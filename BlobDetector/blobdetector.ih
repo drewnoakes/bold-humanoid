@@ -1,0 +1,7 @@
+#include "blobdetector.hh"
+
+#include "../DisjointSet/disjointset.hh"
+
+using namespace bats;
+using namespace Eigen;
+using namespace cv;
