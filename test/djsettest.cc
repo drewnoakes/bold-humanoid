@@ -4,25 +4,26 @@
 using namespace bats;
 using namespace std;
 
+#define N 100000
+
 int main()
 {
   DisjointSet<int> set;
 
-  auto unionPred = [](int* a, int* b) { return (*a - *b) % 2 == 0; };
-  int ints[] = {1,2,3,4,5,6};
-  DisjointSet<int>::Element* elems[6];
+  auto unionPred = [](int* a, int* b) { return (*a % 3) == (*b % 3); };
+  vector<int> ints(N);
+  iota(ints.begin(), ints.end(), 1);
+  random_shuffle(ints.begin(), ints.end());
 
-  for (unsigned i = 0; i < 6; ++i) {
-    elems[i] = set.insert(ints + i, unionPred);
-    cout << *(elems[i]->parent->obj) << endl;
+  DisjointSet<int>::Element* elems[N];
+
+  for (unsigned i = 0; i < N; ++i) {
+    elems[i] = set.insert(&ints[i], unionPred);
   }
 
   
   auto elements = set.getElements();
   cout << "Number of elements: " << elements.size() << endl;
-  for (unsigned i = 0; i < 6; ++i) {
-    cout << *(elements[i]->obj) << endl;
-  }
 
   auto subsets = set.getSubSets();
 

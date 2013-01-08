@@ -14,11 +14,13 @@ namespace bats
   public:
     struct Element
     {
+      unsigned id;
       T* obj;
       Element* parent;
 
-      Element(T* o)
-      : obj(o)
+      Element(unsigned i, T* o)
+	: id(i),
+	  obj(o)
       {}
     };
 
@@ -38,8 +40,14 @@ namespace bats
      */
     Element* findSet(Element* el)
     {
+      /*
+      while (el->parent != el)
+	el = el->parent;
+      */
+
       if (el->parent != el)
 	el->parent = findSet(el->parent);
+
       return el->parent;
     }
 
@@ -56,7 +64,7 @@ namespace bats
       if (r1 == r2)
 	return;
 
-      if (r1 < r2)
+      if (r1->id < r2->id)
 	r2->parent = r1;
       else
 	r1->parent = r2;
@@ -68,7 +76,7 @@ namespace bats
      */
     Element* insert(T* obj)
     {
-      Element* e = new Element(obj);
+      Element* e = new Element(d_elements.size(), obj);
       makeNewSet(e);
       d_elements.push_back(e);
       return e;
@@ -79,7 +87,7 @@ namespace bats
      * Inserts @a obj, and checks whether to add it to an existing subset.
      */
     Element* insert(T* obj, std::function<bool(T*,T*)> unionPred) {
-      Element* e1 = new Element(obj);
+      Element* e1 = new Element(d_elements.size(), obj);
       makeNewSet(e1);
       for (Element* e2 : d_elements)
 	if (unionPred(e1->obj, e2->obj))
