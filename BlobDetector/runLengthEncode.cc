@@ -1,20 +1,20 @@
 #include "blobdetector.ih"
 
-map<unsigned, RunLengthCode> BlobDetector::runLengthEncode(Mat const& labeledImage, unsigned nLabels)
+vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& labeledImage, unsigned nLabels)
 {
   vector<RunLengthCode> rlCodes(nLabels);
 
-  Run curRun;
+  Run curRun(0,0);
   unsigned char curLabel = 0;
 
-  for (unsigned y = 0; y < img.rows; ++y)
+  for (unsigned y = 0; y < labeledImage.rows; ++y)
   {
     
-    unsigned char const* row = img.ptr<unsigned char>(y);
+    unsigned char const* row = labeledImage.ptr<unsigned char>(y);
     // We go one pixel outside of the row, as if image is padded with a column of zeros
-    for (unsigned x = 0; x <= img.cols; ++x)
+    for (unsigned x = 0; x <= labeledImage.cols; ++x)
     {
-      label = x < img.cols ? row[x] : 0;
+      unsigned char label = x < labeledImage.cols ? row[x] : 0;
 
       // Check if we have a run boundary
       if (label != curLabel)

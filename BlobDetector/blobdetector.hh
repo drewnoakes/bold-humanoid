@@ -1,17 +1,19 @@
 #ifndef BATS_BLOBDETECTOR_HH
 #define BATS_BLOBDETECTOR_HH
 
+#include <Eigen/Core>
 #include <opencv.hpp>
+#include "../DisjointSet/disjointset.hh"
 
 namespace bats
 {
   struct Blob
   {
-    Eigen::Vector2u ul;
-    Eigen::Vector2u br;
+    Eigen::Vector2i ul;
+    Eigen::Vector2i br;
     unsigned area;
-    Eigen::Vector2u mu;
-    Eigen::Matrix2u covar;
+    Eigen::Vector2i mu;
+    Eigen::Matrix2i covar;
   };
 
   struct Run
@@ -22,15 +24,22 @@ namespace bats
 	length(1)
     {}
 
-    Eigen::Vector2u start;
-    Eigen::Vector2u end;
+    Eigen::Vector2i start;
+    Eigen::Vector2i end;
     unsigned length;
+
+    bool operator<(Run const& other) const
+    {
+      return
+	start.y() < other.start.y() ||
+	(start.y() == other.start.y() && start.x() < other.start.x());
+    }
   };
 
   class BlobDetector
   {
   public:
-    void detectBlobs(cv::Mat const& labeledImage, unsigned nLabels);
+    std::vector<std::set<std::set<Run> > > detectBlobs(cv::Mat const& labeledImage, unsigned nLabels);
 
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;

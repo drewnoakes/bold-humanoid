@@ -5,3 +5,4 @@
 using namespace bats;
 using namespace Eigen;
 using namespace cv;
+using namespace std;
