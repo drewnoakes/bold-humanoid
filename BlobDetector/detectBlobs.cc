@@ -1,6 +1,6 @@
 #include "blobdetector.ih"
 
-vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsigned nLabels)
+vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels)
 {
   vector<RunLengthCode> rlCodes = runLengthEncode(labeledImage, nLabels);
   
@@ -19,6 +19,8 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
   // Blobs; one set of blobs for each label, each blob is a set of runs
   vector<set<set<Run> > > blobs(nLabels);
 
+  cout << "Building blobs..." << endl;
+
   // Loop over labels
   for (unsigned label = 0; label < nLabels; ++label)
   {
@@ -31,6 +33,8 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
       rSet.insert(run);
 
     for (unsigned y = 1; y < labeledImage.cols; ++y)
+    {
+      cout << y << "\r";
       for (Run& run : rlCode[y])
       {
 	rSet.insert(run);
@@ -39,8 +43,12 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
 	  if (unionPred(run, run2))
 	    rSet.merge(run, run2);
       }
+    }
+
     blobs[label] = rSet.getSubSets();
   }
+
+  cout << "Done!" << endl;
 
   return blobs;
 }

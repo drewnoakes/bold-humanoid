@@ -2,7 +2,7 @@
 
 #include "../DisjointSet/disjointset.hh"
 
-using namespace bats;
+using namespace bold;
 using namespace Eigen;
 using namespace cv;
 using namespace std;

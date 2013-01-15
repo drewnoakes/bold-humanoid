@@ -1,5 +1,188 @@
 #include "../BlobDetector/blobdetector.hh"
 
-int main()
+#include <iostream>
+
+using namespace std;
+using namespace bold;
+
+bool trackbarsChanged = true;
+
+struct bgr
 {
+  bgr(int _b, int _g, int _r)
+    : b(_b), g(_g), r(_r)
+  {}
+
+  unsigned char b;
+  unsigned char g;
+  unsigned char r;
+};
+
+struct hsv
+{
+  int h;
+  int s;
+  int v;
+};
+
+hsv bgr2hsv(bgr const& in)
+{
+  hsv         out;
+  int         min, max, delta;
+
+  min = in.r < in.g ? in.r : in.g;
+  min = min  < in.b ? min  : in.b;
+
+  max = in.r > in.g ? in.r : in.g;
+  max = max  > in.b ? max  : in.b;
+
+  out.v = max;                                // v
+  delta = max - min;
+  if( max > 0 ) {
+    out.s = ((delta << 8) / max);                  // s
+  } else {
+    // r = g = b = 0                        // s = 0, v is undefined
+    out.s = 0;
+    out.h = 0;
+    out.v = 0;// its now undefined
+    return out;
+  }
+  if (delta ==0)
+  {
+    out.h = 0;
+    return out;
+  }
+
+  // 0-63, 64-127, 128- 191
+  if( in.r == max )                           // > is bogus, just keeps compilor happy
+    out.h = (32 + (in.g - in.b) << 5) / delta;        // between yellow & magenta
+  else
+    if( in.g == max )
+      out.h = 96 + ((in.b - in.r) << 5) / delta;  // between cyan & yellow
+    else
+      out.h = 160 + ((in.r - in.g) << 5) / delta;  // between magenta & cyan
+
+  return out;
+}
+
+void makeLUT(char *bgr2lab, int hue, int hrange, int sat, int srange, int val, int vrange)
+{
+  char* p = bgr2lab;
+  for (int b = 0; b < 256; ++b)
+    for (int g = 0; g < 256; ++g)
+      for (int r = 0; r < 256; ++r)
+	{
+	  hsv hsv = bgr2hsv(bgr(b, g, r));
+
+	  // test h
+	  int diff = abs((int)hsv.h - hue);
+	  diff = min(diff, 192 - diff);
+
+	  if (diff <= hrange &&
+	      hsv.s >= sat - srange && hsv.s <= sat + srange &&
+	      hsv.v >= val - vrange && hsv.v <= val + vrange)
+	    *p = 1;
+	  else
+	    *p = 0;
+
+	  ++p;
+	}
+}
+
+void trackbarCallback(int pos, void* userData)
+{
+  trackbarsChanged = true;
+}
+
+int main(int argc, char** argv)
+{
+  if (argc < 2)
+  {
+    cout << "Usage: " << argv[0] << " FILE" << endl;
+    return -1;
+  }
+
+  // Create windows
+  cv::namedWindow("main");
+  cv::namedWindow("labeled");
+  cv::namedWindow("trackbars");
+
+  // Add trackbars
+  int hue = 0;
+  cv::createTrackbar("hue", "trackbars", &hue, 180, &trackbarCallback);
+  int hrange = 10;
+  cv::createTrackbar("hue_range", "trackbars", &hrange, 90, &trackbarCallback);
+  int sat = 210;
+  cv::createTrackbar("sat", "trackbars", &sat, 255, &trackbarCallback);
+  int srange = 45;
+  cv::createTrackbar("sat_range", "trackbars", &srange, 128, &trackbarCallback);
+  int val = 190;
+  cv::createTrackbar("val", "trackbars", &val, 255, &trackbarCallback);
+  int vrange = 65;
+  cv::createTrackbar("val_range", "trackbars", &vrange, 128, &trackbarCallback);
+  
+  // Load image
+  cv::Mat image;
+  image = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
+  
+  if(!image.data )                              // Check for invalid input
+  {
+    cout <<  "Could not open or find the image" << std::endl ;
+    return -1;
+  }
+
+  // Big ass lookup table
+  char *bgr2lab = new char[256*256*256];
+  memset(bgr2lab, 0, 256*256*256);
+  
+  // The labeled image
+  cv::Mat labeled(image.rows, image.cols, CV_8UC1);
+
+  cv::imshow("main", image);
+
+  while (true)
+  {
+    int c = cv::waitKey(30);
+
+    if (c == 'q')
+      break;
+
+    if (trackbarsChanged)
+    {
+      cout << "Building LUT..." << endl;
+
+      makeLUT(bgr2lab, hue, hrange, sat, srange, val, vrange);
+
+      cout << "Done!" << endl << "Labelling..." << endl;
+
+      for (unsigned y = 0; y < image.rows; ++y)
+      {
+	unsigned char *origpix = image.ptr<unsigned char>(y);
+	unsigned char *labeledpix = labeled.ptr<unsigned char>(y);
+	for (unsigned x = 0; x < image.cols; ++x)
+	{
+	  unsigned char l = bgr2lab[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
+	  *labeledpix = l;
+
+	  ++origpix;
+	  ++origpix;
+	  ++origpix;
+	  ++labeledpix;
+	}
+      }
+
+      cout << "Done!" << endl;
+
+      BlobDetector detector;
+      vector<set<set<Run> > > blobs = detector.detectBlobs(labeled, 1);
+
+      cout << "nr blobs: " << blobs.size() << endl;
+
+      cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
+      cv::imshow("labeled", labeled);
+      trackbarsChanged = false;
+    }
+  }
+
+  return 0;
 }

@@ -1,11 +1,11 @@
-#ifndef BATS_BLOBDETECTOR_HH
-#define BATS_BLOBDETECTOR_HH
+#ifndef BOLD_BLOBDETECTOR_HH
+#define BOLD_BLOBDETECTOR_HH
 
 #include <Eigen/Core>
 #include <opencv.hpp>
 #include "../DisjointSet/disjointset.hh"
 
-namespace bats
+namespace bold
 {
   struct Blob
   {
@@ -39,11 +39,11 @@ namespace bats
   class BlobDetector
   {
   public:
-    std::vector<std::set<std::set<Run> > > detectBlobs(cv::Mat const& labeledImage, unsigned nLabels);
+    std::vector<std::set<std::set<Run> > > detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels);
 
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
-    std::vector<RunLengthCode> runLengthEncode(cv::Mat const& labeledImage, unsigned nLabels);
+    std::vector<RunLengthCode> runLengthEncode(cv::Mat const& labeledImage, unsigned char nLabels);
   };
 }
 

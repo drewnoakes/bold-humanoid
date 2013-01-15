@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-using namespace bats;
+using namespace bold;
 using namespace std;
 
 #define N 1000000

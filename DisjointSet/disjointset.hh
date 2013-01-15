@@ -6,7 +6,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace bats
+namespace bold
 {
   template <typename T>
   class DisjointSet
