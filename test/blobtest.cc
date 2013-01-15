@@ -108,7 +108,7 @@ int main(int argc, char** argv)
   cv::namedWindow("trackbars");
 
   // Add trackbars
-  int hue = 0;
+  int hue = 40;
   cv::createTrackbar("hue", "trackbars", &hue, 180, &trackbarCallback);
   int hrange = 10;
   cv::createTrackbar("hue_range", "trackbars", &hrange, 90, &trackbarCallback);
@@ -151,9 +151,15 @@ int main(int argc, char** argv)
     {
       cout << "Building LUT..." << endl;
 
+      double t1 = (double)cv::getTickCount();
+      
       makeLUT(bgr2lab, hue, hrange, sat, srange, val, vrange);
 
-      cout << "Done!" << endl << "Labelling..." << endl;
+      double t2 = (double)cv::getTickCount();
+
+      cout << "Done! (" << (t2 - t1)  / cv::getTickFrequency() << "s)" << endl << "Labelling..." << endl;
+
+      double t3 = (double)cv::getTickCount();
 
       for (unsigned y = 0; y < image.rows; ++y)
       {
@@ -171,12 +177,20 @@ int main(int argc, char** argv)
 	}
       }
 
-      cout << "Done!" << endl;
+      double t4 = (double)cv::getTickCount();
+
+      cout << "Done! (" << (t4 - t3)  / cv::getTickFrequency() << "s)" << endl << "Detecting blobs..." << endl;
+
+      double t5 = (double)cv::getTickCount();
 
       BlobDetector detector;
       vector<set<set<Run> > > blobs = detector.detectBlobs(labeled, 1);
 
-      cout << "nr blobs: " << blobs.size() << endl;
+      double t6 = (double)cv::getTickCount();
+
+      cout << "Done! (" << (t6 - t5) / cv::getTickFrequency() << "s)" << endl;
+
+      cout << "nr blobs: " << blobs[0].size() << endl;
 
       cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
       cv::imshow("labeled", labeled);

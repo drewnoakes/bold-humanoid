@@ -4,8 +4,8 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
 {
   vector<RunLengthCode> rlCodes = runLengthEncode(labeledImage, nLabels);
   
-  vector<DisjointSet<Run>> rlSets;
-
+  vector<DisjointSet<Run>> rlSets(nLabels);
+  
   // Go through all runs and add them to the disjoint sets
 
   // Function to check whether two runs are connected
@@ -19,8 +19,6 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
   // Blobs; one set of blobs for each label, each blob is a set of runs
   vector<set<set<Run> > > blobs(nLabels);
 
-  cout << "Building blobs..." << endl;
-
   // Loop over labels
   for (unsigned label = 0; label < nLabels; ++label)
   {
@@ -30,11 +28,12 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
 
     // Just insert all runs of top row
     for (Run& run : rlCode[0])
-      rSet.insert(run);
-
-    for (unsigned y = 1; y < labeledImage.cols; ++y)
     {
-      cout << y << "\r";
+      rSet.insert(run);
+    }
+
+    for (unsigned y = 1; y < labeledImage.rows; ++y)
+    {
       for (Run& run : rlCode[y])
       {
 	rSet.insert(run);
@@ -47,8 +46,6 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
 
     blobs[label] = rSet.getSubSets();
   }
-
-  cout << "Done!" << endl;
 
   return blobs;
 }

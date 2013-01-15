@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 namespace bold
 {
@@ -39,16 +40,24 @@ namespace bold
 
       for (auto elIdxPair : d_elementIdxMap)
       {
+	// Find subset of this element
 	std::size_t ssId = find(elIdxPair.second);
+
+	// If we haven't seen this one yet, add it
 	if (subSetsM.find(ssId) == subSetsM.end())
 	  subSetsM[ssId] = std::set<T>();
+	// Insert element
 	subSetsM[ssId].insert(elIdxPair.first);
       }
 
       std::set<std::set<T>> subSets;
+
       std::transform(subSetsM.begin(), subSetsM.end(),
 		     std::inserter(subSets, subSets.begin()),
-		     [](std::pair<const size_t, std::set<T>> const& kv) { return kv.second; });
+		     [](std::pair<const size_t, std::set<T>> const& kv) {
+		       return kv.second;
+		     });
+
       return subSets;
     }
 
@@ -75,6 +84,7 @@ namespace bold
 
     void flattenEquivList()
     {
+      std::cout << "Flattening..." << std::endl;
       for (std::size_t idx = 0; idx < d_equivList.size(); ++idx)
 	d_equivList[idx] = d_equivList[d_equivList[idx]];
     }
