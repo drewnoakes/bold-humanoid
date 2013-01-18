@@ -20,8 +20,8 @@ namespace bold
   {
     Run(unsigned x, unsigned y)
       : start(x, y),
-	end(x+1, y),
-	length(1)
+        end(x+1, y),
+        length(1)
     {}
 
     Eigen::Vector2i start;
@@ -31,8 +31,8 @@ namespace bold
     bool operator<(Run const& other) const
     {
       return
-	start.y() < other.start.y() ||
-	(start.y() == other.start.y() && start.x() < other.start.x());
+        start.y() < other.start.y() ||
+        (start.y() == other.start.y() && start.x() < other.start.x());
     }
   };
 

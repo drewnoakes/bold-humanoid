@@ -26,23 +26,23 @@ vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& lab
       // Check if we have a run boundary
       if (label != curLabel)
       {
-	// Check whether this is the end of the current run
-	if (curLabel != 0)
-	{
-	  // Finished run
-	  curRun.end = Vector2i(x, y);
-	  curRun.length = x - curRun.start.x();
-	  rlCodes[curLabel - 1][y].push_back(curRun);
-	}
+        // Check whether this is the end of the current run
+        if (curLabel != 0)
+        {
+          // Finished run
+          curRun.end = Vector2i(x, y);
+          curRun.length = x - curRun.start.x();
+          rlCodes[curLabel - 1][y].push_back(curRun);
+        }
 
-	// Check whether this is the start of a new run
-	if (label != 0)
-	{
-	  // Start new run
-	  curRun = Run(x, y);
-	}
+        // Check whether this is the start of a new run
+        if (label != 0)
+        {
+          // Start new run
+          curRun = Run(x, y);
+        }
 
-	curLabel = label;
+        curLabel = label;
       }
     }
   }

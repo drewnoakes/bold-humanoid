@@ -98,20 +98,20 @@ void findBlobs(Mat const& img, Mat& dst)
     {
       if (row[x] != 0)
       {
-	if (curRun == 0)
-	  curRun = new Run(x, y);
+        if (curRun == 0)
+          curRun = new Run(x, y);
       }
       else // row[x] == 0
       {
-	if (curRun != 0)
-	{
-	  // Finished run
-	  curRun->x2 = x;
-	  curRun->length = x - curRun->x1;
+        if (curRun != 0)
+        {
+          // Finished run
+          curRun->x2 = x;
+          curRun->length = x - curRun->x1;
 
-	  rowruns.push_back(curRun);
-	  curRun = 0;
-	} 
+          rowruns.push_back(curRun);
+          curRun = 0;
+        } 
       } 
     }
     
@@ -133,38 +133,38 @@ void findBlobs(Mat const& img, Mat& dst)
   for (int y = 0; y < img.rows; ++y)
   {
     for_each(runs[y].begin(), runs[y].end(), [&](Run *curRun) {
-	// Find connected parent runs
-	curRun->blob = 0;
-	if (y > 0)
-	{
-	  vector<Run*> prefrowruns = runs[y - 1];
-	  for_each(prefrowruns.begin(), prefrowruns.end(), [&](Run *pCand) {
-	      // Check for overlap: distance from begin of one to
-	      // end of other should be smaller than the sum of
-	      // their lengths.
-	      int l3 = max(curRun->x2, pCand->x2) - min(curRun->x1, pCand->x1);
-	      if (l3 < curRun->length + pCand->length)
-	      {
-		// Connected!
-		Blob *b;
-		if (curRun->blob == 0)
-		  b = findRoot(pCand->blob);
-		else
-		  b = unionBlobs(curRun->blob, pCand->blob);
+        // Find connected parent runs
+        curRun->blob = 0;
+        if (y > 0)
+        {
+          vector<Run*> prefrowruns = runs[y - 1];
+          for_each(prefrowruns.begin(), prefrowruns.end(), [&](Run *pCand) {
+              // Check for overlap: distance from begin of one to
+              // end of other should be smaller than the sum of
+              // their lengths.
+              int l3 = max(curRun->x2, pCand->x2) - min(curRun->x1, pCand->x1);
+              if (l3 < curRun->length + pCand->length)
+              {
+                // Connected!
+                Blob *b;
+                if (curRun->blob == 0)
+                  b = findRoot(pCand->blob);
+                else
+                  b = unionBlobs(curRun->blob, pCand->blob);
 
-		b->x1 = min(b->x1, curRun->x1);
-		b->x2 = max(b->x2, curRun->x2);
-		b->y2 = y;
-		curRun->blob = b;
-	      }
-	    });
-	}
-	if (curRun->blob == 0)
-	{
-	  Blob* b = new Blob(blobs.size(), curRun->x1, y, curRun->x2, y+1);
-	  curRun->blob = b;
-	  blobs.push_back(b);
-	}
+                b->x1 = min(b->x1, curRun->x1);
+                b->x2 = max(b->x2, curRun->x2);
+                b->y2 = y;
+                curRun->blob = b;
+              }
+            });
+        }
+        if (curRun->blob == 0)
+        {
+          Blob* b = new Blob(blobs.size(), curRun->x1, y, curRun->x2, y+1);
+          curRun->blob = b;
+          blobs.push_back(b);
+        }
       });
   }
   
@@ -173,7 +173,7 @@ void findBlobs(Mat const& img, Mat& dst)
   int minArea = 100;
   for_each(blobs.begin(), blobs.end(), [&] (Blob *blob) {
       if (blob->root == blob && blob->area() > minArea)
-	largeBlobs.push_back(blob);
+        largeBlobs.push_back(blob);
     });
 
   cout << "Blobs found: " << largeBlobs.size() << endl;
@@ -190,8 +190,8 @@ void findBlobs(Mat const& img, Mat& dst)
 
   for_each(runs.begin(), runs.end(), [](vector<Run*>& rs) {
       for_each(rs.begin(), rs.end(), [](Run* r) {
-	  delete r;
-	});
+          delete r;
+        });
     });
 
   blobs.clear();
@@ -263,20 +263,20 @@ void makeLUT(char *bgr2lab, int hue, int hrange, int sat, int srange, int val, i
   for (unsigned b = 0; b < 256; ++b)
     for (unsigned g = 0; g < 256; ++g)
       for (int r = 0; r < 256; ++r)
-	{
-	  hsv hsv = bgr2hsv(bgr(b, g, r));
+        {
+          hsv hsv = bgr2hsv(bgr(b, g, r));
 
-	  // test h
-	  int diff = abs((int)hsv.h - hue);
-	  diff = min(diff, 192 - diff);
+          // test h
+          int diff = abs((int)hsv.h - hue);
+          diff = min(diff, 192 - diff);
 
-	  if (diff <= hrange &&
-	      hsv.s >= sat - srange && hsv.s <= sat + srange &&
-	      hsv.v >= val - vrange && hsv.v <= val + vrange)
-	    *p = 255;
+          if (diff <= hrange &&
+              hsv.s >= sat - srange && hsv.s <= sat + srange &&
+              hsv.v >= val - vrange && hsv.v <= val + vrange)
+            *p = 255;
 
-	  ++p;
-	}
+          ++p;
+        }
 }
 
 int main() {
@@ -333,13 +333,13 @@ int main() {
       unsigned char *labeledpix = labeled.ptr<unsigned char>(y);
       for (unsigned x = 0; x < orig.cols; ++x)
       {
-	unsigned char l = bgr2lab[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
-	*labeledpix = l;
+        unsigned char l = bgr2lab[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
+        *labeledpix = l;
 
-	++origpix;
-	++origpix;
-	++origpix;
-	++labeledpix;
+        ++origpix;
+        ++origpix;
+        ++origpix;
+        ++labeledpix;
       }
     }
 
@@ -368,16 +368,16 @@ int main() {
       unsigned char *row = hsv[0].ptr<unsigned char>(y);
       for (unsigned x = 0; x < hsv[0].cols; ++x)
       {
-	int h = row[x];
-	if (h > maxhue)
-	  maxhue = h;
-	int diff = abs(h - hue);
-	diff = min(diff, 180 - diff);
+        int h = row[x];
+        if (h > maxhue)
+          maxhue = h;
+        int diff = abs(h - hue);
+        diff = min(diff, 180 - diff);
 
-	if (diff <= hrange)
-	  row[x] = 255;
-	else
-	  row[x] = 0;
+        if (diff <= hrange)
+          row[x] = 255;
+        else
+          row[x] = 0;
       }
     }
 

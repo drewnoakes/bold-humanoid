@@ -40,23 +40,23 @@ namespace bold
 
       for (auto elIdxPair : d_elementIdxMap)
       {
-	// Find subset of this element
-	std::size_t ssId = find(elIdxPair.second);
+        // Find subset of this element
+        std::size_t ssId = find(elIdxPair.second);
 
-	// If we haven't seen this one yet, add it
-	if (subSetsM.find(ssId) == subSetsM.end())
-	  subSetsM[ssId] = std::set<T>();
-	// Insert element
-	subSetsM[ssId].insert(elIdxPair.first);
+        // If we haven't seen this one yet, add it
+        if (subSetsM.find(ssId) == subSetsM.end())
+          subSetsM[ssId] = std::set<T>();
+        // Insert element
+        subSetsM[ssId].insert(elIdxPair.first);
       }
 
       std::set<std::set<T>> subSets;
 
       std::transform(subSetsM.begin(), subSetsM.end(),
-		     std::inserter(subSets, subSets.begin()),
-		     [](std::pair<const size_t, std::set<T>> const& kv) {
-		       return kv.second;
-		     });
+                     std::inserter(subSets, subSets.begin()),
+                     [](std::pair<const size_t, std::set<T>> const& kv) {
+                       return kv.second;
+                     });
 
       return subSets;
     }
@@ -67,7 +67,7 @@ namespace bold
     std::size_t find(std::size_t idx)
     {
       if (d_equivList[idx] != idx)
-	d_equivList[idx] = find(d_equivList[idx]);
+        d_equivList[idx] = find(d_equivList[idx]);
       return d_equivList[idx];
     }
 
@@ -77,16 +77,16 @@ namespace bold
       std::size_t ss2 = find(idx2);
       
       if (ss1 < ss2)
-	d_equivList[ss2] = ss1;
+        d_equivList[ss2] = ss1;
       else
-	d_equivList[ss1] = ss2;
+        d_equivList[ss1] = ss2;
     }
 
     void flattenEquivList()
     {
       std::cout << "Flattening..." << std::endl;
       for (std::size_t idx = 0; idx < d_equivList.size(); ++idx)
-	d_equivList[idx] = d_equivList[d_equivList[idx]];
+        d_equivList[idx] = d_equivList[d_equivList[idx]];
     }
 
     std::map<T, std::size_t> d_elementIdxMap;

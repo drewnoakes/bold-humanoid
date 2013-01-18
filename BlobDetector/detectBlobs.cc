@@ -36,11 +36,11 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
     {
       for (Run& run : rlCode[y])
       {
-	rSet.insert(run);
-	
-	for (Run& run2 : rlCode[y - 1])
-	  if (unionPred(run, run2))
-	    rSet.merge(run, run2);
+        rSet.insert(run);
+        
+        for (Run& run2 : rlCode[y - 1])
+          if (unionPred(run, run2))
+            rSet.merge(run, run2);
       }
     }
 

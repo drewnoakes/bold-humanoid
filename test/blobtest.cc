@@ -71,22 +71,22 @@ void makeLUT(char *bgr2lab, int hue, int hrange, int sat, int srange, int val, i
   for (int b = 0; b < 256; ++b)
     for (int g = 0; g < 256; ++g)
       for (int r = 0; r < 256; ++r)
-	{
-	  hsv hsv = bgr2hsv(bgr(b, g, r));
+        {
+          hsv hsv = bgr2hsv(bgr(b, g, r));
 
-	  // test h
-	  int diff = abs((int)hsv.h - hue);
-	  diff = min(diff, 192 - diff);
+          // test h
+          int diff = abs((int)hsv.h - hue);
+          diff = min(diff, 192 - diff);
 
-	  if (diff <= hrange &&
-	      hsv.s >= sat - srange && hsv.s <= sat + srange &&
-	      hsv.v >= val - vrange && hsv.v <= val + vrange)
-	    *p = 1;
-	  else
-	    *p = 0;
+          if (diff <= hrange &&
+              hsv.s >= sat - srange && hsv.s <= sat + srange &&
+              hsv.v >= val - vrange && hsv.v <= val + vrange)
+            *p = 1;
+          else
+            *p = 0;
 
-	  ++p;
-	}
+          ++p;
+        }
 }
 
 void trackbarCallback(int pos, void* userData)
@@ -163,18 +163,18 @@ int main(int argc, char** argv)
 
       for (unsigned y = 0; y < image.rows; ++y)
       {
-	unsigned char *origpix = image.ptr<unsigned char>(y);
-	unsigned char *labeledpix = labeled.ptr<unsigned char>(y);
-	for (unsigned x = 0; x < image.cols; ++x)
-	{
-	  unsigned char l = bgr2lab[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
-	  *labeledpix = l;
+        unsigned char *origpix = image.ptr<unsigned char>(y);
+        unsigned char *labeledpix = labeled.ptr<unsigned char>(y);
+        for (unsigned x = 0; x < image.cols; ++x)
+        {
+          unsigned char l = bgr2lab[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
+          *labeledpix = l;
 
-	  ++origpix;
-	  ++origpix;
-	  ++origpix;
-	  ++labeledpix;
-	}
+          ++origpix;
+          ++origpix;
+          ++origpix;
+          ++labeledpix;
+        }
       }
 
       double t4 = (double)cv::getTickCount();

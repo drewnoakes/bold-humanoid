@@ -29,17 +29,17 @@ int main()
     if (ints[i] % 2 == 0)
     {
       if (someSeenEven != -1)
-	set.merge(ints[i], someSeenEven);
+        set.merge(ints[i], someSeenEven);
       if (someSeenEven == -1 || flipCoin())
-	someSeenEven = ints[i];
+        someSeenEven = ints[i];
     }
 
     if (ints[i] % 2 != 0)
     {
       if (someSeenOdd != -1)
-	set.merge(ints[i], someSeenOdd);
+        set.merge(ints[i], someSeenOdd);
       if (someSeenOdd == -1 || flipCoin())
-	someSeenOdd = ints[i];
+        someSeenOdd = ints[i];
     }
   }
 
