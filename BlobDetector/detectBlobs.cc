@@ -1,6 +1,6 @@
 #include "blobdetector.ih"
 
-vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels)
+vector<set<Blob > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels)
 {
   vector<RunLengthCode> rlCodes = runLengthEncode(labeledImage, nLabels);
   
@@ -16,8 +16,8 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
         max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length;
     };
 
-  // Blobs; one set of blobs for each label, each blob is a set of runs
-  vector<set<set<Run> > > blobs(nLabels);
+  // RunSets; one set of runSets for each label, each blob is a set of runs
+  vector<set<Blob> > blobs(nLabels);
 
   // Loop over labels
   for (unsigned label = 0; label < nLabels; ++label)
@@ -44,7 +44,17 @@ vector<set<set<Run> > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, u
       }
     }
 
-    blobs[label] = rSet.getSubSets();
+    set<set<Run> > runSets = rSet.getSubSets();
+
+    set<Blob> bs;
+
+    auto bsBegin = bs.begin();
+
+    // Convert sets of sets runs to sets of blob
+    auto bsEnd = transform(runSets.begin(), runSets.end(),
+                           inserter(bs, bs.end()),
+                           runSetToBlob);
+    blobs[label] = bs;
   }
 
   return blobs;

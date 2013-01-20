@@ -1,6 +1,7 @@
 #include "blobdetector.hh"
 
 #include "../DisjointSet/disjointset.hh"
+#include <algorithm>
 
 using namespace bold;
 using namespace Eigen;

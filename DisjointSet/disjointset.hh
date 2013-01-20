@@ -33,10 +33,10 @@ namespace bold
       merge(d_elementIdxMap[el1], d_elementIdxMap[el2]);
     }
 
-    std::set<std::set<T>> getSubSets()
+    std::set<std::set<T> > getSubSets()
     {
       flattenEquivList();
-      std::map<std::size_t, std::set<T>> subSetsM;
+      std::map<std::size_t, std::set<T> > subSetsM;
 
       for (auto elIdxPair : d_elementIdxMap)
       {
@@ -50,7 +50,7 @@ namespace bold
         subSetsM[ssId].insert(elIdxPair.first);
       }
 
-      std::set<std::set<T>> subSets;
+      std::set<std::set<T> > subSets;
 
       std::transform(subSetsM.begin(), subSetsM.end(),
                      std::inserter(subSets, subSets.begin()),

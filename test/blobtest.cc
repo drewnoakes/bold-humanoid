@@ -1,9 +1,11 @@
 #include "../BlobDetector/blobdetector.hh"
 
 #include <iostream>
+#include <Eigen/Eigenvalues>
 
 using namespace std;
 using namespace bold;
+using namespace Eigen;
 
 bool trackbarsChanged = true;
 
@@ -114,7 +116,7 @@ int main(int argc, char** argv)
   cv::createTrackbar("hue_range", "trackbars", &hrange, 90, &trackbarCallback);
   int sat = 210;
   cv::createTrackbar("sat", "trackbars", &sat, 255, &trackbarCallback);
-  int srange = 45;
+  int srange = 55;
   cv::createTrackbar("sat_range", "trackbars", &srange, 128, &trackbarCallback);
   int val = 190;
   cv::createTrackbar("val", "trackbars", &val, 255, &trackbarCallback);
@@ -184,7 +186,7 @@ int main(int argc, char** argv)
       double t5 = (double)cv::getTickCount();
 
       BlobDetector detector;
-      vector<set<set<Run> > > blobs = detector.detectBlobs(labeled, 1);
+      vector<set<Blob> > blobs = detector.detectBlobs(labeled, 1);
 
       double t6 = (double)cv::getTickCount();
 
@@ -192,8 +194,42 @@ int main(int argc, char** argv)
 
       cout << "nr blobs: " << blobs[0].size() << endl;
 
+      // Paint blobs
+      cv::Mat marked = image.clone();
+      for (Blob const& b : blobs[0])
+      {
+        if (b.area > 25)
+        {
+          cv::rectangle(marked,
+                        cv::Rect(b.ul.x(), b.ul.y(),
+                                 b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
+                        cv::Scalar(255,255,0));
+          
+          cout << "covar: " << endl << b.covar << endl;
+          
+          auto solver = EigenSolver<Matrix2f>(b.covar.cast<float>());
+          auto eigenVectors = solver.eigenvectors().real();
+          auto eigenValues = solver.eigenvalues().real();
+
+          Vector2f ev1 = b.mean.cast<float>() + eigenVectors.col(0) * sqrt(eigenValues(0));
+          Vector2f ev2 = b.mean.cast<float>() + eigenVectors.col(1) * sqrt(eigenValues(1));
+
+          cv::line(marked,
+                   cv::Point(b.mean.x(), b.mean.y()),
+                   cv::Point(ev1.x(), ev1.y()),
+                   cv::Scalar(0,255,0));
+          cv::line(marked,
+                   cv::Point(b.mean.x(), b.mean.y()),
+                   cv::Point(ev2.x(), ev2.y()),
+                   cv::Scalar(0,255,0));
+          
+          cout << "ev: " << endl << solver.eigenvectors() << endl << "-" << endl << solver.eigenvalues() << endl;
+        }
+      }
+
       cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
       cv::imshow("labeled", labeled);
+      cv::imshow("main", marked);
       trackbarsChanged = false;
     }
   }

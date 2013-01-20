@@ -7,15 +7,8 @@
 
 namespace bold
 {
-  struct Blob
-  {
-    Eigen::Vector2i ul;
-    Eigen::Vector2i br;
-    unsigned area;
-    Eigen::Vector2i mu;
-    Eigen::Matrix2i covar;
-  };
-
+  /** Horizontal run of pixels
+   */
   struct Run
   {
     Run(unsigned x, unsigned y)
@@ -24,10 +17,14 @@ namespace bold
         length(1)
     {}
 
-    Eigen::Vector2i start;
-    Eigen::Vector2i end;
-    unsigned length;
+    Eigen::Vector2i start;   ///< Start pixel
+    Eigen::Vector2i end;     ///< End pixel
+    unsigned length;         ///< Number of pixels
 
+    /** Compare operator
+     *
+     * Orders runs first by y, then by x of start
+     */
     bool operator<(Run const& other) const
     {
       return
@@ -36,14 +33,35 @@ namespace bold
     }
   };
 
+  struct Blob
+  {
+    Eigen::Vector2i ul;      ///< Upper left pixel
+    Eigen::Vector2i br;      ///< Bottom righ pixel
+    unsigned area;           ///< Number of pixes in blob
+    Eigen::Vector2f mean;    ///< Mean
+    Eigen::Matrix2f covar;   ///< Covarience
+
+    std::set<Run> runs;      ///< Runs in this blob
+
+    bool operator<(Blob const& other) const
+    {
+      return
+        area < other.area ||
+        (area == other.area && mean.y() < other.mean.y());
+    }
+  };
+
   class BlobDetector
   {
   public:
-    std::vector<std::set<std::set<Run> > > detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels);
+    std::vector<std::set<Blob > > detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels);
 
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
+
     std::vector<RunLengthCode> runLengthEncode(cv::Mat const& labeledImage, unsigned char nLabels);
+
+    static Blob runSetToBlob(std::set<Run> const& runSet);
   };
 }
 
