@@ -105,6 +105,7 @@ void trackbarCallback(int pos, void* userData)
 
 int main(int argc, char** argv)
 {
+  /*
   gtkKit = new Gtk::Main(0, 0);
 
   // Create GUI and gather widgets
@@ -116,7 +117,8 @@ int main(int argc, char** argv)
   gtkHueScale->set_range(0,360);
 
   Gtk::Main::run(*gtkWindow);
-
+  */
+  
   if (argc < 2)
   {
     cout << "Usage: " << argv[0] << " FILE" << endl;
@@ -124,9 +126,9 @@ int main(int argc, char** argv)
   }
 
   // Create windows
-  cv::namedWindow("main");
   cv::namedWindow("labeled");
   cv::namedWindow("trackbars");
+  cv::namedWindow("main");
 
   // Add trackbars
   int hue = 40;
@@ -218,7 +220,7 @@ int main(int argc, char** argv)
       for (Blob const& b : blobs[0])
       {
 	// Only of decent size
-        if (b.area > 25)
+        if ((b.br - b.ul).minCoeff() > 5 )
         {
 	  // Bounding rectangle
           cv::rectangle(marked,

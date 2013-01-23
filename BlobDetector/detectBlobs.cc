@@ -12,8 +12,10 @@ vector<set<Blob > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsig
   auto unionPred =
     [] (Run const& a, Run const& b)
     {
+      float ratio = (float)a.length / (float)b.length;
       return
-        max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length;
+        max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length &&
+      min(ratio, 1.0f/ratio) > 0.75;
     };
 
   // RunSets; one set of runSets for each label, each blob is a set of runs
