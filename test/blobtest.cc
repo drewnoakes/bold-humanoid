@@ -2,10 +2,17 @@
 
 #include <iostream>
 #include <Eigen/Eigenvalues>
+#include <gtkmm.h>
 
 using namespace std;
 using namespace bold;
 using namespace Eigen;
+
+Gtk::Main* gtkKit;
+      
+Gtk::Window* gtkWindow;
+
+Gtk::Scale* gtkHueScale;
 
 bool trackbarsChanged = true;
 
@@ -98,6 +105,18 @@ void trackbarCallback(int pos, void* userData)
 
 int main(int argc, char** argv)
 {
+  gtkKit = new Gtk::Main(0, 0);
+
+  // Create GUI and gather widgets
+  Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("blobtest.glade");
+  gtk_builder_connect_signals(builder->gobj(), 0);
+  
+  builder->get_widget("mainWindow", gtkWindow);
+  builder->get_widget("hueScale", gtkHueScale);
+  gtkHueScale->set_range(0,360);
+
+  Gtk::Main::run(*gtkWindow);
+
   if (argc < 2)
   {
     cout << "Usage: " << argv[0] << " FILE" << endl;
@@ -198,13 +217,17 @@ int main(int argc, char** argv)
       cv::Mat marked = image.clone();
       for (Blob const& b : blobs[0])
       {
+	// Only of decent size
         if (b.area > 25)
         {
+	  // Bounding rectangle
           cv::rectangle(marked,
                         cv::Rect(b.ul.x(), b.ul.y(),
                                  b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
-                        cv::Scalar(255,255,0));
+                        cv::Scalar(255,255,0),
+			2);
           
+	  // Determine orientation
           cout << "covar: " << endl << b.covar << endl;
           
           auto solver = EigenSolver<Matrix2f>(b.covar.cast<float>());
@@ -217,13 +240,25 @@ int main(int argc, char** argv)
           cv::line(marked,
                    cv::Point(b.mean.x(), b.mean.y()),
                    cv::Point(ev1.x(), ev1.y()),
-                   cv::Scalar(0,255,0));
+                   cv::Scalar(0,255,0),
+		   2);
           cv::line(marked,
                    cv::Point(b.mean.x(), b.mean.y()),
                    cv::Point(ev2.x(), ev2.y()),
-                   cv::Scalar(0,255,0));
+                   cv::Scalar(0,255,0),
+		   2);
           
           cout << "ev: " << endl << solver.eigenvectors() << endl << "-" << endl << solver.eigenvalues() << endl;
+
+	  // Draw top-most run
+	  Run const& topRun = *b.runs.begin();
+	  cv::circle(marked,
+		     cv::Point((topRun.start.x() + topRun.end.x()) / 2,
+			       topRun.start.y()),
+		     5,
+		     cv::Scalar(255,0,0),
+		     2);
+
         }
       }
 

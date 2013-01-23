@@ -1,5 +1,5 @@
-CXXFLAGS=-I/usr/include/opencv2 -I/usr/include/eigen3 -O3 -g -std=c++0x
-LDFLAGS= -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann -lstdc++
+CXXFLAGS=-I/usr/include/opencv2 -I/usr/include/eigen3 -O3 -g -std=c++0x `pkg-config gtkmm-2.4 --cflags`
+LDFLAGS= -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann -lstdc++ `pkg-config gtkmm-2.4 --libs`
 
 BLOBDETECTOR_SOURCES=../BlobDetector/detectBlobs.cc ../BlobDetector/runLengthEncode.cc ../BlobDetector/runSetToBlob.cc
 
