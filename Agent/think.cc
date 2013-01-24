@@ -14,8 +14,6 @@ bool inputAvailable()
 
 void Agent::think()
 {
-//  cout << "[Agent::think] Start" << endl;
-
   cv::Mat raw;
 
 //  cout << "[Agent::think] Capture image" << endl;
@@ -35,7 +33,6 @@ void Agent::think()
       cv::circle(raw, cv::Point(obs.pos.x(), obs.pos.y()), 5, cv::Scalar(0,255,255), 2);
       break;
     }
-
   }
 
   cv::imshow("raw", raw);
@@ -46,55 +43,17 @@ void Agent::think()
     char c;
     std::cin >> c;
     if (c == 'w') {
-      d_stepTarget = d_stepMax;
+      d_ambulator.setMoveDir(Eigen::Vector2d(1,0));
     } else if (c == 's') {
-      d_stepTarget = -d_stepMax;
+      d_ambulator.setMoveDir(Eigen::Vector2d(-1,0));
     } else if (c == 'a') {
-      d_turnTarget = d_turnMax;
+      d_ambulator.setMoveDir(Eigen::Vector2d(0,1));
     } else if (c == 'd') {
-      d_turnTarget = -d_turnMax;
-    } else if (c == '[') {
-      while(Action::GetInstance()->Start(1) == false) usleep(8000);
-      while(Action::GetInstance()->IsRunning() == true) usleep(8000);
-    } else if (c == ']') {
-      while(Action::GetInstance()->Start(15) == false) usleep(8000);
-      while(Action::GetInstance()->IsRunning() == true) usleep(8000);
-    }
-  }
-
-  auto walk = Walking::GetInstance();
-
-  if (d_stepTarget == 0 && d_turnTarget == 0 && d_stepCurrent == 0 && d_turnCurrent == 0)
-  {
-    if (walk->IsRunning())
-      walk->Stop();
-  }
-  else
-  {
-    if (!walk->IsRunning())
-    {
-      d_stepCurrent = 0;
-      d_turnCurrent = 0;
-      walk->X_MOVE_AMPLITUDE = d_stepCurrent;
-      walk->A_MOVE_AMPLITUDE = d_turnCurrent;
-      walk->Start();
-      walk->m_Joint.SetEnableBodyWithoutHead(true, true);
-    }
-    else
-    {
-      if (d_stepCurrent < d_stepTarget)
-        d_stepCurrent += d_stepChangeAmount;
-      else if (d_stepCurrent > d_stepTarget)
-        d_stepCurrent = d_stepTarget;
-      walk->X_MOVE_AMPLITUDE = d_stepCurrent;
-
-      if (d_turnCurrent < d_turnTarget)
-        d_turnCurrent += d_turnChangeAmount;
-      else if (d_turnCurrent > d_turnTarget)
-        d_turnCurrent -= d_turnChangeAmount;
-      walk->A_MOVE_AMPLITUDE = d_turnCurrent;
-
-      fprintf(stderr, " (step:%.1f turn:%.1f)\n", d_stepCurrent, d_turnCurrent);
+      d_ambulator.setMoveDir(Eigen::Vector2d(0,-1));
+    } else if (c == ',') {
+      d_ambulator.setTurnAngle(-1);
+    } else if (c == '.') {
+      d_ambulator.setTurnAngle(1);
     }
   }
 }
