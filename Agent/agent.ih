@@ -7,3 +7,4 @@
 using namespace Robot;
 using namespace std;
 using namespace bold;
+using namespace Eigen;

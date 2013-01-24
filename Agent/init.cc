@@ -29,11 +29,11 @@ void Agent::init()
   // Add motion modules
   cout << "[Agent::init] Add motion modules" << endl;
   // Playing action scripts
-  MotionManager::GetInstance()->AddModule((MotionModule*)Action::GetInstance());
+  MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Action::GetInstance());
   // Moving the head
-  MotionManager::GetInstance()->AddModule((MotionModule*)Head::GetInstance());
+  MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Head::GetInstance());
   // Walking
-  MotionManager::GetInstance()->AddModule((MotionModule*)Walking::GetInstance());
+  MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Walking::GetInstance());
 
   // Load motion manager settings
   cout << "[Agent::init] Load motion manager settings" << endl;
@@ -46,7 +46,7 @@ void Agent::init()
 
   // Turn on body
   cout << "[Agent::init] Enable body and motion manager" << endl;
-  Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
+  Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
   // Enable motion mnager
   MotionManager::GetInstance()->SetEnable(true);
   
@@ -55,7 +55,7 @@ void Agent::init()
   d_CM730.WriteByte(CM730::P_LED_PANNEL, 0x01|0x02|0x04, NULL);
   
   // Load motion file
-  Action::GetInstance()->LoadFile((char*)d_motionFile.c_str());
+  Robot::Action::GetInstance()->LoadFile((char*)d_motionFile.c_str());
 
   // Build LUT
   cout << "[Agent::init] Building LUT" << endl;
@@ -86,10 +86,10 @@ void Agent::init()
 
   // Get into starting position
   cout << "[Agent::init] Start position" << endl;
-  Action::GetInstance()->Start(15);
+  Robot::Action::GetInstance()->Start(15);
 
   // Wait until we are in starting position
-  while(Action::GetInstance()->IsRunning())
+  while(Robot::Action::GetInstance()->IsRunning())
     usleep(8*1000);
 
   cout << "[Agent::init] Done" << endl;

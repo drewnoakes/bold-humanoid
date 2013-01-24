@@ -67,7 +67,24 @@ vector<Observation> Agent::processImage(cv::Mat& image)
     observations.push_back(ballObs);
   }
     
+  // Do we have goal posts?
+  for (Blob const& b : blobs[0])
+  {
+    Vector2i wh = b.br - b.ul;
+    if (wh.minCoeff() > 5  &&  // ignore small blobs
+	wh.y() > wh.x())       // Higher than it is lower
+    {
+      // Take center of top most run. This is the first
+      Observation postObs;
+      postObs.type = O_GOAL_POST;
+      Run const& topRun = *b.runs.begin();
+      postObs.pos = (topRun.end + topRun.start).cast<float>() / 2;
 
+      observations.push_back(postObs);
+    }
+
+  }
+  
   
   for(set<Blob>& blobSet : blobs)
   {
@@ -82,11 +99,8 @@ vector<Observation> Agent::processImage(cv::Mat& image)
     }
   }
 
-  cv::imshow("raw", image);
-
   cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
   cv::imshow("labeled", labeled);
 
-
-  cv::waitKey(1);
+  return observations;
 }
