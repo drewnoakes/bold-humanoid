@@ -6,10 +6,26 @@
 
 #include <opencv.hpp>
 
-#include "../../vision/BlobDetector/blobdetector.hh"
+#include <BlobDetector/blobdetector.hh>
 
 namespace bold
 {
+  enum ObsType
+  {
+    O_BALL,
+    O_GOAL_POST,
+    O_LEFT_GOAL_POST,
+    O_RIGHT_GOAL_POST
+  };
+
+  struct Observation
+  {
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    ObsType type;
+    Eigen::Vector2f pos;
+  };
+
   class Agent
   {
   public:
@@ -36,13 +52,16 @@ namespace bold
     std::string d_motionFile;
     
     cv::VideoCapture d_camera;
+
+    unsigned char* d_LUT;
+
     BlobDetector d_blobDetector;
 
     void init();
 
     void think();
 
-    void processImage(cv::Mat& image);
+    std::vector<Observation> processImage(cv::Mat& image);
   };
 }
 

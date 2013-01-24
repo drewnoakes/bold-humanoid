@@ -1,5 +1,7 @@
 #include "agent.hh"
 
+#include <LUTBuilder/lutbuilder.hh>
+
 #include <iostream>
 
 using namespace Robot;

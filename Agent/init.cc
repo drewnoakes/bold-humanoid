@@ -11,6 +11,9 @@ void Agent::init()
     return;
   }
 
+  cv::namedWindow("raw");
+  cv::namedWindow("labeled");
+
   // Initialize motion manager
   cout << "[Agent::init] Initialize motion manager" << endl;
   if(MotionManager::GetInstance()->Initialize(&d_CM730) == false)
@@ -43,7 +46,7 @@ void Agent::init()
 
   // Turn on body
   cout << "[Agent::init] Enable body and motion manager" << endl;
-  Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+  Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
   // Enable motion mnager
   MotionManager::GetInstance()->SetEnable(true);
   
@@ -53,7 +56,34 @@ void Agent::init()
   
   // Load motion file
   Action::GetInstance()->LoadFile((char*)d_motionFile.c_str());
-  
+
+  // Build LUT
+  cout << "[Agent::init] Building LUT" << endl;
+  LUTBuilder lutBuilder;
+
+  vector<hsvRange> ranges;
+
+  // Hardcoded for now
+  hsvRange goalRange;
+  goalRange.h = 40;
+  goalRange.hRange = 10;
+  goalRange.s = 210;
+  goalRange.sRange = 55;
+  goalRange.v = 190;
+  goalRange.vRange = 65;
+  ranges.push_back(goalRange);
+
+  hsvRange ballRange;
+  ballRange.h = 10;
+  ballRange.hRange = 15;
+  ballRange.s = 255;
+  ballRange.sRange = 95;
+  ballRange.v = 190;
+  ballRange.vRange = 95;
+  ranges.push_back(ballRange);
+
+  d_LUT = lutBuilder.buildBGRFromHSVRanges(ranges);
+
   // Get into starting position
   cout << "[Agent::init] Start position" << endl;
   Action::GetInstance()->Start(15);

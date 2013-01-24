@@ -1,10 +1,9 @@
 CXX=g++
 
-
 DARWINDIR=robotis
-VISIONDIR=../vision
+VISIONDIR=vision
 
-CXXFLAGS=-I${DARWINDIR}/Linux/include/ -I${DARWINDIR}/Framework/include/ -I/usr/include/opencv2 -I/usr/include/eigen3 -g -std=c++0x -O3 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+CXXFLAGS=-I${DARWINDIR}/Linux/include/ -I${DARWINDIR}/Framework/include/ -I${VISIONDIR} -I/usr/include/opencv2 -I/usr/include/eigen3 -g -std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
 LDFLAGS=-lpthread -lrt `pkg-config opencv --libs`
 
@@ -13,9 +12,10 @@ TARGET=main
 SOURCES=\
 main.cc \
 Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc \
-${VISIONDIR}/BlobDetector/detectBlobs.cc ${VISIONDIR}/BlobDetector/runLengthEncode.cc ${VISIONDIR}/BlobDetector/runSetToBlob.cc
+${VISIONDIR}/BlobDetector/detectBlobs.cc ${VISIONDIR}/BlobDetector/runLengthEncode.cc ${VISIONDIR}/BlobDetector/runSetToBlob.cc \
+${VISIONDIR}/LUTBuilder/bgr2hsv.cc ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
 
-HEADERS=Agent/agent.hh Agent/agent.ih ${VISIONDIR}/BlobDetector/blobdetector.hh
+HEADERS=Agent/agent.hh Agent/agent.ih ${VISIONDIR}/BlobDetector/blobdetector.hh ${VISIONDIR}/LUTBuilder/lutbuilder.hh
 
 OBJECTS=${SOURCES:.cc=.o}
 

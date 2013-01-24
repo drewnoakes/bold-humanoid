@@ -8,4 +8,6 @@ void Agent::think()
   
   cout << "[Agent::think] Capture image" << endl;
   d_camera >> raw;
+
+  processImage(raw);
 }
