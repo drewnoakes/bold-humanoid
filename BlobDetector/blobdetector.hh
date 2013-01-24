@@ -50,7 +50,7 @@ namespace bold
     bool operator<(Blob const& other) const
     {
       return
-        area < other.area ||
+        area > other.area ||
         (area == other.area && mean.y() < other.mean.y());
     }
   };
