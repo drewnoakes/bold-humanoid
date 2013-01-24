@@ -58,7 +58,7 @@ namespace bold
   class BlobDetector
   {
   public:
-    std::vector<std::set<Blob > > detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels);
+    std::vector<std::set<Blob > > detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels, std::vector<std::function<bool(Run const& a, Run const& b)> > unionPreds);
 
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;

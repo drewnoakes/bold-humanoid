@@ -1,22 +1,12 @@
 #include "blobdetector.ih"
 
-vector<set<Blob > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels)
+vector<set<Blob > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsigned char nLabels, std::vector<std::function<bool(Run const& a, Run const& b)> > unionPreds)
 {
   vector<RunLengthCode> rlCodes = runLengthEncode(labeledImage, nLabels);
   
   vector<DisjointSet<Run>> rlSets(nLabels);
   
   // Go through all runs and add them to the disjoint sets
-
-  // Function to check whether two runs are connected
-  auto unionPred =
-    [] (Run const& a, Run const& b)
-    {
-      float ratio = (float)a.length / (float)b.length;
-      return
-      max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length;// &&
-      //min(ratio, 1.0f/ratio) > 0.75;
-    };
 
   // RunSets; one set of runSets for each label, each blob is a set of runs
   vector<set<Blob> > blobs(nLabels);
@@ -43,7 +33,7 @@ vector<set<Blob > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsig
         rSet.insert(run);
         
         for (Run& run2 : rlCode[y - 1])
-          if (unionPred(run, run2))
+          if (unionPreds[label](run, run2))
             rSet.merge(run, run2);
       }
     }
