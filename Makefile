@@ -1,6 +1,6 @@
 CXX=g++
 
-DARWINDIR=../robotis
+DARWINDIR=robotis
 
 CXXFLAGS=-I${DARWINDIR}/Linux/include/ -I${DARWINDIR}/Framework/include/ -I/usr/include/opencv2 -I/usr/include/eigen3 -g -std=c++0x -O3 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
