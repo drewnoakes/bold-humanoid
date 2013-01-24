@@ -4,3 +4,4 @@
 
 using namespace Robot;
 using namespace std;
+using namespace bold;
