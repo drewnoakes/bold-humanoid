@@ -1,11 +1,15 @@
-CXXFLAGS=-I/usr/include/opencv2 -I/usr/include/eigen3 -O3 -g -std=c++0x `pkg-config gtkmm-2.4 --cflags`
-LDFLAGS= -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann -lstdc++ `pkg-config gtkmm-2.4 --libs`
+CXXFLAGS=`pkg-config opencv --cflags`2 -I/usr/include/eigen3 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+LDFLAGS=`pkg-config opencv --libs`
 
 BLOBDETECTOR_SOURCES=../BlobDetector/detectBlobs.cc ../BlobDetector/runLengthEncode.cc ../BlobDetector/runSetToBlob.cc
 
 BLOBDETECTOR_OBJECTS=$(BLOBDETECTOR_SOURCES:.cc=.o)
 
 all: djsettest blobtest
+
+clean:
+	rm ${BLOBDETECTOR_OBJECTS}
+	rm blobtest
 
 djsettest: djsettest.cc ../DisjointSet/disjointset.hh
 	g++ djsettest.cc -o djsettest -O3 -std=c++0x

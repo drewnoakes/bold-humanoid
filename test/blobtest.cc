@@ -2,17 +2,21 @@
 
 #include <iostream>
 #include <Eigen/Eigenvalues>
-#include <gtkmm.h>
+#include <fstream>
+
+//#include <gtkmm.h>
 
 using namespace std;
 using namespace bold;
 using namespace Eigen;
 
+/*
 Gtk::Main* gtkKit;
       
 Gtk::Window* gtkWindow;
 
 Gtk::Scale* gtkHueScale;
+*/
 
 bool trackbarsChanged = true;
 
@@ -32,6 +36,16 @@ struct hsv
   int h;
   int s;
   int v;
+};
+
+struct hsvRange
+{
+  int h;
+  int hRange;
+  int s;
+  int sRange;
+  int v;
+  int vRange;
 };
 
 hsv bgr2hsv(bgr const& in)
@@ -103,8 +117,28 @@ void trackbarCallback(int pos, void* userData)
   trackbarsChanged = true;
 }
 
+hsvRange loadHSVRange(std::string const& file)
+{
+  ifstream in(file.c_str());
+  hsvRange range;
+  in >>
+    range.h >> range.hRange >>
+    range.s >> range.sRange >>
+    range.v >> range.vRange;
+
+  return range;
+}
+
 int main(int argc, char** argv)
 {
+
+  cv::VideoCapture cap(0);
+  if (!cap.isOpened())
+  {
+    cout << "Failed opening camera" << endl;
+    return -1;
+  }
+
   /*
   gtkKit = new Gtk::Main(0, 0);
 
@@ -130,28 +164,35 @@ int main(int argc, char** argv)
   cv::namedWindow("trackbars");
   cv::namedWindow("main");
 
+  // Load ranges;
+  hsvRange range = loadHSVRange("ranges.dat");
+
   // Add trackbars
-  int hue = 40;
-  cv::createTrackbar("hue", "trackbars", &hue, 180, &trackbarCallback);
-  int hrange = 10;
-  cv::createTrackbar("hue_range", "trackbars", &hrange, 90, &trackbarCallback);
-  int sat = 210;
-  cv::createTrackbar("sat", "trackbars", &sat, 255, &trackbarCallback);
-  int srange = 55;
-  cv::createTrackbar("sat_range", "trackbars", &srange, 128, &trackbarCallback);
-  int val = 190;
-  cv::createTrackbar("val", "trackbars", &val, 255, &trackbarCallback);
-  int vrange = 65;
-  cv::createTrackbar("val_range", "trackbars", &vrange, 128, &trackbarCallback);
-  
-  // Load image
+  cv::createTrackbar("hue", "trackbars", &range.h, 180, &trackbarCallback);
+  cv::createTrackbar("hue_range", "trackbars", &range.hRange, 90, &trackbarCallback);
+  cv::createTrackbar("sat", "trackbars", &range.s, 255, &trackbarCallback);
+  cv::createTrackbar("sat_range", "trackbars", &range.sRange, 128, &trackbarCallback);
+  cv::createTrackbar("val", "trackbars", &range.v, 255, &trackbarCallback);
+  cv::createTrackbar("val_range", "trackbars", &range.vRange, 128, &trackbarCallback);
+
+  string file = argv[1];
+  bool capture = file == "-";
+
   cv::Mat image;
-  image = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
-  
-  if(!image.data )                              // Check for invalid input
+  if (!capture)
   {
-    cout <<  "Could not open or find the image" << std::endl ;
-    return -1;
+    cout << "Reading image: " << file << endl;
+    image = cv::imread(file, CV_LOAD_IMAGE_COLOR);
+  
+    if(!image.data )                              // Check for invalid input
+    {
+      cout <<  "Could not open or find the image" << std::endl ;
+      return -1;
+    }
+  }
+  else
+  {
+    cap >> image;
   }
 
   // Big ass lookup table
@@ -163,12 +204,28 @@ int main(int argc, char** argv)
 
   cv::imshow("main", image);
 
+  bool shouldProcess = true;
+
   while (true)
   {
-    int c = cv::waitKey(30);
+    if (capture)
+    {
+      int c = cv::waitKey(1);
 
-    if (c == 'q')
+      if (c == 'q')
+
       break;
+      cap >> image;
+
+      shouldProcess = true;
+    }
+    else
+    {
+      int c = cv::waitKey(30);
+
+      if (c == 'q')
+	break;
+    }
 
     if (trackbarsChanged)
     {
@@ -176,12 +233,19 @@ int main(int argc, char** argv)
 
       double t1 = (double)cv::getTickCount();
       
-      makeLUT(bgr2lab, hue, hrange, sat, srange, val, vrange);
+      makeLUT(bgr2lab, range.h, range.hRange, range.s, range.sRange, range.v, range.vRange);
 
       double t2 = (double)cv::getTickCount();
 
-      cout << "Done! (" << (t2 - t1)  / cv::getTickFrequency() << "s)" << endl << "Labelling..." << endl;
+      cout << "Done! (" << (t2 - t1)  / cv::getTickFrequency() << "s)" << endl;
 
+      shouldProcess = true;
+      trackbarsChanged = false;
+    }
+
+    if (shouldProcess)
+    {
+      cout << "Labelling..." << endl;
       double t3 = (double)cv::getTickCount();
 
       for (unsigned y = 0; y < image.rows; ++y)
@@ -267,7 +331,8 @@ int main(int argc, char** argv)
       cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
       cv::imshow("labeled", labeled);
       cv::imshow("main", marked);
-      trackbarsChanged = false;
+      
+      shouldProcess = false;
     }
   }
 

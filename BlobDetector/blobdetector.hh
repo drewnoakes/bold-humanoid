@@ -11,6 +11,8 @@ namespace bold
    */
   struct Run
   {
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     Run(unsigned x, unsigned y)
       : start(x, y),
         end(x+1, y),
@@ -35,6 +37,8 @@ namespace bold
 
   struct Blob
   {
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     Eigen::Vector2i ul;      ///< Upper left pixel
     Eigen::Vector2i br;      ///< Bottom righ pixel
     unsigned area;           ///< Number of pixes in blob
