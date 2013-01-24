@@ -14,8 +14,8 @@ vector<set<Blob > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsig
     {
       float ratio = (float)a.length / (float)b.length;
       return
-        max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length &&
-      min(ratio, 1.0f/ratio) > 0.75;
+      max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length;// &&
+      //min(ratio, 1.0f/ratio) > 0.75;
     };
 
   // RunSets; one set of runSets for each label, each blob is a set of runs
@@ -25,6 +25,8 @@ vector<set<Blob > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsig
   for (unsigned label = 0; label < nLabels; ++label)
   {
     RunLengthCode& rlCode = rlCodes[label];
+
+    cout << "rl code: " << label << " - " << rlCode.size() << endl;
 
     DisjointSet<Run> rSet;
 

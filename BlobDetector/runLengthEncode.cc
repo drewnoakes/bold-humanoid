@@ -2,14 +2,16 @@
 
 vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& labeledImage, unsigned char nLabels)
 {
-  vector<RunLengthCode> rlCodes(nLabels);
+  vector<RunLengthCode> rlCodes;
   // Create a run length code for each label
-  for (unsigned char l = 0; l < nLabels; ++nLabels)
+  for (unsigned char l = 0; l < nLabels; ++l)
   {
-    rlCodes[l] = RunLengthCode(labeledImage.rows);
+    rlCodes.push_back(RunLengthCode());
     // a run length code is a vector of vectors of runs
     for (unsigned y = 0; y < labeledImage.rows; ++y)
-      rlCodes[l][y] = vector<Run>();
+      rlCodes[l].push_back(vector<Run>());
+
+    cout << "rlcs: " << l << " " << rlCodes[l].size() << endl;
   }
 
   Run curRun(0,0);
@@ -32,7 +34,8 @@ vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& lab
           // Finished run
           curRun.end = Vector2i(x, y);
           curRun.length = x - curRun.start.x();
-          rlCodes[curLabel - 1][y].push_back(curRun);
+	  if (curLabel <= nLabels)
+	    rlCodes[curLabel - 1][y].push_back(curRun);
         }
 
         // Check whether this is the start of a new run

@@ -36,7 +36,7 @@ namespace bold
   class LUTBuilder
   {
   public:
-    char* buildBGRFromHSVRanges(std::vector<hsvRange> const& ranges);
+    unsigned char* buildBGRFromHSVRanges(std::vector<hsvRange> const& ranges);
 
   private:
 
