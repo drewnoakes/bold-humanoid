@@ -1,0 +1,6 @@
+#include "agent.hh"
+
+#include <iostream>
+
+using namespace Robot;
+using namespace std;
