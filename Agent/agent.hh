@@ -40,11 +40,11 @@ namespace bold
         d_stepCurrent(0),
         d_stepTarget(0),
         d_stepChangeAmount(0.3),
-        d_stepMax(30.0),
+        d_stepMax(10.0),
         d_turnCurrent(0),
         d_turnTarget(0),
         d_turnChangeAmount(1.0),
-        d_turnMax(35.0)
+        d_turnMax(15.0)
     {}
 
     void run();
