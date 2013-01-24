@@ -2,7 +2,11 @@
 
 void Agent::run()
 {
-  init();
+  if (!init())
+  {
+    fprintf(stderr, "Unable to initialise. Exiting.\n");
+    return;
+  }
 
   while (true)
   {

@@ -1,6 +1,6 @@
 #include "agent.ih"
 
-void Agent::init()
+bool Agent::init()
 {
   cout << "[Agent::init] Start" << endl;
 
@@ -8,7 +8,7 @@ void Agent::init()
   if (!d_camera.isOpened())
   {
     cout << "[Agent::init] Failed to open camera!" << endl;
-    return;
+    return false;
   }
 
   cv::namedWindow("raw");
@@ -19,7 +19,7 @@ void Agent::init()
   if(MotionManager::GetInstance()->Initialize(&d_CM730) == false)
   {
     cout << "[Agent::init] Failed to initialize Motion Manager!" << endl;
-    return;
+    return false;
   }
 
   // Load walk parameters
@@ -49,11 +49,11 @@ void Agent::init()
   Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
   // Enable motion mnager
   MotionManager::GetInstance()->SetEnable(true);
-  
+
   // Turn on LED panel on back
   cout << "[Agent::init] Turning on LEDs" << endl;
   d_CM730.WriteByte(CM730::P_LED_PANNEL, 0x01|0x02|0x04, NULL);
-  
+
   // Load motion file
   Robot::Action::GetInstance()->LoadFile((char*)d_motionFile.c_str());
 
@@ -92,6 +92,36 @@ void Agent::init()
   while(Robot::Action::GetInstance()->IsRunning())
     usleep(8*1000);
 
+  cout << "[Agent::init] Init MotionManager" << endl;
+
+  MotionManager::GetInstance()->Reinitialize();
+  MotionManager::GetInstance()->SetEnable(true);
+
+  Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+
+//  Action::GetInstance()->Start(9);
+//  while(Action::GetInstance()->IsRunning() == true) usleep(8000);
+
+  Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
+  Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
+
+  MotionManager::GetInstance()->ResetGyroCalibration();
+  while(1)
+  {
+    if(MotionManager::GetInstance()->GetCalibrationStatus() == 1)
+    {
+      cout << "[Agent::init] Calibration complete" << endl;
+      break;
+    }
+    else if(MotionManager::GetInstance()->GetCalibrationStatus() == -1)
+    {
+      cout << "[Agent::init] Calibration failed" << endl;
+      MotionManager::GetInstance()->ResetGyroCalibration();
+    }
+    usleep(8000);
+  }
+
   cout << "[Agent::init] Done" << endl;
 
+  return true;
 }
