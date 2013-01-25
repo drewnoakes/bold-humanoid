@@ -42,6 +42,9 @@ void Agent::think()
     cv::waitKey(1);
   }
 
+  //
+  // Track ball position with head
+  //
   bool foundBall = false;
   Vector2f foundBallAtPx;
   for (Observation const& obs : observations)
@@ -54,27 +57,18 @@ void Agent::think()
   }
   if (foundBall)
   {
-//  NoBallCount = 0;
-    Vector2f centerPx = Vector2f(Camera::WIDTH/2, Camera::HEIGHT/2);
+    Vector2f centerPx = Vector2f(raw.cols/2, raw.rows/2);
     Vector2f offset = foundBallAtPx - centerPx;
-    offset *= -1; // Invert X-axis, Y-axis
-    offset.x() *= (Camera::VIEW_H_ANGLE / (double)Camera::WIDTH); // pixel per angle
-    offset.y() *= (Camera::VIEW_V_ANGLE / (double)Camera::HEIGHT); // pixel per angle
+    offset.x() *= (Camera::VIEW_H_ANGLE / (double)raw.cols); // pixel per angle
+    offset.y() *= (Camera::VIEW_V_ANGLE / (double)raw.rows); // pixel per angle
+//    std::cout << "Found ball at " << foundBallAtPx.x() << "," << foundBallAtPx.y() << " - "
+//              << "Corresponds to an offset of " << offset.x() << "," << offset.y() << std::endl;
     Head::GetInstance()->MoveTracking(Point2D(offset.x(), offset.y()));
   }
-  else
-  {
-//     if(NoBallCount < 15)
-//     {
-//       Head::GetInstance()->MoveTracking();
-//       NoBallCount++;
-//     }
-//     else
-//     {
-      Head::GetInstance()->InitTracking();
-//     }
-  }
 
+  //
+  // Control walking via keyboard
+  //
   if (inputAvailable())
   {
     char c;
