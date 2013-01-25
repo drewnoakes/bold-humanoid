@@ -1,5 +1,0 @@
-#include "agent.ih"
-
-void AGent::processImage(cv::Mat& image)
-{
-}
