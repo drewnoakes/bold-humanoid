@@ -2,8 +2,8 @@
 
 vector<Observation> Agent::processImage(cv::Mat& image)
 {
-  cout << "[Agent::processImage] Start" << endl;
-  cout << "[Agent::processImage] Image size: " << image.rows << "x" << image.cols << endl;
+//  cout << "[Agent::processImage] Start" << endl;
+//  cout << "[Agent::processImage] Image size: " << image.rows << "x" << image.cols << endl;
 
   // Label the image;
   // OPT: make data memeber
@@ -48,8 +48,8 @@ vector<Observation> Agent::processImage(cv::Mat& image)
   BlobDetector detector;
   vector<set<Blob> > blobs = detector.detectBlobs(labeled, 2, unionPreds);
 
-  cout << "[Agent::processImage] Blobs 0: " << blobs[0].size() << endl;
-  cout << "[Agent::processImage] Blobs 1: " << blobs[1].size() << endl;
+//  cout << "[Agent::processImage] Blobs 0: " << blobs[0].size() << endl;
+//  cout << "[Agent::processImage] Blobs 1: " << blobs[1].size() << endl;
 
   vector<Observation> observations;
 
