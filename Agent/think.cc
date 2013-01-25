@@ -42,6 +42,39 @@ void Agent::think()
     cv::waitKey(1);
   }
 
+  bool foundBall = false;
+  Vector2f foundBallAtPx;
+  for (Observation const& obs : observations)
+  {
+    if (obs.type == O_BALL)
+    {
+      foundBall = true;
+      foundBallAtPx = obs.pos;
+    }
+  }
+  if (foundBall)
+  {
+//  NoBallCount = 0;
+    Vector2f centerPx = Vector2f(Camera::WIDTH/2, Camera::HEIGHT/2);
+    Vector2f offset = foundBallAtPx - centerPx;
+    offset *= -1; // Invert X-axis, Y-axis
+    offset.x() *= (Camera::VIEW_H_ANGLE / (double)Camera::WIDTH); // pixel per angle
+    offset.y() *= (Camera::VIEW_V_ANGLE / (double)Camera::HEIGHT); // pixel per angle
+    Head::GetInstance()->MoveTracking(Point2D(offset.x(), offset.y()));
+  }
+  else
+  {
+//     if(NoBallCount < 15)
+//     {
+//       Head::GetInstance()->MoveTracking();
+//       NoBallCount++;
+//     }
+//     else
+//     {
+      Head::GetInstance()->InitTracking();
+//     }
+  }
+
   if (inputAvailable())
   {
     char c;
