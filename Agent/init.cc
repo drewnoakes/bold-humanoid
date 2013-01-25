@@ -89,7 +89,7 @@ bool Agent::init()
 
   // Get into starting position
   cout << "[Agent::init] Start position" << endl;
-  Robot::Action::GetInstance()->Start(15);
+  Robot::Action::GetInstance()->Start(9);
 
   // Wait until we are in starting position
   while(Robot::Action::GetInstance()->IsRunning())
