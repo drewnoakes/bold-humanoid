@@ -39,6 +39,7 @@ namespace bold
         d_motionFile(motionFile),
         d_camera(0),
         d_ambulator(),
+        d_minBallArea(8*8),
         d_showUI(showUI)
     {}
 
@@ -61,6 +62,8 @@ namespace bold
     BlobDetector d_blobDetector;
 
     Ambulator d_ambulator;
+
+    int d_minBallArea;
 
     bool d_showUI;
 

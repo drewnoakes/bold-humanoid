@@ -56,15 +56,16 @@ vector<Observation> Agent::processImage(cv::Mat& image)
   // Do we have a ball?
   if (blobs[1].size() > 0)
   {
-    Observation ballObs;
-    ballObs.type = O_BALL;
-
-    // Get the biggest top most ball blob. This is the first
+    // The first is the biggest, topmost ball blob
     Blob const& ball = *blobs[1].begin();
 
-    ballObs.pos = ball.mean;
-
-    observations.push_back(ballObs);
+    if (ball.area > d_minBallArea)
+    {
+      Observation ballObs;
+      ballObs.type = O_BALL;
+      ballObs.pos = ball.mean;
+      observations.push_back(ballObs);
+    }
   }
 
   // Do we have goal posts?
