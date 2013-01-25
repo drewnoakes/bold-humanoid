@@ -60,4 +60,6 @@ void Agent::think()
       d_ambulator.setTurnAngle(1);
     }
   }
+
+  d_ambulator.step();
 }
