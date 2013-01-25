@@ -11,7 +11,7 @@ vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& lab
     for (unsigned y = 0; y < labeledImage.rows; ++y)
       rlCodes[l].push_back(vector<Run>());
 
-    cout << "rlcs: " << l << " " << rlCodes[l].size() << endl;
+//    cout << "rlcs: " << l << " " << rlCodes[l].size() << endl;
   }
 
   Run curRun(0,0);

@@ -84,7 +84,7 @@ namespace bold
 
     void flattenEquivList()
     {
-      std::cout << "Flattening..." << std::endl;
+//      std::cout << "Flattening..." << std::endl;
       for (std::size_t idx = 0; idx < d_equivList.size(); ++idx)
         d_equivList[idx] = d_equivList[d_equivList[idx]];
     }

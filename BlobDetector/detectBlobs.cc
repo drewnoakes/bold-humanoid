@@ -16,7 +16,7 @@ vector<set<Blob > > BlobDetector::detectBlobs(cv::Mat const& labeledImage, unsig
   {
     RunLengthCode& rlCode = rlCodes[label];
 
-    cout << "rl code: " << label << " - " << rlCode.size() << endl;
+//    cout << "rl code: " << label << " - " << rlCode.size() << endl;
 
     DisjointSet<Run> rSet;
 
