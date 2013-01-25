@@ -12,7 +12,7 @@ using namespace Eigen;
 
 /*
 Gtk::Main* gtkKit;
-      
+
 Gtk::Window* gtkWindow;
 
 Gtk::Scale* gtkHueScale;
@@ -145,14 +145,14 @@ int main(int argc, char** argv)
   // Create GUI and gather widgets
   Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("blobtest.glade");
   gtk_builder_connect_signals(builder->gobj(), 0);
-  
+
   builder->get_widget("mainWindow", gtkWindow);
   builder->get_widget("hueScale", gtkHueScale);
   gtkHueScale->set_range(0,360);
 
   Gtk::Main::run(*gtkWindow);
   */
-  
+
   if (argc < 2)
   {
     cout << "Usage: " << argv[0] << " FILE" << endl;
@@ -183,7 +183,7 @@ int main(int argc, char** argv)
   {
     cout << "Reading image: " << file << endl;
     image = cv::imread(file, CV_LOAD_IMAGE_COLOR);
-  
+
     if(!image.data )                              // Check for invalid input
     {
       cout <<  "Could not open or find the image" << std::endl ;
@@ -198,7 +198,7 @@ int main(int argc, char** argv)
   // Big ass lookup table
   char *bgr2lab = new char[256*256*256];
   memset(bgr2lab, 0, 256*256*256);
-  
+
   // The labeled image
   cv::Mat labeled(image.rows, image.cols, CV_8UC1);
 
@@ -224,7 +224,7 @@ int main(int argc, char** argv)
       int c = cv::waitKey(30);
 
       if (c == 'q')
-	break;
+        break;
     }
 
     if (trackbarsChanged)
@@ -232,7 +232,7 @@ int main(int argc, char** argv)
       cout << "Building LUT..." << endl;
 
       double t1 = (double)cv::getTickCount();
-      
+
       makeLUT(bgr2lab, range.h, range.hRange, range.s, range.sRange, range.v, range.vRange);
 
       double t2 = (double)cv::getTickCount();
@@ -283,19 +283,19 @@ int main(int argc, char** argv)
       cv::Mat marked = image.clone();
       for (Blob const& b : blobs[0])
       {
-	// Only of decent size
+        // Only of decent size
         if ((b.br - b.ul).minCoeff() > 5 )
         {
-	  // Bounding rectangle
+          // Bounding rectangle
           cv::rectangle(marked,
                         cv::Rect(b.ul.x(), b.ul.y(),
                                  b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
                         cv::Scalar(255,255,0),
-			2);
-          
-	  // Determine orientation
+                        2);
+
+          // Determine orientation
           cout << "covar: " << endl << b.covar << endl;
-          
+
           auto solver = EigenSolver<Matrix2f>(b.covar.cast<float>());
           auto eigenVectors = solver.eigenvectors().real();
           auto eigenValues = solver.eigenvalues().real();
@@ -307,23 +307,23 @@ int main(int argc, char** argv)
                    cv::Point(b.mean.x(), b.mean.y()),
                    cv::Point(ev1.x(), ev1.y()),
                    cv::Scalar(0,255,0),
-		   2);
+                   2);
           cv::line(marked,
                    cv::Point(b.mean.x(), b.mean.y()),
                    cv::Point(ev2.x(), ev2.y()),
                    cv::Scalar(0,255,0),
-		   2);
-          
+                   2);
+
           cout << "ev: " << endl << solver.eigenvectors() << endl << "-" << endl << solver.eigenvalues() << endl;
 
-	  // Draw top-most run
-	  Run const& topRun = *b.runs.begin();
-	  cv::circle(marked,
-		     cv::Point((topRun.start.x() + topRun.end.x()) / 2,
-			       topRun.start.y()),
-		     5,
-		     cv::Scalar(255,0,0),
-		     2);
+          // Draw top-most run
+          Run const& topRun = *b.runs.begin();
+          cv::circle(marked,
+                     cv::Point((topRun.start.x() + topRun.end.x()) / 2,
+                               topRun.start.y()),
+                     5,
+                     cv::Scalar(255,0,0),
+                     2);
 
         }
       }
@@ -331,7 +331,7 @@ int main(int argc, char** argv)
       cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
       cv::imshow("labeled", labeled);
       cv::imshow("main", marked);
-      
+
       shouldProcess = false;
     }
   }

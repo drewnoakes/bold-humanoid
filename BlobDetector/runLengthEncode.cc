@@ -34,8 +34,8 @@ vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& lab
           // Finished run
           curRun.end = Vector2i(x, y);
           curRun.length = x - curRun.start.x();
-	  if (curLabel <= nLabels)
-	    rlCodes[curLabel - 1][y].push_back(curRun);
+          if (curLabel <= nLabels)
+            rlCodes[curLabel - 1][y].push_back(curRun);
         }
 
         // Check whether this is the start of a new run
