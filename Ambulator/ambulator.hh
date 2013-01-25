@@ -17,13 +17,13 @@ namespace bold
     LinearSmoother d_xAmp;
     LinearSmoother d_yAmp;
     LinearSmoother d_turnAmp;
+
   public:
     Ambulator()
       : d_xAmp(0, 0.3),
         d_yAmp(0, 0.3),
         d_turnAmp(0, 1)
-    {
-    }
+    {}
 
     void step()
     {
@@ -37,6 +37,7 @@ namespace bold
       {
         if (walk->IsRunning())
         {
+          std::cout << "Stopping Walker" << std::endl;
           walk->Stop();
         }
       }
@@ -48,12 +49,17 @@ namespace bold
 
         if (!walk->IsRunning())
         {
+          std::cout << "Starting Walker" << std::endl;
           walk->Start();
           walk->m_Joint.SetEnableBodyWithoutHead(true, true);
         }
       }
     }
 
+    /**
+     * Cause all motion to come to a halt. The walk will be stopped using
+     * smoothing.
+     */
     void stop()
     {
       d_xAmp.setTarget(0);
@@ -61,15 +67,24 @@ namespace bold
       d_turnAmp.setTarget(0);
     }
 
-    void setMoveDir(Eigen::Vector2d moveDir)
+    /**
+     * Set the direction of motion, where positive X is in the forwards
+     * direction, and positive Y is to the right. The length of the vector
+     * determines the velocity of motion (unspecfied units).
+     */
+    void setMoveDir(Eigen::Vector2d const& moveDir)
     {
       d_xAmp.setTarget(moveDir.x());
       d_yAmp.setTarget(moveDir.y());
     }
 
-    void setTurnAngle(double turnAngle)
+    /**
+     * Set the rate of turning, where positive values turn right (clockwise)
+     * and negative values turn left (counter-clockwise) (unspecfied units).
+     */
+    void setTurnAngle(double turnSpeed)
     {
-      d_turnAmp.setTarget(turnAngle);
+      d_turnAmp.setTarget(turnSpeed);
     }
   };
 }
