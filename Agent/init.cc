@@ -97,7 +97,7 @@ bool Agent::init()
   MotionManager::GetInstance()->Reinitialize();
   MotionManager::GetInstance()->SetEnable(true);
 
-  Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+  Robot::Action::GetInstance()->m_Joint.SetEnableBody(true, true);
 
 //  Action::GetInstance()->Start(9);
 //  while(Action::GetInstance()->IsRunning() == true) usleep(8000);

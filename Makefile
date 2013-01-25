@@ -15,7 +15,7 @@ Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc \
 ${VISIONDIR}/BlobDetector/detectBlobs.cc ${VISIONDIR}/BlobDetector/runLengthEncode.cc ${VISIONDIR}/BlobDetector/runSetToBlob.cc \
 ${VISIONDIR}/LUTBuilder/bgr2hsv.cc ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
 
-HEADERS=Agent/agent.hh Agent/agent.ih ${VISIONDIR}/BlobDetector/blobdetector.hh ${VISIONDIR}/LUTBuilder/lutbuilder.hh
+HEADERS=Agent/agent.hh Agent/agent.ih Ambulator/ambulator.hh ${VISIONDIR}/BlobDetector/blobdetector.hh ${VISIONDIR}/LUTBuilder/lutbuilder.hh
 
 OBJECTS=${SOURCES:.cc=.o}
 

@@ -6,9 +6,9 @@
 #include <opencv.hpp>
 
 #include <BlobDetector/blobdetector.hh>
-#include <Ambulator/ambulator.hh>
+//#include <Ambulator/ambulator.hh>
 //#include "../vision/BlobDetector/blobdetector.hh"
-//#include "../Ambulator/ambulator.hh"
+#include "../Ambulator/ambulator.hh"
 
 namespace bold
 {
