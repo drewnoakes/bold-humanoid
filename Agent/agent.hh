@@ -6,8 +6,6 @@
 #include <opencv.hpp>
 
 #include <BlobDetector/blobdetector.hh>
-//#include <Ambulator/ambulator.hh>
-//#include "../vision/BlobDetector/blobdetector.hh"
 #include "../Ambulator/ambulator.hh"
 
 namespace bold
@@ -32,17 +30,19 @@ namespace bold
   {
   public:
     Agent(std::string const& U2D_dev,
-    std::string const& iniFile,
-    std::string const& motionFile)
+          std::string const& iniFile,
+          std::string const& motionFile,
+          bool const& showUI)
       : d_linuxCM730(U2D_dev.c_str()),
         d_CM730(&d_linuxCM730),
         d_ini(iniFile),
         d_motionFile(motionFile),
         d_camera(0),
-        d_ambulator()
+        d_ambulator(),
+        d_showUI(showUI)
     {}
 
-    void run();
+    int run();
 
   private:
     Robot::LinuxCM730 d_linuxCM730;
@@ -61,6 +61,8 @@ namespace bold
     BlobDetector d_blobDetector;
 
     Ambulator d_ambulator;
+
+    bool d_showUI;
 
     bool init();
 

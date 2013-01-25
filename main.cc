@@ -6,9 +6,26 @@
 
 using namespace bold;
 
-int main()
+int main(int argc, char **argv)
 {
-  Agent agent(U2D_DEV_NAME0, "config.ini", "/darwin/Data/motion_4096.bin");
+  bool showUI = false;
 
-  agent.run();
+  //
+  // Process command line arguments
+  //
+  std::vector<std::string> args(argv + 1, argv + argc);
+  for (std::string arg : args) {
+      if (arg == "-h" || arg == "--help") {
+          std::cout << "Options:" << std::endl;
+          std::cout << "\t-x\tshow graphical UI using X (or --gui)" << std::endl;
+          std::cout << "\t-h\tshow these options (or --help)" << std::endl;
+          return 0;
+      } else if (arg == "-x" || arg == "--gui") {
+          showUI = true;
+      }
+  }
+
+  Agent agent(U2D_DEV_NAME0, "config.ini", "/darwin/Data/motion_4096.bin", showUI);
+
+  return agent.run();
 }

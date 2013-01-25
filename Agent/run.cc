@@ -1,15 +1,17 @@
 #include "agent.ih"
 
-void Agent::run()
+int Agent::run()
 {
   if (!init())
   {
     fprintf(stderr, "Unable to initialise. Exiting.\n");
-    return;
+    return 1;
   }
 
   while (true)
   {
     think();
   }
+
+  return 0;
 }

@@ -11,8 +11,11 @@ bool Agent::init()
     return false;
   }
 
-  cv::namedWindow("raw");
-  cv::namedWindow("labeled");
+  if (d_showUI)
+  {
+    cv::namedWindow("raw");
+    cv::namedWindow("labeled");
+  }
 
   // Initialize motion manager
   cout << "[Agent::init] Initialize motion manager" << endl;

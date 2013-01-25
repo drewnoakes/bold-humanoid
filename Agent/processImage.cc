@@ -17,7 +17,7 @@ vector<Observation> Agent::processImage(cv::Mat& image)
     {
       unsigned char l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
       *labeledpix = l;
-      
+
       ++origpix;
       ++origpix;
       ++origpix;
@@ -33,7 +33,7 @@ vector<Observation> Agent::processImage(cv::Mat& image)
       max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length;
     };
 
-  
+
   auto goalUnionPred =
     [] (Run const& a, Run const& b)
     {
@@ -47,7 +47,7 @@ vector<Observation> Agent::processImage(cv::Mat& image)
 
   BlobDetector detector;
   vector<set<Blob> > blobs = detector.detectBlobs(labeled, 2, unionPreds);
-  
+
   cout << "[Agent::processImage] Blobs 0: " << blobs[0].size() << endl;
   cout << "[Agent::processImage] Blobs 1: " << blobs[1].size() << endl;
 
@@ -66,13 +66,13 @@ vector<Observation> Agent::processImage(cv::Mat& image)
 
     observations.push_back(ballObs);
   }
-    
+
   // Do we have goal posts?
   for (Blob const& b : blobs[0])
   {
     Vector2i wh = b.br - b.ul;
     if (wh.minCoeff() > 5  &&  // ignore small blobs
-	wh.y() > wh.x())       // Higher than it is lower
+        wh.y() > wh.x())       // Higher than it is lower
     {
       // Take center of top most run. This is the first
       Observation postObs;
@@ -82,25 +82,26 @@ vector<Observation> Agent::processImage(cv::Mat& image)
 
       observations.push_back(postObs);
     }
-
   }
-  
-  
-  for(set<Blob>& blobSet : blobs)
+
+  for (set<Blob>& blobSet : blobs)
   {
     for (Blob const& b : blobSet)
     {
-      if ((b.br - b.ul).minCoeff() > 5 )
-	cv::rectangle(image,
-		      cv::Rect(b.ul.x(), b.ul.y(),
-			       b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
-		      cv::Scalar(255,0,0),
-		      2);
+      if ((b.br - b.ul).minCoeff() > 5)
+        cv::rectangle(image,
+                      cv::Rect(b.ul.x(), b.ul.y(),
+                               b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
+                      cv::Scalar(255,0,0),
+                      2);
     }
   }
 
-  cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
-  cv::imshow("labeled", labeled);
+  if (d_showUI)
+  {
+    cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
+    cv::imshow("labeled", labeled);
+  }
 
   return observations;
 }
