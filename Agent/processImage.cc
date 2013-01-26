@@ -15,7 +15,8 @@ vector<Observation> Agent::processImage(cv::Mat& image)
     unsigned char *labeledpix = labeled.ptr<unsigned char>(y);
     for (unsigned x = 0; x < image.cols; ++x)
     {
-      unsigned char l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
+//      unsigned char l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
+      unsigned char l = d_LUT[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
       *labeledpix = l;
 
       ++origpix;

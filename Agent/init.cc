@@ -101,7 +101,7 @@ bool Agent::init()
   ballRange.vRange = 95;
   ranges.push_back(ballRange);
 
-  d_LUT = lutBuilder.buildBGRFromHSVRanges(ranges);
+  d_LUT = lutBuilder.buildBGR18FromHSVRanges(ranges);
 
   cout << "[Agent::init] Done" << endl;
 
