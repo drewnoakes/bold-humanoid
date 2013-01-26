@@ -7,6 +7,7 @@
 
 #include <BlobDetector/blobdetector.hh>
 #include "../Ambulator/ambulator.hh"
+#include "../Debugger/debugger.hh"
 
 namespace bold
 {
@@ -38,6 +39,7 @@ namespace bold
         d_ini(iniFile),
         d_motionFile(motionFile),
         d_camera(0),
+        d_debugger(),
         d_ambulator(),
         d_minBallArea(8*8),
         d_showUI(showUI)
@@ -56,6 +58,8 @@ namespace bold
     std::string d_motionFile;
 
     cv::VideoCapture d_camera;
+
+    Debugger d_debugger;
 
     unsigned char* d_LUT;
 

@@ -74,10 +74,6 @@ bool Agent::init()
     usleep(8000);
   }
 
-  // Turn on LED panel on back
-  cout << "[Agent::init] Turning on LEDs" << endl;
-  d_CM730.WriteByte(CM730::P_LED_PANNEL, 0x01|0x02|0x04, NULL);
-
   // Build LUT
   cout << "[Agent::init] Building LUT" << endl;
   LUTBuilder lutBuilder;

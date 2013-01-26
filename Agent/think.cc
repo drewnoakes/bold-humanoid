@@ -57,7 +57,6 @@ void Agent::think()
   }
   if (foundBall)
   {
-    d_CM730.WriteByte(CM730::P_LED_PANNEL, 0x01, NULL);
     Vector2f centerPx = Vector2f(raw.cols/2, raw.rows/2);
     Vector2f offset = foundBallAtPx - centerPx;
     offset.x() *= (Camera::VIEW_H_ANGLE / (double)raw.cols); // pixel per angle
@@ -66,10 +65,7 @@ void Agent::think()
 //              << "Corresponds to an offset of " << offset.x() << "," << offset.y() << std::endl;
     Head::GetInstance()->MoveTracking(Point2D(offset.x(), offset.y()));
   }
-  else
-  {
-    d_CM730.WriteByte(CM730::P_LED_PANNEL, 0x0, NULL);
-  }
+  d_debugger.setIsBallObserved(d_CM730, foundBall);
 
   //
   // Control walking via keyboard
