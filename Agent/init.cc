@@ -17,6 +17,8 @@ bool Agent::init()
     cv::namedWindow("labeled");
   }
 
+  d_debugger.update(d_CM730);
+
   //
   // Motion manager
   //

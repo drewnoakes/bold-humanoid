@@ -12,6 +12,13 @@ bool inputAvailable()
   return (FD_ISSET(0, &fds));
 }
 
+static unsigned long long getMicroSeconds()
+{
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  return now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
+}
+
 void Agent::think()
 {
   cv::Mat raw;
@@ -19,7 +26,9 @@ void Agent::think()
 //  cout << "[Agent::think] Capture image" << endl;
   d_camera >> raw;
 
+  auto t = Debugger::getTimestamp();
   vector<Observation> observations = processImage(raw);
+  d_debugger.timeImageProcessing(t);
 
   if (d_showUI)
   {
@@ -65,7 +74,7 @@ void Agent::think()
 //              << "Corresponds to an offset of " << offset.x() << "," << offset.y() << std::endl;
     Head::GetInstance()->MoveTracking(Point2D(offset.x(), offset.y()));
   }
-  d_debugger.setIsBallObserved(d_CM730, foundBall);
+  d_debugger.setIsBallObserved(foundBall);
 
   //
   // Control walking via keyboard
@@ -90,4 +99,6 @@ void Agent::think()
   }
 
   d_ambulator.step();
+
+  d_debugger.update(d_CM730);
 }
