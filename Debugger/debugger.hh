@@ -1,8 +1,9 @@
 #ifndef BOLD_DEBUGGER_HH
 #define BOLD_DEBUGGER_HH
 
-#define LED_RED  0x01;
-#define LED_BLUE 0x02;
+#define LED_RED   0x01;
+#define LED_BLUE  0x02;
+#define LED_GREEN 0x04;
 
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>

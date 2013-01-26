@@ -38,10 +38,13 @@ void Debugger::setIsBallObserved(bool isBallObserved)
 void Debugger::update(Robot::CM730& cm730)
 {
   int value = 0;
+
   if (d_isBallObserved)
     value |= LED_RED;
+
   if (d_isImageProcessingSlow)
     value |= LED_BLUE;
+
   if (value != d_lastLEDValue)
   {
     cm730.WriteByte(Robot::CM730::P_LED_PANNEL, value, NULL);
