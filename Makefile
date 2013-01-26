@@ -11,7 +11,7 @@ TARGET=main
 
 SOURCES=\
 main.cc \
-Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc \
+Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc Debugger/debugger.cc \
 ${VISIONDIR}/BlobDetector/detectBlobs.cc ${VISIONDIR}/BlobDetector/runLengthEncode.cc ${VISIONDIR}/BlobDetector/runSetToBlob.cc \
 ${VISIONDIR}/LUTBuilder/bgr2hsv.cc ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
 
