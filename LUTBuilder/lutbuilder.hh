@@ -10,19 +10,19 @@ namespace bold
     bgr(int _b, int _g, int _r)
       : b(_b), g(_g), r(_r)
     {}
-    
+
     unsigned char b;
     unsigned char g;
     unsigned char r;
   };
-  
+
   struct hsv
   {
     int h;
     int s;
     int v;
   };
-  
+
   struct hsvRange
   {
     int h;
@@ -32,11 +32,12 @@ namespace bold
     int v;
     int vRange;
   };
-  
+
   class LUTBuilder
   {
   public:
-    unsigned char* buildBGRFromHSVRanges(std::vector<hsvRange> const& ranges);
+    unsigned char* buildBGR24FromHSVRanges(std::vector<hsvRange> const& ranges);
+    unsigned char* buildBGR18FromHSVRanges(std::vector<hsvRange> const& ranges);
 
   private:
 
