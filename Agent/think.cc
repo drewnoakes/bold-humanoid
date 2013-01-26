@@ -12,13 +12,6 @@ bool inputAvailable()
   return (FD_ISSET(0, &fds));
 }
 
-static unsigned long long getMicroSeconds()
-{
-  struct timeval now;
-  gettimeofday(&now, NULL);
-  return now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
-}
-
 void Agent::think()
 {
   cv::Mat raw;
