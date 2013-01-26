@@ -17,9 +17,11 @@ void Agent::think()
   cv::Mat raw;
 
 //  cout << "[Agent::think] Capture image" << endl;
-  d_camera >> raw;
-
   auto t = Debugger::getTimestamp();
+  d_camera >> raw;
+  Debugger::printTime(t, "capture image");
+
+  t = Debugger::getTimestamp();
   vector<Observation> observations = processImage(raw);
   d_debugger.timeImageProcessing(t);
 

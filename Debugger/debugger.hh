@@ -32,6 +32,8 @@ namespace bold
     {}
 
     static timestamp_t getTimestamp();
+    
+    static void printTime(timestamp_t startedAt, std::string const& description);
 
     void timeImageProcessing(timestamp_t startedAt);
 

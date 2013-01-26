@@ -30,6 +30,11 @@ void Debugger::timeImageProcessing(timestamp_t startedAt)
   d_isImageProcessingSlow = isOverThreshold;
 }
 
+void Debugger::printTime(timestamp_t startedAt, std::string const& description)
+{
+  double millis = getSeconds(startedAt) * 1000.0;
+  fprintf(stdout, "%s in %.1fms\n", description.c_str(), millis);
+}
 void Debugger::setIsBallObserved(bool isBallObserved)
 {
   d_isBallObserved = isBallObserved;
