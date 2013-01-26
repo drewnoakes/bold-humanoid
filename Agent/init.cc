@@ -17,41 +17,64 @@ bool Agent::init()
     cv::namedWindow("labeled");
   }
 
-  // Initialize motion manager
-  cout << "[Agent::init] Initialize motion manager" << endl;
+  //
+  // Motion manager
+  //
+  cout << "[Agent::init] Initialising motion manager" << endl;
   if(MotionManager::GetInstance()->Initialize(&d_CM730) == false)
   {
     cout << "[Agent::init] Failed to initialize Motion Manager!" << endl;
     return false;
   }
 
-  // Load walk parameters
-  cout << "[Agent::init] Load walk parameters" << endl;
+  cout << "[Agent::init] Loading walk parameters" << endl;
   Walking::GetInstance()->LoadINISettings(&d_ini);
 
-  // Add motion modules
-  cout << "[Agent::init] Add motion modules" << endl;
-  // Playing action scripts
+  cout << "[Agent::init] Adding motion modules" << endl;
   MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Action::GetInstance());
-  // Moving the head
   MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Head::GetInstance());
-  // Walking
   MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Walking::GetInstance());
 
   // Load motion manager settings
-  cout << "[Agent::init] Load motion manager settings" << endl;
+  cout << "[Agent::init] Loading motion manager settings" << endl;
   MotionManager::GetInstance()->LoadINISettings(&d_ini);
 
   // Setup and start motion timer
-  cout << "[Agent::init] Setup and start motion timer" << endl;
+  cout << "[Agent::init] Setup and starting motion timer" << endl;
   d_motionTimer = new LinuxMotionTimer(MotionManager::GetInstance());
   d_motionTimer->Start();
 
-  // Turn on body
-  cout << "[Agent::init] Enable body and motion manager" << endl;
-  Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
-  // Enable motion mnager
+  // Get into starting position
+  cout << "[Agent::init] Adopting standing pose" << endl;
+  Robot::Action::GetInstance()->Start(9);
+
+  // Wait until we are in starting position
+  while(Robot::Action::GetInstance()->IsRunning())
+    usleep(8*1000);
+
+  Robot::Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+  Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
+  Robot::Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
+
+//   MotionManager::GetInstance()->Reinitialize();
   MotionManager::GetInstance()->SetEnable(true);
+
+  cout << "[Agent::init] Calibrating gyro & acc..." << endl;
+  MotionManager::GetInstance()->ResetGyroCalibration();
+  while(1)
+  {
+    if(MotionManager::GetInstance()->GetCalibrationStatus() == 1)
+    {
+      cout << "[Agent::init] Calibration complete" << endl;
+      break;
+    }
+    else if(MotionManager::GetInstance()->GetCalibrationStatus() == -1)
+    {
+      cout << "[Agent::init] Calibration failed" << endl;
+      MotionManager::GetInstance()->ResetGyroCalibration();
+    }
+    usleep(8000);
+  }
 
   // Turn on LED panel on back
   cout << "[Agent::init] Turning on LEDs" << endl;
@@ -86,43 +109,6 @@ bool Agent::init()
   ranges.push_back(ballRange);
 
   d_LUT = lutBuilder.buildBGRFromHSVRanges(ranges);
-
-  // Get into starting position
-  cout << "[Agent::init] Start position" << endl;
-  Robot::Action::GetInstance()->Start(9);
-
-  // Wait until we are in starting position
-  while(Robot::Action::GetInstance()->IsRunning())
-    usleep(8*1000);
-
-  cout << "[Agent::init] Init MotionManager" << endl;
-
-  MotionManager::GetInstance()->Reinitialize();
-  MotionManager::GetInstance()->SetEnable(true);
-
-  Robot::Action::GetInstance()->m_Joint.SetEnableBody(true, true);
-
-//  Action::GetInstance()->Start(9);
-//  while(Action::GetInstance()->IsRunning() == true) usleep(8000);
-
-  Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
-  Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
-
-  MotionManager::GetInstance()->ResetGyroCalibration();
-  while(1)
-  {
-    if(MotionManager::GetInstance()->GetCalibrationStatus() == 1)
-    {
-      cout << "[Agent::init] Calibration complete" << endl;
-      break;
-    }
-    else if(MotionManager::GetInstance()->GetCalibrationStatus() == -1)
-    {
-      cout << "[Agent::init] Calibration failed" << endl;
-      MotionManager::GetInstance()->ResetGyroCalibration();
-    }
-    usleep(8000);
-  }
 
   cout << "[Agent::init] Done" << endl;
 
