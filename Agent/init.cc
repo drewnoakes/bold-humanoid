@@ -35,29 +35,27 @@ bool Agent::init()
   MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Head::GetInstance());
   MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Walking::GetInstance());
 
-  // Load motion manager settings
   cout << "[Agent::init] Loading motion manager settings" << endl;
   MotionManager::GetInstance()->LoadINISettings(&d_ini);
 
-  // Setup and start motion timer
   cout << "[Agent::init] Setup and starting motion timer" << endl;
   d_motionTimer = new LinuxMotionTimer(MotionManager::GetInstance());
   d_motionTimer->Start();
 
-  // Get into starting position
-  cout << "[Agent::init] Adopting standing pose" << endl;
-  Robot::Action::GetInstance()->Start(9);
-
-  // Wait until we are in starting position
-  while(Robot::Action::GetInstance()->IsRunning())
-    usleep(8*1000);
-
+  cout << "[Agent::init] Registering motion modules" << endl;
   Robot::Action::GetInstance()->m_Joint.SetEnableBody(true, true);
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   Robot::Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
 
-//   MotionManager::GetInstance()->Reinitialize();
+  cout << "[Agent::init] Enabling motion manager" << endl;
   MotionManager::GetInstance()->SetEnable(true);
+
+  cout << "[Agent::init] Loading actions from motion file: " << d_motionFile.c_str() << endl;
+  Robot::Action::GetInstance()->LoadFile((char*)d_motionFile.c_str());
+
+  cout << "[Agent::init] Adopting standing pose" << endl;
+  while(Robot::Action::GetInstance()->Start(15) == false) usleep(8000);
+  while(Robot::Action::GetInstance()->IsRunning()) usleep(8*1000);
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   MotionManager::GetInstance()->ResetGyroCalibration();
@@ -79,9 +77,6 @@ bool Agent::init()
   // Turn on LED panel on back
   cout << "[Agent::init] Turning on LEDs" << endl;
   d_CM730.WriteByte(CM730::P_LED_PANNEL, 0x01|0x02|0x04, NULL);
-
-  // Load motion file
-  Robot::Action::GetInstance()->LoadFile((char*)d_motionFile.c_str());
 
   // Build LUT
   cout << "[Agent::init] Building LUT" << endl;
