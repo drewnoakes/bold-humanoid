@@ -141,9 +141,13 @@ void Agent::think()
           // Action 12 -> Right kick
           // Action 13 -> Left kick
           case 6:
+            cout << "Left kick" << endl;
+            Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
             Robot::Action::GetInstance()->Start(13);
             break;
           case 7:
+            cout << "Right kick" << endl;
+            Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
             Robot::Action::GetInstance()->Start(12);
             break;
           default:
