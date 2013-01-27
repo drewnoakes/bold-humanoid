@@ -19,17 +19,38 @@ Agent::Agent(std::string const& U2D_dev,
   if (useJoystick)
     d_joystick = new Joystick();
 
-  int width = 320;
-  int height = 240;
-  cout << "Setting camera frame size to " << width << " x " << height << endl;
-  d_camera.set(CV_CAP_PROP_FRAME_WIDTH, width);
-  d_camera.set(CV_CAP_PROP_FRAME_HEIGHT, height);
+  // Example values
+  //
+  // gain:       1
+  // brightness: 0.501961
+  // contrast:   0.12549
+  // saturation: 0.109804
 
-  cout << "Current gain:       " << d_camera.get(CV_CAP_PROP_GAIN) << endl;
-  cout << "Current brightness: " << d_camera.get(CV_CAP_PROP_BRIGHTNESS) << endl;
-  cout << "Current contrast:   " << d_camera.get(CV_CAP_PROP_CONTRAST) << endl;
-  cout << "Current saturation: " << d_camera.get(CV_CAP_PROP_SATURATION) << endl;
-//cout << "Current hue:        " << d_camera.get(CV_CAP_PROP_HUE) << endl;
-//cout << "Current exposure:   " << d_camera.get(CV_CAP_PROP_EXPOSURE) << endl;
+  double gain       = d_ini.getd("Camera", "Gain",       d_camera.get(CV_CAP_PROP_GAIN));
+  double brightness = d_ini.getd("Camera", "Brightness", d_camera.get(CV_CAP_PROP_BRIGHTNESS));
+  double contrast   = d_ini.getd("Camera", "Contrast",   d_camera.get(CV_CAP_PROP_CONTRAST));
+  double saturation = d_ini.getd("Camera", "Saturation", d_camera.get(CV_CAP_PROP_SATURATION));
+//double hue        = d_ini.getd("Camera", "Hue",        d_camera.get(CV_CAP_PROP_HUE));
+//double exposure   = d_ini.getd("Camera", "Exposure",   d_camera.get(CV_CAP_PROP_EXPOSURE));
+
+  int width  = d_ini.geti("Camera", "Width", 320);
+  int height = d_ini.geti("Camera", "Width", 240);
+
+  cout << "[Agent::Agent] Using camera frame size: " << width << " x " << height << endl;
+  cout << "[Agent::Agent] Using camera gain:       " << gain << endl;
+  cout << "[Agent::Agent] Using camera brightness: " << brightness << endl;
+  cout << "[Agent::Agent] Using camera contrast:   " << contrast << endl;
+  cout << "[Agent::Agent] Using camera saturation: " << saturation << endl;
+//cout << "[Agent::Agent] Using camera hue:        " << hue << endl;
+//cout << "[Agent::Agent] Using camera exposure:   " << exposure << endl;
+
+  d_camera.set(CV_CAP_PROP_FRAME_WIDTH,  width);
+  d_camera.set(CV_CAP_PROP_FRAME_HEIGHT, height);
+  d_camera.set(CV_CAP_PROP_GAIN,         gain);
+  d_camera.set(CV_CAP_PROP_BRIGHTNESS,   brightness);
+  d_camera.set(CV_CAP_PROP_CONTRAST,     contrast);
+  d_camera.set(CV_CAP_PROP_SATURATION,   saturation);
+//d_camera.set(CV_CAP_PROP_HUE,          hue);
+//d_camera.set(CV_CAP_PROP_EXPOSURE,     exposure);
 }
 
