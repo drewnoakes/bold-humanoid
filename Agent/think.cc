@@ -134,7 +134,23 @@ void Agent::think()
       }
       else if (event.isButton())
       {
-        printf("Button %u\n", event.number);
+        switch (event.number)
+        {
+          // Action 10 -> Forward get up
+          // Action 11 -> Backward get up
+          // Action 12 -> Right kick
+          // Action 13 -> Left kick
+          case 6:
+            Robot::Action::GetInstance()->Start(13);
+            break;
+          case 7:
+            Robot::Action::GetInstance()->Start(12);
+            break;
+          default:
+            if (event.value == 1)
+              printf("Button %u\n", event.number);
+            break;
+        }
       }
     }
   }
