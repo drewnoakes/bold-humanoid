@@ -19,6 +19,7 @@ int main(int argc, char **argv)
     if (arg == "-h" || arg == "--help") {
       std::cout << "Options:" << std::endl;
       std::cout << "\t-x\tshow graphical UI using X (or --gui)" << std::endl;
+      std::cout << "\t-j\tallow control via joystick (or --joystick)" << std::endl;
       std::cout << "\t-h\tshow these options (or --help)" << std::endl;
       return 0;
     } else if (arg == "-x" || arg == "--gui") {
