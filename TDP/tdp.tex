@@ -1,0 +1,83 @@
+\documentclass{llncs}
+
+\title{Bold Hearts Team Description\\RoboCup 2013 Kid Size}
+\author{Sander van Dijk \and Drew Noakes \and Daniel Polani}
+
+\institute{Adaptive Systems Research Group\\School of Computer Science\\University of Hertfordshire, UK}
+
+\begin{document}
+
+\maketitle
+
+%
+%         - includes a statement committing to participate in the
+%           RoboCup 2013 Humanoid League competition,
+%         - includes a statement committing to making a person
+%           with sufficient knowledge of the rules available as referee
+%           during the competition,
+%         - fully describes the scientific aspects of your humanoid robot
+%           system and your research interests,
+%         - includes a summary of previous relevant achievements in
+%           research and development as well as publications,
+%         - mentions prior performance in RoboCup competitions
+%         - points out enhancements of the robots' hardware or software
+%           compared to the previous year
+%         - states explicitly whether software from other teams is used
+%           and if yes, which parts are used and what the team's own
+%           contributions are
+%
+
+\begin{abstract}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+Statement committing to participate. Introduce the Bold Hearts;
+summarize the history and achievements; describe members as varying
+from undergrad to doctorate students to industry and staff; give
+introduction on main goals and research interests of the team.
+Statement committing supplying a referee.
+
+\section{Simulation \& Hardware, Joint Opportunities}
+\label{sec:simul-amp-hardw}
+
+Make an introductory case of how a cross-league effort can benefit
+all: we bring high level strategy to hardware league, and can feed
+back realism into simulation league (mention team members have been
+active in several levels of 3DSSL organization?). Note to our
+knowledge we are the first team coming from simulation league (some
+are in SPL though).
+
+\section{Research \& Development}
+\label{sec:research}
+
+\subsection{Shared Framework}
+\label{sec:framework}
+
+Mention we use libbats: mature but actively developed open source base
+framework in 3DSSL; used by several successful teams; Bold Hearts
+currently main maintainers; in the process of porting to hardware, to
+supply common medium level control interface (skill set framework);
+challenges (and describe how we solve it): vision (well on way to have
+real time high resolution solution), noise + ... observations (libbats
+natively allows for different localization solutions), different +
+uncertain model (again, libbats allows for this).
+
+\subsection{Bipedal Locomotion}
+\label{sec:bipedal-locomotion}
+
+Describe inverse kinematic gait control; describe optimization in
+simulation; describe energy limiting optimization + publication
+\cite{lattarulo_application_2011}.
+
+\section{Achievements}
+\label{sec:achievements}
+
+List awards
+
+\bibliographystyle{plain}
+\bibliography{tdp}
+
+\end{document}
+
