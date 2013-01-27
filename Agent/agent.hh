@@ -35,21 +35,7 @@ namespace bold
           std::string const& iniFile,
           std::string const& motionFile,
           bool const& showUI,
-          bool const& useJoystick)
-      : d_linuxCM730(U2D_dev.c_str()),
-        d_CM730(&d_linuxCM730),
-        d_ini(iniFile),
-        d_motionFile(motionFile),
-        d_camera(0),
-        d_debugger(),
-        d_ambulator(),
-        d_minBallArea(8*8),
-        d_showUI(showUI),
-        d_joystick(nullptr)
-    {
-      if (useJoystick)
-        d_joystick = new Joystick();
-    }
+          bool const& useJoystick);
 
     int run();
 
