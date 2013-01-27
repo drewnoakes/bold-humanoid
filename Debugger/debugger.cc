@@ -22,18 +22,24 @@ Debugger::timestamp_t Debugger::getTimestamp()
   return now.tv_usec + (Debugger::timestamp_t)now.tv_sec * 1000000;
 }
 
+void Debugger::timeImageCapture(timestamp_t startedAt)
+{
+  printTime(startedAt, "Captured %4.2f ");
+}
+
 void Debugger::timeImageProcessing(timestamp_t startedAt)
 {
   double millis = getSeconds(startedAt) * 1000.0;
   bool isOverThreshold = millis > d_imageProcessingThresholdMillis;
-  fprintf(isOverThreshold ? stderr : stdout, "Image processed in %.1fms\n", millis);
   d_isImageProcessingSlow = isOverThreshold;
+
+  printTime(startedAt, "Processed %4.2f\n");
 }
 
-void Debugger::printTime(timestamp_t startedAt, std::string const& description)
+void Debugger::printTime(timestamp_t startedAt, std::string const& format)
 {
   double millis = getSeconds(startedAt) * 1000.0;
-  fprintf(stdout, "%s in %.1fms\n", description.c_str(), millis);
+  fprintf(stdout, format.c_str(), millis);
 }
 void Debugger::setIsBallObserved(bool isBallObserved)
 {

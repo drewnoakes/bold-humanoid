@@ -14,13 +14,24 @@ bool inputAvailable()
 
 void Agent::think()
 {
-  cv::Mat raw;
+  //
+  // Print out time since last entry to 'think'
+  //
+  static auto tLast = Debugger::getTimestamp();
+  Debugger::printTime(tLast, "Period %4.2f ");
+  tLast = Debugger::getTimestamp();
 
-//  cout << "[Agent::think] Capture image" << endl;
+  //
+  // Capture the image
+  //
   auto t = Debugger::getTimestamp();
+  cv::Mat raw;
   d_camera >> raw;
-  Debugger::printTime(t, "capture image");
+  d_debugger.timeImageCapture(t);
 
+  //
+  // Process the image
+  //
   t = Debugger::getTimestamp();
   vector<Observation> observations = processImage(raw);
   d_debugger.timeImageProcessing(t);

@@ -36,6 +36,7 @@ namespace bold
     static void printTime(timestamp_t startedAt, std::string const& description);
 
     void timeImageProcessing(timestamp_t startedAt);
+    void timeImageCapture(timestamp_t startedAt);
 
     void setIsBallObserved(bool isBallObserved);
 

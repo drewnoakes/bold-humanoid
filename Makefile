@@ -4,7 +4,7 @@ DARWINDIR=robotis
 VISIONDIR=vision
 JOYSTICKDIR=joystick
 
-CXXFLAGS=-I${DARWINDIR}/Linux/include/ -I${DARWINDIR}/Framework/include/ -I${VISIONDIR} -I${JOYSTICKDIR} -I/usr/include/opencv2 -I/usr/include/eigen3 -g -std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+CXXFLAGS=-I${DARWINDIR}/Linux/include/ -I${DARWINDIR}/Framework/include/ -I${VISIONDIR} -I${JOYSTICKDIR} -I/usr/include/opencv2 -I/usr/include/eigen3 -J2 -O2 -g -std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
 LDFLAGS=-lpthread -lrt `pkg-config opencv --libs`
 
