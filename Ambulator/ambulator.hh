@@ -20,8 +20,8 @@ namespace bold
 
   public:
     Ambulator()
-      : d_xAmp(0, 0.3),
-        d_yAmp(0, 0.3),
+      : d_xAmp(0, 3),
+        d_yAmp(0, 3),
         d_turnAmp(0, 1)
     {}
 

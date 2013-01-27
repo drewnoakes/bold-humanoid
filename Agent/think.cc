@@ -128,9 +128,13 @@ void Agent::think()
         }
 
         if (stick == 1)
-          d_ambulator.setMoveDir(Eigen::Vector2d((axis0/32767.0) * 15, (axis2/32767.0) * 15));
-
-        printf("Axis %u is at position %d\n", event.number, event.value);
+          d_ambulator.setMoveDir(Eigen::Vector2d((-axis1/32767.0) * 15, (-axis0/32767.0) * 15));
+        if (stick == 2)
+          d_ambulator.setTurnAngle((-axis2/32767.0) * 15);
+      }
+      else if (event.isButton())
+      {
+        printf("Button %u\n", event.number);
       }
     }
   }
