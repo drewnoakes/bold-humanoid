@@ -4,7 +4,8 @@ Agent::Agent(std::string const& U2D_dev,
       std::string const& iniFile,
       std::string const& motionFile,
       bool const& showUI,
-      bool const& useJoystick)
+      bool const& useJoystick,
+      bool const& autoGetUpFromFallen)
   : d_linuxCM730(U2D_dev.c_str()),
     d_CM730(&d_linuxCM730),
     d_ini(iniFile),
@@ -13,8 +14,9 @@ Agent::Agent(std::string const& U2D_dev,
     d_debugger(),
     d_ambulator(),
     d_minBallArea(8*8),
+    d_joystick(nullptr),
     d_showUI(showUI),
-    d_joystick(nullptr)
+    d_autoGetUpFromFallen(autoGetUpFromFallen)
 {
   if (useJoystick)
     d_joystick = new Joystick();

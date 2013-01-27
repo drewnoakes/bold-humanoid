@@ -35,35 +35,26 @@ namespace bold
           std::string const& iniFile,
           std::string const& motionFile,
           bool const& showUI,
-          bool const& useJoystick);
+          bool const& useJoystick,
+          bool const& autoGetUpFromFallen);
 
     int run();
 
   private:
     Robot::LinuxCM730 d_linuxCM730;
     Robot::CM730 d_CM730;
-
     Robot::LinuxMotionTimer* d_motionTimer;
-
     minIni d_ini;
-
     std::string d_motionFile;
-
     cv::VideoCapture d_camera;
-
     Debugger d_debugger;
-
     unsigned char* d_LUT;
-
     BlobDetector d_blobDetector;
-
     Ambulator d_ambulator;
-
     int d_minBallArea;
-
     Joystick* d_joystick;
-
     bool d_showUI;
+    bool d_autoGetUpFromFallen;
 
     bool init();
 

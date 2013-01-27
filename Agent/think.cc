@@ -85,7 +85,7 @@ void Agent::think()
   //
   // Get up, if we've fallen over
   //
-  if (MotionStatus::FALLEN != STANDUP)
+  if (d_autoGetUpFromFallen && MotionStatus::FALLEN != STANDUP)
   {
     Walking::GetInstance()->Stop();
     while(Walking::GetInstance()->IsRunning() == 1) usleep(8000);

@@ -10,6 +10,7 @@ int main(int argc, char **argv)
 {
   bool showUI = false;
   bool useJoystick = false;
+  bool autoGetUpFromFallen = true;
 
   //
   // Process command line arguments
@@ -20,16 +21,26 @@ int main(int argc, char **argv)
       std::cout << "Options:" << std::endl;
       std::cout << "\t-x\tshow graphical UI using X (or --gui)" << std::endl;
       std::cout << "\t-j\tallow control via joystick (or --joystick)" << std::endl;
+      std::cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << std::endl;
       std::cout << "\t-h\tshow these options (or --help)" << std::endl;
       return 0;
     } else if (arg == "-x" || arg == "--gui") {
       showUI = true;
     } else if (arg == "-j" || arg == "--joystick") {
       useJoystick = true;
+    } else if (arg == "-g" || arg == "--no-get-up") {
+      autoGetUpFromFallen = true;
     }
   }
 
-  Agent agent(U2D_DEV_NAME0, "config.ini", "/darwin/Data/motion_4096.bin", showUI, useJoystick);
+  Agent agent(
+    U2D_DEV_NAME0,
+    "config.ini",
+    "/darwin/Data/motion_4096.bin",
+    showUI,
+    useJoystick,
+    autoGetUpFromFallen
+  );
 
   return agent.run();
 }
