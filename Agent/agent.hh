@@ -8,6 +8,7 @@
 #include <BlobDetector/blobdetector.hh>
 #include "../Ambulator/ambulator.hh"
 #include "../Debugger/debugger.hh"
+#include "../joystick/joystick.hh"
 
 namespace bold
 {
@@ -33,7 +34,8 @@ namespace bold
     Agent(std::string const& U2D_dev,
           std::string const& iniFile,
           std::string const& motionFile,
-          bool const& showUI)
+          bool const& showUI,
+          bool const& useJoystick)
       : d_linuxCM730(U2D_dev.c_str()),
         d_CM730(&d_linuxCM730),
         d_ini(iniFile),
@@ -42,8 +44,12 @@ namespace bold
         d_debugger(),
         d_ambulator(),
         d_minBallArea(8*8),
-        d_showUI(showUI)
-    {}
+        d_showUI(showUI),
+        d_joystick(nullptr)
+    {
+      if (useJoystick)
+        d_joystick = new Joystick();
+    }
 
     int run();
 
@@ -68,6 +74,8 @@ namespace bold
     Ambulator d_ambulator;
 
     int d_minBallArea;
+
+    Joystick* d_joystick;
 
     bool d_showUI;
 

@@ -2,6 +2,7 @@ CXX=g++
 
 DARWINDIR=robotis
 VISIONDIR=vision
+JOYSTICKDIR=joystick
 
 CXXFLAGS=-I${DARWINDIR}/Linux/include/ -I${DARWINDIR}/Framework/include/ -I${VISIONDIR} -I/usr/include/opencv2 -I/usr/include/eigen3 -g -std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
@@ -13,9 +14,10 @@ SOURCES=\
 main.cc \
 Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc Debugger/debugger.cc \
 ${VISIONDIR}/BlobDetector/detectBlobs.cc ${VISIONDIR}/BlobDetector/runLengthEncode.cc ${VISIONDIR}/BlobDetector/runSetToBlob.cc \
-${VISIONDIR}/LUTBuilder/bgr2hsv.cc ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
+${VISIONDIR}/LUTBuilder/bgr2hsv.cc ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc \
+${JOYSTICKDIR}/joystick.cc
 
-HEADERS=Agent/agent.hh Agent/agent.ih Ambulator/ambulator.hh Debugger/debugger.hh ${VISIONDIR}/BlobDetector/blobdetector.hh ${VISIONDIR}/LUTBuilder/lutbuilder.hh
+HEADERS=Agent/agent.hh Agent/agent.ih Ambulator/ambulator.hh Debugger/debugger.hh ${VISIONDIR}/BlobDetector/blobdetector.hh ${VISIONDIR}/LUTBuilder/lutbuilder.hh ${JOYSTICKDIR}/joystick.hh
 
 OBJECTS=${SOURCES:.cc=.o}
 

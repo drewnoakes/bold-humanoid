@@ -93,6 +93,48 @@ void Agent::think()
     }
   }
 
+  if (d_joystick != nullptr)
+  {
+    JoystickEvent event;
+    while (d_joystick->sample(&event))
+    {
+      static short int axis0 = 0;
+      static short int axis1 = 0;
+      static short int axis2 = 0;
+      static short int axis3 = 0;
+
+      // TODO what could the buttons be used for?
+      if (event.isAxis())
+      {
+        int stick = -1;
+        switch (event.number)
+        {
+          case 0:
+            axis0 = event.value;
+            stick = 1;
+            break;
+          case 1:
+            axis1 = event.value;
+            stick = 1;
+            break;
+          case 2:
+            axis2 = event.value;
+            stick = 2;
+            break;
+          case 3:
+            axis3 = event.value;
+            stick = 2;
+            break;
+        }
+
+        if (stick == 1)
+          d_ambulator.setMoveDir(Eigen::Vector2d((axis0/32767.0) * 15, (axis2/32767.0) * 15));
+
+        printf("Axis %u is at position %d\n", event.number, event.value);
+      }
+    }
+  }
+
   d_ambulator.step();
 
   d_debugger.update(d_CM730);

@@ -9,6 +9,7 @@ using namespace bold;
 int main(int argc, char **argv)
 {
   bool showUI = false;
+  bool useJoystick = false;
 
   //
   // Process command line arguments
@@ -22,10 +23,12 @@ int main(int argc, char **argv)
       return 0;
     } else if (arg == "-x" || arg == "--gui") {
       showUI = true;
+    } else if (arg == "-j" || arg == "--joystick") {
+      useJoystick = true;
     }
   }
 
-  Agent agent(U2D_DEV_NAME0, "config.ini", "/darwin/Data/motion_4096.bin", showUI);
+  Agent agent(U2D_DEV_NAME0, "config.ini", "/darwin/Data/motion_4096.bin", showUI, useJoystick);
 
   return agent.run();
 }
