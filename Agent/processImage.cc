@@ -86,21 +86,22 @@ vector<Observation> Agent::processImage(cv::Mat& image)
     }
   }
 
-  for (set<Blob>& blobSet : blobs)
-  {
-    for (Blob const& b : blobSet)
-    {
-      if ((b.br - b.ul).minCoeff() > 5)
-        cv::rectangle(image,
-                      cv::Rect(b.ul.x(), b.ul.y(),
-                               b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
-                      cv::Scalar(255,0,0),
-                      2);
-    }
-  }
-
   if (d_showUI)
   {
+    // Draw rectangles on the colour image
+    for (set<Blob>& blobSet : blobs)
+    {
+      for (Blob const& b : blobSet)
+      {
+        if ((b.br - b.ul).minCoeff() > 5)
+          cv::rectangle(image,
+                        cv::Rect(b.ul.x(), b.ul.y(),
+                                b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
+                        cv::Scalar(255,0,0),
+                        2);
+      }
+    }
+
     cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
     cv::imshow("labeled", labeled);
   }
