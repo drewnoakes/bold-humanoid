@@ -24,7 +24,7 @@ void Agent::approachBall()
   float maxKickAngle = 30.0;
 
   // Looking all the way down and straight ahead
-  if (tilt <= tilt_min + 10 * MX28::RATIO_VALUE2ANGLE && fabs(pan) <= maxKickAngle)
+  if (tilt <= tilt_min + 8 && fabs(pan) <= maxKickAngle)
   {
     d_state = S_LOOK_FOR_GOAL;
     return;

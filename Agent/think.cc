@@ -82,6 +82,11 @@ void Agent::think()
 
   */
 
+  //
+  // Get up, if we've fallen over
+  //
+  standUpIfFallen();
+
   d_ambulator.step();
 
   d_debugger.update(d_CM730);
