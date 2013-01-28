@@ -19,10 +19,10 @@ namespace bold
     LinearSmoother d_turnAmp;
 
   public:
-    Ambulator()
-      : d_xAmp(0, 3),
-        d_yAmp(0, 3),
-        d_turnAmp(0, 1)
+    Ambulator(minIni const& d_ini)
+    : d_xAmp(0.0, d_ini.getd("Ambulator", "XAmpDelta", 3)),
+      d_yAmp(0.0, d_ini.getd("Ambulator", "YAmpDelta", 3)),
+      d_turnAmp(0.0, d_ini.getd("Ambulator", "TurnDelta", 1))
     {}
 
     void step()

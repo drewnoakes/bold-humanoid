@@ -76,7 +76,9 @@ namespace bold
 
     State d_state;
 
+    /** Number of consecutive cycles during which the ball has been seen. */
     int d_ballSeenCnt;
+    /** Number of consecutive cycles during which both goal posts have been seen. */
     int d_goalSeenCnt;
 
     double d_joystickXAmpMax;
@@ -92,11 +94,12 @@ namespace bold
     std::vector<Observation>::iterator getBallObservation()
     {
       return find_if(d_observations.begin(), d_observations.end(),
-		     [](Observation const& obs) { return obs.type == O_BALL; });
+        [](Observation const& obs) { return obs.type == O_BALL; });
     }
 
-    bool seeBall() {
-	return getBallObservation() != d_observations.end();
+    bool seeBall()
+    {
+      return getBallObservation() != d_observations.end();
     }
 
     void stand()
