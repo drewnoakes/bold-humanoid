@@ -70,6 +70,10 @@ namespace bold
     bool d_showUI;
     bool d_autoGetUpFromFallen;
 
+    double d_circleBallX;
+    double d_circleBallY;
+    double d_circleBallTurn;
+
     std::vector<Observation> d_observations;
 
     std::vector<Observation> d_goalObservations;

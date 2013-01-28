@@ -30,6 +30,10 @@ Agent::Agent(std::string const& U2D_dev,
 
   d_minBallArea = d_ini.geti("Vision", "MinBallArea", 8*8);
 
+  d_circleBallX = d_ini.getd("Circle Ball", "WalkX", -1);
+  d_circleBallY = d_ini.getd("Circle Ball", "WalkY", 50);
+  d_circleBallTurn = d_ini.getd("Circle Ball", "WalkTurn", 15);
+
   // Example values
   //
   // gain:       1
