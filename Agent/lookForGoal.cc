@@ -2,6 +2,8 @@
 
 void Agent::lookForGoal()
 {
+  stand();
+
   int nObs = d_goalObservations.size();
 
   d_debugger.setGoalObservationCount(nObs);
@@ -45,5 +47,4 @@ void Agent::lookForGoal()
     d_state = S_START_CIRCLE_BALL;
   }
 
-  stand();
 }

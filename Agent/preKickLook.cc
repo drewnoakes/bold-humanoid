@@ -38,7 +38,11 @@ void Agent::preKickLook()
 
       Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
 
-      if (ballObs->pos.x() > 0)
+      static auto w = d_camera.get(CV_CAP_PROP_FRAME_WIDTH);
+
+      cout << "KICKING!!! " << ballObs->pos.transpose() << " " << (w/2) << endl;
+
+      if (ballObs->pos.x() < (w / 2))
       {
 	while(Robot::Action::GetInstance()->Start("rk") == false)
 	  usleep(8000);
