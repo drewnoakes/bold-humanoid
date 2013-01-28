@@ -96,7 +96,12 @@ namespace bold
     void lookForBall();
     void approachBall();
     void lookForGoal() {}
-    void circleBall() {}
+
+    /** Turn in a circle, following the pan of the head.
+     * If the head is facing forwards, this method should have no effect.
+     */
+    void circleBall();
+
     void kick() {}
     void getUp() {}
 
