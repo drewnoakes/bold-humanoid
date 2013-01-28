@@ -102,8 +102,22 @@ vector<Observation> Agent::processImage(cv::Mat& image)
       }
     }
 
-    cv::normalize(labeled, labeled, 0, 255, CV_MINMAX );
+    for (Observation const& obs : observations)
+    {
+      cv::Scalar color;
+      switch (obs.type)
+      {
+        case O_BALL:      color = cv::Scalar(0,0,255);   break;
+        case O_GOAL_POST: color = cv::Scalar(0,255,255); break;
+      }
+      cv::circle(image, cv::Point(obs.pos.x(), obs.pos.y()), 5, color, 2);
+    }
+
+    cv::imshow("raw", image);
+    cv::normalize(labeled, labeled, 0, 255, CV_MINMAX);
     cv::imshow("labeled", labeled);
+
+    cv::waitKey(1);
   }
 
   return observations;
