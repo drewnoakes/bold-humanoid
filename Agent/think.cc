@@ -26,6 +26,8 @@ void Agent::think()
 
   stand();
 
+  cout << "state: " << d_state << endl;
+
   switch (d_state)
   {
   case S_INIT:

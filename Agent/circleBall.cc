@@ -17,8 +17,8 @@ void Agent::circleBall()
   }
 
   double x = -2;
-  double y = panRatio > 0 ? 50 : -50;
-  double a = panRatio > 0 ? -20 : 20;
+  double y = panRatio < 0 ? 50 : -50;
+  double a = panRatio < 0 ? -20 : 20;
 
   d_ambulator.setMoveDir(Eigen::Vector2d(x, y));
   d_ambulator.setTurnAngle(a);

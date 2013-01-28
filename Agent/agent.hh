@@ -69,6 +69,8 @@ namespace bold
 
     std::vector<Observation> d_observations;
 
+    std::vector<Observation> d_goalObservations;
+    
     State d_state;
 
     int d_ballSeenCnt;
@@ -101,7 +103,7 @@ namespace bold
 
     void lookForBall();
     void approachBall();
-    void lookForGoal() {}
+    void lookForGoal();
 
     /** Turn in a circle, following the pan of the head.
      * If the head is facing forwards, this method should have no effect.
@@ -111,7 +113,11 @@ namespace bold
     void kick() {}
     void getUp() {}
 
+    void lookAt(Eigen::Vector2f const& pos);
+
     void lookAtBall();
+
+    void lookAtGoal();
 
     void controlHead(cv::Mat raw, std::vector<Observation> observations);
     void standUpIfFallen();

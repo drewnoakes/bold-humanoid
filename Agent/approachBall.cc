@@ -21,7 +21,7 @@ void Agent::approachBall()
   double tilt_range = Head::GetInstance()->GetTopLimitAngle() - tilt_min;
   double tilt_percent = (tilt - tilt_min) / tilt_range;
 
-  float maxKickAngle = 5.0;
+  float maxKickAngle = 30.0;
 
   // Looking all the way down and straight ahead
   if (tilt <= tilt_min + MX28::RATIO_VALUE2ANGLE && fabs(pan) <= maxKickAngle)

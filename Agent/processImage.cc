@@ -72,6 +72,8 @@ vector<Observation> Agent::processImage(cv::Mat& image)
     }
   }
 
+  d_goalObservations.clear();
+
   // Do we have goal posts?
   for (Blob const& b : blobs[0])
   {
@@ -86,6 +88,7 @@ vector<Observation> Agent::processImage(cv::Mat& image)
       postObs.pos = (topRun.end + topRun.start).cast<float>() / 2;
 
       observations.push_back(postObs);
+      d_goalObservations.push_back(postObs);
     }
   }
 
