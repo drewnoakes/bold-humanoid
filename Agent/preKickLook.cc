@@ -56,6 +56,8 @@ void Agent::preKickLook()
 	while(Robot::Action::GetInstance()->IsRunning())
 	  usleep(8*1000);
       }
+
+      d_state = S_LOOK_FOR_BALL;
     }
     
   }
