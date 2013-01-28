@@ -34,7 +34,9 @@ namespace bold
     S_LOOK_FOR_BALL,
     S_APPROACH_BALL,
     S_LOOK_FOR_GOAL,
+    S_START_CIRCLE_BALL,
     S_CIRCLE_BALL,
+    S_PREKICK_LOOK,
     S_KICK,
     S_GET_UP
   };
@@ -110,6 +112,8 @@ namespace bold
      * If the head is facing forwards, this method should have no effect.
      */
     void circleBall();
+
+    void preKickLook();
 
     void kick() {}
     void getUp() {}

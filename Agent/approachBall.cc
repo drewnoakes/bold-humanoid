@@ -32,11 +32,14 @@ void Agent::approachBall()
 
   // Default: full power scaled by tilt
   Vector2d moveDir(30.0, 0);
-  moveDir *= tilt_percent;
+  moveDir = Vector2d(5.0, 0).cwiseMax(tilt_percent * moveDir);
 
   // Ball underneath center: small steps
-  if (ballObs->pos.y() < d_camera.get(CV_CAP_PROP_FRAME_HEIGHT) / 2 - 5)
+  if (ballObs->pos.y() > d_camera.get(CV_CAP_PROP_FRAME_HEIGHT) / 2 + 10)
+  {
+    cout << "Fine tune walk!" << endl;
     moveDir.x() = 3.0;
+  }
 
   double turnAngle = pan_percent * 35.0;
 

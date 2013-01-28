@@ -1,7 +1,5 @@
 #include "agent.ih"
 
-#include <iterator>
-
 void Agent::lookForGoal()
 {
   int nObs = d_goalObservations.size();
@@ -44,6 +42,8 @@ void Agent::lookForGoal()
   {
     lookAtGoal();
 
-    d_state = S_CIRCLE_BALL;
+    d_state = S_START_CIRCLE_BALL;
   }
+
+  stand();
 }

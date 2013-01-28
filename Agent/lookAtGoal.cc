@@ -4,7 +4,6 @@ void Agent::lookAtGoal()
 {
   if (d_goalObservations.size() < 2)
   {
-    d_state = S_LOOK_FOR_GOAL;
     return;
   }
 

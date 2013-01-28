@@ -24,8 +24,6 @@ void Agent::think()
   d_observations = processImage(raw);
   d_debugger.timeImageProcessing(t);
 
-  stand();
-
   cout << "state: " << d_state << endl;
 
   switch (d_state)
@@ -44,13 +42,19 @@ void Agent::think()
   case S_LOOK_FOR_GOAL:
     lookForGoal();
     break;
-    
+
+  case S_START_CIRCLE_BALL:
   case S_CIRCLE_BALL:
     circleBall();
     break;
 
+  case S_PREKICK_LOOK:
+    break;
+
   case S_KICK:
     kick();
+    stand();
+  
     break;
 
   case S_GET_UP:
