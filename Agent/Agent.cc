@@ -20,7 +20,12 @@ Agent::Agent(std::string const& U2D_dev,
     d_ballSeenCnt(0)
 {
   if (useJoystick)
+  {
     d_joystick = new Joystick();
+    d_joystickXAmpMax = d_ini.getd("Joystick", "XAmpMax", 15);
+    d_joystickYAmpMax = d_ini.getd("Joystick", "YAmpMax", 15);
+    d_joystickAAmpMax = d_ini.getd("Joystick", "AAmpMax", 15);
+  }
 
   d_minBallArea = d_ini.geti("Vision", "MinBallArea", 8*8);
 

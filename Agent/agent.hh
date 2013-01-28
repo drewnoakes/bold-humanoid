@@ -68,10 +68,14 @@ namespace bold
     bool d_autoGetUpFromFallen;
 
     std::vector<Observation> d_observations;
-  
+
     State d_state;
 
     int d_ballSeenCnt;
+
+    double d_joystickXAmpMax;
+    double d_joystickYAmpMax;
+    double d_joystickAAmpMax;
 
     bool init();
 

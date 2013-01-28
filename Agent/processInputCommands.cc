@@ -74,9 +74,11 @@ void Agent::processInputCommands()
         }
 
         if (stick == 1)
-          d_ambulator.setMoveDir(Eigen::Vector2d((-axis1/32767.0) * 15, (-axis0/32767.0) * 15));
+          d_ambulator.setMoveDir(Eigen::Vector2d(
+            (-axis1/32767.0) * d_joystickXAmpMax,
+            (-axis0/32767.0) * d_joystickYAmpMax));
         if (stick == 2)
-          d_ambulator.setTurnAngle((-axis2/32767.0) * 15);
+          d_ambulator.setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax);
       }
       else if (event.isButton() && event.value == 1 && !event.isInitialState())
       {
