@@ -57,6 +57,7 @@ void Agent::preKickLook()
 	  usleep(8*1000);
       }
 
+      d_ballSeenCnt = d_ballSeenCnt = 0;
       d_state = S_LOOK_FOR_BALL;
     }
     

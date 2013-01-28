@@ -30,15 +30,15 @@ void Agent::circleBall()
 
     printf("[Agent::circleBall] panRatio: %.3f circleDurationSeconds: %.1f\n", panRatio, circleDurationSeconds);
 
-    if (abs(panRatio) < 0.1)
+    if (abs(panRatio) < 0.2)
     {
       d_state = S_START_PREKICK_LOOK;
       return;
     }
 
-    double x = -2;
+    double x = -1;
     double y = panRatio < 0 ? 50 : -50;
-    double a = panRatio < 0 ? -20 : 20;
+    double a = panRatio < 0 ? -15 : 15;
 
     d_ambulator.setMoveDir(Eigen::Vector2d(x, y));
     d_ambulator.setTurnAngle(a);
