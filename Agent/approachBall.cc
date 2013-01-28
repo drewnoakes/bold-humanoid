@@ -10,6 +10,8 @@ void Agent::approachBall()
     return;
   }
 
+  lookAtBall();
+
   double pan = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
   double pan_range = Head::GetInstance()->GetLeftLimitAngle();
   double pan_percent = pan / pan_range;
@@ -28,16 +30,16 @@ void Agent::approachBall()
     return;
   }
 
-  // Go for it
-  //if (
-  
-  float followMaxFBStep = 30.0;
-  float followMinFBStep = 5.0;
-  float followMaxRLTurn = 35.0;
-  float fitFBStep = 3.0;
-  float fitMaxRLTurn = 35.0;
-  float unitFBStep = 0.3;
-  float unitRLTurn = 1.0;
-  
+  // Default: full power scaled by tilt
+  Vector2d moveDir(30.0, 0);
+  moveDir *= tilt_percent;
 
+  // Ball underneath center: small steps
+  if (ballObs->pos.y() < d_camera.get(CV_CAP_PROP_FRAME_HEIGHT) / 2 - 5)
+    moveDir.x() = 3.0;
+
+  double turnAngle = pan_percent * 35.0;
+
+  d_ambulator.setMoveDir(moveDir);
+  d_ambulator.setTurnAngle(turnAngle);
 }

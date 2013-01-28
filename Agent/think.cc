@@ -24,6 +24,8 @@ void Agent::think()
   d_observations = processImage(raw);
   d_debugger.timeImageProcessing(t);
 
+  stand();
+
   switch (d_state)
   {
   case S_INIT:
@@ -70,9 +72,9 @@ void Agent::think()
   //
   processInputCommands();
 
-  d_ambulator.step();
-
   */
+
+  d_ambulator.step();
 
   d_debugger.update(d_CM730);
 }

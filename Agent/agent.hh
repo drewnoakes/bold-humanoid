@@ -93,6 +93,12 @@ namespace bold
 	return getBallObservation() != d_observations.end();
     }
 
+    void stand()
+    {
+      d_ambulator.setMoveDir(Eigen::Vector2d(0,0));
+      d_ambulator.setTurnAngle(0);
+    }
+
     void lookForBall();
     void approachBall();
     void lookForGoal() {}
