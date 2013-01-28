@@ -61,6 +61,9 @@ namespace bold
     void think();
 
     std::vector<Observation> processImage(cv::Mat& image);
+    void controlHead(cv::Mat raw, std::vector<Observation> observations);
+    void standUpIfFallen();
+    void processInputCommands();
   };
 }
 
