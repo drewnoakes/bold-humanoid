@@ -93,21 +93,21 @@ bool Agent::init()
 
   // Hardcoded for now
   hsvRange goalRange;
-  goalRange.h = 40;
-  goalRange.hRange = 10;
-  goalRange.s = 210;
-  goalRange.sRange = 55;
-  goalRange.v = 190;
-  goalRange.vRange = 65;
+  goalRange.h      = d_ini.geti("Vision", "GoalHue", 40);
+  goalRange.hRange = d_ini.geti("Vision", "GoalHueRange", 10);
+  goalRange.s      = d_ini.geti("Vision", "GoalSaturation", 210);
+  goalRange.sRange = d_ini.geti("Vision", "GoalSaturationRange", 55);
+  goalRange.v      = d_ini.geti("Vision", "GoalValue", 190);
+  goalRange.vRange = d_ini.geti("Vision", "GoalValueRange", 65);
   ranges.push_back(goalRange);
 
   hsvRange ballRange;
-  ballRange.h = 10;
-  ballRange.hRange = 15;
-  ballRange.s = 255;
-  ballRange.sRange = 95;
-  ballRange.v = 190;
-  ballRange.vRange = 95;
+  ballRange.h      = d_ini.geti("Vision", "BallHue", 10);
+  ballRange.hRange = d_ini.geti("Vision", "BallHueRange", 15);
+  ballRange.s      = d_ini.geti("Vision", "BallSaturation", 255);
+  ballRange.sRange = d_ini.geti("Vision", "BallSaturationRange", 95);
+  ballRange.v      = d_ini.geti("Vision", "BallValue", 190);
+  ballRange.vRange = d_ini.geti("Vision", "BallValueRange", 95);
   ranges.push_back(ballRange);
 
   d_LUT = lutBuilder.buildBGR18FromHSVRanges(ranges);
