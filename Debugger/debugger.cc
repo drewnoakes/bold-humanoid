@@ -41,9 +41,15 @@ void Debugger::printTime(timestamp_t startedAt, std::string const& format)
   double millis = getSeconds(startedAt) * 1000.0;
   fprintf(stdout, format.c_str(), millis);
 }
+
 void Debugger::setIsBallObserved(bool isBallObserved)
 {
   d_isBallObserved = isBallObserved;
+}
+
+void Debugger::setGoalObservationCount(int goalObservationCount)
+{
+  d_isTwoGoalPostsObserved = goalObservationCount >= 2;
 }
 
 void Debugger::update(Robot::CM730& cm730)
@@ -55,6 +61,9 @@ void Debugger::update(Robot::CM730& cm730)
 
   if (d_isImageProcessingSlow)
     value |= LED_BLUE;
+
+  if (d_isTwoGoalPostsObserved)
+    value |= LED_GREEN;
 
   if (value != d_lastLEDValue)
   {

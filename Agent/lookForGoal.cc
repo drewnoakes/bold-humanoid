@@ -4,18 +4,19 @@
 
 void Agent::lookForGoal()
 {
-  int nObs = 0;
+  int nObs = d_goalObservations.size();
 
-  for (Observation const& obs : d_observations)
-  {
-    if (obs.type == O_GOAL_POST)
-      ++nObs;
-  }
+  d_debugger.setGoalObservationCount(nObs);
 
   cout << "nObs: " << nObs << endl;
 
+  if (nObs >= 2)
+    d_goalSeenCnt++;
+  else if (d_goalSeenCnt > 0)
+    d_goalSeenCnt--;
+
   static double phase = 0;
-  
+
   if (nObs < 2)
   {
      // Oscillate
@@ -23,7 +24,7 @@ void Agent::lookForGoal()
     double maxAmpV = 30.0;//
     timeval tval;
     gettimeofday(&tval, 0);
-    
+
     double t = tval.tv_sec + tval.tv_usec / 1e6;
 
     static auto w = d_camera.get(CV_CAP_PROP_FRAME_WIDTH);
@@ -39,8 +40,10 @@ void Agent::lookForGoal()
     return;
   }
 
-  lookAtGoal();
+  if (d_goalSeenCnt >= 15)
+  {
+    lookAtGoal();
 
-  d_state = S_CIRCLE_BALL;
-
+    d_state = S_CIRCLE_BALL;
+  }
 }

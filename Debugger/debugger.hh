@@ -17,6 +17,7 @@ namespace bold
 
   private:
     bool d_isBallObserved;
+    bool d_isTwoGoalPostsObserved;
     bool d_isImageProcessingSlow;
     int d_lastLEDValue;
     double d_imageProcessingThresholdMillis;
@@ -26,19 +27,21 @@ namespace bold
   public:
     Debugger()
     : d_isBallObserved(false),
+      d_isTwoGoalPostsObserved(false),
       d_isImageProcessingSlow(false),
       d_lastLEDValue(0xff),
       d_imageProcessingThresholdMillis(25.0)
     {}
 
     static timestamp_t getTimestamp();
-    
+
     static void printTime(timestamp_t startedAt, std::string const& description);
 
     void timeImageProcessing(timestamp_t startedAt);
     void timeImageCapture(timestamp_t startedAt);
 
     void setIsBallObserved(bool isBallObserved);
+    void setGoalObservationCount(int goalObservationCount);
 
     void update(Robot::CM730& cm730);
   };

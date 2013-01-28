@@ -17,7 +17,8 @@ Agent::Agent(std::string const& U2D_dev,
     d_joystick(nullptr),
     d_showUI(showUI),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
-    d_ballSeenCnt(0)
+    d_ballSeenCnt(0),
+    d_goalSeenCnt(0)
 {
   if (useJoystick)
   {

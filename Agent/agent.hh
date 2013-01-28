@@ -70,10 +70,11 @@ namespace bold
     std::vector<Observation> d_observations;
 
     std::vector<Observation> d_goalObservations;
-    
+
     State d_state;
 
     int d_ballSeenCnt;
+    int d_goalSeenCnt;
 
     double d_joystickXAmpMax;
     double d_joystickYAmpMax;
@@ -91,7 +92,7 @@ namespace bold
 		     [](Observation const& obs) { return obs.type == O_BALL; });
     }
 
-    bool seeBall() { 
+    bool seeBall() {
 	return getBallObservation() != d_observations.end();
     }
 
