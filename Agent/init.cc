@@ -45,7 +45,6 @@ bool Agent::init()
   d_motionTimer->Start();
 
   cout << "[Agent::init] Registering motion modules" << endl;
-  Robot::Action::GetInstance()->m_Joint.SetEnableBody(true, true);
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   Robot::Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
 
@@ -56,8 +55,18 @@ bool Agent::init()
   Robot::Action::GetInstance()->LoadFile((char*)d_motionFile.c_str());
 
   cout << "[Agent::init] Adopting standing pose" << endl;
-  while(Robot::Action::GetInstance()->Start(15) == false) usleep(8000);
-  while(Robot::Action::GetInstance()->IsRunning()) usleep(8*1000);
+  Robot::Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+
+  cout << "[Agent::init] Sit down" << endl;
+  while(Robot::Action::GetInstance()->Start("sit down") == false)
+    usleep(8000);
+  while(Robot::Action::GetInstance()->IsRunning())
+    usleep(8*1000);
+  cout << "[Agent::init] Stand up" << endl;
+  while(Robot::Action::GetInstance()->Start("stand up") == false)
+    usleep(8000);
+  while(Robot::Action::GetInstance()->IsRunning())
+    usleep(8*1000);
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   MotionManager::GetInstance()->ResetGyroCalibration();
