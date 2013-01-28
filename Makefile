@@ -12,7 +12,7 @@ TARGET=main
 
 SOURCES=\
 main.cc \
-Agent/Agent.cc Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc Agent/controlHead.cc Agent/processInputCommands.cc Agent/standUpIfFallen.cc Agent/lookForBall.cc Agent/lookAtBall.cc \
+Agent/Agent.cc Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc Agent/controlHead.cc Agent/processInputCommands.cc Agent/standUpIfFallen.cc Agent/lookForBall.cc Agent/lookAtBall.cc Agent/approachBall.cc \
 Debugger/debugger.cc \
 ${VISIONDIR}/BlobDetector/detectBlobs.cc ${VISIONDIR}/BlobDetector/runLengthEncode.cc ${VISIONDIR}/BlobDetector/runSetToBlob.cc \
 ${VISIONDIR}/LUTBuilder/bgr2hsv.cc ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc \
