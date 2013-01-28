@@ -46,7 +46,7 @@ void Agent::lookForBall()
     double periodV = 1.4;
 
     float hAngle = sin(t / periodH * 2.0 * M_PI) * maxAmpH;
-    float vAngle = sin(t / periodV * 2.0 * M_PI) * maxAmpV;
+    float vAngle = (sin(t / periodV * 2.0 * M_PI) + 1.0) * maxAmpV / 2.0;
 
     Head::GetInstance()->MoveByAngle(hAngle, vAngle);
   }
