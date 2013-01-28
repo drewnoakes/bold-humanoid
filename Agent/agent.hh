@@ -83,10 +83,25 @@ namespace bold
 
     std::vector<Observation> processImage(cv::Mat& image);
 
+    std::vector<Observation>::iterator getBallObservation()
+    {
+      return find_if(d_observations.begin(), d_observations.end(),
+		     [](Observation const& obs) { return obs.type == O_BALL; });
+    }
+
+    bool seeBall() { 
+	return getBallObservation() != d_observations.end();
+    }
+
     void lookForBall();
-    void approachBall() {}
+    void approachBall();
     void lookForGoal() {}
-    void circleBall() {}
+
+    /** Turn in a circle, following the pan of the head.
+     * If the head is facing forwards, this method should have no effect.
+     */
+    void circleBall();
+
     void kick() {}
     void getUp() {}
 
