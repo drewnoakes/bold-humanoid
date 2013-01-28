@@ -45,7 +45,6 @@ bool Agent::init()
   d_motionTimer->Start();
 
   cout << "[Agent::init] Registering motion modules" << endl;
-  Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   Robot::Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
 
   cout << "[Agent::init] Enabling motion manager" << endl;
@@ -111,6 +110,8 @@ bool Agent::init()
   ranges.push_back(ballRange);
 
   d_LUT = lutBuilder.buildBGR18FromHSVRanges(ranges);
+
+  d_state = S_INIT;
 
   cout << "[Agent::init] Done" << endl;
 

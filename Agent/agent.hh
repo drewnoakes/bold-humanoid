@@ -28,6 +28,17 @@ namespace bold
     Eigen::Vector2f pos;
   };
 
+  enum State
+  {
+    S_INIT,
+    S_LOOK_FOR_BALL,
+    S_APPROACH_BALL,
+    S_LOOK_FOR_GOAL,
+    S_CIRCLE_BALL,
+    S_KICK,
+    S_GET_UP
+  };
+
   class Agent
   {
   public:
@@ -56,11 +67,27 @@ namespace bold
     bool d_showUI;
     bool d_autoGetUpFromFallen;
 
+    std::vector<Observation> d_observations;
+  
+    State d_state;
+
+    int d_ballSeenCnt;
+
     bool init();
 
     void think();
 
     std::vector<Observation> processImage(cv::Mat& image);
+
+    void lookForBall();
+    void approachBall() {}
+    void lookForGoal() {}
+    void circleBall() {}
+    void kick() {}
+    void getUp() {}
+
+    void lookAtBall();
+
     void controlHead(cv::Mat raw, std::vector<Observation> observations);
     void standUpIfFallen();
     void processInputCommands();

@@ -55,6 +55,7 @@ vector<Observation> Agent::processImage(cv::Mat& image)
   vector<Observation> observations;
 
   // Do we have a ball?
+  d_debugger.setIsBallObserved(false);
   if (blobs[1].size() > 0)
   {
     // The first is the biggest, topmost ball blob
@@ -66,6 +67,8 @@ vector<Observation> Agent::processImage(cv::Mat& image)
       ballObs.type = O_BALL;
       ballObs.pos = ball.mean;
       observations.push_back(ballObs);
+
+      d_debugger.setIsBallObserved(true);
     }
   }
 

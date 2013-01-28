@@ -21,9 +21,40 @@ void Agent::think()
   // Process the image
   //
   t = Debugger::getTimestamp();
-  vector<Observation> observations = processImage(raw);
+  d_observations = processImage(raw);
   d_debugger.timeImageProcessing(t);
 
+  switch (d_state)
+  {
+  case S_INIT:
+    d_state = S_LOOK_FOR_BALL;
+
+  case S_LOOK_FOR_BALL:
+    lookForBall();
+    break;
+
+  case S_APPROACH_BALL:
+    approachBall();
+    break;
+
+  case S_LOOK_FOR_GOAL:
+    lookForGoal();
+    break;
+    
+  case S_CIRCLE_BALL:
+    circleBall();
+    break;
+
+  case S_KICK:
+    kick();
+    break;
+
+  case S_GET_UP:
+    getUp();
+    break;
+  }
+
+  /*
   //
   // Track ball position with head
   //
@@ -40,6 +71,8 @@ void Agent::think()
   processInputCommands();
 
   d_ambulator.step();
+
+  */
 
   d_debugger.update(d_CM730);
 }
