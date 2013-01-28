@@ -2,9 +2,8 @@
 
 void Agent::circleBall()
 {
-  // keep your eye on the ball
-//  lookForBall();
-  
+  lookAtGoal();
+
   double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
   double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
   double panRatio = panAngle / panAngleRange;

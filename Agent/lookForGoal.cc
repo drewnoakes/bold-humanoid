@@ -41,6 +41,6 @@ void Agent::lookForGoal()
 
   lookAtGoal();
 
-  //d_state = S_CIRCLE_BALL;
+  d_state = S_CIRCLE_BALL;
 
 }
