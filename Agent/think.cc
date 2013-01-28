@@ -48,7 +48,9 @@ void Agent::think()
     circleBall();
     break;
 
+  case S_START_PREKICK_LOOK:
   case S_PREKICK_LOOK:
+    preKickLook();
     break;
 
   case S_KICK:

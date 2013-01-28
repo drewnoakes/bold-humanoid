@@ -36,6 +36,7 @@ namespace bold
     S_LOOK_FOR_GOAL,
     S_START_CIRCLE_BALL,
     S_CIRCLE_BALL,
+    S_START_PREKICK_LOOK,
     S_PREKICK_LOOK,
     S_KICK,
     S_GET_UP

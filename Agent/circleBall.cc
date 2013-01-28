@@ -32,7 +32,7 @@ void Agent::circleBall()
     
     if (abs(panRatio) < 0.1)
     {
-      d_state = S_PREKICK_LOOK;
+      d_state = S_START_PREKICK_LOOK;
       return;
     }
     
