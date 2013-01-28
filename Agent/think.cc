@@ -167,7 +167,7 @@ void Agent::think()
         if (stick == 2)
           d_ambulator.setTurnAngle((-axis2/32767.0) * 15);
       }
-      else if (event.isButton() && !event.isInitialState())
+      else if (event.isButton() && event.value == 1 && !event.isInitialState())
       {
         switch (event.number)
         {
