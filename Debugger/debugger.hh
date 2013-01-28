@@ -22,8 +22,6 @@ namespace bold
     int d_lastLEDValue;
     double d_imageProcessingThresholdMillis;
 
-    static double getSeconds(timestamp_t startedAt);
-
   public:
     Debugger()
     : d_isBallObserved(false),
@@ -34,6 +32,8 @@ namespace bold
     {}
 
     static timestamp_t getTimestamp();
+
+    static double getSeconds(timestamp_t startedAt);
 
     static void printTime(timestamp_t startedAt, std::string const& description);
 
