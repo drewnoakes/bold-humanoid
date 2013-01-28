@@ -21,6 +21,8 @@ Agent::Agent(std::string const& U2D_dev,
   if (useJoystick)
     d_joystick = new Joystick();
 
+  d_minBallArea = d_ini.geti("Vision", "MinBallArea", 8*8);
+
   // Example values
   //
   // gain:       1
