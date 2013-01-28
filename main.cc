@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     } else if (arg == "-j" || arg == "--joystick") {
       useJoystick = true;
     } else if (arg == "-g" || arg == "--no-get-up") {
-      autoGetUpFromFallen = true;
+      autoGetUpFromFallen = false;
     }
   }
 
