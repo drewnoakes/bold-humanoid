@@ -1,6 +1,6 @@
 #include "Agent/agent.hh"
 
-#define MOTION_FILE_PATH    "/darwin/Data/motion_4096.bin"
+#define MOTION_FILE_PATH    "./motion_4096.bin"
 #define U2D_DEV_NAME0       "/dev/ttyUSB0"
 #define U2D_DEV_NAME1       "/dev/ttyUSB1"
 
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
   Agent agent(
     U2D_DEV_NAME0,
     "config.ini",
-    "/darwin/Data/motion_4096.bin",
+    MOTION_FILE_PATH,
     showUI,
     useJoystick,
     autoGetUpFromFallen
