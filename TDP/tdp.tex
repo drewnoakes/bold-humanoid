@@ -155,37 +155,58 @@ Kid Size league to prototype, test, and optimize in.
 \label{sec:bipedal-locomotion}
 
 Much of the success of team Bold Hearts in the RoboCup SLL 3D
-competitions was due to high speed of locomotion. Throughout the years we have gained much experience in setting up 
+competitions was due to high speed of locomotion. This was achieved by
+developing gait modules that can generate a wide range of motions,
+with a small set of parameters. These were then optimized by applying
+different methods, e.g. GA, PSO, CMA-ES, etc. As part of a RoboCup
+Federation funded project, one of our members has developed and
+released an open source framework to facilitate such optimizations on
+a large scale \footnote{http://launchpad.net/rcsimcontrol}.
 
-
-For the 2012 competitions in Mexico, we have developed a completely new inverse-kinematics based gait controller
-
-
- Describe inverse
-kinematic gait control; describe optimization in simulation; describe
-energy limiting optimization + publication
+The RoboCup 3D SSL currently has no concept of energy use by the
+robots. However, to test our methods, we have implemented this in the
+simulator, in order to study the trade-off between speed and
+efficiency, and the ability of our methods to find such a
+trade-off. As a result, we managed to successfully find gaits that are
+both stable and fast, as energy efficient
 \cite{lattarulo_application_2011}.
+
+We look forward to apply this range of experience to the hardware
+platform.
 
 \section{Achievements}
 \label{sec:achievements}
 
-2012
-3rd RoboCup World Championship 2012, Mexico City, Mexico
-2nd Dutch Open 2012, Eindhoven, The Netherlands
-4th Iran Open 2012, Qazvin, Iran
-2011
-Top 8 RoboCup World Championship 2011, Istanbul, Turkey
-1st Iran Open 2011, Tehran, Iran
-3rd German Open 2011, Magdeburg, Germany
-2010
-2nd AUTCUP 2010, Tehran, Iran
-2nd RC4EW, Eisteddfod of Wales 2010, Ebbw Vale, UK
-4th RoboCup World Championship 2010, Singapore
-1st German Open 2010, Magdeburg, Germany
-3rd Iran Open 2010, Tehran, Iran
-2009
-2nd RoboCup World Championship 2009, Graz, Austria
-1st German Open 2009, Hannover, Germany
+The following are the achievements of team Bold Hearts in the RoboCup 3D SSL of the last four years.
+
+\begin{description}
+
+\item[2012] ~ \\
+  \begin{itemize}
+    \item 3rd RoboCup World Championship 2012, Mexico City, Mexico
+    \item 2nd Dutch Open 2012, Eindhoven, The Netherlands
+    \item 4th Iran Open 2012, Qazvin, Iran
+  \end{itemize}
+  \item[2011] ~ \\
+    \begin{itemize}
+      \item Top 8 RoboCup World Championship 2011, Istanbul, Turkey
+      \item 1st Iran Open 2011, Tehran, Iran
+      \item 3rd German Open 2011, Magdeburg, Germany
+    \end{itemize}
+  \item[2010] ~ \\
+    \begin{itemize}
+      \item 2nd AUTCUP 2010, Tehran, Iran
+      \item 2nd RC4EW, Eisteddfod of Wales 2010, Ebbw Vale, UK
+      \item 4th RoboCup World Championship 2010, Singapore
+      \item 1st German Open 2010, Magdeburg, Germany
+      \item 3rd Iran Open 2010, Tehran, Iran
+    \end{itemize}
+  \item [2009] ~ \\
+    \begin{itemize}
+      \item 2nd RoboCup World Championship 2009, Graz, Austria
+      \item 1st German Open 2009, Hannover, Germany
+    \end{itemize}
+\end{description}
 
 \bibliographystyle{plain}
 \bibliography{tdp}
