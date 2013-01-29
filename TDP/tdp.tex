@@ -57,6 +57,10 @@ Two of our team members have served on the technical committee, and one as
 the organising chair in both a regional and world cup competition.
 All team members participate voluntarily on an extra-curricular basis.
 
+The University of Hatfield procured seven DARwIn-OP robots at the end
+of 2012. Our intention is to compete at a high level in both the 2013
+German Open in Magdebourg, and the 2013 World Cup in Eindhoven.
+
 The main goals of our team are twofold: firstly, to provide a
 valuable source of experience, contacts, and enjoyment.
 Secondly, to use the robotic football scenario as an important
@@ -104,7 +108,7 @@ position that spans such challenges and disciplines.
 \label{sec:research}
 
 In this section we will go into more detail on the research and
-development that our team is interested in and currently working
+development that our team is interested in and actively working
 on. In the first part we will describe the framework we have built for
 the simulation league and are currently porting to the physical
 robots, and discuss the benefits and challenges in doing so. Secondly,
@@ -117,17 +121,17 @@ leagues.
 As a base for our team we use the {\tt libbats} framework
 \footnote{http://launchpad.net/libbats}. This library was originally
 developed by 3D simulation team Little Green BATS, from the University
-of Groningen, The Netherlands, since 2006. It has been released as
-open-source, and currently team Bold Hearts are the main
-maintainers. Several other teams have used it to base their work on.
+of Groningen, The Netherlands, in 2006. It has been released as
+open-source, and currently team Bold Hearts are the maintainers.
+Several other teams have used it to base their work on.
 
 Besides a low level interface to the simulation environment, the
-library provides a range of modules, including localization through
+library provides a range of modules, including localisation through
 Kalman or particle filters, forward and inverse kinematics, graphical
 monitoring and debugging tools, a generic skill-set interface,
 formation and coordination frameworks, and an extensive XML
 configuration module. We are currently in the process of porting this
-over to the Darwin-OP platform.
+over to the DARwIn-OP platform.
 
 In doing so, we encounter several challenges that arise from
 connecting the different leagues. For instance, the vision model in
@@ -141,7 +145,7 @@ localization method used in simulation unfeasible, but luckily {\tt
 implementations.
 
 Another major difference are the different physical aspects of the
-simulated Nao and physical Darwin-OP robots. Again, {\tt libbats} is
+simulated Nao and physical DARwIn-OP robots. Again, {\tt libbats} is
 set up to easily configure different body models. Also, the shared
 framework, and the open architecture of the RoboCup SSL 3D simulation
 server, will allow us to quickly set up a simulated test-bed for the
