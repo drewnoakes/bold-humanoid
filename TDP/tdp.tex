@@ -103,23 +103,63 @@ position that spans such challenges and disciplines.
 \section{Research \& Development}
 \label{sec:research}
 
+In this section we will go into more detail on the research and
+development that our team is interested in and currently working
+on. In the first part we will describe the framework we have built for
+the simulation league and are currently porting to the physical
+robots, and discuss the benefits and challenges in doing so. Secondly,
+we review our work on bipedal locomotion, an important topic for both
+leagues.
+
 \subsection{Shared Framework}
 \label{sec:framework}
 
-Mention we use libbats: mature but actively developed open source base
-framework in 3DSSL; used by several successful teams; Bold Hearts
-currently main maintainers; in the process of porting to hardware, to
-supply common medium level control interface (skill set framework);
-challenges (and describe how we solve it): vision (well on way to have
-real time high resolution solution), noise + ... observations (libbats
-natively allows for different localization solutions), different +
-uncertain model (again, libbats allows for this).
+As a base for our team we use the {\tt libbats} framework
+\footnote{http://launchpad.net/libbats}. This library was originally
+developed by 3D simulation team Little Green BATS, from the University
+of Groningen, The Netherlands, since 2006. It has been released as
+open-source, and currently team Bold Hearts are the main
+maintainers. Several other teams have used it to base their work on.
+
+Besides a low level interface to the simulation environment, the
+library provides a range of modules, including localization through
+Kalman or particle filters, forward and inverse kinematics, graphical
+monitoring and debugging tools, a generic skill-set interface,
+formation and coordination frameworks, and an extensive XML
+configuration module. We are currently in the process of porting this
+over to the Darwin-OP platform.
+
+In doing so, we encounter several challenges that arise from
+connecting the different leagues. For instance, the vision model in
+the simulated environment is more abstract. As this is such an
+important source of information, our first work consists implementing
+image processing methods needed to feed the framework with similar
+data. This involves dealing with higher levels of noise, more
+ambiguity, and false positives and negatives. This makes the Kalman
+localization method used in simulation unfeasible, but luckily {\tt
+  libbats} natively supports using different localization
+implementations.
+
+Another major difference are the different physical aspects of the
+simulated Nao and physical Darwin-OP robots. Again, {\tt libbats} is
+set up to easily configure different body models. Also, the shared
+framework, and the open architecture of the RoboCup SSL 3D simulation
+server, will allow us to quickly set up a simulated test-bed for the
+Kid Size league to prototype, test, and optimize in.
 
 \subsection{Bipedal Locomotion}
 \label{sec:bipedal-locomotion}
 
-Describe inverse kinematic gait control; describe optimization in
-simulation; describe energy limiting optimization + publication
+Much of the success of team Bold Hearts in the RoboCup SLL 3D
+competitions was due to high speed of locomotion. Throughout the years we have gained much experience in setting up 
+
+
+For the 2012 competitions in Mexico, we have developed a completely new inverse-kinematics based gait controller
+
+
+ Describe inverse
+kinematic gait control; describe optimization in simulation; describe
+energy limiting optimization + publication
 \cite{lattarulo_application_2011}.
 
 \section{Achievements}
