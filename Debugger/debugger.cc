@@ -5,9 +5,18 @@
 #include <time.h>
 #include <stdio.h>
 
+#include "../AgentModel/agentmodel.hh"
+#include "../GameState/gamestate.hh"
+
 using namespace Robot;
 using namespace std;
 using namespace bold;
+
+Debugger::Debugger()
+: d_isBallObserved(false),
+  d_isTwoGoalPostsObserved(false),
+  d_lastLEDValue(0xff)
+{}
 
 const double Debugger::getSeconds(timestamp_t const& startedAt)
 {
@@ -22,16 +31,19 @@ const Debugger::timestamp_t Debugger::getTimestamp()
   return now.tv_usec + (Debugger::timestamp_t)now.tv_sec * 1000000;
 }
 
+void Debugger::timeThinkCycle(timestamp_t const& startedAt)
+{
+  AgentModel::getInstance().lastThinkCycleMillis = printTime(startedAt, "Cycle %4.2f ");
+}
+
 void Debugger::timeImageCapture(timestamp_t const& startedAt)
 {
-  d_lastImageCaptureTimeMillis = printTime(startedAt, "Captured %4.2f ");
+  AgentModel::getInstance().lastImageCaptureTimeMillis = printTime(startedAt, "Captured %4.2f ");
 }
 
 void Debugger::timeImageProcessing(timestamp_t const& startedAt)
 {
-  d_lastImageProcessTimeMillis = printTime(startedAt, "Processed %4.2f\n");
-  bool isOverThreshold = d_lastImageProcessTimeMillis > d_imageProcessingThresholdMillis;
-  d_isImageProcessingSlow = isOverThreshold;
+  AgentModel::getInstance().lastImageProcessTimeMillis = printTime(startedAt, "Processed %4.2f\n");
 }
 
 const double Debugger::printTime(timestamp_t const& startedAt, std::string const& format)
@@ -59,8 +71,8 @@ void Debugger::update(Robot::CM730& cm730)
   int value = 0;
   if (d_isBallObserved)
     value |= LED_RED;
-  if (d_isImageProcessingSlow)
-    value |= LED_BLUE;
+//if (d_isImageProcessingSlow)
+//  value |= LED_BLUE;
   if (d_isTwoGoalPostsObserved)
     value |= LED_GREEN;
   if (value != d_lastLEDValue)
@@ -68,25 +80,9 @@ void Debugger::update(Robot::CM730& cm730)
     cm730.WriteByte(Robot::CM730::P_LED_PANNEL, value, NULL);
     d_lastLEDValue = value;
   }
-
-  //
-  // Update websocket data
-  //
-  if (d_streamer != nullptr)
-  {
-    // TODO include think loop time
-//    d_streamer->setTimings(d_lastImageCaptureTimeMillis, d_lastImageProcessTimeMillis);
-
-    d_streamer->update();
-  }
 }
 
 void Debugger::setGameControlData(RoboCupGameControlData const& gameControlData)
 {
-  // TODO do something useful with this information
-  cout << "GAME CONTROL DATA RECEIVED: " << gameControlData.secsRemaining << endl;
-  if (d_streamer != nullptr)
-  {
-//    d_streamer->updateGameControlData(gameControlData);
-  }
+  GameState::getInstance().update(gameControlData);
 }

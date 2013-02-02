@@ -6,7 +6,7 @@ void Agent::think()
   // Print out time since last entry to 'think'
   //
   static auto tLast = Debugger::getTimestamp();
-  Debugger::printTime(tLast, "Period %4.2f ");
+  d_debugger.timeThinkCycle(tLast);
   tLast = Debugger::getTimestamp();
 
   //
@@ -83,7 +83,21 @@ void Agent::think()
   //
   standUpIfFallen();
 
+  //
+  // Flush out new walking parameters
+  //
   d_ambulator.step();
 
+  //
+  // Update LEDs on back, etc
+  //
   d_debugger.update(d_CM730);
+
+  //
+  // Update websocket data
+  //
+  if (d_streamer != nullptr)
+  {
+    d_streamer->update();
+  }
 }

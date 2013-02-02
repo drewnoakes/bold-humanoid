@@ -31,113 +31,6 @@ var openSocket = function(protocol)
   return socket;
 }
 
-var initialiseIncrementProtocol = function()
-{
-  var socket = openSocket("dumb-increment-protocol");
-
-  $('#resetCounter').click(function()
-  {
-    socket.send("reset\n");
-  });
-
-  socket.onmessage = function(msg)
-  {
-    document.getElementById("number").textContent = msg.data + "\n";
-  };
-};
-
-var initialiseMirrorProtocol = function()
-{
-  var isDown = false,
-      hasLast = false,
-      lastX = 0,
-      lastY = 0,
-      color = "#000000";
-
-  $('#color').change(function()
-  {
-    color = document.getElementById("color").value;
-  });
-
-  var socket = openSocket("lws-mirror-protocol");
-
-  socket.onmessage = function(msg)
-  {
-    j = msg.data.split(';');
-    f = 0;
-    while (f < j.length - 1) {
-      i = j[f].split(' ');
-      if (i[0] === 'd') {
-        ctx.strokeStyle = i[1];
-        ctx.beginPath();
-        ctx.moveTo(+(i[2]), +(i[3]));
-        ctx.lineTo(+(i[4]), +(i[5]));
-        ctx.stroke();
-      }
-      if (i[0] === 'c') {
-        ctx.strokeStyle = i[1];
-        ctx.beginPath();
-        ctx.arc(+(i[2]), +(i[3]), +(i[4]), 0, Math.PI*2, true);
-        ctx.stroke();
-      }
-
-      f++;
-    }
-  };
-
-  var canvas = document.createElement('canvas');
-  canvas.height = 300;
-  canvas.width = 480;
-  var ctx = canvas.getContext("2d");
-
-  document.getElementById('wslm_drawing').appendChild(canvas);
-
-  // Find position of canvas in document
-  var offsetX = 0,
-      offsetY = 0,
-      element = canvas;
-
-  if (element.offsetParent) {
-    do {
-      offsetX += element.offsetLeft;
-      offsetY += element.offsetTop;
-    } while ((element = element.offsetParent));
-  }
-
-  canvas.addEventListener('mousedown', function()
-  {
-    isDown = true;
-  });
-
-  canvas.addEventListener('mouseup', function()
-  {
-    isDown = false;
-    hasLast = false;
-  });
-
-  canvas.addEventListener('mousemove', function(ev)
-  {
-    var x = typeof(ev.offsetX) !== undefined ? ev.offsetX : ev.layerX - offsetX,
-        y = typeof(ev.offsetY) !== undefined ? ev.offsetY : ev.layerY - offsetY;
-
-    if (!isDown)
-      return;
-
-    if (!hasLast)
-    {
-      hasLast = true;
-      lastX = x;
-      lastY = y;
-      return;
-    }
-
-    socket.send("d " + color + " " + lastX + " " + lastY + " " + x + " " + y + ";");
-
-    lastX = x;
-    lastY = y;
-  });
-};
-
 var initialiseTiming = function()
 {
   var chart = new SmoothieChart({
@@ -150,11 +43,16 @@ var initialiseTiming = function()
     },
     labels: {
       fillStyle:'rgb(60, 0, 0)'
-    }
+    },
+    minValue: 0
   });
 
   var line1 = new TimeSeries();
-  chart.addTimeSeries(line1, { strokeStyle:'rgb(0, 255, 0)', fillStyle:'rgba(0, 255, 0, 0.4)', lineWidth:4 });
+  var line2 = new TimeSeries();
+  var line3 = new TimeSeries();
+  chart.addTimeSeries(line1, { strokeStyle:'rgb(255, 0, 0)', fillStyle:'rgba(255, 0, 0, 0.4)', lineWidth:1 });
+  chart.addTimeSeries(line2, { strokeStyle:'rgb(0, 255, 0)', fillStyle:'rgba(0, 255, 0, 0.4)', lineWidth:1 });
+  chart.addTimeSeries(line3, { strokeStyle:'rgb(0, 0, 255)', fillStyle:'rgba(0, 0, 255, 0.4)', lineWidth:1 });
   chart.streamTo(document.getElementById("timing-chart"));
 
   var socket = openSocket("timing-protocol");
@@ -163,19 +61,23 @@ var initialiseTiming = function()
   {
     // TODO parse values
     // data of format "timestamp_ms_long|duration_ms_float"
-    var matches = /^([0-9]+)\|([0-9.]+)/.exec(msg.data);
+    var matches = /^([0-9.]+)\|([0-9.]+)\|([0-9.]+)/.exec(msg.data);
     if (matches) {
-      var time = new Date().getTime(), //parseInt(matches[1]),
-          value = parseFloat(matches[2])/1000000.0;
+      var time = new Date().getTime(),
+          value1 = parseFloat(matches[1]),
+          value2 = parseFloat(matches[2]),
+          value3 = parseFloat(matches[3]);
       console.log(time, value);
-      line1.append(time, value);
+      line1.append(time, value1);
+      line2.append(time, value2);
+      line3.append(time, value3);
     }
   }
 };
 
-var initialiseGameControl = function()
+var initialiseGameState = function()
 {
-  var socket = openSocket("game-control-protocol");
+  var socket = openSocket("game-state-protocol");
 
   socket.onmessage = function(msg)
   {
@@ -185,17 +87,9 @@ var initialiseGameControl = function()
 
 $(document).ready(function()
 {
-  BrowserDetect.init();
-
-  document.getElementById("brow").textContent = " " + BrowserDetect.browser + " " + BrowserDetect.version + " " + BrowserDetect.OS;
-
   document.getElementById("websocket-url").textContent = getWebSocketUrl();
-
-  initialiseIncrementProtocol();
-
-  initialiseMirrorProtocol();
 
   initialiseTiming();
 
-  initialiseGameControl();
+  initialiseGameState();
 });

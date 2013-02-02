@@ -1,21 +1,11 @@
 #ifndef BOLD_DATA_STREAMER_HH
 #define BOLD_DATA_STREAMER_HH
 
-//#include <stdio.h>
-//#include <stdlib.h>
-// #include <unistd.h>
-// #include <getopt.h>
-// #include <string.h>
-// #include <sys/time.h>
-// #include <assert.h>
-// #include <syslog.h>
-// #include <signal.h>
 #include <vector>
 #include <string>
-
 #include <libwebsockets.h>
 
-// #define UNUSED(expr) do { (void)(expr); } while (0)
+#include "../Debugger/debugger.hh"
 
 namespace bold
 {
@@ -35,10 +25,13 @@ namespace bold
   {
   private:
     static DataStreamer* s_instance;
+
     const int d_port;
     libwebsocket_context* d_context;
-    libwebsocket_protocols d_protocols[3];
+    libwebsocket_protocols d_protocols[4];
     std::vector<HttpResource> d_resources;
+
+    bool d_gameStateChanged;
 
     static int callback_http(
       struct libwebsocket_context* context,
@@ -49,6 +42,14 @@ namespace bold
       size_t len);
 
     static int callback_timing(
+      struct libwebsocket_context *context,
+      struct libwebsocket *wsi,
+      enum libwebsocket_callback_reasons reason,
+      void *user,
+      void *in,
+      size_t len);
+
+    static int callback_game_state(
       struct libwebsocket_context *context,
       struct libwebsocket *wsi,
       enum libwebsocket_callback_reasons reason,

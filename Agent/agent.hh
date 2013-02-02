@@ -7,6 +7,7 @@
 
 #include <BlobDetector/blobdetector.hh>
 #include "../Ambulator/ambulator.hh"
+#include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
 #include "../GameController/GameControllerReceiver.hh"
 #include "../joystick/joystick.hh"
@@ -64,6 +65,7 @@ namespace bold
     std::string d_motionFile;
     cv::VideoCapture d_camera;
     Debugger d_debugger;
+    DataStreamer* d_streamer;
     unsigned char* d_LUT;
     BlobDetector d_blobDetector;
     Ambulator d_ambulator;

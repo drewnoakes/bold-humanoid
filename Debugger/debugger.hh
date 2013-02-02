@@ -20,24 +20,10 @@ namespace bold
   private:
     bool d_isBallObserved;
     bool d_isTwoGoalPostsObserved;
-    bool d_isImageProcessingSlow;
     int d_lastLEDValue;
-    double d_imageProcessingThresholdMillis;
-    double d_lastImageCaptureTimeMillis;
-    double d_lastImageProcessTimeMillis;
-    DataStreamer* d_streamer;
 
   public:
-    Debugger()
-    : d_isBallObserved(false),
-      d_isTwoGoalPostsObserved(false),
-      d_isImageProcessingSlow(false),
-      d_lastLEDValue(0xff),
-      d_imageProcessingThresholdMillis(25.0)
-    {
-      d_streamer = new DataStreamer();
-      d_streamer->init();
-    }
+    Debugger();
 
     static const timestamp_t getTimestamp();
 
@@ -45,6 +31,7 @@ namespace bold
 
     static const double printTime(timestamp_t const& startedAt, std::string const& description);
 
+    void timeThinkCycle(timestamp_t const& startedAt);
     void timeImageProcessing(timestamp_t const& startedAt);
     void timeImageCapture(timestamp_t const& startedAt);
 

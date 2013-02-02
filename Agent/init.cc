@@ -17,6 +17,10 @@ bool Agent::init()
     cv::namedWindow("labeled");
   }
 
+  // TODO only stream if argument specified?
+  d_streamer = new DataStreamer();
+  d_streamer->init();
+
   d_debugger.update(d_CM730);
 
   //

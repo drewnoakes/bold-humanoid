@@ -12,37 +12,18 @@
 
 <body>
 
-<section class="browser">Detected Browser: <div id="brow"></div></section>
+  <div id="websocket-url"></div>
+  <div id="sockets"></div>
 
-<div id="websocket-url"></div>
-<div id="sockets"></div>
+  <section>
+    <div>timing</div>
+    <canvas id="timing-chart" width="400" height="100"></canvas>
+  </section>
 
-<section id="increment" class="group2">
-  <div class="title">dumb-increment-protocol</div>
-  <input type="button" id="resetCounter" value="Reset counter">
-  <div id="number"></div>
-</section>
-
-<section id="mirror" class="group2">
-  <div class="title">lws-mirror-protocol</div>
-  <select id="color">
-    <option value=#000000>Black</option>
-    <option value=#0000ff>Blue</option>
-    <option value=#20ff20>Green</option>
-    <option value=#802020>Dark Red</option>
-  </select>
-  <div id="wslm_drawing"></div>
-</section>
-
-<section class="group2">
-  <div class="title">timing</div>
-  <canvas id="timing-chart" width="400" height="100"></canvas>
-</section>
-
-<section class="group2">
-  <div class="title">game control</div>
-  <div id="secondsRemaining"></canvas>
-</section>
+  <section>
+    <div>game control</div>
+    <div id="secondsRemaining"></canvas>
+  </section>
 
 </body>
 </html>
