@@ -7,6 +7,7 @@
 
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
+#include "../GameController/RoboCupGameControlData.h"
 
 namespace bold
 {
@@ -31,19 +32,20 @@ namespace bold
       d_imageProcessingThresholdMillis(25.0)
     {}
 
-    static timestamp_t getTimestamp();
+    static const timestamp_t getTimestamp();
 
-    static double getSeconds(timestamp_t startedAt);
+    static const double getSeconds(timestamp_t const& startedAt);
 
-    static void printTime(timestamp_t startedAt, std::string const& description);
+    static void printTime(timestamp_t const& startedAt, std::string const& description);
 
-    void timeImageProcessing(timestamp_t startedAt);
-    void timeImageCapture(timestamp_t startedAt);
+    void timeImageProcessing(timestamp_t const& startedAt);
+    void timeImageCapture(timestamp_t const& startedAt);
 
-    void setIsBallObserved(bool isBallObserved);
-    void setGoalObservationCount(int goalObservationCount);
+    void setIsBallObserved(bool const& isBallObserved);
+    void setGoalObservationCount(int const& goalObservationCount);
 
     void update(Robot::CM730& cm730);
+    void setGameControlData(RoboCupGameControlData const& gameControlData);
   };
 }
 

@@ -31,6 +31,7 @@ void Agent::think()
   if (d_gameControlReceiver.receive(&gameControlData))
   {
     cout << "GAME CONTROL DATA RECEIVED: " << gameControlData.secsRemaining << endl;
+    d_debugger.setGameControlData(gameControlData);
   }
 
   cout << "state: " << d_state << endl;
@@ -73,23 +74,10 @@ void Agent::think()
     break;
   }
 
-  /*
-  //
-  // Track ball position with head
-  //
-  controlHead(raw, observations);
-
-  //
-  // Get up, if we've fallen over
-  //
-  standUpIfFallen();
-
   //
   // Process input commands
   //
-  processInputCommands();
-
-  */
+//processInputCommands();
 
   //
   // Get up, if we've fallen over
