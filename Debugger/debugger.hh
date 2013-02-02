@@ -34,7 +34,9 @@ namespace bold
       d_isImageProcessingSlow(false),
       d_lastLEDValue(0xff),
       d_imageProcessingThresholdMillis(25.0)
-    {}
+    {
+      d_streamer = new DataStreamer();
+    }
 
     static const timestamp_t getTimestamp();
 

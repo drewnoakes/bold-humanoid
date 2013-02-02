@@ -164,7 +164,7 @@ namespace bold
     }
 
   public:
-    DataStreamer(int port)
+    DataStreamer(int port = 8080)
     : d_port(port)
 //       d_protocols{
 //         /* first protocol must always be HTTP handler */
@@ -176,6 +176,8 @@ namespace bold
 //         { NULL, NULL, 0, NULL, 0 } // end of list
 //       }
     {
+      std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
+
       s_instance = this;
 
       #define PROTOCOL_HTTP 0
