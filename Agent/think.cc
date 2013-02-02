@@ -30,7 +30,6 @@ void Agent::think()
   RoboCupGameControlData gameControlData;
   if (d_gameControlReceiver.receive(&gameControlData))
   {
-    cout << "GAME CONTROL DATA RECEIVED: " << gameControlData.secsRemaining << endl;
     d_debugger.setGameControlData(gameControlData);
   }
 

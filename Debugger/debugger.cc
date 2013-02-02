@@ -75,4 +75,5 @@ void Debugger::update(Robot::CM730& cm730)
 void Debugger::setGameControlData(RoboCupGameControlData const& gameControlData)
 {
   // TODO do something useful with this information
+  cout << "GAME CONTROL DATA RECEIVED: " << gameControlData.secsRemaining << endl;
 }
