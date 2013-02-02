@@ -67,7 +67,6 @@ var initialiseTiming = function()
           value1 = parseFloat(matches[1]),
           value2 = parseFloat(matches[2]),
           value3 = parseFloat(matches[3]);
-      console.log(time, value);
       line1.append(time, value1);
       line2.append(time, value2);
       line3.append(time, value3);
