@@ -36,6 +36,7 @@ namespace bold
       d_imageProcessingThresholdMillis(25.0)
     {
       d_streamer = new DataStreamer();
+      d_streamer->init();
     }
 
     static const timestamp_t getTimestamp();
