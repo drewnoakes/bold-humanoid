@@ -57,7 +57,10 @@ int DataStreamer::callback_http(
       if (in)
       {
         const char* requestedPath = (const char*)in;
+        if (strcmp(requestedPath, "/") == 0)
+          requestedPath = "/index.html";
 
+        std::cout << "[DataStreamer::callback_http] requested path: " << requestedPath << std::endl;
         bool found = false;
         for (HttpResource resource : s_instance->d_resources)
         {
@@ -68,9 +71,12 @@ int DataStreamer::callback_http(
             break;
           }
         }
-        // TODO will this return a 404?
+        // TODO make this this return a 404 instead of just a black response?
         if (!found)
+        {
+          std::cout << "[DataStreamer::callback_http] no suitable resource found for request: " << requestedPath << std::endl;
           return 1;
+        }
       }
       else
       {

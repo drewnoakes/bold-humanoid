@@ -10,3 +10,4 @@
 [submodule "libwebsockets"]
 	path = libwebsockets
 	url = git://git.libwebsockets.org/libwebsockets
+	ignore = untracked
