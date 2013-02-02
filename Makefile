@@ -14,11 +14,12 @@ SOURCES=\
 main.cc \
 Agent/Agent.cc Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc Agent/processInputCommands.cc Agent/standUpIfFallen.cc Agent/lookForBall.cc Agent/lookAtBall.cc Agent/approachBall.cc Agent/circleBall.cc Agent/lookForGoal.cc Agent/lookAtGoal.cc Agent/lookAt.cc Agent/preKickLook.cc \
 Debugger/debugger.cc \
+GameController/GameControllerReceiver.cc \
 ${VISIONDIR}/BlobDetector/detectBlobs.cc ${VISIONDIR}/BlobDetector/runLengthEncode.cc ${VISIONDIR}/BlobDetector/runSetToBlob.cc \
 ${VISIONDIR}/LUTBuilder/bgr2hsv.cc ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc \
 ${JOYSTICKDIR}/joystick.cc
 
-HEADERS=Agent/agent.hh Agent/agent.ih Ambulator/ambulator.hh Debugger/debugger.hh ${VISIONDIR}/BlobDetector/blobdetector.hh ${VISIONDIR}/LUTBuilder/lutbuilder.hh ${JOYSTICKDIR}/joystick.hh
+HEADERS=Agent/agent.hh Agent/agent.ih Ambulator/ambulator.hh Debugger/debugger.hh ${VISIONDIR}/BlobDetector/blobdetector.hh ${VISIONDIR}/LUTBuilder/lutbuilder.hh ${JOYSTICKDIR}/joystick.hh GameController/GameControllerReceiver.hh GameController/RoboCupGameControlData.h
 
 OBJECTS=${SOURCES:.cc=.o}
 

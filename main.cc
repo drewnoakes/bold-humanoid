@@ -39,8 +39,7 @@ int main(int argc, char **argv)
     MOTION_FILE_PATH,
     showUI,
     useJoystick,
-    autoGetUpFromFallen
-  );
+    autoGetUpFromFallen);
 
   return agent.run();
 }

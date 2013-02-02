@@ -24,6 +24,15 @@ void Agent::think()
   d_observations = processImage(raw);
   d_debugger.timeImageProcessing(t);
 
+  //
+  // Listen for any game control data
+  //
+  RoboCupGameControlData gameControlData;
+  if (d_gameControlReceiver.receive(&gameControlData))
+  {
+    cout << "GAME CONTROL DATA RECEIVED: " << gameControlData.secsRemaining << endl;
+  }
+
   cout << "state: " << d_state << endl;
 
   switch (d_state)
@@ -56,7 +65,7 @@ void Agent::think()
   case S_KICK:
     kick();
     stand();
-  
+
     break;
 
   case S_GET_UP:

@@ -8,6 +8,7 @@
 #include <BlobDetector/blobdetector.hh>
 #include "../Ambulator/ambulator.hh"
 #include "../Debugger/debugger.hh"
+#include "../GameController/GameControllerReceiver.hh"
 #include "../joystick/joystick.hh"
 
 namespace bold
@@ -50,7 +51,8 @@ namespace bold
           std::string const& motionFile,
           bool const& showUI,
           bool const& useJoystick,
-          bool const& autoGetUpFromFallen);
+          bool const& autoGetUpFromFallen,
+          unsigned int const& gameControlUdpPort = GAMECONTROLLER_PORT);
 
     int run();
 
@@ -69,6 +71,7 @@ namespace bold
     Joystick* d_joystick;
     bool d_showUI;
     bool d_autoGetUpFromFallen;
+    GameControllerReceiver d_gameControlReceiver;
 
     double d_circleBallX;
     double d_circleBallY;
