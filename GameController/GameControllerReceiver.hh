@@ -3,8 +3,8 @@
 
 #include "RoboCupGameControlData.h"
 
-//namespace bold
-//{
+namespace bold
+{
   class GameControllerReceiver
   {
   private:
@@ -23,6 +23,6 @@
 
     bool receive(struct RoboCupGameControlData* const gameControlData);
   };
-//}
+}
 
 #endif

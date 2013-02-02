@@ -11,6 +11,8 @@
 
 #include "GameControllerReceiver.hh"
 
+using namespace bold;
+
 bool GameControllerReceiver::receive(struct RoboCupGameControlData* const gameControlData)
 {
   const int MAX_LENGTH = 4096;
