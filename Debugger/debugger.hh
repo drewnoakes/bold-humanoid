@@ -8,6 +8,7 @@
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
 #include "../GameController/RoboCupGameControlData.h"
+#include "../DataStreamer/datastreamer.hh"
 
 namespace bold
 {
@@ -22,6 +23,9 @@ namespace bold
     bool d_isImageProcessingSlow;
     int d_lastLEDValue;
     double d_imageProcessingThresholdMillis;
+    double d_lastImageCaptureTimeMillis;
+    double d_lastImageProcessTimeMillis;
+    DataStreamer* d_streamer;
 
   public:
     Debugger()
@@ -36,16 +40,16 @@ namespace bold
 
     static const double getSeconds(timestamp_t const& startedAt);
 
-    static void printTime(timestamp_t const& startedAt, std::string const& description);
+    static const double printTime(timestamp_t const& startedAt, std::string const& description);
 
     void timeImageProcessing(timestamp_t const& startedAt);
     void timeImageCapture(timestamp_t const& startedAt);
 
     void setIsBallObserved(bool const& isBallObserved);
     void setGoalObservationCount(int const& goalObservationCount);
+    void setGameControlData(RoboCupGameControlData const& gameControlData);
 
     void update(Robot::CM730& cm730);
-    void setGameControlData(RoboCupGameControlData const& gameControlData);
   };
 }
 

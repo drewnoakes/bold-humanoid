@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" http-equiv="Content-Language" content="en"/>
+  <title>Telemetry</title>
+  <script src="jquery-1.9.0.min.js" type="text/javascript"></script>
+  <script src="BrowserDetect.js" type="text/javascript"></script>
+  <script src="smoothie.js" type="text/javascript"></script>
+  <script src="telemetry.js" type="text/javascript"></script>
+  <link href="telemetry.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<section class="browser">Detected Browser: <div id="brow"></div></section>
+
+<div id="websocket-url"></div>
+<div id="sockets"></div>
+
+<section id="increment" class="group2">
+  <div class="title">dumb-increment-protocol</div>
+  <input type="button" id="resetCounter" value="Reset counter">
+  <div id="number"></div>
+</section>
+
+<section id="mirror" class="group2">
+  <div class="title">lws-mirror-protocol</div>
+  <select id="color">
+    <option value=#000000>Black</option>
+    <option value=#0000ff>Blue</option>
+    <option value=#20ff20>Green</option>
+    <option value=#802020>Dark Red</option>
+  </select>
+  <div id="wslm_drawing"></div>
+</section>
+
+<section class="group2">
+  <div class="title">timing</div>
+  <canvas id="timing-chart" width="400" height="100"></canvas>
+</section>
+
+<section class="group2">
+  <div class="title">game control</div>
+  <div id="secondsRemaining"></canvas>
+</section>
+
+</body>
+</html>

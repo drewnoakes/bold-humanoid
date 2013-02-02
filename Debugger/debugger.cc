@@ -24,22 +24,21 @@ const Debugger::timestamp_t Debugger::getTimestamp()
 
 void Debugger::timeImageCapture(timestamp_t const& startedAt)
 {
-  printTime(startedAt, "Captured %4.2f ");
+  d_lastImageCaptureTimeMillis = printTime(startedAt, "Captured %4.2f ");
 }
 
 void Debugger::timeImageProcessing(timestamp_t const& startedAt)
 {
-  double millis = getSeconds(startedAt) * 1000.0;
-  bool isOverThreshold = millis > d_imageProcessingThresholdMillis;
+  d_lastImageProcessTimeMillis = printTime(startedAt, "Processed %4.2f\n");
+  bool isOverThreshold = d_lastImageProcessTimeMillis > d_imageProcessingThresholdMillis;
   d_isImageProcessingSlow = isOverThreshold;
-
-  printTime(startedAt, "Processed %4.2f\n");
 }
 
-void Debugger::printTime(timestamp_t const& startedAt, std::string const& format)
+const double Debugger::printTime(timestamp_t const& startedAt, std::string const& format)
 {
   double millis = getSeconds(startedAt) * 1000.0;
   fprintf(stdout, format.c_str(), millis);
+  return millis;
 }
 
 void Debugger::setIsBallObserved(bool const& isBallObserved)
@@ -54,21 +53,31 @@ void Debugger::setGoalObservationCount(int const& goalObservationCount)
 
 void Debugger::update(Robot::CM730& cm730)
 {
+  //
+  // Update LED statuses
+  //
   int value = 0;
-
   if (d_isBallObserved)
     value |= LED_RED;
-
   if (d_isImageProcessingSlow)
     value |= LED_BLUE;
-
   if (d_isTwoGoalPostsObserved)
     value |= LED_GREEN;
-
   if (value != d_lastLEDValue)
   {
     cm730.WriteByte(Robot::CM730::P_LED_PANNEL, value, NULL);
     d_lastLEDValue = value;
+  }
+
+  //
+  // Update websocket data
+  //
+  if (d_streamer != nullptr)
+  {
+    // TODO include think loop time
+//    d_streamer->setTimings(d_lastImageCaptureTimeMillis, d_lastImageProcessTimeMillis);
+
+    d_streamer->update();
   }
 }
 
@@ -76,4 +85,8 @@ void Debugger::setGameControlData(RoboCupGameControlData const& gameControlData)
 {
   // TODO do something useful with this information
   cout << "GAME CONTROL DATA RECEIVED: " << gameControlData.secsRemaining << endl;
+  if (d_streamer != nullptr)
+  {
+//    d_streamer->updateGameControlData(gameControlData);
+  }
 }
