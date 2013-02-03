@@ -103,7 +103,4 @@ void Agent::think()
   }
 
   readCM730SensorValues();
-  Eigen::Vector3d gyro;
-  Eigen::Vector3d acc;
-  AgentModel::getInstance().updateCM730Data(gyro, acc);
 }
