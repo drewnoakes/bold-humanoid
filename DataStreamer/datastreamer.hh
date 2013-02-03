@@ -34,11 +34,11 @@ namespace bold
   {
   private:
     static DataStreamer* s_instance;
-
+    
+    std::vector<HttpResource> d_resources;
     const int d_port;
     libwebsocket_context* d_context;
     libwebsocket_protocols d_protocols[PROTOCOL_COUNT];
-    std::vector<HttpResource> d_resources;
 
     bool d_gameStateChanged;
     bool d_agentModelChanged;
@@ -75,8 +75,17 @@ namespace bold
       void *in,
       size_t len);
 
+    DataStreamer(int port);
+
   public:
-    DataStreamer(int port = 8080);
+    static DataStreamer* create(int port = 8080)
+    {
+      if (s_instance != nullptr)
+        throw "Already initialised.";
+      s_instance = new DataStreamer(port);
+      s_instance->init();
+      return s_instance;
+    }
 
     void init();
     void update();
