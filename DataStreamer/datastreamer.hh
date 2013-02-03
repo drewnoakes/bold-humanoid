@@ -9,6 +9,15 @@
 
 namespace bold
 {
+  enum Protocol
+  {
+    HTTP = 0,
+    TIMING,
+    GAME_STATE,
+    AGENT_MODEL,
+    PROTOCOL_COUNT
+  };
+
   class HttpResource
   {
   public:
@@ -28,7 +37,7 @@ namespace bold
 
     const int d_port;
     libwebsocket_context* d_context;
-    libwebsocket_protocols d_protocols[5];
+    libwebsocket_protocols d_protocols[PROTOCOL_COUNT];
     std::vector<HttpResource> d_resources;
 
     bool d_gameStateChanged;

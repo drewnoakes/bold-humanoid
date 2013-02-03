@@ -225,11 +225,6 @@ DataStreamer::DataStreamer(int port)
 
   DataStreamer::s_instance = this;
 
-  #define PROTOCOL_HTTP 0
-  #define PROTOCOL_TIMING 1
-  #define PROTOCOL_GAME_STATE 2
-  #define PROTOCOL_AGENT_MODEL 3
-
   HttpResource resources[] = {
     { "/index.html", "text/html" },
     { "/telemetry.js", "text/javascript" },
@@ -244,15 +239,16 @@ DataStreamer::DataStreamer(int port)
 
   // name, callback, per-session-data-size
   libwebsocket_protocols p0 = { "http-only", callback_http, 0, NULL, 0 };
-  d_protocols[0] = p0;
+  d_protocols[Protocol::HTTP] = p0;
   libwebsocket_protocols p1 = { "timing-protocol", callback_timing, 0, NULL, 0 };
-  d_protocols[1] = p1;
+  d_protocols[Protocol::TIMING] = p1;
   libwebsocket_protocols p2 = { "game-state-protocol", callback_game_state, 0, NULL, 0 };
-  d_protocols[2] = p2;
+  d_protocols[Protocol::GAME_STATE] = p2;
   libwebsocket_protocols p3 = { "agent-model-protocol", callback_agent_model, 0, NULL, 0 };
-  d_protocols[3] = p3;
+  d_protocols[Protocol::AGENT_MODEL] = p3;
+
   libwebsocket_protocols eol = { NULL, NULL, 0, NULL, 0 };
-  d_protocols[3] = eol;
+  d_protocols[Protocol::PROTOCOL_COUNT] = eol;
 }
 
 void DataStreamer::init()
@@ -288,18 +284,18 @@ void DataStreamer::update()
   if (d_gameStateChanged)
   {
     d_gameStateChanged = false;
-    libwebsocket_callback_on_writable_all_protocol(&d_protocols[PROTOCOL_GAME_STATE]);
+    libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::GAME_STATE]);
   }
   if (d_agentModelChanged)
   {
     d_agentModelChanged = false;
-    libwebsocket_callback_on_writable_all_protocol(&d_protocols[PROTOCOL_AGENT_MODEL]);
+    libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::AGENT_MODEL]);
   }
 
   //
   // We always have new timing data available
   //
-  libwebsocket_callback_on_writable_all_protocol(&d_protocols[PROTOCOL_TIMING]);
+  libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::TIMING]);
 
   //
   // Process whatever else needs doing on the socket (new clients, etc)
