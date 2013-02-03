@@ -223,8 +223,6 @@ DataStreamer::DataStreamer(int port)
 {
   std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
 
-  DataStreamer::s_instance = this;
-
   HttpResource resources[] = {
     { "/index.html", "text/html" },
     { "/telemetry.js", "text/javascript" },

@@ -20,6 +20,8 @@ bool Agent::init()
   // TODO only stream if argument specified?
   d_streamer = new DataStreamer();
   d_streamer->init();
+  DataStreamer::s_instance = d_streamer;
+  std::cout << "from singleton instance pointer " << DataStreamer::s_instance->d_resources.size() << std::endl;
 
   d_debugger.update(d_CM730);
 
