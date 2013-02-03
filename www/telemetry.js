@@ -42,7 +42,7 @@ var initialiseTiming = function()
       verticalSections: 6
     },
     labels: {
-      fillStyle:'white'
+      fillStyle:'#ffffff'
     },
     minValue: 0
   });
@@ -94,7 +94,7 @@ var initialiseAgentModel = function()
       verticalSections: 6
     },
     labels: {
-      fillStyle:'white'
+      fillStyle:'#ffffff'
     }
   };
 
@@ -116,12 +116,12 @@ var initialiseAgentModel = function()
   accChart.addTimeSeries(accZ, { strokeStyle:'rgb(0, 0, 255)', lineWidth:1 });
   accChart.streamTo(document.getElementById("acc-chart"));
 
-  var socket = openSocket("timing-protocol");
+  var socket = openSocket("agent-model-protocol");
 
   socket.onmessage = function(msg)
   {
     // TODO parse values
-    var matches = /^([0-9.]+)\|([0-9.]+)\|([0-9.]+)|([0-9.]+)\|([0-9.]+)\|([0-9.]+)/.exec(msg.data);
+    var matches = /^([-0-9.]+)\|([-0-9.]+)\|([-0-9.]+)\|([-0-9.]+)\|([-0-9.]+)\|([-0-9.]+)/.exec(msg.data);
     if (matches) {
       var time = new Date().getTime(),
           gx = parseFloat(matches[1]),
