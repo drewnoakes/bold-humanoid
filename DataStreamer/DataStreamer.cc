@@ -121,8 +121,6 @@ int DataStreamer::callback_timing(
                     agentModel.lastImageProcessTimeMillis,
                     agentModel.lastThinkCycleMillis);
 
-    printf("%s\n", p);
-
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {
       lwsl_err("ERROR %d writing to socket\n", n);
@@ -159,8 +157,6 @@ int DataStreamer::callback_game_state(
     int n = sprintf((char*)p, "%d|%d",
                     gameState.secondsRemaining,
                     gameState.playMode);
-
-    printf("%s\n", p);
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {
@@ -202,8 +198,6 @@ int DataStreamer::callback_agent_model(
                     agentModel.accelerometerReading.x(),
                     agentModel.accelerometerReading.y(),
                     agentModel.accelerometerReading.z());
-
-    printf("%s\n", p);
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {
