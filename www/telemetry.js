@@ -36,13 +36,13 @@ var initialiseTiming = function()
   var chart = new SmoothieChart({
     grid: {
       strokeStyle:'rgb(125, 0, 0)',
-      fillStyle:'rgb(60, 0, 0)',
+      fillStyle:'rgb(0, 0, 0)',
       lineWidth: 1,
       millisPerLine: 250,
       verticalSections: 6
     },
     labels: {
-      fillStyle:'rgb(60, 0, 0)'
+      fillStyle:'white'
     },
     minValue: 0
   });
@@ -60,7 +60,6 @@ var initialiseTiming = function()
   socket.onmessage = function(msg)
   {
     // TODO parse values
-    // data of format "timestamp_ms_long|duration_ms_float"
     var matches = /^([0-9.]+)\|([0-9.]+)\|([0-9.]+)/.exec(msg.data);
     if (matches) {
       var time = new Date().getTime(),
@@ -84,11 +83,68 @@ var initialiseGameState = function()
   }
 };
 
+var initialiseAgentModel = function()
+{
+  var options = {
+    grid: {
+      strokeStyle:'rgb(125, 0, 0)',
+      fillStyle:'rgb(0, 0, 0)',
+      lineWidth: 1,
+      millisPerLine: 250,
+      verticalSections: 6
+    },
+    labels: {
+      fillStyle:'white'
+    }
+  };
+
+  var gyroX = new TimeSeries();
+  var gyroY = new TimeSeries();
+  var gyroZ = new TimeSeries();
+  var gyroChart = new SmoothieChart(options);
+  gyroChart.addTimeSeries(gyroX, { strokeStyle:'rgb(255, 0, 0)', lineWidth:1 });
+  gyroChart.addTimeSeries(gyroY, { strokeStyle:'rgb(0, 255, 0)', lineWidth:1 });
+  gyroChart.addTimeSeries(gyroZ, { strokeStyle:'rgb(0, 0, 255)', lineWidth:1 });
+  gyroChart.streamTo(document.getElementById("gyro-chart"));
+
+  var accX = new TimeSeries();
+  var accY = new TimeSeries();
+  var accZ = new TimeSeries();
+  var accChart = new SmoothieChart(options);
+  gyroChart.addTimeSeries(accX, { strokeStyle:'rgb(255, 0, 0)', lineWidth:1 });
+  accChart.addTimeSeries(accY, { strokeStyle:'rgb(0, 255, 0)', lineWidth:1 });
+  accChart.addTimeSeries(accZ, { strokeStyle:'rgb(0, 0, 255)', lineWidth:1 });
+  accChart.streamTo(document.getElementById("acc-chart"));
+
+  var socket = openSocket("timing-protocol");
+
+  socket.onmessage = function(msg)
+  {
+    // TODO parse values
+    var matches = /^([0-9.]+)\|([0-9.]+)\|([0-9.]+)|([0-9.]+)\|([0-9.]+)\|([0-9.]+)/.exec(msg.data);
+    if (matches) {
+      var time = new Date().getTime(),
+          gx = parseFloat(matches[1]),
+          gy = parseFloat(matches[2]),
+          gz = parseFloat(matches[3]),
+          ax = parseFloat(matches[4]),
+          ay = parseFloat(matches[5]),
+          az = parseFloat(matches[6]);
+      gyroX.append(time, gx);
+      gyroY.append(time, gy);
+      gyroZ.append(time, gz);
+      accX.append(time, ax);
+      accY.append(time, ay);
+      accZ.append(time, az);
+    }
+  }
+};
+
 $(document).ready(function()
 {
   document.getElementById("websocket-url").textContent = getWebSocketUrl();
 
   initialiseTiming();
-
   initialiseGameState();
+  initialiseAgentModel();
 });

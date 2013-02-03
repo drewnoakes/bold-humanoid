@@ -28,10 +28,11 @@ namespace bold
 
     const int d_port;
     libwebsocket_context* d_context;
-    libwebsocket_protocols d_protocols[4];
+    libwebsocket_protocols d_protocols[5];
     std::vector<HttpResource> d_resources;
 
     bool d_gameStateChanged;
+    bool d_agentModelChanged;
 
     static int callback_http(
       struct libwebsocket_context* context,
@@ -50,6 +51,14 @@ namespace bold
       size_t len);
 
     static int callback_game_state(
+      struct libwebsocket_context *context,
+      struct libwebsocket *wsi,
+      enum libwebsocket_callback_reasons reason,
+      void *user,
+      void *in,
+      size_t len);
+
+    static int callback_agent_model(
       struct libwebsocket_context *context,
       struct libwebsocket *wsi,
       enum libwebsocket_callback_reasons reason,

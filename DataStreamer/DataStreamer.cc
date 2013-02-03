@@ -172,6 +172,49 @@ int DataStreamer::callback_game_state(
   return 0;
 }
 
+////////////////////////////////////////////////////// agent model protocol
+
+int DataStreamer::callback_agent_model(
+  struct libwebsocket_context *context,
+  struct libwebsocket *wsi,
+  enum libwebsocket_callback_reasons reason,
+  void *user,
+  void *in,
+  size_t len)
+{
+  UNUSED(context);
+  UNUSED(user);
+  UNUSED(in);
+  UNUSED(len);
+
+  // TODO review 512 size here... can apply a better cap
+  unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + 512 + LWS_SEND_BUFFER_POST_PADDING];
+  unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
+
+  if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
+  {
+    AgentModel& agentModel = AgentModel::getInstance();
+
+    int n = sprintf((char*)p, "%f|%f|%f|%f|%f|%f",
+                    agentModel.gyroReading.x(),
+                    agentModel.gyroReading.y(),
+                    agentModel.gyroReading.z(),
+                    agentModel.accelerometerReading.x(),
+                    agentModel.accelerometerReading.y(),
+                    agentModel.accelerometerReading.z());
+
+    printf("%s\n", p);
+
+    if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
+    {
+      lwsl_err("ERROR %d writing to socket\n", n);
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
 ////////////////////////////////////////////////////////////
 
 DataStreamer::DataStreamer(int port)
@@ -185,6 +228,7 @@ DataStreamer::DataStreamer(int port)
   #define PROTOCOL_HTTP 0
   #define PROTOCOL_TIMING 1
   #define PROTOCOL_GAME_STATE 2
+  #define PROTOCOL_AGENT_MODEL 3
 
   HttpResource resources[] = {
     { "/index.html", "text/html" },
@@ -205,6 +249,8 @@ DataStreamer::DataStreamer(int port)
   d_protocols[1] = p1;
   libwebsocket_protocols p2 = { "game-state-protocol", callback_game_state, 0, NULL, 0 };
   d_protocols[2] = p2;
+  libwebsocket_protocols p3 = { "agent-model-protocol", callback_agent_model, 0, NULL, 0 };
+  d_protocols[3] = p3;
   libwebsocket_protocols eol = { NULL, NULL, 0, NULL, 0 };
   d_protocols[3] = eol;
 }
@@ -228,6 +274,7 @@ void DataStreamer::init()
     lwsl_err("libwebsocket init failed\n");
 
   GameState::getInstance().updated.connect([this]{ d_gameStateChanged = true; });
+  AgentModel::getInstance().cm730Updated.connect([this]{ d_agentModelChanged = true; });
 }
 
 void DataStreamer::update()
@@ -235,18 +282,29 @@ void DataStreamer::update()
   if (d_context == NULL)
     return;
 
-  // Only register for writing to the socket if we have a change to report
+  //
+  // Only register for writing to sockets where we have changes to report
+  //
   if (d_gameStateChanged)
   {
     d_gameStateChanged = false;
     libwebsocket_callback_on_writable_all_protocol(&d_protocols[PROTOCOL_GAME_STATE]);
   }
+  if (d_agentModelChanged)
+  {
+    d_agentModelChanged = false;
+    libwebsocket_callback_on_writable_all_protocol(&d_protocols[PROTOCOL_AGENT_MODEL]);
+  }
 
+  //
   // We always have new timing data available
+  //
   libwebsocket_callback_on_writable_all_protocol(&d_protocols[PROTOCOL_TIMING]);
 
+  //
   // Process whatever else needs doing on the socket (new clients, etc)
   // This is normally very fast
+  //
   libwebsocket_service(d_context, 0);
 }
 

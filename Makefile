@@ -12,7 +12,7 @@ TARGET=main
 
 SOURCES=\
 main.cc \
-Agent/Agent.cc Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc Agent/processInputCommands.cc Agent/standUpIfFallen.cc Agent/lookForBall.cc Agent/lookAtBall.cc Agent/approachBall.cc Agent/circleBall.cc Agent/lookForGoal.cc Agent/lookAtGoal.cc Agent/lookAt.cc Agent/preKickLook.cc \
+Agent/Agent.cc Agent/run.cc Agent/init.cc Agent/think.cc Agent/processImage.cc Agent/processInputCommands.cc Agent/standUpIfFallen.cc Agent/lookForBall.cc Agent/lookAtBall.cc Agent/approachBall.cc Agent/circleBall.cc Agent/lookForGoal.cc Agent/lookAtGoal.cc Agent/lookAt.cc Agent/preKickLook.cc Agent/readCM730SensorValues.cc \
 DataStreamer/DataStreamer.cc \
 Debugger/debugger.cc \
 GameController/GameControllerReceiver.cc \

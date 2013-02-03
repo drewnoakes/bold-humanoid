@@ -1,4 +1,5 @@
 #include "agent.ih"
+#include "../AgentModel/agentmodel.hh"
 
 void Agent::think()
 {
@@ -100,4 +101,9 @@ void Agent::think()
   {
     d_streamer->update();
   }
+
+  readCM730SensorValues();
+  Eigen::Vector3d gyro;
+  Eigen::Vector3d acc;
+  AgentModel::getInstance().updateCM730Data(gyro, acc);
 }

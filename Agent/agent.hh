@@ -98,6 +98,8 @@ namespace bold
 
     void think();
 
+    void readCM730SensorValues();
+
     std::vector<Observation> processImage(cv::Mat& image);
 
     std::vector<Observation>::iterator getBallObservation()

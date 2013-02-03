@@ -1,7 +1,6 @@
 #ifndef BOLD_GAME_STATE_HH
 #define BOLD_GAME_STATE_HH
 
-//#include <stdio.h>
 #include <sigc++/sigc++.h>
 #include "../GameController/RoboCupGameControlData.h"
 
