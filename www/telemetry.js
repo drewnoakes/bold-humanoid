@@ -157,19 +157,19 @@ var fieldDimensions = {
   ballDiameter: 0.067 // according to Wikipedia
 };
 
+var fieldCenterX, fieldCenterY, scale, minScale;
+
 var drawFieldMap = function()
 {
   var canvas = $('#field-map').get(0);
   var context = canvas.getContext('2d');
 
+  context.save();
+
   context.fillStyle = '#008800';
   context.fillRect(0, 0, canvas.width, canvas.height);
 
-  context.translate(canvas.width/2, canvas.height/2);
-
-  var scale = Math.min(
-    canvas.width / (fieldDimensions.fieldX + 2*fieldDimensions.outerMarginMinimum),
-    canvas.height / (fieldDimensions.fieldY + 2*fieldDimensions.outerMarginMinimum));
+  context.translate(fieldCenterX, fieldCenterY);
 
   // prepare to draw field lines
   context.lineWidth = fieldDimensions.lineWidth * scale;
@@ -258,10 +258,51 @@ var drawFieldMap = function()
   context.lineTo(x, goalY);
 
   context.stroke();
+
+  context.restore();
 };
 
-$(document).ready(function()
-{
+$(document).ready(function() {
+  var $canvas = $('#field-map');
+  var canvas = $canvas.get(0);
+
+  fieldCenterX = canvas.width/2;
+  fieldCenterY = canvas.height/2;
+  scale = Math.min(
+      canvas.width / (fieldDimensions.fieldX + 2*fieldDimensions.outerMarginMinimum),
+      canvas.height / (fieldDimensions.fieldY + 2*fieldDimensions.outerMarginMinimum));
+  minScale = scale * 0.8; // can't zoom out too far
+
+  $canvas.on('mousewheel', function(event) {
+    // TODO zoom around the mouse pointer, rather than (0,0)
+    scale += event.originalEvent.wheelDelta / 20;
+    scale = Math.max(minScale, scale);
+    drawFieldMap();
+  });
+
+  var isMouseDown = false, dragStartX, dragStartY;
+  $canvas.on('mousedown', function(event) {
+    isMouseDown = true;
+    dragStartX = event.screenX;
+    dragStartY = event.screenY;
+  });
+
+  $canvas.on('mouseup', function() {
+    isMouseDown = false;
+  });
+
+  $canvas.on('mousemove', function(event) {
+    if (isMouseDown) {
+      var dx = event.screenX - dragStartX,
+          dy = event.screenY - dragStartY;
+      dragStartX = event.screenX;
+      dragStartY = event.screenY;
+      fieldCenterX += dx;
+      fieldCenterY += dy;
+      drawFieldMap();
+    }
+  });
+
   document.getElementById("websocket-url").textContent = getWebSocketUrl();
 
   initialiseTiming();
