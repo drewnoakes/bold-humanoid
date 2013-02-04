@@ -140,6 +140,126 @@ var initialiseAgentModel = function()
   }
 };
 
+var fieldDimensions = {
+  fieldX: 6.0,
+  fieldY: 4.0,
+  goalX: 0.5,
+  goalY: 1.5,
+  goalZ: 0.8,
+  goalPostDiameter: 0.1,
+  goalAreaX: 0.6,
+  goalAreaY: 2.2,
+  penaltyMarkDistance: 1.8,
+  circleDiameter: 1.2,
+  lineWidth:0.05,
+  penaltyLineLength: 0.1,
+  outerMarginMinimum: 0.7,
+  ballDiameter: 0.067 // according to Wikipedia
+};
+
+var drawFieldMap = function()
+{
+  var canvas = $('#field-map').get(0);
+  var context = canvas.getContext('2d');
+
+  context.fillStyle = '#008800';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  context.translate(canvas.width/2, canvas.height/2);
+
+  var scale = Math.min(
+    canvas.width / (fieldDimensions.fieldX + 2*fieldDimensions.outerMarginMinimum),
+    canvas.height / (fieldDimensions.fieldY + 2*fieldDimensions.outerMarginMinimum));
+
+  // prepare to draw field lines
+  context.lineWidth = fieldDimensions.lineWidth * scale;
+  context.strokeStyle = '#ffffff';
+
+  // center circle
+  context.beginPath();
+  context.arc(0, 0, scale * fieldDimensions.circleDiameter/2, 0, Math.PI*2, true);
+
+  var halfCrossLengthScaled = scale * fieldDimensions.penaltyLineLength / 2;
+  var penaltyX = scale * (fieldDimensions.fieldX/2 - fieldDimensions.penaltyMarkDistance);
+  var penaltyInnerX = penaltyX - halfCrossLengthScaled;
+  var penaltyOuterX = penaltyX + halfCrossLengthScaled;
+
+  // center cross mark
+  context.moveTo(-halfCrossLengthScaled, 0);
+  context.lineTo(+halfCrossLengthScaled, 0);
+
+  // left penalty mark
+  context.moveTo(-penaltyInnerX, 0);
+  context.lineTo(-penaltyOuterX, 0);
+  context.moveTo(-penaltyX, halfCrossLengthScaled);
+  context.lineTo(-penaltyX, -halfCrossLengthScaled);
+
+  // right penalty mark
+  context.moveTo(penaltyInnerX, 0);
+  context.lineTo(penaltyOuterX, 0);
+  context.moveTo(penaltyX, halfCrossLengthScaled);
+  context.lineTo(penaltyX, -halfCrossLengthScaled);
+
+  // outer square
+  var x = scale * fieldDimensions.fieldX/2,
+      y = scale * fieldDimensions.fieldY/2;
+  context.strokeRect(-x, -y, scale * fieldDimensions.fieldX, scale * fieldDimensions.fieldY);
+
+  context.moveTo(0, y);
+  context.lineTo(0, -y);
+
+  var goalAreaY = scale * fieldDimensions.goalAreaY / 2;
+
+  // left goal area
+  context.moveTo(-x, -goalAreaY);
+  context.lineTo(-x + scale*fieldDimensions.goalAreaX, -goalAreaY);
+  context.lineTo(-x + scale*fieldDimensions.goalAreaX, goalAreaY);
+  context.lineTo(-x, goalAreaY);
+
+  // right goal area
+  context.moveTo(x, -goalAreaY);
+  context.lineTo(x - scale*fieldDimensions.goalAreaX, -goalAreaY);
+  context.lineTo(x - scale*fieldDimensions.goalAreaX, goalAreaY);
+  context.lineTo(x, goalAreaY);
+
+  context.stroke();
+
+  var goalY = scale * fieldDimensions.goalY / 2;
+
+  // TODO actually the position of these circles is WRONG! as is many of the lines -- the insides should be used, considering line width
+
+  context.strokeStyle = 'yellow';
+
+  context.beginPath();
+  context.arc(+x, +goalY, scale * fieldDimensions.goalPostDiameter/2, 0, Math.PI*2, true);
+  context.stroke();
+  context.beginPath();
+  context.arc(+x, -goalY, scale * fieldDimensions.goalPostDiameter/2, 0, Math.PI*2, true);
+  context.stroke();
+  context.beginPath();
+  context.arc(-x, +goalY, scale * fieldDimensions.goalPostDiameter/2, 0, Math.PI*2, true);
+  context.stroke();
+  context.beginPath();
+  context.arc(-x, -goalY, scale * fieldDimensions.goalPostDiameter/2, 0, Math.PI*2, true);
+  context.stroke();
+
+  context.beginPath();
+
+  // left goal
+  context.moveTo(-x, -goalY);
+  context.lineTo(-x - scale*fieldDimensions.goalX, -goalY);
+  context.lineTo(-x - scale*fieldDimensions.goalX, goalY);
+  context.lineTo(-x, goalY);
+
+  // right goal
+  context.moveTo(x, -goalY);
+  context.lineTo(x + scale*fieldDimensions.goalX, -goalY);
+  context.lineTo(x + scale*fieldDimensions.goalX, goalY);
+  context.lineTo(x, goalY);
+
+  context.stroke();
+};
+
 $(document).ready(function()
 {
   document.getElementById("websocket-url").textContent = getWebSocketUrl();
@@ -147,4 +267,5 @@ $(document).ready(function()
   initialiseTiming();
   initialiseGameState();
   initialiseAgentModel();
+  drawFieldMap();
 });
