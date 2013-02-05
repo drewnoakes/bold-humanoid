@@ -167,8 +167,8 @@ SmoothieChart.prototype.render = function(canvas, time) {
     for (var t = time - (time % options.grid.millisPerLine); t >= time - (dimensions.width * options.millisPerPixel); t -= options.grid.millisPerLine) {
       canvasContext.beginPath();
       var gx = Math.round(dimensions.width - ((time - t) / options.millisPerPixel));
-      canvasContext.moveTo(gx, 0);
-      canvasContext.lineTo(gx, dimensions.height);
+      canvasContext.moveTo(gx + 0.5, 0);
+      canvasContext.lineTo(gx + 0.5, dimensions.height);
       canvasContext.stroke();
       // To display timestamps along the bottom
       // May have to adjust millisPerLine to display non-overlapping timestamps, depending on the canvas size
@@ -192,8 +192,8 @@ SmoothieChart.prototype.render = function(canvas, time) {
   for (var v = 1; v < options.grid.verticalSections; v++) {
     var gy = Math.round(v * dimensions.height / options.grid.verticalSections);
     canvasContext.beginPath();
-    canvasContext.moveTo(0, gy);
-    canvasContext.lineTo(dimensions.width, gy);
+    canvasContext.moveTo(0, gy + 0.5);
+    canvasContext.lineTo(dimensions.width, gy + 0.5);
     canvasContext.stroke();
     canvasContext.closePath();
   }
@@ -301,7 +301,7 @@ SmoothieChart.prototype.render = function(canvas, time) {
         }
       }
 
-      lastX = x, lastY = y;
+      lastX = x; lastY = y;
     }
     if (dataSet.length > 0 && seriesOptions.fillStyle) {
       // Close up the fill region.
@@ -325,4 +325,4 @@ SmoothieChart.prototype.render = function(canvas, time) {
   }
 
   canvasContext.restore(); // See .save() above.
-}
+};
