@@ -1,78 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" http-equiv="Content-Language" content="en"/>
-  <title>Telemetry</title>
-  <script src="jquery-1.9.0.min.js" type="text/javascript"></script>
-  <script src="smoothie.js" type="text/javascript"></script>
-  <script src="telemetry.js" type="text/javascript"></script>
-  <link href="telemetry.css" rel="stylesheet" type="text/css" />
-    <style>
-        .connection-indicator
-        {
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-            margin: 3px;
 
-            transition: background-color 0.5s linear;
-            -moz-transition: background-color 0.5s linear;
-            -o-transition: background-color 0.5s linear;
-            -webkit-transition: background-color 0.5s linear;
-        }
+    <meta charset="utf-8"/>
 
-        .connection-indicator.disconnected
-        {
-            background-color: red;
-        }
+    <title>Round Table</title>
 
-        .connection-indicator.connecting
-        {
-            background-color: orange;
-        }
+    <script src="scripts/libs/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="scripts/libs/smoothie.js" type="text/javascript"></script>
+    <script src="scripts/libs/require.2.1.0.js" type="text/javascript" data-main="main"></script>
 
-        .connection-indicator.connected
-        {
-            background-color: green;
-        }
-    </style>
+    <link href="styles/round-table.css" rel="stylesheet" type="text/css"/>
+
 </head>
 
 <body>
 
-  <div id="websocket-url">
+<div id="socket-connections"></div>
 
-  </div>
+<div id="streaming-charts"></div>
 
-  <div id="sockets"></div>
-
-  <section>
-    <div>timing</div>
-    <canvas id="timing-chart" width="700" height="100"></canvas>
-  </section>
-
-  <section>
-    <div>gyroscope</div>
-    <canvas id="gyro-chart" width="700" height="100"></canvas>
-  </section>
-
-  <section>
-    <div>accelerometer</div>
-    <canvas id="acc-chart" width="700" height="100"></canvas>
-  </section>
-
-  <section>
+<section>
     <div>game control</div>
     <div id="secondsRemaining"></div>
-  </section>
+</section>
 
-  <section>
-      <div>field</div>
-      <div id="field-map-container">
-          <canvas id="field-map" width="600" height="400"></canvas>
-      </div>
-  </section>
+<section>
+    <div>field</div>
+    <div id="field-map-container">
+        <canvas id="field-map" width="700" height="450"></canvas>
+    </div>
+</section>
+
+<script type="text/javascript">
+    require.config({
+//        baseUrl: "/",
+        urlArgs: 'v=5'
+//        urlArgs: 'noCache=' + new Date().getTime()
+    });
+</script>
 
 </body>
 </html>

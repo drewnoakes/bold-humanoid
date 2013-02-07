@@ -1,0 +1,28 @@
+.connection-indicator
+{
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin: 3px;
+
+    transition: background-color 0.5s linear;
+    -moz-transition: background-color 0.5s linear;
+    -o-transition: background-color 0.5s linear;
+    -webkit-transition: background-color 0.5s linear;
+}
+
+.connection-indicator.disconnected
+{
+    background-color: red;
+}
+
+.connection-indicator.connecting
+{
+    background-color: orange;
+}
+
+.connection-indicator.connected
+{
+    background-color: green;
+}
