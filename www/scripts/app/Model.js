@@ -1,6 +1,11 @@
+/**
+ * @author Drew Noakes http://drewnoakes.com
+ */
 define(
-    [],
-    function()
+    [
+        'scripts/app/GeometryUtil'
+    ],
+    function(GeometryUtil)
     {
         // camera variables
         var cameraDistance = 0.4,
@@ -201,10 +206,15 @@ define(
             light.position.normalize();
             scene.add(light);
 
-            light = new THREE.DirectionalLight(0xffffff);
-            light.position.set(0, 1, 0);
-            light.position.normalize();
-            scene.add(light);
+//            light = new THREE.DirectionalLight(0xffffff);
+//            light.position.set(0, 1, 0);
+//            light.position.normalize();
+//            scene.add(light);
+
+			light = new THREE.PointLight(0xffffff);
+			light.position.set(0, 1, -1);
+			light.position.normalize();
+			scene.add(light);
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -233,9 +243,9 @@ define(
                     var loader = new THREE.JSONLoader();
                     loader.load(node.geometryPath, function(geometry, materials)
                     {
-                        var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-                        mesh.position.set(0,0,0);
-                        parentObject.add(mesh);
+                        geometry.computeFaceNormals();
+                        GeometryUtil.computeVertexNormals(geometry, Math.PI/4);
+						parentObject.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial( materials )));
                         geometriesToLoad--;
                         if (geometriesToLoad === 0) {
                             loadedCallback();
@@ -274,7 +284,7 @@ define(
             container.addEventListener('mousewheel', function(event)
             {
                 event.preventDefault();
-                cameraDistance *= 1 + (event.wheelDeltaY/720);
+                cameraDistance *= 1 - (event.wheelDeltaY/720);
                 updateCameraPosition();
             });
 
@@ -294,7 +304,7 @@ define(
                 if (isMouseDown) {
                     cameraTheta = -((event.clientX - onMouseDownPosition.x) * 0.01) + onMouseDownTheta;
                     cameraPhi = ((event.clientY - onMouseDownPosition.y) * 0.01) + onMouseDownPhi;
-                    cameraPhi = Math.min(Math.PI/2, Math.max(0, cameraPhi));
+                    cameraPhi = Math.min(Math.PI/2, Math.max(-Math.PI/2, cameraPhi));
                     updateCameraPosition();
                 }
             });

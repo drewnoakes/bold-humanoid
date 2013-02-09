@@ -1,3 +1,6 @@
+/**
+ * @author Drew Noakes http://drewnoakes.com
+ */
 define(
     [
     ],
