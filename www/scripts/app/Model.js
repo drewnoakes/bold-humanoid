@@ -192,7 +192,6 @@ define(
         var root = buildBody(body, hinges, function()
         {
             scene.add(root);
-//            buildDataUI(hinges);
             render();
         });
 
@@ -285,6 +284,7 @@ define(
             {
                 event.preventDefault();
                 cameraDistance *= 1 - (event.wheelDeltaY/720);
+				cameraDistance = Math.max(0.1, Math.min(5, cameraDistance));
                 updateCameraPosition();
             });
 
@@ -348,7 +348,6 @@ define(
         {
             var hinge = hinges[activeHingeIndex];
             hinge.rotation[hinge.rotationAxis] += deltaRads;
-//            updateDataUI(hinges);
             render();
         }
 
