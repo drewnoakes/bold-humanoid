@@ -67,6 +67,8 @@ namespace bold
   public:
     static DataStreamer* create(int port = 8080)
     {
+      std::cout << "[DataStreamer:create]" << std::endl;
+
       if (s_instance != nullptr)
         throw "Already initialised.";
       s_instance = new DataStreamer(port);

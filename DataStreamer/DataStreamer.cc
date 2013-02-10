@@ -244,6 +244,8 @@ DataStreamer::DataStreamer(int port)
 
 void DataStreamer::init()
 {
+  std::cout << "[DataStreamer:init] Starting" << std::endl;
+
   d_context = libwebsocket_create_context(
     d_port,
     /* interface */ NULL,
@@ -262,6 +264,8 @@ void DataStreamer::init()
 
   GameState::getInstance().updated.connect([this]{ d_gameStateUpdated = true; });
   AgentModel::getInstance().updated.connect([this]{ d_agentModelUpdated = true; });
+
+  std::cout << "[DataStreamer:init] Done" << std::endl;
 }
 
 void DataStreamer::update()
