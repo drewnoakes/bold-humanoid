@@ -3,6 +3,9 @@
 
 #include <Eigen/Core>
 #include <sigc++/sigc++.h>
+#include "../Agent/agent.hh"
+#include "../CM730Snapshot/CM730Snapshot.hh"
+#include "../MX28Snapshot/MX28Snapshot.hh"
 
 namespace bold
 {
@@ -12,9 +15,9 @@ namespace bold
     AgentModel()
     : lastThinkCycleMillis(0),
       lastImageCaptureTimeMillis(0),
-      lastImageProcessTimeMillis(0),
-      gyroReading(Eigen::Vector3d(0,0,0)),
-      accelerometerReading(Eigen::Vector3d(0,0,0))
+      lastImageProcessTimeMillis(0)
+//       gyroReading(Eigen::Vector3d(0,0,0)),
+//       accelerometerReading(Eigen::Vector3d(0,0,0))
     {};
 
     AgentModel(AgentModel const&);
@@ -26,17 +29,27 @@ namespace bold
     double lastImageCaptureTimeMillis;
     double lastImageProcessTimeMillis;
 
-    Eigen::Vector3d gyroReading;
-    Eigen::Vector3d accelerometerReading;
+//     Eigen::Vector3d gyroReading;
+//     Eigen::Vector3d accelerometerReading;
 
-    sigc::signal<void> cm730Updated;
+    CM730Snapshot cm730State;
+    MX28Snapshot mx28States[JointData::NUMBER_OF_JOINTS];
 
-    void updateCM730Data(Eigen::Vector3d const&  gyro, Eigen::Vector3d const& accelerometer)
-    {
-      gyroReading = gyro;
-      accelerometerReading = accelerometer;
-      cm730Updated();
-    }
+    std::string state;
+
+    sigc::signal<void> updated;
+
+//     void update(Eigen::Vector3d const&  gyro, Eigen::Vector3d const& accelerometer)
+//     {
+//       gyroReading = gyro;
+//       accelerometerReading = accelerometer;
+//       updated();
+//     }
+//
+//     void updateState(bold::State state)
+//     {
+//       //this->state = bold::State::getName(state);
+//     }
 
     static AgentModel& getInstance()
     {

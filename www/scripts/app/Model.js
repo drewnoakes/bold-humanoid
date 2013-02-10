@@ -16,6 +16,12 @@ define(
 
         init();
 
+		// TODO less delay on the smoothie charts
+		// TODO define the offsets/rotations/etc below in terms of Constants
+		// TODO map hinges below to servo IDs, and manipulate from agent-model protocol
+		// TODO configure darwin to serve all these new HTML pages
+		// TODO add forehead-camera geometry
+
         var body = {
             name: 'body',
             geometryPath: 'models/darwin/darwin-body.json',
@@ -29,11 +35,13 @@ define(
                         {
                             name: 'head',
                             geometryPath: 'models/darwin/darwin-head.json',
-                            offset: { x: 0, y: 0.0 },
+							creaseAngle: 0.52,
+//                            offset: { x: 0, y: 0.0 },
                             rotationAxis: 'x', // TODO should be -1, 0, 0
                             children: [
                                 {
                                     name: 'eye-led',
+									creaseAngle: 0.52,
                                     geometryPath: 'models/darwin/darwin-eye-led.json',
                                     offset: { x: 0, y: 0 }
                                 },
@@ -226,7 +234,7 @@ define(
             var container = document.getElementById('model-container');
             container.appendChild(renderer.domElement);
 
-            bindMouseInteraction(container);
+            bindMouseInteraction(renderer.domElement);
 
             document.addEventListener('keydown', onDocumentKeyDown, false);
         }
@@ -243,7 +251,8 @@ define(
                     loader.load(node.geometryPath, function(geometry, materials)
                     {
                         geometry.computeFaceNormals();
-                        GeometryUtil.computeVertexNormals(geometry, Math.PI/4);
+//                        geometry.computeVertexNormals();
+                        GeometryUtil.computeVertexNormals(geometry, node.creaseAngle || 0.2);
 						parentObject.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial( materials )));
                         geometriesToLoad--;
                         if (geometriesToLoad === 0) {

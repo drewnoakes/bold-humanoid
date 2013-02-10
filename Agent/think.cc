@@ -74,6 +74,8 @@ void Agent::think()
     break;
   }
 
+  AgentModel::getInstance().state = d_state;
+
   //
   // Process input commands
   //

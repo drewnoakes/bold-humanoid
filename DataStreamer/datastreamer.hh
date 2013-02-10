@@ -18,30 +18,17 @@ namespace bold
     PROTOCOL_COUNT
   };
 
-  class HttpResource
-  {
-  public:
-    std::string path;
-    std::string mimeType;
-
-    HttpResource(std::string path, std::string mimeType)
-    : path(path),
-      mimeType(mimeType)
-    {}
-  };
-
   class DataStreamer
   {
   private:
     static DataStreamer* s_instance;
-    
-    std::vector<HttpResource> d_resources;
+
     const int d_port;
     libwebsocket_context* d_context;
     libwebsocket_protocols d_protocols[PROTOCOL_COUNT];
 
-    bool d_gameStateChanged;
-    bool d_agentModelChanged;
+    bool d_gameStateUpdated;
+    bool d_agentModelUpdated;
 
     static int callback_http(
       struct libwebsocket_context* context,

@@ -43,42 +43,53 @@ int DataStreamer::callback_http(
   {
     case LWS_CALLBACK_HTTP:
     {
-      HttpResource* serveResource;
+      const char* path;
       if (in)
       {
-        const char* requestedPath = (const char*)in;
-        if (strcmp(requestedPath, "/") == 0)
-          requestedPath = "/index.html";
-
-        std::cout << "[DataStreamer::callback_http] requested path: " << requestedPath << std::endl;
-        // TODO replace with std lib 'find' function
-        bool found = false;
-        for (HttpResource resource : s_instance->d_resources)
+        path = (const char*)in;
+        if (strcmp(path, "/") == 0)
         {
-          if (strcmp(requestedPath, resource.path.c_str()) == 0)
-          {
-            serveResource = &resource;
-            found = true;
-            break;
-          }
+          path = "/index.html";
         }
-        if (!found)
+        else if (string(path).find("..") != string::npos)
         {
-          std::cout << "[DataStreamer::callback_http] no suitable resource found for request: " << requestedPath << std::endl;
-          // NOTE this will return an empty response, not a 404
+          // protect against ../ attacks
+          std::cout << "[DataStreamer::callback_http] invalid request path: " << path << std::endl;
           return 1;
         }
+
+        std::cout << "[DataStreamer::callback_http] requested path: " << path << std::endl;
       }
       else
       {
-        // serve default (last) resource
-        serveResource = &s_instance->d_resources[s_instance->d_resources.size() - 1];
+        path = "/index.html";
+      }
+
+      //
+      // Determine the MIME type based upon the path extension
+      //
+      auto extension = string(path).substr(string(path).find_last_of(".") + 1);
+      string mimeType = "application/binary";
+      if (extension == "html") {
+        mimeType = "text/html";
+      }
+      else if (extension == "js") {
+        mimeType = "text/javascript";
+      }
+      else if (extension == "json") {
+        mimeType = "application/json";
+      }
+      else if (extension == "css") {
+        mimeType = "text/css";
+      }
+      else if (extension == "ico") {
+        mimeType = "image/x-icon";
       }
 
       char buf[256];
-      sprintf(buf, "www%s", serveResource->path.c_str());
+      sprintf(buf, "www%s", path);
 
-      if (libwebsockets_serve_http_file(context, wsi, buf, serveResource->mimeType.c_str()))
+      if (libwebsockets_serve_http_file(context, wsi, buf, mimeType.c_str()))
         lwsl_err("Failed to send HTTP file\n");
 
       break;
@@ -192,12 +203,12 @@ int DataStreamer::callback_agent_model(
     AgentModel& agentModel = AgentModel::getInstance();
 
     int n = sprintf((char*)p, "%f|%f|%f|%f|%f|%f",
-                    agentModel.gyroReading.x(),
-                    agentModel.gyroReading.y(),
-                    agentModel.gyroReading.z(),
-                    agentModel.accelerometerReading.x(),
-                    agentModel.accelerometerReading.y(),
-                    agentModel.accelerometerReading.z());
+                    agentModel.cm730State.gyro.x(),
+                    agentModel.cm730State.gyro.y(),
+                    agentModel.cm730State.gyro.z(),
+                    agentModel.cm730State.acc.x(),
+                    agentModel.cm730State.acc.y(),
+                    agentModel.cm730State.acc.z());
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {
@@ -213,21 +224,9 @@ int DataStreamer::callback_agent_model(
 
 DataStreamer::DataStreamer(int port)
 : d_port(port),
-  d_gameStateChanged(false)
+  d_gameStateUpdated(false)
 {
   std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
-
-  HttpResource resources[] = {
-    { "/index.html", "text/html" },
-    { "/telemetry.js", "text/javascript" },
-    { "/telemetry.css", "text/css" },
-    { "/smoothie.js", "text/javascript" },
-    { "/jquery-1.9.0.min.js", "text/javascript" },
-    { "/BrowserDetect.js", "text/javascript" },
-    { "/favicon.ico", "image/x-icon" }
-  };
-  int resourceCount = sizeof(resources)/sizeof(HttpResource);
-  d_resources.assign(resources, resources + resourceCount);
 
   // name, callback, per-session-data-size
   libwebsocket_protocols p0 = { "http-only", callback_http, 0, NULL, 0 };
@@ -261,8 +260,8 @@ void DataStreamer::init()
   if (d_context == NULL)
     lwsl_err("libwebsocket init failed\n");
 
-  GameState::getInstance().updated.connect([this]{ d_gameStateChanged = true; });
-  AgentModel::getInstance().cm730Updated.connect([this]{ d_agentModelChanged = true; });
+  GameState::getInstance().updated.connect([this]{ d_gameStateUpdated = true; });
+  AgentModel::getInstance().updated.connect([this]{ d_agentModelUpdated = true; });
 }
 
 void DataStreamer::update()
@@ -273,14 +272,14 @@ void DataStreamer::update()
   //
   // Only register for writing to sockets where we have changes to report
   //
-  if (d_gameStateChanged)
+  if (d_gameStateUpdated)
   {
-    d_gameStateChanged = false;
+    d_gameStateUpdated = false;
     libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::GAME_STATE]);
   }
-  if (d_agentModelChanged)
+  if (d_agentModelUpdated)
   {
-    d_agentModelChanged = false;
+    d_agentModelUpdated = false;
     libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::AGENT_MODEL]);
   }
 
