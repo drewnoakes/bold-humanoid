@@ -77,19 +77,18 @@ define(
                     floats.push(parseFloat(bits[i]));
                 }
                 return floats;
-            };
+            },
+            container = $('#streaming-charts');
 
-        var container = $('#streaming-charts');
-
-        for (var p = 0; p < protocolDefinitions.length; p++) {
-            var protocolDefinition = protocolDefinitions[p];
+        _.each(protocolDefinitions, function(protocolDefinition)
+        {
             var seriesArray = [];
 
-            for (var c = 0; c < protocolDefinition.charts.length; c++) {
-                var chartDefinition = protocolDefinition.charts[c];
+            _.each(protocolDefinition.charts, function(chartDefinition)
+            {
                 var chart = new SmoothieChart(chartDefinition.options);
 
-                // TODO add title element
+                // TODO add title/legend elements
                 var canvas = document.createElement('canvas');
                 canvas.width = chartWidth;
                 canvas.height = chartHeight;
@@ -97,23 +96,23 @@ define(
 
                 chart.streamTo(canvas);
 
-                for (var s = 0; s < chartDefinition.series.length; s++) {
-                    var seriesDefinition = chartDefinition.series[s];
+                _.each(chartDefinition.series, function(seriesDefinition)
+                {
                     var series = new TimeSeries();
                     chart.addTimeSeries(series, seriesDefinition);
                     seriesArray.push(series);
-                }
-            }
-
+                });
+            });
+            
             var socket = WebSocketFactory.open(protocolDefinition.protocol);
             socket.onmessage = function (msg)
             {
                 var time = new Date().getTime();
                 var floats = parseFloats(msg.data);
-                for (var f = 0; f < floats.length; f++) {
+                for (var f = 0; f < floats.length && f < seriesArray.length; f++) {
                     seriesArray[f].append(time, floats[f]);
                 }
             }
-        }
+        });
     }
 );
