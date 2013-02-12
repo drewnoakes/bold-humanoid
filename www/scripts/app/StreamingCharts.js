@@ -30,12 +30,14 @@ define(
                 protocol: 'timing-protocol',
                 charts: [
                     {
+                        // TODO this should be a stacked chart
                         title: 'timing',
                         options: timingChartOptions,
                         series: [
                             { strokeStyle: 'rgb(255, 0, 0)', fillStyle: 'rgba(255, 0, 0, 0.4)', lineWidth: 1 },
                             { strokeStyle: 'rgb(0, 255, 0)', fillStyle: 'rgba(0, 255, 0, 0.4)', lineWidth: 1 },
-                            { strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 }
+                            { strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 },
+                            { strokeStyle: 'rgb(0, 255, 255)', fillStyle: 'rgba(0, 255, 255, 0.4)', lineWidth: 1 }
                         ]
                     }
                 ]
