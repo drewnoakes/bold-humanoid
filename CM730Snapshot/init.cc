@@ -72,7 +72,7 @@ bool CM730Snapshot::init(Robot::CM730 cm730)
   auto retDelayTime = table[CM730::P_RETURN_DELAY_TIME];           // 0x00
   returnDelayTimeMicroSeconds = (unsigned int)retDelayTime * 2;
 
-  auto retLevel     = table[CM730::P_RETURN_LEVEL];                // 0x02
+  retLevel = table[CM730::P_RETURN_LEVEL];                         // 0x02
 
   //
   // RAM AREA

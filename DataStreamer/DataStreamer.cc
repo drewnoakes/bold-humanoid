@@ -26,6 +26,15 @@ using namespace std;
  */
 DataStreamer* DataStreamer::s_instance;
 
+libwebsocket_protocols DataStreamer::d_protocols[] = {
+  // name, callback, per-session-data-size
+  { "http-only", DataStreamer::callback_http, 0, NULL, 0 },
+  { "timing-protocol", DataStreamer::callback_timing, 0, NULL, 0 },
+  { "game-state-protocol", DataStreamer::callback_game_state, 0, NULL, 0 },
+  { "agent-model-protocol", DataStreamer::callback_agent_model, 0, NULL, 0 },
+  { NULL, NULL, 0, NULL, 0 },
+};
+
 ////////////////////////////////////////////////////// http protocol
 
 int DataStreamer::callback_http(
@@ -228,18 +237,18 @@ DataStreamer::DataStreamer(int port)
 {
   std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
 
-  // name, callback, per-session-data-size
-  libwebsocket_protocols p0 = { "http-only", callback_http, 0, NULL, 0 };
-  d_protocols[Protocol::HTTP] = p0;
-  libwebsocket_protocols p1 = { "timing-protocol", callback_timing, 0, NULL, 0 };
-  d_protocols[Protocol::TIMING] = p1;
-  libwebsocket_protocols p2 = { "game-state-protocol", callback_game_state, 0, NULL, 0 };
-  d_protocols[Protocol::GAME_STATE] = p2;
-  libwebsocket_protocols p3 = { "agent-model-protocol", callback_agent_model, 0, NULL, 0 };
-  d_protocols[Protocol::AGENT_MODEL] = p3;
-
-  libwebsocket_protocols eol = { NULL, NULL, 0, NULL, 0 };
-  d_protocols[Protocol::PROTOCOL_COUNT] = eol;
+//   // name, callback, per-session-data-size
+//   libwebsocket_protocols p0 = { "http-only", DataStreamer::callback_http, 0, NULL, 0 };
+//   d_protocols[Protocol::HTTP] = p0;
+//   libwebsocket_protocols p1 = { "timing-protocol", DataStreamer::callback_timing, 0, NULL, 0 };
+//   d_protocols[Protocol::TIMING] = p1;
+//   libwebsocket_protocols p2 = { "game-state-protocol", DataStreamer::callback_game_state, 0, NULL, 0 };
+//   d_protocols[Protocol::GAME_STATE] = p2;
+//   libwebsocket_protocols p3 = { "agent-model-protocol", DataStreamer::callback_agent_model, 0, NULL, 0 };
+//   d_protocols[Protocol::AGENT_MODEL] = p3;
+//
+//   libwebsocket_protocols eol = { NULL, NULL, 0, NULL, 0 };
+//   d_protocols[Protocol::PROTOCOL_COUNT] = eol;
 }
 
 void DataStreamer::init()
@@ -261,6 +270,8 @@ void DataStreamer::init()
 
   if (d_context == NULL)
     lwsl_err("libwebsocket init failed\n");
+  else
+    std::cout << "[DataStreamer:init] libwebsocket_context created" << std::endl;
 
   GameState::getInstance().updated.connect([this]{ d_gameStateUpdated = true; });
   AgentModel::getInstance().updated.connect([this]{ d_agentModelUpdated = true; });
