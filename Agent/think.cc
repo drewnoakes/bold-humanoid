@@ -104,5 +104,7 @@ void Agent::think()
     d_streamer->update();
   }
 
-  readCM730SensorValues();
+  t = Debugger::getTimestamp();
+  readSubBoardData();
+  d_debugger.timeSubBoardRead(t);
 }

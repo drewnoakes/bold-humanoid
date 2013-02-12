@@ -98,7 +98,7 @@ namespace bold
 
     void think();
 
-    void readCM730SensorValues();
+    void readSubBoardData();
 
     std::vector<Observation> processImage(cv::Mat& image);
 

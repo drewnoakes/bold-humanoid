@@ -26,6 +26,7 @@ namespace bold
     double lastThinkCycleMillis;
     double lastImageCaptureTimeMillis;
     double lastImageProcessTimeMillis;
+    double lastSubBoardReadTimeMillis;
 
     CM730Snapshot cm730State;
     MX28Snapshot mx28States[JointData::NUMBER_OF_JOINTS];

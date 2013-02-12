@@ -139,6 +139,7 @@ int DataStreamer::callback_timing(
     int n = sprintf((char*)p, "%f|%f|%f",
                     agentModel.lastImageCaptureTimeMillis,
                     agentModel.lastImageProcessTimeMillis,
+                    agentModel.lastSubBoardReadTimeMillis,
                     agentModel.lastThinkCycleMillis);
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
@@ -211,13 +212,14 @@ int DataStreamer::callback_agent_model(
   {
     AgentModel& agentModel = AgentModel::getInstance();
 
-    int n = sprintf((char*)p, "%f|%f|%f|%f|%f|%f",
+    int n = sprintf((char*)p, "%f|%f|%f|%f|%f|%f|%d",
                     agentModel.cm730State.gyro.x(),
                     agentModel.cm730State.gyro.y(),
                     agentModel.cm730State.gyro.z(),
                     agentModel.cm730State.acc.x(),
                     agentModel.cm730State.acc.y(),
-                    agentModel.cm730State.acc.z());
+                    agentModel.cm730State.acc.z(),
+                    agentModel.mx28States[19].presentPosition);
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {

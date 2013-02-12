@@ -46,6 +46,11 @@ void Debugger::timeImageProcessing(timestamp_t const& startedAt)
   AgentModel::getInstance().lastImageProcessTimeMillis = printTime(startedAt, "Processed %4.2f\n");
 }
 
+void Debugger::timeSubBoardRead(timestamp_t const& startedAt)
+{
+  AgentModel::getInstance().lastSubBoardReadTimeMillis = printTime(startedAt, "SubBoardRead %4.2f\n");
+}
+
 const double Debugger::printTime(timestamp_t const& startedAt, std::string const& format)
 {
   double millis = getSeconds(startedAt) * 1000.0;

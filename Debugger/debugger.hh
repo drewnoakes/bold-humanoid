@@ -33,6 +33,7 @@ namespace bold
 
     void timeThinkCycle(timestamp_t const& startedAt);
     void timeImageProcessing(timestamp_t const& startedAt);
+    void timeSubBoardRead(timestamp_t const& startedAt);
     void timeImageCapture(timestamp_t const& startedAt);
 
     void setIsBallObserved(bool const& isBallObserved);

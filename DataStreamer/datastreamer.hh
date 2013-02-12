@@ -24,18 +24,9 @@ namespace bold
     static DataStreamer* s_instance;
 
     static struct libwebsocket_protocols d_protocols[];
-//     = {
-//       // name, callback, per-session-data-size
-//       { "http-only", DataStreamer::callback_http, 0, NULL, 0 },
-//       { "timing-protocol", DataStreamer::callback_timing, 0, NULL, 0 },
-//       { "game-state-protocol", DataStreamer::callback_game_state, 0, NULL, 0 },
-//       { "agent-model-protocol", DataStreamer::callback_agent_model, 0, NULL, 0 },
-//       { NULL, NULL, 0, NULL, 0 },
-//     };
 
     const int d_port;
     libwebsocket_context* d_context;
-//    libwebsocket_protocols d_protocols[PROTOCOL_COUNT];
     bool d_gameStateUpdated;
     bool d_agentModelUpdated;
 
