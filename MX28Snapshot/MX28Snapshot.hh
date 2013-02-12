@@ -53,7 +53,7 @@ public:
 
   MX28Snapshot() {}
 
-  bool init(Robot::CM730 cm730, int mx82ID);
+  bool init(Robot::CM730& cm730, int const mx82ID);
 };
 
 #endif

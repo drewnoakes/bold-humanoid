@@ -38,7 +38,7 @@ public:
   CM730Snapshot()
   {}
 
-  bool init(Robot::CM730 cm730);
+  bool init(Robot::CM730& cm730);
 };
 
 #endif

@@ -45,7 +45,7 @@ Vector3d CM730Snapshot::shortToColour(unsigned short s)
     b / 31.0);
 }
 
-bool CM730Snapshot::init(Robot::CM730 cm730)
+bool CM730Snapshot::init(Robot::CM730& cm730)
 {
   unsigned char table[128];
 

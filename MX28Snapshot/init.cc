@@ -7,7 +7,7 @@ unsigned short MX28Snapshot::readTableWord(unsigned char* table, int addr)
   return CM730::MakeWord(table[addr], table[addr+1]);
 }
 
-bool MX28Snapshot::init(Robot::CM730 cm730, int mx82ID)
+bool MX28Snapshot::init(Robot::CM730& cm730, int const mx82ID)
 {
   unsigned char table[128];
 
