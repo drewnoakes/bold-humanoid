@@ -8,11 +8,11 @@
 class CM730Snapshot
 {
 private:
-  unsigned short readTableWord(unsigned char* table, int addr);
-  double gyroValueToDps(int value);
-  double gyroValueToRps(int value);
-  double accValueToGs(int value);
-  Eigen::Vector3d shortToColour(unsigned short s);
+  static unsigned short readTableWord(unsigned char* table, int addr);
+  static double gyroValueToDps(int value);
+  static double gyroValueToRps(int value);
+  static double accValueToGs(int value);
+  static Eigen::Vector3d shortToColour(unsigned short s);
 
 public:
   unsigned short modelNumber;
@@ -20,7 +20,17 @@ public:
   unsigned char dynamixelId;
   unsigned int baudBPS;
   unsigned int returnDelayTimeMicroSeconds;
-  unsigned char retLevel;
+
+  /**
+   * Controls when a status packet is returned.
+   *
+   * 0 - only for PING command
+   * 1 - only for READ command
+   * 2 - for all commands
+   *
+   * Never returned if instruction is a broadcast packet.
+   */
+  unsigned char statusRetLevel;
   bool isPowered;
   bool isLed2On;
   bool isLed3On;

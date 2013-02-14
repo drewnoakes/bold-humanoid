@@ -188,7 +188,7 @@ int DataStreamer::callback_agent_model(
   {
     AgentModel& agentModel = AgentModel::getInstance();
 
-    int n = sprintf((char*)p, "%f|%f|%f|%f|%f|%f|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d|%d",
+    int n = sprintf((char*)p, "%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f",
                     agentModel.cm730State.gyro.x(),
                     agentModel.cm730State.gyro.y(),
                     agentModel.cm730State.gyro.z(),
@@ -265,19 +265,6 @@ DataStreamer::DataStreamer(int port)
   d_gameStateUpdated(false)
 {
   std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
-
-//   // name, callback, per-session-data-size
-//   libwebsocket_protocols p0 = { "http-only", DataStreamer::callback_http, 0, NULL, 0 };
-//   d_protocols[Protocol::HTTP] = p0;
-//   libwebsocket_protocols p1 = { "timing-protocol", DataStreamer::callback_timing, 0, NULL, 0 };
-//   d_protocols[Protocol::TIMING] = p1;
-//   libwebsocket_protocols p2 = { "game-state-protocol", DataStreamer::callback_game_state, 0, NULL, 0 };
-//   d_protocols[Protocol::GAME_STATE] = p2;
-//   libwebsocket_protocols p3 = { "agent-model-protocol", DataStreamer::callback_agent_model, 0, NULL, 0 };
-//   d_protocols[Protocol::AGENT_MODEL] = p3;
-//
-//   libwebsocket_protocols eol = { NULL, NULL, 0, NULL, 0 };
-//   d_protocols[Protocol::PROTOCOL_COUNT] = eol;
 }
 
 void DataStreamer::streamImage(cv::Mat const& img)

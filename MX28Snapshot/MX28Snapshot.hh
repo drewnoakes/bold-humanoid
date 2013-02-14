@@ -8,7 +8,9 @@ using namespace Robot;
 class MX28Snapshot
 {
 private:
-  unsigned short readTableWord(unsigned char* table, int addr);
+  static unsigned short readTableWord(unsigned char* table, int addr);
+  static double angleValueToRads(unsigned int value);
+  static double valueToRPM(unsigned int value);
 
 public:
 
@@ -17,43 +19,56 @@ public:
   // EEPROM AREA
 
   unsigned short modelNumber;
-  unsigned char version;
+  unsigned char firmwareVersion;
   unsigned char id;
-  unsigned char baud;
-  unsigned char retDelayTime;
-  unsigned short angleLimitCW;
-  unsigned short angleLimitCCW;
-  unsigned char tempLimitHigh;
-  unsigned char voltageLimitLow;
-  unsigned char voltageLimitHigh;
+  unsigned int baudBPS;
+  unsigned int returnDelayTimeMicroSeconds;
+  double angleLimitCW;
+  double angleLimitCCW;
+  unsigned char tempLimitHighCelcius;
+  double voltageLimitLow;
+  double voltageLimitHigh;
   unsigned short maxTorque;
-  unsigned char retLevel;
+
+  /**
+   * Controls when a status packet is returned.
+   *
+   * 0 - only for PING command
+   * 1 - only for READ command
+   * 2 - for all commands
+   *
+   * Never returned if instruction is a broadcast packet.
+   */
+  unsigned char statusRetLevel;
+
   unsigned char alarmLed;
   unsigned char alarmShutdown;
 
   // RAM AREA
 
-  unsigned char torqueEnable;
-  unsigned char led;
-  unsigned char gainD;
-  unsigned char gainI;
-  unsigned char gainP;
-  unsigned short goalPosition;
-  unsigned short movingSpeed;
-  unsigned short torqueLimit;
-  unsigned short presentPosition;
-  unsigned short presentSpeed;
-  unsigned short presentLoad;
-  unsigned char presentVoltage;
+  bool torqueEnable;
+  bool led;
+  double gainP;
+  double gainI;
+  double gainD;
+  double goalPositionRads;
+  double movingSpeedRPM;
+  double torqueLimit;
+  double presentPosition;
+  double presentSpeedRPM;
+  double presentLoad;
+  double presentVoltage;
   unsigned char presentTemp;
-  unsigned char registeredInstr;
-  unsigned char moving;
-  unsigned char lock;
-  unsigned char punch;
+  bool isInstructionRegistered;
+  bool isMoving;
+  bool isEepromLocked;
+
+  // apparently this value is unused
+//  unsigned char punch;
 
   MX28Snapshot() {}
 
-  bool init(Robot::CM730& cm730, int const mx82ID);
+  bool init(Robot::CM730& cm730, int const mx28ID);
 };
 
 #endif
