@@ -15,7 +15,7 @@ int main()
 
   cout << "===== CAPABILITIES =====" << endl;
 
-  cout << "Read/write: " << (cam.canStream() ? "YES" : "NO") << endl;
+  cout << "Read/write: " << (cam.canRead() ? "YES" : "NO") << endl;
   cout << "Streaming:  " << (cam.canStream() ? "YES" : "NO") << endl;
 
   cout << "===== CONTROLS =====" << endl;;
@@ -45,4 +45,23 @@ int main()
   cout << "Height         : " << pixelFormat.height << endl;
   cout << "Bytes per line : " << pixelFormat.height << endl;
   cout << "Bytes total    : " << pixelFormat.imageByteSize << endl;
+
+  cv::namedWindow("main");
+
+  cam.startCapture();
+
+  for (;;)
+  {
+    int c = cv::waitKey(1);
+
+    if (c == 'q')
+      break;
+
+    cv::Mat img = cam.capture();
+    cv::imshow("main", img);
+
+    cout << "." << endl;
+  }
+
+  cam.stopCapture();
 }

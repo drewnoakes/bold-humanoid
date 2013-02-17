@@ -21,7 +21,18 @@ blobtest.o:  ../BlobDetector/blobdetector.hh ../DisjointSet/disjointset.hh
 blobtest: blobtest.o ${BLOBDETECTOR_OBJECTS} 
 	g++ blobtest.o ${CXXFLAGS} ${LDFLAGS} ${BLOBDETECTOR_OBJECTS} -o blobtest
 
-CAMERA_SOURCES=../Camera/Camera.cc ../Camera/open.cc ../Camera/listControls.cc ../Camera/getControlValue.cc ../Camera/setControlValue.cc ../Camera/listFormats.cc ../Camera/pixelFormatRequestSize.cc
+CAMERA_SOURCES=\
+	../Camera/Camera.cc\
+	../Camera/open.cc\
+	../Camera/listControls.cc\
+	../Camera/getControlValue.cc\
+	../Camera/setControlValue.cc\
+	../Camera/listFormats.cc\
+	../Camera/pixelFormatRequestSize.cc\
+	../Camera/initMemoryMapping.cc\
+	../Camera/startCapture.cc\
+	../Camera/stopCapture.cc\
+	../Camera/capture.cc
 
 CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
 

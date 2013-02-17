@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <linux/videodev2.h>
+#include <opencv.hpp>
 
 namespace bold
 {
@@ -104,6 +105,14 @@ namespace bold
 
     };
 
+    struct Buffer
+    {
+      unsigned index;
+      unsigned char* start;
+      size_t length;
+    };
+    
+
   public:
 
     Camera(std::string const& device);
@@ -116,9 +125,15 @@ namespace bold
 
     PixelFormat getPixelFormat() const { return d_pixelFormat; }
 
-    bool caRead() {  return d_capabilities.capabilities & V4L2_CAP_READWRITE; }
+    bool canRead() {  return d_capabilities.capabilities & V4L2_CAP_READWRITE; }
     bool canStream() { return d_capabilities.capabilities & V4L2_CAP_STREAMING; }
 
+    void startCapture();
+    void stopCapture();
+
+    cv::Mat capture();
+
+    void setSquashWidth(bool squash) { d_squash = squash; }
 
     friend class Control;
     friend class PixelFormat;
@@ -133,10 +148,16 @@ namespace bold
     std::vector<Format> d_formats;
     PixelFormat d_pixelFormat;
 
+    std::vector<Buffer> d_buffers;
+
+    bool d_squash;
+
     std::vector<Control> listControls();
     std::vector<Format> listFormats();
 
     void fillControlMenuItems(Control& control);
+
+    void initMemoryMapping();
   };
 }
 

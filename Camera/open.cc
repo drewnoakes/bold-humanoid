@@ -27,4 +27,7 @@ void Camera::open()
   
   // List image formats
   d_formats = listFormats();
+
+  // Start memory mapping
+  initMemoryMapping();
 }
