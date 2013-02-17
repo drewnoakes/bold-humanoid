@@ -1,9 +1,9 @@
 #include "camera.ih"
 
-void Camera::getControlValue(Control& control)
+int Camera::Control::getValue()
 {
   v4l2_control ctrl;
-  ctrl.id = control.id;
-  ioctl(d_fd, VIDIOC_G_CTRL, &ctrl);
-  control.value = ctrl.value;
+  ctrl.id = id;
+  ioctl(owner->d_fd, VIDIOC_G_CTRL, &ctrl);
+  return ctrl.value;
 }
