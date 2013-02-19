@@ -1,4 +1,4 @@
-CXXFLAGS=-I/usr/include/opencv2 -I/usr/include/eigen3 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -O0 -std=c++0x -g
+CXXFLAGS=-I/usr/include/opencv2 -I/usr/include/eigen3 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -O3 -std=c++0x -g
 LDFLAGS=`pkg-config opencv --libs`
 
 BLOBDETECTOR_SOURCES=../BlobDetector/detectBlobs.cc ../BlobDetector/runLengthEncode.cc ../BlobDetector/runSetToBlob.cc
@@ -6,10 +6,6 @@ BLOBDETECTOR_SOURCES=../BlobDetector/detectBlobs.cc ../BlobDetector/runLengthEnc
 BLOBDETECTOR_OBJECTS=$(BLOBDETECTOR_SOURCES:.cc=.o)
 
 all: djsettest blobtest
-
-clean:
-	rm ${BLOBDETECTOR_OBJECTS}
-	rm blobtest
 
 djsettest: djsettest.cc ../DisjointSet/disjointset.hh
 	g++ djsettest.cc -o djsettest -O3 -std=c++0x
@@ -32,7 +28,8 @@ CAMERA_SOURCES=\
 	../Camera/initMemoryMapping.cc\
 	../Camera/startCapture.cc\
 	../Camera/stopCapture.cc\
-	../Camera/capture.cc
+	../Camera/capture.cc\
+	../PixelFilterChain/applyFilters.cc
 
 CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
 
@@ -40,3 +37,10 @@ ${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
 
 cameratest: cameratest.o ${CAMERA_OBJECTS}
 	g++ cameratest.o ${CXXFLAGS} ${LDFLAGS} ${CAMERA_OBJECTS} -o cameratest
+
+clean:
+	rm -f ${BLOBDETECTOR_OBJECTS}
+	rm -f ${CAMERA_OBJECTS}
+	rm -f blobtest
+	rm -f cameratest
+
