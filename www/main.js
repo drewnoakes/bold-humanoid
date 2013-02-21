@@ -3,10 +3,11 @@ require(
         'scripts/app/FieldMap',
         'scripts/app/GameStateMonitor',
         'scripts/app/WebSocketFactory',
+        'scripts/app/Camera.js',
         'scripts/app/StreamingCharts',
         'scripts/app/Model'
     ],
-    function(FieldMap, GameStateMonitor, WebSocketFactory)
+    function(FieldMap, GameStateMonitor, WebSocketFactory, Camera)
     {
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
