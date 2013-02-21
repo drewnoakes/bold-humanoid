@@ -15,6 +15,7 @@ namespace bold
     TIMING,
     GAME_STATE,
     AGENT_MODEL,
+    CAMERA,
     PROTOCOL_COUNT
   };
 
@@ -55,6 +56,14 @@ namespace bold
       size_t len);
 
     static int callback_agent_model(
+      struct libwebsocket_context *context,
+      struct libwebsocket *wsi,
+      enum libwebsocket_callback_reasons reason,
+      void *user,
+      void *in,
+      size_t len);
+
+    static int callback_camera(
       struct libwebsocket_context *context,
       struct libwebsocket *wsi,
       enum libwebsocket_callback_reasons reason,

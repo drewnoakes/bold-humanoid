@@ -32,6 +32,7 @@ libwebsocket_protocols DataStreamer::d_protocols[] = {
   { "timing-protocol", DataStreamer::callback_timing, 0, NULL, 0 },
   { "game-state-protocol", DataStreamer::callback_game_state, 0, NULL, 0 },
   { "agent-model-protocol", DataStreamer::callback_agent_model, 0, NULL, 0 },
+  { "camera-protocol", DataStreamer::callback_camera, 0, NULL, 0 },
   { NULL, NULL, 0, NULL, 0 },
 };
 
@@ -246,6 +247,24 @@ int DataStreamer::callback_agent_model(
       return 1;
     }
   }
+
+  return 0;
+}
+
+////////////////////////////////////////////////////// camera protocol
+
+int DataStreamer::callback_camera(
+  struct libwebsocket_context *context,
+  struct libwebsocket *wsi,
+  enum libwebsocket_callback_reasons reason,
+  void *user,
+  void *in,
+  size_t len)
+{
+  UNUSED(context);
+  UNUSED(user);
+  UNUSED(in);
+  UNUSED(len);
 
   return 0;
 }
