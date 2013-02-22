@@ -1,5 +1,6 @@
 #include "agent.ih"
 #include "../AgentModel/agentmodel.hh"
+#include "../GameController/RoboCupGameControlData.h"
 
 void Agent::think()
 {
@@ -17,6 +18,8 @@ void Agent::think()
   cv::Mat raw = d_camera.capture();
 
   d_debugger.timeImageCapture(t);
+
+  d_streamer->streamImage(raw);
 
   //
   // Process the image
