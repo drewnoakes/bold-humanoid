@@ -26,3 +26,16 @@
 {
     background-color: green;
 }
+
+#camera-container
+{
+    position: relative;
+    height: 260px;
+}
+
+#camera-container img
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+}

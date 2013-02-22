@@ -12,7 +12,7 @@ define(
         {
             var imgBlob = new Blob([msg.data], {type: "image/jpeg"});
             var objectURL = window.URL.createObjectURL(imgBlob);
-            container.append($('<img>').attr('src', objectURL).css({position: 'absolute', left: '0px', top: '0px'}));
+            container.append($('<img>', {src: objectURL}));
 
             var images = container.find('img');
             if (images.length > 5)
