@@ -11,7 +11,7 @@ define(
 		socket.onmessage = function(msg)
         {
             var imgBlob = new Blob([msg.data], {type: "image/jpeg"});
-            var objectURL = window.URL.createObjectURL(imgBlob);
+            var objectURL = (window.webkitURL || window.URL).createObjectURL(imgBlob);
             container.append($('<img>', {src: objectURL}));
 
             var images = container.find('img');
