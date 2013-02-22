@@ -18,21 +18,13 @@
 using namespace bold;
 using namespace std;
 
-#define UNUSED(expr) do { (void)(expr); } while (0)
-
-/**
- * A singleton is needed, as the C-style function pointers used as callbacks
- * cannot have an object instance.
- */
-DataStreamer* DataStreamer::s_instance;
-
 libwebsocket_protocols DataStreamer::d_protocols[] = {
   // name, callback, per-session-data-size
-  { "http-only", DataStreamer::callback_http, 0, NULL, 0 },
-  { "timing-protocol", DataStreamer::callback_timing, 0, NULL, 0 },
-  { "game-state-protocol", DataStreamer::callback_game_state, 0, NULL, 0 },
-  { "agent-model-protocol", DataStreamer::callback_agent_model, 0, NULL, 0 },
-  { "camera-protocol", DataStreamer::callback_camera, 0, NULL, 0 },
+  { "http-only", DataStreamer::_callback_http, 0, NULL, 0 },
+  { "timing-protocol", DataStreamer::_callback_timing, 0, NULL, 0 },
+  { "game-state-protocol", DataStreamer::_callback_game_state, 0, NULL, 0 },
+  { "agent-model-protocol", DataStreamer::_callback_agent_model, 0, NULL, 0 },
+  { "camera-protocol", DataStreamer::_callback_camera, 0, NULL, 0 },
   { NULL, NULL, 0, NULL, 0 },
 };
 
@@ -42,12 +34,10 @@ int DataStreamer::callback_http(
   struct libwebsocket_context* context,
   struct libwebsocket* wsi,
   enum libwebsocket_callback_reasons reason,
-  void* user,
+  void* /*user*/,
   void* in,
-  size_t len)
+  size_t /*len*/)
 {
-  UNUSED(user);
-  UNUSED(len);
 
   switch (reason)
   {
@@ -117,18 +107,13 @@ int DataStreamer::callback_http(
 ////////////////////////////////////////////////////// timing protocol
 
 int DataStreamer::callback_timing(
-  struct libwebsocket_context *context,
+  struct libwebsocket_context* /*context*/,
   struct libwebsocket *wsi,
   enum libwebsocket_callback_reasons reason,
-  void *user,
-  void *in,
-  size_t len)
+  void* /*user*/,
+  void* /*in*/,
+  size_t /*len*/)
 {
-  UNUSED(context);
-  UNUSED(user);
-  UNUSED(in);
-  UNUSED(len);
-
   // TODO review 512 size here... can apply a better cap
   unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + 512 + LWS_SEND_BUFFER_POST_PADDING];
   unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
@@ -156,18 +141,13 @@ int DataStreamer::callback_timing(
 ////////////////////////////////////////////////////// game state protocol
 
 int DataStreamer::callback_game_state(
-  struct libwebsocket_context *context,
+  struct libwebsocket_context* /*context*/,
   struct libwebsocket *wsi,
   enum libwebsocket_callback_reasons reason,
-  void *user,
-  void *in,
-  size_t len)
+  void* /*user*/,
+  void* /*in*/,
+  size_t /*len*/)
 {
-  UNUSED(context);
-  UNUSED(user);
-  UNUSED(in);
-  UNUSED(len);
-
   // TODO review 512 size here... can apply a better cap
   unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + 512 + LWS_SEND_BUFFER_POST_PADDING];
   unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
@@ -193,18 +173,13 @@ int DataStreamer::callback_game_state(
 ////////////////////////////////////////////////////// agent model protocol
 
 int DataStreamer::callback_agent_model(
-  struct libwebsocket_context *context,
-  struct libwebsocket *wsi,
+  struct libwebsocket_context* /*context*/,
+  struct libwebsocket* wsi,
   enum libwebsocket_callback_reasons reason,
-  void *user,
-  void *in,
-  size_t len)
+  void* /*user*/,
+  void* /*in*/,
+  size_t /*len*/)
 {
-  UNUSED(context);
-  UNUSED(user);
-  UNUSED(in);
-  UNUSED(len);
-
   // TODO review 512 size here... can apply a better cap
   unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + 512 + LWS_SEND_BUFFER_POST_PADDING];
   unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
@@ -254,18 +229,13 @@ int DataStreamer::callback_agent_model(
 ////////////////////////////////////////////////////// camera protocol
 
 int DataStreamer::callback_camera(
-  struct libwebsocket_context *context,
+  struct libwebsocket_context* /*context*/,
   struct libwebsocket *wsi,
   enum libwebsocket_callback_reasons reason,
-  void *user,
-  void *in,
-  size_t len)
+  void* /*user*/,
+  void* /*in*/,
+  size_t /*len*/)
 {
-  UNUSED(context);
-  UNUSED(user);
-  UNUSED(in);
-  UNUSED(len);
-
   return 0;
 }
 
@@ -300,6 +270,7 @@ void DataStreamer::init()
   contextInfo.port = d_port;
   contextInfo.protocols = d_protocols;
   contextInfo.gid = contextInfo.uid = -1;
+  contextInfo.user = this;
 
   d_context = libwebsocket_create_context(&contextInfo);
 
