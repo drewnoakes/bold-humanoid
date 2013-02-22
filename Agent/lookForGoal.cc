@@ -27,9 +27,6 @@ void Agent::lookForGoal()
 
     double t = tval.tv_sec + tval.tv_usec / 1e6;
 
-    static auto w = d_camera.get(CV_CAP_PROP_FRAME_WIDTH);
-    static auto h = d_camera.get(CV_CAP_PROP_FRAME_HEIGHT);
-
     phase += 0.03/6 * 2 * M_PI;//(nObs == 1 ? 0.03 / 12 : 0.03 / 6.0) * 2 * M_PI;
     double periodV = 1.4;
 

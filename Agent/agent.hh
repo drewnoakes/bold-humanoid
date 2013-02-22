@@ -3,6 +3,7 @@
 
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
+#include "../vision/Camera/camera.hh"
 #include <opencv.hpp>
 
 #include <BlobDetector/blobdetector.hh>
@@ -63,7 +64,7 @@ namespace bold
     Robot::LinuxMotionTimer* d_motionTimer;
     minIni d_ini;
     std::string d_motionFile;
-    cv::VideoCapture d_camera;
+    Camera d_camera;
     Debugger d_debugger;
     DataStreamer* d_streamer;
     unsigned char* d_LUT;

@@ -34,9 +34,6 @@ void Agent::lookForBall()
     
     double t = tval.tv_sec + tval.tv_usec / 1e6;
 
-    static auto w = d_camera.get(CV_CAP_PROP_FRAME_WIDTH);
-    static auto h = d_camera.get(CV_CAP_PROP_FRAME_HEIGHT);
-
     double periodH = 3.0;
     double periodV = 1.4;
 

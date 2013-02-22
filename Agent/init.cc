@@ -3,13 +3,17 @@
 bool Agent::init()
 {
   cout << "[Agent::init] Start" << endl;
+  d_camera.open();
+  d_camera.startCapture();
 
   // Check if camera is opened successfully
+  /*
   if (!d_camera.isOpened())
   {
     cout << "[Agent::init] Failed to open camera!" << endl;
     return false;
   }
+  */
 
   if (d_showUI)
   {
@@ -64,11 +68,15 @@ bool Agent::init()
     usleep(8000);
   while(Robot::Action::GetInstance()->IsRunning())
     usleep(8*1000);
+
+  /*
   cout << "[Agent::init] Stand up" << endl;
   while(Robot::Action::GetInstance()->Start("stand up") == false)
     usleep(8000);
   while(Robot::Action::GetInstance()->IsRunning())
     usleep(8*1000);
+  */
+
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   MotionManager::GetInstance()->ResetGyroCalibration();

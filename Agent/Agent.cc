@@ -12,7 +12,7 @@ Agent::Agent(std::string const& U2D_dev,
     d_CM730(&d_linuxCM730),
     d_ini(iniFile),
     d_motionFile(motionFile),
-    d_camera(0),
+    d_camera("/dev/video0"),
     d_debugger(),
     d_ambulator(d_ini),
     d_minBallArea(8*8),
@@ -44,12 +44,13 @@ Agent::Agent(std::string const& U2D_dev,
   // contrast:   0.12549
   // saturation: 0.109804
 
-  double gain       = d_ini.getd("Camera", "Gain",       d_camera.get(CV_CAP_PROP_GAIN));
-  double brightness = d_ini.getd("Camera", "Brightness", d_camera.get(CV_CAP_PROP_BRIGHTNESS));
-  double contrast   = d_ini.getd("Camera", "Contrast",   d_camera.get(CV_CAP_PROP_CONTRAST));
-  double saturation = d_ini.getd("Camera", "Saturation", d_camera.get(CV_CAP_PROP_SATURATION));
-//double hue        = d_ini.getd("Camera", "Hue",        d_camera.get(CV_CAP_PROP_HUE));
-//double exposure   = d_ini.getd("Camera", "Exposure",   d_camera.get(CV_CAP_PROP_EXPOSURE));
+ 
+  double gain       = d_ini.getd("Camera", "Gain",       0);
+  double brightness = d_ini.getd("Camera", "Brightness", 0);
+  double contrast   = d_ini.getd("Camera", "Contrast",   0);
+  double saturation = d_ini.getd("Camera", "Saturation", 0);
+//double hue        = d_ini.getd("Camera", "Hue",        0);
+//double exposure   = d_ini.getd("Camera", "Exposure",   0);
 
   int width  = d_ini.geti("Camera", "Width", 320);
   int height = d_ini.geti("Camera", "Width", 240);
@@ -62,6 +63,7 @@ Agent::Agent(std::string const& U2D_dev,
 //cout << "[Agent::Agent] Using camera hue:        " << hue << endl;
 //cout << "[Agent::Agent] Using camera exposure:   " << exposure << endl;
 
+  /*
   d_camera.set(CV_CAP_PROP_FRAME_WIDTH,  width);
   d_camera.set(CV_CAP_PROP_FRAME_HEIGHT, height);
   d_camera.set(CV_CAP_PROP_GAIN,         gain);
@@ -70,5 +72,6 @@ Agent::Agent(std::string const& U2D_dev,
   d_camera.set(CV_CAP_PROP_SATURATION,   saturation);
 //d_camera.set(CV_CAP_PROP_HUE,          hue);
 //d_camera.set(CV_CAP_PROP_EXPOSURE,     exposure);
+*/
 }
 

@@ -14,8 +14,8 @@ void Agent::think()
   // Capture the image
   //
   auto t = Debugger::getTimestamp();
-  cv::Mat raw;
-  d_camera >> raw;
+  cv::Mat raw = d_camera.capture();
+
   d_debugger.timeImageCapture(t);
 
   //
@@ -39,6 +39,7 @@ void Agent::think()
   switch (d_state)
   {
   case S_INIT:
+    break;
     d_state = S_LOOK_FOR_BALL;
 
   case S_LOOK_FOR_BALL:
