@@ -22,7 +22,8 @@ bool Agent::init()
   }
 
   // TODO only stream if argument specified?
-  d_streamer = DataStreamer::create();
+  d_streamer = new DataStreamer(8080);
+  d_streamer->init();
 
   d_debugger.update(d_CM730);
 
