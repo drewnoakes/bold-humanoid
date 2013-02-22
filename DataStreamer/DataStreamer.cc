@@ -9,6 +9,7 @@
 #include <signal.h>
 #include <vector>
 #include <iostream>
+#include <opencv.hpp>
 
 #include "datastreamer.hh"
 
@@ -236,6 +237,25 @@ int DataStreamer::callback_camera(
   void* /*in*/,
   size_t /*len*/)
 {
+
+  if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
+  {
+    // Encode image to jpeg (perhaps do this directly when getting image?)
+    vector<uchar> jpgbuf;
+    cv::imencode(".jpg", d_img, jpgbuf);
+    
+    unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + jpgbuf.size() + LWS_SEND_BUFFER_POST_PADDING];
+    unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
+
+    memcpy(p, jpgbuf.data(), jpgbuf.size());
+
+    if (libwebsocket_write(wsi, p, jpgbuf.size(), LWS_WRITE_BINARY) < 0)
+    {
+      lwsl_err("ERROR %d writing to socket\n", 1);
+      return 1;
+    }
+  }
+
   return 0;
 }
 
@@ -259,6 +279,12 @@ DataStreamer::DataStreamer(int port)
 //
 //   libwebsocket_protocols eol = { NULL, NULL, 0, NULL, 0 };
 //   d_protocols[Protocol::PROTOCOL_COUNT] = eol;
+}
+
+void DataStreamer::streamImage(cv::Mat const& img)
+{
+  d_img = img;
+  libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
 }
 
 void DataStreamer::init()

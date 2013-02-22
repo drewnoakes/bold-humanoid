@@ -4,8 +4,13 @@
 #include <vector>
 #include <string>
 #include <libwebsockets.h>
-
+#include <opencv.hpp>
 #include "../Debugger/debugger.hh"
+
+namespace cv
+{
+  class Mat;
+}
 
 namespace bold
 {
@@ -23,9 +28,12 @@ namespace bold
   {
   public:
     DataStreamer(int port);
+
     void init();
     void update();
     void close();
+
+    void streamImage(cv::Mat const& img);
 
     int callback_http(
       struct libwebsocket_context* context,
@@ -72,6 +80,8 @@ namespace bold
     libwebsocket_context* d_context;
     bool d_gameStateUpdated;
     bool d_agentModelUpdated;
+
+    cv::Mat d_img;
 
   private:
     static struct libwebsocket_protocols d_protocols[];
