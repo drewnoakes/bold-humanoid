@@ -6,3 +6,4 @@ vision
 *.kate-swp
 *#
 cameratest
+test/accumulator.jpg
