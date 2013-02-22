@@ -295,18 +295,13 @@ void DataStreamer::init()
 {
   std::cout << "[DataStreamer:init] Starting" << std::endl;
 
-  d_context = libwebsocket_create_context(
-    d_port,
-    /* interface */ NULL,
-    d_protocols,
-    /*extensions*/ NULL,
-    /*ssl_cert_filepath*/ NULL,
-    /*ssl_private_key_filepath*/ NULL,
-    /*ssl_ca_filepath*/ NULL,
-    /* gid */ -1,
-    /* uid */ -1,
-    /*options*/ 0,
-    /* user */ NULL);
+  lws_context_creation_info contextInfo;
+  memset(&contextInfo, 0, sizeof(contextInfo));
+  contextInfo.port = d_port;
+  contextInfo.protocols = d_protocols;
+  contextInfo.gid = contextInfo.uid = -1;
+
+  d_context = libwebsocket_create_context(&contextInfo);
 
   if (d_context == NULL)
     lwsl_err("libwebsocket init failed\n");
