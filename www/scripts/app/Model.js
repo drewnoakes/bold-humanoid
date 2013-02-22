@@ -221,6 +221,31 @@ define(
             light.position.normalize();
             scene.add(light);
 
+			// GROUND
+			var mapHeight = THREE.ImageUtils.loadTexture("images/felt.png");
+			mapHeight.anisotropy = 4;
+			mapHeight.repeat.set(3, 3);
+//			mapHeight.offset.set(0.001, 0.001);
+			mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
+			mapHeight.format = THREE.RGBFormat;
+
+			var groundMaterial = new THREE.MeshPhongMaterial({
+				ambient: 0x00AA00, color: 0x00AA00, specular: 0x888888,
+				shininess: 25,
+				normalMap: mapHeight,
+				normalScale: 10,
+//				bumpMap: mapHeight,
+//				bumpScale: 10,
+				metal: false
+			} );
+
+			var groundSize = 3;
+			var mesh = new THREE.Mesh(new THREE.PlaneGeometry(groundSize, groundSize), groundMaterial);
+			mesh.position.y = -0.341;
+			mesh.rotation.x = -Math.PI/2;
+//			mesh.receiveShadow = true;
+			scene.add(mesh);
+
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(640, 480);
 

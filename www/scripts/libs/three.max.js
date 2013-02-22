@@ -1794,7 +1794,7 @@ THREE.Vector3.prototype = {
 
 	angleTo: function ( v ) {
 
-		return Math.acos( this.dot( v ) / this.length() / v.length() );
+		return Math.acos( Math.min ( 1, this.dot( v ) / this.length() / v.length() ) );
 
 	},
 
@@ -2026,6 +2026,12 @@ THREE.Vector3.prototype = {
 	clone: function () {
 
 		return new THREE.Vector3( this.x, this.y, this.z );
+
+	},
+
+	toString: function () {
+
+		return '[' + this.x.toFixed(4) + ', ' + this.y.toFixed(4) + ', ' + this.z.toFixed(4) + ']';
 
 	}
 
@@ -7162,7 +7168,7 @@ THREE.Geometry.prototype = {
 
 	computeVertexNormals: function ( areaWeighted ) {
 
-		var v, vl, f, fl, face, vertices;
+		var v, vl, f, fl, face, vertexNormals;
 
 		// create internal buffers for reuse when calling this method repeatedly
 		// (otherwise memory allocation / deallocation every frame is big resource hog)
@@ -7170,11 +7176,11 @@ THREE.Geometry.prototype = {
 		if ( this.__tmpVertices === undefined ) {
 
 			this.__tmpVertices = new Array( this.vertices.length );
-			vertices = this.__tmpVertices;
+			vertexNormals = this.__tmpVertices;
 
 			for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
 
-				vertices[ v ] = new THREE.Vector3();
+				vertexNormals[ v ] = new THREE.Vector3();
 
 			}
 
@@ -7196,15 +7202,17 @@ THREE.Geometry.prototype = {
 
 		} else {
 
-			vertices = this.__tmpVertices;
+			vertexNormals = this.__tmpVertices;
 
 			for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
 
-				vertices[ v ].set( 0, 0, 0 );
+				vertexNormals[ v ].set( 0, 0, 0 );
 
 			}
 
 		}
+
+        // per vertex, sum the normals of each face that meet at that vertex
 
 		if ( areaWeighted ) {
 
@@ -7229,9 +7237,9 @@ THREE.Geometry.prototype = {
 					ab.subVectors( vA, vB );
 					cb.cross( ab );
 
-					vertices[ face.a ].add( cb );
-					vertices[ face.b ].add( cb );
-					vertices[ face.c ].add( cb );
+					vertexNormals[ face.a ].add( cb );
+					vertexNormals[ face.b ].add( cb );
+					vertexNormals[ face.c ].add( cb );
 
 				} else if ( face instanceof THREE.Face4 ) {
 
@@ -7246,9 +7254,9 @@ THREE.Geometry.prototype = {
 					ab.subVectors( vA, vB );
 					db.cross( ab );
 
-					vertices[ face.a ].add( db );
-					vertices[ face.b ].add( db );
-					vertices[ face.d ].add( db );
+					vertexNormals[ face.a ].add( db );
+					vertexNormals[ face.b ].add( db );
+					vertexNormals[ face.d ].add( db );
 
 					// bcd
 
@@ -7256,9 +7264,9 @@ THREE.Geometry.prototype = {
 					bc.subVectors( vB, vC );
 					dc.cross( bc );
 
-					vertices[ face.b ].add( dc );
-					vertices[ face.c ].add( dc );
-					vertices[ face.d ].add( dc );
+					vertexNormals[ face.b ].add( dc );
+					vertexNormals[ face.c ].add( dc );
+					vertexNormals[ face.d ].add( dc );
 
 				}
 
@@ -7272,16 +7280,16 @@ THREE.Geometry.prototype = {
 
 				if ( face instanceof THREE.Face3 ) {
 
-					vertices[ face.a ].add( face.normal );
-					vertices[ face.b ].add( face.normal );
-					vertices[ face.c ].add( face.normal );
+					vertexNormals[ face.a ].add( face.normal );
+					vertexNormals[ face.b ].add( face.normal );
+					vertexNormals[ face.c ].add( face.normal );
 
 				} else if ( face instanceof THREE.Face4 ) {
 
-					vertices[ face.a ].add( face.normal );
-					vertices[ face.b ].add( face.normal );
-					vertices[ face.c ].add( face.normal );
-					vertices[ face.d ].add( face.normal );
+					vertexNormals[ face.a ].add( face.normal );
+					vertexNormals[ face.b ].add( face.normal );
+					vertexNormals[ face.c ].add( face.normal );
+					vertexNormals[ face.d ].add( face.normal );
 
 				}
 
@@ -7289,11 +7297,15 @@ THREE.Geometry.prototype = {
 
 		}
 
+        // normalize the summed face vectors to make a correct normal vector
+
 		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
 
-			vertices[ v ].normalize();
+			vertexNormals[ v ].normalize();
 
 		}
+
+        // copy each new vertex normal to each face that shares it
 
 		for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -7301,16 +7313,16 @@ THREE.Geometry.prototype = {
 
 			if ( face instanceof THREE.Face3 ) {
 
-				face.vertexNormals[ 0 ].copy( vertices[ face.a ] );
-				face.vertexNormals[ 1 ].copy( vertices[ face.b ] );
-				face.vertexNormals[ 2 ].copy( vertices[ face.c ] );
+				face.vertexNormals[ 0 ].copy( vertexNormals[ face.a ] );
+				face.vertexNormals[ 1 ].copy( vertexNormals[ face.b ] );
+				face.vertexNormals[ 2 ].copy( vertexNormals[ face.c ] );
 
 			} else if ( face instanceof THREE.Face4 ) {
 
-				face.vertexNormals[ 0 ].copy( vertices[ face.a ] );
-				face.vertexNormals[ 1 ].copy( vertices[ face.b ] );
-				face.vertexNormals[ 2 ].copy( vertices[ face.c ] );
-				face.vertexNormals[ 3 ].copy( vertices[ face.d ] );
+				face.vertexNormals[ 0 ].copy( vertexNormals[ face.a ] );
+				face.vertexNormals[ 1 ].copy( vertexNormals[ face.b ] );
+				face.vertexNormals[ 2 ].copy( vertexNormals[ face.c ] );
+				face.vertexNormals[ 3 ].copy( vertexNormals[ face.d ] );
 
 			}
 
