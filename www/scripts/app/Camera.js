@@ -6,9 +6,9 @@ define(
     {
         var protocol = 'camera-protocol',
             socket = WebSocketFactory.open(protocol),
-		    container = $('#camera-container');
+            container = $('#camera-container');
 
-		socket.onmessage = function(msg)
+        socket.onmessage = function(msg)
         {
             var imgBlob = new Blob([msg.data], {type: "image/jpeg"});
             var objectURL = (window.webkitURL || window.URL).createObjectURL(imgBlob);
