@@ -16,9 +16,9 @@ define(
 
         init();
 
-		// TODO define the offsets/rotations/etc below in terms of Constants
-		// TODO map hinges below to servo IDs, and manipulate from agent-model protocol
-		// TODO add forehead-camera geometry
+        // TODO define the offsets/rotations/etc below in terms of Constants
+        // TODO map hinges below to servo IDs, and manipulate from agent-model protocol
+        // TODO add forehead-camera geometry
 
         var body = {
             name: 'body',
@@ -33,13 +33,13 @@ define(
                         {
                             name: 'head',
                             geometryPath: 'models/darwin/darwin-head.json',
-							creaseAngle: 0.52,
+                            creaseAngle: 0.52,
 //                            offset: { x: 0, y: 0.0 },
                             rotationAxis: 'x', // TODO should be -1, 0, 0
                             children: [
                                 {
                                     name: 'eye-led',
-									creaseAngle: 0.52,
+                                    creaseAngle: 0.52,
                                     geometryPath: 'models/darwin/darwin-eye-led.json',
                                     offset: { x: 0, y: 0 }
                                 },
@@ -216,10 +216,10 @@ define(
 //            light.position.normalize();
 //            scene.add(light);
 
-			light = new THREE.PointLight(0xffffff);
-			light.position.set(0, 1, -1);
-			light.position.normalize();
-			scene.add(light);
+            light = new THREE.PointLight(0xffffff);
+            light.position.set(0, 1, -1);
+            light.position.normalize();
+            scene.add(light);
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -251,7 +251,7 @@ define(
                         geometry.computeFaceNormals();
 //                        geometry.computeVertexNormals();
                         GeometryUtil.computeVertexNormals(geometry, node.creaseAngle || 0.2);
-						parentObject.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial( materials )));
+                        parentObject.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial( materials )));
                         geometriesToLoad--;
                         if (geometriesToLoad === 0) {
                             loadedCallback();
@@ -291,7 +291,7 @@ define(
             {
                 event.preventDefault();
                 cameraDistance *= 1 - (event.wheelDeltaY/720);
-				cameraDistance = Math.max(0.1, Math.min(5, cameraDistance));
+                cameraDistance = Math.max(0.1, Math.min(5, cameraDistance));
                 updateCameraPosition();
             });
 
