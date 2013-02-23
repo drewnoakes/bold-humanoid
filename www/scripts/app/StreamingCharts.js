@@ -15,7 +15,8 @@ define(
                 fillStyle: 'rgb(0, 0, 0)',
                 lineWidth: 1,
                 millisPerLine: 250,
-                verticalSections: 6
+                verticalSections: 6,
+                sharpLines: true
             },
             labels: {
                 fillStyle: '#ffffff'
@@ -67,8 +68,8 @@ define(
             }
         ];
 
-        var chartWidth = 700,
-            chartHeight = 100,
+        var chartWidth = 640,
+            chartHeight = 120,
             parseFloats = function (s)
             {
                 var bits = s.split('|');
@@ -88,7 +89,7 @@ define(
             {
                 var chart = new SmoothieChart(chartDefinition.options);
 
-                // TODO add title/legend elements
+                container.append($('<h2></h2>', {text:chartDefinition.title}));
                 var canvas = document.createElement('canvas');
                 canvas.width = chartWidth;
                 canvas.height = chartHeight;

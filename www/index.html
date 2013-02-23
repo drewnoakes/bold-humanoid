@@ -18,36 +18,38 @@
 
 <body>
 
-<div id="socket-connections"></div>
+<div id="header">
+    <img id="logo" src="images/logo-boldhearts.png" width="105" height="105">
+    <div id="socket-connections"></div>
+    <div>Game State: <span id="secondsRemaining"></span></div>
+</div>
 
-<section>
-  <div>Camera</div>
-  <div id="camera-container"><img id="camera-img" src="http://homepages.stca.herts.ac.uk/~epics/boldhearts/sites/default/files/magazeen_logo.png"/></div>
-</section>
+<div class="panel">
+    <h1>Camera</h1>
+    <div id="camera-container"></div>
+</div>
 
-<section>
-    <div>model</div>
+<div class="panel">
+    <h1>Model</h1>
     <div id="model-container"></div>
-</section>
+</div>
 
-<div id="streaming-charts"></div>
+<div class="panel">
+    <h1>Charts</h1>
+    <div id="streaming-charts"></div>
+</div>
 
-<section>
-    <div>game control</div>
-    <div id="secondsRemaining"></div>
-</section>
-
-<section>
-    <div>field</div>
+<div class="panel">
+    <h1>Field</h1>
     <div id="field-map-container">
-        <canvas id="field-map" width="700" height="450"></canvas>
+        <canvas id="field-map" width="640" height="480"></canvas>
     </div>
-</section>
+</div>
 
 <script type="text/javascript">
     require.config({
 //        urlArgs: 'v=11'
-//        urlArgs: 'noCache=' + new Date().getTime()
+        urlArgs: 'noCache=' + new Date().getTime()
     });
 </script>
 
