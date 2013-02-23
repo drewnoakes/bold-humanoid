@@ -94,7 +94,7 @@ define(
                 canvas.height = chartHeight;
                 container.append(canvas);
 
-                chart.streamTo(canvas);
+                chart.streamTo(canvas, /*delayMs*/ 200);
 
                 _.each(chartDefinition.series, function(seriesDefinition)
                 {

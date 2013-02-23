@@ -16,10 +16,8 @@ define(
 
         init();
 
-		// TODO less delay on the smoothie charts
 		// TODO define the offsets/rotations/etc below in terms of Constants
 		// TODO map hinges below to servo IDs, and manipulate from agent-model protocol
-		// TODO configure darwin to serve all these new HTML pages
 		// TODO add forehead-camera geometry
 
         var body = {
