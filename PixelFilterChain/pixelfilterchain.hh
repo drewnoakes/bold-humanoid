@@ -2,7 +2,7 @@
 #define BOLD_PIXELFILTERCHAIN_HH
 
 #include <functional>
-#include <opencv.hpp>
+#include <opencv2/opencv.hpp>
 
 namespace bold
 {

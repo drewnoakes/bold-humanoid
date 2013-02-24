@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <linux/videodev2.h>
-#include <opencv.hpp>
+#include <opencv2/opencv.hpp>
 
 namespace bold
 {
