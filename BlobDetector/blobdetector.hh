@@ -2,7 +2,7 @@
 #define BOLD_BLOBDETECTOR_HH
 
 #include <Eigen/Core>
-#include <opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include "../DisjointSet/disjointset.hh"
 
 namespace bold
