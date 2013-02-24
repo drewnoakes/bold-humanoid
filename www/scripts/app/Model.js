@@ -251,9 +251,18 @@ define(
             render();
         }
 
+        var isRenderQueued = false;
         function render()
         {
-            requestAnimationFrame(function() { renderer.render(scene, camera); });
+            // Only render once per frame, regardless of how many times requested
+            if (isRenderQueued)
+                return;
+            isRenderQueued = true;
+            requestAnimationFrame(function()
+            {
+                isRenderQueued = false;
+                renderer.render(scene, camera);
+            });
         }
 
         return {
@@ -265,9 +274,20 @@ define(
                     return;
                 }
 
+                var hasChange = false;
                 for (var i = 0; i < 20; i++)
                 {
-                    hinge[i].rotation[hinge[i].rotationAxis] = angles[i];
+                    var hinge = hinges[i];
+                    if (hinge.rotation !== angles[i])
+                    {
+                        hinge.rotation[hinge.rotationAxis] = angles[i];
+                        hasChange = true;
+                    }
+                }
+
+                if (hasChange)
+                {
+                    render();
                 }
             }
         }

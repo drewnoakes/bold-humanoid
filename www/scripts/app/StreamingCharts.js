@@ -115,7 +115,8 @@ define(
                     seriesArray[f].append(time, floats[f]);
                 }
 
-                Model.updateAngles(floats.slice(6));
+                if (protocolDefinition.protocol === 'agent-model-protocol')
+                    Model.updateAngles(floats.slice(6));
             }
         });
     }
