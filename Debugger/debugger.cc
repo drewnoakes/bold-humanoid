@@ -33,22 +33,22 @@ const Debugger::timestamp_t Debugger::getTimestamp()
 
 void Debugger::timeThinkCycle(timestamp_t const& startedAt)
 {
-  AgentModel::getInstance().lastThinkCycleMillis = printTime(startedAt, "Cycle %4.2f ");
+  AgentModel::getInstance().lastThinkCycleMillis = getSeconds(startedAt) * 1000.0; // printTime(startedAt, "Cycle %4.2f ");
 }
 
 void Debugger::timeImageCapture(timestamp_t const& startedAt)
 {
-  AgentModel::getInstance().lastImageCaptureTimeMillis = printTime(startedAt, "Captured %4.2f ");
+  AgentModel::getInstance().lastImageCaptureTimeMillis = getSeconds(startedAt) * 1000.0; // printTime(startedAt, "Captured %4.2f ");
 }
 
 void Debugger::timeImageProcessing(timestamp_t const& startedAt)
 {
-  AgentModel::getInstance().lastImageProcessTimeMillis = printTime(startedAt, "Processed %4.2f\n");
+  AgentModel::getInstance().lastImageProcessTimeMillis = getSeconds(startedAt) * 1000.0; // printTime(startedAt, "Processed %4.2f");
 }
 
 void Debugger::timeSubBoardRead(timestamp_t const& startedAt)
 {
-  AgentModel::getInstance().lastSubBoardReadTimeMillis = printTime(startedAt, "SubBoardRead %4.2f\n");
+  AgentModel::getInstance().lastSubBoardReadTimeMillis = getSeconds(startedAt) * 1000.0; // printTime(startedAt, "SubBoardRead %4.2f\n");
 }
 
 const double Debugger::printTime(timestamp_t const& startedAt, std::string const& format)

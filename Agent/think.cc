@@ -37,7 +37,7 @@ void Agent::think()
     d_debugger.setGameControlData(gameControlData);
   }
 
-  cout << "state: " << d_state << endl;
+//  cout << "state: " << d_state << endl;
 
   switch (d_state)
   {
