@@ -6,8 +6,6 @@ define(
     ],
     function()
     {
-        //noinspection UnnecessaryLocalVariableJS
-
         var Constants = {
             fieldX: 6.0,
             fieldY: 4.0,
@@ -23,6 +21,180 @@ define(
             penaltyLineLength: 0.1,
             outerMarginMinimum: 0.7,
             ballDiameter: 0.067 // according to Wikipedia
+        };
+
+        // TODO add forehead-camera geometry
+        // TODO define the offsets/rotations/etc below in terms of Constants
+
+        Constants.bodyStructure = {
+            name: 'body',
+            geometryPath: 'models/darwin/darwin-body.json',
+            children: [
+                {
+                    name: 'neck',
+                    geometryPath: 'models/darwin/darwin-neck.json',
+                    offset: { x: 0, y: 0.051 },
+                    rotationAxis: 'y',
+                    children: [
+                        {
+                            name: 'head',
+                            geometryPath: 'models/darwin/darwin-head.json',
+                            creaseAngle: 0.52,
+//                            offset: { x: 0, y: 0.0 },
+                            rotationAxis: 'x', // TODO should be -1, 0, 0
+                            children: [
+                                {
+                                    name: 'eye-led',
+                                    creaseAngle: 0.52,
+                                    geometryPath: 'models/darwin/darwin-eye-led.json',
+                                    offset: { x: 0, y: 0 }
+                                },
+                                {
+                                    name: 'forehead-led',
+                                    geometryPath: 'models/darwin/darwin-forehead-led.json',
+                                    offset: { x: 0, y: 0 }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'pelvis-left-yaw',
+                    geometryPath: 'models/darwin/darwin-pelvis-yaw-left.json',
+                    offset: { x: 0.037, y: -0.1222, z: -0.005 },
+                    rotationAxis: 'y', // TODO should be 0, -1, 0
+                    children: [
+                        {
+                            name: 'pelvis-left',
+                            geometryPath: 'models/darwin/darwin-pelvis-left.json',
+                            offset: { x: 0, y: 0, z: 0 },
+                            rotationAxis: 'z', // TODO should be 0, 0, -1
+                            children: [
+                                {
+                                    name: 'leg-upper-left',
+                                    geometryPath: 'models/darwin/darwin-leg-upper-left.json',
+                                    offset: { x: 0, y: 0, z: 0 },
+                                    rotationAxis: 'x', // TODO should be -1, 0, 0
+                                    children: [
+                                        {
+                                            name: 'leg-lower-left',
+                                            geometryPath: 'models/darwin/darwin-leg-lower-left.json',
+                                            offset: { x: 0, y: -0.093, z: 0 },
+                                            rotationAxis: 'x', // TODO should be -1, 0, 0
+                                            children: [
+                                                {
+                                                    name: 'ankle-left',
+                                                    geometryPath: 'models/darwin/darwin-ankle-left.json',
+                                                    offset: { x: 0, y: -0.093, z: 0 },
+                                                    rotationAxis: 'x', // TODO should be 1, 0, 0
+                                                    children: [
+                                                        {
+                                                            name: 'foot-left',
+                                                            geometryPath: 'models/darwin/darwin-foot-left.json',
+                                                            offset: { x: 0, y: 0, z: 0 },
+                                                            rotationAxis: 'z' // TODO should be 0, 0, 1
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'pelvis-right-yaw',
+                    geometryPath: 'models/darwin/darwin-pelvis-yaw-right.json',
+                    offset: { x: -0.037, y: -0.1222, z: -0.005 },
+                    rotationAxis: 'y', // TODO should be 0, -1, 0
+                    children: [
+                        {
+                            name: 'pelvis-right',
+                            geometryPath: 'models/darwin/darwin-pelvis-right.json',
+                            offset: { x: 0, y: 0, z: 0 },
+                            rotationAxis: 'z', // TODO should be 0, 0, -1
+                            children: [
+                                {
+                                    name: 'leg-upper-right',
+                                    geometryPath: 'models/darwin/darwin-leg-upper-right.json',
+                                    offset: { x: 0, y: 0, z: 0 },
+                                    rotationAxis: 'x', // TODO should be 1, 0, 0
+                                    children: [
+                                        {
+                                            name: 'leg-lower-right',
+                                            geometryPath: 'models/darwin/darwin-leg-lower-right.json',
+                                            offset: { x: 0, y: -0.093, z: 0 },
+                                            rotationAxis: 'x', // TODO should be 1, 0, 0
+                                            children: [
+                                                {
+                                                    name: 'ankle-right',
+                                                    geometryPath: 'models/darwin/darwin-ankle-right.json',
+                                                    offset: { x: 0, y: -0.093, z: 0 },
+                                                    rotationAxis: 'x', // TODO should be -1, 0, 0
+                                                    children: [
+                                                        {
+                                                            name: 'foot-right',
+                                                            geometryPath: 'models/darwin/darwin-foot-right.json',
+                                                            offset: { x: 0, y: 0, z: 0 },
+                                                            rotationAxis: 'z' // TODO should be 0, 0, 1
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'shoulder-left',
+                    geometryPath: 'models/darwin/darwin-shoulder-left.json',
+                    offset: { x: 0.082, y: 0, z: 0 },
+                    rotationAxis: 'x', // 1 0 0
+                    children: [
+                        {
+                            name: 'arm-upper-left',
+                            geometryPath: 'models/darwin/darwin-arm-upper-left.json',
+                            offset: { x: 0, y: -0.016, z: 0 },
+                            rotationAxis: 'z', // TODO should be 0 0 -1 -0.7854
+                            children: [
+                                {
+                                    name: 'arm-lower-left',
+                                    geometryPath: 'models/darwin/darwin-arm-lower-left.json',
+                                    offset: { x: 0, y: -0.06, z: 0.016 },
+                                    rotationAxis: 'x' // TODO should be 1 0 0 -1.5708
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'shoulder-right',
+                    geometryPath: 'models/darwin/darwin-shoulder-right.json',
+                    offset: { x: -0.082, y: 0, z: 0 },
+                    rotationAxis: 'x', // -1 0 0
+                    children: [
+                        {
+                            name: 'arm-upper-right',
+                            geometryPath: 'models/darwin/darwin-arm-upper-right.json',
+                            offset: { x: 0, y: -0.016, z: 0 },
+                            rotationAxis: 'z', // TODO should be 0 0 -1 0.7854
+                            children: [
+                                {
+                                    name: 'arm-lower-right',
+                                    geometryPath: 'models/darwin/darwin-arm-lower-right.json',
+                                    offset: { x: 0, y: -0.06, z: 0.016 },
+                                    rotationAxis: 'x' // TODO should be -1 0 0 1.5708
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         };
 
         return Constants;

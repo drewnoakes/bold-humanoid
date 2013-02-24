@@ -3,9 +3,10 @@
  */
 define(
     [
-        'scripts/app/WebSocketFactory'
+        'scripts/app/WebSocketFactory',
+        'scripts/app/Model'
     ],
-    function(WebSocketFactory)
+    function(WebSocketFactory, Model)
     {
         WebSocketFactory.toString();
 
@@ -113,6 +114,8 @@ define(
                 for (var f = 0; f < floats.length && f < seriesArray.length; f++) {
                     seriesArray[f].append(time, floats[f]);
                 }
+
+                Model.updateAngles(floats.slice(6));
             }
         });
     }
