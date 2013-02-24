@@ -211,31 +211,24 @@ define(
             light.position.normalize();
             scene.add(light);
 
-//            light = new THREE.DirectionalLight(0xffffff);
-//            light.position.set(0, 1, 0);
-//            light.position.normalize();
-//            scene.add(light);
-
             light = new THREE.PointLight(0xffffff);
             light.position.set(0, 1, -1);
             light.position.normalize();
             scene.add(light);
 
 			// GROUND
-			var mapHeight = THREE.ImageUtils.loadTexture("images/felt.png");
-			mapHeight.anisotropy = 4;
-			mapHeight.repeat.set(3, 3);
-//			mapHeight.offset.set(0.001, 0.001);
-			mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
-			mapHeight.format = THREE.RGBFormat;
+			var mapHeightTexture = THREE.ImageUtils.loadTexture("images/felt.png");
+			mapHeightTexture.anisotropy = 16;
+			mapHeightTexture.repeat.set(12, 12);
+			mapHeightTexture.wrapS = mapHeightTexture.wrapT = THREE.RepeatWrapping;
 
 			var groundMaterial = new THREE.MeshPhongMaterial({
-				ambient: 0x00AA00, color: 0x00AA00, specular: 0x888888,
-				shininess: 25,
-				normalMap: mapHeight,
-				normalScale: 10,
-//				bumpMap: mapHeight,
-//				bumpScale: 10,
+				ambient: 0x666666,
+				color: 0x008800,
+				specular: 0x111111,
+				shininess: 0,
+				bumpMap: mapHeightTexture,
+				bumpScale: 0.05,
 				metal: false
 			} );
 
