@@ -57,6 +57,8 @@ div.panel h2
 #camera-container
 {
     position: relative;
+    width: 640px;
+    height: 480px;
 }
 
 #camera-container img
