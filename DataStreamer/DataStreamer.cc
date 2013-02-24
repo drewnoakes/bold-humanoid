@@ -89,6 +89,12 @@ int DataStreamer::callback_http(
       else if (extension == "css") {
         mimeType = "text/css";
       }
+      else if (extension == "png") {
+        mimeType = "image/png";
+      }
+      else if (extension == "jpg") {
+        mimeType = "image/jpeg";
+      }
       else if (extension == "ico") {
         mimeType = "image/x-icon";
       }
