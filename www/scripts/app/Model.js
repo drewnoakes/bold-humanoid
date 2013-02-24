@@ -206,6 +206,9 @@ define(
             scene = new THREE.Scene();
             scene.add(new THREE.AmbientLight(0x555555));
 
+            //
+            // Lighting
+            //
             var light = new THREE.DirectionalLight(0xffffff);
             light.position.set(0, 0, 1);
             light.position.normalize();
@@ -216,33 +219,56 @@ define(
             light.position.normalize();
             scene.add(light);
 
-			// GROUND
-			var mapHeightTexture = THREE.ImageUtils.loadTexture("images/felt.png");
-			mapHeightTexture.anisotropy = 16;
-			mapHeightTexture.repeat.set(12, 12);
-			mapHeightTexture.wrapS = mapHeightTexture.wrapT = THREE.RepeatWrapping;
+            //
+            // Ground
+            //
+            var groundTexture = THREE.ImageUtils.loadTexture("images/felt.jpg");
+            groundTexture.anisotropy = 16;
+            groundTexture.repeat.set(12, 12);
+            groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
 
-			var groundMaterial = new THREE.MeshPhongMaterial({
-				ambient: 0x666666,
-				color: 0x008800,
-				specular: 0x111111,
-				shininess: 0,
-				bumpMap: mapHeightTexture,
-				bumpScale: 0.05,
-				metal: false
-			} );
+            var groundMaterial = new THREE.MeshPhongMaterial({
+                ambient: 0x666666,
+                color: 0x008800,
+                specular: 0x000000,
+                shininess: 0,
+                bumpMap: groundTexture,
+                bumpScale: 0.05
+            } );
 
-			var groundSize = 3;
-			var mesh = new THREE.Mesh(new THREE.PlaneGeometry(groundSize, groundSize), groundMaterial);
-			mesh.position.y = -0.341;
-			mesh.rotation.x = -Math.PI/2;
-//			mesh.receiveShadow = true;
-			scene.add(mesh);
+            var groundSize = 3,
+                groundPlaneY = - 0.341,
+                groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(groundSize, groundSize), groundMaterial);
+            groundMesh.position.y = groundPlaneY;
+            groundMesh.rotation.x = -Math.PI/2;
+            groundMesh.receiveShadow = true;
+            scene.add(groundMesh);
 
+            //
+            // Ball
+            //
+            var ballMaterial = new THREE.MeshPhongMaterial({
+                ambient: 0x666666,
+                map: THREE.ImageUtils.loadTexture("images/ball-colour-map.png"),
+                bumpMap: THREE.ImageUtils.loadTexture("images/ball-bump-map.jpg"),
+                bumpScale: 0.0075
+            } );
+
+            var ballRadius = 0.037,
+                ballSegments = 20,
+                ballMesh = new THREE.Mesh(new THREE.SphereGeometry(ballRadius, ballSegments, ballSegments), ballMaterial);
+            ballMesh.position.set(0.05, groundPlaneY + ballRadius, 0.1);
+//            ballMesh.receiveShadow = true;
+            scene.add(ballMesh);
+
+            //
+            // Render & Camera
+            //
+            var canvasWidth = 640, canvasHeight = 480;
             renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(640, 480);
+            renderer.setSize(canvasWidth, canvasHeight);
 
-            camera = new THREE.PerspectiveCamera( 75, 640 / 480, 0.01, 100000 );
+            camera = new THREE.PerspectiveCamera( 75, canvasWidth / canvasHeight, 0.01, 100 );
 //          camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 
             updateCameraPosition();
