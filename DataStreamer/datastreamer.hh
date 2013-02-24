@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <libwebsockets.h>
-#include <opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include "../Debugger/debugger.hh"
 
 namespace cv

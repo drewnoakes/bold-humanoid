@@ -9,7 +9,6 @@
 #include <signal.h>
 #include <vector>
 #include <iostream>
-#include <opencv.hpp>
 
 #include "datastreamer.hh"
 

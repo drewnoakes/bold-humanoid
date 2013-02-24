@@ -4,7 +4,7 @@
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
 #include "../vision/Camera/camera.hh"
-#include <opencv.hpp>
+#include <opencv2/opencv.hpp>
 
 #include <BlobDetector/blobdetector.hh>
 #include "../Ambulator/ambulator.hh"
