@@ -204,19 +204,24 @@ define(
         function init()
         {
             scene = new THREE.Scene();
-            scene.add(new THREE.AmbientLight(0x555555));
+            scene.add(new THREE.AmbientLight(0x777777));
 
             //
             // Lighting
             //
             var light = new THREE.DirectionalLight(0xffffff);
-            light.position.set(0, 0, 1);
-            light.position.normalize();
-            scene.add(light);
-
-            light = new THREE.PointLight(0xffffff);
-            light.position.set(0, 1, -1);
-            light.position.normalize();
+            light.position.set(1, 2, 2);
+            light.target.position.set(0, 0, 0);
+            light.castShadow = true;
+            light.shadowDarkness = 0.5;
+//            light.shadowCameraVisible = true;
+            light.shadowCameraNear = 2;
+            light.shadowCameraFar = 6;
+            var shadowBoxSize = 0.4;
+            light.shadowCameraLeft = -shadowBoxSize;
+            light.shadowCameraRight = shadowBoxSize;
+            light.shadowCameraTop = shadowBoxSize;
+            light.shadowCameraBottom = -shadowBoxSize;
             scene.add(light);
 
             //
@@ -228,7 +233,7 @@ define(
             groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
 
             var groundMaterial = new THREE.MeshPhongMaterial({
-                ambient: 0x666666,
+                ambient: 0x555555,
                 color: 0x008800,
                 specular: 0x000000,
                 shininess: 0,
@@ -237,7 +242,7 @@ define(
             } );
 
             var groundSize = 3,
-                groundPlaneY = - 0.341,
+                groundPlaneY = -0.341,
                 groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(groundSize, groundSize), groundMaterial);
             groundMesh.position.y = groundPlaneY;
             groundMesh.rotation.x = -Math.PI/2;
@@ -258,18 +263,22 @@ define(
                 ballSegments = 20,
                 ballMesh = new THREE.Mesh(new THREE.SphereGeometry(ballRadius, ballSegments, ballSegments), ballMaterial);
             ballMesh.position.set(0.05, groundPlaneY + ballRadius, 0.1);
-//            ballMesh.receiveShadow = true;
+            ballMesh.castShadow = true;
+            ballMesh.receiveShadow = false;
             scene.add(ballMesh);
 
             //
             // Render & Camera
             //
             var canvasWidth = 640, canvasHeight = 480;
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(canvasWidth, canvasHeight);
 
             camera = new THREE.PerspectiveCamera( 75, canvasWidth / canvasHeight, 0.01, 100 );
 //          camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(canvasWidth, canvasHeight);
+            renderer.shadowMapEnabled = true;
+            renderer.shadowMapSoft = true;
 
             updateCameraPosition();
 
@@ -295,7 +304,10 @@ define(
                         geometry.computeFaceNormals();
 //                        geometry.computeVertexNormals();
                         GeometryUtil.computeVertexNormals(geometry, node.creaseAngle || 0.2);
-                        parentObject.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial( materials )));
+                        var object = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+                        object.castShadow = true;
+                        object.receiveShadow  = false;
+                        parentObject.add(object);
                         geometriesToLoad--;
                         if (geometriesToLoad === 0) {
                             loadedCallback();
