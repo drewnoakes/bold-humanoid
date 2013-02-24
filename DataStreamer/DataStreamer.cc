@@ -43,10 +43,10 @@ int DataStreamer::callback_http(
   {
     case LWS_CALLBACK_HTTP:
     {
-      const char* path;
+      char* path;
       if (in)
       {
-        path = (const char*)in;
+        path = (char*)in;
         if (strcmp(path, "/") == 0)
         {
           path = "/index.html";
@@ -56,6 +56,13 @@ int DataStreamer::callback_http(
           // protect against ../ attacks
           std::cout << "[DataStreamer::callback_http] invalid request path: " << path << std::endl;
           return 1;
+        }
+
+        // ignore query string (for now)
+        int queryStart = string(path).find("?");
+        if (queryStart != string::npos)
+        {
+          path[queryStart] = 0;
         }
 
         std::cout << "[DataStreamer::callback_http] requested path: " << path << std::endl;
