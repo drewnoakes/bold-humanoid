@@ -94,7 +94,8 @@ ${OpenCV_INCLUDE_DIR})
 
 target_link_libraries(boldhumanoid ${OpenCV_LIBS} ${SigC++_LIBRARIES} darwin websockets pthread rt)
 
-set(CMAKE_CXX_FLAGS "-std=c++0x")
+# TODO: fix things so we can use Eigen vectorization
+set(CMAKE_CXX_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT")
 
 
 add_dependencies(boldhumanoid darwin_lib)
