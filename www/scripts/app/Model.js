@@ -151,7 +151,7 @@ define(
                         childObject.position.y = childNode.offset.y || 0;
                     }
                     childObject.rotationAxis = childNode.rotationAxis;
-                    hinges[node.jointId] = childObject;
+                    hinges[childNode.jointId] = childObject;
                     parentObject.add(childObject);
                     processNode(childNode, childObject);
                 }
