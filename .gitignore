@@ -5,3 +5,9 @@ main
 *.kate-swp
 .kdev4
 www/.idea
+CMakeCache.txt
+CMakeFiles
+boldhumanoid
+cmake_install.cmake
+*lib-prefix
+Makefile
