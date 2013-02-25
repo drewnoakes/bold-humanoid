@@ -9,6 +9,8 @@
 #include <signal.h>
 #include <vector>
 #include <iostream>
+#include <cmath>
+#include <sstream>
 
 #include "datastreamer.hh"
 
@@ -252,19 +254,47 @@ int DataStreamer::callback_camera(
 
   if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
   {
+    cout << "[DataStreame::callback_camera] sending image" << endl;
+
     // Encode image to jpeg (perhaps do this directly when getting image?)
     vector<uchar> jpgbuf;
     cv::imencode(".jpg", d_img, jpgbuf);
-    
-    unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + jpgbuf.size() + LWS_SEND_BUFFER_POST_PADDING];
-    unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
 
-    memcpy(p, jpgbuf.data(), jpgbuf.size());
+    size_t jpgSize = jpgbuf.size();
 
-    if (libwebsocket_write(wsi, p, jpgbuf.size(), LWS_WRITE_BINARY) < 0)
+    // Send size prefix
+    ostringstream prefOut;
+    prefOut << jpgSize;
+    string pref = prefOut.str();
+
+    unsigned char prefBuf[LWS_SEND_BUFFER_PRE_PADDING + pref.size() + LWS_SEND_BUFFER_POST_PADDING];
+    unsigned char *p = &prefBuf[LWS_SEND_BUFFER_PRE_PADDING];
+
+    memcpy(p, pref.c_str(), pref.size());
+    int res = libwebsocket_write(wsi, p, pref.size(), LWS_WRITE_TEXT);
+
+    // Send image
+    int tosend = jpgSize;
+    unsigned char* jpgP = jpgbuf.data();
+
+    while (tosend > 0)
     {
-      lwsl_err("ERROR %d writing to socket\n", 1);
-      return 1;
+      unsigned bufsize = min(4096, tosend);
+      unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + bufsize + LWS_SEND_BUFFER_POST_PADDING];
+      p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
+      
+      memcpy(p, jpgP, bufsize);
+      
+      cout << "writing: " << bufsize << endl;
+      
+      res = libwebsocket_write(wsi, p, bufsize, LWS_WRITE_BINARY);
+      if (res < 0)
+      {
+	lwsl_err("ERROR %d writing to socket\n", res);
+	return 1;
+      }
+      tosend -= bufsize;
+      jpgP += bufsize;
     }
   }
 
