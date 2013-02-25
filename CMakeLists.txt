@@ -58,7 +58,16 @@ add_executable(boldhumanoid
 ./Agent/preKickLook.cc
 ./Agent/readSubBoardData.cc
 ./Debugger/debugger.cc
+./DataStreamer/callbackAgentModel.cc
+./DataStreamer/callbackCamera.cc
+./DataStreamer/callbackGameState.cc
+./DataStreamer/callbackHttp.cc
+./DataStreamer/callbackTiming.cc
+./DataStreamer/close.cc
 ./DataStreamer/DataStreamer.cc
+./DataStreamer/init.cc
+./DataStreamer/streamImage.cc
+./DataStreamer/update.cc
 ./MX28Snapshot/init.cc
 ./GameController/GameControllerReceiver.cc
 ./CM730Snapshot/init.cc

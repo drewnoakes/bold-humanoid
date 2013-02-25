@@ -1,0 +1,23 @@
+#include "datastreamer.hh"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <getopt.h>
+#include <string.h>
+#include <sys/time.h>
+#include <assert.h>
+#include <syslog.h>
+#include <signal.h>
+#include <vector>
+#include <iostream>
+#include <cmath>
+#include <sstream>
+
+#include "datastreamer.hh"
+
+#include "../AgentModel/agentmodel.hh"
+#include "../GameState/gamestate.hh"
+
+using namespace bold;
+using namespace std;
