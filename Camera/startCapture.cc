@@ -2,6 +2,9 @@
 
 void Camera::startCapture()
 {
+  // Start memory mapping
+  initMemoryMapping();
+
   for (Buffer buffer : d_buffers)
   {
     v4l2_buffer buf;
