@@ -16,6 +16,7 @@ void Agent::think()
   //
   auto t = Debugger::getTimestamp();
   cv::Mat raw = d_camera.capture();
+  d_pfChain.applyFilters(raw);
 
   d_debugger.timeImageCapture(t);
 

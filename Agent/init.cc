@@ -3,8 +3,28 @@
 bool Agent::init()
 {
   cout << "[Agent::init] Start" << endl;
-  d_camera.open();
-  d_camera.startCapture();
+
+  initCamera();
+
+  d_pfChain.pushFilter([](unsigned char* pxl) {
+      int y = pxl[0] - 16;
+      int cb = pxl[1] - 128;
+      int cr = pxl[2] - 128;
+
+      int b = (298 * y + 516 * cb + 128) >> 8;
+      if (b < 0)
+	b = 0;
+      int g = (298 * y - 100 * cb - 208 * cr) >> 8;
+      if (g < 0)
+	g = 0;
+      int r = (298 * y + 409 * cr + 128) >> 8;
+      if (r < 0)
+	r = 0;
+
+      pxl[0] = b;
+      pxl[1] = g;
+      pxl[2] = r;
+    });
 
   // Check if camera is opened successfully
   /*

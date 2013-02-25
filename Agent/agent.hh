@@ -4,6 +4,7 @@
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
 #include "../vision/Camera/camera.hh"
+#include "../vision/PixelFilterChain/pixelfilterchain.hh"
 #include <opencv2/opencv.hpp>
 
 #include <BlobDetector/blobdetector.hh>
@@ -80,6 +81,8 @@ namespace bold
     double d_circleBallY;
     double d_circleBallTurn;
 
+    PixelFilterChain d_pfChain;
+
     std::vector<Observation> d_observations;
 
     std::vector<Observation> d_goalObservations;
@@ -96,6 +99,8 @@ namespace bold
     double d_joystickAAmpMax;
 
     bool init();
+
+    void initCamera();
 
     void think();
 
