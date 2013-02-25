@@ -151,7 +151,7 @@ define(
                         childObject.position.y = childNode.offset.y || 0;
                     }
                     childObject.rotationAxis = childNode.rotationAxis;
-                    hinges.push(childObject);
+                    hinges[node.jointId] = childObject;
                     parentObject.add(childObject);
                     processNode(childNode, childObject);
                 }
@@ -277,7 +277,7 @@ define(
                 var hasChange = false;
                 for (var i = 0; i < 20; i++)
                 {
-                    var hinge = hinges[i];
+                    var hinge = hinges[i + 1];
                     if (hinge.rotation !== angles[i])
                     {
                         hinge.rotation[hinge.rotationAxis] = angles[i];
