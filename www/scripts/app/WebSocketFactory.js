@@ -16,6 +16,8 @@ define(
             return "ws://" + u.split('/')[0];
         };
 
+        var indicatorByProtocol = {};
+
         //noinspection UnnecessaryLocalVariableJS
 
         var WebSocketFactory = {
@@ -23,15 +25,19 @@ define(
             {
                 var webSocketUrl = getWebSocketUrl();
 
-                var socket = typeof MozWebSocket !== "undefined"
+                var socket = typeof MozWebSocket !== 'undefined'
                     ? new MozWebSocket(webSocketUrl, protocol)
                     : new WebSocket(webSocketUrl, protocol);
 
-                var connectionIndicator = $('<div></div>')
-                    .addClass('connection-indicator connecting')
-                    .attr({title: protocol});
+                // Reuse the indicator, in case we are re-connecting
+                var connectionIndicator = indicatorByProtocol[protocol];
+                if (!connectionIndicator) {
+                    connectionIndicator = $('<div></div>', {title: protocol});
+                    connectionIndicator.appendTo($('#socket-connections'));
+                    indicatorByProtocol[protocol] = connectionIndicator;
+                }
 
-                connectionIndicator.appendTo($('#socket-connections'));
+                connectionIndicator.attr({'class': 'connection-indicator connecting'});
 
                 socket.onopen = function ()
                 {
