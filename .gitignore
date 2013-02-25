@@ -4,3 +4,5 @@ vision
 *.o
 
 *.kate-swp
+*#
+cameratest
