@@ -13,19 +13,31 @@ find_package(SigC++ REQUIRED)
 set(DARWINDIR ${CMAKE_SOURCE_DIR}/robotis)
 set(VISIONDIR ${CMAKE_SOURCE_DIR}/vision)
 set(JOYSTICKDIR ${CMAKE_SOURCE_DIR}/joystick)
- 
+set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
+
 # Compile darwin lib as an external project
 ExternalProject_Add(darwin_lib
-        DOWNLOAD_COMMAND ""
-        CONFIGURE_COMMAND ""
-        SOURCE_DIR ${DARWINDIR}
-        BINARY_DIR ${DARWINDIR}/Linux/build
-        BUILD_COMMAND "make"
-        INSTALL_DIR ${DARWINDIR}/Linux/lib
-        INSTALL_COMMAND "")
+  DOWNLOAD_COMMAND ""
+  CONFIGURE_COMMAND ""
+  SOURCE_DIR ${DARWINDIR}
+  BINARY_DIR ${DARWINDIR}/Linux/build
+  BUILD_COMMAND "make"
+  INSTALL_DIR ${DARWINDIR}/Linux/lib
+  INSTALL_COMMAND "")
 
-link_directories(${DARWINDIR}/Linux/lib)
+# Compile libwebsockets as an externl project
+ExternalProject_Add(libwebsockets_lib
+  DOWNLOAD_COMMAND ""
+  SOURCE_DIR ${LIBWEBSOCKETDIR}
+  BINARY_DIR ${LIBWEBSOCKETDIR}
+#  BUILD_COMMAND "make"
+#  INSTALL_DIR ${DARWINDIR}/Linux/lib
+  INSTALL_COMMAND ""
+)
 
+link_directories(${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
+
+  
 add_executable(boldhumanoid
 ./main.cc
 ./Agent/Agent.cc
@@ -86,4 +98,5 @@ set(CMAKE_CXX_FLAGS "-std=c++0x")
 
 
 add_dependencies(boldhumanoid darwin_lib)
+add_dependencies(boldhumanoid libwebsockets_lib)
 
