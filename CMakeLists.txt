@@ -43,6 +43,7 @@ add_executable(boldhumanoid
 ./Agent/Agent.cc
 ./Agent/run.cc
 ./Agent/init.cc
+./Agent/initCamera.cc
 ./Agent/think.cc
 ./Agent/processImage.cc
 ./Agent/processInputCommands.cc
