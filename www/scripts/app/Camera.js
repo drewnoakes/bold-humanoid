@@ -14,9 +14,8 @@ define(
 
 	var imgBlob;
 
-        socket.onmessage = function(msg)
-        {
-	    console.log(imgState);
+	var msgHandle = function(msg)
+	{
 	    switch (imgState)
 	    {
 	    case 0:
@@ -36,9 +35,7 @@ define(
 		    break;
 		}
 
-		console.log("to read: " + imgToRead);
 		imgBlob = new Blob([imgBlob, msg.data], {type: "image/jpeg"});
-		console.log("read: " + msg.data.size);
 
 		imgToRead -= msg.data.size;
 		if (imgToRead <= 0)
@@ -63,6 +60,24 @@ define(
             if (images.length > 5)
                 images.first().remove();
 	    */
-        }
+	}
+
+	var errorHandle = function(e)
+	{
+	    console.log("Camera socket error; closing and reconnecting");
+
+	    if (socket.readyState == WebSocket.OPEN)
+		socket.close();
+
+	    socket = WebSocketFactory.open(protocol);
+
+	    socket.onerror = errorHandle;
+
+            socket.onmessage = msgHandle;
+	}
+ 
+	socket.onerror = errorHandle;
+
+        socket.onmessage = msgHandle;
     }
 );
