@@ -29,38 +29,39 @@ void Agent::preKickLook()
 
     if (dt >= 0.5)
     {
-      auto ballObs = getBallObservation();
-      if (ballObs == d_observations.end())
+      auto& wm = WorldModel::getInstance();
+
+      if (!wm.isBallVisible)
       {
-	d_state = S_LOOK_FOR_BALL;
-	return;
+        d_state = S_LOOK_FOR_BALL;
+        return;
       }
 
       Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
 
       static auto w = d_camera.getPixelFormat().width;
 
-      cout << "KICKING!!! " << ballObs->pos.transpose() << " " << (w/2) << endl;
+      cout << "KICKING!!! " << wm.ballObservation.pos.transpose() << " " << (w/2) << endl;
 
-      if (ballObs->pos.x() < (w / 2))
+      if (wm.ballObservation.pos.x() < (w / 2))
       {
-	while(Robot::Action::GetInstance()->Start("rk") == false)
-	  usleep(8000);
-	while(Robot::Action::GetInstance()->IsRunning())
-	  usleep(8*1000);
+        while(Robot::Action::GetInstance()->Start("rk") == false)
+          usleep(8000);
+        while(Robot::Action::GetInstance()->IsRunning())
+          usleep(8*1000);
       }
       else
       {
-	while(Robot::Action::GetInstance()->Start("lk") == false)
-	  usleep(8000);
-	while(Robot::Action::GetInstance()->IsRunning())
-	  usleep(8*1000);
+        while(Robot::Action::GetInstance()->Start("lk") == false)
+          usleep(8000);
+        while(Robot::Action::GetInstance()->IsRunning())
+          usleep(8*1000);
       }
 
       d_ballSeenCnt = d_ballSeenCnt = 0;
       d_state = S_LOOK_FOR_BALL;
     }
-    
+
   }
 
 }

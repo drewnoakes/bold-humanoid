@@ -5,29 +5,30 @@
 void Agent::think()
 {
   //
-  // Print out time since last entry to 'think'
+  // Initialise a time value that we'll repeatedly use and update to time
+  // the progress of each step of the think cycle
   //
-  static auto tLast = Debugger::getTimestamp();
-  d_debugger.timeThinkCycle(tLast);
-  tLast = Debugger::getTimestamp();
+  auto t = Debugger::getTimestamp();
+
+  auto& debugger = Debugger::getInstance();
 
   //
   // Capture the image
   //
-  auto t = Debugger::getTimestamp();
   cv::Mat raw = d_camera.capture();
-  d_pfChain.applyFilters(raw);
+  t = debugger.timeEvent(t, "Image Capture");
 
-  d_debugger.timeImageCapture(t);
+  d_pfChain.applyFilters(raw);
+  t = debugger.timeEvent(t, "Pixel Filter Chain");
 
   d_streamer->streamImage(raw);
+  t = debugger.timeEvent(t, "Stream Image");
 
   //
   // Process the image
   //
-  t = Debugger::getTimestamp();
-  d_observations = processImage(raw);
-  d_debugger.timeImageProcessing(t);
+  WorldModel::getInstance().integrateImage(raw);
+  t = debugger.timeEvent(t, "Process Image");
 
   //
   // Listen for any game control data
@@ -35,7 +36,8 @@ void Agent::think()
   RoboCupGameControlData gameControlData;
   if (d_gameControlReceiver.receive(&gameControlData))
   {
-    d_debugger.setGameControlData(gameControlData);
+    GameState::getInstance().update(gameControlData);
+    t = debugger.timeEvent(t, "Integrate Game Control");
   }
 
 //  cout << "state: " << d_state << endl;
@@ -81,25 +83,31 @@ void Agent::think()
 
   AgentModel::getInstance().state = d_state;
 
+  t = debugger.timeEvent(t, "Process State");
+
   //
   // Process input commands
   //
 //processInputCommands();
+//t = d_debugger.timeEvent(t, "Process Human Input");
 
   //
   // Get up, if we've fallen over
   //
   standUpIfFallen();
+  t = debugger.timeEvent(t, "Stand Up");
 
   //
   // Flush out new walking parameters
   //
   d_ambulator.step();
+  t = debugger.timeEvent(t, "Ambulator Step");
 
   //
   // Update LEDs on back, etc
   //
-  d_debugger.update(d_CM730);
+  debugger.update(d_CM730);
+  t = debugger.timeEvent(t, "Update Debugger");
 
   //
   // Update websocket data
@@ -107,9 +115,9 @@ void Agent::think()
   if (d_streamer != nullptr)
   {
     d_streamer->update();
+    t = debugger.timeEvent(t, "Update DataStreamer");
   }
 
-  t = Debugger::getTimestamp();
   readSubBoardData();
-  d_debugger.timeSubBoardRead(t);
+  t = debugger.timeEvent(t, "Read Sub Board");
 }

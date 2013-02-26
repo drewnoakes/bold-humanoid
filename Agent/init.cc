@@ -13,13 +13,13 @@ bool Agent::init()
 
       int b = (298 * y + 516 * cb + 128) >> 8;
       if (b < 0)
-	b = 0;
+        b = 0;
       int g = (298 * y - 100 * cb - 208 * cr) >> 8;
       if (g < 0)
-	g = 0;
+        g = 0;
       int r = (298 * y + 409 * cr + 128) >> 8;
       if (r < 0)
-	r = 0;
+        r = 0;
 
       pxl[0] = b;
       pxl[1] = g;
@@ -38,14 +38,14 @@ bool Agent::init()
   if (d_showUI)
   {
     cv::namedWindow("raw");
-    cv::namedWindow("labeled");
+    cv::namedWindow("labelled");
   }
 
   // TODO only stream if argument specified?
   d_streamer = new DataStreamer(8080);
   d_streamer->init();
 
-  d_debugger.update(d_CM730);
+  Debugger::getInstance().update(d_CM730);
 
   //
   // Motion manager
@@ -98,7 +98,6 @@ bool Agent::init()
     usleep(8*1000);
   */
 
-
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   MotionManager::GetInstance()->ResetGyroCalibration();
   while(1)
@@ -115,33 +114,6 @@ bool Agent::init()
     }
     usleep(8000);
   }
-
-  // Build LUT
-  cout << "[Agent::init] Building LUT" << endl;
-  LUTBuilder lutBuilder;
-
-  vector<hsvRange> ranges;
-
-  // Hardcoded for now
-  hsvRange goalRange;
-  goalRange.h      = d_ini.geti("Vision", "GoalHue", 40);
-  goalRange.hRange = d_ini.geti("Vision", "GoalHueRange", 10);
-  goalRange.s      = d_ini.geti("Vision", "GoalSaturation", 210);
-  goalRange.sRange = d_ini.geti("Vision", "GoalSaturationRange", 55);
-  goalRange.v      = d_ini.geti("Vision", "GoalValue", 190);
-  goalRange.vRange = d_ini.geti("Vision", "GoalValueRange", 65);
-  ranges.push_back(goalRange);
-
-  hsvRange ballRange;
-  ballRange.h      = d_ini.geti("Vision", "BallHue", 10);
-  ballRange.hRange = d_ini.geti("Vision", "BallHueRange", 15);
-  ballRange.s      = d_ini.geti("Vision", "BallSaturation", 255);
-  ballRange.sRange = d_ini.geti("Vision", "BallSaturationRange", 95);
-  ballRange.v      = d_ini.geti("Vision", "BallValue", 190);
-  ballRange.vRange = d_ini.geti("Vision", "BallValueRange", 95);
-  ranges.push_back(ballRange);
-
-  d_LUT = lutBuilder.buildBGR18FromHSVRanges(ranges);
 
   d_state = S_INIT;
 

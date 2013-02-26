@@ -3,35 +3,21 @@
 
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
-#include "../vision/Camera/camera.hh"
-#include "../vision/PixelFilterChain/pixelfilterchain.hh"
 #include <opencv2/opencv.hpp>
 
-#include <BlobDetector/blobdetector.hh>
 #include "../Ambulator/ambulator.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
 #include "../GameController/GameControllerReceiver.hh"
+#include "../WorldModel/worldmodel.hh"
 #include "../joystick/joystick.hh"
+#include "../vision/BlobDetector/blobdetector.hh"
+#include "../vision/Camera/camera.hh"
+#include "../vision/ImageLabeller/imagelabeller.hh"
+#include "../vision/PixelFilterChain/pixelfilterchain.hh"
 
 namespace bold
 {
-  enum ObsType
-  {
-    O_BALL,
-    O_GOAL_POST,
-    O_LEFT_GOAL_POST,
-    O_RIGHT_GOAL_POST
-  };
-
-  struct Observation
-  {
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-    ObsType type;
-    Eigen::Vector2f pos;
-  };
-
   enum State
   {
     S_INIT,
@@ -50,7 +36,7 @@ namespace bold
   {
   public:
     Agent(std::string const& U2D_dev,
-          std::string const& iniFile,
+          minIni const& ini,
           std::string const& motionFile,
           bool const& showUI,
           bool const& useJoystick,
@@ -60,18 +46,15 @@ namespace bold
     int run();
 
   private:
+    const minIni& d_ini;
     Robot::LinuxCM730 d_linuxCM730;
     Robot::CM730 d_CM730;
     Robot::LinuxMotionTimer* d_motionTimer;
-    minIni d_ini;
     std::string d_motionFile;
     Camera d_camera;
-    Debugger d_debugger;
     DataStreamer* d_streamer;
-    unsigned char* d_LUT;
     BlobDetector d_blobDetector;
     Ambulator d_ambulator;
-    int d_minBallArea;
     Joystick* d_joystick;
     bool d_showUI;
     bool d_autoGetUpFromFallen;
@@ -82,10 +65,6 @@ namespace bold
     double d_circleBallTurn;
 
     PixelFilterChain d_pfChain;
-
-    std::vector<Observation> d_observations;
-
-    std::vector<Observation> d_goalObservations;
 
     State d_state;
 
@@ -105,19 +84,6 @@ namespace bold
     void think();
 
     void readSubBoardData();
-
-    std::vector<Observation> processImage(cv::Mat& image);
-
-    std::vector<Observation>::iterator getBallObservation()
-    {
-      return find_if(d_observations.begin(), d_observations.end(),
-        [](Observation const& obs) { return obs.type == O_BALL; });
-    }
-
-    bool seeBall()
-    {
-      return getBallObservation() != d_observations.end();
-    }
 
     void stand()
     {
@@ -145,7 +111,7 @@ namespace bold
 
     void lookAtGoal();
 
-    void controlHead(cv::Mat raw, std::vector<Observation> observations);
+//    void controlHead(cv::Mat raw);
     void standUpIfFallen();
     void processInputCommands();
   };

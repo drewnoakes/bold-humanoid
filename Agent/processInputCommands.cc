@@ -49,7 +49,7 @@ void Agent::processInputCommands()
       static short int axis2 = 0;
       static short int axis3 = 0;
 
-      // TODO what could the buttons be used for?
+      // what could the buttons be used for?
       if (event.isAxis())
       {
         int stick = -1;

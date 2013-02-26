@@ -7,7 +7,6 @@ DataStreamer::DataStreamer(int port)
   std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
 }
 
-
 // static members
 
 libwebsocket_protocols DataStreamer::d_protocols[] = {
@@ -19,6 +18,3 @@ libwebsocket_protocols DataStreamer::d_protocols[] = {
   { "camera-protocol", DataStreamer::_callback_camera, 0, NULL, 0 },
   { NULL, NULL, 0, NULL, 0 },
 };
-
-////////////////////////////////////////////////////// http protocol
-

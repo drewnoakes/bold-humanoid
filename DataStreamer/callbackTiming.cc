@@ -8,19 +8,21 @@ int DataStreamer::callback_timing(
   void* /*in*/,
   size_t /*len*/)
 {
-  // TODO review 512 size here... can apply a better cap
-  unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + 512 + LWS_SEND_BUFFER_POST_PADDING];
-  unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
-
   if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
   {
-    AgentModel& agentModel = AgentModel::getInstance();
+    auto& debugger = Debugger::getInstance();
+    std::vector<EventTiming> const& timings = debugger.getAndClearTimings();
 
-    int n = sprintf((char*)p, "%f|%f|%f|%f",
-                    agentModel.lastImageCaptureTimeMillis,
-                    agentModel.lastImageProcessTimeMillis,
-                    agentModel.lastSubBoardReadTimeMillis,
-                    agentModel.lastThinkCycleMillis);
+    unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + (timings.size()*32) + LWS_SEND_BUFFER_POST_PADDING];
+    unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
+
+    int n = 0;
+    for (EventTiming const& eventTiming : timings)
+    {
+      double timeSeconds = eventTiming.first;
+      std::string eventName = eventTiming.second;
+      n += sprintf((char*)p + n, "%s=%f|", eventName.c_str(), timeSeconds);
+    }
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {

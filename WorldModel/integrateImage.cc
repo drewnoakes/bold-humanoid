@@ -1,30 +1,20 @@
-#include "agent.ih"
+#include "worldmodel.hh"
 
-vector<Observation> Agent::processImage(cv::Mat& image)
+#include <cmath>
+
+using namespace std;
+using namespace bold;
+using namespace Eigen;
+
+void WorldModel::integrateImage(cv::Mat& image)
 {
 //  cout << "[Agent::processImage] Start" << endl;
 //  cout << "[Agent::processImage] Image size: " << image.rows << "x" << image.cols << endl;
 
   // Label the image;
   // OPT: make data memeber
-  cv::Mat labeled(image.rows, image.cols, CV_8UC1);
-
-  for (unsigned y = 0; y < image.rows; ++y)
-  {
-    unsigned char *origpix = image.ptr<unsigned char>(y);
-    unsigned char *labeledpix = labeled.ptr<unsigned char>(y);
-    for (unsigned x = 0; x < image.cols; ++x)
-    {
-//      unsigned char l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
-      unsigned char l = d_LUT[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
-      *labeledpix = l;
-
-      ++origpix;
-      ++origpix;
-      ++origpix;
-      ++labeledpix;
-    }
-  }
+  cv::Mat labelled(image.rows, image.cols, CV_8UC1);
+  d_imageLabeller->label(image, labelled);
 
   auto ballUnionPred =
     [] (Run const& a, Run const& b)
@@ -47,51 +37,51 @@ vector<Observation> Agent::processImage(cv::Mat& image)
   vector<function<bool(Run const&,Run const&)> > unionPreds = {goalUnionPred, ballUnionPred};
 
   BlobDetector detector;
-  vector<set<Blob> > blobs = detector.detectBlobs(labeled, 2, unionPreds);
+  vector<set<Blob> > blobByLabel = detector.detectBlobs(labelled, 2, unionPreds);
 
 //  cout << "[Agent::processImage] Blobs 0: " << blobs[0].size() << endl;
 //  cout << "[Agent::processImage] Blobs 1: " << blobs[1].size() << endl;
 
-  vector<Observation> observations;
-
   // Do we have a ball?
-  d_debugger.setIsBallObserved(false);
-  if (blobs[1].size() > 0)
+  isBallVisible = false;
+  if (blobByLabel[1].size() > 0)
   {
     // The first is the biggest, topmost ball blob
-    Blob const& ball = *blobs[1].begin();
+    Blob const& ball = *blobByLabel[1].begin();
 
     if (ball.area > d_minBallArea)
     {
       Observation ballObs;
       ballObs.type = O_BALL;
       ballObs.pos = ball.mean;
-      observations.push_back(ballObs);
 
-      d_debugger.setIsBallObserved(true);
+      observations.push_back(ballObs);
+      ballObservation = ballObs;
+      isBallVisible = true;
     }
   }
 
-  d_goalObservations.clear();
-
   // Do we have goal posts?
-  for (Blob const& b : blobs[0])
+  for (Blob const& b : blobByLabel[0])
   {
     Vector2i wh = b.br - b.ul;
     if (wh.minCoeff() > 5  &&  // ignore small blobs
         wh.y() > wh.x())       // Higher than it is lower
     {
-      // Take center of top most run. This is the first
+      // Take center of topmost run (the first)
       Observation postObs;
       postObs.type = O_GOAL_POST;
       Run const& topRun = *b.runs.begin();
       postObs.pos = (topRun.end + topRun.start).cast<float>() / 2;
 
       observations.push_back(postObs);
-      d_goalObservations.push_back(postObs);
+      goalObservations.push_back(postObs);
     }
   }
 
+//   Debugger::getInstance().processBlobs(blobs);
+
+  /*
   if (d_showUI)
   {
     // Draw rectangles on the colour image
@@ -102,7 +92,7 @@ vector<Observation> Agent::processImage(cv::Mat& image)
         if ((b.br - b.ul).minCoeff() > 5)
           cv::rectangle(image,
                         cv::Rect(b.ul.x(), b.ul.y(),
-                                b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
+                                 b.br.x() - b.ul.x(), b.br.y() - b.ul.y()),
                         cv::Scalar(255,0,0),
                         2);
       }
@@ -120,11 +110,10 @@ vector<Observation> Agent::processImage(cv::Mat& image)
     }
 
     cv::imshow("raw", image);
-    cv::normalize(labeled, labeled, 0, 255, CV_MINMAX);
-    cv::imshow("labeled", labeled);
+    cv::normalize(labelled, labelled, 0, 255, CV_MINMAX);
+    cv::imshow("labelled", labelled);
 
     cv::waitKey(1);
   }
-
-  return observations;
+  */
 }

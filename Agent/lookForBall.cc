@@ -6,32 +6,30 @@ void Agent::lookForBall()
 {
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
 
-  auto ballObs = getBallObservation();
+  auto& wm = WorldModel::getInstance();
 
-  bool ballSeen = ballObs != d_observations.end();
-
-  if (ballSeen)
-    d_ballSeenCnt++;
-  else if (d_ballSeenCnt > 0)
-    d_ballSeenCnt--;
-
-  // Havent seen the ball enough
-  if (ballSeen)
+  if (wm.isBallVisible)
   {
+    d_ballSeenCnt++;
+
     // Look at ball
     lookAtBall();
 
+    // If the ball has in view long enough, stop looking for it
     if (d_ballSeenCnt >= 15)
       d_state = S_APPROACH_BALL;
   }
   else
   {
-    // Oscillate
+    if (d_ballSeenCnt > 0)
+      d_ballSeenCnt--;
+
+    // Make an oscillatory movement to search for the ball
     double maxAmpH = 70.0;//d_ini.getd("Head Pan/Tilt", "left_limit", 80.0);
     double maxAmpV = 15.0;//
     timeval tval;
     gettimeofday(&tval, 0);
-    
+
     double t = tval.tv_sec + tval.tv_usec / 1e6;
 
     double periodH = 3.0;
@@ -44,5 +42,4 @@ void Agent::lookForBall()
   }
 
   stand();
-
 }

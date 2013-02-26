@@ -1,5 +1,6 @@
 #include "agent.hh"
 
+#include "../WorldModel/worldmodel.hh"
 #include <LUTBuilder/lutbuilder.hh>
 
 #include <iostream>

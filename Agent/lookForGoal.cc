@@ -4,11 +4,11 @@ void Agent::lookForGoal()
 {
   stand();
 
-  int nObs = d_goalObservations.size();
+  auto& wm = WorldModel::getInstance();
 
-  d_debugger.setGoalObservationCount(nObs);
+  int nObs = wm.goalObservations.size();
 
-  cout << "nObs: " << nObs << endl;
+  cout << "[Agent::lookForGoal] Visible goal count: " << nObs << endl;
 
   if (nObs >= 2)
     d_goalSeenCnt++;
@@ -43,5 +43,4 @@ void Agent::lookForGoal()
 
     d_state = S_START_CIRCLE_BALL;
   }
-
 }

@@ -37,7 +37,7 @@ ExternalProject_Add(libwebsockets_lib
 
 link_directories(${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
 
-  
+
 add_executable(boldhumanoid
 ./main.cc
 ./Agent/Agent.cc
@@ -45,7 +45,6 @@ add_executable(boldhumanoid
 ./Agent/init.cc
 ./Agent/initCamera.cc
 ./Agent/think.cc
-./Agent/processImage.cc
 ./Agent/processInputCommands.cc
 ./Agent/standUpIfFallen.cc
 ./Agent/lookForBall.cc
@@ -57,6 +56,7 @@ add_executable(boldhumanoid
 ./Agent/lookAt.cc
 ./Agent/preKickLook.cc
 ./Agent/readSubBoardData.cc
+./CM730Snapshot/init.cc
 ./Debugger/debugger.cc
 ./DataStreamer/callbackAgentModel.cc
 ./DataStreamer/callbackCamera.cc
@@ -68,13 +68,12 @@ add_executable(boldhumanoid
 ./DataStreamer/init.cc
 ./DataStreamer/streamImage.cc
 ./DataStreamer/update.cc
-./MX28Snapshot/init.cc
 ./GameController/GameControllerReceiver.cc
-./CM730Snapshot/init.cc
+./MX28Snapshot/init.cc
+./WorldModel/integrateImage.cc
 ${VISIONDIR}/BlobDetector/detectBlobs.cc
 ${VISIONDIR}/BlobDetector/runLengthEncode.cc
 ${VISIONDIR}/BlobDetector/runSetToBlob.cc
-${VISIONDIR}/PixelFilterChain/applyFilters.cc
 ${VISIONDIR}/Camera/Camera.cc
 ${VISIONDIR}/Camera/capture.cc
 ${VISIONDIR}/Camera/open.cc
@@ -89,6 +88,7 @@ ${VISIONDIR}/Camera/pixelFormatRequestSize.cc
 ${VISIONDIR}/Camera/initMemoryMapping.cc
 ${VISIONDIR}/LUTBuilder/bgr2hsv.cc
 ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
+${VISIONDIR}/PixelFilterChain/applyFilters.cc
 ${JOYSTICKDIR}/joystick.cc
 )
 

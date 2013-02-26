@@ -2,15 +2,16 @@
 
 void Agent::lookAtGoal()
 {
-  if (d_goalObservations.size() < 2)
+  auto& wm = WorldModel::getInstance();
+
+  if (wm.goalObservations.size() < 2)
   {
     return;
   }
 
+  auto middle = (wm.goalObservations[0].pos + wm.goalObservations[1].pos) / 2;
 
-  auto middle = (d_goalObservations[0].pos + d_goalObservations[1].pos) / 2;
-
-  cout << "middle: " << middle.transpose() << endl;
+  cout << "[Agent::lookAtGoal] middle: " << middle.transpose() << endl;
 
   lookAt(middle);
 }

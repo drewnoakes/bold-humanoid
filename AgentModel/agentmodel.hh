@@ -13,20 +13,12 @@ namespace bold
   {
   private:
     AgentModel()
-    : lastThinkCycleMillis(0),
-      lastImageCaptureTimeMillis(0),
-      lastImageProcessTimeMillis(0)
     {};
 
     AgentModel(AgentModel const&);
     void operator=(AgentModel const&);
 
   public:
-
-    double lastThinkCycleMillis;
-    double lastImageCaptureTimeMillis;
-    double lastImageProcessTimeMillis;
-    double lastSubBoardReadTimeMillis;
 
     CM730Snapshot cm730State;
     MX28Snapshot mx28States[JointData::NUMBER_OF_JOINTS];

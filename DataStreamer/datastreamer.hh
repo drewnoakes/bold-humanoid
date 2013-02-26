@@ -42,7 +42,7 @@ namespace bold
       void *user,
       void* in,
       size_t len);
-    
+
     int callback_timing(
       struct libwebsocket_context* context,
       struct libwebsocket* wsi,
@@ -50,7 +50,7 @@ namespace bold
       void *user,
       void* in,
       size_t len);
-    
+
     int callback_game_state(
       struct libwebsocket_context* context,
       struct libwebsocket* wsi,
@@ -58,7 +58,7 @@ namespace bold
       void *user,
       void* in,
       size_t len);
-    
+
     int callback_agent_model(
       struct libwebsocket_context* context,
       struct libwebsocket* wsi,
@@ -66,7 +66,7 @@ namespace bold
       void *user,
       void* in,
       size_t len);
-    
+
     int callback_camera(
       struct libwebsocket_context* context,
       struct libwebsocket* wsi,
@@ -95,7 +95,7 @@ namespace bold
       size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->
-	callback_http(context, wsi, reason, user, in, len);
+        callback_http(context, wsi, reason, user, in, len);
     }
 
     static int _callback_timing(
@@ -107,7 +107,7 @@ namespace bold
       size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->
-	callback_timing(context, wsi, reason, user, in, len);
+        callback_timing(context, wsi, reason, user, in, len);
     }
 
     static int _callback_game_state(
@@ -119,7 +119,7 @@ namespace bold
       size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->
-	callback_game_state(context, wsi, reason, user, in, len);
+        callback_game_state(context, wsi, reason, user, in, len);
     }
 
     static int _callback_agent_model(
@@ -131,7 +131,7 @@ namespace bold
       size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->
-	callback_agent_model(context, wsi, reason, user, in, len);
+        callback_agent_model(context, wsi, reason, user, in, len);
     }
 
     static int _callback_camera(
@@ -143,7 +143,7 @@ namespace bold
       size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->
-	callback_camera(context, wsi, reason, user, in, len);
+        callback_camera(context, wsi, reason, user, in, len);
     }
 
   };

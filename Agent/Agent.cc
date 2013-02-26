@@ -1,7 +1,7 @@
 #include "agent.ih"
 
 Agent::Agent(std::string const& U2D_dev,
-      std::string const& iniFile,
+      minIni const& ini,
       std::string const& motionFile,
       bool const& showUI,
       bool const& useJoystick,
@@ -10,14 +10,11 @@ Agent::Agent(std::string const& U2D_dev,
   )
   : d_linuxCM730(U2D_dev.c_str()),
     d_CM730(&d_linuxCM730),
-    d_ini(iniFile),
+    d_ini(ini),
     d_motionFile(motionFile),
     d_camera("/dev/video0"),
-    d_debugger(),
     d_ambulator(d_ini),
-    d_minBallArea(8*8),
     d_joystick(nullptr),
-    d_showUI(showUI),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
     d_ballSeenCnt(0),
     d_goalSeenCnt(0),
@@ -31,8 +28,6 @@ Agent::Agent(std::string const& U2D_dev,
     d_joystickAAmpMax = d_ini.getd("Joystick", "AAmpMax", 15);
   }
 
-  d_minBallArea = d_ini.geti("Vision", "MinBallArea", 8*8);
-
   d_circleBallX = d_ini.getd("Circle Ball", "WalkX", -1);
   d_circleBallY = d_ini.getd("Circle Ball", "WalkY", 50);
   d_circleBallTurn = d_ini.getd("Circle Ball", "WalkTurn", 15);
@@ -44,7 +39,7 @@ Agent::Agent(std::string const& U2D_dev,
   // contrast:   0.12549
   // saturation: 0.109804
 
- 
+
   double gain       = d_ini.getd("Camera", "Gain",       0);
   double brightness = d_ini.getd("Camera", "Brightness", 0);
   double contrast   = d_ini.getd("Camera", "Contrast",   0);

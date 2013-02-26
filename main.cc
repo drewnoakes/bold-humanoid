@@ -33,9 +33,13 @@ int main(int argc, char **argv)
     }
   }
 
+  minIni ini("config.ini");
+
+  WorldModel::getInstance().initialise(ini);
+
   Agent agent(
     U2D_DEV_NAME0,
-    "config.ini",
+    ini,
     MOTION_FILE_PATH,
     showUI,
     useJoystick,

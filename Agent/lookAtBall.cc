@@ -2,17 +2,13 @@
 
 void Agent::lookAtBall()
 {
-  auto ballObs = find_if(d_observations.begin(), d_observations.end(),
-			 [](Observation const& obs) { return obs.type == O_BALL; });
+  auto& wm = WorldModel::getInstance();
 
-  bool ballSeen = ballObs != d_observations.end();
-  if (!ballSeen)
+  if (!wm.isBallVisible)
   {
-    cout << "Look at ball, but no ball seen" << endl;
+    cerr << "[Agent::lookAtBall] No ball seen" << endl;
     return;
   }
 
-  Vector2f foundBallAtPx = ballObs->pos;
-
-  lookAt(foundBallAtPx);
+  lookAt(wm.ballObservation.pos);
 }

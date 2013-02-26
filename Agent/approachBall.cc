@@ -2,9 +2,9 @@
 
 void Agent::approachBall()
 {
-  auto ballObs = getBallObservation();
+  auto& wm = WorldModel::getInstance();
 
-  if (ballObs == d_observations.end())
+  if (!wm.isBallVisible)
   {
     d_state = S_LOOK_FOR_BALL;
     return;
@@ -15,7 +15,7 @@ void Agent::approachBall()
   double pan = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
   double pan_range = Head::GetInstance()->GetLeftLimitAngle();
   double pan_percent = pan / pan_range;
-  
+
   double tilt = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_TILT);
   double tilt_min = Head::GetInstance()->GetBottomLimitAngle();
   double tilt_range = Head::GetInstance()->GetTopLimitAngle() - tilt_min;
@@ -35,7 +35,7 @@ void Agent::approachBall()
   moveDir = Vector2d(5.0, 0).cwiseMax(tilt_percent * moveDir);
 
   // Ball underneath center: small steps
-  if (ballObs->pos.y() > d_camera.getPixelFormat().height / 2 + 10)
+  if (wm.ballObservation.pos.y() > d_camera.getPixelFormat().height / 2 + 10)
   {
     cout << "Fine tune walk!" << endl;
     moveDir.x() = 3.0;

@@ -2,16 +2,18 @@
 
 void Agent::circleBall()
 {
-  static Debugger::timestamp_t circleStartTime = d_debugger.getTimestamp();
+  static Debugger::timestamp_t circleStartTime = Debugger::getTimestamp();
   static double circleDurationSeconds;
+
+  auto& wm = WorldModel::getInstance();
 
   if (d_state == S_START_CIRCLE_BALL)
   {
-    circleStartTime = d_debugger.getTimestamp();
+    circleStartTime = Debugger::getTimestamp();
 
     lookAtGoal();
 
-    if (d_goalObservations.size() < 2)
+    if (wm.goalObservations.size() < 2)
     {
       d_goalSeenCnt--;
       if (d_goalSeenCnt <= 0)

@@ -6,16 +6,15 @@
 #include <stdio.h>
 
 #include "../AgentModel/agentmodel.hh"
-#include "../GameState/gamestate.hh"
+#include "../WorldModel/worldmodel.hh"
 
 using namespace Robot;
 using namespace std;
 using namespace bold;
 
 Debugger::Debugger()
-: d_isBallObserved(false),
-  d_isTwoGoalPostsObserved(false),
-  d_lastLEDValue(0xff)
+: d_lastLedFlags(0xff),
+  d_eventTimings()
 {}
 
 const double Debugger::getSeconds(timestamp_t const& startedAt)
@@ -31,26 +30,6 @@ const Debugger::timestamp_t Debugger::getTimestamp()
   return now.tv_usec + (Debugger::timestamp_t)now.tv_sec * 1000000;
 }
 
-void Debugger::timeThinkCycle(timestamp_t const& startedAt)
-{
-  AgentModel::getInstance().lastThinkCycleMillis = getSeconds(startedAt) * 1000.0; // printTime(startedAt, "Cycle %4.2f ");
-}
-
-void Debugger::timeImageCapture(timestamp_t const& startedAt)
-{
-  AgentModel::getInstance().lastImageCaptureTimeMillis = getSeconds(startedAt) * 1000.0; // printTime(startedAt, "Captured %4.2f ");
-}
-
-void Debugger::timeImageProcessing(timestamp_t const& startedAt)
-{
-  AgentModel::getInstance().lastImageProcessTimeMillis = getSeconds(startedAt) * 1000.0; // printTime(startedAt, "Processed %4.2f");
-}
-
-void Debugger::timeSubBoardRead(timestamp_t const& startedAt)
-{
-  AgentModel::getInstance().lastSubBoardReadTimeMillis = getSeconds(startedAt) * 1000.0; // printTime(startedAt, "SubBoardRead %4.2f\n");
-}
-
 const double Debugger::printTime(timestamp_t const& startedAt, std::string const& format)
 {
   double millis = getSeconds(startedAt) * 1000.0;
@@ -58,36 +37,36 @@ const double Debugger::printTime(timestamp_t const& startedAt, std::string const
   return millis;
 }
 
-void Debugger::setIsBallObserved(bool const& isBallObserved)
+Debugger::timestamp_t Debugger::timeEvent(timestamp_t const& startedAt, std::string const& eventName)
 {
-  d_isBallObserved = isBallObserved;
+  auto timeSeconds = getSeconds(startedAt);
+  addEventTiming(EventTiming(timeSeconds, eventName));
+  return getTimestamp();
 }
 
-void Debugger::setGoalObservationCount(int const& goalObservationCount)
+void Debugger::addEventTiming(EventTiming const& eventTiming)
 {
-  d_isTwoGoalPostsObserved = goalObservationCount >= 2;
+  d_eventTimings.push_back(eventTiming);
 }
 
-void Debugger::update(Robot::CM730& cm730)
+void Debugger::update(CM730& cm730)
 {
-  //
-  // Update LED statuses
-  //
-  int value = 0;
-  if (d_isBallObserved)
-    value |= LED_RED;
-//if (d_isImageProcessingSlow)
+  auto& wm = WorldModel::getInstance();
+
+  int ledFlags = 0;
+  if (wm.isBallVisible)
+    ledFlags |= LED_RED;
+
+//if (somethingElse)
 //  value |= LED_BLUE;
-  if (d_isTwoGoalPostsObserved)
-    value |= LED_GREEN;
-  if (value != d_lastLEDValue)
-  {
-    cm730.WriteByte(Robot::CM730::P_LED_PANNEL, value, NULL);
-    d_lastLEDValue = value;
-  }
-}
 
-void Debugger::setGameControlData(RoboCupGameControlData const& gameControlData)
-{
-  GameState::getInstance().update(gameControlData);
+  if (wm.goalObservations.size() > 1)
+    ledFlags |= LED_GREEN;
+
+  if (ledFlags != d_lastLedFlags)
+  {
+    // the value changed, so write it
+    cm730.WriteByte(CM730::P_LED_PANNEL, ledFlags, NULL);
+    d_lastLedFlags = ledFlags;
+  }
 }
