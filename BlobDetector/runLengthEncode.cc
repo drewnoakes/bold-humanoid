@@ -1,6 +1,6 @@
 #include "blobdetector.ih"
 
-vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& labeledImage, unsigned char nLabels)
+vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& labelledImage, unsigned char nLabels)
 {
   vector<RunLengthCode> rlCodes;
   // Create a run length code for each label
@@ -8,7 +8,7 @@ vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& lab
   {
     rlCodes.push_back(RunLengthCode());
     // a run length code is a vector of vectors of runs
-    for (unsigned y = 0; y < labeledImage.rows; ++y)
+    for (unsigned y = 0; y < labelledImage.rows; ++y)
       rlCodes[l].push_back(vector<Run>());
 
 //    cout << "rlcs: " << l << " " << rlCodes[l].size() << endl;
@@ -17,13 +17,13 @@ vector<BlobDetector::RunLengthCode> BlobDetector::runLengthEncode(Mat const& lab
   Run curRun(0,0);
   unsigned char curLabel = 0;
 
-  for (unsigned y = 0; y < labeledImage.rows; ++y)
+  for (unsigned y = 0; y < labelledImage.rows; ++y)
   {
-    unsigned char const* row = labeledImage.ptr<unsigned char>(y);
+    unsigned char const* row = labelledImage.ptr<unsigned char>(y);
     // We go one pixel outside of the row, as if image is padded with a column of zeros
-    for (unsigned x = 0; x <= labeledImage.cols; ++x)
+    for (unsigned x = 0; x <= labelledImage.cols; ++x)
     {
-      unsigned char label = x < labeledImage.cols ? row[x] : 0;
+      unsigned char label = x < labelledImage.cols ? row[x] : 0;
 
       // Check if we have a run boundary
       if (label != curLabel)
