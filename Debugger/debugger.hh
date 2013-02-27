@@ -55,11 +55,14 @@ namespace bold
 
     void addEventTiming(EventTiming const& eventTiming);
 
-    std::vector<EventTiming> getAndClearTimings()
+    std::vector<EventTiming> getTimings()
     {
-      auto timings = d_eventTimings;
+      return d_eventTimings;
+    }
+
+    void clearTimings()
+    {
       d_eventTimings = std::vector<EventTiming>();
-      return timings;
     }
 
 //     void processBlobs(std::vector<std::set<Blob>> const& blobs)

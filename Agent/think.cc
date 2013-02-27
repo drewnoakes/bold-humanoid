@@ -110,6 +110,12 @@ void Agent::think()
   t = debugger.timeEvent(t, "Update Debugger");
 
   //
+  // Read all data from the sub board
+  //
+  readSubBoardData();
+  t = debugger.timeEvent(t, "Read Sub Board");
+
+  //
   // Update websocket data
   //
   if (d_streamer != nullptr)
@@ -118,6 +124,6 @@ void Agent::think()
     t = debugger.timeEvent(t, "Update DataStreamer");
   }
 
-  readSubBoardData();
-  t = debugger.timeEvent(t, "Read Sub Board");
+  // TODO this isn't a great approach, as the last values are lost (captured after send)
+  debugger.clearTimings();
 }

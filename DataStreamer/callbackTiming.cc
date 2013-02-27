@@ -11,9 +11,11 @@ int DataStreamer::callback_timing(
   if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
   {
     auto& debugger = Debugger::getInstance();
-    std::vector<EventTiming> const& timings = debugger.getAndClearTimings();
+    std::vector<EventTiming> const& timings = debugger.getTimings();
 
-    unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + (timings.size()*32) + LWS_SEND_BUFFER_POST_PADDING];
+    unsigned int bufLen = LWS_SEND_BUFFER_PRE_PADDING + (timings.size()*64) + LWS_SEND_BUFFER_POST_PADDING;
+    unsigned char buf[bufLen];
+    //memset(&buf, 0, bufLen);
     unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
 
     int n = 0;
@@ -21,7 +23,7 @@ int DataStreamer::callback_timing(
     {
       double timeSeconds = eventTiming.first;
       std::string eventName = eventTiming.second;
-      n += sprintf((char*)p + n, "%s=%f|", eventName.c_str(), timeSeconds);
+      n += sprintf((char*)(p + n), "%s=%f|", eventName.c_str(), timeSeconds);
     }
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)

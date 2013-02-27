@@ -110,13 +110,20 @@ define(
             socket.onmessage = function (msg)
             {
                 var time = new Date().getTime();
-                var floats = parseFloats(msg.data);
-                for (var f = 0; f < floats.length && f < seriesArray.length; f++) {
-                    seriesArray[f].append(time, floats[f]);
+                if (protocolDefinition.protocol === 'timing-protocol')
+                {
+                   console.log(msg.data); 
                 }
+                else
+                {
+                    var floats = parseFloats(msg.data);
+                    for (var f = 0; f < floats.length && f < seriesArray.length; f++) {
+                        seriesArray[f].append(time, floats[f]);
+                    }
 
-                if (protocolDefinition.protocol === 'agent-model-protocol')
-                    Model.updateAngles(floats.slice(6));
+                    if (protocolDefinition.protocol === 'agent-model-protocol')
+                        Model.updateAngles(floats.slice(6));
+                }
             }
         });
     }
