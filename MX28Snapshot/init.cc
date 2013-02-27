@@ -11,7 +11,7 @@ unsigned short MX28Snapshot::readTableWord(unsigned char* table, int addr)
 double MX28Snapshot::angleValueToRads(unsigned int value)
 {
   // see http://support.robotis.com/en/product/dynamixel/rx_series/mx-28.htm
-  return (value - 0x800) / (M_PI * 2.0);
+  return ((int)value - 0x800) * (M_PI / 0x800);
 }
 
 double MX28Snapshot::valueToRPM(unsigned int value)
@@ -25,7 +25,7 @@ double MX28Snapshot::valueToRPM(unsigned int value)
   if (value < 1024)
     return value * 0.052733333;
   else
-    return (value - 1024) * 0.052733333;
+    return ((int)value - 1024) * 0.052733333;
 }
 
 bool MX28Snapshot::init(Robot::CM730& cm730, int const mx28ID)

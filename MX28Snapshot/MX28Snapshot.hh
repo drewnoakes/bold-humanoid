@@ -14,8 +14,6 @@ private:
 
 public:
 
-  // TODO convert these values to other types where it makes sense (eg temp -> degrees) as in CM730 snapshot
-
   // EEPROM AREA
 
   unsigned short modelNumber;
