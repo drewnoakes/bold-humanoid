@@ -2,13 +2,22 @@
 #define BOLD_LUTBUILDER_HH
 
 #include <vector>
+#include <string>
 
-#include <LinuxDARwIn.h>
+// Forwards declaration, as this type is defined in the robotis repository (yuck, I know)
+class minIni
+{
+public:
+  int geti(const std::string& Section, const std::string& Key, int DefValue=0) const;
+};
 
 namespace bold
 {
   struct bgr
   {
+    bgr()
+    {}
+
     bgr(int _b, int _g, int _r)
       : b(_b), g(_g), r(_r)
     {}
@@ -20,6 +29,13 @@ namespace bold
 
   struct hsv
   {
+    hsv()
+    {}
+
+    hsv(int h, int s, int v)
+      : h(h), s(s), v(v)
+    {}
+
     int h;
     int s;
     int v;
@@ -70,9 +86,8 @@ namespace bold
     unsigned char* buildBGR24FromHSVRanges(std::vector<hsvRange> const& ranges);
     unsigned char* buildBGR18FromHSVRanges(std::vector<hsvRange> const& ranges);
 
-  private:
-
-    hsv bgr2hsv(bgr const& in);
+    static hsv bgr2hsv(bgr const& in);
+    static bgr hsv2bgr(hsv const& in);
   };
 }
 
