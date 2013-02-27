@@ -22,7 +22,6 @@ define(
 		if (typeof(msg.data) === 'string')
 		{
 		    imgSize = imgToRead = parseInt(msg.data);
-		    console.log("image size: " + imgSize);
 		    imgState = 1;
 		    imgBlob = new Blob([], {type: "image/jpeg"});
 		}

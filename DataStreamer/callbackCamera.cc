@@ -13,8 +13,6 @@ int DataStreamer::callback_camera(
   {
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
-    cout << "[DataStreame::callback_camera] sending image" << endl;
-    
     // Encode image to jpeg (perhaps do this directly when getting image?)
     vector<uchar> jpgbuf;
     cv::imencode(".jpg", d_img, jpgbuf);
