@@ -4,7 +4,7 @@ LDFLAGS=`pkg-config opencv --libs`
 BLOBDETECTOR_SOURCES=../BlobDetector/detectBlobs.cc ../BlobDetector/runLengthEncode.cc ../BlobDetector/runSetToBlob.cc
 BLOBDETECTOR_OBJECTS=$(BLOBDETECTOR_SOURCES:.cc=.o)
 
-all: djsettest blobtest linetest
+all: djsettest blobtest linetest passtest
 
 djsettest: djsettest.cc ../DisjointSet/disjointset.hh
 	g++ djsettest.cc -o djsettest -O3 -std=c++0x
@@ -29,9 +29,7 @@ CAMERA_SOURCES=\
 	../Camera/stopCapture.cc\
 	../Camera/capture.cc\
 	../PixelFilterChain/applyFilters.cc
-
 CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
-
 ${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
 
 cameratest: cameratest.o ${CAMERA_OBJECTS}
@@ -39,13 +37,19 @@ cameratest: cameratest.o ${CAMERA_OBJECTS}
 
 LINEDETECTOR_SOURCES=../HoughLineAccumulator/houghlineaccumulator.cc ../HoughLineExtractor/findLines.cc
 LINEDETECTOR_OBJECTS=$(LINEDETECTOR_SOURCES:.cc=.o)
-
 ${LINEDETECTOR_OBJECTS}: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh
 
 linetest.o: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh
 
 linetest: linetest.o ${LINEDETECTOR_OBJECTS}
 	g++ linetest.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} -o linetest
+
+LUT_SOURCES=../LUTBuilder/bgr2hsv.cc ../LUTBuilder/hsv2bgr.cc ../LUTBuilder/buildBGRFromHSVRanges.cc ../ImageLabeller/ImageLabeller.cc
+LUT_OBJECTS=$(LUT_SOURCES:.cc=.o)
+${LUT_OBJECTS}: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh
+
+passtest: passtest.o linetest.o ${LINEDETECTOR_OBJECTS} ${LUT_OBJECTS}
+	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} ${LUT_OBJECTS} -o passtest
 
 clean:
 	rm -f ${BLOBDETECTOR_OBJECTS}
