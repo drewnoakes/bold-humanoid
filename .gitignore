@@ -10,3 +10,10 @@ test/accumulator.jpg
 test/djsettest
 test/linetest
 test/passtest
+test/hough
+test/labelled.jpg
+test/line-dots.jpg
+.kdev4/
+test/color-lines.jpg
+test/p
+test/r
