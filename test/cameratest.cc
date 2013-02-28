@@ -26,7 +26,7 @@ int main()
       control.setValue(50);
 
     cout << "Control: " << control.name << " " << control.type << " (" << control.minimum << "-" << control.maximum << ", def: " << control.defaultValue << "), val.: ";
-    
+
     cout << control.getValue() << endl;
   }
 
@@ -56,20 +56,20 @@ int main()
 
       int b = (298 * y + 516 * cb + 128) >> 8;
       if (b < 0)
-	b = 0;
+        b = 0;
       int g = (298 * y - 100 * cb - 208 * cr) >> 8;
       if (g < 0)
-	g = 0;
+        g = 0;
       int r = (298 * y + 409 * cr + 128) >> 8;
       if (r < 0)
-	r = 0;
+        r = 0;
 
       pxl[0] = b;
       pxl[1] = g;
       pxl[2] = r;
     });
 
-  
+
   cv::namedWindow("main");
 
   cam.startCapture();
