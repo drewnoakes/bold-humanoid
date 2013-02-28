@@ -31,7 +31,6 @@ namespace bold
     {
       SEND_CONTROLS,
       SEND_IMG_TAGS,
-      SEND_PREFIX,
       SEND_IMAGE
     };
 
@@ -92,7 +91,8 @@ namespace bold
       void* in,
       size_t len);
 
-    void sendCameraControls(struct libwebsocket* wsi);
+    void sendCameraControls(libwebsocket* wsi);
+    void sendImage(libwebsocket* wsi);
 
   private:
     const int d_port;
