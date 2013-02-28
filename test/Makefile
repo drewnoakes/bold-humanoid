@@ -25,7 +25,10 @@ ${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
 cameratest: cameratest.o ${CAMERA_OBJECTS}
 	g++ cameratest.o ${CXXFLAGS} ${LDFLAGS} ${CAMERA_OBJECTS} -o cameratest
 
-LINEDETECTOR_SOURCES=../HoughLineAccumulator/houghlineaccumulator.cc ../HoughLineExtractor/findLines.cc ../HoughLineExtractor/findMaxLine.cc
+LINEDETECTOR_SOURCES=\
+	../HoughLineAccumulator/houghlineaccumulator.cc\
+	../HoughLineExtractor/findLines.cc\
+	../HoughLineExtractor/findMaxLine.cc
 LINEDETECTOR_OBJECTS=$(LINEDETECTOR_SOURCES:.cc=.o)
 ${LINEDETECTOR_OBJECTS}: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh
 
@@ -34,16 +37,21 @@ hough.o: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/h
 hough: hough.o ${LINEDETECTOR_OBJECTS}
 	g++ hough.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} -o hough
 
-LUT_SOURCES=../Colour/bgr2hsv.cc ../Colour/hsv2bgr.cc ../LUTBuilder/buildBGRFromHSVRanges.cc ../ImageLabeller/ImageLabeller.cc
-LUT_OBJECTS=$(LUT_SOURCES:.cc=.o)
-${LUT_OBJECTS}: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh
+PASS_SOURCES=\
+	../Colour/bgr2hsv.cc\
+	../Colour/hsv2bgr.cc\
+	../LUTBuilder/buildBGRFromHSVRanges.cc\
+	../ImageLabeller/ImageLabeller.cc
+PASS_OBJECTS=$(PASS_SOURCES:.cc=.o)
+${PASS_OBJECTS}: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh
 
-passtest: passtest.o hough.o ${LINEDETECTOR_OBJECTS} ${LUT_OBJECTS}
-	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} ${LUT_OBJECTS} -o passtest
+passtest: passtest.o hough.o ${LINEDETECTOR_OBJECTS} ${PASS_OBJECTS}
+	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} ${PASS_OBJECTS} -o passtest
 
 clean:
 	rm -f ${CAMERA_OBJECTS}
 	rm -f ${LINEDETECTOR_OBJECTS}
+	rm -f ${LUT_OBJECTS}
 	rm -f cameratest
 	rm -f djsettest
 	rm -f hough

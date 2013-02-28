@@ -1,6 +1,8 @@
-#include "blobdetector.ih"
+#include "blobdetectpass.hh"
 
-Blob BlobDetector::runSetToBlob(set<Run> const& runSet)
+using namespace bold;
+
+Blob BlobDetectPass::runSetToBlob(set<Run> const& runSet)
 {
   Blob b;
   // Put in constructor?
@@ -11,7 +13,7 @@ Blob BlobDetector::runSetToBlob(set<Run> const& runSet)
   b.covar << 0, 0, 0, 0;
 
   b.runs = runSet;
-  
+
   for (Run const& run : runSet)
   {
     // OPT: This can be optimized, we know the runs are ordered from top to bottom
@@ -41,8 +43,8 @@ Blob BlobDetector::runSetToBlob(set<Run> const& runSet)
     b.covar(0,1) += (intSum(run.end.x() - 1) - intSum(run.start.x() - 1)) * y;
     b.covar(1,1) += run.length * y * y;
     */
-    
-    
+
+
     for (int x = run.start.x(); x < run.end.x(); ++x)
     {
       b.covar += Vector2f(x, y) * Vector2f(x, y).transpose();
@@ -50,7 +52,7 @@ Blob BlobDetector::runSetToBlob(set<Run> const& runSet)
       //b.covar(0,1) += x * y;
       //b.covar(1,1) += y * y;
     }
-    
+
   }
 
   b.mean /= b.area;

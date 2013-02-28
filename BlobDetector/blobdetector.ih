@@ -1,9 +1,0 @@
-#include "blobdetector.hh"
-
-#include "../DisjointSet/disjointset.hh"
-#include <algorithm>
-
-using namespace bold;
-using namespace Eigen;
-using namespace cv;
-using namespace std;

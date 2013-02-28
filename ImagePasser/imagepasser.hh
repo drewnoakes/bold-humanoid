@@ -26,18 +26,17 @@ namespace bold
 
       for (int y = 0; y < image.rows; ++y)
       {
-        uchar const* row = image.ptr<uchar>(y);
+        TPixel const* row = image.ptr<TPixel>(y);
 
         for (ImagePassHandler<TPixel>* handler : d_handlers)
           handler->onRowStarting(y);
 
-        // We go one pixel outside of the row, as if image is padded with a column of zeros
-        for (int x = 0; x != image.cols; ++x)
+        for (int x = 0; x < image.cols; ++x)
         {
-          uchar label = x == image.cols ? 0 : row[x];
+          TPixel value = row[x];
 
           for (ImagePassHandler<TPixel>* handler : d_handlers)
-            handler->onPixel(label, x, y);
+            handler->onPixel(value, x, y);
         }
       }
 
