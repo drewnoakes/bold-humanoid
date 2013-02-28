@@ -31,6 +31,7 @@ void HoughLineAccumulator::add(int x, int y)
 
 HoughLineAccumulator::HoughLineAccumulator(unsigned int xLength, unsigned int yLength, unsigned int accumulatorHeight)
   : d_accumulatorThetaLen(accumulatorHeight),
+    // TODO the accumulator doesn't need to be quite this wide -- the negative side can be narrower (positive side is correct)
     d_accumulatorRadiusLen(2 * (unsigned int)ceil(sqrt(xLength*xLength + yLength*yLength))),
     d_xLength(xLength),
     d_yLength(yLength),
