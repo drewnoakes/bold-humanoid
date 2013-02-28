@@ -21,26 +21,32 @@ namespace bold
     /** Height of the input image */
     unsigned int const d_yLength;
 
+    // TODO multiplex these caches
     /** Cached sine values across the integer range [0-d_accumulatorThetaLen). */
     double* const d_sinCache;
     /** Cached cosine values across the integer range [0-d_accumulatorThetaLen). */
     double* const d_cosCache;
 
-    /** The accumulator matrix, containing vote counts for line hypotheses. */
     cv::Mat d_accumulator;
 
+    int d_count;
+
   public:
-    HoughLineAccumulator(unsigned int xLength, unsigned int yLength, unsigned int accumulatorWidth = 180);
+    HoughLineAccumulator(unsigned int xLength, unsigned int yLength, unsigned int accumulatorHeight = 180);
     ~HoughLineAccumulator();
+
+    /** The number of times 'add' was called since construction, or the last call to 'clear'. */
+    int count() { return d_count; }
 
     void add(int x, int y);
 
     void clear();
 
+    /** The accumulator matrix, containing vote counts for line hypotheses. */
     cv::Mat getMat();
 
-    double getTheta(unsigned int y);
-    double getRadius(unsigned int x);
+    double getTheta(int y);
+    double getRadius(int x);
   };
 }
 
