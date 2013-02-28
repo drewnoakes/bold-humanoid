@@ -38,6 +38,16 @@ ExternalProject_Add(libwebsockets_lib
 link_directories(${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
 
 
+include_directories(
+${DARWINDIR}/Linux/include
+${DARWINDIR}/Framework/include
+${VISIONDIR}
+${JOYSTICKDIR}
+${LIBWEBSOCKETDIR}/lib
+${EIGEN3_INCLUDE_DIR}
+${SigC++_INCLUDE_DIRS}
+${OpenCV_INCLUDE_DIR})
+
 add_executable(boldhumanoid
 ./main.cc
 ./Agent/Agent.cc
@@ -91,16 +101,6 @@ ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
 ${VISIONDIR}/PixelFilterChain/applyFilters.cc
 ${JOYSTICKDIR}/joystick.cc
 )
-
-
-include_directories(
-${DARWINDIR}/Linux/include
-${DARWINDIR}/Framework/include
-${VISIONDIR}
-${JOYSTICKDIR}
-${EIGEN3_INCLUDE_DIR}
-${SigC++_INCLUDE_DIRS}
-${OpenCV_INCLUDE_DIR})
 
 target_link_libraries(boldhumanoid ${OpenCV_LIBS} ${SigC++_LIBRARIES} darwin websockets pthread rt)
 
