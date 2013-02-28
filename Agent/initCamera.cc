@@ -4,14 +4,14 @@ void Agent::initCamera()
 {
   cout << "[Agent::initCamera] Start" << endl;
 
-  d_camera.open();
+  d_camera->open();
 
-  auto controls = d_camera.getControls();
+  auto controls = d_camera->getControls();
 
   cout << "===== CAPABILITIES =====" << endl;
 
-  cout << "Read/write: " << (d_camera.canRead() ? "YES" : "NO") << endl;
-  cout << "Streaming:  " << (d_camera.canStream() ? "YES" : "NO") << endl;
+  cout << "Read/write: " << (d_camera->canRead() ? "YES" : "NO") << endl;
+  cout << "Streaming:  " << (d_camera->canStream() ? "YES" : "NO") << endl;
 
   cout << "===== CONTROLS =====" << endl;;
   for (auto control : controls)
@@ -25,17 +25,17 @@ void Agent::initCamera()
   }
 
   cout << "===== FORMATS =====" << endl;
-  auto formats = d_camera.getFormats();
+  auto formats = d_camera->getFormats();
   for (auto format : formats)
   {
     cout << "Format: "  << format.description << endl;
   }
 
   cout << "===== CURRENT FORMAT =====" << endl;
-  bool res = d_camera.getPixelFormat().requestSize(320,240);
+  bool res = d_camera->getPixelFormat().requestSize(320,240);
   cout << "Set format: " << (res ? "YES" : "NO") << endl;
 
-  auto pixelFormat = d_camera.getPixelFormat();
+  auto pixelFormat = d_camera->getPixelFormat();
 
 
   cout << "Width          : " << pixelFormat.width << endl;
@@ -44,5 +44,5 @@ void Agent::initCamera()
   cout << "Bytes total    : " << pixelFormat.imageByteSize << endl;
 
 
-  d_camera.startCapture();
+  d_camera->startCapture();
 }

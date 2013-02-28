@@ -1,5 +1,9 @@
 #include "agent.ih"
 
+// TODO: included here to speed up compilation. should put in internal
+// header file and add precompilation to CMakeLists
+#include "../DataStreamer/datastreamer.hh"
+
 bool Agent::init()
 {
   cout << "[Agent::init] Start" << endl;
@@ -44,6 +48,7 @@ bool Agent::init()
   // TODO only stream if argument specified?
   d_streamer = new DataStreamer(8080);
   d_streamer->init();
+  d_streamer->setCamera(d_camera);
 
   Debugger::getInstance().update(d_CM730);
 

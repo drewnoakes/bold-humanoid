@@ -1,4 +1,5 @@
 #include "Agent/agent.hh"
+#include "WorldModel/worldmodel.hh"
 
 #define MOTION_FILE_PATH    "./motion_4096.bin"
 #define U2D_DEV_NAME0       "/dev/ttyUSB0"

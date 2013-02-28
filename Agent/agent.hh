@@ -6,18 +6,17 @@
 #include <opencv2/opencv.hpp>
 
 #include "../Ambulator/ambulator.hh"
-#include "../DataStreamer/datastreamer.hh"
-#include "../Debugger/debugger.hh"
 #include "../GameController/GameControllerReceiver.hh"
-#include "../WorldModel/worldmodel.hh"
-#include "../joystick/joystick.hh"
 #include "../vision/BlobDetector/blobdetector.hh"
-#include "../vision/Camera/camera.hh"
-#include "../vision/ImageLabeller/imagelabeller.hh"
 #include "../vision/PixelFilterChain/pixelfilterchain.hh"
+
+class Joystick;
 
 namespace bold
 {
+  class DataStreamer;
+  class Camera;
+
   enum State
   {
     S_INIT,
@@ -51,7 +50,7 @@ namespace bold
     Robot::CM730 d_CM730;
     Robot::LinuxMotionTimer* d_motionTimer;
     std::string d_motionFile;
-    Camera d_camera;
+    Camera* d_camera;
     DataStreamer* d_streamer;
     BlobDetector d_blobDetector;
     Ambulator d_ambulator;

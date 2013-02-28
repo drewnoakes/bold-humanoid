@@ -1,7 +1,12 @@
 #include "agent.hh"
 
 #include "../WorldModel/worldmodel.hh"
+#include "../AgentModel/agentmodel.hh"
 #include <LUTBuilder/lutbuilder.hh>
+#include "../joystick/joystick.hh"
+#include "../Debugger/debugger.hh"
+#include "../vision/Camera/camera.hh"
+#include "../vision/ImageLabeller/imagelabeller.hh"
 
 #include <iostream>
 

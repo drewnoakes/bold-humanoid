@@ -4,8 +4,8 @@ void Agent::lookAt(Vector2f const& pos)
 {
   static float r = 0.85;
 
-  static auto w = d_camera.getPixelFormat().width;
-  static auto h = d_camera.getPixelFormat().height;
+  static auto w = d_camera->getPixelFormat().width;
+  static auto h = d_camera->getPixelFormat().height;
 
   static Vector2f centerPx = Vector2f(w,h) / 2;
   static float happ = 60 / w;//Camera::VIEW_H_ANGLE / w;

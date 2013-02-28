@@ -1,6 +1,6 @@
 #include "agent.ih"
-#include "../AgentModel/agentmodel.hh"
-#include "../GameController/RoboCupGameControlData.h"
+#include "../DataStreamer/datastreamer.hh"
+#include "../vision/Camera/camera.hh"
 
 void Agent::think()
 {
@@ -15,7 +15,7 @@ void Agent::think()
   //
   // Capture the image
   //
-  cv::Mat raw = d_camera.capture();
+  cv::Mat raw = d_camera->capture();
   t = debugger.timeEvent(t, "Image Capture");
 
   d_pfChain.applyFilters(raw);

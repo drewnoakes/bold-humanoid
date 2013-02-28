@@ -39,7 +39,7 @@ void Agent::preKickLook()
 
       Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
 
-      static auto w = d_camera.getPixelFormat().width;
+      static auto w = d_camera->getPixelFormat().width;
 
       cout << "KICKING!!! " << wm.ballObservation.pos.transpose() << " " << (w/2) << endl;
 

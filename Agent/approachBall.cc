@@ -35,7 +35,7 @@ void Agent::approachBall()
   moveDir = Vector2d(5.0, 0).cwiseMax(tilt_percent * moveDir);
 
   // Ball underneath center: small steps
-  if (wm.ballObservation.pos.y() > d_camera.getPixelFormat().height / 2 + 10)
+  if (wm.ballObservation.pos.y() > d_camera->getPixelFormat().height / 2 + 10)
   {
     cout << "Fine tune walk!" << endl;
     moveDir.x() = 3.0;

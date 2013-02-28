@@ -1,5 +1,7 @@
 #include "agent.ih"
 
+#include "../vision/Camera/camera.hh"
+
 Agent::Agent(std::string const& U2D_dev,
       minIni const& ini,
       std::string const& motionFile,
@@ -12,7 +14,7 @@ Agent::Agent(std::string const& U2D_dev,
     d_CM730(&d_linuxCM730),
     d_ini(ini),
     d_motionFile(motionFile),
-    d_camera("/dev/video0"),
+    d_camera(0),
     d_ambulator(d_ini),
     d_joystick(nullptr),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
@@ -39,6 +41,7 @@ Agent::Agent(std::string const& U2D_dev,
   // contrast:   0.12549
   // saturation: 0.109804
 
+  d_camera = new Camera("/dev/video0");
 
   double gain       = d_ini.getd("Camera", "Gain",       0);
   double brightness = d_ini.getd("Camera", "Brightness", 0);
