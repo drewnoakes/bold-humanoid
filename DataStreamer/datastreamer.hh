@@ -24,6 +24,20 @@ namespace bold
     PROTOCOL_COUNT
   };
 
+  struct CameraSession
+  {
+    enum
+    {
+      SEND_CONTROLS,
+      SEND_IMG_TAGS,
+      SEND_PREFIX,
+      SEND_IMAGE
+    };
+
+    unsigned state;
+    unsigned tagSelection;
+  };
+
   class DataStreamer
   {
   public:

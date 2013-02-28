@@ -4,13 +4,21 @@ int DataStreamer::callback_camera(
   struct libwebsocket_context* /*context*/,
   struct libwebsocket *wsi,
   enum libwebsocket_callback_reasons reason,
-  void* /*user*/,
+  void* session,
   void* in,
   size_t len)
 {
+  CameraSession* cameraSession = reinterpret_cast<CameraSession*>(session);
 
   switch (reason)
   {
+  case LWS_CALLBACK_CLIENT_ESTABLISHED:
+  {
+    memset(cameraSession, 0, sizeof(CameraSession));
+
+    break;
+  }
+
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
     // Encode image to jpeg (perhaps do this directly when getting image?)
@@ -51,14 +59,16 @@ int DataStreamer::callback_camera(
       tosend -= bufsize;
       jpgP += bufsize;
     }
+
+    break;
   }
-  break;
 
   case LWS_CALLBACK_RECEIVE:
   {
     cout << "[DataStreamer::callback_camera] client receive, len: " << len << endl;
+    break;
   }
-  break;
+
   }
 
   return 0;
