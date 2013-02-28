@@ -145,12 +145,12 @@ int main(int argc, char **argv)
   }
 
   // Build colour ranges for segmentation
-  hsvRange fieldRange = hsvRange(71, 20, 138, 55, 173, 65);
-  hsvRange lineRange  = hsvRange(0, 255, 0, 70, 255, 70);
-  hsvRange goalRange  = hsvRange(40, 10, 210, 55, 190, 65);
-  hsvRange ballRange  = hsvRange(13, 30, 255, 95, 190, 95);
+  Colour::hsvRange fieldRange = Colour::hsvRange(71, 20, 138, 55, 173, 65);
+  Colour::hsvRange lineRange  = Colour::hsvRange(0, 255, 0, 70, 255, 70);
+  Colour::hsvRange goalRange  = Colour::hsvRange(40, 10, 210, 55, 190, 65);
+  Colour::hsvRange ballRange  = Colour::hsvRange(13, 30, 255, 95, 190, 95);
 
-  vector<hsvRange> ranges;
+  vector<Colour::hsvRange> ranges;
   ranges.push_back(fieldRange);
   ranges.push_back(lineRange);
   ranges.push_back(goalRange);

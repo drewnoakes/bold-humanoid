@@ -71,8 +71,8 @@ int main(int argc, char **argv)
 
   double maxVotes = hough->lines[0].votes();
   for (HoughLine const& line : hough->lines) {
-    bgr lineColor(0, 0, 255 * (line.votes()/maxVotes)); // red
-    line.draw<bgr>(colorLines, lineColor);
+    Colour::bgr lineColor(0, 0, 255 * (line.votes()/maxVotes)); // red
+    line.draw<Colour::bgr>(colorLines, lineColor);
   }
 
   imwrite("color-lines.jpg", colorLines);

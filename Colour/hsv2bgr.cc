@@ -1,6 +1,8 @@
-#include "lutbuilder.ih"
+#include "colour.hh"
 
-bgr LUTBuilder::hsv2bgr(hsv const& in)
+using namespace bold;
+
+Colour::bgr Colour::hsv2bgr(hsv const& in)
 {
   float b, g, r;
 
@@ -12,7 +14,7 @@ bgr LUTBuilder::hsv2bgr(hsv const& in)
   H = in.h / 255.0;
   V = in.v / 255.0;
 
-  if ( S == 0.0 )
+  if (S == 0.0)
   {
     // Achromatic case, set level of grey
     r = V;
@@ -24,11 +26,11 @@ bgr LUTBuilder::hsv2bgr(hsv const& in)
     // Determine levels of primary colours.
     if (H >= 1.0)
     {
-        H = 0.0;
+      H = 0.0;
     }
     else
     {
-        H = H * 6;
+      H = H * 6;
     }
     I = (int) H;   /* should be in the range 0..5 */
     F = H - I;     /* fractional part */
@@ -45,5 +47,5 @@ bgr LUTBuilder::hsv2bgr(hsv const& in)
     if (I == 5) { r = V; g = M; b = N; }
   }
 
-  return bgr(b * 255, g * 255, r * 255);
+  return Colour::bgr(b * 255, g * 255, r * 255);
 }

@@ -4,7 +4,7 @@ using namespace bold;
 using namespace std;
 using namespace cv;
 
-ImageLabeller::ImageLabeller(std::vector<bold::hsvRange> ranges)
+ImageLabeller::ImageLabeller(std::vector<Colour::hsvRange> ranges)
 : d_LUT(LUTBuilder().buildBGR18FromHSVRanges(ranges))
 {
   std::cout << "[ImageLabeller::ImageLabeller] Constructed" << std::endl;
@@ -30,13 +30,14 @@ void ImageLabeller::label(cv::Mat& image, cv::Mat& labelled)
   }
 }
 
-void ImageLabeller::colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::vector<hsvRange> const& ranges)
+void ImageLabeller::colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::vector<Colour::hsvRange> const& ranges)
 {
+  // TODO can we store Colour::bgr instead of Point3_<uchar> ?
   std::map<uchar,Point3_<uchar>> colorByLabel;
   for (uchar label = 0; label < ranges.size(); label++)
   {
-    hsvRange const& range = ranges.at(label);
-    bgr bgr = LUTBuilder::hsv2bgr(hsv(range.h, range.s, range.v));
+    Colour::hsvRange const& range = ranges.at(label);
+    Colour::bgr bgr = Colour::hsv2bgr(Colour::hsv(range.h, range.s, range.v));
     colorByLabel[label + 1] = Point3_<uchar>(bgr.b, bgr.g, bgr.r);
 
     cout << "Label " << (int)label << " with HSV " << range.h << " " << range.s << " " << range.v << " has RGB " << (int)bgr.r << " " << (int)bgr.g << " " << (int)bgr.b << endl;

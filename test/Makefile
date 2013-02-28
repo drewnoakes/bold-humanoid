@@ -1,7 +1,7 @@
 CXXFLAGS=-I/usr/include/opencv2 -I/usr/include/eigen3 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -O3 -std=c++0x -g
 LDFLAGS=`pkg-config opencv --libs`
 
-all: djsettest blobtest hough passtest
+all: djsettest hough passtest
 
 djsettest: djsettest.cc ../DisjointSet/disjointset.hh
 	g++ djsettest.cc -o djsettest -O3 -std=c++0x
@@ -34,9 +34,9 @@ hough.o: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/h
 hough: hough.o ${LINEDETECTOR_OBJECTS}
 	g++ hough.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} -o hough
 
-LUT_SOURCES=../LUTBuilder/bgr2hsv.cc ../LUTBuilder/hsv2bgr.cc ../LUTBuilder/buildBGRFromHSVRanges.cc ../ImageLabeller/ImageLabeller.cc
+LUT_SOURCES=../Colour/bgr2hsv.cc ../Colour/hsv2bgr.cc ../LUTBuilder/buildBGRFromHSVRanges.cc ../ImageLabeller/ImageLabeller.cc
 LUT_OBJECTS=$(LUT_SOURCES:.cc=.o)
-${LUT_OBJECTS}: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh
+${LUT_OBJECTS}: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh
 
 passtest: passtest.o hough.o ${LINEDETECTOR_OBJECTS} ${LUT_OBJECTS}
 	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} ${LUT_OBJECTS} -o passtest
