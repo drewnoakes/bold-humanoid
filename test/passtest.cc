@@ -14,27 +14,37 @@ using namespace cv;
 using namespace std;
 using namespace bold;
 
+/**
+ * A state machine that calls back when it detects a run of one label sandwiched
+ * between runs of another label.
+ *
+ * This type was designed for finding line segments in an image row/column.
+ *
+ * Hysterisis is used to address both noise and gaps at borders between the
+ * two labels being tracked.
+ */
 class LineRunTracker
 {
 private:
-  enum class State : unsigned char { In, On, Out };
+  enum class State : uchar { In, On, Out };
 
-  unsigned char inLabel; // eg: green
-  unsigned char onLabel; // eg: white
+  uchar inLabel; // eg: green
+  uchar onLabel; // eg: white
   State state;
-  unsigned short int otherCoordinate;
-  unsigned short int startedAt;
-  std::function<void(unsigned short int const, unsigned short int const, unsigned short int const)> callback;
+  ushort startedAt;
+  std::function<void(ushort const, ushort const, ushort const)> callback;
   unsigned hysterisis;
   unsigned hysterisisLimit;
 
 public:
+  ushort otherCoordinate;
+
   LineRunTracker(
-    unsigned char inLabel,
-    unsigned char onLabel,
-    unsigned short int otherCoordinate,
-    unsigned char hysterisisLimit,
-    std::function<void(unsigned short int const, unsigned short int const, unsigned short int const)> callback
+    uchar inLabel,
+    uchar onLabel,
+    ushort otherCoordinate,
+    uchar hysterisisLimit,
+    std::function<void(ushort const, ushort const, ushort const)> callback
   )
   : inLabel(inLabel),
     onLabel(onLabel),
@@ -50,7 +60,7 @@ public:
     state = State::Out;
   }
 
-  void update(unsigned char label, unsigned short int position)
+  void update(uchar label, ushort position)
   {
     switch (state)
     {
@@ -60,6 +70,11 @@ public:
         {
           hysterisis = 0;
           state = State::In;
+        }
+        else
+        {
+          if (hysterisis != 0)
+            hysterisis--;
         }
         break;
       }
@@ -160,34 +175,54 @@ int main(int argc, char **argv)
   // Process labelled pixels
   //
 
+  auto accumulator = bold::HoughLineAccumulator(labelledImage.cols, labelledImage.rows);
+
+  const uchar inLabel = 1;
+  const uchar onLabel = 2;
+  const uchar hysterisisLimit = 1; // TODO learn/control this variable (from config at least)
+
   vector<LineRunTracker> colTrackers;
-  for (unsigned x = 0; x <= labelledImage.cols; ++x)
+  for (int x = 0; x <= labelledImage.cols; ++x)
   {
-    colTrackers.push_back(LineRunTracker(1, 2, x, 3, [&](unsigned short int const from, unsigned short int const to, unsigned short int const other) {
-      int mid = (from + to) / 2;
-      lineDotImage.at<uchar>(mid, (int)other)++;
-      lineDotCount++;
-    }));
+    colTrackers.push_back(LineRunTracker(
+      inLabel, onLabel, /*otherCoordinate*/x, hysterisisLimit,
+      [&](ushort const from, ushort const to, ushort const other) {
+        int mid = (from + to) / 2;
+        lineDotImage.at<uchar>(mid, (int)other)++;
+        accumulator.add((int)other, (int)mid);
+        lineDotCount++;
+      }
+    ));
   }
 
-  for (unsigned y = 0; y < labelledImage.rows; ++y)
-  {
-    unsigned char const* row = labelledImage.ptr<unsigned char>(y);
-
-    auto rowTracker = LineRunTracker(1, 2, y, 3, [&](unsigned short int const from, unsigned short int const to, unsigned short int const other) {
+  auto rowTracker = LineRunTracker(
+    inLabel, onLabel, /*otherCoordinate*/0, hysterisisLimit,
+    [&](ushort const from, ushort const to, ushort const other) {
       int mid = (from + to) / 2;
       lineDotImage.at<uchar>((int)other, mid)++;
+      accumulator.add((int)mid, (int)other);
       lineDotCount++;
-    });
+    }
+  );
+
+  for (int y = 0; y < labelledImage.rows; ++y)
+  {
+    uchar const* row = labelledImage.ptr<uchar>(y);
+
+    rowTracker.reset();
+    rowTracker.otherCoordinate = y;
+
+    LineRunTracker* colTracker = colTrackers.data();
 
     // We go one pixel outside of the row, as if image is padded with a column of zeros
-    for (unsigned x = 0; x <= labelledImage.cols; ++x)
+    for (int x = 0; x != labelledImage.cols; ++x)
     {
-      unsigned char label = x < labelledImage.cols ? row[x] : 0;
+      uchar label = x == labelledImage.cols ? 0 : row[x];
 
       rowTracker.update(label, x);
 
-      colTrackers[x].update(label, y);
+      colTracker->update(label, y);
+      colTracker++;
     }
   }
 
@@ -195,6 +230,27 @@ int main(int argc, char **argv)
 
   cv::normalize(lineDotImage, lineDotImage, 0, 255, NORM_MINMAX, CV_8UC1);
   imwrite("line-dots.jpg", lineDotImage);
+
+  //
+  // Write the accumulator image out to a file
+  //
+  cv::Mat accImg = accumulator.getMat().clone();
+//cv::rectangle(accImg, Point(0,0), Point(accImg.cols-1, accImg.rows-1), Scalar(1));
+  cv::normalize(accImg, accImg, 0, 255, NORM_MINMAX, CV_16UC1);
+  imwrite("accumulator.jpg", accImg);
+
+  //
+  // Find lines
+  //
+  auto extractor = bold::HoughLineExtractor();
+
+  std::vector<bold::HoughLine> lines = extractor.findLines(accumulator);
+
+  cout << "Found " << lines.size() << " line(s):" << endl;
+
+  for (bold::HoughLine const& line : lines) {
+    cout << " theta=" << line.theta() << " (" << (line.theta()*180.0/M_PI) << " degs) radius=" << line.radius() << " m=" << line.gradient() << " c=" << line.yIntersection() << endl;
+  }
 
   return 0;
 }
