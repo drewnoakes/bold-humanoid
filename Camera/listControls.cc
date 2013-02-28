@@ -11,8 +11,12 @@ vector<Camera::Control> Camera::listControls()
   {
     if (queryctrl.flags & V4L2_CTRL_FLAG_DISABLED)
       continue;
-    
-    controls.push_back(Control(queryctrl));
+
+    Control c(queryctrl);
+    if (c.type == CT_MENU)
+      fillControlMenuItems(c);
+
+    controls.push_back(c);
 
     queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
   }

@@ -14,23 +14,27 @@ namespace bold
 
     enum ControlType
     {
-      CT_INT = 1,
-      CT_BOOL,
-      CT_MENU,
-      CT_INT_MENU,
-      CT_BITMASK,
-      CT_BUTTON,
-      CT_INT64,
-      CT_STRING,
-      CT_CTRL_CLASS
+      CT_INT        = 1,
+      CT_BOOL       = 2,
+      CT_MENU       = 3,
+      CT_BUTTON     = 4,
+      CT_INT64      = 5,
+      CT_CTRL_CLASS = 6,
+      CT_STRING     = 7,
+      CT_BITMASK    = 8
     };
 
     struct ControlMenuItem
     {
+      ControlMenuItem(v4l2_querymenu const& qm)
+        : id(qm.id),
+          index(qm.index),
+          name((const char*)qm.name)
+      {}
+
       unsigned id;
       unsigned index;
       std::string name;
-      int value;
     };
 
     struct Control
