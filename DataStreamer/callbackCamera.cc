@@ -13,14 +13,18 @@ int DataStreamer::callback_camera(
   switch (reason)
   {
   case LWS_CALLBACK_CLIENT_ESTABLISHED:
-  {
     memset(cameraSession, 0, sizeof(CameraSession));
-
     break;
-  }
 
   case LWS_CALLBACK_SERVER_WRITEABLE:
-  {
+    switch (cameraSession->state)
+    {
+    case CameraSession::SEND_CONTROLS:
+      sendCameraControls(wsi);
+    }
+  }
+
+/*
     // Encode image to jpeg (perhaps do this directly when getting image?)
     vector<uchar> jpgbuf;
     cv::imencode(".jpg", d_img, jpgbuf);
@@ -70,7 +74,7 @@ int DataStreamer::callback_camera(
   }
 
   }
-
+*/
   return 0;
 }
 

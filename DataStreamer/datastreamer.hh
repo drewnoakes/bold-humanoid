@@ -6,6 +6,7 @@
 #include <libwebsockets.h>
 #include <opencv2/opencv.hpp>
 #include "../Debugger/debugger.hh"
+#include "../vision/Camera/camera.hh"
 
 namespace cv
 {
@@ -46,6 +47,8 @@ namespace bold
     void init();
     void update();
     void close();
+
+    void setCamera(Camera* camera) { d_camera = camera; }
 
     void streamImage(cv::Mat const& img);
 
@@ -89,12 +92,15 @@ namespace bold
       void* in,
       size_t len);
 
+    void sendCameraControls(struct libwebsocket* wsi);
+
   private:
     const int d_port;
     libwebsocket_context* d_context;
     bool d_gameStateUpdated;
     bool d_agentModelUpdated;
 
+    Camera* d_camera;
     cv::Mat d_img;
 
   private:

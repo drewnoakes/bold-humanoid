@@ -14,11 +14,45 @@ define(
 
 	var imgBlob;
 
+        var controls;
+
+        var genControls = function(controls)
+        {
+            for (var i = 0; i < controls.length; ++i)
+            {
+                var c = controls[i];
+                c.iface = $('<div>').addClass('camera-control')
+                    .append($('<span>').addClass('camera-control-name').text(c.name))
+                    .append($('<br>'));
+
+                if (c.menuItems)
+                {
+                }
+                else
+                {
+                    c.iface.append($('<input>').val(c.value));
+                }
+                $('#camera-controls-container').append(c.iface);
+            }
+        }
+
 	var msgHandle = function(msg)
 	{
 	    switch (imgState)
 	    {
-	    case 0:
+            // get control data
+            case 0:
+                controls = JSON.parse(msg.data);
+                console.log(controls);
+                genControls(controls);
+                ++imgState;
+                break;
+
+            // get image tagse
+            case 1:
+                break;
+
+	    case 2:
 		if (typeof(msg.data) === 'string')
 		{
 		    imgSize = imgToRead = parseInt(msg.data);
@@ -27,7 +61,7 @@ define(
 		}
 		break;
 
-	    case 1:
+	    case 3:
 		if (!(msg.data instanceof Blob))
 		{
 		    imgState = 0;
