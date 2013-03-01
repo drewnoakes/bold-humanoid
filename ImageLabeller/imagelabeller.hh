@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../LUTBuilder/lutbuilder.hh"
+#include "../PixelLabel/pixellabel.hh"
 
 namespace bold
 {
@@ -16,7 +17,7 @@ namespace bold
     unsigned char const * const d_LUT;
 
   public:
-    ImageLabeller(std::vector<Colour::hsvRange> ranges);
+    ImageLabeller(std::vector<bold::PixelLabel> labels);
 
     /**
      * Labels an entire image's pixels.
@@ -29,7 +30,7 @@ namespace bold
      * Generates an image in which each pixel is coloured according to the label
      * assigned to it. The result looks like a cartoon, or paint-by-numbers.
      */
-    static void colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::vector<Colour::hsvRange> const& ranges);
+    static void colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::vector<bold::PixelLabel> const& labels);
   };
 }
 

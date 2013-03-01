@@ -6,9 +6,11 @@
 #include <algorithm>
 #include <vector>
 #include <set>
+#include <cassert>
 
-#include "../../DisjointSet/disjointset.hh"
 #include "../imagepasshandler.hh"
+#include "../../DisjointSet/disjointset.hh"
+#include "../../PixelLabel/pixellabel.hh"
 
 namespace bold
 {
@@ -62,68 +64,83 @@ namespace bold
 
   typedef std::function<bool(Run const& a, Run const& b)> UnionPredicate;
 
+  /** Specifies a unit of work for blob detection. Contains the pixel label and union predicate function. */
+  struct BlobLabel
+  {
+    const PixelLabel pixelLabel;
+    const UnionPredicate unionPredicate;
+
+    BlobLabel(PixelLabel pixelLabel, UnionPredicate unionPredicate)
+    : pixelLabel(pixelLabel),
+      unionPredicate(unionPredicate)
+    {}
+  };
+
   class BlobDetectPass : public ImagePassHandler<uchar>
   {
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
 
-    int d_labelCount;
     int d_imageHeight;
     int d_imageWidth;
 
-    /** A callback function per label value, used to determine whether runs may be unioned. */
-    std::vector<UnionPredicate> d_unionPredicateByLabel;
+    std::vector<BlobLabel> d_blobLabels;
     /** Accumulated data for the most recently passed image. */
-    std::vector<RunLengthCode> d_runsPerRowPerLabel;
+    std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
     bold::Run d_currentRun;
     uchar d_currentLabel;
 
-    /**
-     * Processes Runs into Blobs. Returns a set of blobs per label.
-     */
-    std::vector<std::set<Blob>> detectBlobs();
+    /** Processes Runs into Blobs. Returns a set of blobs per label. */
+    std::map<bold::PixelLabel,std::set<Blob>> detectBlobs();
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
 
     void addRun(int x, int y)
     {
+      assert(y == d_currentRun.start.y());
+
       // finish whatever run we were on
       d_currentRun.end = Eigen::Vector2i(x, y);
       d_currentRun.length = x - d_currentRun.start.x();
 
-      if (d_currentLabel <= d_labelCount)
-        d_runsPerRowPerLabel[d_currentLabel - 1][y].push_back(d_currentRun);
+      auto it = d_runsPerRowPerLabel.find(d_currentLabel);
+      if (it != d_runsPerRowPerLabel.end())
+      {
+        it->second[y].push_back(d_currentRun);
+      }
     }
 
   public:
     /** The collection of blobs found during the last image pass. */
-    std::vector<std::set<Blob>> blobsPerLabel;
+    std::map<bold::PixelLabel,std::set<Blob>> blobsPerLabel;
 
-    BlobDetectPass(int imageWidth, int imageHeight, int labelCount, std::vector<UnionPredicate> unionPredicateByLabel)
-    : d_labelCount(labelCount),
+    BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobLabel> blobLabels)
+    : d_blobLabels(blobLabels),
       d_imageHeight(imageHeight),
       d_imageWidth(imageWidth),
       d_runsPerRowPerLabel(),
-      d_currentRun(0, 0),
-      d_unionPredicateByLabel(unionPredicateByLabel)
+      d_currentRun(0, 0)
     {
       // Create a run length code for each label
-      for (uchar label = 0; label < labelCount; ++label)
+      for (BlobLabel const& blobLabel : blobLabels)
       {
+        uchar pixelLabelId = blobLabel.pixelLabel.id();
+
         // A RunLengthCode is a vector of vectors of runs
-        d_runsPerRowPerLabel.push_back(RunLengthCode());
+        d_runsPerRowPerLabel[pixelLabelId] = RunLengthCode();
 
         // Initialise a vector of Runs for each row in the image
         for (unsigned y = 0; y < d_imageHeight; ++y)
-          d_runsPerRowPerLabel[label].push_back(std::vector<bold::Run>());
+          d_runsPerRowPerLabel[pixelLabelId].push_back(std::vector<bold::Run>());
       }
     }
 
     void onImageStarting()
     {
       // Clear all persistent data
-      for (auto runsPerRow : d_runsPerRowPerLabel)
+      for (auto pair : d_runsPerRowPerLabel)
       {
+        auto runsPerRow = pair.second;
         for (std::vector<bold::Run> runs : runsPerRow)
         {
           runs.clear();

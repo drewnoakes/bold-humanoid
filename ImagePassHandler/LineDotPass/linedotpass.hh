@@ -3,62 +3,56 @@
 
 #include <opencv2/core/core.hpp>
 #include <vector>
+#include <Eigen/Core>
 
 #include "../imagepasshandler.hh"
 #include "../../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../LineRunTracker/lineruntracker.hh"
+#include "../../PixelLabel/pixellabel.hh"
 
 namespace bold
 {
   template <typename T>
-  class LineDetectPass : public ImagePassHandler<T>
+  class LineDotPass : public ImagePassHandler<T>
   {
   private:
-    int d_thresholdDivisor;
     const int d_imageWidth;
-    const int d_imageHeight;
-    const uchar inLabel;
-    const uchar onLabel;
+    PixelLabel const& inLabel;
+    PixelLabel const& onLabel;
     const uchar hysterisisLimit; // TODO learn/control this variable (from config at least)
     LineRunTracker* d_rowTracker;
     std::vector<bold::LineRunTracker> d_colTrackers;
 
   public:
-    bold::HoughLineAccumulator accumulator;
-    std::vector<bold::HoughLine> lines;
+    std::vector<Eigen::Vector2i> lineDots;
 
-    LineDetectPass(int width, int height, int thresholdDivisor, int accumulatorHeight, const uchar inLabel, const uchar onLabel, const uchar hysterisisLimit)
-    : accumulator(width, height, accumulatorHeight),
-      d_imageWidth(width),
-      d_imageHeight(height),
-      lines(),
-      d_thresholdDivisor(thresholdDivisor),
+    LineDotPass(int imageWidth, PixelLabel const& inLabel, PixelLabel const& onLabel, const uchar hysterisisLimit)
+    : d_imageWidth(imageWidth),
+      lineDots(),
       inLabel(inLabel),
       onLabel(onLabel),
       hysterisisLimit(hysterisisLimit)
     {
       d_colTrackers = std::vector<bold::LineRunTracker>();
 
-      for (int x = 0; x <= width; ++x)
+      for (int x = 0; x <= imageWidth; ++x)
       {
         d_colTrackers.push_back(bold::LineRunTracker(
-          inLabel, onLabel, /*otherCoordinate*/x, hysterisisLimit,
+          inLabel.id(), onLabel.id(), /*otherCoordinate*/x, hysterisisLimit,
           [&](ushort const from, ushort const to, ushort const other) {
             int mid = (from + to) / 2;
-            //d_lineDots.add(Eigen::Vector2i((int)other, mid));
-            accumulator.add((int)other, (int)mid);
+            lineDots.push_back(Eigen::Vector2i((int)other, mid));
           }
         ));
       }
 
       // TODO delete in desctructor
       d_rowTracker = new LineRunTracker(
-        inLabel, onLabel, /*otherCoordinate*/0, hysterisisLimit,
+        inLabel.id(), onLabel.id(), /*otherCoordinate*/0, hysterisisLimit,
         [&](ushort const from, ushort const to, ushort const other) {
           int mid = (from + to) / 2;
-          //d_lineDots.add(Eigen::Vector2i(mid, (int)other));
-          accumulator.add((int)mid, (int)other);
+          lineDots.push_back(Eigen::Vector2i(mid, (int)other));
         }
       );
     }
@@ -70,8 +64,7 @@ namespace bold
       for (int x = 0; x < d_imageWidth; ++x)
         d_colTrackers[x].reset();
 
-      // clear the accumulator
-      accumulator.clear();
+      lineDots.clear();
     }
 
     void onRowStarting(int y)
@@ -84,13 +77,6 @@ namespace bold
     {
       d_rowTracker->update(label, x);
       d_colTrackers[x].update(label, y);
-    }
-
-    void onImageComplete()
-    {
-      auto extractor = bold::HoughLineExtractor();
-
-      lines = extractor.findLines(accumulator, accumulator.count() / d_thresholdDivisor);
     }
   };
 }

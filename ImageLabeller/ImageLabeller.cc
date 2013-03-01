@@ -4,8 +4,8 @@ using namespace bold;
 using namespace std;
 using namespace cv;
 
-ImageLabeller::ImageLabeller(std::vector<Colour::hsvRange> ranges)
-: d_LUT(LUTBuilder().buildBGR18FromHSVRanges(ranges))
+ImageLabeller::ImageLabeller(std::vector<PixelLabel> labels)
+: d_LUT(LUTBuilder::buildBGR18FromHSVRanges(labels))
 {}
 
 void ImageLabeller::label(cv::Mat& image, cv::Mat& labelled)
@@ -28,13 +28,13 @@ void ImageLabeller::label(cv::Mat& image, cv::Mat& labelled)
   }
 }
 
-void ImageLabeller::colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::vector<Colour::hsvRange> const& ranges)
+void ImageLabeller::colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::vector<PixelLabel> const& labels)
 {
   std::map<uchar,Colour::bgr> colorByLabel;
 
-  for (uchar label = 0; label < ranges.size(); label++)
+  for (PixelLabel const& label : labels)
   {
-    colorByLabel[label + 1] = ranges.at(label).toBgr();
+    colorByLabel[label.id()] = label.hsvRange().toBgr();
   }
 
   int count = 0;
@@ -42,11 +42,17 @@ void ImageLabeller::colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::v
   {
     for(int x = 0; x < labelledImage.cols; x++)
     {
-      uchar label = labelledImage.at<uchar>(y,x);
+      uchar labelId = labelledImage.at<uchar>(y, x);
 
-      if (label > 0 && label <= ranges.size())
+      if (labelId == 0)
       {
-        output.at<Colour::bgr >(y,x) = colorByLabel[label];
+        continue;
+      }
+
+      auto it = colorByLabel.find(labelId);
+      if (it != colorByLabel.end())
+      {
+        output.at<Colour::bgr>(y,x) = it->second;
         count++;
       }
     }

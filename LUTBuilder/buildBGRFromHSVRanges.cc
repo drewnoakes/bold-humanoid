@@ -1,63 +1,48 @@
 #include "lutbuilder.ih"
 
-unsigned char* LUTBuilder::buildBGR24FromHSVRanges(std::vector<Colour::hsvRange> const& ranges)
+uchar* LUTBuilder::buildBGR24FromHSVRanges(vector<PixelLabel> const& labels)
 {
-  unsigned char* LUT = new unsigned char[1<<24];
-  unsigned char* p = LUT;
+  uchar* LUT = new uchar[1<<24];
+  uchar* p = LUT;
+
   for (int b = 0; b < 256; ++b)
     for (int g = 0; g < 256; ++g)
       for (int r = 0; r < 256; ++r)
-        {
-          Colour::hsv hsv = Colour::bgr2hsv(Colour::bgr(b, g, r));
-
-          *p = 0;
-
-          // test h
-          for (unsigned i = 0; i < ranges.size(); ++i)
-          {
-            Colour::hsvRange range = ranges[i];
-
-            int diff = abs((int)hsv.h - range.h);
-            diff = min(diff, 192 - diff);
-
-            if (diff <= range.hRange &&
-                hsv.s >= range.s - range.sRange && hsv.s <= range.s + range.sRange &&
-                hsv.v >= range.v - range.vRange && hsv.v <= range.v + range.vRange)
-              *p = i+1;
-          }
-          ++p;
-        }
+          *(p++) = labelPixel(labels, Colour::bgr(b, g, r));
 
   return LUT;
 }
 
-unsigned char* LUTBuilder::buildBGR18FromHSVRanges(std::vector<Colour::hsvRange> const& ranges)
+uchar* LUTBuilder::buildBGR18FromHSVRanges(vector<PixelLabel> const& labels)
 {
-  unsigned char* LUT = new unsigned char[1<<18];
-  unsigned char* p = LUT;
+  uchar* LUT = new uchar[1<<18];
+  uchar* p = LUT;
+
   for (int b = 0; b < 64; ++b)
     for (int g = 0; g < 64; ++g)
       for (int r = 0; r < 64; ++r)
-        {
-          Colour::hsv hsv = Colour::bgr2hsv(Colour::bgr(b<<2, g<<2, r<<2));
-
-          *p = 0;
-
-          // test h
-          for (unsigned i = 0; i < ranges.size(); ++i)
-          {
-            Colour::hsvRange range = ranges[i];
-
-            int diff = abs((int)hsv.h - range.h);
-            diff = min(diff, 192 - diff);
-
-            if (diff <= range.hRange &&
-                hsv.s >= range.s - range.sRange && hsv.s <= range.s + range.sRange &&
-                hsv.v >= range.v - range.vRange && hsv.v <= range.v + range.vRange)
-              *p = i+1;
-          }
-          ++p;
-        }
+          *(p++) = labelPixel(labels, Colour::bgr(b<<2, g<<2, r<<2));
 
   return LUT;
+}
+
+uchar LUTBuilder::labelPixel(vector<PixelLabel> const& labels, Colour::bgr const& bgr)
+{
+  for (PixelLabel const& label : labels)
+  {
+    Colour::hsvRange range = label.hsvRange();
+    Colour::hsv hsv = Colour::bgr2hsv(bgr);
+
+    int hDiff = abs(hsv.h - range.h);
+    hDiff = min(hDiff, 192 - hDiff);
+
+    if (hDiff <= range.hRange &&
+        hsv.s >= range.s - range.sRange && hsv.s <= range.s + range.sRange &&
+        hsv.v >= range.v - range.vRange && hsv.v <= range.v + range.vRange)
+    {
+      return label.id();
+    }
+  }
+
+  return 0;
 }
