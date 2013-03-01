@@ -33,12 +33,7 @@ uchar LUTBuilder::labelPixel(vector<PixelLabel> const& labels, Colour::bgr const
     Colour::hsvRange range = label.hsvRange();
     Colour::hsv hsv = Colour::bgr2hsv(bgr);
 
-    int hDiff = abs(hsv.h - range.h);
-    hDiff = min(hDiff, 192 - hDiff);
-
-    if (hDiff <= range.hRange &&
-        hsv.s >= range.s - range.sRange && hsv.s <= range.s + range.sRange &&
-        hsv.v >= range.v - range.vRange && hsv.v <= range.v + range.vRange)
+    if (range.contains(hsv))
     {
       return label.id();
     }

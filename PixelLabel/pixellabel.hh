@@ -36,6 +36,8 @@ namespace bold
       return d_id < other.d_id;
     }
   };
+
+  std::ostream& operator<<(std::ostream &stream, bold::PixelLabel const& pixelLabel);
 }
 
 #endif

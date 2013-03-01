@@ -40,6 +40,7 @@ hough: hough.o ${LINEDETECTOR_OBJECTS}
 PASS_SOURCES=\
 	../Colour/bgr2hsv.cc\
 	../Colour/hsv2bgr.cc\
+	../Colour/hsvRange.cc\
 	../LUTBuilder/buildBGRFromHSVRanges.cc\
 	../ImageLabeller/ImageLabeller.cc\
 	../ImagePassHandler/BlobDetectPass/detectBlobs.cc\

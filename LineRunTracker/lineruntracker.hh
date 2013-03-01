@@ -2,6 +2,7 @@
 #define BOLD_LINE_RUN_TRACKER_HH
 
 #include <opencv2/core/core.hpp>
+#include <functional>
 
 namespace bold
 {

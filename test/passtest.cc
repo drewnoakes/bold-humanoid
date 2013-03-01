@@ -65,10 +65,23 @@ int main(int argc, char **argv)
   auto t = getTimestamp();
 
   // Build colour ranges for segmentation
-  PixelLabel ballLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball");
-  PixelLabel goalLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal");
-  PixelLabel fieldLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field");
-  PixelLabel lineLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line");
+
+  // sample-images
+  PixelLabel ballLabel (Colour::hsvRange(255*352/360.0, 30, 255*80/100.0, 95, 255*75/100.0, 95), "Ball"); // red super ball
+  PixelLabel goalLabel (Colour::hsvRange(255* 54/360.0, 10, 255*88/100.0, 55, 255*75/100.0, 65), "Goal"); // yellow paper
+  PixelLabel fieldLabel(Colour::hsvRange(0, 255, 0, 255*20/100.0, 255*85/100.0, 65), "Field"); // white floor
+  PixelLabel lineLabel (Colour::hsvRange(0, 255, 0, 255*25/100.0, 0, 255*30/100.0), "Line"); // black line
+
+  cout << ballLabel << endl;
+  cout << goalLabel << endl;
+  cout << fieldLabel << endl;
+  cout << lineLabel << endl;
+
+//   // rgb.jpg
+//   PixelLabel ballLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball");
+//   PixelLabel goalLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal");
+//   PixelLabel fieldLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field");
+//   PixelLabel lineLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line");
 
   vector<PixelLabel> labels = { ballLabel, goalLabel, fieldLabel, lineLabel };
 

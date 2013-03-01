@@ -47,7 +47,7 @@ namespace bold
         ));
       }
 
-      // TODO delete in desctructor
+      // TODO delete in destructor
       d_rowTracker = new LineRunTracker(
         inLabel.id(), onLabel.id(), /*otherCoordinate*/0, hysterisisLimit,
         [&](ushort const from, ushort const to, ushort const other) {

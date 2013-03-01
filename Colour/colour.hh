@@ -1,6 +1,7 @@
 #ifndef BOLD_COLOUR_HH
 #define BOLD_COLOUR_HH
 
+//#include <cmath>
 #include <vector>
 #include <string>
 #include <opencv2/core/core.hpp>
@@ -70,15 +71,25 @@ namespace bold
         int hue,        int hueRange,
         int saturation, int saturationRange,
         int value,      int valueRange)
-      : h(hue), hRange(hueRange),
-        s(saturation), sRange(saturationRange),
-        v(value), vRange(valueRange)
+      : h(hue),         hRange(hueRange),
+        s(saturation),  sRange(saturationRange),
+        v(value),       vRange(valueRange)
       {}
 
       /** Obtain the center colour for the range, in BGR format. */
       Colour::bgr toBgr() const
       {
         return Colour::hsv2bgr(Colour::hsv(h, s, v));
+      }
+
+      inline bool contains(hsv hsv)
+      {
+        int hDiff = abs(hsv.h - h);
+        hDiff = std::min(hDiff, 192 - hDiff);
+
+        return (hDiff <= hRange &&
+                hsv.s >= s - sRange && hsv.s <= s + sRange &&
+                hsv.v >= v - vRange && hsv.v <= v + vRange);
       }
 
       static hsvRange fromConfig(
@@ -103,6 +114,9 @@ namespace bold
     static hsv bgr2hsv(bgr const& in);
     static bgr hsv2bgr(hsv const& in);
   };
+
+  std::ostream& operator<<(std::ostream &stream, Colour::hsv const& hsv);
+  std::ostream& operator<<(std::ostream &stream, Colour::hsvRange const& hsv);
 }
 
 #endif
