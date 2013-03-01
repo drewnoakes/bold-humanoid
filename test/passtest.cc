@@ -68,7 +68,7 @@ int main(int argc, char **argv)
   ranges.push_back(fieldRange);
   ranges.push_back(lineRange);
 
-  //////////////// START TIMING
+  auto t = getTimestamp();
 
   // Label the image
   cv::Mat labelledImage(colourImage.size(), CV_8UC1);
@@ -80,8 +80,6 @@ int main(int argc, char **argv)
   cv::Mat colourLabelledImage(colourImage.size(), CV_8UC3);
   ImageLabeller::colourLabels(labelledImage, colourLabelledImage, ranges);
   imwrite("labelled.jpg", colourLabelledImage);
-
-  auto t = getTimestamp();
 
   auto ballUnionPred =
     [] (Run const& a, Run const& b)
@@ -104,25 +102,29 @@ int main(int argc, char **argv)
 
   // TODO how to specify which labels are blobbed?
 
-  auto lineDetect = new LineDetectPass<uchar>(labelledImage.cols, labelledImage.rows, 50, 720, 3, 4, 1);
+  auto lineDetect = new LineDetectPass<uchar>(labelledImage.cols, labelledImage.rows, 50, 360, 3, 4, 1);
   auto blobDetect = new BlobDetectPass(labelledImage.cols, labelledImage.rows, 2, unionPredicateByLabel);
 
   vector<ImagePassHandler<uchar>*> handlers = { lineDetect, blobDetect };
 
   auto passer = ImagePasser<uchar>(handlers);
 
-  // TODO provide the colour image, and have the passer use the LUT
-  passer.pass(labelledImage);
+  cout << "Preamble took " << getSeconds(t) << " seconds" << endl;
 
-  cout << "Finished pass in " << getSeconds(t) << " seconds" << endl;
+  t = getTimestamp();
 
-  //////////////// STOP TIMING
+  // TODO provide the colour image, and have the passer look up labels LUT
+
+  int loopCount = 20;
+  for (int i = 0; i < loopCount; i++)
+    passer.pass(labelledImage);
+
+  cout << "Finished " << loopCount << " passes. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
 
   //
   // Write the accumulator image out to a file
   //
   cv::Mat accImg = lineDetect->accumulator.getMat().clone();
-//cv::rectangle(accImg, Point(0,0), Point(accImg.cols-1, accImg.rows-1), Scalar(1));
   cv::normalize(accImg, accImg, 0, 255, NORM_MINMAX, CV_16UC1);
   imwrite("accumulator.jpg", accImg);
 
@@ -135,7 +137,8 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  cout << "Found " << lineDetect->lines.size() << " line(s), and" << endl;
+  cout << "Found:" << endl
+       << "    " << lineDetect->lines.size() << " line(s)" << endl;
   for (uchar label = 0; label < blobDetect->blobsPerLabel.size(); label++)
   {
     cout << "    " << blobDetect->blobsPerLabel[label].size() << " blob(s) for label " << (label + 1) << endl;
@@ -148,7 +151,7 @@ int main(int argc, char **argv)
   {
     double maxVotes = lineDetect->lines[0].votes();
     for (bold::HoughLine const& line : lineDetect->lines) {
-      cout << "  theta=" << line.theta() << " (" << (line.theta()*180.0/M_PI) << " degs) radius=" << line.radius() << " m=" << line.gradient() << " c=" << line.yIntersection() << endl;
+//    cout << "  theta=" << line.theta() << " (" << (line.theta()*180.0/M_PI) << " degs) radius=" << line.radius() << " m=" << line.gradient() << " c=" << line.yIntersection() << endl;
       Colour::bgr lineColor(0, 0, 255 * (line.votes()/maxVotes)); // red
       line.draw<Colour::bgr>(colourImage, lineColor);
     }
@@ -167,7 +170,7 @@ int main(int argc, char **argv)
       cv::Rect rect(blob.ul.x(), blob.ul.y(), size.x(), size.y());
       // TODO create and use function to get label's colour
       Colour::bgr blobColor(255, 0, 0);
-      cv::rectangle(colourImage, rect, Scalar(blobColor.b, blobColor.g, blobColor.r));
+      cv::rectangle(colourImage, rect, cv::Scalar(blobColor.b, blobColor.g, blobColor.r));
     }
   }
 

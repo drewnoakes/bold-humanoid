@@ -35,8 +35,6 @@ namespace bold
       accumulator.clear();
     }
 
-//    void onRowStarting(int y);
-
     void onPixel(T value, int x, int y)
     {
       if (value != 0)

@@ -43,12 +43,17 @@ PASS_SOURCES=\
 	../LUTBuilder/buildBGRFromHSVRanges.cc\
 	../ImageLabeller/ImageLabeller.cc\
 	../ImagePassHandler/BlobDetectPass/detectBlobs.cc\
-	../ImagePassHandler/BlobDetectPass/runSetToBlob.cc
+	../ImagePassHandler/BlobDetectPass/runSetToBlob.cc\
+	../HoughLineAccumulator/houghlineaccumulator.cc\
+	../HoughLineExtractor/findLines.cc\
+	../HoughLineExtractor/findMaxLine.cc
 PASS_OBJECTS=$(PASS_SOURCES:.cc=.o)
-${PASS_OBJECTS}: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDetectPass/linedetectpass.hh
+${PASS_OBJECTS} passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDetectPass/linedetectpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../HoughLine/houghline.hh
 
-passtest: passtest.o hough.o ${LINEDETECTOR_OBJECTS} ${PASS_OBJECTS}
-	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} ${PASS_OBJECTS} -o passtest
+passtest.o:  ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDetectPass/linedetectpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../HoughLine/houghline.hh
+
+passtest: passtest.o hough.o ${PASS_OBJECTS}
+	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${PASS_OBJECTS} -o passtest
 
 clean:
 	rm -f ${PASS_OBJECTS}
