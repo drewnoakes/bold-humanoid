@@ -54,6 +54,12 @@ namespace bold
 
     std::set<Run> runs;      ///< Runs in this blob
 
+    cv::Rect toRect() const
+    {
+      auto size = br - ul;
+      return cv::Rect(ul.x(), ul.y(), size.x(), size.y());
+    }
+
     bool operator<(Blob const& other) const
     {
       return

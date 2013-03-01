@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <opencv2/core/core.hpp>
 
 // Forwards declaration, as this type is defined in the robotis repository (yuck, I know)
 class minIni
@@ -21,9 +22,19 @@ namespace bold
       bgr()
       {}
 
-      bgr(int _b, int _g, int _r)
-        : b(_b), g(_g), r(_r)
+      bgr(int b, int g, int r)
+        : b(b), g(g), r(r)
       {}
+
+      bgr invert()
+      {
+        return bgr(255-b, 255-g, 255-r);
+      }
+
+      cv::Scalar toScalar()
+      {
+        return cv::Scalar(b, g, r);
+      }
 
       unsigned char b;
       unsigned char g;

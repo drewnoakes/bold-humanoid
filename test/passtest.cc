@@ -174,11 +174,8 @@ int main(int argc, char **argv)
   for (BlobLabel const& blobLabel : blobLabels)
   for (bold::Blob blob : blobDetect->blobsPerLabel[blobLabel.pixelLabel])
   {
-    auto size = blob.br - blob.ul;
-    cv::Rect rect(blob.ul.x(), blob.ul.y(), size.x(), size.y());
-    // TODO create and use function to get label's colour
-    Colour::bgr blobColor(255, 0, 0);
-    cv::rectangle(colourImage, rect, cv::Scalar(blobColor.b, blobColor.g, blobColor.r));
+    auto blobColor = blobLabel.pixelLabel.hsvRange().toBgr().invert().toScalar();
+    cv::rectangle(colourImage, blob.toRect(), blobColor);
   }
 
   // Save output image
