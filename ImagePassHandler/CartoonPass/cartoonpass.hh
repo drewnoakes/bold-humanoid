@@ -21,6 +21,7 @@ namespace bold
     cv::Mat d_mat;
     std::map<uchar,Colour::bgr> d_bgrByLabelId;
     bold::Colour::bgr d_backgroundColour;
+    Colour::bgr* d_ptr;
 
   public:
     /**
@@ -43,12 +44,18 @@ namespace bold
       d_mat = d_backgroundColour.toScalar();
     }
 
+    void onRowStarting(int y)
+    {
+      d_ptr = d_mat.ptr<Colour::bgr>(y);
+    }
+
     void onPixel(uchar value, int x, int y)
     {
       if (value != 0)
       {
-        d_mat.at<Colour::bgr>(y, x) = d_bgrByLabelId[value];
+        *d_ptr = d_bgrByLabelId[value];
       }
+      d_ptr++;
     }
   };
 }

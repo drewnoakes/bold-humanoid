@@ -124,7 +124,7 @@ int main(int argc, char **argv)
   vector<ImagePassHandler<uchar>*> handlers = {
     lineDetect,
     blobDetect,
-    //cartoon
+    cartoon
   };
 
   auto passer = ImagePasser<uchar>(handlers);
