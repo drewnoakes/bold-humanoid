@@ -13,6 +13,7 @@
 #include "../ImagePasser/imagepasser.hh"
 #include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
 #include "../ImagePassHandler/LineDotPass/linedotpass.hh"
+#include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
 #include "../LineRunTracker/lineruntracker.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelLabel/pixellabel.hh"
@@ -118,8 +119,13 @@ int main(int argc, char **argv)
     BlobLabel(goalLabel, goalUnionPred)
   };
   auto blobDetect = new BlobDetectPass(imageWidth, imageHeight, blobLabels);
+  auto cartoon = new CartoonPass(imageWidth, imageHeight, labels, Colour::bgr(128,128,128));
 
-  vector<ImagePassHandler<uchar>*> handlers = { lineDetect, blobDetect };
+  vector<ImagePassHandler<uchar>*> handlers = {
+    lineDetect,
+    blobDetect,
+    //cartoon
+  };
 
   auto passer = ImagePasser<uchar>(handlers);
 
@@ -161,6 +167,11 @@ int main(int argc, char **argv)
     size_t blobCount = blobDetect->blobsPerLabel[pixelLabel].size();
     cout << "    " << pixelLabel.name() << " " << blobCount << " blob(s)" << endl;
   }
+
+  //
+  // DRAW LABELLED 'CARTOON' IMAGE
+  //
+  imwrite("labelled.jpg", cartoon->mat());
 
   //
   // DRAW OUTPUT IMAGE
