@@ -53,7 +53,16 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  int imageWidth = colourImage.cols;
+  int imageHeight = colourImage.rows;
+
   cout << "Reading " << argv[1] << endl;
+
+  //
+  // FIXED SETUP
+  //
+
+  auto t = getTimestamp();
 
   // Build colour ranges for segmentation
   PixelLabel ballLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball");
@@ -63,18 +72,14 @@ int main(int argc, char **argv)
 
   vector<PixelLabel> labels = { ballLabel, goalLabel, fieldLabel, lineLabel };
 
-  auto t = getTimestamp();
-
   // Label the image
   cv::Mat labelledImage(colourImage.size(), CV_8UC1);
   auto imageLabeller = new ImageLabeller(labels);
-  imageLabeller->label(colourImage, labelledImage);
 
   // Draw out the labelled image
-  // TODO why does commenting these three lines out stop the line detector working???
-  cv::Mat colourLabelledImage(colourImage.size(), CV_8UC3);
-  ImageLabeller::colourLabels(labelledImage, colourLabelledImage, labels);
-  imwrite("labelled.jpg", colourLabelledImage);
+//  cv::Mat colourLabelledImage(colourImage.size(), CV_8UC3);
+//  ImageLabeller::colourLabels(labelledImage, colourLabelledImage, labels);
+//  imwrite("labelled.jpg", colourLabelledImage);
 
   auto ballUnionPred =
     [] (Run const& a, Run const& b)
@@ -94,12 +99,12 @@ int main(int argc, char **argv)
 
   vector<UnionPredicate> unionPredicateByLabel = {goalUnionPred, ballUnionPred};
 
-  auto lineDetect = new LineDotPass<uchar>(labelledImage.cols, fieldLabel, lineLabel, 1);
+  auto lineDetect = new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel, 1);
   vector<BlobLabel> blobLabels = {
     BlobLabel(ballLabel, ballUnionPred),
     BlobLabel(goalLabel, goalUnionPred)
   };
-  auto blobDetect = new BlobDetectPass(labelledImage.cols, labelledImage.rows, blobLabels);
+  auto blobDetect = new BlobDetectPass(imageWidth, imageHeight, blobLabels);
 
   vector<ImagePassHandler<uchar>*> handlers = { lineDetect, blobDetect };
 
@@ -107,55 +112,65 @@ int main(int argc, char **argv)
 
   cout << "Startup took " << (getSeconds(t)*1000) << " ms" << endl;
 
-  t = getTimestamp();
-
-  // TODO provide the colour image, and have the passer look up labels LUT
+  //
+  // IMAGE LABELLING
+  //
 
   int loopCount = 20;
+
+  t = getTimestamp();
+
+  for (int i = 0; i < loopCount; i++)
+    imageLabeller->label(colourImage, labelledImage);
+
+  cout << "Labelled " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
+
+  //
+  // IMAGE PASS
+  //
+
+  t = getTimestamp();
+
   for (int i = 0; i < loopCount; i++)
     passer.pass(labelledImage);
 
-  cout << "Finished " << loopCount << " passes. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
+  //
+  // PRINT SUMMARIES
+  //
 
-//   //
-//   // Write the accumulator image out to a file
-//   //
-//   cv::Mat accImg = lineDetect->accumulator.getMat().clone();
-//   cv::normalize(accImg, accImg, 0, 255, NORM_MINMAX, CV_16UC1);
-//   imwrite("accumulator.jpg", accImg);
-
-  cout << "Found:" << endl
+  cout << "Finished " << loopCount << " passes. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl
+       << "Found:" << endl
        << "    " << lineDetect->lineDots.size() << " line dots" << endl;
+
   for (BlobLabel const& blobLabel : blobLabels)
   {
     PixelLabel pixelLabel = blobLabel.pixelLabel;
-
     size_t blobCount = blobDetect->blobsPerLabel[pixelLabel].size();
-
-    cout << "    " << blobLabel.pixelLabel.name() << " " << blobCount << " blob(s)" << endl;
+    cout << "    " << pixelLabel.name() << " " << blobCount << " blob(s)" << endl;
   }
 
   //
-  // Draw lines
+  // DRAW OUTPUT IMAGE
   //
+
+  // Draw line dots
   if (lineDetect->lineDots.size() != 0)
   {
     for (Eigen::Vector2i const& lineDot : lineDetect->lineDots) {
-//    cout << "  theta=" << line.theta() << " (" << (line.theta()*180.0/M_PI) << " degs) radius=" << line.radius() << " m=" << line.gradient() << " c=" << line.yIntersection() << endl;
       Colour::bgr lineColor(0, 0, 255); // red
       colourImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineColor;
     }
+  }
+
+  // Draw lines
 //     double maxVotes = lineDetect->lines[0].votes();
 //     for (bold::HoughLine const& line : lineDetect->lines) {
 // //    cout << "  theta=" << line.theta() << " (" << (line.theta()*180.0/M_PI) << " degs) radius=" << line.radius() << " m=" << line.gradient() << " c=" << line.yIntersection() << endl;
 //       Colour::bgr lineColor(0, 0, 255 * (line.votes()/maxVotes)); // red
 //       line.draw<Colour::bgr>(colourImage, lineColor);
 //     }
-  }
 
-  //
   // Draw blobs
-  //
   for (BlobLabel const& blobLabel : blobLabels)
   for (bold::Blob blob : blobDetect->blobsPerLabel[blobLabel.pixelLabel])
   {
@@ -166,6 +181,7 @@ int main(int argc, char **argv)
     cv::rectangle(colourImage, rect, cv::Scalar(blobColor.b, blobColor.g, blobColor.r));
   }
 
+  // Save output image
   imwrite("output.jpg", colourImage);
 
   return 0;

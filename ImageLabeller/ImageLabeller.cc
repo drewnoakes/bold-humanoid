@@ -12,12 +12,12 @@ void ImageLabeller::label(cv::Mat& image, cv::Mat& labelled)
 {
   for (unsigned y = 0; y < image.rows; ++y)
   {
-    unsigned char *origpix = image.ptr<unsigned char>(y);
-    unsigned char *labelledpix = labelled.ptr<unsigned char>(y);
+    uchar *origpix = image.ptr<uchar>(y);
+    uchar *labelledpix = labelled.ptr<uchar>(y);
     for (unsigned x = 0; x < image.cols; ++x)
     {
-//    unsigned char l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
-      unsigned char l = d_LUT[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
+//    uchar l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
+      uchar l = d_LUT[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
       *labelledpix = l;
 
       ++origpix;

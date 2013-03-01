@@ -36,8 +36,6 @@ namespace bold
       return d_id < other.d_id;
     }
   };
-
-  uchar PixelLabel::nextId = 1;
 }
 
 #endif
