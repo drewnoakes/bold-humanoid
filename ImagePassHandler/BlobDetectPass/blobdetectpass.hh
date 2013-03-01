@@ -3,8 +3,11 @@
 
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
+#include <algorithm>
 #include <vector>
+#include <set>
 
+#include "../../DisjointSet/disjointset.hh"
 #include "../imagepasshandler.hh"
 
 namespace bold
@@ -57,17 +60,28 @@ namespace bold
     }
   };
 
+  typedef std::function<bool(Run const& a, Run const& b)> UnionPredicate;
+
   class BlobDetectPass : public ImagePassHandler<uchar>
   {
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
 
-    std::vector<BlobDetector::RunLengthCode> d_runsPerRowPerLabel;
-    bold::Run d_currentRun;
-    uchar d_currentLabel;
     int d_labelCount;
     int d_imageHeight;
     int d_imageWidth;
+
+    /** A callback function per label value, used to determine whether runs may be unioned. */
+    std::vector<UnionPredicate> d_unionPredicateByLabel;
+    /** Accumulated data for the most recently passed image. */
+    std::vector<RunLengthCode> d_runsPerRowPerLabel;
+    bold::Run d_currentRun;
+    uchar d_currentLabel;
+
+    /**
+     * Processes Runs into Blobs. Returns a set of blobs per label.
+     */
+    std::vector<std::set<Blob>> detectBlobs();
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
 
@@ -82,14 +96,16 @@ namespace bold
     }
 
   public:
-    bold::HoughLineAccumulator accumulator;
-    std::vector<bold::HoughLine> lines;
+    /** The collection of blobs found during the last image pass. */
+    std::vector<std::set<Blob>> blobsPerLabel;
 
-    BlobDetectPass(int imageHeight, int imageWidth, int labelCount)
+    BlobDetectPass(int imageWidth, int imageHeight, int labelCount, std::vector<UnionPredicate> unionPredicateByLabel)
     : d_labelCount(labelCount),
       d_imageHeight(imageHeight),
       d_imageWidth(imageWidth),
-      d_runsPerRowPerLabel()
+      d_runsPerRowPerLabel(),
+      d_currentRun(0, 0),
+      d_unionPredicateByLabel(unionPredicateByLabel)
     {
       // Create a run length code for each label
       for (uchar label = 0; label < labelCount; ++label)
@@ -149,7 +165,10 @@ namespace bold
       }
     }
 
-    std::vector<std::set<Blob>> detectBlobs(std::vector<std::function<bool(Run const& a, Run const& b)>> unionPreds);
+    void onImageComplete()
+    {
+      blobsPerLabel = detectBlobs();
+    }
   };
 }
 

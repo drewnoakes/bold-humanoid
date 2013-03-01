@@ -36,11 +36,8 @@ void ImageLabeller::colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::v
   std::map<uchar,Point3_<uchar>> colorByLabel;
   for (uchar label = 0; label < ranges.size(); label++)
   {
-    Colour::hsvRange const& range = ranges.at(label);
-    Colour::bgr bgr = Colour::hsv2bgr(Colour::hsv(range.h, range.s, range.v));
+    Colour::bgr bgr = ranges.at(label).toBgr();
     colorByLabel[label + 1] = Point3_<uchar>(bgr.b, bgr.g, bgr.r);
-
-    cout << "Label " << (int)label << " with HSV " << range.h << " " << range.s << " " << range.v << " has RGB " << (int)bgr.r << " " << (int)bgr.g << " " << (int)bgr.b << endl;
   }
 
   int count = 0;

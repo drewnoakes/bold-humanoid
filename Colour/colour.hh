@@ -62,7 +62,13 @@ namespace bold
       : h(hue), hRange(hueRange),
         s(saturation), sRange(saturationRange),
         v(value), vRange(valueRange)
-      {};
+      {}
+
+      /** Obtain the center colour for the range, in BGR format. */
+      Colour::bgr toBgr() const
+      {
+        return Colour::hsv2bgr(Colour::hsv(h, s, v));
+      }
 
       static hsvRange fromConfig(
         minIni const& ini,

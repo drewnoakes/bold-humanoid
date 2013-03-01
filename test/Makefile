@@ -41,19 +41,24 @@ PASS_SOURCES=\
 	../Colour/bgr2hsv.cc\
 	../Colour/hsv2bgr.cc\
 	../LUTBuilder/buildBGRFromHSVRanges.cc\
-	../ImageLabeller/ImageLabeller.cc
+	../ImageLabeller/ImageLabeller.cc\
+	../ImagePassHandler/BlobDetectPass/detectBlobs.cc\
+	../ImagePassHandler/BlobDetectPass/runSetToBlob.cc
 PASS_OBJECTS=$(PASS_SOURCES:.cc=.o)
-${PASS_OBJECTS}: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh
+${PASS_OBJECTS}: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDetectPass/linedetectpass.hh
 
 passtest: passtest.o hough.o ${LINEDETECTOR_OBJECTS} ${PASS_OBJECTS}
 	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} ${PASS_OBJECTS} -o passtest
 
 clean:
+	rm -f ${PASS_OBJECTS}
 	rm -f ${CAMERA_OBJECTS}
 	rm -f ${LINEDETECTOR_OBJECTS}
 	rm -f ${LUT_OBJECTS}
 	rm -f cameratest
 	rm -f djsettest
 	rm -f hough
+	rm -f hough.o
 	rm -f passtest
+	rm -f passtest.o
 

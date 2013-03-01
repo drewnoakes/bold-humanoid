@@ -35,13 +35,6 @@ namespace bold
       accumulator.clear();
     }
 
-    void onImageComplete()
-    {
-      auto extractor = bold::HoughLineExtractor();
-
-      lines = extractor.findLines(accumulator, accumulator.count() / d_thresholdDivisor);
-    }
-
 //    void onRowStarting(int y);
 
     void onPixel(T value, int x, int y)
@@ -50,6 +43,13 @@ namespace bold
       {
         accumulator.add(x, y);
       }
+    }
+
+    void onImageComplete()
+    {
+      auto extractor = bold::HoughLineExtractor();
+
+      lines = extractor.findLines(accumulator, accumulator.count() / d_thresholdDivisor);
     }
   };
 }
