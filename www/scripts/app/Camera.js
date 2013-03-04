@@ -52,7 +52,7 @@ define(
             {
                 var c = controls[i];
                 c.iface = $('<div>').addClass('camera-control')
-                    .append($('<span>').addClass('camera-control-name').text(c.name))
+                    .append($('<span>').addClass('camera-control-name').text(c.name + " (" + c.minimum + " - " + c.maximum + " [" + c.defaultValue + "])"))
                     .append($('<br>'));
 
                 switch (c.type)
@@ -158,5 +158,9 @@ define(
 	socket.onerror = errorHandle;
 
         socket.onmessage = msgHandle;
+        
+        $('#camera-default-reset').click(function() {
+            socket.send("-1 0");
+        });
     }
 );
