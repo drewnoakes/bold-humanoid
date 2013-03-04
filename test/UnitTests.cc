@@ -1,13 +1,42 @@
 #include "gtest/gtest.h"
 #include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <cmath>
 
 #include "../Geometry/geometry.hh"
+#include "../CameraModel/cameramodel.hh"
 
+using namespace std;
 using namespace bold;
 using namespace Eigen;
 
 // TODO move to CMake and split this up into one file per class-under-test
+
+//PrintTo(const T&, ostream*)
+
+ostream& operator<<(ostream& stream, Eigen::Vector2i const& v)
+{
+  return stream << "(" << v.x() << ", " << v.y() << ")";
+}
+
+bool operator==(Eigen::Vector2i const& a, Eigen::Vector2i const& b)
+{
+  return a.x() == b.x() && a.y() == b.y();
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+TEST (Bounds2iTests, contains)
+{
+  EXPECT_TRUE  ( Bounds2i(0, 0, 10, 10).contains( Vector2i(5, 5) ) );
+  EXPECT_TRUE  ( Bounds2i(0, 0, 10, 10).contains( Vector2i(0, 0) ) );
+  EXPECT_TRUE  ( Bounds2i(0, 0, 10, 10).contains( Vector2i(10, 10) ) );
+
+  EXPECT_FALSE ( Bounds2i(0, 0, 10, 10).contains( Vector2i(15, 15) ) );
+  EXPECT_FALSE ( Bounds2i(0, 0, 10, 10).contains( Vector2i(-1, -1) ) );
+  EXPECT_FALSE ( Bounds2i(0, 0, 10, 10).contains( Vector2i(-1, 5) ) );
+  EXPECT_FALSE ( Bounds2i(0, 0, 10, 10).contains( Vector2i(5, 15) ) );
+}
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -54,11 +83,28 @@ TEST (LineSegmentTests, angle)
   EXPECT_EQ (atan(0.5), LineSegment2i(Vector2i(1,0), Vector2i(3,1)).angle());
 }
 
-TEST (SanityTests, tangents)
+TEST (LineSegmentTests, cropTo)
 {
-  EXPECT_EQ ( atan(1/2.0), atan2(1,2) );
-  EXPECT_EQ ( atan(1/3.0), atan2(1,3) );
-  EXPECT_EQ ( atan(1/4.0), atan2(1,4) );
+  // Completely inside
+  EXPECT_EQ( LineSegment2i(100, 100, 200, 200), LineSegment2i(100, 100, 200, 200).cropTo(Bounds2i(0, 0, 300, 300)) );
+
+  // Completely outside
+  EXPECT_EQ( LineSegment2i(100, 100, 200, 200), LineSegment2i(100, 100, 200, 200).cropTo(Bounds2i(0, 0, 300, 300)) );
+}
+
+TEST (LineSegmentTests, tryIntersect)
+{
+  // Perpendicular
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(1, 1)), LineSegment2i(1, 0, 1, 2).tryIntersect(LineSegment2i(0, 1, 2, 1)) );
+
+  // Parallel (vertical)
+  EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(1, 0, 1, 2).tryIntersect(LineSegment2i(2, 0, 2, 2)) );
+
+  // Parallel (horizontal)
+  EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(0, 0, 1, 0).tryIntersect(LineSegment2i(0, 1, 1, 1)) );
+
+  // Colinear
+  EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(0, 0, 1, 0).tryIntersect(LineSegment2i(2, 0, 3, 0)) );
 }
 
 TEST (DISABLED_LineSegmentTests, toLine)
@@ -96,9 +142,80 @@ TEST (DISABLED_LineSegmentTests, toLine)
 
 //////////////////////////////////////////////////////////////////////////////
 
+// TEST (CameraProjectionTests, design)
+// {
+//   vector<LineSegment3d> worldLines = {
+//     LineSegment3d(Vector3d( 1, 1, 0), Vector3d( 1,-1, 0)),
+//     LineSegment3d(Vector3d( 1,-1, 0), Vector3d(-1,-1, 0)),
+//     LineSegment3d(Vector3d(-1,-1, 0), Vector3d(-1, 1, 0)),
+//     LineSegment3d(Vector3d(-1, 1, 0), Vector3d( 1, 1, 0))
+//   };
+//
+//   Camera camera();
+//
+//   // TODO set up camera position/orientation/fov/focal-length
+//
+//   Matrix worldToCamera;
+//
+//   vector<LineSegment2i> screenLines = camera.project(worldLines, worldToCamera);
+// }
+
+TEST (CameraProjectionTests, getProjector)
+{
+  auto imageWidth = 640;
+  auto imageHeight = 480;
+  auto focalLength = 1;
+  auto rangeVertical = (46.0/180) * M_PI; // 46 degrees from top to bottom
+  auto rangeHorizontal = (60.0/180) * M_PI; // 60 degrees from left to right
+
+  CameraModel cameraModel(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
+
+  // From 3D camera space to 2D screen space
+  Affine3d projectionTransform = cameraModel.getProjectionTransform();
+
+  EXPECT_EQ( Vector3d(0,0,0), projectionTransform.translation() ) << "No translation in projection matrix";
+
+  std::function<Vector2i(Vector3d const&)> projector = cameraModel.getProjector();
+
+  double projectionPlaneWidth = atan(cameraModel.rangeHorizontal() / 2) * cameraModel.focalLength() * 2;
+  double pixelwidth = projectionPlaneWidth / cameraModel.imageWidth();
+
+  EXPECT_EQ( Vector2i(0,0), projector(Vector3d(0,0,10)) );
+  EXPECT_EQ( Vector2i(10/pixelwidth,0), projector(Vector3d(10,0,cameraModel.focalLength())) );
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);
 
   return RUN_ALL_TESTS();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
