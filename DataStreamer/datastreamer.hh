@@ -35,7 +35,8 @@ namespace bold
     };
 
     unsigned state;
-    unsigned tagSelection;
+    unsigned labelSelection;
+    bool imgReady;
   };
 
   class DataStreamer
@@ -49,7 +50,7 @@ namespace bold
 
     void setCamera(Camera* camera) { d_camera = camera; }
 
-    void streamImage(cv::Mat const& img);
+    void streamImage(cv::Mat const& img, std::string const& label);
 
     int callback_http(
       struct libwebsocket_context* context,
@@ -92,7 +93,7 @@ namespace bold
       size_t len);
 
     void sendCameraControls(libwebsocket* wsi);
-    void sendImage(libwebsocket* wsi);
+    void sendImage(libwebsocket* wsi, cv::Mat const& img);
 
   private:
     const int d_port;
@@ -101,7 +102,10 @@ namespace bold
     bool d_agentModelUpdated;
 
     Camera* d_camera;
-    cv::Mat d_img;
+    std::vector<cv::Mat> d_imgStreams;
+    std::map<std::string,unsigned> d_imgStreamLabels;
+
+    std::vector<CameraSession*> d_cameraSessions;
 
   private:
     static struct libwebsocket_protocols d_protocols[];

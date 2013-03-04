@@ -12,11 +12,15 @@ int DataStreamer::callback_camera(
 
   switch (reason)
   {
-  case LWS_CALLBACK_CLIENT_ESTABLISHED:
+  case LWS_CALLBACK_ESTABLISHED:
+    // New client connected; initialize session
     memset(cameraSession, 0, sizeof(CameraSession));
+    cameraSession->labelSelection = d_imgStreams.begin()->first;
+    d_cameraSessions.push_back(cameraSession);
     break;
 
   case LWS_CALLBACK_SERVER_WRITEABLE:
+    // Can write to client
     switch (cameraSession->state)
     {
     case CameraSession::SEND_CONTROLS:
@@ -29,7 +33,8 @@ int DataStreamer::callback_camera(
       break;
 
     case CameraSession::SEND_IMAGE:
-      sendImage(wsi);
+      if (cameraSession->imgReady)
+        sendImage(wsi, d_imgStreams[cameraSession->labelSelection]);
       break;
     }
 
@@ -53,14 +58,8 @@ int DataStreamer::callback_camera(
     break;
   }
 
-/*
+  libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
 
-    break;
-  }
-
-
-  }
-*/
   return 0;
 }
 

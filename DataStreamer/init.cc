@@ -21,5 +21,7 @@ void DataStreamer::init()
   GameState::getInstance().updated.connect([this]{ d_gameStateUpdated = true; });
   AgentModel::getInstance().updated.connect([this]{ d_agentModelUpdated = true; });
 
+  libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
+
   std::cout << "[DataStreamer:init] Done" << std::endl;
 }

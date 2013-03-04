@@ -21,7 +21,7 @@ void Agent::think()
   d_pfChain.applyFilters(raw);
   t = debugger.timeEvent(t, "Pixel Filter Chain");
 
-  d_streamer->streamImage(raw);
+  d_streamer->streamImage(raw, "raw");
   t = debugger.timeEvent(t, "Stream Image");
 
   //

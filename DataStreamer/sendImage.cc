@@ -1,10 +1,10 @@
 #include "datastreamer.ih"
 
-void DataStreamer::sendImage(libwebsocket* wsi)
+void DataStreamer::sendImage(libwebsocket* wsi, cv::Mat const& img)
 {
   // Encode image to jpeg (perhaps do this directly when getting image?)
   vector<uchar> jpgbuf;
-  cv::imencode(".jpg", d_img, jpgbuf);
+  cv::imencode(".jpg", img, jpgbuf);
   
   size_t jpgSize = jpgbuf.size();
   

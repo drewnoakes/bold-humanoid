@@ -23,7 +23,8 @@ void DataStreamer::sendCameraControls(libwebsocket* wsi)
       ",\"minimum\":" << control.minimum <<
       ",\"maximum\":" << control.maximum <<
       ",\"step\":" << control.step <<
-      ",\"value\":" << control.getValue();
+      ",\"value\":" << control.getValue() <<
+      ",\"defaultValue\":" << control.defaultValue;
 
     if (control.type == Camera::CT_MENU)
     {
