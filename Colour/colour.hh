@@ -1,7 +1,6 @@
 #ifndef BOLD_COLOUR_HH
 #define BOLD_COLOUR_HH
 
-//#include <cmath>
 #include <vector>
 #include <string>
 #include <opencv2/core/core.hpp>
@@ -27,12 +26,12 @@ namespace bold
         : b(b), g(g), r(r)
       {}
 
-      bgr invert()
+      bgr invert() const
       {
         return bgr(255-b, 255-g, 255-r);
       }
 
-      cv::Scalar toScalar()
+      cv::Scalar toScalar() const
       {
         return cv::Scalar(b, g, r);
       }
@@ -82,7 +81,7 @@ namespace bold
         return Colour::hsv2bgr(Colour::hsv(h, s, v));
       }
 
-      inline bool contains(hsv hsv)
+      inline bool contains(hsv hsv) const
       {
         int hDiff = abs(hsv.h - h);
         hDiff = std::min(hDiff, 192 - hDiff);
@@ -90,6 +89,23 @@ namespace bold
         return (hDiff <= hRange &&
                 hsv.s >= s - sRange && hsv.s <= s + sRange &&
                 hsv.v >= v - vRange && hsv.v <= v + vRange);
+      }
+
+      static hsvRange fromBytes(uchar h, uchar hRange, uchar s, uchar sRange, uchar v, uchar vRange)
+      {
+        return hsvRange(h, hRange, s, sRange, v, vRange);
+      }
+
+      static hsvRange fromDoubles(double h, double hRange, double s, double sRange, double v, double vRange)
+      {
+        assert(h >= 0.0 && h <= 360.0);
+        assert(hRange >= 0.0 && hRange <= 360.0);
+        assert(s >= 0.0 && sRange <= 1.0);
+        assert(sRange >= 0.0 && sRange <= 1.0);
+        assert(v >= 0.0 && vRange <= 1.0);
+        assert(vRange >= 0.0 && vRange <= 1.0);
+
+        return hsvRange((h/360.0)*255, (hRange/360)*255, s*255, sRange*255, v*255, vRange*255);
       }
 
       static hsvRange fromConfig(

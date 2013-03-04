@@ -8,9 +8,9 @@ map<PixelLabel,set<Blob>> BlobDetectPass::detectBlobs()
   map<PixelLabel,set<Blob>> blobsByLabel;
 
   // For each label that we're configured to look at
-  for (BlobLabel const& blobLabel : d_blobLabels)
+  for (BlobType const& blobType : d_blobTypes)
   {
-    uchar pixelLabelId = blobLabel.pixelLabel.id();
+    uchar pixelLabelId = blobType.pixelLabel.id();
 
     // Go through all runs and add them to the disjoint set
 
@@ -35,7 +35,7 @@ map<PixelLabel,set<Blob>> BlobDetectPass::detectBlobs()
 
         // Attempt to merge this run with runs in the row above
         for (Run& run2 : runsPerRow[y - 1])
-          if (blobLabel.unionPredicate(run, run2))
+          if (blobType.unionPredicate(run, run2))
             rSet.merge(run, run2);
       }
     }
@@ -49,7 +49,7 @@ map<PixelLabel,set<Blob>> BlobDetectPass::detectBlobs()
               inserter(blobSet, blobSet.end()),
               runSetToBlob);
 
-    blobsByLabel[blobLabel.pixelLabel] = blobSet;
+    blobsByLabel[blobType.pixelLabel] = blobSet;
   }
 
   return blobsByLabel;

@@ -22,7 +22,7 @@ namespace bold
 
   public:
     bold::HoughLineAccumulator accumulator;
-    std::vector<bold::HoughLine> lines;
+    std::vector<bold::Line> lines;
 
     HoughLinePass(int width, int height, int thresholdDivisor, int accumulatorHeight)
     : accumulator(width, height, accumulatorHeight),

@@ -8,6 +8,8 @@ void HoughLineAccumulator::add(int x, int y)
 
   for (unsigned int t = 0; t < d_accumulatorThetaLen; t++)
   {
+    // r = x*sin(theta) + y*cos(theta)
+
     // TODO store sin/cos in adjacent pairs for perf
     double radius = x*d_sinCache[t] + y*d_cosCache[t];
 

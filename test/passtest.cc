@@ -6,15 +6,17 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "../HoughLine/houghline.hh"
+#include "../Geometry/geometry.hh"
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../HoughLineExtractor/houghlineextractor.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../ImagePasser/imagepasser.hh"
 #include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
-#include "../ImagePassHandler/LineDotPass/linedotpass.hh"
 #include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
+#include "../ImagePassHandler/LabelCountPass/labelcountpass.hh"
+#include "../ImagePassHandler/LineDotPass/linedotpass.hh"
 #include "../LineRunTracker/lineruntracker.hh"
+#include "../LineFinder/linefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelLabel/pixellabel.hh"
 
@@ -45,8 +47,10 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  auto inputFileName = argv[1];
+
   // Load the colour image
-  cv::Mat colourImage = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+  cv::Mat colourImage = imread(inputFileName, CV_LOAD_IMAGE_COLOR);
 
   if (!colourImage.data)
   {
@@ -57,7 +61,7 @@ int main(int argc, char **argv)
   int imageWidth = colourImage.cols;
   int imageHeight = colourImage.rows;
 
-  cout << "Reading " << argv[1] << endl;
+  cout << "Reading " << inputFileName << endl;
 
   //
   // FIXED SETUP
@@ -67,33 +71,28 @@ int main(int argc, char **argv)
 
   // Build colour ranges for segmentation
 
-  // sample-images
-  PixelLabel ballLabel (Colour::hsvRange(255*352/360.0, 30, 255*80/100.0, 95, 255*75/100.0, 95), "Ball"); // red super ball
-  PixelLabel goalLabel (Colour::hsvRange(255* 54/360.0, 10, 255*88/100.0, 55, 255*75/100.0, 65), "Goal"); // yellow paper
-  PixelLabel fieldLabel(Colour::hsvRange(0, 255, 0, 255*20/100.0, 255*85/100.0, 65), "Field"); // white floor
-  PixelLabel lineLabel (Colour::hsvRange(0, 255, 0, 255*25/100.0, 0, 255*30/100.0), "Line"); // black line
+//   // sample-images
+//   PixelLabel ballLabel (Colour::hsvRange::fromDoubles(354,   6, 0.74, 0.18, 0.71, 0.22), "Ball"); // red super ball
+//   PixelLabel goalLabel (Colour::hsvRange::fromDoubles( 54,  15, 0.75, 0.20, 0.74, 0.20), "Goal"); // yellow paper
+//   PixelLabel fieldLabel(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.25, 0.85, 0.35), "Field"); // white floor
+//   PixelLabel lineLabel (Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.45, 0.00, 0.45), "Line"); // black line
+
+  // rgb.jpg
+  PixelLabel ballLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball");
+  PixelLabel goalLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal");
+  PixelLabel fieldLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field");
+  PixelLabel lineLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line");
 
   cout << ballLabel << endl;
   cout << goalLabel << endl;
   cout << fieldLabel << endl;
   cout << lineLabel << endl;
 
-//   // rgb.jpg
-//   PixelLabel ballLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball");
-//   PixelLabel goalLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal");
-//   PixelLabel fieldLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field");
-//   PixelLabel lineLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line");
-
-  vector<PixelLabel> labels = { ballLabel, goalLabel, fieldLabel, lineLabel };
+  vector<PixelLabel> labels = { goalLabel, ballLabel, fieldLabel, lineLabel };
 
   // Label the image
   cv::Mat labelledImage(colourImage.size(), CV_8UC1);
   auto imageLabeller = new ImageLabeller(labels);
-
-  // Draw out the labelled image
-//  cv::Mat colourLabelledImage(colourImage.size(), CV_8UC3);
-//  ImageLabeller::colourLabels(labelledImage, colourLabelledImage, labels);
-//  imwrite("labelled.jpg", colourLabelledImage);
 
   auto ballUnionPred =
     [] (Run const& a, Run const& b)
@@ -113,21 +112,25 @@ int main(int argc, char **argv)
 
   vector<UnionPredicate> unionPredicateByLabel = {goalUnionPred, ballUnionPred};
 
-  auto lineDetect = new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel, 1);
-  vector<BlobLabel> blobLabels = {
-    BlobLabel(ballLabel, ballUnionPred),
-    BlobLabel(goalLabel, goalUnionPred)
+  auto lineDotPass = new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel, 3);
+  vector<BlobType> blobTypes = {
+    BlobType(ballLabel, ballUnionPred),
+    BlobType(goalLabel, goalUnionPred)
   };
-  auto blobDetect = new BlobDetectPass(imageWidth, imageHeight, blobLabels);
-  auto cartoon = new CartoonPass(imageWidth, imageHeight, labels, Colour::bgr(128,128,128));
+  auto blobDetectPass = new BlobDetectPass(imageWidth, imageHeight, blobTypes);
+  auto cartoonPass = new CartoonPass(imageWidth, imageHeight, labels, Colour::bgr(128,128,128));
+  auto labelCountPass = new LabelCountPass(labels);
 
   vector<ImagePassHandler<uchar>*> handlers = {
-    lineDetect,
-    blobDetect,
-    cartoon
+    lineDotPass,
+    blobDetectPass,
+    cartoonPass,
+    labelCountPass
   };
 
   auto passer = ImagePasser<uchar>(handlers);
+
+  LineFinder lineFinder(imageWidth, imageHeight);
 
   cout << "Startup took " << (getSeconds(t)*1000) << " ms" << endl;
 
@@ -150,8 +153,12 @@ int main(int argc, char **argv)
 
   t = getTimestamp();
 
+  vector<Line> lines;
   for (int i = 0; i < loopCount; i++)
+  {
     passer.pass(labelledImage);
+    lines = lineFinder.find(lineDotPass->lineDots, 15, 2000);
+  }
 
   //
   // PRINT SUMMARIES
@@ -159,46 +166,59 @@ int main(int argc, char **argv)
 
   cout << "Finished " << loopCount << " passes. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl
        << "Found:" << endl
-       << "    " << lineDetect->lineDots.size() << " line dots" << endl;
+       << "    " << lineDotPass->lineDots.size() << " line dots" << endl;
 
-  for (BlobLabel const& blobLabel : blobLabels)
+  for (BlobType const& blobType : blobTypes)
   {
-    PixelLabel pixelLabel = blobLabel.pixelLabel;
-    size_t blobCount = blobDetect->blobsPerLabel[pixelLabel].size();
-    cout << "    " << pixelLabel.name() << " " << blobCount << " blob(s)" << endl;
+    PixelLabel pixelLabel = blobType.pixelLabel;
+    size_t blobCount = blobDetectPass->blobsPerLabel[pixelLabel].size();
+    cout << "    " << blobCount << " " << pixelLabel.name() << " blob(s)" << endl;
+  }
+
+  for (auto const& pair : labelCountPass->getCounts())
+  {
+    cout << "    " << pair.second << " " << pair.first.name() << " pixels" << endl;
   }
 
   //
   // DRAW LABELLED 'CARTOON' IMAGE
   //
-  imwrite("labelled.jpg", cartoon->mat());
+  imwrite("labelled.jpg", cartoonPass->mat());
 
   //
   // DRAW OUTPUT IMAGE
   //
 
   // Draw line dots
-  if (lineDetect->lineDots.size() != 0)
+  if (lineDotPass->lineDots.size() != 0)
   {
-    for (Eigen::Vector2i const& lineDot : lineDetect->lineDots) {
+    for (Eigen::Vector2i const& lineDot : lineDotPass->lineDots) {
       Colour::bgr lineColor(0, 0, 255); // red
       colourImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineColor;
     }
   }
 
-  // Draw lines
-//     double maxVotes = lineDetect->lines[0].votes();
-//     for (bold::HoughLine const& line : lineDetect->lines) {
-// //    cout << "  theta=" << line.theta() << " (" << (line.theta()*180.0/M_PI) << " degs) radius=" << line.radius() << " m=" << line.gradient() << " c=" << line.yIntersection() << endl;
-//       Colour::bgr lineColor(0, 0, 255 * (line.votes()/maxVotes)); // red
-//       line.draw<Colour::bgr>(colourImage, lineColor);
-//     }
+//   vector<LineSegment2i> segments = lineFinder.find(lineDotPass->lineDots);
+//   cout << "    " << segments.size() << " line segments" << endl;
+//   for (LineSegment2i const& segment : segments)
+//   {
+//     cout << "      between (" << segment.p1().x() << "," << segment.p1().y() << ") and ("
+//                               << segment.p2().x() << "," << segment.p2().y() << ")" << endl;
+//     segment.draw(colourImage, Colour::bgr(0,255,255));
+//   }
+
+  cout << "    " << lines.size() << " lines" << endl;
+  for (Line const& line : lines)
+  {
+    cout << "      theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs) radius=" << line.radius() << " m=" << line.gradient() << " c=" << line.yIntersection() << endl;
+    line.draw(colourImage, Colour::bgr(0,255,255).toScalar());
+  }
 
   // Draw blobs
-  for (BlobLabel const& blobLabel : blobLabels)
-  for (bold::Blob blob : blobDetect->blobsPerLabel[blobLabel.pixelLabel])
+  for (BlobType const& blobType : blobTypes)
+  for (bold::Blob blob : blobDetectPass->blobsPerLabel[blobType.pixelLabel])
   {
-    auto blobColor = blobLabel.pixelLabel.hsvRange().toBgr().invert().toScalar();
+    auto blobColor = blobType.pixelLabel.hsvRange().toBgr().invert().toScalar();
     cv::rectangle(colourImage, blob.toRect(), blobColor);
   }
 

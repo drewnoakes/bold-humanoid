@@ -71,12 +71,12 @@ namespace bold
   typedef std::function<bool(Run const& a, Run const& b)> UnionPredicate;
 
   /** Specifies a unit of work for blob detection. Contains the pixel label and union predicate function. */
-  struct BlobLabel
+  struct BlobType
   {
     const PixelLabel pixelLabel;
     const UnionPredicate unionPredicate;
 
-    BlobLabel(PixelLabel pixelLabel, UnionPredicate unionPredicate)
+    BlobType(PixelLabel pixelLabel, UnionPredicate unionPredicate)
     : pixelLabel(pixelLabel),
       unionPredicate(unionPredicate)
     {}
@@ -90,7 +90,7 @@ namespace bold
     int d_imageHeight;
     int d_imageWidth;
 
-    std::vector<BlobLabel> d_blobLabels;
+    std::vector<BlobType> d_blobTypes;
     /** Accumulated data for the most recently passed image. */
     std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
     bold::Run d_currentRun;
@@ -120,17 +120,17 @@ namespace bold
     /** The collection of blobs found during the last image pass. */
     std::map<bold::PixelLabel,std::set<Blob>> blobsPerLabel;
 
-    BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobLabel> blobLabels)
-    : d_blobLabels(blobLabels),
+    BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> blobTypes)
+    : d_blobTypes(blobTypes),
       d_imageHeight(imageHeight),
       d_imageWidth(imageWidth),
       d_runsPerRowPerLabel(),
       d_currentRun(0, 0)
     {
       // Create a run length code for each label
-      for (BlobLabel const& blobLabel : blobLabels)
+      for (BlobType const& blobType : blobTypes)
       {
-        uchar pixelLabelId = blobLabel.pixelLabel.id();
+        uchar pixelLabelId = blobType.pixelLabel.id();
 
         // A RunLengthCode is a vector of vectors of runs
         d_runsPerRowPerLabel[pixelLabelId] = RunLengthCode();
@@ -156,6 +156,7 @@ namespace bold
 
     void onRowStarting(int y)
     {
+      // TODO might miss last run on last row with this approach -- add onRowEnding, or copy into onImageComplete
       if (d_currentLabel != 0)
       {
         // finish whatever run we were on

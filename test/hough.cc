@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../HoughLine/houghline.hh"
+#include "../Geometry/geometry.hh"
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../HoughLineExtractor/houghlineextractor.hh"
 #include "../LUTBuilder/lutbuilder.hh"
@@ -70,9 +70,10 @@ int main(int argc, char **argv)
   cvtColor(image, colorLines, CV_GRAY2BGR);
 
   double maxVotes = hough->lines[0].votes();
-  for (HoughLine const& line : hough->lines) {
+  for (Line const& line : hough->lines)
+  {
     Colour::bgr lineColor(0, 0, 255 * (line.votes()/maxVotes)); // red
-    line.draw<Colour::bgr>(colorLines, lineColor);
+    line.draw(colorLines, lineColor.toScalar());
   }
 
   imwrite("color-lines.jpg", colorLines);

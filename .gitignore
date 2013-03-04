@@ -21,3 +21,4 @@ test/output.jpg
 .cproject
 .project
 nbproject
+/test/unittests

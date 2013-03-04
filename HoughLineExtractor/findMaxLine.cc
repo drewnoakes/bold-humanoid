@@ -4,7 +4,7 @@ using namespace bold;
 using namespace cv;
 using namespace std;
 
-HoughLine HoughLineExtractor::findMaxLine(HoughLineAccumulator& accumulator)
+Line HoughLineExtractor::findMaxLine(HoughLineAccumulator& accumulator)
 {
   Mat mat = accumulator.getMat();
 
@@ -36,5 +36,5 @@ HoughLine HoughLineExtractor::findMaxLine(HoughLineAccumulator& accumulator)
   double radius = accumulator.getRadius(maxX);
   double theta = accumulator.getTheta(maxY);
 
-  return HoughLine(radius, theta, maxVotes);
+  return Line(radius, theta, maxVotes);
 }
