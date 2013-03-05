@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../Geometry/geometry.hh"
+#include "../geometry/Line.hh"
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../HoughLineExtractor/houghlineextractor.hh"
 #include "../LUTBuilder/lutbuilder.hh"

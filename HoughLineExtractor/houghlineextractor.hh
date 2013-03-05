@@ -1,7 +1,7 @@
 #ifndef BOLD_HOUGHLINEEXTRACTOR_HH
 #define BOLD_HOUGHLINEEXTRACTOR_HH
 
-#include "../Geometry/geometry.hh"
+#include "../geometry/Line.hh"
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
 
 #include <vector>

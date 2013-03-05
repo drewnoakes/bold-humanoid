@@ -6,7 +6,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "../Geometry/geometry.hh"
+#include "../geometry/Line.hh"
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../HoughLineExtractor/houghlineextractor.hh"
 #include "../ImageLabeller/imagelabeller.hh"
@@ -192,7 +192,8 @@ int main(int argc, char **argv)
   // Draw line dots
   if (lineDotPass->lineDots.size() != 0)
   {
-    for (Eigen::Vector2i const& lineDot : lineDotPass->lineDots) {
+    for (Eigen::Vector2i const& lineDot : lineDotPass->lineDots)
+    {
       Colour::bgr lineColor(0, 0, 255); // red
       colourImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineColor;
     }

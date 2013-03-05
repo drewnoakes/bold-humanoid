@@ -6,6 +6,20 @@ all: djsettest hough passtest
 djsettest: djsettest.cc ../DisjointSet/disjointset.hh
 	g++ djsettest.cc -o djsettest -O3 -std=c++0x
 
+
+
+GEOMETRY_SOURCES=\
+	../geometry/Bounds2i.cc\
+	../geometry/LineSegment2i.cc
+GEOMETRY_OBJECTS=$(GEOMETRY_SOURCES:.cc=.o)
+GEOMETRY_HEADERS=\
+	../geometry/Bounds2i.hh\
+	../geometry/Line.hh\
+	../geometry/LineSegment2i.hh
+${GEOMETRY_OBJECTS}: ${GEOMETRY_HEADERS}
+
+
+
 CAMERA_SOURCES=\
 	../Camera/Camera.cc\
 	../Camera/open.cc\
@@ -22,8 +36,7 @@ CAMERA_SOURCES=\
 CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
 ${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
 
-cameratest: cameratest.o ${CAMERA_OBJECTS}
-	g++ cameratest.o ${CXXFLAGS} ${LDFLAGS} ${CAMERA_OBJECTS} -o cameratest
+
 
 LINEDETECTOR_SOURCES=\
 	../HoughLineAccumulator/houghlineaccumulator.cc\
@@ -32,20 +45,7 @@ LINEDETECTOR_SOURCES=\
 LINEDETECTOR_OBJECTS=$(LINEDETECTOR_SOURCES:.cc=.o)
 ${LINEDETECTOR_OBJECTS}: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh
 
-hough.o: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../Geometry/geometry.hh
 
-hough: hough.o ${LINEDETECTOR_OBJECTS}
-	g++ hough.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} -o hough
-
-GEOMETRY_SOURCES=\
-	../geometry/Bounds2i.cc\
-	../geometry/LineSegment2i.cc
-GEOMETRY_OBJECTS=$(GEOMETRY_SOURCES:.cc=.o)
-GEOMETRY_HEADERS=\
-	../geometry/Bounds2i.hh\
-	../geometry/Line.hh\
-	../geometry/LineSegment2i.hh
-${GEOMETRY_OBJECTS}: ${GEOMETRY_HEADERS}
 
 PASS_SOURCES=\
 	../Colour/bgr2hsv.cc\
@@ -60,12 +60,22 @@ PASS_SOURCES=\
 	../HoughLineExtractor/findMaxLine.cc\
 	../PixelLabel/pixellabel.cc
 PASS_OBJECTS=$(PASS_SOURCES:.cc=.o)
-${PASS_OBJECTS} passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../Geometry/geometry.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
+${PASS_OBJECTS} passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
 
-passtest.o:                 ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../Geometry/geometry.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
 
-passtest: passtest.o hough.o ${PASS_OBJECTS}
-	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${PASS_OBJECTS} -o passtest
+
+passtest.o:                 ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
+passtest: passtest.o hough.o ${PASS_OBJECTS} ${GEOMETRY_OBJECTS}
+	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${PASS_OBJECTS} ${GEOMETRY_OBJECTS} -o passtest
+
+
+cameratest: cameratest.o ${CAMERA_OBJECTS} ${GEOMETRY_OBJECTS}
+	g++ cameratest.o ${CXXFLAGS} ${LDFLAGS} ${CAMERA_OBJECTS} ${GEOMETRY_OBJECTS} -o cameratest
+
+
+hough.o: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh
+hough: hough.o ${LINEDETECTOR_OBJECTS}
+	g++ hough.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} -o hough
 
 # ----------------------------
 
