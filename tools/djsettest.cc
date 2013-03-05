@@ -14,6 +14,8 @@ bool flipCoin()
 
 int main()
 {
+  // TODO convert this into unit tests
+
   DisjointSet<int> set;
 
   vector<int> ints(N);
@@ -25,7 +27,7 @@ int main()
   for (unsigned i = 0; i < N; ++i)
   {
     set.insert(ints[i]);
-    
+
     if (ints[i] % 2 == 0)
     {
       if (someSeenEven != -1)
@@ -49,7 +51,7 @@ int main()
     cout << "Size: " << subSet.size() << endl;
 
 /*
-  
+
   auto elements = set.getElements();
   cout << "Number of elements: " << elements.size() << endl;
 
