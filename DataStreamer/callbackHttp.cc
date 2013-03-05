@@ -13,6 +13,7 @@ int DataStreamer::callback_http(
   {
     case LWS_CALLBACK_HTTP:
     {
+      // TODO: make this std::string, or copy from string constant correctly
       char* path;
       if (in)
       {
