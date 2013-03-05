@@ -103,6 +103,7 @@ namespace bold
       size_t len);
 
     void sendCameraControls(libwebsocket* wsi);
+    void sendStreamLabels(libwebsocket* wsi);
     void sendImage(libwebsocket* wsi, CameraSession* session);
 
   private:

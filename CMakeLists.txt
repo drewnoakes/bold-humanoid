@@ -79,6 +79,7 @@ add_executable(boldhumanoid
 ./DataStreamer/streamImage.cc
 ./DataStreamer/update.cc
 ./DataStreamer/sendCameraControls.cc
+./DataStreamer/sendStreamLabels.cc
 ./DataStreamer/sendImage.cc
 ./GameController/GameControllerReceiver.cc
 ./MX28Snapshot/init.cc
