@@ -34,6 +34,7 @@ int DataStreamer::callback_camera(
       break;
 
     case CameraSession::SEND_IMG_TAGS:
+      sendStreamLabels(wsi);
       cameraSession->state = CameraSession::SEND_IMAGE;
       break;
 
