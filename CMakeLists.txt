@@ -14,6 +14,7 @@ set(DARWINDIR ${CMAKE_SOURCE_DIR}/robotis)
 set(VISIONDIR ${CMAKE_SOURCE_DIR}/vision)
 set(JOYSTICKDIR ${CMAKE_SOURCE_DIR}/joystick)
 set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
+set(RAPIDJSONDIR ${CMAKE_SOURCE_DIR}/rapidjson)
 
 # Compile darwin lib as an external project
 ExternalProject_Add(darwin_lib
@@ -46,7 +47,8 @@ ${JOYSTICKDIR}
 ${LIBWEBSOCKETDIR}/lib
 ${EIGEN3_INCLUDE_DIR}
 ${SigC++_INCLUDE_DIRS}
-${OpenCV_INCLUDE_DIR})
+${OpenCV_INCLUDE_DIR}
+${RAPIDJSONDIR}/include)
 
 add_executable(boldhumanoid
 ./main.cc
