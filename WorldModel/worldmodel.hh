@@ -14,6 +14,8 @@
 
 namespace bold
 {
+  class DataStreamer;
+
   enum ObsType
   {
     O_BALL,
@@ -78,7 +80,7 @@ namespace bold
     /**
      * Integrate a camera image into the world model.
      */
-    void integrateImage(cv::Mat& cameraImage);
+    void integrateImage(cv::Mat& cameraImage, DataStreamer *streamer = 0);
 
     /**
      * Gets the singleton instance of the WorldModel.

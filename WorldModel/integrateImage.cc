@@ -1,12 +1,12 @@
 #include "worldmodel.hh"
 
 #include <cmath>
-
+#include "../DataStreamer/datastreamer.hh" 
 using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-void WorldModel::integrateImage(cv::Mat& image)
+void WorldModel::integrateImage(cv::Mat& image, DataStreamer* streamer)
 {
 //  cout << "[Agent::processImage] Start" << endl;
 //  cout << "[Agent::processImage] Image size: " << image.rows << "x" << image.cols << endl;
@@ -14,6 +14,9 @@ void WorldModel::integrateImage(cv::Mat& image)
   // Label the image;
   // OPT: make data memeber
   cv::Mat labelled(image.rows, image.cols, CV_8UC1);
+  if (streamer)
+    streamer->streamImage(labelled, "labelled");
+
   d_imageLabeller->label(image, labelled);
 
   auto ballUnionPred =
