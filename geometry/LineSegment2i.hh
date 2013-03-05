@@ -52,7 +52,7 @@ namespace bold
 
     friend std::ostream& operator<<(std::ostream& stream, LineSegment2i const& lineSegment)
     {
-      return stream << "LineSegment2i (P1=" << lineSegment.d_p1 << " P2=" << lineSegment.d_p2 << ")";
+      return stream << "LineSegment2i (P1=" << lineSegment.d_p1.transpose() << " P2=" << lineSegment.d_p2.transpose() << ")";
     }
 
   private:
