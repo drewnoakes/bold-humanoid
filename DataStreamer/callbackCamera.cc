@@ -50,18 +50,36 @@ int DataStreamer::callback_camera(
     if (len > 0)
     {
       string str((char const*)in, len);
-      istringstream controlIn(str);
-      unsigned controlId, controlVal;
-      controlIn >> controlId >> controlVal;
-      cout << "[DataStreamer::callback_camera] client receive: " << controlId << " <- " << controlVal << endl;
-      auto controls = d_camera->getControls();
-      auto control = find_if(controls.begin(), controls.end(),\
-                             [controlId](Camera::Control const& c)
-                             {
-                               return c.id == controlId;
-                             });
-      if (control != controls.end())
-        control->setValue(controlVal);
+      cout << "Received: " << str << endl;
+
+      // Parse JSON
+      rapidjson::Document d;
+      d.Parse<0>(str.c_str());
+      if (d.HasMember("command"))
+      {
+	string command(d["command"].GetString());
+	if (command == "setControl")
+	{
+	  unsigned controlId = d["id"].GetUint();
+	  unsigned controlVal = d["val"].GetUint();
+
+	  cout << "[DataStreamer::callback_camera] client receive: " << controlId << " <- " << controlVal << endl;
+	  auto controls = d_camera->getControls();
+	  auto control = find_if(controls.begin(), controls.end(),	\
+				 [controlId](Camera::Control const& c)
+				 {
+				   return c.id == controlId;
+				 });
+	  if (control != controls.end())
+	    control->setValue(controlVal);
+	}
+	else if (command == "selectStream")
+	{
+	  unsigned streamId = d["id"].GetUint();
+	  cameraSession->streamSelection = streamId;
+	}
+      }
+
     }
     break;
   }

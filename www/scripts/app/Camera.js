@@ -36,14 +36,39 @@ define(
 
         var controlHandle = function(e)
         {
-            var c = e.data;
-            var val =
+	    var c = e.data;
+	    var cmd = {};
+	    cmd.command = "setControl";
+            cmd.id = c.id;
+            cmd.val = parseInt(
                 c.type == ControlTypeEnum.INT ? e.target.value :
                 c.type == ControlTypeEnum.BOOL ? (e.target.checked ? 1 : 0) :
                 c.type == ControlTypeEnum.MENU ? e.target.value :
-                0;
-            socket.send(c.id + " " + val);
+                    0);
+            socket.send(JSON.stringify(cmd));
         }
+
+	var labelHandle = function(e)
+	{
+	    var cmd = {};
+	    cmd.command = "selectStream";
+	    cmd.id = parseInt(e.target.value);
+            socket.send(JSON.stringify(cmd));
+	}
+
+	var genLabels = function(labels)
+	{
+	    var menu = $('<select>').change(labelHandle);
+            for (var i = 0; i < labels.length; ++i)
+            {
+                var item = labels[i];
+                var option = $('<option>').val(item.id).text(item.label); 
+                if (i == 0)
+                    option.attr('selected', 'selected');
+                menu.append(option);
+            }
+	    $('#camera-labels-container').append(menu);
+	}
 
         var genControls = function(controls)
         {
@@ -93,13 +118,16 @@ define(
             // get control data
             case StateEnum.GET_CONTROLS:
                 controls = JSON.parse(msg.data);
-                console.log(controls);
+                console.info(controls);
                 genControls(controls);
-                imgState = StateEnum.GET_PREFIX;
+                imgState = StateEnum.GET_IMG_TAGS;
                 break;
 
             // get image tags
             case StateEnum.GET_IMG_TAGS:
+		labels = JSON.parse(msg.data);
+		genLabels(labels);
+		imgState = StateEnum.GET_PREFIX;
                 break;
 
             // get image prefix
