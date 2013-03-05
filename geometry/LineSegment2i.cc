@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <set>
 #include <cassert>
 #include <cmath>
 
@@ -16,6 +17,7 @@
 using namespace bold;
 using namespace cv;
 using namespace Eigen;
+using namespace std;
 
 double LineSegment2i::fake2dCross(Vector2d const& a, Vector2d const& b)
 {
@@ -26,14 +28,14 @@ LineSegment2i::LineSegment2i(Vector2i p1, Vector2i p2)
 : d_p1(p1), d_p2(p2)
 {
   if (p1.x() == p2.x() && p1.y() == p2.y())
-    throw std::string("Points must have different values.");
+    throw string("Points must have different values.");
 }
 
 LineSegment2i::LineSegment2i(int x1, int y1, int x2, int y2)
 : d_p1(Vector2i(x1, y1)), d_p2(Vector2i(x2, y2))
 {
   if (x1 == x2 && y1 == y2)
-    throw std::string("Points must have different values.");
+    throw string("Points must have different values.");
 }
 
 double LineSegment2i::gradient() const
@@ -58,9 +60,9 @@ double LineSegment2i::angle() const
   return atan2(delta.y(), delta.x());
 }
 
-void LineSegment2i::draw(cv::Mat& image, Colour::bgr const& bgr) const
+void LineSegment2i::draw(Mat& image, Colour::bgr const& bgr) const
 {
-  cv::line(image, cv::Point(d_p1.x(), d_p1.y()), cv::Point(d_p2.x(), d_p2.y()), bgr.toScalar());
+  line(image, Point(d_p1.x(), d_p1.y()), Point(d_p2.x(), d_p2.y()), bgr.toScalar());
 }
 
 /** Converts this {@link LineSegment2i} to a {@link Line}. */
@@ -87,18 +89,49 @@ Line LineSegment2i::toLine() const
 
 Maybe<LineSegment2i> LineSegment2i::cropTo(Bounds2i const& bounds) const
 {
-  std::vector<LineSegment2i> edges = bounds.getEdges();
-  std::vector<Vector2i> ends;
+  struct Vector2iCompare
+  {
+    bool operator() (Vector2i const& lhs, Vector2i const& rhs) const
+    {
+      if (lhs.x() == rhs.x())
+        return lhs.y() < rhs.y();
+
+      return lhs.x() < rhs.x();
+    }
+  };
+
+  vector<LineSegment2i> edges = bounds.getEdges();
+
+  // we use a set, as duplicates can be created if lines pass through corners
+  set<Vector2i, Vector2iCompare> ends;
+
+  // Add ends if they're in bounds
+  if (bounds.contains(d_p1))
+    ends.insert(d_p1);
+  if (bounds.contains(d_p2))
+    ends.insert(d_p2);
+
+  // If we have two ends, we don't need to test for intersections with the edges
+  if (ends.size() != 2)
+  {
+    for (LineSegment2i const& edge : edges)
+    {
+      Maybe<Vector2i> intersect = tryIntersect(edge);
+      if (intersect.hasValue())
+      {
+        ends.insert(*intersect.value());
+      }
+    }
+  }
 
   assert(ends.size() <= 2);
   assert(ends.size() != 1);
 
-  if (ends.size() != 2)
-  {
+  vector<Vector2i> endsVec(ends.begin(), ends.end());
 
-  }
-
-  return *this;
+  return ends.size() == 2
+    ? Maybe<LineSegment2i>(LineSegment2i(endsVec[0], endsVec[1]))
+    : Maybe<LineSegment2i>::empty();
 }
 
 Maybe<Vector2i> LineSegment2i::tryIntersect(LineSegment2i const& other) const
