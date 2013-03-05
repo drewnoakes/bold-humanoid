@@ -53,7 +53,6 @@ double LineSegment2i::yIntersection() const
   return (double)d_p1.y() - gradient() * (double)d_p1.x();
 }
 
-/** Returns the angle of this line to the +ve x-azis, in the range [-pi, pi] */
 double LineSegment2i::angle() const
 {
   auto delta = this->delta();
@@ -65,7 +64,6 @@ void LineSegment2i::draw(Mat& image, Colour::bgr const& bgr) const
   line(image, Point(d_p1.x(), d_p1.y()), Point(d_p2.x(), d_p2.y()), bgr.toScalar());
 }
 
-/** Converts this {@link LineSegment2i} to a {@link Line}. */
 Line LineSegment2i::toLine() const
 {
   double theta = atan2(d_p2.y() - d_p1.y(), d_p1.x() - d_p2.x());

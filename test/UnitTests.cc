@@ -134,6 +134,9 @@ TEST (LineSegmentTests, cropTo)
   // Spanning right edge
   EXPECT_EQ( Maybe<LineSegment2i>(LineSegment2i(100, 100, 200, 100)), LineSegment2i(100, 100, 300, 100).cropTo(Bounds2i(0, 0, 200, 200)) );
 
+  // Spanning left and right edge
+  EXPECT_EQ( Maybe<LineSegment2i>(LineSegment2i(100, 100, 200, 100)), LineSegment2i(0, 100, 300, 100).cropTo(Bounds2i(100, 100, 200, 200)) );
+
   // Running through corners
   EXPECT_EQ( Maybe<LineSegment2i>(LineSegment2i(10, 10, 20, 20)), LineSegment2i(0, 0, 30, 30).cropTo(Bounds2i(10, 10, 20, 20)) );
 
@@ -142,8 +145,6 @@ TEST (LineSegmentTests, cropTo)
 
   // Running along bottom edge
   EXPECT_EQ( Maybe<LineSegment2i>(LineSegment2i(50, 0, 100, 0)), LineSegment2i(0, 0, 200, 0).cropTo(Bounds2i(50, 0, 100, 100)) );
-
-  // TODO further testing
 }
 
 TEST (LineSegmentTests, tryIntersect)
