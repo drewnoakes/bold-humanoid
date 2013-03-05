@@ -27,7 +27,7 @@ void Agent::think()
   //
   // Process the image
   //
-  WorldModel::getInstance().integrateImage(raw);
+  WorldModel::getInstance().integrateImage(raw, d_streamer);
   t = debugger.timeEvent(t, "Process Image");
 
   //
