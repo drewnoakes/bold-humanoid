@@ -15,8 +15,13 @@ int DataStreamer::callback_camera(
   case LWS_CALLBACK_ESTABLISHED:
     // New client connected; initialize session
     memset(cameraSession, 0, sizeof(CameraSession));
-    cameraSession->labelSelection = d_imgStreams.begin()->first;
+    cameraSession->streamSelection = 0;
     d_cameraSessions.push_back(cameraSession);
+    break;
+
+  case LWS_CALLBACK_CLOSED:
+    // Client disconnected
+    d_cameraSessions.erase(find(d_cameraSessions.begin(), d_cameraSessions.end(), cameraSession));
     break;
 
   case LWS_CALLBACK_SERVER_WRITEABLE:
@@ -34,7 +39,9 @@ int DataStreamer::callback_camera(
 
     case CameraSession::SEND_IMAGE:
       if (cameraSession->imgReady)
-        sendImage(wsi, d_imgStreams[cameraSession->labelSelection]);
+      {
+        sendImage(wsi, cameraSession);
+      }
       break;
     }
 
@@ -57,8 +64,6 @@ int DataStreamer::callback_camera(
     }
     break;
   }
-
-  libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
 
   return 0;
 }

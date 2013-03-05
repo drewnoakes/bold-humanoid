@@ -109,6 +109,11 @@ define(
 		    imgSize = imgToRead = parseInt(msg.data);
 		    imgBlob = new Blob([], {type: "image/jpeg"});
 		    imgState = StateEnum.GET_IMAGE;
+		    console.log("[Camera.js] Pref. red; image size: " + imgSize);
+		}
+		else
+		{
+		    console.warn("[Camera.js] Expected string, got: " + msg.data);
 		}
 		break;
 
@@ -116,6 +121,7 @@ define(
 	    case StateEnum.GET_IMAGE:
 		if (!(msg.data instanceof Blob))
 		{
+		    console.warn("[Camera.js] Expected blob, got: ", msg.data);
 		    imgState = StateEnum.GET_PREFIX;
 		    break;
 		}
@@ -123,6 +129,9 @@ define(
 		imgBlob = new Blob([imgBlob, msg.data], {type: "image/jpeg"});
 
 		imgToRead -= msg.data.size;
+
+		console.log("[Camera.js] Got blob of size: " + msg.data.size + ", left: " + imgToRead);
+
 		if (imgToRead <= 0)
 		{
 		    var objectURL = (window.webkitURL || window.URL).createObjectURL(imgBlob);

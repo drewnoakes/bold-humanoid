@@ -2,29 +2,32 @@
 
 void DataStreamer::streamImage(cv::Mat const& img, string const& label)
 {
-  auto streamIdxPtr = d_imgStreamLabels.find(label);
-  unsigned idx;
-  if (streamIdxPtr == d_imgStreamLabels.end())
-  {
-    idx = d_imgStreamLabels[label] = d_imgStreams.size();
-    d_imgStreams.push_back(img);
-  }
-  else
-  {
-    idx = *streamIdxPtr;
-    d_imgStreams[ix] = img;
-  }
+  auto streamPtr = find_if(d_imgStreams.begin(), d_imgStreams.end(),
+			   [&label] (ImgStream& stream) {
+			     return stream.label == label;
+			   });
 
-  // If a client is listening to this stream, fire off a callback
-  bool somebodyListening = false;
+  
+  if (streamPtr == d_imgStreams.end())
+  {
+    ImgStream stream;
+    stream.id = d_imgStreams.size();
+    stream.label = label;
+    
+    streamPtr = d_imgStreams.insert(streamPtr, stream);
+  }
+  
+  streamPtr->img = img;
+
   cout << "nr sessions: " << d_cameraSessions.size() << endl;
   for (auto ses : d_cameraSessions)
   {
-    cout << "got: " << label << ". ses listening to: " << ses->labelSelection << endl;
-    if (ses->labelSelection == idx)
+    cout << "got: " << label << ". ses listening to: " << ses->streamSelection << endl;
+    if (ses->streamSelection == streamPtr->id && !ses->imgSending)
     {
-      somebodyListening = true;
+      cout << "img ready!" << endl;
       ses->imgReady = true;
     }
   }
+
 }

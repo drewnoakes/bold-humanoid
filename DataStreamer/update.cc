@@ -24,6 +24,9 @@ void DataStreamer::update()
   //
   libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::TIMING]);
 
+  libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
+
+
   //
   // Process whatever else needs doing on the socket (new clients, etc)
   // This is normally very fast
