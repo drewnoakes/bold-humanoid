@@ -5,7 +5,8 @@
 #include <Eigen/Core>
 
 #include "../Colour/colour.hh"
-#include "../Geometry/geometry.hh"
+#include "../geometry/Line.hh"
+#include "../geometry/LineSegment2i.hh"
 
 namespace bold
 {

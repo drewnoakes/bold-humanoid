@@ -37,6 +37,16 @@ hough.o: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/h
 hough: hough.o ${LINEDETECTOR_OBJECTS}
 	g++ hough.o ${CXXFLAGS} ${LDFLAGS} ${LINEDETECTOR_OBJECTS} -o hough
 
+GEOMETRY_SOURCES=\
+	../geometry/Bounds2i.cc\
+	../geometry/LineSegment2i.cc
+GEOMETRY_OBJECTS=$(GEOMETRY_SOURCES:.cc=.o)
+GEOMETRY_HEADERS=\
+	../geometry/Bounds2i.hh\
+	../geometry/Line.hh\
+	../geometry/LineSegment2i.hh
+${GEOMETRY_OBJECTS}: ${GEOMETRY_HEADERS}
+
 PASS_SOURCES=\
 	../Colour/bgr2hsv.cc\
 	../Colour/hsv2bgr.cc\
@@ -62,8 +72,8 @@ passtest: passtest.o hough.o ${PASS_OBJECTS}
 gtest:
 	cd google-test && cmake . && make
 
-unittests: gtest UnitTests.cc
-	g++ UnitTests.cc google-test/libgtest.a -Igoogle-test/include/ -isystem google-test/include/ -Igoogle-test ${CXXFLAGS} ${LDFLAGS} -lpthread -o unittests
+unittests: gtest UnitTests.cc ${GEOMETRY_OBJECTS}
+	g++ UnitTests.cc ${GEOMETRY_OBJECTS} google-test/libgtest.a -Igoogle-test/include/ -isystem google-test/include/ -Igoogle-test ${CXXFLAGS} ${LDFLAGS} -lpthread -o unittests
 	./unittests
 
 # ----------------------------
