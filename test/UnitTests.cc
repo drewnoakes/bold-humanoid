@@ -90,6 +90,9 @@ TEST (LineSegmentTests, cropTo)
 
   // Completely outside
   EXPECT_EQ( LineSegment2i(100, 100, 200, 200), LineSegment2i(100, 100, 200, 200).cropTo(Bounds2i(0, 0, 300, 300)) );
+
+  // Spanning right edge
+  EXPECT_EQ( LineSegment2i(100, 100, 200, 200), LineSegment2i(100, 100, 300, 300).cropTo(Bounds2i(0, 0, 200, 200)) );
 }
 
 TEST (LineSegmentTests, tryIntersect)
@@ -97,14 +100,35 @@ TEST (LineSegmentTests, tryIntersect)
   // Perpendicular
   EXPECT_EQ( Maybe<Vector2i>(Vector2i(1, 1)), LineSegment2i(1, 0, 1, 2).tryIntersect(LineSegment2i(0, 1, 2, 1)) );
 
+  // Perpendicular
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(5, 5)), LineSegment2i(0, 10, 10, 0).tryIntersect(LineSegment2i(0, 0, 10, 10)) );
+
+  // Touching (V shape)
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(0, 0)), LineSegment2i(-1, 1, 0, 0).tryIntersect(LineSegment2i(0, 0, 1, 1)) );
+
+  // Touching (T shape)
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(0, 1)), LineSegment2i(-1, 1, 1, 1).tryIntersect(LineSegment2i(0, 0, 0, 1)) );
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(1, 1)), LineSegment2i(0, 1, 2, 1).tryIntersect(LineSegment2i(1, 1, 1, 2)) );
+
+  // Touching (L shape)
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(-1, 1)), LineSegment2i(-2, 1, -1, 1).tryIntersect(LineSegment2i(-1, 1, -1, 2)) );
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(-1, 1)), LineSegment2i(-1, 1, -2, 1).tryIntersect(LineSegment2i(-1, 2, -1, 1)) );
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(-1, 1)), LineSegment2i(-2, 1, -1, 1).tryIntersect(LineSegment2i(-1, 2, -1, 1)) );
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(1, 1)), LineSegment2i(1, 1, 1, 2).tryIntersect(LineSegment2i(1, 1, 2, 1)) );
+  EXPECT_EQ( Maybe<Vector2i>(Vector2i(0, 0)), LineSegment2i(0, 0, 0, 1).tryIntersect(LineSegment2i(0, 0, 1, 0)) );
+
   // Parallel (vertical)
-  EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(1, 0, 1, 2).tryIntersect(LineSegment2i(2, 0, 2, 2)) );
+  EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(1, 1, 1, 2).tryIntersect(LineSegment2i(2, 0, 2, 1)) );
+  EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(1, 1, 1, 2).tryIntersect(LineSegment2i(2, 0, 2, 1)) );
 
   // Parallel (horizontal)
   EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(0, 0, 1, 0).tryIntersect(LineSegment2i(0, 1, 1, 1)) );
 
   // Colinear
   EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(0, 0, 1, 0).tryIntersect(LineSegment2i(2, 0, 3, 0)) );
+  EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(1, 1, 2, 2).tryIntersect(LineSegment2i(3, 3, 4, 4)) );
+  // this case doesn't work -- is it important?
+//EXPECT_EQ( Maybe<Vector2i>(Vector2i(2,2)), LineSegment2i(1, 1, 2, 2).tryIntersect(LineSegment2i(2, 2, 3, 3)) );
 }
 
 TEST (DISABLED_LineSegmentTests, toLine)

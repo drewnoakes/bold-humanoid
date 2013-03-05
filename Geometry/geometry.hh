@@ -301,7 +301,7 @@ namespace bold
       double denom = fake2dCross(dir1, dir2);
       double numer = fake2dCross(pos2 - pos1, dir2);
 
-      if (numer == 0 || denom == 0)
+      if (/*numer == 0 ||*/ denom == 0)
       {
         // lines are collinear or parallel
         return Maybe<Eigen::Vector2i>::empty();
