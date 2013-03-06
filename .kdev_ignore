@@ -1,0 +1,4 @@
+build
+darwin_lib-prefix
+libwebsockets_lib-prefix
+*.o
