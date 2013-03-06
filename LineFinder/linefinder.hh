@@ -12,54 +12,118 @@ namespace bold
 {
   class LineFinder
   {
-  private:
-    cv::Mat d_mat;
-
-    struct AccumulatorBin
+  public:
+    struct LineHypothesis
     {
-      double theta;
-      double radius;
-      ushort count;
-
-      AccumulatorBin(double theta, double radius)
-      : theta(theta),
-        radius(radius),
-        count(1)
-      {}
-
-      bool matches(double theta, double radius)
+      LineHypothesis(Line const& line, Eigen::Vector2i const& dot1, Eigen::Vector2i const& dot2)
+      : d_theta(line.theta()),
+        d_radius(line.radius())
       {
-        double dt = theta - this->theta;
-        double dr = radius - this->radius;
+        auto diff = dot2 - dot1;
+
+        // Determines whether we consider x or y for min/max
+        d_isHorizontal = abs(diff.x()) > abs(diff.y());
+
+        int elementIndex = d_isHorizontal ? 0 : 1;
+        if (dot1[elementIndex] < dot2[elementIndex])
+        {
+          d_min = dot1;
+          d_max = dot2;
+        }
+        else
+        {
+          d_min = dot2;
+          d_max = dot1;
+        }
+
+        d_lines.push_back(line);
+      }
+
+      bool tryMerge(Line const& line, Eigen::Vector2i const& dot1, Eigen::Vector2i const& dot2)
+      {
+        double dt = line.theta() - d_theta;
+        double dr = line.radius() - d_radius;
 
         const double dtThreshold = 5/180.0 * M_PI;
-        const double drThreshold = 5;
+        const double drThreshold = 10;
 
-        return fabs(dt) < dtThreshold && fabs(dr) < drThreshold;
+        if (fabs(dt) < dtThreshold && fabs(dr) < drThreshold)
+        {
+          d_lines.push_back(line);
+
+          // Update min/max values
+          int elementIndex = d_isHorizontal ? 0 : 1;
+          if (dot1[elementIndex] < dot2[elementIndex])
+          {
+            if (d_min[elementIndex] < dot1[elementIndex])
+              d_min = dot1;
+            if (d_max[elementIndex] > dot2[elementIndex])
+              d_max = dot2;
+          }
+          else
+          {
+            if (d_min[elementIndex] < dot2[elementIndex])
+              d_min = dot2;
+            if (d_max[elementIndex] > dot1[elementIndex])
+              d_max = dot1;
+          }
+
+          return true;
+        }
+
+        return false;
       }
-    };
 
-//     struct AccumulatorBinGroup
-//     {
-//       double theta;
-//       double radius;
-//       std::vector<Line> lines;
-//     };
+      Line toLine() const
+      {
+        double t = d_theta;
+        double r = d_radius;
+
+        while (t < 0)
+        {
+          t += M_PI;
+          r = -r;
+        }
+
+        while (t > M_PI)
+        {
+          t -= M_PI;
+          r = -r;
+        }
+
+        return Line(r, t, d_lines.size());
+      }
+
+      int count() const
+      {
+        return d_lines.size();
+      }
+
+      Eigen::Vector2i min() const { return d_min; }
+      Eigen::Vector2i max() const { return d_max; }
+
+    private:
+      Eigen::Vector2i d_min;
+      Eigen::Vector2i d_max;
+      double d_theta;
+      double d_radius;
+      std::vector<Line> d_lines;
+      bool d_isHorizontal;
+    };
 
   public:
     LineFinder(int imageWidth, int imageHeight)
     : d_mat(imageWidth, imageHeight, CV_8UC1)
     {}
 
-    std::vector<Line> find(std::vector<Eigen::Vector2i>& lineDots, ushort minCount = 15, ushort takeCount = 50)
+    std::vector<LineHypothesis> find(std::vector<Eigen::Vector2i>& lineDots, ushort processDotCount = 50)
     {
+      std::vector<LineHypothesis> hypotheses;
+
       // shuffle lineDots to simulate drawing at random
       std::random_shuffle(lineDots.begin(), lineDots.end());
 
-      std::vector<Line> lines;
-      std::vector<AccumulatorBin> bins;
-
-      int dotIndex = std::min((size_t)takeCount, lineDots.size() - 1);
+      int dotIndex = std::min((size_t)processDotCount, lineDots.size() - 1);
 
       while (dotIndex > 1)
       {
@@ -69,20 +133,15 @@ namespace bold
         if (dot1.x() == dot2.x() && dot1.y() == dot2.y())
           continue;
 
-        auto segment = LineSegment2i(dot2, dot1);
-        auto houghLine = segment.toLine();
-
-        double theta = houghLine.theta();
-        double radius = houghLine.radius();
+        auto segment = LineSegment2i(dot1, dot2);
+        auto line = segment.toLine();
 
         // Do we have an entry already for this?
         bool found = false;
-        for (AccumulatorBin& bin : bins)
+        for (LineHypothesis& hypothesis : hypotheses)
         {
-          if (bin.matches(theta, radius))
+          if (hypothesis.tryMerge(line, dot1, dot2))
           {
-            // TODO reorder this and prior item(s) by vote count whenever increments occur
-            bin.count++;
             found = true;
             break;
           }
@@ -91,18 +150,18 @@ namespace bold
         // If not, create one
         if (!found)
         {
-          bins.push_back(AccumulatorBin(theta, radius));
+          hypotheses.push_back(LineHypothesis(line, dot1, dot2));
         }
       }
 
-      for (AccumulatorBin& bin : bins)
-      {
-        if (bin.count > minCount)
-          lines.push_back(Line(bin.radius, bin.theta, bin.count));
-      }
+      // Sort highest-voted first
+      std::sort(hypotheses.begin(), hypotheses.end(), [](LineHypothesis const& a, LineHypothesis const& b) { return a.count() > b.count(); });
 
-      return lines;
+      return hypotheses;
     }
+
+  private:
+    cv::Mat d_mat;
   };
 }
 

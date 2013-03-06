@@ -21,3 +21,4 @@ test/unittests
 .cproject
 .project
 nbproject
+/tools/line-dots.png

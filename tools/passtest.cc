@@ -23,6 +23,7 @@
 using namespace cv;
 using namespace std;
 using namespace bold;
+using namespace Eigen;
 
 typedef unsigned long long timestamp_t;
 
@@ -57,6 +58,8 @@ int main(int argc, char **argv)
     cout << "Could not open or find the image" << std::endl;
     return -1;
   }
+
+  std::srand(unsigned(std::time(0)));
 
   int imageWidth = colourImage.cols;
   int imageHeight = colourImage.rows;
@@ -153,11 +156,11 @@ int main(int argc, char **argv)
 
   t = getTimestamp();
 
-  vector<Line> lines;
+  vector<LineFinder::LineHypothesis> lines;
   for (int i = 0; i < loopCount; i++)
   {
     passer.pass(labelledImage);
-    lines = lineFinder.find(lineDotPass->lineDots, 15, 2000);
+    lines = lineFinder.find(lineDotPass->lineDots, /* processDotCount = */ 5000);
   }
 
   //
@@ -192,13 +195,17 @@ int main(int argc, char **argv)
   // Draw line dots
   if (lineDotPass->lineDots.size() != 0)
   {
-    for (Eigen::Vector2i const& lineDot : lineDotPass->lineDots)
+    cv::Mat lineDotImage(colourImage.size(), CV_8UC1);;
+    for (Vector2i const& lineDot : lineDotPass->lineDots)
     {
       Colour::bgr lineColor(0, 0, 255); // red
       colourImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineColor;
+      lineDotImage.at<uchar>(lineDot.y(), lineDot.x()) = 255;
     }
+    imwrite("line-dots.png", lineDotImage);
   }
 
+  // Draw line segments
 //   vector<LineSegment2i> segments = lineFinder.find(lineDotPass->lineDots);
 //   cout << "    " << segments.size() << " line segments" << endl;
 //   for (LineSegment2i const& segment : segments)
@@ -208,11 +215,36 @@ int main(int argc, char **argv)
 //     segment.draw(colourImage, Colour::bgr(0,255,255));
 //   }
 
+  // Draw lines
   cout << "    " << lines.size() << " lines" << endl;
-  for (Line const& line : lines)
+  if (lines.size() > 0)
   {
-    cout << "      theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs) radius=" << line.radius() << " m=" << line.gradient() << " c=" << line.yIntersection() << endl;
-    line.draw(colourImage, Colour::bgr(0,255,255).toScalar());
+    // Calculate the average vote count for the top N hypotheses
+    int sumVotes = 0;
+    int takeTop = 0;
+    for (auto const& hypothesis : lines)
+    {
+      if (++takeTop == 15) // <-- controllable number
+        break;
+      sumVotes += hypothesis.count();
+    }
+    int averageVotes = sumVotes / takeTop;
+    cout << "      Average number of line votes " << averageVotes << endl;
+
+    for (auto const& hypothesis : lines)
+    {
+      // Only take those with an above average number of votes
+      if (hypothesis.count() < averageVotes)
+        break;
+
+      auto line = hypothesis.toLine();
+      cout << "      theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs) radius=" << line.radius() << " votes=" << line.votes() << " length=" << (hypothesis.max().cast<double>() - hypothesis.min().cast<double>()).norm() << endl;
+      cv::line(colourImage,
+                    Point(hypothesis.min().x(), hypothesis.min().y()),
+                    Point(hypothesis.max().x(), hypothesis.max().y()),
+                    Colour::bgr(255,0,0).toScalar(),
+                    2);
+    }
   }
 
   // Draw blobs
