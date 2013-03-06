@@ -85,25 +85,34 @@ add_executable(boldhumanoid
 ./DataStreamer/sendImage.cc
 ./GameController/GameControllerReceiver.cc
 ./MX28Snapshot/init.cc
-./WorldModel/integrateImage.cc
-${VISIONDIR}/BlobDetector/detectBlobs.cc
-${VISIONDIR}/BlobDetector/runLengthEncode.cc
-${VISIONDIR}/BlobDetector/runSetToBlob.cc
+./VisualCortex/initialise.cc
+./VisualCortex/integrateImage.cc
 ${VISIONDIR}/Camera/Camera.cc
 ${VISIONDIR}/Camera/capture.cc
-${VISIONDIR}/Camera/open.cc
-${VISIONDIR}/Camera/startCapture.cc
-${VISIONDIR}/Camera/listControls.cc
-${VISIONDIR}/Camera/stopCapture.cc
 ${VISIONDIR}/Camera/fillControlMenuItems.cc
-${VISIONDIR}/Camera/setControlValue.cc
-${VISIONDIR}/Camera/listFormats.cc
 ${VISIONDIR}/Camera/getControlValue.cc
-${VISIONDIR}/Camera/pixelFormatRequestSize.cc
 ${VISIONDIR}/Camera/initMemoryMapping.cc
-${VISIONDIR}/LUTBuilder/bgr2hsv.cc
+${VISIONDIR}/Camera/listControls.cc
+${VISIONDIR}/Camera/listFormats.cc
+${VISIONDIR}/Camera/open.cc
+${VISIONDIR}/Camera/pixelFormatRequestSize.cc
+${VISIONDIR}/Camera/setControlValue.cc
+${VISIONDIR}/Camera/startCapture.cc
+${VISIONDIR}/Camera/stopCapture.cc
+${VISIONDIR}/Colour/bgr2hsv.cc
+${VISIONDIR}/Colour/hsv2bgr.cc
+${VISIONDIR}/Colour/hsvRange.cc
+${VISIONDIR}/geometry/Bounds2i.cc
+${VISIONDIR}/geometry/LineSegment2i.cc
+${VISIONDIR}/HoughLineAccumulator/houghlineaccumulator.cc
+${VISIONDIR}/HoughLineExtractor/findLines.cc
+${VISIONDIR}/HoughLineExtractor/findMaxLine.cc
+${VISIONDIR}/ImageLabeller/ImageLabeller.cc
+${VISIONDIR}/ImagePassHandler/BlobDetectPass/detectBlobs.cc
+${VISIONDIR}/ImagePassHandler/BlobDetectPass/runSetToBlob.cc
 ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
 ${VISIONDIR}/PixelFilterChain/applyFilters.cc
+${VISIONDIR}/PixelLabel/pixellabel.cc
 ${JOYSTICKDIR}/joystick.cc
 )
 
@@ -115,4 +124,3 @@ set(CMAKE_CXX_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED
 
 add_dependencies(boldhumanoid darwin_lib)
 add_dependencies(boldhumanoid libwebsockets_lib)
-

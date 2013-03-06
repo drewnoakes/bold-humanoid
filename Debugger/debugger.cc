@@ -51,16 +51,16 @@ void Debugger::addEventTiming(EventTiming const& eventTiming)
 
 void Debugger::update(CM730& cm730)
 {
-  auto& wm = WorldModel::getInstance();
+  auto& vision = VisualCortex::getInstance();
 
   int ledFlags = 0;
-  if (wm.isBallVisible)
+  if (vision.isBallVisible())
     ledFlags |= LED_RED;
 
 //if (somethingElse)
 //  value |= LED_BLUE;
 
-  if (wm.goalObservations.size() > 1)
+  if (vision.goalObservations().size() > 1)
     ledFlags |= LED_GREEN;
 
   if (ledFlags != d_lastLedFlags)

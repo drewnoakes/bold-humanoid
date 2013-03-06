@@ -5,7 +5,7 @@ void Agent::circleBall()
   static Debugger::timestamp_t circleStartTime = Debugger::getTimestamp();
   static double circleDurationSeconds;
 
-  auto& wm = WorldModel::getInstance();
+  auto& vision = VisualCortex::getInstance();
 
   if (d_state == S_START_CIRCLE_BALL)
   {
@@ -13,7 +13,7 @@ void Agent::circleBall()
 
     lookAtGoal();
 
-    if (wm.goalObservations.size() < 2)
+    if (vision.goalObservations().size() < 2)
     {
       d_goalSeenCnt--;
       if (d_goalSeenCnt <= 0)

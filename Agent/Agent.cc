@@ -1,6 +1,10 @@
 #include "agent.ih"
 
 #include "../vision/Camera/camera.hh"
+#include "../vision/ImagePasser/imagepasser.hh"
+#include "../vision/ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../vision/ImagePassHandler/LineDotPass/linedotpass.hh"
+#include "../vision/LineFinder/linefinder.hh"
 
 Agent::Agent(std::string const& U2D_dev,
       minIni const& ini,
@@ -14,13 +18,16 @@ Agent::Agent(std::string const& U2D_dev,
     d_CM730(&d_linuxCM730),
     d_ini(ini),
     d_motionFile(motionFile),
-    d_camera(0),
     d_ambulator(d_ini),
-    d_joystick(nullptr),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
+    d_gameControlReceiver(gameControlUdpPort),
     d_ballSeenCnt(0),
     d_goalSeenCnt(0),
-    d_gameControlReceiver(gameControlUdpPort)
+    d_camera(nullptr),
+    d_joystick(nullptr),
+    d_visualCortex(nullptr),
+    d_motionTimer(nullptr),
+    d_streamer(nullptr)
 {
   if (useJoystick)
   {
@@ -43,23 +50,23 @@ Agent::Agent(std::string const& U2D_dev,
 
   d_camera = new Camera("/dev/video0");
 
-  double gain       = d_ini.getd("Camera", "Gain",       0);
-  double brightness = d_ini.getd("Camera", "Brightness", 0);
-  double contrast   = d_ini.getd("Camera", "Contrast",   0);
-  double saturation = d_ini.getd("Camera", "Saturation", 0);
-//double hue        = d_ini.getd("Camera", "Hue",        0);
-//double exposure   = d_ini.getd("Camera", "Exposure",   0);
-
-  int width  = d_ini.geti("Camera", "Width", 320);
-  int height = d_ini.geti("Camera", "Width", 240);
-
-  cout << "[Agent::Agent] Using camera frame size: " << width << " x " << height << endl;
-  cout << "[Agent::Agent] Using camera gain:       " << gain << endl;
-  cout << "[Agent::Agent] Using camera brightness: " << brightness << endl;
-  cout << "[Agent::Agent] Using camera contrast:   " << contrast << endl;
-  cout << "[Agent::Agent] Using camera saturation: " << saturation << endl;
-//cout << "[Agent::Agent] Using camera hue:        " << hue << endl;
-//cout << "[Agent::Agent] Using camera exposure:   " << exposure << endl;
+//   double gain       = d_ini.getd("Camera", "Gain",       0);
+//   double brightness = d_ini.getd("Camera", "Brightness", 0);
+//   double contrast   = d_ini.getd("Camera", "Contrast",   0);
+//   double saturation = d_ini.getd("Camera", "Saturation", 0);
+// //double hue        = d_ini.getd("Camera", "Hue",        0);
+// //double exposure   = d_ini.getd("Camera", "Exposure",   0);
+//
+//   int width  = d_ini.geti("Camera", "Width", 320);
+//   int height = d_ini.geti("Camera", "Width", 240);
+//
+//   cout << "[Agent::Agent] Using camera frame size: " << width << " x " << height << endl;
+//   cout << "[Agent::Agent] Using camera gain:       " << gain << endl;
+//   cout << "[Agent::Agent] Using camera brightness: " << brightness << endl;
+//   cout << "[Agent::Agent] Using camera contrast:   " << contrast << endl;
+//   cout << "[Agent::Agent] Using camera saturation: " << saturation << endl;
+// //cout << "[Agent::Agent] Using camera hue:        " << hue << endl;
+// //cout << "[Agent::Agent] Using camera exposure:   " << exposure << endl;
 
   /*
   d_camera.set(CV_CAP_PROP_FRAME_WIDTH,  width);

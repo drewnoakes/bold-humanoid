@@ -1,5 +1,7 @@
 #include "agent.ih"
+#include "../Debugger/debugger.hh"
 #include "../DataStreamer/datastreamer.hh"
+#include "../GameState/gamestate.hh"
 #include "../vision/Camera/camera.hh"
 
 void Agent::think()
@@ -18,18 +20,11 @@ void Agent::think()
   cv::Mat raw = d_camera->capture();
   t = debugger.timeEvent(t, "Image Capture");
 
-  d_pfChain.applyFilters(raw);
-  t = debugger.timeEvent(t, "Pixel Filter Chain");
-
-  d_streamer->streamImage(raw, "raw");
-  t = debugger.timeEvent(t, "Stream Image");
-
   //
   // Process the image
   //
-  WorldModel::getInstance().integrateImage(raw, d_streamer);
-  t = debugger.timeEvent(t, "Process Image");
-
+  VisualCortex::getInstance().integrateImage(raw, d_streamer);
+  t = debugger.timeEvent(t, "Image Processing");
   //
   // Listen for any game control data
   //
@@ -82,7 +77,6 @@ void Agent::think()
   }
 
   AgentModel::getInstance().state = d_state;
-
   t = debugger.timeEvent(t, "Process State");
 
   //
@@ -124,6 +118,6 @@ void Agent::think()
     t = debugger.timeEvent(t, "Update DataStreamer");
   }
 
-  // TODO this isn't a great approach, as the last values are lost (captured after send)
+  // TODO this isn't a great approach, as the last value is lost (captured after send)
   debugger.clearTimings();
 }

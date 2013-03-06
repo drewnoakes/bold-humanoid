@@ -4,9 +4,9 @@ void Agent::lookForGoal()
 {
   stand();
 
-  auto& wm = WorldModel::getInstance();
+  auto& vision = VisualCortex::getInstance();
 
-  int nObs = wm.goalObservations.size();
+  int nObs = vision.goalObservations().size();
 
   cout << "[Agent::lookForGoal] Visible goal count: " << nObs << endl;
 

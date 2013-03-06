@@ -7,8 +7,7 @@
 
 #include "../Ambulator/ambulator.hh"
 #include "../GameController/GameControllerReceiver.hh"
-#include "../vision/BlobDetector/blobdetector.hh"
-#include "../vision/PixelFilterChain/pixelfilterchain.hh"
+#include "../VisualCortex/visualcortex.hh"
 
 class Joystick;
 
@@ -50,27 +49,25 @@ namespace bold
     Robot::CM730 d_CM730;
     Robot::LinuxMotionTimer* d_motionTimer;
     std::string d_motionFile;
-    Camera* d_camera;
     DataStreamer* d_streamer;
-    BlobDetector d_blobDetector;
+    Camera* d_camera;
+    VisualCortex* d_visualCortex;
     Ambulator d_ambulator;
     Joystick* d_joystick;
     bool d_showUI;
     bool d_autoGetUpFromFallen;
     GameControllerReceiver d_gameControlReceiver;
 
-    double d_circleBallX;
-    double d_circleBallY;
-    double d_circleBallTurn;
-
-    PixelFilterChain d_pfChain;
-
-    State d_state;
-
     /** Number of consecutive cycles during which the ball has been seen. */
     int d_ballSeenCnt;
     /** Number of consecutive cycles during which both goal posts have been seen. */
     int d_goalSeenCnt;
+
+    double d_circleBallX;
+    double d_circleBallY;
+    double d_circleBallTurn;
+
+    State d_state;
 
     double d_joystickXAmpMax;
     double d_joystickYAmpMax;

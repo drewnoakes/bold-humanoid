@@ -8,7 +8,6 @@
 
 #include "../GameController/RoboCupGameControlData.h"
 #include "../DataStreamer/datastreamer.hh"
-#include <BlobDetector/blobdetector.hh>
 
 #define LED_RED   0x01;
 #define LED_BLUE  0x02;

@@ -29,9 +29,9 @@ void Agent::preKickLook()
 
     if (dt >= 0.5)
     {
-      auto& wm = WorldModel::getInstance();
+      auto& vision = VisualCortex::getInstance();
 
-      if (!wm.isBallVisible)
+      if (!vision.isBallVisible())
       {
         d_state = S_LOOK_FOR_BALL;
         return;
@@ -41,9 +41,9 @@ void Agent::preKickLook()
 
       static auto w = d_camera->getPixelFormat().width;
 
-      cout << "KICKING!!! " << wm.ballObservation.pos.transpose() << " " << (w/2) << endl;
+      cout << "KICKING!!! " << vision.ballObservation().pos.transpose() << " " << (w/2) << endl;
 
-      if (wm.ballObservation.pos.x() < (w / 2))
+      if (vision.ballObservation().pos.x() < (w / 2))
       {
         while(Robot::Action::GetInstance()->Start("rk") == false)
           usleep(8000);

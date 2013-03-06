@@ -2,13 +2,13 @@
 
 void Agent::lookAtBall()
 {
-  auto& wm = WorldModel::getInstance();
+  auto& vision = VisualCortex::getInstance();
 
-  if (!wm.isBallVisible)
+  if (!vision.isBallVisible())
   {
     cerr << "[Agent::lookAtBall] No ball seen" << endl;
     return;
   }
 
-  lookAt(wm.ballObservation.pos);
+  lookAt(vision.ballObservation().pos);
 }

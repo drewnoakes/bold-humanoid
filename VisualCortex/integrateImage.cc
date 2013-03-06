@@ -1,56 +1,63 @@
-#include "worldmodel.hh"
+#include "visualcortex.hh"
 
 #include <cmath>
-#include "../DataStreamer/datastreamer.hh" 
+
+#include "../Debugger/debugger.hh"
+
 using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-void WorldModel::integrateImage(cv::Mat& image, DataStreamer* streamer)
+void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
 {
-//  cout << "[Agent::processImage] Start" << endl;
-//  cout << "[Agent::processImage] Image size: " << image.rows << "x" << image.cols << endl;
+//  cout << "[VisualCortex::integrateImage] Start" << endl;
+//  cout << "[VisualCortex::integrateImage] Image size: " << image.rows << "x" << image.cols << endl;
+
+  auto t = Debugger::getTimestamp();
+
+  //
+  // Send the image via debugger (if required)
+  //
+  if (streamer)
+    streamer->streamImage(image, "raw");
+//   t = debugger.timeEvent(t, "Image Streaming");
+
+
+  // TODO label the iamge directly from YUV (if we don't already)
+  // convert from YUV to RGB
+  d_pfChain.applyFilters(image);
+
+  // TODO time all events in here
+//  t = debugger.timeEvent(t, "Pixel Filter Chain");
 
   // Label the image;
   // OPT: make data memeber
-  cv::Mat labelled(image.rows, image.cols, CV_8UC1);
+  static cv::Mat labelled(image.rows, image.cols, CV_8UC1);
+  // TODO ensure labeller sets all pixel values -- not just non-zero
+  d_imageLabeller->label(image, labelled);
+
+
   if (streamer)
     streamer->streamImage(labelled, "labelled");
 
-  d_imageLabeller->label(image, labelled);
+  d_imagePasser->pass(labelled);
 
-  auto ballUnionPred =
-    [] (Run const& a, Run const& b)
-    {
-      float ratio = (float)a.length / (float)b.length;
-      return
-      max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length;
-    };
+  d_lines = d_lineFinder->find(d_lineDotPass->lineDots);
 
+  auto blobsPerLabel = d_blobDetectPass->blobsPerLabel;
 
-  auto goalUnionPred =
-    [] (Run const& a, Run const& b)
-    {
-      float ratio = (float)a.length / (float)b.length;
-      return
-      max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length &&
-      min(ratio, 1.0f/ratio) > 0.75;
-    };
+//  cout << "[VisualCortex::integrateImage] Blobs 0: " << blobs[0].size() << endl;
+//  cout << "[VisualCortex::integrateImage] Blobs 1: " << blobs[1].size() << endl;
 
-  vector<function<bool(Run const&,Run const&)> > unionPreds = {goalUnionPred, ballUnionPred};
-
-  BlobDetector detector;
-  vector<set<Blob> > blobByLabel = detector.detectBlobs(labelled, 2, unionPreds);
-
-//  cout << "[Agent::processImage] Blobs 0: " << blobs[0].size() << endl;
-//  cout << "[Agent::processImage] Blobs 1: " << blobs[1].size() << endl;
+  d_observations.clear();
+  d_goalObservations.clear();
 
   // Do we have a ball?
-  isBallVisible = false;
-  if (blobByLabel[1].size() > 0)
+  d_isBallVisible = false;
+  if (blobsPerLabel[d_ballLabel].size() > 0)
   {
     // The first is the biggest, topmost ball blob
-    Blob const& ball = *blobByLabel[1].begin();
+    Blob const& ball = *blobsPerLabel[d_ballLabel].begin();
 
     if (ball.area > d_minBallArea)
     {
@@ -58,14 +65,14 @@ void WorldModel::integrateImage(cv::Mat& image, DataStreamer* streamer)
       ballObs.type = O_BALL;
       ballObs.pos = ball.mean;
 
-      observations.push_back(ballObs);
-      ballObservation = ballObs;
-      isBallVisible = true;
+      d_observations.push_back(ballObs);
+      d_ballObservation = ballObs;
+      d_isBallVisible = true;
     }
   }
 
   // Do we have goal posts?
-  for (Blob const& b : blobByLabel[0])
+  for (Blob const& b : blobsPerLabel[d_goalLabel])
   {
     Vector2i wh = b.br - b.ul;
     if (wh.minCoeff() > 5  &&  // ignore small blobs
@@ -77,8 +84,8 @@ void WorldModel::integrateImage(cv::Mat& image, DataStreamer* streamer)
       Run const& topRun = *b.runs.begin();
       postObs.pos = (topRun.end + topRun.start).cast<float>() / 2;
 
-      observations.push_back(postObs);
-      goalObservations.push_back(postObs);
+      d_observations.push_back(postObs);
+      d_goalObservations.push_back(postObs);
     }
   }
 

@@ -6,9 +6,9 @@ void Agent::lookForBall()
 {
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
 
-  auto& wm = WorldModel::getInstance();
+  auto& vision = VisualCortex::getInstance();
 
-  if (wm.isBallVisible)
+  if (vision.isBallVisible())
   {
     d_ballSeenCnt++;
 

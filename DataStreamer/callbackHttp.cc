@@ -20,7 +20,7 @@ int DataStreamer::callback_http(
         path = (char*)in;
         if (strcmp(path, "/") == 0)
         {
-          path = "/index.html";
+          path = (char*)"/index.html";
         }
         else if (string(path).find("..") != string::npos)
         {
@@ -40,7 +40,7 @@ int DataStreamer::callback_http(
       }
       else
       {
-        path = "/index.html";
+        path = (char*)"/index.html";
       }
 
       //
