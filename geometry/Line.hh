@@ -51,7 +51,7 @@ namespace bold
     {
       assert(theta >= 0);
       assert(theta <= M_PI);
-      assert(!isnan(theta) && !isnan(radius) && !isinf(theta) && !isinf(radius));
+      assert(!std::isnan(theta) && !std::isnan(radius) && !std::isinf(theta) && !std::isinf(radius));
     };
 
     double radius() const { return d_radius; }

@@ -1,6 +1,5 @@
 #include "houghlineaccumulator.hh"
 
-#include <opencv.hpp>
 #include <opencv2/core/core.hpp>
 
 using namespace bold;

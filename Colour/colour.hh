@@ -5,13 +5,6 @@
 #include <string>
 #include <opencv2/core/core.hpp>
 
-// Forwards declaration, as this type is defined in the robotis repository (yuck, I know)
-class minIni
-{
-public:
-  int geti(const std::string& Section, const std::string& Key, int DefValue=0) const;
-};
-
 namespace bold
 {
   class Colour
@@ -106,24 +99,6 @@ namespace bold
         assert(vRange >= 0.0 && vRange <= 1.0);
 
         return hsvRange((h/360.0)*255, (hRange/360)*255, s*255, sRange*255, v*255, vRange*255);
-      }
-
-      static hsvRange fromConfig(
-        minIni const& ini,
-        std::string objectName,
-        int hue,        int hueRange,
-        int saturation, int saturationRange,
-        int value,      int valueRange
-      )
-      {
-        hsvRange range;
-        range.h      = ini.geti("Vision", objectName + "Hue",             hue);
-        range.hRange = ini.geti("Vision", objectName + "HueRange",        hueRange);
-        range.s      = ini.geti("Vision", objectName + "Saturation",      saturation);
-        range.sRange = ini.geti("Vision", objectName + "SaturationRange", saturationRange);
-        range.v      = ini.geti("Vision", objectName + "Value",           value);
-        range.vRange = ini.geti("Vision", objectName + "ValueRange",      valueRange);
-        return range;
       }
     };
 

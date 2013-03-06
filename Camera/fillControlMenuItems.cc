@@ -2,7 +2,7 @@
 
 void Camera::fillControlMenuItems(Control& control)
 {
-  cout << "[Camera::fillControlMenuItems] start" << endl;
+  cout << "[Camera::fillControlMenuItems] start (" << control.name << ")" << endl;
 
   struct v4l2_querymenu querymenu;
   memset (&querymenu, 0, sizeof (querymenu));
