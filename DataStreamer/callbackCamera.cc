@@ -59,6 +59,13 @@ int DataStreamer::callback_camera(
 	string command(d["command"].GetString());
 	if (command == "setControl")
 	{
+          if (!d.HasMember("id") || !d.HasMember("val") ||
+              !d["id"].IsUint() || !d["val"].IsUint())
+          {
+            cout << "[DataStreamer::callbackCamera] Invalid setControl command" << endl;
+            break;
+          }
+\
 	  unsigned controlId = d["id"].GetUint();
 	  unsigned controlVal = d["val"].GetUint();
 
@@ -73,9 +80,39 @@ int DataStreamer::callback_camera(
 	}
 	else if (command == "selectStream")
 	{
+          if (!d.HasMember("id") ||
+              !d["id"].IsUint())
+          {
+            cout << "[DataStreamer::callbackCamera] Invalid selectStream command" << endl;
+            break;
+          }
+
 	  unsigned streamId = d["id"].GetUint();
 	  cameraSession->streamSelection = streamId;
 	}
+        else if (command == "controlHead")
+        {
+          if (!d.HasMember("action") ||
+              !d["action"].IsString())
+          {
+            cout << "[DataStreamer::callbackCamera] Invalid controlHead command" << endl;
+            break;
+          }
+          string action(d["action"].GetString());
+
+          Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
+
+          if (action == "<")
+            Head::GetInstance()->MoveByAngleOffset(-5,0);
+          else if (action == ">")
+            Head::GetInstance()->MoveByAngleOffset(5,0);
+          else if (action == "^")
+            Head::GetInstance()->MoveByAngleOffset(0,5);
+          else if (action == "v")
+            Head::GetInstance()->MoveByAngleOffset(0,-5);
+
+        }
+        
       }
 
     }
