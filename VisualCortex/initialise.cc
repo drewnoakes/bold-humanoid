@@ -13,7 +13,7 @@ using namespace Eigen;
 
 void VisualCortex::initialise(minIni const& ini)
 {
-  cout << "[VisualCortex::VisualCortex] Initialising VisualCortex" << endl;
+  cout << "[VisualCortex::initialise] Initialising VisualCortex" << endl;
 
   d_pfChain.pushFilter([](unsigned char* pxl) {
     int y = pxl[0] - 16;

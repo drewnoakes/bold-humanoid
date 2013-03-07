@@ -87,6 +87,7 @@ add_executable(boldhumanoid
 ./MX28Snapshot/init.cc
 ./VisualCortex/initialise.cc
 ./VisualCortex/integrateImage.cc
+./WorldModel/initialise.cc
 ${VISIONDIR}/Camera/Camera.cc
 ${VISIONDIR}/Camera/capture.cc
 ${VISIONDIR}/Camera/fillControlMenuItems.cc
@@ -110,6 +111,7 @@ ${VISIONDIR}/HoughLineExtractor/findMaxLine.cc
 ${VISIONDIR}/ImageLabeller/ImageLabeller.cc
 ${VISIONDIR}/ImagePassHandler/BlobDetectPass/detectBlobs.cc
 ${VISIONDIR}/ImagePassHandler/BlobDetectPass/runSetToBlob.cc
+${VISIONDIR}/LineFinder/find.cc
 ${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
 ${VISIONDIR}/PixelFilterChain/applyFilters.cc
 ${VISIONDIR}/PixelLabel/pixellabel.cc
