@@ -19,8 +19,6 @@ void DataStreamer::sendImage(libwebsocket* wsi, CameraSession* session)
     unsigned char prefBuf[LWS_SEND_BUFFER_PRE_PADDING + pref.size() + LWS_SEND_BUFFER_POST_PADDING];
     unsigned char *p = &prefBuf[LWS_SEND_BUFFER_PRE_PADDING];
   
-    cout << "[DataStreamer::sendImage] Sending prefix: " << pref << endl;
-
     memcpy(p, pref.c_str(), pref.size());
     int res = libwebsocket_write(wsi, p, pref.size(), LWS_WRITE_TEXT);
     if (res < 0)
@@ -46,8 +44,6 @@ void DataStreamer::sendImage(libwebsocket* wsi, CameraSession* session)
     
     memcpy(p, jpgP, bufsize);
     
-    cout << "[DataStreamer::sendImage] Sending: " << bufsize << "/" << tosend << endl;
-
     int res = libwebsocket_write(wsi, p, bufsize, LWS_WRITE_BINARY);
     if (res < 0)
     {
@@ -69,7 +65,6 @@ void DataStreamer::sendImage(libwebsocket* wsi, CameraSession* session)
 
   if (session->imgSending)
   {
-    cout << "[DataStreamer::sendImage] Choked before able to send whole image" << endl;
     libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
   }
 }

@@ -50,7 +50,6 @@ int DataStreamer::callback_camera(
     if (len > 0)
     {
       string str((char const*)in, len);
-      cout << "Received: " << str << endl;
 
       // Parse JSON
       rapidjson::Document d;
@@ -63,7 +62,6 @@ int DataStreamer::callback_camera(
 	  unsigned controlId = d["id"].GetUint();
 	  unsigned controlVal = d["val"].GetUint();
 
-	  cout << "[DataStreamer::callback_camera] client receive: " << controlId << " <- " << controlVal << endl;
 	  auto controls = d_camera->getControls();
 	  auto control = find_if(controls.begin(), controls.end(),	\
 				 [controlId](Camera::Control const& c)

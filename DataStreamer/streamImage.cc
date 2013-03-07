@@ -19,15 +19,8 @@ void DataStreamer::streamImage(cv::Mat const& img, string const& label)
   
   streamPtr->img = img;
 
-  cout << "nr sessions: " << d_cameraSessions.size() << endl;
   for (auto ses : d_cameraSessions)
-  {
-    cout << "got: " << label << ". ses listening to: " << ses->streamSelection << endl;
     if (ses->streamSelection == streamPtr->id && !ses->imgSending)
-    {
-      cout << "img ready!" << endl;
       ses->imgReady = true;
-    }
-  }
 
 }
