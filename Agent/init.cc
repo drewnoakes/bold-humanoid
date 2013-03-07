@@ -75,13 +75,11 @@ bool Agent::init()
   while(Robot::Action::GetInstance()->IsRunning())
     usleep(8*1000);
 
-  /*
   cout << "[Agent::init] Stand up" << endl;
   while(Robot::Action::GetInstance()->Start("stand up") == false)
     usleep(8000);
   while(Robot::Action::GetInstance()->IsRunning())
     usleep(8*1000);
-  */
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   MotionManager::GetInstance()->ResetGyroCalibration();
