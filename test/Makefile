@@ -24,11 +24,12 @@ SOURCES=\
 	../HoughLineAccumulator/houghlineaccumulator.cc\
 	../HoughLineExtractor/findLines.cc\
 	../HoughLineExtractor/findMaxLine.cc\
-	../PixelFilterChain/applyFilters.cc\
-	../LUTBuilder/buildBGRFromHSVRanges.cc\
 	../ImageLabeller/ImageLabeller.cc\
 	../ImagePassHandler/BlobDetectPass/detectBlobs.cc\
 	../ImagePassHandler/BlobDetectPass/runSetToBlob.cc\
+	../LineFinder/find.cc\
+	../LUTBuilder/buildBGRFromHSVRanges.cc\
+	../PixelFilterChain/applyFilters.cc\
 	../PixelLabel/pixellabel.cc
 
 HEADERS=\
@@ -38,6 +39,7 @@ HEADERS=\
 	../geometry/Bounds2i.hh\
 	../geometry/Line.hh\
 	../geometry/LineSegment2i.hh\
+	../geometry/LineSegment3d.hh\
 	../HoughLineExtractor/houghlineextractor.hh\
 	../HoughLineAccumulator/houghlineaccumulator.hh\
 	../HoughLineExtractor/houghlineextractor.hh\

@@ -12,24 +12,25 @@ GEOMETRY_OBJECTS=$(GEOMETRY_SOURCES:.cc=.o)
 GEOMETRY_HEADERS=\
 	../geometry/Bounds2i.hh\
 	../geometry/Line.hh\
-	../geometry/LineSegment2i.hh
+	../geometry/LineSegment2i.hh\
+	../geometry/LineSegment3d.hh
 ${GEOMETRY_OBJECTS}: ${GEOMETRY_HEADERS}
 
 
 
 CAMERA_SOURCES=\
 	../Camera/Camera.cc\
-	../Camera/open.cc\
-	../Camera/listControls.cc\
+	../Camera/capture.cc\
+	../Camera/initMemoryMapping.cc\
 	../Camera/fillControlMenuItems.cc\
 	../Camera/getControlValue.cc\
-	../Camera/setControlValue.cc\
+	../Camera/listControls.cc\
 	../Camera/listFormats.cc\
+	../Camera/open.cc\
 	../Camera/pixelFormatRequestSize.cc\
-	../Camera/initMemoryMapping.cc\
+	../Camera/setControlValue.cc\
 	../Camera/startCapture.cc\
 	../Camera/stopCapture.cc\
-	../Camera/capture.cc\
 	../PixelFilterChain/applyFilters.cc
 CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
 ${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
@@ -49,13 +50,14 @@ PASS_SOURCES=\
 	../Colour/bgr2hsv.cc\
 	../Colour/hsv2bgr.cc\
 	../Colour/hsvRange.cc\
-	../LUTBuilder/buildBGRFromHSVRanges.cc\
 	../ImageLabeller/ImageLabeller.cc\
 	../ImagePassHandler/BlobDetectPass/detectBlobs.cc\
 	../ImagePassHandler/BlobDetectPass/runSetToBlob.cc\
 	../HoughLineAccumulator/houghlineaccumulator.cc\
 	../HoughLineExtractor/findLines.cc\
 	../HoughLineExtractor/findMaxLine.cc\
+	../LineFinder/find.cc\
+	../LUTBuilder/buildBGRFromHSVRanges.cc\
 	../PixelLabel/pixellabel.cc
 PASS_OBJECTS=$(PASS_SOURCES:.cc=.o)
 ${PASS_OBJECTS} passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh

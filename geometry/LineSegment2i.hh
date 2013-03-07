@@ -12,6 +12,8 @@
 
 namespace bold
 {
+  // TODO can this be merged with LineSegment2d using templates & typedef?
+
   struct LineSegment2i
   {
   public:
