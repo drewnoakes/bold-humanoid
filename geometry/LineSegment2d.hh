@@ -21,8 +21,8 @@ namespace bold
 
     LineSegment2d(double x1, double y1,
                   double x2, double y2)
-    : d_p1(Vector2d(x1, y1)),
-      d_p2(Vector2d(x2, y2))
+    : d_p1(Eigen::Vector2d(x1, y1)),
+      d_p2(Eigen::Vector2d(x2, y2))
     {
       if (x1 == x2 && y1 == y2)
         throw std::string("Points must have different values.");
