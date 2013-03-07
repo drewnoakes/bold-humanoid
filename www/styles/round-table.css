@@ -88,3 +88,13 @@ div.panel h2
     font-family: sans-serif;
     font-size: 8pt;
 }
+
+#camera-controls-container
+{
+    position: relative; left: 400px; top: 0px;
+}
+
+#camera-head-controls
+{
+    position: absolute; top: 300px;
+}

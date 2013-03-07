@@ -191,7 +191,18 @@ define(
 
             socket.onmessage = msgHandle;
 	}
- 
+
+        var headControlHandle = function(e)
+        {
+            var cmd = {};
+            cmd.command = "controlHead";
+            cmd.action = e.target.value;
+
+            socket.send(JSON.stringify(cmd));
+        }
+
+        $('.camera-head-controls-button').click(headControlHandle);
+
 	socket.onerror = errorHandle;
 
         socket.onmessage = msgHandle;
