@@ -36,13 +36,47 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
   // TODO ensure labeller sets all pixel values -- not just non-zero
   d_imageLabeller->label(image, labelled);
 
-
-  if (streamer)
-    streamer->streamImage(labelled, "labelled");
-
   d_imagePasser->pass(labelled);
 
   d_lines = d_lineFinder->find(d_lineDotPass->lineDots);
+
+
+  if (streamer)
+  {
+    cv::Mat cartoon = d_cartoonPass->mat();
+
+    if (d_lines.size() > 0)
+    {
+      // Calculate the average vote count for the top N hypotheses
+      int sumVotes = 0;
+      int takeTop = 0;
+      for (auto const& hypothesis : d_lines)
+      {
+        if (++takeTop == 15) // <-- controllable number
+          break;
+        sumVotes += hypothesis.count();
+      }
+      int averageVotes = sumVotes / takeTop;
+      cout << "      Average number of line votes " << averageVotes << endl;
+
+      for (auto const& hypothesis : d_lines)
+      {
+        // Only take those with an above average number of votes
+        if (hypothesis.count() < averageVotes)
+          break;
+
+        auto line = hypothesis.toLine();
+        //cout << "      theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs) radius=" << line.radius() << " votes=" << line.votes() << " length=" << (hypothesis.max().cast<double>() - hypothesis.min().cast<double>()).norm() << endl;
+        cv::line(cartoon,
+                 cv::Point(hypothesis.min().x(), hypothesis.min().y()),
+                 cv::Point(hypothesis.max().x(), hypothesis.max().y()),
+                 Colour::bgr(255,0,0).toScalar(),
+                 2);
+      }
+
+    }
+    streamer->streamImage(cartoon, "labelled");
+  }
 
   auto blobsPerLabel = d_blobDetectPass->blobsPerLabel;
 
