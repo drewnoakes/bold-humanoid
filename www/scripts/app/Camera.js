@@ -5,7 +5,7 @@ define(
     function(WebSocketFactory)
     {
         var protocol = 'camera-protocol',
-            socket = WebSocketFactory.open(protocol),
+            socket,
             container = $('#camera-container');
 
         var imgState = 0,
@@ -163,6 +163,9 @@ define(
                 if (imgToRead <= 0)
                 {
                     var objectURL = (window.webkitURL || window.URL).createObjectURL(imgBlob);
+
+                    new Image()
+
                     container.append($('<img>', {src: objectURL}));
                     
                     var images = container.find('img');
@@ -186,10 +189,6 @@ define(
             imgState = StateEnum.GET_CONTROLS;
 
             socket = WebSocketFactory.open(protocol);
-
-            socket.onerror = errorHandle;
-
-            socket.onmessage = msgHandle;
         };
 
         var headControlHandle = function(e)
@@ -201,12 +200,17 @@ define(
             socket.send(JSON.stringify(cmd));
         };
 
+        var createSocket = function()
+        {
+            socket = WebSocketFactory.open(protocol);
+            socket.onerror = errorHandle;
+            socket.onmessage = msgHandle;
+        };
+
+        createSocket();
+
         $('.camera-head-controls-button').click(headControlHandle);
 
-        socket.onerror = errorHandle;
-
-        socket.onmessage = msgHandle;
-        
         $('#camera-default-reset').click(function()
         {
             socket.send("-1 0");
