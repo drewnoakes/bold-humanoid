@@ -6,6 +6,7 @@ define(
     ],
     function()
     {
+        // all lengths are in metres
         var Constants = {
             fieldX: 6.0,
             fieldY: 4.0,
@@ -46,6 +47,31 @@ define(
             20: 'headTilt'
         };
 
+        var neckOffsetZ     = .026 + .0505; // OP calculated from spec
+        var neckOffsetX     = .013;         // OP calculated from spec
+        var shoulderOffsetX = .013;         // OP calculated from spec
+        var shoulderOffsetY = .082;         // OP spec
+        var shoulderOffsetZ = .026;         // OP calculated from spec
+        var handOffsetX     = .058;
+        var handOffsetZ     = .0159;
+        var upperArmLength  = .060;         // OP spec
+        var lowerArmLength  = .129;         // OP spec
+        var hipOffsetY      = .072 / 2.0;   // OP spec
+        var hipOffsetZ      = .096;         // OP calculated from spec
+        var hipOffsetX      = .008;         // OP calculated from spec
+        var thighLength     = .0930;        // OP spec
+        var tibiaLength     = .0930;        // OP spec
+        var footHeight      = .0335;        // OP spec
+        var kneeOffsetX     = .0;           // OP
+
+//        var dThigh = sqrt(thighLength*thighLength + kneeOffsetX*kneeOffsetX);
+//        var aThigh = atan(kneeOffsetX/thighLength);
+//        var dTibia = sqrt(tibiaLength*tibiaLength + kneeOffsetX*kneeOffsetX);
+//        var aTibia = atan(kneeOffsetX/tibiaLength);
+
+//        var cameraRangeVertical = (46.0/180) * Math.PI; // 46 degrees from top to bottom
+//        var cameraRangeHorizontal = (60.0/180) * Math.PI; // 60 degrees from left to right
+
         Constants.jointIds = {
             shoulderForwardRight: 1,
             shoulderForwardLeft: 2,
@@ -71,6 +97,7 @@ define(
 
         // TODO add forehead-camera geometry
         // TODO define the offsets/rotations/etc below in terms of Constants
+        // TODO allow rotationAxis to be a vector rather than an axis, or else additionally specify the direction
 
         Constants.bodyStructure = {
             name: 'body',
@@ -264,36 +291,5 @@ define(
         };
 
         return Constants;
-
-        // TODO allow rotationAxis to be a vector rather than an axis, or else additionally specify the direction
-
-        /*
-
-         double neckOffsetZ     = .shoulderOffsetZ + .0505; // OP calculated from spec
-         double neckOffsetX     = .013;         // OP calculated from spec
-         double shoulderOffsetX = .013;         // OP calculated from spec
-         double shoulderOffsetY = .082;         // OP spec
-         double shoulderOffsetZ = .026;         // OP calculated from spec
-         double handOffsetX     = .058;
-         double handOffsetZ     = .0159;
-         double upperArmLength  = .060;         // OP spec
-         double lowerArmLength  = .129;         // OP spec
-         double hipOffsetY      = .072 / 2.0;   // OP spec
-         double hipOffsetZ      = .096;         // OP calculated from spec
-         double hipOffsetX      = .008;         // OP calculated from spec
-         double thighLength     = .0930;        // OP spec
-         double tibiaLength     = .0930;        // OP spec
-         double footHeight      = .0335;        // OP spec
-         double kneeOffsetX     = .0;           // OP
-
-         double dThigh = sqrt(thighLength*thighLength + kneeOffsetX*kneeOffsetX);
-         double aThigh = atan(kneeOffsetX/thighLength);
-         double dTibia = sqrt(tibiaLength*tibiaLength + kneeOffsetX*kneeOffsetX);
-         double aTibia = atan(kneeOffsetX/tibiaLength);
-
-         double cameraRangeVertical = (46.0/180) * Math.PI; // 46 degrees from top to bottom
-         double cameraRangeHorizontal = (60.0/180) * Math.PI; // 60 degrees from left to right
-
-         */
     }
 );
