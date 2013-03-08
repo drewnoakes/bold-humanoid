@@ -11,7 +11,7 @@ vector<LineFinder::LineHypothesis> LineFinder::find(vector<Vector2i>& lineDots, 
   // shuffle lineDots to simulate drawing at random
   random_shuffle(lineDots.begin(), lineDots.end());
 
-  int dotIndex = min((size_t)processDotCount, lineDots.size() - 1);
+  int dotIndex = (int)min((size_t)processDotCount + 1, lineDots.size()) - 1;
 
   while (dotIndex > 1)
   {
