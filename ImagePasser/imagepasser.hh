@@ -19,7 +19,7 @@ namespace bold
     : d_handlers(handlers)
     {}
 
-    void pass(cv::Mat& image)
+    void pass(cv::Mat& image) const
     {
       for (ImagePassHandler<TPixel>* handler : d_handlers)
         handler->onImageStarting();

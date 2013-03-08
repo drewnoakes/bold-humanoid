@@ -223,7 +223,7 @@ int main(int argc, char **argv)
     Colour::bgr(0,0,255), // red
     Colour::bgr(0,255,255), // yellow
     Colour::bgr(255,0,255), // magenta
-    Colour::bgr(255,255,0)
+    Colour::bgr(255,255,0) // cyan
   };
   int colourIndex = 0;
   if (lines.size() > 0)
