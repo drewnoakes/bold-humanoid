@@ -102,6 +102,7 @@ namespace bold
     std::vector<Observation> d_goalObservations;
     Observation d_ballObservation;
     bool d_isBallVisible;
+    unsigned d_streamFramePeriod;
 
     PixelLabel d_goalLabel;
     PixelLabel d_ballLabel;

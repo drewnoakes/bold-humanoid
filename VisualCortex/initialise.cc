@@ -15,6 +15,8 @@ void VisualCortex::initialise(minIni const& ini)
 {
   cout << "[VisualCortex::initialise] Initialising VisualCortex" << endl;
 
+  d_streamFramePeriod = ini.geti("Debugger", "BroadcastFramePeriod", 5);
+
   d_pfChain.pushFilter([](unsigned char* pxl) {
     int y = pxl[0] - 16;
     int cb = pxl[1] - 128;

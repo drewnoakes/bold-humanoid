@@ -10,20 +10,18 @@ using namespace Eigen;
 
 void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
 {
-//  cout << "[VisualCortex::integrateImage] Start" << endl;
-//  cout << "[VisualCortex::integrateImage] Image size: " << image.rows << "x" << image.cols << endl;
+  static unsigned long long frameIndex = 0;
+  bool transmitThisFrame = frameIndex++%d_streamFramePeriod == 0;
 
   auto& debugger = Debugger::getInstance();
 
   auto t = Debugger::getTimestamp();
 
-  //
-  // Send the image via debugger (if required)
-  //
-  if (streamer)
+  if (transmitThisFrame && streamer)
+  {
     streamer->streamImage(image, "raw");
-  t = debugger.timeEvent(t, "ImageProcessing/Image Streaming");
-
+    t = debugger.timeEvent(t, "ImageProcessing/Raw Image Streaming");
+  }
 
   // TODO label the image directly from YUV (if we don't already)
   // convert from YUV to RGB
@@ -33,25 +31,20 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
   // Label the image;
   // OPT: make data memeber
   static cv::Mat labelled(image.rows, image.cols, CV_8UC1);
-  // TODO ensure labeller sets all pixel values -- not just non-zero
   d_imageLabeller->label(image, labelled);
-
   t = debugger.timeEvent(t, "ImageProcessing/Pixel Label");
 
   d_imagePasser->pass(labelled);
-
   t = debugger.timeEvent(t, "ImageProcessing/Pass");
 
   d_lines = d_lineFinder->find(d_lineDotPass->lineDots);
   t = debugger.timeEvent(t, "ImageProcessing/Line Search");
 
-  static unsigned long long frameIndex = 0;
-  const unsigned everyFrame = 10;
-
-  if (frameIndex++%everyFrame == 0 && streamer)
+  if (transmitThisFrame && streamer)
   {
     cv::Mat cartoon = d_cartoonPass->mat();
 
+    // TODO allow drawing debug info on any view, not just the cartoon one
     if (d_lines.size() > 0)
     {
       // Calculate the average vote count for the top N hypotheses
@@ -81,7 +74,7 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
 
     }
     streamer->streamImage(cartoon, "labelled");
-    t = debugger.timeEvent(t, "ImageProcessing/Image Stream");
+    t = debugger.timeEvent(t, "ImageProcessing/Labelled Image Stream");
   }
 
   auto blobsPerLabel = d_blobDetectPass->blobsPerLabel;

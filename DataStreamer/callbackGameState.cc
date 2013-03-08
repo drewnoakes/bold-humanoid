@@ -9,6 +9,7 @@ int DataStreamer::callback_game_state(
   size_t /*len*/)
 {
   // TODO review 512 size here... can apply a better cap
+  // TODO can we reuse this buffer? static local?
   unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + 512 + LWS_SEND_BUFFER_POST_PADDING];
   unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
 
