@@ -6,15 +6,11 @@ define(
     {
         var protocol = 'camera-protocol',
             socket,
-            container = $('#camera-container');
-
-        var imgState = 0,
+            imgState = 0,
             imgSize = 0,
-            imgToRead = 0;
-
-        var imgBlob;
-
-        var controls;
+            imgToRead = 0,
+            imgBlob,
+            controls;
 
         var ControlTypeEnum = {
             INT: 1,
@@ -36,15 +32,16 @@ define(
 
         var controlHandle = function(e)
         {
-            var c = e.data;
-            var cmd = {};
-            cmd.command = "setControl";
-            cmd.id = c.id;
-            cmd.val = parseInt(
-                c.type == ControlTypeEnum.INT ? e.target.value :
-                c.type == ControlTypeEnum.BOOL ? (e.target.checked ? 1 : 0) :
-                c.type == ControlTypeEnum.MENU ? e.target.value :
-                    0);
+            var c = e.data,
+                cmd = {
+                    command: "setControl",
+                    id: c.id,
+                    val: parseInt(
+                        c.type == ControlTypeEnum.INT ? e.target.value :
+                        c.type == ControlTypeEnum.BOOL ? (e.target.checked ? 1 : 0) :
+                        c.type == ControlTypeEnum.MENU ? e.target.value :
+                            0)
+                };
             socket.send(JSON.stringify(cmd));
         };
 
@@ -75,41 +72,45 @@ define(
 
             for (var i = 0; i < controls.length; ++i)
             {
-                var c = controls[i];
-                c.iface = $('<div></div>').addClass('camera-control')
-                    .append($('<span></span>').addClass('camera-control-name').text(c.name + " (" + c.minimum + " - " + c.maximum + " [" + c.defaultValue + "])"))
-                    .append($('<br>'));
+                var c = controls[i],
+                    element = $('<div></div>').addClass('camera-control');
 
                 switch (c.type)
                 {
                 case ControlTypeEnum.INT:
-                    c.iface.append($('<input>').val(c.value).change(c,controlHandle));
+                    element.append($('<h3></h3>').html(c.name + ' <span class="values">(' + c.minimum + ' - ' + c.maximum + ' [' + c.defaultValue + '])</span>'));
+                    element.append($('<input>', {type: 'text'}).val(c.value).change(c,controlHandle));
                     break;
 
                 case ControlTypeEnum.BOOL:
-                    var check = $('<input type="checkbox">').change(c,controlHandle);
-                    if (c.value == 1)
-                        check.attr('checked','checked');
-                    c.iface.append(check);
+                    var id = 'cameraControl' + i;
+                    element.append($('<input>', {id: id, type: 'checkbox', checked: c.value}).change(c,controlHandle));
+                    element.append($('<label>', {for: id}).html(c.name + ' <span class="values">[' + (c.defaultValue?'on':'off') + ']</span>'));
                     break;
 
                 case ControlTypeEnum.MENU:
+                    var defaultItem = c.menuItems[parseInt(c.defaultValue)];
+                    element.append($('<h3></h3>').html(c.name + (defaultItem ? ' <span class="values">[' + defaultItem.name + ']</span>':'')));
                     var menu = $('<select></select>').change(c,controlHandle);
                     for (var j = 0; j < c.menuItems.length; ++j)
                     {
                         var item = c.menuItems[j];
-                        var option = $('<option></option>').val(item.index).text(item.name);
-                        if (c.value == item.index)
-                            option.attr('selected', 'selected');
-                        menu.append(option);
+                        menu.append($('<option></option>', {selected: c.value == item.index}).val(item.index).text(item.name));
                     }
-                    c.iface.append(menu);
+                    element.append(menu);
                     break;
                 }
 
-                $('#camera-controls-container').append(c.iface);
+                $('#camera-controls-container').append(element);
             }
         };
+
+        var canvas = document.getElementById('camera-canvas'),
+            context = canvas.getContext('2d');
+
+        // rotate image to correct orientation[
+        context.translate(canvas.width, canvas.height);
+        context.scale(-1, -1);
 
         var msgHandle = function(msg)
         {
@@ -137,12 +138,12 @@ define(
                     imgSize = imgToRead = parseInt(msg.data);
                     imgBlob = new Blob([], {type: "image/jpeg"});
                     imgState = StateEnum.GET_IMAGE;
-                    console.log("[Camera.js] Pref. red; image size: " + imgSize);
+//                    console.log("[Camera.js] Pref. red; image size: " + imgSize);
                 }
-                else
-                {
-                    console.warn("[Camera.js] Expected string, got: " + msg.data);
-                }
+//                else
+//                {
+//                    console.warn("[Camera.js] Expected string, got: " + msg.data);
+//                }
                 break;
 
             // get image data
@@ -158,19 +159,25 @@ define(
 
                 imgToRead -= msg.data.size;
 
-                console.log("[Camera.js] Got blob of size: " + msg.data.size + ", left: " + imgToRead);
+//                console.log("[Camera.js] Got blob of size: " + msg.data.size + ", left: " + imgToRead);
 
                 if (imgToRead <= 0)
                 {
                     var objectURL = (window.webkitURL || window.URL).createObjectURL(imgBlob);
 
-                    new Image()
-
-                    container.append($('<img>', {src: objectURL}));
-                    
-                    var images = container.find('img');
-                    if (images.length > 5)
-                        images.first().remove();
+                    var img = new Image;
+                    img.onload = function()
+                    {
+                        // TODO ensure this is still the latest image (might be out of order)
+                        if (img.width !== canvas.width)
+                            canvas.width = img.width;
+                        if (img.height !== canvas.height)
+                            canvas.height = img.height;
+                        // need to re-establish the context after changing the canvas size
+                        context = canvas.getContext('2d');
+                        context.drawImage(img, 0, 0);
+                    };
+                    img.src = objectURL;
 
                     imgState = StateEnum.GET_PREFIX;
                 }
