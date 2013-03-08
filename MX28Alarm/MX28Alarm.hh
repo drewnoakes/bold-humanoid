@@ -54,6 +54,22 @@ namespace bold
       return d_flags == other.d_flags;
     }
 
+    bool operator!=(MX28Alarm const& other) const
+    {
+      return d_flags != other.d_flags;
+    }
+
+    std::vector<int> diff(MX28Alarm const& other)
+    {
+      std::vector<int> diffFlags;
+      for (uchar i = 0; i <= MAXBIT; i++)
+      {
+        if (isSet(i) != other.isSet(i))
+          diffFlags.push_back(i);
+      }
+      return diffFlags;
+    }
+
     static std::string getName(uchar bitIndex)
     {
       assert(bitIndex <= MAXBIT);
@@ -74,14 +90,14 @@ namespace bold
     {
       bool first = true;
 
-      for (uchar i = 0; i <= 6; i++)
+      for (uchar i = 0; i <= MAXBIT; i++)
       {
         if (mx28Alarm.isSet(i))
         {
           if (!first)
             stream << " ";
           else
-            first = true;
+            first = false;
 
           stream << getName(i);
         }

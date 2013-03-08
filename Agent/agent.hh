@@ -4,9 +4,11 @@
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
 #include <opencv2/opencv.hpp>
+#include <Eigen/Core>
 
 #include "../Ambulator/ambulator.hh"
 #include "../GameController/GameControllerReceiver.hh"
+#include "../MX28Alarm/MX28Alarm.hh"
 #include "../VisualCortex/visualcortex.hh"
 
 class Joystick;
@@ -57,6 +59,7 @@ namespace bold
     bool d_showUI;
     bool d_autoGetUpFromFallen;
     GameControllerReceiver d_gameControlReceiver;
+    bold::MX28Alarm d_alarmLedByJointId[Robot::JointData::NUMBER_OF_JOINTS];
 
     /** Number of consecutive cycles during which the ball has been seen. */
     int d_ballSeenCnt;
