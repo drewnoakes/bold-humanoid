@@ -65,12 +65,12 @@ int DataStreamer::callback_camera(
             cout << "[DataStreamer::callbackCamera] Invalid setControl command" << endl;
             break;
           }
-\
+
           unsigned controlId = d["id"].GetUint();
           unsigned controlVal = d["val"].GetUint();
 
           auto controls = d_camera->getControls();
-          auto control = find_if(controls.begin(), controls.end(),        \
+          auto control = find_if(controls.begin(), controls.end(),
                                  [controlId](Camera::Control const& c)
                                  {
                                    return c.id == controlId;

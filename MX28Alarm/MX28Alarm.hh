@@ -59,13 +59,13 @@ namespace bold
       assert(bitIndex <= MAXBIT);
 
       static std::vector<std::string> names = {
-        "Input Voltage",
-        "Angle Limit",
+        "Input Voltage Limit Breached",
+        "Angle Limit Breached",
         "Overheated",
-        "Range",
-        "Checksum",
-        "Overload",
-        "Instruction"
+        "Out Of Range",
+        "Checksum Error",
+        "Overloaded",
+        "Instruction Error"
       };
       return names[bitIndex];
     }
@@ -79,7 +79,7 @@ namespace bold
         if (mx28Alarm.isSet(i))
         {
           if (!first)
-            stream << ' ';
+            stream << " ";
           else
             first = true;
 
