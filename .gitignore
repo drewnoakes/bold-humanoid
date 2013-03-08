@@ -11,3 +11,4 @@ boldhumanoid
 cmake_install.cmake
 *lib-prefix
 Makefile
+build
