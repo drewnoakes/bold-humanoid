@@ -78,12 +78,12 @@ namespace bold
       {
         if (mx28Alarm.isSet(i))
         {
-          stream << getName(i);
-
           if (!first)
             stream << ' ';
           else
             first = true;
+
+          stream << getName(i);
         }
       }
 

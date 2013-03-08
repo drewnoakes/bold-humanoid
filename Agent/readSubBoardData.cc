@@ -21,13 +21,13 @@ void Agent::readSubBoardData()
 
     if (mx28.alarmLed.hasError())
     {
-      cerr << "[Agent::readSubBoardData] MX28 alarmLed flags: "
+      cerr << "[Agent::readSubBoardData] MX28[id=" << jointId << "] alarmLed flags: "
            << mx28.alarmLed << endl;
     }
 
     if (mx28.alarmShutdown.hasError())
     {
-      cerr << "[Agent::readSubBoardData] MX28 alarmShutdown flags: "
+      cerr << "[Agent::readSubBoardData] MX28[id=" << jointId << "] alarmShutdown flags: "
            << mx28.alarmShutdown << endl;
     }
   }

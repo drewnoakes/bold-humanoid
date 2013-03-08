@@ -57,7 +57,7 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
         sumVotes += hypothesis.count();
       }
       int averageVotes = sumVotes / takeTop;
-      cout << "      Average number of line votes " << averageVotes << endl;
+//      cout << "      Average number of line votes " << averageVotes << endl;
 
       for (auto const& hypothesis : d_lines)
       {
