@@ -103,9 +103,9 @@ int DataStreamer::callback_camera(
           Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
 
           if (action == "<")
-            Head::GetInstance()->MoveByAngleOffset(-5,0);
-          else if (action == ">")
             Head::GetInstance()->MoveByAngleOffset(5,0);
+          else if (action == ">")
+            Head::GetInstance()->MoveByAngleOffset(-5,0);
           else if (action == "^")
             Head::GetInstance()->MoveByAngleOffset(0,5);
           else if (action == "v")

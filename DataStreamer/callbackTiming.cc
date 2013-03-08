@@ -21,9 +21,9 @@ int DataStreamer::callback_timing(
     int n = 0;
     for (EventTiming const& eventTiming : timings)
     {
-      double timeSeconds = eventTiming.first;
+      double ms = eventTiming.first * 1000.0;
       std::string eventName = eventTiming.second;
-      n += sprintf((char*)(p + n), "%s=%f|", eventName.c_str(), timeSeconds);
+      n += sprintf((char*)(p + n), "%s=%g|", eventName.c_str(), ms);
     }
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
