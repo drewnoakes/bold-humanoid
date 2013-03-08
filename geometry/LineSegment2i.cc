@@ -5,6 +5,7 @@
 #include <set>
 #include <cassert>
 #include <cmath>
+#include <stdexcept>
 
 #include <Eigen/Core>
 #include <opencv2/core/core.hpp>
@@ -28,14 +29,14 @@ LineSegment2i::LineSegment2i(Vector2i p1, Vector2i p2)
 : d_p1(p1), d_p2(p2)
 {
   if (p1.x() == p2.x() && p1.y() == p2.y())
-    throw string("Points must have different values.");
+    throw std::runtime_error("Points must have different values.");
 }
 
 LineSegment2i::LineSegment2i(int x1, int y1, int x2, int y2)
 : d_p1(Vector2i(x1, y1)), d_p2(Vector2i(x2, y2))
 {
   if (x1 == x2 && y1 == y2)
-    throw string("Points must have different values.");
+    throw std::runtime_error("Points must have different values.");
 }
 
 double LineSegment2i::gradient() const
