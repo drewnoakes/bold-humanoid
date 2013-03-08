@@ -28,22 +28,22 @@ define(
         timingChartOptions.minValue = 0;
 
         var protocolDefinitions = [
-            {
-                protocol: 'timing-protocol',
-                charts: [
-                    {
-                        // TODO this should be a stacked chart
-                        title: 'timing',
-                        options: timingChartOptions,
-                        series: [
-                            { strokeStyle: 'rgb(255, 0, 0)', fillStyle: 'rgba(255, 0, 0, 0.4)', lineWidth: 1 },
-                            { strokeStyle: 'rgb(0, 255, 0)', fillStyle: 'rgba(0, 255, 0, 0.4)', lineWidth: 1 },
-                            { strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 },
-                            { strokeStyle: 'rgb(0, 255, 255)', fillStyle: 'rgba(0, 255, 255, 0.4)', lineWidth: 1 }
-                        ]
-                    }
-                ]
-            },
+//            {
+//                protocol: 'timing-protocol',
+//                charts: [
+//                    {
+//                        // TODO this should be a stacked chart
+//                        title: 'timing',
+//                        options: timingChartOptions,
+//                        series: [
+//                            { strokeStyle: 'rgb(255, 0, 0)', fillStyle: 'rgba(255, 0, 0, 0.4)', lineWidth: 1 },
+//                            { strokeStyle: 'rgb(0, 255, 0)', fillStyle: 'rgba(0, 255, 0, 0.4)', lineWidth: 1 },
+//                            { strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 },
+//                            { strokeStyle: 'rgb(0, 255, 255)', fillStyle: 'rgba(0, 255, 255, 0.4)', lineWidth: 1 }
+//                        ]
+//                    }
+//                ]
+//            },
             {
                 protocol: 'agent-model-protocol',
                 charts: [
@@ -89,6 +89,16 @@ define(
             _.each(protocolDefinition.charts, function(chartDefinition)
             {
                 var chart = new SmoothieChart(chartDefinition.options);
+                chart.yRangeFunction = function(range)
+                {
+                    // Find the greatest absolute value
+                    var max = Math.max(Math.abs(range.min), Math.abs(range.max));
+                    // Ensure we're viewing at least a quarter of the range, so that
+                    // very small values don't appear exaggeratedly large
+                    max = Math.max(max, 1);
+                    return {min:-max, max:max};
+                };
+                chart.options.horizontalLines.push({color:'#ffffff', lineWidth: 1, value: 0});
 
                 container.append($('<h2></h2>', {text:chartDefinition.title}));
                 var canvas = document.createElement('canvas');
