@@ -2,71 +2,79 @@
 #define BOLD_MX28_SNAPSHOT_HH
 
 #include "../robotis/Framework/include/CM730.h"
+#include "../MX28Alarm/MX28Alarm.hh"
 
-using namespace Robot;
+#include <iostream>
+#include <cassert>
 
-class MX28Snapshot
+namespace bold
 {
-private:
-  static unsigned short readTableWord(unsigned char* table, int addr);
-  static double angleValueToRads(unsigned int value);
-  static double valueToRPM(unsigned int value);
+  class MX28Snapshot
+  {
+  public:
 
-public:
+    typedef unsigned char uchar;
 
-  // EEPROM AREA
+    // EEPROM AREA
 
-  unsigned short modelNumber;
-  unsigned char firmwareVersion;
-  unsigned char id;
-  unsigned int baudBPS;
-  unsigned int returnDelayTimeMicroSeconds;
-  double angleLimitCW;
-  double angleLimitCCW;
-  unsigned char tempLimitHighCelcius;
-  double voltageLimitLow;
-  double voltageLimitHigh;
-  unsigned short maxTorque;
+    unsigned short modelNumber;
+    uchar firmwareVersion;
+    uchar id;
+    unsigned int baudBPS;
+    unsigned int returnDelayTimeMicroSeconds;
+    double angleLimitCW;
+    double angleLimitCCW;
+    uchar tempLimitHighCelcius;
+    double voltageLimitLow;
+    double voltageLimitHigh;
+    unsigned short maxTorque;
 
-  /**
-   * Controls when a status packet is returned.
-   *
-   * 0 - only for PING command
-   * 1 - only for READ command
-   * 2 - for all commands
-   *
-   * Never returned if instruction is a broadcast packet.
-   */
-  unsigned char statusRetLevel;
+    /**
+    * Controls when a status packet is returned.
+    *
+    * 0 - only for PING command
+    * 1 - only for READ command
+    * 2 - for all commands
+    *
+    * Never returned if instruction is a broadcast packet.
+    */
+    uchar statusRetLevel;
 
-  unsigned char alarmLed;
-  unsigned char alarmShutdown;
+    MX28Alarm alarmLed;
+    MX28Alarm alarmShutdown;
 
-  // RAM AREA
+    // RAM AREA
 
-  bool torqueEnable;
-  bool led;
-  double gainP;
-  double gainI;
-  double gainD;
-  double goalPositionRads;
-  double movingSpeedRPM;
-  double torqueLimit;
-  double presentPosition;
-  double presentSpeedRPM;
-  double presentLoad;
-  double presentVoltage;
-  unsigned char presentTemp;
-  bool isInstructionRegistered;
-  bool isMoving;
-  bool isEepromLocked;
+    bool torqueEnable;
+    bool led;
+    double gainP;
+    double gainI;
+    double gainD;
+    double goalPositionRads;
+    double movingSpeedRPM;
+    double torqueLimit;
+    double presentPosition;
+    double presentSpeedRPM;
+    double presentLoad;
+    double presentVoltage;
+    uchar presentTemp;
+    bool isInstructionRegistered;
+    bool isMoving;
+    bool isEepromLocked;
 
-  // apparently this value is unused
-//  unsigned char punch;
+    // apparently this value is unused
+//     uchar punch;
 
-  MX28Snapshot() {}
+    MX28Snapshot() {}
 
-  bool init(Robot::CM730& cm730, int const mx28ID);
-};
+    bool init(Robot::CM730& cm730, int const mx28ID);
+
+  private:
+
+    static unsigned short readTableWord(uchar* table, int addr);
+    static double angleValueToRads(unsigned int value);
+    static double valueToRPM(unsigned int value);
+  };
+}
 
 #endif

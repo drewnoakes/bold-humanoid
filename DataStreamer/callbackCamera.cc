@@ -56,9 +56,9 @@ int DataStreamer::callback_camera(
       d.Parse<0>(str.c_str());
       if (d.HasMember("command"))
       {
-	string command(d["command"].GetString());
-	if (command == "setControl")
-	{
+        string command(d["command"].GetString());
+        if (command == "setControl")
+        {
           if (!d.HasMember("id") || !d.HasMember("val") ||
               !d["id"].IsUint() || !d["val"].IsUint())
           {
@@ -66,20 +66,20 @@ int DataStreamer::callback_camera(
             break;
           }
 \
-	  unsigned controlId = d["id"].GetUint();
-	  unsigned controlVal = d["val"].GetUint();
+          unsigned controlId = d["id"].GetUint();
+          unsigned controlVal = d["val"].GetUint();
 
-	  auto controls = d_camera->getControls();
-	  auto control = find_if(controls.begin(), controls.end(),	\
-				 [controlId](Camera::Control const& c)
-				 {
-				   return c.id == controlId;
-				 });
-	  if (control != controls.end())
-	    control->setValue(controlVal);
-	}
-	else if (command == "selectStream")
-	{
+          auto controls = d_camera->getControls();
+          auto control = find_if(controls.begin(), controls.end(),        \
+                                 [controlId](Camera::Control const& c)
+                                 {
+                                   return c.id == controlId;
+                                 });
+          if (control != controls.end())
+            control->setValue(controlVal);
+        }
+        else if (command == "selectStream")
+        {
           if (!d.HasMember("id") ||
               !d["id"].IsUint())
           {
@@ -87,9 +87,9 @@ int DataStreamer::callback_camera(
             break;
           }
 
-	  unsigned streamId = d["id"].GetUint();
-	  cameraSession->streamSelection = streamId;
-	}
+          unsigned streamId = d["id"].GetUint();
+          cameraSession->streamSelection = streamId;
+        }
         else if (command == "controlHead")
         {
           if (!d.HasMember("action") ||
@@ -112,7 +112,7 @@ int DataStreamer::callback_camera(
             Head::GetInstance()->MoveByAngleOffset(0,-5);
 
         }
-        
+
       }
 
     }

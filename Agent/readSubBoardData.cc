@@ -15,7 +15,21 @@ void Agent::readSubBoardData()
   //
   for (int jointId = JointData::ID_R_SHOULDER_PITCH; jointId < JointData::NUMBER_OF_JOINTS; jointId++)
   {
-    am.mx28States[jointId].init(d_CM730, jointId);
+    MX28Snapshot& mx28 = am.mx28States[jointId];
+
+    mx28.init(d_CM730, jointId);
+
+    if (mx28.alarmLed.hasError())
+    {
+      cerr << "[Agent::readSubBoardData] MX28 alarmLed flags: "
+           << mx28.alarmLed << endl;
+    }
+
+    if (mx28.alarmShutdown.hasError())
+    {
+      cerr << "[Agent::readSubBoardData] MX28 alarmShutdown flags: "
+           << mx28.alarmShutdown << endl;
+    }
   }
 
   am.updated();

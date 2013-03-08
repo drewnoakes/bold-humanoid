@@ -4,6 +4,7 @@
 
 using namespace Robot;
 using namespace Eigen;
+using namespace bold;
 
 unsigned short CM730Snapshot::readTableWord(unsigned char* table, int addr)
 {

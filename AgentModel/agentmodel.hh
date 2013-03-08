@@ -3,6 +3,9 @@
 
 #include <Eigen/Core>
 #include <sigc++/sigc++.h>
+
+#include "../robotis/Framework/include/JointData.h"
+
 #include "../Agent/agent.hh"
 #include "../CM730Snapshot/CM730Snapshot.hh"
 #include "../MX28Snapshot/MX28Snapshot.hh"
@@ -21,7 +24,7 @@ namespace bold
   public:
 
     CM730Snapshot cm730State;
-    MX28Snapshot mx28States[JointData::NUMBER_OF_JOINTS];
+    MX28Snapshot mx28States[Robot::JointData::NUMBER_OF_JOINTS];
 
     std::string state;
 
