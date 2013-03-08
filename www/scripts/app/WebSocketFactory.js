@@ -3,21 +3,11 @@
  */
 define(
     [
-      'scripts/app/Constants'
+      'scripts/app/Settings'
     ],
-    function(Constants)
+    function(Settings)
     {
         'use strict';
-
-        var getWebSocketUrl = function ()
-        {
-            var u = document.URL;
-            if (u.substring(0, 4) === "http")
-                u = u.substr(7);
-            if (u.indexOf(":") != -1)
-              u = u.substring(0, u.indexOf(":"));
-            return "ws://" + u.split('/')[0] + ":" + Constants.webSocketPort;
-        };
 
         var indicatorByProtocol = {};
 
@@ -26,11 +16,9 @@ define(
         var WebSocketFactory = {
             open: function(protocol)
             {
-                var webSocketUrl = getWebSocketUrl();
-
                 var socket = typeof MozWebSocket !== 'undefined'
-                    ? new MozWebSocket(webSocketUrl, protocol)
-                    : new WebSocket(webSocketUrl, protocol);
+                    ? new MozWebSocket(Settings.webSocketUrl, protocol)
+                    : new WebSocket(Settings.webSocketUrl, protocol);
 
                 // Reuse the indicator, in case we are re-connecting
                 var connectionIndicator = indicatorByProtocol[protocol];

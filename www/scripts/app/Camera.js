@@ -8,11 +8,11 @@ define(
             socket = WebSocketFactory.open(protocol),
             container = $('#camera-container');
 
-	var imgState = 0,
-	    imgSize = 0,
-	    imgToRead = 0;
+        var imgState = 0,
+            imgSize = 0,
+            imgToRead = 0;
 
-	var imgBlob;
+        var imgBlob;
 
         var controls;
 
@@ -25,20 +25,20 @@ define(
             CTRL_CLASS: 6,
             STRING: 7,
             BITMASK: 8
-        }
+        };
 
         var StateEnum = {
             GET_CONTROLS : 0,
             GET_IMG_TAGS : 1,
             GET_PREFIX : 2,
             GET_IMAGE : 3
-        }
+        };
 
         var controlHandle = function(e)
         {
-	    var c = e.data;
-	    var cmd = {};
-	    cmd.command = "setControl";
+            var c = e.data;
+            var cmd = {};
+            cmd.command = "setControl";
             cmd.id = c.id;
             cmd.val = parseInt(
                 c.type == ControlTypeEnum.INT ? e.target.value :
@@ -46,19 +46,19 @@ define(
                 c.type == ControlTypeEnum.MENU ? e.target.value :
                     0);
             socket.send(JSON.stringify(cmd));
-        }
+        };
 
-	var labelHandle = function(e)
-	{
-	    var cmd = {};
-	    cmd.command = "selectStream";
-	    cmd.id = parseInt(e.target.value);
+        var labelHandle = function(e)
+        {
+            var cmd = {};
+            cmd.command = "selectStream";
+            cmd.id = parseInt(e.target.value);
             socket.send(JSON.stringify(cmd));
-	}
+        };
 
-	var genLabels = function(labels)
-	{
-	    var menu = $('<select>').change(labelHandle);
+        var genLabels = function(labels)
+        {
+            var menu = $('<select>').change(labelHandle);
             for (var i = 0; i < labels.length; ++i)
             {
                 var item = labels[i];
@@ -67,8 +67,8 @@ define(
                     option.attr('selected', 'selected');
                 menu.append(option);
             }
-	    $('#camera-labels-container').append(menu);
-	}
+            $('#camera-labels-container').append(menu);
+        };
 
         var genControls = function(controls)
         {
@@ -76,8 +76,8 @@ define(
             for (var i = 0; i < controls.length; ++i)
             {
                 var c = controls[i];
-                c.iface = $('<div>').addClass('camera-control')
-                    .append($('<span>').addClass('camera-control-name').text(c.name + " (" + c.minimum + " - " + c.maximum + " [" + c.defaultValue + "])"))
+                c.iface = $('<div></div>').addClass('camera-control')
+                    .append($('<span></span>').addClass('camera-control-name').text(c.name + " (" + c.minimum + " - " + c.maximum + " [" + c.defaultValue + "])"))
                     .append($('<br>'));
 
                 switch (c.type)
@@ -94,11 +94,11 @@ define(
                     break;
 
                 case ControlTypeEnum.MENU:
-                    var menu = $('<select>').change(c,controlHandle);
+                    var menu = $('<select></select>').change(c,controlHandle);
                     for (var j = 0; j < c.menuItems.length; ++j)
                     {
                         var item = c.menuItems[j];
-                        var option = $('<option>').val(item.index).text(item.name); 
+                        var option = $('<option></option>').val(item.index).text(item.name);
                         if (c.value == item.index)
                             option.attr('selected', 'selected');
                         menu.append(option);
@@ -109,12 +109,12 @@ define(
 
                 $('#camera-controls-container').append(c.iface);
             }
-        }
+        };
 
-	var msgHandle = function(msg)
-	{
-	    switch (imgState)
-	    {
+        var msgHandle = function(msg)
+        {
+            switch (imgState)
+            {
             // get control data
             case StateEnum.GET_CONTROLS:
                 controls = JSON.parse(msg.data);
@@ -125,72 +125,72 @@ define(
 
             // get image tags
             case StateEnum.GET_IMG_TAGS:
-		labels = JSON.parse(msg.data);
-		genLabels(labels);
-		imgState = StateEnum.GET_PREFIX;
+                var labels = JSON.parse(msg.data);
+                genLabels(labels);
+                imgState = StateEnum.GET_PREFIX;
                 break;
 
             // get image prefix
             case StateEnum.GET_PREFIX:
-		if (typeof(msg.data) === 'string')
-		{
-		    imgSize = imgToRead = parseInt(msg.data);
-		    imgBlob = new Blob([], {type: "image/jpeg"});
-		    imgState = StateEnum.GET_IMAGE;
-		    console.log("[Camera.js] Pref. red; image size: " + imgSize);
-		}
-		else
-		{
-		    console.warn("[Camera.js] Expected string, got: " + msg.data);
-		}
-		break;
+                if (typeof(msg.data) === 'string')
+                {
+                    imgSize = imgToRead = parseInt(msg.data);
+                    imgBlob = new Blob([], {type: "image/jpeg"});
+                    imgState = StateEnum.GET_IMAGE;
+                    console.log("[Camera.js] Pref. red; image size: " + imgSize);
+                }
+                else
+                {
+                    console.warn("[Camera.js] Expected string, got: " + msg.data);
+                }
+                break;
 
             // get image data
-	    case StateEnum.GET_IMAGE:
-		if (!(msg.data instanceof Blob))
-		{
-		    console.warn("[Camera.js] Expected blob, got: ", msg.data);
-		    imgState = StateEnum.GET_PREFIX;
-		    break;
-		}
+            case StateEnum.GET_IMAGE:
+                if (!(msg.data instanceof Blob))
+                {
+                    console.warn("[Camera.js] Expected blob, got: ", msg.data);
+                    imgState = StateEnum.GET_PREFIX;
+                    break;
+                }
 
-		imgBlob = new Blob([imgBlob, msg.data], {type: "image/jpeg"});
+                imgBlob = new Blob([imgBlob, msg.data], {type: "image/jpeg"});
 
-		imgToRead -= msg.data.size;
+                imgToRead -= msg.data.size;
 
-		console.log("[Camera.js] Got blob of size: " + msg.data.size + ", left: " + imgToRead);
+                console.log("[Camera.js] Got blob of size: " + msg.data.size + ", left: " + imgToRead);
 
-		if (imgToRead <= 0)
-		{
-		    var objectURL = (window.webkitURL || window.URL).createObjectURL(imgBlob);
-		    container.append($('<img>', {src: objectURL}));
-		    
-		    var images = container.find('img');
-		    if (images.length > 5)
-			images.first().remove();
+                if (imgToRead <= 0)
+                {
+                    var objectURL = (window.webkitURL || window.URL).createObjectURL(imgBlob);
+                    container.append($('<img>', {src: objectURL}));
+                    
+                    var images = container.find('img');
+                    if (images.length > 5)
+                        images.first().remove();
 
-		    imgState = StateEnum.GET_PREFIX;
-		}
+                    imgState = StateEnum.GET_PREFIX;
+                }
                 break;
-	    }
-	}
+            }
+        };
 
-	var errorHandle = function(e)
-	{
-	    console.log("Camera socket error; closing and reconnecting");
+        var errorHandle = function(e)
+        {
+            console.log("Camera socket error; closing and reconnecting");
 
-	    if (socket.readyState == WebSocket.OPEN)
-		socket.close();
+            if (socket.readyState == WebSocket.OPEN)
+                socket.close();
 
             $('#camera-controls-container').empty();
             imgState = StateEnum.GET_CONTROLS;
 
-	    socket = WebSocketFactory.open(protocol);
+            socket = WebSocketFactory.open(protocol);
 
-	    socket.onerror = errorHandle;
+            socket.onerror = errorHandle;
 
             socket.onmessage = msgHandle;
-	}
+        };
 
         var headControlHandle = function(e)
         {
@@ -199,15 +199,16 @@ define(
             cmd.action = e.target.value;
 
             socket.send(JSON.stringify(cmd));
-        }
+        };
 
         $('.camera-head-controls-button').click(headControlHandle);
 
-	socket.onerror = errorHandle;
+        socket.onerror = errorHandle;
 
         socket.onmessage = msgHandle;
         
-        $('#camera-default-reset').click(function() {
+        $('#camera-default-reset').click(function()
+        {
             socket.send("-1 0");
         });
     }
