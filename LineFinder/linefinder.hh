@@ -5,6 +5,7 @@
 #include <Eigen/Core>
 
 #include "../Colour/colour.hh"
+#include "../DistributionTracker/distributiontracker.hh"
 #include "../geometry/Line.hh"
 #include "../geometry/LineSegment2i.hh"
 
@@ -17,9 +18,12 @@ namespace bold
     {
       LineHypothesis(Line const& line, Eigen::Vector2i const& dot1, Eigen::Vector2i const& dot2)
       : d_theta(line.theta()),
-        d_radius(line.radius())
+        d_radius(line.radius()),
+        d_lengthDistribution()
       {
         auto diff = dot2 - dot1;
+
+        d_lengthDistribution.add(length(diff));
 
         // Determines whether we consider x or y for min/max
         d_isHorizontal = abs(diff.x()) > abs(diff.y());
@@ -41,6 +45,8 @@ namespace bold
 
       bool tryMerge(Line const& line, Eigen::Vector2i const& dot1, Eigen::Vector2i const& dot2)
       {
+        d_lengthDistribution.add(length(dot2 - dot1));
+
         double dt = line.theta() - d_theta;
         double dr = line.radius() - d_radius;
 
@@ -101,8 +107,15 @@ namespace bold
 
       Eigen::Vector2i min() const { return d_min; }
       Eigen::Vector2i max() const { return d_max; }
+      bold::DistributionTracker lengthDistribution() const { return d_lengthDistribution; }
 
     private:
+      static double length(Eigen::Vector2i v)
+      {
+        return sqrt(v.x()*v.x() + v.y()*v.y());
+      }
+
+      bold::DistributionTracker d_lengthDistribution;
       Eigen::Vector2i d_min;
       Eigen::Vector2i d_max;
       double d_theta;

@@ -217,6 +217,15 @@ int main(int argc, char **argv)
 
   // Draw lines
   cout << "    " << lines.size() << " lines" << endl;
+  std::vector<Colour::bgr> colours = {
+    Colour::bgr(255,0,0), // blue
+    Colour::bgr(0,255,0), // green
+    Colour::bgr(0,0,255), // red
+    Colour::bgr(0,255,255), // yellow
+    Colour::bgr(255,0,255), // magenta
+    Colour::bgr(255,255,0)
+  };
+  int colourIndex = 0;
   if (lines.size() > 0)
   {
     // Calculate the average vote count for the top N hypotheses
@@ -238,11 +247,16 @@ int main(int argc, char **argv)
         break;
 
       auto line = hypothesis.toLine();
-      cout << "      theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs) radius=" << line.radius() << " votes=" << line.votes() << " length=" << (hypothesis.max().cast<double>() - hypothesis.min().cast<double>()).norm() << endl;
+      cout << "      theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs)"
+           << " radius=" << line.radius() << " votes=" << line.votes()
+           << " length=" << (hypothesis.max().cast<double>() - hypothesis.min().cast<double>()).norm()
+           << " lengthAvg=" << hypothesis.lengthDistribution().average()
+           << " lengthStdDev=" << hypothesis.lengthDistribution().stdDev()
+           << endl;
       cv::line(colourImage,
                     Point(hypothesis.min().x(), hypothesis.min().y()),
                     Point(hypothesis.max().x(), hypothesis.max().y()),
-                    Colour::bgr(255,0,0).toScalar(),
+                    colours[colourIndex++ % colours.size()].toScalar(),
                     2);
     }
   }
