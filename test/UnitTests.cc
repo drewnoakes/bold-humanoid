@@ -21,6 +21,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "Bounds2iTests.hh"
 #include "LineSegmentTests.hh"
 #include "CameraModelTests.hh"
+#include "DistributionTrackerTests.hh"
 
 int main(int argc, char **argv)
 {

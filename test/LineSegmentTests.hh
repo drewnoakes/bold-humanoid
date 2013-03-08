@@ -2,6 +2,7 @@
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <stdexcept>
 
 #include "../geometry/Bounds2i.hh"
 #include "../geometry/LineSegment2i.hh"
@@ -19,7 +20,7 @@ TEST (LineSegmentTests, delta)
 
 TEST (LineSegmentTests, points_not_identical)
 {
-  ASSERT_THROW (LineSegment2i(Vector2i(50,0), Vector2i(50,0)), std::string);
+  ASSERT_THROW (LineSegment2i(Vector2i(50,0), Vector2i(50,0)), std::runtime_error);
 }
 
 TEST (LineSegmentTests, gradient)
