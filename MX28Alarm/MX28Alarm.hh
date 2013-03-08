@@ -95,7 +95,7 @@ namespace bold
         if (mx28Alarm.isSet(i))
         {
           if (!first)
-            stream << " ";
+            stream << ", ";
           else
             first = false;
 
