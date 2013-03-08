@@ -24,7 +24,9 @@ define(
             ballDiameter: 0.067 // according to Wikipedia
         };
 
-        var jointNames = {
+        Constants.webSocketPort = 8080;
+
+        Constants.jointNames = {
             1: 'shoulderForwardRight',
             2: 'shoulderForwardLeft',
             3: 'shoulderOutwardRight',

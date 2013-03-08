@@ -3,8 +3,9 @@
  */
 define(
     [
+      'scripts/app/Constants'
     ],
-    function()
+    function(Constants)
     {
         'use strict';
 
@@ -13,7 +14,9 @@ define(
             var u = document.URL;
             if (u.substring(0, 4) === "http")
                 u = u.substr(7);
-            return "ws://" + u.split('/')[0];
+            if (u.indexOf(":") != -1)
+              u = u.substring(0, u.indexOf(":"));
+            return "ws://" + u.split('/')[0] + ":" + Constants.webSocketPort;
         };
 
         var indicatorByProtocol = {};
