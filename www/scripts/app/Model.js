@@ -31,10 +31,18 @@ define(
             render();
         });
 
+        var pendingTextureCount = 3;
+
         function init()
         {
             scene = new THREE.Scene();
             scene.add(new THREE.AmbientLight(0x777777));
+
+            var onTextureLoaded = function()
+            {
+                if (--pendingTextureCount === 0)
+                    render();
+            };
 
             //
             // Lighting
@@ -57,7 +65,7 @@ define(
             //
             // Ground
             //
-            var groundTexture = THREE.ImageUtils.loadTexture("images/felt.jpg");
+            var groundTexture = THREE.ImageUtils.loadTexture("images/felt.jpg", null, onTextureLoaded);
             groundTexture.anisotropy = 16;
             groundTexture.repeat.set(12, 12);
             groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
@@ -84,8 +92,8 @@ define(
             //
             var ballMaterial = new THREE.MeshPhongMaterial({
                 ambient: 0x666666,
-                map: THREE.ImageUtils.loadTexture("images/ball-colour-map.png"),
-                bumpMap: THREE.ImageUtils.loadTexture("images/ball-bump-map.jpg"),
+                map: THREE.ImageUtils.loadTexture("images/ball-colour-map.png", null, onTextureLoaded),
+                bumpMap: THREE.ImageUtils.loadTexture("images/ball-bump-map.jpg", null, onTextureLoaded),
                 bumpScale: 0.0075
             } );
 
@@ -256,6 +264,10 @@ define(
         var isRenderQueued = false;
         function render()
         {
+            // Only render once all textures are loaded
+            if (pendingTextureCount)
+                return;
+
             // Only render once per frame, regardless of how many times requested
             if (isRenderQueued)
                 return;
