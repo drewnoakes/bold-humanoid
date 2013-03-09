@@ -20,25 +20,25 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
   if (transmitThisFrame && streamer)
   {
     streamer->streamImage(image, "raw");
-    t = debugger.timeEvent(t, "ImageProcessing/Raw Image Streaming");
+    t = debugger.timeEvent(t, "Image Processing/Raw Image Streaming");
   }
 
   // TODO label the image directly from YUV (if we don't already)
   // convert from YUV to RGB
   d_pfChain.applyFilters(image);
-  t = debugger.timeEvent(t, "ImageProcessing/Pixel Filters");
+  t = debugger.timeEvent(t, "Image Processing/Pixel Filters");
 
   // Label the image;
   // OPT: make data memeber
   static cv::Mat labelled(image.rows, image.cols, CV_8UC1);
   d_imageLabeller->label(image, labelled);
-  t = debugger.timeEvent(t, "ImageProcessing/Pixel Label");
+  t = debugger.timeEvent(t, "Image Processing/Pixel Label");
 
   d_imagePasser->pass(labelled);
-  t = debugger.timeEvent(t, "ImageProcessing/Pass");
+  t = debugger.timeEvent(t, "Image Processing/Pass");
 
   d_lines = d_lineFinder->find(d_lineDotPass->lineDots);
-  t = debugger.timeEvent(t, "ImageProcessing/Line Search");
+  t = debugger.timeEvent(t, "Image Processing/Line Search");
 
   if (transmitThisFrame && streamer)
   {
@@ -74,7 +74,7 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
 
     }
     streamer->streamImage(cartoon, "labelled");
-    t = debugger.timeEvent(t, "ImageProcessing/Labelled Image Stream");
+    t = debugger.timeEvent(t, "Image Processing/Labelled Image Stream");
   }
 
   auto blobsPerLabel = d_blobDetectPass->blobsPerLabel;
@@ -118,5 +118,5 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
     }
   }
 
-  t = debugger.timeEvent(t, "ImageProcessing/Finishing Up");
+  t = debugger.timeEvent(t, "Image Processing/Finishing Up");
 }
