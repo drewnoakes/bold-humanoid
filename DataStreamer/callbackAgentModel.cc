@@ -23,7 +23,6 @@ int DataStreamer::callback_agent_model(
                     agentModel.cm730State.acc.x(),
                     agentModel.cm730State.acc.y(),
                     agentModel.cm730State.acc.z(),
-                    agentModel.mx28States[0].presentPosition,
                     agentModel.mx28States[1].presentPosition,
                     agentModel.mx28States[2].presentPosition,
                     agentModel.mx28States[3].presentPosition,
@@ -42,7 +41,8 @@ int DataStreamer::callback_agent_model(
                     agentModel.mx28States[16].presentPosition,
                     agentModel.mx28States[17].presentPosition,
                     agentModel.mx28States[18].presentPosition,
-                    agentModel.mx28States[19].presentPosition);
+                    agentModel.mx28States[19].presentPosition,
+                    agentModel.mx28States[20].presentPosition);
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {
