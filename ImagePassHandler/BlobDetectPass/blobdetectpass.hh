@@ -144,10 +144,10 @@ namespace bold
     void onImageStarting()
     {
       // Clear all persistent data
-      for (auto pair : d_runsPerRowPerLabel)
+      for (auto& pair : d_runsPerRowPerLabel)
       {
-        auto runsPerRow = pair.second;
-        for (std::vector<bold::Run> runs : runsPerRow)
+        auto& runsPerRow = pair.second;
+        for (std::vector<bold::Run>& runs : runsPerRow)
         {
           runs.clear();
         }
