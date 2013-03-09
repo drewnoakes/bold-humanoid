@@ -19,25 +19,45 @@ namespace bold
   {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    Run(unsigned x, unsigned y)
-      : start(x, y),
-        end(x+1, y),
-        length(1)
+    Run(unsigned startX, unsigned y)
+      : startX(startX),
+        endX(startX),
+        y(y)
     {}
 
-    Eigen::Vector2i start;   ///< Start pixel
-    Eigen::Vector2i end;     ///< End pixel
-    unsigned length;         ///< Number of pixels
+    unsigned y;        ///< The row index of the horizontal run
+    unsigned startX;   ///< The column index of the left-most pixel
+    unsigned endX;     ///< The column index of the right-most pixel
+
+    /** Returns the number of pixels in the run.
+     *
+     * If a run starts and stops at the same x position, it has length one.
+     */
+    inline unsigned length() const
+    {
+      return endX - startX + 1;
+    }
+
+    /** Returns whether two runs overlap, ignoring y positions. */
+    inline static bool overlaps(Run const& a, Run const& b)
+    {
+      return std::max(a.endX, b.endX) - std::min(a.startX, b.startX) < a.length() + b.length();
+    }
 
     /** Compare operator
      *
-     * Orders runs first by y, then by x of start
+     * Orders runs by y, then by startX.
      */
     bool operator<(Run const& other) const
     {
       return
-        start.y() < other.start.y() ||
-       (start.y() == other.start.y() && start.x() < other.start.x());
+        y < other.y ||
+       (y == other.y && startX < other.startX);
+    }
+
+    friend std::ostream& operator<<(std::ostream& stream, Run const& run)
+    {
+      return stream << "Run (y=" << run.y << " x=[" << run.startX << "," << run.endX << "] len=" << run.length() << ")";
     }
   };
 
@@ -53,6 +73,16 @@ namespace bold
     Eigen::Matrix2f covar;   ///< Covarience
 
     std::set<Run> runs;      ///< Runs in this blob
+
+    Blob()
+    : ul(1e6,1e6),
+      br(-1,-1),
+      area(0)
+    {
+      // can these be done in the initialiser list?
+      mean << 0, 0;
+      covar << 0, 0, 0, 0;
+    }
 
     cv::Rect toRect() const
     {
@@ -101,18 +131,18 @@ namespace bold
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
 
-    void addRun(int x, int y)
+    void addRun(int endX)
     {
-      assert(y == d_currentRun.start.y());
+      assert(endX >= d_currentRun.startX);
 
       // finish whatever run we were on
-      d_currentRun.end = Eigen::Vector2i(x, y);
-      d_currentRun.length = x - d_currentRun.start.x();
+      d_currentRun.endX = endX;
 
+      // TODO do this with pointer arithmetic rather than a map lookup
       auto it = d_runsPerRowPerLabel.find(d_currentLabel);
       if (it != d_runsPerRowPerLabel.end())
       {
-        it->second[y].push_back(d_currentRun);
+        it->second[d_currentRun.y].push_back(d_currentRun);
       }
     }
 
@@ -160,9 +190,9 @@ namespace bold
       if (d_currentLabel != 0)
       {
         // finish whatever run we were on
-        addRun(d_imageWidth - 1, d_currentRun.start.y());
+        addRun(d_imageWidth - 1);
       }
-      d_currentRun = bold::Run(0, 0);
+      d_currentRun.y = y;
       d_currentLabel = 0;
     }
 
@@ -175,14 +205,15 @@ namespace bold
         if (d_currentLabel != 0)
         {
           // Finished run
-          addRun(x, y);
+          assert(x > 0);
+          addRun(x - 1);
         }
 
         // Check whether this is the start of a new run
         if (label != 0)
         {
           // Start new run
-          d_currentRun = Run(x, y);
+          d_currentRun.startX = x;
         }
 
         d_currentLabel = label;

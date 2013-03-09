@@ -97,19 +97,15 @@ int main(int argc, char **argv)
   cv::Mat labelledImage(colourImage.size(), CV_8UC1);
   auto imageLabeller = new ImageLabeller(labels);
 
-  auto ballUnionPred =
-    [] (Run const& a, Run const& b)
-    {
-      return max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length;
-    };
+  auto ballUnionPred = &Run::overlaps;
 
   auto goalUnionPred =
     [] (Run const& a, Run const& b)
     {
-      if (max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) > a.length + b.length)
+      if (!Run::overlaps(a, b))
         return false;
 
-      float ratio = (float)a.length / (float)b.length;
+      float ratio = (float)a.length() / (float)b.length();
       return min(ratio, 1.0f / ratio) > 0.75;
     };
 

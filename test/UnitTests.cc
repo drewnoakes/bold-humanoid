@@ -22,6 +22,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "LineSegmentTests.hh"
 #include "CameraModelTests.hh"
 #include "DistributionTrackerTests.hh"
+#include "RunTests.hh"
 
 int main(int argc, char **argv)
 {
@@ -29,30 +30,3 @@ int main(int argc, char **argv)
 
   return RUN_ALL_TESTS();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
