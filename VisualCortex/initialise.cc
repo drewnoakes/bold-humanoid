@@ -82,7 +82,7 @@ void VisualCortex::initialise(minIni const& ini)
 
   vector<ImagePassHandler<uchar>*> handlers = {
     d_lineDotPass,
-//    d_blobDetectPass,
+    d_blobDetectPass,
     d_cartoonPass,
 //    d_labelCountPass
   };
