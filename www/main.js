@@ -2,17 +2,15 @@ require(
     [
         'scripts/app/FieldMap',
         'scripts/app/GameStateMonitor',
-        'scripts/app/WebSocketFactory',
         'scripts/app/Camera.js',
         'scripts/app/StreamingCharts',
+        'scripts/app/TimingModule',
         'scripts/app/Model'
     ],
-    function(FieldMap, GameStateMonitor, WebSocketFactory, Camera)
+    function(FieldMap, GameStateMonitor)
     {
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
-
-        WebSocketFactory.toString();
 
         new FieldMap($('#field-map').get(0));
 

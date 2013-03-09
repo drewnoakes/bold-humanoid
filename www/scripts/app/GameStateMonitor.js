@@ -3,18 +3,25 @@
  */
 define(
     [
-        'scripts/app/WebSocketFactory'
+        'scripts/app/DataProxy',
+        'scripts/app/Protocols'
     ],
-    function(WebSocketFactory)
+    function(DataProxy, Protocols)
     {
         //noinspection UnnecessaryLocalVariableJS
         var GameStateMonitor = function()
         {
-            var socket = WebSocketFactory.open("game-state-protocol");
-            socket.onmessage = function (msg)
-            {
-                $('#secondsRemaining').text(msg.data);
-            }
+            var subscription = DataProxy.subscribe(
+                Protocols.gameState,
+                {
+                    onmessage: function (msg)
+                    {
+                        $('#secondsRemaining').text(msg.data);
+                    }
+                }
+            );
+
+            // TODO retain subscription and potentially cancel?
         };
 
         return GameStateMonitor;

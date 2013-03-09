@@ -4,9 +4,11 @@
 define(
     [
         'scripts/app/GeometryUtil',
+        'scripts/app/DataProxy',
+        'scripts/app/Protocols',
         'scripts/app/Constants'
     ],
-    function(GeometryUtil, Constants)
+    function(GeometryUtil, DataProxy, Protocols, Constants)
     {
         // camera variables
         var cameraDistance = 0.4,
@@ -265,9 +267,15 @@ define(
             });
         }
 
-        return {
-            updateAngles: function(angles)
+        //
+        // connect with streaming data
+        //
+        var subscription = DataProxy.subscribe(Protocols.agentModel, {
+            onmessage: function (msg)
             {
+                var floats = DataProxy.parseFloats(msg.data),
+                    angles = floats.slice(6);
+
                 if (!angles || angles.length !== 20)
                 {
                     console.error("Expecting 20 angles");
@@ -290,6 +298,8 @@ define(
                     render();
                 }
             }
-        }
+        });
+
+        // TODO when we've moved to modules, wire up disposal of subscription
     }
 );

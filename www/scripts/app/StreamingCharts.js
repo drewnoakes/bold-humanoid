@@ -3,13 +3,11 @@
  */
 define(
     [
-        'scripts/app/WebSocketFactory',
-        'scripts/app/Model'
+        'scripts/app/DataProxy',
+        'scripts/app/Protocols'
     ],
-    function(WebSocketFactory, Model)
+    function(DataProxy, Protocols)
     {
-        WebSocketFactory.toString();
-
         var chartOptions = {
             grid: {
                 strokeStyle: 'rgb(40, 40, 40)',
@@ -24,117 +22,83 @@ define(
             }
         };
 
-        var timingChartOptions = JSON.parse(JSON.stringify(chartOptions)); // poor man's clone
-        timingChartOptions.minValue = 0;
-
-        var protocolDefinitions = [
-//            {
-//                protocol: 'timing-protocol',
-//                charts: [
-//                    {
-//                        // TODO this should be a stacked chart
-//                        title: 'timing',
-//                        options: timingChartOptions,
-//                        series: [
-//                            { strokeStyle: 'rgb(255, 0, 0)', fillStyle: 'rgba(255, 0, 0, 0.4)', lineWidth: 1 },
-//                            { strokeStyle: 'rgb(0, 255, 0)', fillStyle: 'rgba(0, 255, 0, 0.4)', lineWidth: 1 },
-//                            { strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 },
-//                            { strokeStyle: 'rgb(0, 255, 255)', fillStyle: 'rgba(0, 255, 255, 0.4)', lineWidth: 1 }
-//                        ]
-//                    }
-//                ]
-//            },
+        var charts = [
             {
-                protocol: 'agent-model-protocol',
-                charts: [
-                    {
-                        title: 'gyro',
-                        options: chartOptions,
-                        series: [
-                            { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 },
-                            { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 1 },
-                            { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 }
-                        ]
-                    },
-                    {
-                        title: 'acc',
-                        options: chartOptions,
-                        series: [
-                            { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 },
-                            { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 1 },
-                            { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 }
-                        ]
-                    }
+                title: 'gyro',
+                options: chartOptions,
+                series: [
+                    { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 },
+                    { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 1 },
+                    { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 }
+                ]
+            },
+            {
+                title: 'acc',
+                options: chartOptions,
+                series: [
+                    { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 },
+                    { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 1 },
+                    { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 }
                 ]
             }
         ];
 
         var chartWidth = 640,
             chartHeight = 120,
-            parseFloats = function (s)
-            {
-                var bits = s.split('|');
-                var floats = [];
-                for (var i = 0; i < bits.length; i++) {
-                    floats.push(parseFloat(bits[i]));
-                }
-                return floats;
-            },
-            container = $('#streaming-charts');
+            container = $('#streaming-charts'),
+            seriesArray = [];
 
-        _.each(protocolDefinitions, function(protocolDefinition)
+        //
+        // build the chart objects
+        //
+        _.each(charts, function(chartDefinition)
         {
-            var seriesArray = [];
-
-            _.each(protocolDefinition.charts, function(chartDefinition)
+            var chart = new SmoothieChart(chartDefinition.options);
+            chart.yRangeFunction = function(range)
             {
-                var chart = new SmoothieChart(chartDefinition.options);
-                chart.yRangeFunction = function(range)
-                {
-                    // Find the greatest absolute value
-                    var max = Math.max(Math.abs(range.min), Math.abs(range.max));
-                    // Ensure we're viewing at least a quarter of the range, so that
-                    // very small values don't appear exaggeratedly large
-                    max = Math.max(max, 1);
-                    return {min:-max, max:max};
-                };
-                chart.options.horizontalLines.push({color:'#ffffff', lineWidth: 1, value: 0});
+                // Find the greatest absolute value
+                var max = Math.max(Math.abs(range.min), Math.abs(range.max));
+                // Ensure we're viewing at least a quarter of the range, so that
+                // very small values don't appear exaggeratedly large
+                max = Math.max(max, 1);
+                return {min:-max, max:max};
+            };
+            chart.options.horizontalLines.push({color:'#ffffff', lineWidth: 1, value: 0});
 
-                container.append($('<h2></h2>', {text:chartDefinition.title}));
-                var canvas = document.createElement('canvas');
-                canvas.width = chartWidth;
-                canvas.height = chartHeight;
-                container.append(canvas);
+            container.append($('<h2></h2>', {text:chartDefinition.title}));
+            var canvas = document.createElement('canvas');
+            canvas.width = chartWidth;
+            canvas.height = chartHeight;
+            container.append(canvas);
 
-                chart.streamTo(canvas, /*delayMs*/ 200);
+            chart.streamTo(canvas, /*delayMs*/ 200);
 
-                _.each(chartDefinition.series, function(seriesDefinition)
-                {
-                    var series = new TimeSeries();
-                    chart.addTimeSeries(series, seriesDefinition);
-                    seriesArray.push(series);
-                });
+            _.each(chartDefinition.series, function(seriesDefinition)
+            {
+                var series = new TimeSeries();
+                chart.addTimeSeries(series, seriesDefinition);
+                seriesArray.push(series);
             });
-            
-            var socket = WebSocketFactory.open(protocolDefinition.protocol);
-            socket.onmessage = function (msg)
+        });
+
+        //
+        // connect the chart with data
+        //
+        // TODO when the concept of Modules are introduced, track this subscription for module unload
+        var subscription = DataProxy.subscribe(
+            Protocols.agentModel,
             {
-                var time = new Date().getTime();
-                if (protocolDefinition.protocol === 'timing-protocol')
+                onmessage: function (msg)
                 {
-                   console.log(msg.data); 
-                }
-                else
-                {
-                    var floats = parseFloats(msg.data);
+                    var time = new Date().getTime(),
+                        floats = DataProxy.parseFloats(msg.data);
+
+                    // copy values to charts
                     for (var f = 0; f < floats.length && f < seriesArray.length; f++) {
                         seriesArray[f].append(time, floats[f]);
                     }
-
-                    if (protocolDefinition.protocol === 'agent-model-protocol')
-                        Model.updateAngles(floats.slice(6));
                 }
             }
-        });
+        );
     }
 );

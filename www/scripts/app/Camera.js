@@ -1,10 +1,11 @@
 define(
     [
-        'scripts/app/WebSocketFactory'
+        'scripts/app/WebSocketFactory',
+        'scripts/app/Protocols'
     ],
-    function(WebSocketFactory)
+    function(WebSocketFactory, Protocols)
     {
-        var protocol = 'camera-protocol',
+        var protocol = Protocols.camera,
             socket,
             imgState = 0,
             imgSize = 0,
@@ -59,7 +60,7 @@ define(
             for (var i = 0; i < labels.length; ++i)
             {
                 var item = labels[i];
-                var option = $('<option>').val(item.id).text(item.label); 
+                var option = $('<option>').val(item.id).text(item.label);
                 if (i == 0)
                     option.attr('selected', 'selected');
                 menu.append(option);
@@ -105,12 +106,20 @@ define(
             }
         };
 
-        var canvas = document.getElementById('camera-canvas'),
-            context = canvas.getContext('2d');
+        var canvas = document.getElementById('camera-canvas');
 
-        // rotate image to correct orientation[
-        context.translate(canvas.width, canvas.height);
-        context.scale(-1, -1);
+        var createContext = function ()
+        {
+            var context = canvas.getContext('2d');
+
+            // rotate image to correct orientation[
+            context.translate(canvas.width, canvas.height);
+            context.scale(-1, -1);
+
+            return context;
+        };
+
+        var context = createContext();
 
         var msgHandle = function(msg)
         {
@@ -169,12 +178,19 @@ define(
                     img.onload = function()
                     {
                         // TODO ensure this is still the latest image (might be out of order)
-                        if (img.width !== canvas.width)
+                        var changedSize = false;
+                        if (img.width !== canvas.width) {
                             canvas.width = img.width;
-                        if (img.height !== canvas.height)
+                            changedSize = true;
+                        }
+                        if (img.height !== canvas.height) {
                             canvas.height = img.height;
-                        // need to re-establish the context after changing the canvas size
-                        context = canvas.getContext('2d');
+                            changedSize = true;
+                        }
+                        if (changedSize) {
+                            // need to re-establish the context after changing the canvas size
+                            context = createContext();
+                        }
                         context.drawImage(img, 0, 0);
                     };
                     img.src = objectURL;

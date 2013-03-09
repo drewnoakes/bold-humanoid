@@ -1,6 +1,7 @@
 html, body
 {
     font-family: sans-serif;
+    font-size: 13px;
 }
 
 .connection-indicator
@@ -115,4 +116,9 @@ div.panel h2
 {
     position: absolute;
     top: 300px;
+}
+
+#timing table.timing-details tr td:nth-child(2)
+{
+    text-align: right;
 }
