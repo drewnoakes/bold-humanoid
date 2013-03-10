@@ -47,75 +47,74 @@ int DataStreamer::callback_camera(
     }
 
   case LWS_CALLBACK_RECEIVE:
-    if (len > 0)
+    if (len == 0)
+      break;
+
+    string str((char const*)in, len);
+
+    // Parse JSON
+    rapidjson::Document d;
+    d.Parse<0>(str.c_str());
+
+    if (d.HasParseError())
     {
-      string str((char const*)in, len);
+      cerr << "[DataStreamer::callbackCamera] Error parsing JSON request" << endl;
+      break;
+    }
 
-      // Parse JSON
-      rapidjson::Document d;
-      d.Parse<0>(str.c_str());
-      if (d.HasMember("command"))
+    if (!d.HasString("command"))
+    {
+      cerr << "[DataStreamer::callbackCamera] No command specified in received message" << endl;
+      break;
+    }
+
+    string command(d["command"].GetString());
+    if (command == "setControl")
+    {
+      unsigned controlId;
+      unsigned controlVal;
+      if (!d.TryGetUintMember("id", &controlId) || !d.TryGetUintMember("val", &controlVal))
       {
-        string command(d["command"].GetString());
-        if (command == "setControl")
-        {
-          if (!d.HasMember("id") || !d.HasMember("val") ||
-              !d["id"].IsUint() || !d["val"].IsUint())
-          {
-            cout << "[DataStreamer::callbackCamera] Invalid setControl command" << endl;
-            break;
-          }
-
-          unsigned controlId = d["id"].GetUint();
-          unsigned controlVal = d["val"].GetUint();
-
-          auto controls = d_camera->getControls();
-          auto control = find_if(controls.begin(), controls.end(),
-                                 [controlId](Camera::Control const& c)
-                                 {
-                                   return c.id == controlId;
-                                 });
-          if (control != controls.end())
-            control->setValue(controlVal);
-        }
-        else if (command == "selectStream")
-        {
-          if (!d.HasMember("id") ||
-              !d["id"].IsUint())
-          {
-            cout << "[DataStreamer::callbackCamera] Invalid selectStream command" << endl;
-            break;
-          }
-
-          unsigned streamId = d["id"].GetUint();
-          cameraSession->streamSelection = streamId;
-        }
-        else if (command == "controlHead")
-        {
-          if (!d.HasMember("action") ||
-              !d["action"].IsString())
-          {
-            cout << "[DataStreamer::callbackCamera] Invalid controlHead command" << endl;
-            break;
-          }
-          string action(d["action"].GetString());
-
-          Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
-
-          if (action == "<")
-            Head::GetInstance()->MoveByAngleOffset(5,0);
-          else if (action == ">")
-            Head::GetInstance()->MoveByAngleOffset(-5,0);
-          else if (action == "^")
-            Head::GetInstance()->MoveByAngleOffset(0,5);
-          else if (action == "v")
-            Head::GetInstance()->MoveByAngleOffset(0,-5);
-
-        }
-
+        cerr << "[DataStreamer::callbackCamera] Invalid setControl command" << endl;
+        break;
       }
 
+      auto control = d_camera->getControl(controlId);
+      if (control.hasValue())
+        control.value()->setValue(controlVal);
     }
+    else if (command == "selectStream")
+    {
+      unsigned streamId;
+      if (!d.TryGetUintMember("id", &streamId))
+      {
+        cerr << "[DataStreamer::callbackCamera] Invalid selectStream command" << endl;
+        break;
+      }
+
+      cameraSession->streamSelection = streamId;
+    }
+    else if (command == "controlHead")
+    {
+      if (!d.HasString("action"))
+      {
+        cerr << "[DataStreamer::callbackCamera] Invalid controlHead command" << endl;
+        break;
+      }
+      string action(d["action"].GetString());
+
+      Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
+
+      if (action == "<")
+        Head::GetInstance()->MoveByAngleOffset(5,0);
+      else if (action == ">")
+        Head::GetInstance()->MoveByAngleOffset(-5,0);
+      else if (action == "^")
+        Head::GetInstance()->MoveByAngleOffset(0,5);
+      else if (action == "v")
+        Head::GetInstance()->MoveByAngleOffset(0,-5);
+    }
+
     break;
   }
 
