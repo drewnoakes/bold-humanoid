@@ -104,8 +104,10 @@ set(BOLDHUMANOID_SOURCES
 ./DataStreamer/sendImage.cc
 ./GameController/GameControllerReceiver.cc
 ./MX28Snapshot/init.cc
+./VisualCortex/VisualCortex.cc
 ./VisualCortex/initialise.cc
 ./VisualCortex/integrateImage.cc
+./VisualCortex/pixelLabelFromConfig.cc
 ./WorldModel/initialise.cc
 ${VISIONDIR}/Camera/Camera.cc
 ${VISIONDIR}/Camera/capture.cc
@@ -145,7 +147,8 @@ set(INTERNAL_HEADERS
 ./vision/HoughLineAccumulator/houghlineaccumulator.ih
 ./vision/LUTBuilder/lutbuilder.ih
 ./DataStreamer/datastreamer.ih
-./Agent/agent.ih)
+./Agent/agent.ih
+./VisualCortex/visualcortex.ih)
 
 include_directories(
 ${DARWINDIR}/Linux/include
