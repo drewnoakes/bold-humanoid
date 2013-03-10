@@ -19,7 +19,7 @@ namespace bold
   {
   private:
     cv::Mat d_mat;
-    std::map<uchar,Colour::bgr> d_bgrByLabelId;
+    Colour::bgr d_bgrByLabelId[8]; // assumes we'll never have more than 7 labels (1-8)
     bold::Colour::bgr d_backgroundColour;
     Colour::bgr* d_ptr;
 

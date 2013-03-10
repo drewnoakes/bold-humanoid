@@ -17,7 +17,7 @@ namespace bold
   class LabelCountPass : public ImagePassHandler<uchar>
   {
   private:
-    std::map<uchar,uint> d_countByLabelId;
+    uint d_countByLabelId[8]; // assumes we'll never have more than 7 labels (1-8)
     std::vector<PixelLabel> d_labels;
 
   public:
@@ -38,7 +38,6 @@ namespace bold
     {
       if (value != 0)
       {
-        // TODO would an array via pointer arithmetic be much faster?
         d_countByLabelId[value]++;
       }
     }
