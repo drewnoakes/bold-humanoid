@@ -17,7 +17,7 @@ namespace bold
     unsigned char const * const d_LUT;
 
   public:
-    ImageLabeller(std::vector<bold::PixelLabel> labels);
+    ImageLabeller(std::vector<bold::PixelLabel> const& labels);
 
     /**
      * Labels an entire image's pixels.

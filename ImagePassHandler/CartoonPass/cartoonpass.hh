@@ -27,7 +27,7 @@ namespace bold
     /**
      * @param backgroundColour The colour to use for non-labelled pixels. Defaults to black.
      */
-    CartoonPass(int width, int height, std::vector<PixelLabel> labels, Colour::bgr backgroundColour = Colour::bgr(0,0,0))
+    CartoonPass(int width, int height, std::vector<PixelLabel> const& labels, Colour::bgr backgroundColour = Colour::bgr(0,0,0))
     : d_mat(height, width, CV_8UC3),
       d_backgroundColour(backgroundColour)
     {
