@@ -17,24 +17,12 @@ void VisualCortex::initialise(minIni const& ini)
 
   d_streamFramePeriod = ini.geti("Debugger", "BroadcastFramePeriod", 5);
 
-  d_pfChain.pushFilter([](unsigned char* pxl) {
-    int y = pxl[0] - 16;
-    int cb = pxl[1] - 128;
-    int cr = pxl[2] - 128;
+  d_pfChain.pushFilter([](unsigned char* pxl)
+  {
+    Colour::YCbCr* ycbcr = reinterpret_cast<Colour::YCbCr*>(pxl);
+    Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
 
-    int b = (298 * y + 516 * cb + 128) >> 8;
-    if (b < 0)
-      b = 0;
-    int g = (298 * y - 100 * cb - 208 * cr) >> 8;
-    if (g < 0)
-      g = 0;
-    int r = (298 * y + 409 * cr + 128) >> 8;
-    if (r < 0)
-      r = 0;
-
-    pxl[0] = b;
-    pxl[1] = g;
-    pxl[2] = r;
+    *bgr = ycbcr->toBgrInt();
   });
 
   d_goalLabel =  pixelLabelFromConfig(ini, "Goal",  40,  10, 210, 55, 190, 65);
@@ -48,19 +36,15 @@ void VisualCortex::initialise(minIni const& ini)
 
   d_minBallArea = ini.geti("Vision", "MinBallArea", 8*8);
 
-  auto ballUnionPred =
-    [] (Run const& a, Run const& b)
-    {
-      return max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) <= a.length + b.length;
-    };
+  auto ballUnionPred = &Run::overlaps;
 
   auto goalUnionPred =
     [] (Run const& a, Run const& b)
     {
-      if (max(a.end.x(), b.end.x()) - min(a.start.x(), b.start.x()) > a.length + b.length)
+      if (!Run::overlaps(a, b))
         return false;
 
-      float ratio = (float)a.length / (float)b.length;
+      float ratio = (float)a.length() / (float)b.length();
       return min(ratio, 1.0f / ratio) > 0.75;
     };
 

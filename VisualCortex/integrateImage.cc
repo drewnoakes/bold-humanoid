@@ -111,7 +111,8 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
       Observation postObs;
       postObs.type = O_GOAL_POST;
       Run const& topRun = *b.runs.begin();
-      postObs.pos = (topRun.end + topRun.start).cast<float>() / 2;
+      postObs.pos.y() = topRun.y;
+      postObs.pos.x() = (topRun.endX + topRun.startX) / 2.0f;
 
       d_observations.push_back(postObs);
       d_goalObservations.push_back(postObs);
