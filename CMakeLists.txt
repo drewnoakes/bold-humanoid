@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 find_package(Eigen3 REQUIRED)
 find_package(Eigen3 REQUIRED)
-FIND_PACKAGE(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED)
 find_package(SigC++ REQUIRED)
 
 set(DARWINDIR ${CMAKE_SOURCE_DIR}/robotis)
@@ -15,6 +15,36 @@ set(VISIONDIR ${CMAKE_SOURCE_DIR}/vision)
 set(JOYSTICKDIR ${CMAKE_SOURCE_DIR}/joystick)
 set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
 set(RAPIDJSONDIR ${CMAKE_SOURCE_DIR}/rapidjson)
+
+# Macro for adding a precompiled internal header file
+macro(add_pcih _target _ih_path)
+  string(REPLACE ".ih" ".ih.gch" _pcih_path ${_ih_path})
+  get_filename_component(_ih_name ${_ih_path} NAME_WE)
+
+  set(_ih_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${_ih_path})
+  set(_pcih_full_path ${CMAKE_CURRENT_BINARY_DIR}/${_pcih_path})
+
+  get_target_property(_COMPILE_FLAGS ${_target} COMPILE_FLAGS)
+
+  get_directory_property(_directory_flags INCLUDE_DIRECTORIES)
+  foreach(item ${_directory_flags})
+    list(APPEND _COMPILE_FLAGS "-I${item}")
+  endforeach(item)
+ 
+  get_directory_property(_directory_flags DEFINITIONS)
+  list(APPEND _COMPILE_FLAGS ${_directory_flags})
+
+  separate_arguments(_COMPILE_FLAGS)
+
+  add_custom_command(OUTPUT ${_pcih_full_path}
+                     COMMAND ${CMAKE_CXX_COMPILER} -x c++-header ${_COMPILE_FLAGS} -c ${_ih_full_path} -o ${_pcih_full_path}
+                     IMPLICIT_DEPENDS CXX ${_ih_full_path})
+  
+  set(_pcih_target "${_ih_name}_pcih")
+  add_custom_target(${_pcih_target} DEPENDS ${_pcih_full_path})
+  add_dependencies(${_target} ${_pcih_target})
+              
+endmacro(add_pcih)
 
 # Compile darwin lib as an external project
 ExternalProject_Add(darwin_lib
@@ -38,19 +68,8 @@ ExternalProject_Add(libwebsockets_lib
 
 link_directories(${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
 
-
-include_directories(
-${DARWINDIR}/Linux/include
-${DARWINDIR}/Framework/include
-${VISIONDIR}
-${JOYSTICKDIR}
-${LIBWEBSOCKETDIR}/lib
-${EIGEN3_INCLUDE_DIR}
-${SigC++_INCLUDE_DIRS}
-${OpenCV_INCLUDE_DIR}
-${RAPIDJSONDIR}/include)
-
-add_executable(boldhumanoid
+# All sources
+set(BOLDHUMANOID_SOURCES
 ./main.cc
 ./Agent/Agent.cc
 ./Agent/run.cc
@@ -119,11 +138,39 @@ ${VISIONDIR}/PixelLabel/pixellabel.cc
 ${JOYSTICKDIR}/joystick.cc
 )
 
+# Internal header files to be compiles
+set(INTERNAL_HEADERS
+./vision/PixelFilterChain/pixelfilterchain.ih
+./vision/Camera/camera.ih
+./vision/HoughLineAccumulator/houghlineaccumulator.ih
+./vision/LUTBuilder/lutbuilder.ih
+./DataStreamer/datastreamer.ih
+./Agent/agent.ih)
+
+include_directories(
+${DARWINDIR}/Linux/include
+${DARWINDIR}/Framework/include
+${VISIONDIR}
+${JOYSTICKDIR}
+${LIBWEBSOCKETDIR}/lib
+${EIGEN3_INCLUDE_DIR}
+${SigC++_INCLUDE_DIRS}
+${OpenCV_INCLUDE_DIR}
+${RAPIDJSONDIR}/include)
+
+add_executable(boldhumanoid
+  ${BOLDHUMANOID_SOURCES}
+)
+
 target_link_libraries(boldhumanoid ${OpenCV_LIBS} ${SigC++_LIBRARIES} darwin websockets pthread rt)
 
 # TODO: fix things so we can use Eigen vectorization
-set(CMAKE_CXX_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT")
+set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT")
 
+# Additional target for creating precompiled internal headers
+foreach(ih ${INTERNAL_HEADERS})
+  add_pcih(boldhumanoid ${ih})
+endforeach(ih)
 
 add_dependencies(boldhumanoid darwin_lib)
 add_dependencies(boldhumanoid libwebsockets_lib)
