@@ -45,6 +45,7 @@ int DataStreamer::callback_camera(
       }
       break;
     }
+    break;
 
   case LWS_CALLBACK_RECEIVE:
     if (len == 0)
