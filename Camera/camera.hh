@@ -3,8 +3,10 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <linux/videodev2.h>
 #include <opencv2/opencv.hpp>
+#include "../util/Maybe.hh"
 
 namespace bold
 {
@@ -40,15 +42,15 @@ namespace bold
     struct Control
     {
       Control(v4l2_queryctrl const& qc)
-	: owner(0),
+        : owner(0),
           id(qc.id),
-	  type((ControlType)qc.type),
-	  name((const char*)qc.name),
-	  minimum(qc.minimum),
-	  maximum(qc.maximum),
-	  step(qc.step),
-	  defaultValue(qc.default_value),
-	  flags(qc.flags)
+          type((ControlType)qc.type),
+          name((const char*)qc.name),
+          minimum(qc.minimum),
+          maximum(qc.maximum),
+          step(qc.step),
+          defaultValue(qc.default_value),
+          flags(qc.flags)
       {}
 
       Camera* owner;
@@ -62,7 +64,7 @@ namespace bold
       int defaultValue;
       unsigned flags;
       std::vector<ControlMenuItem> menuItems;
-      
+
       int getValue();
       void setValue(int value);
     };
@@ -76,7 +78,7 @@ namespace bold
           description((const char*)fd.description),
           pixelFormat(fd.pixelformat)
       {}
-          
+
       unsigned index;
       unsigned type;
       unsigned flags;
@@ -115,7 +117,7 @@ namespace bold
       unsigned char* start;
       size_t length;
     };
-    
+
 
   public:
 
@@ -124,6 +126,19 @@ namespace bold
     void open();
 
     std::vector<Control> getControls() const { return d_controls; }
+
+    Maybe<Control> getControl(unsigned controlId) const
+    {
+      auto control = find_if(d_controls.begin(), d_controls.end(),
+                            [controlId](Camera::Control const& c)
+                            {
+                              return c.id == controlId;
+                            });
+
+      return control == d_controls.end()
+        ? Maybe<Control>::empty()
+        : Maybe<Control>(*control);
+    }
 
     std::vector<Format> getFormats() const { return d_formats; }
 
