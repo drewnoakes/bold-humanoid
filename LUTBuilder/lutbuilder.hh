@@ -11,8 +11,9 @@ namespace bold
   class LUTBuilder
   {
   public:
-    static uchar* buildBGR24FromHSVRanges(std::vector<bold::PixelLabel> const& labels);
-    static uchar* buildBGR18FromHSVRanges(std::vector<bold::PixelLabel> const& labels);
+    static uchar* buildLookUpTableBGR24(std::vector<bold::PixelLabel> const& labels);
+    static uchar* buildLookUpTableBGR18(std::vector<bold::PixelLabel> const& labels);
+    static uchar* buildLookUpTableYCbCr18(std::vector<bold::PixelLabel> const& labels);
 
     /**
      * Returns the id of the first label that matches the specified BGR colour.

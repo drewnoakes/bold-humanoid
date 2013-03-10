@@ -58,7 +58,7 @@ PASS_SOURCES=\
 	../HoughLineExtractor/findLines.cc\
 	../HoughLineExtractor/findMaxLine.cc\
 	../LineFinder/find.cc\
-	../LUTBuilder/buildBGRFromHSVRanges.cc\
+	../LUTBuilder/buildLookUpTable.cc\
 	../PixelLabel/pixellabel.cc
 PASS_OBJECTS=$(PASS_SOURCES:.cc=.o)
 ${PASS_OBJECTS} passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh

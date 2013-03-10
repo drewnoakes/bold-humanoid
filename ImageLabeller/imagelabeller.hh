@@ -6,7 +6,6 @@
 #include <iostream>
 #include <vector>
 
-#include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelLabel/pixellabel.hh"
 
 namespace bold
@@ -14,13 +13,14 @@ namespace bold
   class ImageLabeller
   {
   private:
-    unsigned char const * const d_LUT;
+    uchar const * const d_LUT;
 
   public:
-    ImageLabeller(std::vector<bold::PixelLabel> const& labels);
+    ImageLabeller(uchar const * const lut);
 
     /**
      * Labels an entire image's pixels.
+     *
      * @param image The input, colour image.
      * @param labelled The target image, in which labels are stored per-pixel.
      */

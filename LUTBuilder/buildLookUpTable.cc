@@ -1,6 +1,6 @@
 #include "lutbuilder.ih"
 
-uchar* LUTBuilder::buildBGR24FromHSVRanges(vector<PixelLabel> const& labels)
+uchar* LUTBuilder::buildLookUpTableBGR24(vector<PixelLabel> const& labels)
 {
   uchar* LUT = new uchar[1<<24];
   uchar* p = LUT;
@@ -13,7 +13,7 @@ uchar* LUTBuilder::buildBGR24FromHSVRanges(vector<PixelLabel> const& labels)
   return LUT;
 }
 
-uchar* LUTBuilder::buildBGR18FromHSVRanges(vector<PixelLabel> const& labels)
+uchar* LUTBuilder::buildLookUpTableBGR18(vector<PixelLabel> const& labels)
 {
   uchar* LUT = new uchar[1<<18];
   uchar* p = LUT;
@@ -22,6 +22,19 @@ uchar* LUTBuilder::buildBGR18FromHSVRanges(vector<PixelLabel> const& labels)
     for (int g = 0; g < 64; ++g)
       for (int r = 0; r < 64; ++r)
           *(p++) = labelPixel(labels, Colour::bgr(b<<2, g<<2, r<<2));
+
+  return LUT;
+}
+
+uchar* LUTBuilder::buildLookUpTableYCbCr18(vector<PixelLabel> const& labels)
+{
+  uchar* LUT = new uchar[1<<18];
+  uchar* p = LUT;
+
+  for (int b = 0; b < 64; ++b)
+    for (int g = 0; g < 64; ++g)
+      for (int r = 0; r < 64; ++r)
+          *(p++) = labelPixel(labels, Colour::YCbCr(b<<2, g<<2, r<<2).toBgrInt());
 
   return LUT;
 }

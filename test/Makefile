@@ -29,7 +29,7 @@ SOURCES=\
 	../ImagePassHandler/BlobDetectPass/detectBlobs.cc\
 	../ImagePassHandler/BlobDetectPass/runSetToBlob.cc\
 	../LineFinder/find.cc\
-	../LUTBuilder/buildBGRFromHSVRanges.cc\
+	../LUTBuilder/buildLookUpTable.cc\
 	../PixelFilterChain/applyFilters.cc\
 	../PixelLabel/pixellabel.cc
 

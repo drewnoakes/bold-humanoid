@@ -95,7 +95,8 @@ int main(int argc, char **argv)
 
   // Label the image
   cv::Mat labelledImage(colourImage.size(), CV_8UC1);
-  auto imageLabeller = new ImageLabeller(labels);
+  auto lut = LUTBuilder::buildLookUpTableBGR18(labels);
+  auto imageLabeller = new ImageLabeller(lut);
 
   auto ballUnionPred = &Run::overlaps;
 

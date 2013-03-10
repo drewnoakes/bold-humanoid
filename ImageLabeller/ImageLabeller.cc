@@ -4,8 +4,8 @@ using namespace bold;
 using namespace std;
 using namespace cv;
 
-ImageLabeller::ImageLabeller(std::vector<PixelLabel> const& labels)
-: d_LUT(LUTBuilder::buildBGR18FromHSVRanges(labels))
+ImageLabeller::ImageLabeller(uchar const * const lut)
+: d_LUT(lut)
 {}
 
 void ImageLabeller::label(cv::Mat& image, cv::Mat& labelled)
