@@ -38,72 +38,13 @@ namespace bold
     {
       // http://www.equasys.de/colorconversion.html
 
-      YCbCr()
-      {}
+      YCbCr();
+      YCbCr(uchar y, uchar cb, uchar cr);
 
-      YCbCr(uchar y, uchar cb, uchar cr)
-      : y(y), cb(cb), cr(cr)
-      {
-        assert(y >= 16);
-        assert(y <= 235);
-        assert(cb >= 16);
-        assert(cb <= 240);
-        assert(cr >= 16);
-        assert(cr <= 240);
-      }
+      bool isValid() const;
 
-      bool isValid() const
-      {
-        return y >= 16 && y <= 235
-            && cb >= 16 && cb <= 240
-            && cr >= 16 && cr <= 240;
-      }
-
-      Colour::bgr toBgrInt() const
-      {
-        assert(isValid());
-
-        int y = this->y - 16;
-        int cb = this->cb - 128;
-        int cr = this->cr - 128;
-
-        int b = (298 * y + 516 * cb + 128) >> 8;
-        if (b < 0)
-          b = 0;
-
-        int g = (298 * y - 100 * cb - 208 * cr) >> 8;
-        if (g < 0)
-          g = 0;
-
-        int r = (298 * y + 409 * cr + 128) >> 8;
-        if (r < 0)
-          r = 0;
-
-        assert(b <= 255);
-        assert(g <= 255);
-        assert(r <= 255);
-
-        return Colour::bgr(b, g, r);
-      }
-
-      Colour::bgr toBgrFloat() const
-      {
-        assert(isValid());
-
-        double Y = y;
-        double Cb = cb;
-        double Cr = cr;
-
-        int r = (int) (Y + 1.40200 * (Cr - 0x80));
-        int g = (int) (Y - 0.34414 * (Cb - 0x80) - 0.71414 * (Cr - 0x80));
-        int b = (int) (Y + 1.77200 * (Cb - 0x80));
-
-        r = std::max(0, std::min(255, r));
-        g = std::max(0, std::min(255, g));
-        b = std::max(0, std::min(255, b));
-
-        return Colour::bgr(b, g, r);
-      }
+      Colour::bgr toBgrInt() const;
+      Colour::bgr toBgrFloat() const;
 
       uchar y;
       uchar cb;

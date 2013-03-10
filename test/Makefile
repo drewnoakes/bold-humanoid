@@ -19,6 +19,7 @@ SOURCES=\
 	../Colour/bgr2hsv.cc\
 	../Colour/hsv2bgr.cc\
 	../Colour/hsvRange.cc\
+	../Colour/YCbCr.cc\
 	../geometry/Bounds2i.cc\
 	../geometry/LineSegment2i.cc\
 	../HoughLineAccumulator/houghlineaccumulator.cc\
