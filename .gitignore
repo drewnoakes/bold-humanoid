@@ -2,7 +2,7 @@ opencvtest
 vision
 *~
 *.o
-
+*.gch
 *.kate-swp
 *#
 tools/cameratest
