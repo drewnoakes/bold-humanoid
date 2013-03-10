@@ -1,29 +1,21 @@
 #include "visualcortex.hh"
-#include <ImagePassHandler/BlobDetectPass/blobdetectpass.hh>
-#include <ImagePassHandler/LineDotPass/linedotpass.hh>
-#include <ImagePasser/imagepasser.hh>
-#include <LineFinder/linefinder.hh>
+
+#include "../vision/ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../vision/ImagePassHandler/LineDotPass/linedotpass.hh"
+#include "../vision/ImagePasser/imagepasser.hh"
+#include "../vision/LineFinder/linefinder.hh"
+#include "../vision/LUTBuilder/lutbuilder.hh"
 
 using namespace cv;
 using namespace bold;
 using namespace std;
 using namespace Eigen;
 
-#include <functional>
-
 void VisualCortex::initialise(minIni const& ini)
 {
   cout << "[VisualCortex::initialise] Initialising VisualCortex" << endl;
 
   d_streamFramePeriod = ini.geti("Debugger", "BroadcastFramePeriod", 5);
-
-  d_pfChain.pushFilter([](unsigned char* pxl)
-  {
-    Colour::YCbCr* ycbcr = reinterpret_cast<Colour::YCbCr*>(pxl);
-    Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
-
-    *bgr = ycbcr->toBgrInt();
-  });
 
   d_goalLabel =  pixelLabelFromConfig(ini, "Goal",  40,  10, 210, 55, 190, 65);
   d_ballLabel =  pixelLabelFromConfig(ini, "Ball",  10,  15, 255, 95, 190, 95);
@@ -32,7 +24,8 @@ void VisualCortex::initialise(minIni const& ini)
 
   vector<PixelLabel> pixelLabels = { d_goalLabel, d_ballLabel, d_fieldLabel, d_lineLabel };
 
-  d_imageLabeller = new ImageLabeller(pixelLabels);
+  auto lut = LUTBuilder::buildLookUpTableYCbCr18(pixelLabels);
+  d_imageLabeller = new ImageLabeller(lut);
 
   d_minBallArea = ini.geti("Vision", "MinBallArea", 8*8);
 

@@ -111,7 +111,6 @@ namespace bold
 
     ImageLabeller* d_imageLabeller;
     LineFinder* d_lineFinder;
-    PixelFilterChain d_pfChain;
 
     ImagePasser<uchar>* d_imagePasser;
     LineDotPass<uchar>* d_lineDotPass;

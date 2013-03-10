@@ -103,6 +103,7 @@ ${VISIONDIR}/Camera/stopCapture.cc
 ${VISIONDIR}/Colour/bgr2hsv.cc
 ${VISIONDIR}/Colour/hsv2bgr.cc
 ${VISIONDIR}/Colour/hsvRange.cc
+${VISIONDIR}/Colour/YCbCr.cc
 ${VISIONDIR}/geometry/Bounds2i.cc
 ${VISIONDIR}/geometry/LineSegment2i.cc
 ${VISIONDIR}/HoughLineAccumulator/houghlineaccumulator.cc
@@ -112,7 +113,7 @@ ${VISIONDIR}/ImageLabeller/ImageLabeller.cc
 ${VISIONDIR}/ImagePassHandler/BlobDetectPass/detectBlobs.cc
 ${VISIONDIR}/ImagePassHandler/BlobDetectPass/runSetToBlob.cc
 ${VISIONDIR}/LineFinder/find.cc
-${VISIONDIR}/LUTBuilder/buildBGRFromHSVRanges.cc
+${VISIONDIR}/LUTBuilder/buildLookUpTable.cc
 ${VISIONDIR}/PixelFilterChain/applyFilters.cc
 ${VISIONDIR}/PixelLabel/pixellabel.cc
 ${JOYSTICKDIR}/joystick.cc

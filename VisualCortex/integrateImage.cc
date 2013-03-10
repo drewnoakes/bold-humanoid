@@ -19,14 +19,11 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
 
   if (transmitThisFrame && streamer)
   {
-    streamer->streamImage(image, "raw");
+    streamer->streamImage(image, "YCbCr");
     t = debugger.timeEvent(t, "Image Processing/Raw Image Streaming");
   }
 
-  // TODO label the image directly from YUV (if we don't already)
-  // convert from YUV to RGB
-  d_pfChain.applyFilters(image);
-  t = debugger.timeEvent(t, "Image Processing/Pixel Filters");
+  // TODO if user requests an RGB image, provide a converted version (or try to do conversion in browser?)
 
   // Label the image;
   // OPT: make data memeber
@@ -73,7 +70,7 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
       }
 
     }
-    streamer->streamImage(cartoon, "labelled");
+    streamer->streamImage(cartoon, "Labelled");
     t = debugger.timeEvent(t, "Image Processing/Labelled Image Stream");
   }
 
