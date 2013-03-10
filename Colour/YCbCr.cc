@@ -11,12 +11,12 @@ Colour::YCbCr::YCbCr()
 Colour::YCbCr::YCbCr(uchar y, uchar cb, uchar cr)
 : y(y), cb(cb), cr(cr)
 {
-  assert(y >= 16);
-  assert(y <= 235);
-  assert(cb >= 16);
-  assert(cb <= 240);
-  assert(cr >= 16);
-  assert(cr <= 240);
+//assert(y >= 16);
+//assert(y <= 235);
+//assert(cb >= 16);
+//assert(cb <= 240);
+//assert(cr >= 16);
+//assert(cr <= 240);
 }
 
 bool Colour::YCbCr::isValid() const
