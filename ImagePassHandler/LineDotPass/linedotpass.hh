@@ -27,7 +27,7 @@ namespace bold
   public:
     std::vector<Eigen::Vector2i> lineDots;
 
-    LineDotPass(int imageWidth, PixelLabel const& inLabel, PixelLabel const& onLabel, const uchar hysterisisLimit)
+    LineDotPass(int imageWidth, PixelLabel const& inLabel, PixelLabel const& onLabel, uchar hysterisisLimit)
     : d_imageWidth(imageWidth),
       lineDots(),
       inLabel(inLabel),
@@ -40,7 +40,7 @@ namespace bold
       {
         d_colTrackers.push_back(bold::LineRunTracker(
           inLabel.id(), onLabel.id(), /*otherCoordinate*/x, hysterisisLimit,
-          [&](ushort const from, ushort const to, ushort const other) {
+          [this](ushort from, ushort to, ushort other) mutable {
             int mid = (from + to) / 2;
             lineDots.push_back(Eigen::Vector2i((int)other, mid));
           }
@@ -50,7 +50,7 @@ namespace bold
       // TODO delete in destructor
       d_rowTracker = new LineRunTracker(
         inLabel.id(), onLabel.id(), /*otherCoordinate*/0, hysterisisLimit,
-        [&](ushort const from, ushort const to, ushort const other) {
+        [this](ushort from, ushort to, ushort other) mutable {
           int mid = (from + to) / 2;
           lineDots.push_back(Eigen::Vector2i(mid, (int)other));
         }
