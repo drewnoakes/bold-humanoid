@@ -1,0 +1,18 @@
+#include "visualcortex.hh"
+
+#include "../vision/ImageLabeller/imagelabeller.hh"
+#include "../vision/ImagePasser/imagepasser.hh"
+#include "../vision/ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../vision/ImagePassHandler/LineDotPass/linedotpass.hh"
+#include "../vision/ImagePassHandler/CartoonPass/cartoonpass.hh"
+#include "../vision/ImagePassHandler/LabelCountPass/labelcountpass.hh"
+#include "../vision/ImagePasser/imagepasser.hh"
+#include "../vision/LineFinder/linefinder.hh"
+#include "../vision/LUTBuilder/lutbuilder.hh"
+#include <cmath>
+#include "../Debugger/debugger.hh"
+
+using namespace cv;
+using namespace bold;
+using namespace std;
+using namespace Eigen;
