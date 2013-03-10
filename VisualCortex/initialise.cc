@@ -1,15 +1,4 @@
-#include "visualcortex.hh"
-
-#include "../vision/ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
-#include "../vision/ImagePassHandler/LineDotPass/linedotpass.hh"
-#include "../vision/ImagePasser/imagepasser.hh"
-#include "../vision/LineFinder/linefinder.hh"
-#include "../vision/LUTBuilder/lutbuilder.hh"
-
-using namespace cv;
-using namespace bold;
-using namespace std;
-using namespace Eigen;
+#include "visualcortex.ih"
 
 void VisualCortex::initialise(minIni const& ini)
 {

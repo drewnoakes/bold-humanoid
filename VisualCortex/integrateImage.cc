@@ -1,12 +1,4 @@
-#include "visualcortex.hh"
-
-#include <cmath>
-
-#include "../Debugger/debugger.hh"
-
-using namespace std;
-using namespace bold;
-using namespace Eigen;
+#include "visualcortex.ih"
 
 void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
 {
