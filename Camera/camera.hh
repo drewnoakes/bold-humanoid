@@ -129,15 +129,10 @@ namespace bold
 
     Maybe<Control> getControl(unsigned controlId) const
     {
-      auto control = find_if(d_controls.begin(), d_controls.end(),
-                            [controlId](Camera::Control const& c)
-                            {
-                              return c.id == controlId;
-                            });
+      for (auto const& control : d_controls)
+        return Maybe<Control>(control);
 
-      return control == d_controls.end()
-        ? Maybe<Control>::empty()
-        : Maybe<Control>(*control);
+      return Maybe<Control>::empty();
     }
 
     std::vector<Format> getFormats() const { return d_formats; }
