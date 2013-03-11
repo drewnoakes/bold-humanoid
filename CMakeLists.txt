@@ -22,7 +22,8 @@ macro(add_pcih _target _ih_path)
   get_filename_component(_ih_name ${_ih_path} NAME_WE)
 
   set(_ih_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${_ih_path})
-  set(_pcih_full_path ${CMAKE_CURRENT_BINARY_DIR}/${_pcih_path})
+  set(_pcih_full_dir_path ${CMAKE_CURRENT_BINARY_DIR}/${_pcih_path})
+  set(_pcih_full_path ${_pcih_full_dir_path}/${CMAKE_BUILD_TYPE}.c++)
 
   get_target_property(_COMPILE_FLAGS ${_target} COMPILE_FLAGS)
 
@@ -46,6 +47,8 @@ macro(add_pcih _target _ih_path)
   separate_arguments(_COMPILE_FLAGS)
 
   add_custom_command(OUTPUT ${_pcih_full_path}
+                     COMMAND rm -r ${_pcih_full_dir_path}
+		     COMMAND mkdir -p ${_pcih_full_dir_path}
                      COMMAND ${CMAKE_CXX_COMPILER} -x c++-header ${_COMPILE_FLAGS} -c ${_ih_full_path} -o ${_pcih_full_path}
                      IMPLICIT_DEPENDS CXX ${_ih_full_path})
 
