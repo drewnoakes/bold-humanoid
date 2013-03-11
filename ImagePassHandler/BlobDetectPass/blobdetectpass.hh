@@ -224,6 +224,8 @@ namespace bold
     {
       blobsPerLabel = detectBlobs();
     }
+
+    std::vector<BlobType> blobTypes() const { return d_blobTypes; }
   };
 }
 
