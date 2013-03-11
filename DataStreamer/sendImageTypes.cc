@@ -9,32 +9,24 @@ void DataStreamer::sendImageTypes(libwebsocket* wsi)
 
   writer.StartArray();
 
-  writer.StartObject();
-  writer.String("id");
-  writer.Uint((unsigned)ImageType::None);
-  writer.String("label");
-  writer.String((char*)"None", 4, false);
-  writer.EndObject(2);
+  auto addImageType = [&writer](ImageType imageType, string name)
+  {
+    writer.StartObject();
+    writer.String("id");
+    writer.Uint((unsigned)imageType);
+    writer.String("label");
+    writer.String(name.c_str(), name.length(), false);
+    writer.EndObject(2);
+  };
 
-//   d.StartObject();
-//   d["id"] = Value((unsigned)ImageType::YCbCr);
-//   d["label"] = "YCbCr";
-//   d.EndObject();
-//
-//   d.StartObject();
-//   d["id"] = Value((unsigned)ImageType::RGB);
-//   d["label"] = "RGB";
-//   d.EndObject();
-//
-//   d.StartObject();
-//   d["id"] = Value((unsigned)ImageType::Cartoon);
-//   d["label"] = "Cartoon";
-//   d.EndObject();
+  addImageType(ImageType::None, "None");
+  addImageType(ImageType::YCbCr, "YCbCr");
+  addImageType(ImageType::RGB, "RGB");
+  addImageType(ImageType::Cartoon, "Cartoon");
 
   writer.EndArray();
 
   const char* json = buffer.GetString();
-//  string labelsStr = d.GetString();
 
   cout << "[DataStreamer::sendStreamLabels] sending: " << json << endl;
 
