@@ -50,7 +50,7 @@ define(
         {
             var cmd = {
                 command: "framePeriod",
-                period: this.selectedOptions[0].value
+                period: parseInt(this.selectedOptions[0].value)
             };
             socket.send(JSON.stringify(cmd));
         });
