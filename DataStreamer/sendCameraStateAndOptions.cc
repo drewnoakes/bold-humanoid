@@ -34,6 +34,12 @@ void DataStreamer::sendCameraStateAndOptions(libwebsocket* wsi)
     writer.EndArray();
 
     //
+    // FRAME PERIOD
+    //
+    writer.String("streamFramePeriod");
+    writer.Uint(d_streamFramePeriod);
+
+    //
     // LAYERS
     //
     writer.String("layers");
