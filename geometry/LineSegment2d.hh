@@ -3,6 +3,8 @@
 
 #include <Eigen/Core>
 
+#include "LineSegment3d.hh"
+
 namespace bold
 {
   // TODO can this be merged with LineSegment2i using templates & typedef?
@@ -33,6 +35,12 @@ namespace bold
 
     /** Returns the vector formed by p2() - p1() */
     Eigen::Vector2d delta() const { return d_p2 - d_p1; }
+
+    LineSegment3d to3(double z = 0) const
+    {
+      return LineSegment3d(d_p1.x(), d_p1.y(), z,
+                           d_p2.x(), d_p2.y(), z);
+    }
 
     bool operator==(LineSegment2d const& other) const
     {

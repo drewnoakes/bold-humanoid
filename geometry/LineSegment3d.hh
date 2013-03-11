@@ -32,6 +32,12 @@ namespace bold
     /** Returns the vector formed by p2() - p1() */
     Eigen::Vector3d delta() const { return d_p2 - d_p1; }
 
+//     LineSegment2d to2() const
+//     {
+//       return LineSegment2d(d_p1.x(), d_p1.y(),
+//                            d_p2.x(), d_p2.y());
+//     }
+
     bool operator==(LineSegment3d const& other) const
     {
       const double epsilon = 0.0000001;
