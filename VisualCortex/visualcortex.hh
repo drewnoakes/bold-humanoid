@@ -65,10 +65,10 @@ namespace bold
       );
 
     /** Process the provided image, extracting features. */
-    void integrateImage(cv::Mat& cameraImage, DataStreamer* streamer);
+    void integrateImage(cv::Mat& cameraImage);
 
-   /** Gets the singleton instance of the VisualCortex. */
-    static VisualCortex& getInstance();
+    /** Composes and enqueues a debugging image. */
+    void streamDebugImage(cv::Mat cameraImage, DataStreamer* d_streamer);
 
     bool isBallVisible() const { return d_isBallVisible; }
     std::vector<Observation> observations() const { return d_observations; }
@@ -76,6 +76,9 @@ namespace bold
     Observation ballObservation() const { return d_ballObservation; }
 
     std::vector<LineFinder::LineHypothesis> lines() const { return d_lines; }
+
+    /** Gets the singleton instance of the VisualCortex. */
+    static VisualCortex& getInstance();
 
   private:
     std::vector<Observation> d_observations;

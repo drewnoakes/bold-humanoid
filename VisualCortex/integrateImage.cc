@@ -1,9 +1,6 @@
 #include "visualcortex.ih"
 
-#include "../DataStreamer/datastreamer.hh"
-#include "../vision/PixelFilterChain/pixelfilterchain.hh"
-
-void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
+void VisualCortex::integrateImage(cv::Mat& image)
 {
   auto& debugger = Debugger::getInstance();
   auto t = Debugger::getTimestamp();
@@ -72,73 +69,5 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
     }
   }
 
-  t = debugger.timeEvent(t, "Image Processing/Updating State");
-
-
-  //
-  // DEBUG IMAGES
-  //
-
-  if (streamer->shouldProvideImage())
-  {
-    ImageType imageType = streamer->getImageType();
-
-    Mat debugImage;
-
-    if (imageType == ImageType::YCbCr)
-    {
-      debugImage = image;
-    }
-    else if (imageType == ImageType::RGB)
-    {
-      debugImage = image;
-      PixelFilterChain chain;
-      chain.pushFilter([](unsigned char* pxl) {
-        Colour::YCbCr* ycbcr = reinterpret_cast<Colour::YCbCr*>(pxl);
-        Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
-        *bgr = (*ycbcr).toBgrInt();
-      });
-      chain.applyFilters(debugImage);
-    }
-    else if (imageType == ImageType::Cartoon)
-    {
-      debugImage = d_cartoonPass->mat();
-    }
-    else if (imageType == ImageType::None)
-    {
-      debugImage = Mat(image.size(), image.type(), Scalar(0));
-    }
-
-    if (streamer->drawLines() && d_lines.size() > 0)
-    {
-      // TODO pull this selection code out
-      // Calculate the average vote count for the top N hypotheses
-      int sumVotes = 0;
-      int takeTop = 0;
-      for (auto const& hypothesis : d_lines)
-      {
-        if (++takeTop == 15) // <-- controllable number
-          break;
-        sumVotes += hypothesis.count();
-      }
-      int averageVotes = sumVotes / takeTop;
-
-      for (auto const& hypothesis : d_lines)
-      {
-        // Only take those with an above average number of votes
-        if (hypothesis.count() < averageVotes)
-          break;
-
-        auto line = hypothesis.toLine();
-        cv::line(debugImage,
-                cv::Point(hypothesis.min().x(), hypothesis.min().y()),
-                cv::Point(hypothesis.max().x(), hypothesis.max().y()),
-                Colour::bgr(255,0,0).toScalar(),
-                2);
-      }
-    }
-
-    streamer->streamImage(debugImage);
-    t = debugger.timeEvent(t, "Image Processing/Image Streaming");
-  }
+  debugger.timeEvent(t, "Image Processing/Updating State");
 }

@@ -1,5 +1,8 @@
 #include "visualcortex.hh"
 
+#include "../DataStreamer/datastreamer.hh"
+#include "../Debugger/debugger.hh"
+
 #include "../vision/ImageLabeller/imagelabeller.hh"
 #include "../vision/ImagePasser/imagepasser.hh"
 #include "../vision/ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
@@ -9,8 +12,9 @@
 #include "../vision/ImagePasser/imagepasser.hh"
 #include "../vision/LineFinder/linefinder.hh"
 #include "../vision/LUTBuilder/lutbuilder.hh"
+#include "../vision/PixelFilterChain/pixelfilterchain.hh"
+
 #include <cmath>
-#include "../Debugger/debugger.hh"
 
 using namespace cv;
 using namespace bold;

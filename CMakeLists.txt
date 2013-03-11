@@ -110,6 +110,7 @@ set(BOLDHUMANOID_SOURCES
 ./VisualCortex/initialise.cc
 ./VisualCortex/integrateImage.cc
 ./VisualCortex/pixelLabelFromConfig.cc
+./VisualCortex/streamDebugImage.cc
 ./WorldModel/initialise.cc
 ${VISIONDIR}/Camera/Camera.cc
 ${VISIONDIR}/Camera/capture.cc
