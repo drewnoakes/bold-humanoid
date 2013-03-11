@@ -45,5 +45,24 @@ vector<LineFinder::LineHypothesis> LineFinder::find(vector<Vector2i>& lineDots, 
   // Sort highest-voted first
   sort(hypotheses.begin(), hypotheses.end(), [](LineHypothesis const& a, LineHypothesis const& b) { return a.count() > b.count(); });
 
-  return hypotheses;
+  // Calculate the average vote count for the top N hypotheses
+  int sumVotes = 0;
+  int takeTop = 0;
+  for (auto const& hypothesis : hypotheses)
+  {
+    if (++takeTop == 15) // <-- controllable number
+      break;
+    sumVotes += hypothesis.count();
+  }
+  int averageVotes = sumVotes / takeTop;
+
+  vector<LineHypothesis> satisfactory;
+  for (auto const& hypothesis : hypotheses)
+  {
+    // Only take those with an above average number of votes
+    if (hypothesis.count() < averageVotes)
+      break;
+    satisfactory.push_back(hypothesis);
+  }
+  return satisfactory;
 }
