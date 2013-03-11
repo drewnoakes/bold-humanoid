@@ -10,13 +10,14 @@ void VisualCortex::integrateImage(cv::Mat& image)
   //
 
   // Label the image;
-  // OPT: make data member
-  static cv::Mat labelled(image.rows, image.cols, CV_8UC1);
-  d_imageLabeller->label(image, labelled);
+  if (d_labelledImage.rows != image.rows || d_labelledImage.cols != image.cols)
+    d_labelledImage = cv::Mat(image.rows, image.cols, CV_8UC1);
+
+  d_imageLabeller->label(image, d_labelledImage);
   t = debugger.timeEvent(t, "Image Processing/Pixel Label");
 
   // Perform the image pass
-  d_imagePasser->pass(labelled);
+  d_imagePasser->pass(d_labelledImage);
   t = debugger.timeEvent(t, "Image Processing/Pass");
 
   // Find lines

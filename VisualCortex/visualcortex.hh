@@ -92,6 +92,8 @@ namespace bold
     PixelLabel d_lineLabel;
 
     ImageLabeller* d_imageLabeller;
+    cv::Mat d_labelledImage;
+
     LineFinder* d_lineFinder;
 
     ImagePasser<uchar>* d_imagePasser;
