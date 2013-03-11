@@ -6,8 +6,8 @@
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
 
-#include "../GameController/RoboCupGameControlData.h"
-#include "../DataStreamer/datastreamer.hh"
+//#include "../GameController/RoboCupGameControlData.h"
+//#include "../DataStreamer/datastreamer.hh"
 
 #define LED_RED   0x01;
 #define LED_BLUE  0x02;
@@ -61,7 +61,7 @@ namespace bold
 
     void clearTimings()
     {
-      d_eventTimings = std::vector<EventTiming>();
+      d_eventTimings.clear();
     }
 
 //     void processBlobs(std::vector<std::set<Blob>> const& blobs)
