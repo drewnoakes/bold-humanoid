@@ -2,8 +2,6 @@
 
 void DataStreamer::streamImage(cv::Mat const& img)
 {
-  assert(d_imageType != ImageType::None);
-
   d_image = img;
 
 //   auto streamPtr = find_if(d_imgStreams.begin(), d_imgStreams.end(),
