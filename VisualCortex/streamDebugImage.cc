@@ -40,8 +40,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
     cout << "[VisualCortex::streamDebugging] Unknown image type requested!" << endl;
   }
 
-  // Draw lines
-  if (streamer->drawLines() && d_lines.size() > 0)
+  // Draw observed lines
+  if (streamer->drawObservedLines() && d_lines.size() > 0)
   {
     for (auto const& hypothesis : d_lines)
     {
@@ -63,11 +63,32 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
       auto detectedBlobs = d_blobDetectPass->getDetectedBlobs().at(blobType.pixelLabel);
       for (Blob const& blob : detectedBlobs)
       {
-	cv::rectangle(debugImage, blob.toRect(), blobColor);
+        cv::rectangle(debugImage, blob.toRect(), blobColor);
       }
     }
   }
-  
+
+  // Draw expected lines
+  if (streamer->drawExpectedLines())
+  {
+    auto fieldLines = WorldModel::getInstance().getFieldLines();
+    Projector projector = AgentModel::getInstance().getCameraModel().getProjector();
+
+    for (LineSegment2d const& line : fieldLines)
+    {
+      LineSegment3d line3d = line.to3();
+
+      Vector2i p1 = projector(line3d.p1());
+      Vector2i p2 = projector(line3d.p2());
+
+      cv::line(debugImage,
+              cv::Point(p1.x(), p1.y()),
+              cv::Point(p2.x(), p2.y()),
+              Colour::bgr(0,255,0).toScalar(),
+              2);
+    }
+  }
+
   streamer->streamImage(debugImage);
   t = debugger.timeEvent(t, "Debug Image Streaming");
 }

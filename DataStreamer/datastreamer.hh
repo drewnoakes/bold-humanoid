@@ -69,14 +69,14 @@ namespace bold
     /** Gets the type of image that clients have requested to view. May be None. */
     ImageType getImageType() const { return d_imageType; }
 
+    /** Gets whether the vision system should provide a debugging image this cycle. */
     bool shouldProvideImage();
+    bool drawObservedLines() const { return d_drawObservedLines; }
+    bool drawExpectedLines() const { return d_drawExpectedLines; }
+    bool drawBlobs() const { return d_drawBlobs; }
 
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img);
-
-    // TODO this should be configurable
-    bool drawLines() const { return true; }
-    bool drawBlobs() const { return true; }
 
   private:
     void sendCameraControls(libwebsocket* wsi);
@@ -91,6 +91,9 @@ namespace bold
     cv::Mat d_image;
     ImageType d_imageType;
     unsigned d_streamFramePeriod;
+    bool d_drawObservedLines;
+    bool d_drawExpectedLines;
+    bool d_drawBlobs;
 
     Camera* d_camera;
 

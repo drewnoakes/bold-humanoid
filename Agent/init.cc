@@ -32,6 +32,8 @@ bool Agent::init()
 
   Debugger::getInstance().update(d_CM730);
 
+  AgentModel::getInstance().initialise(d_ini);
+
   //
   // Motion manager
   //

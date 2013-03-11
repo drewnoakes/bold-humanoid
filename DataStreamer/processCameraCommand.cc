@@ -91,4 +91,26 @@ void DataStreamer::processCameraCommand(std::string json)
 
     d_streamFramePeriod = period;
   }
+  else if (command == "setLayerVisibility")
+  {
+    // { "command": "setLayerVisibility", "layer": "blobs", "visible": true }
+
+    if (!d.HasMember("layer") || !d["layer"].IsString() || !d.HasMember("visible") || !d["visible"].IsBool())
+    {
+      cerr << "[DataStreamer::processCameraCommand] Invalid setLayerVisibility command" << endl;
+      return;
+    }
+
+    string layer = d["layer"].GetString();
+    bool visible = d["visible"].GetBool();
+
+    if (layer == "blobs")
+      d_drawBlobs = visible;
+    else if (layer == "observedLines")
+      d_drawObservedLines = visible;
+    else if (layer == "expectedLines")
+      d_drawExpectedLines = visible;
+    else
+      cerr << "[DataStreamer::processCameraCommand] Invalid setLayerVisibility command. Unknown layer: " << layer << endl;
+  }
 }
