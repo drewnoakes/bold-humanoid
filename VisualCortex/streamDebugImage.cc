@@ -36,6 +36,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
     debugImage = Mat(cameraImage.size(), cameraImage.type(), Scalar(0));
   }
 
+  // Draw lines
   if (streamer->drawLines() && d_lines.size() > 0)
   {
     for (auto const& hypothesis : d_lines)
@@ -46,6 +47,17 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
               cv::Point(hypothesis.max().x(), hypothesis.max().y()),
               Colour::bgr(255,0,0).toScalar(),
               2);
+    }
+  }
+
+  // Draw blobs
+  if (streamer->drawBlobs())
+  {
+    for (BlobType const& blobType : d_blobDetectPass->blobTypes())
+    for (bold::Blob blob : d_blobDetectPass->blobsPerLabel[blobType.pixelLabel])
+    {
+      auto blobColor = blobType.pixelLabel.hsvRange().toBgr().invert().toScalar();
+      cv::rectangle(debugImage, blob.toRect(), blobColor);
     }
   }
 
