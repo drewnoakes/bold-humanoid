@@ -16,10 +16,9 @@ void Agent::initCamera()
   cout << "===== CONTROLS =====" << endl;;
   for (auto control : controls)
   {
-    if (control.name == "Brightness")
-      control.setValue(50);
-
-    cout << "Control: " << control.name << " " << control.type << " (" << control.minimum << "-" << control.maximum << ", def: " << control.defaultValue << "), val.: ";
+    cout <<
+      "Control: " << control.name << " " << control.type <<
+      " (" << control.minimum << "-" << control.maximum << ", def: " << control.defaultValue << "), val.: ";
     
     cout << control.getValue() << endl;
   }
