@@ -28,7 +28,7 @@ void DataStreamer::sendImageTypes(libwebsocket* wsi)
 
   const char* json = buffer.GetString();
 
-  cout << "[DataStreamer::sendStreamLabels] sending: " << json << endl;
+  cout << "[DataStreamer::sendImageTypes] sending: " << json << endl;
 
   unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING +
                     buffer.GetSize() +

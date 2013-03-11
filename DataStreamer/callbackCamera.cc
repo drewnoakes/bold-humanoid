@@ -47,13 +47,11 @@ int DataStreamer::callback_camera(
     break;
 
   case LWS_CALLBACK_RECEIVE:
-    if (len == 0)
-      break;
-
-    string str((char const*)in, len);
-
-    processCameraCommand(str);
-
+    if (len != 0)
+    {
+      string str((char const*)in, len);
+      processCameraCommand(str);
+    }
     break;
   }
 

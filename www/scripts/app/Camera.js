@@ -46,11 +46,21 @@ define(
             socket.send(JSON.stringify(cmd));
         };
 
+        $('#camera-frame-period').change(function()
+        {
+            var cmd = {
+                command: "framePeriod",
+                period: this.selectedOptions[0].value
+            };
+            socket.send(JSON.stringify(cmd));
+        });
+
         var labelHandle = function(e)
         {
-            var cmd = {};
-            cmd.command = "selectStream";
-            cmd.id = parseInt(e.target.value);
+            var cmd = {
+                command: "selectStream",
+                id: parseInt(e.target.value)
+            };
             socket.send(JSON.stringify(cmd));
         };
 
@@ -70,7 +80,6 @@ define(
 
         var genControls = function(controls)
         {
-
             for (var i = 0; i < controls.length; ++i)
             {
                 var c = controls[i],
@@ -216,10 +225,10 @@ define(
 
         var headControlHandle = function(e)
         {
-            var cmd = {};
-            cmd.command = "controlHead";
-            cmd.action = e.target.value;
-
+            var cmd = {
+                command: "controlHead",
+                action: e.target.value
+            };
             socket.send(JSON.stringify(cmd));
         };
 

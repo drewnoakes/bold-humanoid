@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-// TODO support command for: changing frequency of frames
+// TODO send initial state to browser upon connect (image type, period, layers)
 // TODO support command for: drawing detected blobs
 // TODO support command for: drawing detected lines
 // TODO support command for: drawing projected field lines
@@ -77,5 +77,18 @@ void DataStreamer::processCameraCommand(std::string json)
       Head::GetInstance()->MoveByAngleOffset(0,5);
     else if (action == "v")
       Head::GetInstance()->MoveByAngleOffset(0,-5);
+  }
+  else if (command == "framePeriod")
+  {
+    // { "command": "framePeriod", "period": "5" }
+
+    unsigned period;
+    if (!d.TryGetUintMember("period", &period) || period == 0)
+    {
+      cerr << "[DataStreamer::processCameraCommand] Invalid framePeriod command" << endl;
+      return;
+    }
+
+    d_streamFramePeriod = period;
   }
 }
