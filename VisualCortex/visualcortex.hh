@@ -65,7 +65,7 @@ namespace bold
       );
 
     /** Process the provided image, extracting features. */
-    void integrateImage(cv::Mat& cameraImage, DataStreamer* streamer = 0);
+    void integrateImage(cv::Mat& cameraImage, DataStreamer* streamer);
 
    /** Gets the singleton instance of the VisualCortex. */
     static VisualCortex& getInstance();
@@ -82,7 +82,6 @@ namespace bold
     std::vector<Observation> d_goalObservations;
     Observation d_ballObservation;
     bool d_isBallVisible;
-    unsigned d_streamFramePeriod;
 
     PixelLabel d_goalLabel;
     PixelLabel d_ballLabel;

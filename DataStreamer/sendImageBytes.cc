@@ -1,24 +1,27 @@
 #include "datastreamer.ih"
 
-void DataStreamer::sendImage(libwebsocket* wsi, CameraSession* session)
+void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
 {
+  assert(session->imgReady);
+
   if (!session->imgSending)
   {
-    // Haven't started sending image yet, prepare it
-    cv::Mat img = d_imgStreams[session->streamSelection].img;
+    // Haven't started sending this image yet, encode it as JPEG bytes
     session->imgJpgBuffer = new vector<uchar>();
-    cv::imencode(".jpg", img, *(session->imgJpgBuffer));
+    cv::imencode(".jpg", d_image, *(session->imgJpgBuffer));
 
+    //
     // Send off prefix
-    size_t jpgSize = session->imgJpgBuffer->size();
-  
+    //
+    size_t jpegByteCount = session->imgJpgBuffer->size();
+
     ostringstream prefOut;
-    prefOut << jpgSize;
+    prefOut << jpegByteCount;
     string pref = prefOut.str();
-  
+
     unsigned char prefBuf[LWS_SEND_BUFFER_PRE_PADDING + pref.size() + LWS_SEND_BUFFER_POST_PADDING];
     unsigned char *p = &prefBuf[LWS_SEND_BUFFER_PRE_PADDING];
-  
+
     memcpy(p, pref.c_str(), pref.size());
     int res = libwebsocket_write(wsi, p, pref.size(), LWS_WRITE_TEXT);
     if (res < 0)
@@ -31,7 +34,7 @@ void DataStreamer::sendImage(libwebsocket* wsi, CameraSession* session)
     session->imgSending = true;
     session->imgBytesSent = 0;
   }
-  
+
   while (!lws_send_pipe_choked(wsi))
   {
     size_t jpgSize = session->imgJpgBuffer->size();
@@ -41,9 +44,9 @@ void DataStreamer::sendImage(libwebsocket* wsi, CameraSession* session)
     unsigned bufsize = min(4096, tosend);
     unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + bufsize + LWS_SEND_BUFFER_POST_PADDING];
     unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
-    
+
     memcpy(p, jpgP, bufsize);
-    
+
     int res = libwebsocket_write(wsi, p, bufsize, LWS_WRITE_BINARY);
     if (res < 0)
     {
@@ -56,6 +59,7 @@ void DataStreamer::sendImage(libwebsocket* wsi, CameraSession* session)
     if (session->imgBytesSent == jpgSize)
     {
       // Done sending
+      session->imgReady = false;
       session->imgSending = false;
       session->imgBytesSent = 0;
       delete session->imgJpgBuffer;

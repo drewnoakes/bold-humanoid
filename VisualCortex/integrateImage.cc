@@ -1,70 +1,34 @@
 #include "visualcortex.ih"
 
+#include "../DataStreamer/datastreamer.hh"
+#include "../vision/PixelFilterChain/pixelfilterchain.hh"
+
 void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
 {
-  static unsigned long long frameIndex = 0;
-  bool transmitThisFrame = frameIndex++%d_streamFramePeriod == 0;
-
   auto& debugger = Debugger::getInstance();
-
   auto t = Debugger::getTimestamp();
 
-  if (transmitThisFrame && streamer)
-  {
-    streamer->streamImage(image, "YCbCr");
-    t = debugger.timeEvent(t, "Image Processing/Raw Image Streaming");
-  }
-
-  // TODO if user requests an RGB image, provide a converted version (or try to do conversion in browser?)
+  //
+  // PROCESS THE IMAGE
+  //
 
   // Label the image;
-  // OPT: make data memeber
+  // OPT: make data member
   static cv::Mat labelled(image.rows, image.cols, CV_8UC1);
   d_imageLabeller->label(image, labelled);
   t = debugger.timeEvent(t, "Image Processing/Pixel Label");
 
+  // Perform the image pass
   d_imagePasser->pass(labelled);
   t = debugger.timeEvent(t, "Image Processing/Pass");
 
+  // Find lines
   d_lines = d_lineFinder->find(d_lineDotPass->lineDots);
   t = debugger.timeEvent(t, "Image Processing/Line Search");
 
-  if (transmitThisFrame && streamer)
-  {
-    cv::Mat cartoon = d_cartoonPass->mat();
-
-    // TODO allow drawing debug info on any view, not just the cartoon one
-    if (d_lines.size() > 0)
-    {
-      // Calculate the average vote count for the top N hypotheses
-      int sumVotes = 0;
-      int takeTop = 0;
-      for (auto const& hypothesis : d_lines)
-      {
-        if (++takeTop == 15) // <-- controllable number
-          break;
-        sumVotes += hypothesis.count();
-      }
-      int averageVotes = sumVotes / takeTop;
-
-      for (auto const& hypothesis : d_lines)
-      {
-        // Only take those with an above average number of votes
-        if (hypothesis.count() < averageVotes)
-          break;
-
-        auto line = hypothesis.toLine();
-        cv::line(cartoon,
-                 cv::Point(hypothesis.min().x(), hypothesis.min().y()),
-                 cv::Point(hypothesis.max().x(), hypothesis.max().y()),
-                 Colour::bgr(255,0,0).toScalar(),
-                 2);
-      }
-
-    }
-    streamer->streamImage(cartoon, "Labelled");
-    t = debugger.timeEvent(t, "Image Processing/Labelled Image Stream");
-  }
+  //
+  // UPDATE STATE
+  //
 
   auto blobsPerLabel = d_blobDetectPass->blobsPerLabel;
   d_observations.clear();
@@ -108,5 +72,73 @@ void VisualCortex::integrateImage(cv::Mat& image, DataStreamer* streamer)
     }
   }
 
-  t = debugger.timeEvent(t, "Image Processing/Finishing Up");
+  t = debugger.timeEvent(t, "Image Processing/Updating State");
+
+
+  //
+  // DEBUG IMAGES
+  //
+
+  if (streamer->shouldProvideImage())
+  {
+    ImageType imageType = streamer->getImageType();
+
+    Mat debugImage;
+
+    if (imageType == ImageType::YCbCr)
+    {
+      debugImage = image;
+    }
+    else if (imageType == ImageType::RGB)
+    {
+      debugImage = image;
+      PixelFilterChain chain;
+      chain.pushFilter([](unsigned char* pxl) {
+        Colour::YCbCr* ycbcr = reinterpret_cast<Colour::YCbCr*>(pxl);
+        Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
+        *bgr = (*ycbcr).toBgrInt();
+      });
+      chain.applyFilters(debugImage);
+    }
+    else if (imageType == ImageType::Cartoon)
+    {
+      debugImage = d_cartoonPass->mat();
+    }
+    else if (imageType == ImageType::None)
+    {
+      debugImage = Mat(image.size(), image.type(), Scalar(0));
+    }
+
+    if (streamer->drawLines() && d_lines.size() > 0)
+    {
+      // TODO pull this selection code out
+      // Calculate the average vote count for the top N hypotheses
+      int sumVotes = 0;
+      int takeTop = 0;
+      for (auto const& hypothesis : d_lines)
+      {
+        if (++takeTop == 15) // <-- controllable number
+          break;
+        sumVotes += hypothesis.count();
+      }
+      int averageVotes = sumVotes / takeTop;
+
+      for (auto const& hypothesis : d_lines)
+      {
+        // Only take those with an above average number of votes
+        if (hypothesis.count() < averageVotes)
+          break;
+
+        auto line = hypothesis.toLine();
+        cv::line(debugImage,
+                cv::Point(hypothesis.min().x(), hypothesis.min().y()),
+                cv::Point(hypothesis.max().x(), hypothesis.max().y()),
+                Colour::bgr(255,0,0).toScalar(),
+                2);
+      }
+    }
+
+    streamer->streamImage(debugImage);
+    t = debugger.timeEvent(t, "Image Processing/Image Streaming");
+  }
 }

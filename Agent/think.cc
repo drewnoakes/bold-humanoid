@@ -23,7 +23,10 @@ void Agent::think()
   //
   // Process the image
   //
-  VisualCortex::getInstance().integrateImage(raw, d_streamer);
+  VisualCortex& visualCortex = VisualCortex::getInstance();
+  visualCortex.integrateImage(raw, d_streamer);
+//   if (d_streamer->shouldProvideImage())
+//     visualCortex.provideDebugImage(raw, d_streamer);
   t = debugger.timeEvent(t, "Image Processing");
   //
   // Listen for any game control data

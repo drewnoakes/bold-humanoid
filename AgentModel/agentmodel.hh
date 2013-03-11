@@ -14,15 +14,7 @@ namespace bold
 {
   class AgentModel
   {
-  private:
-    AgentModel()
-    {};
-
-    AgentModel(AgentModel const&);
-    void operator=(AgentModel const&);
-
   public:
-
     CM730Snapshot cm730State;
     MX28Snapshot mx28States[Robot::JointData::NUMBER_OF_JOINTS];
 
@@ -30,11 +22,28 @@ namespace bold
 
     sigc::signal<void> updated;
 
+    void notifyCycleStarting()
+    {
+      d_cycleNumber++;
+    }
+
+    unsigned long long getCycleNumber() const { return d_cycleNumber; }
+
     static AgentModel& getInstance()
     {
       static AgentModel instance;
       return instance;
     }
+
+  private:
+    unsigned long long d_cycleNumber;
+
+    AgentModel()
+    : d_cycleNumber(0)
+    {};
+
+    AgentModel(AgentModel const&) = delete;
+    void operator=(AgentModel const&) = delete;
   };
 }
 

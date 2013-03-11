@@ -15,7 +15,6 @@ int DataStreamer::callback_camera(
   case LWS_CALLBACK_ESTABLISHED:
     // New client connected; initialize session
     memset(cameraSession, 0, sizeof(CameraSession));
-    cameraSession->streamSelection = 0;
     d_cameraSessions.push_back(cameraSession);
     break;
 
@@ -28,20 +27,20 @@ int DataStreamer::callback_camera(
     // Can write to client
     switch (cameraSession->state)
     {
-    case CameraSession::SEND_CONTROLS:
+    case CameraSession::State::SEND_CONTROLS:
       sendCameraControls(wsi);
-      cameraSession->state = CameraSession::SEND_IMG_TAGS;
+      cameraSession->state = CameraSession::State::SEND_IMG_TYPES;
       break;
 
-    case CameraSession::SEND_IMG_TAGS:
-      sendStreamLabels(wsi);
-      cameraSession->state = CameraSession::SEND_IMAGE;
+    case CameraSession::State::SEND_IMG_TYPES:
+      sendImageTypes(wsi);
+      cameraSession->state = CameraSession::State::SEND_IMAGE;
       break;
 
-    case CameraSession::SEND_IMAGE:
+    case CameraSession::State::SEND_IMAGE:
       if (cameraSession->imgReady)
       {
-        sendImage(wsi, cameraSession);
+        sendImageBytes(wsi, cameraSession);
       }
       break;
     }
@@ -53,68 +52,7 @@ int DataStreamer::callback_camera(
 
     string str((char const*)in, len);
 
-    // Parse JSON
-    rapidjson::Document d;
-    d.Parse<0>(str.c_str());
-
-    if (d.HasParseError())
-    {
-      cerr << "[DataStreamer::callbackCamera] Error parsing JSON request" << endl;
-      break;
-    }
-
-    if (!d.HasString("command"))
-    {
-      cerr << "[DataStreamer::callbackCamera] No command specified in received message" << endl;
-      break;
-    }
-
-    string command(d["command"].GetString());
-    if (command == "setControl")
-    {
-      unsigned controlId;
-      unsigned controlVal;
-      if (!d.TryGetUintMember("id", &controlId) || !d.TryGetUintMember("val", &controlVal))
-      {
-        cerr << "[DataStreamer::callbackCamera] Invalid setControl command" << endl;
-        break;
-      }
-
-      auto control = d_camera->getControl(controlId);
-      if (control.hasValue())
-        control.value()->setValue(controlVal);
-    }
-    else if (command == "selectStream")
-    {
-      unsigned streamId;
-      if (!d.TryGetUintMember("id", &streamId))
-      {
-        cerr << "[DataStreamer::callbackCamera] Invalid selectStream command" << endl;
-        break;
-      }
-
-      cameraSession->streamSelection = streamId;
-    }
-    else if (command == "controlHead")
-    {
-      if (!d.HasString("action"))
-      {
-        cerr << "[DataStreamer::callbackCamera] Invalid controlHead command" << endl;
-        break;
-      }
-      string action(d["action"].GetString());
-
-      Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
-
-      if (action == "<")
-        Head::GetInstance()->MoveByAngleOffset(5,0);
-      else if (action == ">")
-        Head::GetInstance()->MoveByAngleOffset(-5,0);
-      else if (action == "^")
-        Head::GetInstance()->MoveByAngleOffset(0,5);
-      else if (action == "v")
-        Head::GetInstance()->MoveByAngleOffset(0,-5);
-    }
+    processCameraCommand(str);
 
     break;
   }

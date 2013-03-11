@@ -19,15 +19,15 @@ bool Agent::init()
   }
   */
 
-  if (d_showUI)
-  {
-    cv::namedWindow("raw");
-    cv::namedWindow("labelled");
-  }
+//   if (d_showUI)
+//   {
+//     cv::namedWindow("raw");
+//     cv::namedWindow("labelled");
+//   }
 
   // TODO only stream if argument specified?
   d_streamer = new DataStreamer(8080);
-  d_streamer->init();
+  d_streamer->initialise(d_ini);
   d_streamer->setCamera(d_camera);
 
   Debugger::getInstance().update(d_CM730);

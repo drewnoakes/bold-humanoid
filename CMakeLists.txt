@@ -30,7 +30,7 @@ macro(add_pcih _target _ih_path)
   foreach(item ${_directory_flags})
     list(APPEND _COMPILE_FLAGS "-I${item}")
   endforeach(item)
- 
+
   get_directory_property(_directory_flags DEFINITIONS)
   list(APPEND _COMPILE_FLAGS ${_directory_flags})
 
@@ -39,11 +39,11 @@ macro(add_pcih _target _ih_path)
   add_custom_command(OUTPUT ${_pcih_full_path}
                      COMMAND ${CMAKE_CXX_COMPILER} -x c++-header ${_COMPILE_FLAGS} -c ${_ih_full_path} -o ${_pcih_full_path}
                      IMPLICIT_DEPENDS CXX ${_ih_full_path})
-  
+
   set(_pcih_target "${_ih_name}_pcih")
   add_custom_target(${_pcih_target} DEPENDS ${_pcih_full_path})
   add_dependencies(${_target} ${_pcih_target})
-              
+
 endmacro(add_pcih)
 
 # Compile darwin lib as an external project
@@ -72,21 +72,21 @@ link_directories(${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
 set(BOLDHUMANOID_SOURCES
 ./main.cc
 ./Agent/Agent.cc
-./Agent/run.cc
-./Agent/init.cc
-./Agent/initCamera.cc
-./Agent/think.cc
-./Agent/processInputCommands.cc
-./Agent/standUpIfFallen.cc
-./Agent/lookForBall.cc
-./Agent/lookAtBall.cc
 ./Agent/approachBall.cc
 ./Agent/circleBall.cc
-./Agent/lookForGoal.cc
-./Agent/lookAtGoal.cc
+./Agent/init.cc
+./Agent/initCamera.cc
 ./Agent/lookAt.cc
+./Agent/lookAtBall.cc
+./Agent/lookAtGoal.cc
+./Agent/lookForBall.cc
+./Agent/lookForGoal.cc
 ./Agent/preKickLook.cc
+./Agent/processInputCommands.cc
 ./Agent/readSubBoardData.cc
+./Agent/run.cc
+./Agent/standUpIfFallen.cc
+./Agent/think.cc
 ./CM730Snapshot/init.cc
 ./Debugger/debugger.cc
 ./DataStreamer/callbackAgentModel.cc
@@ -96,12 +96,14 @@ set(BOLDHUMANOID_SOURCES
 ./DataStreamer/callbackTiming.cc
 ./DataStreamer/close.cc
 ./DataStreamer/DataStreamer.cc
-./DataStreamer/init.cc
+./DataStreamer/initialise.cc
+./DataStreamer/processCameraCommand.cc
+./DataStreamer/sendCameraControls.cc
+./DataStreamer/sendImageBytes.cc
+./DataStreamer/sendImageTypes.cc
+./DataStreamer/shouldProvideImage.cc
 ./DataStreamer/streamImage.cc
 ./DataStreamer/update.cc
-./DataStreamer/sendCameraControls.cc
-./DataStreamer/sendStreamLabels.cc
-./DataStreamer/sendImage.cc
 ./GameController/GameControllerReceiver.cc
 ./MX28Snapshot/init.cc
 ./VisualCortex/VisualCortex.cc

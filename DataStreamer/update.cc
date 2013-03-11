@@ -13,6 +13,7 @@ void DataStreamer::update()
     d_gameStateUpdated = false;
     libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::GAME_STATE]);
   }
+
   if (d_agentModelUpdated)
   {
     d_agentModelUpdated = false;
@@ -24,8 +25,17 @@ void DataStreamer::update()
   //
   libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::TIMING]);
 
-  libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
-
+  //
+  // Only request sending images if we have a client who needs servicing
+  //
+  for (CameraSession* cameraSession : d_cameraSessions)
+  {
+    if (cameraSession->state != CameraSession::State::SEND_IMAGE || cameraSession->imgReady)
+    {
+      libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
+      break;
+    }
+  }
 
   //
   // Process whatever else needs doing on the socket (new clients, etc)

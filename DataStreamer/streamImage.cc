@@ -1,26 +1,29 @@
 #include "datastreamer.ih"
 
-void DataStreamer::streamImage(cv::Mat const& img, string const& label)
+void DataStreamer::streamImage(cv::Mat const& img)
 {
-  auto streamPtr = find_if(d_imgStreams.begin(), d_imgStreams.end(),
-			   [&label] (ImgStream& stream) {
-			     return stream.label == label;
-			   });
+  assert(d_imageType != ImageType::None);
 
-  
-  if (streamPtr == d_imgStreams.end())
-  {
-    ImgStream stream;
-    stream.id = d_imgStreams.size();
-    stream.label = label;
-    
-    streamPtr = d_imgStreams.insert(streamPtr, stream);
-  }
-  
-  streamPtr->img = img;
+  d_image = img;
+
+//   auto streamPtr = find_if(d_imgStreams.begin(), d_imgStreams.end(),
+// 			   [&label] (ImgStream& stream) {
+// 			     return stream.label == label;
+// 			   });
+//
+//
+//   if (streamPtr == d_imgStreams.end())
+//   {
+//     ImgStream stream;
+//     stream.id = d_imgStreams.size();
+//     stream.label = label;
+//
+//     streamPtr = d_imgStreams.insert(streamPtr, stream);
+//   }
+//
+//   streamPtr->img = img;
 
   for (auto ses : d_cameraSessions)
-    if (ses->streamSelection == streamPtr->id && !ses->imgSending)
+    if (!ses->imgSending)
       ses->imgReady = true;
-
 }
