@@ -26,6 +26,15 @@ macro(add_pcih _target _ih_path)
 
   get_target_property(_COMPILE_FLAGS ${_target} COMPILE_FLAGS)
 
+  if(CMAKE_BUILD_TYPE)
+    string(TOUPPER "CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}" _cmake_cxx_flags_var)
+  else(CMAKE_BUILD_TYPE)
+    string(TOUPPER "CMAKE_CXX_FLAGS" _cmake_cxx_flags_var)
+  endif(CMAKE_BUILD_TYPE)
+  
+  set(_cmake_cxx_flags ${${_cmake_cxx_flags_var}})
+  list(APPEND _COMPILE_FLAGS ${_cmake_cxx_flags})
+
   get_directory_property(_directory_flags INCLUDE_DIRECTORIES)
   foreach(item ${_directory_flags})
     list(APPEND _COMPILE_FLAGS "-I${item}")
