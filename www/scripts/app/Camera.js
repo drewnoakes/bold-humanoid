@@ -94,7 +94,10 @@ define(
 
                 case ControlTypeEnum.BOOL:
                     var id = 'cameraControl' + i;
-                    element.append($('<input>', {id: id, type: 'checkbox', checked: c.value}).change(c,controlHandle));
+		    var cb = $('<input>', {id: id, type: 'checkbox'}).change(c,controlHandle);
+		    if (c.value)
+			cb.attr('checked','checked');
+                    element.append(cb);
                     element.append($('<label>', {for: id}).html(c.name + ' <span class="values">[' + (c.defaultValue?'on':'off') + ']</span>'));
                     break;
 
