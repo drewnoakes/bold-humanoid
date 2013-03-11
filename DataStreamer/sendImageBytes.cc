@@ -6,12 +6,14 @@ void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
 
   if (!session->imgSending)
   {
-    // Haven't started sending this image yet, encode it as JPEG bytes
+    //
+    // Encode JPEG
+    //
     session->imgJpgBuffer = new vector<uchar>();
     cv::imencode(".jpg", d_image, *(session->imgJpgBuffer));
 
     //
-    // Send off prefix
+    // Send prefix with number of bytes, so the client can merge the frames
     //
     size_t jpegByteCount = session->imgJpgBuffer->size();
 
@@ -35,6 +37,9 @@ void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
     session->imgBytesSent = 0;
   }
 
+  //
+  // Fill the outbound pipe with frames of image data
+  //
   while (!lws_send_pipe_choked(wsi))
   {
     size_t jpgSize = session->imgJpgBuffer->size();
@@ -63,10 +68,13 @@ void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
       session->imgSending = false;
       session->imgBytesSent = 0;
       delete session->imgJpgBuffer;
-      break;
+      return;
     }
   }
 
+  //
+  // Queue for more writing if we still have image remaining
+  //
   if (session->imgSending)
   {
     libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
