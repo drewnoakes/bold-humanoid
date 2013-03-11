@@ -225,24 +225,8 @@ int main(int argc, char **argv)
   int colourIndex = 0;
   if (lines.size() > 0)
   {
-    // Calculate the average vote count for the top N hypotheses
-    int sumVotes = 0;
-    int takeTop = 0;
     for (auto const& hypothesis : lines)
     {
-      if (++takeTop == 15) // <-- controllable number
-        break;
-      sumVotes += hypothesis.count();
-    }
-    int averageVotes = sumVotes / takeTop;
-    cout << "      Average number of line votes " << averageVotes << endl;
-
-    for (auto const& hypothesis : lines)
-    {
-      // Only take those with an above average number of votes
-      if (hypothesis.count() < averageVotes)
-        break;
-
       auto line = hypothesis.toLine();
       cout << "      theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs)"
            << " radius=" << line.radius() << " votes=" << line.votes()
