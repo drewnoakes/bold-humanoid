@@ -30,7 +30,7 @@ void DataStreamer::update()
   //
   for (CameraSession* cameraSession : d_cameraSessions)
   {
-    if (cameraSession->state != CameraSession::State::SEND_IMAGE || cameraSession->imgReady)
+    if (!cameraSession->hasSentStateAndOptions || cameraSession->imgReady)
     {
       libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
       break;

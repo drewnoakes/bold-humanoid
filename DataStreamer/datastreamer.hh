@@ -28,14 +28,10 @@ namespace bold
 
   struct CameraSession
   {
-    enum class State
-    {
-      SEND_CONTROLS,
-      SEND_IMG_TYPES,
-      SEND_IMAGE
-    };
-
-    State state;
+    /** Whether state and options information has been sent to the client.
+     * This should happen immediately upon connection.
+     */
+    bool hasSentStateAndOptions;
     /** Whether an image is ready to be sent to this client. */
     bool imgReady;
     /** Whether an image is currently in the process of being sent. */
@@ -79,8 +75,7 @@ namespace bold
     void streamImage(cv::Mat const& img);
 
   private:
-    void sendCameraControls(libwebsocket* wsi);
-    void sendImageTypes(libwebsocket* wsi);
+    void sendCameraStateAndOptions(libwebsocket* wsi);
     void sendImageBytes(libwebsocket* wsi, CameraSession* session);
 
     void processCameraCommand(std::string json);

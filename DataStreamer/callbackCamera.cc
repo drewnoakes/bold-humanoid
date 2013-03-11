@@ -25,24 +25,14 @@ int DataStreamer::callback_camera(
 
   case LWS_CALLBACK_SERVER_WRITEABLE:
     // Can write to client
-    switch (cameraSession->state)
+    if (!cameraSession->hasSentStateAndOptions)
     {
-    case CameraSession::State::SEND_CONTROLS:
-      sendCameraControls(wsi);
-      cameraSession->state = CameraSession::State::SEND_IMG_TYPES;
-      break;
-
-    case CameraSession::State::SEND_IMG_TYPES:
-      sendImageTypes(wsi);
-      cameraSession->state = CameraSession::State::SEND_IMAGE;
-      break;
-
-    case CameraSession::State::SEND_IMAGE:
-      if (cameraSession->imgReady)
-      {
-        sendImageBytes(wsi, cameraSession);
-      }
-      break;
+      sendCameraStateAndOptions(wsi);
+      cameraSession->hasSentStateAndOptions = true;
+    }
+    else if (cameraSession->imgReady)
+    {
+      sendImageBytes(wsi, cameraSession);
     }
     break;
 

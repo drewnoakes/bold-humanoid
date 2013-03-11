@@ -109,9 +109,8 @@ set(BOLDHUMANOID_SOURCES
 ./DataStreamer/DataStreamer.cc
 ./DataStreamer/initialise.cc
 ./DataStreamer/processCameraCommand.cc
-./DataStreamer/sendCameraControls.cc
+./DataStreamer/sendCameraStateAndOptions.cc
 ./DataStreamer/sendImageBytes.cc
-./DataStreamer/sendImageTypes.cc
 ./DataStreamer/shouldProvideImage.cc
 ./DataStreamer/streamImage.cc
 ./DataStreamer/update.cc

@@ -10,7 +10,8 @@ DataStreamer::DataStreamer(int port)
   d_context(0),
   d_drawObservedLines(true),
   d_drawExpectedLines(true),
-  d_drawBlobs(true)
+  d_drawBlobs(true),
+  d_imageType(ImageType::RGB)
 {
   std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
 }
