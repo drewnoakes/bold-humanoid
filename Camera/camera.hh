@@ -129,13 +129,13 @@ namespace bold
 
     Maybe<Control> getControl(unsigned controlId) const
     {
-      // this just returns the first control?
+      // this just returns the first control. idea: make getControl(std::function pred)
+      /*
       for (auto const& control : d_controls)
         return Maybe<Control>(control);
 
       return Maybe<Control>::empty();
-
-      /*
+      */
       auto control = find_if(d_controls.begin(), d_controls.end(),
                             [&controlId](Camera::Control const& c)
                             {
@@ -145,7 +145,6 @@ namespace bold
       return control == d_controls.end()
         ? Maybe<Control>::empty()
         : Maybe<Control>(*control);
-      */
     }
 
     Maybe<Control> getControl(std::string const& controlName) const
