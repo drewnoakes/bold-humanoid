@@ -13,6 +13,15 @@ void Agent::initCamera()
   cout << "Read/write: " << (d_camera->canRead() ? "YES" : "NO") << endl;
   cout << "Streaming:  " << (d_camera->canStream() ? "YES" : "NO") << endl;
 
+  vector<string> confControls = {"Brightness"};
+
+  for (string const& controlName : confControls)
+  {
+    auto control = d_camera->getControl(controlName);
+    if (control)
+      control->setValue(d_ini.geti("Camera", controlName, control->getValue()));
+  }
+
   cout << "===== CONTROLS =====" << endl;;
   for (auto control : controls)
   {
