@@ -75,11 +75,11 @@ bool Agent::init()
   cout << "[Agent::init] Adopting standing pose" << endl;
   Robot::Action::GetInstance()->m_Joint.SetEnableBody(true, true);
 
-  cout << "[Agent::init] Sit down" << endl;
-  while(Robot::Action::GetInstance()->Start("sit down") == false)
-    usleep(8000);
-  while(Robot::Action::GetInstance()->IsRunning())
-    usleep(8*1000);
+//   cout << "[Agent::init] Sit down" << endl;
+//   while(Robot::Action::GetInstance()->Start("sit down") == false)
+//     usleep(8000);
+//   while(Robot::Action::GetInstance()->IsRunning())
+//     usleep(8*1000);
 
   cout << "[Agent::init] Stand up" << endl;
   while(Robot::Action::GetInstance()->Start("stand up") == false)
