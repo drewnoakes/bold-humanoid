@@ -28,7 +28,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
   // UPDATE STATE
   //
 
-  auto blobsPerLabel = d_blobDetectPass->blobsPerLabel;
+  auto blobsPerLabel = d_blobDetectPass->getDetectedBlobs();
   d_observations.clear();
   d_goalObservations.clear();
 

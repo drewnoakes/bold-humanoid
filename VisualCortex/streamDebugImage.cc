@@ -58,13 +58,16 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
   if (streamer->drawBlobs())
   {
     for (BlobType const& blobType : d_blobDetectPass->blobTypes())
-    for (bold::Blob blob : d_blobDetectPass->blobsPerLabel[blobType.pixelLabel])
     {
       auto blobColor = blobType.pixelLabel.hsvRange().toBgr().invert().toScalar();
-      cv::rectangle(debugImage, blob.toRect(), blobColor);
+      auto detectedBlobs = d_blobDetectPass->getDetectedBlobs().at(blobType.pixelLabel);
+      for (Blob const& blob : detectedBlobs)
+      {
+	cv::rectangle(debugImage, blob.toRect(), blobColor);
+      }
     }
   }
-
+  
   streamer->streamImage(debugImage);
   t = debugger.timeEvent(t, "Debug Image Streaming");
 }
