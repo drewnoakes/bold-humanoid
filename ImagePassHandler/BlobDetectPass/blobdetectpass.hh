@@ -1,5 +1,5 @@
-#ifndef BOLD_BLOB_DETECT_PASS_HH
-#define BOLD_BLOB_DETECT_PASS_HH
+#ifndef BOLD_BLOBDETECTPASS_HH
+#define BOLD_BLOBDETECTPASS_HH
 
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
@@ -14,57 +14,47 @@
 
 namespace bold
 {
-  /** Horizontal run of pixels */
+  /** Horizontal run of pixels
+   *
+   **/
   struct Run
   {
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-    Run(unsigned startX, unsigned y)
-      : startX(startX),
-        endX(startX),
-        y(y)
-    {}
-
-    unsigned y;        ///< The row index of the horizontal run
-    unsigned startX;   ///< The column index of the left-most pixel
-    unsigned endX;     ///< The column index of the right-most pixel
+    Run(unsigned startX, unsigned y);
 
     /** Returns the number of pixels in the run.
      *
      * If a run starts and stops at the same x position, it has length one.
-     */
-    inline unsigned length() const
-    {
-      return endX - startX + 1;
-    }
+     **/
+    unsigned length() const;
 
     /** Returns whether two runs overlap, ignoring y positions. */
-    inline static bool overlaps(Run const& a, Run const& b)
-    {
-      return std::max(a.endX, b.endX) - std::min(a.startX, b.startX) < a.length() + b.length();
-    }
+    bool overlaps(Run const& b) const;
 
     /** Compare operator
      *
      * Orders runs by y, then by startX.
      */
-    bool operator<(Run const& other) const
-    {
-      return
-        y < other.y ||
-       (y == other.y && startX < other.startX);
-    }
+    bool operator<(Run const& other) const;
 
-    friend std::ostream& operator<<(std::ostream& stream, Run const& run)
-    {
-      return stream << "Run (y=" << run.y << " x=[" << run.startX << "," << run.endX << "] len=" << run.length() << ")";
-    }
+    unsigned y;        ///< The row index of the horizontal run
+    unsigned startX;   ///< The column index of the left-most pixel
+    unsigned endX;     ///< The column index of the right-most pixel
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   };
 
-  /** A conjoined set of Runs */
+
+  /** A conjoined set of Runs
+   *
+   **/
   struct Blob
   {
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    Blob();
+
+    cv::Rect toRect() const;
+
+    bool operator<(Blob const& other) const;
 
     Eigen::Vector2i ul;      ///< Upper left pixel
     Eigen::Vector2i br;      ///< Bottom righ pixel
@@ -74,33 +64,20 @@ namespace bold
 
     std::set<Run> runs;      ///< Runs in this blob
 
-    Blob()
-    : ul(1e6,1e6),
-      br(-1,-1),
-      area(0)
-    {
-      // can these be done in the initialiser list?
-      mean << 0, 0;
-      covar << 0, 0, 0, 0;
-    }
-
-    cv::Rect toRect() const
-    {
-      auto size = br - ul;
-      return cv::Rect(ul.x(), ul.y(), size.x(), size.y());
-    }
-
-    bool operator<(Blob const& other) const
-    {
-      return
-        area > other.area ||
-        (area == other.area && mean.y() < other.mean.y());
-    }
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   };
 
+  /** Union predicate
+   *
+   * Used to determine whether two runs should be joined in a blob.
+   */
   typedef std::function<bool(Run const& a, Run const& b)> UnionPredicate;
 
-  /** Specifies a unit of work for blob detection. Contains the pixel label and union predicate function. */
+  /** Blob type
+   *
+   * Specifies a unit of work for blob detection. Contains the pixel
+   * label and union predicate function.
+   **/
   struct BlobType
   {
     const PixelLabel pixelLabel;
@@ -112,64 +89,18 @@ namespace bold
     {}
   };
 
+
+  /** Blob detection image pass
+   *
+   * Builds blobs while passing through an image
+   **/
   class BlobDetectPass : public ImagePassHandler<uchar>
   {
-  private:
-    typedef std::vector<std::vector<Run>> RunLengthCode;
-
-    int d_imageHeight;
-    int d_imageWidth;
-
-    std::vector<BlobType> d_blobTypes;
-    /** Accumulated data for the most recently passed image. */
-    std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
-    bold::Run d_currentRun;
-    uchar d_currentLabel;
-
-    /** Processes Runs into Blobs. Returns a set of blobs per label. */
-    std::map<bold::PixelLabel,std::set<Blob>> detectBlobs();
-
-    static Blob runSetToBlob(std::set<Run> const& runSet);
-
-    void addRun(int endX)
-    {
-      assert(endX >= d_currentRun.startX);
-
-      // finish whatever run we were on
-      d_currentRun.endX = endX;
-
-      // TODO do this with pointer arithmetic rather than a map lookup
-      auto it = d_runsPerRowPerLabel.find(d_currentLabel);
-      if (it != d_runsPerRowPerLabel.end())
-      {
-        it->second[d_currentRun.y].push_back(d_currentRun);
-      }
-    }
-
   public:
     /** The collection of blobs found during the last image pass. */
     std::map<bold::PixelLabel,std::set<Blob>> blobsPerLabel;
 
-    BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> blobTypes)
-    : d_blobTypes(blobTypes),
-      d_imageHeight(imageHeight),
-      d_imageWidth(imageWidth),
-      d_runsPerRowPerLabel(),
-      d_currentRun(0, 0)
-    {
-      // Create a run length code for each label
-      for (BlobType const& blobType : blobTypes)
-      {
-        uchar pixelLabelId = blobType.pixelLabel.id();
-
-        // A RunLengthCode is a vector of vectors of runs
-        d_runsPerRowPerLabel[pixelLabelId] = RunLengthCode();
-
-        // Initialise a vector of Runs for each row in the image
-        for (unsigned y = 0; y < d_imageHeight; ++y)
-          d_runsPerRowPerLabel[pixelLabelId].push_back(std::vector<bold::Run>());
-      }
-    }
+    BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> const& blobTypes);
 
     void onImageStarting()
     {
@@ -226,7 +157,96 @@ namespace bold
     }
 
     std::vector<BlobType> blobTypes() const { return d_blobTypes; }
+
+  private:
+    typedef std::vector<std::vector<Run>> RunLengthCode;
+    
+    int d_imageHeight;
+    int d_imageWidth;
+    
+    std::vector<BlobType> d_blobTypes;
+    /** Accumulated data for the most recently passed image. */
+    std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
+    bold::Run d_currentRun;
+    uchar d_currentLabel;
+    
+    /** Processes Runs into Blobs. Returns a set of blobs per label. */
+    std::map<bold::PixelLabel,std::set<Blob>> detectBlobs();
+
+    static Blob runSetToBlob(std::set<Run> const& runSet);
+    
+    void addRun(int endX)
+    {
+      assert(endX >= d_currentRun.startX);
+      
+      // finish whatever run we were on
+      d_currentRun.endX = endX;
+
+      // TODO do this with pointer arithmetic rather than a map lookup
+      auto it = d_runsPerRowPerLabel.find(d_currentLabel);
+      if (it != d_runsPerRowPerLabel.end())
+      {
+        it->second[d_currentRun.y].push_back(d_currentRun);
+      }
+    }
   };
+  
+ 
+  //// Inline members
+
+  // Run
+  inline Run::Run(unsigned startX, unsigned y)
+    : startX(startX),
+      endX(startX),
+      y(y)
+  {}
+  
+  inline unsigned Run::length() const
+  {
+    return endX - startX + 1;
+  }
+
+  inline bool Run::overlaps(Run const& b) const
+  {
+    return std::max(endX, b.endX) - std::min(startX, b.startX) < length() + length();
+  }
+  
+  inline bool Run::operator<(Run const& other) const
+  {
+    return
+      y < other.y ||
+      (y == other.y && startX < other.startX);
+  }
+
+  // Blob
+  inline Blob::Blob()
+    : ul(1e6,1e6),
+      br(-1,-1),
+      area(0)
+  {
+    // can these be done in the initialiser list?
+    mean << 0, 0;
+    covar << 0, 0, 0, 0;
+  }
+
+  inline cv::Rect Blob::toRect() const
+  {
+    auto size = br - ul;
+    return cv::Rect(ul.x(), ul.y(), size.x(), size.y());
+  }
+
+  inline bool Blob::operator<(Blob const& other) const
+  {
+    return
+      area > other.area ||
+      (area == other.area && mean.y() < other.mean.y());
+  }
+
+}
+
+inline std::ostream& operator<<(std::ostream& stream, bold::Run const& run)
+{
+  return stream << "Run (y=" << run.y << " x=[" << run.startX << "," << run.endX << "] len=" << run.length() << ")";
 }
 
 #endif
