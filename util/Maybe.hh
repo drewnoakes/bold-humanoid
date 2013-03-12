@@ -8,8 +8,8 @@ namespace bold
   template<typename T>
   struct Maybe
   {
-    bool hasValue() { return d_hasValue; }
-    std::shared_ptr<T> value() { return d_value; }
+    bool hasValue() const { return d_hasValue; }
+    std::shared_ptr<T> value() const { return d_value; }
 
     static Maybe<T> empty() { return Maybe<T>(false); }
 
@@ -22,6 +22,16 @@ namespace bold
     : d_hasValue(true),
       d_value(value)
     {}
+
+    operator bool() const
+    {
+      return hasValue();
+    }
+
+    std::shared_ptr<T> operator->() const
+    {
+      return value();
+    }
 
     bool operator==(Maybe const& other) const
     {
