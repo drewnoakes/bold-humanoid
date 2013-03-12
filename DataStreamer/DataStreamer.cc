@@ -2,7 +2,13 @@
 
 DataStreamer::DataStreamer(int port)
 : d_port(port),
-  d_gameStateUpdated(false)
+  d_gameStateUpdated(false),
+  d_agentModelUpdated(false),
+  d_imageType(ImageType::None),
+  d_streamFramePeriod(10),
+  d_camera(0),
+  d_context(0)
+
 {
   std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
 }
