@@ -130,9 +130,22 @@ namespace bold
     Maybe<Control> getControl(unsigned controlId) const
     {
       auto control = find_if(d_controls.begin(), d_controls.end(),
-                            [controlId](Camera::Control const& c)
+                            [&controlId](Camera::Control const& c)
                             {
                               return c.id == controlId;
+                            });
+
+      return control == d_controls.end()
+        ? Maybe<Control>::empty()
+        : Maybe<Control>(*control);
+    }
+
+    Maybe<Control> getControl(std::string const& controlName) const
+    {
+      auto control = find_if(d_controls.begin(), d_controls.end(),
+                            [&controlName](Camera::Control const& c)
+                            {
+                              return c.name == controlName;
                             });
 
       return control == d_controls.end()
