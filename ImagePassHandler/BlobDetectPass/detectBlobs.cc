@@ -1,8 +1,7 @@
 #include "blobdetectpass.ih"
 
-map<PixelLabel,set<Blob>> BlobDetectPass::detectBlobs()
+void BlobDetectPass::detectBlobs()
 {
-  map<PixelLabel,set<Blob>> blobsByLabel;
 
   // For each label that we're configured to look at
   for (BlobType const& blobType : d_blobTypes)
@@ -39,15 +38,12 @@ map<PixelLabel,set<Blob>> BlobDetectPass::detectBlobs()
 
     set<set<Run>> runSets = rSet.getSubSets();
 
-    set<Blob> blobSet;
+    auto& blobSet = d_blobsDetectedPerLabel[blobType.pixelLabel];
+    blobSet.clear();
 
-    // Convert sets of sets runs to sets of blob
+    // Convert sets of run-sets to sets of blob
     transform(runSets.begin(), runSets.end(),
               inserter(blobSet, blobSet.end()),
               runSetToBlob);
-
-    blobsByLabel[blobType.pixelLabel] = blobSet;
   }
-
-  return blobsByLabel;
 }

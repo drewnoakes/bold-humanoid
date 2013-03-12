@@ -41,6 +41,11 @@ namespace bold
     unsigned endX;     ///< The column index of the right-most pixel
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    inline friend std::ostream& operator<<(std::ostream& stream, bold::Run const& run)
+    {
+      return stream << "Run (y=" << run.y << " x=[" << run.startX << "," << run.endX << "] len=" << run.length() << ")";
+    }
   };
 
 
@@ -51,6 +56,11 @@ namespace bold
   {
 
     Blob();
+    Blob(Blob const& other);
+    Blob(Blob&& other);
+
+    Blob& operator=(Blob const& other);
+    Blob& operator=(Blob&& other);
 
     cv::Rect toRect() const;
 
@@ -65,6 +75,14 @@ namespace bold
     std::set<Run> runs;      ///< Runs in this blob
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    
+    inline friend std::ostream& operator<<(std::ostream& stream, bold::Blob const& blob)
+    {
+      return stream << "Blob (ul=[" << blob.ul.transpose() << "] br=[" << blob.br.transpose() << "])";
+    }
+
+  private:
+    Blob& move(Blob&& other);
   };
 
   /** Union predicate
@@ -97,9 +115,6 @@ namespace bold
   class BlobDetectPass : public ImagePassHandler<uchar>
   {
   public:
-    /** The collection of blobs found during the last image pass. */
-    std::map<bold::PixelLabel,std::set<Blob>> blobsPerLabel;
-
     BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> const& blobTypes);
 
     void onImageStarting()
@@ -153,10 +168,12 @@ namespace bold
 
     void onImageComplete()
     {
-      blobsPerLabel = detectBlobs();
+      detectBlobs();
     }
 
     std::vector<BlobType> blobTypes() const { return d_blobTypes; }
+
+    std::map<bold::PixelLabel,std::vector<Blob>> const& getDetectedBlobs() const { return d_blobsDetectedPerLabel; }
 
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
@@ -165,13 +182,17 @@ namespace bold
     int d_imageWidth;
     
     std::vector<BlobType> d_blobTypes;
-    /** Accumulated data for the most recently passed image. */
+
+    // Image pass state Accumulated data for the most recently passed image.
     std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
     bold::Run d_currentRun;
     uchar d_currentLabel;
     
-    /** Processes Runs into Blobs. Returns a set of blobs per label. */
-    std::map<bold::PixelLabel,std::set<Blob>> detectBlobs();
+    // Blobs detected
+    std::map<bold::PixelLabel,std::vector<Blob>> d_blobsDetectedPerLabel;
+
+    // Processes Runs into Blobs. Returns a set of blobs per label
+    void detectBlobs();
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
     
@@ -222,11 +243,49 @@ namespace bold
   inline Blob::Blob()
     : ul(1e6,1e6),
       br(-1,-1),
-      area(0)
+      area(0),
+      mean(Eigen::Vector2f::Zero()),
+      covar(Eigen::Matrix2f::Zero())
   {
-    // can these be done in the initialiser list?
-    mean << 0, 0;
-    covar << 0, 0, 0, 0;
+  }
+
+  inline Blob::Blob(Blob const& other)
+    : ul(other.ul),
+      br(other.br),
+      area(other.area),
+      mean(other.mean),
+      covar(other.covar),
+      runs(other.runs)
+  {}
+
+  inline Blob::Blob(Blob&& other)
+    : ul(std::move(other.ul)),
+      br(std::move(other.br)),
+      area(other.area),
+      mean(std::move(other.mean)),
+      covar(std::move(other.covar)),
+      runs(std::move(other.runs))
+  {
+  }
+
+  inline Blob& Blob::operator=(Blob const& other)
+  {
+    ul = other.ul;
+    br = other.br;
+    area = other.area;
+    mean = other.mean;
+    covar = other.covar;
+    runs = other.runs;
+  }
+
+  inline Blob& Blob::operator=(Blob&& other)
+  {
+    ul = std::move(other.ul);
+    br = std::move(other.br);
+    area = other.area;
+    mean = std::move(other.mean);
+    covar = std::move(other.covar);
+    runs = std::move(other.runs);
   }
 
   inline cv::Rect Blob::toRect() const
@@ -244,9 +303,5 @@ namespace bold
 
 }
 
-inline std::ostream& operator<<(std::ostream& stream, bold::Run const& run)
-{
-  return stream << "Run (y=" << run.y << " x=[" << run.startX << "," << run.endX << "] len=" << run.length() << ")";
-}
 
 #endif
