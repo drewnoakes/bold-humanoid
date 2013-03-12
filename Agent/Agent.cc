@@ -1,6 +1,6 @@
 #include "agent.ih"
 
-#include "../vision/Camera/camera.hh"
+#include "../Camera/camera.hh"
 #include "../vision/ImagePasser/imagepasser.hh"
 #include "../vision/ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
 #include "../vision/ImagePassHandler/LineDotPass/linedotpass.hh"

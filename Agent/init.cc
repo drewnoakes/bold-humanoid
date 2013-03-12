@@ -26,9 +26,12 @@ bool Agent::init()
 //   }
 
   // TODO only stream if argument specified?
+  // TODO port from config, not constructor
   d_streamer = new DataStreamer(8080);
   d_streamer->initialise(d_ini);
   d_streamer->setCamera(d_camera);
+
+  d_streamer->registerControls("camera", d_camera->getControls());
 
   Debugger::getInstance().update(d_CM730);
 
@@ -38,7 +41,8 @@ bool Agent::init()
   // Motion manager
   //
   cout << "[Agent::init] Initialising motion manager" << endl;
-  if(MotionManager::GetInstance()->Initialize(&d_CM730) == false)
+  MotionManager* motionManager = MotionManager::GetInstance();
+  if (!motionManager->Initialize(&d_CM730))
   {
     cout << "[Agent::init] Failed to initialize Motion Manager!" << endl;
     return false;
@@ -48,22 +52,22 @@ bool Agent::init()
   Walking::GetInstance()->LoadINISettings(&d_ini);
 
   cout << "[Agent::init] Adding motion modules" << endl;
-  MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Action::GetInstance());
-  MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Head::GetInstance());
-  MotionManager::GetInstance()->AddModule((MotionModule*)Robot::Walking::GetInstance());
+  motionManager->AddModule((MotionModule*)Robot::Action::GetInstance());
+  motionManager->AddModule((MotionModule*)Robot::Head::GetInstance());
+  motionManager->AddModule((MotionModule*)Robot::Walking::GetInstance());
 
   cout << "[Agent::init] Loading motion manager settings" << endl;
-  MotionManager::GetInstance()->LoadINISettings(&d_ini);
+  motionManager->LoadINISettings(&d_ini);
 
   cout << "[Agent::init] Setup and starting motion timer" << endl;
-  d_motionTimer = new LinuxMotionTimer(MotionManager::GetInstance());
+  d_motionTimer = new LinuxMotionTimer(motionManager);
   d_motionTimer->Start();
 
   cout << "[Agent::init] Registering motion modules" << endl;
   Robot::Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
 
   cout << "[Agent::init] Enabling motion manager" << endl;
-  MotionManager::GetInstance()->SetEnable(true);
+  motionManager->SetEnable(true);
 
   cout << "[Agent::init] Loading actions from motion file: " << d_motionFile.c_str() << endl;
   Robot::Action::GetInstance()->LoadFile((char*)d_motionFile.c_str());
@@ -84,18 +88,18 @@ bool Agent::init()
     usleep(8*1000);
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
-  MotionManager::GetInstance()->ResetGyroCalibration();
+  motionManager->ResetGyroCalibration();
   while(1)
   {
-    if(MotionManager::GetInstance()->GetCalibrationStatus() == 1)
+    if(motionManager->GetCalibrationStatus() == 1)
     {
       cout << "[Agent::init] Calibration complete" << endl;
       break;
     }
-    else if(MotionManager::GetInstance()->GetCalibrationStatus() == -1)
+    else if(motionManager->GetCalibrationStatus() == -1)
     {
       cout << "[Agent::init] Calibration failed" << endl;
-      MotionManager::GetInstance()->ResetGyroCalibration();
+      motionManager->ResetGyroCalibration();
     }
     usleep(8000);
   }

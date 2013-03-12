@@ -23,5 +23,8 @@ void DataStreamer::initialise(minIni const& ini)
   GameState::getInstance().updated.connect([this]{ d_gameStateUpdated = true; });
   AgentModel::getInstance().updated.connect([this]{ d_agentModelUpdated = true; });
 
+  // TODO split into vision and head controls
+  registerControls("debug", getDebugControls());
+
   std::cout << "[DataStreamer:initialise] Done" << std::endl;
 }

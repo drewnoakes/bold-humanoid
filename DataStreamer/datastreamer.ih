@@ -10,6 +10,7 @@
 #include <syslog.h>
 #include <signal.h>
 #include <vector>
+#include <map>
 #include <iostream>
 #include <cmath>
 #include <sstream>
@@ -26,3 +27,4 @@
 using namespace bold;
 using namespace std;
 using namespace Robot;
+using namespace rapidjson;

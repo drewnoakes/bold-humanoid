@@ -2,7 +2,7 @@
 #include "../Debugger/debugger.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../GameState/gamestate.hh"
-#include "../vision/Camera/camera.hh"
+#include "../Camera/camera.hh"
 
 void Agent::think()
 {

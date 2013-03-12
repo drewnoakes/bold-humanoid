@@ -4,9 +4,11 @@ void Agent::initCamera()
 {
   cout << "[Agent::initCamera] Start" << endl;
 
-  d_camera->open();
+  // TODO get camera height/width from config
+  unsigned width = 320;
+  unsigned height = 240;
 
-  auto controls = d_camera->getControls();
+  d_camera->open();
 
   cout << "===== CAPABILITIES =====" << endl;
 
@@ -23,34 +25,24 @@ void Agent::initCamera()
   }
 
   cout << "===== CONTROLS =====" << endl;;
-  for (auto control : controls)
+  for (Control const& control : d_camera->getControls())
   {
-    cout <<
-      "Control: " << control.name << " " << control.type <<
-      " (" << control.minimum << "-" << control.maximum << ", def: " << control.defaultValue << "), val.: ";
-    
-    cout << control.getValue() << endl;
+    cout << "Control: " << control << endl;
   }
 
   cout << "===== FORMATS =====" << endl;
-  auto formats = d_camera->getFormats();
-  for (auto format : formats)
-  {
+  for (auto const& format : d_camera->getFormats())
     cout << "Format: "  << format.description << endl;
-  }
 
   cout << "===== CURRENT FORMAT =====" << endl;
-  bool res = d_camera->getPixelFormat().requestSize(320,240);
-  cout << "Set format: " << (res ? "YES" : "NO") << endl;
+  bool res = d_camera->getPixelFormat().requestSize(width, height);
+  cout << "Request size " << width << "x" << height << ": " << (res ? "OK" : "FAIL") << endl;
 
   auto pixelFormat = d_camera->getPixelFormat();
-
-
   cout << "Width          : " << pixelFormat.width << endl;
   cout << "Height         : " << pixelFormat.height << endl;
   cout << "Bytes per line : " << pixelFormat.bytesPerLine << endl;
   cout << "Bytes total    : " << pixelFormat.imageByteSize << endl;
-
 
   d_camera->startCapture();
 }

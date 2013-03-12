@@ -7,7 +7,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "../Debugger/debugger.hh"
-#include "../vision/Camera/camera.hh"
+#include "../Camera/camera.hh"
 
 namespace cv
 {
@@ -55,7 +55,7 @@ namespace bold
   public:
     DataStreamer(int port);
 
-    // TODO provide port from config via initialise function
+    // TODO provide port from config via initialise function, rather than in DataStreamer constructor
     void initialise(minIni const& ini);
     void update();
     void close();
@@ -74,11 +74,15 @@ namespace bold
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img);
 
+    void registerControls(std::string family, std::vector<Control> controls);
+
   private:
     void sendCameraStateAndOptions(libwebsocket* wsi);
     void sendImageBytes(libwebsocket* wsi, CameraSession* session);
 
     void processCameraCommand(std::string json);
+
+    std::vector<Control> getDebugControls();
 
     bool d_gameStateUpdated;
     bool d_agentModelUpdated;
@@ -93,6 +97,8 @@ namespace bold
     Camera* d_camera;
 
     std::vector<CameraSession*> d_cameraSessions;
+
+    std::map<std::string,std::map<unsigned, Control>> d_controlsByIdByFamily;
 
     const int d_port;
     libwebsocket_context* d_context;

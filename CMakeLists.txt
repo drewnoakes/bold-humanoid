@@ -32,7 +32,7 @@ macro(add_pcih _target _ih_path)
   else(CMAKE_BUILD_TYPE)
     string(TOUPPER "CMAKE_CXX_FLAGS" _cmake_cxx_flags_var)
   endif(CMAKE_BUILD_TYPE)
-  
+
   set(_cmake_cxx_flags ${${_cmake_cxx_flags_var}})
   list(APPEND _COMPILE_FLAGS ${_cmake_cxx_flags})
 
@@ -98,6 +98,20 @@ set(BOLDHUMANOID_SOURCES
 ./Agent/run.cc
 ./Agent/standUpIfFallen.cc
 ./Agent/think.cc
+./Camera/Camera.cc
+./Camera/capture.cc
+./Camera/getControlValue.cc
+./Camera/initMemoryMapping.cc
+./Camera/listControls.cc
+./Camera/listFormats.cc
+./Camera/open.cc
+./Camera/pixelFormatRequestSize.cc
+./Camera/startCapture.cc
+./Camera/stopCapture.cc
+./Control/create.cc
+./Control/handleRequest.cc
+./Control/staticfields.cc
+./Control/writeState.cc
 ./CM730Snapshot/init.cc
 ./Debugger/debugger.cc
 ./DataStreamer/callbackAgentModel.cc
@@ -107,8 +121,10 @@ set(BOLDHUMANOID_SOURCES
 ./DataStreamer/callbackTiming.cc
 ./DataStreamer/close.cc
 ./DataStreamer/DataStreamer.cc
+./DataStreamer/getDebugControls.cc
 ./DataStreamer/initialise.cc
 ./DataStreamer/processCameraCommand.cc
+./DataStreamer/registerControls.cc
 ./DataStreamer/sendCameraStateAndOptions.cc
 ./DataStreamer/sendImageBytes.cc
 ./DataStreamer/shouldProvideImage.cc
@@ -122,18 +138,6 @@ set(BOLDHUMANOID_SOURCES
 ./VisualCortex/pixelLabelFromConfig.cc
 ./VisualCortex/streamDebugImage.cc
 ./WorldModel/initialise.cc
-${VISIONDIR}/Camera/Camera.cc
-${VISIONDIR}/Camera/capture.cc
-${VISIONDIR}/Camera/fillControlMenuItems.cc
-${VISIONDIR}/Camera/getControlValue.cc
-${VISIONDIR}/Camera/initMemoryMapping.cc
-${VISIONDIR}/Camera/listControls.cc
-${VISIONDIR}/Camera/listFormats.cc
-${VISIONDIR}/Camera/open.cc
-${VISIONDIR}/Camera/pixelFormatRequestSize.cc
-${VISIONDIR}/Camera/setControlValue.cc
-${VISIONDIR}/Camera/startCapture.cc
-${VISIONDIR}/Camera/stopCapture.cc
 ${VISIONDIR}/Colour/bgr2hsv.cc
 ${VISIONDIR}/Colour/hsv2bgr.cc
 ${VISIONDIR}/Colour/hsvRange.cc
@@ -156,14 +160,15 @@ ${JOYSTICKDIR}/joystick.cc
 
 # Internal header files to be compiles
 set(INTERNAL_HEADERS
-./vision/PixelFilterChain/pixelfilterchain.ih
-./vision/Camera/camera.ih
-./vision/HoughLineAccumulator/houghlineaccumulator.ih
-./vision/LUTBuilder/lutbuilder.ih
-./vision/ImagePassHandler/BlobDetectPass/blobdetectpass.ih
-./DataStreamer/datastreamer.ih
 ./Agent/agent.ih
-./VisualCortex/visualcortex.ih)
+./Camera/camera.ih
+./Control/control.ih
+./DataStreamer/datastreamer.ih
+./VisualCortex/visualcortex.ih
+./vision/HoughLineAccumulator/houghlineaccumulator.ih
+./vision/ImagePassHandler/BlobDetectPass/blobdetectpass.ih
+./vision/LUTBuilder/lutbuilder.ih
+./vision/PixelFilterChain/pixelfilterchain.ih)
 
 include_directories(
 ${DARWINDIR}/Linux/include

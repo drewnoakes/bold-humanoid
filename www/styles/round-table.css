@@ -74,7 +74,7 @@ div.panel h2
     top: 0;
 }
 
-#camera-controls-container
+#camera-controls
 {
     position: absolute;
     left: 400px;
@@ -88,34 +88,41 @@ div.panel h2
 {
 }
 
-.camera-control
+.control
 {
     display: inline-block;
 }
 
-.camera-control h3, .camera-control label
+.control h3,
+.control label
 {
     font-weight: normal;
     margin: 0;
     font-size: 11px;
 }
 
-.camera-control .values
+#camera-controls .control .values
 {
     color: #666;
     font-size: 10px;
 }
 
-.camera-control input[type=text], .camera-control select
+#camera-controls .control input[type=text],
+#camera-controls .control select
 {
     width: 170px;
     box-sizing: border-box;
 }
 
-#camera-head-controls
+#head-controls
 {
     position: absolute;
     top: 300px;
+    width: 350px;
+}
+
+#vision-controls
+{
 }
 
 #timing table.timing-details tr td:nth-child(2)

@@ -12,39 +12,43 @@ int DataStreamer::callback_camera(
 
   switch (reason)
   {
-  case LWS_CALLBACK_ESTABLISHED:
-    // New client connected; initialize session
-    memset(cameraSession, 0, sizeof(CameraSession));
-    d_cameraSessions.push_back(cameraSession);
-    break;
-
-  case LWS_CALLBACK_CLOSED:
-    // Client disconnected
-    d_cameraSessions.erase(find(d_cameraSessions.begin(), d_cameraSessions.end(), cameraSession));
-    break;
-
-  case LWS_CALLBACK_SERVER_WRITEABLE:
-    // Can write to client
-    if (!cameraSession->hasSentStateAndOptions)
+    case LWS_CALLBACK_ESTABLISHED:
     {
-      sendCameraStateAndOptions(wsi);
-      cameraSession->hasSentStateAndOptions = true;
+      // New client connected; initialize session
+      memset(cameraSession, 0, sizeof(CameraSession));
+      d_cameraSessions.push_back(cameraSession);
+      break;
     }
-    else if (cameraSession->imgReady)
+    case LWS_CALLBACK_CLOSED:
     {
-      sendImageBytes(wsi, cameraSession);
+      // Client disconnected
+      d_cameraSessions.erase(find(d_cameraSessions.begin(), d_cameraSessions.end(), cameraSession));
+      break;
     }
-    break;
-
-  case LWS_CALLBACK_RECEIVE:
-    if (len != 0)
+    case LWS_CALLBACK_SERVER_WRITEABLE:
     {
-      string str((char const*)in, len);
-      processCameraCommand(str);
+      // Can write to client
+      if (!cameraSession->hasSentStateAndOptions)
+      {
+        sendCameraStateAndOptions(wsi);
+        cameraSession->hasSentStateAndOptions = true;
+      }
+      else if (cameraSession->imgReady)
+      {
+        sendImageBytes(wsi, cameraSession);
+      }
+      break;
     }
-    break;
+    case LWS_CALLBACK_RECEIVE:
+    {
+      if (len != 0)
+      {
+        string str((char const*)in, len);
+        processCameraCommand(str);
+      }
+      break;
+    }
   }
 
   return 0;
 }
-

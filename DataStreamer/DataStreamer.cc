@@ -4,14 +4,13 @@ DataStreamer::DataStreamer(int port)
 : d_port(port),
   d_gameStateUpdated(false),
   d_agentModelUpdated(false),
-  d_imageType(ImageType::None),
+  d_imageType(ImageType::RGB),
   d_streamFramePeriod(10),
   d_camera(0),
   d_context(0),
   d_drawObservedLines(true),
   d_drawExpectedLines(true),
-  d_drawBlobs(true),
-  d_imageType(ImageType::RGB)
+  d_drawBlobs(true)
 {
   std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
 }
