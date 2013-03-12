@@ -16,12 +16,16 @@ void VisualCortex::initialise(minIni const& ini)
 
   d_minBallArea = ini.geti("Vision", "MinBallArea", 8*8);
 
-  auto ballUnionPred = &Run::overlaps;
+  auto ballUnionPred =
+    [] (Run const& a, Run const& b)
+    {
+      return a.overlaps(b);
+    };
 
   auto goalUnionPred =
     [] (Run const& a, Run const& b)
     {
-      if (!Run::overlaps(a, b))
+      if (!a.overlaps(b))
         return false;
 
       float ratio = (float)a.length() / (float)b.length();
