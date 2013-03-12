@@ -1,8 +1,4 @@
-#include "blobdetectpass.hh"
-
-using namespace bold;
-using namespace std;
-using namespace Eigen;
+#include "blobdetectpass.ih"
 
 Blob BlobDetectPass::runSetToBlob(set<Run> const& runSet)
 {

@@ -1,7 +1,4 @@
-#include "blobdetectpass.hh"
-
-using namespace bold;
-using namespace std;
+#include "blobdetectpass.ih"
 
 map<PixelLabel,set<Blob>> BlobDetectPass::detectBlobs()
 {
