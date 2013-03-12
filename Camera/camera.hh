@@ -129,35 +129,27 @@ namespace bold
 
     Maybe<Control> getControl(unsigned controlId) const
     {
-      // this just returns the first control. idea: make getControl(std::function pred)
-      /*
-      for (auto const& control : d_controls)
-        return Maybe<Control>(control);
-
-      return Maybe<Control>::empty();
-      */
-      auto control = find_if(d_controls.begin(), d_controls.end(),
-                            [&controlId](Camera::Control const& c)
-                            {
-                              return c.id == controlId;
-                            });
-
-      return control == d_controls.end()
-        ? Maybe<Control>::empty()
-        : Maybe<Control>(*control);
+      return getControl([&controlId](Camera::Control const& c)
+			{
+			  return c.id == controlId;
+			});
     }
 
     Maybe<Control> getControl(std::string const& controlName) const
     {
-      auto control = find_if(d_controls.begin(), d_controls.end(),
-                            [&controlName](Camera::Control const& c)
-                            {
-                              return c.name == controlName;
-                            });
+      return getControl([&controlName](Camera::Control const& c)
+			{
+			  return c.name == controlName;
+			});
+    }
 
-      return control == d_controls.end()
-        ? Maybe<Control>::empty()
-        : Maybe<Control>(*control);
+    Maybe<Control> getControl(std::function<bool(Control const&)> const& pred) const
+    {
+      for (Control const& c : d_controls)
+	if (pred(c))
+	  return Maybe<Control>(c);
+
+      return Maybe<Control>::empty();
     }
 
     std::vector<Format> getFormats() const { return d_formats; }
