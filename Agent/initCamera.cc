@@ -31,7 +31,7 @@ void Agent::initCamera()
   }
 
   cout << "===== FORMATS =====" << endl;
-  for (auto const& format : d_camera->getFormats())
+  for (Camera::Format const& format : d_camera->getFormats())
     cout << "Format: "  << format.description << endl;
 
   cout << "===== CURRENT FORMAT =====" << endl;

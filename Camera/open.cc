@@ -6,9 +6,11 @@ void Camera::open()
 
   if (d_fd < 0)
   {
-    cout << "[Camera] Failed opening device: " << d_device << endl;
+    cout << "[Camera::open] Failed opening device: " << d_device << endl;
     exit(0);
   }
+
+  cout << "[Camera::open] camera opened" << endl;
 
   // List capabilities
   ioctl(d_fd, VIDIOC_QUERYCAP, &d_capabilities);
@@ -23,7 +25,9 @@ void Camera::open()
 
   // List user controls
   d_controls = listControls();
+  cout << "[Camera::open] obtained " << d_controls.size() << " controls" << endl;
 
   // List image formats
   d_formats = listFormats();
+  cout << "[Camera::open] obtained " << d_formats.size() << " formats" << endl;
 }
