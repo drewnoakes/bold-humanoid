@@ -35,6 +35,10 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
   {
     debugImage = Mat(cameraImage.size(), cameraImage.type(), Scalar(0));
   }
+  else
+  {
+    cout << "[VisualCortex::streamDebugging] Unknown image type requested!" << endl;
+  }
 
   // Draw lines
   if (streamer->drawLines() && d_lines.size() > 0)
