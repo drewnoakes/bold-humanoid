@@ -147,6 +147,7 @@ ${VISIONDIR}/HoughLineExtractor/findMaxLine.cc
 ${VISIONDIR}/ImageLabeller/ImageLabeller.cc
 ${VISIONDIR}/ImagePassHandler/BlobDetectPass/detectBlobs.cc
 ${VISIONDIR}/ImagePassHandler/BlobDetectPass/runSetToBlob.cc
+${VISIONDIR}/ImagePassHandler/BlobDetectPass/BlobDetectPass.cc
 ${VISIONDIR}/LineFinder/find.cc
 ${VISIONDIR}/LUTBuilder/buildLookUpTable.cc
 ${VISIONDIR}/PixelFilterChain/applyFilters.cc
@@ -160,6 +161,7 @@ set(INTERNAL_HEADERS
 ./vision/Camera/camera.ih
 ./vision/HoughLineAccumulator/houghlineaccumulator.ih
 ./vision/LUTBuilder/lutbuilder.ih
+./vision/ImagePassHandler/BlobDetectPass/blobdetectpass.ih
 ./DataStreamer/datastreamer.ih
 ./Agent/agent.ih
 ./VisualCortex/visualcortex.ih)
