@@ -8,6 +8,8 @@ define(
     ],
     function(DataProxy, Protocols)
     {
+        'use strict';
+
         var chartOptions = {
             grid: {
                 strokeStyle: 'rgb(40, 40, 40)',

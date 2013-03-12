@@ -7,6 +7,8 @@ define(
     ],
     function(Constants)
     {
+        'use strict';
+
         var FieldMap = function(canvas)
         {
             this.canvas = canvas;

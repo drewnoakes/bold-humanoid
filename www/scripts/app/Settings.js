@@ -7,6 +7,8 @@ define(
     ],
     function (Constants)
     {
+        'use strict';
+
         var getQueryStringParameterByName = function(name)
         {
             name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");

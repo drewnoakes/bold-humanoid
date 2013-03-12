@@ -8,6 +8,8 @@ define(
     ],
     function(DataProxy, Protocols)
     {
+        'use strict';
+
         //noinspection UnnecessaryLocalVariableJS
         var GameStateMonitor = function()
         {

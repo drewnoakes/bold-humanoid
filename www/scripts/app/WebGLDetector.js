@@ -7,6 +7,8 @@ define(
     [],
     function ()
     {
+        'use strict';
+
         var WebGLDetector = {
             canvas: !!window.CanvasRenderingContext2D,
             webgl: (function ()

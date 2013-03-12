@@ -6,6 +6,8 @@ define(
     ],
     function()
     {
+        'use strict';
+
         // all lengths are in metres
         var Constants = {
             fieldX: 6.0,

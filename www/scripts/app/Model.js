@@ -10,6 +10,8 @@ define(
     ],
     function(GeometryUtil, DataProxy, Protocols, Constants)
     {
+        'use strict';
+
         // camera variables
         var cameraDistance = 0.4,
             cameraTheta = -Math.PI/4,

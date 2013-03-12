@@ -6,6 +6,8 @@ define(
     ],
     function(WebSocketFactory, Protocols, ControlBuilder)
     {
+        'use strict';
+
         var protocol = Protocols.camera,
             socket,
             imgState = 0,

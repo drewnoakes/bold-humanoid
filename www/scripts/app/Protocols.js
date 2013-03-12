@@ -6,6 +6,8 @@ define(
     ],
     function ()
     {
+        'use strict';
+
         //noinspection UnnecessaryLocalVariableJS
 
         var Protocols = {

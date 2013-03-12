@@ -7,6 +7,8 @@ define(
     ],
     function (WebSocketFactory)
     {
+        'use strict';
+
         var dataByProtocol = {};
 
         var DataProxy = {};
