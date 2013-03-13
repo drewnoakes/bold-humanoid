@@ -18,22 +18,22 @@ ${GEOMETRY_OBJECTS}: ${GEOMETRY_HEADERS}
 
 
 
-CAMERA_SOURCES=\
-	../Camera/Camera.cc\
-	../Camera/capture.cc\
-	../Camera/initMemoryMapping.cc\
-	../Camera/fillControlMenuItems.cc\
-	../Camera/getControlValue.cc\
-	../Camera/listControls.cc\
-	../Camera/listFormats.cc\
-	../Camera/open.cc\
-	../Camera/pixelFormatRequestSize.cc\
-	../Camera/setControlValue.cc\
-	../Camera/startCapture.cc\
-	../Camera/stopCapture.cc\
-	../PixelFilterChain/applyFilters.cc
-CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
-${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
+# CAMERA_SOURCES=\
+# 	../Camera/Camera.cc\
+# 	../Camera/capture.cc\
+# 	../Camera/initMemoryMapping.cc\
+# 	../Camera/fillControlMenuItems.cc\
+# 	../Camera/getControlValue.cc\
+# 	../Camera/listControls.cc\
+# 	../Camera/listFormats.cc\
+# 	../Camera/open.cc\
+# 	../Camera/pixelFormatRequestSize.cc\
+# 	../Camera/setControlValue.cc\
+# 	../Camera/startCapture.cc\
+# 	../Camera/stopCapture.cc\
+# 	../PixelFilterChain/applyFilters.cc
+# CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
+# ${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
 
 
 

@@ -4,18 +4,6 @@ LDFLAGS=`pkg-config opencv --libs`
 all: unittests
 
 SOURCES=\
-	../Camera/Camera.cc\
-	../Camera/capture.cc\
-	../Camera/getControlValue.cc\
-	../Camera/fillControlMenuItems.cc\
-	../Camera/initMemoryMapping.cc\
-	../Camera/listControls.cc\
-	../Camera/listFormats.cc\
-	../Camera/open.cc\
-	../Camera/pixelFormatRequestSize.cc\
-	../Camera/setControlValue.cc\
-	../Camera/startCapture.cc\
-	../Camera/stopCapture.cc\
 	../Colour/bgr2hsv.cc\
 	../Colour/hsv2bgr.cc\
 	../Colour/hsvRange.cc\
