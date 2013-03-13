@@ -12,38 +12,99 @@ define(
     {
         'use strict';
 
-        // camera variables
-        var cameraDistance = 0.4,
-            cameraTheta = -Math.PI/4,
-            cameraPhi = Math.PI/6;
-
-        var camera, scene, renderer;
-
-        init();
-
-        // TODO get rid of keyboard control
-
-        // use this for keyboard control
-        var activeHingeIndex = 0;
-        var hinges = [];
-
-        var root = buildBody(Constants.bodyStructure, hinges, function()
+        var ModelModule = function()
         {
-            scene.add(root);
-            render();
-        });
+            // camera variables
+            this.cameraDistance = 0.4;
+            this.cameraTheta = -Math.PI/4;
+            this.cameraPhi = Math.PI/6;
 
-        var pendingTextureCount = 3;
+            this.$element = $('<div></div>');
+            this.element = this.$element.get(0);
 
-        function init()
+            /////
+
+            this.title = 'model';
+            this.moduleClass = 'model';
+            this.panes = [
+                {
+                    title: 'main',
+                    element: this.element,
+                    onResized: _.bind(this.onResized, this),
+                    supports: { fullScreen: true }
+                }
+            ];
+        };
+
+        ModelModule.prototype.load = function()
         {
-            scene = new THREE.Scene();
-            scene.add(new THREE.AmbientLight(0x777777));
+            var self = this;
+            this.hinges = [];
+            this.isRenderQueued = false;
+
+            this.initialiseScene();
+
+            var root = this.buildBody(Constants.bodyStructure, this.hinges, function()
+            {
+                self.scene.add(root);
+                self.render();
+            });
+
+            this.subscription = DataProxy.subscribe(Protocols.agentModel, { onmessage: _.bind(this.onMessage, this) });
+        };
+
+        ModelModule.prototype.unload = function()
+        {
+            this.subscription.cancel();
+        };
+
+        ModelModule.prototype.onResized = function(width, height)
+        {
+            this.renderer.setSize(width, height);
+            this.camera.aspect = width / height;
+            this.camera.updateProjectionMatrix();
+        };
+
+        ModelModule.prototype.onMessage = function(msg)
+        {
+            var floats = DataProxy.parseFloats(msg.data),
+                angles = floats.slice(6);
+
+            if (!angles || angles.length !== 20)
+            {
+                console.error("Expecting 20 angles");
+                return;
+            }
+
+            var hasChange = false;
+            for (var i = 0; i < 20; i++)
+            {
+                var hinge = this.hinges[i + 1];
+                if (hinge.rotation !== angles[i])
+                {
+                    hinge.rotation[hinge.rotationAxis] = angles[i];
+                    hasChange = true;
+                }
+            }
+
+            if (hasChange)
+            {
+                this.render();
+            }
+        };
+
+        ModelModule.prototype.initialiseScene = function()
+        {
+            var self = this;
+            this.scene = new THREE.Scene();
+            this.scene.add(new THREE.AmbientLight(0x777777));
+
+            this.pendingTextureCount = 3;
 
             var onTextureLoaded = function()
             {
-                if (--pendingTextureCount === 0)
-                    render();
+                if (--self.pendingTextureCount === 0)
+                    self.render();
             };
 
             //
@@ -62,7 +123,7 @@ define(
             light.shadowCameraRight = shadowBoxSize;
             light.shadowCameraTop = shadowBoxSize;
             light.shadowCameraBottom = -shadowBoxSize;
-            scene.add(light);
+            this.scene.add(light);
 
             //
             // Ground
@@ -87,7 +148,7 @@ define(
             groundMesh.position.y = groundPlaneY;
             groundMesh.rotation.x = -Math.PI/2;
             groundMesh.receiveShadow = true;
-            scene.add(groundMesh);
+            this.scene.add(groundMesh);
 
             //
             // Ball
@@ -105,32 +166,29 @@ define(
             ballMesh.position.set(0.05, groundPlaneY + ballRadius, 0.1);
             ballMesh.castShadow = true;
             ballMesh.receiveShadow = false;
-            scene.add(ballMesh);
+            this.scene.add(ballMesh);
 
             //
             // Render & Camera
             //
             var canvasWidth = 640, canvasHeight = 480;
 
-            camera = new THREE.PerspectiveCamera( 75, canvasWidth / canvasHeight, 0.01, 100 );
-//          camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+            this.camera = new THREE.PerspectiveCamera( 75, canvasWidth / canvasHeight, 0.01, 100 );
+//          this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(canvasWidth, canvasHeight);
-            renderer.shadowMapEnabled = true;
-            renderer.shadowMapSoft = true;
+            this.renderer = new THREE.WebGLRenderer({ antialias: true });
+            this.renderer.setSize(canvasWidth, canvasHeight);
+            this.renderer.shadowMapEnabled = true;
+            this.renderer.shadowMapSoft = true;
 
-            updateCameraPosition();
+            this.updateCameraPosition();
 
-            var container = document.getElementById('model-container');
-            container.appendChild(renderer.domElement);
+            this.element.appendChild(this.renderer.domElement);
 
-            bindMouseInteraction(renderer.domElement);
+            this.bindMouseInteraction(this.renderer.domElement);
+        };
 
-            document.addEventListener('keydown', onDocumentKeyDown, false);
-        }
-
-        function buildBody(body, hinges, loadedCallback)
+        ModelModule.prototype.buildBody = function(body, hinges, loadedCallback)
         {
             var geometriesToLoad = 0;
 
@@ -173,30 +231,30 @@ define(
             processNode(body, root);
 
             return root;
-        }
+        };
 
-
-        function bindMouseInteraction(container)
+        ModelModule.prototype.bindMouseInteraction = function(container)
         {
             var onMouseDownPosition = new THREE.Vector2(),
-                onMouseDownTheta = cameraTheta,
-                onMouseDownPhi = cameraPhi,
-                isMouseDown = false;
+                onMouseDownTheta = this.cameraTheta,
+                onMouseDownPhi = this.cameraPhi,
+                isMouseDown = false,
+                self = this;
 
             container.addEventListener('mousewheel', function(event)
             {
                 event.preventDefault();
-                cameraDistance *= 1 - (event.wheelDeltaY/720);
-                cameraDistance = Math.max(0.1, Math.min(5, cameraDistance));
-                updateCameraPosition();
+                self.cameraDistance *= 1 - (event.wheelDeltaY/720);
+                self.cameraDistance = Math.max(0.1, Math.min(5, self.cameraDistance));
+                self.updateCameraPosition();
             });
 
             container.addEventListener('mousedown', function(event)
             {
                 event.preventDefault();
                 isMouseDown = true;
-                onMouseDownTheta = cameraTheta;
-                onMouseDownPhi = cameraPhi;
+                onMouseDownTheta = self.cameraTheta;
+                onMouseDownPhi = self.cameraPhi;
                 onMouseDownPosition.x = event.clientX;
                 onMouseDownPosition.y = event.clientY;
             });
@@ -205,10 +263,10 @@ define(
             {
                 event.preventDefault();
                 if (isMouseDown) {
-                    cameraTheta = -((event.clientX - onMouseDownPosition.x) * 0.01) + onMouseDownTheta;
-                    cameraPhi = ((event.clientY - onMouseDownPosition.y) * 0.01) + onMouseDownPhi;
-                    cameraPhi = Math.min(Math.PI/2, Math.max(-Math.PI/2, cameraPhi));
-                    updateCameraPosition();
+                    self.cameraTheta = -((event.clientX - onMouseDownPosition.x) * 0.01) + onMouseDownTheta;
+                    self.cameraPhi = ((event.clientY - onMouseDownPosition.y) * 0.01) + onMouseDownPhi;
+                    self.cameraPhi = Math.min(Math.PI/2, Math.max(-Math.PI/2, self.cameraPhi));
+                    self.updateCameraPosition();
                 }
             });
 
@@ -219,101 +277,38 @@ define(
                 onMouseDownPosition.x = event.clientX - onMouseDownPosition.x;
                 onMouseDownPosition.y = event.clientY - onMouseDownPosition.y;
             });
-        }
+        };
 
-        function onDocumentKeyDown(event)
+        ModelModule.prototype.updateCameraPosition = function()
         {
-            switch (event.keyCode) {
-                case 32: // space bar
-                    event.preventDefault();
-                    cycleActiveHinge();
-                    break;
-                case 37: // left arrow
-                    event.preventDefault();
-                    changeHingeAngle(-0.1);
-                    break;
-                case 39: // right arrow
-                    event.preventDefault();
-                    changeHingeAngle(0.1);
-                    break;
-            }
-        }
+            this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
+            this.camera.position.y = this.cameraDistance * Math.sin(this.cameraPhi);
+            this.camera.position.z = this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
+            this.camera.lookAt(new THREE.Vector3(0,-0.1,0));
+            this.render();
+        };
 
-        function cycleActiveHinge()
-        {
-            activeHingeIndex++;
-            if (activeHingeIndex === hinges.length) {
-                activeHingeIndex = 0;
-            }
-        }
-
-        function changeHingeAngle(deltaRads)
-        {
-            var hinge = hinges[activeHingeIndex];
-            hinge.rotation[hinge.rotationAxis] += deltaRads;
-            render();
-        }
-
-        function updateCameraPosition()
-        {
-            camera.position.x = cameraDistance * Math.sin(cameraTheta) * Math.cos(cameraPhi);
-            camera.position.y = cameraDistance * Math.sin(cameraPhi);
-            camera.position.z = cameraDistance * Math.cos(cameraTheta) * Math.cos(cameraPhi);
-            camera.lookAt(new THREE.Vector3(0,-0.1,0));
-            render();
-        }
-
-        var isRenderQueued = false;
-        function render()
+        ModelModule.prototype.render = function()
         {
             // Only render once all textures are loaded
-            if (pendingTextureCount)
+            if (this.pendingTextureCount !== 0)
                 return;
 
             // Only render once per frame, regardless of how many times requested
-            if (isRenderQueued)
+            if (this.isRenderQueued)
                 return;
-            isRenderQueued = true;
+
+            this.isRenderQueued = true;
+
+            // Request render in the next frame
+            var self = this;
             requestAnimationFrame(function()
             {
-                isRenderQueued = false;
-                renderer.render(scene, camera);
+                self.isRenderQueued = false;
+                self.renderer.render(self.scene, self.camera);
             });
-        }
+        };
 
-        //
-        // connect with streaming data
-        //
-        var subscription = DataProxy.subscribe(Protocols.agentModel, {
-            onmessage: function (msg)
-            {
-                var floats = DataProxy.parseFloats(msg.data),
-                    angles = floats.slice(6);
-
-                if (!angles || angles.length !== 20)
-                {
-                    console.error("Expecting 20 angles");
-                    return;
-                }
-
-                var hasChange = false;
-                for (var i = 0; i < 20; i++)
-                {
-                    var hinge = hinges[i + 1];
-                    if (hinge.rotation !== angles[i])
-                    {
-                        hinge.rotation[hinge.rotationAxis] = angles[i];
-                        hasChange = true;
-                    }
-                }
-
-                if (hasChange)
-                {
-                    render();
-                }
-            }
-        });
-
-        // TODO when we've moved to modules, wire up disposal of subscription
+        return ModelModule;
     }
 );

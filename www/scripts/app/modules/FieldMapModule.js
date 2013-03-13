@@ -9,20 +9,33 @@ define(
     {
         'use strict';
 
-        var FieldMap = function(canvas)
+        // A simple module, with a full screen canvas as its element
+
+        var FieldMapModule = function()
         {
-            this.canvas = canvas;
-            var $canvas = $(canvas);
+            this.$canvas = $('<canvas></canvas>');
+            this.canvas = this.$canvas.get(0);
 
-            this.fieldCenterX = canvas.width/2;
-            this.fieldCenterY = canvas.height/2;
-            this.scale = Math.min(
-                canvas.width / (Constants.fieldX + 2*Constants.outerMarginMinimum),
-                canvas.height / (Constants.fieldY + 2*Constants.outerMarginMinimum));
-            this.minScale = this.scale * 0.8; // can't zoom out too far
+            this.bindEvents();
 
+            /////
+
+            this.title = 'field';
+            this.moduleClass = 'field';
+            this.panes = [
+                {
+                    title: 'main',
+                    element: this.canvas,
+                    onResized: _.bind(this.onResized, this),
+                    supports: { fullScreen: true }
+                }
+            ];
+        };
+
+        FieldMapModule.prototype.bindEvents = function()
+        {
             var self = this;
-            $canvas.on('mousewheel', function(event)
+            this.$canvas.on('mousewheel', function (event)
             {
                 // TODO zoom around the mouse pointer, rather than (0,0)
                 self.scale += event.originalEvent.wheelDelta / 20;
@@ -31,18 +44,19 @@ define(
             });
 
             var isMouseDown = false, dragStartX, dragStartY;
-            $canvas.on('mousedown', function(event)
+            this.$canvas.on('mousedown', function(event)
             {
                 isMouseDown = true;
                 dragStartX = event.screenX;
                 dragStartY = event.screenY;
+                self.draw();
             });
 
-            $canvas.on('mouseup', function() {
+            this.$canvas.on('mouseup', function() {
                 isMouseDown = false;
             });
 
-            $canvas.on('mousemove', function(event) {
+            this.$canvas.on('mousemove', function(event) {
                 if (isMouseDown) {
                     var dx = event.screenX - dragStartX,
                         dy = event.screenY - dragStartY;
@@ -53,11 +67,29 @@ define(
                     self.draw();
                 }
             });
+        };
+
+        FieldMapModule.prototype.load = function()
+        {};
+
+        FieldMapModule.prototype.unload = function()
+        {};
+
+        FieldMapModule.prototype.onResized = function(width, height)
+        {
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.fieldCenterX = width/2;
+            this.fieldCenterY = height/2;
+            this.scale = Math.min(
+                width / (Constants.fieldX + 2*Constants.outerMarginMinimum),
+                height / (Constants.fieldY + 2*Constants.outerMarginMinimum));
+            this.minScale = this.scale * 0.8; // can't zoom out too far
 
             this.draw();
         };
 
-        FieldMap.prototype.draw = function()
+        FieldMapModule.prototype.draw = function()
         {
             var context = this.canvas.getContext('2d');
 
@@ -159,6 +191,6 @@ define(
             context.restore();
         };
 
-        return FieldMap;
+        return FieldMapModule;
     }
 );
