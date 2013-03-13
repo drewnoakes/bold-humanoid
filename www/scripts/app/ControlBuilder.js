@@ -22,6 +22,14 @@ define(
                 {
                     var element = $('<div></div>').addClass('control');
 
+                    // Special handling for int types that only have a zero or one value
+                    if (control.type === ControlTypeEnum.INT && control.minimum === 0 && control.maximum === 1)
+                    {
+                        control.type = ControlTypeEnum.BOOL;
+                        delete control.minimum;
+                        delete control.maximum;
+                    }
+
                     switch (control.type)
                     {
                         case ControlTypeEnum.INT:
