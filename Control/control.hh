@@ -1,15 +1,15 @@
 #ifndef BOLD_CONTROL_COMMAND_HH
 #define BOLD_CONTROL_COMMAND_HH
 
+#include <cassert>
+#include <functional>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <functional>
-#include <cassert>
-#include <iostream>
 
-#include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
 #include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 namespace bold
 {
@@ -20,10 +20,6 @@ namespace bold
     Bool = 2,
     Enum = 3,
     Action = 4
-//     Int64 = 5,
-//     ControlClass = 6,
-//     String = 7,
-//     BitMask = 8
   };
 
   struct ControlEnumValue
@@ -33,17 +29,8 @@ namespace bold
     ControlEnumValue(int value, std::string name)
     : d_value(value),
       d_name(name)
-    {
-//       d_id = s_nextEnumValueId++;
-    }
+    {}
 
-//     ControlEnumValue(int id, int value, std::string name)
-//     : d_id(id),
-//       d_value(value),
-//       d_name(name)
-//     {}
-
-//    int getId() const { return d_id; }
     int getValue() const { return d_value; }
     std::string getName() const { return d_name; }
 
@@ -131,11 +118,9 @@ namespace bold
       return d_enumValues;
     }
 
-//     int getValue() const { return d_value; };
-
     void setValue(int value)
     {
-      assert(d_type != ControlType::Action /* && d_type != ControlType::ControlClass && d_type != ControlType::String*/);
+      assert(d_type != ControlType::Action);
       d_value = value;
       d_callback(d_value);
     }

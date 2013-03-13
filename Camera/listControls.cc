@@ -29,13 +29,12 @@ vector<Control> Camera::listControls()
     if (queryctrl.flags & V4L2_CTRL_FLAG_DISABLED)
       continue;
 
-    unsigned id(queryctrl.id);
-    V4L2ControlType type((V4L2ControlType)queryctrl.type);
-    std::string name((const char*)queryctrl.name);
-    int minimum(queryctrl.minimum);
-    int maximum(queryctrl.maximum);
-    int defaultValue(queryctrl.default_value);
-    int flags(queryctrl.flags);
+    unsigned id = queryctrl.id;
+    V4L2ControlType type = (V4L2ControlType)queryctrl.type;
+    std::string name = (const char*)queryctrl.name;
+    int minimum = queryctrl.minimum;
+    int maximum = queryctrl.maximum;
+    int defaultValue = queryctrl.default_value;
     int value = getValue(id);
 
     switch (type)

@@ -19,7 +19,6 @@ vector<Control> DataStreamer::getDebugControls()
   {
     framePeriods.push_back(ControlEnumValue(period, std::to_string(period)));
   }
-  cout << "d_streamFramePeriod=" << d_streamFramePeriod << endl;
   controls.push_back(Control::createEnum("Frame period", framePeriods, d_streamFramePeriod, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); }));
 
   // Head control
