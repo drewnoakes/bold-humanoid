@@ -1,7 +1,7 @@
 #include "worldmodel.hh"
 
-#include "../vision/geometry/LineSegment3d.hh"
-#include "../vision/geometry/LineSegment2d.hh"
+#include "../geometry/LineSegment3d.hh"
+#include "../geometry/LineSegment2d.hh"
 
 #include <minIni.h>
 #include <iostream>

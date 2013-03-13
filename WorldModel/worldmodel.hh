@@ -6,7 +6,7 @@
 #include <vector>
 #include <Eigen/Core>
 
-#include "../vision/geometry/LineSegment2d.hh"
+#include "../geometry/LineSegment2d.hh"
 
 namespace bold
 {

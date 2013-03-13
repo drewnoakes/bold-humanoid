@@ -7,8 +7,8 @@
 
 #include "../joystick/joystick.hh"
 
-#include "../vision/LUTBuilder/lutbuilder.hh"
-#include "../vision/ImageLabeller/imagelabeller.hh"
+#include "../LUTBuilder/lutbuilder.hh"
+#include "../ImageLabeller/imagelabeller.hh"
 
 #include <iostream>
 

@@ -9,7 +9,7 @@
 #include "../Agent/agent.hh"
 #include "../CM730Snapshot/CM730Snapshot.hh"
 #include "../MX28Snapshot/MX28Snapshot.hh"
-#include "../vision/CameraModel/cameramodel.hh"
+#include "../CameraModel/cameramodel.hh"
 
 namespace bold
 {

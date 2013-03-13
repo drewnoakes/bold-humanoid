@@ -1,10 +1,10 @@
 #include "agent.ih"
 
 #include "../Camera/camera.hh"
-#include "../vision/ImagePasser/imagepasser.hh"
-#include "../vision/ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
-#include "../vision/ImagePassHandler/LineDotPass/linedotpass.hh"
-#include "../vision/LineFinder/linefinder.hh"
+#include "../ImagePasser/imagepasser.hh"
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../ImagePassHandler/LineDotPass/linedotpass.hh"
+#include "../LineFinder/linefinder.hh"
 
 Agent::Agent(std::string const& U2D_dev,
       minIni const& ini,

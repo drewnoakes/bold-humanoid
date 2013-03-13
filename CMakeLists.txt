@@ -5,13 +5,12 @@ include(/usr/share/cmake-2.8/Modules/ExternalProject.cmake)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
-find_package(Eigen3 REQUIRED)
+# find_package(Eigen3 REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(SigC++ REQUIRED)
 
 set(DARWINDIR ${CMAKE_SOURCE_DIR}/robotis)
-set(VISIONDIR ${CMAKE_SOURCE_DIR}/vision)
 set(JOYSTICKDIR ${CMAKE_SOURCE_DIR}/joystick)
 set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
 set(RAPIDJSONDIR ${CMAKE_SOURCE_DIR}/rapidjson)
@@ -108,6 +107,10 @@ set(BOLDHUMANOID_SOURCES
 ./Camera/pixelFormatRequestSize.cc
 ./Camera/startCapture.cc
 ./Camera/stopCapture.cc
+./Colour/bgr2hsv.cc
+./Colour/hsv2bgr.cc
+./Colour/hsvRange.cc
+./Colour/YCbCr.cc
 ./Control/create.cc
 ./Control/handleRequest.cc
 ./Control/staticfields.cc
@@ -131,6 +134,19 @@ set(BOLDHUMANOID_SOURCES
 ./DataStreamer/streamImage.cc
 ./DataStreamer/update.cc
 ./GameController/GameControllerReceiver.cc
+./geometry/Bounds2i.cc
+./geometry/LineSegment2i.cc
+./HoughLineAccumulator/houghlineaccumulator.cc
+./HoughLineExtractor/findLines.cc
+./HoughLineExtractor/findMaxLine.cc
+./ImageLabeller/ImageLabeller.cc
+./ImagePassHandler/BlobDetectPass/detectBlobs.cc
+./ImagePassHandler/BlobDetectPass/runSetToBlob.cc
+./ImagePassHandler/BlobDetectPass/BlobDetectPass.cc
+./LineFinder/find.cc
+./LUTBuilder/buildLookUpTable.cc
+./PixelFilterChain/applyFilters.cc
+./PixelLabel/pixellabel.cc
 ./MX28Snapshot/init.cc
 ./VisualCortex/VisualCortex.cc
 ./VisualCortex/initialise.cc
@@ -138,23 +154,6 @@ set(BOLDHUMANOID_SOURCES
 ./VisualCortex/pixelLabelFromConfig.cc
 ./VisualCortex/streamDebugImage.cc
 ./WorldModel/initialise.cc
-${VISIONDIR}/Colour/bgr2hsv.cc
-${VISIONDIR}/Colour/hsv2bgr.cc
-${VISIONDIR}/Colour/hsvRange.cc
-${VISIONDIR}/Colour/YCbCr.cc
-${VISIONDIR}/geometry/Bounds2i.cc
-${VISIONDIR}/geometry/LineSegment2i.cc
-${VISIONDIR}/HoughLineAccumulator/houghlineaccumulator.cc
-${VISIONDIR}/HoughLineExtractor/findLines.cc
-${VISIONDIR}/HoughLineExtractor/findMaxLine.cc
-${VISIONDIR}/ImageLabeller/ImageLabeller.cc
-${VISIONDIR}/ImagePassHandler/BlobDetectPass/detectBlobs.cc
-${VISIONDIR}/ImagePassHandler/BlobDetectPass/runSetToBlob.cc
-${VISIONDIR}/ImagePassHandler/BlobDetectPass/BlobDetectPass.cc
-${VISIONDIR}/LineFinder/find.cc
-${VISIONDIR}/LUTBuilder/buildLookUpTable.cc
-${VISIONDIR}/PixelFilterChain/applyFilters.cc
-${VISIONDIR}/PixelLabel/pixellabel.cc
 ${JOYSTICKDIR}/joystick.cc
 )
 
@@ -164,16 +163,15 @@ set(INTERNAL_HEADERS
 ./Camera/camera.ih
 ./Control/control.ih
 ./DataStreamer/datastreamer.ih
-./VisualCortex/visualcortex.ih
-./vision/HoughLineAccumulator/houghlineaccumulator.ih
-./vision/ImagePassHandler/BlobDetectPass/blobdetectpass.ih
-./vision/LUTBuilder/lutbuilder.ih
-./vision/PixelFilterChain/pixelfilterchain.ih)
+./HoughLineAccumulator/houghlineaccumulator.ih
+./ImagePassHandler/BlobDetectPass/blobdetectpass.ih
+./LUTBuilder/lutbuilder.ih
+./PixelFilterChain/pixelfilterchain.ih
+./VisualCortex/visualcortex.ih)
 
 include_directories(
 ${DARWINDIR}/Linux/include
 ${DARWINDIR}/Framework/include
-${VISIONDIR}
 ${JOYSTICKDIR}
 ${LIBWEBSOCKETDIR}/lib
 ${EIGEN3_INCLUDE_DIR}

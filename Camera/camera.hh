@@ -7,7 +7,7 @@
 #include <linux/videodev2.h>
 #include <opencv2/opencv.hpp>
 
-#include "../vision/util/Maybe.hh"
+#include "../util/Maybe.hh"
 #include "../Control/control.hh"
 
 namespace bold

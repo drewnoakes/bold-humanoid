@@ -6,8 +6,8 @@
 #include <map>
 #include <opencv2/core/core.hpp>
 
-#include "../vision/LineFinder/linefinder.hh"
-#include "../vision/PixelLabel/pixellabel.hh"
+#include "../LineFinder/linefinder.hh"
+#include "../PixelLabel/pixellabel.hh"
 
 class minIni;
 
