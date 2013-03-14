@@ -11,6 +11,10 @@ void VisualCortex::initialise(minIni const& ini)
 
   vector<PixelLabel> pixelLabels = { d_goalLabel, d_ballLabel, d_fieldLabel, d_lineLabel };
 
+  cout << "[VisualCortex::initialise] Using pixel labels:" << endl;
+  for (auto const& label : pixelLabels)
+    cout << "[VisualCortex::initialise] - " << label << endl;
+
   auto lut = LUTBuilder::buildLookUpTableYCbCr18(pixelLabels);
   d_imageLabeller = new ImageLabeller(lut);
 
