@@ -52,15 +52,15 @@ define(
             {
                 if (isImageLarge) {
                     isImageLarge = false;
-                    self.$canvas.css({width: undefined});
+                    self.$canvas.css({width: ''});
                     self.$cameraControlContainer.fadeIn();
                     self.$debugControlContainer.fadeIn();
                 }
                 else {
                     isImageLarge = true;
                     self.$canvas.css({width: '100%'});
-                    self.$cameraControlContainer.fadeOut();
-                    self.$debugControlContainer.fadeOut();
+                    self.$cameraControlContainer.hide();
+                    self.$debugControlContainer.hide();
                 }
             });
         };
