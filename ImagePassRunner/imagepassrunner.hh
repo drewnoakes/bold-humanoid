@@ -1,5 +1,5 @@
-#ifndef BOLD_IMAGE_PASSER_HH
-#define BOLD_IMAGE_PASSER_HH
+#ifndef BOLD_IMAGEPASSRUNNER_HH
+#define BOLD_IMAGEPASSRUNNER_HH
 
 #include <opencv2/core/core.hpp>
 #include <vector>
@@ -9,13 +9,13 @@
 namespace bold
 {
   template <typename TPixel>
-  class ImagePasser
+  class ImagePassRunner
   {
   private:
     std::vector<ImagePassHandler<TPixel>*> d_handlers;
 
   public:
-    ImagePasser(std::vector<ImagePassHandler<TPixel>*> handlers)
+    ImagePassRunner(std::vector<ImagePassHandler<TPixel>*> handlers)
     : d_handlers(handlers)
     {}
 
