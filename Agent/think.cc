@@ -29,13 +29,12 @@ void Agent::think()
     static unsigned frameNumber = 0;
     if (debugger.getSeconds(lastRecordTime) > 1.0)
     {
-      lastRecordTime = t;
       // save image
       stringstream ss;
-      ss << "capture-" << frameNumber << ".png";
-      cout << ss.str();
+      ss << "capture-" << frameNumber++ << ".png";
       cv::imwrite(ss.str(), image);
       t = debugger.timeEvent(t, "Saving Frame To File");
+      lastRecordTime = t;
     }
   }
 
