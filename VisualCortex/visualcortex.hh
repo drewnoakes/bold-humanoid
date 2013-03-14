@@ -45,10 +45,7 @@ namespace bold
     Eigen::Vector2f pos;
   };
 
-  /** Bold-humanoid's vision processing subsystem.
-   *
-   * This class utilises components from the 'vision' submodule.
-   */
+  /** Bold-humanoid's vision processing subsystem. */
   class VisualCortex
   {
   public:
