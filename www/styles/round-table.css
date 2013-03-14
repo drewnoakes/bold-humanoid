@@ -100,6 +100,11 @@ div.pane-container
 
 div.module.camera canvas.camera-canvas
 {
+    width: 320px;
+    transition: width 0.4s;
+    -moz-transition: width 0.4s; /* Firefox 4 */
+    -webkit-transition: width 0.4s; /* Safari and Chrome */
+    -o-transition: width 0.4s; /* Opera */
 }
 
 div.module.camera div.control-container.camera-controls

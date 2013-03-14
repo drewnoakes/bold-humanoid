@@ -52,9 +52,9 @@ define(
             {
                 if (isImageLarge) {
                     isImageLarge = false;
-                    self.$canvas.css({width: ''});
-                    self.$cameraControlContainer.fadeIn();
-                    self.$debugControlContainer.fadeIn();
+                    self.$canvas.css({width: self.canvas.width});
+                    self.$cameraControlContainer.delay(400).fadeIn();
+                    self.$debugControlContainer.delay(400).fadeIn();
                 }
                 else {
                     isImageLarge = true;
