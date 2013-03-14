@@ -1,15 +1,19 @@
 #include "imagelabeller.hh"
 
+#include <memory>
+
 using namespace bold;
 using namespace std;
 using namespace cv;
 
-ImageLabeller::ImageLabeller(uchar const * const lut)
+ImageLabeller::ImageLabeller(shared_ptr<uchar> const& lut)
 : d_LUT(lut)
 {}
 
-void ImageLabeller::label(Mat& image, Mat& labelled)
+void ImageLabeller::label(Mat& image, Mat& labelled) const
 {
+  uchar* lut = d_LUT.get();
+
   for (unsigned y = 0; y < image.rows; ++y)
   {
     uchar* origpix = image.ptr<uchar>(y);
@@ -17,7 +21,7 @@ void ImageLabeller::label(Mat& image, Mat& labelled)
     for (unsigned x = 0; x < image.cols; ++x)
     {
 //    uchar l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
-      uchar l = d_LUT[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
+      uchar l = lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
       *labelledpix = l;
 
       ++origpix;
@@ -28,9 +32,9 @@ void ImageLabeller::label(Mat& image, Mat& labelled)
   }
 }
 
-void ImageLabeller::createCartoon(Mat& labelledInput, Mat& cartoonOutput, std::vector<bold::PixelLabel> const& labels)
+void ImageLabeller::createCartoon(Mat& labelledInput, Mat& cartoonOutput, vector<bold::PixelLabel> const& labels)
 {
-  std::map<uchar,Colour::bgr> colorByLabel;
+  map<uchar,Colour::bgr> colorByLabel;
 
   for (PixelLabel const& label : labels)
   {

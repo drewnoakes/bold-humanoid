@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "../PixelLabel/pixellabel.hh"
 
@@ -13,13 +14,13 @@ namespace bold
   class ImageLabeller
   {
   private:
-    uchar const * d_LUT;
+    std::shared_ptr<unsigned char> d_LUT;
 
   public:
-    ImageLabeller(uchar const * lut);
+    ImageLabeller(std::shared_ptr<unsigned char> const& lut);
 
     /** Replaces the LUT used by this image labeller. */
-    void updateLut(uchar const * lut) { d_LUT = lut; }
+    void updateLut(std::shared_ptr<unsigned char> const& lut) { d_LUT = lut; }
 
     /**
      * Labels an entire image's pixels.
@@ -27,7 +28,7 @@ namespace bold
      * @param image The input, colour image.
      * @param labelled The target image, in which labels are stored per-pixel.
      */
-    void label(cv::Mat& image, cv::Mat& labelled);
+    void label(cv::Mat& image, cv::Mat& labelled) const;
 
     /**
      * Generates an image in which each pixel is coloured according to the label
