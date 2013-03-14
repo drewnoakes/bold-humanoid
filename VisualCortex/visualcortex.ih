@@ -19,6 +19,7 @@
 #include "../PixelFilterChain/pixelfilterchain.hh"
 
 #include <cmath>
+#include <iostream>
 
 using namespace cv;
 using namespace bold;

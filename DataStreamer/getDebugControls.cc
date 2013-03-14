@@ -35,6 +35,7 @@ vector<Control> DataStreamer::getDebugControls()
 
   // Layers
   controls.push_back(Control::createBool("Blobs",            d_drawBlobs,         [this](bool const& value) { d_drawBlobs = value; }));
+  controls.push_back(Control::createBool("Line dots",        d_drawLineDots,      [this](bool const& value) { d_drawLineDots = value; }));
   controls.push_back(Control::createBool("Lines (observed)", d_drawObservedLines, [this](bool const& value) { d_drawObservedLines = value; }));
   controls.push_back(Control::createBool("Lines (expected)", d_drawExpectedLines, [this](bool const& value) { d_drawExpectedLines = value; }));
 

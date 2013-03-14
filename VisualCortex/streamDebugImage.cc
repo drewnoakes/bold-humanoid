@@ -54,6 +54,16 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
     }
   }
 
+  // Draw line dots
+  if (streamer->drawLineDots() && d_lineDotPass->lineDots.size() > 0)
+  {
+    auto colour = Colour::bgr(0,0,255);
+    for (auto const& lineDot : d_lineDotPass->lineDots)
+    {
+      debugImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = colour;
+    }
+  }
+
   // Draw blobs
   if (streamer->drawBlobs())
   {

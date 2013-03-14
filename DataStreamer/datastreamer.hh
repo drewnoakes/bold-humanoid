@@ -67,9 +67,10 @@ namespace bold
 
     /** Gets whether the vision system should provide a debugging image this cycle. */
     bool shouldProvideImage();
-    bool drawObservedLines() const { return d_drawObservedLines; }
-    bool drawExpectedLines() const { return d_drawExpectedLines; }
     bool drawBlobs() const { return d_drawBlobs; }
+    bool drawLineDots() const { return d_drawLineDots; }
+    bool drawExpectedLines() const { return d_drawExpectedLines; }
+    bool drawObservedLines() const { return d_drawObservedLines; }
 
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img);
@@ -90,9 +91,10 @@ namespace bold
     cv::Mat d_image;
     ImageType d_imageType;
     unsigned d_streamFramePeriod;
-    bool d_drawObservedLines;
-    bool d_drawExpectedLines;
     bool d_drawBlobs;
+    bool d_drawLineDots;
+    bool d_drawExpectedLines;
+    bool d_drawObservedLines;
 
     Camera* d_camera;
 
