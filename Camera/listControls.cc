@@ -37,6 +37,12 @@ vector<Control> Camera::listControls()
     int defaultValue = queryctrl.default_value;
     int value = getValue(id);
 
+    // Get ready to query next item
+    queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
+
+    if (name == "Pan (Absolute)" || name == "Tilt (Absolute)")
+      continue;
+
     switch (type)
     {
       case V4L2ControlType::CT_BOOL:
@@ -97,9 +103,6 @@ vector<Control> Camera::listControls()
         cerr << "Unsupported camera control type: " << (int)type << endl;
       }
     }
-
-    // Get ready to query next item
-    queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
   }
 
   return controls;
