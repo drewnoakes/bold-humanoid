@@ -234,6 +234,7 @@ int main(int argc, char **argv)
            << " length=" << (hypothesis.max().cast<double>() - hypothesis.min().cast<double>()).norm()
            << " lengthAvg=" << hypothesis.lengthDistribution().average()
            << " lengthStdDev=" << hypothesis.lengthDistribution().stdDev()
+           << " lengthAvg/lengthStdDev=" << hypothesis.lengthDistribution().average()/hypothesis.lengthDistribution().stdDev()
            << endl;
       cv::line(colourImage,
                     Point(hypothesis.min().x(), hypothesis.min().y()),

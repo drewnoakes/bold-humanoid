@@ -59,6 +59,9 @@ vector<LineFinder::LineHypothesis> LineFinder::find(vector<Vector2i>& lineDots, 
   vector<LineHypothesis> satisfactory;
   for (auto const& hypothesis : hypotheses)
   {
+    if (hypothesis.lengthDistribution().average() / hypothesis.lengthDistribution().stdDev() > 2.0)
+      continue;
+
     // Only take those with an above average number of votes
     if (hypothesis.count() < averageVotes)
       break;
