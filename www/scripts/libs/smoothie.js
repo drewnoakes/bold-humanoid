@@ -382,16 +382,20 @@ SmoothieChart.prototype.render = function(canvas, time) {
 
             lastX = x; lastY = y;
         }
-        if (dataSet.length > 0 && seriesOptions.fillStyle) {
-            // Close up the fill region.
-            canvasContext.lineTo(dimensions.width + seriesOptions.lineWidth + 1, lastY);
-            canvasContext.lineTo(dimensions.width + seriesOptions.lineWidth + 1, dimensions.height + seriesOptions.lineWidth + 1);
-            canvasContext.lineTo(firstX, dimensions.height + seriesOptions.lineWidth);
-            canvasContext.fillStyle = seriesOptions.fillStyle;
-            canvasContext.fill();
+
+        if (dataSet.length > 1) {
+            if (seriesOptions.fillStyle) {
+                // Close up the fill region.
+                canvasContext.lineTo(dimensions.width + seriesOptions.lineWidth + 1, lastY);
+                canvasContext.lineTo(dimensions.width + seriesOptions.lineWidth + 1, dimensions.height + seriesOptions.lineWidth + 1);
+                canvasContext.lineTo(firstX, dimensions.height + seriesOptions.lineWidth);
+                canvasContext.fillStyle = seriesOptions.fillStyle;
+                canvasContext.fill();
+            }
+            canvasContext.stroke();
+            canvasContext.closePath();
         }
-        canvasContext.stroke();
-        canvasContext.closePath();
+
         canvasContext.restore();
     }
 
