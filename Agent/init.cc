@@ -1,9 +1,5 @@
 #include "agent.ih"
 
-// TODO: included here to speed up compilation. should put in internal
-// header file and add precompilation to CMakeLists
-#include "../DataStreamer/datastreamer.hh"
-
 bool Agent::init()
 {
   cout << "[Agent::init] Start" << endl;
@@ -18,12 +14,6 @@ bool Agent::init()
     return false;
   }
   */
-
-//   if (d_showUI)
-//   {
-//     cv::namedWindow("raw");
-//     cv::namedWindow("labelled");
-//   }
 
   // TODO only stream if argument specified?
   // TODO port from config, not constructor

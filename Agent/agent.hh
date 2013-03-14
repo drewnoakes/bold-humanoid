@@ -38,7 +38,6 @@ namespace bold
     Agent(std::string const& U2D_dev,
           minIni const& ini,
           std::string const& motionFile,
-          bool const& showUI,
           bool const& useJoystick,
           bool const& autoGetUpFromFallen,
           bool const& recordFrames,
@@ -58,7 +57,6 @@ namespace bold
     Ambulator d_ambulator;
     Joystick* d_joystick;
     bool d_isRecordingFrames;
-    bool d_showUI;
     bool d_autoGetUpFromFallen;
     GameControllerReceiver d_gameControlReceiver;
     bold::MX28Alarm d_alarmLedByJointId[Robot::JointData::NUMBER_OF_JOINTS];
@@ -95,24 +93,16 @@ namespace bold
     void lookForBall();
     void approachBall();
     void lookForGoal();
-
     /** Turn in a circle, following the pan of the head.
      * If the head is facing forwards, this method should have no effect.
      */
     void circleBall();
-
     void preKickLook();
-
     void kick() {}
     void getUp() {}
-
     void lookAt(Eigen::Vector2f const& pos);
-
     void lookAtBall();
-
     void lookAtGoal();
-
-//    void controlHead(cv::Mat raw);
     void standUpIfFallen();
     void processInputCommands();
   };

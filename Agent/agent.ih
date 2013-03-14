@@ -2,13 +2,13 @@
 
 #include "../AgentModel/agentmodel.hh"
 #include "../Camera/camera.hh"
+#include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
+#include "../ImageLabeller/imagelabeller.hh"
+#include "../LUTBuilder/lutbuilder.hh"
 #include "../WorldModel/worldmodel.hh"
 
 #include "../joystick/joystick.hh"
-
-#include "../LUTBuilder/lutbuilder.hh"
-#include "../ImageLabeller/imagelabeller.hh"
 
 #include <iostream>
 

@@ -11,7 +11,6 @@ using namespace std;
 int main(int argc, char **argv)
 {
   // defaults
-  bool showUI = false;
   bool useJoystick = false;
   bool autoGetUpFromFallen = true;
   bool recordFrames = false;
@@ -28,7 +27,6 @@ int main(int argc, char **argv)
     {
       cout << "Options:" << endl;
       cout << "\t-c <file>\tselect configuration file (or --conf)" << endl;
-      cout << "\t-x\tshow graphical UI using X (or --gui)" << endl;
       cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
       cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
       cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
@@ -38,10 +36,6 @@ int main(int argc, char **argv)
     else if (arg == "-c" || arg == "--conf")
     {
       confFile = argv[++i];
-    }
-    else if (arg == "-x" || arg == "--gui")
-    {
-      showUI = true;
     }
     else if (arg == "-j" || arg == "--joystick")
     {
@@ -66,7 +60,6 @@ int main(int argc, char **argv)
     U2D_DEV_NAME0,
     ini,
     MOTION_FILE_PATH,
-    showUI,
     useJoystick,
     autoGetUpFromFallen,
     recordFrames);
