@@ -146,12 +146,12 @@ set(BOLDHUMANOID_SOURCES
 ./LineFinder/find.cc
 ./LUTBuilder/buildLookUpTable.cc
 ./PixelFilterChain/applyFilters.cc
+./PixelLabel/fromConfig.cc
 ./PixelLabel/pixellabel.cc
 ./MX28Snapshot/init.cc
 ./VisualCortex/VisualCortex.cc
 ./VisualCortex/initialise.cc
 ./VisualCortex/integrateImage.cc
-./VisualCortex/pixelLabelFromConfig.cc
 ./VisualCortex/streamDebugImage.cc
 ./WorldModel/initialise.cc
 ${JOYSTICKDIR}/joystick.cc

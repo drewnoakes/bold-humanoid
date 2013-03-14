@@ -13,10 +13,13 @@ namespace bold
   class ImageLabeller
   {
   private:
-    uchar const * const d_LUT;
+    uchar const * d_LUT;
 
   public:
-    ImageLabeller(uchar const * const lut);
+    ImageLabeller(uchar const * lut);
+
+    /** Replaces the LUT used by this image labeller. */
+    void updateLut(uchar const * lut) { d_LUT = lut; }
 
     /**
      * Labels an entire image's pixels.
@@ -30,7 +33,7 @@ namespace bold
      * Generates an image in which each pixel is coloured according to the label
      * assigned to it. The result looks like a cartoon, or paint-by-numbers.
      */
-    static void colourLabels(cv::Mat& labelledImage, cv::Mat& output, std::vector<bold::PixelLabel> const& labels);
+    static void createCartoon(cv::Mat& labelledInput, cv::Mat& cartoonOutput, std::vector<bold::PixelLabel> const& labels);
   };
 }
 

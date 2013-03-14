@@ -3,10 +3,7 @@
 #include "../AgentModel/agentmodel.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
-#include "../WorldModel/worldmodel.hh"
-
 #include "../ImageLabeller/imagelabeller.hh"
-#include "../ImagePasser/imagepasser.hh"
 #include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
 #include "../ImagePassHandler/LineDotPass/linedotpass.hh"
 #include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
@@ -17,6 +14,9 @@
 #include "../LineFinder/linefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
+#include "../WorldModel/worldmodel.hh"
+
+#include "../robotis/Framework/include/minIni.h"
 
 #include <cmath>
 #include <iostream>

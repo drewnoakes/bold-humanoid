@@ -1,6 +1,8 @@
-#include "visualcortex.ih"
+#include "pixellabel.hh"
 
-PixelLabel VisualCortex::pixelLabelFromConfig(
+using namespace bold;
+
+PixelLabel PixelLabel::fromConfig(
   minIni const& ini,
   std::string objectName,
   int hue,        int hueRange,
@@ -15,6 +17,6 @@ PixelLabel VisualCortex::pixelLabelFromConfig(
   hsvRange.sRange = ini.geti("Vision", objectName + "SaturationRange", saturationRange);
   hsvRange.v      = ini.geti("Vision", objectName + "Value",           value);
   hsvRange.vRange = ini.geti("Vision", objectName + "ValueRange",      valueRange);
-  
+
   return PixelLabel(hsvRange, objectName);
 }

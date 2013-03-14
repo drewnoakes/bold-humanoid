@@ -7,6 +7,8 @@
 
 #include "../Colour/colour.hh"
 
+#include "../robotis/Framework/include/minIni.h"
+
 namespace bold
 {
   class PixelLabel
@@ -19,6 +21,14 @@ namespace bold
     std::string d_name;
 
   public:
+    static bold::PixelLabel fromConfig(
+      minIni const& ini,
+      std::string objectName,
+      int hue,        int hueRange,
+      int saturation, int saturationRange,
+      int value,      int valueRange
+      );
+
     PixelLabel() {}
 
     PixelLabel(Colour::hsvRange hsvRange, std::string name)

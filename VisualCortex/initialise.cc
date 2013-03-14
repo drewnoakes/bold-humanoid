@@ -4,10 +4,10 @@ void VisualCortex::initialise(minIni const& ini)
 {
   cout << "[VisualCortex::initialise] Initialising VisualCortex" << endl;
 
-  d_goalLabel =  pixelLabelFromConfig(ini, "Goal",  40,  10, 210, 55, 190, 65);
-  d_ballLabel =  pixelLabelFromConfig(ini, "Ball",  10,  15, 255, 95, 190, 95);
-  d_fieldLabel = pixelLabelFromConfig(ini, "Field", 71,  20, 138, 55, 173, 65);
-  d_lineLabel =  pixelLabelFromConfig(ini, "Line",   0, 255,   0, 70, 255, 70);
+  d_goalLabel =  PixelLabel::fromConfig(ini, "Goal",  40,  10, 210, 55, 190, 65);
+  d_ballLabel =  PixelLabel::fromConfig(ini, "Ball",  10,  15, 255, 95, 190, 95);
+  d_fieldLabel = PixelLabel::fromConfig(ini, "Field", 71,  20, 138, 55, 173, 65);
+  d_lineLabel =  PixelLabel::fromConfig(ini, "Line",   0, 255,   0, 70, 255, 70);
 
   vector<PixelLabel> pixelLabels = { d_goalLabel, d_ballLabel, d_fieldLabel, d_lineLabel };
 

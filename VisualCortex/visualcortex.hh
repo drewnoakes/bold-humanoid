@@ -53,14 +53,6 @@ namespace bold
 
     void initialise(minIni const& ini);
 
-    static bold::PixelLabel pixelLabelFromConfig(
-      minIni const& ini,
-      std::string objectName,
-      int hue,        int hueRange,
-      int saturation, int saturationRange,
-      int value,      int valueRange
-      );
-
     /** Process the provided image, extracting features. */
     void integrateImage(cv::Mat& cameraImage);
 
