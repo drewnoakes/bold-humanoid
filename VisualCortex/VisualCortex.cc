@@ -4,7 +4,7 @@ VisualCortex::VisualCortex()
   : d_minBallArea(8*8),
     d_isBallVisible(false),
     d_lineFinder(nullptr),
-    d_imagePasser(nullptr),
+    d_imagePassRunner(nullptr),
     d_blobDetectPass(nullptr),
     d_cartoonPass(nullptr),
     d_labelCountPass(nullptr),

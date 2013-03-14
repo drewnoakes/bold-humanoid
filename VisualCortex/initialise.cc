@@ -66,7 +66,7 @@ void VisualCortex::initialise(minIni const& ini)
 //    d_labelCountPass
   };
 
-  d_imagePasser = new ImagePasser<uchar>(handlers);
+  d_imagePassRunner = new ImagePassRunner<uchar>(handlers);
 
   d_lineFinder = new LineFinder(imageWidth, imageHeight);
 

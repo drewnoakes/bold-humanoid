@@ -17,7 +17,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
   t = debugger.timeEvent(t, "Image Processing/Pixel Label");
 
   // Perform the image pass
-  d_imagePasser->pass(d_labelledImage);
+  d_imagePassRunner->pass(d_labelledImage);
   t = debugger.timeEvent(t, "Image Processing/Pass");
 
   // Find lines

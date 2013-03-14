@@ -18,7 +18,7 @@ namespace bold
   class ImageLabeller;
 
   template <typename TPixel>
-  class ImagePasser;
+  class ImagePassRunner;
 
   template <typename TPixel>
   class ImagePassHandler;
@@ -90,7 +90,7 @@ namespace bold
 
     LineFinder* d_lineFinder;
 
-    ImagePasser<uchar>* d_imagePasser;
+    ImagePassRunner<uchar>* d_imagePassRunner;
     LineDotPass<uchar>* d_lineDotPass;
     BlobDetectPass* d_blobDetectPass;
     CartoonPass* d_cartoonPass;
