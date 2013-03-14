@@ -12,6 +12,7 @@ Agent::Agent(std::string const& U2D_dev,
       bool const& showUI,
       bool const& useJoystick,
       bool const& autoGetUpFromFallen,
+      bool const& recordFrames,
       unsigned int const& gameControlUdpPort
   )
   : d_linuxCM730(U2D_dev.c_str()),
@@ -27,7 +28,8 @@ Agent::Agent(std::string const& U2D_dev,
     d_joystick(nullptr),
     d_visualCortex(nullptr),
     d_motionTimer(nullptr),
-    d_streamer(nullptr)
+    d_streamer(nullptr),
+    d_isRecordingFrames(recordFrames)
 {
   if (useJoystick)
   {

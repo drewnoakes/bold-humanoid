@@ -41,6 +41,7 @@ namespace bold
           bool const& showUI,
           bool const& useJoystick,
           bool const& autoGetUpFromFallen,
+          bool const& recordFrames,
           unsigned int const& gameControlUdpPort = GAMECONTROLLER_PORT);
 
     int run();
@@ -56,6 +57,7 @@ namespace bold
     VisualCortex* d_visualCortex;
     Ambulator d_ambulator;
     Joystick* d_joystick;
+    bool d_isRecordingFrames;
     bool d_showUI;
     bool d_autoGetUpFromFallen;
     GameControllerReceiver d_gameControlReceiver;

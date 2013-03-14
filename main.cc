@@ -10,9 +10,11 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+  // defaults
   bool showUI = false;
   bool useJoystick = false;
   bool autoGetUpFromFallen = true;
+  bool recordFrames = false;
 
   string confFile("config.ini");
 
@@ -25,10 +27,11 @@ int main(int argc, char **argv)
     if (arg == "-h" || arg == "--help")
     {
       cout << "Options:" << endl;
-      cout << "\t-c <conffile>\tselect configuration file (or --conf)" << endl;
+      cout << "\t-c <file>\tselect configuration file (or --conf)" << endl;
       cout << "\t-x\tshow graphical UI using X (or --gui)" << endl;
       cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
       cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
+      cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
       cout << "\t-h\tshow these options (or --help)" << endl;
       return 0;
     }
@@ -48,6 +51,10 @@ int main(int argc, char **argv)
     {
       autoGetUpFromFallen = false;
     }
+    else if (arg == "-r" || arg == "--record")
+    {
+      recordFrames = true;
+    }
   }
 
   minIni ini(confFile);
@@ -61,7 +68,8 @@ int main(int argc, char **argv)
     MOTION_FILE_PATH,
     showUI,
     useJoystick,
-    autoGetUpFromFallen);
+    autoGetUpFromFallen,
+    recordFrames);
 
   return agent.run();
 }

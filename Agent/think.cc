@@ -15,20 +15,39 @@ void Agent::think()
   auto& debugger = Debugger::getInstance();
 
   //
-  // Capture the image
+  // Capture the image (YCbCr format)
   //
-  cv::Mat raw = d_camera->capture();
+  cv::Mat image = d_camera->capture();
   t = debugger.timeEvent(t, "Image Capture");
+
+  //
+  // Record frame, if required
+  //
+  if (d_isRecordingFrames)
+  {
+    static Debugger::timestamp_t lastRecordTime;
+    static unsigned frameNumber = 0;
+    if (debugger.getSeconds(lastRecordTime) > 1.0)
+    {
+      lastRecordTime = t;
+      // save image
+      stringstream ss;
+      ss << "capture-" << frameNumber << ".png";
+      cout << ss.str();
+      cv::imwrite(ss.str(), image);
+      t = debugger.timeEvent(t, "Saving Frame To File");
+    }
+  }
 
   //
   // Process the image
   //
   VisualCortex& visualCortex = VisualCortex::getInstance();
-  visualCortex.integrateImage(raw);
+  visualCortex.integrateImage(image);
   t = debugger.timeEvent(t, "Image Processing");
 
   if (d_streamer->shouldProvideImage())
-    visualCortex.streamDebugImage(raw, d_streamer);
+    visualCortex.streamDebugImage(image, d_streamer);
   t = debugger.timeEvent(t, "Image Streaming");
 
   //
@@ -40,8 +59,6 @@ void Agent::think()
     GameState::getInstance().update(gameControlData);
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
-
-//  cout << "state: " << d_state << endl;
 
   switch (d_state)
   {
