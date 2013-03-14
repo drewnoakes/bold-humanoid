@@ -45,8 +45,6 @@ namespace bold
 
       bool tryMerge(Line const& line, Eigen::Vector2i const& dot1, Eigen::Vector2i const& dot2)
       {
-        d_lengthDistribution.add(length(dot2 - dot1));
-
         double dt = line.theta() - d_theta;
         double dr = line.radius() - d_radius;
 
@@ -74,6 +72,7 @@ namespace bold
               d_max = dot1;
           }
 
+          d_lengthDistribution.add(length(dot2 - dot1));
           return true;
         }
 

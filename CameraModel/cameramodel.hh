@@ -40,6 +40,9 @@ namespace bold
       return Eigen::Affine3d(mat);
     }
 
+    /** Gets a projector to convert from 3D camera space (camera at 0,0,0
+     * looking down +ve z) to 2D screen space (with camera in centre of image.)
+     */
     Projector getProjector() const
     {
       auto mat = getProjectionTransform();
@@ -57,7 +60,6 @@ namespace bold
     double d_focalLength;
     double d_rangeVertical;
     double d_rangeHorizontal;
-
   };
 }
 
