@@ -20,11 +20,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
   {
     debugImage = cameraImage;
     PixelFilterChain chain;
-    chain.pushFilter([](unsigned char* pxl) {
-      Colour::YCbCr* ycbcr = reinterpret_cast<Colour::YCbCr*>(pxl);
-      Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
-      *bgr = (*ycbcr).toBgrInt();
-    });
+    chain.pushFilter(&Colour::yCbCrToBgbInPlace);
     chain.applyFilters(debugImage);
   }
   else if (imageType == ImageType::Cartoon)

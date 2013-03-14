@@ -103,7 +103,7 @@ int main(int argc, char **argv)
   auto goalUnionPred =
     [] (Run const& a, Run const& b)
     {
-      if (!Run::overlaps(a, b))
+      if (!a.overlaps(b))
         return false;
 
       float ratio = (float)a.length() / (float)b.length();
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
   vector<UnionPredicate> unionPredicateByLabel = {goalUnionPred, ballUnionPred};
 
   auto lineDotPass = new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel, 3);
-  vector<BlobType> blobTypes = {
+  const vector<BlobType> blobTypes = {
     BlobType(ballLabel, ballUnionPred),
     BlobType(goalLabel, goalUnionPred)
   };
@@ -168,10 +168,11 @@ int main(int argc, char **argv)
        << "Found:" << endl
        << "    " << lineDotPass->lineDots.size() << " line dots" << endl;
 
+  auto blobsByLabel = blobDetectPass->getDetectedBlobs();
   for (BlobType const& blobType : blobTypes)
   {
     PixelLabel pixelLabel = blobType.pixelLabel;
-    size_t blobCount = blobDetectPass->blobsPerLabel[pixelLabel].size();
+    size_t blobCount = blobsByLabel[pixelLabel].size();
     cout << "    " << blobCount << " " << pixelLabel.name() << " blob(s)" << endl;
   }
 
@@ -244,7 +245,7 @@ int main(int argc, char **argv)
 
   // Draw blobs
   for (BlobType const& blobType : blobTypes)
-  for (bold::Blob blob : blobDetectPass->blobsPerLabel[blobType.pixelLabel])
+  for (bold::Blob blob : blobsByLabel[blobType.pixelLabel])
   {
     auto blobColor = blobType.pixelLabel.hsvRange().toBgr().invert().toScalar();
     cv::rectangle(colourImage, blob.toRect(), blobColor);

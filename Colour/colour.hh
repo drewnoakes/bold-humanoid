@@ -93,6 +93,13 @@ namespace bold
 
     static hsv bgr2hsv(bgr const& in);
     static bgr hsv2bgr(hsv const& in);
+
+    static void yCbCrToBgbInPlace(unsigned char* pxl)
+    {
+      Colour::YCbCr* ycbcr = reinterpret_cast<Colour::YCbCr*>(pxl);
+      Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
+      *bgr = (*ycbcr).toBgrInt();
+    }
   };
 
   std::ostream& operator<<(std::ostream &stream, Colour::hsv const& hsv);

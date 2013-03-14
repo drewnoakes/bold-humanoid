@@ -1,4 +1,4 @@
-CXXFLAGS=-I/usr/include/opencv2 -I/usr/include/eigen3 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -O3 -std=c++0x -g
+CXXFLAGS=-I/usr/include/opencv2 -I/usr/include/eigen3 -I../rapidjson/include -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -O3 -std=c++0x -g
 LDFLAGS=`pkg-config opencv --libs`
 
 
@@ -18,22 +18,24 @@ ${GEOMETRY_OBJECTS}: ${GEOMETRY_HEADERS}
 
 
 
-# CAMERA_SOURCES=\
-# 	../Camera/Camera.cc\
-# 	../Camera/capture.cc\
-# 	../Camera/initMemoryMapping.cc\
-# 	../Camera/fillControlMenuItems.cc\
-# 	../Camera/getControlValue.cc\
-# 	../Camera/listControls.cc\
-# 	../Camera/listFormats.cc\
-# 	../Camera/open.cc\
-# 	../Camera/pixelFormatRequestSize.cc\
-# 	../Camera/setControlValue.cc\
-# 	../Camera/startCapture.cc\
-# 	../Camera/stopCapture.cc\
-# 	../PixelFilterChain/applyFilters.cc
-# CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
-# ${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
+CAMERA_SOURCES=\
+	../Camera/Camera.cc\
+	../Camera/capture.cc\
+	../Camera/initMemoryMapping.cc\
+	../Camera/getControlValue.cc\
+	../Camera/listControls.cc\
+	../Camera/listFormats.cc\
+	../Camera/open.cc\
+	../Camera/pixelFormatRequestSize.cc\
+	../Camera/startCapture.cc\
+	../Camera/stopCapture.cc\
+	../Control/create.cc\
+	../Control/handleRequest.cc\
+	../Control/staticfields.cc\
+	../Control/writeState.cc\
+	../PixelFilterChain/applyFilters.cc
+CAMERA_OBJECTS=$(CAMERA_SOURCES:.cc=.o)
+${CAMERA_OBJECTS} cameratest.o: ../Camera/camera.hh ../Camera/camera.ih
 
 
 
@@ -52,6 +54,7 @@ PASS_SOURCES=\
 	../Colour/hsvRange.cc\
 	../Colour/YCbCr.cc\
 	../ImageLabeller/ImageLabeller.cc\
+	../ImagePassHandler/BlobDetectPass/BlobDetectPass.cc\
 	../ImagePassHandler/BlobDetectPass/detectBlobs.cc\
 	../ImagePassHandler/BlobDetectPass/runSetToBlob.cc\
 	../HoughLineAccumulator/houghlineaccumulator.cc\
@@ -70,13 +73,13 @@ djsettest: djsettest.cc ../DisjointSet/disjointset.hh
 	g++ djsettest.cc -o djsettest -O3 -std=c++0x
 
 
-passtest.o:                 ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
+passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
 passtest: passtest.o hough.o ${PASS_OBJECTS} ${GEOMETRY_OBJECTS}
 	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${PASS_OBJECTS} ${GEOMETRY_OBJECTS} -o passtest
 
 
-cameratest: cameratest.o ${CAMERA_OBJECTS} ${GEOMETRY_OBJECTS}
-	g++ cameratest.o ${CXXFLAGS} ${LDFLAGS} ${CAMERA_OBJECTS} ${GEOMETRY_OBJECTS} -o cameratest
+cameratest: cameratest.o ${CAMERA_OBJECTS} ${PASS_OBJECTS} ${GEOMETRY_OBJECTS}
+	g++ cameratest.o ${CXXFLAGS} ${LDFLAGS} ${CAMERA_OBJECTS} ${PASS_OBJECTS} ${GEOMETRY_OBJECTS} -o cameratest
 
 
 hough.o: ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh
