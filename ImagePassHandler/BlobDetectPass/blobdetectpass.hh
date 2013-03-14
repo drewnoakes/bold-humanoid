@@ -231,7 +231,7 @@ namespace bold
 
   inline bool Run::overlaps(Run const& b) const
   {
-    return std::max(endX, b.endX) - std::min(startX, b.startX) < length() + length();
+    return std::max(endX, b.endX) - std::min(startX, b.startX) < length() + b.length();
   }
 
   inline bool Run::operator<(Run const& other) const
