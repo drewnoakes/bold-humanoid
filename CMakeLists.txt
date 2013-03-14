@@ -128,11 +128,12 @@ set(BOLDHUMANOID_SOURCES
 ./DataStreamer/initialise.cc
 ./DataStreamer/processCameraCommand.cc
 ./DataStreamer/registerControls.cc
-./DataStreamer/sendCameraStateAndOptions.cc
+./DataStreamer/sendCameraControls.cc
 ./DataStreamer/sendImageBytes.cc
 ./DataStreamer/shouldProvideImage.cc
 ./DataStreamer/streamImage.cc
 ./DataStreamer/update.cc
+./DataStreamer/writeJson.cc
 ./GameController/GameControllerReceiver.cc
 ./geometry/Bounds2i.cc
 ./geometry/LineSegment2i.cc

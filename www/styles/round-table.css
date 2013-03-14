@@ -117,6 +117,13 @@ div.module.camera div.control-container.camera-controls
     overflow: auto;
 }
 
+
+div.module.camera div.control-container.vision-controls
+{
+    width: 350px;
+    margin-top: 20px;
+}
+
 div.module.camera div.control-container.camera-controls .control .values
 {
     color: #666;

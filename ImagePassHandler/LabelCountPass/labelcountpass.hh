@@ -16,21 +16,22 @@ namespace bold
    */
   class LabelCountPass : public ImagePassHandler<uchar>
   {
-  private:
-    uint d_countByLabelId[8]; // assumes we'll never have more than 7 labels (1-8)
-    std::vector<PixelLabel> d_labels;
-
   public:
-    LabelCountPass(std::vector<PixelLabel> labels)
+
+    // assuming we'll never have more than 7 labels (1-8)
+    static const unsigned MAX_LABEL_COUNT = 8;
+
+    LabelCountPass(std::vector<std::shared_ptr<PixelLabel>> const& labels)
     : d_labels(labels),
       d_countByLabelId()
     {}
 
     void onImageStarting()
     {
-      for (PixelLabel const& label : d_labels)
+      for (std::shared_ptr<PixelLabel> label : d_labels)
       {
-        d_countByLabelId[label.id()] = 0;
+        assert(label->id() < MAX_LABEL_COUNT);
+        d_countByLabelId[label->id()] = 0;
       }
     }
 
@@ -42,18 +43,21 @@ namespace bold
       }
     }
 
-    std::map<PixelLabel,uint> getCounts()
+    std::map<std::shared_ptr<PixelLabel>,uint> getCounts() const
     {
-      std::map<PixelLabel,uint> counts;
+      std::map<std::shared_ptr<PixelLabel>,uint> counts;
 
-      for (PixelLabel const& label : d_labels)
+      for (std::shared_ptr<PixelLabel> label : d_labels)
       {
-        auto count = d_countByLabelId[label.id()];
-        counts[label] = count;
+        counts[label] = d_countByLabelId[label->id()];
       }
 
       return counts;
     }
+
+  private:
+    uint d_countByLabelId[MAX_LABEL_COUNT];
+    std::vector<std::shared_ptr<PixelLabel>> d_labels;
   };
 }
 

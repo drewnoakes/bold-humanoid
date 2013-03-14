@@ -12,5 +12,6 @@ VisualCortex::VisualCortex()
     d_pixelLabelById(),
     d_observations(),
     d_goalObservations(),
-    d_ballObservation()
+    d_ballObservation(),
+    d_controls()
 {}

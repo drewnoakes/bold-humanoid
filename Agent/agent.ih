@@ -6,6 +6,7 @@
 #include "../Debugger/debugger.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../LUTBuilder/lutbuilder.hh"
+#include "../VisualCortex/visualcortex.hh"
 #include "../WorldModel/worldmodel.hh"
 
 #include "../joystick/joystick.hh"

@@ -30,7 +30,7 @@ int DataStreamer::callback_camera(
       // Can write to client
       if (!cameraSession->hasSentStateAndOptions)
       {
-        sendCameraStateAndOptions(wsi);
+        sendCameraControls(wsi);
         cameraSession->hasSentStateAndOptions = true;
       }
       else if (cameraSession->imgReady)

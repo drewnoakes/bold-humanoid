@@ -6,7 +6,7 @@ void BlobDetectPass::detectBlobs()
   // For each label that we're configured to look at
   for (BlobType const& blobType : d_blobTypes)
   {
-    uchar pixelLabelId = blobType.pixelLabel.id();
+    uchar pixelLabelId = blobType.pixelLabel->id();
 
     // Go through all runs and add them to the disjoint set
 

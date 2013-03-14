@@ -19,7 +19,6 @@ Agent::Agent(std::string const& U2D_dev,
     d_goalSeenCnt(0),
     d_camera(nullptr),
     d_joystick(nullptr),
-    d_visualCortex(nullptr),
     d_motionTimer(nullptr),
     d_streamer(nullptr),
     d_isRecordingFrames(recordFrames)

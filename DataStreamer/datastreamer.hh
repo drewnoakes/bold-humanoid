@@ -78,10 +78,11 @@ namespace bold
     void registerControls(std::string family, std::vector<Control> controls);
 
   private:
-    void sendCameraStateAndOptions(libwebsocket* wsi);
+    void sendCameraControls(libwebsocket* wsi);
     void sendImageBytes(libwebsocket* wsi, CameraSession* session);
 
     void processCameraCommand(std::string json);
+    void writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
 
     std::vector<Control> getDebugControls();
 

@@ -43,6 +43,8 @@ namespace bold
     Colour::hsvRange hsvRange() const { return d_hsvRange; }
     std::string name() const { return d_name; }
 
+    void setHsvRange(Colour::hsvRange const& hsvRange) { d_hsvRange = hsvRange; }
+
     bool operator<(const PixelLabel& other) const
     {
       return d_id < other.d_id;

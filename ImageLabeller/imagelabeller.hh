@@ -17,6 +17,10 @@ namespace bold
     std::shared_ptr<unsigned char> d_LUT;
 
   public:
+    ImageLabeller()
+    : d_LUT()
+    {};
+
     ImageLabeller(std::shared_ptr<unsigned char> const& lut);
 
     /** Replaces the LUT used by this image labeller. */

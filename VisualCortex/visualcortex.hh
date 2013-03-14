@@ -8,6 +8,7 @@
 
 #include "../LineFinder/linefinder.hh"
 #include "../PixelLabel/pixellabel.hh"
+#include "../Control/control.hh"
 
 class minIni;
 
@@ -53,11 +54,13 @@ namespace bold
 
     void initialise(minIni const& ini);
 
+    std::vector<Control> getControls() const { return d_controls; }
+
     /** Process the provided image, extracting features. */
     void integrateImage(cv::Mat& cameraImage);
 
     /** Composes and enqueues a debugging image. */
-    void streamDebugImage(cv::Mat cameraImage, DataStreamer* d_streamer);
+    void streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer);
 
     bool isBallVisible() const { return d_isBallVisible; }
     std::vector<Observation> observations() const { return d_observations; }
@@ -70,15 +73,17 @@ namespace bold
     static VisualCortex& getInstance();
 
   private:
+    std::vector<Control> d_controls;
+
     std::vector<Observation> d_observations;
     std::vector<Observation> d_goalObservations;
     Observation d_ballObservation;
     bool d_isBallVisible;
 
-    PixelLabel d_goalLabel;
-    PixelLabel d_ballLabel;
-    PixelLabel d_fieldLabel;
-    PixelLabel d_lineLabel;
+    std::shared_ptr<PixelLabel> d_goalLabel;
+    std::shared_ptr<PixelLabel> d_ballLabel;
+    std::shared_ptr<PixelLabel> d_fieldLabel;
+    std::shared_ptr<PixelLabel> d_lineLabel;
 
     ImageLabeller* d_imageLabeller;
     cv::Mat d_labelledImage;

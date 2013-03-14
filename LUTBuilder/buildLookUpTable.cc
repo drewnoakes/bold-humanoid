@@ -1,6 +1,6 @@
 #include "lutbuilder.ih"
 
-shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR24(vector<PixelLabel> const& labels)
+shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR24(vector<shared_ptr<PixelLabel>> const& labels)
 {
   uchar* lut = new uchar[1<<24];
   uchar* p = lut;
@@ -13,7 +13,7 @@ shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR24(vector<PixelLabel> const& la
   return shared_ptr<uchar>(lut);
 }
 
-shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR18(vector<PixelLabel> const& labels)
+shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR18(vector<shared_ptr<PixelLabel>> const& labels)
 {
   uchar* lut = new uchar[1<<18];
   uchar* p = lut;
@@ -26,7 +26,7 @@ shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR18(vector<PixelLabel> const& la
   return shared_ptr<uchar>(lut);
 }
 
-shared_ptr<uchar> LUTBuilder::buildLookUpTableYCbCr18(vector<PixelLabel> const& labels)
+shared_ptr<uchar> LUTBuilder::buildLookUpTableYCbCr18(vector<shared_ptr<PixelLabel>> const& labels)
 {
   uchar* lut = new uchar[1<<18];
   uchar* p = lut;
@@ -39,16 +39,14 @@ shared_ptr<uchar> LUTBuilder::buildLookUpTableYCbCr18(vector<PixelLabel> const& 
   return shared_ptr<uchar>(lut);
 }
 
-uchar LUTBuilder::labelPixel(vector<PixelLabel> const& labels, Colour::bgr const& bgr)
+uchar LUTBuilder::labelPixel(vector<shared_ptr<PixelLabel>> const& labels, Colour::bgr const& bgr)
 {
-  for (PixelLabel const& label : labels)
+  // Find first that matches
+  for (shared_ptr<PixelLabel> label : labels)
   {
-    Colour::hsvRange range = label.hsvRange();
-    Colour::hsv hsv = Colour::bgr2hsv(bgr);
-
-    if (range.contains(hsv))
+    if (label->hsvRange().contains(Colour::bgr2hsv(bgr)))
     {
-      return label.id();
+      return label->id();
     }
   }
 

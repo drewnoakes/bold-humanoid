@@ -23,10 +23,12 @@ define(
             var container = $('<div></div>');
             this.$cameraControlContainer = $('<div></div>', {'class': 'control-container camera-controls'});
             this.$debugControlContainer  = $('<div></div>', {'class': 'control-container debug-controls'});
+            this.$visionControlContainer  = $('<div></div>', {'class': 'control-container vision-controls'});
 
             container.append(this.$canvas)
                      .append(this.$cameraControlContainer)
-                     .append(this.$debugControlContainer);
+                     .append(this.$debugControlContainer)
+                     .append(this.$visionControlContainer);
 
             this.bindInteraction();
 
@@ -55,12 +57,14 @@ define(
                     self.$canvas.css({width: self.canvas.width});
                     self.$cameraControlContainer.delay(400).fadeIn();
                     self.$debugControlContainer.delay(400).fadeIn();
+                    self.$visionControlContainer.delay(400).fadeIn();
                 }
                 else {
                     isImageLarge = true;
                     self.$canvas.css({width: '100%'});
                     self.$cameraControlContainer.hide();
                     self.$debugControlContainer.hide();
+                    self.$visionControlContainer.hide();
                 }
             });
         };
@@ -117,6 +121,7 @@ define(
 
                     ControlBuilder.build('camera', controls.camera, this.$cameraControlContainer, _.bind(this.sendCommand, this));
                     ControlBuilder.build('debug',  controls.debug,  this.$debugControlContainer,  _.bind(this.sendCommand, this));
+                    ControlBuilder.build('vision', controls.vision, this.$visionControlContainer, _.bind(this.sendCommand, this));
 
                     this.imgState = StateEnum.GET_PREFIX;
                     break;

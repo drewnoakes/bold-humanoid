@@ -3,10 +3,12 @@
 
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
+
 #include <algorithm>
-#include <vector>
-#include <set>
 #include <cassert>
+#include <memory>
+#include <set>
+#include <vector>
 
 #include "../imagepasshandler.hh"
 #include "../../DisjointSet/disjointset.hh"
@@ -75,7 +77,7 @@ namespace bold
     std::set<Run> runs;      ///< Runs in this blob
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    
+
     inline friend std::ostream& operator<<(std::ostream& stream, bold::Blob const& blob)
     {
       return stream << "Blob (ul=[" << blob.ul.transpose() << "] br=[" << blob.br.transpose() << "])";
@@ -98,10 +100,10 @@ namespace bold
    **/
   struct BlobType
   {
-    const PixelLabel pixelLabel;
-    const UnionPredicate unionPredicate;
+    std::shared_ptr<PixelLabel> const pixelLabel;
+    UnionPredicate unionPredicate;
 
-    BlobType(PixelLabel pixelLabel, UnionPredicate unionPredicate)
+    BlobType(std::shared_ptr<PixelLabel> const pixelLabel, UnionPredicate unionPredicate)
     : pixelLabel(pixelLabel),
       unionPredicate(unionPredicate)
     {}
@@ -173,33 +175,33 @@ namespace bold
 
     std::vector<BlobType> blobTypes() const { return d_blobTypes; }
 
-    std::map<bold::PixelLabel,std::vector<Blob>> const& getDetectedBlobs() const { return d_blobsDetectedPerLabel; }
+    std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> const& getDetectedBlobs() const { return d_blobsDetectedPerLabel; }
 
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
-    
+
     int d_imageHeight;
     int d_imageWidth;
-    
+
     std::vector<BlobType> d_blobTypes;
 
     // Image pass state Accumulated data for the most recently passed image.
     std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
     bold::Run d_currentRun;
     uchar d_currentLabel;
-    
+
     // Blobs detected
-    std::map<bold::PixelLabel,std::vector<Blob>> d_blobsDetectedPerLabel;
+    std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> d_blobsDetectedPerLabel;
 
     // Processes Runs into Blobs. Returns a set of blobs per label
     void detectBlobs();
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
-    
+
     void addRun(int endX)
     {
       assert(endX >= d_currentRun.startX);
-      
+
       // finish whatever run we were on
       d_currentRun.endX = endX;
 
@@ -211,8 +213,8 @@ namespace bold
       }
     }
   };
-  
- 
+
+
   //// Inline members
 
   // Run
@@ -221,7 +223,7 @@ namespace bold
       endX(startX),
       y(y)
   {}
-  
+
   inline unsigned Run::length() const
   {
     return endX - startX + 1;
@@ -231,7 +233,7 @@ namespace bold
   {
     return std::max(endX, b.endX) - std::min(startX, b.startX) < length() + length();
   }
-  
+
   inline bool Run::operator<(Run const& other) const
   {
     return

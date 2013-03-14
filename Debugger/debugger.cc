@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "../AgentModel/agentmodel.hh"
+#include "../VisualCortex/visualcortex.hh"
 #include "../WorldModel/worldmodel.hh"
 
 using namespace Robot;

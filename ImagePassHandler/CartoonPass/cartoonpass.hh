@@ -17,31 +17,27 @@ namespace bold
    */
   class CartoonPass : public ImagePassHandler<uchar>
   {
-  private:
-    cv::Mat d_mat;
-    Colour::bgr d_bgrByLabelId[8]; // assumes we'll never have more than 7 labels (1-8)
-    bold::Colour::bgr d_backgroundColour;
-    Colour::bgr* d_ptr;
-
   public:
     /**
      * @param backgroundColour The colour to use for non-labelled pixels. Defaults to black.
      */
-    CartoonPass(int width, int height, std::vector<PixelLabel> const& labels, Colour::bgr backgroundColour = Colour::bgr(0,0,0))
+    CartoonPass(int width, int height, std::vector<std::shared_ptr<PixelLabel>> const& labels, Colour::bgr backgroundColour = Colour::bgr(0,0,0))
     : d_mat(height, width, CV_8UC3),
-      d_backgroundColour(backgroundColour)
-    {
-      for (PixelLabel const& label : labels)
-      {
-        d_bgrByLabelId[label.id()] = label.hsvRange().toBgr();
-      }
-    }
+      d_backgroundColour(backgroundColour),
+      d_labels(labels)
+    {}
 
     cv::Mat& mat() { return d_mat; }
 
     void onImageStarting()
     {
       d_mat = d_backgroundColour.toScalar();
+
+      // Do this each frame, as label definitions can change at runtime
+      for (std::shared_ptr<PixelLabel> const label : d_labels)
+      {
+        d_bgrByLabelId[label->id()] = label->hsvRange().toBgr();
+      }
     }
 
     void onRowStarting(int y)
@@ -57,6 +53,13 @@ namespace bold
       }
       d_ptr++;
     }
+
+  private:
+    cv::Mat d_mat;
+    Colour::bgr d_bgrByLabelId[8]; // assumes we'll never have more than 7 labels (1-8)
+    bold::Colour::bgr d_backgroundColour;
+    Colour::bgr* d_ptr;
+    std::vector<std::shared_ptr<PixelLabel>> d_labels;
   };
 }
 

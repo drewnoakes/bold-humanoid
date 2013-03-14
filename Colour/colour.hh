@@ -89,6 +89,13 @@ namespace bold
 
       static hsvRange fromBytes(uchar h, uchar hRange, uchar s, uchar sRange, uchar v, uchar vRange);
       static hsvRange fromDoubles(double h, double hRange, double s, double sRange, double v, double vRange);
+
+      hsvRange withH(int value)      const { return hsvRange(value, hRange, s, sRange, v, vRange); }
+      hsvRange withHRange(int value) const { return hsvRange(h, value, s, sRange, v, vRange); }
+      hsvRange withS(int value)      const { return hsvRange(h, hRange, value, sRange, v, vRange); }
+      hsvRange withSRange(int value) const { return hsvRange(h, hRange, s, value, v, vRange); }
+      hsvRange withV(int value)      const { return hsvRange(h, hRange, s, sRange, value, vRange); }
+      hsvRange withVRange(int value) const { return hsvRange(h, hRange, s, sRange, v, value); }
     };
 
     static hsv bgr2hsv(bgr const& in);

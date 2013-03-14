@@ -9,7 +9,6 @@
 #include "../Ambulator/ambulator.hh"
 #include "../GameController/GameControllerReceiver.hh"
 #include "../MX28Alarm/MX28Alarm.hh"
-#include "../VisualCortex/visualcortex.hh"
 
 class Joystick;
 
@@ -53,7 +52,6 @@ namespace bold
     std::string d_motionFile;
     DataStreamer* d_streamer;
     Camera* d_camera;
-    VisualCortex* d_visualCortex;
     Ambulator d_ambulator;
     Joystick* d_joystick;
     bool d_isRecordingFrames;
