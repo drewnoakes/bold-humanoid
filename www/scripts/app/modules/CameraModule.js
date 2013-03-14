@@ -28,6 +28,8 @@ define(
                      .append(this.$cameraControlContainer)
                      .append(this.$debugControlContainer);
 
+            this.bindInteraction();
+
             /////
 
             this.title = 'camera';
@@ -40,6 +42,27 @@ define(
                     supports: { fullScreen: true }
                 }
             ];
+        };
+
+        CameraModule.prototype.bindInteraction = function ()
+        {
+            var isImageLarge = false,
+                self = this;
+            this.$canvas.click(function ()
+            {
+                if (isImageLarge) {
+                    isImageLarge = false;
+                    self.$canvas.css({width: undefined});
+                    self.$cameraControlContainer.fadeIn();
+                    self.$debugControlContainer.fadeIn();
+                }
+                else {
+                    isImageLarge = true;
+                    self.$canvas.css({width: '100%'});
+                    self.$cameraControlContainer.fadeOut();
+                    self.$debugControlContainer.fadeOut();
+                }
+            });
         };
 
         CameraModule.prototype.load = function()
