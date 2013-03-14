@@ -86,7 +86,7 @@ define(
                             element.append($('<h3></h3>').html(headingText));
                             var menu = $('<select></select>').change(function()
                             {
-                                sendCommand(family, control.id, parseInt(this.selectedOptions[0].value));
+                                sendCommand(family, control.id, parseInt(this.options[this.selectedIndex].value));
                             });
 
                             _.each(control.enumValues, function(enumValue)
