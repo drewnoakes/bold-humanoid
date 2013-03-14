@@ -101,7 +101,7 @@ define(
 
             console.log('Sending command', command);
 
-            this.socket.send(JSON.stringify(command));
+            this.subscription.send(JSON.stringify(command));
         };
 
         CameraModule.prototype.onmessage = function(message)

@@ -43,6 +43,10 @@ define(
             }
 
             return {
+                send: function (message)
+                {
+                    protocolData.socket.send(message);
+                },
                 close: function ()
                 {
                     for (var i = 0; i < protocolData.callbacks.length; i++) {
