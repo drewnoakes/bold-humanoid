@@ -3,18 +3,18 @@
 
     "materials": [
         {
-	        "DbgName" : "Servo Material",
-	        "blending" : "NormalBlending",
-	        "colorAmbient" : [0.25, 0.25, 0.25],
-	        "colorDiffuse" : [0.14, 0.14, 0.14],
-	        "colorSpecular" : [0.168737, 0.168737, 0.168737],
-	        "shading" : "Phong",
-	        "specularCoef" : 50,
-	        "transparency" : 1.0,
-	        "transparent" : false,
-	        "vertexColors" : false
-	    }
-	],
+            "DbgName" : "Servo Material",
+            "blending" : "NormalBlending",
+            "colorAmbient" : [0.25, 0.25, 0.25],
+            "colorDiffuse" : [0.14, 0.14, 0.14],
+            "colorSpecular" : [0.168737, 0.168737, 0.168737],
+            "shading" : "Phong",
+            "specularCoef" : 50,
+            "transparency" : 1.0,
+            "transparent" : false,
+            "vertexColors" : false
+        }
+    ],
 
     "vertices": [
         0.0180439, 0.0115761, 0.0214732,
