@@ -124,7 +124,6 @@ namespace bold
       bool d_isHorizontal;
     };
 
-  public:
     LineFinder(int imageWidth, int imageHeight)
     : d_mat(imageWidth, imageHeight, CV_8UC1)
     {}
