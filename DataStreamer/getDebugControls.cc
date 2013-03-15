@@ -19,7 +19,9 @@ vector<Control> DataStreamer::getDebugControls()
   {
     framePeriods.push_back(ControlEnumValue(period, std::to_string(period)));
   }
-  controls.push_back(Control::createEnum("Frame period", framePeriods, d_streamFramePeriod, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); }));
+  auto framePeriod = Control::createEnum("Frame period", framePeriods, d_streamFramePeriod, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); });
+  framePeriod.setIsAdvanced(true);
+  controls.push_back(framePeriod);
 
   // Head control
   auto moveHead = [](double const& pan, double const& tilt)

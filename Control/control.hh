@@ -86,6 +86,7 @@ namespace bold
       d_value(0),
       d_type(ControlType::Unknown),
       d_name(),
+      d_isAdvanced(false),
       d_hasLimitValues(false),
       d_minValue(0),
       d_maxValue(0),
@@ -135,6 +136,8 @@ namespace bold
     int getValue() const { return d_value; }
     ControlType getType() const { return d_type; }
     std::string getName() const { return d_name; }
+    bool isAdvanced() const { return d_isAdvanced; }
+    void setIsAdvanced(bool isAdvanced) { d_isAdvanced = isAdvanced; }
 
     bool hasLimitValues() const { return d_hasLimitValues; }
     int getMinValue() const { return d_minValue; }
@@ -186,6 +189,9 @@ namespace bold
         }
       }
 
+      if (control.isAdvanced())
+        stream << " advanced=true";
+
       return stream;
     }
 
@@ -197,6 +203,7 @@ namespace bold
     ControlType d_type;
     std::function<void(int const& value)> d_callback;
     std::string d_name;
+    bool d_isAdvanced;
 
     bool d_hasLimitValues;
     int d_minValue;

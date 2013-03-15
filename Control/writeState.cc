@@ -37,6 +37,12 @@ void Control::writeState(Writer<StringBuffer>& writer) const
     writer.Int(d_defaultValue);
   }
 
+  if (d_isAdvanced)
+  {
+    writer.String("advanced");
+    writer.Bool(true);
+  }
+
   if (d_type == ControlType::Enum)
   {
     writer.String("enumValues");

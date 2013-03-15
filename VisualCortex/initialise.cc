@@ -104,6 +104,13 @@ void VisualCortex::initialise(minIni const& ini)
     v .setLimitValues(0, 255);
     vr.setLimitValues(0, 255);
 
+    h .setIsAdvanced(true);
+    hr.setIsAdvanced(true);
+    s .setIsAdvanced(true);
+    sr.setIsAdvanced(true);
+    v .setIsAdvanced(true);
+    vr.setIsAdvanced(true);
+
     d_controls.push_back(h);
     d_controls.push_back(hr);
     d_controls.push_back(s);
