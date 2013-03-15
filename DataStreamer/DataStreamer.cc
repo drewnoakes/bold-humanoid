@@ -11,9 +11,7 @@ DataStreamer::DataStreamer(int port)
   d_drawObservedLines(true),
   d_drawExpectedLines(true),
   d_drawBlobs(true)
-{
-  std::cout << "[DataStreamer::DataStreamer] creating on TCP port " << port << std::endl;
-}
+{}
 
 // static members
 

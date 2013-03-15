@@ -2,7 +2,7 @@
 
 void VisualCortex::initialise(minIni const& ini)
 {
-  cout << "[VisualCortex::initialise] Initialising VisualCortex" << endl;
+  cout << "[VisualCortex::initialise] Start" << endl;
 
   d_goalLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Goal",  40,  10, 210, 55, 190, 65));
   d_ballLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Ball",  10,  15, 255, 95, 190, 95));
@@ -17,7 +17,7 @@ void VisualCortex::initialise(minIni const& ini)
   {
     cout << "[VisualCortex::initialise] Creating LUT using pixel labels:" << endl;
     for (shared_ptr<PixelLabel> label : pixelLabels)
-      cout << "[VisualCortex::initialise]   " << label << endl;
+      cout << "[VisualCortex::initialise]   " << *label << endl;
 
     d_imageLabeller->updateLut(LUTBuilder::buildLookUpTableYCbCr18(pixelLabels));
   };

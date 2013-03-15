@@ -11,6 +11,8 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+  cout << "[boldhumanoid] Starting boldhumanoid" << endl;
+
   // defaults
   bool useJoystick = false;
   bool autoGetUpFromFallen = true;
@@ -65,5 +67,9 @@ int main(int argc, char **argv)
     autoGetUpFromFallen,
     recordFrames);
 
-  return agent.run();
+  auto rc = agent.run();
+
+  cout << "[boldhumanoid] Exiting normally" << endl;
+
+  return rc;
 }

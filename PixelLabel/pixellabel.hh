@@ -20,6 +20,10 @@ namespace bold
     Colour::hsvRange d_hsvRange;
     std::string d_name;
 
+    // prevent copying
+//     PixelLabel(PixelLabel const&) = delete;
+//     PixelLabel& operator=(PixelLabel const&) = delete;
+
   public:
     static bold::PixelLabel fromConfig(
       minIni const& ini,

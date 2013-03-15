@@ -145,13 +145,46 @@ namespace bold
 
     friend std::ostream& operator<<(std::ostream& stream, Control const& control)
     {
-      stream << control.getName() << "(" << (int)control.getType() << ")" << "=" << control.getValue();
+      stream << control.getName() << "=" << control.getValue();
+
+      switch (control.getType())
+      {
+        case bold::ControlType::Int: stream << " type=int"; break;
+        case bold::ControlType::Bool: stream << " type=bool"; break;
+        case bold::ControlType::Enum: stream << " type=enum"; break;
+        case bold::ControlType::Action: stream << " type=action"; break;
+        default:
+          stream << " type=unknown"; break;
+      }
 
       if (control.hasLimitValues())
-        stream << " (" << control.getMinValue() << "-" << control.getMaxValue() << ")";
+        stream << " range=" << control.getMinValue() << "-" << control.getMaxValue();
 
       if (control.hasDefaultValue())
-        stream << "[" << control.getDefaultValue() << "]";
+      {
+        switch (control.getType())
+        {
+          case bold::ControlType::Bool:
+          {
+            stream << " default=" << (control.getDefaultValue() != 0 ? "true" : "false");
+            break;
+          }
+          case bold::ControlType::Enum:
+          {
+            int index = control.getDefaultValue();
+            auto values = control.getEnumValues();
+            if (index >= 0 && index < values.size())
+              stream << " default=" << (values[index].getName());
+            else
+              stream << " defaultIndex=" << control.getDefaultValue(); break;
+            break;
+          }
+          default:
+          {
+            stream << " default=" << control.getDefaultValue(); break;
+          }
+        }
+      }
 
       return stream;
     }

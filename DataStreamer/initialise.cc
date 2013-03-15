@@ -18,13 +18,11 @@ void DataStreamer::initialise(minIni const& ini)
   if (d_context == NULL)
     lwsl_err("libwebsocket context creation failed\n");
   else
-    std::cout << "[DataStreamer:initialise] libwebsocket_context created" << std::endl;
+    std::cout << "[DataStreamer:initialise] Listening on TCP port " << d_port << std::endl;
 
   GameState::getInstance().updated.connect([this]{ d_gameStateUpdated = true; });
   AgentModel::getInstance().updated.connect([this]{ d_agentModelUpdated = true; });
 
   // TODO split into vision and head controls
   registerControls("debug", getDebugControls());
-
-  std::cout << "[DataStreamer:initialise] Done" << std::endl;
 }

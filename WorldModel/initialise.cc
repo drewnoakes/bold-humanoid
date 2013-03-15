@@ -14,7 +14,7 @@ using namespace Eigen;
 
 void WorldModel::initialise(minIni const& ini)
 {
-  std::cout << "[WorldModel::initialise] Initialising WorldModel" << std::endl;
+  std::cout << "[WorldModel::initialise] Start" << std::endl;
 
   double fieldX              = ini.getd("Environment", "FieldSizeX", 6.0);
   double fieldY              = ini.getd("Environment", "FieldSizeY", 4.0);

@@ -40,8 +40,15 @@ vector<Control> Camera::listControls()
     // Get ready to query next item
     queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
 
+    // Remove some we cannot use
     if (name == "Pan (Absolute)" || name == "Tilt (Absolute)")
       continue;
+
+    // Rename some verbose items
+    if (name == "White Balance Temperature, Auto")
+      name = "Auto WB";
+    else if (name == "White Balance Temperature")
+      name = "WB Temp (K)";
 
     switch (type)
     {
