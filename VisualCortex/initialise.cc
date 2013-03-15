@@ -83,11 +83,32 @@ void VisualCortex::initialise(minIni const& ini)
 
   for (shared_ptr<PixelLabel> label : pixelLabels)
   {
-    d_controls.push_back(Control::createInt(label->name() + " Hue",              label->hsvRange().h,      [label,setHue     ](int value){ setHue     (label, value); }));
-    d_controls.push_back(Control::createInt(label->name() + " Hue Range",        label->hsvRange().hRange, [label,setHueRange](int value){ setHueRange(label, value); }));
-    d_controls.push_back(Control::createInt(label->name() + " Saturation",       label->hsvRange().s,      [label,setSat     ](int value){ setSat     (label, value); }));
-    d_controls.push_back(Control::createInt(label->name() + " Saturation Range", label->hsvRange().sRange, [label,setSatRange](int value){ setSatRange(label, value); }));
-    d_controls.push_back(Control::createInt(label->name() + " Value",            label->hsvRange().v,      [label,setVal     ](int value){ setVal     (label, value); }));
-    d_controls.push_back(Control::createInt(label->name() + " Value Range",      label->hsvRange().vRange, [label,setValRange](int value){ setValRange(label, value); }));
+    Control h  = Control::createInt(label->name() + " Hue",              label->hsvRange().h,      [label,setHue     ](int value){ setHue     (label, value); });
+    Control hr = Control::createInt(label->name() + " Hue Range",        label->hsvRange().hRange, [label,setHueRange](int value){ setHueRange(label, value); });
+    Control s  = Control::createInt(label->name() + " Saturation",       label->hsvRange().s,      [label,setSat     ](int value){ setSat     (label, value); });
+    Control sr = Control::createInt(label->name() + " Saturation Range", label->hsvRange().sRange, [label,setSatRange](int value){ setSatRange(label, value); });
+    Control v  = Control::createInt(label->name() + " Value",            label->hsvRange().v,      [label,setVal     ](int value){ setVal     (label, value); });
+    Control vr = Control::createInt(label->name() + " Value Range",      label->hsvRange().vRange, [label,setValRange](int value){ setValRange(label, value); });
+
+    h .setDefaultValue(label->hsvRange().h);
+    hr.setDefaultValue(label->hsvRange().hRange);
+    s .setDefaultValue(label->hsvRange().s);
+    sr.setDefaultValue(label->hsvRange().sRange);
+    v .setDefaultValue(label->hsvRange().v);
+    vr.setDefaultValue(label->hsvRange().vRange);
+
+    h .setLimitValues(0, 255);
+    hr.setLimitValues(0, 255);
+    s .setLimitValues(0, 255);
+    sr.setLimitValues(0, 255);
+    v .setLimitValues(0, 255);
+    vr.setLimitValues(0, 255);
+
+    d_controls.push_back(h);
+    d_controls.push_back(hr);
+    d_controls.push_back(s);
+    d_controls.push_back(sr);
+    d_controls.push_back(v);
+    d_controls.push_back(vr);
   }
 };
