@@ -81,17 +81,17 @@ int main(int argc, char **argv)
 //   PixelLabel lineLabel (Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.45, 0.00, 0.45), "Line"); // black line
 
   // rgb.jpg
-  PixelLabel ballLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball");
-  PixelLabel goalLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal");
-  PixelLabel fieldLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field");
-  PixelLabel lineLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line");
+  shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball"));
+  shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal"));
+  shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field"));
+  shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line"));
 
-  cout << ballLabel << endl;
-  cout << goalLabel << endl;
-  cout << fieldLabel << endl;
-  cout << lineLabel << endl;
+  cout << *ballLabel << endl;
+  cout << *goalLabel << endl;
+  cout << *fieldLabel << endl;
+  cout << *lineLabel << endl;
 
-  vector<PixelLabel> labels = { goalLabel, ballLabel, fieldLabel, lineLabel };
+  vector<shared_ptr<PixelLabel>> labels = { goalLabel, ballLabel, fieldLabel, lineLabel };
 
   // Label the image
   cv::Mat labelledImage(colourImage.size(), CV_8UC1);
@@ -171,14 +171,14 @@ int main(int argc, char **argv)
   auto blobsByLabel = blobDetectPass->getDetectedBlobs();
   for (BlobType const& blobType : blobTypes)
   {
-    PixelLabel pixelLabel = blobType.pixelLabel;
+    shared_ptr<PixelLabel> pixelLabel = blobType.pixelLabel;
     size_t blobCount = blobsByLabel[pixelLabel].size();
-    cout << "    " << blobCount << " " << pixelLabel.name() << " blob(s)" << endl;
+    cout << "    " << blobCount << " " << pixelLabel->name() << " blob(s)" << endl;
   }
 
   for (auto const& pair : labelCountPass->getCounts())
   {
-    cout << "    " << pair.second << " " << pair.first.name() << " pixels" << endl;
+    cout << "    " << pair.second << " " << pair.first->name() << " pixels" << endl;
   }
 
   //
@@ -248,7 +248,7 @@ int main(int argc, char **argv)
   for (BlobType const& blobType : blobTypes)
   for (bold::Blob blob : blobsByLabel[blobType.pixelLabel])
   {
-    auto blobColor = blobType.pixelLabel.hsvRange().toBgr().invert().toScalar();
+    auto blobColor = blobType.pixelLabel->hsvRange().toBgr().invert().toScalar();
     cv::rectangle(colourImage, blob.toRect(), blobColor);
   }
 
