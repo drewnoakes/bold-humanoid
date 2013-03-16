@@ -42,12 +42,28 @@ html, body
     display: inline-block;
 }
 
-.control h3,
+.control > h3,
 .control label
 {
     font-weight: normal;
     margin: 0;
     font-size: 11px;
+}
+
+div.module div.control.advanced
+{
+    display: none;
+}
+
+div.module.advanced div.control.advanced
+{
+    display: inline-block;
+}
+
+div.control span.value-range,
+div.control span.default-value
+{
+    color: #666;
 }
 
 /********************************************************************/
@@ -79,21 +95,25 @@ div.module h2
     font-size: 12px;
 }
 
-div.module div.pane-container
+div.module > div.pane-container
 {
     position: relative;
+    min-height: 456px;
 }
 
 /********************************************************************/
 
 div.pane-header
 {
+    position: relative;
     height: 24px;
 }
 
-div.pane-container
+div.pane-header > div.pane-header-links
 {
-    min-height: 456px;
+    position: absolute;
+    right: 2px;
+    top: 0;
 }
 
 /********************************************************************/

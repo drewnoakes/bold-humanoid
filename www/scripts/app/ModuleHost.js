@@ -38,7 +38,8 @@ define(
             _.each(this.modules, function(module)
             {
                 var moduleHtml = moduleTemplate(module),
-                    moduleElement = $('<div></div>').html(moduleHtml).children().get(0);
+                    moduleElement = $('<div></div>').html(moduleHtml).children().get(0),
+                    $moduleElement = $(moduleElement);
 
                 $moduleContainer.append(moduleElement);
 
@@ -47,6 +48,29 @@ define(
 
                 if (module.load)
                     module.load();
+
+                if (module.supports && module.supports.advanced)
+                {
+                    var $links = $moduleContainer.find('.pane-header-links');
+                    var $advancedLink = $('<a></a>', {href:'#'}).text('advanced');
+                    $links.append($advancedLink);
+                    var isAdvanced = false;
+                    $advancedLink.click(function ()
+                    {
+                        isAdvanced = !isAdvanced;
+                        if (isAdvanced)
+                        {
+                            $moduleElement.addClass('advanced');
+                            $advancedLink.text('basic');
+                        }
+                        else
+                        {
+                            $moduleElement.removeClass('advanced');
+                            $advancedLink.text('advanced');
+                        }
+                        return false;
+                    })
+                }
 
                 // Load the first pane
                 self.loadPane(module, module.panes[0]);

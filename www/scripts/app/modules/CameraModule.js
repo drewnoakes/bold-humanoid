@@ -36,12 +36,13 @@ define(
 
             this.title = 'camera';
             this.moduleClass = 'camera';
+            this.supports = { advanced: true };
             this.panes = [
                 {
                     title: 'main',
                     element: container.get(0),
 //                    onResized: _.bind(this.onResized, this),
-                    supports: { fullScreen: true }
+                    supports: { fullScreen: true, advanced: true }
                 }
             ];
         };

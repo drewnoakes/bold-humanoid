@@ -22,6 +22,11 @@ define(
                 {
                     var element = $('<div></div>').addClass('control');
 
+                    if (control.advanced)
+                    {
+                        element.addClass('advanced');
+                    }
+
                     // Special handling for int types that only have a zero or one value
                     if (control.type === ControlTypeEnum.INT && control.minimum === 0 && control.maximum === 1)
                     {
@@ -36,9 +41,9 @@ define(
                         {
                             var headingHtml = control.name;
                             if (typeof(control.minimum) !== 'undefined' && typeof(control.maximum) !== 'undefined')
-                                headingHtml +=  ' <span class="values">(' + control.minimum + ' - ' + control.maximum + ')</span>';
+                                headingHtml +=  ' <span class="value-range">(' + control.minimum + ' - ' + control.maximum + ')</span>';
                             if (typeof(control.defaultValue) !== 'undefined')
-                                headingHtml += ' <span class="values">[' + control.defaultValue + ']</span>';
+                                headingHtml += ' <span class="default-value">[' + control.defaultValue + ']</span>';
                             var heading = $('<h3></h3>').html(headingHtml);
                             var input = $('<input>', {type: 'text'})
                                 .val(control.value)
@@ -63,7 +68,7 @@ define(
 
                             var labelHtml = control.name;
                             if (typeof(control.defaultValue) !== 'undefined')
-                                labelHtml += ' <span class="values">[' + (control.defaultValue ? 'on' : 'off') + ']</span>';
+                                labelHtml += ' <span class="default-value">[' + (control.defaultValue ? 'on' : 'off') + ']</span>';
 
                             var checkboxLabel = $('<label>', {for: id})
                                 .html(labelHtml);
@@ -80,7 +85,7 @@ define(
                                 var defaultEnumValue = _.find(control.enumValues, function(ev) { return ev.value === control.defaultValue; });
                                 if (defaultEnumValue)
                                 {
-                                    headingText += ' <span class="values">[' + defaultEnumValue.name + ']</span>';
+                                    headingText += ' <span class="default-value">[' + defaultEnumValue.name + ']</span>';
                                 }
                             }
                             element.append($('<h3></h3>').html(headingText));
