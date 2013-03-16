@@ -3,9 +3,10 @@ define(
         'scripts/app/WebSocketFactory',
         'scripts/app/Protocols',
         'scripts/app/DataProxy',
-        'scripts/app/ControlBuilder'
+        'scripts/app/ControlBuilder',
+        'scripts/app/util/Colour'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder)
+    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, Colour)
     {
         'use strict';
 
@@ -23,9 +24,11 @@ define(
             var container = $('<div></div>');
             this.$cameraControlContainer = $('<div></div>', {'class': 'control-container camera-controls'});
             this.$debugControlContainer  = $('<div></div>', {'class': 'control-container debug-controls'});
-            this.$visionControlContainer  = $('<div></div>', {'class': 'control-container vision-controls'});
+            this.$visionControlContainer = $('<div></div>', {'class': 'control-container vision-controls'});
+            this.$hoverPixelInfo = $('<div></div>', {'class': 'hover-pixel-info'});
 
             container.append(this.$canvas)
+                     .append(this.$hoverPixelInfo)
                      .append(this.$cameraControlContainer)
                      .append(this.$debugControlContainer)
                      .append(this.$visionControlContainer);
@@ -62,11 +65,29 @@ define(
                 }
                 else {
                     isImageLarge = true;
+                    self.$hoverPixelInfo.text('');
                     self.$canvas.css({width: '100%'});
                     self.$cameraControlContainer.hide();
                     self.$debugControlContainer.hide();
                     self.$visionControlContainer.hide();
                 }
+            });
+            this.$canvas.mouseleave(function ()
+            {
+                self.$hoverPixelInfo.text('')
+            });
+            this.$canvas.mousemove(function (e)
+            {
+                if (!self.context || isImageLarge)
+                    return;
+                var x = e.offsetX;
+                var y = e.offsetY;
+                var c = self.context.getImageData(x, y, 1, 1).data;
+                var hsv = Colour.rgbToHsv({r:c[0]/255, g:c[1]/255, b:c[2]/255});
+                self.$hoverPixelInfo.text(
+                    'RGB: ' + c[0] + ',' + c[1] + ',' + c[2] +
+                    ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255)
+                );
             });
         };
 
