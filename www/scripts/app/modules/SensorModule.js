@@ -4,9 +4,10 @@
 define(
     [
         'scripts/app/DataProxy',
-        'scripts/app/Protocols'
+        'scripts/app/Protocols',
+        'scripts/app/PolarTrace'
     ],
-    function(DataProxy, Protocols)
+    function(DataProxy, Protocols, PolarTrace)
     {
         'use strict';
 
@@ -54,6 +55,9 @@ define(
             this.chartCanvases = [];
 
             this.buildCharts();
+
+            this.polarTrace = new PolarTrace();
+            this.container.append(this.polarTrace.element);
 
             /////
 
@@ -132,6 +136,8 @@ define(
             for (var f = 0; f < floats.length && f < this.seriesArray.length; f++) {
                 this.seriesArray[f].append(time, floats[f]);
             }
+
+            this.polarTrace.addValue(floats[3], floats[4]);
         };
 
         return SensorModule;
