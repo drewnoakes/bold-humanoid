@@ -1,11 +1,11 @@
 cmake_minimum_required (VERSION 2.8)
 project (BoldHumanoid)
 
-include(/usr/share/cmake-2.8/Modules/ExternalProject.cmake)
-
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
-# find_package(Eigen3 REQUIRED)
+include(ExternalProject)
+include(AddPcih)
+
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(SigC++ REQUIRED)
@@ -15,48 +15,9 @@ set(JOYSTICKDIR ${CMAKE_SOURCE_DIR}/joystick)
 set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
 set(RAPIDJSONDIR ${CMAKE_SOURCE_DIR}/rapidjson)
 
-# Macro for adding a precompiled internal header file
-macro(add_pcih _target _ih_path)
-  string(REPLACE ".ih" ".ih.gch" _pcih_path ${_ih_path})
-  get_filename_component(_ih_name ${_ih_path} NAME_WE)
-
-  set(_ih_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${_ih_path})
-  set(_pcih_full_dir_path ${CMAKE_CURRENT_BINARY_DIR}/${_pcih_path})
-  set(_pcih_full_path ${_pcih_full_dir_path}/${CMAKE_BUILD_TYPE}.c++)
-
-  get_target_property(_COMPILE_FLAGS ${_target} COMPILE_FLAGS)
-
-  if(CMAKE_BUILD_TYPE)
-    string(TOUPPER "CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}" _cmake_cxx_flags_var)
-  else(CMAKE_BUILD_TYPE)
-    string(TOUPPER "CMAKE_CXX_FLAGS" _cmake_cxx_flags_var)
-  endif(CMAKE_BUILD_TYPE)
-
-  set(_cmake_cxx_flags ${${_cmake_cxx_flags_var}})
-  list(APPEND _COMPILE_FLAGS ${_cmake_cxx_flags})
-
-  get_directory_property(_directory_flags INCLUDE_DIRECTORIES)
-  foreach(item ${_directory_flags})
-    list(APPEND _COMPILE_FLAGS "-I${item}")
-  endforeach(item)
-
-  get_directory_property(_directory_flags DEFINITIONS)
-  list(APPEND _COMPILE_FLAGS ${_directory_flags})
-
-  separate_arguments(_COMPILE_FLAGS)
-
-  add_custom_command(OUTPUT ${_pcih_full_path}
-		     COMMAND mkdir -p ${_pcih_full_dir_path}
-                     COMMAND ${CMAKE_CXX_COMPILER} -x c++-header ${_COMPILE_FLAGS} -c ${_ih_full_path} -o ${_pcih_full_path}
-                     IMPLICIT_DEPENDS CXX ${_ih_full_path})
-
-  set(_pcih_target "${_ih_name}_pcih")
-  add_custom_target(${_pcih_target} DEPENDS ${_pcih_full_path})
-  add_dependencies(${_target} ${_pcih_target})
-
-endmacro(add_pcih)
-
-# Compile darwin lib as an external project
+#
+## Compile darwin lib as an external project
+#
 ExternalProject_Add(darwin_lib
   DOWNLOAD_COMMAND ""
   CONFIGURE_COMMAND ""
@@ -66,19 +27,19 @@ ExternalProject_Add(darwin_lib
   INSTALL_DIR ${DARWINDIR}/Linux/lib
   INSTALL_COMMAND "")
 
-# Compile libwebsockets as an externl project
+#
+## Compile libwebsockets as an external project
+#
 ExternalProject_Add(libwebsockets_lib
   DOWNLOAD_COMMAND ""
   SOURCE_DIR ${LIBWEBSOCKETDIR}
   BINARY_DIR ${LIBWEBSOCKETDIR}
-#  BUILD_COMMAND "make"
-#  INSTALL_DIR ${DARWINDIR}/Linux/lib
   INSTALL_COMMAND ""
 )
 
-link_directories(${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
-
-# All sources
+#
+# All boldhumanoid sources
+#
 set(BOLDHUMANOID_SOURCES
 ./main.cc
 ./Agent/Agent.cc
@@ -158,7 +119,9 @@ set(BOLDHUMANOID_SOURCES
 ${JOYSTICKDIR}/joystick.cc
 )
 
-# Internal header files to be compiles
+#
+## Internal header files to be pre-compiled
+#
 set(INTERNAL_HEADERS
 ./Agent/agent.ih
 ./Camera/camera.ih
@@ -170,29 +133,63 @@ set(INTERNAL_HEADERS
 ./PixelFilterChain/pixelfilterchain.ih
 ./VisualCortex/visualcortex.ih)
 
-include_directories(
-${DARWINDIR}/Linux/include
-${DARWINDIR}/Framework/include
-${JOYSTICKDIR}
-${LIBWEBSOCKETDIR}/lib
-${EIGEN3_INCLUDE_DIR}
-${SigC++_INCLUDE_DIRS}
-${OpenCV_INCLUDE_DIR}
-${RAPIDJSONDIR}/include)
+#
+## Include directories
+#
+set(BOLDHUMANOID_INCLUDE_DIRS
+  ${DARWINDIR}/Linux/include
+  ${DARWINDIR}/Framework/include
+  ${JOYSTICKDIR}
+  ${LIBWEBSOCKETDIR}/lib
+  ${EIGEN3_INCLUDE_DIR}
+  ${SigC++_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIR}
+  ${RAPIDJSONDIR}/include
+  )
 
+include_directories(${BOLDHUMANOID_INCLUDE_DIRS})
+
+#
+## Link directories
+#
+set(BOLDHUMANOID_LINK_DIRS ${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
+link_directories(${BOLDHUMANOID_LINK_DIRS})
+
+#
+## Main executable
+#
 add_executable(boldhumanoid
   ${BOLDHUMANOID_SOURCES}
 )
 
-target_link_libraries(boldhumanoid ${OpenCV_LIBS} ${SigC++_LIBRARIES} darwin websockets pthread rt)
+#
+## Link executable to libraries
+#
+set(BOLDHUMANOID_LINK_LIBRARIES ${OpenCV_LIBS} ${SigC++_LIBRARIES} darwin websockets pthread rt)
+target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
+#
+## Additional compile flags
 # TODO: fix things so we can use Eigen vectorization
-set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT")
+#
+set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT")
+set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 
-# Additional target for creating precompiled internal headers
+#
+## Targets for creating precompiled internal headers
+#
 foreach(ih ${INTERNAL_HEADERS})
   add_pcih(boldhumanoid ${ih})
 endforeach(ih)
 
+
+#
+## Target dependencies
+#
 add_dependencies(boldhumanoid darwin_lib)
 add_dependencies(boldhumanoid libwebsockets_lib)
+
+#
+## Build and run test
+#
+add_subdirectory(test)
