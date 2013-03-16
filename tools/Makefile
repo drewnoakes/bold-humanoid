@@ -64,7 +64,7 @@ PASS_SOURCES=\
 	../LUTBuilder/buildLookUpTable.cc\
 	../PixelLabel/pixellabel.cc
 PASS_OBJECTS=$(PASS_SOURCES:.cc=.o)
-${PASS_OBJECTS} passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
+${PASS_OBJECTS} passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePassRunner/imagepassrunner.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
 
 
 
@@ -73,7 +73,7 @@ djsettest: djsettest.cc ../DisjointSet/disjointset.hh
 	g++ djsettest.cc -o djsettest -O3 -std=c++0x
 
 
-passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePasser/imagepasser.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
+passtest.o: ../LUTBuilder/lutbuilder.hh ../ImageLabeller/imagelabeller.hh ../Colour/colour.hh ../ImagePassRunner/imagepassrunner.hh ../ImagePassHandler/imagepasshandler.hh ../ImagePassHandler/BlobDetectPass/blobdetectpass.hh ../ImagePassHandler/LineDotPass/linedotpass.hh ../HoughLineAccumulator/houghlineaccumulator.hh ../HoughLineExtractor/houghlineextractor.hh ../ImagePassHandler/CartoonPass/cartoonpass.hh ../ImagePassHandler/LabelCountPass/labelcountpass.hh ../LineFinder/linefinder.hh
 passtest: passtest.o hough.o ${PASS_OBJECTS} ${GEOMETRY_OBJECTS}
 	g++ passtest.o ${CXXFLAGS} ${LDFLAGS} ${PASS_OBJECTS} ${GEOMETRY_OBJECTS} -o passtest
 

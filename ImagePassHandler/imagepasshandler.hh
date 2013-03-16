@@ -6,7 +6,7 @@ namespace bold
   /**
    * Abstract base class for classes that process the pixels of an image.
    *
-   * {@link ImagePasser} accepts one or more instances of this type, enabling
+   * {@link ImagePassRunner} accepts one or more instances of this type, enabling
    * multiple processes to feed from a single pass of the input image's pixels.
    */
   template <typename TPixel>

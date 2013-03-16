@@ -10,7 +10,7 @@
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../HoughLineExtractor/houghlineextractor.hh"
 #include "../ImageLabeller/imagelabeller.hh"
-#include "../ImagePasser/imagepasser.hh"
+#include "../ImagePassRunner/imagepassrunner.hh"
 #include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
 #include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
 #include "../ImagePassHandler/LabelCountPass/labelcountpass.hh"
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
     labelCountPass
   };
 
-  auto passer = ImagePasser<uchar>(handlers);
+  auto passer = ImagePassRunner<uchar>(handlers);
 
   LineFinder lineFinder(imageWidth, imageHeight);
 

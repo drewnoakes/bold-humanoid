@@ -12,7 +12,7 @@
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../ImagePassHandler/imagepasshandler.hh"
 #include "../ImagePassHandler/HoughLinePass/houghlinepass.hh"
-#include "../ImagePasser/imagepasser.hh"
+#include "../ImagePassRunner/imagepassrunner.hh"
 
 using namespace cv;
 using namespace std;
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 
   vector<ImagePassHandler<uchar>*> handlers = { hough };
 
-  auto passer = ImagePasser<uchar>(handlers);
+  auto passer = ImagePassRunner<uchar>(handlers);
 
   passer.pass(image);
 
