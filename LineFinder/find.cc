@@ -18,8 +18,11 @@ vector<LineFinder::LineHypothesis> LineFinder::find(vector<Vector2i>& lineDots, 
     auto dot1 = lineDots[dotIndex--];
     auto dot2 = lineDots[dotIndex--];
 
-    if (dot1.x() == dot2.x() && dot1.y() == dot2.y())
+    if (abs(dot1.x() - dot2.x()) + abs(dot1.y() - dot2.y()) < d_minDotManhattanDistance)
+    {
+      // Ignore very short lines as they are indistinguishable from noise
       continue;
+    }
 
     auto segment = LineSegment2i(dot1, dot2);
     auto line = segment.toLine();

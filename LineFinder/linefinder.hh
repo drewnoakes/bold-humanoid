@@ -124,13 +124,17 @@ namespace bold
     };
 
     LineFinder(int imageWidth, int imageHeight)
-    : d_mat(imageWidth, imageHeight, CV_8UC1)
+    : d_mat(imageWidth, imageHeight, CV_8UC1),
+      d_minDotManhattanDistance(3)
     {}
 
     std::vector<LineHypothesis> find(std::vector<Eigen::Vector2i>& lineDots, ushort processDotCount = 50);
 
+    void setMinDotManhattanDistance(unsigned minDotManhattanDistance) { d_minDotManhattanDistance = minDotManhattanDistance; }
+
   private:
     cv::Mat d_mat;
+    unsigned d_minDotManhattanDistance;
   };
 }
 
