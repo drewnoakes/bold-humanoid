@@ -28,21 +28,21 @@ TEST (RunTests, length)
 
 TEST (RunTests, overlaps)
 {
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(5, 15) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(15, 25) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(11, 19) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(0, 10) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(10, 10) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(20, 20) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(20, 30) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(0, 30) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 10), makeRun(10, 10) ) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(5, 15)) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(15, 25)) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(11, 19)) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(0, 10)) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(10, 10)) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(20, 20)) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(20, 30)) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(0, 30)) );
+  EXPECT_TRUE ( makeRun(10, 10).overlaps(makeRun(10, 10)) );
 
   // touching at a diagonal (8 connected)
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(21, 30) ) );
-  EXPECT_TRUE ( Run::overlaps( makeRun(10, 20), makeRun(0, 9) ) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(21, 30)) );
+  EXPECT_TRUE ( makeRun(10, 20).overlaps(makeRun(0, 9)) );
 
   // completely separate
-  EXPECT_FALSE ( Run::overlaps( makeRun(10, 20), makeRun(22, 30) ) );
-  EXPECT_FALSE ( Run::overlaps( makeRun(10, 20), makeRun(0, 8) ) );
+  EXPECT_FALSE ( makeRun(10, 20).overlaps(makeRun(22, 30)) );
+  EXPECT_FALSE ( makeRun(10, 20).overlaps(makeRun(0, 8)) );
 }
