@@ -18,27 +18,6 @@ using namespace cv;
 using namespace Eigen;
 using namespace std;
 
-Bounds2i::Bounds2i(int minX, int minY, int maxX, int maxY)
-: d_min(Vector2i(minX, minY)),
-  d_max(Vector2i(maxX, maxY))
-{
-  assert(d_min.x() <= d_max.x() && d_min.y() <= d_max.y());
-}
-
-Bounds2i::Bounds2i(Vector2i min, Vector2i max)
-: d_min(min),
-  d_max(max)
-{
-  assert(d_min.x() <= d_max.x() && d_min.y() <= d_max.y());
-}
-
-bool Bounds2i::contains(Vector2i const& v) const
-{
-  return v.x() >= d_min.x()
-      && v.x() <= d_max.x()
-      && v.y() >= d_min.y()
-      && v.y() <= d_max.y();
-}
 
 int Bounds2i::width() const
 {
@@ -48,11 +27,6 @@ int Bounds2i::width() const
 int Bounds2i::height() const
 {
   return d_max.y() - d_min.y();
-}
-
-bool Bounds2i::isEmpty() const
-{
-  return width() != 0 && height() != 0;
 }
 
 vector<Vector2i> Bounds2i::getCorners() const
