@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
   auto rc = agent.run();
 
-  cout << "[boldhumanoid] Exiting normally" << endl;
+  cout << "[boldhumanoid] Exiting with " << rc << endl;
 
   return rc;
 }
