@@ -21,6 +21,25 @@ set(TEST_SOURCES
   )
 
 #
+## Target for making google-test
+#
+externalproject_add(googletests
+                    PREFIX google-test
+		    BINARY_DIR google-test
+		    SOURCE_DIR google-test
+		    DOWNLOAD_COMMAND ""
+		    UPDATE_COMMAND ""
+		    INSTALL_COMMAND "")
+
+#
+## Target for running tests. Custom targets are always run
+#
+add_custom_target(runtests ALL ./unittests DEPENDS unittests)
+
+externalproject_get_property(googletests binary_dir)
+set(GOOGLETESTS_BINARY_DIR ${binary_dir})
+
+#
 ## Include directories
 #
 include_directories(${BOLDHUMANOID_INCLUDE_DIRS} google-test/include)
@@ -29,7 +48,7 @@ include_directories(${BOLDHUMANOID_INCLUDE_DIRS} google-test/include)
 ## Link directories
 #
 set(BOLDHUMANOID_LINK_DIRS ${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
-link_directories(${BOLDHUMANOID_LINK_DIRS})
+link_directories(${BOLDHUMANOID_LINK_DIRS} ${GOOGLETESTS_BINARY_DIR})
 
 #
 ## Target
@@ -41,15 +60,12 @@ add_executable(unittests
 #
 ## Link executable to libraries
 #
-target_link_libraries(unittests ${BOLDHUMANOID_LINK_LIBRARIES})
+target_link_libraries(unittests ${BOLDHUMANOID_LINK_LIBRARIES} gtest)
 
 #
 ## Additional compile flags
 #
 set_target_properties(unittests PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 
-#
-## Target for running tests
-#
-add_custom_target(RunTests ALL ./unittests DEPENDS unittests)
 
+add_dependencies(runtests googletests)
