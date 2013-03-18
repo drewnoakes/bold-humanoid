@@ -13,5 +13,5 @@ VisualCortex::VisualCortex()
     d_observations(),
     d_goalObservations(),
     d_ballObservation(),
-    d_controls()
+    d_controlsByFamily()
 {}

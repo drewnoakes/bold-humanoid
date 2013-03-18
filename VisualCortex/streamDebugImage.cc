@@ -39,14 +39,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
   // Draw observed lines
   if (streamer->drawObservedLines() && d_lines.size() > 0)
   {
-    for (auto const& hypothesis : d_lines)
+    for (LineSegment2i const& line : d_lines)
     {
-      auto line = hypothesis.toLine();
-      cv::line(debugImage,
-              cv::Point(hypothesis.min().x(), hypothesis.min().y()),
-              cv::Point(hypothesis.max().x(), hypothesis.max().y()),
-              Colour::bgr(255,0,0).toScalar(),
-              2);
+      line.draw(debugImage, Colour::bgr(255,0,0));
     }
   }
 

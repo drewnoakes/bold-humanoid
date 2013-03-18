@@ -21,7 +21,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
   t = debugger.timeEvent(t, "Image Processing/Pass");
 
   // Find lines
-  d_lines = d_lineFinder->find(d_lineDotPass->lineDots);
+  d_lines = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
   t = debugger.timeEvent(t, "Image Processing/Line Search");
 
   //

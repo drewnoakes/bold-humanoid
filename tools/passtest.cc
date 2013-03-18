@@ -16,8 +16,10 @@
 #include "../ImagePassHandler/LabelCountPass/labelcountpass.hh"
 #include "../ImagePassHandler/LineDotPass/linedotpass.hh"
 #include "../LineRunTracker/lineruntracker.hh"
-#include "../LineFinder/linefinder.hh"
+#include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"
+#include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
+#include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../PixelLabel/pixellabel.hh"
 
 using namespace cv;
@@ -48,58 +50,65 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  int loopCount = 20;
+
   auto inputFileName = argv[1];
 
-  // Load the colour image
+  // Load the BGR image
+  cout << "Reading " << inputFileName << endl;
   cv::Mat colourImage = imread(inputFileName, CV_LOAD_IMAGE_COLOR);
 
   if (!colourImage.data)
   {
-    cout << "Could not open or find the image" << std::endl;
+    cout << "Could not open or find the image" << endl;
     return -1;
   }
 
+  // Convert YCbCr to BGR
+  PixelFilterChain chain;
+  chain.pushFilter(&Colour::yCbCrToBgbInPlace);
+  chain.applyFilters(colourImage);
+
+  // Initialise random seed
   std::srand(unsigned(std::time(0)));
 
   int imageWidth = colourImage.cols;
   int imageHeight = colourImage.rows;
 
-  cout << "Reading " << inputFileName << endl;
-
   //
-  // FIXED SETUP
+  // FIXED START UP INITIALISATION
   //
 
   auto t = getTimestamp();
 
   // Build colour ranges for segmentation
 
-//   // sample-images
-//   PixelLabel ballLabel (Colour::hsvRange::fromDoubles(354,   6, 0.74, 0.18, 0.71, 0.22), "Ball"); // red super ball
-//   PixelLabel goalLabel (Colour::hsvRange::fromDoubles( 54,  15, 0.75, 0.20, 0.74, 0.20), "Goal"); // yellow paper
-//   PixelLabel fieldLabel(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.25, 0.85, 0.35), "Field"); // white floor
-//   PixelLabel lineLabel (Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.45, 0.00, 0.45), "Line"); // black line
+  // hatfield (old, white field)
+  shared_ptr<PixelLabel> ballLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange::fromDoubles(354,   6, 0.74, 0.18, 0.71, 0.22), "Ball")); // red super ball
+  shared_ptr<PixelLabel> goalLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange::fromDoubles( 54,  15, 0.75, 0.20, 0.74, 0.20), "Goal")); // yellow paper
+  shared_ptr<PixelLabel> fieldLabel= make_shared<PixelLabel>(PixelLabel(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.25, 0.85, 0.35), "Field")); // white floor
+  shared_ptr<PixelLabel> lineLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.75, 0.00, 0.75), "Line")); // black line
 
   // rgb.jpg
-  shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball"));
-  shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal"));
-  shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field"));
-  shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line"));
+//   shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball"));
+//   shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal"));
+//   shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field"));
+//   shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line"));
 
-  cout << *ballLabel << endl;
-  cout << *goalLabel << endl;
-  cout << *fieldLabel << endl;
-  cout << *lineLabel << endl;
+  cout << "Using labels:" << endl
+       << "  " << *ballLabel << endl
+       << "  " << *goalLabel << endl
+       << "  " << *fieldLabel << endl
+       << "  " << *lineLabel << endl;
 
   vector<shared_ptr<PixelLabel>> labels = { goalLabel, ballLabel, fieldLabel, lineLabel };
 
-  // Label the image
+  // Resources for labelling
   cv::Mat labelledImage(colourImage.size(), CV_8UC1);
-  auto lut = LUTBuilder::buildLookUpTableBGR18(labels);
-  auto imageLabeller = new ImageLabeller(lut);
+  auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels));
 
+  // Resources for blob detection
   auto ballUnionPred = &Run::overlaps;
-
   auto goalUnionPred =
     [] (Run const& a, Run const& b)
     {
@@ -110,112 +119,95 @@ int main(int argc, char **argv)
       return min(ratio, 1.0f / ratio) > 0.75;
     };
 
-  vector<UnionPredicate> unionPredicateByLabel = {goalUnionPred, ballUnionPred};
-
-  auto lineDotPass = new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel, 3);
   const vector<BlobType> blobTypes = {
     BlobType(ballLabel, ballUnionPred),
     BlobType(goalLabel, goalUnionPred)
   };
   auto blobDetectPass = new BlobDetectPass(imageWidth, imageHeight, blobTypes);
+
+  // Resources for finding line dots
+  auto lineDotPass = new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel, 3);
+
+  // Resources for creating a labelled image
   auto cartoonPass = new CartoonPass(imageWidth, imageHeight, labels, Colour::bgr(128,128,128));
+
+  // Resources for counting the number of labels
   auto labelCountPass = new LabelCountPass(labels);
 
+  // Build the image passer
   vector<ImagePassHandler<uchar>*> handlers = {
     lineDotPass,
     blobDetectPass,
     cartoonPass,
     labelCountPass
   };
-
   auto passer = ImagePassRunner<uchar>(handlers);
 
-  LineFinder lineFinder(imageWidth, imageHeight);
+  RandomPairLineFinder randomPairLineFinder(imageWidth, imageHeight);
+  randomPairLineFinder.setMinDotManhattanDistance(10);
+//randomPairLineFinder.setProcessDotCount(5000);
+
+  MaskWalkLineFinder maskWalkLineFinder(imageWidth, imageHeight);
 
   cout << "Startup took " << (getSeconds(t)*1000) << " ms" << endl;
 
   //
   // IMAGE LABELLING
   //
-
-  int loopCount = 20;
-
   t = getTimestamp();
-
   for (int i = 0; i < loopCount; i++)
     imageLabeller->label(colourImage, labelledImage);
-
   cout << "Labelled " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
 
   //
   // IMAGE PASS
   //
-
   t = getTimestamp();
-
-  vector<LineFinder::LineHypothesis> lines;
   for (int i = 0; i < loopCount; i++)
-  {
     passer.pass(labelledImage);
-    lines = lineFinder.find(lineDotPass->lineDots, /* processDotCount = */ 5000);
-  }
+  cout << "Passed " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
+
+  //
+  // FIND LINES (RandomPairLineFinder)
+  //
+  t = getTimestamp();
+  vector<LineSegment2i> randomPairLines;
+  for (int i = 0; i < loopCount; i++)
+    randomPairLines = randomPairLineFinder.findLineSegments(lineDotPass->lineDots);
+  cout << "RandomPairLineFinder ran " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
+
+  //
+  // FIND LINES (RandomPairLineFinder)
+  //
+  t = getTimestamp();
+  vector<LineSegment2i> maskWalkLines;
+  for (int i = 0; i < loopCount; i++)
+    maskWalkLines = maskWalkLineFinder.findLineSegments(lineDotPass->lineDots);
+  cout << "MaskWalkLineFinder   ran " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
 
   //
   // PRINT SUMMARIES
   //
-
   cout << "Finished " << loopCount << " passes. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl
        << "Found:" << endl
        << "    " << lineDotPass->lineDots.size() << " line dots" << endl;
 
   auto blobsByLabel = blobDetectPass->getDetectedBlobs();
   for (BlobType const& blobType : blobTypes)
-  {
-    shared_ptr<PixelLabel> pixelLabel = blobType.pixelLabel;
-    size_t blobCount = blobsByLabel[pixelLabel].size();
-    cout << "    " << blobCount << " " << pixelLabel->name() << " blob(s)" << endl;
-  }
-
+    cout << "    " << blobsByLabel[blobType.pixelLabel].size() << " " << blobType.pixelLabel->name() << " blob(s)" << endl;
   for (auto const& pair : labelCountPass->getCounts())
-  {
     cout << "    " << pair.second << " " << pair.first->name() << " pixels" << endl;
-  }
 
   //
   // DRAW LABELLED 'CARTOON' IMAGE
   //
-  imwrite("labelled.jpg", cartoonPass->mat());
+  imwrite("labelled.png", cartoonPass->mat());
 
   //
   // DRAW OUTPUT IMAGE
   //
 
-  // Draw line dots
-  if (lineDotPass->lineDots.size() != 0)
-  {
-    cv::Mat lineDotImage(colourImage.size(), CV_8UC1);;
-    for (Vector2i const& lineDot : lineDotPass->lineDots)
-    {
-      Colour::bgr lineColor(0, 0, 255); // red
-      colourImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineColor;
-      lineDotImage.at<uchar>(lineDot.y(), lineDot.x()) = 255;
-    }
-    imwrite("line-dots.png", lineDotImage);
-  }
-
-  // Draw line segments
-//   vector<LineSegment2i> segments = lineFinder.find(lineDotPass->lineDots);
-//   cout << "    " << segments.size() << " line segments" << endl;
-//   for (LineSegment2i const& segment : segments)
-//   {
-//     cout << "      between (" << segment.p1().x() << "," << segment.p1().y() << ") and ("
-//                               << segment.p2().x() << "," << segment.p2().y() << ")" << endl;
-//     segment.draw(colourImage, Colour::bgr(0,255,255));
-//   }
-
-  // Draw lines
-  cout << "    " << lines.size() << " lines" << endl;
-  std::vector<Colour::bgr> colours = {
+  vector<Colour::bgr> colours = {
     Colour::bgr(255,0,0), // blue
     Colour::bgr(0,255,0), // green
     Colour::bgr(0,0,255), // red
@@ -223,37 +215,73 @@ int main(int argc, char **argv)
     Colour::bgr(255,0,255), // magenta
     Colour::bgr(255,255,0) // cyan
   };
-  int colourIndex = 0;
-  if (lines.size() > 0)
+
+  // Draw line dots
+//   cv::Mat lineDotImageGray(colourImage.size(), CV_8U);
+//   lineDotImageGray = Scalar(0);
+  if (lineDotPass->lineDots.size() != 0)
   {
-    for (auto const& hypothesis : lines)
+    cv::Mat lineDotImageColour = cv::Mat::zeros(colourImage.size(), CV_8UC3);
+    Colour::bgr red(0, 0, 255);
+    for (Vector2i const& lineDot : lineDotPass->lineDots)
     {
-      auto line = hypothesis.toLine();
-      cout << "      theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs)"
-           << " radius=" << line.radius() << " votes=" << line.votes()
-           << " length=" << (hypothesis.max().cast<double>() - hypothesis.min().cast<double>()).norm()
-           << " lengthAvg=" << hypothesis.lengthDistribution().average()
-           << " lengthStdDev=" << hypothesis.lengthDistribution().stdDev()
-           << " lengthAvg/lengthStdDev=" << hypothesis.lengthDistribution().average()/hypothesis.lengthDistribution().stdDev()
-           << endl;
-      cv::line(colourImage,
-                    Point(hypothesis.min().x(), hypothesis.min().y()),
-                    Point(hypothesis.max().x(), hypothesis.max().y()),
-                    colours[colourIndex++ % colours.size()].toScalar(),
-                    2);
+//       lineDotImageGray.at<uchar>(lineDot.y(), lineDot.x()) = 255;
+      colourImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = red;
+      lineDotImageColour.at<Colour::bgr>(lineDot.y(), lineDot.x()) = red;
     }
+    imwrite("line-dots.png", lineDotImageColour);
+//     imwrite("line-dots-gray.bmp", lineDotImageGray);
+  }
+
+  // Draw line segments
+//   vector<LineSegment2i> segments = lineFinder.find(lineDotPass->lineDots);
+//   cout << "    " << segments.size() << " line segments" << endl;
+//   for (LineSegment2i const& segment : segments)
+//   {
+//     cout << segment << endl;
+//     segment.draw(colourImage, Colour::bgr(0,255,255));
+//   }
+
+  // Draw lines
+  int colourIndex = 0;
+  cout << "    " << randomPairLines.size() << " line(s) via RandomPairLineFinder" << endl;
+  for (LineSegment2i const& line : randomPairLines)
+  {
+    cout << "      " << line << endl;
+//     line.draw(colourImage, colours[colourIndex++ % colours.size()], 2);
+  }
+  cout << "    " << maskWalkLines.size() << " line(s) via MaskWalkLineFinder" << endl;
+  for (LineSegment2i const& line : maskWalkLines)
+  {
+    cout << "      " << line << endl;
+    line.draw(colourImage, colours[colourIndex++ % colours.size()], 2);
   }
 
   // Draw blobs
   for (BlobType const& blobType : blobTypes)
   for (bold::Blob blob : blobsByLabel[blobType.pixelLabel])
   {
-    auto blobColor = blobType.pixelLabel->hsvRange().toBgr().invert().toScalar();
+    auto blobColor = blobType.pixelLabel->hsvRange().toBgr()/*.invert()*/.toScalar();
     cv::rectangle(colourImage, blob.toRect(), blobColor);
   }
 
   // Save output image
-  imwrite("output.jpg", colourImage);
+  imwrite("output.png", colourImage);
+
+//   // Try using OpenCV's line detection
+//   vector<Vec4i> cvLines;
+//   cv::HoughLinesP(lineDotImageGray, cvLines, 2, 0.5*CV_PI/180, 10, 30, 40);
+//   cout << "    " << cvLines.size() << " line(s) via OpenCV" << endl;
+//   colourIndex = 0;
+//   for (auto const& line : cvLines)
+//   {
+//     cv::line(colourImage,
+//              Point(line[0], line[1]),
+//              Point(line[2], line[3]),
+//              colours[colourIndex++ % colours.size()].toScalar());//, 1, CV_AA);
+//   }
+//   imwrite("cv-lines.png", colourImage);
+//   waitKey();
 
   return 0;
 }

@@ -22,7 +22,8 @@ bool Agent::init()
   d_streamer->setCamera(d_camera);
 
   d_streamer->registerControls("camera", d_camera->getControls());
-  d_streamer->registerControls("vision", VisualCortex::getInstance().getControls());
+  for (auto const& pair : VisualCortex::getInstance().getControlsByFamily())
+    d_streamer->registerControls(pair.first, pair.second);
 
   Debugger::getInstance().update(d_CM730);
 

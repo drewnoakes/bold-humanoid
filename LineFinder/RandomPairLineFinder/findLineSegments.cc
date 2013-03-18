@@ -1,24 +1,27 @@
-#include "linefinder.hh"
+#include "randompairlinefinder.hh"
 
-#include "../geometry/LineSegment2i.hh"
+#include "../../geometry/LineSegment2i.hh"
 
 using namespace bold;
 using namespace std;
 using namespace Eigen;
 
-vector<LineFinder::LineHypothesis> LineFinder::find(vector<Vector2i>& lineDots, ushort processDotCount)
+vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& lineDots)
 {
   vector<LineHypothesis> hypotheses;
 
   // shuffle lineDots to simulate drawing at random
   random_shuffle(lineDots.begin(), lineDots.end());
 
+  // TODO take processDotCount from a field
+  const ushort processDotCount = 5000;
+
   int dotIndex = (int)min((size_t)processDotCount + 1, lineDots.size()) - 1;
 
   while (dotIndex > 1)
   {
     auto dot1 = lineDots[dotIndex--];
-    auto dot2 = lineDots[dotIndex--];
+    auto dot2 = lineDots[dotIndex];
 
     if (abs(dot1.x() - dot2.x()) + abs(dot1.y() - dot2.y()) < d_minDotManhattanDistance)
     {
@@ -61,8 +64,8 @@ vector<LineFinder::LineHypothesis> LineFinder::find(vector<Vector2i>& lineDots, 
   }
   int averageVotes = sumVotes / takeTop;
 
-  vector<LineHypothesis> satisfactory;
-  for (auto const& hypothesis : hypotheses)
+  vector<LineSegment2i> satisfactory;
+  for (LineHypothesis const& hypothesis : hypotheses)
   {
     if (hypothesis.lengthDistribution().average() / hypothesis.lengthDistribution().stdDev() > 2.0)
       continue;
@@ -70,7 +73,11 @@ vector<LineFinder::LineHypothesis> LineFinder::find(vector<Vector2i>& lineDots, 
     // Only take those with an above average number of votes
     if (hypothesis.count() < averageVotes)
       break;
-    satisfactory.push_back(hypothesis);
+
+    satisfactory.push_back(LineSegment2i(
+      Vector2i(hypothesis.min().x(), hypothesis.min().y()),
+      Vector2i(hypothesis.max().x(), hypothesis.max().y())
+    ));
   }
   return satisfactory;
 }

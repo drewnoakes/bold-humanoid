@@ -105,7 +105,10 @@ set(BOLDHUMANOID_SOURCES
 ./ImagePassHandler/BlobDetectPass/detectBlobs.cc
 ./ImagePassHandler/BlobDetectPass/runSetToBlob.cc
 ./ImagePassHandler/BlobDetectPass/BlobDetectPass.cc
-./LineFinder/find.cc
+./LineFinder/RandomPairLineFinder/findLineSegments.cc
+./LineFinder/MaskWalkLineFinder/findLineSegments.cc
+./LineFinder/MaskWalkLineFinder/MaskWalkLineFinder.cc
+./LineFinder/MaskWalkLineFinder/rebuild.cc
 ./LUTBuilder/buildLookUpTable.cc
 ./PixelFilterChain/applyFilters.cc
 ./PixelLabel/fromConfig.cc

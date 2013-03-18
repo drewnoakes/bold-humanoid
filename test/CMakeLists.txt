@@ -6,6 +6,10 @@ set(TEST_SOURCES
   ../Colour/hsv2bgr.cc
   ../Colour/hsvRange.cc
   ../Colour/YCbCr.cc
+  ../Control/create.cc
+  ../Control/handleRequest.cc
+  ../Control/staticfields.cc
+  ../Control/writeState.cc
   ../geometry/Bounds2i.cc
   ../geometry/LineSegment2i.cc
   ../HoughLineAccumulator/houghlineaccumulator.cc
@@ -14,7 +18,11 @@ set(TEST_SOURCES
   ../ImageLabeller/ImageLabeller.cc
   ../ImagePassHandler/BlobDetectPass/detectBlobs.cc
   ../ImagePassHandler/BlobDetectPass/runSetToBlob.cc
-  ../LineFinder/find.cc
+  ../LineFinder/RandomPairLineFinder/findLineSegments.cc
+  ../LineFinder/MaskWalkLineFinder/initialise.cc
+  ../LineFinder/MaskWalkLineFinder/findLineSegments.cc
+  ../LineFinder/MaskWalkLineFinder/MaskWalkLineFinder.cc
+  ../LineFinder/MaskWalkLineFinder/rebuild.cc
   ../LUTBuilder/buildLookUpTable.cc
   ../PixelFilterChain/applyFilters.cc
   ../PixelLabel/pixellabel.cc

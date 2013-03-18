@@ -43,12 +43,7 @@ namespace bold
    */
   class Line
   {
-    // TODO rename to NormalLine2d?
-  private:
-    double d_radius;
-    double d_theta;
-    ushort d_votes;
-
+  // TODO rename to NormalLine2d?
   public:
     Line(double const radius, double const theta, const ushort votes = 0)
     : d_radius(radius),
@@ -139,6 +134,11 @@ namespace bold
     {
       return stream << std::setprecision(13) << "Line (radius=" << line.radius() << " theta=" << line.theta() << ")";
     }
+
+  private:
+    double d_radius;
+    double d_theta;
+    ushort d_votes;
   };
 }
 

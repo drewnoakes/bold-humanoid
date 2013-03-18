@@ -11,11 +11,15 @@
 #include "../ImagePassHandler/LabelCountPass/labelcountpass.hh"
 #include "../geometry/LineSegment.hh"
 #include "../LineFinder/linefinder.hh"
+#include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"
+#include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../WorldModel/worldmodel.hh"
 
 #include "../robotis/Framework/include/minIni.h"
+
+#include <Eigen/Core>
 
 #include <cmath>
 #include <iostream>

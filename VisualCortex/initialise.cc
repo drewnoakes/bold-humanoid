@@ -68,7 +68,8 @@ void VisualCortex::initialise(minIni const& ini)
 
   d_imagePassRunner = new ImagePassRunner<uchar>(handlers);
 
-  d_lineFinder = new LineFinder(imageWidth, imageHeight);
+  d_lineFinder = new MaskWalkLineFinder(imageWidth, imageHeight);
+  d_controlsByFamily["lines"] = d_lineFinder->getControls();
 
   //
   // Allow control over the LUT parameters
@@ -80,6 +81,8 @@ void VisualCortex::initialise(minIni const& ini)
   auto setSatRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withSRange(value)); createLookupTable(); };
   auto setVal      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withV(value)); createLookupTable(); };
   auto setValRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withVRange(value)); createLookupTable(); };
+
+  vector<Control> lutControls;
 
   for (shared_ptr<PixelLabel> label : pixelLabels)
   {
@@ -111,11 +114,13 @@ void VisualCortex::initialise(minIni const& ini)
     v .setIsAdvanced(true);
     vr.setIsAdvanced(true);
 
-    d_controls.push_back(h);
-    d_controls.push_back(hr);
-    d_controls.push_back(s);
-    d_controls.push_back(sr);
-    d_controls.push_back(v);
-    d_controls.push_back(vr);
+    lutControls.push_back(h);
+    lutControls.push_back(hr);
+    lutControls.push_back(s);
+    lutControls.push_back(sr);
+    lutControls.push_back(v);
+    lutControls.push_back(vr);
   }
+
+  d_controlsByFamily["lut"] = lutControls;
 };

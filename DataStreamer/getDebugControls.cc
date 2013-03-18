@@ -15,7 +15,7 @@ vector<Control> DataStreamer::getDebugControls()
 
   // Frame periods
   vector<ControlEnumValue> framePeriods;
-  for (int period = 1; period <=10 ; period++)
+  for (int period = 1; period <= 10; period++)
   {
     framePeriods.push_back(ControlEnumValue(period, std::to_string(period)));
   }

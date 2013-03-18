@@ -7,9 +7,10 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 
+#include "../Control/control.hh"
 #include "../LineFinder/linefinder.hh"
 #include "../PixelLabel/pixellabel.hh"
-#include "../Control/control.hh"
+#include "../geometry/LineSegment2i.hh"
 
 class minIni;
 
@@ -55,7 +56,7 @@ namespace bold
 
     void initialise(minIni const& ini);
 
-    std::vector<Control> getControls() const { return d_controls; }
+    std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
 
     /** Process the provided image, extracting features. */
     void integrateImage(cv::Mat& cameraImage);
@@ -68,13 +69,13 @@ namespace bold
     std::vector<Observation> goalObservations() const { return d_goalObservations; }
     Observation ballObservation() const { return d_ballObservation; }
 
-    std::vector<LineFinder::LineHypothesis> lines() const { return d_lines; }
+    std::vector<LineSegment2i> lines() const { return d_lines; }
 
     /** Gets the singleton instance of the VisualCortex. */
     static VisualCortex& getInstance();
 
   private:
-    std::vector<Control> d_controls;
+    std::map<std::string,std::vector<Control>> d_controlsByFamily;
 
     std::vector<Observation> d_observations;
     std::vector<Observation> d_goalObservations;
@@ -98,7 +99,7 @@ namespace bold
     LabelCountPass* d_labelCountPass;
 
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
-    std::vector<LineFinder::LineHypothesis> d_lines;
+    std::vector<LineSegment2i> d_lines;
 
     int d_minBallArea;
   };
@@ -108,7 +109,6 @@ namespace bold
     static VisualCortex instance;
     return instance;
   }
-
 }
 
 #endif
