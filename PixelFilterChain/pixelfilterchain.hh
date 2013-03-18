@@ -17,7 +17,7 @@ namespace bold
       d_filters.push_back(filter);
     }
 
-    void applyFilters(cv::Mat& img);
+    void applyFilters(cv::Mat& img) const;
 
   private:
     std::vector<std::function<void(unsigned char*)>> d_filters;

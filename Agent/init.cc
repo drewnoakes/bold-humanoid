@@ -39,7 +39,7 @@ bool Agent::init()
   cout << "[Agent::init] Initialising motion manager" << endl;
   if (!motionManager->Initialize(&d_CM730))
   {
-    cout << "[Agent::init] motion manager initialisation FAILED" << endl;
+    cout << "[Agent::init] Motion manager initialisation FAILED" << endl;
     return false;
   }
 

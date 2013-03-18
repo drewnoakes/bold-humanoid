@@ -1,6 +1,6 @@
 #include "pixelfilterchain.ih"
 
-void PixelFilterChain::applyFilters(cv::Mat& img)
+void PixelFilterChain::applyFilters(cv::Mat& img) const
 {
   uchar* imgCursor = img.data;
   uchar* imgEnd = img.data + 3 * img.rows * img.cols;
