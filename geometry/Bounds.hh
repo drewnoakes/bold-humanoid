@@ -48,6 +48,9 @@ namespace bold
     Eigen::Matrix<T,dim,1> d_min;
     Eigen::Matrix<T,dim,1> d_max;
   };
+
+  typedef Bounds<double,2> Bounds2d;
+  typedef Bounds<double,3> Bounds3d;
 }
 
 #endif

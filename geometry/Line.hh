@@ -10,6 +10,12 @@
 #include <Eigen/Core>
 #include <opencv2/core/core.hpp>
 
+#include "LineSegment.hh"
+#include "Bounds.hh"
+#include "Bounds2i.hh"
+#include "LineSegment2i.hh"
+#include "../util/Maybe.hh"
+
 namespace bold
 {
   // TODO remove 'votes' from Line and make Scored<Line> template that augments any value with votes
@@ -64,47 +70,62 @@ namespace bold
 
     void draw(cv::Mat& mat, cv::Scalar const& color) const
     {
+      Maybe<LineSegment<int,2>> line(intersectWith(Bounds2i(Eigen::Vector2i::Zero(), Eigen::Vector2i(mat.cols, mat.rows))));
+
+      if (line.hasValue())
+      {
+        Eigen::Vector2i const& p1 = line.value().get()->p1();
+        Eigen::Vector2i const& p2 = line.value().get()->p2();
+        cv::line(mat, cv::Point(p1.x(), p1.y()), cv::Point(p2.x(), p2.y()), color);
+      }
+    }
+
+    template<typename T>
+    Maybe<LineSegment<T,2>> intersectWith(Bounds<T,2> bounds) const
+    {
       assert(d_theta >= 0 && d_theta <= M_PI);
 
       double tsin = sin(d_theta);
       double tcos = cos(d_theta);
 
-      int maxY = mat.rows - 1;
-      int maxX = mat.cols - 1;
+      int minX = bounds.min().x();
+      int minY = bounds.min().y();
+      int maxX = bounds.max().x();
+      int maxY = bounds.max().y();
 
       // r = x*sin(theta) + y*cos(theta)
       // x = (r - y*cos(theta))/sin(theta)
       // y = (r - x*sin(theta))/cos(theta)
 
-      double xWhenYZero = d_radius/tsin;
-      double yWhenXZero = d_radius/tcos;
+      double xWhenYMin = (d_radius-minY*tcos)/tsin;
+      double yWhenXMin = (d_radius-minX*tsin)/tcos;
 
       double xWhenYMax = (d_radius-maxY*tcos)/tsin;
       double yWhenXMax = (d_radius-maxX*tsin)/tcos;
 
-      std::vector<cv::Point> edgeContactPoints;
+      std::vector<Eigen::Matrix<T,2,1>> edgeContactPoints;
 
-      if (xWhenYZero >= 0 && xWhenYZero <= maxX)
-        edgeContactPoints.push_back(cv::Point(xWhenYZero, 0));
+      if (xWhenYMin >= minX && xWhenYMin <= maxX)
+        edgeContactPoints.push_back(Eigen::Matrix<T,2,1>(xWhenYMin, minY));
 
-      if (xWhenYMax >= 0 && xWhenYMax <= maxX)
-        edgeContactPoints.push_back(cv::Point(xWhenYMax, maxY));
+      if (xWhenYMax >= minX && xWhenYMax <= maxX)
+        edgeContactPoints.push_back(Eigen::Matrix<T,2,1>(xWhenYMax, maxY));
 
-      if (yWhenXZero >= 0 && yWhenXZero <= maxY)
-        edgeContactPoints.push_back(cv::Point(0, yWhenXZero));
+      if (yWhenXMin >= minY && yWhenXMin <= maxY)
+        edgeContactPoints.push_back(Eigen::Matrix<T,2,1>(minX, yWhenXMin));
 
-      if (yWhenXMax >= 0 && yWhenXMax <= maxY)
-        edgeContactPoints.push_back(cv::Point(maxX, yWhenXMax));
+      if (yWhenXMax >= minY && yWhenXMax <= maxY)
+        edgeContactPoints.push_back(Eigen::Matrix<T,2,1>(maxX, yWhenXMax));
 
       if (edgeContactPoints.size() == 0)
-        return;
+        return Maybe<LineSegment<T,2>>::empty();
 
       assert(edgeContactPoints.size() == 2);
 
       if (edgeContactPoints.size() != 2)
-        return;
+        return Maybe<LineSegment<T,2>>::empty();
 
-      cv::line(mat, edgeContactPoints[0], edgeContactPoints[1], color);
+      return Maybe<LineSegment<T,2>>(LineSegment<T,2>(edgeContactPoints[0], edgeContactPoints[1]));
     }
 
     bool operator==(Line const& other) const

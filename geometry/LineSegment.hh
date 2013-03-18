@@ -10,8 +10,8 @@ namespace bold
   struct LineSegment
   {
   public:
-    LineSegment(Eigen::Matrix<T,dim,1> p1,
-                Eigen::Matrix<T,dim,1> p2)
+    LineSegment(Eigen::Matrix<T,dim,1> const& p1,
+                Eigen::Matrix<T,dim,1> const& p2)
     : d_p1(p1),
       d_p2(p2)
     {
