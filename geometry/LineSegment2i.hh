@@ -9,23 +9,21 @@
 
 #include "Line.hh"
 #include "Bounds2i.hh"
+#include "LineSegment.hh"
 
 namespace bold
 {
-  // TODO can this be merged with LineSegment2d using templates & typedef?
-
-  struct LineSegment2i
+  struct LineSegment2i : public LineSegment<int,2>
   {
   public:
-    LineSegment2i(Eigen::Vector2i p1, Eigen::Vector2i p2);
+    LineSegment2i(Eigen::Vector2i p1, Eigen::Vector2i p2)
+    : LineSegment<int,2>::LineSegment(p1, p2)
+    {};
 
-    LineSegment2i(int x1, int y1, int x2, int y2);
-
-    Eigen::Vector2i p1() const { return d_p1; }
-    Eigen::Vector2i p2() const { return d_p2; }
-
-    /** Returns the vector formed by p2() - p1() */
-    Eigen::Vector2i delta() const { return d_p2 - d_p1; }
+    LineSegment2i(int x1, int y1, int x2, int y2)
+    : LineSegment<int,2>::LineSegment(Eigen::Vector2i(x1, y1),
+                                      Eigen::Vector2i(x2, y2))
+    {};
 
     double gradient() const;
 
@@ -43,24 +41,7 @@ namespace bold
 
     Maybe<Eigen::Vector2i> tryIntersect(LineSegment2i const& other) const;
 
-    bool operator==(LineSegment2i const& other) const
-    {
-      const double epsilon = 0.0000001;
-      return fabs(d_p1.x() - other.d_p1.x()) < epsilon
-          && fabs(d_p1.y() - other.d_p1.y()) < epsilon
-          && fabs(d_p2.x() - other.d_p2.x()) < epsilon
-          && fabs(d_p2.y() - other.d_p2.y()) < epsilon;
-    }
-
-    friend std::ostream& operator<<(std::ostream& stream, LineSegment2i const& lineSegment)
-    {
-      return stream << "LineSegment2i (P1=" << lineSegment.d_p1.transpose() << " P2=" << lineSegment.d_p2.transpose() << ")";
-    }
-
   private:
-    Eigen::Vector2i d_p1;
-    Eigen::Vector2i d_p2;
-
     /**
      * Returns the magnitude of the vector that would result from a regular
      * 3D cross product of the input vectors, taking their Z values implicitly

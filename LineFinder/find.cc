@@ -1,5 +1,7 @@
 #include "linefinder.hh"
 
+#include "../geometry/LineSegment2i.hh"
+
 using namespace bold;
 using namespace std;
 using namespace Eigen;

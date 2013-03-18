@@ -7,7 +7,7 @@
 #include "../Colour/colour.hh"
 #include "../DistributionTracker/distributiontracker.hh"
 #include "../geometry/Line.hh"
-#include "../geometry/LineSegment2i.hh"
+#include "../geometry/LineSegment.hh"
 
 namespace bold
 {

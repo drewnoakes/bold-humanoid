@@ -25,18 +25,6 @@ double LineSegment2i::fake2dCross(Vector2d const& a, Vector2d const& b)
   return a.x()*b.y() - a.y()*b.x();
 }
 
-LineSegment2i::LineSegment2i(Vector2i p1, Vector2i p2)
-: d_p1(p1), d_p2(p2)
-{
-  assert(p1.x() != p2.x() || p1.y() != p2.y());
-}
-
-LineSegment2i::LineSegment2i(int x1, int y1, int x2, int y2)
-: d_p1(Vector2i(x1, y1)), d_p2(Vector2i(x2, y2))
-{
-  assert(x1 != x2 || y1 != y2);
-}
-
 double LineSegment2i::gradient() const
 {
   auto d = delta();

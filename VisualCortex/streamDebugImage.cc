@@ -82,7 +82,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
 
     for (LineSegment2d const& line : fieldLines)
     {
-      LineSegment3d line3d = line.to3();
+      LineSegment3d line3d = line.to<3>();
 
       Vector2i p1 = projector(line3d.p1());
       Vector2i p2 = projector(line3d.p2());

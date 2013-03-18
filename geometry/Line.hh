@@ -37,7 +37,7 @@ namespace bold
    */
   class Line
   {
-    // TODO rename to NormalLine?
+    // TODO rename to NormalLine2d?
   private:
     double d_radius;
     double d_theta;

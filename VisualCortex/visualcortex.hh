@@ -4,6 +4,7 @@
 #include <Eigen/Core>
 
 #include <map>
+#include <memory>
 #include <opencv2/core/core.hpp>
 
 #include "../LineFinder/linefinder.hh"

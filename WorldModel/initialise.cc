@@ -1,7 +1,6 @@
 #include "worldmodel.hh"
 
-#include "../geometry/LineSegment3d.hh"
-#include "../geometry/LineSegment2d.hh"
+#include "../geometry/LineSegment.hh"
 
 #include <minIni.h>
 #include <iostream>
@@ -56,27 +55,27 @@ void WorldModel::initialise(minIni const& ini)
 
   // OUTER SQUARE
   // top
-  d_fieldLines.push_back(LineSegment2d(-halfFieldX, halfFieldY, halfFieldX, halfFieldY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, halfFieldY), Vector2d(halfFieldX, halfFieldY)));
   // bottom
-  d_fieldLines.push_back(LineSegment2d(-halfFieldX, -halfFieldY, halfFieldX, -halfFieldY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, -halfFieldY), Vector2d(halfFieldX, -halfFieldY)));
   // left
-  d_fieldLines.push_back(LineSegment2d(-halfFieldX, -halfFieldY, -halfFieldX, halfFieldY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, -halfFieldY), Vector2d(-halfFieldX, halfFieldY)));
   // right
-  d_fieldLines.push_back(LineSegment2d(halfFieldX, -halfFieldY, halfFieldX, halfFieldY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(halfFieldX, -halfFieldY), Vector2d(halfFieldX, halfFieldY)));
 
   // GOAL AREAS
   // left, top
-  d_fieldLines.push_back(LineSegment2d(-halfFieldX, halfGoalAreaY, -halfFieldX+goalAreaX, halfGoalAreaY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, halfGoalAreaY), Vector2d(-halfFieldX+goalAreaX, halfGoalAreaY)));
   // left, bottom
-  d_fieldLines.push_back(LineSegment2d(-halfFieldX, -halfGoalAreaY, -halfFieldX+goalAreaX, -halfGoalAreaY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, -halfGoalAreaY), Vector2d(-halfFieldX+goalAreaX, -halfGoalAreaY)));
   // left, side
-  d_fieldLines.push_back(LineSegment2d(-halfFieldX+goalAreaX, halfGoalAreaY, -halfFieldX+goalAreaX, -halfGoalAreaY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX+goalAreaX, halfGoalAreaY), Vector2d(-halfFieldX+goalAreaX, -halfGoalAreaY)));
   // right, top
-  d_fieldLines.push_back(LineSegment2d(halfFieldX, halfGoalAreaY, halfFieldX-goalAreaX, halfGoalAreaY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(halfFieldX, halfGoalAreaY), Vector2d(halfFieldX-goalAreaX, halfGoalAreaY)));
   // right, bottom
-  d_fieldLines.push_back(LineSegment2d(halfFieldX, -halfGoalAreaY, halfFieldX-goalAreaX, -halfGoalAreaY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(halfFieldX, -halfGoalAreaY), Vector2d(halfFieldX-goalAreaX, -halfGoalAreaY)));
   // right, side
-  d_fieldLines.push_back(LineSegment2d(halfFieldX-goalAreaX, halfGoalAreaY, halfFieldX-goalAreaX, -halfGoalAreaY));
+  d_fieldLines.push_back(LineSegment2d(Vector2d(halfFieldX-goalAreaX, halfGoalAreaY), Vector2d(halfFieldX-goalAreaX, -halfGoalAreaY)));
 
   // CIRCLE
   int segments = 18;
