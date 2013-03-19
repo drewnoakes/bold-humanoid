@@ -38,7 +38,7 @@ namespace bold
     /** Returns the angle of this line to the +ve x-azis, in the range [-pi, pi] */
     double angle() const;
 
-    void draw(cv::Mat& image, bold::Colour::bgr const& bgr) const;
+    void draw(cv::Mat& image, bold::Colour::bgr const& bgr, int thickness = 1) const;
 
     /** Converts this {@link LineSegment2i} to a {@link Line}. */
     Line toLine() const;

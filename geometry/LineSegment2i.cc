@@ -46,9 +46,9 @@ double LineSegment2i::angle() const
   return atan2(delta.y(), delta.x());
 }
 
-void LineSegment2i::draw(Mat& image, Colour::bgr const& bgr) const
+void LineSegment2i::draw(Mat& image, Colour::bgr const& bgr, int thickness) const
 {
-  line(image, Point(d_p1.x(), d_p1.y()), Point(d_p2.x(), d_p2.y()), bgr.toScalar());
+  line(image, Point(d_p1.x(), d_p1.y()), Point(d_p2.x(), d_p2.y()), bgr.toScalar(), thickness);
 }
 
 Line LineSegment2i::toLine() const
