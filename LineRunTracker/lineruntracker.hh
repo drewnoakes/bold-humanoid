@@ -17,17 +17,6 @@ namespace bold
   */
   class LineRunTracker
   {
-  private:
-    enum class State : uchar { In, On, Out };
-
-    uchar inLabel; // eg: green
-    uchar onLabel; // eg: white
-    unsigned hysterisisLimit;
-    State state;
-    ushort startedAt;
-    std::function<void(ushort const, ushort const, ushort const)> callback;
-    unsigned hysterisis;
-
   public:
     ushort otherCoordinate;
 
@@ -117,6 +106,28 @@ namespace bold
         }
       }
     }
+
+    uchar getHysterisisLimit() const { return hysterisisLimit; }
+    void setHysterisisLimit(uchar limit) { hysterisisLimit = limit; }
+
+  private:
+    enum class State : uchar
+    {
+      // Not on the in-label, and not on the on-label after being on the in-label
+      Out,
+      // At the in-label (eg. green)
+      In,
+      // At the on-label, after being on the in-label (eg. white line)
+      On
+    };
+
+    uchar inLabel; // eg: green
+    uchar onLabel; // eg: white
+    uchar hysterisisLimit;
+    State state;
+    ushort startedAt;
+    std::function<void(ushort const, ushort const, ushort const)> callback;
+    uint hysterisis;
   };
 }
 

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "../imagepasshandler.hh"
+#include "../../Control/control.hh"
 #include "../../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../LineRunTracker/lineruntracker.hh"
@@ -22,9 +23,9 @@ namespace bold
     const int d_imageWidth;
     std::shared_ptr<PixelLabel> const inLabel;
     std::shared_ptr<PixelLabel> const onLabel;
-    const uchar hysterisisLimit; // TODO learn/control this variable (from config at least)
     LineRunTracker* d_rowTracker;
     std::vector<bold::LineRunTracker> d_colTrackers;
+    Control d_hysterisisControl;
 
   public:
     std::vector<Eigen::Vector2i> lineDots;
@@ -33,8 +34,7 @@ namespace bold
     : d_imageWidth(imageWidth),
       lineDots(),
       inLabel(inLabel),
-      onLabel(onLabel),
-      hysterisisLimit(hysterisisLimit)
+      onLabel(onLabel)
     {
       d_colTrackers = std::vector<bold::LineRunTracker>();
 
@@ -42,7 +42,7 @@ namespace bold
       {
         d_colTrackers.push_back(bold::LineRunTracker(
           inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysterisisLimit,
-          [this](ushort from, ushort to, ushort other) mutable {
+          [this](ushort const from, ushort const to, ushort const other) {
             int mid = (from + to) / 2;
             lineDots.push_back(Eigen::Vector2i((int)other, mid));
           }
@@ -52,12 +52,27 @@ namespace bold
       // TODO delete in destructor
       d_rowTracker = new LineRunTracker(
         inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysterisisLimit,
-        [this](ushort from, ushort to, ushort other) mutable {
+        [this](ushort const from, ushort const to, ushort const other) {
           int mid = (from + to) / 2;
           lineDots.push_back(Eigen::Vector2i(mid, (int)other));
         }
       );
+
+      d_hysterisisControl = Control::createInt(
+        "Line Dot Hysterisis",
+        hysterisisLimit,
+        [this](int const& value)
+        {
+          d_rowTracker->setHysterisisLimit(value);
+          for (LineRunTracker& colTracker : d_colTrackers)
+            colTracker.setHysterisisLimit(value);
+        }
+      );
+      d_hysterisisControl.setLimitValues(0, 255);
+      d_hysterisisControl.setIsAdvanced(true);
     }
+
+    Control getHysterisisControl() const { return d_hysterisisControl; }
 
     void onImageStarting()
     {

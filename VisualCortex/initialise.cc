@@ -123,4 +123,7 @@ void VisualCortex::initialise(minIni const& ini)
   }
 
   d_controlsByFamily["lut"] = lutControls;
+
+  vector<Control> lineDotPassControls = { d_lineDotPass->getHysterisisControl() };
+  d_controlsByFamily["line-dots"] = lineDotPassControls;
 };
