@@ -168,12 +168,10 @@ namespace bold
       }
     }
 
-    void onImageComplete()
-    {
-      detectBlobs();
-    }
-
     std::vector<BlobType> blobTypes() const { return d_blobTypes; }
+
+    // Processes Runs into Blobs. Returns a set of blobs per label
+    std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> const& detectBlobs();
 
     std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> const& getDetectedBlobs() const { return d_blobsDetectedPerLabel; }
 
@@ -192,9 +190,6 @@ namespace bold
 
     // Blobs detected
     std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> d_blobsDetectedPerLabel;
-
-    // Processes Runs into Blobs. Returns a set of blobs per label
-    void detectBlobs();
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
 

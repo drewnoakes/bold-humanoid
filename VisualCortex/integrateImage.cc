@@ -24,11 +24,14 @@ void VisualCortex::integrateImage(cv::Mat& image)
   d_lines = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
   t = debugger.timeEvent(t, "Image Processing/Line Search");
 
+  // Find lines
+  auto blobsPerLabel = d_blobDetectPass->detectBlobs();
+  t = debugger.timeEvent(t, "Image Processing/Blob Search");
+
   //
   // UPDATE STATE
   //
 
-  auto blobsPerLabel = d_blobDetectPass->getDetectedBlobs();
   d_observations.clear();
   d_goalObservations.clear();
 

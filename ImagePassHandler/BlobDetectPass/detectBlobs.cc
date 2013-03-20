@@ -1,8 +1,7 @@
 #include "blobdetectpass.ih"
 
-void BlobDetectPass::detectBlobs()
+map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
 {
-
   // For each label that we're configured to look at
   for (BlobType const& blobType : d_blobTypes)
   {
@@ -46,4 +45,6 @@ void BlobDetectPass::detectBlobs()
               inserter(blobSet, blobSet.end()),
               runSetToBlob);
   }
+
+  return d_blobsDetectedPerLabel;
 }
