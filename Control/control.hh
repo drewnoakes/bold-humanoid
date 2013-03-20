@@ -122,6 +122,13 @@ namespace bold
     void setValue(int value)
     {
       assert(d_type != ControlType::Action);
+
+      if (d_hasLimitValues && (value > d_maxValue || value < d_minValue))
+      {
+        std::cout << "[Control::setValue] Ignoring out-of-range value " << value << " for " << d_name << ". Must be between " << d_minValue << " and " << d_maxValue << "." << std::endl;
+        return;
+      }
+
       d_value = value;
       d_callback(d_value);
     }
