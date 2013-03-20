@@ -18,19 +18,6 @@
 
 namespace bold
 {
-  // TODO remove 'votes' from Line and make Scored<Line> template that augments any value with votes
-
-//   template<typename TItem>
-//   struct Scored
-//   {
-//     TItem item;
-//     int value;
-//
-//     Scored(TItem item, TValue value)
-//     : item(item), value(value)
-//     {}
-//   };
-
   /**
    * Line, specified using radius/distance-from-origin parameters (normal form.)
    *
@@ -47,8 +34,7 @@ namespace bold
   public:
     Line(double const radius, double const theta, const ushort votes = 0)
     : d_radius(radius),
-      d_theta(theta),
-      d_votes(votes)
+      d_theta(theta)
     {
       assert(theta >= 0);
       assert(theta <= M_PI);
@@ -57,7 +43,6 @@ namespace bold
 
     double radius() const { return d_radius; }
     double theta() const { return d_theta; }
-    ushort votes() const { return d_votes; }
     double thetaDegrees() const { return theta()*180.0/M_PI; }
 
     double gradient() const { return tanh(d_theta); }
@@ -138,7 +123,6 @@ namespace bold
   private:
     double d_radius;
     double d_theta;
-    ushort d_votes;
   };
 }
 

@@ -5,12 +5,12 @@
 using namespace bold;
 using namespace std;
 
-std::vector<Line> HoughLineExtractor::findLines(HoughLineAccumulator& accumulator, int threshold, double angleSearch, int radiusSearch)
+vector<Candidate<Line>> HoughLineExtractor::findLines(HoughLineAccumulator& accumulator, int threshold, double angleSearch, int radiusSearch)
 {
   assert(angleSearch != 0);
   assert(radiusSearch != 0);
 
-  auto lines = std::vector<Line>();
+  auto lines = vector<Candidate<Line>>();
 
   int accumulatorWidth = accumulator.getMat().cols;
   int accumulatorHeight = accumulator.getMat().rows;
@@ -79,7 +79,7 @@ std::vector<Line> HoughLineExtractor::findLines(HoughLineAccumulator& accumulato
           double theta = accumulator.getTheta(y);
           double radius = accumulator.getRadius(x);
 
-          lines.push_back(Line(radius, theta, peakValue));
+          lines.push_back(Candidate<Line>(Line(radius, theta), peakValue));
 
           // If we found a local maximum, then the next 'radiusSearch' pixels
           // cannot be local maxima.
@@ -88,7 +88,7 @@ std::vector<Line> HoughLineExtractor::findLines(HoughLineAccumulator& accumulato
     }
   }
 
-  sort(lines.begin(), lines.end(), [](Line a, Line b) {
+  sort(lines.begin(), lines.end(), [](Candidate<Line> a, Candidate<Line> b) {
     // highest votes first
     return a.votes() > b.votes();
   });

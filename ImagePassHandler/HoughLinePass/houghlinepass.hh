@@ -21,8 +21,8 @@ namespace bold
     int d_thresholdDivisor;
 
   public:
-    bold::HoughLineAccumulator accumulator;
-    std::vector<bold::Line> lines;
+    HoughLineAccumulator accumulator;
+    std::vector<Candidate<Line>> lines;
 
     HoughLinePass(int width, int height, int thresholdDivisor, int accumulatorHeight)
     : accumulator(width, height, accumulatorHeight),
@@ -45,7 +45,7 @@ namespace bold
 
     void onImageComplete()
     {
-      auto extractor = bold::HoughLineExtractor();
+      auto extractor = HoughLineExtractor();
 
       lines = extractor.findLines(accumulator, accumulator.count() / d_thresholdDivisor);
     }

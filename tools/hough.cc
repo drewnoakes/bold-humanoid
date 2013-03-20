@@ -70,10 +70,10 @@ int main(int argc, char **argv)
   cvtColor(image, colorLines, CV_GRAY2BGR);
 
   double maxVotes = hough->lines[0].votes();
-  for (Line const& line : hough->lines)
+  for (Candidate<Line> const& line : hough->lines)
   {
     Colour::bgr lineColor(0, 0, 255 * (line.votes()/maxVotes)); // red
-    line.draw(colorLines, lineColor.toScalar());
+    line.item().draw(colorLines, lineColor.toScalar());
   }
 
   imwrite("color-lines.jpg", colorLines);

@@ -117,7 +117,7 @@ namespace bold
         auto line = hypothesis.toLine();
         return stream
           << "theta=" << line.theta() << " (" << (line.thetaDegrees()) << " degs)"
-          << " radius=" << line.radius() << " votes=" << line.votes()
+          << " radius=" << line.radius() << " votes=" << hypothesis.count()
           << " length=" << (hypothesis.max().cast<double>() - hypothesis.min().cast<double>()).norm()
           << " lengthAvg=" << hypothesis.lengthDistribution().average()
           << " lengthStdDev=" << hypothesis.lengthDistribution().stdDev()
