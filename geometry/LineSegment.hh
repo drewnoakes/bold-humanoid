@@ -28,10 +28,11 @@ namespace bold
     template<int newDim>
     LineSegment<T,newDim> to() const
     {
-      Eigen::Matrix<T,newDim,1> newp1;
-      Eigen::Matrix<T,newDim,1> newp2;
+      Eigen::Matrix<T,newDim,1> newp1 = Eigen::Matrix<T,newDim,1>::Zero();;
+      Eigen::Matrix<T,newDim,1> newp2 = Eigen::Matrix<T,newDim,1>::Zero();;
 
-      // TODO initialise newp1 and newp2 from d_p1 and d_p2
+      newp1.template head< MIN<dim,newDim>::val >() = d_p1.template head< MIN<dim,newDim>::val >();
+      newp2.template head< MIN<dim,newDim>::val >() = d_p2.template head< MIN<dim,newDim>::val >();
 
       return LineSegment<T,newDim>(newp1, newp2);
     }
@@ -58,6 +59,23 @@ namespace bold
   protected:
     Eigen::Matrix<T,dim,1> d_p1;
     Eigen::Matrix<T,dim,1> d_p2;
+
+  private:
+    template <bool COND, int A, int B>
+    struct IF
+    {
+      enum { val = A };
+    };
+
+    template <int A, int B>
+    struct IF<false, A, B>
+    {
+      enum { val = B };
+    };
+
+    template <int A, int B>
+    struct MIN : IF<A < B, A, B>
+    {};
   };
 
   typedef LineSegment<double,2> LineSegment2d;

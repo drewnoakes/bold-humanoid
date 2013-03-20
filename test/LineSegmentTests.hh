@@ -54,6 +54,18 @@ TEST (LineSegmentTests, angle)
   EXPECT_EQ (atan(0.5), LineSegment2i(Vector2i(1,0), Vector2i(3,1)).angle());
 }
 
+TEST (LineSegmentTests, to)
+{
+  EXPECT_EQ ( LineSegment3i(Vector3i(1,2,0), Vector3i(3,4,0)),
+              LineSegment2i(Vector2i(1,2),   Vector2i(3,4)  ).to<3>() );
+
+  EXPECT_EQ ( LineSegment2i(Vector2i(1,2),   Vector2i(4,5)),
+              LineSegment3i(Vector3i(1,2,3), Vector3i(4,5,6)).to<2>() );
+
+  EXPECT_EQ ( LineSegment3i(Vector3i(1,2,3), Vector3i(4,5,6)),
+              LineSegment3i(Vector3i(1,2,3), Vector3i(4,5,6)).to<3>() );
+}
+
 TEST (LineSegmentTests, cropTo)
 {
   // Completely inside
