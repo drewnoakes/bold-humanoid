@@ -48,7 +48,7 @@ namespace bold
       auto mat = getProjectionTransform();
       double projectionPlaneWidth = atan(d_rangeHorizontal / 2) * d_focalLength * 2;
       double pixelWidth = projectionPlaneWidth / d_imageWidth;
-      return [mat,pixelWidth](Eigen::Vector3d const& in) {
+      return [mat,pixelWidth](Eigen::Vector3d const& in) -> Eigen::Vector2i {
         auto m = (mat * in);
         return (m.head<2>() / pixelWidth).cast<int>();
       };
