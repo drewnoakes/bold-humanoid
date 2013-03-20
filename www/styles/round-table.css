@@ -171,8 +171,10 @@ div.module.camera div.control-container.debug-controls
 
 /********************************************************************/
 
-div.module.timing table.timing-details tr td:nth-child(2)
+div.module.timing table.timing-details tr td.duration,
+div.module.timing table.timing-details tr td.max-duration
 {
     text-align: right;
+    padding-left: 1em;
 }
 

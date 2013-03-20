@@ -10,6 +10,8 @@ define(
     {
         'use strict';
 
+        // TODO allow reseting maximums
+
         var chartOptions = {
             grid: {
                 strokeStyle: 'rgb(40, 40, 40)',
@@ -116,14 +118,20 @@ define(
                 var row = $('<tr></tr>').appendTo(this.table);
 
                 $('<td></td>').text(label).appendTo(row);
-                var timeCell = $('<td></td>').appendTo(row);
+                var cellMillis = $('<td></td>', {'class': 'duration'}).appendTo(row),
+                    cellMaxMillis = $('<td></td>', {'class': 'max-duration'}).appendTo(row);
 
                 entry = {
                     label: label,
-                    update: function(time, durationMillis) {
-                        entry.time = time;
-                        entry.millis = durationMillis;
-                        timeCell.text(durationMillis.toFixed(3));
+                    update: function(timestamp, millis) {
+                        entry.time = timestamp;
+                        entry.millis = millis;
+                        if (!entry.maxMillis || entry.maxMillis < millis)
+                        {
+                            entry.maxMillis = millis;
+                            cellMaxMillis.text(millis.toFixed(3));
+                        }
+                        cellMillis.text(millis.toFixed(3));
                     }
                 };
 
