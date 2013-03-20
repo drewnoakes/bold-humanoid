@@ -21,17 +21,11 @@ define(
             this.$canvas = $('<canvas></canvas>', {'class':'camera-canvas'});
             this.canvas = this.$canvas.get(0);
 
-            var container = $('<div></div>');
-            this.$cameraControlContainer = $('<div></div>', {'class': 'control-container camera-controls'});
-            this.$debugControlContainer  = $('<div></div>', {'class': 'control-container debug-controls'});
-            this.$visionControlContainer = $('<div></div>', {'class': 'control-container vision-controls'});
+            this.$container = $('<div></div>');
             this.$hoverPixelInfo = $('<div></div>', {'class': 'hover-pixel-info'});
 
-            container.append(this.$canvas)
-                     .append(this.$hoverPixelInfo)
-                     .append(this.$cameraControlContainer)
-                     .append(this.$debugControlContainer)
-                     .append(this.$visionControlContainer);
+            this.$container.append(this.$canvas)
+                           .append(this.$hoverPixelInfo);
 
             this.bindInteraction();
 
@@ -43,7 +37,7 @@ define(
             this.panes = [
                 {
                     title: 'main',
-                    element: container.get(0),
+                    element: this.$container.get(0),
 //                    onResized: _.bind(this.onResized, this),
                     supports: { fullScreen: true, advanced: true }
                 }
@@ -141,9 +135,15 @@ define(
 
                     console.info('Received control data', controls);
 
-                    ControlBuilder.build('camera', controls.camera, this.$cameraControlContainer, _.bind(this.sendCommand, this));
-                    ControlBuilder.build('debug',  controls.debug,  this.$debugControlContainer,  _.bind(this.sendCommand, this));
-                    ControlBuilder.build('vision', controls.vision, this.$visionControlContainer, _.bind(this.sendCommand, this));
+                    _.each(
+                        _.keys(controls),
+                        function (key)
+                        {
+                            var $div = $('<div></div>', {'class': 'control-container '+key+'-controls'});
+                            self.$container.append($div);
+                            ControlBuilder.build(key, controls[key], $div, _.bind(self.sendCommand, self));
+                        }
+                    );
 
                     this.imgState = StateEnum.GET_PREFIX;
                     break;

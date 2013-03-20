@@ -138,7 +138,13 @@ div.module.camera div.control-container.camera-controls
 }
 
 
-div.module.camera div.control-container.vision-controls
+div.module.camera div.control-container.lines-controls
+{
+    width: 350px;
+    margin-top: 20px;
+}
+
+div.module.camera div.control-container.lut-controls
 {
     width: 350px;
     margin-top: 20px;
