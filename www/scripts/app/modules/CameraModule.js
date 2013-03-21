@@ -50,20 +50,17 @@ define(
                 self = this;
             this.$canvas.click(function ()
             {
+                var $controlDivs = $('.module.camera .control-container');
                 if (isImageLarge) {
                     isImageLarge = false;
                     self.$canvas.css({width: self.canvas.width});
-                    self.$cameraControlContainer.delay(400).fadeIn();
-                    self.$debugControlContainer.delay(400).fadeIn();
-                    self.$visionControlContainer.delay(400).fadeIn();
+                    $controlDivs.delay(400).fadeIn();
                 }
                 else {
                     isImageLarge = true;
                     self.$hoverPixelInfo.text('');
                     self.$canvas.css({width: '100%'});
-                    self.$cameraControlContainer.hide();
-                    self.$debugControlContainer.hide();
-                    self.$visionControlContainer.hide();
+                    $controlDivs.hide();
                 }
             });
             this.$canvas.mouseleave(function ()
