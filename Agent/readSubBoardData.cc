@@ -5,10 +5,16 @@ void Agent::readSubBoardData()
 {
   auto& am = AgentModel::getInstance();
 
+
+  //
+  // READ ALL DATA IN BULK
+  //
+  d_CM730.BulkRead();
+
   //
   // READ FROM SUB BOARD
   //
-  am.cm730State.init(d_CM730);
+  am.cm730State.init(d_CM730.m_BulkReadData[CM730::ID_CM]);
 
   //
   // READ FROM EACH JOINT

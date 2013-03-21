@@ -44,7 +44,7 @@ namespace bold
     CM730Snapshot()
     {}
 
-    bool init(Robot::CM730& cm730);
+    bool init(Robot::BulkReadData& data);
 
   private:
     static unsigned short readTableWord(unsigned char* table, int addr);
