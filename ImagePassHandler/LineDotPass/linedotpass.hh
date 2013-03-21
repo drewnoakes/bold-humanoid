@@ -42,7 +42,7 @@ namespace bold
       {
         d_colTrackers.push_back(bold::LineRunTracker(
           inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysterisisLimit,
-          [this](ushort const from, ushort const to, ushort const other) {
+          [this](ushort const from, ushort const to, ushort const other) mutable {
             int mid = (from + to) / 2;
             lineDots.push_back(Eigen::Vector2i((int)other, mid));
           }
@@ -52,7 +52,7 @@ namespace bold
       // TODO delete in destructor
       d_rowTracker = new LineRunTracker(
         inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysterisisLimit,
-        [this](ushort const from, ushort const to, ushort const other) {
+        [this](ushort const from, ushort const to, ushort const other) mutable {
           int mid = (from + to) / 2;
           lineDots.push_back(Eigen::Vector2i(mid, (int)other));
         }
@@ -61,7 +61,7 @@ namespace bold
       d_hysterisisControl = Control::createInt(
         "Line Dot Hysterisis",
         hysterisisLimit,
-        [this](int const& value)
+        [this](int const& value) mutable
         {
           d_rowTracker->setHysterisisLimit(value);
           for (LineRunTracker& colTracker : d_colTrackers)
