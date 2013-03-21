@@ -145,7 +145,9 @@ Maybe<Vector2i> LineSegment2i::tryIntersect(LineSegment2i const& other) const
     return Maybe<Vector2i>::empty();
   }
 
-  auto intersectionPoint = pos1 + dir1 * t;
+  Vector2d intersectionPoint = pos1 + dir1 * t;
 
-  return Maybe<Vector2i>(intersectionPoint.cast<int>());
+  Vector2d rounded = intersectionPoint.unaryExpr([](double v) { return round(v); });
+
+  return Maybe<Vector2i>(rounded.cast<int>());
 }
