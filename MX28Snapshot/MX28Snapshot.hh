@@ -67,7 +67,7 @@ namespace bold
 
     MX28Snapshot() {}
 
-    bool init(Robot::CM730& cm730, int const mx28ID);
+    bool init(Robot::BulkReadData& cm730, int const mx28ID);
 
   private:
 

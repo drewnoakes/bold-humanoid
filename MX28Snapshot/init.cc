@@ -6,11 +6,6 @@
 using namespace bold;
 using namespace Robot;
 
-unsigned short MX28Snapshot::readTableWord(unsigned char* table, int addr)
-{
-  return CM730::MakeWord(table[addr], table[addr+1]);
-}
-
 double MX28Snapshot::angleValueToRads(unsigned int value)
 {
   // see http://support.robotis.com/en/product/dynamixel/rx_series/mx-28.htm
@@ -31,48 +26,38 @@ double MX28Snapshot::valueToRPM(unsigned int value)
     return ((int)value - 1024) * 0.052733333;
 }
 
-bool MX28Snapshot::init(Robot::CM730& cm730, int const mx28ID)
+bool MX28Snapshot::init(Robot::BulkReadData& data, int const mx28ID)
 {
-  unsigned char table[128];
-
-  // NOTE there are values above PUNCH_H for input/output of PID error components, but we ignore them here
-
-  if(cm730.ReadTable(mx28ID, MX28::P_MODEL_NUMBER_L, MX28::P_PUNCH_H, &table[MX28::P_MODEL_NUMBER_L], 0) != CM730::SUCCESS)
-  {
-    printf("Cannot read MX28 table: %d\n", mx28ID);
-    return false;
-  }
-
   // documentation: http://support.robotis.com/en/product/dynamixel/rx_series/mx-28.htm
 
   //
   // EEPROM AREA
   //
-  modelNumber      = readTableWord(table, MX28::P_MODEL_NUMBER_L);    // 0x001D
-  firmwareVersion  = table[MX28::P_VERSION];
-  id               = table[MX28::P_ID];
+  modelNumber      = data.ReadWord(MX28::P_MODEL_NUMBER_L);    // 0x001D
+  firmwareVersion  = data.ReadByte(MX28::P_VERSION);
+  id               = data.ReadByte(MX28::P_ID);
 
-  auto baudByte    = table[MX28::P_BAUD_RATE];                        // 0x22
+  auto baudByte    = data.ReadByte(MX28::P_BAUD_RATE);                        // 0x22
   baudBPS = 2000000/(baudByte+1);
 
-  auto retDelayTime = table[MX28::P_RETURN_DELAY_TIME];               // 0x00
+  auto retDelayTime = data.ReadByte(MX28::P_RETURN_DELAY_TIME);               // 0x00
   returnDelayTimeMicroSeconds = (unsigned int)retDelayTime * 2;
 
   // If both are set to zero, the servo is in wheel mode
-  angleLimitCW     = angleValueToRads(readTableWord(table, MX28::P_CW_ANGLE_LIMIT_L));  // 0x0000
-  angleLimitCCW    = angleValueToRads(readTableWord(table, MX28::P_CCW_ANGLE_LIMIT_L)); // 0x0FFF
+  angleLimitCW     = angleValueToRads(data.ReadWord(MX28::P_CW_ANGLE_LIMIT_L));  // 0x0000
+  angleLimitCCW    = angleValueToRads(data.ReadWord(MX28::P_CCW_ANGLE_LIMIT_L)); // 0x0FFF
 
   // If temp passes this limit, Heating Error Bit (Bit2) of status packet is set, and alarm is triggered
-  tempLimitHighCelcius = table[MX28::P_HIGH_LIMIT_TEMPERATURE];       // 0x50 (80 degrees)
+  tempLimitHighCelcius = data.ReadByte(MX28::P_HIGH_LIMIT_TEMPERATURE);       // 0x50 (80 degrees)
 
   // If voltage passes these limits, Voltage Range Error Bit (Bit0) of status packet is set, and alarm is triggered
-  voltageLimitLow  = table[MX28::P_LOW_LIMIT_VOLTAGE] * 0.1;          // 0x3C (6.0 V)
-  voltageLimitHigh = table[MX28::P_HIGH_LIMIT_VOLTAGE] * 0.1;         // 0xA0 (16.0 V)
+  voltageLimitLow  = data.ReadByte(MX28::P_LOW_LIMIT_VOLTAGE) * 0.1;          // 0x3C (6.0 V)
+  voltageLimitHigh = data.ReadByte(MX28::P_HIGH_LIMIT_VOLTAGE) * 0.1;         // 0xA0 (16.0 V)
 
   // As a ratio of the max torque output, between 0 and 1
-  maxTorque        = readTableWord(table, MX28::P_MAX_TORQUE_L) / (double)0x03FF; // 0x03FF
+  maxTorque        = data.ReadWord(MX28::P_MAX_TORQUE_L) / (double)0x03FF; // 0x03FF
 
-  statusRetLevel   = table[MX28::P_RETURN_LEVEL];                     // 0x02
+  statusRetLevel   = data.ReadByte(MX28::P_RETURN_LEVEL);                     // 0x02
 
   // Alarms use a bitmask, though I'm not sure on what ID it's present:
   //
@@ -85,47 +70,47 @@ bool MX28Snapshot::init(Robot::CM730& cm730, int const mx28ID)
   // bit 6 - instruction error - undefined instruction, or action command delivered without reg_write
   // bit 7 - unused?
 
-  alarmLed         = MX28Alarm(table[MX28::P_ALARM_LED]);                        // 0x24
-  alarmShutdown    = MX28Alarm(table[MX28::P_ALARM_SHUTDOWN]);                   // 0x24
+  alarmLed         = MX28Alarm(data.ReadByte(MX28::P_ALARM_LED));                        // 0x24
+  alarmShutdown    = MX28Alarm(data.ReadByte(MX28::P_ALARM_SHUTDOWN));                   // 0x24
 
   //
   // RAM AREA
   //
-  torqueEnable     = table[MX28::P_TORQUE_ENABLE] != 0;
-  led              = table[MX28::P_LED] != 0;
+  torqueEnable     = data.ReadByte(MX28::P_TORQUE_ENABLE) != 0;
+  led              = data.ReadByte(MX28::P_LED) != 0;
 
-  gainP            = table[MX28::P_P_GAIN] / 8.0;
-  gainI            = table[MX28::P_I_GAIN] * 1000 / 2048.0;
-  gainD            = table[MX28::P_D_GAIN] * 4 / 1000.0;
+  gainP            = data.ReadByte(MX28::P_P_GAIN) / 8.0;
+  gainI            = data.ReadByte(MX28::P_I_GAIN) * 1000 / 2048.0;
+  gainD            = data.ReadByte(MX28::P_D_GAIN) * 4 / 1000.0;
 
   // Value is between 0 & 7095 (0xFFF). Unit of 0.088 degrees.
-  goalPositionRads = angleValueToRads(readTableWord(table, MX28::P_GOAL_POSITION_L));
+  goalPositionRads = angleValueToRads(data.ReadWord(MX28::P_GOAL_POSITION_L));
 
-  movingSpeedRPM   = valueToRPM(readTableWord(table, MX28::P_MOVING_SPEED_L));
+  movingSpeedRPM   = valueToRPM(data.ReadWord(MX28::P_MOVING_SPEED_L));
 
   // Percentage of max torque to use as a limit. 0 to 1023 (0x3FF). Unit about 0.1%.
-  torqueLimit      = readTableWord(table, MX28::P_TORQUE_LIMIT_L) / 1023.0;
+  torqueLimit      = data.ReadWord(MX28::P_TORQUE_LIMIT_L) / 1023.0;
 
-  presentPosition  = angleValueToRads(readTableWord(table, MX28::P_PRESENT_POSITION_L));
+  presentPosition  = angleValueToRads(data.ReadWord(MX28::P_PRESENT_POSITION_L));
 
-  presentSpeedRPM = valueToRPM(readTableWord(table, MX28::P_PRESENT_SPEED_L));
+  presentSpeedRPM = valueToRPM(data.ReadWord(MX28::P_PRESENT_SPEED_L));
 
-  auto presentLoadInt = readTableWord(table, MX28::P_PRESENT_LOAD_L);
+  auto presentLoadInt = data.ReadWord(MX28::P_PRESENT_LOAD_L);
   if (presentLoadInt < 1024)
     presentLoad = presentLoadInt / 1023.0;
   else
     presentLoad = (presentLoadInt - 1024) / 1023.0;
 
-  presentVoltage   = table[MX28::P_PRESENT_VOLTAGE] * 0.1;
+  presentVoltage   = data.ReadByte(MX28::P_PRESENT_VOLTAGE) * 0.1;
 
-  presentTemp      = table[MX28::P_PRESENT_TEMPERATURE];
+  presentTemp      = data.ReadByte(MX28::P_PRESENT_TEMPERATURE);
 
-  isInstructionRegistered = table[MX28::P_REGISTERED_INSTRUCTION] != 0; // 0x00
-  isMoving                = table[MX28::P_MOVING] != 0;                 // 0x00
-  isEepromLocked          = table[MX28::P_LOCK] != 0;                   // 0x00
+  isInstructionRegistered = data.ReadByte(MX28::P_REGISTERED_INSTRUCTION) != 0; // 0x00
+  isMoving                = data.ReadByte(MX28::P_MOVING) != 0;                 // 0x00
+  isEepromLocked          = data.ReadByte(MX28::P_LOCK) != 0;                   // 0x00
 
   // apparently this value is unused
-//  punch            = readTableWord(table, MX28::P_PUNCH_L);             // 0x0020
+//  punch            = data.ReadWord(MX28::P_PUNCH_L);             // 0x0020
 
   return true;
 }

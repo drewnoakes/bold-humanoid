@@ -23,7 +23,7 @@ void Agent::readSubBoardData()
   {
     MX28Snapshot& mx28 = am.mx28States[jointId];
 
-    mx28.init(d_CM730, jointId);
+    mx28.init(d_CM730.m_BulkReadData[jointId], jointId);
 
     // If the alarm state for an MX28 has changed, print it out
     // TODO do we need to examine mx28.alarmShutdown as well? it seems to hold the same flags as mx28.alarmLed
