@@ -23,10 +23,10 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
   //
   // Process line dots
   //
-  unsigned dotIndex = (int)lineDots.size() - 1;
-  while (dotIndex-- != 0)
+  int dotIndex = (int)lineDots.size() - 1;
+  while (dotIndex >= 0)
   {
-    Vector2i dot = lineDots[dotIndex];
+    Vector2i dot = lineDots[dotIndex--];
 
     // Check if it has been excluded already (i.e. belongs to some other line)
     if (!mask0[dot.y()*d_imageWidth + dot.x()])

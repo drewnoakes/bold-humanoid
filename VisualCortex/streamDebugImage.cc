@@ -41,7 +41,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
   {
     for (LineSegment2i const& line : d_lines)
     {
-      line.draw(debugImage, Colour::bgr(255,0,0));
+      line.draw(debugImage, Colour::bgr(255,80,80), 2);
     }
   }
 
@@ -82,11 +82,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
       Vector2i p1 = projector(line3d.p1());
       Vector2i p2 = projector(line3d.p2());
 
-      cv::line(debugImage,
-              cv::Point(p1.x(), p1.y()),
-              cv::Point(p2.x(), p2.y()),
-              Colour::bgr(0,255,0).toScalar(),
-              2);
+      LineSegment2i line2i(p1, p2);
+
+      line2i.draw(debugImage, Colour::bgr(0,255,0), 1);
     }
   }
 
