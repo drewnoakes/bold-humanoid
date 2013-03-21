@@ -6,7 +6,7 @@
 	url = git@bitbucket.org:boldhearts/vision.git
 [submodule "joystick"]
 	path = joystick
-	url = git@bitbucket.org:drewnoakes/joystick.git
+	url = https://drewnoakes@bitbucket.org/drewnoakes/joystick.git
 [submodule "libwebsockets"]
 	path = libwebsockets
 	url = git://git.libwebsockets.org/libwebsockets
