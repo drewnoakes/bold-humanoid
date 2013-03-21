@@ -50,6 +50,11 @@ vector<Control> Camera::listControls()
     else if (name == "White Balance Temperature")
       name = "WB Temp (K)";
 
+    if (type == V4L2ControlType::CT_INT && minimum == 0 && maximum == 1)
+    {
+      type = V4L2ControlType::CT_BOOL;
+    }
+
     switch (type)
     {
       case V4L2ControlType::CT_BOOL:
