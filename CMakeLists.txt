@@ -47,6 +47,7 @@ set(BOLDHUMANOID_SOURCES
 ./Agent/circleBall.cc
 ./Agent/init.cc
 ./Agent/initCamera.cc
+./Agent/initBody.cc
 ./Agent/lookAt.cc
 ./Agent/lookAtBall.cc
 ./Agent/lookAtGoal.cc

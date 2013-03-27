@@ -46,6 +46,7 @@ namespace bold
 
   private:
     const minIni& d_ini;
+    bool d_haveBody;
     Robot::LinuxCM730 d_linuxCM730;
     Robot::CM730 d_CM730;
     Robot::LinuxMotionTimer* d_motionTimer;
@@ -77,6 +78,8 @@ namespace bold
     bool init();
 
     void initCamera();
+
+    bool initBody();
 
     void think();
 
