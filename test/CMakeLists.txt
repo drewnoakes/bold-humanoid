@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 
 set(TEST_SOURCES
   ./UnitTests.cc
+  ../AgentModel/initBody.cc
+  ../AgentModel/updatePosture.cc
   ../Colour/bgr2hsv.cc
   ../Colour/hsv2bgr.cc
   ../Colour/hsvRange.cc

@@ -18,11 +18,12 @@ bool operator==(Vector2i const& a, Vector2i const& b)
   return a.x() == b.x() && a.y() == b.y();
 }
 
+#include "AgentModelTests.hh"
 #include "Bounds2iTests.hh"
-#include "LineSegmentTests.hh"
 #include "CameraModelTests.hh"
 #include "ColourTests.hh"
 #include "DistributionTrackerTests.hh"
+#include "LineSegmentTests.hh"
 #include "RunTests.hh"
 
 int main(int argc, char **argv)

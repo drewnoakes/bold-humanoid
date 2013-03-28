@@ -25,7 +25,7 @@ namespace bold
 
     sigc::signal<void> updated;
 
-    void initialise(minIni const& ini)
+    void initialise()
     {
       // TODO source imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal from config
       int imageWidth = 320;
@@ -35,9 +35,13 @@ namespace bold
       double rangeHorizontal = 58/180.0 * M_PI;;
 
       d_cameraModel = new CameraModel(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
+
+      initBody();
     }
 
-    void initBody();
+    void updatePosture();
+
+    std::shared_ptr<Limb const> getLeftFoot() const { return d_limbLeftFoot; }
 
     void notifyCycleStarting()
     {
@@ -57,8 +61,11 @@ namespace bold
   private:
     unsigned long long d_cycleNumber;
     CameraModel* d_cameraModel;
-
     std::shared_ptr<Limb> d_torso;
+    std::shared_ptr<Limb> d_limbLeftFoot;
+
+    void initBody();
+
     AgentModel()
     : d_cycleNumber(0)
     {};
