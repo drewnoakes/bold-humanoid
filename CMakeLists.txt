@@ -197,3 +197,8 @@ add_dependencies(boldhumanoid libwebsockets_lib)
 ## Build and run test
 #
 add_subdirectory(test)
+
+#
+## Build tools
+#
+add_subdirectory(tools)
