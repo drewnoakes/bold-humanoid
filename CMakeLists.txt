@@ -61,6 +61,7 @@ set(BOLDHUMANOID_SOURCES
 ./Agent/run.cc
 ./Agent/standUpIfFallen.cc
 ./Agent/think.cc
+./AgentModel/initBody.cc
 ./Camera/Camera.cc
 ./Camera/capture.cc
 ./Camera/getControlValue.cc
