@@ -25,3 +25,4 @@ tools/labelled.png
 tools/line-dots.png
 tools/output.png
 www/.idea
+cachegrind*
