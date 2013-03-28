@@ -3,6 +3,7 @@
 
 #include <Eigen/Core>
 #include <sigc++/sigc++.h>
+#include <memory>
 
 #include "../robotis/Framework/include/JointData.h"
 
@@ -10,6 +11,7 @@
 #include "../CM730Snapshot/CM730Snapshot.hh"
 #include "../MX28Snapshot/MX28Snapshot.hh"
 #include "../CameraModel/cameramodel.hh"
+#include "../BodyPart/bodypart.hh"
 
 namespace bold
 {
@@ -35,6 +37,8 @@ namespace bold
       d_cameraModel = new CameraModel(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
     }
 
+    void initBody();
+
     void notifyCycleStarting()
     {
       d_cycleNumber++;
@@ -54,6 +58,7 @@ namespace bold
     unsigned long long d_cycleNumber;
     CameraModel* d_cameraModel;
 
+    std::shared_ptr<Limb> d_torso;
     AgentModel()
     : d_cycleNumber(0)
     {};
