@@ -27,7 +27,7 @@ bool Agent::init()
 
   Debugger::getInstance().update(d_CM730);
 
-  AgentModel::getInstance().initialise(d_ini);
+  AgentModel::getInstance().initialise(/*d_ini*/);
 
   d_haveBody = initBody();
 
