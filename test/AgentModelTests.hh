@@ -20,9 +20,9 @@ TEST (AgentModelTests, posture)
 
   shared_ptr<Limb const> leftFoot = am.getLeftFoot();
 
-  ASSERT_EQ( Vector3d(0.074/2, -0.1222 - 0.093 - 0.093, -0.005), leftFoot->transform.translation() );
+  EXPECT_EQ( Vector3d(0.074/2, -0.1222 - 0.093 - 0.093 - 0.0335, -0.005), leftFoot->transform.translation() );
 
-  ASSERT_TRUE( (leftFoot->transform.rotation() - Matrix3d::Identity()).isZero() );
+  EXPECT_TRUE( (leftFoot->transform.rotation() - Matrix3d::Identity()).isZero() );
 
   //
   // Roll the leg out and check again
@@ -32,7 +32,7 @@ TEST (AgentModelTests, posture)
 
   am.updatePosture();
 
-  ASSERT_EQ( Vector3d(0.074/2 + 0.093 + 0.093, -0.1222, -0.005), leftFoot->transform.translation() );
+  EXPECT_EQ( Vector3d(0.074/2 + 0.093 + 0.093 + 0.0335, -0.1222, -0.005), leftFoot->transform.translation() );
 
-  ASSERT_EQ( AngleAxisd(M_PI/2, Vector3d::UnitZ()).matrix(), leftFoot->transform.rotation().matrix() );
+  EXPECT_EQ( AngleAxisd(M_PI/2, Vector3d::UnitZ()).matrix(), leftFoot->transform.rotation().matrix() );
 }

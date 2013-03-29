@@ -154,7 +154,7 @@ void AgentModel::initBody()
   lankleFootJoint->id = JointData::ID_L_ANKLE_ROLL;
   lankleFootJoint->axis = Vector3d(0, 0, 1);
   lankleFootJoint->anchors.first = Vector3d(0, 0, 0);
-  lankleFootJoint->anchors.second = Vector3d(0, 0, 0);
+  lankleFootJoint->anchors.second = Vector3d(0, 0.0335, 0);
   llowerLegAnkleJoint->bodyPart = lankleFootJoint;
 
   d_limbLeftFoot = make_shared<Limb>();
@@ -210,7 +210,7 @@ void AgentModel::initBody()
   rankleFootJoint->id = JointData::ID_R_ANKLE_ROLL;
   rankleFootJoint->axis = Vector3d(0, 0, 1);
   rankleFootJoint->anchors.first = Vector3d(0, 0, 0);
-  rankleFootJoint->anchors.second = Vector3d(0, 0, 0);
+  rankleFootJoint->anchors.second = Vector3d(0, 0.0335, 0);
   rlowerLegAnkleJoint->bodyPart = rankleFootJoint;
 
   auto rfoot = make_shared<Limb>();
