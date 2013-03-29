@@ -27,6 +27,11 @@ namespace bold
     double rangeVertical() const { return d_rangeVertical; }
     double rangeHorizontal() const { return d_rangeHorizontal; }
 
+    /** Gets the direction, in camera coordinates, of the specified pixel.
+     * Returns a unit vector.
+     */
+    Eigen::Vector3d directionForPixel(Eigen::Vector2i pixel) const;
+
     Eigen::Affine3d getProjectionTransform() const
     {
       Eigen::Matrix4d mat;

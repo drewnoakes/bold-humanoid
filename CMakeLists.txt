@@ -73,6 +73,7 @@ set(BOLDHUMANOID_SOURCES
 ./Camera/pixelFormatRequestSize.cc
 ./Camera/startCapture.cc
 ./Camera/stopCapture.cc
+./CameraModel/directionForPixel.cc
 ./Colour/bgr2hsv.cc
 ./Colour/hsv2bgr.cc
 ./Colour/hsvRange.cc
