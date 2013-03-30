@@ -28,6 +28,7 @@ set(TEST_SOURCES
   ../LineFinder/MaskWalkLineFinder/MaskWalkLineFinder.cc
   ../LineFinder/MaskWalkLineFinder/rebuild.cc
   ../LUTBuilder/buildLookUpTable.cc
+  ../Math/math.cc
   ../PixelFilterChain/applyFilters.cc
   ../PixelLabel/pixellabel.cc
   )

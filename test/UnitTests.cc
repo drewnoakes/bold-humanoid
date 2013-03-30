@@ -13,6 +13,11 @@ std::ostream& operator<<(std::ostream& stream, Vector2i const& v)
   return stream << "(" << v.x() << ", " << v.y() << ")";
 }
 
+std::ostream& operator<<(std::ostream& stream, Vector3d const& v)
+{
+  return stream << "(" << v.x() << ", " << v.y() << ", " << v.z() << ")";
+}
+
 bool operator==(Vector2i const& a, Vector2i const& b)
 {
   return a.x() == b.x() && a.y() == b.y();
@@ -24,7 +29,9 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "ColourTests.hh"
 #include "DistributionTrackerTests.hh"
 #include "LineSegmentTests.hh"
+#include "MathTests.hh"
 #include "RunTests.hh"
+#include "SpatialiserTest.hh"
 
 int main(int argc, char **argv)
 {

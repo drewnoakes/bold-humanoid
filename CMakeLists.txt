@@ -117,10 +117,11 @@ set(BOLDHUMANOID_SOURCES
 ./LineFinder/MaskWalkLineFinder/MaskWalkLineFinder.cc
 ./LineFinder/MaskWalkLineFinder/rebuild.cc
 ./LUTBuilder/buildLookUpTable.cc
+./Math/math.cc
+./MX28Snapshot/init.cc
 ./PixelFilterChain/applyFilters.cc
 ./PixelLabel/fromConfig.cc
 ./PixelLabel/pixellabel.cc
-./MX28Snapshot/init.cc
 ./VisualCortex/VisualCortex.cc
 ./VisualCortex/initialise.cc
 ./VisualCortex/integrateImage.cc
