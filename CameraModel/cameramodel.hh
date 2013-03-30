@@ -2,7 +2,6 @@
 #define BOLD_CAMERA_MODEL_HH
 
 #include <string>
-#include <vector>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 

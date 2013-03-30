@@ -13,6 +13,8 @@ namespace bold
   class ImagePassHandler
   {
   public:
+    virtual ~ImagePassHandler() {}
+
     /** Image processing is about to begin. */
     virtual void onImageStarting() {}
 

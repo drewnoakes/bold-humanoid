@@ -15,6 +15,8 @@ namespace bold
 	d_current(initialValue)
     {}
 
+    virtual ~Smoother() {}
+
     virtual void step() = 0;
 
     void setTarget(double target)
