@@ -1,0 +1,12 @@
+#include "spatialiser.hh"
+
+#include <iostream>
+
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+
+#include "../Math/math.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;

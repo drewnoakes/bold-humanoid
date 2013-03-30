@@ -31,6 +31,7 @@ set(TEST_SOURCES
   ../Math/math.cc
   ../PixelFilterChain/applyFilters.cc
   ../PixelLabel/pixellabel.cc
+  ../Spatialiser/findGroundPointForPixel.cc
   )
 
 #

@@ -122,6 +122,7 @@ set(BOLDHUMANOID_SOURCES
 ./PixelFilterChain/applyFilters.cc
 ./PixelLabel/fromConfig.cc
 ./PixelLabel/pixellabel.cc
+./Spatialiser/findGroundPointForPixel.cc
 ./VisualCortex/VisualCortex.cc
 ./VisualCortex/initialise.cc
 ./VisualCortex/integrateImage.cc

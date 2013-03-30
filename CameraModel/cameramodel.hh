@@ -30,7 +30,7 @@ namespace bold
     /** Gets the direction, in camera coordinates, of the specified pixel.
      * Returns a unit vector.
      */
-    Eigen::Vector3d directionForPixel(Eigen::Vector2i pixel) const;
+    Eigen::Vector3d directionForPixel(Eigen::Vector2i const& pixel) const;
 
     Eigen::Affine3d getProjectionTransform() const
     {

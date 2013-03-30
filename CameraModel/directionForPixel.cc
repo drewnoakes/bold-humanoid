@@ -1,6 +1,6 @@
 #include "cameramodel.ih"
 
-Vector3d CameraModel::directionForPixel(Vector2i pixel) const
+Vector3d CameraModel::directionForPixel(Vector2i const& pixel) const
 {
   auto extremity = Vector3d(tan(d_rangeHorizontal/2.0), tan(d_rangeVertical/2.0), 1);
 
