@@ -39,11 +39,11 @@ int main(int argc, char **argv)
 
   cout << "Processing image with " << image.cols << " cols and " << image.rows << " rows" << endl;
 
-  auto hough = new HoughLinePass<uchar>(image.cols, image.rows, 80, 720);
+  auto hough = make_shared<HoughLinePass<uchar>>(image.cols, image.rows, 80, 720);
 
   cout << "Accumulator has " << hough->accumulator.getMat().cols << " cols and " << hough->accumulator.getMat().rows << " rows" << endl;
 
-  vector<ImagePassHandler<uchar>*> handlers = { hough };
+  vector<shared_ptr<ImagePassHandler<uchar>>> handlers = { hough };
 
   auto passer = ImagePassRunner<uchar>(handlers);
 

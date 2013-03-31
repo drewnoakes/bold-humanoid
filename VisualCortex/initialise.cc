@@ -11,7 +11,7 @@ void VisualCortex::initialise(minIni const& ini)
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_goalLabel, d_ballLabel, d_fieldLabel, d_lineLabel };
 
-  d_imageLabeller = new ImageLabeller();
+  d_imageLabeller = make_shared<ImageLabeller>();
 
   auto createLookupTable = [this,pixelLabels]()
   {
@@ -48,27 +48,27 @@ void VisualCortex::initialise(minIni const& ini)
   int imageWidth = 320; // TODO source image width/height from config
   int imageHeight = 240;
 
-  d_lineDotPass = new LineDotPass<uchar>(imageWidth, d_fieldLabel, d_lineLabel, 3);
+  d_lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, d_fieldLabel, d_lineLabel, 3);
 
   vector<BlobType> blobTypes = {
     BlobType(d_ballLabel, ballUnionPred),
     BlobType(d_goalLabel, goalUnionPred)
   };
 
-  d_blobDetectPass = new BlobDetectPass(imageWidth, imageHeight, blobTypes);
-  d_cartoonPass = new CartoonPass(imageWidth, imageHeight, pixelLabels, Colour::bgr(128,128,128));
-  d_labelCountPass = new LabelCountPass(pixelLabels);
+  d_blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobTypes);
+  d_cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, pixelLabels, Colour::bgr(128,128,128));
+  d_labelCountPass = make_shared<LabelCountPass>(pixelLabels);
 
-  vector<ImagePassHandler<uchar>*> handlers = {
+  vector<shared_ptr<ImagePassHandler<uchar>>> handlers = {
     d_lineDotPass,
     d_blobDetectPass,
     d_cartoonPass,
 //    d_labelCountPass
   };
 
-  d_imagePassRunner = new ImagePassRunner<uchar>(handlers);
+  d_imagePassRunner = make_shared<ImagePassRunner<uchar>>(handlers);
 
-  d_lineFinder = new MaskWalkLineFinder(imageWidth, imageHeight);
+  d_lineFinder = make_shared<MaskWalkLineFinder>(imageWidth, imageHeight);
   d_controlsByFamily["lines"] = d_lineFinder->getControls();
 
   //

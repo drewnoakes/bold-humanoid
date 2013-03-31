@@ -87,16 +87,16 @@ namespace bold
     std::shared_ptr<PixelLabel> d_fieldLabel;
     std::shared_ptr<PixelLabel> d_lineLabel;
 
-    ImageLabeller* d_imageLabeller;
+    std::shared_ptr<ImageLabeller> d_imageLabeller;
     cv::Mat d_labelledImage;
 
-    LineFinder* d_lineFinder;
+    std::shared_ptr<LineFinder> d_lineFinder;
 
-    ImagePassRunner<uchar>* d_imagePassRunner;
-    LineDotPass<uchar>* d_lineDotPass;
-    BlobDetectPass* d_blobDetectPass;
-    CartoonPass* d_cartoonPass;
-    LabelCountPass* d_labelCountPass;
+    std::shared_ptr<ImagePassRunner<uchar>> d_imagePassRunner;
+    std::shared_ptr<LineDotPass<uchar>> d_lineDotPass;
+    std::shared_ptr<BlobDetectPass> d_blobDetectPass;
+    std::shared_ptr<CartoonPass> d_cartoonPass;
+    std::shared_ptr<LabelCountPass> d_labelCountPass;
 
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
     std::vector<LineSegment2i> d_lines;

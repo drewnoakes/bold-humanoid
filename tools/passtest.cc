@@ -123,19 +123,19 @@ int main(int argc, char **argv)
     BlobType(ballLabel, ballUnionPred),
     BlobType(goalLabel, goalUnionPred)
   };
-  auto blobDetectPass = new BlobDetectPass(imageWidth, imageHeight, blobTypes);
+  auto blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobTypes);
 
   // Resources for finding line dots
-  auto lineDotPass = new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel, 3);
+  auto lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel, 3);
 
   // Resources for creating a labelled image
-  auto cartoonPass = new CartoonPass(imageWidth, imageHeight, labels, Colour::bgr(128,128,128));
+  auto cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, labels, Colour::bgr(128,128,128));
 
   // Resources for counting the number of labels
-  auto labelCountPass = new LabelCountPass(labels);
+  auto labelCountPass = make_shared<LabelCountPass>(labels);
 
   // Build the image passer
-  vector<ImagePassHandler<uchar>*> handlers = {
+  vector<shared_ptr<ImagePassHandler<uchar>>> handlers = {
     lineDotPass,
     blobDetectPass,
     cartoonPass,
