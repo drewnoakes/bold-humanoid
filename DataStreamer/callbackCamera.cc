@@ -15,7 +15,11 @@ int DataStreamer::callback_camera(
     case LWS_CALLBACK_ESTABLISHED:
     {
       // New client connected; initialize session
-      memset(cameraSession, 0, sizeof(CameraSession));
+      cameraSession->hasSentStateAndOptions =
+        cameraSession->imgReady =
+        cameraSession->imgSending =
+        false;
+      cameraSession->imgJpgBuffer = unique_ptr<vector<uchar>>(new vector<uchar>());
       d_cameraSessions.push_back(cameraSession);
       break;
     }

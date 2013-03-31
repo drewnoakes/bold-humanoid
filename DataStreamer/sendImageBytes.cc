@@ -9,7 +9,6 @@ void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
     //
     // Encode JPEG
     //
-    session->imgJpgBuffer = new vector<uchar>();
     cv::imencode(".jpg", d_image, *(session->imgJpgBuffer));
 
     //
@@ -67,7 +66,6 @@ void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
       session->imgReady = false;
       session->imgSending = false;
       session->imgBytesSent = 0;
-      delete session->imgJpgBuffer;
       return;
     }
   }
