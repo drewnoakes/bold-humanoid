@@ -58,11 +58,6 @@ namespace bold
   {
 
     Blob();
-    Blob(Blob const& other);
-    Blob(Blob&& other);
-
-    Blob& operator=(Blob const& other);
-    Blob& operator=(Blob&& other);
 
     cv::Rect toRect() const;
 
@@ -82,9 +77,6 @@ namespace bold
     {
       return stream << "Blob (ul=[" << blob.ul.transpose() << "] br=[" << blob.br.transpose() << "])";
     }
-
-  private:
-    Blob& move(Blob&& other);
   };
 
   /** Union predicate
@@ -244,45 +236,6 @@ namespace bold
       mean(Eigen::Vector2f::Zero()),
       covar(Eigen::Matrix2f::Zero())
   {
-  }
-
-  inline Blob::Blob(Blob const& other)
-    : ul(other.ul),
-      br(other.br),
-      area(other.area),
-      mean(other.mean),
-      covar(other.covar),
-      runs(other.runs)
-  {}
-
-  inline Blob::Blob(Blob&& other)
-    : ul(std::move(other.ul)),
-      br(std::move(other.br)),
-      area(other.area),
-      mean(std::move(other.mean)),
-      covar(std::move(other.covar)),
-      runs(std::move(other.runs))
-  {
-  }
-
-  inline Blob& Blob::operator=(Blob const& other)
-  {
-    ul = other.ul;
-    br = other.br;
-    area = other.area;
-    mean = other.mean;
-    covar = other.covar;
-    runs = other.runs;
-  }
-
-  inline Blob& Blob::operator=(Blob&& other)
-  {
-    ul = std::move(other.ul);
-    br = std::move(other.br);
-    area = other.area;
-    mean = std::move(other.mean);
-    covar = std::move(other.covar);
-    runs = std::move(other.runs);
   }
 
   inline cv::Rect Blob::toRect() const
