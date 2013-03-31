@@ -60,7 +60,7 @@ namespace bold
     void update();
     void close();
 
-    void setCamera(Camera* camera) { d_camera = camera; }
+    void setCamera(std::shared_ptr<Camera> camera) { d_camera = camera; }
 
     /** Gets the type of image that clients have requested to view. May be None. */
     ImageType getImageType() const { return d_imageType; }
@@ -97,7 +97,7 @@ namespace bold
     bool d_drawExpectedLines;
     bool d_drawObservedLines;
 
-    Camera* d_camera;
+    std::shared_ptr<Camera> d_camera;
 
     std::vector<CameraSession*> d_cameraSessions;
 

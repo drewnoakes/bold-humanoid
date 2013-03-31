@@ -29,7 +29,7 @@ bool Agent::initBody()
   motionManager->LoadINISettings(&d_ini);
 
   cout << "[Agent::init] Setup and starting motion timer" << endl;
-  d_motionTimer = new LinuxMotionTimer(motionManager);
+  d_motionTimer = make_shared<LinuxMotionTimer>(motionManager);
   d_motionTimer->Start();
 
   cout << "[Agent::init] Registering motion modules" << endl;

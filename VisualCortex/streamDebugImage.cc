@@ -1,6 +1,6 @@
 #include "visualcortex.ih"
 
-void VisualCortex::streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer)
+void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer)
 {
   if (!streamer->shouldProvideImage())
     return;

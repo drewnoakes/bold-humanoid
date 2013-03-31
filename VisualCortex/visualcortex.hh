@@ -62,7 +62,7 @@ namespace bold
     void integrateImage(cv::Mat& cameraImage);
 
     /** Composes and enqueues a debugging image. */
-    void streamDebugImage(cv::Mat cameraImage, DataStreamer* streamer);
+    void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer);
 
     bool isBallVisible() const { return d_isBallVisible; }
     std::vector<Observation> observations() const { return d_observations; }

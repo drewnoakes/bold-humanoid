@@ -5,6 +5,7 @@
 #include <LinuxCM730.h>
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
+#include <memory>
 
 #include "../Ambulator/ambulator.hh"
 #include "../GameController/GameControllerReceiver.hh"
@@ -45,21 +46,25 @@ namespace bold
     int run();
 
   private:
+    // Settings
     const minIni& d_ini;
     bool d_haveBody;
-    Robot::LinuxCM730 d_linuxCM730;
-    Robot::CM730 d_CM730;
-    Robot::LinuxMotionTimer* d_motionTimer;
     std::string d_motionFile;
-    DataStreamer* d_streamer;
-    Camera* d_camera;
-    Ambulator d_ambulator;
-    Joystick* d_joystick;
     bool d_isRecordingFrames;
     bool d_autoGetUpFromFallen;
+
+    // Modules
+    Robot::LinuxCM730 d_linuxCM730;
+    Robot::CM730 d_CM730;
+    std::shared_ptr<Robot::LinuxMotionTimer> d_motionTimer;
+    std::shared_ptr<DataStreamer> d_streamer;
+    std::shared_ptr<Camera> d_camera;
+    Ambulator d_ambulator;
+    std::shared_ptr<Joystick> d_joystick;
     GameControllerReceiver d_gameControlReceiver;
     bold::MX28Alarm d_alarmLedByJointId[Robot::JointData::NUMBER_OF_JOINTS];
 
+    // State
     /** Number of consecutive cycles during which the ball has been seen. */
     int d_ballSeenCnt;
     /** Number of consecutive cycles during which both goal posts have been seen. */
@@ -75,6 +80,7 @@ namespace bold
     double d_joystickYAmpMax;
     double d_joystickAAmpMax;
 
+    // Methods
     bool init();
 
     void initCamera();

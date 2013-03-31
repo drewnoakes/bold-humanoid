@@ -25,7 +25,7 @@ Agent::Agent(std::string const& U2D_dev,
 {
   if (useJoystick)
   {
-    d_joystick = new Joystick();
+    d_joystick = make_shared<Joystick>(1);
     d_joystickXAmpMax = d_ini.getd("Joystick", "XAmpMax", 15);
     d_joystickYAmpMax = d_ini.getd("Joystick", "YAmpMax", 15);
     d_joystickAAmpMax = d_ini.getd("Joystick", "AAmpMax", 15);
@@ -35,6 +35,6 @@ Agent::Agent(std::string const& U2D_dev,
   d_circleBallY = d_ini.getd("Circle Ball", "WalkY", 50);
   d_circleBallTurn = d_ini.getd("Circle Ball", "WalkTurn", 15);
 
-  d_camera = new Camera("/dev/video0");
+  d_camera = make_shared<Camera>("/dev/video0");
 }
 

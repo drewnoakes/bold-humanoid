@@ -17,7 +17,7 @@ bool Agent::init()
 
   // TODO only stream if argument specified?
   // TODO port from config, not constructor
-  d_streamer = new DataStreamer(8080);
+  d_streamer = make_shared<DataStreamer>(8080);
   d_streamer->initialise(d_ini);
   d_streamer->setCamera(d_camera);
 
