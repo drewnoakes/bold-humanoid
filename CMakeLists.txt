@@ -3,6 +3,8 @@ project (BoldHumanoid)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
+set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests")
+
 include(ExternalProject)
 include(AddPcih)
 
@@ -196,7 +198,9 @@ add_dependencies(boldhumanoid libwebsockets_lib)
 #
 ## Build and run test
 #
-add_subdirectory(test)
+if (BUILDRUN_UNIT_TEST)
+  add_subdirectory(test)
+endif (BUILDRUN_UNIT_TEST)
 
 #
 ## Build tools
