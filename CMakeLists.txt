@@ -119,6 +119,8 @@ set(BOLDHUMANOID_SOURCES
 ./LUTBuilder/buildLookUpTable.cc
 ./Math/math.cc
 ./MX28Snapshot/init.cc
+./Option/ActionOption/hasTerminated.cc
+./Option/ActionOption/runPolicy.cc
 ./PixelFilterChain/applyFilters.cc
 ./PixelLabel/fromConfig.cc
 ./PixelLabel/pixellabel.cc

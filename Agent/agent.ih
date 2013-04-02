@@ -11,6 +11,8 @@
 
 #include "../joystick/joystick.hh"
 
+#include "../Option/ActionOption/actionoption.hh"
+
 #include <iostream>
 
 using namespace Robot;

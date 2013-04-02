@@ -42,7 +42,6 @@ bool Agent::initBody()
   actionModule->LoadFile((char*)d_motionFile.c_str());
 
   cout << "[Agent::init] Enable body" << endl;
-  actionModule->m_Joint.SetEnableBody(true, true);
 
 //   cout << "[Agent::init] Sit down" << endl;
 //   while(actionModule->Start("sit down") == false)
@@ -51,10 +50,12 @@ bool Agent::initBody()
 //     usleep(8*1000);
 
   cout << "[Agent::init] Stand up" << endl;
-  while(actionModule->Start("stand up") == false)
+  ActionOption stand("stand up");
+  while (stand.hasTerminated() == 0.0)
+  {
+    stand.runPolicy();
     usleep(8000);
-  while(actionModule->IsRunning())
-    usleep(8*1000);
+  }
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   motionManager->ResetGyroCalibration();
