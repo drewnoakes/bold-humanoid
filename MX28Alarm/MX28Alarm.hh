@@ -36,7 +36,7 @@ namespace bold
     {
       assert(bitIndex <= MAXBIT);
 
-      return (d_flags >> bitIndex) & 1 == 1;
+      return ((d_flags >> bitIndex) & 1) == 1;
     }
 
     bool hasError() const { return d_flags != 0; }

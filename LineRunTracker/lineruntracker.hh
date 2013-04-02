@@ -18,8 +18,6 @@ namespace bold
   class LineRunTracker
   {
   public:
-    ushort otherCoordinate;
-
     LineRunTracker(
       uchar inLabel,
       uchar onLabel,
@@ -27,13 +25,14 @@ namespace bold
       uchar hysterisisLimit,
       std::function<void(ushort const, ushort const, ushort const)> callback
     )
-    : inLabel(inLabel),
-      onLabel(onLabel),
-      otherCoordinate(otherCoordinate),
-      callback(callback),
-      hysterisisLimit(hysterisisLimit),
-      hysterisis(0),
-      state(State::Out)
+      : otherCoordinate(otherCoordinate),
+	inLabel(inLabel),
+	onLabel(onLabel),
+	hysterisisLimit(hysterisisLimit),
+	state(State::Out),
+	startedAt(0),
+	callback(callback),
+	hysterisis(0)
     {}
 
     void reset()
@@ -41,74 +40,12 @@ namespace bold
       state = State::Out;
     }
 
-    void update(uchar label, ushort position)
-    {
-      switch (state)
-      {
-        case State::Out:
-        {
-          if (label == inLabel)
-          {
-            hysterisis = 0;
-            state = State::In;
-          }
-          else
-          {
-            if (hysterisis != 0)
-              hysterisis--;
-          }
-          break;
-        }
-        case State::In:
-        {
-          if (label == onLabel)
-          {
-            state = State::On;
-            hysterisis = 0;
-            startedAt = position;
-          }
-          else if (label == inLabel)
-          {
-            if (hysterisis != hysterisisLimit)
-              hysterisis++;
-          }
-          else
-          {
-            if (hysterisis != 0)
-              hysterisis--;
-            else
-              state = State::Out;
-          }
-          break;
-        }
-        case State::On:
-        {
-          if (label == inLabel)
-          {
-            // we completed a run!
-            state = State::In;
-            hysterisis = 0;
-            callback(startedAt, position, otherCoordinate);
-          }
-          else if (label == onLabel)
-          {
-            if (hysterisis != hysterisisLimit)
-              hysterisis++;
-          }
-          else
-          {
-            if (hysterisis != 0)
-              hysterisis--;
-            else
-              state = State::Out;
-          }
-          break;
-        }
-      }
-    }
+    void update(uchar label, ushort position);
 
     uchar getHysterisisLimit() const { return hysterisisLimit; }
     void setHysterisisLimit(uchar limit) { hysterisisLimit = limit; }
+
+    ushort otherCoordinate;
 
   private:
     enum class State : uchar
@@ -129,6 +66,73 @@ namespace bold
     std::function<void(ushort const, ushort const, ushort const)> callback;
     uint hysterisis;
   };
+
+  inline void LineRunTracker::update(uchar label, ushort position)
+  {
+    switch (state)
+    {
+    case State::Out:
+    {
+      if (label == inLabel)
+      {
+	hysterisis = 0;
+	state = State::In;
+      }
+      else
+      {
+	if (hysterisis != 0)
+	  hysterisis--;
+      }
+      break;
+    }
+    case State::In:
+    {
+      if (label == onLabel)
+      {
+	state = State::On;
+	hysterisis = 0;
+	startedAt = position;
+      }
+      else if (label == inLabel)
+      {
+	if (hysterisis != hysterisisLimit)
+	  hysterisis++;
+      }
+      else
+      {
+	if (hysterisis != 0)
+	  hysterisis--;
+	else
+	  state = State::Out;
+      }
+      break;
+    }
+    case State::On:
+    {
+      if (label == inLabel)
+      {
+	// we completed a run!
+	state = State::In;
+	hysterisis = 0;
+	callback(startedAt, position, otherCoordinate);
+      }
+      else if (label == onLabel)
+      {
+	if (hysterisis != hysterisisLimit)
+	  hysterisis++;
+      }
+      else
+      {
+	if (hysterisis != 0)
+	  hysterisis--;
+	else
+	  state = State::Out;
+      }
+      break;
+    }
+    }
+  }
+
 }
 
 #endif

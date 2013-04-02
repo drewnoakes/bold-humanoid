@@ -77,9 +77,15 @@ namespace bold
       std::size_t ss2 = find(idx2);
       
       if (ss1 < ss2)
+      {
         d_equivList[ss2] = ss1;
+	return ss2;
+      }
       else
+      {
         d_equivList[ss1] = ss2;
+	return ss1;
+      }
     }
 
     void flattenEquivList()

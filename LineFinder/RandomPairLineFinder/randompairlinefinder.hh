@@ -20,9 +20,9 @@ namespace bold
     struct LineHypothesis
     {
       LineHypothesis(Line const& line, Eigen::Vector2i const& dot1, Eigen::Vector2i const& dot2)
-      : d_theta(line.theta()),
-        d_radius(line.radius()),
-        d_lengthDistribution()
+	: d_lengthDistribution(),
+	  d_theta(line.theta()),
+	  d_radius(line.radius())
       {
         auto diff = dot2 - dot1;
 

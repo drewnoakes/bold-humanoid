@@ -1,17 +1,17 @@
 #include "maskwalklinefinder.ih"
 
 MaskWalkLineFinder::MaskWalkLineFinder(int imageWidth, int imageHeight)
-: d_imageWidth(imageWidth),
-  d_imageHeight(imageHeight),
-  d_mask(imageHeight, imageWidth, CV_8UC1),
-  d_drThreshold(3),
-  d_dtThreshold(1 * M_PI/180),
-  d_voteThreshold(10),
-  d_minLineLength(30),
-  d_maxLineGap(30),
-  d_maxLineSegmentCount(5),
-  d_trigTable(),
-  d_controls()
+   :  d_drThreshold(3),
+      d_dtThreshold(1 * M_PI/180),
+      d_voteThreshold(10),
+      d_minLineLength(30),
+      d_maxLineGap(30),
+      d_maxLineSegmentCount(5),
+      d_imageWidth(imageWidth),
+      d_imageHeight(imageHeight),
+      d_mask(imageHeight, imageWidth, CV_8UC1),
+      d_trigTable(),
+      d_controls()
 {
   rebuild();
 

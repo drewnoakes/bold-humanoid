@@ -11,8 +11,8 @@ namespace bold
 
   public:
     Smoother(double initialValue)
-    : d_current(initialValue),
-      d_target(initialValue)
+      : d_target(initialValue),
+	d_current(initialValue)
     {}
 
     virtual void step() = 0;

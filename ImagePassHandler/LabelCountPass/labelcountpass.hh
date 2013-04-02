@@ -22,8 +22,8 @@ namespace bold
     static const unsigned MAX_LABEL_COUNT = 8;
 
     LabelCountPass(std::vector<std::shared_ptr<PixelLabel>> const& labels)
-    : d_labels(labels),
-      d_countByLabelId()
+      : d_countByLabelId(),
+	d_labels(labels)
     {}
 
     void onImageStarting()

@@ -32,9 +32,9 @@ namespace bold
 
     LineDotPass(int imageWidth, std::shared_ptr<PixelLabel> const inLabel, std::shared_ptr<PixelLabel> const onLabel, uchar hysterisisLimit)
     : d_imageWidth(imageWidth),
-      lineDots(),
       inLabel(inLabel),
-      onLabel(onLabel)
+      onLabel(onLabel),
+      lineDots()
     {
       d_colTrackers = std::vector<bold::LineRunTracker>();
 

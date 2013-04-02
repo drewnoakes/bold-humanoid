@@ -82,9 +82,9 @@ namespace bold
                                 std::function<void()> callback);
 
     Control()
-    : d_callback(),
-      d_value(0),
+    : d_value(0),
       d_type(ControlType::Unknown),
+      d_callback(),
       d_name(),
       d_isAdvanced(false),
       d_hasLimitValues(false),
@@ -181,7 +181,7 @@ namespace bold
           }
           case bold::ControlType::Enum:
           {
-            int index = control.getDefaultValue();
+            unsigned index = control.getDefaultValue();
             auto values = control.getEnumValues();
             if (index >= 0 && index < values.size())
               stream << " default=" << (values[index].getName());

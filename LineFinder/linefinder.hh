@@ -12,9 +12,9 @@ namespace bold
   class LineFinder
   {
   public:
-    virtual std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) {};
+    virtual std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) { return std::vector<LineSegment2i>(); };
 
-    virtual std::vector<bold::Control> getControls() const {};
+    virtual std::vector<bold::Control> getControls() const { return std::vector<bold::Control>(); };
   };
 }
 

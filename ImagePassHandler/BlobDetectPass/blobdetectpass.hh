@@ -185,7 +185,7 @@ namespace bold
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
 
-    void addRun(int endX)
+    void addRun(unsigned endX)
     {
       assert(endX >= d_currentRun.startX);
 
@@ -206,9 +206,9 @@ namespace bold
 
   // Run
   inline Run::Run(unsigned startX, unsigned y)
-    : startX(startX),
-      endX(startX),
-      y(y)
+    : y(y),
+      startX(startX),
+      endX(startX)
   {}
 
   inline unsigned Run::length() const
