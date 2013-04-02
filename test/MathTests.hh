@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "../Math/math.hh"
+#include "helpers.hh"
 
 #include <Eigen/Core>
 
@@ -59,8 +60,16 @@ TEST (MathTests, intersectRayWithGroundPlane)
               Math::intersectRayWithGroundPlane(Vector3d(1,2,3), Vector3d(0,0,-1), 1) );
 
   // Diagonal ray
-  EXPECT_EQ ( Maybe<Vector3d>(Vector3d(1,1,0)),
-              Math::intersectRayWithGroundPlane(Vector3d(0,0,1), Vector3d(1,1,-1).normalized(), 0) );
-  EXPECT_EQ ( Maybe<Vector3d>(Vector3d(2,2,0)),
-              Math::intersectRayWithGroundPlane(Vector3d(0,0,2), Vector3d(1,1,-1).normalized(), 0) );
+  EXPECT_TRUE ( VectorsEqual(
+		  Vector3d(1,1,0),
+		  *(Math::intersectRayWithGroundPlane(Vector3d(0,0,1),
+						      Vector3d(1,1,-1).normalized(),
+						      0).value())
+		  ) );
+  EXPECT_TRUE ( VectorsEqual(
+		  Vector3d(2,2,0),
+		  *(Math::intersectRayWithGroundPlane(Vector3d(0,0,2),
+						      Vector3d(1,1,-1).normalized(),
+						      0).value())
+		  ) );
 }
