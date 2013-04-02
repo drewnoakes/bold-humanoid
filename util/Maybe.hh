@@ -33,6 +33,11 @@ namespace bold
       return value();
     }
 
+    std::shared_ptr<T> operator*() const
+    {
+      return value();
+    }
+
     bool operator==(Maybe const& other) const
     {
       if (d_hasValue ^ other.d_hasValue)
