@@ -30,8 +30,8 @@ namespace bold
       return stream << "Bounds (min=" << line.d_min << " max=" << line.d_max << ")";
     }
 
-    Eigen::Matrix<T,dim,1> min() const { d_min; }
-    Eigen::Matrix<T,dim,1> max() const { d_max; }
+    Eigen::Matrix<T,dim,1> min() const { return d_min; }
+    Eigen::Matrix<T,dim,1> max() const { return d_max; }
 
     bool contains(Eigen::Matrix<T,dim,1> const& v) const
     {
