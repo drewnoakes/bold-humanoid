@@ -10,7 +10,7 @@ Maybe<Vector3d> Math::intersectRayWithGroundPlane(Vector3d const& position,
   if (direction.z() == 0)
     return Maybe<Vector3d>::empty();
 
-  double t = - (position.z() - planeZ) / direction.z();
+  double t = (planeZ - position.z()) / direction.z();
 
   if (t < 0)
     return Maybe<Vector3d>::empty();
