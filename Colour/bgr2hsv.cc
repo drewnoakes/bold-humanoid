@@ -5,7 +5,7 @@ using namespace bold;
 Colour::hsv Colour::bgr2hsv(bgr const& in)
 {
   Colour::hsv out;
-  int         min, max, delta;
+  int         min, max, chroma;
 
   min = in.r < in.g ? in.r : in.g;
   min = min  < in.b ? min  : in.b;
@@ -14,10 +14,10 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   max = max  > in.b ? max  : in.b;
 
   out.v = max;                          // v
-  delta = max - min;
+  chroma = max - min;
   if (max > 0)
   {
-    out.s = ((delta << 8) / max);       // s
+    out.s = ((chroma << 8) / max);       // s
   }
   else
   {
@@ -28,19 +28,20 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
     return out;
   }
 
-  if (delta == 0)
+  if (chroma == 0)
   {
     out.h = 0;
     return out;
   }
 
-  // 0-63, 64-127, 128-191
   if (in.r == max)                               // > is bogus, just keeps compiler happy
-    out.h = (32 + (in.g - in.b) << 5) / delta;   // between yellow & magenta
+    out.h = ((in.g - in.b) * 85) / chroma;   // between yellow & magenta
   else if (in.g == max)
-    out.h = 96 + ((in.b - in.r) << 5) / delta;   // between cyan & yellow
+    out.h = 85 + ((in.b - in.r) * 85) / chroma;   // between cyan & yellow
   else
-    out.h = 160 + ((in.r - in.g) << 5) / delta;  // between magenta & cyan
+    out.h = 128 + ((in.r - in.g) * 85) / chroma;  // between magenta & cyan
+  if (out.h < 0)
+    out.h += 256;
 
   return out;
 }
