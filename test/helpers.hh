@@ -1,3 +1,6 @@
+#ifndef TESTING_HELPER_HH
+#define TESTING_HELPER_HH
+
 #include "gtest/gtest.h"
 
 #include <Eigen/Core>
@@ -8,3 +11,5 @@
   else
     return ::testing::AssertionFailure() << "Vectors differ by more than " << delta;
 }
+
+#endif
