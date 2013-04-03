@@ -185,7 +185,7 @@ target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 ## Additional compile flags
 # TODO: fix things so we can use Eigen vectorization
 #
-set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare")
+set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare -Wno-unused-local-typedefs")
 set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 
 #
