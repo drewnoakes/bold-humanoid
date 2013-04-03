@@ -125,7 +125,7 @@ namespace bold
     int getControlValue(Control const& control);
 
     friend class Control;
-    friend class PixelFormat;
+    friend struct PixelFormat;
 
   private:
     std::string d_device;
