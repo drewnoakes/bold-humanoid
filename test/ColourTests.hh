@@ -26,3 +26,20 @@ TEST (ColourTests, bgr2hsv)
   EXPECT_EQ ( Colour::hsv(0, 0, 0), Colour::bgr2hsv(black) );
   EXPECT_EQ ( Colour::hsv(0, 0, 255), Colour::bgr2hsv(white) );
 }
+
+TEST (ColourTests, hsv2bgr)
+{
+  Colour::hsv red(0,255,255);
+  Colour::hsv blue(85,255,255);
+  Colour::hsv green(170,255,255);
+  Colour::hsv yellow(42,255,255);
+  Colour::hsv cyan(127,255,255);
+  Colour::hsv magenta(212,255,255);
+  Colour::hsv gray(0,0,128);
+  Colour::hsv black(0,0,0);
+  Colour::hsv white(0,0,255);
+
+  EXPECT_EQ ( Colour::bgr(0,0,255), Colour::hsv2bgr(red) );
+  EXPECT_EQ ( Colour::bgr(255,0,0), Colour::hsv2bgr(blue) );
+  EXPECT_EQ ( Colour::bgr(0,255,0), Colour::hsv2bgr(green) );
+}
