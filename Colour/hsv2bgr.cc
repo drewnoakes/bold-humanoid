@@ -1,6 +1,4 @@
-#include "colour.hh"
-
-using namespace bold;
+#include "colour.ih"
 
 Colour::bgr Colour::hsv2bgr(hsv const& in)
 {

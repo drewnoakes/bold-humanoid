@@ -17,6 +17,7 @@ set (PASSTEST_SOURCES
 ../Colour/bgr2hsv.cc
 ../Colour/hsv2bgr.cc
 ../Colour/hsvRange.cc
+../Colour/operator_ins.cc
 ../Colour/YCbCr.cc
 ../Control/handleRequest.cc
 ../Control/staticfields.cc

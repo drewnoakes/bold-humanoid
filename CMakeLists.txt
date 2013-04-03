@@ -74,6 +74,7 @@ set(BOLDHUMANOID_SOURCES
 ./Colour/bgr2hsv.cc
 ./Colour/hsv2bgr.cc
 ./Colour/hsvRange.cc
+./Colour/operator_ins.cc
 ./Colour/YCbCr.cc
 ./Control/create.cc
 ./Control/handleRequest.cc
@@ -131,6 +132,7 @@ ${JOYSTICKDIR}/joystick.cc
 set(INTERNAL_HEADERS
 ./Agent/agent.ih
 ./Camera/camera.ih
+./Colour/colour.ih
 ./Control/control.ih
 ./DataStreamer/datastreamer.ih
 ./HoughLineAccumulator/houghlineaccumulator.ih
