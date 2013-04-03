@@ -40,8 +40,8 @@ namespace bold
     template<typename newT>
     LineSegment<newT,dim> cast()
     {
-      return LineSegment<newT,dim>(d_p1.cast<newT>(),
-                                   d_p2.cast<newT>());
+      return LineSegment<newT,dim>(d_p1.template cast<newT>(),
+                                   d_p2.template cast<newT>());
     }
 
     bool operator==(LineSegment<T,dim> const& other) const
