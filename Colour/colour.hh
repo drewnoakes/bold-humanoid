@@ -133,6 +133,7 @@ namespace bold
     }
   };
 
+  std::ostream& operator<<(std::ostream &stream, Colour::bgr const& bgr);
   std::ostream& operator<<(std::ostream &stream, Colour::hsv const& hsv);
   std::ostream& operator<<(std::ostream &stream, Colour::hsvRange const& hsv);
 }
