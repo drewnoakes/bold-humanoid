@@ -1,6 +1,4 @@
-#include "colour.hh"
-
-using namespace bold;
+#include "colour.ih"
 
 Colour::hsv Colour::bgr2hsv(bgr const& in)
 {
@@ -17,7 +15,7 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   chroma = max - min;
   if (max > 0)
   {
-    out.s = ((chroma << 8) / max);       // s
+    out.s = (((chroma << 8) - chroma) / max);       // s
   }
   else
   {
@@ -35,13 +33,13 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   }
 
   if (in.r == max)                               // > is bogus, just keeps compiler happy
-    out.h = ((in.g - in.b) * 85) / chroma;   // between yellow & magenta
+    out.h = ((in.g - in.b) * 42) / chroma;   // between yellow & magenta
   else if (in.g == max)
-    out.h = 85 + ((in.b - in.r) * 85) / chroma;   // between cyan & yellow
+    out.h = 85 + ((in.b - in.r) * 42) / chroma;   // between cyan & yellow
   else
-    out.h = 128 + ((in.r - in.g) * 85) / chroma;  // between magenta & cyan
+    out.h = 170 + ((in.r - in.g) * 42) / chroma;  // between magenta & cyan
   if (out.h < 0)
-    out.h += 256;
+    out.h += 254;
 
   return out;
 }
