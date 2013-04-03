@@ -181,7 +181,7 @@ namespace bold
           }
           case bold::ControlType::Enum:
           {
-            unsigned index = control.getDefaultValue();
+            int index = control.getDefaultValue();
             auto values = control.getEnumValues();
             if (index >= 0 && index < values.size())
               stream << " default=" << (values[index].getName());
