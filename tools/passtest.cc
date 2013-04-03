@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 
   // Convert YCbCr to BGR
   PixelFilterChain chain;
-  chain.pushFilter(&Colour::yCbCrToBgbInPlace);
+  chain.pushFilter(&Colour::yCbCrToBgrInPlace);
   chain.applyFilters(colourImage);
 
   // Initialise random seed

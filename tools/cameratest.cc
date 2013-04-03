@@ -40,7 +40,7 @@ int main()
 
   PixelFilterChain chain;
 
-  chain.pushFilter(&Colour::yCbCrToBgbInPlace);
+  chain.pushFilter(&Colour::yCbCrToBgrInPlace);
 
   cv::namedWindow("main");
 

@@ -20,7 +20,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   {
     debugImage = cameraImage;
     PixelFilterChain chain;
-    chain.pushFilter(&Colour::yCbCrToBgbInPlace);
+    chain.pushFilter(&Colour::yCbCrToBgrInPlace);
     chain.applyFilters(debugImage);
   }
   else if (imageType == ImageType::Cartoon)

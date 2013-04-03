@@ -29,6 +29,14 @@ namespace bold
         return cv::Scalar(b, g, r);
       }
 
+      bool operator==(bgr const& other) const
+      {
+        return
+          b == other.b &&
+          g == other.g &&
+          r == other.r;
+      }
+
       uchar b;
       uchar g;
       uchar r;
@@ -46,6 +54,14 @@ namespace bold
       Colour::bgr toBgrInt() const;
       Colour::bgr toBgrFloat() const;
 
+      bool operator==(YCbCr const& other) const
+      {
+        return
+          y  == other.y  &&
+          cb == other.cb &&
+          cr == other.cr;
+      }
+
       uchar y;
       uchar cb;
       uchar cr;
@@ -59,6 +75,14 @@ namespace bold
       hsv(int h, int s, int v)
         : h(h), s(s), v(v)
       {}
+
+      bool operator==(hsv const& other) const
+      {
+        return
+          h == other.h &&
+          s == other.s &&
+          v == other.v;
+      }
 
       // TODO why are these int?
       int h;
@@ -101,7 +125,7 @@ namespace bold
     static hsv bgr2hsv(bgr const& in);
     static bgr hsv2bgr(hsv const& in);
 
-    static void yCbCrToBgbInPlace(unsigned char* pxl)
+    static void yCbCrToBgrInPlace(unsigned char* pxl)
     {
       Colour::YCbCr* ycbcr = reinterpret_cast<Colour::YCbCr*>(pxl);
       Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
