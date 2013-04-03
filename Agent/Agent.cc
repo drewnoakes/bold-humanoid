@@ -1,27 +1,23 @@
 #include "agent.ih"
 
 Agent::Agent(std::string const& U2D_dev,
-      minIni const& ini,
-      std::string const& motionFile,
-      bool const& useJoystick,
-      bool const& autoGetUpFromFallen,
-      bool const& recordFrames,
-      unsigned int const& gameControlUdpPort
+             minIni const& ini,
+             std::string const& motionFile,
+             bool const& useJoystick,
+             bool const& autoGetUpFromFallen,
+             bool const& recordFrames,
+             unsigned int const& gameControlUdpPort
   )
-  : d_linuxCM730(U2D_dev.c_str()),
-    d_CM730(&d_linuxCM730),
-    d_ini(ini),
+  : d_ini(ini),
     d_motionFile(motionFile),
-    d_ambulator(d_ini),
+    d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
+    d_linuxCM730(U2D_dev.c_str()),
+    d_CM730(&d_linuxCM730),
+    d_ambulator(d_ini),
     d_gameControlReceiver(gameControlUdpPort),
     d_ballSeenCnt(0),
-    d_goalSeenCnt(0),
-    d_camera(nullptr),
-    d_joystick(nullptr),
-    d_motionTimer(nullptr),
-    d_streamer(nullptr),
-    d_isRecordingFrames(recordFrames)
+    d_goalSeenCnt(0)
 {
   if (useJoystick)
   {

@@ -1,9 +1,9 @@
 #include "blobdetectpass.ih"
 
 BlobDetectPass::BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> const& blobTypes)
-  : d_blobTypes(blobTypes),
-    d_imageHeight(imageHeight),
+  : d_imageHeight(imageHeight),
     d_imageWidth(imageWidth),
+    d_blobTypes(blobTypes),
     d_runsPerRowPerLabel(),
     d_currentRun(0, 0)
 {

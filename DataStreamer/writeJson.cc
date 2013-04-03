@@ -9,5 +9,5 @@ void DataStreamer::writeJson(libwebsocket* wsi, StringBuffer const& buffer)
   unsigned char* p = buf + LWS_SEND_BUFFER_POST_PADDING;
   memcpy(p, json, size);
 
-  int res = libwebsocket_write(wsi, p, size, LWS_WRITE_TEXT);
+  /*int res =*/ libwebsocket_write(wsi, p, size, LWS_WRITE_TEXT);
 }

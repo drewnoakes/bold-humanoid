@@ -25,9 +25,9 @@ namespace bold
     std::vector<Candidate<Line>> lines;
 
     HoughLinePass(int width, int height, int thresholdDivisor, int accumulatorHeight)
-    : accumulator(width, height, accumulatorHeight),
-      lines(),
-      d_thresholdDivisor(thresholdDivisor)
+    : d_thresholdDivisor(thresholdDivisor),
+      accumulator(width, height, accumulatorHeight),
+      lines()
     {}
 
     void onImageStarting()
