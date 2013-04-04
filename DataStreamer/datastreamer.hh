@@ -67,7 +67,6 @@ namespace bold
 
     /** Gets whether the vision system should provide a debugging image this cycle. */
     bool shouldProvideImage();
-    // TODO rename draw* as shouldDraw* as these methods do not perform any operation as the name might suggest
     bool shouldDrawBlobs() const { return d_shouldDrawBlobs; }
     bool shouldDrawLineDots() const { return d_shouldDrawLineDots; }
     bool shouldDrawExpectedLines() const { return d_shouldDrawExpectedLines; }
