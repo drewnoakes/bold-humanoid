@@ -36,10 +36,10 @@ vector<Control> DataStreamer::getDebugControls()
   controls.push_back(Control::createAction("&blacktriangleright;", [&moveHead](){ moveHead(-5, 0); }));
 
   // Layers
-  controls.push_back(Control::createBool("Blobs",            d_drawBlobs,         [this](bool const& value) { d_drawBlobs = value; }));
-  controls.push_back(Control::createBool("Line dots",        d_drawLineDots,      [this](bool const& value) { d_drawLineDots = value; }));
-  controls.push_back(Control::createBool("Lines (observed)", d_drawObservedLines, [this](bool const& value) { d_drawObservedLines = value; }));
-  controls.push_back(Control::createBool("Lines (expected)", d_drawExpectedLines, [this](bool const& value) { d_drawExpectedLines = value; }));
+  controls.push_back(Control::createBool("Blobs",            d_shouldDrawBlobs,         [this](bool const& value) { d_shouldDrawBlobs = value; }));
+  controls.push_back(Control::createBool("Line dots",        d_shouldDrawLineDots,      [this](bool const& value) { d_shouldDrawLineDots = value; }));
+  controls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines, [this](bool const& value) { d_shouldDrawObservedLines = value; }));
+  controls.push_back(Control::createBool("Lines (expected)", d_shouldDrawExpectedLines, [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
 
   return controls;
 }

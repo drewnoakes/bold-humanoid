@@ -37,7 +37,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw observed lines
-  if (streamer->drawObservedLines() && d_lines.size() > 0)
+  if (streamer->shouldDrawObservedLines() && d_lines.size() > 0)
   {
     for (LineSegment2i const& line : d_lines)
     {
@@ -46,7 +46,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw line dots
-  if (streamer->drawLineDots() && d_lineDotPass->lineDots.size() > 0)
+  if (streamer->shouldDrawLineDots() && d_lineDotPass->lineDots.size() > 0)
   {
     auto colour = Colour::bgr(0,0,255);
     for (auto const& lineDot : d_lineDotPass->lineDots)
@@ -56,7 +56,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw blobs
-  if (streamer->drawBlobs())
+  if (streamer->shouldDrawBlobs())
   {
     for (BlobType const& blobType : d_blobDetectPass->blobTypes())
     {
@@ -70,7 +70,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw expected lines
-  if (streamer->drawExpectedLines())
+  if (streamer->shouldDrawExpectedLines())
   {
     auto fieldLines = WorldModel::getInstance().getFieldLines();
     Projector projector = AgentModel::getInstance().getCameraModel().getProjector();

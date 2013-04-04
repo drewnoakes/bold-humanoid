@@ -1,16 +1,20 @@
 #include "datastreamer.ih"
 
 DataStreamer::DataStreamer(int port)
-: d_port(port),
-  d_gameStateUpdated(false),
+: d_gameStateUpdated(false),
   d_agentModelUpdated(false),
+  d_image(),
   d_imageType(ImageType::RGB),
   d_streamFramePeriod(10),
+  d_shouldDrawBlobs(true),
+  d_shouldDrawLineDots(false),
+  d_shouldDrawExpectedLines(true),
+  d_shouldDrawObservedLines(true),
   d_camera(0),
-  d_context(0),
-  d_drawObservedLines(true),
-  d_drawExpectedLines(true),
-  d_drawBlobs(true)
+  d_cameraSessions(),
+  d_controlsByIdByFamily(),
+  d_port(port),
+  d_context(0)
 {}
 
 // static members

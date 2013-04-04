@@ -67,10 +67,11 @@ namespace bold
 
     /** Gets whether the vision system should provide a debugging image this cycle. */
     bool shouldProvideImage();
-    bool drawBlobs() const { return d_drawBlobs; }
-    bool drawLineDots() const { return d_drawLineDots; }
-    bool drawExpectedLines() const { return d_drawExpectedLines; }
-    bool drawObservedLines() const { return d_drawObservedLines; }
+    // TODO rename draw* as shouldDraw* as these methods do not perform any operation as the name might suggest
+    bool shouldDrawBlobs() const { return d_shouldDrawBlobs; }
+    bool shouldDrawLineDots() const { return d_shouldDrawLineDots; }
+    bool shouldDrawExpectedLines() const { return d_shouldDrawExpectedLines; }
+    bool shouldDrawObservedLines() const { return d_shouldDrawObservedLines; }
 
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img);
@@ -92,10 +93,10 @@ namespace bold
     cv::Mat d_image;
     ImageType d_imageType;
     unsigned d_streamFramePeriod;
-    bool d_drawBlobs;
-    bool d_drawLineDots;
-    bool d_drawExpectedLines;
-    bool d_drawObservedLines;
+    bool d_shouldDrawBlobs;
+    bool d_shouldDrawLineDots;
+    bool d_shouldDrawExpectedLines;
+    bool d_shouldDrawObservedLines;
 
     std::shared_ptr<Camera> d_camera;
 
