@@ -1,70 +1,77 @@
 #include "colour.ih"
 
+#include <iostream>
+
+using namespace std;
+
 Colour::bgr Colour::hsv2bgr(hsv const& in)
 {
-  float b, g, r;
+  Colour::bgr out;
 
-  // All values are in the range [0.0 .. 1.0]
-  float S, H, V, F, M, N, K;
-  int   I;
+  int const   nh = 256;         // Maximum hue value
+  int const   hstep = nh / 3;   // Hue step size between red -> green -> blue
 
-  S = in.s / 255.0;
-  H = in.h / 255.0;
-  V = in.v / 255.0;
+  int chroma, F, I, X, M, r, g, b;
 
-  if (S == 0.0)
+  if (in.s == 0)
   {
     // Achromatic case, set level of grey
-    r = V;
-    g = V;
-    b = V;
+    r = g = b = in.v;
   }
   else
   {
-    // Determine levels of primary colours.
-    if (H >= 1.0)
-    {
-      H = 0.0;
-    }
-    else
-    {
-      H = H * 6;
-    }
-    I = (int) H;   /* should be in the range 0..5 */
-    F = H - I;     /* fractional part */
+    chroma = in.s * in.v / 255;
 
-    M = V * (1 - S);
-    N = V * (1 - S * F);
-    K = V * (1 - S * (1 - F));
+    I = 2 * in.h / hstep; // [0-5]
+    F = in.h % hstep; // [0-hstep)
 
     assert (I >= 0 && I <= 5);
+
+    X = chroma * (255 - abs(2 * 255 * F / hstep - 255)) / 255;
 
     switch (I)
     {
     case 0:
-      r = V; g = K; b = M;
+      r = chroma;
+      g = X;
+      b = 0;
       break;
     case 1:
-      r = N; g = V; b = M;
+      r = X;
+      g = chroma;
+      b = 0;
       break;
     case 2:
-      r = M; g = V; b = K;
+      r = 0;
+      g = chroma;
+      b = X;
       break;
     case 3:
-      r = M; g = N; b = V;
+      r = 0;
+      g = X;
+      b = chroma;
       break;
     case 4:
-      r = K; g = M; b = V;
+      r = X;
+      g = 0;
+      b = chroma;
       break;
     case 5:
-      r = V; g = M; b = N;
+      r = chroma;
+      g = 0;
+      b = X;
       break;
     default:
       // Should never hit this
       assert(false && "IMPOSSIBLE CASE");
       r = g = b = 0;
     }
+
+    M = in.v - chroma;
+    r += M;
+    g += M;
+    b += M;
   }
 
-  return Colour::bgr(b * 255, g * 255, r * 255);
+  return Colour::bgr(b, g, r);
 }

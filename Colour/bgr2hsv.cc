@@ -1,9 +1,14 @@
 #include "colour.ih"
 
+#include <iostream>
+
 Colour::hsv Colour::bgr2hsv(bgr const& in)
 {
   Colour::hsv out;
   int         min, max, chroma;
+
+  int const   nh = 255;         // Maximum hue value
+  int const   hstep = nh / 3;   // Hue step size between red -> green -> blue
 
   min = in.r < in.g ? in.r : in.g;
   min = min  < in.b ? min  : in.b;
@@ -15,7 +20,7 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   chroma = max - min;
   if (max > 0)
   {
-    out.s = (((chroma << 8) - chroma) / max);       // s
+    out.s = 255 * chroma / max;       // s
   }
   else
   {
@@ -32,14 +37,32 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
     return out;
   }
 
-  if (in.r == max)                               // > is bogus, just keeps compiler happy
-    out.h = ((in.g - in.b) * 42) / chroma;   // between yellow & magenta
+  const int chroma2 = chroma * 2;
+  const int hstep2 = hstep + 1;
+  int offset;
+  int diff;
+
+  if (in.r == max)
+  {
+    offset = 3 * hstep;
+    diff = in.g - in.b;
+  }
   else if (in.g == max)
-    out.h = 85 + ((in.b - in.r) * 42) / chroma;   // between cyan & yellow
+  {
+    offset = hstep;
+    diff = in.b - in.r;
+  }
   else
-    out.h = 170 + ((in.r - in.g) * 42) / chroma;  // between magenta & cyan
-  if (out.h < 0)
-    out.h += 254;
+  {
+    offset = 2 * hstep;
+    diff = in.r - in.g;
+  }
+
+  out.h = offset + (diff * (hstep + 1)) / chroma2;
+
+  // Rotate such that red has hue 0
+  if (out.h >= nh)
+    out.h -= nh;
 
   return out;
 }
