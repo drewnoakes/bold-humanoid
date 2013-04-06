@@ -16,7 +16,7 @@ vector<Candidate<Line>> HoughLineExtractor::findLines(HoughLineAccumulator& accu
   int accumulatorHeight = accumulator.getMat().rows;
   int halfAccumulatorWidth = accumulatorWidth / 2;
 
-  double thetaStepRadians = M_PI / accumulatorHeight;
+  //double thetaStepRadians = M_PI / accumulatorHeight;
 
   int angleSearchInt = (fabs(angleSearch) / M_PI) * accumulatorHeight;
 
