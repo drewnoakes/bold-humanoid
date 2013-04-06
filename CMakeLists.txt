@@ -29,6 +29,11 @@ ExternalProject_Add(darwin_lib
   INSTALL_DIR ${DARWINDIR}/Linux/lib
   INSTALL_COMMAND "")
 
+ExternalProject_Add_Step(darwin_lib force_build
+   COMMAND ${CMAKE_COMMAND} -E echo "Building libdarwin"
+   DEPENDERS build
+   ALWAYS 1
+)
 #
 ## Compile libwebsockets as an external project
 #
