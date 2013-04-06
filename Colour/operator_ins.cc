@@ -2,17 +2,17 @@
 
 ostream& bold::operator<<(ostream &stream, Colour::bgr const& bgr)
 {
-  return stream <<  "B=" << (int)bgr.b
-                << " G=" << (int)bgr.g
-                << " R=" << (int)bgr.r;
+  return stream <<  "B=" << (unsigned int)bgr.b
+                << " G=" << (unsigned int)bgr.g
+                << " R=" << (unsigned int)bgr.r;
 
 }
 
 ostream& bold::operator<<(ostream &stream, Colour::hsv const& hsv)
 {
-  return stream <<  "H=" << hsv.h
-                << " S=" << hsv.s
-                << " V=" << hsv.v;
+  return stream <<  "H=" << (unsigned int)hsv.h
+                << " S=" << (unsigned int)hsv.s
+                << " V=" << (unsigned int)hsv.v;
 
 }
 

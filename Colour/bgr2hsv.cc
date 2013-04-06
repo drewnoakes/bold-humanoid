@@ -38,7 +38,6 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   }
 
   const int chroma2 = chroma * 2;
-  const int hstep2 = hstep + 1;
   int offset;
   int diff;
 
@@ -58,11 +57,15 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
     diff = in.r - in.g;
   }
 
-  out.h = offset + (diff * (hstep + 1)) / chroma2;
+  int h = offset + (diff * (hstep + 1)) / chroma2;
 
   // Rotate such that red has hue 0
-  if (out.h >= nh)
-    out.h -= nh;
+  if (h >= nh)
+    h -= nh;
+
+  assert(h > 0 && h < 256);
+
+  out.h = h;
 
   return out;
 }

@@ -84,10 +84,9 @@ namespace bold
           v == other.v;
       }
 
-      // TODO why are these int?
-      int h;
-      int s;
-      int v;
+      uchar h;
+      uchar s;
+      uchar v;
     };
 
     struct hsvRange
