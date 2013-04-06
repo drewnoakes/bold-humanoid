@@ -63,9 +63,6 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   if (h >= nh)
     h -= nh;
 
-  cout << in << endl;
-  cout << h << endl;
-
   assert(h >= 0 && h < 256);
 
   out.h = h;
