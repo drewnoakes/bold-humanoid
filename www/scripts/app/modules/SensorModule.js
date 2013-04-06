@@ -79,7 +79,7 @@ define(
             _.each(charts, function(chartDefinition)
             {
                 var chart = new SmoothieChart(chartDefinition.options);
-                chart.yRangeFunction = function(range)
+                chart.options.yRangeFunction = function(range)
                 {
                     // Find the greatest absolute value
                     var max = Math.max(Math.abs(range.min), Math.abs(range.max));
