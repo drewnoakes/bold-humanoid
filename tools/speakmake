@@ -1,0 +1,11 @@
+#!/bin/bash
+
+groups $USER | grep -q audio
+
+if [ $? != 0 ]; then
+   echo "You need to be a member of the 'audio' group to run speakmake."
+   echo "Run 'sudo addgroup $USERNAME audio' and try again in a new session"
+   exit;
+fi
+
+(make $@ && espeak "Compilation successful") || espeak "Compilation failed"
