@@ -43,12 +43,15 @@ bool Agent::initBody()
 
   cout << "[Agent::init] Enable body" << endl;
 
-//   cout << "[Agent::init] Sit down" << endl;
-//   while(actionModule->Start("sit down") == false)
-//     usleep(8000);
-//   while(actionModule->IsRunning())
-//     usleep(8*1000);
+  cout << "[Agent::init] Sit down" << endl;
+  ActionOption sit("sit down");
+  while (sit.hasTerminated() == 0.0)
+  {
+    sit.runPolicy();
+    usleep(8000);
+  }
 
+  /*
   cout << "[Agent::init] Stand up" << endl;
   ActionOption stand("stand up");
   while (stand.hasTerminated() == 0.0)
@@ -56,6 +59,7 @@ bool Agent::initBody()
     stand.runPolicy();
     usleep(8000);
   }
+  */
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   motionManager->ResetGyroCalibration();
