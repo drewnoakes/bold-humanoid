@@ -25,7 +25,7 @@ Colour::bgr Colour::hsvRange::toBgr() const
 bool Colour::hsvRange::contains(Colour::hsv const& hsv) const
 {
   int hDiff = abs(hsv.h - h);
-  hDiff = std::min(hDiff, 192 - hDiff);
+  hDiff = std::min(hDiff, Colour::hsv::hueRange - hDiff);
 
   return (hDiff <= hRange &&
           hsv.s >= s - sRange && hsv.s <= s + sRange &&

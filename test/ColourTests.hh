@@ -93,3 +93,37 @@ TEST (ColourTests, hsv2bgr2hsv)
   EXPECT_EQ ( black, Colour::bgr2hsv(Colour::hsv2bgr(black)) );
   EXPECT_EQ ( white, Colour::bgr2hsv(Colour::hsv2bgr(white)) );
 }
+
+TEST (ColourTests, hsvRange)
+{
+  Colour::hsvRange rangeAll(128, 128, 128, 128, 128, 128);
+  Colour::hsvRange rangeOne(0, 0, 0, 0, 0, 0);
+  Colour::hsvRange rangeHWrap(0, 20, 128, 128, 128, 128);
+  Colour::hsvRange rangeSRangeOutOfBounds(128, 10, 200, 100, 128, 128);
+
+  EXPECT_TRUE ( rangeAll.contains(Colour::hsv(0, 0, 0)) );
+  EXPECT_TRUE ( rangeAll.contains(Colour::hsv(128, 0, 0)) );
+  EXPECT_TRUE ( rangeAll.contains(Colour::hsv(255, 0, 0)) );
+  EXPECT_TRUE ( rangeAll.contains(Colour::hsv(0, 128, 128)) );
+  EXPECT_TRUE ( rangeAll.contains(Colour::hsv(128, 255, 128)) );
+  EXPECT_TRUE ( rangeAll.contains(Colour::hsv(255, 128, 255)) );
+
+  EXPECT_TRUE ( rangeOne.contains(Colour::hsv(0, 0, 0)) );
+  EXPECT_FALSE ( rangeOne.contains(Colour::hsv(128, 0, 0)) );
+  EXPECT_TRUE ( rangeOne.contains(Colour::hsv(255, 0, 0)) );
+  EXPECT_FALSE ( rangeOne.contains(Colour::hsv(0, 128, 128)) );
+  EXPECT_FALSE ( rangeOne.contains(Colour::hsv(128, 255, 128)) );
+  EXPECT_FALSE ( rangeOne.contains(Colour::hsv(255, 128, 255)) );
+
+  EXPECT_TRUE (rangeHWrap.contains(Colour::hsv(0,128,128)) );
+  EXPECT_TRUE (rangeHWrap.contains(Colour::hsv(20,128,128)) );
+  EXPECT_FALSE (rangeHWrap.contains(Colour::hsv(21,128,128)) );
+  EXPECT_TRUE (rangeHWrap.contains(Colour::hsv(Colour::hsv::hueRange - 20,128,128)) );
+  EXPECT_FALSE (rangeHWrap.contains(Colour::hsv(Colour::hsv::hueRange - 21,128,128)) );
+
+  EXPECT_TRUE (rangeSRangeOutOfBounds.contains(Colour::hsv(128,200,128)) );
+  EXPECT_TRUE (rangeSRangeOutOfBounds.contains(Colour::hsv(128,255,128)) );
+  EXPECT_TRUE (rangeSRangeOutOfBounds.contains(Colour::hsv(128,100,128)) );
+  EXPECT_FALSE (rangeSRangeOutOfBounds.contains(Colour::hsv(128,99,128)) );
+  EXPECT_FALSE (rangeSRangeOutOfBounds.contains(Colour::hsv(128,0,128)) );
+}

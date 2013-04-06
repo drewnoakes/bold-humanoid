@@ -7,8 +7,7 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   Colour::hsv out;
   int         min, max, chroma;
 
-  int const   nh = 255;         // Maximum hue value
-  int const   hstep = nh / 3;   // Hue step size between red -> green -> blue
+  int const   hstep = hsv::hueRange / 3;   // Hue step size between red -> green -> blue
 
   min = in.r < in.g ? in.r : in.g;
   min = min  < in.b ? min  : in.b;
@@ -60,8 +59,8 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   int h = offset + (diff * (hstep + 1)) / chroma2;
 
   // Rotate such that red has hue 0
-  if (h >= nh)
-    h -= nh;
+  if (h >= hsv::hueRange)
+    h -= hsv::hueRange;
 
   assert(h >= 0 && h < 256);
 
