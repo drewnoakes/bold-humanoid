@@ -15,6 +15,7 @@ define(
         var ModelModule = function()
         {
             // camera variables
+            this.useThirdPerson = true;
             this.cameraDistance = 0.4;
             this.cameraTheta = -Math.PI/4;
             this.cameraPhi = Math.PI/6;
@@ -40,11 +41,23 @@ define(
         {
             var self = this;
             this.hinges = [];
+            this.objectByName = {};
             this.isRenderQueued = false;
 
             this.initialiseScene();
 
-            var root = this.buildBody(Constants.bodyStructure, this.hinges, function()
+            var firstPersonCheckbox = $('<input>', {type:'checkbox',id:'first-person-checkbox'});
+            firstPersonCheckbox.change(function()
+            {
+                self.useThirdPerson = !firstPersonCheckbox.is(':checked');
+                self.updateCameraPosition();
+                self.render();
+            });
+            this.$element.append(firstPersonCheckbox);
+            var firstPersonLabel = $('<label>', {'for':'first-person-checkbox', text:'First person view'});
+            this.$element.append(firstPersonLabel);
+
+            var root = this.buildBody(Constants.bodyStructure, function()
             {
                 self.scene.add(root);
                 self.render();
@@ -93,6 +106,7 @@ define(
 
             if (hasChange)
             {
+                this.updateCameraPosition();
                 this.render();
             }
         };
@@ -186,13 +200,14 @@ define(
             this.renderer.shadowMapSoft = true;
 
             this.updateCameraPosition();
+            this.render();
 
             this.element.appendChild(this.renderer.domElement);
 
             this.bindMouseInteraction(this.renderer.domElement);
         };
 
-        ModelModule.prototype.buildBody = function(body, hinges, loadedCallback)
+        ModelModule.prototype.buildBody = function(body, loadedCallback)
         {
             var geometriesToLoad = 0;
 
@@ -209,29 +224,32 @@ define(
                         var object = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
                         object.castShadow = true;
                         object.receiveShadow  = false;
+                        if (node.name) {
+                            this.objectByName[node.name] = object;
+                        }
                         parentObject.add(object);
                         geometriesToLoad--;
                         if (geometriesToLoad === 0) {
                             loadedCallback();
                         }
-                    });
+                    }.bind(this));
                 }
 
                 for (var i = 0; node.children && i < node.children.length; i++) {
+                    // Create hinge objects to house the children
                     var childNode = node.children[i];
-                    var childObject = new THREE.Object3D();
+                    var childHinge = new THREE.Object3D();
                     if (childNode.offset) {
-                        childObject.position.x = childNode.offset.x || 0;
-                        childObject.position.y = childNode.offset.y || 0;
+                        childHinge.position.x = childNode.offset.x || 0;
+                        childHinge.position.y = childNode.offset.y || 0;
                     }
-		    console.debug(childNode.rotationAxis);
-                    childObject.rotationAxis = childNode.rotationAxis;
-		    childObject.rotationOrigin = childNode.rotationOrigin;
-                    hinges[childNode.jointId] = childObject;
-                    parentObject.add(childObject);
-                    processNode(childNode, childObject);
+                    childHinge.rotationAxis = childNode.rotationAxis;
+                    childHinge.rotationOrigin = childNode.rotationOrigin;
+                    this.hinges[childNode.jointId] = childHinge;
+                    parentObject.add(childHinge);
+                    processNode(childNode, childHinge);
                 }
-            };
+            }.bind(this);
 
             var root = new THREE.Object3D();
             processNode(body, root);
@@ -253,6 +271,7 @@ define(
                 self.cameraDistance *= 1 - (event.wheelDeltaY/720);
                 self.cameraDistance = Math.max(0.1, Math.min(5, self.cameraDistance));
                 self.updateCameraPosition();
+                self.render();
             });
 
             container.addEventListener('mousedown', function(event)
@@ -273,6 +292,7 @@ define(
                     self.cameraPhi = ((event.clientY - onMouseDownPosition.y) * 0.01) + onMouseDownPhi;
                     self.cameraPhi = Math.min(Math.PI/2, Math.max(-Math.PI/2, self.cameraPhi));
                     self.updateCameraPosition();
+                    self.render();
                 }
             });
 
@@ -287,11 +307,18 @@ define(
 
         ModelModule.prototype.updateCameraPosition = function()
         {
-            this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
-            this.camera.position.y = this.cameraDistance * Math.sin(this.cameraPhi);
-            this.camera.position.z = this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
-            this.camera.lookAt(new THREE.Vector3(0,-0.1,0));
-            this.render();
+            if (this.useThirdPerson) {
+                // Third person -- position camera outside player
+                this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
+                this.camera.position.y = this.cameraDistance * Math.sin(this.cameraPhi);
+                this.camera.position.z = this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
+                this.camera.lookAt(new THREE.Vector3(0,-0.1,0));
+            } else {
+                // First person -- position camera in player's head
+                var headMatrix = this.objectByName['head'].matrixWorld;
+                this.camera.position = new THREE.Vector3().applyMatrix4(headMatrix);
+                this.camera.lookAt(new THREE.Vector3(0,0,1).applyMatrix4(headMatrix));
+            }
         };
 
         ModelModule.prototype.render = function()
