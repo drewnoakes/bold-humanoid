@@ -9,7 +9,14 @@ void Agent::readSubBoardData()
   //
   // READ ALL DATA IN BULK
   //
-  d_CM730.BulkRead();
+  d_CM730.MakeBulkReadPacket();
+  int res = d_CM730.BulkRead();
+
+  if (res != CM730::SUCCESS)
+  {
+    cout << "[Agent::readSubBoardData] Bulk read failed!" << endl;
+    return;
+  }
 
   //
   // READ FROM SUB BOARD
