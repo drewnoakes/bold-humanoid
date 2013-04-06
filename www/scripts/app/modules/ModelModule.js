@@ -90,18 +90,10 @@ define(
             }
 
             var hasChange = false;
-            for (var i = 0; i < 20; i++)
-            {
-                var hinge = this.hinges[i + 1];
-		if (hinge.rotationOrigin) { angles[i] += hinge.rotationOrigin; }
-		//console.debug([i, angles[i], hinge.rotationAxis]);
-		var rotation = hinge.rotationAxis.clone();
-		rotation.multiplyScalar(angles[i]);
-		if (!hinge.rotation.equals(rotation))
-		{
-                    hinge.rotation = rotation;
+            for (var i = 0; i < 20; i++) {
+                if (this.setHingeAngle(this.hinges[i + 1], angles[i])) {
                     hasChange = true;
-		}
+                }
             }
 
             if (hasChange)
@@ -109,6 +101,29 @@ define(
                 this.updateCameraPosition();
                 this.render();
             }
+        };
+
+        ModelModule.prototype.setHingeAngle = function(hinge, angle)
+        {
+            if (!hinge.rotationAxis) {
+                // No hinge is defined (eg: eyes)
+                return false;
+            }
+
+            // Add any angular offset applied to this hinge (adjust the zero-position)
+            if (hinge.rotationOrigin) {
+                angle += hinge.rotationOrigin;
+            }
+
+            var rotation = hinge.rotationAxis.clone();
+            rotation.multiplyScalar(angle);
+            if (!hinge.rotation.equals(rotation)) {
+                hinge.rotation = rotation;
+                return true;
+            }
+
+            // No change was applied
+            return false;
         };
 
         ModelModule.prototype.initialiseScene = function()
@@ -246,6 +261,7 @@ define(
                     childHinge.rotationAxis = childNode.rotationAxis;
                     childHinge.rotationOrigin = childNode.rotationOrigin;
                     this.hinges[childNode.jointId] = childHinge;
+                    this.setHingeAngle(childHinge, 0);
                     parentObject.add(childHinge);
                     processNode(childNode, childHinge);
                 }
@@ -312,12 +328,12 @@ define(
                 this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
                 this.camera.position.y = this.cameraDistance * Math.sin(this.cameraPhi);
                 this.camera.position.z = this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
-                this.camera.lookAt(new THREE.Vector3(0,-0.1,0));
+                this.camera.lookAt(new THREE.Vector3(0, -0.1, 0));
             } else {
                 // First person -- position camera in player's head
                 var headMatrix = this.objectByName['head'].matrixWorld;
-                this.camera.position = new THREE.Vector3().applyMatrix4(headMatrix);
-                this.camera.lookAt(new THREE.Vector3(0,0,1).applyMatrix4(headMatrix));
+                this.camera.position = Constants.cameraOffsetInHead.clone().applyMatrix4(headMatrix);
+                this.camera.lookAt(new THREE.Vector3(0, 0, 1).applyMatrix4(headMatrix));
             }
         };
 
