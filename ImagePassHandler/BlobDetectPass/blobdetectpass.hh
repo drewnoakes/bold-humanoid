@@ -59,10 +59,15 @@ namespace bold
   {
 
     Blob();
+    Blob(Eigen::Vector2i const& _ul, Eigen::Vector2i const& _br,
+         unsigned _area,
+         Eigen::Vector2f _mean, Eigen::Matrix2f _covar,
+         std::set<Run> const& _runs);
 
     cv::Rect toRect() const;
 
     bool operator<(Blob const& other) const;
+    bool operator>(Blob const& other) const { return other < *this; }
 
     Eigen::Vector2i ul;      ///< Upper left pixel
     Eigen::Vector2i br;      ///< Bottom righ pixel
@@ -112,54 +117,11 @@ namespace bold
   public:
     BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> const& blobTypes);
 
-    void onImageStarting()
-    {
-      // Clear all persistent data
-      for (auto& pair : d_runsPerRowPerLabel)
-      {
-        auto& runsPerRow = pair.second;
-        for (std::vector<bold::Run>& runs : runsPerRow)
-        {
-          runs.clear();
-        }
-      }
-    }
+    void onImageStarting();
 
-    void onRowStarting(int y)
-    {
-      // TODO might miss last run on last row with this approach -- add onRowEnding, or copy into onImageComplete
-      if (d_currentLabel != 0)
-      {
-        // finish whatever run we were on
-        addRun(d_imageWidth - 1);
-      }
-      d_currentRun.y = y;
-      d_currentLabel = 0;
-    }
+    void onRowStarting(int y);
 
-    void onPixel(uchar label, int x, int y)
-    {
-      // Check if we have a run boundary
-      if (label != d_currentLabel)
-      {
-        // Check whether this is the end of the current run
-        if (d_currentLabel != 0)
-        {
-          // Finished run
-          assert(x > 0);
-          addRun(x - 1);
-        }
-
-        // Check whether this is the start of a new run
-        if (label != 0)
-        {
-          // Start new run
-          d_currentRun.startX = x;
-        }
-
-        d_currentLabel = label;
-      }
-    }
+    void onPixel(uchar label, int x, int y);
 
     std::vector<BlobType> blobTypes() const { return d_blobTypes; }
 
@@ -167,6 +129,8 @@ namespace bold
     std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> const& detectBlobs();
 
     std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> const& getDetectedBlobs() const { return d_blobsDetectedPerLabel; }
+
+    static Blob runSetToBlob(std::set<Run> const& runSet);
 
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
@@ -184,28 +148,76 @@ namespace bold
     // Blobs detected
     std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> d_blobsDetectedPerLabel;
 
-    static Blob runSetToBlob(std::set<Run> const& runSet);
-
-    void addRun(unsigned endX)
-    {
-      assert(endX >= d_currentRun.startX);
-
-      // finish whatever run we were on
-      d_currentRun.endX = endX;
-
-      // TODO do this with pointer arithmetic rather than a map lookup
-      auto it = d_runsPerRowPerLabel.find(d_currentLabel);
-      if (it != d_runsPerRowPerLabel.end())
-      {
-        it->second[d_currentRun.y].push_back(d_currentRun);
-      }
-    }
+    void addRun(unsigned endX);
   };
 
 
   //// Inline members
 
-  // Run
+  //
+  //// -------- BlobDetectPass --------
+  //
+  inline void BlobDetectPass::onImageStarting()
+  {
+    // Clear all persistent data
+    for (auto& pair : d_runsPerRowPerLabel)
+      for (std::vector<bold::Run>& runs : pair.second)
+        runs.clear();
+  }
+
+  inline void BlobDetectPass::onRowStarting(int y)
+  {
+    // TODO might miss last run on last row with this approach -- add
+    // onRowEnding, or copy into onImageComplete
+    if (d_currentLabel != 0)
+    {
+      // finish whatever run we were on
+      addRun(d_imageWidth - 1);
+    }
+    d_currentRun.y = y;
+    d_currentLabel = 0;
+  }
+
+  inline void BlobDetectPass::onPixel(uchar label, int x, int y)
+  {
+    // Check if we have a run boundary
+    if (label != d_currentLabel)
+    {
+      // Check whether this is the end of the current run
+      if (d_currentLabel != 0)
+      {
+        // Finished run
+        assert(x > 0);
+        addRun(x - 1);
+      }
+      
+      // Check whether this is the start of a new run
+      if (label != 0)
+      {
+        // Start new run
+        d_currentRun.startX = x;
+      }
+      
+      d_currentLabel = label;
+    }
+  }
+
+  inline void BlobDetectPass::addRun(unsigned endX)
+  {
+    assert(endX >= d_currentRun.startX);
+    
+    // finish whatever run we were on
+    d_currentRun.endX = endX;
+    
+    // TODO do this with pointer arithmetic rather than a map lookup
+    auto it = d_runsPerRowPerLabel.find(d_currentLabel);
+    if (it != d_runsPerRowPerLabel.end())
+      it->second[d_currentRun.y].push_back(d_currentRun);
+  }
+  
+  //
+  //// -------- Run --------
+  //
   inline Run::Run(unsigned startX, unsigned y)
     : y(y),
       startX(startX),
@@ -235,7 +247,9 @@ namespace bold
       (y == other.y && startX < other.startX);
   }
 
-  // Blob
+  //
+  //// -------- Blob --------
+  //
   inline Blob::Blob()
     : ul(1e6,1e6),
       br(-1,-1),
@@ -244,6 +258,18 @@ namespace bold
       covar(Eigen::Matrix2f::Zero())
   {
   }
+
+  inline Blob::Blob(Eigen::Vector2i const& _ul, Eigen::Vector2i const& _br,
+                    unsigned _area,
+                    Eigen::Vector2f _mean, Eigen::Matrix2f _covar,
+                    std::set<Run> const& _runs)
+    : ul(_ul),
+      br(_br),
+      area(_area),
+      mean(_mean),
+      covar(_covar),
+      runs(_runs)
+  {}
 
   inline cv::Rect Blob::toRect() const
   {
@@ -254,7 +280,7 @@ namespace bold
   inline bool Blob::operator<(Blob const& other) const
   {
     return
-      area > other.area ||
+      area < other.area ||
       (area == other.area && mean.y() < other.mean.y());
   }
 
