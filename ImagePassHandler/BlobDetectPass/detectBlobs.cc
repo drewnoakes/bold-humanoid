@@ -44,6 +44,9 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
     transform(runSets.begin(), runSets.end(),
               inserter(blobSet, blobSet.end()),
               runSetToBlob);
+
+    // TODO: why isn't blobSet a set again? That would auto-sort
+    std::sort(blobSet.begin(), blobSet.end(), greater<Blob>());
   }
 
   return d_blobsDetectedPerLabel;
