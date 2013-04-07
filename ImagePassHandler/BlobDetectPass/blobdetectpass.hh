@@ -22,6 +22,7 @@ namespace bold
   struct Run
   {
     Run(unsigned startX, unsigned y);
+    Run(unsigned startX, unsigned endX, unsigned y);
 
     /** Returns the number of pixels in the run.
      *
@@ -209,6 +210,12 @@ namespace bold
     : y(y),
       startX(startX),
       endX(startX)
+  {}
+
+  inline Run::Run(unsigned startX, unsigned endX, unsigned y)
+    : y(y),
+      startX(startX),
+      endX(endX)
   {}
 
   inline unsigned Run::length() const
