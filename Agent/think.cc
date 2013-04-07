@@ -130,6 +130,25 @@ void Agent::think()
   //
   readSubBoardData();
   t = debugger.timeEvent(t, "Read Sub Board");
+  
+  AgentModel& am = AgentModel::getInstance();
+  am.updatePosture();
+
+  auto neck = am.getLimb("neck");
+  auto neckHeadJoint = neck->joints[0];
+  auto head = am.getLimb("head");
+  auto cameraJoint = head->joints[0];
+  auto camera = am.getLimb("camera");
+  auto lFoot = am.getLimb("lFoot");
+
+  cout << "---------------" << endl;
+  cout << "neckHeadJoint: " << neckHeadJoint->angle << endl << neckHeadJoint->transform.translation().transpose() << endl;
+  cout << "head:" << endl << head->transform.translation().transpose() << endl;
+  cout << "cameraJoint:" << endl << cameraJoint->transform.translation().transpose() << endl;
+  cout << "camera:" << endl << camera->transform.matrix() << endl;
+  cout << "foot: " << endl << lFoot->transform.matrix() << endl;
+  auto cameraToLFoot = lFoot->transform.inverse() * camera->transform;
+  cout << "cam2foot: " << endl << cameraToLFoot.translation().transpose() << endl;
 
   //
   // Update websocket data
