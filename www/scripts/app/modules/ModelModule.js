@@ -80,11 +80,15 @@ define(
             for (var i = 0; i < 20; i++)
             {
                 var hinge = this.hinges[i + 1];
-                if (hinge.rotation !== angles[i])
-                {
-                    hinge.rotation[hinge.rotationAxis] = angles[i];
+		if (hinge.rotationOrigin) { angles[i] += hinge.rotationOrigin; }
+		//console.debug([i, angles[i], hinge.rotationAxis]);
+		var rotation = hinge.rotationAxis.clone();
+		rotation.multiplyScalar(angles[i]);
+		if (!hinge.rotation.equals(rotation))
+		{
+                    hinge.rotation = rotation;
                     hasChange = true;
-                }
+		}
             }
 
             if (hasChange)
@@ -220,7 +224,9 @@ define(
                         childObject.position.x = childNode.offset.x || 0;
                         childObject.position.y = childNode.offset.y || 0;
                     }
+		    console.debug(childNode.rotationAxis);
                     childObject.rotationAxis = childNode.rotationAxis;
+		    childObject.rotationOrigin = childNode.rotationOrigin;
                     hinges[childNode.jointId] = childObject;
                     parentObject.add(childObject);
                     processNode(childNode, childObject);
