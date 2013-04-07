@@ -141,6 +141,7 @@ void Agent::think()
   auto camera = am.getLimb("camera");
   auto lFoot = am.getLimb("lFoot");
 
+  /*
   cout << "---------------" << endl;
   cout << "neckHeadJoint: " << neckHeadJoint->angle << endl << neckHeadJoint->transform.translation().transpose() << endl;
   cout << "head:" << endl << head->transform.translation().transpose() << endl;
@@ -149,6 +150,20 @@ void Agent::think()
   cout << "foot: " << endl << lFoot->transform.matrix() << endl;
   auto cameraToLFoot = lFoot->transform.inverse() * camera->transform;
   cout << "cam2foot: " << endl << cameraToLFoot.translation().transpose() << endl;
+  */
+
+  if (visualCortex.isBallVisible())
+  {
+    auto ballObs = visualCortex.ballObservation();
+    cout << "Ball observed at pixel: " << ballObs.pos.transpose() << endl;
+
+    double torsoHeight = lFoot->transform.inverse().translation().y();
+    cout << "torsoHeight: " << torsoHeight << endl;
+    Spatialiser spatialiser(am.getCameraModel());
+    auto gp = spatialiser.findGroundPointForPixel(ballObs.pos.cast<int>(), torsoHeight, camera->transform.inverse());
+    cout << "ground point: " << gp << endl;
+  }
+
 
   //
   // Update websocket data
