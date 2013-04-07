@@ -24826,7 +24826,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 	};
 
-	// Map three.max.js constants to WebGL constants
+	// Map three.js constants to WebGL constants
 
 	function paramThreeToGL ( p ) {
 
@@ -26453,7 +26453,7 @@ THREE.SceneUtils = {
  * @author zz85 / http://www.lab4games.net/zz85/blog
  * @author alteredq / http://alteredqualia.com/
  *
- * For Text operations in three.max.js (See TextGeometry)
+ * For Text operations in three.js (See TextGeometry)
  *
  * It uses techniques used in:
  *
@@ -31989,7 +31989,7 @@ THREE.SphereGeometry.prototype = Object.create( THREE.Geometry.prototype );
  * @author zz85 / http://www.lab4games.net/zz85/blog
  * @author alteredq / http://alteredqualia.com/
  *
- * For creating 3D text geometry in three.max.js
+ * For creating 3D text geometry in three.js
  *
  * Text = 3D Text
  *

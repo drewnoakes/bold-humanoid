@@ -3,9 +3,10 @@
  */
 define(
     [
+        'scripts/app/FieldLinePlotter',
         'scripts/app/Constants'
     ],
-    function(Constants)
+    function(FieldLinePlotter, Constants)
     {
         'use strict';
 
@@ -91,104 +92,19 @@ define(
 
         FieldMapModule.prototype.draw = function()
         {
-            var context = this.canvas.getContext('2d');
+            var options = {
+                    scale: this.scale,
+                    goalStrokeStyle: 'yellow',
+                    groundFillStyle: '#008800',
+                    lineStrokeStyle: '#ffffff',
+                    fieldCenter: { x: this.fieldCenterX, y: this.fieldCenterY }
+                },
+                context = this.canvas.getContext('2d');
 
-            context.save();
-
-            context.fillStyle = '#008800';
-            context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-            context.translate(this.fieldCenterX, this.fieldCenterY);
-
-            // prepare to draw field lines
-            context.lineWidth = Constants.lineWidth * this.scale;
-            context.strokeStyle = '#ffffff';
-
-            // center circle
-            context.beginPath();
-            context.arc(0, 0, this.scale * Constants.circleDiameter/2, 0, Math.PI*2, true);
-
-            var halfCrossLengthScaled = this.scale * Constants.penaltyLineLength / 2;
-            var penaltyX = this.scale * (Constants.fieldX/2 - Constants.penaltyMarkDistance);
-            var penaltyInnerX = penaltyX - halfCrossLengthScaled;
-            var penaltyOuterX = penaltyX + halfCrossLengthScaled;
-
-            // center cross mark
-            context.moveTo(-halfCrossLengthScaled, 0);
-            context.lineTo(+halfCrossLengthScaled, 0);
-
-            // left penalty mark
-            context.moveTo(-penaltyInnerX, 0);
-            context.lineTo(-penaltyOuterX, 0);
-            context.moveTo(-penaltyX, halfCrossLengthScaled);
-            context.lineTo(-penaltyX, -halfCrossLengthScaled);
-
-            // right penalty mark
-            context.moveTo(penaltyInnerX, 0);
-            context.lineTo(penaltyOuterX, 0);
-            context.moveTo(penaltyX, halfCrossLengthScaled);
-            context.lineTo(penaltyX, -halfCrossLengthScaled);
-
-            // outer square
-            var x = this.scale * Constants.fieldX/2,
-                y = this.scale * Constants.fieldY/2;
-            context.strokeRect(-x, -y, this.scale * Constants.fieldX, this.scale * Constants.fieldY);
-
-            context.moveTo(0, y);
-            context.lineTo(0, -y);
-
-            var goalAreaY = this.scale * Constants.goalAreaY / 2;
-
-            // left goal area
-            context.moveTo(-x, -goalAreaY);
-            context.lineTo(-x + this.scale*Constants.goalAreaX, -goalAreaY);
-            context.lineTo(-x + this.scale*Constants.goalAreaX, goalAreaY);
-            context.lineTo(-x, goalAreaY);
-
-            // right goal area
-            context.moveTo(x, -goalAreaY);
-            context.lineTo(x - this.scale*Constants.goalAreaX, -goalAreaY);
-            context.lineTo(x - this.scale*Constants.goalAreaX, goalAreaY);
-            context.lineTo(x, goalAreaY);
-
-            context.stroke();
-
-            var goalY = this.scale * Constants.goalY / 2;
-
-            // TODO actually the position of these circles is WRONG! as is many of the lines -- the insides should be used, considering line width
-
-            context.strokeStyle = 'yellow';
-
-            context.beginPath();
-            context.arc(+x, +goalY, this.scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
-            context.stroke();
-            context.beginPath();
-            context.arc(+x, -goalY, this.scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
-            context.stroke();
-            context.beginPath();
-            context.arc(-x, +goalY, this.scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
-            context.stroke();
-            context.beginPath();
-            context.arc(-x, -goalY, this.scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
-            context.stroke();
-
-            context.beginPath();
-
-            // left goal
-            context.moveTo(-x, -goalY);
-            context.lineTo(-x - this.scale*Constants.goalX, -goalY);
-            context.lineTo(-x - this.scale*Constants.goalX, goalY);
-            context.lineTo(-x, goalY);
-
-            // right goal
-            context.moveTo(x, -goalY);
-            context.lineTo(x + this.scale*Constants.goalX, -goalY);
-            context.lineTo(x + this.scale*Constants.goalX, goalY);
-            context.lineTo(x, goalY);
-
-            context.stroke();
-
-            context.restore();
+            FieldLinePlotter.start(context, options);
+            FieldLinePlotter.drawLines(context, options);
+            FieldLinePlotter.drawGoals(context, options);
+            FieldLinePlotter.end(context);
         };
 
         return FieldMapModule;
