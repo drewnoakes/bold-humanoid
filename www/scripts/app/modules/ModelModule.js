@@ -17,9 +17,10 @@ define(
         {
             // camera variables
             this.useThirdPerson = true;
-            this.cameraDistance = 0.4;
-            this.cameraTheta = -Math.PI/4;
-            this.cameraPhi = Math.PI/6;
+
+            this.cameraDistance = 3.375771604938272;
+            this.cameraTheta = 1.316637061435917;
+            this.cameraPhi = 0.2553981633974482;
 
             this.$element = $('<div></div>');
             this.element = this.$element.get(0);
@@ -60,6 +61,8 @@ define(
 
             var root = this.buildBody(Constants.bodyStructure, function()
             {
+                root.position.y = 0.341;
+                root.rotation.y = Math.PI/2;
                 self.scene.add(root);
                 self.render();
             });
@@ -215,11 +218,10 @@ define(
                 bumpScale: 0.025
             } );
 
-            var groundPlaneY = -0.341,
+            var groundPlaneY = 0,
                 groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(groundSizeX, groundSizeY), groundMaterial);
-            groundMesh.position.y = groundPlaneY;
+            groundMesh.position.set(0,0,0);
             groundMesh.rotation.x = -Math.PI/2;
-            groundMesh.rotation.z = Math.PI/2;
             groundMesh.receiveShadow = true;
             this.scene.add(groundMesh);
 
@@ -236,10 +238,45 @@ define(
             var ballRadius = 0.037,
                 ballSegments = 20,
                 ballMesh = new THREE.Mesh(new THREE.SphereGeometry(ballRadius, ballSegments, ballSegments), ballMaterial);
-            ballMesh.position.set(0.05, groundPlaneY + ballRadius, 0.1);
+            ballMesh.position.set(0.1, groundPlaneY + ballRadius, 0.05);
             ballMesh.castShadow = true;
             ballMesh.receiveShadow = false;
             this.scene.add(ballMesh);
+
+            //
+            // Goal posts
+            //
+            var goalMaterial = new THREE.MeshLambertMaterial({ color: 0xfcd116, ambient: 0x555555 }),
+                goalRadius = Constants.goalPostDiameter / 2,
+                goalPostHeight = Constants.goalZ + goalRadius,
+                addGoalPost = function(scaleX, scaleY)
+                {
+                    var x = (Constants.fieldX / 2 + goalRadius) * scaleX,
+                        y = (Constants.goalY / 2 + goalRadius) * scaleY,
+                        cylinder = new THREE.Mesh(new THREE.CylinderGeometry(goalRadius, goalRadius, goalPostHeight, 36, 36, false), goalMaterial),
+                        sphere = new THREE.Mesh(new THREE.SphereGeometry(goalRadius, 36, 36), goalMaterial);
+                    cylinder.position.set(x, goalPostHeight/2, y);
+                    sphere.position.set(x, goalPostHeight, y);
+                    this.scene.add(cylinder);
+                    this.scene.add(sphere);
+                }.bind(this),
+                addGoalBar = function(scaleX)
+                {
+                    var x = (Constants.fieldX / 2 + goalRadius) * scaleX,
+                        barLength = Constants.goalY + goalRadius * 2,
+                        barHeight = Constants.goalZ + goalRadius,
+                        bar = new THREE.Mesh(new THREE.CylinderGeometry(goalRadius, goalRadius, barLength, 36, 36, false), goalMaterial);
+                    bar.rotation.x = Math.PI / 2;
+                    bar.position.set(x, barHeight, 0);
+                    this.scene.add(bar);
+                }.bind(this);
+
+            addGoalPost(1,1);
+            addGoalPost(-1,1);
+            addGoalPost(1,-1);
+            addGoalPost(-1,-1);
+            addGoalBar(1);
+            addGoalBar(-1);
 
             //
             // Render & Camera
@@ -368,7 +405,7 @@ define(
                 this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
                 this.camera.position.y = this.cameraDistance * Math.sin(this.cameraPhi);
                 this.camera.position.z = this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
-                this.camera.lookAt(new THREE.Vector3(0, -0.1, 0));
+                this.camera.lookAt(new THREE.Vector3(0, 0.2, 0));
             } else {
                 // First person -- position camera in player's head
                 var headMatrix = this.objectByName['head'].matrixWorld;
