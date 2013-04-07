@@ -24,6 +24,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 }
 
 #include "AgentModelTests.hh"
+#include "BlobTests.hh"
 #include "Bounds2iTests.hh"
 #include "CameraModelTests.hh"
 #include "ColourTests.hh"
