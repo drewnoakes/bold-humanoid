@@ -22,7 +22,7 @@ Blob BlobDetectPass::runSetToBlob(set<Run> const& runSet)
     unsigned length = run.length();
 
     b.area += length;
-    b.mean.x() += length * ((run.endX + run.startX) / 2);
+    b.mean.x() += length * ((run.endX + run.startX) / 2.0);
     b.mean.y() += length * y;
 
     // covar(0,0) = avg(x^2) - avg(x)^2
