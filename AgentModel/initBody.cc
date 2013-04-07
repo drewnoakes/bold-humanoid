@@ -36,11 +36,14 @@ void AgentModel::initBody()
 
   auto headCameraJoint = make_shared<Joint>();
   headCameraJoint->id = -1;
-  // TODO what to do about the camera's orientation
-  headCameraJoint->axis = Vector3d(1, 0, 0);
+  // Set angle offset of head hear. If this needs to be set for more
+  // stuff, probably best to add another joint before this one and set
+  // it there
+  headCameraJoint->axis = Vector3d(-1, 0, 0);
+  headCameraJoint->angle = -0.7854;
   headCameraJoint->anchors.first = Vector3d(0, 0, 0);
-  headCameraJoint->anchors.second = Vector3d(0, 0, 0);
-  neck->joints.push_back(headCameraJoint);
+  headCameraJoint->anchors.second = Vector3d(0, -0.0344, -0.0332);
+  head->joints.push_back(headCameraJoint);
 
   auto camera = make_shared<Limb>();
   camera->name = "camera";
@@ -64,7 +67,7 @@ void AgentModel::initBody()
   ltorsoShoulderJoint->bodyPart = lshoulderShoulderJoint;
 
   auto lupperArm = make_shared<Limb>();
-  camera->name = "lUpperArm";
+  lupperArm->name = "lUpperArm";
   lshoulderShoulderJoint->bodyPart = lupperArm;
   d_limbs[lupperArm->name] = lupperArm;
 
@@ -76,7 +79,7 @@ void AgentModel::initBody()
   lupperArm->joints.push_back(lupperLowerArmJoint);
 
   auto llowerArm = make_shared<Limb>();
-  camera->name = "lLowerArm";
+  llowerArm->name = "lLowerArm";
   lupperLowerArmJoint->bodyPart = llowerArm;
   d_limbs[llowerArm->name] = llowerArm;
 
