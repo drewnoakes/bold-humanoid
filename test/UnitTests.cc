@@ -13,6 +13,11 @@ std::ostream& operator<<(std::ostream& stream, Vector2i const& v)
   return stream << "(" << v.x() << ", " << v.y() << ")";
 }
 
+std::ostream& operator<<(std::ostream& stream, Vector2f const& v)
+{
+  return stream << "(" << v.x() << ", " << v.y() << ")";
+}
+
 std::ostream& operator<<(std::ostream& stream, Vector3d const& v)
 {
   return stream << "(" << v.x() << ", " << v.y() << ", " << v.z() << ")";
