@@ -41,7 +41,10 @@ namespace bold
 
     void updatePosture();
 
-    std::shared_ptr<Limb const> getLeftFoot() const { return d_limbLeftFoot; }
+    std::shared_ptr<Limb const> getLimb(std::string const& name)
+    {
+      return d_limbs[name];
+    }
 
     void notifyCycleStarting()
     {
@@ -62,7 +65,7 @@ namespace bold
     unsigned long long d_cycleNumber;
     CameraModel* d_cameraModel;
     std::shared_ptr<Limb> d_torso;
-    std::shared_ptr<Limb> d_limbLeftFoot;
+    std::map<std::string, std::shared_ptr<Limb>> d_limbs;
 
     void initBody();
 
