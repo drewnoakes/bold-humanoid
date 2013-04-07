@@ -34,7 +34,7 @@ namespace bold
       double rangeVertical = 46/180.0 * M_PI;
       double rangeHorizontal = 58/180.0 * M_PI;;
 
-      d_cameraModel = new CameraModel(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
+      d_cameraModel = std::make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
 
       initBody();
     }
@@ -53,7 +53,7 @@ namespace bold
 
     unsigned long long getCycleNumber() const { return d_cycleNumber; }
 
-    CameraModel& getCameraModel() const { return *d_cameraModel; }
+    std::shared_ptr<CameraModel> getCameraModel() const { return d_cameraModel; }
 
     static AgentModel& getInstance()
     {
@@ -63,7 +63,7 @@ namespace bold
 
   private:
     unsigned long long d_cycleNumber;
-    CameraModel* d_cameraModel;
+    std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<Limb> d_torso;
     std::map<std::string, std::shared_ptr<Limb>> d_limbs;
 

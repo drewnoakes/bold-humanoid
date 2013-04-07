@@ -73,7 +73,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   if (streamer->shouldDrawExpectedLines())
   {
     auto fieldLines = WorldModel::getInstance().getFieldLines();
-    Projector projector = AgentModel::getInstance().getCameraModel().getProjector();
+    Projector projector = AgentModel::getInstance().getCameraModel()->getProjector();
 
     double torsoX = 1.0;
     double torsoY = -1.0;
