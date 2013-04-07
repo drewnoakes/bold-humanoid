@@ -143,6 +143,7 @@ ${JOYSTICKDIR}/joystick.cc
 #
 set(INTERNAL_HEADERS
 ./Agent/agent.ih
+./AgentModel/agentmodel.ih
 ./Camera/camera.ih
 ./Colour/colour.ih
 ./Control/control.ih
