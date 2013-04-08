@@ -1,0 +1,4 @@
+#include "fsmoption.hh"
+
+using namespace bold;
+using namespace std;
