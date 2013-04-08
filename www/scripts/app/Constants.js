@@ -26,6 +26,8 @@ define(
             ballDiameter: 0.067 // according to Wikipedia
         };
 
+        Constants.ballRadius = Constants.ballDiameter / 2;
+
         Constants.webSocketPort = 8080;
 
         Constants.jointNames = {
@@ -105,7 +107,7 @@ define(
         Constants.cameraOffsetInHead = new THREE.Vector3(0, 0.0329074, 0.0359816);
 
         Constants.bodyStructure = {
-            name: 'body',
+            name: 'torso',
             geometryPath: 'models/darwin/darwin-body.json',
             children: [
                 {

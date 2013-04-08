@@ -18,9 +18,9 @@ define(
             // camera variables
             this.useThirdPerson = true;
             this.cameraDistance = 0.55;
-            this.cameraTheta = -5.27;
-            this.cameraPhi = 0.68;
-            this.lookAtY = 0.22;
+            this.cameraTheta = -5.22;
+            this.cameraPhi = 0.34;
+            this.lookAtZ = 0.24;
 
             this.$element = $('<div></div>');
             this.element = this.$element.get(0);
@@ -61,8 +61,9 @@ define(
 
             var root = this.buildBody(Constants.bodyStructure, function()
             {
-                root.position.y = 0.341;
+                root.position.z = 0.341;
                 root.rotation.y = Math.PI/2;
+                root.rotation.z = Math.PI/2;
                 self.scene.add(root);
                 self.render();
             });
@@ -145,21 +146,11 @@ define(
             };
 
             //
-            // Lighting
+            // Global directional light
             //
-            var light = new THREE.DirectionalLight(0xffffff);
-            light.position.set(1, 2, 2);
+            var light = new THREE.DirectionalLight(0x505550);
+            light.position.set(-1, -1, 0).normalize();
             light.target.position.set(0, 0, 0);
-            light.castShadow = true;
-            light.shadowDarkness = 0.5;
-//            light.shadowCameraVisible = true; // useful for debugging
-            light.shadowCameraNear = 2;
-            light.shadowCameraFar = 6;
-            var shadowBoxSize = 0.4;
-            light.shadowCameraLeft = -shadowBoxSize;
-            light.shadowCameraRight = shadowBoxSize;
-            light.shadowCameraTop = shadowBoxSize;
-            light.shadowCameraBottom = -shadowBoxSize;
             this.scene.add(light);
 
             //
@@ -218,10 +209,7 @@ define(
                 bumpScale: 0.025
             } );
 
-            var groundPlaneY = 0,
-                groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(groundSizeX, groundSizeY), groundMaterial);
-            groundMesh.position.set(0,0,0);
-            groundMesh.rotation.x = -Math.PI/2;
+            var groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(groundSizeX, groundSizeY), groundMaterial);
             groundMesh.receiveShadow = true;
             this.scene.add(groundMesh);
 
@@ -233,15 +221,15 @@ define(
                 map: THREE.ImageUtils.loadTexture("images/ball-colour-map.png", null, onTextureLoaded),
                 bumpMap: THREE.ImageUtils.loadTexture("images/ball-bump-map.jpg", null, onTextureLoaded),
                 bumpScale: 0.0075
-            } );
+            });
 
-            var ballRadius = 0.037,
-                ballSegments = 20,
-                ballMesh = new THREE.Mesh(new THREE.SphereGeometry(ballRadius, ballSegments, ballSegments), ballMaterial);
-            ballMesh.position.set(0.1, groundPlaneY + ballRadius, 0.05);
+            var ballSegments = 20,
+                ballMesh = new THREE.Mesh(new THREE.SphereGeometry(Constants.ballRadius, ballSegments, ballSegments), ballMaterial);
             ballMesh.castShadow = true;
             ballMesh.receiveShadow = false;
             this.scene.add(ballMesh);
+            this.ballMesh = ballMesh;
+            this.ballMesh.position.set(0.1, 0.05, Constants.ballRadius);
 
             //
             // Goal posts
@@ -255,8 +243,9 @@ define(
                         y = (Constants.goalY / 2 + goalRadius) * scaleY,
                         cylinder = new THREE.Mesh(new THREE.CylinderGeometry(goalRadius, goalRadius, goalPostHeight, 36, 36, false), goalMaterial),
                         sphere = new THREE.Mesh(new THREE.SphereGeometry(goalRadius, 36, 36), goalMaterial);
-                    cylinder.position.set(x, goalPostHeight/2, y);
-                    sphere.position.set(x, goalPostHeight, y);
+                    cylinder.rotation.x = Math.PI/2;
+                    cylinder.position.set(x, y, goalPostHeight/2);
+                    sphere.position.set(x, y, goalPostHeight);
                     this.scene.add(cylinder);
                     this.scene.add(sphere);
                 }.bind(this),
@@ -266,8 +255,7 @@ define(
                         barLength = Constants.goalY + goalRadius * 2,
                         barHeight = Constants.goalZ + goalRadius,
                         bar = new THREE.Mesh(new THREE.CylinderGeometry(goalRadius, goalRadius, barLength, 36, 36, false), goalMaterial);
-                    bar.rotation.x = Math.PI / 2;
-                    bar.position.set(x, barHeight, 0);
+                    bar.position.set(x, 0, barHeight);
                     this.scene.add(bar);
                 }.bind(this);
 
@@ -305,6 +293,30 @@ define(
         {
             var geometriesToLoad = 0;
 
+            var callbackForBodyPart = {
+                torso: function(object) {
+                    //
+                    // Player spotlight
+                    //
+                    var light = new THREE.DirectionalLight(0xffffff),
+                        dist = 4,
+                        unit = Math.sqrt(dist*dist / 3),
+                        shadowBoxSize = 0.4;
+                    light.position.set(unit, unit, unit);
+                    light.target.position.set(0, 0, 0);
+                    light.castShadow = true;
+                    light.shadowDarkness = 0.3;
+                    //light.shadowCameraVisible = true; // useful for debugging
+                    light.shadowCameraNear = 2;
+                    light.shadowCameraFar = 6;
+                    light.shadowCameraLeft = -shadowBoxSize;
+                    light.shadowCameraRight = shadowBoxSize;
+                    light.shadowCameraTop = shadowBoxSize;
+                    light.shadowCameraBottom = -shadowBoxSize;
+                    object.add(light);
+                }
+            };
+
             var processNode = function(node, parentObject)
             {
                 if (node.geometryPath) {
@@ -315,13 +327,20 @@ define(
                         geometry.computeFaceNormals();
 //                        geometry.computeVertexNormals();
                         GeometryUtil.computeVertexNormals(geometry, node.creaseAngle || 0.2);
+
                         var object = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
                         object.castShadow = true;
                         object.receiveShadow  = false;
+                        parentObject.add(object);
+
                         if (node.name) {
                             this.objectByName[node.name] = object;
                         }
-                        parentObject.add(object);
+
+                        if (callbackForBodyPart[node.name]) {
+                            callbackForBodyPart[node.name](object);
+                        }
+
                         geometriesToLoad--;
                         if (geometriesToLoad === 0) {
                             loadedCallback();
@@ -382,8 +401,7 @@ define(
                 event.preventDefault();
                 onMouseDownPosition.x = event.clientX - onMouseDownPosition.x;
                 onMouseDownPosition.y = event.clientY - onMouseDownPosition.y;
-
-                container.removeEventListener('mouseup', onMouseUp, false);
+                window.removeEventListener('mouseup', onMouseUp, false);
                 window.removeEventListener('mousemove', onMouseMove, false);
             };
 
@@ -394,8 +412,7 @@ define(
                 onMouseDownPhi = this.cameraPhi;
                 onMouseDownPosition.x = event.clientX;
                 onMouseDownPosition.y = event.clientY;
-
-                container.addEventListener('mouseup', onMouseUp, false);
+                window.addEventListener('mouseup', onMouseUp, false);
                 window.addEventListener('mousemove', onMouseMove, false);
             }.bind(this), false);
         };
@@ -404,10 +421,13 @@ define(
         {
             if (this.useThirdPerson) {
                 // Third person -- position camera outside player
+                var torsoPosition = new THREE.Vector3(0, 0, this.lookAtZ);
                 this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
-                this.camera.position.y = this.cameraDistance * Math.sin(this.cameraPhi);
-                this.camera.position.z = this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
-                this.camera.lookAt(new THREE.Vector3(0, this.lookAtY, 0));
+                this.camera.position.z = this.cameraDistance * Math.sin(this.cameraPhi);
+                this.camera.position.y = -this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
+                this.camera.position.add(torsoPosition);
+                this.camera.up.set(0, 0, 1);
+                this.camera.lookAt(torsoPosition);
             } else {
                 // First person -- position camera in player's head
                 var headMatrix = this.objectByName['head'].matrixWorld;
