@@ -126,6 +126,7 @@ set(BOLDHUMANOID_SOURCES
 ./Option/ActionOption/hasTerminated.cc
 ./Option/ActionOption/runPolicy.cc
 ./Option/FSMOption/runPolicy.cc
+./Option/LookAround/runPolicy.cc
 ./PixelFilterChain/applyFilters.cc
 ./PixelLabel/fromConfig.cc
 ./PixelLabel/pixellabel.cc
