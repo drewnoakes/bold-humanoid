@@ -2,37 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 
 set(TEST_SOURCES
   ./UnitTests.cc
-  ../AgentModel/initBody.cc
-  ../AgentModel/updatePosture.cc
-  ../CameraModel/directionForPixel.cc
-  ../Colour/bgr2hsv.cc
-  ../Colour/hsv2bgr.cc
-  ../Colour/hsvRange.cc
-  ../Colour/operator_ins.cc
-  ../Colour/YCbCr.cc
-  ../Control/create.cc
-  ../Control/handleRequest.cc
-  ../Control/staticfields.cc
-  ../Control/writeState.cc
-  ../geometry/Bounds2i.cc
-  ../geometry/LineSegment2i.cc
-  ../HoughLineAccumulator/houghlineaccumulator.cc
-  ../HoughLineExtractor/findLines.cc
-  ../HoughLineExtractor/findMaxLine.cc
-  ../ImageLabeller/ImageLabeller.cc
-  ../ImagePassHandler/BlobDetectPass/detectBlobs.cc
-  ../ImagePassHandler/BlobDetectPass/runSetToBlob.cc
-  ../LineFinder/RandomPairLineFinder/findLineSegments.cc
-  ../LineFinder/MaskWalkLineFinder/initialise.cc
-  ../LineFinder/MaskWalkLineFinder/findLineSegments.cc
-  ../LineFinder/MaskWalkLineFinder/MaskWalkLineFinder.cc
-  ../LineFinder/MaskWalkLineFinder/rebuild.cc
-  ../LUTBuilder/buildLookUpTable.cc
-  ../Math/math.cc
-  ../PixelFilterChain/applyFilters.cc
-  ../PixelLabel/pixellabel.cc
-  ../Spatialiser/findGroundPointForPixel.cc
-  )
+  $<TARGET_OBJECTS:boldhumanoid_objects>
+)
 
 #
 ## Target for making google-test

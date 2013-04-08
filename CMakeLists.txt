@@ -48,7 +48,6 @@ ExternalProject_Add(libwebsockets_lib
 # All boldhumanoid sources
 #
 set(BOLDHUMANOID_SOURCES
-./main.cc
 ./Agent/Agent.cc
 ./Agent/approachBall.cc
 ./Agent/circleBall.cc
@@ -177,10 +176,18 @@ set(BOLDHUMANOID_LINK_DIRS ${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
 link_directories(${BOLDHUMANOID_LINK_DIRS})
 
 #
+## Reusable object files target
+#
+add_library(boldhumanoid_objects OBJECT
+  ${BOLDHUMANOID_SOURCES}
+)
+
+#
 ## Main executable
 #
 add_executable(boldhumanoid
-  ${BOLDHUMANOID_SOURCES}
+  ./main.cc
+  $<TARGET_OBJECTS:boldhumanoid_objects>
 )
 
 #
@@ -194,13 +201,14 @@ target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 # TODO: fix things so we can use Eigen vectorization
 #
 set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare -Wno-unused-local-typedefs")
+set_target_properties(boldhumanoid_objects PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 
 #
 ## Targets for creating precompiled internal headers
 #
 foreach(ih ${INTERNAL_HEADERS})
-  add_pcih(boldhumanoid ${ih})
+  add_pcih(boldhumanoid_objects ${ih})
 endforeach(ih)
 
 
