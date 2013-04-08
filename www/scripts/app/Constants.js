@@ -23,7 +23,8 @@ define(
             lineWidth:0.05,
             penaltyLineLength: 0.1,
             outerMarginMinimum: 0.7,
-            ballDiameter: 0.067 // according to Wikipedia
+            ballDiameter: 0.067, // according to Wikipedia
+            footHeight: 0.0335
         };
 
         Constants.ballRadius = Constants.ballDiameter / 2;
