@@ -278,6 +278,8 @@ define(
             addGoalBar(1);
             addGoalBar(-1);
 
+//            this.scene.add(new THREE.AxisHelper(1)); // [R,G,B] === (x,y,z)
+
             //
             // Render & Camera
             //
