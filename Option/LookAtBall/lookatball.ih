@@ -1,0 +1,9 @@
+#include "lookatball.hh"
+
+#include "../../VisualCortex/visualcortex.hh"
+#include <LinuxDARwIn.h>
+#include <cmath>
+
+using namespace bold;
+using namespace std;
+using namespace Eigen;
