@@ -17,10 +17,10 @@ define(
         {
             // camera variables
             this.useThirdPerson = true;
-
-            this.cameraDistance = 3.375771604938272;
-            this.cameraTheta = 1.316637061435917;
-            this.cameraPhi = 0.2553981633974482;
+            this.cameraDistance = 0.55;
+            this.cameraTheta = -5.27;
+            this.cameraPhi = 0.68;
+            this.lookAtY = 0.22;
 
             this.$element = $('<div></div>');
             this.element = this.$element.get(0);
@@ -405,7 +405,7 @@ define(
                 this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
                 this.camera.position.y = this.cameraDistance * Math.sin(this.cameraPhi);
                 this.camera.position.z = this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
-                this.camera.lookAt(new THREE.Vector3(0, 0.2, 0));
+                this.camera.lookAt(new THREE.Vector3(0, this.lookAtY, 0));
             } else {
                 // First person -- position camera in player's head
                 var headMatrix = this.objectByName['head'].matrixWorld;
