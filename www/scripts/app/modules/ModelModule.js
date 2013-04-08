@@ -356,48 +356,48 @@ define(
         {
             var onMouseDownPosition = new THREE.Vector2(),
                 onMouseDownTheta = this.cameraTheta,
-                onMouseDownPhi = this.cameraPhi,
-                isMouseDown = false,
-                self = this;
+                onMouseDownPhi = this.cameraPhi;
 
             container.addEventListener('mousewheel', function(event)
             {
                 event.preventDefault();
-                self.cameraDistance *= 1 - (event.wheelDeltaY/720);
-                self.cameraDistance = Math.max(0.1, Math.min(5, self.cameraDistance));
-                self.updateCameraPosition();
-                self.render();
-            });
+                this.cameraDistance *= 1 - (event.wheelDeltaY/720);
+                this.cameraDistance = Math.max(0.1, Math.min(5, this.cameraDistance));
+                this.updateCameraPosition();
+                this.render();
+            }.bind(this), false);
+
+            var onMouseMove = function(event)
+            {
+                event.preventDefault();
+                this.cameraTheta = -((event.clientX - onMouseDownPosition.x) * 0.01) + onMouseDownTheta;
+                this.cameraPhi = ((event.clientY - onMouseDownPosition.y) * 0.01) + onMouseDownPhi;
+                this.cameraPhi = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, this.cameraPhi));
+                this.updateCameraPosition();
+                this.render();
+            }.bind(this);
+
+            var onMouseUp = function (event)
+            {
+                event.preventDefault();
+                onMouseDownPosition.x = event.clientX - onMouseDownPosition.x;
+                onMouseDownPosition.y = event.clientY - onMouseDownPosition.y;
+
+                container.removeEventListener('mouseup', onMouseUp, false);
+                window.removeEventListener('mousemove', onMouseMove, false);
+            };
 
             container.addEventListener('mousedown', function(event)
             {
                 event.preventDefault();
-                isMouseDown = true;
-                onMouseDownTheta = self.cameraTheta;
-                onMouseDownPhi = self.cameraPhi;
+                onMouseDownTheta = this.cameraTheta;
+                onMouseDownPhi = this.cameraPhi;
                 onMouseDownPosition.x = event.clientX;
                 onMouseDownPosition.y = event.clientY;
-            });
 
-            container.addEventListener('mousemove', function(event)
-            {
-                event.preventDefault();
-                if (isMouseDown) {
-                    self.cameraTheta = -((event.clientX - onMouseDownPosition.x) * 0.01) + onMouseDownTheta;
-                    self.cameraPhi = ((event.clientY - onMouseDownPosition.y) * 0.01) + onMouseDownPhi;
-                    self.cameraPhi = Math.min(Math.PI/2, Math.max(-Math.PI/2, self.cameraPhi));
-                    self.updateCameraPosition();
-                    self.render();
-                }
-            });
-
-            container.addEventListener('mouseup', function(event)
-            {
-                event.preventDefault();
-                isMouseDown = false;
-                onMouseDownPosition.x = event.clientX - onMouseDownPosition.x;
-                onMouseDownPosition.y = event.clientY - onMouseDownPosition.y;
-            });
+                container.addEventListener('mouseup', onMouseUp, false);
+                window.addEventListener('mousemove', onMouseMove, false);
+            }.bind(this), false);
         };
 
         ModelModule.prototype.updateCameraPosition = function()
