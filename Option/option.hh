@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 namespace bold
 {
@@ -25,8 +26,12 @@ namespace bold
    */
   class Option {
   public:
-    Option() {}
+    Option(std::string const& id) : d_id(id) {}
     virtual ~Option() {}
+
+    /** Get this option's ID
+     */
+    std::string getID() const { return d_id; }
 
     /** Check whether this option is currently available
      *
@@ -52,6 +57,8 @@ namespace bold
     virtual OptionPtr runPolicy() { return OptionPtr(0); }
 
   private:
+    
+    std::string d_id;
   };
 
 }

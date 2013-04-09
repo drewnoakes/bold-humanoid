@@ -21,6 +21,12 @@ namespace bold
 
     struct State
     {
+      State(std::string const& n, bool f, OptionPtr o)
+	: name(n),
+	  final(f),
+	  option(o)
+      {}
+
       /// State name
       std::string name;
       /// Whether this state is a final state
@@ -40,6 +46,8 @@ namespace bold
     };
 
   public:
+    FSMOption(std::string const& id) : Option(id) {}
+
     virtual bool isAvailable();
 
     virtual double hasTerminated();

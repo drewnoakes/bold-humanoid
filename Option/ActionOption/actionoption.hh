@@ -9,7 +9,7 @@ namespace bold
   class ActionOption : public Option
   {
   public:
-    ActionOption(std::string const& actionName);
+    ActionOption(std::string const& id, std::string const& actionName);
 
     virtual double hasTerminated();
 
@@ -20,8 +20,9 @@ namespace bold
     bool d_started;
   };
 
-  inline ActionOption::ActionOption(std::string const& actionName)
-    : d_actionName(actionName),
+  inline ActionOption::ActionOption(std::string const& id, std::string const& actionName)
+    : Option(id),
+      d_actionName(actionName),
       d_started(false)
   {}
 }

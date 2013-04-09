@@ -7,6 +7,9 @@ namespace bold
 {
   class LookAround : public Option
   {
+  public:
+    LookAround(std::string const& id) : Option(id) {}
+
     virtual OptionPtr runPolicy();
   };
 
