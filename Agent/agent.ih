@@ -13,7 +13,9 @@
 #include "../joystick/joystick.hh"
 
 #include "../Option/ActionOption/actionoption.hh"
+#include "../Option/LookAround/lookaround.hh"
 #include "../Option/FSMOption/fsmoption.hh"
+#include "../OptionTree/optiontree.hh"
 
 #include <iostream>
 

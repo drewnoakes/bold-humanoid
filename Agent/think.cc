@@ -59,6 +59,10 @@ void Agent::think()
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
 
+  auto topOption = d_optionTree.getTop();
+  topOption->runPolicy();
+
+  /*
   switch (d_state)
   {
   case S_INIT:
@@ -97,6 +101,7 @@ void Agent::think()
     getUp();
     break;
   }
+  */
 
   AgentModel::getInstance().state = d_state;
   t = debugger.timeEvent(t, "Process State");
@@ -140,6 +145,8 @@ void Agent::think()
   auto cameraJoint = head->joints[0];
   auto camera = am.getLimb("camera");
   auto lFoot = am.getLimb("lFoot");
+  auto lKnee = am.getLimb("lLowerLeg");
+  auto rFoot = am.getLimb("rFoot");
 
   /*
   cout << "---------------" << endl;
@@ -150,21 +157,23 @@ void Agent::think()
   cout << "foot: " << endl << lFoot->transform.matrix() << endl;
   auto cameraToLFoot = lFoot->transform.inverse() * camera->transform;
   cout << "cam2foot: " << endl << cameraToLFoot.translation().transpose() << endl;
-  */
 
+  cout << "l foot transform:" << endl << lFoot->transform.matrix() << endl;
+  cout << "l knee transform:" << endl << lKnee->transform.matrix() << endl;
+  cout << "r foot transform:" << endl << rFoot->transform.matrix() << endl;
+  */
+  
+  double torsoHeight = lFoot->transform.inverse().translation().z();
+  // Multiplying with this transform brings coordinates from camera space in torso space
+  auto cameraTransform = camera->transform;
+  
   if (visualCortex.isBallVisible())
   {
     auto ballObs = visualCortex.ballObservation();
-    cout << "Ball observed at pixel: " << ballObs.pos.transpose() << endl;
 
-    double torsoHeight = lFoot->transform.inverse().translation().y();
-    cout << "torsoHeight: " << torsoHeight << endl;
-    // Multiplying with this transform brings coordinates from camera space in torso space
-    auto cameraTransform = camera->transform;
-    cout << "cameraTransform: " << endl << cameraTransform.matrix() << endl;
     Spatialiser spatialiser(am.getCameraModel());
     auto gp = spatialiser.findGroundPointForPixel(ballObs.pos.cast<int>(), torsoHeight, camera->transform);
-    cout << "ground point: " << gp << endl;
+    //cout << "ground point: " << gp << endl;
   }
 
 

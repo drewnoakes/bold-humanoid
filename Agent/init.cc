@@ -29,6 +29,17 @@ bool Agent::init()
 
   AgentModel::getInstance().initialise(/*d_ini*/);
 
+  OptionPtr sit = make_shared<ActionOption>("sitdownaction","sit down");
+  d_optionTree.addOption(sit);
+
+  shared_ptr<FSMOption> fsm = make_shared<FSMOption>("win");
+  d_optionTree.addOption(fsm, true);
+
+  shared_ptr<LookAround> la = make_shared<LookAround>("lookaround");
+  FSMOption::StatePtr s = make_shared<FSMOption::State>("lookaround", false, la);
+  fsm->addState(s, true);
+
+
   d_haveBody = initBody();
 
   d_state = S_INIT;

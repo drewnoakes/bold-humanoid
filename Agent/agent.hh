@@ -10,6 +10,7 @@
 #include "../Ambulator/ambulator.hh"
 #include "../GameController/GameControllerReceiver.hh"
 #include "../MX28Alarm/MX28Alarm.hh"
+#include "../OptionTree/optiontree.hh"
 
 class Joystick;
 
@@ -79,6 +80,9 @@ namespace bold
     double d_joystickXAmpMax;
     double d_joystickYAmpMax;
     double d_joystickAAmpMax;
+
+    // Control
+    OptionTree d_optionTree;
 
     // Methods
     bool init();
