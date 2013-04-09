@@ -21,7 +21,7 @@ namespace bold
 
     struct State
     {
-      State(std::string const& n, bool f, OptionPtr o)
+      State(std::string const& n, OptionPtr o, bool f = false)
 	: name(n),
 	  final(f),
 	  option(o)
@@ -35,13 +35,20 @@ namespace bold
       OptionPtr option;
       /// Outgoing transitions
       std::vector<TransitionPtr> transitions;
+
+      TransitionPtr newTransition()
+      {
+	TransitionPtr t = std::make_shared<Transition>();
+	transitions.push_back(t);
+	return t;
+      }
     };
 
     struct Transition
     {
       /// Condition that needs to be fulfilled to fire
       std::function<bool()> condition;
-      /// State this transition results in
+      /// State this transition+ results in
       StatePtr nextState;
     };
 
@@ -55,7 +62,14 @@ namespace bold
     virtual OptionPtr runPolicy();
 
     void addState(StatePtr state, bool startState = false);
-    
+
+    StatePtr newState(std::string const& name, OptionPtr option, bool finalState = false, bool startState = false)
+    {
+      auto s = std::make_shared<State>(name, option, finalState);
+      addState(s, startState);
+      return s;
+    }
+
     void addTransition(TransitionPtr transition);
 
   private:
