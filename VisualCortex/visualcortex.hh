@@ -69,7 +69,7 @@ namespace bold
     std::vector<Observation> goalObservations() const { return d_goalObservations; }
     Observation ballObservation() const { return d_ballObservation; }
 
-    std::vector<LineSegment2i> lines() const { return d_lines; }
+    std::vector<LineSegment2i> lines() const { return d_observedLineSegments; }
 
     /** Gets the singleton instance of the VisualCortex. */
     static VisualCortex& getInstance();
@@ -99,7 +99,7 @@ namespace bold
     std::shared_ptr<LabelCountPass> d_labelCountPass;
 
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
-    std::vector<LineSegment2i> d_lines;
+    std::vector<LineSegment2i> d_observedLineSegments;
 
     int d_minBallArea;
   };

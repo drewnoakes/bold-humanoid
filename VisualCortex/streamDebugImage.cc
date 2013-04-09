@@ -41,9 +41,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw observed lines
-  if (streamer->shouldDrawObservedLines() && d_lines.size() > 0)
+  if (streamer->shouldDrawObservedLines() && d_observedLineSegments.size() > 0)
   {
-    for (LineSegment2i const& line : d_lines)
+    for (LineSegment2i const& line : d_observedLineSegments)
     {
       line.draw(debugImage, observedLineColour, 2);
     }
