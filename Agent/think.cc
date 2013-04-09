@@ -59,8 +59,9 @@ void Agent::think()
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
 
-  auto topOption = d_optionTree.getTop();
-  topOption->runPolicy();
+  auto option = d_optionTree.getTop();
+  while (option)
+    option = option->runPolicy();
 
   /*
   switch (d_state)

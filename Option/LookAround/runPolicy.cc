@@ -5,7 +5,7 @@ OptionPtr LookAround::runPolicy()
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
 
   // Make an oscillatory movement to search for the ball
-  double maxAmpH = 70.0;//d_ini.getd("Head Pan/Tilt", "left_limit", 80.0);
+  double maxAmpH = 70.0;//d_ini.getd("Head Pan/Tilt", "left_limit", 80.0); 
   double maxAmpV = 15.0;//
   timeval tval;
   gettimeofday(&tval, 0);
