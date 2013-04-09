@@ -2,15 +2,15 @@
 
 Vector3d CameraModel::directionForPixel(Vector2i const& pixel) const
 {
-  auto extremity = Vector3d(tan(d_rangeHorizontal/2.0), tan(d_rangeVertical/2.0), 1);
+  auto extremity = Vector3d(tan(d_rangeHorizontal/2.0), 1, tan(d_rangeVertical/2.0));
 
   extremity.normalize();
 
-  double xRatio = (pixel.x() / (double)((d_imageWidth-1)/2.0)) - 1;
-  double yRatio = (pixel.y() / (double)((d_imageHeight-1)/2.0)) - 1;
+  double xRatio = -((pixel.x() / (double)((d_imageWidth-1)/2.0)) - 1);
+  double zRatio = (pixel.y() / (double)((d_imageHeight-1)/2.0)) - 1;
 
   extremity.x() *= xRatio;
-  extremity.y() *= yRatio;
+  extremity.z() *= zRatio;
 
   return extremity.normalized();
 }
