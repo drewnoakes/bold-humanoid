@@ -8,6 +8,8 @@ namespace bold
   class LookAtBall : public Option
   {
   public:
+    LookAtBall(std::string const& id) : Option(id) {}
+
     OptionPtr runPolicy();
   };
 

@@ -11,6 +11,8 @@ OptionPtr LookAtBall::runPolicy()
   }
 
   Vector2f lookAtPos = vision.ballObservation().pos;
+  cout << "Ball observation: " << lookAtPos.transpose() << endl;
+
   static float r = 0.85;
 
   // TODO get these from somewhere central
@@ -18,8 +20,8 @@ OptionPtr LookAtBall::runPolicy()
   static auto h = 240;//d_camera->getPixelFormat().height;
 
   static Vector2f centerPx = Vector2f(w,h) / 2;
-  static float happ = 60 / w;//Camera::VIEW_H_ANGLE / w;
-  static float vapp = 46 / h;//Camera::VIEW_V_ANGLE / h;
+  static float happ = 60.0 / w;//Camera::VIEW_H_ANGLE / w;
+  static float vapp = 46.0 / h;//Camera::VIEW_V_ANGLE / h;
 
   Vector2f offset = (lookAtPos - centerPx) * r;
 
@@ -27,6 +29,8 @@ OptionPtr LookAtBall::runPolicy()
   offset.y() *= vapp; // pixel per angle
 
   offset = offset.cwiseMin(Vector2f(10,10)).cwiseMax(Vector2f(-10,-10));
+
+  cout << "Looking at: " << offset.transpose() << endl;
 
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   Robot::Head::GetInstance()->MoveTracking(Robot::Point2D(offset.x(), offset.y()));

@@ -29,16 +29,39 @@ bool Agent::init()
 
   AgentModel::getInstance().initialise(/*d_ini*/);
 
+  // Sit action
   OptionPtr sit = make_shared<ActionOption>("sitdownaction","sit down");
   d_optionTree.addOption(sit);
 
-  shared_ptr<FSMOption> fsm = make_shared<FSMOption>("win");
-  d_optionTree.addOption(fsm, true);
+  // Build main FSM
+  auto fsm = make_shared<FSMOption>("lookforball");
+  d_optionTree.addOption(fsm, true /*top*/);
+  auto lookAround = make_shared<LookAround>("lookaround");
+  d_optionTree.addOption(lookAround);
+  auto lookAtBall = make_shared<LookAtBall>("lookatball");
+  d_optionTree.addOption(lookAtBall);
 
-  shared_ptr<LookAround> la = make_shared<LookAround>("lookaround");
-  FSMOption::StatePtr s = make_shared<FSMOption::State>("lookaround", false, la);
-  fsm->addState(s, true);
+  // Start state: look around
+  auto lookAroundState = fsm->newState("lookaround", lookAround, false/*endState*/, true/*startState*/);
 
+  // Transition: look at ball when visible
+  auto lookAround2lookAtBall = lookAroundState->newTransition();
+  lookAround2lookAtBall->condition = []() {
+    auto& vision = VisualCortex::getInstance();
+    return vision.isBallVisible();
+  };
+
+  // Next state: look at ball
+  auto lookAtBallState = fsm->newState("lookatball", lookAtBall);
+  lookAround2lookAtBall->nextState = lookAtBallState;
+
+  // Transition: look for ball if no longer seen
+  auto lookAtBall2lookAround = lookAtBallState->newTransition();
+  lookAtBall2lookAround->condition = []() {
+    auto& vision = VisualCortex::getInstance();
+    return !vision.isBallVisible();
+  };
+  lookAtBall2lookAround->nextState = lookAroundState;
 
   d_haveBody = initBody();
 
