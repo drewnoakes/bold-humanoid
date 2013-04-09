@@ -10,6 +10,10 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
 
   ImageType imageType = streamer->getImageType();
 
+  auto lineDotColour = Colour::bgr(0, 0, 255);
+  auto observedLineColour = Colour::bgr(255, 80, 80);
+  auto expectedLineColour = Colour::bgr(0, 255, 0);
+
   Mat debugImage;
 
   if (imageType == ImageType::YCbCr)
@@ -41,17 +45,16 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   {
     for (LineSegment2i const& line : d_lines)
     {
-      line.draw(debugImage, Colour::bgr(255,80,80), 2);
+      line.draw(debugImage, observedLineColour, 2);
     }
   }
 
   // Draw line dots
   if (streamer->shouldDrawLineDots() && d_lineDotPass->lineDots.size() > 0)
   {
-    auto colour = Colour::bgr(0,0,255);
     for (auto const& lineDot : d_lineDotPass->lineDots)
     {
-      debugImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = colour;
+      debugImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
     }
   }
 
@@ -95,7 +98,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
 
       LineSegment2i line2i(p1, p2);
 
-      line2i.draw(debugImage, Colour::bgr(0,255,0), 1);
+      line2i.draw(debugImage, expectedLineColour, 1);
     }
   }
 
