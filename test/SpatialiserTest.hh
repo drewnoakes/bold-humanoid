@@ -30,12 +30,12 @@ TEST (SpatialiserTests, findGroundPointForPixelLookingStraightDown)
 {
   Spatialiser spatialiser = createTestSpatialiser();
   // Look straight down at the ground
-  Affine3d cameraTorsoTransform(AngleAxisd(-M_PI/2, Vector3d::UnitX()));
+  Affine3d cameraTorsoTransform(AngleAxisd(M_PI/2, Vector3d::UnitX()));
 
   Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2i(5,5), /*torsoHeight*/0.4, cameraTorsoTransform);
 
   ASSERT_TRUE ( groundPoint.hasValue() );
-  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,-0.4), *groundPoint.value()) );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,-0.4,0), *groundPoint.value()) );
 }
 
 TEST (SpatialiserTests, findGroundPointForPixelEmptyIfSkybound)
@@ -43,7 +43,7 @@ TEST (SpatialiserTests, findGroundPointForPixelEmptyIfSkybound)
   Spatialiser spatialiser = createTestSpatialiser();
 
   // Look straight up at the sky
-  Affine3d cameraTorsoTransform(AngleAxisd(M_PI/2, Vector3d::UnitX()));
+  Affine3d cameraTorsoTransform(AngleAxisd(-M_PI/2, Vector3d::UnitX()));
 
   Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2i(5,5), /*torsoHeight*/0.4, cameraTorsoTransform);
 
