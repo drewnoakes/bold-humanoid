@@ -9,7 +9,7 @@
   if ((a-b).cwiseAbs().maxCoeff() < delta)
     return ::testing::AssertionSuccess();
   else
-    return ::testing::AssertionFailure() << "Vectors differ by more than " << delta;
+    return ::testing::AssertionFailure() << "|(" << a << ") - (" << b << ")| > " << delta;
 }
 
 #endif

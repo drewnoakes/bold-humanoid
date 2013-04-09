@@ -47,7 +47,8 @@ void VisualCortex::integrateImage(cv::Mat& image)
       Observation ballObs;
       ballObs.type = O_BALL;
       ballObs.pos = ball.mean;
-
+      // Take the bottom of the ball as observation
+      ballObs.pos.y() = ball.ul.y();
       d_observations.push_back(ballObs);
       d_ballObservation = ballObs;
       d_isBallVisible = true;

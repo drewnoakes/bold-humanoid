@@ -21,6 +21,7 @@ define(
             this.cameraTheta = -5.22;
             this.cameraPhi = 0.34;
             this.lookAtZ = 0.24;
+            this.torsoHeight = 0.341;
 
             this.$element = $('<div></div>');
             this.element = this.$element.get(0);
@@ -41,7 +42,6 @@ define(
 
         ModelModule.prototype.load = function()
         {
-            var self = this;
             this.hinges = [];
             this.objectByName = {};
             this.isRenderQueued = false;
@@ -51,22 +51,22 @@ define(
             var firstPersonCheckbox = $('<input>', {type:'checkbox',id:'first-person-checkbox'});
             firstPersonCheckbox.change(function()
             {
-                self.useThirdPerson = !firstPersonCheckbox.is(':checked');
-                self.updateCameraPosition();
-                self.render();
-            });
+                this.useThirdPerson = !firstPersonCheckbox.is(':checked');
+                this.updateCameraPosition();
+                this.render();
+            }.bind(this));
             this.$element.append(firstPersonCheckbox);
             var firstPersonLabel = $('<label>', {'for':'first-person-checkbox', text:'First person view'});
             this.$element.append(firstPersonLabel);
 
-            var root = this.buildBody(Constants.bodyStructure, function()
+            this.bodyRoot = this.buildBody(Constants.bodyStructure, function()
             {
-                root.position.z = 0.341;
-                root.rotation.y = Math.PI/2;
-                root.rotation.z = Math.PI/2;
-                self.scene.add(root);
-                self.render();
-            });
+                this.bodyRoot.position.z = this.torsoHeight;
+                this.bodyRoot.rotation.y = Math.PI/2;
+                this.bodyRoot.rotation.z = Math.PI/2;
+                this.scene.add(this.bodyRoot);
+                this.render();
+            }.bind(this));
 
             this.subscription = DataProxy.subscribe(Protocols.agentModel, { onmessage: _.bind(this.onMessage, this) });
         };
@@ -103,9 +103,20 @@ define(
 
             if (hasChange)
             {
+                this.updateAgentHeightFromGround();
                 this.updateCameraPosition();
                 this.render();
             }
+        };
+
+        ModelModule.prototype.updateAgentHeightFromGround = function()
+        {
+            var leftZ = this.objectByName['foot-left'].matrixWorld.getPosition().z;
+            var rightZ = this.objectByName['foot-right'].matrixWorld.getPosition().z;
+            this.torsoHeight -= Math.min(leftZ, rightZ) - Constants.footHeight;
+            this.bodyRoot.position.z = this.torsoHeight;
+            this.updateCameraPosition();
+            this.render();
         };
 
         ModelModule.prototype.setHingeAngle = function(hinge, angle)
@@ -133,7 +144,6 @@ define(
 
         ModelModule.prototype.initialiseScene = function()
         {
-            var self = this;
             this.scene = new THREE.Scene();
             this.scene.add(new THREE.AmbientLight(0x777777));
 
@@ -141,9 +151,9 @@ define(
 
             var onTextureLoaded = function()
             {
-                if (--self.pendingTextureCount === 0)
-                    self.render();
-            };
+                if (--this.pendingTextureCount === 0)
+                    this.render();
+            }.bind(this);
 
             //
             // Global directional light
@@ -223,13 +233,12 @@ define(
                 bumpScale: 0.0075
             });
 
-            var ballSegments = 20,
-                ballMesh = new THREE.Mesh(new THREE.SphereGeometry(Constants.ballRadius, ballSegments, ballSegments), ballMaterial);
-            ballMesh.castShadow = true;
-            ballMesh.receiveShadow = false;
-            this.scene.add(ballMesh);
-            this.ballMesh = ballMesh;
-            this.ballMesh.position.set(0.1, 0.05, Constants.ballRadius);
+            var ballSegments = 20;
+            this.ballMesh = new THREE.Mesh(new THREE.SphereGeometry(Constants.ballRadius, ballSegments, ballSegments), ballMaterial);
+            this.ballMesh.castShadow = true;
+            this.ballMesh.receiveShadow = false;
+            this.scene.add(this.ballMesh);
+            this.setBallPosition(0.15, 0.05);
 
             //
             // Goal posts
@@ -287,6 +296,11 @@ define(
             this.element.appendChild(this.renderer.domElement);
 
             this.bindMouseInteraction(this.renderer.domElement);
+        };
+
+        ModelModule.prototype.setBallPosition = function(x, y)
+        {
+            this.ballMesh.position.set(x, y, Constants.ballRadius);
         };
 
         ModelModule.prototype.buildBody = function(body, loadedCallback)
@@ -449,12 +463,11 @@ define(
             this.isRenderQueued = true;
 
             // Request render in the next frame
-            var self = this;
             requestAnimationFrame(function()
             {
-                self.isRenderQueued = false;
-                self.renderer.render(self.scene, self.camera);
-            });
+                this.isRenderQueued = false;
+                this.renderer.render(this.scene, this.camera);
+            }.bind(this));
         };
 
         return ModelModule;
