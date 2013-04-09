@@ -145,7 +145,7 @@ define(
         ModelModule.prototype.initialiseScene = function()
         {
             this.scene = new THREE.Scene();
-            this.scene.add(new THREE.AmbientLight(0x777777));
+            this.scene.add(new THREE.AmbientLight(0x727876)); // standard flourescent light
 
             this.pendingTextureCount = 3;
 
