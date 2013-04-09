@@ -159,8 +159,11 @@ void Agent::think()
 
     double torsoHeight = lFoot->transform.inverse().translation().y();
     cout << "torsoHeight: " << torsoHeight << endl;
+    // Multiplying with this transform brings coordinates from camera space in torso space
+    auto cameraTransform = camera->transform;
+    cout << "cameraTransform: " << endl << cameraTransform.matrix() << endl;
     Spatialiser spatialiser(am.getCameraModel());
-    auto gp = spatialiser.findGroundPointForPixel(ballObs.pos.cast<int>(), torsoHeight, camera->transform.inverse());
+    auto gp = spatialiser.findGroundPointForPixel(ballObs.pos.cast<int>(), torsoHeight, camera->transform);
     cout << "ground point: " << gp << endl;
   }
 

@@ -41,15 +41,15 @@ TEST (CameraModelTests, directionForPixel)
 
   CameraModel cameraModel(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
 
-  EXPECT_TRUE ( Vector3d(0, 0, 1).isApprox( cameraModel.directionForPixel(Vector2i(5, 5)) ) );
+  EXPECT_TRUE ( Vector3d(0, 1, 0).isApprox( cameraModel.directionForPixel(Vector2i(5, 5)) ) );
 
-  EXPECT_TRUE ( Vector3d(-1, 0, 1).normalized().isApprox( cameraModel.directionForPixel(Vector2i( 0, 5)) ) );
-  EXPECT_TRUE ( Vector3d( 1, 0, 1).normalized().isApprox( cameraModel.directionForPixel(Vector2i(10, 5)) ) );
+  EXPECT_TRUE ( Vector3d(1, 1, 0).normalized().isApprox( cameraModel.directionForPixel(Vector2i( 0, 5)) ) );
+  EXPECT_TRUE ( Vector3d(-1, 1, 0).normalized().isApprox( cameraModel.directionForPixel(Vector2i(10, 5)) ) );
 
-  EXPECT_TRUE ( Vector3d(0, -1, 1).normalized().isApprox( cameraModel.directionForPixel(Vector2i(5,  0)) ) );
-  EXPECT_TRUE ( Vector3d(0,  1, 1).normalized().isApprox( cameraModel.directionForPixel(Vector2i(5, 10)) ) );
+  EXPECT_TRUE ( Vector3d(0, 1, -1).normalized().isApprox( cameraModel.directionForPixel(Vector2i(5,  0)) ) );
+  EXPECT_TRUE ( Vector3d(0, 1,  1).normalized().isApprox( cameraModel.directionForPixel(Vector2i(5, 10)) ) );
 
-  auto v = Vector3d( 1, 0, 1).normalized();
+  auto v = Vector3d( -1, 1, 0).normalized();
   v.x() *= 2.0/5.0;
   EXPECT_TRUE ( v.normalized().isApprox( cameraModel.directionForPixel(Vector2i(7,  5)) ) );
 }
