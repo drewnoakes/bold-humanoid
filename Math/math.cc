@@ -5,12 +5,12 @@ using namespace Eigen;
 
 Maybe<Vector3d> Math::intersectRayWithGroundPlane(Vector3d const& position,
                                                   Vector3d const& direction,
-                                                  double const planeZ)
+                                                  double const planeY)
 {
-  if (direction.z() == 0)
+  if (direction.y() == 0)
     return Maybe<Vector3d>::empty();
 
-  double t = (planeZ - position.z()) / direction.z();
+  double t = (planeY - position.y()) / direction.y();
 
   if (t < 0)
     return Maybe<Vector3d>::empty();
