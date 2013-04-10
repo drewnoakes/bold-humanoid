@@ -63,7 +63,5 @@ void Agent::preKickLook()
       d_ballSeenCnt = d_goalSeenCnt = 0;
       d_state = State::S_LOOK_FOR_BALL;
     }
-
   }
-
 }

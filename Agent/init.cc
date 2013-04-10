@@ -2,8 +2,6 @@
 
 bool Agent::init()
 {
-  cout << "[Agent::init] Start" << endl;
-
   initCamera();
 
   // Check if camera is opened successfully
@@ -27,15 +25,6 @@ bool Agent::init()
 
   Debugger::getInstance().update(d_CM730);
 
-  // TODO source imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal from config
-  int imageWidth = 320;
-  int imageHeight = 240;
-  double focalLength = 0.025;
-  double rangeVertical = 46/180.0 * M_PI;
-  double rangeHorizontal = 58/180.0 * M_PI;;
-
-  d_cameraModel = std::make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
-
   d_agentModel = make_shared<AgentModel>();
 
   // Sit action
@@ -47,7 +36,7 @@ bool Agent::init()
   d_optionTree.addOption(fsm, true /*top*/);
   auto lookAround = make_shared<LookAround>("lookaround");
   d_optionTree.addOption(lookAround);
-  auto lookAtBall = make_shared<LookAtBall>("lookatball");
+  auto lookAtBall = make_shared<LookAtBall>("lookatball", d_cameraModel);
   d_optionTree.addOption(lookAtBall);
 
   // Start state: look around

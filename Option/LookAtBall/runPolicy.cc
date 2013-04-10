@@ -16,13 +16,12 @@ OptionPtr LookAtBall::runPolicy()
 
   static float r = 0.85;
 
-  // TODO get these from somewhere central
-  static auto w = 320;//d_camera->getPixelFormat().width;
-  static auto h = 240;//d_camera->getPixelFormat().height;
+  unsigned w = d_cameraModel->imageWidth();
+  unsigned h = d_cameraModel->imageHeight();
 
   static Vector2f centerPx = Vector2f(w,h) / 2;
-  static float happ = 60.0 / w;//Camera::VIEW_H_ANGLE / w;
-  static float vapp = 46.0 / h;//Camera::VIEW_V_ANGLE / h;
+  static float happ = d_cameraModel->rangeHorizontalDegs() / w;
+  static float vapp = d_cameraModel->rangeVerticalDegs() / h;
 
   Vector2f offset = (*ballPos - centerPx) * r;
 

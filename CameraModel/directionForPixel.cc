@@ -2,7 +2,7 @@
 
 Vector3d CameraModel::directionForPixel(Vector2i const& pixel) const
 {
-  auto extremity = Vector3d(tan(d_rangeHorizontal/2.0), 1, tan(d_rangeVertical/2.0));
+  auto extremity = Vector3d(tan(rangeHorizontalRads()/2.0), 1, tan(rangeVerticalRads()/2.0));
 
   extremity.normalize();
 

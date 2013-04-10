@@ -12,19 +12,21 @@ namespace bold
   class CameraModel
   {
   public:
-    CameraModel(unsigned imageWidth, unsigned imageHeight, double focalLength, double rangeVertical, double rangeHorizontal)
+    CameraModel(unsigned imageWidth, unsigned imageHeight, double focalLength, double rangeVerticalDegs, double rangeHorizontalDegs)
     : d_imageWidth(imageWidth),
       d_imageHeight(imageHeight),
       d_focalLength(focalLength),
-      d_rangeVertical(rangeVertical),
-      d_rangeHorizontal(rangeHorizontal)
+      d_rangeVerticalDegs(rangeVerticalDegs),
+      d_rangeHorizontalDegs(rangeHorizontalDegs)
     {}
 
     unsigned imageWidth() const { return d_imageWidth; }
     unsigned imageHeight() const { return d_imageHeight; }
     double focalLength() const { return d_focalLength; }
-    double rangeVertical() const { return d_rangeVertical; }
-    double rangeHorizontal() const { return d_rangeHorizontal; }
+    double rangeVerticalDegs() const { return d_rangeVerticalDegs; }
+    double rangeVerticalRads() const { return d_rangeVerticalDegs/180.0 * M_PI; }
+    double rangeHorizontalDegs() const { return d_rangeHorizontalDegs; }
+    double rangeHorizontalRads() const { return d_rangeHorizontalDegs/180.0 * M_PI; }
 
     /** Gets the direction, in camera coordinates, of the specified pixel.
      * Returns a unit vector.
@@ -50,7 +52,7 @@ namespace bold
     Projector getProjector() const
     {
       auto mat = getProjectionTransform();
-      double projectionPlaneWidth = atan(d_rangeHorizontal / 2) * d_focalLength * 2;
+      double projectionPlaneWidth = atan(rangeHorizontalRads() / 2) * d_focalLength * 2;
       double pixelWidth = projectionPlaneWidth / d_imageWidth;
       return [mat,pixelWidth](Eigen::Vector3d const& in) -> Eigen::Vector2i {
         auto m = (mat * in);
@@ -62,8 +64,8 @@ namespace bold
     unsigned d_imageWidth;
     unsigned d_imageHeight;
     double d_focalLength;
-    double d_rangeVertical;
-    double d_rangeHorizontal;
+    double d_rangeVerticalDegs;
+    double d_rangeHorizontalDegs;
   };
 }
 

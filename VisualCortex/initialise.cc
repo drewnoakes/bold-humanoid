@@ -24,8 +24,7 @@ void VisualCortex::initialise(minIni const& ini)
 
   createLookupTable();
 
-  // TODO this default is probably a bit large on a 320x240 image
-  d_minBallArea = ini.geti("Vision", "MinBallArea", 8*8);
+  d_minBallArea = ini.geti("Vision", "MinBallArea", 5*5);
 
   auto ballUnionPred =
     [] (Run const& a, Run const& b)
@@ -45,8 +44,8 @@ void VisualCortex::initialise(minIni const& ini)
 
   vector<UnionPredicate> unionPredicateByLabel = {goalUnionPred, ballUnionPred};
 
-  int imageWidth = 320; // TODO source image width/height from config
-  int imageHeight = 240;
+  int imageWidth = d_cameraModel->imageWidth();
+  int imageHeight = d_cameraModel->imageHeight();
 
   d_lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, d_fieldLabel, d_lineLabel, 3);
 

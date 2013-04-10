@@ -137,8 +137,6 @@ void Agent::think()
   readSubBoardData();
   t = debugger.timeEvent(t, "Read Sub Board");
 
-//   AgentModel& am = AgentModel::getInstance();
-//   am.updatePosture();
   auto const& body = AgentState::getInstance().body()->model();
 
   auto neck = body.getLimb("neck");
@@ -178,7 +176,6 @@ void Agent::think()
     auto gp = spatialiser.findGroundPointForPixel(ballObs->cast<int>(), torsoHeight, camera->transform);
     //cout << "ground point: " << gp << endl;
   }
-
 
   //
   // Update websocket data

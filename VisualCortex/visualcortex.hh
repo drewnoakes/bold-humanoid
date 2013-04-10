@@ -37,7 +37,7 @@ namespace bold
   class VisualCortex
   {
   public:
-    VisualCortex();
+    VisualCortex(std::shared_ptr<CameraModel> cameraModel);
 
     void initialise(minIni const& ini);
 

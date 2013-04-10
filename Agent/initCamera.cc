@@ -4,10 +4,6 @@ void Agent::initCamera()
 {
   cout << "[Agent::initCamera] Start" << endl;
 
-  // TODO get camera height/width from config
-  unsigned width = 320;
-  unsigned height = 240;
-
   d_camera->open();
 
   cout << "[Agent::initCamera] Capabilities:" << endl
@@ -33,6 +29,8 @@ void Agent::initCamera()
   for (Camera::Format const& format : d_camera->getFormats())
     cout << "[Agent::initCamera]   "  << format.description << endl;
 
+  unsigned width = d_cameraModel->imageWidth();
+  unsigned height = d_cameraModel->imageHeight();
   bool res = d_camera->getPixelFormat().requestSize(width, height);
   cout << "[Agent::initCamera] Requesting size " << width << "x" << height << ": " << (res ? "OK" : "FAIL") << endl;
 

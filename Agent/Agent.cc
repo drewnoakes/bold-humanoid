@@ -19,7 +19,18 @@ Agent::Agent(std::string const& U2D_dev,
     d_ballSeenCnt(0),
     d_goalSeenCnt(0)
 {
-  d_visualCortex = std::make_shared<VisualCortex>();
+  cout << "[Agent::Agent] Start" << endl;
+
+  int imageWidth = d_ini.geti("Camera", "ImageWidth", 320);
+  int imageHeight = d_ini.geti("Camera", "ImageHeight", 240);
+  double focalLength = d_ini.getd("Camera", "FocalLength", 0.025);
+  double rangeVerticalDegs = d_ini.getd("Camera", "RangeVerticalDegrees", 46.0);
+  double rangeHorizontalDegs = d_ini.getd("Camera", "RangeHorizontalDegrees", 58.0);
+  // TODO have seen both 58.0 and 60.0 as default horizontal range values
+
+  d_cameraModel = std::make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
+
+  d_visualCortex = std::make_shared<VisualCortex>(d_cameraModel);
   d_visualCortex->initialise(ini);
 
   if (useJoystick)
