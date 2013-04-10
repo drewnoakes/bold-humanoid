@@ -1,0 +1,3 @@
+#include "stand.hh"
+
+using namespace bold;
