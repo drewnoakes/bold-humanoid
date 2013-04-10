@@ -15,16 +15,16 @@ namespace bold
 
     struct State;
     typedef std::shared_ptr<State> StatePtr;
-    
+
     struct Transition;
     typedef std::shared_ptr<Transition> TransitionPtr;
 
     struct State
     {
       State(std::string const& n, OptionPtr o, bool f = false)
-	: name(n),
-	  final(f),
-	  option(o)
+      : name(n),
+        final(f),
+        option(o)
       {}
 
       /// State name
@@ -38,9 +38,9 @@ namespace bold
 
       TransitionPtr newTransition()
       {
-	TransitionPtr t = std::make_shared<Transition>();
-	transitions.push_back(t);
-	return t;
+        TransitionPtr t = std::make_shared<Transition>();
+        transitions.push_back(t);
+        return t;
       }
     };
 
@@ -55,11 +55,11 @@ namespace bold
   public:
     FSMOption(std::string const& id) : Option(id) {}
 
-    virtual bool isAvailable();
+    virtual bool isAvailable() override;
 
-    virtual double hasTerminated();
+    virtual double hasTerminated() override;
 
-    virtual OptionPtr runPolicy();
+    virtual OptionPtr runPolicy() override;
 
     void addState(StatePtr state, bool startState = false);
 
@@ -88,7 +88,7 @@ namespace bold
 
   inline double FSMOption::hasTerminated()
   {
-    return d_curState && d_curState->final ? 1.0 : 0.0; 
+    return d_curState && d_curState->final ? 1.0 : 0.0;
   }
 
   inline void FSMOption::addState(FSMOption::StatePtr state, bool startState)

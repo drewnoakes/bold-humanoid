@@ -23,10 +23,10 @@ namespace bold
 
     LabelCountPass(std::vector<std::shared_ptr<PixelLabel>> const& labels)
       : d_countByLabelId(),
-	d_labels(labels)
+        d_labels(labels)
     {}
 
-    void onImageStarting()
+    void onImageStarting() override
     {
       for (std::shared_ptr<PixelLabel> label : d_labels)
       {
@@ -35,7 +35,7 @@ namespace bold
       }
     }
 
-    void onPixel(uchar value, int x, int y)
+    void onPixel(uchar value, int x, int y) override
     {
       if (value != 0)
       {

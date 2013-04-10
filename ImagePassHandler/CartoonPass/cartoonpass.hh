@@ -29,7 +29,7 @@ namespace bold
 
     cv::Mat& mat() { return d_mat; }
 
-    void onImageStarting()
+    void onImageStarting() override
     {
       d_mat = d_backgroundColour.toScalar();
 
@@ -40,12 +40,12 @@ namespace bold
       }
     }
 
-    void onRowStarting(int y)
+    void onRowStarting(int y) override
     {
       d_ptr = d_mat.ptr<Colour::bgr>(y);
     }
 
-    void onPixel(uchar value, int x, int y)
+    void onPixel(uchar value, int x, int y) override
     {
       if (value != 0)
       {

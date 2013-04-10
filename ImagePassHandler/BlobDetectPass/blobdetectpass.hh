@@ -117,11 +117,11 @@ namespace bold
   public:
     BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> const& blobTypes);
 
-    void onImageStarting();
+    void onImageStarting() override;
 
-    void onRowStarting(int y);
+    void onRowStarting(int y) override;
 
-    void onPixel(uchar label, int x, int y);
+    void onPixel(uchar label, int x, int y) override;
 
     std::vector<BlobType> blobTypes() const { return d_blobTypes; }
 
@@ -190,14 +190,14 @@ namespace bold
         assert(x > 0);
         addRun(x - 1);
       }
-      
+
       // Check whether this is the start of a new run
       if (label != 0)
       {
         // Start new run
         d_currentRun.startX = x;
       }
-      
+
       d_currentLabel = label;
     }
   }
@@ -205,16 +205,16 @@ namespace bold
   inline void BlobDetectPass::addRun(unsigned endX)
   {
     assert(endX >= d_currentRun.startX);
-    
+
     // finish whatever run we were on
     d_currentRun.endX = endX;
-    
+
     // TODO do this with pointer arithmetic rather than a map lookup
     auto it = d_runsPerRowPerLabel.find(d_currentLabel);
     if (it != d_runsPerRowPerLabel.end())
       it->second[d_currentRun.y].push_back(d_currentRun);
   }
-  
+
   //
   //// -------- Run --------
   //

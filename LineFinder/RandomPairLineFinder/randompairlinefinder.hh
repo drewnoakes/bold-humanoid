@@ -20,9 +20,9 @@ namespace bold
     struct LineHypothesis
     {
       LineHypothesis(Line const& line, Eigen::Vector2i const& dot1, Eigen::Vector2i const& dot2)
-	: d_lengthDistribution(),
-	  d_theta(line.theta()),
-	  d_radius(line.radius())
+      : d_lengthDistribution(),
+        d_theta(line.theta()),
+        d_radius(line.radius())
       {
         auto diff = dot2 - dot1;
 
@@ -144,11 +144,11 @@ namespace bold
       d_controls()
     {}
 
-    std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots);
+    std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) override;
 
     void setMinDotManhattanDistance(unsigned minDotManhattanDistance) { d_minDotManhattanDistance = minDotManhattanDistance; }
 
-    std::vector<bold::Control> getControls() const { return d_controls; };
+    std::vector<bold::Control> getControls() const override { return d_controls; };
 
   private:
     unsigned d_minDotManhattanDistance;

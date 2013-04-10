@@ -11,9 +11,9 @@ namespace bold
   public:
     ActionOption(std::string const& id, std::string const& actionName);
 
-    virtual double hasTerminated();
+    virtual double hasTerminated() override;
 
-    virtual OptionPtr runPolicy();
+    virtual OptionPtr runPolicy() override;
 
   private:
     std::string d_actionName;

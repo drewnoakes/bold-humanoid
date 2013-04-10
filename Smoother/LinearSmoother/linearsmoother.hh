@@ -7,15 +7,13 @@ namespace bold
 {
   class LinearSmoother : public virtual Smoother
   {
-  private:
-    double d_delta;
   public:
     LinearSmoother(double initialValue, double delta)
     : Smoother(initialValue),
       d_delta(delta)
     {}
 
-    void step()
+    void step() override
     {
       double diff = d_target - d_current;
 
@@ -29,6 +27,9 @@ namespace bold
       else
         d_current = d_target;
     }
+
+  private:
+    double d_delta;
   };
 }
 

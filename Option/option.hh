@@ -57,7 +57,7 @@ namespace bold
     virtual OptionPtr runPolicy() { return OptionPtr(0); }
 
   private:
-    
+
     std::string d_id;
   };
 

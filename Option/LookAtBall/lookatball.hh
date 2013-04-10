@@ -14,7 +14,7 @@ namespace bold
       d_cameraModel(cameraModel)
     {}
 
-    OptionPtr runPolicy();
+    OptionPtr runPolicy() override;
 
   private:
     std::shared_ptr<CameraModel> d_cameraModel;

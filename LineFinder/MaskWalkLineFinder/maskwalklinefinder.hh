@@ -18,9 +18,9 @@ namespace bold
 
     void initialise(minIni const& ini);
 
-    std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots);
+    std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) override;
 
-    std::vector<Control> getControls() const { return d_controls; }
+    std::vector<Control> getControls() const override { return d_controls; }
 
   private:
     void rebuild();

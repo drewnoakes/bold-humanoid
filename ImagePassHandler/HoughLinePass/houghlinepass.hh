@@ -30,12 +30,12 @@ namespace bold
       lines()
     {}
 
-    void onImageStarting()
+    void onImageStarting() override
     {
       accumulator.clear();
     }
 
-    void onPixel(T value, int x, int y)
+    void onPixel(T value, int x, int y) override
     {
       if (value != 0)
       {
@@ -43,7 +43,7 @@ namespace bold
       }
     }
 
-    void onImageComplete()
+    void onImageComplete() override
     {
       auto extractor = HoughLineExtractor();
 

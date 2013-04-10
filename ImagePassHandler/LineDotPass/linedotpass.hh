@@ -74,7 +74,7 @@ namespace bold
 
     Control getHysterisisControl() const { return d_hysterisisControl; }
 
-    void onImageStarting()
+    void onImageStarting() override
     {
       // reset all run trackers
       d_rowTracker->reset();
@@ -84,13 +84,13 @@ namespace bold
       lineDots.clear();
     }
 
-    void onRowStarting(int y)
+    void onRowStarting(int y) override
     {
       d_rowTracker->reset();
       d_rowTracker->otherCoordinate = y;
     }
 
-    void onPixel(T label, int x, int y)
+    void onPixel(T label, int x, int y) override
     {
       d_rowTracker->update(label, x);
       d_colTrackers[x].update(label, y);
