@@ -147,14 +147,22 @@ set(INTERNAL_HEADERS
 ./Agent/agent.ih
 ./AgentModel/agentmodel.ih
 ./Camera/camera.ih
+./CameraModel/cameramodel.ih
 ./Colour/colour.ih
 ./Control/control.ih
 ./DataStreamer/datastreamer.ih
 ./HoughLineAccumulator/houghlineaccumulator.ih
 ./ImagePassHandler/BlobDetectPass/blobdetectpass.ih
+./LineFinder/MaskWalkLineFinder/maskwalklinefinder.ih
 ./LUTBuilder/lutbuilder.ih
+./Option/ActionOption/actionoption.ih
+./Option/FSMOption/fsmoption.ih
+./Option/LookAround/lookaround.ih
+./Option/LookAtBall/lookatball.ih
 ./PixelFilterChain/pixelfilterchain.ih
-./VisualCortex/visualcortex.ih)
+./Spatialiser/spatialiser.ih
+./VisualCortex/visualcortex.ih
+)
 
 #
 ## Include directories
