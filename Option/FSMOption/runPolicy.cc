@@ -1,6 +1,6 @@
 #include "fsmoption.ih"
 
-OptionPtr FSMOption::runPolicy()
+OptionList FSMOption::runPolicy()
 {
   cout << "[FSMOption::runPolicy] ----- Start -----" << endl;
 
@@ -25,5 +25,5 @@ OptionPtr FSMOption::runPolicy()
 
   cout << "[FSMOption::runPolicy] New state: " << d_curState->name << endl;
 
-  return d_curState->option;
+  return d_curState->options;
 }

@@ -1,13 +1,13 @@
 #include "lookatball.ih"
 
-OptionPtr LookAtBall::runPolicy()
+OptionList LookAtBall::runPolicy()
 {
   auto const& ballObs = AgentState::getInstance().cameraFrame()->getBallObservation();
 
   if (!ballObs.hasValue())
   {
     cerr << "[LookAtBall::runPolicy] No ball seen" << endl;
-    return 0;
+    return OptionList();
   }
 
   auto ballPos = ballObs.value();
@@ -35,5 +35,5 @@ OptionPtr LookAtBall::runPolicy()
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   Robot::Head::GetInstance()->MoveTracking(Robot::Point2D(offset.x(), offset.y()));
 
-  return 0;
+  return OptionList();
 }

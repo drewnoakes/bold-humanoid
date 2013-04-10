@@ -21,18 +21,18 @@ namespace bold
 
     struct State
     {
-      State(std::string const& n, OptionPtr o, bool f = false)
-      : name(n),
-        final(f),
-        option(o)
+      State(std::string const& n, OptionList o, bool f = false)
+	: name(n),
+	  final(f),
+	  options(o)
       {}
 
       /// State name
       std::string name;
       /// Whether this state is a final state
       bool final;
-      /// Option to return while in this state
-      OptionPtr option;
+      /// Options to return while in this state
+      OptionList options;
       /// Outgoing transitions
       std::vector<TransitionPtr> transitions;
 
@@ -59,13 +59,16 @@ namespace bold
 
     virtual double hasTerminated() override;
 
-    virtual OptionPtr runPolicy() override;
+    virtual OptionList runPolicy() override;
 
     void addState(StatePtr state, bool startState = false);
 
-    StatePtr newState(std::string const& name, OptionPtr option, bool finalState = false, bool startState = false)
+    StatePtr newState(std::string const& name,
+		      OptionList options,
+		      bool finalState = false,
+		      bool startState = false)
     {
-      auto s = std::make_shared<State>(name, option, finalState);
+      auto s = std::make_shared<State>(name, options, finalState);
       addState(s, startState);
       return s;
     }

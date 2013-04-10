@@ -40,7 +40,7 @@ bool Agent::init()
   d_optionTree.addOption(lookAtBall);
 
   // Start state: look around
-  auto lookAroundState = fsm->newState("lookaround", lookAround, false/*endState*/, true/*startState*/);
+  auto lookAroundState = fsm->newState("lookaround", {lookAround}, false/*endState*/, true/*startState*/);
 
   // Transition: look at ball when visible
   auto lookAround2lookAtBall = lookAroundState->newTransition();
@@ -49,7 +49,7 @@ bool Agent::init()
   };
 
   // Next state: look at ball
-  auto lookAtBallState = fsm->newState("lookatball", lookAtBall);
+  auto lookAtBallState = fsm->newState("lookatball", {lookAtBall});
   lookAround2lookAtBall->nextState = lookAtBallState;
 
   // Transition: look for ball if no longer seen

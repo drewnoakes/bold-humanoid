@@ -1,6 +1,6 @@
 #include "lookaround.ih"
 
-OptionPtr LookAround::runPolicy()
+OptionList LookAround::runPolicy()
 {
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
 
@@ -20,5 +20,5 @@ OptionPtr LookAround::runPolicy()
   
   Robot::Head::GetInstance()->MoveByAngle(hAngle, vAngle);
 
-  return 0;
+  return OptionList();
 }

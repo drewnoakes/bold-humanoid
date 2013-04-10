@@ -13,7 +13,7 @@ namespace bold
 
     virtual double hasTerminated() override;
 
-    virtual OptionPtr runPolicy() override;
+    virtual OptionList runPolicy() override;
 
   private:
     std::string d_actionName;

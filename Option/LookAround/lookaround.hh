@@ -10,7 +10,7 @@ namespace bold
   public:
     LookAround(std::string const& id) : Option(id) {}
 
-    virtual OptionPtr runPolicy() override;
+    virtual OptionList runPolicy() override;
   };
 }
 

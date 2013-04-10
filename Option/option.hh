@@ -1,7 +1,7 @@
 #ifndef BOLD_OPTION_HH
 #define BOLD_OPTION_HH
 
-#include <vector>
+#include <list>
 #include <memory>
 #include <string>
 
@@ -9,6 +9,7 @@ namespace bold
 {
   class Option;
   typedef std::shared_ptr<Option> OptionPtr;
+  typedef std::list<OptionPtr> OptionList;
 
   /** Option
    *
@@ -54,8 +55,7 @@ namespace bold
      * @returns the sub-option selected by the policy of this option;
      * Default: null-pointer
      */
-    virtual OptionPtr runPolicy() { return OptionPtr(0); }
-
+    virtual OptionList runPolicy() { return OptionList(); }
   private:
 
     std::string d_id;

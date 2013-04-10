@@ -1,6 +1,6 @@
 #include "actionoption.ih"
 
-OptionPtr ActionOption::runPolicy()
+OptionList ActionOption::runPolicy()
 {
   auto actionModule = Robot::Action::GetInstance();
   if (!d_started && !actionModule->IsRunning())
@@ -10,5 +10,5 @@ OptionPtr ActionOption::runPolicy()
     actionModule->Start(d_actionName.c_str());
     d_started = true;
   }
-  return OptionPtr(0);
+  return OptionList();
 }
