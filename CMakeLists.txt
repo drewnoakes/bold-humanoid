@@ -258,6 +258,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/Stand/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
   ./PixelFilterChain/applyFilters.cc
 )
 

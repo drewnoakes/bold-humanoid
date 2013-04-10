@@ -19,9 +19,10 @@
 //#include "../StateObject/GameState/gamestate.hh"
 
 #include "../Option/ActionOption/actionoption.hh"
+#include "../Option/FSMOption/fsmoption.hh"
 #include "../Option/LookAround/lookaround.hh"
 #include "../Option/LookAtBall/lookatball.hh"
-#include "../Option/FSMOption/fsmoption.hh"
+#include "../Option/Stand/stand.hh"
 #include "../OptionTree/optiontree.hh"
 
 #include <iostream>
