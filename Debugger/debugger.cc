@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "../AgentState/agentstate.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../AgentModel/agentmodel.hh"
 #include "../WorldModel/worldmodel.hh"
 

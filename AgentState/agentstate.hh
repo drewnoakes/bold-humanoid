@@ -3,12 +3,12 @@
 
 #include <memory>
 
-#include "../StateObject/BodyState/bodystate.hh"
-#include "../StateObject/CameraFrameState/cameraframestate.hh"
-#include "../StateObject/GameState/gamestate.hh"
-
 namespace bold
 {
+  class CameraFrameState;
+  class GameState;
+  class BodyState;
+
   class AgentState
   {
   public:

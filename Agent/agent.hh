@@ -7,20 +7,20 @@
 #include <memory>
 #include <opencv2/opencv.hpp>
 
-#include "../AgentModel/agentmodel.hh"
 #include "../Ambulator/ambulator.hh"
-#include "../CameraModel/cameramodel.hh"
 #include "../GameController/GameControllerReceiver.hh"
 #include "../MX28Alarm/MX28Alarm.hh"
 #include "../OptionTree/optiontree.hh"
-#include "../VisualCortex/visualcortex.hh"
 
 class Joystick;
 
 namespace bold
 {
-  class DataStreamer;
+  class AgentModel;
   class Camera;
+  class CameraModel;
+  class DataStreamer;
+  class VisualCortex;
 
   enum class State
   {
