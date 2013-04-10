@@ -158,14 +158,14 @@ void AgentModel::initBody()
 
   auto llowerLegAnkleJoint = make_shared<Joint>();
   llowerLegAnkleJoint->id = JointData::ID_L_ANKLE_PITCH;
-  llowerLegAnkleJoint->axis = Vector3d(1, 0, 0);
+  llowerLegAnkleJoint->axis = Vector3d(-1, 0, 0);
   llowerLegAnkleJoint->anchors.first = Vector3d(0, 0, -0.093);
   llowerLegAnkleJoint->anchors.second = Vector3d(0, 0, 0);
   llowerLeg->joints.push_back(llowerLegAnkleJoint);
 
   auto lankleFootJoint = make_shared<Joint>();
   lankleFootJoint->id = JointData::ID_L_ANKLE_ROLL;
-  lankleFootJoint->axis = Vector3d(0, 0, 1);
+  lankleFootJoint->axis = Vector3d(0, 1, 0);
   lankleFootJoint->anchors.first = Vector3d(0, 0, 0);
   lankleFootJoint->anchors.second = Vector3d(0, 0, 0.0335);
   llowerLegAnkleJoint->bodyPart = lankleFootJoint;

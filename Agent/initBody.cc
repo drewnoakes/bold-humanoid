@@ -44,22 +44,12 @@ bool Agent::initBody()
   cout << "[Agent::init] Enable body" << endl;
 
   cout << "[Agent::init] Sit down" << endl;
-  ActionOption sit("sit down");
-  while (sit.hasTerminated() == 0.0)
+  auto sit = d_optionTree.getOption("sitdownaction");
+  while (sit->hasTerminated() == 0.0)
   {
-    sit.runPolicy();
+    sit->runPolicy();
     usleep(8000);
   }
-
-  /*
-  cout << "[Agent::init] Stand up" << endl;
-  ActionOption stand("stand up");
-  while (stand.hasTerminated() == 0.0)
-  {
-    stand.runPolicy();
-    usleep(8000);
-  }
-  */
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   motionManager->ResetGyroCalibration();

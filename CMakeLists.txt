@@ -125,6 +125,9 @@ set(BOLDHUMANOID_SOURCES
 ./MX28Snapshot/init.cc
 ./Option/ActionOption/hasTerminated.cc
 ./Option/ActionOption/runPolicy.cc
+./Option/FSMOption/runPolicy.cc
+./Option/LookAround/runPolicy.cc
+./Option/LookAtBall/runPolicy.cc
 ./PixelFilterChain/applyFilters.cc
 ./PixelLabel/fromConfig.cc
 ./PixelLabel/pixellabel.cc

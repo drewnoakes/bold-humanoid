@@ -59,6 +59,11 @@ void Agent::think()
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
 
+  auto option = d_optionTree.getTop();
+  while (option)
+    option = option->runPolicy();
+
+  /*
   switch (d_state)
   {
   case State::S_INIT:
@@ -97,6 +102,7 @@ void Agent::think()
     getUp();
     break;
   }
+  */
 
 //   AgentState::getInstance().state = d_state;
   t = debugger.timeEvent(t, "Process State");
@@ -141,6 +147,8 @@ void Agent::think()
   auto cameraJoint = head->joints[0];
   auto camera = body.getLimb("camera");
   auto lFoot = body.getLimb("lFoot");
+  auto lKnee = body.getLimb("lLowerLeg");
+  auto rFoot = body.getLimb("rFoot");
 
   /*
   cout << "---------------" << endl;
@@ -151,23 +159,24 @@ void Agent::think()
   cout << "foot: " << endl << lFoot->transform.matrix() << endl;
   auto cameraToLFoot = lFoot->transform.inverse() * camera->transform;
   cout << "cam2foot: " << endl << cameraToLFoot.translation().transpose() << endl;
+
+  cout << "l foot transform:" << endl << lFoot->transform.matrix() << endl;
+  cout << "l knee transform:" << endl << lKnee->transform.matrix() << endl;
+  cout << "r foot transform:" << endl << rFoot->transform.matrix() << endl;
   */
 
   // TODO populate agent frame from camera frame
 
+  double torsoHeight = lFoot->transform.inverse().translation().z();
+  // Multiplying with this transform brings coordinates from camera space in torso space
+  auto cameraTransform = camera->transform;
+
   auto const& ballObs = AgentState::getInstance().cameraFrame()->getBallObservation();
   if (ballObs.hasValue())
   {
-    cout << "Ball observed at pixel: " << ballObs->transpose() << endl;
-
-    double torsoHeight = lFoot->transform.inverse().translation().y();
-    cout << "torsoHeight: " << torsoHeight << endl;
-    // Multiplying with this transform brings coordinates from camera space in torso space
-    auto cameraTransform = camera->transform;
-    cout << "cameraTransform: " << endl << cameraTransform.matrix() << endl;
     Spatialiser spatialiser(d_cameraModel);
     auto gp = spatialiser.findGroundPointForPixel(ballObs->cast<int>(), torsoHeight, camera->transform);
-    cout << "ground point: " << gp << endl;
+    //cout << "ground point: " << gp << endl;
   }
 
 
