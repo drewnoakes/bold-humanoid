@@ -4,9 +4,7 @@ void Agent::lookForGoal()
 {
   stand();
 
-  auto& vision = VisualCortex::getInstance();
-
-  int nObs = vision.goalObservations().size();
+  int nObs = AgentState::getInstance().cameraFrame()->getGoalObservations().size();
 
   cout << "[Agent::lookForGoal] Visible goal count: " << nObs << endl;
 
@@ -41,6 +39,6 @@ void Agent::lookForGoal()
   {
     lookAtGoal();
 
-    d_state = S_START_CIRCLE_BALL;
+    d_state = State::S_START_CIRCLE_BALL;
   }
 }

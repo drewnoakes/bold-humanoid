@@ -14,8 +14,6 @@ int Agent::run()
 
   while (true)
   {
-    AgentModel::getInstance().notifyCycleStarting();
-
     think();
   }
 

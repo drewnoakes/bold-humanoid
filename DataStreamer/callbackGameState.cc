@@ -15,11 +15,11 @@ int DataStreamer::callback_game_state(
 
   if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
   {
-    GameState& gameState = GameState::getInstance();
+    auto const& gameState = AgentState::getInstance().game();
 
     int n = sprintf((char*)p, "%d|%d",
-                    gameState.secondsRemaining,
-                    gameState.playMode);
+                    gameState->getSecondsRemaining(),
+                    gameState->getPlayMode());
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {

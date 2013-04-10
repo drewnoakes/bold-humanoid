@@ -56,7 +56,6 @@ int main(int argc, char **argv)
 
   minIni ini(confFile);
 
-  VisualCortex::getInstance().initialise(ini);
   WorldModel::getInstance().initialise(ini);
 
   Agent agent(

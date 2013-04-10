@@ -22,7 +22,8 @@
 #include "datastreamer.hh"
 
 #include "../AgentModel/agentmodel.hh"
-#include "../GameState/gamestate.hh"
+#include "../AgentState/agentstate.hh"
+#include "../StateObject/GameState/gamestate.hh"
 
 using namespace bold;
 using namespace std;

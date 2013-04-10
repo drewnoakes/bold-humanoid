@@ -32,11 +32,12 @@ void AgentModel::updatePosture()
     {
       shared_ptr<Joint> joint = dynamic_pointer_cast<Joint>(part);
 
-      // NOTE we don't update for joints with negative IDs, as these are fixed (a bit hacky)
-      if (joint->id >= 0)
-      {
-        joint->angle = mx28States[joint->id].presentPosition;
-      }
+//       // NOTE we don't update for joints with negative IDs, as these are fixed (a bit hacky)
+//       if (joint->id >= 0)
+//       {
+//         // TODO take the angle from the joint itself, having been updated from the MX28 snapshot data elsewhere
+//         joint->angle = mx28States[joint->id].presentPosition;
+//       }
 
       shared_ptr<BodyPart> part2 = joint->bodyPart;
       part2->transform = joint->transform

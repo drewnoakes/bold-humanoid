@@ -1,5 +1,7 @@
 #include "agentmodel.hh"
 
+#include <LinuxDARwIn.h>
+
 using namespace bold;
 using namespace std;
 using namespace Eigen;

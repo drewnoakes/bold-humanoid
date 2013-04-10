@@ -22,16 +22,25 @@ bool Agent::init()
   d_streamer->setCamera(d_camera);
 
   d_streamer->registerControls("camera", d_camera->getControls());
-  for (auto const& pair : VisualCortex::getInstance().getControlsByFamily())
+  for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
 
   Debugger::getInstance().update(d_CM730);
 
-  AgentModel::getInstance().initialise(/*d_ini*/);
+  // TODO source imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal from config
+  int imageWidth = 320;
+  int imageHeight = 240;
+  double focalLength = 0.025;
+  double rangeVertical = 46/180.0 * M_PI;
+  double rangeHorizontal = 58/180.0 * M_PI;;
+
+  d_cameraModel = std::make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
+
+  d_agentModel = make_shared<AgentModel>();
 
   d_haveBody = initBody();
 
-  d_state = S_INIT;
+  d_state = State::S_INIT;
 
   cout << "[Agent::init] Done" << endl;
 

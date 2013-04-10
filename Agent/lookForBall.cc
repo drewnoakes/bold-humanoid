@@ -6,9 +6,9 @@ void Agent::lookForBall()
 {
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
 
-  auto& vision = VisualCortex::getInstance();
+  auto const& ballObs = AgentState::getInstance().cameraFrame()->getBallObservation();
 
-  if (vision.isBallVisible())
+  if (ballObs.hasValue())
   {
     d_ballSeenCnt++;
 
@@ -17,7 +17,7 @@ void Agent::lookForBall()
 
     // If the ball has in view long enough, stop looking for it
     if (d_ballSeenCnt >= 15)
-      d_state = S_APPROACH_BALL;
+      d_state = State::S_APPROACH_BALL;
   }
   else
   {

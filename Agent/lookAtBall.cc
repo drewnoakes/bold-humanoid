@@ -2,13 +2,13 @@
 
 void Agent::lookAtBall()
 {
-  auto& vision = VisualCortex::getInstance();
+  auto const& ballObs = AgentState::getInstance().cameraFrame()->getBallObservation();
 
-  if (!vision.isBallVisible())
+  if (!ballObs.hasValue())
   {
     cerr << "[Agent::lookAtBall] No ball seen" << endl;
     return;
   }
 
-  lookAt(vision.ballObservation().pos);
+  lookAt(*ballObs.value());
 }

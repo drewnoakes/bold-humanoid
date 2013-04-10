@@ -1,15 +1,18 @@
 #ifndef BOLD_AGENT_HH
 #define BOLD_AGENT_HH
 
+#include <Eigen/Core>
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
-#include <opencv2/opencv.hpp>
-#include <Eigen/Core>
 #include <memory>
+#include <opencv2/opencv.hpp>
 
+#include "../AgentModel/agentmodel.hh"
 #include "../Ambulator/ambulator.hh"
+#include "../CameraModel/cameramodel.hh"
 #include "../GameController/GameControllerReceiver.hh"
 #include "../MX28Alarm/MX28Alarm.hh"
+#include "../VisualCortex/visualcortex.hh"
 
 class Joystick;
 
@@ -18,7 +21,7 @@ namespace bold
   class DataStreamer;
   class Camera;
 
-  enum State
+  enum class State
   {
     S_INIT,
     S_LOOK_FOR_BALL,
@@ -59,10 +62,12 @@ namespace bold
     std::shared_ptr<Robot::LinuxMotionTimer> d_motionTimer;
     std::shared_ptr<DataStreamer> d_streamer;
     std::shared_ptr<Camera> d_camera;
+    std::shared_ptr<VisualCortex> d_visualCortex;
     Ambulator d_ambulator;
     std::shared_ptr<Joystick> d_joystick;
     GameControllerReceiver d_gameControlReceiver;
-    bold::MX28Alarm d_alarmLedByJointId[Robot::JointData::NUMBER_OF_JOINTS];
+    std::shared_ptr<CameraModel> d_cameraModel;
+    std::shared_ptr<AgentModel> d_agentModel;
 
     // State
     /** Number of consecutive cycles during which the ball has been seen. */

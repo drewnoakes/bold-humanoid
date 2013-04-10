@@ -7,10 +7,11 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 
+#include "../CameraModel/cameramodel.hh"
 #include "../Control/control.hh"
+#include "../geometry/LineSegment2i.hh"
 #include "../LineFinder/linefinder.hh"
 #include "../PixelLabel/pixellabel.hh"
-#include "../geometry/LineSegment2i.hh"
 
 class minIni;
 
@@ -32,22 +33,6 @@ namespace bold
   class CartoonPass;
   class LabelCountPass;
 
-  enum ObsType
-  {
-    O_BALL,
-    O_GOAL_POST,
-    O_LEFT_GOAL_POST,
-    O_RIGHT_GOAL_POST
-  };
-
-  struct Observation
-  {
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-    ObsType type;
-    Eigen::Vector2f pos;
-  };
-
   /** Bold-humanoid's vision processing subsystem. */
   class VisualCortex
   {
@@ -64,23 +49,10 @@ namespace bold
     /** Composes and enqueues a debugging image. */
     void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer);
 
-    bool isBallVisible() const { return d_isBallVisible; }
-    std::vector<Observation> observations() const { return d_observations; }
-    std::vector<Observation> goalObservations() const { return d_goalObservations; }
-    Observation ballObservation() const { return d_ballObservation; }
-
-    std::vector<LineSegment2i> lines() const { return d_observedLineSegments; }
-
-    /** Gets the singleton instance of the VisualCortex. */
-    static VisualCortex& getInstance();
-
   private:
     std::map<std::string,std::vector<Control>> d_controlsByFamily;
 
-    std::vector<Observation> d_observations;
-    std::vector<Observation> d_goalObservations;
-    Observation d_ballObservation;
-    bool d_isBallVisible;
+    std::shared_ptr<CameraModel> d_cameraModel;
 
     std::shared_ptr<PixelLabel> d_goalLabel;
     std::shared_ptr<PixelLabel> d_ballLabel;
@@ -88,27 +60,23 @@ namespace bold
     std::shared_ptr<PixelLabel> d_lineLabel;
 
     std::shared_ptr<ImageLabeller> d_imageLabeller;
+
+    /** A cached Mat, to be re-used each image pass. */
     cv::Mat d_labelledImage;
 
     std::shared_ptr<LineFinder> d_lineFinder;
 
     std::shared_ptr<ImagePassRunner<uchar>> d_imagePassRunner;
+
     std::shared_ptr<LineDotPass<uchar>> d_lineDotPass;
     std::shared_ptr<BlobDetectPass> d_blobDetectPass;
     std::shared_ptr<CartoonPass> d_cartoonPass;
     std::shared_ptr<LabelCountPass> d_labelCountPass;
 
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
-    std::vector<LineSegment2i> d_observedLineSegments;
 
     int d_minBallArea;
   };
-
-  inline VisualCortex& VisualCortex::getInstance()
-  {
-    static VisualCortex instance;
-    return instance;
-  }
 }
 
 #endif

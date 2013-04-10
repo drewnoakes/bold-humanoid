@@ -6,5 +6,5 @@ bool DataStreamer::shouldProvideImage()
   // With experience we may find a better solution.
 
   return d_cameraSessions.size() != 0
-      && AgentModel::getInstance().getCycleNumber() % d_streamFramePeriod == 0;
+      && AgentState::getInstance().getCameraFrameNumber() % d_streamFramePeriod == 0;
 }

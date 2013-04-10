@@ -1,11 +1,10 @@
 #include "agent.ih"
+
 #include "../AgentModel/agentmodel.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 
 void Agent::readSubBoardData()
 {
-  auto& am = AgentModel::getInstance();
-
-
   //
   // READ ALL DATA IN BULK
   //
@@ -21,38 +20,19 @@ void Agent::readSubBoardData()
   //
   // READ FROM SUB BOARD
   //
-  am.cm730State.init(d_CM730.m_BulkReadData[CM730::ID_CM]);
+  CM730Snapshot cm730Snapshot;
+  cm730Snapshot.init(d_CM730.m_BulkReadData[CM730::ID_CM]);
 
   //
   // READ FROM EACH JOINT
   //
+  auto mx28Snapshots = make_shared<vector<MX28Snapshot>>();
   for (int jointId = JointData::ID_R_SHOULDER_PITCH; jointId < JointData::NUMBER_OF_JOINTS; jointId++)
   {
-    MX28Snapshot& mx28 = am.mx28States[jointId];
-
+    MX28Snapshot mx28;
     mx28.init(d_CM730.m_BulkReadData[jointId], jointId);
-
-    // If the alarm state for an MX28 has changed, print it out
-    // TODO do we need to examine mx28.alarmShutdown as well? it seems to hold the same flags as mx28.alarmLed
-    if (mx28.alarmLed != d_alarmLedByJointId[jointId])
-    {
-      d_alarmLedByJointId[jointId] = mx28.alarmLed;
-      cerr << "[Agent::readSubBoardData] MX28[id=" << jointId << "] alarmLed flags changed: "
-           << mx28.alarmLed << endl;
-    }
-
-//     if (mx28.alarmLed.hasError())
-//     {
-//       cerr << "[Agent::readSubBoardData] MX28[id=" << jointId << "] alarmLed flags: "
-//            << mx28.alarmLed << endl;
-//     }
-
-//     if (mx28.alarmShutdown.hasError())
-//     {
-//       cerr << "[Agent::readSubBoardData] MX28[id=" << jointId << "] alarmShutdown flags: "
-//            << mx28.alarmShutdown << endl;
-//     }
+    mx28Snapshots->push_back(mx28);
   }
 
-  am.updated();
+  AgentState::getInstance().body()->update(make_shared<CM730Snapshot>(cm730Snapshot), mx28Snapshots);
 }

@@ -5,8 +5,8 @@
 #include <time.h>
 #include <stdio.h>
 
+#include "../AgentState/agentstate.hh"
 #include "../AgentModel/agentmodel.hh"
-#include "../VisualCortex/visualcortex.hh"
 #include "../WorldModel/worldmodel.hh"
 
 using namespace Robot;
@@ -52,16 +52,16 @@ void Debugger::addEventTiming(EventTiming const& eventTiming)
 
 void Debugger::update(CM730& cm730)
 {
-  auto& vision = VisualCortex::getInstance();
+  auto const& cameraFrame = AgentState::getInstance().cameraFrame();
 
   int ledFlags = 0;
-  if (vision.isBallVisible())
+  if (cameraFrame->getBallObservation().hasValue())
     ledFlags |= LED_RED;
 
 //if (somethingElse)
 //  value |= LED_BLUE;
 
-  if (vision.goalObservations().size() > 1)
+  if (cameraFrame->getGoalObservations().size() > 1)
     ledFlags |= LED_GREEN;
 
   if (ledFlags != d_lastLedFlags)

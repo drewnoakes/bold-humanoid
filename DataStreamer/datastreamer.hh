@@ -84,6 +84,7 @@ namespace bold
     void processCameraCommand(std::string json);
     void writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
 
+    // TODO can this be const?
     std::vector<Control> getDebugControls();
 
     bool d_gameStateUpdated;

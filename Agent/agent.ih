@@ -1,6 +1,7 @@
 #include "agent.hh"
 
 #include "../AgentModel/agentmodel.hh"
+#include "../AgentState/agentstate.hh"
 #include "../Camera/camera.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"

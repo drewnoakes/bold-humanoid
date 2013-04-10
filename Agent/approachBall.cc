@@ -2,11 +2,11 @@
 
 void Agent::approachBall()
 {
-  auto& vision = VisualCortex::getInstance();
+  auto const& ballObservation = AgentState::getInstance().cameraFrame()->getBallObservation();
 
-  if (!vision.isBallVisible())
+  if (!ballObservation.hasValue())
   {
-    d_state = S_LOOK_FOR_BALL;
+    d_state = State::S_LOOK_FOR_BALL;
     return;
   }
 
@@ -26,7 +26,7 @@ void Agent::approachBall()
   // Looking all the way down and straight ahead
   if (tilt <= tilt_min + 8 && fabs(pan) <= maxKickAngle)
   {
-    d_state = S_LOOK_FOR_GOAL;
+    d_state = State::S_LOOK_FOR_GOAL;
     return;
   }
 
@@ -35,7 +35,7 @@ void Agent::approachBall()
   moveDir = Vector2d(5.0, 0).cwiseMax(tilt_percent * moveDir);
 
   // Ball underneath center: small steps
-  if (vision.ballObservation().pos.y() > d_camera->getPixelFormat().height / 2 + 10)
+  if (ballObservation.value()->y() > d_camera->getPixelFormat().height / 2 + 10)
   {
     cout << "Fine tune walk!" << endl;
     moveDir.x() = 3.0;

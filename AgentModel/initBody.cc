@@ -4,7 +4,7 @@ void AgentModel::initBody()
 {
   d_torso = make_shared<Limb>();
   d_torso->name = "torso";
-  d_limbs["torso"] = d_torso;
+  d_limbByName["torso"] = d_torso;
 
   // TODO add gyro / acc joints, as done for camera
 
@@ -20,7 +20,7 @@ void AgentModel::initBody()
   auto neck = make_shared<Limb>();
   neck->name = "neck";
   torsoNeckJoint->bodyPart = neck;
-  d_limbs[neck->name] = neck;
+  d_limbByName[neck->name] = neck;
 
   auto neckHeadJoint = make_shared<Joint>();
   neckHeadJoint->id = JointData::ID_HEAD_TILT;
@@ -32,7 +32,7 @@ void AgentModel::initBody()
   auto head = make_shared<Limb>();
   head->name = "head";
   neckHeadJoint->bodyPart = head;
-  d_limbs[head->name] = head;
+  d_limbByName[head->name] = head;
 
   auto headCameraJoint = make_shared<Joint>();
   headCameraJoint->id = -1;
@@ -48,7 +48,7 @@ void AgentModel::initBody()
   auto camera = make_shared<Limb>();
   camera->name = "camera";
   headCameraJoint->bodyPart = camera;
-  d_limbs[camera->name] = camera;
+  d_limbByName[camera->name] = camera;
 
   // LEFT ARM
 
@@ -69,7 +69,7 @@ void AgentModel::initBody()
   auto lupperArm = make_shared<Limb>();
   lupperArm->name = "lUpperArm";
   lshoulderShoulderJoint->bodyPart = lupperArm;
-  d_limbs[lupperArm->name] = lupperArm;
+  d_limbByName[lupperArm->name] = lupperArm;
 
   auto lupperLowerArmJoint = make_shared<Joint>();
   lupperLowerArmJoint->id = JointData::ID_L_ELBOW;
@@ -81,7 +81,7 @@ void AgentModel::initBody()
   auto llowerArm = make_shared<Limb>();
   llowerArm->name = "lLowerArm";
   lupperLowerArmJoint->bodyPart = llowerArm;
-  d_limbs[llowerArm->name] = llowerArm;
+  d_limbByName[llowerArm->name] = llowerArm;
 
   // RIGHT ARM
 
@@ -102,7 +102,7 @@ void AgentModel::initBody()
   auto rupperArm = make_shared<Limb>();
   rupperArm->name = "rUpperArm";
   rshoulderShoulderJoint->bodyPart = rupperArm;
-  d_limbs[rupperArm->name] = rupperArm;
+  d_limbByName[rupperArm->name] = rupperArm;
 
   auto rupperLowerArmJoint = make_shared<Joint>();
   rupperLowerArmJoint->id = JointData::ID_R_ELBOW;
@@ -114,7 +114,7 @@ void AgentModel::initBody()
   auto rlowerArm = make_shared<Limb>();
   rlowerArm->name = "rLowerArm";
   rupperLowerArmJoint->bodyPart = rlowerArm;
-  d_limbs[rlowerArm->name] = rlowerArm;
+  d_limbByName[rlowerArm->name] = rlowerArm;
 
   // LEFT LEG
 
@@ -142,7 +142,7 @@ void AgentModel::initBody()
   auto lupperLeg = make_shared<Limb>();
   lupperLeg->name = "lUpperLeg";
   lHipHip2Joint->bodyPart = lupperLeg;
-  d_limbs[lupperLeg->name] = lupperLeg;
+  d_limbByName[lupperLeg->name] = lupperLeg;
 
   auto lupperLowerLegJoint = make_shared<Joint>();
   lupperLowerLegJoint->id = JointData::ID_L_KNEE;
@@ -154,7 +154,7 @@ void AgentModel::initBody()
   auto llowerLeg = make_shared<Limb>();
   llowerLeg->name = "lLowerLeg";
   lupperLowerLegJoint->bodyPart = llowerLeg;
-  d_limbs[llowerLeg->name] = llowerLeg;
+  d_limbByName[llowerLeg->name] = llowerLeg;
 
   auto llowerLegAnkleJoint = make_shared<Joint>();
   llowerLegAnkleJoint->id = JointData::ID_L_ANKLE_PITCH;
@@ -173,7 +173,7 @@ void AgentModel::initBody()
   auto leftFoot = make_shared<Limb>();
   leftFoot->name = "lFoot";
   lankleFootJoint->bodyPart = leftFoot;
-  d_limbs[leftFoot->name] = leftFoot;
+  d_limbByName[leftFoot->name] = leftFoot;
 
   // RIGHT LEG
 
@@ -201,7 +201,7 @@ void AgentModel::initBody()
   auto rupperLeg = make_shared<Limb>();
   rupperLeg->name = "rUpperLeg";
   rHipHip2Joint->bodyPart = rupperLeg;
-  d_limbs[rupperLeg->name] = rupperLeg;
+  d_limbByName[rupperLeg->name] = rupperLeg;
 
   auto rupperLowerLegJoint = make_shared<Joint>();
   rupperLowerLegJoint->id = JointData::ID_R_KNEE;
@@ -213,7 +213,7 @@ void AgentModel::initBody()
   auto rlowerLeg = make_shared<Limb>();
   rlowerLeg->name = "rLowerLeg";
   rupperLowerLegJoint->bodyPart = rlowerLeg;
-  d_limbs[rlowerLeg->name] = rlowerLeg;
+  d_limbByName[rlowerLeg->name] = rlowerLeg;
 
   auto rlowerLegAnkleJoint = make_shared<Joint>();
   rlowerLegAnkleJoint->id = JointData::ID_R_ANKLE_PITCH;
@@ -232,5 +232,29 @@ void AgentModel::initBody()
   auto rfoot = make_shared<Limb>();
   rfoot->name = "rFoot";
   rankleFootJoint->bodyPart = rfoot;
-  d_limbs[rfoot->name] = rfoot;
+  d_limbByName[rfoot->name] = rfoot;
+
+  // Visitor pattern with std::function for all joints in the body
+  std::function<void(shared_ptr<BodyPart>, function<void(shared_ptr<Joint>)>)> walkJoints;
+  walkJoints = [&](shared_ptr<BodyPart> bodyPart, function<void(shared_ptr<Joint>)> action)
+  {
+    auto const limb = std::dynamic_pointer_cast<Limb>(bodyPart);
+    auto const joint = std::dynamic_pointer_cast<Joint>(bodyPart);
+
+    if (limb)
+    {
+      for (auto const& joint : limb->joints)
+      {
+        walkJoints(joint, action);
+      }
+    }
+    else if (joint)
+    {
+      action(joint);
+      walkJoints(joint->bodyPart, action);
+    }
+  };
+
+  // Cache joints by ID
+  walkJoints(d_torso, [this](shared_ptr<Joint> joint) { d_jointById[joint->id] = joint; });
 }

@@ -4,6 +4,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
 {
   auto& debugger = Debugger::getInstance();
   auto t = Debugger::getTimestamp();
+  shared_ptr<CameraFrameState> cameraFrame = AgentState::getInstance().cameraFrame();
 
   //
   // PROCESS THE IMAGE
@@ -21,7 +22,8 @@ void VisualCortex::integrateImage(cv::Mat& image)
   t = debugger.timeEvent(t, "Image Processing/Pass");
 
   // Find lines
-  d_observedLineSegments = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
+
+  auto observedLineSegments = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
   t = debugger.timeEvent(t, "Image Processing/Line Search");
 
   // Find blobs
@@ -32,11 +34,10 @@ void VisualCortex::integrateImage(cv::Mat& image)
   // UPDATE STATE
   //
 
-  d_observations.clear();
-  d_goalObservations.clear();
+  vector<Vector2f> goalObservations;
+  Maybe<Vector2f> ballObservation = Maybe<Vector2f>::empty();
 
   // Do we have a ball?
-  d_isBallVisible = false;
   if (blobsPerLabel[d_ballLabel].size() > 0)
   {
     // The first is the biggest, topmost ball blob
@@ -44,14 +45,10 @@ void VisualCortex::integrateImage(cv::Mat& image)
 
     if (ball.area > d_minBallArea)
     {
-      Observation ballObs;
-      ballObs.type = O_BALL;
-      ballObs.pos = ball.mean;
+      Vector2f pos = ball.mean;
       // Take the bottom of the ball as observation
-      ballObs.pos.y() = ball.ul.y();
-      d_observations.push_back(ballObs);
-      d_ballObservation = ballObs;
-      d_isBallVisible = true;
+      pos.y() = ball.ul.y();
+      ballObservation = Maybe<Vector2f>(pos);
     }
   }
 
@@ -62,17 +59,19 @@ void VisualCortex::integrateImage(cv::Mat& image)
     if (wh.minCoeff() > 5  &&  // ignore small blobs
         wh.y() > wh.x())       // Higher than it is lower
     {
-      // Take center of topmost run (the first)
-      Observation postObs;
-      postObs.type = O_GOAL_POST;
       Run const& topRun = *b.runs.begin();
-      postObs.pos.y() = topRun.y;
-      postObs.pos.x() = (topRun.endX + topRun.startX) / 2.0f;
 
-      d_observations.push_back(postObs);
-      d_goalObservations.push_back(postObs);
+      // Take center of topmost run (the first)
+      Vector2f pos(
+        (topRun.endX + topRun.startX) / 2.0f,
+        topRun.y
+      );
+
+      goalObservations.push_back(pos);
     }
   }
+
+  AgentState::getInstance().setCameraFrame(make_shared<CameraFrameState>(goalObservations, ballObservation, observedLineSegments));
 
   debugger.timeEvent(t, "Image Processing/Updating State");
 }

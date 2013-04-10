@@ -41,9 +41,10 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw observed lines
-  if (streamer->shouldDrawObservedLines() && d_observedLineSegments.size() > 0)
+  auto const& observedLineSegments = AgentState::getInstance().cameraFrame()->getObservedLineSegments();
+  if (streamer->shouldDrawObservedLines() && observedLineSegments.size() > 0)
   {
-    for (LineSegment2i const& line : d_observedLineSegments)
+    for (LineSegment2i const& line : observedLineSegments)
     {
       line.draw(debugImage, observedLineColour, 2);
     }
@@ -76,7 +77,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   if (streamer->shouldDrawExpectedLines())
   {
     auto fieldLines = WorldModel::getInstance().getFieldLines();
-    Projector projector = AgentModel::getInstance().getCameraModel()->getProjector();
+    Projector projector = d_cameraModel->getProjector();
 
     double torsoX = 1.0;
     double torsoY = -1.0;

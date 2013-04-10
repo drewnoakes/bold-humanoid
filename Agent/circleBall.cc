@@ -5,21 +5,19 @@ void Agent::circleBall()
   static Debugger::timestamp_t circleStartTime = Debugger::getTimestamp();
   static double circleDurationSeconds;
 
-  auto& vision = VisualCortex::getInstance();
-
-  if (d_state == S_START_CIRCLE_BALL)
+  if (d_state == State::S_START_CIRCLE_BALL)
   {
     circleStartTime = Debugger::getTimestamp();
 
     lookAtGoal();
 
-    if (vision.goalObservations().size() < 2)
+    if (AgentState::getInstance().cameraFrame()->getGoalObservations().size() < 2)
     {
       d_goalSeenCnt--;
       if (d_goalSeenCnt <= 0)
       {
         d_goalSeenCnt = 0;
-        d_state = S_LOOK_FOR_GOAL;
+        d_state = State::S_LOOK_FOR_GOAL;
         return;
       }
     }
@@ -34,7 +32,7 @@ void Agent::circleBall()
 
     if (abs(panRatio) < 0.2)
     {
-      d_state = S_START_PREKICK_LOOK;
+      d_state = State::S_START_PREKICK_LOOK;
       return;
     }
 
@@ -45,7 +43,7 @@ void Agent::circleBall()
     d_ambulator.setMoveDir(Eigen::Vector2d(x, y));
     d_ambulator.setTurnAngle(a);
 
-    d_state = S_CIRCLE_BALL;
+    d_state = State::S_CIRCLE_BALL;
   }
   else
   {
@@ -56,7 +54,7 @@ void Agent::circleBall()
     if (dt >= circleDurationSeconds)
     {
       stand();
-      d_state = S_LOOK_FOR_GOAL;
+      d_state = State::S_LOOK_FOR_GOAL;
     }
   }
 }

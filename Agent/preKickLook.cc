@@ -10,7 +10,7 @@ void Agent::preKickLook()
 
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
 
-  if (d_state == S_START_PREKICK_LOOK)
+  if (d_state == State::S_START_PREKICK_LOOK)
   {
     timeval now;
     gettimeofday(&now, 0);
@@ -18,7 +18,7 @@ void Agent::preKickLook()
 
     Head::GetInstance()->MoveByAngle(0, tilt_min);
 
-    d_state = S_PREKICK_LOOK;
+    d_state = State::S_PREKICK_LOOK;
   }
   else
   {
@@ -29,11 +29,11 @@ void Agent::preKickLook()
 
     if (dt >= 0.5)
     {
-      auto& vision = VisualCortex::getInstance();
+      auto const& cameraFrame = AgentState::getInstance().cameraFrame();
 
-      if (!vision.isBallVisible())
+      if (!cameraFrame->isBallVisible())
       {
-        d_state = S_LOOK_FOR_BALL;
+        d_state = State::S_LOOK_FOR_BALL;
         return;
       }
 
@@ -41,9 +41,11 @@ void Agent::preKickLook()
 
       static auto w = d_camera->getPixelFormat().width;
 
-      cout << "KICKING!!! " << vision.ballObservation().pos.transpose() << " " << (w/2) << endl;
+      auto const& ballObs = cameraFrame->getBallObservation().value();
 
-      if (vision.ballObservation().pos.x() < (w / 2))
+      cout << "KICKING!!! " << ballObs->transpose() << " " << (w/2) << endl;
+
+      if (ballObs->x() < (w / 2))
       {
         while(Robot::Action::GetInstance()->Start("rk") == false)
           usleep(8000);
@@ -59,7 +61,7 @@ void Agent::preKickLook()
       }
 
       d_ballSeenCnt = d_goalSeenCnt = 0;
-      d_state = S_LOOK_FOR_BALL;
+      d_state = State::S_LOOK_FOR_BALL;
     }
 
   }

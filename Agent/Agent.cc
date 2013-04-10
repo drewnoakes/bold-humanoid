@@ -19,6 +19,9 @@ Agent::Agent(std::string const& U2D_dev,
     d_ballSeenCnt(0),
     d_goalSeenCnt(0)
 {
+  d_visualCortex = std::make_shared<VisualCortex>();
+  d_visualCortex->initialise(ini);
+
   if (useJoystick)
   {
     d_joystick = make_shared<Joystick>(1);

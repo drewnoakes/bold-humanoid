@@ -14,35 +14,35 @@ int DataStreamer::callback_agent_model(
 
   if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
   {
-    AgentModel& agentModel = AgentModel::getInstance();
+    BodyState& body = *AgentState::getInstance().body();
 
     int n = sprintf((char*)p, "%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f",
-                    agentModel.cm730State.gyro.x(),
-                    agentModel.cm730State.gyro.y(),
-                    agentModel.cm730State.gyro.z(),
-                    agentModel.cm730State.acc.x(),
-                    agentModel.cm730State.acc.y(),
-                    agentModel.cm730State.acc.z(),
-                    agentModel.mx28States[1].presentPosition,
-                    agentModel.mx28States[2].presentPosition,
-                    agentModel.mx28States[3].presentPosition,
-                    agentModel.mx28States[4].presentPosition,
-                    agentModel.mx28States[5].presentPosition,
-                    agentModel.mx28States[6].presentPosition,
-                    agentModel.mx28States[7].presentPosition,
-                    agentModel.mx28States[8].presentPosition,
-                    agentModel.mx28States[9].presentPosition,
-                    agentModel.mx28States[10].presentPosition,
-                    agentModel.mx28States[11].presentPosition,
-                    agentModel.mx28States[12].presentPosition,
-                    agentModel.mx28States[13].presentPosition,
-                    agentModel.mx28States[14].presentPosition,
-                    agentModel.mx28States[15].presentPosition,
-                    agentModel.mx28States[16].presentPosition,
-                    agentModel.mx28States[17].presentPosition,
-                    agentModel.mx28States[18].presentPosition,
-                    agentModel.mx28States[19].presentPosition,
-                    agentModel.mx28States[20].presentPosition);
+                    body.getCM730State().gyro.x(),
+                    body.getCM730State().gyro.y(),
+                    body.getCM730State().gyro.z(),
+                    body.getCM730State().acc.x(),
+                    body.getCM730State().acc.y(),
+                    body.getCM730State().acc.z(),
+                    body.getMX28State(1).presentPosition,
+                    body.getMX28State(2).presentPosition,
+                    body.getMX28State(3).presentPosition,
+                    body.getMX28State(4).presentPosition,
+                    body.getMX28State(5).presentPosition,
+                    body.getMX28State(6).presentPosition,
+                    body.getMX28State(7).presentPosition,
+                    body.getMX28State(8).presentPosition,
+                    body.getMX28State(9).presentPosition,
+                    body.getMX28State(10).presentPosition,
+                    body.getMX28State(11).presentPosition,
+                    body.getMX28State(12).presentPosition,
+                    body.getMX28State(13).presentPosition,
+                    body.getMX28State(14).presentPosition,
+                    body.getMX28State(15).presentPosition,
+                    body.getMX28State(16).presentPosition,
+                    body.getMX28State(17).presentPosition,
+                    body.getMX28State(18).presentPosition,
+                    body.getMX28State(19).presentPosition,
+                    body.getMX28State(20).presentPosition);
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {

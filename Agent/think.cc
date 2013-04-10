@@ -1,8 +1,9 @@
 #include "agent.ih"
+
+#include "../Camera/camera.hh"
 #include "../Debugger/debugger.hh"
 #include "../DataStreamer/datastreamer.hh"
-#include "../GameState/gamestate.hh"
-#include "../Camera/camera.hh"
+#include "../StateObject/GameState/gamestate.hh"
 
 void Agent::think()
 {
@@ -41,12 +42,11 @@ void Agent::think()
   //
   // Process the image
   //
-  VisualCortex& visualCortex = VisualCortex::getInstance();
-  visualCortex.integrateImage(image);
+  d_visualCortex->integrateImage(image);
   t = debugger.timeEvent(t, "Image Processing");
 
   if (d_streamer->shouldProvideImage())
-    visualCortex.streamDebugImage(image, d_streamer);
+    d_visualCortex->streamDebugImage(image, d_streamer);
   t = debugger.timeEvent(t, "Image Streaming");
 
   //
@@ -55,50 +55,50 @@ void Agent::think()
   RoboCupGameControlData gameControlData;
   if (d_gameControlReceiver.receive(&gameControlData))
   {
-    GameState::getInstance().update(gameControlData);
+    AgentState::getInstance().setGameState(make_shared<GameState>(gameControlData));
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
 
   switch (d_state)
   {
-  case S_INIT:
+  case State::S_INIT:
     break;
-    d_state = S_LOOK_FOR_BALL;
+    d_state = State::S_LOOK_FOR_BALL;
 
-  case S_LOOK_FOR_BALL:
+  case State::S_LOOK_FOR_BALL:
     lookForBall();
     break;
 
-  case S_APPROACH_BALL:
+  case State::S_APPROACH_BALL:
     approachBall();
     break;
 
-  case S_LOOK_FOR_GOAL:
+  case State::S_LOOK_FOR_GOAL:
     lookForGoal();
     break;
 
-  case S_START_CIRCLE_BALL:
-  case S_CIRCLE_BALL:
+  case State::S_START_CIRCLE_BALL:
+  case State::S_CIRCLE_BALL:
     circleBall();
     break;
 
-  case S_START_PREKICK_LOOK:
-  case S_PREKICK_LOOK:
+  case State::S_START_PREKICK_LOOK:
+  case State::S_PREKICK_LOOK:
     preKickLook();
     break;
 
-  case S_KICK:
+  case State::S_KICK:
     kick();
     stand();
 
     break;
 
-  case S_GET_UP:
+  case State::S_GET_UP:
     getUp();
     break;
   }
 
-  AgentModel::getInstance().state = d_state;
+//   AgentState::getInstance().state = d_state;
   t = debugger.timeEvent(t, "Process State");
 
   //
@@ -130,16 +130,17 @@ void Agent::think()
   //
   readSubBoardData();
   t = debugger.timeEvent(t, "Read Sub Board");
-  
-  AgentModel& am = AgentModel::getInstance();
-  am.updatePosture();
 
-  auto neck = am.getLimb("neck");
+//   AgentModel& am = AgentModel::getInstance();
+//   am.updatePosture();
+  auto const& body = AgentState::getInstance().body()->model();
+
+  auto neck = body.getLimb("neck");
   auto neckHeadJoint = neck->joints[0];
-  auto head = am.getLimb("head");
+  auto head = body.getLimb("head");
   auto cameraJoint = head->joints[0];
-  auto camera = am.getLimb("camera");
-  auto lFoot = am.getLimb("lFoot");
+  auto camera = body.getLimb("camera");
+  auto lFoot = body.getLimb("lFoot");
 
   /*
   cout << "---------------" << endl;
@@ -152,18 +153,20 @@ void Agent::think()
   cout << "cam2foot: " << endl << cameraToLFoot.translation().transpose() << endl;
   */
 
-  if (visualCortex.isBallVisible())
+  // TODO populate agent frame from camera frame
+
+  auto const& ballObs = AgentState::getInstance().cameraFrame()->getBallObservation();
+  if (ballObs.hasValue())
   {
-    auto ballObs = visualCortex.ballObservation();
-    cout << "Ball observed at pixel: " << ballObs.pos.transpose() << endl;
+    cout << "Ball observed at pixel: " << ballObs->transpose() << endl;
 
     double torsoHeight = lFoot->transform.inverse().translation().y();
     cout << "torsoHeight: " << torsoHeight << endl;
     // Multiplying with this transform brings coordinates from camera space in torso space
     auto cameraTransform = camera->transform;
     cout << "cameraTransform: " << endl << cameraTransform.matrix() << endl;
-    Spatialiser spatialiser(am.getCameraModel());
-    auto gp = spatialiser.findGroundPointForPixel(ballObs.pos.cast<int>(), torsoHeight, camera->transform);
+    Spatialiser spatialiser(d_cameraModel);
+    auto gp = spatialiser.findGroundPointForPixel(ballObs->cast<int>(), torsoHeight, camera->transform);
     cout << "ground point: " << gp << endl;
   }
 
