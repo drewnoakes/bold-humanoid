@@ -7,6 +7,7 @@ set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests
 
 include(ExternalProject)
 include(AddPcih)
+include(AddClass)
 
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
@@ -45,98 +46,11 @@ ExternalProject_Add(libwebsockets_lib
 )
 
 #
-# All boldhumanoid sources
+## Boldhumanoid sources
+#
+# Only add sources here that are not in class directory structure! Add classes separately below
 #
 set(BOLDHUMANOID_SOURCES
-./Agent/Agent.cc
-./Agent/approachBall.cc
-./Agent/circleBall.cc
-./Agent/init.cc
-./Agent/initCamera.cc
-./Agent/initBody.cc
-./Agent/lookAt.cc
-./Agent/lookAtBall.cc
-./Agent/lookAtGoal.cc
-./Agent/lookForBall.cc
-./Agent/lookForGoal.cc
-./Agent/preKickLook.cc
-./Agent/processInputCommands.cc
-./Agent/readSubBoardData.cc
-./Agent/run.cc
-./Agent/standUpIfFallen.cc
-./Agent/think.cc
-./AgentModel/initBody.cc
-./AgentModel/updatePosture.cc
-./Camera/Camera.cc
-./Camera/capture.cc
-./Camera/getControlValue.cc
-./Camera/initMemoryMapping.cc
-./Camera/listControls.cc
-./Camera/listFormats.cc
-./Camera/open.cc
-./Camera/pixelFormatRequestSize.cc
-./Camera/startCapture.cc
-./Camera/stopCapture.cc
-./CameraModel/directionForPixel.cc
-./Colour/bgr2hsv.cc
-./Colour/hsv2bgr.cc
-./Colour/hsvRange.cc
-./Colour/operator_ins.cc
-./Colour/YCbCr.cc
-./Control/create.cc
-./Control/handleRequest.cc
-./Control/staticfields.cc
-./Control/writeState.cc
-./CM730Snapshot/init.cc
-./Debugger/debugger.cc
-./DataStreamer/callbackAgentModel.cc
-./DataStreamer/callbackCamera.cc
-./DataStreamer/callbackGameState.cc
-./DataStreamer/callbackHttp.cc
-./DataStreamer/callbackTiming.cc
-./DataStreamer/close.cc
-./DataStreamer/DataStreamer.cc
-./DataStreamer/getDebugControls.cc
-./DataStreamer/initialise.cc
-./DataStreamer/processCameraCommand.cc
-./DataStreamer/registerControls.cc
-./DataStreamer/sendCameraControls.cc
-./DataStreamer/sendImageBytes.cc
-./DataStreamer/shouldProvideImage.cc
-./DataStreamer/streamImage.cc
-./DataStreamer/update.cc
-./DataStreamer/writeJson.cc
-./GameController/GameControllerReceiver.cc
-./geometry/Bounds2i.cc
-./geometry/LineSegment2i.cc
-./HoughLineAccumulator/houghlineaccumulator.cc
-./HoughLineExtractor/findLines.cc
-./HoughLineExtractor/findMaxLine.cc
-./ImageLabeller/ImageLabeller.cc
-./ImagePassHandler/BlobDetectPass/detectBlobs.cc
-./ImagePassHandler/BlobDetectPass/runSetToBlob.cc
-./ImagePassHandler/BlobDetectPass/BlobDetectPass.cc
-./LineFinder/RandomPairLineFinder/findLineSegments.cc
-./LineFinder/MaskWalkLineFinder/findLineSegments.cc
-./LineFinder/MaskWalkLineFinder/MaskWalkLineFinder.cc
-./LineFinder/MaskWalkLineFinder/rebuild.cc
-./LUTBuilder/buildLookUpTable.cc
-./Math/math.cc
-./MX28Snapshot/init.cc
-./Option/ActionOption/hasTerminated.cc
-./Option/ActionOption/runPolicy.cc
-./Option/FSMOption/runPolicy.cc
-./Option/LookAround/runPolicy.cc
-./Option/LookAtBall/runPolicy.cc
-./PixelFilterChain/applyFilters.cc
-./PixelLabel/fromConfig.cc
-./PixelLabel/pixellabel.cc
-./Spatialiser/findGroundPointForPixel.cc
-./VisualCortex/VisualCortex.cc
-./VisualCortex/initialise.cc
-./VisualCortex/integrateImage.cc
-./VisualCortex/streamDebugImage.cc
-./WorldModel/initialise.cc
 ${JOYSTICKDIR}/joystick.cc
 )
 
@@ -144,7 +58,7 @@ ${JOYSTICKDIR}/joystick.cc
 ## Internal header files to be pre-compiled
 #
 set(INTERNAL_HEADERS
-./Agent/agent.ih
+#./Agent/agent.ih
 ./AgentModel/agentmodel.ih
 ./Camera/camera.ih
 ./CameraModel/cameramodel.ih
@@ -187,11 +101,196 @@ set(BOLDHUMANOID_LINK_DIRS ${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
 link_directories(${BOLDHUMANOID_LINK_DIRS})
 
 #
+## Additional compile flags
+#
+set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare -Wno-unused-local-typedefs")
+
+add_class(BOLDHUMANOID
+  ./Agent/Agent.cc
+  ./Agent/approachBall.cc
+  ./Agent/circleBall.cc
+  ./Agent/init.cc
+  ./Agent/initCamera.cc
+  ./Agent/initBody.cc
+  ./Agent/lookAt.cc
+  ./Agent/lookAtBall.cc
+  ./Agent/lookAtGoal.cc
+  ./Agent/lookForBall.cc
+  ./Agent/lookForGoal.cc
+  ./Agent/preKickLook.cc
+  ./Agent/processInputCommands.cc
+  ./Agent/readSubBoardData.cc
+  ./Agent/run.cc
+  ./Agent/standUpIfFallen.cc
+  ./Agent/think.cc
+)
+
+add_class(BOLDHUMANOID
+  ./AgentModel/initBody.cc
+  ./AgentModel/updatePosture.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Camera/Camera.cc
+  ./Camera/capture.cc
+  ./Camera/getControlValue.cc
+  ./Camera/initMemoryMapping.cc
+  ./Camera/listControls.cc
+  ./Camera/listFormats.cc
+  ./Camera/open.cc
+  ./Camera/pixelFormatRequestSize.cc
+  ./Camera/startCapture.cc
+  ./Camera/stopCapture.cc
+)
+
+add_class(BOLDHUMANOID
+  ./CameraModel/directionForPixel.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Colour/bgr2hsv.cc
+  ./Colour/hsv2bgr.cc
+  ./Colour/hsvRange.cc
+  ./Colour/operator_ins.cc
+  ./Colour/YCbCr.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Control/create.cc
+  ./Control/handleRequest.cc
+  ./Control/staticfields.cc
+  ./Control/writeState.cc
+)
+
+add_class(BOLDHUMANOID
+  ./CM730Snapshot/init.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Debugger/debugger.cc
+)
+
+add_class(BOLDHUMANOID
+  ./DataStreamer/callbackAgentModel.cc
+  ./DataStreamer/callbackCamera.cc
+  ./DataStreamer/callbackGameState.cc
+  ./DataStreamer/callbackHttp.cc
+  ./DataStreamer/callbackTiming.cc
+  ./DataStreamer/close.cc
+  ./DataStreamer/DataStreamer.cc
+  ./DataStreamer/getDebugControls.cc
+  ./DataStreamer/initialise.cc
+  ./DataStreamer/processCameraCommand.cc
+  ./DataStreamer/registerControls.cc
+  ./DataStreamer/sendCameraControls.cc
+  ./DataStreamer/sendImageBytes.cc
+  ./DataStreamer/shouldProvideImage.cc
+  ./DataStreamer/streamImage.cc
+  ./DataStreamer/update.cc
+  ./DataStreamer/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./GameController/GameControllerReceiver.cc
+)
+
+add_class(BOLDHUMANOID
+  ./geometry/Bounds2i.cc
+  ./geometry/LineSegment2i.cc
+)
+
+add_class(BOLDHUMANOID
+  ./HoughLineAccumulator/houghlineaccumulator.cc
+)
+
+add_class(BOLDHUMANOID
+  ./HoughLineExtractor/findLines.cc
+  ./HoughLineExtractor/findMaxLine.cc
+)
+
+add_class(BOLDHUMANOID
+  ./ImageLabeller/ImageLabeller.cc
+)
+
+add_class(BOLDHUMANOID
+  ./ImagePassHandler/BlobDetectPass/detectBlobs.cc
+  ./ImagePassHandler/BlobDetectPass/runSetToBlob.cc
+  ./ImagePassHandler/BlobDetectPass/BlobDetectPass.cc
+)
+
+add_class(BOLDHUMANOID
+  ./LineFinder/RandomPairLineFinder/findLineSegments.cc
+)
+
+add_class(BOLDHUMANOID
+  ./LineFinder/MaskWalkLineFinder/findLineSegments.cc
+  ./LineFinder/MaskWalkLineFinder/MaskWalkLineFinder.cc
+  ./LineFinder/MaskWalkLineFinder/rebuild.cc
+)
+
+add_class(BOLDHUMANOID
+  ./LUTBuilder/buildLookUpTable.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Math/math.cc
+)
+
+add_class(BOLDHUMANOID
+  ./MX28Snapshot/init.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Option/ActionOption/hasTerminated.cc
+  ./Option/ActionOption/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Option/FSMOption/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Option/LookAround/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Option/LookAtBall/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
+  ./PixelFilterChain/applyFilters.cc
+)
+
+add_class(BOLDHUMANOID
+  ./PixelLabel/fromConfig.cc
+  ./PixelLabel/pixellabel.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Spatialiser/findGroundPointForPixel.cc
+)
+
+add_class(BOLDHUMANOID
+  ./VisualCortex/VisualCortex.cc
+  ./VisualCortex/initialise.cc
+  ./VisualCortex/integrateImage.cc
+  ./VisualCortex/streamDebugImage.cc
+)
+
+add_class(BOLDHUMANOID
+  ./WorldModel/initialise.cc
+)
+
+#
 ## Reusable object files target
 #
 add_library(boldhumanoid_objects OBJECT
   ${BOLDHUMANOID_SOURCES}
 )
+
+foreach(pch_target ${BOLDHUMANOID_PCH_TARGETS})
+  add_dependencies(boldhumanoid_objects ${pch_target})
+endforeach(pch_target)
 
 #
 ## Main executable
@@ -211,7 +310,6 @@ target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 ## Additional compile flags
 # TODO: fix things so we can use Eigen vectorization
 #
-set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare -Wno-unused-local-typedefs")
 set_target_properties(boldhumanoid_objects PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 
