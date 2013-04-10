@@ -1,6 +1,5 @@
 #include "visualcortex.hh"
 
-#include "../AgentModel/agentmodel.hh"
 #include "../AgentState/agentstate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../CameraModel/cameramodel.hh"
