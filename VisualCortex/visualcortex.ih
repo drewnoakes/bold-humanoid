@@ -3,6 +3,7 @@
 #include "../AgentModel/agentmodel.hh"
 #include "../AgentState/agentstate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../CameraModel/cameramodel.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
 #include "../ImageLabeller/imagelabeller.hh"

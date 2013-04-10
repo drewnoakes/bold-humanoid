@@ -7,16 +7,15 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 
-#include "../CameraModel/cameramodel.hh"
 #include "../Control/control.hh"
 #include "../geometry/LineSegment2i.hh"
-#include "../LineFinder/linefinder.hh"
 #include "../PixelLabel/pixellabel.hh"
 
 class minIni;
 
 namespace bold
 {
+  class CameraModel;
   class DataStreamer;
   class ImageLabeller;
 
@@ -29,6 +28,7 @@ namespace bold
   template <typename TPixel>
   class LineDotPass;
 
+  class LineFinder;
   class BlobDetectPass;
   class CartoonPass;
   class LabelCountPass;
