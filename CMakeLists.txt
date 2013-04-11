@@ -253,6 +253,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/HardwareState/update.cc
+)
+
+add_class(BOLDHUMANOID
   ./VisualCortex/VisualCortex.cc
   ./VisualCortex/initialise.cc
   ./VisualCortex/integrateImage.cc
