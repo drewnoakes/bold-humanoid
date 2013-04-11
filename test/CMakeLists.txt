@@ -7,11 +7,11 @@ set(TEST_SOURCES
 
 #
 ## Target for making google-test
-#
+# TODO make this compile in correct place when using out-of-source compilation
 externalproject_add(googletests
                     PREFIX google-test
-		    BINARY_DIR google-test
-		    SOURCE_DIR google-test
+		    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/google-test
+		    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/google-test
 		    DOWNLOAD_COMMAND ""
 		    UPDATE_COMMAND ""
 		    INSTALL_COMMAND "")

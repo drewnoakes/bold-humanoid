@@ -21,14 +21,12 @@ macro(add_class _prefix)
   set(_ih_path ${_path}/${_ih_name})
   set(_ih_full_path ${CMAKE_SOURCE_DIR}/${_ih_path})
   if(EXISTS ${_ih_full_path})
-    message("internal header found")
     string(REPLACE ".ih" ".ih.gch" _pcih_name ${_ih_name})
 
     # Path for precompiled header
     set(_pcih_full_dir_path ${CMAKE_CURRENT_BINARY_DIR}/${_path}/${_pcih_name})
     set(_pcih_full_path ${_pcih_full_dir_path}/${CMAKE_BUILD_TYPE}.c++)
 
-    message("pcih full path: "${_pcih_full_path})
     # Copy compile flags
     set(_COMPILE_FLAGS ${${_prefix}_COMPILE_FLAGS})
 
@@ -64,8 +62,15 @@ macro(add_class _prefix)
     set(_pcih_target "${_ih_name}_pcih")
     add_custom_target(${_pcih_target} DEPENDS ${_pcih_full_path})
     list(APPEND ${_prefix_pch_targets_var} ${_pcih_target})
+
+    string(REPLACE ".ih.gch" ".ih" _pcih_full_dir_path2 ${_pcih_full_dir_path})
+    set(_pcih_include_flag "-include ${_pcih_full_dir_path2} -Winvalid-pch")
+
+    # Add precompiled header as prefix header
+    foreach(_s ${_sources})
+      set_property(SOURCE ${_s} APPEND PROPERTY COMPILE_FLAGS ${_pcih_include_flag})
+    endforeach(_s)
+
   endif(EXISTS ${_ih_full_path})
 
-  message("_path: " ${_path})
-  message("_ih_path: " ${_ih_path})
 endmacro(add_class)
