@@ -15,6 +15,11 @@ namespace bold
   class HardwareState : public StateObject
   {
   public:
+    HardwareState()
+    : d_cm730State(0),
+      d_mx28States(0)
+    {}
+
     void update(std::shared_ptr<CM730Snapshot> cm730State, std::shared_ptr<std::vector<MX28Snapshot>> mx28States);
 
     const CM730Snapshot& getCM730State() const

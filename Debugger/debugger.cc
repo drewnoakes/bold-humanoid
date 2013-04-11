@@ -54,6 +54,9 @@ void Debugger::update(CM730& cm730)
 {
   auto const& cameraFrame = AgentState::getInstance().cameraFrame();
 
+  if (!cameraFrame)
+    return;
+
   int ledFlags = 0;
   if (cameraFrame->getBallObservation().hasValue())
     ledFlags |= LED_RED;

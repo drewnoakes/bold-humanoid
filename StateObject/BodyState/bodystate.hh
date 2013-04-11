@@ -17,6 +17,9 @@ namespace bold
   {
   public:
     BodyState()
+    : d_torso(),
+      d_jointById(),
+      d_limbByName()
     {
       initBody();
     };
