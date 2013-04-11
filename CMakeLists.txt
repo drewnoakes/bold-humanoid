@@ -4,6 +4,7 @@ project (BoldHumanoid)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests")
+set(PRECOMPILE_HEADERS ON CACHE BOOL "Choose whether to precompile headers")
 
 include(ExternalProject)
 include(AddPcih)
@@ -52,30 +53,6 @@ ExternalProject_Add(libwebsockets_lib
 #
 set(BOLDHUMANOID_SOURCES
 ${JOYSTICKDIR}/joystick.cc
-)
-
-#
-## Internal header files to be pre-compiled
-#
-set(INTERNAL_HEADERS
-#./Agent/agent.ih
-./Camera/camera.ih
-./CameraModel/cameramodel.ih
-./Colour/colour.ih
-./Control/control.ih
-./DataStreamer/datastreamer.ih
-./HoughLineAccumulator/houghlineaccumulator.ih
-./ImagePassHandler/BlobDetectPass/blobdetectpass.ih
-./LineFinder/MaskWalkLineFinder/maskwalklinefinder.ih
-./LUTBuilder/lutbuilder.ih
-./Option/ActionOption/actionoption.ih
-./Option/FSMOption/fsmoption.ih
-./Option/LookAround/lookaround.ih
-./Option/LookAtBall/lookatball.ih
-./PixelFilterChain/pixelfilterchain.ih
-./Spatialiser/spatialiser.ih
-./StateObject/BodyState/bodystate.ih
-./VisualCortex/visualcortex.ih
 )
 
 #
@@ -316,14 +293,6 @@ target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 #
 set_target_properties(boldhumanoid_objects PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
-
-#
-## Targets for creating precompiled internal headers
-#
-foreach(ih ${INTERNAL_HEADERS})
-  add_pcih(boldhumanoid_objects ${ih})
-endforeach(ih)
-
 
 #
 ## Target dependencies
