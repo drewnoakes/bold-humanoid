@@ -10,13 +10,12 @@ namespace bold
   {
   public:
     LookAtBall(std::string const& id, std::shared_ptr<CameraModel> cameraModel)
-    : Option(id),
-      d_cameraModel(cameraModel)
+      : Option(id),
+	d_cameraModel(cameraModel)
     {}
-
+    
     OptionList runPolicy() override;
-  };
-
+    
   private:
     std::shared_ptr<CameraModel> d_cameraModel;
   };
