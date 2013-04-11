@@ -2,16 +2,16 @@
 
 #include <LinuxDARwIn.h>
 
-#include "../AgentModel/agentmodel.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 
 using namespace std;
 using namespace bold;
 using namespace Eigen;
 using namespace Robot;
 
-TEST (AgentModelTests, posture)
+TEST (BodyStateTests, posture)
 {
-  auto am = AgentModel();
+  auto am = BodyState();
 
   EXPECT_EQ( 0, am.getJoint(JointData::ID_L_HIP_ROLL)->angle );
 

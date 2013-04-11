@@ -21,8 +21,8 @@
 
 #include "datastreamer.hh"
 
-#include "../AgentModel/agentmodel.hh"
 #include "../AgentState/agentstate.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 

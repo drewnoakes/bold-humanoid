@@ -1,6 +1,6 @@
 #include "agent.ih"
 
-#include "../AgentModel/agentmodel.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 
 void Agent::readSubBoardData()
@@ -35,7 +35,7 @@ void Agent::readSubBoardData()
   }
 
   HardwareState& hw = *AgentState::getInstance().hardware();
-  AgentModel& body = *AgentState::getInstance().body();
+  BodyState& body = *AgentState::getInstance().body();
 
   //
   // Update HardwareState

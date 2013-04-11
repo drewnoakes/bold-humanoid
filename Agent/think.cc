@@ -4,6 +4,7 @@
 #include "../Debugger/debugger.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../StateObject/GameState/gamestate.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 
 void Agent::think()
 {
@@ -141,7 +142,7 @@ void Agent::think()
   readSubBoardData();
   t = debugger.timeEvent(t, "Read Sub Board");
 
-  AgentModel& body = *AgentState::getInstance().body();
+  BodyState& body = *AgentState::getInstance().body();
 
   auto neck = body.getLimb("neck");
   auto neckHeadJoint = neck->joints[0];

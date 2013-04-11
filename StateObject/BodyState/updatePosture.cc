@@ -1,6 +1,6 @@
-#include "agentmodel.ih"
+#include "bodystate.ih"
 
-void AgentModel::updatePosture()
+void BodyState::updatePosture()
 {
   list<shared_ptr<BodyPart>> partQueue;
 

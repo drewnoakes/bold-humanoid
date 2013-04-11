@@ -59,7 +59,6 @@ ${JOYSTICKDIR}/joystick.cc
 #
 set(INTERNAL_HEADERS
 #./Agent/agent.ih
-./AgentModel/agentmodel.ih
 ./Camera/camera.ih
 ./CameraModel/cameramodel.ih
 ./Colour/colour.ih
@@ -75,6 +74,7 @@ set(INTERNAL_HEADERS
 ./Option/LookAtBall/lookatball.ih
 ./PixelFilterChain/pixelfilterchain.ih
 ./Spatialiser/spatialiser.ih
+./StateObject/BodyState/bodystate.ih
 ./VisualCortex/visualcortex.ih
 )
 
@@ -123,11 +123,6 @@ add_class(BOLDHUMANOID
   ./Agent/run.cc
   ./Agent/standUpIfFallen.cc
   ./Agent/think.cc
-)
-
-add_class(BOLDHUMANOID
-  ./AgentModel/initBody.cc
-  ./AgentModel/updatePosture.cc
 )
 
 add_class(BOLDHUMANOID
@@ -272,6 +267,11 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./Spatialiser/findGroundPointForPixel.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/BodyState/initBody.cc
+  ./StateObject/BodyState/updatePosture.cc
 )
 
 add_class(BOLDHUMANOID

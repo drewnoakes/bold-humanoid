@@ -7,24 +7,26 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../robotis/Framework/include/JointData.h"
-#include "../BodyPart/bodypart.hh"
+#include "../stateobject.hh"
+#include "../../BodyPart/bodypart.hh"
+#include "../../robotis/Framework/include/JointData.h"
 
 namespace bold
 {
-  // TODO rename as BodyModelState, and make subclass of StateObject
-
-  class AgentModel
+  class BodyState : public StateObject
   {
   public:
-    AgentModel()
+    BodyState()
     {
       initBody();
     };
 
     void updatePosture();
 
-    std::shared_ptr<Limb const> getTorso() const { return d_torso; }
+    std::shared_ptr<Limb const> getTorso() const
+    {
+      return d_torso;
+    }
 
     std::shared_ptr<Limb const> getLimb(std::string const& name) const
     {
@@ -58,9 +60,8 @@ namespace bold
   private:
     void initBody();
 
-    std::map<int, std::shared_ptr<Joint>> d_jointById;
-
     std::shared_ptr<Limb> d_torso;
+    std::map<int, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
   };
 }

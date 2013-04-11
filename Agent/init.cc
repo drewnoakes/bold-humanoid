@@ -25,8 +25,6 @@ bool Agent::init()
 
   Debugger::getInstance().update(d_CM730);
 
-  d_agentModel = make_shared<AgentModel>();
-
   // Sit action
   OptionPtr sit = make_shared<ActionOption>("sitdownaction","sit down");
   d_optionTree.addOption(sit);

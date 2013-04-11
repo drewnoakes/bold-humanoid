@@ -1,6 +1,6 @@
-#include "agentmodel.ih"
+#include "bodystate.ih"
 
-void AgentModel::initBody()
+void BodyState::initBody()
 {
   d_torso = make_shared<Limb>();
   d_torso->name = "torso";

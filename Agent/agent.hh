@@ -16,7 +16,7 @@ class Joystick;
 
 namespace bold
 {
-  class AgentModel;
+  class BodyState;
   class Camera;
   class CameraModel;
   class DataStreamer;
@@ -61,14 +61,14 @@ namespace bold
     Robot::LinuxCM730 d_linuxCM730;
     Robot::CM730 d_CM730;
     std::shared_ptr<Robot::LinuxMotionTimer> d_motionTimer;
+
     std::shared_ptr<DataStreamer> d_streamer;
     std::shared_ptr<Camera> d_camera;
-    std::shared_ptr<VisualCortex> d_visualCortex;
-    Ambulator d_ambulator;
-    std::shared_ptr<Joystick> d_joystick;
-    GameControllerReceiver d_gameControlReceiver;
     std::shared_ptr<CameraModel> d_cameraModel;
-    std::shared_ptr<AgentModel> d_agentModel;
+    std::shared_ptr<VisualCortex> d_visualCortex;
+    std::shared_ptr<Joystick> d_joystick;
+    Ambulator d_ambulator;
+    GameControllerReceiver d_gameControlReceiver;
 
     // State
     /** Number of consecutive cycles during which the ball has been seen. */
