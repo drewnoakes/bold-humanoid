@@ -14,35 +14,35 @@ int DataStreamer::callback_agent_model(
 
   if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
   {
-    BodyState& body = *AgentState::getInstance().body();
+    HardwareState& hardware = *AgentState::getInstance().hardware();
 
     int n = sprintf((char*)p, "%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f",
-                    body.getCM730State().gyro.x(),
-                    body.getCM730State().gyro.y(),
-                    body.getCM730State().gyro.z(),
-                    body.getCM730State().acc.x(),
-                    body.getCM730State().acc.y(),
-                    body.getCM730State().acc.z(),
-                    body.getMX28State(1).presentPosition,
-                    body.getMX28State(2).presentPosition,
-                    body.getMX28State(3).presentPosition,
-                    body.getMX28State(4).presentPosition,
-                    body.getMX28State(5).presentPosition,
-                    body.getMX28State(6).presentPosition,
-                    body.getMX28State(7).presentPosition,
-                    body.getMX28State(8).presentPosition,
-                    body.getMX28State(9).presentPosition,
-                    body.getMX28State(10).presentPosition,
-                    body.getMX28State(11).presentPosition,
-                    body.getMX28State(12).presentPosition,
-                    body.getMX28State(13).presentPosition,
-                    body.getMX28State(14).presentPosition,
-                    body.getMX28State(15).presentPosition,
-                    body.getMX28State(16).presentPosition,
-                    body.getMX28State(17).presentPosition,
-                    body.getMX28State(18).presentPosition,
-                    body.getMX28State(19).presentPosition,
-                    body.getMX28State(20).presentPosition);
+                    hardware.getCM730State().gyro.x(),
+                    hardware.getCM730State().gyro.y(),
+                    hardware.getCM730State().gyro.z(),
+                    hardware.getCM730State().acc.x(),
+                    hardware.getCM730State().acc.y(),
+                    hardware.getCM730State().acc.z(),
+                    hardware.getMX28State(1).presentPosition,
+                    hardware.getMX28State(2).presentPosition,
+                    hardware.getMX28State(3).presentPosition,
+                    hardware.getMX28State(4).presentPosition,
+                    hardware.getMX28State(5).presentPosition,
+                    hardware.getMX28State(6).presentPosition,
+                    hardware.getMX28State(7).presentPosition,
+                    hardware.getMX28State(8).presentPosition,
+                    hardware.getMX28State(9).presentPosition,
+                    hardware.getMX28State(10).presentPosition,
+                    hardware.getMX28State(11).presentPosition,
+                    hardware.getMX28State(12).presentPosition,
+                    hardware.getMX28State(13).presentPosition,
+                    hardware.getMX28State(14).presentPosition,
+                    hardware.getMX28State(15).presentPosition,
+                    hardware.getMX28State(16).presentPosition,
+                    hardware.getMX28State(17).presentPosition,
+                    hardware.getMX28State(18).presentPosition,
+                    hardware.getMX28State(19).presentPosition,
+                    hardware.getMX28State(20).presentPosition);
 
     if (libwebsocket_write(wsi, p, n, LWS_WRITE_TEXT) < 0)
     {

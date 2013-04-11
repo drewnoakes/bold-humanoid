@@ -1,27 +1,20 @@
-#ifndef BOLD_BODYSTATE_HH
-#define BOLD_BODYSTATE_HH
-
-#include "../stateobject.hh"
+#ifndef BOLD_HARDWARESTATE_HH
+#define BOLD_HARDWARESTATE_HH
 
 #include <memory>
 #include <vector>
 #include <iostream>
 
-#include "../../AgentModel/agentmodel.hh"
-#include "../../BodyPart/bodypart.hh"
+#include "../stateobject.hh"
 #include "../../CM730Snapshot/CM730Snapshot.hh"
 #include "../../MX28Snapshot/MX28Snapshot.hh"
 #include "../../robotis/Framework/include/JointData.h"
 
 namespace bold
 {
-  class BodyState : public StateObject
+  class HardwareState : public StateObject
   {
   public:
-    BodyState(std::shared_ptr<AgentModel> const& model)
-    : d_model(model)
-    {};
-
     void update(std::shared_ptr<CM730Snapshot> cm730State, std::shared_ptr<std::vector<MX28Snapshot>> mx28States)
     {
       d_cm730State = cm730State;
@@ -40,9 +33,6 @@ namespace bold
               << mx28.alarmLed << std::endl;
         }
 
-        auto const& joint = d_model->getJoint(jointId);
-        joint->angle = mx28.presentPosition;
-
 //     if (mx28.alarmLed.hasError())
 //     {
 //       cerr << "[Agent::readSubBoardData] MX28[id=" << jointId << "] alarmLed flags: "
@@ -55,8 +45,6 @@ namespace bold
 //            << mx28.alarmShutdown << endl;
 //     }
       }
-
-      d_model->updatePosture();
     };
 
     const CM730Snapshot& getCM730State() const
@@ -71,13 +59,10 @@ namespace bold
       return (*d_mx28States)[jointId];
     }
 
-    AgentModel& model() const { return *d_model; }
-
   private:
     MX28Alarm d_alarmLedByJointId[Robot::JointData::NUMBER_OF_JOINTS];
     std::shared_ptr<CM730Snapshot> d_cm730State;
     std::shared_ptr<std::vector<MX28Snapshot>> d_mx28States;
-    const std::shared_ptr<AgentModel> d_model;
   };
 }
 

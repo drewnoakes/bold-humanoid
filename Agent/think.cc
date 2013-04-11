@@ -141,7 +141,7 @@ void Agent::think()
   readSubBoardData();
   t = debugger.timeEvent(t, "Read Sub Board");
 
-  auto const& body = AgentState::getInstance().body()->model();
+  AgentModel& body = *AgentState::getInstance().body();
 
   auto neck = body.getLimb("neck");
   auto neckHeadJoint = neck->joints[0];

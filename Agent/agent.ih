@@ -14,9 +14,8 @@
 
 #include "../joystick/joystick.hh"
 
-#include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
-//#include "../StateObject/GameState/gamestate.hh"
+#include "../StateObject/HardwareState/hardwarestate.hh"
 
 #include "../Option/ActionOption/actionoption.hh"
 #include "../Option/FSMOption/fsmoption.hh"

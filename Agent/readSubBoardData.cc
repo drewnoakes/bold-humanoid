@@ -1,7 +1,7 @@
 #include "agent.ih"
 
 #include "../AgentModel/agentmodel.hh"
-#include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/HardwareState/hardwarestate.hh"
 
 void Agent::readSubBoardData()
 {
@@ -34,5 +34,21 @@ void Agent::readSubBoardData()
     mx28Snapshots->push_back(mx28);
   }
 
-  AgentState::getInstance().body()->update(make_shared<CM730Snapshot>(cm730Snapshot), mx28Snapshots);
+  HardwareState& hw = *AgentState::getInstance().hardware();
+  AgentModel& body = *AgentState::getInstance().body();
+
+  //
+  // Update HardwareState
+  //
+  hw.update(make_shared<CM730Snapshot>(cm730Snapshot), mx28Snapshots);
+
+  //
+  // Update BodyState
+  //
+
+  // Set joint angles
+  body.visitJoints([&hw](Joint& joint) { joint.angle = hw.getMX28State(joint.id).presentPosition; });
+
+  // Recalculate matrices
+  body.updatePosture();
 }
