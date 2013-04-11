@@ -80,7 +80,7 @@ link_directories(${BOLDHUMANOID_LINK_DIRS})
 #
 ## Additional compile flags
 #
-set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare -Wno-unused-local-typedefs")
+set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare")
 
 add_class(BOLDHUMANOID
   ./Agent/Agent.cc
