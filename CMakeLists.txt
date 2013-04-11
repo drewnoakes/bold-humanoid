@@ -244,6 +244,7 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./Spatialiser/findGroundPointForPixel.cc
+  ./Spatialiser/updateCameraToAgent.cc
 )
 
 add_class(BOLDHUMANOID

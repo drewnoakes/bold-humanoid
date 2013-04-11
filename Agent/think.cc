@@ -142,45 +142,8 @@ void Agent::think()
   readSubBoardData();
   t = debugger.timeEvent(t, "Read Sub Board");
 
-  BodyState& body = *AgentState::getInstance().body();
-
-  auto neck = body.getLimb("neck");
-  auto neckHeadJoint = neck->joints[0];
-  auto head = body.getLimb("head");
-  auto cameraJoint = head->joints[0];
-  auto camera = body.getLimb("camera");
-  auto lFoot = body.getLimb("lFoot");
-  auto lKnee = body.getLimb("lLowerLeg");
-  auto rFoot = body.getLimb("rFoot");
-
-  /*
-  cout << "---------------" << endl;
-  cout << "neckHeadJoint: " << neckHeadJoint->angle << endl << neckHeadJoint->transform.translation().transpose() << endl;
-  cout << "head:" << endl << head->transform.translation().transpose() << endl;
-  cout << "cameraJoint:" << endl << cameraJoint->transform.translation().transpose() << endl;
-  cout << "camera:" << endl << camera->transform.matrix() << endl;
-  cout << "foot: " << endl << lFoot->transform.matrix() << endl;
-  auto cameraToLFoot = lFoot->transform.inverse() * camera->transform;
-  cout << "cam2foot: " << endl << cameraToLFoot.translation().transpose() << endl;
-
-  cout << "l foot transform:" << endl << lFoot->transform.matrix() << endl;
-  cout << "l knee transform:" << endl << lKnee->transform.matrix() << endl;
-  cout << "r foot transform:" << endl << rFoot->transform.matrix() << endl;
-  */
-
   // TODO populate agent frame from camera frame
-
-  double torsoHeight = lFoot->transform.inverse().translation().z();
-  // Multiplying with this transform brings coordinates from camera space in torso space
-  auto cameraTransform = camera->transform;
-
-  auto const& ballObs = AgentState::getInstance().cameraFrame()->getBallObservation();
-  if (ballObs.hasValue())
-  {
-    Spatialiser spatialiser(d_cameraModel);
-    auto gp = spatialiser.findGroundPointForPixel(ballObs->cast<int>(), torsoHeight, camera->transform);
-    //cout << "ground point: " << gp << endl;
-  }
+  d_spatialiser->updateCameraToAgent();
 
   //
   // Update websocket data

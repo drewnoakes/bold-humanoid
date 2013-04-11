@@ -30,6 +30,8 @@ Agent::Agent(std::string const& U2D_dev,
 
   d_cameraModel = std::make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
 
+  d_spatialiser = std::make_shared<Spatialiser>(d_cameraModel);
+
   d_visualCortex = std::make_shared<VisualCortex>(d_cameraModel);
   d_visualCortex->initialise(ini);
 

@@ -20,6 +20,7 @@ namespace bold
   class Camera;
   class CameraModel;
   class DataStreamer;
+  class Spatialiser;
   class VisualCortex;
 
   enum class State
@@ -67,6 +68,7 @@ namespace bold
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<VisualCortex> d_visualCortex;
     std::shared_ptr<Joystick> d_joystick;
+    std::shared_ptr<Spatialiser> d_spatialiser;
     Ambulator d_ambulator;
     GameControllerReceiver d_gameControlReceiver;
 

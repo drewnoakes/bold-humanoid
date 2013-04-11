@@ -34,8 +34,8 @@ void VisualCortex::integrateImage(cv::Mat& image)
   // UPDATE STATE
   //
 
-  vector<Vector2f> goalObservations;
-  Maybe<Vector2f> ballObservation = Maybe<Vector2f>::empty();
+  vector<Vector2f> goalPositions;
+  Maybe<Vector2f> ballPosition = Maybe<Vector2f>::empty();
 
   // Do we have a ball?
   if (blobsPerLabel[d_ballLabel].size() > 0)
@@ -48,7 +48,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
       Vector2f pos = ball.mean;
       // Take the bottom of the ball as observation
       pos.y() = ball.ul.y();
-      ballObservation = Maybe<Vector2f>(pos);
+      ballPosition = Maybe<Vector2f>(pos);
     }
   }
 
@@ -67,11 +67,11 @@ void VisualCortex::integrateImage(cv::Mat& image)
         topRun.y
       );
 
-      goalObservations.push_back(pos);
+      goalPositions.push_back(pos);
     }
   }
 
-  AgentState::getInstance().setCameraFrame(make_shared<CameraFrameState>(goalObservations, ballObservation, observedLineSegments));
+  AgentState::getInstance().setCameraFrame(make_shared<CameraFrameState>(ballPosition, goalPositions, observedLineSegments));
 
   debugger.timeEvent(t, "Image Processing/Updating State");
 }

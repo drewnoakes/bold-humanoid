@@ -26,6 +26,8 @@ namespace bold
      */
     Maybe<Eigen::Vector3d> findGroundPointForPixel(Eigen::Vector2i const& pixel, double const torsoHeight, Eigen::Affine3d const& cameraTorsoTransform) const;
 
+    void updateCameraToAgent();
+
   private:
     std::shared_ptr<CameraModel> d_cameraModel;
   };
