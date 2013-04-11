@@ -8,4 +8,4 @@ if [ $? != 0 ]; then
    exit;
 fi
 
-(make $@ && espeak "Compilation successful") || espeak "Compilation failed"
+(make $@ && (espeak "Compilation successful" &> /dev/null) ) || (espeak "Compilation failed" &> /dev/null)
