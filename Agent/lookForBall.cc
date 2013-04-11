@@ -41,5 +41,5 @@ void Agent::lookForBall()
     Head::GetInstance()->MoveByAngle(hAngle, vAngle);
   }
 
-  stand();
+  //stand();
 }

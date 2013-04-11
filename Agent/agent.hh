@@ -7,7 +7,6 @@
 #include <memory>
 #include <opencv2/opencv.hpp>
 
-#include "../Ambulator/ambulator.hh"
 #include "../GameController/GameControllerReceiver.hh"
 #include "../MX28Alarm/MX28Alarm.hh"
 #include "../OptionTree/optiontree.hh"
@@ -16,6 +15,7 @@ class Joystick;
 
 namespace bold
 {
+  class Ambulator;
   class BodyState;
   class Camera;
   class CameraModel;
@@ -67,7 +67,7 @@ namespace bold
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<VisualCortex> d_visualCortex;
     std::shared_ptr<Joystick> d_joystick;
-    Ambulator d_ambulator;
+    std::shared_ptr<Ambulator> d_ambulator;
     GameControllerReceiver d_gameControlReceiver;
 
     // State
@@ -88,7 +88,6 @@ namespace bold
 
     // Control
     OptionTree d_optionTree;
-
     // Methods
     bool init();
 
@@ -99,12 +98,6 @@ namespace bold
     void think();
 
     void readSubBoardData();
-
-    void stand()
-    {
-      d_ambulator.setMoveDir(Eigen::Vector2d(0,0));
-      d_ambulator.setTurnAngle(0);
-    }
 
     void lookForBall();
     void approachBall();

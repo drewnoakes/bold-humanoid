@@ -4,7 +4,7 @@ void Agent::preKickLook()
 {
   static double pklStartTime;
 
-  stand();
+  //stand();
 
   double tilt_min = Head::GetInstance()->GetBottomLimitAngle();
 
