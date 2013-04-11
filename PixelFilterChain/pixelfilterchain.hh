@@ -1,4 +1,4 @@
-#ifndef BOLD_PIXELFITLERCHAIN_HH
+#ifndef BOLD_PIXELFILTERCHAIN_HH
 #define BOLD_PIXELFILTERCHAIN_HH
 
 #include <functional>
