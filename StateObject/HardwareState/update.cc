@@ -5,6 +5,9 @@ using namespace std;
 
 void HardwareState::update(shared_ptr<CM730Snapshot> cm730State, shared_ptr<vector<MX28Snapshot>> mx28States)
 {
+  assert(cm730State);
+  assert(mx28States);
+
   d_cm730State = cm730State;
   d_mx28States = mx28States;
 
