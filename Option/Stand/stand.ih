@@ -1,3 +1,5 @@
 #include "stand.hh"
 
+#include "../../Ambulator/ambulator.hh"
+
 using namespace bold;

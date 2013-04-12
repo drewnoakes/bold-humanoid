@@ -47,7 +47,7 @@ namespace bold
       // NOTE cannot use '[]' on a const map
       auto const& i = d_jointById.find(jointId);
       if (i == d_jointById.end())
-        throw std::runtime_error("Invalid JointId: " + jointId);
+        throw std::runtime_error("Invalid JointId" /*+ jointId*/);
       return i->second;
     }
 

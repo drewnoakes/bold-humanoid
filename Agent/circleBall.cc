@@ -40,8 +40,8 @@ void Agent::circleBall()
     double y = panRatio < 0 ? d_circleBallY : -d_circleBallY;
     double a = panRatio < 0 ? -d_circleBallTurn : d_circleBallTurn;
 
-    d_ambulator.setMoveDir(Eigen::Vector2d(x, y));
-    d_ambulator.setTurnAngle(a);
+    d_ambulator->setMoveDir(Eigen::Vector2d(x, y));
+    d_ambulator->setTurnAngle(a);
 
     d_state = State::S_CIRCLE_BALL;
   }
@@ -53,7 +53,7 @@ void Agent::circleBall()
 
     if (dt >= circleDurationSeconds)
     {
-      stand();
+      //stand();
       d_state = State::S_LOOK_FOR_GOAL;
     }
   }

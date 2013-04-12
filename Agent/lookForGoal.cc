@@ -2,7 +2,7 @@
 
 void Agent::lookForGoal()
 {
-  stand();
+  //stand();
 
   int nObs = AgentState::getInstance().cameraFrame()->getGoalObservations().size();
 

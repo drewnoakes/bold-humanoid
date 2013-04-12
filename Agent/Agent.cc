@@ -14,7 +14,6 @@ Agent::Agent(std::string const& U2D_dev,
     d_autoGetUpFromFallen(autoGetUpFromFallen),
     d_linuxCM730(U2D_dev.c_str()),
     d_CM730(&d_linuxCM730),
-    d_ambulator(d_ini),
     d_gameControlReceiver(gameControlUdpPort),
     d_ballSeenCnt(0),
     d_goalSeenCnt(0)
@@ -27,6 +26,8 @@ Agent::Agent(std::string const& U2D_dev,
   double rangeVerticalDegs = d_ini.getd("Camera", "RangeVerticalDegrees", 46.0);
   double rangeHorizontalDegs = d_ini.getd("Camera", "RangeHorizontalDegrees", 58.0);
   // TODO have seen both 58.0 and 60.0 as default horizontal range values
+
+  d_ambulator = make_shared<Ambulator>(d_ini),
 
   d_cameraModel = std::make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
 
