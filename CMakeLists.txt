@@ -53,7 +53,7 @@ ExternalProject_Add(libwebsockets_lib
 # Only add sources here that are not in class directory structure! Add classes separately below
 #
 set(BOLDHUMANOID_SOURCES
-${JOYSTICKDIR}/joystick.cc
+  ${JOYSTICKDIR}/joystick.cc
 )
 
 #
@@ -101,6 +101,11 @@ add_class(BOLDHUMANOID
   ./Agent/run.cc
   ./Agent/standUpIfFallen.cc
   ./Agent/think.cc
+)
+
+add_class(BOLDHUMANOID
+  ./AgentState/allStateObjects.cc
+  ./AgentState/setters.cc
 )
 
 add_class(BOLDHUMANOID

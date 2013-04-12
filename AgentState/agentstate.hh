@@ -2,6 +2,10 @@
 #define BOLD_AGENTSTATE_HH
 
 #include <memory>
+#include <vector>
+#include <sigc++/signal.h>
+
+#include "../StateObject/stateobject.hh"
 
 namespace bold
 {
@@ -32,42 +36,27 @@ namespace bold
     std::shared_ptr<BodyState> body() const { return d_bodyState; }
     std::shared_ptr<AlarmState> alarm() const { return d_alarmState; }
 
+    /** Fires when a state object is updated.
+     */
+    sigc::signal<void, StateType, std::shared_ptr<StateObject>> updated;
+
+    sigc::signal<void> gameUpdated;
+    sigc::signal<void> bodyUpdated;
+
+    std::vector<std::shared_ptr<StateObject>> allStateObjects() const;
+
     unsigned long long getCameraFrameNumber() const { return d_cameraFrameNumber; }
 
     //
     // Setters
     //
 
-    void setCameraFrame(std::shared_ptr<CameraFrameState> cameraFrame)
-    {
-      d_cameraFrameNumber++;
-      d_cameraFrame = cameraFrame;
-    }
-
-    void setAgentFrame(std::shared_ptr<AgentFrameState> agentFrame)
-    {
-      d_agentFrame = agentFrame;
-    }
-
-    void setGameState(std::shared_ptr<GameState> const& gameState)
-    {
-      d_gameState = gameState;
-    }
-
-    void setHardwareState(std::shared_ptr<HardwareState> hardwareState)
-    {
-      d_hardwareState = hardwareState;
-    }
-
-    void setBodyState(std::shared_ptr<BodyState> bodyState)
-    {
-      d_bodyState = bodyState;
-    }
-
-    void setAlarmState(std::shared_ptr<AlarmState> alarmState)
-    {
-      d_alarmState = alarmState;
-    }
+    void setCameraFrame(std::shared_ptr<CameraFrameState> cameraFrame);
+    void setAgentFrame(std::shared_ptr<AgentFrameState> agentFrame);
+    void setGameState(std::shared_ptr<GameState> const& gameState);
+    void setHardwareState(std::shared_ptr<HardwareState> hardwareState);
+    void setBodyState(std::shared_ptr<BodyState> bodyState);
+    void setAlarmState(std::shared_ptr<AlarmState> alarmState);
 
     static AgentState& getInstance();
 

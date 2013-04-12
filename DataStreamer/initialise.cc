@@ -20,9 +20,8 @@ void DataStreamer::initialise(minIni const& ini)
   else
     std::cout << "[DataStreamer:initialise] Listening on TCP port " << d_port << std::endl;
 
-  // TODO reinstate a way for the datastreamer to be notified of changes
-//   AgentState::getInstance().game().updated.connect([this]{ d_gameStateUpdated = true; });
-//   AgentState::getInstance().body().updated.connect([this]{ d_agentModelUpdated = true; });
+  AgentState::getInstance().gameUpdated.connect([this]{ d_gameStateUpdated = true; });
+  AgentState::getInstance().bodyUpdated.connect([this]{ d_agentModelUpdated = true; });
 
   // TODO split into vision and head controls
   registerControls("debug", getDebugControls());
