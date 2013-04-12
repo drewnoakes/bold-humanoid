@@ -1,6 +1,6 @@
 #include <cstdio>
 
-#include "CM730Snapshot.hh"
+#include "cm730snapshot.hh"
 #include "../robotis/Framework/include/CM730.h"
 
 using namespace Robot;

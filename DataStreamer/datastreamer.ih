@@ -18,8 +18,8 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 
-#include "../MX28Snapshot/MX28Snapshot.hh"
-#include "../CM730Snapshot/CM730Snapshot.hh"
+#include "../MX28Snapshot/mx28snapshot.hh"
+#include "../CM730Snapshot/cm730snapshot.hh"
 
 #include "../AgentState/agentstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"

@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cmath>
 
-#include "MX28Snapshot.hh"
+#include "mx28snapshot.hh"
 
 using namespace bold;
 using namespace Robot;

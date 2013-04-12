@@ -8,7 +8,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "../GameController/GameControllerReceiver.hh"
-#include "../MX28Alarm/MX28Alarm.hh"
+#include "../MX28Alarm/mx28alarm.hh"
 #include "../OptionTree/optiontree.hh"
 
 class Joystick;

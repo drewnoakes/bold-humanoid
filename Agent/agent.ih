@@ -4,14 +4,12 @@
 #include "../Ambulator/ambulator.hh"
 #include "../Camera/camera.hh"
 #include "../CameraModel/cameramodel.hh"
-// TODO: rename header
-#include "../CM730Snapshot/CM730Snapshot.hh"
+#include "../CM730Snapshot/cm730snapshot.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../LUTBuilder/lutbuilder.hh"
-// TODO: rename header
-#include "../MX28Snapshot/MX28Snapshot.hh"
+#include "../MX28Snapshot/mx28snapshot.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../VisualCortex/visualcortex.hh"
 #include "../WorldModel/worldmodel.hh"

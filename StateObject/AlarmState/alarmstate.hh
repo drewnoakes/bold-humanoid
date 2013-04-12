@@ -6,8 +6,7 @@
 
 #include "../stateobject.hh"
 #include "../../robotis/Framework/include/JointData.h"
-// TODO: header file name should be lower case
-#include "../../MX28Alarm/MX28Alarm.hh"
+#include "../../MX28Alarm/mx28alarm.hh"
 
 namespace bold
 {

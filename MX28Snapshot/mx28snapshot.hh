@@ -2,7 +2,7 @@
 #define BOLD_MX28_SNAPSHOT_HH
 
 #include "../robotis/Framework/include/CM730.h"
-#include "../MX28Alarm/MX28Alarm.hh"
+#include "../MX28Alarm/mx28alarm.hh"
 
 #include <iostream>
 #include <cassert>
