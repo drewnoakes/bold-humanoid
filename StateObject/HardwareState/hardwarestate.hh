@@ -3,12 +3,9 @@
 
 #include <memory>
 #include <vector>
-#include <iostream>
 
 #include "../stateobject.hh"
 #include "../../robotis/Framework/include/JointData.h"
-// TODO: header file name should be lower case
-#include "../../MX28Alarm/MX28Alarm.hh"
 
 namespace bold
 {
@@ -18,10 +15,10 @@ namespace bold
   class HardwareState : public StateObject
   {
   public:
-    HardwareState()
+    HardwareState(std::shared_ptr<CM730Snapshot const> cm730State, std::vector<std::shared_ptr<MX28Snapshot const>> mx28States)
+    : d_cm730State(cm730State),
+      d_mx28States(mx28States)
     {}
-
-    void update(std::shared_ptr<CM730Snapshot> cm730State, std::vector<std::shared_ptr<MX28Snapshot>> const& mx28States);
 
     std::shared_ptr<CM730Snapshot const> getCM730State() const
     {
@@ -37,9 +34,8 @@ namespace bold
     }
 
   private:
-    MX28Alarm d_alarmLedByJointId[Robot::JointData::NUMBER_OF_JOINTS];
-    std::shared_ptr<CM730Snapshot> d_cm730State;
-    std::vector<std::shared_ptr<MX28Snapshot>> d_mx28States;
+    std::shared_ptr<CM730Snapshot const> d_cm730State;
+    std::vector<std::shared_ptr<MX28Snapshot const>> d_mx28States;
   };
 }
 

@@ -1,5 +1,7 @@
 #include "agent.ih"
 
+#include "../StateObject/AlarmState/alarmstate.hh"
+
 void Agent::readSubBoardData()
 {
   //
@@ -23,7 +25,7 @@ void Agent::readSubBoardData()
   //
   // READ FROM EACH JOINT
   //
-  auto mx28Snapshots = vector<shared_ptr<MX28Snapshot>>();
+  auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
   mx28Snapshots.push_back(make_shared<MX28Snapshot>()); // padding as joints start at 1
   for (int jointId = JointData::ID_R_SHOULDER_PITCH; jointId < JointData::NUMBER_OF_JOINTS; jointId++)
   {
@@ -32,17 +34,46 @@ void Agent::readSubBoardData()
     mx28Snapshots.push_back(mx28);
   }
 
-  auto hw = AgentState::getInstance().hardware();
-  auto body = AgentState::getInstance().body();
+  auto hw = make_shared<HardwareState>(cm730Snapshot, mx28Snapshots);
 
   //
   // Update HardwareState
   //
-  hw->update(cm730Snapshot, mx28Snapshots);
+  AgentState::getInstance().setHardwareState(hw);
+
+  //
+  // Update AlarmState
+  //
+  auto const lastAlarmState = AgentState::getInstance().alarm();
+  bool hasAlarmChanged = false;
+  vector<MX28Alarm> alarmLedByJointId;
+  alarmLedByJointId.push_back(MX28Alarm()); // offset, as jointIds start at 1
+  for (int jointId = Robot::JointData::ID_R_SHOULDER_PITCH; jointId < Robot::JointData::NUMBER_OF_JOINTS; jointId++)
+  {
+    // TODO do we need to examine mx28.alarmShutdown as well? it seems to hold the same flags as mx28.alarmLed
+    auto alarmLed = hw->getMX28State(jointId)->alarmLed;
+
+    alarmLedByJointId.push_back(alarmLed);
+
+    // If the alarm state for an MX28 has changed, print it out
+    if (!lastAlarmState || alarmLed != lastAlarmState->getAlarmLed(jointId))
+    {
+      hasAlarmChanged = true;
+      cerr << "[Agent::readSubBoardData] MX28[id=" << jointId << "] alarmLed flags changed: " << alarmLed << endl;
+    }
+  }
+
+  if (hasAlarmChanged || !lastAlarmState)
+  {
+    AgentState::getInstance().setAlarmState(make_shared<AlarmState>(alarmLedByJointId));
+  }
 
   //
   // Update BodyState
   //
+  auto body = AgentState::getInstance().body();
+
+  // TODO make BodyState immutable and do a replace instead of an update
 
   // Set joint angles
   body->visitJoints([&hw](Joint& joint) { joint.angle = hw->getMX28State(joint.id)->presentPosition; });
