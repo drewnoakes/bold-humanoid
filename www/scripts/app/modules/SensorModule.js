@@ -119,7 +119,7 @@ define(
 
         SensorModule.prototype.load = function()
         {
-            this.subscription = DataProxy.subscribe(Protocols.agentModel, { onmessage: _.bind(this.onmessage, this) });
+            this.subscription = DataProxy.subscribe(Protocols.hardwareState, { onmessage: _.bind(this.onmessage, this) });
         };
 
         SensorModule.prototype.unload = function()
@@ -127,17 +127,20 @@ define(
             this.subscription.cancel();
         };
 
-        SensorModule.prototype.onmessage = function (message)
+        SensorModule.prototype.onmessage = function (msg)
         {
-            var time = new Date().getTime(),
-                floats = DataProxy.parseFloats(message.data);
+            var data = JSON.parse(msg.data),
+                time = new Date().getTime();
 
             // copy values to charts
-            for (var f = 0; f < floats.length && f < this.seriesArray.length; f++) {
-                this.seriesArray[f].append(time, floats[f]);
-            }
+            this.seriesArray[0].append(time, data.gyro[0]);
+            this.seriesArray[1].append(time, data.gyro[1]);
+            this.seriesArray[2].append(time, data.gyro[2]);
+            this.seriesArray[3].append(time, data.acc[0]);
+            this.seriesArray[4].append(time, data.acc[1]);
+            this.seriesArray[5].append(time, data.acc[2]);
 
-            this.polarTrace.addValue(floats[3], floats[4]);
+            this.polarTrace.addValue(data.acc[0], data.acc[1]);
         };
 
         return SensorModule;

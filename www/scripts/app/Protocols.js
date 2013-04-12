@@ -11,10 +11,11 @@ define(
         //noinspection UnnecessaryLocalVariableJS
 
         var Protocols = {
-            agentModel: 'agent-model-protocol',
             camera: 'camera-protocol',
-            gameState: 'game-state-protocol',
-            timing: 'timing-protocol'
+            timing: 'timing-protocol',
+            bodyState: 'Body',
+            gameState: 'Game',
+            hardwareState: 'Hardware'
         };
 
         return Protocols;

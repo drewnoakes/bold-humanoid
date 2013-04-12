@@ -68,7 +68,7 @@ define(
                 this.render();
             }.bind(this));
 
-            this.subscription = DataProxy.subscribe(Protocols.agentModel, { onmessage: _.bind(this.onMessage, this) });
+            this.subscription = DataProxy.subscribe(Protocols.bodyState, { onmessage: _.bind(this.onMessage, this) });
         };
 
         ModelModule.prototype.unload = function()
@@ -85,10 +85,9 @@ define(
 
         ModelModule.prototype.onMessage = function(msg)
         {
-            var floats = DataProxy.parseFloats(msg.data),
-                angles = floats.slice(6);
+            var data = JSON.parse(msg.data);
 
-            if (!angles || angles.length !== 20)
+            if (!data.angles || data.angles.length !== 20)
             {
                 console.error("Expecting 20 angles");
                 return;
@@ -96,7 +95,7 @@ define(
 
             var hasChange = false;
             for (var i = 0; i < 20; i++) {
-                if (this.setHingeAngle(this.hinges[i + 1], angles[i])) {
+                if (this.setHingeAngle(this.hinges[i + 1], data.angles[i])) {
                     hasChange = true;
                 }
             }
@@ -145,7 +144,7 @@ define(
         ModelModule.prototype.initialiseScene = function()
         {
             this.scene = new THREE.Scene();
-            this.scene.add(new THREE.AmbientLight(0x727876)); // standard flourescent light
+            this.scene.add(new THREE.AmbientLight(0x727876)); // standard fluorescent light
 
             this.pendingTextureCount = 3;
 
