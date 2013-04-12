@@ -35,15 +35,15 @@ namespace bold
     // Setters
     //
 
-    void setAgentFrame(std::shared_ptr<AgentFrameState> agentFrame)
-    {
-      d_agentFrame = agentFrame;
-    }
-
     void setCameraFrame(std::shared_ptr<CameraFrameState> cameraFrame)
     {
       d_cameraFrameNumber++;
       d_cameraFrame = cameraFrame;
+    }
+
+    void setAgentFrame(std::shared_ptr<AgentFrameState> agentFrame)
+    {
+      d_agentFrame = agentFrame;
     }
 
     void setGameState(std::shared_ptr<GameState> const& gameState)
@@ -51,9 +51,14 @@ namespace bold
       d_gameState = gameState;
     }
 
-    void setHardwareState(std::shared_ptr<HardwareState>& hardwareState)
+    void setHardwareState(std::shared_ptr<HardwareState> hardwareState)
     {
       d_hardwareState = hardwareState;
+    }
+
+    void setBodyState(std::shared_ptr<BodyState> bodyState)
+    {
+      d_bodyState = bodyState;
     }
 
     static AgentState& getInstance();

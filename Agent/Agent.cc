@@ -20,6 +20,9 @@ Agent::Agent(std::string const& U2D_dev,
 {
   cout << "[Agent::Agent] Start" << endl;
 
+  AgentState::getInstance().setHardwareState(make_shared<HardwareState>());
+  AgentState::getInstance().setBodyState(make_shared<BodyState>());
+
   int imageWidth = d_ini.geti("Camera", "ImageWidth", 320);
   int imageHeight = d_ini.geti("Camera", "ImageHeight", 240);
   double focalLength = d_ini.getd("Camera", "FocalLength", 0.025);
