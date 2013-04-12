@@ -31,6 +31,7 @@ namespace bold
     std::shared_ptr<MX28Snapshot const> getMX28State(unsigned jointId) const
     {
       assert(jointId > 0 && jointId < Robot::JointData::NUMBER_OF_JOINTS);
+      assert(d_mx28States.size() > jointId);
 
       return d_mx28States[jointId];
     }

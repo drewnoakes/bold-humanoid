@@ -24,6 +24,7 @@ void Agent::readSubBoardData()
   // READ FROM EACH JOINT
   //
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot>>();
+  mx28Snapshots.push_back(make_shared<MX28Snapshot>()); // padding as joints start at 1
   for (int jointId = JointData::ID_R_SHOULDER_PITCH; jointId < JointData::NUMBER_OF_JOINTS; jointId++)
   {
     auto mx28 = make_shared<MX28Snapshot>();
