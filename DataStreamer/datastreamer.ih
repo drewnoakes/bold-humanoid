@@ -8,7 +8,6 @@
 #include <sys/time.h>
 #include <assert.h>
 #include <syslog.h>
-#include <signal.h>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -18,8 +17,6 @@
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
-
-#include "datastreamer.hh"
 
 #include "../MX28Snapshot/MX28Snapshot.hh"
 #include "../CM730Snapshot/CM730Snapshot.hh"
