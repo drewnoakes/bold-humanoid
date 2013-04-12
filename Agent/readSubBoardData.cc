@@ -5,26 +5,22 @@
 void Agent::readSubBoardData()
 {
   //
-  // READ ALL DATA IN BULK
+  // READ HARDWARESTATE (input)
   //
+
   d_CM730.MakeBulkReadPacket();
   int res = d_CM730.BulkRead();
 
   if (res != CM730::SUCCESS)
   {
+    // TODO set the 'Hardware' state as failing in AgentState, and broadcast error status to clients
     cout << "[Agent::readSubBoardData] Bulk read failed!" << endl;
     return;
   }
 
-  //
-  // READ FROM SUB BOARD
-  //
   auto cm730Snapshot = make_shared<CM730Snapshot>();
   cm730Snapshot->init(d_CM730.m_BulkReadData[CM730::ID_CM]);
 
-  //
-  // READ FROM EACH JOINT
-  //
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
   mx28Snapshots.push_back(make_shared<MX28Snapshot>()); // padding as joints start at 1
   for (unsigned jointId = 1; jointId < JointData::NUMBER_OF_JOINTS; jointId++)
@@ -36,14 +32,12 @@ void Agent::readSubBoardData()
 
   auto hw = make_shared<HardwareState>(cm730Snapshot, mx28Snapshots);
 
-  //
-  // Update HardwareState
-  //
   AgentState::getInstance().setHardwareState(hw);
 
   //
-  // Update AlarmState
+  // UPDATE ALARMSTATE (trigger)
   //
+
   auto const lastAlarmState = AgentState::getInstance().alarm();
   bool hasAlarmChanged = false;
   vector<MX28Alarm> alarmLedByJointId;
@@ -69,8 +63,9 @@ void Agent::readSubBoardData()
   }
 
   //
-  // Update BodyState
+  // UPDATE BODYSTATE (trigger)
   //
+
   double angles[JointData::NUMBER_OF_JOINTS];
   for (unsigned i = 1; i < JointData::NUMBER_OF_JOINTS; i++)
   {
