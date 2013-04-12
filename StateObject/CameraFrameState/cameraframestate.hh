@@ -17,7 +17,8 @@ namespace bold
     CameraFrameState(Maybe<Eigen::Vector2f> ballObservation,
                      std::vector<Eigen::Vector2f> goalObservations,
                      std::vector<LineSegment2i> observedLineSegments)
-    : d_ballObservation(ballObservation),
+    : StateObject("CameraFrame"),
+      d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments)
     {}
@@ -27,6 +28,8 @@ namespace bold
     std::vector<LineSegment2i> getObservedLineSegments() const { return d_observedLineSegments; }
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
+
+    virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     Maybe<Eigen::Vector2f> d_ballObservation;

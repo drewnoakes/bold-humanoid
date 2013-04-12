@@ -3,6 +3,7 @@
 
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
+#include <string>
 
 namespace bold
 {
@@ -21,16 +22,20 @@ namespace bold
   public:
 //     virtual StateType type() const = 0;
 
-    // TODO could be a pure virtual function eventually
-    virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
-    {}
+    std::string name() const { return d_name; };
+
+    virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const {};
 
   protected:
-    StateObject()
+    StateObject(std::string name)
+    : d_name(name)
     {};
 
     ~StateObject()
     {};
+
+  private:
+    std::string d_name;
   };
 }
 

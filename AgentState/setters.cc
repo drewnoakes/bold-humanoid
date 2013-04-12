@@ -26,7 +26,6 @@ void AgentState::setAgentFrame(shared_ptr<AgentFrameState> agentFrame)
 void AgentState::setGameState(shared_ptr<GameState> const& gameState)
 {
   d_gameState = gameState;
-  gameUpdated();
   updated(StateType::Game, dynamic_pointer_cast<StateObject>(d_gameState));
 }
 
@@ -39,7 +38,6 @@ void AgentState::setHardwareState(shared_ptr<HardwareState> hardwareState)
 void AgentState::setBodyState(shared_ptr<BodyState> bodyState)
 {
   d_bodyState = bodyState;
-  bodyUpdated();
   updated(StateType::Body, dynamic_pointer_cast<StateObject>(d_bodyState));
 }
 

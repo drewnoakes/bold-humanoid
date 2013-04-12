@@ -3,6 +3,7 @@
 
 #include "../../GameController/RoboCupGameControlData.h"
 #include "../stateobject.hh"
+#include <stdexcept>
 
 namespace bold
 {
@@ -21,6 +22,7 @@ namespace bold
   {
   public:
     GameState(RoboCupGameControlData const& gameControlData)
+    : StateObject("Game")
     {
       d_secondsRemaining = gameControlData.secsRemaining;
       d_playMode = (PlayMode)gameControlData.state;
@@ -28,6 +30,26 @@ namespace bold
 
     int getSecondsRemaining() const { return d_secondsRemaining; }
     PlayMode getPlayMode() const { return d_playMode; }
+    std::string getPlayModeString() const
+    {
+      switch (d_playMode)
+      {
+        case PlayMode::INITIAL:
+          return "Initial";
+        case PlayMode::READY:
+          return "Ready";
+        case PlayMode::SET:
+          return "Set";
+        case PlayMode::PLAYING:
+          return "Playing";
+        case PlayMode::FINISHED:
+          return "Finished";
+        default:
+          throw new std::runtime_error("Unsupported PlayMode enum value.");
+      }
+    }
+
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     int d_secondsRemaining;

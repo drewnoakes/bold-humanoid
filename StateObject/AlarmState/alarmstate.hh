@@ -14,7 +14,8 @@ namespace bold
   {
   public:
     AlarmState(std::vector<MX28Alarm> alarmLedByJointId)
-    : d_alarmLedByJointId(alarmLedByJointId)
+    : StateObject("Alarm"),
+      d_alarmLedByJointId(alarmLedByJointId)
     {
       assert(alarmLedByJointId.size() == Robot::JointData::NUMBER_OF_JOINTS);
     }
@@ -25,6 +26,8 @@ namespace bold
 
       return d_alarmLedByJointId[jointId];
     }
+
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     std::vector<MX28Alarm> d_alarmLedByJointId;

@@ -17,7 +17,8 @@ namespace bold
     AgentFrameState(Maybe<Eigen::Vector3d> ballObservation,
                     std::vector<Eigen::Vector3d> goalObservations,
                     std::vector<LineSegment3d> observedLineSegments)
-    : d_ballObservation(ballObservation),
+    : StateObject("AgentFrame"),
+      d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments)
     {}
@@ -27,6 +28,8 @@ namespace bold
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
+
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     Maybe<Eigen::Vector3d> d_ballObservation;

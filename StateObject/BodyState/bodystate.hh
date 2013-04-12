@@ -17,7 +17,8 @@ namespace bold
   {
   public:
     BodyState(double angles[])
-    : d_torso(),
+    : StateObject("Body"),
+      d_torso(),
       d_jointById(),
       d_limbByName()
     {
@@ -60,6 +61,8 @@ namespace bold
         action(joint);
       }
     }
+
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     void initBody(double angles[]);

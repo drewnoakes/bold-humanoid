@@ -95,7 +95,7 @@ namespace bold
 
     void initCamera();
 
-    bool initBody();
+    bool initMotionManager();
 
     void think();
 

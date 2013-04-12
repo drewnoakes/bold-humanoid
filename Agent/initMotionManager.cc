@@ -1,15 +1,13 @@
 #include "agent.ih"
 
-bool Agent::initBody()
+bool Agent::initMotionManager()
 {
   Robot::MotionManager* motionManager = Robot::MotionManager::GetInstance();
+
   Robot::Walking* walkingModule = Robot::Walking::GetInstance();
   Robot::Action* actionModule = Robot::Action::GetInstance();
   Robot::Head* headModule = Robot::Head::GetInstance();
 
-  //
-  // Motion manager
-  //
   cout << "[Agent::init] Initialising motion manager" << endl;
   if (!motionManager->Initialize(&d_CM730))
   {
@@ -53,14 +51,14 @@ bool Agent::initBody()
 
   cout << "[Agent::init] Calibrating gyro & acc..." << endl;
   motionManager->ResetGyroCalibration();
-  while(1)
+  while (1)
   {
-    if(motionManager->GetCalibrationStatus() == 1)
+    if (motionManager->GetCalibrationStatus() == 1)
     {
       cout << "[Agent::init] Calibration complete" << endl;
       break;
     }
-    else if(motionManager->GetCalibrationStatus() == -1)
+    else if (motionManager->GetCalibrationStatus() == -1)
     {
       cout << "[Agent::init] Calibration failed" << endl;
       motionManager->ResetGyroCalibration();

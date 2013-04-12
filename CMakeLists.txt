@@ -87,9 +87,8 @@ add_class(BOLDHUMANOID
   ./Agent/Agent.cc
   ./Agent/approachBall.cc
   ./Agent/circleBall.cc
-  ./Agent/init.cc
   ./Agent/initCamera.cc
-  ./Agent/initBody.cc
+  ./Agent/initMotionManager.cc
   ./Agent/lookAt.cc
   ./Agent/lookAtBall.cc
   ./Agent/lookAtGoal.cc
@@ -149,10 +148,9 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./DataStreamer/callbackAgentModel.cc
   ./DataStreamer/callbackCamera.cc
-  ./DataStreamer/callbackGameState.cc
   ./DataStreamer/callbackHttp.cc
+  ./DataStreamer/callbackState.cc
   ./DataStreamer/callbackTiming.cc
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
@@ -254,8 +252,29 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/AgentFrameState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/AlarmState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/BodyState/initBody.cc
   ./StateObject/BodyState/updatePosture.cc
+  ./StateObject/BodyState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/CameraFrameState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/GameState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/HardwareState/writeJson.cc
 )
 
 add_class(BOLDHUMANOID

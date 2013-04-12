@@ -6,24 +6,18 @@ void DataStreamer::update()
     return;
 
   //
-  // Only register for writing to sockets where we have changes to report
+  // Request write for all dirty state protocols
   //
-  if (d_gameStateUpdated)
-  {
-    d_gameStateUpdated = false;
-    libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::GAME_STATE]);
-  }
-
-  if (d_agentModelUpdated)
-  {
-    d_agentModelUpdated = false;
-    libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::AGENT_MODEL]);
-  }
+//   for (libwebsocket_protocols* protocol : d_dirtyStateProtocols)
+//   {
+//     libwebsocket_callback_on_writable_all_protocol(protocol);
+//   }
+//   d_dirtyStateProtocols.clear();
 
   //
   // We always have new timing data available
   //
-  libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::TIMING]);
+  libwebsocket_callback_on_writable_all_protocol(d_timingProtocol);
 
   //
   // Only request sending images if we have a client who needs servicing
@@ -32,7 +26,7 @@ void DataStreamer::update()
   {
     if (!cameraSession->hasSentStateAndOptions || cameraSession->imgReady)
     {
-      libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
+      libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
       break;
     }
   }

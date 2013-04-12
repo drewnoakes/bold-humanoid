@@ -75,6 +75,6 @@ void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
   //
   if (session->imgSending)
   {
-    libwebsocket_callback_on_writable_all_protocol(&d_protocols[Protocol::CAMERA]);
+    libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
   }
 }

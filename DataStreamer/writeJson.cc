@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-void DataStreamer::writeJson(libwebsocket* wsi, StringBuffer const& buffer)
+int DataStreamer::writeJson(libwebsocket* wsi, StringBuffer const& buffer)
 {
   const char* json = buffer.GetString();
   size_t size = buffer.GetSize();
@@ -9,5 +9,5 @@ void DataStreamer::writeJson(libwebsocket* wsi, StringBuffer const& buffer)
   unsigned char* p = buf + LWS_SEND_BUFFER_POST_PADDING;
   memcpy(p, json, size);
 
-  /*int res =*/ libwebsocket_write(wsi, p, size, LWS_WRITE_TEXT);
+  return libwebsocket_write(wsi, p, size, LWS_WRITE_TEXT);
 }
