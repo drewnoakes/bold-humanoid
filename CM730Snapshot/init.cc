@@ -1,6 +1,7 @@
 #include <cstdio>
 
 #include "CM730Snapshot.hh"
+#include "../robotis/Framework/include/CM730.h"
 
 using namespace Robot;
 using namespace Eigen;

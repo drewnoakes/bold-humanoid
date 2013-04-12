@@ -21,6 +21,9 @@
 
 #include "datastreamer.hh"
 
+#include "../MX28Snapshot/MX28Snapshot.hh"
+#include "../CM730Snapshot/CM730Snapshot.hh"
+
 #include "../AgentState/agentstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/GameState/gamestate.hh"

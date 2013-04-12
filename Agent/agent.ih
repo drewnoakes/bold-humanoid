@@ -4,10 +4,14 @@
 #include "../Ambulator/ambulator.hh"
 #include "../Camera/camera.hh"
 #include "../CameraModel/cameramodel.hh"
+// TODO: rename header
+#include "../CM730Snapshot/CM730Snapshot.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../LUTBuilder/lutbuilder.hh"
+// TODO: rename header
+#include "../MX28Snapshot/MX28Snapshot.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../VisualCortex/visualcortex.hh"
 #include "../WorldModel/worldmodel.hh"
@@ -16,6 +20,7 @@
 
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 
 #include "../Option/ActionOption/actionoption.hh"
 #include "../Option/FSMOption/fsmoption.hh"

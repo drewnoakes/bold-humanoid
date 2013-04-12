@@ -1,10 +1,13 @@
 #ifndef BOLD_CM730_SNAPSHOT_HH
 #define BOLD_CM730_SNAPSHOT_HH
 
-#include "../robotis/Framework/include/CM730.h"
-
 //#include <Eigen/Eigen>
 #include <Eigen/Core>
+
+namespace Robot
+{
+  class BulkReadData;
+}
 
 namespace bold
 {
