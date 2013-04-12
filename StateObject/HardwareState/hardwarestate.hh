@@ -27,8 +27,6 @@ namespace bold
 
     std::shared_ptr<MX28Snapshot const> getMX28State(unsigned jointId) const
     {
-      if (jointId <= 0 || jointId >= Robot::JointData::NUMBER_OF_JOINTS)
-        std::cout << "Invalid JointID: " << jointId << std::endl;
       assert(jointId > 0 && jointId < Robot::JointData::NUMBER_OF_JOINTS);
       assert(d_mx28States.size() > jointId);
 
