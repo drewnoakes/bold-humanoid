@@ -16,12 +16,13 @@ namespace bold
   class BodyState : public StateObject
   {
   public:
-    BodyState()
+    BodyState(double angles[])
     : d_torso(),
       d_jointById(),
       d_limbByName()
     {
-      initBody();
+      initBody(angles);
+      updatePosture();
     };
 
     void updatePosture();
@@ -40,7 +41,7 @@ namespace bold
       return i->second;
     }
 
-    std::shared_ptr<Joint> getJoint(int jointId) const
+    std::shared_ptr<Joint const> getJoint(int jointId) const
     {
       assert(jointId > 0 && jointId < Robot::JointData::NUMBER_OF_JOINTS);
 
@@ -51,17 +52,17 @@ namespace bold
       return i->second;
     }
 
-    void visitJoints(std::function<void(Joint&)> action)
+    void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
     {
-      for (int jointId = Robot::JointData::ID_R_SHOULDER_PITCH; jointId < Robot::JointData::NUMBER_OF_JOINTS; jointId++)
+      for (unsigned jointId = 1; jointId < Robot::JointData::NUMBER_OF_JOINTS; jointId++)
       {
-        Joint& joint = *getJoint(jointId);
+        auto joint = getJoint(jointId);
         action(joint);
       }
     }
 
   private:
-    void initBody();
+    void initBody(double angles[]);
 
     std::shared_ptr<Limb> d_torso;
     std::map<int, std::shared_ptr<Joint>> d_jointById;

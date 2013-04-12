@@ -27,7 +27,7 @@ void Agent::readSubBoardData()
   //
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
   mx28Snapshots.push_back(make_shared<MX28Snapshot>()); // padding as joints start at 1
-  for (int jointId = JointData::ID_R_SHOULDER_PITCH; jointId < JointData::NUMBER_OF_JOINTS; jointId++)
+  for (unsigned jointId = 1; jointId < JointData::NUMBER_OF_JOINTS; jointId++)
   {
     auto mx28 = make_shared<MX28Snapshot>();
     mx28->init(d_CM730.m_BulkReadData[jointId], jointId);
@@ -48,7 +48,7 @@ void Agent::readSubBoardData()
   bool hasAlarmChanged = false;
   vector<MX28Alarm> alarmLedByJointId;
   alarmLedByJointId.push_back(MX28Alarm()); // offset, as jointIds start at 1
-  for (int jointId = Robot::JointData::ID_R_SHOULDER_PITCH; jointId < Robot::JointData::NUMBER_OF_JOINTS; jointId++)
+  for (unsigned jointId = 1; jointId < Robot::JointData::NUMBER_OF_JOINTS; jointId++)
   {
     // TODO do we need to examine mx28.alarmShutdown as well? it seems to hold the same flags as mx28.alarmLed
     auto alarmLed = hw->getMX28State(jointId)->alarmLed;
@@ -71,13 +71,10 @@ void Agent::readSubBoardData()
   //
   // Update BodyState
   //
-  auto body = AgentState::getInstance().body();
-
-  // TODO make BodyState immutable and do a replace instead of an update
-
-  // Set joint angles
-  body->visitJoints([&hw](Joint& joint) { joint.angle = hw->getMX28State(joint.id)->presentPosition; });
-
-  // Recalculate matrices
-  body->updatePosture();
+  double angles[JointData::NUMBER_OF_JOINTS];
+  for (unsigned i = 1; i < JointData::NUMBER_OF_JOINTS; i++)
+  {
+    angles[i] = hw->getMX28State(i)->presentPosition;
+  }
+  AgentState::getInstance().setBodyState(make_shared<BodyState>(angles));
 }

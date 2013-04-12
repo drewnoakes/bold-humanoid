@@ -1,6 +1,6 @@
 #include "bodystate.ih"
 
-void BodyState::initBody()
+void BodyState::initBody(double angles[])
 {
   d_torso = make_shared<Limb>();
   d_torso->name = "torso";
@@ -256,5 +256,9 @@ void BodyState::initBody()
   };
 
   // Cache joints by ID
-  walkJoints(d_torso, [this](shared_ptr<Joint> joint) { d_jointById[joint->id] = joint; });
+  walkJoints(d_torso, [this,angles](shared_ptr<Joint> joint)
+  {
+    joint->angle = angles[joint->id];
+    d_jointById[joint->id] = joint;
+  });
 }

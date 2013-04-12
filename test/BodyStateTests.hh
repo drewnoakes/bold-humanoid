@@ -11,15 +11,19 @@ using namespace Robot;
 
 TEST (BodyStateTests, posture)
 {
-  auto am = BodyState();
+  double angles[JointData::NUMBER_OF_JOINTS];
+  for (int i = 0; i < JointData::NUMBER_OF_JOINTS; i++)
+  {
+    angles[i] = 0;
+  }
 
-  EXPECT_EQ( 0, am.getJoint(JointData::ID_L_HIP_ROLL)->angle );
+  //
+  // Create a body with all hinges at an angle of zero
+  //
 
-  shared_ptr<Limb const> leftFoot = am.getLimb("lFoot");
-  shared_ptr<Limb const> rightFoot = am.getLimb("rFoot");
-
-  // Forces recalculation of transforms
-  am.updatePosture();
+  auto am1 = BodyState(angles);
+  shared_ptr<Limb const> leftFoot = am1.getLimb("lFoot");
+  shared_ptr<Limb const> rightFoot = am1.getLimb("rFoot");
 
   EXPECT_EQ( Vector3d(-0.074/2, -0.005, -0.1222 - 0.093 - 0.093 - 0.0335),
 	     Vector3d(leftFoot->transform.translation()) );
@@ -33,12 +37,12 @@ TEST (BodyStateTests, posture)
   // Roll the legs out 90 degrees and check again
   //
 
-//   am.mx28States[JointData::ID_L_HIP_ROLL].presentPosition = M_PI/2;
-//   am.mx28States[JointData::ID_R_HIP_ROLL].presentPosition = M_PI/2;
-  am.getJoint(JointData::ID_L_HIP_ROLL)->angle = M_PI/2;
-  am.getJoint(JointData::ID_R_HIP_ROLL)->angle = M_PI/2;
+  angles[JointData::ID_L_HIP_ROLL] = M_PI/2;
+  angles[JointData::ID_R_HIP_ROLL] = M_PI/2;
 
-  am.updatePosture();
+  auto am2 = BodyState(angles);
+  leftFoot = am2.getLimb("lFoot");
+  rightFoot = am2.getLimb("rFoot");
 
   EXPECT_EQ( Vector3d(-0.074/2 - 0.093 - 0.093 - 0.0335, -0.005, -0.1222),
 	     Vector3d(leftFoot->transform.translation()) );

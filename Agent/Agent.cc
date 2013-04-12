@@ -20,9 +20,6 @@ Agent::Agent(std::string const& U2D_dev,
 {
   cout << "[Agent::Agent] Start" << endl;
 
-  // TODO make BodyState immutable and replace instead of init/update
-  AgentState::getInstance().setBodyState(make_shared<BodyState>());
-
   int imageWidth = d_ini.geti("Camera", "ImageWidth", 320);
   int imageHeight = d_ini.geti("Camera", "ImageHeight", 240);
   double focalLength = d_ini.getd("Camera", "FocalLength", 0.025);
