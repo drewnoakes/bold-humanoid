@@ -15,12 +15,12 @@ namespace bold
   {
   public:
     AgentState()
-    : d_cameraFrame(),
+    : d_cameraFrameNumber(0),
+      d_cameraFrame(),
       d_agentFrame(),
       d_gameState(),
       d_hardwareState(),
-      d_bodyState(),
-      d_cameraFrameNumber(0)
+      d_bodyState()
     {}
 
     std::shared_ptr<CameraFrameState> cameraFrame() const { return d_cameraFrame; }
