@@ -45,14 +45,10 @@ namespace bold
   class DataStreamer
   {
   public:
-    DataStreamer(int port);
+    DataStreamer(int port, minIni const& ini, std::shared_ptr<Camera> camera);
 
-    // TODO provide port from config via initialise function, rather than in DataStreamer constructor
-    void initialise(minIni const& ini);
     void update();
     void close();
-
-    void setCamera(std::shared_ptr<Camera> camera) { d_camera = camera; }
 
     /** Gets the type of image that clients have requested to view. May be None. */
     ImageType getImageType() const { return d_imageType; }

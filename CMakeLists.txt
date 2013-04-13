@@ -155,7 +155,6 @@ add_class(BOLDHUMANOID
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/getDebugControls.cc
-  ./DataStreamer/initialise.cc
   ./DataStreamer/processCameraCommand.cc
   ./DataStreamer/registerControls.cc
   ./DataStreamer/sendCameraControls.cc
