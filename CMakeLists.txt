@@ -238,6 +238,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildTree.cc
+)
+
+add_class(BOLDHUMANOID
   ./PixelFilterChain/applyFilters.cc
 )
 
