@@ -1,14 +1,21 @@
 #include "datastreamer.ih"
 
 int DataStreamer::callback_state(
-  struct libwebsocket_context* /*context*/,
+  struct libwebsocket_context* context,
   struct libwebsocket *wsi,
   enum libwebsocket_callback_reasons reason,
   void* /*session*/,
   void* /*in*/,
   size_t /*len*/)
 {
-  if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
+  switch (reason)
+  {
+  case LWS_CALLBACK_ESTABLISHED:
+  {
+    libwebsocket_callback_on_writable(context, wsi);
+    return 0;
+  }
+  case LWS_CALLBACK_SERVER_WRITEABLE:
   {
     // If we're being called, then there's some state to send.
     const libwebsocket_protocols* protocol = libwebsockets_get_protocol(wsi);
@@ -33,7 +40,11 @@ int DataStreamer::callback_state(
         return 0;
       }
     }
+    return 0;
   }
-
-  return 0;
+  default:
+  {
+    return 0;
+  }
+  }
 }
