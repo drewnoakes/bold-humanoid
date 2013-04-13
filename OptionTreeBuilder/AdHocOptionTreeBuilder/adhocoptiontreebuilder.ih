@@ -1,0 +1,12 @@
+#include "adhocoptiontreebuilder.hh"
+
+#include "../../AgentState/agentstate.hh"
+#include "../../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../../Option/ActionOption/actionoption.hh"
+#include "../../Option/FSMOption/fsmoption.hh"
+#include "../../Option/LookAround/lookaround.hh"
+#include "../../Option/LookAtBall/lookatball.hh"
+#include "../../Option/Stand/stand.hh"
+
+using namespace bold;
+using namespace std;
