@@ -45,7 +45,7 @@ namespace bold
   class DataStreamer
   {
   public:
-    DataStreamer(int port, minIni const& ini, std::shared_ptr<Camera> camera);
+    DataStreamer(minIni const& ini, std::shared_ptr<Camera> camera);
 
     void update();
     void close();
@@ -74,6 +74,7 @@ namespace bold
 
     // TODO can this be const?
     std::vector<Control> getDebugControls();
+    std::map<std::string,std::map<unsigned, Control>> d_controlsByIdByFamily;
 
     cv::Mat d_image;
     ImageType d_imageType;
@@ -85,16 +86,12 @@ namespace bold
 
     std::shared_ptr<Camera> d_camera;
 
-    libwebsocket_protocols* d_protocols;
-    std::vector<CameraSession*> d_cameraSessions;
-
-    std::map<std::string,std::map<unsigned, Control>> d_controlsByIdByFamily;
-
-    const int d_port;
+    int d_port;
     libwebsocket_context* d_context;
-
-    libwebsocket_protocols* d_cameraProtocol;
+    libwebsocket_protocols* d_protocols;
     libwebsocket_protocols* d_timingProtocol;
+    libwebsocket_protocols* d_cameraProtocol;
+    std::vector<CameraSession*> d_cameraSessions;
 
     //
     // libwebsocket callbacks

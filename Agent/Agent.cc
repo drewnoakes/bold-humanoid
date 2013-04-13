@@ -53,8 +53,7 @@ Agent::Agent(string const& U2D_dev,
   initCamera();
 
   // TODO only stream if argument specified?
-  // TODO port from config, not constructor
-  d_streamer = make_shared<DataStreamer>(8080, d_ini, d_camera);
+  d_streamer = make_shared<DataStreamer>(d_ini, d_camera);
 
   d_streamer->registerControls("camera", d_camera->getControls());
   for (auto const& pair : d_visualCortex->getControlsByFamily())

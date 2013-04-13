@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-DataStreamer::DataStreamer(int port, minIni const& ini, shared_ptr<Camera> camera)
+DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera)
 : d_image(),
   d_imageType(ImageType::RGB),
   d_streamFramePeriod(10),
@@ -11,10 +11,11 @@ DataStreamer::DataStreamer(int port, minIni const& ini, shared_ptr<Camera> camer
   d_camera(camera),
   d_cameraSessions(),
   d_controlsByIdByFamily(),
-  d_port(port),
   d_context(0)
 {
   cout << "[DataStreamer::DataStreamer] Starting" << endl;
+
+  d_port = ini.geti("Debugger", "TcpPort", 8080);
 
   d_streamFramePeriod = ini.geti("Debugger", "BroadcastFramePeriod", 5);
 
