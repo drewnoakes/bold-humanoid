@@ -37,8 +37,7 @@ Agent::Agent(string const& U2D_dev,
 
   d_debugger = make_shared<Debugger>();
 
-  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_debugger);
-  d_visualCortex->initialise(ini);
+  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_debugger, ini);
 
   if (useJoystick)
   {

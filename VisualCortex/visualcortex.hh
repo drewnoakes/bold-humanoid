@@ -39,9 +39,7 @@ namespace bold
   class VisualCortex
   {
   public:
-    VisualCortex(std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<FieldMap> fieldMap, std::shared_ptr<Debugger> debugger);
-
-    void initialise(minIni const& ini);
+    VisualCortex(std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<FieldMap> fieldMap, std::shared_ptr<Debugger> debugger, minIni const& ini);
 
     std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
 
