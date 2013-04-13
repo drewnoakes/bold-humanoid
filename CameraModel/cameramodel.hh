@@ -4,6 +4,7 @@
 #include <string>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <minIni.h>
 
 namespace bold
 {
@@ -19,6 +20,15 @@ namespace bold
       d_rangeVerticalDegs(rangeVerticalDegs),
       d_rangeHorizontalDegs(rangeHorizontalDegs)
     {}
+
+    CameraModel(minIni const& ini)
+    {
+      d_imageWidth = ini.geti("Camera", "ImageWidth", 320);
+      d_imageHeight = ini.geti("Camera", "ImageHeight", 240);
+      d_focalLength = ini.getd("Camera", "FocalLength", 0.025);
+      d_rangeVerticalDegs = ini.getd("Camera", "RangeVerticalDegrees", 46.0);
+      d_rangeHorizontalDegs = ini.getd("Camera", "RangeHorizontalDegrees", 58.0);
+    }
 
     unsigned imageWidth() const { return d_imageWidth; }
     unsigned imageHeight() const { return d_imageHeight; }
