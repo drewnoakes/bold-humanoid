@@ -5,6 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests")
 set(PRECOMPILE_HEADERS ON CACHE BOOL "Choose whether to precompile headers")
+set(UPLOAD_SCP_PATH "" CACHE STRING "Path to use in upload scp command. Format: user@server:path")
 
 include(ExternalProject)
 include(AddPcih)
@@ -323,6 +324,17 @@ set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPI
 #
 add_dependencies(boldhumanoid darwin_lib)
 add_dependencies(boldhumanoid libwebsockets_lib)
+
+if(UPLOAD_SCP_PATH)
+  add_custom_command(OUTPUT upload.stamp
+    COMMAND scp $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
+    COMMAND touch upload.stamp
+    DEPENDS boldhumanoid)
+  
+  add_custom_target(upload DEPENDS upload.stamp)
+else(UPLOAD_SCP_PATH)
+  message(WARNING "You have not set a path for uploading the binary; 'upload' target not generated")
+endif(UPLOAD_SCP_PATH)
 
 #
 ## Build and run test
