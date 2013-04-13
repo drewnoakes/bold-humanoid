@@ -2,32 +2,19 @@ cmake_minimum_required (VERSION 2.8)
 
 set(TEST_SOURCES
   ./UnitTests.cc
+  ./google-test/src/gtest-all.cc
   $<TARGET_OBJECTS:boldhumanoid_objects>
 )
-
-#
-## Target for making google-test
-# TODO make this compile in correct place when using out-of-source compilation
-externalproject_add(googletests
-                    PREFIX google-test
-		    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/google-test
-		    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/google-test
-		    DOWNLOAD_COMMAND ""
-		    UPDATE_COMMAND ""
-		    INSTALL_COMMAND "")
 
 #
 ## Target for running tests. Custom targets are always run
 #
 add_custom_target(runtests ALL ./unittests DEPENDS unittests)
 
-externalproject_get_property(googletests binary_dir)
-set(GOOGLETESTS_BINARY_DIR ${binary_dir})
-
 #
 ## Include directories
 #
-include_directories(${BOLDHUMANOID_INCLUDE_DIRS} google-test/include)
+include_directories(${BOLDHUMANOID_INCLUDE_DIRS} google-test/include google-test)
 
 #
 ## Link directories
@@ -45,7 +32,7 @@ add_executable(unittests
 #
 ## Link executable to libraries
 #
-target_link_libraries(unittests ${BOLDHUMANOID_LINK_LIBRARIES} gtest)
+target_link_libraries(unittests ${BOLDHUMANOID_LINK_LIBRARIES})
 
 #
 ## Additional compile flags
