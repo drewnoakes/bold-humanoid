@@ -15,6 +15,7 @@ class minIni;
 
 namespace bold
 {
+  class FieldMap;
   class CameraModel;
   class DataStreamer;
   class ImageLabeller;
@@ -37,7 +38,7 @@ namespace bold
   class VisualCortex
   {
   public:
-    VisualCortex(std::shared_ptr<CameraModel> cameraModel);
+    VisualCortex(std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<FieldMap> fieldMap);
 
     void initialise(minIni const& ini);
 
@@ -52,6 +53,7 @@ namespace bold
   private:
     std::map<std::string,std::vector<Control>> d_controlsByFamily;
 
+    std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<CameraModel> d_cameraModel;
 
     std::shared_ptr<PixelLabel> d_goalLabel;

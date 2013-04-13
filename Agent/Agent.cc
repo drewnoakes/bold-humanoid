@@ -33,7 +33,9 @@ Agent::Agent(string const& U2D_dev,
 
   d_spatialiser = make_shared<Spatialiser>(d_cameraModel);
 
-  d_visualCortex = make_shared<VisualCortex>(d_cameraModel);
+  d_fieldMap = make_shared<FieldMap>(d_ini);
+
+  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap);
   d_visualCortex->initialise(ini);
 
   if (useJoystick)

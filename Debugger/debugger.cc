@@ -7,7 +7,6 @@
 
 #include "../AgentState/agentstate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
-#include "../WorldModel/worldmodel.hh"
 
 using namespace Robot;
 using namespace std;

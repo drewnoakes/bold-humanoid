@@ -1,4 +1,4 @@
-#include "worldmodel.hh"
+#include "fieldmap.hh"
 
 #include "../geometry/LineSegment.hh"
 
@@ -11,9 +11,9 @@ using namespace bold;
 using namespace std;
 using namespace Eigen;
 
-void WorldModel::initialise(minIni const& ini)
+FieldMap::FieldMap(minIni const& ini)
 {
-  std::cout << "[WorldModel::initialise] Start" << std::endl;
+  std::cout << "[FieldMap::FieldMap] Start" << std::endl;
 
   double fieldX              = ini.getd("Environment", "FieldSizeX", 6.0);
   double fieldY              = ini.getd("Environment", "FieldSizeY", 4.0);

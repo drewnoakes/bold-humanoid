@@ -284,7 +284,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./WorldModel/initialise.cc
+  ./FieldMap/FieldMap.cc
 )
 
 #

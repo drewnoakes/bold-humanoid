@@ -7,25 +7,22 @@
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
+#include "../FieldMap/fieldmap.hh"
 #include "../ImageLabeller/imagelabeller.hh"
+#include "../joystick/joystick.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
-#include "../Spatialiser/spatialiser.hh"
-#include "../VisualCortex/visualcortex.hh"
-#include "../WorldModel/worldmodel.hh"
-
-#include "../joystick/joystick.hh"
-
-#include "../StateObject/CameraFrameState/cameraframestate.hh"
-#include "../StateObject/HardwareState/hardwarestate.hh"
-#include "../StateObject/BodyState/bodystate.hh"
-
 #include "../Option/ActionOption/actionoption.hh"
 #include "../Option/FSMOption/fsmoption.hh"
 #include "../Option/LookAround/lookaround.hh"
 #include "../Option/LookAtBall/lookatball.hh"
 #include "../Option/Stand/stand.hh"
 #include "../OptionTree/optiontree.hh"
+#include "../Spatialiser/spatialiser.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../StateObject/BodyState/bodystate.hh"
+#include "../VisualCortex/visualcortex.hh"
 
 #include <iostream>
 

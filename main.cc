@@ -1,6 +1,4 @@
 #include "Agent/agent.hh"
-#include "WorldModel/worldmodel.hh"
-#include "VisualCortex/visualcortex.hh"
 
 #define MOTION_FILE_PATH    "./motion_4096.bin"
 #define U2D_DEV_NAME0       "/dev/ttyUSB0"
@@ -55,8 +53,6 @@ int main(int argc, char **argv)
   }
 
   minIni ini(confFile);
-
-  WorldModel::getInstance().initialise(ini);
 
   Agent agent(
     U2D_DEV_NAME0,

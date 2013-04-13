@@ -76,7 +76,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   // Draw expected lines
   if (streamer->shouldDrawExpectedLines())
   {
-    auto fieldLines = WorldModel::getInstance().getFieldLines();
+    vector<LineSegment2d> fieldLines = d_fieldMap->getFieldLines();
     Projector projector = d_cameraModel->getProjector();
 
     double torsoX = 1.0;

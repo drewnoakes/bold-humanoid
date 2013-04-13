@@ -20,6 +20,7 @@ namespace bold
   class Camera;
   class CameraModel;
   class DataStreamer;
+  class FieldMap;
   class Spatialiser;
   class VisualCortex;
 
@@ -63,13 +64,14 @@ namespace bold
     Robot::CM730 d_CM730;
     std::shared_ptr<Robot::LinuxMotionTimer> d_motionTimer;
 
-    std::shared_ptr<DataStreamer> d_streamer;
+    std::shared_ptr<Ambulator> d_ambulator;
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;
-    std::shared_ptr<VisualCortex> d_visualCortex;
+    std::shared_ptr<DataStreamer> d_streamer;
+    std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Joystick> d_joystick;
     std::shared_ptr<Spatialiser> d_spatialiser;
-    std::shared_ptr<Ambulator> d_ambulator;
+    std::shared_ptr<VisualCortex> d_visualCortex;
     GameControllerReceiver d_gameControlReceiver;
 
     // State
