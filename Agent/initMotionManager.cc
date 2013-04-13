@@ -9,7 +9,7 @@ bool Agent::initMotionManager()
   Robot::Head* headModule = Robot::Head::GetInstance();
 
   cout << "[Agent::init] Initialising motion manager" << endl;
-  if (!motionManager->Initialize(&d_CM730))
+  if (!motionManager->Initialize(d_CM730.get()))
   {
     cout << "[Agent::init] Motion manager initialisation FAILED" << endl;
     return false;

@@ -10,8 +10,7 @@ int DataStreamer::callback_timing(
 {
   if (reason == LWS_CALLBACK_SERVER_WRITEABLE)
   {
-    auto& debugger = Debugger::getInstance();
-    std::vector<EventTiming> const& timings = debugger.getTimings();
+    std::vector<EventTiming> const& timings = d_debugger->getTimings();
 
     unsigned int bufLen = LWS_SEND_BUFFER_PRE_PADDING + (timings.size()*64) + LWS_SEND_BUFFER_POST_PADDING;
     unsigned char buf[bufLen];

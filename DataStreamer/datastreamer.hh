@@ -1,14 +1,15 @@
 #ifndef BOLD_DATA_STREAMER_HH
 #define BOLD_DATA_STREAMER_HH
 
-#include <vector>
+#include <memory>
 #include <set>
 #include <string>
+#include <vector>
+
+#include <minIni.h>
 #include <libwebsockets.h>
 #include <opencv2/opencv.hpp>
 
-#include "../Debugger/debugger.hh"
-#include "../Camera/camera.hh"
 #include "../StateObject/stateobject.hh"
 
 namespace cv
@@ -18,6 +19,10 @@ namespace cv
 
 namespace bold
 {
+  class Debugger;
+  class Camera;
+  class Control;
+
   struct CameraSession
   {
     /** Whether state and options information has been sent to the client.
@@ -45,7 +50,7 @@ namespace bold
   class DataStreamer
   {
   public:
-    DataStreamer(minIni const& ini, std::shared_ptr<Camera> camera);
+    DataStreamer(minIni const& ini, std::shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger);
 
     void update();
     void close();
@@ -85,6 +90,7 @@ namespace bold
     bool d_shouldDrawObservedLines;
 
     std::shared_ptr<Camera> d_camera;
+    std::shared_ptr<Debugger> d_debugger;
 
     int d_port;
     libwebsocket_context* d_context;

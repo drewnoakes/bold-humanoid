@@ -14,7 +14,7 @@ void Agent::think()
   //
   auto t = Debugger::getTimestamp();
 
-  auto& debugger = Debugger::getInstance();
+  Debugger& debugger = *d_debugger;
 
   //
   // Capture the image (YCbCr format)

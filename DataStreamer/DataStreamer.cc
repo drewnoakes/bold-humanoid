@@ -1,7 +1,8 @@
 #include "datastreamer.ih"
 
-DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera)
-: d_image(),
+DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger)
+: d_controlsByIdByFamily(),
+  d_image(),
   d_imageType(ImageType::RGB),
   d_streamFramePeriod(10),
   d_shouldDrawBlobs(true),
@@ -9,9 +10,10 @@ DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera)
   d_shouldDrawExpectedLines(true),
   d_shouldDrawObservedLines(true),
   d_camera(camera),
-  d_cameraSessions(),
-  d_controlsByIdByFamily(),
-  d_context(0)
+  d_debugger(debugger),
+  d_context(0),
+  d_cameraSessions()
+
 {
   cout << "[DataStreamer::DataStreamer] Starting" << endl;
 

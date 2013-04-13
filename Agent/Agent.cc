@@ -12,13 +12,14 @@ Agent::Agent(string const& U2D_dev,
     d_motionFile(motionFile),
     d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
-    d_linuxCM730(U2D_dev.c_str()),
-    d_CM730(&d_linuxCM730),
     d_gameControlReceiver(gameControlUdpPort),
     d_ballSeenCnt(0),
     d_goalSeenCnt(0)
 {
   cout << "[Agent::Agent] Start" << endl;
+
+  d_linuxCM730 = make_shared<LinuxCM730>(U2D_dev.c_str());
+  d_CM730 = make_shared<CM730>(d_linuxCM730.get());
 
   int imageWidth = d_ini.geti("Camera", "ImageWidth", 320);
   int imageHeight = d_ini.geti("Camera", "ImageHeight", 240);
@@ -35,7 +36,9 @@ Agent::Agent(string const& U2D_dev,
 
   d_fieldMap = make_shared<FieldMap>(d_ini);
 
-  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap);
+  d_debugger = make_shared<Debugger>();
+
+  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_debugger);
   d_visualCortex->initialise(ini);
 
   if (useJoystick)
@@ -55,13 +58,13 @@ Agent::Agent(string const& U2D_dev,
   initCamera();
 
   // TODO only stream if argument specified?
-  d_streamer = make_shared<DataStreamer>(d_ini, d_camera);
+  d_streamer = make_shared<DataStreamer>(d_ini, d_camera, d_debugger);
 
   d_streamer->registerControls("camera", d_camera->getControls());
   for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
 
-  Debugger::getInstance().update(d_CM730);
+  d_debugger->update(d_CM730);
 
   // Sit action
   OptionPtr sit = make_shared<ActionOption>("sitdownaction","sit down");

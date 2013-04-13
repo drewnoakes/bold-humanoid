@@ -2,8 +2,7 @@
 #define BOLD_AGENT_HH
 
 #include <Eigen/Core>
-#include <LinuxDARwIn.h>
-#include <LinuxCM730.h>
+#include <minIni.h>
 #include <memory>
 #include <opencv2/opencv.hpp>
 
@@ -13,6 +12,13 @@
 
 class Joystick;
 
+namespace Robot
+{
+  class CM730;
+  class LinuxCM730;
+  class LinuxMotionTimer;
+}
+
 namespace bold
 {
   class Ambulator;
@@ -20,6 +26,7 @@ namespace bold
   class Camera;
   class CameraModel;
   class DataStreamer;
+  class Debugger;
   class FieldMap;
   class Spatialiser;
   class VisualCortex;
@@ -60,14 +67,15 @@ namespace bold
     bool d_autoGetUpFromFallen;
 
     // Modules
-    Robot::LinuxCM730 d_linuxCM730;
-    Robot::CM730 d_CM730;
+    std::shared_ptr<Robot::LinuxCM730> d_linuxCM730;
+    std::shared_ptr<Robot::CM730> d_CM730;
     std::shared_ptr<Robot::LinuxMotionTimer> d_motionTimer;
 
     std::shared_ptr<Ambulator> d_ambulator;
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<DataStreamer> d_streamer;
+    std::shared_ptr<Debugger> d_debugger;
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Joystick> d_joystick;
     std::shared_ptr<Spatialiser> d_spatialiser;

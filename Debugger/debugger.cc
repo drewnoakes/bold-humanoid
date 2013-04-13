@@ -49,7 +49,7 @@ void Debugger::addEventTiming(EventTiming const& eventTiming)
   d_eventTimings.push_back(eventTiming);
 }
 
-void Debugger::update(CM730& cm730)
+void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
 {
   auto const& cameraFrame = AgentState::getInstance().cameraFrame();
 
@@ -69,7 +69,7 @@ void Debugger::update(CM730& cm730)
   if (ledFlags != d_lastLedFlags)
   {
     // the value changed, so write it
-    cm730.WriteByte(CM730::P_LED_PANNEL, ledFlags, NULL);
+    cm730->WriteByte(CM730::P_LED_PANNEL, ledFlags, NULL);
     d_lastLedFlags = ledFlags;
   }
 }

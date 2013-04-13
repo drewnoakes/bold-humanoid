@@ -5,7 +5,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   if (!streamer->shouldProvideImage())
     return;
 
-  auto& debugger = Debugger::getInstance();
+  Debugger& debugger = *d_debugger;
   auto t = Debugger::getTimestamp();
 
   ImageType imageType = streamer->getImageType();

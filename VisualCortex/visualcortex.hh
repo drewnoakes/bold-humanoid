@@ -17,6 +17,7 @@ namespace bold
 {
   class FieldMap;
   class CameraModel;
+  class Debugger;
   class DataStreamer;
   class ImageLabeller;
 
@@ -38,7 +39,7 @@ namespace bold
   class VisualCortex
   {
   public:
-    VisualCortex(std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<FieldMap> fieldMap);
+    VisualCortex(std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<FieldMap> fieldMap, std::shared_ptr<Debugger> debugger);
 
     void initialise(minIni const& ini);
 
@@ -55,6 +56,7 @@ namespace bold
 
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<CameraModel> d_cameraModel;
+    std::shared_ptr<Debugger> d_debugger;
 
     std::shared_ptr<PixelLabel> d_goalLabel;
     std::shared_ptr<PixelLabel> d_ballLabel;

@@ -2,13 +2,16 @@
 #define BOLD_DEBUGGER_HH
 
 #include <vector>
-
-#include <LinuxDARwIn.h>
-#include <LinuxCM730.h>
+#include <memory>
 
 #define LED_RED   0x01;
 #define LED_BLUE  0x02;
 #define LED_GREEN 0x04;
+
+namespace Robot
+{
+  class CM730;
+}
 
 namespace bold
 {
@@ -19,23 +22,19 @@ namespace bold
   public:
     typedef unsigned long long timestamp_t;
 
-  private:
-    Debugger();
-    int d_lastLedFlags;
-    std::vector<EventTiming> d_eventTimings;
-
-  public:
     static const timestamp_t getTimestamp();
 
     static const double getSeconds(timestamp_t const& startedAt);
 
     static const double printTime(timestamp_t const& startedAt, std::string const& description);
 
+    Debugger();
+
     timestamp_t timeEvent(timestamp_t const& startedAt, std::string const& eventName);
 
     void addEventTiming(EventTiming const& eventTiming);
 
-    std::vector<EventTiming> getTimings()
+    std::vector<EventTiming> getTimings() const
     {
       return d_eventTimings;
     }
@@ -49,13 +48,11 @@ namespace bold
      * Update the debugger at the end of the think cycle.
      * Currently only updates LEDs.
      */
-    void update(Robot::CM730& cm730);
+    void update(std::shared_ptr<Robot::CM730> cm730);
 
-    static Debugger& getInstance()
-    {
-      static Debugger instance;
-      return instance;
-    }
+  private:
+    int d_lastLedFlags;
+    std::vector<EventTiming> d_eventTimings;
   };
 }
 
