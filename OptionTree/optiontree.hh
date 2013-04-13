@@ -2,6 +2,7 @@
 #define BOLD_OPTIONTREE_HH
 
 #include "../Option/option.hh"
+#include <map>
 
 namespace bold
 {
@@ -26,7 +27,7 @@ namespace bold
   }
 
   inline OptionPtr OptionTree::getOption(std::string const& id) const
-  {
+  { 
     auto option = d_options.find(id);
     if (option == d_options.end())
       return 0;
