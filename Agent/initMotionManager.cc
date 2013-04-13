@@ -1,6 +1,6 @@
 #include "agent.ih"
 
-bool Agent::initMotionManager()
+bool Agent::initMotionManager(minIni const& ini)
 {
   Robot::MotionManager* motionManager = Robot::MotionManager::GetInstance();
 
@@ -16,7 +16,7 @@ bool Agent::initMotionManager()
   }
 
   cout << "[Agent::init] Loading walk parameters" << endl;
-  walkingModule->LoadINISettings(&d_ini);
+  walkingModule->LoadINISettings(&ini);
 
   cout << "[Agent::init] Adding motion modules" << endl;
   motionManager->AddModule((MotionModule*)actionModule);
@@ -24,7 +24,7 @@ bool Agent::initMotionManager()
   motionManager->AddModule((MotionModule*)walkingModule);
 
   cout << "[Agent::init] Loading motion manager settings" << endl;
-  motionManager->LoadINISettings(&d_ini);
+  motionManager->LoadINISettings(&ini);
 
   cout << "[Agent::init] Setup and starting motion timer" << endl;
   d_motionTimer = make_shared<LinuxMotionTimer>(motionManager);

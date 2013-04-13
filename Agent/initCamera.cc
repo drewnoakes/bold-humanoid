@@ -1,8 +1,10 @@
 #include "agent.ih"
 
-void Agent::initCamera()
+void Agent::initCamera(minIni const& ini)
 {
   cout << "[Agent::initCamera] Start" << endl;
+
+  d_camera = make_shared<Camera>("/dev/video0");
 
   d_camera->open();
 
@@ -16,7 +18,7 @@ void Agent::initCamera()
   {
     auto control = d_camera->getControl(controlName);
     if (control)
-      control->setValue(d_ini.geti("Camera", controlName, control->getValue()));
+      control->setValue(ini.geti("Camera", controlName, control->getValue()));
   }
 
   cout << "[Agent::initCamera] Controls (" << d_camera->getControls().size() << "):" << endl;;

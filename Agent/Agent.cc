@@ -8,8 +8,7 @@ Agent::Agent(string const& U2D_dev,
              bool const& recordFrames,
              unsigned int const& gameControlUdpPort
   )
-  : d_ini(ini),
-    d_motionFile(motionFile),
+  : d_motionFile(motionFile),
     d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
     d_gameControlReceiver(gameControlUdpPort),
@@ -21,20 +20,20 @@ Agent::Agent(string const& U2D_dev,
   d_linuxCM730 = make_shared<LinuxCM730>(U2D_dev.c_str());
   d_CM730 = make_shared<CM730>(d_linuxCM730.get());
 
-  int imageWidth = d_ini.geti("Camera", "ImageWidth", 320);
-  int imageHeight = d_ini.geti("Camera", "ImageHeight", 240);
-  double focalLength = d_ini.getd("Camera", "FocalLength", 0.025);
-  double rangeVerticalDegs = d_ini.getd("Camera", "RangeVerticalDegrees", 46.0);
-  double rangeHorizontalDegs = d_ini.getd("Camera", "RangeHorizontalDegrees", 58.0);
+  int imageWidth = ini.geti("Camera", "ImageWidth", 320);
+  int imageHeight = ini.geti("Camera", "ImageHeight", 240);
+  double focalLength = ini.getd("Camera", "FocalLength", 0.025);
+  double rangeVerticalDegs = ini.getd("Camera", "RangeVerticalDegrees", 46.0);
+  double rangeHorizontalDegs = ini.getd("Camera", "RangeHorizontalDegrees", 58.0);
   // TODO have seen both 58.0 and 60.0 as default horizontal range values
 
-  d_ambulator = make_shared<Ambulator>(d_ini),
+  d_ambulator = make_shared<Ambulator>(ini),
 
   d_cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
 
   d_spatialiser = make_shared<Spatialiser>(d_cameraModel);
 
-  d_fieldMap = make_shared<FieldMap>(d_ini);
+  d_fieldMap = make_shared<FieldMap>(ini);
 
   d_debugger = make_shared<Debugger>();
 
@@ -44,21 +43,19 @@ Agent::Agent(string const& U2D_dev,
   if (useJoystick)
   {
     d_joystick = make_shared<Joystick>(1);
-    d_joystickXAmpMax = d_ini.getd("Joystick", "XAmpMax", 15);
-    d_joystickYAmpMax = d_ini.getd("Joystick", "YAmpMax", 15);
-    d_joystickAAmpMax = d_ini.getd("Joystick", "AAmpMax", 15);
+    d_joystickXAmpMax = ini.getd("Joystick", "XAmpMax", 15);
+    d_joystickYAmpMax = ini.getd("Joystick", "YAmpMax", 15);
+    d_joystickAAmpMax = ini.getd("Joystick", "AAmpMax", 15);
   }
 
-  d_circleBallX = d_ini.getd("Circle Ball", "WalkX", -1);
-  d_circleBallY = d_ini.getd("Circle Ball", "WalkY", 50);
-  d_circleBallTurn = d_ini.getd("Circle Ball", "WalkTurn", 15);
+  d_circleBallX = ini.getd("Circle Ball", "WalkX", -1);
+  d_circleBallY = ini.getd("Circle Ball", "WalkY", 50);
+  d_circleBallTurn = ini.getd("Circle Ball", "WalkTurn", 15);
 
-  d_camera = make_shared<Camera>("/dev/video0");
-
-  initCamera();
+  initCamera(ini);
 
   // TODO only stream if argument specified?
-  d_streamer = make_shared<DataStreamer>(d_ini, d_camera, d_debugger);
+  d_streamer = make_shared<DataStreamer>(ini, d_camera, d_debugger);
 
   d_streamer->registerControls("camera", d_camera->getControls());
   for (auto const& pair : d_visualCortex->getControlsByFamily())
@@ -98,7 +95,7 @@ Agent::Agent(string const& U2D_dev,
   };
   lookAtBall2lookAround->nextState = lookAroundState;
 
-  d_haveBody = initMotionManager();
+  d_haveBody = initMotionManager(ini);
 
   d_state = State::S_INIT;
 

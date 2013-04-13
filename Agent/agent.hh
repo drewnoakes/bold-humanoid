@@ -60,7 +60,6 @@ namespace bold
 
   private:
     // Settings
-    const minIni& d_ini;
     bool d_haveBody;
     std::string d_motionFile;
     bool d_isRecordingFrames;
@@ -100,12 +99,11 @@ namespace bold
 
     // Control
     OptionTree d_optionTree;
+
     // Methods
-    bool init();
+    void initCamera(minIni const& ini);
 
-    void initCamera();
-
-    bool initMotionManager();
+    bool initMotionManager(minIni const& ini);
 
     void think();
 
