@@ -13,7 +13,11 @@ define(
         var Protocols = {
             camera: 'camera-protocol',
             timing: 'timing-protocol',
+            // One per state object...
+            agentFrameState: 'AgentFrame',
+            alarmState: 'Alarm',
             bodyState: 'Body',
+            cameraFrameState: 'CameraFrame',
             gameState: 'Game',
             hardwareState: 'Hardware'
         };
