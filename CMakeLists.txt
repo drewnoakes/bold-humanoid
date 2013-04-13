@@ -140,7 +140,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./CM730Snapshot/init.cc
+  ./CM730Snapshot/CM730Snapshot.cc
 )
 
 add_class(BOLDHUMANOID
@@ -212,7 +212,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./MX28Snapshot/init.cc
+  ./MX28Snapshot/MX28Snapshot.cc
 )
 
 add_class(BOLDHUMANOID

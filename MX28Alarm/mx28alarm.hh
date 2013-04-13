@@ -27,7 +27,9 @@ namespace bold
 
     const static uchar MAXBIT = 6;
 
-    MX28Alarm(){}
+    MX28Alarm()
+    {}
+
     MX28Alarm(uchar flags)
     : d_flags (flags)
     {}
@@ -59,7 +61,7 @@ namespace bold
       return d_flags != other.d_flags;
     }
 
-    std::vector<int> diff(MX28Alarm const& other)
+    std::vector<int> diff(MX28Alarm const& other) const
     {
       std::vector<int> diffFlags;
       for (uchar i = 0; i <= MAXBIT; i++)

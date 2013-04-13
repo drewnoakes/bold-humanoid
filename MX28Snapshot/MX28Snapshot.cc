@@ -26,7 +26,7 @@ double MX28Snapshot::valueToRPM(unsigned int value)
     return ((int)value - 1024) * 0.052733333;
 }
 
-bool MX28Snapshot::init(Robot::BulkReadData& data, int const mx28ID)
+MX28Snapshot::MX28Snapshot(Robot::BulkReadData& data, int const mx28ID)
 {
   // documentation: http://support.robotis.com/en/product/dynamixel/rx_series/mx-28.htm
 
@@ -111,6 +111,4 @@ bool MX28Snapshot::init(Robot::BulkReadData& data, int const mx28ID)
 
   // apparently this value is unused
 //  punch            = data.ReadWord(MX28::P_PUNCH_L);             // 0x0020
-
-  return true;
 }

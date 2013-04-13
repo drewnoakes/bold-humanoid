@@ -42,7 +42,7 @@ Vector3d CM730Snapshot::shortToColour(unsigned short s)
     b / 31.0);
 }
 
-bool CM730Snapshot::init(Robot::BulkReadData& data)
+CM730Snapshot::CM730Snapshot(Robot::BulkReadData& data)
 {
   // documentation: http://support.robotis.com/en/product/darwin-op/references/reference/hardware_specifications/electronics/sub_controller_(cm-730).htm
 
@@ -107,6 +107,4 @@ bool CM730Snapshot::init(Robot::BulkReadData& data)
 
   micLevelLeft = data.ReadWord(CM730::P_LEFT_MIC_L);
   micLevelRight = data.ReadWord(CM730::P_RIGHT_MIC_L);
-
-  return true;
 }

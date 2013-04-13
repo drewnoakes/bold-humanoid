@@ -44,10 +44,9 @@ namespace bold
     unsigned char micLevelLeft;
     unsigned char micLevelRight;
 
-    CM730Snapshot()
-    {}
+    CM730Snapshot() {}
 
-    bool init(Robot::BulkReadData& data);
+    CM730Snapshot(Robot::BulkReadData& data);
 
   private:
     static unsigned short readTableWord(unsigned char* table, int addr);

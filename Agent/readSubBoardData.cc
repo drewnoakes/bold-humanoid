@@ -18,15 +18,13 @@ void Agent::readSubBoardData()
     return;
   }
 
-  auto cm730Snapshot = make_shared<CM730Snapshot>();
-  cm730Snapshot->init(d_CM730->m_BulkReadData[CM730::ID_CM]);
+  auto cm730Snapshot = make_shared<CM730Snapshot>(d_CM730->m_BulkReadData[CM730::ID_CM]);
 
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
   mx28Snapshots.push_back(make_shared<MX28Snapshot>()); // padding as joints start at 1
   for (unsigned jointId = 1; jointId < JointData::NUMBER_OF_JOINTS; jointId++)
   {
-    auto mx28 = make_shared<MX28Snapshot>();
-    mx28->init(d_CM730->m_BulkReadData[jointId], jointId);
+    auto mx28 = make_shared<MX28Snapshot>(d_CM730->m_BulkReadData[jointId], jointId);
     mx28Snapshots.push_back(mx28);
   }
 
