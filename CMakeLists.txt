@@ -331,7 +331,7 @@ add_dependencies(boldhumanoid libwebsockets_lib)
 
 if(UPLOAD_SCP_PATH)
   add_custom_command(OUTPUT upload.stamp
-    COMMAND scp $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
+    COMMAND scp -C $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
     COMMAND touch upload.stamp
     DEPENDS boldhumanoid)
   
