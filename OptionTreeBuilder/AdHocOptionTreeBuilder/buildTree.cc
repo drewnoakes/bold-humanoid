@@ -5,13 +5,20 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   unique_ptr<OptionTree> tree(new OptionTree());
 
   auto cameraModel = make_shared<CameraModel>(ini);
-  // Sit action
+  // Sit down action
   OptionPtr sit = make_shared<ActionOption>("sitdownaction","sit down");
-  tree->addOption(sit);
+  tree->addOption(sit, true);
+  // Stand up action
+  OptionPtr standup = make_shared<ActionOption>("standupaction","stand up");
+  tree->addOption(standup);
+
+  // Stand action
+  OptionPtr stand = make_shared<Stand>("stand", make_shared<Ambulator>(ini));
+  tree->addOption(stand);
 
   // Build main FSM
   auto fsm = make_shared<FSMOption>("lookforball");
-  tree->addOption(fsm, true /*top*/);
+  tree->addOption(fsm);
   auto lookAround = make_shared<LookAround>("lookaround");
   tree->addOption(lookAround);
   auto lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel);

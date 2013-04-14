@@ -7,6 +7,7 @@
 #include "../../Option/LookAround/lookaround.hh"
 #include "../../Option/LookAtBall/lookatball.hh"
 #include "../../Option/Stand/stand.hh"
+#include "../../Ambulator/ambulator.hh"
 
 using namespace bold;
 using namespace std;
