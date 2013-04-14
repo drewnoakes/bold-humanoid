@@ -60,56 +60,17 @@ void Agent::think()
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
 
-  OptionList options = {d_optionTree.getTop()};
+  OptionList options = {d_optionTree->getTop()};
   while (!options.empty())
   {
-    OptionList subOptions = options.front()->runPolicy();
+    OptionPtr option = options.front();
+    cout << "Running option <" << option->getID() << ">" << endl;
     options.pop_front();
+    OptionList subOptions = option->runPolicy();
     options.insert(options.end(), subOptions.begin(), subOptions.end());
   }
 
-  /*
-  switch (d_state)
-  {
-  case State::S_INIT:
-    break;
-    d_state = State::S_LOOK_FOR_BALL;
 
-  case State::S_LOOK_FOR_BALL:
-    lookForBall();
-    break;
-
-  case State::S_APPROACH_BALL:
-    approachBall();
-    break;
-
-  case State::S_LOOK_FOR_GOAL:
-    lookForGoal();
-    break;
-
-  case State::S_START_CIRCLE_BALL:
-  case State::S_CIRCLE_BALL:
-    circleBall();
-    break;
-
-  case State::S_START_PREKICK_LOOK:
-  case State::S_PREKICK_LOOK:
-    preKickLook();
-    break;
-
-  case State::S_KICK:
-    kick();
-    stand();
-
-    break;
-
-  case State::S_GET_UP:
-    getUp();
-    break;
-  }
-  */
-
-//   AgentState::getInstance().state = d_state;
   t = debugger.timeEvent(t, "Process State");
 
   //

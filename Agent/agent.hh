@@ -8,7 +8,6 @@
 
 #include "../GameController/GameControllerReceiver.hh"
 #include "../MX28Alarm/mx28alarm.hh"
-#include "../OptionTree/optiontree.hh"
 
 class Joystick;
 
@@ -28,6 +27,7 @@ namespace bold
   class DataStreamer;
   class Debugger;
   class FieldMap;
+  class OptionTree;
   class Spatialiser;
   class VisualCortex;
 
@@ -98,7 +98,7 @@ namespace bold
     double d_joystickAAmpMax;
 
     // Control
-    OptionTree d_optionTree;
+    std::unique_ptr<OptionTree> d_optionTree;
 
     // Methods
     void initCamera(minIni const& ini);

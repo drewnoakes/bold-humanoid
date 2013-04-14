@@ -42,7 +42,7 @@ bool Agent::initMotionManager(minIni const& ini)
   cout << "[Agent::init] Enable body" << endl;
 
   cout << "[Agent::init] Sit down" << endl;
-  auto sit = d_optionTree.getOption("sitdownaction");
+  auto sit = d_optionTree->getOption("sitdownaction");
   while (sit->hasTerminated() == 0.0)
   {
     sit->runPolicy();
