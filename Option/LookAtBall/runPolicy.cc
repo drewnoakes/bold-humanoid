@@ -12,8 +12,6 @@ OptionList LookAtBall::runPolicy()
 
   auto ballPos = ballObs.value();
 
-  cout << "Ball observation: " << (*ballPos).transpose() << endl;
-
   static float r = 0.85;
 
   unsigned w = d_cameraModel->imageWidth();
@@ -24,13 +22,13 @@ OptionList LookAtBall::runPolicy()
   static float vapp = d_cameraModel->rangeVerticalDegs() / h;
 
   Vector2f offset = (*ballPos - centerPx) * r;
-
+  
   offset.x() *= happ; // pixel per angle
   offset.y() *= vapp; // pixel per angle
 
   offset = offset.cwiseMin(Vector2f(10,10)).cwiseMax(Vector2f(-10,-10));
-
-  cout << "Looking at: " << offset.transpose() << endl;
+  if (offset.norm() < 10)
+    offset = Vector2f(0,0);
 
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   Robot::Head::GetInstance()->MoveTracking(Robot::Point2D(offset.x(), offset.y()));
