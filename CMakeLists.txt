@@ -222,6 +222,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/ApproachBall/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/FSMOption/runPolicy.cc
 )
 
