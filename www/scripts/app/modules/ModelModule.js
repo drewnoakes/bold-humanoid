@@ -69,14 +69,14 @@ define(
             }.bind(this));
 
             this.bodyStateSubscription  = DataProxy.subscribe(Protocols.bodyState,       { onmessage: _.bind(this.onBodyStateMessage, this) });
-            this.agentFrameSubscription = DataProxy.subscribe(Protocols.agentFrameState, { onmessage: _.bind(this.onAgentFrameMessage, this) });
+            this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { onmessage: _.bind(this.onWorldFrameMessage, this) });
             this.hardwareSubscription   = DataProxy.subscribe(Protocols.hardwareState,   { onmessage: _.bind(this.onHardwareMessage, this) });
         };
 
         ModelModule.prototype.unload = function()
         {
             this.bodyStateSubscription.cancel();
-            this.agentFrameSubscription.cancel();
+            this.worldFrameSubscription.cancel();
             this.hardwareSubscription.cancel();
         };
 
@@ -112,17 +112,14 @@ define(
             }
         };
 
-        ModelModule.prototype.onAgentFrameMessage = function(msg)
+        ModelModule.prototype.onWorldFrameMessage = function(msg)
         {
             var data = JSON.parse(msg.data);
 
             if (data.ball && data.ball instanceof Array && data.ball.length === 3)
             {
-                var ballInAgentFrame = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]),
-                    torsoMatrix = this.objectByName['torso'].matrixWorld;
-                ballInAgentFrame.applyMatrix4(torsoMatrix);
-                this.ballMesh.position = ballInAgentFrame;
-//                console.log(ballInAgentFrame, this.ballMesh.position);
+                this.ballMesh.position = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]);
+//                console.log(this.ballMesh.position);
             }
         };
 

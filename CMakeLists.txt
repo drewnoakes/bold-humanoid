@@ -253,6 +253,7 @@ add_class(BOLDHUMANOID
 add_class(BOLDHUMANOID
   ./Spatialiser/findGroundPointForPixel.cc
   ./Spatialiser/updateCameraToAgent.cc
+  ./Spatialiser/updateAgentToWorld.cc
 )
 
 add_class(BOLDHUMANOID
@@ -279,6 +280,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/HardwareState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/WorldFrameState/writeJson.cc
 )
 
 add_class(BOLDHUMANOID

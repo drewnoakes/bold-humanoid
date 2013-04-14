@@ -19,7 +19,8 @@ define(
             bodyState: 'Body',
             cameraFrameState: 'CameraFrame',
             gameState: 'Game',
-            hardwareState: 'Hardware'
+            hardwareState: 'Hardware',
+            worldFrameState: 'WorldFrame'
         };
 
         return Protocols;

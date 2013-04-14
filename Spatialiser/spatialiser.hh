@@ -28,6 +28,8 @@ namespace bold
 
     void updateCameraToAgent();
 
+    void updateAgentToWorld();
+
   private:
     std::shared_ptr<CameraModel> d_cameraModel;
   };

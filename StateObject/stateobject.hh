@@ -9,12 +9,13 @@ namespace bold
 {
   enum class StateType
   {
-    CameraFrame,
     AgentFrame,
+    Alarm,
+    Body,
+    CameraFrame,
     Game,
     Hardware,
-    Body,
-    Alarm
+    WorldFrame
   };
 
   class StateObject

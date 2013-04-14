@@ -103,8 +103,17 @@ void Agent::think()
   readSubBoardData();
   t = debugger.timeEvent(t, "Read Sub Board");
 
-  // TODO populate agent frame from camera frame
+  //
+  // Populate agent frame from camera frame
+  //
   d_spatialiser->updateCameraToAgent();
+  t = debugger.timeEvent(t, "Camera to Agent Frame");
+
+  //
+  // Populate world frame from agent frame
+  //
+  d_spatialiser->updateAgentToWorld();
+  t = debugger.timeEvent(t, "Agent to World Frame");
 
   //
   // Update websocket data

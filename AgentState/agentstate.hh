@@ -10,11 +10,12 @@
 namespace bold
 {
   class AgentFrameState;
+  class AlarmState;
+  class BodyState;
   class CameraFrameState;
   class GameState;
   class HardwareState;
-  class BodyState;
-  class AlarmState;
+  class WorldFrameState;
 
   class AgentState
   {
@@ -26,7 +27,8 @@ namespace bold
       d_bodyState(),
       d_cameraFrame(),
       d_gameState(),
-      d_hardwareState()
+      d_hardwareState(),
+      d_worldFrameState()
     {}
 
     unsigned long long getCameraFrameNumber() const { return d_cameraFrameNumber; }
@@ -37,6 +39,7 @@ namespace bold
     std::shared_ptr<CameraFrameState> cameraFrame() const { return d_cameraFrame; }
     std::shared_ptr<GameState> game() const { return d_gameState; }
     std::shared_ptr<HardwareState> hardware() const { return d_hardwareState; }
+    std::shared_ptr<WorldFrameState> worldFrame() const { return d_worldFrameState; }
 
     std::vector<std::shared_ptr<StateObject>> allStateObjects() const;
     std::vector<StateType> allStateTypes() const
@@ -48,6 +51,7 @@ namespace bold
         StateType::CameraFrame,
         StateType::Game,
         StateType::Hardware,
+        StateType::WorldFrame,
       };
       return types;
     }
@@ -60,12 +64,13 @@ namespace bold
     // Setters
     //
 
-    void setCameraFrame(std::shared_ptr<CameraFrameState> cameraFrame);
     void setAgentFrame(std::shared_ptr<AgentFrameState> agentFrame);
-    void setGameState(std::shared_ptr<GameState> const& gameState);
-    void setHardwareState(std::shared_ptr<HardwareState> hardwareState);
-    void setBodyState(std::shared_ptr<BodyState> bodyState);
     void setAlarmState(std::shared_ptr<AlarmState> alarmState);
+    void setBodyState(std::shared_ptr<BodyState> bodyState);
+    void setCameraFrame(std::shared_ptr<CameraFrameState> cameraFrame);
+    void setGameState(std::shared_ptr<GameState> gameState);
+    void setHardwareState(std::shared_ptr<HardwareState> hardwareState);
+    void setWorldFrame(std::shared_ptr<WorldFrameState> worldFrameState);
 
     static AgentState& getInstance();
 
@@ -77,6 +82,7 @@ namespace bold
     std::shared_ptr<CameraFrameState> d_cameraFrame;
     std::shared_ptr<GameState> d_gameState;
     std::shared_ptr<HardwareState> d_hardwareState;
+    std::shared_ptr<WorldFrameState> d_worldFrameState;
   };
 
   inline AgentState& AgentState::getInstance()
