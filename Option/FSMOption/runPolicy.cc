@@ -14,12 +14,14 @@ OptionList FSMOption::runPolicy()
   {
     testTransition = false;
     for (auto transition : d_curState->transitions)
+    {
       if (transition->condition())
       {
-        d_curState = transition->nextState;
+        d_curState = transition->childState;
         testTransition = true;
         break;
       }
+    }
   }
   while (testTransition);
 

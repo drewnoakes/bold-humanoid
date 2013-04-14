@@ -16,10 +16,19 @@ namespace bold
     struct State;
     typedef std::shared_ptr<State> StatePtr;
 
-    struct Transition;
+    struct Transition
+    {
+      /// Condition that needs to be fulfilled to fire
+      std::function<bool()> condition;
+      /// State this transition goes from
+      StatePtr parentState;
+      /// State this transition results in
+      StatePtr childState;
+    };
+
     typedef std::shared_ptr<Transition> TransitionPtr;
 
-    struct State
+    struct State : public std::enable_shared_from_this<State>
     {
       State(std::string const& n, OptionList o, bool f = false)
 	: name(n),
@@ -39,17 +48,10 @@ namespace bold
       TransitionPtr newTransition()
       {
         TransitionPtr t = std::make_shared<Transition>();
+        t->parentState = shared_from_this();
         transitions.push_back(t);
         return t;
       }
-    };
-
-    struct Transition
-    {
-      /// Condition that needs to be fulfilled to fire
-      std::function<bool()> condition;
-      /// State this transition+ results in
-      StatePtr nextState;
     };
 
   public:
