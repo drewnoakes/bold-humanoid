@@ -47,7 +47,7 @@ void Agent::processInputCommands()
       static short int axis0 = 0;
       static short int axis1 = 0;
       static short int axis2 = 0;
-      static short int axis3 = 0;
+//       static short int axis3 = 0;
 
       // what could the buttons be used for?
       if (event.isAxis())
@@ -67,10 +67,10 @@ void Agent::processInputCommands()
             axis2 = event.value;
             stick = 2;
             break;
-          case 3:
-            axis3 = event.value;
-            stick = 2;
-            break;
+//           case 3:
+//             axis3 = event.value;
+//             stick = 2;
+//             break;
         }
 
         if (stick == 1)
