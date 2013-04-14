@@ -52,6 +52,8 @@ DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::sh
         return (char*)"Game";
       case StateType::Hardware:
         return (char*)"Hardware";
+      case StateType::WorldFrame:
+        return (char*)"WorldFrame";
       default:
         throw new runtime_error("Unsupported enum class value.");
     }
