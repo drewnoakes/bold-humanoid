@@ -16,8 +16,8 @@ require(
         var moduleHost = new ModuleHost();
 
         moduleHost.add(new CameraModule());
-        moduleHost.add(new TimingModule());
         moduleHost.add(new ModelModule());
+        moduleHost.add(new TimingModule());
         moduleHost.add(new SensorModule());
         moduleHost.add(new FieldMapModule());
 

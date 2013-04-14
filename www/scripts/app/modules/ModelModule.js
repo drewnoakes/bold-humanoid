@@ -68,12 +68,16 @@ define(
                 this.render();
             }.bind(this));
 
-            this.subscription = DataProxy.subscribe(Protocols.bodyState, { onmessage: _.bind(this.onMessage, this) });
+            this.bodyStateSubscription  = DataProxy.subscribe(Protocols.bodyState,       { onmessage: _.bind(this.onBodyStateMessage, this) });
+            this.agentFrameSubscription = DataProxy.subscribe(Protocols.agentFrameState, { onmessage: _.bind(this.onAgentFrameMessage, this) });
+            this.hardwareSubscription   = DataProxy.subscribe(Protocols.hardwareState,   { onmessage: _.bind(this.onHardwareMessage, this) });
         };
 
         ModelModule.prototype.unload = function()
         {
-            this.subscription.cancel();
+            this.bodyStateSubscription.cancel();
+            this.agentFrameSubscription.cancel();
+            this.hardwareSubscription.cancel();
         };
 
         ModelModule.prototype.onResized = function(width, height)
@@ -83,7 +87,7 @@ define(
             this.camera.updateProjectionMatrix();
         };
 
-        ModelModule.prototype.onMessage = function(msg)
+        ModelModule.prototype.onBodyStateMessage = function(msg)
         {
             var data = JSON.parse(msg.data);
 
@@ -105,6 +109,40 @@ define(
                 this.updateAgentHeightFromGround();
                 this.updateCameraPosition();
                 this.render();
+            }
+        };
+
+        ModelModule.prototype.onAgentFrameMessage = function(msg)
+        {
+            var data = JSON.parse(msg.data);
+
+            if (data.ball && data.ball instanceof Array && data.ball.length === 3)
+            {
+                var ballInAgentFrame = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]),
+                    torsoMatrix = this.objectByName['torso'].matrixWorld;
+                ballInAgentFrame.applyMatrix4(torsoMatrix);
+                this.ballMesh.position = ballInAgentFrame;
+//                console.log(ballInAgentFrame, this.ballMesh.position);
+            }
+        };
+
+        ModelModule.prototype.onHardwareMessage = function(msg)
+        {
+            var data = JSON.parse(msg.data);
+
+            // TODO only set if changed?
+
+            if (data.eye && data.eye instanceof Array && data.eye.length === 3)
+            {
+                var eyeMaterial = this.objectByName['eye-led'].material.materials[0];
+                var eyeColor = new THREE.Color(0);
+
+                eyeColor.r = data.eye[0];
+                eyeColor.g = data.eye[1];
+                eyeColor.b = data.eye[2];
+
+                eyeMaterial.color = eyeColor;
+                eyeMaterial.emissive = eyeColor;
             }
         };
 
