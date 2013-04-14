@@ -28,6 +28,7 @@ namespace bold
       d_focalLength = ini.getd("Camera", "FocalLength", 0.025);
       d_rangeVerticalDegs = ini.getd("Camera", "RangeVerticalDegrees", 46.0);
       d_rangeHorizontalDegs = ini.getd("Camera", "RangeHorizontalDegrees", 58.0);
+      // TODO have seen both 58.0 and 60.0 as default horizontal range values
     }
 
     unsigned imageWidth() const { return d_imageWidth; }

@@ -20,8 +20,6 @@ Agent::Agent(string const& U2D_dev,
   d_linuxCM730 = make_shared<LinuxCM730>(U2D_dev.c_str());
   d_CM730 = make_shared<CM730>(d_linuxCM730.get());
 
-  // TODO have seen both 58.0 and 60.0 as default horizontal range values
-
   d_ambulator = make_shared<Ambulator>(ini),
 
   d_cameraModel = make_shared<CameraModel>(ini);
