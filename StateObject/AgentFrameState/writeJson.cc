@@ -35,7 +35,7 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("observedLineSegments");
+    writer.String("lines");
     writer.StartArray();
     {
       for (LineSegment3d const& lineSeg : d_observedLineSegments)

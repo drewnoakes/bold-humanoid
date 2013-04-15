@@ -33,7 +33,7 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("observedLineSegments");
+    writer.String("lines");
     writer.StartArray();
     {
       for (LineSegment2i const& lineSeg : d_observedLineSegments)
