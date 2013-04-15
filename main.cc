@@ -16,6 +16,7 @@ int main(int argc, char **argv)
   bool useJoystick = false;
   bool autoGetUpFromFallen = true;
   bool recordFrames = false;
+  bool useOptionTree = true;
 
   string confFile("config.ini");
 
@@ -32,6 +33,7 @@ int main(int argc, char **argv)
       cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
       cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
       cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
+      cout << "\t-t\tdisable the option tree (or --no-tree)" << endl;
       cout << "\t-h\tshow these options (or --help)" << endl;
       return 0;
     }
@@ -47,6 +49,10 @@ int main(int argc, char **argv)
     {
       autoGetUpFromFallen = false;
     }
+    else if (arg == "-t" || arg == "--no-tree")
+    {
+      useOptionTree = false;
+    }
     else if (arg == "-r" || arg == "--record")
     {
       recordFrames = true;
@@ -61,6 +67,7 @@ int main(int argc, char **argv)
     MOTION_FILE_PATH,
     useJoystick,
     autoGetUpFromFallen,
+    useOptionTree,
     recordFrames);
 
   auto rc = agent.run();

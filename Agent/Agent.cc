@@ -5,12 +5,14 @@ Agent::Agent(string const& U2D_dev,
              string const& motionFile,
              bool const& useJoystick,
              bool const& autoGetUpFromFallen,
+             bool const& useOptionTree,
              bool const& recordFrames,
              unsigned int const& gameControlUdpPort
   )
   : d_motionFile(motionFile),
     d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
+    d_useOptionTree(useOptionTree),
     d_gameControlReceiver(gameControlUdpPort),
     d_ballSeenCnt(0),
     d_goalSeenCnt(0)

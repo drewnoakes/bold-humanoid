@@ -60,9 +60,11 @@ void Agent::think()
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
 
-  d_optionTree->run();
-
-  t = debugger.timeEvent(t, "Process State");
+  if (d_useOptionTree)
+  {
+    d_optionTree->run();
+    t = debugger.timeEvent(t, "Option Tree");
+  }
 
   //
   // Process input commands

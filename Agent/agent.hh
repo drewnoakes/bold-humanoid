@@ -53,6 +53,7 @@ namespace bold
           std::string const& motionFile,
           bool const& useJoystick,
           bool const& autoGetUpFromFallen,
+          bool const& useOptionTree,
           bool const& recordFrames,
           unsigned int const& gameControlUdpPort = GAMECONTROLLER_PORT);
 
@@ -64,6 +65,7 @@ namespace bold
     std::string d_motionFile;
     bool d_isRecordingFrames;
     bool d_autoGetUpFromFallen;
+    bool d_useOptionTree;
 
     // Modules
     std::shared_ptr<Robot::LinuxCM730> d_linuxCM730;
