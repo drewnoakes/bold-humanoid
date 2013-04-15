@@ -287,6 +287,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/OptionTreeState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/WorldFrameState/writeJson.cc
 )
 
