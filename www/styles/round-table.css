@@ -178,3 +178,17 @@ div.module.timing table.timing-details tr td.max-duration
     padding-left: 1em;
 }
 
+/*******************************************************************/
+div.module.optiontree .option
+{
+    background-color: none;
+    transition: background-color 1s linear;
+    -moz-transition: background-color 1s linear;
+    -o-transition: background-color 1s linear;
+    -webkit-transition: background-color 1s linear;
+}
+
+div.module.optiontree .option.ran
+{
+    background-color: yellow;
+}

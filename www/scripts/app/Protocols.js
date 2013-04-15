@@ -20,6 +20,7 @@ define(
             cameraFrameState: 'CameraFrame',
             gameState: 'Game',
             hardwareState: 'Hardware',
+            optionTree: 'OptionTree',
             worldFrameState: 'WorldFrame'
         };
 
