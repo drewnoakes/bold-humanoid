@@ -1,4 +1,7 @@
 #include "optiontree.hh"
+
+#include "../AgentState/agentstate.hh"
+#include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include <iostream>
 
 using namespace bold;

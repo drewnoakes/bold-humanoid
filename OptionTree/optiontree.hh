@@ -2,7 +2,6 @@
 #define BOLD_OPTIONTREE_HH
 
 #include "../Option/option.hh"
-
 #include <map>
 
 namespace bold
@@ -18,8 +17,6 @@ namespace bold
   private:
     std::map<std::string, OptionPtr> d_options;
     OptionPtr d_top;
-    
-    std::list<OptionPtr> d_ranOptions;
   };
 
 

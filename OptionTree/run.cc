@@ -2,7 +2,7 @@
 
 void OptionTree::run()
 {
-  d_ranOptions.clear();
+  OptionList ranOptions;
 
   OptionList options = {d_top};
   while (!options.empty())
@@ -12,6 +12,9 @@ void OptionTree::run()
     options.pop_front();
     OptionList subOptions = option->runPolicy();
     options.insert(options.end(), subOptions.begin(), subOptions.end());
-    d_ranOptions.push_back(option);
+    ranOptions.push_back(option);
   }
+
+  auto s = make_shared<OptionTreeState const>(ranOptions);
+  AgentState::getInstance().set(s);
 }
