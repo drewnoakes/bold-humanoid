@@ -15,9 +15,15 @@
 #include "../OptionTree/optiontree.hh"
 #include "../OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 #include "../Spatialiser/spatialiser.hh"
-#include "../StateObject/CameraFrameState/cameraframestate.hh"
-#include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../StateObject/AgentFrameState/agentframestate.hh"
+#include "../StateObject/AlarmState/alarmstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/GameState/gamestate.hh"
+#include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../StateObject/OptionTreeState/optiontreestate.hh"
+#include "../StateObject/WorldFrameState/worldframestate.hh"
+
 #include "../VisualCortex/visualcortex.hh"
 
 #include <iostream>
