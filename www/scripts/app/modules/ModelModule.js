@@ -7,9 +7,10 @@ define(
         'scripts/app/DataProxy',
         'scripts/app/Protocols',
         'scripts/app/FieldLinePlotter',
-        'scripts/app/Constants'
+        'scripts/app/Constants',
+        'scripts/app/util/Dragger'
     ],
-    function(GeometryUtil, DataProxy, Protocols, FieldLinePlotter, Constants)
+    function(GeometryUtil, DataProxy, Protocols, FieldLinePlotter, Constants, Dragger)
     {
         'use strict';
 
@@ -119,7 +120,6 @@ define(
             if (data.ball && data.ball instanceof Array && data.ball.length === 3)
             {
                 this.ballMesh.position = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]);
-//                console.log(this.ballMesh.position);
             }
         };
 
@@ -215,7 +215,7 @@ define(
             fieldLineCanvas.width = groundSizeX * scale;
             fieldLineCanvas.height = groundSizeY * scale;
             FieldLinePlotter.start(fieldLineContext, plotOptions);
-            FieldLinePlotter.drawLines(fieldLineContext, plotOptions);
+            FieldLinePlotter.drawFieldLines(fieldLineContext, plotOptions);
             FieldLinePlotter.end(fieldLineContext);
 
             var groundBumpMap = THREE.ImageUtils.loadTexture('images/felt.jpg', null, function(texture)
@@ -421,8 +421,7 @@ define(
 
         ModelModule.prototype.bindMouseInteraction = function(container)
         {
-            var onMouseDownPosition = new THREE.Vector2(),
-                onMouseDownTheta = this.cameraTheta,
+            var onMouseDownTheta = this.cameraTheta,
                 onMouseDownPhi = this.cameraPhi;
 
             container.addEventListener('mousewheel', function(event)
@@ -434,35 +433,21 @@ define(
                 this.render();
             }.bind(this), false);
 
-            var onMouseMove = function(event)
-            {
-                event.preventDefault();
-                this.cameraTheta = -((event.clientX - onMouseDownPosition.x) * 0.01) + onMouseDownTheta;
-                this.cameraPhi = ((event.clientY - onMouseDownPosition.y) * 0.01) + onMouseDownPhi;
-                this.cameraPhi = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, this.cameraPhi));
-                this.updateCameraPosition();
-                this.render();
-            }.bind(this);
-
-            var onMouseUp = function (event)
-            {
-                event.preventDefault();
-                onMouseDownPosition.x = event.clientX - onMouseDownPosition.x;
-                onMouseDownPosition.y = event.clientY - onMouseDownPosition.y;
-                window.removeEventListener('mouseup', onMouseUp, false);
-                window.removeEventListener('mousemove', onMouseMove, false);
-            };
-
-            container.addEventListener('mousedown', function(event)
-            {
-                event.preventDefault();
-                onMouseDownTheta = this.cameraTheta;
-                onMouseDownPhi = this.cameraPhi;
-                onMouseDownPosition.x = event.clientX;
-                onMouseDownPosition.y = event.clientY;
-                window.addEventListener('mouseup', onMouseUp, false);
-                window.addEventListener('mousemove', onMouseMove, false);
-            }.bind(this), false);
+            Dragger.bind(container, {
+                start: function()
+                {
+                    onMouseDownTheta = this.cameraTheta;
+                    onMouseDownPhi = this.cameraPhi;
+                }.bind(this),
+                move: function(dx, dy)
+                {
+                    this.cameraTheta = -(dx * 0.01) + onMouseDownTheta;
+                    this.cameraPhi = (dy * 0.01) + onMouseDownPhi;
+                    this.cameraPhi = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, this.cameraPhi));
+                    this.updateCameraPosition();
+                    this.render();
+                }.bind(this)
+            });
         };
 
         ModelModule.prototype.updateCameraPosition = function()

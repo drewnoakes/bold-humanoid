@@ -4,9 +4,12 @@
 define(
     [
         'scripts/app/FieldLinePlotter',
-        'scripts/app/Constants'
+        'scripts/app/Protocols',
+        'scripts/app/Constants',
+        'scripts/app/DataProxy',
+        'scripts/app/util/Dragger'
     ],
-    function(FieldLinePlotter, Constants)
+    function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger)
     {
         'use strict';
 
@@ -35,46 +38,49 @@ define(
 
         FieldMapModule.prototype.bindEvents = function()
         {
-            var self = this;
+            Dragger.bind(this.canvas, {
+                isRelative: true,
+                move: function(dx, dy)
+                {
+                    this.fieldCenterX += dx;
+                    this.fieldCenterY += dy;
+                    this.draw();
+                }.bind(this)
+            });
+
             this.$canvas.on('mousewheel', function (event)
             {
                 // TODO zoom around the mouse pointer, rather than (0,0)
-                self.scale += event.originalEvent.wheelDelta / 20;
-                self.scale = Math.max(self.minScale, self.scale);
-                self.draw();
-            });
-
-            var isMouseDown = false, dragStartX, dragStartY;
-            this.$canvas.on('mousedown', function(event)
-            {
-                isMouseDown = true;
-                dragStartX = event.screenX;
-                dragStartY = event.screenY;
-                self.draw();
-            });
-
-            this.$canvas.on('mouseup', function() {
-                isMouseDown = false;
-            });
-
-            this.$canvas.on('mousemove', function(event) {
-                if (isMouseDown) {
-                    var dx = event.screenX - dragStartX,
-                        dy = event.screenY - dragStartY;
-                    dragStartX = event.screenX;
-                    dragStartY = event.screenY;
-                    self.fieldCenterX += dx;
-                    self.fieldCenterY += dy;
-                    self.draw();
-                }
-            });
+                this.scale += event.originalEvent.wheelDelta / 20;
+                this.scale = Math.max(this.minScale, this.scale);
+                this.draw();
+            }.bind(this));
         };
 
         FieldMapModule.prototype.load = function()
-        {};
+        {
+            this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { onmessage: _.bind(this.onWorldFrameMessage, this) });
+        };
 
         FieldMapModule.prototype.unload = function()
-        {};
+        {
+            this.worldFrameSubscription.cancel();
+        };
+
+        FieldMapModule.prototype.onWorldFrameMessage = function(msg)
+        {
+            var data = JSON.parse(msg.data);
+            this.lineSegments = [];
+
+            _.each(data.lines, function (line)
+            {
+                var p1 = { x: line[0], y: line[1], z: line[2] };
+                var p2 = { x: line[3], y: line[4], z: line[5] };
+                this.lineSegments.push({ p1: p1, p2: p2 });
+            }.bind(this));
+
+            this.draw();
+        };
 
         FieldMapModule.prototype.onResized = function(width, height)
         {
@@ -102,7 +108,8 @@ define(
                 context = this.canvas.getContext('2d');
 
             FieldLinePlotter.start(context, options);
-            FieldLinePlotter.drawLines(context, options);
+            FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
+            FieldLinePlotter.drawFieldLines(context, options);
             FieldLinePlotter.drawGoals(context, options);
             FieldLinePlotter.end(context);
         };

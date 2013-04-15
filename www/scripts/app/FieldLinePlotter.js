@@ -24,10 +24,26 @@ define(
             {
                 context.restore();
             },
-            drawLines: function (context, options)
+            drawLineSegments: function (context, options, lineSegments, lineWidth, strokeStyle)
             {
-                scale = options.scale || 1;
-                fieldCenter = options.fieldCenter || { x: canvas.width / 2, y: canvas.height / 2 };
+                var scale = options.scale || 1;
+
+                context.lineWidth = lineWidth || 1;
+                context.strokeStyle = strokeStyle || '#00ff00';
+
+                context.beginPath();
+                _.each(lineSegments, function (lineSegment)
+                {
+                    var p1 = lineSegment.p1,
+                        p2 = lineSegment.p2;
+                    context.moveTo(p1.x * scale, p1.y * scale);
+                    context.lineTo(p2.x * scale, p2.y * scale);
+                });
+                context.stroke();
+            },
+            drawFieldLines: function (context, options)
+            {
+                var scale = options.scale || 1;
 
                 // prepare to draw field lines
                 context.lineWidth = Constants.lineWidth * scale;
