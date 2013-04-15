@@ -3,7 +3,7 @@
 OptionList ApproachBall::runPolicy()
 {
   auto agentFrameState = AgentState::getInstance().get<AgentFrameState>();
-  
+
   auto ballPos = agentFrameState->getBallObservation();
   if (!ballPos)
   {
@@ -11,13 +11,13 @@ OptionList ApproachBall::runPolicy()
     return OptionList();
   }
 
-  double dist = ballPos->head<2>().norm();
-  double breakDist = 1.0;
-  double alpha = dist/breakDist;
+//   double dist = ballPos->head<2>().norm();
+//   double breakDist = 1.0;
+//   double alpha = dist/breakDist;
 
   Vector2d minMove(5.0, 0);
   Vector2d maxMove(30.0, 0);
-  Vector2d move = minMove + alpha * (maxMove - minMove);
+//   Vector2d move = minMove + alpha * (maxMove - minMove);
 
   d_ambulator->setMoveDir(Vector2d(0.01,0));
 
