@@ -56,10 +56,10 @@ void Agent::think()
   RoboCupGameControlData gameControlData;
   if (d_gameControlReceiver.receive(&gameControlData))
   {
-    AgentState::getInstance().set(make_shared<GameState>(gameControlData));
+    AgentState::getInstance().set(make_shared<GameState const>(gameControlData));
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
-  
+
   d_optionTree->run();
 
   t = debugger.timeEvent(t, "Process State");

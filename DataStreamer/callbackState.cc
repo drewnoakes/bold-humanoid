@@ -20,21 +20,30 @@ int DataStreamer::callback_state(
     // If we're being called, then there's some state to send.
     const libwebsocket_protocols* protocol = libwebsockets_get_protocol(wsi);
 
-    for (shared_ptr<StateObject> state : AgentState::getInstance().allStateObjects())
+    for (shared_ptr<StateTracker const> stateTracker : AgentState::getInstance().getTrackers())
     {
-      if (state && strcmp(state->name().c_str(), protocol->name) == 0)
+      if (stateTracker && strcmp(stateTracker->name().c_str(), protocol->name) == 0)
       {
         StringBuffer buffer;
         Writer<StringBuffer> writer(buffer);
 
-        state->writeJson(writer);
+        shared_ptr<StateObject const> obj = stateTracker->stateBase();
 
-        int n = writeJson(wsi, buffer);
-
-        if (n < 0)
+        if (obj)
         {
-          lwsl_err("ERROR %d writing StateObject JSON to socket\n", n);
-          return 1;
+          obj->writeJson(writer);
+
+          int n = writeJson(wsi, buffer);
+
+          if (n < 0)
+          {
+            lwsl_err("ERROR %d writing StateObject JSON to socket\n", n);
+            return 1;
+          }
+        }
+        else
+        {
+          cout << "No state object for: " << stateTracker->name() << endl;
         }
 
         return 0;

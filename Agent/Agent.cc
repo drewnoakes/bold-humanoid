@@ -17,6 +17,8 @@ Agent::Agent(string const& U2D_dev,
 {
   cout << "[Agent::Agent] Start" << endl;
 
+  registerStateTypes();
+
   d_linuxCM730 = make_shared<LinuxCM730>(U2D_dev.c_str());
   d_CM730 = make_shared<CM730>(d_linuxCM730.get());
 

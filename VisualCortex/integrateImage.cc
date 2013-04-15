@@ -72,7 +72,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
     }
   }
 
-  AgentState::getInstance().set(make_shared<CameraFrameState>(ballPosition, goalPositions, observedLineSegments));
+  AgentState::getInstance().set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments));
 
   debugger.timeEvent(t, "Image Processing/Updating State");
 }

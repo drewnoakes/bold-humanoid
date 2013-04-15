@@ -28,7 +28,7 @@ void Agent::readSubBoardData()
     mx28Snapshots.push_back(mx28);
   }
 
-  auto hw = make_shared<HardwareState>(cm730Snapshot, mx28Snapshots);
+  auto hw = make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots);
 
   AgentState::getInstance().set(hw);
 
@@ -57,7 +57,7 @@ void Agent::readSubBoardData()
 
   if (hasAlarmChanged || !lastAlarmState)
   {
-    AgentState::getInstance().set(make_shared<AlarmState>(alarmLedByJointId));
+    AgentState::getInstance().set(make_shared<AlarmState const>(alarmLedByJointId));
   }
 
   //
@@ -69,5 +69,5 @@ void Agent::readSubBoardData()
   {
     angles[i] = hw->getMX28State(i)->presentPosition;
   }
-  AgentState::getInstance().set(make_shared<BodyState>(angles));
+  AgentState::getInstance().set(make_shared<BodyState const>(angles));
 }

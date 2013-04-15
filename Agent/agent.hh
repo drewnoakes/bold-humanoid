@@ -105,6 +105,8 @@ namespace bold
 
     bool initMotionManager(minIni const& ini);
 
+    void registerStateTypes();
+
     void think();
 
     void readSubBoardData();

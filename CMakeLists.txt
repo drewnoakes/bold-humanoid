@@ -98,13 +98,10 @@ add_class(BOLDHUMANOID
   ./Agent/preKickLook.cc
   ./Agent/processInputCommands.cc
   ./Agent/readSubBoardData.cc
+  ./Agent/registerStateTypes.cc
   ./Agent/run.cc
   ./Agent/standUpIfFallen.cc
   ./Agent/think.cc
-)
-
-add_class(BOLDHUMANOID
-  ./AgentState/allStateObjects.cc
 )
 
 add_class(BOLDHUMANOID

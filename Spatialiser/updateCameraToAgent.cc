@@ -71,5 +71,5 @@ void Spatialiser::updateCameraToAgent()
     }
   }
 
-  AgentState::getInstance().set(make_shared<AgentFrameState>(ball, goals, lineSegments));
+  AgentState::getInstance().set(make_shared<AgentFrameState const>(ball, goals, lineSegments));
 }

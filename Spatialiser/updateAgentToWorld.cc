@@ -20,5 +20,5 @@ void Spatialiser::updateAgentToWorld()
 
   // TODO use the localiser to project from agent to world space
 
-  AgentState::getInstance().set(make_shared<WorldFrameState>(ball, goals, lineSegments));
+  AgentState::getInstance().set(make_shared<WorldFrameState const>(ball, goals, lineSegments));
 }
