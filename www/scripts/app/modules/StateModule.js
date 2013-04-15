@@ -68,7 +68,8 @@ define(
 
         StateModule.prototype.onmessage = function(msg)
         {
-            this.textElement.innerText = msg.data;
+            var text = JSON.stringify(JSON.parse(msg.data), undefined, 2);
+            this.textElement.innerText = text;
         };
 
         return StateModule;

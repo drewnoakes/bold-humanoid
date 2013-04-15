@@ -171,6 +171,22 @@ div.module.camera div.control-container.debug-controls
 
 /********************************************************************/
 
+div.module.state .json-text
+{
+    white-space: pre;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+div.module.state > div.pane-container
+{
+    position: relative;
+    height: 456px;
+    overflow: auto;
+}
+
+/********************************************************************/
+
 div.module.timing table.timing-details tr td.duration,
 div.module.timing table.timing-details tr td.max-duration
 {
