@@ -22,7 +22,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   OptionPtr approachBall = make_shared<ApproachBall>("approachball", ambulator);
   tree->addOption(approachBall);
 
-
+  // Left kick
+  OptionPtr leftKick = make_shared<ActionOption>("leftkickaction","lk");
+  tree->addOption(leftKick);
+  
+  // Left kick
+  OptionPtr rightKick = make_shared<ActionOption>("rightkickaction","rk");
+  tree->addOption(rightKick);
+  
   // FSM
   auto fsm = make_shared<FSMOption>("win");
   tree->addOption(fsm, true);
@@ -45,6 +52,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   // State: approach and look at ball
   auto approachBallState = fsm->newState("approachball", {approachBall, lookAtBall});
 
+  auto ballLostCondition = []() {
+    static int lastSeen = 0;
+    lastSeen++;
+    if (AgentState::getInstance().get<CameraFrameState>()->isBallVisible())
+      lastSeen = 0;
+    return lastSeen > 10;
+  };
+
   // Transition: into actual loop after stood up
   auto standUp2lookAround = standUpState->newTransition();
   standUp2lookAround->condition = [standUp2lookAround]() {
@@ -62,13 +77,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
 
   // Transition: look for ball if no longer seen
   auto lookAtBall2lookAround = lookAtBallState->newTransition();
-  lookAtBall2lookAround->condition = []() {
-    static int lastSeen = 0;
-    lastSeen++;
-    if (AgentState::getInstance().get<CameraFrameState>()->isBallVisible())
-      lastSeen = 0;
-    return lastSeen > 10;
-  };
+  lookAtBall2lookAround->condition = ballLostCondition;
   lookAtBall2lookAround->childState = lookAroundState;
 
   // Transition: approach ball
@@ -82,6 +91,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
     return nSeen > 10;
   };
   lookAtBall2approachBall->childState = approachBallState;
+
+  // Transition: look for ball again if no longer seen
+  auto approachBall2lookAround = approachBallState->newTransition();
+  approachBall2lookAround->condition = ballLostCondition;
+  approachBall2lookAround->childState = lookAroundState;
 
   return tree;
 }
