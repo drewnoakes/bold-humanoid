@@ -17,23 +17,23 @@ FieldMap::FieldMap(minIni const& ini)
 
   double fieldX              = ini.getd("Environment", "FieldSizeX", 6.0);
   double fieldY              = ini.getd("Environment", "FieldSizeY", 4.0);
-  double goalX               = ini.getd("Environment", "GoalSizeX", 0.5);
+//   double goalX               = ini.getd("Environment", "GoalSizeX", 0.5);
   double goalY               = ini.getd("Environment", "GoalSizeY", 1.5);
-  double goalZ               = ini.getd("Environment", "GoalSizeZ", 0.8);
-  double goalPostDiameter    = ini.getd("Environment", "GoalPostDiameter", 0.1);
+//   double goalZ               = ini.getd("Environment", "GoalSizeZ", 0.8);
+//   double goalPostDiameter    = ini.getd("Environment", "GoalPostDiameter", 0.1);
   double goalAreaX           = ini.getd("Environment", "GoalAreaSizeX", 0.6);
   double goalAreaY           = ini.getd("Environment", "GoalAreaSizeY", 2.2);
-  double penaltyMarkDistance = ini.getd("Environment", "PenaltyMarkDistance", 1.8);
+//   double penaltyMarkDistance = ini.getd("Environment", "PenaltyMarkDistance", 1.8);
   double circleDiameter      = ini.getd("Environment", "CircleDiameter", 1.2);
-  double lineWidth           = ini.getd("Environment", "LineWidth", 0.05);
-  double penaltyLineLength   = ini.getd("Environment", "PenaltyLineLength", 0.1);
-  double outerMarginMinimum  = ini.getd("Environment", "OuterMarginMinimum", 0.7);
-  double ballDiameter        = ini.getd("Environment", "BallDiameter", 0.067); // according to Wikipedia
+//   double lineWidth           = ini.getd("Environment", "LineWidth", 0.05);
+//   double penaltyLineLength   = ini.getd("Environment", "PenaltyLineLength", 0.1);
+//   double outerMarginMinimum  = ini.getd("Environment", "OuterMarginMinimum", 0.7);
+//   double ballDiameter        = ini.getd("Environment", "BallDiameter", 0.067); // according to Wikipedia
 
-  double halfCrossLength = penaltyLineLength/2;
-  double penaltyX = fieldX/2 - penaltyMarkDistance;
-  double penaltyInnerX = penaltyX - halfCrossLength;
-  double penaltyOuterX = penaltyX + halfCrossLength;
+//   double halfCrossLength = penaltyLineLength/2;
+//   double penaltyX = fieldX/2 - penaltyMarkDistance;
+//   double penaltyInnerX = penaltyX - halfCrossLength;
+//   double penaltyOuterX = penaltyX + halfCrossLength;
   double halfFieldX = fieldX/2;
   double halfFieldY = fieldY/2;
   double halfGoalAreaY = goalAreaY/2;

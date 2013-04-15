@@ -79,12 +79,12 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
     vector<LineSegment2d> fieldLines = d_fieldMap->getFieldLines();
     Projector projector = d_cameraModel->getProjector();
 
-    double torsoX = 1.0;
-    double torsoY = -1.0;
-    double torsoTheta = 0;
+//     double torsoX = 1.0;
+//     double torsoY = -1.0;
+//     double torsoTheta = 0;
 
     // TODO calculate correct camera position, using neck angles, agent height, camera position within head
-    double cameraHeight = 0.45;
+//     double cameraHeight = 0.45;
 
     Affine3d worldToCamera(Translation3d(0,0,10)); // * AngleAxisf(a,axis) * Scaling(s);
 //     Affine3d worldToCamera(AngleAxisd(M_PI/2, Vector3d::UnitY));
