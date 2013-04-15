@@ -6,7 +6,7 @@ OptionList LookAtBall::runPolicy()
 
   if (!ballObs.hasValue())
   {
-    cerr << "[LookAtBall::runPolicy] No ball seen" << endl;
+    cerr << "[LookAtBall::runPolicy] No ball seen!" << endl;
     return OptionList();
   }
 
@@ -26,8 +26,11 @@ OptionList LookAtBall::runPolicy()
   offset.x() *= happ; // pixel per angle
   offset.y() *= vapp; // pixel per angle
 
-  offset = offset.cwiseMin(Vector2f(10,10)).cwiseMax(Vector2f(-10,-10));
-  if (offset.norm() < 10)
+  float maxOffset = 20;
+  offset = offset.cwiseMin(Vector2f(maxOffset,maxOffset)).cwiseMax(Vector2f(-maxOffset,-maxOffset));
+
+  cout << "offset: " << offset.transpose() << endl;
+  if (offset.norm() < 2)
     offset = Vector2f(0,0);
 
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
