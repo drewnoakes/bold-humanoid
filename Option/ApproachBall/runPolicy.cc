@@ -11,16 +11,16 @@ OptionList ApproachBall::runPolicy()
     return OptionList();
   }
 
-//   double dist = ballPos->head<2>().norm();
-//   double breakDist = 1.0;
-//   double alpha = dist/breakDist;
-
+  double dist = ballPos->head<2>().norm();
+  double breakDist = 1.0;
+  double alpha = dist/breakDist;
+  
   Vector2d minMove(5.0, 0);
   Vector2d maxMove(30.0, 0);
-//   Vector2d move = minMove + alpha * (maxMove - minMove);
-
+  Vector2d move = minMove + alpha * (maxMove - minMove);
+  
   d_ambulator->setMoveDir(move);
-
+  
   double turnAngle = atan2(ballPos->x(), ballPos->y());
   double turnGain = 0.5;
 
