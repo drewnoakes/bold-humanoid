@@ -17,8 +17,7 @@ namespace bold
     CameraFrameState(Maybe<Eigen::Vector2f> ballObservation,
                      std::vector<Eigen::Vector2f> goalObservations,
                      std::vector<LineSegment2i> observedLineSegments)
-    : StateObject("CameraFrame"),
-      d_ballObservation(ballObservation),
+    : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments)
     {}

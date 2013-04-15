@@ -17,8 +17,7 @@ namespace bold
     WorldFrameState(Maybe<Eigen::Vector3d> ballObservation,
                     std::vector<Eigen::Vector3d> goalObservations,
                     std::vector<LineSegment3d> observedLineSegments)
-    : StateObject("WorldFrame"),
-      d_ballObservation(ballObservation),
+    : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments)
     {}

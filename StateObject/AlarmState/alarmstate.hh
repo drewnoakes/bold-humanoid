@@ -14,8 +14,7 @@ namespace bold
   {
   public:
     AlarmState(std::vector<MX28Alarm> alarmLedByJointId)
-    : StateObject("Alarm"),
-      d_alarmLedByJointId(alarmLedByJointId)
+    : d_alarmLedByJointId(alarmLedByJointId)
     {
       assert(alarmLedByJointId.size() == Robot::JointData::NUMBER_OF_JOINTS);
     }

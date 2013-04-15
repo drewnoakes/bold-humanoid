@@ -16,8 +16,7 @@ namespace bold
   {
   public:
     HardwareState(std::shared_ptr<CM730Snapshot const> cm730State, std::vector<std::shared_ptr<MX28Snapshot const>> mx28States)
-    : StateObject("Hardware"),
-      d_cm730State(cm730State),
+    : d_cm730State(cm730State),
       d_mx28States(mx28States)
     {}
 

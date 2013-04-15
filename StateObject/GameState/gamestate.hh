@@ -22,7 +22,6 @@ namespace bold
   {
   public:
     GameState(RoboCupGameControlData const& gameControlData)
-    : StateObject("Game")
     {
       d_secondsRemaining = gameControlData.secsRemaining;
       d_playMode = (PlayMode)gameControlData.state;

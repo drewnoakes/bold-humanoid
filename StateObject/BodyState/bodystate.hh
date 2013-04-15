@@ -17,8 +17,7 @@ namespace bold
   {
   public:
     BodyState(double angles[])
-    : StateObject("Body"),
-      d_torso(),
+    : d_torso(),
       d_jointById(),
       d_limbByName()
     {
