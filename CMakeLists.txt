@@ -242,7 +242,6 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./OptionTree/run.cc
-  ./OptionTree/writeJson.cc
 )
 
 add_class(BOLDHUMANOID
@@ -347,7 +346,7 @@ if(UPLOAD_SCP_PATH)
     COMMAND scp -C $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
     COMMAND touch upload.stamp
     DEPENDS boldhumanoid)
-  
+
   add_custom_target(upload DEPENDS upload.stamp)
 else(UPLOAD_SCP_PATH)
   message(WARNING "You have not set a path for uploading the binary; 'upload' target not generated")
