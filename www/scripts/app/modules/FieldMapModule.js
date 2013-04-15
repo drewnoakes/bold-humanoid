@@ -65,7 +65,7 @@ define(
 
         FieldMapModule.prototype.unload = function()
         {
-            this.worldFrameSubscription.cancel();
+            this.worldFrameSubscription.close();
         };
 
         FieldMapModule.prototype.onWorldFrameMessage = function(msg)

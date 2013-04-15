@@ -92,7 +92,7 @@ define(
 
         CameraModule.prototype.unload = function()
         {
-            this.subscription.cancel();
+            this.subscription.close();
         };
 
         CameraModule.prototype.createContext = function ()

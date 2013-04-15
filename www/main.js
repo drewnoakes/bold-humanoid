@@ -6,9 +6,10 @@ require(
         'scripts/app/modules/ModelModule',
         'scripts/app/modules/CameraModule',
         'scripts/app/modules/SensorModule',
+        'scripts/app/modules/StateModule',
         'scripts/app/GameStateMonitor'
     ],
-    function(ModuleHost, FieldMapModule, TimingModule, ModelModule, CameraModule, SensorModule, GameStateMonitor)
+    function(ModuleHost, FieldMapModule, TimingModule, ModelModule, CameraModule, SensorModule, StateModule, GameStateMonitor)
     {
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
@@ -16,10 +17,11 @@ require(
         var moduleHost = new ModuleHost();
 
         moduleHost.add(new CameraModule());
+        moduleHost.add(new FieldMapModule());
         moduleHost.add(new ModelModule());
         moduleHost.add(new TimingModule());
         moduleHost.add(new SensorModule());
-        moduleHost.add(new FieldMapModule());
+        moduleHost.add(new StateModule());
 
         moduleHost.load();
 

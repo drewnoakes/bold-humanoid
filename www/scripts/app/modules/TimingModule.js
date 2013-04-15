@@ -95,7 +95,7 @@ define(
 
         TimingModule.prototype.unload = function()
         {
-            this.subscription.cancel();
+            this.subscription.close();
         };
 
         TimingModule.prototype.updateChart = function(time)

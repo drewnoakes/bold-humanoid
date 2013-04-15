@@ -76,9 +76,9 @@ define(
 
         ModelModule.prototype.unload = function()
         {
-            this.bodyStateSubscription.cancel();
-            this.worldFrameSubscription.cancel();
-            this.hardwareSubscription.cancel();
+            this.bodyStateSubscription.close();
+            this.worldFrameSubscription.close();
+            this.hardwareSubscription.close();
         };
 
         ModelModule.prototype.onResized = function(width, height)

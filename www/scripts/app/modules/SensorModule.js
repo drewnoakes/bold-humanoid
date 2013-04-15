@@ -124,7 +124,7 @@ define(
 
         SensorModule.prototype.unload = function()
         {
-            this.subscription.cancel();
+            this.subscription.close();
         };
 
         SensorModule.prototype.onmessage = function (msg)
