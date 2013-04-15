@@ -56,8 +56,20 @@ define(
 
             this.buildCharts();
 
-            this.polarTrace = new PolarTrace();
-            this.container.append(this.polarTrace.element);
+            var addPolarTrace = function(name)
+            {
+                var trace = new PolarTrace(),
+                    div = $('<div></div>', {'class':'polar-trace-container'});
+                div.append($('<h2></h2>').text(name));
+                div.append(trace.element);
+
+                this.container.append(div);
+                return trace;
+            }.bind(this);
+
+            this.polarTraceXY = addPolarTrace('X|Y');
+            this.polarTraceYZ = addPolarTrace('Y|Z');
+            this.polarTraceXZ = addPolarTrace('X|Z');
 
             /////
 
@@ -140,7 +152,9 @@ define(
             this.seriesArray[4].append(time, data.acc[1]);
             this.seriesArray[5].append(time, data.acc[2]);
 
-            this.polarTrace.addValue(data.acc[0], data.acc[1]);
+            this.polarTraceXY.addValue(data.acc[0], data.acc[1]);
+            this.polarTraceYZ.addValue(data.acc[1], data.acc[2]);
+            this.polarTraceXZ.addValue(data.acc[0], data.acc[2]);
         };
 
         return SensorModule;
