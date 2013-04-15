@@ -1,6 +1,7 @@
 #ifndef BOLD_AGENTSTATE_HH
 #define BOLD_AGENTSTATE_HH
 
+#include <algorithm>
 #include <cassert>
 #include <memory>
 #include <vector>
@@ -74,9 +75,9 @@ namespace bold
     std::vector<std::shared_ptr<StateTracker>> getTrackers() const
     {
       std::vector<std::shared_ptr<StateTracker>> stateObjects;
-      for (auto const& pair : d_trackerByTypeId) {
-        stateObjects.push_back(pair.second);
-      }
+      std::transform(d_trackerByTypeId.begin(), d_trackerByTypeId.end(),
+                     std::back_inserter(stateObjects),
+                     [](decltype(d_trackerByTypeId)::value_type const& pair) { return pair.second; });
       return stateObjects;
     }
 
