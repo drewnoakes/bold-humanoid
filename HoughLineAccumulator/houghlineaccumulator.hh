@@ -43,10 +43,10 @@ namespace bold
     void clear();
 
     /** The accumulator matrix, containing vote counts for line hypotheses. */
-    cv::Mat getMat();
+    cv::Mat getMat() const;
 
-    double getTheta(int y);
-    double getRadius(int x);
+    double getTheta(int y) const;
+    double getRadius(int x) const;
   };
 }
 

@@ -18,12 +18,12 @@ namespace bold
     /**
      * Searches for lines in a {@link HoughLineAccumulator}.
      */
-    std::vector<Candidate<Line>> findLines(HoughLineAccumulator& accumulator, int threshold = 10, double angleSearch = (5.0/180)*M_PI, int radiusSearch = 10);
+    std::vector<Candidate<Line>> findLines(HoughLineAccumulator& accumulator, int threshold = 10, double angleSearch = (5.0/180)*M_PI, int radiusSearch = 10) const;
 
     /**
      * Finds the single most probable line in the accumulator.
      */
-    Line findMaxLine(HoughLineAccumulator& accumulator);
+    Line findMaxLine(HoughLineAccumulator& accumulator) const;
   };
 }
 

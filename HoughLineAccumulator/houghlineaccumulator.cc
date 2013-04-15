@@ -66,17 +66,17 @@ void HoughLineAccumulator::clear()
   d_accumulator = cv::Scalar(0);
 }
 
-cv::Mat HoughLineAccumulator::getMat()
+cv::Mat HoughLineAccumulator::getMat() const
 {
   return d_accumulator;
 }
 
-double HoughLineAccumulator::getTheta(int y)
+double HoughLineAccumulator::getTheta(int y) const
 {
   return y * (M_PI / d_accumulatorThetaLen);
 }
 
-double HoughLineAccumulator::getRadius(int x)
+double HoughLineAccumulator::getRadius(int x) const
 {
   return x - ((int)d_accumulatorRadiusLen / 2);
 }

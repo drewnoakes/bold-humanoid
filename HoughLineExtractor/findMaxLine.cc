@@ -4,7 +4,7 @@ using namespace bold;
 using namespace cv;
 using namespace std;
 
-Line HoughLineExtractor::findMaxLine(HoughLineAccumulator& accumulator)
+Line HoughLineExtractor::findMaxLine(HoughLineAccumulator& accumulator) const
 {
   Mat mat = accumulator.getMat();
 

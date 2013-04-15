@@ -5,7 +5,7 @@
 using namespace bold;
 using namespace std;
 
-vector<Candidate<Line>> HoughLineExtractor::findLines(HoughLineAccumulator& accumulator, int threshold, double angleSearch, int radiusSearch)
+vector<Candidate<Line>> HoughLineExtractor::findLines(HoughLineAccumulator& accumulator, int threshold, double angleSearch, int radiusSearch) const
 {
   assert(angleSearch != 0);
   assert(radiusSearch != 0);
