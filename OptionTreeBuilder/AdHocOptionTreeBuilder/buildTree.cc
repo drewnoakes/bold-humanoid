@@ -56,7 +56,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   // Transition: look at ball when visible
   auto lookAround2lookAtBall = lookAroundState->newTransition();
   lookAround2lookAtBall->condition = []() {
-    return AgentState::getInstance().cameraFrame()->isBallVisible();
+    return AgentState::getInstance().get<CameraFrameState>()->isBallVisible();
   };
   lookAround2lookAtBall->childState = lookAtBallState;
 
@@ -65,7 +65,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   lookAtBall2lookAround->condition = []() {
     static int lastSeen = 0;
     lastSeen++;
-    if (AgentState::getInstance().cameraFrame()->isBallVisible())
+    if (AgentState::getInstance().get<CameraFrameState>()->isBallVisible())
       lastSeen = 0;
     return lastSeen > 10;
   };
@@ -75,7 +75,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   auto lookAtBall2approachBall = lookAtBallState->newTransition();
   lookAtBall2approachBall->condition = []() {
     static int nSeen = 0;
-    if (AgentState::getInstance().cameraFrame()->isBallVisible())
+    if (AgentState::getInstance().get<CameraFrameState>()->isBallVisible())
       nSeen++;
     else if (nSeen > 0)
       nSeen--;

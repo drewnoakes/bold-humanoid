@@ -11,14 +11,14 @@ using namespace std;
 
 void Spatialiser::updateAgentToWorld()
 {
-  BodyState& body = *AgentState::getInstance().body();
-  AgentFrameState const& agentFrame = *AgentState::getInstance().agentFrame();
+  auto body = AgentState::getInstance().get<BodyState>();
+  auto agentFrame = AgentState::getInstance().get<AgentFrameState>();
 
-  auto const& ball = agentFrame.getBallObservation();
-  auto const& goals = agentFrame.getGoalObservations();
-  auto const& lineSegments = agentFrame.getObservedLineSegments();
+  auto const& ball = agentFrame->getBallObservation();
+  auto const& goals = agentFrame->getGoalObservations();
+  auto const& lineSegments = agentFrame->getObservedLineSegments();
 
   // TODO use the localiser to project from agent to world space
 
-  AgentState::getInstance().setWorldFrame(make_shared<WorldFrameState>(ball, goals, lineSegments));
+  AgentState::getInstance().set(make_shared<WorldFrameState>(ball, goals, lineSegments));
 }

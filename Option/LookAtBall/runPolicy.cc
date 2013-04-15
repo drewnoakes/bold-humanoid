@@ -2,7 +2,7 @@
 
 OptionList LookAtBall::runPolicy()
 {
-  auto const& ballObs = AgentState::getInstance().cameraFrame()->getBallObservation();
+  auto const& ballObs = AgentState::getInstance().get<CameraFrameState>()->getBallObservation();
 
   if (!ballObs.hasValue())
   {

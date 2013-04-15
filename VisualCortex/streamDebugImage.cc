@@ -41,7 +41,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw observed lines
-  auto const& observedLineSegments = AgentState::getInstance().cameraFrame()->getObservedLineSegments();
+  auto const& observedLineSegments = AgentState::getInstance().get<CameraFrameState>()->getObservedLineSegments();
   if (streamer->shouldDrawObservedLines() && observedLineSegments.size() > 0)
   {
     for (LineSegment2i const& line : observedLineSegments)

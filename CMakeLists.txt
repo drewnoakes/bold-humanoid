@@ -105,7 +105,6 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./AgentState/allStateObjects.cc
-  ./AgentState/setters.cc
 )
 
 add_class(BOLDHUMANOID
@@ -239,6 +238,11 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./Option/Stand/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
+  ./OptionTree/run.cc
+  ./OptionTree/writeJson.cc
 )
 
 add_class(BOLDHUMANOID

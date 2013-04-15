@@ -4,7 +4,7 @@ void Agent::lookForGoal()
 {
   //stand();
 
-  int nObs = AgentState::getInstance().cameraFrame()->getGoalObservations().size();
+  int nObs = AgentState::getInstance().get<CameraFrameState>()->getGoalObservations().size();
 
   cout << "[Agent::lookForGoal] Visible goal count: " << nObs << endl;
 

@@ -56,20 +56,11 @@ void Agent::think()
   RoboCupGameControlData gameControlData;
   if (d_gameControlReceiver.receive(&gameControlData))
   {
-    AgentState::getInstance().setGameState(make_shared<GameState>(gameControlData));
+    AgentState::getInstance().set(make_shared<GameState>(gameControlData));
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
-
-  OptionList options = {d_optionTree->getTop()};
-  while (!options.empty())
-  {
-    OptionPtr option = options.front();
-    cout << "Running option <" << option->getID() << ">" << endl;
-    options.pop_front();
-    OptionList subOptions = option->runPolicy();
-    options.insert(options.end(), subOptions.begin(), subOptions.end());
-  }
-
+  
+  d_optionTree->run();
 
   t = debugger.timeEvent(t, "Process State");
 

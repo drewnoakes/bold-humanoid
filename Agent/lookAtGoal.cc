@@ -2,7 +2,7 @@
 
 void Agent::lookAtGoal()
 {
-  auto const& goals = AgentState::getInstance().cameraFrame()->getGoalObservations();
+  auto const& goals = AgentState::getInstance().get<CameraFrameState>()->getGoalObservations();
 
   if (goals.size() < 2)
   {

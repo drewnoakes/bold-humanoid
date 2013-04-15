@@ -6,7 +6,7 @@ void Agent::lookForBall()
 {
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
 
-  auto const& ballObs = AgentState::getInstance().cameraFrame()->getBallObservation();
+  auto const& ballObs = AgentState::getInstance().get<CameraFrameState>()->getBallObservation();
 
   if (ballObs.hasValue())
   {

@@ -6,6 +6,7 @@
 #include <sigc++/signal.h>
 
 #include "../StateObject/stateobject.hh"
+#include <map>
 
 namespace bold
 {
@@ -33,14 +34,6 @@ namespace bold
 
     unsigned long long getCameraFrameNumber() const { return d_cameraFrameNumber; }
 
-    std::shared_ptr<AgentFrameState> agentFrame() const { return d_agentFrame; }
-    std::shared_ptr<AlarmState> alarm() const { return d_alarmState; }
-    std::shared_ptr<BodyState> body() const { return d_bodyState; }
-    std::shared_ptr<CameraFrameState> cameraFrame() const { return d_cameraFrame; }
-    std::shared_ptr<GameState> game() const { return d_gameState; }
-    std::shared_ptr<HardwareState> hardware() const { return d_hardwareState; }
-    std::shared_ptr<WorldFrameState> worldFrame() const { return d_worldFrameState; }
-
     std::vector<std::shared_ptr<StateObject>> allStateObjects() const;
     std::vector<StateType> allStateTypes() const
     {
@@ -64,13 +57,20 @@ namespace bold
     // Setters
     //
 
-    void setAgentFrame(std::shared_ptr<AgentFrameState> agentFrame);
-    void setAlarmState(std::shared_ptr<AlarmState> alarmState);
-    void setBodyState(std::shared_ptr<BodyState> bodyState);
-    void setCameraFrame(std::shared_ptr<CameraFrameState> cameraFrame);
-    void setGameState(std::shared_ptr<GameState> gameState);
-    void setHardwareState(std::shared_ptr<HardwareState> hardwareState);
-    void setWorldFrame(std::shared_ptr<WorldFrameState> worldFrameState);
+    template <typename T>
+    void set(std::shared_ptr<T> state)
+    {
+      // Todo: check whether this is atomic
+      d_states[&typeid(T)] = state;
+    }
+
+    template <typename T>
+    std::shared_ptr<T const> get() const
+    {
+      // Todo: this definitely is not atomic
+      auto s = d_states.find(&typeid(T));
+      return s != d_states.end() ? std::static_pointer_cast<T const>(s->second) : 0;
+    }
 
     static AgentState& getInstance();
 
@@ -83,6 +83,10 @@ namespace bold
     std::shared_ptr<GameState> d_gameState;
     std::shared_ptr<HardwareState> d_hardwareState;
     std::shared_ptr<WorldFrameState> d_worldFrameState;
+
+    struct TypeInfoCompare { bool operator()(std::type_info const* a, std::type_info const* b) const { return a->before(*b); }; };
+
+    std::map<std::type_info const*, std::shared_ptr<StateObject>,TypeInfoCompare> d_states;
   };
 
   inline AgentState& AgentState::getInstance()

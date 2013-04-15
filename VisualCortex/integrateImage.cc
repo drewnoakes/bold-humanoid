@@ -5,7 +5,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
   Debugger& debugger = *d_debugger;
   auto t = Debugger::getTimestamp();
 
-  shared_ptr<CameraFrameState> cameraFrame = AgentState::getInstance().cameraFrame();
+  auto cameraFrame = AgentState::getInstance().get<CameraFrameState>();
 
   //
   // PROCESS THE IMAGE
@@ -72,7 +72,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
     }
   }
 
-  AgentState::getInstance().setCameraFrame(make_shared<CameraFrameState>(ballPosition, goalPositions, observedLineSegments));
+  AgentState::getInstance().set(make_shared<CameraFrameState>(ballPosition, goalPositions, observedLineSegments));
 
   debugger.timeEvent(t, "Image Processing/Updating State");
 }

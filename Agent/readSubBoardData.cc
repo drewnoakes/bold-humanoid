@@ -30,13 +30,13 @@ void Agent::readSubBoardData()
 
   auto hw = make_shared<HardwareState>(cm730Snapshot, mx28Snapshots);
 
-  AgentState::getInstance().setHardwareState(hw);
+  AgentState::getInstance().set(hw);
 
   //
   // UPDATE ALARMSTATE (trigger)
   //
 
-  auto const lastAlarmState = AgentState::getInstance().alarm();
+  auto const lastAlarmState = AgentState::getInstance().get<AlarmState>();
   bool hasAlarmChanged = false;
   vector<MX28Alarm> alarmLedByJointId;
   alarmLedByJointId.push_back(MX28Alarm()); // offset, as jointIds start at 1
@@ -57,7 +57,7 @@ void Agent::readSubBoardData()
 
   if (hasAlarmChanged || !lastAlarmState)
   {
-    AgentState::getInstance().setAlarmState(make_shared<AlarmState>(alarmLedByJointId));
+    AgentState::getInstance().set(make_shared<AlarmState>(alarmLedByJointId));
   }
 
   //
@@ -69,5 +69,5 @@ void Agent::readSubBoardData()
   {
     angles[i] = hw->getMX28State(i)->presentPosition;
   }
-  AgentState::getInstance().setBodyState(make_shared<BodyState>(angles));
+  AgentState::getInstance().set(make_shared<BodyState>(angles));
 }
