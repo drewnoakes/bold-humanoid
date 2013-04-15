@@ -50,7 +50,8 @@ define(
 
             this.$canvas.on('mousewheel', function (event)
             {
-                // TODO zoom around the mouse pointer, rather than (0,0)
+                event.preventDefault();
+                // TODO zoom relative to the position of the mouse pointer, rather than (0,0)
                 this.scale += event.originalEvent.wheelDelta / 20;
                 this.scale = Math.max(this.minScale, this.scale);
                 this.draw();
@@ -70,6 +71,7 @@ define(
         FieldMapModule.prototype.onWorldFrameMessage = function(msg)
         {
             var data = JSON.parse(msg.data);
+            this.ballPosition = data.ball;
             this.lineSegments = [];
 
             _.each(data.lines, function (line)
@@ -108,7 +110,10 @@ define(
                 context = this.canvas.getContext('2d');
 
             FieldLinePlotter.start(context, options);
-            FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
+            if (this.lineSegments && this.lineSegments.length)
+                FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
+            if (this.ballPosition)
+                FieldLinePlotter.drawBall(context, options, this.ballPosition);
             FieldLinePlotter.drawFieldLines(context, options);
             FieldLinePlotter.drawGoals(context, options);
             FieldLinePlotter.end(context);

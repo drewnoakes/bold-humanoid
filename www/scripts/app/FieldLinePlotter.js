@@ -136,8 +136,18 @@ define(
                 context.lineTo(x, goalY);
 
                 context.stroke();
+            },
+            drawBall: function(context, options, position)
+            {
+                var scale = options.scale || 1;
 
-                context.restore();
+                // TODO actually the position of these circles is WRONG! as is many of the lines -- the insides should be used, considering line width
+
+                context.fillStyle = options.ballFillStyle || 'orange';
+
+                context.beginPath();
+                context.arc(position.x, position.y, scale * Constants.ballRadius, 0, Math.PI*2, true);
+                context.fill();
             }
         };
 
