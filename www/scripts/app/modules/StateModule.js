@@ -44,7 +44,7 @@ define(
                     this.subscription.close();
                 }
 
-                this.textElement.innerText = 'Waiting for an update...';
+                this.textElement.innerText = state ? 'Waiting for an update...' : '';
 
                 if (state) {
                     this.subscription = DataProxy.subscribe(state, { onmessage: _.bind(this.onmessage, this) });
