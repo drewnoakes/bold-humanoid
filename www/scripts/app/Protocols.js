@@ -13,15 +13,28 @@ define(
         var Protocols = {
             camera: 'camera-protocol',
             timing: 'timing-protocol',
-            // One per state object...
+
+            // One per StateObject...
             agentFrameState: 'AgentFrame',
             alarmState: 'Alarm',
             bodyState: 'Body',
             cameraFrameState: 'CameraFrame',
             gameState: 'Game',
             hardwareState: 'Hardware',
-            optionTree: 'OptionTree',
-            worldFrameState: 'WorldFrame'
+            optionTreeState: 'OptionTree',
+            worldFrameState: 'WorldFrame',
+
+            // TODO populate this from the server somehow
+            allStates: [
+                'AgentFrame',
+                'Alarm',
+                'CameraFrame',
+                'Body',
+                'Game',
+                'Hardware',
+                'OptionTree',
+                'WorldFrame'
+            ]
         };
 
         return Protocols;

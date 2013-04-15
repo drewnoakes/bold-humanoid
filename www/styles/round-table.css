@@ -180,7 +180,6 @@ div.module.state .json-text
 
 div.module.state > div.pane-container
 {
-    position: relative;
     height: 456px;
     overflow: auto;
 }

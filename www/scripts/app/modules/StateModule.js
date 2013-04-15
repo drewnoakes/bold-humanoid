@@ -3,9 +3,10 @@
  */
 define(
     [
+        'scripts/app/Protocols',
         'scripts/app/DataProxy'
     ],
-    function(DataProxy)
+    function(Protocols, DataProxy)
     {
         'use strict';
 
@@ -29,8 +30,7 @@ define(
                 }
             ];
 
-            // TODO populate this from the server somehow
-            var stateNames = ['AgentFrame','CameraFrame','WorldFrame','Body','Game','Hardware'];
+            var stateNames = Protocols.allStates;
 
             select.append($("<option>").attr('value', '').text('(None)'));
             _.each(stateNames, function(stateName)
@@ -44,7 +44,7 @@ define(
                     this.subscription.close();
                 }
 
-                this.textElement.innerText = '';
+                this.textElement.innerText = 'Waiting for an update...';
 
                 if (state) {
                     this.subscription = DataProxy.subscribe(state, { onmessage: _.bind(this.onmessage, this) });
@@ -68,8 +68,7 @@ define(
 
         StateModule.prototype.onmessage = function(msg)
         {
-            var text = JSON.stringify(JSON.parse(msg.data), undefined, 2);
-            this.textElement.innerText = text;
+            this.textElement.innerText = JSON.stringify(JSON.parse(msg.data), undefined, 2);
         };
 
         return StateModule;

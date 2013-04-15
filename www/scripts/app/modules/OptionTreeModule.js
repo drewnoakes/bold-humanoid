@@ -20,16 +20,19 @@ define(
                     element: this.container
                 }
             ];
-        }
-
+        };
         
         OptionTreeModule.prototype.load = function()
         {
-            console.log("OptionTreeModule loaded");
-            this.subscription = DataProxy.subscribe(Protocols.optionTree, { onmessage: _.bind(this.onmessage, this) });
+            this.subscription = DataProxy.subscribe(Protocols.optionTreeState, { onmessage: _.bind(this.onmessage, this) });
         };
 
-        OptionTreeModule.prototype.onmessage = function (msg)
+        OptionTreeModule.prototype.unload = function()
+        {
+            this.subscription.close();
+        };
+
+        OptionTreeModule.prototype.onmessage = function(msg)
         {
             for (var name in this.options)
                 this.options[name].ran = false;
@@ -58,8 +61,6 @@ define(
                     option.view.removeClass('ran');
                 }
             }
-            
-            console.log(this.options);
         };
 
         return OptionTreeModule;
