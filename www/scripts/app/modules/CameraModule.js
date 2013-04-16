@@ -46,41 +46,46 @@ define(
 
         CameraModule.prototype.bindInteraction = function ()
         {
-            var isImageLarge = false,
-                self = this;
-            this.$canvas.click(function ()
+            var isImageLarge = false;
+            this.$canvas.click(function (event)
             {
+
                 var $controlDivs = $('.module.camera .control-container');
                 if (isImageLarge) {
                     isImageLarge = false;
-                    self.$canvas.css({width: self.canvas.width});
+                    this.$canvas.css({width: this.canvas.width});
                     $controlDivs.delay(400).fadeIn();
+                } else {
+                    if (event.shiftKey) {
+                        var rgb = this.context.getImageData(event.offsetX, event.offsetY, 1, 1).data,
+                            hsv = Colour.rgbToHsv({r:rgb[0]/255, g:rgb[1]/255, b:rgb[2]/255});
+                        console.log(Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255));
+                    } else {
+                        isImageLarge = true;
+                        this.$hoverPixelInfo.text('');
+                        this.$canvas.css({width: '100%'});
+                        $controlDivs.hide();
+                    }
                 }
-                else {
-                    isImageLarge = true;
-                    self.$hoverPixelInfo.text('');
-                    self.$canvas.css({width: '100%'});
-                    $controlDivs.hide();
-                }
-            });
+            }.bind(this));
             this.$canvas.mouseleave(function ()
             {
-                self.$hoverPixelInfo.text('')
-            });
+                this.$hoverPixelInfo.text('')
+            }.bind(this));
             this.$canvas.mousemove(function (e)
             {
-                if (!self.context || isImageLarge)
+                if (!this.context || isImageLarge)
                     return;
-                var x = e.offsetX;
-                var y = e.offsetY;
-                var c = self.context.getImageData(x, y, 1, 1).data;
-                var hsv = Colour.rgbToHsv({r:c[0]/255, g:c[1]/255, b:c[2]/255});
-                self.$hoverPixelInfo.text(
+                var x = e.offsetX,
+                    y = e.offsetY,
+                    rgb = this.context.getImageData(x, y, 1, 1).data,
+                    hsv = Colour.rgbToHsv({r:rgb[0]/255, g:rgb[1]/255, b:rgb[2]/255});
+                this.$hoverPixelInfo.text(
                     'Pos: ' + x + ',' + y +
-                    ' RGB: ' + c[0] + ',' + c[1] + ',' + c[2] +
+                    ' RGB: ' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] +
                     ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255)
                 );
-            });
+            }.bind(this));
         };
 
         CameraModule.prototype.load = function()
