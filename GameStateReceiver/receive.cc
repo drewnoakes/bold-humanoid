@@ -9,25 +9,25 @@
 #include <errno.h>
 #include <unistd.h>
 
-#include "GameControllerReceiver.hh"
+#include "gamestatereceiver.hh"
 
 using namespace bold;
 
-bool GameControllerReceiver::receive(struct RoboCupGameControlData* const gameControlData)
+bool GameStateReceiver::receive(struct RoboCupGameControlData* const gameControlData)
 {
   const int MAX_LENGTH = 4096;
   static char data[MAX_LENGTH];
 
   if (!d_init)
   {
-    printf("[GameControllerReceiver::receive] Creating datagram socket...\n");
+    printf("[GameStateReceiver::receive] Creating datagram socket...\n");
 
     // Create an ordinary UDP socket
     d_socket = socket(AF_INET, SOCK_DGRAM, 0);
 
     if (d_socket < 0)
     {
-      printf("[GameControllerReceiver::receive] Could not open datagram socket (errno=%d)\n", errno);
+      printf("[GameStateReceiver::receive] Could not open datagram socket (errno=%d)\n", errno);
       return false;
     }
 
@@ -35,7 +35,7 @@ bool GameControllerReceiver::receive(struct RoboCupGameControlData* const gameCo
     u_int yes = 1;
     if (setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) < 0)
     {
-      printf("[GameControllerReceiver::receive] Reusing address failed\n");
+      printf("[GameStateReceiver::receive] Reusing address failed\n");
       return false;
     }
 
@@ -49,7 +49,7 @@ bool GameControllerReceiver::receive(struct RoboCupGameControlData* const gameCo
     // Bind to the receive address
     if (bind(d_socket, (struct sockaddr*) &addr, sizeof(addr)) < 0)
     {
-      printf("[GameControllerReceiver::receive] Could not bind to port %u (d_socket=%d, errno=%d)\n", d_port, d_socket, errno);
+      printf("[GameStateReceiver::receive] Could not bind to port %u (d_socket=%d, errno=%d)\n", d_port, d_socket, errno);
       return false;
     }
 
@@ -73,7 +73,7 @@ bool GameControllerReceiver::receive(struct RoboCupGameControlData* const gameCo
 
     if (fcntl(d_socket, F_SETFL, flags | O_NONBLOCK) < 0)
     {
-      printf("[GameControllerReceiver::receive] Could not set nonblocking mode\n");
+      printf("[GameStateReceiver::receive] Could not set nonblocking mode\n");
       return false;
     }
 

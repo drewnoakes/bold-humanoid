@@ -163,7 +163,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./GameController/GameControllerReceiver.cc
+  ./GameStateReceiver/receive.cc
 )
 
 add_class(BOLDHUMANOID

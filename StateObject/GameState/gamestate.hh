@@ -1,7 +1,7 @@
 #ifndef BOLD_GAME_STATE_HH
 #define BOLD_GAME_STATE_HH
 
-#include "../../GameController/RoboCupGameControlData.h"
+#include "../../GameStateReceiver/RoboCupGameControlData.h"
 #include "../stateobject.hh"
 #include <stdexcept>
 

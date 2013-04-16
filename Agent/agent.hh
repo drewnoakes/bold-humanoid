@@ -6,7 +6,7 @@
 #include <memory>
 #include <opencv2/opencv.hpp>
 
-#include "../GameController/GameControllerReceiver.hh"
+#include "../GameStateReceiver/gamestatereceiver.hh"
 #include "../MX28Alarm/mx28alarm.hh"
 
 class Joystick;
@@ -81,7 +81,7 @@ namespace bold
     std::shared_ptr<Joystick> d_joystick;
     std::shared_ptr<Spatialiser> d_spatialiser;
     std::shared_ptr<VisualCortex> d_visualCortex;
-    GameControllerReceiver d_gameControlReceiver;
+    GameStateReceiver d_gameStateReceiver;
 
     // State
     /** Number of consecutive cycles during which the ball has been seen. */

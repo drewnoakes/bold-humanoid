@@ -5,7 +5,7 @@
 
 namespace bold
 {
-  class GameControllerReceiver
+  class GameStateReceiver
   {
   private:
     const int d_port;
@@ -14,7 +14,7 @@ namespace bold
     bool d_init;
 
   public:
-    GameControllerReceiver(int port = GAMECONTROLLER_PORT)
+    GameStateReceiver(int port = GAMECONTROLLER_PORT)
     : d_port(port),
       d_socket(-1),
       d_receivedAnything(false),

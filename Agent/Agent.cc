@@ -13,7 +13,7 @@ Agent::Agent(string const& U2D_dev,
     d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
     d_useOptionTree(useOptionTree),
-    d_gameControlReceiver(gameControlUdpPort),
+    d_gameStateReceiver(gameControlUdpPort),
     d_ballSeenCnt(0),
     d_goalSeenCnt(0)
 {
