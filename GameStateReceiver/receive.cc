@@ -8,17 +8,22 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <memory>
 
 #include "gamestatereceiver.hh"
+#include "../StateObject/GameState/gamestate.hh"
 
 using namespace bold;
+using namespace std;
 
-bool GameStateReceiver::receive(struct RoboCupGameControlData* const gameControlData)
+#define GAMECONTROLLER_STRUCT_HEADER "RGme"
+
+shared_ptr<GameState> GameStateReceiver::receive()
 {
   const int MAX_LENGTH = 4096;
   static char data[MAX_LENGTH];
 
-  if (!d_init)
+  if (!d_isInitialised)
   {
     printf("[GameStateReceiver::receive] Creating datagram socket...\n");
 
@@ -28,7 +33,7 @@ bool GameStateReceiver::receive(struct RoboCupGameControlData* const gameControl
     if (d_socket < 0)
     {
       printf("[GameStateReceiver::receive] Could not open datagram socket (errno=%d)\n", errno);
-      return false;
+      return nullptr;
     }
 
     // Allow multiple sockets to use the same port
@@ -36,7 +41,7 @@ bool GameStateReceiver::receive(struct RoboCupGameControlData* const gameControl
     if (setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) < 0)
     {
       printf("[GameStateReceiver::receive] Reusing address failed\n");
-      return false;
+      return nullptr;
     }
 
     // Set up destination address
@@ -50,7 +55,7 @@ bool GameStateReceiver::receive(struct RoboCupGameControlData* const gameControl
     if (bind(d_socket, (struct sockaddr*) &addr, sizeof(addr)) < 0)
     {
       printf("[GameStateReceiver::receive] Could not bind to port %u (d_socket=%d, errno=%d)\n", d_port, d_socket, errno);
-      return false;
+      return nullptr;
     }
 
     // Request that the kernel join a multicast group
@@ -74,10 +79,10 @@ bool GameStateReceiver::receive(struct RoboCupGameControlData* const gameControl
     if (fcntl(d_socket, F_SETFL, flags | O_NONBLOCK) < 0)
     {
       printf("[GameStateReceiver::receive] Could not set nonblocking mode\n");
-      return false;
+      return nullptr;
     }
 
-    d_init = true;
+    d_isInitialised = true;
   }
 
   // Process incoming game controller messages:
@@ -94,10 +99,11 @@ bool GameStateReceiver::receive(struct RoboCupGameControlData* const gameControl
     //struct RoboCupGameControlData gameControlData;
     if (memcmp(data, GAMECONTROLLER_STRUCT_HEADER, sizeof(GAMECONTROLLER_STRUCT_HEADER) - 1) == 0)
     {
-      memcpy(gameControlData, data, sizeof(RoboCupGameControlData));
-      return true;
+      GameState gameState;
+      memcpy(&gameState, data, sizeof(GameState));
+      return make_shared<GameState>(gameState);
     }
   }
 
-  return false;
+  return nullptr;
 }
