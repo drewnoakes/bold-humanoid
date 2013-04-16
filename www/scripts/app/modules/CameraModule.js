@@ -81,7 +81,7 @@ define(
                     rgb = this.context.getImageData(x, y, 1, 1).data,
                     hsv = Colour.rgbToHsv({r:rgb[0]/255, g:rgb[1]/255, b:rgb[2]/255});
                 this.$hoverPixelInfo.text(
-                    'Pos: ' + x + ',' + y +
+                    'Pos: ' + (this.canvas.width - x) + ',' + (this.canvas.height - y +
                     ' RGB: ' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] +
                     ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255)
                 );
