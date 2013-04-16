@@ -76,7 +76,8 @@ define(
                 var c = self.context.getImageData(x, y, 1, 1).data;
                 var hsv = Colour.rgbToHsv({r:c[0]/255, g:c[1]/255, b:c[2]/255});
                 self.$hoverPixelInfo.text(
-                    'RGB: ' + c[0] + ',' + c[1] + ',' + c[2] +
+                    'Pos: ' + x + ',' + y +
+                    ' RGB: ' + c[0] + ',' + c[1] + ',' + c[2] +
                     ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255)
                 );
             });
