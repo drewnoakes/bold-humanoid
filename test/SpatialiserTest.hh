@@ -35,6 +35,10 @@ TEST (SpatialiserTests, findGroundPointForPixelLookingStraightDown)
   Maybe<Vector3d> groundPoint =
     spatialiser.findGroundPointForPixel(Vector2i(5,5), /*torsoHeight*/0.4, cameraTorsoTransform);
 
+  EXPECT_TRUE ( VectorsEqual(cameraTorsoTransform.matrix().col(0).head<3>(), Vector3d(1, 0,  0)) );
+  EXPECT_TRUE ( VectorsEqual(cameraTorsoTransform.matrix().col(1).head<3>(), Vector3d(0, 0, -1)) );
+  EXPECT_TRUE ( VectorsEqual(cameraTorsoTransform.matrix().col(2).head<3>(), Vector3d(0, 1,  0)) );
+
   ASSERT_TRUE ( groundPoint.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,-0.4), *groundPoint.value()) );
 }
