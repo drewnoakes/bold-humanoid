@@ -28,6 +28,13 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
     writer.Double(d_cm730State->eyeColor.y());
     writer.Double(d_cm730State->eyeColor.z());
     writer.EndArray();
+
+    writer.String("forehead");
+    writer.StartArray();
+    writer.Double(d_cm730State->foreheadColor.x());
+    writer.Double(d_cm730State->foreheadColor.y());
+    writer.Double(d_cm730State->foreheadColor.z());
+    writer.EndArray();
   }
   writer.EndObject();
 }

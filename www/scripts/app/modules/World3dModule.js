@@ -135,6 +135,19 @@ define(
                 eyeMaterial.color = eyeColor;
                 eyeMaterial.emissive = eyeColor;
             }
+
+            if (data.forehead && data.forehead instanceof Array && data.forehead.length === 3)
+            {
+                var foreheadMaterial = this.objectByName['forehead-led'].material.materials[0];
+                var foreheadColor = new THREE.Color(0);
+
+                foreheadColor.r = data.forehead[0];
+                foreheadColor.g = data.forehead[1];
+                foreheadColor.b = data.forehead[2];
+
+                foreheadMaterial.color = foreheadColor;
+                foreheadMaterial.emissive = foreheadColor;
+            }
         };
 
         World3dModule.prototype.updateAgentHeightFromGround = function()
