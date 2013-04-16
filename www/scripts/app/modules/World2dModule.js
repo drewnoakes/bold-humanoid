@@ -15,7 +15,7 @@ define(
 
         // A simple module, with a full screen canvas as its element
 
-        var FieldMapModule = function()
+        var World2dModule = function()
         {
             this.$canvas = $('<canvas></canvas>');
             this.canvas = this.$canvas.get(0);
@@ -36,7 +36,7 @@ define(
             ];
         };
 
-        FieldMapModule.prototype.bindEvents = function()
+        World2dModule.prototype.bindEvents = function()
         {
             Dragger.bind(this.canvas, {
                 isRelative: true,
@@ -58,7 +58,7 @@ define(
             }.bind(this));
         };
 
-        FieldMapModule.prototype.load = function()
+        World2dModule.prototype.load = function()
         {
             this.worldFrameSubscription = DataProxy.subscribe(
                 Protocols.worldFrameState,
@@ -69,12 +69,12 @@ define(
             );
         };
 
-        FieldMapModule.prototype.unload = function()
+        World2dModule.prototype.unload = function()
         {
             this.worldFrameSubscription.close();
         };
 
-        FieldMapModule.prototype.onWorldFrameData = function(data)
+        World2dModule.prototype.onWorldFrameData = function(data)
         {
             this.ballPosition = data.ball;
             this.lineSegments = [];
@@ -89,7 +89,7 @@ define(
             this.draw();
         };
 
-        FieldMapModule.prototype.onResized = function(width, height)
+        World2dModule.prototype.onResized = function(width, height)
         {
             this.canvas.width = width;
             this.canvas.height = height;
@@ -103,7 +103,7 @@ define(
             this.draw();
         };
 
-        FieldMapModule.prototype.draw = function()
+        World2dModule.prototype.draw = function()
         {
             var options = {
                     scale: this.scale,
@@ -124,6 +124,6 @@ define(
             FieldLinePlotter.end(context);
         };
 
-        return FieldMapModule;
+        return World2dModule;
     }
 );

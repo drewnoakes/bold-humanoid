@@ -14,7 +14,7 @@ define(
     {
         'use strict';
 
-        var ModelModule = function()
+        var World3dModule = function()
         {
             // camera variables
             this.useThirdPerson = true;
@@ -41,7 +41,7 @@ define(
             ];
         };
 
-        ModelModule.prototype.load = function()
+        World3dModule.prototype.load = function()
         {
             this.hinges = [];
             this.objectByName = {};
@@ -74,21 +74,21 @@ define(
             this.hardwareSubscription   = DataProxy.subscribe(Protocols.hardwareState,   { json: true, onmessage: _.bind(this.onHardwareData, this) });
         };
 
-        ModelModule.prototype.unload = function()
+        World3dModule.prototype.unload = function()
         {
             this.bodyStateSubscription.close();
             this.worldFrameSubscription.close();
             this.hardwareSubscription.close();
         };
 
-        ModelModule.prototype.onResized = function(width, height)
+        World3dModule.prototype.onResized = function(width, height)
         {
             this.renderer.setSize(width, height);
             this.camera.aspect = width / height;
             this.camera.updateProjectionMatrix();
         };
 
-        ModelModule.prototype.onBodyStateData = function(data)
+        World3dModule.prototype.onBodyStateData = function(data)
         {
             if (!data.angles || data.angles.length !== 20)
             {
@@ -111,7 +111,7 @@ define(
             }
         };
 
-        ModelModule.prototype.onWorldFrameData = function(data)
+        World3dModule.prototype.onWorldFrameData = function(data)
         {
             if (data.ball && data.ball instanceof Array && data.ball.length === 3)
             {
@@ -119,7 +119,7 @@ define(
             }
         };
 
-        ModelModule.prototype.onHardwareData = function(data)
+        World3dModule.prototype.onHardwareData = function(data)
         {
             // TODO only set if changed?
 
@@ -137,7 +137,7 @@ define(
             }
         };
 
-        ModelModule.prototype.updateAgentHeightFromGround = function()
+        World3dModule.prototype.updateAgentHeightFromGround = function()
         {
             var leftZ = this.objectByName['foot-left'].matrixWorld.getPosition().z;
             var rightZ = this.objectByName['foot-right'].matrixWorld.getPosition().z;
@@ -147,7 +147,7 @@ define(
             this.render();
         };
 
-        ModelModule.prototype.setHingeAngle = function(hinge, angle)
+        World3dModule.prototype.setHingeAngle = function(hinge, angle)
         {
             if (!hinge.rotationAxis) {
                 // No hinge is defined (eg: eyes)
@@ -170,7 +170,7 @@ define(
             return false;
         };
 
-        ModelModule.prototype.initialiseScene = function()
+        World3dModule.prototype.initialiseScene = function()
         {
             this.scene = new THREE.Scene();
             this.scene.add(new THREE.AmbientLight(0x727876)); // standard fluorescent light
@@ -326,12 +326,12 @@ define(
             this.bindMouseInteraction(this.renderer.domElement);
         };
 
-        ModelModule.prototype.setBallPosition = function(x, y)
+        World3dModule.prototype.setBallPosition = function(x, y)
         {
             this.ballMesh.position.set(x, y, Constants.ballRadius);
         };
 
-        ModelModule.prototype.buildBody = function(body, loadedCallback)
+        World3dModule.prototype.buildBody = function(body, loadedCallback)
         {
             var geometriesToLoad = 0;
 
@@ -413,7 +413,7 @@ define(
             return root;
         };
 
-        ModelModule.prototype.bindMouseInteraction = function(container)
+        World3dModule.prototype.bindMouseInteraction = function(container)
         {
             var onMouseDownTheta = this.cameraTheta,
                 onMouseDownPhi = this.cameraPhi;
@@ -444,7 +444,7 @@ define(
             });
         };
 
-        ModelModule.prototype.updateCameraPosition = function()
+        World3dModule.prototype.updateCameraPosition = function()
         {
             if (this.useThirdPerson) {
                 // Third person -- position camera outside player
@@ -463,7 +463,7 @@ define(
             }
         };
 
-        ModelModule.prototype.render = function()
+        World3dModule.prototype.render = function()
         {
             // Only render once all textures are loaded
             if (this.pendingTextureCount !== 0)
@@ -483,6 +483,6 @@ define(
             }.bind(this));
         };
 
-        return ModelModule;
+        return World3dModule;
     }
 );

@@ -10,7 +10,7 @@ define(
     {
         'use strict';
 
-        var StateModule = function()
+        var StateDumpModule = function()
         {
             var moduleHtml = Handlebars.compile($('#state-module-template').html()),
                 container = $('<div></div>').html(moduleHtml).children(),
@@ -64,19 +64,19 @@ define(
             });
         };
 
-        StateModule.prototype.load = function()
+        StateDumpModule.prototype.load = function()
         {};
 
-        StateModule.prototype.unload = function()
+        StateDumpModule.prototype.unload = function()
         {
             this.subscription.close();
         };
 
-        StateModule.prototype.onData = function(data)
+        StateDumpModule.prototype.onData = function(data)
         {
             this.textElement.innerText = JSON.stringify(data, undefined, 2);
         };
 
-        return StateModule;
+        return StateDumpModule;
     }
 );

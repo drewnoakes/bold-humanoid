@@ -50,7 +50,7 @@ define(
 
         var chartHeight = 150;
 
-        var SensorModule = function()
+        var IMUModule = function()
         {
             this.container = $('<div></div>');
             this.seriesArray = [];
@@ -87,7 +87,7 @@ define(
             ];
         };
 
-        SensorModule.prototype.buildCharts = function()
+        IMUModule.prototype.buildCharts = function()
         {
             var self = this;
             _.each(charts, function(chartDefinition)
@@ -123,7 +123,7 @@ define(
             });
         };
 
-        SensorModule.prototype.onResized = function(width, height)
+        IMUModule.prototype.onResized = function(width, height)
         {
             _.each(this.chartCanvases, function(canvas)
             {
@@ -131,7 +131,7 @@ define(
             });
         };
 
-        SensorModule.prototype.load = function()
+        IMUModule.prototype.load = function()
         {
             this.subscription = DataProxy.subscribe(
                 Protocols.hardwareState,
@@ -142,12 +142,12 @@ define(
             );
         };
 
-        SensorModule.prototype.unload = function()
+        IMUModule.prototype.unload = function()
         {
             this.subscription.close();
         };
 
-        SensorModule.prototype.onData = function (data)
+        IMUModule.prototype.onData = function (data)
         {
             var time = new Date().getTime();
 
@@ -164,6 +164,6 @@ define(
             this.polarTraceXZ.addValue(data.acc[0], data.acc[2]);
         };
 
-        return SensorModule;
+        return IMUModule;
     }
 );
