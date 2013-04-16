@@ -250,7 +250,9 @@ void BodyState::initBody(double angles[])
     }
     else if (joint)
     {
-      action(joint);
+      if (joint->id >= 0) {
+        action(joint);
+      }
       walkJoints(joint->bodyPart, action);
     }
   };
