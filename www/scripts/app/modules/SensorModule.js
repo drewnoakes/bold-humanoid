@@ -75,7 +75,7 @@ define(
 
             /////
 
-            this.title = 'sensors';
+            this.title = 'IMU';
             this.moduleClass = 'sensors';
             this.panes = [
                 {

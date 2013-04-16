@@ -29,7 +29,7 @@ define(
 
             /////
 
-            this.title = 'model';
+            this.title = '3d world';
             this.moduleClass = 'model';
             this.panes = [
                 {

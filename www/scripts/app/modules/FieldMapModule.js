@@ -24,7 +24,7 @@ define(
 
             /////
 
-            this.title = 'field';
+            this.title = '2d world';
             this.moduleClass = 'field';
             this.panes = [
                 {

@@ -12,7 +12,7 @@ define(
             this.container = $('<div>');
             this.options = {};
 
-            this.title = 'optiontree';
+            this.title = 'option tree';
             this.moduleClass = 'optiontree';
             this.panes = [
                 {

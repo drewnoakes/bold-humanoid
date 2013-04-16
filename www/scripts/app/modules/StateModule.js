@@ -20,7 +20,7 @@ define(
 
             /////
 
-            this.title = 'state';
+            this.title = 'state dump';
             this.moduleClass = 'state';
             this.panes = [
                 {
