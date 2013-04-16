@@ -15,6 +15,7 @@ define(
                 var onMouseMove = function(event)
                 {
                     event.preventDefault();
+                    event.stopImmediatePropagation();
                     var dx = event.clientX - onMouseDownPosition.x,
                         dy = event.clientY - onMouseDownPosition.y;
                     if (functions.move) {
@@ -29,6 +30,7 @@ define(
                 var onMouseUp = function (event)
                 {
                     event.preventDefault();
+                    event.stopImmediatePropagation();
                     window.removeEventListener('mouseup', onMouseUp, false);
                     window.removeEventListener('mousemove', onMouseMove, false);
                     if (functions.stop) {
@@ -39,6 +41,7 @@ define(
                 element.addEventListener('mousedown', function(event)
                 {
                     event.preventDefault();
+                    event.stopImmediatePropagation();
                     if (functions.start) {
                         functions.start();
                     }

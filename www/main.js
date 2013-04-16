@@ -18,15 +18,17 @@ require(
         var moduleHost = new ModuleHost();
 
         moduleHost.add(new CameraModule());
-        moduleHost.add(new FieldMapModule());
         moduleHost.add(new ModelModule());
-        moduleHost.add(new OptionTreeModule());
         moduleHost.add(new TimingModule());
         moduleHost.add(new SensorModule());
+        moduleHost.add(new FieldMapModule());
+        moduleHost.add(new OptionTreeModule());
         moduleHost.add(new StateModule());
 
         moduleHost.load();
 
         new GameStateMonitor();
+
+        $('#module-container').sortable(); //.disableSelection();
     }
 );

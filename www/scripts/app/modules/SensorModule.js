@@ -48,7 +48,7 @@ define(
             }
         ];
 
-        var chartHeight = 200;
+        var chartHeight = 150;
 
         var SensorModule = function()
         {
