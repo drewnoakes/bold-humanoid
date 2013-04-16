@@ -1,7 +1,7 @@
 define(
     [
         'scripts/app/DataProxy',
-        'scripts/app/Protocols',
+        'scripts/app/Protocols'
     ],
     function(DataProxy, Protocols)
     {

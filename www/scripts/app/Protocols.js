@@ -24,7 +24,7 @@ define(
             optionTreeState: 'OptionTree',
             worldFrameState: 'WorldFrame',
 
-            // TODO populate this from the server somehow
+            // TODO populate this from the server somehow, but must only list those using JSON encoding
             allStates: [
                 'AgentFrame',
                 'Alarm',

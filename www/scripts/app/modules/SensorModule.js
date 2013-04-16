@@ -11,6 +11,8 @@ define(
     {
         'use strict';
 
+        // TODO reuse RGB <==> XYZ colour coding on polar traces
+
         var chartOptions = {
             grid: {
                 strokeStyle: 'rgb(40, 40, 40)',
