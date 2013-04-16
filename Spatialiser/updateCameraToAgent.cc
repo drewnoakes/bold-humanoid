@@ -15,14 +15,14 @@ void Spatialiser::updateCameraToAgent()
   auto cameraFrame = AgentState::getInstance().get<CameraFrameState>();
 
   /*
-  auto neck = body.getLimb("neck");
+  auto neck = body->getLimb("neck");
   auto neckHeadJoint = neck->joints[0];
-  auto head = body.getLimb("head");
+  auto head = body->getLimb("head");
   auto cameraJoint = head->joints[0];
-  auto camera = body.getLimb("camera");
-  auto lFoot = body.getLimb("lFoot");
-  auto lKnee = body.getLimb("lLowerLeg");
-  auto rFoot = body.getLimb("rFoot");
+  auto camera = body->getLimb("camera");
+  auto lFoot = body->getLimb("lFoot");
+  auto lKnee = body->getLimb("lLowerLeg");
+  auto rFoot = body->getLimb("rFoot");
 
   cout << "---------------" << endl;
   cout << "neckHeadJoint: " << neckHeadJoint->angle << endl << neckHeadJoint->transform.translation().transpose() << endl;
