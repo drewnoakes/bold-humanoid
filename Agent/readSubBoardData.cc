@@ -36,7 +36,7 @@ void Agent::readSubBoardData()
   // UPDATE ALARMSTATE (trigger)
   //
 
-  auto const lastAlarmState = AgentState::getInstance().get<AlarmState>();
+  auto lastAlarmState = AgentState::getInstance().get<AlarmState>();
   bool hasAlarmChanged = false;
   vector<MX28Alarm> alarmLedByJointId;
   alarmLedByJointId.push_back(MX28Alarm()); // offset, as jointIds start at 1
