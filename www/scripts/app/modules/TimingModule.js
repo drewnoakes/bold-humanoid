@@ -72,7 +72,13 @@ define(
 
         TimingModule.prototype.load = function()
         {
-            this.subscription = DataProxy.subscribe(Protocols.timing, { onmessage: _.bind(this.onmessage, this) });
+            this.subscription = DataProxy.subscribe(
+                Protocols.timing,
+                {
+                    json: false,
+                    onmessage: _.bind(this.onmessage, this)
+                }
+            );
         };
 
         TimingModule.prototype.onmessage = function(msg)

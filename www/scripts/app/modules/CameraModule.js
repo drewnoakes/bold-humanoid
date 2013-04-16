@@ -88,7 +88,13 @@ define(
             this.imgState = StateEnum.GET_CONTROLS;
             this.createContext();
 
-            this.subscription = DataProxy.subscribe(Protocols.camera, { onmessage: _.bind(this.onmessage, this) });
+            this.subscription = DataProxy.subscribe(
+                Protocols.camera,
+                {
+                    json: false,
+                    onmessage: _.bind(this.onmessage, this)
+                }
+            );
         };
 
         CameraModule.prototype.unload = function()

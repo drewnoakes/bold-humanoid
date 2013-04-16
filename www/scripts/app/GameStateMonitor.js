@@ -16,9 +16,11 @@ define(
             var subscription = DataProxy.subscribe(
                 Protocols.gameState,
                 {
-                    onmessage: function (msg)
+                    json: true,
+                    onmessage: function (data)
                     {
-                        $('#secondsRemaining').text(msg.data);
+                        // TODO actually use object structure, rather than populating the text with JSON
+                        $('#secondsRemaining').text(data);
                     }
                 }
             );

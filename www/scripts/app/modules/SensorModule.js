@@ -11,7 +11,7 @@ define(
     {
         'use strict';
 
-        // TODO reuse RGB <==> XYZ colour coding on polar traces
+        // TODO reuse RGB <==> XYZ colour coding on polar trace axes
 
         var chartOptions = {
             grid: {
@@ -133,7 +133,13 @@ define(
 
         SensorModule.prototype.load = function()
         {
-            this.subscription = DataProxy.subscribe(Protocols.hardwareState, { onmessage: _.bind(this.onmessage, this) });
+            this.subscription = DataProxy.subscribe(
+                Protocols.hardwareState,
+                {
+                    json: true,
+                    onmessage: _.bind(this.onData, this)
+                }
+            );
         };
 
         SensorModule.prototype.unload = function()
@@ -141,10 +147,9 @@ define(
             this.subscription.close();
         };
 
-        SensorModule.prototype.onmessage = function (msg)
+        SensorModule.prototype.onData = function (data)
         {
-            var data = JSON.parse(msg.data),
-                time = new Date().getTime();
+            var time = new Date().getTime();
 
             // copy values to charts
             this.seriesArray[0].append(time, data.gyro[0]);

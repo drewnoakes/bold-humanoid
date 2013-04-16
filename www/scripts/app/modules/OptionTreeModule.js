@@ -24,7 +24,13 @@ define(
         
         OptionTreeModule.prototype.load = function()
         {
-            this.subscription = DataProxy.subscribe(Protocols.optionTreeState, { onmessage: _.bind(this.onmessage, this) });
+            this.subscription = DataProxy.subscribe(
+                Protocols.optionTreeState,
+                {
+                    json: true,
+                    onmessage: _.bind(this.onData, this)
+                }
+            );
         };
 
         OptionTreeModule.prototype.unload = function()
@@ -32,12 +38,11 @@ define(
             this.subscription.close();
         };
 
-        OptionTreeModule.prototype.onmessage = function(msg)
+        OptionTreeModule.prototype.onData = function(data)
         {
             for (var name in this.options)
                 this.options[name].ran = false;
 
-            var data = JSON.parse(msg.data);
             for (var i = 0; i < data.ranoptions.length; ++i)
             {
                 var name = data.ranoptions[i];

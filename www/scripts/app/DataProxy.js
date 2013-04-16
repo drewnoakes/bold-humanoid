@@ -17,29 +17,38 @@ define(
         {
             return function (msg)
             {
-                for (var i = 0; i < protocolData.callbacks.length; i++) {
-                    var c = protocolData.callbacks[i][eventName];
+                var parsed;
+                for (var i = 0; i < protocolData.clients.length; i++) {
+                    var client = protocolData.clients[i];
+                    var c = client[eventName];
                     if (typeof(c) === 'function') {
-                        // TODO use arguments instead of 'msg'?
-                        c(msg);
+                        if (client.json) {
+                            if (!parsed && msg.data) {
+                                parsed = JSON.parse(msg.data);
+                            }
+                            c(parsed);
+                        } else {
+                            // TODO use arguments instead of 'msg'?
+                            c(msg);
+                        }
                     }
                 }
             }
         };
 
-        DataProxy.subscribe = function (protocol, callbacks)
+        DataProxy.subscribe = function (protocol, options)
         {
             var protocolData = dataByProtocol[protocol];
 
             if (!protocolData) {
-                protocolData = { callbacks: [callbacks] };
+                protocolData = { clients: [options] };
                 dataByProtocol[protocol] = protocolData;
                 protocolData.socket = WebSocketFactory.open(protocol);
                 protocolData.socket.onmessage = proxyEvent(protocolData, 'onmessage');
                 protocolData.socket.onerror = proxyEvent(protocolData, 'onerror');
             }
             else {
-                protocolData.callbacks.push(callbacks);
+                protocolData.clients.push(options);
             }
 
             return {
@@ -49,13 +58,13 @@ define(
                 },
                 close: function ()
                 {
-                    for (var i = 0; i < protocolData.callbacks.length; i++) {
-                        var callback = protocolData.callbacks[i];
-                        if (callback === callbacks) {
-                            // remove this item from the queue
-                            protocolData.callbacks.splice(i, 1);
+                    for (var i = 0; i < protocolData.clients.length; i++) {
+                        var callback = protocolData.clients[i];
+                        if (callback === options) {
+                            // remove this client
+                            protocolData.clients.splice(i, 1);
 
-                            if (protocolData.callbacks.length === 0) {
+                            if (protocolData.clients.length === 0) {
                                 // no one is using this socket any more, so close it down
                                 protocolData.socket.close();
 

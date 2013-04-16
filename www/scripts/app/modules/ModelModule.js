@@ -69,9 +69,9 @@ define(
                 this.render();
             }.bind(this));
 
-            this.bodyStateSubscription  = DataProxy.subscribe(Protocols.bodyState,       { onmessage: _.bind(this.onBodyStateMessage, this) });
-            this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { onmessage: _.bind(this.onWorldFrameMessage, this) });
-            this.hardwareSubscription   = DataProxy.subscribe(Protocols.hardwareState,   { onmessage: _.bind(this.onHardwareMessage, this) });
+            this.bodyStateSubscription  = DataProxy.subscribe(Protocols.bodyState,       { json: true, onmessage: _.bind(this.onBodyStateData, this) });
+            this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
+            this.hardwareSubscription   = DataProxy.subscribe(Protocols.hardwareState,   { json: true, onmessage: _.bind(this.onHardwareData, this) });
         };
 
         ModelModule.prototype.unload = function()
@@ -88,10 +88,8 @@ define(
             this.camera.updateProjectionMatrix();
         };
 
-        ModelModule.prototype.onBodyStateMessage = function(msg)
+        ModelModule.prototype.onBodyStateData = function(data)
         {
-            var data = JSON.parse(msg.data);
-
             if (!data.angles || data.angles.length !== 20)
             {
                 console.error("Expecting 20 angles");
@@ -113,20 +111,16 @@ define(
             }
         };
 
-        ModelModule.prototype.onWorldFrameMessage = function(msg)
+        ModelModule.prototype.onWorldFrameData = function(data)
         {
-            var data = JSON.parse(msg.data);
-
             if (data.ball && data.ball instanceof Array && data.ball.length === 3)
             {
                 this.ballMesh.position = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]);
             }
         };
 
-        ModelModule.prototype.onHardwareMessage = function(msg)
+        ModelModule.prototype.onHardwareData = function(data)
         {
-            var data = JSON.parse(msg.data);
-
             // TODO only set if changed?
 
             if (data.eye && data.eye instanceof Array && data.eye.length === 3)

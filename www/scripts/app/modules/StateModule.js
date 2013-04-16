@@ -47,7 +47,13 @@ define(
                 this.textElement.innerText = state ? 'Waiting for an update...' : '';
 
                 if (state) {
-                    this.subscription = DataProxy.subscribe(state, { onmessage: _.bind(this.onmessage, this) });
+                    this.subscription = DataProxy.subscribe(
+                        state,
+                        {
+                            json: true,
+                            onmessage: _.bind(this.onData, this)
+                        }
+                    );
                 }
             }.bind(this);
 
@@ -66,9 +72,9 @@ define(
             this.subscription.close();
         };
 
-        StateModule.prototype.onmessage = function(msg)
+        StateModule.prototype.onData = function(data)
         {
-            this.textElement.innerText = JSON.stringify(JSON.parse(msg.data), undefined, 2);
+            this.textElement.innerText = JSON.stringify(data, undefined, 2);
         };
 
         return StateModule;

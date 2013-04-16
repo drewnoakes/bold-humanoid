@@ -60,7 +60,13 @@ define(
 
         FieldMapModule.prototype.load = function()
         {
-            this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { onmessage: _.bind(this.onWorldFrameMessage, this) });
+            this.worldFrameSubscription = DataProxy.subscribe(
+                Protocols.worldFrameState,
+                {
+                    json: true,
+                    onmessage: _.bind(this.onWorldFrameData, this)
+                }
+            );
         };
 
         FieldMapModule.prototype.unload = function()
@@ -68,9 +74,8 @@ define(
             this.worldFrameSubscription.close();
         };
 
-        FieldMapModule.prototype.onWorldFrameMessage = function(msg)
+        FieldMapModule.prototype.onWorldFrameData = function(data)
         {
-            var data = JSON.parse(msg.data);
             this.ballPosition = data.ball;
             this.lineSegments = [];
 
