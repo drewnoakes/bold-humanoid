@@ -7,7 +7,7 @@ DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::sh
   d_streamFramePeriod(10),
   d_shouldDrawBlobs(true),
   d_shouldDrawLineDots(false),
-  d_shouldDrawExpectedLines(true),
+  d_shouldDrawExpectedLines(false),
   d_shouldDrawObservedLines(true),
   d_camera(camera),
   d_debugger(debugger),
