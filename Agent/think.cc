@@ -93,7 +93,9 @@ void Agent::think()
   //
   // Read all data from the sub board
   //
-  readSubBoardData();
+  static int tmp = 0;
+  if (tmp++ % 5 == 0)
+    readSubBoardData();
   t = debugger.timeEvent(t, "Read Sub Board");
 
   //
