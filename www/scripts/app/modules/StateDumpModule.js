@@ -59,7 +59,7 @@ define(
 
             select.change(function()
             {
-                var state = select.get(0).selectedOptions[0].value;
+                var state = select.get(0).value;
                 setState(state);
             });
         };
