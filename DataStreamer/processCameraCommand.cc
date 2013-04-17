@@ -40,7 +40,7 @@ void DataStreamer::processCameraCommand(std::string json)
     return;
   }
 
-  Control& controls = (*it).second;
+  Control& controls = it->second;
 
   if (!controls.handleRequest(d))
   {

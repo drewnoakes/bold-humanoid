@@ -12,13 +12,42 @@ void Agent::initCamera(minIni const& ini)
        << "[Agent::initCamera]   Read/write: " << (d_camera->canRead() ? "YES" : "NO") << endl
        << "[Agent::initCamera]   Streaming:  " << (d_camera->canStream() ? "YES" : "NO") << endl;
 
-  vector<string> confControls = {"Brightness"};
+  //
+  // Set control values from config
+  //
 
-  for (string const& controlName : confControls)
+  cout << "[Agent::initCamera] Configuring camera from ini file" << endl;
+  string sectionName = "Camera";
+  for (Control& control : d_camera->getControls())
   {
-    auto control = d_camera->getControl(controlName);
-    if (control)
-      control->setValue(ini.geti("Camera", controlName, control->getValue()));
+    string name = control.getName();
+
+    // strip strange characters from name
+    char excludeChars[] = "()-, ";
+    for (unsigned int i = 0; i < strlen(excludeChars); ++i)
+    {
+      name.erase(remove(name.begin(), name.end(), excludeChars[i]), name.end());
+    }
+
+    if (!ini.haskey(sectionName, name))
+    {
+      cout << "[Agent::initCamera] No config key for '" << name << "'" << endl;
+    }
+    else
+    {
+      ControlType type = control.getType();
+      switch (type) {
+        case ControlType::Action:
+        case ControlType::Unknown:
+        default:
+          break;
+        case ControlType::Bool:
+        case ControlType::Enum:
+        case ControlType::Int:
+          int value = ini.geti(sectionName, name, control.getDefaultValue());
+          control.setValue(value);
+      }
+    }
   }
 
   cout << "[Agent::initCamera] Controls (" << d_camera->getControls().size() << "):" << endl;;

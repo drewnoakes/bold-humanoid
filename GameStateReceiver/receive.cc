@@ -96,7 +96,6 @@ shared_ptr<GameState> GameStateReceiver::receive()
   while ((len = recvfrom(d_socket, data, MAX_LENGTH, 0, (struct sockaddr*) &source_addr, &source_addr_len)) > 0)
   {
     // Verify game controller header:
-    //struct RoboCupGameControlData gameControlData;
     if (memcmp(data, GAMECONTROLLER_STRUCT_HEADER, sizeof(GAMECONTROLLER_STRUCT_HEADER) - 1) == 0)
     {
       GameState gameState;

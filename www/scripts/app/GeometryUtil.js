@@ -45,7 +45,7 @@ define(
 
                 }
 
-				// for each face...
+                // for each face...
 
                 for (f = 0, fl = geometry.faces.length; f < fl; f ++) {
 
@@ -59,47 +59,47 @@ define(
                     else
                         continue;
 
-					// for each vertex of the face...
+                    // for each vertex of the face...
 
-					for ( var fv = 0; fv < faceVertexCount; fv ++ ) {
+                    for ( var fv = 0; fv < faceVertexCount; fv ++ ) {
 
-						var vertexIndex = face[ 'abcd'.charAt( fv ) ];
+                        var vertexIndex = face[ 'abcd'.charAt( fv ) ];
 
-						var vertexFaces = faceIndicesPerVertex[ vertexIndex ];
+                        var vertexFaces = faceIndicesPerVertex[ vertexIndex ];
 
-						var vertexNormal = face.normal.clone();
+                        var vertexNormal = face.normal.clone();
 
-						// for each neighbouring face that shares this vertex...
+                        // for each neighbouring face that shares this vertex...
 
-						for ( var vf = 0; vf < vertexFaces.length; vf ++ ) {
+                        for ( var vf = 0; vf < vertexFaces.length; vf ++ ) {
 
-							var neighbourFaceIndex = vertexFaces[vf];
+                            var neighbourFaceIndex = vertexFaces[vf];
 
-							var neighbourFace = geometry.faces[neighbourFaceIndex];
+                            var neighbourFace = geometry.faces[neighbourFaceIndex];
 
                             // disregard the face we're working with
                             if (neighbourFace === face)
                                 continue;
 
-							// given both normals are unit vectors, the angle is just acos(a.dot(b))
+                            // given both normals are unit vectors, the angle is just acos(a.dot(b))
                             var theta = Math.acos(face.normal.dot(neighbourFace.normal));
 
                             if (theta <= maxSmoothAngle) {
 
-								vertexNormal.add(neighbourFace.normal);
+                                vertexNormal.add(neighbourFace.normal);
 
                             }
 
                         }
 
-						vertexNormal.normalize();
+                        vertexNormal.normalize();
 
-						face.vertexNormals[ fv ] = vertexNormal;
+                        face.vertexNormals[ fv ] = vertexNormal;
                     }
 
                 }
 
-			}
+            }
 
         };
 
