@@ -20,7 +20,7 @@ define(
                     onmessage: function (data)
                     {
                         // TODO actually use object structure, rather than populating the text with JSON
-                        $('#secondsRemaining').text(data);
+                        $('#secondsRemaining').text(data.playMode + ', ' + data.secondsRemaining + ' seconds remaining');
                     }
                 }
             );
