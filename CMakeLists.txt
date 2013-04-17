@@ -119,6 +119,7 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./CameraModel/directionForPixel.cc
+  ./CameraModel/pixelForDirection.cc
 )
 
 add_class(BOLDHUMANOID

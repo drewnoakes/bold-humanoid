@@ -44,6 +44,8 @@ namespace bold
      */
     Eigen::Vector3d directionForPixel(Eigen::Vector2i const& pixel) const;
 
+    Eigen::Vector2i pixelForDirection(Eigen::Vector3d const& direction) const;
+
     Eigen::Affine3d getProjectionTransform() const
     {
       Eigen::Matrix4d mat;
