@@ -141,12 +141,10 @@ define(
             {
                 var scale = options.scale || 1;
 
-                // TODO actually the position of these circles is WRONG! as is many of the lines -- the insides should be used, considering line width
-
                 context.fillStyle = options.ballFillStyle || 'orange';
 
                 context.beginPath();
-                context.arc(position.x, position.y, scale * Constants.ballRadius, 0, Math.PI*2, true);
+                context.arc(position[0], position[1], scale * Constants.ballRadius, 0, Math.PI*2, true);
                 context.fill();
             }
         };
