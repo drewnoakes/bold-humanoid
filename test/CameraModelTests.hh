@@ -53,3 +53,26 @@ TEST (CameraModelTests, directionForPixel)
   v.x() *= 2.0/5.0;
   EXPECT_TRUE ( v.normalized().isApprox( cameraModel.directionForPixel(Vector2i(7,  5)) ) );
 }
+
+TEST (CameraModelTests, pixelForDirection)
+{
+  auto imageWidth = 11;
+  auto imageHeight = 11;
+  auto focalLength = 1;
+  auto rangeVerticalDegs = 90;
+  auto rangeHorizontalDegs = 90;
+
+  CameraModel cameraModel(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
+
+  EXPECT_EQ ( Vector2i(5,5), cameraModel.pixelForDirection(Vector3d(0, 1, 0)) );
+
+  EXPECT_EQ ( Vector2i(0,5), cameraModel.pixelForDirection(Vector3d(1, 1, 0)) );
+  EXPECT_EQ ( Vector2i(10,5), cameraModel.pixelForDirection(Vector3d(-1, 1, 0)) );
+
+  EXPECT_EQ ( Vector2i(5,0), cameraModel.pixelForDirection(Vector3d(0, 1, -1)) );
+  EXPECT_EQ ( Vector2i(5, 10), cameraModel.pixelForDirection(Vector3d(0, 1, 1)) );
+
+  auto v = Vector3d( -1, 1, 0).normalized();
+  v.x() *= 2.0/5.0;
+  EXPECT_EQ ( Vector2i(7, 5), cameraModel.pixelForDirection(v) );
+}
