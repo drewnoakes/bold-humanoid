@@ -18,6 +18,8 @@ namespace bold
 
     void initialise(minIni const& ini);
 
+    void walkLine(Eigen::Vector2i const& start, float theta, bool forward, std::function<bool(int/*x*/,int/*y*/)> const& pred);
+
     std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) override;
 
     std::vector<Control> getControls() const override { return d_controls; }

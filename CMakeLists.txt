@@ -199,6 +199,7 @@ add_class(BOLDHUMANOID
   ./LineFinder/MaskWalkLineFinder/findLineSegments.cc
   ./LineFinder/MaskWalkLineFinder/MaskWalkLineFinder.cc
   ./LineFinder/MaskWalkLineFinder/rebuild.cc
+  ./LineFinder/MaskWalkLineFinder/walkLine.cc
 )
 
 add_class(BOLDHUMANOID

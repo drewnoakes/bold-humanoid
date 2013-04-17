@@ -26,6 +26,8 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
   int dotIndex = (int)lineDots.size() - 1;
   while (dotIndex >= 0)
   {
+    cout << "dotIndex: " << dotIndex << endl;
+
     Vector2i dot = lineDots[dotIndex--];
 
     // Check if it has been excluded already (i.e. belongs to some other line)
@@ -56,73 +58,12 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
     if (maxVotes < d_voteThreshold)
       continue;
 
-    // From the current point walk in each direction along the found line and
-    // extract the line segment
-    float tcos = ttab[maxTheta*2];
-    float tsin = -ttab[maxTheta*2+1];
-    bool isVertical = fabs(tsin) > fabs(tcos);
-
-    // We using fixed-point integer arithmetic. This 'shift' is the amount to
-    // bump integers up, providing space for fractions of whole numbers.
-    // Outcomes are shifted back down again to give integer results.
-    // Values 'x' and 'y', when shifted, become 'i' and 'j'.
-    // We only shift one axis, depending upon the orientation of the line.
-    const int shift = 16;
-
-    int i0, j0, di, dj;
-    if (isVertical)
-    {
-      i0 = dot.x();
-      j0 = (dot.y() << shift) + (1 << (shift-1));
-      di = tsin > 0 ? 1 : -1;
-      // y = (r - x*cos(theta))/sin(theta)
-      dj = cvRound(tcos*(1 << shift)/fabs(tsin));
-    }
-    else
-    {
-      i0 = (dot.x() << shift) + (1 << (shift-1));
-      j0 = dot.y();
-      dj = tcos > 0 ? 1 : -1;
-      // x = (r - y*sin(theta))/cos(theta)
-      di = cvRound(tsin*(1 << shift)/fabs(tcos));
-    }
-
     // For both ends...
     Vector2i lineEnds[2];
     for (int endIndex = 0; endIndex <= 1; endIndex++)
     {
       int gap = 0;
-
-      if (endIndex != 0)
-      {
-        // Flip, for second end, and walk the opposite direction
-        di = -di;
-        dj = -dj;
-      }
-
-      // Walk along the line using fixed-point arithmetics,
-      // stop at the image border or in case of too big gap
-      for (int i = i0, j = j0; ; i += di, j += dj)
-      {
-        int x, y;
-
-        if (isVertical)
-        {
-          x = i;
-          y = j >> shift;
-        }
-        else
-        {
-          x = i >> shift;
-          y = j;
-        }
-
-        if (x < 0 || x >= d_imageWidth || y < 0 || y >= d_imageHeight)
-        {
-          // Stop if we reach the edge of the image
-          break;
-        }
-
+      auto pred = [&](int x, int y) {
         // If on line
         if (mask0[y*d_imageWidth + x])
         {
@@ -132,13 +73,17 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
           // Update line end.
           lineEnds[endIndex].y() = y;
           lineEnds[endIndex].x() = x;
+          return false;
         }
         else if (++gap > d_maxLineGap)
         {
           // It's too long since we last saw a dot
-          break;
+          return true;
         }
-      }
+        return false;
+      };
+      bool forward = endIndex == 0;
+      walkLine(dot, maxTheta, forward, pred);
     }
 
     // NOTE The length check only applies to the x or y component.
@@ -147,37 +92,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
     // Now walk the line again, and clean up the mask/accum
     for (int endIndex = 0; endIndex <= 1; endIndex++)
     {
-      if (endIndex != 0)
-      {
-        // flip, for second end, and walk the opposite direction
-        di = -di;
-        dj = -dj;
-      }
-
-      // walk along the line using fixed-point arithmetics,
-      // stop at the image border or in case of too big gap
-      for (int i = i0, j = j0;; i += di, i += dj)
-      {
-        int x, y;
-
-        if (isVertical)
-        {
-          x = i;
-          y = j >> shift;
-        }
-        else
-        {
-          x = i >> shift;
-          y = j;
-        }
-
-        if (x < 0 || x >= d_imageWidth || y < 0 || y >= d_imageHeight)
-        {
-          // Stop if we reach the edge of the image
-          break;
-        }
-
-        // for each non-zero point:
+      auto pred = [&](int x, int y) {
         uchar* mdata = mask0 + y*d_imageWidth + x;
         if (*mdata)
         {
@@ -199,9 +114,12 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
         if (y == lineEnds[endIndex].y() && x == lineEnds[endIndex].x())
         {
           // Stop if we reach the end of the line
-          break;
+          return true;
         }
-      }
+        return false;
+      };
+      bool forward = endIndex == 0;
+      walkLine(dot, maxTheta, forward, pred);
     }
 
     if (isLongEnough)
