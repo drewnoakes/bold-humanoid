@@ -117,6 +117,23 @@ define(
             {
                 this.ballMesh.position = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]);
             }
+
+            // Clear any previous lines
+            if (this.lineObject) {
+                this.scene.remove(this.lineObject);
+            }
+            this.lineObject = new THREE.Object3D();
+            this.scene.add(this.lineObject);
+
+            if (data.lines && data.lines instanceof Array && data.lines.length !== 0) {
+                _.each(data.lines, function (line)
+                {
+                    var lineGeometry = new THREE.Geometry();
+                    lineGeometry.vertices.push(new THREE.Vector3(line[0], line[1], line[2]));
+                    lineGeometry.vertices.push(new THREE.Vector3(line[3], line[4], line[5]));
+                    this.lineObject.add(new THREE.Line(lineGeometry, this.fieldLineMaterial));
+                }.bind(this));
+            }
         };
 
         World3dModule.prototype.onHardwareData = function(data)
@@ -315,6 +332,11 @@ define(
             addGoalPost(-1,-1);
             addGoalBar(1);
             addGoalBar(-1);
+
+            //
+            // FIELD LINES
+            //
+            this.fieldLineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
 
 //            this.scene.add(new THREE.AxisHelper(1)); // [R,G,B] === (x,y,z)
 
