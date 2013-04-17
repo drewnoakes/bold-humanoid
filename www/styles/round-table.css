@@ -266,6 +266,13 @@ div.module.field > div.pane-container
     height: 436px
 }
 
+div.module.field div.hover-info
+{
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+}
+
 /********************************************************************/
 
 div.module.timing table.timing-details tr td.duration,

@@ -19,6 +19,11 @@ define(
         {
             this.$canvas = $('<canvas></canvas>');
             this.canvas = this.$canvas.get(0);
+            this.$container = $('<div></div>');
+            this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
+
+            this.$container.append(this.$canvas)
+                           .append(this.$hoverInfo);
 
             this.bindEvents();
 
@@ -29,7 +34,7 @@ define(
             this.panes = [
                 {
                     title: 'main',
-                    element: this.canvas,
+                    element: this.$container.get(0),
                     onResized: _.bind(this.onResized, this),
                     supports: { fullScreen: true }
                 }
@@ -56,6 +61,15 @@ define(
                 this.scale = Math.max(this.minScale, this.scale);
                 this.draw();
             }.bind(this));
+
+            this.$canvas.on('mousemove', function (event)
+            {
+                var x = (event.offsetX - this.fieldCenterX) / this.scale,
+                    y = (event.offsetY - this.fieldCenterY) / this.scale;
+                this.$hoverInfo.text(x.toFixed(2) + ', ' + y.toFixed(2));
+            }.bind(this));
+
+            this.$canvas.on('mouseleave', function() { this.$hoverInfo.text(''); }.bind(this));
         };
 
         World2dModule.prototype.load = function()
