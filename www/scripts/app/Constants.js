@@ -24,7 +24,9 @@ define(
             penaltyLineLength: 0.1,
             outerMarginMinimum: 0.7,
             ballDiameter: 0.067, // according to Wikipedia
-            footHeight: 0.0335
+            footHeight: 0.0335,
+            cameraFovHorizontalDegrees: 58,
+            cameraFovVerticalDegrees: 46
         };
 
         Constants.ballRadius = Constants.ballDiameter / 2;
