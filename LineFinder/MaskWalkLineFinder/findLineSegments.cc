@@ -26,8 +26,6 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
   int dotIndex = (int)lineDots.size() - 1;
   while (dotIndex >= 0)
   {
-    cout << "dotIndex: " << dotIndex << endl;
-
     Vector2i dot = lineDots[dotIndex--];
 
     // Check if it has been excluded already (i.e. belongs to some other line)
