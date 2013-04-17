@@ -126,7 +126,8 @@ TEST (LineSegmentTests, tryIntersect)
 //EXPECT_EQ( Maybe<Vector2i>(Vector2i(2,2)), LineSegment2i(1, 1, 2, 2).tryIntersect(LineSegment2i(2, 2, 3, 3)) );
 }
 
-TEST (DISABLED_LineSegmentTests, toLine)
+/*
+TEST (LineSegmentTe/sts, toLine)
 {
   // Vertical line at x=10
   EXPECT_EQ (Line(10, 0), LineSegment2i(Vector2i(10,0), Vector2i(10,10)).toLine());
@@ -158,3 +159,4 @@ TEST (DISABLED_LineSegmentTests, toLine)
   // line from (5.5,2) to (3,3.5)
   EXPECT_EQ (Line(-sin(atan(0.5)), M_PI+atan(-0.6)), LineSegment2i(Vector2i(5.5,2), Vector2i(3,3.5)).toLine());
 }
+*/
