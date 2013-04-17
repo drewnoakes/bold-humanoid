@@ -6,14 +6,12 @@ Agent::Agent(string const& U2D_dev,
              bool const& useJoystick,
              bool const& autoGetUpFromFallen,
              bool const& useOptionTree,
-             bool const& recordFrames,
-             unsigned int const& gameControlUdpPort
+             bool const& recordFrames
   )
   : d_motionFile(motionFile),
     d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
     d_useOptionTree(useOptionTree),
-    d_gameStateReceiver(gameControlUdpPort),
     d_ballSeenCnt(0),
     d_goalSeenCnt(0)
 {
@@ -35,6 +33,8 @@ Agent::Agent(string const& U2D_dev,
   d_debugger = make_shared<Debugger>();
 
   d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_debugger, ini);
+
+  d_gameStateReceiver = make_shared<GameStateReceiver>(ini);
 
   AdHocOptionTreeBuilder optionTreeBuilder;
   d_optionTree = optionTreeBuilder.buildTree(ini);

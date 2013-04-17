@@ -8,6 +8,7 @@
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
 #include "../FieldMap/fieldmap.hh"
+#include "../GameStateReceiver/gamestatereceiver.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../joystick/joystick.hh"
 #include "../LUTBuilder/lutbuilder.hh"

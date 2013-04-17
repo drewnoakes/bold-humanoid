@@ -10,6 +10,9 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("playMode");
     writer.String(getPlayModeString().c_str());
 
+    writer.String("playerPerTeam");
+    writer.Int(getPlayersPerTeam());
+
     writer.String("isFirstHalf");
     writer.Bool(isFirstHalf());
 
@@ -29,7 +32,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
     writer.Int(getSecondsSinceLastDropIn());
 
     writer.String("secondsRemaining");
-    writer.Int(d_secondsRemaining);
+    writer.Int(getSecondsRemaining());
 
     auto writeTeam = [&writer,this](TeamInfo const& team)
     {

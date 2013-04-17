@@ -108,11 +108,16 @@ namespace bold
   class GameState : public StateObject
   {
   public:
-    int getSecondsRemaining() const { return d_secondsRemaining; }
-    PlayMode getPlayMode() const { return d_playMode; }
+    GameState(char const* data)
+    {
+      memcpy(&d_data, data, sizeof(GameStateData));
+    }
+
+    int getSecondsRemaining() const { return d_data.secondsRemaining; }
+    PlayMode getPlayMode() const { return PlayMode(d_data.playMode); }
     std::string getPlayModeString() const
     {
-      switch (d_playMode)
+      switch (PlayMode(d_data.playMode))
       {
         case PlayMode::INITIAL:
           return "Initial";
@@ -129,32 +134,38 @@ namespace bold
       }
     }
 
-    uint8 getPlayersPerTeam() const { return d_playersPerTeam; }
-    bool isFirstHalf() const { return d_isFirstHalf == 1; }
+    uint32 getVersion() const { return d_data.version; }
+    uint8 getPlayersPerTeam() const { return d_data.playersPerTeam; }
+    bool isFirstHalf() const { return d_data.isFirstHalf == 1; }
     /** The next team to kick off. */
-    uint8 getNextKickOffTeamNumber() const { return d_nextKickOffTeamNumber; }
-    bool isPenaltyShootout() const { return d_secondaryState == ExtraState::PENALTYSHOOT; }
-    bool isOvertime() const { return d_secondaryState == ExtraState::OVERTIME; }
-    uint8 getSecondsSinceLastDropIn() const { return d_secondsSinceLastDropIn; }
-    uint8 getLastDropInTeamNumber() const { return d_dropInTeamNumber; }
-    TeamInfo const& teamInfo1() const { return d_teams[0]; }
-    TeamInfo const& teamInfo2() const { return d_teams[1]; }
+    uint8 getNextKickOffTeamNumber() const { return d_data.nextKickOffTeamNumber; }
+    bool isPenaltyShootout() const { return ExtraState(d_data.secondaryState) == ExtraState::PENALTYSHOOT; }
+    bool isOvertime() const { return ExtraState(d_data.secondaryState) == ExtraState::OVERTIME; }
+    uint8 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn; }
+    uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamNumber; }
+    TeamInfo const& teamInfo1() const { return d_data.teams[0]; }
+    TeamInfo const& teamInfo2() const { return d_data.teams[1]; }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
-    // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
-    char d_header[4];          // header to identify the structure
-    uint32 d_version;          // version of the data structure
-    uint8 d_playersPerTeam;    // The number of players on a team
-    PlayMode d_playMode;       // state of the game (STATE_READY, STATE_PLAYING, etc)
-    uint8 d_isFirstHalf;       // 1 = game in first half, 0 otherwise
-    uint8 d_nextKickOffTeamNumber;       // the next team to kick off
-    ExtraState d_secondaryState; // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
-    uint8 d_dropInTeamNumber;        // team that caused last drop in
-    uint16 d_secondsSinceLastDropIn;       // number of seconds passed since the last drop in.  -1 before first dropin
-    uint32 d_secondsRemaining; // estimate of number of seconds remaining in the half
-    TeamInfo d_teams[2];
+    struct GameStateData
+    {
+      // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
+      char header[4];          // header to identify the structure
+      uint32 version;          // version of the data structure
+      uint8 playersPerTeam;    // The number of players on a team
+      uint8 playMode;       // state of the game (STATE_READY, STATE_PLAYING, etc)
+      uint8 isFirstHalf;       // 1 = game in first half, 0 otherwise
+      uint8 nextKickOffTeamNumber;       // the next team to kick off
+      uint8 secondaryState; // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+      uint8 dropInTeamNumber;        // team that caused last drop in
+      uint16 secondsSinceLastDropIn;       // number of seconds passed since the last drop in.  -1 before first dropin
+      uint32 secondsRemaining; // estimate of number of seconds remaining in the half
+      TeamInfo teams[2];
+    };
+
+    GameStateData d_data;
   };
 }
 

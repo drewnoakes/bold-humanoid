@@ -53,7 +53,7 @@ void Agent::think()
   //
   // Listen for any game control data
   //
-  shared_ptr<GameState const> gameState = d_gameStateReceiver.receive();
+  shared_ptr<GameState const> gameState = d_gameStateReceiver->receive();
   if (gameState)
   {
     AgentState::getInstance().set(gameState);

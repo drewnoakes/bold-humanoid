@@ -6,7 +6,6 @@
 #include <memory>
 #include <opencv2/opencv.hpp>
 
-#include "../GameStateReceiver/gamestatereceiver.hh"
 #include "../MX28Alarm/mx28alarm.hh"
 
 class Joystick;
@@ -27,6 +26,7 @@ namespace bold
   class DataStreamer;
   class Debugger;
   class FieldMap;
+  class GameStateReceiver;
   class OptionTree;
   class Spatialiser;
   class VisualCortex;
@@ -54,8 +54,7 @@ namespace bold
           bool const& useJoystick,
           bool const& autoGetUpFromFallen,
           bool const& useOptionTree,
-          bool const& recordFrames,
-          unsigned int const& gameControlUdpPort = GAMECONTROLLER_PORT);
+          bool const& recordFrames);
 
     int run();
 
@@ -81,7 +80,7 @@ namespace bold
     std::shared_ptr<Joystick> d_joystick;
     std::shared_ptr<Spatialiser> d_spatialiser;
     std::shared_ptr<VisualCortex> d_visualCortex;
-    GameStateReceiver d_gameStateReceiver;
+    std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
 
     // State
     /** Number of consecutive cycles during which the ball has been seen. */

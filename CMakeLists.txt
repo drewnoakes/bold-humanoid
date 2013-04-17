@@ -163,6 +163,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./GameStateReceiver/GameStateReceiver.cc
   ./GameStateReceiver/receive.cc
 )
 
