@@ -1,7 +1,9 @@
 #include "adhocoptiontreebuilder.hh"
 
+#include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../AgentState/agentstate.hh"
 #include "../../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../../StateObject/HardwareState/hardwarestate.hh"
 #include "../../Option/ActionOption/actionoption.hh"
 #include "../../Option/ApproachBall/approachball.hh"
 #include "../../Option/FSMOption/fsmoption.hh"

@@ -29,28 +29,73 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   // Left kick
   OptionPtr rightKick = make_shared<ActionOption>("rightkickaction","rk");
   tree->addOption(rightKick);
+
+  OptionPtr lookAround = make_shared<LookAround>("lookaround");
+  tree->addOption(lookAround);
+
+  OptionPtr lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel);
+  tree->addOption(lookAtBall);
   
   // FSM
-  auto fsm = make_shared<FSMOption>("win");
-  tree->addOption(fsm, true);
-  auto lookAround = make_shared<LookAround>("lookaround");
-  tree->addOption(lookAround);
-  auto lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel);
-  tree->addOption(lookAtBall);
+  auto winFsm = make_shared<FSMOption>("win");
+  tree->addOption(winFsm, true);
+  auto attackFsm = make_shared<FSMOption>("attack");
+  tree->addOption(attackFsm);
 
+
+  //
   // Build main FSM
+  //
+  // State: paused
+  auto pauseState = winFsm->newState("pause", {stand}, false, true);
 
+  // State: attack
+  auto attackState = winFsm->newState("attack", {attackFsm});
+
+  auto startButtonCondition = []() {
+    static int lastSwitch = 0;
+    lastSwitch++;
+    if (lastSwitch < 20)
+      return false;
+
+    auto hw = AgentState::getInstance().get<HardwareState>();
+    if (!hw)
+      return false;
+    auto cm730 = hw->getCM730State();
+    if (!cm730)
+      return false;
+
+    if (cm730->isStartButtonPressed)
+    {
+      lastSwitch = 0;
+      return true;;
+    }
+    
+    return false;
+  };
+
+  auto pause2attack = pauseState->newTransition();
+  pause2attack->condition = startButtonCondition;
+  pause2attack->childState = attackState;
+
+  auto attack2pause = attackState->newTransition();
+  attack2pause->condition = startButtonCondition;
+  attack2pause->childState = pauseState;
+
+  //
+  // Build attack FSM
+  //
   // Start state: stand up
-  auto standUpState = fsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
+  auto standUpState = attackFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
 
   // State: stand and look look around
-  auto lookAroundState = fsm->newState("lookaround", {stand, lookAround});
+  auto lookAroundState = attackFsm->newState("lookaround", {stand, lookAround});
 
   // State: stand and look at ball
-  auto lookAtBallState = fsm->newState("lookatball", {stand, lookAtBall});
+  auto lookAtBallState = attackFsm->newState("lookatball", {stand, lookAtBall});
 
   // State: approach and look at ball
-  auto approachBallState = fsm->newState("approachball", {approachBall, lookAtBall});
+  auto approachBallState = attackFsm->newState("approachball", {approachBall, lookAtBall});
 
   auto ballLostCondition = []() {
     static int lastSeen = 0;
