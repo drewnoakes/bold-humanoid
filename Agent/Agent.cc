@@ -32,6 +32,8 @@ Agent::Agent(string const& U2D_dev,
 
   d_debugger = make_shared<Debugger>();
 
+  d_localiser = make_shared<Localiser>();
+
   d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_debugger, ini);
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(ini);
@@ -62,11 +64,9 @@ Agent::Agent(string const& U2D_dev,
 
   d_debugger->update(d_CM730);
 
-
   d_haveBody = initMotionManager(ini);
 
   d_state = State::S_INIT;
 
   cout << "[Agent::Agent] Done" << endl;
 }
-

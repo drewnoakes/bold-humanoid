@@ -113,8 +113,12 @@ define(
 
         World3dModule.prototype.onWorldFrameData = function(data)
         {
-            if (data.ball && data.ball instanceof Array && data.ball.length === 3)
-            {
+            if (data.pos && data.pos instanceof Array && data.pos.length === 4) {
+                this.bodyRoot.position = new THREE.Vector3(data.pos[0], data.pos[1], data.pos[2]);
+                this.bodyRoot.rotation.x = data.pos[3];
+            }
+
+            if (data.ball && data.ball instanceof Array && data.ball.length === 3) {
                 this.ballMesh.position = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]);
             }
 
@@ -129,11 +133,13 @@ define(
                 _.each(data.lines, function (line)
                 {
                     var lineGeometry = new THREE.Geometry();
-                    lineGeometry.vertices.push(new THREE.Vector3(line[0], line[1], line[2]));
-                    lineGeometry.vertices.push(new THREE.Vector3(line[3], line[4], line[5]));
+                    lineGeometry.vertices.push(new THREE.Vector3(line[0], line[1], /*line[2]*/0));
+                    lineGeometry.vertices.push(new THREE.Vector3(line[3], line[4], /*line[5]*/0));
                     this.lineObject.add(new THREE.Line(lineGeometry, this.fieldLineMaterial));
                 }.bind(this));
             }
+
+            this.render();
         };
 
         World3dModule.prototype.onHardwareData = function(data)

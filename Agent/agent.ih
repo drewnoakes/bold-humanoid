@@ -11,6 +11,7 @@
 #include "../GameStateReceiver/gamestatereceiver.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../joystick/joystick.hh"
+#include "../Localiser/localiser.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../OptionTree/optiontree.hh"
@@ -24,7 +25,6 @@
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
-
 #include "../VisualCortex/visualcortex.hh"
 
 #include <iostream>

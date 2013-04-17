@@ -7,6 +7,16 @@ void WorldFrameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
+    writer.String("pos");
+    writer.StartArray();
+    {
+      writer.Double(d_position.x());
+      writer.Double(d_position.y());
+      writer.Double(d_position.z());
+      writer.Double(d_position.theta());
+    }
+    writer.EndArray();
+
     writer.String("ball");
     if (d_ballObservation.hasValue())
     {
