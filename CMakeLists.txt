@@ -348,6 +348,8 @@ add_dependencies(boldhumanoid libwebsockets_lib)
 if(UPLOAD_SCP_PATH)
   add_custom_command(OUTPUT upload.stamp
     COMMAND scp -C $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
+    COMMAND scp -C ${CMAKE_SOURCE_DIR}/*.ini ${UPLOAD_SCP_PATH}
+    COMMAND rsync -rP ${CMAKE_SOURCE_DIR}/www ${UPLOAD_SCP_PATH}
     COMMAND touch upload.stamp
     DEPENDS boldhumanoid)
 
@@ -355,6 +357,15 @@ if(UPLOAD_SCP_PATH)
 else(UPLOAD_SCP_PATH)
   message(WARNING "You have not set a path for uploading the binary; 'upload' target not generated")
 endif(UPLOAD_SCP_PATH)
+
+
+set(_command find ${CMAKE_SOURCE_DIR} -regextype posix-egrep -regex ".*((hh)|(cc))$" -print | etags -o ${CMAKE_SOURCE_DIR}/TAGS -)
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/TAGS
+  COMMAND ${_command}
+  IMPLICIT_DEPENDS ${BOLDHUMANOID_SORCES}
+  VERBATIM
+  )
+add_custom_target(tags DEPENDS ${CMAKE_SOURCE_DIR}/TAGS)
 
 #
 ## Build and run test
