@@ -1,5 +1,7 @@
 #include "lutbuilder.ih"
 
+// TODO these shared_ptr are not going to release the LUT objects -- they just delete the first item in the array!
+
 shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR24(vector<shared_ptr<PixelLabel>> const& labels)
 {
   uchar* lut = new uchar[1<<24];
@@ -31,20 +33,24 @@ shared_ptr<uchar> LUTBuilder::buildLookUpTableYCbCr18(vector<shared_ptr<PixelLab
   uchar* lut = new uchar[1<<18];
   uchar* p = lut;
 
-  for (int b = 0; b < 64; ++b)
-    for (int g = 0; g < 64; ++g)
-      for (int r = 0; r < 64; ++r)
-          *(p++) = labelPixel(labels, Colour::YCbCr(b<<2, g<<2, r<<2).toBgrInt());
+  // TODO should we use the floating point conversion from YCbCr to BGR here for accuracy?
+
+  for (int y = 0; y < 64; ++y)
+    for (int cb = 0; cb < 64; ++cb)
+      for (int cr = 0; cr < 64; ++cr)
+          *(p++) = labelPixel(labels, Colour::YCbCr(y<<2, cb<<2, cr<<2).toBgrInt());
 
   return shared_ptr<uchar>(lut);
 }
 
 uchar LUTBuilder::labelPixel(vector<shared_ptr<PixelLabel>> const& labels, Colour::bgr const& bgr)
 {
+  auto const& hsv = Colour::bgr2hsv(bgr);
+
   // Find first that matches
   for (shared_ptr<PixelLabel> label : labels)
   {
-    if (label->hsvRange().contains(Colour::bgr2hsv(bgr)))
+    if (label->hsvRange().contains(hsv))
     {
       return label->id();
     }
