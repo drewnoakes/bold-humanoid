@@ -1,6 +1,9 @@
 #ifndef BOLD_AGENTPOSITION_HH
 #define BOLD_AGENTPOSITION_HH
 
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+
 namespace bold
 {
   class AgentPosition
@@ -17,6 +20,10 @@ namespace bold
     double y() const { return d_y; }
     double z() const { return d_z; }
     double theta() const { return d_theta; }
+
+    Eigen::Affine3d worldToAgentTransform() const;
+
+    Eigen::Vector3d pos() const { return Eigen::Vector3d(d_x, d_y, d_z); }
 
   private:
     double d_x;

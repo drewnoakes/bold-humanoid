@@ -105,6 +105,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./AgentPosition/worldToAgentTransform.cc
+)
+
+add_class(BOLDHUMANOID
   ./Camera/Camera.cc
   ./Camera/capture.cc
   ./Camera/getControlValue.cc
