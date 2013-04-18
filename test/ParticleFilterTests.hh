@@ -42,7 +42,7 @@ namespace bold
   };
 }
 
-TEST (ParticleFilterTests, delta)
+TEST (ParticleFilterTests, basicOperation)
 {
   auto samplingFactory = make_shared<ReversingSamplerFactory<2>>();
 
