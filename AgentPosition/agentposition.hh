@@ -25,6 +25,11 @@ namespace bold
 
     Eigen::Vector3d pos() const { return Eigen::Vector3d(d_x, d_y, d_z); }
 
+    AgentPosition withX(double x) const { return AgentPosition(x, d_y, d_z, d_theta); }
+    AgentPosition withY(double y) const { return AgentPosition(d_x, y, d_z, d_theta); }
+    AgentPosition withZ(double z) const { return AgentPosition(d_x, d_y, z, d_theta); }
+    AgentPosition withTheta(double theta) const { return AgentPosition(d_x, d_y, d_z, theta); }
+
   private:
     double d_x;
     double d_y;
