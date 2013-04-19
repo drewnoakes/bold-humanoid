@@ -105,7 +105,7 @@ namespace bold
     std::shared_ptr<StateTracker> getTracker() const
     {
       auto pair = d_trackerByTypeId.find(&typeid(T));
-      assert(pair != d_trackerByTypeId.end()); // assert exists
+      assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
       return pair->second;
     }
 
