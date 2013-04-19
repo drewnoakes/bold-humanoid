@@ -51,10 +51,10 @@ namespace bold
     void update()
     {
       // TODO implement
-      auto extracted = d_filter->extract();
-      // TODO utilise this calculation at appropriate points
+
+      auto pos = d_filter->extract().first;
       double torsoHeight = AgentState::getInstance().get<BodyState>()->getTorsoHeight();
-      d_pos = d_pos.withZ(torsoHeight);
+      d_pos = AgentPosition(pos[0], pos[1], torsoHeight, pos[2]);
     }
 
     AgentPosition position() const { return d_pos; }
