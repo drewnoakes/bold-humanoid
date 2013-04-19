@@ -4,6 +4,7 @@
 #include <iterator>
 #include <random>
 #include <vector>
+#include <functional>
 
 #include "../../Filter/filter.hh"
 #include "../../Filter/ParticleFilter/particlefilter.hh"
