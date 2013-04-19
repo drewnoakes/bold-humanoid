@@ -149,16 +149,18 @@ define(
             },
             drawParticles: function(context, options, particles)
             {
-                var scale = options.scale || 1;
+                var scale = options.scale || 1,
+                    size = options.particleSize || 1;
 
-                context.fillStyle = options.particleStyle || 'red';
+                context.fillStyle = options.particleStyle || 'cyan';
+
 
                 context.beginPath();
                 _.each(particles, function (particle)
                 {
-                    var x = Math.round(particle[0] * scale),
-                        y = Math.round(particle[1] * scale);
-                    context.fillRect(x, y, 1, 1);
+                    var x = Math.round(particle[0] * scale - size/2),
+                        y = Math.round(particle[1] * scale - size/2);
+                    context.fillRect(x, y, size, size);
                 });
             }
         };

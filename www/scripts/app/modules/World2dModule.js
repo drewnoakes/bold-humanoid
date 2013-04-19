@@ -128,6 +128,8 @@ define(
                     goalStrokeStyle: 'yellow',
                     groundFillStyle: '#008800',
                     lineStrokeStyle: '#ffffff',
+                    particleStyle: 'cyan',
+                    particleSize: 3,
                     fieldCenter: { x: this.fieldCenterX, y: this.fieldCenterY }
                 },
                 context = this.canvas.getContext('2d');
