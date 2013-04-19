@@ -60,7 +60,13 @@ namespace bold
 
       // Build the next generation
       ParticleSampler drawSample = d_particleSamplerFactory->create(d_particles);
+
+      // TODO maybe migrate the logic below to the ParticleSampleFactory, and reinstate pure generation
+//      auto newParticles = std::make_shared<std::vector<Particle>>(d_particleCount);
+//       std::generate(newParticles->begin(), newParticles->end(), drawSample);
+
       auto newParticles = std::make_shared<std::vector<Particle>>();
+
       unsigned randomizeCount = d_particleCount * d_randomizeRatio;
       unsigned drawCount = d_particleCount - randomizeCount;
 
@@ -74,12 +80,11 @@ namespace bold
 
       for (int i = 0; i < drawCount; i++)
       {
+        // TODO apply noise to the generated samples
         newParticles->push_back(drawSample());
       }
 
       assert(newParticles->size() == d_particleCount);
-
-//       std::generate(newParticles->begin(), newParticles->end(), drawSample);
 
       d_particles = newParticles;
     }
