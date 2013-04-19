@@ -41,10 +41,7 @@ void Spatialiser::updateCameraToAgent()
   // Multiplying with this transform brings coordinates from camera space in torso space
   auto cameraTransform = body->getLimb("camera")->transform;
 
-  double torsoHeight = max(
-    body->getLimb("lFoot")->transform.inverse().translation().z(),
-    body->getLimb("rFoot")->transform.inverse().translation().z()
-  );
+  double torsoHeight = body->getTorsoHeight();
 
   auto const& ballObs = cameraFrame->getBallObservation();
 
