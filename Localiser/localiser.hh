@@ -2,6 +2,8 @@
 #define BOLD_LOCALISER_HH
 
 #include <memory>
+#include <chrono>
+#include <random>
 
 #include "../AgentPosition/agentposition.hh"
 #include "../AgentState/agentstate.hh"
@@ -21,7 +23,8 @@ namespace bold
     {
       double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
       double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;
-      std::default_random_engine generator;
+      auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+      std::default_random_engine generator(seed);
       std::uniform_real_distribution<double> fieldXDistribution(-xMax, xMax);
       std::uniform_real_distribution<double> fieldYDistribution(-yMax, yMax);
       std::uniform_real_distribution<double> thetaDistribution(-M_PI, M_PI);
@@ -55,6 +58,8 @@ namespace bold
       auto pos = d_filter->extract().first;
       double torsoHeight = AgentState::getInstance().get<BodyState>()->getTorsoHeight();
       d_pos = AgentPosition(pos[0], pos[1], torsoHeight, pos[2]);
+
+      updateState();
     }
 
     AgentPosition position() const { return d_pos; }
