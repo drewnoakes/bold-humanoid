@@ -61,6 +61,7 @@ namespace bold
     Particle extract() const override
     {
       // TODO implement
+      return (*d_particles)[0]; // HACK to remove compiler warnings
     }
 
     std::shared_ptr<std::vector<Particle> const> getParticles() const { return d_particles; }

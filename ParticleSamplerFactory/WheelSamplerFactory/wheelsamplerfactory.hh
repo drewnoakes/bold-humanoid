@@ -24,24 +24,24 @@ namespace bold
 
     typename Filter<DIM>::ParticleSampler create(std::shared_ptr<std::vector<typename Filter<DIM>::Particle>> const& particles) override
     {
-      d_index = d_rnd() * particles.size();
+      d_index = d_rnd() * particles->size();
       d_beta = 0.0;
 
       d_maxWeight = std::max_element(
-        particles.begin(),particles.end(),
-        [](ParticleFilter<2>::Particle const& p1, ParticleFilter<2>::Particle const& p2) {
+        particles->begin(), particles->end(),
+        [](typename ParticleFilter<DIM>::Particle const& p1, typename ParticleFilter<DIM>::Particle const& p2) {
           return p1.second < p2.second;
         })->second;
 
       return [&]() {
         d_beta += d_rnd() * 2 * d_maxWeight;
-        double weight = particles[d_index].second;
+        double weight = (*particles)[d_index].second;
         while (d_beta > weight) {
           d_beta -= weight;
-          d_index = (d_index + 1) % particles.size();
-          weight = particles[d_index].second;
+          d_index = (d_index + 1) % particles->size();
+          weight = (*particles)[d_index].second;
         }
-        return particles[d_index];
+        return (*particles)[d_index];
       };
     }
 
