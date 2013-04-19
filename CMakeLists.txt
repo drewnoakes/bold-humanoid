@@ -106,6 +106,7 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./AgentPosition/worldToAgentTransform.cc
+  ./AgentPosition/agentToWorldTransform.cc
 )
 
 add_class(BOLDHUMANOID

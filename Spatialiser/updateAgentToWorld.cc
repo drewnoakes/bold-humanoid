@@ -22,7 +22,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   // Transform from agent to world space
   //
 
-  Affine3d agentToWorld = Translation3d(position.x(), position.y(), position.z()) * AngleAxisd(-M_PI/2 + position.theta(), Vector3d::UnitZ());
+  Affine3d agentToWorld = position.agentToWorldTransform();
 
   Maybe<Vector3d> ball = ballAgent.hasValue()
   ? agentToWorld * *(ballAgent.value())

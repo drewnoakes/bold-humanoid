@@ -22,6 +22,7 @@ namespace bold
     double theta() const { return d_theta; }
 
     Eigen::Affine3d worldToAgentTransform() const;
+    Eigen::Affine3d agentToWorldTransform() const;
 
     Eigen::Vector3d pos() const { return Eigen::Vector3d(d_x, d_y, d_z); }
 
