@@ -11,7 +11,7 @@ void Agent::circleBall()
 
     lookAtGoal();
 
-    if (AgentState::getInstance().get<CameraFrameState>()->getGoalObservations().size() < 2)
+    if (AgentState::get<CameraFrameState>()->getGoalObservations().size() < 2)
     {
       d_goalSeenCnt--;
       if (d_goalSeenCnt <= 0)

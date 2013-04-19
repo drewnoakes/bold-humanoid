@@ -11,8 +11,8 @@ using namespace std;
 
 void Spatialiser::updateCameraToAgent()
 {
-  auto body = AgentState::getInstance().get<BodyState>();
-  auto cameraFrame = AgentState::getInstance().get<CameraFrameState>();
+  auto body = AgentState::get<BodyState>();
+  auto cameraFrame = AgentState::get<CameraFrameState>();
 
   /*
   auto neck = body->getLimb("neck");

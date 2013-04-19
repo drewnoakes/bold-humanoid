@@ -2,7 +2,7 @@
 
 void Agent::approachBall()
 {
-  auto const& ballObservation = AgentState::getInstance().get<CameraFrameState>()->getBallObservation();
+  auto const& ballObservation = AgentState::get<CameraFrameState>()->getBallObservation();
 
   if (!ballObservation.hasValue())
   {

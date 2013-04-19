@@ -95,9 +95,10 @@ namespace bold
     }
 
     template <typename T>
-    std::shared_ptr<T const> get() const
+    static std::shared_ptr<T const> get()
     {
-      std::shared_ptr<StateTracker> tracker = getTracker<T>();
+      auto const& instance = AgentState::getInstance();
+      std::shared_ptr<StateTracker> tracker = instance.getTracker<T>();
       return tracker->state<T const>();
     }
 

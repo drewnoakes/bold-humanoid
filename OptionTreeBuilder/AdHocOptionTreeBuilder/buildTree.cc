@@ -58,7 +58,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
     if (lastSwitch < 20)
       return false;
 
-    auto hw = AgentState::getInstance().get<HardwareState>();
+    auto hw = AgentState::get<HardwareState>();
     if (!hw)
       return false;
     auto cm730 = hw->getCM730State();
@@ -100,7 +100,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   auto ballLostCondition = []() {
     static int lastSeen = 0;
     lastSeen++;
-    if (AgentState::getInstance().get<CameraFrameState>()->isBallVisible())
+    if (AgentState::get<CameraFrameState>()->isBallVisible())
       lastSeen = 0;
     return lastSeen > 10;
   };
@@ -116,7 +116,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   // Transition: look at ball when visible
   auto lookAround2lookAtBall = lookAroundState->newTransition();
   lookAround2lookAtBall->condition = []() {
-    return AgentState::getInstance().get<CameraFrameState>()->isBallVisible();
+    return AgentState::get<CameraFrameState>()->isBallVisible();
   };
   lookAround2lookAtBall->childState = lookAtBallState;
 
@@ -129,7 +129,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   auto lookAtBall2approachBall = lookAtBallState->newTransition();
   lookAtBall2approachBall->condition = []() {
     static int nSeen = 0;
-    if (AgentState::getInstance().get<CameraFrameState>()->isBallVisible())
+    if (AgentState::get<CameraFrameState>()->isBallVisible())
       nSeen++;
     else if (nSeen > 0)
       nSeen--;
