@@ -22,14 +22,15 @@ namespace bold
 
     bool hasValue() const { return d_value.hasValue(); }
 
-    std::shared_ptr<T> value()
+    std::shared_ptr<T> value() const
     {
       if (hasValue())
         return d_value.value();
 
       if (d_creator)
       {
-        d_value = Maybe<T>(d_creator());
+        auto writeable = const_cast<Maybe<T>*>(&d_value);
+        *writeable = Maybe<T>(d_creator());
         return d_value.value();
       }
 
@@ -41,12 +42,12 @@ namespace bold
       return hasValue();
     }
 
-    T const* operator->()
+    T const* operator->() const
     {
       return value();
     }
 
-    T const* operator*()
+    T const* operator*() const
     {
       return value();
     }
