@@ -28,6 +28,7 @@ namespace bold
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
+    AgentPosition getPosition() const { return d_position; }
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
 
