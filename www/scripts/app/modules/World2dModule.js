@@ -129,12 +129,15 @@ define(
                 context = this.canvas.getContext('2d');
 
             FieldLinePlotter.start(context, options);
-            if (this.lineSegments && this.lineSegments.length)
-                FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
-            if (this.ballPosition)
-                FieldLinePlotter.drawBall(context, options, this.ballPosition);
             FieldLinePlotter.drawFieldLines(context, options);
             FieldLinePlotter.drawGoals(context, options);
+
+            if (this.lineSegments && this.lineSegments.length)
+                FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
+
+            if (this.ballPosition)
+                FieldLinePlotter.drawBall(context, options, this.ballPosition);
+
             FieldLinePlotter.end(context);
         };
 
