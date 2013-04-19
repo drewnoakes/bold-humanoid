@@ -11,6 +11,8 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.StartArray();
 
+      // TODO find a way to write these numbers with less precision, to keep the JSON size down
+
       writer.Double(particle.first.x()); // x
       writer.Double(particle.first.y()); // y
       writer.Double(particle.first.z()); // theta
