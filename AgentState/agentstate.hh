@@ -67,9 +67,8 @@ namespace bold
     void registerStateType(std::string name)
     {
       const std::type_info* typeId = &typeid(T);
-      assert(d_trackerByTypeId.find(typeId) == d_trackerByTypeId.end()); // assert doesn't exist yet
-      std::shared_ptr<StateTracker> tracker = StateTracker::create<T>(name);
-      d_trackerByTypeId[typeId] = tracker;
+      assert(d_trackerByTypeId.find(typeId) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
+      d_trackerByTypeId[typeId] = StateTracker::create<T>(name);
     }
 
     std::vector<std::shared_ptr<StateTracker>> getTrackers() const
@@ -89,6 +88,7 @@ namespace bold
     template <typename T>
     void set(std::shared_ptr<T const> state)
     {
+      // TODO can type traits be used here to guarantee that T derives from StateObject
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
       updated(tracker);
