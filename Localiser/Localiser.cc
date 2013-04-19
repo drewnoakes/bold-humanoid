@@ -6,13 +6,13 @@ Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap)
   double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
   double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;
   auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
+
   std::uniform_real_distribution<double> fieldXDistribution(-xMax, xMax);
   std::uniform_real_distribution<double> fieldYDistribution(-yMax, yMax);
   std::uniform_real_distribution<double> thetaDistribution(-M_PI, M_PI);
-  d_fieldXRng = std::bind(fieldXDistribution, generator);
-  d_fieldYRng = std::bind(fieldYDistribution, generator);
-  d_thetaRng = std::bind(thetaDistribution, generator);
+  d_fieldXRng = std::bind(fieldXDistribution, std::default_random_engine(seed));
+  d_fieldYRng = std::bind(fieldYDistribution, std::default_random_engine(seed + 7));
+  d_thetaRng  = std::bind(thetaDistribution,  std::default_random_engine(seed + 13));
 
   auto samplerFactory = std::make_shared<WheelSamplerFactory<3>>();
 
