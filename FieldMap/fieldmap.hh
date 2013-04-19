@@ -19,9 +19,17 @@ namespace bold
     /** Positions of the base of four goal posts. */
     std::vector<Eigen::Vector2d> getGoalPostPositions() const { return d_goalPostPositions; }
 
+    double fieldLengthX() const { return d_fieldLengthX; }
+    double fieldLengthY() const { return d_fieldLengthY; }
+    double outerMarginMinimum() const { return d_outerMarginMinimum; }
+
   private:
     std::vector<LineSegment2d> d_fieldLines;
     std::vector<Eigen::Vector2d> d_goalPostPositions;
+
+    double d_fieldLengthX;
+    double d_fieldLengthY;
+    double d_outerMarginMinimum;
   };
 }
 
