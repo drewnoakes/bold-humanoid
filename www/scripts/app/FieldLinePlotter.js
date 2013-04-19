@@ -146,6 +146,20 @@ define(
                 context.beginPath();
                 context.arc(position[0] * scale, -position[1] * scale, Constants.ballRadius * scale, 0, Math.PI*2, true);
                 context.fill();
+            },
+            drawParticles: function(context, options, particles)
+            {
+                var scale = options.scale || 1;
+
+                context.fillStyle = options.particleStyle || 'red';
+
+                context.beginPath();
+                _.each(particles, function (particle)
+                {
+                    var x = particle[0] * scale,
+                        y = particle[1] * scale;
+                    context.fillRect(x, y, 1, 1);
+                });
             }
         };
 
