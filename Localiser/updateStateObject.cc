@@ -1,6 +1,6 @@
 #include "localiser.ih"
 
-void Localiser::updateState()
+void Localiser::updateStateObject()
 {
   auto const& particleState = std::make_shared<ParticleState const>(d_filter->getParticles());
 

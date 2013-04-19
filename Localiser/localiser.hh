@@ -17,17 +17,14 @@ namespace bold
   public:
     Localiser(std::shared_ptr<FieldMap> fieldMap);
 
-    void predict(/*motion data*/)
-    {
-
-    }
+    void predict(Eigen::Affine3d motion);
 
     void update();
 
     AgentPosition position() const { return d_pos; }
 
   private:
-    void updateState();
+    void updateStateObject();
 
     AgentPosition d_pos;
     std::shared_ptr<ParticleFilter<3>> d_filter;

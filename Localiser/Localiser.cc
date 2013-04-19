@@ -25,5 +25,5 @@ Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap)
 
   d_filter = std::make_shared<ParticleFilter<3>>(200, randomState, samplerFactory);
 
-  updateState();
+  updateStateObject();
 }
