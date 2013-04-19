@@ -17,10 +17,11 @@ namespace bold
     typedef std::function<State()> StateSampler;
     typedef std::function<Particle()> ParticleSampler;
 
-    ParticleFilter(int initialSize, StateSampler randomStateProvider, std::shared_ptr<ParticleSamplerFactory<DIM>> psf)
+    ParticleFilter(unsigned initialSize, StateSampler randomStateProvider, std::shared_ptr<ParticleSamplerFactory<DIM>> psf)
     : d_particles(std::make_shared<std::vector<Particle>>(initialSize)),
       d_particleSamplerFactory(psf),
-      d_randomStateProvider(randomStateProvider)
+      d_randomStateProvider(randomStateProvider),
+      d_particleCount(initialSize)
     {
       randomise();
     }
@@ -56,7 +57,7 @@ namespace bold
 
       // Build the next generation
       ParticleSampler drawSample = d_particleSamplerFactory->create(d_particles);
-      auto newParticles = std::make_shared<std::vector<Particle>>(d_particles->size());
+      auto newParticles = std::make_shared<std::vector<Particle>>(d_particleCount);
       std::generate(newParticles->begin(), newParticles->end(), drawSample);
 
       d_particles = newParticles;
@@ -70,7 +71,10 @@ namespace bold
 
     std::shared_ptr<std::vector<Particle> const> getParticles() const { return d_particles; }
 
+    void setParticleCount(int particleCount) { d_particleCount = particleCount; }
+
   private:
+    unsigned d_particleCount;
     StateSampler d_randomStateProvider;
     std::shared_ptr<std::vector<Particle>> d_particles;
     std::shared_ptr<ParticleSamplerFactory<DIM>> d_particleSamplerFactory;

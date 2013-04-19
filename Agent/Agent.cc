@@ -58,6 +58,7 @@ Agent::Agent(string const& U2D_dev,
   // TODO only stream if argument specified?
   d_streamer = make_shared<DataStreamer>(ini, d_camera, d_debugger);
 
+  // TODO a better abstraction over control providers
   d_streamer->registerControls("camera", d_camera->getControls());
   d_streamer->registerControls("localiser", d_localiser->getControls());
   for (auto const& pair : d_visualCortex->getControlsByFamily())

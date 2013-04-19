@@ -24,9 +24,20 @@ Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap)
     return ParticleFilter<3>::State(d_fieldXRng(), d_fieldYRng(), d_thetaRng());
   };
 
-  d_filter = std::make_shared<ParticleFilter<3>>(200, randomState, samplerFactory);
+  int initialCount = 200;
+  d_filter = std::make_shared<ParticleFilter<3>>(initialCount, randomState, samplerFactory);
+
+  //
+  // Set up controls
+  //
 
   d_controls.push_back(Control::createAction("Randomize", [this](){ d_filter->randomise(); }));
 
+  auto particleCountControl = Control::createInt("Particle Count", initialCount, [this](int value){ d_filter->setParticleCount(value); });
+  particleCountControl.setDefaultValue(200);
+  particleCountControl.setLimitValues(1, 2000);
+  d_controls.push_back(particleCountControl);
+
+  //
   updateStateObject();
 }
