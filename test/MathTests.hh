@@ -73,3 +73,26 @@ TEST (MathTests, intersectRayWithGroundPlane)
 						      0).value())
 		  ) );
 }
+
+TEST (MathTests, findPerpendicularVector)
+{
+  EXPECT_TRUE( VectorsEqual (Vector2d( 0,-1), Math::findPerpendicularVector(Vector2d( 1, 0))) );
+  EXPECT_TRUE( VectorsEqual (Vector2d( 0, 1), Math::findPerpendicularVector(Vector2d(-1, 0))) );
+  EXPECT_TRUE( VectorsEqual (Vector2d( 1, 0), Math::findPerpendicularVector(Vector2d( 0, 1))) );
+  EXPECT_TRUE( VectorsEqual (Vector2d(-1, 0), Math::findPerpendicularVector(Vector2d( 0,-1))) );
+}
+
+TEST (MathTests, linePointClosestToPoint)
+{
+  LineSegment2d unitX(Vector2d(0,0), Vector2d::UnitX());
+
+  EXPECT_TRUE( VectorsEqual (Vector2d(  0, 0), Math::linePointClosestToPoint(unitX, Vector2d(  0, 0))) ) << "At p1";
+  EXPECT_TRUE( VectorsEqual (Vector2d(  1, 0), Math::linePointClosestToPoint(unitX, Vector2d(  1, 0))) ) << "At p2";
+  EXPECT_TRUE( VectorsEqual (Vector2d(  0, 0), Math::linePointClosestToPoint(unitX, Vector2d(  0, 1))) ) << "Above p1";
+  EXPECT_TRUE( VectorsEqual (Vector2d(  0, 0), Math::linePointClosestToPoint(unitX, Vector2d(  0,-1))) ) << "Below p1";
+  EXPECT_TRUE( VectorsEqual (Vector2d(0.5, 0), Math::linePointClosestToPoint(unitX, Vector2d(0.5, 1))) ) << "Above midpoint";
+  EXPECT_TRUE( VectorsEqual (Vector2d(0.5, 0), Math::linePointClosestToPoint(unitX, Vector2d(0.5,-1))) ) << "Below midpoint";
+  EXPECT_TRUE( VectorsEqual (Vector2d(  0, 0), Math::linePointClosestToPoint(unitX, Vector2d( -1, 0))) ) << "Beyond p1";
+  EXPECT_TRUE( VectorsEqual (Vector2d(  1, 0), Math::linePointClosestToPoint(unitX, Vector2d(  2, 0))) ) << "Beyond p2";
+
+}

@@ -219,7 +219,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Math/math.cc
+  ./Math/findPerpendicularVector.cc
+  ./Math/intersectRayWithGroundPlane.cc
+  ./Math/intersectRayWithPlane.cc
+  ./Math/linePointClosestToPoint.cc
 )
 
 add_class(BOLDHUMANOID

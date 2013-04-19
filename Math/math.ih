@@ -1,0 +1,7 @@
+#include "math.hh"
+
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+
+using namespace bold;
+using namespace Eigen;
