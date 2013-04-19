@@ -1,0 +1,15 @@
+#include "localiser.hh"
+
+#include <chrono>
+#include <random>
+
+#include "../AgentState/agentstate.hh"
+#include "../FieldMap/fieldmap.hh"
+#include "../Filter/ParticleFilter/particlefilter.hh"
+#include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
+#include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/ParticleState/particlestate.hh"
+
+using namespace std;
+using namespace bold;
+using namespace Eigen;

@@ -207,6 +207,12 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Localiser/Localiser.cc
+  ./Localiser/update.cc
+  ./Localiser/updateState.cc
+)
+
+add_class(BOLDHUMANOID
   ./LUTBuilder/buildLookUpTable.cc
 )
 
