@@ -156,8 +156,8 @@ define(
                 context.beginPath();
                 _.each(particles, function (particle)
                 {
-                    var x = particle[0] * scale,
-                        y = particle[1] * scale;
+                    var x = Math.round(particle[0] * scale),
+                        y = Math.round(particle[1] * scale);
                     context.fillRect(x, y, 1, 1);
                 });
             }
