@@ -1,7 +1,8 @@
 #include "localiser.ih"
 
 Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap)
-: d_pos(-2.7, 0, 0.23, 0)
+: d_pos(0, 0, 0, 0),
+  d_fieldMap(fieldMap)
 {
   double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
   double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;

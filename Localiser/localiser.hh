@@ -27,6 +27,7 @@ namespace bold
     void updateStateObject();
 
     AgentPosition d_pos;
+    std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<ParticleFilter<3>> d_filter;
     std::function<double()> d_fieldXRng;
     std::function<double()> d_fieldYRng;
