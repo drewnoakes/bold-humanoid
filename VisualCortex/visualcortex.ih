@@ -1,7 +1,6 @@
 #include "visualcortex.hh"
 
 #include "../AgentState/agentstate.hh"
-#include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../CameraModel/cameramodel.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
@@ -18,8 +17,10 @@
 #include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
-
 #include "../robotis/Framework/include/minIni.h"
+#include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/WorldFrameState/worldframestate.hh"
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
