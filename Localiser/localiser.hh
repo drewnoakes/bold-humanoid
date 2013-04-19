@@ -8,26 +8,43 @@
 #include "../Filter/ParticleFilter/particlefilter.hh"
 #include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
 #include "../StateObject/ParticleState/particlestate.hh"
+#include "../StateObject/BodyState/bodystate.hh"
+#include "../FieldMap/fieldmap.hh"
 
 namespace bold
 {
   class Localiser
   {
   public:
-    Localiser()
+    Localiser(std::shared_ptr<FieldMap> fieldMap)
     : d_pos(-2.7, 0, 0.23, 0)
     {
-      // TODO z value from body configuration (reuse code)
+      double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
+      double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;
+      std::default_random_engine generator;
+      std::uniform_real_distribution<double> fieldXDistribution(-xMax, xMax);
+      std::uniform_real_distribution<double> fieldYDistribution(-yMax, yMax);
+      std::uniform_real_distribution<double> thetaDistribution(-M_PI, M_PI);
+      d_fieldXRng = std::bind(fieldXDistribution, generator);
+      d_fieldYRng = std::bind(fieldYDistribution, generator);
+      d_thetaRng = std::bind(thetaDistribution, generator);
+
       auto samplerFactory = std::make_shared<WheelSamplerFactory<3>>();
-      d_filter = std::make_shared<ParticleFilter<3>>(200, Localiser::randomState, samplerFactory);
+
+      auto randomState = [this]() -> ParticleFilter<3>::State
+      {
+        // generate an initial random state
+        // TODO can we use the game mode to bias the randomness? eg before kickoff, will be on a known side, or nearer prior known locations
+        return ParticleFilter<3>::State(d_fieldXRng(), d_fieldYRng(), d_thetaRng());
+      };
+
+      d_filter = std::make_shared<ParticleFilter<3>>(200, randomState, samplerFactory);
+
+      // TODO utilise this calculation at appropriate points
+      double torsoHeight = AgentState::getInstance().get<BodyState>()->getTorsoHeight();
+      d_pos = d_pos.withZ(torsoHeight);
 
       updateState();
-    }
-
-    static ParticleFilter<3>::State randomState()
-    {
-      // TODO generate an initial random state using config values
-      // TODO can we use the game mode to bias the randomness? eg before kickoff, will be on a known side
     }
 
     void predict(/*motion data*/)
@@ -52,6 +69,9 @@ namespace bold
 
     AgentPosition d_pos;
     std::shared_ptr<ParticleFilter<3>> d_filter;
+    std::function<double()> d_fieldXRng;
+    std::function<double()> d_fieldYRng;
+    std::function<double()> d_thetaRng;
   };
 }
 
