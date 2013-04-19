@@ -26,5 +26,7 @@ Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap)
 
   d_filter = std::make_shared<ParticleFilter<3>>(200, randomState, samplerFactory);
 
+  d_controls.push_back(Control::createAction("Randomize", [this](){ d_filter->randomise(); }));
+
   updateStateObject();
 }

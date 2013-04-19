@@ -4,6 +4,7 @@
 #include <random>
 
 #include "../AgentState/agentstate.hh"
+#include "../Control/control.hh"
 #include "../FieldMap/fieldmap.hh"
 #include "../Filter/ParticleFilter/particlefilter.hh"
 #include "../Math/math.hh"

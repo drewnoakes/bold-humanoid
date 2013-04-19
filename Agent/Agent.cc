@@ -59,6 +59,7 @@ Agent::Agent(string const& U2D_dev,
   d_streamer = make_shared<DataStreamer>(ini, d_camera, d_debugger);
 
   d_streamer->registerControls("camera", d_camera->getControls());
+  d_streamer->registerControls("localiser", d_localiser->getControls());
   for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
 

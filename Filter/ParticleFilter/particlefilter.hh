@@ -19,17 +19,18 @@ namespace bold
 
     ParticleFilter(int initialSize, StateSampler randomStateProvider, std::shared_ptr<ParticleSamplerFactory<DIM>> psf)
     : d_particles(std::make_shared<std::vector<Particle>>(initialSize)),
-      d_particleSamplerFactory(psf)
+      d_particleSamplerFactory(psf),
+      d_randomStateProvider(randomStateProvider)
     {
-      randomise(randomStateProvider);
+      randomise();
     }
 
-    void randomise(std::function<State()> randomStateProvider)
+    void randomise()
     {
       std::generate(d_particles->begin(), d_particles->end(),
         [&]()
         {
-          return Particle(randomStateProvider(), 0);
+          return Particle(d_randomStateProvider(), 0);
         });
     }
 
@@ -46,11 +47,14 @@ namespace bold
 
     void update(std::function<double(State const&)> observationModel) override
     {
+      // Calculate the probability of each particle given the observation data
       for (auto& particle : *d_particles)
       {
+        // Assign weight
         particle.second = observationModel(particle.first);
       }
 
+      // Build the next generation
       ParticleSampler drawSample = d_particleSamplerFactory->create(d_particles);
       auto newParticles = std::make_shared<std::vector<Particle>>(d_particles->size());
       std::generate(newParticles->begin(), newParticles->end(), drawSample);
@@ -67,6 +71,7 @@ namespace bold
     std::shared_ptr<std::vector<Particle> const> getParticles() const { return d_particles; }
 
   private:
+    StateSampler d_randomStateProvider;
     std::shared_ptr<std::vector<Particle>> d_particles;
     std::shared_ptr<ParticleSamplerFactory<DIM>> d_particleSamplerFactory;
   };

@@ -11,6 +11,7 @@ namespace bold
   template<int DIM>
   class ParticleFilter;
   class FieldMap;
+  class Control;
 
   class Localiser
   {
@@ -20,6 +21,8 @@ namespace bold
     void predict(Eigen::Affine3d motion);
 
     void update();
+
+    std::vector<Control> getControls() const { return d_controls; }
 
     AgentPosition position() const { return d_pos; }
 
@@ -32,6 +35,7 @@ namespace bold
     std::function<double()> d_fieldXRng;
     std::function<double()> d_fieldYRng;
     std::function<double()> d_thetaRng;
+    std::vector<Control> d_controls;
   };
 }
 
