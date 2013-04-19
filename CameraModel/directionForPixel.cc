@@ -2,15 +2,11 @@
 
 Vector3d CameraModel::directionForPixel(Vector2i const& pixel) const
 {
-  auto extremity = Vector3d(tan(rangeHorizontalRads()/2.0), 1, tan(rangeVerticalRads()/2.0));
+  Vector3d p;
+  p << (pixel -Vector2i(d_imageWidth / 2, d_imageHeight / 2)).cast<double>(), 1;
 
-  extremity.normalize();
-
-  double xRatio = -((pixel.x() / (double)((d_imageWidth-1)/2.0)) - 1);
-  double zRatio = (pixel.y() / (double)((d_imageHeight-1)/2.0)) - 1;
-
-  extremity.x() *= xRatio;
-  extremity.z() *= zRatio;
-
-  return extremity.normalized();
+  auto ptInv = getProjectionTransform().inverse();
+  cout << ptInv.matrix() << endl;
+  Vector3d dir(getProjectionTransform().inverse() * p);
+  return dir.normalized();
 }

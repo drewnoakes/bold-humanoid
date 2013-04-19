@@ -77,16 +77,14 @@ namespace bold
 
     
     /** Gets a projector to convert from 3D camera space (camera at 0,0,0
-     * looking down +ve z) to 2D screen space (with camera in centre of image.)
+     * looking down +ve y) to 2D screen space (with camera in centre of image.)
      */
     Projector getProjector() const
     {
       auto mat = getProjectionTransform();
-      double projectionPlaneWidth = atan(rangeHorizontalRads() / 2) * d_focalLength * 2;
-      double pixelWidth = projectionPlaneWidth / d_imageWidth;
-      return [mat,pixelWidth](Eigen::Vector3d const& in) -> Eigen::Vector2i {
+      return [mat](Eigen::Vector3d const& in) -> Eigen::Vector2i {
         auto m = (mat * in);
-        return ((m / m.z()).head<2>() / pixelWidth).cast<int>();
+        return (m / m.z()).head<2>().cast<int>();
       };
     }
 
