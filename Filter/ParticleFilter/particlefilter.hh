@@ -1,6 +1,8 @@
 #ifndef BOLD_PARTICLEFILTER_HH
 #define BOLD_PARTICLEFILTER_HH
 
+#include <cassert>
+
 #include "../filter.hh"
 #include "../ParticleSamplerFactory/particlesamplerfactory.hh"
 
@@ -17,11 +19,12 @@ namespace bold
     typedef std::function<State()> StateSampler;
     typedef std::function<Particle()> ParticleSampler;
 
-    ParticleFilter(unsigned initialSize, StateSampler randomStateProvider, std::shared_ptr<ParticleSamplerFactory<DIM>> psf)
-    : d_particles(std::make_shared<std::vector<Particle>>(initialSize)),
-      d_particleSamplerFactory(psf),
+    ParticleFilter(unsigned initialSize, double initialRandomizeRatio, StateSampler randomStateProvider, std::shared_ptr<ParticleSamplerFactory<DIM>> psf)
+    : d_particleCount(initialSize),
+      d_randomizeRatio(initialRandomizeRatio),
       d_randomStateProvider(randomStateProvider),
-      d_particleCount(initialSize)
+      d_particles(std::make_shared<std::vector<Particle>>(initialSize)),
+      d_particleSamplerFactory(psf)
     {
       randomise();
     }
@@ -57,8 +60,26 @@ namespace bold
 
       // Build the next generation
       ParticleSampler drawSample = d_particleSamplerFactory->create(d_particles);
-      auto newParticles = std::make_shared<std::vector<Particle>>(d_particleCount);
-      std::generate(newParticles->begin(), newParticles->end(), drawSample);
+      auto newParticles = std::make_shared<std::vector<Particle>>();
+      unsigned randomizeCount = d_particleCount * d_randomizeRatio;
+      unsigned drawCount = d_particleCount - randomizeCount;
+
+      assert(randomizeCount + drawCount == d_particleCount);
+
+      for (int i = 0; i < randomizeCount; i++)
+      {
+        Particle p(d_randomStateProvider(), 0);
+        newParticles->push_back(p);
+      }
+
+      for (int i = 0; i < drawCount; i++)
+      {
+        newParticles->push_back(drawSample());
+      }
+
+      assert(newParticles->size() == d_particleCount);
+
+//       std::generate(newParticles->begin(), newParticles->end(), drawSample);
 
       d_particles = newParticles;
     }
@@ -72,9 +93,11 @@ namespace bold
     std::shared_ptr<std::vector<Particle> const> getParticles() const { return d_particles; }
 
     void setParticleCount(int particleCount) { d_particleCount = particleCount; }
+    void setRandomizeRatio(double ratio) { d_randomizeRatio = ratio; }
 
   private:
     unsigned d_particleCount;
+    double d_randomizeRatio;
     StateSampler d_randomStateProvider;
     std::shared_ptr<std::vector<Particle>> d_particles;
     std::shared_ptr<ParticleSamplerFactory<DIM>> d_particleSamplerFactory;

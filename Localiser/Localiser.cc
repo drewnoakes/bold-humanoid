@@ -24,8 +24,9 @@ Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap)
     return ParticleFilter<3>::State(d_fieldXRng(), d_fieldYRng(), d_thetaRng());
   };
 
-  int initialCount = 200;
-  d_filter = std::make_shared<ParticleFilter<3>>(initialCount, randomState, samplerFactory);
+  unsigned initialCount = 200;
+  double initialRandomizeRatio = 0.1;
+  d_filter = std::make_shared<ParticleFilter<3>>(initialCount, initialRandomizeRatio, randomState, samplerFactory);
 
   //
   // Set up controls
@@ -34,9 +35,14 @@ Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap)
   d_controls.push_back(Control::createAction("Randomize", [this](){ d_filter->randomise(); }));
 
   auto particleCountControl = Control::createInt("Particle Count", initialCount, [this](int value){ d_filter->setParticleCount(value); });
-  particleCountControl.setDefaultValue(200);
+  particleCountControl.setDefaultValue(initialCount);
   particleCountControl.setLimitValues(1, 2000);
   d_controls.push_back(particleCountControl);
+
+  auto randomizeRatioControl = Control::createInt("Randomize Ratio", int(initialRandomizeRatio * 100), [this](int value){ d_filter->setRandomizeRatio(value/100.0); });
+  randomizeRatioControl.setDefaultValue(int(initialRandomizeRatio * 100));
+  randomizeRatioControl.setLimitValues(0, 100);
+  d_controls.push_back(randomizeRatioControl);
 
   //
   updateStateObject();

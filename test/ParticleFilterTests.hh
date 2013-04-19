@@ -49,11 +49,11 @@ TEST (ParticleFilterTests, basicOperation)
   EXPECT_EQ ( 0, samplingFactory->createCount );
   EXPECT_EQ ( 0, samplingFactory->sampleCount );
 
-  int count = 10;
-  unsigned i = 0;
-  ParticleFilter<2> filter(count, [&](){ i++; return Vector2d(i, i); }, samplingFactory);
+  int particleCount = 10;
+  int i = 0;
+  ParticleFilter<2> filter(particleCount, 0, [&](){ i++; return Vector2d(i, i); }, samplingFactory);
 
-  EXPECT_EQ(count, i);
+  EXPECT_EQ(particleCount, i);
 
   i = 1;
   shared_ptr<vector<Filter<2>::Particle> const> particles = filter.getParticles();
@@ -64,12 +64,12 @@ TEST (ParticleFilterTests, basicOperation)
     i++;
   }
 
-  EXPECT_EQ ( i, count + 1 );
+  EXPECT_EQ ( i, particleCount + 1 );
 
   int predictCallCount = 0;
   filter.predict([&](Vector2d const& state) { predictCallCount++; return Vector2d(state.x() + 1, state.y() + 1); });
 
-  EXPECT_EQ(count, predictCallCount);
+  EXPECT_EQ(particleCount, predictCallCount);
 
   i = 1;
   for (auto const& p : *(filter.getParticles()))
@@ -78,7 +78,7 @@ TEST (ParticleFilterTests, basicOperation)
     i++;
   }
 
-  EXPECT_EQ ( i, count + 1 );
+  EXPECT_EQ ( i, particleCount + 1 );
 
   // Set weights as [1,2,3,...]
   // The sampling function will return them in reverse order
@@ -86,9 +86,9 @@ TEST (ParticleFilterTests, basicOperation)
   filter.update([&i](Vector2d const& state) { i++; return i; });
 
   EXPECT_EQ ( 1, samplingFactory->createCount );
-  EXPECT_EQ ( count, samplingFactory->sampleCount );
+  EXPECT_EQ ( particleCount, samplingFactory->sampleCount );
 
-  i = count;
+  i = particleCount;
   for (auto const& p : *(filter.getParticles()))
   {
     EXPECT_EQ( double(i), p.second );
