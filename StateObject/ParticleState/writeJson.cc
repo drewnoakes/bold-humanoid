@@ -11,9 +11,10 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.StartArray();
 
-      writer.Double(particle.first.x());
-      writer.Double(particle.first.y());
-      writer.Double(particle.first.z());
+      writer.Double(particle.first.x()); // x
+      writer.Double(particle.first.y()); // y
+      writer.Double(particle.first.z()); // theta
+      writer.Double(particle.second); // weight
 
       writer.EndArray();
     }
