@@ -76,7 +76,6 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   // Draw expected lines
   if (streamer->shouldDrawExpectedLines())
   {
-    vector<LineSegment2d> fieldLines = d_fieldMap->getFieldLines();
     Projector projector = d_cameraModel->getProjector();
 
     Affine3d const& worldToAgent = AgentState::get<WorldFrameState>()->getPosition().worldToAgentTransform();
@@ -84,7 +83,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
 
     Affine3d const& worldToCamera = agentToCamera * worldToAgent;
 
-    for (LineSegment2d const& line : fieldLines)
+    for (LineSegment2d const& line : d_fieldMap->getFieldLines())
     {
       LineSegment3d line3d = line.to<3>();
 
