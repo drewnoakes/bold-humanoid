@@ -11,7 +11,6 @@ using namespace std;
 
 void Spatialiser::updateAgentToWorld(AgentPosition position)
 {
-  auto body = AgentState::get<BodyState>();
   auto agentFrame = AgentState::get<AgentFrameState>();
 
   auto const& ballAgent = agentFrame->getBallObservation();
