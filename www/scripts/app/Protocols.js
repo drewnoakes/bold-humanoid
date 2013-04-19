@@ -33,6 +33,7 @@ define(
                 'Game',
                 'Hardware',
                 'OptionTree',
+                'Particle',
                 'WorldFrame'
             ]
         };

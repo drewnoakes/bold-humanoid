@@ -24,6 +24,7 @@
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
+#include "../StateObject/ParticleState/particlestate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
 #include "../VisualCortex/visualcortex.hh"
 

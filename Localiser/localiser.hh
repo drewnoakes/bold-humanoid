@@ -40,10 +40,6 @@ namespace bold
 
       d_filter = std::make_shared<ParticleFilter<3>>(200, randomState, samplerFactory);
 
-      // TODO utilise this calculation at appropriate points
-      double torsoHeight = AgentState::getInstance().get<BodyState>()->getTorsoHeight();
-      d_pos = d_pos.withZ(torsoHeight);
-
       updateState();
     }
 
@@ -55,6 +51,10 @@ namespace bold
     void update()
     {
       // TODO implement
+      auto extracted = d_filter->extract();
+      // TODO utilise this calculation at appropriate points
+      double torsoHeight = AgentState::getInstance().get<BodyState>()->getTorsoHeight();
+      d_pos = d_pos.withZ(torsoHeight);
     }
 
     AgentPosition position() const { return d_pos; }
