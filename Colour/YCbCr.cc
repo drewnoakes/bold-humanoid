@@ -29,14 +29,28 @@ bool Colour::YCbCr::isValid() const
 Colour::bgr Colour::YCbCr::toBgrInt() const
 {
 //assert(isValid());
+//{ 33292, -6472, -9519, 18678 }
+  // YUV coefficients
+  /*
+  int c0 = 33292;
+  int c1 = -6472;
+  int c2 = -9519;
+  int c3 = 18678;
+  */
 
-  int y = this->y - 16;
+  // YCrCb coefficients
+  int c0 = 22987;
+  int c1 = -11698;
+  int c2 = -5636;
+  int c3 = 29049;
+  
+  int y = this->y;
   int cb = this->cb - 128;
   int cr = this->cr - 128;
 
-  int r = (298 * y + 409 * cr + 128) >> 8;
-  int g = (298 * y - 100 * cb - 208 * cr) >> 8;
-  int b = (298 * y + 516 * cb + 128) >> 8;
+  int b = y + (((c3 * cb) + (1 << 13)) >> 14);
+  int g = y + (((c2 * cb + c1 * cr) + (1 << 13)) >> 14);
+  int r = y + (((c0 * cr) + (1 << 13)) >> 14);
 
   if (r < 0)
     r = 0;
