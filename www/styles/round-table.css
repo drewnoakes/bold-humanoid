@@ -109,6 +109,7 @@ div.module > div.pane-header > div.pane-header-links
 div.module > div.pane-header > div.pane-header-links > a
 {
     text-decoration: none;
+    margin-left: 12px;
 }
 
 div.module > div.pane-header > div.pane-header-links > a:hover
