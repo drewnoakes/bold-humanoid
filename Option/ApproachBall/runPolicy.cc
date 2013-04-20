@@ -2,7 +2,7 @@
 
 OptionList ApproachBall::runPolicy()
 {
-  auto agentFrameState = AgentState::getInstance().get<AgentFrameState>();
+  auto agentFrameState = AgentState::get<AgentFrameState>();
 
   auto ballPos = agentFrameState->getBallObservation();
   if (!ballPos)

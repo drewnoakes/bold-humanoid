@@ -16,11 +16,10 @@ namespace bold
     OptionList getRanOptions() const { return d_ranOptions; };
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+
   private:
     OptionList d_ranOptions;
-    
   };
-
 }
 
 #endif

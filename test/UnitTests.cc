@@ -28,14 +28,17 @@ bool operator==(Vector2i const& a, Vector2i const& b)
   return a.x() == b.x() && a.y() == b.y();
 }
 
+#include "AgentPositionTests.hh"
 #include "BodyStateTests.hh"
 #include "BlobTests.hh"
 #include "Bounds2iTests.hh"
 #include "CameraModelTests.hh"
 #include "ColourTests.hh"
 #include "DistributionTrackerTests.hh"
+#include "LazyTests.hh"
 #include "LineSegmentTests.hh"
 #include "MathTests.hh"
+#include "ParticleFilterTests.hh"
 #include "RunTests.hh"
 #include "SpatialiserTest.hh"
 

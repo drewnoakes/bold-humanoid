@@ -8,8 +8,6 @@ define(
     {
         'use strict';
 
-        //noinspection UnnecessaryLocalVariableJS
-
         var Protocols = {
             camera: 'camera-protocol',
             timing: 'timing-protocol',
@@ -22,20 +20,22 @@ define(
             gameState: 'Game',
             hardwareState: 'Hardware',
             optionTreeState: 'OptionTree',
-            worldFrameState: 'WorldFrame',
-
-            // TODO populate this from the server somehow, but must only list those using JSON encoding
-            allStates: [
-                'AgentFrame',
-                'Alarm',
-                'CameraFrame',
-                'Body',
-                'Game',
-                'Hardware',
-                'OptionTree',
-                'WorldFrame'
-            ]
+            particleState: 'Particle',
+            worldFrameState: 'WorldFrame'
         };
+
+        // TODO populate this from the server somehow, but must only list those using JSON encoding
+        Protocols.allStates = [
+            Protocols.agentFrameState,
+            Protocols.alarmState,
+            Protocols.cameraFrameState,
+            Protocols.bodyState,
+            Protocols.gameState,
+            Protocols.hardwareState,
+            Protocols.optionTreeState,
+            Protocols.particleState,
+            Protocols.worldFrameState
+        ];
 
         return Protocols;
     }

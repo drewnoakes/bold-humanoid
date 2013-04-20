@@ -10,6 +10,7 @@
 #include "../stateobject.hh"
 #include "../../BodyPart/bodypart.hh"
 #include "../../robotis/Framework/include/JointData.h"
+#include "../../util/Lazy.hh"
 
 namespace bold
 {
@@ -23,6 +24,15 @@ namespace bold
     {
       initBody(angles);
       updatePosture();
+      d_torsoHeight = Lazy<double>([this]()
+      {
+        return std::make_shared<double>(
+          std::max(
+            this->getLimb("lFoot")->transform.inverse().translation().z(),
+            this->getLimb("rFoot")->transform.inverse().translation().z()
+          )
+        );
+      });
     };
 
     void updatePosture();
@@ -63,9 +73,15 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
+    double getTorsoHeight() const
+    {
+      return *d_torsoHeight.value();
+    }
+
   private:
     void initBody(double angles[]);
 
+    Lazy<double> d_torsoHeight;
     std::shared_ptr<Limb> d_torso;
     std::map<int, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;

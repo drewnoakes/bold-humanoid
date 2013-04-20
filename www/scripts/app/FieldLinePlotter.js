@@ -24,23 +24,6 @@ define(
             {
                 context.restore();
             },
-            drawLineSegments: function (context, options, lineSegments, lineWidth, strokeStyle)
-            {
-                var scale = options.scale || 1;
-
-                context.lineWidth = lineWidth || 1;
-                context.strokeStyle = strokeStyle || '#00ff00';
-
-                context.beginPath();
-                _.each(lineSegments, function (lineSegment)
-                {
-                    var p1 = lineSegment.p1,
-                        p2 = lineSegment.p2;
-                    context.moveTo(p1.x * scale, p1.y * scale);
-                    context.lineTo(p2.x * scale, p2.y * scale);
-                });
-                context.stroke();
-            },
             drawFieldLines: function (context, options)
             {
                 var scale = options.scale || 1;
@@ -137,17 +120,48 @@ define(
 
                 context.stroke();
             },
+            drawLineSegments: function (context, options, lineSegments, lineWidth, strokeStyle)
+            {
+                var scale = options.scale || 1;
+
+                context.lineWidth = lineWidth || 1;
+                context.strokeStyle = strokeStyle || '#00ff00';
+
+                context.beginPath();
+                _.each(lineSegments, function (lineSegment)
+                {
+                    var p1 = lineSegment.p1,
+                        p2 = lineSegment.p2;
+                    context.moveTo(p1.x * scale, -p1.y * scale);
+                    context.lineTo(p2.x * scale, -p2.y * scale);
+                });
+                context.stroke();
+            },
             drawBall: function(context, options, position)
             {
                 var scale = options.scale || 1;
 
-                // TODO actually the position of these circles is WRONG! as is many of the lines -- the insides should be used, considering line width
-
                 context.fillStyle = options.ballFillStyle || 'orange';
 
                 context.beginPath();
-                context.arc(position.x, position.y, scale * Constants.ballRadius, 0, Math.PI*2, true);
+                context.arc(position[0] * scale, -position[1] * scale, Constants.ballRadius * scale, 0, Math.PI*2, true);
                 context.fill();
+            },
+            drawParticles: function(context, options, particles)
+            {
+                var scale = options.scale || 1,
+                    size = options.particleSize || 1;
+
+                context.fillStyle = options.particleStyle || 'cyan';
+
+
+                context.beginPath();
+                _.each(particles, function (particle)
+                {
+                    var x = Math.round(particle[0] * scale - size/2),
+                        y = Math.round(particle[1] * scale - size/2);
+                    context.fillRect(x, y, size, size);
+                });
             }
         };
 

@@ -29,6 +29,7 @@ namespace bold
       d_rangeVerticalDegs = ini.getd("Camera", "RangeVerticalDegrees", 46.0);
       d_rangeHorizontalDegs = ini.getd("Camera", "RangeHorizontalDegrees", 58.0);
       // TODO have seen both 58.0 and 60.0 as default horizontal range values
+      // 60 seems like a more likely choice, as 240/320 === 46/60
     }
 
     unsigned imageWidth() const { return d_imageWidth; }

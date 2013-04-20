@@ -105,9 +105,15 @@ void Agent::think()
   t = debugger.timeEvent(t, "Camera to Agent Frame");
 
   //
+  // Update the localiser
+  //
+  d_localiser->update();
+  t = debugger.timeEvent(t, "Update Localiser");
+
+  //
   // Populate world frame from agent frame
   //
-  d_spatialiser->updateAgentToWorld();
+  d_spatialiser->updateAgentToWorld(d_localiser->position());
   t = debugger.timeEvent(t, "Agent to World Frame");
 
   //

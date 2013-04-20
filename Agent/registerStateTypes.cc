@@ -11,5 +11,6 @@ void Agent::registerStateTypes()
   AgentState::getInstance().registerStateType<GameState>("Game");
   AgentState::getInstance().registerStateType<HardwareState>("Hardware");
   AgentState::getInstance().registerStateType<OptionTreeState>("OptionTree");
+  AgentState::getInstance().registerStateType<ParticleState>("Particle");
   AgentState::getInstance().registerStateType<WorldFrameState>("WorldFrame");
 }

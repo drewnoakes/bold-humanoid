@@ -105,6 +105,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./AgentPosition/worldToAgentTransform.cc
+  ./AgentPosition/agentToWorldTransform.cc
+)
+
+add_class(BOLDHUMANOID
   ./Camera/Camera.cc
   ./Camera/capture.cc
   ./Camera/getControlValue.cc
@@ -204,11 +209,21 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Localiser/Localiser.cc
+  ./Localiser/update.cc
+  ./Localiser/predict.cc
+  ./Localiser/updateStateObject.cc
+)
+
+add_class(BOLDHUMANOID
   ./LUTBuilder/buildLookUpTable.cc
 )
 
 add_class(BOLDHUMANOID
-  ./Math/math.cc
+  ./Math/findPerpendicularVector.cc
+  ./Math/intersectRayWithGroundPlane.cc
+  ./Math/intersectRayWithPlane.cc
+  ./Math/linePointClosestToPoint.cc
 )
 
 add_class(BOLDHUMANOID
@@ -291,6 +306,11 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/OptionTreeState/writeJson.cc
+)
+
+
+add_class(BOLDHUMANOID
+  ./StateObject/ParticleState/writeJson.cc
 )
 
 add_class(BOLDHUMANOID

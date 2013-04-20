@@ -21,7 +21,6 @@ define(
             this.cameraDistance = 0.55;
             this.cameraTheta = -5.22;
             this.cameraPhi = 0.34;
-            this.lookAtZ = 0.24;
             this.torsoHeight = 0.341;
 
             this.$element = $('<div></div>');
@@ -63,11 +62,13 @@ define(
             this.bodyRoot = this.buildBody(Constants.bodyStructure, function()
             {
                 this.bodyRoot.position.z = this.torsoHeight;
-                this.bodyRoot.rotation.y = Math.PI/2;
-                this.bodyRoot.rotation.z = Math.PI/2;
+                this.bodyRoot.rotation.z = -Math.PI/2;
+                //this.bodyRoot.add(new THREE.AxisHelper(0.2)); // [R,G,B] === (x,y,z)
                 this.scene.add(this.bodyRoot);
                 this.render();
             }.bind(this));
+
+            this.positionBodySpotlight(this.bodyRoot);
 
             this.bodyStateSubscription  = DataProxy.subscribe(Protocols.bodyState,       { json: true, onmessage: _.bind(this.onBodyStateData, this) });
             this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
@@ -113,8 +114,13 @@ define(
 
         World3dModule.prototype.onWorldFrameData = function(data)
         {
-            if (data.ball && data.ball instanceof Array && data.ball.length === 3)
-            {
+            if (data.pos && data.pos instanceof Array && data.pos.length === 4) {
+                this.bodyRoot.position = new THREE.Vector3(data.pos[0], data.pos[1], data.pos[2]);
+                this.bodyRoot.rotation.z = data.pos[3];
+                this.positionBodySpotlight(this.bodyRoot);
+            }
+
+            if (data.ball && data.ball instanceof Array && data.ball.length === 3) {
                 this.ballMesh.position = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]);
             }
 
@@ -129,11 +135,13 @@ define(
                 _.each(data.lines, function (line)
                 {
                     var lineGeometry = new THREE.Geometry();
-                    lineGeometry.vertices.push(new THREE.Vector3(line[0], line[1], line[2]));
-                    lineGeometry.vertices.push(new THREE.Vector3(line[3], line[4], line[5]));
+                    lineGeometry.vertices.push(new THREE.Vector3(line[0], line[1], /*line[2]*/0));
+                    lineGeometry.vertices.push(new THREE.Vector3(line[3], line[4], /*line[5]*/0));
                     this.lineObject.add(new THREE.Line(lineGeometry, this.fieldLineMaterial));
                 }.bind(this));
             }
+
+            this.render();
         };
 
         World3dModule.prototype.onHardwareData = function(data)
@@ -171,10 +179,13 @@ define(
         {
             var leftZ = this.objectByName['foot-left'].matrixWorld.getPosition().z;
             var rightZ = this.objectByName['foot-right'].matrixWorld.getPosition().z;
-            this.torsoHeight -= Math.min(leftZ, rightZ) - Constants.footHeight;
-            this.bodyRoot.position.z = this.torsoHeight;
-            this.updateCameraPosition();
-            this.render();
+            var error = Math.min(leftZ, rightZ) - Constants.footHeight;
+            if (Math.abs(error) > 0.01) {
+                this.torsoHeight -= error;
+                this.bodyRoot.position.z = this.torsoHeight;
+                //this.updateCameraPosition();
+                this.render();
+            }
         };
 
         World3dModule.prototype.setHingeAngle = function(hinge, angle)
@@ -368,33 +379,35 @@ define(
             this.ballMesh.position.set(x, y, Constants.ballRadius);
         };
 
+        World3dModule.prototype.positionBodySpotlight = function(body)
+        {
+            var dist = 4,
+                unit = Math.sqrt(dist*dist / 3);
+
+            if (!body.spotlight)
+            {
+                var light = new THREE.DirectionalLight(0xffffff),
+                    shadowBoxSize = 0.4;
+                light.castShadow = true;
+                light.shadowDarkness = 0.3;
+                //light.shadowCameraVisible = true; // useful for debugging
+                light.shadowCameraNear = 2;
+                light.shadowCameraFar = 6;
+                light.shadowCameraLeft = -shadowBoxSize;
+                light.shadowCameraRight = shadowBoxSize;
+                light.shadowCameraTop = shadowBoxSize;
+                light.shadowCameraBottom = -shadowBoxSize;
+                this.scene.add(light);
+                body.spotlight = light;
+            }
+
+            body.spotlight.position.set(body.position.x + unit, body.position.y + unit, body.position.z + unit);
+            body.spotlight.target.position = body.position; //.set(0, 0, 0);
+        };
+
         World3dModule.prototype.buildBody = function(body, loadedCallback)
         {
             var geometriesToLoad = 0;
-
-            var callbackForBodyPart = {
-                torso: function(object) {
-                    //
-                    // Player spotlight
-                    //
-                    var light = new THREE.DirectionalLight(0xffffff),
-                        dist = 4,
-                        unit = Math.sqrt(dist*dist / 3),
-                        shadowBoxSize = 0.4;
-                    light.position.set(unit, unit, unit);
-                    light.target.position.set(0, 0, 0);
-                    light.castShadow = true;
-                    light.shadowDarkness = 0.3;
-                    //light.shadowCameraVisible = true; // useful for debugging
-                    light.shadowCameraNear = 2;
-                    light.shadowCameraFar = 6;
-                    light.shadowCameraLeft = -shadowBoxSize;
-                    light.shadowCameraRight = shadowBoxSize;
-                    light.shadowCameraTop = shadowBoxSize;
-                    light.shadowCameraBottom = -shadowBoxSize;
-                    object.add(light);
-                }
-            };
 
             var processNode = function(node, parentObject)
             {
@@ -410,14 +423,13 @@ define(
                         var object = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
                         object.castShadow = true;
                         object.receiveShadow  = false;
+                        // rotate to account for the different axes used in the json files
+                        object.rotation.x = Math.PI/2;
+                        object.rotation.y = Math.PI;
                         parentObject.add(object);
 
                         if (node.name) {
                             this.objectByName[node.name] = object;
-                        }
-
-                        if (callbackForBodyPart[node.name]) {
-                            callbackForBodyPart[node.name](object);
                         }
 
                         geometriesToLoad--;
@@ -434,6 +446,7 @@ define(
                     if (childNode.offset) {
                         childHinge.position.x = childNode.offset.x || 0;
                         childHinge.position.y = childNode.offset.y || 0;
+                        childHinge.position.z = childNode.offset.z || 0;
                     }
                     childHinge.rotationAxis = childNode.rotationAxis;
                     childHinge.rotationOrigin = childNode.rotationOrigin;
@@ -485,10 +498,10 @@ define(
         {
             if (this.useThirdPerson) {
                 // Third person -- position camera outside player
-                var torsoPosition = new THREE.Vector3(0, 0, this.lookAtZ);
+                var torsoPosition = this.bodyRoot ? this.bodyRoot.position : new THREE.Vector3(0, 0, 0);
                 this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
-                this.camera.position.z = this.cameraDistance * Math.sin(this.cameraPhi);
                 this.camera.position.y = -this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
+                this.camera.position.z = this.cameraDistance * Math.sin(this.cameraPhi);
                 this.camera.position.add(torsoPosition);
                 this.camera.up.set(0, 0, 1);
                 this.camera.lookAt(torsoPosition);

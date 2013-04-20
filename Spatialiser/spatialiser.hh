@@ -5,6 +5,7 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include "../AgentPosition/agentposition.hh"
 #include "../CameraModel/cameramodel.hh"
 #include "../util/Maybe.hh"
 
@@ -28,7 +29,7 @@ namespace bold
 
     void updateCameraToAgent();
 
-    void updateAgentToWorld();
+    void updateAgentToWorld(AgentPosition position);
 
   private:
     std::shared_ptr<CameraModel> d_cameraModel;

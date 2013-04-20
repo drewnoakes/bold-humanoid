@@ -11,8 +11,8 @@ using namespace std;
 
 void Spatialiser::updateCameraToAgent()
 {
-  auto body = AgentState::getInstance().get<BodyState>();
-  auto cameraFrame = AgentState::getInstance().get<CameraFrameState>();
+  auto body = AgentState::get<BodyState>();
+  auto cameraFrame = AgentState::get<CameraFrameState>();
 
   /*
   auto neck = body->getLimb("neck");
@@ -41,10 +41,7 @@ void Spatialiser::updateCameraToAgent()
   // Multiplying with this transform brings coordinates from camera space in torso space
   auto cameraTransform = body->getLimb("camera")->transform;
 
-  double torsoHeight = max(
-    body->getLimb("lFoot")->transform.inverse().translation().z(),
-    body->getLimb("rFoot")->transform.inverse().translation().z()
-  );
+  double torsoHeight = body->getTorsoHeight();
 
   auto const& ballObs = cameraFrame->getBallObservation();
 

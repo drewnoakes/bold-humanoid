@@ -43,12 +43,13 @@ int DataStreamer::callback_state(
         }
         else
         {
-          cout << "No state object for: " << stateTracker->name() << endl;
+          cout << "[DataStreamer::callbackState] No StateObject set for: " << stateTracker->name() << endl;
         }
 
         return 0;
       }
     }
+    cout << "[DataStreamer::callbackState] No StateTracker registered for: " << protocol->name << endl;
     return 0;
   }
   default:

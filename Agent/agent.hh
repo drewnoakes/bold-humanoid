@@ -27,6 +27,7 @@ namespace bold
   class Debugger;
   class FieldMap;
   class GameStateReceiver;
+  class Localiser;
   class OptionTree;
   class Spatialiser;
   class VisualCortex;
@@ -79,6 +80,7 @@ namespace bold
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Joystick> d_joystick;
     std::shared_ptr<Spatialiser> d_spatialiser;
+    std::shared_ptr<Localiser> d_localiser;
     std::shared_ptr<VisualCortex> d_visualCortex;
     std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
 

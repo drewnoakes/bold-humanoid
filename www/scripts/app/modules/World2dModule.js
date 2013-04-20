@@ -74,18 +74,16 @@ define(
 
         World2dModule.prototype.load = function()
         {
-            this.worldFrameSubscription = DataProxy.subscribe(
-                Protocols.worldFrameState,
-                {
-                    json: true,
-                    onmessage: _.bind(this.onWorldFrameData, this)
-                }
-            );
+            this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
+
+            // TODO only subscribe if use checks a box
+            this.particleSubscription   = DataProxy.subscribe(Protocols.particleState,   { json: true, onmessage: _.bind(this.onParticleData, this) });
         };
 
         World2dModule.prototype.unload = function()
         {
             this.worldFrameSubscription.close();
+            this.particleSubscription.close();
         };
 
         World2dModule.prototype.onWorldFrameData = function(data)
@@ -100,7 +98,13 @@ define(
                 this.lineSegments.push({ p1: p1, p2: p2 });
             }.bind(this));
 
-            this.draw();
+            this.draw(); // TODO only draw worldFrameData, on its own canvas
+        };
+
+        World2dModule.prototype.onParticleData = function(data)
+        {
+            this.particles = data;
+            this.draw(); // TODO only draw particles, on their own canvas
         };
 
         World2dModule.prototype.onResized = function(width, height)
@@ -124,17 +128,25 @@ define(
                     goalStrokeStyle: 'yellow',
                     groundFillStyle: '#008800',
                     lineStrokeStyle: '#ffffff',
+                    particleStyle: 'cyan',
+                    particleSize: 3,
                     fieldCenter: { x: this.fieldCenterX, y: this.fieldCenterY }
                 },
                 context = this.canvas.getContext('2d');
 
             FieldLinePlotter.start(context, options);
-            if (this.lineSegments && this.lineSegments.length)
-                FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
-            if (this.ballPosition)
-                FieldLinePlotter.drawBall(context, options, this.ballPosition);
             FieldLinePlotter.drawFieldLines(context, options);
             FieldLinePlotter.drawGoals(context, options);
+
+            if (this.lineSegments && this.lineSegments.length)
+                FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
+
+            if (this.ballPosition)
+                FieldLinePlotter.drawBall(context, options, this.ballPosition);
+
+            if (this.particles)
+                FieldLinePlotter.drawParticles(context, options, this.particles);
+
             FieldLinePlotter.end(context);
         };
 

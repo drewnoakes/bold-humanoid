@@ -32,6 +32,8 @@ Agent::Agent(string const& U2D_dev,
 
   d_debugger = make_shared<Debugger>();
 
+  d_localiser = make_shared<Localiser>(d_fieldMap);
+
   d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_debugger, ini);
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(ini);
@@ -56,12 +58,13 @@ Agent::Agent(string const& U2D_dev,
   // TODO only stream if argument specified?
   d_streamer = make_shared<DataStreamer>(ini, d_camera, d_debugger);
 
+  // TODO a better abstraction over control providers
   d_streamer->registerControls("camera", d_camera->getControls());
+  d_streamer->registerControls("localiser", d_localiser->getControls());
   for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
 
   d_debugger->update(d_CM730);
-
 
   d_haveBody = initMotionManager(ini);
 
@@ -69,4 +72,3 @@ Agent::Agent(string const& U2D_dev,
 
   cout << "[Agent::Agent] Done" << endl;
 }
-

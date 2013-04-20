@@ -41,7 +41,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw observed lines
-  auto const& observedLineSegments = AgentState::getInstance().get<CameraFrameState>()->getObservedLineSegments();
+  auto const& observedLineSegments = AgentState::get<CameraFrameState>()->getObservedLineSegments();
   if (streamer->shouldDrawObservedLines() && observedLineSegments.size() > 0)
   {
     for (LineSegment2i const& line : observedLineSegments)
@@ -76,21 +76,14 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   // Draw expected lines
   if (streamer->shouldDrawExpectedLines())
   {
-    vector<LineSegment2d> fieldLines = d_fieldMap->getFieldLines();
     Projector projector = d_cameraModel->getProjector();
 
-//     double torsoX = 1.0;
-//     double torsoY = -1.0;
-//     double torsoTheta = 0;
+    Affine3d const& worldToAgent = AgentState::get<WorldFrameState>()->getPosition().worldToAgentTransform();
+    Affine3d const& agentToCamera = AgentState::get<BodyState>()->getLimb("camera")->transform.inverse();
 
-    // TODO calculate correct camera position, using neck angles, agent height, camera position within head
-//     double cameraHeight = 0.45;
+    Affine3d const& worldToCamera = agentToCamera * worldToAgent;
 
-    Affine3d worldToCamera(Translation3d(0,0,10)); // * AngleAxisf(a,axis) * Scaling(s);
-//     Affine3d worldToCamera(AngleAxisd(M_PI/2, Vector3d::UnitY));
-//     worldToCamera.rotate();
-
-    for (LineSegment2d const& line : fieldLines)
+    for (LineSegment2d const& line : d_fieldMap->getFieldLines())
     {
       LineSegment3d line3d = line.to<3>();
 

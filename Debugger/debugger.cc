@@ -51,7 +51,7 @@ void Debugger::addEventTiming(EventTiming const& eventTiming)
 
 void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
 {
-  auto const& cameraFrame = AgentState::getInstance().get<CameraFrameState>();
+  auto const& cameraFrame = AgentState::get<CameraFrameState>();
 
   if (!cameraFrame)
     return;

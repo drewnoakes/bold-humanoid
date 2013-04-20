@@ -29,7 +29,7 @@ void Agent::preKickLook()
 
     if (dt >= 0.5)
     {
-      auto const& cameraFrame = AgentState::getInstance().get<CameraFrameState>();
+      auto const& cameraFrame = AgentState::get<CameraFrameState>();
 
       if (!cameraFrame->isBallVisible())
       {
