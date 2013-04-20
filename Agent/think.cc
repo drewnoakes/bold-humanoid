@@ -60,61 +60,64 @@ void Agent::think()
     t = debugger.timeEvent(t, "Integrate Game Control");
   }
 
-  if (d_useOptionTree)
+  if (d_haveBody)
   {
-    d_optionTree->run();
-    t = debugger.timeEvent(t, "Option Tree");
-  }
+    if (d_useOptionTree)
+    {
+      d_optionTree->run();
+      t = debugger.timeEvent(t, "Option Tree");
+    }
 
-  //
-  // Process input commands
-  //
+    //
+    // Process input commands
+    //
 //processInputCommands();
 //t = d_debugger.timeEvent(t, "Process Human Input");
 
-  //
-  // Get up, if we've fallen over
-  //
-  standUpIfFallen();
-  t = debugger.timeEvent(t, "Stand Up");
+    //
+    // Get up, if we've fallen over
+    //
+    standUpIfFallen();
+    t = debugger.timeEvent(t, "Stand Up");
 
-  //
-  // Flush out new walking parameters
-  //
-  d_ambulator->step();
-  t = debugger.timeEvent(t, "Ambulator Step");
+    //
+    // Flush out new walking parameters
+    //
+    d_ambulator->step();
+    t = debugger.timeEvent(t, "Ambulator Step");
 
-  //
-  // Update LEDs on back, etc
-  //
-  debugger.update(d_CM730);
-  t = debugger.timeEvent(t, "Update Debugger");
+    //
+    // Update LEDs on back, etc
+    //
+    debugger.update(d_CM730);
+    t = debugger.timeEvent(t, "Update Debugger");
 
-  //
-  // Read all data from the sub board
-  //
-  static int tmp = 0;
-  if (tmp++ % 5 == 0)
-    readSubBoardData();
-  t = debugger.timeEvent(t, "Read Sub Board");
+    //
+    // Read all data from the sub board
+    //
+    static int tmp = 0;
+    if (tmp++ % 5 == 0)
+      readSubBoardData();
+    t = debugger.timeEvent(t, "Read Sub Board");
 
-  //
-  // Populate agent frame from camera frame
-  //
-  d_spatialiser->updateCameraToAgent();
-  t = debugger.timeEvent(t, "Camera to Agent Frame");
+    //
+    // Populate agent frame from camera frame
+    //
+    d_spatialiser->updateCameraToAgent();
+    t = debugger.timeEvent(t, "Camera to Agent Frame");
 
-  //
-  // Update the localiser
-  //
-  d_localiser->update();
-  t = debugger.timeEvent(t, "Update Localiser");
+    //
+    // Update the localiser
+    //
+    d_localiser->update();
+    t = debugger.timeEvent(t, "Update Localiser");
 
-  //
-  // Populate world frame from agent frame
-  //
-  d_spatialiser->updateAgentToWorld(d_localiser->position());
-  t = debugger.timeEvent(t, "Agent to World Frame");
+    //
+    // Populate world frame from agent frame
+    //
+    d_spatialiser->updateAgentToWorld(d_localiser->position());
+    t = debugger.timeEvent(t, "Agent to World Frame");
+  }
 
   //
   // Update websocket data
