@@ -1,12 +1,22 @@
 #include "Agent/agent.hh"
 #include "OptionTree/optiontree.hh"
 
+#include <signal.h>
+
 #define MOTION_FILE_PATH    "./motion_4096.bin"
 #define U2D_DEV_NAME0       "/dev/ttyUSB0"
 #define U2D_DEV_NAME1       "/dev/ttyUSB1"
 
 using namespace bold;
 using namespace std;
+
+Agent* agent;
+
+void handleShutdownSignal(int sig)
+{
+  if (agent)
+    agent->stop();
+}
 
 int main(int argc, char **argv)
 {
@@ -61,7 +71,7 @@ int main(int argc, char **argv)
 
   minIni ini(confFile);
 
-  Agent agent(
+  agent = new Agent(
     U2D_DEV_NAME0,
     ini,
     MOTION_FILE_PATH,
@@ -70,9 +80,12 @@ int main(int argc, char **argv)
     useOptionTree,
     recordFrames);
 
-  auto rc = agent.run();
+  signal(SIGTERM, &handleShutdownSignal);
+  signal(SIGINT, &handleShutdownSignal);
 
-  cout << "[boldhumanoid] Exiting with " << rc << endl;
+  agent->run();
 
-  return rc;
+  cout << "[boldhumanoid] Finished" << endl;
+
+  return 0;
 }
