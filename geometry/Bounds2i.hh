@@ -1,12 +1,10 @@
-#ifndef BOLD_BOUNDS_2I_HH
-#define BOLD_BOUNDS_2I_HH
+#ifndef BOLD_BOUNDS2I_HH
+#define BOLD_BOUNDS2I_HH
 
 #include "Bounds.hh"
 
 #include <vector>
-
 #include <Eigen/Core>
-//#include <opencv2/core/core.hpp>
 
 namespace bold
 {
@@ -23,7 +21,7 @@ namespace bold
 
     Bounds2i(Eigen::Vector2i min, Eigen::Vector2i max)
     : Bounds<int,2>::Bounds(min, max)
-    {};
+    {}
 
     int width() const;
 

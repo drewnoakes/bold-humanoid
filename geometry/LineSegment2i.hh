@@ -20,16 +20,16 @@ namespace bold
   public:
     LineSegment2i(LineSegment<int,2> const& other)
     : LineSegment<int,2>::LineSegment(other.p1(), other.p2())
-    {};
+    {}
 
     LineSegment2i(Eigen::Vector2i const& p1, Eigen::Vector2i const& p2)
     : LineSegment<int,2>::LineSegment(p1, p2)
-    {};
+    {}
 
     LineSegment2i(int const x1, int const y1, int const x2, int const y2)
     : LineSegment<int,2>::LineSegment(Eigen::Vector2i(x1, y1),
                                       Eigen::Vector2i(x2, y2))
-    {};
+    {}
 
     double gradient() const;
 
