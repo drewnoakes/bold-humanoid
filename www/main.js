@@ -8,9 +8,10 @@ require(
         'scripts/app/modules/OptionTreeModule',
         'scripts/app/modules/IMUModule',
         'scripts/app/modules/StateDumpModule',
+        'scripts/app/ControlClient',
         'scripts/app/GameStateMonitor'
     ],
-    function(ModuleHost, World2dModule, TimingModule, World3dModule, CameraModule, OptionTreeModule, IMUModule, StateDumpModule, GameStateMonitor)
+    function(ModuleHost, World2dModule, TimingModule, World3dModule, CameraModule, OptionTreeModule, IMUModule, StateDumpModule, ControlClient, GameStateMonitor)
     {
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
@@ -30,6 +31,8 @@ require(
         moduleHost.load();
 
         new GameStateMonitor();
+
+        ControlClient.connect();
 
         $('#module-container').sortable(); //.disableSelection();
     }

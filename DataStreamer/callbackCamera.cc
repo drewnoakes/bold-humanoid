@@ -15,10 +15,8 @@ int DataStreamer::callback_camera(
   case LWS_CALLBACK_ESTABLISHED:
   {
     // New client connected; initialize session
-    cameraSession->hasSentStateAndOptions =
-      cameraSession->imgReady =
-      cameraSession->imgSending =
-      false;
+    cameraSession->imgReady = false;
+    cameraSession->imgSending = false;
     cameraSession->imgJpgBuffer = unique_ptr<vector<uchar>>(new vector<uchar>());
     d_cameraSessions.push_back(cameraSession);
     break;
@@ -32,23 +30,9 @@ int DataStreamer::callback_camera(
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
     // Can write to client
-    if (!cameraSession->hasSentStateAndOptions)
-    {
-      sendCameraControls(wsi);
-      cameraSession->hasSentStateAndOptions = true;
-    }
-    else if (cameraSession->imgReady)
+    if (cameraSession->imgReady)
     {
       sendImageBytes(wsi, cameraSession);
-    }
-    break;
-  }
-  case LWS_CALLBACK_RECEIVE:
-  {
-    if (len != 0)
-    {
-      string str((char const*)in, len);
-      processCameraCommand(str);
     }
     break;
   }

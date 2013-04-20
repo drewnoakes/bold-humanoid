@@ -4,16 +4,16 @@ define(
         'scripts/app/Protocols',
         'scripts/app/DataProxy',
         'scripts/app/ControlBuilder',
+        'scripts/app/ControlClient',
         'scripts/app/util/Colour'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, Colour)
+    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, ControlClient, Colour)
     {
         'use strict';
 
         var StateEnum = {
-            GET_CONTROLS : 0,
-            GET_PREFIX : 1,
-            GET_IMAGE : 2
+            GET_PREFIX : 0,
+            GET_IMAGE : 1
         };
 
         var CameraModule = function()
@@ -90,7 +90,7 @@ define(
 
         CameraModule.prototype.load = function()
         {
-            this.imgState = StateEnum.GET_CONTROLS;
+            this.imgState = StateEnum.GET_PREFIX;
             this.createContext();
 
             this.subscription = DataProxy.subscribe(
@@ -100,6 +100,11 @@ define(
                     onmessage: _.bind(this.onmessage, this)
                 }
             );
+
+            ControlBuilder.build('lut',    $('<div></div>', {'class': 'control-container lut-controls'}).appendTo(this.$container));
+            ControlBuilder.build('lines',  $('<div></div>', {'class': 'control-container lines-controls'}).appendTo(this.$container));
+            ControlBuilder.build('camera', $('<div></div>', {'class': 'control-container camera-controls'}).appendTo(this.$container));
+            ControlBuilder.build('debug',  $('<div></div>', {'class': 'control-container debug-controls'}).appendTo(this.$container));
         };
 
         CameraModule.prototype.unload = function()
@@ -116,47 +121,11 @@ define(
             this.context.scale(-1, -1);
         };
 
-        CameraModule.prototype.sendCommand = function(family, id, value)
-        {
-            var command = {
-                family: family,
-                id: id
-            };
-
-            if (typeof(value) !== 'undefined')
-            {
-                command.value = value;
-            }
-
-            console.log('Sending command', command);
-
-            this.subscription.send(JSON.stringify(command));
-        };
-
         CameraModule.prototype.onmessage = function(message)
         {
             var self = this;
             switch (this.imgState)
             {
-                case StateEnum.GET_CONTROLS:
-                {
-                    var controls = JSON.parse(message.data);
-
-                    console.info('Received control data', controls);
-
-                    _.each(
-                        _.keys(controls),
-                        function (key)
-                        {
-                            var $div = $('<div></div>', {'class': 'control-container '+key+'-controls'});
-                            self.$container.append($div);
-                            ControlBuilder.build(key, controls[key], $div, _.bind(self.sendCommand, self));
-                        }
-                    );
-
-                    this.imgState = StateEnum.GET_PREFIX;
-                    break;
-                }
                 case StateEnum.GET_PREFIX:
                 {
                     if (typeof(message.data) === 'string')

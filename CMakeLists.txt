@@ -152,13 +152,14 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./DataStreamer/callbackCamera.cc
+  ./DataStreamer/callbackControl.cc
   ./DataStreamer/callbackHttp.cc
   ./DataStreamer/callbackState.cc
   ./DataStreamer/callbackTiming.cc
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/getDebugControls.cc
-  ./DataStreamer/processCameraCommand.cc
+  ./DataStreamer/processCommand.cc
   ./DataStreamer/registerControls.cc
   ./DataStreamer/sendCameraControls.cc
   ./DataStreamer/sendImageBytes.cc

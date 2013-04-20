@@ -25,10 +25,6 @@ namespace bold
 
   struct CameraSession
   {
-    /** Whether state and options information has been sent to the client.
-     * This should happen immediately upon connection.
-     */
-    bool hasSentStateAndOptions;
     /** Whether an image is ready to be sent to this client. */
     bool imgReady;
     /** Whether an image is currently in the process of being sent. */
@@ -74,7 +70,7 @@ namespace bold
     void sendCameraControls(libwebsocket* wsi);
     void sendImageBytes(libwebsocket* wsi, CameraSession* session);
 
-    void processCameraCommand(std::string json);
+    void processCommand(std::string json);
     int writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
 
     // TODO can this be const?
@@ -95,18 +91,19 @@ namespace bold
     int d_port;
     libwebsocket_context* d_context;
     libwebsocket_protocols* d_protocols;
-    libwebsocket_protocols* d_timingProtocol;
     libwebsocket_protocols* d_cameraProtocol;
+    libwebsocket_protocols* d_timingProtocol;
     std::vector<CameraSession*> d_cameraSessions;
 
     //
     // libwebsocket callbacks
     //
 
-    int callback_http  (struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
-    int callback_camera(struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
-    int callback_timing(struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
-    int callback_state (struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
+    int callback_http   (struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
+    int callback_camera (struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
+    int callback_timing (struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
+    int callback_control(struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
+    int callback_state  (struct libwebsocket_context* context, struct libwebsocket* wsi, enum libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
 
     static int _callback_camera(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
     {
@@ -121,6 +118,11 @@ namespace bold
     static int _callback_timing(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->callback_timing(context, wsi, reason, user, in, len);
+    }
+
+    static int _callback_control(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
+    {
+      return static_cast<DataStreamer*>(libwebsocket_context_user(context))->callback_control(context, wsi, reason, user, in, len);
     }
 
     static int _callback_state(struct libwebsocket_context *context, struct libwebsocket *wsi, enum libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
