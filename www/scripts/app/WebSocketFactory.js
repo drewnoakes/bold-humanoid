@@ -10,6 +10,7 @@ define(
         'use strict';
 
         var indicatorByProtocol = {};
+        var socketByProtocol = {};
 
         //noinspection UnnecessaryLocalVariableJS
 
@@ -19,6 +20,8 @@ define(
                 var socket = typeof MozWebSocket !== 'undefined'
                     ? new MozWebSocket(Settings.webSocketUrl, protocol)
                     : new WebSocket(Settings.webSocketUrl, protocol);
+
+                socketByProtocol[protocol] = socket;
 
                 // Reuse the indicator, in case we are re-connecting
                 var connectionIndicator = indicatorByProtocol[protocol];
@@ -46,6 +49,13 @@ define(
                 };
 
                 return socket;
+            },
+            close: function (protocol)
+            {
+                socketByProtocol[protocol].close();
+                delete socketByProtocol[protocol];
+                indicatorByProtocol[protocol].remove();
+                delete indicatorByProtocol[protocol];
             }
         };
 

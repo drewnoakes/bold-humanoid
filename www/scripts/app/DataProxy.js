@@ -66,7 +66,7 @@ define(
 
                             if (protocolData.clients.length === 0) {
                                 // no one is using this socket any more, so close it down
-                                protocolData.socket.close();
+                                WebSocketFactory.close(protocol);
 
                                 delete dataByProtocol[protocol];
                             }

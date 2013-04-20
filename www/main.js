@@ -17,13 +17,15 @@ require(
 
         var moduleHost = new ModuleHost();
 
-        moduleHost.add(new CameraModule());
-        moduleHost.add(new World3dModule());
-        moduleHost.add(new TimingModule());
-        moduleHost.add(new IMUModule());
-        moduleHost.add(new World2dModule());
-        moduleHost.add(new OptionTreeModule());
-        moduleHost.add(new StateDumpModule());
+        moduleHost.register(new CameraModule());
+        moduleHost.register(new World3dModule());
+        moduleHost.register(new TimingModule());
+        moduleHost.register(new IMUModule());
+        moduleHost.register(new World2dModule());
+        moduleHost.register(new OptionTreeModule());
+        moduleHost.register(new StateDumpModule());
+
+//        moduleHost.createLinks('#header');
 
         moduleHost.load();
 
