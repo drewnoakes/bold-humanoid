@@ -13,6 +13,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   auto lineDotColour = Colour::bgr(0, 0, 255);
   auto observedLineColour = Colour::bgr(255, 80, 80);
   auto expectedLineColour = Colour::bgr(0, 255, 0);
+  auto horizonColour = Colour::bgr(0, 128, 255);
 
   Mat debugImage;
 
@@ -92,6 +93,21 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
 
       line2i.draw(debugImage, expectedLineColour, 1);
     }
+  }
+
+  // Draw horizon
+  if (streamer->shouldDrawHorizon())
+  {
+    Affine3d const& cameraTransform = AgentState::get<BodyState>()->getLimb("camera")->transform;
+
+    Vector2i p1(0,0);
+    p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraTransform);
+    Vector2i p2(d_cameraModel->imageWidth() - 1, 0);
+    p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraTransform);
+
+    LineSegment2i line2i(p1, p2);
+
+    line2i.draw(debugImage, expectedLineColour, 1);
   }
 
   streamer->streamImage(debugImage);
