@@ -4,10 +4,9 @@ define(
         'scripts/app/Protocols',
         'scripts/app/DataProxy',
         'scripts/app/ControlBuilder',
-        'scripts/app/ControlClient',
         'scripts/app/util/Colour'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, ControlClient, Colour)
+    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, Colour)
     {
         'use strict';
 
