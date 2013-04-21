@@ -23,7 +23,7 @@ namespace bold
 
     virtual void predict(std::function<State(State const&)> motionModel) = 0;
     virtual void update(std::function<double(State const&)> observationModel) = 0;
-    virtual std::pair<State,double> extract() const = 0;
+    virtual Particle extract() const = 0;
   };
 }
 
