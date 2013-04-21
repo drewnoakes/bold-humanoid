@@ -34,7 +34,7 @@ namespace bold
 
     unsigned imageWidth() const { return d_imageWidth; }
     unsigned imageHeight() const { return d_imageHeight; }
-    double focalLength() const { return d_focalLength; }
+    double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads());/* TODO: find real d_focalLength;*/ }
     double rangeVerticalDegs() const { return d_rangeVerticalDegs; }
     double rangeVerticalRads() const { return d_rangeVerticalDegs/180.0 * M_PI; }
     double rangeHorizontalDegs() const { return d_rangeHorizontalDegs; }
@@ -57,13 +57,13 @@ namespace bold
     Eigen::Affine3d getProjectionTransform() const
     {
       // TODO: cache
-      double f = 1.0 / tan(.5 * rangeHorizontalRads());
+      double f = focalLength();
       Eigen::Affine3d c;
       c.matrix() <<
         f, 0, 0, 0,
         0, f, 0, 0,
         0, 0, 1, 0,
-        0, 0, 0, 1;
+        0, 0, 1, 0;
       
       auto s = Eigen::Scaling((d_imageWidth - 1) / 2.0, (d_imageHeight - 1) / 2.0, 1.0);
       Eigen::Affine3d t;
