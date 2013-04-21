@@ -5,18 +5,20 @@
 #include <functional>
 
 #include "../AgentPosition/agentposition.hh"
+#include "../Filter/ParticleFilter/particlefilter.hh"
+#include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
 
 namespace bold
 {
-  template<int DIM>
-  class ParticleFilter;
   class FieldMap;
   class Control;
+
+  typedef ParticleFilter<3>::Particle Particle;
 
   class Localiser
   {
   public:
-    Localiser(std::shared_ptr<FieldMap> fieldMap);
+    Localiser(std::shared_ptr<FieldMap> fieldMap, unsigned initialCount = 200, double randomizeRatio = 0.1);
 
     void predict(Eigen::Affine3d motion);
 
@@ -29,6 +31,10 @@ namespace bold
   private:
     void updateStateObject();
 
+    ParticleFilter<3>::State createRandomState();
+
+    std::shared_ptr<std::vector<Particle>> resample(std::shared_ptr<std::vector<Particle>> const& particles, unsigned particleCount);
+
     AgentPosition d_pos;
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<ParticleFilter<3>> d_filter;
@@ -36,6 +42,8 @@ namespace bold
     std::function<double()> d_fieldYRng;
     std::function<double()> d_thetaRng;
     std::vector<Control> d_controls;
+    double d_randomizeRatio;
+    WheelSamplerFactory<3> d_wsf;
   };
 }
 

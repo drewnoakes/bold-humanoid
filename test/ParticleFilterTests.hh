@@ -13,45 +13,26 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-namespace bold
-{
-  template<int DIM>
-  class ReversingSamplerFactory : public ParticleSamplerFactory<DIM>
-  {
-  public:
-    ReversingSamplerFactory()
-    : createCount(0),
-      sampleCount(0)
-    {}
-
-    int createCount;
-    int sampleCount;
-    int index;
-
-    typename Filter<DIM>::ParticleSampler create(std::shared_ptr<std::vector<typename Filter<DIM>::Particle>> const& particles) override
-    {
-      createCount++;
-      index = particles->size() - 1;
-      return [&]() {
-        auto const& particle = (*particles)[index];
-        this->index--;
-        this->sampleCount++;
-        return particle;
-      };
-    }
-  };
-}
-
 TEST (ParticleFilterTests, basicOperation)
 {
-  auto samplingFactory = make_shared<ReversingSamplerFactory<2>>();
+  unsigned resampleCallCount = 0;
+  ParticleFilter<2>::ParticleResampler resampler
+   = [&resampleCallCount](shared_ptr<vector<ParticleFilter<2>::Particle>> particles, unsigned particleCount)
+    {
+      resampleCallCount++;
+      auto newParticles = make_shared<vector<ParticleFilter<2>::Particle>>();
+      for (int i = particleCount - 1; i >= 0; i--)
+      {
+        newParticles->push_back((*particles)[i]);
+      }
+      return newParticles;
+    };
 
-  EXPECT_EQ ( 0, samplingFactory->createCount );
-  EXPECT_EQ ( 0, samplingFactory->sampleCount );
+  EXPECT_EQ ( 0, resampleCallCount );
 
   int particleCount = 10;
   int i = 0;
-  ParticleFilter<2> filter(particleCount, 0, [&](){ i++; return Vector2d(i, i); }, samplingFactory);
+  ParticleFilter<2> filter(particleCount, [&](){ i++; return Vector2d(i, i); }, resampler);
 
   EXPECT_EQ(particleCount, i);
 
@@ -85,8 +66,7 @@ TEST (ParticleFilterTests, basicOperation)
   i = 0;
   filter.update([&i](Vector2d const& state) { i++; return i; });
 
-  EXPECT_EQ ( 1, samplingFactory->createCount );
-  EXPECT_EQ ( particleCount, samplingFactory->sampleCount );
+  EXPECT_EQ ( 1, resampleCallCount );
 
   i = particleCount;
   for (auto const& p : *(filter.getParticles()))

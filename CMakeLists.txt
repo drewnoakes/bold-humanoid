@@ -210,9 +210,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Localiser/createRandomState.cc
   ./Localiser/Localiser.cc
-  ./Localiser/update.cc
   ./Localiser/predict.cc
+  ./Localiser/resample.cc
+  ./Localiser/update.cc
   ./Localiser/updateStateObject.cc
 )
 
