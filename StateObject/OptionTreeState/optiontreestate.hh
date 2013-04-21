@@ -9,6 +9,7 @@ namespace bold
   class OptionTreeState : public StateObject
   {
   public:
+    // TODO is OptionList backed by a mutable object? if so, we may end up sending incorrect information to clients
     OptionTreeState(OptionList const& ranOptions)
     : d_ranOptions(ranOptions)
     {}
