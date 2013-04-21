@@ -99,15 +99,16 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   if (streamer->shouldDrawHorizon())
   {
     Affine3d const& cameraTransform = AgentState::get<BodyState>()->getLimb("camera")->transform;
+    Affine3d const& footTransform = AgentState::get<BodyState>()->getLimb("lFoot")->transform;
 
     Vector2i p1(0,0);
-    p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraTransform);
+    p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraTransform * footTransform.inverse());
     Vector2i p2(d_cameraModel->imageWidth() - 1, 0);
-    p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraTransform);
+    p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraTransform * footTransform.inverse());
 
     LineSegment2i line2i(p1, p2);
 
-    line2i.draw(debugImage, expectedLineColour, 1);
+    line2i.draw(debugImage, horizonColour, 1);
   }
 
   streamer->streamImage(debugImage);
