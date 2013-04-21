@@ -37,9 +37,10 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraTorsoTra
 
   double f = d_cameraModel->focalLength();
 
-  // Not 100% sure why we need to multiple x with f as well
-  double y = -1 / up.y() * (f * x * up.x() + f * up.z()); 
+  double y = -1 / up.y() * ( x * up.x() + f * up.z()); 
 
-  int py = (y / d_cameraModel->focalLength() + 1.0) * d_cameraModel->imageHeight() / 2;
+  double r = f * tan(d_cameraModel->rangeVerticalRads() / 2);
+
+  int py = ((y / r + 1.0) * (d_cameraModel->imageHeight() - 1.0) / 2.0) + .5;
   return py;
 }
