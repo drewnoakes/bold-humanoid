@@ -8,30 +8,6 @@
 #include "../geometry/LineSegment2i.hh"
 #include "helpers.hh"
 
-TEST (CameraModelTests, getProjector)
-{
-  auto imageWidth = 640;
-  auto imageHeight = 480;
-  auto focalLength = 1;
-  auto rangeVerticalDegs = 46.0; // 46 degrees from top to bottom
-  auto rangeHorizontalDegs = 60.0; // 60 degrees from left to right
-
-  CameraModel cameraModel(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
-
-  // From 3D camera space to 2D screen space
-  Affine3d projectionTransform = cameraModel.getProjectionTransform();
-
-  EXPECT_EQ( Vector3d(0,0,0), projectionTransform.translation() ) << "No translation in projection matrix";
-
-  std::function<Vector2i(Vector3d const&)> projector = cameraModel.getProjector();
-
-  double projectionPlaneWidth = atan(cameraModel.rangeHorizontalRads() / 2) * cameraModel.focalLength() * 2;
-  double pixelwidth = projectionPlaneWidth / cameraModel.imageWidth();
-
-  EXPECT_EQ( Vector2i(0,0), projector(Vector3d(0,10,0)) );
-  //EXPECT_EQ( Vector2i(10/pixelwidth,0), projector(Vector3d(10,0,cameraModel.focalLength())) );
-}
-
 TEST (CameraModelTests, directionForPixel)
 {
   auto imageWidth = 11;

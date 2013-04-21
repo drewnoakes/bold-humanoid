@@ -76,19 +76,6 @@ namespace bold
       return s * c * t;
     }
 
-    
-    /** Gets a projector to convert from 3D camera space (camera at 0,0,0
-     * looking down +ve y) to 2D screen space (with camera in centre of image.)
-     */
-    Projector getProjector() const
-    {
-      auto mat = getProjectionTransform();
-      return [mat](Eigen::Vector3d const& in) -> Eigen::Vector2i {
-        auto m = (mat * in);
-        return (m / m.z()).head<2>().cast<int>();
-      };
-    }
-
   private:
     unsigned d_imageWidth;
     unsigned d_imageHeight;
