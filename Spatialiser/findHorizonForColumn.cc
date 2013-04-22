@@ -33,7 +33,7 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraTorsoTra
 
   // In this case, we're looking straight up or down
   // TODO: handle better
-  assert(up.z() != 0);
+  assert(up.y() != 0);
 
   double f = d_cameraModel->focalLength();
 
