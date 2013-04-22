@@ -48,16 +48,36 @@ define(
 
             this.initialiseScene();
 
-            var firstPersonCheckbox = $('<input>', {type:'checkbox',id:'first-person-checkbox'});
-            firstPersonCheckbox.change(function()
+            var addCheckbox = function(id, text, checked, onchange)
             {
-                this.useThirdPerson = !firstPersonCheckbox.is(':checked');
+                var checkbox = $('<input>', {type:'checkbox',id:id}).change(function() { onchange(checkbox.is(':checked')); }.bind(this)).attr('checked',!!checked);
+
+                this.$element
+                    .append(checkbox)
+                    .append($('<label>', {'for':id, text:text}));
+
+                onchange(!!checked);
+            }.bind(this);
+
+            addCheckbox('first-person-checkbox', 'First person view', false, function(isChecked)
+            {
+                this.useThirdPerson = !isChecked;
                 this.updateCameraPosition();
                 this.render();
             }.bind(this));
-            this.$element.append(firstPersonCheckbox);
-            var firstPersonLabel = $('<label>', {'for':'first-person-checkbox', text:'First person view'});
-            this.$element.append(firstPersonLabel);
+
+            addCheckbox('move-player-checkbox', 'Move player', true, function(isChecked)
+            {
+                this.movePlayer = isChecked;
+                this.updateCameraPosition();
+                this.render();
+            }.bind(this));
+
+            addCheckbox('draw-lines-checkbox', 'Draw lines', true, function(isChecked)
+            {
+                this.drawLines = isChecked;
+                this.render();
+            }.bind(this));
 
             this.bodyRoot = this.buildBody(Constants.bodyStructure, function()
             {
@@ -114,7 +134,7 @@ define(
 
         World3dModule.prototype.onWorldFrameData = function(data)
         {
-            if (data.pos && data.pos instanceof Array && data.pos.length === 4) {
+            if (this.movePlayer && data.pos && data.pos instanceof Array && data.pos.length === 4) {
                 this.bodyRoot.position = new THREE.Vector3(data.pos[0], data.pos[1], data.pos[2]);
                 this.bodyRoot.rotation.z = data.pos[3];
                 this.positionBodySpotlight(this.bodyRoot);
@@ -128,17 +148,20 @@ define(
             if (this.lineObject) {
                 this.scene.remove(this.lineObject);
             }
-            this.lineObject = new THREE.Object3D();
-            this.scene.add(this.lineObject);
 
-            if (data.lines && data.lines instanceof Array && data.lines.length !== 0) {
-                _.each(data.lines, function (line)
-                {
-                    var lineGeometry = new THREE.Geometry();
-                    lineGeometry.vertices.push(new THREE.Vector3(line[0], line[1], /*line[2]*/0));
-                    lineGeometry.vertices.push(new THREE.Vector3(line[3], line[4], /*line[5]*/0));
-                    this.lineObject.add(new THREE.Line(lineGeometry, this.fieldLineMaterial));
-                }.bind(this));
+            if (this.drawLines) {
+                this.lineObject = new THREE.Object3D();
+                this.scene.add(this.lineObject);
+
+                if (data.lines && data.lines instanceof Array && data.lines.length !== 0) {
+                    _.each(data.lines, function (line)
+                    {
+                        var lineGeometry = new THREE.Geometry();
+                        lineGeometry.vertices.push(new THREE.Vector3(line[0], line[1], /*line[2]*/0));
+                        lineGeometry.vertices.push(new THREE.Vector3(line[3], line[4], /*line[5]*/0));
+                        this.lineObject.add(new THREE.Line(lineGeometry, this.fieldLineMaterial));
+                    }.bind(this));
+                }
             }
 
             this.render();
