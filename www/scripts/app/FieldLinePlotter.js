@@ -177,8 +177,8 @@ define(
                 context.beginPath();
                 _.each(particles, function (particle)
                 {
-                    var x = Math.round(particle[0] * scale - size/2),
-                        y = Math.round(particle[1] * scale - size/2);
+                    var x = Math.round( particle[0] * scale - size/2),
+                        y = Math.round(-particle[1] * scale - size/2);
                     context.fillRect(x, y, size, size);
                 });
             }
