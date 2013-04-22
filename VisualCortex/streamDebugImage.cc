@@ -13,6 +13,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   auto lineDotColour = Colour::bgr(0, 0, 255);
   auto observedLineColour = Colour::bgr(255, 80, 80);
   auto expectedLineColour = Colour::bgr(0, 255, 0);
+  auto horizonColour = Colour::bgr(0, 128, 255);
 
   Mat debugImage;
 
@@ -76,8 +77,6 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   // Draw expected lines
   if (streamer->shouldDrawExpectedLines())
   {
-    Projector projector = d_cameraModel->getProjector();
-
     Affine3d const& worldToAgent = AgentState::get<WorldFrameState>()->getPosition().worldToAgentTransform();
     Affine3d const& agentToCamera = AgentState::get<BodyState>()->getLimb("camera")->transform.inverse();
 
@@ -87,13 +86,36 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
     {
       LineSegment3d line3d = line.to<3>();
 
-      Vector2i p1 = projector(worldToCamera * line3d.p1());
-      Vector2i p2 = projector(worldToCamera * line3d.p2());
+      Vector2i p1 = d_cameraModel->pixelForDirection(worldToCamera * line3d.p1());
+      Vector2i p2 = d_cameraModel->pixelForDirection(worldToCamera * line3d.p2());
 
       LineSegment2i line2i(p1, p2);
 
       line2i.draw(debugImage, expectedLineColour, 1);
     }
+  }
+
+  // Draw horizon
+  if (streamer->shouldDrawHorizon())
+  {
+    auto neckJoint = AgentState::get<BodyState>()->getLimb("neck")->joints[0];
+
+    Affine3d const& cameraTransform = AgentState::get<BodyState>()->getLimb("camera")->transform;
+
+    Affine3d const& footTransform = AgentState::get<BodyState>()->getLimb("rFoot")->transform;
+
+    Affine3d cameraToFootRotation(cameraTransform.rotation() *
+                                  footTransform.rotation().inverse());
+
+    Vector2i p1(0,0);
+    p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraToFootRotation);
+
+    Vector2i p2(d_cameraModel->imageWidth() - 1, 0);
+    p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraToFootRotation);
+
+    LineSegment2i line2i(p1, p2);
+
+    line2i.draw(debugImage, horizonColour, 1);
   }
 
   streamer->streamImage(debugImage);

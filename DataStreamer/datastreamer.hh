@@ -60,6 +60,7 @@ namespace bold
     bool shouldDrawLineDots() const { return d_shouldDrawLineDots; }
     bool shouldDrawExpectedLines() const { return d_shouldDrawExpectedLines; }
     bool shouldDrawObservedLines() const { return d_shouldDrawObservedLines; }
+    bool shouldDrawHorizon() const { return d_shouldDrawHorizon; }
 
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img);
@@ -84,6 +85,7 @@ namespace bold
     bool d_shouldDrawLineDots;
     bool d_shouldDrawExpectedLines;
     bool d_shouldDrawObservedLines;
+    bool d_shouldDrawHorizon;
 
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<Debugger> d_debugger;

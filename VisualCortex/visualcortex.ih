@@ -18,6 +18,7 @@
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../robotis/Framework/include/minIni.h"
+#include "../Spatialiser/spatialiser.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"

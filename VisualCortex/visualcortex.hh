@@ -35,11 +35,17 @@ namespace bold
   class CartoonPass;
   class LabelCountPass;
 
+  class Spatialiser;
+
   /** Bold-humanoid's vision processing subsystem. */
   class VisualCortex
   {
   public:
-    VisualCortex(std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<FieldMap> fieldMap, std::shared_ptr<Debugger> debugger, minIni const& ini);
+    VisualCortex(std::shared_ptr<CameraModel> cameraModel,
+                 std::shared_ptr<FieldMap> fieldMap,
+                 std::shared_ptr<Spatialiser> spatialiser,
+                 std::shared_ptr<Debugger> debugger,
+                 minIni const& ini);
 
     std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
 
@@ -54,6 +60,7 @@ namespace bold
 
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<CameraModel> d_cameraModel;
+    std::shared_ptr<Spatialiser> d_spatialiser;
     std::shared_ptr<Debugger> d_debugger;
 
     std::shared_ptr<PixelLabel> d_goalLabel;

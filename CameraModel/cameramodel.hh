@@ -34,7 +34,7 @@ namespace bold
 
     unsigned imageWidth() const { return d_imageWidth; }
     unsigned imageHeight() const { return d_imageHeight; }
-    double focalLength() const { return d_focalLength; }
+    double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads());/* TODO: find real d_focalLength;*/ }
     double rangeVerticalDegs() const { return d_rangeVerticalDegs; }
     double rangeVerticalRads() const { return d_rangeVerticalDegs/180.0 * M_PI; }
     double rangeHorizontalDegs() const { return d_rangeHorizontalDegs; }
@@ -45,31 +45,35 @@ namespace bold
      */
     Eigen::Vector3d directionForPixel(Eigen::Vector2i const& pixel) const;
 
+    Eigen::Vector2i pixelForDirection(Eigen::Vector3d const& direction) const;
+
+    /** Gets a projection matrix
+     *
+     * This matrixt projects from camera frame onto image frame, up to
+     * a scaling factor, which is given in the z element of the
+     * transformed vector. i.e to get the pixel coordinate p of a
+     * point v with projection matrix T: p' = Tv, p = p'/p'_z.
+     */
     Eigen::Affine3d getProjectionTransform() const
     {
-      Eigen::Matrix4d mat;
-
-      mat <<
-        d_focalLength, 0, 0, 0,
-        0, d_focalLength, 0, 0,
-        0, 0, d_focalLength, 0,
+      // TODO: cache
+      double f = focalLength();
+      Eigen::Affine3d c;
+      c.matrix() <<
+        f, 0, 0, 0,
+        0, f, 0, 0,
+        0, 0, 1, 0,
         0, 0, 1, 0;
-
-      return Eigen::Affine3d(mat);
-    }
-
-    /** Gets a projector to convert from 3D camera space (camera at 0,0,0
-     * looking down +ve z) to 2D screen space (with camera in centre of image.)
-     */
-    Projector getProjector() const
-    {
-      auto mat = getProjectionTransform();
-      double projectionPlaneWidth = atan(rangeHorizontalRads() / 2) * d_focalLength * 2;
-      double pixelWidth = projectionPlaneWidth / d_imageWidth;
-      return [mat,pixelWidth](Eigen::Vector3d const& in) -> Eigen::Vector2i {
-        auto m = (mat * in);
-        return (m.head<2>() / pixelWidth).cast<int>();
-      };
+      
+      auto s = Eigen::Scaling((d_imageWidth - 1) / 2.0, (d_imageHeight - 1) / 2.0, 1.0);
+      Eigen::Affine3d t;
+      t.matrix() <<
+        -1, 0, 0, 0,
+        0, 0, 1, 0,
+        0, 1, 0, 0,
+        0, 0, 0, 1;
+      
+      return s * c * t;
     }
 
   private:
