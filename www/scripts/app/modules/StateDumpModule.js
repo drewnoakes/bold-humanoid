@@ -69,7 +69,8 @@ define(
 
         StateDumpModule.prototype.unload = function()
         {
-            this.subscription.close();
+            if (this.subscription)
+                this.subscription.close();
         };
 
         StateDumpModule.prototype.onData = function(data)
