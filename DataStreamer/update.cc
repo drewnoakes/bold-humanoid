@@ -6,15 +6,6 @@ void DataStreamer::update()
     return;
 
   //
-  // Request write for all dirty state protocols
-  //
-//   for (libwebsocket_protocols* protocol : d_dirtyStateProtocols)
-//   {
-//     libwebsocket_callback_on_writable_all_protocol(protocol);
-//   }
-//   d_dirtyStateProtocols.clear();
-
-  //
   // We always have new timing data available
   //
   libwebsocket_callback_on_writable_all_protocol(d_timingProtocol);
@@ -24,7 +15,7 @@ void DataStreamer::update()
   //
   for (CameraSession* cameraSession : d_cameraSessions)
   {
-    if (!cameraSession->hasSentStateAndOptions || cameraSession->imgReady)
+    if (cameraSession->imgReady)
     {
       libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
       break;

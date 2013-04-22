@@ -16,65 +16,92 @@ define(
             this.loaded = false;
         };
 
-        ModuleHost.prototype.add = function(module)
+        ModuleHost.prototype.register = function(module)
         {
             if (this.loaded)
-              throw 'Cannot add modules once the host is loaded.';
+              throw 'Cannot register modules once the host is loaded.';
 
             this.modules.push(module);
         };
+
+        var moduleTemplate = Handlebars.compile($('#module-template').html()),
+            $moduleContainer = $('#module-container');
 
         ModuleHost.prototype.load = function()
         {
             if (this.modules.length === 0)
                 throw 'No modules to load.';
 
+            if (this.loaded)
+              throw 'Already loaded.';
+
             this.loaded = true;
+            this.addAllModules();
+        };
 
-            var moduleTemplate = Handlebars.compile($('#module-template').html()),
-                $moduleContainer = $('#module-container'),
-                self = this;
+        ModuleHost.prototype.addAllModules = function ()
+        {
+            _.each(this.modules, this.addModule.bind(this));
+        };
 
-            _.each(this.modules, function(module)
+        ModuleHost.prototype.addModule = function(module)
+        {
+            var moduleHtml = moduleTemplate(module),
+                moduleElement = $('<div></div>').html(moduleHtml).children().get(0),
+                $moduleElement = $(moduleElement);
+
+            module.element = moduleElement;
+            $moduleContainer.append(moduleElement);
+
+            // Populate element properties
+            module.paneContainer = $(moduleElement).find('.pane-container').get(0);
+
+            if (module.load)
+                module.load();
+
+            var $links = $moduleElement.find('.pane-header-links');
+
+            if (module.supports && module.supports.advanced)
             {
-                var moduleHtml = moduleTemplate(module),
-                    moduleElement = $('<div></div>').html(moduleHtml).children().get(0),
-                    $moduleElement = $(moduleElement);
-
-                $moduleContainer.append(moduleElement);
-
-                // Populate element properties
-                module.paneContainer = $(moduleElement).find('.pane-container').get(0);
-
-                if (module.load)
-                    module.load();
-
-                if (module.supports && module.supports.advanced)
+                var $advancedLink = $('<a></a>', {href:'#'}).text('advanced');
+                $links.append($advancedLink);
+                var isAdvanced = false;
+                $advancedLink.click(function ()
                 {
-                    var $links = $moduleContainer.find('.pane-header-links');
-                    var $advancedLink = $('<a></a>', {href:'#'}).text('advanced');
-                    $links.append($advancedLink);
-                    var isAdvanced = false;
-                    $advancedLink.click(function ()
+                    isAdvanced = !isAdvanced;
+                    if (isAdvanced)
                     {
-                        isAdvanced = !isAdvanced;
-                        if (isAdvanced)
-                        {
-                            $moduleElement.addClass('advanced');
-                            $advancedLink.text('basic');
-                        }
-                        else
-                        {
-                            $moduleElement.removeClass('advanced');
-                            $advancedLink.text('advanced');
-                        }
-                        return false;
-                    })
-                }
+                        $moduleElement.addClass('advanced');
+                        $advancedLink.text('basic');
+                    }
+                    else
+                    {
+                        $moduleElement.removeClass('advanced');
+                        $advancedLink.text('advanced');
+                    }
+                    return false;
+                })
+            }
 
-                // Load the first pane
-                self.loadPane(module, module.panes[0]);
-            });
+            var $closeLink = $('<a></a>', {href:'#'}).text('close');
+            $closeLink.click(function() { this.removeModule(module); }.bind(this));
+            $links.append($closeLink);
+
+            // Load the first pane
+            this.loadPane(module, module.panes[0]);
+        };
+
+        ModuleHost.prototype.removeModule = function(module)
+        {
+            if (!module.element)
+                throw 'Has not been added';
+
+            // Remove from the DOM
+            $(module.element).remove();
+
+            // Tell it to clean up
+            if (module.unload)
+                module.unload();
         };
 
         ModuleHost.prototype.loadPane = function(module, pane)

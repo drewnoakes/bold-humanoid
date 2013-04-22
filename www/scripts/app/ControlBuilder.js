@@ -3,21 +3,23 @@
  */
 define(
     [
-        'scripts/app/ControlTypeEnum'
+        'scripts/app/ControlTypeEnum',
+        'scripts/app/ControlClient'
     ],
-    function (ControlTypeEnum)
+    function (ControlTypeEnum, ControlClient)
     {
         'use strict';
 
-        var controlId = 0;
+        var nextControlId = 0;
 
-        //noinspection UnnecessaryLocalVariableJS
+        var ControlBuilder = {};
 
-        var ControlBuilder = {
-            build: function(family, controls, container, sendCommand)
+        ControlBuilder.build = function(family, container)
+        {
+            container.empty();
+
+            ControlClient.withData(family, function(controls)
             {
-                container.empty();
-
                 _.each(controls, function(control)
                 {
                     var element = $('<div></div>').addClass('control');
@@ -41,7 +43,7 @@ define(
                                 .val(control.value)
                                 .change(function ()
                                 {
-                                    sendCommand(family, control.id, parseInt(this.value));
+                                    ControlClient.sendCommand(family, control.id, parseInt(this.value));
                                 });
 
                             element.append(heading).append(input);
@@ -50,12 +52,12 @@ define(
 
                         case ControlTypeEnum.BOOL:
                         {
-                            var id = family + (controlId++);
+                            var id = family + (nextControlId++);
                             var checkbox = $('<input>', {id: id, type: 'checkbox', checked: control.value});
 
                             checkbox.change(function()
                             {
-                                sendCommand(family, control.id, !!this.checked);
+                                ControlClient.sendCommand(family, control.id, !!this.checked);
                             });
 
                             var labelHtml = control.name;
@@ -83,7 +85,7 @@ define(
                             element.append($('<h3></h3>').html(headingText));
                             var menu = $('<select></select>').change(function()
                             {
-                                sendCommand(family, control.id, parseInt(this.options[this.selectedIndex].value));
+                                ControlClient.sendCommand(family, control.id, parseInt(this.options[this.selectedIndex].value));
                             });
 
                             _.each(control.enumValues, function(enumValue)
@@ -101,7 +103,7 @@ define(
                         {
                             var button = $('<button></button>').html(control.name).click(function()
                             {
-                                sendCommand(family, control.id);
+                                ControlClient.sendCommand(family, control.id);
                                 return false;
                             });
                             element.append(button);
@@ -111,7 +113,7 @@ define(
 
                     container.append(element);
                 });
-            }
+            });
         };
 
         return ControlBuilder;

@@ -19,7 +19,7 @@ namespace bold
   public:
     ImageLabeller()
     : d_LUT()
-    {};
+    {}
 
     ImageLabeller(std::shared_ptr<unsigned char> const& lut);
 

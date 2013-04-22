@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include "../Filter/filter.hh"
+#include "../Filter/ParticleFilter/particlefilter.hh"
 
 namespace bold
 {
@@ -12,7 +12,7 @@ namespace bold
   class ParticleSamplerFactory
   {
   public:
-    virtual typename Filter<DIM>::ParticleSampler create(std::shared_ptr<std::vector<typename Filter<DIM>::Particle>> const& particles) = 0;
+    virtual typename ParticleFilter<DIM>::ParticleSampler create(std::shared_ptr<std::vector<typename bold::ParticleFilter<DIM>::Particle>> const& particles) = 0;
   };
 }
 

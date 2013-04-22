@@ -8,7 +8,8 @@ Agent::Agent(string const& U2D_dev,
              bool const& useOptionTree,
              bool const& recordFrames
   )
-  : d_motionFile(motionFile),
+  : d_isRunning(false),
+    d_motionFile(motionFile),
     d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
     d_useOptionTree(useOptionTree),

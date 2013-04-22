@@ -51,7 +51,7 @@ namespace bold
       return i->second;
     }
 
-    std::shared_ptr<Joint const> getJoint(int jointId) const
+    std::shared_ptr<Joint const> getJoint(unsigned jointId) const
     {
       assert(jointId > 0 && jointId < Robot::JointData::NUMBER_OF_JOINTS);
 
@@ -83,7 +83,7 @@ namespace bold
 
     Lazy<double> d_torsoHeight;
     std::shared_ptr<Limb> d_torso;
-    std::map<int, std::shared_ptr<Joint>> d_jointById;
+    std::map<unsigned, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
   };
 }

@@ -1,15 +1,20 @@
 #include "agent.ih"
 
-int Agent::run()
+void Agent::run()
 {
   cout << "[Agent::run] Start" << endl;
 
-  // TODO trap signals and exit normally
+  if (d_isRunning)
+    throw new std::runtime_error("Already running");
 
-  while (true)
+  d_isRunning = true;
+
+  while (d_isRunning)
   {
     think();
   }
 
-  return 0;
+  // TODO if the agent is walking, allow it to come to a stable pose before terminating
+
+  cout << "[Agent::run] Stopped" << endl;
 }

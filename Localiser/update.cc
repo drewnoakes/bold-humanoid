@@ -40,19 +40,9 @@ void Localiser::update()
     return scoreSum;
   });
 
-  // HACK just taking the one with the highest weight for now
-  auto pos = (*d_filter->getParticles())[0].first;
-  auto bestWeight = 0;
-  for (ParticleFilter<3>::Particle const& particle : *d_filter->getParticles())
-  {
-    if (particle.second > bestWeight)
-    {
-      pos = particle.first;
-      bestWeight = particle.second;
-    }
-  }
+  auto state = d_filter->extract();
 
-  d_pos = AgentPosition(pos[0], pos[1], torsoHeight, pos[2]);
+  d_pos = AgentPosition(state[0], state[1], torsoHeight, state[2]);
 
   updateStateObject();
 }

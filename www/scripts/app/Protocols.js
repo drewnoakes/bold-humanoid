@@ -11,6 +11,7 @@ define(
         var Protocols = {
             camera: 'camera-protocol',
             timing: 'timing-protocol',
+            control: 'control-protocol',
 
             // One per StateObject...
             agentFrameState: 'AgentFrame',

@@ -8,26 +8,31 @@ require(
         'scripts/app/modules/OptionTreeModule',
         'scripts/app/modules/IMUModule',
         'scripts/app/modules/StateDumpModule',
+        'scripts/app/ControlClient',
         'scripts/app/GameStateMonitor'
     ],
-    function(ModuleHost, World2dModule, TimingModule, World3dModule, CameraModule, OptionTreeModule, IMUModule, StateDumpModule, GameStateMonitor)
+    function(ModuleHost, World2dModule, TimingModule, World3dModule, CameraModule, OptionTreeModule, IMUModule, StateDumpModule, ControlClient, GameStateMonitor)
     {
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
 
         var moduleHost = new ModuleHost();
 
-        moduleHost.add(new CameraModule());
-        moduleHost.add(new World3dModule());
-        moduleHost.add(new TimingModule());
-        moduleHost.add(new IMUModule());
-        moduleHost.add(new World2dModule());
-        moduleHost.add(new OptionTreeModule());
-        moduleHost.add(new StateDumpModule());
+        moduleHost.register(new CameraModule());
+        moduleHost.register(new World3dModule());
+        moduleHost.register(new TimingModule());
+        moduleHost.register(new IMUModule());
+        moduleHost.register(new World2dModule());
+        moduleHost.register(new OptionTreeModule());
+        moduleHost.register(new StateDumpModule());
+
+//        moduleHost.createLinks('#header');
 
         moduleHost.load();
 
         new GameStateMonitor();
+
+        ControlClient.connect();
 
         $('#module-container').sortable(); //.disableSelection();
     }

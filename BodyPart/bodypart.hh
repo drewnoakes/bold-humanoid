@@ -68,10 +68,9 @@ namespace bold
   struct Joint : public BodyPart
   {
     Joint()
-      : rate(0), torque(0), control(0)
-    {
-      angle = 0;
-    }
+    : angle(0)
+//    rate(0), torque(0), control(0)
+    {}
 
     /// Axis of joint in local coordinate system
     Eigen::Vector3d axis;
@@ -79,20 +78,20 @@ namespace bold
     /// This joint's identifier
     int id;
 
-    /// Minimum and maximum angle bounds
-    std::pair<double, double> bounds;
+//    /// Minimum and maximum angle bounds
+//    std::pair<double, double> bounds;
 
     /// Joint angle
     double angle;
 
-    /// Joint rate
-    double rate;
-
-    /// Torque action upon joint, as given by server
-    double torque;
-
-    /// Control velocity set at last time step
-    double control;
+//    /// Joint rate
+//    double rate;
+//
+//    /// Torque action upon joint, as given by server
+//    double torque;
+//
+//    /// Control velocity set at last time step
+//    double control;
 
     /// Body part connected by this joint
     std::shared_ptr<BodyPart> bodyPart;

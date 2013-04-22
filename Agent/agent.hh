@@ -57,11 +57,13 @@ namespace bold
           bool const& useOptionTree,
           bool const& recordFrames);
 
-    int run();
+    void run();
+    void stop();
 
   private:
     // Settings
     bool d_haveBody;
+    bool d_isRunning;
     std::string d_motionFile;
     bool d_isRecordingFrames;
     bool d_autoGetUpFromFallen;

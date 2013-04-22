@@ -101,6 +101,7 @@ add_class(BOLDHUMANOID
   ./Agent/registerStateTypes.cc
   ./Agent/run.cc
   ./Agent/standUpIfFallen.cc
+  ./Agent/stop.cc
   ./Agent/think.cc
 )
 
@@ -152,13 +153,14 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./DataStreamer/callbackCamera.cc
+  ./DataStreamer/callbackControl.cc
   ./DataStreamer/callbackHttp.cc
   ./DataStreamer/callbackState.cc
   ./DataStreamer/callbackTiming.cc
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/getDebugControls.cc
-  ./DataStreamer/processCameraCommand.cc
+  ./DataStreamer/processCommand.cc
   ./DataStreamer/registerControls.cc
   ./DataStreamer/sendCameraControls.cc
   ./DataStreamer/sendImageBytes.cc
@@ -209,9 +211,12 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Localiser/createRandomState.cc
+  ./Localiser/extract.cc
   ./Localiser/Localiser.cc
-  ./Localiser/update.cc
   ./Localiser/predict.cc
+  ./Localiser/resample.cc
+  ./Localiser/update.cc
   ./Localiser/updateStateObject.cc
 )
 
