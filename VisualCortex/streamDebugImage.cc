@@ -101,11 +101,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
     auto neckJoint = AgentState::get<BodyState>()->getLimb("neck")->joints[0];
 
     Affine3d const& cameraTransform = AgentState::get<BodyState>()->getLimb("camera")->transform;
-
     Affine3d const& footTransform = AgentState::get<BodyState>()->getLimb("rFoot")->transform;
-
-    Affine3d cameraToFootRotation(cameraTransform.rotation() *
-                                  footTransform.rotation().inverse());
+    Affine3d cameraToFootRotation(footTransform.rotation().inverse() *
+                                  cameraTransform.rotation());
 
     Vector2i p1(0,0);
     p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraToFootRotation);
