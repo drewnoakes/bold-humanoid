@@ -20,7 +20,8 @@ define(
                 lineWidth: 1,
                 millisPerLine: 250,
                 verticalSections: 6,
-                sharpLines: true
+                sharpLines: true,
+                borderVisible: false
             },
             labels: {
                 fillStyle: '#ffffff'
