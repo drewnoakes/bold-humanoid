@@ -19,13 +19,10 @@ namespace bold
     {}
 
     /** Returns the ground-plane location, in agent space, for a given camera pixel.
-     * Assumes that the torso is vertical.
      *
      * @param pixel the x/y pixel location
-     * @param torsoHeight the height of the torso from the ground plane
-     * @param cameraTransform the transformation from camera to torso frame
      */
-    Maybe<Eigen::Vector3d> findGroundPointForPixel(Eigen::Vector2i const& pixel, double const torsoHeight, Eigen::Affine3d const& cameraTorsoTransform) const;
+    Maybe<Eigen::Vector3d> findGroundPointForPixel(Eigen::Vector2i const& pixel, double const distanceAboveGround = 0) const;
 
     int findHorizonForColumn(int column, Eigen::Affine3d const& cameraTorsoTransform);
 

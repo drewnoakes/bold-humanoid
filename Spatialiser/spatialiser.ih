@@ -5,7 +5,9 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include "../AgentState/agentstate.hh"
 #include "../Math/math.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 
 using namespace bold;
 using namespace Eigen;

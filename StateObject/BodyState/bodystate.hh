@@ -33,6 +33,10 @@ namespace bold
           )
         );
       });
+
+      Eigen::Affine3d const& cameraTransform = getLimb("camera")->transform;
+      Eigen::Affine3d const& footTransform = getLimb("rFoot")->transform;
+      d_cameraGroundTransform = footTransform.inverse() * cameraTransform;
     };
 
     void updatePosture();
@@ -73,6 +77,8 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
+    Eigen::Affine3d getCameraToGroundTransform() const { return d_cameraGroundTransform; }
+
     double getTorsoHeight() const
     {
       return *d_torsoHeight.value();
@@ -85,6 +91,7 @@ namespace bold
     std::shared_ptr<Limb> d_torso;
     std::map<unsigned, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
+    Eigen::Affine3d d_cameraGroundTransform;
   };
 }
 
