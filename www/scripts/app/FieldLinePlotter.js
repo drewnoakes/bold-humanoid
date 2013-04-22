@@ -171,12 +171,10 @@ define(
                 var scale = options.scale || 1,
                     size = options.particleSize || 1;
 
-                context.fillStyle = options.particleStyle || 'cyan';
-
-
                 context.beginPath();
                 _.each(particles, function (particle)
                 {
+                    context.fillStyle = particle[3] === 0 ? 'black' : options.particleStyle || 'cyan';
                     var x = Math.round( particle[0] * scale - size/2),
                         y = Math.round(-particle[1] * scale - size/2);
                     context.fillRect(x, y, size, size);
