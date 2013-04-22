@@ -386,7 +386,7 @@ else(UPLOAD_SCP_PATH)
 endif(UPLOAD_SCP_PATH)
 
 
-set(_command find ${CMAKE_SOURCE_DIR} -regextype posix-egrep -regex ".*((hh)|(cc))$" -print | etags --declarations -o ${CMAKE_SOURCE_DIR}/TAGS -)
+set(_command find ${CMAKE_SOURCE_DIR} -regextype posix-egrep -regex ".*((hh)|(cc))$" -print | etags -o ${CMAKE_SOURCE_DIR}/TAGS -)
 add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/TAGS
   COMMAND ${_command}
   IMPLICIT_DEPENDS ${BOLDHUMANOID_SORCES}
