@@ -19,7 +19,8 @@ define(
                 lineWidth: 1,
                 millisPerLine: 250,
                 verticalSections: 6,
-                sharpLines: true
+                sharpLines: true,
+                borderVisible: false
             },
             labels: {
                 fillStyle: '#ffffff'
@@ -29,7 +30,7 @@ define(
 
         var seriesOptions = {
             strokeStyle: 'rgb(0, 255, 0)',
-            fillStyle: 'rgba(0, 255, 0, 0.4)',
+            fillStyle: 'rgba(0, 255, 0, 0.3)',
             lineWidth: 1
         };
 
@@ -47,6 +48,7 @@ define(
             var series = new TimeSeries();
             chart.addTimeSeries(series, seriesOptions);
             chart.streamTo(canvas, /*delayMs*/ 100);
+            chart.options.horizontalLines.push({color:'#FF0000', lineWidth: 1, value: 30});
 
             this.table = $('<table></table>', {'class':'timing-details'}).appendTo(container);
 
