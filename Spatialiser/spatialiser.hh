@@ -24,6 +24,8 @@ namespace bold
      */
     Maybe<Eigen::Vector3d> findGroundPointForPixel(Eigen::Vector2i const& pixel, double const distanceAboveGround = 0) const;
 
+    Maybe<Eigen::Vector3d> findGroundPointForPixel(Eigen::Vector2i const& pixel, Eigen::Affine3d const& cameraGroundTransform, double const distanceAboveGround = 0) const;
+
     int findHorizonForColumn(int column, Eigen::Affine3d const& cameraTorsoTransform);
 
     void updateCameraToAgent();
