@@ -33,6 +33,8 @@ namespace bold
 
     ParticleFilter<3>::State createRandomState();
 
+    ParticleFilter<3>::State extract(std::shared_ptr<std::vector<Particle>> const& particles);
+
     std::shared_ptr<std::vector<Particle>> resample(std::shared_ptr<std::vector<Particle>> const& particles, unsigned particleCount);
 
     AgentPosition d_pos;

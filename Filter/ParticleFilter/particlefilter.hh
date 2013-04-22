@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "../filter.hh"
-#include "../ParticleSamplerFactory/particlesamplerfactory.hh"
 
 namespace bold
 {
@@ -16,16 +15,20 @@ namespace bold
   public:
     typedef Eigen::Matrix<double,DIM,1> State;
     typedef std::pair<State,double> Particle;
+    typedef std::function<Particle()> ParticleSampler;
     typedef std::function<State()> StateSampler;
     typedef std::function<std::shared_ptr<std::vector<Particle>>(std::shared_ptr<std::vector<Particle>>, unsigned)> ParticleResampler;
+    typedef std::function<State(std::shared_ptr<std::vector<Particle>>)> ParticleExtractor;
 
     ParticleFilter(unsigned initialSize,
                    StateSampler randomStateProvider,
-                   ParticleResampler resampler)
+                   ParticleResampler resampler,
+                   ParticleExtractor extractor)
     : d_particleCount(initialSize),
       d_randomStateProvider(randomStateProvider),
       d_particles(std::make_shared<std::vector<Particle>>(initialSize)),
-      d_resampler(resampler)
+      d_resampler(resampler),
+      d_extractor(extractor)
     {
       randomise();
     }
@@ -64,21 +67,27 @@ namespace bold
       assert(d_particles->size() == d_particleCount);
     }
 
-    Particle extract() const override
+    State extract() const override
     {
-      // TODO implement
-      return (*d_particles)[0]; // HACK to remove compiler warnings
+      return d_extractor(d_particles);
     }
+
+    // TODO does returning this as 'const' mean that the data is copied? if so, remove const
 
     std::shared_ptr<std::vector<Particle> const> getParticles() const { return d_particles; }
 
-    void setParticleCount(int particleCount) { d_particleCount = particleCount; }
+    void setParticleCount(unsigned particleCount)
+    {
+      assert(particleCount != 0);
+      d_particleCount = particleCount;
+    }
 
   private:
     unsigned d_particleCount;
     StateSampler d_randomStateProvider;
     std::shared_ptr<std::vector<Particle>> d_particles;
     ParticleResampler d_resampler;
+    ParticleExtractor d_extractor;
   };
 }
 

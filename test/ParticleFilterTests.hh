@@ -28,16 +28,19 @@ TEST (ParticleFilterTests, basicOperation)
       return newParticles;
     };
 
+  ParticleFilter<2>::ParticleExtractor extractor =
+    [this](shared_ptr<vector<ParticleFilter<2>::Particle>> particles) { return (*particles)[0].first; };
+
   EXPECT_EQ ( 0, resampleCallCount );
 
   int particleCount = 10;
   int i = 0;
-  ParticleFilter<2> filter(particleCount, [&](){ i++; return Vector2d(i, i); }, resampler);
+  ParticleFilter<2> filter(particleCount, [&](){ i++; return Vector2d(i, i); }, resampler, extractor);
 
   EXPECT_EQ(particleCount, i);
 
   i = 1;
-  shared_ptr<vector<Filter<2>::Particle> const> particles = filter.getParticles();
+  shared_ptr<vector<ParticleFilter<2>::Particle> const> particles = filter.getParticles();
   for (auto const& p : *particles)
   {
     EXPECT_TRUE( VectorsEqual(p.first, Vector2d(i, i)) );

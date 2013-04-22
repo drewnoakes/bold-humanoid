@@ -1,5 +1,6 @@
 #include "localiser.hh"
 
+#include <cassert>
 #include <chrono>
 #include <random>
 

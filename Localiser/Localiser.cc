@@ -1,36 +1,35 @@
 #include "localiser.ih"
 
-Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap, unsigned initialCount, double randomizeRatio)
+Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, double randomizeRatio)
 : d_pos(0, 0, 0, 0),
   d_fieldMap(fieldMap),
   d_randomizeRatio(randomizeRatio)
 {
   double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
   double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;
-  auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
 
-  std::uniform_real_distribution<double> fieldXDistribution(-xMax, xMax);
-  std::uniform_real_distribution<double> fieldYDistribution(-yMax, yMax);
-  std::uniform_real_distribution<double> thetaDistribution(-M_PI, M_PI);
-  d_fieldXRng = std::bind(fieldXDistribution, std::default_random_engine(seed));
-  d_fieldYRng = std::bind(fieldYDistribution, std::default_random_engine(seed + 7));
-  d_thetaRng  = std::bind(thetaDistribution,  std::default_random_engine(seed + 13));
-
-  //bold::ParticleFilter<DIM>::ParticleFilter(
-  //unsigned int,
-  //bold::ParticleFilter<DIM>::StateSampler,
-  //std::function<std::shared_ptr<std::vector<std::pair<Eigen::Matrix<double, DIM, 1>, double> > >(std::shared_ptr<std::vector<std::pair<Eigen::Matrix<double, DIM, 1>, double> > >)>, unsigned int) [with int DIM = 3; bold::ParticleFilter<DIM>::StateSampler = std::function<Eigen::Matrix<double, 3, 1>()>]
+  uniform_real_distribution<double> fieldXDistribution(-xMax, xMax);
+  uniform_real_distribution<double> fieldYDistribution(-yMax, yMax);
+  uniform_real_distribution<double> thetaDistribution(-M_PI, M_PI);
+  d_fieldXRng = bind(fieldXDistribution, default_random_engine(seed));
+  d_fieldYRng = bind(fieldYDistribution, default_random_engine(seed + 7));
+  d_thetaRng  = bind(thetaDistribution,  default_random_engine(seed + 13));
 
   ParticleFilter<3>::ParticleResampler resampler =
-    [this](std::shared_ptr<std::vector<Particle>> particles, unsigned particleCount) -> std::shared_ptr<std::vector<Particle>>
+    [this](shared_ptr<vector<Particle>> particles, unsigned particleCount)
     {
       return resample(particles, particleCount);
     };
 
-  d_filter = std::make_shared<ParticleFilter<3>>(
+  ParticleFilter<3>::ParticleExtractor extractor =
+    [this](shared_ptr<vector<Particle>> particles) { return extract(particles); };
+
+  d_filter = make_shared<ParticleFilter<3>>(
     initialCount,
     [this]() { return createRandomState(); },
-    resampler);
+    resampler,
+    extractor);
 
   //
   // Set up controls
@@ -48,6 +47,5 @@ Localiser::Localiser(std::shared_ptr<FieldMap> fieldMap, unsigned initialCount, 
   randomizeRatioControl.setLimitValues(0, 100);
   d_controls.push_back(randomizeRatioControl);
 
-  //
   updateStateObject();
 }

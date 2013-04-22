@@ -6,7 +6,6 @@
 #include <vector>
 #include <functional>
 
-#include "../../Filter/filter.hh"
 #include "../../Filter/ParticleFilter/particlefilter.hh"
 #include "../ParticleSamplerFactory/particlesamplerfactory.hh"
 
@@ -23,7 +22,7 @@ namespace bold
       d_rnd = std::bind(distribution, generator);
     }
 
-    typename Filter<DIM>::ParticleSampler create(std::shared_ptr<std::vector<typename Filter<DIM>::Particle>> const& particles) override
+    typename ParticleFilter<DIM>::ParticleSampler create(std::shared_ptr<std::vector<typename ParticleFilter<DIM>::Particle>> const& particles) override
     {
       d_index = d_rnd() * particles->size();
       d_beta = 0.0;
