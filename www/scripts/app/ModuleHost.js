@@ -84,7 +84,7 @@ define(
             }
 
             var $closeLink = $('<a></a>', {href:'#'}).text('close');
-            $closeLink.click(function() { this.removeModule(module); }.bind(this));
+            $closeLink.click(function(event) { event.preventDefault(); this.removeModule(module); return false; }.bind(this));
             $links.append($closeLink);
 
             // Load the first pane
