@@ -119,7 +119,7 @@ define(
             this.scale = Math.min(
                 width / fieldLengthX,
                 (width / ratio) / fieldLengthY);
-            this.minScale = this.scale * 0.8; // can't zoom out too far
+            this.minScale = this.scale * 0.5; // can't zoom out too far
 
             this.draw();
         };
