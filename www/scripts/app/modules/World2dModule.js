@@ -7,10 +7,9 @@ define(
         'scripts/app/Protocols',
         'scripts/app/Constants',
         'scripts/app/DataProxy',
-        'scripts/app/ControlBuilder',
         'scripts/app/util/Dragger'
     ],
-    function(FieldLinePlotter, Protocols, Constants, DataProxy, ControlBuilder, Dragger)
+    function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger)
     {
         'use strict';
 
@@ -77,8 +76,6 @@ define(
 
             // TODO only subscribe if use checks a box
             this.particleSubscription   = DataProxy.subscribe(Protocols.particleState,   { json: true, onmessage: _.bind(this.onParticleData, this) });
-
-            ControlBuilder.build('localiser', $('<div></div>', {'class': 'control-container localiser-controls'}).appendTo(this.$container));
         };
 
         World2dModule.prototype.unload = function()
