@@ -161,6 +161,7 @@ div.module > div.pane-header > div.pane-header-links > a:hover
     font-weight: normal;
     margin: 0;
     font-size: 11px;
+    letter-spacing: -0.1em;
 }
 
 div.module div.control.advanced
@@ -204,7 +205,6 @@ div.module.camera div.control-container.camera-controls
     height: 440px;
     overflow: auto;
 }
-
 
 div.module.camera div.control-container.lines-controls
 {

@@ -369,7 +369,7 @@ define(
             this.updateCameraPosition();
             this.render();
 
-            this.element.appendChild(this.renderer.domElement);
+            this.$element.append(this.renderer.domElement);
 
             this.bindMouseInteraction(this.renderer.domElement);
         };

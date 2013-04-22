@@ -14,8 +14,6 @@ define(
     {
         'use strict';
 
-        // A simple module, with a full screen canvas as its element
-
         var World2dModule = function()
         {
             this.$canvas = $('<canvas></canvas>');
@@ -113,13 +111,17 @@ define(
 
         World2dModule.prototype.onResized = function(width, height)
         {
+            var fieldLengthX = (Constants.fieldX + 2 * Constants.outerMarginMinimum);
+            var fieldLengthY = (Constants.fieldY + 2 * Constants.outerMarginMinimum);
+            var ratio = fieldLengthX / fieldLengthY;
+
             this.canvas.width = width;
-            this.canvas.height = height;
+            this.canvas.height = width / ratio;
             this.fieldCenterX = width/2;
-            this.fieldCenterY = height/2;
+            this.fieldCenterY = (width / ratio)/2;
             this.scale = Math.min(
-                width / (Constants.fieldX + 2*Constants.outerMarginMinimum),
-                height / (Constants.fieldY + 2*Constants.outerMarginMinimum));
+                width / fieldLengthX,
+                (width / ratio) / fieldLengthY);
             this.minScale = this.scale * 0.8; // can't zoom out too far
 
             this.draw();
