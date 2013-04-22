@@ -3,12 +3,12 @@
 
 #include <algorithm>
 #include <cassert>
+#include <map>
 #include <memory>
-#include <vector>
 #include <sigc++/signal.h>
+#include <vector>
 
 #include "../StateObject/stateobject.hh"
-#include <map>
 
 struct libwebsocket_protocols;
 
