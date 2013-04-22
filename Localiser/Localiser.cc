@@ -7,14 +7,15 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
 {
   double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
   double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;
-  auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
 
-  uniform_real_distribution<double> fieldXDistribution(-xMax, xMax);
-  uniform_real_distribution<double> fieldYDistribution(-yMax, yMax);
-  uniform_real_distribution<double> thetaDistribution(-M_PI, M_PI);
-  d_fieldXRng = bind(fieldXDistribution, default_random_engine(seed));
-  d_fieldYRng = bind(fieldYDistribution, default_random_engine(seed + 7));
-  d_thetaRng  = bind(thetaDistribution,  default_random_engine(seed + 13));
+  d_fieldXRng = Math::createUniformRng(-xMax, xMax);
+  d_fieldYRng = Math::createUniformRng(-yMax, yMax);
+  d_thetaRng  = Math::createUniformRng(-M_PI, M_PI);
+
+  double initialPositionError = 0.05; // 5 cm
+  unsigned initialAngleErrorDeg = 1;  // 1 degree
+  d_positionError = Math::createNormalRng(0, initialPositionError);
+  d_angleError    = Math::createNormalRng(0, Math::degToRad(initialAngleErrorDeg));
 
   ParticleFilter<3>::ParticleResampler resampler =
     [this](shared_ptr<vector<Particle>> particles, unsigned particleCount)
@@ -42,10 +43,22 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   particleCountControl.setLimitValues(1, 2000);
   d_controls.push_back(particleCountControl);
 
-  auto randomizeRatioControl = Control::createInt("Randomize Ratio", int(randomizeRatio * 100), [this](int value){ d_randomizeRatio = value/100.0; });
-  randomizeRatioControl.setDefaultValue(int(randomizeRatio * 100));
-  randomizeRatioControl.setLimitValues(0, 100);
+  double randomizeRatioScale = 100.0;
+  auto randomizeRatioControl = Control::createInt("Randomize Ratio", int(randomizeRatio * randomizeRatioScale), [this,randomizeRatioScale](int value){ d_randomizeRatio = value/randomizeRatioScale; });
+  randomizeRatioControl.setDefaultValue(int(randomizeRatio * randomizeRatioScale));
+  randomizeRatioControl.setLimitValues(0 * randomizeRatioScale, 1 * randomizeRatioScale);
   d_controls.push_back(randomizeRatioControl);
+
+  double positionErrorScale = 100.0;
+  auto positionErrorControl = Control::createInt("Position Error (cm)", int(initialPositionError * positionErrorScale), [this,positionErrorScale](int value){ d_positionError = Math::createNormalRng(0, value/positionErrorScale); });
+  positionErrorControl.setDefaultValue(int(initialPositionError * positionErrorScale));
+  positionErrorControl.setLimitValues(0, 50);
+  d_controls.push_back(positionErrorControl);
+
+  auto angleErrorControl = Control::createInt("Angle Error (deg)", initialAngleErrorDeg, [this](int value){ d_angleError = Math::createNormalRng(0, Math::degToRad(value)); });
+  angleErrorControl.setDefaultValue(initialAngleErrorDeg);
+  angleErrorControl.setLimitValues(0, 20);
+  d_controls.push_back(angleErrorControl);
 
   updateStateObject();
 }

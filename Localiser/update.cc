@@ -5,6 +5,15 @@ void Localiser::update()
   auto const& agentFrame = AgentState::get<AgentFrameState>();
   double torsoHeight = AgentState::get<BodyState>()->getTorsoHeight();
 
+  d_filter->predict([this](Vector3d state) -> Vector3d
+  {
+    return Vector3d(
+      state[0] + d_positionError(),
+      state[1] + d_positionError(),
+      state[2] + d_angleError()
+    );
+  });
+
   d_filter->update([&torsoHeight,&agentFrame,this](Vector3d state) -> double
   {
     AgentPosition pos(state[0], state[1], torsoHeight, state[2]);

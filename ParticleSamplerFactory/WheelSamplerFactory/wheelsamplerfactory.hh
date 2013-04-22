@@ -2,11 +2,11 @@
 #define BOLD_WHEELSAMPLERFACTORY_HH
 
 #include <iterator>
-#include <random>
 #include <vector>
 #include <functional>
 
 #include "../../Filter/ParticleFilter/particlefilter.hh"
+#include "../../Math/math.hh"
 #include "../ParticleSamplerFactory/particlesamplerfactory.hh"
 
 namespace bold
@@ -17,9 +17,7 @@ namespace bold
   public:
     WheelSamplerFactory()
     {
-      std::default_random_engine generator;
-      std::uniform_real_distribution<double> distribution(0,1);
-      d_rnd = std::bind(distribution, generator);
+      d_rnd = Math::createUniformRng(0, 1);
     }
 
     typename ParticleFilter<DIM>::ParticleSampler create(std::shared_ptr<std::vector<typename ParticleFilter<DIM>::Particle>> const& particles) override

@@ -1,8 +1,6 @@
 #include "localiser.hh"
 
 #include <cassert>
-#include <chrono>
-#include <random>
 
 #include "../AgentState/agentstate.hh"
 #include "../Control/control.hh"

@@ -46,6 +46,8 @@ namespace bold
     std::vector<Control> d_controls;
     double d_randomizeRatio;
     WheelSamplerFactory<3> d_wsf;
+    std::function<double()> d_positionError;
+    std::function<double()> d_angleError;
   };
 }
 
