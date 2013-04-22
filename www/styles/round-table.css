@@ -193,7 +193,7 @@ div.module.camera canvas.camera-canvas
 
 div.module.camera > div.pane-container
 {
-    height: 410px
+    min-height: 410px
 }
 
 div.module.camera div.control-container.camera-controls
