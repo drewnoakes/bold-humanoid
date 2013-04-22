@@ -84,7 +84,18 @@ TEST (SpatialiserTests, findHorizonForColumnSquareCam)
   EXPECT_EQ ( 0, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
   EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
   EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
-  
+
+  // Rotation around z-axis should not matter
+  cameraTorsoTransform = AngleAxisd(M_PI/2.0, Vector3d::UnitZ());
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+
+  // Rotation around z-axis while leaning forward
+  cameraTorsoTransform = AngleAxisd(-M_PI/4.0, Vector3d::UnitX()) * AngleAxisd(M_PI/2.0, Vector3d::UnitZ());
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
+  EXPECT_EQ ( 0, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
 }
 
 TEST (SpatialiserTests, findHorizonForColumnWideCam)
