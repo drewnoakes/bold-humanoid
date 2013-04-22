@@ -294,6 +294,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/BodyState/BodyState.cc
   ./StateObject/BodyState/initBody.cc
   ./StateObject/BodyState/updatePosture.cc
   ./StateObject/BodyState/writeJson.cc
