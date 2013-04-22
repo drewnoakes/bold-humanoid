@@ -98,18 +98,18 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   // Draw horizon
   if (streamer->shouldDrawHorizon())
   {
+    auto neckJoint = AgentState::get<BodyState>()->getLimb("neck")->joints[0];
+
     Affine3d const& cameraTransform = AgentState::get<BodyState>()->getLimb("camera")->transform;
-    Affine3d const& footTransform = AgentState::get<BodyState>()->getLimb("lFoot")->transform;
+
+    Affine3d const& footTransform = AgentState::get<BodyState>()->getLimb("rFoot")->transform;
 
     Affine3d cameraToFootRotation(cameraTransform.rotation() *
                                   footTransform.rotation().inverse());
 
-    cout << "Transform: " << endl << cameraToFootRotation.matrix() << endl;
-
     Vector2i p1(0,0);
     p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraToFootRotation);
 
-    cout << "Direction at horizon: " << endl << (cameraToFootRotation * d_cameraModel->directionForPixel(p1)) << endl;
     Vector2i p2(d_cameraModel->imageWidth() - 1, 0);
     p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraToFootRotation);
 
