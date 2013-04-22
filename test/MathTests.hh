@@ -94,5 +94,35 @@ TEST (MathTests, linePointClosestToPoint)
   EXPECT_TRUE( VectorsEqual (Vector2d(0.5, 0), Math::linePointClosestToPoint(unitX, Vector2d(0.5,-1))) ) << "Below midpoint";
   EXPECT_TRUE( VectorsEqual (Vector2d(  0, 0), Math::linePointClosestToPoint(unitX, Vector2d( -1, 0))) ) << "Beyond p1";
   EXPECT_TRUE( VectorsEqual (Vector2d(  1, 0), Math::linePointClosestToPoint(unitX, Vector2d(  2, 0))) ) << "Beyond p2";
+}
 
+TEST (MathTests, createNormalRng)
+{
+  double mean = 1.5;
+  auto rng = Math::createNormalRng(mean, 1);
+  double sum = 0;
+  unsigned loopCount = 1000;
+  for (int i = 0; i < loopCount; i++)
+  {
+    sum += rng();
+  }
+  EXPECT_NEAR(mean, sum/loopCount, 0.1);
+}
+
+TEST (MathTests, degreesRadiansConversion)
+{
+  EXPECT_EQ( 0, Math::degToRad(0) );
+  EXPECT_EQ( 0, Math::radToDeg(0) );
+
+  EXPECT_EQ( M_PI, Math::degToRad(180) );
+  EXPECT_EQ( 180.0, Math::radToDeg(M_PI) );
+
+  EXPECT_EQ( M_PI/2, Math::degToRad(90) );
+  EXPECT_EQ( 90.0, Math::radToDeg(M_PI/2) );
+
+  EXPECT_EQ( M_PI/4, Math::degToRad(45) );
+  EXPECT_EQ( 45.0, Math::radToDeg(M_PI/4) );
+
+  EXPECT_EQ( -M_PI/4, Math::degToRad(-45) );
+  EXPECT_EQ( -45.0, Math::radToDeg(-M_PI/4) );
 }

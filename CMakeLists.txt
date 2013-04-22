@@ -224,6 +224,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Math/createRng.cc
   ./Math/findPerpendicularVector.cc
   ./Math/intersectRayWithGroundPlane.cc
   ./Math/intersectRayWithPlane.cc

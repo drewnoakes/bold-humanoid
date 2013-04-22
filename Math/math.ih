@@ -3,5 +3,9 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include <chrono>
+#include <random>
+
 using namespace bold;
 using namespace Eigen;
+using namespace std;
