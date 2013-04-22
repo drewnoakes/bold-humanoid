@@ -87,7 +87,7 @@ define(
                     goalY = scale * Constants.goalY / 2,
                     x = scale * Constants.fieldX/2;
 
-                // TODO actually the position of these circles is WRONG! as is many of the lines -- the insides should be used, considering line width
+                // TODO the position of these circles is slightly wrong, as the perimeter should line up with the edge of the line
 
                 context.strokeStyle = options.goalStrokeStyle || 'yellow';
 

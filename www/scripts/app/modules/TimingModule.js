@@ -10,7 +10,8 @@ define(
     {
         'use strict';
 
-        // TODO allow reseting maximums
+        // TODO allow resetting maximums
+        // TODO reorder table rows lexicographically
 
         var chartOptions = {
             grid: {
