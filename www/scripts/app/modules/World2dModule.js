@@ -7,9 +7,10 @@ define(
         'scripts/app/Protocols',
         'scripts/app/Constants',
         'scripts/app/DataProxy',
+        'scripts/app/ControlBuilder',
         'scripts/app/util/Dragger'
     ],
-    function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger)
+    function(FieldLinePlotter, Protocols, Constants, DataProxy, ControlBuilder, Dragger)
     {
         'use strict';
 
@@ -78,6 +79,8 @@ define(
 
             // TODO only subscribe if use checks a box
             this.particleSubscription   = DataProxy.subscribe(Protocols.particleState,   { json: true, onmessage: _.bind(this.onParticleData, this) });
+
+            ControlBuilder.build('localiser', $('<div></div>', {'class': 'control-container localiser-controls'}).appendTo(this.$container));
         };
 
         World2dModule.prototype.unload = function()
@@ -88,6 +91,7 @@ define(
 
         World2dModule.prototype.onWorldFrameData = function(data)
         {
+            this.agentPosition = data.pos;
             this.ballPosition = data.ball;
             this.lineSegments = [];
 
@@ -146,6 +150,9 @@ define(
 
             if (this.particles)
                 FieldLinePlotter.drawParticles(context, options, this.particles);
+
+            if (this.agentPosition)
+                FieldLinePlotter.drawAgentPosition(context, options, this.agentPosition);
 
             FieldLinePlotter.end(context);
         };

@@ -147,6 +147,25 @@ define(
                 context.arc(position[0] * scale, -position[1] * scale, Constants.ballRadius * scale, 0, Math.PI*2, true);
                 context.fill();
             },
+            drawAgentPosition: function(context, options, agentPosition)
+            {
+                var scale = options.scale || 1,
+                    agentDotRadius = options.agentDotRadius || 3,
+                    agentDirectionLength = options.agentDirectionLength || 15,
+                    heading = agentPosition[3] + Math.PI / 2;
+
+                context.strokeStyle = options.agentPosStyle || 'red';
+                context.fillStyle = options.agentPosStyle || 'red';
+
+                context.beginPath();
+                context.arc(agentPosition[0] * scale, -agentPosition[1] * scale, agentDotRadius, 0, Math.PI*2, true);
+                context.fill();
+                context.beginPath();
+                context.moveTo(agentPosition[0] * scale, -agentPosition[1] * scale);
+                context.lineTo(agentPosition[0] * scale + agentDirectionLength * Math.cos(heading),
+                              -agentPosition[1] * scale - agentDirectionLength * Math.sin(heading));
+                context.stroke();
+            },
             drawParticles: function(context, options, particles)
             {
                 var scale = options.scale || 1,

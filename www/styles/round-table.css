@@ -190,6 +190,11 @@ div.module.camera canvas.camera-canvas
     -o-transition: width 0.4s; /* Opera */
 }
 
+div.module.camera > div.pane-container
+{
+    height: 410px
+}
+
 div.module.camera div.control-container.camera-controls
 {
     position: absolute;
@@ -261,11 +266,6 @@ div.module.state > div.pane-container
 }
 
 /********************************************************************/
-
-div.module.field > div.pane-container
-{
-    height: 436px
-}
 
 div.module.field div.hover-info
 {
