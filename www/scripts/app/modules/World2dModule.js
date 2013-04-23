@@ -28,7 +28,7 @@ define(
             /////
 
             this.title = '2d world';
-            this.moduleClass = 'field';
+            this.id = '2d';
             this.panes = [
                 {
                     title: 'main',

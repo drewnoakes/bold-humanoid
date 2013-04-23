@@ -13,7 +13,7 @@ define(
             this.options = {};
 
             this.title = 'option tree';
-            this.moduleClass = 'optiontree';
+            this.id = 'optiontree';
             this.panes = [
                 {
                     title: 'main',

@@ -77,7 +77,7 @@ define(
             /////
 
             this.title = 'IMU';
-            this.moduleClass = 'sensors';
+            this.id = 'sensors';
             this.panes = [
                 {
                     title: 'main',

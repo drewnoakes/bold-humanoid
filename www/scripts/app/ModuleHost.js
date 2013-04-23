@@ -16,6 +16,7 @@ define(
             this.loaded = false;
             this.$linkContainer = $(linkContainerSelector);
             this.$moduleContainer = $('#module-container');
+            this.moduleById = {};
 
             var sortableOptions = {
                 update: this.updateHash.bind(this)
@@ -26,9 +27,11 @@ define(
         ModuleHost.prototype.register = function(module)
         {
             if (this.loaded)
-              throw 'Cannot register modules once the host is loaded.';
+              throw 'Cannot register modules once the ModuleHost is loaded.';
 
             this.modules.push(module);
+
+            this.moduleById[module.id] = module;
 
             module.__$button = $('<a></a>', {'class': 'module-button', href:'#'})
                 .text(module.title)
@@ -49,15 +52,22 @@ define(
         ModuleHost.prototype.load = function()
         {
             if (this.modules.length === 0)
-                throw 'No modules to load.';
+                throw 'No modules registered in ModuleHost.';
 
             if (this.loaded)
-              throw 'Already loaded.';
+              throw 'ModuleHost already loaded.';
 
             this.loaded = true;
 
+            // Load any modules found in the hash
             if (window.location.hash && window.location.hash.length > 1 && window.location.hash[0] === '#') {
-                // TODO load modules found in the hash
+                var moduleIds = window.location.hash.substr(1).split('|');
+                _.each(moduleIds, function (moduleId)
+                {
+                    var module = this.moduleById[moduleId];
+                    if (module)
+                        this.addModule(module);
+                }.bind(this));
             }
         };
 
@@ -159,7 +169,7 @@ define(
             {
                 if (hash)
                     hash += '|';
-                hash += moduleDiv.module.moduleClass;
+                hash += moduleDiv.module.id;
             });
             window.location.hash = hash;
         };

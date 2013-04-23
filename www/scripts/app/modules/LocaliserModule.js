@@ -36,7 +36,7 @@ define(
             this.buildChart();
 
             this.title = 'localiser';
-            this.moduleClass = 'localiser';
+            this.id = 'localiser';
             this.panes = [
                 {
                     title: 'main',

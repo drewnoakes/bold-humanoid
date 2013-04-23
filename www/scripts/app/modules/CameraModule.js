@@ -31,7 +31,7 @@ define(
             /////
 
             this.title = 'camera';
-            this.moduleClass = 'camera';
+            this.id = 'camera';
             this.supports = { advanced: true };
             this.panes = [
                 {

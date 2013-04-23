@@ -60,7 +60,7 @@ define(
             /////
 
             this.title = 'timing';
-            this.moduleClass = 'timing';
+            this.id = 'timing';
             this.panes = [
                 {
                     title: 'main',

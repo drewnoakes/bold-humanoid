@@ -21,7 +21,7 @@ define(
             /////
 
             this.title = 'state dump';
-            this.moduleClass = 'state';
+            this.id = 'state';
             this.panes = [
                 {
                     title: 'main',
