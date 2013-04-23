@@ -86,6 +86,27 @@ TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
   }
 }
 
+TEST (SpatialiserTests, findGroundPointForPixelLooking45Degrees)
+{
+  Spatialiser spatialiser = createTestSpatialiser();
+  // Look 45 deg down at the ground
+  Affine3d cameraTorsoTransform(AngleAxisd(-M_PI/4, Vector3d::UnitX()));
+
+  Maybe<Vector3d> groundPoint(Vector3d(0,0,0));
+
+  groundPoint =
+    spatialiser.findGroundPointForPixel(Vector2i(5,5), /*torsoHeight*/1.0, cameraTorsoTransform);
+
+  ASSERT_TRUE ( groundPoint.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,1,-1), *groundPoint.value()) );
+
+  groundPoint =
+    spatialiser.findGroundPointForPixel(Vector2i(5,0), /*torsoHeight*/1.0, cameraTorsoTransform);
+
+  ASSERT_TRUE ( groundPoint.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,-1), *groundPoint.value()) );
+}
+
 TEST (SpatialiserTests, findGroundPointForPixelEmptyIfSkybound)
 {
   Spatialiser spatialiser = createTestSpatialiser();
