@@ -8,6 +8,8 @@
 #include "../AgentState/agentstate.hh"
 #include "../Math/math.hh"
 #include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/AgentFrameState/agentframestate.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
 
 using namespace bold;
 using namespace Eigen;

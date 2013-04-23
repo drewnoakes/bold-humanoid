@@ -1,20 +1,11 @@
-#include "spatialiser.hh"
-
-#include "../AgentState/agentstate.hh"
-#include "../StateObject/BodyState/bodystate.hh"
-#include "../StateObject/AgentFrameState/agentframestate.hh"
-#include "../StateObject/CameraFrameState/cameraframestate.hh"
-
-using namespace bold;
-using namespace Eigen;
-using namespace std;
+#include "spatialiser.ih"
 
 void Spatialiser::updateCameraToAgent()
 {
-  auto body = AgentState::get<BodyState>();
   auto cameraFrame = AgentState::get<CameraFrameState>();
 
   /*
+  auto body = AgentState::get<BodyState>();
   auto neck = body->getLimb("neck");
   auto neckHeadJoint = neck->joints[0];
   auto head = body->getLimb("head");
