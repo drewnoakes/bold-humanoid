@@ -32,6 +32,13 @@ img#logo
 div#header-content
 {
     display: inline-block;
+    vertical-align: top;
+    margin: 6px;
+}
+
+div#header-content div#socket-connections
+{
+    margin-top: 12px;
 }
 
 div#header-content h1

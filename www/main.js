@@ -9,10 +9,10 @@ require(
         'scripts/app/modules/IMUModule',
         'scripts/app/modules/StateDumpModule',
         'scripts/app/modules/LocaliserModule',
-        'scripts/app/ControlClient',
-        'scripts/app/GameStateMonitor'
+        'scripts/app/modules/GameStateModule',
+        'scripts/app/ControlClient'
     ],
-    function(ModuleHost, World2dModule, TimingModule, World3dModule, CameraModule, OptionTreeModule, IMUModule, StateDumpModule, LocaliserModule, ControlClient, GameStateMonitor)
+    function(ModuleHost, World2dModule, TimingModule, World3dModule, CameraModule, OptionTreeModule, IMUModule, StateDumpModule, LocaliserModule, GameStateModule, ControlClient)
     {
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
@@ -27,10 +27,9 @@ require(
         moduleHost.register(new IMUModule());
         moduleHost.register(new OptionTreeModule());
         moduleHost.register(new StateDumpModule());
+        moduleHost.register(new GameStateModule());
 
         moduleHost.load();
-
-        new GameStateMonitor();
 
         ControlClient.connect();
     }
