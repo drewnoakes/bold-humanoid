@@ -30,19 +30,18 @@ define(
 
             this.modules.push(module);
 
-            var $moduleButton = $('<a></a>', {'class': 'module-button', href:'#'})
+            module.__$button = $('<a></a>', {'class': 'module-button', href:'#'})
                 .text(module.title)
                 .click(function (event)
                 {
                     event.preventDefault();
-                    if (module.element)
+                    if (module.__element)
                         this.removeModule(module);
                     else
                         this.addModule(module);
                     return false;
-                }.bind(this));
-            module.$button = $moduleButton;
-            this.$linkContainer.append($moduleButton);
+                }.bind(this))
+                .appendTo(this.$linkContainer);
         };
 
         var moduleTemplate = Handlebars.compile($('#module-template').html());
@@ -56,6 +55,10 @@ define(
               throw 'Already loaded.';
 
             this.loaded = true;
+
+            if (window.location.hash && window.location.hash.length > 1 && window.location.hash[0] === '#') {
+                // TODO load modules found in the hash
+            }
         };
 
         ModuleHost.prototype.addAllModules = function ()
@@ -69,13 +72,13 @@ define(
                 moduleElement = $('<div></div>').html(moduleHtml).children().get(0),
                 $moduleElement = $(moduleElement);
 
-            module.$button.addClass('added');
-            module.element = moduleElement;
+            module.__$button.addClass('added');
+            module.__element = moduleElement;
             moduleElement.module = module;
             this.$moduleContainer.append(moduleElement);
 
             // Populate element properties
-            module.paneContainer = $(moduleElement).find('.pane-container').get(0);
+            module.__paneContainer = $(moduleElement).find('.pane-container').get(0);
 
             if (module.load)
                 module.load();
@@ -116,26 +119,26 @@ define(
 
         ModuleHost.prototype.removeModule = function(module)
         {
-            if (!module.element)
+            if (!module.__element)
                 throw 'Has not been added';
 
-            module.$button.removeClass('added');
+            module.__$button.removeClass('added');
 
             // Remove from the DOM
-            $(module.element).remove();
+            $(module.__element).remove();
 
             // Tell it to clean up
             if (module.unload)
                 module.unload();
 
-            delete module.element;
+            delete module.__element;
 
             this.updateHash();
         };
 
         ModuleHost.prototype.loadPane = function(module, pane)
         {
-            $(module.paneContainer).empty().append(pane.element);
+            $(module.__paneContainer).empty().append(pane.element);
 
             if (module.activePane && module.activePane.unload)
                 module.activePane.unload();
@@ -144,7 +147,7 @@ define(
                 pane.load();
 
             if (pane.onResized)
-                pane.onResized(module.paneContainer.clientWidth,  module.paneContainer.clientHeight);
+                pane.onResized(module.__paneContainer.clientWidth,  module.__paneContainer.clientHeight);
 
             module.activePane = pane;
         };
