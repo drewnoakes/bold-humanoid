@@ -10,7 +10,7 @@ OptionList LookAtGoal::runPolicy()
     return OptionList();
   }
 
-  auto middle = (goalsObs[0] + goalsObs[1]) / 2;
+  auto middle = (goalObs[0] + goalObs[1]) / 2;
 
   static float r = 0.85;
 
@@ -21,8 +21,8 @@ OptionList LookAtGoal::runPolicy()
   static float happ = d_cameraModel->rangeHorizontalDegs() / w;
   static float vapp = d_cameraModel->rangeVerticalDegs() / h;
 
-  Vector2f offset = (*middle - centerPx) * r;
-  
+  Vector2f offset = (middle - centerPx) * r;
+
   offset.x() *= happ; // pixel per angle
   offset.y() *= vapp; // pixel per angle
 

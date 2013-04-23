@@ -57,8 +57,9 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    Eigen::Affine3d getCameraToGroundTransform() const { return d_cameraGroundTransform; }
+    Eigen::Affine3d getCameraAgentTransform() const { return d_cameraAgentTransform; }
 
+    // TODO this should probably go away
     double getTorsoHeight() const
     {
       return *d_torsoHeight.value();
@@ -71,7 +72,11 @@ namespace bold
     std::shared_ptr<Limb> d_torso;
     std::map<unsigned, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
-    Eigen::Affine3d d_cameraGroundTransform;
+
+    /// Rotation of the torso, wrt the agent/world frames
+    Eigen::Affine3d d_torsoWorldRotation;
+    /// Transform of camera, including rotation of torso in agent/world frames
+    Eigen::Affine3d d_cameraAgentTransform;
   };
 }
 

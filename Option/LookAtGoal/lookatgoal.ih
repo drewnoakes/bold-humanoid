@@ -6,6 +6,8 @@
 
 #include <LinuxDARwIn.h>
 #include <cmath>
+#include <iostream>
+#include <Eigen/Core>
 
 using namespace bold;
 using namespace std;

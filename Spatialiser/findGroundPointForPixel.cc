@@ -1,17 +1,17 @@
 #include "spatialiser.ih"
 
-Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2i const& pixel, Affine3d const& cameraGroundTransform, double const distanceAboveGround) const
+Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2i const& pixel, Affine3d const& cameraAgentTransform, double const groundZ) const
 {
-  Vector3d direction = cameraGroundTransform.rotation() * d_cameraModel->directionForPixel(pixel);
-  Vector3d position = cameraGroundTransform.translation();
+  Vector3d direction = cameraAgentTransform.rotation() * d_cameraModel->directionForPixel(pixel);
 
-  double torsoHeight = cameraGroundTransform.translation().z() - distanceAboveGround;
+  Vector3d position = cameraAgentTransform.translation();
 
-  return Math::intersectRayWithGroundPlane(position, direction, -torsoHeight);
+  return Math::intersectRayWithGroundPlane(position, direction, groundZ);
 }
 
-Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2i const& pixel, double const distanceAboveGround) const
+Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2i const& pixel, double const groundZ) const
 {
-  Affine3d cameraGroundTransform = AgentState::get<BodyState>()->getCameraToGroundTransform();
-  return findGroundPointForPixel(pixel, cameraGroundTransform, distanceAboveGround);
+  Affine3d cameraAgentTransform = AgentState::get<BodyState>()->getCameraAgentTransform();
+
+  return findGroundPointForPixel(pixel, cameraAgentTransform, groundZ);
 }
