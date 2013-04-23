@@ -30,11 +30,17 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   OptionPtr rightKick = make_shared<ActionOption>("rightkickaction","rk");
   tree->addOption(rightKick);
 
+  // Look around
   OptionPtr lookAround = make_shared<LookAround>("lookaround");
   tree->addOption(lookAround);
 
+  // Look at ball
   OptionPtr lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel);
   tree->addOption(lookAtBall);
+  
+  // Look at goal
+  OptionPtr lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel);
+  tree->addOption(lookAtGoal);
   
   // FSM
   auto winFsm = make_shared<FSMOption>("win");

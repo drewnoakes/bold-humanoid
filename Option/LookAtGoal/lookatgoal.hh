@@ -1,0 +1,24 @@
+#ifndef BOLD_LOOKATGOAL_HH
+#define BOLD_LOOKATGOAL_HH
+
+#include "../option.hh"
+#include "../CameraModel/cameramodel.hh"
+
+namespace bold
+{
+  class LookAtGoal : public Option
+  {
+  public:
+    LookAtGoal(std::string const& id, std::shared_ptr<CameraModel> cameraModel)
+      : Option(id),
+	d_cameraModel(cameraModel)
+    {}
+    
+    OptionList runPolicy() override;
+    
+  private:
+    std::shared_ptr<CameraModel> d_cameraModel;
+  };
+}
+
+#endif
