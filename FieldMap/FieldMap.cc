@@ -23,35 +23,34 @@ FieldMap::FieldMap(minIni const& ini)
 //   double goalPostDiameter    = ini.getd("Environment", "GoalPostDiameter", 0.1);
   double goalAreaX           = ini.getd("Environment", "GoalAreaSizeX", 0.6);
   double goalAreaY           = ini.getd("Environment", "GoalAreaSizeY", 2.2);
-//   double penaltyMarkDistance = ini.getd("Environment", "PenaltyMarkDistance", 1.8);
+  double penaltyMarkDistance = ini.getd("Environment", "PenaltyMarkDistance", 1.8);
   double circleDiameter      = ini.getd("Environment", "CircleDiameter", 1.2);
 //   double lineWidth           = ini.getd("Environment", "LineWidth", 0.05);
-//   double penaltyLineLength   = ini.getd("Environment", "PenaltyLineLength", 0.1);
+  double penaltyLineLength   = ini.getd("Environment", "PenaltyLineLength", 0.1);
   d_outerMarginMinimum  = ini.getd("Environment", "OuterMarginMinimum", 0.7);
 //   double ballDiameter        = ini.getd("Environment", "BallDiameter", 0.067); // according to Wikipedia
 
-//   double halfCrossLength = penaltyLineLength/2;
-//   double penaltyX = fieldX/2 - penaltyMarkDistance;
-//   double penaltyInnerX = penaltyX - halfCrossLength;
-//   double penaltyOuterX = penaltyX + halfCrossLength;
+  double halfCrossLength = penaltyLineLength/2;
+  double penaltyX = d_fieldLengthX/2 - penaltyMarkDistance;
+  double penaltyInnerX = penaltyX - halfCrossLength;
+  double penaltyOuterX = penaltyX + halfCrossLength;
   double halfFieldX = d_fieldLengthX/2;
   double halfFieldY = d_fieldLengthY/2;
   double halfGoalAreaY = goalAreaY/2;
   double halfGoalY = goalY/2;
   double circleRadius = circleDiameter/2;
 
-  // TODO store the three cross marks
 
-//   // CROSS MARKS
-//   // center cross mark
-//   LineSegment3d(-halfCrossLength, 0, 0, halfCrossLength, 0, 0);
-//   LineSegment3d(0, -halfCrossLength, 0, 0, halfCrossLength, 0);
-//   // left penalty mark
-//   LineSegment3d(-penaltyInnerX, 0, 0, -penaltyOuterX, 0, 0);
-//   LineSegment3d(-penaltyX, -halfCrossLength, 0, -penaltyX, halfCrossLength, 0);
-//   // right penalty mark
-//   LineSegment3d(penaltyInnerX, 0, 0, penaltyOuterX, 0, 0);
-//   LineSegment3d(penaltyX, -halfCrossLength, 0, penaltyX, halfCrossLength, 0);
+  // CROSS MARKS
+  // center cross mark
+  d_fieldLines.push_back(LineSegment3d(-halfCrossLength, 0, 0, halfCrossLength, 0, 0));
+//  d_fieldLines.push_back(LineSegment3d(0, -halfCrossLength, 0, 0, halfCrossLength, 0));
+  // left penalty mark
+  d_fieldLines.push_back(LineSegment3d(-penaltyInnerX, 0, 0, -penaltyOuterX, 0, 0));
+  d_fieldLines.push_back(LineSegment3d(-penaltyX, -halfCrossLength, 0, -penaltyX, halfCrossLength, 0));
+  // right penalty mark
+  d_fieldLines.push_back(LineSegment3d(penaltyInnerX, 0, 0, penaltyOuterX, 0, 0));
+  d_fieldLines.push_back(LineSegment3d(penaltyX, -halfCrossLength, 0, penaltyX, halfCrossLength, 0));
 
   // OUTER SQUARE
   // top
