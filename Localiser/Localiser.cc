@@ -1,7 +1,7 @@
 #include "localiser.ih"
 
 Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, double randomizeRatio)
-: d_pos(0, 0, 0, 0),
+: d_pos(0, 0, 0),
   d_fieldMap(fieldMap),
   d_randomizeRatio(randomizeRatio)
 {
@@ -12,8 +12,8 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   d_fieldYRng = Math::createUniformRng(-yMax, yMax);
   d_thetaRng  = Math::createUniformRng(-M_PI, M_PI);
 
-  double initialPositionError = 0.05; // 5 cm
-  unsigned initialAngleErrorDeg = 1;  // 1 degree
+  double initialPositionError = 0.03; // cm
+  unsigned initialAngleErrorDeg = 3;  // degree
   d_positionError = Math::createNormalRng(0, initialPositionError);
   d_angleError    = Math::createNormalRng(0, Math::degToRad(initialAngleErrorDeg));
 

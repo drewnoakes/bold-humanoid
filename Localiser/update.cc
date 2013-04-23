@@ -3,7 +3,6 @@
 void Localiser::update()
 {
   auto const& agentFrame = AgentState::get<AgentFrameState>();
-  double torsoHeight = AgentState::get<BodyState>()->getTorsoHeight();
 
   d_filter->predict([this](Vector3d state) -> Vector3d
   {
@@ -14,30 +13,66 @@ void Localiser::update()
     );
   });
 
-  d_filter->update([&torsoHeight,&agentFrame,this](Vector3d state) -> double
+  d_filter->update([&agentFrame,this](Vector3d state) -> double
   {
-    AgentPosition pos(state[0], state[1], torsoHeight, state[2]);
-    Affine3d worldToAgent(pos.worldToAgentTransform());
+    AgentPosition pos(state[0], state[1], state[2]);
+
+    Affine3d agentWorld3d(pos.agentWorldTransform());
+
+    // TODO avoid 2d->3d->2d conversion here by creating a worldToAgent2d transform
+
+    // IDEA further positions have more error, so should carry lesser reward? result: bias slightly towards closer matches
 
     double scoreSum = 0;
 
+    //
+    // Score observed lines
+    //
+
     for (LineSegment3d const& observed : agentFrame->getObservedLineSegments())
     {
-      LineSegment2d const& observed2d = observed.to<2>();
+      LineSegment2d observed2d(observed.to<2>());
+
       double bestScore = 0;
-      for (LineSegment2d const& worldLine : d_fieldMap->getFieldLines())
+
+      for (LineSegment3d const& candidate : d_fieldMap->getFieldLines())
       {
-        Vector3d p1(worldLine.p1().x(), worldLine.p1().y(), torsoHeight);
-        Vector3d p2(worldLine.p2().x(), worldLine.p2().y(), torsoHeight);
-        LineSegment3d candidate3d(worldToAgent * p1, worldToAgent * p2);
-        LineSegment2d candidate2d = candidate3d.to<2>();
+        LineSegment2d candidateAgent = LineSegment3d(agentWorld3d * candidate.p1(), agentWorld3d * candidate.p2()).to<2>();
 
         // very naive scoring system for now...
 
-        double distance1 = (observed2d.p1() - Math::linePointClosestToPoint(candidate2d, observed2d.p1())).norm();
-        double distance2 = (observed2d.p2() - Math::linePointClosestToPoint(candidate2d, observed2d.p2())).norm();
+        double distance1 = (observed2d.p1() - Math::linePointClosestToPoint(candidateAgent, observed2d.p1())).norm();
+        double distance2 = (observed2d.p2() - Math::linePointClosestToPoint(candidateAgent, observed2d.p2())).norm();
 
         double score = 1 / (distance1 + distance2);
+
+        if (score > bestScore)
+          bestScore = score;
+      }
+
+      scoreSum += bestScore;
+    }
+
+    //
+    // Score observed goal posts
+    //
+
+    for (Vector3d const& observed : agentFrame->getGoalObservations())
+    {
+      Vector2d observed2d(observed.head<2>());
+      double bestScore = 0;
+
+      for (Vector3d const& candidate : d_fieldMap->getGoalPostPositions())
+      {
+        Vector3d candidate3d(candidate.x(), candidate.y(), 0);
+        Vector3d candidateAgent3d(agentWorld3d * candidate3d);
+        Vector2d candidateAgent2d(candidateAgent3d.x(), candidateAgent3d.y());
+
+        // very naive scoring system for now...
+
+        double distance = (candidateAgent2d - observed2d).norm();
+
+        double score = 1 / distance;
 
         if (score > bestScore)
           bestScore = score;
@@ -51,7 +86,7 @@ void Localiser::update()
 
   auto state = d_filter->extract();
 
-  d_pos = AgentPosition(state[0], state[1], torsoHeight, state[2]);
+  d_pos = AgentPosition(state[0], state[1], state[2]);
 
   updateStateObject();
 }

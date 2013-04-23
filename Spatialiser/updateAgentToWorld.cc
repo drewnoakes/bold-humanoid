@@ -13,29 +13,27 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
 {
   auto agentFrame = AgentState::get<AgentFrameState>();
 
-  auto const& ballAgent = agentFrame->getBallObservation();
-  auto const& goalsAgent = agentFrame->getGoalObservations();
-  auto const& lineSegmentsAgent = agentFrame->getObservedLineSegments();
-
   //
   // Transform from agent to world space
   //
 
-  Affine3d agentToWorld = position.agentToWorldTransform();
+  Affine3d agentToWorld = position.worldAgentTransform();
+
+  auto const& ballAgent = agentFrame->getBallObservation();
 
   Maybe<Vector3d> ball = ballAgent.hasValue()
-  ? agentToWorld * *(ballAgent.value())
-  : Maybe<Vector3d>::empty();
+    ? agentToWorld * *(ballAgent.value())
+    : Maybe<Vector3d>::empty();
 
   vector<Vector3d> goals;
   vector<LineSegment3d> lineSegments;
 
-  for (auto const& goalPos : goalsAgent)
+  for (auto const& goalPos : agentFrame->getGoalObservations())
   {
     goals.push_back(agentToWorld * goalPos);
   }
 
-  for (auto const& lineSegmentAgent : lineSegmentsAgent)
+  for (auto const& lineSegmentAgent : agentFrame->getObservedLineSegments())
   {
     auto lineSegment = LineSegment3d(
       agentToWorld * lineSegmentAgent.p1(),

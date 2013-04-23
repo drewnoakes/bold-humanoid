@@ -12,7 +12,6 @@ void WorldFrameState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.Double(d_position.x());
       writer.Double(d_position.y());
-      writer.Double(d_position.z());
       writer.Double(d_position.theta());
     }
     writer.EndArray();

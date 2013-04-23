@@ -152,7 +152,7 @@ define(
                 var scale = options.scale || 1,
                     agentDotRadius = options.agentDotRadius || 3,
                     agentDirectionLength = options.agentDirectionLength || 15,
-                    heading = agentPosition[3] + Math.PI / 2;
+                    heading = agentPosition[2] + Math.PI / 2;
 
                 context.strokeStyle = options.agentPosStyle || 'red';
                 context.fillStyle = options.agentPosStyle || 'red';

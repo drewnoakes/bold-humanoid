@@ -44,55 +44,55 @@ FieldMap::FieldMap(minIni const& ini)
 
 //   // CROSS MARKS
 //   // center cross mark
-//   LineSegment2d(-halfCrossLength, 0, halfCrossLength, 0);
-//   LineSegment2d(0, -halfCrossLength, 0, halfCrossLength);
+//   LineSegment3d(-halfCrossLength, 0, 0, halfCrossLength, 0, 0);
+//   LineSegment3d(0, -halfCrossLength, 0, 0, halfCrossLength, 0);
 //   // left penalty mark
-//   LineSegment2d(-penaltyInnerX, 0, -penaltyOuterX, 0);
-//   LineSegment2d(-penaltyX, -halfCrossLength, -penaltyX, halfCrossLength);
+//   LineSegment3d(-penaltyInnerX, 0, 0, -penaltyOuterX, 0, 0);
+//   LineSegment3d(-penaltyX, -halfCrossLength, 0, -penaltyX, halfCrossLength, 0);
 //   // right penalty mark
-//   LineSegment2d(penaltyInnerX, 0, penaltyOuterX, 0);
-//   LineSegment2d(penaltyX, -halfCrossLength, penaltyX, halfCrossLength);
+//   LineSegment3d(penaltyInnerX, 0, 0, penaltyOuterX, 0, 0);
+//   LineSegment3d(penaltyX, -halfCrossLength, 0, penaltyX, halfCrossLength, 0);
 
   // OUTER SQUARE
   // top
-  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, halfFieldY), Vector2d(halfFieldX, halfFieldY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-halfFieldX, halfFieldY, 0), Vector3d(halfFieldX, halfFieldY, 0)));
   // bottom
-  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, -halfFieldY), Vector2d(halfFieldX, -halfFieldY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-halfFieldX, -halfFieldY, 0), Vector3d(halfFieldX, -halfFieldY, 0)));
   // left
-  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, -halfFieldY), Vector2d(-halfFieldX, halfFieldY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-halfFieldX, -halfFieldY, 0), Vector3d(-halfFieldX, halfFieldY, 0)));
   // right
-  d_fieldLines.push_back(LineSegment2d(Vector2d(halfFieldX, -halfFieldY), Vector2d(halfFieldX, halfFieldY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(halfFieldX, -halfFieldY, 0), Vector3d(halfFieldX, halfFieldY, 0)));
 
   // GOAL AREAS
   // left, top
-  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, halfGoalAreaY), Vector2d(-halfFieldX+goalAreaX, halfGoalAreaY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-halfFieldX, halfGoalAreaY, 0), Vector3d(-halfFieldX+goalAreaX, halfGoalAreaY, 0)));
   // left, bottom
-  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX, -halfGoalAreaY), Vector2d(-halfFieldX+goalAreaX, -halfGoalAreaY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-halfFieldX, -halfGoalAreaY, 0), Vector3d(-halfFieldX+goalAreaX, -halfGoalAreaY, 0)));
   // left, side
-  d_fieldLines.push_back(LineSegment2d(Vector2d(-halfFieldX+goalAreaX, halfGoalAreaY), Vector2d(-halfFieldX+goalAreaX, -halfGoalAreaY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-halfFieldX+goalAreaX, halfGoalAreaY, 0), Vector3d(-halfFieldX+goalAreaX, -halfGoalAreaY, 0)));
   // right, top
-  d_fieldLines.push_back(LineSegment2d(Vector2d(halfFieldX, halfGoalAreaY), Vector2d(halfFieldX-goalAreaX, halfGoalAreaY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(halfFieldX, halfGoalAreaY, 0), Vector3d(halfFieldX-goalAreaX, halfGoalAreaY, 0)));
   // right, bottom
-  d_fieldLines.push_back(LineSegment2d(Vector2d(halfFieldX, -halfGoalAreaY), Vector2d(halfFieldX-goalAreaX, -halfGoalAreaY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(halfFieldX, -halfGoalAreaY, 0), Vector3d(halfFieldX-goalAreaX, -halfGoalAreaY, 0)));
   // right, side
-  d_fieldLines.push_back(LineSegment2d(Vector2d(halfFieldX-goalAreaX, halfGoalAreaY), Vector2d(halfFieldX-goalAreaX, -halfGoalAreaY)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(halfFieldX-goalAreaX, halfGoalAreaY, 0), Vector3d(halfFieldX-goalAreaX, -halfGoalAreaY, 0)));
 
   // CIRCLE
   int segments = 18;
-  Vector2d lastPoint(0, circleRadius);
+  Vector3d lastPoint(0, circleRadius, 0);
   for (unsigned i = 1; i <= segments; i++)
   {
     double theta = (i/(double)segments) * M_PI * 2;
-    Vector2d point(sin(theta) * circleRadius, cos(theta) * circleRadius);
-    d_fieldLines.push_back(LineSegment2d(lastPoint, point));
+    Vector3d point(sin(theta) * circleRadius, cos(theta) * circleRadius, 0);
+    d_fieldLines.push_back(LineSegment3d(lastPoint, point));
     lastPoint = point;
   }
 
   // GOAL POST POSITIONS
   d_goalPostPositions = {
-    Vector2d(-halfFieldX, halfGoalY),
-    Vector2d(-halfFieldX, -halfGoalY),
-    Vector2d(halfFieldX, halfGoalY),
-    Vector2d(halfFieldX, -halfGoalY)
+    Vector3d(-halfFieldX, halfGoalY, 0),
+    Vector3d(-halfFieldX, -halfGoalY, 0),
+    Vector3d(halfFieldX, halfGoalY, 0),
+    Vector3d(halfFieldX, -halfGoalY, 0)
   };
 };

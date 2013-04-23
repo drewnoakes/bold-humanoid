@@ -4,31 +4,6 @@ void Spatialiser::updateCameraToAgent()
 {
   auto cameraFrame = AgentState::get<CameraFrameState>();
 
-  /*
-  auto body = AgentState::get<BodyState>();
-  auto neck = body->getLimb("neck");
-  auto neckHeadJoint = neck->joints[0];
-  auto head = body->getLimb("head");
-  auto cameraJoint = head->joints[0];
-  auto camera = body->getLimb("camera");
-  auto lFoot = body->getLimb("lFoot");
-  auto lKnee = body->getLimb("lLowerLeg");
-  auto rFoot = body->getLimb("rFoot");
-
-  cout << "---------------" << endl;
-  cout << "neckHeadJoint: " << neckHeadJoint->angle << endl << neckHeadJoint->transform.translation().transpose() << endl;
-  cout << "head:" << endl << head->transform.translation().transpose() << endl;
-  cout << "cameraJoint:" << endl << cameraJoint->transform.translation().transpose() << endl;
-  cout << "camera:" << endl << camera->transform.matrix() << endl;
-  cout << "foot: " << endl << lFoot->transform.matrix() << endl;
-  auto cameraToLFoot = lFoot->transform.inverse() * camera->transform;
-  cout << "cam2foot: " << endl << cameraToLFoot.translation().transpose() << endl;
-
-  cout << "l foot transform:" << endl << lFoot->transform.matrix() << endl;
-  cout << "l knee transform:" << endl << lKnee->transform.matrix() << endl;
-  cout << "r foot transform:" << endl << rFoot->transform.matrix() << endl;
-  */
-
   auto const& ballObs = cameraFrame->getBallObservation();
 
   Maybe<Vector3d> ball = ballObs.hasValue()

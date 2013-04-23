@@ -18,7 +18,7 @@ namespace bold
   class Localiser
   {
   public:
-    Localiser(std::shared_ptr<FieldMap> fieldMap, unsigned initialCount = 200, double randomizeRatio = 0.1);
+    Localiser(std::shared_ptr<FieldMap> fieldMap, unsigned initialCount = 200, double randomizeRatio = 0.05);
 
     void predict(Eigen::Affine3d motion);
 
