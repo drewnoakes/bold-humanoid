@@ -10,10 +10,11 @@ define(
          *
          * ModuleHost provides common services to all modules, and controls their display on the page.
          */
-        var ModuleHost = function ()
+        var ModuleHost = function (linkContainerSelector)
         {
             this.modules = [];
             this.loaded = false;
+            this.$linkContainer = $(linkContainerSelector);
         };
 
         ModuleHost.prototype.register = function(module)
@@ -22,6 +23,21 @@ define(
               throw 'Cannot register modules once the host is loaded.';
 
             this.modules.push(module);
+
+            console.log(module);
+            var $moduleButton = $('<a></a>', {'class': 'module-button', href:'#'})
+                .text(module.title)
+                .click(function (event)
+                {
+                    event.preventDefault();
+                    if (module.element)
+                        this.removeModule(module);
+                    else
+                        this.addModule(module);
+                    return false;
+                }.bind(this));
+            module.$button = $moduleButton;
+            this.$linkContainer.append($moduleButton);
         };
 
         var moduleTemplate = Handlebars.compile($('#module-template').html()),
@@ -36,7 +52,6 @@ define(
               throw 'Already loaded.';
 
             this.loaded = true;
-            this.addAllModules();
         };
 
         ModuleHost.prototype.addAllModules = function ()
@@ -50,6 +65,7 @@ define(
                 moduleElement = $('<div></div>').html(moduleHtml).children().get(0),
                 $moduleElement = $(moduleElement);
 
+            module.$button.addClass('added');
             module.element = moduleElement;
             $moduleContainer.append(moduleElement);
 
@@ -96,12 +112,16 @@ define(
             if (!module.element)
                 throw 'Has not been added';
 
+            module.$button.removeClass('added');
+
             // Remove from the DOM
             $(module.element).remove();
 
             // Tell it to clean up
             if (module.unload)
                 module.unload();
+
+            delete module.element;
         };
 
         ModuleHost.prototype.loadPane = function(module, pane)

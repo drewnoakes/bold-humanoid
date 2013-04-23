@@ -47,6 +47,36 @@ div#header-content h2
     font-weight: normal;
 }
 
+div#header-module-links
+{
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    left: 400px;
+    text-align: right;
+}
+
+div#header-module-links > a.module-button
+{
+    display: inline-block;
+    margin: 2px;
+    padding: 5px;
+    background-color: #ddd;
+    color: #444;
+    text-decoration: none;
+    transition: background-color 0.4s linear;
+    -moz-transition: background-color 0.4s linear;
+    -o-transition: background-color 0.4s linear;
+    -webkit-transition: background-color 0.4s linear;
+}
+
+div#header-module-links > a.module-button.added
+{
+    color: #fff;
+    background-color: rgba(121, 36, 133, 0.7);
+    border-bottom: 1px solid rgba(121, 36, 133, 1);
+}
+
 /********************************************************************/
 
 ul#module-container

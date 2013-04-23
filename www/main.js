@@ -17,20 +17,20 @@ require(
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
 
-        var moduleHost = new ModuleHost();
+        var moduleHost = new ModuleHost('#header-module-links');
 
         moduleHost.register(new CameraModule());
         moduleHost.register(new World3dModule());
-        moduleHost.register(new TimingModule());
-        moduleHost.register(new IMUModule());
         moduleHost.register(new World2dModule());
+        moduleHost.register(new TimingModule());
+        moduleHost.register(new LocaliserModule());
+        moduleHost.register(new IMUModule());
         moduleHost.register(new OptionTreeModule());
         moduleHost.register(new StateDumpModule());
-        moduleHost.register(new LocaliserModule());
-
-//        moduleHost.createLinks('#header');
 
         moduleHost.load();
+
+        moduleHost.addAllModules();
 
         new GameStateMonitor();
 
