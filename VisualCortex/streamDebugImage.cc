@@ -84,12 +84,15 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
 
     for (LineSegment3d const& line : d_fieldMap->getFieldLines())
     {
-      Vector2i p1 = d_cameraModel->pixelForDirection(worldToCamera * line.p1());
-      Vector2i p2 = d_cameraModel->pixelForDirection(worldToCamera * line.p2());
+      auto p1 = d_cameraModel->pixelForDirection(worldToCamera * line.p1());
+      auto p2 = d_cameraModel->pixelForDirection(worldToCamera * line.p2());
 
-      LineSegment2i line2i(p1, p2);
+      if (p1.hasValue() && p2.hasValue())
+      {
+        LineSegment2i line2i(*p1.value(), *p2.value());
 
-      line2i.draw(debugImage, expectedLineColour, 1);
+        line2i.draw(debugImage, expectedLineColour, 1);
+      }
     }
   }
 

@@ -6,6 +6,8 @@
 #include <Eigen/Geometry>
 #include <minIni.h>
 
+#include "../util/Maybe.hh"
+
 namespace bold
 {
   typedef std::function<Eigen::Vector2i(Eigen::Vector3d const&)> Projector;
@@ -45,7 +47,7 @@ namespace bold
      */
     Eigen::Vector3d directionForPixel(Eigen::Vector2i const& pixel) const;
 
-    Eigen::Vector2i pixelForDirection(Eigen::Vector3d const& direction) const;
+    Maybe<Eigen::Vector2i> pixelForDirection(Eigen::Vector3d const& direction) const;
 
     /** Gets a projection matrix
      *
@@ -64,7 +66,7 @@ namespace bold
         0, f, 0, 0,
         0, 0, 1, 0,
         0, 0, 1, 0;
-      
+
       auto s = Eigen::Scaling((d_imageWidth - 1) / 2.0, (d_imageHeight - 1) / 2.0, 1.0);
       Eigen::Affine3d t;
       t.matrix() <<
@@ -72,7 +74,7 @@ namespace bold
         0, 0, 1, 0,
         0, 1, 0, 0,
         0, 0, 0, 1;
-      
+
       return s * c * t;
     }
 

@@ -1,8 +1,9 @@
 #include "cameramodel.ih"
 
-Vector2i CameraModel::pixelForDirection(Vector3d const& direction) const
+Maybe<Vector2i> CameraModel::pixelForDirection(Vector3d const& direction) const
 {
-  assert(direction.y() > 0);
+  if (direction.y() <= 0)
+    return Maybe<Vector2i>::empty();
 
   double r = focalLength() * tan(rangeVerticalRads() / 2);
 
@@ -14,5 +15,5 @@ Vector2i CameraModel::pixelForDirection(Vector3d const& direction) const
   pixel.x() = (d_imageWidth - 1) / 2 * (-p.x() + 1) + 0.5;
   pixel.y() = (d_imageHeight - 1) / 2 * (p.z() / r + 1) + 0.5;
 
-  return pixel;
+  return Maybe<Vector2i>(pixel);
 }
