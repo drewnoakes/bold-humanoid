@@ -15,6 +15,12 @@ define(
             this.modules = [];
             this.loaded = false;
             this.$linkContainer = $(linkContainerSelector);
+            this.$moduleContainer = $('#module-container');
+
+            var sortableOptions = {
+                update: this.updateHash.bind(this)
+            };
+            this.$moduleContainer.sortable(sortableOptions); //.disableSelection();
         };
 
         ModuleHost.prototype.register = function(module)
@@ -24,7 +30,6 @@ define(
 
             this.modules.push(module);
 
-            console.log(module);
             var $moduleButton = $('<a></a>', {'class': 'module-button', href:'#'})
                 .text(module.title)
                 .click(function (event)
@@ -40,8 +45,7 @@ define(
             this.$linkContainer.append($moduleButton);
         };
 
-        var moduleTemplate = Handlebars.compile($('#module-template').html()),
-            $moduleContainer = $('#module-container');
+        var moduleTemplate = Handlebars.compile($('#module-template').html());
 
         ModuleHost.prototype.load = function()
         {
@@ -67,7 +71,8 @@ define(
 
             module.$button.addClass('added');
             module.element = moduleElement;
-            $moduleContainer.append(moduleElement);
+            moduleElement.module = module;
+            this.$moduleContainer.append(moduleElement);
 
             // Populate element properties
             module.paneContainer = $(moduleElement).find('.pane-container').get(0);
@@ -105,6 +110,8 @@ define(
 
             // Load the first pane
             this.loadPane(module, module.panes[0]);
+
+            this.updateHash();
         };
 
         ModuleHost.prototype.removeModule = function(module)
@@ -122,6 +129,8 @@ define(
                 module.unload();
 
             delete module.element;
+
+            this.updateHash();
         };
 
         ModuleHost.prototype.loadPane = function(module, pane)
@@ -138,6 +147,18 @@ define(
                 pane.onResized(module.paneContainer.clientWidth,  module.paneContainer.clientHeight);
 
             module.activePane = pane;
+        };
+
+        ModuleHost.prototype.updateHash = function()
+        {
+            var hash = '';
+            _.each(this.$moduleContainer.find('div.module'), function (moduleDiv)
+            {
+                if (hash)
+                    hash += '|';
+                hash += moduleDiv.module.moduleClass;
+            });
+            window.location.hash = hash;
         };
 
         return ModuleHost;

@@ -30,12 +30,8 @@ require(
 
         moduleHost.load();
 
-        moduleHost.addAllModules();
-
         new GameStateMonitor();
 
         ControlClient.connect();
-
-        $('#module-container').sortable(); //.disableSelection();
     }
 );
