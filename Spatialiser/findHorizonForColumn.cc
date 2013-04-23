@@ -1,5 +1,15 @@
 #include "spatialiser.ih"
 
+int Spatialiser::findHorizonForColumn(int column)
+{
+  if (!AgentState::get<BodyState>())
+    return -1;
+
+  Affine3d cameraAgentTransform = AgentState::get<BodyState>()->getCameraAgentTransform();
+
+  return findHorizonForColumn(column, cameraAgentTransform);
+}
+
 int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraTorsoTransform)
 {
   // Equation of horizon line:
@@ -13,6 +23,9 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraTorsoTra
   //
   // x nx + f ny + z nz = 0
   // y = -1/ny (x nx + f nz)
+
+  assert(d_cameraModel);
+  assert(d_cameraModel->imageWidth() > 1);
 
   // x on projection plane
   double x = (2.0 * column / (d_cameraModel->imageWidth() - 1.0)) - 1.0;

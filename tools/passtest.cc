@@ -105,7 +105,8 @@ int main(int argc, char **argv)
 
   // Resources for labelling
   cv::Mat labelledImage(colourImage.size(), CV_8UC1);
-  auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels));
+  // TODO: this will crash
+  auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels), 0);
 
   // Resources for blob detection
   auto ballUnionPred = &Run::overlaps;

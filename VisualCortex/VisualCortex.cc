@@ -20,7 +20,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_goalLabel, d_ballLabel, d_fieldLabel, d_lineLabel };
 
-  d_imageLabeller = make_shared<ImageLabeller>();
+  d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
   auto createLookupTable = [this,pixelLabels]()
   {

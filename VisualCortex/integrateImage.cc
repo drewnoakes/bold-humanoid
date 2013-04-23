@@ -15,7 +15,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
   if (d_labelledImage.rows != image.rows || d_labelledImage.cols != image.cols)
     d_labelledImage = cv::Mat(image.rows, image.cols, CV_8UC1);
 
-  d_imageLabeller->label(image, d_labelledImage);
+  d_imageLabeller->label(image, d_labelledImage, true);
   t = debugger.timeEvent(t, "Image Processing/Pixel Label");
 
   // Perform the image pass
