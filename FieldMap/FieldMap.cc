@@ -43,14 +43,14 @@ FieldMap::FieldMap(minIni const& ini)
 
   // CROSS MARKS
   // center cross mark
-  d_fieldLines.push_back(LineSegment3d(-halfCrossLength, 0, 0, halfCrossLength, 0, 0));
-//  d_fieldLines.push_back(LineSegment3d(0, -halfCrossLength, 0, 0, halfCrossLength, 0));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-halfCrossLength, 0, 0), Vector3d(halfCrossLength, 0, 0)));
+//  d_fieldLines.push_back(LineSegment3d(Vector3d(0, -halfCrossLength, 0), Vector3d(0, halfCrossLength, 0)));
   // left penalty mark
-  d_fieldLines.push_back(LineSegment3d(-penaltyInnerX, 0, 0, -penaltyOuterX, 0, 0));
-  d_fieldLines.push_back(LineSegment3d(-penaltyX, -halfCrossLength, 0, -penaltyX, halfCrossLength, 0));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-penaltyInnerX, 0, 0), Vector3d(-penaltyOuterX, 0, 0)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(-penaltyX, -halfCrossLength, 0), Vector3d(-penaltyX, halfCrossLength, 0)));
   // right penalty mark
-  d_fieldLines.push_back(LineSegment3d(penaltyInnerX, 0, 0, penaltyOuterX, 0, 0));
-  d_fieldLines.push_back(LineSegment3d(penaltyX, -halfCrossLength, 0, penaltyX, halfCrossLength, 0));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(penaltyInnerX, 0, 0), Vector3d(penaltyOuterX, 0, 0)));
+  d_fieldLines.push_back(LineSegment3d(Vector3d(penaltyX, -halfCrossLength, 0), Vector3d(penaltyX, halfCrossLength, 0)));
 
   // OUTER SQUARE
   // top
