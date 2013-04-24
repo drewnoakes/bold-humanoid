@@ -80,15 +80,15 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   // Draw expected lines
   if (d_shouldDrawExpectedLines)
   {
-    Affine3d const& worldToAgent = AgentState::get<WorldFrameState>()->getPosition().agentWorldTransform();
-    Affine3d const& agentToCamera = AgentState::get<BodyState>()->getLimb("camera")->transform.inverse();
+    Affine3d const& agentWorld = AgentState::get<WorldFrameState>()->getPosition().agentWorldTransform();
+    Affine3d const& cameraAgent = AgentState::get<BodyState>()->getCameraAgentTransform();
 
-    Affine3d const& worldToCamera = agentToCamera * worldToAgent;
+    Affine3d const& cameraWorld = cameraAgent * agentWorld;
 
     for (LineSegment3d const& line : d_fieldMap->getFieldLines())
     {
-      auto p1 = d_cameraModel->pixelForDirection(worldToCamera * line.p1());
-      auto p2 = d_cameraModel->pixelForDirection(worldToCamera * line.p2());
+      auto p1 = d_cameraModel->pixelForDirection(cameraWorld * line.p1());
+      auto p2 = d_cameraModel->pixelForDirection(cameraWorld * line.p2());
 
       if (p1.hasValue() && p2.hasValue())
       {
