@@ -17,6 +17,7 @@ define(
 
         var onControlData = function(data)
         {
+            console.log('Received control data:', data);
             // Store the control data
             dataByFamily = data;
 
