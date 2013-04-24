@@ -27,6 +27,7 @@ int main(int argc, char **argv)
   bool autoGetUpFromFallen = true;
   bool recordFrames = false;
   bool useOptionTree = true;
+  unsigned uniformNumber = 0;
 
   string confFile("config.ini");
 
@@ -40,16 +41,21 @@ int main(int argc, char **argv)
     {
       cout << "Options:" << endl;
       cout << "\t-c <file>\tselect configuration file (or --conf)" << endl;
-      cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
-      cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
-      cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
+      cout << "\t-n <num>\tplayer number (or --number)" << endl;
       cout << "\t-t\tdisable the option tree (or --no-tree)" << endl;
+      cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
+      cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
+      cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
       cout << "\t-h\tshow these options (or --help)" << endl;
       return 0;
     }
     else if (arg == "-c" || arg == "--conf")
     {
       confFile = argv[++i];
+    }
+    else if (arg == "-n" || arg == "--number")
+    {
+      uniformNumber = atoi(argv[++i]);
     }
     else if (arg == "-j" || arg == "--joystick")
     {
@@ -75,6 +81,7 @@ int main(int argc, char **argv)
     U2D_DEV_NAME0,
     ini,
     MOTION_FILE_PATH,
+    uniformNumber,
     useJoystick,
     autoGetUpFromFallen,
     useOptionTree,
