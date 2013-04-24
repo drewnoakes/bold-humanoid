@@ -46,6 +46,9 @@ void Localiser::update()
 
         double score = 1 / (distance1 + distance2 + 1);
 
+        double dotProduct = observed2d.delta().normalized().dot( candidateAgent.delta().normalized() );
+        score *= dotProduct;
+
         if (score > bestScore)
           bestScore = score;
       }
