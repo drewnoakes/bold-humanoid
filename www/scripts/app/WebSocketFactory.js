@@ -3,7 +3,7 @@
  */
 define(
     [
-      'scripts/app/Settings'
+      'Settings'
     ],
     function(Settings)
     {

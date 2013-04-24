@@ -3,8 +3,8 @@
  */
 define(
     [
-        'scripts/app/ControlTypeEnum',
-        'scripts/app/ControlClient'
+        'ControlTypeEnum',
+        'ControlClient'
     ],
     function (ControlTypeEnum, ControlClient)
     {

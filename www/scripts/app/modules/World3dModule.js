@@ -3,12 +3,12 @@
  */
 define(
     [
-        'scripts/app/GeometryUtil',
-        'scripts/app/DataProxy',
-        'scripts/app/Protocols',
-        'scripts/app/FieldLinePlotter',
-        'scripts/app/Constants',
-        'scripts/app/util/Dragger'
+        'GeometryUtil',
+        'DataProxy',
+        'Protocols',
+        'FieldLinePlotter',
+        'Constants',
+        'util/Dragger'
     ],
     function(GeometryUtil, DataProxy, Protocols, FieldLinePlotter, Constants, Dragger)
     {

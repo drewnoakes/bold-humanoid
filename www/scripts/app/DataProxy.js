@@ -3,7 +3,7 @@
  */
 define(
     [
-        'scripts/app/WebSocketFactory'
+        'WebSocketFactory'
     ],
     function (WebSocketFactory)
     {

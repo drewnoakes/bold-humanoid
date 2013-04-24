@@ -3,7 +3,7 @@
  */
 define(
     [
-        'scripts/app/Constants'
+        'Constants'
     ],
     function (Constants)
     {

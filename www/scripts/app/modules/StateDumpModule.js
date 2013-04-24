@@ -3,8 +3,8 @@
  */
 define(
     [
-        'scripts/app/Protocols',
-        'scripts/app/DataProxy'
+        'Protocols',
+        'DataProxy'
     ],
     function(Protocols, DataProxy)
     {

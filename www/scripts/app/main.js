@@ -1,16 +1,16 @@
 require(
     [
-        'scripts/app/ModuleHost',
-        'scripts/app/modules/World2dModule',
-        'scripts/app/modules/TimingModule',
-        'scripts/app/modules/World3dModule',
-        'scripts/app/modules/CameraModule',
-        'scripts/app/modules/OptionTreeModule',
-        'scripts/app/modules/IMUModule',
-        'scripts/app/modules/StateDumpModule',
-        'scripts/app/modules/LocaliserModule',
-        'scripts/app/modules/GameStateModule',
-        'scripts/app/ControlClient'
+        'ModuleHost',
+        'modules/World2dModule',
+        'modules/TimingModule',
+        'modules/World3dModule',
+        'modules/CameraModule',
+        'modules/OptionTreeModule',
+        'modules/IMUModule',
+        'modules/StateDumpModule',
+        'modules/LocaliserModule',
+        'modules/GameStateModule',
+        'ControlClient'
     ],
     function(ModuleHost, World2dModule, TimingModule, World3dModule, CameraModule, OptionTreeModule, IMUModule, StateDumpModule, LocaliserModule, GameStateModule, ControlClient)
     {

@@ -3,9 +3,9 @@
  */
 define(
     [
-        'scripts/app/DataProxy',
-        'scripts/app/ControlBuilder',
-        'scripts/app/Protocols'
+        'DataProxy',
+        'ControlBuilder',
+        'Protocols'
     ],
     function(DataProxy, ControlBuilder, Protocols)
     {

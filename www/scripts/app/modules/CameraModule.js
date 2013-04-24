@@ -1,10 +1,10 @@
 define(
     [
-        'scripts/app/WebSocketFactory',
-        'scripts/app/Protocols',
-        'scripts/app/DataProxy',
-        'scripts/app/ControlBuilder',
-        'scripts/app/util/Colour'
+        'WebSocketFactory',
+        'Protocols',
+        'DataProxy',
+        'ControlBuilder',
+        'util/Colour'
     ],
     function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, Colour)
     {

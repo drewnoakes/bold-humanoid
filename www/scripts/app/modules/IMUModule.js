@@ -3,9 +3,9 @@
  */
 define(
     [
-        'scripts/app/DataProxy',
-        'scripts/app/Protocols',
-        'scripts/app/PolarTrace'
+        'DataProxy',
+        'Protocols',
+        'PolarTrace'
     ],
     function(DataProxy, Protocols, PolarTrace)
     {

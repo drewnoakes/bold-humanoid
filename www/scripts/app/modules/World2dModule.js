@@ -3,11 +3,11 @@
  */
 define(
     [
-        'scripts/app/FieldLinePlotter',
-        'scripts/app/Protocols',
-        'scripts/app/Constants',
-        'scripts/app/DataProxy',
-        'scripts/app/util/Dragger'
+        'FieldLinePlotter',
+        'Protocols',
+        'Constants',
+        'DataProxy',
+        'util/Dragger'
     ],
     function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger)
     {
