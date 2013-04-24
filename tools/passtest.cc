@@ -135,14 +135,12 @@ int main(int argc, char **argv)
   // Resources for counting the number of labels
   auto labelCountPass = make_shared<LabelCountPass>(labels);
 
-  // Build the image passer
-  vector<shared_ptr<ImagePassHandler<uchar>>> handlers = {
-    lineDotPass,
-    blobDetectPass,
-    cartoonPass,
-    labelCountPass
-  };
-  auto passer = ImagePassRunner<uchar>(handlers);
+  // Build the pass runner
+  auto passRunner = ImagePassRunner<uchar>();
+  passRunner.addHandler(lineDotPass);
+  passRunner.addHandler(blobDetectPass);
+  passRunner.addHandler(cartoonPass);
+  passRunner.addHandler(labelCountPass);
 
   RandomPairLineFinder randomPairLineFinder(imageWidth, imageHeight);
   randomPairLineFinder.setMinDotManhattanDistance(10);
@@ -165,7 +163,7 @@ int main(int argc, char **argv)
   //
   t = getTimestamp();
   for (int i = 0; i < loopCount; i++)
-    passer.pass(labelledImage);
+    passRunner.pass(labelledImage);
   cout << "Passed " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
 
   //

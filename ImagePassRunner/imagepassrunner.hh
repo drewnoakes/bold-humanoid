@@ -1,6 +1,7 @@
 #ifndef BOLD_IMAGEPASSRUNNER_HH
 #define BOLD_IMAGEPASSRUNNER_HH
 
+#include <cassert>
 #include <opencv2/core/core.hpp>
 #include <vector>
 
@@ -12,9 +13,18 @@ namespace bold
   class ImagePassRunner
   {
   public:
-    ImagePassRunner(std::vector<std::shared_ptr<ImagePassHandler<TPixel>>> handlers)
-    : d_handlers(handlers)
-    {}
+    void addHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler)
+    {
+      assert(std::find(d_handlers.begin(), d_handlers.end(), handler) == d_handlers.end());
+      d_handlers.push_back(handler);
+    }
+
+    void removeHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler)
+    {
+      auto it = d_handlers.find(handler);
+      assert(it != d_handlers.end());
+      d_handlers.erase(it);
+    }
 
     void pass(cv::Mat& image) const
     {
@@ -43,7 +53,6 @@ namespace bold
 
   private:
     std::vector<std::shared_ptr<ImagePassHandler<TPixel>>> d_handlers;
-
   };
 }
 

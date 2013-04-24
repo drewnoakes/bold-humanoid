@@ -67,14 +67,11 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, pixelLabels, Colour::bgr(128,128,128));
   d_labelCountPass = make_shared<LabelCountPass>(pixelLabels);
 
-  vector<shared_ptr<ImagePassHandler<uchar>>> handlers = {
-    d_lineDotPass,
-    d_blobDetectPass,
-    d_cartoonPass,
-//    d_labelCountPass
-  };
-
-  d_imagePassRunner = make_shared<ImagePassRunner<uchar>>(handlers);
+  d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
+  d_imagePassRunner->addHandler(d_lineDotPass);
+  d_imagePassRunner->addHandler(d_blobDetectPass);
+  d_imagePassRunner->addHandler(d_cartoonPass);
+//   d_imagePassRunner->addHandler(d_labelCountPass);
 
   d_lineFinder = make_shared<MaskWalkLineFinder>(imageWidth, imageHeight);
   d_controlsByFamily["lines"] = d_lineFinder->getControls();
