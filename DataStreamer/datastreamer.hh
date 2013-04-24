@@ -68,13 +68,11 @@ namespace bold
     void registerControls(std::string family, std::vector<Control> controls);
 
   private:
-    void sendCameraControls(libwebsocket* wsi);
     void sendImageBytes(libwebsocket* wsi, CameraSession* session);
 
     void processCommand(std::string json);
     int writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
 
-    // TODO can this be const?
     std::vector<Control> getDebugControls();
     std::map<std::string,std::map<unsigned, Control>> d_controlsByIdByFamily;
 
