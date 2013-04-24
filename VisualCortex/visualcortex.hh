@@ -37,6 +37,14 @@ namespace bold
 
   class Spatialiser;
 
+  enum class ImageType
+  {
+    None = 0,
+    YCbCr = 1,
+    RGB = 2,
+    Cartoon = 3
+  };
+
   /** Bold-humanoid's vision processing subsystem. */
   class VisualCortex
   {
@@ -85,6 +93,14 @@ namespace bold
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
 
     int d_minBallArea;
+
+    ImageType d_imageType;
+    unsigned d_streamFramePeriod;
+    bool d_shouldDrawBlobs;
+    bool d_shouldDrawLineDots;
+    bool d_shouldDrawExpectedLines;
+    bool d_shouldDrawObservedLines;
+    bool d_shouldDrawHorizon;
   };
 }
 

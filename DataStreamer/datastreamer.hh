@@ -35,14 +35,6 @@ namespace bold
     unsigned imgBytesSent;
   };
 
-  enum class ImageType
-  {
-    None = 0,
-    YCbCr = 1,
-    RGB = 2,
-    Cartoon = 3
-  };
-
   class DataStreamer
   {
   public:
@@ -51,16 +43,8 @@ namespace bold
     void update();
     void close();
 
-    /** Gets the type of image that clients have requested to view. May be None. */
-    ImageType getImageType() const { return d_imageType; }
-
-    /** Gets whether the vision system should provide a debugging image this cycle. */
-    bool shouldProvideImage();
-    bool shouldDrawBlobs() const { return d_shouldDrawBlobs; }
-    bool shouldDrawLineDots() const { return d_shouldDrawLineDots; }
-    bool shouldDrawExpectedLines() const { return d_shouldDrawExpectedLines; }
-    bool shouldDrawObservedLines() const { return d_shouldDrawObservedLines; }
-    bool shouldDrawHorizon() const { return d_shouldDrawHorizon; }
+    /** Returns true if there is at least one client connected to the camera image protocol. */
+    bool hasImageClients() const { return d_cameraSessions.size() != 0; }
 
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img);
@@ -73,17 +57,9 @@ namespace bold
     void processCommand(std::string json);
     int writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
 
-    std::vector<Control> getDebugControls();
     std::map<std::string,std::map<unsigned, Control>> d_controlsByIdByFamily;
 
     cv::Mat d_image;
-    ImageType d_imageType;
-    unsigned d_streamFramePeriod;
-    bool d_shouldDrawBlobs;
-    bool d_shouldDrawLineDots;
-    bool d_shouldDrawExpectedLines;
-    bool d_shouldDrawObservedLines;
-    bool d_shouldDrawHorizon;
 
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<Debugger> d_debugger;

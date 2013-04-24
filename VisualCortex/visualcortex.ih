@@ -23,13 +23,16 @@
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
 
+#include <LinuxDARwIn.h>
+
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
 #include <cmath>
 #include <iostream>
 
-using namespace cv;
 using namespace bold;
-using namespace std;
+using namespace cv;
 using namespace Eigen;
+using namespace std;
+using namespace Robot;

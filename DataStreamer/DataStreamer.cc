@@ -3,24 +3,14 @@
 DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger)
 : d_controlsByIdByFamily(),
   d_image(),
-  d_imageType(ImageType::RGB),
-  d_streamFramePeriod(10),
-  d_shouldDrawBlobs(true),
-  d_shouldDrawLineDots(false),
-  d_shouldDrawExpectedLines(false),
-  d_shouldDrawObservedLines(true),
-  d_shouldDrawHorizon(true),
   d_camera(camera),
   d_debugger(debugger),
   d_context(0),
   d_cameraSessions()
-
 {
   cout << "[DataStreamer::DataStreamer] Starting" << endl;
 
   d_port = ini.geti("Debugger", "TcpPort", 8080);
-
-  d_streamFramePeriod = ini.geti("Debugger", "BroadcastFramePeriod", 5);
 
   // We have three special protocols: HTTP-only, Camera, Timing and Control.
   // These are followed by N other protocols, one per type of state in the system
@@ -74,7 +64,4 @@ DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::sh
       libwebsocket_callback_on_writable_all_protocol(protocol);
     }
   );
-
-  // TODO split into vision and head controls
-  registerControls("debug", getDebugControls());
 }

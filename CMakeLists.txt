@@ -159,11 +159,9 @@ add_class(BOLDHUMANOID
   ./DataStreamer/callbackTiming.cc
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
-  ./DataStreamer/getDebugControls.cc
   ./DataStreamer/processCommand.cc
   ./DataStreamer/registerControls.cc
   ./DataStreamer/sendImageBytes.cc
-  ./DataStreamer/shouldProvideImage.cc
   ./DataStreamer/streamImage.cc
   ./DataStreamer/update.cc
   ./DataStreamer/writeJson.cc

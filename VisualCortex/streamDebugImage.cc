@@ -2,13 +2,16 @@
 
 void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer)
 {
-  if (!streamer->shouldProvideImage())
+  // Only compose the image if at least one client is connected
+  if (!streamer->hasImageClients())
+    return;
+
+  // Only provide an image every N cycles
+  if (AgentState::getInstance().getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod != 0)
     return;
 
   Debugger& debugger = *d_debugger;
   auto t = Debugger::getTimestamp();
-
-  ImageType imageType = streamer->getImageType();
 
   auto lineDotColour = Colour::bgr(0, 0, 255);
   auto observedLineColour = Colour::bgr(255, 80, 80);
@@ -17,22 +20,22 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
 
   Mat debugImage;
 
-  if (imageType == ImageType::YCbCr)
+  if (d_imageType == ImageType::YCbCr)
   {
     debugImage = cameraImage;
   }
-  else if (imageType == ImageType::RGB)
+  else if (d_imageType == ImageType::RGB)
   {
     debugImage = cameraImage;
     PixelFilterChain chain;
     chain.pushFilter(&Colour::yCbCrToBgrInPlace);
     chain.applyFilters(debugImage);
   }
-  else if (imageType == ImageType::Cartoon)
+  else if (d_imageType == ImageType::Cartoon)
   {
     debugImage = d_cartoonPass->mat();
   }
-  else if (imageType == ImageType::None)
+  else if (d_imageType == ImageType::None)
   {
     debugImage = Mat(cameraImage.size(), cameraImage.type(), Scalar(0));
   }
@@ -43,7 +46,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
 
   // Draw observed lines
   auto const& observedLineSegments = AgentState::get<CameraFrameState>()->getObservedLineSegments();
-  if (streamer->shouldDrawObservedLines() && observedLineSegments.size() > 0)
+  if (d_shouldDrawObservedLines && observedLineSegments.size() > 0)
   {
     for (LineSegment2i const& line : observedLineSegments)
     {
@@ -52,7 +55,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw line dots
-  if (streamer->shouldDrawLineDots() && d_lineDotPass->lineDots.size() > 0)
+  if (d_shouldDrawLineDots && d_lineDotPass->lineDots.size() > 0)
   {
     for (auto const& lineDot : d_lineDotPass->lineDots)
     {
@@ -61,7 +64,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw blobs
-  if (streamer->shouldDrawBlobs())
+  if (d_shouldDrawBlobs)
   {
     for (BlobType const& blobType : d_blobDetectPass->blobTypes())
     {
@@ -75,7 +78,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw expected lines
-  if (streamer->shouldDrawExpectedLines())
+  if (d_shouldDrawExpectedLines)
   {
     Affine3d const& worldToAgent = AgentState::get<WorldFrameState>()->getPosition().agentWorldTransform();
     Affine3d const& agentToCamera = AgentState::get<BodyState>()->getLimb("camera")->transform.inverse();
@@ -97,7 +100,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw horizon
-  if (streamer->shouldDrawHorizon())
+  if (d_shouldDrawHorizon)
   {
     auto const& body = AgentState::get<BodyState>();
     auto neckJoint = body->getLimb("neck")->joints[0];

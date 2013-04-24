@@ -46,8 +46,7 @@ void Agent::think()
   d_visualCortex->integrateImage(image);
   t = debugger.timeEvent(t, "Image Processing");
 
-  if (d_streamer->shouldProvideImage())
-    d_visualCortex->streamDebugImage(image, d_streamer);
+  d_visualCortex->streamDebugImage(image, d_streamer);
   t = debugger.timeEvent(t, "Image Streaming");
 
   //
