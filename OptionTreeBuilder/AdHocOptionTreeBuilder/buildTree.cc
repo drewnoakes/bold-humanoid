@@ -80,6 +80,38 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
     return false;
   };
 
+  auto penaltyTransition = []() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    int ourTeam = 0; //TODO: get from where?
+    int myUnum = 0; //TODO: get from where?
+    auto myGameStateInfo = gameState->playerInfo(ourTeam, myUnum);
+    return myGameStateInfo.hasPenalty();
+  };
+
+  auto noPenaltyTransition = [&penaltyTransition]() {
+    return !penaltyTransition();
+  };
+
+  auto readyTransition = []() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    return gameState->getPlayMode() == PlayMode::READY;
+  };
+
+  auto setTransition = []() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    return gameState->getPlayMode() == PlayMode::SET;
+  };
+
+  auto playingTransition = []() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    return gameState->getPlayMode() == PlayMode::PLAYING;
+  };
+
+  auto finishedTransition = []() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    return gameState->getPlayMode() == PlayMode::FINISHED;
+  };
+
   auto pause2attack = pauseState->newTransition();
   pause2attack->condition = startButtonCondition;
   pause2attack->childState = attackState;
