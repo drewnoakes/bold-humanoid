@@ -15,15 +15,16 @@ namespace bold
   public:
     void addHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler)
     {
-      assert(std::find(d_handlers.begin(), d_handlers.end(), handler) == d_handlers.end());
-      d_handlers.push_back(handler);
+      if (std::find(d_handlers.begin(), d_handlers.end(), handler) == d_handlers.end())
+        d_handlers.push_back(handler);
     }
 
     void removeHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler)
     {
-      auto it = d_handlers.find(handler);
-      assert(it != d_handlers.end());
-      d_handlers.erase(it);
+      auto it = std::find(d_handlers.begin(), d_handlers.end(), handler);
+
+      if (it != d_handlers.end())
+        d_handlers.erase(it);
     }
 
     void pass(cv::Mat& image) const

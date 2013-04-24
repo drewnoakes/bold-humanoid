@@ -79,7 +79,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
   d_imagePassRunner->addHandler(d_lineDotPass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
-  d_imagePassRunner->addHandler(d_cartoonPass);
+//  d_imagePassRunner->addHandler(d_cartoonPass); // will be added if a client requests cartoon images
 //   d_imagePassRunner->addHandler(d_labelCountPass);
 
   d_lineFinder = make_shared<MaskWalkLineFinder>(imageWidth, imageHeight);
@@ -89,11 +89,11 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   // Allow control over the LUT parameters
   //
 
-  auto setHue      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withH(value)); createLookupTable(); };
+  auto setHue      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withH(value));      createLookupTable(); };
   auto setHueRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withHRange(value)); createLookupTable(); };
-  auto setSat      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withS(value)); createLookupTable(); };
+  auto setSat      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withS(value));      createLookupTable(); };
   auto setSatRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withSRange(value)); createLookupTable(); };
-  auto setVal      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withV(value)); createLookupTable(); };
+  auto setVal      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withV(value));      createLookupTable(); };
   auto setValRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withVRange(value)); createLookupTable(); };
 
   vector<Control> lutControls;
@@ -172,8 +172,23 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   imageTypes.push_back(ControlEnumValue((int)ImageType::Cartoon, "Cartoon"));
   imageTypes.push_back(ControlEnumValue((int)ImageType::YCbCr,   "YCbCr"));
   imageTypes.push_back(ControlEnumValue((int)ImageType::None,    "None"));
-  // TODO add/remove pass handlers depending upon the selected image type
-  imageControls.push_back(Control::createEnum("Image", imageTypes, (int)d_imageType, [this](ControlEnumValue const& value) { d_imageType = (ImageType)value.getValue(); }));
+  imageControls.push_back(
+    Control::createEnum(
+      "Image",
+      imageTypes,
+      (int)d_imageType,
+      [this](ControlEnumValue const& value)
+      {
+        d_imageType = (ImageType)value.getValue();
+
+        // Only include the image pass handler if we're streaming the cartoon
+        if (d_imageType == ImageType::Cartoon)
+          d_imagePassRunner->addHandler(d_cartoonPass);
+        else
+          d_imagePassRunner->removeHandler(d_cartoonPass);
+      }
+    )
+  );
 
   // Frame periods
   vector<ControlEnumValue> framePeriods;
