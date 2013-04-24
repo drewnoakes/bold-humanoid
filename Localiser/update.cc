@@ -44,7 +44,7 @@ void Localiser::update()
         double distance1 = (observed2d.p1() - Math::linePointClosestToPoint(candidateAgent, observed2d.p1())).norm();
         double distance2 = (observed2d.p2() - Math::linePointClosestToPoint(candidateAgent, observed2d.p2())).norm();
 
-        double score = 1 / (distance1 + distance2);
+        double score = 1 / (distance1 + distance2 + 1);
 
         if (score > bestScore)
           bestScore = score;
