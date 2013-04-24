@@ -90,7 +90,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
       auto p1 = d_cameraModel->pixelForDirection(cameraWorld * line.p1());
       auto p2 = d_cameraModel->pixelForDirection(cameraWorld * line.p2());
 
-      if (p1.hasValue() && p2.hasValue())
+      if (p1.hasValue() && p2.hasValue() && *p1.value() != *p2.value())
       {
         LineSegment2i line2i(*p1.value(), *p2.value());
 
