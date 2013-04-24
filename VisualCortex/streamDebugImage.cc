@@ -90,11 +90,17 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
       auto p1 = d_cameraModel->pixelForDirection(cameraWorld * line.p1());
       auto p2 = d_cameraModel->pixelForDirection(cameraWorld * line.p2());
 
-      if (p1.hasValue() && p2.hasValue() && *p1.value() != *p2.value())
+      if (p1.hasValue() && p2.hasValue())
       {
-        LineSegment2i line2i(*p1.value(), *p2.value());
+        auto p1v = *p1.value();
+        auto p2v = *p2.value();
+        auto max = Vector2i(320,240); // TODO get this properly
+        if (p1v != p2v)
+        {
+          LineSegment2i line2i(max - p1v, max - p2v);
 
-        line2i.draw(debugImage, expectedLineColour, 1);
+          line2i.draw(debugImage, expectedLineColour, 1);
+        }
       }
     }
   }
