@@ -43,37 +43,15 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   createLookupTable();
 
   d_minBallArea = ini.geti("Vision", "MinBallArea", 5*5);
-  d_goalRunUnionRatio = ini.getd("Vision", "GoalRunUnionRatio", 0.75);
-
-  auto ballUnionPred =
-    [] (Run const& a, Run const& b)
-    {
-      return a.overlaps(b);
-    };
-
-  auto goalUnionPred =
-    [this] (Run const& a, Run const& b)
-    {
-      if (!a.overlaps(b))
-        return false;
-
-      float ratio = (float)a.length() / (float)b.length();
-      return min(ratio, 1.0f / ratio) > d_goalRunUnionRatio;
-    };
-
-  vector<UnionPredicate> unionPredicateByLabel = {goalUnionPred, ballUnionPred};
 
   int imageWidth = d_cameraModel->imageWidth();
   int imageHeight = d_cameraModel->imageHeight();
 
   d_lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, d_fieldLabel, d_lineLabel, 3);
 
-  vector<BlobType> blobTypes = {
-    BlobType(d_ballLabel, ballUnionPred),
-    BlobType(d_goalLabel, goalUnionPred)
-  };
+  vector<shared_ptr<PixelLabel>> blobPixelLabels = { d_ballLabel, d_goalLabel };
 
-  d_blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobTypes);
+  d_blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
   d_cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, pixelLabels, Colour::bgr(128,128,128));
   d_labelCountPass = make_shared<LabelCountPass>(pixelLabels);
 
@@ -212,10 +190,4 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   minBallAreaControl.setIsAdvanced(true);
   vector<Control> ballControls = { minBallAreaControl };
   d_controlsByFamily["ball"] = ballControls;
-
-  auto goalRunUnionRatioControl = Control::createInt("Goal run union min %", int(d_goalRunUnionRatio*100), [this](int value) { d_goalRunUnionRatio = value/100.0; });
-  goalRunUnionRatioControl.setLimitValues(0, 100);
-  goalRunUnionRatioControl.setIsAdvanced(true);
-  vector<Control> goalControls = { goalRunUnionRatioControl };
-  d_controlsByFamily["goal"] = goalControls;
 }

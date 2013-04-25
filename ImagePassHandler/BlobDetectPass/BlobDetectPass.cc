@@ -1,16 +1,16 @@
 #include "blobdetectpass.ih"
 
-BlobDetectPass::BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> const& blobTypes)
+BlobDetectPass::BlobDetectPass(int imageWidth, int imageHeight, std::vector<shared_ptr<PixelLabel>> const& pixelLabels)
   : d_imageHeight(imageHeight),
     d_imageWidth(imageWidth),
-    d_blobTypes(blobTypes),
+    d_pixelLabels(pixelLabels),
     d_runsPerRowPerLabel(),
     d_currentRun(0, 0)
 {
   // Create a run length code for each label
-  for (BlobType const& blobType : blobTypes)
+  for (auto const& pixelLabel : pixelLabels)
   {
-    uchar pixelLabelId = blobType.pixelLabel->id();
+    uchar pixelLabelId = pixelLabel->id();
 
     // A RunLengthCode is a vector of vectors of runs
     d_runsPerRowPerLabel[pixelLabelId] = RunLengthCode();
@@ -20,6 +20,6 @@ BlobDetectPass::BlobDetectPass(int imageWidth, int imageHeight, std::vector<Blob
       d_runsPerRowPerLabel[pixelLabelId].push_back(std::vector<bold::Run>());
 
     // Initialize blob container
-    d_blobsDetectedPerLabel[blobType.pixelLabel] = vector<Blob>();
+    d_blobsDetectedPerLabel[pixelLabel] = vector<Blob>();
   }
 }

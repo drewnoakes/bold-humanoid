@@ -45,7 +45,7 @@ namespace bold
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    inline friend std::ostream& operator<<(std::ostream& stream, bold::Run const& run)
+    inline friend std::ostream& operator<<(std::ostream& stream, Run const& run)
     {
       return stream << "Run (y=" << run.y << " x=[" << run.startX << "," << run.endX << "] len=" << run.length() << ")";
     }
@@ -79,34 +79,11 @@ namespace bold
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    inline friend std::ostream& operator<<(std::ostream& stream, bold::Blob const& blob)
+    inline friend std::ostream& operator<<(std::ostream& stream, Blob const& blob)
     {
       return stream << "Blob (ul=[" << blob.ul.transpose() << "] br=[" << blob.br.transpose() << "])";
     }
   };
-
-  /** Union predicate
-   *
-   * Used to determine whether two runs should be joined in a blob.
-   */
-  typedef std::function<bool(Run const& a, Run const& b)> UnionPredicate;
-
-  /** Blob type
-   *
-   * Specifies a unit of work for blob detection. Contains the pixel
-   * label and union predicate function.
-   **/
-  struct BlobType
-  {
-    std::shared_ptr<PixelLabel> const pixelLabel;
-    UnionPredicate unionPredicate;
-
-    BlobType(std::shared_ptr<PixelLabel> const pixelLabel, UnionPredicate unionPredicate)
-    : pixelLabel(pixelLabel),
-      unionPredicate(unionPredicate)
-    {}
-  };
-
 
   /** Blob detection image pass
    *
@@ -115,7 +92,7 @@ namespace bold
   class BlobDetectPass : public ImagePassHandler<uchar>
   {
   public:
-    BlobDetectPass(int imageWidth, int imageHeight, std::vector<BlobType> const& blobTypes);
+    BlobDetectPass(int imageWidth, int imageHeight, std::vector<std::shared_ptr<PixelLabel>> const& blobTypes);
 
     void onImageStarting() override;
 
@@ -123,12 +100,12 @@ namespace bold
 
     void onPixel(uchar label, int x, int y) override;
 
-    std::vector<BlobType> blobTypes() const { return d_blobTypes; }
+    std::vector<std::shared_ptr<PixelLabel>> pixelLabels() const { return d_pixelLabels; }
 
     // Processes Runs into Blobs. Returns a set of blobs per label
-    std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> const& detectBlobs();
+    std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> const& detectBlobs();
 
-    std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> const& getDetectedBlobs() const { return d_blobsDetectedPerLabel; }
+    std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> const& getDetectedBlobs() const { return d_blobsDetectedPerLabel; }
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
 
@@ -138,15 +115,15 @@ namespace bold
     int d_imageHeight;
     int d_imageWidth;
 
-    std::vector<BlobType> d_blobTypes;
+    std::vector<std::shared_ptr<PixelLabel>> d_pixelLabels;
 
     // Image pass state Accumulated data for the most recently passed image.
     std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
-    bold::Run d_currentRun;
+    Run d_currentRun;
     uchar d_currentLabel;
 
     // Blobs detected
-    std::map<std::shared_ptr<bold::PixelLabel>,std::vector<Blob>> d_blobsDetectedPerLabel;
+    std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> d_blobsDetectedPerLabel;
 
     void addRun(unsigned endX);
   };
@@ -161,7 +138,7 @@ namespace bold
   {
     // Clear all persistent data
     for (auto& pair : d_runsPerRowPerLabel)
-      for (std::vector<bold::Run>& runs : pair.second)
+      for (std::vector<Run>& runs : pair.second)
         runs.clear();
   }
 

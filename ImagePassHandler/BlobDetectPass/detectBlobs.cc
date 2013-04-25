@@ -3,9 +3,9 @@
 map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
 {
   // For each label that we're configured to look at
-  for (BlobType const& blobType : d_blobTypes)
+  for (auto const& pixelLabels : d_pixelLabels)
   {
-    uchar pixelLabelId = blobType.pixelLabel->id();
+    uchar pixelLabelId = pixelLabels->id();
 
     // Go through all runs and add them to the disjoint set
 
@@ -30,14 +30,14 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
 
         // Attempt to merge this run with runs in the row above
         for (Run& run2 : runsPerRow[y - 1])
-          if (blobType.unionPredicate(run, run2))
+          if (run.overlaps(run2))
             rSet.merge(run, run2);
       }
     }
 
     set<set<Run>> runSets = rSet.getSubSets();
 
-    auto& blobSet = d_blobsDetectedPerLabel[blobType.pixelLabel];
+    auto& blobSet = d_blobsDetectedPerLabel[pixelLabels];
     blobSet.clear();
 
     // Convert sets of run-sets to sets of blob

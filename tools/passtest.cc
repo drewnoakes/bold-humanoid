@@ -108,23 +108,8 @@ int main(int argc, char **argv)
   // TODO: this will crash
   auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels), 0);
 
-  // Resources for blob detection
-  auto ballUnionPred = &Run::overlaps;
-  auto goalUnionPred =
-    [] (Run const& a, Run const& b)
-    {
-      if (!a.overlaps(b))
-        return false;
-
-      float ratio = (float)a.length() / (float)b.length();
-      return min(ratio, 1.0f / ratio) > 0.75;
-    };
-
-  const vector<BlobType> blobTypes = {
-    BlobType(ballLabel, ballUnionPred),
-    BlobType(goalLabel, goalUnionPred)
-  };
-  auto blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobTypes);
+  const vector<shared_ptr<PixelLabel>> blobPixelLabels = { ballLabel, goalLabel };
+  auto blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
 
   // Resources for finding line dots
   auto lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel, 3);
@@ -192,8 +177,8 @@ int main(int argc, char **argv)
        << "    " << lineDotPass->lineDots.size() << " line dots" << endl;
 
   auto blobsByLabel = blobDetectPass->getDetectedBlobs();
-  for (BlobType const& blobType : blobTypes)
-    cout << "    " << blobsByLabel[blobType.pixelLabel].size() << " " << blobType.pixelLabel->name() << " blob(s)" << endl;
+  for (auto const& pixelLabel : blobPixelLabels)
+    cout << "    " << blobsByLabel[pixelLabel].size() << " " << pixelLabel->name() << " blob(s)" << endl;
   for (auto const& pair : labelCountPass->getCounts())
     cout << "    " << pair.second << " " << pair.first->name() << " pixels" << endl;
 
@@ -257,10 +242,10 @@ int main(int argc, char **argv)
   }
 
   // Draw blobs
-  for (BlobType const& blobType : blobTypes)
-  for (bold::Blob blob : blobsByLabel[blobType.pixelLabel])
+  for (auto const& pixelLabel : blobPixelLabels)
+  for (bold::Blob blob : blobsByLabel[pixelLabel])
   {
-    auto blobColor = blobType.pixelLabel->hsvRange().toBgr()/*.invert()*/.toScalar();
+    auto blobColor = pixelLabel->hsvRange().toBgr()/*.invert()*/.toScalar();
     cv::rectangle(colourImage, blob.toRect(), blobColor);
   }
 

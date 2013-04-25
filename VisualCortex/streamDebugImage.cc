@@ -66,9 +66,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   // Draw blobs
   if (d_shouldDrawBlobs)
   {
-    for (BlobType const& blobType : d_blobDetectPass->blobTypes())
+    for (auto const& pixelLabel : d_blobDetectPass->pixelLabels())
     {
-      auto blobColorBgr = blobType.pixelLabel->hsvRange().toBgr();
+      auto blobColorBgr = pixelLabel->hsvRange().toBgr();
       switch (d_imageType)
       {
         case ImageType::Cartoon:
@@ -80,7 +80,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
       }
 
       auto blobColor = blobColorBgr.toScalar();
-      auto detectedBlobs = d_blobDetectPass->getDetectedBlobs().at(blobType.pixelLabel);
+      auto detectedBlobs = d_blobDetectPass->getDetectedBlobs().at(pixelLabel);
       for (Blob const& blob : detectedBlobs)
       {
         cv::rectangle(debugImage, blob.toRect(), blobColor);

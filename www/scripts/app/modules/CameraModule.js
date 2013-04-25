@@ -104,7 +104,6 @@ define(
             ControlBuilder.build('image',  $('<div></div>', {'class': 'control-container image-controls'}).appendTo(this.$container));
             ControlBuilder.build('lines',  $('<div></div>', {'class': 'control-container lines-controls'}).appendTo(this.$container));
             ControlBuilder.build('ball',   $('<div></div>', {'class': 'control-container ball-controls'}).appendTo(this.$container));
-            ControlBuilder.build('goal',   $('<div></div>', {'class': 'control-container goal-controls'}).appendTo(this.$container));
             ControlBuilder.build('lut',    $('<div></div>', {'class': 'control-container lut-controls'}).appendTo(this.$container));
             ControlBuilder.build('camera', $('<div></div>', {'class': 'control-container camera-controls'}).appendTo(this.$container));
         };
