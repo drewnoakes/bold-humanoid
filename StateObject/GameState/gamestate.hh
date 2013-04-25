@@ -90,7 +90,7 @@ namespace bold
     uint8 getTeamNumber() const { return d_teamNumber; }
     uint8 isBlueTeam() const { return d_teamColour == 0; }
     uint8 getScore() const { return d_score; }
-    PlayerInfo getPlayer(uint8 index) const
+    PlayerInfo const& getPlayer(uint8 index) const
     {
       assert(index < MAX_NUM_PLAYERS);
       return d_players[index];
@@ -145,6 +145,17 @@ namespace bold
     uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamNumber; }
     TeamInfo const& teamInfo1() const { return d_data.teams[0]; }
     TeamInfo const& teamInfo2() const { return d_data.teams[1]; }
+
+    TeamInfo const& ourTeamInfo(unsigned ourTeamNumber) const
+    {
+      return teamInfo1().getTeamNumber() == ourTeamNumber ? teamInfo1() : teamInfo2();
+    }
+
+    PlayerInfo const& playerInfo(unsigned team, unsigned unum) const
+    {
+      assert(team < 2);
+      return d_data.teams[team].getPlayer(unum);
+    }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 

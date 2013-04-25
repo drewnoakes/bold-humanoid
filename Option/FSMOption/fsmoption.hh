@@ -2,6 +2,7 @@
 #define BOLD_FSMOPTION_HH
 
 #include "../option.hh"
+#include "../../Clock/clock.hh"
 #include <string>
 #include <vector>
 
@@ -20,6 +21,10 @@ namespace bold
     {
       /// Condition that needs to be fulfilled to fire
       std::function<bool()> condition;
+
+      /// Function to be called when this transition is fired
+      std::function<void()> onFire;
+
       /// State this transition goes from
       StatePtr parentState;
       /// State this transition results in
@@ -44,6 +49,8 @@ namespace bold
       OptionList options;
       /// Outgoing transitions
       std::vector<TransitionPtr> transitions;
+
+      Clock::Timestamp startTime;
 
       TransitionPtr newTransition()
       {

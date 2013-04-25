@@ -14,8 +14,12 @@ using namespace bold;
 
 Debugger::Debugger()
 : d_lastLedFlags(0xff),
-  d_eventTimings()
-{}
+  d_eventTimings(),
+  d_eyeColour(0,0,0),
+  d_headColour(0,0,0)
+{
+  showPaused();
+}
 
 const double Debugger::getSeconds(timestamp_t const& startedAt)
 {
@@ -72,4 +76,26 @@ void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
     cm730->WriteByte(CM730::P_LED_PANNEL, ledFlags, NULL);
     d_lastLedFlags = ledFlags;
   }
+
+  int ec =
+    (d_eyeColour.r >> 3) |
+    ((d_eyeColour.g >> 3) << 5) |
+    ((d_eyeColour.b >> 3) << 10);
+  cm730->WriteWord(CM730::P_LED_EYE_L, ec, 0);
+
+  int hc =
+    (d_headColour.r >> 3) |
+    ((d_headColour.g >> 3) << 5) |
+    ((d_headColour.b >> 3) << 10);
+  cm730->WriteWord(CM730::P_LED_HEAD_L, hc, 0);
 }
+
+void Debugger::showReady() { showHeadColour(Colour::bgr(0,128,128)); showEyeColour(Colour::bgr(255,0,0)); };
+
+void Debugger::showSet() { showHeadColour(Colour::bgr(0,255,128)); showEyeColour(Colour::bgr(255,0,0)); };
+
+void Debugger::showPlaying() { showHeadColour(Colour::bgr(0,255,0)); showEyeColour(Colour::bgr(255,0,0));}
+
+void Debugger::showPenalized() { showHeadColour(Colour::bgr(0,0,255)); showEyeColour(Colour::bgr(255,0,0));}
+
+void Debugger::showPaused() { showHeadColour(Colour::bgr(0,128,255)); showEyeColour(Colour::bgr(255,0,0)); }

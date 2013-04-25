@@ -1,6 +1,9 @@
 #include "adhocoptiontreebuilder.ih"
 
-unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
+unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
+                                                         unsigned teamNumber,
+                                                         unsigned uniformNumber,
+                                                         shared_ptr<Debugger> debugger)
 {
   unique_ptr<OptionTree> tree(new OptionTree());
 
@@ -48,16 +51,33 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
   auto attackFsm = make_shared<FSMOption>("attack");
   tree->addOption(attackFsm);
 
+  //
+  // ========== WIN ==========
+  //
 
-  //
-  // Build main FSM
-  //
+  // ---------- STATES ----------
   // State: paused
-  auto pauseState = winFsm->newState("pause", {stand}, false, true);
+  auto pauseState = winFsm->newState("pause", {stand}, false/*end state*/, true/*start state*/);
 
-  // State: attack
-  auto attackState = winFsm->newState("attack", {attackFsm});
+  // State: ready
+  auto readyState = winFsm->newState("ready", {stand});
 
+  // State: set
+  auto setState = winFsm->newState("set", {stand});
+
+  // State: beforeTheirKickoff
+  auto beforeTheirKickoff = winFsm->newState("beforetheirkickoff", {stand});
+
+  // State: play
+  auto playingState = winFsm->newState("playing", {stand});
+
+  // State: penalized
+  auto penalizedState = winFsm->newState("penalized", {stand});
+
+
+  // ---------- TRANSITIONS ----------
+
+  // Start button condition
   auto startButtonCondition = []() {
     static int lastSwitch = 0;
     lastSwitch++;
@@ -80,12 +100,121 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini)
     return false;
   };
 
+  // Penalty condition
+  auto penaltyCondition = [=,&cout]() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    if (!gameState)
+      return false;
+
+    auto myGameStateInfo = gameState->ourTeamInfo(teamNumber).getPlayer(uniformNumber);
+    return myGameStateInfo.hasPenalty();
+  };
+
+  // No penalty condition
+  // TODO: should be simply !penaltyCondition, but didn't work on first try
+  auto noPenaltyCondition = [=,&cout]() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    if (!gameState)
+      return true;
+
+    auto myGameStateInfo = gameState->ourTeamInfo(teamNumber).getPlayer(uniformNumber);
+    return !myGameStateInfo.hasPenalty();
+  };
+
+  // READY playmode condition
+  auto readyCondition = [=]() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    debugger->showPaused();
+    return gameState->getPlayMode() == PlayMode::READY;
+  };
+
+  // SET playmode condition
+  auto setCondition = []() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    if (!gameState) // No gamestate yes, most likely not SET
+      return false;
+    return gameState->getPlayMode() == PlayMode::SET;
+  };
+
+  // PLAYING playmode condition
+  auto playingCondition = []() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    return gameState->getPlayMode() == PlayMode::PLAYING;
+  };
+
+  // FINISHED playmode condition
+  auto finishedCondition = []() {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    return gameState->getPlayMode() == PlayMode::FINISHED;
+  };
+
+  // From pause to ready: press button
+  auto pause2ReadyTransition = pauseState->newTransition();
+  pause2ReadyTransition->condition = startButtonCondition;
+  pause2ReadyTransition->onFire = [=]() { debugger->showReady(); };
+  pause2ReadyTransition->childState = readyState;
+
+  // From ready to set: game state changed
+  auto ready2setTransition = readyState->newTransition();
+  ready2setTransition->condition = setCondition;
+  ready2setTransition->onFire = [=]() { debugger->showSet(); };
+  ready2setTransition->childState = setState;
+
+  // From set to play: game state changed TODO: go to their kickoff if itś theirs
+  auto set2playingTransition = setState->newTransition();
+  set2playingTransition->condition = playingCondition;
+  set2playingTransition->onFire = [=]() { debugger->showPlaying(); };
+  set2playingTransition->childState = playingState;
+
+  // From set to penalized: penalized state
+  auto set2penalizedTransition = setState->newTransition();
+  set2penalizedTransition->condition = penaltyCondition;
+  set2penalizedTransition->onFire = [=]() { debugger->showPenalized(); }; 
+  set2penalizedTransition->childState = penalizedState;
+
+  // From playing to penalized: penalized state
+  auto playing2penalizedTransition = playingState->newTransition();
+  playing2penalizedTransition->condition = penaltyCondition;
+  playing2penalizedTransition->onFire = [=]() { debugger->showPenalized(); }; 
+  playing2penalizedTransition->childState = penalizedState;
+
+  // From penalized to set: no penalized state and game state
+  auto penalized2setTransition = penalizedState->newTransition();
+  penalized2setTransition->condition = [=] () {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    return noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::SET);
+  };
+  penalized2setTransition->onFire = [=] () { debugger->showSet(); };
+  penalized2setTransition->childState = setState;
+  
+  // From penalized to play: no penalized state and game state
+  auto penalized2playingTransition = penalizedState->newTransition();
+  penalized2playingTransition->condition = [=] () {
+    auto gameState = AgentState::getInstance().get<GameState>();
+    return noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::PLAYING);
+  };
+  penalized2playingTransition->onFire = [=] () { debugger->showPlaying(); };
+  penalized2playingTransition->childState = playingState;
+  
+
+  //
+  // BUILD PLAY FSM
+  //
+
+  // State: attack
+  auto attackState = winFsm->newState("attack", {attackFsm});
+
+
+
+  // 
   auto pause2attack = pauseState->newTransition();
   pause2attack->condition = startButtonCondition;
+  pause2attack->onFire = [debugger]() { debugger->showPlaying(); };
   pause2attack->childState = attackState;
 
   auto attack2pause = attackState->newTransition();
   attack2pause->condition = startButtonCondition;
+  attack2pause->onFire = [debugger]() { debugger->showPaused(); };
   attack2pause->childState = pauseState;
 
   //
