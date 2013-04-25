@@ -38,6 +38,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "LazyTests.hh"
 #include "LineSegmentTests.hh"
 #include "MathTests.hh"
+#include "MovingAverageTests.hh"
 #include "ParticleFilterTests.hh"
 #include "RunTests.hh"
 #include "SpatialiserTest.hh"
