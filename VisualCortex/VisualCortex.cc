@@ -196,9 +196,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   {
     framePeriods.push_back(ControlEnumValue(period, std::to_string(period)));
   }
-  auto framePeriod = Control::createEnum("Frame period", framePeriods, d_streamFramePeriod, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); });
-  framePeriod.setIsAdvanced(true);
-  imageControls.push_back(framePeriod);
+  imageControls.push_back(Control::createEnum("Frame period", framePeriods, d_streamFramePeriod, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); }));
 
   // Layers
   // TODO: should lambdas be declared mutable?
