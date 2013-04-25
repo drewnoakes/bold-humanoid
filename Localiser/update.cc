@@ -57,14 +57,18 @@ void Localiser::update()
         }
 
         // Now evaluate it as a circle line
-        Vector3d wp1 = worldAgent3d * observed.p1();
-        Vector3d wp2 = worldAgent3d * observed.p2();
+        Vector2d wp1 = (worldAgent3d * observed.p1()).head<2>();
+        Vector2d wp2 = (worldAgent3d * observed.p2()).head<2>();
         double circDist1 = wp1.norm() - d_fieldMap->circleRadius();
         double circDist2 = wp2.norm() - d_fieldMap->circleRadius();
         double circScore = d_rewardFalloff / (circDist1 + circDist2 + d_rewardFalloff);
 
         if (circScore > bestScore)
-          bestScore = circScore;
+        {
+          // Looks like it might be a circle line -- however it's not likely if it bisects much of the circle
+          if (Math::smallestAngleBetween(wp1, wp2) < M_PI/6)
+            bestScore = circScore;
+        }
 
         scoreSum += bestScore;
       }
