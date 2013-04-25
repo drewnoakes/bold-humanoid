@@ -90,10 +90,10 @@ namespace bold
     uint8 getTeamNumber() const { return d_teamNumber; }
     uint8 isBlueTeam() const { return d_teamColour == 0; }
     uint8 getScore() const { return d_score; }
-    PlayerInfo const& getPlayer(uint8 index) const
+    PlayerInfo const& getPlayer(uint8 unum) const
     {
-      assert(index < MAX_NUM_PLAYERS);
-      return d_players[index];
+      assert(unum > 0 && unum <= MAX_NUM_PLAYERS);
+      return d_players[unum - 1];
     }
 
   private:
