@@ -1,0 +1,51 @@
+=-=-=-=-= TODO =-=-=-=-=-=
+
+- outfits
+  - clothing
+  - numbers
+
+- attempt to segment the field for colour labelling
+
+- localiser working
+  - scoring
+  - smoothing (moving average)      ######
+  - reduce noise (deg/cm)           ######
+  - tweak for goalie
+  - use ball as a landmark
+  - variance of non-zero weighted
+  - control/motion model
+
+
+- roles
+  - goalie
+  - attack
+  - support
+  - penalty striker
+  - penalty keeper
+
+
+- integrate game state with options
+  - rules compliance
+  - strategy
+
+- communication between robots
+  - ball position
+  - ownership / disownership
+    
+- dark object/unlabelled-in-field/ufo avoidance
+
+
+- use LEDs to communicate with human observers during competition
+
+
+=-=-=-=-= DONE =-=-=-=-=-=
+
+- charge batteries
+- battery system
+- network/subnet configuration
+- read rules before ref training
+- team logo image to lady
+- get a team id
+- localiser scoring: use 1/(x+1)
+- localiser scoring: scale by dot product (angle)
+
