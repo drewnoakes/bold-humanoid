@@ -93,6 +93,7 @@ namespace bold
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
 
     int d_minBallArea;
+    double d_goalRunUnionRatio;
 
     ImageType d_imageType;
     unsigned d_streamFramePeriod;

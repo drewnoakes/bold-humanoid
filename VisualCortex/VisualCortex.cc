@@ -43,6 +43,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   createLookupTable();
 
   d_minBallArea = ini.geti("Vision", "MinBallArea", 5*5);
+  d_goalRunUnionRatio = ini.getd("Vision", "GoalRunUnionRatio", 0.75);
 
   auto ballUnionPred =
     [] (Run const& a, Run const& b)
@@ -51,13 +52,13 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     };
 
   auto goalUnionPred =
-    [] (Run const& a, Run const& b)
+    [this] (Run const& a, Run const& b)
     {
       if (!a.overlaps(b))
         return false;
 
       float ratio = (float)a.length() / (float)b.length();
-      return min(ratio, 1.0f / ratio) > 0.75;
+      return min(ratio, 1.0f / ratio) > d_goalRunUnionRatio;
     };
 
   vector<UnionPredicate> unionPredicateByLabel = {goalUnionPred, ballUnionPred};
@@ -211,4 +212,10 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   minBallAreaControl.setIsAdvanced(true);
   vector<Control> ballControls = { minBallAreaControl };
   d_controlsByFamily["ball"] = ballControls;
+
+  auto goalRunUnionRatioControl = Control::createInt("Goal run union min %", int(d_goalRunUnionRatio*100), [this](int value) { d_goalRunUnionRatio = value/100.0; });
+  goalRunUnionRatioControl.setLimitValues(0, 100);
+  goalRunUnionRatioControl.setIsAdvanced(true);
+  vector<Control> goalControls = { goalRunUnionRatioControl };
+  d_controlsByFamily["goal"] = goalControls;
 }
