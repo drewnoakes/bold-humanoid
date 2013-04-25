@@ -89,12 +89,18 @@ define(
             this.agentPosition = data.pos;
             this.ballPosition = data.ball;
             this.lineSegments = [];
+            this.goalPositions = [];
 
             _.each(data.lines, function (line)
             {
-                var p1 = { x: line[0], y: line[1], z: line[2] };
-                var p2 = { x: line[3], y: line[4], z: line[5] };
+                var p1 = { x: line[0], y: line[1]/*, z: line[2]*/ };
+                var p2 = { x: line[3], y: line[4]/*, z: line[5]*/ };
                 this.lineSegments.push({ p1: p1, p2: p2 });
+            }.bind(this));
+
+            _.each(data.goals, function (goalPos)
+            {
+                this.goalPositions.push({ x: goalPos[0], y: goalPos[1] });
             }.bind(this));
 
             this.draw(); // TODO only draw worldFrameData, on its own canvas
@@ -144,14 +150,19 @@ define(
             if (this.lineSegments && this.lineSegments.length)
                 FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
 
-            if (this.ballPosition)
-                FieldLinePlotter.drawBall(context, options, this.ballPosition);
-
             if (this.particles)
                 FieldLinePlotter.drawParticles(context, options, this.particles);
 
             if (this.agentPosition)
                 FieldLinePlotter.drawAgentPosition(context, options, this.agentPosition);
+
+            if (this.ballPosition)
+                FieldLinePlotter.drawBall(context, options, this.ballPosition);
+
+            if (this.goalPositions) {
+                options.goalStrokeStyle = 'blue';
+                FieldLinePlotter.drawGoalPosts(context, options, this.goalPositions);
+            }
 
             FieldLinePlotter.end(context);
         };

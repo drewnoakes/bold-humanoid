@@ -81,28 +81,38 @@ define(
 
                 context.stroke();
             },
-            drawGoals: function(context, options)
+            drawGoalPosts: function(context, options, positions)
             {
-                var scale = options.scale || 1,
-                    goalY = scale * Constants.goalY / 2,
-                    x = scale * Constants.fieldX/2;
-
-                // TODO the position of these circles is slightly wrong, as the perimeter should line up with the edge of the line
+                var scale = options.scale || 1;
 
                 context.strokeStyle = options.goalStrokeStyle || 'yellow';
 
-                context.beginPath();
-                context.arc(+x, +goalY, scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
-                context.stroke();
-                context.beginPath();
-                context.arc(+x, -goalY, scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
-                context.stroke();
-                context.beginPath();
-                context.arc(-x, +goalY, scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
-                context.stroke();
-                context.beginPath();
-                context.arc(-x, -goalY, scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
-                context.stroke();
+                _.each(positions, function (pos)
+                {
+                    context.beginPath();
+                    context.arc(pos.x * scale, -pos.y * scale, scale * Constants.goalPostDiameter/2, 0, Math.PI*2, true);
+                    context.stroke();
+                });
+            },
+            drawGoals: function(context, options)
+            {
+                var scale = options.scale || 1,
+                    goalY = Constants.goalY / 2,
+                    x = Constants.fieldX/2;
+
+                // TODO the position of these circles is slightly wrong, as the perimeter should line up with the edge of the line
+
+                FieldLinePlotter.drawGoalPosts(context, options, [
+                    {x: x, y: goalY},
+                    {x: x, y:-goalY},
+                    {x:-x, y: goalY},
+                    {x:-x, y:-goalY}
+                ]);
+
+                x *= scale;
+                goalY *= scale;
+
+                context.strokeStyle = options.goalStrokeStyle || 'yellow';
 
                 context.beginPath();
 
