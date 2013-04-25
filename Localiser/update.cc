@@ -18,6 +18,7 @@ void Localiser::update()
     AgentPosition pos(state[0], state[1], state[2]);
 
     Affine3d agentWorld3d(pos.agentWorldTransform());
+    Affine3d worldAgent3d(pos.worldAgentTransform());
 
     // TODO avoid 2d->3d->2d conversion here by creating a worldToAgent2d transform
 
@@ -54,6 +55,16 @@ void Localiser::update()
           if (score > bestScore)
             bestScore = score;
         }
+
+        // Now evaluate it as a circle line
+        Vector3d wp1 = worldAgent3d * observed.p1();
+        Vector3d wp2 = worldAgent3d * observed.p2();
+        double circDist1 = wp1.norm() - d_fieldMap->circleRadius();
+        double circDist2 = wp2.norm() - d_fieldMap->circleRadius();
+        double circScore = d_rewardFalloff / (circDist1 + circDist2 + d_rewardFalloff);
+
+        if (circScore > bestScore)
+          bestScore = circScore;
 
         scoreSum += bestScore;
       }
