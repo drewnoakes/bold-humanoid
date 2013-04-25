@@ -7,8 +7,7 @@
 - attempt to segment the field for colour labelling
 
 - localiser working
-  - scoring
-  - smoothing (moving average)      ######
+  - use actual model of a circle    ######
   - reduce noise (deg/cm)           ######
   - tweak for goalie
   - use ball as a landmark
@@ -38,6 +37,8 @@
 - use LEDs to communicate with human observers during competition
 
 
+- Control::createDouble
+
 =-=-=-=-= DONE =-=-=-=-=-=
 
 - charge batteries
@@ -48,4 +49,5 @@
 - get a team id
 - localiser scoring: use 1/(x+1)
 - localiser scoring: scale by dot product (angle)
+- localiser smoothing (moving average)
 
