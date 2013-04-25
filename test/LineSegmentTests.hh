@@ -139,12 +139,12 @@ TEST (LineSegmentTests, normalisedDot)
 
 TEST (LineSegmentTests, smallestAngleBetween)
 {
-  EXPECT_EQ ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,0))) );
-  EXPECT_EQ ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,2)).smallestAngleBetween(LineSegment2d(Vector2d(2,2),Vector2d(4,2))) );
+  EXPECT_NEAR ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,0))), 0.000001 );
+  EXPECT_NEAR ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,2)).smallestAngleBetween(LineSegment2d(Vector2d(2,2),Vector2d(4,2))), 0.000001 );
 
-  EXPECT_EQ ( 0, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(0,-1))) );
+  EXPECT_NEAR ( 0, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(0,-1))), 0.000001 );
 
-  EXPECT_EQ ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,0))) );
+  EXPECT_NEAR ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,0))), 0.000001 );
 
   EXPECT_NEAR ( M_PI/4, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,1))), 0.000001 );
   EXPECT_NEAR ( M_PI/4, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(-1,1))), 0.000001 );
