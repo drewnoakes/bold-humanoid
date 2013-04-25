@@ -44,7 +44,7 @@ void Localiser::update()
         double distance1 = (observed2d.p1() - Math::linePointClosestToPoint(candidateAgent, observed2d.p1())).norm();
         double distance2 = (observed2d.p2() - Math::linePointClosestToPoint(candidateAgent, observed2d.p2())).norm();
 
-        double score = 1 / (distance1 + distance2 + 1);
+        double score = d_rewardFalloff / (distance1 + distance2 + d_rewardFalloff);
 
         double dotProduct = observed2d.delta().normalized().dot( candidateAgent.delta().normalized() );
         score *= dotProduct;

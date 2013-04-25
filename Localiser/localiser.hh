@@ -20,7 +20,7 @@ namespace bold
   class Localiser
   {
   public:
-    Localiser(std::shared_ptr<FieldMap> fieldMap, unsigned initialCount = 200, double randomizeRatio = 0.05, unsigned smoothingWindowSize = 5);
+    Localiser(std::shared_ptr<FieldMap> fieldMap, unsigned initialCount = 200, double randomizeRatio = 0.05, unsigned smoothingWindowSize = 5, double rewardFalloff = 0.1);
 
     void predict(Eigen::Affine3d motion);
 
@@ -46,6 +46,8 @@ namespace bold
     MovingAverage<Eigen::Vector4d> d_avgPos;
     std::shared_ptr<FieldMap> d_fieldMap;
     double d_randomizeRatio;
+    /// smaller number gives faster falloff
+    double d_rewardFalloff;
 
     std::shared_ptr<ParticleFilter<3>> d_filter;
     std::function<double()> d_fieldXRng;

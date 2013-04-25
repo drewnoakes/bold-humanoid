@@ -1,11 +1,12 @@
 #include "localiser.ih"
 
-Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, double randomizeRatio, unsigned smoothingWindowSize)
+Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, double randomizeRatio, unsigned smoothingWindowSize, double rewardFalloff)
 : d_pos(0, 0, 0),
   d_smoothedPos(0, 0, 0),
   d_avgPos(smoothingWindowSize),
   d_fieldMap(fieldMap),
-  d_randomizeRatio(randomizeRatio)
+  d_randomizeRatio(randomizeRatio),
+  d_rewardFalloff(rewardFalloff)
 {
   double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
   double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;
@@ -45,11 +46,10 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   particleCountControl.setLimitValues(1, 2000);
   d_controls.push_back(particleCountControl);
 
-  double randomizeRatioScale = 100.0;
-  auto randomizeRatioControl = Control::createInt("Randomize Ratio", int(randomizeRatio * randomizeRatioScale), [this,randomizeRatioScale](int value){ d_randomizeRatio = value/randomizeRatioScale; });
-  randomizeRatioControl.setDefaultValue(int(randomizeRatio * randomizeRatioScale));
-  randomizeRatioControl.setLimitValues(0 * randomizeRatioScale, 1 * randomizeRatioScale);
-  d_controls.push_back(randomizeRatioControl);
+  auto randomizePercentControl = Control::createInt("Randomize %", int(randomizeRatio * 100), [this](int value){ d_randomizeRatio = value/100.0; });
+  randomizePercentControl.setDefaultValue(int(randomizeRatio * 100));
+  randomizePercentControl.setLimitValues(0, 100);
+  d_controls.push_back(randomizePercentControl);
 
   double positionErrorScale = 100.0;
   auto positionErrorControl = Control::createInt("Position Error (cm)", int(initialPositionError * positionErrorScale), [this,positionErrorScale](int value){ d_positionError = Math::createNormalRng(0, value/positionErrorScale); });
@@ -61,6 +61,12 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   angleErrorControl.setDefaultValue(initialAngleErrorDeg);
   angleErrorControl.setLimitValues(0, 20);
   d_controls.push_back(angleErrorControl);
+
+  double falloffScale = 100.0;
+  auto rewardFalloffControl = Control::createInt("Reward Falloff (x100)", int(rewardFalloff*falloffScale), [this,falloffScale](int value){ d_rewardFalloff = value/falloffScale; });
+  rewardFalloffControl.setDefaultValue(int(rewardFalloff*falloffScale));
+  rewardFalloffControl.setLimitValues(1, 20*falloffScale);
+  d_controls.push_back(rewardFalloffControl);
 
   auto smoothingWindowSizeControl = Control::createInt("Smoothing Window", smoothingWindowSize, [this](int value){ d_avgPos = MovingAverage<Vector4d>(value); });
   smoothingWindowSizeControl.setDefaultValue(smoothingWindowSize);
