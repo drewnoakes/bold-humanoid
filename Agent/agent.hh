@@ -52,11 +52,12 @@ namespace bold
     Agent(std::string const& U2D_dev,
           minIni const& ini,
           std::string const& motionFile,
-          unsigned const& uniformNumber,
-          bool const& useJoystick,
-          bool const& autoGetUpFromFallen,
-          bool const& useOptionTree,
-          bool const& recordFrames);
+          unsigned teamNumber,
+          unsigned uniformNumber,
+          bool useJoystick,
+          bool autoGetUpFromFallen,
+          bool useOptionTree,
+          bool recordFrames);
 
     void run();
     void stop();
@@ -66,6 +67,7 @@ namespace bold
     bool d_haveBody;
     bool d_isRunning;
     std::string d_motionFile;
+    unsigned d_teamNumber;
     unsigned d_uniformNumber;
     bool d_isRecordingFrames;
     bool d_autoGetUpFromFallen;
