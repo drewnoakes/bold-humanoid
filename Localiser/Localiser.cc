@@ -81,6 +81,5 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   minGoalsNeededControl.setLimitValues(0, 5);
   d_controls.push_back(minGoalsNeededControl);
 
-
   updateStateObject();
 }
