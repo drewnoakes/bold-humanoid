@@ -54,6 +54,23 @@ define(
         var IMUModule = function()
         {
             this.container = $('<div></div>');
+
+            /////
+
+            this.title = 'IMU';
+            this.id = 'sensors';
+            this.panes = [
+                {
+                    title: 'main',
+                    element: this.container,
+                    onResized: _.bind(this.onResized, this),
+                    supports: { fullScreen: true }
+                }
+            ];
+        };
+
+        IMUModule.prototype.load = function()
+        {
             this.seriesArray = [];
             this.chartCanvases = [];
 
@@ -74,66 +91,6 @@ define(
             this.polarTraceYZ = addPolarTrace('Y|Z');
             this.polarTraceXZ = addPolarTrace('X|Z');
 
-            /////
-
-            this.title = 'IMU';
-            this.id = 'sensors';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.container,
-                    onResized: _.bind(this.onResized, this),
-                    supports: { fullScreen: true }
-                }
-            ];
-        };
-
-        IMUModule.prototype.buildCharts = function()
-        {
-            var self = this;
-            _.each(charts, function(chartDefinition)
-            {
-                var chart = new SmoothieChart(chartDefinition.options);
-                chart.options.yRangeFunction = function(range)
-                {
-                    // Find the greatest absolute value
-                    var max = Math.max(Math.abs(range.min), Math.abs(range.max));
-                    // Ensure we're viewing at least a quarter of the range, so that
-                    // very small values don't appear exaggeratedly large
-                    max = Math.max(max, 1);
-                    return {min:-max, max:max};
-                };
-                chart.options.horizontalLines.push({color:'#ffffff', lineWidth: 1, value: 0});
-
-                self.container.append($('<h2></h2>', {text:chartDefinition.title}));
-                var canvas = document.createElement('canvas');
-                canvas.width = 640;
-                canvas.height = chartHeight;
-                self.container.append(canvas);
-
-                self.chartCanvases.push(canvas);
-
-                chart.streamTo(canvas, /*delayMs*/ 200);
-
-                _.each(chartDefinition.series, function(seriesDefinition)
-                {
-                    var series = new TimeSeries();
-                    chart.addTimeSeries(series, seriesDefinition);
-                    self.seriesArray.push(series);
-                });
-            });
-        };
-
-        IMUModule.prototype.onResized = function(width, height)
-        {
-            _.each(this.chartCanvases, function(canvas)
-            {
-                canvas.width = width;
-            });
-        };
-
-        IMUModule.prototype.load = function()
-        {
             this.subscription = DataProxy.subscribe(
                 Protocols.hardwareState,
                 {
@@ -145,7 +102,55 @@ define(
 
         IMUModule.prototype.unload = function()
         {
+            _.each(this.charts, function (chart) { chart.stop(); });
+
+            this.container.empty();
             this.subscription.close();
+        };
+
+        IMUModule.prototype.buildCharts = function()
+        {
+            this.charts = [];
+            _.each(charts, function(chartDefinition)
+            {
+                var chart = new SmoothieChart(chartDefinition.options);
+                this.charts.push(chart);
+                chart.options.yRangeFunction = function(range)
+                {
+                    // Find the greatest absolute value
+                    var max = Math.max(Math.abs(range.min), Math.abs(range.max));
+                    // Ensure we're viewing at least a quarter of the range, so that
+                    // very small values don't appear exaggeratedly large
+                    max = Math.max(max, 1);
+                    return {min:-max, max:max};
+                };
+                chart.options.horizontalLines.push({color:'#ffffff', lineWidth: 1, value: 0});
+
+                this.container.append($('<h2></h2>', {text:chartDefinition.title}));
+                var canvas = document.createElement('canvas');
+                canvas.width = 640;
+                canvas.height = chartHeight;
+                this.container.append(canvas);
+
+                this.chartCanvases.push(canvas);
+
+                chart.streamTo(canvas, /*delayMs*/ 200);
+
+                _.each(chartDefinition.series, function(seriesDefinition)
+                {
+                    var series = new TimeSeries();
+                    chart.addTimeSeries(series, seriesDefinition);
+                    this.seriesArray.push(series);
+                }.bind(this));
+            }.bind(this));
+        };
+
+        IMUModule.prototype.onResized = function(width, height)
+        {
+            _.each(this.chartCanvases, function(canvas)
+            {
+                canvas.width = width;
+            });
         };
 
         IMUModule.prototype.onData = function (data)

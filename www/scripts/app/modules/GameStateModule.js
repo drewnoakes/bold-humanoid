@@ -12,7 +12,7 @@ define(
             this.container = $('<div>');
             this.options = {};
 
-            this.title = 'game state';
+            this.title = 'game';
             this.id = 'game';
             this.panes = [
                 {

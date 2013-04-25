@@ -9,7 +9,7 @@ define(
 
         var OptionTreeModule = function()
         {
-            this.container = $('<div>');
+            this.$container = $('<div></div>');
             this.options = {};
 
             this.title = 'option tree';
@@ -17,7 +17,7 @@ define(
             this.panes = [
                 {
                     title: 'main',
-                    element: this.container
+                    element: this.$container
                 }
             ];
         };
@@ -35,37 +35,37 @@ define(
 
         OptionTreeModule.prototype.unload = function()
         {
+            this.$container.empty();
             this.subscription.close();
         };
 
         OptionTreeModule.prototype.onData = function(data)
         {
-            for (var name in this.options)
-                this.options[name].ran = false;
+            _.each(this.options, function (option)
+            {
+                option.ran = false;
+            });
 
-            for (var i = 0; i < data.ranoptions.length; ++i)
+            for (var i = 0; i < data.ranoptions.length; i++)
             {
                 var name = data.ranoptions[i];
                 var option = this.options[name];
-                if (!option)
-                {
-                    option = this.options[name] = {
-                        view: $('<div>'+name+'</div>').addClass('option'),
+                if (option) {
+                    option.ran = true;
+                } else {
+                    var view = $('<div>' + name + '</div>').addClass('option');
+                    this.options[name] = {
+                        view: view,
                         ran: true
                     };
-                    this.container.append(option.view);
+                    this.$container.append(view);
                 }
-                option.ran = true;
             }
 
-            for (var name in this.options) {
-                var option = this.options[name];
-                if (option.ran) {
-                    option.view.addClass('ran');
-                } else {
-                    option.view.removeClass('ran');
-                }
-            }
+            _.each(this.options, function (option)
+            {
+                option.view.toggleClass('ran', option.ran);
+            });
         };
 
         return OptionTreeModule;

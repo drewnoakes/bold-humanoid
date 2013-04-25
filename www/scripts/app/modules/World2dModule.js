@@ -15,15 +15,7 @@ define(
 
         var World2dModule = function()
         {
-            this.$canvas = $('<canvas></canvas>');
-            this.canvas = this.$canvas.get(0);
             this.$container = $('<div></div>');
-            this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
-
-            this.$container.append(this.$canvas)
-                           .append(this.$hoverInfo);
-
-            this.bindEvents();
 
             /////
 
@@ -72,6 +64,15 @@ define(
 
         World2dModule.prototype.load = function()
         {
+            this.$canvas = $('<canvas></canvas>');
+            this.canvas = this.$canvas.get(0);
+            this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
+
+            this.$container.append(this.$canvas)
+                           .append(this.$hoverInfo);
+
+            this.bindEvents();
+
             this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
 
             // TODO only subscribe if use checks a box
@@ -80,6 +81,7 @@ define(
 
         World2dModule.prototype.unload = function()
         {
+            this.$container.empty();
             this.worldFrameSubscription.close();
             this.particleSubscription.close();
         };

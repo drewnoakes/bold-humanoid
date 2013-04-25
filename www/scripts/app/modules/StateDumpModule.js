@@ -10,32 +10,37 @@ define(
     {
         'use strict';
 
+        var moduleHtml = Handlebars.compile($('#state-module-template').html());
+
         var StateDumpModule = function()
         {
-            var moduleHtml = Handlebars.compile($('#state-module-template').html()),
-                container = $('<div></div>').html(moduleHtml).children(),
-                select = container.find('select');
-
-            this.textElement = container.find('div.json-text').get(0);
-
-            /////
+            this.$container = $('<div></div>');
 
             this.title = 'state dump';
             this.id = 'state';
             this.panes = [
                 {
                     title: 'main',
-                    element: container.get(0),
+                    element: this.$container.get(0),
                     supports: { fullScreen: true, advanced: false }
                 }
             ];
+        };
 
-            var stateNames = Protocols.allStates;
+        StateDumpModule.prototype.load = function()
+        {
+            var templateRoot = $('<div></div>').html(moduleHtml).children();
 
-            select.append($("<option>").attr('value', '').text('(None)'));
-            _.each(stateNames, function(stateName)
+            this.$container.append(templateRoot);
+
+            this.textElement = templateRoot.find('div.json-text').get(0);
+
+            var select = templateRoot.find('select');
+
+            select.append($('<option>').attr('value', '').text('(None)'));
+            _.each(Protocols.allStates, function(stateName)
             {
-                select.append($("<option>").attr('value', stateName).text(stateName));
+                select.append($('<option>').attr('value', stateName).text(stateName));
             });
 
             var setState = function(state)
@@ -64,11 +69,12 @@ define(
             });
         };
 
-        StateDumpModule.prototype.load = function()
-        {};
-
         StateDumpModule.prototype.unload = function()
         {
+            this.$container.empty();
+
+            delete this.textElement;
+
             if (this.subscription)
                 this.subscription.close();
         };

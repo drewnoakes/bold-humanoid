@@ -26,8 +26,8 @@ require(
         moduleHost.register(new LocaliserModule());
         moduleHost.register(new IMUModule());
         moduleHost.register(new OptionTreeModule());
-        moduleHost.register(new StateDumpModule());
         moduleHost.register(new GameStateModule());
+        moduleHost.register(new StateDumpModule());
 
         moduleHost.load();
 

@@ -36,26 +36,11 @@ define(
         };
 
         var chartHeight = 150;
+        var parseRegex = /([^=|]+)=([^|]+)\|/g;
 
         var TimingModule = function()
         {
-            var container = $('<div></div>'),
-                chart = new SmoothieChart(chartOptions),
-                canvas = document.createElement('canvas');
-
-            canvas.height = chartHeight;
-            container.append(canvas);
-
-            var series = new TimeSeries();
-            chart.addTimeSeries(series, seriesOptions);
-            chart.streamTo(canvas, /*delayMs*/ 100);
-            chart.options.horizontalLines.push({color:'#FF0000', lineWidth: 1, value: 30});
-
-            this.table = $('<table></table>', {'class':'timing-details'}).appendTo(container);
-
-            this.series = series;
-            this.canvas = canvas;
-            this.entryByLabel = {};
+            this.$container = $('<div></div>');
 
             /////
 
@@ -64,17 +49,31 @@ define(
             this.panes = [
                 {
                     title: 'main',
-                    element: container.get(0),
+                    element: this.$container.get(0),
                     onResized: _.bind(this.onResized, this),
                     supports: { fullScreen: true }
                 }
             ];
         };
 
-        var parseRegex = /([^=|]+)=([^|]+)\|/g;
-
         TimingModule.prototype.load = function()
         {
+            this.chart = new SmoothieChart(chartOptions);
+            var canvas = document.createElement('canvas');
+            canvas.height = chartHeight;
+            this.$container.append(canvas);
+
+            var series = new TimeSeries();
+            this.chart.addTimeSeries(series, seriesOptions);
+            this.chart.streamTo(canvas, /*delayMs*/ 100);
+            this.chart.options.horizontalLines.push({color:'#FF0000', lineWidth: 1, value: 30});
+
+            this.table = $('<table></table>', {'class':'timing-details'}).appendTo(this.$container);
+
+            this.series = series;
+            this.canvas = canvas;
+            this.entryByLabel = {};
+
             this.subscription = DataProxy.subscribe(
                 Protocols.timing,
                 {
@@ -82,6 +81,13 @@ define(
                     onmessage: _.bind(this.onmessage, this)
                 }
             );
+        };
+
+        TimingModule.prototype.unload = function()
+        {
+            this.chart.stop();
+            this.$container.empty();
+            this.subscription.close();
         };
 
         TimingModule.prototype.onmessage = function(msg)
@@ -100,11 +106,6 @@ define(
         TimingModule.prototype.onResized = function(width, height)
         {
             this.canvas.width = width;
-        };
-
-        TimingModule.prototype.unload = function()
-        {
-            this.subscription.close();
         };
 
         TimingModule.prototype.updateChart = function(time)
