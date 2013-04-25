@@ -8,7 +8,7 @@
 using namespace Eigen;
 using namespace bold;
 
-TEST (MovingAverageTests, basics)
+TEST (MovingAverageTests, double)
 {
   MovingAverage<double> m(5);
 
@@ -21,4 +21,14 @@ TEST (MovingAverageTests, basics)
   EXPECT_EQ( (3+4+5+6+7)/5.0, m.next(7) );
   EXPECT_EQ( (4+5+6+7+8)/5.0, m.next(8) );
   EXPECT_EQ( (5+6+7+8+9)/5.0, m.next(9) );
+}
+
+TEST (MovingAverageTests, vector2d)
+{
+  MovingAverage<Vector2d> m(2);
+
+  EXPECT_EQ( Vector2d(1,1),     m.next(Vector2d(1,1)) );
+  EXPECT_EQ( Vector2d(1.5,1.5), m.next(Vector2d(2,2)) );
+  EXPECT_EQ( Vector2d(2.5,2.5), m.next(Vector2d(3,3)) );
+  EXPECT_EQ( Vector2d(3.5,3.5), m.next(Vector2d(4,4)) );
 }

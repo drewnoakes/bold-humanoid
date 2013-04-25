@@ -13,7 +13,7 @@ namespace bold
     : d_items(windowSize),
       d_length(0),
       d_nextPointer(0),
-      d_sum(0),
+      d_sum(),
       d_windowSize(windowSize)
     {
       if (windowSize == 0)
