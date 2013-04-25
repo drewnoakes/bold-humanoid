@@ -146,6 +146,11 @@ namespace bold
     TeamInfo const& teamInfo1() const { return d_data.teams[0]; }
     TeamInfo const& teamInfo2() const { return d_data.teams[1]; }
 
+    TeamInfo const& ourTeamInfo(unsigned ourTeamNumber) const
+    {
+      return teamInfo1().getTeamNumber() == ourTeamNumber ? teamInfo1() : teamInfo2();
+    }
+
     PlayerInfo const& playerInfo(unsigned team, unsigned unum) const
     {
       assert(team < 2);
