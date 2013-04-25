@@ -207,8 +207,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   imageControls.push_back(Control::createBool("Horizon",          d_shouldDrawHorizon,       [this](bool const& value) { d_shouldDrawHorizon = value; }));
   d_controlsByFamily["image"] = imageControls;
 
-  vector<Control> ballControls = {
-    Control::createInt("Min ball area", d_minBallArea, [this](int value) { d_minBallArea = value; })
-  };
+  auto minBallAreaControl = Control::createInt("Min ball area", d_minBallArea, [this](int value) { d_minBallArea = value; });
+  minBallAreaControl.setIsAdvanced(true);
+  vector<Control> ballControls = { minBallAreaControl };
   d_controlsByFamily["ball"] = ballControls;
 }
