@@ -68,7 +68,18 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   {
     for (BlobType const& blobType : d_blobDetectPass->blobTypes())
     {
-      auto blobColor = blobType.pixelLabel->hsvRange().toBgr()/*.invert()*/.toScalar();
+      auto blobColorBgr = blobType.pixelLabel->hsvRange().toBgr();
+      switch (d_imageType)
+      {
+        case ImageType::Cartoon:
+        case ImageType::RGB:
+          blobColorBgr = blobColorBgr.invert();
+          break;
+        default:
+          break;
+      }
+
+      auto blobColor = blobColorBgr.toScalar();
       auto detectedBlobs = d_blobDetectPass->getDetectedBlobs().at(blobType.pixelLabel);
       for (Blob const& blob : detectedBlobs)
       {
