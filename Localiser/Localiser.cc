@@ -1,15 +1,22 @@
 #include "localiser.ih"
 
-Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, double randomizeRatio, unsigned smoothingWindowSize, double rewardFalloff)
+Localiser::Localiser(shared_ptr<FieldMap> fieldMap, minIni const& ini)
 : d_pos(0, 0, 0),
   d_smoothedPos(0, 0, 0),
-  d_avgPos(smoothingWindowSize),
-  d_fieldMap(fieldMap),
-  d_randomizeRatio(randomizeRatio),
-  d_rewardFalloff(rewardFalloff),
-  d_useLines(true),
-  d_minGoalsNeeded(0)
+  d_avgPos(1),
+  d_fieldMap(fieldMap)
 {
+  int initialCount = ini.geti("Localiser", "ParticleCount", 200);
+  int smoothingWindowSize = ini.geti("Localiser", "SmoothingWindowSize", 5);
+  d_randomizeRatio = ini.getd("Localiser", "RandomiseRatio", 0.05);
+  d_rewardFalloff = ini.getd("Localiser", "RewardFallOff", 0.1);
+  d_useLines = ini.geti("Localiser", "UseLines", 1) != 0;
+  d_minGoalsNeeded = ini.geti("Localiser", "MinGoalsNeeded", 1);
+  double positionErrorMillimeters = ini.getd("Localiser", "PositionErrorMillimeters", 0.03);
+  unsigned initialAngleErrorDeg = ini.geti("Localiser", "AngleErrorDegrees", 3);
+
+  d_avgPos = MovingAverage<Vector4d>(smoothingWindowSize);
+
   double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
   double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;
 
@@ -17,9 +24,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   d_fieldYRng = Math::createUniformRng(-yMax, yMax);
   d_thetaRng  = Math::createUniformRng(-M_PI, M_PI);
 
-  double initialPositionError = 0.03; // cm
-  unsigned initialAngleErrorDeg = 3;  // degree
-  d_positionError = Math::createNormalRng(0, initialPositionError);
+  d_positionError = Math::createNormalRng(0, positionErrorMillimeters);
   d_angleError    = Math::createNormalRng(0, Math::degToRad(initialAngleErrorDeg));
 
   ParticleFilter<3>::ParticleResampler resampler =
@@ -48,14 +53,14 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   particleCountControl.setLimitValues(1, 2000);
   d_controls.push_back(particleCountControl);
 
-  auto randomizePercentControl = Control::createInt("Randomize %", int(randomizeRatio * 100), [this](int value){ d_randomizeRatio = value/100.0; });
-  randomizePercentControl.setDefaultValue(int(randomizeRatio * 100));
+  auto randomizePercentControl = Control::createInt("Randomize %", int(d_randomizeRatio * 100), [this](int value){ d_randomizeRatio = value/100.0; });
+  randomizePercentControl.setDefaultValue(int(d_randomizeRatio * 100));
   randomizePercentControl.setLimitValues(0, 100);
   d_controls.push_back(randomizePercentControl);
 
-  double positionErrorScale = 100.0;
-  auto positionErrorControl = Control::createInt("Position Error (cm)", int(initialPositionError * positionErrorScale), [this,positionErrorScale](int value){ d_positionError = Math::createNormalRng(0, value/positionErrorScale); });
-  positionErrorControl.setDefaultValue(int(initialPositionError * positionErrorScale));
+  double positionErrorScale = 1000.0;
+  auto positionErrorControl = Control::createInt("Position Error (mm)", int(positionErrorMillimeters * positionErrorScale), [this,positionErrorScale](int value){ d_positionError = Math::createNormalRng(0, value/positionErrorScale); });
+  positionErrorControl.setDefaultValue(int(positionErrorMillimeters * positionErrorScale));
   positionErrorControl.setLimitValues(0, 50);
   d_controls.push_back(positionErrorControl);
 
@@ -65,8 +70,8 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   d_controls.push_back(angleErrorControl);
 
   double falloffScale = 100.0;
-  auto rewardFalloffControl = Control::createInt("Reward Falloff (x100)", int(rewardFalloff*falloffScale), [this,falloffScale](int value){ d_rewardFalloff = value/falloffScale; });
-  rewardFalloffControl.setDefaultValue(int(rewardFalloff*falloffScale));
+  auto rewardFalloffControl = Control::createInt("Reward Falloff (x100)", int(d_rewardFalloff*falloffScale), [this,falloffScale](int value){ d_rewardFalloff = value/falloffScale; });
+  rewardFalloffControl.setDefaultValue(int(d_rewardFalloff*falloffScale));
   rewardFalloffControl.setLimitValues(1, 20*falloffScale);
   d_controls.push_back(rewardFalloffControl);
 

@@ -1,9 +1,10 @@
 #ifndef BOLD_LOCALISER_HH
 #define BOLD_LOCALISER_HH
 
-#include <memory>
-#include <functional>
 #include <Eigen/Core>
+#include <functional>
+#include <minIni.h>
+#include <memory>
 
 #include "../AgentPosition/agentposition.hh"
 #include "../Filter/ParticleFilter/particlefilter.hh"
@@ -20,7 +21,7 @@ namespace bold
   class Localiser
   {
   public:
-    Localiser(std::shared_ptr<FieldMap> fieldMap, unsigned initialCount = 200, double randomizeRatio = 0.05, unsigned smoothingWindowSize = 5, double rewardFalloff = 0.1);
+    Localiser(std::shared_ptr<FieldMap> fieldMap, minIni const& ini);
 
     void predict(Eigen::Affine3d motion);
 

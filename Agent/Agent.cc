@@ -39,7 +39,7 @@ Agent::Agent(string const& U2D_dev,
 
   d_debugger = make_shared<Debugger>();
 
-  d_localiser = make_shared<Localiser>(d_fieldMap);
+  d_localiser = make_shared<Localiser>(d_fieldMap, ini);
 
   d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, ini);
 
