@@ -48,6 +48,8 @@ namespace bold
     double d_randomizeRatio;
     /// smaller number gives faster falloff
     double d_rewardFalloff;
+    bool d_useLines;
+    unsigned d_minGoalsNeeded;
 
     std::shared_ptr<ParticleFilter<3>> d_filter;
     std::function<double()> d_fieldXRng;

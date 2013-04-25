@@ -29,59 +29,65 @@ void Localiser::update()
     // Score observed lines
     //
 
-    for (LineSegment3d const& observed : agentFrame->getObservedLineSegments())
+    if (d_useLines)
     {
-      LineSegment2d observed2d(observed.to<2>());
-
-      double bestScore = 0;
-
-      for (LineSegment3d const& candidate : d_fieldMap->getFieldLines())
+      for (LineSegment3d const& observed : agentFrame->getObservedLineSegments())
       {
-        LineSegment2d candidateAgent = LineSegment3d(agentWorld3d * candidate.p1(), agentWorld3d * candidate.p2()).to<2>();
+        LineSegment2d observed2d(observed.to<2>());
 
-        // very naive scoring system for now...
+        double bestScore = 0;
 
-        double distance1 = (observed2d.p1() - Math::linePointClosestToPoint(candidateAgent, observed2d.p1())).norm();
-        double distance2 = (observed2d.p2() - Math::linePointClosestToPoint(candidateAgent, observed2d.p2())).norm();
+        for (LineSegment3d const& candidate : d_fieldMap->getFieldLines())
+        {
+          LineSegment2d candidateAgent = LineSegment3d(agentWorld3d * candidate.p1(), agentWorld3d * candidate.p2()).to<2>();
 
-        double score = d_rewardFalloff / (distance1 + distance2 + d_rewardFalloff);
+          // very naive scoring system for now...
 
-        double dotProduct = observed2d.delta().normalized().dot( candidateAgent.delta().normalized() );
-        score *= dotProduct;
+          double distance1 = (observed2d.p1() - Math::linePointClosestToPoint(candidateAgent, observed2d.p1())).norm();
+          double distance2 = (observed2d.p2() - Math::linePointClosestToPoint(candidateAgent, observed2d.p2())).norm();
 
-        if (score > bestScore)
-          bestScore = score;
+          double score = d_rewardFalloff / (distance1 + distance2 + d_rewardFalloff);
+
+          double dotProduct = observed2d.delta().normalized().dot( candidateAgent.delta().normalized() );
+          score *= dotProduct;
+
+          if (score > bestScore)
+            bestScore = score;
+        }
+
+        scoreSum += bestScore;
       }
-
-      scoreSum += bestScore;
     }
 
     //
     // Score observed goal posts
     //
 
-    for (Vector3d const& observed : agentFrame->getGoalObservations())
+    if (agentFrame->getGoalObservations().size() <= d_minGoalsNeeded)
     {
-      Vector2d observed2d(observed.head<2>());
-      double bestScore = 0;
-
-      for (Vector3d const& candidate : d_fieldMap->getGoalPostPositions())
+      for (Vector3d const& observed : agentFrame->getGoalObservations())
       {
-        Vector3d candidate3d(candidate.x(), candidate.y(), 0);
-        Vector3d candidateAgent3d(agentWorld3d * candidate3d);
-        Vector2d candidateAgent2d(candidateAgent3d.x(), candidateAgent3d.y());
+        Vector2d observed2d(observed.head<2>());
+        double bestScore = 0;
 
-        // very naive scoring system for now...
+        for (Vector3d const& candidate : d_fieldMap->getGoalPostPositions())
+        {
+          Vector3d candidate3d(candidate.x(), candidate.y(), 0);
+          Vector3d candidateAgent3d(agentWorld3d * candidate3d);
+          Vector2d candidateAgent2d(candidateAgent3d.x(), candidateAgent3d.y());
 
-        double distance = (candidateAgent2d - observed2d).norm();
+          // very naive scoring system for now...
 
-        double score = 1 / distance;
+          double distance = (candidateAgent2d - observed2d).norm();
 
-        if (score > bestScore)
-          bestScore = score;
+          double score = 1 / distance;
+
+          if (score > bestScore)
+            bestScore = score;
+        }
+
+        scoreSum += bestScore;
       }
-
-      scoreSum += bestScore;
     }
 
     return scoreSum;
