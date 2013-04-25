@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include "../Colour/colour.hh"
 
 #define LED_RED   0x01;
 #define LED_BLUE  0x02;
@@ -44,6 +45,20 @@ namespace bold
       d_eventTimings.clear();
     }
 
+    void showEyeColour(Colour::bgr const& colour) { d_eyeColour = colour; }
+
+    void showHeadColour(Colour::bgr const& colour) { d_headColour = colour; }
+
+    void showReady();
+
+    void showSet();
+
+    void showPlaying();
+
+    void showPenalized();
+
+    void showPaused();
+
     /**
      * Update the debugger at the end of the think cycle.
      * Currently only updates LEDs.
@@ -53,6 +68,9 @@ namespace bold
   private:
     int d_lastLedFlags;
     std::vector<EventTiming> d_eventTimings;
+
+    Colour::bgr d_eyeColour;
+    Colour::bgr d_headColour;
   };
 }
 
