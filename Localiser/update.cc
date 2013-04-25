@@ -48,8 +48,8 @@ void Localiser::update()
 
           double score = d_rewardFalloff / (distance1 + distance2 + d_rewardFalloff);
 
-          double dotProduct = observed2d.delta().normalized().dot( candidateAgent.delta().normalized() );
-          score *= dotProduct;
+          double angle = observed2d.smallestAngleBetween(candidateAgent);
+          score *= angle/(M_PI/2);
 
           if (score > bestScore)
             bestScore = score;
@@ -89,6 +89,8 @@ void Localiser::update()
         scoreSum += bestScore;
       }
     }
+
+    assert(scoreSum >= 0);
 
     return scoreSum;
   });
