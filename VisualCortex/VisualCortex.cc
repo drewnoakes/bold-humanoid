@@ -11,7 +11,6 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_debugger(debugger),
   d_minBallArea(8*8),
   d_imageType(ImageType::RGB),
-  d_streamFramePeriod(10),
   d_shouldDrawBlobs(true),
   d_shouldDrawLineDots(false),
   d_shouldDrawExpectedLines(false),
@@ -20,7 +19,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 {
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
-  d_streamFramePeriod = ini.geti("Debugger", "BroadcastFramePeriod", 5);
+  d_streamFramePeriod = ini.geti("Debugger", "CameraFramePeriod", 5);
 
   d_goalLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Goal",  40,  10, 210, 55, 190, 65));
   d_ballLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Ball",  10,  15, 255, 95, 190, 95));
