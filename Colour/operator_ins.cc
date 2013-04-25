@@ -5,7 +5,6 @@ ostream& bold::operator<<(ostream &stream, Colour::bgr const& bgr)
   return stream <<  "B=" << (unsigned int)bgr.b
                 << " G=" << (unsigned int)bgr.g
                 << " R=" << (unsigned int)bgr.r;
-
 }
 
 ostream& bold::operator<<(ostream &stream, Colour::hsv const& hsv)
@@ -13,7 +12,6 @@ ostream& bold::operator<<(ostream &stream, Colour::hsv const& hsv)
   return stream <<  "H=" << (unsigned int)hsv.h
                 << " S=" << (unsigned int)hsv.s
                 << " V=" << (unsigned int)hsv.v;
-
 }
 
 std::ostream& bold::operator<<(std::ostream &stream, Colour::hsvRange const& hsvRange)
