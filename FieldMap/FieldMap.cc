@@ -40,6 +40,7 @@ FieldMap::FieldMap(minIni const& ini)
   double halfGoalY = goalY/2;
   d_circleRadius = circleDiameter/2;
 
+/*
   // CROSS MARKS
   // center cross mark
   d_fieldLines.push_back(LineSegment3d(Vector3d(-halfCrossLength, 0, 0), Vector3d(halfCrossLength, 0, 0)));
@@ -50,6 +51,7 @@ FieldMap::FieldMap(minIni const& ini)
   // right penalty mark
   d_fieldLines.push_back(LineSegment3d(Vector3d(penaltyInnerX, 0, 0), Vector3d(penaltyOuterX, 0, 0)));
   d_fieldLines.push_back(LineSegment3d(Vector3d(penaltyX, -halfCrossLength, 0), Vector3d(penaltyX, halfCrossLength, 0)));
+*/
 
   // OUTER SQUARE
   // top
