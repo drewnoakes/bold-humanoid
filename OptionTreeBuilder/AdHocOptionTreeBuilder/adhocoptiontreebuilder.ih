@@ -13,6 +13,7 @@
 #include "../../Option/LookAtGoal/lookatgoal.hh"
 #include "../../Option/Stand/stand.hh"
 #include "../../Ambulator/ambulator.hh"
+#include "../../Debugger/debugger.hh"
 
 #include <algorithm>
 
