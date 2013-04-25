@@ -78,7 +78,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   d_controls.push_back(Control::createBool("Use Lines", d_useLines, [this](bool value){ d_useLines = value; }));
 
   auto minGoalsNeededControl = Control::createInt("Min Goals Needed", d_minGoalsNeeded, [this](int value){ d_minGoalsNeeded = value; });
-  minGoalsNeededControl.setLimitValues(0, 5);
+  minGoalsNeededControl.setLimitValues(1, 5);
   d_controls.push_back(minGoalsNeededControl);
 
   updateStateObject();
