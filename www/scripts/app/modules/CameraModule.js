@@ -17,16 +17,7 @@ define(
 
         var CameraModule = function()
         {
-            this.$canvas = $('<canvas></canvas>', {'class':'camera-canvas'});
-            this.canvas = this.$canvas.get(0);
-
             this.$container = $('<div></div>');
-            this.$hoverPixelInfo = $('<div></div>', {'class': 'hover-pixel-info'});
-
-            this.$container.append(this.$canvas)
-                           .append(this.$hoverPixelInfo);
-
-            this.bindInteraction();
 
             /////
 
@@ -43,7 +34,44 @@ define(
             ];
         };
 
-        CameraModule.prototype.bindInteraction = function ()
+        CameraModule.prototype.load = function()
+        {
+            this.$canvas = $('<canvas></canvas>', {'class':'camera-canvas'});
+
+            this.canvas = this.$canvas.get(0);
+            this.$hoverPixelInfo = $('<div></div>', {'class': 'hover-pixel-info'});
+
+            this.$container.append(this.$canvas)
+                           .append(this.$hoverPixelInfo);
+
+            this.bindInteraction();
+
+            this.imgState = StateEnum.GET_PREFIX;
+            this.createContext();
+
+            this.subscription = DataProxy.subscribe(
+                Protocols.camera,
+                {
+                    json: false,
+                    onmessage: _.bind(this.onmessage, this)
+                }
+            );
+
+            ControlBuilder.build('head',   $('<div></div>', {'class': 'control-container head-controls'}).appendTo(this.$container));
+            ControlBuilder.build('image',  $('<div></div>', {'class': 'control-container image-controls'}).appendTo(this.$container));
+            ControlBuilder.build('lines',  $('<div></div>', {'class': 'control-container lines-controls'}).appendTo(this.$container));
+            ControlBuilder.build('ball',   $('<div></div>', {'class': 'control-container ball-controls'}).appendTo(this.$container));
+            ControlBuilder.build('lut',    $('<div></div>', {'class': 'control-container lut-controls'}).appendTo(this.$container));
+            ControlBuilder.build('camera', $('<div></div>', {'class': 'control-container camera-controls'}).appendTo(this.$container));
+        };
+
+        CameraModule.prototype.unload = function()
+        {
+            this.$container.empty();
+            this.subscription.close();
+        };
+
+        CameraModule.prototype.bindInteraction = function()
         {
             var isImageLarge = false;
             this.$canvas.click(function (event)
@@ -85,32 +113,6 @@ define(
                     ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255)
                 );
             }.bind(this));
-        };
-
-        CameraModule.prototype.load = function()
-        {
-            this.imgState = StateEnum.GET_PREFIX;
-            this.createContext();
-
-            this.subscription = DataProxy.subscribe(
-                Protocols.camera,
-                {
-                    json: false,
-                    onmessage: _.bind(this.onmessage, this)
-                }
-            );
-
-            ControlBuilder.build('head',   $('<div></div>', {'class': 'control-container head-controls'}).appendTo(this.$container));
-            ControlBuilder.build('image',  $('<div></div>', {'class': 'control-container image-controls'}).appendTo(this.$container));
-            ControlBuilder.build('lines',  $('<div></div>', {'class': 'control-container lines-controls'}).appendTo(this.$container));
-            ControlBuilder.build('ball',   $('<div></div>', {'class': 'control-container ball-controls'}).appendTo(this.$container));
-            ControlBuilder.build('lut',    $('<div></div>', {'class': 'control-container lut-controls'}).appendTo(this.$container));
-            ControlBuilder.build('camera', $('<div></div>', {'class': 'control-container camera-controls'}).appendTo(this.$container));
-        };
-
-        CameraModule.prototype.unload = function()
-        {
-            this.subscription.close();
         };
 
         CameraModule.prototype.createContext = function ()
