@@ -33,8 +33,6 @@ define(
         {
             this.$container = $('<div></div>');
 
-            this.buildChart();
-
             this.title = 'localiser';
             this.id = 'localiser';
             this.panes = [
@@ -47,51 +45,80 @@ define(
             ];
         };
 
+        LocaliserModule.prototype.load = function()
+        {
+            this.buildChart();
+
+            this.particleSubscription = DataProxy.subscribe(Protocols.particleState,    { json: true, onmessage: _.bind(this.onParticleData, this) });
+            this.cameraSubscription   = DataProxy.subscribe(Protocols.cameraFrameState, { json: true, onmessage: _.bind(this.onCameraData, this) });
+
+            ControlBuilder.build('localiser', $('<div></div>', {'class': 'control-container localiser-controls'}).appendTo(this.$container));
+
+            // TODO show what is in the camera frame (ball, goals, lines...)
+            this.$ballVisibleMarker = $('<div></div>').addClass('marker ball').appendTo(this.$container);
+            this.$goal1VisibleMarker = $('<div></div>').addClass('marker goal').appendTo(this.$container);
+            this.$goal2VisibleMarker = $('<div></div>').addClass('marker goal').appendTo(this.$container);
+        };
+
+        LocaliserModule.prototype.unload = function()
+        {
+            this.particleSubscription.close();
+            this.cameraSubscription.close();
+            this.chart.stop();
+            this.$container.empty();
+        };
+
         LocaliserModule.prototype.buildChart = function()
         {
-            var chart = new SmoothieChart(chartOptions);
+            this.chart = new SmoothieChart(chartOptions);
 
             this.chartCanvas = document.createElement('canvas');
             this.chartCanvas.width = 640;
             this.chartCanvas.height = chartHeight;
             this.$container.append(this.chartCanvas);
 
-            chart.streamTo(this.chartCanvas, /*delayMs*/ 200);
+            this.chart.streamTo(this.chartCanvas, /*delayMs*/ 200);
 
             this.averageSeries = new TimeSeries();
             this.maxSeries = new TimeSeries();
 
-            chart.addTimeSeries(this.averageSeries, {lineWidth:1, strokeStyle:'#0040ff', fillStyle:'rgba(0,64,255,0.26)'});
-            chart.addTimeSeries(this.maxSeries, {lineWidth:1, strokeStyle:'#00ff00'});
+            this.chart.addTimeSeries(this.averageSeries, {lineWidth:1, strokeStyle:'#0040ff', fillStyle:'rgba(0,64,255,0.26)'});
+            this.chart.addTimeSeries(this.maxSeries, {lineWidth:1, strokeStyle:'#00ff00'});
         };
 
         LocaliserModule.prototype.onResized = function(width, height)
         {
-            _.each(this.chartCanvases, function(canvas)
-            {
-                canvas.width = width;
-            });
+            this.chartCanvas.width = width;
         };
 
-        LocaliserModule.prototype.load = function()
+        LocaliserModule.prototype.onCameraData = function (data)
         {
-            this.subscription = DataProxy.subscribe(
-                Protocols.particleState,
-                {
-                    json: true,
-                    onmessage: _.bind(this.onData, this)
+            if (data.ball) {
+                this.$ballVisibleMarker.addClass('visible');
+            } else {
+                this.$ballVisibleMarker.removeClass('visible');
+            }
+
+            switch (data.goals.length) {
+                case 0: {
+                    this.$goal1VisibleMarker.removeClass('visible');
+                    this.$goal2VisibleMarker.removeClass('visible');
+                    break;
                 }
-            );
-
-            ControlBuilder.build('localiser', $('<div></div>', {'class': 'control-container localiser-controls'}).appendTo(this.$container));
+                case 1: {
+                    this.$goal1VisibleMarker.addClass('visible');
+                    this.$goal2VisibleMarker.removeClass('visible');
+                    break;
+                }
+                default: {
+                    this.$goal1VisibleMarker.addClass('visible');
+                    this.$goal2VisibleMarker.addClass('visible');
+                    break;
+                }
+            }
         };
 
-        LocaliserModule.prototype.unload = function()
-        {
-            this.subscription.close();
-        };
-
-        LocaliserModule.prototype.onData = function (data)
+        LocaliserModule.prototype.onParticleData = function (data)
         {
             var time = new Date().getTime();
 
