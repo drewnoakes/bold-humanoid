@@ -10,11 +10,11 @@ namespace bold
   {
   public:
     MovingAverage(unsigned windowSize)
-    : d_windowSize(windowSize),
-      d_items(windowSize),
-      d_sum(0),
+    : d_items(windowSize),
       d_length(0),
-      d_nextPointer(0)
+      d_nextPointer(0),
+      d_sum(0),
+      d_windowSize(windowSize)
     {
       if (windowSize == 0)
         throw new std::runtime_error("Cannot have zero window size.");
