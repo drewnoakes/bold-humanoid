@@ -1,7 +1,9 @@
 #include "localiser.ih"
 
-Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, double randomizeRatio)
+Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, double randomizeRatio, unsigned smoothingWindowSize)
 : d_pos(0, 0, 0),
+  d_smoothedPos(0, 0, 0),
+  d_avgPos(smoothingWindowSize),
   d_fieldMap(fieldMap),
   d_randomizeRatio(randomizeRatio)
 {
@@ -59,6 +61,11 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap, unsigned initialCount, doubl
   angleErrorControl.setDefaultValue(initialAngleErrorDeg);
   angleErrorControl.setLimitValues(0, 20);
   d_controls.push_back(angleErrorControl);
+
+  auto smoothingWindowSizeControl = Control::createInt("Smoothing Window", smoothingWindowSize, [this](int value){ d_avgPos = MovingAverage<Vector4d>(value); });
+  smoothingWindowSizeControl.setDefaultValue(smoothingWindowSize);
+  smoothingWindowSizeControl.setLimitValues(1, 100);
+  d_controls.push_back(smoothingWindowSizeControl);
 
   updateStateObject();
 }

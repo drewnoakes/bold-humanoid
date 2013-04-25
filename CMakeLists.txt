@@ -214,6 +214,7 @@ add_class(BOLDHUMANOID
   ./Localiser/predict.cc
   ./Localiser/resample.cc
   ./Localiser/update.cc
+  ./Localiser/updateSmoothedPos.cc
   ./Localiser/updateStateObject.cc
 )
 

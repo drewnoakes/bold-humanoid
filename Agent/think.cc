@@ -114,7 +114,7 @@ void Agent::think()
     //
     // Populate world frame from agent frame
     //
-    d_spatialiser->updateAgentToWorld(d_localiser->position());
+    d_spatialiser->updateAgentToWorld(d_localiser->smoothedPosition());
     t = debugger.timeEvent(t, "Agent to World Frame");
   }
 

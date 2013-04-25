@@ -91,5 +91,8 @@ void Localiser::update()
 
   d_pos = AgentPosition(state[0], state[1], state[2]);
 
+  updateSmoothedPos();
+
+  // Copy particles into their state object
   updateStateObject();
 }
