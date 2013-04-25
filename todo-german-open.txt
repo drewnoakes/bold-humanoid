@@ -6,10 +6,8 @@
 
 - attempt to segment the field for colour labelling
 
-- localiser working
-  - control to use only goals       ######
-  - use actual model of a circle    ######
-  - reduce noise (deg/cm)           ######
+- localiser
+  - ctor params via config file
   - intersection features
   - tweak for goalie
   - use ball as a landmark
@@ -41,6 +39,11 @@
 
 - Control::createDouble
 
+- RT:
+  - unload stops charts
+  - unload clears controls
+  - control data updated on each change, so when module re-added after a change, it shows it
+
 =-=-=-=-= DONE =-=-=-=-=-=
 
 - charge batteries
@@ -52,4 +55,9 @@
 - localiser scoring: use 1/(x+1)
 - localiser scoring: scale by dot product (angle)
 - localiser smoothing (moving average)
+- control to use only goals
+- reduce noise (deg/cm)
+- remove goal blob limitation
+- don't inject particles if nothing seen
+- localiser uses actual model of a circle
 
