@@ -38,8 +38,7 @@ FieldMap::FieldMap(minIni const& ini)
   double halfFieldY = d_fieldLengthY/2;
   double halfGoalAreaY = goalAreaY/2;
   double halfGoalY = goalY/2;
-  double circleRadius = circleDiameter/2;
-
+  d_circleRadius = circleDiameter/2;
 
   // CROSS MARKS
   // center cross mark
@@ -78,12 +77,12 @@ FieldMap::FieldMap(minIni const& ini)
 
   // CIRCLE
   int segments = 18;
-  Vector3d lastPoint(0, circleRadius, 0);
+  Vector3d lastPoint(0, d_circleRadius, 0);
   for (unsigned i = 1; i <= segments; i++)
   {
     double theta = (i/(double)segments) * M_PI * 2;
-    Vector3d point(sin(theta) * circleRadius, cos(theta) * circleRadius, 0);
-    d_fieldLines.push_back(LineSegment3d(lastPoint, point));
+    Vector3d point(sin(theta) * d_circleRadius, cos(theta) * d_circleRadius, 0);
+    d_circleLines.push_back(LineSegment3d(lastPoint, point));
     lastPoint = point;
   }
 

@@ -17,6 +17,8 @@ namespace bold
     /// Returns the positions of all field lines, in the world frame.
     std::vector<LineSegment3d> getFieldLines() const { return d_fieldLines; }
 
+    std::vector<LineSegment3d> getCircleLines() const { return d_circleLines; }
+
     /// Positions of the base of four goal posts, in the world frame.
     std::vector<Eigen::Vector3d> getGoalPostPositions() const { return d_goalPostPositions; }
 
@@ -29,13 +31,17 @@ namespace bold
     /// The minimum width of field surface found outside the outer field lines.
     double outerMarginMinimum() const { return d_outerMarginMinimum; }
 
+    double circleRadius() const { return d_circleRadius; }
+
   private:
     std::vector<LineSegment3d> d_fieldLines;
+    std::vector<LineSegment3d> d_circleLines;
     std::vector<Eigen::Vector3d> d_goalPostPositions;
 
     double d_fieldLengthX;
     double d_fieldLengthY;
     double d_outerMarginMinimum;
+    double d_circleRadius;
   };
 }
 
