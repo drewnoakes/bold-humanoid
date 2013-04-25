@@ -63,7 +63,7 @@ void Localiser::update()
     // Score observed goal posts
     //
 
-    if (agentFrame->getGoalObservations().size() <= d_minGoalsNeeded)
+    if (agentFrame->getGoalObservations().size() >= d_minGoalsNeeded)
     {
       for (Vector3d const& observed : agentFrame->getGoalObservations())
       {
