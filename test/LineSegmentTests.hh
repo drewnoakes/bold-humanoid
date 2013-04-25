@@ -126,6 +126,32 @@ TEST (LineSegmentTests, tryIntersect)
 //EXPECT_EQ( Maybe<Vector2i>(Vector2i(2,2)), LineSegment2i(1, 1, 2, 2).tryIntersect(LineSegment2i(2, 2, 3, 3)) );
 }
 
+TEST (LineSegmentTests, normalisedDot)
+{
+  EXPECT_EQ ( 0, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).normalisedDot(LineSegment2d(Vector2d(0,0),Vector2d(1,0))) );
+  EXPECT_EQ ( 0, LineSegment2d(Vector2d(0,0),Vector2d(0,2)).normalisedDot(LineSegment2d(Vector2d(2,2),Vector2d(4,2))) );
+  EXPECT_EQ ( -1, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).normalisedDot(LineSegment2d(Vector2d(0,0),Vector2d(0,-1))) );
+
+  EXPECT_EQ ( 1, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).normalisedDot(LineSegment2d(Vector2d(0,0),Vector2d(0,1))) );
+
+  EXPECT_NEAR ( 0.707107, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).normalisedDot(LineSegment2d(Vector2d(0,0),Vector2d(1,1))), 0.000001 );
+}
+
+TEST (LineSegmentTests, smallestAngleBetween)
+{
+  EXPECT_EQ ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,0))) );
+  EXPECT_EQ ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,2)).smallestAngleBetween(LineSegment2d(Vector2d(2,2),Vector2d(4,2))) );
+
+  EXPECT_EQ ( 0, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(0,-1))) );
+
+  EXPECT_EQ ( M_PI/2, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,0))) );
+
+  EXPECT_NEAR ( M_PI/4, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,1))), 0.000001 );
+  EXPECT_NEAR ( M_PI/4, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(-1,1))), 0.000001 );
+  EXPECT_NEAR ( M_PI/4, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(-1,-1))), 0.000001 );
+  EXPECT_NEAR ( M_PI/4, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,-1))), 0.000001 );
+}
+
 /*
 TEST (LineSegmentTe/sts, toLine)
 {

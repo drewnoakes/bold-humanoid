@@ -25,6 +25,23 @@ namespace bold
     /** Returns the vector formed by <code>p2() - p1()</code> */
     Eigen::Matrix<T,dim,1> delta() const { return d_p2 - d_p1; }
 
+    double normalisedDot(LineSegment<T,dim> other)
+    {
+      return delta().normalized().dot( other.delta().normalized() );
+    }
+
+    /** Calculate the smallest angle between the two line segments.
+     *
+     * The output will be between 0 and PI/2, inclusive.
+     */
+    double smallestAngleBetween(LineSegment<T,dim> other)
+    {
+      auto a = fabs(acos(normalisedDot(other)));
+      if (a >= M_PI/2)
+        a = M_PI - a;
+      return a;
+    }
+
     template<int newDim>
     LineSegment<T,newDim> to() const
     {
