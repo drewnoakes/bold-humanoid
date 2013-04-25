@@ -81,6 +81,7 @@ int main(int argc, char **argv)
     U2D_DEV_NAME0,
     ini,
     MOTION_FILE_PATH,
+    9, // Team number. TODO: set sensible
     uniformNumber,
     useJoystick,
     autoGetUpFromFallen,
