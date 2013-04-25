@@ -57,7 +57,8 @@ namespace bold
           bool useJoystick,
           bool autoGetUpFromFallen,
           bool useOptionTree,
-          bool recordFrames);
+          bool recordFrames,
+          bool ignoreGameController);
 
     void run();
     void stop();
@@ -72,6 +73,7 @@ namespace bold
     bool d_isRecordingFrames;
     bool d_autoGetUpFromFallen;
     bool d_useOptionTree;
+    bool d_ignoreGameController;
 
     // Modules
     std::shared_ptr<Robot::LinuxCM730> d_linuxCM730;

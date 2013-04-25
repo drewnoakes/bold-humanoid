@@ -12,6 +12,20 @@ using namespace std;
 
 Agent* agent;
 
+void printUsage()
+{
+  cout << "Options:" << endl;
+  cout << "\t-c <file>\tselect configuration file (or --conf)" << endl;
+  cout << "\t-t <num>\tteam number (or --team)" << endl;
+  cout << "\t-u <num>\tuniform number (or --unum)" << endl;
+  cout << "\t-t\tdisable the option tree (or --no-tree)" << endl;
+  cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
+  cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
+  cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
+  cout << "\t--nogc\tdo not listen to GameController" << endl;
+  cout << "\t-h\tshow these options (or --help)" << endl;
+}
+
 void handleShutdownSignal(int sig)
 {
   if (agent)
@@ -27,8 +41,9 @@ int main(int argc, char **argv)
   bool autoGetUpFromFallen = true;
   bool recordFrames = false;
   bool useOptionTree = true;
+  unsigned teamNumber = 9;
   unsigned uniformNumber = 0;
-
+  bool ignoreGameController = false;
   string confFile("config.ini");
 
   //
@@ -39,21 +54,18 @@ int main(int argc, char **argv)
     string arg(argv[i]);
     if (arg == "-h" || arg == "--help")
     {
-      cout << "Options:" << endl;
-      cout << "\t-c <file>\tselect configuration file (or --conf)" << endl;
-      cout << "\t-n <num>\tplayer number (or --number)" << endl;
-      cout << "\t-t\tdisable the option tree (or --no-tree)" << endl;
-      cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
-      cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
-      cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
-      cout << "\t-h\tshow these options (or --help)" << endl;
+      printUsage();
       return 0;
     }
     else if (arg == "-c" || arg == "--conf")
     {
       confFile = argv[++i];
     }
-    else if (arg == "-n" || arg == "--number")
+    else if (arg == "-t" || arg == "--team")
+    {
+      teamNumber = atoi(argv[++i]);
+    }
+    else if (arg == "-u" || arg == "--unum")
     {
       uniformNumber = atoi(argv[++i]);
     }
@@ -73,6 +85,23 @@ int main(int argc, char **argv)
     {
       recordFrames = true;
     }
+    else if (arg == "--nogc")
+    {
+      ignoreGameController = true;
+    }
+    else
+    {
+      cout << "UNKNOWN ARGUMENT: " << arg << endl;
+      printUsage();
+      return -1;
+    }
+  }
+
+  if (uniformNumber == 0)
+  {
+    cout << "YOU MUST SUPPLY A UNIFORM NUMBER!" << endl;
+    printUsage();
+    return -1;
   }
 
   minIni ini(confFile);
@@ -81,12 +110,13 @@ int main(int argc, char **argv)
     U2D_DEV_NAME0,
     ini,
     MOTION_FILE_PATH,
-    9, // Team number. TODO: set sensible
+    teamNumber,
     uniformNumber,
     useJoystick,
     autoGetUpFromFallen,
     useOptionTree,
-    recordFrames);
+    recordFrames,
+    ignoreGameController);
 
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);

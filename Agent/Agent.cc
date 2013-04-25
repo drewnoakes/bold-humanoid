@@ -8,7 +8,8 @@ Agent::Agent(string const& U2D_dev,
              bool useJoystick,
              bool autoGetUpFromFallen,
              bool useOptionTree,
-             bool recordFrames
+             bool recordFrames,
+             bool ignoreGameController
   )
   : d_isRunning(false),
     d_motionFile(motionFile),
@@ -17,6 +18,7 @@ Agent::Agent(string const& U2D_dev,
     d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
     d_useOptionTree(useOptionTree),
+    d_ignoreGameController(ignoreGameController),
     d_ballSeenCnt(0),
     d_goalSeenCnt(0)
 {
@@ -44,7 +46,11 @@ Agent::Agent(string const& U2D_dev,
   d_gameStateReceiver = make_shared<GameStateReceiver>(ini);
 
   AdHocOptionTreeBuilder optionTreeBuilder;
-  d_optionTree = optionTreeBuilder.buildTree(ini, d_teamNumber, d_uniformNumber, d_debugger);
+  d_optionTree = optionTreeBuilder.buildTree(ini,
+                                             d_teamNumber,
+                                             d_uniformNumber,
+                                             d_ignoreGameController,
+                                             d_debugger);
 
   if (useJoystick)
   {
