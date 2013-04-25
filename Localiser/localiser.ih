@@ -10,6 +10,7 @@
 #include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/ParticleState/particlestate.hh"
 
 using namespace std;
