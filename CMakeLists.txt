@@ -129,6 +129,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Clock/getTimestamp.cc
+)
+
+add_class(BOLDHUMANOID
   ./Colour/bgr2hsv.cc
   ./Colour/hsv2bgr.cc
   ./Colour/hsvRange.cc
