@@ -126,3 +126,21 @@ TEST (MathTests, degreesRadiansConversion)
   EXPECT_EQ( -M_PI/4, Math::degToRad(-45) );
   EXPECT_EQ( -45.0, Math::radToDeg(-M_PI/4) );
 }
+
+TEST (MathTests, smallestAngleBetween)
+{
+  EXPECT_NEAR( 0, Math::smallestAngleBetween(Vector2d(0,1), Vector2d(0,1)), 0.0000001 );
+  EXPECT_NEAR( 0, Math::smallestAngleBetween(Vector2d(1,1), Vector2d(1,1)), 0.0000001 );
+  EXPECT_NEAR( 0, Math::smallestAngleBetween(Vector2d(-1,-1), Vector2d(-1,-1)), 0.0000001 );
+
+  EXPECT_NEAR( M_PI, Math::smallestAngleBetween(Vector2d(0,1), Vector2d(0,-1)), 0.0000001 );
+  EXPECT_NEAR( M_PI, Math::smallestAngleBetween(Vector2d(1,1), Vector2d(-1,-1)), 0.0000001 );
+  EXPECT_NEAR( M_PI, Math::smallestAngleBetween(Vector2d(1,0), Vector2d(-1,0)), 0.0000001 );
+
+  EXPECT_NEAR( M_PI/2, Math::smallestAngleBetween(Vector2d(0,1), Vector2d(1,0)), 0.0000001 );
+  EXPECT_NEAR( M_PI/2, Math::smallestAngleBetween(Vector2d(0,1), Vector2d(-1,0)), 0.0000001 );
+
+  EXPECT_NEAR( M_PI/4, Math::smallestAngleBetween(Vector2d(0,1), Vector2d(1,1)), 0.0000001 );
+  EXPECT_NEAR( M_PI/4, Math::smallestAngleBetween(Vector2d(0,1), Vector2d(-1,1)), 0.0000001 );
+  EXPECT_NEAR( M_PI/4, Math::smallestAngleBetween(Vector2d(-1,-1), Vector2d(-1,0)), 0.0000001 );
+}

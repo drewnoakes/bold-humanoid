@@ -32,6 +32,8 @@ namespace bold
     static double degToRad(double degrees) { return (degrees * M_PI) / 180.0; }
     static double radToDeg(double radians) { return (radians / M_PI) * 180.0; }
 
+    static double smallestAngleBetween(Eigen::Vector2d v1, Eigen::Vector2d v2);
+
   private:
     Math() {}
   };

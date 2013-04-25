@@ -228,6 +228,7 @@ add_class(BOLDHUMANOID
   ./Math/intersectRayWithGroundPlane.cc
   ./Math/intersectRayWithPlane.cc
   ./Math/linePointClosestToPoint.cc
+  ./Math/smallestAngleBetween.cc
 )
 
 add_class(BOLDHUMANOID
