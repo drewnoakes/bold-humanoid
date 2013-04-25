@@ -282,6 +282,13 @@ div.module.camera div.control-container.image-controls > div:nth-child(1)
 
 /********************************************************************/
 
+div.module.localiser div.control-container.localiser-controls > div:nth-child(1)
+{
+    display: block;
+}
+
+/********************************************************************/
+
 div.module.sensors .polar-trace-container
 {
     display: inline-block;
