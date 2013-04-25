@@ -7,8 +7,10 @@
 - attempt to segment the field for colour labelling
 
 - localiser working
+  - control to use only goals       ######
   - use actual model of a circle    ######
   - reduce noise (deg/cm)           ######
+  - intersection features
   - tweak for goalie
   - use ball as a landmark
   - variance of non-zero weighted
