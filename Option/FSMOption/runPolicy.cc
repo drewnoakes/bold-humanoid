@@ -18,14 +18,18 @@ OptionList FSMOption::runPolicy()
       if (transition->condition())
       {
         d_curState = transition->childState;
+        cout << "[FSMOption::runPolicy] Transition to state: " << d_curState->name << endl;
+        d_curState->startTime = Clock::getTimestamp();
         testTransition = true;
+        if (transition->onFire)
+          transition->onFire();
         break;
       }
     }
   }
   while (testTransition);
 
-  cout << "[FSMOption::runPolicy] New state: " << d_curState->name << endl;
+  cout << "[FSMOption::runPolicy] Final state: " << d_curState->name << endl;
 
   return d_curState->options;
 }
