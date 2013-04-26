@@ -13,6 +13,7 @@
 #include "../../Option/FSMOption/fsmoption.hh"
 #include "../../Option/LookAround/lookaround.hh"
 #include "../../Option/LookAtBall/lookatball.hh"
+#include "../../Option/LookAtFeet/lookatfeet.hh"
 #include "../../Option/LookAtGoal/lookatgoal.hh"
 #include "../../Option/Stand/stand.hh"
 #include "../../Ambulator/ambulator.hh"
@@ -22,3 +23,4 @@
 
 using namespace bold;
 using namespace std;
+using namespace Robot;

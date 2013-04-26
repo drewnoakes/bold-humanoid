@@ -46,6 +46,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   OptionPtr lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel);
   tree->addOption(lookAtBall);
 
+  // Look at feet
+  OptionPtr lookAtFeet = make_shared<LookAtFeet>("lookatfeet", ini);
+  tree->addOption(lookAtFeet);
+
   // Look at goal
   OptionPtr lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel);
   tree->addOption(lookAtGoal);
@@ -253,19 +257,20 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // State: look for goal
     auto lookForGoalState = playingFsm->newState("lookforgoal", {stand, lookAround});
 
+    // State: stand and look at goal
+    auto lookAtGoalState = playingFsm->newState("lookatgoal", {stand, lookAtGoal});
+
     // State: circle ball
-    auto circleBallState = playingFsm->newState("circleball", {circleBall, lookAtGoal});
+    auto circleBallState = playingFsm->newState("circleball", {circleBall});
 
     // State: pre-kick look
-    /*
-    auto preKickLookState = playingFsm->newState("prekicklook", {stand, lookDown});
+    auto lookAtFeetState = playingFsm->newState("lookatfeet", {lookAtFeet});
 
     // State: left kick
     auto leftKickState = playingFsm->newState("leftkick", {leftKick});
 
     // State: right kick
-    auto rightKickState = playingFsm->newState("rightkick", {rightkick});
-    */
+    auto rightKickState = playingFsm->newState("rightkick", {rightKick});
 
     // ---------- TRANSITIONS ----------
 
@@ -325,28 +330,75 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     approachBall2lookForGoal->childState = lookForGoalState;
 
+    // Transition: look at goal when visible
+    auto lookForGoal2lookAtGoal = lookForGoalState->newTransition();
+    lookForGoal2lookAtGoal->condition = []() {
+      auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
+      return goalsObs.size() >= 2;
+    };
+    lookForGoal2lookAtGoal->childState = lookAtGoalState;
+
     // Transition: look for ball after too long
     auto lookForGoal2lookForBall = lookForGoalState->newTransition();
     lookForGoal2lookForBall->condition = [lookForGoal2lookForBall]() {
       Clock::Timestamp t = Clock::getTimestamp();
-      cout << "t: " << t << " " << lookForGoal2lookForBall->parentState->startTime << endl;
       if (t - lookForGoal2lookForBall->parentState->startTime > 10000000)
         return true;
       return false;
     };
     lookForGoal2lookForBall->childState = lookForBallState;
 
-    // Transition: seen goal, circle ball
-    auto lookForGoal2Circle = lookForGoalState->newTransition();
-    lookForGoal2Circle->condition = []()
-    {
+    // Transition: if goal is seen right in front of us, start kick procedure
+    auto lookAtGoal2lookDown = lookAtGoalState->newTransition();
+    lookAtGoal2lookDown->condition = [lookAtGoal2lookDown]() {
       auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
-      cout << "Goalobs: " << goalsObs.size() << endl;
 
-      return (goalsObs.size() >= 2);
+      Clock::Timestamp t = Clock::getTimestamp();
+      if (t - lookAtGoal2lookDown->parentState->startTime > 2000000)
+        return true;
+
+      if (goalsObs.size() < 2)
+        return false;
+
+      double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
+      double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
+      double panRatio = panAngle / panAngleRange;
+      return abs(panRatio) < 0.2;
     };
-    lookForGoal2Circle->childState = circleBallState;
+    lookAtGoal2lookDown->childState = leftKickState;
 
+    // Transition: seen goal, circle ball
+    auto lookAtGoal2Circle = lookAtGoalState->newTransition();
+    lookAtGoal2Circle->condition = [lookAtGoal2Circle]()
+    {
+      Clock::Timestamp t = Clock::getTimestamp();
+      if (t - lookAtGoal2Circle->parentState->startTime > 250000)
+        return true;
+    };
+    lookAtGoal2Circle->childState = circleBallState;
+
+    // Transition: stop circling
+    auto circle2lookAtGoal = circleBallState->newTransition();
+    circle2lookAtGoal->condition = [circle2lookAtGoal]()
+    {
+      double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
+      double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
+      double panRatio = panAngle / panAngleRange;
+      
+      double circleDurationSeconds = panRatio * 0.4;
+      Clock::Timestamp t = Clock::getTimestamp();
+      if (t - circle2lookAtGoal->parentState->startTime > circleDurationSeconds * 1000000)
+        return true;
+    };
+    circle2lookAtGoal->childState = lookAtGoalState;
+
+    auto kickLeft2lookForBall = leftKickState->newTransition();
+    kickLeft2lookForBall->condition = [kickLeft2lookForBall]() {
+      auto& os = kickLeft2lookForBall->parentState->options;
+      return std::all_of(os.begin(), os.end(), [](OptionPtr o) { return o->hasTerminated(); });
+    };
+    kickLeft2lookForBall->childState = lookForBallState;
+    
   } // uniformNumber != 1
 
   return tree;

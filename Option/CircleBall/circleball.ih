@@ -1,5 +1,7 @@
 #include "circleball.hh"
 
 #include "../../Ambulator/ambulator.hh"
+//#include "../../robotis/Framework/include/MotionManager.h"
 
 using namespace bold;
+using namespace Robot;
