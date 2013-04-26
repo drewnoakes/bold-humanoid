@@ -88,11 +88,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   // ---------- TRANSITIONS ----------
 
   auto startButtonCondition = []() {
-    static int lastSwitch = 0;
-    lastSwitch++;
-    if (lastSwitch < 20)
-      return false;
-
     auto hw = AgentState::get<HardwareState>();
     if (!hw)
       return false;
@@ -100,23 +95,17 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     if (!cm730)
       return false;
 
-    if (cm730->isStartButtonPressed)
+    static bool lastState = false;
+    if (lastState ^ cm730->isStartButtonPressed)
     {
-      lastSwitch = 0;
-      cout << "S";
-      return true;
+      lastState = cm730->isStartButtonPressed;
+      return lastState;
     }
 
-    cout << "s";
     return false;
   };
 
   auto modeButtonCondition = []() {
-    static int lastSwitch = 0;
-    lastSwitch++;
-    if (lastSwitch < 20)
-      return false;
-
     auto hw = AgentState::get<HardwareState>();
     if (!hw)
       return false;
@@ -124,14 +113,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     if (!cm730)
       return false;
 
-    if (cm730->isModeButtonPressed)
+    static bool lastState = false;
+    if (lastState ^ cm730->isModeButtonPressed)
     {
-      lastSwitch = 0;
-      cout << "M";
-      return true;
+      lastState = cm730->isModeButtonPressed;
+      return lastState;
     }
 
-    cout << "m";
     return false;
   };
 
