@@ -149,8 +149,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto gameState = AgentState::get<GameState>();
     if (!gameState)
       return true;
-    auto myGameStateInfo = gameState->teamInfo(teamNumber).getPlayer(uniformNumber);
-    return !myGameStateInfo.hasPenalty();
+    return !gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
   // READY playmode condition
@@ -165,7 +164,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   // SET playmode condition
   auto setCondition = []() {
     auto gameState = AgentState::get<GameState>();
-    if (!gameState) // No gamestate yes, most likely not SET
+    if (!gameState) // No gamestate yet, most likely not SET
       return false;
     return gameState->getPlayMode() == PlayMode::SET;
   };
@@ -244,20 +243,20 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     // From penalized to set: no penalized state and game state
     auto penalized2setTransition = penalizedState->newTransition();
-    penalized2setTransition->condition = [=] () {
+    penalized2setTransition->condition = [=]() {
       auto gameState = AgentState::get<GameState>();
       return gameState && noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::SET);
     };
-    penalized2setTransition->onFire = [=] () { debugger->showSet(); };
+    penalized2setTransition->onFire = [=]() { debugger->showSet(); };
     penalized2setTransition->childState = setState;
 
     // From penalized to play: no penalized state and game state
     auto penalized2playingTransition = penalizedState->newTransition();
-    penalized2playingTransition->condition = [=] () {
+    penalized2playingTransition->condition = [=]() {
       auto gameState = AgentState::get<GameState>();
       return gameState && noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::PLAYING);
     };
-    penalized2playingTransition->onFire = [=] () { debugger->showPlaying(); };
+    penalized2playingTransition->onFire = [=]() { debugger->showPlaying(); };
     penalized2playingTransition->childState = playingState;
 
     // From play to paused: pause button
@@ -270,7 +269,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   {
     auto pause2playingTransition = pauseState->newTransition();
     pause2playingTransition->condition = startButtonCondition;
-    pause2playingTransition->onFire = [=] () { debugger->showPlaying(); };
+    pause2playingTransition->onFire = [=]() { debugger->showPlaying(); };
     pause2playingTransition->childState = playingState;
 
     auto play2pausedTransition = playingState->newTransition();
