@@ -26,6 +26,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   OptionPtr approachBall = make_shared<ApproachBall>("approachball", ambulator);
   tree->addOption(approachBall);
 
+  // Circle around ball
+  /*
+  OptionPtr circle = make_shared<Circle>("circle");
+  
+  tree->addOption(circle);
+  */
+
   // Left kick
   OptionPtr leftKick = make_shared<ActionOption>("leftkickaction","lk");
   tree->addOption(leftKick);
@@ -250,9 +257,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto lookForGoalState = playingFsm->newState("lookforgoal", {stand, lookAround});
 
     // State: circle ball
+    /*
     auto circleBallState = playingFsm->newState("circleball", {circle, lookAtGoal});
+    */
 
     // State: pre-kick look
+    /*
     auto preKickLookState = playingFsm->newState("prekicklook", {stand, lookDown});
 
     // State: left kick
@@ -260,6 +270,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     // State: right kick
     auto rightKickState = playingFsm->newState("rightkick", {rightkick});
+    */
 
     // ---------- TRANSITIONS ----------
 
@@ -277,10 +288,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       auto& os = standUp2lookAround->parentState->options;
       return std::all_of(os.begin(), os.end(), [](OptionPtr o) { return o->hasTerminated(); });
     };
-    standUp2lookAround->childState = lookAroundState;
+    standUp2lookAround->childState = lookForBallState;
 
     // Transition: look at ball when visible
-    auto lookAround2lookAtBall = lookAroundState->newTransition();
+    auto lookAround2lookAtBall = lookForBallState->newTransition();
     lookAround2lookAtBall->condition = []() {
       return AgentState::get<CameraFrameState>()->isBallVisible();
     };
@@ -289,7 +300,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // Transition: look for ball if no longer seen
     auto lookAtBall2lookAround = lookAtBallState->newTransition();
     lookAtBall2lookAround->condition = ballLostCondition;
-    lookAtBall2lookAround->childState = lookAroundState;
+    lookAtBall2lookAround->childState = lookForBallState;
 
     // Transition: approach ball
     auto lookAtBall2approachBall = lookAtBallState->newTransition();
@@ -303,10 +314,31 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     lookAtBall2approachBall->childState = approachBallState;
 
+    // Transition: look for goal
+    auto approachBall2lookForGoal = approachBallState->newTransition();
+    approachBall2lookForGoal->condition = []() {
+      auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+      if (!ballObs)
+        return false;
+
+      return ((*ballObs)->head<2>().norm() < 0.1);
+    };
+    approachBall2lookForGoal->childState = lookForGoalState;
+
+    auto lookForGoal2lookForBall = lookForGoalState->newTransition();
+    lookForGoal2lookForBall->condition = [lookForGoal2lookForBall]() {
+      Clock::Timestamp t = Clock::getTimestamp();
+      cout << "t: " << t << " " << lookForGoal2lookForBall->parentState->startTime << endl;
+      if (t - lookForGoal2lookForBall->parentState->startTime > 10000000)
+        return true;
+      return false;
+    };
+    lookForGoal2lookForBall->childState = lookForBallState;
+
     // Transition: look for ball again if no longer seen
     auto approachBall2lookAround = approachBallState->newTransition();
     approachBall2lookAround->condition = ballLostCondition;
-    approachBall2lookAround->childState = lookAroundState;
+    approachBall2lookAround->childState = lookForBallState;
   } // uniformNumber != 1
 
   return tree;

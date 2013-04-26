@@ -12,11 +12,13 @@ OptionList ApproachBall::runPolicy()
   }
 
   double dist = ballPos->head<2>().norm();
-  double breakDist = 1.0;
+  double breakDist = 0.5;
   double alpha = dist/breakDist;
+  if (alpha > 1)
+    alpha = 1;
   
-  Vector2d minMove(3.0, 0);
-  Vector2d maxMove(10.0, 0);
+  Vector2d minMove(5.0, 0);
+  Vector2d maxMove(30.0, 0);
   Vector2d move = minMove + alpha * (maxMove - minMove);
   
   d_ambulator->setMoveDir(move);
