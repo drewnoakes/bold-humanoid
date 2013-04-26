@@ -9,10 +9,14 @@ OptionList FSMOption::runPolicy()
 
   cout << "[FSMOption::runPolicy] Current state: " << d_curState->name << endl;
 
-  bool testTransition = true;
+  const int MAX_LOOP_COUNT = 20;
+
+  int loopCount = 0;
+  bool transitionMade;
   do
   {
-    testTransition = false;
+    transitionMade = false;
+
     for (auto transition : d_curState->transitions)
     {
       if (transition->condition())
@@ -20,14 +24,20 @@ OptionList FSMOption::runPolicy()
         d_curState = transition->childState;
         cout << "[FSMOption::runPolicy] Transition to state: " << d_curState->name << endl;
         d_curState->startTime = Clock::getSeconds();
-        testTransition = true;
+        transitionMade = true;
         if (transition->onFire)
           transition->onFire();
         break;
       }
     }
+
+    if (loopCount++ > MAX_LOOP_COUNT)
+    {
+      cerr << "[FSMOption::runPolicy] Transition walk loop exceeded maximum number of iterations. Breaking from loop." << endl;
+      break;
+    }
   }
-  while (testTransition);
+  while (transitionMade);
 
   cout << "[FSMOption::runPolicy] Final state: " << d_curState->name << endl;
 
