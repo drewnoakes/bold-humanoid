@@ -20,6 +20,7 @@
 #include "../../Debugger/debugger.hh"
 
 #include <algorithm>
+#include <fstream>
 
 using namespace bold;
 using namespace std;

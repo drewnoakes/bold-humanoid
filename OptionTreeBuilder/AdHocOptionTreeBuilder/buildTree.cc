@@ -288,6 +288,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     play2pausedTransition->childState = pauseState;
   }
 
+  ofstream winOut("win.dot");
+  winOut << winFsm->toDot();
+  
   //
   // ========== PLAYING ==========
   //
