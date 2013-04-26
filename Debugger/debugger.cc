@@ -98,4 +98,4 @@ void Debugger::showPlaying() { showHeadColour(Colour::bgr(0,255,0)); showEyeColo
 
 void Debugger::showPenalized() { showHeadColour(Colour::bgr(0,0,255)); showEyeColour(Colour::bgr(255,0,0));}
 
-void Debugger::showPaused() { showHeadColour(Colour::bgr(0,128,255)); showEyeColour(Colour::bgr(255,0,0)); }
+void Debugger::showPaused() { showHeadColour(Colour::bgr(128,128,128)); showEyeColour(Colour::bgr(128,128,128)); }
