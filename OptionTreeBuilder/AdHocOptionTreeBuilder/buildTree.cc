@@ -149,7 +149,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto gameState = AgentState::get<GameState>();
     if (!gameState)
       return true;
-
     auto myGameStateInfo = gameState->teamInfo(teamNumber).getPlayer(uniformNumber);
     return !myGameStateInfo.hasPenalty();
   };
@@ -157,6 +156,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   // READY playmode condition
   auto readyCondition = [=]() {
     auto gameState = AgentState::get<GameState>();
+    if (!gameState)
+      return true;
     debugger->showPaused();
     return gameState->getPlayMode() == PlayMode::READY;
   };
@@ -172,6 +173,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   // PLAYING playmode condition
   auto playingCondition = []() {
     auto gameState = AgentState::get<GameState>();
+    if (!gameState)
+      return false;
     return gameState->getPlayMode() == PlayMode::PLAYING;
   };
 
@@ -243,7 +246,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto penalized2setTransition = penalizedState->newTransition();
     penalized2setTransition->condition = [=] () {
       auto gameState = AgentState::get<GameState>();
-      return noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::SET);
+      return gameState && noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::SET);
     };
     penalized2setTransition->onFire = [=] () { debugger->showSet(); };
     penalized2setTransition->childState = setState;
@@ -252,7 +255,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto penalized2playingTransition = penalizedState->newTransition();
     penalized2playingTransition->condition = [=] () {
       auto gameState = AgentState::get<GameState>();
-      return noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::PLAYING);
+      return gameState && noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::PLAYING);
     };
     penalized2playingTransition->onFire = [=] () { debugger->showPlaying(); };
     penalized2playingTransition->childState = playingState;
