@@ -67,10 +67,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   // ---------- STATES ----------
   // State: paused
-  auto pauseState = winFsm->newState("pause", {stand}, false/*end state*/, true/*start state*/);
+  auto pauseState = winFsm->newState("pause", {stand}, false/*end state*/, false/*start state*/);
 
   // State: ready
-  auto readyState = winFsm->newState("ready", {stand});
+  auto readyState = winFsm->newState("ready", {stand}, false/*end state*/, true/* start state */);
 
   // State: set
   auto setState = winFsm->newState("set", {stand});
