@@ -144,3 +144,24 @@ TEST (MathTests, smallestAngleBetween)
   EXPECT_NEAR( M_PI/4, Math::smallestAngleBetween(Vector2d(0,1), Vector2d(-1,1)), 0.0000001 );
   EXPECT_NEAR( M_PI/4, Math::smallestAngleBetween(Vector2d(-1,-1), Vector2d(-1,0)), 0.0000001 );
 }
+
+TEST(MathTests, lerp)
+{
+  // Ratio based
+  EXPECT_NEAR( 0, Math::lerp(0, 0, 1), 0.00001 );
+  EXPECT_NEAR( 0, Math::lerp(0, 0, 0), 0.00001 );
+  EXPECT_NEAR( 0, Math::lerp(0, 0, 100), 0.00001 );
+  EXPECT_NEAR( 5, Math::lerp(0, 5, 100), 0.00001 );
+
+  EXPECT_NEAR( 5, Math::lerp(0.5, 0, 10), 0.00001 );
+  EXPECT_NEAR( 5, Math::lerp(0.5, 10, 0), 0.00001 );
+
+  EXPECT_NEAR( 5, Math::lerp(1, 4, 5), 0.00001 );
+  EXPECT_NEAR( 20, Math::lerp(2, 0, 10), 0.00001 );
+  EXPECT_NEAR( -10, Math::lerp(-1, 0, 10), 0.00001 );
+
+  // Map based
+  EXPECT_NEAR( 10, Math::lerp(0, 0, 1, 10, 20), 0.00001 );
+  EXPECT_NEAR( 15, Math::lerp(0.5, 0, 1, 10, 20), 0.00001 );
+  EXPECT_NEAR( 20, Math::lerp(1, 0, 1, 10, 20), 0.00001 );
+}
