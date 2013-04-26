@@ -266,6 +266,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/LookAtFeet/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/LookAtGoal/runPolicy.cc
 )
 
