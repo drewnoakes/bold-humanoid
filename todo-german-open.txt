@@ -1,10 +1,8 @@
 =-=-=-=-= TODO =-=-=-=-=-=
 
-- outfits
-  - clothing
-  - numbers
-
-- attempt to segment the field for colour labelling
+- don't require ready->set->play because we may be brought into play mid-game
+- don't require button press
+- use button to unplenalise manually
 
 - localiser
   - ctor params via config file
@@ -35,7 +33,8 @@
 
 
 - use LEDs to communicate with human observers during competition
-
+-
+- RT show thinks-per-second (FPS)
 - RT show thinks-per-second (FPS)
 
 - Math::lerp
@@ -67,4 +66,7 @@
 - remove goal blob limitation
 - don't inject particles if nothing seen
 - localiser uses actual model of a circle
+- clothing
+- numbers
+- attempt to segment the field for colour labelling
 
