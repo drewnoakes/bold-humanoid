@@ -92,6 +92,8 @@ namespace bold
 
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
 
+    bool d_detectLines;
+
     int d_minBallArea;
 
     ImageType d_imageType;

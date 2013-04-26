@@ -19,6 +19,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 {
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
+  d_detectLines = ini.geti("Vision", "DetectLines", 0) != 0;
+
   d_streamFramePeriod = ini.geti("Debugger", "CameraFramePeriod", 5);
 
   d_goalLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Goal",  40,  10, 210, 55, 190, 65));
@@ -55,7 +57,9 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_labelCountPass = make_shared<LabelCountPass>(pixelLabels);
 
   d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
-  d_imagePassRunner->addHandler(d_lineDotPass);
+
+  if (d_detectLines)
+    d_imagePassRunner->addHandler(d_lineDotPass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
 //  d_imagePassRunner->addHandler(d_cartoonPass); // will be added if a client requests cartoon images
 //   d_imagePassRunner->addHandler(d_labelCountPass);

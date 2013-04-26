@@ -55,7 +55,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   // Draw line dots
-  if (d_shouldDrawLineDots && d_lineDotPass->lineDots.size() > 0)
+  if (d_detectLines && d_shouldDrawLineDots && d_lineDotPass->lineDots.size() > 0)
   {
     for (auto const& lineDot : d_lineDotPass->lineDots)
     {
