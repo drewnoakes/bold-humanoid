@@ -45,7 +45,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
       writer.String("players");
       writer.StartArray();
       {
-        for (int p = 0; p < getPlayersPerTeam(); ++p) {
+        for (int p = 1; p < getPlayersPerTeam(); ++p) {
           auto const& player = team.getPlayer(p);
           writer.StartObject();
           {
