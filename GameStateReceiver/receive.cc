@@ -1,12 +1,4 @@
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <memory>
-
-#include "gamestatereceiver.hh"
-#include "../StateObject/GameState/gamestate.hh"
-
-using namespace bold;
-using namespace std;
+#include "gamestatereceiver.ih"
 
 #define GAMECONTROLLER_STRUCT_HEADER "RGme"
 

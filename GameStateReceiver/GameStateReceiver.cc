@@ -1,14 +1,4 @@
-#include "gamestatereceiver.hh"
-
-#include <iostream>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <errno.h>
-#include <fcntl.h>
-
-using namespace bold;
-using namespace std;
+#include "gamestatereceiver.ih"
 
 GameStateReceiver::GameStateReceiver(minIni const& ini)
 : d_socket(-1),
@@ -38,7 +28,7 @@ GameStateReceiver::GameStateReceiver(minIni const& ini)
   // Set up destination address
   struct sockaddr_in addr;
   memset(&addr, 0, sizeof(addr));
-  addr.sin_family = AF_INET;
+  addr.sin_family = AF_INET; // IPv4
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
   addr.sin_port = htons(d_port);
 
