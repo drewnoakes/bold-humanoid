@@ -37,7 +37,7 @@ namespace bold
       {
         if (walk->IsRunning())
         {
-          std::cout << "Stopping Walker" << std::endl;
+//           std::cout << "Stopping Walker" << std::endl;
           walk->Stop();
         }
       }
@@ -49,7 +49,7 @@ namespace bold
 
         if (!walk->IsRunning())
         {
-          std::cout << "Starting Walker" << std::endl;
+//           std::cout << "Starting Walker" << std::endl;
           walk->Start();
           walk->m_Joint.SetEnableBodyWithoutHead(true, true);
         }

@@ -4,17 +4,25 @@ void OptionTree::run()
 {
   OptionList ranOptions;
 
-  OptionList options = {d_top};
-  while (!options.empty())
+  OptionList queue = {d_top};
+
+  while (!queue.empty())
   {
-    OptionPtr option = options.front();
-    cout << "Running option <" << option->getID() << ">" << endl;
-    options.pop_front();
+    // Pop the top option from the queue
+    OptionPtr option = queue.front();
+    queue.pop_front();
+
+//     cout << "Running option <" << option->getID() << ">" << endl;
+
+    // Run it
     OptionList subOptions = option->runPolicy();
-    options.insert(options.end(), subOptions.begin(), subOptions.end());
+
+    // Push any suboptions it created onto the back of the stack
+    queue.insert(queue.end(), subOptions.begin(), subOptions.end());
+
+    // Remember the fact that we ran it
     ranOptions.push_back(option);
   }
 
-  auto s = make_shared<OptionTreeState const>(ranOptions);
-  AgentState::getInstance().set(s);
+  AgentState::getInstance().set(make_shared<OptionTreeState const>(ranOptions));
 }

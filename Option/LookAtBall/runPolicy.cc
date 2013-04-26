@@ -22,14 +22,14 @@ OptionList LookAtBall::runPolicy()
   static float vapp = d_cameraModel->rangeVerticalDegs() / h;
 
   Vector2f offset = (*ballPos - centerPx) * r;
-  
+
   offset.x() *= happ; // pixel per angle
   offset.y() *= vapp; // pixel per angle
 
   float maxOffset = 20;
   offset = offset.cwiseMin(Vector2f(maxOffset,maxOffset)).cwiseMax(Vector2f(-maxOffset,-maxOffset));
 
-  cout << "offset: " << offset.transpose() << endl;
+//   cout << "offset: " << offset.transpose() << endl;
   if (offset.norm() < 2)
     offset = Vector2f(0,0);
 

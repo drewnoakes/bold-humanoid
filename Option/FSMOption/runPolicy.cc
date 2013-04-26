@@ -2,12 +2,12 @@
 
 OptionList FSMOption::runPolicy()
 {
-  cout << "[FSMOption::runPolicy] ----- Start -----" << endl;
+//   cout << "[FSMOption::runPolicy] ----- Start -----" << endl;
 
   if (!d_curState)
     d_curState = d_startState;
 
-  cout << "[FSMOption::runPolicy] Current state: " << d_curState->name << endl;
+//   cout << "[FSMOption::runPolicy] Current state: " << d_curState->name << endl;
 
   const int MAX_LOOP_COUNT = 20;
 
@@ -22,11 +22,16 @@ OptionList FSMOption::runPolicy()
       if (transition->condition())
       {
         d_curState = transition->childState;
+
         cout << "[FSMOption::runPolicy] Transition to state: " << d_curState->name << endl;
+
         d_curState->startTime = Clock::getSeconds();
+
         transitionMade = true;
+
         if (transition->onFire)
           transition->onFire();
+
         break;
       }
     }
@@ -39,7 +44,7 @@ OptionList FSMOption::runPolicy()
   }
   while (transitionMade);
 
-  cout << "[FSMOption::runPolicy] Final state: " << d_curState->name << endl;
+//   cout << "[FSMOption::runPolicy] Final state: " << d_curState->name << endl;
 
   return d_curState->options;
 }
