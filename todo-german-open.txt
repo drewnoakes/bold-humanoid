@@ -1,5 +1,7 @@
 =-=-=-=-= TODO =-=-=-=-=-=
 
+- review ball/goal labelling
+- choose foot to kick with
 - don't require ready->set->play because we may be brought into play mid-game
 - don't require button press
 - use button to unplenalise manually
@@ -33,8 +35,7 @@
 
 
 - use LEDs to communicate with human observers during competition
--
-- RT show thinks-per-second (FPS)
+
 - RT show thinks-per-second (FPS)
 
 - Math::lerp
