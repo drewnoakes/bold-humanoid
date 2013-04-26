@@ -255,6 +255,7 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./Option/FSMOption/runPolicy.cc
+  ./Option/FSMOption/toDot.cc
 )
 
 add_class(BOLDHUMANOID

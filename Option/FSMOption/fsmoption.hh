@@ -89,6 +89,8 @@ namespace bold
 
     void addTransition(TransitionPtr transition);
 
+    std::string toDot() const;
+
   private:
     std::vector<StatePtr> d_states;
     std::vector<TransitionPtr> d_transitions;
