@@ -50,7 +50,7 @@ namespace bold
       /// Outgoing transitions
       std::vector<TransitionPtr> transitions;
 
-      Clock::Timestamp startTime;
+      double startTime;
 
       TransitionPtr newTransition()
       {

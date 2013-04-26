@@ -27,7 +27,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   tree->addOption(approachBall);
 
   // Circle around ball
-  OptionPtr circleBall = make_shared<CircleBall>("circleball", ambulator);  
+  OptionPtr circleBall = make_shared<CircleBall>("circleball", ambulator);
   tree->addOption(circleBall);
 
   // Left kick
@@ -341,10 +341,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // Transition: look for ball after too long
     auto lookForGoal2lookForBall = lookForGoalState->newTransition();
     lookForGoal2lookForBall->condition = [lookForGoal2lookForBall]() {
-      Clock::Timestamp t = Clock::getTimestamp();
-      if (t - lookForGoal2lookForBall->parentState->startTime > 10000000)
-        return true;
-      return false;
+      double t = Clock::getSeconds();
+      return t - lookForGoal2lookForBall->parentState->startTime > 10;
     };
     lookForGoal2lookForBall->childState = lookForBallState;
 
@@ -353,8 +351,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     lookAtGoal2lookDown->condition = [lookAtGoal2lookDown]() {
       auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
 
-      Clock::Timestamp t = Clock::getTimestamp();
-      if (t - lookAtGoal2lookDown->parentState->startTime > 2000000)
+      double t = Clock::getSeconds();
+      if (t - lookAtGoal2lookDown->parentState->startTime > 2)
         return true;
 
       if (goalsObs.size() < 2)
@@ -371,9 +369,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto lookAtGoal2Circle = lookAtGoalState->newTransition();
     lookAtGoal2Circle->condition = [lookAtGoal2Circle]()
     {
-      Clock::Timestamp t = Clock::getTimestamp();
-      if (t - lookAtGoal2Circle->parentState->startTime > 250000)
-        return true;
+      double t = Clock::getSeconds();
+      return t - lookAtGoal2Circle->parentState->startTime > 2.5;
     };
     lookAtGoal2Circle->childState = circleBallState;
 
@@ -384,11 +381,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
       double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
       double panRatio = panAngle / panAngleRange;
-      
+
       double circleDurationSeconds = panRatio * 0.4;
-      Clock::Timestamp t = Clock::getTimestamp();
-      if (t - circle2lookAtGoal->parentState->startTime > circleDurationSeconds * 1000000)
-        return true;
+      double t = Clock::getSeconds();
+      return t - circle2lookAtGoal->parentState->startTime > circleDurationSeconds;
     };
     circle2lookAtGoal->childState = lookAtGoalState;
 
@@ -398,7 +394,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       return std::all_of(os.begin(), os.end(), [](OptionPtr o) { return o->hasTerminated(); });
     };
     kickLeft2lookForBall->childState = lookForBallState;
-    
+
   } // uniformNumber != 1
 
   return tree;

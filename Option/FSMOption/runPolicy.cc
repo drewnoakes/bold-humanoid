@@ -19,7 +19,7 @@ OptionList FSMOption::runPolicy()
       {
         d_curState = transition->childState;
         cout << "[FSMOption::runPolicy] Transition to state: " << d_curState->name << endl;
-        d_curState->startTime = Clock::getTimestamp();
+        d_curState->startTime = Clock::getSeconds();
         testTransition = true;
         if (transition->onFire)
           transition->onFire();
