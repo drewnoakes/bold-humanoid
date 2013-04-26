@@ -9,6 +9,8 @@ namespace bold
     typedef unsigned long long Timestamp;
 
     static Timestamp getTimestamp();
+
+    static double getSeconds();
   };
 
 }
