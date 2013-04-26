@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "../AgentState/agentstate.hh"
+#include "../Clock/clock.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 
 using namespace Robot;
@@ -56,6 +57,7 @@ void Debugger::addEventTiming(EventTiming const& eventTiming)
 void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
 {
   auto const& cameraFrame = AgentState::get<CameraFrameState>();
+  double seconds = Clock::getSeconds();
 
   if (!cameraFrame)
     return;
@@ -77,17 +79,25 @@ void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
     d_lastLedFlags = ledFlags;
   }
 
-  int ec =
-    (d_eyeColour.r >> 3) |
-    ((d_eyeColour.g >> 3) << 5) |
-    ((d_eyeColour.b >> 3) << 10);
-  cm730->WriteWord(CM730::P_LED_EYE_L, ec, 0);
+  auto eyeHsv = Colour::bgr2hsv(d_eyeColour);
+  eyeHsv.v = fabs(sin(seconds*2)) * 255;
+  auto eyeColour = Colour::hsv2bgr(eyeHsv);
 
-  int hc =
-    (d_headColour.r >> 3) |
-    ((d_headColour.g >> 3) << 5) |
-    ((d_headColour.b >> 3) << 10);
-  cm730->WriteWord(CM730::P_LED_HEAD_L, hc, 0);
+  auto headHsv = Colour::bgr2hsv(d_headColour);
+  headHsv.v = fabs(sin(seconds*3)) * 255;
+  auto headColour = Colour::hsv2bgr(headHsv);
+
+  int eyeInt =
+     (eyeColour.r >> 3) |
+    ((eyeColour.g >> 3) << 5) |
+    ((eyeColour.b >> 3) << 10);
+  cm730->WriteWord(CM730::P_LED_EYE_L, eyeInt, 0);
+
+  int headInt =
+     (headColour.r >> 3) |
+    ((headColour.g >> 3) << 5) |
+    ((headColour.b >> 3) << 10);
+  cm730->WriteWord(CM730::P_LED_HEAD_L, headInt, 0);
 }
 
 void Debugger::showReady() { showHeadColour(Colour::bgr(255,0,0)); showEyeColour(Colour::bgr(255,0,0)); };
