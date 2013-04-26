@@ -87,7 +87,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   // ---------- TRANSITIONS ----------
 
-  // Start button condition
   auto startButtonCondition = []() {
     static int lastSwitch = 0;
     lastSwitch++;
@@ -104,14 +103,15 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     if (cm730->isStartButtonPressed)
     {
       lastSwitch = 0;
+      cout << "S";
       return true;
     }
 
+    cout << "s";
     return false;
   };
 
-  // Cycle state button condition
-  auto cycleStateButtonCondition = []() {
+  auto modeButtonCondition = []() {
     static int lastSwitch = 0;
     lastSwitch++;
     if (lastSwitch < 20)
@@ -127,9 +127,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     if (cm730->isModeButtonPressed)
     {
       lastSwitch = 0;
+      cout << "M";
       return true;
     }
 
+    cout << "m";
     return false;
   };
 
@@ -138,9 +140,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto gameState = AgentState::get<GameState>();
     if (!gameState)
       return false;
-
-    auto myGameStateInfo = gameState->teamInfo(teamNumber).getPlayer(uniformNumber);
-    return myGameStateInfo.hasPenalty();
+    return gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
   // No penalty condition
@@ -152,36 +152,18 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     return !gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
-  // READY playmode condition
-  auto readyCondition = [=]() {
-    auto gameState = AgentState::get<GameState>();
-    if (!gameState)
-      return true;
-    debugger->showPaused();
-    return gameState->getPlayMode() == PlayMode::READY;
+  auto makePlayModeCondition = [](PlayMode playMode, bool defaultValue)
+  {
+    return [=]() {
+      auto gameState = AgentState::get<GameState>();
+      if (!gameState)
+        return defaultValue;
+      return gameState->getPlayMode() == playMode;
+    };
   };
 
-  // SET playmode condition
-  auto setCondition = []() {
-    auto gameState = AgentState::get<GameState>();
-    if (!gameState) // No gamestate yet, most likely not SET
-      return false;
-    return gameState->getPlayMode() == PlayMode::SET;
-  };
-
-  // PLAYING playmode condition
-  auto playingCondition = []() {
-    auto gameState = AgentState::get<GameState>();
-    if (!gameState)
-      return false;
-    return gameState->getPlayMode() == PlayMode::PLAYING;
-  };
-
-  // FINISHED playmode condition
-//   auto finishedCondition = []() {
-//     auto gameState = AgentState::get<GameState>();
-//     return gameState->getPlayMode() == PlayMode::FINISHED;
-//   };
+  auto setCondition = makePlayModeCondition(PlayMode::SET, false);
+  auto playingCondition = makePlayModeCondition(PlayMode::PLAYING, false);
 
   if (!ignoreGameController)
   {
@@ -195,31 +177,37 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     pause2ReadyTransition->onFire = [=]() { debugger->showReady(); };
     pause2ReadyTransition->childState = readyState;
 
+    // From play to paused: pause button
+    auto play2pausedTransition = playingState->newTransition("p2pStartBtn");
+    play2pausedTransition->condition = startButtonCondition;
+    play2pausedTransition->onFire = [=]() { debugger->showPaused(); };
+    play2pausedTransition->childState = pauseState;
+
     //
     // MODE BUTTON
     //
 
     // From pause to ready: button pressed
     auto pause2ReadyManualTransition = pauseState->newTransition();
-    pause2ReadyManualTransition->condition = cycleStateButtonCondition;
+    pause2ReadyManualTransition->condition = modeButtonCondition;
     pause2ReadyManualTransition->onFire = [=]() { debugger->showSet(); };
     pause2ReadyManualTransition->childState = readyState;
 
     // From ready to set: button pressed
     auto ready2setManualTransition = readyState->newTransition("p2rCycleStateBtn");
-    ready2setManualTransition->condition = cycleStateButtonCondition;
+    ready2setManualTransition->condition = modeButtonCondition;
     ready2setManualTransition->onFire = [=]() { debugger->showSet(); };
     ready2setManualTransition->childState = setState;
 
     // From set to penalised: button pressed
     auto set2PenalizedManualTransition = setState->newTransition("s2pCycleStateBtn");
-    set2PenalizedManualTransition->condition = cycleStateButtonCondition;
+    set2PenalizedManualTransition->condition = modeButtonCondition;
     set2PenalizedManualTransition->onFire = [=]() { debugger->showPenalized(); };
     set2PenalizedManualTransition->childState = penalizedState;
 
     // From penalized to play: button pressed
     auto penalized2PlayTransition = setState->newTransition("p2pCycleStateBtn");
-    penalized2PlayTransition->condition = cycleStateButtonCondition;
+    penalized2PlayTransition->condition = modeButtonCondition;
     penalized2PlayTransition->onFire = [=]() { debugger->showPlaying(); };
     penalized2PlayTransition->childState = playingState;
 
@@ -268,12 +256,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     penalized2playingTransition->onFire = [=]() { debugger->showPlaying(); };
     penalized2playingTransition->childState = playingState;
-
-    // From play to paused: pause button
-    auto play2pausedTransition = playingState->newTransition("p2pStartBtn");
-    play2pausedTransition->condition = startButtonCondition;
-    play2pausedTransition->onFire = [=]() { debugger->showPaused(); };
-    play2pausedTransition->childState = pauseState;
   } // !ignoreGameController
   else
   {
@@ -290,7 +272,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   ofstream winOut("win.dot");
   winOut << winFsm->toDot();
-  
+
   //
   // ========== PLAYING ==========
   //
