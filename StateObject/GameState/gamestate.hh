@@ -146,9 +146,9 @@ namespace bold
     TeamInfo const& teamInfo1() const { return d_data.teams[0]; }
     TeamInfo const& teamInfo2() const { return d_data.teams[1]; }
 
-    TeamInfo const& ourTeamInfo(unsigned ourTeamNumber) const
+    TeamInfo const& teamInfo(unsigned teamNumber) const
     {
-      return teamInfo1().getTeamNumber() == ourTeamNumber ? teamInfo1() : teamInfo2();
+      return teamInfo1().getTeamNumber() == teamNumber ? teamInfo1() : teamInfo2();
     }
 
     PlayerInfo const& playerInfo(unsigned team, unsigned unum) const

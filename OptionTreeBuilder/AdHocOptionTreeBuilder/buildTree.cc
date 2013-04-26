@@ -112,35 +112,35 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   // Penalty condition
   auto penaltyCondition = [=]() {
-    auto gameState = AgentState::getInstance().get<GameState>();
+    auto gameState = AgentState::get<GameState>();
     if (!gameState)
       return false;
 
-    auto myGameStateInfo = gameState->ourTeamInfo(teamNumber).getPlayer(uniformNumber);
+    auto myGameStateInfo = gameState->teamInfo(teamNumber).getPlayer(uniformNumber);
     return myGameStateInfo.hasPenalty();
   };
 
   // No penalty condition
   // TODO: should be simply !penaltyCondition, but didn't work on first try
   auto noPenaltyCondition = [=]() {
-    auto gameState = AgentState::getInstance().get<GameState>();
+    auto gameState = AgentState::get<GameState>();
     if (!gameState)
       return true;
 
-    auto myGameStateInfo = gameState->ourTeamInfo(teamNumber).getPlayer(uniformNumber);
+    auto myGameStateInfo = gameState->teamInfo(teamNumber).getPlayer(uniformNumber);
     return !myGameStateInfo.hasPenalty();
   };
 
   // READY playmode condition
   auto readyCondition = [=]() {
-    auto gameState = AgentState::getInstance().get<GameState>();
+    auto gameState = AgentState::get<GameState>();
     debugger->showPaused();
     return gameState->getPlayMode() == PlayMode::READY;
   };
 
   // SET playmode condition
   auto setCondition = []() {
-    auto gameState = AgentState::getInstance().get<GameState>();
+    auto gameState = AgentState::get<GameState>();
     if (!gameState) // No gamestate yes, most likely not SET
       return false;
     return gameState->getPlayMode() == PlayMode::SET;
@@ -148,13 +148,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   // PLAYING playmode condition
   auto playingCondition = []() {
-    auto gameState = AgentState::getInstance().get<GameState>();
+    auto gameState = AgentState::get<GameState>();
     return gameState->getPlayMode() == PlayMode::PLAYING;
   };
 
   // FINISHED playmode condition
 //   auto finishedCondition = []() {
-//     auto gameState = AgentState::getInstance().get<GameState>();
+//     auto gameState = AgentState::get<GameState>();
 //     return gameState->getPlayMode() == PlayMode::FINISHED;
 //   };
 
@@ -172,7 +172,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     ready2setTransition->onFire = [=]() { debugger->showSet(); };
     ready2setTransition->childState = setState;
 
-    // From set to play: game state changed TODO: go to their kickoff if itś theirs
+    // From set to play: game state changed TODO: go to their kickoff if it's theirs
     auto set2playingTransition = setState->newTransition();
     set2playingTransition->condition = playingCondition;
     set2playingTransition->onFire = [=]() { debugger->showPlaying(); };
@@ -193,7 +193,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // From penalized to set: no penalized state and game state
     auto penalized2setTransition = penalizedState->newTransition();
     penalized2setTransition->condition = [=] () {
-      auto gameState = AgentState::getInstance().get<GameState>();
+      auto gameState = AgentState::get<GameState>();
       return noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::SET);
     };
     penalized2setTransition->onFire = [=] () { debugger->showSet(); };
@@ -202,7 +202,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // From penalized to play: no penalized state and game state
     auto penalized2playingTransition = penalizedState->newTransition();
     penalized2playingTransition->condition = [=] () {
-      auto gameState = AgentState::getInstance().get<GameState>();
+      auto gameState = AgentState::get<GameState>();
       return noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::PLAYING);
     };
     penalized2playingTransition->onFire = [=] () { debugger->showPlaying(); };
