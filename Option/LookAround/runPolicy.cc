@@ -3,21 +3,67 @@
 OptionList LookAround::runPolicy()
 {
   // Make an oscillatory movement to search for the ball
-  double maxAmpH = 70.0;//d_ini.getd("Head Pan/Tilt", "left_limit", 80.0); 
-  double maxAmpV = 15.0;//
-  timeval tval;
-  gettimeofday(&tval, 0);
 
-  double t = tval.tv_sec + tval.tv_usec / 1e6;
+  double t = Clock::getSeconds();
 
-  double periodH = 3.0;
-  double periodV = 1.4;
-  
-  float hAngle = sin(t / periodH * 2.0 * M_PI) * maxAmpH;
-  float vAngle = (sin(t / periodV * 2.0 * M_PI) + 1.0) * maxAmpV / 2.0;
-  
+  double period = (d_durationHoriz + d_durationVert) * 2;
+
+  double phase = fmod(t, period);
+
+  double hAngle = 0;
+  double vAngle = 0;
+
+  assert(phase >= 0);
+
+  if (phase < d_durationHoriz)
+  {
+    // moving right-to-left across top
+    vAngle = d_topAngle;
+    hAngle = Math::lerp(phase/d_durationHoriz, -d_sideAngle, d_sideAngle);
+  }
+  else
+  {
+    phase -= d_durationHoriz;
+
+    if (phase < d_durationVert)
+    {
+      // moving top-to-bottom at left
+      vAngle = Math::lerp(phase/d_durationVert, d_topAngle, d_bottomAngle);
+      hAngle = d_sideAngle;
+    }
+    else
+    {
+      phase -= d_durationVert;
+
+      if (phase < d_durationHoriz)
+      {
+        // moving left-to-right across bottom
+        vAngle = d_bottomAngle;
+        hAngle = Math::lerp(phase/d_durationHoriz, d_sideAngle, -d_sideAngle);
+      }
+      else
+      {
+        phase -= d_durationHoriz;
+
+        if (phase < d_durationVert)
+        {
+          // moving bottom-to-top across right
+          vAngle = Math::lerp(phase/d_durationVert, d_bottomAngle, d_topAngle);
+          hAngle = -d_sideAngle;
+        }
+        else
+        {
+          cout << "[LookAround::runPolicy] Failed to find phase of motion" << endl;
+        }
+      }
+    }
+  }
+
+  // Move to the calculated position
   Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   Robot::Head::GetInstance()->MoveByAngle(hAngle, vAngle);
+
+  // TODO rename robotis's MoveByAngle to MoveToAngle
 
   return OptionList();
 }

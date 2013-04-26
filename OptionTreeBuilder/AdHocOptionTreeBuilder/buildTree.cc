@@ -33,23 +33,23 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   // Left kick
   OptionPtr leftKick = make_shared<ActionOption>("leftkickaction","lk");
   tree->addOption(leftKick);
-  
+
   // Left kick
   OptionPtr rightKick = make_shared<ActionOption>("rightkickaction","rk");
   tree->addOption(rightKick);
 
   // Look around
-  OptionPtr lookAround = make_shared<LookAround>("lookaround");
+  OptionPtr lookAround = make_shared<LookAround>("lookaround", ini);
   tree->addOption(lookAround);
 
   // Look at ball
   OptionPtr lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel);
   tree->addOption(lookAtBall);
-  
+
   // Look at goal
   OptionPtr lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel);
   tree->addOption(lookAtGoal);
-  
+
   // FSM
   auto winFsm = make_shared<FSMOption>("win");
   tree->addOption(winFsm, true);
@@ -102,7 +102,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       lastSwitch = 0;
       return true;
     }
-    
+
     return false;
   };
 
@@ -177,13 +177,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // From set to penalized: penalized state
     auto set2penalizedTransition = setState->newTransition();
     set2penalizedTransition->condition = penaltyCondition;
-    set2penalizedTransition->onFire = [=]() { debugger->showPenalized(); }; 
+    set2penalizedTransition->onFire = [=]() { debugger->showPenalized(); };
     set2penalizedTransition->childState = penalizedState;
 
     // From playing to penalized: penalized state
     auto playing2penalizedTransition = playingState->newTransition();
     playing2penalizedTransition->condition = penaltyCondition;
-    playing2penalizedTransition->onFire = [=]() { debugger->showPenalized(); }; 
+    playing2penalizedTransition->onFire = [=]() { debugger->showPenalized(); };
     playing2penalizedTransition->childState = penalizedState;
 
     // From penalized to set: no penalized state and game state
@@ -194,7 +194,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     penalized2setTransition->onFire = [=] () { debugger->showSet(); };
     penalized2setTransition->childState = setState;
-  
+
     // From penalized to play: no penalized state and game state
     auto penalized2playingTransition = penalizedState->newTransition();
     penalized2playingTransition->condition = [=] () {
@@ -203,7 +203,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     penalized2playingTransition->onFire = [=] () { debugger->showPlaying(); };
     penalized2playingTransition->childState = playingState;
-  
+
     // From play to paused: pause button
     auto play2pausedTransition = playingState->newTransition();
     play2pausedTransition->condition = startButtonCondition;

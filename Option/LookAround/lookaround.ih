@@ -1,8 +1,12 @@
 #include "lookaround.hh"
 
-#include <sys/time.h>
-#include <LinuxDARwIn.h>
 #include <cmath>
+#include <cassert>
+#include <LinuxDARwIn.h>
+#include <sys/time.h>
+
+#include "../Clock/clock.hh"
+#include "../Math/math.hh"
 
 using namespace bold;
 using namespace std;
