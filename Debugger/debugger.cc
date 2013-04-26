@@ -1,20 +1,9 @@
-#include "debugger.hh"
-
-#include <LinuxDARwIn.h>
-#include <LinuxCM730.h>
-#include <time.h>
-#include <stdio.h>
-
-#include "../AgentState/agentstate.hh"
-#include "../Clock/clock.hh"
-#include "../StateObject/CameraFrameState/cameraframestate.hh"
-
-using namespace Robot;
-using namespace std;
-using namespace bold;
+#include "debugger.ih"
 
 Debugger::Debugger()
 : d_lastLedFlags(0xff),
+  d_lastEyeInt(0),
+  d_lastHeadInt(0),
   d_eventTimings(),
   d_eyeColour(0,0,0),
   d_headColour(0,0,0)
@@ -91,13 +80,23 @@ void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
      (eyeColour.r >> 3) |
     ((eyeColour.g >> 3) << 5) |
     ((eyeColour.b >> 3) << 10);
-  cm730->WriteWord(CM730::P_LED_EYE_L, eyeInt, 0);
+
+  if (eyeInt != d_lastEyeInt)
+  {
+    cm730->WriteWord(CM730::P_LED_EYE_L, eyeInt, 0);
+    d_lastEyeInt = eyeInt;
+  }
 
   int headInt =
      (headColour.r >> 3) |
     ((headColour.g >> 3) << 5) |
     ((headColour.b >> 3) << 10);
-  cm730->WriteWord(CM730::P_LED_HEAD_L, headInt, 0);
+
+  if (headInt != d_lastHeadInt)
+  {
+    cm730->WriteWord(CM730::P_LED_HEAD_L, headInt, 0);
+    d_lastHeadInt = headInt;
+  }
 }
 
 void Debugger::showReady() { showHeadColour(Colour::bgr(255,0,0)); showEyeColour(Colour::bgr(255,0,0)); };

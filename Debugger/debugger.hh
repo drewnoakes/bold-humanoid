@@ -67,6 +67,8 @@ namespace bold
 
   private:
     int d_lastLedFlags;
+    int d_lastEyeInt;
+    int d_lastHeadInt;
     std::vector<EventTiming> d_eventTimings;
 
     Colour::bgr d_eyeColour;
