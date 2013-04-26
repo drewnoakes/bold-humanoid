@@ -36,6 +36,13 @@
 
 - use LEDs to communicate with human observers during competition
 
+- RT show thinks-per-second (FPS)
+
+- Math::lerp
+- reuse Clock class
+
+- Math::lerp
+- reuse Clock class
 
 - Control::createDouble
 
