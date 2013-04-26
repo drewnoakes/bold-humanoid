@@ -185,6 +185,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   if (!ignoreGameController)
   {
+    //
+    // PAUSE BUTTON
+    //
+
     // From pause to ready: press button
     auto pause2ReadyTransition = pauseState->newTransition();
     pause2ReadyTransition->condition = startButtonCondition;
@@ -192,8 +196,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     pause2ReadyTransition->childState = readyState;
 
     //
-    // PLAY MODE TRANSITIONS -- MAUAL
+    // MODE BUTTON
     //
+
+    // From pause to ready: button pressed
+    auto pause2ReadyManualTransition = pauseState->newTransition();
+    pause2ReadyManualTransition->condition = cycleStateButtonCondition;
+    pause2ReadyManualTransition->onFire = [=]() { debugger->showSet(); };
+    pause2ReadyManualTransition->childState = readyState;
 
     // From ready to set: button pressed
     auto ready2setManualTransition = readyState->newTransition();
