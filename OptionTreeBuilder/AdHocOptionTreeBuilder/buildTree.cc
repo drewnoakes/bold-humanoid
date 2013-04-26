@@ -238,7 +238,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
 
     // State: stand and look look around
-    auto lookAroundState = playingFsm->newState("lookaround", {stand, lookAround});
+    auto lookForBallState = playingFsm->newState("lookforball", {stand, lookAround});
 
     // State: stand and look at ball
     auto lookAtBallState = playingFsm->newState("lookatball", {stand, lookAtBall});
@@ -246,6 +246,20 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // State: approach and look at ball
     auto approachBallState = playingFsm->newState("approachball", {approachBall, lookAtBall});
 
+    // State: look for goal
+    auto lookForGoalState = playingFsm->newState("lookforgoal", {stand, lookAround});
+
+    // State: circle ball
+    auto circleBallState = playingFsm->newState("circleball", {circle, lookAtGoal});
+
+    // State: pre-kick look
+    auto preKickLookState = playingFsm->newState("prekicklook", {stand, lookDown});
+
+    // State: left kick
+    auto leftKickState = playingFsm->newState("leftkick", {leftKick});
+
+    // State: right kick
+    auto rightKickState = playingFsm->newState("rightkick", {rightkick});
 
     // ---------- TRANSITIONS ----------
 
