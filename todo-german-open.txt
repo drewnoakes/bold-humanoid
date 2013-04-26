@@ -1,13 +1,9 @@
 =-=-=-=-= TODO =-=-=-=-=-=
 
-- review ball/goal labelling
+- send statii to the game controller
 - choose foot to kick with
-- don't require ready->set->play because we may be brought into play mid-game
-- don't require button press
-- use button to unplenalise manually
 
 - localiser
-  - ctor params via config file
   - intersection features
   - tweak for goalie
   - use ball as a landmark
@@ -23,10 +19,6 @@
   - penalty keeper
 
 
-- integrate game state with options
-  - rules compliance
-  - strategy
-
 - communication between robots
   - ball position
   - ownership / disownership
@@ -41,14 +33,9 @@
 - Math::lerp
 - reuse Clock class
 
-- Math::lerp
-- reuse Clock class
-
 - Control::createDouble
 
 - RT:
-  - unload stops charts
-  - unload clears controls
   - control data updated on each change, so when module re-added after a change, it shows it
 
 =-=-=-=-= DONE =-=-=-=-=-=
@@ -70,4 +57,13 @@
 - clothing
 - numbers
 - attempt to segment the field for colour labelling
+- don't require button press at startup
+- don't require ready->set->play because we may be brought into play mid-game
+- easier to see forehead colours for game states
+- use button to unplenalise manually
+- review ball/goal labelling
+- localiser ctor params via config file
+- integrate game state with options
+- RT unload stops charts
+- RT unload clears controls
 
