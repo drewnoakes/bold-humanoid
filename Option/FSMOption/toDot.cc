@@ -24,7 +24,10 @@ string FSMOption::toDot() const
 
       for (auto transition : state->transitions)
       {
-        out << state->name << " -> " << transition->childState->name << endl;
+        out << state->name << " -> " << transition->childState->name;
+        if (transition->name != "")
+          out << " [label=" << transition->name << "]";
+        out << endl;
         
         stateQueue.push_back(transition->childState);
       }

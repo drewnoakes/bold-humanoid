@@ -19,6 +19,13 @@ namespace bold
 
     struct Transition
     {
+      Transition(std::string const& n)
+        : name(n)
+      {}
+
+      // Transition name
+      std::string name;
+
       /// Condition that needs to be fulfilled to fire
       std::function<bool()> condition;
 
@@ -57,9 +64,9 @@ namespace bold
         return Clock::getSeconds() - startTime;
       }
 
-      TransitionPtr newTransition()
+      TransitionPtr newTransition(std::string name = "")
       {
-        TransitionPtr t = std::make_shared<Transition>();
+        TransitionPtr t = std::make_shared<Transition>(name);
         t->parentState = shared_from_this();
         transitions.push_back(t);
         return t;
