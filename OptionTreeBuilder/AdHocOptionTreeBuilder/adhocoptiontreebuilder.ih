@@ -7,6 +7,7 @@
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 #include "../../Option/ActionOption/actionoption.hh"
 #include "../../Option/ApproachBall/approachball.hh"
+#include "../../Option/Circle/circle.hh"
 #include "../../Option/FSMOption/fsmoption.hh"
 #include "../../Option/LookAround/lookaround.hh"
 #include "../../Option/LookAtBall/lookatball.hh"
