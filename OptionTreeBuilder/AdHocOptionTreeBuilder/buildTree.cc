@@ -67,10 +67,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   // ---------- STATES ----------
   // State: paused
-  auto pauseState = winFsm->newState("pause", {stand}, false/*end state*/, false/*start state*/);
+  auto pauseState = winFsm->newState("pause", {stand}, false/*end state*/, ignoreGameController/*start state*/);
 
   // State: ready
-  auto readyState = winFsm->newState("ready", {stand}, false/*end state*/, true/* start state */);
+  auto readyState = winFsm->newState("ready", {stand}, false/*end state*/, !ignoreGameController/* start state */);
 
   // State: set
   auto setState = winFsm->newState("set", {stand});
@@ -379,12 +379,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     lookAtBall2approachBall->childState = approachBallState;
 
     // Transition: look for ball again if no longer seen
-    auto approachBall2lookAround = approachBallState->newTransition();
+    auto approachBall2lookAround = approachBallState->newTransition("ballLost");
     approachBall2lookAround->condition = ballLostCondition;
     approachBall2lookAround->childState = lookForBallState;
 
     // Transition: look for goal
-    auto approachBall2lookForGoal = approachBallState->newTransition();
+    auto approachBall2lookForGoal = approachBallState->newTransition("closeToBall");
     approachBall2lookForGoal->condition = []() {
       auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
       if (!ballObs)
@@ -403,7 +403,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     lookForGoal2lookAtGoal->childState = lookAtGoalState;
 
     // Transition: look for ball after too long
-    auto lookForGoal2lookForBall = lookForGoalState->newTransition();
+    auto lookForGoal2lookForBall = lookForGoalState->newTransition("lookTooLong");
     lookForGoal2lookForBall->condition = [lookForGoal2lookForBall]() {
       return lookForGoal2lookForBall->parentState->secondsSinceStart() > 10;
     };
@@ -425,7 +425,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       double panRatio = panAngle / panAngleRange;
       return abs(panRatio) < 0.2;
     };
-    lookAtGoal2lookDown->childState = leftKickState;
+    lookAtGoal2lookDown->childState = lookAtFeetState;
 
     // Transition: seen goal, circle ball
     auto lookAtGoal2Circle = lookAtGoalState->newTransition();
