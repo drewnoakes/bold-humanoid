@@ -1,6 +1,6 @@
 =-=-=-=-= TODO =-=-=-=-=-=
 
-- send statii to the game controller
+- send agent status to the game controller
 - choose foot to kick with
 
 - localiser
@@ -10,14 +10,11 @@
   - variance of non-zero weighted
   - control/motion model
 
-
 - roles
-  - goalie
   - attack
   - support
   - penalty striker
   - penalty keeper
-
 
 - communication between robots
   - ball position
@@ -25,12 +22,8 @@
     
 - dark object/unlabelled-in-field/ufo avoidance
 
-
-- use LEDs to communicate with human observers during competition
-
 - RT show thinks-per-second (FPS)
 
-- Math::lerp
 - reuse Clock class
 
 - Control::createDouble
@@ -44,7 +37,7 @@
 - battery system
 - network/subnet configuration
 - read rules before ref training
-- team logo image to lady
+- team logo image
 - get a team id
 - localiser scoring: use 1/(x+1)
 - localiser scoring: scale by dot product (angle)
@@ -66,4 +59,8 @@
 - integrate game state with options
 - RT unload stops charts
 - RT unload clears controls
+- output dot file from fsm's
+- goalie role
+- Math::lerp
+- use LEDs to communicate with human observers during competition
 
