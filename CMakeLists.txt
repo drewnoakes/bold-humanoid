@@ -249,7 +249,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/Circle/runPolicy.cc
+  ./Option/CircleBall/runPolicy.cc
 )
 
 add_class(BOLDHUMANOID
