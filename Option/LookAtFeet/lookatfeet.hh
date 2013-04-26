@@ -12,8 +12,8 @@ namespace bold
     LookAtFeet(std::string const& id, minIni const& ini)
     : Option(id)
     {
-      d_feetX = ini.getd("LookAtFeet", "FeetX", 0.0);
-      d_feetY = ini.getd("LookAtFeet", "FeetY", 30.0);
+      d_feetX = ini.getd("LookAtFeet", "FeetX", 0);
+      d_feetY = ini.getd("LookAtFeet", "FeetY", -67.5);
     }
 
     OptionList runPolicy() override;
