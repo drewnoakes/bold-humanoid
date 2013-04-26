@@ -153,10 +153,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   };
 
   // FINISHED playmode condition
-  auto finishedCondition = []() {
-    auto gameState = AgentState::getInstance().get<GameState>();
-    return gameState->getPlayMode() == PlayMode::FINISHED;
-  };
+//   auto finishedCondition = []() {
+//     auto gameState = AgentState::getInstance().get<GameState>();
+//     return gameState->getPlayMode() == PlayMode::FINISHED;
+//   };
 
   if (!ignoreGameController)
   {
@@ -341,8 +341,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // Transition: look for ball after too long
     auto lookForGoal2lookForBall = lookForGoalState->newTransition();
     lookForGoal2lookForBall->condition = [lookForGoal2lookForBall]() {
-      double t = Clock::getSeconds();
-      return t - lookForGoal2lookForBall->parentState->startTime > 10;
+      return lookForGoal2lookForBall->parentState->secondsSinceStart() > 10;
     };
     lookForGoal2lookForBall->childState = lookForBallState;
 
@@ -351,8 +350,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     lookAtGoal2lookDown->condition = [lookAtGoal2lookDown]() {
       auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
 
-      double t = Clock::getSeconds();
-      if (t - lookAtGoal2lookDown->parentState->startTime > 2)
+      if (lookAtGoal2lookDown->parentState->secondsSinceStart() > 2)
         return true;
 
       if (goalsObs.size() < 2)
@@ -369,8 +367,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto lookAtGoal2Circle = lookAtGoalState->newTransition();
     lookAtGoal2Circle->condition = [lookAtGoal2Circle]()
     {
-      double t = Clock::getSeconds();
-      return t - lookAtGoal2Circle->parentState->startTime > 2.5;
+      return lookAtGoal2Circle->parentState->secondsSinceStart() > 2.5;
     };
     lookAtGoal2Circle->childState = circleBallState;
 
@@ -381,10 +378,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
       double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
       double panRatio = panAngle / panAngleRange;
-
       double circleDurationSeconds = panRatio * 0.4;
-      double t = Clock::getSeconds();
-      return t - circle2lookAtGoal->parentState->startTime > circleDurationSeconds;
+      return circle2lookAtGoal->parentState->secondsSinceStart() > circleDurationSeconds;
     };
     circle2lookAtGoal->childState = lookAtGoalState;
 

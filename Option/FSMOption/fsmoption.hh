@@ -52,6 +52,11 @@ namespace bold
 
       double startTime;
 
+      double secondsSinceStart()
+      {
+        return Clock::getSeconds() - startTime;
+      }
+
       TransitionPtr newTransition()
       {
         TransitionPtr t = std::make_shared<Transition>();
