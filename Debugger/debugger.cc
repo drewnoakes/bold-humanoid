@@ -90,9 +90,9 @@ void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
   cm730->WriteWord(CM730::P_LED_HEAD_L, hc, 0);
 }
 
-void Debugger::showReady() { showHeadColour(Colour::bgr(0,128,128)); showEyeColour(Colour::bgr(255,0,0)); };
+void Debugger::showReady() { showHeadColour(Colour::bgr(255,0,0)); showEyeColour(Colour::bgr(255,0,0)); };
 
-void Debugger::showSet() { showHeadColour(Colour::bgr(0,255,128)); showEyeColour(Colour::bgr(255,0,0)); };
+void Debugger::showSet() { showHeadColour(Colour::bgr(0,255,255)); showEyeColour(Colour::bgr(255,0,0)); };
 
 void Debugger::showPlaying() { showHeadColour(Colour::bgr(0,255,0)); showEyeColour(Colour::bgr(255,0,0));}
 
