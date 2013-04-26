@@ -110,6 +110,29 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     return false;
   };
 
+  // Cycle state button condition
+  auto cycleStateButtonCondition = []() {
+    static int lastSwitch = 0;
+    lastSwitch++;
+    if (lastSwitch < 20)
+      return false;
+
+    auto hw = AgentState::get<HardwareState>();
+    if (!hw)
+      return false;
+    auto cm730 = hw->getCM730State();
+    if (!cm730)
+      return false;
+
+    if (cm730->isModeButtonPressed)
+    {
+      lastSwitch = 0;
+      return true;
+    }
+
+    return false;
+  };
+
   // Penalty condition
   auto penaltyCondition = [=]() {
     auto gameState = AgentState::get<GameState>();
@@ -165,6 +188,32 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     pause2ReadyTransition->condition = startButtonCondition;
     pause2ReadyTransition->onFire = [=]() { debugger->showReady(); };
     pause2ReadyTransition->childState = readyState;
+
+    //
+    // PLAY MODE TRANSITIONS -- MAUAL
+    //
+
+    // From ready to set: button pressed
+    auto ready2setManualTransition = readyState->newTransition();
+    ready2setManualTransition->condition = cycleStateButtonCondition;
+    ready2setManualTransition->onFire = [=]() { debugger->showSet(); };
+    ready2setManualTransition->childState = setState;
+
+    // From set to penalised: button pressed
+    auto set2PenalizedManualTransition = setState->newTransition();
+    set2PenalizedManualTransition->condition = cycleStateButtonCondition;
+    set2PenalizedManualTransition->onFire = [=]() { debugger->showPenalized(); };
+    set2PenalizedManualTransition->childState = penalizedState;
+
+    // From penalized to play: button pressed
+    auto penalized2PlayTransition = setState->newTransition();
+    penalized2PlayTransition->condition = cycleStateButtonCondition;
+    penalized2PlayTransition->onFire = [=]() { debugger->showPlaying(); };
+    penalized2PlayTransition->childState = playingState;
+
+    //
+    // PLAY MODE TRANSITIONS -- GAME CONTROLLER
+    //
 
     // From ready to set: game state changed
     auto ready2setTransition = readyState->newTransition();
