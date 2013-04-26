@@ -22,6 +22,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
   // Loop until we get the most recent messages
   // TODO this looping may not be a good idea, in case we miss an important message
   //      there are only two a second, so it shouldn't be hard to process all of them
+  // TODO no need to have the source_addr filled in -- skip it (and test)
   while (recvfrom(d_socket, data, MAX_LENGTH, 0, (struct sockaddr*) &source_addr, &source_addr_len) > 0)
   {
     // Verify game controller header:
