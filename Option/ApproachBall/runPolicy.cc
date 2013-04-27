@@ -16,8 +16,6 @@ OptionList ApproachBall::runPolicy()
   double alpha = Math::clamp(dist/breakDist, 0.0, 1.0);
 
   Vector2d move = Math::lerp(alpha, Vector2d(5.0, 0), Vector2d(30.0, 0));
-  cout << "Move: " << move.transpose() << endl;
-
   d_ambulator->setMoveDir(move);
 
   double turnAngle = -atan2(ballPos->x(), ballPos->y()) * 35.0;
