@@ -392,9 +392,10 @@ add_dependencies(boldhumanoid libwebsockets_lib)
 
 if(UPLOAD_SCP_PATH)
   add_custom_command(OUTPUT upload.stamp
-    COMMAND scp -C $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
-    COMMAND scp -C ${CMAKE_SOURCE_DIR}/*.ini ${UPLOAD_SCP_PATH}
-    COMMAND rsync -rP ${CMAKE_SOURCE_DIR}/www ${UPLOAD_SCP_PATH}
+    COMMAND rsync -zP $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
+    COMMAND rsync -zP ${CMAKE_SOURCE_DIR}/*.ini ${UPLOAD_SCP_PATH}
+    COMMAND rsync -rzP ${CMAKE_SOURCE_DIR}/www ${UPLOAD_SCP_PATH}
+    COMMAND rsync -zP ${CMAKE_SOURCE_DIR}/motion_4096.bin ${UPLOAD_SCP_PATH}
     COMMAND touch upload.stamp
     DEPENDS boldhumanoid)
 
