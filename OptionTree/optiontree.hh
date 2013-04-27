@@ -3,6 +3,7 @@
 
 #include "../Option/option.hh"
 #include <map>
+#include <cassert>
 
 namespace bold
 {
@@ -19,16 +20,19 @@ namespace bold
     OptionPtr d_top;
   };
 
-
   inline void OptionTree::addOption(OptionPtr option, bool top)
   {
     d_options[option->getID()] = option;
+
     if (top)
+    {
+      assert(!d_top && "top option already added");
       d_top = option;
+    }
   }
 
   inline OptionPtr OptionTree::getOption(std::string const& id) const
-  { 
+  {
     auto option = d_options.find(id);
     if (option == d_options.end())
       return 0;
@@ -39,7 +43,6 @@ namespace bold
   {
     return d_top;
   }
-
 }
 
 #endif
