@@ -166,7 +166,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     auto unpausing2playingTransition = unpausingState->newTransition();
     unpausing2playingTransition->condition = [unpausingState]() { return unpausingState->allOptionsTerminated(); };;
-    unpausing2playingTransition->onFire = [=]() { debugger->showPlaying(); };
+    unpausing2playingTransition->onFire = [=]() { debugger->showSet(); };
     unpausing2playingTransition->childState = setState;
 
     // From play to paused: pause button
