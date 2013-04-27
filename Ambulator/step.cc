@@ -13,14 +13,12 @@ void Ambulator::step()
   {
     if (walk->IsRunning())
     {
-      cout << "[Ambulator] Stopping Walker" << endl;
+//       cout << "[Ambulator] Stopping Walker" << endl;
       walk->Stop();
     }
   }
   else
   {
-    cout << "[Ambulator] xAmp=" << xAmp << " yAmp=" << yAmp << " turnAmp=" << turnAmp << endl;
-
     walk->X_MOVE_AMPLITUDE = xAmp;
     walk->Y_MOVE_AMPLITUDE = yAmp;
     walk->A_MOVE_AMPLITUDE = turnAmp;
@@ -29,7 +27,7 @@ void Ambulator::step()
 
     if (!walk->IsRunning())
     {
-      cout << "[Ambulator] Starting Walker" << endl;
+//       cout << "[Ambulator] Starting Walker" << endl;
       walk->Start();
     }
   }
