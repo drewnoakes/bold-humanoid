@@ -4,18 +4,17 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
                                                          unsigned teamNumber,
                                                          unsigned uniformNumber,
                                                          bool ignoreGameController,
-                                                         shared_ptr<Debugger> debugger)
+                                                         shared_ptr<Debugger> debugger,
+                                                         shared_ptr<CameraModel> cameraModel,
+                                                         shared_ptr<Ambulator> ambulator)
 {
   unique_ptr<OptionTree> tree(new OptionTree());
 
-  auto cameraModel = make_shared<CameraModel>(ini);
-  auto ambulator = make_shared<Ambulator>(ini);
-
   // Sit down action
-  OptionPtr sit = make_shared<ActionOption>("sitdownaction","sit down");
+  OptionPtr sit = make_shared<ActionOption>("sitdownaction", "sit down");
   tree->addOption(sit);
   // Stand up action
-  OptionPtr standup = make_shared<ActionOption>("standupaction","stand up");
+  OptionPtr standup = make_shared<ActionOption>("standupaction", "stand up");
   tree->addOption(standup);
 
   // Stand
@@ -31,11 +30,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   tree->addOption(circleBall);
 
   // Left kick
-  OptionPtr leftKick = make_shared<ActionOption>("leftkickaction","lk");
+  OptionPtr leftKick = make_shared<ActionOption>("leftkickaction", "lk");
   tree->addOption(leftKick);
 
   // Left kick
-  OptionPtr rightKick = make_shared<ActionOption>("rightkickaction","rk");
+  OptionPtr rightKick = make_shared<ActionOption>("rightkickaction", "rk");
   tree->addOption(rightKick);
 
   // Look around

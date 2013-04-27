@@ -50,7 +50,9 @@ Agent::Agent(string const& U2D_dev,
                                              d_teamNumber,
                                              d_uniformNumber,
                                              d_ignoreGameController,
-                                             d_debugger);
+                                             d_debugger,
+                                             d_cameraModel,
+                                             d_ambulator);
 
   if (useJoystick)
   {
