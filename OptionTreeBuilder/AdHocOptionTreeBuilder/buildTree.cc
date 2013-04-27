@@ -318,11 +318,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // ---------- TRANSITIONS ----------
 
     auto ballLostCondition = []() {
-      static int lastSeen = 0;
-      lastSeen++;
+      static double lastSeen = 0;
+      double t = Clock::getSeconds();
       if (AgentState::get<CameraFrameState>()->isBallVisible())
-        lastSeen = 0;
-      return lastSeen > 10;
+        lastSeen = t;
+      return t - lastSeen > 1.0;
     };
 
     // Transition: into actual loop after stood up
@@ -352,7 +352,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
         nSeen++;
       else if (nSeen > 0)
         nSeen--;
-      cout << "nSeen: " << nSeen << endl;
       return nSeen > 10;
     };
     lookAtBall2approachBall->childState = approachBallState;
