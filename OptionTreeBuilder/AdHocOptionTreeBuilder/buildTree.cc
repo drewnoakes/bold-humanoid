@@ -53,6 +53,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   OptionPtr lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel);
   tree->addOption(lookAtGoal);
 
+  //Dive left
+  OptionPtr leftdive = make_shared<ActionOption>("diveleftaction","left_dive");
+  tree->addOption(leftdive);
+
   // FSM
   auto winFsm = make_shared<FSMOption>("win");
   tree->addOption(winFsm, true);
@@ -280,6 +284,76 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   {
     // Start state: stand up
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
+  }
+  // Penalty goalie behaviour
+  else if (uniformNumber == 5)
+  {
+    // Start state: stand up
+    auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
+    // State: stand and look look around
+    auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
+
+    // State: stand and look at ball
+    auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
+
+    // State: diving to the left
+    auto leftDiveState = playingFsm->newState("leftdive", {leftdive});
+
+
+    // ---------- TRANSITIONS ----------
+
+    auto ballLostCondition = []() {
+      static int lastSeen = 0;
+      lastSeen++;
+      if (AgentState::get<CameraFrameState>()->isBallVisible())
+        lastSeen = 0;
+      return lastSeen > 10;
+    };
+
+    // Transition: into actual loop after stood up
+    auto standUp2lookAround = standUpState->newTransition();
+    standUp2lookAround->condition = [standUpState]() {
+      return standUpState->allOptionsTerminated();
+    };
+    standUp2lookAround->childState = lookForBallState;
+
+    // Transition: look around -> look at ball when visible
+    auto lookAround2lookAtBall = lookForBallState->newTransition();
+    lookAround2lookAtBall->condition = []() {
+      return AgentState::get<CameraFrameState>()->isBallVisible();
+    };
+    lookAround2lookAtBall->childState = lookAtBallState;
+
+    // Transition: look at ball -> look for ball if no longer seen
+    auto lookAtBall2lookAround = lookAtBallState->newTransition();
+    lookAtBall2lookAround->condition = ballLostCondition;
+    lookAtBall2lookAround->childState = lookForBallState; 
+
+    // Transition: look at ball -> diving to the left
+    auto lookAtBall2leftDive = lookAtBallState->newTransition();
+    lookAtBall2leftDive->condition = []() {
+      auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+      if (!ballObs)
+        return false;
+      
+      Eigen::Vector3d ballPos = *(*ballObs);
+      if (ballPos.y() > 1.0)
+	return false;
+      
+      if (ballPos.x() > 0)
+	return false;
+      
+      return true;
+    };
+    lookAtBall2leftDive->childState = leftDiveState;  
+
+    // Transition: dive to left -> back to look for goal
+    auto leftDive2lookForBall = leftDiveState->newTransition();
+    leftDive2lookForBall->condition = [leftDiveState]() {
+      return leftDiveState->allOptionsTerminated();
+    };
+    leftDive2lookForBall->childState = lookForBallState;
+
   }
   // Player behavior
   else
