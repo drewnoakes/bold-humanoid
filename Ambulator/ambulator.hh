@@ -32,26 +32,28 @@ namespace bold
 
       double xAmp = d_xAmp.getNext();
       double yAmp = d_yAmp.getNext();
-      
+
       double turnAmp = d_turnAmp.getNext();
 
       if (xAmp == 0 && yAmp == 0 && turnAmp == 0)
       {
         if (walk->IsRunning())
         {
-//           std::cout << "Stopping Walker" << std::endl;
+          std::cout << "[Ambulator] Stopping Walker" << std::endl;
           walk->Stop();
         }
       }
       else
       {
+        std::cout << "[Ambulator] xAmp=" << xAmp << " yAmp=" << yAmp << " turnAmp=" << turnAmp << std::endl;
+
         walk->X_MOVE_AMPLITUDE = xAmp;
         walk->Y_MOVE_AMPLITUDE = yAmp;
         walk->A_MOVE_AMPLITUDE = turnAmp;
 
         if (!walk->IsRunning())
         {
-//           std::cout << "Starting Walker" << std::endl;
+          std::cout << "[Ambulator] Starting Walker" << std::endl;
           walk->Start();
           walk->m_Joint.SetEnableBodyWithoutHead(true, true);
         }
