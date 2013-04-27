@@ -62,9 +62,7 @@ namespace bold
       }
 
       AgentState::getInstance().set(std::make_shared<AmbulatorState const>(
-        d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(),
-        walk->X_MOVE_AMPLITUDE, walk->Y_MOVE_AMPLITUDE, walk->A_MOVE_AMPLITUDE
-      ));
+        d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(), walk));
     }
 
     /**
