@@ -20,12 +20,16 @@ namespace bold
     LinearSmoother d_xAmp;
     LinearSmoother d_yAmp;
     LinearSmoother d_turnAmp;
+    bool d_turnAngleSet;
+    bool d_moveDirSet;
 
   public:
     Ambulator(minIni const& ini)
     : d_xAmp(0.0, ini.getd("Ambulator", "XAmpDelta", 3.0)),
       d_yAmp(0.0, ini.getd("Ambulator", "YAmpDelta", 3.0)),
-      d_turnAmp(0.0, ini.getd("Ambulator", "TurnDelta", 1.0))
+      d_turnAmp(0.0, ini.getd("Ambulator", "TurnDelta", 1.0)),
+      d_turnAngleSet(false),
+      d_moveDirSet(false)
     {}
 
     void step()
@@ -61,6 +65,9 @@ namespace bold
         }
       }
 
+      d_turnAngleSet = false;
+      d_moveDirSet = false;
+
       AgentState::getInstance().set(std::make_shared<AmbulatorState const>(
         d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(), walk));
     }
@@ -83,6 +90,9 @@ namespace bold
      */
     void setMoveDir(Eigen::Vector2d const& moveDir)
     {
+      if (d_moveDirSet)
+        std::cerr << "[Ambulator::d_moveDirSet] Movement direction set twice between calls to step" << std::endl;
+      d_moveDirSet = true;
       d_xAmp.setTarget(moveDir.x());
       d_yAmp.setTarget(moveDir.y());
     }
@@ -93,6 +103,9 @@ namespace bold
      */
     void setTurnAngle(double turnSpeed)
     {
+      if (d_turnAngleSet)
+        std::cerr << "[Ambulator::setTurnAngle] Turn angle set twice between calls to step" << std::endl;
+      d_turnAngleSet = true;
       d_turnAmp.setTarget(turnSpeed);
     }
   };
