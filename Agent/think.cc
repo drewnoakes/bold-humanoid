@@ -82,9 +82,10 @@ void Agent::think()
     //
     // Flush out new walking parameters
     //
+    /*
     d_ambulator->step();
     t = debugger.timeEvent(t, "Ambulator Step");
-
+    */
     //
     // Update LEDs on back, etc
     //
