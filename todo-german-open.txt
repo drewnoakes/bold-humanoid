@@ -1,5 +1,6 @@
 =-=-=-=-= TODO =-=-=-=-=-=
 
+- debuggable AmbulatorState
 - choose foot to kick with
 
 - localiser
