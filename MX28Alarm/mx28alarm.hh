@@ -72,6 +72,19 @@ namespace bold
       return diffFlags;
     }
 
+    std::vector<std::string> getSetNames() const
+    {
+      std::vector<std::string> names;
+
+      for (uchar i = 0; i <= MAXBIT; i++)
+      {
+        if (isSet(i))
+          names.push_back(getName(i));
+      }
+
+      return names;
+    }
+
     static std::string getName(uchar bitIndex)
     {
       assert(bitIndex <= MAXBIT);
