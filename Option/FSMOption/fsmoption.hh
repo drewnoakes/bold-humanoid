@@ -5,6 +5,7 @@
 #include "../../Clock/clock.hh"
 #include <string>
 #include <vector>
+#include <algorithm>
 
 namespace bold
 {
@@ -62,6 +63,11 @@ namespace bold
       double secondsSinceStart()
       {
         return Clock::getSeconds() - startTime;
+      }
+
+      bool allOptionsTerminated() const
+      {
+        return std::all_of(options.begin(), options.end(), [](OptionPtr o) { return o->hasTerminated(); });
       }
 
       TransitionPtr newTransition(std::string name = "")
