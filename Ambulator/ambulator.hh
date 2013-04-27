@@ -1,16 +1,10 @@
 #ifndef BOLD_AMBULATOR_HH
 #define BOLD_AMBULATOR_HH
 
+#include <minIni.h>
 #include <Eigen/Core>
-#include <LinuxDARwIn.h>
-#include <LinuxCM730.h>
-#include <iostream>
 
-#include "../AgentState/agentstate.hh"
-#include "../robotis/Framework/include/Walking.h"
-#include "../Smoother/smoother.hh"
 #include "../Smoother/LinearSmoother/linearsmoother.hh"
-#include "../StateObject/AmbulatorState/ambulatorstate.hh"
 
 namespace bold
 {
@@ -32,45 +26,7 @@ namespace bold
       d_moveDirSet(false)
     {}
 
-    void step()
-    {
-      auto walk = Robot::Walking::GetInstance();
-
-      double xAmp = d_xAmp.getNext();
-      double yAmp = d_yAmp.getNext();
-
-      double turnAmp = d_turnAmp.getNext();
-
-      if (xAmp == 0 && yAmp == 0 && turnAmp == 0)
-      {
-        if (walk->IsRunning())
-        {
-          std::cout << "[Ambulator] Stopping Walker" << std::endl;
-          walk->Stop();
-        }
-      }
-      else
-      {
-        std::cout << "[Ambulator] xAmp=" << xAmp << " yAmp=" << yAmp << " turnAmp=" << turnAmp << std::endl;
-
-        walk->X_MOVE_AMPLITUDE = xAmp;
-        walk->Y_MOVE_AMPLITUDE = yAmp;
-        walk->A_MOVE_AMPLITUDE = turnAmp;
-
-        if (!walk->IsRunning())
-        {
-          std::cout << "[Ambulator] Starting Walker" << std::endl;
-          walk->Start();
-          walk->m_Joint.SetEnableBodyWithoutHead(true, true);
-        }
-      }
-
-      d_turnAngleSet = false;
-      d_moveDirSet = false;
-
-      AgentState::getInstance().set(std::make_shared<AmbulatorState const>(
-        d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(), walk));
-    }
+    void step();
 
     /**
      * Cause all motion to come to a halt. The walk will be stopped using
@@ -88,26 +44,13 @@ namespace bold
      * direction, and positive Y is to the right. The length of the vector
      * determines the velocity of motion (unspecfied units).
      */
-    void setMoveDir(Eigen::Vector2d const& moveDir)
-    {
-      if (d_moveDirSet)
-        std::cerr << "[Ambulator::d_moveDirSet] Movement direction set twice between calls to step" << std::endl;
-      d_moveDirSet = true;
-      d_xAmp.setTarget(moveDir.x());
-      d_yAmp.setTarget(moveDir.y());
-    }
+    void setMoveDir(Eigen::Vector2d const& moveDir);
 
     /**
      * Set the rate of turning, where positive values turn right (clockwise)
      * and negative values turn left (counter-clockwise) (unspecfied units).
      */
-    void setTurnAngle(double turnSpeed)
-    {
-      if (d_turnAngleSet)
-        std::cerr << "[Ambulator::setTurnAngle] Turn angle set twice between calls to step" << std::endl;
-      d_turnAngleSet = true;
-      d_turnAmp.setTarget(turnSpeed);
-    }
+    void setTurnAngle(double turnSpeed);
   };
 }
 

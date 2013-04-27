@@ -2,4 +2,7 @@
 
 #include "../../Ambulator/ambulator.hh"
 
+#include <LinuxDARwIn.h>
+
 using namespace bold;
+using namespace Robot;

@@ -30,6 +30,7 @@
 #include "../VisualCortex/visualcortex.hh"
 
 #include <iostream>
+#include <LinuxDARwIn.h>
 
 using namespace Robot;
 using namespace std;

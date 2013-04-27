@@ -1,0 +1,13 @@
+#include "ambulator.hh"
+
+#include "../AgentState/agentstate.hh"
+#include "../robotis/Framework/include/Walking.h"
+#include "../StateObject/AmbulatorState/ambulatorstate.hh"
+
+#include <LinuxDARwIn.h>
+#include <LinuxCM730.h>
+#include <iostream>
+
+using namespace bold;
+using namespace Robot;
+using namespace std;

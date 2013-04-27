@@ -21,6 +21,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <LinuxDARwIn.h>
 
 using namespace bold;
 using namespace std;
