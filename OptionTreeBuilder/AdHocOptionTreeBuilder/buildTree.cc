@@ -66,7 +66,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   // ---------- STATES ----------
   // State: paused
-  auto pauseState = winFsm->newState("pause", {stand}, false/*end state*/, ignoreGameController/*start state*/);
+  auto pauseState = winFsm->newState("pause", {sit}, false/*end state*/, ignoreGameController/*start state*/);
+
+  auto unpausingState = winFsm->newState("unpausing", {standup});
 
   // State: ready
   auto readyState = winFsm->newState("ready", {stand}, false/*end state*/, !ignoreGameController/* start state */);
@@ -158,11 +160,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // PAUSE BUTTON
     //
 
-    // From pause to ready: press button
-    auto pause2ReadyTransition = pauseState->newTransition("p2rStartBtn");
-    pause2ReadyTransition->condition = startButtonCondition;
-    pause2ReadyTransition->onFire = [=]() { debugger->showReady(); };
-    pause2ReadyTransition->childState = readyState;
+    auto pause2unpausingTransition = pauseState->newTransition();
+    pause2unpausingTransition->condition = startButtonCondition;
+    pause2unpausingTransition->childState = unpausingState;
+
+    auto unpausing2playingTransition = unpausingState->newTransition();
+    unpausing2playingTransition->condition = [unpausingState]() { return unpausingState->allOptionsTerminated(); };;
+    unpausing2playingTransition->onFire = [=]() { debugger->showPlaying(); };
+    unpausing2playingTransition->childState = setState;
 
     // From play to paused: pause button
     auto play2pausedTransition = playingState->newTransition("p2pStartBtn");
@@ -174,11 +179,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // MODE BUTTON
     //
 
-    // From pause to ready: button pressed
-    auto pause2ReadyManualTransition = pauseState->newTransition();
-    pause2ReadyManualTransition->condition = modeButtonCondition;
-    pause2ReadyManualTransition->onFire = [=]() { debugger->showSet(); };
-    pause2ReadyManualTransition->childState = readyState;
+    // TODO when in paused state, can the mode button somehow disable the motors?
 
     // From ready to set: button pressed
     auto ready2setManualTransition = readyState->newTransition("p2rCycleStateBtn");
@@ -252,10 +253,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   } // !ignoreGameController
   else
   {
-    auto pause2playingTransition = pauseState->newTransition();
-    pause2playingTransition->condition = startButtonCondition;
-    pause2playingTransition->onFire = [=]() { debugger->showPlaying(); };
-    pause2playingTransition->childState = playingState;
+    auto pause2unpausingTransition = pauseState->newTransition();
+    pause2unpausingTransition->condition = startButtonCondition;
+    pause2unpausingTransition->childState = unpausingState;
+
+    auto unpausing2playingTransition = unpausingState->newTransition();
+    unpausing2playingTransition->condition = [unpausingState]() { return unpausingState->allOptionsTerminated(); };;
+    unpausing2playingTransition->onFire = [=]() { debugger->showPlaying(); };
+    unpausing2playingTransition->childState = playingState;
 
     auto play2pausedTransition = playingState->newTransition();
     play2pausedTransition->condition = startButtonCondition;
