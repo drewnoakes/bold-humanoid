@@ -20,7 +20,9 @@ OptionList ApproachBall::runPolicy()
   Vector2d minMove(5.0, 0);
   Vector2d maxMove(30.0, 0);
   Vector2d move = minMove + alpha * (maxMove - minMove);
-  
+
+  cout << "Move: " << move.transpose() << endl;
+
   d_ambulator->setMoveDir(move);
   
   double turnAngle = -atan2(ballPos->x(), ballPos->y()) * 35.0;
