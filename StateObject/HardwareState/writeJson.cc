@@ -49,10 +49,10 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.String("id").Int(mx28->id);
       writer.String("movingSpeedRPM").Int(mx28->movingSpeedRPM);
-      writer.String("presentSpeedRPM").Int(mx28->presentSpeedRPM);
-      writer.String("presentLoad").Int(mx28->presentLoad);
-      writer.String("presentTemp").Int(mx28->presentTemp);
-      writer.String("presentVoltage").Int(mx28->presentVoltage);
+      writer.String("speedRPM").Int(mx28->presentSpeedRPM);
+      writer.String("load").Int(mx28->presentLoad);
+      writer.String("temp").Int(mx28->presentTemp);
+      writer.String("voltage").Int(mx28->presentVoltage);
     }
     writer.EndArray();
   }
