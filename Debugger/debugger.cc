@@ -8,7 +8,7 @@ Debugger::Debugger()
   d_eyeColour(0,0,0),
   d_headColour(0,0,0)
 {
-  showPaused();
+  // TODO intial head/eye colour not well defined
 }
 
 const double Debugger::getSeconds(timestamp_t const& startedAt)
