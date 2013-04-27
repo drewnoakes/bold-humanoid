@@ -1,6 +1,5 @@
 =-=-=-=-= TODO =-=-=-=-=-=
 
-- send agent status to the game controller
 - choose foot to kick with
 
 - localiser
@@ -22,11 +21,13 @@
     
 - dark object/unlabelled-in-field/ufo avoidance
 
-- RT show thinks-per-second (FPS)
+- RT show FPS, total and per-timing-item
 
-- reuse Clock class
+- reuse Clock class in place of Debugger
 
 - Control::createDouble
+
+- send agent status to the game controller
 
 - RT:
   - control data updated on each change, so when module re-added after a change, it shows it
