@@ -86,16 +86,8 @@ set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABL
 
 add_class(BOLDHUMANOID
   ./Agent/Agent.cc
-  ./Agent/approachBall.cc
-  ./Agent/circleBall.cc
   ./Agent/initCamera.cc
   ./Agent/initMotionManager.cc
-  ./Agent/lookAt.cc
-  ./Agent/lookAtBall.cc
-  ./Agent/lookAtGoal.cc
-  ./Agent/lookForBall.cc
-  ./Agent/lookForGoal.cc
-  ./Agent/preKickLook.cc
   ./Agent/processInputCommands.cc
   ./Agent/readSubBoardData.cc
   ./Agent/registerStateTypes.cc

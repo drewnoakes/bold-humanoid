@@ -122,20 +122,8 @@ namespace bold
 
     void readSubBoardData();
 
-    void lookForBall();
-    void approachBall();
-    void lookForGoal();
-    /** Turn in a circle, following the pan of the head.
-     * If the head is facing forwards, this method should have no effect.
-     */
-    void circleBall();
-    void preKickLook();
-    void kick() {}
-    void getUp() {}
-    void lookAt(Eigen::Vector2f const& pos);
-    void lookAtBall();
-    void lookAtGoal();
     void standUpIfFallen();
+
     void processInputCommands();
   };
 }
