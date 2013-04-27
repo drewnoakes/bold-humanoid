@@ -17,9 +17,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   OptionPtr standup = make_shared<ActionOption>("standupaction", "stand up");
   tree->addOption(standup);
 
-  // Stand
-  OptionPtr stand = make_shared<Stand>("stand", ambulator);
-  tree->addOption(stand);
+  // Stop walking
+  OptionPtr stopWalking = make_shared<StopWalking>("stopwalking", ambulator);
+  tree->addOption(stopWalking);
 
   // Approach ball
   OptionPtr approachBall = make_shared<ApproachBall>("approachball", ambulator);
@@ -66,24 +66,24 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
   // ---------- STATES ----------
   // State: paused
-  auto pauseState = winFsm->newState("pause", {sit}, false/*end state*/, ignoreGameController/*start state*/);
+  auto pauseState = winFsm->newState("pause", {sit,stopWalking}, false/*end state*/, ignoreGameController/*start state*/);
 
   auto unpausingState = winFsm->newState("unpausing", {standup});
 
   // State: ready
-  auto readyState = winFsm->newState("ready", {stand}, false/*end state*/, !ignoreGameController/* start state */);
+  auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, !ignoreGameController/* start state */);
 
   // State: set
-  auto setState = winFsm->newState("set", {stand});
+  auto setState = winFsm->newState("set", {stopWalking});
 
   // State: beforeTheirKickoff
-  auto beforeTheirKickoff = winFsm->newState("beforetheirkickoff", {stand});
+  auto beforeTheirKickoff = winFsm->newState("beforetheirkickoff", {stopWalking});
 
   // State: playing
   auto playingState = winFsm->newState("playing", {playingFsm});
 
   // State: penalized
-  auto penalizedState = winFsm->newState("penalized", {stand});
+  auto penalizedState = winFsm->newState("penalized", {stopWalking});
 
 
   // ---------- TRANSITIONS ----------
@@ -290,22 +290,22 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
 
     // State: stand and look look around
-    auto lookForBallState = playingFsm->newState("lookforball", {stand, lookAround});
+    auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
 
     // State: circle around
     auto lookForBallCirclingState = playingFsm->newState("lookforballcircling", {circleBall});
 
     // State: stand and look at ball
-    auto lookAtBallState = playingFsm->newState("lookatball", {stand, lookAtBall});
+    auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
 
     // State: approach and look at ball
     auto approachBallState = playingFsm->newState("approachball", {approachBall, lookAtBall});
 
     // State: look for goal
-    auto lookForGoalState = playingFsm->newState("lookforgoal", {stand, lookAround});
+    auto lookForGoalState = playingFsm->newState("lookforgoal", {stopWalking, lookAround});
 
     // State: stand and look at goal
-    auto lookAtGoalState = playingFsm->newState("lookatgoal", {stand, lookAtGoal});
+    auto lookAtGoalState = playingFsm->newState("lookatgoal", {stopWalking, lookAtGoal});
 
     // State: aim (transition state between looking at goal and either kicking or circling)
     auto aimState = playingFsm->newState("aim", {});

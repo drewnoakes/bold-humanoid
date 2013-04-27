@@ -7,13 +7,15 @@ namespace bold
 {
   class Ambulator;
 
-  class Stand : public Option
+  class StopWalking : public Option
   {
   public:
-    Stand(std::string const& id, std::shared_ptr<Ambulator> ambulator)
-      : Option(id),
-	d_ambulator(ambulator)
+    StopWalking(std::string const& id, std::shared_ptr<Ambulator> ambulator)
+    : Option(id),
+      d_ambulator(ambulator)
     {}
+
+    double hasTerminated() override;
 
     OptionList runPolicy() override;
 

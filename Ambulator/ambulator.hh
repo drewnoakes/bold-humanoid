@@ -39,6 +39,8 @@ namespace bold
       d_turnAmp.setTarget(0);
     }
 
+    bool isRunning() const;
+
     /**
      * Set the direction of motion, where positive X is in the forwards
      * direction, and positive Y is to the right. The length of the vector

@@ -1,6 +1,6 @@
-#include "stand.ih"
+#include "stopwalking.ih"
 
-OptionList Stand::runPolicy()
+OptionList StopWalking::runPolicy()
 {
   Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
 

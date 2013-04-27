@@ -1,4 +1,4 @@
-#include "stand.hh"
+#include "stopwalking.hh"
 
 #include "../../Ambulator/ambulator.hh"
 

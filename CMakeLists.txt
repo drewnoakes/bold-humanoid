@@ -272,7 +272,8 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/Stand/runPolicy.cc
+  ./Option/StopWalking/runPolicy.cc
+  ./Option/StopWalking/hasTerminated.cc
 )
 
 add_class(BOLDHUMANOID
