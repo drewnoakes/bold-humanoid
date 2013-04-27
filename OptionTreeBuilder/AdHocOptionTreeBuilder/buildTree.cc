@@ -288,6 +288,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // State: stand and look look around
     auto lookForBallState = playingFsm->newState("lookforball", {stand, lookAround});
 
+    // State: circle around
+    auto lookForBallCirclingState = playingFsm->newState("lookforballcircling", {circleBall});
+
     // State: stand and look at ball
     auto lookAtBallState = playingFsm->newState("lookatball", {stand, lookAtBall});
 
@@ -338,6 +341,20 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       return AgentState::get<CameraFrameState>()->isBallVisible();
     };
     lookAround2lookAtBall->childState = lookAtBallState;
+
+    // Transition: look around -> circle around if takes too long
+    auto lookForBall2lookForBallCircling = lookForBallState->newTransition();
+    lookForBall2lookForBallCircling->condition = [lookForBallState]() {
+      return lookForBallState->secondsSinceStart() > 10;
+    };
+    lookForBall2lookForBallCircling->childState = lookForBallCirclingState;
+
+    // Transition: look for ball circling -> back to look for ball
+    auto lookForBallCircling2lookForBall = lookForBallCirclingState->newTransition();
+    lookForBallCircling2lookForBall->condition = [lookForBallCirclingState]() {
+      return lookForBallCirclingState->secondsSinceStart() > 5;
+    };
+    lookForBallCircling2lookForBall->childState = lookForBallState;
 
     // Transition: look at ball -> look for ball if no longer seen
     auto lookAtBall2lookAround = lookAtBallState->newTransition();
