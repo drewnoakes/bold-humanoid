@@ -194,7 +194,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     set2PenalizedManualTransition->childState = penalizedState;
 
     // From penalized to play: button pressed
-    auto penalized2PlayTransition = setState->newTransition("p2pCycleStateBtn");
+    auto penalized2PlayTransition = penalizedState->newTransition("p2pCycleStateBtn");
     penalized2PlayTransition->condition = modeButtonCondition;
     penalized2PlayTransition->onFire = [=]() { debugger->showPlaying(); };
     penalized2PlayTransition->childState = playingState;
