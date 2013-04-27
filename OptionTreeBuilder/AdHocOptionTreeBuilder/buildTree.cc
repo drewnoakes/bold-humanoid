@@ -369,7 +369,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       if (!ballObs)
         return false;
 
-      return ((*ballObs)->head<2>().norm() < 0.1);
+      return ((*ballObs)->head<2>().norm() < 0.05);
     };
     approachBall2lookForGoal->childState = lookForGoalState;
 
@@ -421,7 +421,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
       double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
       double panRatio = panAngle / panAngleRange;
-      double circleDurationSeconds = fabs(panRatio) * 1.4;
+      double circleDurationSeconds = fabs(panRatio) * 3;
       cout << "circleDuration: " << circleDurationSeconds << endl;
       cout << "Seconds since start: " << circleBallState->secondsSinceStart() << endl;
       return circleBallState->secondsSinceStart() > circleDurationSeconds;
