@@ -21,11 +21,16 @@ namespace bold
       d_currentPhase(walker->GetCurrentPhase()),
       d_bodySwingY(walker->GetBodySwingY()),
       d_bodySwingZ(walker->GetBodySwingZ())
-    {}
+    {
+      Robot::JointData jd = walker->m_Joint;
+      for (unsigned j = 1; j < Robot::JointData::NUMBER_OF_JOINTS; j++)
+        d_enabled[j] = jd.GetEnable(j);
+    }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
+    bool d_enabled[Robot::JointData::NUMBER_OF_JOINTS];
     double d_targetX;
     double d_targetY;
     double d_targetTurn;
