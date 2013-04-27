@@ -4,6 +4,7 @@
 #include <Eigen/Core>
 #include <LinuxDARwIn.h>
 #include <LinuxCM730.h>
+#include <iostream>
 
 #include "../robotis/Framework/include/Walking.h"
 #include "../Smoother/smoother.hh"
@@ -20,9 +21,9 @@ namespace bold
 
   public:
     Ambulator(minIni const& ini)
-    : d_xAmp(0.0, ini.getd("Ambulator", "XAmpDelta", 3)),
-      d_yAmp(0.0, ini.getd("Ambulator", "YAmpDelta", 3)),
-      d_turnAmp(0.0, ini.getd("Ambulator", "TurnDelta", 1))
+    : d_xAmp(0.0, ini.getd("Ambulator", "XAmpDelta", 3.0)),
+      d_yAmp(0.0, ini.getd("Ambulator", "YAmpDelta", 3.0)),
+      d_turnAmp(0.0, ini.getd("Ambulator", "TurnDelta", 1.0))
     {}
 
     void step()
@@ -31,6 +32,7 @@ namespace bold
 
       double xAmp = d_xAmp.getNext();
       double yAmp = d_yAmp.getNext();
+      
       double turnAmp = d_turnAmp.getNext();
 
       if (xAmp == 0 && yAmp == 0 && turnAmp == 0)
