@@ -43,6 +43,9 @@ void Agent::approachBall()
 
   double turnAngle = pan_percent * 35.0;
 
+  Robot::Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
+
   d_ambulator->setMoveDir(moveDir);
   d_ambulator->setTurnAngle(turnAngle);
+  d_ambulator->step();
 }
