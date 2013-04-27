@@ -6,9 +6,11 @@
 #include <LinuxCM730.h>
 #include <iostream>
 
+#include "../AgentState/agentstate.hh"
 #include "../robotis/Framework/include/Walking.h"
 #include "../Smoother/smoother.hh"
 #include "../Smoother/LinearSmoother/linearsmoother.hh"
+#include "../StateObject/AmbulatorState/ambulatorstate.hh"
 
 namespace bold
 {
@@ -58,6 +60,11 @@ namespace bold
           walk->m_Joint.SetEnableBodyWithoutHead(true, true);
         }
       }
+
+      AgentState::getInstance().set(std::make_shared<AmbulatorState const>(
+        d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(),
+        walk->X_MOVE_AMPLITUDE, walk->Y_MOVE_AMPLITUDE, walk->A_MOVE_AMPLITUDE
+      ));
     }
 
     /**

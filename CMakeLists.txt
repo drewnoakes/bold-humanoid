@@ -303,6 +303,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/AmbulatorState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/BodyState/BodyState.cc
   ./StateObject/BodyState/initBody.cc
   ./StateObject/BodyState/updatePosture.cc

@@ -6,6 +6,7 @@ void Agent::registerStateTypes()
 
   AgentState::getInstance().registerStateType<AgentFrameState>("AgentFrame");
   AgentState::getInstance().registerStateType<AlarmState>("Alarm");
+  AgentState::getInstance().registerStateType<AmbulatorState>("Ambulator");
   AgentState::getInstance().registerStateType<BodyState>("Body");
   AgentState::getInstance().registerStateType<CameraFrameState>("CameraFrame");
   AgentState::getInstance().registerStateType<GameState>("Game");

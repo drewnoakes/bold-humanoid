@@ -16,6 +16,7 @@ define(
             // One per StateObject...
             agentFrameState: 'AgentFrame',
             alarmState: 'Alarm',
+            ambulatorState: 'Ambulator',
             bodyState: 'Body',
             cameraFrameState: 'CameraFrame',
             gameState: 'Game',
@@ -29,6 +30,7 @@ define(
         Protocols.allStates = [
             Protocols.agentFrameState,
             Protocols.alarmState,
+            Protocols.ambulatorState,
             Protocols.cameraFrameState,
             Protocols.bodyState,
             Protocols.gameState,

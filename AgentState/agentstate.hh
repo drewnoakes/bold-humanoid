@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <map>
 #include <memory>
 #include <sigc++/signal.h>
@@ -66,6 +67,7 @@ namespace bold
     template<typename T>
     void registerStateType(std::string name)
     {
+      std::cout << "[AgentState::registerStateType] Registering state type: " << name << std::endl;
       const std::type_info* typeId = &typeid(T);
       assert(d_trackerByTypeId.find(typeId) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
       d_trackerByTypeId[typeId] = StateTracker::create<T>(name);
