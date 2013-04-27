@@ -25,11 +25,12 @@ void Ambulator::step()
     walk->Y_MOVE_AMPLITUDE = yAmp;
     walk->A_MOVE_AMPLITUDE = turnAmp;
 
+    walk->m_Joint.SetEnableBodyWithoutHead(true, true);
+
     if (!walk->IsRunning())
     {
       cout << "[Ambulator] Starting Walker" << endl;
       walk->Start();
-      walk->m_Joint.SetEnableBodyWithoutHead(true, true);
     }
   }
 
