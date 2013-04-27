@@ -346,6 +346,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
         nSeen++;
       else if (nSeen > 0)
         nSeen--;
+      cout << "nSeen: " << nSeen << endl;
       return nSeen > 10;
     };
     lookAtBall2approachBall->childState = approachBallState;
@@ -374,12 +375,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     lookForGoal2lookAtGoal->childState = lookAtGoalState;
 
-    // Transition: look for goal -> look for ball after too long
+    // Transition: look for goal -> start kicking after too long
     auto lookForGoal2lookForBall = lookForGoalState->newTransition("lookTooLong");
     lookForGoal2lookForBall->condition = [lookForGoalState]() {
-      return lookForGoalState->secondsSinceStart() > 10;
+      return lookForGoalState->secondsSinceStart() > 5;
     };
-    lookForGoal2lookForBall->childState = lookForBallState;
+    lookForGoal2lookForBall->childState = lookAtFeetState;
 
     // Transition: look at goal -> aim if seen goal for long enough
     auto lookAtGoal2aim = lookAtGoalState->newTransition();
@@ -394,7 +395,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
       double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
       double panRatio = panAngle / panAngleRange;
-      return abs(panRatio) < 0.2;
+      cout << "panRatio: " << panRatio << endl;
+      return fabs(panRatio) < 0.3;
     };
     aim2lookAtFeet->childState = lookAtFeetState;
 
@@ -413,7 +415,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
       double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
       double panRatio = panAngle / panAngleRange;
-      double circleDurationSeconds = panRatio * 0.4;
+      double circleDurationSeconds = fabs(panRatio) * 1.4;
+      cout << "circleDuration: " << circleDurationSeconds << endl;
+      cout << "Seconds since start: " << circleBallState->secondsSinceStart() << endl;
       return circleBallState->secondsSinceStart() > circleDurationSeconds;
     };
     circle2lookForGoal->childState = lookForGoalState;
@@ -421,6 +425,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // Transition: look at feet -> kick left
     auto lookAtFeet2kickLeft = lookAtFeetState->newTransition();
     lookAtFeet2kickLeft->condition = [lookAtFeetState] () {
+      if (lookAtFeetState->secondsSinceStart() < 1)
+        return false;
+
       // Wait until we're finished looking down
       if (!lookAtFeetState->allOptionsTerminated())
         return false;
@@ -444,6 +451,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // Transition: look at feet -> kick right
     auto lookAtFeet2kickRight = lookAtFeetState->newTransition();
     lookAtFeet2kickRight->condition = [lookAtFeetState] () {
+      if (lookAtFeetState->secondsSinceStart() < 1)
+        return false;
+
       // Wait until we're finished looking down
       if (!lookAtFeetState->allOptionsTerminated())
         return false;
@@ -467,6 +477,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // Transition: look at feet -> look for ball
     auto lookAtFeet2lookForBall = lookAtFeetState->newTransition();
     lookAtFeet2lookForBall->condition = [lookAtFeetState] () {
+      if (lookAtFeetState->secondsSinceStart() < 1)
+        return false;
+
       // Wait until we're finished looking down
       return lookAtFeetState->allOptionsTerminated();
     };
