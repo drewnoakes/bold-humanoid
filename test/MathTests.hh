@@ -164,4 +164,8 @@ TEST(MathTests, lerp)
   EXPECT_NEAR( 10, Math::lerp(0, 0, 1, 10, 20), 0.00001 );
   EXPECT_NEAR( 15, Math::lerp(0.5, 0, 1, 10, 20), 0.00001 );
   EXPECT_NEAR( 20, Math::lerp(1, 0, 1, 10, 20), 0.00001 );
+
+  EXPECT_TRUE ( VectorsEqual(Vector2d(0,0), Math::lerp(0.0, Vector2d(0,0), Vector2d(10,10))) );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(5,5), Math::lerp(0.5, Vector2d(0,0), Vector2d(10,10))) );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(9,9), Math::lerp(0.9, Vector2d(0,0), Vector2d(10,10))) );
 }
