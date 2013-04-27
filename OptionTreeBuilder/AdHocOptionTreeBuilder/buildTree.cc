@@ -294,6 +294,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // State: stand and look at goal
     auto lookAtGoalState = playingFsm->newState("lookatgoal", {stand, lookAtGoal});
 
+    // State: aim (transition state between looking at goal and either kicking or circling)
+    auto aimState = playingFsm->newState("aim", {});
+
     // State: circle ball
     auto circleBallState = playingFsm->newState("circleball", {circleBall});
 
@@ -318,25 +321,24 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     // Transition: into actual loop after stood up
     auto standUp2lookAround = standUpState->newTransition();
-    standUp2lookAround->condition = [standUp2lookAround]() {
-      auto& os = standUp2lookAround->parentState->options;
-      return std::all_of(os.begin(), os.end(), [](OptionPtr o) { return o->hasTerminated(); });
+    standUp2lookAround->condition = [standUpState]() {
+      return standUpState->allOptionsTerminated();
     };
     standUp2lookAround->childState = lookForBallState;
 
-    // Transition: look at ball when visible
+    // Transition: look around -> look at ball when visible
     auto lookAround2lookAtBall = lookForBallState->newTransition();
     lookAround2lookAtBall->condition = []() {
       return AgentState::get<CameraFrameState>()->isBallVisible();
     };
     lookAround2lookAtBall->childState = lookAtBallState;
 
-    // Transition: look for ball if no longer seen
+    // Transition: look at ball -> look for ball if no longer seen
     auto lookAtBall2lookAround = lookAtBallState->newTransition();
     lookAtBall2lookAround->condition = ballLostCondition;
     lookAtBall2lookAround->childState = lookForBallState;
 
-    // Transition: approach ball
+    // Transition: look at ball -> approach ball
     auto lookAtBall2approachBall = lookAtBallState->newTransition();
     lookAtBall2approachBall->condition = []() {
       static int nSeen = 0;
@@ -348,12 +350,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     lookAtBall2approachBall->childState = approachBallState;
 
-    // Transition: look for ball again if no longer seen
+    // Transition: approach ball -> look for ball again if no longer seen
     auto approachBall2lookAround = approachBallState->newTransition("ballLost");
     approachBall2lookAround->condition = ballLostCondition;
     approachBall2lookAround->childState = lookForBallState;
 
-    // Transition: look for goal
+    // Transition: approachball -> look for goal
     auto approachBall2lookForGoal = approachBallState->newTransition("closeToBall");
     approachBall2lookForGoal->condition = []() {
       auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
@@ -364,7 +366,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     approachBall2lookForGoal->childState = lookForGoalState;
 
-    // Transition: look at goal when visible
+    // Transition: look for goal -> look at goal when visible
     auto lookForGoal2lookAtGoal = lookForGoalState->newTransition();
     lookForGoal2lookAtGoal->condition = []() {
       auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
@@ -372,58 +374,117 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     };
     lookForGoal2lookAtGoal->childState = lookAtGoalState;
 
-    // Transition: look for ball after too long
+    // Transition: look for goal -> look for ball after too long
     auto lookForGoal2lookForBall = lookForGoalState->newTransition("lookTooLong");
-    lookForGoal2lookForBall->condition = [lookForGoal2lookForBall]() {
-      return lookForGoal2lookForBall->parentState->secondsSinceStart() > 10;
+    lookForGoal2lookForBall->condition = [lookForGoalState]() {
+      return lookForGoalState->secondsSinceStart() > 10;
     };
     lookForGoal2lookForBall->childState = lookForBallState;
 
-    // Transition: if goal is seen right in front of us, start kick procedure
-    auto lookAtGoal2lookDown = lookAtGoalState->newTransition();
-    lookAtGoal2lookDown->condition = [lookAtGoal2lookDown]() {
-      auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
-
-      if (lookAtGoal2lookDown->parentState->secondsSinceStart() > 2)
-        return true;
-
-      if (goalsObs.size() < 2)
-        return false;
-
+    // Transition: look at goal -> aim if seen goal for long enough
+    auto lookAtGoal2aim = lookAtGoalState->newTransition();
+    lookAtGoal2aim->condition = [lookAtGoalState]() {
+      return lookAtGoalState->secondsSinceStart() > 0.5;
+    };
+    lookAtGoal2aim->childState = aimState;
+    
+    // Transition: aim -> if goal is seen right in front of us, start kick procedure
+    auto aim2lookAtFeet = aimState->newTransition();
+    aim2lookAtFeet->condition = []() {
       double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
       double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
       double panRatio = panAngle / panAngleRange;
       return abs(panRatio) < 0.2;
     };
-    lookAtGoal2lookDown->childState = lookAtFeetState;
+    aim2lookAtFeet->childState = lookAtFeetState;
 
-    // Transition: seen goal, circle ball
-    auto lookAtGoal2Circle = lookAtGoalState->newTransition();
-    lookAtGoal2Circle->condition = [lookAtGoal2Circle]()
+    // Transition: look at goal -> circle ball
+    auto aim2Circle = aimState->newTransition();
+    aim2Circle->condition = []()
     {
-      return lookAtGoal2Circle->parentState->secondsSinceStart() > 2.5;
+      return true;
     };
-    lookAtGoal2Circle->childState = circleBallState;
+    aim2Circle->childState = circleBallState;
 
-    // Transition: stop circling
-    auto circle2lookAtGoal = circleBallState->newTransition();
-    circle2lookAtGoal->condition = [circle2lookAtGoal]()
+    // Transition: circle -> stop circling and look for goal again
+    auto circle2lookForGoal = circleBallState->newTransition();
+    circle2lookForGoal->condition = [circleBallState]()
     {
       double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
       double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
       double panRatio = panAngle / panAngleRange;
       double circleDurationSeconds = panRatio * 0.4;
-      return circle2lookAtGoal->parentState->secondsSinceStart() > circleDurationSeconds;
+      return circleBallState->secondsSinceStart() > circleDurationSeconds;
     };
-    circle2lookAtGoal->childState = lookAtGoalState;
+    circle2lookForGoal->childState = lookForGoalState;
 
+    // Transition: look at feet -> kick left
+    auto lookAtFeet2kickLeft = lookAtFeetState->newTransition();
+    lookAtFeet2kickLeft->condition = [lookAtFeetState] () {
+      // Wait until we're finished looking down
+      if (!lookAtFeetState->allOptionsTerminated())
+        return false;
+
+      auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+      // Don't kick if we don't see the ball
+      if (!ballObs)
+        return false;
+      
+      // Don't kick if it's too far in front
+      if ((*ballObs)->y() > 0.2)
+        return false;
+
+      if ((*ballObs)->x() > 0)
+        return false;
+
+      return true;
+    };
+    lookAtFeet2kickLeft->childState = leftKickState;
+
+    // Transition: look at feet -> kick right
+    auto lookAtFeet2kickRight = lookAtFeetState->newTransition();
+    lookAtFeet2kickRight->condition = [lookAtFeetState] () {
+      // Wait until we're finished looking down
+      if (!lookAtFeetState->allOptionsTerminated())
+        return false;
+
+      auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+      // Don't kick if we don't see the ball
+      if (!ballObs)
+        return false;
+      
+      // Don't kick if it's too far in front
+      if ((*ballObs)->y() > 0.2)
+        return false;
+
+      if ((*ballObs)->x() < 0)
+        return false;
+
+      return true;
+    };
+    lookAtFeet2kickRight->childState = rightKickState;
+
+    // Transition: look at feet -> look for ball
+    auto lookAtFeet2lookForBall = lookAtFeetState->newTransition();
+    lookAtFeet2lookForBall->condition = [lookAtFeetState] () {
+      // Wait until we're finished looking down
+      return lookAtFeetState->allOptionsTerminated();
+    };
+    lookAtFeet2lookForBall->childState = lookForBallState;
+
+    // Transition: kick left -> look for ball
     auto kickLeft2lookForBall = leftKickState->newTransition();
-    kickLeft2lookForBall->condition = [kickLeft2lookForBall]() {
-      auto& os = kickLeft2lookForBall->parentState->options;
-      return std::all_of(os.begin(), os.end(), [](OptionPtr o) { return o->hasTerminated(); });
+    kickLeft2lookForBall->condition = [leftKickState]() {      
+      return leftKickState->allOptionsTerminated();
     };
     kickLeft2lookForBall->childState = lookForBallState;
 
+    // Transition: kick right -> look for ball
+    auto kickRight2lookForBall = rightKickState->newTransition();
+    kickRight2lookForBall->condition = [rightKickState]() {      
+      return rightKickState->allOptionsTerminated();
+    };
+    kickRight2lookForBall->childState = lookForBallState;
   } // uniformNumber != 1
 
   ofstream playingOut("playing.dot");
