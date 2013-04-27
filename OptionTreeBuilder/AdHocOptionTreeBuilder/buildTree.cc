@@ -209,6 +209,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     ready2setTransition->onFire = [=]() { debugger->showSet(); };
     ready2setTransition->childState = setState;
 
+    // From ready to playing: game state changed
+    auto ready2playingTransition = readyState->newTransition("r2pGameController");
+    ready2playingTransition->condition = playingCondition;
+    ready2playingTransition->onFire = [=]() { debugger->showPlaying(); };
+    ready2playingTransition->childState = playingState;
+
     // From set to play: game state changed TODO: go to their kickoff if it's theirs
     auto set2playingTransition = setState->newTransition("s2pGameController");
     set2playingTransition->condition = playingCondition;
@@ -388,7 +394,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       return lookAtGoalState->secondsSinceStart() > 0.5;
     };
     lookAtGoal2aim->childState = aimState;
-    
+
     // Transition: aim -> if goal is seen right in front of us, start kick procedure
     auto aim2lookAtFeet = aimState->newTransition();
     aim2lookAtFeet->condition = []() {
@@ -436,7 +442,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       // Don't kick if we don't see the ball
       if (!ballObs)
         return false;
-      
+
       // Don't kick if it's too far in front
       if ((*ballObs)->y() > 0.2)
         return false;
@@ -462,7 +468,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       // Don't kick if we don't see the ball
       if (!ballObs)
         return false;
-      
+
       // Don't kick if it's too far in front
       if ((*ballObs)->y() > 0.2)
         return false;
@@ -487,14 +493,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     // Transition: kick left -> look for ball
     auto kickLeft2lookForBall = leftKickState->newTransition();
-    kickLeft2lookForBall->condition = [leftKickState]() {      
+    kickLeft2lookForBall->condition = [leftKickState]() {
       return leftKickState->allOptionsTerminated();
     };
     kickLeft2lookForBall->childState = lookForBallState;
 
     // Transition: kick right -> look for ball
     auto kickRight2lookForBall = rightKickState->newTransition();
-    kickRight2lookForBall->condition = [rightKickState]() {      
+    kickRight2lookForBall->condition = [rightKickState]() {
       return rightKickState->allOptionsTerminated();
     };
     kickRight2lookForBall->childState = lookForBallState;
