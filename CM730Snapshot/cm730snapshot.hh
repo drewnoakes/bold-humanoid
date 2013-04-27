@@ -1,7 +1,6 @@
 #ifndef BOLD_CM730_SNAPSHOT_HH
 #define BOLD_CM730_SNAPSHOT_HH
 
-//#include <Eigen/Eigen>
 #include <Eigen/Core>
 
 namespace Robot
