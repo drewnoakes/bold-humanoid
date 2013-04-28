@@ -219,17 +219,17 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     ready2playingTransition->onFire = [=]() { debugger->showPlaying(); };
     ready2playingTransition->childState = playingState;
 
-    // From set to play: game state changed TODO: go to their kickoff if it's theirs
-    auto set2playingTransition = setState->newTransition("s2pGameController");
-    set2playingTransition->condition = playingCondition;
-    set2playingTransition->onFire = [=]() { debugger->showPlaying(); };
-    set2playingTransition->childState = playingState;
-
     // From set to penalized: penalized state
     auto set2penalizedTransition = setState->newTransition("s2pGameController");
     set2penalizedTransition->condition = penaltyCondition;
     set2penalizedTransition->onFire = [=]() { debugger->showPenalized(); };
     set2penalizedTransition->childState = penalizedState;
+
+    // From set to play: game state changed TODO: go to their kickoff if it's theirs
+    auto set2playingTransition = setState->newTransition("s2pGameController");
+    set2playingTransition->condition = playingCondition;
+    set2playingTransition->onFire = [=]() { debugger->showPlaying(); };
+    set2playingTransition->childState = playingState;
 
     // From playing to penalized: penalized state
     auto playing2penalizedTransition = playingState->newTransition("p2pGameController");
