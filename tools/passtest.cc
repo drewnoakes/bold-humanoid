@@ -21,26 +21,12 @@
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../PixelLabel/pixellabel.hh"
+#include "../Clock/clock.hh"
 
 using namespace cv;
 using namespace std;
 using namespace bold;
 using namespace Eigen;
-
-typedef unsigned long long timestamp_t;
-
-const timestamp_t getTimestamp()
-{
-  struct timeval now;
-  gettimeofday(&now, NULL);
-  return now.tv_usec + (timestamp_t)now.tv_sec * 1000000;
-}
-
-const double getSeconds(timestamp_t const& startedAt)
-{
-  auto now = getTimestamp();
-  return (now - startedAt) / 1000000.0L;
-}
 
 int main(int argc, char **argv)
 {
@@ -79,7 +65,7 @@ int main(int argc, char **argv)
   // FIXED START UP INITIALISATION
   //
 
-  auto t = getTimestamp();
+  auto t = Clock::getTimestamp();
 
   // Build colour ranges for segmentation
 
@@ -133,46 +119,46 @@ int main(int argc, char **argv)
 
   MaskWalkLineFinder maskWalkLineFinder(imageWidth, imageHeight);
 
-  cout << "Startup took " << (getSeconds(t)*1000) << " ms" << endl;
+  cout << "Startup took " << (Clock::getSeconds(t)*1000) << " ms" << endl;
 
   //
   // IMAGE LABELLING
   //
-  t = getTimestamp();
+  t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
     imageLabeller->label(colourImage, labelledImage);
-  cout << "Labelled " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
+  cout << "Labelled " << loopCount << " times. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl;
 
   //
   // IMAGE PASS
   //
-  t = getTimestamp();
+  t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
     passRunner.pass(labelledImage);
-  cout << "Passed " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
+  cout << "Passed " << loopCount << " times. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl;
 
   //
   // FIND LINES (RandomPairLineFinder)
   //
-  t = getTimestamp();
+  t = Clock::getTimestamp();
   vector<LineSegment2i> randomPairLines;
   for (int i = 0; i < loopCount; i++)
     randomPairLines = randomPairLineFinder.findLineSegments(lineDotPass->lineDots);
-  cout << "RandomPairLineFinder ran " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
+  cout << "RandomPairLineFinder ran " << loopCount << " times. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl;
 
   //
   // FIND LINES (RandomPairLineFinder)
   //
-  t = getTimestamp();
+  t = Clock::getTimestamp();
   vector<LineSegment2i> maskWalkLines;
   for (int i = 0; i < loopCount; i++)
     maskWalkLines = maskWalkLineFinder.findLineSegments(lineDotPass->lineDots);
-  cout << "MaskWalkLineFinder   ran " << loopCount << " times. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl;
+  cout << "MaskWalkLineFinder   ran " << loopCount << " times. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl;
 
   //
   // PRINT SUMMARIES
   //
-  cout << "Finished " << loopCount << " passes. Average time: " << (getSeconds(t)*1000/loopCount) << " ms" << endl
+  cout << "Finished " << loopCount << " passes. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl
        << "Found:" << endl
        << "    " << lineDotPass->lineDots.size() << " line dots" << endl;
 

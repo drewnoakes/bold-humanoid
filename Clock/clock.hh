@@ -11,6 +11,8 @@ namespace bold
     static Timestamp getTimestamp();
 
     static double getSeconds();
+
+    static double getSeconds(Timestamp since);
   };
 
 }

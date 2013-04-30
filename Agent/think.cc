@@ -6,7 +6,7 @@ void Agent::think()
   // Initialise a time value that we'll repeatedly use and update to time
   // the progress of each step of the think cycle
   //
-  auto t = Debugger::getTimestamp();
+  auto t = Clock::getTimestamp();
 
   //
   // Capture the image (YCbCr format)
@@ -19,9 +19,9 @@ void Agent::think()
   //
   if (d_isRecordingFrames)
   {
-    static Debugger::timestamp_t lastRecordTime;
+    static Clock::Timestamp lastRecordTime;
     static unsigned frameNumber = 0;
-    if (d_debugger->getSeconds(lastRecordTime) > 1.0)
+    if (Clock::getSeconds(lastRecordTime) > 1.0)
     {
       // save image
       stringstream ss;

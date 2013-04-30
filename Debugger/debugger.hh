@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <memory>
+
 #include "../Colour/colour.hh"
+#include "../Clock/clock.hh"
 
 #define LED_RED   0x01;
 #define LED_BLUE  0x02;
@@ -21,17 +23,9 @@ namespace bold
   class Debugger
   {
   public:
-    typedef unsigned long long timestamp_t;
-
-    static const timestamp_t getTimestamp();
-
-    static const double getSeconds(timestamp_t const& startedAt);
-
-    static const double printTime(timestamp_t const& startedAt, std::string const& description);
-
     Debugger();
 
-    timestamp_t timeEvent(timestamp_t const& startedAt, std::string const& eventName);
+    Clock::Timestamp timeEvent(Clock::Timestamp const& startedAt, std::string const& eventName);
 
     void addEventTiming(EventTiming const& eventTiming);
 

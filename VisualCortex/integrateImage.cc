@@ -3,7 +3,7 @@
 void VisualCortex::integrateImage(cv::Mat& image)
 {
   Debugger& debugger = *d_debugger;
-  auto t = Debugger::getTimestamp();
+  auto t = Clock::getTimestamp();
 
   auto cameraFrame = AgentState::get<CameraFrameState>();
 

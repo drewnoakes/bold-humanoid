@@ -11,7 +11,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
     return;
 
   Debugger& debugger = *d_debugger;
-  auto t = Debugger::getTimestamp();
+  auto t = Clock::getTimestamp();
 
   auto lineDotColour = Colour::bgr(0, 0, 255);
   auto observedLineColour = Colour::bgr(255, 80, 80);
