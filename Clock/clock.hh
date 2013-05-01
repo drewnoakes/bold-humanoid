@@ -13,6 +13,9 @@ namespace bold
     static double getSeconds();
 
     static double getSeconds(Timestamp since);
+
+  private:
+    Clock() {}
   };
 
 }
