@@ -70,4 +70,4 @@ define(
 
         return OptionTreeModule;
     }
-)
+);
