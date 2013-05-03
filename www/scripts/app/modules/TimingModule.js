@@ -58,21 +58,19 @@ define(
         TimingModule.prototype.load = function()
         {
             this.chart = new SmoothieChart(chartOptions);
-            var canvas = document.createElement('canvas');
-            canvas.height = chartHeight;
-            this.$container.append(canvas);
+            this.canvas = document.createElement('canvas');
+            this.canvas.height = chartHeight;
+            this.$container.append(this.canvas);
 
-            var series = new TimeSeries();
-            this.chart.addTimeSeries(series, seriesOptions);
-            this.chart.streamTo(canvas, /*delayMs*/ 100);
+            this.series = new TimeSeries();
+            this.chart.addTimeSeries(this.series, seriesOptions);
+            this.chart.streamTo(this.canvas, /*delayMs*/ 100);
             this.chart.options.horizontalLines.push({color:'#FF0000', lineWidth: 1, value: 30});
 
             this.$fps = $('<div></div>', {'class':'fps'}).appendTo(this.$container);
 
             this.table = $('<table></table>', {'class':'timing-details'}).appendTo(this.$container);
 
-            this.series = series;
-            this.canvas = canvas;
             this.entryByLabel = {};
 
             this.subscription = DataProxy.subscribe(
@@ -110,8 +108,6 @@ define(
                 var millis = data.timings[key];
                 this.getOrCreateEntry(key).update(time, millis);
             }.bind(this));
-
-            // TODO process message count data here too (maybe a new module?): { "gameControllerMessages": 1, "ignoredMessages": 10 }
 
             this.updateChart(time);
         };
