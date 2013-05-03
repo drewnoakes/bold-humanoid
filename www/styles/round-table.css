@@ -339,7 +339,7 @@ div.module.state .json-text
 
 div.module.state > div.pane-container
 {
-    max-height: 456px;
+    height: 456px;
     overflow: auto;
 }
 
