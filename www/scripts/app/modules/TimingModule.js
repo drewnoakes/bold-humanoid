@@ -67,6 +67,8 @@ define(
             this.chart.streamTo(canvas, /*delayMs*/ 100);
             this.chart.options.horizontalLines.push({color:'#FF0000', lineWidth: 1, value: 30});
 
+            this.$fps = $('<div></div>', {'class':'fps'}).appendTo(this.$container);
+
             this.table = $('<table></table>', {'class':'timing-details'}).appendTo(this.$container);
 
             this.series = series;
@@ -80,6 +82,12 @@ define(
                     onmessage: _.bind(this.onData, this)
                 }
             );
+
+            this.fpsInterval = setInterval(function ()
+            {
+                this.$fps.text(this.fpsCount ? this.fpsCount + ' FPS' : '');
+                this.fpsCount = 0;
+            }.bind(this), 1000);
         };
 
         TimingModule.prototype.unload = function()
@@ -87,10 +95,14 @@ define(
             this.chart.stop();
             this.$container.empty();
             this.subscription.close();
+
+            clearInterval(this.fpsInterval);
+            delete this.fpsInterval;
         };
 
         TimingModule.prototype.onData = function(data)
         {
+            this.fpsCount++;
             var time = new Date().getTime();
 
             _.each(_.keys(data.timings), function (key)
