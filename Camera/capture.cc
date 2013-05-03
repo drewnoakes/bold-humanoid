@@ -25,36 +25,44 @@ Mat Camera::capture()
   unsigned char* datCursor = d_buffers[buf.index].start;
   unsigned char* datEnd = datCursor + 4 * d_pixelFormat.height * d_pixelFormat.width / 2;
   unsigned char* imgCursor = img.data;
-  
-  while (datCursor != datEnd)
-  {
-    int y1 = datCursor[0];
-    int y2 = datCursor[2];
-    int cb = datCursor[1];
-    int cr = datCursor[3];
 
-    if (d_squash)
+  if (d_squash)
+  {
+    while (datCursor != datEnd)
     {
+      int y1 = datCursor[0];
+      int y2 = datCursor[2];
+      int cb = datCursor[1];
+      int cr = datCursor[3];
+
       imgCursor[0] = y1 + y2 / 2;
       imgCursor[1] = cb;
       imgCursor[2] = cr;
 
       imgCursor += 3;
+      datCursor += 4;
     }
-    else
+  }
+  else
+  {
+    while (datCursor != datEnd)
     {
+      int y1 = datCursor[0];
+      int y2 = datCursor[2];
+      int cb = datCursor[1];
+      int cr = datCursor[3];
+
       imgCursor[0] = y1;
       imgCursor[1] = cb;
       imgCursor[2] = cr;
-      
+
       imgCursor[3] = y2;
       imgCursor[4] = cb;
       imgCursor[5] = cr;
+
       imgCursor += 6;
+      datCursor += 4;
     }
-
-    datCursor += 4;
-
   }
 
   return img;
