@@ -23,6 +23,7 @@
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/DebugState/debugstate.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"

@@ -10,7 +10,6 @@ define(
 
         var Protocols = {
             camera: 'camera-protocol',
-            timing: 'timing-protocol',
             control: 'control-protocol',
 
             // One per StateObject...
@@ -19,6 +18,7 @@ define(
             ambulatorState: 'Ambulator',
             bodyState: 'Body',
             cameraFrameState: 'CameraFrame',
+            debug: 'Debug',
             gameState: 'Game',
             hardwareState: 'Hardware',
             optionTreeState: 'OptionTree',
@@ -33,6 +33,7 @@ define(
             Protocols.ambulatorState,
             Protocols.cameraFrameState,
             Protocols.bodyState,
+            Protocols.debug,
             Protocols.gameState,
             Protocols.hardwareState,
             Protocols.optionTreeState,

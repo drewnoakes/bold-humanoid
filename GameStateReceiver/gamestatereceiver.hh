@@ -10,10 +10,12 @@
 
 namespace bold
 {
+  class Debugger;
+
   class GameStateReceiver
   {
   public:
-    GameStateReceiver(minIni const& ini);
+    GameStateReceiver(minIni const& ini, std::shared_ptr<Debugger> debugger);
 
     std::shared_ptr<GameState> receive();
 
@@ -21,6 +23,7 @@ namespace bold
     int d_port;
     int d_socket;
     bool d_receivedAnything;
+    std::shared_ptr<Debugger> d_debugger;
   };
 }
 

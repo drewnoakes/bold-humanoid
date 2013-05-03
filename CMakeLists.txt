@@ -158,7 +158,6 @@ add_class(BOLDHUMANOID
   ./DataStreamer/callbackControl.cc
   ./DataStreamer/callbackHttp.cc
   ./DataStreamer/callbackState.cc
-  ./DataStreamer/callbackTiming.cc
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/processCommand.cc
@@ -321,6 +320,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/CameraFrameState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/DebugState/writeJson.cc
 )
 
 add_class(BOLDHUMANOID

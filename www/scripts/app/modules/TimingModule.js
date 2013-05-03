@@ -36,7 +36,6 @@ define(
         };
 
         var chartHeight = 150;
-        var parseRegex = /([^=|]+)=([^|]+)\|/g;
 
         var TimingModule = function()
         {
@@ -75,10 +74,10 @@ define(
             this.entryByLabel = {};
 
             this.subscription = DataProxy.subscribe(
-                Protocols.timing,
+                Protocols.debug,
                 {
-                    json: false,
-                    onmessage: _.bind(this.onmessage, this)
+                    json: true,
+                    onmessage: _.bind(this.onData, this)
                 }
             );
         };
@@ -90,15 +89,17 @@ define(
             this.subscription.close();
         };
 
-        TimingModule.prototype.onmessage = function(msg)
+        TimingModule.prototype.onData = function(data)
         {
-            var time = new Date().getTime(),
-                match;
+            var time = new Date().getTime();
 
-            while (match = parseRegex.exec(msg.data)) {
-                this.getOrCreateEntry(match[1])
-                    .update(time, parseFloat(match[2]));
-            }
+            _.each(_.keys(data.timings), function (key)
+            {
+                var millis = data.timings[key];
+                this.getOrCreateEntry(key).update(time, millis);
+            }.bind(this));
+
+            // TODO process message count data here too (maybe a new module?): { "gameControllerMessages": 1, "ignoredMessages": 10 }
 
             this.updateChart(time);
         };

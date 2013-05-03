@@ -1,10 +1,16 @@
 #include "debugger.ih"
 
+#define LED_RED   0x01;
+#define LED_BLUE  0x02;
+#define LED_GREEN 0x04;
+
 Debugger::Debugger()
 : d_lastLedFlags(0xff),
   d_lastEyeInt(0),
   d_lastHeadInt(0),
-  d_eventTimings(),
+  d_eventTimings(make_shared<vector<EventTiming>>()),
+  d_gameControllerMessageCount(0),
+  d_ignoredMessageCount(0),
   d_eyeColour(0,0,0),
   d_headColour(0,0,0)
 {
@@ -20,11 +26,15 @@ Clock::Timestamp Debugger::timeEvent(Clock::Timestamp const& startedAt, std::str
 
 void Debugger::addEventTiming(EventTiming const& eventTiming)
 {
-  d_eventTimings.push_back(eventTiming);
+  d_eventTimings->push_back(eventTiming);
 }
 
 void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
 {
+  //
+  // Update Hardware LEDs
+  //
+
   auto const& cameraFrame = AgentState::get<CameraFrameState>();
   double seconds = Clock::getSeconds();
 
@@ -35,8 +45,8 @@ void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
   if (cameraFrame->getBallObservation().hasValue())
     ledFlags |= LED_RED;
 
-//if (somethingElse)
-//  value |= LED_BLUE;
+  if (d_gameControllerMessageCount != 0)
+    ledFlags |= LED_BLUE;
 
   if (cameraFrame->getGoalObservations().size() > 1)
     ledFlags |= LED_GREEN;
@@ -77,14 +87,25 @@ void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
     cm730->WriteWord(CM730::P_LED_HEAD_L, headInt, 0);
     d_lastHeadInt = headInt;
   }
+
+  //
+  // Update DebugState object
+  //
+
+  AgentState::getInstance().set(make_shared<DebugState const>(d_eventTimings, d_gameControllerMessageCount, d_ignoredMessageCount));
+
+  // clear accumulators for next cycle
+  d_eventTimings = make_shared<vector<EventTiming>>();
+  d_gameControllerMessageCount = 0;
+  d_ignoredMessageCount = 0;
 }
 
 void Debugger::showReady() { showHeadColour(Colour::bgr(255,0,0)); showEyeColour(Colour::bgr(255,0,0)); };
 
 void Debugger::showSet() { showHeadColour(Colour::bgr(0,255,255)); showEyeColour(Colour::bgr(255,0,0)); };
 
-void Debugger::showPlaying() { showHeadColour(Colour::bgr(0,255,0)); showEyeColour(Colour::bgr(255,0,0));}
+void Debugger::showPlaying() { showHeadColour(Colour::bgr(0,255,0)); showEyeColour(Colour::bgr(255,0,0)); }
 
-void Debugger::showPenalized() { showHeadColour(Colour::bgr(0,0,255)); showEyeColour(Colour::bgr(255,0,0));}
+void Debugger::showPenalized() { showHeadColour(Colour::bgr(0,0,255)); showEyeColour(Colour::bgr(255,0,0)); }
 
 void Debugger::showPaused() { showHeadColour(Colour::bgr(128,128,128)); showEyeColour(Colour::bgr(128,128,128)); }

@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <memory>
 
+#include "../Debugger/debugger.hh"
 #include "../StateObject/GameState/gamestate.hh"
 
 using namespace bold;

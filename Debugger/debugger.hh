@@ -7,10 +7,6 @@
 #include "../Colour/colour.hh"
 #include "../Clock/clock.hh"
 
-#define LED_RED   0x01;
-#define LED_BLUE  0x02;
-#define LED_GREEN 0x04;
-
 namespace Robot
 {
   class CM730;
@@ -25,32 +21,29 @@ namespace bold
   public:
     Debugger();
 
+    //
+    // Event timings
+    //
+
     Clock::Timestamp timeEvent(Clock::Timestamp const& startedAt, std::string const& eventName);
 
     void addEventTiming(EventTiming const& eventTiming);
 
-    std::vector<EventTiming> getTimings() const
-    {
-      return d_eventTimings;
-    }
+    //
+    // UDP Message Counts
+    //
 
-    void clearTimings()
-    {
-      d_eventTimings.clear();
-    }
+    void notifyReceivedGameControllerMessage() { d_gameControllerMessageCount++; }
+    void notifyIgnoringUnrecognisedMessage() { d_ignoredMessageCount++; }
 
-    void showEyeColour(Colour::bgr const& colour) { d_eyeColour = colour; }
-
-    void showHeadColour(Colour::bgr const& colour) { d_headColour = colour; }
+    //
+    // Display status
+    //
 
     void showReady();
-
     void showSet();
-
     void showPlaying();
-
     void showPenalized();
-
     void showPaused();
 
     /**
@@ -60,10 +53,15 @@ namespace bold
     void update(std::shared_ptr<Robot::CM730> cm730);
 
   private:
+    void showEyeColour(Colour::bgr const& colour) { d_eyeColour = colour; }
+    void showHeadColour(Colour::bgr const& colour) { d_headColour = colour; }
+
     int d_lastLedFlags;
     int d_lastEyeInt;
     int d_lastHeadInt;
-    std::vector<EventTiming> d_eventTimings;
+    std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
+    unsigned d_gameControllerMessageCount;
+    unsigned d_ignoredMessageCount;
 
     Colour::bgr d_eyeColour;
     Colour::bgr d_headColour;

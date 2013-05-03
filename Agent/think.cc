@@ -118,9 +118,7 @@ void Agent::think()
   if (d_streamer != nullptr)
   {
     d_streamer->update();
+    // NOTE this timing value will appear in the *next* think cycle
     t = d_debugger->timeEvent(t, "Update DataStreamer");
   }
-
-  // TODO this isn't a great approach, as the last value is lost (captured after send)
-  d_debugger->clearTimings();
 }

@@ -43,7 +43,7 @@ Agent::Agent(string const& U2D_dev,
 
   d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, ini);
 
-  d_gameStateReceiver = make_shared<GameStateReceiver>(ini);
+  d_gameStateReceiver = make_shared<GameStateReceiver>(ini, d_debugger);
 
   AdHocOptionTreeBuilder optionTreeBuilder;
   d_optionTree = optionTreeBuilder.buildTree(ini,

@@ -8,6 +8,7 @@
 #include "../AgentState/agentstate.hh"
 #include "../Clock/clock.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/DebugState/debugstate.hh"
 
 using namespace bold;
 using namespace Robot;

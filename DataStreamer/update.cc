@@ -6,11 +6,6 @@ void DataStreamer::update()
     return;
 
   //
-  // We always have new timing data available
-  //
-  libwebsocket_callback_on_writable_all_protocol(d_timingProtocol);
-
-  //
   // Only request sending images if we have a client who needs servicing
   //
   for (CameraSession* cameraSession : d_cameraSessions)

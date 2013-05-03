@@ -7,7 +7,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
   const int MAX_LENGTH = 4096;
   static char data[MAX_LENGTH];
 
-  // Process incoming game controller messages:
+  // Process incoming game controller messages
   static sockaddr_in source_addr;
   socklen_t source_addr_len = sizeof(source_addr);
 
@@ -17,13 +17,15 @@ shared_ptr<GameState> GameStateReceiver::receive()
   // TODO no need to have the source_addr filled in -- skip it (and test)
   while (recvfrom(d_socket, data, MAX_LENGTH, 0, (struct sockaddr*) &source_addr, &source_addr_len) > 0)
   {
-    // Verify game controller header:
+    // Verify game controller header
     if (memcmp(data, GAMECONTROLLER_STRUCT_HEADER, sizeof(GAMECONTROLLER_STRUCT_HEADER) - 1) == 0)
     {
+      d_debugger->notifyReceivedGameControllerMessage();
       return make_shared<GameState>(data);
     }
     else
     {
+      d_debugger->notifyIgnoringUnrecognisedMessage();
       cout << "[GameStateReceiver::receive] ignoring message with unexpected header" << endl;
     }
   }

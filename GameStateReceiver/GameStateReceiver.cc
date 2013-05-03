@@ -1,8 +1,9 @@
 #include "gamestatereceiver.ih"
 
-GameStateReceiver::GameStateReceiver(minIni const& ini)
+GameStateReceiver::GameStateReceiver(minIni const& ini, shared_ptr<Debugger> debugger)
 : d_socket(-1),
-  d_receivedAnything(false)
+  d_receivedAnything(false),
+  d_debugger(debugger)
 {
   d_port = ini.geti("GameController", "Port", 3838);
 
