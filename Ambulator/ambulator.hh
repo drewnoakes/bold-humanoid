@@ -10,13 +10,6 @@ namespace bold
 {
   class Ambulator
   {
-  private:
-    LinearSmoother d_xAmp;
-    LinearSmoother d_yAmp;
-    LinearSmoother d_turnAmp;
-    bool d_turnAngleSet;
-    bool d_moveDirSet;
-
   public:
     Ambulator(minIni const& ini)
     : d_xAmp(0.0, ini.getd("Ambulator", "XAmpDelta", 3.0)),
@@ -53,6 +46,13 @@ namespace bold
      * and negative values turn left (counter-clockwise) (unspecfied units).
      */
     void setTurnAngle(double turnSpeed);
+
+  private:
+    LinearSmoother d_xAmp;
+    LinearSmoother d_yAmp;
+    LinearSmoother d_turnAmp;
+    bool d_turnAngleSet;
+    bool d_moveDirSet;
   };
 }
 
