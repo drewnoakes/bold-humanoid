@@ -1,6 +1,6 @@
 #include "visualcortex.ih"
 
-void VisualCortex::integrateImage(cv::Mat& image)
+void VisualCortex::integrateImage(Mat& image)
 {
   Debugger& debugger = *d_debugger;
   auto t = Clock::getTimestamp();
@@ -13,7 +13,7 @@ void VisualCortex::integrateImage(cv::Mat& image)
 
   // Label the image;
   if (d_labelledImage.rows != image.rows || d_labelledImage.cols != image.cols)
-    d_labelledImage = cv::Mat(image.rows, image.cols, CV_8UC1);
+    d_labelledImage = Mat(image.rows, image.cols, CV_8UC1);
 
   d_imageLabeller->label(image, d_labelledImage, true);
   t = debugger.timeEvent(t, "Image Processing/Pixel Label");
@@ -52,6 +52,8 @@ void VisualCortex::integrateImage(cv::Mat& image)
     {
       Vector2f pos = ball.mean;
       // Take the bottom of the ball as observation
+      // TODO take the curvature of the ball into account -- project middle of blob on the plane z=ballRadius
+      // TODO discard blobs that would be too large/small for the ball we expect at that position of the frame
       pos.y() = ball.ul.y();
       ballPosition = Maybe<Vector2f>(pos);
     }
