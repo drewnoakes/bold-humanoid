@@ -24,7 +24,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
     }
     else
     {
-      printf("[GameStateReceiver::receive] ignoring message with unexpected header\n");
+      cout << "[GameStateReceiver::receive] ignoring message with unexpected header" << endl;
     }
   }
 
