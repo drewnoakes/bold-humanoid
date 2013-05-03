@@ -10,7 +10,7 @@ define(
     {
         'use strict';
 
-        var moduleHtml = Handlebars.compile($('#state-module-template').html());
+        var moduleHtml = Handlebars.compile($('#state-dump-module-template').html())();
 
         var StateDumpModule = function()
         {

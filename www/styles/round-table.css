@@ -154,6 +154,14 @@ div.module > div.pane-header > div.pane-header-links > a:hover
     text-decoration: underline;
 }
 
+div.module div.module-column-3
+{
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    width: 200px;
+}
+
 /********************************************************************/
 
 .connection-indicator
@@ -279,6 +287,72 @@ div.module.camera div.control-container.image-controls
 div.module.camera div.control-container.image-controls > div:nth-child(1)
 {
     display: block;
+}
+
+/********************************************************************/
+
+div.module.game div.play-mode
+{
+    display: inline-block;
+    height: 60px;
+    line-height: 60px;
+    width: 120px;
+    border: 1px solid rgba(0,0,0,0.4);
+    border-radius: 4px;
+    text-align: center;
+}
+
+div.module.game div.play-mode.Initial { background-color: #CCC; }
+div.module.game div.play-mode.Ready { background-color: #00F; color: #FFF; }
+div.module.game div.play-mode.Set { background-color: #FF0; }
+div.module.game div.play-mode.Playing { background-color: #0F0; }
+div.module.game div.play-mode.Finished { background-color: #444; color: #FFF; }
+
+div.module.game ul.penalties
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+div.module.game ul.penalties li
+{
+    width: 160px;
+    background-color: rgba(128,0,0,0.1);
+    border: 1px solid rgba(128,0,0,0.3);
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 4px;
+    padding: 0 12px;
+}
+
+div.module.game ul.penalties li.done
+{
+    background-color: rgba(255,255,0,0.2);
+}
+
+div.module.game ul.penalties li div.title
+{
+    margin-top: 6px;
+}
+
+div.module.game ul.penalties li div.time
+{
+    margin-bottom: 6px;
+    color: #555;
+}
+
+div.module.game div.time-remaining
+{
+    margin-top: 22px;
+}
+
+div.module.game div.score
+{
+    font-size: 32px;
+    color: #444;
+    font-weight: bold;
+    margin-bottom: 18px;
 }
 
 /********************************************************************/
