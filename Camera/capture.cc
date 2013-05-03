@@ -2,8 +2,11 @@
 
 Mat Camera::capture()
 {
+  auto t = Clock::getTimestamp();
+
   v4l2_buffer buf;
   memset(&buf, 0, sizeof(buf));
+  t = d_debugger->timeEvent(t, "Image Capture/Zero Memory");
 
   buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
   buf.memory = V4L2_MEMORY_MMAP;
@@ -13,12 +16,14 @@ Mat Camera::capture()
     cout << "[Camera] Error dequeueing buffer" << endl;
     exit(-1);
   }
+  t = d_debugger->timeEvent(t, "Image Capture/Dequeue");
 
   if (-1 == ioctl(d_fd, VIDIOC_QBUF, &buf))
   {
     cout << "[Camera] Error re-queueing buffer" << endl;
     exit(-1);
   }
+  t = d_debugger->timeEvent(t, "Image Capture/Requeue");
 
   Mat img(d_pixelFormat.height, d_squash ? d_pixelFormat.width / 2 : d_pixelFormat.width, CV_8UC3);
 
@@ -26,6 +31,7 @@ Mat Camera::capture()
   unsigned char* datEnd = datCursor + 4 * d_pixelFormat.height * d_pixelFormat.width / 2;
   unsigned char* imgCursor = img.data;
 
+  // Convert each set of four input values into either one or two pixels
   if (d_squash)
   {
     while (datCursor != datEnd)
@@ -64,6 +70,8 @@ Mat Camera::capture()
       datCursor += 4;
     }
   }
+
+  t = d_debugger->timeEvent(t, "Image Capture/Copy From Buffer");
 
   return img;
 }

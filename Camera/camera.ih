@@ -6,7 +6,9 @@
 #include <stropts.h>
 #include <sys/stat.h>
 
+#include "../Clock/clock.hh"
 #include "../Control/control.hh"
+#include "../Debugger/debugger.hh"
 
 using namespace cv;
 using namespace bold;
