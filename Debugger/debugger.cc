@@ -58,35 +58,27 @@ void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
     d_lastLedFlags = ledFlags;
   }
 
-  auto eyeHsv = Colour::bgr2hsv(d_eyeColour);
-  eyeHsv.v = fabs(sin(seconds*2)) * 255;
-  auto eyeColour = Colour::hsv2bgr(eyeHsv);
-
-  auto headHsv = Colour::bgr2hsv(d_headColour);
-  headHsv.v = fabs(sin(seconds*3)) * 255;
-  auto headColour = Colour::hsv2bgr(headHsv);
-
-  int eyeInt =
-     (eyeColour.r >> 3) |
-    ((eyeColour.g >> 3) << 5) |
-    ((eyeColour.b >> 3) << 10);
-
-  if (eyeInt != d_lastEyeInt)
+  auto setColor = [&cm730](Colour::bgr const& bgr, int* lastInt, int const& targetId, double const& v)
   {
-    cm730->WriteWord(CM730::P_LED_EYE_L, eyeInt, 0);
-    d_lastEyeInt = eyeInt;
-  }
+    auto hsv = Colour::bgr2hsv(bgr);
+    hsv.v = v;
 
-  int headInt =
-     (headColour.r >> 3) |
-    ((headColour.g >> 3) << 5) |
-    ((headColour.b >> 3) << 10);
+    auto color = Colour::hsv2bgr(hsv);
 
-  if (headInt != d_lastHeadInt)
-  {
-    cm730->WriteWord(CM730::P_LED_HEAD_L, headInt, 0);
-    d_lastHeadInt = headInt;
-  }
+    int intValue =
+       (color.r >> 3) |
+      ((color.g >> 3) << 5) |
+      ((color.b >> 3) << 10);
+
+    if (intValue != (*lastInt))
+    {
+      cm730->WriteWord(targetId, intValue, 0);
+      *lastInt = intValue;
+    }
+  };
+
+  setColor(d_eyeColour,  &d_lastEyeInt,  CM730::P_LED_EYE_L,  fabs(sin(seconds*2)) * 255);
+  setColor(d_headColour, &d_lastHeadInt, CM730::P_LED_HEAD_L, fabs(sin(seconds*3)) * 255);
 
   //
   // Update DebugState object
