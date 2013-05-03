@@ -1,5 +1,4 @@
-#ifndef BATS_DISJOINTSET_HH
-#define BATS_DISJOINTSET_HH
+#pragma once
 
 #include <map>
 #include <set>
@@ -13,9 +12,8 @@ namespace bold
   class DisjointSet
   {
   public:
-
     DisjointSet() {}
-    
+
     void insert(T const& el)
     {
       std::size_t idx = d_equivList.size();
@@ -62,8 +60,8 @@ namespace bold
     }
 
     std::size_t size() const;
-  private:
 
+  private:
     std::size_t find(std::size_t idx)
     {
       if (d_equivList[idx] != idx)
@@ -75,22 +73,21 @@ namespace bold
     {
       std::size_t ss1 = find(idx1);
       std::size_t ss2 = find(idx2);
-      
+
       if (ss1 < ss2)
       {
         d_equivList[ss2] = ss1;
-	return ss2;
+        return ss2;
       }
       else
       {
         d_equivList[ss1] = ss2;
-	return ss1;
+        return ss1;
       }
     }
 
     void flattenEquivList()
     {
-//      std::cout << "Flattening..." << std::endl;
       for (std::size_t idx = 0; idx < d_equivList.size(); ++idx)
         d_equivList[idx] = d_equivList[d_equivList[idx]];
     }
@@ -99,5 +96,3 @@ namespace bold
     std::vector<std::size_t> d_equivList;
   };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef BOLD_AGENT_MODEL_HH
-#define BOLD_AGENT_MODEL_HH
+#pragma once
 
 #include <functional>
 #include <map>
@@ -79,5 +78,3 @@ namespace bold
     Eigen::Affine3d d_cameraAgentTransform;
   };
 }
-
-#endif

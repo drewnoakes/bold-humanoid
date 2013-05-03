@@ -1,5 +1,4 @@
-#ifndef BOLD_ALARMSTATE_HH
-#define BOLD_ALARMSTATE_HH
+#pragma once
 
 #include <cassert>
 #include <vector>
@@ -32,5 +31,3 @@ namespace bold
     std::vector<MX28Alarm> d_alarmLedByJointId;
   };
 }
-
-#endif

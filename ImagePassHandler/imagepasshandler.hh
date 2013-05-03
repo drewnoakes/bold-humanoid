@@ -1,5 +1,4 @@
-#ifndef BOLD_IMAGE_PASS_HANDLER_HH
-#define BOLD_IMAGE_PASS_HANDLER_HH
+#pragma once
 
 namespace bold
 {
@@ -31,5 +30,3 @@ namespace bold
     virtual void onPixel(TPixel value, int x, int y) = 0;
   };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef BOLD_MAYBE_HH
-#define BOLD_MAYBE_HH
+#pragma once
 
 #include <memory>
 
@@ -65,5 +64,3 @@ namespace bold
     std::shared_ptr<T> d_value;
   };
 }
-
-#endif

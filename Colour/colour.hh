@@ -1,5 +1,4 @@
-#ifndef BOLD_COLOUR_HH
-#define BOLD_COLOUR_HH
+#pragma once
 
 #include <vector>
 #include <string>
@@ -138,5 +137,3 @@ namespace bold
   std::ostream& operator<<(std::ostream &stream, Colour::hsv const& hsv);
   std::ostream& operator<<(std::ostream &stream, Colour::hsvRange const& hsv);
 }
-
-#endif

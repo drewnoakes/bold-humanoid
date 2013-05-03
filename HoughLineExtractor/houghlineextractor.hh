@@ -1,5 +1,4 @@
-#ifndef BOLD_HOUGHLINEEXTRACTOR_HH
-#define BOLD_HOUGHLINEEXTRACTOR_HH
+#pragma once
 
 #include "../geometry/Line.hh"
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
@@ -26,5 +25,3 @@ namespace bold
     Line findMaxLine(HoughLineAccumulator& accumulator) const;
   };
 }
-
-#endif

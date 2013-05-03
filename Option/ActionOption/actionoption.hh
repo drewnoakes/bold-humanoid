@@ -1,5 +1,4 @@
-#ifndef BOLD_ACTIONOPTION_HH
-#define BOLD_ACTIONOPTION_HH
+#pragma once
 
 #include "../option.hh"
 #include <string>
@@ -26,5 +25,3 @@ namespace bold
       d_started(false)
   {}
 }
-
-#endif

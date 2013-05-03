@@ -1,5 +1,4 @@
-#ifndef BOLD_WORLDFRAMESTATE_HH
-#define BOLD_WORLDFRAMESTATE_HH
+#pragma once
 
 #include <Eigen/Core>
 
@@ -41,5 +40,3 @@ namespace bold
     AgentPosition d_position;
   };
 }
-
-#endif

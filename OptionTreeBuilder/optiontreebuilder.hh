@@ -1,5 +1,4 @@
-#ifndef BOLD_OPTIONTREEBUILDER_HH
-#define BOLD_OPTIONTREEBUILDER_HH
+#pragma once
 
 #include "../OptionTree/optiontree.hh"
 #include <memory>
@@ -12,7 +11,4 @@ namespace bold
   public:
     virtual std::unique_ptr<OptionTree> buildTree(minIni const& ini) = 0;
   };
-
 }
-
-#endif

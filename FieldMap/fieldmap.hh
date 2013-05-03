@@ -1,5 +1,4 @@
-#ifndef BOLD_WORLD_MODEL_HH
-#define BOLD_WORLD_MODEL_HH
+#pragma once
 
 #include <minIni.h>
 #include <vector>
@@ -44,5 +43,3 @@ namespace bold
     double d_circleRadius;
   };
 }
-
-#endif

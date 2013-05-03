@@ -1,5 +1,4 @@
-#ifndef BOLD_WHEELSAMPLERFACTORY_HH
-#define BOLD_WHEELSAMPLERFACTORY_HH
+#pragma once
 
 #include <iterator>
 #include <vector>
@@ -50,5 +49,3 @@ namespace bold
     std::function<double()> d_rnd;
   };
 }
-
-#endif

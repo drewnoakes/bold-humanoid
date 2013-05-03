@@ -1,5 +1,4 @@
-#ifndef BOLD_LOCALISER_HH
-#define BOLD_LOCALISER_HH
+#pragma once
 
 #include <Eigen/Core>
 #include <functional>
@@ -62,5 +61,3 @@ namespace bold
     std::function<double()> d_angleError;
   };
 }
-
-#endif

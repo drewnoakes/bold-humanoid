@@ -1,5 +1,4 @@
-#ifndef BOLD_IMAGEPASSRUNNER_HH
-#define BOLD_IMAGEPASSRUNNER_HH
+#pragma once
 
 #include <cassert>
 #include <opencv2/core/core.hpp>
@@ -56,5 +55,3 @@ namespace bold
     std::vector<std::shared_ptr<ImagePassHandler<TPixel>>> d_handlers;
   };
 }
-
-#endif

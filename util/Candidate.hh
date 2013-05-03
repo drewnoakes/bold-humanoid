@@ -1,5 +1,4 @@
-#ifndef BOLD_CANDIDATE_HH
-#define BOLD_CANDIDATE_HH
+#pragma once
 
 namespace bold
 {
@@ -20,5 +19,3 @@ namespace bold
     int d_votes;
   };
 }
-
-#endif

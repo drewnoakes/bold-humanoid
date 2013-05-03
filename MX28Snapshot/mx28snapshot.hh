@@ -1,5 +1,4 @@
-#ifndef BOLD_MX28_SNAPSHOT_HH
-#define BOLD_MX28_SNAPSHOT_HH
+#pragma once
 
 #include "../robotis/Framework/include/CM730.h"
 #include "../MX28Alarm/mx28alarm.hh"
@@ -76,5 +75,3 @@ namespace bold
     static double valueToRPM(unsigned int value);
   };
 }
-
-#endif

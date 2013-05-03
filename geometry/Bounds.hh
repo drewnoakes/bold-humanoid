@@ -1,5 +1,4 @@
-#ifndef BOLD_BOUNDS_HH
-#define BOLD_BOUNDS_HH
+#pragma once
 
 #include <iostream>
 #include <stdexcept>
@@ -52,5 +51,3 @@ namespace bold
   typedef Bounds<double,2> Bounds2d;
   typedef Bounds<double,3> Bounds3d;
 }
-
-#endif

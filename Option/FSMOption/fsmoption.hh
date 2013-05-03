@@ -1,5 +1,4 @@
-#ifndef BOLD_FSMOPTION_HH
-#define BOLD_FSMOPTION_HH
+#pragma once
 
 #include "../option.hh"
 #include "../../Clock/clock.hh"
@@ -135,5 +134,3 @@ namespace bold
     d_transitions.push_back(transition);
   }
 }
-
-#endif

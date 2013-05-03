@@ -1,5 +1,4 @@
-#ifndef BOLD_PARTICLEFILTER_HH
-#define BOLD_PARTICLEFILTER_HH
+#pragma once
 
 #include <cassert>
 #include <memory>
@@ -90,5 +89,3 @@ namespace bold
     ParticleExtractor d_extractor;
   };
 }
-
-#endif

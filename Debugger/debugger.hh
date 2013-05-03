@@ -1,5 +1,4 @@
-#ifndef BOLD_DEBUGGER_HH
-#define BOLD_DEBUGGER_HH
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -67,5 +66,3 @@ namespace bold
     Colour::bgr d_headColour;
   };
 }
-
-#endif

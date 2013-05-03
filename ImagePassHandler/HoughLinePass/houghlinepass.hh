@@ -1,5 +1,4 @@
-#ifndef BOLD_HOUGH_LINE_PASS_HH
-#define BOLD_HOUGH_LINE_PASS_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <vector>
@@ -51,5 +50,3 @@ namespace bold
     }
   };
 }
-
-#endif

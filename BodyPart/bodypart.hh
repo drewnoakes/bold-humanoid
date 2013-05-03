@@ -1,5 +1,4 @@
-#ifndef BOLD_BODYPART_HH
-#define BOLD_BODYPART_HH
+#pragma once
 
 #include <Eigen/Geometry>
 #include <vector>
@@ -110,5 +109,3 @@ namespace bold
   };
 
 }
-
-#endif

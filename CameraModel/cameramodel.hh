@@ -1,5 +1,4 @@
-#ifndef BOLD_CAMERA_MODEL_HH
-#define BOLD_CAMERA_MODEL_HH
+#pragma once
 
 #include <string>
 #include <Eigen/Core>
@@ -84,5 +83,3 @@ namespace bold
     double d_rangeHorizontalDegs;
   };
 }
-
-#endif

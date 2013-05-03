@@ -1,5 +1,4 @@
-#ifndef BOLD_RANDOM_PAIR_LINE_SEGMENT_FINDER_HH
-#define BOLD_RANDOM_PAIR_LINE_SEGMENT_FINDER_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
@@ -155,5 +154,3 @@ namespace bold
     std::vector<bold::Control> d_controls;
   };
 }
-
-#endif

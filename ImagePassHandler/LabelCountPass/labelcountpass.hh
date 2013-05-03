@@ -1,5 +1,4 @@
-#ifndef BOLD_LABEL_COUNT_PASS_HH
-#define BOLD_LABEL_COUNT_PASS_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <vector>
@@ -60,5 +59,3 @@ namespace bold
     std::vector<std::shared_ptr<PixelLabel>> d_labels;
   };
 }
-
-#endif

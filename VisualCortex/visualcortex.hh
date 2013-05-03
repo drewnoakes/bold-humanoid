@@ -1,5 +1,4 @@
-#ifndef BOLD_VISUALCORTEX_HH
-#define BOLD_VISUALCORTEX_HH
+#pragma once
 
 #include <Eigen/Core>
 
@@ -105,5 +104,3 @@ namespace bold
     bool d_shouldDrawHorizon;
   };
 }
-
-#endif

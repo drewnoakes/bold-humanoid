@@ -1,5 +1,4 @@
-#ifndef BOLD_OPTIONTREE_HH
-#define BOLD_OPTIONTREE_HH
+#pragma once
 
 #include "../Option/option.hh"
 #include <map>
@@ -44,5 +43,3 @@ namespace bold
     return d_top;
   }
 }
-
-#endif

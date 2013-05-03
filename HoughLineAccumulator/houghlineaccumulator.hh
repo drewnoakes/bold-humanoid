@@ -1,5 +1,4 @@
-#ifndef BOLD_HOUGHLINEACCUMULATOR_HH
-#define BOLD_HOUGHLINEACCUMULATOR_HH
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -49,5 +48,3 @@ namespace bold
     double getRadius(int x) const;
   };
 }
-
-#endif

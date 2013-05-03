@@ -1,5 +1,4 @@
-#ifndef BOLD_LUTBUILDER_HH
-#define BOLD_LUTBUILDER_HH
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -22,5 +21,3 @@ namespace bold
     static uchar labelPixel(std::vector<std::shared_ptr<PixelLabel>> const& labels, Colour::bgr const& bgr);
   };
 }
-
-#endif

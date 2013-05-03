@@ -1,5 +1,4 @@
-#ifndef BOLD_LINE_DETECT_PASS_HH
-#define BOLD_LINE_DETECT_PASS_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
@@ -97,5 +96,3 @@ namespace bold
     }
   };
 }
-
-#endif

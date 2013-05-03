@@ -1,5 +1,4 @@
-#ifndef BOLD_LINE_RUN_TRACKER_HH
-#define BOLD_LINE_RUN_TRACKER_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <functional>
@@ -132,7 +131,4 @@ namespace bold
     }
     }
   }
-
 }
-
-#endif

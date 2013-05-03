@@ -1,5 +1,4 @@
-#ifndef BOLD_DATA_STREAMER_HH
-#define BOLD_DATA_STREAMER_HH
+#pragma once
 
 #include <memory>
 #include <set>
@@ -100,5 +99,3 @@ namespace bold
     }
   };
 }
-
-#endif

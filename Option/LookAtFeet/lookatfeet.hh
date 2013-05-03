@@ -1,5 +1,4 @@
-#ifndef BOLD_LOOKATFEET_HH
-#define BOLD_LOOKATFEET_HH
+#pragma once
 
 #include "../option.hh"
 #include <minIni.h>
@@ -23,5 +22,3 @@ namespace bold
     double d_feetY;
   };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef BOLD_ADHOCOPTIONTREEBUILDER_HH
-#define BOLD_ADHOCOPTIONTREEBUILDER_HH
+#pragma once
 
 #include "../optiontreebuilder.hh"
 
@@ -21,5 +20,3 @@ namespace bold
                                           std::shared_ptr<Ambulator> ambulator);
   };
 }
-
-#endif

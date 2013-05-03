@@ -1,5 +1,4 @@
-#ifndef BOLD_LINE_HH
-#define BOLD_LINE_HH
+#pragma once
 
 #include <iostream>
 #include <iomanip>
@@ -125,5 +124,3 @@ namespace bold
     double d_theta;
   };
 }
-
-#endif

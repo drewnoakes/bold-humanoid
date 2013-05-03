@@ -1,5 +1,4 @@
-#ifndef BOLD_LOOKATBALL_HH
-#define BOLD_LOOKATBALL_HH
+#pragma once
 
 #include "../option.hh"
 #include "../CameraModel/cameramodel.hh"
@@ -13,12 +12,10 @@ namespace bold
       : Option(id),
 	d_cameraModel(cameraModel)
     {}
-    
+
     OptionList runPolicy() override;
-    
+
   private:
     std::shared_ptr<CameraModel> d_cameraModel;
   };
 }
-
-#endif

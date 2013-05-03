@@ -1,5 +1,4 @@
-#ifndef BOLD_LAZY_HH
-#define BOLD_LAZY_HH
+#pragma once
 
 #include <memory>
 
@@ -74,5 +73,3 @@ namespace bold
     std::function<std::shared_ptr<T>()> d_creator;
   };
 }
-
-#endif

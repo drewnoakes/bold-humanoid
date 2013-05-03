@@ -1,5 +1,4 @@
-#ifndef BOLD_APPROACHBALL_HH
-#define BOLD_APPROACHBALL_HH
+#pragma once
 
 #include "../option.hh"
 
@@ -14,12 +13,10 @@ namespace bold
       : Option(id),
         d_ambulator(ambulator)
     {}
-        
+
     OptionList runPolicy() override;
 
   private:
     std::shared_ptr<Ambulator> d_ambulator;
   };
 }
-
-#endif

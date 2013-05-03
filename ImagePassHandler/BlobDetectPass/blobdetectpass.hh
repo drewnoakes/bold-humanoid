@@ -1,5 +1,4 @@
-#ifndef BOLD_BLOBDETECTPASS_HH
-#define BOLD_BLOBDETECTPASS_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
@@ -50,7 +49,6 @@ namespace bold
       return stream << "Run (y=" << run.y << " x=[" << run.startX << "," << run.endX << "] len=" << run.length() << ")";
     }
   };
-
 
   /** A conjoined set of Runs
    *
@@ -233,8 +231,7 @@ namespace bold
       area(0),
       mean(Eigen::Vector2f::Zero()),
       covar(Eigen::Matrix2f::Zero())
-  {
-  }
+  {}
 
   inline Blob::Blob(Eigen::Vector2i const& _ul, Eigen::Vector2i const& _br,
                     unsigned _area,
@@ -260,8 +257,4 @@ namespace bold
       area < other.area ||
       (area == other.area && mean.y() < other.mean.y());
   }
-
 }
-
-
-#endif

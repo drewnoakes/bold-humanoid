@@ -1,5 +1,4 @@
-#ifndef BOLD_AGENTPOSITION_HH
-#define BOLD_AGENTPOSITION_HH
+#pragma once
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -35,5 +34,3 @@ namespace bold
     double d_theta;
   };
 }
-
-#endif

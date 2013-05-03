@@ -1,5 +1,4 @@
-#ifndef BOLD_PIXELFILTERCHAIN_HH
-#define BOLD_PIXELFILTERCHAIN_HH
+#pragma once
 
 #include <functional>
 #include <opencv2/opencv.hpp>
@@ -23,5 +22,3 @@ namespace bold
     std::vector<std::function<void(unsigned char*)>> d_filters;
   };
 }
-
-#endif

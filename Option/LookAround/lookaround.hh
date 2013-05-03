@@ -1,5 +1,4 @@
-#ifndef BOLD_LOOKAROUND_HH
-#define BOLD_LOOKAROUND_HH
+#pragma once
 
 #include "../option.hh"
 #include <minIni.h>
@@ -29,5 +28,3 @@ namespace bold
     double d_durationVert;
   };
 }
-
-#endif

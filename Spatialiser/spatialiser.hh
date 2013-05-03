@@ -1,5 +1,4 @@
-#ifndef BOLD_SPATIALISER_HH
-#define BOLD_SPATIALISER_HH
+#pragma once
 
 #include <memory>
 #include <Eigen/Core>
@@ -37,5 +36,3 @@ namespace bold
     std::shared_ptr<CameraModel> d_cameraModel;
   };
 }
-
-#endif

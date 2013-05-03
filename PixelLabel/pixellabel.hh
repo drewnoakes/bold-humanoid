@@ -1,5 +1,4 @@
-#ifndef BOLD_PIXEL_LABEL_HH
-#define BOLD_PIXEL_LABEL_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <string>
@@ -57,5 +56,3 @@ namespace bold
 
   std::ostream& operator<<(std::ostream &stream, bold::PixelLabel const& pixelLabel);
 }
-
-#endif

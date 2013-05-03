@@ -1,5 +1,5 @@
-#ifndef BOLD_MOVINGAVERAGE_HH
-#define BOLD_MOVINGAVERAGE_HH
+#pragma once
+
 #include <vector>
 #include <stdexcept>
 
@@ -46,5 +46,3 @@ namespace bold
     unsigned d_windowSize;
   };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef BOLD_HARDWARESTATE_HH
-#define BOLD_HARDWARESTATE_HH
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -40,5 +39,3 @@ namespace bold
     std::vector<std::shared_ptr<MX28Snapshot const>> d_mx28States;
   };
 }
-
-#endif

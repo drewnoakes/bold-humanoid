@@ -1,5 +1,4 @@
-#ifndef BOLD_MATH_HH
-#define BOLD_MATH_HH
+#pragma once
 
 #include <Eigen/Core>
 #include <functional>
@@ -72,5 +71,3 @@ namespace bold
     Math() {}
   };
 }
-
-#endif

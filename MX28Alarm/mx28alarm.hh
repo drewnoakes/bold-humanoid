@@ -1,5 +1,4 @@
-#ifndef BOLD_MX28_ALARM_HH
-#define BOLD_MX28_ALARM_HH
+#pragma once
 
 #include <iostream>
 #include <cassert>
@@ -125,5 +124,3 @@ namespace bold
     uchar d_flags;
   };
 }
-
-#endif

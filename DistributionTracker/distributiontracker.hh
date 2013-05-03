@@ -1,5 +1,4 @@
-#ifndef BOLD_DISTRIBUTION_TRACKER
-#define BOLD_DISTRIBUTION_TRACKER
+#pragma once
 
 #include <stdexcept>
 #include <cmath>
@@ -62,5 +61,3 @@ namespace bold
     unsigned d_count;
   };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef BOLD_CONTROL_COMMAND_HH
-#define BOLD_CONTROL_COMMAND_HH
+#pragma once
 
 #include <cassert>
 #include <functional>
@@ -222,5 +221,3 @@ namespace bold
     std::vector<ControlEnumValue> d_enumValues;
   };
 }
-
-#endif

@@ -1,12 +1,11 @@
-#ifndef BOLD_CIRCLEBALL_HH
-#define BOLD_CIRCLEBALL_HH
+#pragma once
 
 #include "../option.hh"
 
 namespace bold
 {
   class Ambulator;
-  
+
   class CircleBall : public Option
   {
   public:
@@ -21,5 +20,3 @@ namespace bold
     std::shared_ptr<Ambulator> d_ambulator;
   };
 }
-
-#endif

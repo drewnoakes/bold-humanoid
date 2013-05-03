@@ -1,5 +1,4 @@
-#ifndef BOLD_CAMERAFRAMESTATE_HH
-#define BOLD_CAMERAFRAMESTATE_HH
+#pragma once
 
 #include <Eigen/Core>
 
@@ -36,5 +35,3 @@ namespace bold
     std::vector<LineSegment2i> d_observedLineSegments;
   };
 }
-
-#endif

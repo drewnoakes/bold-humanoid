@@ -1,5 +1,4 @@
-#ifndef BOLD_LINE_SEGMENT_2I_HH
-#define BOLD_LINE_SEGMENT_2I_HH
+#pragma once
 
 #include <Eigen/Core>
 #include <opencv2/core/core.hpp>
@@ -56,5 +55,3 @@ namespace bold
     static double fake2dCross(Eigen::Vector2d const& a, Eigen::Vector2d const& b);
   };
 }
-
-#endif

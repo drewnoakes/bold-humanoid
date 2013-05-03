@@ -1,5 +1,4 @@
-#ifndef BOLD_BOUNDS2I_HH
-#define BOLD_BOUNDS2I_HH
+#pragma once
 
 #include "Bounds.hh"
 
@@ -33,5 +32,3 @@ namespace bold
     std::vector<LineSegment2i> getEdges() const;
   };
 }
-
-#endif

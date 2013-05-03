@@ -1,5 +1,4 @@
-#ifndef BOLD_AGENTSTATE_HH
-#define BOLD_AGENTSTATE_HH
+#pragma once
 
 #include <algorithm>
 #include <cassert>
@@ -126,5 +125,3 @@ namespace bold
     return instance;
   }
 }
-
-#endif

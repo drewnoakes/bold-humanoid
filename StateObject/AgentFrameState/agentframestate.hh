@@ -1,5 +1,4 @@
-#ifndef BOLD_AGENTFRAMESTATE_HH
-#define BOLD_AGENTFRAMESTATE_HH
+#pragma once
 
 #include <Eigen/Core>
 
@@ -36,5 +35,3 @@ namespace bold
     std::vector<LineSegment3d> d_observedLineSegments;
   };
 }
-
-#endif

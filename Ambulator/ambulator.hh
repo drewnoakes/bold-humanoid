@@ -1,5 +1,4 @@
-#ifndef BOLD_AMBULATOR_HH
-#define BOLD_AMBULATOR_HH
+#pragma once
 
 #include <minIni.h>
 #include <Eigen/Core>
@@ -55,5 +54,3 @@ namespace bold
     bool d_moveDirSet;
   };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef BOLD_OPTIONTREESTATE_HH
-#define BOLD_OPTIONTREESTATE_HH
+#pragma once
 
 #include "../stateobject.hh"
 #include "../../Option/option.hh"
@@ -22,5 +21,3 @@ namespace bold
     OptionList d_ranOptions;
   };
 }
-
-#endif

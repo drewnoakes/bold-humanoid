@@ -1,5 +1,4 @@
-#ifndef BOLD_AMBULATORSTATE_HH
-#define BOLD_AMBULATORSTATE_HH
+#pragma once
 
 #include "../stateobject.hh"
 
@@ -43,5 +42,3 @@ namespace bold
     double d_bodySwingZ;
   };
 }
-
-#endif

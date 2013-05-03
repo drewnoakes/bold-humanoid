@@ -1,5 +1,4 @@
-#ifndef BOLD_GAME_STATE_HH
-#define BOLD_GAME_STATE_HH
+#pragma once
 
 #include "../stateobject.hh"
 
@@ -179,5 +178,3 @@ namespace bold
     GameStateData d_data;
   };
 }
-
-#endif

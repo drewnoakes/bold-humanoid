@@ -1,5 +1,4 @@
-#ifndef BOLD_PARTICLESTATE_HH
-#define BOLD_PARTICLESTATE_HH
+#pragma once
 
 #include "../StateObject/stateobject.hh"
 #include "../../Filter/ParticleFilter/particlefilter.hh"
@@ -24,5 +23,3 @@ namespace bold
     std::shared_ptr<std::vector<ParticleFilter<3>::Particle> const> d_particles;
   };
 }
-
-#endif

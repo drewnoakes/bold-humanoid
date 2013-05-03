@@ -1,5 +1,4 @@
-#ifndef BOLD_GAME_CONTROLLER_RECEIVER_HH
-#define BOLD_GAME_CONTROLLER_RECEIVER_HH
+#pragma once
 
 #define GAMECONTROLLER_PORT 3838
 
@@ -26,5 +25,3 @@ namespace bold
     std::shared_ptr<Debugger> d_debugger;
   };
 }
-
-#endif

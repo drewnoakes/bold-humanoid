@@ -1,5 +1,4 @@
-#ifndef BOLD_LINE_SEGMENT_3D_HH
-#define BOLD_LINE_SEGMENT_3D_HH
+#pragma once
 
 #include <Eigen/Core>
 #include <stdexcept>
@@ -99,5 +98,3 @@ namespace bold
   typedef LineSegment<double,3> LineSegment3d;
   typedef LineSegment<int,3> LineSegment3i;
 }
-
-#endif

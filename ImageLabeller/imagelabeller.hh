@@ -1,5 +1,4 @@
-#ifndef BOLD_IMAGELABELLER_HH
-#define BOLD_IMAGELABELLER_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 
@@ -45,5 +44,3 @@ namespace bold
     std::shared_ptr<Spatialiser> d_spatialiser;
   };
 }
-
-#endif

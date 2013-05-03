@@ -1,5 +1,4 @@
-#ifndef BOLD_CAMERA_HH
-#define BOLD_CAMERA_HH
+#pragma once
 
 #include <string>
 #include <vector>
@@ -147,5 +146,3 @@ namespace bold
     void initMemoryMapping();
   };
 }
-
-#endif

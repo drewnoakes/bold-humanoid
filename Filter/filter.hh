@@ -1,5 +1,4 @@
-#ifndef BOLD_FILTER_HH
-#define BOLD_FILTER_HH
+#pragma once
 
 #include <Eigen/Core>
 #include <functional>
@@ -23,5 +22,3 @@ namespace bold
     virtual State extract() const = 0;
   };
 }
-
-#endif

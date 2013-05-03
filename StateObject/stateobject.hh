@@ -1,5 +1,4 @@
-#ifndef BOLD_STATE_HH
-#define BOLD_STATE_HH
+#pragma once
 
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
@@ -12,5 +11,3 @@ namespace bold
     virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
   };
 }
-
-#endif

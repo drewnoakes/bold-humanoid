@@ -1,5 +1,4 @@
-#ifndef BOLD_SMOOTHER_HH
-#define BOLD_SMOOTHER_HH
+#pragma once
 
 namespace bold
 {
@@ -41,5 +40,3 @@ namespace bold
     }
   };
 }
-
-#endif

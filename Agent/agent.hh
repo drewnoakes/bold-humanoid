@@ -1,5 +1,4 @@
-#ifndef BOLD_AGENT_HH
-#define BOLD_AGENT_HH
+#pragma once
 
 #include <Eigen/Core>
 #include <minIni.h>
@@ -127,5 +126,3 @@ namespace bold
     void processInputCommands();
   };
 }
-
-#endif

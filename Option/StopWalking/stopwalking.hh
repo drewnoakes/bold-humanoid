@@ -1,5 +1,4 @@
-#ifndef BOLD_STAND_HH
-#define BOLD_STAND_HH
+#pragma once
 
 #include "../option.hh"
 
@@ -23,5 +22,3 @@ namespace bold
     std::shared_ptr<Ambulator> d_ambulator;
   };
 }
-
-#endif

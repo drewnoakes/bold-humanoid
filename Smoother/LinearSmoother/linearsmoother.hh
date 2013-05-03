@@ -1,5 +1,4 @@
-#ifndef BOLD_LINEARSMOOTHER_HH
-#define BOLD_LINEARSMOOTHER_HH
+#pragma once
 
 #include "../smoother.hh"
 
@@ -32,5 +31,3 @@ namespace bold
     double d_delta;
   };
 }
-
-#endif

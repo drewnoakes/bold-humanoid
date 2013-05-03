@@ -1,5 +1,4 @@
-#ifndef BOLD_OPTION_HH
-#define BOLD_OPTION_HH
+#pragma once
 
 #include <list>
 #include <memory>
@@ -25,7 +24,8 @@ namespace bold
    *   action to take at which time
    *
    */
-  class Option {
+  class Option
+  {
   public:
     Option(std::string const& id) : d_id(id) {}
     virtual ~Option() {}
@@ -56,13 +56,8 @@ namespace bold
      * Default: null-pointer
      */
     virtual OptionList runPolicy() { return OptionList(); }
-  private:
 
+  private:
     std::string d_id;
   };
-
 }
-
-#endif
-
-

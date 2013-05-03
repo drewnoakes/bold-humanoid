@@ -1,5 +1,4 @@
-#ifndef BOLD_PARTICLESAMPLERFACTORY_HH
-#define BOLD_PARTICLESAMPLERFACTORY_HH
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -15,5 +14,3 @@ namespace bold
     virtual typename ParticleFilter<DIM>::ParticleSampler create(std::shared_ptr<std::vector<typename bold::ParticleFilter<DIM>::Particle>> const& particles) = 0;
   };
 }
-
-#endif

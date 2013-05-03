@@ -1,5 +1,4 @@
-#ifndef BOLD_CLOCK_HH
-#define BOLD_CLOCK_HH
+#pragma once
 
 namespace bold
 {
@@ -19,6 +18,3 @@ namespace bold
   };
 
 }
-
-#endif
-

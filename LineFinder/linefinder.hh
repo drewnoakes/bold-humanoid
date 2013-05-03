@@ -1,5 +1,4 @@
-#ifndef LINEFINDER_HH
-#define LINEFINDER_HH
+#pragma once
 
 #include <vector>
 #include <Eigen/Core>
@@ -19,5 +18,3 @@ namespace bold
     virtual std::vector<bold::Control> getControls() const { return std::vector<bold::Control>(); };
   };
 }
-
-#endif // LINEFINDER_HH

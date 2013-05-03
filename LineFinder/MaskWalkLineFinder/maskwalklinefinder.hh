@@ -1,5 +1,4 @@
-#ifndef BOLD_MASK_WALK_LINE_SEGMENT_FINDER_HH
-#define BOLD_MASK_WALK_LINE_SEGMENT_FINDER_HH
+#pragma once
 
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
@@ -52,5 +51,3 @@ namespace bold
     std::vector<Control> d_controls;
   };
 }
-
-#endif

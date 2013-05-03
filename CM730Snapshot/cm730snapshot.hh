@@ -1,5 +1,4 @@
-#ifndef BOLD_CM730_SNAPSHOT_HH
-#define BOLD_CM730_SNAPSHOT_HH
+#pragma once
 
 #include <Eigen/Core>
 
@@ -55,5 +54,3 @@ namespace bold
     static Eigen::Vector3d shortToColour(unsigned short s);
   };
 }
-
-#endif
