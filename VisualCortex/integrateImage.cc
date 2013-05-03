@@ -46,27 +46,36 @@ void VisualCortex::integrateImage(Mat& image)
   if (blobsPerLabel[d_ballLabel].size() > 0)
   {
     // The first is the biggest, topmost ball blob
-    Blob const& ball = *blobsPerLabel[d_ballLabel].begin();
-
-    if (ball.area > d_minBallArea)
+    for (Blob const& ballBlob : blobsPerLabel[d_ballLabel])
     {
-      Vector2f pos = ball.mean;
-      // Take the bottom of the ball as observation
-      // TODO take the curvature of the ball into account -- project middle of blob on the plane z=ballRadius
+      if (ballBlob.area < d_minBallArea)
+        break;
+
+      Vector2f pos = ballBlob.mean;
+
       // TODO discard blobs that would be too large/small for the ball we expect at that position of the frame
-      pos.y() = ball.ul.y();
-      ballPosition = Maybe<Vector2f>(pos);
+//       d_cameraModel->directionForPixel(pos);
+      bool isCorrectSizeForPosition = true;
+
+      if (isCorrectSizeForPosition)
+      {
+        // TODO take the curvature of the ball into account -- project middle of blob on the plane z=ballRadius
+        // Take the bottom of the ball as observation
+        pos.y() = ballBlob.ul.y();
+        ballPosition = Maybe<Vector2f>(pos);
+      }
     }
   }
 
   // Do we have goal posts?
-  for (Blob const& b : blobsPerLabel[d_goalLabel])
+  for (Blob const& goalBlob : blobsPerLabel[d_goalLabel])
   {
-    Vector2i wh = b.br - b.ul;
+    // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
+    Vector2i wh = goalBlob.br - goalBlob.ul;
     if (wh.minCoeff() > 5 &&  // Ignore small blobs
         wh.y() > wh.x())      // Taller than it is wide
     {
-      Run const& topRun = *b.runs.begin();
+      Run const& topRun = *goalBlob.runs.begin();
 
       // Take center of topmost run (the first)
       Vector2f pos(
