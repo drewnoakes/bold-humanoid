@@ -1,6 +1,6 @@
 #include "camera.ih"
 
-cv::Mat Camera::capture()
+Mat Camera::capture()
 {
   v4l2_buffer buf;
   memset(&buf, 0, sizeof(buf));
@@ -20,7 +20,7 @@ cv::Mat Camera::capture()
     exit(-1);
   }
 
-  cv::Mat img(d_pixelFormat.height, d_squash ? d_pixelFormat.width / 2 : d_pixelFormat.width, CV_8UC3);
+  Mat img(d_pixelFormat.height, d_squash ? d_pixelFormat.width / 2 : d_pixelFormat.width, CV_8UC3);
 
   unsigned char* datCursor = d_buffers[buf.index].start;
   unsigned char* datEnd = datCursor + 4 * d_pixelFormat.height * d_pixelFormat.width / 2;

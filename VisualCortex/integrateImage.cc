@@ -61,8 +61,8 @@ void VisualCortex::integrateImage(cv::Mat& image)
   for (Blob const& b : blobsPerLabel[d_goalLabel])
   {
     Vector2i wh = b.br - b.ul;
-    if (wh.minCoeff() > 5  &&  // ignore small blobs
-        wh.y() > wh.x())       // Higher than it is lower
+    if (wh.minCoeff() > 5 &&  // Ignore small blobs
+        wh.y() > wh.x())      // Taller than it is wide
     {
       Run const& topRun = *b.runs.begin();
 

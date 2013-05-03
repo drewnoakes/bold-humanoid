@@ -1,14 +1,13 @@
 #include "camera.hh"
 
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stropts.h>
-
 #include <cstring>
-
+#include <fcntl.h>
 #include <iostream>
+#include <stropts.h>
+#include <sys/stat.h>
 
 #include "../Control/control.hh"
 
+using namespace cv;
 using namespace bold;
 using namespace std;
