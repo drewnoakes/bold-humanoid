@@ -59,7 +59,7 @@ namespace bold
     Blob();
     Blob(Eigen::Vector2i const& _ul, Eigen::Vector2i const& _br,
          unsigned _area,
-         Eigen::Vector2f _mean, Eigen::Matrix2f _covar,
+         Eigen::Vector2d _mean, // Eigen::Matrix2d _covar,
          std::set<Run> const& _runs);
 
     cv::Rect toRect() const;
@@ -70,8 +70,8 @@ namespace bold
     Eigen::Vector2i ul;      ///< Upper left pixel
     Eigen::Vector2i br;      ///< Bottom righ pixel
     unsigned area;           ///< Number of pixes in blob
-    Eigen::Vector2f mean;    ///< Mean
-    Eigen::Matrix2f covar;   ///< Covarience
+    Eigen::Vector2d mean;    ///< Mean
+//     Eigen::Matrix2d covar;   ///< Covarience
 
     std::set<Run> runs;      ///< Runs in this blob
 
@@ -229,19 +229,19 @@ namespace bold
     : ul(1e6,1e6),
       br(-1,-1),
       area(0),
-      mean(Eigen::Vector2f::Zero()),
-      covar(Eigen::Matrix2f::Zero())
+      mean(Eigen::Vector2d::Zero())
+//       covar(Eigen::Matrix2d::Zero()
   {}
 
   inline Blob::Blob(Eigen::Vector2i const& _ul, Eigen::Vector2i const& _br,
                     unsigned _area,
-                    Eigen::Vector2f _mean, Eigen::Matrix2f _covar,
+                    Eigen::Vector2d _mean, //Eigen::Matrix2d _covar,
                     std::set<Run> const& _runs)
     : ul(_ul),
       br(_br),
       area(_area),
       mean(_mean),
-      covar(_covar),
+//       covar(_covar),
       runs(_runs)
   {}
 

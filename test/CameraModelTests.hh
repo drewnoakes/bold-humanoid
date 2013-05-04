@@ -21,22 +21,22 @@ TEST (CameraModelTests, directionForPixel)
                            rangeVerticalDegs, rangeHorizontalDegs);
 
   EXPECT_TRUE ( VectorsEqual(Vector3d(0, 1, 0).normalized(),
-                             cameraModel1.directionForPixel(Vector2i(5, 5)) ) );
+                             cameraModel1.directionForPixel(Vector2d(5.5, 5.5)) ) );
 
   EXPECT_TRUE ( VectorsEqual(Vector3d(1, 1, 0).normalized(),
-                             cameraModel1.directionForPixel(Vector2i( 0, 5)) ) );
+                             cameraModel1.directionForPixel(Vector2d( 0, 5.5)) ) );
   EXPECT_TRUE ( VectorsEqual(Vector3d(-1, 1, 0).normalized(),
-                             cameraModel1.directionForPixel(Vector2i(10, 5)) ) );
+                             cameraModel1.directionForPixel(Vector2d(11, 5.5)) ) );
 
   EXPECT_TRUE ( VectorsEqual(Vector3d(0, 1, -1).normalized(),
-                             cameraModel1.directionForPixel(Vector2i(5,  0)) ) );
+                             cameraModel1.directionForPixel(Vector2d(5.5,  0)) ) );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0, 1,  1).normalized(),
-                             cameraModel1.directionForPixel(Vector2i(5, 10)) ) );
+                             cameraModel1.directionForPixel(Vector2d(5.5, 11)) ) );
 
   auto v = Vector3d( -1, 1, 0).normalized();
-  v.x() *= 2.0/5.0;
+  v.x() *= 2.0/5.5;
   EXPECT_TRUE ( VectorsEqual(v.normalized(),
-                             cameraModel1.directionForPixel(Vector2i(7,  5)) ) );
+                             cameraModel1.directionForPixel(Vector2d(7.5,  5.5)) ) );
 
   rangeVerticalDegs = 45;
   rangeHorizontalDegs = 60;
@@ -49,17 +49,17 @@ TEST (CameraModelTests, directionForPixel)
                            rangeVerticalDegs, rangeHorizontalDegs);
 
   EXPECT_TRUE ( VectorsEqual(Vector3d(0, 1, 0).normalized(),
-                             cameraModel2.directionForPixel(Vector2i(5, 5)) ) );
+                             cameraModel2.directionForPixel(Vector2d(5.5, 5.5)) ) );
 
   EXPECT_TRUE ( VectorsEqual(Vector3d(th, 1, 0).normalized(),
-                             cameraModel2.directionForPixel(Vector2i( 0, 5)) ) );
+                             cameraModel2.directionForPixel(Vector2d( 0, 5.5)) ) );
   EXPECT_TRUE ( VectorsEqual(Vector3d(-th, 1, 0).normalized(),
-                             cameraModel2.directionForPixel(Vector2i(10, 5)) ) );
+                             cameraModel2.directionForPixel(Vector2d(11, 5.5)) ) );
 
   EXPECT_TRUE ( VectorsEqual(Vector3d(0, 1, -tv).normalized(),
-                             cameraModel2.directionForPixel(Vector2i(5,  0)) ) );
+                             cameraModel2.directionForPixel(Vector2d(5.5,  0)) ) );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0, 1,  tv).normalized(),
-                             cameraModel2.directionForPixel(Vector2i(5, 10)) ) );
+                             cameraModel2.directionForPixel(Vector2d(5.5, 11)) ) );
 
 }
 
@@ -73,22 +73,22 @@ TEST (CameraModelTests, pixelForDirection)
 
   CameraModel cameraModel1(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
 
-  EXPECT_EQ ( Maybe<Vector2i>::empty(), cameraModel1.pixelForDirection(Vector3d(0,0,0)) );
-  EXPECT_EQ ( Maybe<Vector2i>::empty(), cameraModel1.pixelForDirection(Vector3d(1,0,0)) );
-  EXPECT_EQ ( Maybe<Vector2i>::empty(), cameraModel1.pixelForDirection(Vector3d(0,0,1)) );
-  EXPECT_EQ ( Maybe<Vector2i>::empty(), cameraModel1.pixelForDirection(Vector3d(1,-1,1)) );
+  EXPECT_EQ ( Maybe<Vector2d>::empty(), cameraModel1.pixelForDirection(Vector3d(0,  0, 0)) );
+  EXPECT_EQ ( Maybe<Vector2d>::empty(), cameraModel1.pixelForDirection(Vector3d(1,  0, 0)) );
+  EXPECT_EQ ( Maybe<Vector2d>::empty(), cameraModel1.pixelForDirection(Vector3d(0,  0, 1)) );
+  EXPECT_EQ ( Maybe<Vector2d>::empty(), cameraModel1.pixelForDirection(Vector3d(1, -1, 1)) );
 
-  EXPECT_EQ ( Vector2i(5,5), *cameraModel1.pixelForDirection(Vector3d(0, 1, 0)).value() );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(5.5, 5.5), *cameraModel1.pixelForDirection(Vector3d(0, 1, 0)).value() ) );
 
-  EXPECT_EQ ( Vector2i(0,5), *cameraModel1.pixelForDirection(Vector3d(1, 1, 0)).value() );
-  EXPECT_EQ ( Vector2i(10,5), *cameraModel1.pixelForDirection(Vector3d(-1, 1, 0)).value() );
+  EXPECT_TRUE ( VectorsEqual( Vector2d( 0.5, 5.5), *cameraModel1.pixelForDirection(Vector3d( 1, 1, 0)).value() ) );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(10.5, 5.5), *cameraModel1.pixelForDirection(Vector3d(-1, 1, 0)).value() ) );
 
-  EXPECT_EQ ( Vector2i(5,0), *cameraModel1.pixelForDirection(Vector3d(0, 1, -1)).value() );
-  EXPECT_EQ ( Vector2i(5, 10), *cameraModel1.pixelForDirection(Vector3d(0, 1, 1)).value() );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(5.5,  0.5), *cameraModel1.pixelForDirection(Vector3d(0, 1, -1)).value() ) );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(5.5, 10.5), *cameraModel1.pixelForDirection(Vector3d(0, 1,  1)).value() ) );
 
-  auto v = Vector3d( -1, 1, 0).normalized();
+  auto v = Vector3d(-1, 1, 0).normalized();
   v.x() *= 2.0/5.0;
-  EXPECT_EQ ( Vector2i(7, 5), *cameraModel1.pixelForDirection(v).value() );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(7.5, 5.5), *cameraModel1.pixelForDirection(v).value() ) );
 
   // 2 time range
   rangeVerticalDegs = 45;
@@ -99,11 +99,11 @@ TEST (CameraModelTests, pixelForDirection)
   double th = tan(.5 * 60.0 / 180.0 * M_PI);
   double tv = tan(.5 * 45.0 / 180.0 * M_PI);
 
-  EXPECT_EQ ( Vector2i(5,5), *cameraModel2.pixelForDirection(Vector3d(0, 1, 0)).value() );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(5.5, 5.5), *cameraModel2.pixelForDirection(Vector3d(0, 1, 0)).value() ) );
 
-  EXPECT_EQ ( Vector2i(0,5), *cameraModel2.pixelForDirection(Vector3d(th, 1, 0)).value() );
-  EXPECT_EQ ( Vector2i(10,5), *cameraModel2.pixelForDirection(Vector3d(-th, 1, 0)).value() );
+  EXPECT_TRUE ( VectorsEqual( Vector2d( 0.5, 5.5), *cameraModel2.pixelForDirection(Vector3d(th, 1, 0)).value() ) );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(10.5, 5.5), *cameraModel2.pixelForDirection(Vector3d(-th, 1, 0)).value() ) );
 
-  EXPECT_EQ ( Vector2i(5,0), *cameraModel2.pixelForDirection(Vector3d(0, 1, -tv)).value() );
-  EXPECT_EQ ( Vector2i(5, 10), *cameraModel2.pixelForDirection(Vector3d(0, 1, tv)).value() );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(5.5,  0.5), *cameraModel2.pixelForDirection(Vector3d(0, 1, -tv)).value() ) );
+  EXPECT_TRUE ( VectorsEqual( Vector2d(5.5, 10.5), *cameraModel2.pixelForDirection(Vector3d(0, 1, tv)).value() ) );
 }

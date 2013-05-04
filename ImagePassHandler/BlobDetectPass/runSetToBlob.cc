@@ -43,20 +43,19 @@ Blob BlobDetectPass::runSetToBlob(set<Run> const& runSet)
     b.covar(1,1) += run.length * y * y;
     */
 
-    for (int x = run.startX; x <= run.endX; ++x)
-    {
-      b.covar += Vector2f(x, y) * Vector2f(x, y).transpose();
-      //b.covar(0,0) += x * x;
-      //b.covar(0,1) += x * y;
-      //b.covar(1,1) += y * y;
-    }
+//    for (int x = run.startX; x <= run.endX; ++x)
+//    {
+//      b.covar += Vector2d(x, y) * Vector2d(x, y).transpose();
+//      //b.covar(0,0) += x * x;
+//      //b.covar(0,1) += x * y;
+//      //b.covar(1,1) += y * y;
+//    }
   }
 
   b.mean /= b.area;
 
-  b.covar /= b.area;
-
-  b.covar -= b.mean * b.mean.transpose();
+//   b.covar /= b.area;
+//   b.covar -= b.mean * b.mean.transpose();
 
   //b.covar(1,0) = b.covar(0,1);
 

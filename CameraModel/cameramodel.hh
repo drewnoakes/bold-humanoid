@@ -9,7 +9,7 @@
 
 namespace bold
 {
-  typedef std::function<Eigen::Vector2i(Eigen::Vector3d const&)> Projector;
+  typedef std::function<Eigen::Vector2d(Eigen::Vector3d const&)> Projector;
 
   class CameraModel
   {
@@ -42,9 +42,9 @@ namespace bold
     /** Gets the direction, in camera coordinates, of the specified pixel.
      * Returns a unit vector.
      */
-    Eigen::Vector3d directionForPixel(Eigen::Vector2i const& pixel) const;
+    Eigen::Vector3d directionForPixel(Eigen::Vector2d const& pixel) const;
 
-    Maybe<Eigen::Vector2i> pixelForDirection(Eigen::Vector3d const& direction) const;
+    Maybe<Eigen::Vector2d> pixelForDirection(Eigen::Vector3d const& direction) const;
 
     /** Gets a projection matrix
      *

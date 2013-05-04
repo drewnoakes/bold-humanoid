@@ -39,8 +39,8 @@ void VisualCortex::integrateImage(Mat& image)
   // UPDATE STATE
   //
 
-  vector<Vector2f> goalPositions;
-  Maybe<Vector2f> ballPosition = Maybe<Vector2f>::empty();
+  vector<Vector2d> goalPositions;
+  Maybe<Vector2d> ballPosition = Maybe<Vector2d>::empty();
 
   // Do we have a ball?
   if (blobsPerLabel[d_ballLabel].size() > 0)
@@ -51,7 +51,7 @@ void VisualCortex::integrateImage(Mat& image)
       if (ballBlob.area < d_minBallArea)
         break;
 
-      Vector2f pos = ballBlob.mean;
+      Vector2d pos = ballBlob.mean;
 
       // TODO discard blobs that would be too large/small for the ball we expect at that position of the frame
 //       d_cameraModel->directionForPixel(pos);
@@ -62,7 +62,7 @@ void VisualCortex::integrateImage(Mat& image)
         // TODO take the curvature of the ball into account -- project middle of blob on the plane z=ballRadius
         // Take the bottom of the ball as observation
         pos.y() = ballBlob.ul.y();
-        ballPosition = Maybe<Vector2f>(pos);
+        ballPosition = Maybe<Vector2d>(pos);
       }
     }
   }
@@ -78,7 +78,7 @@ void VisualCortex::integrateImage(Mat& image)
       Run const& topRun = *goalBlob.runs.begin();
 
       // Take center of topmost run (the first)
-      Vector2f pos(
+      Vector2d pos(
         (topRun.endX + topRun.startX) / 2.0f,
         topRun.y
       );

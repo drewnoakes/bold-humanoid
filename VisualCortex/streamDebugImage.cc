@@ -103,9 +103,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
 
       if (p1.hasValue() && p2.hasValue())
       {
-        auto p1v = *p1.value();
-        auto p2v = *p2.value();
-        auto max = Vector2i(320,240); // TODO get this properly
+        auto p1v = (*p1.value()).cast<int>();
+        auto p2v = (*p2.value()).cast<int>();
+        auto max = Vector2i(320, 240); // TODO get this properly
         if (p1v != p2v)
         {
           LineSegment2i line2i(max - p1v, max - p2v);
