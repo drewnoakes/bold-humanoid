@@ -5,7 +5,7 @@ double ActionOption::hasTerminated()
   if (!d_started)
     return false;
 
-  auto actionModule = Robot::Action::GetInstance();
+  auto actionModule = robotis::Action::GetInstance();
   // It could be we're running something else?
   if (actionModule->IsRunning())
     return 0.0;

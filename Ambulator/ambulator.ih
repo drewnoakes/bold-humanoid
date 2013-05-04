@@ -9,5 +9,5 @@
 #include <iostream>
 
 using namespace bold;
-using namespace Robot;
+using namespace robotis;
 using namespace std;

@@ -11,5 +11,5 @@
 #include "../StateObject/DebugState/debugstate.hh"
 
 using namespace bold;
-using namespace Robot;
+using namespace robotis;
 using namespace std;

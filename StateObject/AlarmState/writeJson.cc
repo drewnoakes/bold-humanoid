@@ -3,7 +3,7 @@
 using namespace std;
 using namespace bold;
 using namespace rapidjson;
-using namespace Robot;
+using namespace robotis;
 
 void AlarmState::writeJson(Writer<StringBuffer>& writer) const
 {

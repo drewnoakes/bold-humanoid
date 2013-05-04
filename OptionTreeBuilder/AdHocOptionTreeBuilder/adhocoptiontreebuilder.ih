@@ -24,4 +24,4 @@
 
 using namespace bold;
 using namespace std;
-using namespace Robot;
+using namespace robotis;

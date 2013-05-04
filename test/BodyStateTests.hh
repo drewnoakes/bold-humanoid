@@ -7,7 +7,7 @@
 using namespace std;
 using namespace bold;
 using namespace Eigen;
-using namespace Robot;
+using namespace robotis;
 
 TEST (BodyStateTests, posture)
 {

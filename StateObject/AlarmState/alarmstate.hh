@@ -15,12 +15,12 @@ namespace bold
     AlarmState(std::vector<MX28Alarm> alarmLedByJointId)
     : d_alarmLedByJointId(alarmLedByJointId)
     {
-      assert(alarmLedByJointId.size() == Robot::JointData::NUMBER_OF_JOINTS);
+      assert(alarmLedByJointId.size() == robotis::JointData::NUMBER_OF_JOINTS);
     }
 
     MX28Alarm const getAlarmLed(unsigned jointId) const
     {
-      assert(jointId > 0 && jointId < Robot::JointData::NUMBER_OF_JOINTS);
+      assert(jointId > 0 && jointId < robotis::JointData::NUMBER_OF_JOINTS);
 
       return d_alarmLedByJointId[jointId];
     }

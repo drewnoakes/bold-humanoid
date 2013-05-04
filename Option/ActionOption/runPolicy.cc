@@ -2,7 +2,7 @@
 
 OptionList ActionOption::runPolicy()
 {
-  auto actionModule = Robot::Action::GetInstance();
+  auto actionModule = robotis::Action::GetInstance();
   if (!d_started && !actionModule->IsRunning())
   {
     cout << "[ActionOption::runPolicy] Starting Action: " << getID() << endl;

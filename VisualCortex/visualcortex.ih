@@ -35,4 +35,4 @@ using namespace bold;
 using namespace cv;
 using namespace Eigen;
 using namespace std;
-using namespace Robot;
+using namespace robotis;

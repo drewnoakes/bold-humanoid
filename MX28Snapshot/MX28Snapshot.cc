@@ -4,7 +4,7 @@
 #include "mx28snapshot.hh"
 
 using namespace bold;
-using namespace Robot;
+using namespace robotis;
 
 double MX28Snapshot::angleValueToRads(unsigned int value)
 {
@@ -26,7 +26,7 @@ double MX28Snapshot::valueToRPM(unsigned int value)
     return ((int)value - 1024) * 0.052733333;
 }
 
-MX28Snapshot::MX28Snapshot(Robot::BulkReadData& data, int const mx28ID)
+MX28Snapshot::MX28Snapshot(BulkReadData& data, int const mx28ID)
 {
   // documentation: http://support.robotis.com/en/product/dynamixel/rx_series/mx-28.htm
 

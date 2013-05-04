@@ -5,7 +5,7 @@ bool Agent::initMotionManager(minIni const& ini)
   MotionManager* motionManager = MotionManager::GetInstance();
 
   Walking* walkingModule = Walking::GetInstance();
-  Robot::Action* actionModule = Robot::Action::GetInstance();
+  robotis::Action* actionModule = robotis::Action::GetInstance();
   Head* headModule = Head::GetInstance();
 
   cout << "[Agent::init] Initialising motion manager" << endl;

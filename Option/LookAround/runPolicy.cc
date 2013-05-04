@@ -60,8 +60,8 @@ OptionList LookAround::runPolicy()
   }
 
   // Move to the calculated position
-  Robot::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
-  Robot::Head::GetInstance()->MoveByAngle(hAngle, vAngle);
+  robotis::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
+  robotis::Head::GetInstance()->MoveByAngle(hAngle, vAngle);
 
   // TODO rename robotis's MoveByAngle to MoveToAngle
 

@@ -2,7 +2,7 @@
 
 #include <Eigen/Core>
 
-namespace Robot
+namespace robotis
 {
   class BulkReadData;
 }
@@ -44,7 +44,7 @@ namespace bold
 
     CM730Snapshot() {}
 
-    CM730Snapshot(Robot::BulkReadData& data);
+    CM730Snapshot(robotis::BulkReadData& data);
 
   private:
     static unsigned short readTableWord(unsigned char* table, int addr);

@@ -9,7 +9,7 @@ namespace bold
   class AmbulatorState : public StateObject
   {
   public:
-    AmbulatorState(double targetX, double targetY, double targetTurn, Robot::Walking* walker)
+    AmbulatorState(double targetX, double targetY, double targetTurn, robotis::Walking* walker)
     : d_targetX(targetX),
       d_targetY(targetY),
       d_targetTurn(targetTurn),
@@ -21,15 +21,15 @@ namespace bold
       d_bodySwingY(walker->GetBodySwingY()),
       d_bodySwingZ(walker->GetBodySwingZ())
     {
-      Robot::JointData jd = walker->m_Joint;
-      for (unsigned j = 1; j < Robot::JointData::NUMBER_OF_JOINTS; j++)
+      robotis::JointData jd = walker->m_Joint;
+      for (unsigned j = 1; j < robotis::JointData::NUMBER_OF_JOINTS; j++)
         d_enabled[j] = jd.GetEnable(j);
     }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
-    bool d_enabled[Robot::JointData::NUMBER_OF_JOINTS];
+    bool d_enabled[robotis::JointData::NUMBER_OF_JOINTS];
     double d_targetX;
     double d_targetY;
     double d_targetTurn;

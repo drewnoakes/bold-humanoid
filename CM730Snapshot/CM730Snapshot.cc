@@ -3,7 +3,7 @@
 #include "cm730snapshot.hh"
 #include "../robotis/Framework/include/CM730.h"
 
-using namespace Robot;
+using namespace robotis;
 using namespace Eigen;
 using namespace bold;
 
@@ -42,7 +42,7 @@ Vector3d CM730Snapshot::shortToColour(unsigned short s)
     b / 31.0);
 }
 
-CM730Snapshot::CM730Snapshot(Robot::BulkReadData& data)
+CM730Snapshot::CM730Snapshot(robotis::BulkReadData& data)
 {
   // documentation: http://support.robotis.com/en/product/darwin-op/references/reference/hardware_specifications/electronics/sub_controller_(cm-730).htm
 

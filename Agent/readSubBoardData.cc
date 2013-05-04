@@ -40,7 +40,7 @@ void Agent::readSubBoardData()
   bool hasAlarmChanged = false;
   vector<MX28Alarm> alarmLedByJointId;
   alarmLedByJointId.push_back(MX28Alarm()); // offset, as jointIds start at 1
-  for (unsigned jointId = 1; jointId < Robot::JointData::NUMBER_OF_JOINTS; jointId++)
+  for (unsigned jointId = 1; jointId < robotis::JointData::NUMBER_OF_JOINTS; jointId++)
   {
     // TODO do we need to examine mx28.alarmShutdown as well? it seems to hold the same flags as mx28.alarmLed
     auto alarmLed = hw->getMX28State(jointId)->alarmLed;

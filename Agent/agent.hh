@@ -9,7 +9,7 @@
 
 class Joystick;
 
-namespace Robot
+namespace robotis
 {
   class CM730;
   class LinuxCM730;
@@ -75,9 +75,9 @@ namespace bold
     bool d_ignoreGameController;
 
     // Modules
-    std::shared_ptr<Robot::LinuxCM730> d_linuxCM730;
-    std::shared_ptr<Robot::CM730> d_CM730;
-    std::shared_ptr<Robot::LinuxMotionTimer> d_motionTimer;
+    std::shared_ptr<robotis::LinuxCM730> d_linuxCM730;
+    std::shared_ptr<robotis::CM730> d_CM730;
+    std::shared_ptr<robotis::LinuxMotionTimer> d_motionTimer;
 
     std::shared_ptr<Ambulator> d_ambulator;
     std::shared_ptr<Camera> d_camera;

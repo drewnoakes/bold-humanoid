@@ -34,7 +34,7 @@
 #include <iostream>
 #include <LinuxDARwIn.h>
 
-using namespace Robot;
+using namespace robotis;
 using namespace std;
 using namespace bold;
 using namespace Eigen;

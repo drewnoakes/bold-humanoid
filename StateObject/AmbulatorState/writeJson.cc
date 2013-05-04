@@ -35,7 +35,7 @@ void AmbulatorState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("enabled");
     writer.StartArray();
     {
-      for (unsigned j = 1; j < Robot::JointData::NUMBER_OF_JOINTS; j++)
+      for (unsigned j = 1; j < robotis::JointData::NUMBER_OF_JOINTS; j++)
         writer.Bool(d_enabled[j]);
     }
     writer.EndArray();

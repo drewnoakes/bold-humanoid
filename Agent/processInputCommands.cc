@@ -90,13 +90,13 @@ void Agent::processInputCommands()
           // Action 13 -> Left kick
           case 6:
             cout << "Left kick" << endl;
-            Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
-            Robot::Action::GetInstance()->Start(13);
+            robotis::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
+            robotis::Action::GetInstance()->Start(13);
             break;
           case 7:
             cout << "Right kick" << endl;
-            Robot::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
-            Robot::Action::GetInstance()->Start(12);
+            robotis::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
+            robotis::Action::GetInstance()->Start(12);
             break;
           default:
             if (event.value == 1)

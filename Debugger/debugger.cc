@@ -17,7 +17,7 @@ Debugger::Debugger()
   // TODO intial head/eye colour not well defined
 }
 
-Clock::Timestamp Debugger::timeEvent(Clock::Timestamp const& startedAt, std::string const& eventName)
+Clock::Timestamp Debugger::timeEvent(Clock::Timestamp const& startedAt, string const& eventName)
 {
   auto timeSeconds = Clock::getSeconds(startedAt);
   addEventTiming(EventTiming(timeSeconds, eventName));
@@ -29,7 +29,7 @@ void Debugger::addEventTiming(EventTiming const& eventTiming)
   d_eventTimings->push_back(eventTiming);
 }
 
-void Debugger::update(std::shared_ptr<Robot::CM730> cm730)
+void Debugger::update(shared_ptr<CM730> cm730)
 {
   //
   // Update Hardware LEDs

@@ -36,7 +36,7 @@ namespace bold
 
     std::shared_ptr<Joint const> getJoint(unsigned jointId) const
     {
-      assert(jointId > 0 && jointId < Robot::JointData::NUMBER_OF_JOINTS);
+      assert(jointId > 0 && jointId < robotis::JointData::NUMBER_OF_JOINTS);
 
       // NOTE cannot use '[]' on a const map
       auto const& i = d_jointById.find(jointId);
@@ -47,7 +47,7 @@ namespace bold
 
     void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
     {
-      for (unsigned jointId = 1; jointId < Robot::JointData::NUMBER_OF_JOINTS; jointId++)
+      for (unsigned jointId = 1; jointId < robotis::JointData::NUMBER_OF_JOINTS; jointId++)
       {
         auto joint = getJoint(jointId);
         action(joint);
