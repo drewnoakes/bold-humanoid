@@ -27,4 +27,12 @@ tools/output.png
 www/.idea
 cachegrind*
 TAGS
+__pycache__
+_bold.so
+bold.py
+*.dot
 
+swig/boldpyPYTHON_wrap.cxx
+tools/labelled.jpg
+tools/luttest
+tools/output.jpg
