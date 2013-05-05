@@ -104,11 +104,9 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  minIni ini(confFile);
-
   agent = new Agent(
     U2D_DEV_NAME0,
-    ini,
+    confFile,
     MOTION_FILE_PATH,
     teamNumber,
     uniformNumber,

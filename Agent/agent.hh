@@ -43,7 +43,7 @@ namespace bold
   {
   public:
     Agent(std::string const& U2D_dev,
-          minIni const& ini,
+          std::string const& confFile,
           std::string const& motionFile,
           unsigned teamNumber,
           unsigned uniformNumber,
@@ -59,6 +59,7 @@ namespace bold
   private:
     bool d_haveBody;
     bool d_isRunning;
+    minIni d_ini;
     std::string d_motionFile;
     unsigned d_teamNumber;
     unsigned d_uniformNumber;

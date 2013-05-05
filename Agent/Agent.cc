@@ -1,7 +1,7 @@
 #include "agent.ih"
 
 Agent::Agent(string const& U2D_dev,
-             minIni const& ini,
+             string const& confFile,
              string const& motionFile,
              unsigned teamNumber,
              unsigned uniformNumber,
@@ -12,6 +12,7 @@ Agent::Agent(string const& U2D_dev,
              bool ignoreGameController
   )
   : d_isRunning(false),
+    d_ini(confFile),
     d_motionFile(motionFile),
     d_teamNumber(teamNumber),
     d_uniformNumber(uniformNumber),
@@ -28,24 +29,24 @@ Agent::Agent(string const& U2D_dev,
   d_CM730 = make_shared<CM730>(d_linuxCM730.get());
   d_CM730->MakeBulkReadPacket();
 
-  d_ambulator = make_shared<Ambulator>(ini),
+  d_ambulator = make_shared<Ambulator>(d_ini),
 
-  d_cameraModel = make_shared<CameraModel>(ini);
+  d_cameraModel = make_shared<CameraModel>(d_ini);
 
   d_spatialiser = make_shared<Spatialiser>(d_cameraModel);
 
-  d_fieldMap = make_shared<FieldMap>(ini);
+  d_fieldMap = make_shared<FieldMap>(d_ini);
 
   d_debugger = make_shared<Debugger>();
 
-  d_localiser = make_shared<Localiser>(d_fieldMap, ini);
+  d_localiser = make_shared<Localiser>(d_fieldMap, d_ini);
 
-  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, ini);
+  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, d_ini);
 
-  d_gameStateReceiver = make_shared<GameStateReceiver>(ini, d_debugger);
+  d_gameStateReceiver = make_shared<GameStateReceiver>(d_ini, d_debugger);
 
   AdHocOptionTreeBuilder optionTreeBuilder;
-  d_optionTree = optionTreeBuilder.buildTree(ini,
+  d_optionTree = optionTreeBuilder.buildTree(d_ini,
                                              d_teamNumber,
                                              d_uniformNumber,
                                              d_ignoreGameController,
@@ -56,15 +57,15 @@ Agent::Agent(string const& U2D_dev,
   if (useJoystick)
   {
     d_joystick = make_shared<Joystick>(1);
-    d_joystickXAmpMax = ini.getd("Joystick", "XAmpMax", 15);
-    d_joystickYAmpMax = ini.getd("Joystick", "YAmpMax", 15);
-    d_joystickAAmpMax = ini.getd("Joystick", "AAmpMax", 15);
+    d_joystickXAmpMax = d_ini.getd("Joystick", "XAmpMax", 15);
+    d_joystickYAmpMax = d_ini.getd("Joystick", "YAmpMax", 15);
+    d_joystickAAmpMax = d_ini.getd("Joystick", "AAmpMax", 15);
   }
 
-  initCamera(ini);
+  initCamera(d_ini);
 
   // TODO only stream if argument specified?
-  d_streamer = make_shared<DataStreamer>(ini, d_camera, d_debugger);
+  d_streamer = make_shared<DataStreamer>(d_ini, d_camera, d_debugger);
 
   // TODO a better abstraction over control providers
   d_streamer->registerControls("camera", d_camera->getControls());
@@ -74,7 +75,7 @@ Agent::Agent(string const& U2D_dev,
 
   d_debugger->update(d_CM730);
 
-  d_haveBody = initMotionManager(ini);
+  d_haveBody = initMotionManager(d_ini);
 
   cout << "[Agent::Agent] Done" << endl;
 }
