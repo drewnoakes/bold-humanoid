@@ -8,6 +8,7 @@ void Agent::readSubBoardData()
   // READ HARDWARESTATE (input)
   //
 
+  // TODO don't call this every step
   d_CM730->MakeBulkReadPacket();
   int res = d_CM730->BulkRead();
 
