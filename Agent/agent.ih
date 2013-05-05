@@ -32,7 +32,13 @@
 #include "../VisualCortex/visualcortex.hh"
 
 #include <iostream>
-#include <LinuxDARwIn.h>
+
+#include <Action.h>
+#include <Head.h>
+#include <LinuxCM730.h>
+#include <LinuxMotionTimer.h>
+#include <MotionManager.h>
+#include <MX28.h>
 
 using namespace robotis;
 using namespace std;

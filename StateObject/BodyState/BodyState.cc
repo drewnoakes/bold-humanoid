@@ -18,11 +18,11 @@ BodyState::BodyState(double angles[])
   });
 
   // TODO determine stance foot
-  Eigen::Affine3d const& footTorsoTransform = getLimb("rFoot")->transform;
+  Affine3d const& footTorsoTransform = getLimb("rFoot")->transform;
 
   d_torsoWorldRotation = footTorsoTransform.inverse().rotation();
 
-  Eigen::Affine3d const& cameraTorsoTransform = getLimb("camera")->transform;
+  Affine3d const& cameraTorsoTransform = getLimb("camera")->transform;
 
   // This is a special transform that gives the position of the camera in
   // the agent's frame, taking any rotation of the torso into account

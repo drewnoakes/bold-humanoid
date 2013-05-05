@@ -2,11 +2,14 @@
 
 #include <cmath>
 #include <cassert>
-#include <LinuxDARwIn.h>
+#include <iostream>
 #include <sys/time.h>
+
+#include <Head.h>
 
 #include "../Clock/clock.hh"
 #include "../Math/math.hh"
 
 using namespace bold;
 using namespace std;
+using namespace robotis;

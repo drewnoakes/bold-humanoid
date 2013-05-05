@@ -2,7 +2,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
-#include <LinuxDARwIn.h>
+#include <minIni.h>
 
 #include "../../Control/control.hh"
 #include "../../geometry/LineSegment2i.hh"

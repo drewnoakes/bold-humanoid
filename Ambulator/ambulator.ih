@@ -4,9 +4,9 @@
 #include "../robotis/Framework/include/Walking.h"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 
-#include <LinuxDARwIn.h>
-#include <LinuxCM730.h>
 #include <iostream>
+
+#include <Walking.h>
 
 using namespace bold;
 using namespace robotis;

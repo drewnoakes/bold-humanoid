@@ -1,8 +1,8 @@
 #include "stopwalking.hh"
 
-#include "../../Ambulator/ambulator.hh"
+#include <Walking.h>
 
-#include <LinuxDARwIn.h>
+#include "../../Ambulator/ambulator.hh"
 
 using namespace bold;
 using namespace robotis;

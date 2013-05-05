@@ -33,8 +33,8 @@ OptionList LookAtGoal::runPolicy()
   if (offset.norm() < 2)
     offset = Vector2d(0,0);
 
-  robotis::Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
-  robotis::Head::GetInstance()->MoveTracking(robotis::Point2D(offset.x(), offset.y()));
+  Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
+  Head::GetInstance()->MoveTracking(Point2D(offset.x(), offset.y()));
 
   return OptionList();
 }

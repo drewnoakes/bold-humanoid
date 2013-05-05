@@ -4,7 +4,8 @@
 #include "../../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../../VisualCortex/visualcortex.hh"
 
-#include <LinuxDARwIn.h>
+#include <Head.h>
+
 #include <cmath>
 #include <iostream>
 #include <Eigen/Core>
@@ -12,3 +13,4 @@
 using namespace bold;
 using namespace std;
 using namespace Eigen;
+using namespace robotis;

@@ -2,7 +2,9 @@
 
 #include "../../Ambulator/ambulator.hh"
 
-#include <LinuxDARwIn.h>
+#include <MotionStatus.h>
+#include <Head.h>
+#include <Walking.h>
 
 using namespace bold;
 using namespace robotis;

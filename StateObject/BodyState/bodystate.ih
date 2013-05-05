@@ -1,6 +1,8 @@
 #include "bodystate.hh"
 
-#include <LinuxDARwIn.h>
+#include <list>
+
+#include <JointData.h>
 
 using namespace bold;
 using namespace std;

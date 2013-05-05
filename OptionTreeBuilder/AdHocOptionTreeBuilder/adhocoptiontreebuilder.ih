@@ -20,7 +20,9 @@
 
 #include <algorithm>
 #include <fstream>
-#include <LinuxDARwIn.h>
+
+#include <Head.h>
+#include <MotionStatus.h>
 
 using namespace bold;
 using namespace std;
