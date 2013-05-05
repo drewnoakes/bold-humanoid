@@ -1,16 +1,28 @@
 %module bold
 %{
-#include "../Math/math.hh"
+#include "../Agent/agent.hh"
+#include "../OptionTree/optiontree.hh"
 %}
+
+%include "std_string.i"
 
 namespace bold
 {
-  class Math
+  class Agent
   {
   public:
-    static double smallestAngleBetween(Eigen::Vector2d v1, Eigen::Vector2d v2);
-    static double degToRad(double degrees);
-  private:
-    Math() {}
+    Agent(std::string const& U2D_dev,
+          std::string const& confFile,
+          std::string const& motionFile,
+          unsigned teamNumber,
+          unsigned uniformNumber,
+          bool useJoystick,
+          bool autoGetUpFromFallen,
+          bool useOptionTree,
+          bool recordFrames,
+          bool ignoreGameController);
+
+    void run();
+    void stop();
   };
 }
