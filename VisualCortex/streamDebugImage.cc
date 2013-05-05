@@ -120,18 +120,21 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   if (d_shouldDrawHorizon)
   {
     auto const& body = AgentState::get<BodyState>();
-    auto neckJoint = body->getLimb("neck")->joints[0];
-    Affine3d cameraToFootRotation = body->getCameraAgentTransform();
+    if (body)
+    {
+      auto neckJoint = body->getLimb("neck")->joints[0];
+      Affine3d cameraToFootRotation = body->getCameraAgentTransform();
 
-    Vector2i p1(0,0);
-    p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraToFootRotation);
+      Vector2i p1(0,0);
+      p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraToFootRotation);
 
-    Vector2i p2(d_cameraModel->imageWidth() - 1, 0);
-    p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraToFootRotation);
+      Vector2i p2(d_cameraModel->imageWidth() - 1, 0);
+      p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraToFootRotation);
 
-    LineSegment2i line2i(p1, p2);
+      LineSegment2i line2i(p1, p2);
 
-    line2i.draw(debugImage, horizonColour, 1);
+      line2i.draw(debugImage, horizonColour, 1);
+    }
   }
 
   streamer->streamImage(debugImage);
