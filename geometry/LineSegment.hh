@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../util/meta.hh"
+
 #include <Eigen/Core>
 #include <stdexcept>
 
@@ -75,23 +77,6 @@ namespace bold
   protected:
     Eigen::Matrix<T,dim,1> d_p1;
     Eigen::Matrix<T,dim,1> d_p2;
-
-  private:
-    template <bool COND, int A, int B>
-    struct IF
-    {
-      enum { val = A };
-    };
-
-    template <int A, int B>
-    struct IF<false, A, B>
-    {
-      enum { val = B };
-    };
-
-    template <int A, int B>
-    struct MIN : IF<A < B, A, B>
-    {};
   };
 
   typedef LineSegment<double,2> LineSegment2d;
