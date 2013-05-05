@@ -127,11 +127,11 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   // Head control
   //
   vector<Control> headControls;
-  auto moveHead = [](double const& pan, double const& tilt)
+  auto moveHead = [](double const& panDelta, double const& tiltDelta)
   {
     auto head = Head::GetInstance();
     head->m_Joint.SetEnableHeadOnly(true, true);
-    head->MoveByAngleOffset(pan, tilt);
+    head->MoveByAngleOffset(panDelta, tiltDelta);
   };
   headControls.push_back(Control::createAction("&blacktriangleleft;",  [&moveHead](){ moveHead( 5, 0); }));
   headControls.push_back(Control::createAction("&blacktriangle;",      [&moveHead](){ moveHead( 0, 5); }));
