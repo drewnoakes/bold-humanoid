@@ -44,7 +44,7 @@ namespace bold
 
     CM730Snapshot() {}
 
-    CM730Snapshot(robotis::BulkReadData& data);
+    CM730Snapshot(robotis::BulkReadData const& data);
 
   private:
     static unsigned short readTableWord(unsigned char* table, int addr);

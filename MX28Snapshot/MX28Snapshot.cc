@@ -26,7 +26,7 @@ double MX28Snapshot::valueToRPM(unsigned int value)
     return ((int)value - 1024) * 0.052733333;
 }
 
-MX28Snapshot::MX28Snapshot(BulkReadData& data, int const mx28ID)
+MX28Snapshot::MX28Snapshot(BulkReadData const& data, int const mx28ID)
 {
   // documentation: http://support.robotis.com/en/product/dynamixel/rx_series/mx-28.htm
 

@@ -66,7 +66,7 @@ namespace bold
 
     MX28Snapshot() {}
 
-    MX28Snapshot(robotis::BulkReadData& cm730, int const mx28ID);
+    MX28Snapshot(robotis::BulkReadData const& cm730, int const mx28ID);
 
   private:
 

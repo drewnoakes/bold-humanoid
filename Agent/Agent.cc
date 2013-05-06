@@ -28,6 +28,7 @@ Agent::Agent(string const& U2D_dev,
 
   d_linuxCM730 = make_shared<LinuxCM730>(U2D_dev.c_str());
   d_CM730 = make_shared<CM730>(d_linuxCM730.get());
+  d_CM730->MakeBulkReadPacket();
 
   d_ambulator = make_shared<Ambulator>(ini),
 
