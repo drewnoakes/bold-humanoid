@@ -16,12 +16,16 @@ void ImageLabeller::label(Mat& image, Mat& labelled, bool ignoreAboveHorizon) co
   uchar* lut = d_LUT.get();
   vector<int> horizon(image.cols);
   int maxHorizon = -1;
-  for (int x = 0; x < image.cols; ++x)
+
+  if (ignoreAboveHorizon)
   {
-    int h = d_spatialiser->findHorizonForColumn(x);
-    horizon[x] = h;
-    if (h > maxHorizon)
-      maxHorizon = h;
+    for (int x = 0; x < image.cols; ++x)
+    {
+      int h = d_spatialiser->findHorizonForColumn(x);
+      horizon[x] = h;
+      if (h > maxHorizon)
+        maxHorizon = h;
+    }
   }
 
   
@@ -30,15 +34,18 @@ void ImageLabeller::label(Mat& image, Mat& labelled, bool ignoreAboveHorizon) co
     uchar* origpix = image.ptr<uchar>(y);
     uchar* labelledpix = labelled.ptr<uchar>(y);
 
-    if (y > maxHorizon)
+    if (ignoreAboveHorizon && y > maxHorizon)
+    {
       memset(labelledpix, 0, image.cols);
+      continue;
+    }
 
 
     for (int x = 0; x < image.cols; ++x)
     {
 //    uchar l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
         uchar l =
-          y > horizon[x] ?
+          ignoreAboveHorizon && y > horizon[x] ?
           0 :
           lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
