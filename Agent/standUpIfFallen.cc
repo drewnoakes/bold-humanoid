@@ -4,19 +4,30 @@ void Agent::standUpIfFallen()
 {
   if (d_autoGetUpFromFallen && MotionStatus::FALLEN != STANDUP)
   {
-    Walking::GetInstance()->Stop();
-    while(Walking::GetInstance()->IsRunning() == 1) usleep(8000);
+    auto walk = Walking::GetInstance();
+    auto action = robotis::Action::GetInstance();
+    auto head = Head::GetInstance();
 
-    robotis::Action::GetInstance()->m_Joint.SetEnableBody(true, true);
+    walk->Stop();
+
+    // Loop until walking has stopped
+    // TODO this blocks the think cycle, including image processing and localisation updates
+    while(walk->IsRunning() == 1)
+      usleep(8000);
+
+    action->m_Joint.SetEnableBody(true, true);
 
     if (MotionStatus::FALLEN == FORWARD)
-      robotis::Action::GetInstance()->Start(10);   // FORWARD GETUP
+      action->Start((int)ActionPage::ForwardGetUp);
     else if (MotionStatus::FALLEN == BACKWARD)
-      robotis::Action::GetInstance()->Start(11);   // BACKWARD GETUP
+      action->Start((int)ActionPage::BackwardGetUp);
 
-    while (robotis::Action::GetInstance()->IsRunning() == 1) usleep(8000);
+    // Loop until the get up script has stopped
+    // TODO this blocks the think cycle, including image processing and localisation updates
+    while (action->IsRunning() == 1)
+      usleep(8000);
 
-    Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
-    Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
+    head->m_Joint.SetEnableHeadOnly(true, true);
+    walk->m_Joint.SetEnableBodyWithoutHead(true, true);
   }
 }

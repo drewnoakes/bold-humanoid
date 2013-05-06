@@ -82,21 +82,19 @@ void Agent::processInputCommands()
       }
       else if (event.isButton() && event.value == 1 && !event.isInitialState())
       {
+        auto action = robotis::Action::GetInstance();
+
         switch (event.number)
         {
-          // Action 10 -> Forward get up
-          // Action 11 -> Backward get up
-          // Action 12 -> Right kick
-          // Action 13 -> Left kick
           case 6:
             cout << "Left kick" << endl;
-            robotis::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
-            robotis::Action::GetInstance()->Start(13);
+            action->m_Joint.SetEnableBodyWithoutHead(true, true);
+            action->Start((int)ActionPage::KickLeft);
             break;
           case 7:
             cout << "Right kick" << endl;
-            robotis::Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
-            robotis::Action::GetInstance()->Start(12);
+            action->m_Joint.SetEnableBodyWithoutHead(true, true);
+            action->Start((int)ActionPage::KickLeft);
             break;
           default:
             if (event.value == 1)

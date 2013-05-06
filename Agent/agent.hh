@@ -31,7 +31,12 @@ namespace bold
   class Spatialiser;
   class VisualCortex;
 
+  enum class ActionPage
   {
+    ForwardGetUp = 10,
+    BackwardGetUp = 11,
+    KickRight = 12,
+    KickLeft = 13
   };
 
   class Agent
@@ -52,7 +57,6 @@ namespace bold
     void stop();
 
   private:
-    // Settings
     bool d_haveBody;
     bool d_isRunning;
     std::string d_motionFile;
@@ -63,7 +67,6 @@ namespace bold
     bool d_useOptionTree;
     bool d_ignoreGameController;
 
-    // Modules
     std::shared_ptr<robotis::LinuxCM730> d_linuxCM730;
     std::shared_ptr<robotis::CM730> d_CM730;
     std::shared_ptr<robotis::LinuxMotionTimer> d_motionTimer;
@@ -80,22 +83,12 @@ namespace bold
     std::shared_ptr<VisualCortex> d_visualCortex;
     std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
 
-    // State
-    /** Number of consecutive cycles during which the ball has been seen. */
-    int d_ballSeenCnt;
-    /** Number of consecutive cycles during which both goal posts have been seen. */
-    int d_goalSeenCnt;
-
-//     State d_state;
-
     double d_joystickXAmpMax;
     double d_joystickYAmpMax;
     double d_joystickAAmpMax;
 
-    // Control
     std::unique_ptr<OptionTree> d_optionTree;
 
-    // Methods
     void initCamera(minIni const& ini);
 
     bool initMotionManager(minIni const& ini);

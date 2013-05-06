@@ -18,9 +18,7 @@ Agent::Agent(string const& U2D_dev,
     d_isRecordingFrames(recordFrames),
     d_autoGetUpFromFallen(autoGetUpFromFallen),
     d_useOptionTree(useOptionTree),
-    d_ignoreGameController(ignoreGameController),
-    d_ballSeenCnt(0),
-    d_goalSeenCnt(0)
+    d_ignoreGameController(ignoreGameController)
 {
   cout << "[Agent::Agent] Start" << endl;
 
