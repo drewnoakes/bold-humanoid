@@ -1,9 +1,10 @@
 %module bold
+
+// Includes inserted verbatim into wrapper code
 %{
 #include "../Agent/agent.hh"
 #include "../OptionTree/optiontree.hh"
 #include "../AgentState/agentstate.hh"
-#include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
@@ -15,13 +16,33 @@
 #include "../StateObject/AlarmState/alarmstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/DebugState/debugstate.hh"
-
-#include <functional>
-
 %}
 
-%include "std_string.i"
+// Include std library interfaces
+%include <std_string.i>
+%include <std_shared_ptr.i>
 
+// Can not create objects, unless we tell you to
+%nodefaultctor;
+
+// Have to list all classes of which a shared_ptr is used (plus their
+// (grand)parent classes, just to be sure)
+%shared_ptr(bold::StateObject)
+%shared_ptr(bold::AgentFrameState)
+%shared_ptr(bold::AlarmState)
+%shared_ptr(bold::AmbulatorState)
+%shared_ptr(bold::BodyState)
+%shared_ptr(bold::CameraFrameState)
+%shared_ptr(bold::DebugState)
+%shared_ptr(bold::GameState)
+%shared_ptr(bold::HardwareState)
+%shared_ptr(bold::OptionTreeState)
+%shared_ptr(bold::ParticleState)
+%shared_ptr(bold::WorldFrameState)
+
+// Now define all interfaces that we want to be available in Python In
+// theory we can also %include all header files, but that often breaks
+// (eg C++11 stuff, and usually inlined and private stuff)
 namespace bold
 {
   class Agent
@@ -56,6 +77,10 @@ namespace bold
 
   class StateTracker;
 
+  class StateObject
+  {
+  };
+
   class AgentState
   {
   public:
@@ -70,19 +95,34 @@ namespace bold
     static AgentState& getInstance();
   };
 
+  class BodyState : public StateObject
+  {
+  public:
+    BodyState(double angles[]);
 
+    double getTorsoHeight() const;
+  };
+
+  class CameraFrameState : public StateObject
+  {
+  public:
+    bool isBallVisible() const;
+  };
 }
 
-%template(getBodyState) bold::AgentState::get<bold::BodyState>;
-%template(getAgentFrameState) bold::AgentState::get<bold::AgentFrameState>;
-%template(getAlarmState) bold::AgentState::get<bold::AlarmState>;
-%template(getAmbulatorState) bold::AgentState::get<bold::AmbulatorState>;
-%template(getBodyState) bold::AgentState::get<bold::BodyState>;
-%template(getCameraFrameState) bold::AgentState::get<bold::CameraFrameState>;
-%template(getDebugState) bold::AgentState::get<bold::DebugState>;
-%template(getGameState) bold::AgentState::get<bold::GameState>;
-%template(getHardwareState) bold::AgentState::get<bold::HardwareState>;
-%template(getOptionTreeState) bold::AgentState::get<bold::OptionTreeState>;
-%template(getParticleState) bold::AgentState::get<bold::ParticleState>;
-%template(getWorldFrameState) bold::AgentState::get<bold::WorldFrameState>;
+// Must list all template instantiations
+%define STATEOBJECT_TEMPLATE(O)
+%template(get ## O) bold::AgentState::get<bold::O>;
+%enddef
 
+STATEOBJECT_TEMPLATE(AgentFrameState)
+STATEOBJECT_TEMPLATE(AlarmState)
+STATEOBJECT_TEMPLATE(AmbulatorState)
+STATEOBJECT_TEMPLATE(BodyState)
+STATEOBJECT_TEMPLATE(CameraFrameState)
+STATEOBJECT_TEMPLATE(DebugState)
+STATEOBJECT_TEMPLATE(GameState)
+STATEOBJECT_TEMPLATE(HardwareState)
+STATEOBJECT_TEMPLATE(OptionTreeState)
+STATEOBJECT_TEMPLATE(ParticleState)
+STATEOBJECT_TEMPLATE(WorldFrameState)
