@@ -8,7 +8,6 @@ void Agent::readSubBoardData()
   // READ HARDWARESTATE (input)
   //
 
-  // TODO don't call this every step
   int res = d_CM730->BulkRead();
 
   if (res != CM730::SUCCESS)
