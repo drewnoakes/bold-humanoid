@@ -121,4 +121,6 @@ void Agent::think()
     // NOTE this timing value will appear in the *next* think cycle
     t = d_debugger->timeEvent(t, "Update DataStreamer");
   }
+
+  onThinkEnd();
 }

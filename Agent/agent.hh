@@ -4,6 +4,7 @@
 #include <minIni.h>
 #include <memory>
 #include <opencv2/opencv.hpp>
+#include <sigc++/signal.h>
 
 #include "../MX28Alarm/mx28alarm.hh"
 
@@ -55,6 +56,8 @@ namespace bold
 
     void run();
     void stop();
+
+    sigc::signal<void> onThinkEnd;
 
   private:
     bool d_haveBody;
