@@ -62,8 +62,8 @@ void Agent::think()
     //
     // Process input commands
     //
-//  processInputCommands();
-//  t = d_d_debugger->timeEvent(t, "Process Human Input");
+    processInputCommands();
+    t = d_debugger->timeEvent(t, "Process Human Input");
 
     //
     // Get up, if we've fallen over
