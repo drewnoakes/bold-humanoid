@@ -53,12 +53,12 @@ bool Agent::initMotionManager(minIni const& ini)
   motionManager->ResetGyroCalibration();
   while (1)
   {
-    if (motionManager->GetCalibrationStatus() == 1)
+    if (motionManager->GetCalibrationStatus() == CalibrationState::COMPLETE)
     {
       cout << "[Agent::init] Calibration complete" << endl;
       break;
     }
-    else if (motionManager->GetCalibrationStatus() == -1)
+    else if (motionManager->GetCalibrationStatus() == CalibrationState::ERRORED)
     {
       cout << "[Agent::init] Calibration failed" << endl;
       motionManager->ResetGyroCalibration();

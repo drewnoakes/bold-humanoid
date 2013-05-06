@@ -2,7 +2,7 @@
 
 void Agent::standUpIfFallen()
 {
-  if (d_autoGetUpFromFallen && MotionStatus::FALLEN != STANDUP)
+  if (d_autoGetUpFromFallen && MotionStatus::FALLEN != FallState::STANDUP)
   {
     auto walk = Walking::GetInstance();
     auto action = robotis::Action::GetInstance();
@@ -17,9 +17,9 @@ void Agent::standUpIfFallen()
 
     action->m_Joint.SetEnableBody(true, true);
 
-    if (MotionStatus::FALLEN == FORWARD)
+    if (MotionStatus::FALLEN == FallState::FORWARD)
       action->Start((int)ActionPage::ForwardGetUp);
-    else if (MotionStatus::FALLEN == BACKWARD)
+    else if (MotionStatus::FALLEN == FallState::BACKWARD)
       action->Start((int)ActionPage::BackwardGetUp);
 
     // Loop until the get up script has stopped

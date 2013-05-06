@@ -54,7 +54,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   tree->addOption(lookAtGoal);
 
   //Dive left
-  OptionPtr leftdive = make_shared<ActionOption>("diveleftaction","left_dive");
+  OptionPtr leftdive = make_shared<ActionOption>("diveleftaction", "left_dive");
   tree->addOption(leftdive);
 
   // FSM
@@ -327,7 +327,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
     // Transition: look at ball -> look for ball if no longer seen
     auto lookAtBall2lookAround = lookAtBallState->newTransition();
     lookAtBall2lookAround->condition = ballLostCondition;
-    lookAtBall2lookAround->childState = lookForBallState; 
+    lookAtBall2lookAround->childState = lookForBallState;
 
     // Transition: look at ball -> diving to the left
     auto lookAtBall2leftDive = lookAtBallState->newTransition();
@@ -335,17 +335,17 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
       if (!ballObs)
         return false;
-      
+
       Eigen::Vector3d ballPos = *(*ballObs);
       if (ballPos.y() > 1.0)
 	return false;
-      
+
       if (ballPos.x() > 0)
 	return false;
-      
+
       return true;
     };
-    lookAtBall2leftDive->childState = leftDiveState;  
+    lookAtBall2leftDive->childState = leftDiveState;
 
     // Transition: dive to left -> back to look for goal
     auto leftDive2lookForBall = leftDiveState->newTransition();
