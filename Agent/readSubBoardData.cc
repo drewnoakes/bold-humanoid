@@ -8,6 +8,7 @@ void Agent::readSubBoardData()
   // READ HARDWARESTATE (input)
   //
 
+  // TODO should not be doing a bulk read here -- instead, we should reuse the MotionManager's loop (in theory)
   int res = d_CM730->BulkRead();
 
   if (res != CM730::SUCCESS)
@@ -27,7 +28,11 @@ void Agent::readSubBoardData()
     mx28Snapshots.push_back(mx28);
   }
 
-  auto hw = make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots);
+  auto rxBytes = d_linuxCM730->GetReceivedByteCount();
+  auto txBytes = d_linuxCM730->GetTransmittedByteCount();
+//   d_linuxCM730->ResetByteCounts();
+
+  auto hw = make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes);
 
   AgentState::getInstance().set(hw);
 

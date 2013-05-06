@@ -55,6 +55,9 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
       writer.String("voltage").Int(mx28->presentVoltage);
     }
     writer.EndArray();
+
+    writer.String("rxBytes").Uint64(d_rxBytes);
+    writer.String("txBytes").Uint64(d_txBytes);
   }
   writer.EndObject();
 }
