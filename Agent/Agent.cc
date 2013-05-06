@@ -63,10 +63,6 @@ Agent::Agent(string const& U2D_dev,
     d_joystickAAmpMax = ini.getd("Joystick", "AAmpMax", 15);
   }
 
-  d_circleBallX = ini.getd("Circle Ball", "WalkX", -1);
-  d_circleBallY = ini.getd("Circle Ball", "WalkY", 50);
-  d_circleBallTurn = ini.getd("Circle Ball", "WalkTurn", 15);
-
   initCamera(ini);
 
   // TODO only stream if argument specified?

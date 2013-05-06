@@ -97,10 +97,6 @@ namespace bold
     /** Number of consecutive cycles during which both goal posts have been seen. */
     int d_goalSeenCnt;
 
-    double d_circleBallX;
-    double d_circleBallY;
-    double d_circleBallTurn;
-
     State d_state;
 
     double d_joystickXAmpMax;
