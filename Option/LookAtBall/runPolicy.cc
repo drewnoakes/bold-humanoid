@@ -10,7 +10,7 @@ OptionList LookAtBall::runPolicy()
     return OptionList();
   }
 
-  auto ballPos = ballObs.value();
+  Vector2d ballPos = ballObs->head<2>();
 
   static float r = 0.85;
 
@@ -21,7 +21,7 @@ OptionList LookAtBall::runPolicy()
   static float happ = d_cameraModel->rangeHorizontalDegs() / w;
   static float vapp = d_cameraModel->rangeVerticalDegs() / h;
 
-  Vector2d offset = (*ballPos - centerPx) * r;
+  Vector2d offset = (ballPos - centerPx) * r;
 
   offset.x() *= happ; // pixel per angle
   offset.y() *= vapp; // pixel per angle

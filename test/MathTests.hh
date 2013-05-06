@@ -64,13 +64,13 @@ TEST (MathTests, intersectRayWithGroundPlane)
 		  Vector3d(1,1,0),
 		  *(Math::intersectRayWithGroundPlane(Vector3d(0,0,1),
 						      Vector3d(1,1,-1).normalized(),
-						      0).value())
+						      0))
 		  ) );
   EXPECT_TRUE ( VectorsEqual(
 		  Vector3d(2,2,0),
 		  *(Math::intersectRayWithGroundPlane(Vector3d(0,0,2),
 						      Vector3d(1,1,-1).normalized(),
-						      0).value())
+						      0))
 		  ) );
 }
 

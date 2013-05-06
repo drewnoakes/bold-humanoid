@@ -7,7 +7,7 @@ void Spatialiser::updateCameraToAgent()
   auto const& ballObs = cameraFrame->getBallObservation();
 
   Maybe<Vector3d> ball = ballObs.hasValue()
-    ? findGroundPointForPixel(*ballObs.value())
+    ? findGroundPointForPixel(*ballObs)
     : Maybe<Vector3d>::empty();
 
   std::vector<Vector3d> goals;
@@ -18,7 +18,7 @@ void Spatialiser::updateCameraToAgent()
     auto const& pos3d = findGroundPointForPixel(goal);
     if (pos3d.hasValue())
     {
-      goals.push_back(*pos3d.value());
+      goals.push_back(*pos3d);
     }
   }
 
@@ -28,7 +28,7 @@ void Spatialiser::updateCameraToAgent()
     auto const& p2 = findGroundPointForPixel(lineSegment.p2().cast<double>() + Vector2d(0.5,0.5));
     if (p1.hasValue() && p2.hasValue())
     {
-      lineSegments.push_back(LineSegment3d(*p1.value(), *p2.value()));
+      lineSegments.push_back(LineSegment3d(*p1, *p2));
     }
   }
 

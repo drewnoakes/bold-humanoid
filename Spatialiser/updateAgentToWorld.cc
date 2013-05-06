@@ -22,7 +22,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   auto const& ballAgent = agentFrame->getBallObservation();
 
   Maybe<Vector3d> ball = ballAgent.hasValue()
-    ? agentToWorld * *(ballAgent.value())
+    ? agentToWorld * (*ballAgent)
     : Maybe<Vector3d>::empty();
 
   vector<Vector3d> goals;

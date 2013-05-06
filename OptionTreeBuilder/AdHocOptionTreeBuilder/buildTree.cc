@@ -335,8 +335,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
       if (!ballObs)
         return false;
-
-      Eigen::Vector3d ballPos = *(*ballObs);
+      Eigen::Vector3d ballPos = *ballObs;
       if (ballPos.y() > 1.0)
 	return false;
 
@@ -463,7 +462,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
       if (!ballObs)
         return false;
 
-      return ((*ballObs)->head<2>().norm() < 0.05);
+      return (ballObs->head<2>().norm() < 0.05);
     };
     approachBall2lookForGoal->childState = lookForGoalState;
 
@@ -538,10 +537,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
         return false;
 
       // Don't kick if it's too far in front
-      if ((*ballObs)->y() > 0.2)
+      if (ballObs->y() > 0.2)
         return false;
 
-      if ((*ballObs)->x() > 0)
+      if (ballObs->x() > 0)
         return false;
 
       return true;
@@ -564,10 +563,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
         return false;
 
       // Don't kick if it's too far in front
-      if ((*ballObs)->y() > 0.2)
+      if (ballObs->y() > 0.2)
         return false;
 
-      if ((*ballObs)->x() < 0)
+      if (ballObs->x() < 0)
         return false;
 
       return true;

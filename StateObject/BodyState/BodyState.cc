@@ -7,14 +7,12 @@ BodyState::BodyState(double angles[])
 {
   initBody(angles);
   updatePosture();
-  d_torsoHeight = Lazy<double>([this]()
+  d_torsoHeight = async(launch::deferred, [this]()
   {
-    return std::make_shared<double>(
-      std::max(
-        this->getLimb("lFoot")->transform.inverse().translation().z(),
-        this->getLimb("rFoot")->transform.inverse().translation().z()
-      )
-    );
+    return std::max(
+      this->getLimb("lFoot")->transform.inverse().translation().z(),
+      this->getLimb("rFoot")->transform.inverse().translation().z()
+      );
   });
 
   // TODO determine stance foot

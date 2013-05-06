@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <future>
 #include <map>
 #include <memory>
 #include <stdexcept>
@@ -9,7 +10,6 @@
 #include "../stateobject.hh"
 #include "../../BodyPart/bodypart.hh"
 #include "../../robotis/Framework/include/JointData.h"
-#include "../../util/Lazy.hh"
 
 namespace bold
 {
@@ -61,13 +61,13 @@ namespace bold
     // TODO this should probably go away
     double getTorsoHeight() const
     {
-      return *d_torsoHeight.value();
+      return d_torsoHeight.get();
     }
 
   private:
     void initBody(double angles[]);
 
-    Lazy<double> d_torsoHeight;
+    mutable std::future<double> d_torsoHeight;
     std::shared_ptr<Limb> d_torso;
     std::map<unsigned, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;

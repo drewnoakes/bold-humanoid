@@ -11,8 +11,8 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
     if (d_ballObservation.hasValue())
     {
       writer.StartArray();
-      writer.Double(d_ballObservation.value()->x());
-      writer.Double(d_ballObservation.value()->y());
+      writer.Double(d_ballObservation->x());
+      writer.Double(d_ballObservation->y());
       writer.EndArray();
     }
     else

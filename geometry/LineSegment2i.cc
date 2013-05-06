@@ -104,7 +104,7 @@ Maybe<LineSegment2i> LineSegment2i::cropTo(Bounds2i const& bounds) const
       Maybe<Vector2i> intersect = tryIntersect(edge);
       if (intersect.hasValue())
       {
-        ends.insert(*intersect.value());
+        ends.insert(*intersect);
       }
     }
   }

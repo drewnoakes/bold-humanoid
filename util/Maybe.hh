@@ -5,62 +5,35 @@
 namespace bold
 {
   template<typename T>
-  struct Maybe
+  struct Maybe : public std::shared_ptr<T>
   {
-    bool hasValue() const { return d_hasValue; }
-    std::shared_ptr<T> value() const { return d_value; }
+    bool hasValue() const { return this->get(); }
+    T const& value() const { return *(this->get()); }
 
-    static Maybe<T> empty() { return Maybe<T>(false); }
+    static Maybe<T> empty() { return Maybe<T>(0); }
 
     Maybe(T value)
-    : d_hasValue(true),
-      d_value(std::make_shared<T>(value))
+      : std::shared_ptr<T>(std::make_shared<T>(value))
     {}
 
     Maybe(std::shared_ptr<T> value)
-    : d_hasValue(true),
-      d_value(value)
+      : std::shared_ptr<T>(value)
     {}
-
-    operator bool() const
-    {
-      return hasValue();
-    }
-
-    std::shared_ptr<T> operator->() const
-    {
-      return value();
-    }
-
-    std::shared_ptr<T> operator*() const
-    {
-      return value();
-    }
 
     bool operator==(Maybe const& other) const
     {
-      if (d_hasValue ^ other.d_hasValue)
+      if (hasValue() != other.hasValue())
         return false;
-
-      return !d_hasValue || *d_value == *other.d_value;
+      return !hasValue() || *(this->get()) == *(other.get());
     }
 
     friend std::ostream& operator<<(std::ostream& stream, Maybe<T> const& maybe)
     {
-      if (maybe.d_hasValue)
+      if (maybe)
       {
-        return stream << "Maybe (hasValue=true value=" << *maybe.d_value << ")";
+        return stream << "Maybe (hasValue=true value=" << *maybe << ")";
       }
       return stream << "Maybe (hasValue=false)";
     }
-
-  private:
-    Maybe(bool hasValue)
-    : d_hasValue(false),
-      d_value(0)
-    {}
-
-    bool d_hasValue;
-    std::shared_ptr<T> d_value;
   };
 }

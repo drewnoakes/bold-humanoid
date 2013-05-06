@@ -53,8 +53,8 @@ namespace bold
 
       if (line.hasValue())
       {
-        Eigen::Vector2i const& p1 = line.value().get()->p1();
-        Eigen::Vector2i const& p2 = line.value().get()->p2();
+        Eigen::Vector2i const& p1 = line->p1();
+        Eigen::Vector2i const& p2 = line->p2();
         cv::line(mat, cv::Point(p1.x(), p1.y()), cv::Point(p2.x(), p2.y()), color);
       }
     }
