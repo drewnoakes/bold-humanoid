@@ -54,7 +54,7 @@ void Debugger::update(shared_ptr<CM730> cm730)
   if (ledFlags != d_lastLedFlags)
   {
     // the value changed, so write it
-    cm730->WriteByte(CM730::P_LED_PANNEL, ledFlags, NULL);
+    cm730->WriteByte(CM730::ID_CM, CM730::P_LED_PANNEL, ledFlags, NULL);
     d_lastLedFlags = ledFlags;
   }
 
@@ -72,7 +72,7 @@ void Debugger::update(shared_ptr<CM730> cm730)
 
     if (intValue != (*lastInt))
     {
-      cm730->WriteWord(targetId, intValue, 0);
+      cm730->WriteWord(CM730::ID_CM, targetId, intValue, 0);
       *lastInt = intValue;
     }
   };
