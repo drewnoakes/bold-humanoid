@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 
 import bold
+import numpy as np
 
 def thinkEndCallback():
-    cameraState = bold.AgentState.getCameraFrameState();
+    cameraState = bold.AgentState.getCameraFrameState()
+    print(cameraState)
     print("Ball visible: ", cameraState.isBallVisible())
+    ballObs = cameraState.getBallObservation()
+    print(ballObs)
 
 U2D_DEV_NAME = "/dev/ttyUSB0"
 MOTION_FILE_PATH = "./motion_4096.bin"
-CONF_FILE_PATH = "./config.ini"
+CONF_FILE_PATH = "./germanopen.ini"
 TEAM_NUMBER = 24
 UNIFORM_NUMBER = 2
 USE_JOYSTICK = False

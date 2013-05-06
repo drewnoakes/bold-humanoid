@@ -18,12 +18,13 @@
 #include "../StateObject/DebugState/debugstate.hh"
 %}
 
+// Can not create objects, unless we tell you to
+%nodefaultctor;
+
 // Include std library interfaces
 %include <std_string.i>
 %include <std_shared_ptr.i>
-
-// Can not create objects, unless we tell you to
-%nodefaultctor;
+%include "eigen.i"
 
 // Have to list all classes of which a shared_ptr is used (plus their
 // (grand)parent classes, just to be sure)
@@ -39,6 +40,11 @@
 %shared_ptr(bold::OptionTreeState)
 %shared_ptr(bold::ParticleState)
 %shared_ptr(bold::WorldFrameState)
+
+%template() std::shared_ptr<Eigen::Vector2d>;
+
+%eigen_typemaps(Eigen::Vector2d)
+
 
 // Now define all interfaces that we want to be available in Python In
 // theory we can also %include all header files, but that often breaks
@@ -108,6 +114,15 @@ namespace bold
   public:
     bool isBallVisible() const;
   };
+  
+  %extend CameraFrameState {
+  public:
+    std::shared_ptr<Eigen::Vector2d> getBallObservation() const
+    {
+      return ($self->getBallObservation());
+    }
+  };
+
 }
 
 // Must list all template instantiations
@@ -115,14 +130,16 @@ namespace bold
 %template(get ## O) bold::AgentState::get<bold::O>;
 %enddef
 
-STATEOBJECT_TEMPLATE(AgentFrameState)
-STATEOBJECT_TEMPLATE(AlarmState)
-STATEOBJECT_TEMPLATE(AmbulatorState)
-STATEOBJECT_TEMPLATE(BodyState)
-STATEOBJECT_TEMPLATE(CameraFrameState)
-STATEOBJECT_TEMPLATE(DebugState)
-STATEOBJECT_TEMPLATE(GameState)
-STATEOBJECT_TEMPLATE(HardwareState)
-STATEOBJECT_TEMPLATE(OptionTreeState)
-STATEOBJECT_TEMPLATE(ParticleState)
-STATEOBJECT_TEMPLATE(WorldFrameState)
+STATEOBJECT_TEMPLATE(AgentFrameState);
+STATEOBJECT_TEMPLATE(AlarmState);
+STATEOBJECT_TEMPLATE(AmbulatorState);
+STATEOBJECT_TEMPLATE(BodyState);
+STATEOBJECT_TEMPLATE(CameraFrameState);
+STATEOBJECT_TEMPLATE(DebugState);
+STATEOBJECT_TEMPLATE(GameState);
+STATEOBJECT_TEMPLATE(HardwareState);
+STATEOBJECT_TEMPLATE(OptionTreeState);
+STATEOBJECT_TEMPLATE(ParticleState);
+STATEOBJECT_TEMPLATE(WorldFrameState);
+
+
