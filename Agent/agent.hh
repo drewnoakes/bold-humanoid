@@ -31,18 +31,7 @@ namespace bold
   class Spatialiser;
   class VisualCortex;
 
-  enum class State
   {
-    S_INIT,
-    S_LOOK_FOR_BALL,
-    S_APPROACH_BALL,
-    S_LOOK_FOR_GOAL,
-    S_START_CIRCLE_BALL,
-    S_CIRCLE_BALL,
-    S_START_PREKICK_LOOK,
-    S_PREKICK_LOOK,
-    S_KICK,
-    S_GET_UP
   };
 
   class Agent
@@ -97,7 +86,7 @@ namespace bold
     /** Number of consecutive cycles during which both goal posts have been seen. */
     int d_goalSeenCnt;
 
-    State d_state;
+//     State d_state;
 
     double d_joystickXAmpMax;
     double d_joystickYAmpMax;

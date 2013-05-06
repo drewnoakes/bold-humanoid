@@ -78,7 +78,5 @@ Agent::Agent(string const& U2D_dev,
 
   d_haveBody = initMotionManager(ini);
 
-  d_state = State::S_INIT;
-
   cout << "[Agent::Agent] Done" << endl;
 }
