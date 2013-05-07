@@ -421,7 +421,7 @@ add_custom_target(tags DEPENDS ${CMAKE_SOURCE_DIR}/TAGS)
 #
 ## SWIG/Python
 #
-add_subdirectory(swig)
+#add_subdirectory(swig)
 
 #
 ## Build and run test
