@@ -13,11 +13,11 @@ namespace bold
     : d_items(windowSize),
       d_length(0),
       d_nextPointer(0),
-      d_sum(),
       d_windowSize(windowSize)
     {
       if (windowSize == 0)
         throw new std::runtime_error("Cannot have zero window size.");
+      memset(&d_sum, 0, sizeof(d_sum));
     }
 
     T next(T value)
