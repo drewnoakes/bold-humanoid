@@ -27,8 +27,8 @@ TEST (MovingAverageTests, vector2d)
 {
   MovingAverage<Vector2d> m(2);
 
-  EXPECT_EQ( Vector2d(1,1),     m.next(Vector2d(1,1)) );
-  EXPECT_EQ( Vector2d(1.5,1.5), m.next(Vector2d(2,2)) );
-  EXPECT_EQ( Vector2d(2.5,2.5), m.next(Vector2d(3,3)) );
-  EXPECT_EQ( Vector2d(3.5,3.5), m.next(Vector2d(4,4)) );
+  EXPECT_TRUE( VectorsEqual(Vector2d(1,1),     m.next(Vector2d(1,1))) );
+  EXPECT_TRUE( VectorsEqual(Vector2d(1.5,1.5), m.next(Vector2d(2,2))) );
+  EXPECT_TRUE( VectorsEqual(Vector2d(2.5,2.5), m.next(Vector2d(3,3))) );
+  EXPECT_TRUE( VectorsEqual(Vector2d(3.5,3.5), m.next(Vector2d(4,4))) );
 }
