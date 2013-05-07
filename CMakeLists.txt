@@ -421,19 +421,7 @@ add_custom_target(tags DEPENDS ${CMAKE_SOURCE_DIR}/TAGS)
 #
 ## SWIG/Python
 #
-find_package(SWIG REQUIRED)
-include(${SWIG_USE_FILE})
-find_package(PythonLibs)
-include_directories(${PYTHON_INCLUDE_PATH})
-set(CMAKE_SWIG_FLAGS "-builtin")
-set_source_files_properties(${CMAKE_SOURCE_DIR}/swig/boldpy.i PROPERTIES CPLUSPLUS ON)
-set_source_files_properties(${CMAKE_SOURCE_DIR}/swig/boldpy.i PROPERTIES SWIG_FLAGS "")
-swig_add_module(bold python ${CMAKE_SOURCE_DIR}/swig/boldpy.i $<TARGET_OBJECTS:boldhumanoid_objects>)
-swig_link_libraries(bold ${PYTHON_LIBRARIES})
-
-set_target_properties(${SWIG_MODULE_bold_REAL_NAME} PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
-add_dependencies(${SWIG_MODULE_bold_REAL_NAME} boldhumanoid_objects)
-target_link_libraries(${SWIG_MODULE_bold_REAL_NAME} ${BOLDHUMANOID_LINK_LIBRARIES})
+add_subdirectory(swig)
 
 #
 ## Build and run test
