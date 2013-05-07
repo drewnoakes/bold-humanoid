@@ -58,16 +58,12 @@ namespace bold
 
     Eigen::Affine3d getCameraAgentTransform() const { return d_cameraAgentTransform; }
 
-    // TODO this should probably go away
-    double getTorsoHeight() const
-    {
-      return d_torsoHeight.get();
-    }
+    double getTorsoHeight() const { return d_torsoHeight; }
 
   private:
     void initBody(double angles[]);
 
-    mutable std::future<double> d_torsoHeight;
+    double d_torsoHeight;
     std::shared_ptr<Limb> d_torso;
     std::map<unsigned, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;

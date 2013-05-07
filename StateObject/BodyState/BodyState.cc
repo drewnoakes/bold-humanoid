@@ -7,13 +7,10 @@ BodyState::BodyState(double angles[])
 {
   initBody(angles);
   updatePosture();
-  d_torsoHeight = async(launch::deferred, [this]()
-  {
-    return std::max(
-      this->getLimb("lFoot")->transform.inverse().translation().z(),
-      this->getLimb("rFoot")->transform.inverse().translation().z()
-      );
-  });
+  d_torsoHeight = std::max(
+    this->getLimb("lFoot")->transform.inverse().translation().z(),
+    this->getLimb("rFoot")->transform.inverse().translation().z()
+  );
 
   // TODO determine stance foot
   Affine3d const& footTorsoTransform = getLimb("rFoot")->transform;
