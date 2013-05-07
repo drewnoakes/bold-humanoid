@@ -112,7 +112,7 @@ define(
             context.lineCap = 'round';
             context.lineWidth = 20;
             context.moveTo(mid, mid);
-            context.lineTo(mid + (data.target[1] * moveScale), mid + (data.target[0] * moveScale));
+            context.lineTo(mid + (data.target[1] * moveScale), mid - (data.target[0] * moveScale));
             context.stroke();
 
             // Current
@@ -121,7 +121,7 @@ define(
             context.lineCap = 'round';
             context.lineWidth = 9;
             context.moveTo(mid, mid);
-            context.lineTo(mid + (data.current[1] * moveScale), mid + (data.current[0] * moveScale));
+            context.lineTo(mid + (data.current[1] * moveScale), mid - (data.current[0] * moveScale));
             context.stroke();
         };
 
