@@ -93,9 +93,9 @@ MACRO(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
   ENDIF("${swig_source_file_flags}" STREQUAL "NOTFOUND")
   SET(swig_source_file_fullname "${infile}")
   IF(${swig_source_file_path} MATCHES "^${CMAKE_CURRENT_SOURCE_DIR}")
-    STRING(REGEX REPLACE 
-      "^${CMAKE_CURRENT_SOURCE_DIR}" ""
+    FILE(RELATIVE_PATH
       swig_source_file_relative_path
+      ${CMAKE_CURRENT_SOURCE_DIR}
       "${swig_source_file_path}")
   ELSE(${swig_source_file_path} MATCHES "^${CMAKE_CURRENT_SOURCE_DIR}")
     IF(${swig_source_file_path} MATCHES "^${CMAKE_CURRENT_BINARY_DIR}")
@@ -124,7 +124,7 @@ MACRO(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
   IF(CMAKE_SWIG_OUTDIR)
     SET(swig_outdir ${CMAKE_SWIG_OUTDIR})
   ELSE(CMAKE_SWIG_OUTDIR)
-    SET(swig_outdir ${CMAKE_CURRENT_BINARY_DIR})
+    SET(swig_outdir ${swig_generated_file_fullname})
   ENDIF(CMAKE_SWIG_OUTDIR)
   SWIG_GET_EXTRA_OUTPUT_FILES(${SWIG_MODULE_${name}_LANGUAGE}
     swig_extra_generated_files
@@ -136,7 +136,6 @@ MACRO(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
   # this allows for the same .i file to be wrapped into different languages
   SET(swig_generated_file_fullname
     "${swig_generated_file_fullname}${SWIG_MODULE_${name}_LANGUAGE}_wrap")
-
   IF(swig_source_file_cplusplus)
     SET(swig_generated_file_fullname
       "${swig_generated_file_fullname}.${SWIG_CXX_EXTENSION}")
@@ -162,6 +161,7 @@ MACRO(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
   IF(SWIG_MODULE_${name}_EXTRA_FLAGS)
     SET(swig_extra_flags ${swig_extra_flags} ${SWIG_MODULE_${name}_EXTRA_FLAGS})
   ENDIF(SWIG_MODULE_${name}_EXTRA_FLAGS)
+  #MESSAGE("Out dir: ${swig_outdir}")
   ADD_CUSTOM_COMMAND(
     OUTPUT "${swig_generated_file_fullname}" ${swig_extra_generated_files}
     # Let's create the ${swig_outdir} at execution time, in case dir contains $(OutDir)
