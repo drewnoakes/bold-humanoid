@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "../stateobject.hh"
-#include "../util/Maybe.hh"
-#include "../geometry/LineSegment2i.hh"
+#include "../../util/Maybe.hh"
+#include "../../geometry/LineSegment2i.hh"
 
 namespace bold
 {
