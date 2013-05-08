@@ -9,6 +9,8 @@ def thinkEndCallback():
     print("Ball visible: ", cameraState.isBallVisible())
     ballObs = cameraState.getBallObservation()
     print(ballObs)
+    goalObs = cameraState.getGoalObservations()
+    print(goalObs)
 
 U2D_DEV_NAME = "/dev/ttyUSB0"
 MOTION_FILE_PATH = "./motion_4096.bin"

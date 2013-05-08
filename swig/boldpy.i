@@ -22,9 +22,10 @@
 %nodefaultctor;
 
 // Include std library interfaces
-%include <std_string.i>
+%include <stl.i>
 %include <std_shared_ptr.i>
 %include "eigen.i"
+%include "geometry.i"
 
 // Have to list all classes of which a shared_ptr is used (plus their
 // (grand)parent classes, just to be sure)
@@ -41,10 +42,7 @@
 %shared_ptr(bold::ParticleState)
 %shared_ptr(bold::WorldFrameState)
 
-%template() std::shared_ptr<Eigen::Vector2d>;
-
-%eigen_typemaps(Eigen::Vector2d)
-
+%template() std::vector<PyObject*>;
 
 // Now define all interfaces that we want to be available in Python In
 // theory we can also %include all header files, but that often breaks
@@ -113,13 +111,29 @@ namespace bold
   {
   public:
     bool isBallVisible() const;
+     std::vector<bold::LineSegment2i> getObservedLineSegments() const;
   };
   
   %extend CameraFrameState {
   public:
+    // SWIG has issues with Maybe
     std::shared_ptr<Eigen::Vector2d> getBallObservation() const
     {
       return ($self->getBallObservation());
+    }
+
+    // 
+    std::vector<PyObject*> getGoalObservations() const
+    {
+      std::vector<PyObject*> out;
+      std::vector<Eigen::Vector2d> in = $self->getGoalObservations();
+      for (int i = 0; i < in.size(); ++i)
+      {
+        PyObject *resultobj = 0;
+        ConvertFromEigenToNumPyMatrix<Eigen::Vector2d>(&resultobj, &(in[i]));
+        out.push_back(resultobj);
+      }
+      return out;
     }
   };
 
