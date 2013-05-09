@@ -11,7 +11,7 @@ def thinkEndCallback():
     print(ballObs)
     goalObs = cameraState.getGoalObservations()
     print(goalObs)
-
+    
 U2D_DEV_NAME = "/dev/ttyUSB0"
 MOTION_FILE_PATH = "./motion_4096.bin"
 CONF_FILE_PATH = "./germanopen.ini"
@@ -35,5 +35,21 @@ a = bold.Agent(U2D_DEV_NAME,
                IGNORE_GAME_CONTROLLER)
 
 a.onThinkEndConnect(thinkEndCallback);
+
+visualCortex = a.getVisualCortex()
+visualCortex.setShouldIgnoreAboveHorizon(False)
+
+vcSettings = {
+    'shouldDetectLines': False,
+    'shouldIgnoreAboveHorizon': False,
+    'minBallArea': 8,
+    'streamFramePeriod': 5,
+    'shouldDrawBlobs': True,
+    'shouldDrawLineDots': True,
+    'shouldDrawExpectedLines': False,
+    'shouldDrawHorizon': True}
+
+visualCortex.set(**vcSettings)
+                  
 
 a.run()
