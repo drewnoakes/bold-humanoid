@@ -9,6 +9,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_cameraModel(cameraModel),
   d_spatialiser(spatialiser),
   d_debugger(debugger),
+  d_shouldDetectLines(true),
+  d_shouldIgnoreAboveHorizon(true),
   d_minBallArea(8*8),
   d_imageType(ImageType::RGB),
   d_shouldDrawBlobs(true),
@@ -19,7 +21,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 {
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
-  d_detectLines = ini.geti("Vision", "DetectLines", 0) != 0;
+  d_shouldDetectLines = ini.geti("Vision", "DetectLines", 0) != 0;
 
   d_streamFramePeriod = ini.geti("Debugger", "CameraFramePeriod", 5);
 
@@ -58,7 +60,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
 
-  if (d_detectLines)
+  if (d_shouldDetectLines)
     d_imagePassRunner->addHandler(d_lineDotPass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
 //  d_imagePassRunner->addHandler(d_cartoonPass); // will be added if a client requests cartoon images

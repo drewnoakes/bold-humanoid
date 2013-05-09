@@ -62,6 +62,34 @@ namespace bold
     /** Composes and enqueues a debugging image. */
     void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer);
 
+    void setShouldDetectLines(bool val) { d_shouldDetectLines = val; }
+    bool getShouldDetectLines() const { return d_shouldDetectLines; }
+
+    void setShouldIgnoreAboveHorizon(bool val) { d_shouldIgnoreAboveHorizon = val; }
+    bool getShouldIgnoreAboveHorizon() const { return d_shouldIgnoreAboveHorizon; }
+
+    void setMinBallArea(unsigned val) { d_minBallArea = val; }
+    unsigned getMinBallArea() const { return d_minBallArea; }
+
+    void setStreamFramePeriod(unsigned val) { d_streamFramePeriod = val; }
+    unsigned getStreamFramePeriod() const { return d_streamFramePeriod; }
+
+    
+    void setShouldDrawBlobs(bool val) { d_shouldDrawBlobs = val; }
+    bool getShouldDrawBlobs() const { return d_shouldDrawBlobs; }
+
+    void setShouldDrawLineDots(bool val) { d_shouldDrawLineDots = val; }
+    bool getShouldDrawLineDots() const { return d_shouldDrawLineDots; }
+
+    void setShouldDrawExpectedLines(bool val) { d_shouldDrawExpectedLines = val; }
+    bool getShouldDrawExpectedLines() const { return d_shouldDrawExpectedLines; }
+
+    void setShouldDrawObservedLines(bool val) { d_shouldDrawObservedLines = val; }
+    bool getShouldDrawObservedLines() const { return d_shouldDrawObservedLines; }
+
+    void setShouldDrawHorizon(bool val) { d_shouldDrawHorizon = val; }
+    bool getShouldDrawHorizon() const { return d_shouldDrawHorizon; }
+    
   private:
     std::map<std::string,std::vector<Control>> d_controlsByFamily;
 
@@ -91,9 +119,10 @@ namespace bold
 
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
 
-    bool d_detectLines;
+    bool d_shouldDetectLines;
+    bool d_shouldIgnoreAboveHorizon;
 
-    int d_minBallArea;
+    unsigned d_minBallArea;
 
     ImageType d_imageType;
     unsigned d_streamFramePeriod;

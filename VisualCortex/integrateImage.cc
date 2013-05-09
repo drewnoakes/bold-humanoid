@@ -15,7 +15,7 @@ void VisualCortex::integrateImage(Mat& image)
   if (d_labelledImage.rows != image.rows || d_labelledImage.cols != image.cols)
     d_labelledImage = Mat(image.rows, image.cols, CV_8UC1);
 
-  d_imageLabeller->label(image, d_labelledImage, true);
+  d_imageLabeller->label(image, d_labelledImage, d_shouldIgnoreAboveHorizon);
   t = debugger.timeEvent(t, "Image Processing/Pixel Label");
 
   // Perform the image pass
@@ -25,7 +25,7 @@ void VisualCortex::integrateImage(Mat& image)
   // Find lines
 
   vector<LineSegment2i> observedLineSegments;
-  if (d_detectLines)
+  if (d_shouldDetectLines)
   {
     observedLineSegments = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
     t = debugger.timeEvent(t, "Image Processing/Line Search");
@@ -86,6 +86,9 @@ void VisualCortex::integrateImage(Mat& image)
       goalPositions.push_back(pos);
     }
   }
+
+  // REMOVE! just for testing purposes
+  goalPositions.push_back(Vector2d(10,10));
 
   AgentState::getInstance().set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments));
 
