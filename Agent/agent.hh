@@ -32,14 +32,6 @@ namespace bold
   class Spatialiser;
   class VisualCortex;
 
-  enum class ActionPage
-  {
-    ForwardGetUp = 10,
-    BackwardGetUp = 11,
-    KickRight = 12,
-    KickLeft = 13
-  };
-
   class Agent
   {
   public:
@@ -53,6 +45,19 @@ namespace bold
           bool useOptionTree,
           bool recordFrames,
           bool ignoreGameController);
+
+    
+    std::shared_ptr<Ambulator> getAmbulator() const { return d_ambulator; }
+    std::shared_ptr<Camera> getCamera() const { return d_camera; }
+    std::shared_ptr<CameraModel> getCameraModel() const { return d_cameraModel; }
+    std::shared_ptr<DataStreamer> getDataStreamer() const { return d_streamer; }
+    std::shared_ptr<Debugger> getDebugger() const { return d_debugger; }
+    std::shared_ptr<FieldMap> getFieldMap() const { return d_fieldMap; }
+    std::shared_ptr<Joystick> getJoystick() const { return d_joystick; }
+    std::shared_ptr<Spatialiser> getSpatialiser() const { return d_spatialiser; }
+    std::shared_ptr<Localiser> getLocaliser() const { return d_localiser; }
+    std::shared_ptr<VisualCortex> getVisualCortex() const { return d_visualCortex; }
+    std::shared_ptr<GameStateReceiver> getGameStateReceiver() const { return d_gameStateReceiver; }
 
     void run();
     void stop();

@@ -15,6 +15,7 @@
 #include "../Localiser/localiser.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
+#include "../Option/ActionOption/actionoption.hh"
 #include "../OptionTree/optiontree.hh"
 #include "../OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 #include "../Spatialiser/spatialiser.hh"

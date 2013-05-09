@@ -84,6 +84,7 @@ void Agent::processInputCommands()
       {
         auto action = robotis::Action::GetInstance();
 
+        // TODO: make this use options
         switch (event.number)
         {
           case 6:

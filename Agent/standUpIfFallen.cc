@@ -16,7 +16,7 @@ void Agent::standUpIfFallen()
       usleep(8000);
 
     action->m_Joint.SetEnableBody(true, true);
-
+    // TODO: make this use options
     if (MotionStatus::FALLEN == FallState::FORWARD)
       action->Start((int)ActionPage::ForwardGetUp);
     else if (MotionStatus::FALLEN == FallState::BACKWARD)
