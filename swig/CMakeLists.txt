@@ -5,7 +5,7 @@ include(${SWIG_USE_FILE})
 set(CMAKE_SWIG_FLAGS "-builtin")
 
 #todo: this is a hack
-include_directories("${PYTHON_INCLUDE_PATH};/usr/include/i386-linux-gnu/python3.3m/")
+include_directories("${PYTHON_INCLUDE_PATH};/usr/include/i386-linux-gnu/python3.3m/;${CMAKE_SOURCE_DIR}")
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/swig/boldpy.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties(${CMAKE_SOURCE_DIR}/swig/boldpy.i PROPERTIES SWIG_FLAGS "")
