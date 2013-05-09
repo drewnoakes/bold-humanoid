@@ -5,10 +5,20 @@
 
 namespace bold
 {
+  enum class ActionPage
+  {
+    ForwardGetUp = 10,
+    BackwardGetUp = 11,
+    KickRight = 12,
+    KickLeft = 13
+  };
+
+
   class ActionOption : public Option
   {
   public:
     ActionOption(std::string const& id, std::string const& actionName);
+    ActionOption(std::string const& id, ActionPage actionPage);
 
     virtual double hasTerminated() override;
 
