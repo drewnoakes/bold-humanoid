@@ -2,7 +2,6 @@
 
 // Includes inserted verbatim into wrapper code
 %{
-#include "../Agent/agent.hh"
 #include "../OptionTree/optiontree.hh"
 #include "../AgentState/agentstate.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
@@ -20,6 +19,8 @@
 
 // Can not create objects, unless we tell you to
 %nodefaultctor;
+// Create a lot of docs
+%feature("autodoc", "3");
 
 // Include std library interfaces
 %include <stl.i>
@@ -42,42 +43,21 @@
 %shared_ptr(bold::ParticleState)
 %shared_ptr(bold::WorldFrameState)
 
+%shared_ptr(bold::VisualCortex)
+
 %template() std::vector<PyObject*>;
+
 
 // Now define all interfaces that we want to be available in Python In
 // theory we can also %include all header files, but that often breaks
 // (eg C++11 stuff, and usually inlined and private stuff)
+%feature("kwargs");
+
+%include "../VisualCortex/visualcortex.i"
+%include "../Agent/agent.i"
+
 namespace bold
 {
-  class Agent
-  {
-  public:
-    Agent(std::string const& U2D_dev,
-          std::string const& confFile,
-          std::string const& motionFile,
-          unsigned teamNumber,
-          unsigned uniformNumber,
-          bool useJoystick,
-          bool autoGetUpFromFallen,
-          bool useOptionTree,
-          bool recordFrames,
-          bool ignoreGameController);
-
-    void run();
-    void stop();
-
-  };
-
-  %extend Agent {
-  public:
-    void onThinkEndConnect(PyObject* pyFunc)
-    {
-      $self->onThinkEnd.connect(
-        [pyFunc]() {
-          PyEval_CallObject(pyFunc, Py_BuildValue("()"));
-        });
-    }
-  };
 
   class StateTracker;
 
