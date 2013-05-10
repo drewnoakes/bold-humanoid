@@ -1,8 +1,9 @@
 #include "action.hh"
-#include </home/drew/rc/kidsize/bold-humanoid/BodyControl/bodycontrol.hh>
-#include </home/drew/rc/kidsize/bold-humanoid/AgentState/agentstate.hh>
-#include </home/drew/rc/kidsize/bold-humanoid/StateObject/HardwareState/hardwarestate.hh>
-#include </home/drew/rc/kidsize/bold-humanoid/MX28Snapshot/mx28snapshot.hh>
+
+#include "../../BodyControl/bodycontrol.hh"
+#include "../../AgentState/agentstate.hh"
+#include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../MX28Snapshot/mx28snapshot.hh"
 
 #include <iostream>
 #include <string.h>

@@ -239,10 +239,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./MotionModule/Walking/walking.cc
-  ./MotionModule/Walking/Matrix.cpp
-  ./MotionModule/Walking/Point.cpp
-  ./MotionModule/Walking/Vector.cpp
+  ./MotionModule/WalkModule/walkmodule.cc
+  ./MotionModule/WalkModule/Matrix.cpp
+  ./MotionModule/WalkModule/Point.cpp
+  ./MotionModule/WalkModule/Vector.cpp
 )
 
 add_class(BOLDHUMANOID

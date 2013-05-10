@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../MotionModule/Walking/walking.hh"
+#include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../stateobject.hh"
 
 namespace bold
@@ -8,7 +8,7 @@ namespace bold
   class AmbulatorState : public StateObject
   {
   public:
-    AmbulatorState(double targetX, double targetY, double targetTurn, std::shared_ptr<Walking> walker)
+    AmbulatorState(double targetX, double targetY, double targetTurn, std::shared_ptr<WalkModule> walker)
     : d_targetX(targetX),
       d_targetY(targetY),
       d_targetTurn(targetTurn),

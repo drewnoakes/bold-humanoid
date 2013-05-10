@@ -53,7 +53,7 @@ Agent::Agent(string const& U2D_dev,
     cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
   }
 
-  d_walkModule = make_shared<Walking>(d_ini);
+  d_walkModule = make_shared<WalkModule>(d_ini);
   d_actionModule = make_shared<Action>();
   d_actionModule->loadFile(d_motionFile);
 

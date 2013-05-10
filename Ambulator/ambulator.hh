@@ -8,12 +8,12 @@
 
 namespace bold
 {
-  class Walking;
+  class WalkModule;
 
   class Ambulator
   {
   public:
-    Ambulator(std::shared_ptr<Walking> walkModule, minIni const& ini)
+    Ambulator(std::shared_ptr<WalkModule> walkModule, minIni const& ini)
     : d_walkModule(walkModule),
       d_xAmp(0.0, ini.getd("Ambulator", "XAmpDelta", 3.0)),
       d_yAmp(0.0, ini.getd("Ambulator", "YAmpDelta", 3.0)),
@@ -51,7 +51,7 @@ namespace bold
     void setTurnAngle(double turnSpeed);
 
   private:
-    std::shared_ptr<Walking> d_walkModule;
+    std::shared_ptr<WalkModule> d_walkModule;
     LinearSmoother d_xAmp;
     LinearSmoother d_yAmp;
     LinearSmoother d_turnAmp;

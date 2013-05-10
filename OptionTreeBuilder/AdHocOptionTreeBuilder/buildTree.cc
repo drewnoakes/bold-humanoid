@@ -1,6 +1,7 @@
 #include "adhocoptiontreebuilder.ih"
-#include </home/drew/rc/kidsize/bold-humanoid/StateObject/BodyState/bodystate.hh>
-#include </home/drew/rc/kidsize/bold-humanoid/MotionModule/Head/head.hh>
+
+#include "../../StateObject/BodyState/bodystate.hh"
+#include "../../MotionModule/Head/head.hh"
 
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
                                                          unsigned teamNumber,
@@ -11,7 +12,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
                                                          shared_ptr<Ambulator> ambulator,
                                                          shared_ptr<Action> actionModule,
                                                          shared_ptr<Head> headModule,
-                                                         shared_ptr<Walking> walkModule)
+                                                         shared_ptr<WalkModule> walkModule)
 {
   unique_ptr<OptionTree> tree(new OptionTree());
 

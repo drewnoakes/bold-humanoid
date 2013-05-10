@@ -1,7 +1,7 @@
 #include "ambulator.hh"
 
 #include "../AgentState/agentstate.hh"
-#include "../MotionModule/Walking/walking.hh"
+#include "../MotionModule/WalkModule/walkmodule.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 
 #include <iostream>

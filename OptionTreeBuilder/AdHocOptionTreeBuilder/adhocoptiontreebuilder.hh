@@ -9,7 +9,7 @@ namespace bold
   class CameraModel;
   class Debugger;
   class Head;
-  class Walking;
+  class WalkModule;
 
   class AdHocOptionTreeBuilder
   {
@@ -23,6 +23,6 @@ namespace bold
                                           std::shared_ptr<Ambulator> ambulator,
                                           std::shared_ptr<Action> actionModule,
                                           std::shared_ptr<Head> headModule,
-                                          std::shared_ptr<Walking> walkModule);
+                                          std::shared_ptr<WalkModule> walkModule);
   };
 }

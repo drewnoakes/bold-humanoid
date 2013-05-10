@@ -1,6 +1,8 @@
 #pragma once
+
 #include <memory>
-#include </home/drew/rc/kidsize/bold-humanoid/JointId/jointid.hh>
+
+#include "../JointId/jointid.hh"
 
 namespace bold
 {

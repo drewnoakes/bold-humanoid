@@ -31,7 +31,7 @@ namespace bold
   class OptionTree;
   class Spatialiser;
   class VisualCortex;
-  class Walking;
+  class WalkModule;
 
   enum class ActionPage
   {
@@ -81,7 +81,7 @@ namespace bold
     std::shared_ptr<CM730Linux> d_cm730Linux;
     std::shared_ptr<CM730> d_cm730;
     std::shared_ptr<MotionLoop> d_motionLoop;
-    std::shared_ptr<Walking> d_walkModule;
+    std::shared_ptr<WalkModule> d_walkModule;
     std::shared_ptr<Head> d_headModule;
     std::shared_ptr<Action> d_actionModule;
 

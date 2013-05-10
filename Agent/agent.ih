@@ -38,7 +38,7 @@
 #include "../MotionLoop/motionloop.hh"
 #include "../MotionModule/Action/action.hh"
 #include "../MotionModule/Head/head.hh"
-#include "../MotionModule/Walking/walking.hh"
+#include "../MotionModule/WalkModule/walkmodule.hh"
 
 #include <iostream>
 

@@ -8,7 +8,7 @@ class minIni;
 
 namespace bold
 {
-  class Walking : public MotionModule
+  class WalkModule : public MotionModule
   {
   public:
     enum
@@ -97,11 +97,11 @@ namespace bold
     void updateBalanceParams();
 
   public:
-    Walking(minIni const& ini);
+    WalkModule(minIni const& ini);
 
-    virtual ~Walking();
+    virtual ~WalkModule();
 
-    // Walking initial pose
+    // WalkModule initial pose
     double X_OFFSET;
     double Y_OFFSET;
     double Z_OFFSET;
@@ -109,7 +109,7 @@ namespace bold
     double P_OFFSET;
     double R_OFFSET;
 
-    // Walking control
+    // WalkModule control
     double PERIOD_TIME;
     double DSP_RATIO;
     double STEP_FB_RATIO;

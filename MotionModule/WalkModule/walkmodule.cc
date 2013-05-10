@@ -1,10 +1,11 @@
-#include "walking.hh"
+#include "walkmodule.hh"
 
 #include <cmath>
 #include <iostream>
 
 #include "../../AgentState/agentstate.hh"
 #include "../../BodyControl/bodycontrol.hh"
+#include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../minIni/minIni.h"
 #include "../../MX28/mx28.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
@@ -12,14 +13,13 @@
 // TODO if we keep this walk, reimplement using Eigen and get rid of these classes:
 #include "Vector.h"
 #include "Matrix.h"
-#include </home/drew/rc/kidsize/bold-humanoid/CM730Snapshot/cm730snapshot.hh>
 
 using namespace bold;
 using namespace std;
 
-Walking::Walking(minIni const& ini)
+WalkModule::WalkModule(minIni const& ini)
 {
-  string section = "Walking Config";
+  string section = "Walk Module";
 
   X_OFFSET = ini.getd(section, "x_offset", -10);
   Y_OFFSET = ini.getd(section, "y_offset", 5);
@@ -68,15 +68,15 @@ Walking::Walking(minIni const& ini)
 //   d_jointData.setPGain(JointControl::ID_L_ELBOW, 8);
 }
 
-Walking::~Walking()
+WalkModule::~WalkModule()
 {}
 
-double Walking::wsin(double time, double period, double period_shift, double mag, double mag_shift)
+double WalkModule::wsin(double time, double period, double period_shift, double mag, double mag_shift)
 {
   return mag * sin(2 * M_PI / period * time - period_shift) + mag_shift;
 }
 
-bool Walking::computeIK(double *out, double x, double y, double z, double a, double b, double c)
+bool WalkModule::computeIK(double *out, double x, double y, double z, double a, double b, double c)
 {
   Matrix3D Tad, Tda, Tcd, Tdc, Tac;
   Vector3D vec;
@@ -152,7 +152,7 @@ bool Walking::computeIK(double *out, double x, double y, double z, double a, dou
   return true;
 }
 
-void Walking::updateTimeParams()
+void WalkModule::updateTimeParams()
 {
   m_PeriodTime = PERIOD_TIME;
   m_DSP_Ratio = DSP_RATIO;
@@ -181,7 +181,7 @@ void Walking::updateTimeParams()
   m_Arm_Swing_Gain = ARM_SWING_GAIN;
 }
 
-void Walking::updateMovementParams()
+void WalkModule::updateMovementParams()
 {
   // Forward/Back
   m_X_Move_Amplitude = X_MOVE_AMPLITUDE;
@@ -219,7 +219,7 @@ void Walking::updateMovementParams()
   }
 }
 
-void Walking::updateBalanceParams()
+void WalkModule::updateBalanceParams()
 {
   m_X_Offset = X_OFFSET;
   m_Y_Offset = Y_OFFSET;
@@ -230,7 +230,7 @@ void Walking::updateBalanceParams()
   m_Hip_Pitch_Offset = HIP_PITCH_OFFSET*MX28::RATIO_DEGS2VALUE;
 }
 
-void Walking::initialize()
+void WalkModule::initialize()
 {
   X_MOVE_AMPLITUDE   = 0;
   Y_MOVE_AMPLITUDE   = 0;
@@ -259,23 +259,23 @@ void Walking::initialize()
   step(JointSelection(true, true, true));
 }
 
-void Walking::start()
+void WalkModule::start()
 {
   m_Ctrl_Running = true;
   m_Real_Running = true;
 }
 
-void Walking::stop()
+void WalkModule::stop()
 {
   m_Ctrl_Running = false;
 }
 
-bool Walking::isRunning()
+bool WalkModule::isRunning()
 {
   return m_Real_Running;
 }
 
-void Walking::step(JointSelection const& selectedJoints)
+void WalkModule::step(JointSelection const& selectedJoints)
 {
   double x_swap, y_swap, z_swap, a_swap, b_swap, c_swap;
   double x_move_r, y_move_r, z_move_r, a_move_r, b_move_r, c_move_r;
@@ -536,7 +536,7 @@ void Walking::step(JointSelection const& selectedJoints)
 //   }
 }
 
-void Walking::applyHead(shared_ptr<HeadSection> head)
+void WalkModule::applyHead(shared_ptr<HeadSection> head)
 {
   // Ensure we have our standard PID values
   head->visitJoints([this](shared_ptr<JointControl> joint){ joint->setPidGains(P_GAIN, I_GAIN, D_GAIN); });
@@ -544,7 +544,7 @@ void Walking::applyHead(shared_ptr<HeadSection> head)
   head->pan()->setAngle(A_MOVE_AMPLITUDE);
 }
 
-void Walking::applyArms(shared_ptr<ArmSection> arms)
+void WalkModule::applyArms(shared_ptr<ArmSection> arms)
 {
   // Ensure we have our standard PID values
   arms->visitJoints([this](shared_ptr<JointControl> joint){ joint->setPidGains(P_GAIN, I_GAIN, D_GAIN); });
@@ -553,7 +553,7 @@ void Walking::applyArms(shared_ptr<ArmSection> arms)
   arms->shoulderPitchLeft()->setValue(d_outValue[13]);
 }
 
-void Walking::applyLegs(shared_ptr<LegSection> legs)
+void WalkModule::applyLegs(shared_ptr<LegSection> legs)
 {
   // Ensure we have our standard PID values
   legs->visitJoints([this](shared_ptr<JointControl> joint){ joint->setPidGains(P_GAIN, I_GAIN, D_GAIN); });

@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../motionmodule.hh"
-#include </home/drew/rc/kidsize/bold-humanoid/Math/math.hh>
+#include "../../Math/math.hh"
 
 class minIni;
 
