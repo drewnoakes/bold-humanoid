@@ -1,21 +1,15 @@
 #include "gtest/gtest.h"
 
-#include <JointData.h>
-
 #include "../StateObject/BodyState/bodystate.hh"
+#include "../JointId/jointid.hh"
 
 using namespace std;
 using namespace bold;
 using namespace Eigen;
-using namespace robotis;
 
 TEST (BodyStateTests, posture)
 {
-  double angles[JointData::NUMBER_OF_JOINTS];
-  for (int i = 0; i < JointData::NUMBER_OF_JOINTS; i++)
-  {
-    angles[i] = 0;
-  }
+  double angles[21] = {0,};
 
   //
   // Create a body with all hinges at an angle of zero
@@ -37,8 +31,8 @@ TEST (BodyStateTests, posture)
   // Roll the legs out 90 degrees and check again
   //
 
-  angles[JointData::ID_L_HIP_ROLL] = M_PI/2;
-  angles[JointData::ID_R_HIP_ROLL] = M_PI/2;
+  angles[(int)JointId::L_HIP_ROLL] = M_PI/2;
+  angles[(int)JointId::R_HIP_ROLL] = M_PI/2;
 
   auto am2 = BodyState(angles);
   leftFoot = am2.getLimb("lFoot");

@@ -5,11 +5,12 @@
 #include <string>
 #include <vector>
 
-#include <minIni.h>
 #include <libwebsockets.h>
 #include <opencv2/opencv.hpp>
 
 #include "../StateObject/stateobject.hh"
+
+class minIni;
 
 namespace cv
 {

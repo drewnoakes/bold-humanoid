@@ -4,6 +4,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
                            shared_ptr<FieldMap> fieldMap,
                            shared_ptr<Spatialiser> spatialiser,
                            shared_ptr<Debugger> debugger,
+                           shared_ptr<Head> headModule,
                            minIni const& ini)
 : d_fieldMap(fieldMap),
   d_cameraModel(cameraModel),
@@ -127,20 +128,18 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   // Head control
   //
   vector<Control> headControls;
-  auto moveHead = [](double const& panDelta, double const& tiltDelta)
+  auto moveHead = [&headModule](double const& panDelta, double const& tiltDelta)
   {
-    auto head = Head::GetInstance();
-    head->m_Joint.SetEnableHeadOnly(true, true);
-    head->MoveByAngleOffset(panDelta, tiltDelta);
+//     headModule->m_Joint.SetEnableHeadOnly(true, true);
+    headModule->moveByAngleOffset(panDelta, tiltDelta);
   };
   headControls.push_back(Control::createAction("&blacktriangleleft;",  [&moveHead](){ moveHead( 5, 0); }));
   headControls.push_back(Control::createAction("&blacktriangle;",      [&moveHead](){ moveHead( 0, 5); }));
   headControls.push_back(Control::createAction("&blacktriangledown;",  [&moveHead](){ moveHead( 0,-5); }));
   headControls.push_back(Control::createAction("&blacktriangleright;", [&moveHead](){ moveHead(-5, 0); }));
-  headControls.push_back(Control::createAction("home", [](){
-    auto head = Head::GetInstance();
-    head->m_Joint.SetEnableHeadOnly(true, true);
-    head->MoveToHome();
+  headControls.push_back(Control::createAction("home", [&headModule](){
+//     headModule->m_Joint.SetEnableHeadOnly(true, true);
+    headModule->moveToHome();
   }));
   d_controlsByFamily["head"] = headControls;
 

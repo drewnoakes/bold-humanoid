@@ -1,17 +1,21 @@
 #pragma once
 
-#include <minIni.h>
 #include <Eigen/Core>
+#include <memory>
 
 #include "../Smoother/LinearSmoother/linearsmoother.hh"
+#include "../minIni/minIni.h"
 
 namespace bold
 {
+  class Walking;
+
   class Ambulator
   {
   public:
-    Ambulator(minIni const& ini)
-    : d_xAmp(0.0, ini.getd("Ambulator", "XAmpDelta", 3.0)),
+    Ambulator(std::shared_ptr<Walking> walkModule, minIni const& ini)
+    : d_walkModule(walkModule),
+      d_xAmp(0.0, ini.getd("Ambulator", "XAmpDelta", 3.0)),
       d_yAmp(0.0, ini.getd("Ambulator", "YAmpDelta", 3.0)),
       d_turnAmp(0.0, ini.getd("Ambulator", "TurnDelta", 1.0)),
       d_turnAngleSet(false),
@@ -47,6 +51,7 @@ namespace bold
     void setTurnAngle(double turnSpeed);
 
   private:
+    std::shared_ptr<Walking> d_walkModule;
     LinearSmoother d_xAmp;
     LinearSmoother d_yAmp;
     LinearSmoother d_turnAmp;

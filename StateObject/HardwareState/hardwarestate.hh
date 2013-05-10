@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "../stateobject.hh"
-#include "../../robotis/Framework/include/JointData.h"
 
 namespace bold
 {
@@ -31,7 +30,7 @@ namespace bold
 
     std::shared_ptr<MX28Snapshot const> getMX28State(unsigned jointId) const
     {
-      assert(jointId > 0 && jointId < robotis::JointData::NUMBER_OF_JOINTS);
+      assert(jointId > 0 && jointId <= NUMBER_OF_JOINTS);
       assert(d_mx28States.size() > jointId);
 
       return d_mx28States[jointId];
@@ -43,6 +42,8 @@ namespace bold
     unsigned long GetTransmittedBytes() const { return d_txBytes; }
 
   private:
+    const int NUMBER_OF_JOINTS = 20;
+
     std::shared_ptr<CM730Snapshot const> d_cm730State;
     std::vector<std::shared_ptr<MX28Snapshot const>> d_mx28States;
     unsigned long d_rxBytes;

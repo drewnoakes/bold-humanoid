@@ -1,10 +1,11 @@
 #pragma once
 
-#include <minIni.h>
 #include <vector>
 #include <Eigen/Core>
 
 #include "../geometry/LineSegment.hh"
+
+class minIni;
 
 namespace bold
 {

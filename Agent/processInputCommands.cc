@@ -1,6 +1,6 @@
 #include "agent.ih"
 
-bool inputAvailable()
+bool isInputAvailable()
 {
   struct timeval tv;
   fd_set fds;
@@ -17,7 +17,7 @@ void Agent::processInputCommands()
   //
   // Control walking via keyboard
   //
-  if (inputAvailable())
+  if (isInputAvailable())
   {
     char c;
     std::cin >> c;
@@ -82,23 +82,21 @@ void Agent::processInputCommands()
       }
       else if (event.isButton() && event.value == 1 && !event.isInitialState())
       {
-        auto action = robotis::Action::GetInstance();
-
         switch (event.number)
         {
           case 6:
             cout << "Left kick" << endl;
-            action->m_Joint.SetEnableBodyWithoutHead(true, true);
-            action->Start((int)ActionPage::KickLeft);
+//             d_actionModule->d_jointData.setEnableBodyWithoutHead(true, true);
+            d_actionModule->start((int)ActionPage::KickLeft);
             break;
           case 7:
             cout << "Right kick" << endl;
-            action->m_Joint.SetEnableBodyWithoutHead(true, true);
-            action->Start((int)ActionPage::KickLeft);
+//             d_actionModule->d_jointData.setEnableBodyWithoutHead(true, true);
+            d_actionModule->start((int)ActionPage::KickLeft);
             break;
           default:
             if (event.value == 1)
-              printf("Button %u\n", event.number);
+              cout << "Button " << event.number << endl;
             break;
         }
       }

@@ -19,7 +19,6 @@
 #include "../OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
-#include "../StateObject/AlarmState/alarmstate.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
@@ -29,18 +28,20 @@
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../StateObject/ParticleState/particlestate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
+#include "../StateObserver/GyroCalibrator/gyrocalibrator.hh"
+#include "../StateObserver/FallDetector/falldetector.hh"
 #include "../VisualCortex/visualcortex.hh"
+
+#include "../CM730/cm730.hh"
+#include "../CM730Platform/CM730Linux/cm730linux.hh"
+#include "../MX28/mx28.hh"
+#include "../MotionLoop/motionloop.hh"
+#include "../MotionModule/Action/action.hh"
+#include "../MotionModule/Head/head.hh"
+#include "../MotionModule/Walking/walking.hh"
 
 #include <iostream>
 
-#include <Action.h>
-#include <Head.h>
-#include <LinuxCM730.h>
-#include <LinuxMotionTimer.h>
-#include <MotionManager.h>
-#include <MX28.h>
-
-using namespace robotis;
 using namespace std;
 using namespace bold;
 using namespace Eigen;

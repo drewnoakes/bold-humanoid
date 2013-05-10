@@ -25,11 +25,41 @@ Agent::Agent(string const& U2D_dev,
 
   registerStateTypes();
 
-  d_linuxCM730 = make_shared<LinuxCM730>(U2D_dev.c_str());
-  d_CM730 = make_shared<CM730>(d_linuxCM730.get());
-  d_CM730->MakeBulkReadPacket();
+  // Register state observers
+  d_fallDetector = make_shared<FallDetector>();
+  AgentState::getInstance().registerObserver<HardwareState>(d_fallDetector);
 
-  d_ambulator = make_shared<Ambulator>(d_ini),
+  d_gyroCalibrator = make_shared<GyroCalibrator>();
+  AgentState::getInstance().registerObserver<HardwareState>(d_gyroCalibrator);
+
+  d_cm730Linux = make_shared<CM730Linux>(U2D_dev.c_str());
+  d_cm730 = make_shared<CM730>(d_cm730Linux);
+  d_cm730->makeBulkReadPacket();
+
+  d_haveBody = d_cm730->connect();
+
+  if (d_haveBody)
+  {
+    d_motionLoop = make_shared<MotionLoop>(d_cm730);
+
+    d_motionLoop->addModule(d_actionModule);
+    d_motionLoop->addModule(d_headModule);
+    d_motionLoop->addModule(d_walkModule);
+
+    d_motionLoop->start();
+  }
+  else
+  {
+    cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
+  }
+
+  d_walkModule = make_shared<Walking>(d_ini);
+  d_actionModule = make_shared<Action>();
+  d_actionModule->loadFile(d_motionFile);
+
+  d_headModule = make_shared<Head>(d_ini);
+
+  d_ambulator = make_shared<Ambulator>(d_walkModule, d_ini),
 
   d_cameraModel = make_shared<CameraModel>(d_ini);
 
@@ -41,7 +71,7 @@ Agent::Agent(string const& U2D_dev,
 
   d_localiser = make_shared<Localiser>(d_fieldMap, d_ini);
 
-  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, d_ini);
+  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, d_headModule, d_ini);
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_ini, d_debugger);
 
@@ -52,7 +82,10 @@ Agent::Agent(string const& U2D_dev,
                                              d_ignoreGameController,
                                              d_debugger,
                                              d_cameraModel,
-                                             d_ambulator);
+                                             d_ambulator,
+                                             d_actionModule,
+                                             d_headModule,
+                                             d_walkModule);
 
   if (useJoystick)
   {
@@ -73,9 +106,16 @@ Agent::Agent(string const& U2D_dev,
   for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
 
-  d_debugger->update(d_CM730);
+  d_debugger->update(d_cm730);
 
-  d_haveBody = initMotionManager(d_ini);
+  // TODO move this to an initialisation phase of the behaviour tree
+  cout << "[Agent::Agent] Sitting down..." << endl;
+  auto sit = d_optionTree->getOption("sitdownaction");
+  while (sit->hasTerminated() == 0.0)
+  {
+    sit->runPolicy();
+    usleep(8000);
+  }
 
   cout << "[Agent::Agent] Done" << endl;
 }

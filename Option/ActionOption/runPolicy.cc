@@ -2,13 +2,14 @@
 
 OptionList ActionOption::runPolicy()
 {
-  auto actionModule = robotis::Action::GetInstance();
-  if (!d_started && !actionModule->IsRunning())
+  if (!d_started && !d_actionModule->isRunning())
   {
     cout << "[ActionOption::runPolicy] Starting Action: " << getID() << endl;
-    actionModule->m_Joint.SetEnableBody(true, true);
-    actionModule->Start(d_actionName.c_str());
+
+//     d_actionModule->d_jointData.setEnableBody(true, true);
+    d_actionModule->start(d_actionName);
     d_started = true;
   }
+
   return OptionList();
 }

@@ -1,13 +1,10 @@
 #include "ambulator.hh"
 
 #include "../AgentState/agentstate.hh"
-#include "../robotis/Framework/include/Walking.h"
+#include "../MotionModule/Walking/walking.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 
 #include <iostream>
 
-#include <Walking.h>
-
 using namespace bold;
-using namespace robotis;
 using namespace std;

@@ -1,9 +1,13 @@
 #include "hardwarestate.hh"
+
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 
+#include <memory>
+
 using namespace bold;
 using namespace rapidjson;
+using namespace std;
 
 void HardwareState::writeJson(Writer<StringBuffer>& writer) const
 {
@@ -45,10 +49,10 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
 
     writer.String("joints");
     writer.StartArray();
-    for (auto mx28 : d_mx28States)
+    for (shared_ptr<MX28Snapshot const> mx28 : d_mx28States)
     {
       writer.String("id").Int(mx28->id);
-      writer.String("movingSpeedRPM").Int(mx28->movingSpeedRPM);
+//       writer.String("movingSpeedRPM").Int(mx28->movingSpeedRPM);
       writer.String("speedRPM").Int(mx28->presentSpeedRPM);
       writer.String("load").Int(mx28->presentLoad);
       writer.String("temp").Int(mx28->presentTemp);

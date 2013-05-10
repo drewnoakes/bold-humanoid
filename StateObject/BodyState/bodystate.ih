@@ -2,9 +2,6 @@
 
 #include <list>
 
-#include <JointData.h>
-
 using namespace bold;
 using namespace std;
 using namespace Eigen;
-using namespace robotis;

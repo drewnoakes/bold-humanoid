@@ -9,6 +9,8 @@ namespace bold
 
     static Timestamp getTimestamp();
 
+    static double getMillis();
+
     static double getSeconds();
 
     static double getSeconds(Timestamp since);

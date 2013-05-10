@@ -1,8 +1,5 @@
 #include "stopwalking.hh"
 
-#include <Walking.h>
-
 #include "../../Ambulator/ambulator.hh"
 
 using namespace bold;
-using namespace robotis;

@@ -6,13 +6,10 @@
 #include "../Colour/colour.hh"
 #include "../Clock/clock.hh"
 
-namespace robotis
-{
-  class CM730;
-}
-
 namespace bold
 {
+  class CM730;
+
   typedef std::pair<double,std::string> EventTiming;
 
   class Debugger
@@ -49,7 +46,7 @@ namespace bold
      * Update the debugger at the end of the think cycle.
      * Currently only updates LEDs.
      */
-    void update(std::shared_ptr<robotis::CM730> cm730);
+    void update(std::shared_ptr<CM730> cm730);
 
   private:
     void showEyeColour(Colour::bgr const& colour) { d_eyeColour = colour; }

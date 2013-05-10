@@ -1,110 +1,83 @@
+#include "cm730snapshot.hh"
+
 #include <cstdio>
 
-#include "cm730snapshot.hh"
-#include "../robotis/Framework/include/CM730.h"
+#include "../CM730/cm730.hh"
 
-using namespace robotis;
 using namespace Eigen;
 using namespace bold;
 
-double CM730Snapshot::gyroValueToDps(int value)
+// see http://support.robotis.com/en/product/darwin-op/references/reference/hardware_specifications/electronics/sub_controller_(cm-730).htm
+
+// TODO have constructors just store const byte[] and convert fields to properties that make conversions
+
+CM730Snapshot::CM730Snapshot(BulkReadData const& data)
 {
-  // TODO the range in the positive and negative should be slightly different
-  // see http://support.robotis.com/en/product/darwin-op/references/reference/hardware_specifications/electronics/sub_controller_(cm-730).htm
-  return ((value-512)/512.0)*1600.0;
-}
-
-double CM730Snapshot::gyroValueToRps(int value)
-{
-  // 0 -> -1600 dps
-  // 512 -> 0 dps
-  // 1023 -> +1600 dps
-  double dps = gyroValueToDps(value);
-  return dps*M_PI/180.0;
-}
-
-double CM730Snapshot::accValueToGs(int value)
-{
-  // TODO the range in the positive and negative should be slightly different
-  // see http://support.robotis.com/en/product/darwin-op/references/reference/hardware_specifications/electronics/sub_controller_(cm-730).htm
-  return ((value-512)/512.0)*4.0;
-}
-
-Vector3d CM730Snapshot::shortToColour(unsigned short s)
-{
-  auto r =  s        & 0x1F; // first five bits
-  auto g = (s >> 5)  & 0x1F; // next five bits
-  auto b = (s >> 10) & 0x1F; // next five bits
-
-  return Vector3d(
-    r / 31.0,
-    g / 31.0,
-    b / 31.0);
-}
-
-CM730Snapshot::CM730Snapshot(robotis::BulkReadData const& data)
-{
-  // documentation: http://support.robotis.com/en/product/darwin-op/references/reference/hardware_specifications/electronics/sub_controller_(cm-730).htm
-
-  //
-  // EEPROM AREA
-  //
-
-  modelNumber     = data.ReadWord(CM730::P_MODEL_NUMBER_L); // 0x7300
-
-  firmwareVersion = data.ReadByte(CM730::P_VERSION);
-
-  dynamixelId     = data.ReadByte(CM730::P_ID);                            // 0xC8
-
-  auto baudByte   = data.ReadByte(CM730::P_BAUD_RATE);                     // 0x01
-  baudBPS = 2000000/(baudByte+1);
-
-  auto retDelayTime = data.ReadByte(CM730::P_RETURN_DELAY_TIME);           // 0x00
-  returnDelayTimeMicroSeconds = (unsigned int)retDelayTime * 2;
-
-  statusRetLevel = data.ReadByte(CM730::P_RETURN_LEVEL);                         // 0x02
+  // we don't read anything from the EEPROM area
 
   //
   // RAM AREA
   //
 
-  isPowered = data.ReadByte(CM730::P_DXL_POWER) == 1;
+  isPowered = data.readByte(CM730::P_DXL_POWER) == 1;
 
-  auto ledPanel = data.ReadByte(CM730::P_LED_PANNEL);
+  auto ledPanel = data.readByte(CM730::P_LED_PANNEL);
   isLed2On = (ledPanel & 0x1) != 0;
   isLed3On = (ledPanel & 0x2) != 0;
   isLed4On = (ledPanel & 0x4) != 0;
 
-  auto ledForehead = data.ReadWord(CM730::P_LED_HEAD_L);
-  foreheadColor = shortToColour(ledForehead);
+  auto ledForehead = data.readWord(CM730::P_LED_HEAD_L);
+  foreheadColor = CM730::shortToColour(ledForehead);
 
-  auto ledEye = data.ReadWord(CM730::P_LED_EYE_L);
-  eyeColor = shortToColour(ledEye);
+  auto ledEye = data.readWord(CM730::P_LED_EYE_L);
+  eyeColor = CM730::shortToColour(ledEye);
 
-  auto buttons      = data.ReadByte(CM730::P_BUTTON);
+  auto buttons = data.readByte(CM730::P_BUTTON);
   isModeButtonPressed = (buttons & 0x1) != 0;
   isStartButtonPressed = (buttons & 0x2) != 0;
 
-  auto gyroZ = data.ReadWord(CM730::P_GYRO_Z_L);
-  auto gyroY = data.ReadWord(CM730::P_GYRO_Y_L);
-  auto gyroX = data.ReadWord(CM730::P_GYRO_X_L);
+  auto gyroZ = data.readWord(CM730::P_GYRO_Z_L);
+  auto gyroY = data.readWord(CM730::P_GYRO_Y_L);
+  auto gyroX = data.readWord(CM730::P_GYRO_X_L);
+  gyroRaw = Vector3i(gyroX, gyroY, gyroZ);
   gyro = Vector3d(
-    gyroValueToRps(gyroX),
-    gyroValueToRps(gyroY),
-    gyroValueToRps(gyroZ)
+    CM730::gyroValueToRps(gyroX),
+    CM730::gyroValueToRps(gyroY),
+    CM730::gyroValueToRps(gyroZ)
   );
 
-  auto accX = data.ReadWord(CM730::P_ACCEL_X_L);
-  auto accY = data.ReadWord(CM730::P_ACCEL_Y_L);
-  auto accZ = data.ReadWord(CM730::P_ACCEL_Z_L);
+  auto accX = data.readWord(CM730::P_ACCEL_X_L);
+  auto accY = data.readWord(CM730::P_ACCEL_Y_L);
+  auto accZ = data.readWord(CM730::P_ACCEL_Z_L);
+  accRaw = Vector3i(accX, accY, accZ);
   acc = Vector3d(
-    accValueToGs(accX),
-    accValueToGs(accY),
-    accValueToGs(accZ)
+    CM730::accValueToGs(accX),
+    CM730::accValueToGs(accY),
+    CM730::accValueToGs(accZ)
   );
 
-  voltage = data.ReadByte(CM730::P_VOLTAGE) / 10.0f;
+  voltage = data.readByte(CM730::P_VOLTAGE) / 10.0f;
+}
 
-  micLevelLeft = data.ReadWord(CM730::P_LEFT_MIC_L);
-  micLevelRight = data.ReadWord(CM730::P_RIGHT_MIC_L);
+StaticCM730State::StaticCM730State(BulkReadData const& data)
+{
+  //
+  // EEPROM AREA
+  //
+
+  modelNumber     = data.readWord(CM730::P_MODEL_NUMBER_L);       // 0x7300
+
+  firmwareVersion = data.readByte(CM730::P_VERSION);
+
+  dynamixelId     = data.readByte(CM730::P_ID);                   // 0xC8
+
+  auto baudByte   = data.readByte(CM730::P_BAUD_RATE);            // 0x01
+  baudBPS = 2000000/(baudByte+1);
+
+  auto retDelayTime = data.readByte(CM730::P_RETURN_DELAY_TIME);  // 0x00
+  returnDelayTimeMicroSeconds = (unsigned int)retDelayTime * 2;
+
+  statusRetLevel = data.readByte(CM730::P_RETURN_LEVEL);          // 0x02
+
+  // we don't read anything from the RAM area
 }

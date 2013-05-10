@@ -51,6 +51,24 @@ void Agent::think()
     t = d_debugger->timeEvent(t, "Integrate Game Control");
   }
 
+  //
+  // Populate agent frame from camera frame
+  //
+  d_spatialiser->updateCameraToAgent();
+  t = d_debugger->timeEvent(t, "Camera to Agent Frame");
+
+  //
+  // Update the localiser
+  //
+  d_localiser->update();
+  t = d_debugger->timeEvent(t, "Update Localiser");
+
+  //
+  // Populate world frame from agent frame
+  //
+  d_spatialiser->updateAgentToWorld(d_localiser->smoothedPosition());
+  t = d_debugger->timeEvent(t, "Agent to World Frame");
+
   if (d_haveBody)
   {
     if (d_useOptionTree)
@@ -68,48 +86,22 @@ void Agent::think()
     //
     // Get up, if we've fallen over
     //
+    // TODO make this a behaviour
     standUpIfFallen();
     t = d_debugger->timeEvent(t, "Stand Up");
 
     //
     // Flush out new walking parameters
     //
+    // TODO this becomes part of the motion loop
     d_ambulator->step();
     t = d_debugger->timeEvent(t, "Ambulator Step");
 
     //
     // Update LEDs on back, etc
     //
-    d_debugger->update(d_CM730);
+    d_debugger->update(d_cm730);
     t = d_debugger->timeEvent(t, "Update Debugger");
-
-    //
-    // Read all data from the sub board
-    //
-    static int tmp = 0;
-    if (tmp++ % 5 == 0)
-    {
-      readSubBoardData();
-      t = d_debugger->timeEvent(t, "Read Sub Board");
-    }
-
-    //
-    // Populate agent frame from camera frame
-    //
-    d_spatialiser->updateCameraToAgent();
-    t = d_debugger->timeEvent(t, "Camera to Agent Frame");
-
-    //
-    // Update the localiser
-    //
-    d_localiser->update();
-    t = d_debugger->timeEvent(t, "Update Localiser");
-
-    //
-    // Populate world frame from agent frame
-    //
-    d_spatialiser->updateAgentToWorld(d_localiser->smoothedPosition());
-    t = d_debugger->timeEvent(t, "Agent to World Frame");
   }
 
   //

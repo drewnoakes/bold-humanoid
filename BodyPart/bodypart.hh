@@ -1,7 +1,10 @@
 #pragma once
 
 #include <Eigen/Geometry>
+#include <memory>
 #include <vector>
+
+#include "../JointId/jointid.hh"
 
 namespace bold
 {
@@ -29,7 +32,6 @@ namespace bold
     {
       return transform.translation().head<3>();
     }
-
 
     // Needed when having fixed sized Eigen member
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -75,12 +77,12 @@ namespace bold
     Eigen::Vector3d axis;
 
     /// This joint's identifier
-    int id;
+    JointId id;
 
 //    /// Minimum and maximum angle bounds
 //    std::pair<double, double> bounds;
 
-    /// Joint angle
+    /// Joint angle in radians
     double angle;
 
 //    /// Joint rate
@@ -107,5 +109,4 @@ namespace bold
     // Needed when having fixed sized Eigen member
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   };
-
 }

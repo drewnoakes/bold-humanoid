@@ -3,9 +3,11 @@
 #define GAMECONTROLLER_PORT 3838
 
 #include <memory>
-#include <minIni.h>
 
 #include "../StateObject/GameState/gamestate.hh"
+#include "../minIni/minIni.h"
+
+class minIni;
 
 namespace bold
 {

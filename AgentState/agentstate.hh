@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "../StateObject/stateobject.hh"
+#include "../StateObserver/stateobserver.hh"
 
 struct libwebsocket_protocols;
 
@@ -86,6 +87,25 @@ namespace bold
     /** Fires when a state object is updated. */
     sigc::signal<void, std::shared_ptr<StateTracker>> updated;
 
+    std::map<std::type_info const*, std::vector<std::shared_ptr<StateObserver<StateObject>>>> d_observersByTypeId;
+
+    template<typename TState>
+    void registerObserver(std::shared_ptr<StateObserver<TState>> observer)
+    {
+      // TODO can type traits be used here to guarantee that T derives from StateObject
+      std::type_info const* typeId = &typeid(TState);
+      auto it = d_observersByTypeId.find(typeId);
+      if (it == d_observersByTypeId.end())
+      {
+        std::vector<std::shared_ptr<StateObserver<StateObject>>> observers = { std::dynamic_pointer_cast<StateObserver<StateObject>>(observer) };
+        d_observersByTypeId[typeId] = observers;
+      }
+      else
+      {
+        it->second.push_back(std::dynamic_pointer_cast<StateObserver<StateObject>>(observer));
+      }
+    }
+
     template <typename T>
     void set(std::shared_ptr<T const> state)
     {
@@ -93,6 +113,15 @@ namespace bold
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
       updated(tracker);
+      std::type_info const* typeId = &typeid(T);
+      auto it = d_observersByTypeId.find(typeId);
+      if (it != d_observersByTypeId.end())
+      {
+        for (auto& observer : it->second)
+        {
+          std::dynamic_pointer_cast<StateObserver<T>>(observer)->observe(state);
+        }
+      }
     }
 
     template <typename T>

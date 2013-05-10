@@ -14,7 +14,6 @@ define(
 
             // One per StateObject...
             agentFrameState: 'AgentFrame',
-            alarmState: 'Alarm',
             ambulatorState: 'Ambulator',
             bodyState: 'Body',
             cameraFrameState: 'CameraFrame',
@@ -29,7 +28,6 @@ define(
         // TODO populate this from the server somehow, but must only list those using JSON encoding
         Protocols.allStates = [
             Protocols.agentFrameState,
-            Protocols.alarmState,
             Protocols.ambulatorState,
             Protocols.cameraFrameState,
             Protocols.bodyState,

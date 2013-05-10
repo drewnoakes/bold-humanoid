@@ -2,8 +2,6 @@
 
 void Ambulator::step()
 {
-  auto walk = Walking::GetInstance();
-
   double xAmp = d_xAmp.getNext();
   double yAmp = d_yAmp.getNext();
 
@@ -11,24 +9,24 @@ void Ambulator::step()
 
   if (xAmp == 0 && yAmp == 0 && turnAmp == 0)
   {
-    if (walk->IsRunning())
+    if (d_walkModule->isRunning())
     {
 //       cout << "[Ambulator] Stopping Walker" << endl;
-      walk->Stop();
+      d_walkModule->stop();
     }
   }
   else
   {
-    walk->X_MOVE_AMPLITUDE = xAmp;
-    walk->Y_MOVE_AMPLITUDE = yAmp;
-    walk->A_MOVE_AMPLITUDE = turnAmp;
+    d_walkModule->X_MOVE_AMPLITUDE = xAmp;
+    d_walkModule->Y_MOVE_AMPLITUDE = yAmp;
+    d_walkModule->A_MOVE_AMPLITUDE = turnAmp;
 
-    walk->m_Joint.SetEnableBodyWithoutHead(true, true);
+//     d_walkModule->d_jointData.setEnableBodyWithoutHead(true, true);
 
-    if (!walk->IsRunning())
+    if (!d_walkModule->isRunning())
     {
 //       cout << "[Ambulator] Starting Walker" << endl;
-      walk->Start();
+      d_walkModule->start();
     }
   }
 
@@ -36,5 +34,5 @@ void Ambulator::step()
   d_moveDirSet = false;
 
   AgentState::getInstance().set(make_shared<AmbulatorState const>(
-    d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(), walk));
+    d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(), d_walkModule));
 }

@@ -1,15 +1,18 @@
 #pragma once
 
 #include "../option.hh"
-#include <minIni.h>
+#include "../minIni/minIni.h"
 
 namespace bold
 {
+  class Head;
+
   class LookAtFeet : public Option
   {
   public:
-    LookAtFeet(std::string const& id, minIni const& ini)
-    : Option(id)
+    LookAtFeet(std::string const& id, minIni const& ini, std::shared_ptr<Head> headModule)
+    : Option(id),
+      d_headModule(headModule)
     {
       d_feetX = ini.getd("LookAtFeet", "FeetX", 0);
       d_feetY = ini.getd("LookAtFeet", "FeetY", -67.5);
@@ -18,6 +21,7 @@ namespace bold
     OptionList runPolicy() override;
 
   private:
+    std::shared_ptr<Head> d_headModule;
     double d_feetX;
     double d_feetY;
   };

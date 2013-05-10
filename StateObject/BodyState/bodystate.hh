@@ -9,7 +9,7 @@
 
 #include "../stateobject.hh"
 #include "../../BodyPart/bodypart.hh"
-#include "../../robotis/Framework/include/JointData.h"
+#include "../JointId/jointid.hh"
 
 namespace bold
 {
@@ -20,10 +20,9 @@ namespace bold
 
     void updatePosture();
 
-    std::shared_ptr<Limb const> getTorso() const
-    {
-      return d_torso;
-    }
+    std::shared_ptr<Limb const> getTorso() const { return d_torso; }
+
+    std::shared_ptr<Joint const> getHeadPanJoint() const { return getJoint(JointId::HEAD_PAN); }
 
     std::shared_ptr<Limb const> getLimb(std::string const& name) const
     {
@@ -34,12 +33,12 @@ namespace bold
       return i->second;
     }
 
-    std::shared_ptr<Joint const> getJoint(unsigned jointId) const
+    std::shared_ptr<Joint const> getJoint(JointId jointId) const
     {
-      assert(jointId > 0 && jointId < robotis::JointData::NUMBER_OF_JOINTS);
+      assert((unsigned)jointId > 0 && (unsigned)jointId <= NUMBER_OF_JOINTS);
 
       // NOTE cannot use '[]' on a const map
-      auto const& i = d_jointById.find(jointId);
+      auto const& i = d_jointById.find((unsigned)jointId);
       if (i == d_jointById.end())
         throw std::runtime_error("Invalid JointId" /*+ jointId*/);
       return i->second;
@@ -47,9 +46,9 @@ namespace bold
 
     void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
     {
-      for (unsigned jointId = 1; jointId < robotis::JointData::NUMBER_OF_JOINTS; jointId++)
+      for (unsigned jointId = 1; jointId <= NUMBER_OF_JOINTS; jointId++)
       {
-        auto joint = getJoint(jointId);
+        auto joint = getJoint((JointId)jointId);
         action(joint);
       }
     }
@@ -61,10 +60,13 @@ namespace bold
     double getTorsoHeight() const { return d_torsoHeight; }
 
   private:
+    const int NUMBER_OF_JOINTS = 20;
+
     void initBody(double angles[]);
 
     double d_torsoHeight;
     std::shared_ptr<Limb> d_torso;
+    // TODO replace with a vector<sp<Joint>> for performance of lookup
     std::map<unsigned, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
 
