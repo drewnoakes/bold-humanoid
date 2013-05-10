@@ -2,4 +2,5 @@
 
 NR=$1
 
-ssh darwin@192.168.123.$NR
+ssh -t darwin@192.168.123.$NR "screen -dr || screen"
+
