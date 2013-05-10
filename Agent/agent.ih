@@ -37,7 +37,7 @@
 #include "../MX28/mx28.hh"
 #include "../MotionLoop/motionloop.hh"
 #include "../MotionModule/Action/action.hh"
-#include "../MotionModule/Head/head.hh"
+#include "../MotionModule/HeadModule/headmodule.hh"
 #include "../MotionModule/WalkModule/walkmodule.hh"
 
 #include <iostream>

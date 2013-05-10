@@ -3,6 +3,6 @@
 #include "../../Ambulator/ambulator.hh"
 #include "../../AgentState/agentstate.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
-#include "../../MotionModule/Head/head.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
 
 using namespace bold;

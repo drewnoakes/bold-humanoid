@@ -4,7 +4,7 @@
 #include "../../CameraModel/cameramodel.hh"
 #include "../../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../../VisualCortex/visualcortex.hh"
-#include "../../MotionModule/Head/head.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
 
 #include <cmath>
 

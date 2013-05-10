@@ -1,4 +1,4 @@
-#include "head.hh"
+#include "headmodule.hh"
 
 #include "../Math/math.hh"
 #include "../minIni/minIni.h"
@@ -10,7 +10,7 @@
 using namespace bold;
 using namespace std;
 
-Head::Head(minIni const& ini)
+HeadModule::HeadModule(minIni const& ini)
 {
   d_panGainP    = ini.getd("Head Module", "pan_p_gain", 0.1);
   d_panGainD    = ini.getd("Head Module", "pan_d_gain", 0.22);
@@ -28,16 +28,16 @@ Head::Head(minIni const& ini)
   d_tiltHome    = ini.getd("Head Module", "tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
 }
 
-Head::~Head()
+HeadModule::~HeadModule()
 {}
 
-void Head::checkLimit()
+void HeadModule::checkLimit()
 {
   d_panAngle = Math::clamp(d_panAngle, d_limitRight, d_limitLeft);
   d_tiltAngle = Math::clamp(d_panAngle, d_limitBottom, d_limitTop);
 }
 
-void Head::initialize()
+void HeadModule::initialize()
 {
   d_panAngle = d_panHome;
   d_tiltAngle = d_tiltHome;
@@ -46,12 +46,12 @@ void Head::initialize()
   moveToHome();
 }
 
-void Head::moveToHome()
+void HeadModule::moveToHome()
 {
   moveToAngle(d_panHome, d_tiltHome);
 }
 
-void Head::moveToAngle(double pan, double tilt)
+void HeadModule::moveToAngle(double pan, double tilt)
 {
   d_panAngle = pan;
   d_tiltAngle = tilt;
@@ -59,18 +59,18 @@ void Head::moveToAngle(double pan, double tilt)
   checkLimit();
 }
 
-void Head::moveByAngleOffset(double panDelta, double tiltDelta)
+void HeadModule::moveByAngleOffset(double panDelta, double tiltDelta)
 {
   moveToAngle(d_panAngle + panDelta, d_tiltAngle + tiltDelta);
 }
 
-void Head::initTracking()
+void HeadModule::initTracking()
 {
   d_panError = 0;
   d_tiltError = 0;
 }
 
-void Head::moveTracking(double panError, double tiltError)
+void HeadModule::moveTracking(double panError, double tiltError)
 {
   d_panError = panError;
   d_tiltError = tiltError;
@@ -97,16 +97,16 @@ void Head::moveTracking(double panError, double tiltError)
   checkLimit();
 }
 
-void Head::step(JointSelection const& selectedJoints)
+void HeadModule::step(JointSelection const& selectedJoints)
 {
   // TODO implement a head movement that updates its target position every 8ms instead of every 30ms, for smoother movements
 }
 
-void Head::applyHead(std::shared_ptr<HeadSection> head)
+void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
 {
   head->pan()->setAngle(d_panAngle);
   head->tilt()->setAngle(d_tiltAngle);
 }
 
-void Head::applyArms(std::shared_ptr<ArmSection> arms) { cerr << "[Head::applyArms] SHOULD NOT BE CALLED" << endl; }
-void Head::applyLegs(std::shared_ptr<LegSection> legs) { cerr << "[Head::applyLegs] SHOULD NOT BE CALLED" << endl; }
+void HeadModule::applyArms(std::shared_ptr<ArmSection> arms) { cerr << "[HeadModule::applyArms] SHOULD NOT BE CALLED" << endl; }
+void HeadModule::applyLegs(std::shared_ptr<LegSection> legs) { cerr << "[HeadModule::applyLegs] SHOULD NOT BE CALLED" << endl; }

@@ -22,7 +22,7 @@
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
-#include "../MotionModule/Head/head.hh"
+#include "../MotionModule/HeadModule/headmodule.hh"
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>

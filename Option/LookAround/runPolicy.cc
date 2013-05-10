@@ -60,7 +60,7 @@ OptionList LookAround::runPolicy()
   }
 
   // Move to the calculated position
-//   Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
+//   HeadModule::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   d_headModule->moveToAngle(hAngle, vAngle);
 
   return OptionList();

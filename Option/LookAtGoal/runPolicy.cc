@@ -33,7 +33,7 @@ OptionList LookAtGoal::runPolicy()
   if (offset.norm() < 2)
     offset = Vector2d(0,0);
 
-//   Head::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
+//   HeadModule::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   d_headModule->moveTracking(offset.x(), offset.y());
 
   return OptionList();

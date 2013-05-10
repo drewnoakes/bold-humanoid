@@ -1,7 +1,7 @@
 #include "adhocoptiontreebuilder.ih"
 
 #include "../../StateObject/BodyState/bodystate.hh"
-#include "../../MotionModule/Head/head.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
 
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
                                                          unsigned teamNumber,
@@ -11,7 +11,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
                                                          shared_ptr<CameraModel> cameraModel,
                                                          shared_ptr<Ambulator> ambulator,
                                                          shared_ptr<Action> actionModule,
-                                                         shared_ptr<Head> headModule,
+                                                         shared_ptr<HeadModule> headModule,
                                                          shared_ptr<WalkModule> walkModule)
 {
   unique_ptr<OptionTree> tree(new OptionTree());

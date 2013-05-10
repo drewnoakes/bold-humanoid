@@ -5,12 +5,12 @@
 
 namespace bold
 {
-  class Head;
+  class HeadModule;
 
   class LookAtFeet : public Option
   {
   public:
-    LookAtFeet(std::string const& id, minIni const& ini, std::shared_ptr<Head> headModule)
+    LookAtFeet(std::string const& id, minIni const& ini, std::shared_ptr<HeadModule> headModule)
     : Option(id),
       d_headModule(headModule)
     {
@@ -21,7 +21,7 @@ namespace bold
     OptionList runPolicy() override;
 
   private:
-    std::shared_ptr<Head> d_headModule;
+    std::shared_ptr<HeadModule> d_headModule;
     double d_feetX;
     double d_feetY;
   };

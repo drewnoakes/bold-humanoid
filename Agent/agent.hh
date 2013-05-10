@@ -24,7 +24,7 @@ namespace bold
   class FallDetector;
   class FieldMap;
   class GyroCalibrator;
-  class Head;
+  class HeadModule;
   class GameStateReceiver;
   class Localiser;
   class MotionLoop;
@@ -82,7 +82,7 @@ namespace bold
     std::shared_ptr<CM730> d_cm730;
     std::shared_ptr<MotionLoop> d_motionLoop;
     std::shared_ptr<WalkModule> d_walkModule;
-    std::shared_ptr<Head> d_headModule;
+    std::shared_ptr<HeadModule> d_headModule;
     std::shared_ptr<Action> d_actionModule;
 
     // State observers

@@ -57,7 +57,7 @@ Agent::Agent(string const& U2D_dev,
   d_actionModule = make_shared<Action>();
   d_actionModule->loadFile(d_motionFile);
 
-  d_headModule = make_shared<Head>(d_ini);
+  d_headModule = make_shared<HeadModule>(d_ini);
 
   d_ambulator = make_shared<Ambulator>(d_walkModule, d_ini),
 

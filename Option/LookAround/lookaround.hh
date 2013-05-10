@@ -5,12 +5,12 @@
 
 namespace bold
 {
-  class Head;
+  class HeadModule;
 
   class LookAround : public Option
   {
   public:
-    LookAround(std::string const& id, minIni const& ini, std::shared_ptr<Head> headModule)
+    LookAround(std::string const& id, minIni const& ini, std::shared_ptr<HeadModule> headModule)
     : Option(id),
       d_headModule(headModule)
     {
@@ -24,7 +24,7 @@ namespace bold
     virtual OptionList runPolicy() override;
 
   private:
-    std::shared_ptr<Head> d_headModule;
+    std::shared_ptr<HeadModule> d_headModule;
     double d_topAngle;
     double d_bottomAngle;
     double d_sideAngle;

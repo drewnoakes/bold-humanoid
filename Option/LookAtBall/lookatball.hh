@@ -5,12 +5,12 @@
 namespace bold
 {
   class CameraModel;
-  class Head;
+  class HeadModule;
 
   class LookAtBall : public Option
   {
   public:
-    LookAtBall(std::string const& id, std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<Head> headModule)
+    LookAtBall(std::string const& id, std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<HeadModule> headModule)
     : Option(id),
       d_cameraModel(cameraModel),
       d_headModule(headModule)
@@ -20,6 +20,6 @@ namespace bold
 
   private:
     std::shared_ptr<CameraModel> d_cameraModel;
-    std::shared_ptr<Head> d_headModule;
+    std::shared_ptr<HeadModule> d_headModule;
   };
 }

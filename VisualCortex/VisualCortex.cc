@@ -4,7 +4,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
                            shared_ptr<FieldMap> fieldMap,
                            shared_ptr<Spatialiser> spatialiser,
                            shared_ptr<Debugger> debugger,
-                           shared_ptr<Head> headModule,
+                           shared_ptr<HeadModule> headModule,
                            minIni const& ini)
 : d_fieldMap(fieldMap),
   d_cameraModel(cameraModel),
@@ -125,7 +125,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_controlsByFamily["line-dots"] = lineDotPassControls;
 
   //
-  // Head control
+  // HeadModule control
   //
   vector<Control> headControls;
   auto moveHead = [&headModule](double const& panDelta, double const& tiltDelta)

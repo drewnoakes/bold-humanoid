@@ -13,7 +13,7 @@ namespace bold
   class ArmSection;
   class LegSection;
 
-  class Head : public MotionModule
+  class HeadModule : public MotionModule
   {
   private:
     static constexpr double EYE_TILT_OFFSET_ANGLE = 40.0; // degrees
@@ -40,8 +40,8 @@ namespace bold
     void checkLimit();
 
   public:
-    Head(minIni const& ini);
-    ~Head();
+    HeadModule(minIni const& ini);
+    ~HeadModule();
 
     void initialize() override;
     void step(JointSelection const& selectedJoints) override;

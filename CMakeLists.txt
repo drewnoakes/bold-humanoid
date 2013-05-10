@@ -235,7 +235,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./MotionModule/Head/head.cc
+  ./MotionModule/HeadModule/headmodule.cc
 )
 
 add_class(BOLDHUMANOID

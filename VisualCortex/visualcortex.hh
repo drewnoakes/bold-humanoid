@@ -18,7 +18,7 @@ namespace bold
   class CameraModel;
   class Debugger;
   class DataStreamer;
-  class Head;
+  class HeadModule;
   class ImageLabeller;
 
   template <typename TPixel>
@@ -53,7 +53,7 @@ namespace bold
                  std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
                  std::shared_ptr<Debugger> debugger,
-                 std::shared_ptr<Head> headModule,
+                 std::shared_ptr<HeadModule> headModule,
                  minIni const& ini);
 
     std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
