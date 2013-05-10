@@ -1,6 +1,6 @@
 #include "actionoption.hh"
 
-#include "../MotionModule/Action/action.hh"
+#include "../MotionModule/ActionModule/actionmodule.hh"
 
 #include <iostream>
 

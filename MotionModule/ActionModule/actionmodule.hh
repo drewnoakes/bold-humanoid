@@ -9,7 +9,7 @@ namespace bold
 {
   class BodySection;
 
-  class Action : public MotionModule
+  class ActionModule : public MotionModule
   {
   public:
     typedef unsigned char uchar;
@@ -91,9 +91,9 @@ namespace bold
     void setChecksum(PAGE *pPage);
 
   public:
-    Action();
+    ActionModule();
 
-    ~Action();
+    ~ActionModule();
 
     void initialize() override;
     void step(JointSelection const& selectedJoints) override;

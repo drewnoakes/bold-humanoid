@@ -4,7 +4,7 @@ OptionList ActionOption::runPolicy()
 {
   if (!d_started && !d_actionModule->isRunning())
   {
-    cout << "[ActionOption::runPolicy] Starting Action: " << getID() << endl;
+    cout << "[ActionOption::runPolicy] Starting ActionModule: " << getID() << endl;
 
 //     d_actionModule->d_jointData.setEnableBody(true, true);
     d_actionModule->start(d_actionName);

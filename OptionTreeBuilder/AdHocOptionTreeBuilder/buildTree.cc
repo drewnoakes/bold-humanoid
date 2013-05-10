@@ -10,7 +10,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
                                                          shared_ptr<Debugger> debugger,
                                                          shared_ptr<CameraModel> cameraModel,
                                                          shared_ptr<Ambulator> ambulator,
-                                                         shared_ptr<Action> actionModule,
+                                                         shared_ptr<ActionModule> actionModule,
                                                          shared_ptr<HeadModule> headModule,
                                                          shared_ptr<WalkModule> walkModule)
 {

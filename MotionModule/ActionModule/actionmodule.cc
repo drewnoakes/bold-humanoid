@@ -1,4 +1,4 @@
-#include "action.hh"
+#include "actionmodule.hh"
 
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../AgentState/agentstate.hh"
@@ -11,18 +11,18 @@
 using namespace bold;
 using namespace std;
 
-Action::Action()
+ActionModule::ActionModule()
 : d_file(nullptr),
   d_isRunning(false)
 {}
 
-Action::~Action()
+ActionModule::~ActionModule()
 {
   if (d_file != 0)
     fclose(d_file);
 }
 
-bool Action::verifyChecksum(PAGE *pPage)
+bool ActionModule::verifyChecksum(PAGE *pPage)
 {
   uchar checksum = 0x00;
   uchar *pt = (uchar*)pPage;
@@ -35,14 +35,14 @@ bool Action::verifyChecksum(PAGE *pPage)
 
   if (checksum != 0xff)
   {
-    cerr << "[Action::verifyChecksum] Page checksum is invalid" << endl;
+    cerr << "[ActionModule::verifyChecksum] Page checksum is invalid" << endl;
     return false;
   }
 
   return true;
 }
 
-void Action::setChecksum(PAGE *pPage)
+void ActionModule::setChecksum(PAGE *pPage)
 {
   uchar checksum = 0x00;
   uchar *pt = (uchar*)pPage;
@@ -58,7 +58,7 @@ void Action::setChecksum(PAGE *pPage)
   pPage->header.checksum = (uchar)(0xff - checksum);
 }
 
-void Action::resetPage(PAGE *pPage)
+void ActionModule::resetPage(PAGE *pPage)
 {
   uchar *pt = (uchar*)pPage;
 
@@ -89,7 +89,7 @@ void Action::resetPage(PAGE *pPage)
   setChecksum(pPage);
 }
 
-void Action::initialize()
+void ActionModule::initialize()
 {
   d_isRunning = false;
 
@@ -98,19 +98,19 @@ void Action::initialize()
 //     d_jointData.setValue(id, MotionStatus::m_CurrentJoints.GetValue(id));
 }
 
-bool Action::loadFile(string filename)
+bool ActionModule::loadFile(string filename)
 {
   FILE *file = fopen(filename.c_str(), "r+b");
   if (file == 0)
   {
-    cerr << "[Action::LoadFile] Can not open motion file: " << filename << endl;
+    cerr << "[ActionModule::LoadFile] Can not open motion file: " << filename << endl;
     return false;
   }
 
   fseek(file, 0, SEEK_END);
   if (ftell(file) != (long)(sizeof(PAGE) * MAXNUM_PAGE))
   {
-    cerr << "[Action::LoadFile] Invalid motion file size: " << filename << endl;
+    cerr << "[ActionModule::LoadFile] Invalid motion file size: " << filename << endl;
     fclose(file);
     return false;
   }
@@ -123,12 +123,12 @@ bool Action::loadFile(string filename)
   return true;
 }
 
-bool Action::createFile(string filename)
+bool ActionModule::createFile(string filename)
 {
   FILE *action = fopen(filename.c_str(), "ab");
   if (action == 0)
   {
-    cerr << "[Action::CreateFile] Can not create Action file: " << filename << endl;
+    cerr << "[ActionModule::CreateFile] Can not create ActionModule file: " << filename << endl;
     return false;
   }
 
@@ -145,11 +145,11 @@ bool Action::createFile(string filename)
   return true;
 }
 
-bool Action::start(int pageIndex)
+bool ActionModule::start(int pageIndex)
 {
   if (pageIndex < 1 || pageIndex >= MAXNUM_PAGE)
   {
-    cerr << "[Action::Start] Invalid page index: " << pageIndex << endl;
+    cerr << "[ActionModule::Start] Invalid page index: " << pageIndex << endl;
     return false;
   }
 
@@ -160,7 +160,7 @@ bool Action::start(int pageIndex)
   return start(pageIndex, &page);
 }
 
-bool Action::start(string pageName)
+bool ActionModule::start(string pageName)
 {
   int index;
   PAGE page;
@@ -177,11 +177,11 @@ bool Action::start(string pageName)
   return start(index, &page);
 }
 
-bool Action::start(int index, PAGE *page)
+bool ActionModule::start(int index, PAGE *page)
 {
   if (d_isRunning)
   {
-    cerr << "[Action::Start] Cannot play page index " << index << " -- already playing index " << d_playingPageIndex << endl;
+    cerr << "[ActionModule::Start] Cannot play page index " << index << " -- already playing index " << d_playingPageIndex << endl;
     return false;
   }
 
@@ -189,7 +189,7 @@ bool Action::start(int index, PAGE *page)
 
   if (d_playingPage.header.repeat == 0 || d_playingPage.header.stepnum == 0)
   {
-    cerr << "[Action::Start] Page index " << index << " has no steps to perform" << endl;
+    cerr << "[ActionModule::Start] Page index " << index << " has no steps to perform" << endl;
     return false;
   }
 
@@ -199,22 +199,22 @@ bool Action::start(int index, PAGE *page)
   return true;
 }
 
-void Action::stop()
+void ActionModule::stop()
 {
   d_stopRequested = true;
 }
 
-void Action::brake()
+void ActionModule::brake()
 {
   d_isRunning = false;
 }
 
-bool Action::isRunning()
+bool ActionModule::isRunning()
 {
   return d_isRunning;
 }
 
-bool Action::isRunning(int *page, int *step)
+bool ActionModule::isRunning(int *page, int *step)
 {
   if (page != 0)
     *page = d_playingPageIndex;
@@ -225,19 +225,19 @@ bool Action::isRunning(int *page, int *step)
   return isRunning();
 }
 
-bool Action::loadPage(int index, PAGE *page)
+bool ActionModule::loadPage(int index, PAGE *page)
 {
   long position = (long)(sizeof(PAGE)*index);
 
   if (fseek(d_file, position, SEEK_SET) != 0)
   {
-    cerr << "[Action::LoadPage] Error seeking file position: " << position << endl;
+    cerr << "[ActionModule::LoadPage] Error seeking file position: " << position << endl;
     return false;
   }
 
   if (fread(page, 1, sizeof(PAGE), d_file) != sizeof(PAGE))
   {
-    cerr << "[Action::LoadPage] Error reading page index: " << index << endl;
+    cerr << "[ActionModule::LoadPage] Error reading page index: " << index << endl;
     return false;
   }
 
@@ -247,7 +247,7 @@ bool Action::loadPage(int index, PAGE *page)
   return true;
 }
 
-bool Action::savePage(int index, PAGE *page)
+bool ActionModule::savePage(int index, PAGE *page)
 {
   long position = (long)(sizeof(PAGE)*index);
 
@@ -256,20 +256,20 @@ bool Action::savePage(int index, PAGE *page)
 
   if (fseek(d_file, position, SEEK_SET) != 0)
   {
-    cerr << "[Action::SavePage] Error seeking file position: " << position << endl;
+    cerr << "[ActionModule::SavePage] Error seeking file position: " << position << endl;
     return false;
   }
 
   if (fwrite(page, 1, sizeof(PAGE), d_file) != sizeof(PAGE))
   {
-    cerr << "[Action::LoadPage] Error writing page index: " << index << endl;
+    cerr << "[ActionModule::LoadPage] Error writing page index: " << index << endl;
     return false;
   }
 
   return true;
 }
 
-void Action::step(JointSelection const& selectedJoints)
+void ActionModule::step(JointSelection const& selectedJoints)
 {
   unsigned long ulTotalTime256T;
   unsigned long ulPreSectionTime256T;
@@ -673,7 +673,7 @@ void Action::step(JointSelection const& selectedJoints)
   }
 }
 
-void Action::applySection(shared_ptr<BodySection> section)
+void ActionModule::applySection(shared_ptr<BodySection> section)
 {
   section->visitJoints([&section,this](shared_ptr<JointControl> joint)
   {
@@ -682,6 +682,6 @@ void Action::applySection(shared_ptr<BodySection> section)
   });
 }
 
-void Action::applyHead(shared_ptr<HeadSection> head) { applySection(dynamic_pointer_cast<BodySection>(head)); }
-void Action::applyArms(shared_ptr<ArmSection> arms) { applySection(dynamic_pointer_cast<BodySection>(arms)); }
-void Action::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic_pointer_cast<BodySection>(legs)); }
+void ActionModule::applyHead(shared_ptr<HeadSection> head) { applySection(dynamic_pointer_cast<BodySection>(head)); }
+void ActionModule::applyArms(shared_ptr<ArmSection> arms) { applySection(dynamic_pointer_cast<BodySection>(arms)); }
+void ActionModule::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic_pointer_cast<BodySection>(legs)); }
