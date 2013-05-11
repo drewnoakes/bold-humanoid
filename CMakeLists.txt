@@ -68,6 +68,7 @@ add_class(BOLDHUMANOID
   ./Agent/Agent.cc
   ./Agent/initCamera.cc
   ./Agent/processInputCommands.cc
+  ./Agent/readStaticHardwareState.cc
   ./Agent/registerStateTypes.cc
   ./Agent/run.cc
   ./Agent/standUpIfFallen.cc
@@ -347,9 +348,12 @@ add_class(BOLDHUMANOID
   ./StateObject/OptionTreeState/writeJson.cc
 )
 
-
 add_class(BOLDHUMANOID
   ./StateObject/ParticleState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/StaticHardwareState/writeJson.cc
 )
 
 add_class(BOLDHUMANOID

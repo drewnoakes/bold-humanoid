@@ -38,8 +38,8 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    unsigned long GetReceivedBytes() const { return d_rxBytes; }
-    unsigned long GetTransmittedBytes() const { return d_txBytes; }
+    unsigned long getReceivedBytes() const { return d_rxBytes; }
+    unsigned long getTransmittedBytes() const { return d_txBytes; }
 
   private:
     const int NUMBER_OF_JOINTS = 20;

@@ -27,6 +27,7 @@
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../StateObject/ParticleState/particlestate.hh"
+#include "../StateObject/StaticHardwareState/statichardwarestate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
 #include "../StateObserver/GyroCalibrator/gyrocalibrator.hh"
 #include "../StateObserver/FallDetector/falldetector.hh"

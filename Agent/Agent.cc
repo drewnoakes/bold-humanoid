@@ -46,6 +46,8 @@ Agent::Agent(string const& U2D_dev,
     d_motionLoop->addModule(d_walkModule);
 
     d_motionLoop->start();
+
+    readStaticHardwareState();
   }
   else
   {

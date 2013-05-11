@@ -121,5 +121,7 @@ namespace bold
     void standUpIfFallen();
 
     void processInputCommands();
+
+    void readStaticHardwareState();
   };
 }

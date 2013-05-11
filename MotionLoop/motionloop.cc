@@ -222,8 +222,6 @@ void MotionLoop::step()
     return;
   }
 
-  // TODO populate a smaller object than the full snapshot here
-
   auto cm730Snapshot = make_shared<CM730Snapshot>(d_bulkRead->getBulkReadData(CM730::ID_CM));
 
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
@@ -241,8 +239,7 @@ void MotionLoop::step()
   auto rxBytes = d_cm730->getReceivedByteCount();
   auto txBytes = d_cm730->getTransmittedByteCount();
 
-  auto hw = make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes);
-  AgentState::getInstance().set(hw);
+  AgentState::getInstance().set(make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes));
 
   //
   // UPDATE BODYSTATE
@@ -252,7 +249,7 @@ void MotionLoop::step()
   double angles[JointControl::NUMBER_OF_JOINTS];
   for (unsigned jointId = 1; jointId < JointControl::NUMBER_OF_JOINTS; jointId++)
   {
-    angles[jointId] = hw->getMX28State(jointId)->presentPosition;
+    angles[jointId] = mx28Snapshots[jointId]->presentPosition;
   }
 
   AgentState::getInstance().set(make_shared<BodyState const>(angles));

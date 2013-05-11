@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <cassert>
 #include <vector>
 
@@ -82,6 +83,13 @@ namespace bold
       }
 
       return names;
+    }
+
+    std::string toString() const
+    {
+      std::stringstream stream;
+      stream << this;
+      return stream.str();
     }
 
     static std::string getName(uchar bitIndex)

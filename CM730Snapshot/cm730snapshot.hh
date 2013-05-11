@@ -51,9 +51,6 @@ namespace bold
 
     // skip dynamic addresses in the table -- they are captured in CM730Snapshot
 
-    unsigned char micLevelLeft;
-    unsigned char micLevelRight;
-
     StaticCM730State(BulkReadTable const& data);
   };
 }
