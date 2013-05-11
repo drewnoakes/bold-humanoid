@@ -6,7 +6,7 @@ namespace bold
 {
   typedef unsigned char uchar;
 
-  class BulkReadData;
+  class BulkReadTable;
 
   // http://support.robotis.com/en/techsupport_eng.htm#product/dynamixel/mx_series/mx-28.htm
 
@@ -24,7 +24,7 @@ namespace bold
     double presentVoltage;
     uchar presentTemp;
 
-    MX28Snapshot(BulkReadData const& data, int const mx28ID);
+    MX28Snapshot(BulkReadTable const& data, int const mx28ID);
   };
 
   class StaticMX28State
@@ -74,6 +74,6 @@ namespace bold
 //  uchar punch; // apparently this value is unused
 //  double goalAcceleration; // TODO introduce this from the read
 
-    StaticMX28State(BulkReadData const& data, int const mx28ID);
+    StaticMX28State(BulkReadTable const& data, int const mx28ID);
   };
 }

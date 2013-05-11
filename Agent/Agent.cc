@@ -34,7 +34,6 @@ Agent::Agent(string const& U2D_dev,
 
   d_cm730Linux = make_shared<CM730Linux>(U2D_dev.c_str());
   d_cm730 = make_shared<CM730>(d_cm730Linux);
-  d_cm730->makeBulkReadPacket();
 
   d_haveBody = d_cm730->connect();
 

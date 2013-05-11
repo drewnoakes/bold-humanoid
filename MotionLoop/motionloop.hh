@@ -39,6 +39,7 @@ namespace bold
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
     std::shared_ptr<BodyControl> d_bodyControl;
+    std::shared_ptr<BulkRead> d_bulkRead;
 
     /// When false, calls to process have no effect
     bool d_isStarted;

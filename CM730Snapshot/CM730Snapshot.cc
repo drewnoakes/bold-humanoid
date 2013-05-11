@@ -11,7 +11,7 @@ using namespace bold;
 
 // TODO have constructors just store const byte[] and convert fields to properties that make conversions
 
-CM730Snapshot::CM730Snapshot(BulkReadData const& data)
+CM730Snapshot::CM730Snapshot(BulkReadTable const& data)
 {
   // we don't read anything from the EEPROM area
 
@@ -59,7 +59,7 @@ CM730Snapshot::CM730Snapshot(BulkReadData const& data)
   voltage = data.readByte(CM730::P_VOLTAGE) / 10.0f;
 }
 
-StaticCM730State::StaticCM730State(BulkReadData const& data)
+StaticCM730State::StaticCM730State(BulkReadTable const& data)
 {
   //
   // EEPROM AREA

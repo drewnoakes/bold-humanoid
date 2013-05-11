@@ -13,7 +13,7 @@ using namespace bold;
 
 // TODO have constructors just store const byte[] and convert fields to properties that make conversions
 
-MX28Snapshot::MX28Snapshot(BulkReadData const& data, int const mx28ID)
+MX28Snapshot::MX28Snapshot(BulkReadTable const& data, int const mx28ID)
 {
   id = data.readByte(MX28::P_ID);
 
@@ -37,7 +37,7 @@ MX28Snapshot::MX28Snapshot(BulkReadData const& data, int const mx28ID)
   presentTemp = data.readByte(MX28::P_PRESENT_TEMPERATURE);
 }
 
-StaticMX28State::StaticMX28State(BulkReadData const& data, int const mx28ID)
+StaticMX28State::StaticMX28State(BulkReadTable const& data, int const mx28ID)
 {
   //
   // EEPROM AREA

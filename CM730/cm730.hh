@@ -14,19 +14,36 @@ namespace bold
 
   typedef unsigned char uchar;
 
-  class BulkReadData
+  class BulkReadTable
   {
   public:
-    int start_address;
+    int startAddress;
     int length;
-    int error;
     uchar table[MX28::MAXNUM_ADDRESS];
 
-    BulkReadData();
-    virtual ~BulkReadData() {}
+    BulkReadTable();
 
-    int readByte(int address) const;
-    int readWord(int address) const;
+    uchar readByte(uchar address) const;
+    int readWord(uchar address) const;
+  };
+
+  class BulkRead
+  {
+  public:
+    uchar error;
+    unsigned deviceCount;
+    int rxLength;
+    BulkReadTable data[21];
+
+    BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax);
+
+    BulkReadTable const& getBulkReadData(uchar id) const;
+
+    // TODO why is this const_cast needed?
+    uchar* getTxPacket() const { return const_cast<uchar*>(&d_txPacket[0]); }
+
+  private:
+    uchar d_txPacket[5 + 1 + 3 + (20*3) + 1]; // 70
   };
 
   class CM730
@@ -147,13 +164,11 @@ namespace bold
 
     std::shared_ptr<CM730Platform> d_platform;
     uchar d_controlTable[MAXNUM_ADDRESS];
-    uchar d_bulkReadTxPacket[MAXNUM_TXPARAM + 10];
-    BulkReadData d_bulkReadData[ID_BROADCAST];
 
     /**
      * @param priority select the queue for this exchange: 0=high 1=med 2=low
      */
-    int txRxPacket(uchar *txpacket, uchar *rxpacket, int priority);
+    int txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, std::shared_ptr<BulkRead> bulkRead);
 
     static uchar calculateChecksum(uchar *packet);
 
@@ -169,13 +184,11 @@ namespace bold
     // 1023 -> +1600 dps
     static constexpr double RATIO_VALUE2DPS =  1600.0               / 512.0;
     static constexpr double RATIO_VALUE2RPS = (1600.0*(M_PI/180.0)) / 512.0;
-
     static constexpr double RATIO_VALUE2GS = 4.0 / 512.0;
 
     static double gyroValueToDps(int value) { return (value - 512)*RATIO_VALUE2DPS; }
     static double gyroValueToRps(int value) { return (value - 512)*RATIO_VALUE2RPS; }
-
-    static double accValueToGs(int value) { return (value - 512)*RATIO_VALUE2GS; }
+    static double accValueToGs(int value)   { return (value - 512)*RATIO_VALUE2GS; }
 
     static Eigen::Vector3d shortToColour(unsigned short s)
     {
@@ -246,11 +259,8 @@ namespace bold
     int reset(uchar id);
 
 
-    void makeBulkReadPacket();
+    int bulkRead(std::shared_ptr<BulkRead> bulkRead);
 
-    int bulkRead();
-
-    BulkReadData const& getBulkReadData(uchar id) { return d_bulkReadData[id]; }
 
     unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }
     unsigned long getTransmittedByteCount() const { return d_platform->getTransmittedByteCount(); }

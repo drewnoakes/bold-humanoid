@@ -26,29 +26,72 @@ using namespace std;
 #define INST_SYNC_WRITE    (131)   // 0x83
 #define INST_BULK_READ     (146)   // 0x92
 
-BulkReadData::BulkReadData()
-: start_address(0),
-  length(0),
-  error(-1)
+BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
+: error(-1),
+  deviceCount(1 + 20)
+{
+  // Build a place for the data we read back
+  for (int i = 0; i < 21; i++)
+    data[i] = BulkReadTable();
+
+  // Create a cached TX packet as it'll be identical each time
+  d_txPacket[ID]          = (uchar)CM730::ID_BROADCAST;
+  d_txPacket[INSTRUCTION] = INST_BULK_READ;
+
+  uchar p = PARAMETER;
+
+  d_txPacket[p++] = (uchar)0x0;
+
+  rxLength = deviceCount * 6;
+
+  auto writeDeviceRequest = [&p,this](uchar deviceId, uchar startAddress, uchar endAddress)
+  {
+    assert(startAddress < endAddress);
+
+    uchar requestedByteCount = endAddress - startAddress + 1;
+
+    rxLength += requestedByteCount;
+
+    d_txPacket[p++] = requestedByteCount;
+    d_txPacket[p++] = deviceId;
+    d_txPacket[p++] = startAddress;
+
+    uchar dataIndex = deviceId == CM730::ID_CM ? 0 : deviceId;
+    data[dataIndex].startAddress = startAddress;
+    data[dataIndex].length = requestedByteCount;
+  };
+
+  writeDeviceRequest(CM730::ID_CM, cmMin, cmMax);
+
+  for (int id = 1; id <= 20; id++)
+    writeDeviceRequest(id, mxMin, mxMax);
+
+  d_txPacket[LENGTH] = p - PARAMETER + 2; // Include one byte each for instruction and checksum
+}
+
+BulkReadTable const& BulkRead::getBulkReadData(uchar id) const
+{
+  return data[id == CM730::ID_CM ? 0 : id];
+}
+
+BulkReadTable::BulkReadTable()
+: startAddress(0),
+  length(0)
 {
   for (int i = 0; i < MX28::MAXNUM_ADDRESS; i++)
     table[i] = 0;
 }
 
-int BulkReadData::readByte(int address) const
+uchar BulkReadTable::readByte(uchar address) const
 {
-  if (address >= start_address && address < (start_address + length))
-    return (int)table[address];
-
-  return 0;
+  assert(address >= startAddress && address < (startAddress + length));
+  return table[address];
 }
 
-int BulkReadData::readWord(int address) const
+int BulkReadTable::readWord(uchar address) const
 {
-  if (address >= start_address && address < (start_address + length))
-    return CM730::makeWord(table[address], table[address+1]);
-
-  return 0;
+  assert(address >= startAddress && address < (startAddress + length));
+  return CM730::makeWord(table[address], table[address+1]);
 }
 
 
@@ -57,10 +100,6 @@ CM730::CM730(shared_ptr<CM730Platform> platform)
 {
   d_platform = platform;
   DEBUG_PRINT = false;
-  d_bulkReadTxPacket[LENGTH] = 0;
-
-  for (int i = 0; i < ID_BROADCAST; i++)
-    d_bulkReadData[i] = BulkReadData();
 }
 
 CM730::~CM730()
@@ -68,7 +107,7 @@ CM730::~CM730()
   disconnect();
 }
 
-int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority)
+int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr<BulkRead> bulkRead = nullptr)
 {
   if (priority > 1)
     d_platform->lowPriorityWait();
@@ -94,7 +133,7 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority)
 
   if (length < (MAXNUM_TXPARAM + 6))
   {
-    // Throw away any unprocessed inbound bytes
+    // Throw away any unprocessed inbound bytes lingering in the buffer
     d_platform->clearPort();
 
     // Send the instruction packet
@@ -114,7 +153,7 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority)
             cout << "RX: ";
 
         int receivedCount = 0;
-        while(1)
+        while (1)
         {
           length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
           if (DEBUG_PRINT)
@@ -172,37 +211,21 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority)
       }
       else if (txpacket[INSTRUCTION] == INST_BULK_READ)
       {
-        // The number of devices (Dynamixels?) expected based upon the request
-        int deviceCount = (txpacket[LENGTH]-3) / 3;
+        assert(bulkRead);
 
-        int expectedLength = deviceCount * 6;
+        bulkRead->error = rxpacket[ERRBIT];
 
-        for (int x = 0, p = PARAMETER + 1; x < deviceCount; x++)
-        {
-          int _len = txpacket[p++];
-          int _id = txpacket[p++];
-          int _addr = txpacket[p++];
-
-          expectedLength += _len;
-          d_bulkReadData[_id].length = _len;
-          d_bulkReadData[_id].start_address = _addr;
-        }
+        int deviceCount = bulkRead->deviceCount;
+        int expectedLength = bulkRead->rxLength;
 
         d_platform->setPacketTimeout(expectedLength*1.5);
 
         int receivedCount = 0;
-        if (DEBUG_PRINT)
-          cout << "RX: ";
 
-        while(1)
+        // Read until we get enough bytes, or there's a timeout
+        while (1)
         {
-          length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
-          if (DEBUG_PRINT)
-          {
-            for (int n = 0; n < length; n++)
-               cout << hex << setfill('0') << setw(2) << rxpacket[receivedCount + n] << " ";
-          }
-          receivedCount += length;
+          receivedCount += d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
 
           if (receivedCount == expectedLength)
           {
@@ -216,20 +239,16 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority)
           }
         }
 
-        for (int x = 0, p = PARAMETER + 2; x < deviceCount; x++, p += 3)
+        // Process data for all devices
+        while (1)
         {
-          int _id = txpacket[p];
-          d_bulkReadData[_id].error = -1;
-        }
-
-        while(1)
-        {
+          // Search for the header: 0xFFFF
           int i;
           for (i = 0; i < receivedCount - 1; i++)
           {
-            if (rxpacket[i] == 0xFF && rxpacket[i+1] == 0xFF)
+            if (rxpacket[i] == 0xFF && rxpacket[i + 1] == 0xFF)
               break;
-            else if (i == (receivedCount - 2) && rxpacket[receivedCount - 1] == 0xFF)
+            if (i == (receivedCount - 2) && rxpacket[receivedCount - 1] == 0xFF)
               break;
           }
 
@@ -237,36 +256,40 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority)
           {
             // Check checksum
             uchar checksum = calculateChecksum(rxpacket);
-            if (DEBUG_PRINT)
-              cout << "CHK:" << hex << setfill('0') << setw(2) << checksum << endl;
 
-            if (rxpacket[LENGTH+rxpacket[LENGTH]] == checksum)
+            if (rxpacket[LENGTH + rxpacket[LENGTH]] == checksum)
             {
-              for (int j = 0; j < (rxpacket[LENGTH]-2); j++)
-                d_bulkReadData[rxpacket[ID]].table[d_bulkReadData[rxpacket[ID]].start_address + j] = rxpacket[PARAMETER + j];
+              // Checksum matches
+              for (int j = 0; j < (rxpacket[LENGTH] - 2); j++)
+              {
+                unsigned dataIndex = rxpacket[ID] == CM730::ID_CM ? 0 : rxpacket[ID];
+                unsigned address = bulkRead->data[dataIndex].startAddress + j;
+                bulkRead->data[dataIndex].table[address] = rxpacket[PARAMETER + j];
+              }
 
-              d_bulkReadData[rxpacket[ID]].error = (int)rxpacket[ERRBIT];
-
-              int cur_packet_length = LENGTH + 1 + rxpacket[LENGTH];
-              expectedLength = receivedCount - cur_packet_length;
+              int curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
+              expectedLength = receivedCount - curPacketLength;
               for (int j = 0; j <= expectedLength; j++)
-                rxpacket[j] = rxpacket[j+cur_packet_length];
+                rxpacket[j] = rxpacket[j + curPacketLength];
 
               receivedCount = expectedLength;
               deviceCount--;
             }
             else
             {
+              // Checksum doesn't match
               res = RX_CORRUPT;
 
               for (int j = 0; j <= receivedCount - 2; j++)
-                rxpacket[j] = rxpacket[j+2];
+                rxpacket[j] = rxpacket[j + 2];
 
               expectedLength = receivedCount -= 2;
             }
 
+            // Loop until we've copied from all devices
             if (deviceCount == 0)
               break;
+
             if (receivedCount <= 6)
             {
               if (deviceCount != 0)
@@ -276,6 +299,7 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority)
           }
           else
           {
+            // Move bytes forwards in buffer, so that the header is aligned in byte zero
             for (int j = 0; j < (receivedCount - i); j++)
               rxpacket[j] = rxpacket[j+i];
             receivedCount -= i;
@@ -350,51 +374,15 @@ uchar CM730::calculateChecksum(uchar *packet)
   return (~checksum);
 }
 
-void CM730::makeBulkReadPacket()
+int CM730::bulkRead(shared_ptr<BulkRead> bulkRead)
 {
-  // TODO review length of m_BulkReadTxPacket array -- probably too long
+  uchar rxpacket[bulkRead->rxLength];
 
-  d_bulkReadTxPacket[ID]          = (uchar)ID_BROADCAST;
-  d_bulkReadTxPacket[INSTRUCTION] = INST_BULK_READ;
+  bulkRead->error = -1;
 
-  uchar p = PARAMETER;
+  assert(bulkRead->getTxPacket()[LENGTH] != 0);
 
-  d_bulkReadTxPacket[p++] = (uchar)0x0;
-
-  auto writeDeviceRequest = [&p,this](uchar deviceId, uchar startAddress, uchar endAddress)
-  {
-    assert(startAddress < endAddress);
-    uchar requestedByteCount = endAddress - startAddress + 1;
-    d_bulkReadTxPacket[p++] = requestedByteCount;
-    d_bulkReadTxPacket[p++] = deviceId;
-    d_bulkReadTxPacket[p++] = startAddress;
-  };
-
-//if (Ping(CM730::ID_CM, 0) == SUCCESS)
-    writeDeviceRequest(CM730::ID_CM, CM730::P_DXL_POWER, CM730::P_VOLTAGE);
-
-  for (int id = 1; id <= NUMBER_OF_JOINTS; id++)
-    writeDeviceRequest(id, MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE);
-
-//if (Ping(FSR::ID_L_FSR, 0) == SUCCESS)
-//  writeDeviceRequest(FSR::ID_L_FSR, FSR::P_FSR1_L, FSR::P_FSR_Y);
-
-//if (Ping(FSR::ID_R_FSR, 0) == SUCCESS)
-//  writeDeviceRequest(FSR::ID_R_FSR, FSR::P_FSR1_L, FSR::P_FSR_Y);
-
-  d_bulkReadTxPacket[LENGTH] = p - PARAMETER + 2; // Include one byte each for instruction and checksum
-}
-
-int CM730::bulkRead()
-{
-  // TODO review allocated space for this packet
-  uchar rxpacket[MAXNUM_RXPARAM + 10] = {0, };
-
-  if (d_bulkReadTxPacket[LENGTH] != 0)
-    return txRxPacket(d_bulkReadTxPacket, rxpacket, 0);
-
-  makeBulkReadPacket();
-  return TX_FAIL;
+  return txRxPacket(bulkRead->getTxPacket(), rxpacket, 0, bulkRead);
 }
 
 int CM730::syncWrite(int start_addr, int each_length, int number, int *pParam)
@@ -435,7 +423,7 @@ int CM730::reset(uchar id)
 
 bool CM730::connect()
 {
-  if (d_platform->openPort() == false)
+  if (!d_platform->openPort())
   {
     cerr << "[CM730::connect] Failed to open CM730 port" << endl;
     cerr << "[CM730::connect] Either the CM730 is in use by another program, or you do not have root privileges" << endl;

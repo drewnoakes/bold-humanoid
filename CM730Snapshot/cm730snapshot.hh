@@ -4,7 +4,7 @@
 
 namespace bold
 {
-  class BulkReadData;
+  class BulkReadTable;
 
   // http://support.robotis.com/en/product/darwin-op/references/reference/hardware_specifications/electronics/sub_controller_(cm-730).htm
 
@@ -27,7 +27,7 @@ namespace bold
     Eigen::Vector3i gyroRaw;
     Eigen::Vector3i accRaw;
 
-    CM730Snapshot(BulkReadData const& data);
+    CM730Snapshot(BulkReadTable const& data);
   };
 
   class StaticCM730State
@@ -54,6 +54,6 @@ namespace bold
     unsigned char micLevelLeft;
     unsigned char micLevelRight;
 
-    StaticCM730State(BulkReadData const& data);
+    StaticCM730State(BulkReadTable const& data);
   };
 }
