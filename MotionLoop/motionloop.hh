@@ -27,7 +27,7 @@ namespace bold
     void addModule(std::shared_ptr<MotionModule> module);
     void removeModule(std::shared_ptr<MotionModule> module);
 
-    void process();
+    void step();
 
     /// TODO allow specifying these in config
     /// Set of static offsets to be added to all target positions sent to hardware.
