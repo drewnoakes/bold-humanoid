@@ -47,6 +47,9 @@ namespace bold
     unsigned d_loopDurationMillis;
 
     pthread_t d_thread;
+    
+    /// Whether the loop has read any values yet.
+    bool d_readYet;
 
     /// The method that governs the thread's lifetime and operation
     static void *threadMethod(void *param);

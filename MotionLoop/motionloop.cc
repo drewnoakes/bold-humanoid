@@ -17,7 +17,8 @@ using namespace std;
 MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
 : d_isStarted(false),
   d_stopRequested(false),
-  d_loopDurationMillis(8)
+  d_loopDurationMillis(8),
+  d_readYet(false)
 {
   d_cm730 = cm730;
   d_bodyControl = make_shared<BodyControl>();
@@ -37,6 +38,8 @@ bool MotionLoop::start()
 {
   cout << "[MotionLoop::start] Starting" << endl;
 
+  d_readYet = false;
+  
   // Initialise default thread attributes
   pthread_attr_t attr;
   pthread_attr_init(&attr);
@@ -141,73 +144,76 @@ void *MotionLoop::threadMethod(void *param)
 
 void MotionLoop::step()
 {
-  //
-  // LET MOTION MODULES UPDATE BODY CONTROL
-  //
-
-  // TODO only step modules that are in use
-  for (auto const& module : d_modules)
+  if (d_readYet)
   {
-    auto jointSelection = JointSelection(true, true, true);
+    //
+    // LET MOTION MODULES UPDATE BODY CONTROL
+    //
 
-    module->step(jointSelection);
-  }
-
-  // TODO apply body section updates via modules, as appropriate
-
-  //
-  // WRITE UPDATE
-  //
-
-  int dirtyDeviceCount = 0;
-  int minAddress = MX28::P_D_GAIN;
-  int maxAddress = MX28::P_GOAL_POSITION_H;
-  for (shared_ptr<JointControl> joint : d_bodyControl->getJoints())
-  {
-    if (joint->isDirty())
+    // TODO only step modules that are in use
+    for (auto const& module : d_modules)
     {
-      dirtyDeviceCount++;
-      // TODO find real min/max addresses
-//       minAddress = min(minAddress, joint->minAddress());
-//       maxAddress = max(maxAddress, joint->maxAddress());
-    }
-  }
+      auto jointSelection = JointSelection(true, true, true);
 
-  if (dirtyDeviceCount > 0)
-  {
-    // Prepare the parameters of a SyncWrite instruction
-    int bytesPerDevice = 1 + maxAddress - minAddress + 1;
-    int parameters[dirtyDeviceCount * bytesPerDevice];
-    int n = 0;
+      module->step(jointSelection);
+    }
+
+    // TODO apply body section updates via modules, as appropriate
+
+    //
+    // WRITE UPDATE
+    //
+
+    int dirtyDeviceCount = 0;
+    int minAddress = MX28::P_D_GAIN;
+    int maxAddress = MX28::P_GOAL_POSITION_H;
     for (shared_ptr<JointControl> joint : d_bodyControl->getJoints())
     {
       if (joint->isDirty())
       {
-        // Specify the goal position, and apply any calibration offset
-        int goalPosition = joint->getValue() + d_offsets[joint->getId()];
-
-        parameters[n++] = joint->getId();
-
-        // Values to map to min/max address range
-        // TODO only include between min/max addresses
-        parameters[n++] = joint->getDGain();
-        parameters[n++] = joint->getIGain();
-        parameters[n++] = joint->getPGain();
-        parameters[n++] = 0; // reserved
-        parameters[n++] = CM730::getLowByte(goalPosition);
-        parameters[n++] = CM730::getHighByte(goalPosition);
-
-        joint->clearDirty();
+        dirtyDeviceCount++;
+        // TODO find real min/max addresses
+  //       minAddress = min(minAddress, joint->minAddress());
+  //       maxAddress = max(maxAddress, joint->maxAddress());
       }
     }
 
-    //
-    // Send the SyncWrite message, if anything changed
-    //
-
     if (dirtyDeviceCount > 0)
     {
-      d_cm730->syncWrite(minAddress, bytesPerDevice, dirtyDeviceCount, parameters);
+      // Prepare the parameters of a SyncWrite instruction
+      int bytesPerDevice = 1 + maxAddress - minAddress + 1;
+      int parameters[dirtyDeviceCount * bytesPerDevice];
+      int n = 0;
+      for (shared_ptr<JointControl> joint : d_bodyControl->getJoints())
+      {
+        if (joint->isDirty())
+        {
+          // Specify the goal position, and apply any calibration offset
+          int goalPosition = joint->getValue() + d_offsets[joint->getId()];
+
+          parameters[n++] = joint->getId();
+
+          // Values to map to min/max address range
+          // TODO only include between min/max addresses
+          parameters[n++] = joint->getDGain();
+          parameters[n++] = joint->getIGain();
+          parameters[n++] = joint->getPGain();
+          parameters[n++] = 0; // reserved
+          parameters[n++] = CM730::getLowByte(goalPosition);
+          parameters[n++] = CM730::getHighByte(goalPosition);
+
+          joint->clearDirty();
+        }
+      }
+
+      //
+      // Send the SyncWrite message, if anything changed
+      //
+
+      if (dirtyDeviceCount > 0)
+      {
+        d_cm730->syncWrite(minAddress, bytesPerDevice, dirtyDeviceCount, parameters);
+      }
     }
   }
 
@@ -255,4 +261,6 @@ void MotionLoop::step()
   }
 
   AgentState::getInstance().set(make_shared<BodyState const>(angles));
+  
+  d_readYet = true;
 }
