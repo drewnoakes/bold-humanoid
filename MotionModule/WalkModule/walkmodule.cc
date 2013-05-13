@@ -262,7 +262,7 @@ void WalkModule::initialize()
   updateTimeParams();
   updateMovementParams();
 
-  step(JointSelection(true, true, true));
+//  step(JointSelection(true, true, true));
 }
 
 void WalkModule::start()
