@@ -21,8 +21,8 @@ MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
 {
   d_cm730 = cm730;
   d_bodyControl = make_shared<BodyControl>();
-  d_bulkRead = make_shared<BulkRead>(CM730::P_DXL_POWER, CM730::P_VOLTAGE,
-                                     MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE);
+  d_dynamicBulkRead = make_shared<BulkRead>(CM730::P_DXL_POWER, CM730::P_VOLTAGE,
+                                            MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE);
 
   for (int i = 0; i < JointControl::NUMBER_OF_JOINTS; i++)
     d_offsets[i] = 0;
@@ -215,7 +215,7 @@ void MotionLoop::step()
   // READ DATA
   //
 
-  CommResult res = d_cm730->bulkRead(d_bulkRead);
+  CommResult res = d_cm730->bulkRead(d_dynamicBulkRead);
 
   if (res != CommResult::SUCCESS)
   {
@@ -224,13 +224,13 @@ void MotionLoop::step()
     return;
   }
 
-  auto cm730Snapshot = make_shared<CM730Snapshot>(d_bulkRead->getBulkReadData(CM730::ID_CM));
+  auto cm730Snapshot = make_shared<CM730Snapshot>(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM));
 
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
   mx28Snapshots.push_back(nullptr); // padding as joints start at 1
   for (unsigned jointId = 1; jointId < JointControl::NUMBER_OF_JOINTS; jointId++)
   {
-    auto mx28 = make_shared<MX28Snapshot>(d_bulkRead->getBulkReadData(jointId), jointId);
+    auto mx28 = make_shared<MX28Snapshot>(d_dynamicBulkRead->getBulkReadData(jointId), jointId);
     mx28Snapshots.push_back(mx28);
   }
 
