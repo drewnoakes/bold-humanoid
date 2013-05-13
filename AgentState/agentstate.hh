@@ -95,8 +95,6 @@ namespace bold
       // TODO can type traits be used here to guarantee that T derives from StateObject
       std::type_info const* typeId = &typeid(TState);
       assert(observer);
-//       auto genericObserver = observer;
-//       assert(genericObserver);
       auto it = d_observersByTypeId.find(typeId);
       if (it == d_observersByTypeId.end())
       {
@@ -127,8 +125,6 @@ namespace bold
         for (auto& observer : it->second)
         {
           assert(observer);
-//           auto o = std::dynamic_pointer_cast<StateObserver<T>>(observer);
-//           assert(o);
           observer->observe(state);
         }
       }
