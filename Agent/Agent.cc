@@ -39,6 +39,8 @@ Agent::Agent(string const& U2D_dev,
 
   if (d_haveBody)
   {
+    readStaticHardwareState();
+
     d_motionLoop = make_shared<MotionLoop>(d_cm730);
 
     d_motionLoop->addModule(d_actionModule);
@@ -46,8 +48,6 @@ Agent::Agent(string const& U2D_dev,
     d_motionLoop->addModule(d_walkModule);
 
     d_motionLoop->start();
-
-    readStaticHardwareState();
   }
   else
   {
