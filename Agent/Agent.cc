@@ -35,6 +35,13 @@ Agent::Agent(string const& U2D_dev,
   d_cm730Linux = make_shared<CM730Linux>(U2D_dev.c_str());
   d_cm730 = make_shared<CM730>(d_cm730Linux);
 
+  // Create motion modules
+  d_walkModule = make_shared<WalkModule>(d_ini);
+  d_actionModule = make_shared<ActionModule>();
+  d_actionModule->loadFile(d_motionFile);
+  d_headModule = make_shared<HeadModule>(d_ini);
+
+  // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();
 
   if (d_haveBody)
@@ -53,12 +60,6 @@ Agent::Agent(string const& U2D_dev,
   {
     cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
   }
-
-  d_walkModule = make_shared<WalkModule>(d_ini);
-  d_actionModule = make_shared<ActionModule>();
-  d_actionModule->loadFile(d_motionFile);
-
-  d_headModule = make_shared<HeadModule>(d_ini);
 
   d_ambulator = make_shared<Ambulator>(d_walkModule, d_ini),
 

@@ -103,6 +103,8 @@ void MotionLoop::stop()
 
 void MotionLoop::addModule(shared_ptr<MotionModule> module)
 {
+  assert(module);
+  
   // Initialise modules each time they are added
   module->initialize();
 
