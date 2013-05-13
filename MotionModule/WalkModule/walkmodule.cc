@@ -71,6 +71,12 @@ WalkModule::WalkModule(minIni const& ini)
 WalkModule::~WalkModule()
 {}
 
+constexpr double WalkModule::EYE_TILT_OFFSET_ANGLE;
+constexpr double WalkModule::THIGH_LENGTH;
+constexpr double WalkModule::CALF_LENGTH;
+constexpr double WalkModule::ANKLE_LENGTH;
+constexpr double WalkModule::LEG_LENGTH;
+
 double WalkModule::wsin(double time, double period, double period_shift, double mag, double mag_shift)
 {
   return mag * sin(2 * M_PI / period * time - period_shift) + mag_shift;

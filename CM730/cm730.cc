@@ -107,7 +107,7 @@ CM730::~CM730()
   disconnect();
 }
 
-int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr<BulkRead> bulkRead = nullptr)
+CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr<BulkRead> bulkRead = nullptr)
 {
   if (priority > 1)
     d_platform->lowPriorityWait();
@@ -129,7 +129,7 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr
     cout << "INST: " << getInstructionName(txpacket[INSTRUCTION]) << endl;
   }
 
-  int res = TX_FAIL;
+  CommResult res = CommResult::TX_FAIL;
 
   if (length < (MAXNUM_TXPARAM + 6))
   {
@@ -185,7 +185,7 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr
               if (DEBUG_PRINT)
                 cout << "CHK: " << hex << setfill('0') << setw(2) << checksum << endl;
 
-              res = rxpacket[receivedCount-1] == checksum ? SUCCESS : RX_CORRUPT;
+              res = rxpacket[receivedCount-1] == checksum ? CommResult::SUCCESS : CommResult::RX_CORRUPT;
               break;
             }
             else
@@ -203,7 +203,7 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr
             // Haven't loaded enough data yet... check the clock
             if (d_platform->isPacketTimeout())
             {
-              res = receivedCount == 0 ? RX_TIMEOUT : RX_CORRUPT;
+              res = receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
               break;
             }
           }
@@ -229,12 +229,12 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr
 
           if (receivedCount == expectedLength)
           {
-            res = SUCCESS;
+            res = CommResult::SUCCESS;
             break;
           }
           else if (d_platform->isPacketTimeout())
           {
-            res = receivedCount == 0 ? RX_TIMEOUT : RX_CORRUPT;
+            res = receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
             break;
           }
         }
@@ -278,7 +278,7 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr
             else
             {
               // Checksum doesn't match
-              res = RX_CORRUPT;
+              res = CommResult::RX_CORRUPT;
 
               for (int j = 0; j <= receivedCount - 2; j++)
                 rxpacket[j] = rxpacket[j + 2];
@@ -293,7 +293,7 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr
             if (receivedCount <= 6)
             {
               if (deviceCount != 0)
-                res = RX_CORRUPT;
+                res = CommResult::RX_CORRUPT;
               break;
             }
           }
@@ -309,21 +309,21 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr
       else
       {
         // Broadcast message, always successful as no response expected (?)
-        res = SUCCESS;
+        res = CommResult::SUCCESS;
       }
     }
     else
     {
-      res = TX_FAIL;
+      res = CommResult::TX_FAIL;
     }
   }
   else
   {
-    res = TX_CORRUPT;
+    res = CommResult::TX_CORRUPT;
   }
 
   if (DEBUG_PRINT)
-    cout << "Time: " << setprecision(2) << d_platform->getPacketTime() << "ms  RETURN: " << getResponseCodeName(res) << endl;
+    cout << "Time: " << setprecision(2) << d_platform->getPacketTime() << "ms  RETURN: " << getCommResultName(res) << endl;
 
   d_platform->highPriorityRelease();
   if (priority > 0)
@@ -334,16 +334,16 @@ int CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr
   return res;
 }
 
-string CM730::getResponseCodeName(int responseCode)
+string CM730::getCommResultName(CommResult responseCode)
 {
   switch(responseCode)
   {
-    case SUCCESS:     return "SUCCESS";
-    case TX_CORRUPT:  return "TX_CORRUPT";
-    case TX_FAIL:     return "TX_FAIL";
-    case RX_FAIL:     return "RX_FAIL";
-    case RX_TIMEOUT:  return "RX_TIMEOUT";
-    case RX_CORRUPT:  return "RX_CORRUPT";
+    case CommResult::SUCCESS:     return "SUCCESS";
+    case CommResult::TX_CORRUPT:  return "TX_CORRUPT";
+    case CommResult::TX_FAIL:     return "TX_FAIL";
+    case CommResult::RX_FAIL:     return "RX_FAIL";
+    case CommResult::RX_TIMEOUT:  return "RX_TIMEOUT";
+    case CommResult::RX_CORRUPT:  return "RX_CORRUPT";
 
     default:          return "UNKNOWN";
   }
@@ -374,7 +374,7 @@ uchar CM730::calculateChecksum(uchar *packet)
   return (~checksum);
 }
 
-int CM730::bulkRead(shared_ptr<BulkRead> bulkRead)
+CommResult CM730::bulkRead(shared_ptr<BulkRead> bulkRead)
 {
   uchar rxpacket[bulkRead->rxLength];
 
@@ -385,7 +385,7 @@ int CM730::bulkRead(shared_ptr<BulkRead> bulkRead)
   return txRxPacket(bulkRead->getTxPacket(), rxpacket, 0, bulkRead);
 }
 
-int CM730::syncWrite(int start_addr, int each_length, int number, int *pParam)
+CommResult CM730::syncWrite(int start_addr, int each_length, int number, int *pParam)
 {
   assert(number > 0);
   unsigned txSize = 8 + (each_length * number);
@@ -409,7 +409,7 @@ int CM730::syncWrite(int start_addr, int each_length, int number, int *pParam)
   return txRxPacket(txpacket, rxpacket, 0);
 }
 
-int CM730::reset(uchar id)
+CommResult CM730::reset(uchar id)
 {
   uchar txpacket[6];
   uchar rxpacket[6];
@@ -446,7 +446,7 @@ bool CM730::changeBaud(int baud)
 
 bool CM730::dxlPowerOn()
 {
-  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, 1, 0) == CM730::SUCCESS)
+  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, 1, 0) == CommResult::SUCCESS)
   {
     if (DEBUG_PRINT)
       cout << "[CM730::dxlPowerOn] Succeed to change Dynamixel power" << endl;
@@ -475,18 +475,18 @@ void CM730::disconnect()
   d_platform->closePort();
 }
 
-int CM730::ping(int id, uchar *error)
+CommResult CM730::ping(uchar id, uchar *error)
 {
   uchar txpacket[6];
   uchar rxpacket[6];
 
-  txpacket[ID]           = (uchar)id;
+  txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_PING;
   txpacket[LENGTH]       = 2;
 
-  int result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
 
-  if (result == SUCCESS && txpacket[ID] != ID_BROADCAST)
+  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
     if (error != 0)
       *error = rxpacket[ERRBIT];
@@ -495,20 +495,20 @@ int CM730::ping(int id, uchar *error)
   return result;
 }
 
-int CM730::readByte(int id, int address, uchar *pValue, uchar *error)
+CommResult CM730::readByte(uchar id, int address, uchar *pValue, uchar *error)
 {
   uchar txpacket[8];
   uchar rxpacket[7];
 
-  txpacket[ID]           = (uchar)id;
+  txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_READ;
   txpacket[PARAMETER]    = (uchar)address;
   txpacket[PARAMETER+1]  = 1;
   txpacket[LENGTH]       = 4;
 
-  int result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
 
-  if (result == SUCCESS)
+  if (result == CommResult::SUCCESS)
   {
     *pValue = rxpacket[PARAMETER];
     if (error != 0)
@@ -518,20 +518,20 @@ int CM730::readByte(int id, int address, uchar *pValue, uchar *error)
   return result;
 }
 
-int CM730::readWord(int id, int address, int *pValue, uchar *error)
+CommResult CM730::readWord(uchar id, int address, int *pValue, uchar *error)
 {
   uchar txpacket[8];
   uchar rxpacket[8];
 
-  txpacket[ID]           = (uchar)id;
+  txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_READ;
   txpacket[PARAMETER]    = (uchar)address;
   txpacket[PARAMETER+1]  = 2;
   txpacket[LENGTH]       = 4;
 
-  int result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
 
-  if (result == SUCCESS)
+  if (result == CommResult::SUCCESS)
   {
     *pValue = makeWord(rxpacket[PARAMETER], rxpacket[PARAMETER + 1]);
 
@@ -542,22 +542,22 @@ int CM730::readWord(int id, int address, int *pValue, uchar *error)
   return result;
 }
 
-int CM730::readTable(int id, int start_addr, int end_addr, uchar *table, uchar *error)
+CommResult CM730::readTable(uchar id, int start_addr, int end_addr, uchar *table, uchar *error)
 {
   int length = end_addr - start_addr + 1;
 
   uchar txpacket[8];
   uchar rxpacket[6 + length];
 
-  txpacket[ID]           = (uchar)id;
+  txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_READ;
   txpacket[PARAMETER]    = (uchar)start_addr;
   txpacket[PARAMETER+1]  = (uchar)length;
   txpacket[LENGTH]       = 4;
 
-  int result = txRxPacket(txpacket, rxpacket, 1);
+  CommResult result = txRxPacket(txpacket, rxpacket, 1);
 
-  if (result == SUCCESS)
+  if (result == CommResult::SUCCESS)
   {
     for (int i=0; i<length; i++)
       table[start_addr + i] = rxpacket[PARAMETER + i];
@@ -569,20 +569,20 @@ int CM730::readTable(int id, int start_addr, int end_addr, uchar *table, uchar *
   return result;
 }
 
-int CM730::writeByte(int id, int address, int value, uchar *error)
+CommResult CM730::writeByte(uchar id, int address, int value, uchar *error)
 {
   uchar txpacket[8];
   uchar rxpacket[6];
 
-  txpacket[ID]           = (uchar)id;
+  txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_WRITE;
   txpacket[PARAMETER]    = (uchar)address;
   txpacket[PARAMETER+1]  = (uchar)value;
   txpacket[LENGTH]       = 4;
 
-  int result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
 
-  if (result == SUCCESS && id != ID_BROADCAST)
+  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
     if (error != 0)
       *error = rxpacket[ERRBIT];
@@ -591,21 +591,21 @@ int CM730::writeByte(int id, int address, int value, uchar *error)
   return result;
 }
 
-int CM730::writeWord(int id, int address, int value, uchar *error)
+CommResult CM730::writeWord(uchar id, int address, int value, uchar *error)
 {
   uchar txpacket[9];
   uchar rxpacket[6];
 
-  txpacket[ID]           = (uchar)id;
+  txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_WRITE;
   txpacket[PARAMETER]    = (uchar)address;
   txpacket[PARAMETER+1]  = (uchar)getLowByte(value);
   txpacket[PARAMETER+2]  = (uchar)getHighByte(value);
   txpacket[LENGTH]       = 5;
 
-  int result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
 
-  if (result == SUCCESS && id != ID_BROADCAST)
+  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
     if (error != 0)
       *error = rxpacket[ERRBIT];

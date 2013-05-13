@@ -46,26 +46,26 @@ namespace bold
     uchar d_txPacket[5 + 1 + 3 + (20*3) + 1]; // 70
   };
 
+  /// Communication results
+  enum class CommResult
+  {
+    /// Successful communication with Dynamixel
+    SUCCESS,
+    /// Problems with Instruction Packet
+    TX_CORRUPT,
+    /// Port error, failed to send Instruction Packet
+    TX_FAIL,
+    /// Port error, failed to receive Status Packet
+    RX_FAIL,
+    /// Timeout Status, failed to receive Packet (check connection)
+    RX_TIMEOUT,
+    /// Status Packet error (bad communications link)
+    RX_CORRUPT
+  };
+
   class CM730
   {
   public:
-    /// Communication results
-    enum
-    {
-      /// Successful communication with Dynamixel
-      SUCCESS,
-      /// Problems with Instruction Packet
-      TX_CORRUPT,
-      /// Port error, failed to send Instruction Packet
-      TX_FAIL,
-      /// Port error, failed to receive Status Packet
-      RX_FAIL,
-      /// Timeout Status, failed to receive Packet (check connection)
-      RX_TIMEOUT,
-      /// Status Packet error (bad communications link)
-      RX_CORRUPT
-    };
-
     /// Error bit flags
     enum
     {
@@ -168,7 +168,7 @@ namespace bold
     /**
      * @param priority select the queue for this exchange: 0=high 1=med 2=low
      */
-    int txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, std::shared_ptr<BulkRead> bulkRead);
+    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, std::shared_ptr<BulkRead> bulkRead);
 
     static uchar calculateChecksum(uchar *packet);
 
@@ -203,7 +203,7 @@ namespace bold
     CM730(std::shared_ptr<CM730Platform> platform);
     ~CM730();
 
-    static std::string getResponseCodeName(int responseCode);
+    static std::string getCommResultName(CommResult responseCode);
     static std::string getInstructionName(uchar instructionId);
 
 
@@ -220,24 +220,24 @@ namespace bold
 
 
     /// Check the existance of Dynamixel with selected id. Returns communication result enum value.
-    int ping(int id, uchar *error);
+    CommResult ping(uchar id, uchar *error);
 
 
     /// Reads a byte from the CM730 control table. Returns communication result enum value.
-    int readByte(int id, int address, uchar *pValue, uchar *error);
+    CommResult readByte(uchar id, int address, uchar *pValue, uchar *error);
 
     /// Reads two bytes from the CM730 control table. Returns communication result enum value.
-    int readWord(int id, int address, int *pValue, uchar *error);
+    CommResult readWord(uchar id, int address, int *pValue, uchar *error);
 
     /// Reads a consecutive range of bytes from the CM730 control table. Returns communication result enum value.
-    int readTable(int id, int start_addr, int end_addr, uchar *table, uchar *error);
+    CommResult readTable(uchar id, int start_addr, int end_addr, uchar *table, uchar *error);
 
 
     /// Writes a byte into the control table for the specified Dynamixel device. Returns communication result enum value.
-    int writeByte(int id, int address, int value, uchar *error);
+    CommResult writeByte(uchar id, int address, int value, uchar *error);
 
     /// Writes two bytes into the control table for the specified Dynamixel device. Returns communication result enum value.
-    int writeWord(int id, int address, int value, uchar *error);
+    CommResult writeWord(uchar id, int address, int value, uchar *error);
 
     /** Simultaneously write data to several Dynamixels at a time. Useful for motion control.
      *
@@ -252,14 +252,14 @@ namespace bold
      * @param deviceCount the number of Dynamixel devices to write to
      * @param pParam parameters to be written, of length (number*each_length)
      */
-    int syncWrite(int start_addr, int each_length, int deviceCount, int *pParam);
+    CommResult syncWrite(int start_addr, int each_length, int deviceCount, int *pParam);
 
 
     /// Restores the state of the specified Dynamixel to the factory default setting.
-    int reset(uchar id);
+    CommResult reset(uchar id);
 
 
-    int bulkRead(std::shared_ptr<BulkRead> bulkRead);
+    CommResult bulkRead(std::shared_ptr<BulkRead> bulkRead);
 
 
     unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }

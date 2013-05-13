@@ -213,9 +213,9 @@ void MotionLoop::step()
   // READ DATA
   //
 
-  int res = d_cm730->bulkRead(d_bulkRead);
+  CommResult res = d_cm730->bulkRead(d_bulkRead);
 
-  if (res != CM730::SUCCESS)
+  if (res != CommResult::SUCCESS)
   {
     // TODO set the 'Hardware' state as failing in AgentState, and broadcast error status to clients
     cerr << "[MotionLoop::process] Bulk read failed -- skipping update of HardwareState" << endl;

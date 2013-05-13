@@ -5,9 +5,9 @@ void Agent::readStaticHardwareState()
   auto bulkRead = make_shared<BulkRead>(CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
                                         MX28::P_MODEL_NUMBER_L, MX28::P_TORQUE_ENABLE);
 
-  int res = d_cm730->bulkRead(bulkRead);
+  CommResult res = d_cm730->bulkRead(bulkRead);
 
-  if (res != CM730::SUCCESS)
+  if (res != CommResult::SUCCESS)
   {
     cerr << "[Agent::readStaticHardwareState] Bulk read failed -- skipping update of StaticHardwareState" << endl;
     return;
