@@ -61,15 +61,15 @@ namespace bold
     // RAM AREA
 
     bool torqueEnable;
-    bool led;
-    double gainP;
-    double gainI;
-    double gainD;
-    double goalPositionRads;
-    double movingSpeedRPM;
-    double torqueLimit;
-    bool isInstructionRegistered;
-    bool isMoving;
+//     bool led;
+//     double gainP;
+//     double gainI;
+//     double gainD;
+//     double goalPositionRads;
+//     double movingSpeedRPM;
+//     double torqueLimit;
+//     bool isInstructionRegistered;
+//     bool isMoving;
     bool isEepromLocked;
 //  uchar punch; // apparently this value is unused
 //  double goalAcceleration; // TODO introduce this from the read

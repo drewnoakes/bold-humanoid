@@ -90,6 +90,7 @@ StaticMX28State::StaticMX28State(BulkReadTable const& data, int const mx28ID)
   // RAM AREA
   //
   torqueEnable     = data.readByte(MX28::P_TORQUE_ENABLE) != 0;
+/*
   led              = data.readByte(MX28::P_LED) != 0;
 
   gainP            = data.readByte(MX28::P_P_GAIN) / 8.0;
@@ -106,6 +107,7 @@ StaticMX28State::StaticMX28State(BulkReadTable const& data, int const mx28ID)
 
   isInstructionRegistered = data.readByte(MX28::P_REGISTERED_INSTRUCTION) != 0; // 0x00
   isMoving                = data.readByte(MX28::P_MOVING) != 0;                 // 0x00
+*/
   isEepromLocked          = data.readByte(MX28::P_LOCK) != 0;                   // 0x00
 
   // apparently this value is unused
