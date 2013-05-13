@@ -498,7 +498,9 @@ void WalkModule::step(JointSelection const& selectedJoints)
   // TODO convert this stabilisation to a generic and replaceable BodyControlModulator ?
   if (BALANCE_ENABLE)
   {
-    auto gryoRaw = AgentState::get<HardwareState>()->getCM730State()->gyroRaw;
+    auto hw = AgentState::get<HardwareState>();
+    assert(hw);
+    auto gryoRaw = hw->getCM730State()->gyroRaw;
 
     // TODO review the gyro axes labels
     double rlGyroErr = gryoRaw.x();

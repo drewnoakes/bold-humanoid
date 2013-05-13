@@ -21,7 +21,9 @@ namespace bold
       d_mx28States(mx28States),
       d_rxBytes(rxBytes),
       d_txBytes(txBytes)
-    {}
+    {
+      assert(cm730State);
+    }
 
     std::shared_ptr<CM730Snapshot const> getCM730State() const
     {
