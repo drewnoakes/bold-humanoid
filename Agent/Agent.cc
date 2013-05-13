@@ -93,15 +93,6 @@ Agent::Agent(string const& U2D_dev,
 
   d_debugger->update(d_cm730);
 
-  // TODO move this to an initialisation phase of the behaviour tree
-  cout << "[Agent::Agent] Sitting down..." << endl;
-  auto sit = d_optionTree->getOption("sitdownaction");
-  while (sit->hasTerminated() == 0.0)
-  {
-    sit->runPolicy();
-    usleep(8000);
-  }
-
   if (d_haveBody)
   {
     readStaticHardwareState();
@@ -117,6 +108,15 @@ Agent::Agent(string const& U2D_dev,
   else
   {
     cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
+  }
+
+  // TODO move this to an initialisation phase of the behaviour tree
+  cout << "[Agent::Agent] Sitting down..." << endl;
+  auto sit = d_optionTree->getOption("sitdownaction");
+  while (sit->hasTerminated() == 0.0)
+  {
+    sit->runPolicy();
+    usleep(8000);
   }
 
   cout << "[Agent::Agent] Done" << endl;
