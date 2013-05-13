@@ -94,15 +94,18 @@ namespace bold
     {
       // TODO can type traits be used here to guarantee that T derives from StateObject
       std::type_info const* typeId = &typeid(TState);
+      assert(observer);
+      auto genericObserver = std::dynamic_pointer_cast<StateObserver<StateObject>>(observer);
+      assert(genericObserver);
       auto it = d_observersByTypeId.find(typeId);
       if (it == d_observersByTypeId.end())
       {
-        std::vector<std::shared_ptr<StateObserver<StateObject>>> observers = { std::dynamic_pointer_cast<StateObserver<StateObject>>(observer) };
+        std::vector<std::shared_ptr<StateObserver<StateObject>>> observers = { genericObserver };
         d_observersByTypeId[typeId] = observers;
       }
       else
       {
-        it->second.push_back(std::dynamic_pointer_cast<StateObserver<StateObject>>(observer));
+        it->second.push_back(genericObserver);
       }
     }
 
@@ -113,13 +116,19 @@ namespace bold
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
       updated(tracker);
+      
       std::type_info const* typeId = &typeid(T);
       auto it = d_observersByTypeId.find(typeId);
       if (it != d_observersByTypeId.end())
       {
+        std::vector<std::shared_ptr<StateObserver<StateObject>>> const& observers = it->second;
+        assert(observers.size());
         for (auto& observer : it->second)
         {
-          std::dynamic_pointer_cast<StateObserver<T>>(observer)->observe(state);
+          assert(observer);
+          auto o = std::dynamic_pointer_cast<StateObserver<T>>(observer);
+          assert(o);
+          o->observe(state);
         }
       }
     }
