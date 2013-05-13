@@ -44,23 +44,6 @@ Agent::Agent(string const& U2D_dev,
   // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();
 
-  if (d_haveBody)
-  {
-    readStaticHardwareState();
-
-    d_motionLoop = make_shared<MotionLoop>(d_cm730);
-
-    d_motionLoop->addModule(d_actionModule);
-    d_motionLoop->addModule(d_headModule);
-    d_motionLoop->addModule(d_walkModule);
-
-    d_motionLoop->start();
-  }
-  else
-  {
-    cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
-  }
-
   d_ambulator = make_shared<Ambulator>(d_walkModule, d_ini),
 
   d_cameraModel = make_shared<CameraModel>(d_ini);
@@ -117,6 +100,23 @@ Agent::Agent(string const& U2D_dev,
   {
     sit->runPolicy();
     usleep(8000);
+  }
+
+  if (d_haveBody)
+  {
+    readStaticHardwareState();
+
+    d_motionLoop = make_shared<MotionLoop>(d_cm730);
+
+    d_motionLoop->addModule(d_actionModule);
+    d_motionLoop->addModule(d_headModule);
+    d_motionLoop->addModule(d_walkModule);
+
+    d_motionLoop->start();
+  }
+  else
+  {
+    cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
   }
 
   cout << "[Agent::Agent] Done" << endl;
