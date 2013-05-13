@@ -2,6 +2,8 @@
 
 void Agent::think()
 {
+  cout << "[Agent::think]" << endl;
+
   //
   // Initialise a time value that we'll repeatedly use and update to time
   // the progress of each step of the think cycle

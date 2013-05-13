@@ -121,7 +121,7 @@ void MotionLoop::removeModule(shared_ptr<MotionModule> module)
 
 void *MotionLoop::threadMethod(void *param)
 {
-  cout << "[MotionLoop::threadMethod] Starting MotionLoop thread" << endl;
+  cout << "[MotionLoop::threadMethod] Started" << endl;
 
   MotionLoop *loop = (MotionLoop*)param;
   static struct timespec next_time;
@@ -144,6 +144,8 @@ void *MotionLoop::threadMethod(void *param)
 
 void MotionLoop::step()
 {
+  cout << "[MotionLoop::step]" << endl;
+  
   if (d_readYet)
   {
     //

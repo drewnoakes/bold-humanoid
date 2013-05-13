@@ -2,7 +2,10 @@
 
 #include "../CM730Snapshot/cm730snapshot.hh"
 
+#include <iostream>
+
 using namespace bold;
+using namespace std;
 
 FallDetector::FallDetector()
 : d_windowSize(30),
@@ -14,6 +17,8 @@ FallDetector::FallDetector()
 
 void FallDetector::observeTyped(std::shared_ptr<HardwareState const> hardwareState)
 {
+  cout << "[FallDetector::observeTyped] observing" << endl;
+  
   // Track the smoothed forward/backward acceleration to test for a consistent
   // indication that we have fallen.
 
