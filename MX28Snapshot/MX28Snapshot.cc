@@ -15,9 +15,7 @@ using namespace bold;
 
 MX28Snapshot::MX28Snapshot(BulkReadTable const& data, int const mx28ID)
 {
-  id = data.readByte(MX28::P_ID);
-
-  assert(id == mx28ID);
+  id = mx28ID;
 
   presentPositionValue = data.readWord(MX28::P_PRESENT_POSITION_L);
   presentPosition = MX28::value2Rads(presentPositionValue);
