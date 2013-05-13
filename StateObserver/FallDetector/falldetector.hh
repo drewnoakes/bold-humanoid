@@ -15,12 +15,12 @@ namespace bold
     FORWARD
   };
 
-  class FallDetector : public StateObserver<HardwareState>
+  class FallDetector : public TypedStateObserver<HardwareState>
   {
   public:
     FallDetector();
 
-    void observe(std::shared_ptr<HardwareState const> hardwareState) override;
+    void observeTyped(std::shared_ptr<HardwareState const> hardwareState) override;
 
     FallState getFallenState() const { return d_fallenState; }
 

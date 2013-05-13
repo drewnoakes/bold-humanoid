@@ -12,7 +12,7 @@ FallDetector::FallDetector()
   d_fallenState(FallState::STANDUP)
 {}
 
-void FallDetector::observe(std::shared_ptr<HardwareState const> hardwareState)
+void FallDetector::observeTyped(std::shared_ptr<HardwareState const> hardwareState)
 {
   // Track the smoothed forward/backward acceleration to test for a consistent
   // indication that we have fallen.

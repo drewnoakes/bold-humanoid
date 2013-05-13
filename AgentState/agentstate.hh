@@ -87,31 +87,32 @@ namespace bold
     /** Fires when a state object is updated. */
     sigc::signal<void, std::shared_ptr<StateTracker>> updated;
 
-    std::map<std::type_info const*, std::vector<std::shared_ptr<StateObserver<StateObject>>>> d_observersByTypeId;
+    std::map<std::type_info const*, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeId;
 
     template<typename TState>
-    void registerObserver(std::shared_ptr<StateObserver<TState>> observer)
+    void registerObserver(std::shared_ptr<StateObserver> observer)
     {
       // TODO can type traits be used here to guarantee that T derives from StateObject
       std::type_info const* typeId = &typeid(TState);
       assert(observer);
-      auto genericObserver = std::dynamic_pointer_cast<StateObserver<StateObject>>(observer);
-      assert(genericObserver);
+//       auto genericObserver = observer;
+//       assert(genericObserver);
       auto it = d_observersByTypeId.find(typeId);
       if (it == d_observersByTypeId.end())
       {
-        std::vector<std::shared_ptr<StateObserver<StateObject>>> observers = { genericObserver };
+        std::vector<std::shared_ptr<StateObserver>> observers = { observer };
         d_observersByTypeId[typeId] = observers;
       }
       else
       {
-        it->second.push_back(genericObserver);
+        it->second.push_back(observer);
       }
     }
 
     template <typename T>
     void set(std::shared_ptr<T const> state)
     {
+      assert(state);
       // TODO can type traits be used here to guarantee that T derives from StateObject
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
@@ -121,14 +122,14 @@ namespace bold
       auto it = d_observersByTypeId.find(typeId);
       if (it != d_observersByTypeId.end())
       {
-        std::vector<std::shared_ptr<StateObserver<StateObject>>> const& observers = it->second;
+        std::vector<std::shared_ptr<StateObserver>> const& observers = it->second;
         assert(observers.size());
         for (auto& observer : it->second)
         {
           assert(observer);
-          auto o = std::dynamic_pointer_cast<StateObserver<T>>(observer);
-          assert(o);
-          o->observe(state);
+//           auto o = std::dynamic_pointer_cast<StateObserver<T>>(observer);
+//           assert(o);
+          observer->observe(state);
         }
       }
     }

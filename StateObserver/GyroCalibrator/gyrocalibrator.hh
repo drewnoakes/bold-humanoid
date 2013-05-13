@@ -18,7 +18,7 @@ namespace bold
     COMPLETE
   };
 
-  class GyroCalibrator : public StateObserver<HardwareState>
+  class GyroCalibrator : public TypedStateObserver<HardwareState>
   {
   private:
     int d_windowSize;
@@ -32,7 +32,7 @@ namespace bold
   public:
     GyroCalibrator();
 
-    void observe(std::shared_ptr<HardwareState const> hardwareState) override;
+    void observeTyped(std::shared_ptr<HardwareState const> hardwareState) override;
 
     void reset();
 

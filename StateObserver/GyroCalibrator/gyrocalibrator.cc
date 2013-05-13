@@ -25,7 +25,7 @@ void GyroCalibrator::reset()
   d_rlCenter = -1;
 }
 
-void GyroCalibrator::observe(std::shared_ptr<HardwareState const> hardwareState)
+void GyroCalibrator::observeTyped(std::shared_ptr<HardwareState const> hardwareState)
 {
   if (d_calibrationStatus == CalibrationState::COMPLETE)
     return;
