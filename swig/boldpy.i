@@ -46,8 +46,12 @@
 
 %shared_ptr(bold::VisualCortex)
 
+%shared_ptr(bold::BodyPart)
 %shared_ptr(bold::Limb)
 %shared_ptr(bold::Joint)
+
+%shared_ptr(bold::Option)
+%shared_ptr(bold::ActionOption)
 
 %template() std::vector<PyObject*>;
 
@@ -63,6 +67,11 @@
 %include "../StateObject/stateobject.i"
 %include "../StateObject/BodyState/bodystate.i"
 %include "../AgentState/agentstate.i"
+
+%include "../Option/option.i"
+%include "../Option/ActionOption/actionoption.i"
+
+%include "../OptionTree/optiontree.i"
 
 namespace bold
 {

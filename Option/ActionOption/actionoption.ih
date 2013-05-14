@@ -3,6 +3,7 @@
 #include <Action.h>
 
 #include <iostream>
+#include <cassert>
 
 using namespace bold;
 using namespace std;
