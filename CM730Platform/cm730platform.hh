@@ -29,6 +29,7 @@ namespace bold
     virtual int writePort(uchar const* packet, std::size_t byteCount) = 0;
 
     /// Attempts to read byteCount bytes from the CM730 port into the buffer starting at packet, returning the number of bytes read, or -1 on error
+    /// This is a non-blocking read, so if no bytes are available, the return value will be zero.
     virtual int readPort(uchar* packet, std::size_t byteCount) = 0;
 
 

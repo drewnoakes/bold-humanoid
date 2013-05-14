@@ -123,10 +123,12 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
 
   if (DEBUG_PRINT)
   {
-    cout << endl << "TX: ";
+    cout << "[CM730::txRxPacket] transmitting " << getInstructionName(txpacket[INSTRUCTION]) << endl;
+    cout << "[CM730::txRxPacket]   TX: ";
+    cout << hex << setfill('0');
     for (int n = 0; n < length; n++)
-      cout << hex << setfill('0') << setw(2) << txpacket[n];
-    cout << "INST: " << getInstructionName(txpacket[INSTRUCTION]) << endl;
+      cout << " " << setw(2) << (int)txpacket[n];
+    cout << dec << endl;
   }
 
   CommResult res = CommResult::TX_FAIL;
@@ -149,17 +151,16 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
 
         d_platform->setPacketTimeout(length);
 
-        if (DEBUG_PRINT)
-            cout << "RX: ";
-
         int receivedCount = 0;
         while (1)
         {
           length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
-          if (DEBUG_PRINT)
+          if (length && DEBUG_PRINT)
           {
+            cout << "[CM730::txRxPacket]  RX[" << length << "] " << hex << setfill('0');
             for (int n = 0; n < length; n++)
-              cout << hex << setfill('0') << setw(2) << rxpacket[receivedCount + n] << " ";
+              cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
+            cout << dec << endl;
           }
           receivedCount += length;
 
@@ -183,7 +184,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
               // Check checksum
               uchar checksum = calculateChecksum(rxpacket);
               if (DEBUG_PRINT)
-                cout << "CHK: " << hex << setfill('0') << setw(2) << checksum << endl;
+                cout << "[CM730::txRxPacket] Checksum: " << hex << setfill('0') << setw(2) << (int)checksum << dec << endl;
 
               res = rxpacket[receivedCount-1] == checksum ? CommResult::SUCCESS : CommResult::RX_CORRUPT;
               break;
@@ -198,14 +199,10 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
               receivedCount -= i;
             }
           }
-          else
+          else if (d_platform->isPacketTimeout())
           {
-            // Haven't loaded enough data yet... check the clock
-            if (d_platform->isPacketTimeout())
-            {
-              res = receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
-              break;
-            }
+            res = receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
+            break;
           }
         }
       }
@@ -225,7 +222,15 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
         // Read until we get enough bytes, or there's a timeout
         while (1)
         {
-          receivedCount += d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
+          length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
+          if (length && DEBUG_PRINT)
+          {
+            cout << "[CM730::txRxPacket]   RX[" << length << "] " << hex << setfill('0');
+            for (int n = 0; n < length; n++)
+              cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
+            cout << dec << endl;
+          }
+          receivedCount += length;
 
           if (receivedCount == expectedLength)
           {
@@ -259,6 +264,9 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
 
             if (rxpacket[LENGTH + rxpacket[LENGTH]] == checksum)
             {
+              if (DEBUG_PRINT)
+                cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID] << " checksum: " << hex << setfill('0') << setw(2) << (int)checksum << dec << endl;
+
               // Checksum matches
               for (int j = 0; j < (rxpacket[LENGTH] - 2); j++)
               {
@@ -280,6 +288,8 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
               // Checksum doesn't match
               res = CommResult::RX_CORRUPT;
 
+              cerr << "[CM730::txRxPacket] Checksum didn't match" << endl;
+              
               for (int j = 0; j <= receivedCount - 2; j++)
                 rxpacket[j] = rxpacket[j + 2];
 
@@ -323,7 +333,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
   }
 
   if (DEBUG_PRINT)
-    cout << "Time: " << setprecision(2) << d_platform->getPacketTime() << "ms  RETURN: " << getCommResultName(res) << endl;
+    cout << "[CM730::txRxPacket] time " << setprecision(2) << d_platform->getPacketTime() << "ms  " << getCommResultName(res) << endl;
 
   d_platform->highPriorityRelease();
   if (priority > 0)
