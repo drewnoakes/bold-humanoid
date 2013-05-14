@@ -124,7 +124,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
   if (DEBUG_PRINT)
   {
     cout << "[CM730::txRxPacket] transmitting " << getInstructionName(txpacket[INSTRUCTION]) << endl;
-    cout << "[CM730::txRxPacket]   TX: ";
+    cout << "[CM730::txRxPacket]   TX[" << length << "] ";
     cout << hex << setfill('0');
     for (int n = 0; n < length; n++)
       cout << " " << setw(2) << (int)txpacket[n];
