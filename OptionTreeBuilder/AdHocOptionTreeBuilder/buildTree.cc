@@ -1,7 +1,6 @@
 #include "adhocoptiontreebuilder.ih"
 
-unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
-                                                         unsigned teamNumber,
+unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          unsigned uniformNumber,
                                                          bool ignoreGameController,
                                                          shared_ptr<Debugger> debugger,
@@ -38,7 +37,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   tree->addOption(rightKick);
 
   // Look around
-  OptionPtr lookAround = make_shared<LookAround>("lookaround", ini);
+  OptionPtr lookAround = make_shared<LookAround>("lookaround");
   tree->addOption(lookAround);
 
   // Look at ball
@@ -46,7 +45,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   tree->addOption(lookAtBall);
 
   // Look at feet
-  OptionPtr lookAtFeet = make_shared<LookAtFeet>("lookatfeet", ini);
+  OptionPtr lookAtFeet = make_shared<LookAtFeet>("lookatfeet");
   tree->addOption(lookAtFeet);
 
   // Look at goal

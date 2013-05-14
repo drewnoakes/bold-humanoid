@@ -1,5 +1,6 @@
 #include "Agent/agent.hh"
 #include "OptionTree/optiontree.hh"
+#include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 
 #include <signal.h>
 
@@ -10,7 +11,7 @@
 using namespace bold;
 using namespace std;
 
-Agent* agent;
+unique_ptr<Agent> agent;
 
 void printUsage()
 {
@@ -104,7 +105,7 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  agent = new Agent(
+  agent.reset(new Agent(
     U2D_DEV_NAME0,
     confFile,
     MOTION_FILE_PATH,
@@ -114,7 +115,17 @@ int main(int argc, char **argv)
     autoGetUpFromFallen,
     useOptionTree,
     recordFrames,
-    ignoreGameController);
+    ignoreGameController));
+
+  AdHocOptionTreeBuilder optionTreeBuilder;
+  auto optionTree = optionTreeBuilder.buildTree(teamNumber,
+                                                uniformNumber,
+                                                ignoreGameController,
+                                                agent->getDebugger(),
+                                                agent->getCameraModel(),
+                                                agent->getAmbulator());
+
+  agent->setOptionTree(optionTree);
 
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);

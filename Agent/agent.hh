@@ -59,6 +59,11 @@ namespace bold
     std::shared_ptr<VisualCortex> getVisualCortex() const { return d_visualCortex; }
     std::shared_ptr<GameStateReceiver> getGameStateReceiver() const { return d_gameStateReceiver; }
 
+    void setOptionTree(std::unique_ptr<OptionTree>& tree)
+    {
+      d_optionTree = std::move(tree);
+    }
+
     void run();
     void stop();
 

@@ -8,11 +8,11 @@ namespace bold
   class LookAtFeet : public Option
   {
   public:
-    LookAtFeet(std::string const& id, minIni const& ini)
+    LookAtFeet(std::string const& id)
     : Option(id)
     {
-      d_feetX = ini.getd("LookAtFeet", "FeetX", 0);
-      d_feetY = ini.getd("LookAtFeet", "FeetY", -67.5);
+      d_feetX = 0;//ini.getd("LookAtFeet", "FeetX", 0);
+      d_feetY = -67.5;//ini.getd("LookAtFeet", "FeetY", -67.5);
     }
 
     OptionList runPolicy() override;

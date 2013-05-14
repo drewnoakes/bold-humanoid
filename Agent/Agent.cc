@@ -45,15 +45,6 @@ Agent::Agent(string const& U2D_dev,
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_ini, d_debugger);
 
-  AdHocOptionTreeBuilder optionTreeBuilder;
-  d_optionTree = optionTreeBuilder.buildTree(d_ini,
-                                             d_teamNumber,
-                                             d_uniformNumber,
-                                             d_ignoreGameController,
-                                             d_debugger,
-                                             d_cameraModel,
-                                             d_ambulator);
-
   if (useJoystick)
   {
     d_joystick = make_shared<Joystick>(1);
