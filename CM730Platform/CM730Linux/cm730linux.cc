@@ -40,8 +40,8 @@ bool CM730Linux::openPort()
 {
   cout << "[CM730Linux::openPort] Starting" << endl;
 
-  struct termios newtio;
-  struct serial_struct serinfo;
+  struct termios newtio = {0,};
+  struct serial_struct serinfo = {0,};
   double baudrate = 1000000.0; //bps (1Mbps)
 
   closePort();
@@ -50,7 +50,7 @@ bool CM730Linux::openPort()
     goto UART_OPEN_ERROR;
 
   // You must set 38400bps!
-  memset(&newtio, 0, sizeof(newtio));
+//   memset(&newtio, 0, sizeof(newtio));
   newtio.c_cflag      = B38400|CS8|CLOCAL|CREAD;
   newtio.c_iflag      = IGNPAR;
   newtio.c_oflag      = 0;

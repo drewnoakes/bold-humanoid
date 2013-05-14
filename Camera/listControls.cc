@@ -4,7 +4,7 @@ vector<Control> Camera::listControls()
 {
   auto setValue = [this](unsigned const& id, int const& value)
   {
-    v4l2_control ctrl;
+    v4l2_control ctrl = {0,};
     ctrl.id = id;
     ctrl.value = value;
     ioctl(d_fd, VIDIOC_S_CTRL, &ctrl);
@@ -12,7 +12,7 @@ vector<Control> Camera::listControls()
 
   auto getValue = [this](unsigned const& id) -> int
   {
-    v4l2_control ctrl;
+    v4l2_control ctrl = {0,};
     ctrl.id = id;
     ioctl(d_fd, VIDIOC_G_CTRL, &ctrl);
     return ctrl.value;
@@ -20,7 +20,7 @@ vector<Control> Camera::listControls()
 
   vector<Control> controls;
 
-  v4l2_queryctrl queryctrl;
+  v4l2_queryctrl queryctrl = {0,};
   queryctrl.id = V4L2_CTRL_FLAG_NEXT_CTRL;
 
   while (ioctl(d_fd, VIDIOC_QUERYCTRL, &queryctrl) == 0)
