@@ -34,8 +34,7 @@ Agent::Agent(string const& U2D_dev,
 
   d_cm730Linux = make_shared<CM730Linux>(U2D_dev.c_str());
   d_cm730 = make_shared<CM730>(d_cm730Linux);
-  d_cm730->DEBUG_PRINT = true;
-  d_cm730->dxlPowerOn();
+//   d_cm730->DEBUG_PRINT = true;
 
   // Create motion modules
   d_walkModule = make_shared<WalkModule>(d_ini);
@@ -45,6 +44,9 @@ Agent::Agent(string const& U2D_dev,
 
   // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();
+  
+  if (!d_haveBody)
+    cout << "[Agent::Agent] Unable to connect to body" << endl;
 
   d_ambulator = make_shared<Ambulator>(d_walkModule, d_ini),
 

@@ -97,10 +97,9 @@ int BulkReadTable::readWord(uchar address) const
 
 
 CM730::CM730(shared_ptr<CM730Platform> platform)
-{
-  d_platform = platform;
-  DEBUG_PRINT = false;
-}
+: DEBUG_PRINT(false),
+  d_platform(platform)
+{}
 
 CM730::~CM730()
 {
@@ -324,7 +323,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
     }
     else
     {
-      cerr << "[CM730::txRxPacket] Failed to write to port. Wrote " << bytesWritten << " but expected " << length << endl;
+      cerr << "[CM730::txRxPacket] Failed to write to port: " << bytesWritten << " of " << length << " written" << endl;
       res = CommResult::TX_FAIL;
     }
   }

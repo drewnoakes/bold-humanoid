@@ -159,19 +159,6 @@ namespace bold
       ID_BROADCAST    = 254
     };
 
-  private:
-    static const int NUMBER_OF_JOINTS = 20;
-
-    std::shared_ptr<CM730Platform> d_platform;
-    uchar d_controlTable[MAXNUM_ADDRESS];
-
-    /**
-     * @param priority select the queue for this exchange: 0=high 1=med 2=low
-     */
-    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, std::shared_ptr<BulkRead> bulkRead);
-
-    static uchar calculateChecksum(uchar *packet);
-
   public:
     static int makeWord(uchar lowByte, uchar highByte) { return (highByte << 8) | lowByte; }
     static uchar getLowByte(int word) { return word & 0xFF; }
@@ -265,5 +252,18 @@ namespace bold
     unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }
     unsigned long getTransmittedByteCount() const { return d_platform->getTransmittedByteCount(); }
     void resetByteCounts() { d_platform->resetByteCounts(); }
+
+  private:
+    static const int NUMBER_OF_JOINTS = 20;
+
+    std::shared_ptr<CM730Platform> d_platform;
+    uchar d_controlTable[MAXNUM_ADDRESS];
+
+    /**
+     * @param priority select the queue for this exchange: 0=high 1=med 2=low
+     */
+    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, std::shared_ptr<BulkRead> bulkRead);
+
+    static uchar calculateChecksum(uchar *packet);    
   };
 }
