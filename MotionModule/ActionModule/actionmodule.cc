@@ -74,7 +74,7 @@ void ActionModule::resetPage(PAGE *pPage)
   pPage->header.speed = 32;
   pPage->header.accel = 32;
 
-  for (int i = 0; i < NUMBER_OF_JOINTS; i++)
+  for (int i = MIN_JOINT_ID; i <= MAX_JOINT_ID; i++)
     pPage->header.slope[i] = 0x55;
 
   for (int i = 0; i < MAXNUM_STEP; i++)
@@ -286,15 +286,15 @@ void ActionModule::step(JointSelection const& selectedJoints)
   uchar bDirectionChanged;
 
   ///////////////// Static
-  static unsigned short wpStartAngle1024[NUMBER_OF_JOINTS];
-  static unsigned short wpTargetAngle1024[NUMBER_OF_JOINTS];
-  static short int ipMovingAngle1024[NUMBER_OF_JOINTS];
-  static short int ipMainAngle1024[NUMBER_OF_JOINTS];
-  static short int ipAccelAngle1024[NUMBER_OF_JOINTS];
-  static short int ipMainSpeed1024[NUMBER_OF_JOINTS];
-  static short int ipLastOutSpeed1024[NUMBER_OF_JOINTS];
-  static short int ipGoalSpeed1024[NUMBER_OF_JOINTS];
-  static uchar bpFinishType[NUMBER_OF_JOINTS];
+  static unsigned short wpStartAngle1024[JOINT_ARRAY_LENGTH];
+  static unsigned short wpTargetAngle1024[JOINT_ARRAY_LENGTH];
+  static short int ipMovingAngle1024[JOINT_ARRAY_LENGTH];
+  static short int ipMainAngle1024[JOINT_ARRAY_LENGTH];
+  static short int ipAccelAngle1024[JOINT_ARRAY_LENGTH];
+  static short int ipMainSpeed1024[JOINT_ARRAY_LENGTH];
+  static short int ipLastOutSpeed1024[JOINT_ARRAY_LENGTH];
+  static short int ipGoalSpeed1024[JOINT_ARRAY_LENGTH];
+  static uchar bpFinishType[JOINT_ARRAY_LENGTH];
   short int iSpeedN;
   static unsigned short wUnitTimeCount;
   static unsigned short wUnitTimeNum;
@@ -336,7 +336,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
     bPlayRepeatCount = d_playingPage.header.repeat;
     wNextPlayPage = 0;
 
-    for (uchar bID=1; bID<NUMBER_OF_JOINTS; bID++)
+    for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
     {
       if (selectedJoints[bID])
       {
@@ -356,7 +356,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
     }
     else
     {
-      for (uchar bID=1; bID<NUMBER_OF_JOINTS; bID++)
+      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
         if (selectedJoints[bID])
         {
@@ -411,7 +411,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
   {
     wUnitTimeCount = 0;
 
-    for (uchar bID=1; bID<NUMBER_OF_JOINTS; bID++)
+    for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
     {
       if (selectedJoints[bID])
       {
@@ -427,7 +427,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
       bSection = MAIN_SECTION;
       wUnitTimeNum =  wUnitTimeTotalNum - (wAccelStep << 1);
 
-      for (uchar bID = 1; bID < NUMBER_OF_JOINTS; bID++)
+      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
         if (selectedJoints[bID])
         {
@@ -449,7 +449,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
       bSection = POST_SECTION;
       wUnitTimeNum = wAccelStep;
 
-      for (uchar bID=1; bID<NUMBER_OF_JOINTS; bID++)
+      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
         if (selectedJoints[bID])
           ipMainAngle1024[bID] = ipMovingAngle1024[bID] - ipMainAngle1024[bID] - ipAccelAngle1024[bID];
@@ -473,7 +473,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
       // PRE Section
       bSection = PRE_SECTION;
 
-      for (uchar bID=1; bID<NUMBER_OF_JOINTS; bID++)
+      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
         if (selectedJoints[bID])
           ipLastOutSpeed1024[bID] = 0;
@@ -537,7 +537,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
       wMaxAngle1024 = 0;
 
       ////////// Joint
-      for (uchar bID=1; bID<NUMBER_OF_JOINTS; bID++)
+      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
         if (!selectedJoints[bID])
           continue;
@@ -648,7 +648,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
       if (lDivider2 == 0)
         lDivider2 = 1;
 
-      for (uchar bID=1; bID<NUMBER_OF_JOINTS; bID++)
+      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
         if (selectedJoints[bID])
         {

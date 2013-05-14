@@ -22,6 +22,7 @@ namespace bold
       d_rxBytes(rxBytes),
       d_txBytes(txBytes)
     {
+      assert(d_mx28States.size() == 21);
       assert(cm730State);
     }
 
