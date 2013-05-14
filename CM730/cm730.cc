@@ -123,7 +123,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
 
   if (DEBUG_PRINT)
   {
-    cout << "[CM730::txRxPacket] transmitting " << getInstructionName(txpacket[INSTRUCTION]) << endl;
+    cout << "[CM730::txRxPacket] Transmitting '" << getInstructionName(txpacket[INSTRUCTION]) << "' instruction" << endl;
     cout << "[CM730::txRxPacket]   TX[" << length << "] ";
     cout << hex << setfill('0');
     for (int n = 0; n < length; n++)
@@ -139,7 +139,9 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
     d_platform->clearPort();
 
     // Send the instruction packet
-    if (d_platform->writePort(txpacket, length) == length)
+    int bytesWritten = d_platform->writePort(txpacket, length);
+    
+    if (bytesWritten == length)
     {
       // Now, handle the response...
 
@@ -157,7 +159,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
           length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
           if (length && DEBUG_PRINT)
           {
-            cout << "[CM730::txRxPacket]  RX[" << length << "] " << hex << setfill('0');
+            cout << "[CM730::txRxPacket]   RX[" << length << "] " << hex << setfill('0');
             for (int n = 0; n < length; n++)
               cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
             cout << dec << endl;
@@ -183,8 +185,6 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
             {
               // Check checksum
               uchar checksum = calculateChecksum(rxpacket);
-              if (DEBUG_PRINT)
-                cout << "[CM730::txRxPacket] Checksum: " << hex << setfill('0') << setw(2) << (int)checksum << dec << endl;
 
               res = rxpacket[receivedCount-1] == checksum ? CommResult::SUCCESS : CommResult::RX_CORRUPT;
               break;
@@ -324,6 +324,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
     }
     else
     {
+      cerr << "[CM730::txRxPacket] Failed to write to port. Wrote " << bytesWritten << " but expected " << length << endl;
       res = CommResult::TX_FAIL;
     }
   }
@@ -333,7 +334,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, sha
   }
 
   if (DEBUG_PRINT)
-    cout << "[CM730::txRxPacket] time " << setprecision(2) << d_platform->getPacketTime() << "ms  " << getCommResultName(res) << endl;
+    cout << "[CM730::txRxPacket] Round trip in " << setprecision(2) << d_platform->getPacketTime() << "ms  (" << getCommResultName(res) << ")" << endl;
 
   d_platform->highPriorityRelease();
   if (priority > 0)
