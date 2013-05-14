@@ -38,7 +38,7 @@ CM730Linux::~CM730Linux()
 
 bool CM730Linux::openPort()
 {
-  cout << "[CM730Linux::OpenPort] Starting" << endl;
+  cout << "[CM730Linux::openPort] Starting" << endl;
 
   struct termios newtio;
   struct serial_struct serinfo;
@@ -70,7 +70,7 @@ bool CM730Linux::openPort()
   if (ioctl(d_socket, TIOCSSERIAL, &serinfo) < 0)
     goto UART_OPEN_ERROR;
 
-  cout << "[CM730Linux::OpenPort] Opened with " << baudrate << " bps baud" << endl;
+  cout << "[CM730Linux::openPort] Opened with " << baudrate << " bps baud" << endl;
 
   tcflush(d_socket, TCIFLUSH);
 
@@ -79,7 +79,7 @@ bool CM730Linux::openPort()
   return true;
 
 UART_OPEN_ERROR:
-  cerr << "[CM730Linux::OpenPort] Error opening port" << endl;
+  cerr << "[CM730Linux::openPort] Error opening port" << endl;
   closePort();
   return false;
 }
