@@ -8,6 +8,7 @@
 #include "../CM730/cm730.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/DebugState/debugstate.hh"
+#include "../StateObject/TimingState/timingstate.hh"
 
 using namespace bold;
 using namespace std;

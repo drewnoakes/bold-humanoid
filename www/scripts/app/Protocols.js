@@ -20,8 +20,10 @@ define(
             debug: 'Debug',
             gameState: 'Game',
             hardwareState: 'Hardware',
+            motionTiming: 'MotionTiming',
             optionTreeState: 'OptionTree',
             particleState: 'Particle',
+            thinkTiming: 'ThinkTiming',
             worldFrameState: 'WorldFrame'
         };
 
@@ -34,8 +36,10 @@ define(
             Protocols.debug,
             Protocols.gameState,
             Protocols.hardwareState,
+            Protocols.motionTiming,
             Protocols.optionTreeState,
             Protocols.particleState,
+            Protocols.thinkTiming,
             Protocols.worldFrameState
         ];
 

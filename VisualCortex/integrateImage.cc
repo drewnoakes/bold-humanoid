@@ -1,10 +1,7 @@
 #include "visualcortex.ih"
 
-void VisualCortex::integrateImage(Mat& image)
+void VisualCortex::integrateImage(Mat& image, shared_ptr<SequentialTimer> t)
 {
-  Debugger& debugger = *d_debugger;
-  auto t = Clock::getTimestamp();
-
   auto cameraFrame = AgentState::get<CameraFrameState>();
 
   //
@@ -16,11 +13,11 @@ void VisualCortex::integrateImage(Mat& image)
     d_labelledImage = Mat(image.rows, image.cols, CV_8UC1);
 
   d_imageLabeller->label(image, d_labelledImage, true);
-  t = debugger.timeEvent(t, "Image Processing/Pixel Label");
+  t->timeEvent("Image Processing/Pixel Label");
 
   // Perform the image pass
   d_imagePassRunner->pass(d_labelledImage);
-  t = debugger.timeEvent(t, "Image Processing/Pass");
+  t->timeEvent("Image Processing/Pass");
 
   // Find lines
 
@@ -28,12 +25,12 @@ void VisualCortex::integrateImage(Mat& image)
   if (d_detectLines)
   {
     observedLineSegments = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
-    t = debugger.timeEvent(t, "Image Processing/Line Search");
+    t->timeEvent("Image Processing/Line Search");
   }
 
   // Find blobs
   auto blobsPerLabel = d_blobDetectPass->detectBlobs();
-  t = debugger.timeEvent(t, "Image Processing/Blob Search");
+  t->timeEvent("Image Processing/Blob Search");
 
   //
   // UPDATE STATE
@@ -89,5 +86,5 @@ void VisualCortex::integrateImage(Mat& image)
 
   AgentState::getInstance().set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments));
 
-  debugger.timeEvent(t, "Image Processing/Updating State");
+  t->timeEvent("Image Processing/Updating State");
 }

@@ -1,6 +1,6 @@
 #include "visualcortex.ih"
 
-void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer)
+void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer> streamer, shared_ptr<SequentialTimer> t)
 {
   // Only compose the image if at least one client is connected
   if (!streamer->hasImageClients())
@@ -9,9 +9,6 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   // Only provide an image every N cycles
   if (AgentState::getInstance().getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod != 0)
     return;
-
-  Debugger& debugger = *d_debugger;
-  auto t = Clock::getTimestamp();
 
   auto lineDotColour = Colour::bgr(0, 0, 255);
   auto observedLineColour = Colour::bgr(255, 80, 80);
@@ -138,5 +135,5 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStr
   }
 
   streamer->streamImage(debugImage);
-  t = debugger.timeEvent(t, "Debug Image Streaming");
+  t->timeEvent("Debug Image Streaming");
 }

@@ -14,6 +14,7 @@ class minIni;
 
 namespace bold
 {
+  class SequentialTimer;
   class FieldMap;
   class CameraModel;
   class Debugger;
@@ -59,10 +60,10 @@ namespace bold
     std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
 
     /** Process the provided image, extracting features. */
-    void integrateImage(cv::Mat& cameraImage);
+    void integrateImage(cv::Mat& cameraImage, std::shared_ptr<SequentialTimer> timer);
 
     /** Composes and enqueues a debugging image. */
-    void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer);
+    void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer, std::shared_ptr<SequentialTimer> timer);
 
   private:
     std::map<std::string,std::vector<Control>> d_controlsByFamily;

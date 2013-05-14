@@ -4,12 +4,14 @@
 #include <memory>
 #include <list>
 
-#include "../CM730/cm730.hh"
 #include "../MotionModule/motionmodule.hh"
 
 namespace bold
 {
   class BodyControl;
+  class BulkRead;
+  class CM730;
+  class Debugger;
 
   class MotionLoop
   {
@@ -17,7 +19,7 @@ namespace bold
     static const int NUMBER_OF_JOINTS = 20;
 
   public:
-    MotionLoop(std::shared_ptr<CM730> manager);
+    MotionLoop(std::shared_ptr<CM730> cm730, std::shared_ptr<Debugger> debugger);
 
     ~MotionLoop();
 
@@ -38,6 +40,7 @@ namespace bold
   private:
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
+    std::shared_ptr<Debugger> d_debugger;
     std::shared_ptr<BodyControl> d_bodyControl;
     std::shared_ptr<BulkRead> d_dynamicBulkRead;
 

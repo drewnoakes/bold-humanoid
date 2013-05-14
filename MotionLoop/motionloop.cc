@@ -2,10 +2,13 @@
 
 #include "../AgentState/agentstate.hh"
 #include "../BodyControl/bodycontrol.hh"
+#include "../CM730/cm730.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
+#include "../Debugger/debugger.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../StateObject/TimingState/timingstate.hh"
 
 #include <time.h>
 #include <iostream>
@@ -14,13 +17,14 @@
 using namespace bold;
 using namespace std;
 
-MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
-: d_isStarted(false),
+MotionLoop::MotionLoop(shared_ptr<CM730> cm730, shared_ptr<Debugger> debugger)
+: d_cm730(cm730),
+  d_debugger(debugger),
+  d_isStarted(false),
   d_stopRequested(false),
   d_loopDurationMillis(8),
   d_readYet(false)
 {
-  d_cm730 = cm730;
   d_bodyControl = make_shared<BodyControl>();
   d_dynamicBulkRead = make_shared<BulkRead>(CM730::P_DXL_POWER, CM730::P_VOLTAGE,
                                             MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE);
@@ -148,6 +152,8 @@ void MotionLoop::step()
 {
   cout << "[MotionLoop::step]" << endl;
   
+  auto t = d_debugger->getThinkTimer();
+  
   if (d_readYet)
   {
     //
@@ -157,10 +163,9 @@ void MotionLoop::step()
     // TODO only step modules that are in use
     for (auto const& module : d_modules)
     {
-      auto jointSelection = JointSelection(true, true, true);
-
-      module->step(jointSelection);
+      module->step(JointSelection(true, true, true));
     }
+    t->timeEvent("Step Modules");
 
     // TODO apply body section updates via modules, as appropriate
 
@@ -219,6 +224,8 @@ void MotionLoop::step()
         d_cm730->syncWrite(minAddress, bytesPerDevice, dirtyDeviceCount, parameters);
       }
     }
+    
+    t->timeEvent("Write to CM730");
   }
 
   //
@@ -226,13 +233,16 @@ void MotionLoop::step()
   //
 
   CommResult res = d_cm730->bulkRead(d_dynamicBulkRead);
+  t->timeEvent("Read from CM730");
 
   if (res != CommResult::SUCCESS)
   {
     // TODO set the 'Hardware' state as failing in AgentState, and broadcast error status to clients
-    cerr << "[MotionLoop::process] Bulk read failed -- skipping update of HardwareState" << endl;
+    cerr << "[MotionLoop::process] Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState" << endl;
     return;
   }
+  
+  d_readYet = true;
 
   auto cm730Snapshot = make_shared<CM730Snapshot>(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM));
 
@@ -252,6 +262,7 @@ void MotionLoop::step()
   auto txBytes = d_cm730->getTransmittedByteCount();
 
   AgentState::getInstance().set(make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes));
+  t->timeEvent("Update HardwareState");
 
   //
   // UPDATE BODYSTATE
@@ -265,6 +276,10 @@ void MotionLoop::step()
   }
 
   AgentState::getInstance().set(make_shared<BodyState const>(angles));
-  
-  d_readYet = true;
+  t->timeEvent("Update BodyState");
+
+  //
+  // Set timing data for the think cycle
+  //
+  AgentState::getInstance().set(make_shared<MotionTimingState const>(t->flush()));
 }

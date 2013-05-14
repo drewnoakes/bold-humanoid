@@ -11,6 +11,8 @@
 
 namespace bold
 {
+  class SequentialTimer;
+  
   class Debugger;
 
   class Camera
@@ -119,7 +121,7 @@ namespace bold
     void startCapture();
     void stopCapture();
 
-    cv::Mat capture();
+    cv::Mat capture(std::shared_ptr<SequentialTimer> timer);
 
     void setSquashWidth(bool squash) { d_squash = squash; }
 

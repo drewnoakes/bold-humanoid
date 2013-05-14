@@ -122,7 +122,7 @@ namespace bold
       {
         std::vector<std::shared_ptr<StateObserver>> const& observers = it->second;
         assert(observers.size());
-        for (auto& observer : it->second)
+        for (auto& observer : observers)
         {
           assert(observer);
           observer->observe(state);

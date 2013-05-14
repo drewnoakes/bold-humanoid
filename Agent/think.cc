@@ -8,13 +8,15 @@ void Agent::think()
   // Initialise a time value that we'll repeatedly use and update to time
   // the progress of each step of the think cycle
   //
-  auto t = Clock::getTimestamp();
+  auto t = d_debugger->getThinkTimer();
 
   //
   // Capture the image (YCbCr format)
   //
-  cv::Mat image = d_camera->capture();
-  t = d_debugger->timeEvent(t, "Image Capture");
+//   t->enter("Image Capture");
+  cv::Mat image = d_camera->capture(t);
+//   t->exit();
+  t->timeEvent("Image Capture");
 
   //
   // Record frame, if required
@@ -29,19 +31,23 @@ void Agent::think()
       stringstream ss;
       ss << "capture-" << frameNumber++ << ".png";
       cv::imwrite(ss.str(), image);
-      t = d_debugger->timeEvent(t, "Saving Frame To File");
-      lastRecordTime = t;
+      t->timeEvent("Saving Frame To File");
+      lastRecordTime = Clock::getTimestamp();
     }
   }
 
   //
   // Process the image
   //
-  d_visualCortex->integrateImage(image);
-  t = d_debugger->timeEvent(t, "Image Processing");
+//   t->enter("Image Processing");
+  d_visualCortex->integrateImage(image, t);
+//   t->exit();
+  t->timeEvent("Image Processing");
 
-  d_visualCortex->streamDebugImage(image, d_streamer);
-  t = d_debugger->timeEvent(t, "Image Streaming");
+//   t->enter("Image Streaming");
+  d_visualCortex->streamDebugImage(image, d_streamer, t);
+//   t->exit();
+  t->timeEvent("Image Streaming");
 
   //
   // Listen for any game control data
@@ -50,60 +56,60 @@ void Agent::think()
   if (gameState)
   {
     AgentState::getInstance().set(gameState);
-    t = d_debugger->timeEvent(t, "Integrate Game Control");
+    t->timeEvent("Integrate Game Control");
   }
 
   //
   // Populate agent frame from camera frame
   //
   d_spatialiser->updateCameraToAgent();
-  t = d_debugger->timeEvent(t, "Camera to Agent Frame");
+  t->timeEvent("Camera to Agent Frame");
 
   //
   // Update the localiser
   //
   d_localiser->update();
-  t = d_debugger->timeEvent(t, "Update Localiser");
+  t->timeEvent("Update Localiser");
 
   //
   // Populate world frame from agent frame
   //
   d_spatialiser->updateAgentToWorld(d_localiser->smoothedPosition());
-  t = d_debugger->timeEvent(t, "Agent to World Frame");
+  t->timeEvent("Agent to World Frame");
 
   if (d_haveBody)
   {
     if (d_useOptionTree)
     {
       d_optionTree->run();
-      t = d_debugger->timeEvent(t, "Option Tree");
+      t->timeEvent("Option Tree");
     }
 
     //
     // Process input commands
     //
     processInputCommands();
-    t = d_debugger->timeEvent(t, "Process Human Input");
+    t->timeEvent("Process Human Input");
 
     //
     // Get up, if we've fallen over
     //
     // TODO make this a behaviour
     standUpIfFallen();
-    t = d_debugger->timeEvent(t, "Stand Up");
+    t->timeEvent("Stand Up");
 
     //
     // Flush out new walking parameters
     //
     // TODO this becomes part of the motion loop
     d_ambulator->step();
-    t = d_debugger->timeEvent(t, "Ambulator Step");
+    t->timeEvent("Ambulator Step");
 
     //
     // Update LEDs on back, etc
     //
     d_debugger->update(d_cm730);
-    t = d_debugger->timeEvent(t, "Update Debugger");
+    t->timeEvent("Update Debugger");
   }
 
   //
@@ -112,9 +118,13 @@ void Agent::think()
   if (d_streamer != nullptr)
   {
     d_streamer->update();
-    // NOTE this timing value will appear in the *next* think cycle
-    t = d_debugger->timeEvent(t, "Update DataStreamer");
+    t->timeEvent("Update DataStreamer");
   }
+
+  //
+  // Set timing data for the think cycle
+  //
+  AgentState::getInstance().set(make_shared<ThinkTimingState const>(t->flush()));
 
   onThinkEnd();
 }

@@ -9,6 +9,8 @@ void Agent::registerStateTypes()
   AgentState::getInstance().registerStateType<BodyState>("Body");
   AgentState::getInstance().registerStateType<CameraFrameState>("CameraFrame");
   AgentState::getInstance().registerStateType<DebugState>("Debug");
+  AgentState::getInstance().registerStateType<MotionTimingState>("MotionTiming");
+  AgentState::getInstance().registerStateType<ThinkTimingState>("ThinkTiming");
   AgentState::getInstance().registerStateType<GameState>("Game");
   AgentState::getInstance().registerStateType<HardwareState>("Hardware");
   AgentState::getInstance().registerStateType<OptionTreeState>("OptionTree");

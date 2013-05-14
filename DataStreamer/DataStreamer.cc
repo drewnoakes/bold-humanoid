@@ -55,7 +55,7 @@ DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::sh
     cout << "[DataStreamer::DataStreamer] Listening on TCP port " << d_port << endl;
 
   //
-  // Listen for state changes, and publish them via websockets
+  // Listen for state changes and publish them via websockets
   //
   AgentState::getInstance().updated.connect(
     [](shared_ptr<StateTracker const> tracker) {
