@@ -456,19 +456,17 @@ bool CM730::changeBaud(int baud)
 
 bool CM730::dxlPowerOn()
 {
+  cout << "[CM730::dxlPowerOn] Turning Dynamixel power on" << endl;
+  
   if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, 1, 0) == CommResult::SUCCESS)
   {
-    if (DEBUG_PRINT)
-      cout << "[CM730::dxlPowerOn] Succeed to change Dynamixel power" << endl;
-
 //        WriteWord(CM730::ID_CM, CM730::P_LED_HEAD_L, MakeColor(255, 128, 0), 0);
     // TODO why is this sleep here?
     d_platform->sleep(300); // about 300msec
   }
   else
   {
-    if (DEBUG_PRINT)
-      cerr << "[CM730::dxlPowerOn] Failed to change Dynamixel power" << endl;
+    cerr << "[CM730::dxlPowerOn] Failed to change Dynamixel power" << endl;
     return false;
   }
 

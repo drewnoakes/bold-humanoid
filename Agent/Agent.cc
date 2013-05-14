@@ -35,6 +35,7 @@ Agent::Agent(string const& U2D_dev,
   d_cm730Linux = make_shared<CM730Linux>(U2D_dev.c_str());
   d_cm730 = make_shared<CM730>(d_cm730Linux);
   d_cm730->DEBUG_PRINT = true;
+  d_cm730->dxlPowerOn();
 
   // Create motion modules
   d_walkModule = make_shared<WalkModule>(d_ini);
