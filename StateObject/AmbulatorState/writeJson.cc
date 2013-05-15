@@ -29,6 +29,7 @@ void AmbulatorState::writeJson(Writer<StringBuffer>& writer) const
 
     writer.String("phase").Int(d_currentPhase);
 
+    writer.String("hipPitch").Double(d_hipPitch);
     writer.String("bodySwingY").Double(d_bodySwingY);
     writer.String("bodySwingZ").Double(d_bodySwingZ);
 

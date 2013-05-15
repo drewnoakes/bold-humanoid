@@ -19,7 +19,8 @@ namespace bold
       d_isRunning(walker->IsRunning()),
       d_currentPhase(walker->GetCurrentPhase()),
       d_bodySwingY(walker->GetBodySwingY()),
-      d_bodySwingZ(walker->GetBodySwingZ())
+      d_bodySwingZ(walker->GetBodySwingZ()),
+      d_hipPitch(walker->HIP_PITCH_OFFSET)
     {
       robotis::JointData jd = walker->m_Joint;
       for (unsigned j = 1; j < robotis::JointData::NUMBER_OF_JOINTS; j++)
@@ -40,5 +41,6 @@ namespace bold
     int d_currentPhase;
     double d_bodySwingY;
     double d_bodySwingZ;
+    double d_hipPitch;
   };
 }
