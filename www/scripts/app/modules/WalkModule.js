@@ -4,14 +4,15 @@
 define(
     [
         'Protocols',
-        'DataProxy'
+        'DataProxy',
+        'ControlBuilder'
     ],
-    function(Protocols, DataProxy)
+    function(Protocols, DataProxy, ControlBuilder)
     {
         'use strict';
 
         var size = 300,
-            moveScale = 8;
+            moveScale = 3;
 
         var WalkModule = function()
         {
@@ -36,6 +37,8 @@ define(
             this.canvas.height = size;
             this.context = this.canvas.getContext('2d');
 
+            ControlBuilder.build('ambulator', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container));
+            
             this.subscription = DataProxy.subscribe(Protocols.ambulatorState, { json: true, onmessage: _.bind(this.onData, this) });
         };
 
@@ -75,6 +78,7 @@ define(
 
             // Cross hairs
             context.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            context.lineWidth = 2;
             context.beginPath();
             context.moveTo(mid, 0);
             context.lineTo(mid, size);
@@ -91,7 +95,7 @@ define(
             context.beginPath();
             context.lineCap = 'round';
             context.lineWidth = 20;
-            context.arc(mid, mid, size*0.4, -Math.PI/2, -Math.PI/2 + (data.target[2]*Math.PI/180), data.target[2] < 0);
+            context.arc(mid, mid, size*0.4, -Math.PI/2, -Math.PI/2 - (data.target[2]*Math.PI/180), data.target[2] > 0);
             context.stroke();
 
             // Current
@@ -99,7 +103,7 @@ define(
             context.beginPath();
             context.lineCap = 'round';
             context.lineWidth = 9;
-            context.arc(mid, mid, size*0.4, -Math.PI/2, -Math.PI/2 + (data.current[2]*Math.PI/180), data.current[2] < 0);
+            context.arc(mid, mid, size*0.4, -Math.PI/2, -Math.PI/2 - (data.current[2]*Math.PI/180), data.current[2] > 0);
             context.stroke();
 
             //
@@ -112,7 +116,7 @@ define(
             context.lineCap = 'round';
             context.lineWidth = 20;
             context.moveTo(mid, mid);
-            context.lineTo(mid + (data.target[1] * moveScale), mid + (data.target[0] * moveScale));
+            context.lineTo(mid + (data.target[1] * moveScale), mid - (data.target[0] * moveScale));
             context.stroke();
 
             // Current
@@ -121,7 +125,7 @@ define(
             context.lineCap = 'round';
             context.lineWidth = 9;
             context.moveTo(mid, mid);
-            context.lineTo(mid + (data.current[1] * moveScale), mid + (data.current[0] * moveScale));
+            context.lineTo(mid + (data.current[1] * moveScale), mid - (data.current[0] * moveScale));
             context.stroke();
         };
 

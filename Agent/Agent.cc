@@ -70,6 +70,7 @@ Agent::Agent(string const& U2D_dev,
   // TODO a better abstraction over control providers
   d_streamer->registerControls("camera", d_camera->getControls());
   d_streamer->registerControls("localiser", d_localiser->getControls());
+  d_streamer->registerControls("ambulator", d_ambulator->getControls());
   for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
 

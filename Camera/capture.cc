@@ -13,7 +13,8 @@ Mat Camera::capture()
 
   if (-1 == ioctl(d_fd, VIDIOC_DQBUF, &buf))
   {
-    cout << "[Camera] Error dequeueing buffer" << endl;
+    cout << "[Camera::capture] Error dequeueing buffer" << endl;
+    // TODO have seen this in a match -- do we have to exit the process?
     exit(-1);
   }
   t = d_debugger->timeEvent(t, "Image Capture/Dequeue");

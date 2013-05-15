@@ -28,6 +28,9 @@ namespace bold
       else
         d_current -= std::min(d_delta, -diff);
     }
+    
+    double getDelta() const { return d_delta; }
+    void setDelta(double delta) { d_delta = delta; }
 
   private:
     double d_delta;
