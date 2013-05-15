@@ -9,6 +9,7 @@ void Agent::standUpIfFallen()
   if (!d_autoGetUpFromFallen || d_fallDetector->getFallenState() == FallState::STANDUP)
     return;
 
+  // TODO arbitrate this differently
   d_walkModule->stop();
 
   // Loop until walking has stopped
