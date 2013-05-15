@@ -1,6 +1,7 @@
 #include "ambulator.hh"
 
 #include "../AgentState/agentstate.hh"
+#include "../Math/math.hh"
 #include "../robotis/Framework/include/Walking.h"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 

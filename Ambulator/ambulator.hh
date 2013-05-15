@@ -15,7 +15,10 @@ namespace bold
       d_yAmp(0.0, ini.getd("Ambulator", "YAmpDelta", 3.0)),
       d_turnAmp(0.0, ini.getd("Ambulator", "TurnDelta", 1.0)),
       d_turnAngleSet(false),
-      d_moveDirSet(false)
+      d_moveDirSet(false),
+      d_maxHipPitchAtSpeed(ini.getd("Ambulator", "MaxHipPitchAtSpeed", 15.0)),
+      d_minHipPitch(ini.getd("Ambulator", "MinHipPitch", 13.0)),
+      d_maxHipPitch(ini.getd("Ambulator", "MaxHipPitch", 17.0))
     {}
 
     void step();
@@ -52,5 +55,8 @@ namespace bold
     LinearSmoother d_turnAmp;
     bool d_turnAngleSet;
     bool d_moveDirSet;
+    double d_maxHipPitchAtSpeed;
+    double d_minHipPitch;
+    double d_maxHipPitch;
   };
 }

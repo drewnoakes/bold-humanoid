@@ -22,7 +22,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   tree->addOption(stopWalking);
 
   // Approach ball
-  OptionPtr approachBall = make_shared<ApproachBall>("approachball", ambulator);
+  OptionPtr approachBall = make_shared<ApproachBall>(ini, "approachball", ambulator);
   tree->addOption(approachBall);
 
   // Circle around ball

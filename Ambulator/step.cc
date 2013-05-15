@@ -19,9 +19,16 @@ void Ambulator::step()
   }
   else
   {
-    walk->X_MOVE_AMPLITUDE = xAmp;
+    walk->X_MOVE_AMPLITUDE = xAmp; // forward
     walk->Y_MOVE_AMPLITUDE = yAmp;
     walk->A_MOVE_AMPLITUDE = turnAmp;
+    
+    // TODO this doesn't support walking backwards (-ve x)
+    // TODO examine using the acceleration (delta xAmp) as a input signal
+    
+    double alpha = Math::clamp(xAmp/d_maxHipPitchAtSpeed, 0.0, 1.0);
+
+    walk->HIP_PITCH_OFFSET = Math::lerp(alpha, d_minHipPitch, d_maxHipPitch);
 
     walk->m_Joint.SetEnableBodyWithoutHead(true, true);
 
