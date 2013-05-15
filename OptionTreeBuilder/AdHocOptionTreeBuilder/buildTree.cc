@@ -532,18 +532,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
         return false;
 
       auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-      // Don't kick if we don't see the ball
-      if (!ballObs)
-        return false;
 
-      // Don't kick if it's too far in front
-      if (ballObs->y() > 0.2)
-        return false;
-
-      if (ballObs->x() > 0)
-        return false;
-
-      return true;
+      if (ballObs && ballObs->y() <= 0.2 && ballObs->x() < 0)
+      {
+        cout << "[lookAtFeet2kickLeft] Kicking with left foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")" << endl;
+        return true;
+      }
+      return false;
     };
     lookAtFeet2kickLeft->childState = leftKickState;
 
@@ -558,18 +553,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
         return false;
 
       auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-      // Don't kick if we don't see the ball
-      if (!ballObs)
-        return false;
 
-      // Don't kick if it's too far in front
-      if (ballObs->y() > 0.2)
-        return false;
-
-      if (ballObs->x() < 0)
-        return false;
-
-      return true;
+      if (ballObs && ballObs->y() <= 0.2 && ballObs->x() > 0)
+      {
+        cout << "[lookAtFeet2kickRight] Kicking with right foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")" << endl;
+        return true;
+      }
+      return false;
     };
     lookAtFeet2kickRight->childState = rightKickState;
 
