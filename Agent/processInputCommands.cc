@@ -92,7 +92,7 @@ void Agent::processInputCommands()
           case 7:
             cout << "Right kick" << endl;
 //             d_actionModule->d_jointData.setEnableBodyWithoutHead(true, true);
-            d_actionModule->start((int)ActionPage::KickLeft);
+            d_actionModule->start((int)ActionPage::KickRight);
             break;
           default:
             if (event.value == 1)
