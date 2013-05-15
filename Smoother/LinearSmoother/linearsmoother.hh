@@ -2,6 +2,8 @@
 
 #include "../smoother.hh"
 
+#include <cmath>
+
 namespace bold
 {
   class LinearSmoother : public virtual Smoother
@@ -19,12 +21,12 @@ namespace bold
       if (diff == 0)
         return;
 
-      if (diff > d_delta)
-        d_current += d_delta;
-      else if (diff < d_delta)
-        d_current -= d_delta;
+      // Limit the rate of change to delta
+      
+      if (diff > 0)
+        d_current += std::min(d_delta, diff);
       else
-        d_current = d_target;
+        d_current -= std::min(d_delta, -diff);
     }
 
   private:
