@@ -457,12 +457,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     // Transition: approachball -> look for goal
     auto approachBall2lookForGoal = approachBallState->newTransition("closeToBall");
-    approachBall2lookForGoal->condition = []() {
+    approachBall2lookForGoal->condition = [&ini]() {
       auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
       if (!ballObs)
         return false;
 
-      return (ballObs->head<2>().norm() < 0.05);
+      return (ballObs->head<2>().norm() < ini.getd("Approach Ball", "UntilDistance", 0.05));
     };
     approachBall2lookForGoal->childState = lookForGoalState;
 
