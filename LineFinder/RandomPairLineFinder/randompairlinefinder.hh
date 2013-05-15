@@ -109,7 +109,7 @@ namespace bold
 
       Eigen::Vector2i min() const { return d_min; }
       Eigen::Vector2i max() const { return d_max; }
-      bold::DistributionTracker lengthDistribution() const { return d_lengthDistribution; }
+      DistributionTracker lengthDistribution() const { return d_lengthDistribution; }
 
       friend std::ostream& operator<<(std::ostream& stream, LineHypothesis const& hypothesis)
       {
@@ -129,7 +129,7 @@ namespace bold
         return sqrt(v.x()*v.x() + v.y()*v.y());
       }
 
-      bold::DistributionTracker d_lengthDistribution;
+      DistributionTracker d_lengthDistribution;
       Eigen::Vector2i d_min;
       Eigen::Vector2i d_max;
       double d_theta;
@@ -147,10 +147,10 @@ namespace bold
 
     void setMinDotManhattanDistance(unsigned minDotManhattanDistance) { d_minDotManhattanDistance = minDotManhattanDistance; }
 
-    std::vector<bold::Control> getControls() const override { return d_controls; };
+    std::vector<Control> getControls() const override { return d_controls; };
 
   private:
     unsigned d_minDotManhattanDistance;
-    std::vector<bold::Control> d_controls;
+    std::vector<Control> d_controls;
   };
 }

@@ -15,6 +15,6 @@ namespace bold
 
     virtual std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) { return std::vector<LineSegment2i>(); };
 
-    virtual std::vector<bold::Control> getControls() const { return std::vector<bold::Control>(); };
+    virtual std::vector<Control> getControls() const { return std::vector<Control>(); };
   };
 }
