@@ -13,7 +13,7 @@ OptionList CircleBall::runPolicy()
   Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
   d_ambulator->setMoveDir(Eigen::Vector2d(x, y));
   d_ambulator->setTurnAngle(a);
-  d_ambulator->step();
+//   d_ambulator->step();
 
   return OptionList();
 }
