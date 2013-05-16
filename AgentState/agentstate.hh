@@ -143,8 +143,19 @@ namespace bold
     template <typename T>
     static std::shared_ptr<T const> get()
     {
-      std::shared_ptr<StateTracker> tracker = AgentState::getInstance().getTracker<T>();
-      return tracker->state<T const>();
+      return AgentState::getInstance().getTrackerState<T>();
+    }
+
+    template<typename T>
+    std::shared_ptr<T const> getTrackerState() const
+    {
+      lock();
+      auto pair = d_trackerByTypeId.find(&typeid(T));
+      assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
+      auto tracker = pair->second;
+      auto state = tracker->state<T>();
+      unlock();
+      return state;
     }
 
     template<typename T>
@@ -153,8 +164,9 @@ namespace bold
       lock();
       auto pair = d_trackerByTypeId.find(&typeid(T));
       assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
+      auto tracker = pair->second;
       unlock();
-      return pair->second;
+      return tracker;
     }
 
     static AgentState& getInstance();
