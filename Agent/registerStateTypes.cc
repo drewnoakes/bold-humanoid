@@ -2,8 +2,6 @@
 
 void Agent::registerStateTypes()
 {
-  cout << "[Agent::registerStateTypes] Start" << endl;
-
   AgentState::getInstance().registerStateType<AgentFrameState>("AgentFrame");
   AgentState::getInstance().registerStateType<AmbulatorState>("Ambulator");
   AgentState::getInstance().registerStateType<BodyState>("Body");
