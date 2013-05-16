@@ -420,7 +420,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
       }
     }
 
-    // Section ������Ʈ (PRE -> MAIN -> POST -> (PAUSE or PRE) ...)
+    // Section (PRE -> MAIN -> POST -> (PAUSE or PRE) ...)
     if (bSection == PRE_SECTION)
     {
       // MAIN Section
