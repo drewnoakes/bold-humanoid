@@ -1,9 +1,6 @@
 [submodule "robotis"]
 	path = robotis
 	url = git@bitbucket.org:boldhearts/robotis.git
-[submodule "vision"]
-	path = vision
-	url = git@bitbucket.org:boldhearts/vision.git
 [submodule "joystick"]
 	path = joystick
 	url = git@bitbucket.org:drewnoakes/joystick.git
