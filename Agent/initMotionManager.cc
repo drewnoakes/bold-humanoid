@@ -55,7 +55,7 @@ bool Agent::initMotionManager(minIni const& ini)
   {
     if (motionManager->GetCalibrationStatus() == CalibrationState::COMPLETE)
     {
-      cout << "[Agent::init] Calibration complete" << endl;
+      cout << "[Agent::init] Calibration complete with FB=" << motionManager->GetGyroCenterFB() << ", RL=" << motionManager->GetGyroCenterRL() << endl;
       break;
     }
     else if (motionManager->GetCalibrationStatus() == CalibrationState::ERRORED)
