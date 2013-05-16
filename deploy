@@ -25,7 +25,7 @@ do
 
   # TODO ensure process isn't running remotely
 
-  rsync -r boldhumanoid *.ini www motion_4096.bin darwin$i:
+  rsync -zrP boldhumanoid *.ini www motion_4096.bin darwin@darwin$i:
 
   if [ $? -ne 0 ]; then
     echo FAILED to deploy to darwin$i
