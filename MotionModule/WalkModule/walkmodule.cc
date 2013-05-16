@@ -160,80 +160,80 @@ bool WalkModule::computeIK(double *out, double x, double y, double z, double a, 
 
 void WalkModule::updateTimeParams()
 {
-  m_PeriodTime = PERIOD_TIME;
-  m_DSP_Ratio = DSP_RATIO;
-  m_SSP_Ratio = 1 - DSP_RATIO;
+  d_periodTime = PERIOD_TIME;
+  d_dspRatio = DSP_RATIO;
+  d_sspRatio = 1 - DSP_RATIO;
 
-  m_X_Swap_PeriodTime = m_PeriodTime / 2;
-  m_X_Move_PeriodTime = m_PeriodTime * m_SSP_Ratio;
-  m_Y_Swap_PeriodTime = m_PeriodTime;
-  m_Y_Move_PeriodTime = m_PeriodTime * m_SSP_Ratio;
-  m_Z_Swap_PeriodTime = m_PeriodTime / 2;
-  m_Z_Move_PeriodTime = m_PeriodTime * m_SSP_Ratio / 2;
-  m_A_Move_PeriodTime = m_PeriodTime * m_SSP_Ratio;
+  d_xSwapPeriodTime = d_periodTime / 2;
+  d_xMovePeriodTime = d_periodTime * d_sspRatio;
+  d_ySwapPeriodTime = d_periodTime;
+  d_yMovePeriodTime = d_periodTime * d_sspRatio;
+  d_zSwapPeriodTime = d_periodTime / 2;
+  d_zMovePeriodTime = d_periodTime * d_sspRatio / 2;
+  d_aMovePeriodTime = d_periodTime * d_sspRatio;
 
-  m_SSP_Time = m_PeriodTime * m_SSP_Ratio;
-  m_SSP_Time_Start_L = (1 - m_SSP_Ratio) * m_PeriodTime / 4;
-  m_SSP_Time_End_L = (1 + m_SSP_Ratio) * m_PeriodTime / 4;
-  m_SSP_Time_Start_R = (3 - m_SSP_Ratio) * m_PeriodTime / 4;
-  m_SSP_Time_End_R = (3 + m_SSP_Ratio) * m_PeriodTime / 4;
+  d_sspTime = d_periodTime * d_sspRatio;
+  d_sspTimeStartL = (1 - d_sspRatio) * d_periodTime / 4;
+  d_sspTimeEndL = (1 + d_sspRatio) * d_periodTime / 4;
+  d_sspTimeStartR = (3 - d_sspRatio) * d_periodTime / 4;
+  d_sspTimeEndR = (3 + d_sspRatio) * d_periodTime / 4;
 
-  m_Phase_Time1 = (m_SSP_Time_End_L + m_SSP_Time_Start_L) / 2;
-  m_Phase_Time2 = (m_SSP_Time_Start_R + m_SSP_Time_End_L) / 2;
-  m_Phase_Time3 = (m_SSP_Time_End_R + m_SSP_Time_Start_R) / 2;
+  d_phaseTime1 = (d_sspTimeEndL + d_sspTimeStartL) / 2;
+  d_phaseTime2 = (d_sspTimeStartR + d_sspTimeEndL) / 2;
+  d_phaseTime3 = (d_sspTimeEndR + d_sspTimeStartR) / 2;
 
-  m_Pelvis_Offset = PELVIS_OFFSET*MX28::RATIO_DEGS2VALUE;
-  m_Pelvis_Swing = m_Pelvis_Offset * 0.35;
-  m_Arm_Swing_Gain = ARM_SWING_GAIN;
+  d_pelvisOffset = PELVIS_OFFSET*MX28::RATIO_DEGS2VALUE;
+  d_pelvisSwing = d_pelvisOffset * 0.35;
+  d_armSwingGain = ARM_SWING_GAIN;
 }
 
 void WalkModule::updateMovementParams()
 {
   // Forward/Back
-  m_X_Move_Amplitude = X_MOVE_AMPLITUDE;
-  m_X_Swap_Amplitude = X_MOVE_AMPLITUDE * STEP_FB_RATIO;
+  d_xMoveAmplitude = X_MOVE_AMPLITUDE;
+  d_xSwapAmplitude = X_MOVE_AMPLITUDE * STEP_FB_RATIO;
 
   // Right/Left
-  m_Y_Move_Amplitude = Y_MOVE_AMPLITUDE / 2;
-  if (m_Y_Move_Amplitude > 0)
-    m_Y_Move_Amplitude_Shift = m_Y_Move_Amplitude;
+  d_yMoveAmplitude = Y_MOVE_AMPLITUDE / 2;
+  if (d_yMoveAmplitude > 0)
+    d_yMoveAmplitudeShift = d_yMoveAmplitude;
   else
-    m_Y_Move_Amplitude_Shift = -m_Y_Move_Amplitude;
-  m_Y_Swap_Amplitude = Y_SWAP_AMPLITUDE + m_Y_Move_Amplitude_Shift * 0.04;
+    d_yMoveAmplitudeShift = -d_yMoveAmplitude;
+  d_ySwapAmplitude = Y_SWAP_AMPLITUDE + d_yMoveAmplitudeShift * 0.04;
 
-  m_Z_Move_Amplitude = Z_MOVE_AMPLITUDE / 2;
-  m_Z_Move_Amplitude_Shift = m_Z_Move_Amplitude / 2;
-  m_Z_Swap_Amplitude = Z_SWAP_AMPLITUDE;
-  m_Z_Swap_Amplitude_Shift = m_Z_Swap_Amplitude;
+  d_zMoveAmplitude = Z_MOVE_AMPLITUDE / 2;
+  d_zMoveAmplitudeShift = d_zMoveAmplitude / 2;
+  d_zSwapAmplitude = Z_SWAP_AMPLITUDE;
+  d_zSwapAmplitudeShift = d_zSwapAmplitude;
 
   // Direction
   if (!A_MOVE_AIM_ON)
   {
-    m_A_Move_Amplitude = A_MOVE_AMPLITUDE * M_PI / 180.0 / 2;
-    if (m_A_Move_Amplitude > 0)
-      m_A_Move_Amplitude_Shift = m_A_Move_Amplitude;
+    d_aMoveAmplitude = A_MOVE_AMPLITUDE * M_PI / 180.0 / 2;
+    if (d_aMoveAmplitude > 0)
+      d_aMoveAmplitudeShift = d_aMoveAmplitude;
     else
-      m_A_Move_Amplitude_Shift = -m_A_Move_Amplitude;
+      d_aMoveAmplitudeShift = -d_aMoveAmplitude;
   }
   else
   {
-    m_A_Move_Amplitude = -A_MOVE_AMPLITUDE * M_PI / 180.0 / 2;
-    if (m_A_Move_Amplitude > 0)
-      m_A_Move_Amplitude_Shift = -m_A_Move_Amplitude;
+    d_aMoveAmplitude = -A_MOVE_AMPLITUDE * M_PI / 180.0 / 2;
+    if (d_aMoveAmplitude > 0)
+      d_aMoveAmplitudeShift = -d_aMoveAmplitude;
     else
-      m_A_Move_Amplitude_Shift = m_A_Move_Amplitude;
+      d_aMoveAmplitudeShift = d_aMoveAmplitude;
   }
 }
 
 void WalkModule::updateBalanceParams()
 {
-  m_X_Offset = X_OFFSET;
-  m_Y_Offset = Y_OFFSET;
-  m_Z_Offset = Z_OFFSET;
-  m_R_Offset = R_OFFSET * M_PI / 180.0;
-  m_P_Offset = P_OFFSET * M_PI / 180.0;
-  m_A_Offset = A_OFFSET * M_PI / 180.0;
-  m_Hip_Pitch_Offset = HIP_PITCH_OFFSET*MX28::RATIO_DEGS2VALUE;
+  d_xOffset = X_OFFSET;
+  d_yOffset = Y_OFFSET;
+  d_zOffset = Z_OFFSET;
+  d_rOffset = R_OFFSET * M_PI / 180.0;
+  d_pOffset = P_OFFSET * M_PI / 180.0;
+  d_aOffset = A_OFFSET * M_PI / 180.0;
+  d_hipPitchOffset = HIP_PITCH_OFFSET*MX28::RATIO_DEGS2VALUE;
 }
 
 void WalkModule::initialize()
@@ -242,23 +242,23 @@ void WalkModule::initialize()
   Y_MOVE_AMPLITUDE   = 0;
   A_MOVE_AMPLITUDE   = 0;
 
-  m_Body_Swing_Y = 0;
-  m_Body_Swing_Z = 0;
+  d_bodySwingY = 0;
+  d_bodySwingZ = 0;
 
-  m_X_Swap_Phase_Shift = M_PI;
-  m_X_Swap_Amplitude_Shift = 0;
-  m_X_Move_Phase_Shift = M_PI / 2;
-  m_X_Move_Amplitude_Shift = 0;
-  m_Y_Swap_Phase_Shift = 0;
-  m_Y_Swap_Amplitude_Shift = 0;
-  m_Y_Move_Phase_Shift = M_PI / 2;
-  m_Z_Swap_Phase_Shift = M_PI * 3 / 2;
-  m_Z_Move_Phase_Shift = M_PI / 2;
-  m_A_Move_Phase_Shift = M_PI / 2;
+  d_xSwapPhaseShift = M_PI;
+  d_xSwapAmplitudeaShift = 0;
+  d_xMovePhaseShift = M_PI / 2;
+  d_xMoveAmplitudeShift = 0;
+  d_ySwapPhaseShift = 0;
+  d_ySwapAmplitudeShift = 0;
+  d_yMovePhaseShift = M_PI / 2;
+  d_zSwapPhaseShift = M_PI * 3 / 2;
+  d_zMovePhaseShift = M_PI / 2;
+  d_aMovePhaseShift = M_PI / 2;
 
-  m_Ctrl_Running = false;
-  m_Real_Running = false;
-  m_Time = 0;
+  d_isCtrlRunning = false;
+  d_isRealRunning = false;
+  d_time = 0;
   updateTimeParams();
   updateMovementParams();
 
@@ -267,18 +267,18 @@ void WalkModule::initialize()
 
 void WalkModule::start()
 {
-  m_Ctrl_Running = true;
-  m_Real_Running = true;
+  d_isCtrlRunning = true;
+  d_isRealRunning = true;
 }
 
 void WalkModule::stop()
 {
-  m_Ctrl_Running = false;
+  d_isCtrlRunning = false;
 }
 
 bool WalkModule::isRunning()
 {
-  return m_Real_Running;
+  return d_isRealRunning;
 }
 
 void WalkModule::step(JointSelection const& selectedJoints)
@@ -295,15 +295,15 @@ void WalkModule::step(JointSelection const& selectedJoints)
   double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
 
   // Update walk parameters
-  if (m_Time == 0)
+  if (d_time == 0)
   {
     updateTimeParams();
-    m_Phase = PHASE0;
-    if (!m_Ctrl_Running)
+    d_phase = PHASE0;
+    if (!d_isCtrlRunning)
     {
-      if (m_X_Move_Amplitude == 0 && m_Y_Move_Amplitude == 0 && m_A_Move_Amplitude == 0)
+      if (d_xMoveAmplitude == 0 && d_yMoveAmplitude == 0 && d_aMoveAmplitude == 0)
       {
-        m_Real_Running = false;
+        d_isRealRunning = false;
       }
       else
       {
@@ -313,21 +313,21 @@ void WalkModule::step(JointSelection const& selectedJoints)
       }
     }
   }
-  else if (m_Time >= (m_Phase_Time1 - TIME_UNIT/2) && m_Time < (m_Phase_Time1 + TIME_UNIT/2))
+  else if (d_time >= (d_phaseTime1 - TIME_UNIT/2) && d_time < (d_phaseTime1 + TIME_UNIT/2))
   {
     updateMovementParams();
-    m_Phase = PHASE1;
+    d_phase = PHASE1;
   }
-  else if (m_Time >= (m_Phase_Time2 - TIME_UNIT/2) && m_Time < (m_Phase_Time2 + TIME_UNIT/2))
+  else if (d_time >= (d_phaseTime2 - TIME_UNIT/2) && d_time < (d_phaseTime2 + TIME_UNIT/2))
   {
     updateTimeParams();
-    m_Time = m_Phase_Time2;
-    m_Phase = PHASE2;
-    if (!m_Ctrl_Running)
+    d_time = d_phaseTime2;
+    d_phase = PHASE2;
+    if (!d_isCtrlRunning)
     {
-      if (m_X_Move_Amplitude == 0 && m_Y_Move_Amplitude == 0 && m_A_Move_Amplitude == 0)
+      if (d_xMoveAmplitude == 0 && d_yMoveAmplitude == 0 && d_aMoveAmplitude == 0)
       {
-        m_Real_Running = false;
+        d_isRealRunning = false;
       }
       else
       {
@@ -337,83 +337,83 @@ void WalkModule::step(JointSelection const& selectedJoints)
       }
     }
   }
-  else if (m_Time >= (m_Phase_Time3 - TIME_UNIT/2) && m_Time < (m_Phase_Time3 + TIME_UNIT/2))
+  else if (d_time >= (d_phaseTime3 - TIME_UNIT/2) && d_time < (d_phaseTime3 + TIME_UNIT/2))
   {
     updateMovementParams();
-    m_Phase = PHASE3;
+    d_phase = PHASE3;
   }
   updateBalanceParams();
 
   // Compute endpoints
-  x_swap = wsin(m_Time, m_X_Swap_PeriodTime, m_X_Swap_Phase_Shift, m_X_Swap_Amplitude, m_X_Swap_Amplitude_Shift);
-  y_swap = wsin(m_Time, m_Y_Swap_PeriodTime, m_Y_Swap_Phase_Shift, m_Y_Swap_Amplitude, m_Y_Swap_Amplitude_Shift);
-  z_swap = wsin(m_Time, m_Z_Swap_PeriodTime, m_Z_Swap_Phase_Shift, m_Z_Swap_Amplitude, m_Z_Swap_Amplitude_Shift);
+  x_swap = wsin(d_time, d_xSwapPeriodTime, d_xSwapPhaseShift, d_xSwapAmplitude, d_xSwapAmplitudeaShift);
+  y_swap = wsin(d_time, d_ySwapPeriodTime, d_ySwapPhaseShift, d_ySwapAmplitude, d_ySwapAmplitudeShift);
+  z_swap = wsin(d_time, d_zSwapPeriodTime, d_zSwapPhaseShift, d_zSwapAmplitude, d_zSwapAmplitudeShift);
   a_swap = 0;
   b_swap = 0;
   c_swap = 0;
 
-  if (m_Time <= m_SSP_Time_Start_L)
+  if (d_time <= d_sspTimeStartL)
   {
-    x_move_l = wsin(m_SSP_Time_Start_L, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_L, m_X_Move_Amplitude, m_X_Move_Amplitude_Shift);
-    y_move_l = wsin(m_SSP_Time_Start_L, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_L, m_Y_Move_Amplitude, m_Y_Move_Amplitude_Shift);
-    z_move_l = wsin(m_SSP_Time_Start_L, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_L, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_l = wsin(m_SSP_Time_Start_L, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_L, m_A_Move_Amplitude, m_A_Move_Amplitude_Shift);
-    x_move_r = wsin(m_SSP_Time_Start_L, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_L, -m_X_Move_Amplitude, -m_X_Move_Amplitude_Shift);
-    y_move_r = wsin(m_SSP_Time_Start_L, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_L, -m_Y_Move_Amplitude, -m_Y_Move_Amplitude_Shift);
-    z_move_r = wsin(m_SSP_Time_Start_R, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_R, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_r = wsin(m_SSP_Time_Start_L, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_L, -m_A_Move_Amplitude, -m_A_Move_Amplitude_Shift);
+    x_move_l = wsin(d_sspTimeStartL, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartL, d_xMoveAmplitude, d_xMoveAmplitudeShift);
+    y_move_l = wsin(d_sspTimeStartL, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartL, d_yMoveAmplitude, d_yMoveAmplitudeShift);
+    z_move_l = wsin(d_sspTimeStartL, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartL, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_l = wsin(d_sspTimeStartL, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartL, d_aMoveAmplitude, d_aMoveAmplitudeShift);
+    x_move_r = wsin(d_sspTimeStartL, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartL, -d_xMoveAmplitude, -d_xMoveAmplitudeShift);
+    y_move_r = wsin(d_sspTimeStartL, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartL, -d_yMoveAmplitude, -d_yMoveAmplitudeShift);
+    z_move_r = wsin(d_sspTimeStartR, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartR, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_r = wsin(d_sspTimeStartL, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartL, -d_aMoveAmplitude, -d_aMoveAmplitudeShift);
     pelvis_offset_l = 0;
     pelvis_offset_r = 0;
   }
-  else if (m_Time <= m_SSP_Time_End_L)
+  else if (d_time <= d_sspTimeEndL)
   {
-    x_move_l = wsin(m_Time, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_L, m_X_Move_Amplitude, m_X_Move_Amplitude_Shift);
-    y_move_l = wsin(m_Time, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_L, m_Y_Move_Amplitude, m_Y_Move_Amplitude_Shift);
-    z_move_l = wsin(m_Time, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_L, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_l = wsin(m_Time, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_L, m_A_Move_Amplitude, m_A_Move_Amplitude_Shift);
-    x_move_r = wsin(m_Time, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_L, -m_X_Move_Amplitude, -m_X_Move_Amplitude_Shift);
-    y_move_r = wsin(m_Time, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_L, -m_Y_Move_Amplitude, -m_Y_Move_Amplitude_Shift);
-    z_move_r = wsin(m_SSP_Time_Start_R, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_R, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_r = wsin(m_Time, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_L, -m_A_Move_Amplitude, -m_A_Move_Amplitude_Shift);
-    pelvis_offset_l = wsin(m_Time, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_L, m_Pelvis_Swing / 2, m_Pelvis_Swing / 2);
-    pelvis_offset_r = wsin(m_Time, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_L, -m_Pelvis_Offset / 2, -m_Pelvis_Offset / 2);
+    x_move_l = wsin(d_time, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartL, d_xMoveAmplitude, d_xMoveAmplitudeShift);
+    y_move_l = wsin(d_time, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartL, d_yMoveAmplitude, d_yMoveAmplitudeShift);
+    z_move_l = wsin(d_time, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartL, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_l = wsin(d_time, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartL, d_aMoveAmplitude, d_aMoveAmplitudeShift);
+    x_move_r = wsin(d_time, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartL, -d_xMoveAmplitude, -d_xMoveAmplitudeShift);
+    y_move_r = wsin(d_time, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartL, -d_yMoveAmplitude, -d_yMoveAmplitudeShift);
+    z_move_r = wsin(d_sspTimeStartR, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartR, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_r = wsin(d_time, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartL, -d_aMoveAmplitude, -d_aMoveAmplitudeShift);
+    pelvis_offset_l = wsin(d_time, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartL, d_pelvisSwing / 2, d_pelvisSwing / 2);
+    pelvis_offset_r = wsin(d_time, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartL, -d_pelvisOffset / 2, -d_pelvisOffset / 2);
   }
-  else if (m_Time <= m_SSP_Time_Start_R)
+  else if (d_time <= d_sspTimeStartR)
   {
-    x_move_l = wsin(m_SSP_Time_End_L, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_L, m_X_Move_Amplitude, m_X_Move_Amplitude_Shift);
-    y_move_l = wsin(m_SSP_Time_End_L, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_L, m_Y_Move_Amplitude, m_Y_Move_Amplitude_Shift);
-    z_move_l = wsin(m_SSP_Time_End_L, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_L, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_l = wsin(m_SSP_Time_End_L, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_L, m_A_Move_Amplitude, m_A_Move_Amplitude_Shift);
-    x_move_r = wsin(m_SSP_Time_End_L, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_L, -m_X_Move_Amplitude, -m_X_Move_Amplitude_Shift);
-    y_move_r = wsin(m_SSP_Time_End_L, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_L, -m_Y_Move_Amplitude, -m_Y_Move_Amplitude_Shift);
-    z_move_r = wsin(m_SSP_Time_Start_R, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_R, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_r = wsin(m_SSP_Time_End_L, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_L, -m_A_Move_Amplitude, -m_A_Move_Amplitude_Shift);
+    x_move_l = wsin(d_sspTimeEndL, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartL, d_xMoveAmplitude, d_xMoveAmplitudeShift);
+    y_move_l = wsin(d_sspTimeEndL, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartL, d_yMoveAmplitude, d_yMoveAmplitudeShift);
+    z_move_l = wsin(d_sspTimeEndL, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartL, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_l = wsin(d_sspTimeEndL, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartL, d_aMoveAmplitude, d_aMoveAmplitudeShift);
+    x_move_r = wsin(d_sspTimeEndL, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartL, -d_xMoveAmplitude, -d_xMoveAmplitudeShift);
+    y_move_r = wsin(d_sspTimeEndL, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartL, -d_yMoveAmplitude, -d_yMoveAmplitudeShift);
+    z_move_r = wsin(d_sspTimeStartR, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartR, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_r = wsin(d_sspTimeEndL, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartL, -d_aMoveAmplitude, -d_aMoveAmplitudeShift);
     pelvis_offset_l = 0;
     pelvis_offset_r = 0;
   }
-  else if (m_Time <= m_SSP_Time_End_R)
+  else if (d_time <= d_sspTimeEndR)
   {
-    x_move_l = wsin(m_Time, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, m_X_Move_Amplitude, m_X_Move_Amplitude_Shift);
-    y_move_l = wsin(m_Time, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, m_Y_Move_Amplitude, m_Y_Move_Amplitude_Shift);
-    z_move_l = wsin(m_SSP_Time_End_L, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_L, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_l = wsin(m_Time, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, m_A_Move_Amplitude, m_A_Move_Amplitude_Shift);
-    x_move_r = wsin(m_Time, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, -m_X_Move_Amplitude, -m_X_Move_Amplitude_Shift);
-    y_move_r = wsin(m_Time, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, -m_Y_Move_Amplitude, -m_Y_Move_Amplitude_Shift);
-    z_move_r = wsin(m_Time, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_R, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_r = wsin(m_Time, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, -m_A_Move_Amplitude, -m_A_Move_Amplitude_Shift);
-    pelvis_offset_l = wsin(m_Time, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_R, m_Pelvis_Offset / 2, m_Pelvis_Offset / 2);
-    pelvis_offset_r = wsin(m_Time, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_R, -m_Pelvis_Swing / 2, -m_Pelvis_Swing / 2);
+    x_move_l = wsin(d_time, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartR + M_PI, d_xMoveAmplitude, d_xMoveAmplitudeShift);
+    y_move_l = wsin(d_time, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartR + M_PI, d_yMoveAmplitude, d_yMoveAmplitudeShift);
+    z_move_l = wsin(d_sspTimeEndL, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartL, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_l = wsin(d_time, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartR + M_PI, d_aMoveAmplitude, d_aMoveAmplitudeShift);
+    x_move_r = wsin(d_time, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartR + M_PI, -d_xMoveAmplitude, -d_xMoveAmplitudeShift);
+    y_move_r = wsin(d_time, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartR + M_PI, -d_yMoveAmplitude, -d_yMoveAmplitudeShift);
+    z_move_r = wsin(d_time, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartR, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_r = wsin(d_time, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartR + M_PI, -d_aMoveAmplitude, -d_aMoveAmplitudeShift);
+    pelvis_offset_l = wsin(d_time, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartR, d_pelvisOffset / 2, d_pelvisOffset / 2);
+    pelvis_offset_r = wsin(d_time, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartR, -d_pelvisSwing / 2, -d_pelvisSwing / 2);
   }
   else
   {
-    x_move_l = wsin(m_SSP_Time_End_R, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, m_X_Move_Amplitude, m_X_Move_Amplitude_Shift);
-    y_move_l = wsin(m_SSP_Time_End_R, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, m_Y_Move_Amplitude, m_Y_Move_Amplitude_Shift);
-    z_move_l = wsin(m_SSP_Time_End_L, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_L, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_l = wsin(m_SSP_Time_End_R, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, m_A_Move_Amplitude, m_A_Move_Amplitude_Shift);
-    x_move_r = wsin(m_SSP_Time_End_R, m_X_Move_PeriodTime, m_X_Move_Phase_Shift + 2 * M_PI / m_X_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, -m_X_Move_Amplitude, -m_X_Move_Amplitude_Shift);
-    y_move_r = wsin(m_SSP_Time_End_R, m_Y_Move_PeriodTime, m_Y_Move_Phase_Shift + 2 * M_PI / m_Y_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, -m_Y_Move_Amplitude, -m_Y_Move_Amplitude_Shift);
-    z_move_r = wsin(m_SSP_Time_End_R, m_Z_Move_PeriodTime, m_Z_Move_Phase_Shift + 2 * M_PI / m_Z_Move_PeriodTime * m_SSP_Time_Start_R, m_Z_Move_Amplitude, m_Z_Move_Amplitude_Shift);
-    c_move_r = wsin(m_SSP_Time_End_R, m_A_Move_PeriodTime, m_A_Move_Phase_Shift + 2 * M_PI / m_A_Move_PeriodTime * m_SSP_Time_Start_R + M_PI, -m_A_Move_Amplitude, -m_A_Move_Amplitude_Shift);
+    x_move_l = wsin(d_sspTimeEndR, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartR + M_PI, d_xMoveAmplitude, d_xMoveAmplitudeShift);
+    y_move_l = wsin(d_sspTimeEndR, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartR + M_PI, d_yMoveAmplitude, d_yMoveAmplitudeShift);
+    z_move_l = wsin(d_sspTimeEndL, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartL, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_l = wsin(d_sspTimeEndR, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartR + M_PI, d_aMoveAmplitude, d_aMoveAmplitudeShift);
+    x_move_r = wsin(d_sspTimeEndR, d_xMovePeriodTime, d_xMovePhaseShift + 2 * M_PI / d_xMovePeriodTime * d_sspTimeStartR + M_PI, -d_xMoveAmplitude, -d_xMoveAmplitudeShift);
+    y_move_r = wsin(d_sspTimeEndR, d_yMovePeriodTime, d_yMovePhaseShift + 2 * M_PI / d_yMovePeriodTime * d_sspTimeStartR + M_PI, -d_yMoveAmplitude, -d_yMoveAmplitudeShift);
+    z_move_r = wsin(d_sspTimeEndR, d_zMovePeriodTime, d_zMovePhaseShift + 2 * M_PI / d_zMovePeriodTime * d_sspTimeStartR, d_zMoveAmplitude, d_zMoveAmplitudeShift);
+    c_move_r = wsin(d_sspTimeEndR, d_aMovePeriodTime, d_aMovePhaseShift + 2 * M_PI / d_aMovePeriodTime * d_sspTimeStartR + M_PI, -d_aMoveAmplitude, -d_aMoveAmplitudeShift);
     pelvis_offset_l = 0;
     pelvis_offset_r = 0;
   }
@@ -423,49 +423,49 @@ void WalkModule::step(JointSelection const& selectedJoints)
   a_move_r = 0;
   b_move_r = 0;
 
-  ep[0] = x_swap + x_move_r + m_X_Offset;
-  ep[1] = y_swap + y_move_r - m_Y_Offset / 2;
-  ep[2] = z_swap + z_move_r + m_Z_Offset;
-  ep[3] = a_swap + a_move_r - m_R_Offset / 2;
-  ep[4] = b_swap + b_move_r + m_P_Offset;
-  ep[5] = c_swap + c_move_r - m_A_Offset / 2;
-  ep[6] = x_swap + x_move_l + m_X_Offset;
-  ep[7] = y_swap + y_move_l + m_Y_Offset / 2;
-  ep[8] = z_swap + z_move_l + m_Z_Offset;
-  ep[9] = a_swap + a_move_l + m_R_Offset / 2;
-  ep[10] = b_swap + b_move_l + m_P_Offset;
-  ep[11] = c_swap + c_move_l + m_A_Offset / 2;
+  ep[0] = x_swap + x_move_r + d_xOffset;
+  ep[1] = y_swap + y_move_r - d_yOffset / 2;
+  ep[2] = z_swap + z_move_r + d_zOffset;
+  ep[3] = a_swap + a_move_r - d_rOffset / 2;
+  ep[4] = b_swap + b_move_r + d_pOffset;
+  ep[5] = c_swap + c_move_r - d_aOffset / 2;
+  ep[6] = x_swap + x_move_l + d_xOffset;
+  ep[7] = y_swap + y_move_l + d_yOffset / 2;
+  ep[8] = z_swap + z_move_l + d_zOffset;
+  ep[9] = a_swap + a_move_l + d_rOffset / 2;
+  ep[10] = b_swap + b_move_l + d_pOffset;
+  ep[11] = c_swap + c_move_l + d_aOffset / 2;
 
   // Compute body swing
-  if (m_Time <= m_SSP_Time_End_L)
+  if (d_time <= d_sspTimeEndL)
   {
-    m_Body_Swing_Y = -ep[7];
-    m_Body_Swing_Z = ep[8];
+    d_bodySwingY = -ep[7];
+    d_bodySwingZ = ep[8];
   }
   else
   {
-    m_Body_Swing_Y = -ep[1];
-    m_Body_Swing_Z = ep[2];
+    d_bodySwingY = -ep[1];
+    d_bodySwingZ = ep[2];
   }
-  m_Body_Swing_Z -= LEG_LENGTH;
+  d_bodySwingZ -= LEG_LENGTH;
 
   // Compute arm swing
-  if (m_X_Move_Amplitude == 0)
+  if (d_xMoveAmplitude == 0)
   {
     angle[12] = 0; // Right
     angle[13] = 0; // Left
   }
   else
   {
-    angle[12] = wsin(m_Time, m_PeriodTime, M_PI * 1.5, -m_X_Move_Amplitude * m_Arm_Swing_Gain, 0);
-    angle[13] = wsin(m_Time, m_PeriodTime, M_PI * 1.5, m_X_Move_Amplitude * m_Arm_Swing_Gain, 0);
+    angle[12] = wsin(d_time, d_periodTime, M_PI * 1.5, -d_xMoveAmplitude * d_armSwingGain, 0);
+    angle[13] = wsin(d_time, d_periodTime, M_PI * 1.5, d_xMoveAmplitude * d_armSwingGain, 0);
   }
 
-  if (m_Real_Running)
+  if (d_isRealRunning)
   {
-    m_Time += TIME_UNIT;
-    if (m_Time >= m_PeriodTime)
-      m_Time = 0;
+    d_time += TIME_UNIT;
+    if (d_time >= d_periodTime)
+      d_time = 0;
   }
 
   // Compute angles

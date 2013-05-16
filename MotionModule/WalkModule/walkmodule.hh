@@ -26,66 +26,68 @@ namespace bold
     static constexpr double ANKLE_LENGTH = 33.5; // mm
     static constexpr double LEG_LENGTH = THIGH_LENGTH + CALF_LENGTH + ANKLE_LENGTH;
 
-    double m_PeriodTime;
-    double m_DSP_Ratio;
-    double m_SSP_Ratio;
-    double m_X_Swap_PeriodTime;
-    double m_X_Move_PeriodTime;
-    double m_Y_Swap_PeriodTime;
-    double m_Y_Move_PeriodTime;
-    double m_Z_Swap_PeriodTime;
-    double m_Z_Move_PeriodTime;
-    double m_A_Move_PeriodTime;
-    double m_SSP_Time;
-    double m_SSP_Time_Start_L;
-    double m_SSP_Time_End_L;
-    double m_SSP_Time_Start_R;
-    double m_SSP_Time_End_R;
-    double m_Phase_Time1;
-    double m_Phase_Time2;
-    double m_Phase_Time3;
+    double d_periodTime;
+    /// Double support phase ratio.
+    double d_dspRatio;
+    /// Single support phase ratio.
+    double d_sspRatio;
+    double d_xSwapPeriodTime;
+    double d_xMovePeriodTime;
+    double d_ySwapPeriodTime;
+    double d_yMovePeriodTime;
+    double d_zSwapPeriodTime;
+    double d_zMovePeriodTime;
+    double d_aMovePeriodTime;
+    double d_sspTime;
+    double d_sspTimeStartL;
+    double d_sspTimeEndL;
+    double d_sspTimeStartR;
+    double d_sspTimeEndR;
+    double d_phaseTime1;
+    double d_phaseTime2;
+    double d_phaseTime3;
 
-    double m_X_Offset;
-    double m_Y_Offset;
-    double m_Z_Offset;
-    double m_R_Offset;
-    double m_P_Offset;
-    double m_A_Offset;
+    double d_xOffset;
+    double d_yOffset;
+    double d_zOffset;
+    double d_rOffset;
+    double d_pOffset;
+    double d_aOffset;
 
-    double m_X_Swap_Phase_Shift;
-    double m_X_Swap_Amplitude;
-    double m_X_Swap_Amplitude_Shift;
-    double m_X_Move_Phase_Shift;
-    double m_X_Move_Amplitude;
-    double m_X_Move_Amplitude_Shift;
-    double m_Y_Swap_Phase_Shift;
-    double m_Y_Swap_Amplitude;
-    double m_Y_Swap_Amplitude_Shift;
-    double m_Y_Move_Phase_Shift;
-    double m_Y_Move_Amplitude;
-    double m_Y_Move_Amplitude_Shift;
-    double m_Z_Swap_Phase_Shift;
-    double m_Z_Swap_Amplitude;
-    double m_Z_Swap_Amplitude_Shift;
-    double m_Z_Move_Phase_Shift;
-    double m_Z_Move_Amplitude;
-    double m_Z_Move_Amplitude_Shift;
-    double m_A_Move_Phase_Shift;
-    double m_A_Move_Amplitude;
-    double m_A_Move_Amplitude_Shift;
+    double d_xSwapPhaseShift;
+    double d_xSwapAmplitude;
+    double d_xSwapAmplitudeaShift;
+    double d_xMovePhaseShift;
+    double d_xMoveAmplitude;
+    double d_xMoveAmplitudeShift;
+    double d_ySwapPhaseShift;
+    double d_ySwapAmplitude;
+    double d_ySwapAmplitudeShift;
+    double d_yMovePhaseShift;
+    double d_yMoveAmplitude;
+    double d_yMoveAmplitudeShift;
+    double d_zSwapPhaseShift;
+    double d_zSwapAmplitude;
+    double d_zSwapAmplitudeShift;
+    double d_zMovePhaseShift;
+    double d_zMoveAmplitude;
+    double d_zMoveAmplitudeShift;
+    double d_aMovePhaseShift;
+    double d_aMoveAmplitude;
+    double d_aMoveAmplitudeShift;
 
-    double m_Pelvis_Offset;
-    double m_Pelvis_Swing;
-    double m_Hip_Pitch_Offset;
-    double m_Arm_Swing_Gain;
+    double d_pelvisOffset;
+    double d_pelvisSwing;
+    double d_hipPitchOffset;
+    double d_armSwingGain;
 
-    bool m_Ctrl_Running;
-    bool m_Real_Running;
-    double m_Time;
+    bool d_isCtrlRunning;
+    bool d_isRealRunning;
+    double d_time;
 
-    int    m_Phase;
-    double m_Body_Swing_Y;
-    double m_Body_Swing_Z;
+    int    d_phase;
+    double d_bodySwingY;
+    double d_bodySwingZ;
 
     int d_outValue[14];
 
@@ -141,9 +143,9 @@ namespace bold
     void applyArms(std::shared_ptr<ArmSection> arms) override;
     void applyLegs(std::shared_ptr<LegSection> legs) override;
 
-    int getCurrentPhase() const  { return m_Phase; }
-    double getBodySwingY() const { return m_Body_Swing_Y; }
-    double getBodySwingZ() const { return m_Body_Swing_Z; }
+    int getCurrentPhase() const  { return d_phase; }
+    double getBodySwingY() const { return d_bodySwingY; }
+    double getBodySwingZ() const { return d_bodySwingZ; }
 
     void start();
     void stop();
