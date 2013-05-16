@@ -30,7 +30,7 @@ void GyroCalibrator::observeTyped(std::shared_ptr<HardwareState const> hardwareS
   if (d_calibrationStatus == CalibrationState::COMPLETE)
     return;
 
-  cout << "[GyroCalibrator::observeTyped] observing" << endl;
+//   cout << "[GyroCalibrator::observeTyped] observing" << endl;
   
   // TODO why not do up/down (Z) ?
   // TODO do the axes of the acc/gyro match the torso axes we've chosen?
