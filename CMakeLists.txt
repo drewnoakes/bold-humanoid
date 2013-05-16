@@ -395,6 +395,23 @@ set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPI
 add_dependencies(boldhumanoid darwin_lib)
 add_dependencies(boldhumanoid libwebsockets_lib)
 
+#
+## Copy files to build dir, so all dependencies are in there
+#
+file(GLOB INI_FILES ${CMAKE_SOURCE_DIR}/*.ini)
+foreach(ini_file ${INI_FILES})
+  file(COPY ${ini_file} DESTINATION .)
+endforeach(ini_file)
+
+file(COPY www DESTINATION .)
+file(COPY motion_4096.bin DESTINATION .)
+file(COPY libwebsockets/lib/libwebsockets.so DESTINATION .)
+file(COPY libwebsockets/lib/libwebsockets.so.3.0.0 DESTINATION .)
+file(COPY bundle.sh DESTINATION .)
+
+#
+## Upload target
+#
 if(UPLOAD_SCP_PATH)
   add_custom_command(OUTPUT upload.stamp
     COMMAND rsync -zP $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
@@ -409,7 +426,9 @@ else(UPLOAD_SCP_PATH)
   message(WARNING "You have not set a path for uploading the binary; 'upload' target not generated")
 endif(UPLOAD_SCP_PATH)
 
-
+#
+## CTAGS target (for emacs users)
+#
 set(_command find ${CMAKE_SOURCE_DIR} -regextype posix-egrep -regex ".*((hh)|(cc))$" -print | etags -o ${CMAKE_SOURCE_DIR}/TAGS -)
 add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/TAGS
   COMMAND ${_command}
@@ -434,4 +453,3 @@ endif (BUILDRUN_UNIT_TEST)
 ## Build tools
 #
 add_subdirectory(tools)
-
