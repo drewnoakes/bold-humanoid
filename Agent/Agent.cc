@@ -106,21 +106,10 @@ Agent::Agent(string const& U2D_dev,
     d_motionLoop->addModule(d_actionModule);
     d_motionLoop->addModule(d_headModule);
     d_motionLoop->addModule(d_walkModule);
-
-    d_motionLoop->start();
   }
   else
   {
     cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
-  }
-
-  // TODO move this to an initialisation phase of the behaviour tree
-  cout << "[Agent::Agent] Sitting down..." << endl;
-  auto sit = d_optionTree->getOption("sitdownaction");
-  while (sit->hasTerminated() == 0.0)
-  {
-    sit->runPolicy();
-    usleep(8000);
   }
 
   cout << "[Agent::Agent] Done" << endl;
