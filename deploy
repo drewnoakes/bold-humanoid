@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# deploy path N [N ... ]
+
+path=$1
+
+#if [ "$path" != "." ]
+#then
+#  path="../bundle/${path}"
+#fi
+
+# ensure path exists
+cd $path
+if [ ! -d $path ];
+then
+  echo "Path '$path' not found"
+  exit 1
+fi
+
+res=0
+
+for i in ${@:2}
+do
+  echo deploying $path to darwin$i
+
+  # TODO ensure process isn't running remotely
+
+  rsync -r boldhumanoid *.ini www motion_4096.bin darwin$i:
+
+  if [ $? -ne 0 ]; then
+    echo FAILED to deploy to darwin$i
+    res=1
+  fi
+done
+
+cd -
+
+exit $res
