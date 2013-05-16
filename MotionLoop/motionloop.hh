@@ -29,8 +29,6 @@ namespace bold
     void addModule(std::shared_ptr<MotionModule> module);
     void removeModule(std::shared_ptr<MotionModule> module);
 
-    void step();
-
     /// TODO allow specifying these in config
     /// Set of static offsets to be added to all target positions sent to hardware.
     /// May be used to compensate for angular positional errors.
@@ -38,6 +36,8 @@ namespace bold
     int d_offsets[NUMBER_OF_JOINTS + 1];
 
   private:
+    void step();
+    
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
     std::shared_ptr<Debugger> d_debugger;
