@@ -117,8 +117,11 @@ int main(int argc, char **argv)
     recordFrames,
     ignoreGameController));
 
+  minIni ini(confFile);
+
   AdHocOptionTreeBuilder optionTreeBuilder;
-  auto optionTree = optionTreeBuilder.buildTree(teamNumber,
+  auto optionTree = optionTreeBuilder.buildTree(ini,
+                                                teamNumber,
                                                 uniformNumber,
                                                 ignoreGameController,
                                                 agent->getDebugger(),

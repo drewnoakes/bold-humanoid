@@ -1,7 +1,7 @@
 #include "agent.ih"
 
 Agent::Agent(string const& U2D_dev,
-             string const& confFile,
+             minIni const& ini,
              string const& motionFile,
              unsigned teamNumber,
              unsigned uniformNumber,
@@ -12,7 +12,7 @@ Agent::Agent(string const& U2D_dev,
              bool ignoreGameController
   )
   : d_isRunning(false),
-    d_ini(confFile),
+    d_ini(ini),
     d_motionFile(motionFile),
     d_teamNumber(teamNumber),
     d_uniformNumber(uniformNumber),

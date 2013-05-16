@@ -1,6 +1,7 @@
 #include "adhocoptiontreebuilder.ih"
 
-unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
+unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
+                                                         unsigned teamNumber,
                                                          unsigned uniformNumber,
                                                          bool ignoreGameController,
                                                          shared_ptr<Debugger> debugger,

@@ -36,7 +36,7 @@ namespace bold
   {
   public:
     Agent(std::string const& U2D_dev,
-          std::string const& confFile,
+          minIni const& ini,
           std::string const& motionFile,
           unsigned teamNumber,
           unsigned uniformNumber,
