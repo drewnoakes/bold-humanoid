@@ -29,7 +29,10 @@ void printUsage()
 void handleShutdownSignal(int sig)
 {
   if (agent)
+  {
+    cout << "[boldhumanoid] Stopping Agent" << endl;
     agent->stop();
+  }
 }
 
 int main(int argc, char **argv)
@@ -104,6 +107,7 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  cout << "[boldhumanoid] Creating Agent" << endl;
   agent = new Agent(
     U2D_DEV_NAME0,
     confFile,
@@ -119,6 +123,7 @@ int main(int argc, char **argv)
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);
 
+  cout << "[boldhumanoid] Running Agent" << endl;
   agent->run();
 
   cout << "[boldhumanoid] Finished" << endl;

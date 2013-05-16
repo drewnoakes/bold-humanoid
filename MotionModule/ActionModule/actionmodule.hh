@@ -110,7 +110,9 @@ namespace bold
     bool start(int iPage);
     bool start(std::string namePage);
     bool start(int index, PAGE *pPage);
+    /// Request the action to come to a stop soon.
     void stop();
+    /// Stop immediately, irrespective of the current playing position.
     void brake();
     bool isRunning();
     bool isRunning(int *iPage, int *iStep);

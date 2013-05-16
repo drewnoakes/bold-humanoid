@@ -508,7 +508,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
         }
         else
         {
-            bPlayRepeatCount--;
+          bPlayRepeatCount--;
           if (bPlayRepeatCount > 0)
             wNextPlayPage = d_playingPageIndex;
           else
