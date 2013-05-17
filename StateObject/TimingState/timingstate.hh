@@ -36,6 +36,8 @@ namespace bold
       writer.EndObject();      
     }
     
+    std::shared_ptr<std::vector<EventTiming> const> getTimings() const { return d_eventTimings; }
+    
   private:
    std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
   };
