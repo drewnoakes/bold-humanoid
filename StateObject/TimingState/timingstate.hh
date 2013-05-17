@@ -17,6 +17,8 @@ namespace bold
     TimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings)
     : d_eventTimings(eventTimings)
     {}
+    
+    virtual ~TimingState() {}
 
   public:
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override
