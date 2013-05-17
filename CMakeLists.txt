@@ -397,17 +397,18 @@ add_dependencies(boldhumanoid libwebsockets_lib)
 
 #
 ## Copy files to build dir, so all dependencies are in there
-#
-file(GLOB INI_FILES ${CMAKE_SOURCE_DIR}/*.ini)
-foreach(ini_file ${INI_FILES})
-  file(COPY ${ini_file} DESTINATION .)
-endforeach(ini_file)
+#  (This fails on first configuration)
 
-file(COPY www DESTINATION .)
-file(COPY motion_4096.bin DESTINATION .)
-file(COPY libwebsockets/lib/libwebsockets.so DESTINATION .)
-file(COPY libwebsockets/lib/libwebsockets.so.3.0.0 DESTINATION .)
-file(COPY bundle.sh DESTINATION .)
+#file(GLOB INI_FILES ${CMAKE_SOURCE_DIR}/*.ini)
+#foreach(ini_file ${INI_FILES})
+#  file(COPY ${ini_file} DESTINATION .)
+#endforeach(ini_file)
+
+#file(COPY www DESTINATION .)
+#file(COPY motion_4096.bin DESTINATION .)
+#file(COPY libwebsockets/lib/libwebsockets.so DESTINATION .)
+#file(COPY libwebsockets/lib/libwebsockets.so.3.0.0 DESTINATION .)
+#file(COPY bundle.sh DESTINATION .)
 
 #
 ## Upload target
