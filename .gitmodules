@@ -6,8 +6,7 @@
 	url = git@bitbucket.org:drewnoakes/joystick.git
 [submodule "libwebsockets"]
 	path = libwebsockets
-	url = git://git.libwebsockets.org/libwebsockets
-	ignore = untracked
+	url = git@bitbucket.org:boldhearts/libwebsockets.git
 [submodule "rapidjson"]
 	path = rapidjson
 	url = git@bitbucket.org:boldhearts/rapidjson
