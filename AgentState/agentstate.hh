@@ -7,7 +7,7 @@
 #include <memory>
 #include <sigc++/signal.h>
 #include <vector>
-#include <semaphore.h>
+#include <mutex>
 
 #include "../StateObject/stateobject.hh"
 #include "../StateObserver/stateobserver.hh"
@@ -62,30 +62,25 @@ namespace bold
   class AgentState
   {
   public:
-    AgentState()
-    {
-      sem_init(&d_lock, 0, 1);
-    }
+    AgentState() {}
     
     template<typename T>
     void registerStateType(std::string name)
     {
       std::cout << "[AgentState::registerStateType] Registering state type: " << name << std::endl;
-      lock();
+      std::lock_guard<std::mutex> guard(d_mutex);
       const std::type_info* typeId = &typeid(T);
       assert(d_trackerByTypeId.find(typeId) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
       d_trackerByTypeId[typeId] = StateTracker::create<T>(name);
-      unlock();
     }
 
     std::vector<std::shared_ptr<StateTracker>> getTrackers() const
     {
       std::vector<std::shared_ptr<StateTracker>> stateObjects;
-      lock();
+      std::lock_guard<std::mutex> guard(d_mutex);
       std::transform(d_trackerByTypeId.begin(), d_trackerByTypeId.end(),
                      std::back_inserter(stateObjects),
                      [](decltype(d_trackerByTypeId)::value_type const& pair) { return pair.second; });
-      unlock();
       return stateObjects;
     }
 
@@ -100,7 +95,7 @@ namespace bold
       // TODO can type traits be used here to guarantee that T derives from StateObject
       std::type_info const* typeId = &typeid(TState);
       assert(observer);
-      lock();
+      std::lock_guard<std::mutex> guard(d_mutex);
       auto it = d_observersByTypeId.find(typeId);
       if (it == d_observersByTypeId.end())
       {
@@ -111,7 +106,6 @@ namespace bold
       {
         it->second.push_back(observer);
       }
-      unlock();
     }
 
     template <typename T>
@@ -124,7 +118,7 @@ namespace bold
       updated(tracker);
       
       std::type_info const* typeId = &typeid(T);
-      lock();
+      std::lock_guard<std::mutex> guard(d_mutex);
       auto it = d_observersByTypeId.find(typeId);
       if (it != d_observersByTypeId.end())
       {
@@ -137,7 +131,6 @@ namespace bold
         }
       }
       // TODO we hold this lock throughout all observers... dodgy!
-      unlock();
     }
 
     template <typename T>
@@ -149,34 +142,29 @@ namespace bold
     template<typename T>
     std::shared_ptr<T const> getTrackerState() const
     {
-      lock();
+      std::lock_guard<std::mutex> guard(d_mutex);
       auto pair = d_trackerByTypeId.find(&typeid(T));
       assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
       auto tracker = pair->second;
       auto state = tracker->state<T>();
-      unlock();
       return state;
     }
 
     template<typename T>
     std::shared_ptr<StateTracker> getTracker() const
     {
-      lock();
+      std::lock_guard<std::mutex> guard(d_mutex);
       auto pair = d_trackerByTypeId.find(&typeid(T));
       assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
       auto tracker = pair->second;
-      unlock();
       return tracker;
     }
 
     static AgentState& getInstance();
 
   private:
-    mutable sem_t d_lock;
+    mutable std::mutex d_mutex;
 
-    void lock() const { while((sem_wait(&d_lock) == -1) && (errno == EINTR)); }
-    void unlock() const { sem_post(&d_lock); }
-    
     struct TypeInfoCompare { bool operator()(std::type_info const* a, std::type_info const* b) const { return a->before(*b); }; };
 
     std::map<std::type_info const*, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeId;
