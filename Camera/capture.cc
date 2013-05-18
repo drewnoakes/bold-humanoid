@@ -1,10 +1,10 @@
 #include "camera.ih"
 
-Mat Camera::capture(shared_ptr<SequentialTimer> t)
+Mat Camera::capture(SequentialTimer& t)
 {
   v4l2_buffer buf;
   memset(&buf, 0, sizeof(buf));
-  t->timeEvent("Image Capture/Zero Memory");
+  t.timeEvent("Image Capture/Zero Memory");
 
   buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
   buf.memory = V4L2_MEMORY_MMAP;
@@ -14,14 +14,14 @@ Mat Camera::capture(shared_ptr<SequentialTimer> t)
     cout << "[Camera] Error dequeueing buffer" << endl;
     exit(-1);
   }
-  t->timeEvent("Image Capture/Dequeue");
+  t.timeEvent("Image Capture/Dequeue");
 
   if (-1 == ioctl(d_fd, VIDIOC_QBUF, &buf))
   {
     cout << "[Camera] Error re-queueing buffer" << endl;
     exit(-1);
   }
-  t->timeEvent("Image Capture/Requeue");
+  t.timeEvent("Image Capture/Requeue");
 
   Mat img(d_pixelFormat.height, d_squash ? d_pixelFormat.width / 2 : d_pixelFormat.width, CV_8UC3);
 
@@ -69,7 +69,7 @@ Mat Camera::capture(shared_ptr<SequentialTimer> t)
     }
   }
 
-  t->timeEvent("Image Capture/Copy From Buffer");
+  t.timeEvent("Image Capture/Copy From Buffer");
 
   return img;
 }

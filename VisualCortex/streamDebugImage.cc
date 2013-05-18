@@ -1,6 +1,6 @@
 #include "visualcortex.ih"
 
-void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer> streamer, shared_ptr<SequentialTimer> t)
+void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer> streamer, SequentialTimer& t)
 {
   // Only compose the image if at least one client is connected
   if (!streamer->hasImageClients())
@@ -135,5 +135,5 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   streamer->streamImage(debugImage);
-  t->timeEvent("Debug Image Streaming");
+  t.timeEvent("Debug Image Streaming");
 }

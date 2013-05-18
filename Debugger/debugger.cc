@@ -12,10 +12,7 @@ Debugger::Debugger()
   d_ignoredMessageCount(0),
   d_eyeColour(0,0,0),
   d_headColour(0,0,0)
-{
-  d_motionTimer = make_shared<SequentialTimer>("Motion");
-  d_thinkTimer = make_shared<SequentialTimer>("Think");
-}
+{}
 
 void Debugger::update(shared_ptr<CM730> cm730)
 {

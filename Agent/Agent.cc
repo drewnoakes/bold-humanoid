@@ -101,7 +101,7 @@ Agent::Agent(string const& U2D_dev,
   {
     readStaticHardwareState();
 
-    d_motionLoop = make_shared<MotionLoop>(d_cm730, d_debugger);
+    d_motionLoop = make_shared<MotionLoop>(d_cm730);
 
     d_motionLoop->addModule(d_actionModule);
     d_motionLoop->addModule(d_headModule);

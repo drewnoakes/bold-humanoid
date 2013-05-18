@@ -60,10 +60,10 @@ namespace bold
     std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
 
     /** Process the provided image, extracting features. */
-    void integrateImage(cv::Mat& cameraImage, std::shared_ptr<SequentialTimer> timer);
+    void integrateImage(cv::Mat& cameraImage, SequentialTimer& timer);
 
     /** Composes and enqueues a debugging image. */
-    void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer, std::shared_ptr<SequentialTimer> timer);
+    void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer, SequentialTimer& timer);
 
   private:
     std::map<std::string,std::vector<Control>> d_controlsByFamily;

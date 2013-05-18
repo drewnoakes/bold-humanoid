@@ -16,46 +16,37 @@ namespace bold
   class SequentialTimer
   {
   public:
-    SequentialTimer(std::string ns)
+    SequentialTimer()
     : d_eventTimings(std::make_shared<std::vector<EventTiming>>()),
-      d_ns(ns)
+      d_last(Clock::getTimestamp()),
+      d_flushed(false)
     {}
-    
-    void start()
-    {
-      d_last = Clock::getTimestamp();
-    }
     
     Clock::Timestamp timeEvent(std::string const& eventName)
     {
+      assert(!d_flushed);
       auto timeSeconds = Clock::getSeconds(d_last);
       d_eventTimings->push_back(EventTiming(timeSeconds, eventName));
       return Clock::getTimestamp();
     }
-    
+
+    // TODO rename 'getTimings'
     std::shared_ptr<std::vector<EventTiming>> flush()
     {
-      auto old = d_eventTimings;
-      d_eventTimings = std::make_shared<std::vector<EventTiming>>();
-      return old;
+      d_flushed = true;
+      return d_eventTimings;
     }
 
   private:
     std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
-    std::string d_ns;
     Clock::Timestamp d_last;
+    bool d_flushed;
   };
 
   class Debugger
   {
   public:
     Debugger();
-
-    //
-    // Event timings
-    //
-    std::shared_ptr<SequentialTimer> getThinkTimer() const { d_thinkTimer->start(); return d_thinkTimer; }
-    std::shared_ptr<SequentialTimer> getMotionTimer() const { d_thinkTimer->start(); return d_motionTimer; }
 
     //
     // UDP Message Counts
@@ -83,9 +74,6 @@ namespace bold
   private:
     void showEyeColour(Colour::bgr const& colour) { d_eyeColour = colour; }
     void showHeadColour(Colour::bgr const& colour) { d_headColour = colour; }
-    
-    std::shared_ptr<SequentialTimer> d_thinkTimer;
-    std::shared_ptr<SequentialTimer> d_motionTimer;
 
     int d_lastLedFlags;
     int d_lastEyeInt;

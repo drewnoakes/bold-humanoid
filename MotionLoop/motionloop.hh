@@ -19,7 +19,7 @@ namespace bold
     static const int NUMBER_OF_JOINTS = 20;
 
   public:
-    MotionLoop(std::shared_ptr<CM730> cm730, std::shared_ptr<Debugger> debugger);
+    MotionLoop(std::shared_ptr<CM730> cm730);
 
     ~MotionLoop();
 
@@ -40,7 +40,6 @@ namespace bold
     
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
-    std::shared_ptr<Debugger> d_debugger;
     std::shared_ptr<BodyControl> d_bodyControl;
     std::shared_ptr<BulkRead> d_dynamicBulkRead;
 

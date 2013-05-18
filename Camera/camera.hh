@@ -121,7 +121,7 @@ namespace bold
     void startCapture();
     void stopCapture();
 
-    cv::Mat capture(std::shared_ptr<SequentialTimer> timer);
+    cv::Mat capture(SequentialTimer& timer);
 
     void setSquashWidth(bool squash) { d_squash = squash; }
 

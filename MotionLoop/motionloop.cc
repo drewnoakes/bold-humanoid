@@ -17,9 +17,8 @@
 using namespace bold;
 using namespace std;
 
-MotionLoop::MotionLoop(shared_ptr<CM730> cm730, shared_ptr<Debugger> debugger)
+MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
 : d_cm730(cm730),
-  d_debugger(debugger),
   d_isStarted(false),
   d_stopRequested(false),
   d_loopDurationMillis(8),
@@ -152,7 +151,7 @@ void MotionLoop::step()
 {
   cout << "[MotionLoop::step]" << endl;
   
-  auto t = d_debugger->getThinkTimer();
+  SequentialTimer t;
   
   if (d_readYet)
   {
@@ -165,7 +164,7 @@ void MotionLoop::step()
     {
       module->step(JointSelection(true, true, true));
     }
-    t->timeEvent("Step Modules");
+    t.timeEvent("Step Modules");
 
     // TODO apply body section updates via modules, as appropriate
 
@@ -182,8 +181,8 @@ void MotionLoop::step()
       {
         dirtyDeviceCount++;
         // TODO find real min/max addresses
-  //       minAddress = min(minAddress, joint->minAddress());
-  //       maxAddress = max(maxAddress, joint->maxAddress());
+//       minAddress = min(minAddress, joint->minAddress());
+//       maxAddress = max(maxAddress, joint->maxAddress());
       }
     }
 
@@ -225,7 +224,7 @@ void MotionLoop::step()
       }
     }
     
-    t->timeEvent("Write to CM730");
+    t.timeEvent("Write to CM730");
   }
 
   //
@@ -233,7 +232,7 @@ void MotionLoop::step()
   //
 
   CommResult res = d_cm730->bulkRead(d_dynamicBulkRead);
-  t->timeEvent("Read from CM730");
+  t.timeEvent("Read from CM730");
 
   if (res != CommResult::SUCCESS)
   {
@@ -262,7 +261,7 @@ void MotionLoop::step()
   auto txBytes = d_cm730->getTransmittedByteCount();
 
   AgentState::getInstance().set(make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes));
-  t->timeEvent("Update HardwareState");
+  t.timeEvent("Update HardwareState");
 
   //
   // UPDATE BODYSTATE
@@ -276,10 +275,10 @@ void MotionLoop::step()
   }
 
   AgentState::getInstance().set(make_shared<BodyState const>(angles));
-  t->timeEvent("Update BodyState");
+  t.timeEvent("Update BodyState");
 
   //
   // Set timing data for the think cycle
   //
-  AgentState::getInstance().set(make_shared<MotionTimingState const>(t->flush()));
+  AgentState::getInstance().set(make_shared<MotionTimingState const>(t.flush()));
 }
