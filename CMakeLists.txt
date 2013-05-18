@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests")
 set(PRECOMPILE_HEADERS ON CACHE BOOL "Choose whether to precompile headers")
 set(UPLOAD_SCP_PATH "" CACHE STRING "Path to use in upload scp command. Format: user@server:path")
+set(BUNDLES_PATH "" CACHE STRING "Path to use to store bundles")
 
 include(ExternalProject)
 include(AddPcih)
@@ -399,26 +400,19 @@ add_dependencies(boldhumanoid libwebsockets_lib)
 ## Copy files to build dir, so all dependencies are in there
 #  (This fails on first configuration)
 
-#file(GLOB INI_FILES ${CMAKE_SOURCE_DIR}/*.ini)
-#foreach(ini_file ${INI_FILES})
-#  file(COPY ${ini_file} DESTINATION .)
-#endforeach(ini_file)
-
-#file(COPY www DESTINATION .)
-#file(COPY motion_4096.bin DESTINATION .)
-#file(COPY libwebsockets/lib/libwebsockets.so DESTINATION .)
-#file(COPY libwebsockets/lib/libwebsockets.so.3.0.0 DESTINATION .)
-#file(COPY bundle.sh DESTINATION .)
+set(BOLDHUMANOID_DEPLOY_FILES
+  $<TARGET_FILE:boldhumanoid>
+  ${CMAKE_SOURCE_DIR}/*.ini
+  ${CMAKE_SOURCE_DIR}/www
+  ${CMAKE_SOURCE_DIR}/motion_4096.bin
+)
 
 #
 ## Upload target
 #
 if(UPLOAD_SCP_PATH)
   add_custom_command(OUTPUT upload.stamp
-    COMMAND rsync -zP $<TARGET_FILE:boldhumanoid> ${UPLOAD_SCP_PATH}
-    COMMAND rsync -zP ${CMAKE_SOURCE_DIR}/*.ini ${UPLOAD_SCP_PATH}
-    COMMAND rsync -rzP ${CMAKE_SOURCE_DIR}/www ${UPLOAD_SCP_PATH}
-    COMMAND rsync -zP ${CMAKE_SOURCE_DIR}/motion_4096.bin ${UPLOAD_SCP_PATH}
+    COMMAND rsync -rzP ${BOLDHUMANOID_DEPLOY_FILES} ${UPLOAD_SCP_PATH}
     COMMAND touch upload.stamp
     DEPENDS boldhumanoid)
 
@@ -426,6 +420,30 @@ if(UPLOAD_SCP_PATH)
 else(UPLOAD_SCP_PATH)
   message(WARNING "You have not set a path for uploading the binary; 'upload' target not generated")
 endif(UPLOAD_SCP_PATH)
+
+#
+## Bundle target
+#
+if(BUNDLES_PATH)
+  add_custom_command(OUTPUT bundle.stamp
+    COMMAND if [ \"\${TAG}\" != \"\" ]\;
+          then 
+            git tag \${TAG}\;
+            mkdir -p ${BUNDLES_PATH}/\${TAG}\;
+            cp -r ${BOLDHUMANOID_DEPLOY_FILES} ${BUNDLES_PATH}/\${TAG}\;
+          else
+            echo \"No tag given. Usage: make bundle TAG=<tag>\"\;
+          fi
+    COMMAND touch bundle.stamp
+    DEPENDS boldhumanoid
+    
+    )
+
+  add_custom_target(bundle DEPENDS bundle.stamp)
+else(BUNDLES_PATH)
+  message(WARNING "You have not set a path for storing bundles; 'bundle' target not generated")
+endif(BUNDLES_PATH)
+
 
 #
 ## CTAGS target (for emacs users)
