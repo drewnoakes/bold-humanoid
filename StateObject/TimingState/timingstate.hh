@@ -23,7 +23,6 @@ namespace bold
   public:
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override
     {
-      writer.String("timings");
       writer.StartObject();
       {
         std::vector<EventTiming> const& timings = *d_eventTimings;
