@@ -10,24 +10,6 @@ using namespace std;
 
 // NOTE these tests ensure the same threading characteristics on development and production environments
 
-TEST (ThreadTests, createSingleThreadAndJoin)
-{
-  thread t1([]() { cout << "Hello from thread!" << endl; });
-  t1.join();
-}
-
-TEST (ThreadTests, createMultipleThreadsAndJoin)
-{
-  vector<thread> threads;
-  threads.push_back(thread([]() { cout << "Hello from thread!" << endl; }));
-  threads.push_back(thread([]() { cout << "Hello from thread!" << endl; }));
-  threads.push_back(thread([]() { cout << "Hello from thread!" << endl; }));
-  threads.push_back(thread([]() { cout << "Hello from thread!" << endl; }));
-  
-  for (auto& thread : threads)
-    thread.join();
-}
-
 struct UnsafeCounter
 {
   UnsafeCounter() : value(0) {}
