@@ -32,6 +32,7 @@ namespace bold
 
     void set(std::shared_ptr<StateObject const> state)
     {
+      std::lock_guard<std::mutex> guard(d_mutex);
       d_state = state;
       d_updateCount++;
     }
@@ -39,11 +40,13 @@ namespace bold
     template<typename T>
     std::shared_ptr<T const> state() const
     {
+      std::lock_guard<std::mutex> guard(d_mutex);
       return std::dynamic_pointer_cast<T const>(d_state);
     }
 
     std::shared_ptr<StateObject const> stateBase() const
     {
+      std::lock_guard<std::mutex> guard(d_mutex);
       return d_state;
     }
 
@@ -53,6 +56,7 @@ namespace bold
     libwebsocket_protocols* websocketProtocol;;
 
   private:
+    mutable std::mutex d_mutex;
     const std::string d_name;
     const std::type_info* d_typeid;
     std::shared_ptr<StateObject const> d_state;
