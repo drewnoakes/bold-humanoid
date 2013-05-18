@@ -171,7 +171,7 @@ namespace bold
 
     struct TypeInfoCompare { bool operator()(std::type_info const* a, std::type_info const* b) const { return a->before(*b); }; };
 
-    std::map<std::type_info const*, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeId;
+    std::map<std::type_info const*, std::vector<std::shared_ptr<StateObserver>>, TypeInfoCompare> d_observersByTypeId;
     std::map<std::type_info const*, std::shared_ptr<StateTracker>, TypeInfoCompare> d_trackerByTypeId;
   };
 
