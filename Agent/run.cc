@@ -11,6 +11,8 @@ void Agent::run()
 
   if (d_haveBody)
   {
+    d_cm730->torqueEnable(true);
+  
     d_motionLoop->start();
 
     // TODO move this to an initialisation phase of the behaviour tree

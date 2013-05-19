@@ -205,6 +205,8 @@ namespace bold
     /// Turn on the CM730's Dynamixel power.
     bool dxlPowerOn();
 
+    /// Enable or disable torque for all joints.
+    void torqueEnable(bool enable);
 
     /// Check the existance of Dynamixel with selected id. Returns communication result enum value.
     CommResult ping(uchar id, uchar *error);

@@ -35,6 +35,9 @@ namespace bold
     LEGS_END = L_ANKLE_ROLL,
 
     HEAD_START = HEAD_PAN,
-    HEAD_END = HEAD_TILT
+    HEAD_END = HEAD_TILT,
+    
+    MIN = R_SHOULDER_PITCH,
+    MAX = HEAD_TILT
   };
 }

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <iomanip>
 
+#include "../JointId/jointid.hh"
+
 using namespace bold;
 using namespace std;
 
@@ -471,6 +473,20 @@ bool CM730::dxlPowerOn()
   }
 
   return true;
+}
+
+void CM730::torqueEnable(bool enable)
+{
+  int error;
+  for (uchar jointId = JointId::MIN; jointId <= JointId::MAX; jointId++)
+  {
+    writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
+    if (error != 0)
+    {
+      // TODO better reporting of error, across all CM730 operations
+      cerr << "[CM730::torqueEnable] error for joint ID " << jointId << ": 0x" << hex() << jointId << dec() << endl;
+    }
+  }
 }
 
 void CM730::disconnect()
