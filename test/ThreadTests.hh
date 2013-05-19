@@ -5,6 +5,7 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <sigc++/sigc++.h>
 
 using namespace std;
 
@@ -57,6 +58,38 @@ TEST (ThreadTests, multipleCounters)
   
   EXPECT_EQ( safeCounter.value,   expected );
   EXPECT_NE( unsafeCounter.value, expected );
+}
+
+TEST (ThreadTests, threadSafetyOfSignals)
+{
+  int threadCount = 5;
+  int iterationCount = 10000;
+//   int expected = threadCount * iterationCount;
+  
+  int count;
+  sigc::signal<void> sig;
+  mutex m;
+  
+  sig.connect([&](){ count++; });
+  
+  vector<thread> threads;
+  for (int t = 0; t < threadCount; t++)
+  {
+    threads.push_back(thread([&]()
+    {
+      for (int i = 0; i < iterationCount; i++)
+      {
+        lock_guard<mutex> guard(m);
+        sig();
+      }
+    }));
+  }
+  
+  for (auto& thread : threads)
+    thread.join();
+  
+//   EXPECT_EQ( safeCounter.value,   expected );
+//   EXPECT_NE( unsafeCounter.value, expected );
 }
 
 TEST (ThreadTests, threadedProducerConsumer)
