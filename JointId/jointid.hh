@@ -2,7 +2,7 @@
 
 namespace bold
 {
-  enum class JointId
+  enum class JointId : unsigned char
   {
     R_SHOULDER_PITCH = 1,
     L_SHOULDER_PITCH = 2,

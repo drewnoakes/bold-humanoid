@@ -190,7 +190,7 @@ void MotionLoop::step()
     {
       // Prepare the parameters of a SyncWrite instruction
       int bytesPerDevice = 1 + maxAddress - minAddress + 1;
-      int parameters[dirtyDeviceCount * bytesPerDevice];
+      uchar parameters[dirtyDeviceCount * bytesPerDevice];
       int n = 0;
       for (shared_ptr<JointControl> joint : d_bodyControl->getJoints())
       {

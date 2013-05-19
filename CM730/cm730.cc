@@ -118,7 +118,7 @@ CM730::~CM730()
   disconnect();
 }
 
-CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, shared_ptr<BulkRead> bulkRead = nullptr)
+CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, shared_ptr<BulkRead> bulkRead = nullptr)
 {
   if (priority > 1)
     d_platform->lowPriorityWait();
@@ -407,9 +407,10 @@ CommResult CM730::bulkRead(shared_ptr<BulkRead> bulkRead)
   return txRxPacket(bulkRead->getTxPacket(), rxpacket, 0, bulkRead);
 }
 
-CommResult CM730::syncWrite(int start_addr, int each_length, int number, int *pParam)
+CommResult CM730::syncWrite(uchar start_addr, uchar each_length, uchar number, uchar *pParam)
 {
   assert(number > 0);
+  assert(each_length > 0);
   unsigned txSize = 8 + (each_length * number);
   if (txSize > 143)
     cerr << "[CM730::SyncWrite] Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size" << endl;
@@ -419,12 +420,12 @@ CommResult CM730::syncWrite(int start_addr, int each_length, int number, int *pP
 
   txpacket[ID]            = (uchar)ID_BROADCAST;
   txpacket[INSTRUCTION]   = INST_SYNC_WRITE;
-  txpacket[PARAMETER]     = (uchar)start_addr;
-  txpacket[PARAMETER + 1] = (uchar)(each_length - 1);
+  txpacket[PARAMETER]     = start_addr;
+  txpacket[PARAMETER + 1] = (each_length - 1);
 
   int n;
   for (n = 0; n < (number * each_length); n++)
-    txpacket[PARAMETER + 2 + n] = (uchar)pParam[n];
+    txpacket[PARAMETER + 2 + n] = pParam[n];
 
   txpacket[LENGTH] = n + 4;
 
@@ -487,14 +488,14 @@ bool CM730::dxlPowerOn()
 
 void CM730::torqueEnable(bool enable)
 {
-  int error;
-  for (uchar jointId = JointId::MIN; jointId <= JointId::MAX; jointId++)
+  uchar error;
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
     if (error != 0)
     {
       // TODO better reporting of error, across all CM730 operations
-      cerr << "[CM730::torqueEnable] error for joint ID " << jointId << ": 0x" << hex() << jointId << dec() << endl;
+      cerr << "[CM730::torqueEnable] error for joint ID " << jointId << ": 0x" << hex << jointId << dec << endl;
     }
   }
 }
@@ -529,14 +530,14 @@ CommResult CM730::ping(uchar id, uchar *error)
   return result;
 }
 
-CommResult CM730::readByte(uchar id, int address, uchar *pValue, uchar *error)
+CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, uchar *error)
 {
   uchar txpacket[8];
   uchar rxpacket[7];
 
   txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_READ;
-  txpacket[PARAMETER]    = (uchar)address;
+  txpacket[PARAMETER]    = address;
   txpacket[PARAMETER+1]  = 1;
   txpacket[LENGTH]       = 4;
 
@@ -552,14 +553,14 @@ CommResult CM730::readByte(uchar id, int address, uchar *pValue, uchar *error)
   return result;
 }
 
-CommResult CM730::readWord(uchar id, int address, int *pValue, uchar *error)
+CommResult CM730::readWord(uchar id, uchar address, int *pValue, uchar *error)
 {
   uchar txpacket[8];
   uchar rxpacket[8];
 
   txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_READ;
-  txpacket[PARAMETER]    = (uchar)address;
+  txpacket[PARAMETER]    = address;
   txpacket[PARAMETER+1]  = 2;
   txpacket[LENGTH]       = 4;
 
@@ -576,7 +577,7 @@ CommResult CM730::readWord(uchar id, int address, int *pValue, uchar *error)
   return result;
 }
 
-CommResult CM730::readTable(uchar id, int start_addr, int end_addr, uchar *table, uchar *error)
+CommResult CM730::readTable(uchar id, uchar start_addr, uchar end_addr, uchar *table, uchar *error)
 {
   int length = end_addr - start_addr + 1;
 
@@ -585,15 +586,15 @@ CommResult CM730::readTable(uchar id, int start_addr, int end_addr, uchar *table
 
   txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_READ;
-  txpacket[PARAMETER]    = (uchar)start_addr;
-  txpacket[PARAMETER+1]  = (uchar)length;
+  txpacket[PARAMETER]    = start_addr;
+  txpacket[PARAMETER+1]  = length;
   txpacket[LENGTH]       = 4;
 
   CommResult result = txRxPacket(txpacket, rxpacket, 1);
 
   if (result == CommResult::SUCCESS)
   {
-    for (int i=0; i<length; i++)
+    for (int i = 0; i < length; i++)
       table[start_addr + i] = rxpacket[PARAMETER + i];
 
     if (error != 0)
@@ -603,15 +604,15 @@ CommResult CM730::readTable(uchar id, int start_addr, int end_addr, uchar *table
   return result;
 }
 
-CommResult CM730::writeByte(uchar id, int address, int value, uchar *error)
+CommResult CM730::writeByte(uchar id, uchar address, uchar value, uchar *error)
 {
   uchar txpacket[8];
   uchar rxpacket[6];
 
   txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_WRITE;
-  txpacket[PARAMETER]    = (uchar)address;
-  txpacket[PARAMETER+1]  = (uchar)value;
+  txpacket[PARAMETER]    = address;
+  txpacket[PARAMETER+1]  = value;
   txpacket[LENGTH]       = 4;
 
   CommResult result = txRxPacket(txpacket, rxpacket, 2);
@@ -625,14 +626,14 @@ CommResult CM730::writeByte(uchar id, int address, int value, uchar *error)
   return result;
 }
 
-CommResult CM730::writeWord(uchar id, int address, int value, uchar *error)
+CommResult CM730::writeWord(uchar id, uchar address, int value, uchar *error)
 {
   uchar txpacket[9];
   uchar rxpacket[6];
 
   txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_WRITE;
-  txpacket[PARAMETER]    = (uchar)address;
+  txpacket[PARAMETER]    = address;
   txpacket[PARAMETER+1]  = (uchar)getLowByte(value);
   txpacket[PARAMETER+2]  = (uchar)getHighByte(value);
   txpacket[LENGTH]       = 5;

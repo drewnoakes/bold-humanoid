@@ -49,9 +49,9 @@ namespace bold
     bool d_isDirty;
     int d_value;
     double d_angle;
-    int d_gainP;
-    int d_gainI;
-    int d_gainD;
+    uchar d_gainP;
+    uchar d_gainI;
+    uchar d_gainD;
 
   public:
     JointControl(unsigned jointId);
@@ -74,15 +74,15 @@ namespace bold
     bool isDirty() const { return d_isDirty; }
     void clearDirty() { d_isDirty = false; }
 
-    void setPGain(int p) { if (d_gainP == p) return; d_gainP = p; d_isDirty = true; }
-    void setIGain(int i) { if (d_gainI == i) return; d_gainI = i; d_isDirty = true; }
-    void setDGain(int d) { if (d_gainD == d) return; d_gainD = d; d_isDirty = true; }
+    void setPGain(uchar p) { if (d_gainP == p) return; d_gainP = p; d_isDirty = true; }
+    void setIGain(uchar i) { if (d_gainI == i) return; d_gainI = i; d_isDirty = true; }
+    void setDGain(uchar d) { if (d_gainD == d) return; d_gainD = d; d_isDirty = true; }
 
-    void setPidGains(int p, int i, int d) { setPGain(p); setIGain(i); setDGain(d); }
+    void setPidGains(uchar p, uchar i, uchar d) { setPGain(p); setIGain(i); setDGain(d); }
 
-    int getPGain() const { return d_gainP; }
-    int getIGain() const { return d_gainI; }
-    int getDGain() const { return d_gainD; }
+    uchar getPGain() const { return d_gainP; }
+    uchar getIGain() const { return d_gainI; }
+    uchar getDGain() const { return d_gainD; }
   };
 
   class HeadSection;
@@ -102,8 +102,8 @@ namespace bold
 
   public:
 
-    const int MIN_JOINT_ID = 1;
-    const int MAX_JOINT_ID = 20;
+    const uchar MIN_JOINT_ID = 1;
+    const uchar MAX_JOINT_ID = 20;
 
     BodyControl();
 

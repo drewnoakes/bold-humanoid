@@ -213,20 +213,20 @@ namespace bold
 
 
     /// Reads a byte from the CM730 control table. Returns communication result enum value.
-    CommResult readByte(uchar id, int address, uchar *pValue, uchar *error);
+    CommResult readByte(uchar id, uchar address, uchar *pValue, uchar *error);
 
     /// Reads two bytes from the CM730 control table. Returns communication result enum value.
-    CommResult readWord(uchar id, int address, int *pValue, uchar *error);
+    CommResult readWord(uchar id, uchar address, int *pValue, uchar *error);
 
     /// Reads a consecutive range of bytes from the CM730 control table. Returns communication result enum value.
-    CommResult readTable(uchar id, int start_addr, int end_addr, uchar *table, uchar *error);
+    CommResult readTable(uchar id, uchar start_addr, uchar end_addr, uchar *table, uchar *error);
 
 
     /// Writes a byte into the control table for the specified Dynamixel device. Returns communication result enum value.
-    CommResult writeByte(uchar id, int address, int value, uchar *error);
+    CommResult writeByte(uchar id, uchar address, uchar value, uchar *error);
 
     /// Writes two bytes into the control table for the specified Dynamixel device. Returns communication result enum value.
-    CommResult writeWord(uchar id, int address, int value, uchar *error);
+    CommResult writeWord(uchar id, uchar address, int value, uchar *error);
 
     /** Simultaneously write data to several Dynamixels at a time. Useful for motion control.
      *
@@ -241,7 +241,7 @@ namespace bold
      * @param deviceCount the number of Dynamixel devices to write to
      * @param pParam parameters to be written, of length (number*each_length)
      */
-    CommResult syncWrite(int start_addr, int each_length, int deviceCount, int *pParam);
+    CommResult syncWrite(uchar start_addr, uchar each_length, uchar deviceCount, uchar *pParam);
 
 
     /// Restores the state of the specified Dynamixel to the factory default setting.
@@ -256,7 +256,7 @@ namespace bold
     void resetByteCounts() { d_platform->resetByteCounts(); }
 
   private:
-    static const int NUMBER_OF_JOINTS = 20;
+    static const uchar NUMBER_OF_JOINTS = 20;
 
     std::shared_ptr<CM730Platform> d_platform;
     uchar d_controlTable[MAXNUM_ADDRESS];
@@ -264,7 +264,7 @@ namespace bold
     /**
      * @param priority select the queue for this exchange: 0=high 1=med 2=low
      */
-    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, int priority, std::shared_ptr<BulkRead> bulkRead);
+    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, std::shared_ptr<BulkRead> bulkRead);
 
     static uchar calculateChecksum(uchar *packet);    
   };
