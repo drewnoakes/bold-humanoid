@@ -9,7 +9,9 @@ using namespace std;
 class Base
 {
 public:
+  virtual ~Base() {}
   virtual bool isSomething() = 0;
+  virtual bool isSub() { return false; }
 };
 
 class Derived : public Base
@@ -17,7 +19,20 @@ class Derived : public Base
 public:
   bool called;
   bool isSomething() override { called = true; return true; }
+  bool isSub() override { return true; }
 };
+
+TEST (CppTests, dynamicSharedPointerCast)
+{
+  shared_ptr<Derived> sub = make_shared<Derived>();
+  shared_ptr<Base> base = sub;
+
+  shared_ptr<Derived> sub2 = dynamic_pointer_cast<Derived>(base);
+      
+  EXPECT_TRUE ( sub->isSub() );
+  EXPECT_TRUE ( base->isSub() );
+  EXPECT_TRUE ( sub2->isSub() );
+}
 
 TEST (CppTests, castingSharedPointers)
 {

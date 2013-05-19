@@ -5,7 +5,9 @@
 #include "../AgentState/agentstate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
 
+#include <atomic>
 #include <thread>
+#include <mutex>
 #include <vector>
 
 using namespace bold;
@@ -13,11 +15,19 @@ using namespace std;
 
 // NOTE these tests ensure the same threading characteristics on development and production environments
 
-TEST (AgentStateTests, threadedAccess)
+class AgentStateTests : public ::testing::Test
 {
-  int loopCount = 10000;
-  
-  AgentState::getInstance().registerStateType<MotionTimingState>("MotionTiming");
+protected:
+  static void SetUpTestCase()
+  {
+    cout << "[AgentStateTests::SetUpTestCase] registering state type" << endl;
+    AgentState::getInstance().registerStateType<MotionTimingState>("MotionTiming");
+  }
+};
+
+TEST_F (AgentStateTests, threadedAccess)
+{
+  int loopCount = 50000;
   
   thread producer([&]()
   {
@@ -50,4 +60,17 @@ TEST (AgentStateTests, threadedAccess)
   consumer.join();
   
   EXPECT_TRUE(seenState);
+}
+
+TEST_F (AgentStateTests, setAndGet)
+{
+  auto eventTimings = make_shared<vector<EventTiming>>();
+  eventTimings->push_back(make_pair(0.1, "Event 1"));
+  eventTimings->push_back(make_pair(0.2, "Event 2"));
+  AgentState::getInstance().set(make_shared<MotionTimingState const>(eventTimings));
+  
+  shared_ptr<MotionTimingState const> state = AgentState::get<MotionTimingState>();
+  
+  EXPECT_NE ( nullptr, state );
+  EXPECT_EQ(2, state->getTimings()->size());
 }
