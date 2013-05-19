@@ -2,15 +2,15 @@
 
 double Clock::getMillis()
 {
-  return getTimestamp() / 1e3;
+  return timeStampToMillis(getTimestamp());
 }
 
 double Clock::getSeconds()
 {
-  return getTimestamp() / 1e6;
+  return timeStampToSeconds(getTimestamp());
 }
 
-double Clock::getSeconds(Timestamp since)
+double Clock::getSecondsSince(Timestamp since)
 {
-  return (getTimestamp() - since) / 1e6;
+  return timeStampToSeconds(getTimestamp() - since);
 }

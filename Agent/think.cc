@@ -21,7 +21,7 @@ void Agent::think()
   {
     static Clock::Timestamp lastRecordTime;
     static unsigned frameNumber = 0;
-    if (Clock::getSeconds(lastRecordTime) > 1.0)
+    if (Clock::getSecondsSince(lastRecordTime) > 1.0)
     {
       // save image
       stringstream ss;

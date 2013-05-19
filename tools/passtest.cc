@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 
   MaskWalkLineFinder maskWalkLineFinder(imageWidth, imageHeight);
 
-  cout << "Startup took " << (Clock::getSeconds(t)*1000) << " ms" << endl;
+  cout << "Startup took " << (Clock::getSecondsSince(t)*1000) << " ms" << endl;
 
   //
   // IMAGE LABELLING
@@ -127,7 +127,7 @@ int main(int argc, char **argv)
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
     imageLabeller->label(colourImage, labelledImage);
-  cout << "Labelled " << loopCount << " times. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl;
+  cout << "Labelled " << loopCount << " times. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl;
 
   //
   // IMAGE PASS
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
     passRunner.pass(labelledImage);
-  cout << "Passed " << loopCount << " times. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl;
+  cout << "Passed " << loopCount << " times. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl;
 
   //
   // FIND LINES (RandomPairLineFinder)
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
   vector<LineSegment2i> randomPairLines;
   for (int i = 0; i < loopCount; i++)
     randomPairLines = randomPairLineFinder.findLineSegments(lineDotPass->lineDots);
-  cout << "RandomPairLineFinder ran " << loopCount << " times. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl;
+  cout << "RandomPairLineFinder ran " << loopCount << " times. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl;
 
   //
   // FIND LINES (RandomPairLineFinder)
@@ -153,12 +153,12 @@ int main(int argc, char **argv)
   vector<LineSegment2i> maskWalkLines;
   for (int i = 0; i < loopCount; i++)
     maskWalkLines = maskWalkLineFinder.findLineSegments(lineDotPass->lineDots);
-  cout << "MaskWalkLineFinder   ran " << loopCount << " times. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl;
+  cout << "MaskWalkLineFinder   ran " << loopCount << " times. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl;
 
   //
   // PRINT SUMMARIES
   //
-  cout << "Finished " << loopCount << " passes. Average time: " << (Clock::getSeconds(t)*1000/loopCount) << " ms" << endl
+  cout << "Finished " << loopCount << " passes. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl
        << "Found:" << endl
        << "    " << lineDotPass->lineDots.size() << " line dots" << endl;
 

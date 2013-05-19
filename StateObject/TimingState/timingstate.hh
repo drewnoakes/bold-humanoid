@@ -28,8 +28,8 @@ namespace bold
         std::vector<EventTiming> const& timings = *d_eventTimings;
         for (EventTiming const& timing : timings)
         {
-          writer.String(timing.second.c_str());
-          writer.Double(timing.first * 1000.0);
+          writer.String(timing.second.c_str()); // event name
+          writer.Double(timing.first);          // duration in milliseconds
         }
       }
       writer.EndObject();      

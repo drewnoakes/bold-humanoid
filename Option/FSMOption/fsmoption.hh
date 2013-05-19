@@ -57,11 +57,11 @@ namespace bold
       /// Outgoing transitions
       std::vector<TransitionPtr> transitions;
 
-      double startTime;
+      double startTimeSeconds;
 
       double secondsSinceStart()
       {
-        return Clock::getSeconds() - startTime;
+        return Clock::getSeconds() - startTimeSeconds;
       }
 
       bool allOptionsTerminated() const

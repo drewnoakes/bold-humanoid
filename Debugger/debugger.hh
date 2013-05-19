@@ -22,12 +22,13 @@ namespace bold
       d_flushed(false)
     {}
     
-    Clock::Timestamp timeEvent(std::string const& eventName)
+    void timeEvent(std::string const& eventName)
     {
       assert(!d_flushed);
-      auto timeSeconds = Clock::getSeconds(d_last);
-      d_eventTimings->push_back(EventTiming(timeSeconds, eventName));
-      return Clock::getTimestamp();
+      auto now = Clock::getTimestamp();
+      auto timeMillis = Clock::timeStampToMillis(now - d_last);
+      d_eventTimings->push_back(EventTiming(timeMillis, eventName));
+      d_last = now;
     }
 
     // TODO rename 'getTimings'
