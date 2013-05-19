@@ -14,13 +14,15 @@ class minIni;
 
 namespace bold
 {
-  class SequentialTimer;
-  class FieldMap;
   class CameraModel;
   class Debugger;
   class DataStreamer;
+  class FieldMap;
   class HeadModule;
   class ImageLabeller;
+  class LineFinder;
+  class SequentialTimer;
+  class Spatialiser;
 
   template <typename TPixel>
   class ImagePassRunner;
@@ -30,13 +32,9 @@ namespace bold
 
   template <typename TPixel>
   class LineDotPass;
-
-  class LineFinder;
   class BlobDetectPass;
   class CartoonPass;
   class LabelCountPass;
-
-  class Spatialiser;
 
   enum class ImageType
   {

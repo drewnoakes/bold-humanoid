@@ -28,6 +28,10 @@ using namespace std;
 #define INST_SYNC_WRITE    (131)   // 0x83
 #define INST_BULK_READ     (146)   // 0x92
 
+//////////
+////////// BulkRead
+//////////
+
 BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 : error(-1),
   deviceCount(1 + 20)
@@ -71,6 +75,10 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
   d_txPacket[LENGTH] = p - PARAMETER + 2; // Include one byte each for instruction and checksum
 }
 
+//////////
+////////// BulkReadTable
+//////////
+
 BulkReadTable const& BulkRead::getBulkReadData(uchar id) const
 {
   return data[id == CM730::ID_CM ? 0 : id];
@@ -96,7 +104,9 @@ int BulkReadTable::readWord(uchar address) const
   return CM730::makeWord(table[address], table[address+1]);
 }
 
-
+//////////
+////////// CM730
+//////////
 
 CM730::CM730(shared_ptr<CM730Platform> platform)
 : DEBUG_PRINT(false),
