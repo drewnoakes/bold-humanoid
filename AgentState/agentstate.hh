@@ -90,6 +90,7 @@ namespace bold
 
     unsigned stateTypeCount() const { return d_trackerByTypeId.size(); }
 
+    // TODO get rid of the updated signal, as it causes updates to occur on the motion thread, when they should be on the think thread, or even another thread
     /** Fires when a state object is updated. */
     sigc::signal<void, std::shared_ptr<StateTracker>> updated;
 
@@ -121,6 +122,7 @@ namespace bold
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
       
+      // TODO this blocks for too long. eventing won't work well. need to do all updates async, off the motion thread
       std::lock_guard<std::mutex> guard(d_mutex);
       updated(tracker);
       
