@@ -116,13 +116,15 @@ namespace bold
     void set(std::shared_ptr<T const> state)
     {
       assert(state);
+      
       // TODO can type traits be used here to guarantee that T derives from StateObject
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
+      
+      std::lock_guard<std::mutex> guard(d_mutex);
       updated(tracker);
       
       std::type_info const* typeId = &typeid(T);
-      std::lock_guard<std::mutex> guard(d_mutex);
       auto it = d_observersByTypeId.find(typeId);
       if (it != d_observersByTypeId.end())
       {
