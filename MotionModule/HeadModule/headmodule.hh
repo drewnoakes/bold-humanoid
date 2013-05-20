@@ -15,30 +15,6 @@ namespace bold
 
   class HeadModule : public MotionModule
   {
-  private:
-    static constexpr double EYE_TILT_OFFSET_ANGLE = 40.0; // degrees
-
-    double d_limitLeft;
-    double d_limitRight;
-    double d_limitTop;
-    double d_limitBottom;
-
-    double d_panHome;
-    double d_tiltHome;
-
-    double d_panGainP;
-    double d_panGainD;
-    double d_tiltGainP;
-    double d_tiltGainD;
-
-    double d_panError;
-    double d_tiltError;
-
-    double d_panAngle;
-    double d_tiltAngle;
-
-    void checkLimit();
-
   public:
     HeadModule(minIni const& ini);
     ~HeadModule();
@@ -83,5 +59,29 @@ namespace bold
 
     /// Use the provided error as the input into a PD controller
     void moveTracking(double panError, double tiltError);
+
+  private:
+    static constexpr double EYE_TILT_OFFSET_ANGLE = 40.0; // degrees
+
+    void checkLimit();
+    
+    double d_limitLeft;
+    double d_limitRight;
+    double d_limitTop;
+    double d_limitBottom;
+
+    double d_panHome;
+    double d_tiltHome;
+
+    double d_panGainP;
+    double d_panGainD;
+    double d_tiltGainP;
+    double d_tiltGainD;
+
+    double d_panError;
+    double d_tiltError;
+
+    double d_panAngle;
+    double d_tiltAngle;
   };
 }
