@@ -20,7 +20,7 @@ namespace bold
     /**
      * @param backgroundColour The colour to use for non-labelled pixels. Defaults to black.
      */
-    CartoonPass(int width, int height, std::vector<std::shared_ptr<PixelLabel>> const& labels, Colour::bgr backgroundColour = Colour::bgr(0,0,0))
+    CartoonPass(ushort width, ushort height, std::vector<std::shared_ptr<PixelLabel>> const& labels, Colour::bgr backgroundColour = Colour::bgr(0,0,0))
     : d_mat(height, width, CV_8UC3),
       d_backgroundColour(backgroundColour),
       d_labels(labels)
@@ -39,12 +39,12 @@ namespace bold
       }
     }
 
-    void onRowStarting(int y) override
+    void onRowStarting(ushort y) override
     {
       d_ptr = d_mat.ptr<Colour::bgr>(y);
     }
 
-    void onPixel(uchar value, int x, int y) override
+    void onPixel(uchar value, ushort x, ushort y) override
     {
       if (value != 0)
       {

@@ -18,7 +18,7 @@ namespace bold
   public:
 
     // assuming we'll never have more than 7 labels (1-8)
-    static const unsigned MAX_LABEL_COUNT = 8;
+    static const uchar MAX_LABEL_COUNT = 8;
 
     LabelCountPass(std::vector<std::shared_ptr<PixelLabel>> const& labels)
       : d_countByLabelId(),
@@ -34,7 +34,7 @@ namespace bold
       }
     }
 
-    void onPixel(uchar value, int x, int y) override
+    void onPixel(uchar value, ushort x, ushort y) override
     {
       if (value != 0)
       {

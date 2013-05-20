@@ -2,6 +2,8 @@
 
 namespace bold
 {
+  typedef unsigned short int ushort;
+  
   /**
    * Abstract base class for classes that process the pixels of an image.
    *
@@ -21,12 +23,12 @@ namespace bold
     virtual void onImageComplete() {}
 
     /** The row 'y' is about to start. */
-    virtual void onRowStarting(int y) {}
+    virtual void onRowStarting(ushort y) {}
 
     /**
      * The pixel at 'x', 'y', has a value of 'value'.
      * This is the only abstract function on this class.
      */
-    virtual void onPixel(TPixel value, int x, int y) = 0;
+    virtual void onPixel(TPixel value, ushort x, ushort y) = 0;
   };
 }

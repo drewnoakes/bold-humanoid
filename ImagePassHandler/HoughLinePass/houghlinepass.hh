@@ -23,7 +23,7 @@ namespace bold
     HoughLineAccumulator accumulator;
     std::vector<Candidate<Line>> lines;
 
-    HoughLinePass(int width, int height, int thresholdDivisor, int accumulatorHeight)
+    HoughLinePass(uint width, uint height, int thresholdDivisor, uint accumulatorHeight)
     : d_thresholdDivisor(thresholdDivisor),
       accumulator(width, height, accumulatorHeight),
       lines()
@@ -34,7 +34,7 @@ namespace bold
       accumulator.clear();
     }
 
-    void onPixel(T value, int x, int y) override
+    void onPixel(T value, ushort x, ushort y) override
     {
       if (value != 0)
       {

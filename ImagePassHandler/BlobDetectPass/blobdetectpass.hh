@@ -90,13 +90,13 @@ namespace bold
   class BlobDetectPass : public ImagePassHandler<uchar>
   {
   public:
-    BlobDetectPass(int imageWidth, int imageHeight, std::vector<std::shared_ptr<PixelLabel>> const& blobTypes);
+    BlobDetectPass(ushort imageWidth, ushort imageHeight, std::vector<std::shared_ptr<PixelLabel>> const& blobTypes);
 
     void onImageStarting() override;
 
-    void onRowStarting(int y) override;
+    void onRowStarting(ushort y) override;
 
-    void onPixel(uchar label, int x, int y) override;
+    void onPixel(uchar label, ushort x, ushort y) override;
 
     std::vector<std::shared_ptr<PixelLabel>> pixelLabels() const { return d_pixelLabels; }
 
@@ -110,8 +110,8 @@ namespace bold
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
 
-    int d_imageHeight;
-    int d_imageWidth;
+    ushort d_imageHeight;
+    ushort d_imageWidth;
 
     std::vector<std::shared_ptr<PixelLabel>> d_pixelLabels;
 
@@ -140,7 +140,7 @@ namespace bold
         runs.clear();
   }
 
-  inline void BlobDetectPass::onRowStarting(int y)
+  inline void BlobDetectPass::onRowStarting(ushort y)
   {
     // TODO might miss last run on last row with this approach -- add
     // onRowEnding, or copy into onImageComplete
@@ -153,7 +153,7 @@ namespace bold
     d_currentLabel = 0;
   }
 
-  inline void BlobDetectPass::onPixel(uchar label, int x, int y)
+  inline void BlobDetectPass::onPixel(uchar label, ushort x, ushort y)
   {
     // Check if we have a run boundary
     if (label != d_currentLabel)
