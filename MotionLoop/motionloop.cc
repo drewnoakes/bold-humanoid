@@ -135,11 +135,17 @@ void *MotionLoop::threadMethod(void *param)
     next_time.tv_sec += (next_time.tv_nsec + loop->d_loopDurationMillis * 1000000) / 1000000000;
     next_time.tv_nsec = (next_time.tv_nsec + loop->d_loopDurationMillis * 1000000) % 1000000000;
 
-    loop->step();
+    SequentialTimer t;
+  
+    loop->step(t);
     
-    cout << "[MotionLoop::threadMethod] sleep until " << next_time.tv_sec << " sec, " << (next_time.tv_nsec * 1000000) << " ms" << endl;
+//    cout << "[MotionLoop::threadMethod] sleep until " << next_time.tv_sec << " sec, " << (next_time.tv_nsec * 1000000) << " ms" << endl;
 
     clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next_time, NULL);
+    t.timeEvent("Sleep");
+
+    // Set timing data for the motion cycle
+    AgentState::getInstance().set(make_shared<MotionTimingState const>(t.flush()));
   }
 
   cout << "[MotionLoop::threadMethod] Exiting" << endl;
@@ -147,11 +153,9 @@ void *MotionLoop::threadMethod(void *param)
   pthread_exit(NULL);
 }
 
-void MotionLoop::step()
+void MotionLoop::step(SequentialTimer& t)
 {
-  cout << "[MotionLoop::step]" << endl;
-  
-  SequentialTimer t;
+//   cout << "[MotionLoop::step]" << endl;
   
   if (d_readYet)
   {
@@ -276,9 +280,4 @@ void MotionLoop::step()
 
   AgentState::getInstance().set(make_shared<BodyState const>(angles));
   t.timeEvent("Update BodyState");
-
-  //
-  // Set timing data for the think cycle
-  //
-  AgentState::getInstance().set(make_shared<MotionTimingState const>(t.flush()));
 }

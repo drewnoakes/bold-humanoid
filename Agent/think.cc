@@ -2,7 +2,7 @@
 
 void Agent::think()
 {
-  cout << "[Agent::think]" << endl;
+//   cout << "[Agent::think]" << endl;
 
   SequentialTimer t;
 

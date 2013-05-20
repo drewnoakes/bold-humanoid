@@ -12,6 +12,7 @@ namespace bold
   class BulkRead;
   class CM730;
   class Debugger;
+  class SequentialTimer;
 
   class MotionLoop
   {
@@ -36,7 +37,7 @@ namespace bold
     int d_offsets[NUMBER_OF_JOINTS + 1];
 
   private:
-    void step();
+    void step(SequentialTimer& t);
     
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
