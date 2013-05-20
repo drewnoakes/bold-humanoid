@@ -83,7 +83,7 @@ link_directories(${BOLDHUMANOID_LINK_DIRS})
 #
 ## Additional compile flags
 #
-set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -fPIC -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare")
+set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -fPIC -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare -Wno-c++11-narrowing -Wno-unknown-warning-option")
 
 add_class(BOLDHUMANOID
   ./Agent/Agent.cc
@@ -324,6 +324,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Configurable/static.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/DebugState/writeJson.cc
 )
 
@@ -396,9 +400,6 @@ set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPI
 add_dependencies(boldhumanoid darwin_lib)
 add_dependencies(boldhumanoid libwebsockets_lib)
 
-#
-## Copy files to build dir, so all dependencies are in there
-#  (This fails on first configuration)
 
 set(BOLDHUMANOID_DEPLOY_FILES
   $<TARGET_FILE:boldhumanoid>
