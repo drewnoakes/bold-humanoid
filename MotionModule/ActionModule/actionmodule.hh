@@ -115,7 +115,6 @@ namespace bold
     /// Stop immediately, irrespective of the current playing position.
     void brake();
     bool isRunning();
-    bool isRunning(int *iPage, int *iStep);
     bool loadPage(int index, PAGE *pPage);
     bool savePage(int index, PAGE *pPage);
     void resetPage(PAGE *pPage);

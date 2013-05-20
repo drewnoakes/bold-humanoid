@@ -214,17 +214,6 @@ bool ActionModule::isRunning()
   return d_isRunning;
 }
 
-bool ActionModule::isRunning(int *page, int *step)
-{
-  if (page != 0)
-    *page = d_playingPageIndex;
-
-  if (step != 0)
-    *step = m_PageStepCount - 1;
-
-  return isRunning();
-}
-
 bool ActionModule::loadPage(int index, PAGE *page)
 {
   long position = (long)(sizeof(PAGE)*index);
