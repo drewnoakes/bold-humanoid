@@ -238,9 +238,9 @@ void WalkModule::updateBalanceParams()
 
 void WalkModule::initialize()
 {
-  X_MOVE_AMPLITUDE   = 0;
-  Y_MOVE_AMPLITUDE   = 0;
-  A_MOVE_AMPLITUDE   = 0;
+  X_MOVE_AMPLITUDE = 0;
+  Y_MOVE_AMPLITUDE = 0;
+  A_MOVE_AMPLITUDE = 0;
 
   d_bodySwingY = 0;
   d_bodySwingZ = 0;
@@ -256,8 +256,8 @@ void WalkModule::initialize()
   d_zMovePhaseShift = M_PI / 2;
   d_aMovePhaseShift = M_PI / 2;
 
-  d_isCtrlRunning = false;
-  d_isRealRunning = false;
+  d_isStopRequested = false;
+  d_isRunning = false;
   d_time = 0;
   updateTimeParams();
   updateMovementParams();
@@ -267,18 +267,18 @@ void WalkModule::initialize()
 
 void WalkModule::start()
 {
-  d_isCtrlRunning = true;
-  d_isRealRunning = true;
+  d_isStopRequested = false;
+  d_isRunning = true;
 }
 
 void WalkModule::stop()
 {
-  d_isCtrlRunning = false;
+  d_isStopRequested = true;
 }
 
 bool WalkModule::isRunning()
 {
-  return d_isRealRunning;
+  return d_isRunning;
 }
 
 void WalkModule::step(JointSelection const& selectedJoints)
@@ -299,11 +299,11 @@ void WalkModule::step(JointSelection const& selectedJoints)
   {
     updateTimeParams();
     d_phase = PHASE0;
-    if (!d_isCtrlRunning)
+    if (d_isStopRequested)
     {
       if (d_xMoveAmplitude == 0 && d_yMoveAmplitude == 0 && d_aMoveAmplitude == 0)
       {
-        d_isRealRunning = false;
+        d_isRunning = false;
       }
       else
       {
@@ -323,11 +323,11 @@ void WalkModule::step(JointSelection const& selectedJoints)
     updateTimeParams();
     d_time = d_phaseTime2;
     d_phase = PHASE2;
-    if (!d_isCtrlRunning)
+    if (d_isStopRequested)
     {
       if (d_xMoveAmplitude == 0 && d_yMoveAmplitude == 0 && d_aMoveAmplitude == 0)
       {
-        d_isRealRunning = false;
+        d_isRunning = false;
       }
       else
       {
@@ -461,7 +461,7 @@ void WalkModule::step(JointSelection const& selectedJoints)
     angle[13] = wsin(d_time, d_periodTime, M_PI * 1.5, d_xMoveAmplitude * d_armSwingGain, 0);
   }
 
-  if (d_isRealRunning)
+  if (d_isRunning)
   {
     d_time += TIME_UNIT;
     if (d_time >= d_periodTime)

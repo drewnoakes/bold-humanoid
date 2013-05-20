@@ -81,8 +81,8 @@ namespace bold
     double d_hipPitchOffset;
     double d_armSwingGain;
 
-    bool d_isCtrlRunning;
-    bool d_isRealRunning;
+    bool d_isStopRequested;
+    bool d_isRunning;
     double d_time;
 
     int    d_phase;
