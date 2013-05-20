@@ -2,4 +2,7 @@
 #include <OptionTree/optiontree.hh>
 %}
 
-#include "optiontree.hh"
+%clearnodefaultctor;
+%include "optiontree.hh"
+%nodefaultctor;
+
