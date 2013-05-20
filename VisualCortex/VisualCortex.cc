@@ -128,19 +128,11 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   // HeadModule control
   //
   vector<Control> headControls;
-  auto moveHead = [headModule](double const& panDelta, double const& tiltDelta)
-  {
-//     headModule->m_Joint.SetEnableHeadOnly(true, true);
-    headModule->moveByAngleOffset(panDelta, tiltDelta);
-  };
-  headControls.push_back(Control::createAction("&blacktriangleleft;",  [&moveHead](){ moveHead( 5, 0); }));
-  headControls.push_back(Control::createAction("&blacktriangle;",      [&moveHead](){ moveHead( 0, 5); }));
-  headControls.push_back(Control::createAction("&blacktriangledown;",  [&moveHead](){ moveHead( 0,-5); }));
-  headControls.push_back(Control::createAction("&blacktriangleright;", [&moveHead](){ moveHead(-5, 0); }));
-  headControls.push_back(Control::createAction("home", [headModule](){
-//     headModule->m_Joint.SetEnableHeadOnly(true, true);
-    headModule->moveToHome();
-  }));
+  headControls.push_back(Control::createAction("&blacktriangleleft;",  [headModule]() { headModule->moveByAngleOffset( 5, 0); }));
+  headControls.push_back(Control::createAction("&blacktriangle;",      [headModule]() { headModule->moveByAngleOffset( 0, 5); }));
+  headControls.push_back(Control::createAction("&blacktriangledown;",  [headModule]() { headModule->moveByAngleOffset( 0,-5); }));
+  headControls.push_back(Control::createAction("&blacktriangleright;", [headModule]() { headModule->moveByAngleOffset(-5, 0); }));
+  headControls.push_back(Control::createAction("home",                 [headModule]() { headModule->moveToHome(); }));
   d_controlsByFamily["head"] = headControls;
 
   //
