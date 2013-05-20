@@ -78,8 +78,8 @@ namespace bold
     double d_tiltGainP;
     double d_tiltGainD;
 
-    double d_panError;
-    double d_tiltError;
+    double d_lastPanError;
+    double d_lastTiltError;
 
     double d_panAngle;
     double d_tiltAngle;

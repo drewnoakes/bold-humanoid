@@ -66,17 +66,17 @@ void HeadModule::moveByAngleOffset(double panDelta, double tiltDelta)
 
 void HeadModule::initTracking()
 {
-  d_panError = 0;
-  d_tiltError = 0;
+  d_lastPanError = 0;
+  d_lastTiltError = 0;
 }
 
 void HeadModule::moveTracking(double panError, double tiltError)
 {
-  double panErrorDelta = panError - d_panError;
-  double tiltErrorDelta = tiltError - d_tiltError;
+  double panErrorDelta = panError - d_lastPanError;
+  double tiltErrorDelta = tiltError - d_lastTiltError;
 
-  d_panError = panError;
-  d_tiltError = tiltError;
+  d_lastPanError = panError;
+  d_lastTiltError = tiltError;
 
   auto calcDelta = [](double error, double errorDelta, double p, double d)
   {
