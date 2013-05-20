@@ -4,7 +4,7 @@ void OptionTree::run()
 {
   OptionList ranOptions;
 
-  OptionList queue = {d_top};
+  list<OptionPtr> queue = {d_top};
 
   while (!queue.empty())
   {

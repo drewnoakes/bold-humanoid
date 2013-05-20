@@ -1,6 +1,6 @@
 #pragma once
 
-#include <list>
+#include <vector>
 #include <memory>
 #include <string>
 
@@ -8,7 +8,7 @@ namespace bold
 {
   class Option;
   typedef std::shared_ptr<Option> OptionPtr;
-  typedef std::list<OptionPtr> OptionList;
+  typedef std::vector<OptionPtr> OptionList;
 
   /** Option
    *
