@@ -72,11 +72,11 @@ void HeadModule::initTracking()
 
 void HeadModule::moveTracking(double panError, double tiltError)
 {
-  d_panError = panError;
-  d_tiltError = tiltError;
-
   double panErrorDelta = panError - d_panError;
   double tiltErrorDelta = tiltError - d_tiltError;
+
+  d_panError = panError;
+  d_tiltError = tiltError;
 
   auto calcDelta = [](double error, double errorDelta, double p, double d)
   {
