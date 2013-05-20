@@ -170,6 +170,11 @@ void MotionLoop::step(SequentialTimer& t)
     t.timeEvent("Step Modules");
 
     // TODO apply body section updates via modules, as appropriate
+    for (auto const& module : d_modules)
+    {
+      module->applyHead(d_bodyControl->getHeadSection());
+    }
+    t.timeEvent("Apply Body Sections");
 
     //
     // WRITE UPDATE

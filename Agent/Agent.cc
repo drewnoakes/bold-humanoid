@@ -80,8 +80,8 @@ Agent::Agent()
     d_motionLoop = make_shared<MotionLoop>(d_cm730);
 
     d_motionLoop->addModule(d_actionModule);
-    d_motionLoop->addModule(d_headModule);
     d_motionLoop->addModule(d_walkModule);
+    d_motionLoop->addModule(d_headModule);
   }
   else
   {
