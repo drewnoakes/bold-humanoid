@@ -45,15 +45,6 @@ namespace bold
       D_GAIN_DEFAULT = 0
     };
 
-    uchar d_jointId;
-    bool d_isDirty;
-    int d_value;
-    double d_angle;
-    uchar d_gainP;
-    uchar d_gainI;
-    uchar d_gainD;
-
-  public:
     JointControl(unsigned jointId);
 
     uchar getId() const { return d_jointId; }
@@ -83,6 +74,15 @@ namespace bold
     uchar getPGain() const { return d_gainP; }
     uchar getIGain() const { return d_gainI; }
     uchar getDGain() const { return d_gainD; }
+    
+  private:
+    uchar d_jointId;
+    bool d_isDirty;
+    int d_value;
+    double d_angle;
+    uchar d_gainP;
+    uchar d_gainI;
+    uchar d_gainD;
   };
 
   class HeadSection;
