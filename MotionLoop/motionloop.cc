@@ -132,6 +132,7 @@ void *MotionLoop::threadMethod(void *param)
 
   while (!loop->d_stopRequested)
   {
+    // TODO this will always increment by <8ms, even if something stalled
     next_time.tv_sec += (next_time.tv_nsec + loop->d_loopDurationMillis * 1000000) / 1000000000;
     next_time.tv_nsec = (next_time.tv_nsec + loop->d_loopDurationMillis * 1000000) % 1000000000;
 
@@ -139,8 +140,6 @@ void *MotionLoop::threadMethod(void *param)
   
     loop->step(t);
     
-//    cout << "[MotionLoop::threadMethod] sleep until " << next_time.tv_sec << " sec, " << (next_time.tv_nsec * 1000000) << " ms" << endl;
-
     clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next_time, NULL);
     t.timeEvent("Sleep");
 
