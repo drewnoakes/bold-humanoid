@@ -128,7 +128,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   // HeadModule control
   //
   vector<Control> headControls;
-  auto moveHead = [&headModule](double const& panDelta, double const& tiltDelta)
+  auto moveHead = [headModule](double const& panDelta, double const& tiltDelta)
   {
 //     headModule->m_Joint.SetEnableHeadOnly(true, true);
     headModule->moveByAngleOffset(panDelta, tiltDelta);
@@ -137,7 +137,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   headControls.push_back(Control::createAction("&blacktriangle;",      [&moveHead](){ moveHead( 0, 5); }));
   headControls.push_back(Control::createAction("&blacktriangledown;",  [&moveHead](){ moveHead( 0,-5); }));
   headControls.push_back(Control::createAction("&blacktriangleright;", [&moveHead](){ moveHead(-5, 0); }));
-  headControls.push_back(Control::createAction("home", [&headModule](){
+  headControls.push_back(Control::createAction("home", [headModule](){
 //     headModule->m_Joint.SetEnableHeadOnly(true, true);
     headModule->moveToHome();
   }));
