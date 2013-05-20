@@ -250,7 +250,6 @@ void MotionLoop::step(SequentialTimer& t)
   auto cm730Snapshot = make_shared<CM730Snapshot>(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM));
 
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
-  mx28Snapshots.push_back(nullptr); // padding as joints start at 1
   for (unsigned jointId = 1; jointId < JointControl::NUMBER_OF_JOINTS; jointId++)
   {
     auto mx28 = make_shared<MX28Snapshot>(d_dynamicBulkRead->getBulkReadData(jointId), jointId);
@@ -275,7 +274,7 @@ void MotionLoop::step(SequentialTimer& t)
   double angles[JointControl::NUMBER_OF_JOINTS];
   for (unsigned jointId = 1; jointId < JointControl::NUMBER_OF_JOINTS; jointId++)
   {
-    angles[jointId] = mx28Snapshots[jointId]->presentPosition;
+    angles[jointId] = mx28Snapshots[jointId - 1]->presentPosition;
   }
 
   AgentState::getInstance().set(make_shared<BodyState const>(angles));

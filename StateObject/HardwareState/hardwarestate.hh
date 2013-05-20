@@ -22,7 +22,7 @@ namespace bold
       d_rxBytes(rxBytes),
       d_txBytes(txBytes)
     {
-      assert(d_mx28States.size() == 21);
+      assert(d_mx28States.size() == 20);
       assert(cm730State);
     }
 
@@ -34,9 +34,9 @@ namespace bold
     std::shared_ptr<MX28Snapshot const> getMX28State(unsigned jointId) const
     {
       assert(jointId > 0 && jointId <= NUMBER_OF_JOINTS);
-      assert(d_mx28States.size() > jointId);
+      assert(d_mx28States.size() >= jointId);
 
-      return d_mx28States[jointId];
+      return d_mx28States[jointId - 1];
     }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
