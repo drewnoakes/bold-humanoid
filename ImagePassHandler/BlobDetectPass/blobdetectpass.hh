@@ -68,8 +68,8 @@ namespace bold
     bool operator>(Blob const& other) const { return other < *this; }
 
     Eigen::Vector2i ul;      ///< Upper left pixel
-    Eigen::Vector2i br;      ///< Bottom righ pixel
-    unsigned area;           ///< Number of pixes in blob
+    Eigen::Vector2i br;      ///< Bottom right pixel
+    unsigned area;           ///< Number of pixels in blob
     Eigen::Vector2d mean;    ///< Mean
 //     Eigen::Matrix2d covar;   ///< Covarience
 
