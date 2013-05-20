@@ -45,18 +45,22 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("led3").Bool(d_cm730State->isLed3On);
     writer.String("led4").Bool(d_cm730State->isLed4On);
 
-    writer.String("voltage").Double(d_cm730State->voltage);
+    writer.String("volts").Double(d_cm730State->voltage);
 
     writer.String("joints");
     writer.StartArray();
     for (shared_ptr<MX28Snapshot const> mx28 : d_mx28States)
     {
-      writer.String("id").Int(mx28->id);
+      writer.StartObject();
+      {
+        writer.String("id").Int(mx28->id);
 //       writer.String("movingSpeedRPM").Int(mx28->movingSpeedRPM);
-      writer.String("speedRPM").Int(mx28->presentSpeedRPM);
-      writer.String("load").Int(mx28->presentLoad);
-      writer.String("temp").Int(mx28->presentTemp);
-      writer.String("voltage").Int(mx28->presentVoltage);
+        writer.String("rpm").Int(mx28->presentSpeedRPM);
+        writer.String("load").Int(mx28->presentLoad);
+        writer.String("temp").Int(mx28->presentTemp);
+        writer.String("volts").Int(mx28->presentVoltage);
+      }
+      writer.EndObject();
     }
     writer.EndArray();
 
