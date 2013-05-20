@@ -1,5 +1,16 @@
 %{
 #include <AgentState/agentstate.hh>
+#include <StateObject/AgentFrameState/agentframestate.hh>
+#include <StateObject/HardwareState/hardwarestate.hh>
+#include <StateObject/CameraFrameState/cameraframestate.hh>
+#include <StateObject/GameState/gamestate.hh>
+#include <StateObject/AmbulatorState/ambulatorstate.hh>
+#include <StateObject/ParticleState/particlestate.hh>
+#include <StateObject/WorldFrameState/worldframestate.hh>
+#include <StateObject/OptionTreeState/optiontreestate.hh>
+#include <StateObject/AlarmState/alarmstate.hh>
+#include <StateObject/BodyState/bodystate.hh>
+#include <StateObject/DebugState/debugstate.hh>
 %}
 
 namespace bold

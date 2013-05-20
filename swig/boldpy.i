@@ -1,21 +1,4 @@
-%module bold
-
-// Includes inserted verbatim into wrapper code
-%{
-#include "../OptionTree/optiontree.hh"
-#include "../AgentState/agentstate.hh"
-#include "../StateObject/AgentFrameState/agentframestate.hh"
-#include "../StateObject/HardwareState/hardwarestate.hh"
-#include "../StateObject/CameraFrameState/cameraframestate.hh"
-#include "../StateObject/GameState/gamestate.hh"
-#include "../StateObject/AmbulatorState/ambulatorstate.hh"
-#include "../StateObject/ParticleState/particlestate.hh"
-#include "../StateObject/WorldFrameState/worldframestate.hh"
-#include "../StateObject/OptionTreeState/optiontreestate.hh"
-#include "../StateObject/AlarmState/alarmstate.hh"
-#include "../StateObject/BodyState/bodystate.hh"
-#include "../StateObject/DebugState/debugstate.hh"
-%}
+%module(directors="1") bold
 
 // Can not create objects, unless we tell you to
 %nodefaultctor;
@@ -52,15 +35,19 @@
 
 %shared_ptr(bold::Option)
 %shared_ptr(bold::ActionOption)
+%shared_ptr(bold::FSMState)
+%shared_ptr(bold::FSMTransition)
+%shared_ptr(bold::FSMOption)
 
 %template() std::vector<PyObject*>;
-
+%template() std::vector<std::shared_ptr<bold::Option> >;
 
 // Now define all interfaces that we want to be available in Python In
 // theory we can also %include all header files, but that often breaks
 // (eg C++11 stuff, and usually inlined and private stuff)
 %feature("kwargs");
 
+%include "../Configurable/configurable.i"
 %include "../VisualCortex/visualcortex.i"
 %include "../Agent/agent.i"
 %include "../BodyPart/bodypart.i"
@@ -70,6 +57,7 @@
 
 %include "../Option/option.i"
 %include "../Option/ActionOption/actionoption.i"
+%include "../Option/FSMOption/fsmoption.i"
 
 %include "../OptionTree/optiontree.i"
 
