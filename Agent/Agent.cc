@@ -11,7 +11,8 @@ Agent::Agent(string const& U2D_dev,
              bool recordFrames,
              bool ignoreGameController
   )
-  : d_isRunning(false),
+  : Configurable("agent"),
+    d_isRunning(false),
     d_ini(ini),
     d_motionFile(motionFile),
     d_teamNumber(teamNumber),

@@ -7,6 +7,7 @@
 #include <sigc++/signal.h>
 
 #include "../MX28Alarm/mx28alarm.hh"
+#include "../Configurable/configurable.hh"
 
 class Joystick;
 
@@ -32,7 +33,7 @@ namespace bold
   class Spatialiser;
   class VisualCortex;
 
-  class Agent
+  class Agent : public Configurable
   {
   public:
     Agent(std::string const& U2D_dev,
