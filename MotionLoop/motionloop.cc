@@ -28,7 +28,7 @@ MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
   d_dynamicBulkRead = make_shared<BulkRead>(CM730::P_DXL_POWER, CM730::P_VOLTAGE,
                                             MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE);
 
-  for (int i = 0; i < JointControl::NUMBER_OF_JOINTS; i++)
+  for (uchar i = 0; i < (uchar)JointId::MAX; i++)
     d_offsets[i] = 0;
 }
 
@@ -239,7 +239,6 @@ void MotionLoop::step(SequentialTimer& t)
 
   if (res != CommResult::SUCCESS)
   {
-    // TODO set the 'Hardware' state as failing in AgentState, and broadcast error status to clients
     cerr << "[MotionLoop::process] Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState" << endl;
     return;
   }
@@ -249,7 +248,7 @@ void MotionLoop::step(SequentialTimer& t)
   auto cm730Snapshot = make_shared<CM730Snapshot>(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM));
 
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
-  for (unsigned jointId = 1; jointId < JointControl::NUMBER_OF_JOINTS; jointId++)
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     auto mx28 = make_shared<MX28Snapshot>(d_dynamicBulkRead->getBulkReadData(jointId), jointId);
     mx28Snapshots.push_back(mx28);
@@ -269,9 +268,9 @@ void MotionLoop::step(SequentialTimer& t)
   // UPDATE BODYSTATE
   //
 
-  // TODO implement this as an observer of HardwareState
-  double angles[JointControl::NUMBER_OF_JOINTS];
-  for (unsigned jointId = 1; jointId < JointControl::NUMBER_OF_JOINTS; jointId++)
+  // TODO implement this as an observer of HardwareState, and perform calculation on think thread, not motion thread (?)
+  double angles[(uchar)JointId::MAX + 1];
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     angles[jointId] = mx28Snapshots[jointId - 1]->presentPosition;
   }

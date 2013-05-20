@@ -16,9 +16,6 @@ namespace bold
 
   class MotionLoop
   {
-  private:
-    static const int NUMBER_OF_JOINTS = 20;
-
   public:
     MotionLoop(std::shared_ptr<CM730> cm730);
 
@@ -34,7 +31,7 @@ namespace bold
     /// Set of static offsets to be added to all target positions sent to hardware.
     /// May be used to compensate for angular positional errors.
     /// See also the offset_tuner project.
-    int d_offsets[NUMBER_OF_JOINTS + 1];
+    int d_offsets[(uchar)JointId::MAX + 1];
 
   private:
     void step(SequentialTimer& t);
