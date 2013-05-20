@@ -28,12 +28,7 @@ namespace bold
 			m33,
 			MAXNUM_ELEMENT
 		};
-
-	private:
-
-	protected:
-
-	public:
+    
 		double m[MAXNUM_ELEMENT]; // Element
 
 		Matrix3D();
