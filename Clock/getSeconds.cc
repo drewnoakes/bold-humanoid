@@ -1,11 +1,16 @@
 #include "clock.ih"
 
-double Clock::getSeconds()
+double Clock::getMillis()
 {
-  return getTimestamp() / 1e6;
+  return timeStampToMillis(getTimestamp());
 }
 
-double Clock::getSeconds(Timestamp since)
+double Clock::getSeconds()
 {
-  return (getTimestamp() - since) / 1e6;
+  return timeStampToSeconds(getTimestamp());
+}
+
+double Clock::getSecondsSince(Timestamp since)
+{
+  return timeStampToSeconds(getTimestamp() - since);
 }

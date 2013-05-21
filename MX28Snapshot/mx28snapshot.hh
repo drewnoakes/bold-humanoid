@@ -1,21 +1,35 @@
 #pragma once
 
-#include "../robotis/Framework/include/CM730.h"
 #include "../MX28Alarm/mx28alarm.hh"
-
-#include <iostream>
-#include <cassert>
 
 namespace bold
 {
+  typedef unsigned char uchar;
+
+  class BulkReadTable;
+
+  // http://support.robotis.com/en/techsupport_eng.htm#product/dynamixel/mx_series/mx-28.htm
+
+  // TODO rename as MX28State
+
   class MX28Snapshot
   {
   public:
+    uchar id;
 
-    typedef unsigned char uchar;
+    double presentPosition;
+    double presentPositionValue;
+    double presentSpeedRPM;
+    double presentLoad;
+    double presentVoltage;
+    uchar presentTemp;
 
-    // EEPROM AREA
+    MX28Snapshot(BulkReadTable const& data, int const mx28ID);
+  };
 
+  class StaticMX28State
+  {
+  public:
     unsigned short modelNumber;
     uchar firmwareVersion;
     uchar id;
@@ -39,39 +53,27 @@ namespace bold
     */
     uchar statusRetLevel;
 
+    /// Specifies conditions for the alarm LED to be turned on
     MX28Alarm alarmLed;
+    /// Specifies conditions for the device to shut down
     MX28Alarm alarmShutdown;
 
     // RAM AREA
 
     bool torqueEnable;
-    bool led;
-    double gainP;
-    double gainI;
-    double gainD;
-    double goalPositionRads;
-    double movingSpeedRPM;
-    double torqueLimit;
-    double presentPosition;
-    double presentSpeedRPM;
-    double presentLoad;
-    double presentVoltage;
-    uchar presentTemp;
-    bool isInstructionRegistered;
-    bool isMoving;
+//     bool led;
+//     double gainP;
+//     double gainI;
+//     double gainD;
+//     double goalPositionRads;
+//     double movingSpeedRPM;
+//     double torqueLimit;
+//     bool isInstructionRegistered;
+//     bool isMoving;
     bool isEepromLocked;
+//  uchar punch; // apparently this value is unused
+//  double goalAcceleration; // TODO introduce this from the read
 
-    // apparently this value is unused
-//     uchar punch;
-
-    MX28Snapshot() {}
-
-    MX28Snapshot(robotis::BulkReadData const& cm730, int const mx28ID);
-
-  private:
-
-    static unsigned short readTableWord(uchar* table, int addr);
-    static double angleValueToRads(unsigned int value);
-    static double valueToRPM(unsigned int value);
+    StaticMX28State(BulkReadTable const& data, int const mx28ID);
   };
 }

@@ -16,28 +16,10 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(SigC++ REQUIRED)
 
-set(DARWINDIR ${CMAKE_SOURCE_DIR}/robotis)
 set(JOYSTICKDIR ${CMAKE_SOURCE_DIR}/joystick)
 set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
 set(RAPIDJSONDIR ${CMAKE_SOURCE_DIR}/rapidjson)
 
-#
-## Compile darwin lib as an external project
-#
-ExternalProject_Add(darwin_lib
-  DOWNLOAD_COMMAND ""
-  CONFIGURE_COMMAND ""
-  SOURCE_DIR ${DARWINDIR}
-  BINARY_DIR ${DARWINDIR}/Linux/build
-  BUILD_COMMAND "make"
-  INSTALL_DIR ${DARWINDIR}/Linux/lib
-  INSTALL_COMMAND "")
-
-ExternalProject_Add_Step(darwin_lib force_build
-   COMMAND ${CMAKE_COMMAND} -E echo "Building libdarwin"
-   DEPENDERS build
-   ALWAYS 1
-)
 #
 ## Compile libwebsockets as an external project
 #
@@ -62,8 +44,6 @@ set(BOLDHUMANOID_SOURCES
 ## Include directories
 #
 set(BOLDHUMANOID_INCLUDE_DIRS
-  ${DARWINDIR}/Linux/include
-  ${DARWINDIR}/Framework/include
   ${JOYSTICKDIR}
   ${LIBWEBSOCKETDIR}/lib
   ${EIGEN3_INCLUDE_DIR}
@@ -77,7 +57,7 @@ include_directories(${BOLDHUMANOID_INCLUDE_DIRS})
 #
 ## Link directories
 #
-set(BOLDHUMANOID_LINK_DIRS ${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
+set(BOLDHUMANOID_LINK_DIRS ${LIBWEBSOCKETDIR}/lib)
 link_directories(${BOLDHUMANOID_LINK_DIRS})
 
 #
@@ -88,9 +68,8 @@ set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++0x -fPIC -DEIGEN_DONT_VECTORIZE -DEIGEN_
 add_class(BOLDHUMANOID
   ./Agent/Agent.cc
   ./Agent/initCamera.cc
-  ./Agent/initMotionManager.cc
   ./Agent/processInputCommands.cc
-  ./Agent/readSubBoardData.cc
+  ./Agent/readStaticHardwareState.cc
   ./Agent/registerStateTypes.cc
   ./Agent/run.cc
   ./Agent/standUpIfFallen.cc
@@ -106,6 +85,10 @@ add_class(BOLDHUMANOID
 add_class(BOLDHUMANOID
   ./Ambulator/setters.cc
   ./Ambulator/step.cc
+)
+
+add_class(BOLDHUMANOID
+  ./BodyControl/bodycontrol.cc
 )
 
 add_class(BOLDHUMANOID
@@ -132,6 +115,18 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./CM730/cm730.cc
+)
+
+add_class(BOLDHUMANOID
+  ./CM730Platform/CM730Linux/cm730linux.cc
+)
+
+add_class(BOLDHUMANOID
+  ./CM730Snapshot/CM730Snapshot.cc
+)
+
+add_class(BOLDHUMANOID
   ./Colour/bgr2hsv.cc
   ./Colour/hsv2bgr.cc
   ./Colour/hsvRange.cc
@@ -144,10 +139,6 @@ add_class(BOLDHUMANOID
   ./Control/handleRequest.cc
   ./Control/staticfields.cc
   ./Control/writeState.cc
-)
-
-add_class(BOLDHUMANOID
-  ./CM730Snapshot/CM730Snapshot.cc
 )
 
 add_class(BOLDHUMANOID
@@ -234,6 +225,29 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./minIni/minIni.c
+)
+
+add_class(BOLDHUMANOID
+  ./MotionLoop/motionloop.cc
+)
+
+add_class(BOLDHUMANOID
+  ./MotionModule/ActionModule/actionmodule.cc
+)
+
+add_class(BOLDHUMANOID
+  ./MotionModule/HeadModule/headmodule.cc
+)
+
+add_class(BOLDHUMANOID
+  ./MotionModule/WalkModule/walkmodule.cc
+  ./MotionModule/WalkModule/Matrix.cpp
+  ./MotionModule/WalkModule/Point.cpp
+  ./MotionModule/WalkModule/Vector.cpp
+)
+
+add_class(BOLDHUMANOID
   ./MX28Snapshot/MX28Snapshot.cc
 )
 
@@ -305,10 +319,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/AlarmState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
   ./StateObject/AmbulatorState/writeJson.cc
 )
 
@@ -343,13 +353,24 @@ add_class(BOLDHUMANOID
   ./StateObject/OptionTreeState/writeJson.cc
 )
 
-
 add_class(BOLDHUMANOID
   ./StateObject/ParticleState/writeJson.cc
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/StaticHardwareState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/WorldFrameState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObserver/FallDetector/falldetector.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObserver/GyroCalibrator/gyrocalibrator.cc
 )
 
 add_class(BOLDHUMANOID
@@ -384,7 +405,7 @@ add_executable(boldhumanoid
 #
 ## Link executable to libraries
 #
-set(BOLDHUMANOID_LINK_LIBRARIES ${OpenCV_LIBS} ${SigC++_LIBRARIES} darwin websockets pthread rt)
+set(BOLDHUMANOID_LINK_LIBRARIES ${OpenCV_LIBS} ${SigC++_LIBRARIES} websockets pthread rt)
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
 #
@@ -397,7 +418,6 @@ set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPI
 #
 ## Target dependencies
 #
-add_dependencies(boldhumanoid darwin_lib)
 add_dependencies(boldhumanoid libwebsockets_lib)
 
 
@@ -460,7 +480,7 @@ add_custom_target(tags DEPENDS ${CMAKE_SOURCE_DIR}/TAGS)
 #
 ## SWIG/Python
 #
-add_subdirectory(swig)
+#add_subdirectory(swig)
 
 #
 ## Build and run test

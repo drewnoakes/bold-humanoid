@@ -19,7 +19,7 @@ namespace bold
   class LineDotPass : public ImagePassHandler<T>
   {
   private:
-    const int d_imageWidth;
+    const ushort d_imageWidth;
     std::shared_ptr<PixelLabel> const inLabel;
     std::shared_ptr<PixelLabel> const onLabel;
     LineRunTracker* d_rowTracker;
@@ -29,7 +29,7 @@ namespace bold
   public:
     std::vector<Eigen::Vector2i> lineDots;
 
-    LineDotPass(int imageWidth, std::shared_ptr<PixelLabel> const inLabel, std::shared_ptr<PixelLabel> const onLabel, uchar hysterisisLimit)
+    LineDotPass(ushort imageWidth, std::shared_ptr<PixelLabel> const inLabel, std::shared_ptr<PixelLabel> const onLabel, uchar hysterisisLimit)
     : d_imageWidth(imageWidth),
       inLabel(inLabel),
       onLabel(onLabel),
@@ -37,7 +37,7 @@ namespace bold
     {
       d_colTrackers = std::vector<bold::LineRunTracker>();
 
-      for (int x = 0; x <= imageWidth; ++x)
+      for (ushort x = 0; x <= imageWidth; ++x)
       {
         d_colTrackers.push_back(bold::LineRunTracker(
           inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysterisisLimit,
@@ -77,19 +77,19 @@ namespace bold
     {
       // reset all run trackers
       d_rowTracker->reset();
-      for (int x = 0; x < d_imageWidth; ++x)
+      for (ushort x = 0; x < d_imageWidth; ++x)
         d_colTrackers[x].reset();
 
       lineDots.clear();
     }
 
-    void onRowStarting(int y) override
+    void onRowStarting(ushort y) override
     {
       d_rowTracker->reset();
       d_rowTracker->otherCoordinate = y;
     }
 
-    void onPixel(T label, int x, int y) override
+    void onPixel(T label, ushort x, ushort y) override
     {
       d_rowTracker->update(label, x);
       d_colTrackers[x].update(label, y);

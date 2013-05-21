@@ -21,9 +21,5 @@
 #include <algorithm>
 #include <fstream>
 
-#include <Head.h>
-#include <MotionStatus.h>
-
 using namespace bold;
 using namespace std;
-using namespace robotis;

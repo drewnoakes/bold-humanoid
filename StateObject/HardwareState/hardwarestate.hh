@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "../stateobject.hh"
-#include "../../robotis/Framework/include/JointData.h"
 
 namespace bold
 {
@@ -22,7 +21,10 @@ namespace bold
       d_mx28States(mx28States),
       d_rxBytes(rxBytes),
       d_txBytes(txBytes)
-    {}
+    {
+      assert(d_mx28States.size() == 20);
+      assert(cm730State);
+    }
 
     std::shared_ptr<CM730Snapshot const> getCM730State() const
     {
@@ -31,18 +33,20 @@ namespace bold
 
     std::shared_ptr<MX28Snapshot const> getMX28State(unsigned jointId) const
     {
-      assert(jointId > 0 && jointId < robotis::JointData::NUMBER_OF_JOINTS);
-      assert(d_mx28States.size() > jointId);
+      assert(jointId > 0 && jointId <= NUMBER_OF_JOINTS);
+      assert(d_mx28States.size() >= jointId);
 
-      return d_mx28States[jointId];
+      return d_mx28States[jointId - 1];
     }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    unsigned long GetReceivedBytes() const { return d_rxBytes; }
-    unsigned long GetTransmittedBytes() const { return d_txBytes; }
+    unsigned long getReceivedBytes() const { return d_rxBytes; }
+    unsigned long getTransmittedBytes() const { return d_txBytes; }
 
   private:
+    const int NUMBER_OF_JOINTS = 20;
+
     std::shared_ptr<CM730Snapshot const> d_cm730State;
     std::vector<std::shared_ptr<MX28Snapshot const>> d_mx28States;
     unsigned long d_rxBytes;

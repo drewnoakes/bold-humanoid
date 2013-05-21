@@ -14,11 +14,15 @@ class minIni;
 
 namespace bold
 {
-  class FieldMap;
   class CameraModel;
   class Debugger;
   class DataStreamer;
+  class FieldMap;
+  class HeadModule;
   class ImageLabeller;
+  class LineFinder;
+  class SequentialTimer;
+  class Spatialiser;
 
   template <typename TPixel>
   class ImagePassRunner;
@@ -28,13 +32,9 @@ namespace bold
 
   template <typename TPixel>
   class LineDotPass;
-
-  class LineFinder;
   class BlobDetectPass;
   class CartoonPass;
   class LabelCountPass;
-
-  class Spatialiser;
 
   enum class ImageType
   {
@@ -52,15 +52,16 @@ namespace bold
                  std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
                  std::shared_ptr<Debugger> debugger,
+                 std::shared_ptr<HeadModule> headModule,
                  minIni const& ini);
 
     std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
 
     /** Process the provided image, extracting features. */
-    void integrateImage(cv::Mat& cameraImage);
+    void integrateImage(cv::Mat& cameraImage, SequentialTimer& timer);
 
     /** Composes and enqueues a debugging image. */
-    void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer);
+    void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer, SequentialTimer& timer);
 
     void setShouldDetectLines(bool val) { d_shouldDetectLines = val; }
     bool getShouldDetectLines() const { return d_shouldDetectLines; }

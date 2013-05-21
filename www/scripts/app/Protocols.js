@@ -14,30 +14,32 @@ define(
 
             // One per StateObject...
             agentFrameState: 'AgentFrame',
-            alarmState: 'Alarm',
             ambulatorState: 'Ambulator',
             bodyState: 'Body',
             cameraFrameState: 'CameraFrame',
             debug: 'Debug',
             gameState: 'Game',
             hardwareState: 'Hardware',
+            motionTiming: 'MotionTiming',
             optionTreeState: 'OptionTree',
             particleState: 'Particle',
+            thinkTiming: 'ThinkTiming',
             worldFrameState: 'WorldFrame'
         };
 
         // TODO populate this from the server somehow, but must only list those using JSON encoding
         Protocols.allStates = [
             Protocols.agentFrameState,
-            Protocols.alarmState,
             Protocols.ambulatorState,
             Protocols.cameraFrameState,
             Protocols.bodyState,
             Protocols.debug,
             Protocols.gameState,
             Protocols.hardwareState,
+            Protocols.motionTiming,
             Protocols.optionTreeState,
             Protocols.particleState,
+            Protocols.thinkTiming,
             Protocols.worldFrameState
         ];
 

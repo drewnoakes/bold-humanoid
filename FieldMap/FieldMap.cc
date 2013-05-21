@@ -2,10 +2,11 @@
 
 #include "../geometry/LineSegment.hh"
 
-#include <minIni.h>
 #include <iostream>
 #include <vector>
 #include <Eigen/Core>
+
+#include "../minIni/minIni.h"
 
 using namespace bold;
 using namespace std;

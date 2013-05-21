@@ -1,15 +1,18 @@
 #pragma once
 
 #include "../option.hh"
-#include <minIni.h>
+#include "../minIni/minIni.h"
 
 namespace bold
 {
+  class HeadModule;
+
   class LookAround : public Option
   {
   public:
-    LookAround(std::string const& id)
-    : Option(id)
+    LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule)
+    : Option(id),
+      d_headModule(headModule)
     {
       d_topAngle      = -15.0;//ini.getd("LookAround", "TopAngle", -15.0);
       d_bottomAngle   = 15.0;//ini.getd("LookAround", "BottomAngle", 15.0);
@@ -21,6 +24,7 @@ namespace bold
     virtual OptionList runPolicy() override;
 
   private:
+    std::shared_ptr<HeadModule> d_headModule;
     double d_topAngle;
     double d_bottomAngle;
     double d_sideAngle;

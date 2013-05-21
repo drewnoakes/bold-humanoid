@@ -1,20 +1,26 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../../StateObject/BodyState/bodystate.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
+
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
                                                          unsigned teamNumber,
                                                          unsigned uniformNumber,
                                                          bool ignoreGameController,
                                                          shared_ptr<Debugger> debugger,
                                                          shared_ptr<CameraModel> cameraModel,
-                                                         shared_ptr<Ambulator> ambulator)
+                                                         shared_ptr<Ambulator> ambulator,
+                                                         shared_ptr<ActionModule> actionModule,
+                                                         shared_ptr<HeadModule> headModule,
+                                                         shared_ptr<WalkModule> walkModule)
 {
   unique_ptr<OptionTree> tree(new OptionTree());
 
   // Sit down action
-  OptionPtr sit = make_shared<ActionOption>("sitdownaction", "sit down");
+  OptionPtr sit = make_shared<ActionOption>("sitdownaction", "sit down", actionModule);
   tree->addOption(sit);
   // Stand up action
-  OptionPtr standup = make_shared<ActionOption>("standupaction", "stand up");
+  OptionPtr standup = make_shared<ActionOption>("standupaction", "stand up", actionModule);
   tree->addOption(standup);
 
   // Stop walking
@@ -26,35 +32,35 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   tree->addOption(approachBall);
 
   // Circle around ball
-  OptionPtr circleBall = make_shared<CircleBall>("circleball", ambulator);
+  OptionPtr circleBall = make_shared<CircleBall>("circleball", ambulator, headModule);
   tree->addOption(circleBall);
 
   // Left kick
-  OptionPtr leftKick = make_shared<ActionOption>("leftkickaction", "lk");
+  OptionPtr leftKick = make_shared<ActionOption>("leftkickaction", "lk", actionModule);
   tree->addOption(leftKick);
 
   // Left kick
-  OptionPtr rightKick = make_shared<ActionOption>("rightkickaction", "rk");
+  OptionPtr rightKick = make_shared<ActionOption>("rightkickaction", "rk", actionModule);
   tree->addOption(rightKick);
 
   // Look around
-  OptionPtr lookAround = make_shared<LookAround>("lookaround");
+  OptionPtr lookAround = make_shared<LookAround>("lookaround", headModule);
   tree->addOption(lookAround);
 
   // Look at ball
-  OptionPtr lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel);
+  OptionPtr lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel, headModule);
   tree->addOption(lookAtBall);
 
   // Look at feet
-  OptionPtr lookAtFeet = make_shared<LookAtFeet>("lookatfeet");
+  OptionPtr lookAtFeet = make_shared<LookAtFeet>("lookatfeet", headModule);
   tree->addOption(lookAtFeet);
 
   // Look at goal
-  OptionPtr lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel);
+  OptionPtr lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel, headModule);
   tree->addOption(lookAtGoal);
 
   //Dive left
-  OptionPtr leftdive = make_shared<ActionOption>("diveleftaction", "left_dive");
+  OptionPtr leftdive = make_shared<ActionOption>("diveleftaction", "left_dive", actionModule);
   tree->addOption(leftdive);
 
   // FSM
@@ -490,11 +496,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     // Transition: aim -> if goal is seen right in front of us, start kick procedure
     auto aim2lookAtFeet = aimState->newTransition();
-    aim2lookAtFeet->condition = []() {
-      double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
-      double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
+    aim2lookAtFeet->condition = [&headModule]() {
+      auto body = AgentState::get<BodyState>();
+      double panAngle = body->getHeadPanJoint()->angle; // MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
+      double panAngleRange = headModule->getLeftLimitRads();
       double panRatio = panAngle / panAngleRange;
-      cout << "panRatio: " << panRatio << endl;
+//       cout << "panRatio: " << panRatio << endl;
       return fabs(panRatio) < 0.3;
     };
     aim2lookAtFeet->childState = lookAtFeetState;
@@ -509,14 +516,15 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     // Transition: circle -> stop circling and look for goal again
     auto circle2lookForGoal = circleBallState->newTransition();
-    circle2lookForGoal->condition = [circleBallState]()
+    circle2lookForGoal->condition = [circleBallState,&headModule]()
     {
-      double panAngle = MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
-      double panAngleRange = Head::GetInstance()->GetLeftLimitAngle();
+      auto body = AgentState::get<BodyState>();
+      double panAngle = body->getHeadPanJoint()->angle;
+      double panAngleRange = headModule->getLeftLimitRads();
       double panRatio = panAngle / panAngleRange;
       double circleDurationSeconds = fabs(panRatio) * 3;
-      cout << "circleDuration: " << circleDurationSeconds << endl;
-      cout << "Seconds since start: " << circleBallState->secondsSinceStart() << endl;
+//       cout << "circleDuration: " << circleDurationSeconds << endl;
+//       cout << "Seconds since start: " << circleBallState->secondsSinceStart() << endl;
       return circleBallState->secondsSinceStart() > circleDurationSeconds;
     };
     circle2lookForGoal->childState = lookForGoalState;

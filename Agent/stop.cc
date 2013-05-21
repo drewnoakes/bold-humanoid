@@ -8,4 +8,6 @@ void Agent::stop()
   cout << "[Agent::stop] Stopping..." << endl;
 
   d_isRunning = false;
+  
+  d_motionLoop->stop();
 }

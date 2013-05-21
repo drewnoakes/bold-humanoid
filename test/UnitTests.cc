@@ -29,10 +29,13 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 }
 
 #include "AgentPositionTests.hh"
+#include "AgentStateTests.hh"
 #include "BodyStateTests.hh"
 #include "BlobTests.hh"
 #include "Bounds2iTests.hh"
 #include "CameraModelTests.hh"
+#include "CM730Tests.hh"
+#include "CppTests.hh"
 #include "ColourTests.hh"
 #include "DistributionTrackerTests.hh"
 #include "LinearSmootherTests.hh"
@@ -40,9 +43,9 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "MathTests.hh"
 #include "MovingAverageTests.hh"
 #include "ParticleFilterTests.hh"
-#include "RobotisTests.hh"
 #include "RunTests.hh"
 #include "SpatialiserTest.hh"
+#include "ThreadTests.hh"
 
 int main(int argc, char **argv)
 {

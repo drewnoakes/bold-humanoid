@@ -5,11 +5,12 @@
 #include <string>
 #include <vector>
 
-#include <minIni.h>
 #include <libwebsockets.h>
 #include <opencv2/opencv.hpp>
 
 #include "../StateObject/stateobject.hh"
+
+class minIni;
 
 namespace cv
 {
@@ -68,6 +69,7 @@ namespace bold
     libwebsocket_protocols* d_protocols;
     libwebsocket_protocols* d_cameraProtocol;
     std::vector<CameraSession*> d_cameraSessions;
+    bool d_hasWebSockets;
 
     //
     // libwebsocket callbacks

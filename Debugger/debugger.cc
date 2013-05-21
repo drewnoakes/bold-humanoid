@@ -1,33 +1,18 @@
 #include "debugger.ih"
 
-#define LED_RED   0x01;
-#define LED_BLUE  0x02;
-#define LED_GREEN 0x04;
+#define LED_RED   (0x01);
+#define LED_BLUE  (0x02);
+#define LED_GREEN (0x04);
 
 Debugger::Debugger()
 : d_lastLedFlags(0xff),
   d_lastEyeInt(0),
   d_lastHeadInt(0),
-  d_eventTimings(make_shared<vector<EventTiming>>()),
   d_gameControllerMessageCount(0),
   d_ignoredMessageCount(0),
   d_eyeColour(0,0,0),
   d_headColour(0,0,0)
-{
-  // TODO intial head/eye colour not well defined
-}
-
-Clock::Timestamp Debugger::timeEvent(Clock::Timestamp const& startedAt, string const& eventName)
-{
-  auto timeSeconds = Clock::getSeconds(startedAt);
-  addEventTiming(EventTiming(timeSeconds, eventName));
-  return Clock::getTimestamp();
-}
-
-void Debugger::addEventTiming(EventTiming const& eventTiming)
-{
-  d_eventTimings->push_back(eventTiming);
-}
+{}
 
 void Debugger::update(shared_ptr<CM730> cm730)
 {
@@ -54,7 +39,7 @@ void Debugger::update(shared_ptr<CM730> cm730)
   if (ledFlags != d_lastLedFlags)
   {
     // the value changed, so write it
-    cm730->WriteByte(CM730::ID_CM, CM730::P_LED_PANNEL, ledFlags, NULL);
+    cm730->writeByte(CM730::ID_CM, CM730::P_LED_PANNEL, ledFlags, NULL);
     d_lastLedFlags = ledFlags;
   }
 
@@ -72,7 +57,7 @@ void Debugger::update(shared_ptr<CM730> cm730)
 
     if (intValue != (*lastInt))
     {
-      cm730->WriteWord(CM730::ID_CM, targetId, intValue, 0);
+      cm730->writeWord(CM730::ID_CM, targetId, intValue, 0);
       *lastInt = intValue;
     }
   };
@@ -84,10 +69,18 @@ void Debugger::update(shared_ptr<CM730> cm730)
   // Update DebugState object
   //
 
-  AgentState::getInstance().set(make_shared<DebugState const>(d_eventTimings, d_gameControllerMessageCount, d_ignoredMessageCount));
+  bool hasRed = d_lastLedFlags & LED_RED;
+  bool hasGreen = d_lastLedFlags & LED_RED;
+  bool hasBlue = d_lastLedFlags & LED_RED;
+  AgentState::getInstance().set(
+    make_shared<DebugState const>(
+      d_gameControllerMessageCount, d_ignoredMessageCount,
+      d_eyeColour, d_headColour, 
+      hasRed, hasGreen, hasBlue
+    )
+  );
 
   // clear accumulators for next cycle
-  d_eventTimings = make_shared<vector<EventTiming>>();
   d_gameControllerMessageCount = 0;
   d_ignoredMessageCount = 0;
 }

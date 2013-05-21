@@ -2,32 +2,17 @@
 
 #include <Eigen/Core>
 
-namespace robotis
-{
-  class BulkReadData;
-}
-
 namespace bold
 {
+  class BulkReadTable;
+
+  // http://support.robotis.com/en/product/darwin-op/references/reference/hardware_specifications/electronics/sub_controller_(cm-730).htm
+
+  // TODO rename as CM730State
+
   class CM730Snapshot
   {
   public:
-    unsigned short modelNumber;
-    unsigned char firmwareVersion;
-    unsigned char dynamixelId;
-    unsigned int baudBPS;
-    unsigned int returnDelayTimeMicroSeconds;
-
-    /**
-    * Controls when a status packet is returned.
-    *
-    * 0 - only for PING command
-    * 1 - only for READ command
-    * 2 - for all commands
-    *
-    * Never returned if instruction is a broadcast packet.
-    */
-    unsigned char statusRetLevel;
     bool isPowered;
     bool isLed2On;
     bool isLed3On;
@@ -39,18 +24,33 @@ namespace bold
     Eigen::Vector3d gyro;
     Eigen::Vector3d acc;
     float voltage;
-    unsigned char micLevelLeft;
-    unsigned char micLevelRight;
+    Eigen::Vector3i gyroRaw;
+    Eigen::Vector3i accRaw;
 
-    CM730Snapshot() {}
+    CM730Snapshot(BulkReadTable const& data);
+  };
 
-    CM730Snapshot(robotis::BulkReadData const& data);
+  class StaticCM730State
+  {
+  public:
+    unsigned short modelNumber;
+    unsigned char firmwareVersion;
+    unsigned char dynamixelId;
+    unsigned int baudBPS;
+    unsigned int returnDelayTimeMicroSeconds;
 
-  private:
-    static unsigned short readTableWord(unsigned char* table, int addr);
-    static double gyroValueToDps(int value);
-    static double gyroValueToRps(int value);
-    static double accValueToGs(int value);
-    static Eigen::Vector3d shortToColour(unsigned short s);
+    /** Controls when a status packet is returned in response to an instruction.
+    *
+    * 0 - only for PING command
+    * 1 - only for READ command
+    * 2 - for all commands
+    *
+    * Note that a status packet is never returned for broadcast instructions.
+    */
+    unsigned char statusRetLevel;
+
+    // skip dynamic addresses in the table -- they are captured in CM730Snapshot
+
+    StaticCM730State(BulkReadTable const& data);
   };
 }

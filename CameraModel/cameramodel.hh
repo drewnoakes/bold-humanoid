@@ -3,8 +3,8 @@
 #include <string>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
-#include <minIni.h>
 
+#include "../minIni/minIni.h"
 #include "../util/Maybe.hh"
 
 namespace bold

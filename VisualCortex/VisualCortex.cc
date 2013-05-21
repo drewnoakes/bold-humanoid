@@ -4,6 +4,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
                            shared_ptr<FieldMap> fieldMap,
                            shared_ptr<Spatialiser> spatialiser,
                            shared_ptr<Debugger> debugger,
+                           shared_ptr<HeadModule> headModule,
                            minIni const& ini)
 : d_fieldMap(fieldMap),
   d_cameraModel(cameraModel),
@@ -126,24 +127,14 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_controlsByFamily["line-dots"] = lineDotPassControls;
 
   //
-  // Head control
+  // HeadModule control
   //
   vector<Control> headControls;
-  auto moveHead = [](double const& panDelta, double const& tiltDelta)
-  {
-    auto head = Head::GetInstance();
-    head->m_Joint.SetEnableHeadOnly(true, true);
-    head->MoveByAngleOffset(panDelta, tiltDelta);
-  };
-  headControls.push_back(Control::createAction("&blacktriangleleft;",  [&moveHead](){ moveHead( 5, 0); }));
-  headControls.push_back(Control::createAction("&blacktriangle;",      [&moveHead](){ moveHead( 0, 5); }));
-  headControls.push_back(Control::createAction("&blacktriangledown;",  [&moveHead](){ moveHead( 0,-5); }));
-  headControls.push_back(Control::createAction("&blacktriangleright;", [&moveHead](){ moveHead(-5, 0); }));
-  headControls.push_back(Control::createAction("home", [](){
-    auto head = Head::GetInstance();
-    head->m_Joint.SetEnableHeadOnly(true, true);
-    head->MoveToHome();
-  }));
+  headControls.push_back(Control::createAction("&blacktriangleleft;",  [headModule]() { headModule->moveByAngleOffset( 5, 0); }));
+  headControls.push_back(Control::createAction("&blacktriangle;",      [headModule]() { headModule->moveByAngleOffset( 0, 5); }));
+  headControls.push_back(Control::createAction("&blacktriangledown;",  [headModule]() { headModule->moveByAngleOffset( 0,-5); }));
+  headControls.push_back(Control::createAction("&blacktriangleright;", [headModule]() { headModule->moveByAngleOffset(-5, 0); }));
+  headControls.push_back(Control::createAction("home",                 [headModule]() { headModule->moveToHome(); }));
   d_controlsByFamily["head"] = headControls;
 
   //

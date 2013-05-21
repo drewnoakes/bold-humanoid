@@ -6,7 +6,7 @@ void HoughLineAccumulator::add(int x, int y)
   uint16_t* rowBase = reinterpret_cast<uint16_t*>(d_accumulator.data);
   int halfAccRadLen = d_accumulatorRadiusLen / 2;
 
-  for (unsigned int t = 0; t < d_accumulatorThetaLen; t++)
+  for (uint t = 0; t < d_accumulatorThetaLen; t++)
   {
     // r = x*sin(theta) + y*cos(theta)
 
@@ -31,10 +31,10 @@ void HoughLineAccumulator::add(int x, int y)
   }
 }
 
-HoughLineAccumulator::HoughLineAccumulator(unsigned int xLength, unsigned int yLength, unsigned int accumulatorHeight)
+HoughLineAccumulator::HoughLineAccumulator(uint xLength, uint yLength, uint accumulatorHeight)
   : d_accumulatorThetaLen(accumulatorHeight),
     // TODO the accumulator doesn't need to be quite this wide -- the negative side can be narrower (positive side is correct)
-    d_accumulatorRadiusLen(2 * (unsigned int)ceil(sqrt(xLength*xLength + yLength*yLength))),
+    d_accumulatorRadiusLen(2 * (uint)ceil(sqrt(xLength*xLength + yLength*yLength))),
     d_xLength(xLength),
     d_yLength(yLength),
     d_sinCache(new double[d_accumulatorThetaLen]),
@@ -42,7 +42,7 @@ HoughLineAccumulator::HoughLineAccumulator(unsigned int xLength, unsigned int yL
 {
   // cache the values of sin and cos for faster processing
   const double d_thetaStepRadians = M_PI / d_accumulatorThetaLen;
-  for (unsigned int t = 0; t < d_accumulatorThetaLen; t++)
+  for (uint t = 0; t < d_accumulatorThetaLen; t++)
   {
     double theta = t*d_thetaStepRadians;
     d_sinCache[t] = sin(theta);

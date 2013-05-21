@@ -4,9 +4,12 @@
 
 namespace bold
 {
-  class Debugger;
-  class CameraModel;
+  class ActionModule;
   class Ambulator;
+  class CameraModel;
+  class Debugger;
+  class HeadModule;
+  class WalkModule;
 
   class AdHocOptionTreeBuilder
   {
@@ -17,6 +20,9 @@ namespace bold
                                           bool ignoreGameController,
                                           std::shared_ptr<Debugger> debugger,
                                           std::shared_ptr<CameraModel> cameraModel,
-                                          std::shared_ptr<Ambulator> ambulator);
+                                          std::shared_ptr<Ambulator> ambulator,
+                                          std::shared_ptr<ActionModule> actionModule,
+                                          std::shared_ptr<HeadModule> headModule,
+                                          std::shared_ptr<WalkModule> walkModule);
   };
 }

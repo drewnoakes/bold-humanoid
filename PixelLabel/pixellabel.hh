@@ -6,7 +6,7 @@
 
 #include "../Colour/colour.hh"
 
-#include "../robotis/Framework/include/minIni.h"
+#include "../minIni/minIni.h"
 
 namespace bold
 {
@@ -18,10 +18,6 @@ namespace bold
     uchar d_id;
     Colour::hsvRange d_hsvRange;
     std::string d_name;
-
-    // prevent copying
-//     PixelLabel(PixelLabel const&) = delete;
-//     PixelLabel& operator=(PixelLabel const&) = delete;
 
   public:
     static bold::PixelLabel fromConfig(

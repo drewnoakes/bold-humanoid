@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cmath>
 #include <vector>
 #include <stdexcept>
+#include <string.h>
 
 namespace bold
 {
@@ -20,6 +22,8 @@ namespace bold
       memset(&d_sum, 0, sizeof(d_sum));
     }
 
+    int count() const { return d_length; }
+
     T next(T value)
     {
       if (d_length == d_windowSize)
@@ -35,7 +39,24 @@ namespace bold
       d_sum += value;
       d_nextPointer = (d_nextPointer + 1) % d_windowSize;
 
-      return d_sum / d_length;
+      d_avg = d_sum / d_length;
+
+      return d_avg;
+    }
+
+    T getAverage() const { return d_avg; }
+
+    T calculateStdDev()
+    {
+      // TODO unit test this
+      T sum;
+      for (int i = 0; i < d_length; i++)
+      {
+        int index = (d_nextPointer - i - 1) % d_windowSize;
+        T diff = d_items[index] - d_avg;
+        sum += diff * diff;
+      }
+      return sqrt(sum / d_windowSize);
     }
 
   private:
@@ -43,6 +64,7 @@ namespace bold
     unsigned d_length;
     int d_nextPointer;
     T d_sum;
+    T d_avg;
     unsigned d_windowSize;
   };
 }

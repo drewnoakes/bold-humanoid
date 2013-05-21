@@ -1,6 +1,6 @@
 #include "ambulator.ih"
 
-bool Ambulator::isRunning() const { return Walking::GetInstance()->IsRunning(); }
+bool Ambulator::isRunning() const { return d_walkModule->isRunning(); }
 
 void Ambulator::setMoveDir(Eigen::Vector2d const& moveDir)
 {

@@ -1,6 +1,6 @@
 #include "blobdetectpass.ih"
 
-BlobDetectPass::BlobDetectPass(int imageWidth, int imageHeight, std::vector<shared_ptr<PixelLabel>> const& pixelLabels)
+BlobDetectPass::BlobDetectPass(ushort imageWidth, ushort imageHeight, std::vector<shared_ptr<PixelLabel>> const& pixelLabels)
   : d_imageHeight(imageHeight),
     d_imageWidth(imageWidth),
     d_pixelLabels(pixelLabels),

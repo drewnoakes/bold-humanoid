@@ -2,32 +2,33 @@
 
 void Agent::standUpIfFallen()
 {
-  if (d_autoGetUpFromFallen && MotionStatus::FALLEN != FallState::STANDUP)
-  {
-    auto walk = Walking::GetInstance();
-    auto action = robotis::Action::GetInstance();
-    auto head = Head::GetInstance();
+  // TODO this should be part of the behaviour tree
 
-    walk->Stop();
+  // TODO use OrientationState instead of d_fallDetector (which will be observing the hardware snapshots)
 
-    // Loop until walking has stopped
-    // TODO this blocks the think cycle, including image processing and localisation updates
-    while(walk->IsRunning() == 1)
-      usleep(8000);
+  if (!d_autoGetUpFromFallen || d_fallDetector->getFallenState() == FallState::STANDUP)
+    return;
 
-    action->m_Joint.SetEnableBody(true, true);
-    // TODO: make this use options
-    if (MotionStatus::FALLEN == FallState::FORWARD)
-      action->Start((int)ActionPage::ForwardGetUp);
-    else if (MotionStatus::FALLEN == FallState::BACKWARD)
-      action->Start((int)ActionPage::BackwardGetUp);
+  // TODO arbitrate this differently
+  d_walkModule->stop();
 
-    // Loop until the get up script has stopped
-    // TODO this blocks the think cycle, including image processing and localisation updates
-    while (action->IsRunning() == 1)
-      usleep(8000);
+  // Loop until walking has stopped
+  // TODO this blocks the think cycle, including image processing and localisation updates
+  while (d_walkModule->isRunning())
+    usleep(8000);
 
-    head->m_Joint.SetEnableHeadOnly(true, true);
-    walk->m_Joint.SetEnableBodyWithoutHead(true, true);
-  }
+//   d_actionModule->d_jointData.setEnableBody(true, true);
+
+  if (d_fallDetector->getFallenState() == FallState::FORWARD)
+    d_actionModule->start((int)ActionPage::ForwardGetUp);
+  else if (d_fallDetector->getFallenState() == FallState::BACKWARD)
+    d_actionModule->start((int)ActionPage::BackwardGetUp);
+
+  // Loop until the get up script has stopped
+  // TODO this blocks the think cycle, including image processing and localisation updates
+  while (d_actionModule->isRunning())
+    usleep(8000);
+
+//   d_headModule->d_jointData.setEnableHeadOnly(true, true);
+//   d_walkModule->d_jointData.setEnableBodyWithoutHead(true, true);
 }

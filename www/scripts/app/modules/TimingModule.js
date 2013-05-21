@@ -74,7 +74,7 @@ define(
             this.entryByLabel = {};
 
             this.subscription = DataProxy.subscribe(
-                Protocols.debug,
+                Protocols.thinkTiming,
                 {
                     json: true,
                     onmessage: _.bind(this.onData, this)
@@ -103,9 +103,9 @@ define(
             this.fpsCount++;
             var time = new Date().getTime();
 
-            _.each(_.keys(data.timings), function (key)
+            _.each(_.keys(data), function (key)
             {
-                var millis = data.timings[key];
+                var millis = data[key];
                 this.getOrCreateEntry(key).update(time, millis);
             }.bind(this));
 

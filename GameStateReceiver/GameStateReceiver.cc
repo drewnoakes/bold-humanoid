@@ -46,7 +46,7 @@ GameStateReceiver::GameStateReceiver(minIni const& ini, shared_ptr<Debugger> deb
 //     mreq.imr_interface.s_addr = htonl(INADDR_ANY);
 //     if (setsockopt(d_socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) < 0)
 //     {
-//       printf("setsockopt failed");
+//       cerr << "[GameStateReceiver::receive] setsockopt failed" << endl;
 //       exit(1);
 //     }
 

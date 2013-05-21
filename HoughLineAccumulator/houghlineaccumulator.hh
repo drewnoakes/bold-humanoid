@@ -7,18 +7,20 @@
 
 namespace bold
 {
+  typedef unsigned int uint;
+  
   class HoughLineAccumulator
   {
   private:
     /** Width of the accumulator matrix, spanning values of theta */
-    unsigned int const d_accumulatorThetaLen;
+    uint const d_accumulatorThetaLen;
     /** height of the accumulator matrix, spanning values of radius */
-    unsigned int const d_accumulatorRadiusLen;
+    uint const d_accumulatorRadiusLen;
 
     /** Width of the input image */
-    unsigned int const d_xLength;
+    uint const d_xLength;
     /** Height of the input image */
-    unsigned int const d_yLength;
+    uint const d_yLength;
 
     // TODO multiplex these caches
     /** Cached sine values across the integer range [0-d_accumulatorThetaLen). */
@@ -31,7 +33,7 @@ namespace bold
     int d_count;
 
   public:
-    HoughLineAccumulator(unsigned int xLength, unsigned int yLength, unsigned int accumulatorHeight = 180);
+    HoughLineAccumulator(uint xLength, uint yLength, uint accumulatorHeight = 180);
     ~HoughLineAccumulator();
 
     /** The number of times 'add' was called since construction, or the last call to 'clear'. */

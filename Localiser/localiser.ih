@@ -7,6 +7,7 @@
 #include "../FieldMap/fieldmap.hh"
 #include "../Filter/ParticleFilter/particlefilter.hh"
 #include "../Math/math.hh"
+#include "../minIni/minIni.h"
 #include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/BodyState/bodystate.hh"

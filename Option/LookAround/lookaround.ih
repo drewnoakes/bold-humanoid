@@ -5,11 +5,9 @@
 #include <iostream>
 #include <sys/time.h>
 
-#include <Head.h>
-
 #include "../Clock/clock.hh"
 #include "../Math/math.hh"
+#include "../MotionModule/HeadModule/headmodule.hh"
 
 using namespace bold;
 using namespace std;
-using namespace robotis;

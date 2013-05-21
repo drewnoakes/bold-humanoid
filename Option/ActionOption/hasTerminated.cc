@@ -3,11 +3,10 @@
 double ActionOption::hasTerminated()
 {
   if (!d_started)
-    return false;
+    return 0.0;
 
-  auto actionModule = robotis::Action::GetInstance();
   // It could be we're running something else?
-  if (actionModule->IsRunning())
+  if (d_actionModule->isRunning())
     return 0.0;
 
   d_started = false;

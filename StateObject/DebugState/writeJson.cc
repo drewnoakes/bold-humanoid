@@ -6,25 +6,28 @@ using namespace rapidjson;
 
 void DebugState::writeJson(Writer<StringBuffer>& writer) const
 {
-  writer.StartObject();
-  {
-    writer.String("timings");
-    writer.StartObject();
-    {
-      vector<EventTiming> const& timings = *d_eventTimings;
-      for (EventTiming const& timing : timings)
-      {
-        writer.String(timing.second.c_str());
-        writer.Double(timing.first * 1000.0);
-      }
-    }
-    writer.EndObject();
-
-    writer.String("gameControllerMessages");
-    writer.Int(d_gameControllerMessageCount);
-
-    writer.String("ignoredMessages");
-    writer.Int(d_ignoredMessageCount);
-  }
-  writer.EndObject();
+  writer.StartObject()
+    .String("gameControllerMessages")
+      .Int(d_gameControllerMessageCount)
+    .String("ignoredMessages")
+      .Int(d_ignoredMessageCount)
+    .String("eyeColour")
+      .StartArray()
+        .Int(d_eyeColour.r)
+        .Int(d_eyeColour.g)
+        .Int(d_eyeColour.b)
+      .EndArray()
+    .String("headColour")
+      .StartArray()
+        .Int(d_headColour.r)
+        .Int(d_headColour.g)
+        .Int(d_headColour.b)
+      .EndArray()
+    .String("led")
+      .StartArray()
+        .Bool(d_redLed)
+        .Bool(d_greenLed)
+        .Bool(d_blueLed)
+      .EndArray()
+  .EndObject();
 }

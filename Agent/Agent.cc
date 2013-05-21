@@ -11,11 +11,30 @@ Agent::Agent()
   /*
   registerStateTypes();
 
-  d_linuxCM730 = make_shared<LinuxCM730>(U2D_dev.c_str());
-  d_CM730 = make_shared<CM730>(d_linuxCM730.get());
-  d_CM730->MakeBulkReadPacket();
+  // Register state observers
+  d_fallDetector = make_shared<FallDetector>();
+  AgentState::getInstance().registerObserver<HardwareState>(d_fallDetector);
 
-  d_ambulator = make_shared<Ambulator>(d_ini),
+  d_gyroCalibrator = make_shared<GyroCalibrator>();
+  AgentState::getInstance().registerObserver<HardwareState>(d_gyroCalibrator);
+
+  d_cm730Linux = make_shared<CM730Linux>(U2D_dev.c_str());
+  d_cm730 = make_shared<CM730>(d_cm730Linux);
+//   d_cm730->DEBUG_PRINT = true;
+
+  // Create motion modules
+  d_walkModule = make_shared<WalkModule>(d_ini);
+  d_actionModule = make_shared<ActionModule>();
+  d_actionModule->loadFile(d_motionFile);
+  d_headModule = make_shared<HeadModule>(d_ini);
+
+  // Attempt to connect to the CM730
+  d_haveBody = d_cm730->connect();
+  
+  if (!d_haveBody)
+    cout << "[Agent::Agent] Unable to connect to body" << endl;
+
+  d_ambulator = make_shared<Ambulator>(d_walkModule, d_ini),
 
   d_cameraModel = make_shared<CameraModel>(d_ini);
 
@@ -27,7 +46,7 @@ Agent::Agent()
 
   d_localiser = make_shared<Localiser>(d_fieldMap, d_ini);
 
-  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, d_ini);
+  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, d_headModule, d_ini);
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_ini, d_debugger);
 
@@ -51,10 +70,27 @@ Agent::Agent()
   for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
 
-  d_debugger->update(d_CM730);
+  d_debugger->update(d_cm730);
 
+  if (d_haveBody)
+  {
+    readStaticHardwareState();
+
+    d_motionLoop = make_shared<MotionLoop>(d_cm730);
+
+<<<<<<< HEAD
   d_haveBody = initMotionManager(d_ini);
   */
+=======
+    d_motionLoop->addModule(d_actionModule);
+    d_motionLoop->addModule(d_headModule);
+    d_motionLoop->addModule(d_walkModule);
+  }
+  else
+  {
+    cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
+  }
+>>>>>>> feature/motion
 
   cout << "[Agent::Agent] Done" << endl;
 }

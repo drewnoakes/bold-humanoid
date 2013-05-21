@@ -10,7 +10,7 @@ DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::sh
 {
   cout << "[DataStreamer::DataStreamer] Starting" << endl;
 
-  d_port = ini.geti("Debugger", "TcpPort", 8080);
+  d_port = ini.geti("Data Streamer", "TcpPort", 8080);
 
   // We have three special protocols: HTTP-only, Camera and Control.
   // These are followed by N other protocols, one per type of state in the system
@@ -49,16 +49,20 @@ DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::sh
   contextInfo.user = this;
   d_context = libwebsocket_create_context(&contextInfo);
 
-  if (d_context == NULL)
-    lwsl_err("libwebsocket context creation failed\n");
-  else
+  d_hasWebSockets = d_context != nullptr;
+  
+  if (d_hasWebSockets)
     cout << "[DataStreamer::DataStreamer] Listening on TCP port " << d_port << endl;
+  else
+    cerr << "[DataStreamer::DataStreamer] libwebsocket context creation failed" << endl;
 
   //
-  // Listen for state changes, and publish them via websockets
+  // Listen for state changes and publish them via websockets
   //
   AgentState::getInstance().updated.connect(
-    [](shared_ptr<StateTracker const> tracker) {
+    [this](shared_ptr<StateTracker const> tracker) {
+      if (!d_hasWebSockets)
+        return;
       libwebsocket_protocols* protocol = tracker->websocketProtocol;
       libwebsocket_callback_on_writable_all_protocol(protocol);
     }

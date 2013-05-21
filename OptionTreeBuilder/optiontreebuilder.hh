@@ -1,8 +1,10 @@
 #pragma once
 
-#include "../OptionTree/optiontree.hh"
 #include <memory>
-#include <minIni.h>
+
+#include "../OptionTree/optiontree.hh"
+
+class minIni;
 
 namespace bold
 {

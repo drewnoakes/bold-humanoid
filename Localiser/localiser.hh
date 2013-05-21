@@ -2,13 +2,14 @@
 
 #include <Eigen/Core>
 #include <functional>
-#include <minIni.h>
 #include <memory>
 
 #include "../AgentPosition/agentposition.hh"
 #include "../Filter/ParticleFilter/particlefilter.hh"
 #include "../MovingAverage/movingaverage.hh"
 #include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
+
+class minIni;
 
 namespace bold
 {

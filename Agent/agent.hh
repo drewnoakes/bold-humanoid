@@ -7,30 +7,32 @@
 
 #include "../MX28Alarm/mx28alarm.hh"
 #include "../Configurable/configurable.hh"
+#include "../minIni/minIni.h"
 
 class Joystick;
 
-namespace robotis
-{
-  class CM730;
-  class LinuxCM730;
-  class LinuxMotionTimer;
-}
-
 namespace bold
 {
+  class ActionModule;
   class Ambulator;
   class BodyState;
   class Camera;
   class CameraModel;
+  class CM730;
+  class CM730Linux;
   class DataStreamer;
   class Debugger;
+  class FallDetector;
   class FieldMap;
+  class GyroCalibrator;
+  class HeadModule;
   class GameStateReceiver;
   class Localiser;
+  class MotionLoop;
   class OptionTree;
   class Spatialiser;
   class VisualCortex;
+  class WalkModule;
 
   class Agent : public Configurable
   {
@@ -55,12 +57,16 @@ namespace bold
       d_optionTree = std::move(tree);
     }
 
+    Agent(Agent const&) = delete;
+    Agent& operator=(Agent const&) = delete;
+
     void run();
     void stop();
 
     sigc::signal<void> onThinkEnd;
 
   private:
+    /// Whether we have connected to a CM730 subcontroller.
     bool d_haveBody;
     bool d_isRunning;
 
@@ -72,9 +78,21 @@ namespace bold
     bool d_useOptionTree;
     bool d_ignoreGameController;
 
-    std::shared_ptr<robotis::LinuxCM730> d_linuxCM730;
-    std::shared_ptr<robotis::CM730> d_CM730;
-    std::shared_ptr<robotis::LinuxMotionTimer> d_motionTimer;
+    // Motion
+
+    std::shared_ptr<CM730Linux> d_cm730Linux;
+    std::shared_ptr<CM730> d_cm730;
+    std::shared_ptr<MotionLoop> d_motionLoop;
+    std::shared_ptr<WalkModule> d_walkModule;
+    std::shared_ptr<HeadModule> d_headModule;
+    std::shared_ptr<ActionModule> d_actionModule;
+
+    // State observers
+
+    std::shared_ptr<FallDetector> d_fallDetector;
+    std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
+
+    // Components
 
     std::shared_ptr<Ambulator> d_ambulator;
     std::shared_ptr<Camera> d_camera;
@@ -96,8 +114,11 @@ namespace bold
 
     void initCamera();
 
+<<<<<<< HEAD
     bool initMotionManager();
 
+=======
+>>>>>>> feature/motion
     void registerStateTypes();
 
     void think();
@@ -107,5 +128,7 @@ namespace bold
     void standUpIfFallen();
 
     void processInputCommands();
+
+    void readStaticHardwareState();
   };
 }

@@ -25,7 +25,7 @@ OptionList FSMOption::runPolicy()
 
         cout << "[FSMOption::runPolicy] Transition to state: " << d_curState->name << endl;
 
-        d_curState->startTime = Clock::getSeconds();
+        d_curState->startTimeSeconds = Clock::getSeconds();
 
         transitionMade = true;
 

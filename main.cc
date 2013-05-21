@@ -30,7 +30,10 @@ void printUsage()
 void handleShutdownSignal(int sig)
 {
   if (agent)
+  {
+    cout << "[boldhumanoid] Stopping Agent" << endl;
     agent->stop();
+  }
 }
 
 int main(int argc, char **argv)
@@ -107,17 +110,8 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  agent.reset(new Agent(
-    U2D_DEV_NAME0,
-    confFile,
-    MOTION_FILE_PATH,
-    teamNumber,
-    uniformNumber,
-    useJoystick,
-    autoGetUpFromFallen,
-    useOptionTree,
-    recordFrames,
-    ignoreGameController));
+  cout << "[boldhumanoid] Creating Agent" << endl;
+  agent.reset(new Agent();
 
   minIni ini(confFile);
 
@@ -128,13 +122,17 @@ int main(int argc, char **argv)
                                                 ignoreGameController,
                                                 agent->getDebugger(),
                                                 agent->getCameraModel(),
-                                                agent->getAmbulator());
+                                                agent->getAmbulator(),
+                                                agent->getActionModule(),
+                                                agent->getHeadModule(),
+                                                agent->getWalkModule());
 
   agent->setOptionTree(optionTree);
 
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);
 
+  cout << "[boldhumanoid] Running Agent" << endl;
   agent->run();
 
   cout << "[boldhumanoid] Finished" << endl;
