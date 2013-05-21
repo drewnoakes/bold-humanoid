@@ -1,6 +1,6 @@
 #include "agent.ih"
 
-void Agent::initCamera(minIni const& ini)
+void Agent::initCamera()
 {
   cout << "[Agent::initCamera] Start" << endl;
 
@@ -29,7 +29,7 @@ void Agent::initCamera(minIni const& ini)
       name.erase(remove(name.begin(), name.end(), excludeChars[i]), name.end());
     }
 
-    if (!ini.haskey(sectionName, name))
+    if (!paramExists(name))
     {
       cout << "[Agent::initCamera] No config key for '" << name << "'" << endl;
     }
@@ -44,7 +44,7 @@ void Agent::initCamera(minIni const& ini)
         case ControlType::Bool:
         case ControlType::Enum:
         case ControlType::Int:
-          int value = ini.geti(sectionName, name, control.getDefaultValue());
+          int value = getParam(name, control.getDefaultValue());
           control.setValue(value);
       }
     }

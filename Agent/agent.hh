@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Eigen/Core>
-#include <minIni.h>
 #include <memory>
 #include <opencv2/opencv.hpp>
 #include <sigc++/signal.h>
@@ -36,16 +35,7 @@ namespace bold
   class Agent : public Configurable
   {
   public:
-    Agent(std::string const& U2D_dev,
-          minIni const& ini,
-          std::string const& motionFile,
-          unsigned teamNumber,
-          unsigned uniformNumber,
-          bool useJoystick,
-          bool autoGetUpFromFallen,
-          bool useOptionTree,
-          bool recordFrames,
-          bool ignoreGameController);
+    Agent();
 
     
     std::shared_ptr<Ambulator> getAmbulator() const { return d_ambulator; }
@@ -73,7 +63,7 @@ namespace bold
   private:
     bool d_haveBody;
     bool d_isRunning;
-    minIni d_ini;
+
     std::string d_motionFile;
     unsigned d_teamNumber;
     unsigned d_uniformNumber;
@@ -104,9 +94,9 @@ namespace bold
 
     std::unique_ptr<OptionTree> d_optionTree;
 
-    void initCamera(minIni const& ini);
+    void initCamera();
 
-    bool initMotionManager(minIni const& ini);
+    bool initMotionManager();
 
     void registerStateTypes();
 

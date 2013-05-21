@@ -1,6 +1,6 @@
 #include "agent.ih"
 
-bool Agent::initMotionManager(minIni const& ini)
+bool Agent::initMotionManager()
 {
   MotionManager* motionManager = MotionManager::GetInstance();
 

@@ -4,6 +4,19 @@ import sys, getopt
 import bold
 import numpy as np
 
+class PyConf(bold.ConfImpl):
+    def getParamStr(self, path, defVal):
+        return defVal
+    def getParamInt(self, path, defVal):
+        return defVal
+    def getParamDbl(self, path, defVal):
+        return defVal
+
+
+def buildOptionTree():
+    tree = bold.OptionTree()
+    return tree
+
 def thinkEndCallback():
     cameraState = bold.AgentState.getCameraFrameState()
     print(cameraState)
@@ -37,6 +50,8 @@ def main(argv):
     RECORD_FRAMES = False
     IGNORE_GAME_CONTROLLER = True
 
+    conf = PyConf()
+    bold.Configurable.setConfImpl(conf)
 
     try:
         opts, args = getopt.getopt(argv,
@@ -74,6 +89,8 @@ def main(argv):
         usage()
         return
 
+    tree = buildOptionTree()
+
     a = bold.Agent(U2D_DEV_NAME, 
                    CONF_FILE_PATH,
                    MOTION_FILE_PATH,
@@ -103,7 +120,7 @@ def main(argv):
 
     visualCortex.set(**vcSettings)
                   
-    a.run()
+    #a.run()
 
 
 if __name__ == "__main__":

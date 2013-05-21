@@ -37,6 +37,8 @@ int main(int argc, char **argv)
 {
   cout << "[boldhumanoid] Starting boldhumanoid" << endl;
 
+  Configurable::setConfImpl(new ConfImpl());
+
   // defaults
   bool useJoystick = false;
   bool autoGetUpFromFallen = true;

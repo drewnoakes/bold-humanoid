@@ -1,29 +1,14 @@
 #include "agent.ih"
 
-Agent::Agent(string const& U2D_dev,
-             minIni const& ini,
-             string const& motionFile,
-             unsigned teamNumber,
-             unsigned uniformNumber,
-             bool useJoystick,
-             bool autoGetUpFromFallen,
-             bool useOptionTree,
-             bool recordFrames,
-             bool ignoreGameController
-  )
+Agent::Agent()
   : Configurable("agent"),
-    d_isRunning(false),
-    d_ini(ini),
-    d_motionFile(motionFile),
-    d_teamNumber(teamNumber),
-    d_uniformNumber(uniformNumber),
-    d_isRecordingFrames(recordFrames),
-    d_autoGetUpFromFallen(autoGetUpFromFallen),
-    d_useOptionTree(useOptionTree),
-    d_ignoreGameController(ignoreGameController)
+    d_isRunning(false)
 {
   cout << "[Agent::Agent] Start" << endl;
 
+  cout << "U2D dev name: " << getParam("u2dDevName") << endl;
+
+  /*
   registerStateTypes();
 
   d_linuxCM730 = make_shared<LinuxCM730>(U2D_dev.c_str());
@@ -69,6 +54,7 @@ Agent::Agent(string const& U2D_dev,
   d_debugger->update(d_CM730);
 
   d_haveBody = initMotionManager(d_ini);
+  */
 
   cout << "[Agent::Agent] Done" << endl;
 }

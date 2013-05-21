@@ -4,6 +4,53 @@ import sys, getopt
 import bold
 import numpy as np
 
+"""
+Configuration
+"""
+class Param:
+    """
+    Empty class used to build parameter hierarchies
+    """
+    def __init__(self, **kwds):
+        self.__dict__.update(kwds)
+    def add(seld, **kwds):
+        seld.__dict__.update(kwds)
+
+class PyConf(bold.ConfImpl):
+    def paramExists(self, path):
+        return eval(path) == None
+    def getParam(self, path, defVal):
+        val = eval(path)
+        if (val == None):
+            return defVal
+        return val
+    def getParamStr(self, path, defVal):
+        return getParam(path, defVal)
+    def getParamInt(self, path, defVal):
+        return getParam(path, defVal)
+    def getParamDbl(self, path, defVal):
+        return getParam(path, defVal)
+    def getParamBool(self, path, defVal):
+        return getParam(path, defVal)
+
+agentParams = {
+    "u2dDevName": "/dev/ttyUSB0",
+    "motionFilePath": "./motion_4096.bin",
+    "confFilePath": "./germanopen.ini",
+    "teamNumber": 24,
+    "uniformNumber": -1,
+    "useJoystick": False,
+    "autoGetUp": True,
+    "useOptionTree": False,
+    "recordFrames": False,
+    "ignoreGameController": False
+}
+
+agent = Param(testStr="hello")
+agent.add(agentParams)
+agent.testInt = 1
+agent.testDbl = 2.0
+
 def buildOptionTree():
     tree = bold.OptionTree()
     return tree
@@ -30,18 +77,7 @@ def usage():
 	-h           show these options (or --help)''')
 
 def main(argv):
-    U2D_DEV_NAME = "/dev/ttyUSB0"
-    MOTION_FILE_PATH = "./motion_4096.bin"
-    CONF_FILE_PATH = "./germanopen.ini"
-    TEAM_NUMBER = 24
-    UNIFORM_NUMBER = -1
-    USE_JOYSTICK = False
-    AUTO_GET_UP = True
-    USE_OPTION_TREE = False
-    RECORD_FRAMES = False
-    IGNORE_GAME_CONTROLLER = True
-
-
+    # Parse command arguments
     try:
         opts, args = getopt.getopt(argv,
                                    "c:t:u:ogjrh",
@@ -53,21 +89,21 @@ def main(argv):
 
     for opt, arg in opts:
         if opt in ('-c', '--conf'):
-            CONF_FILE_PATH = arg
+            agent.confFilePath = arg
         elif opt in ('-t', '--team'):
-            TEAM_NUMBER = int(arg)
+            agent.teamNumber = int(arg)
         elif opt in ('-u', '--unum'):
-            UNIFORM_NUMBER = int(arg)
+            agent.uniformNumber = int(arg)
         elif opt in ('-o', '--no-tree'):
-            USE_OPTION_TREE = False
+            agent.useOptionTree = False
         elif opt in ('-g', '--no-get-up'):
-            AUTO_GET_UP = False
+            agent.autoGetUp = False
         elif opt in ('-j', '--joystick'):
-            USE_JOYSTICK = True
+            agent.useJoystick = True
         elif opt in ('-r', '--record'):
-            RECORD_FRAMES = True
+            agent.recordFrames = True
         elif opt == '--nogc':
-            IGNORE_GAME_CONTROLLER = True
+            agent.ignoreGameController = True
         elif opt in ('-h', '--help'):
             usage()
             return
@@ -79,18 +115,9 @@ def main(argv):
         return
 
     tree = buildOptionTree()
-
-    a = bold.Agent(U2D_DEV_NAME, 
-                   CONF_FILE_PATH,
-                   MOTION_FILE_PATH,
-                   TEAM_NUMBER,
-                   UNIFORM_NUMBER,
-                   USE_JOYSTICK,
-                   AUTO_GET_UP,
-                   USE_OPTION_TREE,
-                   RECORD_FRAMES,
-                   IGNORE_GAME_CONTROLLER)
     
+    a = bold.Agent()
+    """
     a.onThinkEndConnect(thinkEndCallback);
     
     visualCortex = a.getVisualCortex()
@@ -109,8 +136,8 @@ def main(argv):
 
     visualCortex.set(**vcSettings)
                   
-    #a.run()
-
+    a.run()
+    """
 
 if __name__ == "__main__":
     main(sys.argv[1:])
