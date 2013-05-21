@@ -111,7 +111,7 @@ int main(int argc, char **argv)
   }
 
   cout << "[boldhumanoid] Creating Agent" << endl;
-  agent.reset(new Agent();
+  agent.reset(new Agent());
 
   minIni ini(confFile);
 

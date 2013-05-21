@@ -225,10 +225,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./minIni/minIni.c
-)
-
-add_class(BOLDHUMANOID
   ./MotionLoop/motionloop.cc
 )
 
