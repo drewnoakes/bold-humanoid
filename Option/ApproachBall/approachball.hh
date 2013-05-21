@@ -2,7 +2,7 @@
 
 #include "../option.hh"
 
-#include "minIni.h"
+#include "../../minIni/minIni.h"
 
 namespace bold
 {

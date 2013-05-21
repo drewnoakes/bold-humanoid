@@ -114,11 +114,6 @@ namespace bold
 
     void initCamera();
 
-<<<<<<< HEAD
-    bool initMotionManager();
-
-=======
->>>>>>> feature/motion
     void registerStateTypes();
 
     void think();

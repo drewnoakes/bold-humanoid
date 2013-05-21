@@ -18,8 +18,8 @@ namespace bold
       d_isRunning(walker->isRunning()),
       d_currentPhase(walker->getCurrentPhase()),
       d_bodySwingY(walker->getBodySwingY()),
-      d_bodySwingZ(walker->getBodySwingZ())
-      d_hipPitch(walker->HIP_PITCH_OFFSET),
+      d_bodySwingZ(walker->getBodySwingZ()),
+      d_hipPitch(walker->HIP_PITCH_OFFSET)
     {}
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
