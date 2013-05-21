@@ -6,7 +6,7 @@ Agent::Agent()
 {
   cout << "[Agent::Agent] Start" << endl;
 
-  cout << "U2D dev name: " << getParam("u2dDevName") << endl;
+  cout << "U2D dev name: " << getParam("u2dDevName", string("unkown")) << endl;
 
   /*
   registerStateTypes();
@@ -78,10 +78,6 @@ Agent::Agent()
 
     d_motionLoop = make_shared<MotionLoop>(d_cm730);
 
-<<<<<<< HEAD
-  d_haveBody = initMotionManager(d_ini);
-  */
-=======
     d_motionLoop->addModule(d_actionModule);
     d_motionLoop->addModule(d_headModule);
     d_motionLoop->addModule(d_walkModule);
@@ -90,7 +86,7 @@ Agent::Agent()
   {
     cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
   }
->>>>>>> feature/motion
+  */
 
   cout << "[Agent::Agent] Done" << endl;
 }

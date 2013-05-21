@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <cassert>
 
 namespace bold
 {

@@ -10,7 +10,7 @@ OptionList ActionOption::runPolicy()
 
 //     d_actionModule->d_jointData.setEnableBody(true, true);
     if (d_actionPage != ActionPage::None)
-      d_actionModule->start(d_actionPage);
+      d_actionModule->start((int)d_actionPage);
     else
       d_actionModule->start(d_actionName);
 
