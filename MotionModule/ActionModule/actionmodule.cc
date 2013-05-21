@@ -12,8 +12,9 @@ using namespace bold;
 using namespace std;
 
 ActionModule::ActionModule()
-: d_file(nullptr),
-  d_isRunning(false)
+  : MotionModule("action"), 
+    d_file(nullptr),
+    d_isRunning(false)
 {}
 
 ActionModule::~ActionModule()

@@ -5,18 +5,16 @@
 #include <memory>
 
 #include "../StateObject/GameState/gamestate.hh"
-#include "../minIni/minIni.h"
-
-class minIni;
+#include "../Configurable/configurable.hh"
 
 namespace bold
 {
   class Debugger;
 
-  class GameStateReceiver
+  class GameStateReceiver : public Configurable
   {
   public:
-    GameStateReceiver(minIni const& ini, std::shared_ptr<Debugger> debugger);
+    GameStateReceiver(std::shared_ptr<Debugger> debugger);
 
     std::shared_ptr<GameState> receive();
 

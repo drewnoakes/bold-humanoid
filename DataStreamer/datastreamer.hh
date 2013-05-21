@@ -9,8 +9,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "../StateObject/stateobject.hh"
-
-class minIni;
+#include "../Configurable/configurable.hh"
 
 namespace cv
 {
@@ -35,10 +34,10 @@ namespace bold
     unsigned imgBytesSent;
   };
 
-  class DataStreamer
+  class DataStreamer : public Configurable
   {
   public:
-    DataStreamer(minIni const& ini, std::shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger);
+    DataStreamer(std::shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger);
 
     void update();
     void close();

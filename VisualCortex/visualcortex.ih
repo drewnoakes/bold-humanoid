@@ -16,7 +16,6 @@
 #include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"
 #include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
-#include "../minIni/minIni.h"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../StateObject/BodyState/bodystate.hh"

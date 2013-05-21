@@ -5,8 +5,6 @@
 #include "../motionmodule.hh"
 #include "../../Math/math.hh"
 
-class minIni;
-
 namespace bold
 {
   class HeadSection;
@@ -16,7 +14,7 @@ namespace bold
   class HeadModule : public MotionModule
   {
   public:
-    HeadModule(minIni const& ini);
+    HeadModule();
     ~HeadModule();
 
     void initialize() override;

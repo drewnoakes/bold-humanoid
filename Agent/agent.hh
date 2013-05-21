@@ -7,7 +7,6 @@
 
 #include "../MX28Alarm/mx28alarm.hh"
 #include "../Configurable/configurable.hh"
-#include "../minIni/minIni.h"
 
 class Joystick;
 

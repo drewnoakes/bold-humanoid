@@ -6,7 +6,6 @@
 #include "../../AgentState/agentstate.hh"
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../CM730Snapshot/cm730snapshot.hh"
-#include "../../minIni/minIni.h"
 #include "../../MX28/mx28.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 
@@ -17,29 +16,30 @@
 using namespace bold;
 using namespace std;
 
-WalkModule::WalkModule(minIni const& ini)
+WalkModule::WalkModule()
+  : MotionModule("walk")
 {
   string section = "Walk Module";
 
-  X_OFFSET = ini.getd(section, "x_offset", -10);
-  Y_OFFSET = ini.getd(section, "y_offset", 5);
-  Z_OFFSET = ini.getd(section, "z_offset", 20);
-  R_OFFSET = ini.getd(section, "roll_offset", 0);
-  P_OFFSET = ini.getd(section, "pitch_offset", 0);
-  A_OFFSET = ini.getd(section, "yaw_offset", 0);
-  HIP_PITCH_OFFSET  = ini.getd(section, "hip_pitch_offset", 13.0);
-  PERIOD_TIME       = ini.getd(section, "period_time", 600);
-  DSP_RATIO         = ini.getd(section, "dsp_ratio", 0.1);
-  STEP_FB_RATIO     = ini.getd(section, "step_forward_back_ratio", 0.28);
-  Z_MOVE_AMPLITUDE  = ini.getd(section, "foot_height", 40);
-  Y_SWAP_AMPLITUDE  = ini.getd(section, "swing_right_left", 20.0);
-  Z_SWAP_AMPLITUDE  = ini.getd(section, "swing_top_down", 5);
-  PELVIS_OFFSET     = ini.getd(section, "pelvis_offset", 3.0);
-  ARM_SWING_GAIN    = ini.getd(section, "arm_swing_gain", 1.5);
-  BALANCE_KNEE_GAIN        = ini.getd(section, "balance_knee_gain", 0.3);
-  BALANCE_ANKLE_PITCH_GAIN = ini.getd(section, "balance_ankle_pitch_gain", 0.9);
-  BALANCE_HIP_ROLL_GAIN    = ini.getd(section, "balance_hip_roll_gain", 0.5);
-  BALANCE_ANKLE_ROLL_GAIN  = ini.getd(section, "balance_ankle_roll_gain", 1.0);
+  X_OFFSET = getParam("x_offset", -10);
+  Y_OFFSET = getParam("y_offset", 5);
+  Z_OFFSET = getParam("z_offset", 20);
+  R_OFFSET = getParam("roll_offset", 0);
+  P_OFFSET = getParam("pitch_offset", 0);
+  A_OFFSET = getParam("yaw_offset", 0);
+  HIP_PITCH_OFFSET  = getParam("hip_pitch_offset", 13.0);
+  PERIOD_TIME       = getParam("period_time", 600);
+  DSP_RATIO         = getParam("dsp_ratio", 0.1);
+  STEP_FB_RATIO     = getParam("step_forward_back_ratio", 0.28);
+  Z_MOVE_AMPLITUDE  = getParam("foot_height", 40);
+  Y_SWAP_AMPLITUDE  = getParam("swing_right_left", 20.0);
+  Z_SWAP_AMPLITUDE  = getParam("swing_top_down", 5);
+  PELVIS_OFFSET     = getParam("pelvis_offset", 3.0);
+  ARM_SWING_GAIN    = getParam("arm_swing_gain", 1.5);
+  BALANCE_KNEE_GAIN        = getParam("balance_knee_gain", 0.3);
+  BALANCE_ANKLE_PITCH_GAIN = getParam("balance_ankle_pitch_gain", 0.9);
+  BALANCE_HIP_ROLL_GAIN    = getParam("balance_hip_roll_gain", 0.5);
+  BALANCE_ANKLE_ROLL_GAIN  = getParam("balance_ankle_roll_gain", 1.0);
 
   P_GAIN = JointControl::P_GAIN_DEFAULT;
   I_GAIN = JointControl::I_GAIN_DEFAULT;

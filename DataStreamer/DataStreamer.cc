@@ -1,16 +1,17 @@
 #include "datastreamer.ih"
 
-DataStreamer::DataStreamer(minIni const& ini, shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger)
-: d_controlsByIdByFamily(),
-  d_image(),
-  d_camera(camera),
-  d_debugger(debugger),
-  d_context(0),
-  d_cameraSessions()
+DataStreamer::DataStreamer(shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger)
+  : Configurable("datastreamer"),
+    d_controlsByIdByFamily(),
+    d_image(),
+    d_camera(camera),
+    d_debugger(debugger),
+    d_context(0),
+    d_cameraSessions()
 {
   cout << "[DataStreamer::DataStreamer] Starting" << endl;
 
-  d_port = ini.geti("Data Streamer", "TcpPort", 8080);
+  d_port = getParam("tcpPort", 8080);
 
   // We have three special protocols: HTTP-only, Camera and Control.
   // These are followed by N other protocols, one per type of state in the system

@@ -4,32 +4,32 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
                            shared_ptr<FieldMap> fieldMap,
                            shared_ptr<Spatialiser> spatialiser,
                            shared_ptr<Debugger> debugger,
-                           shared_ptr<HeadModule> headModule,
-                           minIni const& ini)
-: d_fieldMap(fieldMap),
-  d_cameraModel(cameraModel),
-  d_spatialiser(spatialiser),
-  d_debugger(debugger),
-  d_shouldDetectLines(true),
-  d_shouldIgnoreAboveHorizon(true),
-  d_minBallArea(8*8),
-  d_imageType(ImageType::RGB),
-  d_shouldDrawBlobs(true),
-  d_shouldDrawLineDots(false),
-  d_shouldDrawExpectedLines(false),
-  d_shouldDrawObservedLines(true),
-  d_shouldDrawHorizon(true)
+                           shared_ptr<HeadModule> headModule)
+  : Configurable("visialcortex"),
+    d_fieldMap(fieldMap),
+    d_cameraModel(cameraModel),
+    d_spatialiser(spatialiser),
+    d_debugger(debugger),
+    d_shouldDetectLines(true),
+    d_shouldIgnoreAboveHorizon(true),
+    d_minBallArea(64),
+    d_imageType(ImageType::RGB),
+    d_shouldDrawBlobs(true),
+    d_shouldDrawLineDots(false),
+    d_shouldDrawExpectedLines(false),
+    d_shouldDrawObservedLines(true),
+    d_shouldDrawHorizon(true)
 {
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
-  d_shouldDetectLines = ini.geti("Vision", "DetectLines", 0) != 0;
+  d_shouldDetectLines = getParam("DetectLines", 0) != 0;
 
-  d_streamFramePeriod = ini.geti("Debugger", "CameraFramePeriod", 5);
+  d_streamFramePeriod = getParam("CameraFramePeriod", 5);
 
-  d_goalLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Goal",  40,  10, 210, 55, 190, 65));
-  d_ballLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Ball",  10,  15, 255, 95, 190, 95));
-  d_fieldLabel = std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Field", 71,  20, 138, 55, 173, 65));
-  d_lineLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig(ini, "Line",   0, 255,   0, 70, 255, 70));
+  d_goalLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig("Goal",  40,  10, 210, 55, 190, 65));
+  d_ballLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig("Ball",  10,  15, 255, 95, 190, 95));
+  d_fieldLabel = std::make_shared<PixelLabel>(PixelLabel::fromConfig("Field", 71,  20, 138, 55, 173, 65));
+  d_lineLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig("Line",   0, 255,   0, 70, 255, 70));
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel };
 
@@ -46,7 +46,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   createLookupTable();
 
-  d_minBallArea = ini.geti("Vision", "MinBallArea", 5*5);
+  d_minBallArea = getParam("MinBallArea", 5*5);
 
   int imageWidth = d_cameraModel->imageWidth();
   int imageHeight = d_cameraModel->imageHeight();

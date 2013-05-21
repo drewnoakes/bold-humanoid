@@ -3,37 +3,38 @@
 #include <string>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
-
-#include "../minIni/minIni.h"
+#include "../Configurable/configurable.hh"
 #include "../util/Maybe.hh"
 
 namespace bold
 {
   typedef std::function<Eigen::Vector2d(Eigen::Vector3d const&)> Projector;
 
-  class CameraModel
+  class CameraModel : public Configurable
   {
   public:
     CameraModel(unsigned imageWidth, unsigned imageHeight, double focalLength, double rangeVerticalDegs, double rangeHorizontalDegs)
-    : d_imageWidth(imageWidth),
+      : Configurable("CameraModule"),
+      d_imageWidth(imageWidth),
       d_imageHeight(imageHeight),
       d_focalLength(focalLength),
       d_rangeVerticalDegs(rangeVerticalDegs),
       d_rangeHorizontalDegs(rangeHorizontalDegs)
     {}
 
-    CameraModel(minIni const& ini)
+    CameraModel()
+      : Configurable("CameraModule")
     {
-      d_imageWidth = ini.geti("Camera", "ImageWidth", 320);
-      d_imageHeight = ini.geti("Camera", "ImageHeight", 240);
-      d_focalLength = ini.getd("Camera", "FocalLength", 0.025);
-      d_rangeVerticalDegs = ini.getd("Camera", "RangeVerticalDegrees", 45.0);
-      d_rangeHorizontalDegs = ini.getd("Camera", "RangeHorizontalDegrees", 60.0);
+      d_imageWidth = getParam("ImageWidth", 320);
+      d_imageHeight = getParam("ImageHeight", 240);
+      d_rangeVerticalDegs = getParam("RangeVerticalDegrees", 45.0);
+      d_rangeHorizontalDegs = getParam("rangeHorizontalDegrees", 60.0);
     }
 
     unsigned imageWidth() const { return d_imageWidth; }
     unsigned imageHeight() const { return d_imageHeight; }
-    double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads());/* TODO: find real d_focalLength;*/ }
+    
+    double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads()); } // TODO: cash
     double rangeVerticalDegs() const { return d_rangeVerticalDegs; }
     double rangeVerticalRads() const { return d_rangeVerticalDegs/180.0 * M_PI; }
     double rangeHorizontalDegs() const { return d_rangeHorizontalDegs; }

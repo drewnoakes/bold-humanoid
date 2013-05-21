@@ -3,8 +3,7 @@
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 
-unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
-                                                         unsigned teamNumber,
+unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          unsigned uniformNumber,
                                                          bool ignoreGameController,
                                                          shared_ptr<Debugger> debugger,
@@ -28,7 +27,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
   tree->addOption(stopWalking);
 
   // Approach ball
-  OptionPtr approachBall = make_shared<ApproachBall>(ini, "approachball", ambulator);
+  OptionPtr approachBall = make_shared<ApproachBall>("approachball", ambulator);
   tree->addOption(approachBall);
 
   // Circle around ball
@@ -463,12 +462,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(minIni const& ini,
 
     // Transition: approachball -> look for goal
     auto approachBall2lookForGoal = approachBallState->newTransition("closeToBall");
-    approachBall2lookForGoal->condition = [&ini]() {
+    approachBall2lookForGoal->condition = [playingFsm]() {
       auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
       if (!ballObs)
         return false;
 
-      return (ballObs->head<2>().norm() < ini.getd("Approach Ball", "UntilDistance", 0.05));
+      return (ballObs->head<2>().norm() < playingFsm->getParam("approachBall.untilDistance", 0.05));
     };
     approachBall2lookForGoal->childState = lookForGoalState;
 

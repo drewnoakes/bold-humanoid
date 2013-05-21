@@ -1,9 +1,9 @@
 #include "pixellabel.hh"
+#include "../Configurable/configurable.hh"
 
 using namespace bold;
 
 PixelLabel PixelLabel::fromConfig(
-  minIni const& ini,
   std::string objectName,
   int hue,        int hueRange,
   int saturation, int saturationRange,
@@ -11,12 +11,12 @@ PixelLabel PixelLabel::fromConfig(
   )
 {
   Colour::hsvRange hsvRange;
-  hsvRange.h      = ini.geti("Vision", objectName + "Hue",             hue);
-  hsvRange.hRange = ini.geti("Vision", objectName + "HueRange",        hueRange);
-  hsvRange.s      = ini.geti("Vision", objectName + "Saturation",      saturation);
-  hsvRange.sRange = ini.geti("Vision", objectName + "SaturationRange", saturationRange);
-  hsvRange.v      = ini.geti("Vision", objectName + "Value",           value);
-  hsvRange.vRange = ini.geti("Vision", objectName + "ValueRange",      valueRange);
+  hsvRange.h      = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".hue", hue);
+  hsvRange.hRange = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".hueRange", hueRange);
+  hsvRange.s      = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".saturation", saturation);
+  hsvRange.sRange = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".saturationRange", saturationRange);
+  hsvRange.v      = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".value", value);
+  hsvRange.vRange = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".valueRange", valueRange);
 
   return PixelLabel(hsvRange, objectName);
 }

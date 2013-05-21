@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../option.hh"
-#include "../minIni/minIni.h"
 
 namespace bold
 {
@@ -14,8 +13,8 @@ namespace bold
     : Option(id),
       d_headModule(headModule)
     {
-      d_feetX = 0;//ini.getd("LookAtFeet", "FeetX", 0);
-      d_feetY = -67.5;//ini.getd("LookAtFeet", "FeetY", -67.5);
+      d_feetX = getParam("feetX", 0);
+      d_feetY = getParam("feetY", -67.5);
     }
 
     OptionList runPolicy() override;
@@ -26,3 +25,12 @@ namespace bold
     double d_feetY;
   };
 }
+
+
+
+
+
+
+
+
+

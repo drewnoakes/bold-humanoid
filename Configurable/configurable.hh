@@ -27,12 +27,7 @@ namespace bold
 
     static void setConfImpl(ConfImpl* impl) { s_confImpl = impl; }
 
-  protected:
-    bool paramExists(std::string const& path)
-    {
-      assert(s_confImpl && "Configuration implementation has not been set.");
-      return s_confImpl->paramExists(d_nameSpace + "." + path);
-    }
+    static ConfImpl* getConfImpl() { return s_confImpl; }
 
     template <typename T>
     T getParam(std::string const& path, T const& defVal)
@@ -40,6 +35,13 @@ namespace bold
       assert(s_confImpl && "Configuration implementation has not been set.");
       return s_confImpl->getParam(d_nameSpace + "." + path, defVal);
       
+    }
+
+  protected:
+    bool paramExists(std::string const& path)
+    {
+      assert(s_confImpl && "Configuration implementation has not been set.");
+      return s_confImpl->paramExists(d_nameSpace + "." + path);
     }
 
     std::string d_nameSpace;

@@ -1,31 +1,30 @@
 #include "headmodule.hh"
 
 #include "../Math/math.hh"
-#include "../minIni/minIni.h"
 #include "../BodyControl/bodycontrol.hh"
 #include "../AgentState/agentstate.hh"
-
 #include <iostream>
 
 using namespace bold;
 using namespace std;
 
-HeadModule::HeadModule(minIni const& ini)
+HeadModule::HeadModule()
+  : MotionModule("head")
 {
-  d_panGainP    = ini.getd("Head Module", "pan_p_gain", 0.1);
-  d_panGainD    = ini.getd("Head Module", "pan_d_gain", 0.22);
+  d_panGainP    = getParam("pan_p_gain", 0.1);
+  d_panGainD    = getParam("pan_d_gain", 0.22);
 
-  d_tiltGainP   = ini.getd("Head Module", "tilt_p_gain", 0.1);
-  d_tiltGainD   = ini.getd("Head Module", "tilt_d_gain", 0.22);
+  d_tiltGainP   = getParam("tilt_p_gain", 0.1);
+  d_tiltGainD   = getParam("tilt_d_gain", 0.22);
 
   // Restrictions placed upon the range of movement by the head within this module
-  d_limitLeft   = ini.getd("Head Module", "left_limit", 70);
-  d_limitRight  = ini.getd("Head Module", "right_limit", -70);
-  d_limitTop    = ini.getd("Head Module", "top_limit", EYE_TILT_OFFSET_ANGLE);
-  d_limitBottom = ini.getd("Head Module", "bottom_limit", EYE_TILT_OFFSET_ANGLE - 65);
+  d_limitLeft   = getParam("left_limit", 70);
+  d_limitRight  = getParam("right_limit", -70);
+  d_limitTop    = getParam("top_limit", EYE_TILT_OFFSET_ANGLE);
+  d_limitBottom = getParam("bottom_limit", EYE_TILT_OFFSET_ANGLE - 65);
 
-  d_panHome     = ini.getd("Head Module", "pan_home", 0.0);
-  d_tiltHome    = ini.getd("Head Module", "tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
+  d_panHome     = getParam("pan_home", 0.0);
+  d_tiltHome    = getParam("tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
 }
 
 HeadModule::~HeadModule()

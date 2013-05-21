@@ -8,8 +8,7 @@
 #include "../Filter/ParticleFilter/particlefilter.hh"
 #include "../MovingAverage/movingaverage.hh"
 #include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
-
-class minIni;
+#include "../Configurable/configurable.hh"
 
 namespace bold
 {
@@ -18,10 +17,10 @@ namespace bold
 
   typedef ParticleFilter<3>::Particle Particle;
 
-  class Localiser
+  class Localiser : public Configurable
   {
   public:
-    Localiser(std::shared_ptr<FieldMap> fieldMap, minIni const& ini);
+    Localiser(std::shared_ptr<FieldMap> fieldMap);
 
     void predict(Eigen::Affine3d motion);
 

@@ -9,8 +9,7 @@
 #include "../Control/control.hh"
 #include "../geometry/LineSegment2i.hh"
 #include "../PixelLabel/pixellabel.hh"
-
-class minIni;
+#include "../Configurable/configurable.hh"
 
 namespace bold
 {
@@ -45,15 +44,14 @@ namespace bold
   };
 
   /** Bold-humanoid's vision processing subsystem. */
-  class VisualCortex
+  class VisualCortex : public Configurable
   {
   public:
     VisualCortex(std::shared_ptr<CameraModel> cameraModel,
                  std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
                  std::shared_ptr<Debugger> debugger,
-                 std::shared_ptr<HeadModule> headModule,
-                 minIni const& ini);
+                 std::shared_ptr<HeadModule> headModule);
 
     std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
 

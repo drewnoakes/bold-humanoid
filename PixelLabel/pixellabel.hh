@@ -6,8 +6,6 @@
 
 #include "../Colour/colour.hh"
 
-#include "../minIni/minIni.h"
-
 namespace bold
 {
   class PixelLabel
@@ -20,8 +18,7 @@ namespace bold
     std::string d_name;
 
   public:
-    static bold::PixelLabel fromConfig(
-      minIni const& ini,
+    static PixelLabel fromConfig(
       std::string objectName,
       int hue,        int hueRange,
       int saturation, int saturationRange,

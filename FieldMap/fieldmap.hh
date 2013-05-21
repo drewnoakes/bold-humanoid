@@ -4,15 +4,14 @@
 #include <Eigen/Core>
 
 #include "../geometry/LineSegment.hh"
-
-class minIni;
+#include "../Configurable/configurable.hh"
 
 namespace bold
 {
-  class FieldMap
+  class FieldMap : public Configurable
   {
   public:
-    FieldMap(minIni const& ini);
+    FieldMap();
 
     /// Returns the positions of all field lines, in the world frame.
     std::vector<LineSegment3d> getFieldLines() const { return d_fieldLines; }

@@ -16,7 +16,6 @@ unique_ptr<Agent> agent;
 void printUsage()
 {
   cout << "Options:" << endl;
-  cout << "\t-c <file>\tselect configuration file (or --conf)" << endl;
   cout << "\t-t <num>\tteam number (or --team)" << endl;
   cout << "\t-u <num>\tuniform number (or --unum)" << endl;
   cout << "\t-t\tdisable the option tree (or --no-tree)" << endl;
@@ -50,7 +49,6 @@ int main(int argc, char **argv)
   unsigned teamNumber = 9;
   unsigned uniformNumber = 0;
   bool ignoreGameController = false;
-  string confFile("config.ini");
 
   //
   // Process command line arguments
@@ -62,10 +60,6 @@ int main(int argc, char **argv)
     {
       printUsage();
       return 0;
-    }
-    else if (arg == "-c" || arg == "--conf")
-    {
-      confFile = argv[++i];
     }
     else if (arg == "-t" || arg == "--team")
     {
@@ -113,11 +107,8 @@ int main(int argc, char **argv)
   cout << "[boldhumanoid] Creating Agent" << endl;
   agent.reset(new Agent());
 
-  minIni ini(confFile);
-
   AdHocOptionTreeBuilder optionTreeBuilder;
-  auto optionTree = optionTreeBuilder.buildTree(ini,
-                                                teamNumber,
+  auto optionTree = optionTreeBuilder.buildTree(teamNumber,
                                                 uniformNumber,
                                                 ignoreGameController,
                                                 agent->getDebugger(),

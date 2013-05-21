@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../option.hh"
-#include "../minIni/minIni.h"
 
 namespace bold
 {
@@ -14,11 +13,11 @@ namespace bold
     : Option(id),
       d_headModule(headModule)
     {
-      d_topAngle      = -15.0;//ini.getd("LookAround", "TopAngle", -15.0);
-      d_bottomAngle   = 15.0;//ini.getd("LookAround", "BottomAngle", 15.0);
-      d_sideAngle     = 7.0;//ini.getd("LookAround", "SideAngle", 70.0);
-      d_durationHoriz = 3.0;//ini.getd("LookAround", "DurationHoriz", 3.0);
-      d_durationVert  = 0.4;//ini.getd("LookAround", "DurationVert", 0.4);
+      d_topAngle      = getParam("topAngle", -15.0);
+      d_bottomAngle   = getParam("bottomAngle", 15.0);
+      d_sideAngle     = getParam("sideAngle", 70.0);
+      d_durationHoriz = getParam("durationHoriz", 3.0);
+      d_durationVert  = getParam("durationVert", 0.4);
     }
 
     virtual OptionList runPolicy() override;
@@ -32,3 +31,10 @@ namespace bold
     double d_durationVert;
   };
 }
+
+
+
+
+
+
+

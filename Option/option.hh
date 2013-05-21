@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 
+#include "../Configurable/configurable.hh"
+
 namespace bold
 {
   class Option;
@@ -24,10 +26,13 @@ namespace bold
    *   action to take at which time
    *
    */
-  class Option
+  class Option : public Configurable
   {
   public:
-    Option(std::string const& id) : d_id(id) {}
+    Option(std::string const& id)
+      : Configurable(std::string("option.") + id),
+        d_id(id)
+    {}
     virtual ~Option() {}
 
     /** Get this option's ID

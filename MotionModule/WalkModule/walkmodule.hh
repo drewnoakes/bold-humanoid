@@ -4,8 +4,6 @@
 
 #include "../motionmodule.hh"
 
-class minIni;
-
 namespace bold
 {
   class WalkModule : public MotionModule
@@ -99,7 +97,7 @@ namespace bold
     void updateBalanceParams();
 
   public:
-    WalkModule(minIni const& ini);
+    WalkModule();
 
     virtual ~WalkModule();
 

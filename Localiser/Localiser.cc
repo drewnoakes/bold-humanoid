@@ -1,19 +1,20 @@
 #include "localiser.ih"
 
-Localiser::Localiser(shared_ptr<FieldMap> fieldMap, minIni const& ini)
-: d_pos(0, 0, 0),
-  d_smoothedPos(0, 0, 0),
-  d_avgPos(1),
-  d_fieldMap(fieldMap)
+Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
+  : Configurable("localiser"),
+    d_pos(0, 0, 0),
+    d_smoothedPos(0, 0, 0),
+    d_avgPos(1),
+    d_fieldMap(fieldMap)
 {
-  int initialCount = ini.geti("Localiser", "ParticleCount", 200);
-  int smoothingWindowSize = ini.geti("Localiser", "SmoothingWindowSize", 5);
-  d_randomizeRatio = ini.getd("Localiser", "RandomiseRatio", 0.05);
-  d_rewardFalloff = ini.getd("Localiser", "RewardFallOff", 0.1);
-  d_useLines = ini.geti("Localiser", "UseLines", 1) != 0;
-  d_minGoalsNeeded = ini.geti("Localiser", "MinGoalsNeeded", 1);
-  double positionErrorMillimeters = ini.getd("Localiser", "PositionErrorMillimeters", 0.03);
-  unsigned initialAngleErrorDeg = ini.geti("Localiser", "AngleErrorDegrees", 3);
+  int initialCount = getParam("ParticleCount", 200);
+  int smoothingWindowSize = getParam("SmoothingWindowSize", 5);
+  d_randomizeRatio = getParam("RandomiseRatio", 0.05);
+  d_rewardFalloff = getParam("RewardFallOff", 0.1);
+  d_useLines = getParam("UseLines", 1) != 0;
+  d_minGoalsNeeded = getParam("MinGoalsNeeded", 1);
+  double positionErrorMillimeters = getParam("PositionErrorMillimeters", 0.03);
+  unsigned initialAngleErrorDeg = getParam("AngleErrorDegrees", 3);
 
   d_avgPos = MovingAverage<Vector4d>(smoothingWindowSize);
 

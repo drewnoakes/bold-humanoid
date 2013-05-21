@@ -5,26 +5,27 @@
 
 #include "../Smoother/LinearSmoother/linearsmoother.hh"
 #include "../Control/control.hh"
-#include "../minIni/minIni.h"
+#include "../Configurable/configurable.hh"
 
 namespace bold
 {
   class WalkModule;
 
-  class Ambulator
+  class Ambulator : public Configurable
   {
   public:
-    Ambulator(std::shared_ptr<WalkModule> walkModule, minIni const& ini)
-    : d_walkModule(walkModule),
-      d_xAmp(0.0, ini.getd("Ambulator", "XAmpDelta", 3.0)),
-      d_yAmp(0.0, ini.getd("Ambulator", "YAmpDelta", 3.0)),
-      d_turnAmp(0.0, ini.getd("Ambulator", "TurnDelta", 1.0)),
-      d_maxHipPitchAtSpeed(ini.getd("Ambulator", "MaxHipPitchAtSpeed", 15.0)),
-      d_minHipPitch(ini.getd("Ambulator", "MinHipPitch", 13.0)),
-      d_maxHipPitch(ini.getd("Ambulator", "MaxHipPitch", 17.0)),
-      d_turnAngleSet(false),
-      d_moveDirSet(false),
-      d_controls()
+    Ambulator(std::shared_ptr<WalkModule> walkModule)
+      : Configurable("ambulator"),
+        d_walkModule(walkModule),
+        d_xAmp(0.0, getParam("xAmpDelta", 3.0)),
+        d_yAmp(0.0, getParam("yAmpDelta", 3.0)),
+        d_turnAmp(0.0, getParam("turnDelta", 1.0)),
+        d_maxHipPitchAtSpeed(getParam("maxHipPitchAtSpeed", 15.0)),
+        d_minHipPitch(getParam("minHipPitch", 13.0)),
+        d_maxHipPitch(getParam("maxHipPitch", 17.0)),
+        d_turnAngleSet(false),
+        d_moveDirSet(false),
+        d_controls()
     {
       // TODO these should be double controls
       d_controls.push_back(Control::createInt("Min hip pitch", d_minHipPitch, [this](int value) { d_minHipPitch = value; }));

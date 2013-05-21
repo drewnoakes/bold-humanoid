@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "../JointId/jointid.hh"
+#include "../Configurable/configurable.hh"
 
 namespace bold
 {
@@ -35,18 +36,33 @@ namespace bold
     bool d_set[21];
   };
 
-	/** Abstract base for types of motion such as walking, running scripts or controlling the head.
-     */
-	class MotionModule
-	{
-	public:
-		static const int TIME_UNIT = 8; //msec
+  /** Abstract base for types of motion such as walking, running scripts or controlling the head.
+   */
+  class MotionModule : public Configurable
+  {
+  public:
+    MotionModule(std::string const& type)
+      : Configurable(std::string("motion.") + type)
+    {}
+    virtual ~MotionModule() {}
 
-		virtual void initialize() = 0;
+    static const int TIME_UNIT = 8; //msec
+
+    virtual void initialize() = 0;
 
     virtual void step(JointSelection const& selectedJoints) = 0;
     virtual void applyHead(std::shared_ptr<HeadSection> head) = 0;
     virtual void applyArms(std::shared_ptr<ArmSection> arms) = 0;
     virtual void applyLegs(std::shared_ptr<LegSection> legs) = 0;
-	};
+  };
 }
+
+
+
+
+
+
+
+
+
+

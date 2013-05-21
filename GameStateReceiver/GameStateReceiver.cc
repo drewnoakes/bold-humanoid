@@ -1,11 +1,12 @@
 #include "gamestatereceiver.ih"
 
-GameStateReceiver::GameStateReceiver(minIni const& ini, shared_ptr<Debugger> debugger)
-: d_socket(-1),
-  d_receivedAnything(false),
-  d_debugger(debugger)
+GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger)
+  : Configurable("gamestatereceiver"),
+    d_socket(-1),
+    d_receivedAnything(false),
+    d_debugger(debugger)
 {
-  d_port = ini.geti("GameController", "Port", 3838);
+  d_port = getParam("port", 3838);
 
   cout << "[GameStateReceiver::receive] Creating socket for UDP port " << d_port << endl;
 

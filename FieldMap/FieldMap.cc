@@ -1,35 +1,35 @@
 #include "fieldmap.hh"
 
 #include "../geometry/LineSegment.hh"
+#include "../Configurable/configurable.hh"
 
 #include <iostream>
 #include <vector>
 #include <Eigen/Core>
 
-#include "../minIni/minIni.h"
-
 using namespace bold;
 using namespace std;
 using namespace Eigen;
 
-FieldMap::FieldMap(minIni const& ini)
+FieldMap::FieldMap()
+  : Configurable("field")
 {
   std::cout << "[FieldMap::FieldMap] Start" << std::endl;
 
-  d_fieldLengthX              = ini.getd("Environment", "FieldSizeX", 6.0);
-  d_fieldLengthY              = ini.getd("Environment", "FieldSizeY", 4.0);
-//   double goalX               = ini.getd("Environment", "GoalSizeX", 0.5);
-  double goalY               = ini.getd("Environment", "GoalSizeY", 1.5);
-//   double goalZ               = ini.getd("Environment", "GoalSizeZ", 0.8);
-//   double goalPostDiameter    = ini.getd("Environment", "GoalPostDiameter", 0.1);
-  double goalAreaX           = ini.getd("Environment", "GoalAreaSizeX", 0.6);
-  double goalAreaY           = ini.getd("Environment", "GoalAreaSizeY", 2.2);
-//   double penaltyMarkDistance = ini.getd("Environment", "PenaltyMarkDistance", 1.8);
-  double circleDiameter      = ini.getd("Environment", "CircleDiameter", 1.2);
-//   double lineWidth           = ini.getd("Environment", "LineWidth", 0.05);
-//   double penaltyLineLength   = ini.getd("Environment", "PenaltyLineLength", 0.1);
-  d_outerMarginMinimum  = ini.getd("Environment", "OuterMarginMinimum", 0.7);
-//   double ballDiameter        = ini.getd("Environment", "BallDiameter", 0.067); // according to Wikipedia
+  d_fieldLengthX              = getParam("FieldSizeX", 6.0);
+  d_fieldLengthY              = getParam("FieldSizeY", 4.0);
+//   double goalX               = getParam("GoalSizeX", 0.5);
+  double goalY               = getParam("GoalSizeY", 1.5);
+//   double goalZ               = getParam("GoalSizeZ", 0.8);
+//   double goalPostDiameter    = getParam("GoalPostDiameter", 0.1);
+  double goalAreaX           = getParam("GoalAreaSizeX", 0.6);
+  double goalAreaY           = getParam("GoalAreaSizeY", 2.2);
+//   double penaltyMarkDistance = getParam("PenaltyMarkDistance", 1.8);
+  double circleDiameter      = getParam("CircleDiameter", 1.2);
+//   double lineWidth           = getParam("LineWidth", 0.05);
+//   double penaltyLineLength   = getParam("PenaltyLineLength", 0.1);
+  d_outerMarginMinimum  = getParam("OuterMarginMinimum", 0.7);
+//   double ballDiameter        = getParam("BallDiameter", 0.067); // according to Wikipedia
 
 //   double halfCrossLength = penaltyLineLength/2;
 //   double penaltyX = d_fieldLengthX/2 - penaltyMarkDistance;
