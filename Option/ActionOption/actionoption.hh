@@ -21,7 +21,7 @@ namespace bold
   public:
     ActionOption(std::string const& id, std::string const& actionName, std::shared_ptr<ActionModule> actionModule);
 
-    ActionOption(std::string const& id, ActionPage actionPage);
+    ActionOption(std::string const& id, ActionPage actionPage, std::shared_ptr<ActionModule> actionModule);
 
     virtual double hasTerminated() override;
 
@@ -42,8 +42,9 @@ namespace bold
       d_started(false)
   {}
 
-  inline ActionOption::ActionOption(std::string const& id, ActionPage actionPage)
+  inline ActionOption::ActionOption(std::string const& id, ActionPage actionPage, std::shared_ptr<ActionModule> actionModule)
     : Option(id),
+      d_actionModule(actionModule),
       d_actionName(""),
       d_actionPage(actionPage),
       d_started(false)
