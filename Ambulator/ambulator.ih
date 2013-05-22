@@ -3,6 +3,7 @@
 #include "../AgentState/agentstate.hh"
 #include "../Math/math.hh"
 #include "../MotionModule/WalkModule/walkmodule.hh"
+#include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 
 #include <iostream>

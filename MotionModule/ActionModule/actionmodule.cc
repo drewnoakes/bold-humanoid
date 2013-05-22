@@ -2,8 +2,9 @@
 
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../AgentState/agentstate.hh"
-#include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../MX28Snapshot/mx28snapshot.hh"
+#include "../../StateObject/HardwareState/hardwarestate.hh"
 
 #include <iostream>
 #include <string.h>
@@ -11,10 +12,10 @@
 using namespace bold;
 using namespace std;
 
-ActionModule::ActionModule()
-  : MotionModule("action"), 
-    d_file(nullptr),
-    d_isRunning(false)
+ActionModule::ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler)
+: MotionModule("action", scheduler),
+  d_file(nullptr),
+  d_isRunning(false)
 {}
 
 ActionModule::~ActionModule()
@@ -195,8 +196,11 @@ bool ActionModule::start(int index, PAGE *page)
   }
 
   d_playingPageIndex = index;
-  m_FirstDrivingStart = true;
-  d_isRunning = true;
+  d_firstDrivingStart = true;
+  d_isRunning = false; // will be set to true once 'step' is called
+  
+  getScheduler()->add(make_shared<MotionTask>(this, JointSelection::all(), Priority::Normal, true));
+  
   return true;
 }
 
@@ -259,7 +263,7 @@ bool ActionModule::savePage(int index, PAGE *page)
   return true;
 }
 
-bool ActionModule::step(JointSelection const& selectedJoints)
+bool ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   unsigned long ulTotalTime256T;
   unsigned long ulPreSectionTime256T;
@@ -310,13 +314,11 @@ bool ActionModule::step(JointSelection const& selectedJoints)
   enum{ PRE_SECTION, MAIN_SECTION, POST_SECTION, PAUSE_SECTION };
   enum{ ZERO_FINISH, NON_ZERO_FINISH};
 
-  if (!d_isRunning)
-    return false;
-
-  if (m_FirstDrivingStart)
+  if (d_firstDrivingStart)
   {
-    m_FirstDrivingStart = false; //First Process end
-    m_PlayingFinished = false;
+    d_isRunning = true;
+    d_firstDrivingStart = false; //First Process end
+    d_playingFinished = false;
     d_stopRequested = false;
     wUnitTimeCount = 0;
     wUnitTimeNum = 0;
@@ -328,7 +330,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
 
     for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
     {
-      if (selectedJoints[bID])
+      if ((*selectedJoints)[bID])
       {
         wpTargetAngle1024[bID] = hw->getMX28State(bID)->presentPositionValue; // MotionStatus::m_CurrentJoints.GetValue(bID);
         ipLastOutSpeed1024[bID] = 0;
@@ -337,6 +339,9 @@ bool ActionModule::step(JointSelection const& selectedJoints)
       }
     }
   }
+
+  if (!d_isRunning)
+    return false;
 
   if (wUnitTimeCount < wUnitTimeNum)
   {
@@ -348,7 +353,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
     {
       for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
-        if (selectedJoints[bID])
+        if ((*selectedJoints)[bID])
         {
           if (ipMovingAngle1024[bID] == 0)
             d_values[bID] = wpStartAngle1024[bID];
@@ -403,7 +408,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
 
     for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
     {
-      if (selectedJoints[bID])
+      if ((*selectedJoints)[bID])
       {
         wpStartAngle1024[bID] = hw->getMX28State(bID)->presentPositionValue;
         ipLastOutSpeed1024[bID] = ipGoalSpeed1024[bID];
@@ -419,7 +424,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
 
       for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
-        if (selectedJoints[bID])
+        if ((*selectedJoints)[bID])
         {
           if (bpFinishType[bID] == NON_ZERO_FINISH)
           {
@@ -441,7 +446,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
 
       for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
-        if (selectedJoints[bID])
+        if ((*selectedJoints)[bID])
           ipMainAngle1024[bID] = ipMovingAngle1024[bID] - ipMainAngle1024[bID] - ipAccelAngle1024[bID];
       }
     }
@@ -465,7 +470,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
 
       for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
-        if (selectedJoints[bID])
+        if ((*selectedJoints)[bID])
           ipLastOutSpeed1024[bID] = 0;
       }
     }
@@ -473,7 +478,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
     // PRE Section
     if (bSection == PRE_SECTION)
     {
-      if (m_PlayingFinished)
+      if (d_playingFinished)
       {
         d_isRunning = false;
         return false;
@@ -507,7 +512,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
 
         if (wNextPlayPage == 0)
         {
-          m_PlayingFinished = true;
+          d_playingFinished = true;
         }
         else
         {
@@ -517,7 +522,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
             m_NextPlayPage = d_playingPage;
 
           if (m_NextPlayPage.header.repeat == 0 || m_NextPlayPage.header.stepnum == 0)
-            m_PlayingFinished = true;
+            d_playingFinished = true;
         }
       }
 
@@ -531,7 +536,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
       ////////// Joint
       for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
-        if (!selectedJoints[bID])
+        if (!(*selectedJoints)[bID])
           continue;
 
         ipAccelAngle1024[bID] = 0;
@@ -553,7 +558,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
         // Find Next target angle
         if (m_PageStepCount == d_playingPage.header.stepnum)
         {
-          if (m_PlayingFinished)
+          if (d_playingFinished)
             wNextTargetAngle = wCurrentTargetAngle;
           else
           {
@@ -583,7 +588,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
         }
 
         // Find finish type
-        if (bDirectionChanged || wPauseTime || m_PlayingFinished)
+        if (bDirectionChanged || wPauseTime || d_playingFinished)
         {
           bpFinishType[bID] = ZERO_FINISH;
         }
@@ -642,7 +647,7 @@ bool ActionModule::step(JointSelection const& selectedJoints)
 
       for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
       {
-        if (selectedJoints[bID])
+        if ((*selectedJoints)[bID])
         {
           lStartSpeed1024_PreTime_256T = (long)ipLastOutSpeed1024[bID] * ulPreSectionTime256T; //  *300/1024 * 1024/720 * 256 * 2
           lMovingAngle_Speed1024Scale_256T_2T = (((long)ipMovingAngle1024[bID]) * 2560L) / 12;

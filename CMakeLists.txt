@@ -161,6 +161,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./FieldMap/FieldMap.cc
+)
+
+add_class(BOLDHUMANOID
   ./GameStateReceiver/GameStateReceiver.cc
   ./GameStateReceiver/receive.cc
 )
@@ -241,6 +245,10 @@ add_class(BOLDHUMANOID
   ./MotionModule/WalkModule/Matrix.cpp
   ./MotionModule/WalkModule/Point.cpp
   ./MotionModule/WalkModule/Vector.cpp
+)
+
+add_class(BOLDHUMANOID
+  ./MotionTaskScheduler/update.cc
 )
 
 add_class(BOLDHUMANOID
@@ -346,6 +354,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/MotionTaskState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/OptionTreeState/writeJson.cc
 )
 
@@ -373,10 +385,6 @@ add_class(BOLDHUMANOID
   ./VisualCortex/VisualCortex.cc
   ./VisualCortex/integrateImage.cc
   ./VisualCortex/streamDebugImage.cc
-)
-
-add_class(BOLDHUMANOID
-  ./FieldMap/FieldMap.cc
 )
 
 #

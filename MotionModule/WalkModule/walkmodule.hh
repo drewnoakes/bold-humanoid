@@ -79,8 +79,8 @@ namespace bold
     double d_hipPitchOffset;
     double d_armSwingGain;
 
-    bool d_isStopRequested;
-    bool d_isRunning;
+    bool   d_isStopRequested;
+    bool   d_isRunning;
     double d_time;
 
     int    d_phase;
@@ -97,7 +97,7 @@ namespace bold
     void updateBalanceParams();
 
   public:
-    WalkModule();
+    WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler);
 
     virtual ~WalkModule();
 
@@ -136,7 +136,7 @@ namespace bold
     int    D_GAIN;
 
     void initialize() override;
-    bool step(JointSelection const& selectedJoints) override;
+    bool step(std::shared_ptr<JointSelection> selectedJoints) override;
     void applyHead(std::shared_ptr<HeadSection> head) override;
     void applyArms(std::shared_ptr<ArmSection> arms) override;
     void applyLegs(std::shared_ptr<LegSection> legs) override;

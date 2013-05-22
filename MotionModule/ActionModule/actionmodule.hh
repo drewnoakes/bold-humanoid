@@ -56,8 +56,8 @@ namespace bold
     typedef struct // Step Structure (total 64 bytes)
     {
       unsigned short position[31];    // Joint position   0~61
-      uchar pause;            // Pause time       62
-      uchar time;             // Time             63
+      uchar pause;                    // Pause time       62
+      uchar time;                     // Time             63
     } STEP;
 
     typedef struct // Page Structure (total 512 bytes)
@@ -77,11 +77,11 @@ namespace bold
     STEP m_CurrentStep;
 
     int d_playingPageIndex;
-    bool m_FirstDrivingStart;
+    bool d_firstDrivingStart;
     int m_PageStepCount;
     bool d_isRunning;
     bool d_stopRequested;
-    bool m_PlayingFinished;
+    bool d_playingFinished;
 
     bool d_active[21];
     unsigned short d_pGains[21];
@@ -93,12 +93,12 @@ namespace bold
     void setChecksum(PAGE *pPage);
 
   public:
-    ActionModule();
+    ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler);
 
     ~ActionModule();
 
     void initialize() override;
-    bool step(JointSelection const& selectedJoints) override;
+    bool step(std::shared_ptr<JointSelection> selectedJoints) override;
     void applyHead(std::shared_ptr<HeadSection> head) override;
     void applyArms(std::shared_ptr<ArmSection> arms) override;
     void applyLegs(std::shared_ptr<LegSection> legs) override;

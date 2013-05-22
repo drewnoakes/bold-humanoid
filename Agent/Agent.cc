@@ -22,10 +22,11 @@ Agent::Agent()
 //   d_cm730->DEBUG_PRINT = true;
 
   // Create motion modules
-  d_walkModule = make_shared<WalkModule>();
-  d_actionModule = make_shared<ActionModule>();
+  auto scheduler = make_shared<MotionTaskScheduler>();
+  d_walkModule = make_shared<WalkModule>(scheduler);
+  d_actionModule = make_shared<ActionModule>(scheduler);
   d_actionModule->loadFile(d_motionFile);
-  d_headModule = make_shared<HeadModule>();
+  d_headModule = make_shared<HeadModule>(scheduler);
 
   // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();
@@ -77,7 +78,7 @@ Agent::Agent()
   {
     readStaticHardwareState();
 
-    d_motionLoop = make_shared<MotionLoop>(d_cm730);
+    d_motionLoop = make_shared<MotionLoop>(d_cm730, scheduler);
 
     d_motionLoop->addModule(d_actionModule);
     d_motionLoop->addModule(d_walkModule);

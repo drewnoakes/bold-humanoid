@@ -33,6 +33,7 @@ void Ambulator::step()
     if (!d_walkModule->isRunning())
     {
 //       cout << "[Ambulator] Starting Walker" << endl;
+      d_walkModule->getScheduler()->add(make_shared<MotionTask>(d_walkModule.get(), JointSelection::armsAndLegs(), Priority::Normal, true));
       d_walkModule->start();
     }
   }

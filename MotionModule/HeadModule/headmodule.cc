@@ -1,15 +1,17 @@
 #include "headmodule.hh"
 
-#include "../Math/math.hh"
-#include "../BodyControl/bodycontrol.hh"
 #include "../AgentState/agentstate.hh"
+#include "../BodyControl/bodycontrol.hh"
+#include "../Math/math.hh"
+#include "../MotionTaskScheduler/motiontaskscheduler.hh"
+
 #include <iostream>
 
 using namespace bold;
 using namespace std;
 
-HeadModule::HeadModule()
-  : MotionModule("head")
+HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
+: MotionModule("head", scheduler)
 {
   d_panGainP    = getParam("pan_p_gain", 0.1);
   d_panGainD    = getParam("pan_d_gain", 0.22);
@@ -29,6 +31,8 @@ HeadModule::HeadModule()
 
 HeadModule::~HeadModule()
 {}
+
+constexpr double HeadModule::EYE_TILT_OFFSET_ANGLE;
 
 void HeadModule::checkLimit()
 {
@@ -54,6 +58,8 @@ void HeadModule::moveToAngle(double pan, double tilt)
 {
   d_panAngle = pan;
   d_tiltAngle = tilt;
+  
+  getScheduler()->add(make_shared<MotionTask>(this, JointSelection::head(), Priority::Normal, false));
 
   checkLimit();
 }
@@ -96,7 +102,7 @@ void HeadModule::moveTracking(double panError, double tiltError)
   checkLimit();
 }
 
-bool HeadModule::step(JointSelection const& selectedJoints)
+bool HeadModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   // TODO implement a head movement that updates its target position every 8ms instead of every 30ms, for smoother movements
   return false;

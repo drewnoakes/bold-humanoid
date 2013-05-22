@@ -5,9 +5,11 @@
 #include "../CM730/cm730.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../Debugger/debugger.hh"
+#include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
 
 #include <time.h>
@@ -17,8 +19,9 @@
 using namespace bold;
 using namespace std;
 
-MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
+MotionLoop::MotionLoop(shared_ptr<CM730> cm730, shared_ptr<MotionTaskScheduler> schedule)
 : d_cm730(cm730),
+  d_schedule(schedule),
   d_isStarted(false),
   d_stopRequested(false),
   d_loopDurationMillis(8),
@@ -35,6 +38,21 @@ MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
 MotionLoop::~MotionLoop()
 {
   stop();
+}
+
+void MotionLoop::addModule(shared_ptr<MotionModule> module)
+{
+  assert(module);
+  
+  // Initialise modules each time they are added
+  module->initialize();
+
+  d_modules.push_back(module);
+}
+
+void MotionLoop::removeModule(shared_ptr<MotionModule> module)
+{
+  d_modules.remove(module);
 }
 
 bool MotionLoop::start()
@@ -107,21 +125,6 @@ void MotionLoop::stop()
   d_isStarted = false;
 }
 
-void MotionLoop::addModule(shared_ptr<MotionModule> module)
-{
-  assert(module);
-  
-  // Initialise modules each time they are added
-  module->initialize();
-
-  d_modules.push_back(module);
-}
-
-void MotionLoop::removeModule(shared_ptr<MotionModule> module)
-{
-  d_modules.remove(module);
-}
-
 void *MotionLoop::threadMethod(void *param)
 {
   cout << "[MotionLoop::threadMethod] Started" << endl;
@@ -154,27 +157,37 @@ void *MotionLoop::threadMethod(void *param)
 
 void MotionLoop::step(SequentialTimer& t)
 {
-//   cout << "[MotionLoop::step]" << endl;
-  
   if (d_readYet)
   {
     //
     // LET MOTION MODULES UPDATE BODY CONTROL
     //
-
-    // TODO only step modules that are in use
-    for (auto const& module : d_modules)
+    
+    // Force a refresh of MotionTaskState, if there is one
+    d_schedule->update();
+    
+    auto tasks = AgentState::get<MotionTaskState>();
+    
+    for (pair<shared_ptr<MotionTask>, shared_ptr<JointSelection>> const& pair : *tasks->getModuleJointSelection())
     {
-      module->step(JointSelection(true, true, true));
-    }
-    t.timeEvent("Step Modules");
+      shared_ptr<MotionTask> task = pair.first;
+      shared_ptr<JointSelection> jointSelection = pair.second;
+      auto module = task->getModule();
+      
+      if (!module->step(jointSelection) && task->isCommitRequested())
+        d_schedule->remove(task);
 
-    // TODO apply body section updates via modules, as appropriate
-    for (auto const& module : d_modules)
-    {
-      module->applyHead(d_bodyControl->getHeadSection());
+      if (jointSelection->hasHead())
+        module->applyHead(d_bodyControl->getHeadSection());
+      
+      if (jointSelection->hasArms())
+        module->applyArms(d_bodyControl->getArmSection());
+      
+      if (jointSelection->hasLegs())
+        module->applyLegs(d_bodyControl->getLegSection());
+
+      t.timeEvent("Step & Apply Module (" + module->getName() + ")");
     }
-    t.timeEvent("Apply Body Sections");
 
     //
     // WRITE UPDATE

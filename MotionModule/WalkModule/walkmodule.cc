@@ -16,8 +16,8 @@
 using namespace bold;
 using namespace std;
 
-WalkModule::WalkModule()
-  : MotionModule("walk")
+WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
+: MotionModule("walk", scheduler)
 {
   string section = "Walk Module";
 
@@ -261,8 +261,6 @@ void WalkModule::initialize()
   d_time = 0;
   updateTimeParams();
   updateMovementParams();
-
-//  step(JointSelection(true, true, true));
 }
 
 void WalkModule::start()
@@ -281,7 +279,7 @@ bool WalkModule::isRunning()
   return d_isRunning;
 }
 
-bool WalkModule::step(JointSelection const& selectedJoints)
+bool WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   double x_swap, y_swap, z_swap, a_swap, b_swap, c_swap;
   double x_move_r, y_move_r, z_move_r, a_move_r, b_move_r, c_move_r;
