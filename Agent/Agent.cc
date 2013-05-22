@@ -6,7 +6,7 @@ Agent::Agent()
 {
   cout << "[Agent::Agent] Start" << endl;
 
-  cout << "U2D dev name: " << getParam("u2dDevName", string("unkown")) << endl;
+  cout << "U2D dev name: " << getParam("u2dDevName", string("unknown")) << endl;
 
   registerStateTypes();
 
