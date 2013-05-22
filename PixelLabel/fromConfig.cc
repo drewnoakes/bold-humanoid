@@ -11,12 +11,12 @@ PixelLabel PixelLabel::fromConfig(
   )
 {
   Colour::hsvRange hsvRange;
-  hsvRange.h      = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".hue", hue);
-  hsvRange.hRange = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".hueRange", hueRange);
-  hsvRange.s      = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".saturation", saturation);
-  hsvRange.sRange = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".saturationRange", saturationRange);
-  hsvRange.v      = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".value", value);
-  hsvRange.vRange = Configurable::getConfImpl()->getParam(std::string("vision.") + objectName + ".valueRange", valueRange);
+  hsvRange.h      = Configurable::getParam("vision", objectName + ".hue", hue);
+  hsvRange.hRange = Configurable::getParam("vision", objectName + ".hueRange", hueRange);
+  hsvRange.s      = Configurable::getParam("vision", objectName + ".saturation", saturation);
+  hsvRange.sRange = Configurable::getParam("vision", objectName + ".saturationRange", saturationRange);
+  hsvRange.v      = Configurable::getParam("vision", objectName + ".value", value);
+  hsvRange.vRange = Configurable::getParam("vision", objectName + ".valueRange", valueRange);
 
   return PixelLabel(hsvRange, objectName);
 }

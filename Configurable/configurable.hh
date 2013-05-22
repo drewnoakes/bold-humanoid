@@ -30,11 +30,16 @@ namespace bold
     static ConfImpl* getConfImpl() { return s_confImpl; }
 
     template <typename T>
-    T getParam(std::string const& path, T const& defVal)
+    static T getParam(std::string const& nameSpace, std::string const& path, T const& defVal)
     {
       assert(s_confImpl && "Configuration implementation has not been set.");
-      return s_confImpl->getParam(d_nameSpace + "." + path, defVal);
-      
+      return s_confImpl->getParam(nameSpace + "." + path, defVal);
+    }
+
+    template <typename T>
+    T getParam(std::string const& path, T const& defVal)
+    {
+      return getParam(d_nameSpace, path, defVal);
     }
 
   protected:
