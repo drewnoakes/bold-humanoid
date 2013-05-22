@@ -4,6 +4,7 @@
 [submodule "libwebsockets"]
 	path = libwebsockets
 	url = git@bitbucket.org:boldhearts/libwebsockets.git
+	ignore = untracked
 [submodule "rapidjson"]
 	path = rapidjson
 	url = git@bitbucket.org:boldhearts/rapidjson
