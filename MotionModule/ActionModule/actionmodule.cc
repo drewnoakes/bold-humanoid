@@ -259,7 +259,7 @@ bool ActionModule::savePage(int index, PAGE *page)
   return true;
 }
 
-void ActionModule::step(JointSelection const& selectedJoints)
+bool ActionModule::step(JointSelection const& selectedJoints)
 {
   unsigned long ulTotalTime256T;
   unsigned long ulPreSectionTime256T;
@@ -311,7 +311,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
   enum{ ZERO_FINISH, NON_ZERO_FINISH};
 
   if (!d_isRunning)
-    return;
+    return false;
 
   if (m_FirstDrivingStart)
   {
@@ -476,7 +476,7 @@ void ActionModule::step(JointSelection const& selectedJoints)
       if (m_PlayingFinished)
       {
         d_isRunning = false;
-        return;
+        return false;
       }
 
       m_PageStepCount++;
@@ -661,6 +661,8 @@ void ActionModule::step(JointSelection const& selectedJoints)
       wUnitTimeNum = wAccelStep; //PreSection
     }
   }
+  
+  return true;
 }
 
 void ActionModule::applySection(shared_ptr<BodySection> section)

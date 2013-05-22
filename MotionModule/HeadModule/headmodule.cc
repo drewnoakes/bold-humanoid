@@ -96,9 +96,10 @@ void HeadModule::moveTracking(double panError, double tiltError)
   checkLimit();
 }
 
-void HeadModule::step(JointSelection const& selectedJoints)
+bool HeadModule::step(JointSelection const& selectedJoints)
 {
   // TODO implement a head movement that updates its target position every 8ms instead of every 30ms, for smoother movements
+  return false;
 }
 
 void HeadModule::applyHead(std::shared_ptr<HeadSection> head)

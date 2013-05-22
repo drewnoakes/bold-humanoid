@@ -281,7 +281,7 @@ bool WalkModule::isRunning()
   return d_isRunning;
 }
 
-void WalkModule::step(JointSelection const& selectedJoints)
+bool WalkModule::step(JointSelection const& selectedJoints)
 {
   double x_swap, y_swap, z_swap, a_swap, b_swap, c_swap;
   double x_move_r, y_move_r, z_move_r, a_move_r, b_move_r, c_move_r;
@@ -473,7 +473,7 @@ void WalkModule::step(JointSelection const& selectedJoints)
       computeIK(&angle[6], ep[6], ep[7], ep[8], ep[9], ep[10], ep[11]) != 1)
   {
     // Do not use angle;
-    return;
+    return d_isRunning;
   }
 
   // Convert leg angles from radians to degrees (skip shoulders and head pan)
@@ -542,6 +542,8 @@ void WalkModule::step(JointSelection const& selectedJoints)
 //     d_jointData.setIGain(id, I_GAIN);
 //     d_jointData.setDGain(id, D_GAIN);
 //   }
+
+  return d_isRunning;
 }
 
 void WalkModule::applyHead(shared_ptr<HeadSection> head)

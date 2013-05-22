@@ -50,19 +50,11 @@ namespace bold
 
     virtual void initialize() = 0;
 
-    virtual void step(JointSelection const& selectedJoints) = 0;
+    /// Updates the position. Returns false if the module considers this to be the
+    /// final step required for the current MotionTask.
+    virtual bool step(JointSelection const& selectedJoints) = 0;
     virtual void applyHead(std::shared_ptr<HeadSection> head) = 0;
     virtual void applyArms(std::shared_ptr<ArmSection> arms) = 0;
     virtual void applyLegs(std::shared_ptr<LegSection> legs) = 0;
   };
 }
-
-
-
-
-
-
-
-
-
-
