@@ -8,7 +8,6 @@ Agent::Agent()
 
   cout << "U2D dev name: " << getParam("u2dDevName", string("unkown")) << endl;
 
-  /*
   registerStateTypes();
 
   // Register state observers
@@ -18,15 +17,15 @@ Agent::Agent()
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   AgentState::getInstance().registerObserver<HardwareState>(d_gyroCalibrator);
 
-  d_cm730Linux = make_shared<CM730Linux>(U2D_dev.c_str());
+  d_cm730Linux = make_shared<CM730Linux>(getParam("u2dDevName", string("")));
   d_cm730 = make_shared<CM730>(d_cm730Linux);
 //   d_cm730->DEBUG_PRINT = true;
 
   // Create motion modules
-  d_walkModule = make_shared<WalkModule>(d_ini);
+  d_walkModule = make_shared<WalkModule>();
   d_actionModule = make_shared<ActionModule>();
   d_actionModule->loadFile(d_motionFile);
-  d_headModule = make_shared<HeadModule>(d_ini);
+  d_headModule = make_shared<HeadModule>();
 
   // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();
@@ -34,34 +33,36 @@ Agent::Agent()
   if (!d_haveBody)
     cout << "[Agent::Agent] Unable to connect to body" << endl;
 
-  d_ambulator = make_shared<Ambulator>(d_walkModule, d_ini),
+  d_ambulator = make_shared<Ambulator>(d_walkModule),
 
-  d_cameraModel = make_shared<CameraModel>(d_ini);
+  d_cameraModel = make_shared<CameraModel>();
 
   d_spatialiser = make_shared<Spatialiser>(d_cameraModel);
 
-  d_fieldMap = make_shared<FieldMap>(d_ini);
+  d_fieldMap = make_shared<FieldMap>();
 
   d_debugger = make_shared<Debugger>();
 
-  d_localiser = make_shared<Localiser>(d_fieldMap, d_ini);
+  d_localiser = make_shared<Localiser>(d_fieldMap);
 
-  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, d_headModule, d_ini);
+  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, d_headModule);
 
-  d_gameStateReceiver = make_shared<GameStateReceiver>(d_ini, d_debugger);
+  d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger);
+
+  bool useJoystick = getParam("useJoystick", false);
 
   if (useJoystick)
   {
     d_joystick = make_shared<Joystick>(1);
-    d_joystickXAmpMax = d_ini.getd("Joystick", "XAmpMax", 15);
-    d_joystickYAmpMax = d_ini.getd("Joystick", "YAmpMax", 15);
-    d_joystickAAmpMax = d_ini.getd("Joystick", "AAmpMax", 15);
+    d_joystickXAmpMax = Configurable::getParam("joystick", "xAmpMax", 15);
+    d_joystickYAmpMax = Configurable::getParam("joystick", "yAmpMax", 15);
+    d_joystickAAmpMax = Configurable::getParam("joystick", "aAmpMax", 15);
   }
 
-  initCamera(d_ini);
+  initCamera();
 
   // TODO only stream if argument specified?
-  d_streamer = make_shared<DataStreamer>(d_ini, d_camera, d_debugger);
+  d_streamer = make_shared<DataStreamer>(d_camera, d_debugger);
 
   // TODO a better abstraction over control providers
   d_streamer->registerControls("camera", d_camera->getControls());
@@ -86,7 +87,6 @@ Agent::Agent()
   {
     cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
   }
-  */
 
   cout << "[Agent::Agent] Done" << endl;
 }
