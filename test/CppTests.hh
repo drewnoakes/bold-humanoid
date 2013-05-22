@@ -134,6 +134,24 @@ TEST (CppTests, swappingSharedPointers)
   EXPECT_EQ( 1, *b );
 }
 
+TEST (CppTests, vectorEraseRemove)
+{
+  std::vector<int> vec = {1, 2, 3, 3, 3, 4};
+  
+  vec.erase(
+    std::remove_if(
+      vec.begin(), vec.end(),
+      [](int i) { return i == 3;}
+    ),
+    vec.end()
+  );
+  
+  EXPECT_EQ( 3, vec.size() );
+  EXPECT_EQ( 1, vec[0] );
+  EXPECT_EQ( 2, vec[1] );
+  EXPECT_EQ( 4, vec[2] );
+}
+
 ///
 /// ATOMIC OPERATIONS
 ///
