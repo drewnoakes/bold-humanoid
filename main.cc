@@ -42,10 +42,10 @@ int main(int argc, char **argv)
   Configurable::setConfImpl(new ConfImpl());
 
   // defaults
-  bool useJoystick = false;
-  bool autoGetUpFromFallen = true;
-  bool recordFrames = false;
-  bool useOptionTree = true;
+//   bool useJoystick = false;
+//   bool autoGetUpFromFallen = true;
+//   bool recordFrames = false;
+//   bool useOptionTree = true;
   unsigned teamNumber = 9;
   unsigned uniformNumber = 0;
   bool ignoreGameController = false;
@@ -69,22 +69,22 @@ int main(int argc, char **argv)
     {
       uniformNumber = atoi(argv[++i]);
     }
-    else if (arg == "-j" || arg == "--joystick")
-    {
-      useJoystick = true;
-    }
-    else if (arg == "-g" || arg == "--no-get-up")
-    {
-      autoGetUpFromFallen = false;
-    }
-    else if (arg == "-t" || arg == "--no-tree")
-    {
-      useOptionTree = false;
-    }
-    else if (arg == "-r" || arg == "--record")
-    {
-      recordFrames = true;
-    }
+//     else if (arg == "-j" || arg == "--joystick")
+//     {
+//       useJoystick = true;
+//     }
+//     else if (arg == "-g" || arg == "--no-get-up")
+//     {
+//       autoGetUpFromFallen = false;
+//     }
+//     else if (arg == "-t" || arg == "--no-tree")
+//     {
+//       useOptionTree = false;
+//     }
+//     else if (arg == "-r" || arg == "--record")
+//     {
+//       recordFrames = true;
+//     }
     else if (arg == "--nogc")
     {
       ignoreGameController = true;
