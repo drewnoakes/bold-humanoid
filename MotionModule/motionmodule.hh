@@ -19,7 +19,7 @@ namespace bold
     JointSelection(bool head, bool arms, bool legs)
     {
       bool set = arms;
-      for (uchar jointId = 1; jointId <= 20; jointId++)
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
         if (jointId == (int)JointId::LEGS_START)
           set = legs;

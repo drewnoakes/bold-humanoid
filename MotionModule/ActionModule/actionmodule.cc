@@ -506,7 +506,9 @@ bool ActionModule::step(JointSelection const& selectedJoints)
         }
 
         if (wNextPlayPage == 0)
+        {
           m_PlayingFinished = true;
+        }
         else
         {
           if (d_playingPageIndex != wNextPlayPage)

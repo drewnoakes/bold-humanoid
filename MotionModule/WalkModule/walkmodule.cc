@@ -289,7 +289,7 @@ bool WalkModule::step(JointSelection const& selectedJoints)
   double pelvis_offset_r, pelvis_offset_l;
   double angle[14], ep[12];
   double offset;
-  double TIME_UNIT = MotionModule::TIME_UNIT;
+//   double TIME_UNIT = MotionModule::TIME_UNIT;
   //                     R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
   int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
   double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
