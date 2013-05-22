@@ -74,5 +74,9 @@ namespace bold
     Eigen::Affine3d d_torsoWorldRotation;
     /// Transform of camera, including rotation of torso in agent/world frames
     Eigen::Affine3d d_cameraAgentTransform;
+
+  public:
+    // Needed when having fixed sized Eigen member
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   };
 }
