@@ -14,6 +14,6 @@ swig_add_module(bold python ${CMAKE_SOURCE_DIR}/swig/boldpy.i $<TARGET_OBJECTS:b
 
 swig_link_libraries(bold ${PYTHON_LIBRARIES})
 
-set_target_properties(${SWIG_MODULE_bold_REAL_NAME} PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
+set_target_properties(${SWIG_MODULE_bold_REAL_NAME} PROPERTIES COMPILE_FLAGS "${BOLDHUMANOID_COMPILE_FLAGS} -w")
 add_dependencies(${SWIG_MODULE_bold_REAL_NAME} boldhumanoid_objects)
 target_link_libraries(${SWIG_MODULE_bold_REAL_NAME} ${BOLDHUMANOID_LINK_LIBRARIES})
