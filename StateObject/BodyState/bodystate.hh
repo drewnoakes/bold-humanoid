@@ -35,7 +35,7 @@ namespace bold
 
     std::shared_ptr<Joint const> getJoint(JointId jointId) const
     {
-      assert((unsigned)jointId > 0 && (unsigned)jointId <= NUMBER_OF_JOINTS);
+      assert(jointId >= JointId::MIN && jointId <= JointId::MAX);
 
       // NOTE cannot use '[]' on a const map
       auto const& i = d_jointById.find((unsigned)jointId);
@@ -46,7 +46,7 @@ namespace bold
 
     void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
     {
-      for (unsigned jointId = 1; jointId <= NUMBER_OF_JOINTS; jointId++)
+      for (unsigned jointId = (unsigned)JointId::MIN; jointId <= (unsigned)JointId::MAX; jointId++)
       {
         auto joint = getJoint((JointId)jointId);
         action(joint);
@@ -60,8 +60,6 @@ namespace bold
     double getTorsoHeight() const { return d_torsoHeight; }
 
   private:
-    const int NUMBER_OF_JOINTS = 20;
-
     void initBody(double angles[]);
 
     double d_torsoHeight;

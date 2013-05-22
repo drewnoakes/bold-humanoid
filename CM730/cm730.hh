@@ -256,8 +256,6 @@ namespace bold
     void resetByteCounts() { d_platform->resetByteCounts(); }
 
   private:
-    static const uchar NUMBER_OF_JOINTS = 20;
-
     std::shared_ptr<CM730Platform> d_platform;
     uchar d_controlTable[MAXNUM_ADDRESS];
 

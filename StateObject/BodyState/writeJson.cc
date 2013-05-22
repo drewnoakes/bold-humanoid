@@ -10,7 +10,7 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("angles");
     writer.StartArray();
     {
-      for (unsigned j = 1; j < NUMBER_OF_JOINTS; j++)
+      for (unsigned j = (unsigned)JointId::MIN; j <= (unsigned)JointId::MAX; j++)
       {
         auto it = d_jointById.find(j);
         writer.Double(it->second->angle);
