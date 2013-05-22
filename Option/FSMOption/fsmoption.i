@@ -27,7 +27,7 @@ namespace bold
     std::vector<FSMTransitionPtr> transitions;
     std::vector<std::shared_ptr<Option> > options;
 
-    double startTime;
+    double startTimeSeconds;
 
     double secondsSinceStart();
     bool allOptionsTerminated() const;

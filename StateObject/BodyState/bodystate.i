@@ -14,7 +14,7 @@ namespace bold
 
     std::shared_ptr<Limb const> getTorso() const;
     std::shared_ptr<Limb const> getLimb(std::string const& name) const;
-    std::shared_ptr<Joint const> getJoint(unsigned jointId) const;
+    std::shared_ptr<Joint const> getJoint(JointId jointId) const;
   };
 
 }

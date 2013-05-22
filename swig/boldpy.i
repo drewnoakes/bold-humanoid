@@ -14,6 +14,8 @@
 // Have to list all classes of which a shared_ptr is used (plus their
 // (grand)parent classes, just to be sure). Must be listed before any
 // use
+%shared_ptr(bold::Configurable)
+%shared_ptr(bold::Agent)
 %shared_ptr(bold::StateObject)
 %shared_ptr(bold::AgentFrameState)
 %shared_ptr(bold::AlarmState)

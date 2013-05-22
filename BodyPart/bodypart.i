@@ -4,6 +4,8 @@
 
 namespace bold
 {
+  class JointId;
+
   struct BodyPart
   {
     std::string name;
@@ -28,7 +30,7 @@ namespace bold
   {
     Eigen::Vector3d axis;
 
-    int id;
+    JointId id;
     double angle;
     std::shared_ptr<BodyPart> bodyPart;
     std::pair<Eigen::Vector3d, Eigen::Vector3d> anchors;

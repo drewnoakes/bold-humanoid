@@ -8,7 +8,6 @@
 #include <StateObject/ParticleState/particlestate.hh>
 #include <StateObject/WorldFrameState/worldframestate.hh>
 #include <StateObject/OptionTreeState/optiontreestate.hh>
-#include <StateObject/AlarmState/alarmstate.hh>
 #include <StateObject/BodyState/bodystate.hh>
 #include <StateObject/DebugState/debugstate.hh>
 %}
@@ -38,7 +37,6 @@ namespace bold
 %enddef
 
 STATEOBJECT_TEMPLATE(AgentFrameState);
-STATEOBJECT_TEMPLATE(AlarmState);
 STATEOBJECT_TEMPLATE(AmbulatorState);
 STATEOBJECT_TEMPLATE(BodyState);
 STATEOBJECT_TEMPLATE(CameraFrameState);
