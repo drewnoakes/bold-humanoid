@@ -172,6 +172,8 @@ void MotionLoop::step(SequentialTimer& t)
     {
       shared_ptr<MotionTask> task = pair.first;
       shared_ptr<JointSelection> jointSelection = pair.second;
+      assert(task);
+      assert(jointSelection);
       auto module = task->getModule();
       
       if (!module->step(jointSelection) && task->isCommitRequested())
