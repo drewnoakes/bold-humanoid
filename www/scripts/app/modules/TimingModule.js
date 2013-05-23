@@ -26,7 +26,10 @@ define(
             labels: {
                 fillStyle: '#ffffff'
             },
-            minValue: 0
+            yRangeFunction: function (range)
+            {
+                return {min: 0, max: Math.max(30, range.max)};
+            }
         };
 
         var seriesOptions = {
