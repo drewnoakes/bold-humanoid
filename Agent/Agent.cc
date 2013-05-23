@@ -11,8 +11,10 @@ Agent::Agent()
   cout << "[Agent::Agent] Start" << endl;
 
   auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));
-  
   cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
+  
+  d_motionFile = "./motion_4096.bin";
+  cout << "[Agent::Agent] Using motion file: " << d_motionFile << endl;
 
   registerStateTypes();
 
