@@ -5,6 +5,12 @@
 // Create a lot of docs
 %feature("autodoc", "3");
 
+%feature("director:except") {
+    if ($error != NULL) {
+        throw Swig::DirectorMethodException();
+    }
+}
+
 // Include std library interfaces
 %include <stl.i>
 %include <std_shared_ptr.i>

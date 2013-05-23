@@ -1,37 +1,62 @@
 #!/usr/bin/env python3
 
 import sys, getopt
+
+sys.path.append("swig")
+sys.path.append("build/swig")
+
 import bold
 import numpy as np
 
 """
 Configuration
 """
+
 class Param:
     """
     Empty class used to build parameter hierarchies
     """
     def __init__(self, **kwds):
         self.__dict__.update(kwds)
-    def add(seld, **kwds):
-        seld.__dict__.update(kwds)
+
+    def add(self, kwds):
+        self.__dict__.update(kwds)
+
 
 class PyConf(bold.ConfImpl):
     def paramExists(self, path):
-        return eval(path) == None
-    def getParam(self, path, defVal):
-        val = eval(path)
-        if (val == None):
+        res = None
+        try:
+            res = eval(path)
+        except:
+            print("Not found: " + path)
+
+        return res != None
+
+    def _getParam(self, path, defVal):
+        print("Get param called")
+        res = None
+        try:
+            res = eval(path)
+        except:
+            print("Not found: " + path)
+
+        if (res == None):
             return defVal
-        return val
+        else:
+            return res
+
     def getParamStr(self, path, defVal):
-        return getParam(path, defVal)
+        return _getParam(path, defVal)
     def getParamInt(self, path, defVal):
-        return getParam(path, defVal)
+        return _getParam(path, defVal)
     def getParamDbl(self, path, defVal):
-        return getParam(path, defVal)
+        return _getParam(path, defVal)
     def getParamBool(self, path, defVal):
-        return getParam(path, defVal)
+        return _getParam(path, defVal)
+
+pc = PyConf()
+bold.Configurable.setConfImpl(pc.__disown__())
 
 agentParams = {
     "u2dDevName": "/dev/ttyUSB0",
@@ -109,7 +134,7 @@ def main(argv):
             return
 
 
-    if UNIFORM_NUMBER < 0:
+    if agent.uniformNumber < 0:
         print('ERROR: you must supply a uniform number')
         usage()
         return
