@@ -10,7 +10,9 @@ Agent::Agent()
 {
   cout << "[Agent::Agent] Start" << endl;
 
-  cout << "U2D dev name: " << getParam("u2dDevName", string("unknown")) << endl;
+  auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));
+  
+  cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
 
   registerStateTypes();
 
@@ -21,7 +23,7 @@ Agent::Agent()
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   AgentState::getInstance().registerObserver<HardwareState>(d_gyroCalibrator);
 
-  d_cm730Linux = make_shared<CM730Linux>(getParam("u2dDevName", string("")));
+  d_cm730Linux = make_shared<CM730Linux>(cm730DevicePath);
   d_cm730 = make_shared<CM730>(d_cm730Linux);
 //   d_cm730->DEBUG_PRINT = true;
 
