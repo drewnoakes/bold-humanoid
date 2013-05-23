@@ -38,7 +38,6 @@ namespace bold
   public:
     Agent();
 
-    
     std::shared_ptr<Ambulator> getAmbulator() const { return d_ambulator; }
     std::shared_ptr<Camera> getCamera() const { return d_camera; }
     std::shared_ptr<CameraModel> getCameraModel() const { return d_cameraModel; }

@@ -2,7 +2,11 @@
 
 Agent::Agent()
   : Configurable("agent"),
-    d_isRunning(false)
+    d_isRunning(false),
+    d_isRecordingFrames(false),
+    d_autoGetUpFromFallen(true),
+    d_useOptionTree(true),
+    d_ignoreGameController(false)
 {
   cout << "[Agent::Agent] Start" << endl;
 
