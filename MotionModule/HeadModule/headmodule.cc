@@ -83,7 +83,7 @@ void HeadModule::moveTracking(double panError, double tiltError)
   d_lastPanError = panError;
   d_lastTiltError = tiltError;
 
-  auto calcDelta = [](double error, double errorDelta, double p, double d)
+  auto calcPDOffset = [](double error, double errorDelta, double p, double d)
   {
     double pOffset = pow(error * p, 2);
     if (error < 0)
@@ -96,9 +96,11 @@ void HeadModule::moveTracking(double panError, double tiltError)
     return pOffset + dOffset;
   };
 
-  d_panAngle  += calcDelta(panError,  panErrorDelta,  d_panGainP,  d_panGainD);
-  d_tiltAngle += calcDelta(tiltError, tiltErrorDelta, d_tiltGainP, d_tiltGainD);
+  d_panAngle  += calcPDOffset(panError,  panErrorDelta,  d_panGainP,  d_panGainD);
+  d_tiltAngle += calcPDOffset(tiltError, tiltErrorDelta, d_tiltGainP, d_tiltGainD);
 
+  getScheduler()->add(make_shared<MotionTask>(this, JointSelection::head(), Priority::Normal, false));
+  
   checkLimit();
 }
 
