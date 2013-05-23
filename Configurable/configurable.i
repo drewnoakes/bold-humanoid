@@ -19,6 +19,7 @@ namespace bold
     %rename(getParamBool) getParam(std::string const&, bool);
 
     virtual bool paramExists(std::string const& path);
+
     virtual std::string getParam(std::string const& path, std::string const& defVal);
     virtual int getParam(std::string const& path, int defVal);
     virtual double getParam(std::string const& path, double defVal);

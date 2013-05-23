@@ -11,7 +11,9 @@ namespace bold
   public:
     ConfImpl() {}
     virtual ~ConfImpl() {}
+
     virtual bool paramExists(std::string const& path) { return false; }
+
     virtual std::string getParam(std::string const& path, std::string const& defVal) { return defVal; }
     virtual int getParam(std::string const& path, int defVal) { return defVal; }
     virtual double getParam(std::string const& path, double defVal) { return defVal; }

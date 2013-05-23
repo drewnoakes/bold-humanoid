@@ -47,13 +47,17 @@ class PyConf(bold.ConfImpl):
             return res
 
     def getParamStr(self, path, defVal):
-        return _getParam(path, defVal)
+        return self._getParam(path, defVal)
+
     def getParamInt(self, path, defVal):
-        return _getParam(path, defVal)
+        return self._getParam(path, defVal)
+
     def getParamDbl(self, path, defVal):
-        return _getParam(path, defVal)
+        return self._getParam(path, defVal)
+
     def getParamBool(self, path, defVal):
-        return _getParam(path, defVal)
+        return self._getParam(path, defVal)
+
 
 pc = PyConf()
 bold.Configurable.setConfImpl(pc.__disown__())
