@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../stateobject.hh"
+#include "../../JointId/jointid.hh"
 
 namespace bold
 {
@@ -26,7 +27,7 @@ namespace bold
 
     std::shared_ptr<StaticMX28State const> getMX28State(unsigned jointId) const
     {
-      assert(jointId > 0 && jointId <= NUMBER_OF_JOINTS);
+      assert(jointId >= (unsigned)JointId::MIN && jointId <= (unsigned)JointId::MAX);
       assert(d_mx28States.size() > jointId);
 
       return d_mx28States[jointId];
@@ -35,8 +36,6 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
-    const int NUMBER_OF_JOINTS = 20;
-
     std::shared_ptr<StaticCM730State const> d_cm730State;
     std::vector<std::shared_ptr<StaticMX28State const>> d_mx28States;
   };

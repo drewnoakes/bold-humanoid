@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "../../JointId/jointid.hh"
 #include "../stateobject.hh"
 
 namespace bold
@@ -33,7 +34,7 @@ namespace bold
 
     std::shared_ptr<MX28Snapshot const> getMX28State(unsigned jointId) const
     {
-      assert(jointId > 0 && jointId <= NUMBER_OF_JOINTS);
+      assert(jointId >= (unsigned)JointId::MIN && jointId <= (unsigned)JointId::MAX);
       assert(d_mx28States.size() >= jointId);
 
       return d_mx28States[jointId - 1];
@@ -45,8 +46,6 @@ namespace bold
     unsigned long getTransmittedBytes() const { return d_txBytes; }
 
   private:
-    const int NUMBER_OF_JOINTS = 20;
-
     std::shared_ptr<CM730Snapshot const> d_cm730State;
     std::vector<std::shared_ptr<MX28Snapshot const>> d_mx28States;
     unsigned long d_rxBytes;
