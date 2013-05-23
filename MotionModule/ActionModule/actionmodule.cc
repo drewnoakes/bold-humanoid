@@ -332,7 +332,7 @@ bool ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     {
       if ((*selectedJoints)[bID])
       {
-        wpTargetAngle1024[bID] = hw->getMX28State(bID)->presentPositionValue; // MotionStatus::m_CurrentJoints.GetValue(bID);
+        wpTargetAngle1024[bID] = hw->getMX28State(bID)->presentPositionValue;
         ipLastOutSpeed1024[bID] = 0;
         ipMovingAngle1024[bID] = 0;
         ipGoalSpeed1024[bID] = 0;
