@@ -10,6 +10,10 @@ namespace bold
   
   typedef unsigned char uchar;
 
+  /** The priority of a motion task.
+   * 
+   * Used in arbitrating which motion module gains control of a body section.
+   */
   enum class Priority
   {
     Important = 2,
@@ -17,6 +21,8 @@ namespace bold
     Optional  = 0
   };
 
+  /** Models a set of joints.
+   */
   class JointSelection
   {
   public:
@@ -59,6 +65,8 @@ namespace bold
   };
  
   /** Represents a desire to control a body section using a particular motion module.
+   * 
+   * May also request to maintain control of the body section until some later point.
    */
   class MotionTask
   {
@@ -77,7 +85,7 @@ namespace bold
     bool isCommitRequested() const { return d_isCommitRequested; }
     bool isCommitted() const { return d_isCommitted; }
     
-    /// Called by the framework when a task that requests commit is started.
+    /// Called by the framework when a task that requests committal is started.
     void setCommitted()
     {
       d_isCommitted = true;
