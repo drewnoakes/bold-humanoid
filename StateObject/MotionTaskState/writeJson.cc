@@ -55,10 +55,10 @@ void MotionTaskState::writeJson(Writer<StringBuffer>& writer) const
 {
   auto writeSection = [&](string name, vector<shared_ptr<MotionTask>> const& tasks)
   {
-    writer.String("head");
+    writer.String(name.c_str());
     writer.StartArray();
     {
-      for (shared_ptr<MotionTask> const& task : d_headTasks)
+      for (shared_ptr<MotionTask> const& task : tasks)
       {
         writer.StartObject();
         {
