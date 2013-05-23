@@ -64,7 +64,7 @@ void MotionTaskScheduler::update()
   // This is a bit ugly, but I cannot think of a simpler way of grouping them in c++
   if (headTask == armTask && armTask == legTask)
   {
-    moduleJointSelection->push_back(make_pair(headTask, JointSelection::all()));
+    if (headTask) moduleJointSelection->push_back(make_pair(headTask, JointSelection::all()));
   }
   else if (headTask == armTask)
   {
