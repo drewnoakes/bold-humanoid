@@ -35,6 +35,7 @@
 #include "../StateObject/WorldFrameState/worldframestate.hh"
 #include "../StateObserver/GyroCalibrator/gyrocalibrator.hh"
 #include "../StateObserver/FallDetector/falldetector.hh"
+#include "../ThreadId/threadid.hh"
 #include "../VisualCortex/visualcortex.hh"
 
 #include "../CM730/cm730.hh"

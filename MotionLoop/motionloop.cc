@@ -10,6 +10,7 @@
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
+#include "../ThreadId/threadid.hh"
 
 #include <time.h>
 #include <iostream>
@@ -126,6 +127,8 @@ void MotionLoop::stop()
 void *MotionLoop::threadMethod(void *param)
 {
   cout << "[MotionLoop::threadMethod] Started" << endl;
+  
+  ThreadId::setThreadId(ThreadId::MotionLoop);
 
   MotionLoop *loop = (MotionLoop*)param;
   static struct timespec next_time;

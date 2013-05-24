@@ -1,14 +1,9 @@
-#include "motiontaskscheduler.hh"
-
-#include "../MotionModule/motionmodule.hh"
-
-#include <algorithm>
-
-using namespace bold;
-using namespace std;
+#include "motiontaskscheduler.ih"
 
 void MotionTaskScheduler::update()
 {
+  assert(ThreadId::isThinkLoopThread());
+  
   // Remove all non-committed tasks
   auto it1 = d_tasks.erase(
     remove_if(

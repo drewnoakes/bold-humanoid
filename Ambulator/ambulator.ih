@@ -5,7 +5,9 @@
 #include "../MotionModule/WalkModule/walkmodule.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
+#include "../ThreadId/threadid.hh"
 
+#include <cassert>
 #include <iostream>
 
 using namespace bold;

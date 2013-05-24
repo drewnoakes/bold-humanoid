@@ -24,10 +24,7 @@ namespace bold
       d_hasChange(false)
     {}
     
-    void registerModule(MotionModule* module)
-    {
-      d_modules.push_back(module);
-    }
+    void registerModule(MotionModule* module) { d_modules.push_back(module); }
     
     /** Enqueues motion tasks to be picked up in the next motion loop.
      *
@@ -39,20 +36,7 @@ namespace bold
     void add(MotionModule* module,
              Priority headPriority, bool requestCommitHead,
              Priority armsPriority, bool requestCommitArms,
-             Priority legsPriority, bool requestCommitLegs)
-    {
-      auto handleSection = [this,module](SectionId section, Priority priority, bool requestCommit)
-      {
-        if (priority == Priority::None)
-          return;
-        d_tasks.push_back(std::make_shared<MotionTask>(module, section, priority, requestCommit));
-        d_hasChange = true;
-      };
-      
-      handleSection(SectionId::Head, headPriority, requestCommitHead);
-      handleSection(SectionId::Arms, armsPriority, requestCommitArms);
-      handleSection(SectionId::Legs, legsPriority, requestCommitLegs);
-    }
+             Priority legsPriority, bool requestCommitLegs);
     
     /** Called by the motion loop before reading MotionTaskState.
      * 

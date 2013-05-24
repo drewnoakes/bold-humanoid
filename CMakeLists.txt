@@ -248,6 +248,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./MotionTaskScheduler/add.cc
   ./MotionTaskScheduler/update.cc
 )
 
@@ -379,6 +380,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObserver/GyroCalibrator/gyrocalibrator.cc
+)
+
+add_class(BOLDHUMANOID
+  ./ThreadId/statics.cc
 )
 
 add_class(BOLDHUMANOID

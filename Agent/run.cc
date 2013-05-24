@@ -7,6 +7,8 @@ void Agent::run()
   if (d_isRunning)
     throw new std::runtime_error("Already running");
 
+  ThreadId::setThreadId(ThreadId::ThinkLoop);
+  
   d_isRunning = true;
 
   if (d_haveBody)

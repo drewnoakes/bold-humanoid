@@ -2,6 +2,8 @@
 
 void Ambulator::step()
 {
+  assert(ThreadId::isThinkLoopThread());
+  
   double xAmp = d_xAmp.getNext();
   double yAmp = d_yAmp.getNext();
 
