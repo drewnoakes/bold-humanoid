@@ -22,7 +22,9 @@ namespace bold
       d_headTasks(headTasks),
       d_armTasks(armTasks),
       d_legTasks(legTasks)
-    {}    
+    {}
+
+    bool isEmpty() const { return d_moduleJointSelection->size() == 0; }
     
     /// Provides which modules to step, and what JointSelection to pass them
     std::shared_ptr<std::vector<std::pair<std::shared_ptr<MotionTask>, std::shared_ptr<JointSelection>>>> getModuleJointSelection() const { return d_moduleJointSelection; }
