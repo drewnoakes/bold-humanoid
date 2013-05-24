@@ -152,6 +152,21 @@ TEST (CppTests, vectorEraseRemove)
   EXPECT_EQ( 4, vec[2] );
 }
 
+TEST (CppTests, vectorEraseRemoveWhenEmpty)
+{
+  std::vector<int> vec;
+  
+  vec.erase(
+    std::remove_if(
+      vec.begin(), vec.end(),
+      [](int i) { return i == 3;}
+    ),
+    vec.end()
+  );
+  
+  EXPECT_EQ( 0, vec.size() );
+}
+
 ///
 /// ATOMIC OPERATIONS
 ///
