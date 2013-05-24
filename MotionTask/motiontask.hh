@@ -16,9 +16,17 @@ namespace bold
    */
   enum class Priority
   {
-    Important = 2,
-    Normal    = 1,
-    Optional  = 0
+    Important = 3,
+    Normal    = 2,
+    Optional  = 1,
+    None      = 0
+  };
+  
+  enum class SectionId
+  {
+    Head,
+    Arms,
+    Legs
   };
 
   /** Models a set of joints.
@@ -71,29 +79,28 @@ namespace bold
   class MotionTask
   {
   public:
-    MotionTask(MotionModule* module, std::shared_ptr<JointSelection> jointSelection, Priority priority, bool isCommitRequested)
+    MotionTask(MotionModule* module, SectionId section, Priority priority, bool isCommitRequested)
     : d_module(module),
-      d_jointSelection(jointSelection),
+      d_section(section),
       d_priority(priority),
       d_isCommitRequested(isCommitRequested),
       d_isCommitted(false)
     {}
     
     MotionModule* getModule() const { return d_module; }
-    std::shared_ptr<JointSelection> getJointSelection() const { return d_jointSelection; }
+    SectionId getSection() const { return d_section; }
     Priority getPriority() const { return d_priority; }
     bool isCommitRequested() const { return d_isCommitRequested; }
     bool isCommitted() const { return d_isCommitted; }
     
     /// Called by the framework when a task that requests committal is started.
-    void setCommitted()
-    {
-      d_isCommitted = true;
-    }
+    void setCommitted() { d_isCommitted = true; }
+    /// Called by the framework when the task's module signals completion.
+    void clearCommitted() { d_isCommitted = false; }
   
   private:
     MotionModule* d_module;
-    std::shared_ptr<JointSelection> d_jointSelection;
+    SectionId d_section;
     Priority d_priority;
     bool d_isCommitRequested;
     bool d_isCommitted;

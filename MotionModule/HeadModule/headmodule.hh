@@ -18,7 +18,7 @@ namespace bold
     ~HeadModule();
 
     void initialize() override;
-    bool step(std::shared_ptr<JointSelection> selectedJoints) override;
+    void step(std::shared_ptr<JointSelection> selectedJoints) override;
     void applyHead(std::shared_ptr<HeadSection> head) override;
     void applyArms(std::shared_ptr<ArmSection> arms) override;
     void applyLegs(std::shared_ptr<LegSection> legs) override;

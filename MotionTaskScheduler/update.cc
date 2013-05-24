@@ -1,5 +1,7 @@
 #include "motiontaskscheduler.hh"
 
+#include "../MotionModule/motionmodule.hh"
+
 #include <algorithm>
 
 using namespace bold;
@@ -7,17 +9,42 @@ using namespace std;
 
 void MotionTaskScheduler::update()
 {
-  if (!d_hasChange)
-    return;
-  
-  lock_guard<mutex> g(d_mutex);
-
-  // Double check once lock acquired
-  if (!d_hasChange)
+  // Uncommit tasks from motion modules that have completed
+  for (MotionModule* module : d_modules)
   {
-    cerr << "[MotionTaskScheduler::update] Unexpected concurrent calls detected" << endl;
-    return;
+    if (module->clearCompletedFlag())
+    {
+      // Remove any tasks for which the corresponding module has completed
+      auto it = d_tasks.erase(
+        remove_if(
+          d_tasks.begin(), 
+          d_tasks.end(),
+          [module](shared_ptr<MotionTask> task) { return task->getModule() == module; }
+        )
+      );
+      
+      if (it != d_tasks.end())
+      {
+        // Something was removed
+        d_hasChange = true;
+      }
+    }
   }
+  
+  // Check for any committed tasks for which the corresponding module is not committed
+  auto it = d_tasks.erase(
+    remove_if(
+      d_tasks.begin(), 
+      d_tasks.end(),
+      [](shared_ptr<MotionTask> task) { return task->isCommitRequested() && !task->isCommitted(); }
+    )
+  );
+  
+  if (it != d_tasks.end())
+    d_hasChange = true; // something was removed
+  
+  if (!d_hasChange)
+    return;
 
   // Determine which tasks are assigned which body sections
   auto moduleJointSelection = make_shared<vector<pair<shared_ptr<MotionTask>, shared_ptr<JointSelection>>>>();
@@ -28,11 +55,11 @@ void MotionTaskScheduler::update()
   
   for (shared_ptr<MotionTask> task : d_tasks)
   {
-    if (task->getJointSelection()->hasHead())
+    if (task->getSection() == SectionId::Head)
       headTasks.push_back(task);
-    if (task->getJointSelection()->hasArms())
+    if (task->getSection() == SectionId::Arms)
       armTasks.push_back(task);
-    if (task->getJointSelection()->hasLegs())
+    if (task->getSection() == SectionId::Legs)
       legTasks.push_back(task);
   }
   
@@ -58,8 +85,8 @@ void MotionTaskScheduler::update()
   sortTasks(legTasks);
   
   shared_ptr<MotionTask> headTask = headTasks.size() ? headTasks[0] : nullptr;
-  shared_ptr<MotionTask> armTask = armTasks.size() ? armTasks[0] : nullptr;
-  shared_ptr<MotionTask> legTask = legTasks.size() ? legTasks[0] : nullptr;
+  shared_ptr<MotionTask> armTask  = armTasks.size()  ? armTasks[0] : nullptr;
+  shared_ptr<MotionTask> legTask  = legTasks.size()  ? legTasks[0] : nullptr;
   
   // This is a bit ugly, but I cannot think of a simpler way of grouping them in c++
   if (headTask == armTask && armTask == legTask)
@@ -98,8 +125,12 @@ void MotionTaskScheduler::update()
   
   // Clear out non-committed tasks
   d_tasks.erase(
-    remove_if(d_tasks.begin(), d_tasks.end(), [](shared_ptr<MotionTask> const& task) { return !task->isCommitted(); }),
-    d_tasks.end());
+    remove_if(
+      d_tasks.begin(), 
+      d_tasks.end(),
+      [](shared_ptr<MotionTask> task) { return !task->isCommitted(); }
+    )
+  );
   
   d_hasChange = false;
 }

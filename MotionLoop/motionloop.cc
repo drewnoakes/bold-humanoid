@@ -5,7 +5,6 @@
 #include "../CM730/cm730.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../Debugger/debugger.hh"
-#include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
@@ -19,9 +18,8 @@
 using namespace bold;
 using namespace std;
 
-MotionLoop::MotionLoop(shared_ptr<CM730> cm730, shared_ptr<MotionTaskScheduler> schedule)
+MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
 : d_cm730(cm730),
-  d_schedule(schedule),
   d_isStarted(false),
   d_stopRequested(false),
   d_loopDurationMillis(8),
@@ -163,9 +161,6 @@ void MotionLoop::step(SequentialTimer& t)
     // LET MOTION MODULES UPDATE BODY CONTROL
     //
     
-    // Force a refresh of MotionTaskState, if there is one
-    d_schedule->update();
-    
     auto tasks = AgentState::get<MotionTaskState>();
     
     for (pair<shared_ptr<MotionTask>, shared_ptr<JointSelection>> const& pair : *tasks->getModuleJointSelection())
@@ -176,8 +171,7 @@ void MotionLoop::step(SequentialTimer& t)
       assert(jointSelection);
       auto module = task->getModule();
       
-      if (!module->step(jointSelection) && task->isCommitRequested())
-        d_schedule->remove(task);
+      module->step(jointSelection);
 
       if (jointSelection->hasHead())
         module->applyHead(d_bodyControl->getHeadSection());

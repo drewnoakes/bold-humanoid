@@ -1,7 +1,7 @@
 #include "actionmodule.hh"
 
-#include "../../BodyControl/bodycontrol.hh"
 #include "../../AgentState/agentstate.hh"
+#include "../../BodyControl/bodycontrol.hh"
 #include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../MX28Snapshot/mx28snapshot.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
@@ -199,8 +199,11 @@ bool ActionModule::start(int index, PAGE *page)
   d_firstDrivingStart = true;
   d_isRunning = false; // will be set to true once 'step' is called
   
-  getScheduler()->add(make_shared<MotionTask>(this, JointSelection::all(), Priority::Normal, true));
-  
+  getScheduler()->add(this,
+                      Priority::Optional,  true,  // HEAD   Interuptable::YES
+                      Priority::Important, true,  // ARMS
+                      Priority::Important, true); // LEGS
+ 
   return true;
 }
 
@@ -263,7 +266,7 @@ bool ActionModule::savePage(int index, PAGE *page)
   return true;
 }
 
-bool ActionModule::step(shared_ptr<JointSelection> selectedJoints)
+void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   unsigned long ulTotalTime256T;
   unsigned long ulPreSectionTime256T;
@@ -341,7 +344,10 @@ bool ActionModule::step(shared_ptr<JointSelection> selectedJoints)
   }
 
   if (!d_isRunning)
-    return false;
+  {
+    setCompletedFlag();
+    return;
+  }
 
   if (wUnitTimeCount < wUnitTimeNum)
   {
@@ -481,7 +487,8 @@ bool ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       if (d_playingFinished)
       {
         d_isRunning = false;
-        return false;
+        setCompletedFlag();
+        return;
       }
 
       m_PageStepCount++;
@@ -668,8 +675,6 @@ bool ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       wUnitTimeNum = wAccelStep; //PreSection
     }
   }
-  
-  return true;
 }
 
 void ActionModule::applySection(shared_ptr<BodySection> section)

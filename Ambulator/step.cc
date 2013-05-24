@@ -11,7 +11,6 @@ void Ambulator::step()
   {
     if (d_walkModule->isRunning())
     {
-//       cout << "[Ambulator] Stopping Walker" << endl;
       d_walkModule->stop();
     }
   }
@@ -28,12 +27,13 @@ void Ambulator::step()
 
     d_walkModule->HIP_PITCH_OFFSET = Math::lerp(alpha, d_minHipPitch, d_maxHipPitch);
 
-//     d_walkModule->d_jointData.setEnableBodyWithoutHead(true, true);
-
     if (!d_walkModule->isRunning())
     {
-//       cout << "[Ambulator] Starting Walker" << endl;
-      d_walkModule->getScheduler()->add(make_shared<MotionTask>(d_walkModule.get(), JointSelection::armsAndLegs(), Priority::Normal, true));
+      // TODO this will look more sane when we make Ambulator the MotionModule, and have a generic WalkEngine with RobotisWalkEngine
+      d_walkModule->getScheduler()->add(d_walkModule.get(),
+                                        Priority::Optional,  true,  // HEAD   Interuptable::YES
+                                        Priority::Important, true,  // ARMS
+                                        Priority::Important, true); // LEGS
       d_walkModule->start();
     }
   }

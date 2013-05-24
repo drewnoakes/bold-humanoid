@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <memory>
-#include <mutex>
 #include <vector>
 
 #include "../AgentState/agentstate.hh"
@@ -11,41 +10,48 @@
 
 namespace bold
 {
+  class MotionModule;
+  
   /** Tracks all active MotionTasks.
-   * 
+   *
    * Thread safe.
    */
   class MotionTaskScheduler
   {
   public:
     MotionTaskScheduler()
-    : d_hasChange(false)
+    : d_modules(),
+      d_hasChange(false)
     {}
     
-    /** Adds a task to be picked up in the next motion loop.
+    void registerModule(MotionModule* module)
+    {
+      d_modules.push_back(module);
+    }
+    
+    /** Enqueues motion tasks to be picked up in the next motion loop.
      *
-     * The highest priority task per body section will be selected.
+     * Overall, the highest priority task per body section will be selected.
      * If the task has a commit request and is selected, it will be set
      * as committed, until the corresponding MotionModule::step function
      * returns false.
      */
-    void add(std::shared_ptr<MotionTask> task)
+    void add(MotionModule* module,
+             Priority headPriority, bool requestCommitHead,
+             Priority armsPriority, bool requestCommitArms,
+             Priority legsPriority, bool requestCommitLegs)
     {
-      std::lock_guard<std::mutex> g(d_mutex);
-      d_tasks.push_back(task);
-      d_hasChange = true;
-    }
-    
-    void remove(std::shared_ptr<MotionTask> task)
-    {
-      std::lock_guard<std::mutex> g(d_mutex);
-      auto it = std::find(d_tasks.begin(), d_tasks.end(), task);
+      auto handleSection = [this,module](SectionId section, Priority priority, bool requestCommit)
+      {
+        if (priority == Priority::None)
+          return;
+        d_tasks.push_back(std::make_shared<MotionTask>(module, section, priority, requestCommit));
+        d_hasChange = true;
+      };
       
-      if (it == d_tasks.end())
-        return;
-      
-      d_tasks.erase(it);
-      d_hasChange = true;
+      handleSection(SectionId::Head, headPriority, requestCommitHead);
+      handleSection(SectionId::Arms, armsPriority, requestCommitArms);
+      handleSection(SectionId::Legs, legsPriority, requestCommitLegs);
     }
     
     /** Called by the motion loop before reading MotionTaskState.
@@ -55,8 +61,8 @@ namespace bold
     void update();
 
   private:
-    std::mutex d_mutex;
     std::vector<std::shared_ptr<MotionTask>> d_tasks;
+    std::vector<MotionModule*> d_modules;
     bool d_hasChange;
   };  
 }

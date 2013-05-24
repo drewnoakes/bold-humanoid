@@ -28,6 +28,7 @@ namespace bold
   class GameStateReceiver;
   class Localiser;
   class MotionLoop;
+  class MotionTaskScheduler;
   class OptionTree;
   class Spatialiser;
   class VisualCortex;
@@ -85,6 +86,7 @@ namespace bold
     std::shared_ptr<CM730Linux> d_cm730Linux;
     std::shared_ptr<CM730> d_cm730;
     std::shared_ptr<MotionLoop> d_motionLoop;
+    std::shared_ptr<MotionTaskScheduler> d_motionSchedule;
     std::shared_ptr<WalkModule> d_walkModule;
     std::shared_ptr<HeadModule> d_headModule;
     std::shared_ptr<ActionModule> d_actionModule;

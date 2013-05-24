@@ -8,7 +8,6 @@
 
 namespace bold
 {
-  class MotionTaskScheduler;
   class BodyControl;
   class BulkRead;
   class CM730;
@@ -18,7 +17,7 @@ namespace bold
   class MotionLoop
   {
   public:
-    MotionLoop(std::shared_ptr<CM730> cm730, std::shared_ptr<MotionTaskScheduler> schedule);
+    MotionLoop(std::shared_ptr<CM730> cm730);
 
     ~MotionLoop();
 
@@ -39,7 +38,6 @@ namespace bold
     
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
-    std::shared_ptr<MotionTaskScheduler> d_schedule;
     std::shared_ptr<BodyControl> d_bodyControl;
     std::shared_ptr<BulkRead> d_dynamicBulkRead;
 

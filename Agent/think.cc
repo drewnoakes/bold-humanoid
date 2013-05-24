@@ -108,6 +108,9 @@ void Agent::think()
     t.timeEvent("Update Debugger");
   }
 
+  // Refresh MotionTaskState, if one is needed
+  d_motionSchedule->update();
+
   //
   // Update websocket data
   //

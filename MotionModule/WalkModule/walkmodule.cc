@@ -279,7 +279,7 @@ bool WalkModule::isRunning()
   return d_isRunning;
 }
 
-bool WalkModule::step(shared_ptr<JointSelection> selectedJoints)
+void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   double x_swap, y_swap, z_swap, a_swap, b_swap, c_swap;
   double x_move_r, y_move_r, z_move_r, a_move_r, b_move_r, c_move_r;
@@ -287,7 +287,6 @@ bool WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   double pelvis_offset_r, pelvis_offset_l;
   double angle[14], ep[12];
   double offset;
-//   double TIME_UNIT = MotionModule::TIME_UNIT;
   //                     R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
   int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
   double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
@@ -302,6 +301,7 @@ bool WalkModule::step(shared_ptr<JointSelection> selectedJoints)
       if (d_xMoveAmplitude == 0 && d_yMoveAmplitude == 0 && d_aMoveAmplitude == 0)
       {
         d_isRunning = false;
+        setCompletedFlag();
       }
       else
       {
@@ -326,6 +326,7 @@ bool WalkModule::step(shared_ptr<JointSelection> selectedJoints)
       if (d_xMoveAmplitude == 0 && d_yMoveAmplitude == 0 && d_aMoveAmplitude == 0)
       {
         d_isRunning = false;
+        setCompletedFlag();
       }
       else
       {
@@ -471,7 +472,9 @@ bool WalkModule::step(shared_ptr<JointSelection> selectedJoints)
       computeIK(&angle[6], ep[6], ep[7], ep[8], ep[9], ep[10], ep[11]) != 1)
   {
     // Do not use angle;
-    return d_isRunning;
+    if (!d_isRunning)
+      setCompletedFlag();
+    return;
   }
 
   // Convert leg angles from radians to degrees (skip shoulders and head pan)
@@ -540,8 +543,9 @@ bool WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 //     d_jointData.setIGain(id, I_GAIN);
 //     d_jointData.setDGain(id, D_GAIN);
 //   }
-
-  return d_isRunning;
+  
+  if (!d_isRunning)
+    setCompletedFlag();
 }
 
 void WalkModule::applyHead(shared_ptr<HeadSection> head)

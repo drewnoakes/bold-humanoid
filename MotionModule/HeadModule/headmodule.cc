@@ -59,7 +59,10 @@ void HeadModule::moveToAngle(double pan, double tilt)
   d_panAngle = pan;
   d_tiltAngle = tilt;
   
-  getScheduler()->add(make_shared<MotionTask>(this, JointSelection::head(), Priority::Normal, false));
+  getScheduler()->add(this,
+                      Priority::Normal, false,  // HEAD   Interuptable::YES
+                      Priority::None,   false,  // ARMS
+                      Priority::None,   false); // LEGS
 
   checkLimit();
 }
@@ -99,15 +102,17 @@ void HeadModule::moveTracking(double panError, double tiltError)
   d_panAngle  += calcPDOffset(panError,  panErrorDelta,  d_panGainP,  d_panGainD);
   d_tiltAngle += calcPDOffset(tiltError, tiltErrorDelta, d_tiltGainP, d_tiltGainD);
 
-  getScheduler()->add(make_shared<MotionTask>(this, JointSelection::head(), Priority::Normal, false));
+  getScheduler()->add(this,
+                      Priority::Normal, false,  // HEAD   Interuptable::YES
+                      Priority::None,   false,  // ARMS
+                      Priority::None,   false); // LEGS
   
   checkLimit();
 }
 
-bool HeadModule::step(shared_ptr<JointSelection> selectedJoints)
+void HeadModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   // TODO implement a head movement that updates its target position every 8ms instead of every 30ms, for smoother movements
-  return false;
 }
 
 void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
