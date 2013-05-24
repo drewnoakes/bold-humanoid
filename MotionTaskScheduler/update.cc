@@ -9,39 +9,39 @@ using namespace std;
 
 void MotionTaskScheduler::update()
 {
-  // Uncommit tasks from motion modules that have completed
+  // Remove all non-committed tasks
+  auto it1 = d_tasks.erase(
+    remove_if(
+      d_tasks.begin(), 
+      d_tasks.end(),
+      [](shared_ptr<MotionTask> const& task) { return !task->isCommitted(); }
+    )
+  );
+  
+  if (it1 != d_tasks.end())
+    d_hasChange = true; // something was removed
+
+  // Remove committed tasks for motion modules that have completed
   for (MotionModule* module : d_modules)
   {
     if (module->clearCompletedFlag())
     {
-      // Remove any tasks for which the corresponding module has completed
-      auto it = d_tasks.erase(
+      // Remove any committed tasks for which the corresponding module has completed
+      auto it2 = d_tasks.erase(
         remove_if(
           d_tasks.begin(), 
           d_tasks.end(),
-          [module](shared_ptr<MotionTask> task) { return task->getModule() == module; }
+          [module](shared_ptr<MotionTask> const& task) { return task->isCommitted() && task->getModule() == module; }
         )
       );
       
-      if (it != d_tasks.end())
+      if (it2 != d_tasks.end())
       {
         // Something was removed
         d_hasChange = true;
       }
     }
   }
-  
-  // Check for any committed tasks for which the corresponding module is not committed
-  auto it = d_tasks.erase(
-    remove_if(
-      d_tasks.begin(), 
-      d_tasks.end(),
-      [](shared_ptr<MotionTask> task) { return task->isCommitRequested() && !task->isCommitted(); }
-    )
-  );
-  
-  if (it != d_tasks.end())
-    d_hasChange = true; // something was removed
   
   if (!d_hasChange)
     return;
