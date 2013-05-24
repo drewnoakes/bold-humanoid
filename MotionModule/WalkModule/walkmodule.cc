@@ -281,16 +281,6 @@ bool WalkModule::isRunning()
 
 void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 {
-  double x_swap, y_swap, z_swap, a_swap, b_swap, c_swap;
-  double x_move_r, y_move_r, z_move_r, a_move_r, b_move_r, c_move_r;
-  double x_move_l, y_move_l, z_move_l, a_move_l, b_move_l, c_move_l;
-  double pelvis_offset_r, pelvis_offset_l;
-  double angle[14], ep[12];
-  double offset;
-  //                     R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
-  int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
-  double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
-
   // Update walk parameters
   if (d_time == 0)
   {
@@ -344,12 +334,16 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   updateBalanceParams();
 
   // Compute endpoints
-  x_swap = wsin(d_time, d_xSwapPeriodTime, d_xSwapPhaseShift, d_xSwapAmplitude, d_xSwapAmplitudeaShift);
-  y_swap = wsin(d_time, d_ySwapPeriodTime, d_ySwapPhaseShift, d_ySwapAmplitude, d_ySwapAmplitudeShift);
-  z_swap = wsin(d_time, d_zSwapPeriodTime, d_zSwapPhaseShift, d_zSwapAmplitude, d_zSwapAmplitudeShift);
-  a_swap = 0;
-  b_swap = 0;
-  c_swap = 0;
+  double x_swap = wsin(d_time, d_xSwapPeriodTime, d_xSwapPhaseShift, d_xSwapAmplitude, d_xSwapAmplitudeaShift);
+  double y_swap = wsin(d_time, d_ySwapPeriodTime, d_ySwapPhaseShift, d_ySwapAmplitude, d_ySwapAmplitudeShift);
+  double z_swap = wsin(d_time, d_zSwapPeriodTime, d_zSwapPhaseShift, d_zSwapAmplitude, d_zSwapAmplitudeShift);
+  double a_swap = 0;
+  double b_swap = 0;
+  double c_swap = 0;
+
+  double x_move_r, y_move_r, z_move_r, a_move_r, b_move_r, c_move_r;
+  double x_move_l, y_move_l, z_move_l, a_move_l, b_move_l, c_move_l;
+  double pelvis_offset_r, pelvis_offset_l;
 
   if (d_time <= d_sspTimeStartL)
   {
@@ -422,6 +416,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   a_move_r = 0;
   b_move_r = 0;
 
+  double ep[12];
   ep[0] = x_swap + x_move_r + d_xOffset;
   ep[1] = y_swap + y_move_r - d_yOffset / 2;
   ep[2] = z_swap + z_move_r + d_zOffset;
@@ -448,6 +443,8 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   }
   d_bodySwingZ -= LEG_LENGTH;
 
+  double angle[14];
+  
   // Compute arm swing
   if (d_xMoveAmplitude == 0)
   {
@@ -457,7 +454,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   else
   {
     angle[12] = wsin(d_time, d_periodTime, M_PI * 1.5, -d_xMoveAmplitude * d_armSwingGain, 0);
-    angle[13] = wsin(d_time, d_periodTime, M_PI * 1.5, d_xMoveAmplitude * d_armSwingGain, 0);
+    angle[13] = wsin(d_time, d_periodTime, M_PI * 1.5,  d_xMoveAmplitude * d_armSwingGain, 0);
   }
 
   if (d_isRunning)
@@ -481,10 +478,14 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   for (int i = 0; i < 12; i++)
     angle[i] *= 180.0 / M_PI;
 
+  //                     R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
+  int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
+  double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
+  
   // Compute motor value
   for (int i = 0; i < 14; i++)
   {
-    offset = (double)dir[i] * angle[i] * MX28::RATIO_DEGS2VALUE;
+    double offset = (double)dir[i] * angle[i] * MX28::RATIO_DEGS2VALUE;
     if (i == 1) // R_HIP_ROLL
       offset += (double)dir[i] * pelvis_offset_r;
     else if (i == 7) // L_HIP_ROLL
@@ -520,29 +521,6 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     d_outValue[5]  -= (int)(dir[5]  * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN*4); // R_ANKLE_ROLL
     d_outValue[11] -= (int)(dir[11] * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN*4); // L_ANKLE_ROLL
   }
-
-//   d_jointData.setValue(JointControl::ID_R_HIP_YAW,        d_outValue[0]);
-//   d_jointData.setValue(JointControl::ID_R_HIP_ROLL,       d_outValue[1]);
-//   d_jointData.setValue(JointControl::ID_R_HIP_PITCH,      d_outValue[2]);
-//   d_jointData.setValue(JointControl::ID_R_KNEE,           d_outValue[3]);
-//   d_jointData.setValue(JointControl::ID_R_ANKLE_PITCH,    d_outValue[4]);
-//   d_jointData.setValue(JointControl::ID_R_ANKLE_ROLL,     d_outValue[5]);
-//   d_jointData.setValue(JointControl::ID_L_HIP_YAW,        d_outValue[6]);
-//   d_jointData.setValue(JointControl::ID_L_HIP_ROLL,       d_outValue[7]);
-//   d_jointData.setValue(JointControl::ID_L_HIP_PITCH,      d_outValue[8]);
-//   d_jointData.setValue(JointControl::ID_L_KNEE,           d_outValue[9]);
-//   d_jointData.setValue(JointControl::ID_L_ANKLE_PITCH,    d_outValue[10]);
-//   d_jointData.setValue(JointControl::ID_L_ANKLE_ROLL,     d_outValue[11]);
-//   d_jointData.setValue(JointControl::ID_R_SHOULDER_PITCH, d_outValue[12]);
-//   d_jointData.setValue(JointControl::ID_L_SHOULDER_PITCH, d_outValue[13]);
-//   d_jointData.setAngle(JointControl::ID_HEAD_PAN,         A_MOVE_AMPLITUDE);
-//
-//   for (int id = JointControl::ID_R_HIP_YAW; id <= JointControl::ID_L_ANKLE_ROLL; id++)
-//   {
-//     d_jointData.setPGain(id, P_GAIN);
-//     d_jointData.setIGain(id, I_GAIN);
-//     d_jointData.setDGain(id, D_GAIN);
-//   }
   
   if (!d_isRunning)
     setCompletedFlag();
