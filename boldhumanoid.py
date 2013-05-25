@@ -6,62 +6,19 @@ sys.path.append("swig")
 sys.path.append("build/swig")
 
 import bold
+from boldpy.conf import *
 import numpy as np
 
-"""
-Configuration
-"""
-
-class Param:
-    """
-    Empty class used to build parameter hierarchies
-    """
-    def __init__(self, **kwds):
-        self.__dict__.update(kwds)
-
-    def add(self, kwds):
-        self.__dict__.update(kwds)
-
-
-class PyConf(bold.ConfImpl):
-    def paramExists(self, path):
-        res = None
-        try:
-            res = eval(path)
-        except:
-            print("Not found: " + path)
-
-        return res != None
-
-    def _getParam(self, path, defVal):
-        print("Get param called")
-        res = None
-        try:
-            res = eval(path)
-        except:
-            print("Not found: " + path)
-
-        if (res == None):
-            return defVal
-        else:
-            return res
-
-    def getParamStr(self, path, defVal):
-        return self._getParam(path, defVal)
-
-    def getParamInt(self, path, defVal):
-        return self._getParam(path, defVal)
-
-    def getParamDbl(self, path, defVal):
-        return self._getParam(path, defVal)
-
-    def getParamBool(self, path, defVal):
-        return self._getParam(path, defVal)
-
-
-pc = PyConf()
+# Prepare configuration system
+pc = PyConf(reportMissing = True)
 bold.Configurable.setConfImpl(pc.__disown__())
 
+# Load default paramters
+from defparams import *
+
+print(agent.u2dDevName)
+
+"""
 agentParams = {
     "u2dDevName": "/dev/ttyUSB0",
     "motionFilePath": "./motion_4096.bin",
@@ -79,6 +36,7 @@ agent = Param(testStr="hello")
 agent.add(agentParams)
 agent.testInt = 1
 agent.testDbl = 2.0
+"""
 
 def buildOptionTree():
     tree = bold.OptionTree()
@@ -146,6 +104,7 @@ def main(argv):
     tree = buildOptionTree()
     
     a = bold.Agent()
+
     """
     a.onThinkEndConnect(thinkEndCallback);
     
