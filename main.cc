@@ -118,7 +118,7 @@ int main(int argc, char **argv)
                                                 agent->getHeadModule(),
                                                 agent->getWalkModule());
 
-  agent->setOptionTree(optionTree);
+  agent->setOptionTree(move(optionTree));
 
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);

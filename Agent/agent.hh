@@ -54,7 +54,7 @@ namespace bold
     std::shared_ptr<WalkModule> getWalkModule() const { return d_walkModule; }
     std::shared_ptr<ActionModule> getActionModule() const { return d_actionModule; }
 
-    void setOptionTree(std::unique_ptr<OptionTree>& tree)
+    void setOptionTree(std::unique_ptr<OptionTree> tree)
     {
       d_optionTree = std::move(tree);
     }
