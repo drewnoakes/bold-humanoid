@@ -63,6 +63,8 @@ def usage():
 	--nogc       do not listen to GameController
 	-h           show these options (or --help)''')
 
+agent.uniformNumber = -1
+
 def main(argv):
     # Parse command arguments
     try:
@@ -105,7 +107,6 @@ def main(argv):
     
     a = bold.Agent()
 
-    """
     a.onThinkEndConnect(thinkEndCallback);
     
     visualCortex = a.getVisualCortex()
@@ -125,8 +126,7 @@ def main(argv):
     visualCortex.set(**vcSettings)
                   
     a.run()
-    """
-
+    
 if __name__ == "__main__":
     main(sys.argv[1:])
 
