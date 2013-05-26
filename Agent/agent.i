@@ -47,13 +47,17 @@ namespace bold
     std::shared_ptr<WalkModule> getWalkModule() const;
     std::shared_ptr<ActionModule> getActionModule() const;
 
-    void setOptionTree(std::unique_ptr<OptionTree>& tree);
     void run();
     void stop();
   };
 
   %extend Agent {
   public:
+    void setOptionTree(OptionTree* tree)
+    {
+      $self->setOptionTree(std::unique_ptr<bold::OptionTree>(tree));
+    }
+
     void onThinkEndConnect(PyObject* pyFunc)
     {
       $self->onThinkEnd.connect(
