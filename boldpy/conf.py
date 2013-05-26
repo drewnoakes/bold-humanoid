@@ -14,9 +14,10 @@ class Param:
 
 
 class PyConf(bold.ConfImpl):
-    def __init__(self, reportMissing=False):
+    def __init__(self, prefix="conf.", reportMissing=False):
         bold.ConfImpl.__init__(self)
 
+        self.prefix = prefix
         self.reportMissing = reportMissing
         self.reported = []
         self.reportFile = "missing.py"
@@ -27,22 +28,16 @@ class PyConf(bold.ConfImpl):
                     self.reported = map(lambda l: (l.split(" = "))[0], f.read().splitlines())
 
     def _checkReportMissing(self, path, defVal):
-        print(1)
         if self.reportMissing:
-            print(1.5)
             if path not in self.reported:
-                print(2)
                 self.reported.append(path)
-                print(3)
                 with open(self.reportFile, "a+") as f:
-                    print(4)
                     f.write(path + " = " + str(defVal) + "\n")
-                    print(5)
 
     def paramExists(self, path):
         res = None
         try:
-            res = eval("sys.modules['__main__']."+path)
+            res = eval("sys.modules['__main__']." + prefix + "." + path)
         except:
             pass
 
@@ -52,9 +47,8 @@ class PyConf(bold.ConfImpl):
 
         res = None
         try:
-            res = eval("sys.modules['__main__']."+path)
+            res = eval("sys.modules['__main__']." + prefix + "." + path)
         except:
-            print("not found: " + path)
             self._checkReportMissing(path, defVal)
 
         if (res == None):
@@ -63,14 +57,14 @@ class PyConf(bold.ConfImpl):
             return res
 
     def getParamStr(self, path, defVal):
-        return self._getParam(path, defVal)
+        return str(self._getParam(path, defVal))
 
     def getParamInt(self, path, defVal):
-        return self._getParam(path, defVal)
+        return int(self._getParam(path, defVal))
 
     def getParamDbl(self, path, defVal):
-        return self._getParam(path, defVal)
+        return float(self._getParam(path, defVal))
 
     def getParamBool(self, path, defVal):
-        return self._getParam(path, defVal)
+        return bool(self._getParam(path, defVal))
 

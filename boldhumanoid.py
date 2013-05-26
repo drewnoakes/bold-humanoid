@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
 
+# Load basic modules
 import sys, getopt
-
 sys.path.append("swig")
-sys.path.append("build/swig")
-
-import bold
-from boldpy.conf import *
 import numpy as np
+
+# Import C++ library
+import bold
+
+# Load configuraion module
+from boldpy.conf import *
 
 # Prepare configuration system
 pc = PyConf(reportMissing = True)
 bold.Configurable.setConfImpl(pc.__disown__())
 
 # Load default paramters
-from defparams import *
+import defparams as conf
 
-print(agent.u2dDevName)
+# Load option tree building
+from boldpy.optiontree import *
 
-"""
+from boldpy.agent import *
+
+"""  
 agentParams = {
     "u2dDevName": "/dev/ttyUSB0",
     "motionFilePath": "./motion_4096.bin",
@@ -32,15 +37,10 @@ agentParams = {
     "ignoreGameController": False
 }
 
-agent = Param(testStr="hello")
-agent.add(agentParams)
-agent.testInt = 1
-agent.testDbl = 2.0
+conf.agent.add(agentParams)
+conf.agent.testInt = 1
+conf.agent.testDbl = 2.0
 """
-
-def buildOptionTree():
-    tree = bold.OptionTree()
-    return tree
 
 def thinkEndCallback():
     cameraState = bold.AgentState.getCameraFrameState()
@@ -63,8 +63,6 @@ def usage():
 	--nogc       do not listen to GameController
 	-h           show these options (or --help)''')
 
-agent.uniformNumber = -1
-
 def main(argv):
     # Parse command arguments
     try:
@@ -78,38 +76,38 @@ def main(argv):
 
     for opt, arg in opts:
         if opt in ('-c', '--conf'):
-            agent.confFilePath = arg
+            conf.agent.confFilePath = arg
         elif opt in ('-t', '--team'):
-            agent.teamNumber = int(arg)
+            conf.agent.teamNumber = int(arg)
         elif opt in ('-u', '--unum'):
-            agent.uniformNumber = int(arg)
+            conf.agent.uniformNumber = int(arg)
         elif opt in ('-o', '--no-tree'):
-            agent.useOptionTree = False
+            conf.agent.useOptionTree = False
         elif opt in ('-g', '--no-get-up'):
-            agent.autoGetUp = False
+            conf.agent.autoGetUp = False
         elif opt in ('-j', '--joystick'):
-            agent.useJoystick = True
+            conf.agent.useJoystick = True
         elif opt in ('-r', '--record'):
-            agent.recordFrames = True
+            conf.agent.recordFrames = True
         elif opt == '--nogc':
-            agent.ignoreGameController = True
+            conf.agent.ignoreGameController = True
         elif opt in ('-h', '--help'):
             usage()
             return
 
 
-    if agent.uniformNumber < 0:
+    if conf.agent.uniformNumber < 0:
         print('ERROR: you must supply a uniform number')
         usage()
         return
 
-    tree = buildOptionTree()
-    
-    a = bold.Agent()
+    builder = PyOptionTreeBuilder()
+    tree = builder.buildTree()
+    agent.setOptionTree(tree)
 
-    a.onThinkEndConnect(thinkEndCallback);
+    agent.onThinkEndConnect(thinkEndCallback);
     
-    visualCortex = a.getVisualCortex()
+    visualCortex = agent.getVisualCortex()
     visualCortex.setShouldIgnoreAboveHorizon(False)
     
     vcSettings = {
@@ -125,7 +123,7 @@ def main(argv):
 
     visualCortex.set(**vcSettings)
                   
-    a.run()
+    agent.run()
     
 if __name__ == "__main__":
     main(sys.argv[1:])
