@@ -20,32 +20,35 @@
 // Have to list all classes of which a shared_ptr is used (plus their
 // (grand)parent classes, just to be sure). Must be listed before any
 // use
-%shared_ptr(bold::Configurable)
+%shared_ptr(bold::ActionModule)
+%shared_ptr(bold::ActionOption)
 %shared_ptr(bold::Agent)
-%shared_ptr(bold::StateObject)
 %shared_ptr(bold::AgentFrameState)
 %shared_ptr(bold::AlarmState)
+%shared_ptr(bold::Ambulator)
 %shared_ptr(bold::AmbulatorState)
+%shared_ptr(bold::BodyPart)
 %shared_ptr(bold::BodyState)
 %shared_ptr(bold::CameraFrameState)
+%shared_ptr(bold::Configurable)
 %shared_ptr(bold::DebugState)
-%shared_ptr(bold::GameState)
-%shared_ptr(bold::HardwareState)
-%shared_ptr(bold::OptionTreeState)
-%shared_ptr(bold::ParticleState)
-%shared_ptr(bold::WorldFrameState)
-
-%shared_ptr(bold::VisualCortex)
-
-%shared_ptr(bold::BodyPart)
-%shared_ptr(bold::Limb)
-%shared_ptr(bold::Joint)
-
-%shared_ptr(bold::Option)
-%shared_ptr(bold::ActionOption)
+%shared_ptr(bold::FSMOption)
 %shared_ptr(bold::FSMState)
 %shared_ptr(bold::FSMTransition)
-%shared_ptr(bold::FSMOption)
+%shared_ptr(bold::GameState)
+%shared_ptr(bold::HardwareState)
+%shared_ptr(bold::HeadModule)
+%shared_ptr(bold::Joint)
+%shared_ptr(bold::Limb)
+%shared_ptr(bold::MotionModule)
+%shared_ptr(bold::Option)
+%shared_ptr(bold::OptionTreeState)
+%shared_ptr(bold::ParticleState)
+%shared_ptr(bold::StateObject)
+%shared_ptr(bold::StopWalking)
+%shared_ptr(bold::VisualCortex)
+%shared_ptr(bold::WalkModule)
+%shared_ptr(bold::WorldFrameState)
 
 %template() std::vector<PyObject*>;
 %template() std::vector<std::shared_ptr<bold::Option> >;
@@ -63,8 +66,13 @@
 %include "../StateObject/BodyState/bodystate.i"
 %include "../AgentState/agentstate.i"
 
+%include "../MotionModule/motionmodule.i"
+
+%include "../Ambulator/ambulator.i"
+
 %include "../Option/option.i"
 %include "../Option/ActionOption/actionoption.i"
+%include "../Option/StopWalking/stopwalking.i"
 %include "../Option/FSMOption/fsmoption.i"
 
 %include "../OptionTree/optiontree.i"
