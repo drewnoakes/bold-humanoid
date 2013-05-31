@@ -1,6 +1,6 @@
 #include "actionoption.ih"
 
-OptionList ActionOption::runPolicy()
+std::vector<std::shared_ptr<Option>> ActionOption::runPolicy()
 {
   assert(d_actionPage != ActionPage::None || d_actionName != "");
       
@@ -17,5 +17,5 @@ OptionList ActionOption::runPolicy()
     d_started = true;
   }
 
-  return OptionList();
+  return std::vector<std::shared_ptr<Option>>();
 }

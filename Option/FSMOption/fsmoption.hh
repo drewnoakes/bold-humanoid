@@ -36,7 +36,7 @@ namespace bold
 
   struct FSMState : public std::enable_shared_from_this<FSMState>
   {
-    FSMState(std::string const& n, OptionList o, bool f = false)
+    FSMState(std::string const& n, std::vector<std::shared_ptr<Option>> o, bool f = false)
       : name(n),
         final(f),
         options(o)
@@ -47,7 +47,7 @@ namespace bold
     /// Whether this state is a final state
     bool final;
     /// Options to return while in this state
-    OptionList options;
+    std::vector<std::shared_ptr<Option>> options;
     /// Outgoing transitions
     std::vector<FSMTransitionPtr> transitions;
 
@@ -60,7 +60,7 @@ namespace bold
 
     bool allOptionsTerminated() const
     {
-      return std::all_of(options.begin(), options.end(), [](OptionPtr o) { return o->hasTerminated(); });
+      return std::all_of(options.begin(), options.end(), [](std::shared_ptr<Option> o) { return o->hasTerminated(); });
     }
 
     FSMTransitionPtr newTransition(std::string name = "")
@@ -83,14 +83,14 @@ namespace bold
 
     virtual double hasTerminated() override;
 
-    virtual OptionList runPolicy() override;
+    virtual std::vector<std::shared_ptr<Option>> runPolicy() override;
 
     void addState(FSMStatePtr state, bool startState = false);
 
     FSMStatePtr newState(std::string const& name,
-		      OptionList options,
-		      bool finalState = false,
-		      bool startState = false)
+                         std::vector<std::shared_ptr<Option>> options,
+                         bool finalState = false,
+                         bool startState = false)
     {
       auto s = std::make_shared<FSMState>(name, options, finalState);
       addState(s, startState);

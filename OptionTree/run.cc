@@ -2,20 +2,20 @@
 
 void OptionTree::run()
 {
-  OptionList ranOptions;
+  vector<shared_ptr<Option>> ranOptions;
 
-  list<OptionPtr> queue = {d_top};
+  list<shared_ptr<Option>> queue = {d_top};
 
   while (!queue.empty())
   {
     // Pop the top option from the queue
-    OptionPtr option = queue.front();
+    shared_ptr<Option> option = queue.front();
     queue.pop_front();
 
 //     cout << "Running option <" << option->getID() << ">" << endl;
 
     // Run it
-    OptionList subOptions = option->runPolicy();
+    vector<shared_ptr<Option>> subOptions = option->runPolicy();
 
     // Push any suboptions it created onto the back of the stack
     queue.insert(queue.end(), subOptions.begin(), subOptions.end());

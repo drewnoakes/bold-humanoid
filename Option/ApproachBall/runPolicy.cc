@@ -1,13 +1,13 @@
 #include "approachball.ih"
 
-OptionList ApproachBall::runPolicy()
+std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
 {
   auto ballPos = AgentState::get<AgentFrameState>()->getBallObservation();
 
   if (!ballPos)
   {
     cerr << "[ApproachBall::runPolicy] No ball observation!" << endl;
-    return OptionList();
+    return std::vector<std::shared_ptr<Option>>();
   }
 
   double dist = ballPos->head<2>().norm();
@@ -25,5 +25,5 @@ OptionList ApproachBall::runPolicy()
 
   d_ambulator->setTurnAngle(turnAngle);
 
-  return OptionList();
+  return std::vector<std::shared_ptr<Option>>();
 }

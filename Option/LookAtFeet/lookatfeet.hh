@@ -17,7 +17,7 @@ namespace bold
       d_feetY = getParam("feetY", -67.5);
     }
 
-    OptionList runPolicy() override;
+    std::vector<std::shared_ptr<Option>> runPolicy() override;
 
   private:
     std::shared_ptr<HeadModule> d_headModule;

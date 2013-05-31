@@ -16,7 +16,7 @@ namespace bold
 
     double hasTerminated() override;
 
-    OptionList runPolicy() override;
+    std::vector<std::shared_ptr<Option>> runPolicy() override;
 
   private:
     std::shared_ptr<Ambulator> d_ambulator;

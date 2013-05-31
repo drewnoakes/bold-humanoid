@@ -1,6 +1,6 @@
 #include "fsmoption.ih"
 
-OptionList FSMOption::runPolicy()
+std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
 {
 //   cout << "[FSMOption::runPolicy] ----- Start -----" << endl;
 

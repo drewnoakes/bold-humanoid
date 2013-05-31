@@ -20,7 +20,7 @@ namespace bold
       d_durationVert  = getParam("durationVert", 0.4);
     }
 
-    virtual OptionList runPolicy() override;
+    virtual std::vector<std::shared_ptr<Option>> runPolicy() override;
 
   private:
     std::shared_ptr<HeadModule> d_headModule;

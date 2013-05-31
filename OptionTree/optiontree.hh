@@ -10,16 +10,16 @@ namespace bold
   {
   public:
     void run();
-    void addOption(OptionPtr option, bool top = false);
-    OptionPtr getOption(std::string const& id) const;
-    OptionPtr getTop() const;
+    void addOption(std::shared_ptr<Option> option, bool top = false);
+    std::shared_ptr<Option> getOption(std::string const& id) const;
+    std::shared_ptr<Option> getTop() const;
 
   private:
-    std::map<std::string, OptionPtr> d_options;
-    OptionPtr d_top;
+    std::map<std::string, std::shared_ptr<Option> > d_options;
+    std::shared_ptr<Option> d_top;
   };
 
-  inline void OptionTree::addOption(OptionPtr option, bool top)
+  inline void OptionTree::addOption(std::shared_ptr<Option> option, bool top)
   {
     d_options[option->getID()] = option;
 
@@ -30,7 +30,7 @@ namespace bold
     }
   }
 
-  inline OptionPtr OptionTree::getOption(std::string const& id) const
+  inline std::shared_ptr<Option> OptionTree::getOption(std::string const& id) const
   {
     auto option = d_options.find(id);
     if (option == d_options.end())
@@ -38,7 +38,7 @@ namespace bold
     return option->second;
   }
 
-  inline OptionPtr OptionTree::getTop() const
+  inline std::shared_ptr<Option> OptionTree::getTop() const
   {
     return d_top;
   }

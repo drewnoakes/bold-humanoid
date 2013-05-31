@@ -1,13 +1,13 @@
 #include "lookatball.ih"
 
-OptionList LookAtBall::runPolicy()
+std::vector<std::shared_ptr<Option>> LookAtBall::runPolicy()
 {
   auto const& ballObs = AgentState::get<CameraFrameState>()->getBallObservation();
 
   if (!ballObs.hasValue())
   {
     cerr << "[LookAtBall::runPolicy] No ball seen!" << endl;
-    return OptionList();
+    return std::vector<std::shared_ptr<Option>>();
   }
 
   Vector2d ballPos = ballObs->head<2>();
@@ -36,5 +36,5 @@ OptionList LookAtBall::runPolicy()
 //   HeadModule::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   d_headModule->moveTracking(offset.x(), offset.y());
 
-  return OptionList();
+  return std::vector<std::shared_ptr<Option>>();
 }

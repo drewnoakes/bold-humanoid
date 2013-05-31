@@ -1,6 +1,6 @@
 #include "circleball.ih"
 
-OptionList CircleBall::runPolicy()
+std::vector<std::shared_ptr<Option>> CircleBall::runPolicy()
 {
   auto bodyState = AgentState::get<BodyState>();
 
@@ -18,5 +18,5 @@ OptionList CircleBall::runPolicy()
   d_ambulator->setTurnAngle(a);
 //   d_ambulator->step();
 
-  return OptionList();
+  return std::vector<std::shared_ptr<Option>>();
 }

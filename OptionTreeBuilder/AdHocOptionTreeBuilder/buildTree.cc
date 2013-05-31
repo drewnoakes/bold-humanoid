@@ -16,50 +16,50 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   unique_ptr<OptionTree> tree(new OptionTree());
 
   // Sit down action
-  OptionPtr sit = make_shared<ActionOption>("sitdownaction", "sit down", actionModule);
+  shared_ptr<Option> sit = make_shared<ActionOption>("sitdownaction", "sit down", actionModule);
   tree->addOption(sit);
   // Stand up action
-  OptionPtr standup = make_shared<ActionOption>("standupaction", "stand up", actionModule);
+  shared_ptr<Option> standup = make_shared<ActionOption>("standupaction", "stand up", actionModule);
   tree->addOption(standup);
 
   // Stop walking
-  OptionPtr stopWalking = make_shared<StopWalking>("stopwalking", ambulator);
+  shared_ptr<Option> stopWalking = make_shared<StopWalking>("stopwalking", ambulator);
   tree->addOption(stopWalking);
 
   // Approach ball
-  OptionPtr approachBall = make_shared<ApproachBall>("approachball", ambulator);
+  shared_ptr<Option> approachBall = make_shared<ApproachBall>("approachball", ambulator);
   tree->addOption(approachBall);
 
   // Circle around ball
-  OptionPtr circleBall = make_shared<CircleBall>("circleball", ambulator, headModule);
+  shared_ptr<Option> circleBall = make_shared<CircleBall>("circleball", ambulator, headModule);
   tree->addOption(circleBall);
 
   // Left kick
-  OptionPtr leftKick = make_shared<ActionOption>("leftkickaction", "lk", actionModule);
+  shared_ptr<Option> leftKick = make_shared<ActionOption>("leftkickaction", "lk", actionModule);
   tree->addOption(leftKick);
 
   // Left kick
-  OptionPtr rightKick = make_shared<ActionOption>("rightkickaction", "rk", actionModule);
+  shared_ptr<Option> rightKick = make_shared<ActionOption>("rightkickaction", "rk", actionModule);
   tree->addOption(rightKick);
 
   // Look around
-  OptionPtr lookAround = make_shared<LookAround>("lookaround", headModule);
+  shared_ptr<Option> lookAround = make_shared<LookAround>("lookaround", headModule);
   tree->addOption(lookAround);
 
   // Look at ball
-  OptionPtr lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel, headModule);
+  shared_ptr<Option> lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel, headModule);
   tree->addOption(lookAtBall);
 
   // Look at feet
-  OptionPtr lookAtFeet = make_shared<LookAtFeet>("lookatfeet", headModule);
+  shared_ptr<Option> lookAtFeet = make_shared<LookAtFeet>("lookatfeet", headModule);
   tree->addOption(lookAtFeet);
 
   // Look at goal
-  OptionPtr lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel, headModule);
+  shared_ptr<Option> lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel, headModule);
   tree->addOption(lookAtGoal);
 
   //Dive left
-  OptionPtr leftdive = make_shared<ActionOption>("diveleftaction", "left_dive", actionModule);
+  shared_ptr<Option> leftdive = make_shared<ActionOption>("diveleftaction", "left_dive", actionModule);
   tree->addOption(leftdive);
 
   // FSM

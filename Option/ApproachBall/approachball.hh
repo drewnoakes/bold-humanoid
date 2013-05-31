@@ -18,7 +18,7 @@ namespace bold
         d_breakDist(getParam("breakDist", 0.5))
     {}
 
-    OptionList runPolicy() override;
+    std::vector<std::shared_ptr<Option>> runPolicy() override;
 
   private:
     std::shared_ptr<Ambulator> d_ambulator;

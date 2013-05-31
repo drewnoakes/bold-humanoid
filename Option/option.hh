@@ -9,8 +9,6 @@
 namespace bold
 {
   class Option;
-  typedef std::shared_ptr<Option> OptionPtr;
-  typedef std::vector<OptionPtr> OptionList;
 
   /** Option
    *
@@ -60,7 +58,7 @@ namespace bold
      * @returns the sub-option selected by the policy of this option;
      * Default: null-pointer
      */
-    virtual OptionList runPolicy() { return OptionList(); }
+    virtual std::vector<std::shared_ptr<Option> > runPolicy() { return std::vector<std::shared_ptr<Option>>(); }
 
   private:
     std::string d_id;

@@ -25,7 +25,7 @@ namespace bold
 
     virtual double hasTerminated() override;
 
-    virtual OptionList runPolicy() override;
+    virtual std::vector<std::shared_ptr<Option>> runPolicy() override;
 
   private:
     std::shared_ptr<ActionModule> d_actionModule;

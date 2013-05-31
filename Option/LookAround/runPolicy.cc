@@ -1,6 +1,6 @@
 #include "lookaround.ih"
 
-OptionList LookAround::runPolicy()
+std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
 {
   // Make an oscillatory movement to search for the ball
 
@@ -63,5 +63,5 @@ OptionList LookAround::runPolicy()
 //   HeadModule::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   d_headModule->moveToAngle(hAngle, vAngle);
 
-  return OptionList();
+  return std::vector<std::shared_ptr<Option>>();
 }

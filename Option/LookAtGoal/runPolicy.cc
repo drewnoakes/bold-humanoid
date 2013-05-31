@@ -1,13 +1,13 @@
 #include "lookatgoal.ih"
 
-OptionList LookAtGoal::runPolicy()
+std::vector<std::shared_ptr<Option>> LookAtGoal::runPolicy()
 {
   auto const& goalObs = AgentState::get<CameraFrameState>()->getGoalObservations();
 
   if (goalObs.size() < 2)
   {
     cerr << "[LookAtBall::runPolicy] No ball seen!" << endl;
-    return OptionList();
+    return std::vector<std::shared_ptr<Option>>();
   }
 
   auto middle = (goalObs[0] + goalObs[1]) / 2;
@@ -36,5 +36,5 @@ OptionList LookAtGoal::runPolicy()
 //   HeadModule::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   d_headModule->moveTracking(offset.x(), offset.y());
 
-  return OptionList();
+  return std::vector<std::shared_ptr<Option>>();
 }
