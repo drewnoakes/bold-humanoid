@@ -88,6 +88,7 @@ namespace bold
   public:
     uint8 getTeamNumber() const { return d_teamNumber; }
     uint8 isBlueTeam() const { return d_teamColour == 0; }
+    uint8 getGoalColour() const { return d_goalColour; }
     uint8 getScore() const { return d_score; }
     PlayerInfo const& getPlayer(uint8 unum) const
     {
