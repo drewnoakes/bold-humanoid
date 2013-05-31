@@ -22,12 +22,12 @@ namespace bold
     template<typename T>
     static std::shared_ptr<StateTracker> create(std::string name)
     {
-      return std::make_shared<StateTracker>(name, &typeid(T));
+      return std::make_shared<StateTracker>(name/*, &typeid(T)*/);
     }
 
-    StateTracker(std::string name, const std::type_info* typeId)
-    : d_name(name),
-      d_typeid(typeId)
+    StateTracker(std::string name/*, const std::type_info* typeId*/)
+    : d_name(name)
+      /*, d_typeid(typeId)*/
     {}
 
     void set(std::shared_ptr<StateObject const> state)
@@ -58,7 +58,7 @@ namespace bold
   private:
     mutable std::mutex d_mutex;
     const std::string d_name;
-    const std::type_info* d_typeid;
+    // Not used: const std::type_info* d_typeid;
     std::shared_ptr<StateObject const> d_state;
     long long unsigned d_updateCount;
   };
