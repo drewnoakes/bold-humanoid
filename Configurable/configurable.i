@@ -2,7 +2,7 @@
 #include <Configurable/configurable.hh>
 %}
 
-%feature("director") ConfImpl;
+%feature("director") bold::ConfImpl;
 
 
 namespace bold
