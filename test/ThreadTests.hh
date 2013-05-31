@@ -31,7 +31,7 @@ private:
   mutex d_mutex;
 };
 
-TEST (ThreadTests, multipleCounters)
+TEST (ThreadTests, DISABLED_multipleCounters)
 {
   int threadCount = 5;
   int iterationCount = 10000;
@@ -60,7 +60,7 @@ TEST (ThreadTests, multipleCounters)
   EXPECT_NE( unsafeCounter.value, expected );
 }
 
-TEST (ThreadTests, threadSafetyOfSignals)
+TEST (ThreadTests, DISABLED_threadSafetyOfSignals)
 {
   int threadCount = 5;
   int iterationCount = 10000;
@@ -92,7 +92,7 @@ TEST (ThreadTests, threadSafetyOfSignals)
 //   EXPECT_NE( unsafeCounter.value, expected );
 }
 
-TEST (ThreadTests, threadedProducerConsumer)
+TEST (ThreadTests, DISABLED_threadedProducerConsumer)
 {
   int loopCount = 50000;
   
