@@ -14,13 +14,3 @@ namespace bold
     ActionOption(std::string const& id, ActionPage actionPage, std::shared_ptr<ActionModule> actionModule);
   };
 }
-
-
-
-
-
-
-
-
-
-
