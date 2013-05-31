@@ -71,9 +71,6 @@
 %include "../Ambulator/ambulator.i"
 
 %include "../Option/option.i"
-%include "../Option/ActionOption/actionoption.i"
-%include "../Option/StopWalking/stopwalking.i"
-%include "../Option/FSMOption/fsmoption.i"
 
 %include "../OptionTree/optiontree.i"
 
