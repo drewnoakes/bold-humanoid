@@ -43,6 +43,7 @@ conf.agent.testDbl = 2.0
 """
 
 def thinkEndCallback():
+    print("===== HELLO =====")
     cameraState = bold.AgentState.getCameraFrameState()
     print(cameraState)
     print("Ball visible: ", cameraState.isBallVisible())

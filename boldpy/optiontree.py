@@ -1,6 +1,7 @@
 import bold
 from boldpy.agent import agent
 import logging
+import time
 
 class ActionOption(bold.Option):
     def __init__(self, id, actionName):
@@ -27,6 +28,63 @@ class ActionOption(bold.Option):
             self.started = true
 
         return [];
+
+
+class FSMTransition:
+    def __init__(self, name, parentState = None):
+        self.name = name
+        
+        self.condition = None
+        self.onFire = None
+        self.parentState = parentState
+        self.childState = None
+        
+
+class FSMState:
+    def __init__(self, name, options = [], final = False):
+        self.name = name
+        self.options = options
+        self.final = final
+        self.transitions = []
+        self.startTime = 0
+
+    def secondsSinceStart(self):
+        return time.time() - self.startTime
+
+    def allOptionsTerminated(self):
+        return all(o.hasTerminated() for o in self.options)
+
+    def newTransition(self, name = ""):
+        t = FSMTransition(name, self)
+        self.transitions.append(t)
+        return t
+
+        
+class FSMOption(bold.Option):
+    def __init__(self, id):
+        bold.Option.__init__(self, id)
+        self.states = []
+        self.transitions = []
+
+        self.startState = None
+        self.curState = None
+
+    def isAvailable(self):
+        return True
+
+    def hasTerminated(self):
+        if not self.curState is None and self.curState.final:
+            return 1.0
+        else:
+            return 0.0
+
+    def addState(self, state, startState = False):
+        self.states.append(state)
+        if startState:
+            self.startState = startState
+
+    def addTransition(self, transition):
+        self.transitions.append(transition)
 
 
 class PyOptionTreeBuilder:
