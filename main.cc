@@ -1,6 +1,7 @@
 #include "Agent/agent.hh"
 #include "OptionTree/optiontree.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
+#include "ThreadId/threadid.hh"
 
 #include <signal.h>
 
@@ -104,6 +105,8 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  ThreadId::setThreadId(ThreadId::ThinkLoop);
+  
   cout << "[boldhumanoid] Creating Agent" << endl;
   agent.reset(new Agent());
 

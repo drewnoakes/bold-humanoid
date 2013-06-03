@@ -4,6 +4,7 @@
 #include "../BodyControl/bodycontrol.hh"
 #include "../Math/math.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
+#include "../ThreadId/threadid.hh"
 
 #include <iostream>
 
@@ -112,6 +113,7 @@ void HeadModule::moveTracking(double panError, double tiltError)
 
 void HeadModule::step(shared_ptr<JointSelection> selectedJoints)
 {
+  assert(ThreadId::isMotionLoopThread());
   // TODO implement a head movement that updates its target position every 8ms instead of every 30ms, for smoother movements
 }
 

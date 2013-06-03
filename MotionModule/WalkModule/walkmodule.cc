@@ -8,6 +8,7 @@
 #include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../MX28/mx28.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../ThreadId/threadid.hh"
 
 // TODO if we keep this walk, reimplement using Eigen and get rid of these classes:
 #include "Vector.h"
@@ -281,6 +282,8 @@ bool WalkModule::isRunning()
 
 void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 {
+  assert(ThreadId::isMotionLoopThread());
+
   // Update walk parameters
   if (d_time == 0)
   {

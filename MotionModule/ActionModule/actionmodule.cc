@@ -5,6 +5,7 @@
 #include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../MX28Snapshot/mx28snapshot.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../ThreadId/threadid.hh"
 
 #include <iostream>
 #include <string.h>
@@ -268,6 +269,8 @@ bool ActionModule::savePage(int index, PAGE *page)
 
 void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 {
+  assert(ThreadId::isMotionLoopThread());
+  
   unsigned long ulTotalTime256T;
   unsigned long ulPreSectionTime256T;
   unsigned long ulMainTime256T;

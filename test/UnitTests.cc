@@ -46,6 +46,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "RunTests.hh"
 #include "SpatialiserTest.hh"
 #include "ThreadTests.hh"
+#include "ThreadIdTests.hh"
 
 int main(int argc, char **argv)
 {

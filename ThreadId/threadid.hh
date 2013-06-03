@@ -12,6 +12,7 @@ namespace bold
     };
     
     static void setThreadId(int threadId) { d_threadId = threadId; }
+    static int getThreadId() { return d_threadId; }
     static bool isMotionLoopThread() { return d_threadId == MotionLoop; }
     static bool isThinkLoopThread() { return d_threadId == ThinkLoop; }
   
