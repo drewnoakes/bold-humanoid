@@ -11,10 +11,9 @@ void Agent::think()
   //
   // Capture the image (YCbCr format)
   //
-//   t->enter("Image Capture");
+  t.enter("Image Capture");
   cv::Mat image = d_camera->capture(t);
-//   t->exit();
-  t.timeEvent("Image Capture");
+  t.exit();
 
   //
   // Record frame, if required
@@ -37,15 +36,13 @@ void Agent::think()
   //
   // Process the image
   //
-//   t->enter("Image Processing");
+  t.enter("Image Processing");
   d_visualCortex->integrateImage(image, t);
-//   t->exit();
-  t.timeEvent("Image Processing");
+  t.exit();
 
-//   t->enter("Image Streaming");
+  t.enter("Image Streaming");
   d_visualCortex->streamDebugImage(image, d_streamer, t);
-//   t->exit();
-  t.timeEvent("Image Streaming");
+  t.exit();
 
   //
   // Listen for any game control data
