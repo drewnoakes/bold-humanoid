@@ -16,19 +16,19 @@ namespace bold
   public:
     virtual ~ImagePassHandler() {}
 
-    /** Image processing is about to begin. */
+    /** Processing of an image frame is about to begin. */
     virtual void onImageStarting() {}
-
-    /** Image processing has completed. */
-    virtual void onImageComplete() {}
 
     /** The row 'y' is about to start. */
     virtual void onRowStarting(ushort y) {}
 
     /**
-     * The pixel at 'x', 'y', has a value of 'value'.
+     * The pixel at 'x', 'y', has a label of 'labelId'.
      * This is the only abstract function on this class.
      */
-    virtual void onPixel(TPixel value, ushort x, ushort y) = 0;
+    virtual void onPixel(TPixel labelId, ushort x, ushort y) = 0;
+
+    /** Processing of an image frame has completed. */
+    virtual void onImageComplete() {}
   };
 }
