@@ -136,15 +136,17 @@ TEST (CppTests, swappingSharedPointers)
 
 TEST (CppTests, vectorEraseRemove)
 {
-  std::vector<int> vec = {1, 2, 3, 3, 3, 4};
+  vector<int> vec = {1, 2, 3, 3, 3, 4};
   
-  vec.erase(
-    std::remove_if(
+  auto it = vec.erase(
+    remove_if(
       vec.begin(), vec.end(),
       [](int i) { return i == 3;}
     ),
     vec.end()
   );
+  
+  EXPECT_EQ( 3, *it );
   
   EXPECT_EQ( 3, vec.size() );
   EXPECT_EQ( 1, vec[0] );
@@ -152,12 +154,60 @@ TEST (CppTests, vectorEraseRemove)
   EXPECT_EQ( 4, vec[2] );
 }
 
+TEST (CppTests, vectorEraseRemoveNonConsecutive)
+{
+  vector<int> vec = {1, 2, 3, 4, 5, 6};
+  
+  auto it = vec.erase(
+    remove_if(
+      vec.begin(), vec.end(),
+      [](int i) { return i%2 == 0;}
+    ),
+    vec.end()
+  );
+  
+  EXPECT_EQ( 4, *it );
+  
+  EXPECT_EQ( 3, vec.size() );
+  EXPECT_EQ( 1, vec[0] );
+  EXPECT_EQ( 3, vec[1] );
+  EXPECT_EQ( 5, vec[2] );
+}
+
+TEST (CppTests, vectorEraseRemoveNothingMatched)
+{
+  vector<int> vec = {1, 2, 3, 4, 5, 6};
+  vector<int> seen;
+  
+  auto it = vec.erase(
+    remove_if(
+      vec.begin(), vec.end(),
+      [&seen](int i) {
+        seen.push_back(i);
+        return false;
+      }
+    ),
+    vec.end()
+  );
+  
+  EXPECT_EQ( vec.end(), it );
+  
+  EXPECT_EQ( 6, vec.size() );
+  EXPECT_EQ( 6, seen.size() );
+  EXPECT_EQ( 1, seen[0] );
+  EXPECT_EQ( 2, seen[1] );
+  EXPECT_EQ( 3, seen[2] );
+  EXPECT_EQ( 4, seen[3] );
+  EXPECT_EQ( 5, seen[4] );
+  EXPECT_EQ( 6, seen[5] );
+}
+
 TEST (CppTests, vectorEraseRemoveWhenEmpty)
 {
-  std::vector<int> vec;
+  vector<int> vec;
   
   vec.erase(
-    std::remove_if(
+    remove_if(
       vec.begin(), vec.end(),
       [](int i) { return i == 3;}
     ),
