@@ -235,6 +235,7 @@ void MotionLoop::step(SequentialTimer& t)
             joint->clearDirty();
           }
         }
+        assert(n == dirtyDeviceCount * bytesPerDevice);
 
         //
         // Send the SyncWrite message, if anything changed
