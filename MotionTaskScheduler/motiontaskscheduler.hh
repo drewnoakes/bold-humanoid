@@ -38,9 +38,7 @@ namespace bold
              Priority armsPriority, bool requestCommitArms,
              Priority legsPriority, bool requestCommitLegs);
     
-    /** Called by the motion loop before reading MotionTaskState.
-     * 
-     * Updates MotionTaskState, if any changes have been made.
+    /** Called at the end of each think loop, updating MotionTaskState.
      */
     void update();
 
