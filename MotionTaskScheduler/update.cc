@@ -3,18 +3,6 @@
 void MotionTaskScheduler::update()
 {
   assert(ThreadId::isThinkLoopThread());
-  
-  // Remove all non-committed tasks
-  auto it1 = d_tasks.erase(
-    remove_if(
-      d_tasks.begin(), 
-      d_tasks.end(),
-      [](shared_ptr<MotionTask> const& task) { return !task->isCommitted(); }
-    )
-  );
-  
-  if (it1 != d_tasks.end())
-    d_hasChange = true; // something was removed
 
   // Remove committed tasks for motion modules that have completed
   for (MotionModule* module : d_modules)
@@ -22,7 +10,7 @@ void MotionTaskScheduler::update()
     if (module->clearCompletedFlag())
     {
       // Remove any committed tasks for which the corresponding module has completed
-      auto it2 = d_tasks.erase(
+      auto it1 = d_tasks.erase(
         remove_if(
           d_tasks.begin(), 
           d_tasks.end(),
@@ -30,7 +18,7 @@ void MotionTaskScheduler::update()
         )
       );
       
-      if (it2 != d_tasks.end())
+      if (it1 != d_tasks.end())
       {
         // Something was removed
         d_hasChange = true;
@@ -118,8 +106,12 @@ void MotionTaskScheduler::update()
   // Generate motion task state
   AgentState::getInstance().set(make_shared<MotionTaskState const>(moduleJointSelection, headTasks, armTasks, legTasks));
   
-  // Clear out non-committed tasks
-  d_tasks.erase(
+  // Clear out non-committed tasks as they should only be presented to the
+  // motion loop once. As the motion loop runs in 8ms vs the think loop at 30ms,
+  // the stored MotionTaskState is guaranteed to be executed at least once.
+  // Hence we can remove non-committed tasks now, readying this set of tasks
+  // for the next think cycle.
+  auto it2 = d_tasks.erase(
     remove_if(
       d_tasks.begin(), 
       d_tasks.end(),
@@ -127,5 +119,5 @@ void MotionTaskScheduler::update()
     )
   );
   
-  d_hasChange = false;
+  d_hasChange = it2 == d_tasks.end();
 }
