@@ -10,7 +10,7 @@ using namespace std;
 
 BodyControl::BodyControl()
 {
-  for (int jointId = MIN_JOINT_ID; jointId <= MAX_JOINT_ID; jointId++)
+  for (uchar jointId = MIN_JOINT_ID; jointId <= MAX_JOINT_ID; jointId++)
     d_joints.push_back(make_shared<JointControl>(jointId));
 
   d_headSection = make_shared<HeadSection>(this);
@@ -22,7 +22,7 @@ void BodyControl::updateFromHardwareState()
 {
   auto hw = AgentState::get<HardwareState>();
   
-  for (int jointId = MIN_JOINT_ID; jointId <= MAX_JOINT_ID; jointId++)
+  for (uchar jointId = MIN_JOINT_ID; jointId <= MAX_JOINT_ID; jointId++)
   {
     shared_ptr<JointControl> joint = getJoint((JointId)jointId);
     joint->setValue(hw->getMX28State(jointId)->presentPositionValue);
@@ -33,7 +33,7 @@ void BodyControl::updateFromHardwareState()
 
 /////////////////////////////////////////////////////////////
 
-JointControl::JointControl(unsigned jointId)
+JointControl::JointControl(uchar jointId)
 : d_jointId(jointId),
   d_isDirty(false),
   d_value(MX28::CENTER_VALUE),

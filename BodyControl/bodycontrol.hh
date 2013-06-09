@@ -20,7 +20,7 @@ namespace bold
       D_GAIN_DEFAULT = 0
     };
 
-    JointControl(unsigned jointId);
+    JointControl(uchar jointId);
 
     uchar getId() const { return d_jointId; }
 
