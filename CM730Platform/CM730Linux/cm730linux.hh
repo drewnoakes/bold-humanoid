@@ -7,6 +7,8 @@
 
 namespace bold
 {
+  typedef unsigned char uchar;
+  
   class CM730Linux : public CM730Platform
   {
   private:
@@ -47,8 +49,8 @@ namespace bold
     bool setBaud(unsigned baud) override;
     void closePort() override;
     void clearPort() override;
-    int writePort(unsigned char const* packet, std::size_t numPacket) override;
-    int readPort(unsigned char* packet, std::size_t numPacket) override;
+    int writePort(uchar const* packet, std::size_t numPacket) override;
+    int readPort(uchar* packet, std::size_t numPacket) override;
 
     void lowPriorityWait() override;
     void midPriorityWait() override;
