@@ -47,6 +47,9 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
 
     writer.String("volts").Double(d_cm730State->voltage);
 
+    writer.String("rxBytes").Uint64(d_rxBytes);
+    writer.String("txBytes").Uint64(d_txBytes);
+
     writer.String("joints");
     writer.StartArray();
     for (shared_ptr<MX28Snapshot const> mx28 : d_mx28States)
@@ -64,9 +67,6 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
       writer.EndObject();
     }
     writer.EndArray();
-
-    writer.String("rxBytes").Uint64(d_rxBytes);
-    writer.String("txBytes").Uint64(d_txBytes);
   }
   writer.EndObject();
 }
