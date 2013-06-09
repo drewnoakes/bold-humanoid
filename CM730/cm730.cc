@@ -283,6 +283,8 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
               {
                 unsigned dataIndex = rxpacket[ID] == CM730::ID_CM ? 0 : rxpacket[ID];
                 unsigned address = bulkRead->data[dataIndex].startAddress + j;
+                assert(dataIndex < 21);
+                assert(address < MX28::MAXNUM_ADDRESS);
                 bulkRead->data[dataIndex].table[address] = rxpacket[PARAMETER + j];
               }
 
