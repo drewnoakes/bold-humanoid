@@ -73,8 +73,8 @@ namespace bold
     STEP m_CurrentStep;
 
     int d_playingPageIndex;
-    // TODO rename as d_isFirstStep
-    bool d_firstDrivingStart;
+    /// Whether the next step will be the first of the action
+    bool d_isFirstStepOfAction;
     int m_PageStepCount;
     bool d_isRunning;
     bool d_stopRequested;

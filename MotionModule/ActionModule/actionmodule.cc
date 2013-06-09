@@ -195,7 +195,7 @@ bool ActionModule::start(int index, PAGE *page)
   }
 
   d_playingPageIndex = index;
-  d_firstDrivingStart = true;
+  d_isFirstStepOfAction = true;
 
   d_isRunning = false; // will be set to true once 'step' is called
 
@@ -326,11 +326,11 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
   enum{ PRE_SECTION, MAIN_SECTION, POST_SECTION, PAUSE_SECTION };
   enum{ ZERO_FINISH, NON_ZERO_FINISH};
 
-  if (d_firstDrivingStart)
+  if (d_isFirstStepOfAction)
   {
     // Special treatment for the first step of a new action
     d_isRunning = true;
-    d_firstDrivingStart = false;
+    d_isFirstStepOfAction = false;
     d_playingFinished = false;
     d_stopRequested = false;
     wUnitTimeCount = 0;
