@@ -79,8 +79,8 @@ void ActionModule::resetPage(PAGE *pPage)
   pPage->header.speed = 32;
   pPage->header.accel = 32;
 
-  for (int i = MIN_JOINT_ID; i <= MAX_JOINT_ID; i++)
-    pPage->header.slope[i] = 0x55;
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    pPage->header.slope[jointId] = 0x55;
 
   for (int i = 0; i < MAXNUM_STEP; i++)
   {
@@ -290,6 +290,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
   uchar bDirectionChanged;
 
   ///////////////// Static
+  const int JOINT_ARRAY_LENGTH = 22;
   static unsigned short wpStartAngle1024[JOINT_ARRAY_LENGTH];
   static unsigned short wpTargetAngle1024[JOINT_ARRAY_LENGTH];
   static short int ipMovingAngle1024[JOINT_ARRAY_LENGTH];
@@ -339,7 +340,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     bPlayRepeatCount = d_playingPage.header.repeat;
     wNextPlayPage = 0;
 
-    for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
+    for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
     {
       if ((*selectedJoints)[bID])
       {
@@ -365,7 +366,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     }
     else
     {
-      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
+      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
       {
         if ((*selectedJoints)[bID])
         {
@@ -420,7 +421,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
   {
     wUnitTimeCount = 0;
 
-    for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
+    for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
     {
       if ((*selectedJoints)[bID])
       {
@@ -436,7 +437,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       bSection = MAIN_SECTION;
       wUnitTimeNum =  wUnitTimeTotalNum - (wAccelStep << 1);
 
-      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
+      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
       {
         if ((*selectedJoints)[bID])
         {
@@ -458,7 +459,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       bSection = POST_SECTION;
       wUnitTimeNum = wAccelStep;
 
-      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
+      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
       {
         if ((*selectedJoints)[bID])
           ipMainAngle1024[bID] = ipMovingAngle1024[bID] - ipMainAngle1024[bID] - ipAccelAngle1024[bID];
@@ -482,7 +483,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       // PRE Section
       bSection = PRE_SECTION;
 
-      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
+      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
       {
         if ((*selectedJoints)[bID])
           ipLastOutSpeed1024[bID] = 0;
@@ -549,7 +550,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       wMaxAngle1024 = 0;
 
       ////////// Joint
-      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
+      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
       {
         if (!(*selectedJoints)[bID])
           continue;
@@ -660,7 +661,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       if (lDivider2 == 0)
         lDivider2 = 1;
 
-      for (uchar bID = MIN_JOINT_ID; bID <= MAX_JOINT_ID; bID++)
+      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
       {
         if ((*selectedJoints)[bID])
         {

@@ -67,11 +67,6 @@ namespace bold
     } PAGE;
 
   private:
-    // TODO get rid of these
-    static const int JOINT_ARRAY_LENGTH = 22;
-    static const int MIN_JOINT_ID = 1;
-    static const int MAX_JOINT_ID = 20;
-
     FILE* d_file;
     PAGE d_playingPage;
     PAGE m_NextPlayPage;

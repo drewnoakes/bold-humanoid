@@ -67,8 +67,6 @@ namespace bold
   class BodyControl
   {
   private:
-    const int JOINT_ARRAY_LENGTH = 21;
-
     std::vector<std::shared_ptr<JointControl>> d_joints;
 
     std::shared_ptr<HeadSection> d_headSection;
@@ -76,10 +74,6 @@ namespace bold
     std::shared_ptr<LegSection> d_legSection;
 
   public:
-
-    const uchar MIN_JOINT_ID = 1;
-    const uchar MAX_JOINT_ID = 20;
-
     BodyControl();
 
     /** Sets all JointControl positions to match current hardware values. */
