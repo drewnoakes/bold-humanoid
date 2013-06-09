@@ -55,6 +55,7 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
       {
         writer.String("id").Int(mx28->id);
 //       writer.String("movingSpeedRPM").Int(mx28->movingSpeedRPM);
+        writer.String("val").Int(mx28->presentPositionValue);
         writer.String("rpm").Int(mx28->presentSpeedRPM);
         writer.String("load").Int(mx28->presentLoad);
         writer.String("temp").Int(mx28->presentTemp);
