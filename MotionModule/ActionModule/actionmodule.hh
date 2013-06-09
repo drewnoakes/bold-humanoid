@@ -67,6 +67,7 @@ namespace bold
     } PAGE;
 
   private:
+    // TODO get rid of these
     static const int JOINT_ARRAY_LENGTH = 22;
     static const int MIN_JOINT_ID = 1;
     static const int MAX_JOINT_ID = 20;
@@ -77,6 +78,7 @@ namespace bold
     STEP m_CurrentStep;
 
     int d_playingPageIndex;
+    // TODO rename as d_isFirstStep
     bool d_firstDrivingStart;
     int m_PageStepCount;
     bool d_isRunning;

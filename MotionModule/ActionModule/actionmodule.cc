@@ -25,6 +25,8 @@ ActionModule::~ActionModule()
     fclose(d_file);
 }
 
+// TODO reorder members to make this easier to read
+
 bool ActionModule::verifyChecksum(PAGE *pPage)
 {
   uchar checksum = 0x00;
@@ -199,6 +201,7 @@ bool ActionModule::start(int index, PAGE *page)
 
   d_playingPageIndex = index;
   d_firstDrivingStart = true;
+
   d_isRunning = false; // will be set to true once 'step' is called
   
   getScheduler()->add(this,
