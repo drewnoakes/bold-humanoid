@@ -104,8 +104,7 @@ namespace bold
     {
       for (uchar jointId = (uchar)d_minJointId; jointId <= (uchar)d_maxJointId; jointId++)
       {
-        auto joint = d_body->getJoint((JointId)jointId);
-        action(joint);
+        action(d_body->getJoint((JointId)jointId));
       }
     }
 
