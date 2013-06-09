@@ -25,7 +25,9 @@ void BodyControl::updateFromHardwareState()
   for (uchar jointId = MIN_JOINT_ID; jointId <= MAX_JOINT_ID; jointId++)
   {
     shared_ptr<JointControl> joint = getJoint((JointId)jointId);
-    joint->setValue(hw->getMX28State(jointId)->presentPositionValue);
+    auto mx28 = hw->getMX28State(jointId);
+    cout << "[BodyControl::updateFromHardwareState] Setting joint " << (int)jointId << " angle=" << Math::radToDeg(mx28->presentPosition) << " value=" << mx28->presentPositionValue << endl;
+    joint->setValue(mx28->presentPositionValue);
     // Clear dirty flag. Value came from hardware, so no need to write it back again.
     joint->clearDirty();
   }
