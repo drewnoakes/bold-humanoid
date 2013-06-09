@@ -12,21 +12,32 @@ namespace bold
 
   // TODO rename as MX28State
 
+  /** Models frequently changing data table entries from an MX28 dynamixel device.
+   */
   class MX28Snapshot
   {
   public:
+    /// The ID of this MX28 dynamixel device.
     uchar id;
 
+    /// The present angle, in radians.
     double presentPosition;
+    /// The present angle, in encoder units.
     double presentPositionValue;
+    /// The present speed, in revolutions per minute.
     double presentSpeedRPM;
+    /// The present load.
     double presentLoad;
+    /// The present voltage.
     double presentVoltage;
+    /// The present temperature, in Celcius.
     uchar presentTemp;
 
     MX28Snapshot(BulkReadTable const& data, int const mx28ID);
   };
 
+  /** Models infrequently changing data table entries from an MX28 dynamixel device.
+   */
   class StaticMX28State
   {
   public:
