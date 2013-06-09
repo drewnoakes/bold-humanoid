@@ -15,6 +15,13 @@ void Agent::run()
   
     d_motionLoop->start();
 
+    cout << "[Agent::run] Waiting for HardwareState" << endl;
+    while (!AgentState::get<HardwareState>())
+    {
+      // Wait until the motion loop has read a hardware value
+      usleep(8000);
+    }
+    
     // TODO move this to an initialisation phase of the behaviour tree
     cout << "[Agent::run] Getting into initial pose" << endl;
     auto sit = d_optionTree->getOption("sitdownaction");
