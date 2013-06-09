@@ -95,8 +95,8 @@ namespace bold
     
     /// Called by the framework when a task that requests committal is started.
     void setCommitted() { d_isCommitted = true; }
-    /// Called by the framework when the task's module signals completion.
-    void clearCommitted() { d_isCommitted = false; }
+//    /// Called by the framework when the task's module signals completion.
+//     void clearCommitted() { d_isCommitted = false; }
   
   private:
     MotionModule* d_module;
