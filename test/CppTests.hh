@@ -239,6 +239,31 @@ TEST (CppTests, vectorEraseRemoveWhenEmpty)
   EXPECT_EQ( 0, vec.size() );
 }
 
+TEST (CppTests, vectorEraseSharedPtr)
+{
+  for (int thres = 0; thres < 4; thres++)
+  {
+    vector<shared_ptr<int>> ptrs;
+    
+    ptrs.push_back(make_shared<int>(0));
+    ptrs.push_back(make_shared<int>(1));
+    ptrs.push_back(make_shared<int>(2));
+    ptrs.push_back(make_shared<int>(3));
+    
+    ptrs.erase(
+      remove_if(
+        ptrs.begin(), ptrs.end(),
+        [thres](shared_ptr<int> i) { EXPECT_TRUE(bool(i)); return *i >= thres; }
+      ),
+      ptrs.end()
+    );
+    
+    ASSERT_TRUE( std::all_of(ptrs.begin(), ptrs.end(), [](shared_ptr<int> p) { return bool(p); }));
+    
+    EXPECT_EQ( thres, ptrs.size() );
+  }
+}
+
 ///
 /// ATOMIC OPERATIONS
 ///
