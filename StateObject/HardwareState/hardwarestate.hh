@@ -8,6 +8,8 @@
 
 namespace bold
 {
+  typedef unsigned char uchar;
+  
   class CM730Snapshot;
   class MX28Snapshot;
 
@@ -32,9 +34,9 @@ namespace bold
       return d_cm730State;
     }
 
-    std::shared_ptr<MX28Snapshot const> getMX28State(unsigned jointId) const
+    std::shared_ptr<MX28Snapshot const> getMX28State(uchar jointId) const
     {
-      assert(jointId >= (unsigned)JointId::MIN && jointId <= (unsigned)JointId::MAX);
+      assert(jointId >= (uchar)JointId::MIN && jointId <= (uchar)JointId::MAX);
       assert(d_mx28States.size() >= jointId);
 
       return d_mx28States[jointId - 1];
