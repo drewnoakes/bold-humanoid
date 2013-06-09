@@ -326,8 +326,9 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 
   if (d_firstDrivingStart)
   {
+    // Special treatment for the first step of a new action
     d_isRunning = true;
-    d_firstDrivingStart = false; //First Process end
+    d_firstDrivingStart = false;
     d_playingFinished = false;
     d_stopRequested = false;
     wUnitTimeCount = 0;
