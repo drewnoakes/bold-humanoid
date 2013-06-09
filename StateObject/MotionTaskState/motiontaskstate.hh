@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <memory>
 #include <vector>
 
@@ -14,7 +15,7 @@ namespace bold
   {
   public:
     MotionTaskState(
-      std::shared_ptr<std::vector<std::pair<std::shared_ptr<MotionTask>, std::shared_ptr<JointSelection>>>> moduleJointSelection,
+      std::shared_ptr<std::vector<std::pair<MotionModule*, std::shared_ptr<JointSelection>>>> moduleJointSelection,
       std::vector<std::shared_ptr<MotionTask>> headTasks,
       std::vector<std::shared_ptr<MotionTask>> armTasks,
       std::vector<std::shared_ptr<MotionTask>> legTasks
@@ -30,12 +31,12 @@ namespace bold
     bool isEmpty() const { return d_moduleJointSelection->size() == 0; }
     
     /// Provides which modules to step, and what JointSelection to pass them
-    std::shared_ptr<std::vector<std::pair<std::shared_ptr<MotionTask>, std::shared_ptr<JointSelection>>>> getModuleJointSelection() const { return d_moduleJointSelection; }
+    std::shared_ptr<std::vector<std::pair<MotionModule*, std::shared_ptr<JointSelection>>>> getModuleJointSelection() const { return d_moduleJointSelection; }
     
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
-    std::shared_ptr<std::vector<std::pair<std::shared_ptr<MotionTask>, std::shared_ptr<JointSelection>>>> d_moduleJointSelection;
+    std::shared_ptr<std::vector<std::pair<MotionModule*, std::shared_ptr<JointSelection>>>> d_moduleJointSelection;
     std::vector<std::shared_ptr<MotionTask>> d_headTasks;
     std::vector<std::shared_ptr<MotionTask>> d_armTasks;
     std::vector<std::shared_ptr<MotionTask>> d_legTasks;

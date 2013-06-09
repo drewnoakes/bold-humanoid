@@ -168,13 +168,13 @@ void MotionLoop::step(SequentialTimer& t)
     
     if (tasks && !tasks->isEmpty())
     {
-      for (pair<shared_ptr<MotionTask>, shared_ptr<JointSelection>> const& pair : *tasks->getModuleJointSelection())
+      for (pair<MotionModule*, shared_ptr<JointSelection>> const& pair : *tasks->getModuleJointSelection())
       {
-        shared_ptr<MotionTask> task = pair.first;
+        MotionModule* module = pair.first;
         shared_ptr<JointSelection> jointSelection = pair.second;
-        assert(task);
+
+        assert(module);
         assert(jointSelection);
-        auto module = task->getModule();
         
         module->step(jointSelection);
 

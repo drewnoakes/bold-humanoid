@@ -30,7 +30,7 @@ void MotionTaskScheduler::update()
     return;
 
   // Determine which tasks are assigned which body sections
-  auto moduleJointSelection = make_shared<vector<pair<shared_ptr<MotionTask>, shared_ptr<JointSelection>>>>();
+  auto moduleJointSelection = make_shared<vector<pair<MotionModule*, shared_ptr<JointSelection>>>>();
   
   vector<shared_ptr<MotionTask>> headTasks;
   vector<shared_ptr<MotionTask>> armTasks;
@@ -71,31 +71,40 @@ void MotionTaskScheduler::update()
   shared_ptr<MotionTask> armTask  = armTasks.size()  ? armTasks[0] : nullptr;
   shared_ptr<MotionTask> legTask  = legTasks.size()  ? legTasks[0] : nullptr;
   
+  MotionModule* headModule = headTask ? headTask->getModule() : nullptr;
+  MotionModule* armModule = armTask ? armTask->getModule() : nullptr;
+  MotionModule* legModule = legTask ? legTask->getModule() : nullptr;
+  
   // This is a bit ugly, but I cannot think of a simpler way of grouping them in c++
-  if (headTask == armTask && armTask == legTask)
+  if (headModule == armModule && armModule == legModule)
   {
-    if (headTask) moduleJointSelection->push_back(make_pair(headTask, JointSelection::all()));
+    // All sections controlled by same module
+    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::all()));
   }
-  else if (headTask == armTask)
+  else if (headModule == armModule)
   {
-    if (headTask) moduleJointSelection->push_back(make_pair(headTask, JointSelection::headAndArms()));
-    if (legTask)  moduleJointSelection->push_back(make_pair(legTask,  JointSelection::legs()));
+    // Head and arm sections controlled by same module
+    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::headAndArms()));
+    if (legModule)  moduleJointSelection->push_back(make_pair(legModule,  JointSelection::legs()));
   }
-  else if (armTask == legTask)
+  else if (armModule == legModule)
   {
-    if (headTask) moduleJointSelection->push_back(make_pair(headTask, JointSelection::head()));
-    if (armTask)  moduleJointSelection->push_back(make_pair(armTask,  JointSelection::armsAndLegs()));
+    // Arm and leg sections controlled by same module
+    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::head()));
+    if (armModule)  moduleJointSelection->push_back(make_pair(armModule,  JointSelection::armsAndLegs()));
   }
-  else if (headTask == legTask)
+  else if (headModule == legModule)
   {
-    if (headTask) moduleJointSelection->push_back(make_pair(headTask, JointSelection::headAndLegs()));
-    if (armTask)  moduleJointSelection->push_back(make_pair(armTask,  JointSelection::arms()));
+    // Head and leg sections controlled by same module
+    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::headAndLegs()));
+    if (armModule)  moduleJointSelection->push_back(make_pair(armModule,  JointSelection::arms()));
   }
   else
   {
-    if (headTask) moduleJointSelection->push_back(make_pair(headTask, JointSelection::head()));
-    if (armTask)  moduleJointSelection->push_back(make_pair(armTask,  JointSelection::arms()));
-    if (legTask)  moduleJointSelection->push_back(make_pair(legTask,  JointSelection::legs()));
+    // Each section controlled by different modules
+    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::head()));
+    if (armModule)  moduleJointSelection->push_back(make_pair(armModule,  JointSelection::arms()));
+    if (legModule)  moduleJointSelection->push_back(make_pair(legModule,  JointSelection::legs()));
   }
   
   // Commit selected tasks if they require it
