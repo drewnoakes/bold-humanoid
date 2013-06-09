@@ -15,7 +15,8 @@ void MotionTaskScheduler::update()
           d_tasks.begin(), 
           d_tasks.end(),
           [module](shared_ptr<MotionTask> const& task) { return task->isCommitted() && task->getModule() == module; }
-        )
+        ),
+        d_tasks.end()
       );
       
       if (it1 != d_tasks.end())
@@ -125,7 +126,8 @@ void MotionTaskScheduler::update()
       d_tasks.begin(), 
       d_tasks.end(),
       [](shared_ptr<MotionTask> task) { return !task->isCommitted(); }
-    )
+    ),
+    d_tasks.end()
   );
   
   d_hasChange = it2 == d_tasks.end();
