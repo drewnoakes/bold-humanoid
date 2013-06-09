@@ -141,6 +141,8 @@ namespace bold
       // TODO we hold this lock throughout all observers... dodgy!
     }
 
+    /** Get the StateObject of specified type T. May be nullptr.
+     */
     template <typename T>
     static std::shared_ptr<T const> get()
     {
