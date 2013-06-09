@@ -202,6 +202,28 @@ TEST (CppTests, vectorEraseRemoveNothingMatched)
   EXPECT_EQ( 6, seen[5] );
 }
 
+TEST (CppTests, vectorEraseWhenNoElements)
+{
+  vector<int> vec;
+  vector<int> seen;
+  
+  auto it = vec.erase(
+    remove_if(
+      vec.begin(), vec.end(),
+      [&seen](int i) {
+        seen.push_back(i);
+        return false;
+      }
+    ),
+    vec.end()
+  );
+  
+  EXPECT_EQ( vec.end(), it );
+  
+  EXPECT_EQ( 0, vec.size() );
+  EXPECT_EQ( 0, seen.size() );
+}
+
 TEST (CppTests, vectorEraseRemoveWhenEmpty)
 {
   vector<int> vec;
