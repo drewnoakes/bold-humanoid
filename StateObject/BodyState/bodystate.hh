@@ -13,6 +13,8 @@
 
 namespace bold
 {
+  typedef unsigned char uchar;
+  
   class BodyState : public StateObject
   {
   public:
@@ -38,7 +40,7 @@ namespace bold
       assert(jointId >= JointId::MIN && jointId <= JointId::MAX);
 
       // NOTE cannot use '[]' on a const map
-      auto const& i = d_jointById.find((unsigned)jointId);
+      auto const& i = d_jointById.find((uchar)jointId);
       if (i == d_jointById.end())
         throw std::runtime_error("Invalid JointId" /*+ jointId*/);
       return i->second;
@@ -46,7 +48,7 @@ namespace bold
 
     void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
     {
-      for (unsigned jointId = (unsigned)JointId::MIN; jointId <= (unsigned)JointId::MAX; jointId++)
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
         auto joint = getJoint((JointId)jointId);
         action(joint);
@@ -65,7 +67,7 @@ namespace bold
     double d_torsoHeight;
     std::shared_ptr<Limb> d_torso;
     // TODO replace with a vector<sp<Joint>> for performance of lookup
-    std::map<unsigned, std::shared_ptr<Joint>> d_jointById;
+    std::map<uchar, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
 
     /// Rotation of the torso, wrt the agent/world frames

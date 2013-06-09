@@ -102,7 +102,7 @@ namespace bold
 
     void visitJoints(std::function<void(std::shared_ptr<JointControl>)> action)
     {
-      for (unsigned jointId = (int)d_minJointId; jointId <= (int)d_maxJointId; jointId++)
+      for (uchar jointId = (uchar)d_minJointId; jointId <= (uchar)d_maxJointId; jointId++)
       {
         auto joint = d_body->getJoint((JointId)jointId);
         action(joint);

@@ -17,7 +17,7 @@ void Agent::readStaticHardwareState()
 
   auto mx28States = vector<shared_ptr<StaticMX28State const>>();
   mx28States.push_back(nullptr); // padding as joints start at 1
-  for (unsigned jointId = 1; jointId <= 20; jointId++)
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     mx28States.push_back(make_shared<StaticMX28State>(staticBulkRead->getBulkReadData(jointId), jointId));
   }
