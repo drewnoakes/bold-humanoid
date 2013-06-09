@@ -97,11 +97,6 @@ void ActionModule::resetPage(PAGE *pPage)
 void ActionModule::initialize()
 {
   d_isRunning = false;
-
-  // copy the current pose somehow at this time?
-  auto hw = AgentState::get<HardwareState>();
-  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
 }
 
 bool ActionModule::loadFile(string filename)
@@ -203,6 +198,12 @@ bool ActionModule::start(int index, PAGE *page)
   d_firstDrivingStart = true;
 
   d_isRunning = false; // will be set to true once 'step' is called
+
+  // copy the current pose somehow at this time?
+  auto hw = AgentState::get<HardwareState>();
+  assert(hw);
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
   
   getScheduler()->add(this,
                       Priority::Optional,  true,  // HEAD   Interuptable::YES
