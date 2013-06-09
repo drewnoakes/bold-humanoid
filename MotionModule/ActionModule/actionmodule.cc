@@ -96,9 +96,10 @@ void ActionModule::initialize()
 {
   d_isRunning = false;
 
-  // TODO do we need to copy the current pose somehow at this time?
-//   for (int id = 1; id < NUMBER_OF_JOINTS; id++)
-//     d_jointData.setValue(id, MotionStatus::m_CurrentJoints.GetValue(id));
+  // copy the current pose somehow at this time?
+  auto hw = AgentState::get<HardwareState>();
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
 }
 
 bool ActionModule::loadFile(string filename)
