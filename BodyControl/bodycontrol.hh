@@ -82,6 +82,9 @@ namespace bold
 
     BodyControl();
 
+    /** Sets all JointControl positions to match current hardware values. */
+    void updateFromHardwareState();
+    
     std::shared_ptr<JointControl> getJoint(JointId const id) const { return d_joints[(int)id - 1]; }
 
     std::vector<std::shared_ptr<JointControl>> getJoints() const { return d_joints; }

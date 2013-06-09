@@ -1,6 +1,9 @@
 #include "bodycontrol.hh"
 
+#include "../AgentState/agentstate.hh"
 #include "../MX28/mx28.hh"
+#include "../MX28Snapshot/mx28snapshot.hh"
+#include "../StateObject/HardwareState/hardwarestate.hh"
 
 using namespace bold;
 using namespace std;
@@ -13,6 +16,19 @@ BodyControl::BodyControl()
   d_headSection = make_shared<HeadSection>(this);
   d_armSection = make_shared<ArmSection>(this);
   d_legSection = make_shared<LegSection>(this);
+}
+
+void BodyControl::updateFromHardwareState()
+{
+  auto hw = AgentState::get<HardwareState>();
+  
+  for (int jointId = MIN_JOINT_ID; jointId <= MAX_JOINT_ID; jointId++)
+  {
+    shared_ptr<JointControl> joint = getJoint((JointId)jointId);
+    joint->setValue(hw->getMX28State(jointId)->presentPositionValue);
+    // Clear dirty flag. Value came from hardware, so no need to write it back again.
+    joint->clearDirty();
+  }
 }
 
 /////////////////////////////////////////////////////////////

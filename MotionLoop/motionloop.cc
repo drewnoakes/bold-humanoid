@@ -263,8 +263,6 @@ void MotionLoop::step(SequentialTimer& t)
     cerr << "[MotionLoop::process] Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState" << endl;
     return;
   }
-  
-  d_readYet = true;
 
   auto cm730Snapshot = make_shared<CM730Snapshot>(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM));
 
@@ -298,4 +296,10 @@ void MotionLoop::step(SequentialTimer& t)
 
   AgentState::getInstance().set(make_shared<BodyState const>(angles));
   t.timeEvent("Update BodyState");
+  
+  if (!d_readYet)
+  {
+    d_bodyControl->updateFromHardwareState();
+    d_readYet = true;
+  }
 }
