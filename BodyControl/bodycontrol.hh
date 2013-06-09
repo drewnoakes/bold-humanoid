@@ -24,8 +24,8 @@ namespace bold
 
     uchar getId() const { return d_jointId; }
 
-    void setValue(int value);
-    int getValue() const { return d_value; }
+    void setValue(unsigned value);
+    unsigned getValue() const { return d_value; }
 
     /// Sets the angle, in degrees
     void setAngle(double angle);
@@ -53,7 +53,7 @@ namespace bold
   private:
     uchar d_jointId;
     bool d_isDirty;
-    int d_value;
+    unsigned d_value;
     double d_angle;
     uchar d_gainP;
     uchar d_gainI;

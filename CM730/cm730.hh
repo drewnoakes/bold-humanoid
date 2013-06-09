@@ -160,11 +160,11 @@ namespace bold
     };
 
   public:
-    static int makeWord(uchar lowByte, uchar highByte) { return (highByte << 8) | lowByte; }
-    static uchar getLowByte(int word) { return word & 0xFF; }
-    static uchar getHighByte(int word) { return (word >> 8) & 0xFF; }
+    static unsigned makeWord(uchar lowByte, uchar highByte) { return (highByte << 8) | lowByte; }
+    static uchar getLowByte(unsigned word) { return word & 0xFF; }
+    static uchar getHighByte(unsigned word) { return (word >> 8) & 0xFF; }
 
-    static int color2Value(uchar red, uchar green, uchar blue) { return (int)(((blue>>3)<<10)|((green>>3)<<5)|(red>>3)); }
+    static unsigned color2Value(uchar red, uchar green, uchar blue) { return (unsigned)(((blue>>3)<<10)|((green>>3)<<5)|(red>>3)); }
 
     // 0 -> -1600 dps
     // 512 -> 0 dps
@@ -173,9 +173,9 @@ namespace bold
     static constexpr double RATIO_VALUE2RPS = (1600.0*(M_PI/180.0)) / 512.0;
     static constexpr double RATIO_VALUE2GS = 4.0 / 512.0;
 
-    static double gyroValueToDps(int value) { return (value - 512)*RATIO_VALUE2DPS; }
-    static double gyroValueToRps(int value) { return (value - 512)*RATIO_VALUE2RPS; }
-    static double accValueToGs(int value)   { return (value - 512)*RATIO_VALUE2GS; }
+    static double gyroValueToDps(unsigned value) { return ((int)value - 512)*RATIO_VALUE2DPS; }
+    static double gyroValueToRps(unsigned value) { return ((int)value - 512)*RATIO_VALUE2RPS; }
+    static double accValueToGs(unsigned value)   { return ((int)value - 512)*RATIO_VALUE2GS; }
 
     static Eigen::Vector3d shortToColour(unsigned short s)
     {
@@ -197,7 +197,7 @@ namespace bold
     /// Links CM730, returning true on success.
     bool connect();
 
-    bool changeBaud(int baud);
+    bool changeBaud(unsigned baud);
 
     /// Releases CM730.
     void disconnect();

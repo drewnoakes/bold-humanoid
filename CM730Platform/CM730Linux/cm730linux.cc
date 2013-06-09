@@ -84,7 +84,7 @@ UART_OPEN_ERROR:
   return false;
 }
 
-bool CM730Linux::setBaud(int baud)
+bool CM730Linux::setBaud(unsigned baud)
 {
   struct serial_struct serinfo;
   int baudrate = (int)(2000000.0f / (float)(baud + 1));

@@ -456,7 +456,7 @@ bool CM730::connect()
   return dxlPowerOn();
 }
 
-bool CM730::changeBaud(int baud)
+bool CM730::changeBaud(unsigned baud)
 {
   if (d_platform->setBaud(baud) == false)
   {

@@ -7,9 +7,9 @@ namespace bold
   class MX28
   {
   public:
-    static const int MIN_VALUE    = 0x0000;
-    static const int CENTER_VALUE = 0x0800; // 2048
-    static const int MAX_VALUE    = 0x0FFF; // 4095
+    static const unsigned MIN_VALUE    = 0x0000;
+    static const unsigned CENTER_VALUE = 0x0800; // 2048
+    static const unsigned MAX_VALUE    = 0x0FFF; // 4095
 
     static constexpr double MIN_DEGS = -180.0;
     static constexpr double MAX_DEGS =  180.0;
@@ -28,24 +28,24 @@ namespace bold
     static constexpr double RATIO_VALUE2TORQUE = 0.01;
     static constexpr double RATIO_TORQUE2VALUE = 100;
 
-    static int getMirrorValue(int value) { return MAX_VALUE + 1 - value; }
+    static unsigned getMirrorValue(unsigned value) { return MAX_VALUE + 1 - value; }
     static double getMirrorAngle(double angle) { return -angle; }
 
-    static int degs2Value(double angle) { return (int)(angle*RATIO_DEGS2VALUE)+CENTER_VALUE; }
-    static double value2Degs(int value) { return (double)(value-CENTER_VALUE)*RATIO_VALUE2DEGS; }
+    static unsigned degs2Value(double angle) { return (unsigned)(angle*RATIO_DEGS2VALUE)+CENTER_VALUE; }
+    static double value2Degs(unsigned value) { return (double)(value-CENTER_VALUE)*RATIO_VALUE2DEGS; }
 
-    static int rads2Value(double angle) { return (int)(angle*RATIO_RADS2VALUE)+CENTER_VALUE; }
-    static double value2Rads(int value) { return (double)(value-CENTER_VALUE)*RATIO_VALUE2RADS; }
+    static unsigned rads2Value(double angle) { return (unsigned)(angle*RATIO_RADS2VALUE)+CENTER_VALUE; }
+    static double value2Rads(unsigned value) { return (double)(value-CENTER_VALUE)*RATIO_VALUE2RADS; }
 
 /*
     // TODO compare these old conversions with those being used for accuracy before deleting this commented code
 
-    double MX28Snapshot::angleValueToRads(unsigned int value)
+    double MX28Snapshot::angleValueToRads(unsigned value)
     {
       return ((int)value - 0x800) * (M_PI / 0x800);
     }
 
-    double MX28Snapshot::valueToRPM(unsigned int value)
+    double MX28Snapshot::valueToRPM(unsigned value)
     {
       // Value is between 0 & 1023 (0x3FF). Unit of 0.053 rpm.
       // If zero, maximum RPM of motor is used without speed control.
@@ -59,12 +59,11 @@ namespace bold
     }
 */
 
-    static double rpm2Value(double speed) { int temp = ((int)(fabs(speed)*RATIO_RPM2VALUE)) & 0x3FF; if (speed < 0) temp |= 0x400; return temp; }
-    static double value2Rpm(int value) { double temp = (value & 0x3FF)*RATIO_VALUE2RPM; if (value & 0x400) temp = -temp; return temp; }
+    static unsigned rpm2Value(double speed) { int temp = ((int)(fabs(speed)*RATIO_RPM2VALUE)) & 0x3FF; if (speed < 0) temp |= 0x400; return temp; }
+    static double value2Rpm(unsigned value) { double temp = (value & 0x3FF)*RATIO_VALUE2RPM; if (value & 0x400) temp = -temp; return temp; }
 
-    static double torque2Value(double speed) { int temp = ((int)(fabs(speed)*RATIO_TORQUE2VALUE)) & 0x3FF; if (speed < 0) temp |= 0x400; return temp; }
-    static double talue2Torque(int value) { double temp = (value & 0x3FF)*RATIO_VALUE2TORQUE; if (value & 0x400) temp = -temp; return temp; }
-
+    static unsigned torque2Value(double speed) { int temp = ((int)(fabs(speed)*RATIO_TORQUE2VALUE)) & 0x3FF; if (speed < 0) temp |= 0x400; return temp; }
+    static double talue2Torque(unsigned value) { double temp = (value & 0x3FF)*RATIO_VALUE2TORQUE; if (value & 0x400) temp = -temp; return temp; }
 
     /** EEPROM and RAM p. 4 in MX28 Technical Specifications PDF
      * This enum enumerates the adresses. The list depends on the version the MX28.

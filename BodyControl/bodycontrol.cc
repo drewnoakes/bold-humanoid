@@ -45,7 +45,7 @@ JointControl::JointControl(uchar jointId)
   d_gainD(D_GAIN_DEFAULT)
 {}
 
-void JointControl::setValue(int value)
+void JointControl::setValue(unsigned value)
 {
   value = Math::clamp(value, MX28::MIN_VALUE, MX28::MAX_VALUE);
   if (d_value == value)
@@ -59,7 +59,7 @@ void JointControl::setAngle(double angle)
 {
   angle = Math::clamp(angle, MX28::MIN_DEGS, MX28::MAX_DEGS);
   d_angle = angle;
-  int value = MX28::degs2Value(angle);
+  unsigned value = MX28::degs2Value(angle);
   if (d_value == value)
     return;
   d_value = value;

@@ -17,7 +17,7 @@ namespace bold
     /// Opens CM730 port, returning true on success
     virtual bool openPort() = 0;
 
-    virtual bool setBaud(int baud) = 0;
+    virtual bool setBaud(unsigned baud) = 0;
 
     /// Closes CM730 port
     virtual void closePort() = 0;

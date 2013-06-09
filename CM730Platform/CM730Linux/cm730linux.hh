@@ -44,7 +44,7 @@ namespace bold
     void resetByteCounts() override { d_rxByteCount = d_txByteCount = 0; }
 
     bool openPort() override;
-    bool setBaud(int baud) override;
+    bool setBaud(unsigned baud) override;
     void closePort() override;
     void clearPort() override;
     int writePort(unsigned char const* packet, std::size_t numPacket) override;
