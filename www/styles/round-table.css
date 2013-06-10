@@ -435,6 +435,11 @@ div.module.timing table.timing-details tr td.max-duration
     padding-left: 1em;
 }
 
+div.module.timing table.timing-details td
+{
+  min-width: 60px;
+}
+
 div.module.timing div.fps
 {
     float: right;
