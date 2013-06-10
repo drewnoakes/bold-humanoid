@@ -51,22 +51,6 @@ WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   A_MOVE_AMPLITUDE = 0;
   A_MOVE_AIM_ON = false;
   BALANCE_ENABLE = true;
-
-//   d_jointData.setAngle(JointControl::ID_R_SHOULDER_PITCH, -48.345);
-//   d_jointData.setAngle(JointControl::ID_L_SHOULDER_PITCH, 41.313);
-//   d_jointData.setAngle(JointControl::ID_R_SHOULDER_ROLL, -17.873);
-//   d_jointData.setAngle(JointControl::ID_L_SHOULDER_ROLL, 17.580);
-//   d_jointData.setAngle(JointControl::ID_R_ELBOW, 29.300);
-//   d_jointData.setAngle(JointControl::ID_L_ELBOW, -29.593);
-//
-//   d_jointData.setAngle(JointControl::ID_HEAD_TILT, EYE_TILT_OFFSET_ANGLE);
-//
-//   d_jointData.setPGain(JointControl::ID_R_SHOULDER_PITCH, 8);
-//   d_jointData.setPGain(JointControl::ID_L_SHOULDER_PITCH, 8);
-//   d_jointData.setPGain(JointControl::ID_R_SHOULDER_ROLL, 8);
-//   d_jointData.setPGain(JointControl::ID_L_SHOULDER_ROLL, 8);
-//   d_jointData.setPGain(JointControl::ID_R_ELBOW, 8);
-//   d_jointData.setPGain(JointControl::ID_L_ELBOW, 8);
 }
 
 WalkModule::~WalkModule()
@@ -539,11 +523,16 @@ void WalkModule::applyHead(shared_ptr<HeadSection> head)
 
 void WalkModule::applyArms(shared_ptr<ArmSection> arms)
 {
-  // Ensure we have our standard PID values
-  arms->visitJoints([this](shared_ptr<JointControl> joint){ joint->setPidGains(P_GAIN, I_GAIN, D_GAIN); });
+  // Arms move with a low P value of 8
+  arms->visitJoints([this](shared_ptr<JointControl> joint){ joint->setPGain(8); });
 
   arms->shoulderPitchRight()->setValue(d_outValue[12]);
   arms->shoulderPitchLeft()->setValue(d_outValue[13]);
+
+  arms->shoulderRollRight()->setAngle(-17);
+  arms->shoulderRollLeft()->setAngle(17);
+  arms->elbowRight()->setAngle(29);
+  arms->elbowLeft()->setAngle(-29);
 }
 
 void WalkModule::applyLegs(shared_ptr<LegSection> legs)
