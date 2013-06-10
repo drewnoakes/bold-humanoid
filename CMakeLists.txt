@@ -83,6 +83,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Ambulator/Ambulator.cc
   ./Ambulator/setters.cc
   ./Ambulator/step.cc
 )
