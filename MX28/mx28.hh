@@ -28,14 +28,14 @@ namespace bold
     static constexpr double RATIO_VALUE2TORQUE = 0.01;
     static constexpr double RATIO_TORQUE2VALUE = 100;
 
-    static unsigned getMirrorValue(unsigned value) { return MAX_VALUE + 1 - value; }
-    static double getMirrorAngle(double angle) { return -angle; }
+//     static unsigned getMirrorValue(unsigned value) { return MAX_VALUE + 1 - value; }
+//     static double getMirrorAngle(double angle) { return -angle; }
 
-    static unsigned degs2Value(double angle) { return (unsigned)(angle*RATIO_DEGS2VALUE)+CENTER_VALUE; }
-    static double value2Degs(unsigned value) { return (double)(value-CENTER_VALUE)*RATIO_VALUE2DEGS; }
+    static unsigned degs2Value(double angle) { return (angle*RATIO_DEGS2VALUE)+CENTER_VALUE; }
+    static double value2Degs(unsigned value) { return (double)((int)value-(int)CENTER_VALUE)*RATIO_VALUE2DEGS; }
 
-    static unsigned rads2Value(double angle) { return (unsigned)(angle*RATIO_RADS2VALUE)+CENTER_VALUE; }
-    static double value2Rads(unsigned value) { return (double)(value-CENTER_VALUE)*RATIO_VALUE2RADS; }
+    static unsigned rads2Value(double angle) { return (angle*RATIO_RADS2VALUE)+CENTER_VALUE; }
+    static double value2Rads(unsigned value) { return (double)((int)value-(int)CENTER_VALUE)*RATIO_VALUE2RADS; }
 
 /*
     // TODO compare these old conversions with those being used for accuracy before deleting this commented code
