@@ -261,7 +261,7 @@ void BodyState::initBody(double angles[])
   // Cache joints by ID
   walkJoints(d_torso, [this,angles](shared_ptr<Joint> joint)
   {
-    joint->angle = angles[(int)joint->id];
-    d_jointById[(int)joint->id] = joint;
+    joint->angle = angles[(uchar)joint->id];
+    d_jointById[(uchar)joint->id] = joint;
   });
 }
