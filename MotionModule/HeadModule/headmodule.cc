@@ -119,6 +119,9 @@ void HeadModule::step(shared_ptr<JointSelection> selectedJoints)
 
 void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
 {
+  // Head moves with a low P value of 8
+  head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPGain(8); });
+
   head->pan()->setAngle(d_panAngle);
   head->tilt()->setAngle(d_tiltAngle);
 }
