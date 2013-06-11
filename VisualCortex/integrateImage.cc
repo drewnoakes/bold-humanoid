@@ -46,7 +46,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     for (Blob const& ballBlob : blobsPerLabel[d_ballLabel])
     {
       if (ballBlob.area < d_minBallArea)
-        break;
+        continue;
 
       Vector2d pos = ballBlob.mean;
 
