@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 
   // Load the BGR image
   cout << "Reading " << inputFileName << endl;
-  cv::Mat colourImage = imread(inputFileName, CV_LOAD_IMAGE_COLOR);
+  Mat colourImage = imread(inputFileName, CV_LOAD_IMAGE_COLOR);
 
   if (!colourImage.data)
   {
@@ -70,16 +70,16 @@ int main(int argc, char **argv)
   // Build colour ranges for segmentation
 
   // hatfield (old, white field)
-  shared_ptr<PixelLabel> ballLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange::fromDoubles(354,   6, 0.74, 0.18, 0.71, 0.22), "Ball")); // red super ball
-  shared_ptr<PixelLabel> goalLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange::fromDoubles( 54,  15, 0.75, 0.20, 0.74, 0.20), "Goal")); // yellow paper
-  shared_ptr<PixelLabel> fieldLabel= make_shared<PixelLabel>(PixelLabel(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.25, 0.85, 0.35), "Field")); // white floor
-  shared_ptr<PixelLabel> lineLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.75, 0.00, 0.75), "Line")); // black line
+//   shared_ptr<PixelLabel> ballLabel = make_shared<PixelLabel>(Colour::hsvRange::fromDoubles(354,   1, 0.74, 0.18, 0.71, 0.22), "Ball"); // red super ball
+//   shared_ptr<PixelLabel> goalLabel = make_shared<PixelLabel>(Colour::hsvRange::fromDoubles( 54,  15, 0.75, 0.20, 0.74, 0.20), "Goal"); // yellow paper
+//   shared_ptr<PixelLabel> fieldLabel= make_shared<PixelLabel>(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.25, 0.85, 0.35), "Field"); // white floor
+//   shared_ptr<PixelLabel> lineLabel = make_shared<PixelLabel>(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.75, 0.00, 0.75), "Line"); // black line
 
   // rgb.jpg
-//   shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball"));
-//   shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal"));
-//   shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field"));
-//   shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>(PixelLabel(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line"));
+  shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball");
+  shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal");
+  shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field");
+  shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line");
 
   cout << "Using labels:" << endl
        << "  " << *ballLabel << endl
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
   vector<shared_ptr<PixelLabel>> labels = { goalLabel, ballLabel, fieldLabel, lineLabel };
 
   // Resources for labelling
-  cv::Mat labelledImage(colourImage.size(), CV_8UC1);
+  Mat labelledImage(colourImage.size(), CV_8UC1);
   // TODO: this will crash
   auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels), 0);
 
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 
   MaskWalkLineFinder maskWalkLineFinder(imageWidth, imageHeight);
 
-  cout << "Startup took " << (Clock::getSecondsSince(t)*1000) << " ms" << endl;
+  cout << "Startup took " << Clock::getMillisSince(t) << " ms" << endl;
 
   //
   // IMAGE LABELLING
@@ -127,7 +127,7 @@ int main(int argc, char **argv)
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
     imageLabeller->label(colourImage, labelledImage);
-  cout << "Labelled " << loopCount << " times. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl;
+  cout << "Labelled " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
   // IMAGE PASS
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
     passRunner.pass(labelledImage);
-  cout << "Passed " << loopCount << " times. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl;
+  cout << "Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
   // FIND LINES (RandomPairLineFinder)
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
   vector<LineSegment2i> randomPairLines;
   for (int i = 0; i < loopCount; i++)
     randomPairLines = randomPairLineFinder.findLineSegments(lineDotPass->lineDots);
-  cout << "RandomPairLineFinder ran " << loopCount << " times. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl;
+  cout << "RandomPairLineFinder ran " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
   // FIND LINES (RandomPairLineFinder)
@@ -153,12 +153,12 @@ int main(int argc, char **argv)
   vector<LineSegment2i> maskWalkLines;
   for (int i = 0; i < loopCount; i++)
     maskWalkLines = maskWalkLineFinder.findLineSegments(lineDotPass->lineDots);
-  cout << "MaskWalkLineFinder   ran " << loopCount << " times. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl;
+  cout << "MaskWalkLineFinder   ran " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
   // PRINT SUMMARIES
   //
-  cout << "Finished " << loopCount << " passes. Average time: " << (Clock::getSecondsSince(t)*1000/loopCount) << " ms" << endl
+  cout << "Finished " << loopCount << " passes. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl
        << "Found:" << endl
        << "    " << lineDotPass->lineDots.size() << " line dots" << endl;
 
