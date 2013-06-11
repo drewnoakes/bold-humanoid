@@ -37,12 +37,13 @@ namespace bold
       }
     }
     
-    std::vector<uchar>& getEdgeYValues() const { return d_maxYByX; }
+    //std::vector<uchar> getEdgeYValues() const { return d_maxYByX; }
+    uchar getEdgeYValue(uchar x) const { return d_maxYByX[x]; }
 
   private:
-    std::vector<uchar> d_maxYByX;
     std::shared_ptr<PixelLabel> d_fieldLabel;
     ushort d_pixelWidth;
     ushort d_pixelHeight;
+    std::vector<uchar> d_maxYByX;
   };
 }
