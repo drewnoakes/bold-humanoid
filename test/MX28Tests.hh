@@ -42,3 +42,14 @@ TEST (MX28Tests, degs2Value)
   EXPECT_NEAR( 0x0FFF, MX28::degs2Value(180.0), 1 );
   EXPECT_EQ( 0x0000, MX28::degs2Value(-180.0) );
 }
+
+TEST (MX28Tests, clampValue)
+{
+  EXPECT_EQ( 0, MX28::clampValue(-10) );
+  EXPECT_EQ( 0, MX28::clampValue(0) );
+  
+  EXPECT_EQ( 0x0001, MX28::clampValue(0x0001) );
+  EXPECT_EQ( 0x0800, MX28::clampValue(0x0800) );
+  EXPECT_EQ( 0x0FFF, MX28::clampValue(0x0FFF) );
+  EXPECT_EQ( 0x0FFF, MX28::clampValue(0x1000) );
+}

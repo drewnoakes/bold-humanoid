@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "../Math/math.hh"
+
 namespace bold
 {
   class MX28
@@ -36,6 +38,8 @@ namespace bold
 
     static unsigned rads2Value(double angle) { return (angle*RATIO_RADS2VALUE)+CENTER_VALUE; }
     static double value2Rads(unsigned value) { return (double)((int)value-(int)CENTER_VALUE)*RATIO_VALUE2RADS; }
+    
+    static unsigned clampValue(int value) { return (unsigned)Math::clamp(value, 0, (int)MAX_VALUE); }
 
 /*
     // TODO compare these old conversions with those being used for accuracy before deleting this commented code
