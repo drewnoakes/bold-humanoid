@@ -21,13 +21,26 @@ namespace bold
     Eigen::Vector3d foreheadColor;
     bool isModeButtonPressed;
     bool isStartButtonPressed;
+    /// The converted gyroscope output, in degrees per second.
     Eigen::Vector3d gyro;
+    /// The converted accelerometer output, in gs.
     Eigen::Vector3d acc;
     float voltage;
+    /// Raw raw value of the gyroscope, in range [0,1023] corresponding to [-1600,1600] degrees per second.
     Eigen::Vector3i gyroRaw;
+    /// Raw raw value of the accelerometer, in range [0,1023] corresponding to [-4,4] g.
     Eigen::Vector3i accRaw;
 
     CM730Snapshot(BulkReadTable const& data);
+    
+    /** Returns the gyroscope value, in hardware units, but balanced around the midpoint.
+     * 
+     * Values may be positive or negative.
+     */
+    Eigen::Vector3i getBalancedGyroValue() const
+    {
+      return this->gyroRaw - Eigen::Vector3i(512, 512, 512);
+    }
   };
 
   class StaticCM730State
