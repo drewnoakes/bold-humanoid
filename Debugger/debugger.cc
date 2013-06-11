@@ -39,7 +39,7 @@ void Debugger::update(shared_ptr<CM730> cm730)
   if (ledFlags != d_lastLedFlags)
   {
     // the value changed, so write it
-    cm730->writeByte(CM730::ID_CM, CM730::P_LED_PANNEL, ledFlags, NULL);
+    cm730->writeByte(CM730::ID_CM, CM730::P_LED_PANEL, ledFlags, NULL);
     d_lastLedFlags = ledFlags;
   }
 

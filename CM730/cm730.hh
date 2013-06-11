@@ -98,7 +98,7 @@ namespace bold
       P_RETURN_DELAY_TIME = 5, /// Return Delay Time
       P_RETURN_LEVEL      = 16, /// Status Return Level
       P_DXL_POWER         = 24, /// Dynamixel Power
-      P_LED_PANNEL        = 25, /// LED of back panel
+      P_LED_PANEL        = 25, /// LED of back panel
       P_LED_HEAD_L        = 26, /// Low byte of Head LED
       P_LED_HEAD_H        = 27, /// High byte of Head LED
       P_LED_EYE_L         = 28, /// Low byte of Eye LED

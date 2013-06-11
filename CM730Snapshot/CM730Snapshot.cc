@@ -21,7 +21,7 @@ CM730Snapshot::CM730Snapshot(BulkReadTable const& data)
 
   isPowered = data.readByte(CM730::P_DXL_POWER) == 1;
 
-  auto ledPanel = data.readByte(CM730::P_LED_PANNEL);
+  auto ledPanel = data.readByte(CM730::P_LED_PANEL);
   isLed2On = (ledPanel & 0x1) != 0;
   isLed3On = (ledPanel & 0x2) != 0;
   isLed4On = (ledPanel & 0x4) != 0;
