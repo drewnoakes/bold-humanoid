@@ -37,10 +37,10 @@ WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   Z_SWAP_AMPLITUDE  = getParam("swing_top_down", 5);
   PELVIS_OFFSET     = getParam("pelvis_offset", 3.0);
   ARM_SWING_GAIN    = getParam("arm_swing_gain", 1.5);
-  BALANCE_KNEE_GAIN        = getParam("balance_knee_gain", 0.3);
-  BALANCE_ANKLE_PITCH_GAIN = getParam("balance_ankle_pitch_gain", 0.9);
-  BALANCE_HIP_ROLL_GAIN    = getParam("balance_hip_roll_gain", 0.5);
-  BALANCE_ANKLE_ROLL_GAIN  = getParam("balance_ankle_roll_gain", 1.0);
+  BALANCE_KNEE_GAIN        = getParam("balance_knee_gain", 1.2);
+  BALANCE_ANKLE_PITCH_GAIN = getParam("balance_ankle_pitch_gain", 3.6);
+  BALANCE_HIP_ROLL_GAIN    = getParam("balance_hip_roll_gain", 2.0);
+  BALANCE_ANKLE_ROLL_GAIN  = getParam("balance_ankle_roll_gain", 4.0);
 
   P_GAIN = JointControl::P_GAIN_DEFAULT;
   I_GAIN = JointControl::I_GAIN_DEFAULT;
@@ -495,18 +495,17 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     double rlGyroErr = gryoRaw.x();
     double fbGyroErr = gryoRaw.y();
 
-    // TODO remove this *4 but updating constants
-    d_outValue[1]  += (int)(dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN*4); // R_HIP_ROLL
-    d_outValue[7]  += (int)(dir[7] * rlGyroErr * BALANCE_HIP_ROLL_GAIN*4); // L_HIP_ROLL
+    d_outValue[1]  += (int)(dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN); // R_HIP_ROLL
+    d_outValue[7]  += (int)(dir[7] * rlGyroErr * BALANCE_HIP_ROLL_GAIN); // L_HIP_ROLL
 
-    d_outValue[3]  -= (int)(dir[3] * fbGyroErr * BALANCE_KNEE_GAIN*4); // R_KNEE
-    d_outValue[9]  -= (int)(dir[9] * fbGyroErr * BALANCE_KNEE_GAIN*4); // L_KNEE
+    d_outValue[3]  -= (int)(dir[3] * fbGyroErr * BALANCE_KNEE_GAIN); // R_KNEE
+    d_outValue[9]  -= (int)(dir[9] * fbGyroErr * BALANCE_KNEE_GAIN); // L_KNEE
 
-    d_outValue[4]  -= (int)(dir[4]  * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN*4); // R_ANKLE_PITCH
-    d_outValue[10] -= (int)(dir[10] * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN*4); // L_ANKLE_PITCH
+    d_outValue[4]  -= (int)(dir[4]  * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN); // R_ANKLE_PITCH
+    d_outValue[10] -= (int)(dir[10] * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN); // L_ANKLE_PITCH
 
-    d_outValue[5]  -= (int)(dir[5]  * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN*4); // R_ANKLE_ROLL
-    d_outValue[11] -= (int)(dir[11] * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN*4); // L_ANKLE_ROLL
+    d_outValue[5]  -= (int)(dir[5]  * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN); // R_ANKLE_ROLL
+    d_outValue[11] -= (int)(dir[11] * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN); // L_ANKLE_ROLL
   }
   
   if (!d_isRunning)
