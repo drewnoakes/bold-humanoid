@@ -511,6 +511,10 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   
   if (!d_isRunning)
     setCompletedFlag();
+  
+  // Ensure all values are within the valid range
+  for (int i = 0; i < 14; ++i)
+    d_outValue[i] = MX28::clampValue(d_outValue[i]);
 }
 
 void WalkModule::applyHead(shared_ptr<HeadSection> head)
