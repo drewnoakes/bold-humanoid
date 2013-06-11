@@ -258,6 +258,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./MX28/conversions.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/ActionOption/hasTerminated.cc
   ./Option/ActionOption/runPolicy.cc
 )
