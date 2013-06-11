@@ -22,12 +22,12 @@ WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 {
   string section = "Walk Module";
 
-  X_OFFSET = getParam("x_offset", -10);
-  Y_OFFSET = getParam("y_offset", 5);
-  Z_OFFSET = getParam("z_offset", 20);
-  R_OFFSET = getParam("roll_offset", 0);
-  P_OFFSET = getParam("pitch_offset", 0);
-  A_OFFSET = getParam("yaw_offset", 0);
+  X_OFFSET          = getParam("x_offset", -10);
+  Y_OFFSET          = getParam("y_offset", 5);
+  Z_OFFSET          = getParam("z_offset", 20);
+  R_OFFSET          = getParam("roll_offset", 0);
+  P_OFFSET          = getParam("pitch_offset", 0);
+  A_OFFSET          = getParam("yaw_offset", 0);
   HIP_PITCH_OFFSET  = getParam("hip_pitch_offset", 13.0);
   PERIOD_TIME       = getParam("period_time", 600);
   DSP_RATIO         = getParam("dsp_ratio", 0.1);
@@ -37,6 +37,7 @@ WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   Z_SWAP_AMPLITUDE  = getParam("swing_top_down", 5);
   PELVIS_OFFSET     = getParam("pelvis_offset", 3.0);
   ARM_SWING_GAIN    = getParam("arm_swing_gain", 1.5);
+  
   BALANCE_KNEE_GAIN        = getParam("balance_knee_gain", 1.2);
   BALANCE_ANKLE_PITCH_GAIN = getParam("balance_ankle_pitch_gain", 3.6);
   BALANCE_HIP_ROLL_GAIN    = getParam("balance_hip_roll_gain", 2.0);
