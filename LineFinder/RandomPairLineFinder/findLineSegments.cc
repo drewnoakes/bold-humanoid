@@ -49,6 +49,9 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
       hypotheses.push_back(LineHypothesis(line, dot1, dot2));
     }
   }
+  
+  if (hypotheses.size() == 0)
+    return vector<LineSegment2i>();
 
   // Sort highest-voted first
   sort(hypotheses.begin(), hypotheses.end(), [](LineHypothesis const& a, LineHypothesis const& b) { return a.count() > b.count(); });
@@ -62,6 +65,7 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
       break;
     sumVotes += hypothesis.count();
   }
+  assert(takeTop != 0);
   int averageVotes = sumVotes / takeTop;
 
   vector<LineSegment2i> satisfactory;
