@@ -45,8 +45,11 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     // The first is the biggest, topmost ball blob
     for (Blob const& ballBlob : blobsPerLabel[d_ballLabel])
     {
+      // Ignore balls that are too small (avoid noise)
       if (ballBlob.area < d_minBallArea)
         continue;
+      
+      // TODO ignore ball if it appears outside the field edge
 
       Vector2d pos = ballBlob.mean;
 
