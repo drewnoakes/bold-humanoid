@@ -268,10 +268,7 @@ void MotionLoop::step(SequentialTimer& t)
 
   auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-  {
-    auto mx28 = make_shared<MX28Snapshot>(d_dynamicBulkRead->getBulkReadData(jointId), jointId);
-    mx28Snapshots.push_back(mx28);
-  }
+    mx28Snapshots.push_back(make_shared<MX28Snapshot>(d_dynamicBulkRead->getBulkReadData(jointId), jointId));
 
   //
   // UPDATE HARDWARE STATE
