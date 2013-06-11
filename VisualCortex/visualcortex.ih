@@ -11,6 +11,7 @@
 #include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
 #include "../ImagePassHandler/LineDotPass/linedotpass.hh"
 #include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
+#include "../ImagePassHandler/FieldEdgePass/fieldedgepass.hh"
 #include "../ImagePassHandler/LabelCountPass/labelcountpass.hh"
 #include "../LineFinder/linefinder.hh"
 #include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"

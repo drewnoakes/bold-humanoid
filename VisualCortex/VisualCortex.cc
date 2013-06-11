@@ -58,9 +58,13 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
   d_cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, pixelLabels, Colour::bgr(128,128,128));
   d_labelCountPass = make_shared<LabelCountPass>(pixelLabels);
+  d_fieldEdgePass = make_shared<FieldEdgePass>(d_fieldLabel, imageWidth, imageHeight);
 
   d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
-
+  
+  //TODO: create control to turn this feature on and off
+  d_imagePassRunner->addHandler(d_fieldEdgePass);
+  
   if (d_shouldDetectLines)
     d_imagePassRunner->addHandler(d_lineDotPass);
   d_imagePassRunner->addHandler(d_blobDetectPass);

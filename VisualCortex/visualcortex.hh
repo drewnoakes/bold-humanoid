@@ -33,6 +33,7 @@ namespace bold
   class LineDotPass;
   class BlobDetectPass;
   class CartoonPass;
+  class FieldEdgePass;
   class LabelCountPass;
 
   enum class ImageType
@@ -115,6 +116,7 @@ namespace bold
     std::shared_ptr<BlobDetectPass> d_blobDetectPass;
     std::shared_ptr<CartoonPass> d_cartoonPass;
     std::shared_ptr<LabelCountPass> d_labelCountPass;
+    std::shared_ptr<FieldEdgePass> d_fieldEdgePass;
 
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
 
