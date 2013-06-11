@@ -36,6 +36,7 @@ CM730Snapshot::CM730Snapshot(BulkReadTable const& data)
   isModeButtonPressed = (buttons & 0x1) != 0;
   isStartButtonPressed = (buttons & 0x2) != 0;
 
+  // TODO when IMU calibration data available, use it here
   auto gyroZ = data.readWord(CM730::P_GYRO_Z_L);
   auto gyroY = data.readWord(CM730::P_GYRO_Y_L);
   auto gyroX = data.readWord(CM730::P_GYRO_X_L);
@@ -46,6 +47,7 @@ CM730Snapshot::CM730Snapshot(BulkReadTable const& data)
     CM730::gyroValueToRps(gyroZ)
   );
 
+  // TODO when IMU calibration data available, use it here
   auto accX = data.readWord(CM730::P_ACCEL_X_L);
   auto accY = data.readWord(CM730::P_ACCEL_Y_L);
   auto accZ = data.readWord(CM730::P_ACCEL_Z_L);

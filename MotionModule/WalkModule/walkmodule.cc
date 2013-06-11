@@ -493,6 +493,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     auto gryoRaw = hw->getCM730State()->gyroRaw;
 
     // TODO review the gyro axes labels
+    // TODO need to balance these values around the midpoint, taking calibration into account
     double rlGyroErr = gryoRaw.x();
     double fbGyroErr = gryoRaw.y();
 
