@@ -38,7 +38,7 @@ constexpr double HeadModule::EYE_TILT_OFFSET_ANGLE;
 void HeadModule::checkLimit()
 {
   d_panAngle = Math::clamp(d_panAngle, d_limitRight, d_limitLeft);
-  d_tiltAngle = Math::clamp(d_panAngle, d_limitBottom, d_limitTop);
+  d_tiltAngle = Math::clamp(d_tiltAngle, d_limitBottom, d_limitTop);
 }
 
 void HeadModule::initialize()
