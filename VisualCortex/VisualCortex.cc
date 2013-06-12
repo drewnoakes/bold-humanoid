@@ -30,7 +30,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_goalLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig("Goal",  40,  10, 210, 55, 190, 65));
   d_ballLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig("Ball",  10,  15, 255, 95, 190, 95));
   d_fieldLabel = std::make_shared<PixelLabel>(PixelLabel::fromConfig("Field", 90,  15, 195, 30,  75, 65));
-  d_lineLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig("Line",   0, 255,   0, 70, 255, 70));
+  d_lineLabel =  std::make_shared<PixelLabel>(PixelLabel::fromConfig("Line",   0, 255,   0, 70, 255, 100));
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel };
 
