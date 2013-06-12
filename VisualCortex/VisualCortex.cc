@@ -18,7 +18,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     d_shouldDrawLineDots(false),
     d_shouldDrawExpectedLines(false),
     d_shouldDrawObservedLines(true),
-    d_shouldDrawHorizon(true)
+    d_shouldDrawHorizon(true),
+    d_shouldDrawFieldEdge(true)
 {
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
@@ -184,6 +185,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   imageControls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines, [this](bool const& value) { d_shouldDrawObservedLines = value; }));
   imageControls.push_back(Control::createBool("Lines (expected)", d_shouldDrawExpectedLines, [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
   imageControls.push_back(Control::createBool("Horizon",          d_shouldDrawHorizon,       [this](bool const& value) { d_shouldDrawHorizon = value; }));
+  imageControls.push_back(Control::createBool("Field edge",       d_shouldDrawFieldEdge,     [this](bool const& value) { d_shouldDrawFieldEdge = value; }));
   d_controlsByFamily["image"] = imageControls;
 
   auto minBallAreaControl = Control::createInt("Min ball area", d_minBallArea, [this](int value) { d_minBallArea = value; });

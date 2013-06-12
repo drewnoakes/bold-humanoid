@@ -2,6 +2,7 @@
 
 namespace bold
 {
+  typedef unsigned char uchar;
   typedef unsigned short int ushort;
   
   /**

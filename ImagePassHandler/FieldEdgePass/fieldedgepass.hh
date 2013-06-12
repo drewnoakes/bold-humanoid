@@ -1,49 +1,29 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "../imagepasshandler.hh"
-#include "../../PixelLabel/pixellabel.hh"
 
 namespace bold
 {
+  class PixelLabel;
+
   class FieldEdgePass : public ImagePassHandler<uchar>
   {
   public:
-    FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
-    : d_fieldLabel(fieldLabel),
-      d_pixelWidth(pixelWidth),
-      d_pixelHeight(pixelHeight),
-      d_maxYByX(pixelWidth)
-    {}
+    FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight);
 
-    void onImageStarting() override
-    {
-      assert(d_maxYByX.size() == d_pixelWidth);
-      
-      for (ushort x = 0; x < d_pixelWidth; x++)
-        d_maxYByX[x] = d_pixelHeight;
-    }
+    void onImageStarting() override;
 
-    void onPixel(uchar labelId, ushort x, ushort y) override
-    {
-      assert(x >=0 && x < d_pixelWidth);
-      
-      if (labelId == d_fieldLabel->id())
-      {
-        assert(y > d_maxYByX[x]);
-        
-        d_maxYByX[x] = y;
-      }
-    }
+    void onPixel(uchar labelId, ushort x, ushort y) override;
     
-    //std::vector<uchar> getEdgeYValues() const { return d_maxYByX; }
-    uchar getEdgeYValue(uchar x) const { return d_maxYByX[x]; }
+    uchar getEdgeYValue(ushort x) const;
 
   private:
     std::shared_ptr<PixelLabel> d_fieldLabel;
+    std::vector<uchar> d_maxYByX;
     ushort d_pixelWidth;
     ushort d_pixelHeight;
-    std::vector<uchar> d_maxYByX;
   };
 }

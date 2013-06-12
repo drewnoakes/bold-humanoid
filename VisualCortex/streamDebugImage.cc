@@ -12,8 +12,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
 
   auto lineDotColour = Colour::bgr(0, 0, 255);
   auto observedLineColour = Colour::bgr(255, 80, 80);
-  auto expectedLineColour = Colour::bgr(0, 255, 0);
+  auto expectedLineColour = Colour::bgr(255, 0, 0);
   auto horizonColour = Colour::bgr(0, 128, 255);
+  auto fieldEdgeColour = Colour::bgr(0, 255, 0);
 
   Mat debugImage;
 
@@ -131,6 +132,17 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
       LineSegment2i line2i(p1, p2);
 
       line2i.draw(debugImage, horizonColour, 1);
+    }
+  }
+
+  // Draw field edge
+  if (d_shouldDrawFieldEdge)
+  {
+    for (unsigned x = 0; x < debugImage.size().width; ++x)
+    {
+      uchar y = d_fieldEdgePass->getEdgeYValue(x);
+
+      debugImage.at<Colour::bgr>(y, x) = fieldEdgeColour;
     }
   }
 

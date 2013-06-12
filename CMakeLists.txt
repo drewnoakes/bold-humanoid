@@ -195,6 +195,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./ImagePassHandler/FieldEdgePass/fieldedgepass.cc
+)
+
+add_class(BOLDHUMANOID
   ./LineFinder/RandomPairLineFinder/findLineSegments.cc
 )
 

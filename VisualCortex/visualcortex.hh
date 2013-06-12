@@ -89,6 +89,9 @@ namespace bold
 
     void setShouldDrawHorizon(bool val) { d_shouldDrawHorizon = val; }
     bool getShouldDrawHorizon() const { return d_shouldDrawHorizon; }
+
+    void setShouldDrawFieldEdge(bool val) { d_shouldDrawFieldEdge = val; }
+    bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge; }
     
   private:
     std::map<std::string,std::vector<Control>> d_controlsByFamily;
@@ -132,5 +135,6 @@ namespace bold
     bool d_shouldDrawExpectedLines;
     bool d_shouldDrawObservedLines;
     bool d_shouldDrawHorizon;
+    bool d_shouldDrawFieldEdge;
   };
 }
