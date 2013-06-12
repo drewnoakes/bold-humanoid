@@ -441,11 +441,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
           else
             ipMainSpeed1024[jointId] = (short int)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider1);
 
-          if (ipMainSpeed1024[jointId] > 1023)
-            ipMainSpeed1024[jointId] = 1023;
-
-          if (ipMainSpeed1024[jointId] < -1023)
-            ipMainSpeed1024[jointId] = -1023;
+          ipMainSpeed1024[jointId] = Math::clamp(ipMainSpeed1024[jointId], (short int)-1023, (short int)1023);
         }
       }
 
