@@ -7,7 +7,6 @@ define(
   ],
   function(DataProxy)
   {
-    // TODO allow resetting maximums
     // TODO reorder table rows lexicographically
 
     var seriesOptions = {
@@ -58,6 +57,7 @@ define(
       this.chart.options.horizontalLines.push({color:'#FF0000', lineWidth: 1, value: this.thresholdMillis});
 
       this.$fps = $('<div></div>', {'class':'fps'}).appendTo(this.$container);
+      $('<a></a>', {'class':'reset', href:'#'}).text('reset maximums').click(function() { this.resetMaximums(); return false; }.bind(this)).appendTo(this.$container);
 
       this.table = $('<table></table>', {'class':'timing-details'}).appendTo(this.$container);
 
@@ -118,6 +118,14 @@ define(
       });
 
       this.series.append(time, totalTime);
+    };
+
+    TimingPane.prototype.resetMaximums = function()
+    {
+      _.each(_.values(this.entryByLabel), function(entry)
+      {
+          entry.maxMillis = 0;
+      });
     };
 
     TimingPane.prototype.getOrCreateEntry = function(label)

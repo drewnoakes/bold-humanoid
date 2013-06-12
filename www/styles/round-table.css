@@ -444,6 +444,13 @@ div.module.think-timing div.fps,
 div.module.motion-timing div.fps
 {
     float: right;
+    margin-left: 10px;
+}
+
+div.module.think-timing a.reset,
+div.module.motion-timing a.reset
+{
+    float: right;
 }
 
 /*******************************************************************/
