@@ -260,6 +260,7 @@ void MotionLoop::step(SequentialTimer& t)
 
   if (res != CommResult::SUCCESS)
   {
+    // TODO if this occurs N times in a row, consider recreating the CM730 instance (perhaps someone pressed the hardware reset button)
     cerr << "[MotionLoop::process] Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState" << endl;
     return;
   }
