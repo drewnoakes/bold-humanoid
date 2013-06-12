@@ -165,7 +165,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
         d_platform->setPacketTimeout(length);
 
         int receivedCount = 0;
-        while (1)
+        while (true)
         {
           length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
           if (length && DEBUG_PRINT)
@@ -231,7 +231,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
         int receivedCount = 0;
 
         // Read until we get enough bytes, or there's a timeout
-        while (1)
+        while (true)
         {
           length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
           if (length && DEBUG_PRINT)
@@ -256,7 +256,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
         }
 
         // Process data for all devices
-        while (1)
+        while (true)
         {
           // Search for the header: 0xFFFF
           int i;
@@ -301,7 +301,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
               // Checksum doesn't match
               res = CommResult::RX_CORRUPT;
 
-              cerr << "[CM730::txRxPacket] Checksum didn't match" << endl;
+              cerr << "[CM730::txRxPacket] Received checksum didn't match" << endl;
               
               for (int j = 0; j <= receivedCount - 2; j++)
                 rxpacket[j] = rxpacket[j + 2];
@@ -324,7 +324,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
           {
             // Move bytes forwards in buffer, so that the header is aligned in byte zero
             for (int j = 0; j < (receivedCount - i); j++)
-              rxpacket[j] = rxpacket[j+i];
+              rxpacket[j] = rxpacket[j + i];
             receivedCount -= i;
           }
         }
