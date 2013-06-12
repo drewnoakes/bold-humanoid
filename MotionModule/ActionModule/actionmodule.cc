@@ -182,19 +182,18 @@ bool ActionModule::start(int pageIndex)
 
 bool ActionModule::start(string pageName)
 {
-  int index;
   PAGE page;
 
-  for (index = 1; index < MAXNUM_PAGE; index++)
+  for (int index = 1; index < MAXNUM_PAGE; index++)
   {
     if (!loadPage(index, &page))
       return false;
 
     if (strcmp(pageName.c_str(), (char*)page.header.name) == 0)
-      break;
+      return start(index, &page);
   }
-
-  return start(index, &page);
+  
+  return false;
 }
 
 bool ActionModule::start(int index, PAGE *page)
