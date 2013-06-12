@@ -36,34 +36,37 @@ namespace bold
       TORQUE_OFF_BIT_MASK = 0x2000
     };
 
-    typedef struct // Header Structure (total 64 bytes)
+    // Page Header Structure (total 64 bytes)
+    typedef struct
     {
-      uchar name[MAXNUM_NAME+1]; // Name             0~13
-      uchar reserved1;        // Reserved1        14
-      uchar repeat;           // Repeat count     15
-      uchar schedule;         // schedule         16
-      uchar reserved2[3];     // reserved2        17~19
-      uchar stepnum;          // Number of step   20
-      uchar reserved3;        // reserved3        21
-      uchar speed;            // Speed            22
-      uchar reserved4;        // reserved4        23
-      uchar accel;            // Acceleration time 24
-      uchar next;             // Link to next     25
-      uchar exit;             // Link to exit     26
-      uchar reserved5[4];     // reserved5        27~30
-      uchar checksum;         // checksum         31
-      uchar slope[31];        // CW/CCW compliance slope  32~62
-      uchar reserved6;        // reserved6        63
+      uchar name[MAXNUM_NAME+1]; // Name              0~13
+      uchar reserved1;           // Reserved1         14
+      uchar repeat;              // Repeat count      15
+      uchar schedule;            // schedule          16
+      uchar reserved2[3];        // reserved2         17~19
+      uchar stepnum;             // Number of step    20
+      uchar reserved3;           // reserved3         21
+      uchar speed;               // Speed             22
+      uchar reserved4;           // reserved4         23
+      uchar accel;               // Acceleration time 24
+      uchar next;                // Link to next      25
+      uchar exit;                // Link to exit      26
+      uchar reserved5[4];        // reserved5         27~30
+      uchar checksum;            // checksum          31
+      uchar slope[31];           // CW/CCW slope      32~62
+      uchar reserved6;           // reserved6         63
     } PAGEHEADER;
 
-    typedef struct // Step Structure (total 64 bytes)
+    // Step Structure (total 64 bytes)
+    typedef struct
     {
       unsigned short position[31];    // Joint position   0~61
       uchar pause;                    // Pause time       62
       uchar time;                     // Time             63
     } STEP;
 
-    typedef struct // Page Structure (total 512 bytes)
+    // Page Structure (total 512 bytes)
+    typedef struct
     {
       PAGEHEADER header;              // Page header  0~64
       STEP step[MAXNUM_STEP];         // Page step    65~511
