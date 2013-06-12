@@ -102,6 +102,14 @@ namespace bold
 
     void applySection(std::shared_ptr<BodySection> section);
 
+    /** Returns the set of page names found in the motion file.
+     * 
+     * Not all pages have names, and there are several names that apply to
+     * multiple pages. Playing an action by name results in the first page with
+     * that name being started.
+     */
+    std::set<std::string> getPageNames();
+
     bool loadFile(std::string filename);
     bool createFile(std::string filename);
     bool start(int iPage);

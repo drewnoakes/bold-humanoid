@@ -27,6 +27,25 @@ ActionModule::~ActionModule()
 
 // TODO reorder members to make this easier to read
 
+set<string> ActionModule::getPageNames()
+{
+  set<string> names;
+
+  PAGE page;
+
+  for (int index = 1; index < MAXNUM_PAGE; index++)
+  {
+    if (loadPage(index, &page))
+    {
+      string name((char*)page.header.name);
+      if (name.size())
+        names.insert(name);
+    }
+  }
+
+  return names;
+}
+
 bool ActionModule::verifyChecksum(PAGE *pPage)
 {
   uchar checksum = 0x00;
