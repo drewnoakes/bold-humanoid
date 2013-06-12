@@ -10,7 +10,6 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     d_cameraModel(cameraModel),
     d_spatialiser(spatialiser),
     d_debugger(debugger),
-    d_shouldDetectLines(true),
     d_shouldIgnoreAboveHorizon(true),
     d_minBallArea(64),
     d_imageType(ImageType::RGB),
@@ -23,7 +22,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 {
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
-  d_shouldDetectLines = getParam("DetectLines", 0) != 0;
+  d_shouldDetectLines = getParam("DetectLines", 1) != 0;
 
   d_streamFramePeriod = getParam("CameraFramePeriod", 5);
 
