@@ -30,218 +30,7 @@ ActionModule::~ActionModule()
     fclose(d_file);
 }
 
-// TODO reorder members to make this easier to read
-
-set<string> ActionModule::getPageNames()
-{
-  set<string> names;
-
-  PAGE page;
-
-  for (int index = 1; index < MAXNUM_PAGE; index++)
-  {
-    if (loadPage(index, &page))
-    {
-      string name((char*)page.header.name);
-      if (name.size())
-        names.insert(name);
-    }
-  }
-
-  return names;
-}
-
-bool ActionModule::verifyChecksum(PAGE *pPage)
-{
-  uchar checksum = 0x00;
-  uchar *pt = (uchar*)pPage;
-
-  for (unsigned int i = 0; i < sizeof(PAGE); i++)
-  {
-    checksum += *pt;
-    pt++;
-  }
-
-  if (checksum != 0xff)
-  {
-    cerr << "[ActionModule::verifyChecksum] Page checksum is invalid" << endl;
-    return false;
-  }
-
-  return true;
-}
-
-void ActionModule::setChecksum(PAGE *pPage)
-{
-  uchar checksum = 0x00;
-  uchar *pt = (uchar*)pPage;
-
-  pPage->header.checksum = 0x00;
-
-  for (unsigned int i = 0; i < sizeof(PAGE); i++)
-  {
-    checksum += *pt;
-    pt++;
-  }
-
-  pPage->header.checksum = (uchar)(0xff - checksum);
-}
-
-void ActionModule::resetPage(PAGE *pPage)
-{
-  uchar *pt = (uchar*)pPage;
-
-  // TODO memset?
-  for (unsigned int i = 0; i < sizeof(PAGE); i++)
-  {
-    *pt = 0x00;
-    pt++;
-  }
-
-  pPage->header.schedule = TIME_BASE_SCHEDULE; // default time base
-  pPage->header.repeat = 1;
-  pPage->header.speed = 32;
-  pPage->header.accel = 32;
-
-  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    pPage->header.slope[jointId] = 0x55;
-
-  for (int i = 0; i < MAXNUM_STEP; i++)
-  {
-    for (int j = 0; j < 31; j++)
-      pPage->step[i].position[j] = INVALID_BIT_MASK;
-
-    pPage->step[i].pause = 0;
-    pPage->step[i].time = 0;
-  }
-
-  setChecksum(pPage);
-}
-
 void ActionModule::initialize()
-{
-  d_isRunning = false;
-}
-
-bool ActionModule::loadFile(string filename)
-{
-  FILE *file = fopen(filename.c_str(), "r+b");
-  if (file == 0)
-  {
-    cerr << "[ActionModule::LoadFile] Can not open motion file: " << filename << endl;
-    return false;
-  }
-
-  fseek(file, 0, SEEK_END);
-  if (ftell(file) != (long)(sizeof(PAGE) * MAXNUM_PAGE))
-  {
-    cerr << "[ActionModule::LoadFile] Invalid motion file size: " << filename << endl;
-    fclose(file);
-    return false;
-  }
-
-  // Close any previously loaded file handle
-  if (d_file != 0)
-    fclose(d_file);
-
-  d_file = file;
-  return true;
-}
-
-bool ActionModule::createFile(string filename)
-{
-  FILE *action = fopen(filename.c_str(), "ab");
-  if (action == 0)
-  {
-    cerr << "[ActionModule::CreateFile] Can not create ActionModule file: " << filename << endl;
-    return false;
-  }
-
-  PAGE page;
-  resetPage(&page);
-  for (int i = 0; i < MAXNUM_PAGE; i++)
-    fwrite(&page, 1, sizeof(PAGE), action);
-
-  // Close any previously loaded file handle
-  if (d_file != 0)
-    fclose(d_file);
-
-  d_file = action;
-  return true;
-}
-
-bool ActionModule::start(int pageIndex)
-{
-  if (pageIndex < 1 || pageIndex >= MAXNUM_PAGE)
-  {
-    cerr << "[ActionModule::Start] Invalid page index: " << pageIndex << endl;
-    return false;
-  }
-
-  PAGE page;
-  if (!loadPage(pageIndex, &page))
-    return false;
-
-  return start(pageIndex, &page);
-}
-
-bool ActionModule::start(string pageName)
-{
-  PAGE page;
-
-  for (int index = 1; index < MAXNUM_PAGE; index++)
-  {
-    if (!loadPage(index, &page))
-      return false;
-
-    if (strcmp(pageName.c_str(), (char*)page.header.name) == 0)
-      return start(index, &page);
-  }
-  
-  return false;
-}
-
-bool ActionModule::start(int index, PAGE *page)
-{
-  if (d_isRunning)
-  {
-    cerr << "[ActionModule::Start] Cannot play page index " << index << " -- already playing index " << d_playingPageIndex << endl;
-    return false;
-  }
-
-  d_playingPage = *page;
-
-  if (d_playingPage.header.repeat == 0 || d_playingPage.header.stepnum == 0)
-  {
-    cerr << "[ActionModule::Start] Page index " << index << " has no steps to perform" << endl;
-    return false;
-  }
-
-  d_playingPageIndex = index;
-  d_isFirstStepOfAction = true;
-
-  d_isRunning = false; // will be set to true once 'step' is called
-
-  // copy the current pose somehow at this time?
-  auto hw = AgentState::get<HardwareState>();
-  assert(hw);
-  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
-  
-  getScheduler()->add(this,
-                      Priority::Optional,  true,  // HEAD   Interuptable::YES
-                      Priority::Important, true,  // ARMS
-                      Priority::Important, true); // LEGS
- 
-  return true;
-}
-
-void ActionModule::stop()
-{
-  d_stopRequested = true;
-}
-
-void ActionModule::brake()
 {
   d_isRunning = false;
 }
@@ -249,50 +38,6 @@ void ActionModule::brake()
 bool ActionModule::isRunning()
 {
   return d_isRunning;
-}
-
-bool ActionModule::loadPage(int index, PAGE *page)
-{
-  long position = (long)(sizeof(PAGE)*index);
-
-  if (fseek(d_file, position, SEEK_SET) != 0)
-  {
-    cerr << "[ActionModule::LoadPage] Error seeking file position: " << position << endl;
-    return false;
-  }
-
-  if (fread(page, 1, sizeof(PAGE), d_file) != sizeof(PAGE))
-  {
-    cerr << "[ActionModule::LoadPage] Error reading page index: " << index << endl;
-    return false;
-  }
-
-  if (!verifyChecksum(page))
-    resetPage(page);
-
-  return true;
-}
-
-bool ActionModule::savePage(int index, PAGE *page)
-{
-  long position = (long)(sizeof(PAGE)*index);
-
-  if (!verifyChecksum(page))
-      setChecksum(page);
-
-  if (fseek(d_file, position, SEEK_SET) != 0)
-  {
-    cerr << "[ActionModule::SavePage] Error seeking file position: " << position << endl;
-    return false;
-  }
-
-  if (fwrite(page, 1, sizeof(PAGE), d_file) != sizeof(PAGE))
-  {
-    cerr << "[ActionModule::LoadPage] Error writing page index: " << index << endl;
-    return false;
-  }
-
-  return true;
 }
 
 void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
@@ -722,3 +467,256 @@ void ActionModule::applySection(shared_ptr<BodySection> section)
 void ActionModule::applyHead(shared_ptr<HeadSection> head) { applySection(dynamic_pointer_cast<BodySection>(head)); }
 void ActionModule::applyArms(shared_ptr<ArmSection> arms) { applySection(dynamic_pointer_cast<BodySection>(arms)); }
 void ActionModule::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic_pointer_cast<BodySection>(legs)); }
+
+bool ActionModule::start(int pageIndex)
+{
+  if (pageIndex < 1 || pageIndex >= MAXNUM_PAGE)
+  {
+    cerr << "[ActionModule::Start] Invalid page index: " << pageIndex << endl;
+    return false;
+  }
+
+  PAGE page;
+  if (!loadPage(pageIndex, &page))
+    return false;
+
+  return start(pageIndex, &page);
+}
+
+bool ActionModule::start(string pageName)
+{
+  PAGE page;
+
+  for (int index = 1; index < MAXNUM_PAGE; index++)
+  {
+    if (!loadPage(index, &page))
+      return false;
+
+    if (strcmp(pageName.c_str(), (char*)page.header.name) == 0)
+      return start(index, &page);
+  }
+  
+  return false;
+}
+
+bool ActionModule::start(int index, PAGE *page)
+{
+  if (d_isRunning)
+  {
+    cerr << "[ActionModule::Start] Cannot play page index " << index << " -- already playing index " << d_playingPageIndex << endl;
+    return false;
+  }
+
+  d_playingPage = *page;
+
+  if (d_playingPage.header.repeat == 0 || d_playingPage.header.stepnum == 0)
+  {
+    cerr << "[ActionModule::Start] Page index " << index << " has no steps to perform" << endl;
+    return false;
+  }
+
+  d_playingPageIndex = index;
+  d_isFirstStepOfAction = true;
+
+  d_isRunning = false; // will be set to true once 'step' is called
+
+  // copy the current pose somehow at this time?
+  auto hw = AgentState::get<HardwareState>();
+  assert(hw);
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
+  
+  getScheduler()->add(this,
+                      Priority::Optional,  true,  // HEAD   Interuptable::YES
+                      Priority::Important, true,  // ARMS
+                      Priority::Important, true); // LEGS
+ 
+  return true;
+}
+
+void ActionModule::stop()
+{
+  d_stopRequested = true;
+}
+
+void ActionModule::brake()
+{
+  d_isRunning = false;
+}
+
+set<string> ActionModule::getPageNames()
+{
+  set<string> names;
+
+  PAGE page;
+
+  for (int index = 1; index < MAXNUM_PAGE; index++)
+  {
+    if (loadPage(index, &page))
+    {
+      string name((char*)page.header.name);
+      if (name.size())
+        names.insert(name);
+    }
+  }
+
+  return names;
+}
+
+bool ActionModule::loadFile(string filename)
+{
+  FILE *file = fopen(filename.c_str(), "r+b");
+  if (file == 0)
+  {
+    cerr << "[ActionModule::LoadFile] Can not open motion file: " << filename << endl;
+    return false;
+  }
+
+  fseek(file, 0, SEEK_END);
+  if (ftell(file) != (long)(sizeof(PAGE) * MAXNUM_PAGE))
+  {
+    cerr << "[ActionModule::LoadFile] Invalid motion file size: " << filename << endl;
+    fclose(file);
+    return false;
+  }
+
+  // Close any previously loaded file handle
+  if (d_file != 0)
+    fclose(d_file);
+
+  d_file = file;
+  return true;
+}
+
+bool ActionModule::createFile(string filename)
+{
+  FILE *action = fopen(filename.c_str(), "ab");
+  if (action == 0)
+  {
+    cerr << "[ActionModule::CreateFile] Can not create ActionModule file: " << filename << endl;
+    return false;
+  }
+
+  PAGE page;
+  resetPage(&page);
+  for (int i = 0; i < MAXNUM_PAGE; i++)
+    fwrite(&page, 1, sizeof(PAGE), action);
+
+  // Close any previously loaded file handle
+  if (d_file != 0)
+    fclose(d_file);
+
+  d_file = action;
+  return true;
+}
+
+bool ActionModule::loadPage(int index, PAGE *page)
+{
+  long position = (long)(sizeof(PAGE)*index);
+
+  if (fseek(d_file, position, SEEK_SET) != 0)
+  {
+    cerr << "[ActionModule::LoadPage] Error seeking file position: " << position << endl;
+    return false;
+  }
+
+  if (fread(page, 1, sizeof(PAGE), d_file) != sizeof(PAGE))
+  {
+    cerr << "[ActionModule::LoadPage] Error reading page index: " << index << endl;
+    return false;
+  }
+
+  if (!verifyChecksum(page))
+    resetPage(page);
+
+  return true;
+}
+
+bool ActionModule::savePage(int index, PAGE *page)
+{
+  long position = (long)(sizeof(PAGE)*index);
+
+  if (!verifyChecksum(page))
+      setChecksum(page);
+
+  if (fseek(d_file, position, SEEK_SET) != 0)
+  {
+    cerr << "[ActionModule::SavePage] Error seeking file position: " << position << endl;
+    return false;
+  }
+
+  if (fwrite(page, 1, sizeof(PAGE), d_file) != sizeof(PAGE))
+  {
+    cerr << "[ActionModule::LoadPage] Error writing page index: " << index << endl;
+    return false;
+  }
+
+  return true;
+}
+
+void ActionModule::resetPage(PAGE *pPage)
+{
+  uchar *pt = (uchar*)pPage;
+
+  // TODO memset?
+  for (unsigned int i = 0; i < sizeof(PAGE); i++)
+  {
+    *pt = 0x00;
+    pt++;
+  }
+
+  pPage->header.schedule = TIME_BASE_SCHEDULE; // default time base
+  pPage->header.repeat = 1;
+  pPage->header.speed = 32;
+  pPage->header.accel = 32;
+
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    pPage->header.slope[jointId] = 0x55;
+
+  for (int i = 0; i < MAXNUM_STEP; i++)
+  {
+    for (int j = 0; j < 31; j++)
+      pPage->step[i].position[j] = INVALID_BIT_MASK;
+
+    pPage->step[i].pause = 0;
+    pPage->step[i].time = 0;
+  }
+
+  setChecksum(pPage);
+}
+
+bool ActionModule::verifyChecksum(PAGE *pPage)
+{
+  uchar checksum = 0x00;
+  uchar *pt = (uchar*)pPage;
+
+  for (unsigned int i = 0; i < sizeof(PAGE); i++)
+  {
+    checksum += *pt;
+    pt++;
+  }
+
+  if (checksum != 0xff)
+  {
+    cerr << "[ActionModule::verifyChecksum] Page checksum is invalid" << endl;
+    return false;
+  }
+
+  return true;
+}
+
+void ActionModule::setChecksum(PAGE *pPage)
+{
+  uchar checksum = 0x00;
+  uchar *pt = (uchar*)pPage;
+
+  pPage->header.checksum = 0x00;
+
+  for (unsigned int i = 0; i < sizeof(PAGE); i++)
+  {
+    checksum += *pt;
+    pt++;
+  }
+
+  pPage->header.checksum = (uchar)(0xff - checksum);
+}
