@@ -8,7 +8,6 @@ std::vector<std::shared_ptr<Option>> ActionOption::runPolicy()
   {
     cout << "[ActionOption::runPolicy] Starting action: " << getID() << endl;
 
-//     d_actionModule->d_jointData.setEnableBody(true, true);
     if (d_actionPage != ActionPage::None)
       d_actionModule->start((int)d_actionPage);
     else

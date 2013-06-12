@@ -33,7 +33,6 @@ std::vector<std::shared_ptr<Option>> LookAtGoal::runPolicy()
   if (offset.norm() < 2)
     offset = Vector2d(0,0);
 
-//   HeadModule::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   d_headModule->moveTracking(offset.x(), offset.y());
 
   return std::vector<std::shared_ptr<Option>>();

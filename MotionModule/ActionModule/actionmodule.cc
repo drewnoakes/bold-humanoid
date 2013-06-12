@@ -180,7 +180,6 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
             }
           }
 
-//           d_jointData.setSlope(bID, 1 << (d_playingPage.header.slope[bID]>>4), 1 << (d_playingPage.header.slope[bID]&0x0f));
           d_pGains[bID] = (256 >> (d_playingPage.header.slope[bID]>>4)) << 2;
         }
       }

@@ -86,12 +86,10 @@ void Agent::processInputCommands()
         {
           case 6:
             cout << "Left kick" << endl;
-//             d_actionModule->d_jointData.setEnableBodyWithoutHead(true, true);
             d_actionModule->start((int)ActionPage::KickLeft);
             break;
           case 7:
             cout << "Right kick" << endl;
-//             d_actionModule->d_jointData.setEnableBodyWithoutHead(true, true);
             d_actionModule->start((int)ActionPage::KickRight);
             break;
           default:

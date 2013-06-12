@@ -60,7 +60,6 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
   }
 
   // Move to the calculated position
-//   HeadModule::GetInstance()->m_Joint.SetEnableHeadOnly(true, true);
   d_headModule->moveToAngle(hAngle, vAngle);
 
   return std::vector<std::shared_ptr<Option>>();

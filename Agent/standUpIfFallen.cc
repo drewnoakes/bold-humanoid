@@ -17,8 +17,6 @@ void Agent::standUpIfFallen()
   while (d_walkModule->isRunning())
     usleep(8000);
 
-//   d_actionModule->d_jointData.setEnableBody(true, true);
-
   if (d_fallDetector->getFallenState() == FallState::FORWARD)
     d_actionModule->start((int)ActionPage::ForwardGetUp);
   else if (d_fallDetector->getFallenState() == FallState::BACKWARD)
@@ -28,7 +26,4 @@ void Agent::standUpIfFallen()
   // TODO this blocks the think cycle, including image processing and localisation updates
   while (d_actionModule->isRunning())
     usleep(8000);
-
-//   d_headModule->d_jointData.setEnableHeadOnly(true, true);
-//   d_walkModule->d_jointData.setEnableBodyWithoutHead(true, true);
 }

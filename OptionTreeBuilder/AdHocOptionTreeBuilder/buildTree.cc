@@ -497,7 +497,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     auto aim2lookAtFeet = aimState->newTransition();
     aim2lookAtFeet->condition = [&headModule]() {
       auto body = AgentState::get<BodyState>();
-      double panAngle = body->getHeadPanJoint()->angle; // MotionStatus::m_CurrentJoints.GetAngle(JointData::ID_HEAD_PAN);
+      double panAngle = body->getHeadPanJoint()->angle;
       double panAngleRange = headModule->getLeftLimitRads();
       double panRatio = panAngle / panAngleRange;
 //       cout << "panRatio: " << panRatio << endl;
