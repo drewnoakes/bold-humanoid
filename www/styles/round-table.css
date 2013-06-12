@@ -437,7 +437,7 @@ table.timing-details tr td.max-duration
 
 table.timing-details td
 {
-  min-width: 60px;
+    min-width: 60px;
 }
 
 div.module.think-timing div.fps,
@@ -459,4 +459,18 @@ div.module.optiontree .option
 div.module.optiontree .option.ran
 {
     background-color: yellow;
+}
+
+/*******************************************************************/
+
+div.module.actions
+{
+    min-height: 60px;
+}
+
+div.module.actions button
+{
+    margin: 0 3px 4px 0;
+    padding: 2px 6px;
+    font-size: 13px;
 }
