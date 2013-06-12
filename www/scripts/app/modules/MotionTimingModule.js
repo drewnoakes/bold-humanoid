@@ -23,7 +23,7 @@ define(
             this.panes = [
                 {
                     title: 'main',
-                    element: this.pane.container, //this.$container.get(0),
+                    element: this.pane.container,
                     onResized: _.bind(this.pane.onResized, this.pane),
                     supports: { fullScreen: false }
                 }
