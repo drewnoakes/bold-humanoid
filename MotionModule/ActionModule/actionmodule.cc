@@ -13,11 +13,16 @@
 using namespace bold;
 using namespace std;
 
-ActionModule::ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler)
+ActionModule::ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, string filename)
 : MotionModule("action", scheduler),
   d_file(nullptr),
   d_isRunning(false)
-{}
+{
+  loadFile(filename);
+  
+  for (string name : getPageNames())
+    d_controls.push_back(Control::createAction(name, [this,name]() { start(name); }));
+}
 
 ActionModule::~ActionModule()
 {

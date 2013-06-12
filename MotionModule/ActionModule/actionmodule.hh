@@ -1,9 +1,12 @@
 #pragma once
 
+#include "../motionmodule.hh"
+
 #include <stdio.h>
 #include <string>
+#include <set>
 
-#include "../motionmodule.hh"
+#include "../../Control/control.hh"
 
 namespace bold
 {
@@ -83,6 +86,8 @@ namespace bold
     bool d_active[21];
     unsigned short d_pGains[21];
     unsigned short d_values[21];
+    
+    std::vector<Control> d_controls;
 
     bool isJointActive(uchar jointId) const { return d_active[jointId]; }
 
@@ -90,7 +95,7 @@ namespace bold
     void setChecksum(PAGE *pPage);
 
   public:
-    ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler);
+    ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::string filename);
 
     ~ActionModule();
 
@@ -102,6 +107,8 @@ namespace bold
 
     void applySection(std::shared_ptr<BodySection> section);
 
+    std::vector<Control> getControls() const { return d_controls; };
+    
     /** Returns the set of page names found in the motion file.
      * 
      * Not all pages have names, and there are several names that apply to

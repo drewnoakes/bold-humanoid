@@ -35,9 +35,8 @@ Agent::Agent()
   // Create motion modules
   d_headModule = make_shared<HeadModule>(d_motionSchedule);
   d_walkModule = make_shared<WalkModule>(d_motionSchedule);
-  d_actionModule = make_shared<ActionModule>(d_motionSchedule);
-  d_actionModule->loadFile(d_motionFile);
-
+  d_actionModule = make_shared<ActionModule>(d_motionSchedule, d_motionFile);
+  
   // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();
   
@@ -76,9 +75,10 @@ Agent::Agent()
   d_streamer = make_shared<DataStreamer>(d_camera, d_debugger);
 
   // TODO a better abstraction over control providers
+  d_streamer->registerControls("actions", d_actionModule->getControls());
+  d_streamer->registerControls("ambulator", d_ambulator->getControls());
   d_streamer->registerControls("camera", d_camera->getControls());
   d_streamer->registerControls("localiser", d_localiser->getControls());
-  d_streamer->registerControls("ambulator", d_ambulator->getControls());
   for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
 
