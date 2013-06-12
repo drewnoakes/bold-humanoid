@@ -23,7 +23,7 @@ void Agent::standUpIfFallen()
     d_actionModule->start((int)ActionPage::BackwardGetUp);
 
   // Loop until the get up script has stopped
-  // TODO this blocks the think cycle, including image processing and localisation updates
+  // TODO this blocks the think cycle, including image processing, localisation, data-streamer updates
   while (d_actionModule->isRunning())
     usleep(8000);
 }
