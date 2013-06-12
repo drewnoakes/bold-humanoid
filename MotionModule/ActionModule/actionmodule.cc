@@ -109,14 +109,14 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     bPlayRepeatCount = d_playingPage.header.repeat;
     wNextPlayPage = 0;
 
-    for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
+    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
-      if ((*selectedJoints)[bID])
+      if ((*selectedJoints)[jointId])
       {
-        wpTargetAngle1024[bID] = hw->getMX28State(bID)->presentPositionValue;
-        ipLastOutSpeed1024[bID] = 0;
-        ipMovingAngle1024[bID] = 0;
-        ipGoalSpeed1024[bID] = 0;
+        wpTargetAngle1024[jointId] = hw->getMX28State(jointId)->presentPositionValue;
+        ipLastOutSpeed1024[jointId] = 0;
+        ipMovingAngle1024[jointId] = 0;
+        ipGoalSpeed1024[jointId] = 0;
       }
     }
   }
@@ -135,52 +135,52 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     }
     else
     {
-      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
-        if ((*selectedJoints)[bID])
+        if ((*selectedJoints)[jointId])
         {
-          if (ipMovingAngle1024[bID] == 0)
-            d_values[bID] = wpStartAngle1024[bID];
+          if (ipMovingAngle1024[jointId] == 0)
+            d_values[jointId] = wpStartAngle1024[jointId];
           else
           {
             if (bSection == PRE_SECTION)
             {
-              iSpeedN = (short)(((long)(ipMainSpeed1024[bID] - ipLastOutSpeed1024[bID]) * wUnitTimeCount) / wUnitTimeNum);
-              ipGoalSpeed1024[bID] = ipLastOutSpeed1024[bID] + iSpeedN;
-              ipAccelAngle1024[bID] =  (short)((((long)(ipLastOutSpeed1024[bID] + (iSpeedN >> 1)) * wUnitTimeCount * 144) / 15) >> 9);
+              iSpeedN = (short)(((long)(ipMainSpeed1024[jointId] - ipLastOutSpeed1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
+              ipGoalSpeed1024[jointId] = ipLastOutSpeed1024[jointId] + iSpeedN;
+              ipAccelAngle1024[jointId] =  (short)((((long)(ipLastOutSpeed1024[jointId] + (iSpeedN >> 1)) * wUnitTimeCount * 144) / 15) >> 9);
 
-              d_values[bID] = wpStartAngle1024[bID] + ipAccelAngle1024[bID];
+              d_values[jointId] = wpStartAngle1024[jointId] + ipAccelAngle1024[jointId];
             }
             else if (bSection == MAIN_SECTION)
             {
-              d_values[bID] = wpStartAngle1024[bID] + (short int)(((long)(ipMainAngle1024[bID])*wUnitTimeCount) / wUnitTimeNum);
-              ipGoalSpeed1024[bID] = ipMainSpeed1024[bID];
+              d_values[jointId] = wpStartAngle1024[jointId] + (short int)(((long)(ipMainAngle1024[jointId])*wUnitTimeCount) / wUnitTimeNum);
+              ipGoalSpeed1024[jointId] = ipMainSpeed1024[jointId];
             }
             else // POST_SECTION
             {
               if (wUnitTimeCount == (wUnitTimeNum-1))
               {
-                d_values[bID] = wpTargetAngle1024[bID];
+                d_values[jointId] = wpTargetAngle1024[jointId];
               }
               else
               {
-                if (bpFinishType[bID] == ZERO_FINISH)
+                if (bpFinishType[jointId] == ZERO_FINISH)
                 {
-                  iSpeedN = (short int)(((long)(0 - ipLastOutSpeed1024[bID]) * wUnitTimeCount) / wUnitTimeNum);
-                  ipGoalSpeed1024[bID] = ipLastOutSpeed1024[bID] + iSpeedN;
-                  d_values[bID] = wpStartAngle1024[bID] +  (short)((((long)(ipLastOutSpeed1024[bID] + (iSpeedN>>1)) * wUnitTimeCount * 144) / 15) >> 9);
+                  iSpeedN = (short int)(((long)(0 - ipLastOutSpeed1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
+                  ipGoalSpeed1024[jointId] = ipLastOutSpeed1024[jointId] + iSpeedN;
+                  d_values[jointId] = wpStartAngle1024[jointId] +  (short)((((long)(ipLastOutSpeed1024[jointId] + (iSpeedN>>1)) * wUnitTimeCount * 144) / 15) >> 9);
                 }
                 else // NON_ZERO_FINISH
                 {
                   // MAIN Section
-                  d_values[bID] = wpStartAngle1024[bID] + (short int)(((long)(ipMainAngle1024[bID]) * wUnitTimeCount) / wUnitTimeNum);
-                  ipGoalSpeed1024[bID] = ipMainSpeed1024[bID];
+                  d_values[jointId] = wpStartAngle1024[jointId] + (short int)(((long)(ipMainAngle1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
+                  ipGoalSpeed1024[jointId] = ipMainSpeed1024[jointId];
                 }
               }
             }
           }
 
-          d_pGains[bID] = (256 >> (d_playingPage.header.slope[bID]>>4)) << 2;
+          d_pGains[jointId] = (256 >> (d_playingPage.header.slope[jointId]>>4)) << 2;
         }
       }
     }
@@ -189,12 +189,12 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
   {
     wUnitTimeCount = 0;
 
-    for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
+    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
-      if ((*selectedJoints)[bID])
+      if ((*selectedJoints)[jointId])
       {
-        wpStartAngle1024[bID] = hw->getMX28State(bID)->presentPositionValue;
-        ipLastOutSpeed1024[bID] = ipGoalSpeed1024[bID];
+        wpStartAngle1024[jointId] = hw->getMX28State(jointId)->presentPositionValue;
+        ipLastOutSpeed1024[jointId] = ipGoalSpeed1024[jointId];
       }
     }
 
@@ -205,19 +205,19 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       bSection = MAIN_SECTION;
       wUnitTimeNum =  wUnitTimeTotalNum - (wAccelStep << 1);
 
-      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
-        if ((*selectedJoints)[bID])
+        if ((*selectedJoints)[jointId])
         {
-          if (bpFinishType[bID] == NON_ZERO_FINISH)
+          if (bpFinishType[jointId] == NON_ZERO_FINISH)
           {
             if ((wUnitTimeTotalNum - wAccelStep) == 0)
-              ipMainAngle1024[bID] = 0;
+              ipMainAngle1024[jointId] = 0;
             else
-              ipMainAngle1024[bID] = (short)((((long)(ipMovingAngle1024[bID] - ipAccelAngle1024[bID])) * wUnitTimeNum) / (wUnitTimeTotalNum - wAccelStep));
+              ipMainAngle1024[jointId] = (short)((((long)(ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId])) * wUnitTimeNum) / (wUnitTimeTotalNum - wAccelStep));
           }
           else // ZERO_FINISH
-            ipMainAngle1024[bID] = ipMovingAngle1024[bID] - ipAccelAngle1024[bID] - (short int)((((long)ipMainSpeed1024[bID] * wAccelStep * 12) / 5) >> 8);
+            ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId] - (short int)((((long)ipMainSpeed1024[jointId] * wAccelStep * 12) / 5) >> 8);
         }
       }
     }
@@ -227,10 +227,10 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       bSection = POST_SECTION;
       wUnitTimeNum = wAccelStep;
 
-      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
-        if ((*selectedJoints)[bID])
-          ipMainAngle1024[bID] = ipMovingAngle1024[bID] - ipMainAngle1024[bID] - ipAccelAngle1024[bID];
+        if ((*selectedJoints)[jointId])
+          ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipMainAngle1024[jointId] - ipAccelAngle1024[jointId];
       }
     }
     else if (bSection == POST_SECTION)
@@ -251,10 +251,10 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       // PRE Section
       bSection = PRE_SECTION;
 
-      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
-        if ((*selectedJoints)[bID])
-          ipLastOutSpeed1024[bID] = 0;
+        if ((*selectedJoints)[jointId])
+          ipLastOutSpeed1024[jointId] = 0;
       }
     }
 
@@ -318,26 +318,26 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       wMaxAngle1024 = 0;
 
       ////////// Joint
-      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
-        if (!(*selectedJoints)[bID])
+        if (!(*selectedJoints)[jointId])
           continue;
 
-        ipAccelAngle1024[bID] = 0;
+        ipAccelAngle1024[jointId] = 0;
 
         // Find current target angle
-        if (d_playingPage.step[m_PageStepCount-1].position[bID] & INVALID_BIT_MASK)
-          wCurrentTargetAngle = wpTargetAngle1024[bID];
+        if (d_playingPage.step[m_PageStepCount-1].position[jointId] & INVALID_BIT_MASK)
+          wCurrentTargetAngle = wpTargetAngle1024[jointId];
         else
-          wCurrentTargetAngle = d_playingPage.step[m_PageStepCount-1].position[bID];
+          wCurrentTargetAngle = d_playingPage.step[m_PageStepCount-1].position[jointId];
 
         // Update start, prev_target, curr_target
-        wpStartAngle1024[bID] = wpTargetAngle1024[bID];
-        wPrevTargetAngle = wpTargetAngle1024[bID];
-        wpTargetAngle1024[bID] = wCurrentTargetAngle;
+        wpStartAngle1024[jointId] = wpTargetAngle1024[jointId];
+        wPrevTargetAngle = wpTargetAngle1024[jointId];
+        wpTargetAngle1024[jointId] = wCurrentTargetAngle;
 
         // Find Moving offset
-        ipMovingAngle1024[bID] = (int)(wpTargetAngle1024[bID] - wpStartAngle1024[bID]);
+        ipMovingAngle1024[jointId] = (int)(wpTargetAngle1024[jointId] - wpStartAngle1024[jointId]);
 
         // Find Next target angle
         if (m_PageStepCount == d_playingPage.header.stepnum)
@@ -346,18 +346,18 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
             wNextTargetAngle = wCurrentTargetAngle;
           else
           {
-            if (m_NextPlayPage.step[0].position[bID] & INVALID_BIT_MASK)
+            if (m_NextPlayPage.step[0].position[jointId] & INVALID_BIT_MASK)
               wNextTargetAngle = wCurrentTargetAngle;
             else
-              wNextTargetAngle = m_NextPlayPage.step[0].position[bID];
+              wNextTargetAngle = m_NextPlayPage.step[0].position[jointId];
           }
         }
         else
         {
-          if (d_playingPage.step[m_PageStepCount].position[bID] & INVALID_BIT_MASK)
+          if (d_playingPage.step[m_PageStepCount].position[jointId] & INVALID_BIT_MASK)
             wNextTargetAngle = wCurrentTargetAngle;
           else
-            wNextTargetAngle = d_playingPage.step[m_PageStepCount].position[bID];
+            wNextTargetAngle = d_playingPage.step[m_PageStepCount].position[jointId];
         }
 
         // Find direction change
@@ -374,20 +374,20 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         // Find finish type
         if (bDirectionChanged || wPauseTime || d_playingFinished)
         {
-          bpFinishType[bID] = ZERO_FINISH;
+          bpFinishType[jointId] = ZERO_FINISH;
         }
         else
         {
-          bpFinishType[bID] = NON_ZERO_FINISH;
+          bpFinishType[jointId] = NON_ZERO_FINISH;
         }
 
         if (d_playingPage.header.schedule == SPEED_BASE_SCHEDULE)
         {
           //MaxAngle1024 update
-          if (ipMovingAngle1024[bID] < 0)
-            wTmp = -ipMovingAngle1024[bID];
+          if (ipMovingAngle1024[jointId] < 0)
+            wTmp = -ipMovingAngle1024[jointId];
           else
-            wTmp = ipMovingAngle1024[bID];
+            wTmp = ipMovingAngle1024[jointId];
 
           if (wTmp > wMaxAngle1024)
             wMaxAngle1024 = wTmp;
@@ -429,23 +429,23 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       if (lDivider2 == 0)
         lDivider2 = 1;
 
-      for (uchar bID = (uchar)JointId::MIN; bID <= (uchar)JointId::MAX; bID++)
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
-        if ((*selectedJoints)[bID])
+        if ((*selectedJoints)[jointId])
         {
-          lStartSpeed1024_PreTime_256T = (long)ipLastOutSpeed1024[bID] * ulPreSectionTime256T; //  *300/1024 * 1024/720 * 256 * 2
-          lMovingAngle_Speed1024Scale_256T_2T = (((long)ipMovingAngle1024[bID]) * 2560L) / 12;
+          lStartSpeed1024_PreTime_256T = (long)ipLastOutSpeed1024[jointId] * ulPreSectionTime256T; //  *300/1024 * 1024/720 * 256 * 2
+          lMovingAngle_Speed1024Scale_256T_2T = (((long)ipMovingAngle1024[jointId]) * 2560L) / 12;
 
-          if (bpFinishType[bID] == ZERO_FINISH)
-            ipMainSpeed1024[bID] = (short int)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider2);
+          if (bpFinishType[jointId] == ZERO_FINISH)
+            ipMainSpeed1024[jointId] = (short int)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider2);
           else
-            ipMainSpeed1024[bID] = (short int)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider1);
+            ipMainSpeed1024[jointId] = (short int)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider1);
 
-          if (ipMainSpeed1024[bID] > 1023)
-            ipMainSpeed1024[bID] = 1023;
+          if (ipMainSpeed1024[jointId] > 1023)
+            ipMainSpeed1024[jointId] = 1023;
 
-          if (ipMainSpeed1024[bID] < -1023)
-            ipMainSpeed1024[bID] = -1023;
+          if (ipMainSpeed1024[jointId] < -1023)
+            ipMainSpeed1024[jointId] = -1023;
         }
       }
 
