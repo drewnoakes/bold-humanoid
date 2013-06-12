@@ -113,11 +113,12 @@ namespace bold
     bool loadFile(std::string filename);
     bool createFile(std::string filename);
     bool start(int iPage);
+    /** Play the first page having the specified name. */
     bool start(std::string namePage);
     bool start(int index, PAGE *pPage);
     /// Request the action to come to a stop soon.
     void stop();
-    /// Stop immediately, irrespective of the current playing position.
+    /** Stop immediately, irrespective of the current playing position. */
     void brake();
     bool isRunning();
     bool loadPage(int index, PAGE *pPage);
