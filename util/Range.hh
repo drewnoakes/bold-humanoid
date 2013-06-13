@@ -32,15 +32,35 @@ namespace bold
       }
     }
     
+    void expand(Range<T> value)
+    {
+      if (value.isEmpty())
+        return;
+      
+      expand(value.min());
+      expand(value.max());
+    }
+    
     void reset()
     {
       d_isEmpty = true;
+    }
+    
+    T size()
+    {
+      return d_max - d_min;
+    }
+    
+    bool contains(T value)
+    {
+      return d_min <= value && d_max >= value;
     }
     
     bool operator==(Range<T> const& other) const
     {
       if (d_isEmpty && other.d_isEmpty)
         return true;
+      
       return
         d_isEmpty == other.d_isEmpty &&
         d_min == other.d_min &&

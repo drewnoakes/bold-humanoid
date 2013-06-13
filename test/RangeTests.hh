@@ -38,17 +38,7 @@ TEST (RangeTests, expand)
 {
   auto range = Range<int>(1, 2);
   
-  EXPECT_FALSE ( range.isEmpty() );
-  EXPECT_EQ ( 1, range.min() );
-  EXPECT_EQ ( 2, range.max() );
-  
   range.expand(1); // NOOP
-  
-  EXPECT_FALSE ( range.isEmpty() );
-  EXPECT_EQ ( 1, range.min() );
-  EXPECT_EQ ( 2, range.max() );
-  
-  EXPECT_FALSE ( range.isEmpty() );
   
   EXPECT_EQ ( Range<int>(1, 2), range );
   
@@ -59,6 +49,19 @@ TEST (RangeTests, expand)
   range.expand(3);
   
   EXPECT_EQ ( Range<int>(0, 3), range );
+}
+
+TEST (RangeTests, expandWithRange)
+{
+  auto range = Range<int>(1, 2);
+
+  range.expand(Range<int>(0, 1));
+  
+  EXPECT_EQ ( Range<int>(0, 2), range );
+
+  range.expand(Range<int>(5, 6));
+  
+  EXPECT_EQ ( Range<int>(0, 6), range );  
 }
 
 TEST (RangeTests, reset)
@@ -74,4 +77,24 @@ TEST (RangeTests, reset)
   EXPECT_FALSE ( range.isEmpty() );
   EXPECT_EQ ( 1, range.min() );
   EXPECT_EQ ( 1, range.max() );
+}
+
+TEST (RangeTests, size)
+{
+  EXPECT_EQ ( 0, Range<int>().size() );
+  EXPECT_EQ ( 0, Range<int>(1, 1).size() );
+  EXPECT_EQ ( 1, Range<int>(1, 2).size() );
+  EXPECT_EQ ( 2, Range<int>(1, 3).size() );
+  EXPECT_EQ ( 1, Range<int>(2, 3).size() );
+  EXPECT_EQ ( 4, Range<int>(-1, 3).size() );
+}
+
+TEST (RangeTests, contains)
+{
+  EXPECT_TRUE ( Range<int>(0, 10).contains(0) );
+  EXPECT_TRUE ( Range<int>(0, 10).contains(5) );
+  EXPECT_TRUE ( Range<int>(0, 10).contains(10) );
+
+  EXPECT_FALSE( Range<int>(0, 10).contains(-1) );
+  EXPECT_FALSE( Range<int>(0, 10).contains(11) );
 }
