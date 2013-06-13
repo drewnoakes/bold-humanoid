@@ -74,8 +74,15 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // Do we have goal posts?
   for (Blob const& goalBlob : blobsPerLabel[d_goalLabel])
   {
+    // Ignore goal if it appears outside of field
+    //
+    // NOTE Process this before anything else as anything above the field edge is wasting our time
+    if (goalBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x()))
+        continue;
+    
     // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
     Vector2i wh = goalBlob.br - goalBlob.ul;
+    
     if (wh.minCoeff() > 5 &&  // Ignore small blobs
         wh.y() > wh.x())      // Taller than it is wide
     {
