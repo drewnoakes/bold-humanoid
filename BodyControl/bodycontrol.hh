@@ -3,6 +3,7 @@
 #include "../BodyPart/bodypart.hh"
 #include "../JointId/jointid.hh"
 #include "../Math/math.hh"
+#include "../util/Range.hh"
 
 #include <memory>
 
@@ -37,14 +38,15 @@ namespace bold
     /// Gets the target angle, in radians
     double getRadians() { return Math::degToRad(getDegrees()); }
 
-    bool isDirty() const { return d_isDirty; }
-    void clearDirty() { d_isDirty = false; }
+    Range<int> getModifiedAddressRange() const { return d_changedAddressRange; }
+    bool isDirty() const { return !d_changedAddressRange.isEmpty(); }
+    void clearDirty() { d_changedAddressRange.reset(); }
 
-    void setPGain(uchar p) { if (d_gainP == p) return; d_gainP = p; d_isDirty = true; }
-    void setIGain(uchar i) { if (d_gainI == i) return; d_gainI = i; d_isDirty = true; }
-    void setDGain(uchar d) { if (d_gainD == d) return; d_gainD = d; d_isDirty = true; }
+    void setPGain(uchar p);
+    void setIGain(uchar i);
+    void setDGain(uchar d);
 
-    void setPidGains(uchar p, uchar i, uchar d) { setPGain(p); setIGain(i); setDGain(d); }
+    void setPidGains(uchar p, uchar i, uchar d);
 
     uchar getPGain() const { return d_gainP; }
     uchar getIGain() const { return d_gainI; }
@@ -52,12 +54,12 @@ namespace bold
     
   private:
     uchar d_jointId;
-    bool d_isDirty;
     unsigned d_value;
     double d_degrees;
     uchar d_gainP;
     uchar d_gainI;
     uchar d_gainD;
+    Range<int> d_changedAddressRange;
   };
 
   class HeadSection;
