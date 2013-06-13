@@ -179,6 +179,9 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   // Layers
   // TODO: should lambdas be declared mutable?
+  // TODO this should probably be in a different control family
+  imageControls.push_back(Control::createBool("Ignore above horizon", d_shouldIgnoreAboveHorizon, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }));
+  
   imageControls.push_back(Control::createBool("Blobs",            d_shouldDrawBlobs,         [this](bool const& value) { d_shouldDrawBlobs = value; }));
   imageControls.push_back(Control::createBool("Line dots",        d_shouldDrawLineDots,      [this](bool const& value) { d_shouldDrawLineDots = value; }));
   imageControls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines, [this](bool const& value) { d_shouldDrawObservedLines = value; }));
