@@ -36,6 +36,16 @@
         </div>
     </script>
 
+    <script id="hardware-body-model-template" type="text/x-handlebars-template">
+        <div class="hardware-body-model" style="width:{{this.containerWidth}}px; height:{{this.containerHeight}}px;">
+            {{#each this.joints}}
+            <div class="joint" title="{{this.name}} ({{this.id}})" data-joint-id="{{this.id}}" style="left:{{this.x}}px; top:{{this.y}}px; width:{{this.width}}px; height:{{this.height}}px;">
+                <div class="temperature"></div>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+
     <script id="game-module-template" type="text/x-handlebars-template">
         <div class="module-column-3">
             <div class="play-mode {{this.playMode}}">{{this.playMode}}</div>

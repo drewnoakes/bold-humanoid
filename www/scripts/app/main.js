@@ -6,6 +6,7 @@ require(
         'modules/CameraModule',
         'modules/CommsModule',
         'modules/GameStateModule',
+        'modules/HardwareModule',
         'modules/IMUModule',
         'modules/LocaliserModule',
         'modules/MotionTimingModule',
@@ -16,7 +17,7 @@ require(
         'modules/World2dModule',
         'modules/World3dModule'
     ],
-    function(ControlClient, ModuleHost, ActionModule, CameraModule, CommsModule, GameStateModule, IMUModule, LocaliserModule, MotionTimingModule, OptionTreeModule, StateDumpModule, ThinkTimingModule, WalkModule, World2dModule, World3dModule)
+    function(ControlClient, ModuleHost, ActionModule, CameraModule, CommsModule, GameStateModule, HardwareModule, IMUModule, LocaliserModule, MotionTimingModule, OptionTreeModule, StateDumpModule, ThinkTimingModule, WalkModule, World2dModule, World3dModule)
     {
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
@@ -31,6 +32,7 @@ require(
         moduleHost.register(new LocaliserModule());
         moduleHost.register(new WalkModule());
         moduleHost.register(new CommsModule());
+        moduleHost.register(new HardwareModule());
         moduleHost.register(new IMUModule());
         moduleHost.register(new OptionTreeModule());
         moduleHost.register(new GameStateModule());

@@ -481,3 +481,26 @@ div.module.actions button
     padding: 2px 6px;
     font-size: 13px;
 }
+
+/*******************************************************************/
+
+div.module.hardware div.hardware-body-model
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+div.module.hardware div.hardware-body-model div.joint
+{
+    position: absolute;
+    border: 1px dotted grey;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 20px;
+    transition: background-color 0.4s linear;
+    -moz-transition: background-color 0.4s linear;
+    -o-transition: background-color 0.4s linear;
+    -webkit-transition: background-color 0.4s linear;
+}
