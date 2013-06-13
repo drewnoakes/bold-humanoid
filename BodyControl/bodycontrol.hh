@@ -27,15 +27,15 @@ namespace bold
     void setValue(unsigned value);
     unsigned getValue() const { return d_value; }
 
-    /// Sets the angle, in degrees
-    void setAngle(double angle);
-    /// Gets the angle, in degrees
-    double getAngle() const { return d_angle; }
+    /// Sets the target angle, in degrees
+    void setDegrees(double degrees);
+    /// Gets the target angle, in degrees
+    double getDegrees() const { return d_degrees; }
 
-    /// Sets the angle, in radians
-    void setRadian(double radian);
-    /// Gets the angle, in radians
-    double getRadian() { return Math::degToRad(getAngle()); }
+    /// Sets the target angle, in radians
+    void setRadians(double radian);
+    /// Gets the target angle, in radians
+    double getRadians() { return Math::degToRad(getDegrees()); }
 
     bool isDirty() const { return d_isDirty; }
     void clearDirty() { d_isDirty = false; }
@@ -54,7 +54,7 @@ namespace bold
     uchar d_jointId;
     bool d_isDirty;
     unsigned d_value;
-    double d_angle;
+    double d_degrees;
     uchar d_gainP;
     uchar d_gainI;
     uchar d_gainD;

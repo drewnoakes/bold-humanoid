@@ -37,7 +37,7 @@ JointControl::JointControl(uchar jointId)
 : d_jointId(jointId),
   d_isDirty(false),
   d_value(MX28::CENTER_VALUE),
-  d_angle(0.0),
+  d_degrees(0.0),
   d_gainP(P_GAIN_DEFAULT),
   d_gainI(I_GAIN_DEFAULT),
   d_gainD(D_GAIN_DEFAULT)
@@ -49,15 +49,15 @@ void JointControl::setValue(unsigned value)
   if (d_value == value)
     return;
   d_value = value;
-  d_angle = MX28::value2Degs(value);
   d_isDirty = true;
+  d_degrees = MX28::value2Degs(value);
 }
 
-void JointControl::setAngle(double angle)
+void JointControl::setDegrees(double degrees)
 {
-  angle = Math::clamp(angle, MX28::MIN_DEGS, MX28::MAX_DEGS);
-  d_angle = angle;
-  unsigned value = MX28::degs2Value(angle);
+  degrees = Math::clamp(degrees, MX28::MIN_DEGS, MX28::MAX_DEGS);
+  d_degrees = degrees;
+  unsigned value = MX28::degs2Value(degrees);
   if (d_value == value)
     return;
   d_value = value;

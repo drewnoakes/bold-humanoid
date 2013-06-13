@@ -524,7 +524,7 @@ void WalkModule::applyHead(shared_ptr<HeadSection> head)
   // Ensure we have our standard PID values
   head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPidGains(P_GAIN, I_GAIN, D_GAIN); });
 
-  head->pan()->setAngle(A_MOVE_AMPLITUDE);
+  head->pan()->setDegrees(A_MOVE_AMPLITUDE);
 }
 
 void WalkModule::applyArms(shared_ptr<ArmSection> arms)
@@ -535,10 +535,10 @@ void WalkModule::applyArms(shared_ptr<ArmSection> arms)
   arms->shoulderPitchRight()->setValue(d_outValue[12]);
   arms->shoulderPitchLeft()->setValue(d_outValue[13]);
 
-  arms->shoulderRollRight()->setAngle(-17);
-  arms->shoulderRollLeft()->setAngle(17);
-  arms->elbowRight()->setAngle(29);
-  arms->elbowLeft()->setAngle(-29);
+  arms->shoulderRollRight()->setDegrees(-17);
+  arms->shoulderRollLeft()->setDegrees(17);
+  arms->elbowRight()->setDegrees(29);
+  arms->elbowLeft()->setDegrees(-29);
 }
 
 void WalkModule::applyLegs(shared_ptr<LegSection> legs)

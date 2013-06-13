@@ -122,8 +122,8 @@ void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
   // Head moves with a low P value of 8
   head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPGain(8); });
 
-  head->pan()->setAngle(d_panAngle);
-  head->tilt()->setAngle(d_tiltAngle);
+  head->pan()->setDegrees(d_panAngle);
+  head->tilt()->setDegrees(d_tiltAngle);
 }
 
 void HeadModule::applyArms(std::shared_ptr<ArmSection> arms) { cerr << "[HeadModule::applyArms] SHOULD NOT BE CALLED" << endl; }
