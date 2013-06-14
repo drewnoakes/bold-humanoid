@@ -25,7 +25,7 @@ do
 
   # TODO ensure process isn't running remotely
 
-  rsync -zrP www *.ini motion_4096.bin boldhumanoid.py boldhumanoid darwin@darwin$i:
+  rsync -zrP www *.ini motion_4096.bin boldhumanoid.py boldhumanoid swig boldpy defparams.py darwin@darwin$i:
 
   if [ $? -ne 0 ]; then
     echo FAILED to deploy to darwin$i
