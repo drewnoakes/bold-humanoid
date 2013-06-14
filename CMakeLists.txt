@@ -72,6 +72,7 @@ add_class(BOLDHUMANOID
   ./Agent/readStaticHardwareState.cc
   ./Agent/registerStateTypes.cc
   ./Agent/run.cc
+  ./Agent/setOptionTree.cc
   ./Agent/standUpIfFallen.cc
   ./Agent/stop.cc
   ./Agent/think.cc
@@ -305,6 +306,8 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./OptionTree/addOption.cc
+  ./OptionTree/getOption.cc
   ./OptionTree/run.cc
 )
 

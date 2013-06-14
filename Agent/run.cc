@@ -25,6 +25,8 @@ void Agent::run()
     // TODO move this to an initialisation phase of the behaviour tree
     cout << "[Agent::run] Getting into initial pose" << endl;
     auto sit = d_optionTree->getOption("sitdownaction");
+    cout << "sit: " << (sit ? "yes" : "no") << endl;
+
     while (sit->hasTerminated() == 0.0)
     {
       sit->runPolicy();
@@ -32,6 +34,8 @@ void Agent::run()
     }
   }
   
+  cout << "[Agent::run] Starting think loop" << endl;
+
   while (d_isRunning)
   {
     think();
