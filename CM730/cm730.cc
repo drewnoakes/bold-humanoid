@@ -411,8 +411,6 @@ CommResult CM730::bulkRead(shared_ptr<BulkRead> bulkRead)
 
 CommResult CM730::syncWrite(uchar start_addr, uchar each_length, uchar number, uchar *pParam)
 {
-  assert(number > 0);
-  assert(each_length > 0);
   unsigned txSize = 8 + (each_length * number);
   if (txSize > 143)
     cerr << "[CM730::SyncWrite] Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size" << endl;
