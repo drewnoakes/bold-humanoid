@@ -88,8 +88,8 @@ namespace bold
     bool d_playingFinished;
 
     bool d_active[21];
-    unsigned short d_pGains[21];
-    unsigned short d_values[21];
+    uchar d_pGains[21];
+    ushort d_values[21];
     
     std::vector<Control> d_controls;
 
