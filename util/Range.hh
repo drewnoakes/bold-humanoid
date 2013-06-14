@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <iostream>
 
 namespace bold
 {
@@ -77,4 +78,12 @@ namespace bold
     T d_min;
     T d_max;
   };
+  
+  template<typename T>
+  std::ostream& operator<<(std::ostream &stream, Range<T> const& range)
+  {
+    if (range.isEmpty())
+      return stream << "(empty)";
+    return stream << "(" << range.min() << " -> " << range.max() << ")";
+  }
 }
