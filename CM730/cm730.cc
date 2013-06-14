@@ -409,9 +409,9 @@ CommResult CM730::bulkRead(shared_ptr<BulkRead> bulkRead)
   return txRxPacket(bulkRead->getTxPacket(), rxpacket, 0, bulkRead);
 }
 
-CommResult CM730::syncWrite(uchar start_addr, uchar each_length, uchar number, uchar *pParam)
+CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar deviceCount, uchar *parameters)
 {
-  unsigned txSize = 8 + (each_length * number);
+  unsigned txSize = 8 + (bytesPerDevice * deviceCount);
   if (txSize > 143)
     cerr << "[CM730::SyncWrite] Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size" << endl;
   uchar txpacket[txSize];
@@ -420,12 +420,12 @@ CommResult CM730::syncWrite(uchar start_addr, uchar each_length, uchar number, u
 
   txpacket[ID]            = (uchar)ID_BROADCAST;
   txpacket[INSTRUCTION]   = INST_SYNC_WRITE;
-  txpacket[PARAMETER]     = start_addr;
-  txpacket[PARAMETER + 1] = (each_length - 1);
+  txpacket[PARAMETER]     = fromAddress;
+  txpacket[PARAMETER + 1] = (bytesPerDevice - 1);
 
   int n;
-  for (n = 0; n < (number * each_length); n++)
-    txpacket[PARAMETER + 2 + n] = pParam[n];
+  for (n = 0; n < (deviceCount * bytesPerDevice); n++)
+    txpacket[PARAMETER + 2 + n] = parameters[n];
 
   txpacket[LENGTH] = n + 4;
 
@@ -577,16 +577,16 @@ CommResult CM730::readWord(uchar id, uchar address, int *pValue, uchar *error)
   return result;
 }
 
-CommResult CM730::readTable(uchar id, uchar start_addr, uchar end_addr, uchar *table, uchar *error)
+CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, uchar *error)
 {
-  int length = end_addr - start_addr + 1;
+  int length = toAddress - fromAddress + 1;
 
   uchar txpacket[8];
   uchar rxpacket[6 + length];
 
   txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_READ;
-  txpacket[PARAMETER]    = start_addr;
+  txpacket[PARAMETER]    = fromAddress;
   txpacket[PARAMETER+1]  = length;
   txpacket[LENGTH]       = 4;
 
@@ -595,7 +595,7 @@ CommResult CM730::readTable(uchar id, uchar start_addr, uchar end_addr, uchar *t
   if (result == CommResult::SUCCESS)
   {
     for (int i = 0; i < length; i++)
-      table[start_addr + i] = rxpacket[PARAMETER + i];
+      table[fromAddress + i] = rxpacket[PARAMETER + i];
 
     if (error != 0)
       *error = rxpacket[ERRBIT];

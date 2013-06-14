@@ -219,7 +219,7 @@ namespace bold
     CommResult readWord(uchar id, uchar address, int *pValue, uchar *error);
 
     /// Reads a consecutive range of bytes from the CM730 control table. Returns communication result enum value.
-    CommResult readTable(uchar id, uchar start_addr, uchar end_addr, uchar *table, uchar *error);
+    CommResult readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, uchar *error);
 
 
     /// Writes a byte into the control table for the specified Dynamixel device. Returns communication result enum value.
@@ -236,12 +236,12 @@ namespace bold
      * devices, though the values may differ by device.
      * SyncWrite is a broadcast message, so no Status packet is expected in response, hence no error code.
      *
-     * @param start_addr starting address within the control table
-     * @param each_length number of consecutive values to read from the control table, inclusive
+     * @param fromAddress starting address within the control table
+     * @param bytesPerDevice number of consecutive values to read from the control table, inclusive
      * @param deviceCount the number of Dynamixel devices to write to
-     * @param pParam parameters to be written, of length (number*each_length)
+     * @param parameters parameters to be written, of length (number*bytesPerDevice)
      */
-    CommResult syncWrite(uchar start_addr, uchar each_length, uchar deviceCount, uchar *pParam);
+    CommResult syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar deviceCount, uchar *parameters);
 
 
     /// Restores the state of the specified Dynamixel to the factory default setting.
