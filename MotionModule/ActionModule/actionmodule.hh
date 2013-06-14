@@ -17,8 +17,11 @@ namespace bold
   public:
     enum
     {
+      /// Valid page numbers range from 1 to 255.
       MAXNUM_PAGE = 256,
+      /// Valid step of a page are numbered from 0 to 6 (7 steps per page max).
       MAXNUM_STEP = 7,
+      /// Page names may be no longer than 13 characters.
       MAXNUM_NAME = 13
     };
 
