@@ -15,8 +15,6 @@ namespace bold
   class ActionModule : public MotionModule
   {
   public:
-    typedef unsigned char uchar;
-
     enum
     {
       MAXNUM_PAGE = 256,

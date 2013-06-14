@@ -13,6 +13,7 @@
 namespace bold
 {
   typedef unsigned char uchar;
+  typedef unsigned short ushort;
 
   class ArmSection;
   class HeadSection;
