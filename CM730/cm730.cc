@@ -413,7 +413,7 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
 {
   unsigned txSize = 8 + (bytesPerDevice * deviceCount);
   if (txSize > 143)
-    cerr << "[CM730::SyncWrite] Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size" << endl;
+    cerr << "[CM730::syncWrite] Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size (" << deviceCount << " devices, " << bytesPerDevice << " bytes per device)" << endl;
   uchar txpacket[txSize];
   // Sync write instructions do not receive status packet responses, so no buffer is needed.
   uchar* rxpacket = nullptr;
