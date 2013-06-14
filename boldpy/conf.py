@@ -25,14 +25,17 @@ class PyConf(bold.ConfImpl):
         if reportMissing:
             if os.path.exists(self.reportFile):
                 with open(self.reportFile, "r+") as f:
-                    self.reported = map(lambda l: (l.split(" = "))[0], f.read().splitlines())
+                    self.reported = list(map(lambda l: (l.split(" = "))[0], f.read().splitlines()))
 
     def _checkReportMissing(self, path, defVal):
         if self.reportMissing:
             if path not in self.reported:
                 self.reported.append(path)
-                with open(self.reportFile, "a+") as f:
-                    f.write(path + " = " + str(defVal) + "\n")
+                try:
+                    with open(self.reportFile, "a+") as f:
+                        f.write(path + " = " + str(defVal) + "\n")
+                except:
+                    print("Failed opening missing param file")
 
     def paramExists(self, path):
         res = None
@@ -44,7 +47,6 @@ class PyConf(bold.ConfImpl):
         return res != None
 
     def _getParam(self, path, defVal):
-
         res = None
         try:
             res = eval("sys.modules['__main__']." + prefix + "." + path)
