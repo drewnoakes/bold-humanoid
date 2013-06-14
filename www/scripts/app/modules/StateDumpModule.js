@@ -49,7 +49,7 @@ define(
                     this.subscription.close();
                 }
 
-                this.textElement.innerText = state ? 'Waiting for an update...' : '';
+                $(this.textElement).text(state ? 'Waiting for an update...' : '');
 
                 if (state) {
                     this.subscription = DataProxy.subscribe(
@@ -81,7 +81,7 @@ define(
 
         StateDumpModule.prototype.onData = function(data)
         {
-            this.textElement.innerText = JSON.stringify(data, undefined, 2);
+            $(this.textElement).text(JSON.stringify(data, undefined, 2));
         };
 
         return StateDumpModule;
