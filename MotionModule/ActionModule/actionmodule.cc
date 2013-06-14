@@ -454,8 +454,8 @@ void ActionModule::applySection(shared_ptr<BodySection> section)
 {
   section->visitJoints([&section,this](shared_ptr<JointControl> joint)
   {
-    joint->setValue(d_values[(int)joint->getId()]);
-    joint->setPGain(d_pGains[(int)joint->getId()]);
+    joint->setValue(d_values[joint->getId()]);
+    joint->setPGain(d_pGains[joint->getId()]);
   });
 }
 
