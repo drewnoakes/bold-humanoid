@@ -181,6 +181,8 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
           }
 
           d_pGains[jointId] = (256 >> (d_playingPage.header.slope[jointId]>>4)) << 2;
+          
+          cout << "jointId=" << (int)jointId << " slope=" << (int)d_playingPage.header.slope[jointId] << " p=" << (int)d_pGains[jointId] << endl;
         }
       }
     }
