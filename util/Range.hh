@@ -46,12 +46,12 @@ namespace bold
       d_isEmpty = true;
     }
     
-    T size()
+    T size() const
     {
       return d_max - d_min;
     }
     
-    bool contains(T value)
+    bool contains(T value) const
     {
       return d_min <= value && d_max >= value;
     }
