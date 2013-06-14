@@ -228,6 +228,7 @@ void MotionLoop::step(SequentialTimer& t)
             
             if (addrRange.contains(MX28::P_GOAL_POSITION_L))
             {
+              assert(addrRange.contains(MX28::P_GOAL_POSITION_H));
               parameters[n++] = CM730::getLowByte(goalPosition);
               parameters[n++] = CM730::getHighByte(goalPosition);
             }

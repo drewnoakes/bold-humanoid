@@ -51,6 +51,7 @@ void JointControl::setValue(unsigned value)
   d_value = value;
   d_degrees = MX28::value2Degs(value);
   d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
+  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
 }
 
 void JointControl::setDegrees(double degrees)
@@ -62,6 +63,7 @@ void JointControl::setDegrees(double degrees)
     return;
   d_value = value;
   d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
+  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
 }
 
 void JointControl::setRadians(double radians) { setDegrees(Math::radToDeg(radians)); }
