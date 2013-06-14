@@ -195,20 +195,21 @@ void MotionLoop::step(SequentialTimer& t)
       //
 
       int dirtyDeviceCount = 0;
-      Range<int> modifiedAddressRange;
+      Range<int> addrRange;
       for (shared_ptr<JointControl> joint : d_bodyControl->getJoints())
       {
         if (joint->isDirty())
         {
           dirtyDeviceCount++;
-          modifiedAddressRange.expand(joint->getModifiedAddressRange());
+          addrRange.expand(joint->getModifiedAddressRange());
         }
       }
 
       if (dirtyDeviceCount > 0)
       {
         // Prepare the parameters of a SyncWrite instruction
-        int bytesPerDevice = 1 + modifiedAddressRange.size() + 1;
+        int bytesPerDevice = 1 + addrRange.size() + 1;
+
         uchar parameters[dirtyDeviceCount * bytesPerDevice];
         int n = 0;
         for (shared_ptr<JointControl> joint : d_bodyControl->getJoints())
@@ -220,17 +221,12 @@ void MotionLoop::step(SequentialTimer& t)
 
             parameters[n++] = joint->getId();
 
-            // Values to map to min/max address range
-            // TODO only include between min/max addresses
-            if (modifiedAddressRange.contains(MX28::P_D_GAIN))
-              parameters[n++] = joint->getDGain();
-            if (modifiedAddressRange.contains(MX28::P_I_GAIN))
-              parameters[n++] = joint->getIGain();
-            if (modifiedAddressRange.contains(MX28::P_P_GAIN))
-              parameters[n++] = joint->getPGain();
-            if (modifiedAddressRange.contains(MX28::P_RESERVED))
-              parameters[n++] = 0; // reserved
-            if (modifiedAddressRange.contains(MX28::P_GOAL_POSITION_L))
+            if (addrRange.contains(MX28::P_D_GAIN))   parameters[n++] = joint->getDGain();
+            if (addrRange.contains(MX28::P_I_GAIN))   parameters[n++] = joint->getIGain();
+            if (addrRange.contains(MX28::P_P_GAIN))   parameters[n++] = joint->getPGain();
+            if (addrRange.contains(MX28::P_RESERVED)) parameters[n++] = 0;
+            
+            if (addrRange.contains(MX28::P_GOAL_POSITION_L))
             {
               parameters[n++] = CM730::getLowByte(goalPosition);
               parameters[n++] = CM730::getHighByte(goalPosition);
@@ -245,10 +241,7 @@ void MotionLoop::step(SequentialTimer& t)
         // Send the SyncWrite message, if anything changed
         //
 
-        if (dirtyDeviceCount > 0)
-        {
-          d_cm730->syncWrite(modifiedAddressRange.min(), bytesPerDevice, dirtyDeviceCount, parameters);
-        }
+        d_cm730->syncWrite(addrRange.min(), bytesPerDevice, dirtyDeviceCount, parameters);
       }
       
       t.timeEvent("Write to CM730");
