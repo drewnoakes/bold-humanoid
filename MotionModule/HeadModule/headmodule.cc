@@ -14,9 +14,9 @@ using namespace std;
 HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 : MotionModule("head", scheduler)
 {
+  // PD gain values
   d_panGainP    = getParam("pan_p_gain", 0.1);
   d_panGainD    = getParam("pan_d_gain", 0.22);
-
   d_tiltGainP   = getParam("tilt_p_gain", 0.1);
   d_tiltGainD   = getParam("tilt_d_gain", 0.22);
 
@@ -26,8 +26,26 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_limitTop    = getParam("top_limit", EYE_TILT_OFFSET_ANGLE);
   d_limitBottom = getParam("bottom_limit", EYE_TILT_OFFSET_ANGLE - 65);
 
+  // Home position
   d_panHome     = getParam("pan_home", 0.0);
   d_tiltHome    = getParam("tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
+  
+  // Controls
+  auto createControl = [this](double* target, string name, double min, double max, int scale = 1, bool isAdvanced = true)
+  {
+    auto control = Control::createInt(name, (*target)*scale, [this,target,scale](int value) { *target = value/double(scale); });
+    control.setLimitValues(min * scale, max * scale);
+    control.setIsAdvanced(isAdvanced);
+    d_controls.push_back(control);
+  };
+  
+  createControl(&d_panGainP, "Pan P Gain", 0, 0.20, 100);
+  createControl(&d_panGainD, "Pan D Gain", 0, 0.40, 100);
+  createControl(&d_tiltGainP, "Tilt P Gain", 0, 0.20, 100);
+  createControl(&d_tiltGainD, "Tilt D Gain", 0, 0.40, 100);
+  
+  createControl(&d_limitLeft, "Pan Limit Left", 100, 1);
+  createControl(&d_limitRight, "Pan Limit Right", -100, -1);
 }
 
 HeadModule::~HeadModule()

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../motionmodule.hh"
+#include "../../Control/control.hh"
 #include "../../Math/math.hh"
 
 namespace bold
@@ -16,6 +17,8 @@ namespace bold
   public:
     HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler);
     ~HeadModule();
+    
+    std::vector<Control> getControls() const { return d_controls; }    
 
     void initialize() override;
     void step(std::shared_ptr<JointSelection> selectedJoints) override;
@@ -62,6 +65,8 @@ namespace bold
     static constexpr double EYE_TILT_OFFSET_ANGLE = 40.0; // degrees
 
     void checkLimit();
+    
+    std::vector<Control> d_controls;
     
     double d_limitLeft;
     double d_limitRight;
