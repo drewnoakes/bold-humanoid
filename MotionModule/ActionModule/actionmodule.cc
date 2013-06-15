@@ -198,10 +198,9 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
           {
             if (bpFinishType[jointId] == NON_ZERO_FINISH)
             {
-              if ((wUnitTimeTotalNum - wAccelStep) == 0)
-                ipMainAngle1024[jointId] = 0;
-              else
-                ipMainAngle1024[jointId] = (short)((((long)(ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId])) * wUnitTimeNum) / (wUnitTimeTotalNum - wAccelStep));
+              ipMainAngle1024[jointId] = (wUnitTimeTotalNum - wAccelStep) == 0
+                ? ipMainAngle1024[jointId] = 0
+                : ipMainAngle1024[jointId] = (short)((((long)(ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId])) * wUnitTimeNum) / (wUnitTimeTotalNum - wAccelStep));
             }
             else // ZERO_FINISH
               ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId] - (short)((((long)ipMainSpeed1024[jointId] * wAccelStep * 12) / 5) >> 8);
