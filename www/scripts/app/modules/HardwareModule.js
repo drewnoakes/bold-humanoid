@@ -69,6 +69,7 @@ define(
                 };
             };
             this.voltageChart.streamTo(this.voltageCanvas, /*delayMs*/ 200);
+            this.container.append($('<h2></h2>').text('voltage'));
             this.container.append(this.voltageCanvas);
 
             this.voltageSeries = new TimeSeries();
@@ -87,6 +88,7 @@ define(
                 };
             };
             this.temperatureChart.streamTo(this.temperatureCanvas, /*delayMs*/ 200);
+            this.container.append($('<h2></h2>').text('temperature'));
             this.container.append(this.temperatureCanvas);
 
             this.temperatureSeriesById = [undefined];

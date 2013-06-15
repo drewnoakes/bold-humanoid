@@ -492,7 +492,7 @@ div.module.actions button
 div.module.hardware div.hardware-body-model
 {
     position: absolute;
-    top: 0;
+    top: 20px;
     right: 0;
 }
 
