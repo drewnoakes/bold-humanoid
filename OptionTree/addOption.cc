@@ -2,8 +2,6 @@
 
 void OptionTree::addOption(shared_ptr<Option> option, bool top)
 {
-  cout << "[OptionTree] Adding option: " << option->getID() << endl;
-
   d_options[option->getID()] = option;
   
   if (top)
