@@ -1,5 +1,5 @@
 import bold
-from boldpy.agent import agent
+#from boldpy.agent import agent
 import logging
 import time
 
@@ -192,7 +192,9 @@ class FSMOption(bold.Option):
 class PyOptionTreeBuilder:
     def createActionOptions(self, tree, namesScripts):
         for ns in namesScripts:
-            tree.addOption(ActionOption(ns[0], ns[1]))
+            o = ActionOption(ns[0], ns[1])
+            o.thisown = 0
+            tree.addOption(o)
 
     def createOptions(self, tree):
         actionOptions = [
@@ -204,12 +206,6 @@ class PyOptionTreeBuilder:
 
         self.createActionOptions(tree, actionOptions)
         
-        #hm = agent.getHeadModule()
-        #wm = agent.getWalkModule()
-        #amb = agent.getAmbulator()
-
-        #tree.addOption(bold.StopWalking("stopwalking", amb))
-
     def buildTree(self):
         tree = bold.OptionTree()
 
