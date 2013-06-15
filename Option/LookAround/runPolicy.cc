@@ -60,7 +60,7 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
   }
 
   // Move to the calculated position
-  d_headModule->moveToAngle(hAngle, vAngle);
+  d_headModule->moveToDegs(hAngle, vAngle);
 
   return std::vector<std::shared_ptr<Option>>();
 }

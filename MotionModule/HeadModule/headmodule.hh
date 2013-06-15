@@ -47,13 +47,11 @@ namespace bold
     /// Move the head to the position set as the 'home' position
     void moveToHome();
 
-    // TODO create moveToDegs and moveToRads, etc
-
     /// Move to the absolute angular position specified
-    void moveToAngle(double panDegs, double tiltDegs);
+    void moveToDegs(double panDegs, double tiltDegs);
 
     /// Move the head by the delta specified
-    void moveByAngleOffset(double panDegsDelta, double tiltDegsDelta);
+    void moveByDeltaDegs(double panDegsDelta, double tiltDegsDelta);
 
     /// Reset motion tracking state to zero
     void initTracking();

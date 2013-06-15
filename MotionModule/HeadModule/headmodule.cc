@@ -34,10 +34,10 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_tiltHome    = getParam("tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
   
   // Controls
-  d_controls.push_back(Control::createAction("&blacktriangleleft;",  [this]() { moveByAngleOffset( 5, 0); }));
-  d_controls.push_back(Control::createAction("&blacktriangle;",      [this]() { moveByAngleOffset( 0, 5); }));
-  d_controls.push_back(Control::createAction("&blacktriangledown;",  [this]() { moveByAngleOffset( 0,-5); }));
-  d_controls.push_back(Control::createAction("&blacktriangleright;", [this]() { moveByAngleOffset(-5, 0); }));
+  d_controls.push_back(Control::createAction("&blacktriangleleft;",  [this]() { moveByDeltaDegs( 5, 0); }));
+  d_controls.push_back(Control::createAction("&blacktriangle;",      [this]() { moveByDeltaDegs( 0, 5); }));
+  d_controls.push_back(Control::createAction("&blacktriangledown;",  [this]() { moveByDeltaDegs( 0,-5); }));
+  d_controls.push_back(Control::createAction("&blacktriangleright;", [this]() { moveByDeltaDegs(-5, 0); }));
   d_controls.push_back(Control::createAction("home",                 [this]() { moveToHome(); }));
   
   auto createControl = [this](double* target, string name, double min, double max, int scale = 1, bool isAdvanced = true)
@@ -83,10 +83,10 @@ void HeadModule::initialize()
 
 void HeadModule::moveToHome()
 {
-  moveToAngle(d_panHome, d_tiltHome);
+  moveToDegs(d_panHome, d_tiltHome);
 }
 
-void HeadModule::moveToAngle(double pan, double tilt)
+void HeadModule::moveToDegs(double pan, double tilt)
 {
   d_panAngle = pan;
   d_tiltAngle = tilt;
@@ -99,9 +99,9 @@ void HeadModule::moveToAngle(double pan, double tilt)
   checkLimit();
 }
 
-void HeadModule::moveByAngleOffset(double panDelta, double tiltDelta)
+void HeadModule::moveByDeltaDegs(double panDelta, double tiltDelta)
 {
-  moveToAngle(d_panAngle + panDelta, d_tiltAngle + tiltDelta);
+  moveToDegs(d_panAngle + panDelta, d_tiltAngle + tiltDelta);
 }
 
 void HeadModule::initTracking()
