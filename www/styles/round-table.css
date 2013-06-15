@@ -252,6 +252,11 @@ div.module.camera div.control-container.camera-controls
     overflow: auto;
 }
 
+div.module.camera div.control-container.head-controls
+{
+    width: 160px;
+}
+
 div.module.camera div.control-container.lines-controls
 {
     width: 350px;
