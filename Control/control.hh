@@ -97,6 +97,7 @@ namespace bold
     void setLimitValues(int const min, int const max)
     {
       assert(d_type == ControlType::Int);
+      assert(min <= max);
 
       d_hasLimitValues = true;
       d_minValue = min;
