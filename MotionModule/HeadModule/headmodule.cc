@@ -31,6 +31,12 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_tiltHome    = getParam("tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
   
   // Controls
+  d_controls.push_back(Control::createAction("&blacktriangleleft;",  [this]() { moveByAngleOffset( 5, 0); }));
+  d_controls.push_back(Control::createAction("&blacktriangle;",      [this]() { moveByAngleOffset( 0, 5); }));
+  d_controls.push_back(Control::createAction("&blacktriangledown;",  [this]() { moveByAngleOffset( 0,-5); }));
+  d_controls.push_back(Control::createAction("&blacktriangleright;", [this]() { moveByAngleOffset(-5, 0); }));
+  d_controls.push_back(Control::createAction("home",                 [this]() { moveToHome(); }));
+  
   auto createControl = [this](double* target, string name, double min, double max, int scale = 1, bool isAdvanced = true)
   {
     auto control = Control::createInt(name, (*target)*scale, [this,target,scale](int value) { *target = value/double(scale); });

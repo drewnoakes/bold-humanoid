@@ -133,13 +133,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   //
   // HeadModule control
   //
-  vector<Control> headControls;
-  headControls.push_back(Control::createAction("&blacktriangleleft;",  [headModule]() { headModule->moveByAngleOffset( 5, 0); }));
-  headControls.push_back(Control::createAction("&blacktriangle;",      [headModule]() { headModule->moveByAngleOffset( 0, 5); }));
-  headControls.push_back(Control::createAction("&blacktriangledown;",  [headModule]() { headModule->moveByAngleOffset( 0,-5); }));
-  headControls.push_back(Control::createAction("&blacktriangleright;", [headModule]() { headModule->moveByAngleOffset(-5, 0); }));
-  headControls.push_back(Control::createAction("home",                 [headModule]() { headModule->moveToHome(); }));
-  d_controlsByFamily["head"] = headControls;
+  d_controlsByFamily["head"] = headModule->getControls();
 
   //
   // Image controls
