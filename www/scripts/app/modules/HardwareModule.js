@@ -34,7 +34,7 @@ define(
         var chartHeight = 150,
             chartWidth = 430,
             lowTemperature = 25,
-            highTemperature = 50,
+            highTemperature = 65,
             lowVoltage = 11,
             highVoltage = 13;
 
