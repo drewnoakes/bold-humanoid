@@ -1,0 +1,6 @@
+#include "option.hh"
+
+#include <iostream>
+
+using namespace bold;
+using namespace std;

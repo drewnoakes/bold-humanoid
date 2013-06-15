@@ -27,15 +27,12 @@ namespace bold
   class Option : public Configurable
   {
   public:
-    Option(std::string const& id)
-      : Configurable(std::string("option.") + id),
-        d_id(id)
-    {}
-    virtual ~Option() {}
+    Option(std::string const& id);
+    virtual ~Option();
 
     /** Get this option's ID
      */
-    std::string getID() const { return d_id; }
+    std::string getID() const;
 
     /** Check whether this option is currently available
      *
