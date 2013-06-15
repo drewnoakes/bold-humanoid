@@ -88,7 +88,7 @@ namespace bold
     std::string toString() const
     {
       std::stringstream stream;
-      stream << this;
+      stream << *this;
       return stream.str();
     }
 
