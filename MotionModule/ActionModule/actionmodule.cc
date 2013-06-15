@@ -119,53 +119,53 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     {
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
-        if ((*selectedJoints)[jointId])
-        {
-          if (ipMovingAngle1024[jointId] == 0)
-            d_values[jointId] = wpStartAngle1024[jointId];
-          else
-          {
-            if (bSection == PRE_SECTION)
-            {
-              short iSpeedN = (short)(((long)(ipMainSpeed1024[jointId] - ipLastOutSpeed1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
-              ipGoalSpeed1024[jointId] = ipLastOutSpeed1024[jointId] + iSpeedN;
-              ipAccelAngle1024[jointId] =  (short)((((long)(ipLastOutSpeed1024[jointId] + (iSpeedN >> 1)) * wUnitTimeCount * 144) / 15) >> 9);
+        if (!(*selectedJoints)[jointId])
+          continue;
 
-              d_values[jointId] = wpStartAngle1024[jointId] + ipAccelAngle1024[jointId];
-            }
-            else if (bSection == MAIN_SECTION)
+        if (ipMovingAngle1024[jointId] == 0)
+          d_values[jointId] = wpStartAngle1024[jointId];
+        else
+        {
+          if (bSection == PRE_SECTION)
+          {
+            short iSpeedN = (short)(((long)(ipMainSpeed1024[jointId] - ipLastOutSpeed1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
+            ipGoalSpeed1024[jointId] = ipLastOutSpeed1024[jointId] + iSpeedN;
+            ipAccelAngle1024[jointId] =  (short)((((long)(ipLastOutSpeed1024[jointId] + (iSpeedN >> 1)) * wUnitTimeCount * 144) / 15) >> 9);
+
+            d_values[jointId] = wpStartAngle1024[jointId] + ipAccelAngle1024[jointId];
+          }
+          else if (bSection == MAIN_SECTION)
+          {
+            d_values[jointId] = wpStartAngle1024[jointId] + (short)(((long)(ipMainAngle1024[jointId])*wUnitTimeCount) / wUnitTimeNum);
+            ipGoalSpeed1024[jointId] = ipMainSpeed1024[jointId];
+          }
+          else // POST_SECTION
+          {
+            if (wUnitTimeCount == (wUnitTimeNum-1))
             {
-              d_values[jointId] = wpStartAngle1024[jointId] + (short)(((long)(ipMainAngle1024[jointId])*wUnitTimeCount) / wUnitTimeNum);
-              ipGoalSpeed1024[jointId] = ipMainSpeed1024[jointId];
+              d_values[jointId] = wpTargetAngle1024[jointId];
             }
-            else // POST_SECTION
+            else
             {
-              if (wUnitTimeCount == (wUnitTimeNum-1))
+              if (bpFinishType[jointId] == ZERO_FINISH)
               {
-                d_values[jointId] = wpTargetAngle1024[jointId];
+                short iSpeedN = (short)(((long)(0 - ipLastOutSpeed1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
+                ipGoalSpeed1024[jointId] = ipLastOutSpeed1024[jointId] + iSpeedN;
+                d_values[jointId] = wpStartAngle1024[jointId] + (short)((((long)(ipLastOutSpeed1024[jointId] + (iSpeedN>>1)) * wUnitTimeCount * 144) / 15) >> 9);
               }
-              else
+              else // NON_ZERO_FINISH
               {
-                if (bpFinishType[jointId] == ZERO_FINISH)
-                {
-                  short iSpeedN = (short)(((long)(0 - ipLastOutSpeed1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
-                  ipGoalSpeed1024[jointId] = ipLastOutSpeed1024[jointId] + iSpeedN;
-                  d_values[jointId] = wpStartAngle1024[jointId] +  (short)((((long)(ipLastOutSpeed1024[jointId] + (iSpeedN>>1)) * wUnitTimeCount * 144) / 15) >> 9);
-                }
-                else // NON_ZERO_FINISH
-                {
-                  // MAIN Section
-                  d_values[jointId] = wpStartAngle1024[jointId] + (short)(((long)(ipMainAngle1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
-                  ipGoalSpeed1024[jointId] = ipMainSpeed1024[jointId];
-                }
+                // MAIN Section
+                d_values[jointId] = wpStartAngle1024[jointId] + (short)(((long)(ipMainAngle1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
+                ipGoalSpeed1024[jointId] = ipMainSpeed1024[jointId];
               }
             }
           }
-
-          d_pGains[jointId] = (256 >> (d_playingPage.header.slope[jointId]>>4)) << 2;
-          
-          cout << "jointId=" << (int)jointId << " slope=" << (int)d_playingPage.header.slope[jointId] << " p=" << (int)d_pGains[jointId] << endl;
         }
+
+        d_pGains[jointId] = (256 >> (d_playingPage.header.slope[jointId]>>4)) << 2;
+        
+        cout << "jointId=" << (int)jointId << " value=" << d_values[jointId] << " slope=" << (int)d_playingPage.header.slope[jointId] << " p=" << (int)d_pGains[jointId] << endl;
       }
     }
   }
