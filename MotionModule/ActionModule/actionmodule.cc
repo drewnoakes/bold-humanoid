@@ -115,10 +115,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
   if (wUnitTimeCount < wUnitTimeNum)
   {
     wUnitTimeCount++;
-    if (bSection == PAUSE_SECTION)
-    {
-    }
-    else
+    if (bSection != PAUSE_SECTION)
     {
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
