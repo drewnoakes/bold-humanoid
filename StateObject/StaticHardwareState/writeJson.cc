@@ -11,6 +11,17 @@ using namespace std;
 
 void StaticHardwareState::writeJson(Writer<StringBuffer>& writer) const
 {
+  auto writeAlarm = [&writer](string name, MX28Alarm const& alarm)
+  {
+    writer.String(name.c_str());
+    writer.StartArray();
+    {
+      for (auto const& setName : alarm.getSetNames())
+        writer.String(setName.c_str());
+    }
+    writer.EndArray();
+  };
+
   writer.StartObject();
   {
     writer.String("id").Int(d_cm730State->dynamixelId);
@@ -38,8 +49,8 @@ void StaticHardwareState::writeJson(Writer<StringBuffer>& writer) const
         writer.String("voltageLimitHigh").Double(mx28->voltageLimitHigh);
         writer.String("maxTorque").Int(mx28->maxTorque);
         writer.String("statusRetLevel").Int(mx28->statusRetLevel);
-        writer.String("alarmLed").String(mx28->alarmLed.toString().c_str());
-        writer.String("alarmShutdown").String(mx28->alarmShutdown.toString().c_str());
+        writeAlarm("alarmLed", mx28->alarmLed);
+        writeAlarm("alarmShutdown", mx28->alarmShutdown);
         writer.String("torqueEnable").Bool(mx28->torqueEnable);
         writer.String("isEepromLocked").Bool(mx28->isEepromLocked);
       }
