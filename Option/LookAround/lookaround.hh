@@ -31,10 +31,3 @@ namespace bold
     double d_durationVert;
   };
 }
-
-
-
-
-
-
-
