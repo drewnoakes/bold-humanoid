@@ -24,8 +24,8 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_tiltGainD   = getParam("tracking_tilt_d_gain", 0.22);
 
   // Restrictions placed upon the range of movement by the head within this module
-  d_limitLeft   = getParam("left_limit", 70);
-  d_limitRight  = getParam("right_limit", -70);
+  d_limitLeft   = getParam("left_limit", 100);
+  d_limitRight  = getParam("right_limit", -100);
   d_limitTop    = getParam("top_limit", EYE_TILT_OFFSET_ANGLE);
   d_limitBottom = getParam("bottom_limit", EYE_TILT_OFFSET_ANGLE - 65);
 
@@ -55,9 +55,10 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   createControl(&d_tiltGainP, "Tracking Tilt P Gain", 0, 0.20, 100);
   createControl(&d_tiltGainD, "Tracking Tilt D Gain", 0, 0.40, 100);
   
+  createControl(&d_limitLeft, "Pan Limit Left", 1, 150);
+  createControl(&d_limitRight, "Pan Limit Right", -150, -1);
   
-  createControl(&d_limitLeft, "Pan Limit Left", 1, 100);
-  createControl(&d_limitRight, "Pan Limit Right", -100, -1);
+  // No controls for top/bottom -- cannot go lower without damaging head, and no need to look upwards
 }
 
 HeadModule::~HeadModule()
@@ -149,8 +150,7 @@ void HeadModule::step(shared_ptr<JointSelection> selectedJoints)
 
 void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
 {
-  // Head moves with a low P value of 8
-  head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPGain(8); });
+  head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPGain(d_gainP); });
 
   head->pan()->setDegrees(d_panAngle);
   head->tilt()->setDegrees(d_tiltAngle);
