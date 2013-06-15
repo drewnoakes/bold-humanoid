@@ -24,6 +24,7 @@ define(
             motionTiming: 'MotionTiming',
             optionTreeState: 'OptionTree',
             particleState: 'Particle',
+            staticHardware: 'StaticHardware',
             thinkTiming: 'ThinkTiming',
             worldFrameState: 'WorldFrame'
         };
@@ -41,6 +42,7 @@ define(
             Protocols.motionTiming,
             Protocols.optionTreeState,
             Protocols.particleState,
+            Protocols.staticHardware,
             Protocols.thinkTiming,
             Protocols.worldFrameState
         ];
