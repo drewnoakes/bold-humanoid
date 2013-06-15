@@ -50,7 +50,7 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   createControl(&d_tiltGainP, "Tilt P Gain", 0, 0.20, 100);
   createControl(&d_tiltGainD, "Tilt D Gain", 0, 0.40, 100);
   
-  createControl(&d_limitLeft, "Pan Limit Left", 100, 1);
+  createControl(&d_limitLeft, "Pan Limit Left", 1, 100);
   createControl(&d_limitRight, "Pan Limit Right", -100, -1);
 }
 
