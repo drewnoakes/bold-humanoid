@@ -242,12 +242,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       {
         // PRE Section
         bSection = PRE_SECTION;
-
-        for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-        {
-          if ((*selectedJoints)[jointId])
-            ipLastOutSpeed1024[jointId] = 0;
-        }
+        memset(ipLastOutSpeed1024, 0, sizeof(ipLastOutSpeed1024));
         break;
       }
     }
