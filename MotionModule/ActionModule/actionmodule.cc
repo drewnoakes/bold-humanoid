@@ -183,62 +183,69 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     }
 
     // Section (PRE -> MAIN -> POST -> (PAUSE or PRE) ...)
-    if (bSection == PRE_SECTION)
+    switch (bSection)
     {
-      // MAIN Section
-      bSection = MAIN_SECTION;
-      wUnitTimeNum =  wUnitTimeTotalNum - (wAccelStep << 1);
-
-      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+      case PRE_SECTION:
       {
-        if ((*selectedJoints)[jointId])
+        // MAIN Section
+        bSection = MAIN_SECTION;
+        wUnitTimeNum =  wUnitTimeTotalNum - (wAccelStep << 1);
+
+        for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
         {
-          if (bpFinishType[jointId] == NON_ZERO_FINISH)
+          if ((*selectedJoints)[jointId])
           {
-            if ((wUnitTimeTotalNum - wAccelStep) == 0)
-              ipMainAngle1024[jointId] = 0;
-            else
-              ipMainAngle1024[jointId] = (short)((((long)(ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId])) * wUnitTimeNum) / (wUnitTimeTotalNum - wAccelStep));
+            if (bpFinishType[jointId] == NON_ZERO_FINISH)
+            {
+              if ((wUnitTimeTotalNum - wAccelStep) == 0)
+                ipMainAngle1024[jointId] = 0;
+              else
+                ipMainAngle1024[jointId] = (short)((((long)(ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId])) * wUnitTimeNum) / (wUnitTimeTotalNum - wAccelStep));
+            }
+            else // ZERO_FINISH
+              ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId] - (short)((((long)ipMainSpeed1024[jointId] * wAccelStep * 12) / 5) >> 8);
           }
-          else // ZERO_FINISH
-            ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId] - (short)((((long)ipMainSpeed1024[jointId] * wAccelStep * 12) / 5) >> 8);
         }
+        break;
       }
-    }
-    else if (bSection == MAIN_SECTION)
-    {
-      // POST Section
-      bSection = POST_SECTION;
-      wUnitTimeNum = wAccelStep;
+      case MAIN_SECTION:
+      {
+        // POST Section
+        bSection = POST_SECTION;
+        wUnitTimeNum = wAccelStep;
 
-      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-      {
-        if ((*selectedJoints)[jointId])
-          ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipMainAngle1024[jointId] - ipAccelAngle1024[jointId];
+        for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+        {
+          if ((*selectedJoints)[jointId])
+            ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipMainAngle1024[jointId] - ipAccelAngle1024[jointId];
+        }
+        break;
       }
-    }
-    else if (bSection == POST_SECTION)
-    {
-      // Pause time
-      if (wPauseTime)
+      case POST_SECTION:
       {
-        bSection = PAUSE_SECTION;
-        wUnitTimeNum = wPauseTime;
+        // Pause time
+        if (wPauseTime)
+        {
+          bSection = PAUSE_SECTION;
+          wUnitTimeNum = wPauseTime;
+        }
+        else
+        {
+          bSection = PRE_SECTION;
+        }
+        break;
       }
-      else
+      case PAUSE_SECTION:
       {
+        // PRE Section
         bSection = PRE_SECTION;
-      }
-    }
-    else if (bSection == PAUSE_SECTION)
-    {
-      // PRE Section
-      bSection = PRE_SECTION;
 
-      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-      {
-        if ((*selectedJoints)[jointId])
-          ipLastOutSpeed1024[jointId] = 0;
+        for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+        {
+          if ((*selectedJoints)[jointId])
+            ipLastOutSpeed1024[jointId] = 0;
+        }
+        break;
       }
     }
 
@@ -416,8 +423,8 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         }
       }
 
-      wUnitTimeNum = wAccelStep; //PreSection
-    }
+      wUnitTimeNum = wAccelStep;
+    } // PreSection
   }
 }
 
