@@ -56,13 +56,14 @@ localiser.UseLines = 1
 
 motion.head.bottom_limit = -25.0
 motion.head.left_limit = 70
-motion.head.pan_d_gain = 0.22
+motion.head.tracking_pan_d_gain = 0.22
 motion.head.pan_home = 0.0
-motion.head.pan_p_gain = 0.1
+motion.head.p_gain = 8
+motion.head.tracking_pan_p_gain = 0.1
 motion.head.right_limit = -70
-motion.head.tilt_d_gain = 0.22
+motion.head.tracking_tilt_d_gain = 0.22
 motion.head.tilt_home = 10.0
-motion.head.tilt_p_gain = 0.1
+motion.head.tracking_tilt_p_gain = 0.1
 motion.head.top_limit = 40.0
 
 motion.walk.arm_swing_gain = 1.5

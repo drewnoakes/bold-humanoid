@@ -76,10 +76,13 @@ namespace bold
     double d_panHome;
     double d_tiltHome;
 
-    double d_panGainP;
-    double d_panGainD;
-    double d_tiltGainP;
-    double d_tiltGainD;
+    /// P gain value set on the MX28
+    double d_gainP;
+    
+    double d_panGainP;  ///< P gain value for pan joint used in tracking calculations
+    double d_panGainD;  ///< D gain value for pan joint used in tracking calculations
+    double d_tiltGainP; ///< P gain value for tilt joint used in tracking calculations
+    double d_tiltGainD; ///< D gain value for tilt joint used in tracking calculations
 
     double d_lastPanError;
     double d_lastTiltError;

@@ -14,11 +14,14 @@ using namespace std;
 HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 : MotionModule("head", scheduler)
 {
-  // PD gain values
-  d_panGainP    = getParam("pan_p_gain", 0.1);
-  d_panGainD    = getParam("pan_d_gain", 0.22);
-  d_tiltGainP   = getParam("tilt_p_gain", 0.1);
-  d_tiltGainD   = getParam("tilt_d_gain", 0.22);
+  // P gain values for MX28
+  d_gainP    = getParam("p_gain", 8);
+
+  // PD gain values for tracking
+  d_panGainP    = getParam("tracking_pan_p_gain", 0.1);
+  d_panGainD    = getParam("tracking_pan_d_gain", 0.22);
+  d_tiltGainP   = getParam("tracking_tilt_p_gain", 0.1);
+  d_tiltGainD   = getParam("tracking_tilt_d_gain", 0.22);
 
   // Restrictions placed upon the range of movement by the head within this module
   d_limitLeft   = getParam("left_limit", 70);
@@ -45,10 +48,13 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
     d_controls.push_back(control);
   };
   
-  createControl(&d_panGainP, "Pan P Gain", 0, 0.20, 100);
-  createControl(&d_panGainD, "Pan D Gain", 0, 0.40, 100);
-  createControl(&d_tiltGainP, "Tilt P Gain", 0, 0.20, 100);
-  createControl(&d_tiltGainD, "Tilt D Gain", 0, 0.40, 100);
+  createControl(&d_gainP, "P Gain", 0, 32);
+  
+  createControl(&d_panGainP, "Tracking Pan P Gain", 0, 0.20, 100);
+  createControl(&d_panGainD, "Tracking Pan D Gain", 0, 0.40, 100);
+  createControl(&d_tiltGainP, "Tracking Tilt P Gain", 0, 0.20, 100);
+  createControl(&d_tiltGainD, "Tracking Tilt D Gain", 0, 0.40, 100);
+  
   
   createControl(&d_limitLeft, "Pan Limit Left", 1, 100);
   createControl(&d_limitRight, "Pan Limit Right", -100, -1);
