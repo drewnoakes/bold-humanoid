@@ -175,7 +175,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     {
       if ((*selectedJoints)[jointId])
       {
-        wpStartAngle1024[jointId] = d_values[jointId]; //hw->getMX28State(jointId)->presentPositionValue;
+        wpStartAngle1024[jointId] = d_values[jointId];
         ipLastOutSpeed1024[jointId] = ipGoalSpeed1024[jointId];
       }
     }
