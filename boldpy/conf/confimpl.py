@@ -14,7 +14,7 @@ class Param:
 
 
 class PyConf(bold.ConfImpl):
-    def __init__(self, prefix="conf.", reportMissing=False):
+    def __init__(self, prefix="conf", reportMissing=False):
         bold.ConfImpl.__init__(self)
 
         self.prefix = prefix
@@ -47,9 +47,12 @@ class PyConf(bold.ConfImpl):
         return res != None
 
     def _getParam(self, path, defVal):
+        print(path)
+        print("sys.modules['__main__']." + self.prefix + "." + path)
+
         res = None
         try:
-            res = eval("sys.modules['__main__']." + prefix + "." + path)
+            res = eval("sys.modules['__main__']." + self.prefix + "." + path)
         except:
             self._checkReportMissing(path, defVal)
 
