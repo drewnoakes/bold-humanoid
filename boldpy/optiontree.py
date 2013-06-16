@@ -1,7 +1,8 @@
 import bold
-#from boldpy.agent import agent
 import logging
 import time
+from boldpy.agent import *
+from numpy import *
 
 class ActionOption(bold.Option):
 
@@ -33,7 +34,7 @@ class ActionOption(bold.Option):
         if not self.started:
             return 0.0
 
-        if (agent.getActionModule().isRunning()):
+        if (getAgent().getActionModule().isRunning()):
             return 0.0
 
         return 1.0;
@@ -41,9 +42,9 @@ class ActionOption(bold.Option):
     def runPolicy(self):
         """ Starts and runs action; returns empty list """
 
-        if not self.started and not agent.getActionModule().isRunning:
+        if not self.started and not getAgent().getActionModule().isRunning:
             logging.info('Sarting action: ' + str(getID()))
-            agent.getActionModule().start(self.actionName)
+            getAgent().getActionModule().start(self.actionName)
             self.started = true
 
         return [];
@@ -189,6 +190,22 @@ class FSMOption(bold.Option):
         self.transitions.append(transition)
 
 
+class StopWalking(bold.Option):
+    def __init__(self, id):
+        bold.Option.__init__(self, id)
+    
+    def hasTerminated(self):
+        return 1.0 if getAgent().getAmbulator().isRunning() else 0.0
+
+    def runPolicy(self):
+        amb = getAgent().getAmbulator()
+        moveDir = array([[0],
+                         [0]])
+        amb.setMoveDir(moveDir)
+        amd.setTurnAngle(0);
+        return []
+
+
 class PyOptionTreeBuilder:
     def createActionOptions(self, tree, namesScripts):
         for ns in namesScripts:
@@ -206,6 +223,9 @@ class PyOptionTreeBuilder:
 
         self.createActionOptions(tree, actionOptions)
         
+        sw = StopWalking("stopwalking");
+        tree.addOption(sw, True)
+
     def buildTree(self):
         tree = bold.OptionTree()
 
