@@ -4,38 +4,20 @@
 import sys, getopt
 sys.path.append("swig")
 import numpy as np
-
 # Import C++ library
 import bold
-
 # Load configuraion module
 import boldpy.conf as conf
-
-# Load option tree building
-from boldpy.optiontree import *
-
+# Load option tree module
+from boldpy.options.optiontree import *
+# Load agent module
 from boldpy.agent import *
-
+# Load interface to dynamically import modules
 import importlib
+# Catch signals
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-"""  
-agentParams = {
-    "u2dDevName": "/dev/ttyUSB0",
-    "motionFilePath": "./motion_4096.bin",
-    "confFilePath": "./germanopen.ini",
-    "teamNumber": 24,
-    "uniformNumber": -1,
-    "useJoystick": False,
-    "autoGetUp": True,
-    "useOptionTree": False,
-    "recordFrames": False,
-    "ignoreGameController": False
-}
-
-conf.agent.add(agentParams)
-conf.agent.testInt = 1
-conf.agent.testDbl = 2.0
-"""
 
 def thinkEndCallback():
     print("===== HELLO =====")
@@ -46,6 +28,7 @@ def thinkEndCallback():
     print(ballObs)
     goalObs = cameraState.getGoalObservations()
     print(goalObs)
+
     
 def usage():
     print('''Options:
@@ -58,6 +41,7 @@ def usage():
 	-r           record one camera frame each second to PNG files (or --record)
 	--nogc       do not listen to GameController
 	-h           show these options (or --help)''')
+
 
 def main(argv):
     global conf
