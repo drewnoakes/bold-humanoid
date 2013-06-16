@@ -1,8 +1,9 @@
 #include "gamestatereceiver.ih"
 
-GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger)
+GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, int ourTeamNumber)
   : Configurable("gamestatereceiver"),
     d_socket(-1),
+    d_ourTeamNumber(ourTeamNumber),
     d_receivedAnything(false),
     d_debugger(debugger)
 {
