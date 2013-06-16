@@ -20,7 +20,6 @@ class AgentStateTests : public ::testing::Test
 protected:
   static void SetUpTestCase()
   {
-    cout << "[AgentStateTests::SetUpTestCase] registering state type" << endl;
     AgentState::getInstance().registerStateType<MotionTimingState>("MotionTiming");
   }
 };
