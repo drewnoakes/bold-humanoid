@@ -2,6 +2,8 @@
 
 void Agent::run()
 {
+  ThreadId::setThreadId(ThreadId::ThinkLoop);
+
   cout << "[Agent::run] Start" << endl;
 
   if (d_isRunning)
