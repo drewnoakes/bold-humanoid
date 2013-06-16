@@ -11,7 +11,7 @@ using namespace std;
 
 // NOTE these tests ensure the same threading characteristics on development and production environments
 
-TEST (ThreadIdTests, multipleCounters)
+TEST (ThreadIdTests, threadIdAssignment)
 {
   auto makeLoop = [](int threadId)
   {
