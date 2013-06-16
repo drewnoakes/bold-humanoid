@@ -9,19 +9,14 @@ import numpy as np
 import bold
 
 # Load configuraion module
-from boldpy.conf import *
-
-# Prepare configuration system
-pc = PyConf(reportMissing = True)
-bold.Configurable.setConfImpl(pc.__disown__())
-
-# Load default paramters
-import defparams as conf
+import boldpy.conf as conf
 
 # Load option tree building
 from boldpy.optiontree import *
 
 from boldpy.agent import *
+
+import importlib
 
 """  
 agentParams = {
@@ -65,6 +60,8 @@ def usage():
 	-h           show these options (or --help)''')
 
 def main(argv):
+    global conf
+
     # Parse command arguments
     try:
         opts, args = getopt.getopt(argv,
@@ -75,9 +72,12 @@ def main(argv):
         usage()
         return
 
+    # Check and load conf file
     for opt, arg in opts:
         if opt in ('-c', '--conf'):
-            conf.agent.confFilePath = arg
+            confFile = arg
+            print("Conf file: " + confFile)
+            conf = importlib.import_module(confFile)
         elif opt in ('-t', '--team'):
             conf.agent.teamNumber = int(arg)
         elif opt in ('-u', '--unum'):
@@ -96,11 +96,16 @@ def main(argv):
             usage()
             return
 
+    print (conf.agent.u2dDevName)
+    print (sys.modules['__main__'].conf.agent.u2dDevName)
 
     if conf.agent.uniformNumber < 0:
         print('ERROR: you must supply a uniform number')
         usage()
         return
+
+    agent = getAgent()
+    print(agent)
 
     builder = PyOptionTreeBuilder()
     tree = builder.buildTree()
