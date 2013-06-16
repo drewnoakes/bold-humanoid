@@ -22,12 +22,11 @@ namespace bold
     template<typename T>
     static std::shared_ptr<StateTracker> create(std::string name)
     {
-      return std::make_shared<StateTracker>(name/*, &typeid(T)*/);
+      return std::make_shared<StateTracker>(name);
     }
 
-    StateTracker(std::string name/*, const std::type_info* typeId*/)
+    StateTracker(std::string name)
     : d_name(name)
-      /*, d_typeid(typeId)*/
     {}
 
     void set(std::shared_ptr<StateObject const> state)
@@ -53,12 +52,11 @@ namespace bold
     std::string name() const { return d_name; }
     long long unsigned updateCount() const { return d_updateCount; }
 
-    libwebsocket_protocols* websocketProtocol;;
+    libwebsocket_protocols* websocketProtocol;
 
   private:
     mutable std::mutex d_mutex;
     const std::string d_name;
-    // Not used: const std::type_info* d_typeid;
     std::shared_ptr<StateObject const> d_state;
     long long unsigned d_updateCount;
   };
