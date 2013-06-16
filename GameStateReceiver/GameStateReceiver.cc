@@ -66,3 +66,8 @@ GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, int ourTeamN
     throw new runtime_error("Could not set nonblocking mode");
   }
 }
+
+GameStateReceiver::~GameStateReceiver()
+{
+  close(d_socket);
+}

@@ -15,6 +15,7 @@ namespace bold
   {
   public:
     GameStateReceiver(std::shared_ptr<Debugger> debugger, int ourTeamNumber);
+    ~GameStateReceiver();
 
     std::shared_ptr<GameState> receive();
 
