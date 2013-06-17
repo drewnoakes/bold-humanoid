@@ -30,6 +30,13 @@ bool TeamCommunicator::send(StringBuffer buffer)
   if (d_debugger)
     d_debugger->notifySendingTeamMessage();
   
+  // TODO send data, possible not composing document internally
+  // - team number
+  // - player number
+  // - relative position of ball
+  // - whether fallen or not
+  // - motion dir/turn angle
+  
   return d_socket->send(buffer.GetString(), buffer.GetSize());
 }
 
