@@ -70,8 +70,8 @@ void Debugger::update(shared_ptr<CM730> cm730)
   //
 
   bool hasRed = d_lastLedFlags & LED_RED;
-  bool hasGreen = d_lastLedFlags & LED_RED;
-  bool hasBlue = d_lastLedFlags & LED_RED;
+  bool hasGreen = d_lastLedFlags & LED_GREEN;
+  bool hasBlue = d_lastLedFlags & LED_BLUE;
   AgentState::getInstance().set(
     make_shared<DebugState const>(
       d_gameControllerMessageCount, d_ignoredMessageCount,
