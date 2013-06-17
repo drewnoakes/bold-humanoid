@@ -91,6 +91,8 @@ namespace bold
 
     void notifyReceivedGameControllerMessage() { d_gameControllerMessageCount++; }
     void notifyIgnoringUnrecognisedMessage() { d_ignoredMessageCount++; }
+    void notifySendingTeamMessage() { d_sentTeamMessageCount++; }
+    void notifyReceivedTeamMessage() { d_receivedTeamMessageCount++; }
 
     //
     // Display status
@@ -117,6 +119,8 @@ namespace bold
     int d_lastHeadInt;
     unsigned d_gameControllerMessageCount;
     unsigned d_ignoredMessageCount;
+    unsigned d_sentTeamMessageCount;
+    unsigned d_receivedTeamMessageCount;
 
     Colour::bgr d_eyeColour;
     Colour::bgr d_headColour;

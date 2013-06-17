@@ -400,6 +400,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./TeamCommunicator/teamcommunicator.cc
+)
+
+add_class(BOLDHUMANOID
   ./ThreadId/statics.cc
 )
 

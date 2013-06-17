@@ -75,6 +75,7 @@ void Debugger::update(shared_ptr<CM730> cm730)
   AgentState::getInstance().set(
     make_shared<DebugState const>(
       d_gameControllerMessageCount, d_ignoredMessageCount,
+      d_sentTeamMessageCount, d_receivedTeamMessageCount,
       d_eyeColour, d_headColour, 
       hasRed, hasGreen, hasBlue
     )
