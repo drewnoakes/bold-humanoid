@@ -120,6 +120,9 @@ bool UDPSocket::bind(const string localIpAddress, int port)
     return false;
   }
 
+  // Allow other sockets to bind() to this port, unless there is an active
+  // listening socket bound to the port already. This gets around 'Address
+  // already in use' errors.
   if (setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&one, sizeof(int)) == -1)
   {
     cerr << "[UDPSocket::bind] Unable to set socket option SO_REUSEADDR" << endl;

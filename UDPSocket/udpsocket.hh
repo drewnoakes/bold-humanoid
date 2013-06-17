@@ -21,7 +21,10 @@ namespace bold
     /** Controls whether the UDP socket is broadcasting. */
     bool setBroadcast(bool isBroadcast);
     
-    /** Controls whether a sender will receive their own multicast packets. */
+    /** Controls whether a sender will receive their own multicast packets.
+     * 
+     * Loopback is enabled for multicast sockets by default.
+     */
     bool setMulticastLoopback(bool isLoopback);
 
     /** Sets the multicast Time-To-Live (TTL).
