@@ -235,12 +235,12 @@ void BodyState::initBody(double angles[])
   rankleFootJoint->bodyPart = rfoot;
   d_limbByName[rfoot->name] = rfoot;
 
-  // Visitor pattern with std::function for all joints in the body
-  std::function<void(shared_ptr<BodyPart>, function<void(shared_ptr<Joint>)>)> walkJoints;
+  // Visitor pattern with function for all joints in the body
+  function<void(shared_ptr<BodyPart>, function<void(shared_ptr<Joint>)>)> walkJoints;
   walkJoints = [&](shared_ptr<BodyPart> bodyPart, function<void(shared_ptr<Joint>)> action)
   {
-    auto const limb = std::dynamic_pointer_cast<Limb>(bodyPart);
-    auto const joint = std::dynamic_pointer_cast<Joint>(bodyPart);
+    auto const limb = dynamic_pointer_cast<Limb>(bodyPart);
+    auto const joint = dynamic_pointer_cast<Joint>(bodyPart);
 
     if (limb)
     {
