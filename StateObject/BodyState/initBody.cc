@@ -240,21 +240,23 @@ void BodyState::initBody(double angles[])
   walkJoints = [&](shared_ptr<BodyPart> bodyPart, function<void(shared_ptr<Joint>)> action)
   {
     auto const limb = dynamic_pointer_cast<Limb>(bodyPart);
-    auto const joint = dynamic_pointer_cast<Joint>(bodyPart);
 
     if (limb)
     {
       for (auto const& joint : limb->joints)
-      {
         walkJoints(joint, action);
-      }
     }
-    else if (joint)
+    else
     {
-      if ((int)joint->id != 0) {
-        action(joint);
+      auto const joint = dynamic_pointer_cast<Joint>(bodyPart);
+      
+      if (joint)
+      {   
+        if ((int)joint->id != 0)
+          action(joint);
+        
+        walkJoints(joint->bodyPart, action);
       }
-      walkJoints(joint->bodyPart, action);
     }
   };
 
