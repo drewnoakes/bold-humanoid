@@ -35,7 +35,7 @@ void BodyState::initBody(double angles[])
   d_limbByName[head->name] = head;
 
   auto headCameraJoint = make_shared<Joint>();
-  headCameraJoint->id = (JointId)-1;
+  headCameraJoint->id = (JointId)0;
   // Set angle offset of head hear. If this needs to be set for more
   // stuff, probably best to add another joint before this one and set
   // it there
