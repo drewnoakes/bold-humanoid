@@ -12,6 +12,7 @@ void BodyState::initBody(double angles[])
 
   auto torsoNeckJoint = make_shared<Joint>();
   torsoNeckJoint->id = JointId::HEAD_PAN;
+  torsoNeckJoint->name = "head-pan";
   torsoNeckJoint->axis = Vector3d(0, 0, 1);
   torsoNeckJoint->anchors.first = Vector3d(0, 0, 0.0505);
   torsoNeckJoint->anchors.second = Vector3d(0, 0, 0);
@@ -24,6 +25,7 @@ void BodyState::initBody(double angles[])
 
   auto neckHeadJoint = make_shared<Joint>();
   neckHeadJoint->id = JointId::HEAD_TILT;
+  neckHeadJoint->name = "head-tilt";
   neckHeadJoint->axis = Vector3d(1, 0, 0);
   neckHeadJoint->anchors.first = Vector3d(0, 0, 0);
   neckHeadJoint->anchors.second = Vector3d(0, 0, 0);
@@ -36,6 +38,7 @@ void BodyState::initBody(double angles[])
 
   auto headCameraJoint = make_shared<Joint>();
   headCameraJoint->id = (JointId)0;
+  headCameraJoint->name = "head-camera";
   // Set angle offset of head hear. If this needs to be set for more
   // stuff, probably best to add another joint before this one and set
   // it there
@@ -55,6 +58,7 @@ void BodyState::initBody(double angles[])
 
   auto ltorsoShoulderJoint = make_shared<Joint>();
   ltorsoShoulderJoint->id = JointId::L_SHOULDER_PITCH;
+  ltorsoShoulderJoint->name = "left-shoulder-pitch";
   ltorsoShoulderJoint->axis = Vector3d(-1, 0, 0);
   ltorsoShoulderJoint->anchors.first = Vector3d(-0.082, 0, 0);
   ltorsoShoulderJoint->anchors.second = Vector3d(0, 0, 0);
@@ -62,6 +66,7 @@ void BodyState::initBody(double angles[])
 
   auto lshoulderShoulderJoint = make_shared<Joint>();
   lshoulderShoulderJoint->id = JointId::L_SHOULDER_ROLL;
+  lshoulderShoulderJoint->name = "left-shoulder-roll";
   lshoulderShoulderJoint->axis = Vector3d(0, -1, 0);
   lshoulderShoulderJoint->anchors.first = Vector3d(0, 0, 0);
   lshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
@@ -74,6 +79,7 @@ void BodyState::initBody(double angles[])
 
   auto lupperLowerArmJoint = make_shared<Joint>();
   lupperLowerArmJoint->id = JointId::L_ELBOW;
+  lupperLowerArmJoint->name = "left-elbow";
   lupperLowerArmJoint->axis = Vector3d(-1, 0, 0);
   lupperLowerArmJoint->anchors.first = Vector3d(0, 0.016, -0.060);
   lupperLowerArmJoint->anchors.second = Vector3d(0, 0, 0);
@@ -88,6 +94,7 @@ void BodyState::initBody(double angles[])
 
   auto rtorsoShoulderJoint = make_shared<Joint>();
   rtorsoShoulderJoint->id = JointId::R_SHOULDER_PITCH;
+  rtorsoShoulderJoint->name = "right-shoulder-pitch";
   rtorsoShoulderJoint->axis = Vector3d(1, 0, 0);
   rtorsoShoulderJoint->anchors.first = Vector3d(0.082, 0, 0);
   rtorsoShoulderJoint->anchors.second = Vector3d(0, 0, 0);
@@ -95,6 +102,7 @@ void BodyState::initBody(double angles[])
 
   auto rshoulderShoulderJoint = make_shared<Joint>();
   rshoulderShoulderJoint->id = JointId::R_SHOULDER_ROLL;
+  rshoulderShoulderJoint->name = "right-shoulder-roll";
   rshoulderShoulderJoint->axis = Vector3d(0, -1, 0);
   rshoulderShoulderJoint->anchors.first = Vector3d(0, 0, 0);
   rshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
@@ -107,6 +115,7 @@ void BodyState::initBody(double angles[])
 
   auto rupperLowerArmJoint = make_shared<Joint>();
   rupperLowerArmJoint->id = JointId::R_ELBOW;
+  rupperLowerArmJoint->name = "right-elbow";
   rupperLowerArmJoint->axis = Vector3d(1, 0, 0);
   rupperLowerArmJoint->anchors.first = Vector3d(0, 0.016, -0.060);
   rupperLowerArmJoint->anchors.second = Vector3d(0, 0, 0);
@@ -121,6 +130,7 @@ void BodyState::initBody(double angles[])
 
   auto ltorsoHipJoint = make_shared<Joint>();
   ltorsoHipJoint->id = JointId::L_HIP_YAW;
+  ltorsoHipJoint->name = "left-hip-yaw";
   ltorsoHipJoint->axis = Vector3d(0, 0, -1);
   ltorsoHipJoint->anchors.first = Vector3d(-0.037, -0.005, -0.1222);
   ltorsoHipJoint->anchors.second = Vector3d(0, 0, 0);
@@ -128,6 +138,7 @@ void BodyState::initBody(double angles[])
 
   auto lHipHip1Joint = make_shared<Joint>();
   lHipHip1Joint->id = JointId::L_HIP_ROLL;
+  lHipHip1Joint->name = "left-hip-roll";
   lHipHip1Joint->axis = Vector3d(0, 1, 0);
   lHipHip1Joint->anchors.first = Vector3d(0, 0, 0);
   lHipHip1Joint->anchors.second = Vector3d(0, 0, 0);
@@ -135,6 +146,7 @@ void BodyState::initBody(double angles[])
 
   auto lHipHip2Joint = make_shared<Joint>();
   lHipHip2Joint->id = JointId::L_HIP_PITCH;
+  lHipHip2Joint->name = "left-hip-pitch";
   lHipHip2Joint->axis = Vector3d(1, 0, 0);
   lHipHip2Joint->anchors.first = Vector3d(0, 0, 0);
   lHipHip2Joint->anchors.second = Vector3d(0, 0, 0);
@@ -147,6 +159,7 @@ void BodyState::initBody(double angles[])
 
   auto lupperLowerLegJoint = make_shared<Joint>();
   lupperLowerLegJoint->id = JointId::L_KNEE;
+  lupperLowerLegJoint->name = "left-knee";
   lupperLowerLegJoint->axis = Vector3d(1, 0, 0);
   lupperLowerLegJoint->anchors.first = Vector3d(0, 0, -0.093);
   lupperLowerLegJoint->anchors.second = Vector3d(0, 0, 0);
@@ -159,6 +172,7 @@ void BodyState::initBody(double angles[])
 
   auto llowerLegAnkleJoint = make_shared<Joint>();
   llowerLegAnkleJoint->id = JointId::L_ANKLE_PITCH;
+  llowerLegAnkleJoint->name = "left-ankle-pitch";
   llowerLegAnkleJoint->axis = Vector3d(-1, 0, 0);
   llowerLegAnkleJoint->anchors.first = Vector3d(0, 0, -0.093);
   llowerLegAnkleJoint->anchors.second = Vector3d(0, 0, 0);
@@ -166,6 +180,7 @@ void BodyState::initBody(double angles[])
 
   auto lankleFootJoint = make_shared<Joint>();
   lankleFootJoint->id = JointId::L_ANKLE_ROLL;
+  lankleFootJoint->name = "left-ankle-roll";
   lankleFootJoint->axis = Vector3d(0, 1, 0);
   lankleFootJoint->anchors.first = Vector3d(0, 0, 0);
   lankleFootJoint->anchors.second = Vector3d(0, 0, 0.0335);
@@ -180,6 +195,7 @@ void BodyState::initBody(double angles[])
 
   auto rtorsoHipJoint = make_shared<Joint>();
   rtorsoHipJoint->id = JointId::R_HIP_YAW;
+  rtorsoHipJoint->name = "right-hip-yaw";
   rtorsoHipJoint->axis = Vector3d(0, 0, -1);
   rtorsoHipJoint->anchors.first = Vector3d(0.037, -0.005, -0.1222);
   rtorsoHipJoint->anchors.second = Vector3d(0, 0, 0);
@@ -187,6 +203,7 @@ void BodyState::initBody(double angles[])
 
   auto rHipHip1Joint = make_shared<Joint>();
   rHipHip1Joint->id = JointId::R_HIP_ROLL;
+  rHipHip1Joint->name = "right-hip-roll";
   rHipHip1Joint->axis = Vector3d(0, -1, 0);
   rHipHip1Joint->anchors.first = Vector3d(0, 0, 0);
   rHipHip1Joint->anchors.second = Vector3d(0, 0, 0);
@@ -194,6 +211,7 @@ void BodyState::initBody(double angles[])
 
   auto rHipHip2Joint = make_shared<Joint>();
   rHipHip2Joint->id = JointId::R_HIP_PITCH;
+  rHipHip2Joint->name = "right-hip-pitch";
   rHipHip2Joint->axis = Vector3d(-1, 0, 0);
   rHipHip2Joint->anchors.first = Vector3d(0, 0, 0);
   rHipHip2Joint->anchors.second = Vector3d(0, 0, 0);
@@ -206,6 +224,7 @@ void BodyState::initBody(double angles[])
 
   auto rupperLowerLegJoint = make_shared<Joint>();
   rupperLowerLegJoint->id = JointId::R_KNEE;
+  rupperLowerLegJoint->name = "right-knee";
   rupperLowerLegJoint->axis = Vector3d(-1, 0, 0);
   rupperLowerLegJoint->anchors.first = Vector3d(0, 0, -0.093);
   rupperLowerLegJoint->anchors.second = Vector3d(0, 0, 0);
@@ -218,6 +237,7 @@ void BodyState::initBody(double angles[])
 
   auto rlowerLegAnkleJoint = make_shared<Joint>();
   rlowerLegAnkleJoint->id = JointId::R_ANKLE_PITCH;
+  rlowerLegAnkleJoint->name = "right-ankle-pitch";
   rlowerLegAnkleJoint->axis = Vector3d(1, 0, 0);
   rlowerLegAnkleJoint->anchors.first = Vector3d(0, 0, -0.093);
   rlowerLegAnkleJoint->anchors.second = Vector3d(0, 0, 0);
@@ -225,6 +245,7 @@ void BodyState::initBody(double angles[])
 
   auto rankleFootJoint = make_shared<Joint>();
   rankleFootJoint->id = JointId::R_ANKLE_ROLL;
+  rankleFootJoint->name = "right-ankle-roll";
   rankleFootJoint->axis = Vector3d(0, 1, 0);
   rankleFootJoint->anchors.first = Vector3d(0, 0, 0);
   rankleFootJoint->anchors.second = Vector3d(0, 0, 0.0335);
