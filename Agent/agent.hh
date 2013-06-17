@@ -55,6 +55,11 @@ namespace bold
     std::shared_ptr<WalkModule> getWalkModule() const { return d_walkModule; }
     std::shared_ptr<ActionModule> getActionModule() const { return d_actionModule; }
 
+    unsigned getTeamNumber() const { return d_teamNumber; }
+    void setTeamNumber(unsigned teamNumber) { d_teamNumber = teamNumber; }
+    unsigned getUniformNumber() const { return d_uniformNumber; }
+    void setUniformNumber(unsigned uniformNumber) { d_uniformNumber = uniformNumber; }
+    
     void setOptionTree(std::unique_ptr<OptionTree> tree);
 
     Agent(Agent const&) = delete;

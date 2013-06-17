@@ -109,6 +109,9 @@ int main(int argc, char **argv)
   
   cout << "[boldhumanoid] Creating Agent" << endl;
   agent.reset(new Agent());
+  
+  agent->setTeamNumber(teamNumber);
+  agent->setUniformNumber(teamNumber);
 
   AdHocOptionTreeBuilder optionTreeBuilder;
   auto optionTree = optionTreeBuilder.buildTree(teamNumber,
