@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <memory>
 
+#include "../Agent/agent.hh"
 #include "../Debugger/debugger.hh"
 #include "../StateObject/GameState/gamestate.hh"
 

@@ -37,10 +37,10 @@ shared_ptr<GameState> GameStateReceiver::receive()
     }
     
     // Verify that we're one of the teams mentioned in the message
-    if (gameState->teamInfo1().getTeamNumber() != d_ourTeamNumber &&
-        gameState->teamInfo2().getTeamNumber() != d_ourTeamNumber)
+    if (gameState->teamInfo1().getTeamNumber() != d_agent->getTeamNumber() &&
+        gameState->teamInfo2().getTeamNumber() != d_agent->getTeamNumber())
     {
-      cerr << "[GameStateReceiver::receive] Ignoring game controller message for incorrect team numbers " << (int)gameState->teamInfo1().getTeamNumber() << " and " << (int)gameState->teamInfo2().getTeamNumber() << " when our team number is " << d_ourTeamNumber << endl;
+      cerr << "[GameStateReceiver::receive] Ignoring game controller message for incorrect team numbers " << (int)gameState->teamInfo1().getTeamNumber() << " and " << (int)gameState->teamInfo2().getTeamNumber() << " when our team number is " << d_agent->getTeamNumber() << endl;
       d_debugger->notifyIgnoringUnrecognisedMessage();
       continue;
     }

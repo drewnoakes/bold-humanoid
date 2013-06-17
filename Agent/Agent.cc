@@ -59,7 +59,7 @@ Agent::Agent()
 
   d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_debugger, d_headModule);
 
-  d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, d_teamNumber);
+  d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, this);
 
   bool useJoystick = getParam("useJoystick", false);
 
