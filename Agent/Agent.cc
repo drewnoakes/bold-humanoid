@@ -3,12 +3,12 @@
 Agent::Agent()
   : Configurable("agent"),
     d_isRunning(false),
+    d_teamNumber(0),
+    d_uniformNumber(0),
     d_isRecordingFrames(false),
     d_autoGetUpFromFallen(true),
     d_useOptionTree(true),
-    d_ignoreGameController(false),
-    d_teamNumber(0),
-    d_uniformNumber(0)
+    d_ignoreGameController(false)
 {
   cout << "[Agent::Agent] Start" << endl;
 
