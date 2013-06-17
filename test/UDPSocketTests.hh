@@ -5,7 +5,7 @@
 
 #include <sys/socket.h>
 
-TEST (UDPSocketTests, communication)
+TEST (UDPSocketTests, DISABLED_communication)
 {
   int receiverPort = 8765;
   int senderPort = 5678;
