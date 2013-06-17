@@ -30,11 +30,9 @@ namespace bold
 
     friend std::ostream& operator<<(std::ostream& stream, Maybe<T> const& maybe)
     {
-      if (maybe)
-      {
-        return stream << "Maybe (hasValue=true value=" << *maybe << ")";
-      }
-      return stream << "Maybe (hasValue=false)";
+      return maybe
+        ? stream << "Maybe (hasValue=true value=" << *maybe << ")"
+        : stream << "Maybe (hasValue=false)";
     }
   };
 }
