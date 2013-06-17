@@ -11,7 +11,7 @@ namespace bold
     bool hasValue() const { return this->get(); }
     T const& value() const { return *(this->get()); }
 
-    static Maybe<T> empty() { return Maybe<T>(0); }
+    static Maybe<T> empty() { return Maybe<T>((std::shared_ptr<T>)nullptr); }
 
     Maybe(T value)
       : std::shared_ptr<T>(std::make_shared<T>(value))
