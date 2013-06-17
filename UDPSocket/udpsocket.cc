@@ -125,7 +125,7 @@ bool UDPSocket::bind(const string localIpAddress, int port)
   // already in use' errors.
   if (setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&one, sizeof(int)) == -1)
   {
-    cerr << "[UDPSocket::bind] Unable to set socket option SO_REUSEADDR" << endl;
+    cerr << "[UDPSocket::bind] Unable to set socket option SO_REUSEADDR: " << strerror(errno) << endl;
     // Continue, despite this error
   }
 
