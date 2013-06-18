@@ -5,6 +5,7 @@
 #include <Eigen/Geometry>
 #include "../Configurable/configurable.hh"
 #include "../util/Maybe.hh"
+#include "../Math/math.hh"
 
 namespace bold
 {
@@ -37,9 +38,9 @@ namespace bold
     
     double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads()); } // TODO: cache
     double rangeVerticalDegs() const { return d_rangeVerticalDegs; }
-    double rangeVerticalRads() const { return d_rangeVerticalDegs/180.0 * M_PI; }
+    double rangeVerticalRads() const { return Math::degToRad(d_rangeVerticalDegs); }
     double rangeHorizontalDegs() const { return d_rangeHorizontalDegs; }
-    double rangeHorizontalRads() const { return d_rangeHorizontalDegs/180.0 * M_PI; }
+    double rangeHorizontalRads() const { return Math::degToRad(d_rangeHorizontalDegs); }
 
     /** Gets the direction, in camera coordinates, of the specified pixel.
      * Returns a unit vector.
