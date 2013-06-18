@@ -17,7 +17,7 @@ namespace bold
       : Configurable("CameraModule"),
       d_imageWidth(imageWidth),
       d_imageHeight(imageHeight),
-      d_focalLength(focalLength),
+//       d_focalLength(focalLength),
       d_rangeVerticalDegs(rangeVerticalDegs),
       d_rangeHorizontalDegs(rangeHorizontalDegs)
     {}
@@ -27,6 +27,7 @@ namespace bold
     {
       d_imageWidth = getParam("ImageWidth", 320);
       d_imageHeight = getParam("ImageHeight", 240);
+//       d_focalLength = getParam("FocalLength", 0.025);
       d_rangeVerticalDegs = getParam("RangeVerticalDegrees", 45.0);
       d_rangeHorizontalDegs = getParam("rangeHorizontalDegrees", 60.0);
     }
@@ -79,7 +80,7 @@ namespace bold
   private:
     unsigned d_imageWidth;
     unsigned d_imageHeight;
-    double d_focalLength;
+//     double d_focalLength;
     double d_rangeVerticalDegs;
     double d_rangeHorizontalDegs;
   };
