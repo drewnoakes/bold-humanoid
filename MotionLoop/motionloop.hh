@@ -11,7 +11,6 @@ namespace bold
   class BodyControl;
   class BulkRead;
   class CM730;
-  class Debugger;
   class SequentialTimer;
 
   class MotionLoop

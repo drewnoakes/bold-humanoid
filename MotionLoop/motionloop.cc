@@ -4,7 +4,6 @@
 #include "../BodyControl/bodycontrol.hh"
 #include "../CM730/cm730.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
-#include "../Debugger/debugger.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../StateObject/BodyState/bodystate.hh"
