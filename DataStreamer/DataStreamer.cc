@@ -1,11 +1,10 @@
 #include "datastreamer.ih"
 
-DataStreamer::DataStreamer(shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger)
+DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   : Configurable("datastreamer"),
     d_controlsByIdByFamily(),
     d_image(),
     d_camera(camera),
-    d_debugger(debugger),
     d_context(0),
     d_cameraSessions()
 {

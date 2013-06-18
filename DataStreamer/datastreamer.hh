@@ -18,7 +18,6 @@ namespace cv
 
 namespace bold
 {
-  class Debugger;
   class Camera;
   class Control;
 
@@ -37,7 +36,7 @@ namespace bold
   class DataStreamer : public Configurable
   {
   public:
-    DataStreamer(std::shared_ptr<Camera> camera, std::shared_ptr<Debugger> debugger);
+    DataStreamer(std::shared_ptr<Camera> camera);
 
     void update();
     void close();
@@ -61,7 +60,6 @@ namespace bold
     cv::Mat d_image;
 
     std::shared_ptr<Camera> d_camera;
-    std::shared_ptr<Debugger> d_debugger;
 
     int d_port;
     libwebsocket_context* d_context;

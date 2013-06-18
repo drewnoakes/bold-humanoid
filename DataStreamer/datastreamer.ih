@@ -23,7 +23,6 @@
 
 #include "../AgentState/agentstate.hh"
 #include "../Camera/camera.hh"
-#include "../Debugger/debugger.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"

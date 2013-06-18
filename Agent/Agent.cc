@@ -74,7 +74,7 @@ Agent::Agent()
   initCamera();
 
   // TODO only stream if argument specified?
-  d_streamer = make_shared<DataStreamer>(d_camera, d_debugger);
+  d_streamer = make_shared<DataStreamer>(d_camera);
 
   // TODO a better abstraction over control providers
   d_streamer->registerControls("actions", d_actionModule->getControls());
