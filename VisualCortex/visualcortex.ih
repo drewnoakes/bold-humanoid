@@ -29,6 +29,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <memory>
 
 using namespace bold;
 using namespace cv;
