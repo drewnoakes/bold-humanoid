@@ -47,10 +47,18 @@ namespace bold
     /// Move the head to the position set as the 'home' position
     void moveToHome();
 
-    /// Move to the absolute angular position specified
+    /** Move to the absolute angular position specified.
+     * 
+     * @param panDegsDelta zero center, positive left, negative right
+     * @param tiltDegsDelta zero center, positive up, negative down
+     */
     void moveToDegs(double panDegs, double tiltDegs);
 
-    /// Move the head by the delta specified
+    /** Move the head by the delta specified.
+     * 
+     * @param panDegsDelta positive left, negative right
+     * @param tiltDegsDelta positive up, negative down
+     */
     void moveByDeltaDegs(double panDegsDelta, double tiltDegsDelta);
 
     /// Reset motion tracking state to zero
