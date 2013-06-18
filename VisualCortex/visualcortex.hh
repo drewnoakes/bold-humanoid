@@ -14,7 +14,6 @@
 namespace bold
 {
   class CameraModel;
-  class Debugger;
   class DataStreamer;
   class FieldMap;
   class HeadModule;
@@ -51,7 +50,6 @@ namespace bold
     VisualCortex(std::shared_ptr<CameraModel> cameraModel,
                  std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
-                 std::shared_ptr<Debugger> debugger,
                  std::shared_ptr<HeadModule> headModule);
 
     std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
@@ -99,8 +97,7 @@ namespace bold
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<Spatialiser> d_spatialiser;
-    std::shared_ptr<Debugger> d_debugger;
-
+    
     std::shared_ptr<PixelLabel> d_goalLabel;
     std::shared_ptr<PixelLabel> d_ballLabel;
     std::shared_ptr<PixelLabel> d_fieldLabel;

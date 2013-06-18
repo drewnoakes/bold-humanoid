@@ -3,13 +3,11 @@
 VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
                            shared_ptr<FieldMap> fieldMap,
                            shared_ptr<Spatialiser> spatialiser,
-                           shared_ptr<Debugger> debugger,
                            shared_ptr<HeadModule> headModule)
   : Configurable("visialcortex"),
     d_fieldMap(fieldMap),
     d_cameraModel(cameraModel),
     d_spatialiser(spatialiser),
-    d_debugger(debugger),
     d_shouldIgnoreAboveHorizon(true),
     d_minBallArea(64),
     d_imageType(ImageType::RGB),
