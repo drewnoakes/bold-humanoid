@@ -4,7 +4,7 @@ void Agent::initCamera()
 {
   cout << "[Agent::initCamera] Start" << endl;
 
-  d_camera = make_shared<Camera>("/dev/video0", d_debugger);
+  d_camera = make_shared<Camera>("/dev/video0");
 
   d_camera->open();
 

@@ -1,8 +1,7 @@
 #include "camera.ih"
 
-Camera::Camera(string const& device, shared_ptr<Debugger> debugger)
+Camera::Camera(string const& device)
   : d_device(device),
     d_fd(0),
-    d_debugger(debugger),
     d_squash(false)
 {}

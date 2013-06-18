@@ -11,7 +11,6 @@
 
 namespace bold
 {
-  class Debugger;
   class SequentialTimer;
 
   class Camera
@@ -78,7 +77,7 @@ namespace bold
       size_t length;
     };
 
-    Camera(std::string const& device, std::shared_ptr<Debugger> debugger);
+    Camera(std::string const& device);
 
     void open();
 
@@ -139,7 +138,6 @@ namespace bold
     PixelFormat d_pixelFormat;
 
     std::vector<Buffer> d_buffers;
-    std::shared_ptr<Debugger> d_debugger;
 
     /// If true, the obtained image will have half the width
     bool d_squash;
