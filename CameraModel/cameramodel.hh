@@ -34,7 +34,7 @@ namespace bold
     unsigned imageWidth() const { return d_imageWidth; }
     unsigned imageHeight() const { return d_imageHeight; }
     
-    double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads()); } // TODO: cash
+    double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads()); } // TODO: cache
     double rangeVerticalDegs() const { return d_rangeVerticalDegs; }
     double rangeVerticalRads() const { return d_rangeVerticalDegs/180.0 * M_PI; }
     double rangeHorizontalDegs() const { return d_rangeHorizontalDegs; }
