@@ -25,9 +25,7 @@ void Agent::initCamera()
     // strip strange characters from name
     char excludeChars[] = "()-, ";
     for (unsigned int i = 0; i < strlen(excludeChars); ++i)
-    {
       name.erase(remove(name.begin(), name.end(), excludeChars[i]), name.end());
-    }
 
     if (!paramExists(name))
     {
@@ -52,9 +50,7 @@ void Agent::initCamera()
 
   cout << "[Agent::initCamera] Controls (" << d_camera->getControls().size() << "):" << endl;;
   for (Control const& control : d_camera->getControls())
-  {
     cout << "[Agent::initCamera]   " << control << endl;
-  }
 
   cout << "[Agent::initCamera] Formats (" << d_camera->getFormats().size() << "):" << endl;;
   for (Camera::Format const& format : d_camera->getFormats())
