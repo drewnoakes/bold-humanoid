@@ -439,9 +439,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     lookForBallCircling2lookForBall->childState = lookForBallState;
 
     // Transition: look at ball -> look for ball if no longer seen
-    auto lookAtBall2lookAround = lookAtBallState->newTransition();
-    lookAtBall2lookAround->condition = ballLostCondition;
-    lookAtBall2lookAround->childState = lookForBallState;
+    auto lookAtBall2lookForBall = lookAtBallState->newTransition();
+    lookAtBall2lookForBall->condition = ballLostCondition;
+    lookAtBall2lookForBall->childState = lookForBallState;
 
     // Transition: look at ball -> approach ball
     auto lookAtBall2approachBall = lookAtBallState->newTransition();
