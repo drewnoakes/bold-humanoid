@@ -13,10 +13,10 @@ namespace bold
     : Option(id),
       d_headModule(headModule)
     {
-      d_topAngle      = getParam("topAngle", -15.0);
+      d_topAngle      = getParam("topAngle", -30.0);
       d_bottomAngle   = getParam("bottomAngle", 15.0);
-      d_sideAngle     = getParam("sideAngle", 70.0);
-      d_durationHoriz = getParam("durationHoriz", 3.0);
+      d_sideAngle     = getParam("sideAngle", 100.0);
+      d_durationHoriz = getParam("durationHoriz", 1.3);
       d_durationVert  = getParam("durationVert", 0.4);
     }
 
