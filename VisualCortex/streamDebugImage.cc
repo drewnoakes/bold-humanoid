@@ -96,6 +96,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
 
     for (LineSegment3d const& line : d_fieldMap->getFieldLines())
     {
+      // TODO this degrades when lines start/end outside of the camera's FOV
       auto p1 = d_cameraModel->pixelForDirection(cameraWorld * line.p1());
       auto p2 = d_cameraModel->pixelForDirection(cameraWorld * line.p2());
 
