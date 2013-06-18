@@ -67,7 +67,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     d_imagePassRunner->addHandler(d_lineDotPass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
 //  d_imagePassRunner->addHandler(d_cartoonPass); // will be added if a client requests cartoon images
-//   d_imagePassRunner->addHandler(d_labelCountPass);
+//  d_imagePassRunner->addHandler(d_labelCountPass);
 
   d_lineFinder = make_shared<MaskWalkLineFinder>(imageWidth, imageHeight);
   d_controlsByFamily["lines"] = d_lineFinder->getControls();
