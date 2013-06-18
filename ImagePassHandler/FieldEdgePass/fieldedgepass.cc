@@ -25,7 +25,7 @@ void FieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
   
   if (labelId == d_fieldLabel->id())
   {
-    assert(y > d_maxYByX[x]);
+    assert(y >= d_maxYByX[x]);
     
     d_maxYByX[x] = y;
   }
