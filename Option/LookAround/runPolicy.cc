@@ -47,7 +47,7 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
 
         if (phase < d_durationVert)
         {
-          // moving bottom-to-top across right
+          // moving bottom-to-top at right
           vAngle = Math::lerp(phase/d_durationVert, d_bottomAngle, d_topAngle);
           hAngle = -d_sideAngle;
         }
