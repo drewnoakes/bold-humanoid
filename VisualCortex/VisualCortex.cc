@@ -66,25 +66,39 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   if (d_shouldDetectLines)
     d_imagePassRunner->addHandler(d_lineDotPass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
-//  d_imagePassRunner->addHandler(d_cartoonPass); // will be added if a client requests cartoon images
-//  d_imagePassRunner->addHandler(d_labelCountPass);
-
+  
   d_lineFinder = make_shared<MaskWalkLineFinder>(imageWidth, imageHeight);
-  d_controlsByFamily["lines"] = d_lineFinder->getControls();
+  
+  // HeadModule control
+  d_controlsByFamily["head"] = headModule->getControls();  
 
   //
+  // VISION SYSTEM CONTROLS
+  //
+
+  auto minBallAreaControl = Control::createInt("Min ball area", d_minBallArea, [this](int value) { d_minBallArea = value; });
+  minBallAreaControl.setIsAdvanced(true);
+  vector<Control> ballControls = { minBallAreaControl };
+  d_controlsByFamily["vision/ball"] = ballControls;
+  auto lineDetectionControls = d_lineFinder->getControls();
+  lineDetectionControls.push_back(Control::createBool("Detect lines", d_shouldDetectLines, [this](bool value)
+  {
+    if (value)
+      d_imagePassRunner->addHandler(d_lineDotPass);
+    else
+      d_imagePassRunner->removeHandler(d_lineDotPass);
+  }));
+  lineDetectionControls.push_back(d_lineDotPass->getHysterisisControl());
+  d_controlsByFamily["vision/line-detection"] = lineDetectionControls;
+  
   // Allow control over the LUT parameters
-  //
-
   auto setHue      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withH(value));      createLookupTable(); };
   auto setHueRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withHRange(value)); createLookupTable(); };
   auto setSat      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withS(value));      createLookupTable(); };
   auto setSatRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withSRange(value)); createLookupTable(); };
   auto setVal      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withV(value));      createLookupTable(); };
   auto setValRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withVRange(value)); createLookupTable(); };
-
   vector<Control> lutControls;
-
   for (shared_ptr<PixelLabel> label : pixelLabels)
   {
     Control h  = Control::createInt(label->name() + " Hue",              label->hsvRange().h,      [label,setHue     ](int value){ setHue     (label, value); });
@@ -123,19 +137,15 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     lutControls.push_back(vr);
   }
 
-  d_controlsByFamily["lut"] = lutControls;
+  d_controlsByFamily["vision/lut"] = lutControls;
 
-  vector<Control> lineDotPassControls = { d_lineDotPass->getHysterisisControl() };
-  d_controlsByFamily["line-dots"] = lineDotPassControls;
-
+  vector<Control> horizonControls = { Control::createBool("Ignore above horizon", d_shouldIgnoreAboveHorizon, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }) };
+  d_controlsByFamily["vision/horizon"] = horizonControls;
+  
   //
-  // HeadModule control
+  // DEBUG IMAGE CONTROLS
   //
-  d_controlsByFamily["head"] = headModule->getControls();
-
-  //
-  // Image controls
-  //
+  
   vector<Control> debugImageControls;
   // Image types
   vector<ControlEnumValue> imageTypes;
@@ -171,19 +181,11 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   // Layers
   // TODO: should lambdas be declared mutable?
-  // TODO this should probably be in a different control family
-  debugImageControls.push_back(Control::createBool("Ignore above horizon", d_shouldIgnoreAboveHorizon, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }));
-
   debugImageControls.push_back(Control::createBool("Blobs",            d_shouldDrawBlobs,         [this](bool const& value) { d_shouldDrawBlobs = value; }));
   debugImageControls.push_back(Control::createBool("Line dots",        d_shouldDrawLineDots,      [this](bool const& value) { d_shouldDrawLineDots = value; }));
   debugImageControls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines, [this](bool const& value) { d_shouldDrawObservedLines = value; }));
   debugImageControls.push_back(Control::createBool("Lines (expected)", d_shouldDrawExpectedLines, [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
   debugImageControls.push_back(Control::createBool("Horizon",          d_shouldDrawHorizon,       [this](bool const& value) { d_shouldDrawHorizon = value; }));
   debugImageControls.push_back(Control::createBool("Field edge",       d_shouldDrawFieldEdge,     [this](bool const& value) { d_shouldDrawFieldEdge = value; }));
-  d_controlsByFamily["image"] = debugImageControls;
-
-  auto minBallAreaControl = Control::createInt("Min ball area", d_minBallArea, [this](int value) { d_minBallArea = value; });
-  minBallAreaControl.setIsAdvanced(true);
-  vector<Control> ballControls = { minBallAreaControl };
-  d_controlsByFamily["ball"] = ballControls;
+  d_controlsByFamily["debug-image"] = debugImageControls;
 }
