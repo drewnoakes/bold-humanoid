@@ -136,14 +136,14 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   //
   // Image controls
   //
-  vector<Control> imageControls;
+  vector<Control> debugImageControls;
   // Image types
   vector<ControlEnumValue> imageTypes;
   imageTypes.push_back(ControlEnumValue((int)ImageType::RGB,     "RGB"));
   imageTypes.push_back(ControlEnumValue((int)ImageType::Cartoon, "Cartoon"));
   imageTypes.push_back(ControlEnumValue((int)ImageType::YCbCr,   "YCbCr"));
   imageTypes.push_back(ControlEnumValue((int)ImageType::None,    "None"));
-  imageControls.push_back(
+  debugImageControls.push_back(
     Control::createEnum(
       "Image",
       imageTypes,
@@ -167,20 +167,20 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   {
     framePeriods.push_back(ControlEnumValue(period, to_string(period)));
   }
-  imageControls.push_back(Control::createEnum("Frame period", framePeriods, d_streamFramePeriod, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); }));
+  debugImageControls.push_back(Control::createEnum("Frame period", framePeriods, d_streamFramePeriod, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); }));
 
   // Layers
   // TODO: should lambdas be declared mutable?
   // TODO this should probably be in a different control family
-  imageControls.push_back(Control::createBool("Ignore above horizon", d_shouldIgnoreAboveHorizon, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }));
-  
-  imageControls.push_back(Control::createBool("Blobs",            d_shouldDrawBlobs,         [this](bool const& value) { d_shouldDrawBlobs = value; }));
-  imageControls.push_back(Control::createBool("Line dots",        d_shouldDrawLineDots,      [this](bool const& value) { d_shouldDrawLineDots = value; }));
-  imageControls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines, [this](bool const& value) { d_shouldDrawObservedLines = value; }));
-  imageControls.push_back(Control::createBool("Lines (expected)", d_shouldDrawExpectedLines, [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
-  imageControls.push_back(Control::createBool("Horizon",          d_shouldDrawHorizon,       [this](bool const& value) { d_shouldDrawHorizon = value; }));
-  imageControls.push_back(Control::createBool("Field edge",       d_shouldDrawFieldEdge,     [this](bool const& value) { d_shouldDrawFieldEdge = value; }));
-  d_controlsByFamily["image"] = imageControls;
+  debugImageControls.push_back(Control::createBool("Ignore above horizon", d_shouldIgnoreAboveHorizon, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }));
+
+  debugImageControls.push_back(Control::createBool("Blobs",            d_shouldDrawBlobs,         [this](bool const& value) { d_shouldDrawBlobs = value; }));
+  debugImageControls.push_back(Control::createBool("Line dots",        d_shouldDrawLineDots,      [this](bool const& value) { d_shouldDrawLineDots = value; }));
+  debugImageControls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines, [this](bool const& value) { d_shouldDrawObservedLines = value; }));
+  debugImageControls.push_back(Control::createBool("Lines (expected)", d_shouldDrawExpectedLines, [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
+  debugImageControls.push_back(Control::createBool("Horizon",          d_shouldDrawHorizon,       [this](bool const& value) { d_shouldDrawHorizon = value; }));
+  debugImageControls.push_back(Control::createBool("Field edge",       d_shouldDrawFieldEdge,     [this](bool const& value) { d_shouldDrawFieldEdge = value; }));
+  d_controlsByFamily["image"] = debugImageControls;
 
   auto minBallAreaControl = Control::createInt("Min ball area", d_minBallArea, [this](int value) { d_minBallArea = value; });
   minBallAreaControl.setIsAdvanced(true);
