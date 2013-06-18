@@ -49,10 +49,8 @@ void Agent::think()
   //
   shared_ptr<GameState const> gameState = d_gameStateReceiver->receive();
   if (gameState)
-  {
     AgentState::getInstance().set(gameState);
-    t.timeEvent("Integrate Game Control");
-  }
+  t.timeEvent("Integrate Game Control");
 
   //
   // Populate agent frame from camera frame
