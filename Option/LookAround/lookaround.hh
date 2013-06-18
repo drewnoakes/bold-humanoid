@@ -16,7 +16,7 @@ namespace bold
       d_topAngle      = getParam("topAngle",    -20.0);
       d_bottomAngle   = getParam("bottomAngle",  30.0);
       d_sideAngle     = getParam("sideAngle",   100.0);
-      d_durationHoriz = getParam("durationHoriz", 1.5);
+      d_durationHoriz = getParam("durationHoriz", 2.3);
       d_durationVert  = getParam("durationVert",  0.2);
     }
 
