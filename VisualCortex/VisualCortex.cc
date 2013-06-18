@@ -24,10 +24,10 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   d_streamFramePeriod = getParam("CameraFramePeriod", 5);
 
-  d_goalLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Goal",  40,  10, 210, 55, 190, 65));
-  d_ballLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Ball",  10,  15, 255, 95, 190, 95));
-  d_fieldLabel = make_shared<PixelLabel>(PixelLabel::fromConfig("Field", 90,  15, 195, 30,  75, 65));
-  d_lineLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Line",   0, 255,   0, 70, 255, 100));
+  d_goalLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Goal",  35,  15, 209,  48, 179,  60));
+  d_ballLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Ball",   9,  20, 211,  89, 172, 138));
+  d_fieldLabel = make_shared<PixelLabel>(PixelLabel::fromConfig("Field", 78,  16, 202, 106, 109, 124));
+  d_lineLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Line",   0, 255,  57, 110, 224,  63));
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel };
 
@@ -44,7 +44,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   createLookupTable();
 
-  d_minBallArea = getParam("MinBallArea", 5*5);
+  d_minBallArea = getParam("MinBallArea", 3*3);
 
   int imageWidth = d_cameraModel->imageWidth();
   int imageHeight = d_cameraModel->imageHeight();
