@@ -13,7 +13,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
   d_rewardFalloff = getParam("RewardFallOff", 0.1);
   d_useLines = getParam("UseLines", 1) != 0;
   d_minGoalsNeeded = getParam("MinGoalsNeeded", 1);
-  double positionErrorMillimeters = getParam("PositionErrorMillimeters", 0.03);
+  double positionError = getParam("PositionError", 0.03);
   unsigned initialAngleErrorDeg = getParam("AngleErrorDegrees", 3);
 
   d_avgPos = MovingAverage<Vector4d>(smoothingWindowSize);
@@ -25,7 +25,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
   d_fieldYRng = Math::createUniformRng(-yMax, yMax);
   d_thetaRng  = Math::createUniformRng(-M_PI, M_PI);
 
-  d_positionError = Math::createNormalRng(0, positionErrorMillimeters);
+  d_positionError = Math::createNormalRng(0, positionError);
   d_angleError    = Math::createNormalRng(0, Math::degToRad(initialAngleErrorDeg));
 
   ParticleFilter<3>::ParticleResampler resampler =
@@ -60,8 +60,8 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
   d_controls.push_back(randomizePercentControl);
 
   double positionErrorScale = 1000.0;
-  auto positionErrorControl = Control::createInt("Position Error (mm)", int(positionErrorMillimeters * positionErrorScale), [this,positionErrorScale](int value){ d_positionError = Math::createNormalRng(0, value/positionErrorScale); });
-  positionErrorControl.setDefaultValue(int(positionErrorMillimeters * positionErrorScale));
+  auto positionErrorControl = Control::createInt("Position Error (mm)", int(positionError * positionErrorScale), [this,positionErrorScale](int value){ d_positionError = Math::createNormalRng(0, value/positionErrorScale); });
+  positionErrorControl.setDefaultValue(int(positionError * positionErrorScale));
   positionErrorControl.setLimitValues(0, 50);
   d_controls.push_back(positionErrorControl);
 
