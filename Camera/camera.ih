@@ -8,7 +8,7 @@
 
 #include "../Clock/clock.hh"
 #include "../Control/control.hh"
-#include "../Debugger/debugger.hh"
+#include "../SequentialTimer/sequentialtimer.hh"
 
 using namespace cv;
 using namespace bold;

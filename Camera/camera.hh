@@ -11,14 +11,12 @@
 
 namespace bold
 {
-  class SequentialTimer;
-  
   class Debugger;
+  class SequentialTimer;
 
   class Camera
   {
   public:
-
     enum class V4L2ControlType
     {
       CT_INT        = 1,

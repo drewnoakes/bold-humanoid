@@ -6,6 +6,7 @@
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../Debugger/debugger.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
+#include "../SequentialTimer/sequentialtimer.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"

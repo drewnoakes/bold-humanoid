@@ -19,6 +19,7 @@
 #include "../Option/ActionOption/actionoption.hh"
 #include "../OptionTree/optiontree.hh"
 #include "../OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
+#include "../SequentialTimer/sequentialtimer.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"

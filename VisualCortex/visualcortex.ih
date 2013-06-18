@@ -18,6 +18,7 @@
 #include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
+#include "../SequentialTimer/sequentialtimer.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
