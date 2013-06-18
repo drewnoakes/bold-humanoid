@@ -342,10 +342,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         return false;
       Eigen::Vector3d ballPos = *ballObs;
       if (ballPos.y() > 1.0)
-	return false;
+        return false;
 
       if (ballPos.x() > 0)
-	return false;
+        return false;
 
       return true;
     };
