@@ -51,23 +51,17 @@ class PyConf(bold.ConfImpl):
 
     def _getParam(self, path, defVal):
         els = path.split(".")
-
+        els.insert(0, self.prefix)
         par = sys.modules['__main__']
-        res = None
+        res = par
         try:
-            res = reduce(lambda p,c: None if p is None else p.getattr(c), els, par) 
+            for el in els:
+                res = getattr(res, el)
+                if not res:
+                    break;
         except:
             res = None
 
-        #try:
-        #    print("a")
-        #    res = eval(toeval);
-        #    print("b")
-        #except:
-        #    if (self.reportMissing):
-        #        self._checkReportMissing(path, defVal)
-        print("res: " + str(res))
-        
         if (res == None):
             return defVal
         else:
