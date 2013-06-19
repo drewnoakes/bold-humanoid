@@ -67,6 +67,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
         // Take the bottom of the ball as observation
         pos.y() = ballBlob.ul.y();
         ballPosition = Maybe<Vector2d>(pos);
+        break;
       }
     }
   }
