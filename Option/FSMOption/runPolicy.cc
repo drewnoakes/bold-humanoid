@@ -5,7 +5,11 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
 //   cout << "[FSMOption::runPolicy] ----- Start -----" << endl;
 
   if (!d_curState)
+  {
     d_curState = d_startState;
+    if (d_curState->onEnter)
+      d_curState->onEnter();
+  }
 
 //   cout << "[FSMOption::runPolicy] Current state: " << d_curState->name << endl;
 
@@ -33,6 +37,9 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
 
         if (transition->onFire)
           transition->onFire();
+
+        if (d_curState->onEnter)
+          d_curState->onEnter();
 
         break;
       }

@@ -63,6 +63,8 @@ namespace bold
     /// Outgoing transitions
     std::vector<FSMTransitionPtr> transitions;
 
+    std::function<void()> onEnter;
+
     double startTimeSeconds;
 
     double secondsSinceStart()
