@@ -1,5 +1,6 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../../Ambulator/ambulator.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../util/conditionals.hh"
@@ -76,17 +77,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto ballLostCondition = oneShot([ballVisibleCondition]() { return trueForMillis(1000, negate(ballVisibleCondition)); });
 
-//   auto ballLostCondition = trueForMillis(1000, negate(ballVisibleCondition));
-
-//   auto ballLostCondition = []()
-//   {
-//     static double lastSeen = 0;
-//     double t = Clock::getSeconds();
-//     if (AgentState::get<CameraFrameState>()->isBallVisible())
-//       lastSeen = t;
-//     return t - lastSeen > 1.0;
-//   };
-
   auto isPenalised = [=]()
   {
     auto gameState = AgentState::get<GameState>();
@@ -121,6 +111,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto isSetPlayMode = isPlayMode(PlayMode::SET, false);
   auto isPlayingPlayMode = isPlayMode(PlayMode::PLAYING, false);
+
+  auto isWalking = [ambulator]()
+  {
+    return ambulator->isRunning();
+  };
 
   // BUILD TREE
 
@@ -205,13 +200,18 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
 
+  readyState->onEnter = [debugger]() { debugger->showReady(); };
+  setState->onEnter = [debugger]() { debugger->showSet(); };
+  playingState->onEnter = [debugger]() { debugger->showPlaying(); };
+  penalizedState->onEnter = [debugger]() { debugger->showPenalized(); };
+  pausedState->onEnter = [debugger]() { debugger->showPaused(); };
+  pausingState->onEnter = [debugger]() { debugger->showPaused(); };
+
   // ---------- TRANSITIONS ----------
 
   //
   // PAUSE BUTTON
   //
-
-  // TODO all these debugger->show* calls might better be modelled on the states themselves as entry actions
 
   pausedState
     ->transitionTo(unpausingState)
@@ -219,17 +219,15 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   unpausingState
     ->transitionTo(setState)
-    ->when(hasTerminated(unpausingState))
-    ->notify([=]() { debugger->showSet(); });
+    ->when(hasTerminated(unpausingState));
 
   playingState
     ->transitionTo(pausingState)
-    ->when(startButtonPressed)
-    ->notify([=]() { debugger->showPaused(); });
+    ->when(startButtonPressed);
 
   pausingState
     ->transitionTo(pausedState)
-    ->when(hasTerminated(pausingState));
+    ->when(negate(isWalking));
 
   //
   // MODE BUTTON
@@ -239,18 +237,15 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   readyState
     ->transitionTo(setState)
-    ->when(modeButtonPressed)
-    ->notify([=]() { debugger->showSet(); });
+    ->when(modeButtonPressed);
 
   setState
     ->transitionTo(penalizedState)
-    ->when(modeButtonPressed)
-    ->notify([=]() { debugger->showPenalized(); });
+    ->when(modeButtonPressed);
 
   penalizedState
     ->transitionTo(playingState)
-    ->when(modeButtonPressed)
-    ->notify([=]() { debugger->showPlaying(); });
+    ->when(modeButtonPressed);
 
   //
   // PLAY MODE TRANSITIONS -- GAME CONTROLLER
@@ -258,38 +253,31 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   readyState
     ->transitionTo(setState)
-    ->when(isSetPlayMode)
-    ->notify([=]() { debugger->showSet(); });
+    ->when(isSetPlayMode);
 
   readyState
     ->transitionTo(playingState)
-    ->when(isPlayingPlayMode)
-    ->notify([=]() { debugger->showPlaying(); });
+    ->when(isPlayingPlayMode);
 
   setState
     ->transitionTo(penalizedState)
-    ->when(isPenalised)
-    ->notify([=]() { debugger->showPenalized(); });
+    ->when(isPenalised);
 
   setState
     ->transitionTo(playingState)
-    ->when(isPlayingPlayMode)
-    ->notify([=]() { debugger->showPlaying(); });
+    ->when(isPlayingPlayMode);
 
   playingState
     ->transitionTo(penalizedState)
-    ->when(isPenalised)
-    ->notify([=]() { debugger->showPenalized(); });
+    ->when(isPenalised);
 
   penalizedState
     ->transitionTo(setState)
-    ->when(nonPenalisedPlayMode(PlayMode::SET))
-    ->notify([=]() { debugger->showSet(); });
+    ->when(nonPenalisedPlayMode(PlayMode::SET));
 
   penalizedState
     ->transitionTo(playingState)
-    ->when(nonPenalisedPlayMode(PlayMode::PLAYING))
-    ->notify([=]() { debugger->showPlaying(); });
+    ->when(nonPenalisedPlayMode(PlayMode::PLAYING));
 
   ofstream winOut("win.dot");
   winOut << winFsm->toDot();

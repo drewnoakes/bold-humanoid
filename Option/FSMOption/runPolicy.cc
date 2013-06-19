@@ -5,7 +5,11 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
 //   cout << "[FSMOption::runPolicy] ----- Start -----" << endl;
 
   if (!d_curState)
+  {
     d_curState = d_startState;
+    if (d_curState->onEnter)
+      d_curState->onEnter();
+  }
 
 //   cout << "[FSMOption::runPolicy] Current state: " << d_curState->name << endl;
 
@@ -21,7 +25,10 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
     {
       if (transition->condition())
       {
-        cout << "[FSMOption::runPolicy] Transition from '" << d_curState->name << "' to '" << transition->childState->name << "'" << endl;
+        cout << "[FSMOption::runPolicy] (" << getID() << ") transitioning from '" << d_curState->name
+             << "' to '" << transition->childState->name << "' after "
+             << (int)((Clock::getSeconds() - d_curState->startTimeSeconds)*1000) << "ms"
+             <<  endl;
 
         d_curState = transition->childState;
         d_curState->startTimeSeconds = Clock::getSeconds();
@@ -30,6 +37,9 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
 
         if (transition->onFire)
           transition->onFire();
+
+        if (d_curState->onEnter)
+          d_curState->onEnter();
 
         break;
       }

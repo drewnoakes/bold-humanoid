@@ -2,9 +2,11 @@
 
 #include "../option.hh"
 #include "../../Clock/clock.hh"
+
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 namespace bold
 {
@@ -30,13 +32,13 @@ namespace bold
     FSMStatePtr parentState;
     /// State this transition results in
     FSMStatePtr childState;
-    
+
     FSMTransition* when(std::function<bool()> condition)
     {
       this->condition = condition;
       return this;
     }
-    
+
     FSMTransition* notify(std::function<void()> callback)
     {
       this->onFire = callback;
@@ -62,6 +64,8 @@ namespace bold
     std::vector<std::shared_ptr<Option>> options;
     /// Outgoing transitions
     std::vector<FSMTransitionPtr> transitions;
+
+    std::function<void()> onEnter;
 
     double startTimeSeconds;
 
@@ -92,7 +96,7 @@ namespace bold
       return t;
     }
   };
-  
+
   /** Finite State Machine
    */
   class FSMOption : public Option

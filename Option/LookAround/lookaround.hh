@@ -11,7 +11,8 @@ namespace bold
   public:
     LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule)
     : Option(id),
-      d_headModule(headModule)
+      d_headModule(headModule),
+      d_lastTimeSeconds(0)
     {
       d_topAngle      = getParam("topAngle",     30.0);
       d_bottomAngle   = getParam("bottomAngle", -25.0);
@@ -31,10 +32,15 @@ namespace bold
     double d_bottomAngle;
     /// The head's maximum pan angle (negated for left side)
     double d_sideAngle;
-    
+
     /// The time spent in each horizontal movement
     double d_durationHoriz;
     /// The time spent in each vertical movement
     double d_durationVert;
+
+    /// The last time this runPolicy was called
+    double d_lastTimeSeconds;
+    /// The time at which this option was considered started
+    double d_startTimeSeconds;
   };
 }
