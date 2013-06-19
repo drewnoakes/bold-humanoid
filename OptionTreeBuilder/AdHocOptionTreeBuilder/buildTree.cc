@@ -73,7 +73,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // TODO merge these two? do they have to be different? look at usages
 
-  auto ballLostCondition = oneShot([ballVisibleCondition]() { return isRepeated(10, negate(ballVisibleCondition)); });
+//   auto ballLostCondition = oneShot([ballVisibleCondition]() { return isRepeated(10, negate(ballVisibleCondition)); });
+
+  auto ballLostCondition = oneShot([ballVisibleCondition]() { return trueForMillis(1000, negate(ballVisibleCondition)); });
 
 //   auto ballLostCondition = trueForMillis(1000, negate(ballVisibleCondition));
 
