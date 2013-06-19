@@ -38,23 +38,26 @@ namespace bold
 
   auto trueForMillis = [](int millis, std::function<bool()> condition)
   {
-    auto lastTrueAt = std::make_shared<double>(0);
+    auto turnedTrueAt = std::make_shared<double>(0);
     auto lastTrue = std::make_shared<bool>(false);
 
-    return [lastTrueAt,lastTrue,millis,condition]()
+    return [turnedTrueAt,lastTrue,millis,condition]()
     {
       if (condition())
       {
         auto t = Clock::getMillis();
         if (*lastTrue)
         {
-          if (t - *lastTrueAt > millis)
+          if (t - *turnedTrueAt > millis)
           {
             return true;
           }
         }
-        *lastTrue = true;
-        *lastTrueAt = t;
+        else
+        {
+          *lastTrue = true;
+          *turnedTrueAt = t;
+        }
       }
       else
       {

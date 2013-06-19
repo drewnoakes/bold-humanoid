@@ -67,6 +67,7 @@ TEST(ConditionalsTests, trueForMillis)
   EXPECT_FALSE(fun());
   EXPECT_FALSE(fun());
   EXPECT_FALSE(fun());
+  // Period elapses with no updates -- true on first after that break
   this_thread::sleep_for(chrono::milliseconds(15));
   EXPECT_TRUE(fun());
   EXPECT_TRUE(fun());
@@ -74,8 +75,12 @@ TEST(ConditionalsTests, trueForMillis)
   EXPECT_FALSE(fun());
   EXPECT_FALSE(fun());
   value = true;
+
+  // Period elapses with constant updates -- true on first that
   EXPECT_FALSE(fun());
-  this_thread::sleep_for(chrono::milliseconds(15));
+  auto t = Clock::getTimestamp();
+  while (Clock::getMillisSince(t) < 15)
+    fun();
   EXPECT_TRUE(fun());
   EXPECT_TRUE(fun());
 }
