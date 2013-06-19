@@ -41,7 +41,9 @@ namespace bold
     template <typename T>
     T getParam(std::string const& path, T const& defVal)
     {
-      return getParam(d_nameSpace, path, defVal);
+      T val = getParam(d_nameSpace, path, defVal);
+      std::cout << "Value found: " << val << std::endl;
+      return val;
     }
 
   protected:
