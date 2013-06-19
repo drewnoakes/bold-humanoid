@@ -72,7 +72,6 @@ namespace bold
     void setStreamFramePeriod(unsigned val) { d_streamFramePeriod = val; }
     unsigned getStreamFramePeriod() const { return d_streamFramePeriod; }
 
-    
     void setShouldDrawBlobs(bool val) { d_shouldDrawBlobs = val; }
     bool getShouldDrawBlobs() const { return d_shouldDrawBlobs; }
 
@@ -93,14 +92,14 @@ namespace bold
 
     void setShouldDrawFieldEdge(bool val) { d_shouldDrawFieldEdge = val; }
     bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge; }
-    
+
   private:
     std::map<std::string,std::vector<Control>> d_controlsByFamily;
 
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<Spatialiser> d_spatialiser;
-    
+
     std::shared_ptr<PixelLabel> d_goalLabel;
     std::shared_ptr<PixelLabel> d_ballLabel;
     std::shared_ptr<PixelLabel> d_fieldLabel;

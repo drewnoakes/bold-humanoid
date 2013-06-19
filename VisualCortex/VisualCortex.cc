@@ -60,18 +60,18 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_fieldEdgePass = make_shared<FieldEdgePass>(d_fieldLabel, imageWidth, imageHeight);
 
   d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
-  
+
   //TODO: create control to turn this feature on and off
   d_imagePassRunner->addHandler(d_fieldEdgePass);
-  
+
   if (d_shouldDetectLines)
     d_imagePassRunner->addHandler(d_lineDotPass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
-  
+
   d_lineFinder = make_shared<MaskWalkLineFinder>(imageWidth, imageHeight);
-  
+
   // HeadModule control
-  d_controlsByFamily["head"] = headModule->getControls();  
+  d_controlsByFamily["head"] = headModule->getControls();
 
   //
   // VISION SYSTEM CONTROLS
@@ -91,7 +91,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   }));
   lineDetectionControls.push_back(d_lineDotPass->getHysterisisControl());
   d_controlsByFamily["vision/line-detection"] = lineDetectionControls;
-  
+
   // Allow control over the LUT parameters
   auto setHue      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withH(value));      createLookupTable(); };
   auto setHueRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withHRange(value)); createLookupTable(); };
@@ -142,11 +142,11 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   vector<Control> horizonControls = { Control::createBool("Ignore above horizon", d_shouldIgnoreAboveHorizon, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }) };
   d_controlsByFamily["vision/horizon"] = horizonControls;
-  
+
   //
   // DEBUG IMAGE CONTROLS
   //
-  
+
   vector<Control> debugImageControls;
   // Image types
   vector<ControlEnumValue> imageTypes;
