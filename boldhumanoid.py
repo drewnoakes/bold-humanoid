@@ -56,11 +56,9 @@ def main(argv):
         usage()
         return
 
-    # Check and load conf file
     for opt, arg in opts:
         if opt in ('-c', '--conf'):
             confFile = arg
-            print("Conf file: " + confFile)
             conf = importlib.import_module(confFile)
         elif opt in ('-t', '--team'):
             conf.agent.teamNumber = int(arg)
@@ -79,9 +77,6 @@ def main(argv):
         elif opt in ('-h', '--help'):
             usage()
             return
-
-    print (conf.agent.u2dDevName)
-    print (sys.modules['__main__'].conf.agent.u2dDevName)
 
     if conf.agent.uniformNumber < 0:
         print('ERROR: you must supply a uniform number')
