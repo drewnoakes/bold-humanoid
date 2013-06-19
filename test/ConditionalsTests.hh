@@ -72,8 +72,12 @@ TEST(ConditionalsTests, trueForMillis)
   EXPECT_TRUE(fun());
   value = false;
   EXPECT_FALSE(fun());
-
-  // TODO should state reset after signaling true?
+  EXPECT_FALSE(fun());
+  value = true;
+  EXPECT_FALSE(fun());
+  this_thread::sleep_for(chrono::milliseconds(15));
+  EXPECT_TRUE(fun());
+  EXPECT_TRUE(fun());
 }
 
 TEST(ConditionalsTests, stepUpDownThreshold)
