@@ -2,7 +2,8 @@ find_package(SWIG REQUIRED)
 find_package(PythonLibs)
 
 include(${SWIG_USE_FILE})
-set(CMAKE_SWIG_FLAGS "-builtin")
+#set(CMAKE_SWIG_FLAGS "-builtin") # builtin has one layer less, but can't extend classes with Python code
+set(CMAKE_SWIG_FLAGS "")
 
 #todo: this is a hack
 include_directories("${PYTHON_INCLUDE_PATH};/usr/include/i386-linux-gnu/python3.3m/;${CMAKE_SOURCE_DIR}")
