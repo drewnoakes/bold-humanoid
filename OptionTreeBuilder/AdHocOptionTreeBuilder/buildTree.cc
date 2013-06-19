@@ -432,7 +432,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       {
         // Approach ball until we're within a given distance
         auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-        return ballObs && (ballObs->head<2>().norm() < playingFsm->getParam("approachBall.untilDistance", 0.05));
+        return ballObs && (ballObs->head<2>().norm() < playingFsm->getParam("approachBall.untilDistance", 0.065));
       });
 
     lookForGoalState
