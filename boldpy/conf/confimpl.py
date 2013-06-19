@@ -9,6 +9,9 @@ class Param:
     def __init__(self, **kwds):
         self.__dict__.update(kwds)
 
+    def __str__(self):
+        return "<Param>"
+
     def add(self, kwds):
         self.__dict__.update(kwds)
 
@@ -40,22 +43,31 @@ class PyConf(bold.ConfImpl):
     def paramExists(self, path):
         res = None
         try:
-            res = eval("sys.modules['__main__']." + prefix + "." + path)
+            res = eval("sys.modules['__main__']." + self.prefix + "." + path)
         except:
             pass
 
         return res != None
 
     def _getParam(self, path, defVal):
-        print(path)
-        print("sys.modules['__main__']." + self.prefix + "." + path)
+        els = path.split(".")
 
+        par = sys.modules['__main__']
         res = None
         try:
-            res = eval("sys.modules['__main__']." + self.prefix + "." + path)
+            res = reduce(lambda p,c: None if p is None else p.getattr(c), els, par) 
         except:
-            self._checkReportMissing(path, defVal)
+            res = None
 
+        #try:
+        #    print("a")
+        #    res = eval(toeval);
+        #    print("b")
+        #except:
+        #    if (self.reportMissing):
+        #        self._checkReportMissing(path, defVal)
+        print("res: " + str(res))
+        
         if (res == None):
             return defVal
         else:
