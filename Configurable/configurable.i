@@ -30,5 +30,15 @@ namespace bold
   {
   public:
     static void setConfImpl(ConfImpl* impl);
+
+    template <typename T>
+      T getParam(std::string const& path, T const& defVal);
+
   };
+
+  %template(getParamStr) Configurable::getParam<std::string>;
+  %template(getParamInt) Configurable::getParam<int>;
+  %template(getParamDbl) Configurable::getParam<double>;
+  %template(getParamBool) Configurable::getParam<bool>;
+
 }
