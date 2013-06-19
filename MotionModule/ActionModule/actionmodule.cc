@@ -20,7 +20,7 @@ ActionModule::ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, strin
   d_isRunning(false)
 {
   loadFile(filename);
-  
+
   for (string name : getPageNames())
     d_controls.push_back(Control::createAction(name, [this,name]() { start(name); }));
 }
@@ -44,7 +44,7 @@ bool ActionModule::isRunning()
 void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   assert(ThreadId::isMotionLoopThread());
-  
+
   ///////////////// Static
   const int JOINT_ARRAY_LENGTH = 22;
   static ushort wpStartAngle1024[JOINT_ARRAY_LENGTH];
@@ -100,7 +100,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         // Only update selected joints
       if (!(*selectedJoints)[jointId])
         continue;
-      
+
       wpTargetAngle1024[jointId] = hw->getMX28State(jointId)->presentPositionValue;
       ipLastOutSpeed1024[jointId] = 0;
       ipMovingAngle1024[jointId] = 0;
@@ -466,7 +466,7 @@ bool ActionModule::start(string pageName)
     if (strcmp(pageName.c_str(), (char*)page.header.name) == 0)
       return start(index, &page);
   }
-  
+
   return false;
 }
 
@@ -496,12 +496,12 @@ bool ActionModule::start(int index, PAGE *page)
   assert(hw);
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
-  
+
   getScheduler()->add(this,
                       Priority::Optional,  true,  // HEAD   Interuptable::YES
                       Priority::Important, true,  // ARMS
                       Priority::Important, true); // LEGS
- 
+
   return true;
 }
 
