@@ -474,7 +474,7 @@ bool ActionModule::start(int index, PAGE *page)
 {
   if (d_isRunning)
   {
-    cerr << "[ActionModule::Start] Cannot play page index " << index << " -- already playing index " << d_playingPageIndex << endl;
+    cerr << "[ActionModule::Start] Ignoring request to play page " << index << " -- already playing page " << d_playingPageIndex << endl;
     return false;
   }
 
