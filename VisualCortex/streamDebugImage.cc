@@ -86,6 +86,28 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     }
   }
 
+  // Draw observed objects (ie. actual ball/goal posts chosen from blobs)
+  if (d_shouldDrawObservedObjects)
+  {
+    auto cameraFrame = AgentState::get<CameraFrameState>();
+
+    auto ball = cameraFrame->getBallObservation();
+    if (ball)
+    {
+      auto ballColor = Colour::bgr(0, 0, 255);
+      Rect rect((int)round(ball->x()), (int)round(ball->y()), 3, 3);
+      cv::rectangle(debugImage, rect, ballColor.toScalar());
+    }
+
+    auto goals = cameraFrame->getGoalObservations();
+    for (auto goal : goals)
+    {
+      auto goalColor = Colour::bgr(0, 255, 255);
+      Rect rect((int)round(goal.x()), (int)round(goal.y()), 3, 3);
+      cv::rectangle(debugImage, rect, goalColor.toScalar());
+    }
+  }
+
   // Draw expected lines
   if (d_shouldDrawExpectedLines)
   {

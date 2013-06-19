@@ -16,7 +16,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     d_shouldDrawExpectedLines(false),
     d_shouldDrawObservedLines(true),
     d_shouldDrawHorizon(true),
-    d_shouldDrawFieldEdge(true)
+    d_shouldDrawFieldEdge(true),
+    d_shouldDrawObservedObjects(true)
 {
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
@@ -181,11 +182,12 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   // Layers
   // TODO: should lambdas be declared mutable?
-  debugImageControls.push_back(Control::createBool("Blobs",            d_shouldDrawBlobs,         [this](bool const& value) { d_shouldDrawBlobs = value; }));
-  debugImageControls.push_back(Control::createBool("Line dots",        d_shouldDrawLineDots,      [this](bool const& value) { d_shouldDrawLineDots = value; }));
-  debugImageControls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines, [this](bool const& value) { d_shouldDrawObservedLines = value; }));
-  debugImageControls.push_back(Control::createBool("Lines (expected)", d_shouldDrawExpectedLines, [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
-  debugImageControls.push_back(Control::createBool("Horizon",          d_shouldDrawHorizon,       [this](bool const& value) { d_shouldDrawHorizon = value; }));
-  debugImageControls.push_back(Control::createBool("Field edge",       d_shouldDrawFieldEdge,     [this](bool const& value) { d_shouldDrawFieldEdge = value; }));
+  debugImageControls.push_back(Control::createBool("Blobs",            d_shouldDrawBlobs,           [this](bool const& value) { d_shouldDrawBlobs = value; }));
+  debugImageControls.push_back(Control::createBool("Line dots",        d_shouldDrawLineDots,        [this](bool const& value) { d_shouldDrawLineDots = value; }));
+  debugImageControls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines,   [this](bool const& value) { d_shouldDrawObservedLines = value; }));
+  debugImageControls.push_back(Control::createBool("Lines (expected)", d_shouldDrawExpectedLines,   [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
+  debugImageControls.push_back(Control::createBool("Horizon",          d_shouldDrawHorizon,         [this](bool const& value) { d_shouldDrawHorizon = value; }));
+  debugImageControls.push_back(Control::createBool("Field edge",       d_shouldDrawFieldEdge,       [this](bool const& value) { d_shouldDrawFieldEdge = value; }));
+  debugImageControls.push_back(Control::createBool("Objects",          d_shouldDrawObservedObjects, [this](bool const& value) { d_shouldDrawObservedObjects = value; }));
   d_controlsByFamily["debug-image"] = debugImageControls;
 }

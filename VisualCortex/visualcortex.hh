@@ -82,6 +82,9 @@ namespace bold
     void setShouldDrawExpectedLines(bool val) { d_shouldDrawExpectedLines = val; }
     bool getShouldDrawExpectedLines() const { return d_shouldDrawExpectedLines; }
 
+    void setShouldDrawObservedObjects(bool val) { d_shouldDrawObservedObjects = val; }
+    bool getShouldDrawObservedObjects() const { return d_shouldDrawObservedObjects; }
+
     void setShouldDrawObservedLines(bool val) { d_shouldDrawObservedLines = val; }
     bool getShouldDrawObservedLines() const { return d_shouldDrawObservedLines; }
 
@@ -130,6 +133,7 @@ namespace bold
     unsigned d_streamFramePeriod;
     bool d_shouldDrawBlobs;
     bool d_shouldDrawLineDots;
+    bool d_shouldDrawObservedObjects;
     bool d_shouldDrawExpectedLines;
     bool d_shouldDrawObservedLines;
     bool d_shouldDrawHorizon;
