@@ -1,5 +1,6 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../../Ambulator/ambulator.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../util/conditionals.hh"
@@ -122,6 +123,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   auto isSetPlayMode = isPlayMode(PlayMode::SET, false);
   auto isPlayingPlayMode = isPlayMode(PlayMode::PLAYING, false);
 
+  auto isWalking = [ambulator]()
+  {
+    return ambulator->isRunning();
+  };
+
   // BUILD TREE
 
   unique_ptr<OptionTree> tree(new OptionTree());
@@ -229,7 +235,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   pausingState
     ->transitionTo(pausedState)
-    ->when(hasTerminated(pausingState));
+    ->when(negate(isWalking));
 
   //
   // MODE BUTTON
