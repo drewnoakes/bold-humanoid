@@ -77,17 +77,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto ballLostCondition = oneShot([ballVisibleCondition]() { return trueForMillis(1000, negate(ballVisibleCondition)); });
 
-//   auto ballLostCondition = trueForMillis(1000, negate(ballVisibleCondition));
-
-//   auto ballLostCondition = []()
-//   {
-//     static double lastSeen = 0;
-//     double t = Clock::getSeconds();
-//     if (AgentState::get<CameraFrameState>()->isBallVisible())
-//       lastSeen = t;
-//     return t - lastSeen > 1.0;
-//   };
-
   auto isPenalised = [=]()
   {
     auto gameState = AgentState::get<GameState>();
