@@ -473,6 +473,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookForGoalState)
       ->when([circleBallState,&headModule]()
       {
+        // BUG head keeps moving during this state, making the below logic incorrect
         double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angle;
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
