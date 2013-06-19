@@ -457,8 +457,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookAtFeetState)
       ->when([&headModule]()
       {
-        auto body = AgentState::get<BodyState>();
-        double panAngle = body->getHeadPanJoint()->angle;
+        double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angle;
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
         return fabs(panRatio) < 0.3;
@@ -474,8 +473,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookForGoalState)
       ->when([circleBallState,&headModule]()
       {
-        auto body = AgentState::get<BodyState>();
-        double panAngle = body->getHeadPanJoint()->angle;
+        double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angle;
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
         double circleDurationSeconds = fabs(panRatio) * 3;
