@@ -3,9 +3,13 @@ import logging
 import time
 from boldpy.agent import *
 from numpy import *
+
 from .fsmoption import *
 from .actionoption import *
 from .stopwalking import *
+from .lookatfeet import *
+
+#import boldpy.conf as conf
 
 class PyOptionTreeBuilder:
     def createActionOptions(self, tree, namesScripts):
@@ -27,7 +31,11 @@ class PyOptionTreeBuilder:
         sw = StopWalking("stopwalking");
         tree.addOption(sw, True)
 
+        laf = LookAtFeet("lookatfeet")
+        tree.addOption(laf)
+
     def buildTree(self):
+        #print("buildTree: " + conf.confimpl.getParamStr("agent.u2dDevName", "not found"))
         tree = bold.OptionTree()
 
         self.createOptions(tree)
