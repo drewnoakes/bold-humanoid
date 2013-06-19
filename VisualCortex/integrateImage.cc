@@ -48,7 +48,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       // Ignore balls that are too small (avoid noise)
       if (ballBlob.area < d_minBallArea)
         continue;
-      
+
       // Ignore ball if it appears outside the field edge
       //
       // Is not the ball if the bottom right corner of the ball is within the field edge determined by the bottom right corner
@@ -77,12 +77,13 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     // Ignore goal if it appears outside of field
     //
     // NOTE Process this before anything else as anything above the field edge is wasting our time
-    if (goalBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x()))
+    int allowedGoalFieldEdgeErrorPixels = 5;
+    if (goalBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x()) + allowedGoalFieldEdgeErrorPixels)
         continue;
-    
+
     // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
     Vector2i wh = goalBlob.br - goalBlob.ul;
-    
+
     if (wh.minCoeff() > 5 &&  // Ignore small blobs
         wh.y() > wh.x())      // Taller than it is wide
     {

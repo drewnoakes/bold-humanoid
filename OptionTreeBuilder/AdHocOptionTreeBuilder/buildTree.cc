@@ -6,7 +6,6 @@
 
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          unsigned uniformNumber,
-                                                         bool ignoreGameController,
                                                          shared_ptr<Debugger> debugger,
                                                          shared_ptr<CameraModel> cameraModel,
                                                          shared_ptr<Ambulator> ambulator,
@@ -73,7 +72,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // TODO merge these two? do they have to be different? look at usages
 
-  auto ballLostCondition = oneShot([ballVisibleCondition]() { return isRepeated(10, negate(ballVisibleCondition)); });
+//   auto ballLostCondition = oneShot([ballVisibleCondition]() { return isRepeated(10, negate(ballVisibleCondition)); });
+
+  auto ballLostCondition = oneShot([ballVisibleCondition]() { return trueForMillis(1000, negate(ballVisibleCondition)); });
 
 //   auto ballLostCondition = trueForMillis(1000, negate(ballVisibleCondition));
 
@@ -188,11 +189,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // ---------- STATES ----------
 
-  auto pauseState = winFsm->newState("pause", {sit,stopWalking}, false/*end state*/, ignoreGameController/*start state*/);
+  auto pausingState = winFsm->newState("pausing", {stopWalking});
+
+  auto pausedState = winFsm->newState("paused", {sit});
 
   auto unpausingState = winFsm->newState("unpausing", {standup});
 
-  auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, !ignoreGameController/* start state */);
+  auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, true/* start state */);
 
   auto setState = winFsm->newState("set", {stopWalking});
 
@@ -204,106 +207,89 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // ---------- TRANSITIONS ----------
 
-  if (!ignoreGameController)
-  {
-    //
-    // PAUSE BUTTON
-    //
+  //
+  // PAUSE BUTTON
+  //
 
-    // TODO all these debugger->show* calls might better be modelled on the states themselves as entry actions
+  // TODO all these debugger->show* calls might better be modelled on the states themselves as entry actions
 
-    pauseState
-      ->transitionTo(unpausingState)
-      ->when(startButtonPressed);
+  pausedState
+    ->transitionTo(unpausingState)
+    ->when(startButtonPressed);
 
-    unpausingState
-      ->transitionTo(setState)
-      ->when([unpausingState]() { return unpausingState->allOptionsTerminated(); })
-      ->notify([=]() { debugger->showSet(); });
+  unpausingState
+    ->transitionTo(setState)
+    ->when(hasTerminated(unpausingState))
+    ->notify([=]() { debugger->showSet(); });
 
-    playingState
-      ->transitionTo(pauseState)
-      ->when(startButtonPressed)
-      ->notify([=]() { debugger->showPaused(); });
+  playingState
+    ->transitionTo(pausingState)
+    ->when(startButtonPressed)
+    ->notify([=]() { debugger->showPaused(); });
 
-    //
-    // MODE BUTTON
-    //
+  pausingState
+    ->transitionTo(pausedState)
+    ->when(hasTerminated(pausingState));
 
-    // TODO when in paused state, can the mode button somehow disable the motors?
+  //
+  // MODE BUTTON
+  //
 
-    readyState
-      ->transitionTo(setState)
-      ->when(modeButtonPressed)
-      ->notify([=]() { debugger->showSet(); });
+  // TODO when in paused state, can the mode button somehow disable the motors?
 
-    setState
-      ->transitionTo(penalizedState)
-      ->when(modeButtonPressed)
-      ->notify([=]() { debugger->showPenalized(); });
+  readyState
+    ->transitionTo(setState)
+    ->when(modeButtonPressed)
+    ->notify([=]() { debugger->showSet(); });
 
-    penalizedState
-      ->transitionTo(playingState)
-      ->when(modeButtonPressed)
-      ->notify([=]() { debugger->showPlaying(); });
+  setState
+    ->transitionTo(penalizedState)
+    ->when(modeButtonPressed)
+    ->notify([=]() { debugger->showPenalized(); });
 
-    //
-    // PLAY MODE TRANSITIONS -- GAME CONTROLLER
-    //
+  penalizedState
+    ->transitionTo(playingState)
+    ->when(modeButtonPressed)
+    ->notify([=]() { debugger->showPlaying(); });
 
-    readyState
-      ->transitionTo(setState)
-      ->when(isSetPlayMode)
-      ->notify([=]() { debugger->showSet(); });
+  //
+  // PLAY MODE TRANSITIONS -- GAME CONTROLLER
+  //
 
-    readyState
-      ->transitionTo(playingState)
-      ->when(isPlayingPlayMode)
-      ->notify([=]() { debugger->showPlaying(); });
+  readyState
+    ->transitionTo(setState)
+    ->when(isSetPlayMode)
+    ->notify([=]() { debugger->showSet(); });
 
-    setState
-      ->transitionTo(penalizedState)
-      ->when(isPenalised)
-      ->notify([=]() { debugger->showPenalized(); });
+  readyState
+    ->transitionTo(playingState)
+    ->when(isPlayingPlayMode)
+    ->notify([=]() { debugger->showPlaying(); });
 
-    setState
-      ->transitionTo(playingState)
-      ->when(isPlayingPlayMode)
-      ->notify([=]() { debugger->showPlaying(); });
+  setState
+    ->transitionTo(penalizedState)
+    ->when(isPenalised)
+    ->notify([=]() { debugger->showPenalized(); });
 
-    playingState
-      ->transitionTo(penalizedState)
-      ->when(isPenalised)
-      ->notify([=]() { debugger->showPenalized(); });
+  setState
+    ->transitionTo(playingState)
+    ->when(isPlayingPlayMode)
+    ->notify([=]() { debugger->showPlaying(); });
 
-    penalizedState
-      ->transitionTo(setState)
-      ->when(nonPenalisedPlayMode(PlayMode::SET))
-      ->notify([=]() { debugger->showSet(); });
+  playingState
+    ->transitionTo(penalizedState)
+    ->when(isPenalised)
+    ->notify([=]() { debugger->showPenalized(); });
 
-    penalizedState
-      ->transitionTo(playingState)
-      ->when(nonPenalisedPlayMode(PlayMode::PLAYING))
-      ->notify([=]() { debugger->showPlaying(); });
-  }
-  else
-  {
-    // ignoring game controller
+  penalizedState
+    ->transitionTo(setState)
+    ->when(nonPenalisedPlayMode(PlayMode::SET))
+    ->notify([=]() { debugger->showSet(); });
 
-    pauseState
-      ->transitionTo(unpausingState)
-      ->when(startButtonPressed);
-
-    unpausingState
-      ->transitionTo(playingState)
-      ->when(hasTerminated(unpausingState))
-      ->notify([=]() { debugger->showPlaying(); });
-
-    playingState
-      ->transitionTo(pauseState)
-      ->when(startButtonPressed)
-      ->notify([=]() { debugger->showPaused(); });
-  }
+  penalizedState
+    ->transitionTo(playingState)
+    ->when(nonPenalisedPlayMode(PlayMode::PLAYING))
+    ->notify([=]() { debugger->showPlaying(); });
 
   ofstream winOut("win.dot");
   winOut << winFsm->toDot();
@@ -432,7 +418,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       {
         // Approach ball until we're within a given distance
         auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-        return ballObs && (ballObs->head<2>().norm() < playingFsm->getParam("approachBall.untilDistance", 0.065));
+        return ballObs && (ballObs->head<2>().norm() < playingFsm->getParam("approachBall.untilDistance", 0.075));
       });
 
     lookForGoalState
@@ -473,13 +459,15 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookForGoalState)
       ->when([circleBallState,&headModule]()
       {
+        // BUG head keeps moving during this state, making the below logic incorrect
         double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angle;
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
-        double circleDurationSeconds = fabs(panRatio) * 3;
+        double circleDurationSeconds = fabs(panRatio) * 4.5;
         cout << "[circleBallState] circleDurationSeconds=" << circleDurationSeconds
              << " secondsSinceStart=" << circleBallState->secondsSinceStart()
              << " panRatio=" << panRatio
+             << " panAngle=" << panAngle
              << " leftLimitDegs=" << headModule->getLeftLimitDegs() << endl;
         return circleBallState->secondsSinceStart() > circleDurationSeconds;
       });

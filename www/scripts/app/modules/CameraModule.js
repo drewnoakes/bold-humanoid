@@ -57,8 +57,10 @@ define(
                 }
             );
 
+            ControlBuilder.build('camera',                $('<div></div>', {'class': 'control-container camera-controls'}).appendTo(this.$container));
             ControlBuilder.build('head',                  $('<div></div>', {'class': 'control-container head-controls'}).appendTo(this.$container));
             ControlBuilder.build('debug-image',           $('<div></div>', {'class': 'control-container image-controls'}).appendTo(this.$container));
+            ControlBuilder.build('debug-image-features',  $('<div></div>', {'class': 'control-container image-controls-features'}).appendTo(this.$container));
             ControlBuilder.build('vision/line-detection', $('<div></div>', {'class': 'control-container lines-controls'}).appendTo(this.$container));
             ControlBuilder.build('vision/ball',           $('<div></div>', {'class': 'control-container ball-controls'}).appendTo(this.$container));
             ControlBuilder.build('vision/horizon',        $('<div></div>', {'class': 'control-container horizon-controls'}).appendTo(this.$container));

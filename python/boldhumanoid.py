@@ -1,26 +1,23 @@
 #!/usr/bin/env python3
 
-# Load basic modules
 import sys, getopt
-sys.path.append("swig")
-import numpy as np
-# Import C++ library
 import bold
-# Load configuraion module
-import boldpy.conf as conf
-# Load option tree module
-from boldpy.options.optiontree import *
-# Load agent module
-from boldpy.agent import *
-# Load interface to dynamically import modules
-import importlib
-# Catch signals
-import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)
+import numpy as np
 
+class PyConf(bold.ConfImpl):
+    def getParamStr(self, path, defVal):
+        return defVal
+    def getParamInt(self, path, defVal):
+        return defVal
+    def getParamDbl(self, path, defVal):
+        return defVal
+
+
+def buildOptionTree():
+    tree = bold.OptionTree()
+    return tree
 
 def thinkEndCallback():
-    print("===== HELLO =====")
     cameraState = bold.AgentState.getCameraFrameState()
     print(cameraState)
     print("Ball visible: ", cameraState.isBallVisible())
@@ -28,7 +25,6 @@ def thinkEndCallback():
     print(ballObs)
     goalObs = cameraState.getGoalObservations()
     print(goalObs)
-
 
 def usage():
     print('''Options:
@@ -41,11 +37,20 @@ def usage():
   -r           record one camera frame each second to PNG files (or --record)
   -h           show these options (or --help)''')
 
-
 def main(argv):
-    global conf
+    U2D_DEV_NAME = "/dev/ttyUSB0"
+    MOTION_FILE_PATH = "./motion_4096.bin"
+    CONF_FILE_PATH = "./germanopen.ini"
+    TEAM_NUMBER = 24
+    UNIFORM_NUMBER = -1
+    USE_JOYSTICK = False
+    AUTO_GET_UP = True
+    USE_OPTION_TREE = False
+    RECORD_FRAMES = False
 
-    # Parse command arguments
+    conf = PyConf()
+    bold.Configurable.setConfImpl(conf)
+
     try:
         opts, args = getopt.getopt(argv,
                                    "c:t:u:ogjrh",
@@ -57,39 +62,44 @@ def main(argv):
 
     for opt, arg in opts:
         if opt in ('-c', '--conf'):
-            confFile = arg
-            conf = importlib.import_module(confFile)
+            CONF_FILE_PATH = arg
         elif opt in ('-t', '--team'):
-            conf.agent.teamNumber = int(arg)
+            TEAM_NUMBER = int(arg)
         elif opt in ('-u', '--unum'):
-            conf.agent.uniformNumber = int(arg)
+            UNIFORM_NUMBER = int(arg)
         elif opt in ('-o', '--no-tree'):
-            conf.agent.useOptionTree = False
+            USE_OPTION_TREE = False
         elif opt in ('-g', '--no-get-up'):
-            conf.agent.autoGetUp = False
+            AUTO_GET_UP = False
         elif opt in ('-j', '--joystick'):
-            conf.agent.useJoystick = True
+            USE_JOYSTICK = True
         elif opt in ('-r', '--record'):
-            conf.agent.recordFrames = True
+            RECORD_FRAMES = True
         elif opt in ('-h', '--help'):
             usage()
             return
 
-    if conf.agent.uniformNumber < 0:
+
+    if UNIFORM_NUMBER < 0:
         print('ERROR: you must supply a uniform number')
         usage()
         return
 
-    agent = getAgent()
-    print(agent)
+    tree = buildOptionTree()
 
-    builder = PyOptionTreeBuilder()
-    tree = builder.buildTree()
-    agent.setOptionTree(tree)
+    a = bold.Agent(U2D_DEV_NAME,
+                   CONF_FILE_PATH,
+                   MOTION_FILE_PATH,
+                   TEAM_NUMBER,
+                   UNIFORM_NUMBER,
+                   USE_JOYSTICK,
+                   AUTO_GET_UP,
+                   USE_OPTION_TREE,
+                   RECORD_FRAMES)
 
-    agent.onThinkEndConnect(thinkEndCallback);
+    a.onThinkEndConnect(thinkEndCallback);
 
-    visualCortex = agent.getVisualCortex()
+    visualCortex = a.getVisualCortex()
     visualCortex.setShouldIgnoreAboveHorizon(False)
 
     vcSettings = {
@@ -105,7 +115,8 @@ def main(argv):
 
     visualCortex.set(**vcSettings)
 
-    agent.run()
+    #a.run()
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
