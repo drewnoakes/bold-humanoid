@@ -25,7 +25,7 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
     {
       if (transition->condition())
       {
-        cout << "[FSMOption::runPolicy] Transition from '" << d_curState->name
+        cout << "[FSMOption::runPolicy] (" << getID() << ") transitioning from '" << d_curState->name
              << "' to '" << transition->childState->name << "' after "
              << (int)((Clock::getSeconds() - d_curState->startTimeSeconds)*1000) << "ms"
              <<  endl;
