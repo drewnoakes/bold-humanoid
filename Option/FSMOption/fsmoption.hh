@@ -30,13 +30,13 @@ namespace bold
     FSMStatePtr parentState;
     /// State this transition results in
     FSMStatePtr childState;
-    
+
     FSMTransition* when(std::function<bool()> condition)
     {
       this->condition = condition;
       return this;
     }
-    
+
     FSMTransition* notify(std::function<void()> callback)
     {
       this->onFire = callback;
@@ -94,7 +94,7 @@ namespace bold
       return t;
     }
   };
-  
+
   /** Finite State Machine
    */
   class FSMOption : public Option
