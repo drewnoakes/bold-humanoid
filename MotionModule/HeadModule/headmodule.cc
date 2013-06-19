@@ -32,7 +32,7 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   // Home position
   d_panHome     = getParam("pan_home", 0.0);
   d_tiltHome    = getParam("tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
-  
+
   // Controls
   d_controls.push_back(Control::createAction("&blacktriangleleft;",  [this]() { moveByDeltaDegs( 5, 0); }));
   d_controls.push_back(Control::createAction("&blacktriangle;",      [this]() { moveByDeltaDegs( 0, 5); }));
@@ -48,17 +48,17 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
     control.setIsAdvanced(isAdvanced);
     d_controls.push_back(control);
   };
-  
+
   createControl(&d_gainP, "P Gain", 0, 32);
-  
+
   createControl(&d_panGainP, "Tracking Pan P Gain", 0, 0.20, 100);
   createControl(&d_panGainD, "Tracking Pan D Gain", 0, 0.40, 100);
   createControl(&d_tiltGainP, "Tracking Tilt P Gain", 0, 0.20, 100);
   createControl(&d_tiltGainD, "Tracking Tilt D Gain", 0, 0.40, 100);
-  
+
   createControl(&d_limitLeft, "Pan Limit Left", 1, 150);
   createControl(&d_limitRight, "Pan Limit Right", -150, -1);
-  
+
   // No controls for top/bottom -- cannot go lower without damaging head, and no need to look upwards
 }
 
@@ -91,7 +91,7 @@ void HeadModule::moveToDegs(double pan, double tilt)
 {
   d_panAngle = pan;
   d_tiltAngle = tilt;
-  
+
   getScheduler()->add(this,
                       Priority::Normal, false,  // HEAD   Interuptable::YES
                       Priority::None,   false,  // ARMS
@@ -139,7 +139,7 @@ void HeadModule::moveTracking(double panError, double tiltError)
                       Priority::Normal, false,  // HEAD   Interuptable::YES
                       Priority::None,   false,  // ARMS
                       Priority::None,   false); // LEGS
-  
+
   checkLimit();
 }
 
