@@ -370,7 +370,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
 
-    auto lookForBallCirclingState = playingFsm->newState("lookforballcircling", {circleBall});
+    auto circleToFindLostBallState = playingFsm->newState("lookforballcircling", {circleBall});
 
     auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
 
@@ -403,13 +403,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     // walk a circle if we don't find the ball within 10 seconds
     lookForBallState
-      ->transitionTo(lookForBallCirclingState)
+      ->transitionTo(circleToFindLostBallState)
       ->when(secondsSinceStart(10, lookForBallState));
 
     // after 5 seconds of circling, look for the ball again
-    lookForBallCirclingState
+    circleToFindLostBallState
       ->transitionTo(lookForBallState)
-      ->when(secondsSinceStart(5, lookForBallCirclingState));
+      ->when(secondsSinceStart(5, circleToFindLostBallState));
 
     lookAtBallState
       ->transitionTo(lookForBallState)
