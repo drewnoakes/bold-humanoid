@@ -1,7 +1,6 @@
 #pragma once
 
 #include <sstream>
-#include <iostream>
 #include <cassert>
 
 namespace bold
@@ -42,7 +41,6 @@ namespace bold
     T getParam(std::string const& path, T const& defVal)
     {
       T val = getParam(d_nameSpace, path, defVal);
-      std::cout << "Value found: " << val << std::endl;
       return val;
     }
 
