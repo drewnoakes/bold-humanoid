@@ -190,7 +190,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // ---------- STATES ----------
 
-  auto pauseState = winFsm->newState("pause", {sit,stopWalking}, false/*end state*/, ignoreGameController/*start state*/);
+  auto pausingState = winFsm->newState("pausing", {stopWalking});
+
+  auto pausedState = winFsm->newState("paused", {sit}, false/*end state*/, ignoreGameController/*start state*/);
 
   auto unpausingState = winFsm->newState("unpausing", {standup});
 
@@ -214,7 +216,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     // TODO all these debugger->show* calls might better be modelled on the states themselves as entry actions
 
-    pauseState
+    pausedState
       ->transitionTo(unpausingState)
       ->when(startButtonPressed);
 
@@ -224,7 +226,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->notify([=]() { debugger->showSet(); });
 
     playingState
-      ->transitionTo(pauseState)
+      ->transitionTo(pausingState)
       ->when(startButtonPressed)
       ->notify([=]() { debugger->showPaused(); });
 
@@ -292,7 +294,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   {
     // ignoring game controller
 
-    pauseState
+    pausedState
       ->transitionTo(unpausingState)
       ->when(startButtonPressed);
 
@@ -302,7 +304,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->notify([=]() { debugger->showPlaying(); });
 
     playingState
-      ->transitionTo(pauseState)
+      ->transitionTo(pausingState)
       ->when(startButtonPressed)
       ->notify([=]() { debugger->showPaused(); });
   }
