@@ -7,8 +7,7 @@ Agent::Agent()
     d_uniformNumber(0),
     d_isRecordingFrames(false),
     d_autoGetUpFromFallen(true),
-    d_useOptionTree(true),
-    d_ignoreGameController(false)
+    d_useOptionTree(true)
 {
   cout << "[Agent::Agent] Start" << endl;
 

@@ -81,7 +81,6 @@ namespace bold
     bool d_isRecordingFrames;
     bool d_autoGetUpFromFallen;
     bool d_useOptionTree;
-    bool d_ignoreGameController;
 
     // Motion
 

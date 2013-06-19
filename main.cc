@@ -23,7 +23,6 @@ void printUsage()
   cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
   cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
   cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
-  cout << "\t--nogc\tdo not listen to GameController" << endl;
   cout << "\t-h\tshow these options (or --help)" << endl;
 }
 
@@ -49,7 +48,6 @@ int main(int argc, char **argv)
 //   bool useOptionTree = true;
   unsigned teamNumber = 24;
   unsigned uniformNumber = 0;
-  bool ignoreGameController = false;
 
   //
   // Process command line arguments
@@ -86,10 +84,6 @@ int main(int argc, char **argv)
 //     {
 //       recordFrames = true;
 //     }
-    else if (arg == "--nogc")
-    {
-      ignoreGameController = true;
-    }
     else
     {
       cout << "UNKNOWN ARGUMENT: " << arg << endl;
@@ -118,7 +112,6 @@ int main(int argc, char **argv)
   AdHocOptionTreeBuilder optionTreeBuilder;
   auto optionTree = optionTreeBuilder.buildTree(teamNumber,
                                                 uniformNumber,
-                                                ignoreGameController,
                                                 agent->getDebugger(),
                                                 agent->getCameraModel(),
                                                 agent->getAmbulator(),

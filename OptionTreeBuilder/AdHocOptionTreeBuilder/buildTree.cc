@@ -6,7 +6,6 @@
 
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          unsigned uniformNumber,
-                                                         bool ignoreGameController,
                                                          shared_ptr<Debugger> debugger,
                                                          shared_ptr<CameraModel> cameraModel,
                                                          shared_ptr<Ambulator> ambulator,
@@ -192,11 +191,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto pausingState = winFsm->newState("pausing", {stopWalking});
 
-  auto pausedState = winFsm->newState("paused", {sit}, false/*end state*/, ignoreGameController/*start state*/);
+  auto pausedState = winFsm->newState("paused", {sit});
 
   auto unpausingState = winFsm->newState("unpausing", {standup});
 
-  auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, !ignoreGameController/* start state */);
+  auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, true/* start state */);
 
   auto setState = winFsm->newState("set", {stopWalking});
 
@@ -208,106 +207,85 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // ---------- TRANSITIONS ----------
 
-  if (!ignoreGameController)
-  {
-    //
-    // PAUSE BUTTON
-    //
+  //
+  // PAUSE BUTTON
+  //
 
-    // TODO all these debugger->show* calls might better be modelled on the states themselves as entry actions
+  // TODO all these debugger->show* calls might better be modelled on the states themselves as entry actions
 
-    pausedState
-      ->transitionTo(unpausingState)
-      ->when(startButtonPressed);
+  pausedState
+    ->transitionTo(unpausingState)
+    ->when(startButtonPressed);
 
-    unpausingState
-      ->transitionTo(setState)
-      ->when([unpausingState]() { return unpausingState->allOptionsTerminated(); })
-      ->notify([=]() { debugger->showSet(); });
+  unpausingState
+    ->transitionTo(setState)
+    ->when(hasTerminated(unpausingState))
+    ->notify([=]() { debugger->showSet(); });
 
-    playingState
-      ->transitionTo(pausingState)
-      ->when(startButtonPressed)
-      ->notify([=]() { debugger->showPaused(); });
+  playingState
+    ->transitionTo(pausingState)
+    ->when(startButtonPressed)
+    ->notify([=]() { debugger->showPaused(); });
 
-    //
-    // MODE BUTTON
-    //
+  //
+  // MODE BUTTON
+  //
 
-    // TODO when in paused state, can the mode button somehow disable the motors?
+  // TODO when in paused state, can the mode button somehow disable the motors?
 
-    readyState
-      ->transitionTo(setState)
-      ->when(modeButtonPressed)
-      ->notify([=]() { debugger->showSet(); });
+  readyState
+    ->transitionTo(setState)
+    ->when(modeButtonPressed)
+    ->notify([=]() { debugger->showSet(); });
 
-    setState
-      ->transitionTo(penalizedState)
-      ->when(modeButtonPressed)
-      ->notify([=]() { debugger->showPenalized(); });
+  setState
+    ->transitionTo(penalizedState)
+    ->when(modeButtonPressed)
+    ->notify([=]() { debugger->showPenalized(); });
 
-    penalizedState
-      ->transitionTo(playingState)
-      ->when(modeButtonPressed)
-      ->notify([=]() { debugger->showPlaying(); });
+  penalizedState
+    ->transitionTo(playingState)
+    ->when(modeButtonPressed)
+    ->notify([=]() { debugger->showPlaying(); });
 
-    //
-    // PLAY MODE TRANSITIONS -- GAME CONTROLLER
-    //
+  //
+  // PLAY MODE TRANSITIONS -- GAME CONTROLLER
+  //
 
-    readyState
-      ->transitionTo(setState)
-      ->when(isSetPlayMode)
-      ->notify([=]() { debugger->showSet(); });
+  readyState
+    ->transitionTo(setState)
+    ->when(isSetPlayMode)
+    ->notify([=]() { debugger->showSet(); });
 
-    readyState
-      ->transitionTo(playingState)
-      ->when(isPlayingPlayMode)
-      ->notify([=]() { debugger->showPlaying(); });
+  readyState
+    ->transitionTo(playingState)
+    ->when(isPlayingPlayMode)
+    ->notify([=]() { debugger->showPlaying(); });
 
-    setState
-      ->transitionTo(penalizedState)
-      ->when(isPenalised)
-      ->notify([=]() { debugger->showPenalized(); });
+  setState
+    ->transitionTo(penalizedState)
+    ->when(isPenalised)
+    ->notify([=]() { debugger->showPenalized(); });
 
-    setState
-      ->transitionTo(playingState)
-      ->when(isPlayingPlayMode)
-      ->notify([=]() { debugger->showPlaying(); });
+  setState
+    ->transitionTo(playingState)
+    ->when(isPlayingPlayMode)
+    ->notify([=]() { debugger->showPlaying(); });
 
-    playingState
-      ->transitionTo(penalizedState)
-      ->when(isPenalised)
-      ->notify([=]() { debugger->showPenalized(); });
+  playingState
+    ->transitionTo(penalizedState)
+    ->when(isPenalised)
+    ->notify([=]() { debugger->showPenalized(); });
 
-    penalizedState
-      ->transitionTo(setState)
-      ->when(nonPenalisedPlayMode(PlayMode::SET))
-      ->notify([=]() { debugger->showSet(); });
+  penalizedState
+    ->transitionTo(setState)
+    ->when(nonPenalisedPlayMode(PlayMode::SET))
+    ->notify([=]() { debugger->showSet(); });
 
-    penalizedState
-      ->transitionTo(playingState)
-      ->when(nonPenalisedPlayMode(PlayMode::PLAYING))
-      ->notify([=]() { debugger->showPlaying(); });
-  }
-  else
-  {
-    // ignoring game controller
-
-    pausedState
-      ->transitionTo(unpausingState)
-      ->when(startButtonPressed);
-
-    unpausingState
-      ->transitionTo(playingState)
-      ->when(hasTerminated(unpausingState))
-      ->notify([=]() { debugger->showPlaying(); });
-
-    playingState
-      ->transitionTo(pausingState)
-      ->when(startButtonPressed)
-      ->notify([=]() { debugger->showPaused(); });
-  }
+  penalizedState
+    ->transitionTo(playingState)
+    ->when(nonPenalisedPlayMode(PlayMode::PLAYING))
+    ->notify([=]() { debugger->showPlaying(); });
 
   ofstream winOut("win.dot");
   winOut << winFsm->toDot();
