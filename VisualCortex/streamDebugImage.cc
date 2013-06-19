@@ -95,7 +95,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     if (ball)
     {
       auto ballColor = Colour::bgr(0, 0, 255);
-      Rect rect((int)round(ball->x()), (int)round(ball->y()), 3, 3);
+      Rect rect((int)round(ball->x()), (int)round(ball->y()), 5, 5);
       cv::rectangle(debugImage, rect, ballColor.toScalar());
     }
 
@@ -103,8 +103,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     for (auto goal : goals)
     {
       auto goalColor = Colour::bgr(0, 255, 255);
-      Rect rect((int)round(goal.x()), (int)round(goal.y()), 3, 3);
-      cv::rectangle(debugImage, rect, goalColor.toScalar());
+      Rect rect((int)round(goal.x()), (int)round(goal.y()), 5, 5);
+      cv::rectangle(debugImage, rect, goalColor.toScalar(), CV_FILLED);
     }
   }
 
