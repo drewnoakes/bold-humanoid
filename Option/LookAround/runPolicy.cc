@@ -6,9 +6,20 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
 
   double t = Clock::getSeconds();
 
+  if (t - d_lastTimeSeconds > 1)
+  {
+    // It's been long enough since we last ran that we consider this a re-start.
+    
+    // Start quarter-way through the first phase, so the head is slightly
+    // to the left, and pans right through the top of the box.
+    d_startTimeSeconds = t - (d_durationHoriz/4.0);
+  }
+
+  d_lastTimeSeconds = t;
+
   double period = (d_durationHoriz + d_durationVert) * 2;
 
-  double phase = fmod(t, period);
+  double phase = fmod(t - d_startTimeSeconds, period);
 
   double hAngle = 0;
   double vAngle = 0;
