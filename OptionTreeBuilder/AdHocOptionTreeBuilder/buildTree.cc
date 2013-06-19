@@ -477,8 +477,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
         double circleDurationSeconds = fabs(panRatio) * 3;
-        //cout << "circleDuration: " << circleDurationSeconds << endl;
-        //cout << "Seconds since start: " << circleBallState->secondsSinceStart() << endl;
+        cout << "[circleBallState] circleDurationSeconds=" << circleDurationSeconds
+             << " secondsSinceStart=" << circleBallState->secondsSinceStart()
+             << " panRatio=" << panRatio
+             << " leftLimitDegs=" << headModule->getLeftLimitDegs() << endl;
         return circleBallState->secondsSinceStart() > circleDurationSeconds;
       });
 
