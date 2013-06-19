@@ -30,6 +30,18 @@ namespace bold
     FSMStatePtr parentState;
     /// State this transition results in
     FSMStatePtr childState;
+    
+    FSMTransition* when(std::function<bool()> condition)
+    {
+      this->condition = condition;
+      return this;
+    }
+    
+    FSMTransition* notify(std::function<void()> callback)
+    {
+      this->onFire = callback;
+      return this;
+    }
   };
 
   typedef std::shared_ptr<FSMTransition> FSMTransitionPtr;
@@ -67,6 +79,15 @@ namespace bold
     {
       FSMTransitionPtr t = std::make_shared<FSMTransition>(name);
       t->parentState = shared_from_this();
+      transitions.push_back(t);
+      return t;
+    }
+
+    FSMTransitionPtr transitionTo(FSMStatePtr targetState)
+    {
+      FSMTransitionPtr t = std::make_shared<FSMTransition>("");
+      t->parentState = shared_from_this();
+      t->childState = targetState;
       transitions.push_back(t);
       return t;
     }
