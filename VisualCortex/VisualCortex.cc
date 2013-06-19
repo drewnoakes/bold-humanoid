@@ -13,11 +13,11 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     d_imageType(ImageType::RGB),
     d_shouldDrawBlobs(true),
     d_shouldDrawLineDots(false),
+    d_shouldDrawObservedObjects(true),
     d_shouldDrawExpectedLines(false),
     d_shouldDrawObservedLines(true),
     d_shouldDrawHorizon(true),
-    d_shouldDrawFieldEdge(true),
-    d_shouldDrawObservedObjects(true)
+    d_shouldDrawFieldEdge(true)
 {
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
