@@ -2,6 +2,7 @@
 
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../util/conditionals.hh"
 
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          unsigned uniformNumber,
@@ -13,11 +14,123 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          shared_ptr<HeadModule> headModule,
                                                          shared_ptr<WalkModule> walkModule)
 {
+  // GENERAL FUNCTIONS
+
+  auto secondsSinceStart = [](double seconds, FSMStatePtr state)
+  {
+    return [state,seconds]() { return state->secondsSinceStart() >= seconds; };
+  };
+
+  // TODO uses of hasTerminated are all on the state that is being observed -- use a better fluent API
+
+  auto hasTerminated = [](FSMStatePtr state)
+  {
+    return [state]() { return state->allOptionsTerminated(); };
+  };
+
+  auto startButtonPressed = []()
+  {
+    auto hw = AgentState::get<HardwareState>();
+    if (!hw)
+      return false;
+    auto cm730 = hw->getCM730State();
+    if (!cm730)
+      return false;
+
+    static bool lastState = false;
+    if (lastState ^ cm730->isStartButtonPressed)
+    {
+      lastState = cm730->isStartButtonPressed;
+      return lastState;
+    }
+
+    return false;
+  };
+
+  auto modeButtonPressed = []()
+  {
+    auto hw = AgentState::get<HardwareState>();
+    if (!hw)
+      return false;
+    auto cm730 = hw->getCM730State();
+    if (!cm730)
+      return false;
+
+    static bool lastState = false;
+    if (lastState ^ cm730->isModeButtonPressed)
+    {
+      lastState = cm730->isModeButtonPressed;
+      return lastState;
+    }
+
+    return false;
+  };
+
+  auto ballVisibleCondition = []()
+  {
+    return AgentState::get<CameraFrameState>()->isBallVisible();
+  };
+
+  // TODO merge these two? do they have to be different? look at usages
+
+//   auto ballLostCondition = isRepeated(10, negate(ballVisibleCondition));
+
+  auto ballLostCondition = trueForMillis(1000, negate(ballVisibleCondition));
+
+//   auto ballLostCondition = []()
+//   {
+//     static double lastSeen = 0;
+//     double t = Clock::getSeconds();
+//     if (AgentState::get<CameraFrameState>()->isBallVisible())
+//       lastSeen = t;
+//     return t - lastSeen > 1.0;
+//   };
+
+  auto isPenalised = [=]()
+  {
+    auto gameState = AgentState::get<GameState>();
+    return gameState && gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
+  };
+
+  auto isNotPenalised = [=]()
+  {
+    auto gameState = AgentState::get<GameState>();
+    return gameState && !gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
+  };
+
+  auto nonPenalisedPlayMode = [isNotPenalised](PlayMode playMode)
+  {
+    return [isNotPenalised,playMode]()
+    {
+      auto gameState = AgentState::get<GameState>();
+      return gameState && isNotPenalised() && gameState->getPlayMode() == playMode;
+    };
+  };
+
+  auto isPlayMode = [](PlayMode playMode, bool defaultValue)
+  {
+    return [=]()
+    {
+      auto gameState = AgentState::get<GameState>();
+      if (!gameState)
+        return defaultValue;
+      return gameState->getPlayMode() == playMode;
+    };
+  };
+
+  auto isSetPlayMode = isPlayMode(PlayMode::SET, false);
+  auto isPlayingPlayMode = isPlayMode(PlayMode::PLAYING, false);
+
+  // BUILD TREE
+
   unique_ptr<OptionTree> tree(new OptionTree());
+
+  // OPTIONS
 
   // Sit down action
   shared_ptr<Option> sit = make_shared<ActionOption>("sitdownaction", "sit down", actionModule);
   tree->addOption(sit);
+
   // Stand up action
   shared_ptr<Option> standup = make_shared<ActionOption>("standupaction", "stand up", actionModule);
   tree->addOption(standup);
@@ -74,94 +187,22 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   //
 
   // ---------- STATES ----------
-  // State: paused
+
   auto pauseState = winFsm->newState("pause", {sit,stopWalking}, false/*end state*/, ignoreGameController/*start state*/);
 
   auto unpausingState = winFsm->newState("unpausing", {standup});
 
-  // State: ready
   auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, !ignoreGameController/* start state */);
 
-  // State: set
   auto setState = winFsm->newState("set", {stopWalking});
 
-  // State: beforeTheirKickoff
   auto beforeTheirKickoff = winFsm->newState("beforetheirkickoff", {stopWalking});
 
-  // State: playing
   auto playingState = winFsm->newState("playing", {playingFsm});
 
-  // State: penalized
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
 
-
   // ---------- TRANSITIONS ----------
-
-  auto startButtonCondition = []() {
-    auto hw = AgentState::get<HardwareState>();
-    if (!hw)
-      return false;
-    auto cm730 = hw->getCM730State();
-    if (!cm730)
-      return false;
-
-    static bool lastState = false;
-    if (lastState ^ cm730->isStartButtonPressed)
-    {
-      lastState = cm730->isStartButtonPressed;
-      return lastState;
-    }
-
-    return false;
-  };
-
-  auto modeButtonCondition = []() {
-    auto hw = AgentState::get<HardwareState>();
-    if (!hw)
-      return false;
-    auto cm730 = hw->getCM730State();
-    if (!cm730)
-      return false;
-
-    static bool lastState = false;
-    if (lastState ^ cm730->isModeButtonPressed)
-    {
-      lastState = cm730->isModeButtonPressed;
-      return lastState;
-    }
-
-    return false;
-  };
-
-  // Penalty condition
-  auto penaltyCondition = [=]() {
-    auto gameState = AgentState::get<GameState>();
-    if (!gameState)
-      return false;
-    return gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
-  };
-
-  // No penalty condition
-  // TODO: should be simply !penaltyCondition, but didn't work on first try
-  auto noPenaltyCondition = [=]() {
-    auto gameState = AgentState::get<GameState>();
-    if (!gameState)
-      return true;
-    return !gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
-  };
-
-  auto makePlayModeCondition = [](PlayMode playMode, bool defaultValue)
-  {
-    return [=]() {
-      auto gameState = AgentState::get<GameState>();
-      if (!gameState)
-        return defaultValue;
-      return gameState->getPlayMode() == playMode;
-    };
-  };
-
-  auto setCondition = makePlayModeCondition(PlayMode::SET, false);
-  auto playingCondition = makePlayModeCondition(PlayMode::PLAYING, false);
 
   if (!ignoreGameController)
   {
@@ -169,20 +210,21 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     // PAUSE BUTTON
     //
 
-    auto pause2unpausingTransition = pauseState->newTransition();
-    pause2unpausingTransition->condition = startButtonCondition;
-    pause2unpausingTransition->childState = unpausingState;
+    // TODO all these debugger->show* calls might better be modelled on the states themselves as entry actions
 
-    auto unpausing2playingTransition = unpausingState->newTransition();
-    unpausing2playingTransition->condition = [unpausingState]() { return unpausingState->allOptionsTerminated(); };;
-    unpausing2playingTransition->onFire = [=]() { debugger->showSet(); };
-    unpausing2playingTransition->childState = setState;
+    pauseState
+      ->transitionTo(unpausingState)
+      ->when(startButtonPressed);
 
-    // From play to paused: pause button
-    auto play2pausedTransition = playingState->newTransition("p2pStartBtn");
-    play2pausedTransition->condition = startButtonCondition;
-    play2pausedTransition->onFire = [=]() { debugger->showPaused(); };
-    play2pausedTransition->childState = pauseState;
+    unpausingState
+      ->transitionTo(setState)
+      ->when([unpausingState]() { return unpausingState->allOptionsTerminated(); })
+      ->notify([=]() { debugger->showSet(); });
+
+    playingState
+      ->transitionTo(pauseState)
+      ->when(startButtonPressed)
+      ->notify([=]() { debugger->showPaused(); });
 
     //
     // MODE BUTTON
@@ -190,91 +232,77 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     // TODO when in paused state, can the mode button somehow disable the motors?
 
-    // From ready to set: button pressed
-    auto ready2setManualTransition = readyState->newTransition("p2rCycleStateBtn");
-    ready2setManualTransition->condition = modeButtonCondition;
-    ready2setManualTransition->onFire = [=]() { debugger->showSet(); };
-    ready2setManualTransition->childState = setState;
+    readyState
+      ->transitionTo(setState)
+      ->when(modeButtonPressed)
+      ->notify([=]() { debugger->showSet(); });
 
-    // From set to penalised: button pressed
-    auto set2PenalizedManualTransition = setState->newTransition("s2pCycleStateBtn");
-    set2PenalizedManualTransition->condition = modeButtonCondition;
-    set2PenalizedManualTransition->onFire = [=]() { debugger->showPenalized(); };
-    set2PenalizedManualTransition->childState = penalizedState;
+    setState
+      ->transitionTo(penalizedState)
+      ->when(modeButtonPressed)
+      ->notify([=]() { debugger->showPenalized(); });
 
-    // From penalized to play: button pressed
-    auto penalized2PlayTransition = penalizedState->newTransition("p2pCycleStateBtn");
-    penalized2PlayTransition->condition = modeButtonCondition;
-    penalized2PlayTransition->onFire = [=]() { debugger->showPlaying(); };
-    penalized2PlayTransition->childState = playingState;
+    penalizedState
+      ->transitionTo(playingState)
+      ->when(modeButtonPressed)
+      ->notify([=]() { debugger->showPlaying(); });
 
     //
     // PLAY MODE TRANSITIONS -- GAME CONTROLLER
     //
 
-    // From ready to set: game state changed
-    auto ready2setTransition = readyState->newTransition("r2sGameController");
-    ready2setTransition->condition = setCondition;
-    ready2setTransition->onFire = [=]() { debugger->showSet(); };
-    ready2setTransition->childState = setState;
+    readyState
+      ->transitionTo(setState)
+      ->when(isSetPlayMode)
+      ->notify([=]() { debugger->showSet(); });
 
-    // From ready to playing: game state changed
-    auto ready2playingTransition = readyState->newTransition("r2pGameController");
-    ready2playingTransition->condition = playingCondition;
-    ready2playingTransition->onFire = [=]() { debugger->showPlaying(); };
-    ready2playingTransition->childState = playingState;
+    readyState
+      ->transitionTo(playingState)
+      ->when(isPlayingPlayMode)
+      ->notify([=]() { debugger->showPlaying(); });
 
-    // From set to penalized: penalized state
-    auto set2penalizedTransition = setState->newTransition("s2pGameController");
-    set2penalizedTransition->condition = penaltyCondition;
-    set2penalizedTransition->onFire = [=]() { debugger->showPenalized(); };
-    set2penalizedTransition->childState = penalizedState;
+    setState
+      ->transitionTo(penalizedState)
+      ->when(isPenalised)
+      ->notify([=]() { debugger->showPenalized(); });
 
-    // From set to play: game state changed TODO: go to their kickoff if it's theirs
-    auto set2playingTransition = setState->newTransition("s2pGameController");
-    set2playingTransition->condition = playingCondition;
-    set2playingTransition->onFire = [=]() { debugger->showPlaying(); };
-    set2playingTransition->childState = playingState;
+    setState
+      ->transitionTo(playingState)
+      ->when(isPlayingPlayMode)
+      ->notify([=]() { debugger->showPlaying(); });
 
-    // From playing to penalized: penalized state
-    auto playing2penalizedTransition = playingState->newTransition("p2pGameController");
-    playing2penalizedTransition->condition = penaltyCondition;
-    playing2penalizedTransition->onFire = [=]() { debugger->showPenalized(); };
-    playing2penalizedTransition->childState = penalizedState;
+    playingState
+      ->transitionTo(penalizedState)
+      ->when(isPenalised)
+      ->notify([=]() { debugger->showPenalized(); });
 
-    // From penalized to set: no penalized state and game state
-    auto penalized2setTransition = penalizedState->newTransition("p2sGameController");
-    penalized2setTransition->condition = [=]() {
-      auto gameState = AgentState::get<GameState>();
-      return gameState && noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::SET);
-    };
-    penalized2setTransition->onFire = [=]() { debugger->showSet(); };
-    penalized2setTransition->childState = setState;
+    penalizedState
+      ->transitionTo(setState)
+      ->when(nonPenalisedPlayMode(PlayMode::SET))
+      ->notify([=]() { debugger->showSet(); });
 
-    // From penalized to play: no penalized state and game state
-    auto penalized2playingTransition = penalizedState->newTransition("p2pGameController");
-    penalized2playingTransition->condition = [=]() {
-      auto gameState = AgentState::get<GameState>();
-      return gameState && noPenaltyCondition() && (gameState->getPlayMode() == PlayMode::PLAYING);
-    };
-    penalized2playingTransition->onFire = [=]() { debugger->showPlaying(); };
-    penalized2playingTransition->childState = playingState;
-  } // !ignoreGameController
+    penalizedState
+      ->transitionTo(playingState)
+      ->when(nonPenalisedPlayMode(PlayMode::PLAYING))
+      ->notify([=]() { debugger->showPlaying(); });
+  }
   else
   {
-    auto pause2unpausingTransition = pauseState->newTransition();
-    pause2unpausingTransition->condition = startButtonCondition;
-    pause2unpausingTransition->childState = unpausingState;
+    // ignoring game controller
 
-    auto unpausing2playingTransition = unpausingState->newTransition();
-    unpausing2playingTransition->condition = [unpausingState]() { return unpausingState->allOptionsTerminated(); };;
-    unpausing2playingTransition->onFire = [=]() { debugger->showPlaying(); };
-    unpausing2playingTransition->childState = playingState;
+    pauseState
+      ->transitionTo(unpausingState)
+      ->when(startButtonPressed);
 
-    auto play2pausedTransition = playingState->newTransition();
-    play2pausedTransition->condition = startButtonCondition;
-    play2pausedTransition->onFire = [=]() { debugger->showPaused(); };
-    play2pausedTransition->childState = pauseState;
+    unpausingState
+      ->transitionTo(playingState)
+      ->when(hasTerminated(unpausingState))
+      ->notify([=]() { debugger->showPlaying(); });
+
+    playingState
+      ->transitionTo(pauseState)
+      ->when(startButtonPressed)
+      ->notify([=]() { debugger->showPaused(); });
   }
 
   ofstream winOut("win.dot");
@@ -293,307 +321,230 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   // Penalty goalie behaviour
   else if (uniformNumber == 5)
   {
-    // Start state: stand up
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
-    // State: stand and look look around
+
     auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
 
-    // State: stand and look at ball
     auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
 
-    // State: diving to the left
     auto leftDiveState = playingFsm->newState("leftdive", {leftdive});
-
 
     // ---------- TRANSITIONS ----------
 
-    auto ballLostCondition = []() {
-      static int lastSeen = 0;
-      lastSeen++;
-      if (AgentState::get<CameraFrameState>()->isBallVisible())
-        lastSeen = 0;
-      return lastSeen > 10;
-    };
+    standUpState->transitionTo(lookForBallState)
+                ->when(hasTerminated(standUpState));
 
-    // Transition: into actual loop after stood up
-    auto standUp2lookAround = standUpState->newTransition();
-    standUp2lookAround->condition = [standUpState]() {
-      return standUpState->allOptionsTerminated();
-    };
-    standUp2lookAround->childState = lookForBallState;
+    lookForBallState->transitionTo(lookAtBallState)
+                    ->when(ballVisibleCondition);
 
-    // Transition: look around -> look at ball when visible
-    auto lookAround2lookAtBall = lookForBallState->newTransition();
-    lookAround2lookAtBall->condition = []() {
-      return AgentState::get<CameraFrameState>()->isBallVisible();
-    };
-    lookAround2lookAtBall->childState = lookAtBallState;
+    lookAtBallState->transitionTo(lookForBallState)
+                  ->when(ballLostCondition);
 
-    // Transition: look at ball -> look for ball if no longer seen
-    auto lookAtBall2lookAround = lookAtBallState->newTransition();
-    lookAtBall2lookAround->condition = ballLostCondition;
-    lookAtBall2lookAround->childState = lookForBallState;
+    lookAtBallState->transitionTo(leftDiveState)
+                   ->when([]()
+                   {
+                     auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+                     return ball && ball->y() < 1.0 && ball->x() < 0;
+                   });
 
-    // Transition: look at ball -> diving to the left
-    auto lookAtBall2leftDive = lookAtBallState->newTransition();
-    lookAtBall2leftDive->condition = []() {
-      auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-      if (!ballObs)
-        return false;
-      Eigen::Vector3d ballPos = *ballObs;
-      if (ballPos.y() > 1.0)
-        return false;
+    // TODO introduce rightDiveState
+//     lookAtBallState->transitionTo(rightDiveState)
+//                    ->when([]()
+//                    {
+//                      auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+//                      return ball && ball->y() < 1.0 && ball->x() > 0;
+//                    });
 
-      if (ballPos.x() > 0)
-        return false;
-
-      return true;
-    };
-    lookAtBall2leftDive->childState = leftDiveState;
-
-    // Transition: dive to left -> back to look for goal
-    auto leftDive2lookForBall = leftDiveState->newTransition();
-    leftDive2lookForBall->condition = [leftDiveState]() {
-      return leftDiveState->allOptionsTerminated();
-    };
-    leftDive2lookForBall->childState = lookForBallState;
-
+    leftDiveState->transitionTo(lookForBallState)
+                 ->when(hasTerminated(leftDiveState));
   }
-  // Player behavior
   else
   {
+    //
+    // PLAYER BEHAVIOR
+    //
+
     // ---------- STATES ----------
 
-    // Start state: stand up
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
 
-    // State: stand and look look around
     auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
 
-    // State: circle around
     auto lookForBallCirclingState = playingFsm->newState("lookforballcircling", {circleBall});
 
-    // State: stand and look at ball
     auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
 
-    // State: approach and look at ball
     auto approachBallState = playingFsm->newState("approachball", {approachBall, lookAtBall});
 
-    // State: look for goal
     auto lookForGoalState = playingFsm->newState("lookforgoal", {stopWalking, lookAround});
 
-    // State: stand and look at goal
     auto lookAtGoalState = playingFsm->newState("lookatgoal", {stopWalking, lookAtGoal});
 
-    // State: aim (transition state between looking at goal and either kicking or circling)
+    // transition state between looking at goal and either kicking or circling
     auto aimState = playingFsm->newState("aim", {});
 
-    // State: circle ball
     auto circleBallState = playingFsm->newState("circleball", {circleBall});
 
-    // State: pre-kick look
     auto lookAtFeetState = playingFsm->newState("lookatfeet", {lookAtFeet});
 
-    // State: left kick
     auto leftKickState = playingFsm->newState("leftkick", {leftKick});
 
-    // State: right kick
     auto rightKickState = playingFsm->newState("rightkick", {rightKick});
 
     // ---------- TRANSITIONS ----------
 
-    auto ballLostCondition = []() {
-      static double lastSeen = 0;
-      double t = Clock::getSeconds();
-      if (AgentState::get<CameraFrameState>()->isBallVisible())
-        lastSeen = t;
-      return t - lastSeen > 1.0;
-    };
+    standUpState
+      ->transitionTo(lookForBallState)
+      ->when(hasTerminated(standUpState));
 
-    // Transition: into actual loop after stood up
-    auto standUp2lookAround = standUpState->newTransition();
-    standUp2lookAround->condition = [standUpState]() {
-      return standUpState->allOptionsTerminated();
-    };
-    standUp2lookAround->childState = lookForBallState;
+    lookForBallState
+      ->transitionTo(lookAtBallState)
+      ->when(ballVisibleCondition);
 
-    // Transition: look around -> look at ball when visible
-    auto lookAround2lookAtBall = lookForBallState->newTransition();
-    lookAround2lookAtBall->condition = []() {
-      return AgentState::get<CameraFrameState>()->isBallVisible();
-    };
-    lookAround2lookAtBall->childState = lookAtBallState;
+    // walk a circle if we don't find the ball within 10 seconds
+    lookForBallState
+      ->transitionTo(lookForBallCirclingState)
+      ->when(secondsSinceStart(10, lookForBallState));
 
-    // Transition: look around -> circle around if takes too long
-    auto lookForBall2lookForBallCircling = lookForBallState->newTransition();
-    lookForBall2lookForBallCircling->condition = [lookForBallState]() {
-      return lookForBallState->secondsSinceStart() > 10;
-    };
-    lookForBall2lookForBallCircling->childState = lookForBallCirclingState;
+    // after 5 seconds of circling, look for the ball again
+    lookForBallCirclingState
+      ->transitionTo(lookForBallState)
+      ->when(secondsSinceStart(5, lookForBallCirclingState));
 
-    // Transition: look for ball circling -> back to look for ball
-    auto lookForBallCircling2lookForBall = lookForBallCirclingState->newTransition();
-    lookForBallCircling2lookForBall->condition = [lookForBallCirclingState]() {
-      return lookForBallCirclingState->secondsSinceStart() > 5;
-    };
-    lookForBallCircling2lookForBall->childState = lookForBallState;
+    lookAtBallState
+      ->transitionTo(lookForBallState)
+      ->when(ballLostCondition);
 
-    // Transition: look at ball -> look for ball if no longer seen
-    auto lookAtBall2lookForBall = lookAtBallState->newTransition();
-    lookAtBall2lookForBall->condition = ballLostCondition;
-    lookAtBall2lookForBall->childState = lookForBallState;
+    // start approaching the ball when we have the confidence that it's really there
+    // TODO this doesn't filter the ball position, so may be mislead by jitter
+    lookAtBallState
+      ->transitionTo(approachBallState)
+      ->when(oneShot([ballVisibleCondition]() { return stepUpDownThreshold(10, ballVisibleCondition); }));
 
-    // Transition: look at ball -> approach ball
-    auto lookAtBall2approachBall = lookAtBallState->newTransition();
-    lookAtBall2approachBall->condition = []() {
-      static int nSeen = 0;
-      if (AgentState::get<CameraFrameState>()->isBallVisible())
-        nSeen++;
-      else if (nSeen > 0)
-        nSeen--;
-      return nSeen > 10;
-    };
-    lookAtBall2approachBall->childState = approachBallState;
+    approachBallState
+      ->transitionTo(lookForBallState)
+      ->when(ballLostCondition);
 
-    // Transition: approach ball -> look for ball again if no longer seen
-    auto approachBall2lookAround = approachBallState->newTransition("ballLost");
-    approachBall2lookAround->condition = ballLostCondition;
-    approachBall2lookAround->childState = lookForBallState;
-
-    // Transition: approachball -> look for goal
-    auto approachBall2lookForGoal = approachBallState->newTransition("closeToBall");
-    approachBall2lookForGoal->condition = [playingFsm]() {
-      auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-      if (!ballObs)
-        return false;
-
-      return (ballObs->head<2>().norm() < playingFsm->getParam("approachBall.untilDistance", 0.05));
-    };
-    approachBall2lookForGoal->childState = lookForGoalState;
-
-    // Transition: look for goal -> look at goal when visible
-    auto lookForGoal2lookAtGoal = lookForGoalState->newTransition();
-    lookForGoal2lookAtGoal->condition = []() {
-      auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
-      return goalsObs.size() >= 2;
-    };
-    lookForGoal2lookAtGoal->childState = lookAtGoalState;
-
-    // Transition: look for goal -> start kicking after too long
-    auto lookForGoal2lookForBall = lookForGoalState->newTransition("lookTooLong");
-    lookForGoal2lookForBall->condition = [lookForGoalState]() {
-      return lookForGoalState->secondsSinceStart() > 5;
-    };
-    lookForGoal2lookForBall->childState = lookAtFeetState;
-
-    // Transition: look at goal -> aim if seen goal for long enough
-    auto lookAtGoal2aim = lookAtGoalState->newTransition();
-    lookAtGoal2aim->condition = [lookAtGoalState]() {
-      return lookAtGoalState->secondsSinceStart() > 0.5;
-    };
-    lookAtGoal2aim->childState = aimState;
-
-    // Transition: aim -> if goal is seen right in front of us, start kick procedure
-    auto aim2lookAtFeet = aimState->newTransition();
-    aim2lookAtFeet->condition = [&headModule]() {
-      auto body = AgentState::get<BodyState>();
-      double panAngle = body->getHeadPanJoint()->angle;
-      double panAngleRange = headModule->getLeftLimitRads();
-      double panRatio = panAngle / panAngleRange;
-//       cout << "panRatio: " << panRatio << endl;
-      return fabs(panRatio) < 0.3;
-    };
-    aim2lookAtFeet->childState = lookAtFeetState;
-
-    // Transition: look at goal -> circle ball
-    auto aim2Circle = aimState->newTransition();
-    aim2Circle->condition = []()
-    {
-      return true;
-    };
-    aim2Circle->childState = circleBallState;
-
-    // Transition: circle -> stop circling and look for goal again
-    auto circle2lookForGoal = circleBallState->newTransition();
-    circle2lookForGoal->condition = [circleBallState,&headModule]()
-    {
-      auto body = AgentState::get<BodyState>();
-      double panAngle = body->getHeadPanJoint()->angle;
-      double panAngleRange = headModule->getLeftLimitRads();
-      double panRatio = panAngle / panAngleRange;
-      double circleDurationSeconds = fabs(panRatio) * 3;
-//       cout << "circleDuration: " << circleDurationSeconds << endl;
-//       cout << "Seconds since start: " << circleBallState->secondsSinceStart() << endl;
-      return circleBallState->secondsSinceStart() > circleDurationSeconds;
-    };
-    circle2lookForGoal->childState = lookForGoalState;
-
-    // Transition: look at feet -> kick left
-    auto lookAtFeet2kickLeft = lookAtFeetState->newTransition();
-    lookAtFeet2kickLeft->condition = [lookAtFeetState] () {
-      if (lookAtFeetState->secondsSinceStart() < 1)
-        return false;
-
-      // Wait until we're finished looking down
-      if (!lookAtFeetState->allOptionsTerminated())
-        return false;
-
-      auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-
-      if (ballObs && ballObs->y() <= 0.2 && ballObs->x() < 0)
+    // stop walking to ball once we're close enough
+    approachBallState
+      ->transitionTo(lookForGoalState)
+      ->when([playingFsm]()
       {
-        cout << "[lookAtFeet2kickLeft] Kicking with left foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")" << endl;
-        return true;
-      }
-      return false;
-    };
-    lookAtFeet2kickLeft->childState = leftKickState;
+        // Approach ball until we're within a given distance
+        auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+        return ballObs && (ballObs->head<2>().norm() < playingFsm->getParam("approachBall.untilDistance", 0.05));
+      });
 
-    // Transition: look at feet -> kick right
-    auto lookAtFeet2kickRight = lookAtFeetState->newTransition();
-    lookAtFeet2kickRight->condition = [lookAtFeetState] () {
-      if (lookAtFeetState->secondsSinceStart() < 1)
-        return false;
-
-      // Wait until we're finished looking down
-      if (!lookAtFeetState->allOptionsTerminated())
-        return false;
-
-      auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-
-      if (ballObs && ballObs->y() <= 0.2 && ballObs->x() > 0)
+    lookForGoalState
+      ->transitionTo(lookAtGoalState)
+      ->when([]()
       {
-        cout << "[lookAtFeet2kickRight] Kicking with right foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")" << endl;
-        return true;
-      }
-      return false;
-    };
-    lookAtFeet2kickRight->childState = rightKickState;
+        auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
+        return goalsObs.size() >= 2;
+      });
 
-    // Transition: look at feet -> look for ball
-    auto lookAtFeet2lookForBall = lookAtFeetState->newTransition();
-    lookAtFeet2lookForBall->condition = [lookAtFeetState] () {
-      if (lookAtFeetState->secondsSinceStart() < 1)
+    // limit how long we will look for the goal
+    lookForGoalState
+      ->transitionTo(lookAtFeetState)
+      ->when(secondsSinceStart(7, lookForGoalState));
+
+    lookAtGoalState
+      ->transitionTo(aimState)
+      ->when(secondsSinceStart(0.5, lookAtGoalState));
+
+    // start kick procedure if goal is in front of us
+    aimState
+      ->transitionTo(lookAtFeetState)
+      ->when([&headModule]()
+      {
+        auto body = AgentState::get<BodyState>();
+        double panAngle = body->getHeadPanJoint()->angle;
+        double panAngleRange = headModule->getLeftLimitRads();
+        double panRatio = panAngle / panAngleRange;
+        return fabs(panRatio) < 0.3;
+      });
+
+    // circle immediately, if goal is not in front (prior transition didn't fire)
+    aimState
+      ->transitionTo(circleBallState)
+      ->when([]() { return true; });
+
+    // control duration of ball circling
+    circleBallState
+      ->transitionTo(lookForGoalState)
+      ->when([circleBallState,&headModule]()
+      {
+        auto body = AgentState::get<BodyState>();
+        double panAngle = body->getHeadPanJoint()->angle;
+        double panAngleRange = headModule->getLeftLimitRads();
+        double panRatio = panAngle / panAngleRange;
+        double circleDurationSeconds = fabs(panRatio) * 3;
+        //cout << "circleDuration: " << circleDurationSeconds << endl;
+        //cout << "Seconds since start: " << circleBallState->secondsSinceStart() << endl;
+        return circleBallState->secondsSinceStart() > circleDurationSeconds;
+      });
+
+    lookAtFeetState
+      ->transitionTo(leftKickState)
+      ->when([lookAtFeetState]()
+      {
+        if (lookAtFeetState->secondsSinceStart() < 1)
+          return false;
+
+        // Wait until we're finished looking down
+        if (!lookAtFeetState->allOptionsTerminated())
+          return false;
+
+        auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+
+        if (ballObs && ballObs->y() <= 0.2 && ballObs->x() < 0)
+        {
+          cout << "[lookAtFeet2kickLeft] Kicking with left foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")" << endl;
+          return true;
+        }
         return false;
+      });
 
-      // Wait until we're finished looking down
-      return lookAtFeetState->allOptionsTerminated();
-    };
-    lookAtFeet2lookForBall->childState = lookForBallState;
+    lookAtFeetState
+      ->transitionTo(rightKickState)
+      ->when([lookAtFeetState]()
+      {
+        if (lookAtFeetState->secondsSinceStart() < 1)
+          return false;
 
-    // Transition: kick left -> look for ball
-    auto kickLeft2lookForBall = leftKickState->newTransition();
-    kickLeft2lookForBall->condition = [leftKickState]() {
-      return leftKickState->allOptionsTerminated();
-    };
-    kickLeft2lookForBall->childState = lookForBallState;
+        // Wait until we're finished looking down
+        if (!lookAtFeetState->allOptionsTerminated())
+          return false;
 
-    // Transition: kick right -> look for ball
-    auto kickRight2lookForBall = rightKickState->newTransition();
-    kickRight2lookForBall->condition = [rightKickState]() {
-      return rightKickState->allOptionsTerminated();
-    };
-    kickRight2lookForBall->childState = lookForBallState;
+        auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+
+        if (ballObs && ballObs->y() <= 0.2 && ballObs->x() > 0)
+        {
+          cout << "[lookAtFeet2kickRight] Kicking with right foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")" << endl;
+          return true;
+        }
+        return false;
+      });
+
+    lookAtFeetState
+      ->transitionTo(lookForBallState)
+      ->when([lookAtFeetState]()
+      {
+        // TODO use 'all' operator
+        if (lookAtFeetState->secondsSinceStart() < 1)
+          return false;
+
+        // Wait until we're finished looking down
+        return lookAtFeetState->allOptionsTerminated();
+      });
+
+    leftKickState
+      ->transitionTo(lookForBallState)
+      ->when(hasTerminated(leftKickState));
+
+    rightKickState
+      ->transitionTo(lookForBallState)
+      ->when(hasTerminated(rightKickState));
   } // uniformNumber != 1
 
   ofstream playingOut("playing.dot");
