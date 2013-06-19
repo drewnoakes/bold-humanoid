@@ -98,9 +98,6 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     }
   }
 
-  // REMOVE! just for testing purposes
-  goalPositions.push_back(Vector2d(10,10));
-
   AgentState::getInstance().set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments));
 
   t.timeEvent("Image Processing/Updating State");
