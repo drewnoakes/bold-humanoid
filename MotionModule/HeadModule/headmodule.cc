@@ -39,7 +39,8 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_controls.push_back(Control::createAction("&blacktriangledown;",  [this]() { moveByDeltaDegs( 0,-5); }));
   d_controls.push_back(Control::createAction("&blacktriangleright;", [this]() { moveByDeltaDegs(-5, 0); }));
   d_controls.push_back(Control::createAction("home",                 [this]() { moveToHome(); }));
-  
+  d_controls.push_back(Control::createAction("zero",                 [this]() { moveToDegs(0, 0); }));
+
   auto createControl = [this](double* target, string name, double min, double max, int scale = 1, bool isAdvanced = true)
   {
     auto control = Control::createInt(name, (*target)*scale, [this,target,scale](int value) { *target = value/double(scale); });
