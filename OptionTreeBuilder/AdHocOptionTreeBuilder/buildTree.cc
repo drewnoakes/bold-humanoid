@@ -227,6 +227,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     ->when(startButtonPressed)
     ->notify([=]() { debugger->showPaused(); });
 
+  pausingState
+    ->transitionTo(pausedState)
+    ->when(hasTerminated(pausingState));
+
   //
   // MODE BUTTON
   //
