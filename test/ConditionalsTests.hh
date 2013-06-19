@@ -106,7 +106,7 @@ TEST(ConditionalsTests, oneShot)
 {
   int createCount = 0;
   bool value = false;
-  
+
   auto fun = oneShot([&createCount,&value]()
   {
     createCount++;

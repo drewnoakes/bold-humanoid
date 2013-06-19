@@ -13,7 +13,7 @@ Agent::Agent()
 
   auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));
   cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
-  
+
   d_motionFile = "./motion_4096.bin";
   cout << "[Agent::Agent] Using motion file: " << d_motionFile << endl;
 
@@ -32,15 +32,15 @@ Agent::Agent()
 
   // Prepare the motion schedule, that coordinates which motions are carried out
   d_motionSchedule = make_shared<MotionTaskScheduler>();
-  
+
   // Create motion modules
   d_headModule = make_shared<HeadModule>(d_motionSchedule);
   d_walkModule = make_shared<WalkModule>(d_motionSchedule);
   d_actionModule = make_shared<ActionModule>(d_motionSchedule, d_motionFile);
-  
+
   // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();
-  
+
   if (!d_haveBody)
     cout << "[Agent::Agent] Unable to connect to body" << endl;
 

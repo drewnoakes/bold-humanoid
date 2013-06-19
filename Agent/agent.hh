@@ -59,7 +59,7 @@ namespace bold
     void setTeamNumber(unsigned teamNumber) { d_teamNumber = teamNumber; }
     unsigned getUniformNumber() const { return d_uniformNumber; }
     void setUniformNumber(unsigned uniformNumber) { d_uniformNumber = uniformNumber; }
-    
+
     void setOptionTree(std::unique_ptr<OptionTree> tree);
 
     Agent(Agent const&) = delete;

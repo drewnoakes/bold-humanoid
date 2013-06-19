@@ -29,7 +29,7 @@ def thinkEndCallback():
     goalObs = cameraState.getGoalObservations()
     print(goalObs)
 
-    
+
 def usage():
     print('''Options:
   -c <file>    select configuration file (or --conf)
@@ -93,10 +93,10 @@ def main(argv):
     agent.setOptionTree(tree)
 
     agent.onThinkEndConnect(thinkEndCallback);
-    
+
     visualCortex = agent.getVisualCortex()
     visualCortex.setShouldIgnoreAboveHorizon(False)
-    
+
     vcSettings = {
         'shouldDetectLines': False,
         'shouldIgnoreAboveHorizon': False,
@@ -109,9 +109,9 @@ def main(argv):
         'shouldDrawHorizon': True}
 
     visualCortex.set(**vcSettings)
-                  
+
     agent.run()
-    
+
 if __name__ == "__main__":
     main(sys.argv[1:])
 

@@ -25,7 +25,7 @@ def thinkEndCallback():
     print(ballObs)
     goalObs = cameraState.getGoalObservations()
     print(goalObs)
-    
+
 def usage():
     print('''Options:
   -c <file>    select configuration file (or --conf)
@@ -98,10 +98,10 @@ def main(argv):
                    RECORD_FRAMES)
 
     a.onThinkEndConnect(thinkEndCallback);
-    
+
     visualCortex = a.getVisualCortex()
     visualCortex.setShouldIgnoreAboveHorizon(False)
-    
+
     vcSettings = {
         'shouldDetectLines': False,
         'shouldIgnoreAboveHorizon': False,
@@ -114,7 +114,7 @@ def main(argv):
         'shouldDrawHorizon': True}
 
     visualCortex.set(**vcSettings)
-                  
+
     #a.run()
 
 
