@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 //   bool autoGetUpFromFallen = true;
 //   bool recordFrames = false;
 //   bool useOptionTree = true;
-  unsigned teamNumber = 9;
+  unsigned teamNumber = 24;
   unsigned uniformNumber = 0;
   bool ignoreGameController = false;
 
