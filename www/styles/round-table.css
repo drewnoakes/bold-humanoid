@@ -260,13 +260,13 @@ div.module.camera div.control-container.head-controls
 div.module.camera div.control-container.lines-controls
 {
     width: 350px;
-    margin-top: 20px;
+    margin-top: 8px;
 }
 
 div.module.camera div.control-container.lut-controls
 {
     width: 350px;
-    margin-top: 20px;
+    margin-top: 8px;
 }
 
 div.module.camera div.control-container.camera-controls .control .values
@@ -282,16 +282,12 @@ div.module.camera div.control-container.camera-controls .control select
     box-sizing: border-box;
 }
 
-div.module.camera div.control-container.image-controls
+div.module.camera div.control-container.image-controls,
+div.module.camera div.control-container.image-controls-features
 {
     width: 320px;
     /*width: 260px;*/
-    margin-top: 23px;
-}
-
-div.module.camera div.control-container.image-controls > div:nth-child(1)
-{
-    display: block;
+    margin-top: 8px;
 }
 
 /********************************************************************/
