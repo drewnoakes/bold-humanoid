@@ -203,12 +203,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
 
-  readyState->onEnter = [debugger]() { debugger->showReady(); };
-  setState->onEnter = [debugger]() { debugger->showSet(); };
+  readyState->onEnter = [debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); };
+  setState->onEnter = [debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); };
   playingState->onEnter = [debugger]() { debugger->showPlaying(); };
-  penalizedState->onEnter = [debugger]() { debugger->showPenalized(); };
+  penalizedState->onEnter = [debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); };
   pausedState->onEnter = [debugger]() { debugger->showPaused(); };
-  pausingState->onEnter = [debugger]() { debugger->showPaused(); };
+  pausingState->onEnter = [debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); };
 
   // ---------- TRANSITIONS ----------
 
