@@ -12,7 +12,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          shared_ptr<Ambulator> ambulator,
                                                          shared_ptr<ActionModule> actionModule,
                                                          shared_ptr<HeadModule> headModule,
-                                                         shared_ptr<WalkModule> walkModule)
+                                                         shared_ptr<WalkModule> walkModule,
+                                                         shared_ptr<FallDetector> fallDetector)
 {
   const unsigned UNUM_GOALIE = 1;
   const unsigned UNUM_GOALIE_PENALTY = 5;
@@ -120,6 +121,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     return ambulator->isRunning();
   };
 
+  auto hasFallenForward = [fallDetector]() { return fallDetector->getFallenState() == FallState::FORWARD; };
+
+  auto hasFallenBackward = [fallDetector]() { return fallDetector->getFallenState() == FallState::BACKWARD; };
+
   // BUILD TREE
 
   unique_ptr<OptionTree> tree(new OptionTree());
@@ -134,6 +139,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   shared_ptr<Option> standup = make_shared<ActionOption>("standupaction", "stand up", actionModule);
   tree->addOption(standup);
 
+  // Forward get up
+  shared_ptr<Option> forwardgetup = make_shared<ActionOption>("forwardgetupaction", ActionPage::ForwardGetUp, actionModule);
+  
+  // Backward get up
+  shared_ptr<Option> backwardgetup = make_shared<ActionOption>("backwardgetupaction", ActionPage::BackwardGetUp, actionModule);
+  
   // Stop walking
   shared_ptr<Option> stopWalking = make_shared<StopWalking>("stopwalking", ambulator);
   tree->addOption(stopWalking);
@@ -202,6 +213,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   auto playingState = winFsm->newState("playing", {playingFsm});
 
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
+
+  auto forwardGetUpState = playingFsm->newState("forwardgetup", {forwardgetup});
+
+  auto backwardGetUpState = playingFsm->newState("backwardgetup", {backwardgetup});
 
   readyState->onEnter = [debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); };
   setState->onEnter = [debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); };
@@ -289,6 +304,23 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   penalizedState
     ->transitionTo(playingState)
     ->when(nonPenalisedPlayMode(PlayMode::PLAYING));
+
+  // FALLEN TRANSITIONS
+  playingState
+    ->transitionTo(forwardGetUpState)
+    ->when(hasFallenForward);
+
+  playingState
+    ->transitionTo(backwardGetUpState)
+    ->when(hasFallenBackward);
+
+  forwardGetUpState
+    ->transitionTo(playingState)
+    ->when(hasTerminated(forwardGetUpState));
+
+  backwardGetUpState
+    ->transitionTo(playingState)
+    ->when(hasTerminated(backwardGetUpState));
 
   ofstream winOut("win.dot");
   winOut << winFsm->toDot();
