@@ -56,6 +56,8 @@ namespace bold
     std::shared_ptr<WalkModule> getWalkModule() const { return d_walkModule; }
     std::shared_ptr<ActionModule> getActionModule() const { return d_actionModule; }
 
+    std::shared_ptr<FallDetector> getFallDetector() const { return d_fallDetector; }
+
     unsigned getTeamNumber() const { return d_teamNumber; }
     void setTeamNumber(unsigned teamNumber) { d_teamNumber = teamNumber; }
     unsigned getUniformNumber() const { return d_uniformNumber; }
