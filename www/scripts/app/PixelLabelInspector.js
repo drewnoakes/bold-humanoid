@@ -27,7 +27,6 @@ define(
 
             ControlClient.withData('vision/lut', function(controls)
             {
-                console.log('callback!');
                 _.each(controls, function (control)
                 {
                     switch (control.name)
