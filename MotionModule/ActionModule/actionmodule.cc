@@ -443,7 +443,7 @@ bool ActionModule::start(int pageIndex)
 {
   if (pageIndex < 1 || pageIndex >= MAXNUM_PAGE)
   {
-    cerr << "[ActionModule::Start] Invalid page index: " << pageIndex << endl;
+    cerr << "[ActionModule::start] Invalid page index: " << pageIndex << endl;
     return false;
   }
 
@@ -474,7 +474,7 @@ bool ActionModule::start(int index, PAGE *page)
 {
   if (d_isRunning)
   {
-    cerr << "[ActionModule::Start] Ignoring request to play page " << index << " -- already playing page " << d_playingPageIndex << endl;
+    cerr << "[ActionModule::start] Ignoring request to play page " << index << " -- already playing page " << d_playingPageIndex << endl;
     return false;
   }
 
@@ -482,7 +482,7 @@ bool ActionModule::start(int index, PAGE *page)
 
   if (d_playingPage.header.repeat == 0 || d_playingPage.header.stepnum == 0)
   {
-    cerr << "[ActionModule::Start] Page index " << index << " has no steps to perform" << endl;
+    cerr << "[ActionModule::start] Page index " << index << " has no steps to perform" << endl;
     return false;
   }
 
