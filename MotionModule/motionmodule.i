@@ -17,6 +17,9 @@ namespace bold
   {
   public:
     ~ActionModule();
+
+    bool start(std::string namePage);
+    bool isRunning();
   };
 
   class HeadModule : public MotionModule

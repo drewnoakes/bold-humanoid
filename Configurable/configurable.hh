@@ -1,7 +1,6 @@
 #pragma once
 
 #include <sstream>
-#include <iostream>
 #include <cassert>
 
 namespace bold
@@ -41,7 +40,8 @@ namespace bold
     template <typename T>
     T getParam(std::string const& path, T const& defVal)
     {
-      return getParam(d_nameSpace, path, defVal);
+      T val = getParam(d_nameSpace, path, defVal);
+      return val;
     }
 
   protected:

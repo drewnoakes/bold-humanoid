@@ -117,3 +117,7 @@ vision.Line.saturation = 0
 vision.Line.saturationRange = 70
 vision.Line.value = 255
 vision.Line.valueRange = 70
+
+option= Param()
+option.lookatfeet = Param()
+option.lookatfeet.feetX = 10

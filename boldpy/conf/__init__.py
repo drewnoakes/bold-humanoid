@@ -1,7 +1,8 @@
 import bold
 from boldpy.conf.confimpl import *
 
-bold.Configurable.setConfImpl(PyConf(reportMissing=True).__disown__())
+_confimpl = PyConf(reportMissing=False).__disown__()
+bold.Configurable.setConfImpl(_confimpl)
 
 from boldpy.conf.defparams import *
 

@@ -25,12 +25,3 @@ namespace bold
     double d_feetY;
   };
 }
-
-
-
-
-
-
-
-
-
