@@ -67,9 +67,9 @@ void Agent::initCamera()
         cerr << "[Agent::initCamera] Setting camera control '" << name << "' failed -- set " << value << " but read back " << retrieved << endl;
     }
   };
-  trySetCameraControl("Auto WB", 0);
-  trySetCameraControl("Exposure, Auto", 3);
-  trySetCameraControl("Exposure, Auto Priority", 0);
+  trySetCameraControl("Auto WB", 0); // off
+  trySetCameraControl("Exposure, Auto", 1); // manual
+  trySetCameraControl("Exposure, Auto Priority", 0); // off
   trySetCameraControl("Backlight Compensation", 0);
   trySetCameraControl("Exposure (Absolute)", 133);
   trySetCameraControl("Brightness", 128);
