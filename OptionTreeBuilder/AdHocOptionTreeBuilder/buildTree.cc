@@ -312,31 +312,32 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     // ---------- TRANSITIONS ----------
 
     standUpState->transitionTo(lookForBallState)
-                ->when(hasTerminated(standUpState));
+      ->when(hasTerminated(standUpState));
 
     lookForBallState->transitionTo(lookAtBallState)
-                    ->when(ballVisibleCondition);
+      ->when(ballVisibleCondition);
 
     lookAtBallState->transitionTo(lookForBallState)
-                  ->when(ballLostCondition);
+      ->when(ballLostCondition);
 
     lookAtBallState->transitionTo(leftDiveState)
-                   ->when([]()
-                   {
-                     auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
-                     return ball && ball->y() < 1.0 && ball->x() < 0;
-                   });
+      ->when([]()
+      {
+        auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+        return ball && ball->y() < 1.0 && ball->x() < 0;
+      });
 
     // TODO introduce rightDiveState
-//     lookAtBallState->transitionTo(rightDiveState)
-//                    ->when([]()
-//                    {
-//                      auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
-//                      return ball && ball->y() < 1.0 && ball->x() > 0;
-//                    });
+//     lookAtBallState
+//       ->transitionTo(rightDiveState)
+//       ->when([]()
+//       {
+//         auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+//         return ball && ball->y() < 1.0 && ball->x() > 0;
+//       });
 
     leftDiveState->transitionTo(lookForBallState)
-                 ->when(hasTerminated(leftDiveState));
+      ->when(hasTerminated(leftDiveState));
   }
   else
   {
