@@ -2,20 +2,26 @@
 
 vector<Control> Camera::listControls()
 {
-  auto setValue = [this](unsigned const& id, int const& value)
-  {
-    v4l2_control ctrl = {0,};
-    ctrl.id = id;
-    ctrl.value = value;
-    ioctl(d_fd, VIDIOC_S_CTRL, &ctrl);
-  };
-
   auto getValue = [this](unsigned const& id) -> int
   {
     v4l2_control ctrl = {0,};
     ctrl.id = id;
     ioctl(d_fd, VIDIOC_G_CTRL, &ctrl);
     return ctrl.value;
+  };
+
+  auto setValue = [this,getValue](unsigned const& id, int const& value)
+  {
+    v4l2_control ctrl = {0,};
+    ctrl.id = id;
+    ctrl.value = value;
+    ioctl(d_fd, VIDIOC_S_CTRL, &ctrl);
+
+    // Test whether the value we set was taken or not
+    int retrieved = getValue(id);
+
+    if (retrieved != value)
+      cerr << "[Camera::setValue] Setting camera control with ID " << id << " failed -- set " << value << " but read back " << retrieved << endl;
   };
 
   vector<Control> controls;
