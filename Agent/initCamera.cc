@@ -65,8 +65,8 @@ void Agent::initCamera()
   trySetCameraControl("Sharpness", 191);
   trySetCameraControl("Backlight Compensation", 0);
   trySetCameraControl("Exposure, Auto", 3);
-  trySetCameraControl("Exposure (Absolute)", 133);
   trySetCameraControl("Exposure, Auto Priority", 0);
+  trySetCameraControl("Exposure (Absolute)", 133);
 
   cout << "[Agent::initCamera] Controls (" << d_camera->getControls().size() << "):" << endl;;
   for (Control const& control : d_camera->getControls())
