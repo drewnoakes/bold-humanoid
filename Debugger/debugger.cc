@@ -74,13 +74,13 @@ void Debugger::update(shared_ptr<CM730> cm730)
   bool hasGreen = d_lastLedFlags & LED_GREEN;
   bool hasBlue = d_lastLedFlags & LED_BLUE;
 
-  // TODO track whether there's actually anything to update, avoiding unnecessary DebugState changes  
-  
+  // TODO track whether there's actually anything to update, avoiding unnecessary DebugState changes
+
   AgentState::getInstance().set(
     make_shared<DebugState const>(
       d_gameControllerMessageCount, d_ignoredMessageCount,
       d_sentTeamMessageCount, d_receivedTeamMessageCount,
-      d_eyeColour, d_headColour, 
+      d_eyeColour, d_headColour,
       hasRed, hasGreen, hasBlue
     )
   );

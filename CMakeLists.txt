@@ -482,7 +482,7 @@ endif(UPLOAD_SCP_PATH)
 if(BUNDLES_PATH)
   add_custom_command(OUTPUT bundle.stamp
     COMMAND if [ \"\${TAG}\" != \"\" ]\;
-          then 
+          then
             git tag \${TAG}\;
             mkdir -p ${BUNDLES_PATH}/\${TAG}\;
             cp -r ${BOLDHUMANOID_DEPLOY_FILES} ${BUNDLES_PATH}/\${TAG}\;
@@ -491,7 +491,7 @@ if(BUNDLES_PATH)
           fi
     COMMAND touch bundle.stamp
     DEPENDS boldhumanoid
-    
+
     )
 
   add_custom_target(bundle DEPENDS bundle.stamp)

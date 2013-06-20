@@ -151,7 +151,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
 
     // Send the instruction packet
     int bytesWritten = d_platform->writePort(txpacket, length);
-    
+
     if (bytesWritten == length)
     {
       // Now, handle the response...
@@ -302,7 +302,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
               res = CommResult::RX_CORRUPT;
 
               cerr << "[CM730::txRxPacket] Received checksum didn't match" << endl;
-              
+
               for (int j = 0; j <= receivedCount - 2; j++)
                 rxpacket[j] = rxpacket[j + 2];
 
@@ -469,7 +469,7 @@ bool CM730::changeBaud(unsigned baud)
 bool CM730::dxlPowerOn()
 {
   cout << "[CM730::dxlPowerOn] Turning Dynamixel power on" << endl;
-  
+
   if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, 1, 0) == CommResult::SUCCESS)
   {
 //        WriteWord(CM730::ID_CM, CM730::P_LED_HEAD_L, MakeColor(255, 128, 0), 0);
