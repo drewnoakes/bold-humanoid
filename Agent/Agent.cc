@@ -86,8 +86,17 @@ Agent::Agent()
   d_streamer->registerControls("ambulator", d_ambulator->getControls());
   d_streamer->registerControls("camera", d_camera->getControls());
   d_streamer->registerControls("localiser", d_localiser->getControls());
-  for (auto const& pair : d_visualCortex->getControlsByFamily())
+    for (auto const& pair : d_visualCortex->getControlsByFamily())
     d_streamer->registerControls(pair.first, pair.second);
+
+  string sayings[] = {
+    "Hello", "Bold Hearts", "Hooray", "Oh my",
+    "The rain in spain falls mainly in the plain"
+  };
+  vector<Control> speechControls;
+  for (auto saying : sayings)
+    speechControls.push_back(Control::createAction(saying, [this,saying](){ d_voice->say(saying); }));
+  d_streamer->registerControls("speech", speechControls);
 
   d_debugger->update(d_cm730);
 
