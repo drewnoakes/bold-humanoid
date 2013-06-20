@@ -83,12 +83,12 @@ define(
             var isImageLarge = false;
             this.$canvas.click(function (event)
             {
-
                 var $controlDivs = $('.module.camera .control-container');
                 if (isImageLarge) {
                     isImageLarge = false;
                     this.$canvas.css({width: this.canvas.width});
                     $controlDivs.delay(400).fadeIn();
+                    this.pixelLabelInspector.setVisible(true);
                 } else {
                     if (event.shiftKey) {
                         var rgb = this.context.getImageData(event.offsetX, event.offsetY, 1, 1).data,
@@ -96,6 +96,7 @@ define(
                         console.log(Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255));
                     } else {
                         isImageLarge = true;
+                        this.pixelLabelInspector.setVisible(false);
                         this.$hoverPixelInfo.text('');
                         this.$canvas.css({width: '100%'});
                         $controlDivs.hide();

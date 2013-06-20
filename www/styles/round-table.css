@@ -242,6 +242,11 @@ div.module.camera > div.pane-container
     min-height: 410px
 }
 
+div.module.camera canvas.pixel-label-inspector
+{
+    margin: 16px 0;
+}
+
 div.module.camera div.control-container.camera-controls
 {
     position: absolute;

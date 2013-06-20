@@ -12,6 +12,7 @@ define(
         var PixelLabelInspector = function(width, height)
         {
             this.canvas = document.createElement('canvas');
+            this.canvas.className = 'pixel-label-inspector';
             this.canvas.width = width;
             this.canvas.height = height;
             this.context = this.canvas.getContext('2d');
