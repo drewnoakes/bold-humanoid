@@ -10,6 +10,7 @@ Debugger::Debugger()
   d_lastHeadInt(0),
   d_gameControllerMessageCount(0),
   d_ignoredMessageCount(0),
+  d_seenGameControllerMessageYet(false),
   d_eyeColour(0,0,0),
   d_headColour(0,0,0)
 {}

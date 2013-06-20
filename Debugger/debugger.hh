@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <iostream>
 
 #include "../Colour/colour.hh"
 
@@ -9,7 +10,7 @@ namespace bold
   class CM730;
 
   // TODO this class's name suggests something grander than its reality
-  
+
   class Debugger
   {
   public:
@@ -19,7 +20,17 @@ namespace bold
     // UDP Message Counts
     //
 
-    void notifyReceivedGameControllerMessage() { d_gameControllerMessageCount++; }
+    void notifyReceivedGameControllerMessage()
+    {
+      if (!d_seenGameControllerMessageYet)
+      {
+        std::cout << "[Debugger::notifyReceivedGameControllerMessage] Seen first message from game controller" << std::endl;
+        d_seenGameControllerMessageYet = true;
+      }
+
+      d_gameControllerMessageCount++;
+    }
+    
     void notifyIgnoringUnrecognisedMessage() { d_ignoredMessageCount++; }
     void notifySendingTeamMessage() { d_sentTeamMessageCount++; }
     void notifyReceivedTeamMessage() { d_receivedTeamMessageCount++; }
@@ -39,7 +50,7 @@ namespace bold
      * Currently only updates LEDs.
      */
     void update(std::shared_ptr<CM730> cm730);
-    
+
   private:
     void showEyeColour(Colour::bgr const& colour) { d_eyeColour = colour; }
     void showHeadColour(Colour::bgr const& colour) { d_headColour = colour; }
@@ -51,6 +62,7 @@ namespace bold
     unsigned d_ignoredMessageCount;
     unsigned d_sentTeamMessageCount;
     unsigned d_receivedTeamMessageCount;
+    bool d_seenGameControllerMessageYet;
 
     Colour::bgr d_eyeColour;
     Colour::bgr d_headColour;
