@@ -73,7 +73,6 @@ add_class(BOLDHUMANOID
   ./Agent/registerStateTypes.cc
   ./Agent/run.cc
   ./Agent/setOptionTree.cc
-  ./Agent/standUpIfFallen.cc
   ./Agent/stop.cc
   ./Agent/think.cc
 )
