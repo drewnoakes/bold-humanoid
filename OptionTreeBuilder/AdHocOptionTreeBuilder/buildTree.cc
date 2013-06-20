@@ -14,6 +14,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          shared_ptr<HeadModule> headModule,
                                                          shared_ptr<WalkModule> walkModule)
 {
+  const unsigned UNUM_GOALIE = 1;
+  const unsigned UNUM_GOALIE_PENALTY = 5;
+
   // GENERAL FUNCTIONS
 
   auto secondsSinceStart = [](double seconds, FSMStatePtr state)
@@ -286,15 +289,18 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   // ========== PLAYING ==========
   //
 
-  // Goalie behavior
-  if (uniformNumber == 1)
+  if (uniformNumber == UNUM_GOALIE)
   {
-    // Start state: stand up
+    // Goalie behaviour for normal game play
+
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
+
+    // TODO implement a basic goalie behaviour
   }
-  // Penalty goalie behaviour
-  else if (uniformNumber == 5)
+  else if (uniformNumber == UNUM_GOALIE_PENALTY)
   {
+    // Goalie behaviour during penalties
+
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
 
     auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
