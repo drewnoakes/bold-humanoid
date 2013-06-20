@@ -4,9 +4,10 @@ define(
         'Protocols',
         'DataProxy',
         'ControlBuilder',
+        'PixelLabelInspector',
         'util/Colour'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, Colour)
+    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, PixelLabelInspector, Colour)
     {
         'use strict';
 
@@ -41,8 +42,12 @@ define(
             this.canvas = this.$canvas.get(0);
             this.$hoverPixelInfo = $('<div></div>', {'class': 'hover-pixel-info'});
 
+            this.pixelLabelInspector = new PixelLabelInspector(320, 100);
+            this.pixelLabelInspector.setVisible(false);
+
             this.$container.append(this.$canvas)
-                           .append(this.$hoverPixelInfo);
+                           .append(this.$hoverPixelInfo)
+                           .append(this.pixelLabelInspector.canvas);
 
             this.bindInteraction();
 
@@ -99,7 +104,8 @@ define(
             }.bind(this));
             this.$canvas.mouseleave(function ()
             {
-                this.$hoverPixelInfo.text('')
+                this.$hoverPixelInfo.text('');
+                this.pixelLabelInspector.setVisible(false);
             }.bind(this));
             this.$canvas.mousemove(function (e)
             {
@@ -114,6 +120,8 @@ define(
                     ' RGB: ' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] +
                     ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255)
                 );
+                this.pixelLabelInspector.setVisible(true);
+                this.pixelLabelInspector.highlightHsv(hsv);
             }.bind(this));
         };
 
