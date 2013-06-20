@@ -53,19 +53,9 @@ void Agent::initCamera()
   {
     Maybe<Control> c = d_camera->getControl(name);
     if (!c.hasValue())
-    {
       cerr << "[Agent::initCamera] No camera control found for: " << name << endl;
-    }
     else
-    {
       (*c).setValue(value);
-
-      // Test whether the value we set was taken or not
-      int retrieved = (*c).getValue();
-
-      if (retrieved != value)
-        cerr << "[Agent::initCamera] Setting camera control '" << name << "' failed -- set " << value << " but read back " << retrieved << endl;
-    }
   };
   trySetCameraControl("Auto WB", 0); // off
   trySetCameraControl("Exposure, Auto", 1); // manual
