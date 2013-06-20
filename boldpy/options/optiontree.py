@@ -28,10 +28,10 @@ class PyOptionTreeBuilder:
         self.createActionOptions(tree, actionOptions)
         
         sit = ActionOption("sitdownaction", "sit down").__disown__()
-        tree.addOption(sit, True)
+        tree.addOption(sit)
 
         sw = StopWalking("stopwalking").__disown__()
-        tree.addOption(sw)
+        tree.addOption(sw, True)
 
         laf = LookAtFeet("lookatfeet").__disown__()
         tree.addOption(laf)

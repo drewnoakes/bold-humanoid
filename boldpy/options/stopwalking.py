@@ -13,8 +13,10 @@ class StopWalking(bold.Option):
     def runPolicy(self):
         print("StopWalking.runPolicy()")
         amb = getAgent().getAmbulator()
-        moveDir = numpy.array([[0],
-                               [0]])
+        moveDir = numpy.array([[0.0],
+                               [0.0]])
+        print(moveDir)
+        print(amb.setMoveDir)
         amb.setMoveDir(moveDir)
-        amd.setTurnAngle(0);
+        amb.setTurnAngle(0);
         return []
