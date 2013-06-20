@@ -390,7 +390,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->when(ballLostCondition);
 
     // start approaching the ball when we have the confidence that it's really there
-    // TODO this doesn't filter the ball position, so may be mislead by jitter
+    // TODO this doesn't filter the ball position, so may be misled by jitter
     lookAtBallState
       ->transitionTo(approachBallState)
       ->when(oneShot([ballVisibleCondition]() { return stepUpDownThreshold(10, ballVisibleCondition); }));
