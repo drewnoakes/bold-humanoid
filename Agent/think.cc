@@ -85,13 +85,6 @@ void Agent::think()
     t.timeEvent("Process Human Input");
 
     //
-    // Get up, if we've fallen over
-    //
-    // TODO make this a behaviour
-    standUpIfFallen();
-    t.timeEvent("Stand Up");
-
-    //
     // Flush out new walking parameters
     //
     // TODO this becomes part of the motion loop
