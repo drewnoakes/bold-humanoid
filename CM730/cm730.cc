@@ -413,7 +413,7 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
 {
   unsigned txSize = 8 + (bytesPerDevice * deviceCount);
   if (txSize > 143)
-    cerr << "[CM730::syncWrite] Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size (" << deviceCount << " devices, " << bytesPerDevice << " bytes per device)" << endl;
+    cerr << "[CM730::syncWrite] Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size (" << (int)deviceCount << " devices, " << (int)bytesPerDevice << " bytes per device)" << endl;
   uchar txpacket[txSize];
   // Sync write instructions do not receive status packet responses, so no buffer is needed.
   uchar* rxpacket = nullptr;
@@ -448,8 +448,7 @@ bool CM730::connect()
 {
   if (!d_platform->openPort())
   {
-    cerr << "[CM730::connect] Failed to open CM730 port" << endl;
-    cerr << "[CM730::connect] Either the CM730 is in use by another program, or you do not have root privileges" << endl;
+    cerr << "[CM730::connect] Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)" << endl;
     return false;
   }
 
@@ -495,7 +494,7 @@ void CM730::torqueEnable(bool enable)
     if (error != 0)
     {
       // TODO better reporting of error, across all CM730 operations
-      cerr << "[CM730::torqueEnable] error for joint ID " << jointId << ": 0x" << hex << jointId << dec << endl;
+      cerr << "[CM730::torqueEnable] Error for joint ID " << (int)jointId << ": 0x" << hex << (int)error << dec << endl;
     }
   }
 }
