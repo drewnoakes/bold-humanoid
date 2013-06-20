@@ -17,6 +17,7 @@
 #include "../../Option/LookAtGoal/lookatgoal.hh"
 #include "../../Option/StopWalking/stopwalking.hh"
 #include "../../Debugger/debugger.hh"
+#include "../../StateObserver/FallDetector/falldetector.hh"
 
 #include <algorithm>
 #include <fstream>

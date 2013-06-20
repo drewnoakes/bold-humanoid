@@ -117,7 +117,8 @@ int main(int argc, char **argv)
                                                 agent->getAmbulator(),
                                                 agent->getActionModule(),
                                                 agent->getHeadModule(),
-                                                agent->getWalkModule());
+                                                agent->getWalkModule(),
+                                                agent->getFallDetector());
 
   agent->setOptionTree(move(optionTree));
 

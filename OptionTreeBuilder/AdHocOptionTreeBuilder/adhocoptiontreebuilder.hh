@@ -21,6 +21,7 @@ namespace bold
                                           std::shared_ptr<Ambulator> ambulator,
                                           std::shared_ptr<ActionModule> actionModule,
                                           std::shared_ptr<HeadModule> headModule,
-                                          std::shared_ptr<WalkModule> walkModule);
+                                          std::shared_ptr<WalkModule> walkModule,
+                                          std::shared_ptr<FallDetector> fallDetector);
   };
 }

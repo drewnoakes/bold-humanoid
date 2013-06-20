@@ -14,6 +14,7 @@ namespace bold
   class Debugger;
   class HeadModule;
   class WalkModule;
+  class FallDetector;
 
   class OptionTreeBuilder
   {
@@ -25,6 +26,7 @@ namespace bold
                                                   std::shared_ptr<Ambulator> ambulator,
                                                   std::shared_ptr<ActionModule> actionModule,
                                                   std::shared_ptr<HeadModule> headModule,
-                                                  std::shared_ptr<WalkModule> walkModule) = 0;
+                                                  std::shared_ptr<WalkModule> walkModule,
+                                                  std::shared_ptr<FallDetector> fallDetector) = 0;
   };
 }
