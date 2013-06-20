@@ -9,6 +9,8 @@ Agent::Agent()
     d_autoGetUpFromFallen(true),
     d_useOptionTree(true)
 {
+  ThreadId::setThreadId(ThreadId::ThinkLoop);
+
   cout << "[Agent::Agent] Start" << endl;
 
   auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));

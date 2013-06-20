@@ -2,8 +2,6 @@
 
 void Agent::run()
 {
-  ThreadId::setThreadId(ThreadId::ThinkLoop);
-
   cout << "[Agent::run] Start" << endl;
 
   if (d_isRunning)
@@ -28,7 +26,7 @@ void Agent::run()
     cout << "[Agent::run] Getting into initial pose" << endl;
     auto sit = d_optionTree->getOption("sitdownaction");
     cout << "sit: " << (sit ? "yes" : "no") << endl;
-
+    cout << sit->getID() << endl;
     while (sit->hasTerminated() == 0.0)
     {
       sit->runPolicy();
