@@ -42,7 +42,7 @@ define(
             this.canvas = this.$canvas.get(0);
             this.$hoverPixelInfo = $('<div></div>', {'class': 'hover-pixel-info'});
 
-            this.pixelLabelInspector = new PixelLabelInspector(320, 100);
+            this.pixelLabelInspector = new PixelLabelInspector(320, 85);
             this.pixelLabelInspector.setVisible(false);
 
             this.$container.append(this.$canvas)
