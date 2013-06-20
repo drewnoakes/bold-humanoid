@@ -32,6 +32,7 @@ namespace bold
   class OptionTree;
   class Spatialiser;
   class VisualCortex;
+  class Voice;
   class WalkModule;
 
   class Agent : public Configurable
@@ -105,11 +106,12 @@ namespace bold
     std::shared_ptr<DataStreamer> d_streamer;
     std::shared_ptr<Debugger> d_debugger;
     std::shared_ptr<FieldMap> d_fieldMap;
+    std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
     std::shared_ptr<Joystick> d_joystick;
     std::shared_ptr<Spatialiser> d_spatialiser;
     std::shared_ptr<Localiser> d_localiser;
     std::shared_ptr<VisualCortex> d_visualCortex;
-    std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
+    std::shared_ptr<Voice> d_voice;
 
     double d_joystickXAmpMax;
     double d_joystickYAmpMax;

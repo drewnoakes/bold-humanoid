@@ -38,6 +38,7 @@
 #include "../StateObserver/FallDetector/falldetector.hh"
 #include "../ThreadId/threadid.hh"
 #include "../VisualCortex/visualcortex.hh"
+#include "../Voice/voice.hh"
 
 #include "../CM730/cm730.hh"
 #include "../CM730Platform/CM730Linux/cm730linux.hh"

@@ -13,6 +13,10 @@ Agent::Agent()
 
   cout << "[Agent::Agent] Start" << endl;
 
+  cout << "[Agent::Agent] Creating voice" << endl;
+  d_voice = make_shared<Voice>();
+  d_voice->say("Bold Hearts are go");
+
   auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));
   cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
 
