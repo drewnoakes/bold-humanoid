@@ -417,6 +417,10 @@ add_class(BOLDHUMANOID
   ./VisualCortex/streamDebugImage.cc
 )
 
+add_class(BOLDHUMANOID
+  ./Voice/voice.cc
+)
+
 #
 ## Reusable object files target
 #
@@ -439,7 +443,7 @@ add_executable(boldhumanoid
 #
 ## Link executable to libraries
 #
-set(BOLDHUMANOID_LINK_LIBRARIES ${OpenCV_LIBS} ${SigC++_LIBRARIES} websockets pthread rt)
+set(BOLDHUMANOID_LINK_LIBRARIES ${OpenCV_LIBS} ${SigC++_LIBRARIES} websockets pthread rt espeak)
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
 #
