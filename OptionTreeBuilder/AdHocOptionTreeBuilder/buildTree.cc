@@ -274,6 +274,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     ->transitionTo(penalizedState)
     ->when(isPenalised);
 
+  playingState
+    ->transitionTo(readyState)
+    ->when(nonPenalisedPlayMode(PlayMode::READY));
+
+  playingState
+    ->transitionTo(setState)
+    ->when(nonPenalisedPlayMode(PlayMode::SET));
+
   penalizedState
     ->transitionTo(setState)
     ->when(nonPenalisedPlayMode(PlayMode::SET));
