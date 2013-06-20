@@ -166,8 +166,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   tree->addOption(rightKick);
 
   // Look around
-  shared_ptr<Option> lookAround = make_shared<LookAround>("lookaround", headModule);
+  shared_ptr<Option> lookAround = make_shared<LookAround>("lookaround", headModule, 100.0);
   tree->addOption(lookAround);
+
+  // Look around narrow
+  shared_ptr<Option> lookAroundNarrow = make_shared<LookAround>("lookaroundnarrow", headModule, 45.0);
+  tree->addOption(lookAroundNarrow);
 
   // Look at ball
   shared_ptr<Option> lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel, headModule);
@@ -184,6 +188,18 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   //Dive left
   shared_ptr<Option> leftdive = make_shared<ActionOption>("diveleftaction", "left_dive", actionModule);
   tree->addOption(leftdive);
+
+  //Dive right
+  shared_ptr<Option> rightdive = make_shared<ActionOption>("diverightaction", "right_dive", actionModule);
+  tree->addOption(rightdive);
+
+  //Big Step left
+  shared_ptr<Option> bigStepLeft = make_shared<ActionOption>("bigstepleftaction", "big-step-l", actionModule);
+  tree->addOption(bigStepLeft);
+
+  //Big Step right
+  shared_ptr<Option> bigStepRight = make_shared<ActionOption>("bigsteprightaction", "big-step-r", actionModule);
+  tree->addOption(bigStepRight);
 
   // FSM
   auto winFsm = make_shared<FSMOption>("win");
@@ -335,6 +351,16 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
 
+    auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
+
+    auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
+
+    //TODO Big step to the right and left ready to be used...
+
+    //auto leftBigStepState = playingFsm->newState("bigStepLeft", {bigStepLeft});
+
+    //auto righBigStepState = playingFsm->newState("bigStepRight", {bigStepRight});
+
     // TODO implement a basic goalie behaviour
   }
   else if (uniformNumber == UNUM_GOALIE_PENALTY)
@@ -343,11 +369,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
 
-    auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
+    auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAroundNarrow});
 
     auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
 
     auto leftDiveState = playingFsm->newState("leftdive", {leftdive});
+
+    auto rightDiveState = playingFsm->newState("rightdive", {rightdive});
 
     // ---------- TRANSITIONS ----------
 
@@ -361,23 +389,28 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->when(ballLostCondition);
 
     lookAtBallState->transitionTo(leftDiveState)
-      ->when([]()
+      ->when(oneShot([]() { return trueForMillis(200, []()
       {
         auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
-        return ball && ball->y() < 1.0 && ball->x() < 0;
-      });
+        bool dive = ball && ball->y() < 1.0 && ball->x() < -0.1;
+        if (dive) cout << "dive left - ball: " << (*ball).head<2>().transpose() << endl;
+        return dive;
+      }); }));
 
-    // TODO introduce rightDiveState
-//     lookAtBallState
-//       ->transitionTo(rightDiveState)
-//       ->when([]()
-//       {
-//         auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
-//         return ball && ball->y() < 1.0 && ball->x() > 0;
-//       });
+    lookAtBallState->transitionTo(rightDiveState)
+      ->when(oneShot([](){ return trueForMillis(200, []()
+      {
+        auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+        bool dive = ball && ball->y() < 1.0 && ball->x() > 0.1;
+	if (dive) cout << "dive right - ball: " << (*ball).head<2>().transpose() << endl;
+	return dive;
+      }); }));
 
     leftDiveState->transitionTo(lookForBallState)
       ->when(hasTerminated(leftDiveState));
+
+    rightDiveState->transitionTo(lookForBallState)
+      ->when(hasTerminated(rightDiveState));
   }
   else
   {

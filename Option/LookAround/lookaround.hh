@@ -9,14 +9,14 @@ namespace bold
   class LookAround : public Option
   {
   public:
-    LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule)
+    LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle)
     : Option(id),
       d_headModule(headModule),
       d_lastTimeSeconds(0)
     {
       d_topAngle      = getParam("topAngle",     30.0);
       d_bottomAngle   = getParam("bottomAngle", -25.0);
-      d_sideAngle     = getParam("sideAngle",   100.0);
+      d_sideAngle     = sideAngle; //getParam("sideAngle",   100.0);
       d_durationHoriz = getParam("durationHoriz", 2.3);
       d_durationVert  = getParam("durationVert",  0.2);
     }
