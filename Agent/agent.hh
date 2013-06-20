@@ -129,8 +129,6 @@ namespace bold
 
     void readSubBoardData();
 
-    void standUpIfFallen();
-
     void processInputCommands();
 
     void readStaticHardwareState();
