@@ -21,7 +21,6 @@
 // (grand)parent classes, just to be sure). Must be listed before any
 // use
 %shared_ptr(bold::ActionModule)
-%shared_ptr(bold::ActionOption)
 %shared_ptr(bold::Agent)
 %shared_ptr(bold::AgentFrameState)
 %shared_ptr(bold::AlarmState)
@@ -32,9 +31,6 @@
 %shared_ptr(bold::CameraFrameState)
 %shared_ptr(bold::Configurable)
 %shared_ptr(bold::DebugState)
-%shared_ptr(bold::FSMOption)
-%shared_ptr(bold::FSMState)
-%shared_ptr(bold::FSMTransition)
 %shared_ptr(bold::GameState)
 %shared_ptr(bold::HardwareState)
 %shared_ptr(bold::HeadModule)
