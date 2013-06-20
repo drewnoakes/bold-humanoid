@@ -1,4 +1,6 @@
 import bold
+import logging
+from boldpy.agent import *
 
 class ActionOption(bold.Option):
 
@@ -27,20 +29,28 @@ class ActionOption(bold.Option):
     def hasTerminated(self):
         """ Return 1.0 if ActionModule is finshed, 0.0 otherwise. """
 
+        print("ActionOption.hasTerminated()")
         if not self.started:
+            print("Not started yet")
             return 0.0
 
         if (getAgent().getActionModule().isRunning()):
+            print("Action module is running")
             return 0.0
 
+        print("Started and action module not running")
         return 1.0;
 
     def runPolicy(self):
         """ Starts and runs action; returns empty list """
 
-        if not self.started and not getAgent().getActionModule().isRunning:
-            logging.info('Sarting action: ' + str(getID()))
-            getAgent().getActionModule().start(self.actionName)
-            self.started = true
-
+        print("ActioNOption.runPolicy()")
+        
+        if not self.started and not getAgent().getActionModule().isRunning():
+            print('Sarting action: ' + str(self.getID()))
+            am = getAgent().getActionModule()
+            res = am.start(self.actionName)
+            print("Success" if res else "Fail")
+            self.started = True
+   
         return [];

@@ -14,13 +14,12 @@ from .lookatfeet import *
 class PyOptionTreeBuilder:
     def createActionOptions(self, tree, namesScripts):
         for ns in namesScripts:
-            o = ActionOption(ns[0], ns[1])
-            o.thisown = 0
+            o = ActionOption(ns[0], ns[1]).__disown__()
             tree.addOption(o)
 
     def createOptions(self, tree):
         actionOptions = [
-            ("sitdownaction", "sit down"),
+            #("sitdownaction", "sit down"),
             ("standupaction", "stand up"),
             ("leftkickaction", "lk"),
             ("rightkickaction", "rk"),
@@ -28,10 +27,13 @@ class PyOptionTreeBuilder:
 
         self.createActionOptions(tree, actionOptions)
         
-        sw = StopWalking("stopwalking");
-        tree.addOption(sw, True)
+        sit = ActionOption("sitdownaction", "sit down").__disown__()
+        tree.addOption(sit, True)
 
-        laf = LookAtFeet("lookatfeet")
+        sw = StopWalking("stopwalking").__disown__()
+        tree.addOption(sw)
+
+        laf = LookAtFeet("lookatfeet").__disown__()
         tree.addOption(laf)
 
     def buildTree(self):
