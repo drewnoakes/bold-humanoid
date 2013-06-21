@@ -30,6 +30,7 @@
 %shared_ptr(bold::BodyPart)
 %shared_ptr(bold::BodyState)
 %shared_ptr(bold::CameraFrameState)
+%shared_ptr(bold::CameraModel)
 %shared_ptr(bold::Configurable)
 %shared_ptr(bold::DebugState)
 %shared_ptr(bold::GameState)
@@ -59,6 +60,7 @@
 %include "../VisualCortex/visualcortex.i"
 %include "../Agent/agent.i"
 %include "../BodyPart/bodypart.i"
+%include "../CameraModel/cameramodel.i"
 %include "../StateObject/stateobject.i"
 %include "../StateObject/BodyState/bodystate.i"
 %include "../AgentState/agentstate.i"
