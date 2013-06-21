@@ -1,4 +1,5 @@
 import bold
+import time
 
 class FSMTransition:
     
@@ -24,7 +25,14 @@ class FSMTransition:
         self.onFire = None
         self.parentState = parentState
         self.childState = None
-        
+
+    def when(self, condition):
+        self.condition = condition
+        return self
+
+    def notify(self, callback):
+        self.onFire = callback
+        return self
 
 class FSMState:
 
@@ -42,7 +50,7 @@ class FSMState:
           having terminated if this is true and this state is active.
         transitions: A list of FSMTransition objects that determine
           the possible transitions out of this state.
-        startTime: The time, measured with time.time() in seconds,
+        startTimeSeconds: The time, measured with time.time() in seconds,
           when this action became active.
     """
 
@@ -51,11 +59,12 @@ class FSMState:
         self.options = options
         self.final = final
         self.transitions = []
-        self.startTime = 0
+        self.startTimeSeconds = 0
+        self.onEnter = None
 
     def secondsSinceStart(self):
         """Return the difference between now and start time. """
-        return time.time() - self.startTime
+        return time.time() - self.startTimeSeconds
 
     def allOptionsTerminated(self):
         """Return whether all options in this state report
@@ -66,6 +75,13 @@ class FSMState:
         """Add a new transition from this state, and return it"""
         t = FSMTransition(name, self)
         t.childState = childState
+        self.transitions.append(t)
+        return t
+    
+    def transitionTo(self, targetState):
+        t = FSMTransition("")
+        t.parentState = self
+        t.childState = targetState
         self.transitions.append(t)
         return t
 
@@ -129,7 +145,12 @@ class FSMOption(bold.Option):
         """
         self.states.append(state)
         if startState:
-            self.startState = startState
+            self.startState = state
+
+    def createAndAddState(self, name = "", options = [], startState = False, finalState = False):
+        s = FSMState(name, options, finalState)
+        self.addState(s, startState)
+        return s
 
     def addTransition(self, transition):
         """Add a transition to this FSM
@@ -138,4 +159,45 @@ class FSMOption(bold.Option):
           transition: FSMTransition object to add.
         """
         self.transitions.append(transition)
+
+    def runPolicy(self):
+        if self.curState is None:
+            self.curState = self.startState
+            if self.curState.onEnter is not None:
+                self.curState.onEnter()
+
+        MAX_LOOP_COUNT = 20
+
+        loopCount = 0
+        transitionMade = False
+        while True:
+            transitionMade = False
+            for t in self.curState.transitions:
+                if (t.condition()):
+                    print("[FSMOption::runPolicy] (" + self.getID() + ") transitioning from '" +
+                          self.curState.name + "' to '" + t.childState.name +
+                          "' after " + str((time.time() - self.curState.startTimeSeconds) * 1000) + "ms")
+
+                    self.curState = t.childState
+                    self.curState.startTimeSeconds = time.time()
+
+                    transitionMade = True
+
+                    if t.onFire is not None:
+                        t.onFire()
+
+                    if self.curState.onEnter is not None:
+                        self.curState.onEnter()
+
+                    break # loop over transitions
+
+            if transitionMade:
+                break
+
+            loopCount += 1
+            if loopCount > MAX_LOOP_COUNT:
+                print("[FSMOption::runPolicy] Transition walk loop exceeded maximum number of iterations. Breaking from loop.")
+                break
+
+        return self.curState.options
 

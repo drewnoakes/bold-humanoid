@@ -21,13 +21,13 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 def thinkEndCallback():
     print("===== HELLO =====")
-    cameraState = bold.AgentState.getCameraFrameState()
-    print(cameraState)
-    print("Ball visible: ", cameraState.isBallVisible())
-    ballObs = cameraState.getBallObservation()
-    print(ballObs)
-    goalObs = cameraState.getGoalObservations()
-    print(goalObs)
+    #cameraState = bold.AgentState.getCameraFrameState()
+    #print(cameraState)
+    #print("Ball visible: ", cameraState.isBallVisible())
+    #ballObs = cameraState.getBallObservation()
+    #print(ballObs)
+    #goalObs = cameraState.getGoalObservations()
+    #print(goalObs)
 
 
 def usage():

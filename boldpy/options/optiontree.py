@@ -30,23 +30,39 @@ class PyOptionTreeBuilder:
 
         self.createActionOptions(tree, actionOptions)
         
-        sit = ActionOption("sitdownaction", "sit down").__disown__()
-        tree.addOption(sit)
+        self.sit = ActionOption("sitdownaction", "sit down").__disown__()
+        tree.addOption(self.sit)
 
-        sw = StopWalking("stopwalking").__disown__()
-        tree.addOption(sw)
+        self.sw = StopWalking("stopwalking").__disown__()
+        tree.addOption(self.sw)
 
-        laf = LookAtFeet("lookatfeet").__disown__()
-        tree.addOption(laf)
+        self.laf = LookAtFeet("lookatfeet").__disown__()
+        tree.addOption(self.laf)
 
-        lar = LookAround("lookaround").__disown__()
-        tree.addOption(lar)
+        self.lar = LookAround("lookaround").__disown__()
+        tree.addOption(self.lar)
 
-        lab = LookAtBall("lookatball").__disown__()
-        tree.addOption(lab)
+        self.lab = LookAtBall("lookatball").__disown__()
+        tree.addOption(self.lab)
 
-        lag = LookAtGoal("lookatgoal").__disown__()
-        tree.addOption(lag, True)
+        self.lag = LookAtGoal("lookatgoal").__disown__()
+        tree.addOption(self.lag)
+
+        self.createBootFSM(tree)
+
+    def createBootFSM(self, tree):
+        bootFSM = FSMOption("bootfsm").__disown__()
+        print(bootFSM)
+        sitDownState = bootFSM.createAndAddState(options = [self.sit], startState = True)
+        sitDownState.onEnter = lambda: print("Hello")
+
+        print(sitDownState)
+        lookAroundState = bootFSM.createAndAddState(options = [self.lar])
+        print(lookAroundState)
+        sitDownState.transitionTo(lookAroundState).when(sitDownState.allOptionsTerminated)
+        print("a")
+        tree.addOption(bootFSM, True)
+
 
     def buildTree(self):
         #print("buildTree: " + conf.confimpl.getParamStr("agent.u2dDevName", "not found"))
