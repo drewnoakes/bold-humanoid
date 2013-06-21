@@ -25,6 +25,7 @@ namespace bold
     LineRunTracker* d_rowTracker;
     std::vector<bold::LineRunTracker> d_colTrackers;
     Control d_hysterisisControl;
+    uchar d_hysterisisLimit;
 
   public:
     std::vector<Eigen::Vector2i> lineDots;
@@ -33,14 +34,17 @@ namespace bold
     : d_imageWidth(imageWidth),
       inLabel(inLabel),
       onLabel(onLabel),
+      d_hysterisisLimit(hysterisisLimit),
       lineDots()
     {
+      // Create trackers
+
       d_colTrackers = std::vector<bold::LineRunTracker>();
 
       for (ushort x = 0; x <= imageWidth; ++x)
       {
         d_colTrackers.push_back(bold::LineRunTracker(
-          inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysterisisLimit,
+          inLabel->id(), onLabel->id(), /*otherCoordinate*/x, d_hysterisisLimit,
           [this](ushort const from, ushort const to, ushort const other) mutable {
             int mid = (from + to) / 2;
             lineDots.push_back(Eigen::Vector2i((int)other, mid));
@@ -50,21 +54,24 @@ namespace bold
 
       // TODO delete in destructor
       d_rowTracker = new LineRunTracker(
-        inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysterisisLimit,
+        inLabel->id(), onLabel->id(), /*otherCoordinate*/0, d_hysterisisLimit,
         [this](ushort const from, ushort const to, ushort const other) mutable {
           int mid = (from + to) / 2;
           lineDots.push_back(Eigen::Vector2i(mid, (int)other));
         }
       );
 
+      // Create controls
+
       d_hysterisisControl = Control::createInt(
         "Line Dot Hysterisis",
-        hysterisisLimit,
+        [this]() { return d_hysterisisLimit; },
         [this](int const& value) mutable
         {
-          d_rowTracker->setHysterisisLimit(value);
+          d_hysterisisLimit = value;
+          d_rowTracker->setHysterisisLimit(d_hysterisisLimit);
           for (LineRunTracker& colTracker : d_colTrackers)
-            colTracker.setHysterisisLimit(value);
+            colTracker.setHysterisisLimit(d_hysterisisLimit);
         }
       );
       d_hysterisisControl.setLimitValues(0, 255);

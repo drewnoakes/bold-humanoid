@@ -81,6 +81,8 @@ namespace bold
       d_particleCount = particleCount;
     }
 
+    unsigned getParticleCount() const { return d_particleCount; }
+
   private:
     unsigned d_particleCount;
     StateSampler d_randomStateProvider;

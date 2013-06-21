@@ -45,32 +45,32 @@ namespace bold
   {
   public:
     static Control createInt(std::string name,
-                             int value,
+                             std::function<int()> getter,
                              std::function<void(int const& value)> callback);
 
     static Control createInt(unsigned id,
                              std::string name,
-                             int value,
+                             std::function<int()> getter,
                              std::function<void(int const& value)> callback);
 
     static Control createBool(std::string name,
-                              bool value,
+                              std::function<bool()> getter,
                               std::function<void(bool const& value)> callback);
 
     static Control createBool(unsigned id,
                               std::string name,
-                              bool value,
+                              std::function<bool()> getter,
                               std::function<void(bool const& value)> callback);
 
     static Control createEnum(std::string name,
                               std::vector<ControlEnumValue> enumValues,
-                              unsigned value,
+                              std::function<unsigned()> getter,
                               std::function<void(ControlEnumValue const& value)> callback);
 
     static Control createEnum(unsigned id,
                               std::string name,
                               std::vector<ControlEnumValue> enumValues,
-                              unsigned value,
+                              std::function<unsigned()> getter,
                               std::function<void(ControlEnumValue const& value)> callback);
 
     static Control createAction(std::string name,
@@ -81,9 +81,9 @@ namespace bold
                                 std::function<void()> callback);
 
     Control()
-    : d_value(0),
-      d_type(ControlType::Unknown),
-      d_callback(),
+    : d_type(ControlType::Unknown),
+      d_getter(),
+      d_setter(),
       d_name(),
       d_isAdvanced(false),
       d_hasLimitValues(false),
@@ -129,8 +129,15 @@ namespace bold
         return;
       }
 
-      d_value = value;
-      d_callback(d_value);
+      d_setter(value);
+
+      if (d_getter)
+      {
+        // Test whether the value we set was taken or not
+        int retrievedValue = d_getter();
+        if (retrievedValue != value)
+          std::cerr << "[Camera::setValue] Setting camera control with ID " << d_id << " failed -- set " << value << " but read back " << retrievedValue << std::endl;
+      }
     }
 
     /** Handles a request against this control, received in JSON. */
@@ -140,7 +147,7 @@ namespace bold
     void writeState(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
 
     unsigned getId() const { return d_id; }
-    int getValue() const { return d_value; }
+    int getValue() const { return d_getter(); }
     ControlType getType() const { return d_type; }
     std::string getName() const { return d_name; }
     bool isAdvanced() const { return d_isAdvanced; }
@@ -206,9 +213,9 @@ namespace bold
     static unsigned s_nextControlId;
 
     unsigned d_id;
-    int d_value;
     ControlType d_type;
-    std::function<void(int const& value)> d_callback;
+    std::function<int()> d_getter;
+    std::function<void(int const& value)> d_setter;
     std::string d_name;
     bool d_isAdvanced;
 

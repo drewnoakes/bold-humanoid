@@ -41,7 +41,6 @@ vector<Control> Camera::listControls()
     int minimum = queryctrl.minimum;
     int maximum = queryctrl.maximum;
     int defaultValue = queryctrl.default_value;
-    int value = getValue(id);
 
     // Get ready to query next item
     queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
@@ -68,7 +67,7 @@ vector<Control> Camera::listControls()
         auto control = Control::createBool(
           id,
           name,
-          value != 0,
+          [getValue,id]() { return getValue(id) != 0; },
           [setValue,id](bool const& value) { setValue(id, value ? 1 : 0); });
         control.setDefaultValue(defaultValue);
         controls.push_back(control);
@@ -79,7 +78,7 @@ vector<Control> Camera::listControls()
         auto control = Control::createInt(
           id,
           name,
-          value,
+          [getValue,id]() { return getValue(id); },
           [setValue,id](int const& value) { setValue(id, value); });
         control.setDefaultValue(defaultValue);
         control.setLimitValues(minimum, maximum);
@@ -110,7 +109,7 @@ vector<Control> Camera::listControls()
           id,
           name,
           enumValues,
-          (unsigned)value,
+          [getValue,id]() { return (unsigned)getValue(id); },
           [setValue,id](ControlEnumValue const& value) { setValue(id, value.getValue()); });
         control.setDefaultValue(defaultValue);
         controls.push_back(control);

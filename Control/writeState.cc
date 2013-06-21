@@ -14,12 +14,12 @@ void Control::writeState(Writer<StringBuffer>& writer) const
   if (d_type == ControlType::Bool)
   {
     writer.String("value");
-    writer.Bool(d_value != 0);
+    writer.Bool(d_getter() != 0);
   }
   else if (d_type == ControlType::Int || d_type == ControlType::Enum)
   {
     writer.String("value");
-    writer.Int(d_value);
+    writer.Int(d_getter());
   }
 
   if (d_hasLimitValues)

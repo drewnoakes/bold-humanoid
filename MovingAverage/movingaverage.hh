@@ -23,6 +23,7 @@ namespace bold
     }
 
     int count() const { return d_length; }
+    unsigned getWindowSize() const { return d_windowSize; }
 
     T next(T value)
     {

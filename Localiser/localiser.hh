@@ -50,6 +50,8 @@ namespace bold
     double d_rewardFalloff;
     bool d_useLines;
     unsigned d_minGoalsNeeded;
+    unsigned d_positionError;
+    unsigned d_angleErrorDegs;
 
     std::shared_ptr<ParticleFilter<3>> d_filter;
     std::function<double()> d_fieldXRng;
@@ -57,7 +59,7 @@ namespace bold
     std::function<double()> d_thetaRng;
     std::vector<Control> d_controls;
     WheelSamplerFactory<3> d_wsf;
-    std::function<double()> d_positionError;
-    std::function<double()> d_angleError;
+    std::function<double()> d_positionErrorRng;
+    std::function<double()> d_angleErrorRng;
   };
 }

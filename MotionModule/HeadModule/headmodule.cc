@@ -43,7 +43,7 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 
   auto createControl = [this](double* target, string name, double min, double max, int scale = 1, bool isAdvanced = true)
   {
-    auto control = Control::createInt(name, (*target)*scale, [this,target,scale](int value) { *target = value/double(scale); });
+    auto control = Control::createInt(name, [target,scale]() { return int((*target)*scale); }, [this,target,scale](int value) { *target = value/double(scale); });
     control.setLimitValues(min * scale, max * scale);
     control.setIsAdvanced(isAdvanced);
     d_controls.push_back(control);

@@ -77,12 +77,12 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   // VISION SYSTEM CONTROLS
   //
 
-  auto minBallAreaControl = Control::createInt("Min ball area", d_minBallArea, [this](int value) { d_minBallArea = value; });
+  auto minBallAreaControl = Control::createInt("Min ball area", [this]() { return d_minBallArea; }, [this](int value) { d_minBallArea = value; });
   minBallAreaControl.setIsAdvanced(true);
   vector<Control> ballControls = { minBallAreaControl };
   d_controlsByFamily["vision/ball"] = ballControls;
   auto lineDetectionControls = d_lineFinder->getControls();
-  lineDetectionControls.push_back(Control::createBool("Detect lines", d_shouldDetectLines, [this](bool value)
+  lineDetectionControls.push_back(Control::createBool("Detect lines", [this]() { return d_shouldDetectLines; }, [this](bool value)
   {
     if (value)
       d_imagePassRunner->addHandler(d_lineDotPass);
@@ -102,12 +102,12 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   vector<Control> lutControls;
   for (shared_ptr<PixelLabel> label : pixelLabels)
   {
-    Control h  = Control::createInt(label->name() + " Hue",              label->hsvRange().h,      [label,setHue     ](int value){ setHue     (label, value); });
-    Control hr = Control::createInt(label->name() + " Hue Range",        label->hsvRange().hRange, [label,setHueRange](int value){ setHueRange(label, value); });
-    Control s  = Control::createInt(label->name() + " Saturation",       label->hsvRange().s,      [label,setSat     ](int value){ setSat     (label, value); });
-    Control sr = Control::createInt(label->name() + " Saturation Range", label->hsvRange().sRange, [label,setSatRange](int value){ setSatRange(label, value); });
-    Control v  = Control::createInt(label->name() + " Value",            label->hsvRange().v,      [label,setVal     ](int value){ setVal     (label, value); });
-    Control vr = Control::createInt(label->name() + " Value Range",      label->hsvRange().vRange, [label,setValRange](int value){ setValRange(label, value); });
+    Control h  = Control::createInt(label->name() + " Hue",              [label]() { return label->hsvRange().h; },      [label,setHue     ](int value){ setHue     (label, value); });
+    Control hr = Control::createInt(label->name() + " Hue Range",        [label]() { return label->hsvRange().hRange; }, [label,setHueRange](int value){ setHueRange(label, value); });
+    Control s  = Control::createInt(label->name() + " Saturation",       [label]() { return label->hsvRange().s; },      [label,setSat     ](int value){ setSat     (label, value); });
+    Control sr = Control::createInt(label->name() + " Saturation Range", [label]() { return label->hsvRange().sRange; }, [label,setSatRange](int value){ setSatRange(label, value); });
+    Control v  = Control::createInt(label->name() + " Value",            [label]() { return label->hsvRange().v; },      [label,setVal     ](int value){ setVal     (label, value); });
+    Control vr = Control::createInt(label->name() + " Value Range",      [label]() { return label->hsvRange().vRange; }, [label,setValRange](int value){ setValRange(label, value); });
 
     h .setDefaultValue(label->hsvRange().h);
     hr.setDefaultValue(label->hsvRange().hRange);
@@ -140,7 +140,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   d_controlsByFamily["vision/lut"] = lutControls;
 
-  vector<Control> horizonControls = { Control::createBool("Ignore above horizon", d_shouldIgnoreAboveHorizon, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }) };
+  vector<Control> horizonControls = { Control::createBool("Ignore above horizon", [this]() { return d_shouldIgnoreAboveHorizon; }, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }) };
   d_controlsByFamily["vision/horizon"] = horizonControls;
 
   //
@@ -158,7 +158,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     Control::createEnum(
       "Image",
       imageTypes,
-      (int)d_imageType,
+      [this]() { return (int)d_imageType; },
       [this](ControlEnumValue const& value)
       {
         d_imageType = (ImageType)value.getValue();
@@ -178,17 +178,17 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   {
     framePeriods.push_back(ControlEnumValue(period, to_string(period)));
   }
-  debugImageControls.push_back(Control::createEnum("Frame period", framePeriods, d_streamFramePeriod, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); }));
+  debugImageControls.push_back(Control::createEnum("Frame period", framePeriods, [this]() { return d_streamFramePeriod; }, [this](ControlEnumValue const& value) { d_streamFramePeriod = value.getValue(); }));
   d_controlsByFamily["debug-image"] = debugImageControls;
 
   // Layers
   vector<Control> debugImageFeaturesControls;
-  debugImageFeaturesControls.push_back(Control::createBool("Blobs",            d_shouldDrawBlobs,           [this](bool const& value) { d_shouldDrawBlobs = value; }));
-  debugImageFeaturesControls.push_back(Control::createBool("Line dots",        d_shouldDrawLineDots,        [this](bool const& value) { d_shouldDrawLineDots = value; }));
-  debugImageFeaturesControls.push_back(Control::createBool("Lines (observed)", d_shouldDrawObservedLines,   [this](bool const& value) { d_shouldDrawObservedLines = value; }));
-  debugImageFeaturesControls.push_back(Control::createBool("Lines (expected)", d_shouldDrawExpectedLines,   [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
-  debugImageFeaturesControls.push_back(Control::createBool("Horizon",          d_shouldDrawHorizon,         [this](bool const& value) { d_shouldDrawHorizon = value; }));
-  debugImageFeaturesControls.push_back(Control::createBool("Field edge",       d_shouldDrawFieldEdge,       [this](bool const& value) { d_shouldDrawFieldEdge = value; }));
-  debugImageFeaturesControls.push_back(Control::createBool("Objects",          d_shouldDrawObservedObjects, [this](bool const& value) { d_shouldDrawObservedObjects = value; }));
+  debugImageFeaturesControls.push_back(Control::createBool("Blobs",            [this]() { return d_shouldDrawBlobs; },           [this](bool const& value) { d_shouldDrawBlobs = value; }));
+  debugImageFeaturesControls.push_back(Control::createBool("Line dots",        [this]() { return d_shouldDrawLineDots; },        [this](bool const& value) { d_shouldDrawLineDots = value; }));
+  debugImageFeaturesControls.push_back(Control::createBool("Lines (observed)", [this]() { return d_shouldDrawObservedLines; },   [this](bool const& value) { d_shouldDrawObservedLines = value; }));
+  debugImageFeaturesControls.push_back(Control::createBool("Lines (expected)", [this]() { return d_shouldDrawExpectedLines; },   [this](bool const& value) { d_shouldDrawExpectedLines = value; }));
+  debugImageFeaturesControls.push_back(Control::createBool("Horizon",          [this]() { return d_shouldDrawHorizon; },         [this](bool const& value) { d_shouldDrawHorizon = value; }));
+  debugImageFeaturesControls.push_back(Control::createBool("Field edge",       [this]() { return d_shouldDrawFieldEdge; },       [this](bool const& value) { d_shouldDrawFieldEdge = value; }));
+  debugImageFeaturesControls.push_back(Control::createBool("Objects",          [this]() { return d_shouldDrawObservedObjects; }, [this](bool const& value) { d_shouldDrawObservedObjects = value; }));
   d_controlsByFamily["debug-image-features"] = debugImageFeaturesControls;
 }

@@ -18,12 +18,12 @@ Ambulator::Ambulator(std::shared_ptr<WalkModule> walkModule)
     d_controls()
 {
   // TODO these should be double controls
-  d_controls.push_back(Control::createInt("Min hip pitch", d_minHipPitch, [this](int value) { d_minHipPitch = value; }));
-  d_controls.push_back(Control::createInt("Max hip pitch", d_maxHipPitch, [this](int value) { d_maxHipPitch = value; }));
-  d_controls.push_back(Control::createInt("Max hip pitch @ speed", d_maxHipPitchAtSpeed, [this](int value) { d_maxHipPitchAtSpeed = value; }));
-  d_controls.push_back(Control::createInt("X smoothing delta", d_xAmp.getDelta(), [this](int value) { d_xAmp.setDelta(value); }));
-  d_controls.push_back(Control::createInt("Y smoothing delta", d_yAmp.getDelta(), [this](int value) { d_yAmp.setDelta(value); }));
-  d_controls.push_back(Control::createInt("Turn smoothing delta", d_turnAmp.getDelta(), [this](int value) { d_turnAmp.setDelta(value); }));
-  
-  d_controls.push_back(Control::createBool("Enable auto-balance", d_walkModule->BALANCE_ENABLE, [this](bool value) { d_walkModule->BALANCE_ENABLE = value; }));
+  d_controls.push_back(Control::createInt("Min hip pitch",         [this]() { return d_minHipPitch; },        [this](int value) { d_minHipPitch = value; }));
+  d_controls.push_back(Control::createInt("Max hip pitch",         [this]() { return d_maxHipPitch; },        [this](int value) { d_maxHipPitch = value; }));
+  d_controls.push_back(Control::createInt("Max hip pitch @ speed", [this]() { return d_maxHipPitchAtSpeed; }, [this](int value) { d_maxHipPitchAtSpeed = value; }));
+  d_controls.push_back(Control::createInt("X smoothing delta",     [this]() { return d_xAmp.getDelta(); },    [this](int value) { d_xAmp.setDelta(value); }));
+  d_controls.push_back(Control::createInt("Y smoothing delta",     [this]() { return d_yAmp.getDelta(); },    [this](int value) { d_yAmp.setDelta(value); }));
+  d_controls.push_back(Control::createInt("Turn smoothing delta",  [this]() { return d_turnAmp.getDelta(); }, [this](int value) { d_turnAmp.setDelta(value); }));
+
+  d_controls.push_back(Control::createBool("Enable auto-balance",  [this]() { return d_walkModule->BALANCE_ENABLE; }, [this](bool value) { d_walkModule->BALANCE_ENABLE = value; }));
 }

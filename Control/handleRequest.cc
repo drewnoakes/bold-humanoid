@@ -31,7 +31,7 @@ bool Control::handleRequest(Document const& json)
   
   case ControlType::Action:
   {
-    d_callback(0);
+    d_setter(0);
     break;
   }
   

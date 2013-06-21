@@ -7,9 +7,9 @@ void Localiser::update()
   d_filter->predict([this](Vector3d state) -> Vector3d
   {
     return Vector3d(
-      state[0] + d_positionError(),
-      state[1] + d_positionError(),
-      state[2] + d_angleError()
+      state[0] + d_positionErrorRng(),
+      state[1] + d_positionErrorRng(),
+      state[2] + d_angleErrorRng()
     );
   });
 
