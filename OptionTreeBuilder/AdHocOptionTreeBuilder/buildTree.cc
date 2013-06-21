@@ -4,6 +4,7 @@
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../util/conditionals.hh"
+#include "../../util/Range.hh"
 
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          unsigned uniformNumber,
@@ -355,13 +356,45 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
 
-    //TODO Big step to the right and left ready to be used...
+    // TODO Test this further and logic to kick ball away from goal if close to keeper
 
-    //auto leftBigStepState = playingFsm->newState("bigStepLeft", {bigStepLeft});
+    auto bigStepLeftState = playingFsm->newState("bigStepLeft", {bigStepLeft});
 
-    //auto righBigStepState = playingFsm->newState("bigStepRight", {bigStepRight});
+    auto bigStepRightState = playingFsm->newState("bigStepRight", {bigStepRight});
 
-    // TODO implement a basic goalie behaviour
+    standUpState->transitionTo(lookForBallState)
+      ->when(hasTerminated(standUpState));
+
+    lookForBallState->transitionTo(lookAtBallState)
+      ->when(ballVisibleCondition);
+
+    lookAtBallState->transitionTo(lookForBallState)
+      ->when(ballLostCondition);
+
+    lookAtBallState->transitionTo(bigStepLeftState)
+      ->when(oneShot([]() { return trueForMillis(1000, []()
+      {
+        auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+        bool step = ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(-0.75, -0.3).contains(ball->x());
+        if (step) cout << "step to the left - ball: " << (*ball).head<2>().transpose() << endl;
+        return step;
+      }); }));
+
+    lookAtBallState->transitionTo(bigStepRightState)
+      ->when(oneShot([](){ return trueForMillis(1000, []()
+      {
+        auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+        bool step = ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(0.3, 0.75).contains(ball->x());
+	if (step) cout << "step to the right - ball: " << (*ball).head<2>().transpose() << endl;
+	return step;
+      }); }));
+
+    bigStepLeftState->transitionTo(lookForBallState)
+      ->when(hasTerminated(bigStepLeftState));
+
+    bigStepRightState->transitionTo(lookForBallState)
+      ->when(hasTerminated(bigStepRightState));
+
   }
   else if (uniformNumber == UNUM_GOALIE_PENALTY)
   {
