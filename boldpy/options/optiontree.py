@@ -10,6 +10,7 @@ from .stopwalking import *
 from .lookatfeet import *
 from .lookaround import *
 from .lookatball import *
+from .lookatgoal import *
 
 #import boldpy.conf as conf
 
@@ -42,7 +43,10 @@ class PyOptionTreeBuilder:
         tree.addOption(lar)
 
         lab = LookAtBall("lookatball").__disown__()
-        tree.addOption(lab, True)
+        tree.addOption(lab)
+
+        lag = LookAtGoal("lookatgoal").__disown__()
+        tree.addOption(lag, True)
 
     def buildTree(self):
         #print("buildTree: " + conf.confimpl.getParamStr("agent.u2dDevName", "not found"))
