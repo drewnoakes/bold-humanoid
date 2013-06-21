@@ -41,7 +41,7 @@ UDPSocket::~UDPSocket()
 bool UDPSocket::setBlocking(bool isBlocking)
 {
   int flags = fcntl(d_socket, F_GETFL, 0);
-  
+
   if (flags < 0)
   {
     cerr << "[UDPSocket::setBlocking] Error in F_GETFL: " << strerror(errno) << endl;
@@ -58,33 +58,33 @@ bool UDPSocket::setBlocking(bool isBlocking)
     cerr << "[UDPSocket::setBlocking] Error in F_SETFL: " << strerror(errno) << endl;
     return false;
   }
-  
+
   return true;
 }
 
 bool UDPSocket::setBroadcast(bool isBroadcast)
 {
   int isBroadcastInt = isBroadcast ? 1 : 0;
-  
+
   if (setsockopt(d_socket, SOL_SOCKET, SO_BROADCAST, &isBroadcastInt, sizeof(int)))
   {
     cerr << "[UDPSocket::setBroadcast] Error setting socket option SO_BROADCAST to " << isBroadcast << ": " << strerror(errno) << endl;
     return false;
   }
-  
+
   return true;
 }
 
 bool UDPSocket::setMulticastLoopback(bool isLoopback)
 {
   char isLoopbackChar = isLoopback ? 1 : 0;
-  
+
   if (setsockopt(d_socket, IPPROTO_IP, IP_MULTICAST_LOOP, &isLoopbackChar, sizeof(char)))
   {
     cerr << "[UDPSocket::setMulticastLoopback] Error setting socket option IP_MULTICAST_LOOP to " << isLoopback << ": " << strerror(errno) << endl;
     return false;
   }
-  
+
   return true;
 }
 
@@ -111,12 +111,12 @@ bool UDPSocket::setTarget(string targetIpAddress, int port)
 bool UDPSocket::bind(const string localIpAddress, int port)
 {
   static const int one = 1;
-  
+
   struct sockaddr_in addr = {0};
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_port = htons((uint16_t)port);
   addr.sin_family = AF_INET;
-  
+
   if (inet_pton(AF_INET, localIpAddress.c_str(), &(addr.sin_addr)))
   {
     cerr << "[UDPSocket::bind] Failed due to invalid address: " << localIpAddress << endl;
@@ -154,20 +154,20 @@ int UDPSocket::receive(char* data, int dataLength)
 int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr* fromAddress, int* fromAddressLength)
 {
   assert(bool(fromAddress) == bool(fromAddressLength));
-  
+
   ssize_t bytesRead = recvfrom(d_socket, data, dataLength, 0, fromAddress, (socklen_t*)fromAddressLength);
-  
+
   if (bytesRead < 0)
   {
     if (errno == EAGAIN)
     {
-      // Response indicates that no data was available without blocking, so just return 0 
+      // Response indicates that no data was available without blocking, so just return 0
       return 0;
     }
-    
+
     cerr << "[UDPSocket::receiveFrom] Error (" << errno << "): " << strerror(errno) << endl;
   }
-  
+
   return bytesRead;
 }
 
@@ -179,7 +179,7 @@ bool UDPSocket::send(const string message)
 bool UDPSocket::send(const char* data, int dataLength)
 {
   assert(dataLength > 0);
-  
+
   ssize_t bytesSent = sendto(d_socket, data, dataLength, 0, d_target, sizeof(*d_target));
 
   if (bytesSent < 0)
@@ -191,7 +191,7 @@ bool UDPSocket::send(const char* data, int dataLength)
 bool UDPSocket::resolveIp4Address(const string ip4Address, int port, sockaddr_in* addr)
 {
   memset(addr, 0, sizeof(sockaddr_in));
-  
+
   addr->sin_family = AF_INET;
   addr->sin_port = htons((uint16_t)port);
 
@@ -201,6 +201,6 @@ bool UDPSocket::resolveIp4Address(const string ip4Address, int port, sockaddr_in
     cerr << "[UDPSocket::resolveIp4Address] Unable to resolve IP4 address string: " << ip4Address << endl;
     return false;
   }
-  
+
   return true;
 }

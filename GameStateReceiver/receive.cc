@@ -9,9 +9,9 @@ shared_ptr<GameState> GameStateReceiver::receive()
   static char data[MAX_LENGTH];
 
   // Process incoming game controller messages
-  
   sockaddr fromAddress;
   int fromAddressLength;
+
   // Loop until we get the most recent messages
   // TODO this looping may not be a good idea, in case we miss an important message
   //      there are only two a second, so it shouldn't be hard to process all of them
@@ -27,7 +27,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
     }
 
     auto gameState = make_shared<GameState>(data);
-    
+
     // Verify the version of the message
     if (gameState->getVersion() != GAMECONTROLLER_STRUCT_VERSION)
     {
@@ -35,7 +35,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
       d_debugger->notifyIgnoringUnrecognisedMessage();
       continue;
     }
-    
+
     // Verify that we're one of the teams mentioned in the message
     if (gameState->teamInfo1().getTeamNumber() != d_agent->getTeamNumber() &&
         gameState->teamInfo2().getTeamNumber() != d_agent->getTeamNumber())
