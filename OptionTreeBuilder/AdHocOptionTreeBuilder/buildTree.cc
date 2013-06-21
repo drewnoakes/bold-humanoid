@@ -422,7 +422,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->when(ballLostCondition);
 
     lookAtBallState->transitionTo(leftDiveState)
-      ->when(oneShot([]() { return trueForMillis(200, []()
+      ->when(oneShot([]() { return trueForMillis(100, []()
       {
         auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
         bool dive = ball && ball->y() < 1.0 && ball->x() < -0.1;
@@ -431,7 +431,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       }); }));
 
     lookAtBallState->transitionTo(rightDiveState)
-      ->when(oneShot([](){ return trueForMillis(200, []()
+      ->when(oneShot([](){ return trueForMillis(100, []()
       {
         auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
         bool dive = ball && ball->y() < 1.0 && ball->x() > 0.1;
