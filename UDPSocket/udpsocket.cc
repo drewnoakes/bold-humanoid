@@ -112,7 +112,7 @@ bool UDPSocket::bind(const string localIpAddress, int port)
 {
   static const int one = 1;
   
-  struct sockaddr_in addr;
+  struct sockaddr_in addr = {0};
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_port = htons((uint16_t)port);
   addr.sin_family = AF_INET;
