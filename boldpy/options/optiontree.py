@@ -8,6 +8,7 @@ from .fsmoption import *
 from .actionoption import *
 from .stopwalking import *
 from .lookatfeet import *
+from .lookaround import *
 
 #import boldpy.conf as conf
 
@@ -31,10 +32,13 @@ class PyOptionTreeBuilder:
         tree.addOption(sit)
 
         sw = StopWalking("stopwalking").__disown__()
-        tree.addOption(sw, True)
+        tree.addOption(sw)
 
         laf = LookAtFeet("lookatfeet").__disown__()
         tree.addOption(laf)
+
+        lar = LookAround("lookaround").__disown__()
+        tree.addOption(lar, True)
 
     def buildTree(self):
         #print("buildTree: " + conf.confimpl.getParamStr("agent.u2dDevName", "not found"))
