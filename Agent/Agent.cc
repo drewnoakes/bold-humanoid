@@ -93,7 +93,7 @@ Agent::Agent()
     "Hello", "Bold Hearts", "Hooray", "Oh my",
     "The rain in spain falls mainly in the plain"
   };
-  vector<Control> speechControls;
+  vector<std::shared_ptr<Control const>> speechControls;
   for (auto saying : sayings)
     speechControls.push_back(Control::createAction(saying, [this,saying](){ d_voice->say(saying); }));
   d_streamer->registerControls("speech", speechControls);

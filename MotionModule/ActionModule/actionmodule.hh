@@ -90,8 +90,8 @@ namespace bold
     bool d_active[21];
     uchar d_pGains[21];
     ushort d_values[21];
-    
-    std::vector<Control> d_controls;
+
+    std::vector<std::shared_ptr<Control const>> d_controls;
 
     bool isJointActive(uchar jointId) const { return d_active[jointId]; }
 
@@ -111,10 +111,10 @@ namespace bold
 
     void applySection(std::shared_ptr<BodySection> section);
 
-    std::vector<Control> getControls() const { return d_controls; };
-    
+    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; };
+
     /** Returns the set of page names found in the motion file.
-     * 
+     *
      * Not all pages have names, and there are several names that apply to
      * multiple pages. Playing an action by name results in the first page with
      * that name being started.

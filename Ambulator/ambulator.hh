@@ -43,8 +43,8 @@ namespace bold
      * and negative values turn left (counter-clockwise) (unspecfied units).
      */
     void setTurnAngle(double turnSpeed);
-    
-    std::vector<Control> getControls() const { return d_controls; }
+
+    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
 
   private:
     std::shared_ptr<WalkModule> d_walkModule;
@@ -56,6 +56,6 @@ namespace bold
     double d_maxHipPitch;
     bool d_turnAngleSet;
     bool d_moveDirSet;
-    std::vector<Control> d_controls;
+    std::vector<std::shared_ptr<Control const>> d_controls;
   };
 }

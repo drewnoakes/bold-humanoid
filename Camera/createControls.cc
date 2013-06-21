@@ -1,6 +1,6 @@
 #include "camera.ih"
 
-vector<Control> Camera::listControls()
+void Camera::createControls()
 {
   auto getValue = [this](unsigned const& id) -> int
   {
@@ -24,7 +24,7 @@ vector<Control> Camera::listControls()
       cerr << "[Camera::setValue] Setting camera control with ID " << id << " failed -- set " << value << " but read back " << retrieved << endl;
   };
 
-  vector<Control> controls;
+  d_controls.clear();
 
   v4l2_queryctrl queryctrl = {0,};
   queryctrl.id = V4L2_CTRL_FLAG_NEXT_CTRL;
@@ -55,6 +55,9 @@ vector<Control> Camera::listControls()
     else if (name == "White Balance Temperature")
       name = "WB Temp (K)";
 
+    set<string> advancedControlNames = { "Auto WB", "Exposure, Auto", "Exposure, Auto Priority", "Backlight Compensation", "Power Line Frequency" };
+    bool isAdvanced = advancedControlNames.find(name) != advancedControlNames.end();
+
     if (type == V4L2ControlType::CT_INT && minimum == 0 && maximum == 1)
     {
       type = V4L2ControlType::CT_BOOL;
@@ -69,8 +72,9 @@ vector<Control> Camera::listControls()
           name,
           [getValue,id]() { return getValue(id) != 0; },
           [setValue,id](bool const& value) { setValue(id, value ? 1 : 0); });
-        control.setDefaultValue(defaultValue);
-        controls.push_back(control);
+        control->setDefaultValue(defaultValue);
+        control->setIsAdvanced(isAdvanced);
+        d_controls.push_back(control);
         break;
       }
       case V4L2ControlType::CT_INT:
@@ -80,9 +84,10 @@ vector<Control> Camera::listControls()
           name,
           [getValue,id]() { return getValue(id); },
           [setValue,id](int const& value) { setValue(id, value); });
-        control.setDefaultValue(defaultValue);
-        control.setLimitValues(minimum, maximum);
-        controls.push_back(control);
+        control->setDefaultValue(defaultValue);
+        control->setLimitValues(minimum, maximum);
+        control->setIsAdvanced(isAdvanced);
+        d_controls.push_back(control);
         break;
       }
       case V4L2ControlType::CT_MENU:
@@ -111,8 +116,9 @@ vector<Control> Camera::listControls()
           enumValues,
           [getValue,id]() { return (unsigned)getValue(id); },
           [setValue,id](ControlEnumValue const& value) { setValue(id, value.getValue()); });
-        control.setDefaultValue(defaultValue);
-        controls.push_back(control);
+        control->setDefaultValue(defaultValue);
+        control->setIsAdvanced(isAdvanced);
+        d_controls.push_back(control);
         break;
       }
       default:
@@ -121,6 +127,4 @@ vector<Control> Camera::listControls()
       }
     }
   }
-
-  return controls;
 }

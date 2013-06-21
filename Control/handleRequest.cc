@@ -1,6 +1,6 @@
 #include "control.ih"
 
-bool Control::handleRequest(Document const& json)
+bool Control::handleRequest(Document const& json) const
 {
   switch (d_type)
   {
@@ -16,7 +16,7 @@ bool Control::handleRequest(Document const& json)
     setValue(value);
     break;
   }
-  
+
   case ControlType::Bool:
   {
     bool value;
@@ -28,16 +28,16 @@ bool Control::handleRequest(Document const& json)
     setValue(value ? 1 : 0);
     break;
   }
-  
+
   case ControlType::Action:
   {
     d_setter(0);
     break;
   }
-  
+
   case ControlType::Unknown:
     break;
   }
-  
+
   return true;
 }

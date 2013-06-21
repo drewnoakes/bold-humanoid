@@ -147,10 +147,10 @@ namespace bold
 
     void setMinDotManhattanDistance(unsigned minDotManhattanDistance) { d_minDotManhattanDistance = minDotManhattanDistance; }
 
-    std::vector<Control> getControls() const override { return d_controls; };
+    std::vector<std::shared_ptr<Control const>> getControls() const override { return d_controls; };
 
   private:
     unsigned d_minDotManhattanDistance;
-    std::vector<Control> d_controls;
+    std::vector<std::shared_ptr<Control const>> d_controls;
   };
 }

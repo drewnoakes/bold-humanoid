@@ -23,9 +23,6 @@ void Camera::open()
   d_pixelFormat = PixelFormat(formatReq.fmt.pix);
   d_pixelFormat.owner = this;
 
-  // List user controls
-  d_controls = listControls();
-
-  // List image formats
-  d_formats = listFormats();
+  createControls();
+  createFormats();
 }

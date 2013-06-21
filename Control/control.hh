@@ -3,6 +3,7 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -44,41 +45,41 @@ namespace bold
   class Control
   {
   public:
-    static Control createInt(std::string name,
-                             std::function<int()> getter,
-                             std::function<void(int const& value)> callback);
+    static std::shared_ptr<Control> createInt(std::string name,
+                                    std::function<int()> getter,
+                                    std::function<void(int const& value)> callback);
 
-    static Control createInt(unsigned id,
-                             std::string name,
-                             std::function<int()> getter,
-                             std::function<void(int const& value)> callback);
+    static std::shared_ptr<Control> createInt(unsigned id,
+                                    std::string name,
+                                    std::function<int()> getter,
+                                    std::function<void(int const& value)> callback);
 
-    static Control createBool(std::string name,
-                              std::function<bool()> getter,
-                              std::function<void(bool const& value)> callback);
+    static std::shared_ptr<Control> createBool(std::string name,
+                                    std::function<bool()> getter,
+                                    std::function<void(bool const& value)> callback);
 
-    static Control createBool(unsigned id,
-                              std::string name,
-                              std::function<bool()> getter,
-                              std::function<void(bool const& value)> callback);
+    static std::shared_ptr<Control> createBool(unsigned id,
+                                    std::string name,
+                                    std::function<bool()> getter,
+                                    std::function<void(bool const& value)> callback);
 
-    static Control createEnum(std::string name,
-                              std::vector<ControlEnumValue> enumValues,
-                              std::function<unsigned()> getter,
-                              std::function<void(ControlEnumValue const& value)> callback);
+    static std::shared_ptr<Control> createEnum(std::string name,
+                                    std::vector<ControlEnumValue> enumValues,
+                                    std::function<unsigned()> getter,
+                                    std::function<void(ControlEnumValue const& value)> callback);
 
-    static Control createEnum(unsigned id,
-                              std::string name,
-                              std::vector<ControlEnumValue> enumValues,
-                              std::function<unsigned()> getter,
-                              std::function<void(ControlEnumValue const& value)> callback);
+    static std::shared_ptr<Control> createEnum(unsigned id,
+                                    std::string name,
+                                    std::vector<ControlEnumValue> enumValues,
+                                    std::function<unsigned()> getter,
+                                    std::function<void(ControlEnumValue const& value)> callback);
 
-    static Control createAction(std::string name,
-                                std::function<void()> callback);
+    static std::shared_ptr<Control> createAction(std::string name,
+                                    std::function<void()> callback);
 
-    static Control createAction(unsigned id,
-                                std::string name,
-                                std::function<void()> callback);
+    static std::shared_ptr<Control> createAction(unsigned id,
+                                    std::string name,
+                                    std::function<void()> callback);
 
     Control()
     : d_type(ControlType::Unknown),
@@ -119,7 +120,7 @@ namespace bold
       return d_enumValues;
     }
 
-    void setValue(int value)
+    void setValue(int value) const
     {
       assert(d_type != ControlType::Action);
 
@@ -141,7 +142,7 @@ namespace bold
     }
 
     /** Handles a request against this control, received in JSON. */
-    bool handleRequest(rapidjson::Document const& json);
+    bool handleRequest(rapidjson::Document const& json) const;
 
     /** Provides the state of this control in JSON. */
     void writeState(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;

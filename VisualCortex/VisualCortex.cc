@@ -78,10 +78,12 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   //
 
   auto minBallAreaControl = Control::createInt("Min ball area", [this]() { return d_minBallArea; }, [this](int value) { d_minBallArea = value; });
-  minBallAreaControl.setIsAdvanced(true);
-  vector<Control> ballControls = { minBallAreaControl };
+  minBallAreaControl->setIsAdvanced(true);
+  vector<shared_ptr<Control const>> ballControls = { minBallAreaControl };
   d_controlsByFamily["vision/ball"] = ballControls;
-  auto lineDetectionControls = d_lineFinder->getControls();
+  vector<shared_ptr<Control const>> lineDetectionControls;
+  for (auto c : d_lineFinder->getControls())
+    lineDetectionControls.push_back(c);
   lineDetectionControls.push_back(Control::createBool("Detect lines", [this]() { return d_shouldDetectLines; }, [this](bool value)
   {
     if (value)
@@ -89,7 +91,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     else
       d_imagePassRunner->removeHandler(d_lineDotPass);
   }));
-  lineDetectionControls.push_back(d_lineDotPass->getHysterisisControl());
+  for (auto c : d_lineDotPass->getControls())
+    lineDetectionControls.push_back(c);
   d_controlsByFamily["vision/line-detection"] = lineDetectionControls;
 
   // Allow control over the LUT parameters
@@ -99,36 +102,36 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   auto setSatRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withSRange(value)); createLookupTable(); };
   auto setVal      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withV(value));      createLookupTable(); };
   auto setValRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withVRange(value)); createLookupTable(); };
-  vector<Control> lutControls;
+  vector<shared_ptr<Control const>> lutControls;
   for (shared_ptr<PixelLabel> label : pixelLabels)
   {
-    Control h  = Control::createInt(label->name() + " Hue",              [label]() { return label->hsvRange().h; },      [label,setHue     ](int value){ setHue     (label, value); });
-    Control hr = Control::createInt(label->name() + " Hue Range",        [label]() { return label->hsvRange().hRange; }, [label,setHueRange](int value){ setHueRange(label, value); });
-    Control s  = Control::createInt(label->name() + " Saturation",       [label]() { return label->hsvRange().s; },      [label,setSat     ](int value){ setSat     (label, value); });
-    Control sr = Control::createInt(label->name() + " Saturation Range", [label]() { return label->hsvRange().sRange; }, [label,setSatRange](int value){ setSatRange(label, value); });
-    Control v  = Control::createInt(label->name() + " Value",            [label]() { return label->hsvRange().v; },      [label,setVal     ](int value){ setVal     (label, value); });
-    Control vr = Control::createInt(label->name() + " Value Range",      [label]() { return label->hsvRange().vRange; }, [label,setValRange](int value){ setValRange(label, value); });
+    auto h  = Control::createInt(label->name() + " Hue",              [label]() { return label->hsvRange().h; },      [label,setHue     ](int value){ setHue     (label, value); });
+    auto hr = Control::createInt(label->name() + " Hue Range",        [label]() { return label->hsvRange().hRange; }, [label,setHueRange](int value){ setHueRange(label, value); });
+    auto s  = Control::createInt(label->name() + " Saturation",       [label]() { return label->hsvRange().s; },      [label,setSat     ](int value){ setSat     (label, value); });
+    auto sr = Control::createInt(label->name() + " Saturation Range", [label]() { return label->hsvRange().sRange; }, [label,setSatRange](int value){ setSatRange(label, value); });
+    auto v  = Control::createInt(label->name() + " Value",            [label]() { return label->hsvRange().v; },      [label,setVal     ](int value){ setVal     (label, value); });
+    auto vr = Control::createInt(label->name() + " Value Range",      [label]() { return label->hsvRange().vRange; }, [label,setValRange](int value){ setValRange(label, value); });
 
-    h .setDefaultValue(label->hsvRange().h);
-    hr.setDefaultValue(label->hsvRange().hRange);
-    s .setDefaultValue(label->hsvRange().s);
-    sr.setDefaultValue(label->hsvRange().sRange);
-    v .setDefaultValue(label->hsvRange().v);
-    vr.setDefaultValue(label->hsvRange().vRange);
+    h ->setDefaultValue(label->hsvRange().h);
+    hr->setDefaultValue(label->hsvRange().hRange);
+    s ->setDefaultValue(label->hsvRange().s);
+    sr->setDefaultValue(label->hsvRange().sRange);
+    v ->setDefaultValue(label->hsvRange().v);
+    vr->setDefaultValue(label->hsvRange().vRange);
 
-    h .setLimitValues(0, 255);
-    hr.setLimitValues(0, 255);
-    s .setLimitValues(0, 255);
-    sr.setLimitValues(0, 255);
-    v .setLimitValues(0, 255);
-    vr.setLimitValues(0, 255);
+    h ->setLimitValues(0, 255);
+    hr->setLimitValues(0, 255);
+    s ->setLimitValues(0, 255);
+    sr->setLimitValues(0, 255);
+    v ->setLimitValues(0, 255);
+    vr->setLimitValues(0, 255);
 
-    h .setIsAdvanced(true);
-    hr.setIsAdvanced(true);
-    s .setIsAdvanced(true);
-    sr.setIsAdvanced(true);
-    v .setIsAdvanced(true);
-    vr.setIsAdvanced(true);
+    h ->setIsAdvanced(true);
+    hr->setIsAdvanced(true);
+    s ->setIsAdvanced(true);
+    sr->setIsAdvanced(true);
+    v ->setIsAdvanced(true);
+    vr->setIsAdvanced(true);
 
     lutControls.push_back(h);
     lutControls.push_back(hr);
@@ -140,14 +143,14 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   d_controlsByFamily["vision/lut"] = lutControls;
 
-  vector<Control> horizonControls = { Control::createBool("Ignore above horizon", [this]() { return d_shouldIgnoreAboveHorizon; }, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }) };
+  vector<shared_ptr<Control const>> horizonControls = { Control::createBool("Ignore above horizon", [this]() { return d_shouldIgnoreAboveHorizon; }, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }) };
   d_controlsByFamily["vision/horizon"] = horizonControls;
 
   //
   // DEBUG IMAGE CONTROLS
   //
 
-  vector<Control> debugImageControls;
+  vector<shared_ptr<Control const>> debugImageControls;
   // Image types
   vector<ControlEnumValue> imageTypes;
   imageTypes.push_back(ControlEnumValue((int)ImageType::RGB,     "RGB"));
@@ -182,7 +185,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   d_controlsByFamily["debug-image"] = debugImageControls;
 
   // Layers
-  vector<Control> debugImageFeaturesControls;
+  vector<shared_ptr<Control const>> debugImageFeaturesControls;
   debugImageFeaturesControls.push_back(Control::createBool("Blobs",            [this]() { return d_shouldDrawBlobs; },           [this](bool const& value) { d_shouldDrawBlobs = value; }));
   debugImageFeaturesControls.push_back(Control::createBool("Line dots",        [this]() { return d_shouldDrawLineDots; },        [this](bool const& value) { d_shouldDrawLineDots = value; }));
   debugImageFeaturesControls.push_back(Control::createBool("Lines (observed)", [this]() { return d_shouldDrawObservedLines; },   [this](bool const& value) { d_shouldDrawObservedLines = value; }));

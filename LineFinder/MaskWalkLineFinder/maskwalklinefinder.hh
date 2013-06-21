@@ -22,7 +22,7 @@ namespace bold
 
     std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) override;
 
-    std::vector<Control> getControls() const override { return d_controls; }
+    std::vector<std::shared_ptr<Control const>> getControls() const override { return d_controls; }
 
   private:
     void rebuild();
@@ -49,6 +49,6 @@ namespace bold
     std::vector<float> d_trigTable;
 
     // controls
-    std::vector<Control> d_controls;
+    std::vector<std::shared_ptr<Control const>> d_controls;
   };
 }

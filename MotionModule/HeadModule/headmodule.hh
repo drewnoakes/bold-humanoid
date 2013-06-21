@@ -17,8 +17,8 @@ namespace bold
   public:
     HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler);
     ~HeadModule();
-    
-    std::vector<Control> getControls() const { return d_controls; }    
+
+    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
 
     void initialize() override;
     void step(std::shared_ptr<JointSelection> selectedJoints) override;
@@ -48,14 +48,14 @@ namespace bold
     void moveToHome();
 
     /** Move to the absolute angular position specified.
-     * 
+     *
      * @param panDegsDelta zero center, positive left, negative right
      * @param tiltDegsDelta zero center, positive up, negative down
      */
     void moveToDegs(double panDegs, double tiltDegs);
 
     /** Move the head by the delta specified.
-     * 
+     *
      * @param panDegsDelta positive left, negative right
      * @param tiltDegsDelta positive up, negative down
      */
@@ -71,9 +71,9 @@ namespace bold
     static constexpr double EYE_TILT_OFFSET_ANGLE = 40.0; // degrees
 
     void checkLimit();
-    
-    std::vector<Control> d_controls;
-    
+
+    std::vector<std::shared_ptr<Control const>> d_controls;
+
     double d_limitLeft;
     double d_limitRight;
     double d_limitTop;
@@ -84,7 +84,7 @@ namespace bold
 
     /// P gain value set on the MX28
     double d_gainP;
-    
+
     double d_panGainP;  ///< P gain value for pan joint used in tracking calculations
     double d_panGainD;  ///< D gain value for pan joint used in tracking calculations
     double d_tiltGainP; ///< P gain value for tilt joint used in tracking calculations

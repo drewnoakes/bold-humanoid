@@ -95,10 +95,9 @@ add_class(BOLDHUMANOID
 add_class(BOLDHUMANOID
   ./Camera/Camera.cc
   ./Camera/capture.cc
-  ./Camera/getControlValue.cc
   ./Camera/initMemoryMapping.cc
-  ./Camera/listControls.cc
-  ./Camera/listFormats.cc
+  ./Camera/createControls.cc
+  ./Camera/createFormats.cc
   ./Camera/open.cc
   ./Camera/pixelFormatRequestSize.cc
   ./Camera/startCapture.cc

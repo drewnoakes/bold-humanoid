@@ -1,8 +1,8 @@
 #include "camera.ih"
 
-vector<Camera::Format> Camera::listFormats()
+void Camera::createFormats()
 {
-  vector<Format> formats;
+  d_formats.clear();
 
   struct v4l2_fmtdesc fmtDesc;
   fmtDesc.index = 0;
@@ -10,9 +10,7 @@ vector<Camera::Format> Camera::listFormats()
 
   while (ioctl(d_fd, VIDIOC_ENUM_FMT, &fmtDesc) == 0)
   {
-    formats.push_back(Format(fmtDesc));
+    d_formats.push_back(Format(fmtDesc));
     fmtDesc.index++;
   }
-
-  return formats;
 }

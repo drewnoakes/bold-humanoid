@@ -30,7 +30,7 @@ void DataStreamer::processCommand(std::string json)
   }
 
   // find the command
-  map<unsigned, Control>& controlsById = d_controlsByIdByFamily[family];
+  map<unsigned, shared_ptr<Control const>>& controlsById = d_controlsByIdByFamily[family];
 
   auto it = controlsById.find(id);
 
@@ -40,9 +40,9 @@ void DataStreamer::processCommand(std::string json)
     return;
   }
 
-  Control& controls = it->second;
+  shared_ptr<Control const> controls = it->second;
 
-  if (!controls.handleRequest(d))
+  if (!controls->handleRequest(d))
   {
     cerr << "[DataStreamer::processCommand] Processing failed for: " << json << endl;
   }

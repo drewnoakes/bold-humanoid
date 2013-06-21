@@ -26,7 +26,7 @@ namespace bold
 
     void update();
 
-    std::vector<Control> getControls() const { return d_controls; }
+    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
 
     AgentPosition position() const { return d_pos; }
     AgentPosition smoothedPosition() const { return d_smoothedPos; }
@@ -57,7 +57,7 @@ namespace bold
     std::function<double()> d_fieldXRng;
     std::function<double()> d_fieldYRng;
     std::function<double()> d_thetaRng;
-    std::vector<Control> d_controls;
+    std::vector<std::shared_ptr<Control const>> d_controls;
     WheelSamplerFactory<3> d_wsf;
     std::function<double()> d_positionErrorRng;
     std::function<double()> d_angleErrorRng;

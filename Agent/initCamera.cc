@@ -18,9 +18,9 @@ void Agent::initCamera()
 
   cout << "[Agent::initCamera] Configuring camera from ini file" << endl;
   string sectionName = "Camera";
-  for (Control& control : d_camera->getControls())
+  for (shared_ptr<Control const> control : d_camera->getControls())
   {
-    string name = control.getName();
+    string name = control->getName();
 
     // strip strange characters from name
     char excludeChars[] = "()-, ";
@@ -33,7 +33,7 @@ void Agent::initCamera()
     }
     else
     {
-      ControlType type = control.getType();
+      ControlType type = control->getType();
       switch (type) {
         case ControlType::Action:
         case ControlType::Unknown:
@@ -42,33 +42,28 @@ void Agent::initCamera()
         case ControlType::Bool:
         case ControlType::Enum:
         case ControlType::Int:
-          int value = getParam(name, control.getDefaultValue());
-          control.setValue(value);
+          int value = getParam(name, control->getDefaultValue());
+          control->setValue(value);
       }
     }
   }
 
   // HACK set some camera properties explicitly while we don't have a configuration system
-  auto trySetCameraControl = [this](string name, int value, bool isAdvanced = false)
+  auto trySetCameraControl = [this](string name, int value)
   {
-    Maybe<Control> c = d_camera->getControl(name);
-    if (!c.hasValue())
-    {
+    shared_ptr<Control const> c = d_camera->getControl(name);
+    if (!c)
       cerr << "[Agent::initCamera] No camera control found for: " << name << endl;
-    }
     else
-    {
-      if (isAdvanced)
-        (*c).setIsAdvanced(true);
-      (*c).setValue(value);
-    }
+      c->setValue(value);
   };
-  trySetCameraControl("Auto WB", 0, true); // off
-  trySetCameraControl("Exposure, Auto", 1, true); // manual
-  trySetCameraControl("Exposure, Auto Priority", 0, true); // off
-  trySetCameraControl("Backlight Compensation", 0, true);
-  trySetCameraControl("Power Line Frequency", 2, true);
-  trySetCameraControl("Exposure (Absolute)", 133);
+  trySetCameraControl("Auto WB", 0); // off
+  trySetCameraControl("Exposure, Auto", 1); // manual
+  trySetCameraControl("Exposure, Auto Priority", 0); // off
+  trySetCameraControl("Backlight Compensation", 0);
+  trySetCameraControl("Power Line Frequency", 2);
+
+  trySetCameraControl("Exposure (Absolute)", 500);
   trySetCameraControl("Brightness", 128);
   trySetCameraControl("Contrast", 32);
   trySetCameraControl("Saturation", 28);
@@ -77,8 +72,8 @@ void Agent::initCamera()
   trySetCameraControl("Sharpness", 191);
 
   cout << "[Agent::initCamera] Controls (" << d_camera->getControls().size() << "):" << endl;;
-  for (Control const& control : d_camera->getControls())
-    cout << "[Agent::initCamera]   " << control << endl;
+  for (std::shared_ptr<Control const> control : d_camera->getControls())
+    cout << "[Agent::initCamera]   " << *control << endl;
 
   cout << "[Agent::initCamera] Formats (" << d_camera->getFormats().size() << "):" << endl;;
   for (Camera::Format const& format : d_camera->getFormats())

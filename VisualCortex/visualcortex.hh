@@ -52,7 +52,7 @@ namespace bold
                  std::shared_ptr<Spatialiser> spatialiser,
                  std::shared_ptr<HeadModule> headModule);
 
-    std::map<std::string,std::vector<Control>> getControlsByFamily() const { return d_controlsByFamily; }
+    std::map<std::string,std::vector<std::shared_ptr<Control const>>> getControlsByFamily() const { return d_controlsByFamily; }
 
     /** Process the provided image, extracting features. */
     void integrateImage(cv::Mat& cameraImage, SequentialTimer& timer);
@@ -94,7 +94,7 @@ namespace bold
     bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge; }
 
   private:
-    std::map<std::string,std::vector<Control>> d_controlsByFamily;
+    std::map<std::string,std::vector<std::shared_ptr<Control const>>> d_controlsByFamily;
 
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<CameraModel> d_cameraModel;

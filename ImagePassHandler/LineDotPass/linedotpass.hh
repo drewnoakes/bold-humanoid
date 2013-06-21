@@ -24,7 +24,7 @@ namespace bold
     std::shared_ptr<PixelLabel> const onLabel;
     LineRunTracker* d_rowTracker;
     std::vector<bold::LineRunTracker> d_colTrackers;
-    Control d_hysterisisControl;
+    std::vector<std::shared_ptr<Control const>> d_controls;
     uchar d_hysterisisLimit;
 
   public:
@@ -63,7 +63,7 @@ namespace bold
 
       // Create controls
 
-      d_hysterisisControl = Control::createInt(
+      auto hysterisisControl = Control::createInt(
         "Line Dot Hysterisis",
         [this]() { return d_hysterisisLimit; },
         [this](int const& value) mutable
@@ -74,11 +74,12 @@ namespace bold
             colTracker.setHysterisisLimit(d_hysterisisLimit);
         }
       );
-      d_hysterisisControl.setLimitValues(0, 255);
-      d_hysterisisControl.setIsAdvanced(true);
+      hysterisisControl->setLimitValues(0, 255);
+      hysterisisControl->setIsAdvanced(true);
+      d_controls.push_back(hysterisisControl);
     }
 
-    Control getHysterisisControl() const { return d_hysterisisControl; }
+    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
 
     void onImageStarting() override
     {

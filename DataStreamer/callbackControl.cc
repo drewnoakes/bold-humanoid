@@ -29,11 +29,11 @@ int DataStreamer::callback_control(
         writer.String(family.c_str());
         writer.StartArray();
 
-        for (auto& pair2 : pair1.second)
+        for (auto pair2 : pair1.second)
         {
           writer.StartObject();
-          Control control = pair2.second;
-          control.writeState(writer);
+          auto control = pair2.second;
+          control->writeState(writer);
           writer.EndObject();
         }
 

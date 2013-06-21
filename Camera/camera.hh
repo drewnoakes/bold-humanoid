@@ -67,7 +67,6 @@ namespace bold
       unsigned imageByteSize;
 
       bool requestSize(unsigned width, unsigned height);
-
     };
 
     struct Buffer
@@ -81,31 +80,32 @@ namespace bold
 
     void open();
 
-    std::vector<Control> getControls() const { return d_controls; }
+    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
 
-    Maybe<Control> getControl(unsigned const& controlId) const
+//     Maybe<Control const> getControl(unsigned const& controlId) const
+//     {
+//       return getControl([&controlId](Control const& c)
+//       {
+//         return c.getId() == controlId;
+//       });
+//     }
+
+    std::shared_ptr<Control const> getControl(std::string const& controlName) const
     {
-      return getControl([&controlId](Control const& c)
+      return getControl([&controlName](std::shared_ptr<Control const> c)
       {
-        return c.getId() == controlId;
+        assert(c);
+        return c->getName() == controlName;
       });
     }
 
-    Maybe<Control> getControl(std::string const& controlName) const
+    std::shared_ptr<Control const> getControl(std::function<bool(std::shared_ptr<Control const>)> const& pred) const
     {
-      return getControl([&controlName](Control const& c)
-      {
-        return c.getName() == controlName;
-      });
-    }
-
-    Maybe<Control> getControl(std::function<bool(Control const&)> const& pred) const
-    {
-      for (Control const& c : d_controls)
+      for (auto c : d_controls)
         if (pred(c))
-          return Maybe<Control>(c);
+          return c;
 
-      return Maybe<Control>::empty();
+      return Maybe<Control const>::empty();
     }
 
     std::vector<Format> getFormats() const { return d_formats; }
@@ -122,18 +122,20 @@ namespace bold
 
     void setSquashWidth(bool squash) { d_squash = squash; }
 
-    int getControlValue(Control const& control);
-
     friend class Control;
     friend struct PixelFormat;
 
   private:
+    void createControls();
+    void createFormats();
+    void initMemoryMapping();
+
     std::string d_device;
     int d_fd;
 
     v4l2_capability d_capabilities;
 
-    std::vector<Control> d_controls;
+    std::vector<std::shared_ptr<Control const>> d_controls;
     std::vector<Format> d_formats;
     PixelFormat d_pixelFormat;
 
@@ -141,10 +143,5 @@ namespace bold
 
     /// If true, the obtained image will have half the width
     bool d_squash;
-
-    std::vector<Control> listControls();
-    std::vector<Format> listFormats();
-
-    void initMemoryMapping();
   };
 }
