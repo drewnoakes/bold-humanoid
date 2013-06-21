@@ -49,25 +49,31 @@ void Agent::initCamera()
   }
 
   // HACK set some camera properties explicitly while we don't have a configuration system
-  auto trySetCameraControl = [this](string name, int value)
+  auto trySetCameraControl = [this](string name, int value, bool isAdvanced = false)
   {
     Maybe<Control> c = d_camera->getControl(name);
     if (!c.hasValue())
+    {
       cerr << "[Agent::initCamera] No camera control found for: " << name << endl;
+    }
     else
+    {
+      if (isAdvanced)
+        (*c).setIsAdvanced(true);
       (*c).setValue(value);
+    }
   };
-  trySetCameraControl("Auto WB", 0); // off
-  trySetCameraControl("Exposure, Auto", 1); // manual
-  trySetCameraControl("Exposure, Auto Priority", 0); // off
-  trySetCameraControl("Backlight Compensation", 0);
+  trySetCameraControl("Auto WB", 0, true); // off
+  trySetCameraControl("Exposure, Auto", 1, true); // manual
+  trySetCameraControl("Exposure, Auto Priority", 0, true); // off
+  trySetCameraControl("Backlight Compensation", 0, true);
+  trySetCameraControl("Power Line Frequency", 2, true);
   trySetCameraControl("Exposure (Absolute)", 133);
   trySetCameraControl("Brightness", 128);
   trySetCameraControl("Contrast", 32);
   trySetCameraControl("Saturation", 28);
   trySetCameraControl("Gain", 255);
   trySetCameraControl("WB Temp (K)", 0);
-  trySetCameraControl("Power Line Frequency", 2);
   trySetCameraControl("Sharpness", 191);
 
   cout << "[Agent::initCamera] Controls (" << d_camera->getControls().size() << "):" << endl;;
