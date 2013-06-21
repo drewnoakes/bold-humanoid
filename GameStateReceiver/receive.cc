@@ -3,19 +3,19 @@
 #define GAMECONTROLLER_STRUCT_HEADER "RGme"
 #define GAMECONTROLLER_STRUCT_VERSION 7
 
+#define GAMECONTROLLER_RETURN_STRUCT_HEADER "RGrt"
+#define GAMECONTROLLER_RETURN_STRUCT_VERSION 1
+
 shared_ptr<GameState> GameStateReceiver::receive()
 {
   const int MAX_LENGTH = 4096; // TODO can this just be sizeof(RoboCupGameControlData)
   static char data[MAX_LENGTH];
 
   // Process incoming game controller messages
-  sockaddr fromAddress;
+  sockaddr_in fromAddress;
   int fromAddressLength;
 
-  // Loop until we get the most recent messages
-  // TODO this looping may not be a good idea, in case we miss an important message
-  //      there are only two a second, so it shouldn't be hard to process all of them
-  // TODO use the fromAddress to send a response message stating that we're alive and well
+  // Process all pending messages, looping until done
   while (d_socket->receiveFrom(data, MAX_LENGTH, &fromAddress, &fromAddressLength) > 0)
   {
     // Verify header
@@ -46,6 +46,21 @@ shared_ptr<GameState> GameStateReceiver::receive()
     }
 
     d_debugger->notifyReceivedGameControllerMessage();
+
+//     // Send a response to the game controller (the sender), stating we're alive and well
+//     assert(fromAddress.sa_family == AF_INET);
+//     d_socket->setTarget(fromAddress);
+//
+//     RoboCupGameControlReturnData response;
+//     memcpy(&response.header, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(response.header));
+//     response.version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
+//     response.teamNumber = (uint16)d_agent->getTeamNumber();
+//     response.uniformNumber = (uint16)d_agent->getUniformNumber();
+//     response.message = (int)GameControllerResponseMessage::ALIVE;
+//
+//     if (!d_socket->send((char*)(&response), sizeof(RoboCupGameControlReturnData)))
+//       cerr << "[GameStateReceiver::receive] Failed sending status response message to game controller" << endl;
+
     return gameState;
   }
 

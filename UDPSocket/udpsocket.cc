@@ -29,7 +29,7 @@ UDPSocket::UDPSocket()
     throw runtime_error("Unable to create datagram socket");
   }
 
-  d_target = (sockaddr*)new sockaddr_in;
+  d_target = new sockaddr_in;
 }
 
 UDPSocket::~UDPSocket()
@@ -98,9 +98,9 @@ bool UDPSocket::setMulticastTTL(const u_char ttl)
   return true;
 }
 
-bool UDPSocket::setTarget(const struct sockaddr targetAddress)
+bool UDPSocket::setTarget(const sockaddr_in targetAddress)
 {
-  return memcpy(d_target, &targetAddress, sizeof(d_target));
+  return memcpy(d_target, &targetAddress, sizeof(sockaddr_in));
 }
 
 bool UDPSocket::setTarget(string targetIpAddress, int port)
@@ -112,10 +112,10 @@ bool UDPSocket::bind(const string localIpAddress, int port)
 {
   static const int one = 1;
 
-  struct sockaddr_in addr = {0};
+  sockaddr_in addr = {0};
+  addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = INADDR_ANY;
   addr.sin_port = htons((uint16_t)port);
-  addr.sin_family = AF_INET;
 
   if (inet_pton(AF_INET, localIpAddress.c_str(), &(addr.sin_addr)))
   {
@@ -151,11 +151,11 @@ int UDPSocket::receive(char* data, int dataLength)
   return receiveFrom(data, dataLength, nullptr, nullptr);
 }
 
-int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr* fromAddress, int* fromAddressLength)
+int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress, int* fromAddressLength)
 {
   assert(bool(fromAddress) == bool(fromAddressLength));
 
-  ssize_t bytesRead = recvfrom(d_socket, data, dataLength, 0, fromAddress, (socklen_t*)fromAddressLength);
+  ssize_t bytesRead = recvfrom(d_socket, data, dataLength, 0, (sockaddr*)fromAddress, (socklen_t*)fromAddressLength);
 
   if (bytesRead < 0)
   {
@@ -168,6 +168,8 @@ int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr* fromAddress, in
     cerr << "[UDPSocket::receiveFrom] Error (" << errno << "): " << strerror(errno) << endl;
   }
 
+  assert(fromAddress->sin_family == AF_INET);
+
   return bytesRead;
 }
 
@@ -179,8 +181,10 @@ bool UDPSocket::send(const string message)
 bool UDPSocket::send(const char* data, int dataLength)
 {
   assert(dataLength > 0);
+  assert(d_target);
+  assert(d_target->sa_family == AF_INET);
 
-  ssize_t bytesSent = sendto(d_socket, data, dataLength, 0, d_target, sizeof(*d_target));
+  ssize_t bytesSent = sendto(d_socket, data, dataLength, 0, (sockaddr*)d_target, sizeof(sockaddr));
 
   if (bytesSent < 0)
     cerr << "[UDPSocket::send] Error (" << errno << "): " << strerror(errno) << endl;

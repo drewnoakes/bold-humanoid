@@ -13,6 +13,22 @@ namespace bold
   class Agent;
   class Debugger;
 
+  struct RoboCupGameControlReturnData
+  {
+    char header[4];
+    uint32 version;
+    uint16 teamNumber;
+    uint16 uniformNumber;
+    uint32 message;
+  };
+
+  enum class GameControllerResponseMessage : uint32
+  {
+    PENALISE = 0,
+    UNPENALISE = 1,
+    ALIVE = 2
+  };
+
   class GameStateReceiver : public Configurable
   {
   public:

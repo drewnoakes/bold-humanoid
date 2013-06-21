@@ -1,11 +1,9 @@
 #pragma once
 
 #include <string>
+#include <netinet/in.h>
 
 #include "../util/Maybe.hh"
-
-struct sockaddr_in;
-struct sockaddr;
 
 namespace bold
 {
@@ -38,8 +36,8 @@ namespace bold
      * 
      * @param targetAddress the target address, probably obtained via receiveFrom
      */
-    bool setTarget(const sockaddr targetAddress);
     
+    bool setTarget(const sockaddr_in targetAddress);
     /** Sets the target address.
      * 
      * @param targetIdAddress an IP address in string form, eg: 123.12.23.34
@@ -87,12 +85,12 @@ namespace bold
      * @returns the number of bytes read, which may be zero if non-blocking, or
      *          negative if an error occurs.
      */
-    int receiveFrom(char* data, int dataLength, sockaddr* fromAddress, int* fromAddressLength);
   
+    int receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress, int* fromAddressLength);
   private:
     bool resolveIp4Address(const std::string ip4Address, int port, sockaddr_in* addr);
     
     int d_socket;
-    sockaddr* d_target;
+    sockaddr_in* d_target;
   };
 }

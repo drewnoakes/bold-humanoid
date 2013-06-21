@@ -23,7 +23,7 @@ TEST (UDPSocketTests, DISABLED_communication)
   
   EXPECT_TRUE(sender.send("Hello"));
   
-  sockaddr from;
+  sockaddr_in from;
   int len = sizeof(from);
   char packet[100] = {0};
   int bytesRead = receiver.receiveFrom(packet, sizeof(packet), &from, &len);
