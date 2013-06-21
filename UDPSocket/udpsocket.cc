@@ -24,7 +24,10 @@ UDPSocket::UDPSocket()
   d_socket = socket(AF_INET, SOCK_DGRAM, 0);
 
   if (d_socket == -1)
-    throw runtime_error("Unable to create socket");
+  {
+    cerr << "[UDPSocket::UDPSocket] Unable to create datagram socket (errono=" << errno << " " << strerror(errno) << ")" << endl;
+    throw runtime_error("Unable to create datagram socket");
+  }
 
   d_target = (sockaddr*)new sockaddr_in;
 }
@@ -41,7 +44,7 @@ bool UDPSocket::setBlocking(bool isBlocking)
   
   if (flags < 0)
   {
-    cerr << "[UDPSocket::setBlocking] Error in F_GETFL" << endl;
+    cerr << "[UDPSocket::setBlocking] Error in F_GETFL: " << strerror(errno) << endl;
     return false;
   }
 
@@ -52,7 +55,7 @@ bool UDPSocket::setBlocking(bool isBlocking)
 
   if (fcntl(d_socket, F_SETFL, flags) == -1)
   {
-    cerr << "[UDPSocket::setBlocking] Error in F_SETFL" << endl;
+    cerr << "[UDPSocket::setBlocking] Error in F_SETFL: " << strerror(errno) << endl;
     return false;
   }
   
