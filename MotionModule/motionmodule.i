@@ -26,6 +26,12 @@ namespace bold
   {
   public:
     ~HeadModule();
+
+    void moveToHome();
+    void moveToDegs(double panDegs, double tiltDegs);
+    void moveByDeltaDegs(double panDegsDelta, double tiltDegsDelta);
+    void initTracking();
+    void moveTracking(double panError, double tiltError);
   };
 
   class WalkModule : public MotionModule
