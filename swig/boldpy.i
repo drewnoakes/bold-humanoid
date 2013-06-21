@@ -6,9 +6,10 @@
 %feature("autodoc", "3");
 
 %feature("director:except") {
-    if ($error != NULL) {
-        throw Swig::DirectorMethodException();
-    }
+  if ($error != NULL) {
+    PyErr_Print();
+    throw Swig::DirectorMethodException();
+  }
 }
 
 // Include std library interfaces
