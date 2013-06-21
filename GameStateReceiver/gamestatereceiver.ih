@@ -12,6 +12,7 @@
 #include "../Agent/agent.hh"
 #include "../Debugger/debugger.hh"
 #include "../StateObject/GameState/gamestate.hh"
+#include "../UDPSocket/udpsocket.hh"
 
 using namespace bold;
 using namespace std;
