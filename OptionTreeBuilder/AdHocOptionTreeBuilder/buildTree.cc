@@ -134,26 +134,25 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // OPTIONS
 
-  // TODO correct capitalisation of options
+  auto sit = tree->addOption(make_shared<ActionOption>("sitDownAction", "sit down", actionModule));
+  auto standUp = tree->addOption(make_shared<ActionOption>("standUpAction", "stand up", actionModule));
+  auto forwardGetUp = tree->addOption(make_shared<ActionOption>("forwardGetUpAction", ActionPage::ForwardGetUp, actionModule));
+  auto backwardGetUp = tree->addOption(make_shared<ActionOption>("backwardGetUpAction", ActionPage::BackwardGetUp, actionModule));
+  auto leftDive = tree->addOption(make_shared<ActionOption>("diveleftAction", "left_dive", actionModule));
+  auto rightDive = tree->addOption(make_shared<ActionOption>("diverightAction", "right_dive", actionModule));
+  auto bigStepLeft = tree->addOption(make_shared<ActionOption>("bigStepLeftAction", "big-step-l", actionModule));
+  auto bigStepRight = tree->addOption(make_shared<ActionOption>("bigStepRightAction", "big-step-r", actionModule));
+  auto leftKick = tree->addOption(make_shared<ActionOption>("leftKickAction", "lk", actionModule));
+  auto rightKick = tree->addOption(make_shared<ActionOption>("rightKickAction", "rk", actionModule));
 
-  auto sit = tree->addOption(make_shared<ActionOption>("sitdownaction", "sit down", actionModule));
-  auto standup = tree->addOption(make_shared<ActionOption>("standupaction", "stand up", actionModule));
-  auto forwardgetup = tree->addOption(make_shared<ActionOption>("forwardgetupaction", ActionPage::ForwardGetUp, actionModule));
-  auto backwardgetup = tree->addOption(make_shared<ActionOption>("backwardgetupaction", ActionPage::BackwardGetUp, actionModule));
-  auto stopWalking = tree->addOption(make_shared<StopWalking>("stopwalking", ambulator));
-  auto approachBall = tree->addOption(make_shared<ApproachBall>("approachball", ambulator));
-  auto circleBall = tree->addOption(make_shared<CircleBall>("circleball", ambulator, headModule));
-  auto leftKick = tree->addOption(make_shared<ActionOption>("leftkickaction", "lk", actionModule));
-  auto rightKick = tree->addOption(make_shared<ActionOption>("rightkickaction", "rk", actionModule));
-  auto lookAround = tree->addOption(make_shared<LookAround>("lookaround", headModule, 100.0));
-  auto lookAroundNarrow = tree->addOption(make_shared<LookAround>("lookaroundnarrow", headModule, 45.0));
-  auto lookAtBall = tree->addOption(make_shared<LookAtBall>("lookatball", cameraModel, headModule));
-  auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookatfeet", headModule));
-  auto lookAtGoal = tree->addOption(make_shared<LookAtGoal>("lookatgoal", cameraModel, headModule));
-  auto leftdive = tree->addOption(make_shared<ActionOption>("diveleftaction", "left_dive", actionModule));
-  auto rightdive = tree->addOption(make_shared<ActionOption>("diverightaction", "right_dive", actionModule));
-  auto bigStepLeft = tree->addOption(make_shared<ActionOption>("bigstepleftaction", "big-step-l", actionModule));
-  auto bigStepRight = tree->addOption(make_shared<ActionOption>("bigsteprightaction", "big-step-r", actionModule));
+  auto stopWalking = tree->addOption(make_shared<StopWalking>("stopWalking", ambulator));
+  auto approachBall = tree->addOption(make_shared<ApproachBall>("approachBall", ambulator));
+  auto circleBall = tree->addOption(make_shared<CircleBall>("circleBall", ambulator, headModule));
+  auto lookAround = tree->addOption(make_shared<LookAround>("lookAround", headModule, 100.0));
+  auto lookAroundNarrow = tree->addOption(make_shared<LookAround>("lookAroundNarrow", headModule, 45.0));
+  auto lookAtBall = tree->addOption(make_shared<LookAtBall>("lookAtBall", cameraModel, headModule));
+  auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookAtFeet", headModule));
+  auto lookAtGoal = tree->addOption(make_shared<LookAtGoal>("lookAtGoal", cameraModel, headModule));
 
   // FSMs
 
@@ -167,14 +166,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto pausingState = winFsm->newState("pausing", {stopWalking});
   auto pausedState = winFsm->newState("paused", {sit});
-  auto unpausingState = winFsm->newState("unpausing", {standup});
+  auto unpausingState = winFsm->newState("unpausing", {standUp});
   auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, true/* start state */);
   auto setState = winFsm->newState("set", {stopWalking});
-  auto beforeTheirKickoff = winFsm->newState("beforetheirkickoff", {stopWalking});
+  auto beforeTheirKickoff = winFsm->newState("beforeTheirKickOff", {stopWalking});
   auto playingState = winFsm->newState("playing", {playingFsm});
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
-  auto forwardGetUpState = winFsm->newState("forwardgetup", {forwardgetup});
-  auto backwardGetUpState = winFsm->newState("backwardgetup", {backwardgetup});
+  auto forwardGetUpState = winFsm->newState("forwardGetUp", {forwardGetUp});
+  auto backwardGetUpState = winFsm->newState("backwardGetUp", {backwardGetUp});
   auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
   auto sitForShutdownState = winFsm->newState("sitForShutdown", {sit});
   auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
@@ -310,9 +309,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     // TODO test this further
     // TODO add logic to kick ball away from goal if close to keeper
 
-    auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
-    auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
-    auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
+    auto standUpState = playingFsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
+    auto lookForBallState = playingFsm->newState("lookForBall", {stopWalking, lookAround});
+    auto lookAtBallState = playingFsm->newState("lookAtBall", {stopWalking, lookAtBall});
     auto bigStepLeftState = playingFsm->newState("bigStepLeft", {bigStepLeft});
     auto bigStepRightState = playingFsm->newState("bigStepRight", {bigStepRight});
 
@@ -356,11 +355,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   {
     // Goalie behaviour during penalties
 
-    auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
-    auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAroundNarrow});
-    auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
-    auto leftDiveState = playingFsm->newState("leftdive", {leftdive});
-    auto rightDiveState = playingFsm->newState("rightdive", {rightdive});
+    auto standUpState = playingFsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
+    auto lookForBallState = playingFsm->newState("lookForBall", {stopWalking, lookAroundNarrow});
+    auto lookAtBallState = playingFsm->newState("lookAtBall", {stopWalking, lookAtBall});
+    auto leftDiveState = playingFsm->newState("leftDive", {leftDive});
+    auto rightDiveState = playingFsm->newState("rightDive", {rightDive});
 
     standUpState->transitionTo(lookForBallState)
       ->when(hasTerminated(standUpState));
@@ -403,18 +402,18 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     // PLAYER BEHAVIOR
     //
 
-    auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
-    auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
-    auto circleToFindLostBallState = playingFsm->newState("lookforballcircling", {circleBall});
-    auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
-    auto approachBallState = playingFsm->newState("approachball", {approachBall, lookAtBall});
-    auto lookForGoalState = playingFsm->newState("lookforgoal", {stopWalking, lookAround});
-    auto lookAtGoalState = playingFsm->newState("lookatgoal", {stopWalking, lookAtGoal});
+    auto standUpState = playingFsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
+    auto lookForBallState = playingFsm->newState("lookForBall", {stopWalking, lookAround});
+    auto circleToFindLostBallState = playingFsm->newState("lookForBallCircling", {circleBall});
+    auto lookAtBallState = playingFsm->newState("lookAtBall", {stopWalking, lookAtBall});
+    auto approachBallState = playingFsm->newState("approachBall", {approachBall, lookAtBall});
+    auto lookForGoalState = playingFsm->newState("lookForGoal", {stopWalking, lookAround});
+    auto lookAtGoalState = playingFsm->newState("lookAtGoal", {stopWalking, lookAtGoal});
     auto aimState = playingFsm->newState("aim", {});
-    auto circleBallState = playingFsm->newState("circleball", {circleBall});
-    auto lookAtFeetState = playingFsm->newState("lookatfeet", {lookAtFeet});
-    auto leftKickState = playingFsm->newState("leftkick", {leftKick});
-    auto rightKickState = playingFsm->newState("rightkick", {rightKick});
+    auto circleBallState = playingFsm->newState("circleBall", {circleBall});
+    auto lookAtFeetState = playingFsm->newState("lookAtFeet", {lookAtFeet});
+    auto leftKickState = playingFsm->newState("leftKick", {leftKick});
+    auto rightKickState = playingFsm->newState("rightKick", {rightKick});
 
     standUpState
       ->transitionTo(lookForBallState)
