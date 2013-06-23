@@ -84,7 +84,7 @@ namespace bold
     bool d_isFirstStepOfAction;
     int m_PageStepCount;
     bool d_isRunning;
-    bool d_stopRequested;
+    bool d_isStopRequested;
     bool d_playingFinished;
 
     bool d_active[21];

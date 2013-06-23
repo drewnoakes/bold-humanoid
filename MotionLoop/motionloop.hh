@@ -42,7 +42,7 @@ namespace bold
 
     /// When false, calls to process have no effect
     bool d_isStarted;
-    bool d_stopRequested;
+    bool d_isStopRequested;
     unsigned d_loopDurationMillis;
 
     pthread_t d_thread;

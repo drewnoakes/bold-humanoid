@@ -86,7 +86,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     d_isRunning = true;
     d_isFirstStepOfAction = false;
     d_playingFinished = false;
-    d_stopRequested = false;
+    d_isStopRequested = false;
     wUnitTimeCount = 0;
     wUnitTimeNum = 0;
     wPauseTime = 0;
@@ -270,7 +270,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 
       if (m_PageStepCount == d_playingPage.header.stepnum)
       {
-        if (d_stopRequested)
+        if (d_isStopRequested)
         {
           wNextPlayPage = d_playingPage.header.exit;
         }
@@ -507,7 +507,7 @@ bool ActionModule::start(int index, PAGE *page)
 
 void ActionModule::stop()
 {
-  d_stopRequested = true;
+  d_isStopRequested = true;
 }
 
 void ActionModule::brake()

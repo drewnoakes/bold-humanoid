@@ -22,7 +22,7 @@ using namespace std;
 MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
 : d_cm730(cm730),
   d_isStarted(false),
-  d_stopRequested(false),
+  d_isStopRequested(false),
   d_loopDurationMillis(8),
   d_readYet(false)
 {
@@ -111,7 +111,7 @@ void MotionLoop::stop()
     return;
 
   // set the flag to end the thread
-  d_stopRequested = true;
+  d_isStopRequested = true;
 
   // wait for the thread to end
   int error;
@@ -120,7 +120,7 @@ void MotionLoop::stop()
 
   cout << "[MotionLoop::stop] Stopped" << endl;
 
-  d_stopRequested = false;
+  d_isStopRequested = false;
   d_isStarted = false;
 }
 
@@ -134,7 +134,7 @@ void *MotionLoop::threadMethod(void *param)
   static struct timespec next_time;
   clock_gettime(CLOCK_MONOTONIC, &next_time);
 
-  while (!loop->d_stopRequested)
+  while (!loop->d_isStopRequested)
   {
     // TODO this will always increment by <8ms, even if something stalled
     next_time.tv_sec += (next_time.tv_nsec + loop->d_loopDurationMillis * 1000000) / 1000000000;
