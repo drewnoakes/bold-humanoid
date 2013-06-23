@@ -17,8 +17,6 @@ FallDetector::FallDetector()
 
 void FallDetector::observeTyped(std::shared_ptr<HardwareState const> hardwareState)
 {
-//   cout << "[FallDetector::observeTyped] observing" << endl;
-  
   // Track the smoothed forward/backward acceleration to test for a consistent
   // indication that we have fallen.
 
