@@ -164,10 +164,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   // ========== WIN ==========
   //
 
+  auto startUpState = winFsm->newState("startUp", {sit}, false/*end state*/, true/* start state */);
+  auto readyState = winFsm->newState("ready", {stopWalking});
   auto pausingState = winFsm->newState("pausing", {stopWalking});
   auto pausedState = winFsm->newState("paused", {sit});
   auto unpausingState = winFsm->newState("unpausing", {standUp});
-  auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, true/* start state */);
   auto setState = winFsm->newState("set", {stopWalking});
   auto beforeTheirKickoff = winFsm->newState("beforeTheirKickOff", {stopWalking});
   auto playingState = winFsm->newState("playing", {playingFsm});
@@ -185,6 +186,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   pausedState->onEnter = [debugger]() { debugger->showPaused(); };
   pausingState->onEnter = [debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); };
   stopAgentAndExitState->onEnter = [agent]() { agent->getCM730()->torqueEnable(false); agent->stop(); };
+
+  //
+  // START UP
+  //
+
+  startUpState
+    ->transitionTo(readyState)
+    ->when(hasTerminated(startUpState));
 
   //
   // PAUSE BUTTON

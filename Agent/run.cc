@@ -25,17 +25,6 @@ void Agent::run()
       // Wait until the motion loop has read a hardware value
       usleep(8000);
     }
-
-    // TODO move this to an initialisation phase of the behaviour tree
-    cout << "[Agent::run] Getting into initial pose" << endl;
-    auto sit = d_optionTree->getOption("sitdownaction");
-    cout << "sit: " << (sit ? "yes" : "no") << endl;
-    cout << sit->getID() << endl;
-    while (sit->hasTerminated() == 0.0)
-    {
-      sit->runPolicy();
-      usleep(8000);
-    }
   }
 
   cout << "[Agent::run] Starting think loop" << endl;
