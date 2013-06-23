@@ -15,8 +15,22 @@ Agent::Agent()
   cout << "[Agent::Agent] Start" << endl;
 
   cout << "[Agent::Agent] Creating voice" << endl;
+
+  vector<string> phrases = {
+    "Bold Hearts are go!",
+    "I am a protector of the realm",
+    "What do you despise? By this are you truly known.",
+    "A day may come when the courage of men fails",
+    "Duty is heavier than a mountain",
+    "Humans have a knack for choosing precisely the things that are worst for them",
+    "Ride for ruin and the world's ending!",
+    "Kill if you will, but command me nothing!",
+    "The existence of tricks does not imply the absence of magic",
+    "We eat ham and jam and Spam a lot"
+  };
+  srand(time(NULL));
   d_voice = make_shared<Voice>();
-  d_voice->say("Bold Hearts are go");
+  d_voice->say(phrases[rand() % phrases.size()]);
 
   auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));
   cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
