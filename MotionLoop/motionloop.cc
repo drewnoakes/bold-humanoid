@@ -42,7 +42,7 @@ MotionLoop::~MotionLoop()
 void MotionLoop::addModule(shared_ptr<MotionModule> module)
 {
   assert(module);
-  
+
   // Initialise modules each time they are added
   module->initialize();
 
@@ -59,7 +59,7 @@ bool MotionLoop::start()
   cout << "[MotionLoop::start] Starting" << endl;
 
   d_readYet = false;
-  
+
   // Initialise default thread attributes
   pthread_attr_t attr;
   pthread_attr_init(&attr);
@@ -127,7 +127,7 @@ void MotionLoop::stop()
 void *MotionLoop::threadMethod(void *param)
 {
   cout << "[MotionLoop::threadMethod] Started" << endl;
-  
+
   ThreadId::setThreadId(ThreadId::MotionLoop);
 
   MotionLoop *loop = (MotionLoop*)param;
@@ -141,9 +141,9 @@ void *MotionLoop::threadMethod(void *param)
     next_time.tv_nsec = (next_time.tv_nsec + loop->d_loopDurationMillis * 1000000) % 1000000000;
 
     SequentialTimer t;
-  
+
     loop->step(t);
-    
+
     clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next_time, NULL);
     t.timeEvent("Sleep");
 
@@ -163,9 +163,9 @@ void MotionLoop::step(SequentialTimer& t)
     //
     // LET MOTION MODULES UPDATE BODY CONTROL
     //
-    
+
     auto tasks = AgentState::get<MotionTaskState>();
-    
+
     if (tasks && !tasks->isEmpty())
     {
       for (pair<MotionModule*, shared_ptr<JointSelection>> const& pair : *tasks->getModuleJointSelection())
@@ -175,15 +175,15 @@ void MotionLoop::step(SequentialTimer& t)
 
         assert(module);
         assert(jointSelection);
-        
+
         module->step(jointSelection);
 
         if (jointSelection->hasHead())
           module->applyHead(d_bodyControl->getHeadSection());
-        
+
         if (jointSelection->hasArms())
           module->applyArms(d_bodyControl->getArmSection());
-        
+
         if (jointSelection->hasLegs())
           module->applyLegs(d_bodyControl->getLegSection());
 
@@ -225,7 +225,7 @@ void MotionLoop::step(SequentialTimer& t)
             if (addrRange.contains(MX28::P_I_GAIN))   parameters[n++] = joint->getIGain();
             if (addrRange.contains(MX28::P_P_GAIN))   parameters[n++] = joint->getPGain();
             if (addrRange.contains(MX28::P_RESERVED)) parameters[n++] = 0;
-            
+
             if (addrRange.contains(MX28::P_GOAL_POSITION_L))
             {
               assert(addrRange.contains(MX28::P_GOAL_POSITION_H));
@@ -244,7 +244,7 @@ void MotionLoop::step(SequentialTimer& t)
 
         d_cm730->syncWrite(addrRange.min(), bytesPerDevice, dirtyDeviceCount, parameters);
       }
-      
+
       t.timeEvent("Write to CM730");
     }
   }

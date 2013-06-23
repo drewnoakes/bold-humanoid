@@ -12,7 +12,7 @@ void Agent::run()
   if (d_haveBody)
   {
     d_cm730->torqueEnable(true);
-  
+
     d_motionLoop->start();
 
     cout << "[Agent::run] Waiting for HardwareState" << endl;
@@ -21,7 +21,7 @@ void Agent::run()
       // Wait until the motion loop has read a hardware value
       usleep(8000);
     }
-    
+
     // TODO move this to an initialisation phase of the behaviour tree
     cout << "[Agent::run] Getting into initial pose" << endl;
     auto sit = d_optionTree->getOption("sitdownaction");
@@ -33,7 +33,7 @@ void Agent::run()
       usleep(8000);
     }
   }
-  
+
   cout << "[Agent::run] Starting think loop" << endl;
 
   while (d_isRunning)

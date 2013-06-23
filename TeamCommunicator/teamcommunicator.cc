@@ -29,14 +29,14 @@ bool TeamCommunicator::send(StringBuffer buffer)
 {
   if (d_debugger)
     d_debugger->notifySendingTeamMessage();
-  
+
   // TODO send data, possible not composing document internally
   // - team number
   // - player number
   // - relative position of ball
   // - whether fallen or not
   // - motion dir/turn angle
-  
+
   return d_socket->send(buffer.GetString(), buffer.GetSize());
 }
 
@@ -46,12 +46,12 @@ Maybe<Document> TeamCommunicator::tryReceive()
   static char buffer[BUFFER_SIZE];
   if (d_socket->receive(buffer, BUFFER_SIZE) <= 0)
     return Maybe<Document>::empty();
-  
-  auto doc = make_shared<Document>();  
+
+  auto doc = make_shared<Document>();
   doc->Parse<0>(buffer);
 
   if (d_debugger)
     d_debugger->notifyReceivedTeamMessage();
-  
+
   return doc;
 }

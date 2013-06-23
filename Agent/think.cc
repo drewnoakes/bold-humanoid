@@ -5,7 +5,7 @@ void Agent::think()
 //   cout << "[Agent::think]" << endl;
 
   assert(ThreadId::isThinkLoopThread());
-  
+
   SequentialTimer t;
 
   //
