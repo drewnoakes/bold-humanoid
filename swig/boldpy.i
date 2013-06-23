@@ -31,7 +31,9 @@
 %shared_ptr(bold::BodyState)
 %shared_ptr(bold::CameraFrameState)
 %shared_ptr(bold::CameraModel)
+%shared_ptr(bold::CM730Snapshot)
 %shared_ptr(bold::Configurable)
+%shared_ptr(bold::Debugger)
 %shared_ptr(bold::DebugState)
 %shared_ptr(bold::GameState)
 %shared_ptr(bold::HardwareState)
@@ -39,6 +41,7 @@
 %shared_ptr(bold::Joint)
 %shared_ptr(bold::Limb)
 %shared_ptr(bold::MotionModule)
+%shared_ptr(bold::MX28Snapshot)
 %shared_ptr(bold::Option)
 %shared_ptr(bold::OptionTreeState)
 %shared_ptr(bold::ParticleState)
@@ -62,8 +65,13 @@
 %include "../Agent/agent.i"
 %include "../BodyPart/bodypart.i"
 %include "../CameraModel/cameramodel.i"
+%include "../CM730Snapshot/cm730snapshot.i"
+%include "../MX28Snapshot/mx28snapshot.i"
 %include "../StateObject/stateobject.i"
 %include "../StateObject/BodyState/bodystate.i"
+%include "../StateObject/CameraFrameState/cameraframestate.i"
+%include "../StateObject/HardwareState/hardwarestate.i"
+
 %include "../AgentState/agentstate.i"
 
 %include "../MotionModule/motionmodule.i"
@@ -73,38 +81,3 @@
 %include "../Option/option.i"
 
 %include "../OptionTree/optiontree.i"
-
-namespace bold
-{
-
-  class CameraFrameState : public StateObject
-  {
-  public:
-    bool isBallVisible() const;
-     std::vector<bold::LineSegment2i> getObservedLineSegments() const;
-  };
-  
-  %extend CameraFrameState {
-  public:
-    // SWIG has issues with Maybe
-    std::shared_ptr<Eigen::Vector2d> getBallObservation() const
-    {
-      return ($self->getBallObservation());
-    }
-
-    // 
-    std::vector<PyObject*> getGoalObservations() const
-    {
-      std::vector<PyObject*> out;
-      std::vector<Eigen::Vector2d> in = $self->getGoalObservations();
-      for (int i = 0; i < in.size(); ++i)
-      {
-        PyObject *resultobj = 0;
-        ConvertFromEigenToNumPyMatrix<Eigen::Vector2d>(&resultobj, &(in[i]));
-        out.push_back(resultobj);
-      }
-      return out;
-    }
-  };
-
-}
