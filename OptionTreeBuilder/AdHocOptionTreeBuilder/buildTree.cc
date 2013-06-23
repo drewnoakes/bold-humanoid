@@ -292,7 +292,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   stopWalkingForShutdownState
     ->transitionTo(sitForShutdownState)
-    ->when(negate(isWalking));
+    ->when(negate(isWalking)); // TODO why can't this be hasTerminated(stopWalkingForShutdownState) -- doesn't seem to work (here and in other places)
 
   sitForShutdownState
     ->transitionTo(stopAgentAndExitState)
