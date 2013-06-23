@@ -31,14 +31,14 @@ class ActionOption(bold.Option):
 
         print("ActionOption.hasTerminated()")
         if not self.started:
-            print("Not started yet")
+            print("Not started yet; not terminated")
             return 0.0
 
         if (getAgent().getActionModule().isRunning()):
-            print("Action module is running")
+            print("Action module is running; not terminated")
             return 0.0
 
-        print("Started and action module not running")
+        print("Started and action module not running; terminated")
         return 1.0;
 
     def runPolicy(self):
