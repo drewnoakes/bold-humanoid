@@ -147,7 +147,7 @@ class FSMOption(bold.Option):
         if startState:
             self.startState = state
 
-    def createAndAddState(self, name = "", options = [], startState = False, finalState = False):
+    def newState(self, name = "", options = [], startState = False, finalState = False):
         s = FSMState(name, options, finalState)
         self.addState(s, startState)
         return s
@@ -191,7 +191,7 @@ class FSMOption(bold.Option):
 
                     break # loop over transitions
 
-            if transitionMade:
+            if not transitionMade:
                 break
 
             loopCount += 1
