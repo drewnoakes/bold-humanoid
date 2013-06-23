@@ -18,7 +18,7 @@ void Agent::requestStop()
 
 void Agent::stop()
 {
-  cout << "[Agent::stop] Requesting stop..." << endl;
+  cout << "[Agent::stop]" << endl;
   d_isRunning = false;
   d_motionLoop->stop();
 }
