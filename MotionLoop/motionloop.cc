@@ -279,20 +279,6 @@ void MotionLoop::step(SequentialTimer& t)
   AgentState::getInstance().set(make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes));
   t.timeEvent("Update HardwareState");
 
-  //
-  // UPDATE BODYSTATE
-  //
-
-  // TODO implement this as an observer of HardwareState, and perform calculation on think thread, not motion thread (?)
-  double angles[(uchar)JointId::MAX + 1];
-  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-  {
-    angles[jointId] = mx28Snapshots[jointId - 1]->presentPosition;
-  }
-
-  AgentState::getInstance().set(make_shared<BodyState const>(angles));
-  t.timeEvent("Update BodyState");
-  
   if (!d_readYet)
   {
     d_bodyControl->updateFromHardwareState();

@@ -16,6 +16,25 @@ void Agent::think()
   t.exit();
 
   //
+  // Update BodyState
+  //
+  // BodyState is updated immediately after capturing the camera image so that
+  // it's as close to the state of the body at the time of capture as possible.
+  // This means that throughout each think cycle, the body state doesn't change.
+  //
+
+  auto hw = AgentState::get<HardwareState>();
+  if (hw)
+  {
+    double angles[(uchar)JointId::MAX + 1];
+    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+      angles[jointId] = hw->getMX28State(jointId)->presentPosition;
+
+    AgentState::getInstance().set(make_shared<BodyState const>(angles));
+    t.timeEvent("Update BodyState");
+  }
+
+  //
   // Record frame, if required
   //
   if (d_isRecordingFrames)
