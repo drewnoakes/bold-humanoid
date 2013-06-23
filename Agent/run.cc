@@ -9,6 +9,10 @@ void Agent::run()
 
   d_isRunning = true;
 
+  std::stringstream announcement;
+  announcement << "Player " << d_uniformNumber << " on team " << d_teamNumber;
+  d_voice->say(announcement.str());
+
   if (d_haveBody)
   {
     d_cm730->torqueEnable(true);
