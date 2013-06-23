@@ -122,13 +122,13 @@ namespace bold
       return s;
     }
 
-    void addTransition(FSMTransitionPtr transition);
+    FSMTransitionPtr wildcardTransitionTo(FSMStatePtr targetState);
 
     std::string toDot() const;
 
   private:
     std::vector<FSMStatePtr> d_states;
-    std::vector<FSMTransitionPtr> d_transitions;
+    std::vector<FSMTransitionPtr> d_wildcardTransitions;
     FSMStatePtr d_startState;
     FSMStatePtr d_curState;
   };
@@ -152,8 +152,11 @@ namespace bold
       d_startState = state;
   }
 
-  inline void FSMOption::addTransition(FSMTransitionPtr transition)
+  inline FSMTransitionPtr FSMOption::wildcardTransitionTo(FSMStatePtr targetState)
   {
-    d_transitions.push_back(transition);
+    FSMTransitionPtr t = std::make_shared<FSMTransition>("");
+    t->childState = targetState;
+    d_wildcardTransitions.push_back(t);
+    return t;
   }
 }

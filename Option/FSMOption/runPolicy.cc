@@ -4,18 +4,39 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
 {
 //   cout << "[FSMOption::runPolicy] ----- Start -----" << endl;
 
-  if (!d_curState)
+  auto setCurrentState = [this](FSMStatePtr state)
   {
-    d_curState = d_startState;
+    d_curState = state;
     d_curState->startTimeSeconds = Clock::getSeconds();
-    
+
     if (d_curState->onEnter)
       d_curState->onEnter();
-  }
+  };
+
+  if (!d_curState)
+    setCurrentState(d_startState);
 
 //   cout << "[FSMOption::runPolicy] Current state: " << d_curState->name << endl;
 
   const int MAX_LOOP_COUNT = 20;
+
+  auto tryTransition = [this,setCurrentState](FSMTransitionPtr transition)
+  {
+    if (!transition->condition())
+      return false;
+
+    cout << "[FSMOption::runPolicy] (" << getID() << ") transitioning from '" << d_curState->name
+          << "' to '" << transition->childState->name << "' after "
+          << (int)((Clock::getSeconds() - d_curState->startTimeSeconds)*1000) << "ms"
+          <<  endl;
+
+    setCurrentState(transition->childState);
+
+    if (transition->onFire)
+      transition->onFire();
+
+    return true;
+  };
 
   int loopCount = 0;
   bool transitionMade;
@@ -23,27 +44,24 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
   {
     transitionMade = false;
 
-    for (auto transition : d_curState->transitions)
+    for (auto transition : d_wildcardTransitions)
     {
-      if (transition->condition())
+      if (tryTransition(transition))
       {
-        cout << "[FSMOption::runPolicy] (" << getID() << ") transitioning from '" << d_curState->name
-             << "' to '" << transition->childState->name << "' after "
-             << (int)((Clock::getSeconds() - d_curState->startTimeSeconds)*1000) << "ms"
-             <<  endl;
-
-        d_curState = transition->childState;
-        d_curState->startTimeSeconds = Clock::getSeconds();
-
         transitionMade = true;
-
-        if (transition->onFire)
-          transition->onFire();
-
-        if (d_curState->onEnter)
-          d_curState->onEnter();
-
         break;
+      }
+    }
+
+    if (!transitionMade)
+    {
+      for (auto transition : d_curState->transitions)
+      {
+        if (tryTransition(transition))
+        {
+          transitionMade = true;
+          break;
+        }
       }
     }
 

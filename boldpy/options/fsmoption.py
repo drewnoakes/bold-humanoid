@@ -2,7 +2,7 @@ import bold
 import time
 
 class FSMTransition:
-    
+
     """Finite State Machine transition
 
     Represents a transition between states in an FSM.
@@ -18,7 +18,7 @@ class FSMTransition:
         parentState: The FSMState that this transition is from
         childState: The FSMState that this transition is to
     """
-    
+
     def __init__(self, name, parentState = None):
         self.name = name
         self.condition = None
@@ -77,7 +77,7 @@ class FSMState:
         t.childState = childState
         self.transitions.append(t)
         return t
-    
+
     def transitionTo(self, targetState):
         t = FSMTransition("")
         t.parentState = self
@@ -85,23 +85,23 @@ class FSMState:
         self.transitions.append(t)
         return t
 
-        
+
 class FSMOption(bold.Option):
-    
+
     """ Finite State Machine Option
 
     A Finite State Machine (FSM) is a directed graph, where the nodes
     are states (represented by FMState objects) and the edges define
     transitions between these states (represented by FSMTransition
     objects). When run, the FSM performs the following steps:
-    
+
     * If no state is selected, select the start state
     * Loop through the transitions from this state and check their
       conditions; fire the first one that returns True.
     * Repeat the previous step, until no transitions fire anymore.
     * Return the list of options associated with the final selected
       state.
-    
+
     Attributes:
       states: List of FSMState objects
       transitions: List of FSMTransition objects
@@ -136,7 +136,7 @@ class FSMOption(bold.Option):
 
     def addState(self, state, startState = False):
         """Add a state to this FSM
-        
+
         Args:
           state: FSMState object to add.
           startState: Boolean flag denoting whether this is the start
@@ -152,13 +152,14 @@ class FSMOption(bold.Option):
         self.addState(s, startState)
         return s
 
-    def addTransition(self, transition):
-        """Add a transition to this FSM
-        
-        Args:
-          transition: FSMTransition object to add.
-        """
-        self.transitions.append(transition)
+    # TODO this was never used, but we now have wildcardTransitionTo which should probably be implemented here -- Sander, I'd like to see how that's done
+    #def addTransition(self, transition):
+        #"""Add a transition to this FSM
+
+        #Args:
+          #transition: FSMTransition object to add.
+        #"""
+        #self.transitions.append(transition)
 
     def runPolicy(self):
         if self.curState is None:

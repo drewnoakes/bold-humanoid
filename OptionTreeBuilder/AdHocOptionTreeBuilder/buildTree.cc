@@ -126,7 +126,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto hasFallenBackward = [fallDetector]() { return fallDetector->getFallenState() == FallState::BACKWARD; };
 
-  auto isAgentShutdownRequested = [agent]() { return agent->isStopRequested(); };
+  auto isAgentShutdownRequested = changedTo(true, [agent]() { return agent->isStopRequested(); });
 
   // BUILD TREE
 
@@ -293,10 +293,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   //
 
   // TODO express this sequence more eligantly
-  // TODO wildcard winFSM.* -> stopWalkingForShutdown (not just from playingState)
 
-  playingState
-    ->transitionTo(stopWalkingForShutdownState)
+  winFsm
+    ->wildcardTransitionTo(stopWalkingForShutdownState)
     ->when(isAgentShutdownRequested);
 
   stopWalkingForShutdownState
