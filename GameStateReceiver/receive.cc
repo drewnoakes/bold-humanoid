@@ -21,8 +21,13 @@ shared_ptr<GameState> GameStateReceiver::receive()
     // Verify header
     if (memcmp(data, GAMECONTROLLER_STRUCT_HEADER, sizeof(GAMECONTROLLER_STRUCT_HEADER) - 1) != 0)
     {
-      cerr << "[GameStateReceiver::receive] Ignoring game controller message with unexpected header" << endl;
-      d_debugger->notifyIgnoringUnrecognisedMessage();
+      // Silently ignore status messages from other players
+      if (memcmp(data, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(GAMECONTROLLER_RETURN_STRUCT_HEADER) - 1) != 0)
+      {
+        // Not a GC message, nor a status message
+        cerr << "[GameStateReceiver::receive] Ignoring game controller message with unexpected header" << endl;
+        d_debugger->notifyIgnoringUnrecognisedMessage();
+      }
       continue;
     }
 
