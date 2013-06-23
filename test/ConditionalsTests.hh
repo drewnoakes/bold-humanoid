@@ -139,3 +139,41 @@ TEST(ConditionalsTests, oneShot)
   EXPECT_FALSE(fun());
   EXPECT_EQ(3, createCount);
 }
+
+TEST(ConditionalsTests, changedTo)
+{
+  bool value = false;
+  auto fun1 = changedTo(true, [&value](){ return value; });
+
+  EXPECT_FALSE(fun1());
+  EXPECT_FALSE(fun1());
+
+  value = true;
+
+  EXPECT_TRUE(fun1());
+  EXPECT_FALSE(fun1());
+  EXPECT_FALSE(fun1());
+
+  value = false;
+
+  EXPECT_FALSE(fun1());
+
+  value = true;
+
+  EXPECT_TRUE(fun1());
+  EXPECT_FALSE(fun1());
+
+  auto fun2 = changedTo(false, [&value](){ return value; });
+
+  EXPECT_FALSE(fun2());
+
+  value = false;
+
+  EXPECT_TRUE(fun2());
+  EXPECT_FALSE(fun2());
+
+  value = true;
+  auto fun3 = changedTo(true, [&value](){ return value; });
+  EXPECT_TRUE(fun3()) << "True if starting value matches target";
+  EXPECT_FALSE(fun3());
+}

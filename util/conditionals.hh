@@ -115,4 +115,20 @@ namespace bold
       return false;
     };
   };
+
+  auto changedTo = [](bool trueWhen, std::function<bool()> condition)
+  {
+    auto lastValue = std::make_shared<bool>(!trueWhen);
+
+    return [lastValue,trueWhen,condition]()
+    {
+      bool val = condition();
+
+      if (val == *lastValue)
+        return false;
+
+      *lastValue = val;
+      return val == trueWhen;
+    };
+  };
 }
