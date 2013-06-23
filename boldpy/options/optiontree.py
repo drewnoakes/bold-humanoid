@@ -57,22 +57,22 @@ class PyOptionTreeBuilder:
         sitDownState = bootFSM.newState(options = [tree.getOption("sitdownaction")],
                                            startState = True,
                                            name = "sitdown")
-        standUpState = bootFSM.newState(options = [tree.getOption("standupaction")],
-                                           name = "standup")
 
-        lookAroundState = bootFSM.newState(options = [self.lar],
-                                              name = "lookaround")
+        bootDoneState = bootFSM.newState(options = [],
+                                         finalState = True,
+                                         name = "bootdone")
 
         # TRANSITIONS
         sitDownState.\
-            transitionTo(standUpState).\
+            transitionTo(bootDoneState).\
             when(sitDownState.allOptionsTerminated)
 
-        standUpState.\
-            transitionTo(lookAroundState).\
-            when(standUpState.allOptionsTerminated)
-
         tree.addOption(bootFSM)
+
+    def createPlayingFSM(self, tree):
+        playingFSM = FSMOption("playing").__disown__()
+
+        tree.addOption(playingFSM)
 
     def createWinFSM(self, tree):
         winFSM = FSMOption("winfsm").__disown__()
@@ -80,7 +80,7 @@ class PyOptionTreeBuilder:
         # STATES
         bootingState = winFSM.newState(options = [tree.getOption("bootfsm")],
                                        startState = True,
-                                       name = "winfsm")
+                                       name = "bootfsm")
         
         pausingState = winFSM.newState(options = [tree.getOption("stopwalking")],
                                        name = "pausing")
@@ -113,10 +113,45 @@ class PyOptionTreeBuilder:
                                                 name ="backwardgetup")
 
         dbg = getAgent().getDebugger()
+        bootingState.onEnter = dbg.showPaused
+
+        readyState.onEnter = dbg.showReady
+        setState.onEnter = dbg.showSet
+        #playingState.onEnter = dbg.showPlaying
+        penalizedState.onEnter = dbg.showPenalized
+        pausedState.onEnter = dbg.showPaused
+        pausingState.onEnter = dbg.showPaused
+
+        # TRANSITIONS
+
+        def startButtonPressed():
+            hw = bold.AgentState.getHardwareState()
+            if hw is None:
+                return False
+            cm730 = hw.getCM730State()
+            if cm730 is None:
+                return False
+            state = cm730.isStartButtonPressed
+            print(state)
+            if startButtonPressed.lastState is not state:
+                startButtonPressed.lastState = state
+                return state
+
+            return False
+        startButtonPressed.lastState = False
+
+        bootingState.\
+            transitionTo(pausedState).\
+            when(bootingState.allOptionsTerminated)
+
+        pausedState.\
+            transitionTo(penalizedState).\
+            when(startButtonPressed)
 
         tree.addOption(winFSM, True)
   
     def buildTree(self):
+
         #print("buildTree: " + conf.confimpl.getParamStr("agent.u2dDevName", "not found"))
         tree = bold.OptionTree()
 
