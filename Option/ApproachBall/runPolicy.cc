@@ -16,8 +16,6 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
 
   Vector2d move = Math::lerp(alpha, Vector2d(d_minForwardSpeed, 0), Vector2d(d_maxForwardSpeed, 0));
 
-  cout << "Move: " << move.transpose() << endl;
-
   d_ambulator->setMoveDir(move);
 
   // NOTE atan has flipped x/y on purpose
