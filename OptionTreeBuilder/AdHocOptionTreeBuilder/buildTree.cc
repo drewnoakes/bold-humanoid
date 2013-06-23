@@ -231,9 +231,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
 
-  auto forwardGetUpState = playingFsm->newState("forwardgetup", {forwardgetup});
+  auto forwardGetUpState = winFsm->newState("forwardgetup", {forwardgetup});
 
-  auto backwardGetUpState = playingFsm->newState("backwardgetup", {backwardgetup});
+  auto backwardGetUpState = winFsm->newState("backwardgetup", {backwardgetup});
 
   readyState->onEnter = [debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); };
   setState->onEnter = [debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); };
