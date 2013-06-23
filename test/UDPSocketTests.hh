@@ -18,7 +18,6 @@ TEST (UDPSocketTests, DISABLED_communication)
 
   UDPSocket receiver;
   EXPECT_TRUE(receiver.setBlocking(true));
-  EXPECT_TRUE(receiver.setMulticastLoopback(true));
   EXPECT_TRUE(receiver.bind("", receiverPort));
 
   EXPECT_TRUE(sender.send("Hello"));
@@ -46,7 +45,7 @@ TEST (UDPSocketTests, DISABLED_communication)
   EXPECT_EQ("Hello yourself", string(packet));
 }
 
-TEST (UDPSocketTests, loopback)
+TEST (UDPSocketTests, broadcastLoopback)
 {
   int port = 8765;
 
@@ -54,7 +53,6 @@ TEST (UDPSocketTests, loopback)
 
   EXPECT_TRUE(socket.setBlocking(true));
   EXPECT_TRUE(socket.setBroadcast(true));
-  EXPECT_TRUE(socket.setMulticastLoopback(true));
   EXPECT_TRUE(socket.setTarget("255.255.255.255", port));
   EXPECT_TRUE(socket.bind("", port));
 
