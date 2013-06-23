@@ -107,7 +107,7 @@ int main(int argc, char **argv)
   agent.reset(new Agent());
 
   agent->setTeamNumber(teamNumber);
-  agent->setUniformNumber(teamNumber);
+  agent->setUniformNumber(uniformNumber);
 
   AdHocOptionTreeBuilder optionTreeBuilder;
   auto optionTree = optionTreeBuilder.buildTree(teamNumber,
