@@ -32,7 +32,8 @@ namespace bold
       }
       return out;
     }
-
+    
+    /*
     std::vector<std::pair<PyObject*,PyObject*> > getObservedLineSegments() const
     {
       std::vector<std::pair<PyObject*,PyObject*> > out;
@@ -47,6 +48,7 @@ namespace bold
       }
       return out;
     }
+    */
   };
 
 }
