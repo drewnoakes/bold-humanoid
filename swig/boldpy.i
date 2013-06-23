@@ -56,6 +56,7 @@
 // (eg C++11 stuff, and usually inlined and private stuff)
 %feature("kwargs");
 
+%include "../Debugger/debugger.i"
 %include "../Configurable/configurable.i"
 %include "../VisualCortex/visualcortex.i"
 %include "../Agent/agent.i"
