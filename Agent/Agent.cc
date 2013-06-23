@@ -3,6 +3,7 @@
 Agent::Agent()
   : Configurable("agent"),
     d_isRunning(false),
+    d_isStopRequested(false),
     d_teamNumber(0),
     d_uniformNumber(0),
     d_isRecordingFrames(false),

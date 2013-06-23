@@ -31,7 +31,7 @@ void handleShutdownSignal(int sig)
   if (agent)
   {
     cout << "[boldhumanoid] Stopping Agent" << endl;
-    agent->stop();
+    agent->requestStop();
   }
 }
 
@@ -112,6 +112,7 @@ int main(int argc, char **argv)
   AdHocOptionTreeBuilder optionTreeBuilder;
   auto optionTree = optionTreeBuilder.buildTree(teamNumber,
                                                 uniformNumber,
+                                                agent.get(),
                                                 agent->getDebugger(),
                                                 agent->getCameraModel(),
                                                 agent->getAmbulator(),

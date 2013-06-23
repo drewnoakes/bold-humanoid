@@ -57,6 +57,7 @@ namespace bold
     std::shared_ptr<ActionModule> getActionModule() const { return d_actionModule; }
 
     std::shared_ptr<FallDetector> getFallDetector() const { return d_fallDetector; }
+    std::shared_ptr<CM730> getCM730() const { return d_cm730; }
 
     unsigned getTeamNumber() const { return d_teamNumber; }
     void setTeamNumber(unsigned teamNumber) { d_teamNumber = teamNumber; }
@@ -69,7 +70,10 @@ namespace bold
     Agent& operator=(Agent const&) = delete;
 
     void run();
+    void requestStop();
     void stop();
+
+    bool isStopRequested() const { return d_isStopRequested; }
 
     sigc::signal<void> onThinkEnd;
 
@@ -77,6 +81,7 @@ namespace bold
     /// Whether we have connected to a CM730 subcontroller.
     bool d_haveBody;
     bool d_isRunning;
+    bool d_isStopRequested;
 
     std::string d_motionFile;
     unsigned d_teamNumber;

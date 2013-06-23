@@ -1,6 +1,8 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../../Agent/agent.hh"
 #include "../../Ambulator/ambulator.hh"
+#include "../../CM730/cm730.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../util/conditionals.hh"
@@ -8,6 +10,7 @@
 
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          unsigned uniformNumber,
+                                                         Agent* agent,
                                                          shared_ptr<Debugger> debugger,
                                                          shared_ptr<CameraModel> cameraModel,
                                                          shared_ptr<Ambulator> ambulator,
@@ -117,14 +120,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   auto isSetPlayMode = isPlayMode(PlayMode::SET, false);
   auto isPlayingPlayMode = isPlayMode(PlayMode::PLAYING, false);
 
-  auto isWalking = [ambulator]()
-  {
-    return ambulator->isRunning();
-  };
+  auto isWalking = [ambulator]() { return ambulator->isRunning(); };
 
   auto hasFallenForward = [fallDetector]() { return fallDetector->getFallenState() == FallState::FORWARD; };
 
   auto hasFallenBackward = [fallDetector]() { return fallDetector->getFallenState() == FallState::BACKWARD; };
+
+  auto isAgentShutdownRequested = [agent]() { return agent->isStopRequested(); };
 
   // BUILD TREE
 
@@ -163,27 +165,19 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   // ========== WIN ==========
   //
 
-  // ---------- STATES ----------
-
   auto pausingState = winFsm->newState("pausing", {stopWalking});
-
   auto pausedState = winFsm->newState("paused", {sit});
-
   auto unpausingState = winFsm->newState("unpausing", {standup});
-
   auto readyState = winFsm->newState("ready", {stopWalking}, false/*end state*/, true/* start state */);
-
   auto setState = winFsm->newState("set", {stopWalking});
-
   auto beforeTheirKickoff = winFsm->newState("beforetheirkickoff", {stopWalking});
-
   auto playingState = winFsm->newState("playing", {playingFsm});
-
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
-
   auto forwardGetUpState = winFsm->newState("forwardgetup", {forwardgetup});
-
   auto backwardGetUpState = winFsm->newState("backwardgetup", {backwardgetup});
+  auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
+  auto sitForShutdownState = winFsm->newState("sitForShutdown", {sit});
+  auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
 
   readyState->onEnter = [debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); };
   setState->onEnter = [debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); };
@@ -191,8 +185,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   penalizedState->onEnter = [debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); };
   pausedState->onEnter = [debugger]() { debugger->showPaused(); };
   pausingState->onEnter = [debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); };
-
-  // ---------- TRANSITIONS ----------
+  stopAgentAndExitState->onEnter = [agent]() { agent->getCM730()->torqueEnable(false); agent->stop(); };
 
   //
   // PAUSE BUTTON
@@ -215,10 +208,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     ->when(negate(isWalking));
 
   //
-  // MODE BUTTON
+  // PLAY MODE BUTTON
   //
-
-  // TODO when in paused state, can the mode button somehow disable the motors?
 
   readyState
     ->transitionTo(setState)
@@ -233,7 +224,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     ->when(modeButtonPressed);
 
   //
-  // PLAY MODE TRANSITIONS -- GAME CONTROLLER
+  // GAME CONTROLLER PLAY MODE
   //
 
   readyState
@@ -289,6 +280,24 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     ->transitionTo(playingState)
     ->when(hasTerminated(backwardGetUpState));
 
+  //
+  // SHUTDOWN
+  //
+
+  // TODO express this sequence more eligantly
+  // TODO wildcard winFSM.* -> stopWalkingForShutdown (not just from playingState)
+
+  playingState
+    ->transitionTo(stopWalkingForShutdownState)
+    ->when(isAgentShutdownRequested);
+
+  stopWalkingForShutdownState
+    ->transitionTo(sitForShutdownState)
+    ->when(negate(isWalking));
+
+  sitForShutdownState
+    ->transitionTo(stopAgentAndExitState)
+    ->when(hasTerminated(sitForShutdownState));
 
   //
   // ========== PLAYING ==========
@@ -298,16 +307,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   {
     // Goalie behaviour for normal game play
 
+    // TODO test this further
+    // TODO add logic to kick ball away from goal if close to keeper
+
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
-
     auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
-
     auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
-
-    // TODO Test this further and logic to kick ball away from goal if close to keeper
-
     auto bigStepLeftState = playingFsm->newState("bigStepLeft", {bigStepLeft});
-
     auto bigStepRightState = playingFsm->newState("bigStepRight", {bigStepRight});
 
     standUpState->transitionTo(lookForBallState)
@@ -320,22 +326,24 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->when(ballLostCondition);
 
     lookAtBallState->transitionTo(bigStepLeftState)
-      ->when(oneShot([]() { return trueForMillis(1000, []()
+      ->when(oneShot([]()
       {
-        auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
-        bool step = ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(-0.75, -0.3).contains(ball->x());
-        if (step) cout << "step to the left - ball: " << (*ball).head<2>().transpose() << endl;
-        return step;
-      }); }));
+        return trueForMillis(1000, []()
+        {
+          auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+          return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(-0.75, -0.3).contains(ball->x());
+        });
+      }));
 
     lookAtBallState->transitionTo(bigStepRightState)
-      ->when(oneShot([](){ return trueForMillis(1000, []()
+      ->when(oneShot([]()
       {
-        auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
-        bool step = ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(0.3, 0.75).contains(ball->x());
-	if (step) cout << "step to the right - ball: " << (*ball).head<2>().transpose() << endl;
-	return step;
-      }); }));
+        return trueForMillis(1000, []()
+        {
+          auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+          return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(0.3, 0.75).contains(ball->x());
+        });
+      }));
 
     bigStepLeftState->transitionTo(lookForBallState)
       ->when(hasTerminated(bigStepLeftState));
@@ -349,16 +357,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     // Goalie behaviour during penalties
 
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
-
     auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAroundNarrow});
-
     auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
-
     auto leftDiveState = playingFsm->newState("leftdive", {leftdive});
-
     auto rightDiveState = playingFsm->newState("rightdive", {rightdive});
-
-    // ---------- TRANSITIONS ----------
 
     standUpState->transitionTo(lookForBallState)
       ->when(hasTerminated(standUpState));
@@ -370,22 +372,24 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->when(ballLostCondition);
 
     lookAtBallState->transitionTo(leftDiveState)
-      ->when(oneShot([]() { return trueForMillis(100, []()
+      ->when(oneShot([]()
       {
-        auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
-        bool dive = ball && ball->y() < 1.0 && ball->x() < -0.1;
-        if (dive) cout << "dive left - ball: " << (*ball).head<2>().transpose() << endl;
-        return dive;
-      }); }));
+        return trueForMillis(100, []()
+        {
+          auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+          return ball && ball->y() < 1.0 && ball->x() < -0.1;
+        });
+      }));
 
     lookAtBallState->transitionTo(rightDiveState)
-      ->when(oneShot([](){ return trueForMillis(100, []()
+      ->when(oneShot([]()
       {
-        auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
-        bool dive = ball && ball->y() < 1.0 && ball->x() > 0.1;
-	if (dive) cout << "dive right - ball: " << (*ball).head<2>().transpose() << endl;
-	return dive;
-      }); }));
+        return trueForMillis(100, []()
+        {
+          auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+          return ball && ball->y() < 1.0 && ball->x() > 0.1;
+        });
+      }));
 
     leftDiveState->transitionTo(lookForBallState)
       ->when(hasTerminated(leftDiveState));
@@ -399,34 +403,18 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     // PLAYER BEHAVIOR
     //
 
-    // ---------- STATES ----------
-
     auto standUpState = playingFsm->newState("standup", {standup}, false/*endState*/, true/*startState*/);
-
     auto lookForBallState = playingFsm->newState("lookforball", {stopWalking, lookAround});
-
     auto circleToFindLostBallState = playingFsm->newState("lookforballcircling", {circleBall});
-
     auto lookAtBallState = playingFsm->newState("lookatball", {stopWalking, lookAtBall});
-
     auto approachBallState = playingFsm->newState("approachball", {approachBall, lookAtBall});
-
     auto lookForGoalState = playingFsm->newState("lookforgoal", {stopWalking, lookAround});
-
     auto lookAtGoalState = playingFsm->newState("lookatgoal", {stopWalking, lookAtGoal});
-
-    // transition state between looking at goal and either kicking or circling
     auto aimState = playingFsm->newState("aim", {});
-
     auto circleBallState = playingFsm->newState("circleball", {circleBall});
-
     auto lookAtFeetState = playingFsm->newState("lookatfeet", {lookAtFeet});
-
     auto leftKickState = playingFsm->newState("leftkick", {leftKick});
-
     auto rightKickState = playingFsm->newState("rightkick", {rightKick});
-
-    // ---------- TRANSITIONS ----------
 
     standUpState
       ->transitionTo(lookForBallState)
