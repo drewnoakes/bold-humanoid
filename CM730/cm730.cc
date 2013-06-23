@@ -487,6 +487,8 @@ bool CM730::dxlPowerOn()
 
 void CM730::torqueEnable(bool enable)
 {
+  cout << "[CM730::torqueEnable] " << (enable ? "Enabling" : "Disabling") << " all joint torque" << endl;
+  
   uchar error;
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
