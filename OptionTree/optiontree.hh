@@ -6,11 +6,27 @@
 
 namespace bold
 {
+  // TODO rename 'top' as 'root'?
+
   class OptionTree
   {
   public:
     void run();
-    void addOption(std::shared_ptr<Option> option, bool top = false);
+
+    template<typename OptionType>
+    std::shared_ptr<OptionType> addOption(std::shared_ptr<OptionType> option, bool isTop = false)
+    {
+      d_options[option->getID()] = std::dynamic_pointer_cast<Option>(option);
+
+      if (isTop)
+      {
+        assert(!d_top && "top option already added");
+        d_top = std::dynamic_pointer_cast<Option>(option);
+      }
+
+      return option;
+    }
+
     std::shared_ptr<Option> getOption(std::string const& id) const;
     std::shared_ptr<Option> getTop() const;
 

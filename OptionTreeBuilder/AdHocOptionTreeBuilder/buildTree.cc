@@ -132,82 +132,32 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // OPTIONS
 
-  // Sit down action
-  shared_ptr<Option> sit = make_shared<ActionOption>("sitdownaction", "sit down", actionModule);
-  tree->addOption(sit);
+  // TODO correct capitalisation of options
 
-  // Stand up action
-  shared_ptr<Option> standup = make_shared<ActionOption>("standupaction", "stand up", actionModule);
-  tree->addOption(standup);
+  auto sit = tree->addOption(make_shared<ActionOption>("sitdownaction", "sit down", actionModule));
+  auto standup = tree->addOption(make_shared<ActionOption>("standupaction", "stand up", actionModule));
+  auto forwardgetup = tree->addOption(make_shared<ActionOption>("forwardgetupaction", ActionPage::ForwardGetUp, actionModule));
+  auto backwardgetup = tree->addOption(make_shared<ActionOption>("backwardgetupaction", ActionPage::BackwardGetUp, actionModule));
+  auto stopWalking = tree->addOption(make_shared<StopWalking>("stopwalking", ambulator));
+  auto approachBall = tree->addOption(make_shared<ApproachBall>("approachball", ambulator));
+  auto circleBall = tree->addOption(make_shared<CircleBall>("circleball", ambulator, headModule));
+  auto leftKick = tree->addOption(make_shared<ActionOption>("leftkickaction", "lk", actionModule));
+  auto rightKick = tree->addOption(make_shared<ActionOption>("rightkickaction", "rk", actionModule));
+  auto lookAround = tree->addOption(make_shared<LookAround>("lookaround", headModule, 100.0));
+  auto lookAroundNarrow = tree->addOption(make_shared<LookAround>("lookaroundnarrow", headModule, 45.0));
+  auto lookAtBall = tree->addOption(make_shared<LookAtBall>("lookatball", cameraModel, headModule));
+  auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookatfeet", headModule));
+  auto lookAtGoal = tree->addOption(make_shared<LookAtGoal>("lookatgoal", cameraModel, headModule));
+  auto leftdive = tree->addOption(make_shared<ActionOption>("diveleftaction", "left_dive", actionModule));
+  auto rightdive = tree->addOption(make_shared<ActionOption>("diverightaction", "right_dive", actionModule));
+  auto bigStepLeft = tree->addOption(make_shared<ActionOption>("bigstepleftaction", "big-step-l", actionModule));
+  auto bigStepRight = tree->addOption(make_shared<ActionOption>("bigsteprightaction", "big-step-r", actionModule));
 
-  // Forward get up
-  shared_ptr<Option> forwardgetup = make_shared<ActionOption>("forwardgetupaction", ActionPage::ForwardGetUp, actionModule);
-  
-  // Backward get up
-  shared_ptr<Option> backwardgetup = make_shared<ActionOption>("backwardgetupaction", ActionPage::BackwardGetUp, actionModule);
-  
-  // Stop walking
-  shared_ptr<Option> stopWalking = make_shared<StopWalking>("stopwalking", ambulator);
-  tree->addOption(stopWalking);
+  // FSMs
 
-  // Approach ball
-  shared_ptr<Option> approachBall = make_shared<ApproachBall>("approachball", ambulator);
-  tree->addOption(approachBall);
+  auto winFsm = tree->addOption(make_shared<FSMOption>("win"), /*isRoot*/true);
 
-  // Circle around ball
-  shared_ptr<Option> circleBall = make_shared<CircleBall>("circleball", ambulator, headModule);
-  tree->addOption(circleBall);
-
-  // Left kick
-  shared_ptr<Option> leftKick = make_shared<ActionOption>("leftkickaction", "lk", actionModule);
-  tree->addOption(leftKick);
-
-  // Left kick
-  shared_ptr<Option> rightKick = make_shared<ActionOption>("rightkickaction", "rk", actionModule);
-  tree->addOption(rightKick);
-
-  // Look around
-  shared_ptr<Option> lookAround = make_shared<LookAround>("lookaround", headModule, 100.0);
-  tree->addOption(lookAround);
-
-  // Look around narrow
-  shared_ptr<Option> lookAroundNarrow = make_shared<LookAround>("lookaroundnarrow", headModule, 45.0);
-  tree->addOption(lookAroundNarrow);
-
-  // Look at ball
-  shared_ptr<Option> lookAtBall = make_shared<LookAtBall>("lookatball", cameraModel, headModule);
-  tree->addOption(lookAtBall);
-
-  // Look at feet
-  shared_ptr<Option> lookAtFeet = make_shared<LookAtFeet>("lookatfeet", headModule);
-  tree->addOption(lookAtFeet);
-
-  // Look at goal
-  shared_ptr<Option> lookAtGoal = make_shared<LookAtGoal>("lookatgoal", cameraModel, headModule);
-  tree->addOption(lookAtGoal);
-
-  //Dive left
-  shared_ptr<Option> leftdive = make_shared<ActionOption>("diveleftaction", "left_dive", actionModule);
-  tree->addOption(leftdive);
-
-  //Dive right
-  shared_ptr<Option> rightdive = make_shared<ActionOption>("diverightaction", "right_dive", actionModule);
-  tree->addOption(rightdive);
-
-  //Big Step left
-  shared_ptr<Option> bigStepLeft = make_shared<ActionOption>("bigstepleftaction", "big-step-l", actionModule);
-  tree->addOption(bigStepLeft);
-
-  //Big Step right
-  shared_ptr<Option> bigStepRight = make_shared<ActionOption>("bigsteprightaction", "big-step-r", actionModule);
-  tree->addOption(bigStepRight);
-
-  // FSM
-  auto winFsm = make_shared<FSMOption>("win");
-  tree->addOption(winFsm, true);
-
-  auto playingFsm = make_shared<FSMOption>("playing");
-  tree->addOption(playingFsm);
+  auto playingFsm = tree->addOption(make_shared<FSMOption>("playing"));
 
   //
   // ========== WIN ==========
@@ -339,8 +289,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     ->transitionTo(playingState)
     ->when(hasTerminated(backwardGetUpState));
 
-  ofstream winOut("win.dot");
-  winOut << winFsm->toDot();
 
   //
   // ========== PLAYING ==========
@@ -619,7 +567,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookForBallState)
       ->when([lookAtFeetState]()
       {
-        // TODO use 'all' operator
+        // TODO create and use 'all' operator
         if (lookAtFeetState->secondsSinceStart() < 1)
           return false;
 
@@ -635,6 +583,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookForBallState)
       ->when(hasTerminated(rightKickState));
   } // uniformNumber != 1
+
+  // Write out DOT files for visualisation of states and transitions
+
+  ofstream winOut("win.dot");
+  winOut << winFsm->toDot();
 
   ofstream playingOut("playing.dot");
   playingOut << playingFsm->toDot();

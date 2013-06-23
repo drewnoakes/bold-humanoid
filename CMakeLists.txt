@@ -309,7 +309,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./OptionTree/addOption.cc
   ./OptionTree/getOption.cc
   ./OptionTree/run.cc
 )
