@@ -11,7 +11,7 @@ TEST (ColourTests, bgr2hsv)
   Colour::bgr green(0,255,0);
   Colour::bgr yellow(0,255,255);
   Colour::bgr yellow1(0,255,254);
-  Colour::bgr yellow2(0,254,255); 
+  Colour::bgr yellow2(0,254,255);
   Colour::bgr cyan(255,255,0);
   Colour::bgr magenta(255,0,255);
   Colour::bgr gray(128,128,128);
@@ -19,8 +19,8 @@ TEST (ColourTests, bgr2hsv)
   Colour::bgr white(255,255,255);
 
   EXPECT_EQ ( Colour::hsv(0, 255, 255), Colour::bgr2hsv(red) );
-  EXPECT_EQ ( Colour::hsv(85, 255, 255), Colour::bgr2hsv(green) );
   EXPECT_EQ ( Colour::hsv(170, 255, 255), Colour::bgr2hsv(blue) );
+  EXPECT_EQ ( Colour::hsv(85, 255, 255), Colour::bgr2hsv(green) );
   EXPECT_EQ ( Colour::hsv(43, 255, 255), Colour::bgr2hsv(yellow) );
   // Since yellow should have hue 85/2=42.5, which is rounded to 43,
   // small deviation towards g (increase of hue) should map to the
@@ -34,6 +34,26 @@ TEST (ColourTests, bgr2hsv)
   EXPECT_EQ ( Colour::hsv(0, 0, 128), Colour::bgr2hsv(gray) );
   EXPECT_EQ ( Colour::hsv(0, 0, 0), Colour::bgr2hsv(black) );
   EXPECT_EQ ( Colour::hsv(0, 0, 255), Colour::bgr2hsv(white) );
+
+  // These are a series of RGB -> HSV conversions according to Gimp
+  // The numbers shown in comments come from Gimp, and our values (which are different)
+  // are shown in the 'expected' values
+
+  // There are some differences between the values calculated from Gimp and those
+  // from our algorithm, but larger than 2/255 in any one channel
+
+  // Gimp says 259,62,84 (HSV) -> 183,158,214
+  EXPECT_EQ ( Colour::hsv(183, 159, 213), Colour::bgr2hsv(Colour::bgr(213,80,123)) );
+  // Gimp says 341,62,84 (HSV) -> 241,158,214
+  EXPECT_EQ ( Colour::hsv(242, 159, 213), Colour::bgr2hsv(Colour::bgr(123,80,213)) );
+  // Gimp says 23,100,78 (HSV) -> 16,255,198
+  EXPECT_EQ ( Colour::hsv( 16, 255, 200), Colour::bgr2hsv(Colour::bgr(0,78,200)) );
+  // Gimp says 212,92,77 (HSV) -> 150,234,196
+  EXPECT_EQ ( Colour::hsv(150, 235, 196), Colour::bgr2hsv(Colour::bgr(196,100,15)) );
+  // Gimp says 162,57,78 (HSV) -> 114,145,198
+  EXPECT_EQ ( Colour::hsv(115, 145, 200), Colour::bgr2hsv(Colour::bgr(166,200,86)) );
+  // Gimp says 351,100,93 (HSV) -> 247,255,237
+  EXPECT_EQ ( Colour::hsv(249, 255, 236), Colour::bgr2hsv(Colour::bgr(36,0,236)) );
 }
 
 TEST (ColourTests, hsv2bgr)

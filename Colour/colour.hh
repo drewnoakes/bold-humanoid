@@ -87,7 +87,7 @@ namespace bold
       uchar s;
       uchar v;
 
-      static const int hueRange = (255 / 3) * 3;
+      static const int hueRange = (255 / 3) * 3; // 255/3 == 85, 85*3 == 255
     };
 
     struct hsvRange

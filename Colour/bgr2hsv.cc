@@ -15,11 +15,10 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   max = in.r > in.g ? in.r : in.g;
   max = max  > in.b ? max  : in.b;
 
-  out.v = max;                          // v
   chroma = max - min;
   if (max > 0)
   {
-    out.s = 255 * chroma / max;       // s
+    out.s = 255 * chroma / max;         // s
   }
   else
   {
@@ -29,6 +28,8 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
     out.v = 0; // it's now undefined
     return out;
   }
+
+  out.v = max;                          // v
 
   if (chroma == 0)
   {
