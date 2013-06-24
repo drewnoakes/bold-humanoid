@@ -17,7 +17,7 @@ namespace bold
     void onImageStarting() override;
 
     void onPixel(uchar labelId, ushort x, ushort y) override;
-    
+
     uchar getEdgeYValue(ushort x) const;
 
     void smooth(unsigned windowSize);
