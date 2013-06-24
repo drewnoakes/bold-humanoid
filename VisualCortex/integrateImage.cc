@@ -51,8 +51,9 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
       // Ignore ball if it appears outside the field edge
       //
-      // Is not the ball if the bottom right corner of the ball is within the field edge determined by the bottom right corner
       if (ballBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(ballBlob.ul.x()))
+      // This blob can not be the ball if its upper left corner is below the field edge.
+      // Remember that the image appears upside down.
         continue;
 
       Vector2d pos = ballBlob.mean;
