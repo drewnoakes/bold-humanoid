@@ -25,9 +25,9 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   d_streamFramePeriod = getParam("CameraFramePeriod", 5);
 
-  d_goalLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Goal",  35,  15, 209,  48, 179,  60));
+  d_goalLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Goal",  52,   8, 197,  39, 173,  49));
   d_ballLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Ball",   9,  20, 211,  89, 172, 138));
-  d_fieldLabel = make_shared<PixelLabel>(PixelLabel::fromConfig("Field", 78,  30, 202, 106, 109, 124));
+  d_fieldLabel = make_shared<PixelLabel>(PixelLabel::fromConfig("Field", 98,  14, 205,  35, 154,  47));
   d_lineLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Line",   0, 255,  57, 110, 224,  63));
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel };

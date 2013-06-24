@@ -63,7 +63,7 @@ void Agent::initCamera()
   trySetCameraControl("Backlight Compensation", 0);
   trySetCameraControl("Power Line Frequency", 2);
 
-  trySetCameraControl("Exposure (Absolute)", 500);
+  trySetCameraControl("Exposure (Absolute)", 1500);
   trySetCameraControl("Brightness", 128);
   trySetCameraControl("Contrast", 32);
   trySetCameraControl("Saturation", 28);
