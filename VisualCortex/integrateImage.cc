@@ -86,8 +86,8 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
     Vector2i wh = goalBlob.br - goalBlob.ul;
 
-    if (wh.minCoeff() > 5 &&  // Ignore small blobs
-        wh.y() > wh.x())      // Taller than it is wide
+    if (wh.minCoeff() > d_minGoalDimensionPixels &&  // Ignore small blobs
+        wh.y() > wh.x())                             // Taller than it is wide
     {
       Run const& topRun = *goalBlob.runs.begin();
 

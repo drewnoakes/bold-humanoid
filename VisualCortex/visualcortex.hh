@@ -69,6 +69,9 @@ namespace bold
     void setMinBallArea(unsigned val) { d_minBallArea = val; }
     unsigned getMinBallArea() const { return d_minBallArea; }
 
+    void setMinGoalDimensionPixels(unsigned val) { d_minGoalDimensionPixels = val; }
+    unsigned getMinGoalDimensionPixels() const { return d_minGoalDimensionPixels; }
+
     void setStreamFramePeriod(unsigned val) { d_streamFramePeriod = val; }
     unsigned getStreamFramePeriod() const { return d_streamFramePeriod; }
 
@@ -127,6 +130,7 @@ namespace bold
     bool d_shouldIgnoreAboveHorizon;
 
     unsigned d_minBallArea;
+    unsigned d_minGoalDimensionPixels;
 
     ImageType d_imageType;
     unsigned d_streamFramePeriod;

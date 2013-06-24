@@ -10,6 +10,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     d_spatialiser(spatialiser),
     d_shouldIgnoreAboveHorizon(true),
     d_minBallArea(64),
+    d_minGoalDimensionPixels(3),
     d_imageType(ImageType::RGB),
     d_shouldDrawBlobs(true),
     d_shouldDrawLineDots(false),
@@ -46,6 +47,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   createLookupTable();
 
   d_minBallArea = getParam("MinBallArea", 3*3);
+  d_minGoalDimensionPixels = getParam("MinGoalDimensionPixels", 3);
 
   int imageWidth = d_cameraModel->imageWidth();
   int imageHeight = d_cameraModel->imageHeight();
@@ -79,8 +81,13 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   auto minBallAreaControl = Control::createInt("Min ball area", [this]() { return d_minBallArea; }, [this](int value) { d_minBallArea = value; });
   minBallAreaControl->setIsAdvanced(true);
-  vector<shared_ptr<Control const>> ballControls = { minBallAreaControl };
-  d_controlsByFamily["vision/ball"] = ballControls;
+  minBallAreaControl->setLimitValues(1, 100);
+  auto minGoalDimensionControl = Control::createInt("Min goal dimension", [this]() { return d_minGoalDimensionPixels; }, [this](int value) { d_minGoalDimensionPixels = value; });
+  minGoalDimensionControl->setIsAdvanced(true);
+  minGoalDimensionControl->setLimitValues(1, 100);
+  vector<shared_ptr<Control const>> objectDetectionControls = { minBallAreaControl, minGoalDimensionControl };
+  d_controlsByFamily["vision/objects"] = objectDetectionControls;
+
   vector<shared_ptr<Control const>> lineDetectionControls;
   for (auto c : d_lineFinder->getControls())
     lineDetectionControls.push_back(c);
