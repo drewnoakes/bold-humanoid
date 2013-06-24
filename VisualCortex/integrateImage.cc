@@ -32,6 +32,10 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   auto blobsPerLabel = d_blobDetectPass->detectBlobs();
   t.timeEvent("Image Processing/Blob Search");
 
+  // Smooth the field edge a little
+  if (d_fieldEdgeSmoothingWindow > 1)
+    d_fieldEdgePass->smooth(d_fieldEdgeSmoothingWindow);
+
   //
   // UPDATE STATE
   //

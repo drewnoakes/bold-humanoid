@@ -132,6 +132,8 @@ namespace bold
     unsigned d_minBallArea;
     unsigned d_minGoalDimensionPixels;
 
+    unsigned d_fieldEdgeSmoothingWindow;
+
     ImageType d_imageType;
     unsigned d_streamFramePeriod;
     bool d_shouldDrawBlobs;

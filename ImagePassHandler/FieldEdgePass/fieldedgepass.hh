@@ -20,6 +20,8 @@ namespace bold
     
     uchar getEdgeYValue(ushort x) const;
 
+    void smooth(unsigned windowSize);
+
   private:
     std::shared_ptr<PixelLabel> d_fieldLabel;
     std::vector<uchar> d_maxYByX;

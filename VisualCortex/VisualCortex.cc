@@ -11,6 +11,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     d_shouldIgnoreAboveHorizon(true),
     d_minBallArea(64),
     d_minGoalDimensionPixels(3),
+    d_fieldEdgeSmoothingWindow(8),
     d_imageType(ImageType::RGB),
     d_shouldDrawBlobs(true),
     d_shouldDrawLineDots(false),
@@ -87,6 +88,12 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   minGoalDimensionControl->setLimitValues(1, 100);
   vector<shared_ptr<Control const>> objectDetectionControls = { minBallAreaControl, minGoalDimensionControl };
   d_controlsByFamily["vision/objects"] = objectDetectionControls;
+
+  auto fieldEdgeSmoothWindowSize = Control::createInt("Field edge smooth window size", [this]() { return d_fieldEdgeSmoothingWindow; }, [this](int value) { d_fieldEdgeSmoothingWindow = value; });
+  fieldEdgeSmoothWindowSize->setIsAdvanced(true);
+  fieldEdgeSmoothWindowSize->setLimitValues(1, 100);
+  vector<shared_ptr<Control const>> fieldEdgeControls = { fieldEdgeSmoothWindowSize };
+  d_controlsByFamily["vision/field-edge"] = fieldEdgeControls;
 
   vector<shared_ptr<Control const>> lineDetectionControls;
   for (auto c : d_lineFinder->getControls())

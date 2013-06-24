@@ -1,6 +1,7 @@
 #include "fieldedgepass.hh"
 
 #include "../../PixelLabel/pixellabel.hh"
+#include "../../MovingAverage/movingaverage.hh"
 
 using namespace bold;
 
@@ -37,4 +38,13 @@ uchar FieldEdgePass::getEdgeYValue(ushort x) const
   assert(d_maxYByX[x] < d_pixelHeight);
   
   return d_maxYByX[x]; 
+
+void FieldEdgePass::smooth(unsigned windowSize)
+{
+  MovingAverage<unsigned> avg(windowSize);
+
+  for (int x = 0; x < d_pixelWidth; x++)
+  {
+    d_maxYByX[x] = avg.next(d_maxYByX[x]);
+  }
 }
