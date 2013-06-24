@@ -114,15 +114,51 @@ define(
                 _.each(_.values(this.labels), function (label)
                 {
                     var labelData = label[components[component]],
-                        min = Math.max(0,   labelData.mid - (labelData.range/2)),
-                        max = Math.min(255, labelData.mid + (labelData.range/2)),
-                        minRatio = min/255,
-                        maxRatio = max/255,
-                        minX = minRatio*space,
-                        maxX = maxRatio*space;
+                        min = labelData.mid - (labelData.range/2),
+                        max = labelData.mid + (labelData.range/2),
+                        undershoot = 0,
+                        overshoot = 0;
 
-                    context.fillStyle = label.colour;
-                    context.fillRect(gutterWidth + minX, y, maxX - minX, barHeight);
+                    if (min < 0)
+                    {
+                        undershoot = -min;
+                        min = 0;
+                    }
+
+                    if (max > 255)
+                    {
+                        overshoot = max - 255;
+                        max = 255;
+                    }
+
+                    var drawComponentRange = function(y, minValue, maxValue)
+                    {
+                        var minRatio = minValue/255,
+                            maxRatio = maxValue/255,
+                            minX = minRatio*space,
+                            maxX = maxRatio*space;
+
+                        context.fillStyle = label.colour;
+                        context.fillRect(gutterWidth + minX, y, maxX - minX, barHeight);
+                    };
+
+                    drawComponentRange(y, min, max);
+
+                    if (component === 0 && (undershoot !== 0 || overshoot !== 0))
+                    {
+                        // special handling for any over/undershoot in the hue channel
+                        if (undershoot !== 0 && overshoot !== 0)
+                        console.log("WARNING didn't expect both over and undershoot");
+
+                        if (undershoot !== 0)
+                        {
+                            drawComponentRange(y, 255 - undershoot, 255);
+                        }
+                        if (overshoot !== 0)
+                        {
+                            drawComponentRange(y, 0, overshoot);
+                        }
+                    }
 
                     y += barHeight + barSpacing;
 
