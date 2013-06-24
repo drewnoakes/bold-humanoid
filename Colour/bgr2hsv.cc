@@ -4,18 +4,18 @@
 
 Colour::hsv Colour::bgr2hsv(bgr const& in)
 {
-  Colour::hsv out;
-  int         min, max, chroma;
+  int const hstep = 255 / 3;   // Hue step size between red -> green -> blue
 
-  int const   hstep = hsv::hueRange / 3;   // Hue step size between red -> green -> blue
-
-  min = in.r < in.g ? in.r : in.g;
+  int min = in.r < in.g ? in.r : in.g;
   min = min  < in.b ? min  : in.b;
 
-  max = in.r > in.g ? in.r : in.g;
+  int max = in.r > in.g ? in.r : in.g;
   max = max  > in.b ? max  : in.b;
 
-  chroma = max - min;
+  int chroma = max - min;
+
+  Colour::hsv out;
+
   if (max > 0)
   {
     out.s = 255 * chroma / max;         // s
@@ -60,8 +60,8 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   int h = offset + (diff * (hstep + 1)) / chroma2;
 
   // Rotate such that red has hue 0
-  if (h >= hsv::hueRange)
-    h -= hsv::hueRange;
+  if (h >= 255) // TODO would this be faster using mod?
+    h -= 255;
 
   assert(h >= 0 && h < 256);
 
