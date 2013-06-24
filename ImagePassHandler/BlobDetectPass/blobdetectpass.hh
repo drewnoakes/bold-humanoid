@@ -55,7 +55,6 @@ namespace bold
    **/
   struct Blob
   {
-
     Blob();
     Blob(Eigen::Vector2i const& _ul, Eigen::Vector2i const& _br,
          unsigned _area,
