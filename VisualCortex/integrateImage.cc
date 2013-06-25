@@ -46,8 +46,32 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // Do we have a ball?
   if (blobsPerLabel[d_ballLabel].size() > 0)
   {
+    // Merge ball blobs
+    vector<Blob> ballBlobs = blobsPerLabel[d_ballLabel];
+    for (int i = 0; i < min(10, (int)ballBlobs.size()); ++i)
+    {
+      Blob& larger = ballBlobs[i];
+      if (larger.area < d_minBallArea)
+        break;
+
+      for (int j = i + 1; j < ballBlobs.size(); ++j)
+      {
+        Blob& smaller = ballBlobs[j];
+
+        if (smaller.area == 0)
+          continue;
+
+        if (shouldMergeBallBlobs(larger, smaller))
+        {
+          larger.merge(smaller);
+          smaller.area = 0;
+        }
+      }
+    }
+    t.timeEvent("Image Processing/Ball Blob Merging");
+
     // The first is the biggest, topmost ball blob
-    for (Blob const& ballBlob : blobsPerLabel[d_ballLabel])
+    for (Blob const& ballBlob : ballBlobs)
     {
       // Ignore balls that are too small (avoid noise)
       if (ballBlob.area < d_minBallArea)
