@@ -9,8 +9,12 @@ bool VisualCortex::shouldMergeBallBlobs(Blob& larger, Blob& smaller)
 
   Bounds2i unionBounds = Bounds2i::merge(largerBounds, smallerBounds);
 
+  cout << "largerBounds="<<largerBounds<<" smallerBounds="<<smallerBounds<<" unionBounds="<<unionBounds<<endl;
+
   double largerAspect = (double)largerBounds.minDimension() / largerBounds.maxDimension();
   double unionAspect = (double)unionBounds.minDimension() / unionBounds.maxDimension();
+
+  cout << "unionAspect="<<unionAspect<<" largerAspect="<<largerAspect<<endl;
 
   if (unionAspect < largerAspect)
     return false;
@@ -20,6 +24,8 @@ bool VisualCortex::shouldMergeBallBlobs(Blob& larger, Blob& smaller)
   int unionMaxDimension = unionBounds.maxDimension();
 
   assert(unionMaxDimension >= maxDimension);
+
+  cout << "unionMaxDimension="<<unionMaxDimension<<" maxDimension="<<maxDimension<<endl;
 
   return unionMaxDimension < maxDimension * 1.3;
 }
