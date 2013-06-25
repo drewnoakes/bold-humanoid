@@ -81,7 +81,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
       auto detectedBlobs = d_blobDetectPass->getDetectedBlobs().at(pixelLabel);
       for (Blob const& blob : detectedBlobs)
       {
-        cv::rectangle(debugImage, blob.toRect(), blobColor);
+        // Blobs with zero area were merged into other blobs
+        if (blob.area != 0)
+          cv::rectangle(debugImage, blob.toRect(), blobColor);
       }
     }
   }
