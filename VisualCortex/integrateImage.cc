@@ -52,7 +52,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   if (blobsPerLabel[d_ballLabel].size() > 0)
   {
     // Merge ball blobs
-    vector<Blob> ballBlobs = blobsPerLabel[d_ballLabel];
+    vector<Blob>& ballBlobs = blobsPerLabel[d_ballLabel];
     for (int i = 0; i < min(10, (int)ballBlobs.size()); ++i)
     {
       Blob& larger = ballBlobs[i];
