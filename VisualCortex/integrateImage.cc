@@ -78,6 +78,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     // The first is the biggest, topmost ball blob
     for (Blob const& ballBlob : ballBlobs)
     {
+      if (ballBlob.area == 0)
+      {
+        // Ignore blobs that were previously merged into another blob (zero area)
+        continue;
+      }
+
       // Ignore balls that are too small (avoid noise)
       if (ballBlob.area < d_minBallArea)
       {
