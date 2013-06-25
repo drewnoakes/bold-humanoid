@@ -36,7 +36,10 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   // Smooth the field edge a little
   if (d_fieldEdgeSmoothingWindow > 1)
+  {
     d_fieldEdgePass->smooth(d_fieldEdgeSmoothingWindow);
+    t.timeEvent("Image Processing/Field Edge Smoothing");
+  }
 
   //
   // UPDATE STATE
