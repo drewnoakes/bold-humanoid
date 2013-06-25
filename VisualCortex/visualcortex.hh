@@ -13,7 +13,6 @@
 
 namespace bold
 {
-  struct Blob;
   class CameraModel;
   class DataStreamer;
   class FieldMap;
@@ -48,6 +47,8 @@ namespace bold
   class VisualCortex : public Configurable
   {
   public:
+    static bool shouldMergeBallBlobs(Bounds2i const& larger, Bounds2i const& smaller);
+
     VisualCortex(std::shared_ptr<CameraModel> cameraModel,
                  std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
@@ -98,8 +99,6 @@ namespace bold
     bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge; }
 
   private:
-    static bool shouldMergeBallBlobs(Blob& larger, Blob& smaller);
-
     std::map<std::string,std::vector<std::shared_ptr<Control const>>> d_controlsByFamily;
 
     std::shared_ptr<FieldMap> d_fieldMap;

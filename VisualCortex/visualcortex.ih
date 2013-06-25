@@ -5,6 +5,7 @@
 #include "../DataStreamer/datastreamer.hh"
 #include "../FieldMap/fieldmap.hh"
 #include "../geometry/LineSegment.hh"
+#include "../geometry/Bounds2i.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../ImagePassRunner/imagepassrunner.hh"
 #include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"

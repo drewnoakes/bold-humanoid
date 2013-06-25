@@ -53,6 +53,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "ThreadTests.hh"
 #include "ThreadIdTests.hh"
 #include "UDPSocketTests.hh"
+#include "VisualCortexTests.hh"
 
 int main(int argc, char **argv)
 {

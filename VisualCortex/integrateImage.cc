@@ -61,7 +61,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
         if (smaller.area == 0)
           continue;
 
-        if (shouldMergeBallBlobs(larger, smaller))
+        if (shouldMergeBallBlobs(larger.bounds(), smaller.bounds()))
         {
           larger.merge(smaller);
           smaller.area = 0;
