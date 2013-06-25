@@ -4,6 +4,8 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 {
   auto cameraFrame = AgentState::get<CameraFrameState>();
 
+  // TODO why are SequentialTimer calls here prefixed with "Image Processing"? This is supposed to be taken care of via the enter/exit pattern
+
   //
   // PROCESS THE IMAGE
   //
