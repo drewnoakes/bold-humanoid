@@ -67,6 +67,14 @@ TEST (Bounds2iTests, merge)
   );
 }
 
+TEST (Bounds2iTests, minDimension)
+{
+  EXPECT_EQ(10, Bounds2i(0,0,10,10).minDimension());
+  EXPECT_EQ(3, Bounds2i(5,7,10,10).minDimension());
+  EXPECT_EQ(3, Bounds2i(7,5,10,10).minDimension());
+  EXPECT_EQ(0, Bounds2i(10,10,10,10).minDimension());
+}
+
 TEST (Bounds2iTests, maxDimension)
 {
   EXPECT_EQ(10, Bounds2i(0,0,10,10).maxDimension());

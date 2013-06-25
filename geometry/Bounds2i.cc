@@ -28,6 +28,11 @@ Bounds2i Bounds2i::merge(Bounds2i const& a, Bounds2i const& b)
   );
 }
 
+int Bounds2i::minDimension() const
+{
+  return std::min(width(), height());
+}
+
 int Bounds2i::maxDimension() const
 {
   return std::max(width(), height());

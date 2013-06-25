@@ -24,6 +24,7 @@ namespace bold
     : Bounds<int,2>::Bounds(min, max)
     {}
 
+    int minDimension() const;
     int maxDimension() const;
 
     int width() const;
