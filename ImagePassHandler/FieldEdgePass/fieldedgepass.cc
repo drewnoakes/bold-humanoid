@@ -44,8 +44,13 @@ void FieldEdgePass::smooth(unsigned windowSize)
 {
   MovingAverage<unsigned> avg(windowSize);
 
-  for (int x = 0; x < d_pixelWidth; x++)
+  int offset = int(windowSize)/2;
+  for (int x = 0, t = -offset; x < d_pixelWidth; x++, t++)
   {
-    d_maxYByX[x] = avg.next(d_maxYByX[x]);
+    auto smoothedY = avg.next(d_maxYByX[x]);
+    if (t >= 0 && smoothedY > d_maxYByX[t])
+    {
+      d_maxYByX[x] = smoothedY;
+    }
   }
 }
