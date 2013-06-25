@@ -3,6 +3,7 @@
 #include "helpers.hh"
 
 #include <memory>
+#include <map>
 
 using namespace std;
 
@@ -28,7 +29,7 @@ TEST (CppTests, dynamicSharedPointerCast)
   shared_ptr<Base> base = sub;
 
   shared_ptr<Derived> sub2 = dynamic_pointer_cast<Derived>(base);
-      
+
   EXPECT_TRUE ( sub->isSub() );
   EXPECT_TRUE ( base->isSub() );
   EXPECT_TRUE ( sub2->isSub() );
@@ -41,13 +42,13 @@ TEST (CppTests, castingSharedPointers)
   //
   // Ensure no slicing occurs
   //
-  
+
   auto base = dynamic_pointer_cast<Base>(derived);
-  
+
   EXPECT_TRUE( base->isSomething() );
   EXPECT_TRUE( derived->called );
   EXPECT_TRUE( dynamic_pointer_cast<Derived>(base)->called );
-  
+
   // RTTI doesn't provide the derived type when upcast
   EXPECT_NE( &typeid(base), &typeid(derived) );
 }
@@ -55,20 +56,20 @@ TEST (CppTests, castingSharedPointers)
 TEST (CppTests, reassigningSharedPointers)
 {
   auto a = make_shared<int>(1);
-  
+
   EXPECT_EQ( 1, *a );
-  
+
   auto b = a;
-  
+
   EXPECT_EQ( 1, *a );
   EXPECT_EQ( 1, *b );
-  
+
   // Reassigning the object pointed to affects all copies of the shared_ptr
   *b = 2;
-  
+
   EXPECT_EQ( 2, *a );
   EXPECT_EQ( 2, *b );
-  
+
   // Reassigning an instance of shared_ptr with another shared_ptr affects only the copy be assigned to
   a = make_shared<int>(3);
 
@@ -79,21 +80,21 @@ TEST (CppTests, reassigningSharedPointers)
 TEST (CppTests, resettingSharedPointers)
 {
   auto a = make_shared<int>(1);
-  
+
   EXPECT_EQ( 1, *a );
-  
+
   auto b = a;
-  
+
   EXPECT_EQ( a, b );
   EXPECT_EQ( 1, *a );
   EXPECT_EQ( 1, *b );
- 
+
   a.reset(new int);
   *a = 2;
-  
+
   EXPECT_EQ( 2, *a );
   EXPECT_EQ( 1, *b );
- 
+
   a.reset();
 
   EXPECT_EQ( nullptr, a );
@@ -103,19 +104,19 @@ TEST (CppTests, resettingSharedPointers)
 TEST (CppTests, referenceCounting)
 {
   auto a = make_shared<int>(1);
-  
+
   EXPECT_EQ( 1, a.use_count() );
   EXPECT_TRUE( a.unique() );
-  
+
   auto b = a;
-  
+
   EXPECT_EQ( 2, a.use_count() );
   EXPECT_EQ( 2, b.use_count() );
   EXPECT_FALSE( a.unique() );
   EXPECT_FALSE( b.unique() );
- 
+
   a.reset();
-  
+
   EXPECT_EQ( 1, b.use_count() );
   EXPECT_TRUE( b.unique() );
 }
@@ -129,7 +130,7 @@ TEST (CppTests, swappingSharedPointers)
   EXPECT_EQ( 2, *b );
 
   b.swap(a);
-  
+
   EXPECT_EQ( 2, *a );
   EXPECT_EQ( 1, *b );
 }
@@ -137,7 +138,7 @@ TEST (CppTests, swappingSharedPointers)
 TEST (CppTests, vectorEraseRemove)
 {
   vector<int> vec = {1, 2, 3, 3, 3, 4};
-  
+
   auto it = vec.erase(
     remove_if(
       vec.begin(), vec.end(),
@@ -145,9 +146,9 @@ TEST (CppTests, vectorEraseRemove)
     ),
     vec.end()
   );
-  
+
   EXPECT_EQ( 3, *it );
-  
+
   EXPECT_EQ( 3, vec.size() );
   EXPECT_EQ( 1, vec[0] );
   EXPECT_EQ( 2, vec[1] );
@@ -157,7 +158,7 @@ TEST (CppTests, vectorEraseRemove)
 TEST (CppTests, vectorEraseRemoveNonConsecutive)
 {
   vector<int> vec = {1, 2, 3, 4, 5, 6};
-  
+
   auto it = vec.erase(
     remove_if(
       vec.begin(), vec.end(),
@@ -165,9 +166,9 @@ TEST (CppTests, vectorEraseRemoveNonConsecutive)
     ),
     vec.end()
   );
-  
+
   EXPECT_EQ( 4, *it );
-  
+
   EXPECT_EQ( 3, vec.size() );
   EXPECT_EQ( 1, vec[0] );
   EXPECT_EQ( 3, vec[1] );
@@ -178,7 +179,7 @@ TEST (CppTests, vectorEraseRemoveNothingMatched)
 {
   vector<int> vec = {1, 2, 3, 4, 5, 6};
   vector<int> seen;
-  
+
   auto it = vec.erase(
     remove_if(
       vec.begin(), vec.end(),
@@ -189,9 +190,9 @@ TEST (CppTests, vectorEraseRemoveNothingMatched)
     ),
     vec.end()
   );
-  
+
   EXPECT_EQ( vec.end(), it );
-  
+
   EXPECT_EQ( 6, vec.size() );
   EXPECT_EQ( 6, seen.size() );
   EXPECT_EQ( 1, seen[0] );
@@ -206,7 +207,7 @@ TEST (CppTests, vectorEraseWhenNoElements)
 {
   vector<int> vec;
   vector<int> seen;
-  
+
   auto it = vec.erase(
     remove_if(
       vec.begin(), vec.end(),
@@ -217,9 +218,9 @@ TEST (CppTests, vectorEraseWhenNoElements)
     ),
     vec.end()
   );
-  
+
   EXPECT_EQ( vec.end(), it );
-  
+
   EXPECT_EQ( 0, vec.size() );
   EXPECT_EQ( 0, seen.size() );
 }
@@ -227,7 +228,7 @@ TEST (CppTests, vectorEraseWhenNoElements)
 TEST (CppTests, vectorEraseRemoveWhenEmpty)
 {
   vector<int> vec;
-  
+
   vec.erase(
     remove_if(
       vec.begin(), vec.end(),
@@ -235,7 +236,7 @@ TEST (CppTests, vectorEraseRemoveWhenEmpty)
     ),
     vec.end()
   );
-  
+
   EXPECT_EQ( 0, vec.size() );
 }
 
@@ -244,12 +245,12 @@ TEST (CppTests, vectorEraseSharedPtr)
   for (int thres = 0; thres < 4; thres++)
   {
     vector<shared_ptr<int>> ptrs;
-    
+
     ptrs.push_back(make_shared<int>(0));
     ptrs.push_back(make_shared<int>(1));
     ptrs.push_back(make_shared<int>(2));
     ptrs.push_back(make_shared<int>(3));
-    
+
     ptrs.erase(
       remove_if(
         ptrs.begin(), ptrs.end(),
@@ -257,11 +258,31 @@ TEST (CppTests, vectorEraseSharedPtr)
       ),
       ptrs.end()
     );
-    
+
     ASSERT_TRUE( std::all_of(ptrs.begin(), ptrs.end(), [](shared_ptr<int> p) { return bool(p); }));
-    
+
     EXPECT_EQ( thres, ptrs.size() );
   }
+}
+
+TEST(CppTests, mutateVectorInMap)
+{
+  map<int,vector<int>> data;
+
+  data[1] = {1,1,1,1,1};
+  data[2] = {2,2,2,2,2};
+
+  auto& ones = data[1];
+
+  ones[0] = 2;
+
+  EXPECT_EQ(2, data[1][0]);
+
+  auto& retrieved = data[1];
+
+  retrieved[1] = 3;
+
+  EXPECT_EQ(3, data[1][1]);
 }
 
 ///
