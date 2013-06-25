@@ -18,6 +18,20 @@ using namespace cv;
 using namespace Eigen;
 using namespace std;
 
+Bounds2i Bounds2i::merge(Bounds2i const& a, Bounds2i const& b)
+{
+  return Bounds2i(
+    std::min(a.min().x(), b.min().x()),
+    std::min(a.min().y(), b.min().y()),
+    std::max(a.max().x(), b.max().x()),
+    std::max(a.max().y(), b.max().y())
+  );
+}
+
+int Bounds2i::maxDimension() const
+{
+  return std::max(width(), height());
+}
 
 int Bounds2i::width() const
 {

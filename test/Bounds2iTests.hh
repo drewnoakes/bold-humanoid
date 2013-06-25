@@ -53,3 +53,24 @@ TEST (Bounds2iTests, edges)
   EXPECT_EQ ( LineSegment2i(0, 2, 1, 2), edges[2] );
   EXPECT_EQ ( LineSegment2i(1, 2, 1, 0), edges[3] );
 }
+
+TEST (Bounds2iTests, merge)
+{
+  EXPECT_EQ(
+    Bounds2i(1, 2, 3, 4),
+    Bounds2i::merge(Bounds2i(1, 2, 2, 3), Bounds2i(2, 3, 3, 4))
+  );
+
+  EXPECT_EQ(
+    Bounds2i(0, 0, 3, 3),
+    Bounds2i::merge(Bounds2i(0, 0, 3, 3), Bounds2i(1, 1, 2, 2))
+  );
+}
+
+TEST (Bounds2iTests, maxDimension)
+{
+  EXPECT_EQ(10, Bounds2i(0,0,10,10).maxDimension());
+  EXPECT_EQ(5, Bounds2i(5,7,10,10).maxDimension());
+  EXPECT_EQ(5, Bounds2i(7,5,10,10).maxDimension());
+  EXPECT_EQ(0, Bounds2i(10,10,10,10).maxDimension());
+}

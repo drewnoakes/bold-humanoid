@@ -14,6 +14,8 @@ namespace bold
     // TODO add 'draw' for completeness
 
   public:
+    static Bounds2i merge(Bounds2i const& a, Bounds2i const& b);
+
     Bounds2i(int minX, int minY, int maxX, int maxY)
     : Bounds<int,2>::Bounds(Eigen::Vector2i(minX, minY), Eigen::Vector2i(maxX, maxY))
     {}
@@ -21,6 +23,8 @@ namespace bold
     Bounds2i(Eigen::Vector2i min, Eigen::Vector2i max)
     : Bounds<int,2>::Bounds(min, max)
     {}
+
+    int maxDimension() const;
 
     int width() const;
 
