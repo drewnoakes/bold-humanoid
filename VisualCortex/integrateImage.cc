@@ -48,7 +48,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   vector<Vector2d> goalPositions;
   Maybe<Vector2d> ballPosition = Maybe<Vector2d>::empty();
 
-  // Do we have a ball?
+  // Might we have a ball?
   if (blobsPerLabel[d_ballLabel].size() > 0)
   {
     // Merge ball blobs
@@ -56,8 +56,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     for (int i = 0; i < min(10, (int)ballBlobs.size()); ++i)
     {
       Blob& larger = ballBlobs[i];
+
       if (larger.area < d_minBallArea)
+      {
+        // Blobs are sorted, largest first, so if this is too small, the rest will be too
         break;
+      }
 
       for (int j = i + 1; j < min(10, (int)ballBlobs.size()); ++j)
       {
