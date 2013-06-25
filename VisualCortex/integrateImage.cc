@@ -57,6 +57,9 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     {
       Blob& larger = ballBlobs[i];
 
+      if (larger.area == 0)
+        continue;
+
       if (larger.area < d_minBallArea)
       {
         // Blobs are sorted, largest first, so if this is too small, the rest will be too
@@ -73,6 +76,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
         if (shouldMergeBallBlobs(larger.bounds(), smaller.bounds()))
         {
           larger.merge(smaller);
+          // Indicate that the smaller one is no longer in use
           smaller.area = 0;
         }
       }

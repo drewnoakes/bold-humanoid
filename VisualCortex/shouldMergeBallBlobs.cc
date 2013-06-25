@@ -7,9 +7,10 @@ bool VisualCortex::shouldMergeBallBlobs(Bounds2i const& larger, Bounds2i const& 
   Bounds2i combined = Bounds2i::merge(larger, smaller);
 
   double largerAspect = (double)larger.minDimension() / larger.maxDimension();
-  double unionAspect = (double)combined.minDimension() / combined.maxDimension();
+  double combinedAspect = (double)combined.minDimension() / combined.maxDimension();
 
-  if (unionAspect < largerAspect)
+  // If combining these blobs would result in a shape that's less square-like, don't combine
+  if (combinedAspect < largerAspect)
     return false;
 
   int maxDimension = max(larger.maxDimension(), smaller.maxDimension());
