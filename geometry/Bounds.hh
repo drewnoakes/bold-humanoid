@@ -26,7 +26,7 @@ namespace bold
 
     friend std::ostream& operator<<(std::ostream& stream, Bounds<T,dim> const& line)
     {
-      return stream << "Bounds (min=" << line.d_min << " max=" << line.d_max << ")";
+      return stream << "Bounds (min=" << line.d_min.transpose() << " max=" << line.d_max.transpose() << ")";
     }
 
     Eigen::Matrix<T,dim,1> min() const { return d_min; }
