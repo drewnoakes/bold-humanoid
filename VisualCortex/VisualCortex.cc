@@ -48,7 +48,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   createLookupTable();
 
   d_minBallArea = getParam("MinBallArea", 3*3);
-  d_minGoalDimensionPixels = getParam("MinGoalDimensionPixels", 3);
+  d_minGoalDimensionPixels = getParam("MinGoalDimensionPixels", 1);
+  d_fieldEdgeSmoothingWindow = getParam("FieldEdgeSmoothingWindow", 15);
 
   int imageWidth = d_cameraModel->imageWidth();
   int imageHeight = d_cameraModel->imageHeight();
