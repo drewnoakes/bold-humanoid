@@ -59,7 +59,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       if (larger.area < d_minBallArea)
         break;
 
-      for (int j = i + 1; j < ballBlobs.size(); ++j)
+      for (int j = i + 1; j < min(10, (int)ballBlobs.size()); ++j)
       {
         Blob& smaller = ballBlobs[j];
 
