@@ -6,8 +6,7 @@ bool VisualCortex::shouldMergeBallBlobs(Bounds2i const& larger, Bounds2i const& 
 
   Bounds2i combined = Bounds2i::merge(larger, smaller);
 
-
-  cout << "largerBounds="<<largerBounds<<" smallerBounds="<<smallerBounds<<" unionBounds="<<unionBounds<<endl;
+  cout << "larger="<<larger<<" smaller="<<smaller<<" union="<<combined<<endl;
 
   double largerAspect = (double)larger.minDimension() / larger.maxDimension();
   double unionAspect = (double)combined.minDimension() / combined.maxDimension();
