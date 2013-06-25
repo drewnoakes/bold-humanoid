@@ -12,6 +12,7 @@
 #include "../imagepasshandler.hh"
 #include "../../DisjointSet/disjointset.hh"
 #include "../../PixelLabel/pixellabel.hh"
+#include "../../geometry/Bounds2i.hh"
 
 namespace bold
 {
@@ -63,11 +64,15 @@ namespace bold
 
     cv::Rect toRect() const;
 
+    Bounds2i bounds() const;
+
+    void merge(Blob& other);
+
     bool operator<(Blob const& other) const;
     bool operator>(Blob const& other) const { return other < *this; }
 
-    Eigen::Vector2i ul;      ///< Upper left pixel
-    Eigen::Vector2i br;      ///< Bottom right pixel
+    Eigen::Vector2i ul;      ///< Upper left pixel (min)
+    Eigen::Vector2i br;      ///< Bottom right pixel (max)
     unsigned area;           ///< Number of pixels in blob
     Eigen::Vector2d mean;    ///< Mean
 //     Eigen::Matrix2d covar;   ///< Covarience
@@ -248,6 +253,28 @@ namespace bold
   {
     auto size = br - ul;
     return cv::Rect(ul.x(), ul.y(), size.x(), size.y());
+  }
+
+
+  inline Bounds2i Blob::bounds() const
+  {
+    return Bounds2i(ul, br);
+  }
+
+  inline void Blob::merge(Blob& other)
+  {
+    assert(other.area != 0);
+    mean = ((mean * area) + (other.mean * other.area)) / (area + other.area);
+    area += other.area;
+    // TODO can we do this more nicely using Eigen?
+    if (other.ul.x() < ul.x())
+      ul.x() = other.ul.x();
+    if (other.ul.y() < ul.y())
+      ul.y() = other.ul.y();
+    if (other.br.x() > br.x())
+      br.x() = other.br.x();
+    if (other.br.y() > br.y())
+      br.y() = other.br.y();
   }
 
   inline bool Blob::operator<(Blob const& other) const
