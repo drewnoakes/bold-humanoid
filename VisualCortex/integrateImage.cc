@@ -51,7 +51,10 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     {
       // Ignore balls that are too small (avoid noise)
       if (ballBlob.area < d_minBallArea)
-        continue;
+      {
+        // As blobs are sorted largest to smallest, stop at the first one that's too small
+        break;
+      }
 
       // Ignore ball if it appears outside the field edge
       //
