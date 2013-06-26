@@ -23,8 +23,10 @@ namespace bold
     {
       d_controls.push_back(Control::createInt("Lower turn limit (degs)", [this](){ return Math::radToDeg(d_lowerTurnLimitRads); }, [this](int value) { d_lowerTurnLimitRads = Math::degToRad(value); }));
       d_controls.push_back(Control::createInt("Upper turn limit (degs)", [this](){ return Math::radToDeg(d_upperTurnLimitRads); }, [this](int value) { d_upperTurnLimitRads = Math::degToRad(value); }));
-      d_controls.push_back(Control::createInt("Min forward speed", [this](){ return d_minForwardSpeed; }, [this](int value) { d_minForwardSpeed = value; }));
-      d_controls.push_back(Control::createInt("Max forward speed", [this](){ return d_maxForwardSpeed; }, [this](int value) { d_maxForwardSpeed = value; }));
+      d_controls.push_back(Control::createInt("Min forward speed",   [this](){ return d_minForwardSpeed; }, [this](int value) { d_minForwardSpeed = value; }));
+      d_controls.push_back(Control::createInt("Max forward speed",   [this](){ return d_maxForwardSpeed; }, [this](int value) { d_maxForwardSpeed = value; }));
+      d_controls.push_back(Control::createInt("Turn speed scale",    [this](){ return d_turnScale; }, [this](int value) { d_turnScale = value; }));
+      d_controls.push_back(Control::createInt("Break distance (cm)", [this](){ return d_breakDist * 100; }, [this](int value) { d_breakDist = value/100.0; }));
     }
 
     std::vector<std::shared_ptr<Option>> runPolicy() override;
