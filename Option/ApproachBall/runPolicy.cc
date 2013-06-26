@@ -27,5 +27,7 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
   d_ambulator->setMoveDir(moveDir);
   d_ambulator->setTurnAngle(ballAngleRads * d_turnScale); // unspecified units
 
+  cout << "dist=" << dist << " speedDueToDistance=" << speedDueToDistance << " ballAngleRads=" << ballAngleRads << " speedScaleDueToAngle=" << speedScaleDueToAngle << " moveDir=" << moveDir.transpose() << endl;
+
   return std::vector<std::shared_ptr<Option>>();
 }
