@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 //   bool autoGetUpFromFallen = true;
 //   bool recordFrames = false;
 //   bool useOptionTree = true;
-  unsigned teamNumber = 24;
+  unsigned teamNumber = 3; // team number in eindhoven, wc2013
   unsigned uniformNumber = 0;
 
   //
