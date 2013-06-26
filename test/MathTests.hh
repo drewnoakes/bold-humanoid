@@ -164,6 +164,10 @@ TEST(MathTests, lerp)
   EXPECT_NEAR( 10, Math::lerp(0, 0, 1, 10, 20), 0.00001 );
   EXPECT_NEAR( 15, Math::lerp(0.5, 0, 1, 10, 20), 0.00001 );
   EXPECT_NEAR( 20, Math::lerp(1, 0, 1, 10, 20), 0.00001 );
+  // outside range
+  // TODO this is inconsistent with the other lerp function which extends beyond the given domain
+  EXPECT_NEAR( 20, Math::lerp(2, 0, 1, 10, 20), 0.00001 ); // other lerp gives 30
+  EXPECT_NEAR( 10, Math::lerp(0, 1, 2, 10, 20), 0.00001 ); // other lerp gives 0
 
   EXPECT_TRUE ( VectorsEqual(Vector2d(0,0), Math::lerp(0.0, Vector2d(0,0), Vector2d(10,10))) );
   EXPECT_TRUE ( VectorsEqual(Vector2d(5,5), Math::lerp(0.5, Vector2d(0,0), Vector2d(10,10))) );
