@@ -3,6 +3,7 @@
 #include "../../Agent/agent.hh"
 #include "../../Ambulator/ambulator.hh"
 #include "../../CM730/cm730.hh"
+#include "../../DataStreamer/datastreamer.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../util/conditionals.hh"
@@ -11,6 +12,7 @@
 unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
                                                          unsigned uniformNumber,
                                                          Agent* agent,
+                                                         shared_ptr<DataStreamer> dataStreamer,
                                                          shared_ptr<Debugger> debugger,
                                                          shared_ptr<CameraModel> cameraModel,
                                                          shared_ptr<Ambulator> ambulator,
@@ -153,6 +155,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   auto lookAtBall = tree->addOption(make_shared<LookAtBall>("lookAtBall", cameraModel, headModule));
   auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookAtFeet", headModule));
   auto lookAtGoal = tree->addOption(make_shared<LookAtGoal>("lookAtGoal", cameraModel, headModule));
+
+  dataStreamer->registerControls("option/approach-ball", approachBall->getControls());
 
   // FSMs
 

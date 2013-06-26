@@ -38,7 +38,8 @@ define(
             this.context = this.canvas.getContext('2d');
 
             ControlBuilder.build('ambulator', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container));
-            
+            ControlBuilder.build('option/approach-ball', $('<div></div>', {'class': 'control-container approach-ball-controls'}).appendTo(this.$container));
+
             this.subscription = DataProxy.subscribe(Protocols.ambulatorState, { json: true, onmessage: _.bind(this.onData, this) });
         };
 

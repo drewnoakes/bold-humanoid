@@ -113,6 +113,7 @@ int main(int argc, char **argv)
   auto optionTree = optionTreeBuilder.buildTree(teamNumber,
                                                 uniformNumber,
                                                 agent.get(),
+                                                agent->getDataStreamer(),
                                                 agent->getDebugger(),
                                                 agent->getCameraModel(),
                                                 agent->getAmbulator(),

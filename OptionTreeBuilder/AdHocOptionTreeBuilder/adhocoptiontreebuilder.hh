@@ -4,6 +4,7 @@
 
 namespace bold
 {
+  class DataStreamer;
   class ActionModule;
   class Agent;
   class Ambulator;
@@ -18,6 +19,7 @@ namespace bold
     std::unique_ptr<OptionTree> buildTree(unsigned teamNumber,
                                           unsigned uniformNumber,
                                           Agent* agent,
+                                          std::shared_ptr<DataStreamer> dataStreamer,
                                           std::shared_ptr<Debugger> debugger,
                                           std::shared_ptr<CameraModel> cameraModel,
                                           std::shared_ptr<Ambulator> ambulator,
