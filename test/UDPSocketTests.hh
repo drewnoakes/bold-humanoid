@@ -45,7 +45,7 @@ TEST (UDPSocketTests, DISABLED_communication)
   EXPECT_EQ("Hello yourself", string(packet));
 }
 
-TEST (UDPSocketTests, broadcastLoopback)
+TEST (UDPSocketTests, DISABLED_broadcastLoopback)
 {
   int port = 8765;
 
