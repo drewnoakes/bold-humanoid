@@ -14,12 +14,12 @@ namespace bold
     ApproachBall(std::string const& id, std::shared_ptr<Ambulator> ambulator)
       : Option(id),
         d_ambulator(ambulator),
-        d_turnScale(getParam("turnScale", 17.5)),
-        d_maxForwardSpeed(getParam("maxForwardSpeed", 30.0)),
+        d_turnScale(getParam("turnScale", 25.0)),
+        d_maxForwardSpeed(getParam("maxForwardSpeed", 40.0)),
         d_minForwardSpeed(getParam("minForwardSpeed", 5.0)),
-        d_brakeDistance(getParam("breakDist", 0.5)),
-        d_lowerTurnLimitRads(getParam("lowerTurnLimitDegs", Math::degToRad(10))),
-        d_upperTurnLimitRads(getParam("upperTurnLimitDegs", Math::degToRad(30)))
+        d_brakeDistance(getParam("breakDist", 0.45)),
+        d_lowerTurnLimitRads(getParam("lowerTurnLimitDegs", Math::degToRad(20))),
+        d_upperTurnLimitRads(getParam("upperTurnLimitDegs", Math::degToRad(35)))
     {
       d_controls.push_back(Control::createInt("Lower turn limit (degs)", [this](){ return Math::radToDeg(d_lowerTurnLimitRads); }, [this](int value) { d_lowerTurnLimitRads = Math::degToRad(value); }));
       d_controls.push_back(Control::createInt("Upper turn limit (degs)", [this](){ return Math::radToDeg(d_upperTurnLimitRads); }, [this](int value) { d_upperTurnLimitRads = Math::degToRad(value); }));
