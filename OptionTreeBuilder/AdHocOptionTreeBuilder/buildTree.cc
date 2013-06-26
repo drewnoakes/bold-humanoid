@@ -429,12 +429,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     lookForBallState
       ->transitionTo(lookAtBallState)
-      ->when(ballVisibleCondition);
+      ->when(oneShot([ballVisibleCondition]() { return stepUpDownThreshold(5, ballVisibleCondition); }));
 
     // walk a circle if we don't find the ball within 10 seconds
     lookForBallState
       ->transitionTo(circleToFindLostBallState)
-      ->when(secondsSinceStart(10, lookForBallState));
+      ->when(secondsSinceStart(8, lookForBallState));
 
     // after 5 seconds of circling, look for the ball again
     circleToFindLostBallState
@@ -443,7 +443,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     lookAtBallState
       ->transitionTo(lookForBallState)
-      ->when(ballLostCondition);
+      ->when(oneShot([ballLostCondition]() { return trueForMillis(1000, ballLostCondition); }));
 
     // start approaching the ball when we have the confidence that it's really there
     // TODO this doesn't filter the ball position, so may be misled by jitter
