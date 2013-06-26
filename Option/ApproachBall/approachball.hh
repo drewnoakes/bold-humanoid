@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../Math/math.hh"
 #include "../option.hh"
 
 namespace bold
@@ -15,7 +16,9 @@ namespace bold
         d_turnScale(getParam("turnScale", 17.5)),
         d_maxForwardSpeed(getParam("maxForwardSpeed", 30.0)),
         d_minForwardSpeed(getParam("minForwardSpeed", 5.0)),
-        d_breakDist(getParam("breakDist", 0.5))
+        d_breakDist(getParam("breakDist", 0.5)),
+        d_lowerTurnLimitRads(getParam("lowerTurnLimitDegs", Math::degToRad(10))),
+        d_upperTurnLimitRads(getParam("upperTurnLimitDegs", Math::degToRad(30)))
     {}
 
     std::vector<std::shared_ptr<Option>> runPolicy() override;
@@ -26,7 +29,7 @@ namespace bold
     double d_maxForwardSpeed;
     double d_minForwardSpeed;
     double d_breakDist;
+    double d_lowerTurnLimitRads;
+    double d_upperTurnLimitRads;
   };
 }
-
-
