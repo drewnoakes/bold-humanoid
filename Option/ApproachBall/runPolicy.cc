@@ -9,7 +9,7 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
 
   if (!ballPos)
   {
-    cerr << "[ApproachBall::runPolicy] No ball observation in AgentFrame yet ApproachBall was run" << endl;
+//     cerr << "[ApproachBall::runPolicy] No ball observation in AgentFrame yet ApproachBall was run" << endl;
     return std::vector<std::shared_ptr<Option>>();
   }
 
@@ -21,8 +21,6 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
   double ballAngleRads = -atan2(ballPos->x(), ballPos->y());
 
   double speedScaleDueToAngle = Math::lerp(fabs(ballAngleRads), d_lowerTurnLimitRads, d_upperTurnLimitRads, 1.0, 0.0);
-
-  cout << "speedScaleDueToAngle=" << speedScaleDueToAngle << " ballAngleRads=" << ballAngleRads << endl;
 
   Vector2d moveDir = Math::lerp(speedDueToDistance * speedScaleDueToAngle,
                                 Vector2d(d_minForwardSpeed, 0),
