@@ -435,7 +435,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookAtBallState)
       ->when(oneShot([ballVisibleCondition]() { return stepUpDownThreshold(5, ballVisibleCondition); }));
 
-    // walk a circle if we don't find the ball within 10 seconds
+    // walk a circle if we don't find the ball within some time limit
     lookForBallState
       ->transitionTo(circleToFindLostBallState)
       ->when(secondsSinceStart(8, lookForBallState));
