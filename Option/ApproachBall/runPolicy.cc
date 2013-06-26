@@ -18,7 +18,7 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
   double ballAngleRads = -atan2(ballPos->x(), ballPos->y());
 
   double speedScaleDueToAngle = Math::clamp(fabs((ballAngleRads - d_lowerTurnLimitRads) /
-                                                 (d_upperTurnLimitRads - d_lowerTurnLimitRads)), 0.0, 1.0);
+                                                 (d_upperTurnLimitRads - d_lowerTurnLimitRads)), 1.0, 0.0);
 
   Vector2d moveDir = Math::lerp(speedDueToDistance * speedScaleDueToAngle,
                                 Vector2d(d_minForwardSpeed, 0),
