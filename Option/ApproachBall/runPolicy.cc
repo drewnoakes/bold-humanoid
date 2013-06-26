@@ -20,7 +20,7 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
   // NOTE atan has flipped x/y on purpose
   double ballAngleRads = -atan2(ballPos->x(), ballPos->y());
 
-  double speedScaleDueToAngle = Math::lerp(ballAngleRads, d_lowerTurnLimitRads, d_upperTurnLimitRads, 1.0, 0.0);
+  double speedScaleDueToAngle = Math::lerp(fabs(ballAngleRads), d_lowerTurnLimitRads, d_upperTurnLimitRads, 1.0, 0.0);
 
   cout << "speedScaleDueToAngle=" << speedScaleDueToAngle << " ballAngleRads=" << ballAngleRads << endl;
 
