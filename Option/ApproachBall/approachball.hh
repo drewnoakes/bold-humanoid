@@ -17,7 +17,7 @@ namespace bold
         d_turnScale(getParam("turnScale", 17.5)),
         d_maxForwardSpeed(getParam("maxForwardSpeed", 30.0)),
         d_minForwardSpeed(getParam("minForwardSpeed", 5.0)),
-        d_breakDist(getParam("breakDist", 0.5)),
+        d_brakeDistance(getParam("breakDist", 0.5)),
         d_lowerTurnLimitRads(getParam("lowerTurnLimitDegs", Math::degToRad(10))),
         d_upperTurnLimitRads(getParam("upperTurnLimitDegs", Math::degToRad(30)))
     {
@@ -26,7 +26,7 @@ namespace bold
       d_controls.push_back(Control::createInt("Min forward speed",   [this](){ return d_minForwardSpeed; }, [this](int value) { d_minForwardSpeed = value; }));
       d_controls.push_back(Control::createInt("Max forward speed",   [this](){ return d_maxForwardSpeed; }, [this](int value) { d_maxForwardSpeed = value; }));
       d_controls.push_back(Control::createInt("Turn speed scale",    [this](){ return d_turnScale; }, [this](int value) { d_turnScale = value; }));
-      d_controls.push_back(Control::createInt("Break distance (cm)", [this](){ return d_breakDist * 100; }, [this](int value) { d_breakDist = value/100.0; }));
+      d_controls.push_back(Control::createInt("Break distance (cm)", [this](){ return d_brakeDistance * 100; }, [this](int value) { d_brakeDistance = value/100.0; }));
     }
 
     std::vector<std::shared_ptr<Option>> runPolicy() override;
@@ -39,7 +39,7 @@ namespace bold
     double d_turnScale;
     double d_maxForwardSpeed;
     double d_minForwardSpeed;
-    double d_breakDist;
+    double d_brakeDistance;
     double d_lowerTurnLimitRads;
     double d_upperTurnLimitRads;
   };

@@ -12,7 +12,7 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
 
   double dist = ballPos->head<2>().norm();
 
-  double speedDueToDistance = Math::clamp(dist/d_breakDist, 0.0, 1.0);
+  double speedDueToDistance = Math::clamp(dist/d_brakeDistance, 0.0, 1.0);
 
   // NOTE atan has flipped x/y on purpose
   double ballAngleRads = -atan2(ballPos->x(), ballPos->y());
