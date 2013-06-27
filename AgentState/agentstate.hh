@@ -69,6 +69,7 @@ namespace bold
     template<typename T>
     void registerStateType(std::string name)
     {
+      // TODO fail if state type name already registered
       std::cout << "[AgentState::registerStateType] Registering state type: " << name << std::endl;
       std::lock_guard<std::mutex> guard(d_mutex);
       const std::type_info* typeId = &typeid(T);
