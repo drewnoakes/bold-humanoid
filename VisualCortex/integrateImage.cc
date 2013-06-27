@@ -21,6 +21,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   d_imagePassRunner->pass(d_labelledImage);
   t.timeEvent("Image Processing/Pass");
 
+  if (d_shouldCountLabels)
+  {
+    AgentState::getInstance().set(make_shared<LabelCountState const>(d_labelCountPass->getCounts()));
+    t.timeEvent("Image Processing/Store Label Count");
+  }
+
   // Find lines
 
   vector<LineSegment2i> observedLineSegments;

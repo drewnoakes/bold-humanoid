@@ -24,6 +24,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
   d_shouldDetectLines = getParam("DetectLines", 0) != 0;
+  d_shouldCountLabels = getParam("CountLabels", 1) != 0;
 
   d_streamFramePeriod = getParam("CameraFramePeriod", 5);
 
@@ -71,6 +72,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   if (d_shouldDetectLines)
     d_imagePassRunner->addHandler(d_lineDotPass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
+  if (d_shouldCountLabels)
+    d_imagePassRunner->addHandler(d_labelCountPass);
 
   d_lineFinder = make_shared<MaskWalkLineFinder>(imageWidth, imageHeight);
 
@@ -110,6 +113,17 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   for (auto c : d_lineDotPass->getControls())
     lineDetectionControls.push_back(c);
   d_controlsByFamily["vision/line-detection"] = lineDetectionControls;
+
+  vector<shared_ptr<Control const>> labelCountControls;
+  lineDetectionControls.push_back(Control::createBool("Count Labels", [this]() { return d_shouldCountLabels; }, [this](bool value)
+  {
+    d_shouldCountLabels = value;
+    if (d_shouldCountLabels)
+      d_imagePassRunner->addHandler(d_labelCountPass);
+    else
+      d_imagePassRunner->removeHandler(d_labelCountPass);
+  }));
+  d_controlsByFamily["vision/label-count"] = lineDetectionControls;
 
   // Allow control over the LUT parameters
   auto setHue      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withH(value));      createLookupTable(); };

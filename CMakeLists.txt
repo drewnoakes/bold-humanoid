@@ -369,6 +369,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/LabelCountState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/MotionTaskState/writeJson.cc
 )
 

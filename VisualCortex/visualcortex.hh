@@ -65,6 +65,9 @@ namespace bold
     void setShouldDetectLines(bool val) { d_shouldDetectLines = val; }
     bool getShouldDetectLines() const { return d_shouldDetectLines; }
 
+    void setShouldCountLabels(bool val) { d_shouldCountLabels = val; }
+    bool getShouldCountLabels() const { return d_shouldCountLabels; }
+
     void setShouldIgnoreAboveHorizon(bool val) { d_shouldIgnoreAboveHorizon = val; }
     bool getShouldIgnoreAboveHorizon() const { return d_shouldIgnoreAboveHorizon; }
 
@@ -129,6 +132,7 @@ namespace bold
     std::map<uchar,bold::PixelLabel> d_pixelLabelById;
 
     bool d_shouldDetectLines;
+    bool d_shouldCountLabels;
     bool d_shouldIgnoreAboveHorizon;
 
     unsigned d_minBallArea;

@@ -22,6 +22,7 @@
 #include "../Spatialiser/spatialiser.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/LabelCountState/labelcountstate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
 #include "../MotionModule/HeadModule/headmodule.hh"
 
