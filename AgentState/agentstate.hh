@@ -65,7 +65,7 @@ namespace bold
   {
   public:
     AgentState() {}
-    
+
     template<typename T>
     void registerStateType(std::string name)
     {
@@ -116,15 +116,15 @@ namespace bold
     void set(std::shared_ptr<T const> state)
     {
       assert(state);
-      
+
       // TODO can type traits be used here to guarantee that T derives from StateObject
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
-      
+
       // TODO this blocks for too long. eventing won't work well. need to do all updates async, off the motion thread
       std::lock_guard<std::mutex> guard(d_mutex);
       updated(tracker);
-      
+
       std::type_info const* typeId = &typeid(T);
       auto it = d_observersByTypeId.find(typeId);
       if (it != d_observersByTypeId.end())
