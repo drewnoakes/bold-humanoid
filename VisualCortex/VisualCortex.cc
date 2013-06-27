@@ -101,7 +101,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     lineDetectionControls.push_back(c);
   lineDetectionControls.push_back(Control::createBool("Detect lines", [this]() { return d_shouldDetectLines; }, [this](bool value)
   {
-    if (value)
+    d_shouldDetectLines = value;
+    if (d_shouldDetectLines)
       d_imagePassRunner->addHandler(d_lineDotPass);
     else
       d_imagePassRunner->removeHandler(d_lineDotPass);
