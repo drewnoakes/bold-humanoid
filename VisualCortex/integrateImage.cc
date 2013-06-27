@@ -10,10 +10,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // PROCESS THE IMAGE
   //
 
-  // Label the image;
+  // Label the image
   if (d_labelledImage.rows != image.rows || d_labelledImage.cols != image.cols)
     d_labelledImage = Mat(image.rows, image.cols, CV_8UC1);
 
+  // Produce an image of labelled pixels.
+  // If the option is enabled, any pixels above the horizon will be set to zero.
   d_imageLabeller->label(image, d_labelledImage, d_shouldIgnoreAboveHorizon);
   t.timeEvent("Image Processing/Pixel Label");
 
