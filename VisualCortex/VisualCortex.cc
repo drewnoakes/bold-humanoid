@@ -24,7 +24,7 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
   d_shouldDetectLines = getParam("DetectLines", 0) != 0;
-  d_shouldCountLabels = getParam("CountLabels", 1) != 0;
+  d_shouldCountLabels = getParam("CountLabels", 0) != 0;
 
   d_streamFramePeriod = getParam("CameraFramePeriod", 5);
 
