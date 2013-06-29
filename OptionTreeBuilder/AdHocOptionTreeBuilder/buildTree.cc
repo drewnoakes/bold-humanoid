@@ -527,7 +527,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         if (lookAtFeetState->secondsSinceStart() < 1)
           return false;
 
-        // Wait until we're finished looking down
+        // Wait until we've finished looking down
         if (!lookAtFeetState->allOptionsTerminated())
           return false;
 
@@ -548,7 +548,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         if (lookAtFeetState->secondsSinceStart() < 1)
           return false;
 
-        // Wait until we're finished looking down
+        // Wait until we've finished looking down
         if (!lookAtFeetState->allOptionsTerminated())
           return false;
 
