@@ -13,6 +13,7 @@
 
 namespace bold
 {
+  class Camera;
   class CameraModel;
   class DataStreamer;
   class FieldMap;
@@ -49,7 +50,8 @@ namespace bold
   public:
     static bool shouldMergeBallBlobs(Bounds2i const& larger, Bounds2i const& smaller);
 
-    VisualCortex(std::shared_ptr<CameraModel> cameraModel,
+    VisualCortex(std::shared_ptr<Camera> camera,
+                 std::shared_ptr<CameraModel> cameraModel,
                  std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
                  std::shared_ptr<HeadModule> headModule);
@@ -58,6 +60,9 @@ namespace bold
 
     /** Process the provided image, extracting features. */
     void integrateImage(cv::Mat& cameraImage, SequentialTimer& timer);
+
+    /** Saves the provided image to a file, along with information about the current agent's state in a JSON file. */
+    void saveImage(cv::Mat const& image);
 
     /** Composes and enqueues a debugging image. */
     void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer, SequentialTimer& timer);
@@ -105,6 +110,7 @@ namespace bold
     std::map<std::string,std::vector<std::shared_ptr<Control const>>> d_controlsByFamily;
 
     std::shared_ptr<FieldMap> d_fieldMap;
+    std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<Spatialiser> d_spatialiser;
 
@@ -142,6 +148,8 @@ namespace bold
 
     ImageType d_imageType;
     unsigned d_streamFramePeriod;
+    bool d_isRecordingFrames;
+    bool d_recordNextFrame;
     bool d_shouldDrawBlobs;
     bool d_shouldDrawLineDots;
     bool d_shouldDrawObservedObjects;

@@ -65,6 +65,7 @@ define(
             ControlBuilder.build('camera',                $('<div></div>', {'class': 'control-container camera-controls'}).appendTo(this.$container));
             ControlBuilder.build('head',                  $('<div></div>', {'class': 'control-container head-controls'}).appendTo(this.$container));
             ControlBuilder.build('debug-image',           $('<div></div>', {'class': 'control-container image-controls'}).appendTo(this.$container));
+            ControlBuilder.build('image-capture',         $('<div></div>', {'class': 'control-container image-capture-controls'}).appendTo(this.$container));
             ControlBuilder.build('debug-image-features',  $('<div></div>', {'class': 'control-container image-controls-features'}).appendTo(this.$container));
             ControlBuilder.build('vision/line-detection', $('<div></div>', {'class': 'control-container lines-controls'}).appendTo(this.$container));
             ControlBuilder.build('vision/objects',        $('<div></div>', {'class': 'control-container object-controls'}).appendTo(this.$container));

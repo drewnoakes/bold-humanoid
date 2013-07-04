@@ -416,6 +416,7 @@ add_class(BOLDHUMANOID
   ./VisualCortex/VisualCortex.cc
   ./VisualCortex/integrateImage.cc
   ./VisualCortex/shouldMergeBallBlobs.cc
+  ./VisualCortex/saveImage.cc
   ./VisualCortex/streamDebugImage.cc
 )
 

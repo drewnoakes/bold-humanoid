@@ -86,7 +86,6 @@ namespace bold
     std::string d_motionFile;
     unsigned d_teamNumber;
     unsigned d_uniformNumber;
-    bool d_isRecordingFrames;
     bool d_autoGetUpFromFallen;
     bool d_useOptionTree;
 

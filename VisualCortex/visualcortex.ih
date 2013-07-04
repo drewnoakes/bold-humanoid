@@ -1,6 +1,7 @@
 #include "visualcortex.hh"
 
 #include "../AgentState/agentstate.hh"
+#include "../Camera/camera.hh"
 #include "../CameraModel/cameramodel.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../FieldMap/fieldmap.hh"

@@ -6,7 +6,6 @@ Agent::Agent()
     d_isStopRequested(false),
     d_teamNumber(0),
     d_uniformNumber(0),
-    d_isRecordingFrames(false),
     d_autoGetUpFromFallen(true),
     d_useOptionTree(true)
 {
@@ -77,7 +76,9 @@ Agent::Agent()
 
   d_localiser = make_shared<Localiser>(d_fieldMap);
 
-  d_visualCortex = make_shared<VisualCortex>(d_cameraModel, d_fieldMap, d_spatialiser, d_headModule);
+  initCamera();
+
+  d_visualCortex = make_shared<VisualCortex>(d_camera, d_cameraModel, d_fieldMap, d_spatialiser, d_headModule);
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, this);
 
@@ -90,8 +91,6 @@ Agent::Agent()
     d_joystickYAmpMax = Configurable::getParam("joystick", "yAmpMax", 15);
     d_joystickAAmpMax = Configurable::getParam("joystick", "aAmpMax", 15);
   }
-
-  initCamera();
 
   // TODO only stream if argument specified?
   d_streamer = make_shared<DataStreamer>(d_camera);

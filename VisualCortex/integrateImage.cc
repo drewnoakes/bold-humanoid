@@ -2,6 +2,18 @@
 
 void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 {
+  //
+  // Record frame, if required
+  //
+  static Clock::Timestamp lastRecordTime;
+  if (d_recordNextFrame || (d_isRecordingFrames && Clock::getSecondsSince(lastRecordTime) > 1.0))
+  {
+    saveImage(image);
+    lastRecordTime = Clock::getTimestamp();
+    d_recordNextFrame = false;
+    t.timeEvent("Saving Frame To File");
+  }
+
   auto cameraFrame = AgentState::get<CameraFrameState>();
 
   // TODO why are SequentialTimer calls here prefixed with "Image Processing"? This is supposed to be taken care of via the enter/exit pattern

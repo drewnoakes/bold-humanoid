@@ -35,24 +35,6 @@ void Agent::think()
   }
 
   //
-  // Record frame, if required
-  //
-  if (d_isRecordingFrames)
-  {
-    static Clock::Timestamp lastRecordTime;
-    static unsigned frameNumber = 0;
-    if (Clock::getSecondsSince(lastRecordTime) > 1.0)
-    {
-      // save image
-      stringstream ss;
-      ss << "capture-" << frameNumber++ << ".png";
-      cv::imwrite(ss.str(), image);
-      t.timeEvent("Saving Frame To File");
-      lastRecordTime = Clock::getTimestamp();
-    }
-  }
-
-  //
   // Process the image
   //
   t.enter("Image Processing");

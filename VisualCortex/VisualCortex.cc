@@ -1,11 +1,13 @@
 #include "visualcortex.ih"
 
-VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
+VisualCortex::VisualCortex(shared_ptr<Camera> camera,
+                           shared_ptr<CameraModel> cameraModel,
                            shared_ptr<FieldMap> fieldMap,
                            shared_ptr<Spatialiser> spatialiser,
                            shared_ptr<HeadModule> headModule)
   : Configurable("visialcortex"),
     d_fieldMap(fieldMap),
+    d_camera(camera),
     d_cameraModel(cameraModel),
     d_spatialiser(spatialiser),
     d_shouldIgnoreAboveHorizon(true),
@@ -13,6 +15,8 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
     d_minGoalDimensionPixels(1),
     d_fieldEdgeSmoothingWindow(15),
     d_imageType(ImageType::RGB),
+    d_isRecordingFrames(false),
+    d_recordNextFrame(false),
     d_shouldDrawBlobs(true),
     d_shouldDrawLineDots(false),
     d_shouldDrawObservedObjects(true),
@@ -77,12 +81,20 @@ VisualCortex::VisualCortex(shared_ptr<CameraModel> cameraModel,
 
   d_lineFinder = make_shared<MaskWalkLineFinder>(imageWidth, imageHeight);
 
-  // HeadModule control
-  d_controlsByFamily["head"] = headModule->getControls();
-
   //
   // VISION SYSTEM CONTROLS
   //
+
+  // HeadModule control
+  d_controlsByFamily["head"] = headModule->getControls();
+
+  // Image capture controls
+  vector<shared_ptr<Control const>> imageCaptureControls;
+  imageCaptureControls.push_back(Control::createAction("Save Frame", [this]() { d_recordNextFrame = true; }));
+  auto recordFramesControl = Control::createBool("Record Frames", [this]() { return d_isRecordingFrames; }, [this](bool value) { d_isRecordingFrames = value; });
+  recordFramesControl->setIsAdvanced(true);
+  imageCaptureControls.push_back(recordFramesControl);
+  d_controlsByFamily["image-capture"] = imageCaptureControls;
 
   auto minBallAreaControl = Control::createInt("Min ball area", [this]() { return d_minBallArea; }, [this](int value) { d_minBallArea = value; });
   minBallAreaControl->setIsAdvanced(true);
