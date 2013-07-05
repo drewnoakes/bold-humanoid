@@ -42,7 +42,6 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   }
 
   // Find lines
-
   vector<LineSegment2i> observedLineSegments;
   if (d_shouldDetectLines)
   {
@@ -53,13 +52,6 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // Find blobs
   auto blobsPerLabel = d_blobDetectPass->detectBlobs();
   t.timeEvent("Image Processing/Blob Search");
-
-  // Smooth the field edge a little
-  if (d_fieldEdgeSmoothingWindow > 1)
-  {
-    d_fieldEdgePass->smooth(d_fieldEdgeSmoothingWindow);
-    t.timeEvent("Image Processing/Field Edge Smoothing");
-  }
 
   //
   // UPDATE STATE

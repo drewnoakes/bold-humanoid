@@ -1,18 +1,36 @@
 #include "fieldedgepass.hh"
 
-#include "../../PixelLabel/pixellabel.hh"
+#include "../../Control/control.hh"
 #include "../../MovingAverage/movingaverage.hh"
+#include "../../PixelLabel/pixellabel.hh"
 
 using namespace bold;
+using namespace std;
 
 FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
-: d_fieldLabel(fieldLabel),
+: Configurable("fieldedgepass"),
+  d_fieldLabel(fieldLabel),
   d_maxYByX(pixelWidth),
   d_runByX(pixelWidth),
   d_pixelWidth(pixelWidth),
   d_pixelHeight(pixelHeight),
+  d_smoothingWindowSize(15),
   d_minVerticalRunLength(5)
-{}
+{
+  d_smoothingWindowSize = getParam("FieldEdgeSmoothingWindow", 15);
+}
+
+vector<shared_ptr<Control const>> FieldEdgePass::getControls()
+{
+  auto smoothingWindowSizeControl = Control::createInt("Field edge smooth window size", [this]() { return d_smoothingWindowSize; }, [this](int value) { d_smoothingWindowSize = value; });
+  smoothingWindowSizeControl->setIsAdvanced(true);
+  smoothingWindowSizeControl->setLimitValues(1, 100);
+  auto minVerticalRunLengthControl = Control::createInt("Field edge noise tolerance", [this]() { return d_minVerticalRunLength; }, [this](int value) { d_minVerticalRunLength = value; });
+  minVerticalRunLengthControl->setIsAdvanced(true);
+  minVerticalRunLengthControl->setLimitValues(1, 100);
+  vector<shared_ptr<Control const>> fieldEdgeControls = { smoothingWindowSizeControl, minVerticalRunLengthControl };
+  return fieldEdgeControls;
+}
 
 void FieldEdgePass::onImageStarting()
 {
@@ -54,11 +72,15 @@ ushort FieldEdgePass::getEdgeYValue(ushort x) const
   return d_maxYByX[x];
 }
 
-void FieldEdgePass::smooth(unsigned windowSize)
+void FieldEdgePass::onImageComplete()
 {
-  MovingAverage<unsigned> avg(windowSize);
+  // Bail out early if no smoothing is requested
+  if (d_smoothingWindowSize == 1)
+    return;
 
-  int offset = int(windowSize)/2;
+  MovingAverage<unsigned> avg(d_smoothingWindowSize);
+
+  int offset = int(d_smoothingWindowSize)/2;
   for (int x = 0, t = -offset; x < d_pixelWidth; x++, t++)
   {
     auto smoothedY = avg.next(d_maxYByX[x]);

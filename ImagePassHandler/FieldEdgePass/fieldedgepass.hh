@@ -4,23 +4,25 @@
 #include <vector>
 
 #include "../imagepasshandler.hh"
+#include "../Configurable/configurable.hh"
 
 namespace bold
 {
+  class Control;
   class PixelLabel;
 
-  class FieldEdgePass : public ImagePassHandler<uchar>
+  class FieldEdgePass : public ImagePassHandler<uchar>, Configurable
   {
   public:
     FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight);
 
     void onImageStarting() override;
-
     void onPixel(uchar labelId, ushort x, ushort y) override;
+    void onImageComplete() override;
 
     ushort getEdgeYValue(ushort x) const;
 
-    void smooth(unsigned windowSize);
+    std::vector<std::shared_ptr<Control const>> getControls();
 
   private:
     std::shared_ptr<PixelLabel> d_fieldLabel;
@@ -28,6 +30,7 @@ namespace bold
     std::vector<ushort> d_runByX;
     ushort d_pixelWidth;
     ushort d_pixelHeight;
+    ushort d_smoothingWindowSize;
     ushort d_minVerticalRunLength;
   };
 }
