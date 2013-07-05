@@ -22,7 +22,9 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
                    // name, callback, per-session-data-size, rx-buffer-size, owning-server, protocol-index
   d_protocols[0] = { "http-only", DataStreamer::_callback_http, 0, 0, NULL, 0 };
   d_protocols[1] = { "camera-protocol", DataStreamer::_callback_camera, sizeof(CameraSession), 0, NULL, 0 };
-  d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, 0, 0, NULL, 0 };
+  // TODO this 16kB hack gets around the outbound buffer size problem -- a better solution is to write in a loop until the pipe is choked
+  // see http://ml.libwebsockets.org/pipermail/libwebsockets/2013-April/000432.html
+  d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, 0, 16*1024, NULL, 0 };
 
   d_cameraProtocol = &d_protocols[1];
 
@@ -50,7 +52,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   d_context = libwebsocket_create_context(&contextInfo);
 
   d_hasWebSockets = d_context != nullptr;
-  
+
   if (d_hasWebSockets)
     cout << "[DataStreamer::DataStreamer] Listening on TCP port " << d_port << endl;
   else
