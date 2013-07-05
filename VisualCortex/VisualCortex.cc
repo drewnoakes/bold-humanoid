@@ -133,7 +133,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_controlsByFamily["vision/line-detection"] = lineDetectionControls;
 
   vector<shared_ptr<Control const>> labelCountControls;
-  lineDetectionControls.push_back(Control::createBool("Count Labels", [this]() { return d_shouldCountLabels; }, [this](bool value)
+  labelCountControls.push_back(Control::createBool("Count labels", [this]() { return d_shouldCountLabels; }, [this](bool value)
   {
     d_shouldCountLabels = value;
     if (d_shouldCountLabels)
@@ -141,7 +141,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     else
       d_imagePassRunner->removeHandler(d_labelCountPass);
   }));
-  d_controlsByFamily["vision/label-count"] = lineDetectionControls;
+  d_controlsByFamily["vision/label-count"] = labelCountControls;
 
   // Allow control over the LUT parameters
   auto setHue      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withH(value));      createLookupTable(); };
