@@ -10,7 +10,7 @@
 namespace bold
 {
   typedef std::pair<double, std::string> EventTiming;
-  
+
   class SequentialTimer
   {
   public:
@@ -20,13 +20,14 @@ namespace bold
       d_last(Clock::getTimestamp()),
       d_flushed(false)
     {}
-    
+
     void timeEvent(std::string const& eventName)
     {
       assert(!d_flushed);
       auto now = Clock::getTimestamp();
       auto timeMillis = Clock::timestampToMillis(now - d_last);
-      d_eventTimings->push_back(EventTiming(timeMillis, eventName));
+      std::string name = d_prefix.size() ? d_prefix + '/' + eventName : eventName;
+      d_eventTimings->push_back(EventTiming(timeMillis, name));
       d_last = now;
     }
 
@@ -35,13 +36,13 @@ namespace bold
       d_flushed = true;
       return d_eventTimings;
     }
-    
+
     void enter(std::string name)
     {
       d_entered.push_back(std::make_pair(name, Clock::getTimestamp()));
       rebuildPrefix();
     }
-    
+
     void exit()
     {
       assert(d_entered.size() != 0);
@@ -53,6 +54,8 @@ namespace bold
       d_entered.pop_back();
       rebuildPrefix();
     }
+
+    std::string getPrefix() const { return d_prefix; }
 
   private:
     void rebuildPrefix()
@@ -69,7 +72,7 @@ namespace bold
       }
       d_prefix = prefix.str();
     }
-    
+
     std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
     std::deque<std::pair<std::string,Clock::Timestamp>> d_entered;
     std::string d_prefix;

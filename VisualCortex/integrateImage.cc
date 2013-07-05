@@ -16,8 +16,6 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   auto cameraFrame = AgentState::get<CameraFrameState>();
 
-  // TODO why are SequentialTimer calls here prefixed with "Image Processing"? This is supposed to be taken care of via the enter/exit pattern
-
   //
   // PROCESS THE IMAGE
   //
@@ -29,16 +27,16 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // Produce an image of labelled pixels.
   // If the option is enabled, any pixels above the horizon will be set to zero.
   d_imageLabeller->label(image, d_labelledImage, d_shouldIgnoreAboveHorizon);
-  t.timeEvent("Image Processing/Pixel Label");
+  t.timeEvent("Pixel Label");
 
   // Perform the image pass
   d_imagePassRunner->pass(d_labelledImage);
-  t.timeEvent("Image Processing/Pass");
+  t.timeEvent("Pass");
 
   if (d_shouldCountLabels)
   {
     AgentState::getInstance().set(make_shared<LabelCountState const>(d_labelCountPass->getCounts()));
-    t.timeEvent("Image Processing/Store Label Count");
+    t.timeEvent("Store Label Count");
   }
 
   // Find lines
@@ -46,12 +44,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   if (d_shouldDetectLines)
   {
     observedLineSegments = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
-    t.timeEvent("Image Processing/Line Search");
+    t.timeEvent("Line Search");
   }
 
   // Find blobs
   auto blobsPerLabel = d_blobDetectPass->detectBlobs();
-  t.timeEvent("Image Processing/Blob Search");
+  t.timeEvent("Blob Search");
 
   //
   // UPDATE STATE
@@ -93,7 +91,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
         }
       }
     }
-    t.timeEvent("Image Processing/Ball Blob Merging");
+    t.timeEvent("Ball Blob Merging");
 
     // The first is the biggest, topmost ball blob
     for (Blob const& ballBlob : ballBlobs)
@@ -165,5 +163,5 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   AgentState::getInstance().set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments));
 
-  t.timeEvent("Image Processing/Updating State");
+  t.timeEvent("Updating State");
 }
