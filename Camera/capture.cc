@@ -12,7 +12,7 @@ Mat Camera::capture(SequentialTimer& t)
   if (-1 == ioctl(d_fd, VIDIOC_DQBUF, &buf))
   {
     cout << "[Camera::capture] Error dequeueing buffer" << endl;
-    // TODO have seen this in a match -- do we have to exit the process?
+    // NOTE saw this during a match when the robot fell and the cable came out of the camera
     exit(-1);
   }
   t.timeEvent("Dequeue");
