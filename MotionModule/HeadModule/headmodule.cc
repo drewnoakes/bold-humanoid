@@ -24,8 +24,8 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_tiltGainD   = getParam("tracking_tilt_d_gain", 0.22);
 
   // Restrictions placed upon the range of movement by the head within this module
-  d_limitLeftDegs   = getParam("left_limit", 100.0);
-  d_limitRightDegs  = getParam("right_limit", -100.0);
+  d_limitLeftDegs   = getParam("left_limit", 135.0);
+  d_limitRightDegs  = getParam("right_limit", -135.0);
   d_limitTopDegs    = getParam("top_limit", 40.0);
   d_limitBottomDegs = getParam("bottom_limit", -22.0);
 
@@ -70,6 +70,26 @@ void HeadModule::checkLimit()
   // Clamp pan/tilt within the box-shaped limit
   d_panAngle = Math::clamp(d_panAngle, d_limitRightDegs, d_limitLeftDegs);
   d_tiltAngle = Math::clamp(d_tiltAngle, d_limitBottomDegs, d_limitTopDegs);
+
+  // Lower corners of that box are disallowed as the head makes contact with the
+  // shoulder, and the body occludes too much from the camera anyway.
+  //
+  //  -135           135
+  //
+  //     \           /  10
+  //      \         /
+  //       \_______/    -22
+  //
+  //      -85     85
+
+  if (fabs(d_panAngle) > Math::degToRad(85))
+  {
+    // Outside of +/- 85 degrees, we need to prevent tilting too far down.
+    // At 85 deg, we start tilting upwards to avoid the shoulder.
+    double limit = Math::lerp(fabs(d_panAngle), 85, 135, -22, 10);
+    if (d_tiltAngle < limit)
+      d_tiltAngle = limit;
+  }
 }
 
 void HeadModule::initialize()
