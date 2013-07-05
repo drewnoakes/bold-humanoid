@@ -134,9 +134,6 @@ namespace bold
     std::shared_ptr<LabelCountPass> d_labelCountPass;
     std::shared_ptr<FieldEdgePass> d_fieldEdgePass;
 
-    // TODO why using shared_ptr<PixelLabel> above but not here?
-    std::map<uchar,bold::PixelLabel> d_pixelLabelById;
-
     bool d_shouldDetectLines;
     bool d_shouldCountLabels;
     bool d_shouldIgnoreAboveHorizon;
