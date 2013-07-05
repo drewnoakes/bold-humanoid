@@ -7,10 +7,10 @@
 
 #include <iostream>
 #include <fstream>
-#include <stdio.h>      /* puts */
-#include <time.h>       /* time_t, struct tm, time, localtime, strftime */
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
+#include <unistd.h>
 
 using namespace rapidjson;
 using namespace cv;
@@ -53,6 +53,17 @@ void VisualCortex::saveImage(cv::Mat const& image)
   PrettyWriter<StringBuffer> writer(buffer);
   writer.StartObject();
   {
+    // Host name
+    char hostName[80];
+    if (gethostname(hostName, 80) == -1)
+    {
+      cerr << "[VisualCortex::saveImage] gethostname failed: " << strerror(errno) << endl;
+    }
+    else
+    {
+      writer.String("hostname").String(hostName);
+    }
+
     // Current date and time
     writer.String("date").String(dateTimeString);
 
