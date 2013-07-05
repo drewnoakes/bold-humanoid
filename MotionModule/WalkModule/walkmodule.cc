@@ -57,7 +57,6 @@ WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 WalkModule::~WalkModule()
 {}
 
-constexpr double WalkModule::EYE_TILT_OFFSET_ANGLE;
 constexpr double WalkModule::THIGH_LENGTH;
 constexpr double WalkModule::CALF_LENGTH;
 constexpr double WalkModule::ANKLE_LENGTH;

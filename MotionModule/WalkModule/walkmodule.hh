@@ -18,7 +18,6 @@ namespace bold
     };
 
   private:
-    static constexpr double EYE_TILT_OFFSET_ANGLE = 40.0; // degrees
     static constexpr double THIGH_LENGTH = 93.0; // mm
     static constexpr double CALF_LENGTH = 93.0; // mm
     static constexpr double ANKLE_LENGTH = 33.5; // mm
