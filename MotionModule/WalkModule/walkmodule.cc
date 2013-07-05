@@ -37,7 +37,7 @@ WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   Z_SWAP_AMPLITUDE  = getParam("swing_top_down", 5);
   PELVIS_OFFSET     = getParam("pelvis_offset", 3.0);
   ARM_SWING_GAIN    = getParam("arm_swing_gain", 1.5);
-  
+
   BALANCE_KNEE_GAIN        = getParam("balance_knee_gain", 1.2);
   BALANCE_ANKLE_PITCH_GAIN = getParam("balance_ankle_pitch_gain", 3.6);
   BALANCE_HIP_ROLL_GAIN    = getParam("balance_hip_roll_gain", 2.0);
@@ -431,7 +431,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   d_bodySwingZ -= LEG_LENGTH;
 
   double angle[14];
-  
+
   // Compute arm swing
   if (d_xMoveAmplitude == 0)
   {
@@ -468,7 +468,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   //                     R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
   int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
   double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
-  
+
   // Compute motor value
   for (int i = 0; i < 14; i++)
   {
@@ -509,10 +509,10 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     d_outValue[5]  -= (int)(dir[5]  * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN); // R_ANKLE_ROLL
     d_outValue[11] -= (int)(dir[11] * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN); // L_ANKLE_ROLL
   }
-  
+
   if (!d_isRunning)
     setCompletedFlag();
-  
+
   // Ensure all values are within the valid range
   for (int i = 0; i < 14; ++i)
     d_outValue[i] = MX28::clampValue(d_outValue[i]);
