@@ -28,15 +28,15 @@ namespace bold
 
     // TODO don't store this here, but rather some static model of the body's limits
 
-    double getTopLimitDegs() const    { return d_limitTop; }
-    double getBottomLimitDegs() const { return d_limitBottom; }
-    double getRightLimitDegs() const  { return d_limitRight; }
-    double getLeftLimitDegs() const   { return d_limitLeft; }
+    double getTopLimitDegs() const    { return d_limitTopDegs; }
+    double getBottomLimitDegs() const { return d_limitBottomDegs; }
+    double getRightLimitDegs() const  { return d_limitRightDegs; }
+    double getLeftLimitDegs() const   { return d_limitLeftDegs; }
 
-    double getTopLimitRads() const    { return Math::degToRad(d_limitTop); }
-    double getBottomLimitRads() const { return Math::degToRad(d_limitBottom); }
-    double getRightLimitRads() const  { return Math::degToRad(d_limitRight); }
-    double getLeftLimitRads() const   { return Math::degToRad(d_limitLeft); }
+    double getTopLimitRads() const    { return Math::degToRad(d_limitTopDegs); }
+    double getBottomLimitRads() const { return Math::degToRad(d_limitBottomDegs); }
+    double getRightLimitRads() const  { return Math::degToRad(d_limitRightDegs); }
+    double getLeftLimitRads() const   { return Math::degToRad(d_limitLeftDegs); }
 
     double getPanDegs() const  { return d_panAngle; }
     double getTiltDegs() const { return d_tiltAngle; }
@@ -74,13 +74,13 @@ namespace bold
 
     std::vector<std::shared_ptr<Control const>> d_controls;
 
-    double d_limitLeft;
-    double d_limitRight;
-    double d_limitTop;
-    double d_limitBottom;
+    double d_limitLeftDegs;
+    double d_limitRightDegs;
+    double d_limitTopDegs;
+    double d_limitBottomDegs;
 
-    double d_panHome;
-    double d_tiltHome;
+    double d_panHomeDegs;
+    double d_tiltHomeDegs;
 
     /// P gain value set on the MX28
     double d_gainP;

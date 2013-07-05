@@ -24,14 +24,14 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_tiltGainD   = getParam("tracking_tilt_d_gain", 0.22);
 
   // Restrictions placed upon the range of movement by the head within this module
-  d_limitLeft   = getParam("left_limit", 100);
-  d_limitRight  = getParam("right_limit", -100);
-  d_limitTop    = getParam("top_limit", EYE_TILT_OFFSET_ANGLE);
-  d_limitBottom = getParam("bottom_limit", EYE_TILT_OFFSET_ANGLE - 65);
+  d_limitLeftDegs   = getParam("left_limit", 100);
+  d_limitRightDegs  = getParam("right_limit", -100);
+  d_limitTopDegs    = getParam("top_limit", EYE_TILT_OFFSET_ANGLE);
+  d_limitBottomDegs = getParam("bottom_limit", EYE_TILT_OFFSET_ANGLE - 65);
 
   // Home position
-  d_panHome     = getParam("pan_home", 0.0);
-  d_tiltHome    = getParam("tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
+  d_panHomeDegs     = getParam("pan_home", 0.0);
+  d_tiltHomeDegs    = getParam("tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
 
   // Controls
   d_controls.push_back(Control::createAction("&blacktriangleleft;",  [this]() { moveByDeltaDegs( 5, 0); }));
@@ -56,8 +56,8 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   createControl(&d_tiltGainP, "Tracking Tilt P Gain", 0, 0.20, 100);
   createControl(&d_tiltGainD, "Tracking Tilt D Gain", 0, 0.40, 100);
 
-  createControl(&d_limitLeft, "Pan Limit Left", 1, 150);
-  createControl(&d_limitRight, "Pan Limit Right", -150, -1);
+  createControl(&d_limitLeftDegs, "Pan Limit Left", 1, 150);
+  createControl(&d_limitRightDegs, "Pan Limit Right", -150, -1);
 
   // No controls for top/bottom -- cannot go lower without damaging head, and no need to look upwards
 }
@@ -69,14 +69,15 @@ constexpr double HeadModule::EYE_TILT_OFFSET_ANGLE;
 
 void HeadModule::checkLimit()
 {
-  d_panAngle = Math::clamp(d_panAngle, d_limitRight, d_limitLeft);
-  d_tiltAngle = Math::clamp(d_tiltAngle, d_limitBottom, d_limitTop);
+  // Clamp pan/tilt within the box-shaped limit
+  d_panAngle = Math::clamp(d_panAngle, d_limitRightDegs, d_limitLeftDegs);
+  d_tiltAngle = Math::clamp(d_tiltAngle, d_limitBottomDegs, d_limitTopDegs);
 }
 
 void HeadModule::initialize()
 {
-  d_panAngle = d_panHome;
-  d_tiltAngle = d_tiltHome;
+  d_panAngle = d_panHomeDegs;
+  d_tiltAngle = d_tiltHomeDegs;
   checkLimit();
   initTracking();
   moveToHome();
@@ -84,7 +85,7 @@ void HeadModule::initialize()
 
 void HeadModule::moveToHome()
 {
-  moveToDegs(d_panHome, d_tiltHome);
+  moveToDegs(d_panHomeDegs, d_tiltHomeDegs);
 }
 
 void HeadModule::moveToDegs(double pan, double tilt)
