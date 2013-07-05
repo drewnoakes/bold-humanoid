@@ -24,14 +24,14 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_tiltGainD   = getParam("tracking_tilt_d_gain", 0.22);
 
   // Restrictions placed upon the range of movement by the head within this module
-  d_limitLeftDegs   = getParam("left_limit", 100);
-  d_limitRightDegs  = getParam("right_limit", -100);
-  d_limitTopDegs    = getParam("top_limit", EYE_TILT_OFFSET_ANGLE);
-  d_limitBottomDegs = getParam("bottom_limit", EYE_TILT_OFFSET_ANGLE - 65);
+  d_limitLeftDegs   = getParam("left_limit", 100.0);
+  d_limitRightDegs  = getParam("right_limit", -100.0);
+  d_limitTopDegs    = getParam("top_limit", 40.0);
+  d_limitBottomDegs = getParam("bottom_limit", -22.0);
 
   // Home position
   d_panHomeDegs     = getParam("pan_home", 0.0);
-  d_tiltHomeDegs    = getParam("tilt_home", EYE_TILT_OFFSET_ANGLE - 30.0);
+  d_tiltHomeDegs    = getParam("tilt_home", -10.0);
 
   // Controls
   d_controls.push_back(Control::createAction("&blacktriangleleft;",  [this]() { moveByDeltaDegs( 5, 0); }));
@@ -64,8 +64,6 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 
 HeadModule::~HeadModule()
 {}
-
-constexpr double HeadModule::EYE_TILT_OFFSET_ANGLE;
 
 void HeadModule::checkLimit()
 {

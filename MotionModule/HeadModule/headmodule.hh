@@ -68,8 +68,6 @@ namespace bold
     void moveTracking(double panError, double tiltError);
 
   private:
-    static constexpr double EYE_TILT_OFFSET_ANGLE = 40.0; // degrees
-
     void checkLimit();
 
     std::vector<std::shared_ptr<Control const>> d_controls;
