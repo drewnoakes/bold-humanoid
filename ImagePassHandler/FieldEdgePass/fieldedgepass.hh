@@ -18,13 +18,13 @@ namespace bold
 
     void onPixel(uchar labelId, ushort x, ushort y) override;
 
-    uchar getEdgeYValue(ushort x) const;
+    ushort getEdgeYValue(ushort x) const;
 
     void smooth(unsigned windowSize);
 
   private:
     std::shared_ptr<PixelLabel> d_fieldLabel;
-    std::vector<uchar> d_maxYByX;
+    std::vector<ushort> d_maxYByX;
     ushort d_pixelWidth;
     ushort d_pixelHeight;
   };

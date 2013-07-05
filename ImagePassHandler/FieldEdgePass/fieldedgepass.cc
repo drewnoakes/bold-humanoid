@@ -32,7 +32,7 @@ void FieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
   }
 }
 
-uchar FieldEdgePass::getEdgeYValue(ushort x) const
+ushort FieldEdgePass::getEdgeYValue(ushort x) const
 {
   assert(x < d_pixelWidth);
   assert(d_maxYByX[x] < d_pixelHeight);
