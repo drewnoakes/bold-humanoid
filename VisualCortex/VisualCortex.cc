@@ -25,6 +25,12 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     d_shouldDrawHorizon(true),
     d_shouldDrawFieldEdge(true)
 {
+  assert(camera);
+  assert(cameraModel);
+  assert(fieldMap);
+  assert(spatialiser);
+  assert(headModule);
+
   cout << "[VisualCortex::VisualCortex] Start" << endl;
 
   d_shouldDetectLines = getParam("DetectLines", 0) != 0;
