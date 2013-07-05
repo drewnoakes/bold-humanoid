@@ -5,7 +5,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
                            shared_ptr<FieldMap> fieldMap,
                            shared_ptr<Spatialiser> spatialiser,
                            shared_ptr<HeadModule> headModule)
-  : Configurable("visialcortex"),
+  : Configurable("visualcortex"),
     d_fieldMap(fieldMap),
     d_camera(camera),
     d_cameraModel(cameraModel),

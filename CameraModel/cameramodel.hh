@@ -15,7 +15,7 @@ namespace bold
   {
   public:
     CameraModel(unsigned imageWidth, unsigned imageHeight, double focalLength, double rangeVerticalDegs, double rangeHorizontalDegs)
-      : Configurable("CameraModule"),
+      : Configurable("cameramodel"),
       d_imageWidth(imageWidth),
       d_imageHeight(imageHeight),
 //       d_focalLength(focalLength),
@@ -24,7 +24,7 @@ namespace bold
     {}
 
     CameraModel()
-      : Configurable("CameraModule")
+      : Configurable("cameramodel")
     {
       d_imageWidth = getParam("ImageWidth", 320);
       d_imageHeight = getParam("ImageHeight", 240);
@@ -35,7 +35,7 @@ namespace bold
 
     unsigned imageWidth() const { return d_imageWidth; }
     unsigned imageHeight() const { return d_imageHeight; }
-    
+
     double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads()); } // TODO: cache
     double rangeVerticalDegs() const { return d_rangeVerticalDegs; }
     double rangeVerticalRads() const { return Math::degToRad(d_rangeVerticalDegs); }
