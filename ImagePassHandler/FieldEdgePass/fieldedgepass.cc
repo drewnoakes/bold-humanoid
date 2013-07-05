@@ -8,8 +8,10 @@ using namespace bold;
 FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
 : d_fieldLabel(fieldLabel),
   d_maxYByX(pixelWidth),
+  d_runByX(pixelWidth),
   d_pixelWidth(pixelWidth),
-  d_pixelHeight(pixelHeight)
+  d_pixelHeight(pixelHeight),
+  d_minVerticalRunLength(5)
 {}
 
 void FieldEdgePass::onImageStarting()
@@ -18,17 +20,29 @@ void FieldEdgePass::onImageStarting()
 
   for (ushort x = 0; x < d_pixelWidth; x++)
     d_maxYByX[x] = d_pixelHeight - 1;
+
+  memset(d_runByX.data(), 0, sizeof(ushort) * d_pixelWidth);
 }
 
 void FieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 {
-  assert(x >= 0 && x < d_pixelWidth);
+//   assert(x >= 0 && x < d_pixelWidth);
 
   if (labelId == d_fieldLabel->id())
   {
-    assert(y >= d_maxYByX[x]);
+//     assert(y >= d_maxYByX[x]);
 
-    d_maxYByX[x] = y;
+    ushort run = d_runByX[x];
+    run++;
+
+    if (run >= d_minVerticalRunLength)
+      d_maxYByX[x] = y;
+
+    d_runByX[x] = run;
+  }
+  else
+  {
+    d_runByX[x] = 0;
   }
 }
 

@@ -25,7 +25,9 @@ namespace bold
   private:
     std::shared_ptr<PixelLabel> d_fieldLabel;
     std::vector<ushort> d_maxYByX;
+    std::vector<ushort> d_runByX;
     ushort d_pixelWidth;
     ushort d_pixelHeight;
+    ushort d_minVerticalRunLength;
   };
 }
