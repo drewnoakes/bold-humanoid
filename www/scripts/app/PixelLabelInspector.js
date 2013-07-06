@@ -4,11 +4,12 @@
 define(
     [
         'ControlClient',
-        'util/Colour',
         'util/CanvasExtensions'
     ],
-    function(ControlClient, Colour)
+    function(ControlClient)
     {
+        'use strict';
+
         var PixelLabelInspector = function(width, height)
         {
             this.canvas = document.createElement('canvas');
@@ -88,8 +89,6 @@ define(
                 components = ['hue', 'saturation', 'value'],
                 space = this.canvas.width - gutterWidth;
 
-            // TODO deal with the fact that hue wraps around
-
             var y = 0;
             for (var component = 0; component < 3; component++)
             {
@@ -144,20 +143,17 @@ define(
 
                     drawComponentRange(y, min, max);
 
+                    // Deal with the fact that hue wraps around
                     if (component === 0 && (undershoot !== 0 || overshoot !== 0))
                     {
                         // special handling for any over/undershoot in the hue channel
                         if (undershoot !== 0 && overshoot !== 0)
-                        console.log("WARNING didn't expect both over and undershoot");
+                            console.log("WARNING didn't expect both over and undershoot");
 
                         if (undershoot !== 0)
-                        {
                             drawComponentRange(y, 255 - undershoot, 255);
-                        }
                         if (overshoot !== 0)
-                        {
                             drawComponentRange(y, 0, overshoot);
-                        }
                     }
 
                     y += barHeight + barSpacing;
