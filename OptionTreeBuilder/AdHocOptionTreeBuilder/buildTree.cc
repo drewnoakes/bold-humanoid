@@ -31,13 +31,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     return [state,seconds]() { return state->secondsSinceStart() >= seconds; };
   };
 
-  // TODO uses of hasTerminated are all on the state that is being observed -- use a better fluent API
-
-  auto hasTerminated = [](FSMStatePtr state)
-  {
-    return [state]() { return state->allOptionsTerminated(); };
-  };
-
   auto startButtonPressed = []()
   {
     auto hw = AgentState::get<HardwareState>();
@@ -197,7 +190,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   startUpState
     ->transitionTo(readyState)
-    ->when(hasTerminated(startUpState));
+    ->whenTerminated();
 
   //
   // PAUSE BUTTON
@@ -209,7 +202,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   unpausingState
     ->transitionTo(setState)
-    ->when(hasTerminated(unpausingState));
+    ->whenTerminated();
 
   playingState
     ->transitionTo(pausingState)
@@ -286,11 +279,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   forwardGetUpState
     ->transitionTo(playingState)
-    ->when(hasTerminated(forwardGetUpState));
+    ->whenTerminated();
 
   backwardGetUpState
     ->transitionTo(playingState)
-    ->when(hasTerminated(backwardGetUpState));
+    ->whenTerminated();
 
   //
   // SHUTDOWN
@@ -304,11 +297,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   stopWalkingForShutdownState
     ->transitionTo(sitForShutdownState)
-    ->when(negate(isWalking)); // TODO why can't this be hasTerminated(stopWalkingForShutdownState) -- doesn't seem to work (here and in other places)
+    ->when(negate(isWalking)); // TODO why can't this be whenTerminated() -- doesn't seem to work (here and in other places)
 
   sitForShutdownState
     ->transitionTo(stopAgentAndExitState)
-    ->when(hasTerminated(sitForShutdownState));
+    ->whenTerminated();
 
   //
   // ========== PLAYING ==========
@@ -328,7 +321,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     auto bigStepRightState = playingFsm->newState("bigStepRight", {bigStepRight});
 
     standUpState->transitionTo(lookForBallState)
-      ->when(hasTerminated(standUpState));
+      ->whenTerminated();
 
     lookForBallState->transitionTo(lookAtBallState)
       ->when(ballVisibleCondition);
@@ -357,10 +350,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       }));
 
     bigStepLeftState->transitionTo(lookForBallState)
-      ->when(hasTerminated(bigStepLeftState));
+      ->whenTerminated();
 
     bigStepRightState->transitionTo(lookForBallState)
-      ->when(hasTerminated(bigStepRightState));
+      ->whenTerminated();
 
   }
   else if (uniformNumber == UNUM_GOALIE_PENALTY)
@@ -374,7 +367,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     auto rightDiveState = playingFsm->newState("rightDive", {rightDive});
 
     standUpState->transitionTo(lookForBallState)
-      ->when(hasTerminated(standUpState));
+      ->whenTerminated();
 
     lookForBallState->transitionTo(lookAtBallState)
       ->when(ballVisibleCondition);
@@ -403,10 +396,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       }));
 
     leftDiveState->transitionTo(lookForBallState)
-      ->when(hasTerminated(leftDiveState));
+      ->whenTerminated();
 
     rightDiveState->transitionTo(lookForBallState)
-      ->when(hasTerminated(rightDiveState));
+      ->whenTerminated();
   }
   else
   {
@@ -429,7 +422,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     standUpState
       ->transitionTo(lookForBallState)
-      ->when(hasTerminated(standUpState));
+      ->whenTerminated();
 
     lookForBallState
       ->transitionTo(lookAtBallState)
@@ -576,11 +569,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     leftKickState
       ->transitionTo(lookForBallState)
-      ->when(hasTerminated(leftKickState));
+      ->whenTerminated();
 
     rightKickState
       ->transitionTo(lookForBallState)
-      ->when(hasTerminated(rightKickState));
+      ->whenTerminated();
   } // uniformNumber != 1
 
   // Write out DOT files for visualisation of states and transitions

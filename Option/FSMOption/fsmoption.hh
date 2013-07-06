@@ -15,9 +15,7 @@ namespace bold
 
   struct FSMTransition
   {
-    FSMTransition(std::string const& n)
-      : name(n)
-    {}
+    FSMTransition(std::string const& n);
 
     // Transition name
     std::string name;
@@ -33,17 +31,9 @@ namespace bold
     /// State this transition results in
     FSMStatePtr childState;
 
-    FSMTransition* when(std::function<bool()> condition)
-    {
-      this->condition = condition;
-      return this;
-    }
-
-    FSMTransition* notify(std::function<void()> callback)
-    {
-      this->onFire = callback;
-      return this;
-    }
+    FSMTransition* when(std::function<bool()> condition);
+    FSMTransition* notify(std::function<void()> callback);
+    FSMTransition* whenTerminated();
   };
 
   typedef std::shared_ptr<FSMTransition> FSMTransitionPtr;
