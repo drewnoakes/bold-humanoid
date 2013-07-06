@@ -74,11 +74,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     return AgentState::get<CameraFrameState>()->isBallVisible();
   };
 
-  // TODO merge these two? do they have to be different? look at usages
-
-//   auto ballLostCondition = oneShot([ballVisibleCondition]() { return isRepeated(10, negate(ballVisibleCondition)); });
-
-  auto ballLostCondition = oneShot([ballVisibleCondition]() { return trueForMillis(1000, negate(ballVisibleCondition)); });
+  // TODO review this one-size-fits-all approach on a case-by-case basis below
+  auto ballFoundConditionFactory = [ballVisibleCondition]() { return trueForMillis(1000, ballVisibleCondition); };
+  auto ballLostConditionFactory = [ballVisibleCondition]() { return trueForMillis(1000, negate(ballVisibleCondition)); };
 
   auto isPenalised = [=]()
   {
@@ -326,11 +324,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     lookForBallState
       ->transitionTo(lookAtBallState)
-      ->when(ballVisibleCondition);
+      ->when(ballFoundConditionFactory);
 
     lookAtBallState
       ->transitionTo(lookForBallState)
-      ->when(ballLostCondition);
+      ->when(ballLostConditionFactory);
 
     lookAtBallState
       ->transitionTo(bigStepLeftState)
@@ -379,11 +377,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     lookForBallState
       ->transitionTo(lookAtBallState)
-      ->when(ballVisibleCondition);
+      ->when(ballFoundConditionFactory);
 
     lookAtBallState
       ->transitionTo(lookForBallState)
-      ->when(ballLostCondition);
+      ->when(ballLostConditionFactory);
 
     lookAtBallState
       ->transitionTo(leftDiveState)
@@ -454,7 +452,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     lookAtBallState
       ->transitionTo(lookForBallState)
-      ->when(ballLostCondition);
+      ->when(ballLostConditionFactory);
 
     // start approaching the ball when we have the confidence that it's really there
     // TODO this doesn't filter the ball position, so may be misled by jitter
@@ -464,7 +462,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     approachBallState
       ->transitionTo(lookForBallState)
-      ->when(ballLostCondition);
+      ->when(ballLostConditionFactory);
 
     // stop walking to ball once we're close enough
     approachBallState
