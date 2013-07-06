@@ -7,10 +7,7 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
   auto setCurrentState = [this](FSMStatePtr state)
   {
     d_curState = state;
-    d_curState->startTimeSeconds = Clock::getSeconds();
-
-    if (d_curState->onEnter)
-      d_curState->onEnter();
+    d_curState->start();
   };
 
   if (!d_curState)

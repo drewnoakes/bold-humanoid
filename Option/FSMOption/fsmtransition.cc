@@ -8,18 +8,26 @@ FSMTransition::FSMTransition(std::string const& name)
 
 FSMTransition* FSMTransition::when(std::function<bool()> condition)
 {
+  this->conditionFactory = nullptr;
   this->condition = condition;
   return this;
 }
 
-FSMTransition* FSMTransition::notify(std::function<void()> callback)
+FSMTransition* FSMTransition::when(std::function<std::function<bool()>()> conditionFactory)
 {
-  this->onFire = callback;
+  this->conditionFactory = conditionFactory;
+  this->condition = nullptr;
   return this;
 }
 
 FSMTransition* FSMTransition::whenTerminated()
 {
   this->condition = [this]() { return parentState->allOptionsTerminated(); };
+  return this;
+}
+
+FSMTransition* FSMTransition::notify(std::function<void()> callback)
+{
+  this->onFire = callback;
   return this;
 }

@@ -23,6 +23,11 @@ namespace bold
     /// Condition that needs to be fulfilled to fire
     std::function<bool()> condition;
 
+    /// A function that creates a new condition function each time the source
+    /// FSMState is entered. This prevents conditions from carrying state
+    /// between usages.
+    std::function<std::function<bool()>()> conditionFactory;
+
     /// Function to be called when this transition is fired
     std::function<void()> onFire;
 
@@ -32,8 +37,9 @@ namespace bold
     FSMStatePtr childState;
 
     FSMTransition* when(std::function<bool()> condition);
-    FSMTransition* notify(std::function<void()> callback);
+    FSMTransition* when(std::function<std::function<bool()>()> conditionFactory);
     FSMTransition* whenTerminated();
+    FSMTransition* notify(std::function<void()> callback);
   };
 
   typedef std::shared_ptr<FSMTransition> FSMTransitionPtr;
@@ -58,6 +64,21 @@ namespace bold
     std::function<void()> onEnter;
 
     double startTimeSeconds;
+
+    void start()
+    {
+      startTimeSeconds = Clock::getSeconds();
+
+      // For transitions with condition factories, invoke them to clear out any accumulated state
+      for (FSMTransitionPtr const& transition : transitions)
+      {
+        if (transition->conditionFactory)
+          transition->condition = transition->conditionFactory();
+      }
+
+      if (onEnter)
+        onEnter();
+    }
 
     double secondsSinceStart()
     {
