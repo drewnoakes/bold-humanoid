@@ -289,7 +289,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   // SHUTDOWN
   //
 
-  // TODO express this sequence more eligantly
+  // TODO express this sequence more elegantly
 
   winFsm
     ->wildcardTransitionTo(stopWalkingForShutdownState)
