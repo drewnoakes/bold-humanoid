@@ -20,10 +20,9 @@ namespace bold
   public:
     static PixelLabel fromConfig(
       std::string objectName,
-      int hue,        int hueRange,
-      int saturation, int saturationRange,
-      int value,      int valueRange
-      );
+      uchar hMin, uchar hMax,
+      uchar sMin, uchar sMax,
+      uchar vMin, uchar vMax);
 
     PixelLabel() {}
 

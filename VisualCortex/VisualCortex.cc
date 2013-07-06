@@ -37,10 +37,10 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_streamFramePeriod = getParam("CameraFramePeriod", 5);
 
-  d_goalLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Goal",  52,   8, 197,  39, 173,  49));
-  d_ballLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Ball",   8,  15, 168,  96, 157, 145));
-  d_fieldLabel = make_shared<PixelLabel>(PixelLabel::fromConfig("Field", 95,  23, 201,  35, 122,  70));
-  d_lineLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Line",   0, 255,  57, 110, 224,  63));
+  d_goalLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Goal",   44,  60, 158, 236, 124, 222));
+  d_ballLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Ball",  248,  23,  72, 255,  12, 255));
+  d_fieldLabel = make_shared<PixelLabel>(PixelLabel::fromConfig("Field",  72, 118, 166, 236,  52, 192));
+  d_lineLabel =  make_shared<PixelLabel>(PixelLabel::fromConfig("Line",    0, 255,   0, 167, 161, 255));
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel };
 
@@ -138,51 +138,50 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_controlsByFamily["vision/label-count"] = labelCountControls;
 
   // Allow control over the LUT parameters
-  auto setHue      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withH(value));      createLookupTable(); };
-  auto setHueRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withHRange(value)); createLookupTable(); };
-  auto setSat      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withS(value));      createLookupTable(); };
-  auto setSatRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withSRange(value)); createLookupTable(); };
-  auto setVal      = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withV(value));      createLookupTable(); };
-  auto setValRange = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withVRange(value)); createLookupTable(); };
+  auto setHueMin = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withHMin(value)); createLookupTable(); };
+  auto setHueMax = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withHMax(value)); createLookupTable(); };
+  auto setSatMin = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withSMin(value)); createLookupTable(); };
+  auto setSatMax = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withSMax(value)); createLookupTable(); };
+  auto setValMin = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withVMin(value)); createLookupTable(); };
+  auto setValMax = [createLookupTable](shared_ptr<PixelLabel> label, int value) { label->setHsvRange(label->hsvRange().withVMax(value)); createLookupTable(); };
   vector<shared_ptr<Control const>> lutControls;
   for (shared_ptr<PixelLabel> label : pixelLabels)
   {
-    auto h  = Control::createInt(label->name() + " Hue",              [label]() { return label->hsvRange().h; },      [label,setHue     ](int value){ setHue     (label, value); });
-    auto hr = Control::createInt(label->name() + " Hue Range",        [label]() { return label->hsvRange().hRange; }, [label,setHueRange](int value){ setHueRange(label, value); });
-    auto s  = Control::createInt(label->name() + " Saturation",       [label]() { return label->hsvRange().s; },      [label,setSat     ](int value){ setSat     (label, value); });
-    auto sr = Control::createInt(label->name() + " Saturation Range", [label]() { return label->hsvRange().sRange; }, [label,setSatRange](int value){ setSatRange(label, value); });
-    auto v  = Control::createInt(label->name() + " Value",            [label]() { return label->hsvRange().v; },      [label,setVal     ](int value){ setVal     (label, value); });
-    auto vr = Control::createInt(label->name() + " Value Range",      [label]() { return label->hsvRange().vRange; }, [label,setValRange](int value){ setValRange(label, value); });
+    auto hMin = Control::createInt(label->name() + " Hue Min", [label]() { return label->hsvRange().hMin; }, [label,setHueMin](int value){ setHueMin(label, value); });
+    auto hMax = Control::createInt(label->name() + " Hue Max", [label]() { return label->hsvRange().hMax; }, [label,setHueMax](int value){ setHueMax(label, value); });
+    auto sMin = Control::createInt(label->name() + " Sat Min", [label]() { return label->hsvRange().sMin; }, [label,setSatMin](int value){ setSatMin(label, value); });
+    auto sMax = Control::createInt(label->name() + " Sat Max", [label]() { return label->hsvRange().sMax; }, [label,setSatMax](int value){ setSatMax(label, value); });
+    auto vMin = Control::createInt(label->name() + " Val Min", [label]() { return label->hsvRange().vMin; }, [label,setValMin](int value){ setValMin(label, value); });
+    auto vMax = Control::createInt(label->name() + " Val Max", [label]() { return label->hsvRange().vMax; }, [label,setValMax](int value){ setValMax(label, value); });
 
-    h ->setDefaultValue(label->hsvRange().h);
-    hr->setDefaultValue(label->hsvRange().hRange);
-    s ->setDefaultValue(label->hsvRange().s);
-    sr->setDefaultValue(label->hsvRange().sRange);
-    v ->setDefaultValue(label->hsvRange().v);
-    vr->setDefaultValue(label->hsvRange().vRange);
+    hMin->setDefaultValue(label->hsvRange().hMin);
+    hMax->setDefaultValue(label->hsvRange().hMax);
+    sMin->setDefaultValue(label->hsvRange().sMin);
+    sMax->setDefaultValue(label->hsvRange().sMax);
+    vMin->setDefaultValue(label->hsvRange().vMin);
+    vMax->setDefaultValue(label->hsvRange().vMax);
 
-    h ->setLimitValues(0, 255);
-    hr->setLimitValues(0, 255);
-    s ->setLimitValues(0, 255);
-    sr->setLimitValues(0, 255);
-    v ->setLimitValues(0, 255);
-    vr->setLimitValues(0, 255);
+    hMin->setLimitValues(0, 255);
+    hMax->setLimitValues(0, 255);
+    sMin->setLimitValues(0, 255);
+    sMax->setLimitValues(0, 255);
+    vMin->setLimitValues(0, 255);
+    vMax->setLimitValues(0, 255);
 
-    h ->setIsAdvanced(true);
-    hr->setIsAdvanced(true);
-    s ->setIsAdvanced(true);
-    sr->setIsAdvanced(true);
-    v ->setIsAdvanced(true);
-    vr->setIsAdvanced(true);
+    hMin->setIsAdvanced(true);
+    hMax->setIsAdvanced(true);
+    sMin->setIsAdvanced(true);
+    sMax->setIsAdvanced(true);
+    vMin->setIsAdvanced(true);
+    vMax->setIsAdvanced(true);
 
-    lutControls.push_back(h);
-    lutControls.push_back(hr);
-    lutControls.push_back(s);
-    lutControls.push_back(sr);
-    lutControls.push_back(v);
-    lutControls.push_back(vr);
+    lutControls.push_back(hMin);
+    lutControls.push_back(hMax);
+    lutControls.push_back(sMin);
+    lutControls.push_back(sMax);
+    lutControls.push_back(vMin);
+    lutControls.push_back(vMax);
   }
-
   d_controlsByFamily["vision/lut"] = lutControls;
 
   vector<shared_ptr<Control const>> horizonControls = { Control::createBool("Ignore above horizon", [this]() { return d_shouldIgnoreAboveHorizon; }, [this](bool const& value) { d_shouldIgnoreAboveHorizon = value; }) };

@@ -116,10 +116,7 @@ TEST (ColourTests, hsv2bgr2hsv)
 
 TEST (ColourTests, hsvRange)
 {
-  Colour::hsvRange rangeAll(128, 128, 128, 128, 128, 128);
-  Colour::hsvRange rangeOne(0, 0, 0, 0, 0, 0);
-  Colour::hsvRange rangeHWrap(0, 20, 128, 128, 128, 128);
-  Colour::hsvRange rangeSRangeOutOfBounds(128, 10, 200, 100, 128, 128);
+  Colour::hsvRange rangeAll(0, 255, 0, 255, 0, 255);
 
   EXPECT_TRUE ( rangeAll.contains(Colour::hsv(0, 0, 0)) );
   EXPECT_TRUE ( rangeAll.contains(Colour::hsv(128, 0, 0)) );
@@ -128,22 +125,39 @@ TEST (ColourTests, hsvRange)
   EXPECT_TRUE ( rangeAll.contains(Colour::hsv(128, 255, 128)) );
   EXPECT_TRUE ( rangeAll.contains(Colour::hsv(255, 128, 255)) );
 
+  Colour::hsvRange rangeOne(0, 0, 0, 0, 0, 0);
+
   EXPECT_TRUE  ( rangeOne.contains(Colour::hsv(0, 0, 0)) );
   EXPECT_FALSE ( rangeOne.contains(Colour::hsv(128, 0, 0)) );
-  EXPECT_TRUE  ( rangeOne.contains(Colour::hsv(255, 0, 0)) );
+  EXPECT_FALSE ( rangeOne.contains(Colour::hsv(255, 0, 0)) );
   EXPECT_FALSE ( rangeOne.contains(Colour::hsv(0, 128, 128)) );
   EXPECT_FALSE ( rangeOne.contains(Colour::hsv(128, 255, 128)) );
   EXPECT_FALSE ( rangeOne.contains(Colour::hsv(255, 128, 255)) );
 
+  Colour::hsvRange rangeHWrap(235, 20, 0, 255, 0, 255);
+
   EXPECT_TRUE  (rangeHWrap.contains(Colour::hsv(0,128,128)) );
   EXPECT_TRUE  (rangeHWrap.contains(Colour::hsv(20,128,128)) );
   EXPECT_FALSE (rangeHWrap.contains(Colour::hsv(21,128,128)) );
-  EXPECT_TRUE  (rangeHWrap.contains(Colour::hsv(255 - 20,128,128)) );
-  EXPECT_FALSE (rangeHWrap.contains(Colour::hsv(255 - 21,128,128)) );
+  EXPECT_TRUE  (rangeHWrap.contains(Colour::hsv(235,128,128)) );
+  EXPECT_FALSE (rangeHWrap.contains(Colour::hsv(234,128,128)) );
+
+  Colour::hsvRange rangeSRangeOutOfBounds(118, 138, 100, 255, 0, 255);
 
   EXPECT_TRUE  (rangeSRangeOutOfBounds.contains(Colour::hsv(128,200,128)) );
   EXPECT_TRUE  (rangeSRangeOutOfBounds.contains(Colour::hsv(128,255,128)) );
   EXPECT_TRUE  (rangeSRangeOutOfBounds.contains(Colour::hsv(128,100,128)) );
   EXPECT_FALSE (rangeSRangeOutOfBounds.contains(Colour::hsv(128,99,128)) );
   EXPECT_FALSE (rangeSRangeOutOfBounds.contains(Colour::hsv(128,0,128)) );
+
+  EXPECT_EQ(127, Colour::hsvRange(0, 255, 0,0, 0,0).getHMid());
+  EXPECT_EQ(5,   Colour::hsvRange(0, 10, 0,0, 0,0).getHMid());
+  EXPECT_EQ(255, Colour::hsvRange(250, 5, 0,0, 0,0).getHMid());
+  EXPECT_EQ(5,   Colour::hsvRange(250, 15, 0,0, 0,0).getHMid());
+
+  EXPECT_EQ(0,   Colour::hsvRange(0,0, 0,0, 0,0).getSMid());
+  EXPECT_EQ(127, Colour::hsvRange(0,0, 0,255, 0,0).getSMid());
+
+  EXPECT_EQ(0,   Colour::hsvRange(0,0, 0,0, 0,0).getVMid());
+  EXPECT_EQ(127, Colour::hsvRange(0,0, 0,0, 0,255).getVMid());
 }

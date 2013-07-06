@@ -90,34 +90,38 @@ namespace bold
 
     struct hsvRange
     {
-      int h;
-      int hRange;
-      int s;
-      int sRange;
-      int v;
-      int vRange;
+      uchar hMin;
+      uchar hMax;
+      uchar sMin;
+      uchar sMax;
+      uchar vMin;
+      uchar vMax;
 
       hsvRange();
 
       hsvRange(
-        int hue,        int hueRange,
-        int saturation, int saturationRange,
-        int value,      int valueRange);
+        uchar hMin, uchar hMax,
+        uchar sMin, uchar sMax,
+        uchar vMin, uchar vMax);
+
+      uchar getHMid() const;
+      uchar getSMid() const;
+      uchar getVMid() const;
 
       /** Obtain the center colour for the range, in BGR format. */
       Colour::bgr toBgr() const;
 
       bool contains(hsv const& hsv) const;
 
-      static hsvRange fromBytes(uchar h, uchar hRange, uchar s, uchar sRange, uchar v, uchar vRange);
-      static hsvRange fromDoubles(double h, double hRange, double s, double sRange, double v, double vRange);
+      static hsvRange fromBytes(uchar hMin, uchar hMax, uchar sMin, uchar sMax, uchar vMin, uchar vMax);
+      static hsvRange fromDoubles(double hMin, double hMax, double sMin, double sMax, double vMin, double vMax);
 
-      hsvRange withH(int value)      const { return hsvRange(value, hRange, s, sRange, v, vRange); }
-      hsvRange withHRange(int value) const { return hsvRange(h, value, s, sRange, v, vRange); }
-      hsvRange withS(int value)      const { return hsvRange(h, hRange, value, sRange, v, vRange); }
-      hsvRange withSRange(int value) const { return hsvRange(h, hRange, s, value, v, vRange); }
-      hsvRange withV(int value)      const { return hsvRange(h, hRange, s, sRange, value, vRange); }
-      hsvRange withVRange(int value) const { return hsvRange(h, hRange, s, sRange, v, value); }
+      hsvRange withHMin(uchar value) const { return hsvRange(value, hMax, sMin, sMax, vMin, vMax); }
+      hsvRange withHMax(uchar value) const { return hsvRange(hMin, value, sMin, sMax, vMin, vMax); }
+      hsvRange withSMin(uchar value) const { return hsvRange(hMin, hMax, value, sMax, vMin, vMax); }
+      hsvRange withSMax(uchar value) const { return hsvRange(hMin, hMax, sMin, value, vMin, vMax); }
+      hsvRange withVMin(uchar value) const { return hsvRange(hMin, hMax, sMin, sMax, value, vMax); }
+      hsvRange withVMax(uchar value) const { return hsvRange(hMin, hMax, sMin, sMax, vMin, value); }
     };
 
     static hsv bgr2hsv(bgr const& in);

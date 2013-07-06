@@ -5,18 +5,18 @@ using namespace bold;
 
 PixelLabel PixelLabel::fromConfig(
   std::string objectName,
-  int hue,        int hueRange,
-  int saturation, int saturationRange,
-  int value,      int valueRange
-  )
+  uchar hMin, uchar hMax,
+  uchar sMin, uchar sMax,
+  uchar vMin, uchar vMax)
 {
   Colour::hsvRange hsvRange;
-  hsvRange.h      = Configurable::getParam("vision", objectName + ".hue", hue);
-  hsvRange.hRange = Configurable::getParam("vision", objectName + ".hueRange", hueRange);
-  hsvRange.s      = Configurable::getParam("vision", objectName + ".saturation", saturation);
-  hsvRange.sRange = Configurable::getParam("vision", objectName + ".saturationRange", saturationRange);
-  hsvRange.v      = Configurable::getParam("vision", objectName + ".value", value);
-  hsvRange.vRange = Configurable::getParam("vision", objectName + ".valueRange", valueRange);
+  
+  hsvRange.hMin = Configurable::getParam("vision", objectName + ".hue.min", hMin);
+  hsvRange.hMax = Configurable::getParam("vision", objectName + ".hue.max", hMax);
+  hsvRange.sMin = Configurable::getParam("vision", objectName + ".sat.min", sMin);
+  hsvRange.sMax = Configurable::getParam("vision", objectName + ".sat.max", sMax);
+  hsvRange.vMin = Configurable::getParam("vision", objectName + ".val.min", vMin);
+  hsvRange.vMax = Configurable::getParam("vision", objectName + ".val.max", vMax);
 
   return PixelLabel(hsvRange, objectName);
 }

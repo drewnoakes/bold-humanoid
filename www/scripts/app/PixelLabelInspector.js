@@ -32,33 +32,33 @@ define(
                 {
                     switch (control.name)
                     {
-                        case 'Ball Hue':              this.labels.ball.hue.mid = control.value; break;
-                        case 'Ball Hue Range':        this.labels.ball.hue.range = control.value; break;
-                        case 'Ball Saturation':       this.labels.ball.saturation.mid = control.value; break;
-                        case 'Ball Saturation Range': this.labels.ball.saturation.range = control.value; break;
-                        case 'Ball Value':            this.labels.ball.value.mid = control.value; break;
-                        case 'Ball Value Range':      this.labels.ball.value.range = control.value; break;
+                        case 'Ball Hue Min': this.labels.ball.hue.min = control.value; break;
+                        case 'Ball Hue Max': this.labels.ball.hue.max = control.value; break;
+                        case 'Ball Sat Min': this.labels.ball.saturation.min = control.value; break;
+                        case 'Ball Sat Max': this.labels.ball.saturation.max = control.value; break;
+                        case 'Ball Val Min': this.labels.ball.value.min = control.value; break;
+                        case 'Ball Val Max': this.labels.ball.value.max = control.value; break;
 
-                        case 'Line Hue':              this.labels.line.hue.mid = control.value; break;
-                        case 'Line Hue Range':        this.labels.line.hue.range = control.value; break;
-                        case 'Line Saturation':       this.labels.line.saturation.mid = control.value; break;
-                        case 'Line Saturation Range': this.labels.line.saturation.range = control.value; break;
-                        case 'Line Value':            this.labels.line.value.mid = control.value; break;
-                        case 'Line Value Range':      this.labels.line.value.range = control.value; break;
+                        case 'Line Hue Min': this.labels.line.hue.min = control.value; break;
+                        case 'Line Hue Max': this.labels.line.hue.max = control.value; break;
+                        case 'Line Sat Min': this.labels.line.saturation.min = control.value; break;
+                        case 'Line Sat Max': this.labels.line.saturation.max = control.value; break;
+                        case 'Line Val Min': this.labels.line.value.min = control.value; break;
+                        case 'Line Val Max': this.labels.line.value.max = control.value; break;
 
-                        case 'Goal Hue':              this.labels.goal.hue.mid = control.value; break;
-                        case 'Goal Hue Range':        this.labels.goal.hue.range = control.value; break;
-                        case 'Goal Saturation':       this.labels.goal.saturation.mid = control.value; break;
-                        case 'Goal Saturation Range': this.labels.goal.saturation.range = control.value; break;
-                        case 'Goal Value':            this.labels.goal.value.mid = control.value; break;
-                        case 'Goal Value Range':      this.labels.goal.value.range = control.value; break;
+                        case 'Goal Hue Min': this.labels.goal.hue.min = control.value; break;
+                        case 'Goal Hue Max': this.labels.goal.hue.max = control.value; break;
+                        case 'Goal Sat Min': this.labels.goal.saturation.min = control.value; break;
+                        case 'Goal Sat Max': this.labels.goal.saturation.max = control.value; break;
+                        case 'Goal Val Min': this.labels.goal.value.min = control.value; break;
+                        case 'Goal Val Max': this.labels.goal.value.max = control.value; break;
 
-                        case 'Field Hue':             this.labels.field.hue.mid = control.value; break;
-                        case 'Field Hue Range':       this.labels.field.hue.range = control.value; break;
-                        case 'Field Saturation':      this.labels.field.saturation.mid = control.value; break;
-                        case 'Field Saturation Range':this.labels.field.saturation.range = control.value; break;
-                        case 'Field Value':           this.labels.field.value.mid = control.value; break;
-                        case 'Field Value Range':     this.labels.field.value.range = control.value; break;
+                        case 'Field Hue Min': this.labels.field.hue.min = control.value; break;
+                        case 'Field Hue Max': this.labels.field.hue.max = control.value; break;
+                        case 'Field Sat Min': this.labels.field.saturation.min = control.value; break;
+                        case 'Field Sat Max': this.labels.field.saturation.max = control.value; break;
+                        case 'Field Val Min': this.labels.field.value.min = control.value; break;
+                        case 'Field Val Max': this.labels.field.value.max = control.value; break;
                     }
                 }.bind(this));
 
@@ -113,22 +113,14 @@ define(
                 _.each(_.values(this.labels), function (label)
                 {
                     var labelData = label[components[component]],
-                        min = labelData.mid - (labelData.range/2),
-                        max = labelData.mid + (labelData.range/2),
-                        undershoot = 0,
-                        overshoot = 0;
+                        min = labelData.min,
+                        max = labelData.max;
 
                     if (min < 0)
-                    {
-                        undershoot = -min;
                         min = 0;
-                    }
 
                     if (max > 255)
-                    {
-                        overshoot = max - 255;
                         max = 255;
-                    }
 
                     var drawComponentRange = function(y, minValue, maxValue)
                     {
@@ -141,19 +133,15 @@ define(
                         context.fillRect(gutterWidth + minX, y, maxX - minX, barHeight);
                     };
 
-                    drawComponentRange(y, min, max);
-
-                    // Deal with the fact that hue wraps around
-                    if (component === 0 && (undershoot !== 0 || overshoot !== 0))
+                    if (min < max)
                     {
-                        // special handling for any over/undershoot in the hue channel
-                        if (undershoot !== 0 && overshoot !== 0)
-                            console.log("WARNING didn't expect both over and undershoot");
-
-                        if (undershoot !== 0)
-                            drawComponentRange(y, 255 - undershoot, 255);
-                        if (overshoot !== 0)
-                            drawComponentRange(y, 0, overshoot);
+                        drawComponentRange(y, min, max);
+                    }
+                    else
+                    {
+                        // Deal with the fact that hue wraps around
+                        drawComponentRange(y, min, 255);
+                        drawComponentRange(y, 0, max);
                     }
 
                     y += barHeight + barSpacing;
