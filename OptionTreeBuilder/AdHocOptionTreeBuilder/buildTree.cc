@@ -385,25 +385,25 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     lookAtBallState
       ->transitionTo(leftDiveState)
-      ->when(oneShot([]()
+      ->when([]()
       {
         return trueForMillis(100, []()
         {
           auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
           return ball && ball->y() < 1.0 && ball->x() < -0.1;
         });
-      }));
+      });
 
     lookAtBallState
       ->transitionTo(rightDiveState)
-      ->when(oneShot([]()
+      ->when([]()
       {
         return trueForMillis(100, []()
         {
           auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
           return ball && ball->y() < 1.0 && ball->x() > 0.1;
         });
-      }));
+      });
 
     leftDiveState
       ->transitionTo(lookForBallState)
@@ -438,7 +438,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     lookForBallState
       ->transitionTo(lookAtBallState)
-      ->when(oneShot([ballVisibleCondition]() { return stepUpDownThreshold(5, ballVisibleCondition); }));
+      ->when([ballVisibleCondition]() { return stepUpDownThreshold(5, ballVisibleCondition); });
 
     // walk a circle if we don't find the ball within some time limit
     lookForBallState
@@ -458,7 +458,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     // TODO this doesn't filter the ball position, so may be misled by jitter
     lookAtBallState
       ->transitionTo(approachBallState)
-      ->when(oneShot([ballVisibleCondition]() { return stepUpDownThreshold(10, ballVisibleCondition); }));
+      ->when([ballVisibleCondition]() { return stepUpDownThreshold(10, ballVisibleCondition); });
 
     approachBallState
       ->transitionTo(lookForBallState)
