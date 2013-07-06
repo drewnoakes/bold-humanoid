@@ -17,7 +17,6 @@ namespace bold
   {
     FSMTransition(std::string const& n);
 
-    // Transition name
     std::string name;
 
     /// Condition that needs to be fulfilled to fire
@@ -46,16 +45,16 @@ namespace bold
 
   struct FSMState : public std::enable_shared_from_this<FSMState>
   {
-    FSMState(std::string const& n, std::vector<std::shared_ptr<Option>> o, bool f = false)
+    FSMState(std::string const& n, std::vector<std::shared_ptr<Option>> o, bool isFinal = false)
       : name(n),
-        final(f),
+        isFinal(isFinal),
         options(o)
     {}
 
     /// State name
     std::string name;
     /// Whether this state is a final state
-    bool final;
+    bool isFinal;
     /// Options to return while in this state
     std::vector<std::shared_ptr<Option>> options;
     /// Outgoing transitions
@@ -144,8 +143,6 @@ namespace bold
     FSMStatePtr d_curState;
   };
 
-
-
   inline bool FSMOption::isAvailable()
   {
     return true;
@@ -153,7 +150,7 @@ namespace bold
 
   inline double FSMOption::hasTerminated()
   {
-    return d_curState && d_curState->final ? 1.0 : 0.0;
+    return d_curState && d_curState->isFinal ? 1.0 : 0.0;
   }
 
   inline void FSMOption::addState(FSMStatePtr state, bool startState)
