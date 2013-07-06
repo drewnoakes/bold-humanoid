@@ -413,7 +413,7 @@ div.module.sensors .polar-trace-container + .polar-trace-container
 div.module.state .json-text
 {
     white-space: pre;
-    font-family: consolas, Ubuntu Monospace, monospace;
+    font-family: Ubuntu Mono, consolas, monospace;
     font-size: 11px;
 }
 
