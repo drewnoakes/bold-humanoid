@@ -334,25 +334,25 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
     lookAtBallState
       ->transitionTo(bigStepLeftState)
-      ->when(oneShot([]()
+      ->when([]()
       {
         return trueForMillis(1000, []()
         {
           auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
           return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(-0.75, -0.3).contains(ball->x());
         });
-      }));
+      });
 
     lookAtBallState
       ->transitionTo(bigStepRightState)
-      ->when(oneShot([]()
+      ->when([]()
       {
         return trueForMillis(1000, []()
         {
           auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
           return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(0.3, 0.75).contains(ball->x());
         });
-      }));
+      });
 
     bigStepLeftState
       ->transitionTo(lookForBallState)
