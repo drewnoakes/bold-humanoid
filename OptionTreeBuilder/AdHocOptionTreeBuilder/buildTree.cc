@@ -320,16 +320,20 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     auto bigStepLeftState = playingFsm->newState("bigStepLeft", {bigStepLeft});
     auto bigStepRightState = playingFsm->newState("bigStepRight", {bigStepRight});
 
-    standUpState->transitionTo(lookForBallState)
+    standUpState
+      ->transitionTo(lookForBallState)
       ->whenTerminated();
 
-    lookForBallState->transitionTo(lookAtBallState)
+    lookForBallState
+      ->transitionTo(lookAtBallState)
       ->when(ballVisibleCondition);
 
-    lookAtBallState->transitionTo(lookForBallState)
+    lookAtBallState
+      ->transitionTo(lookForBallState)
       ->when(ballLostCondition);
 
-    lookAtBallState->transitionTo(bigStepLeftState)
+    lookAtBallState
+      ->transitionTo(bigStepLeftState)
       ->when(oneShot([]()
       {
         return trueForMillis(1000, []()
@@ -339,7 +343,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         });
       }));
 
-    lookAtBallState->transitionTo(bigStepRightState)
+    lookAtBallState
+      ->transitionTo(bigStepRightState)
       ->when(oneShot([]()
       {
         return trueForMillis(1000, []()
@@ -349,10 +354,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         });
       }));
 
-    bigStepLeftState->transitionTo(lookForBallState)
+    bigStepLeftState
+      ->transitionTo(lookForBallState)
       ->whenTerminated();
 
-    bigStepRightState->transitionTo(lookForBallState)
+    bigStepRightState
+      ->transitionTo(lookForBallState)
       ->whenTerminated();
 
   }
@@ -366,16 +373,20 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     auto leftDiveState = playingFsm->newState("leftDive", {leftDive});
     auto rightDiveState = playingFsm->newState("rightDive", {rightDive});
 
-    standUpState->transitionTo(lookForBallState)
+    standUpState
+      ->transitionTo(lookForBallState)
       ->whenTerminated();
 
-    lookForBallState->transitionTo(lookAtBallState)
+    lookForBallState
+      ->transitionTo(lookAtBallState)
       ->when(ballVisibleCondition);
 
-    lookAtBallState->transitionTo(lookForBallState)
+    lookAtBallState
+      ->transitionTo(lookForBallState)
       ->when(ballLostCondition);
 
-    lookAtBallState->transitionTo(leftDiveState)
+    lookAtBallState
+      ->transitionTo(leftDiveState)
       ->when(oneShot([]()
       {
         return trueForMillis(100, []()
@@ -385,7 +396,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         });
       }));
 
-    lookAtBallState->transitionTo(rightDiveState)
+    lookAtBallState
+      ->transitionTo(rightDiveState)
       ->when(oneShot([]()
       {
         return trueForMillis(100, []()
@@ -395,10 +407,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         });
       }));
 
-    leftDiveState->transitionTo(lookForBallState)
+    leftDiveState
+      ->transitionTo(lookForBallState)
       ->whenTerminated();
 
-    rightDiveState->transitionTo(lookForBallState)
+    rightDiveState
+      ->transitionTo(lookForBallState)
       ->whenTerminated();
   }
   else
