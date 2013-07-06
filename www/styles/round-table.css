@@ -476,6 +476,13 @@ div.module.optiontree .option.ran
 
 /*******************************************************************/
 
+div.module.histogram
+{
+    min-height: 60px;
+}
+
+/*******************************************************************/
+
 div.module.actions
 {
     min-height: 60px;
