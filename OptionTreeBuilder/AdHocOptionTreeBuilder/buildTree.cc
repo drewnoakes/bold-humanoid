@@ -24,6 +24,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   const unsigned UNUM_GOALIE = 1;
   const unsigned UNUM_GOALIE_PENALTY = 5;
 
+  // TODO any / all / true functions
+
   // GENERAL FUNCTIONS
 
   auto secondsSinceStart = [](double seconds, FSMStatePtr state)
@@ -511,6 +513,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookForGoalState)
       ->when([circleBallState,&headModule,&secondsSinceStart]()
       {
+        // TODO break dependency upon pan limit
         double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angle;
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
@@ -523,6 +526,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
         return secondsSinceStart(circleDurationSeconds, circleBallState);
       });
+
+    // TODO if ball too central, step to left/right slightly, or use different kick
 
     lookAtFeetState
       ->transitionTo(leftKickState)

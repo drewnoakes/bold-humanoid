@@ -2,6 +2,7 @@
 
 double ActionOption::hasTerminated()
 {
+  // TODO this started flag is not reliable in practice -- eg: sit after pause -- becomes stuck as 'true'
   if (!d_started)
     return 0.0;
 
