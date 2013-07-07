@@ -45,10 +45,10 @@ namespace bold
 
   struct FSMState : public std::enable_shared_from_this<FSMState>
   {
-    FSMState(std::string const& n, std::vector<std::shared_ptr<Option>> o, bool isFinal = false)
-      : name(n),
-        isFinal(isFinal),
-        options(o)
+    FSMState(std::string const& name, std::vector<std::shared_ptr<Option>> options, bool isFinal = false)
+    : name(name),
+      isFinal(isFinal),
+      options(options)
     {}
 
     /// State name
