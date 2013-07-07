@@ -62,11 +62,11 @@ namespace bold
 
     std::function<void()> onEnter;
 
-    double startTimeSeconds;
+    Clock::Timestamp startTimestamp;
 
     void start()
     {
-      startTimeSeconds = Clock::getSeconds();
+      startTimestamp = Clock::getTimestamp();
 
       // For transitions with condition factories, invoke them to clear out any accumulated state
       for (FSMTransitionPtr const& transition : transitions)
@@ -81,7 +81,7 @@ namespace bold
 
     double secondsSinceStart()
     {
-      return Clock::getSeconds() - startTimeSeconds;
+      return Clock::getSecondsSince(startTimestamp);
     }
 
     bool allOptionsTerminated() const
