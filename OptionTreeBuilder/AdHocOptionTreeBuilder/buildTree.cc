@@ -494,12 +494,11 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     // start kick procedure if goal is in front of us
     aimState
       ->transitionTo(lookAtFeetState)
-      ->when([&headModule]()
+      ->when([]()
       {
         double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angle;
-        double panAngleRange = headModule->getLeftLimitRads();
-        double panRatio = panAngle / panAngleRange;
-        return fabs(panRatio) < 0.3;
+        // TODO this angular limit in config
+        return fabs(Math::radToDeg(panAngle)) < 25.0;
       });
 
     // circle immediately, if goal is not in front (prior transition didn't fire)
