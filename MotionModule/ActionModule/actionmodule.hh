@@ -69,8 +69,8 @@ namespace bold
     // Page Structure (total 512 bytes)
     typedef struct
     {
-      PAGEHEADER header;              // Page header  0~64
-      STEP step[MAXNUM_STEP];         // Page step    65~511
+      PAGEHEADER header;              // Page header  0~63
+      STEP step[MAXNUM_STEP];         // Page step    64~511
     } PAGE;
 
   private:
