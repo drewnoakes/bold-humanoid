@@ -2,6 +2,8 @@
 
 #include "../../AgentState/agentstate.hh"
 #include "../../BodyControl/bodycontrol.hh"
+#include "../../MotionScriptFile/motionscriptfile.hh"
+#include "../../MotionScriptPage/motionscriptpage.hh"
 #include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../MX28Snapshot/mx28snapshot.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
@@ -14,21 +16,15 @@
 using namespace bold;
 using namespace std;
 
-ActionModule::ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, string filename)
+ActionModule::ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::shared_ptr<MotionScriptFile> file)
 : MotionModule("action", scheduler),
-  d_file(nullptr),
+  d_file(file),
   d_isRunning(false)
 {
-  loadFile(filename);
-
-  for (string name : getPageNames())
+  assert(file);
+  
+  for (string name : file->getPageNames())
     d_controls.push_back(Control::createAction(name, [this,name]() { start(name); }));
-}
-
-ActionModule::~ActionModule()
-{
-  if (d_file != 0)
-    fclose(d_file);
 }
 
 void ActionModule::initialize()
@@ -92,7 +88,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     wPauseTime = 0;
     bSection = PAUSE_SECTION;
     m_PageStepCount = 0;
-    bPlayRepeatCount = d_playingPage.header.repeat;
+    bPlayRepeatCount = d_playingPage->getRepeatCount();
     wNextPlayPage = 0;
 
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
@@ -166,7 +162,8 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
           }
         }
 
-        d_pGains[jointId] = (256 >> (d_playingPage.header.slope[jointId]>>4)) << 2;
+        d_pGains[jointId] = d_playingPage->getPGain(jointId);
+//         d_pGains[jointId] = (256 >> (d_playingPage->getSlope(jointId)>>4)) << 2;
       }
     }
   }
@@ -259,27 +256,27 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 
       m_PageStepCount++;
 
-      if (m_PageStepCount > d_playingPage.header.stepnum)
+      if (m_PageStepCount > d_playingPage->getStepCount())
       {
         d_playingPage = m_NextPlayPage;
         if (d_playingPageIndex != wNextPlayPage)
-          bPlayRepeatCount = d_playingPage.header.repeat;
+          bPlayRepeatCount = d_playingPage->getRepeatCount();
         m_PageStepCount = 1;
         d_playingPageIndex = wNextPlayPage;
       }
 
-      if (m_PageStepCount == d_playingPage.header.stepnum)
+      if (m_PageStepCount == d_playingPage->getStepCount())
       {
         if (d_isStopRequested)
         {
-          wNextPlayPage = d_playingPage.header.exit;
+          wNextPlayPage = d_playingPage->getExit();
         }
         else
         {
           bPlayRepeatCount--;
           wNextPlayPage = bPlayRepeatCount > 0
             ? d_playingPageIndex
-            : d_playingPage.header.next;
+            : d_playingPage->getNext();
         }
 
         if (wNextPlayPage == 0)
@@ -289,18 +286,18 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         else
         {
           if (d_playingPageIndex != wNextPlayPage)
-            loadPage(wNextPlayPage, &m_NextPlayPage);
+            m_NextPlayPage = d_file->getPageByIndex(wNextPlayPage);
           else
             m_NextPlayPage = d_playingPage;
 
-          if (m_NextPlayPage.header.repeat == 0 || m_NextPlayPage.header.stepnum == 0)
+          if (m_NextPlayPage->getRepeatCount() == 0 || m_NextPlayPage->getStepCount() == 0)
             d_playingFinished = true;
         }
       }
 
       //////// Step
-      wPauseTime = (((ushort)d_playingPage.step[m_PageStepCount-1].pause) << 5) / d_playingPage.header.speed;
-      ushort wMaxSpeed256 = ((ushort)d_playingPage.step[m_PageStepCount-1].time * (ushort)d_playingPage.header.speed) >> 5;
+      wPauseTime = (((ushort)d_playingPage->getStepPause(m_PageStepCount-1)) << 5) / d_playingPage->getSpeed();
+      ushort wMaxSpeed256 = ((ushort)d_playingPage->getStepTime(m_PageStepCount-1) * (ushort)d_playingPage->getSpeed()) >> 5;
       if (wMaxSpeed256 == 0)
         wMaxSpeed256 = 1;
       ushort wMaxAngle1024 = 0;
@@ -314,9 +311,9 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         ipAccelAngle1024[jointId] = 0;
 
         // Find current target angle
-        ushort wCurrentTargetAngle = d_playingPage.step[m_PageStepCount-1].position[jointId] & INVALID_BIT_MASK
+        ushort wCurrentTargetAngle = d_playingPage->getStepPosition(m_PageStepCount-1, jointId) & MotionScriptPage::INVALID_BIT_MASK
           ? wpTargetAngle1024[jointId]
-          : d_playingPage.step[m_PageStepCount-1].position[jointId];
+          : d_playingPage->getStepPosition(m_PageStepCount-1, jointId);
 
         // Update start, prev_target, curr_target
         wpStartAngle1024[jointId] = wpTargetAngle1024[jointId];
@@ -328,19 +325,19 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 
         // Find Next target angle
         ushort wNextTargetAngle;
-        if (m_PageStepCount == d_playingPage.header.stepnum)
+        if (m_PageStepCount == d_playingPage->getStepCount())
         {
           wNextTargetAngle = d_playingFinished
             ? wCurrentTargetAngle
-            : m_NextPlayPage.step[0].position[jointId] & INVALID_BIT_MASK
+            : m_NextPlayPage->getStepPosition(0, jointId) & MotionScriptPage::INVALID_BIT_MASK
               ? wCurrentTargetAngle
-              : m_NextPlayPage.step[0].position[jointId];
+              : m_NextPlayPage->getStepPosition(0, jointId);
         }
         else
         {
-          wNextTargetAngle = d_playingPage.step[m_PageStepCount].position[jointId] & INVALID_BIT_MASK
+          wNextTargetAngle = d_playingPage->getStepPosition(m_PageStepCount, jointId) & MotionScriptPage::INVALID_BIT_MASK
             ? wCurrentTargetAngle
-            : d_playingPage.step[m_PageStepCount].position[jointId];
+            : d_playingPage->getStepPosition(m_PageStepCount, jointId);
         }
 
         // Find direction change
@@ -360,7 +357,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
           ? ZERO_FINISH
           : NON_ZERO_FINISH;
 
-        if (d_playingPage.header.schedule == SPEED_BASE_SCHEDULE)
+        if (d_playingPage->getSchedule() == MotionScriptPage::SPEED_BASE_SCHEDULE)
         {
           // MaxAngle1024 update
           ushort wTmp = ipMovingAngle1024[jointId] < 0
@@ -375,11 +372,11 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       //wUnitTimeNum = ((wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) /7.8msec;
       //             = ((128*wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) ;    (/7.8msec == *128)
       //             = (wMaxAngle1024*40) /(wMaxSpeed256 *3);
-      wUnitTimeTotalNum = d_playingPage.header.schedule == TIME_BASE_SCHEDULE
+      wUnitTimeTotalNum = d_playingPage->getSchedule() == MotionScriptPage::TIME_BASE_SCHEDULE
         ? wMaxSpeed256 //TIME BASE 051025
         : (wMaxAngle1024 * 40) / (wMaxSpeed256 * 3);
 
-      wAccelStep = d_playingPage.header.accel;
+      wAccelStep = d_playingPage->getAcceleration();
       if (wUnitTimeTotalNum <= (wAccelStep << 1))
       {
         if (wUnitTimeTotalNum == 0)
@@ -441,36 +438,25 @@ void ActionModule::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic
 
 bool ActionModule::start(int pageIndex)
 {
-  if (pageIndex < 1 || pageIndex >= MAXNUM_PAGE)
-  {
-    cerr << "[ActionModule::start] Invalid page index: " << pageIndex << endl;
-    return false;
-  }
+  auto page = d_file->getPageByIndex(pageIndex);
 
-  PAGE page;
-  if (!loadPage(pageIndex, &page))
-    return false;
-
-  return start(pageIndex, &page);
+  return page ? start(pageIndex, page) : false;
 }
 
-bool ActionModule::start(string pageName)
+bool ActionModule::start(string const& pageName)
 {
-  PAGE page;
-
-  for (int index = 1; index < MAXNUM_PAGE; index++)
+  for (int index = 0; index < MotionScriptFile::MAX_PAGE_ID; index++)
   {
-    if (!loadPage(index, &page))
-      return false;
-
-    if (strcmp(pageName.c_str(), (char*)page.header.name) == 0)
-      return start(index, &page);
+    auto page = d_file->getPageByIndex(index);
+    if (page->getName() == pageName)
+      return start(index, page);
   }
 
+  cerr << "[ActionModule::start] No page with name " << pageName << " found" << endl;
   return false;
 }
 
-bool ActionModule::start(int index, PAGE *page)
+bool ActionModule::start(int index, shared_ptr<MotionScriptPage> page)
 {
   if (d_isRunning)
   {
@@ -478,9 +464,9 @@ bool ActionModule::start(int index, PAGE *page)
     return false;
   }
 
-  d_playingPage = *page;
+  d_playingPage = page;
 
-  if (d_playingPage.header.repeat == 0 || d_playingPage.header.stepnum == 0)
+  if (d_playingPage->getRepeatCount() == 0 || d_playingPage->getStepCount() == 0)
   {
     cerr << "[ActionModule::start] Page index " << index << " has no steps to perform" << endl;
     return false;
@@ -513,181 +499,4 @@ void ActionModule::stop()
 void ActionModule::brake()
 {
   d_isRunning = false;
-}
-
-set<string> ActionModule::getPageNames()
-{
-  set<string> names;
-
-  PAGE page;
-
-  for (int index = 1; index < MAXNUM_PAGE; index++)
-  {
-    if (loadPage(index, &page))
-    {
-      string name((char*)page.header.name);
-      if (name.size())
-        names.insert(name);
-    }
-  }
-
-  return names;
-}
-
-bool ActionModule::loadFile(string filename)
-{
-  FILE *file = fopen(filename.c_str(), "r+b");
-  if (file == 0)
-  {
-    cerr << "[ActionModule::LoadFile] Can not open motion file: " << filename << endl;
-    return false;
-  }
-
-  fseek(file, 0, SEEK_END);
-  if (ftell(file) != (long)(sizeof(PAGE) * MAXNUM_PAGE))
-  {
-    cerr << "[ActionModule::LoadFile] Invalid motion file size: " << filename << endl;
-    fclose(file);
-    return false;
-  }
-
-  // Close any previously loaded file handle
-  if (d_file != 0)
-    fclose(d_file);
-
-  d_file = file;
-  return true;
-}
-
-bool ActionModule::createFile(string filename)
-{
-  FILE *action = fopen(filename.c_str(), "ab");
-  if (action == 0)
-  {
-    cerr << "[ActionModule::CreateFile] Can not create ActionModule file: " << filename << endl;
-    return false;
-  }
-
-  PAGE page;
-  resetPage(&page);
-  for (int i = 0; i < MAXNUM_PAGE; i++)
-    fwrite(&page, 1, sizeof(PAGE), action);
-
-  // Close any previously loaded file handle
-  if (d_file != 0)
-    fclose(d_file);
-
-  d_file = action;
-  return true;
-}
-
-bool ActionModule::loadPage(int index, PAGE *page)
-{
-  long position = (long)(sizeof(PAGE)*index);
-
-  if (fseek(d_file, position, SEEK_SET) != 0)
-  {
-    cerr << "[ActionModule::LoadPage] Error seeking file position: " << position << endl;
-    return false;
-  }
-
-  if (fread(page, 1, sizeof(PAGE), d_file) != sizeof(PAGE))
-  {
-    cerr << "[ActionModule::LoadPage] Error reading page index: " << index << endl;
-    return false;
-  }
-
-  if (!verifyChecksum(page))
-    resetPage(page);
-
-  return true;
-}
-
-bool ActionModule::savePage(int index, PAGE *page)
-{
-  long position = (long)(sizeof(PAGE)*index);
-
-  if (!verifyChecksum(page))
-      setChecksum(page);
-
-  if (fseek(d_file, position, SEEK_SET) != 0)
-  {
-    cerr << "[ActionModule::SavePage] Error seeking file position: " << position << endl;
-    return false;
-  }
-
-  if (fwrite(page, 1, sizeof(PAGE), d_file) != sizeof(PAGE))
-  {
-    cerr << "[ActionModule::LoadPage] Error writing page index: " << index << endl;
-    return false;
-  }
-
-  return true;
-}
-
-void ActionModule::resetPage(PAGE *pPage)
-{
-  uchar *pt = (uchar*)pPage;
-
-  // TODO memset?
-  for (unsigned int i = 0; i < sizeof(PAGE); i++)
-  {
-    *pt = 0x00;
-    pt++;
-  }
-
-  pPage->header.schedule = TIME_BASE_SCHEDULE; // default time base
-  pPage->header.repeat = 1;
-  pPage->header.speed = 32;
-  pPage->header.accel = 32;
-
-  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    pPage->header.slope[jointId] = 0x55;
-
-  for (int i = 0; i < MAXNUM_STEP; i++)
-  {
-    for (int j = 0; j < 31; j++)
-      pPage->step[i].position[j] = INVALID_BIT_MASK;
-
-    pPage->step[i].pause = 0;
-    pPage->step[i].time = 0;
-  }
-
-  setChecksum(pPage);
-}
-
-bool ActionModule::verifyChecksum(PAGE *pPage)
-{
-  uchar checksum = 0x00;
-  uchar *pt = (uchar*)pPage;
-
-  for (unsigned int i = 0; i < sizeof(PAGE); i++)
-  {
-    checksum += *pt;
-    pt++;
-  }
-
-  if (checksum != 0xff)
-  {
-    cerr << "[ActionModule::verifyChecksum] Page checksum is invalid" << endl;
-    return false;
-  }
-
-  return true;
-}
-
-void ActionModule::setChecksum(PAGE *pPage)
-{
-  uchar checksum = 0x00;
-  uchar *pt = (uchar*)pPage;
-
-  pPage->header.checksum = 0x00;
-
-  for (unsigned int i = 0; i < sizeof(PAGE); i++)
-  {
-    checksum += *pt;
-    pt++;
-  }
-
-  pPage->header.checksum = (uchar)(0xff - checksum);
 }

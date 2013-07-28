@@ -14,6 +14,7 @@
 #include "../joystick/joystick.hh"
 #include "../Localiser/localiser.hh"
 #include "../LUTBuilder/lutbuilder.hh"
+#include "../MotionScriptFile/motionscriptfile.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../Option/ActionOption/actionoption.hh"

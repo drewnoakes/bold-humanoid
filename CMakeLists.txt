@@ -135,6 +135,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Configurable/static.cc
+)
+
+add_class(BOLDHUMANOID
   ./Control/create.cc
   ./Control/handleRequest.cc
   ./Control/staticfields.cc
@@ -252,6 +256,14 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./MotionScriptFile/motionscriptfile.cc
+)
+
+add_class(BOLDHUMANOID
+  ./MotionScriptPage/motionscriptpage.cc
+)
+
+add_class(BOLDHUMANOID
   ./MotionTaskScheduler/add.cc
   ./MotionTaskScheduler/update.cc
 )
@@ -351,10 +363,6 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/CameraFrameState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
-  ./Configurable/static.cc
 )
 
 add_class(BOLDHUMANOID

@@ -83,7 +83,6 @@ namespace bold
     bool d_isRunning;
     bool d_isStopRequested;
 
-    std::string d_motionFile;
     unsigned d_teamNumber;
     unsigned d_uniformNumber;
     bool d_autoGetUpFromFallen;
