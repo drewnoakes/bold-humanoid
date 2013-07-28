@@ -182,7 +182,7 @@ bool UDPSocket::send(const char* data, int dataLength)
 {
   assert(dataLength > 0);
   assert(d_target);
-  assert(d_target->sa_family == AF_INET);
+  assert(d_target->sin_family == AF_INET);
 
   ssize_t bytesSent = sendto(d_socket, data, dataLength, 0, (sockaddr*)d_target, sizeof(sockaddr));
 
