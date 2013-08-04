@@ -11,17 +11,17 @@ namespace bold
   typedef unsigned char uchar;
   typedef unsigned short ushort;
 
+  enum class MotionScriptPageSchedule : uchar
+  {
+    SPEED_BASE = 0,
+    TIME_BASE = 0x0a
+  };
+
   class MotionScriptPage
   {
     friend class MotionScriptFile;
 
   public:
-    enum
-    {
-      SPEED_BASE_SCHEDULE = 0,
-      TIME_BASE_SCHEDULE  = 0x0a
-    };
-
     enum
     {
       INVALID_BIT_MASK    = 0x4000,
@@ -74,7 +74,7 @@ namespace bold
     inline uchar getNext() const { return next; }
     inline uchar getSpeed() const { return speed; }
 
-    inline uchar getSchedule() const { return schedule; }
+    inline MotionScriptPageSchedule getSchedule() const { return schedule ? MotionScriptPageSchedule::TIME_BASE : MotionScriptPageSchedule::SPEED_BASE; }
     inline uchar getAcceleration() const { return accel; }
 
     inline uchar getStepPause(uchar stepIndex) const { return steps[stepIndex].pause; }

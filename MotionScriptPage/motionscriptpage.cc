@@ -46,7 +46,7 @@ void MotionScriptPage::reset()
     pt++;
   }
 
-  schedule = TIME_BASE_SCHEDULE; // default time base
+  schedule = (uchar)MotionScriptPageSchedule::TIME_BASE; // default to time-base
   repeat = 1;
   speed = 32;
   accel = 32;

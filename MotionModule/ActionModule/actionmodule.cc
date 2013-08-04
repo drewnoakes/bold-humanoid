@@ -357,7 +357,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
           ? ZERO_FINISH
           : NON_ZERO_FINISH;
 
-        if (d_playingPage->getSchedule() == MotionScriptPage::SPEED_BASE_SCHEDULE)
+        if (d_playingPage->getSchedule() == MotionScriptPageSchedule::SPEED_BASE)
         {
           // MaxAngle1024 update
           ushort wTmp = ipMovingAngle1024[jointId] < 0
@@ -372,7 +372,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       //wUnitTimeNum = ((wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) /7.8msec;
       //             = ((128*wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) ;    (/7.8msec == *128)
       //             = (wMaxAngle1024*40) /(wMaxSpeed256 *3);
-      wUnitTimeTotalNum = d_playingPage->getSchedule() == MotionScriptPage::TIME_BASE_SCHEDULE
+      wUnitTimeTotalNum = d_playingPage->getSchedule() == MotionScriptPageSchedule::TIME_BASE
         ? wMaxSpeed256 //TIME BASE 051025
         : (wMaxAngle1024 * 40) / (wMaxSpeed256 * 3);
 
