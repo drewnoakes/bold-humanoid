@@ -1,8 +1,9 @@
 #pragma once
 
-#include <string>
 #include <memory>
 #include <set>
+#include <string>
+#include <vector>
 
 namespace bold
 {
@@ -30,6 +31,9 @@ namespace bold
 
     bool saveToBinaryFile(std::string const& filePath) const;
     bool saveToJsonFile(std::string const& filePath) const;
+
+    /// Gets all populated pages that are not continuation targets of other pages.
+    std::vector<std::shared_ptr<MotionScriptPage>> getSequenceRoots() const;
 
     /// Gets the first page with the specified name.
     std::shared_ptr<MotionScriptPage> getPageByName(std::string const& pageName) const;

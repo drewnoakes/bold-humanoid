@@ -95,6 +95,30 @@ bool MotionScriptFile::saveToBinaryFile(string const& filePath) const
   return true;
 }
 
+vector<shared_ptr<MotionScriptPage>> MotionScriptFile::getSequenceRoots() const
+{
+  bool exists[(ushort)MAX_PAGE_ID + 1] = {0,};
+  bool isTarget[(ushort)MAX_PAGE_ID + 1] = {0,};
+
+  for (int pageIndex = 0; pageIndex <= MAX_PAGE_ID; pageIndex++)
+  {
+    auto page = d_pages[pageIndex];
+    if (page->getStepCount() == 0)
+      continue;
+    exists[pageIndex] = true;
+    if (page->getNext() != 0)
+      isTarget[page->getNext()] = true;
+  }
+
+  vector<shared_ptr<MotionScriptPage>> rootPages;
+  for (int pageIndex = 0; pageIndex <= MAX_PAGE_ID; pageIndex++)
+  {
+    if (exists[pageIndex] && !isTarget[pageIndex])
+      rootPages.push_back(d_pages[pageIndex]);
+  }
+  return rootPages;
+}
+
 bool MotionScriptFile::saveToJsonFile(string const& filePath) const
 {
   // TODO
