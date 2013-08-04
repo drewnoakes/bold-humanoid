@@ -22,9 +22,15 @@ ActionModule::ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::
   d_isRunning(false)
 {
   assert(file);
-  
-  for (string name : file->getPageNames())
-    d_controls.push_back(Control::createAction(name, [this,name]() { start(name); }));
+
+  for (shared_ptr<MotionScriptPage> page : file->getSequenceRoots())
+  {
+    int pageIndex = file->indexOf(page);
+    stringstream label;
+    label << page->getName() << " (" << pageIndex << ")";
+    cout << "[ActionModule::ActionModule] Found root page: " << label.str() << endl;
+    d_controls.push_back(Control::createAction(label.str(), [this,pageIndex]() { start(pageIndex); }));
+  }
 }
 
 void ActionModule::initialize()
