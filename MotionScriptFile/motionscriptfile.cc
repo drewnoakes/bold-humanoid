@@ -116,7 +116,6 @@ MotionScriptFile::MotionScriptFile(shared_ptr<MotionScriptPage> pages[(ushort)MA
     d_pages[i] = pages[i];
 }
 
-
 set<string> MotionScriptFile::getPageNames() const
 {
   set<string> names;
@@ -146,4 +145,43 @@ shared_ptr<MotionScriptPage> MotionScriptFile::getPageByName(string const& pageN
       return page;
   }
   return nullptr;
+}
+
+void MotionScriptFile::toDotText(ostream& out) const
+{
+  out << "digraph MotionFile {" << endl;
+
+  for (unsigned pageIndex = 0; pageIndex <= MAX_PAGE_ID; pageIndex++)
+  {
+    int nextIndex = d_pages[pageIndex]->getNext();
+    int repeatCount = d_pages[pageIndex]->getRepeatCount();
+    int exitIndex = d_pages[pageIndex]->getExit();
+
+    if (nextIndex)
+      out << "    " << pageIndex << " -> " << nextIndex << ";" << endl;
+
+    if (repeatCount > 1)
+      out << "    " << pageIndex << " -> " << pageIndex << " [label=\"repeat " << repeatCount << "\"];" << endl;
+
+    if (exitIndex)
+      out << "    " << pageIndex << " -> " << exitIndex << " [label=\"exit\"];" << endl;
+  }
+
+  for (unsigned pageIndex = 0; pageIndex <= MAX_PAGE_ID; pageIndex++)
+  {
+    auto name = d_pages[pageIndex]->getName();
+    int stepCount = d_pages[pageIndex]->getStepCount();
+    int speed = d_pages[pageIndex]->getSpeed();
+    int acceleration = d_pages[pageIndex]->getAcceleration();
+    string schedule = d_pages[pageIndex]->getSchedule() == MotionScriptPageSchedule::SPEED_BASE ? "Speed" : "Time";
+
+    if (stepCount != 0)
+      out << "    " << pageIndex << " [label=\"" << name
+          << "\\nspeed=" << speed << " sched=" << schedule
+          << "\\nid=" << pageIndex << " steps=" << stepCount
+          << "\\nacc=" << acceleration
+          << "\"];" << endl;
+  }
+
+  out << "}" << endl;
 }

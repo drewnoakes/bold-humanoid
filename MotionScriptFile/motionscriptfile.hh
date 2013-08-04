@@ -43,6 +43,10 @@ namespace bold
      */
     std::set<std::string> getPageNames() const;
 
+    /** Writes DOT markup of a directed graph showing the relationship between pages within this file.
+     */
+    void toDotText(std::ostream& out) const;
+
   private:
     std::shared_ptr<MotionScriptPage> d_pages[(ushort)MAX_PAGE_ID + 1];
   };

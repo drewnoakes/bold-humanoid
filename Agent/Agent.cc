@@ -44,6 +44,8 @@ Agent::Agent()
     exit(-2);
   }
 
+  motionScriptFile->toDotText(cout);
+
   registerStateTypes();
 
   // Register state observers
