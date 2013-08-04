@@ -38,13 +38,7 @@ void MotionScriptPage::updateChecksum()
 
 void MotionScriptPage::reset()
 {
-  // TODO memset?
-  uchar* pt = (uchar*)this;
-  for (unsigned int i = 0; i < sizeof(MotionScriptPage); i++)
-  {
-    *pt = 0x00;
-    pt++;
-  }
+  memset(this, 0, sizeof(MotionScriptPage));
 
   schedule = (uchar)MotionScriptPageSchedule::TIME_BASE; // default to time-base
   repeat = 1;
