@@ -47,6 +47,9 @@ namespace bold
      */
     void toDotText(std::ostream& out) const;
 
+    /// Gets the index of the specified page within the file, otherwise -1.
+    int indexOf(std::shared_ptr<MotionScriptPage> page) const;
+
   private:
     std::shared_ptr<MotionScriptPage> d_pages[(ushort)MAX_PAGE_ID + 1];
   };

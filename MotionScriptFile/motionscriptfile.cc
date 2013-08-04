@@ -185,3 +185,13 @@ void MotionScriptFile::toDotText(ostream& out) const
 
   out << "}" << endl;
 }
+
+int MotionScriptFile::indexOf(shared_ptr<MotionScriptPage> page) const
+{
+  for (unsigned pageIndex = 0; pageIndex <= MAX_PAGE_ID; pageIndex++)
+  {
+    if (page.get() == d_pages[pageIndex].get())
+      return pageIndex;
+  }
+  return -1;
+}
