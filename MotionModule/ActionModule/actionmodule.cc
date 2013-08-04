@@ -41,6 +41,12 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   assert(ThreadId::isMotionLoopThread());
 
+  if (!d_isRunning)
+  {
+    setCompletedFlag();
+    return;
+  }
+
   ///////////////// Static
   const int JOINT_ARRAY_LENGTH = 22;
   static ushort wpStartAngle1024[JOINT_ARRAY_LENGTH];
@@ -102,12 +108,6 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       ipMovingAngle1024[jointId] = 0;
       ipGoalSpeed1024[jointId] = 0;
     }
-  }
-
-  if (!d_isRunning)
-  {
-    setCompletedFlag();
-    return;
   }
 
   if (wUnitTimeCount < wUnitTimeNum)
