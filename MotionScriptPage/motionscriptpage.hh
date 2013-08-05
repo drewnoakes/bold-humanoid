@@ -22,6 +22,11 @@ namespace bold
     friend class MotionScriptFile;
 
   public:
+    static const uchar DEFAULT_SPEED = 32;
+    static const uchar DEFAULT_ACCELERATION = 32;
+    static const uchar DEFAULT_SLOPE = 0x55;
+    static const MotionScriptPageSchedule DEFAULT_SCHEDULE = MotionScriptPageSchedule::TIME_BASE;
+
     enum
     {
       INVALID_BIT_MASK    = 0x4000,

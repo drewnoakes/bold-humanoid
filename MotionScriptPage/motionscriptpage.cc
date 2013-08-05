@@ -42,11 +42,11 @@ void MotionScriptPage::reset()
 
   schedule = (uchar)MotionScriptPageSchedule::TIME_BASE; // default to time-base
   repeat = 1;
-  speed = 32;
-  accel = 32;
+  speed = DEFAULT_SPEED;
+  accel = DEFAULT_ACCELERATION;
 
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    slope[jointId] = 0x55;
+    slope[jointId] = DEFAULT_SLOPE;
 
   for (int i = 0; i < MAXNUM_STEPS; i++)
   {
