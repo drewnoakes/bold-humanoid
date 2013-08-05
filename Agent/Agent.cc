@@ -37,6 +37,7 @@ Agent::Agent()
   auto motionScriptFileName = "./motion_4096.bin";
   cout << "[Agent::Agent] Using motion file: " << motionScriptFileName << endl;
   auto motionScriptFile = MotionScriptFile::loadFromBinaryFile(motionScriptFileName);
+  motionScriptFile->saveToJsonFile("./motion_4096.json");
 
   if (!motionScriptFile)
   {

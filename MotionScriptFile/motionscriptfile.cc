@@ -1,12 +1,16 @@
 #include "motionscriptfile.hh"
 
 #include "../MotionScriptPage/motionscriptpage.hh"
+#include "../JointId/jointid.hh"
 
 #include <iostream>
 #include <cstdio>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/filewritestream.h>
 
 using namespace bold;
 using namespace std;
+using namespace rapidjson;
 
 shared_ptr<MotionScriptFile> MotionScriptFile::loadFromBinaryFile(string const& filePath)
 {
@@ -121,8 +125,124 @@ vector<shared_ptr<MotionScriptPage>> MotionScriptFile::getSequenceRoots() const
 
 bool MotionScriptFile::saveToJsonFile(string const& filePath) const
 {
-  // TODO
-  return false;
+  // NOTE this method is a transitory solution as we move away from using binary files
+
+  FILE *file = fopen(filePath.c_str(), "wb");
+
+  if (file == 0)
+  {
+    cerr << "[MotionScriptFile::saveToJsonFile] Can not open output file for writing: " << filePath << endl;
+    return false;
+  }
+
+  char buffer[1024];
+  FileWriteStream f(file, buffer, 1024);
+  PrettyWriter<FileWriteStream> writer(f);
+  writer.SetIndent(' ', 2);
+
+  writer.StartArray();
+  for (shared_ptr<MotionScriptPage> rootPage : getSequenceRoots())
+  {
+    writer.StartObject();
+    {
+      writer.String("name").String(rootPage->getName().c_str());
+
+      shared_ptr<MotionScriptPage> page = rootPage;
+
+      writer.String("stages");
+      writer.StartArray();
+      {
+        bool startNewStage = true;
+        while (true)
+        {
+          if (startNewStage)
+          {
+            writer.StartObject();
+            startNewStage = false;
+
+            if (page->getRepeatCount() != 1)
+              writer.String("repeat").Int(page->getRepeatCount());
+            if (page->getSpeed() != MotionScriptPage::DEFAULT_SPEED)
+              writer.String("speed").Int(page->getSpeed());
+            if (page->getAcceleration() != MotionScriptPage::DEFAULT_ACCELERATION)
+              writer.String("acceleration").Int(page->getAcceleration());
+            if (page->getSchedule() != MotionScriptPage::DEFAULT_SCHEDULE)
+              writer.String("schedule").String(page->getSchedule() == MotionScriptPageSchedule::SPEED_BASE ? "speed" : "time");
+
+            for (int i = (uchar)JointId::MIN; i <= (uchar)JointId::MAX; i++)
+            {
+              if (page->getSlope(i) != MotionScriptPage::DEFAULT_SLOPE)
+              {
+                writer.String("slopes");
+                writer.StartArray();
+                for (int j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
+                  writer.Int(page->getSlope(j));
+                writer.EndArray();
+                break;
+              }
+            }
+
+            writer.String("steps");
+            writer.StartArray();
+          }
+
+          for (uchar i = 0; i < page->getStepCount(); i++)
+          {
+            writer.StartObject();
+            {
+              if (page->getStepPause(i) != 0)
+                writer.String("pauseCycles").Int(page->getStepPause(i));
+              if (page->getStepTime(i) != 0)
+                writer.String("moveCycles").Int(page->getStepTime(i));
+              writer.String("values").StartArray();
+              for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+                writer.Int(page->getStepPosition(i, jointId));
+              writer.EndArray();
+            }
+            writer.EndObject();
+          }
+
+          if (page->getNext() == 0)
+          {
+            writer.EndArray();
+            writer.EndObject();
+            break;
+          }
+
+          // If next page and prior page share same parameters, don't start a new 'stage' object
+
+          auto nextPage = getPageByIndex(page->getNext());
+
+          for (int j = (uchar)JointId::MIN; !startNewStage && j <= (uchar)JointId::MAX; j++)
+            startNewStage |= page->getSlope(j) != nextPage->getSlope(j);
+
+          startNewStage |=
+              page->getRepeatCount() != 1 ||
+              nextPage->getRepeatCount() != 1 ||
+              nextPage->getSpeed() != page->getSpeed() ||
+              nextPage->getSchedule() != page->getSchedule() ||
+              nextPage->getAcceleration() != page->getAcceleration();
+
+          page = nextPage;
+
+          if (startNewStage)
+          {
+            writer.EndArray();
+            writer.EndObject();
+          }
+        }
+      }
+      writer.EndArray();
+    }
+    writer.EndObject();
+  }
+  writer.EndArray();
+
+  f.Flush();
+
+  fclose(file);
+
+  return true;
 }
 
 MotionScriptFile::MotionScriptFile()
