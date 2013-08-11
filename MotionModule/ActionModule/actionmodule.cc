@@ -68,23 +68,23 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
 
   ///////////////// Static
   const int JOINT_ARRAY_LENGTH = 22;
-  static ushort wpStartAngle1024[JOINT_ARRAY_LENGTH];
-  static ushort wpTargetAngle1024[JOINT_ARRAY_LENGTH];
-  static short ipMovingAngle1024[JOINT_ARRAY_LENGTH];
-  static short ipMainAngle1024[JOINT_ARRAY_LENGTH];
-  static short ipAccelAngle1024[JOINT_ARRAY_LENGTH];
-  static short ipMainSpeed1024[JOINT_ARRAY_LENGTH];
-  static short ipLastOutSpeed1024[JOINT_ARRAY_LENGTH];
-  static short ipGoalSpeed1024[JOINT_ARRAY_LENGTH];
-  static FinishLevel bpFinishType[JOINT_ARRAY_LENGTH];
-  static ushort wUnitTimeCount;
-  static ushort wUnitTimeNum;
-  static ushort wPauseTime;
-  static ushort wUnitTimeTotalNum;
-  static ushort wAccelStep;
-  static Section bSection;
-  static uchar bPlayRepeatCount;
-  static ushort wNextPlayPage;
+  static ushort startAngles1024[JOINT_ARRAY_LENGTH];
+  static ushort targetAngles1024[JOINT_ARRAY_LENGTH];
+  static short movingAngles1024[JOINT_ARRAY_LENGTH];
+  static short mainAngles1024[JOINT_ARRAY_LENGTH];
+  static short accelAngles1024[JOINT_ARRAY_LENGTH];
+  static short mainSpeeds1024[JOINT_ARRAY_LENGTH];
+  static short lastOutSpeeds1024[JOINT_ARRAY_LENGTH];
+  static short goalSpeeds1024[JOINT_ARRAY_LENGTH];
+  static FinishLevel finishTypes[JOINT_ARRAY_LENGTH];
+  static ushort unitTimeCount;
+  static ushort unitTimeNum;
+  static ushort pauseTime;
+  static ushort unitTimeTotalNum;
+  static ushort accelStep;
+  static Section section;
+  static uchar playRepeatCount;
+  static ushort nextPlayPage;
 
   auto hw = AgentState::get<HardwareState>();
 
@@ -99,13 +99,13 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     d_isFirstStepOfAction = false;
     d_playingFinished = false;
     d_isStopRequested = false;
-    wUnitTimeCount = 0;
-    wUnitTimeNum = 0;
-    wPauseTime = 0;
-    bSection = Section::PAUSE;
-    m_PageStepCount = 0;
-    bPlayRepeatCount = d_playingPage->getRepeatCount();
-    wNextPlayPage = 0;
+    unitTimeCount = 0;
+    unitTimeNum = 0;
+    pauseTime = 0;
+    section = Section::PAUSE;
+    d_pageStepCount = 0;
+    playRepeatCount = d_playingPage->getRepeatCount();
+    nextPlayPage = 0;
 
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
@@ -113,21 +113,21 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       if (!(*selectedJoints)[jointId])
         continue;
 
-      wpTargetAngle1024[jointId] = hw->getMX28State(jointId)->presentPositionValue;
-      ipLastOutSpeed1024[jointId] = 0;
-      ipMovingAngle1024[jointId] = 0;
-      ipGoalSpeed1024[jointId] = 0;
+      targetAngles1024[jointId] = hw->getMX28State(jointId)->presentPositionValue;
+      lastOutSpeeds1024[jointId] = 0;
+      movingAngles1024[jointId] = 0;
+      goalSpeeds1024[jointId] = 0;
     }
   }
 
-  if (wUnitTimeCount < wUnitTimeNum)
+  if (unitTimeCount < unitTimeNum)
   {
     //
     // Continue current section
     //
 
-    wUnitTimeCount++;
-    if (bSection != Section::PAUSE)
+    unitTimeCount++;
+    if (section != Section::PAUSE)
     {
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
@@ -135,44 +135,44 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         if (!(*selectedJoints)[jointId])
           continue;
 
-        if (ipMovingAngle1024[jointId] == 0)
+        if (movingAngles1024[jointId] == 0)
         {
-          d_values[jointId] = wpStartAngle1024[jointId];
+          d_values[jointId] = startAngles1024[jointId];
         }
-        else switch (bSection)
+        else switch (section)
         {
           case Section::PRE:
           {
-            short iSpeedN = (short)(((long)(ipMainSpeed1024[jointId] - ipLastOutSpeed1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
-            ipGoalSpeed1024[jointId] = ipLastOutSpeed1024[jointId] + iSpeedN;
-            ipAccelAngle1024[jointId] =  (short)((((long)(ipLastOutSpeed1024[jointId] + (iSpeedN >> 1)) * wUnitTimeCount * 144) / 15) >> 9);
+            short iSpeedN = (short)(((long)(mainSpeeds1024[jointId] - lastOutSpeeds1024[jointId]) * unitTimeCount) / unitTimeNum);
+            goalSpeeds1024[jointId] = lastOutSpeeds1024[jointId] + iSpeedN;
+            accelAngles1024[jointId] =  (short)((((long)(lastOutSpeeds1024[jointId] + (iSpeedN >> 1)) * unitTimeCount * 144) / 15) >> 9);
 
-            d_values[jointId] = wpStartAngle1024[jointId] + ipAccelAngle1024[jointId];
+            d_values[jointId] = startAngles1024[jointId] + accelAngles1024[jointId];
           }
           case Section::MAIN:
           {
-            d_values[jointId] = wpStartAngle1024[jointId] + (short)(((long)(ipMainAngle1024[jointId])*wUnitTimeCount) / wUnitTimeNum);
-            ipGoalSpeed1024[jointId] = ipMainSpeed1024[jointId];
+            d_values[jointId] = startAngles1024[jointId] + (short)(((long)(mainAngles1024[jointId])*unitTimeCount) / unitTimeNum);
+            goalSpeeds1024[jointId] = mainSpeeds1024[jointId];
           }
           case Section::POST:
           {
-            if (wUnitTimeCount == (wUnitTimeNum-1))
+            if (unitTimeCount == (unitTimeNum-1))
             {
-              d_values[jointId] = wpTargetAngle1024[jointId];
+              d_values[jointId] = targetAngles1024[jointId];
             }
             else
             {
-              if (bpFinishType[jointId] == FinishLevel::ZERO)
+              if (finishTypes[jointId] == FinishLevel::ZERO)
               {
-                short iSpeedN = (short)(((long)(0 - ipLastOutSpeed1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
-                ipGoalSpeed1024[jointId] = ipLastOutSpeed1024[jointId] + iSpeedN;
-                d_values[jointId] = wpStartAngle1024[jointId] + (short)((((long)(ipLastOutSpeed1024[jointId] + (iSpeedN>>1)) * wUnitTimeCount * 144) / 15) >> 9);
+                short iSpeedN = (short)(((long)(0 - lastOutSpeeds1024[jointId]) * unitTimeCount) / unitTimeNum);
+                goalSpeeds1024[jointId] = lastOutSpeeds1024[jointId] + iSpeedN;
+                d_values[jointId] = startAngles1024[jointId] + (short)((((long)(lastOutSpeeds1024[jointId] + (iSpeedN>>1)) * unitTimeCount * 144) / 15) >> 9);
               }
               else // FinishLevel::NON_ZERO
               {
                 // MAIN Section
-                d_values[jointId] = wpStartAngle1024[jointId] + (short)(((long)(ipMainAngle1024[jointId]) * wUnitTimeCount) / wUnitTimeNum);
-                ipGoalSpeed1024[jointId] = ipMainSpeed1024[jointId];
+                d_values[jointId] = startAngles1024[jointId] + (short)(((long)(mainAngles1024[jointId]) * unitTimeCount) / unitTimeNum);
+                goalSpeeds1024[jointId] = mainSpeeds1024[jointId];
               }
             }
           }
@@ -190,41 +190,41 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
   {
     // Completed previous section
 
-    wUnitTimeCount = 0;
+    unitTimeCount = 0;
 
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
       if ((*selectedJoints)[jointId])
       {
-        wpStartAngle1024[jointId] = d_values[jointId];
-        ipLastOutSpeed1024[jointId] = ipGoalSpeed1024[jointId];
+        startAngles1024[jointId] = d_values[jointId];
+        lastOutSpeeds1024[jointId] = goalSpeeds1024[jointId];
       }
     }
 
     // Section (PRE -> MAIN -> POST -> (PAUSE or PRE) ...)
-    switch (bSection)
+    switch (section)
     {
       case Section::PRE:
       {
-        bSection = Section::MAIN;
-        wUnitTimeNum =  wUnitTimeTotalNum - (wAccelStep << 1);
+        section = Section::MAIN;
+        unitTimeNum =  unitTimeTotalNum - (accelStep << 1);
 
         for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
         {
           if (!(*selectedJoints)[jointId])
             continue;
 
-          switch (bpFinishType[jointId])
+          switch (finishTypes[jointId])
           {
             case FinishLevel::NON_ZERO:
             {
-              ipMainAngle1024[jointId] = (wUnitTimeTotalNum - wAccelStep) == 0
-                ? ipMainAngle1024[jointId] = 0
-                : ipMainAngle1024[jointId] = (short)((((long)(ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId])) * wUnitTimeNum) / (wUnitTimeTotalNum - wAccelStep));
+              mainAngles1024[jointId] = (unitTimeTotalNum - accelStep) == 0
+                ? mainAngles1024[jointId] = 0
+                : mainAngles1024[jointId] = (short)((((long)(movingAngles1024[jointId] - accelAngles1024[jointId])) * unitTimeNum) / (unitTimeTotalNum - accelStep));
             }
             case FinishLevel::ZERO:
             {
-              ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipAccelAngle1024[jointId] - (short)((((long)ipMainSpeed1024[jointId] * wAccelStep * 12) / 5) >> 8);
+              mainAngles1024[jointId] = movingAngles1024[jointId] - accelAngles1024[jointId] - (short)((((long)mainSpeeds1024[jointId] * accelStep * 12) / 5) >> 8);
             }
           }
         }
@@ -232,39 +232,39 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       }
       case Section::MAIN:
       {
-        bSection = Section::POST;
-        wUnitTimeNum = wAccelStep;
+        section = Section::POST;
+        unitTimeNum = accelStep;
 
         for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
         {
           if ((*selectedJoints)[jointId])
-            ipMainAngle1024[jointId] = ipMovingAngle1024[jointId] - ipMainAngle1024[jointId] - ipAccelAngle1024[jointId];
+            mainAngles1024[jointId] = movingAngles1024[jointId] - mainAngles1024[jointId] - accelAngles1024[jointId];
         }
         break;
       }
       case Section::POST:
       {
-        if (wPauseTime)
+        if (pauseTime)
         {
-          bSection = Section::PAUSE;
-          wUnitTimeNum = wPauseTime;
+          section = Section::PAUSE;
+          unitTimeNum = pauseTime;
         }
         else
         {
-          bSection = Section::PRE;
+          section = Section::PRE;
         }
         break;
       }
       case Section::PAUSE:
       {
-        bSection = Section::PRE;
-        memset(ipLastOutSpeed1024, 0, sizeof(ipLastOutSpeed1024));
+        section = Section::PRE;
+        memset(lastOutSpeeds1024, 0, sizeof(lastOutSpeeds1024));
         break;
       }
     }
 
     // PRE Section
-    if (bSection == Section::PRE)
+    if (section == Section::PRE)
     {
       if (d_playingFinished)
       {
@@ -273,39 +273,39 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         return;
       }
 
-      m_PageStepCount++;
+      d_pageStepCount++;
 
-      if (m_PageStepCount > d_playingPage->getStepCount())
+      if (d_pageStepCount > d_playingPage->getStepCount())
       {
         d_playingPage = m_NextPlayPage;
-        if (d_playingPageIndex != wNextPlayPage)
-          bPlayRepeatCount = d_playingPage->getRepeatCount();
-        m_PageStepCount = 1;
-        d_playingPageIndex = wNextPlayPage;
+        if (d_playingPageIndex != nextPlayPage)
+          playRepeatCount = d_playingPage->getRepeatCount();
+        d_pageStepCount = 1;
+        d_playingPageIndex = nextPlayPage;
       }
 
-      if (m_PageStepCount == d_playingPage->getStepCount())
+      if (d_pageStepCount == d_playingPage->getStepCount())
       {
         if (d_isStopRequested)
         {
-          wNextPlayPage = d_playingPage->getExit();
+          nextPlayPage = d_playingPage->getExit();
         }
         else
         {
-          bPlayRepeatCount--;
-          wNextPlayPage = bPlayRepeatCount > 0
+          playRepeatCount--;
+          nextPlayPage = playRepeatCount > 0
             ? d_playingPageIndex
             : d_playingPage->getNext();
         }
 
-        if (wNextPlayPage == 0)
+        if (nextPlayPage == 0)
         {
           d_playingFinished = true;
         }
         else
         {
-          if (d_playingPageIndex != wNextPlayPage)
-            m_NextPlayPage = d_file->getPageByIndex(wNextPlayPage);
+          if (d_playingPageIndex != nextPlayPage)
+            m_NextPlayPage = d_file->getPageByIndex(nextPlayPage);
           else
             m_NextPlayPage = d_playingPage;
 
@@ -315,8 +315,8 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       }
 
       //////// Step
-      wPauseTime = (((ushort)d_playingPage->getStepPause(m_PageStepCount-1)) << 5) / d_playingPage->getSpeed();
-      ushort wMaxSpeed256 = ((ushort)d_playingPage->getStepTime(m_PageStepCount-1) * (ushort)d_playingPage->getSpeed()) >> 5;
+      pauseTime = (((ushort)d_playingPage->getStepPause(d_pageStepCount-1)) << 5) / d_playingPage->getSpeed();
+      ushort wMaxSpeed256 = ((ushort)d_playingPage->getStepTime(d_pageStepCount-1) * (ushort)d_playingPage->getSpeed()) >> 5;
       if (wMaxSpeed256 == 0)
         wMaxSpeed256 = 1;
       ushort wMaxAngle1024 = 0;
@@ -327,24 +327,24 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         if (!(*selectedJoints)[jointId])
           continue;
 
-        ipAccelAngle1024[jointId] = 0;
+        accelAngles1024[jointId] = 0;
 
         // Find current target angle
-        ushort wCurrentTargetAngle = d_playingPage->getStepPosition(m_PageStepCount-1, jointId) & MotionScriptPage::INVALID_BIT_MASK
-          ? wpTargetAngle1024[jointId]
-          : d_playingPage->getStepPosition(m_PageStepCount-1, jointId);
+        ushort wCurrentTargetAngle = d_playingPage->getStepPosition(d_pageStepCount-1, jointId) & MotionScriptPage::INVALID_BIT_MASK
+          ? targetAngles1024[jointId]
+          : d_playingPage->getStepPosition(d_pageStepCount-1, jointId);
 
         // Update start, prev_target, curr_target
-        wpStartAngle1024[jointId] = wpTargetAngle1024[jointId];
-        ushort wPrevTargetAngle = wpTargetAngle1024[jointId];
-        wpTargetAngle1024[jointId] = wCurrentTargetAngle;
+        startAngles1024[jointId] = targetAngles1024[jointId];
+        ushort wPrevTargetAngle = targetAngles1024[jointId];
+        targetAngles1024[jointId] = wCurrentTargetAngle;
 
         // Find Moving offset
-        ipMovingAngle1024[jointId] = (int)(wpTargetAngle1024[jointId] - wpStartAngle1024[jointId]);
+        movingAngles1024[jointId] = (int)(targetAngles1024[jointId] - startAngles1024[jointId]);
 
         // Find Next target angle
         ushort wNextTargetAngle;
-        if (m_PageStepCount == d_playingPage->getStepCount())
+        if (d_pageStepCount == d_playingPage->getStepCount())
         {
           wNextTargetAngle = d_playingFinished
             ? wCurrentTargetAngle
@@ -354,9 +354,9 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         }
         else
         {
-          wNextTargetAngle = d_playingPage->getStepPosition(m_PageStepCount, jointId) & MotionScriptPage::INVALID_BIT_MASK
+          wNextTargetAngle = d_playingPage->getStepPosition(d_pageStepCount, jointId) & MotionScriptPage::INVALID_BIT_MASK
             ? wCurrentTargetAngle
-            : d_playingPage->getStepPosition(m_PageStepCount, jointId);
+            : d_playingPage->getStepPosition(d_pageStepCount, jointId);
         }
 
         // Find direction change
@@ -372,16 +372,16 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
         }
 
         // Find finish type
-        bpFinishType[jointId] = bDirectionChanged || wPauseTime || d_playingFinished
+        finishTypes[jointId] = bDirectionChanged || pauseTime || d_playingFinished
           ? FinishLevel::ZERO
           : FinishLevel::NON_ZERO;
 
         if (d_playingPage->getSchedule() == MotionScriptPageSchedule::SPEED_BASE)
         {
           // MaxAngle1024 update
-          ushort wTmp = ipMovingAngle1024[jointId] < 0
-            ? -ipMovingAngle1024[jointId]
-            :  ipMovingAngle1024[jointId];
+          ushort wTmp = movingAngles1024[jointId] < 0
+            ? -movingAngles1024[jointId]
+            :  movingAngles1024[jointId];
 
           if (wTmp > wMaxAngle1024)
             wMaxAngle1024 = wTmp;
@@ -391,27 +391,27 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       //wUnitTimeNum = ((wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) /7.8msec;
       //             = ((128*wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) ;    (/7.8msec == *128)
       //             = (wMaxAngle1024*40) /(wMaxSpeed256 *3);
-      wUnitTimeTotalNum = d_playingPage->getSchedule() == MotionScriptPageSchedule::TIME_BASE
+      unitTimeTotalNum = d_playingPage->getSchedule() == MotionScriptPageSchedule::TIME_BASE
         ? wMaxSpeed256 //TIME BASE 051025
         : (wMaxAngle1024 * 40) / (wMaxSpeed256 * 3);
 
-      wAccelStep = d_playingPage->getAcceleration();
-      if (wUnitTimeTotalNum <= (wAccelStep << 1))
+      accelStep = d_playingPage->getAcceleration();
+      if (unitTimeTotalNum <= (accelStep << 1))
       {
-        if (wUnitTimeTotalNum == 0)
+        if (unitTimeTotalNum == 0)
         {
-          wAccelStep = 0;
+          accelStep = 0;
         }
         else
         {
-          wAccelStep = (wUnitTimeTotalNum - 1) >> 1;
-          if (wAccelStep == 0)
-            wUnitTimeTotalNum = 0;
+          accelStep = (unitTimeTotalNum - 1) >> 1;
+          if (accelStep == 0)
+            unitTimeTotalNum = 0;
         }
       }
 
-      ulong ulTotalTime256T = ((ulong)wUnitTimeTotalNum) << 1;// /128 * 256
-      ulong ulPreSectionTime256T = ((ulong)wAccelStep) << 1;// /128 * 256
+      ulong ulTotalTime256T = ((ulong)unitTimeTotalNum) << 1;// /128 * 256
+      ulong ulPreSectionTime256T = ((ulong)accelStep) << 1;// /128 * 256
       ulong ulMainTime256T = ulTotalTime256T - ulPreSectionTime256T;
       long lDivider1 = ulPreSectionTime256T + (ulMainTime256T << 1);
       long lDivider2 = (ulMainTime256T << 1);
@@ -426,18 +426,18 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
       {
         if ((*selectedJoints)[jointId])
         {
-          long lStartSpeed1024_PreTime_256T = (long)ipLastOutSpeed1024[jointId] * ulPreSectionTime256T; //  *300/1024 * 1024/720 * 256 * 2
-          long lMovingAngle_Speed1024Scale_256T_2T = (((long)ipMovingAngle1024[jointId]) * 2560L) / 12;
+          long lStartSpeed1024_PreTime_256T = (long)lastOutSpeeds1024[jointId] * ulPreSectionTime256T; //  *300/1024 * 1024/720 * 256 * 2
+          long lMovingAngle_Speed1024Scale_256T_2T = (((long)movingAngles1024[jointId]) * 2560L) / 12;
 
-          ipMainSpeed1024[jointId] = bpFinishType[jointId] == FinishLevel::ZERO
+          mainSpeeds1024[jointId] = finishTypes[jointId] == FinishLevel::ZERO
             ? (short)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider2)
             : (short)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider1);
 
-          ipMainSpeed1024[jointId] = Math::clamp(ipMainSpeed1024[jointId], (short)-1023, (short)1023);
+          mainSpeeds1024[jointId] = Math::clamp(mainSpeeds1024[jointId], (short)-1023, (short)1023);
         }
       }
 
-      wUnitTimeNum = wAccelStep;
+      unitTimeNum = accelStep;
     } // PreSection
   }
 }

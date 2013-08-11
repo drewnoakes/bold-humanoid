@@ -25,7 +25,7 @@ namespace bold
     int d_playingPageIndex;
     /// Whether the next step will be the first of the action
     bool d_isFirstStepOfAction;
-    int m_PageStepCount;
+    int d_pageStepCount;
     bool d_isRunning;
     bool d_isStopRequested;
     bool d_playingFinished;
