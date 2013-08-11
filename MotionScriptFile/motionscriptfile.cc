@@ -173,10 +173,10 @@ bool MotionScriptFile::saveToJsonFile(string const& filePath) const
             {
               if (page->getSlope(i) != MotionScriptPage::DEFAULT_SLOPE)
               {
-                writer.String("slopes");
+                writer.String("p-gains");
                 writer.StartArray();
                 for (int j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
-                  writer.Int(page->getSlope(j));
+                  writer.Int(page->getPGain(j));
                 writer.EndArray();
                 break;
               }
