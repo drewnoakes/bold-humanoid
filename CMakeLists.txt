@@ -264,6 +264,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./MotionScriptRunner/motionscriptrunner.cc
+)
+
+add_class(BOLDHUMANOID
   ./MotionTaskScheduler/add.cc
   ./MotionTaskScheduler/update.cc
 )

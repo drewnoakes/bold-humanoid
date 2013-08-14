@@ -297,6 +297,8 @@ void MotionScriptFile::toDotText(ostream& out) const
 
   for (unsigned pageIndex = 0; pageIndex <= MAX_PAGE_ID; pageIndex++)
   {
+    // Exit is an unused feature that allows graceful finish up after 'stop' requested, as opposed to brake.
+
     int nextIndex = d_pages[pageIndex]->getNext();
     int repeatCount = d_pages[pageIndex]->getRepeatCount();
     int exitIndex = d_pages[pageIndex]->getExit();
