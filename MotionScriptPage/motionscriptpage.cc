@@ -30,31 +30,31 @@ bool MotionScriptPage::isChecksumValid() const
 void MotionScriptPage::updateChecksum()
 {
   // set to zero for the calculation
-  checksum = 0x00;
+  d_checksum = 0x00;
 
   // calculate and update
-  checksum = (uchar)(0xff - calculateChecksum());
+  d_checksum = (uchar)(0xff - calculateChecksum());
 }
 
 void MotionScriptPage::reset()
 {
   memset(this, 0, sizeof(MotionScriptPage));
 
-  schedule = (uchar)MotionScriptPageSchedule::TIME_BASE; // default to time-base
-  repeat = 1;
-  speed = DEFAULT_SPEED;
-  accel = DEFAULT_ACCELERATION;
+  d_schedule = (uchar)MotionScriptPageSchedule::TIME_BASE; // default to time-base
+  d_repeatCount = 1;
+  d_speed = DEFAULT_SPEED;
+  d_accelerationTime = DEFAULT_ACCELERATION;
 
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    slope[jointId] = DEFAULT_SLOPE;
+    d_slopes[jointId] = DEFAULT_SLOPE;
 
   for (int i = 0; i < MAXNUM_STEPS; i++)
   {
     for (int j = 0; j < MAXNUM_POSITIONS; j++)
-      steps[i].position[j] = INVALID_BIT_MASK;
+      d_steps[i].position[j] = INVALID_BIT_MASK;
 
-    steps[i].pause = 0;
-    steps[i].time = 0;
+    d_steps[i].pause = 0;
+    d_steps[i].time = 0;
   }
 
   updateChecksum();

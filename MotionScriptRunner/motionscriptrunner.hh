@@ -29,7 +29,7 @@ namespace bold
   private:
     std::shared_ptr<MotionScriptFile> d_file;
     std::shared_ptr<MotionScriptPage> d_playingPage;
-    std::shared_ptr<MotionScriptPage> m_NextPlayPage;
+    std::shared_ptr<MotionScriptPage> d_nextPage;
 
     int d_playingPageIndex;
     /// Whether the next step will be the first of the action
@@ -54,23 +54,23 @@ namespace bold
 
     ///////////////// Static
     static const int JOINT_ARRAY_LENGTH = 22;
-    ushort startAngles1024[JOINT_ARRAY_LENGTH];
-    ushort targetAngles1024[JOINT_ARRAY_LENGTH];
-    short movingAngles1024[JOINT_ARRAY_LENGTH];
-    short mainAngles1024[JOINT_ARRAY_LENGTH];
-    short accelAngles1024[JOINT_ARRAY_LENGTH];
-    short mainSpeeds1024[JOINT_ARRAY_LENGTH];
-    short lastOutSpeeds1024[JOINT_ARRAY_LENGTH];
-    short goalSpeeds1024[JOINT_ARRAY_LENGTH];
-    FinishLevel finishTypes[JOINT_ARRAY_LENGTH];
-    ushort unitTimeCount;
-    ushort unitTimeNum;
-    ushort pauseTime;
-    ushort unitTimeTotalNum;
-    ushort accelStep;
-    Section section;
-    uchar playRepeatCount;
-    ushort nextPlayPage;
+    ushort d_startAngles1024[JOINT_ARRAY_LENGTH];
+    ushort d_targetAngles1024[JOINT_ARRAY_LENGTH];
+    short d_movingAngles1024[JOINT_ARRAY_LENGTH];
+    short d_mainAngles1024[JOINT_ARRAY_LENGTH];
+    short d_accelAngles1024[JOINT_ARRAY_LENGTH];
+    short d_mainSpeeds1024[JOINT_ARRAY_LENGTH];
+    short d_lastOutSpeeds1024[JOINT_ARRAY_LENGTH];
+    short d_goalSpeeds1024[JOINT_ARRAY_LENGTH];
+    FinishLevel d_finishTypes[JOINT_ARRAY_LENGTH];
+    ushort d_unitTimeCount;
+    ushort d_unitTimeNum;
+    ushort d_pauseTime;
+    ushort d_unitTimeTotalNum;
+    ushort d_accelStep;
+    Section d_section;
+    uchar d_playRepeatCount;
+    ushort d_nextPageIndex;
     MotionScriptRunnerState d_state;
   };
 }

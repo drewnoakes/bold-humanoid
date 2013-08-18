@@ -27,7 +27,7 @@ namespace bold
 
     MotionScriptFile();
 
-    MotionScriptFile(std::shared_ptr<MotionScriptPage> d_pages[(ushort)MAX_PAGE_ID + 1]);
+    MotionScriptFile(std::shared_ptr<MotionScriptPage> pages[(ushort)MAX_PAGE_ID + 1]);
 
     bool saveToBinaryFile(std::string const& filePath) const;
     bool saveToJsonFile(std::string const& filePath) const;
