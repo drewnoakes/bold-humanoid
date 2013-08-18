@@ -42,8 +42,10 @@ namespace bold
     std::shared_ptr<MotionScriptPage> d_currentPage;
     std::shared_ptr<MotionScriptPage> d_nextPage;
 
+    // TODO can we get rid of current/next page indices and just use shared_ptrs?
     int d_currentPageIndex;
     int d_currentPageStep;
+    ushort d_nextPageIndex;
 
     // TODO can this be replaced by d_state in Finished? or new Finishing value?
     bool d_playingFinished;
@@ -61,7 +63,7 @@ namespace bold
     short d_lastOutSpeeds1024[JOINT_ARRAY_LENGTH];
     short d_goalSpeeds1024[JOINT_ARRAY_LENGTH];
     FinishLevel d_finishTypes[JOINT_ARRAY_LENGTH];
-    // TODO is a 'unit' the same as a 'section'?
+    // TODO is a 'unit' the same as a 'section'? If so, rename for clarity.
     // TODO what's the difference between d_unitTimeCount and d_unitTimeNum? Rename so it's clearer.
     ushort d_unitTimeCount;
     ushort d_unitTimeNum;
@@ -70,7 +72,6 @@ namespace bold
     ushort d_accelStep;
     Section d_section;
     uchar d_repeatCurrentPageCount;
-    ushort d_nextPageIndex;
     MotionScriptRunnerState d_state;
   };
 }
