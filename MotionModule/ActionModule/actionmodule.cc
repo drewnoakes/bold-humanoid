@@ -98,6 +98,8 @@ bool ActionModule::start(string const& pageName)
 
 bool ActionModule::start(int index, shared_ptr<MotionScriptPage> page)
 {
+  cout << "[ActionModule::start] Starting page index " << index << " (" << page->getName() << ")" << endl;
+  
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
     cerr << "[ActionModule::start] Ignoring request to play page " << index << " -- already playing page " << d_runner->getCurrentPageIndex() << endl;
