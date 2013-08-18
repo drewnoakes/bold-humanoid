@@ -1,6 +1,7 @@
 #include "actionoption.hh"
 
-#include "../MotionModule/ActionModule/actionmodule.hh"
+#include "../../MotionModule/ActionModule/actionmodule.hh"
+#include "../../MotionScriptRunner/motionscriptrunner.hh"
 
 #include <iostream>
 #include <cassert>

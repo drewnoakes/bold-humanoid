@@ -15,6 +15,7 @@ namespace bold
   };
 
   class ActionModule;
+  class MotionScriptRunner;
 
   class ActionOption : public Option
   {
@@ -31,22 +32,20 @@ namespace bold
     std::shared_ptr<ActionModule> d_actionModule;
     std::string d_actionName;
     ActionPage d_actionPage;
-    bool d_started;
+    std::shared_ptr<MotionScriptRunner> d_runner;
   };
 
   inline ActionOption::ActionOption(std::string const& id, std::string const& actionName, std::shared_ptr<ActionModule> actionModule)
     : Option(id),
       d_actionModule(actionModule),
       d_actionName(actionName),
-      d_actionPage(ActionPage::None),
-      d_started(false)
+      d_actionPage(ActionPage::None)
   {}
 
   inline ActionOption::ActionOption(std::string const& id, ActionPage actionPage, std::shared_ptr<ActionModule> actionModule)
     : Option(id),
       d_actionModule(actionModule),
       d_actionName(""),
-      d_actionPage(actionPage),
-      d_started(false)
+      d_actionPage(actionPage)
   {}
 }

@@ -23,7 +23,7 @@ namespace bold
 
     std::vector<std::shared_ptr<Control const>> d_controls;
 
-    bool start(int index, std::shared_ptr<MotionScriptPage> page);
+    std::shared_ptr<MotionScriptRunner> start(int index, std::shared_ptr<MotionScriptPage> page);
 
   public:
     ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::shared_ptr<MotionScriptFile> file);
@@ -42,10 +42,10 @@ namespace bold
 
     // TODO replace start with: run(shared_ptr<MotionScriptRunner>)
 
-    bool start(int pageIndex);
+    std::shared_ptr<MotionScriptRunner> start(int pageIndex);
 
     /** Play the first page having the specified name. */
-    bool start(std::string const& pageName);
+    std::shared_ptr<MotionScriptRunner> start(std::string const& pageName);
 
     bool isRunning();
   };

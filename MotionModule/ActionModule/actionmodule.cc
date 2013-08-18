@@ -76,14 +76,14 @@ void ActionModule::applyHead(shared_ptr<HeadSection> head) { applySection(dynami
 void ActionModule::applyArms(shared_ptr<ArmSection> arms) { applySection(dynamic_pointer_cast<BodySection>(arms)); }
 void ActionModule::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic_pointer_cast<BodySection>(legs)); }
 
-bool ActionModule::start(int pageIndex)
+shared_ptr<MotionScriptRunner> ActionModule::start(int pageIndex)
 {
   auto page = d_file->getPageByIndex(pageIndex);
 
-  return page ? start(pageIndex, page) : false;
+  return page ? start(pageIndex, page) : nullptr;
 }
 
-bool ActionModule::start(string const& pageName)
+shared_ptr<MotionScriptRunner> ActionModule::start(string const& pageName)
 {
   for (int index = 0; index < MotionScriptFile::MAX_PAGE_ID; index++)
   {
@@ -93,23 +93,23 @@ bool ActionModule::start(string const& pageName)
   }
 
   cerr << "[ActionModule::start] No page with name " << pageName << " found" << endl;
-  return false;
+  return nullptr;
 }
 
-bool ActionModule::start(int index, shared_ptr<MotionScriptPage> page)
+shared_ptr<MotionScriptRunner> ActionModule::start(int index, shared_ptr<MotionScriptPage> page)
 {
   cout << "[ActionModule::start] Starting page index " << index << " (" << page->getName() << ")" << endl;
-  
+
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
     cerr << "[ActionModule::start] Ignoring request to play page " << index << " -- already playing page " << d_runner->getCurrentPageIndex() << endl;
-    return false;
+    return nullptr;
   }
 
   if (page->getRepeatCount() == 0 || page->getStepCount() == 0)
   {
     cerr << "[ActionModule::start] Page at index " << index << " has no steps to perform" << endl;
-    return false;
+    return nullptr;
   }
 
   d_runner = make_shared<MotionScriptRunner>(d_file, page, index);
@@ -119,5 +119,5 @@ bool ActionModule::start(int index, shared_ptr<MotionScriptPage> page)
                       Priority::Important, true,  // ARMS
                       Priority::Important, true); // LEGS
 
-  return true;
+  return d_runner;
 }
