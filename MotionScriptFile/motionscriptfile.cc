@@ -110,8 +110,8 @@ vector<shared_ptr<MotionScriptPage>> MotionScriptFile::getSequenceRoots() const
     if (page->getStepCount() == 0)
       continue;
     exists[pageIndex] = true;
-    if (page->getNext() != 0)
-      isTarget[page->getNext()] = true;
+    if (page->getNextPageIndex() != 0)
+      isTarget[page->getNextPageIndex()] = true;
   }
 
   vector<shared_ptr<MotionScriptPage>> rootPages;
@@ -164,8 +164,8 @@ bool MotionScriptFile::saveToJsonFile(string const& filePath) const
               writer.String("repeat").Int(page->getRepeatCount());
             if (page->getSpeed() != MotionScriptPage::DEFAULT_SPEED)
               writer.String("speed").Int(page->getSpeed());
-            if (page->getAcceleration() != MotionScriptPage::DEFAULT_ACCELERATION)
-              writer.String("acceleration").Int(page->getAcceleration());
+            if (page->getAccelerationTime() != MotionScriptPage::DEFAULT_ACCELERATION)
+              writer.String("acceleration").Int(page->getAccelerationTime());
             if (page->getSchedule() != MotionScriptPage::DEFAULT_SCHEDULE)
               writer.String("schedule").String(page->getSchedule() == MotionScriptPageSchedule::SPEED_BASE ? "speed" : "time");
 
@@ -202,7 +202,7 @@ bool MotionScriptFile::saveToJsonFile(string const& filePath) const
             writer.EndObject();
           }
 
-          if (page->getNext() == 0)
+          if (page->getNextPageIndex() == 0)
           {
             writer.EndArray();
             writer.EndObject();
@@ -211,7 +211,7 @@ bool MotionScriptFile::saveToJsonFile(string const& filePath) const
 
           // If next page and prior page share same parameters, don't start a new 'stage' object
 
-          auto nextPage = getPageByIndex(page->getNext());
+          auto nextPage = getPageByIndex(page->getNextPageIndex());
 
           for (int j = (uchar)JointId::MIN; !startNewStage && j <= (uchar)JointId::MAX; j++)
             startNewStage |= page->getSlope(j) != nextPage->getSlope(j);
@@ -221,7 +221,7 @@ bool MotionScriptFile::saveToJsonFile(string const& filePath) const
               nextPage->getRepeatCount() != 1 ||
               nextPage->getSpeed() != page->getSpeed() ||
               nextPage->getSchedule() != page->getSchedule() ||
-              nextPage->getAcceleration() != page->getAcceleration();
+              nextPage->getAccelerationTime() != page->getAccelerationTime();
 
           page = nextPage;
 
@@ -299,7 +299,7 @@ void MotionScriptFile::toDotText(ostream& out) const
   {
     // Exit is an unused feature that allows graceful finish up after 'stop' requested, as opposed to brake.
 
-    int nextIndex = d_pages[pageIndex]->getNext();
+    int nextIndex = d_pages[pageIndex]->getNextPageIndex();
     int repeatCount = d_pages[pageIndex]->getRepeatCount();
 
     if (nextIndex)
@@ -314,7 +314,7 @@ void MotionScriptFile::toDotText(ostream& out) const
     auto name = d_pages[pageIndex]->getName();
     int stepCount = d_pages[pageIndex]->getStepCount();
     int speed = d_pages[pageIndex]->getSpeed();
-    int acceleration = d_pages[pageIndex]->getAcceleration();
+    int acceleration = d_pages[pageIndex]->getAccelerationTime();
     string schedule = d_pages[pageIndex]->getSchedule() == MotionScriptPageSchedule::SPEED_BASE ? "Speed" : "Time";
 
     if (stepCount != 0)

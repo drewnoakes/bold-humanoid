@@ -75,11 +75,11 @@ namespace bold
     inline uchar getSlope(uchar jointId) const { return d_slopes[jointId]; }
     inline uchar getPGain(uchar jointId) const { return (256 >> (d_slopes[jointId]>>4)) << 2; }
 
-    inline uchar getNext() const { return d_nextPageIndex; }
+    inline uchar getNextPageIndex() const { return d_nextPageIndex; }
     inline uchar getSpeed() const { return d_speed; }
 
     inline MotionScriptPageSchedule getSchedule() const { return d_schedule ? MotionScriptPageSchedule::TIME_BASE : MotionScriptPageSchedule::SPEED_BASE; }
-    inline uchar getAcceleration() const { return d_accelerationTime; }
+    inline uchar getAccelerationTime() const { return d_accelerationTime; }
 
     inline uchar getStepPause(uchar stepIndex) const { return d_steps[stepIndex].pause; }
     inline uchar getStepTime(uchar stepIndex) const { return d_steps[stepIndex].time; }

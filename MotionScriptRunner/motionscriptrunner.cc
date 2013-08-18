@@ -248,7 +248,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
         d_repeatCurrentPageCount--;
         d_nextPageIndex = d_repeatCurrentPageCount > 0
           ? d_currentPageIndex
-          : d_currentPage->getNext();
+          : d_currentPage->getNextPageIndex();
 
         if (d_nextPageIndex == 0)
         {
@@ -340,7 +340,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
         ? maxSpeed256 //TIME BASE 051025
         : (maxAngle1024 * 40) / (maxSpeed256 * 3);
 
-      d_accelStep = d_currentPage->getAcceleration();
+      d_accelStep = d_currentPage->getAccelerationTime();
       if (d_unitTimeTotalNum <= (d_accelStep << 1))
       {
         if (d_unitTimeTotalNum == 0)
