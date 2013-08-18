@@ -18,7 +18,6 @@ MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScriptFile> file, shared
 : d_file(file),
   d_currentPage(page),
   d_currentPageIndex(index),
-  d_isFirstStepOfAction(true),
   d_state(MotionScriptRunnerState::Pending)
 {
   assert(file);
@@ -32,7 +31,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
   if (d_state == MotionScriptRunnerState::Finished)
   {
-    cerr << "[MotionScriptRunner::step] already finished -- returning false" << endl;
+    cerr << "[MotionScriptRunner::step] already finished" << endl;
     return false;
   }
 
@@ -42,7 +41,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
   // Initialise
   //
 
-  if (d_isFirstStepOfAction)
+  if (d_state == MotionScriptRunnerState::Pending)
   {
     // Special treatment for the first step of a new action
 
@@ -52,8 +51,6 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
 
-    d_isFirstStepOfAction = false;
-    d_playingFinished = false;
     d_state = MotionScriptRunnerState::Running;
     d_unitTimeCount = 0;
     d_unitTimeNum = 0;

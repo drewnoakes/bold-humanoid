@@ -32,8 +32,6 @@ namespace bold
     std::shared_ptr<MotionScriptPage> d_nextPage;
 
     int d_currentPageIndex;
-    /// Whether the next step will be the first of the action
-    bool d_isFirstStepOfAction;
     int d_currentPageStep;
     bool d_playingFinished;
 
