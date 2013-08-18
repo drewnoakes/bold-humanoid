@@ -19,7 +19,6 @@ MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScriptFile> file, shared
   d_playingPage(page),
   d_playingPageIndex(index),
   d_isFirstStepOfAction(true),
-  d_isRunning(false),
   d_state(MotionScriptRunnerState::Pending)
 {
   assert(file);
@@ -52,7 +51,6 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
 
-    d_isRunning = true;
     d_isFirstStepOfAction = false;
     d_playingFinished = false;
     d_state = MotionScriptRunnerState::Running;
@@ -229,7 +227,6 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     {
       if (d_playingFinished)
       {
-        d_isRunning = false;
         d_state = MotionScriptRunnerState::Finished;
         return false;
       }

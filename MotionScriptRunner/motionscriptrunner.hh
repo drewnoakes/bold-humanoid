@@ -35,7 +35,6 @@ namespace bold
     /// Whether the next step will be the first of the action
     bool d_isFirstStepOfAction;
     int d_pageStepCount;
-    bool d_isRunning;
     bool d_playingFinished;
 
     uchar d_pGains[21];
