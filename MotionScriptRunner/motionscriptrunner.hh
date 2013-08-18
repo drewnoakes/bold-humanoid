@@ -36,7 +36,6 @@ namespace bold
     bool d_isFirstStepOfAction;
     int d_pageStepCount;
     bool d_isRunning;
-    bool d_isStopRequested;
     bool d_playingFinished;
 
     uchar d_pGains[21];

@@ -75,7 +75,6 @@ namespace bold
     inline uchar getSlope(uchar jointId) const { return slope[jointId]; }
     inline uchar getPGain(uchar jointId) const { return (256 >> (slope[jointId]>>4)) << 2; }
 
-    inline uchar getExit() const { return exit; }
     inline uchar getNext() const { return next; }
     inline uchar getSpeed() const { return speed; }
 

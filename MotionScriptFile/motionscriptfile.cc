@@ -301,16 +301,12 @@ void MotionScriptFile::toDotText(ostream& out) const
 
     int nextIndex = d_pages[pageIndex]->getNext();
     int repeatCount = d_pages[pageIndex]->getRepeatCount();
-    int exitIndex = d_pages[pageIndex]->getExit();
 
     if (nextIndex)
       out << "    " << pageIndex << " -> " << nextIndex << ";" << endl;
 
     if (repeatCount > 1)
       out << "    " << pageIndex << " -> " << pageIndex << " [label=\"repeat " << repeatCount << "\"];" << endl;
-
-    if (exitIndex)
-      out << "    " << pageIndex << " -> " << exitIndex << " [label=\"exit\"];" << endl;
   }
 
   for (unsigned pageIndex = 0; pageIndex <= MAX_PAGE_ID; pageIndex++)

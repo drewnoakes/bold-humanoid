@@ -55,7 +55,6 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     d_isRunning = true;
     d_isFirstStepOfAction = false;
     d_playingFinished = false;
-    d_isStopRequested = false;
     d_state = MotionScriptRunnerState::Running;
     unitTimeCount = 0;
     unitTimeNum = 0;
@@ -248,17 +247,10 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
       if (d_pageStepCount == d_playingPage->getStepCount())
       {
-        if (d_isStopRequested)
-        {
-          nextPlayPage = d_playingPage->getExit();
-        }
-        else
-        {
-          playRepeatCount--;
-          nextPlayPage = playRepeatCount > 0
-            ? d_playingPageIndex
-            : d_playingPage->getNext();
-        }
+        playRepeatCount--;
+        nextPlayPage = playRepeatCount > 0
+          ? d_playingPageIndex
+          : d_playingPage->getNext();
 
         if (nextPlayPage == 0)
         {
