@@ -27,17 +27,6 @@ namespace bold
     int getCurrentPageIndex() const { return d_currentPageIndex; }
 
   private:
-    std::shared_ptr<MotionScriptFile> d_file;
-    std::shared_ptr<MotionScriptPage> d_currentPage;
-    std::shared_ptr<MotionScriptPage> d_nextPage;
-
-    int d_currentPageIndex;
-    int d_currentPageStep;
-    bool d_playingFinished;
-
-    uchar d_pGains[21];
-    ushort d_values[21];
-
     /**************************************
     * Section             /----\
     *                    /|    |\
@@ -49,7 +38,19 @@ namespace bold
     enum class Section : uchar { PRE = 1, MAIN = 2, POST = 3, PAUSE = 4 };
     enum class FinishLevel : uchar { ZERO = 1, NON_ZERO = 2 };
 
-    ///////////////// Static
+    std::shared_ptr<MotionScriptFile> d_file;
+    std::shared_ptr<MotionScriptPage> d_currentPage;
+    std::shared_ptr<MotionScriptPage> d_nextPage;
+
+    int d_currentPageIndex;
+    int d_currentPageStep;
+
+    // TODO can this be replaced by d_state in Finished? or new Finishing value?
+    bool d_playingFinished;
+
+    uchar d_pGains[21];
+    ushort d_values[21];
+
     static const int JOINT_ARRAY_LENGTH = 22;
     ushort d_startAngles1024[JOINT_ARRAY_LENGTH];
     ushort d_targetAngles1024[JOINT_ARRAY_LENGTH];
@@ -60,6 +61,8 @@ namespace bold
     short d_lastOutSpeeds1024[JOINT_ARRAY_LENGTH];
     short d_goalSpeeds1024[JOINT_ARRAY_LENGTH];
     FinishLevel d_finishTypes[JOINT_ARRAY_LENGTH];
+    // TODO is a 'unit' the same as a 'section'?
+    // TODO what's the difference between d_unitTimeCount and d_unitTimeNum? Rename so it's clearer.
     ushort d_unitTimeCount;
     ushort d_unitTimeNum;
     ushort d_pauseTime;

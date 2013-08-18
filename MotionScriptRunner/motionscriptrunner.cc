@@ -220,7 +220,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
       }
     }
 
-    // PRE Section
+    // If we're in the PRE section, then we must have just transitioned into it
     if (d_section == Section::PRE)
     {
       if (d_playingFinished)
