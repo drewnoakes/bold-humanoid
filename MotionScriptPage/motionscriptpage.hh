@@ -57,17 +57,17 @@ namespace bold
     bool isEmpty() const;
 
     inline std::string getName() const { return std::string(reinterpret_cast<char const*>(d_name)); }
-    inline void setName(std::string name)
-    {
-      if (name.size() > MAXNUM_NAME)
-        throw std::runtime_error("Name is too long");
-
-      memset(this->d_name, MAXNUM_NAME+1, 0);
-      memcpy(this->d_name, name.c_str(), name.size());
-    }
+//     inline void setName(std::string name)
+//     {
+//       if (name.size() > MAXNUM_NAME)
+//         throw std::runtime_error("Name is too long");
+//
+//       memset(this->d_name, MAXNUM_NAME+1, 0);
+//       memcpy(this->d_name, name.c_str(), name.size());
+//     }
 
     inline uchar getRepeatCount() const { return d_repeatCount; }
-    inline void setRepeatCount(uchar count) { d_repeatCount = count; }
+//    inline void setRepeatCount(uchar count) { d_repeatCount = count; }
 
     inline uchar getStepCount() const { return d_stepCount; }
 //    inline void setStepCount(uchar count) { stepnum = count; }
