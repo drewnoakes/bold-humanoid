@@ -12,17 +12,17 @@ using namespace std;
 TEST(SequentialTimerTests, basics)
 {
   SequentialTimer t;
-  usleep(1000); // sleep for 1ms
-  t.timeEvent("1");
+  usleep(2000); // sleep for 1ms
+  t.timeEvent("2");
   t.timeEvent("0");
   auto items = *t.flush();
 
   EXPECT_EQ(2, items.size());
 
-  EXPECT_EQ("1", items[0].second);
+  EXPECT_EQ("2", items[0].second);
   EXPECT_EQ("0", items[1].second);
 
-  EXPECT_NEAR(1, items[0].first, 0.75);
+  EXPECT_NEAR(2, items[0].first, 0.75);
   EXPECT_NEAR(0, items[1].first, 0.75);
 
   EXPECT_TRUE(items[0].first > items[1].first);
