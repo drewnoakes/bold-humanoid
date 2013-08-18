@@ -123,9 +123,9 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
             {
               if (d_finishTypes[jointId] == FinishLevel::ZERO)
               {
-                short iSpeedN = (short)(((long)(0 - d_lastOutSpeeds1024[jointId]) * d_unitTimeCount) / d_unitTimeNum);
-                d_goalSpeeds1024[jointId] = d_lastOutSpeeds1024[jointId] + iSpeedN;
-                d_values[jointId] = d_startAngles1024[jointId] + (short)((((long)(d_lastOutSpeeds1024[jointId] + (iSpeedN>>1)) * d_unitTimeCount * 144) / 15) >> 9);
+                short speedN = (short)(((long)(0 - d_lastOutSpeeds1024[jointId]) * d_unitTimeCount) / d_unitTimeNum);
+                d_goalSpeeds1024[jointId] = d_lastOutSpeeds1024[jointId] + speedN;
+                d_values[jointId] = d_startAngles1024[jointId] + (short)((((long)(d_lastOutSpeeds1024[jointId] + (speedN>>1)) * d_unitTimeCount * 144) / 15) >> 9);
               }
               else // FinishLevel::NON_ZERO
               {
@@ -270,10 +270,10 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
       //////// Step
       d_pauseTime = (((ushort)d_playingPage->getStepPause(d_pageStepCount-1)) << 5) / d_playingPage->getSpeed();
-      ushort wMaxSpeed256 = ((ushort)d_playingPage->getStepTime(d_pageStepCount-1) * (ushort)d_playingPage->getSpeed()) >> 5;
-      if (wMaxSpeed256 == 0)
-        wMaxSpeed256 = 1;
-      ushort wMaxAngle1024 = 0;
+      ushort maxSpeed256 = ((ushort)d_playingPage->getStepTime(d_pageStepCount-1) * (ushort)d_playingPage->getSpeed()) >> 5;
+      if (maxSpeed256 == 0)
+        maxSpeed256 = 1;
+      ushort maxAngle1024 = 0;
 
       ////////// Joint
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
@@ -284,61 +284,61 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
         d_accelAngles1024[jointId] = 0;
 
         // Find current target angle
-        ushort wCurrentTargetAngle = d_playingPage->getStepPosition(d_pageStepCount-1, jointId) & MotionScriptPage::INVALID_BIT_MASK
+        ushort currentTargetAngle = d_playingPage->getStepPosition(d_pageStepCount-1, jointId) & MotionScriptPage::INVALID_BIT_MASK
           ? d_targetAngles1024[jointId]
           : d_playingPage->getStepPosition(d_pageStepCount-1, jointId);
 
         // Update start, prev_target, curr_target
         d_startAngles1024[jointId] = d_targetAngles1024[jointId];
-        ushort wPrevTargetAngle = d_targetAngles1024[jointId];
-        d_targetAngles1024[jointId] = wCurrentTargetAngle;
+        ushort prevTargetAngle = d_targetAngles1024[jointId];
+        d_targetAngles1024[jointId] = currentTargetAngle;
 
         // Find Moving offset
         d_movingAngles1024[jointId] = (int)(d_targetAngles1024[jointId] - d_startAngles1024[jointId]);
 
         // Find Next target angle
-        ushort wNextTargetAngle;
+        ushort nextTargetAngle;
         if (d_pageStepCount == d_playingPage->getStepCount())
         {
-          wNextTargetAngle = d_playingFinished
-            ? wCurrentTargetAngle
+          nextTargetAngle = d_playingFinished
+            ? currentTargetAngle
             : d_nextPage->getStepPosition(0, jointId) & MotionScriptPage::INVALID_BIT_MASK
-              ? wCurrentTargetAngle
+              ? currentTargetAngle
               : d_nextPage->getStepPosition(0, jointId);
         }
         else
         {
-          wNextTargetAngle = d_playingPage->getStepPosition(d_pageStepCount, jointId) & MotionScriptPage::INVALID_BIT_MASK
-            ? wCurrentTargetAngle
+          nextTargetAngle = d_playingPage->getStepPosition(d_pageStepCount, jointId) & MotionScriptPage::INVALID_BIT_MASK
+            ? currentTargetAngle
             : d_playingPage->getStepPosition(d_pageStepCount, jointId);
         }
 
         // Find direction change
-        bool bDirectionChanged;
-        if (((wPrevTargetAngle < wCurrentTargetAngle) && (wCurrentTargetAngle < wNextTargetAngle))
-         || ((wPrevTargetAngle > wCurrentTargetAngle) && (wCurrentTargetAngle > wNextTargetAngle)))
+        bool directionChanged;
+        if (((prevTargetAngle < currentTargetAngle) && (currentTargetAngle < nextTargetAngle))
+         || ((prevTargetAngle > currentTargetAngle) && (currentTargetAngle > nextTargetAngle)))
         {
-          bDirectionChanged = false;
+          directionChanged = false;
         }
         else
         {
-          bDirectionChanged = true;
+          directionChanged = true;
         }
 
         // Find finish type
-        d_finishTypes[jointId] = bDirectionChanged || d_pauseTime || d_playingFinished
+        d_finishTypes[jointId] = directionChanged || d_pauseTime || d_playingFinished
           ? FinishLevel::ZERO
           : FinishLevel::NON_ZERO;
 
         if (d_playingPage->getSchedule() == MotionScriptPageSchedule::SPEED_BASE)
         {
           // MaxAngle1024 update
-          ushort wTmp = d_movingAngles1024[jointId] < 0
+          ushort tmp = d_movingAngles1024[jointId] < 0
             ? -d_movingAngles1024[jointId]
             :  d_movingAngles1024[jointId];
 
-          if (wTmp > wMaxAngle1024)
-            wMaxAngle1024 = wTmp;
+          if (tmp > maxAngle1024)
+            maxAngle1024 = tmp;
         }
       }
 
@@ -346,8 +346,8 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
       //             = ((128*wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) ;    (/7.8msec == *128)
       //             = (wMaxAngle1024*40) /(wMaxSpeed256 *3);
       d_unitTimeTotalNum = d_playingPage->getSchedule() == MotionScriptPageSchedule::TIME_BASE
-        ? wMaxSpeed256 //TIME BASE 051025
-        : (wMaxAngle1024 * 40) / (wMaxSpeed256 * 3);
+        ? maxSpeed256 //TIME BASE 051025
+        : (maxAngle1024 * 40) / (maxSpeed256 * 3);
 
       d_accelStep = d_playingPage->getAcceleration();
       if (d_unitTimeTotalNum <= (d_accelStep << 1))
@@ -364,28 +364,28 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
         }
       }
 
-      ulong ulTotalTime256T = ((ulong)d_unitTimeTotalNum) << 1;// /128 * 256
-      ulong ulPreSectionTime256T = ((ulong)d_accelStep) << 1;// /128 * 256
-      ulong ulMainTime256T = ulTotalTime256T - ulPreSectionTime256T;
-      long lDivider1 = ulPreSectionTime256T + (ulMainTime256T << 1);
-      long lDivider2 = (ulMainTime256T << 1);
+      ulong totalTime256T = ((ulong)d_unitTimeTotalNum) << 1;// /128 * 256
+      ulong preSectionTime256T = ((ulong)d_accelStep) << 1;// /128 * 256
+      ulong mainTime256T = totalTime256T - preSectionTime256T;
+      long divider1 = preSectionTime256T + (mainTime256T << 1);
+      long divider2 = (mainTime256T << 1);
 
-      if (lDivider1 == 0)
-        lDivider1 = 1;
+      if (divider1 == 0)
+        divider1 = 1;
 
-      if (lDivider2 == 0)
-        lDivider2 = 1;
+      if (divider2 == 0)
+        divider2 = 1;
 
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
         if ((*selectedJoints)[jointId])
         {
-          long lStartSpeed1024_PreTime_256T = (long)d_lastOutSpeeds1024[jointId] * ulPreSectionTime256T; //  *300/1024 * 1024/720 * 256 * 2
-          long lMovingAngle_Speed1024Scale_256T_2T = (((long)d_movingAngles1024[jointId]) * 2560L) / 12;
+          long startSpeed1024_PreTime_256T = (long)d_lastOutSpeeds1024[jointId] * preSectionTime256T; //  *300/1024 * 1024/720 * 256 * 2
+          long movingAngle_Speed1024Scale_256T_2T = (((long)d_movingAngles1024[jointId]) * 2560L) / 12;
 
           d_mainSpeeds1024[jointId] = d_finishTypes[jointId] == FinishLevel::ZERO
-            ? (short)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider2)
-            : (short)((lMovingAngle_Speed1024Scale_256T_2T - lStartSpeed1024_PreTime_256T) / lDivider1);
+            ? (short)((movingAngle_Speed1024Scale_256T_2T - startSpeed1024_PreTime_256T) / divider2)
+            : (short)((movingAngle_Speed1024Scale_256T_2T - startSpeed1024_PreTime_256T) / divider1);
 
           d_mainSpeeds1024[jointId] = Math::clamp(d_mainSpeeds1024[jointId], (short)-1023, (short)1023);
         }
