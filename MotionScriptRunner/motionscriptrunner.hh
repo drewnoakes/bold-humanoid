@@ -24,17 +24,17 @@ namespace bold
     unsigned getValue(uchar jointId) const { return d_values[jointId]; }
     uchar getPGain(uchar jointId) const { return d_pGains[jointId]; }
 
-    int getCurrentPageIndex() const { return d_playingPageIndex; }
+    int getCurrentPageIndex() const { return d_currentPageIndex; }
 
   private:
     std::shared_ptr<MotionScriptFile> d_file;
-    std::shared_ptr<MotionScriptPage> d_playingPage;
+    std::shared_ptr<MotionScriptPage> d_currentPage;
     std::shared_ptr<MotionScriptPage> d_nextPage;
 
-    int d_playingPageIndex;
+    int d_currentPageIndex;
     /// Whether the next step will be the first of the action
     bool d_isFirstStepOfAction;
-    int d_pageStepCount;
+    int d_currentPageStep;
     bool d_playingFinished;
 
     uchar d_pGains[21];
@@ -68,7 +68,7 @@ namespace bold
     ushort d_unitTimeTotalNum;
     ushort d_accelStep;
     Section d_section;
-    uchar d_playRepeatCount;
+    uchar d_repeatCurrentPageCount;
     ushort d_nextPageIndex;
     MotionScriptRunnerState d_state;
   };
