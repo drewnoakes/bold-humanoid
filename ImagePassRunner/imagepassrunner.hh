@@ -28,26 +28,26 @@ namespace bold
 
     void pass(cv::Mat& image) const
     {
-      for (auto handler : d_handlers)
+      for (auto const& handler : d_handlers)
         handler->onImageStarting();
 
       for (int y = 0; y < image.rows; ++y)
       {
         TPixel const* row = image.ptr<TPixel>(y);
 
-        for (auto handler : d_handlers)
+        for (auto const& handler : d_handlers)
           handler->onRowStarting(y);
 
         for (int x = 0; x < image.cols; ++x)
         {
           TPixel value = row[x];
 
-          for (auto handler : d_handlers)
+          for (auto const& handler : d_handlers)
             handler->onPixel(value, x, y);
         }
       }
 
-      for (auto handler : d_handlers)
+      for (auto const& handler : d_handlers)
         handler->onImageComplete();
     }
 
