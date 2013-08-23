@@ -18,7 +18,8 @@ void Voice::say(const string message)
 {
   cout << "[Voice::say] Saying: " << message << endl;
   std::async(launch::async, [message]()
-  {
-    espeak_Synth(message.c_str(), message.length(), 0, POS_CHARACTER, 0, espeakCHARS_AUTO, nullptr, nullptr);
-    espeak_Synchronize();
-  });}
+             {
+               espeak_Synth(message.c_str(), message.length(), 0, POS_CHARACTER, 0, espeakCHARS_AUTO, nullptr, nullptr);
+               espeak_Synchronize();
+             });
+}

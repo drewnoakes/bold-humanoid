@@ -28,7 +28,7 @@ Agent::Agent()
 //     "We eat ham and jam and Spam a lot"
   };
   srand(time(NULL));
-  d_voice = make_shared<Voice>();
+  d_voice = make_shared<Voice>("english-mb-en1");
   d_voice->say(phrases[rand() % phrases.size()]);
 
   auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));
