@@ -14,38 +14,61 @@ ImageLabeller::ImageLabeller(shared_ptr<uchar> const& lut, shared_ptr<Spatialise
 void ImageLabeller::label(Mat& image, Mat& labelled, bool ignoreAboveHorizon) const
 {
   uchar* lut = d_LUT.get();
-  vector<int> horizon(image.cols);
-  int maxHorizon = -1;
+  vector<int> horizonYAtCol(image.cols);
 
+  int maxHorizonY = -1;
+  int minHorizonY = image.rows;
+  // If we are ignoring everything above the horizon, find out where
+  // the horizon is for each column
+  // TODO: is horizon a straight line?  If so, then just determining
+  // outer columns is enough
   if (ignoreAboveHorizon)
   {
     for (int x = 0; x < image.cols; ++x)
     {
       int h = d_spatialiser->findHorizonForColumn(x);
-      horizon[x] = h;
-      if (h > maxHorizon)
-        maxHorizon = h;
+      horizonYAtCol[x] = h;
+      if (h > maxHorizonY)
+        maxHorizonY = h;
+      if (h < minHorizonY)
+        minHorizonY = h;
     }
   }
-
   
-  for (int y = 0; y < image.rows; ++y)
+  minHorizonY = min(image.rows, minHorizonY);
+  maxHorizonY = min(image.rows, maxHorizonY);
+
+  // First batch: everything guaranteed under the horizon
+  for (int y = 0; y < minHorizonY; ++y)
   {
     uchar* origpix = image.ptr<uchar>(y);
     uchar* labelledpix = labelled.ptr<uchar>(y);
 
-    if (ignoreAboveHorizon && y > maxHorizon)
+    for (int x = 0; x < image.cols; ++x)
     {
-      memset(labelledpix, 0, image.cols);
-      continue;
-    }
+      uchar l =
+        lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
+      *labelledpix = l;
+
+      ++origpix;
+      ++origpix;
+      ++origpix;
+      ++labelledpix;
+    }
+  }
+
+  // Second batch: horizon goes through these rows
+  // Never get into this batch if ignoreAboveHorizon == false
+  for (int y = minHorizonY; y < maxHorizonY + 1; ++y)
+  {
+    uchar* origpix = image.ptr<uchar>(y);
+    uchar* labelledpix = labelled.ptr<uchar>(y);
 
     for (int x = 0; x < image.cols; ++x)
     {
-//    uchar l = d_LUT[(origpix[0] << 16) | (origpix[1] << 8) | origpix[2]];
         uchar l =
-          ignoreAboveHorizon && y > horizon[x] ?
+          y > horizonYAtCol[x] ?
           0 :
           lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
@@ -56,6 +79,13 @@ void ImageLabeller::label(Mat& image, Mat& labelled, bool ignoreAboveHorizon) co
       ++origpix;
       ++labelledpix;
     }
+  }
+
+  // Third batch: everything here is above the horizon
+  for (int y = maxHorizonY + 1; y < image.rows; ++y)
+  {
+    uchar* labelledpix = labelled.ptr<uchar>(y);
+    memset(labelledpix, 0, image.cols);
   }
 }
 
