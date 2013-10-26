@@ -12,13 +12,9 @@ std::vector<std::shared_ptr<Option>> ActionOption::runPolicy()
       d_runner = d_actionModule->start(d_actionName);
 
     if (d_runner)
-    {
       cout << "[ActionOption::runPolicy] Started action: " << getID() << endl;
-    }
     else
-    {
       cout << "[ActionOption::runPolicy] Request to start action denied: " << getID() << endl;
-    }
   }
 
   return std::vector<std::shared_ptr<Option>>();
