@@ -10,7 +10,6 @@ namespace bold
   typedef unsigned char uchar;
 
   class MotionScriptPage;
-  class MotionScriptPage;
 
   /** Represents a collection of playable, scripted motions.
    *
