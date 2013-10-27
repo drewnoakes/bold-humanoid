@@ -18,7 +18,6 @@ namespace bold
     {
       return ($self->getBallObservation());
     }
-
     // 
     std::vector<PyObject*> getGoalObservations() const
     {

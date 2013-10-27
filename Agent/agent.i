@@ -47,6 +47,11 @@ namespace bold
     std::shared_ptr<WalkModule> getWalkModule() const;
     std::shared_ptr<ActionModule> getActionModule() const;
 
+    unsigned getTeamNumber() const;
+    void setTeamNumber(unsigned teamNumber);
+    unsigned getUniformNumber() const;
+    void setUniformNumber(unsigned uniformNumber);
+
     void run();
     void stop();
   };

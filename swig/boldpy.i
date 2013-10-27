@@ -5,6 +5,8 @@
 // Create a lot of docs
 %feature("autodoc", "3");
 
+// C++ director exception handling
+// Added to wrapping code
 %feature("director:except") {
   if ($error != NULL) {
     PyErr_Print();
@@ -51,6 +53,7 @@
 %shared_ptr(bold::WalkModule)
 %shared_ptr(bold::WorldFrameState)
 
+// List special STL container instantiations
 %template() std::vector<PyObject*>;
 %template() std::vector<std::shared_ptr<bold::Option> >;
 
@@ -67,7 +70,9 @@
 %include "../CameraModel/cameramodel.i"
 %include "../CM730Snapshot/cm730snapshot.i"
 %include "../MX28Snapshot/mx28snapshot.i"
+
 %include "../StateObject/stateobject.i"
+%include "../StateObject/AgentFrameState/agentframestate.i"
 %include "../StateObject/BodyState/bodystate.i"
 %include "../StateObject/CameraFrameState/cameraframestate.i"
 %include "../StateObject/HardwareState/hardwarestate.i"
