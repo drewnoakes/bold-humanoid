@@ -77,8 +77,8 @@ void VisualCortex::saveImage(cv::Mat const& image)
     writer.EndObject();
 
     // Body pose
-    shared_ptr<BodyState const> bodyState = AgentState::get<BodyState>();
-    bodyState->writeJson(writer);
+    writer.String("body");
+    AgentState::get<BodyState>()->writeJson(writer);
   }
   writer.EndObject();
 
