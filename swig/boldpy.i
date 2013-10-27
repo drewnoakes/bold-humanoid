@@ -73,8 +73,10 @@
 
 %include "../StateObject/stateobject.i"
 %include "../StateObject/AgentFrameState/agentframestate.i"
+%include "../StateObject/AmbulatorState/ambulatorstate.i"
 %include "../StateObject/BodyState/bodystate.i"
 %include "../StateObject/CameraFrameState/cameraframestate.i"
+%include "../StateObject/GameState/gamestate.i"
 %include "../StateObject/HardwareState/hardwarestate.i"
 
 %include "../AgentState/agentstate.i"

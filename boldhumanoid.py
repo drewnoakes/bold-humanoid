@@ -4,7 +4,7 @@
 import sys, getopt
 sys.path.append("swig")
 import numpy as np
-# Import C++ library
+# Import Bold Hearts C++ library
 import bold
 # Load configuraion module
 import boldpy.conf as conf
@@ -21,11 +21,25 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 def thinkEndCallback():
     print("===== HELLO =====")
-    #cameraState = bold.AgentState.getCameraFrameState()
-    #print(cameraState)
-    #print("Ball visible: ", cameraState.isBallVisible())
-    #ballObs = cameraState.getBallObservation()
-    #print(ballObs)
+    cameraState = bold.AgentState.getCameraFrameState()
+    print("(Camera Frame) Ball visible: ", cameraState.isBallVisible())
+    ballObs = cameraState.getBallObservation()
+    print("(Camera Frame) Ball observations:")
+    print(ballObs)
+
+    agentFrameState = bold.AgentState.getAgentFrameState()
+    print("(Agent Frame) Ball visible: ", agentFrameState.isBallVisible())
+    ballObs = agentFrameState.getBallObservation()
+    print("(Agent Frame) Ball observations:")
+    print(ballObs)
+
+    ambulatorState = bold.AgentState.getAmbulatorState()
+    print(ambulatorState)
+    print("AmbulatorState): current phase")
+    print(ambulatorState.getCurrentPhase())
+
+    print("=====")
+    
     #goalObs = cameraState.getGoalObservations()
     #print(goalObs)
 
@@ -61,8 +75,8 @@ def main(argv):
             conf = importlib.import_module(confFile)
         elif opt in ('-t', '--team'):
             conf.agent.teamNumber = int(arg)
-        elif opt in ('-u', '--unum'):
-            conf.agent.uniformNumber = int(arg)
+        #elif opt in ('-u', '--unum'):
+        #    conf.agent.uniformNumber = int(arg)
         elif opt in ('-o', '--no-tree'):
             conf.agent.useOptionTree = False
         elif opt in ('-g', '--no-get-up'):
@@ -75,12 +89,13 @@ def main(argv):
             usage()
             return
 
-    if conf.agent.uniformNumber < 0:
-        print('ERROR: you must supply a uniform number')
-        usage()
-        return
+    #if conf.agent.uniformNumber < 0:
+    #    print('ERROR: you must supply a uniform number')
+    #    usage()
+    #    return
 
     agent = getAgent()
+    agent.setTeamNumber(3)
     print(agent)
 
     builder = PyOptionTreeBuilder()
