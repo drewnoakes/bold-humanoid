@@ -2,8 +2,6 @@
 
 #include "../AgentState/agentstate.hh"
 #include "../Math/math.hh"
-#include "../MotionScriptFile/motionscriptfile.hh"
-#include "../MotionScriptPage/motionscriptpage.hh"
 #include "../MotionTask/motiontask.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
@@ -14,15 +12,14 @@
 using namespace bold;
 using namespace std;
 
-MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScriptFile> file, shared_ptr<MotionScriptPage> page, int index)
-: d_file(file),
-  d_currentPage(page),
-  d_currentPageIndex(index),
+MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> script)
+: d_script(script),
+  d_currentStageIndex(0),
+  d_currentStepIndex(0),
   d_state(MotionScriptRunnerState::Pending)
 {
-  assert(file);
-  assert(page);
-  assert(d_currentPage->getRepeatCount());
+  assert(script);
+  assert(script->getStageCount());
 }
 
 bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
@@ -34,8 +31,6 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     cerr << "[MotionScriptRunner::step] already finished" << endl;
     return false;
   }
-
-  auto hw = AgentState::get<HardwareState>();
 
   //
   // Initialise
@@ -56,9 +51,10 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     d_unitTimeNum = 0;
     d_pauseTime = 0;
     d_section = Section::PAUSE;
-    d_currentPageStep = 0;
-    d_repeatCurrentPageCount = d_currentPage->getRepeatCount();
-    d_nextPageIndex = 0;
+    d_currentStageIndex = 0;
+    d_currentStage = d_script->getStage(d_currentStageIndex);
+    d_currentStepIndex = 0;
+    d_repeatCurrentStageCount = d_currentStage->repeatCount;
 
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
@@ -139,7 +135,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
           }
         }
 
-        d_pGains[jointId] = d_currentPage->getPGain(jointId);
+        d_pGains[jointId] = d_currentStage->getPGain(jointId);
       }
     }
   }
@@ -229,46 +225,37 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
         return false;
       }
 
-      // Move to next page
-      d_currentPageStep++;
+      // Move to next step
+      d_currentStepIndex++;
 
-      if (d_currentPageStep > d_currentPage->getStepCount())
+      if (d_currentStepIndex == d_currentStage->steps.size())
       {
-        // The current page is complete -- progress to the 'next' page
-        assert(d_nextPage);
-        d_currentPage = d_nextPage;
-        d_repeatCurrentPageCount = d_currentPage->getRepeatCount();
-        d_currentPageStep = 1;
-        d_currentPageIndex = d_nextPageIndex;
+        // The current stage is complete
+        // Check if it needs to be repeated
+        d_repeatCurrentStageCount--;
+        assert(d_repeatCurrentStageCount >= 0);
+        if (d_repeatCurrentStageCount == 0)
+        {
+          // No repeats necessary, so move to next stage
+          d_currentStageIndex++;
+          assert(d_currentStageIndex < d_script->getStageCount());
+          d_currentStage = d_script->getStage(d_currentStageIndex);
+          d_repeatCurrentStageCount = d_currentStage->repeatCount;
+        }
+        d_currentStepIndex = 0;
       }
-
-      if (d_currentPageStep == d_currentPage->getStepCount())
+      else if (d_currentStepIndex == d_currentStage->steps.size() - 1)
       {
-        // This is the last step of the current page -- prepare the 'next' page, if there is one
-        d_repeatCurrentPageCount--;
-        d_nextPageIndex = d_repeatCurrentPageCount > 0
-          ? d_currentPageIndex
-          : d_currentPage->getNextPageIndex();
+        // This is the last step of the current page
+        bool isFinishing = d_repeatCurrentStageCount == 1 && d_currentStageIndex == d_script->getStageCount() - 1;
 
-        if (d_nextPageIndex == 0)
-        {
+        if (isFinishing)
           d_playingFinished = true;
-        }
-        else
-        {
-          if (d_currentPageIndex != d_nextPageIndex)
-            d_nextPage = d_file->getPageByIndex(d_nextPageIndex);
-          else
-            d_nextPage = d_currentPage;
-
-          if (d_nextPage->getRepeatCount() == 0 || d_nextPage->getStepCount() == 0)
-            d_playingFinished = true;
-        }
       }
 
       //////// Step
-      d_pauseTime = (((ushort)d_currentPage->getStepPause(d_currentPageStep-1)) << 5) / d_currentPage->getSpeed();
-      ushort maxSpeed256 = ((ushort)d_currentPage->getStepTime(d_currentPageStep-1) * (ushort)d_currentPage->getSpeed()) >> 5;
+      d_pauseTime = (((ushort)d_currentStage->steps[d_currentStepIndex].pauseCycles) << 5) / d_currentStage->speed;
+      ushort maxSpeed256 = ((ushort)d_currentStage->steps[d_currentStepIndex].moveCycles * (ushort)d_currentStage->speed) >> 5;
       if (maxSpeed256 == 0)
         maxSpeed256 = 1;
       ushort maxAngle1024 = 0;
@@ -282,9 +269,9 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
         d_accelAngles1024[jointId] = 0;
 
         // Find current target angle
-        ushort currentTargetAngle = d_currentPage->getStepPosition(d_currentPageStep-1, jointId) & MotionScriptPage::INVALID_BIT_MASK
+        ushort currentTargetAngle = d_currentStage->steps[d_currentStepIndex].getValue(jointId) & MotionScript::INVALID_BIT_MASK
           ? d_targetAngles1024[jointId]
-          : d_currentPage->getStepPosition(d_currentPageStep-1, jointId);
+          : d_currentStage->steps[d_currentStepIndex].getValue(jointId);
 
         // Update start, prev_target, curr_target
         d_startAngles1024[jointId] = d_targetAngles1024[jointId];
@@ -296,19 +283,28 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
         // Find Next target angle
         ushort nextTargetAngle;
-        if (d_currentPageStep == d_currentPage->getStepCount())
+        if (d_currentStepIndex == d_currentStage->steps.size())
         {
-          nextTargetAngle = d_playingFinished
-            ? currentTargetAngle
-            : d_nextPage->getStepPosition(0, jointId) & MotionScriptPage::INVALID_BIT_MASK
-              ? currentTargetAngle
-              : d_nextPage->getStepPosition(0, jointId);
+          if (d_playingFinished)
+          {
+            nextTargetAngle = currentTargetAngle;
+          }
+          else
+          {
+            auto nextStage = d_repeatCurrentStageCount > 1
+              ? d_currentStage
+              : d_script->getStage(d_currentStageIndex + 1);
+
+            nextTargetAngle = nextStage->steps[0].getValue(jointId) & MotionScript::INVALID_BIT_MASK
+                ? currentTargetAngle
+                : nextStage->steps[0].getValue(jointId);
+          }
         }
         else
         {
-          nextTargetAngle = d_currentPage->getStepPosition(d_currentPageStep, jointId) & MotionScriptPage::INVALID_BIT_MASK
+          nextTargetAngle = d_currentStage->steps[d_currentStepIndex + 1].getValue(jointId) & MotionScript::INVALID_BIT_MASK
             ? currentTargetAngle
-            : d_currentPage->getStepPosition(d_currentPageStep, jointId);
+            : d_currentStage->steps[d_currentStepIndex + 1].getValue(jointId);
         }
 
         bool directionChanged = !(
@@ -320,27 +316,12 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
         d_finishTypes[jointId] = directionChanged || d_pauseTime || d_playingFinished
           ? FinishLevel::ZERO
           : FinishLevel::NON_ZERO;
-
-        if (d_currentPage->getSchedule() == MotionScriptPageSchedule::SPEED_BASE)
-        {
-          // MaxAngle1024 update
-          ushort tmp = d_movingAngles1024[jointId] < 0
-            ? -d_movingAngles1024[jointId]
-            :  d_movingAngles1024[jointId];
-
-          if (tmp > maxAngle1024)
-            maxAngle1024 = tmp;
-        }
       }
 
-      //wUnitTimeNum = ((wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) /7.8msec;
-      //             = ((128*wMaxAngle1024*300/1024) /(wMaxSpeed256 * 720/256)) ;    (/7.8msec == *128)
-      //             = (wMaxAngle1024*40) /(wMaxSpeed256 *3);
-      d_unitTimeTotalNum = d_currentPage->getSchedule() == MotionScriptPageSchedule::TIME_BASE
-        ? maxSpeed256 //TIME BASE 051025
-        : (maxAngle1024 * 40) / (maxSpeed256 * 3);
+      d_unitTimeTotalNum =  maxSpeed256;
 
-      d_accelStep = d_currentPage->getAccelerationTime();
+      static const uchar DEFAULT_ACCELERATION = 32;
+      d_accelStep = DEFAULT_ACCELERATION;
       if (d_unitTimeTotalNum <= (d_accelStep << 1))
       {
         if (d_unitTimeTotalNum == 0)

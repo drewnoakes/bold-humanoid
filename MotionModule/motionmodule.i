@@ -3,6 +3,7 @@
 #include <MotionModule/ActionModule/actionmodule.hh>
 #include <MotionModule/HeadModule/headmodule.hh>
 #include <MotionModule/WalkModule/walkmodule.hh>
+#include <MotionScriptRunner/motionscriptrunner.hh>
 %}
 
 namespace bold
@@ -18,7 +19,7 @@ namespace bold
   public:
     ~ActionModule();
 
-    bool start(std::string namePage);
+    bool start(std::shared_ptr<bold::MotionScriptRunner> runner);
     bool isRunning();
   };
 

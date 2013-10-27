@@ -256,11 +256,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./MotionScriptFile/motionscriptfile.cc
-)
-
-add_class(BOLDHUMANOID
-  ./MotionScriptPage/motionscriptpage.cc
+  ./MotionScript/MotionScript.cc
 )
 
 add_class(BOLDHUMANOID
@@ -341,6 +337,10 @@ add_class(BOLDHUMANOID
 add_class(BOLDHUMANOID
   ./PixelLabel/fromConfig.cc
   ./PixelLabel/pixellabel.cc
+)
+
+add_class(BOLDHUMANOID
+  ./RobotisMotionFile/RobotisMotionFile.cc
 )
 
 add_class(BOLDHUMANOID

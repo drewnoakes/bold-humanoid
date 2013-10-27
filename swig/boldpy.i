@@ -42,6 +42,7 @@
 %shared_ptr(bold::HeadModule)
 %shared_ptr(bold::Joint)
 %shared_ptr(bold::Limb)
+%shared_ptr(bold::MotionScriptRunner)
 %shared_ptr(bold::MotionModule)
 %shared_ptr(bold::MX28Snapshot)
 %shared_ptr(bold::Option)

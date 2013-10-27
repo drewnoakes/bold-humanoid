@@ -1,13 +1,13 @@
 #pragma once
 
+#include "../MotionScript/motionscript.hh"
+
 #include <memory>
 
 namespace bold
 {
   typedef unsigned char uchar;
 
-  class MotionScriptFile;
-  class MotionScriptPage;
   class JointSelection;
 
   enum class MotionScriptRunnerState { Pending, Running, Finished };
@@ -15,7 +15,7 @@ namespace bold
   class MotionScriptRunner
   {
   public:
-    MotionScriptRunner(std::shared_ptr<MotionScriptFile> file, std::shared_ptr<MotionScriptPage> page, int index);
+    MotionScriptRunner(std::shared_ptr<MotionScript const> script);
 
     MotionScriptRunnerState getState() const { return d_state; }
 
@@ -24,7 +24,13 @@ namespace bold
     unsigned getValue(uchar jointId) const { return d_values[jointId]; }
     uchar getPGain(uchar jointId) const { return d_pGains[jointId]; }
 
-    int getCurrentPageIndex() const { return d_currentPageIndex; }
+    int getCurrentStageIndex() const { return d_currentStageIndex; }
+    int getCurrentStepIndex() const { return d_currentStepIndex; }
+
+    std::string getScriptName() const
+    {
+      return d_script->getName();
+    }
 
   private:
     /**************************************
@@ -38,14 +44,13 @@ namespace bold
     enum class Section : uchar { PRE = 1, MAIN = 2, POST = 3, PAUSE = 4 };
     enum class FinishLevel : uchar { ZERO = 1, NON_ZERO = 2 };
 
-    std::shared_ptr<MotionScriptFile> d_file;
-    std::shared_ptr<MotionScriptPage> d_currentPage;
-    std::shared_ptr<MotionScriptPage> d_nextPage;
+    std::shared_ptr<MotionScript const> d_script;
 
-    // TODO can we get rid of current/next page indices and just use shared_ptrs?
-    int d_currentPageIndex;
-    int d_currentPageStep;
-    ushort d_nextPageIndex;
+    std::shared_ptr<MotionScript::Stage const> d_currentStage;
+
+    int d_currentStageIndex;
+    int d_currentStepIndex;
+    int d_repeatCurrentStageCount;
 
     // TODO can this be replaced by d_state in Finished? or new Finishing value?
     bool d_playingFinished;
@@ -71,7 +76,6 @@ namespace bold
     ushort d_unitTimeTotalNum;
     ushort d_accelStep;
     Section d_section;
-    uchar d_repeatCurrentPageCount;
     MotionScriptRunnerState d_state;
   };
 }

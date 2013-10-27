@@ -1,5 +1,7 @@
 #include "agent.ih"
 
+#include "../MotionScriptRunner/motionscriptrunner.hh"
+
 bool isInputAvailable()
 {
   struct timeval tv;
@@ -86,11 +88,11 @@ void Agent::processInputCommands()
         {
           case 6:
             cout << "Left kick" << endl;
-            d_actionModule->start((int)ActionPage::KickLeft);
+            d_actionModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickLeft")));
             break;
           case 7:
             cout << "Right kick" << endl;
-            d_actionModule->start((int)ActionPage::KickRight);
+            d_actionModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickRight")));
             break;
           default:
             if (event.value == 1)

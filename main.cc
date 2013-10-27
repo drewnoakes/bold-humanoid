@@ -1,6 +1,8 @@
 #include "Agent/agent.hh"
+#include "MotionScript/motionscript.hh"
 #include "OptionTree/optiontree.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
+#include "RobotisMotionFile/robotismotionfile.hh"
 #include "ThreadId/threadid.hh"
 
 #include <signal.h>
@@ -35,9 +37,30 @@ void handleShutdownSignal(int sig)
   }
 }
 
+void convertMotionFile()
+{
+  vector<shared_ptr<MotionScript const>> motionScripts;
+
+  auto motionScriptFileName = "./motion_4096.bin";
+  cout << "[convertMotionFile] Processing Robotis-formatted motion file: " << motionScriptFileName << endl;
+  auto motionScriptFile = RobotisMotionFile(motionScriptFileName);
+  auto rootPageIndices = motionScriptFile.getSequenceRootPageIndices();
+  for (uchar rootPageIndex : rootPageIndices)
+  {
+    stringstream ss;
+    ss << "./motionscripts/motion_4096." << (int)rootPageIndex << ".json";
+    shared_ptr<MotionScript> motionScript = motionScriptFile.toMotionScript(rootPageIndex);
+    motionScripts.push_back(motionScript);
+    motionScript->writeJsonFile(ss.str());
+  }
+  motionScriptFile.toDotText(cout);
+}
+
 int main(int argc, char **argv)
 {
   cout << "[boldhumanoid] Starting boldhumanoid" << endl;
+
+//  convertMotionFile();
 
   Configurable::setConfImpl(new ConfImpl());
 

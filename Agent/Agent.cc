@@ -34,18 +34,7 @@ Agent::Agent()
   auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));
   cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
 
-  auto motionScriptFileName = "./motion_4096.bin";
-  cout << "[Agent::Agent] Using motion file: " << motionScriptFileName << endl;
-  auto motionScriptFile = MotionScriptFile::loadFromBinaryFile(motionScriptFileName);
-  motionScriptFile->saveToJsonFile("./motion_4096.json");
-
-  if (!motionScriptFile)
-  {
-    cerr << "[Agent::Agent] Error loading motion script file. Exiting." << endl;
-    exit(-2);
-  }
-
-  motionScriptFile->toDotText(cout);
+  vector<shared_ptr<MotionScript>> motionScripts = MotionScript::loadAllInPath("./motionscripts");
 
   registerStateTypes();
 
@@ -66,7 +55,7 @@ Agent::Agent()
   // Create motion modules
   d_headModule = make_shared<HeadModule>(d_motionSchedule);
   d_walkModule = make_shared<WalkModule>(d_motionSchedule);
-  d_actionModule = make_shared<ActionModule>(d_motionSchedule, motionScriptFile);
+  d_actionModule = make_shared<ActionModule>(d_motionSchedule, motionScripts);
 
   // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();

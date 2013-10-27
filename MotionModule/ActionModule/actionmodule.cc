@@ -1,8 +1,6 @@
 #include "actionmodule.hh"
 
 #include "../../BodyControl/bodycontrol.hh"
-#include "../../MotionScriptFile/motionscriptfile.hh"
-#include "../../MotionScriptPage/motionscriptpage.hh"
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
 #include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../ThreadId/threadid.hh"
@@ -14,19 +12,13 @@
 using namespace bold;
 using namespace std;
 
-ActionModule::ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::shared_ptr<MotionScriptFile> file)
-: MotionModule("action", scheduler),
-  d_file(file)
+ActionModule::ActionModule(shared_ptr<MotionTaskScheduler> scheduler, vector<shared_ptr<MotionScript>> scripts)
+: MotionModule("action", scheduler)
 {
-  assert(file);
-
-  for (shared_ptr<MotionScriptPage> page : file->getSequenceRoots())
+  for (shared_ptr<MotionScript> script : scripts)
   {
-    int pageIndex = file->indexOf(page);
-    stringstream label;
-    label << page->getName() << " (" << pageIndex << ")";
-    cout << "[ActionModule::ActionModule] Found root page: " << label.str() << endl;
-    d_controls.push_back(Control::createAction(label.str(), [this,pageIndex]() { start(pageIndex); }));
+    cout << "[ActionModule::ActionModule] Found script: " << script->getName() << endl;
+    d_controls.push_back(Control::createAction(script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); }));
   }
 }
 
@@ -76,48 +68,27 @@ void ActionModule::applyHead(shared_ptr<HeadSection> head) { applySection(dynami
 void ActionModule::applyArms(shared_ptr<ArmSection> arms) { applySection(dynamic_pointer_cast<BodySection>(arms)); }
 void ActionModule::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic_pointer_cast<BodySection>(legs)); }
 
-shared_ptr<MotionScriptRunner> ActionModule::start(int pageIndex)
+bool ActionModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
 {
-  auto page = d_file->getPageByIndex(pageIndex);
-
-  return page ? start(pageIndex, page) : nullptr;
-}
-
-shared_ptr<MotionScriptRunner> ActionModule::start(string const& pageName)
-{
-  for (int index = 0; index < MotionScriptFile::MAX_PAGE_ID; index++)
-  {
-    auto page = d_file->getPageByIndex(index);
-    if (page->getName() == pageName)
-      return start(index, page);
-  }
-
-  cerr << "[ActionModule::start] No page with name " << pageName << " found" << endl;
-  return nullptr;
-}
-
-shared_ptr<MotionScriptRunner> ActionModule::start(int index, shared_ptr<MotionScriptPage> page)
-{
-  cout << "[ActionModule::start] Starting page index " << index << " (" << page->getName() << ")" << endl;
+  cout << "[ActionModule::start] Starting script " << scriptRunner->getScriptName() << endl;
 
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
-    cerr << "[ActionModule::start] Ignoring request to play page " << index << " -- already playing page " << d_runner->getCurrentPageIndex() << endl;
-    return nullptr;
+    cerr << "[ActionModule::start] Ignoring request to play script " << scriptRunner->getScriptName()
+         << " -- already playing " << d_runner->getScriptName()
+         << endl;
+
+    return false;
   }
 
-  if (page->getRepeatCount() == 0 || page->getStepCount() == 0)
-  {
-    cerr << "[ActionModule::start] Page at index " << index << " has no steps to perform" << endl;
-    return nullptr;
-  }
+  d_runner = scriptRunner;
 
-  d_runner = make_shared<MotionScriptRunner>(d_file, page, index);
+  // NOTE currently we assume that motion scripts control all body parts
 
   getScheduler()->add(this,
                       Priority::Optional,  true,  // HEAD   Interuptable::YES
                       Priority::Important, true,  // ARMS
                       Priority::Important, true); // LEGS
 
-  return d_runner;
+  return true;
 }

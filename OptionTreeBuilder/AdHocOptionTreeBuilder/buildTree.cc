@@ -129,16 +129,16 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // OPTIONS
 
-  auto sit = tree->addOption(make_shared<ActionOption>("sitDownAction", "sit down", actionModule));
-  auto standUp = tree->addOption(make_shared<ActionOption>("standUpAction", "stand up", actionModule));
-  auto forwardGetUp = tree->addOption(make_shared<ActionOption>("forwardGetUpAction", ActionPage::ForwardGetUp, actionModule));
-  auto backwardGetUp = tree->addOption(make_shared<ActionOption>("backwardGetUpAction", ActionPage::BackwardGetUp, actionModule));
-  auto leftDive = tree->addOption(make_shared<ActionOption>("diveleftAction", "left_dive", actionModule));
-  auto rightDive = tree->addOption(make_shared<ActionOption>("diverightAction", "right_dive", actionModule));
-  auto bigStepLeft = tree->addOption(make_shared<ActionOption>("bigStepLeftAction", "big-step-l", actionModule));
-  auto bigStepRight = tree->addOption(make_shared<ActionOption>("bigStepRightAction", "big-step-r", actionModule));
-  auto leftKick = tree->addOption(make_shared<ActionOption>("leftKickAction", "lk", actionModule));
-  auto rightKick = tree->addOption(make_shared<ActionOption>("rightKickAction", "rk", actionModule));
+  auto sit = tree->addOption(make_shared<ActionOption>("sitDownAction", actionModule, "./motionscripts/sit-down.json"));
+  auto standUp = tree->addOption(make_shared<ActionOption>("standUpAction", actionModule, "./motionscripts/stand-ready.json"));
+  auto forwardGetUp = tree->addOption(make_shared<ActionOption>("forwardGetUpAction", actionModule, "./motionscripts/get-up-from-front.json"));
+  auto backwardGetUp = tree->addOption(make_shared<ActionOption>("backwardGetUpAction", actionModule, "./motionscripts/get-up-from-back.json"));
+  auto leftDive = tree->addOption(make_shared<ActionOption>("diveleftAction", actionModule, "./motionscripts/dive-left.json"));
+  auto rightDive = tree->addOption(make_shared<ActionOption>("diverightAction", actionModule, "./motionscripts/dive-right.json"));
+  auto bigStepLeft = tree->addOption(make_shared<ActionOption>("bigStepLeftAction", actionModule, "./motionscripts/step-left-big.json"));
+  auto bigStepRight = tree->addOption(make_shared<ActionOption>("bigStepRightAction", actionModule, "./motionscripts/step-right-big.json"));
+  auto leftKick = tree->addOption(make_shared<ActionOption>("leftKickAction", actionModule, "./motionscripts/kick-left.json"));
+  auto rightKick = tree->addOption(make_shared<ActionOption>("rightKickAction", actionModule, "./motionscripts/kick-right.json"));
 
   auto stopWalking = tree->addOption(make_shared<StopWalking>("stopWalking", ambulator));
   auto approachBall = tree->addOption(make_shared<ApproachBall>("approachBall", ambulator));

@@ -10,23 +10,18 @@
 
 namespace bold
 {
-  class MotionScriptFile;
-  class MotionScriptPage;
+  class MotionScript;
   class MotionScriptRunner;
   class BodySection;
 
   class ActionModule : public MotionModule
   {
   private:
-    std::shared_ptr<MotionScriptFile> d_file;
     std::shared_ptr<MotionScriptRunner> d_runner;
-
     std::vector<std::shared_ptr<Control const>> d_controls;
 
-    std::shared_ptr<MotionScriptRunner> start(int index, std::shared_ptr<MotionScriptPage> page);
-
   public:
-    ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::shared_ptr<MotionScriptFile> file);
+    ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
 
     void initialize() override;
 
@@ -40,12 +35,7 @@ namespace bold
 
     std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; };
 
-    // TODO replace start with: run(shared_ptr<MotionScriptRunner>)
-
-    std::shared_ptr<MotionScriptRunner> start(int pageIndex);
-
-    /** Play the first page having the specified name. */
-    std::shared_ptr<MotionScriptRunner> start(std::string const& pageName);
+    bool start(std::shared_ptr<MotionScriptRunner> scriptRunner);
 
     bool isRunning();
   };
