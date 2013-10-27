@@ -22,6 +22,23 @@ namespace bold
       d_hipPitch(walker->HIP_PITCH_OFFSET)
     {}
 
+    double getTargetX() const { return d_targetX; }
+    double getTargetY() const { return d_targetY; }
+    double getTargetTurn() const { return d_targetTurn; }
+
+    double getCurrentX() const { return d_currentX; }
+    double getCurrentY() const { return d_currentY; }
+    double getCurrentTurn() const { return d_currentTurn; }
+
+    bool isRunning() const { return d_isRunning; }
+
+    int getCurrentPhase() const { return d_currentPhase; }
+
+    double getBodySwingY() const { return d_bodySwingY; }
+    double getBodySwingZ() const { return d_bodySwingZ; }
+
+    double getHipPitch() const { return d_hipPitch; }
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
