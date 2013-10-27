@@ -99,8 +99,6 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  ThreadId::setThreadId(ThreadId::ThinkLoop);
-
   cout << "[boldhumanoid] Creating Agent" << endl;
   cout << "[boldhumanoid] Team number " << teamNumber << ", uniform number " << uniformNumber << endl;
 
