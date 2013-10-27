@@ -16,10 +16,14 @@ void ImageLabeller::label(Mat& image, Mat& labelled, bool ignoreAboveHorizon) co
   uchar* lut = d_LUT.get();
   vector<int> horizonYAtCol(image.cols);
 
+  // Everything above this row is guaranteed to be above horizon
   int minAboveHorizonY = -1;
+  // Everything below this row is guaranteed to be under horizon
   int minHorizonY = image.rows;
+
   // If we are ignoring everything above the horizon, find out where
   // the horizon is for each column
+  // remember: y = 0 is bottom of field of view
   // TODO: is horizon a straight line?  If so, then just determining
   // outer columns is enough
   if (ignoreAboveHorizon)
@@ -34,6 +38,9 @@ void ImageLabeller::label(Mat& image, Mat& labelled, bool ignoreAboveHorizon) co
         minHorizonY = h;
     }
   }
+  else
+    minAboveHorizonY = image.rows;
+
   ++minAboveHorizonY;
   minHorizonY = min(image.rows, minHorizonY);
   minAboveHorizonY = min(image.rows, minAboveHorizonY);
