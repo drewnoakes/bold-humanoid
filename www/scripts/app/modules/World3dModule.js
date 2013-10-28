@@ -200,8 +200,8 @@ define(
 
         World3dModule.prototype.updateAgentHeightFromGround = function()
         {
-            var leftZ = this.objectByName['foot-left'].matrixWorld.getPosition().z;
-            var rightZ = this.objectByName['foot-right'].matrixWorld.getPosition().z;
+            var leftZ = new THREE.Vector3().getPositionFromMatrix(this.objectByName['foot-left'].matrixWorld).z;
+            var rightZ = new THREE.Vector3().getPositionFromMatrix(this.objectByName['foot-right'].matrixWorld).z;
             var error = Math.min(leftZ, rightZ) - Constants.footHeight;
             if (Math.abs(error) > 0.01) {
                 this.torsoHeight -= error;
