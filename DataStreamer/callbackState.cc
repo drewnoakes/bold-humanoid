@@ -24,13 +24,13 @@ int DataStreamer::callback_state(
     {
       if (stateTracker && strcmp(stateTracker->name().c_str(), protocol->name) == 0)
       {
-        StringBuffer buffer;
-        Writer<StringBuffer> writer(buffer);
-
         shared_ptr<StateObject const> obj = stateTracker->stateBase();
 
         if (obj)
         {
+          StringBuffer buffer;
+          Writer<StringBuffer> writer(buffer);
+
           obj->writeJson(writer);
 
           int n = writeJson(wsi, buffer);
