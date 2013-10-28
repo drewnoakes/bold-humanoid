@@ -45,7 +45,7 @@ void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
     uchar* jpgP = session->imgJpgBuffer->data() + session->imgBytesSent;
 
     int tosend = jpgSize - session->imgBytesSent;
-    unsigned bufsize = min(4096, tosend);
+    unsigned bufsize = min(2048, tosend);
     unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + bufsize + LWS_SEND_BUFFER_POST_PADDING];
     unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
 
