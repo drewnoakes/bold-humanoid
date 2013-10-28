@@ -141,7 +141,7 @@ define(
             }
 
             if (data.ball && data.ball instanceof Array && data.ball.length === 3) {
-                this.ballMesh.position = new THREE.Vector3(data.ball[0], data.ball[1], data.ball[2]);
+                this.setBallPosition(data.ball[0], data.ball[1], data.ball[2]);
             }
 
             // Clear any previous lines
@@ -397,9 +397,12 @@ define(
             this.bindMouseInteraction(this.renderer.domElement);
         };
 
-        World3dModule.prototype.setBallPosition = function(x, y)
+        World3dModule.prototype.setBallPosition = function(x, y, z)
         {
-            this.ballMesh.position.set(x, y, Constants.ballRadius);
+            if (Math.abs(z) < 1e-3)
+                z = Constants.ballRadius;
+
+            this.ballMesh.position.set(x, y, z);
         };
 
         World3dModule.prototype.positionBodySpotlight = function(body)
