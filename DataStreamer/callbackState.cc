@@ -33,6 +33,8 @@ int DataStreamer::callback_state(
 
           obj->writeJson(writer);
 
+          // TODO should probably track !lws_send_pipe_choked(wsi) here, and store full buffer on session
+
           int n = writeJson(wsi, buffer);
 
           if (n < 0)
