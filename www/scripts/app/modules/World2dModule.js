@@ -7,9 +7,10 @@ define(
         'Protocols',
         'Constants',
         'DataProxy',
-        'util/Dragger'
+        'util/Dragger',
+        'util/MouseEventUtil'
     ],
-    function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger)
+    function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger, MouseEventUtil)
     {
         'use strict';
 
@@ -54,6 +55,7 @@ define(
 
             this.$canvas.on('mousemove', function (event)
             {
+                MouseEventUtil.polyfill(event);
                 var x = (event.offsetX - this.fieldCenterX) / this.scale,
                     y = (event.offsetY - this.fieldCenterY) / this.scale;
                 this.$hoverInfo.text(x.toFixed(2) + ', ' + y.toFixed(2));

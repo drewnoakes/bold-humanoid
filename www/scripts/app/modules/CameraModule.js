@@ -5,9 +5,10 @@ define(
         'DataProxy',
         'ControlBuilder',
         'PixelLabelInspector',
-        'util/Colour'
+        'util/Colour',
+        'util/MouseEventUtil'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, PixelLabelInspector, Colour)
+    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, PixelLabelInspector, Colour, MouseEventUtil)
     {
         'use strict';
 
@@ -115,6 +116,7 @@ define(
             {
                 if (!this.context || isImageLarge)
                     return;
+                MouseEventUtil.polyfill(e);
                 var x = e.offsetX,
                     y = e.offsetY,
                     rgb = this.context.getImageData(x, y, 1, 1).data,
