@@ -39,13 +39,13 @@ int DataStreamer::callback_state(
 
           if (n < 0)
           {
-            lwsl_err("ERROR %d writing StateObject JSON to socket\n", n);
+            lwsl_err("ERROR %d writing JSON to socket for StateObject: %s\n", n, protocol->name);
             return 1;
           }
         }
         else
         {
-          cerr << "[DataStreamer::callbackState] No StateObject set for: " << stateTracker->name() << endl;
+          cerr << "[DataStreamer::callbackState] No StateObject set for: " << protocol->name << endl;
         }
 
         return 0;
