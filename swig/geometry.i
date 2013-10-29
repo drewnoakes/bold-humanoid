@@ -15,3 +15,22 @@
 %eigen_typemaps(Eigen::Vector2i)
 %eigen_typemaps(Eigen::Vector3d)
 
+namespace bold
+{
+  struct LineSegment2i
+  {
+  public:
+    Eigen::Vector2i p1() const;
+    Eigen::Vector2i p2() const;
+  };
+}
+
+namespace bold
+{
+  struct LineSegment3d
+  {
+  public:
+    Eigen::Vector3d p1() const;
+    Eigen::Vector3d p2() const;
+  };
+}

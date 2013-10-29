@@ -26,28 +26,28 @@ namespace bold
       for (int i = 0; i < in.size(); ++i)
       {
         PyObject *resultobj = 0;
-        ConvertFromEigenToNumPyMatrix<Eigen::Vector2d>(&resultobj, &(in[i]));
+        ConvertFromEigenToNumPyMatrix(&resultobj, &(in[i]));
         out.push_back(resultobj);
       }
       return out;
     }
     
-    /*
     std::vector<std::pair<PyObject*,PyObject*> > getObservedLineSegments() const
     {
       std::vector<std::pair<PyObject*,PyObject*> > out;
-      std::vector<LineSegment2i> in = $self->getObservedLineSegments();
+      std::vector<bold::LineSegment2i> in = $self->getObservedLineSegments();
       for (int i = 0; i < in.size(); ++i)
       {
         PyObject *resultobj1 = 0;
         PyObject *resultobj2 = 0;
-        ConvertFromEigenToNumPyMatrix<Eigen::Vector2d>(&resultobj1, &(in[i].p1()));
-        ConvertFromEigenToNumPyMatrix<Eigen::Vector2d>(&resultobj2, &(in[i].p2()));
+        Eigen::Vector2i p1 = in[i].p1();
+        Eigen::Vector2i p2 = in[i].p2();
+        ConvertFromEigenToNumPyMatrix(&resultobj1, &p1);
+        ConvertFromEigenToNumPyMatrix(&resultobj2, &p2);
         out.push_back(std::pair<PyObject*,PyObject*>(resultobj1, resultobj2));
       }
       return out;
     }
-    */
   };
 
 }
