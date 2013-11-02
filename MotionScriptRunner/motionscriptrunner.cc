@@ -79,6 +79,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     //
 
     d_unitTimeCount++;
+
     if (d_section != Section::PAUSE)
     {
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)

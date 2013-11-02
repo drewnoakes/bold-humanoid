@@ -32,9 +32,9 @@ namespace bold
     Eigen::Vector3i accRaw;
 
     CM730Snapshot(BulkReadTable const& data);
-    
+
     /** Returns the gyroscope value, in hardware units, but balanced around the midpoint.
-     * 
+     *
      * Values may be positive or negative.
      */
     Eigen::Vector3i getBalancedGyroValue() const
