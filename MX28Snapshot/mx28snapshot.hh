@@ -33,7 +33,7 @@ namespace bold
     /// The present temperature, in Celcius.
     uchar presentTemp;
 
-    MX28Snapshot(BulkReadTable const& data, int const mx28ID);
+    MX28Snapshot(BulkReadTable const& data, uchar mx28ID);
   };
 
   /** Models infrequently changing data table entries from an MX28 dynamixel device.

@@ -13,7 +13,7 @@ using namespace bold;
 
 // TODO have constructors just store const byte[] and convert fields to properties that make conversions
 
-MX28Snapshot::MX28Snapshot(BulkReadTable const& data, int const mx28ID)
+MX28Snapshot::MX28Snapshot(BulkReadTable const& data, uchar mx28ID)
 {
   id = mx28ID;
 
