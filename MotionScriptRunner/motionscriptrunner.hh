@@ -6,6 +6,12 @@
 
 namespace bold
 {
+  // NOTE
+  //
+  // Motion scripts are divided across several levels:
+  //
+  //   Stages -> Key Frames -> Sections -> Steps
+
   typedef unsigned char uchar;
 
   class JointSelection;
@@ -58,15 +64,20 @@ namespace bold
     ushort d_values[21];
 
     static const int JOINT_ARRAY_LENGTH = 22;
+
     ushort d_startAngles1024[JOINT_ARRAY_LENGTH];
     ushort d_targetAngles1024[JOINT_ARRAY_LENGTH];
+
     short d_movingAngles1024[JOINT_ARRAY_LENGTH];
     short d_mainAngles1024[JOINT_ARRAY_LENGTH];
     short d_accelAngles1024[JOINT_ARRAY_LENGTH];
+
     short d_mainSpeeds1024[JOINT_ARRAY_LENGTH];
     short d_lastOutSpeeds1024[JOINT_ARRAY_LENGTH];
     short d_goalSpeeds1024[JOINT_ARRAY_LENGTH];
+
     FinishLevel d_finishTypes[JOINT_ARRAY_LENGTH];
+
     // TODO is a 'unit' the same as a 'section'? If so, rename for clarity.
     // TODO what's the difference between d_unitTimeCount and d_unitTimeNum? Rename so it's clearer.
     ushort d_unitTimeCount;
