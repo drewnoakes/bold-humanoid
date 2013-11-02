@@ -96,9 +96,9 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
         {
           case Section::PRE:
           {
-            short iSpeedN = (short)(((long)(d_mainSpeeds1024[jointId] - d_lastOutSpeeds1024[jointId]) * d_unitTimeCount) / d_unitTimeNum);
-            d_goalSpeeds1024[jointId] = d_lastOutSpeeds1024[jointId] + iSpeedN;
-            d_accelAngles1024[jointId] =  (short)((((long)(d_lastOutSpeeds1024[jointId] + (iSpeedN >> 1)) * d_unitTimeCount * 144) / 15) >> 9);
+            short speedN = (short)(((long)(d_mainSpeeds1024[jointId] - d_lastOutSpeeds1024[jointId]) * d_unitTimeCount) / d_unitTimeNum);
+            d_goalSpeeds1024[jointId] = d_lastOutSpeeds1024[jointId] + speedN;
+            d_accelAngles1024[jointId] =  (short)((((long)(d_lastOutSpeeds1024[jointId] + (speedN >> 1)) * d_unitTimeCount * 144) / 15) >> 9);
 
             d_values[jointId] = d_startAngles1024[jointId] + d_accelAngles1024[jointId];
             break;
