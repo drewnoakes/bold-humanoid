@@ -22,6 +22,8 @@ MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> script)
   assert(script->getStageCount());
 }
 
+// TODO can we avoid passing selectedJoints at each step, to ensure it doesn't change during execution?
+
 bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 {
   assert(ThreadId::isMotionLoopThread());
