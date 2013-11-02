@@ -17,6 +17,8 @@ namespace bold
   public:
     MotionScriptRunner(std::shared_ptr<MotionScript const> script);
 
+    std::string getScriptName() const { return d_script->getName(); }
+
     MotionScriptRunnerState getState() const { return d_state; }
 
     bool step(std::shared_ptr<JointSelection> selectedJoints);
@@ -26,11 +28,6 @@ namespace bold
 
     int getCurrentStageIndex() const { return d_currentStageIndex; }
     int getCurrentStepIndex() const { return d_currentStepIndex; }
-
-    std::string getScriptName() const
-    {
-      return d_script->getName();
-    }
 
   private:
     /**************************************
