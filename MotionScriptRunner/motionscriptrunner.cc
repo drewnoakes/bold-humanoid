@@ -40,12 +40,6 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
   {
     // Special treatment for the first step of a new action
 
-    // copy the current pose
-    auto hw = AgentState::get<HardwareState>();
-    assert(hw);
-    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-      d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
-
     d_state = MotionScriptRunnerState::Running;
     d_unitTimeCount = 0;
     d_unitTimeNum = 0;
@@ -56,9 +50,16 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     d_currentStepIndex = 0;
     d_repeatCurrentStageCount = d_currentStage->repeatCount;
 
+    auto hw = AgentState::get<HardwareState>();
+
+    assert(hw);
+
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
-        // Only update selected joints
+      // copy the current pose
+      d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
+
+      // Only update selected joints
       if (!(*selectedJoints)[jointId])
         continue;
 
