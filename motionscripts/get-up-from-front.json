@@ -2,7 +2,7 @@
   "name": "get-up-from-front",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 25,
           "values": [

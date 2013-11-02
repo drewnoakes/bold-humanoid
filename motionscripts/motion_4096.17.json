@@ -2,7 +2,7 @@
   "name": "mul1",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [

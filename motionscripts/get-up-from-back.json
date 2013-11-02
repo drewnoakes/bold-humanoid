@@ -2,7 +2,7 @@
   "name": "get-up-from-back",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 25,
           "values": [

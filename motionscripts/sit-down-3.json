@@ -26,7 +26,7 @@
         32,
         32
       ],
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 50,
           "values": [
@@ -104,7 +104,7 @@
         32,
         32
       ],
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 37,
           "values": [
@@ -182,7 +182,7 @@
         32,
         32
       ],
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 25,
           "values": [

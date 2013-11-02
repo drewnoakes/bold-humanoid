@@ -2,7 +2,7 @@
   "name": "d3",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [

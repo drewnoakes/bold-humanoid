@@ -2,7 +2,7 @@
   "name": "lie-down-back",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [

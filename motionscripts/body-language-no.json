@@ -2,7 +2,7 @@
   "name": "body-language-no",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 50,
           "values": [

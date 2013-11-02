@@ -3,7 +3,7 @@
   "stages": [
     {
       "speed": 21,
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 100,
           "values": [
@@ -207,7 +207,7 @@
       ]
     },
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [
@@ -337,7 +337,7 @@
     },
     {
       "speed": 21,
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [
@@ -466,7 +466,7 @@
       ]
     },
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [

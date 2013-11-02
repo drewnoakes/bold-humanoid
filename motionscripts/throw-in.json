@@ -2,7 +2,7 @@
   "name": "throwIn",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 200,
           "values": [

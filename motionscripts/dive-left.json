@@ -2,7 +2,7 @@
   "name": "dive-left",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "pauseCycles": 10,
           "moveCycles": 1,

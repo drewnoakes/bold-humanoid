@@ -60,11 +60,13 @@ TEST (MotionScriptRunnerTests, double)
 
   EXPECT_EQ(MotionScriptRunnerState::Pending, runner.getState());
   EXPECT_EQ(0, runner.getCurrentStageIndex());
-  EXPECT_EQ(0, runner.getCurrentStepIndex());
+  EXPECT_EQ(0, runner.getCurrentKeyFrameIndex());
   EXPECT_EQ("test-script", runner.getScriptName());
 
   EXPECT_TRUE(runner.step(JointSelection::all()));
 
   EXPECT_EQ(MotionScriptRunnerState::Running, runner.getState());
 
+  while (runner.step(JointSelection::all()))
+  {}
 }

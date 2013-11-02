@@ -3,7 +3,7 @@
   "stages": [
     {
       "speed": 21,
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [

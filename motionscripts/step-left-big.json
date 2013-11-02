@@ -2,7 +2,7 @@
   "name": "step-left-big",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 62,
           "values": [

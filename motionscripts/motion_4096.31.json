@@ -2,7 +2,7 @@
   "name": "d4",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [

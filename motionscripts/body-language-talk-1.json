@@ -2,7 +2,7 @@
   "name": "body-language-talk-1",
   "stages": [
     {
-      "steps": [
+      "keyFrames": [
         {
           "moveCycles": 125,
           "values": [
