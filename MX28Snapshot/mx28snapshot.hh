@@ -33,6 +33,9 @@ namespace bold
     /// The present temperature, in Celcius.
     uchar presentTemp;
 
+    /// Parameterless constructor required for unit testing
+    MX28Snapshot() {}
+
     MX28Snapshot(BulkReadTable const& data, uchar mx28ID);
   };
 

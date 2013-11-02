@@ -31,6 +31,9 @@ namespace bold
     /// Raw raw value of the accelerometer, in range [0,1023] corresponding to [-4,4] g.
     Eigen::Vector3i accRaw;
 
+    /// Parameterless constructor required for unit testing
+    CM730Snapshot() {}
+
     CM730Snapshot(BulkReadTable const& data);
 
     /** Returns the gyroscope value, in hardware units, but balanced around the midpoint.
