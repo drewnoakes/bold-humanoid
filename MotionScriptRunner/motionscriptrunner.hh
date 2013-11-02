@@ -30,6 +30,8 @@ namespace bold
     int getCurrentStepIndex() const { return d_currentStepIndex; }
 
   private:
+    bool progressToNextSection(std::shared_ptr<JointSelection> selectedJoints);
+
     /**************************************
     * Section             /----\
     *                    /|    |\
