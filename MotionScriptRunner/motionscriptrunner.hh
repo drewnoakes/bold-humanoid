@@ -58,7 +58,7 @@ namespace bold
     int d_repeatCurrentStageCount;
 
     // TODO can this be replaced by d_state in Finished? or new Finishing value?
-    bool d_playingFinished;
+    bool d_isPlayingFinished;
 
     uchar d_pGains[21];
     ushort d_values[21];
@@ -78,13 +78,11 @@ namespace bold
 
     FinishLevel d_finishTypes[JOINT_ARRAY_LENGTH];
 
-    // TODO is a 'unit' the same as a 'section'? If so, rename for clarity.
-    // TODO what's the difference between d_unitTimeCount and d_unitTimeNum? Rename so it's clearer.
-    ushort d_unitTimeCount;
-    ushort d_unitTimeNum;
-    ushort d_pauseTime;
-    ushort d_unitTimeTotalNum;
-    ushort d_accelStep;
+    ushort d_sectionStepIndex;
+    ushort d_sectionStepCount;
+    ushort d_pauseStepCount;
+    ushort d_frameStepCount;
+    ushort d_accelStepCount;
     Section d_section;
     MotionScriptRunnerState d_state;
   };
