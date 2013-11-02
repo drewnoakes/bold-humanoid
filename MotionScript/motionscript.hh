@@ -20,9 +20,9 @@ namespace bold
   public:
     static const ushort INVALID_BIT_MASK = 0x4000;
 
-    struct Step
+    struct KeyFrame
     {
-      Step()
+      KeyFrame()
       : pauseCycles(0),
         moveCycles(0),
         values()
@@ -43,7 +43,7 @@ namespace bold
       Stage()
       : speed(DEFAULT_SPEED),
         repeatCount(1),
-        steps()
+        keyFrames()
       {
         memset(&pGains, DEFAULT_P_GAIN, sizeof(pGains));
       }
@@ -53,7 +53,7 @@ namespace bold
       unsigned speed;
       unsigned repeatCount;
       uchar pGains[(uchar)JointId::MAX];
-      std::vector<Step> steps;
+      std::vector<KeyFrame> keyFrames;
     };
 
     static std::shared_ptr<MotionScript> fromFile(std::string fileName);

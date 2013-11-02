@@ -239,7 +239,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
     // Move to next step
     d_currentStepIndex++;
 
-    if (d_currentStepIndex == d_currentStage->steps.size())
+    if (d_currentStepIndex == d_currentStage->keyFrames.size())
     {
       // The current stage is complete
       // Check if it needs to be repeated
@@ -255,7 +255,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
       }
       d_currentStepIndex = 0;
     }
-    else if (d_currentStepIndex == d_currentStage->steps.size() - 1)
+    else if (d_currentStepIndex == d_currentStage->keyFrames.size() - 1)
     {
       // This is the last step of the current page
       bool isFinishing = d_repeatCurrentStageCount == 1 && d_currentStageIndex == d_script->getStageCount() - 1;
@@ -265,8 +265,8 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
     }
 
     //////// Step
-    d_pauseTime = (((ushort)d_currentStage->steps[d_currentStepIndex].pauseCycles) << 5) / d_currentStage->speed;
-    ushort maxSpeed256 = ((ushort)d_currentStage->steps[d_currentStepIndex].moveCycles * (ushort)d_currentStage->speed) >> 5;
+    d_pauseTime = (((ushort)d_currentStage->keyFrames[d_currentStepIndex].pauseCycles) << 5) / d_currentStage->speed;
+    ushort maxSpeed256 = ((ushort)d_currentStage->keyFrames[d_currentStepIndex].moveCycles * (ushort)d_currentStage->speed) >> 5;
     if (maxSpeed256 == 0)
       maxSpeed256 = 1;
     ushort maxAngle1024 = 0;
@@ -280,9 +280,9 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
       d_accelAngles1024[jointId] = 0;
 
       // Find current target angle
-      ushort currentTargetAngle = d_currentStage->steps[d_currentStepIndex].getValue(jointId) & MotionScript::INVALID_BIT_MASK
+      ushort currentTargetAngle = d_currentStage->keyFrames[d_currentStepIndex].getValue(jointId) & MotionScript::INVALID_BIT_MASK
         ? d_targetAngles1024[jointId]
-        : d_currentStage->steps[d_currentStepIndex].getValue(jointId);
+        : d_currentStage->keyFrames[d_currentStepIndex].getValue(jointId);
 
       // Update start, prev_target, curr_target
       d_startAngles1024[jointId] = d_targetAngles1024[jointId];
@@ -294,7 +294,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
 
       // Find Next target angle
       ushort nextTargetAngle;
-      if (d_currentStepIndex == d_currentStage->steps.size())
+      if (d_currentStepIndex == d_currentStage->keyFrames.size())
       {
         if (d_playingFinished)
         {
@@ -306,16 +306,16 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
             ? d_currentStage
             : d_script->getStage(d_currentStageIndex + 1);
 
-          nextTargetAngle = nextStage->steps[0].getValue(jointId) & MotionScript::INVALID_BIT_MASK
+          nextTargetAngle = nextStage->keyFrames[0].getValue(jointId) & MotionScript::INVALID_BIT_MASK
               ? currentTargetAngle
-              : nextStage->steps[0].getValue(jointId);
+              : nextStage->keyFrames[0].getValue(jointId);
         }
       }
       else
       {
-        nextTargetAngle = d_currentStage->steps[d_currentStepIndex + 1].getValue(jointId) & MotionScript::INVALID_BIT_MASK
+        nextTargetAngle = d_currentStage->keyFrames[d_currentStepIndex + 1].getValue(jointId) & MotionScript::INVALID_BIT_MASK
           ? currentTargetAngle
-          : d_currentStage->steps[d_currentStepIndex + 1].getValue(jointId);
+          : d_currentStage->keyFrames[d_currentStepIndex + 1].getValue(jointId);
       }
 
       bool directionChanged = !(

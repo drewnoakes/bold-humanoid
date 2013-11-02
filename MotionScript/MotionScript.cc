@@ -55,20 +55,20 @@ shared_ptr<MotionScript> MotionScript::fromFile(std::string fileName)
         stage->pGains[g] = gainsMember->value[g].GetInt();
     }
 
-    auto const& steps = stageMember["steps"];
-    for (unsigned j = 0; j < steps.Size(); j++)
+    auto const& keyFrames = stageMember["keyFrames"];
+    for (unsigned j = 0; j < keyFrames.Size(); j++)
     {
-      auto const& stepMember = steps[j];
-      auto step = Step();
+      auto const& keyFrameMember = keyFrames[j];
+      auto keyFrame = KeyFrame();
 
-      step.pauseCycles = stepMember.TryGetIntValue("pauseCycles", 0);
-      step.moveCycles = stepMember["moveCycles"].GetInt();
+      keyFrame.pauseCycles = keyFrameMember.TryGetIntValue("pauseCycles", 0);
+      keyFrame.moveCycles = keyFrameMember["moveCycles"].GetInt();
 
-      auto const& valuesMember = stepMember["values"];
+      auto const& valuesMember = keyFrameMember["values"];
       for (uchar v = 0; v < (uchar)JointId::MAX; v++)
-        step.values[v] = valuesMember[v].GetInt();
+        keyFrame.values[v] = valuesMember[v].GetInt();
 
-      stage->steps.push_back(step);
+      stage->keyFrames.push_back(keyFrame);
     }
 
     stages.push_back(stage);
@@ -166,10 +166,10 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
             }
           }
 
-          writer.String("steps");
+          writer.String("keyFrames");
           writer.StartArray();
           {
-            for (Step const& step : stage->steps)
+            for (KeyFrame const& step : stage->keyFrames)
             {
               writer.StartObject();
               {

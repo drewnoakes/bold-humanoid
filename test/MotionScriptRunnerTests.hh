@@ -23,7 +23,7 @@ using namespace std;
 
 void pushStep(shared_ptr<MotionScript::Stage> stage, ushort value, uchar moveCycles, uchar pauseCycles = 0)
 {
-  MotionScript::Step step;
+  MotionScript::KeyFrame step;
 
   step.moveCycles = moveCycles;
   step.pauseCycles = pauseCycles;
@@ -31,7 +31,7 @@ void pushStep(shared_ptr<MotionScript::Stage> stage, ushort value, uchar moveCyc
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     step.values[jointId-1] = value;
 
-  stage->steps.push_back(step);
+  stage->keyFrames.push_back(step);
 }
 
 TEST (MotionScriptRunnerTests, double)

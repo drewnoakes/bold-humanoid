@@ -154,14 +154,14 @@ shared_ptr<MotionScript> RobotisMotionFile::toMotionScript(uchar rootPageIndex)
 
     for (uchar i = 0; i < page->stepCount; i++)
     {
-      auto step = MotionScript::Step();
+      auto step = MotionScript::KeyFrame();
 
       step.pauseCycles = page->steps[i].pause;
       step.moveCycles = page->steps[i].time;
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
         step.values[jointId - 1] = page->steps[i].position[jointId];
 
-      currentStage->steps.push_back(step);
+      currentStage->keyFrames.push_back(step);
     }
 
     if (page->nextPageIndex == 0)

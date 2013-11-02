@@ -3,7 +3,7 @@
     "name": "throwIn",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 200,
             "values": [
@@ -187,7 +187,7 @@
     "name": "ok",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -321,7 +321,7 @@
     "name": "no",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -455,7 +455,7 @@
     "name": "hi",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -565,7 +565,7 @@
     "name": "stand-straight",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -649,7 +649,7 @@
     "name": "talk1",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -835,7 +835,7 @@
     "name": "step-r",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -944,7 +944,7 @@
     "name": "step-l",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -1075,7 +1075,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -1109,7 +1109,7 @@
     "name": "f up",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 25,
             "values": [
@@ -1243,7 +1243,7 @@
     "name": "b up",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 25,
             "values": [
@@ -1427,7 +1427,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 62,
             "values": [
@@ -1634,7 +1634,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 62,
             "values": [
@@ -1819,7 +1819,7 @@
     "name": "",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 62,
             "values": [
@@ -1976,7 +1976,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -2032,7 +2032,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -2066,7 +2066,7 @@
     "name": "mul1",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -2575,7 +2575,7 @@
     "name": "left_dive",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "pauseCycles": 10,
             "moveCycles": 1,
@@ -2740,7 +2740,7 @@
     "name": "right_dive",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "pauseCycles": 10,
             "moveCycles": 1,
@@ -2905,7 +2905,7 @@
     "name": "big-step-r",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 62,
             "values": [
@@ -3037,7 +3037,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -3168,7 +3168,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 250,
             "values": [
@@ -3452,7 +3452,7 @@
     "name": "big-step-l",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 62,
             "values": [
@@ -3561,7 +3561,7 @@
     "name": "d3",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -3696,7 +3696,7 @@
     "stages": [
       {
         "speed": 21,
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -3955,7 +3955,7 @@
     "name": "d4",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -4114,7 +4114,7 @@
     "name": "defensive_r",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 62,
             "values": [
@@ -4173,7 +4173,7 @@
     "name": "d2",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 250,
             "values": [
@@ -4458,7 +4458,7 @@
     "stages": [
       {
         "speed": 21,
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 100,
             "values": [
@@ -4662,7 +4662,7 @@
         ]
       },
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -4792,7 +4792,7 @@
       },
       {
         "speed": 21,
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -4921,7 +4921,7 @@
         ]
       },
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -5402,7 +5402,7 @@
           8,
           8
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -5479,7 +5479,7 @@
           8,
           8
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -5656,7 +5656,7 @@
           8,
           8
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -5832,7 +5832,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 187,
             "values": [
@@ -5889,7 +5889,7 @@
           16,
           16
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -6065,7 +6065,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 187,
             "values": [
@@ -6121,7 +6121,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 25,
             "values": [
@@ -6328,7 +6328,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 25,
             "values": [
@@ -6513,7 +6513,7 @@
     "name": "lie down",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -6622,7 +6622,7 @@
     "name": "lie up",
     "stages": [
       {
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 125,
             "values": [
@@ -6730,7 +6730,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -6813,7 +6813,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 50,
             "values": [
@@ -6891,7 +6891,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 37,
             "values": [
@@ -6969,7 +6969,7 @@
           32,
           32
         ],
-        "steps": [
+        "keyFrames": [
           {
             "moveCycles": 25,
             "values": [
