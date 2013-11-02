@@ -135,7 +135,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
           default:
           {
             cerr << "[MotionScriptRunner::step] Unexpected section: " << (int)d_section << endl;
-            throw new std::runtime_error("Unexpected section");
+            throw new runtime_error("Unexpected section");
           }
         }
 
