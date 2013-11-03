@@ -23,7 +23,9 @@ namespace bold
 
   private:
     std::shared_ptr<ActionModule> d_actionModule;
+    /// The script associated with this ActionOption
     std::shared_ptr<MotionScript const> d_script;
+    /// The most recent MotionScriptRunner issued to the ActionModule
     std::shared_ptr<MotionScriptRunner> d_runner;
   };
 
