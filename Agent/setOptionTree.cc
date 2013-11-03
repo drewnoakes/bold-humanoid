@@ -2,6 +2,6 @@
 
 void Agent::setOptionTree(unique_ptr<OptionTree> tree)
 {
-  cout << "[Agent] Got optiontree, with nr of options: " << tree->optionCount() << endl;
+  cout << "[Agent::setOptionTree] Setting OptionTree with " << tree->optionCount() << " options" << endl;
   d_optionTree = move(tree);
 }
