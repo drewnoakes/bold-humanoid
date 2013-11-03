@@ -401,9 +401,11 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
 
     // Update joint value and other working variables
 
+    short value;
+
     if (d_keyFrameDeltaValue[jointId] == 0)
     {
-      d_values[jointId] = d_sectionStartAngles[jointId];
+      value = d_sectionStartAngles[jointId];
     }
     else switch (d_section)
     {
@@ -413,13 +415,13 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
         d_goalSpeeds[jointId] = d_sectionStartGoalSpeeds[jointId] + speedN;
         d_accelAngles1024[jointId] =  (short)((((long)(d_sectionStartGoalSpeeds[jointId] + (speedN >> 1)) * d_sectionStepIndex * 144) / 15) >> 9);
 
-        d_values[jointId] = d_sectionStartAngles[jointId] + d_accelAngles1024[jointId];
+        value = d_sectionStartAngles[jointId] + d_accelAngles1024[jointId];
         break;
       }
       case Section::MAIN:
       {
         // Linear interpolation
-        d_values[jointId] = d_sectionStartAngles[jointId] + (short)(((long)(d_mainAngles1024[jointId])*d_sectionStepIndex) / d_sectionStepCount);
+        value = d_sectionStartAngles[jointId] + (short)(((long)(d_mainAngles1024[jointId])*d_sectionStepIndex) / d_sectionStepCount);
         d_goalSpeeds[jointId] = d_mainSpeeds1024[jointId];
         break;
       }
@@ -428,7 +430,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
         if (d_sectionStepIndex == d_sectionStepCount)
         {
           // In the last step of the POST section, set the angle directly equal to the target value
-          d_values[jointId] = d_keyFrameTargetAngles[jointId];
+          value = d_keyFrameTargetAngles[jointId];
         }
         else
         {
@@ -437,13 +439,13 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
             // Decelerate towards zero
             short speedN = (short)(((long)(0 - d_sectionStartGoalSpeeds[jointId]) * d_sectionStepIndex) / d_sectionStepCount);
             d_goalSpeeds[jointId] = d_sectionStartGoalSpeeds[jointId] + speedN;
-            d_values[jointId] = d_sectionStartAngles[jointId] + (short)((((long)(d_sectionStartGoalSpeeds[jointId] + (speedN>>1)) * d_sectionStepIndex * 144) / 15) >> 9);
+            value = d_sectionStartAngles[jointId] + (short)((((long)(d_sectionStartGoalSpeeds[jointId] + (speedN>>1)) * d_sectionStepIndex * 144) / 15) >> 9);
           }
           else
           {
             // Linear progress towards target
             assert(d_finishSpeeds[jointId] == FinishSpeed::NON_ZERO);
-            d_values[jointId] = d_sectionStartAngles[jointId] + (short)(((long)(d_mainAngles1024[jointId]) * d_sectionStepIndex) / d_sectionStepCount);
+            value = d_sectionStartAngles[jointId] + (short)(((long)(d_mainAngles1024[jointId]) * d_sectionStepIndex) / d_sectionStepCount);
             d_goalSpeeds[jointId] = d_mainSpeeds1024[jointId];
           }
         }
@@ -455,6 +457,13 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
         throw new runtime_error("Unexpected section");
       }
     }
+
+    if (value < 0)
+      value = 0;
+    if (value > 0x0FFF)
+      value = 0x0FFF;
+
+    d_values[jointId] = value;
 
     d_pGains[jointId] = d_currentStage->getPGain(jointId);
   }
