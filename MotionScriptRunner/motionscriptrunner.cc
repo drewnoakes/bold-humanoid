@@ -253,7 +253,12 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints
     {
       // No repeats necessary, so move to next stage
       d_currentStageIndex++;
-      assert(d_currentStageIndex < d_script->getStageCount());
+      if (d_currentStageIndex == d_script->getStageCount())
+      {
+        d_isPlayingFinished = true;
+        d_state = MotionScriptRunnerState::Finished;
+        return false;
+      }
       d_currentStage = d_script->getStage(d_currentStageIndex);
       d_repeatCurrentStageCount = d_currentStage->repeatCount;
     }
