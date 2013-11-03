@@ -34,6 +34,8 @@ void pushStep(shared_ptr<MotionScript::Stage> stage, ushort value, uchar moveCyc
   stage->keyFrames.push_back(step);
 }
 
+// TODO unit test that runs through all motion script files on disk
+
 TEST (DISABLED_MotionScriptRunnerTests, basics)
 {
   ThreadId::setThreadId(ThreadId::ThreadIds::MotionLoop);
