@@ -90,6 +90,28 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
   continueCurrentSection(selectedJoints);
 
+  int jj = (int)JointId::L_KNEE;
+  cout << (int)d_sectionStepIndex << ","
+       << (int)d_sectionStepCount << ","
+       << (int)d_keyFramePauseStepCount << ","
+       << (int)d_section << ","
+       << (int)d_keyFrameMotionStepCount << ","
+       << (int)d_accelStepCount << ","
+       << (int)d_repeatCurrentStageCount << ","
+       << ","
+       << (int)d_sectionStartAngles[jj] << ","
+       << (int)d_keyFrameTargetAngles[jj] << ","
+       << (int)d_keyFrameDeltaValue[jj] << ","
+       << (int)d_mainAngles1024[jj] << ","
+       << (int)d_accelAngles1024[jj] << ","
+       << (int)d_mainSpeeds1024[jj] << ","
+       << (int)d_sectionStartGoalSpeeds[jj] << ","
+       << (int)d_goalSpeeds[jj] << ","
+       << (int)d_finishSpeeds[jj] << ","
+       << (int)d_values[jj] << ","
+       << (int)d_pGains[jj] << ","
+       << endl;
+
   return true;
 }
 
