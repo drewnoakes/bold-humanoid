@@ -99,7 +99,6 @@ vector<shared_ptr<MotionScript>> MotionScript::loadAllInPath(std::string path)
 
     stringstream filePath;
     filePath << path << "/" << ent->d_name;
-    cout << "Found: " << filePath.str() << endl;
     scripts.push_back(fromFile(filePath.str()));
   }
 

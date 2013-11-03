@@ -24,7 +24,7 @@ ActionModule::ActionModule(shared_ptr<MotionTaskScheduler> scheduler, vector<sha
 
   for (shared_ptr<MotionScript> script : scripts)
   {
-    cout << "[ActionModule::ActionModule] Found script: " << script->getName() << endl;
+    cout << "[ActionModule::ActionModule] Adding motion script: " << script->getName() << endl;
     d_controls.push_back(Control::createAction(script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); }));
   }
 }
