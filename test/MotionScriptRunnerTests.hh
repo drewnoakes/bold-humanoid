@@ -34,7 +34,7 @@ void pushStep(shared_ptr<MotionScript::Stage> stage, ushort value, uchar moveCyc
   stage->keyFrames.push_back(step);
 }
 
-TEST (MotionScriptRunnerTests, double)
+TEST (DISABLED_MotionScriptRunnerTests, basics)
 {
   ThreadId::setThreadId(ThreadId::ThreadIds::MotionLoop);
 
