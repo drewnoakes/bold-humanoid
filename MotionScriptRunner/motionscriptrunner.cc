@@ -154,6 +154,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
         {
           case FinishSpeed::NON_ZERO:
           {
+            // Determine
             d_mainAngles1024[jointId] = (d_keyFrameMotionStepCount - d_accelStepCount) == 0
               ? d_mainAngles1024[jointId] = 0
               : d_mainAngles1024[jointId] = (short)((((long)(d_keyFrameDeltaValue[jointId] - d_accelAngles1024[jointId])) * d_sectionStepCount) / (d_keyFrameMotionStepCount - d_accelStepCount));
@@ -422,19 +423,22 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
       {
         if (d_sectionStepIndex == (d_sectionStepCount-1))
         {
+          // In the last step of the POST section, set the angle directly equal to the target value
           d_values[jointId] = d_keyFrameTargetAngles[jointId];
         }
         else
         {
           if (d_finishSpeeds[jointId] == FinishSpeed::ZERO)
           {
+            // Decelerate towards zero
             short speedN = (short)(((long)(0 - d_sectionStartGoalSpeeds[jointId]) * d_sectionStepIndex) / d_sectionStepCount);
             d_goalSpeeds[jointId] = d_sectionStartGoalSpeeds[jointId] + speedN;
             d_values[jointId] = d_sectionStartAngles[jointId] + (short)((((long)(d_sectionStartGoalSpeeds[jointId] + (speedN>>1)) * d_sectionStepIndex * 144) / 15) >> 9);
           }
-          else // FinishLevel::NON_ZERO
+          else
           {
-            // MAIN Section
+            // Linear progress towards target
+            assert(d_finishSpeeds[jointId] == FinishSpeed::NON_ZERO);
             d_values[jointId] = d_sectionStartAngles[jointId] + (short)(((long)(d_mainAngles1024[jointId]) * d_sectionStepIndex) / d_sectionStepCount);
             d_goalSpeeds[jointId] = d_mainSpeeds1024[jointId];
           }
