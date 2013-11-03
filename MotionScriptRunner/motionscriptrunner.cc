@@ -52,6 +52,8 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     d_currentKeyFrameIndex = -1; // will be incremented to 0 immediately
     d_repeatCurrentStageCount = d_currentStage->repeatCount;
 
+    memset(&d_mainAngles1024, 0, sizeof(d_mainAngles1024));
+
     auto hw = AgentState::get<HardwareState>();
 
     assert(hw);
@@ -423,7 +425,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
       }
       case Section::POST:
       {
-        if (d_sectionStepIndex == (d_sectionStepCount-1))
+        if (d_sectionStepIndex == d_sectionStepCount)
         {
           // In the last step of the POST section, set the angle directly equal to the target value
           d_values[jointId] = d_keyFrameTargetAngles[jointId];
