@@ -114,6 +114,8 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 //        << (int)d_pGains[jj] << ","
 //        << endl;
 
+  // TODO if anyone is listening, create and store a MotionScriptState object to allow nicer debugging in the UI
+
   return true;
 }
 
