@@ -15,6 +15,13 @@ using namespace std;
 ActionModule::ActionModule(shared_ptr<MotionTaskScheduler> scheduler, vector<shared_ptr<MotionScript>> scripts)
 : MotionModule("action", scheduler)
 {
+  // Sort scripts alphabetically by name
+  sort(scripts.begin(), scripts.end(),
+      [](shared_ptr<MotionScript> const& a, shared_ptr<MotionScript> const& b) -> bool
+  {
+    return a->getName() < b->getName();
+  });
+
   for (shared_ptr<MotionScript> script : scripts)
   {
     cout << "[ActionModule::ActionModule] Found script: " << script->getName() << endl;
