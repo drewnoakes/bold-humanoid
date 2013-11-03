@@ -2,14 +2,23 @@
 
 std::vector<std::shared_ptr<Option>> ActionOption::runPolicy()
 {
+  cout << "[ActionOption::runPolicy] " << getID() << endl;
+  
   if (!d_runner || d_runner->getState() != MotionScriptRunnerState::Running)
   {
-    bool started = d_actionModule->start(d_runner);
+    auto runner = make_shared<MotionScriptRunner>(d_script);
+
+    bool started = d_actionModule->start(runner);
 
     if (started)
+    {
       cout << "[ActionOption::runPolicy] Started action: " << getID() << endl;
+      d_runner = runner;
+    }
     else
+    {
       cout << "[ActionOption::runPolicy] Request to start action denied: " << getID() << endl;
+    }
   }
 
   return std::vector<std::shared_ptr<Option>>();
