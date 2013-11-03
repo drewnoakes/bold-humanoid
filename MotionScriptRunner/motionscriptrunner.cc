@@ -158,10 +158,12 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
             d_mainAngles1024[jointId] = (d_keyFrameMotionStepCount - d_accelStepCount) == 0
               ? d_mainAngles1024[jointId] = 0
               : d_mainAngles1024[jointId] = (short)((((long)(d_keyFrameDeltaValue[jointId] - d_accelAngles1024[jointId])) * d_sectionStepCount) / (d_keyFrameMotionStepCount - d_accelStepCount));
+            break;
           }
           case FinishSpeed::ZERO:
           {
             d_mainAngles1024[jointId] = d_keyFrameDeltaValue[jointId] - d_accelAngles1024[jointId] - (short)((((long)d_mainSpeeds1024[jointId] * d_accelStepCount * 12) / 5) >> 8);
+            break;
           }
         }
       }
