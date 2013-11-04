@@ -11,7 +11,6 @@
 namespace bold
 {
   struct FSMState;
-  typedef std::shared_ptr<FSMState> FSMStatePtr;
 
   struct FSMTransition
   {
@@ -31,17 +30,15 @@ namespace bold
     std::function<void()> onFire;
 
     /// State this transition goes from
-    FSMStatePtr parentState;
+    std::shared_ptr<FSMState> parentState;
     /// State this transition results in
-    FSMStatePtr childState;
+    std::shared_ptr<FSMState> childState;
 
     FSMTransition* when(std::function<bool()> condition);
     FSMTransition* when(std::function<std::function<bool()>()> conditionFactory);
     FSMTransition* whenTerminated();
     FSMTransition* notify(std::function<void()> callback);
   };
-
-  typedef std::shared_ptr<FSMTransition> FSMTransitionPtr;
 
   struct FSMState : public std::enable_shared_from_this<FSMState>
   {
@@ -58,7 +55,7 @@ namespace bold
     /// Options to return while in this state
     std::vector<std::shared_ptr<Option>> options;
     /// Outgoing transitions
-    std::vector<FSMTransitionPtr> transitions;
+    std::vector<std::shared_ptr<FSMTransition>> transitions;
 
     std::function<void()> onEnter;
 
@@ -69,7 +66,7 @@ namespace bold
       startTimestamp = Clock::getTimestamp();
 
       // For transitions with condition factories, invoke them to clear out any accumulated state
-      for (FSMTransitionPtr const& transition : transitions)
+      for (std::shared_ptr<FSMTransition> const& transition : transitions)
       {
         if (transition->conditionFactory)
           transition->condition = transition->conditionFactory();
@@ -89,17 +86,17 @@ namespace bold
       return std::all_of(options.begin(), options.end(), [](std::shared_ptr<Option> o) { return o->hasTerminated(); });
     }
 
-    FSMTransitionPtr newTransition(std::string name = "")
+    std::shared_ptr<FSMTransition> newTransition(std::string name = "")
     {
-      FSMTransitionPtr t = std::make_shared<FSMTransition>(name);
+      std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>(name);
       t->parentState = shared_from_this();
       transitions.push_back(t);
       return t;
     }
 
-    FSMTransitionPtr transitionTo(FSMStatePtr targetState)
+    std::shared_ptr<FSMTransition> transitionTo(std::shared_ptr<FSMState> targetState)
     {
-      FSMTransitionPtr t = std::make_shared<FSMTransition>("");
+      std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>("");
       t->parentState = shared_from_this();
       t->childState = targetState;
       transitions.push_back(t);
@@ -120,9 +117,9 @@ namespace bold
 
     virtual std::vector<std::shared_ptr<Option>> runPolicy() override;
 
-    void addState(FSMStatePtr state, bool startState = false);
+    void addState(std::shared_ptr<FSMState> state, bool startState = false);
 
-    FSMStatePtr newState(std::string const& name,
+    std::shared_ptr<FSMState> newState(std::string const& name,
                          std::vector<std::shared_ptr<Option>> options,
                          bool finalState = false,
                          bool startState = false)
@@ -132,15 +129,15 @@ namespace bold
       return s;
     }
 
-    FSMTransitionPtr wildcardTransitionTo(FSMStatePtr targetState);
+    std::shared_ptr<FSMTransition> wildcardTransitionTo(std::shared_ptr<FSMState> targetState);
 
     std::string toDot() const;
 
   private:
-    std::vector<FSMStatePtr> d_states;
-    std::vector<FSMTransitionPtr> d_wildcardTransitions;
-    FSMStatePtr d_startState;
-    FSMStatePtr d_curState;
+    std::vector<std::shared_ptr<FSMState>> d_states;
+    std::vector<std::shared_ptr<FSMTransition>> d_wildcardTransitions;
+    std::shared_ptr<FSMState> d_startState;
+    std::shared_ptr<FSMState> d_curState;
   };
 
   inline bool FSMOption::isAvailable()
@@ -153,16 +150,16 @@ namespace bold
     return d_curState && d_curState->isFinal ? 1.0 : 0.0;
   }
 
-  inline void FSMOption::addState(FSMStatePtr state, bool startState)
+  inline void FSMOption::addState(std::shared_ptr<FSMState> state, bool startState)
   {
     d_states.push_back(state);
     if (startState)
       d_startState = state;
   }
 
-  inline FSMTransitionPtr FSMOption::wildcardTransitionTo(FSMStatePtr targetState)
+  inline std::shared_ptr<FSMTransition> FSMOption::wildcardTransitionTo(std::shared_ptr<FSMState> targetState)
   {
-    FSMTransitionPtr t = std::make_shared<FSMTransition>("");
+    std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>("");
     t->childState = targetState;
     d_wildcardTransitions.push_back(t);
     return t;

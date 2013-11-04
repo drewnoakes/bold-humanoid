@@ -28,7 +28,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   // GENERAL FUNCTIONS
 
-  auto secondsSinceStart = [](double seconds, FSMStatePtr state)
+  auto secondsSinceStart = [](double seconds, shared_ptr<FSMState> state)
   {
     return [state,seconds]() { return state->secondsSinceStart() >= seconds; };
   };

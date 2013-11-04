@@ -1,6 +1,6 @@
 #include "actionoption.ih"
 
-std::vector<std::shared_ptr<Option>> ActionOption::runPolicy()
+vector<shared_ptr<Option>> ActionOption::runPolicy()
 {
   cout << "[ActionOption::runPolicy] " << getID() << endl;
   
@@ -21,5 +21,5 @@ std::vector<std::shared_ptr<Option>> ActionOption::runPolicy()
     }
   }
 
-  return std::vector<std::shared_ptr<Option>>();
+  return vector<shared_ptr<Option>>();
 }

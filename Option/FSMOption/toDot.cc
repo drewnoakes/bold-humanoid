@@ -4,10 +4,10 @@ string FSMOption::toDot() const
 {
   ostringstream out;
   out << "digraph "  << getID() << "{" << endl;
-  list<FSMStatePtr> stateQueue;
+  list<shared_ptr<FSMState>> stateQueue;
   stateQueue.push_back(d_startState);
 
-  list<FSMStatePtr> visitedStates;
+  list<shared_ptr<FSMState>> visitedStates;
 
   while (!stateQueue.empty())
   {
@@ -28,7 +28,7 @@ string FSMOption::toDot() const
         if (transition->name != "")
           out << " [label=" << transition->name << "]";
         out << endl;
-        
+
         stateQueue.push_back(transition->childState);
       }
       visitedStates.push_back(state);

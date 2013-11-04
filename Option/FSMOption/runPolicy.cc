@@ -1,10 +1,10 @@
 #include "fsmoption.ih"
 
-std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
+vector<shared_ptr<Option>> FSMOption::runPolicy()
 {
 //   cout << "[FSMOption::runPolicy] ----- Start -----" << endl;
 
-  auto setCurrentState = [this](FSMStatePtr state)
+  auto setCurrentState = [this](shared_ptr<FSMState> state)
   {
     d_curState = state;
     d_curState->start();
@@ -17,7 +17,7 @@ std::vector<std::shared_ptr<Option>> FSMOption::runPolicy()
 
   const int MAX_LOOP_COUNT = 20;
 
-  auto tryTransition = [this,setCurrentState](FSMTransitionPtr transition)
+  auto tryTransition = [this,setCurrentState](shared_ptr<FSMTransition> transition)
   {
     if (!transition->condition())
       return false;
