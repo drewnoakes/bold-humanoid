@@ -154,7 +154,10 @@ namespace bold
   {
     d_states.push_back(state);
     if (startState)
+    {
+      assert(!d_startState);
       d_startState = state;
+    }
   }
 
   inline std::shared_ptr<FSMTransition> FSMOption::wildcardTransitionTo(std::shared_ptr<FSMState> targetState)
