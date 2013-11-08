@@ -6,11 +6,54 @@
 
 namespace bold
 {
-  // NOTE
   //
   // Motion scripts are divided across several levels:
   //
-  //   Stages -> Key Frames -> Sections -> Steps
+  //     Motion Script -> Stages -> Key Frames -> Sections -> Steps
+  //
+  // Motion Scripts
+  //
+  // - have a name
+  // - contain one or more stages
+  //
+  // Stages
+  //
+  // - may be repeated N times in a row
+  // - can specify p-gains and a speed value
+  // - contain one or more key frames
+  //
+  // Key Frames
+  //
+  // - specify a set of target positions for motors
+  // - specify how many cycles it takes to reach this target
+  // - specify an optional number of cycles to pause for after reaching the target
+  //
+  // During the playback of the script, the time between key frames is divided
+  // into sections: PRE, MAIN, POST, PAUSE
+  //
+  // Sections
+  //
+  //   PRE
+  //     - The initial period of movement between key frames
+  //     - Speed will slowly accelerate if coming from a zero finish speed
+  //     - Speed will be constant if coming from a non-zero finish speed
+  //
+  //   MAIN
+  //     - A, sometimes short, period of time between PRE and POST
+  //     - May involve a very sudden change in position, depending upon the
+  //       distance to travel and moveCycles
+  //
+  //   POST
+  //     - The final period of movement between key frames
+  //     - Speed will slowly decelerate if approaching a zero finish speed
+  //     - Speed will be constant if approaching a non-zero finish speed
+  //
+  // Steps
+  //
+  // - another name for 'cycle'
+  // - the discrete calculation unit for motor positioning
+  // - 8ms apart (125 Hz)
+  //
 
   typedef unsigned char uchar;
 
@@ -40,14 +83,6 @@ namespace bold
     void continueCurrentSection(std::shared_ptr<JointSelection> selectedJoints);
     bool startKeyFrame(std::shared_ptr<JointSelection> selectedJoints);
 
-   /**************************************
-    * Section             /----\
-    *                    /|    |\
-    *        /+---------/ |    | \
-    *       / |        |  |    |  \
-    * -----/  |        |  |    |   \----
-    *      PRE  MAIN   PRE MAIN POST PAUSE
-    ***************************************/
     enum class Section : uchar { PRE = 1, MAIN = 2, POST = 3, PAUSE = 4 };
     enum class FinishSpeed : uchar { ZERO = 1, NON_ZERO = 2 };
 
