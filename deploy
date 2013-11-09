@@ -25,7 +25,7 @@ do
 
   # TODO ensure process isn't running remotely
 
-  rsync -zrP www motion_4096.bin boldhumanoid.py boldhumanoid boldpy darwin@darwin$i:
+  rsync -zrP www motionscripts boldhumanoid.py boldhumanoid boldpy darwin@darwin$i:
   rsync -zrP swig/bold.py swig/_bold.so darwin@darwin$i:swig/
 
   if [ $? -ne 0 ]; then
