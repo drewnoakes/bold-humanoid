@@ -12,7 +12,7 @@ class Joystick;
 
 namespace bold
 {
-  class ActionModule;
+  class MotionScriptModule;
   class Ambulator;
   class BodyState;
   class Camera;
@@ -54,7 +54,7 @@ namespace bold
 
     std::shared_ptr<HeadModule> getHeadModule() const { return d_headModule; }
     std::shared_ptr<WalkModule> getWalkModule() const { return d_walkModule; }
-    std::shared_ptr<ActionModule> getActionModule() const { return d_actionModule; }
+    std::shared_ptr<MotionScriptModule> getMotionScriptModule() const { return d_motionScriptModule; }
 
     std::shared_ptr<FallDetector> getFallDetector() const { return d_fallDetector; }
     std::shared_ptr<CM730> getCM730() const { return d_cm730; }
@@ -96,7 +96,7 @@ namespace bold
     std::shared_ptr<MotionTaskScheduler> d_motionSchedule;
     std::shared_ptr<WalkModule> d_walkModule;
     std::shared_ptr<HeadModule> d_headModule;
-    std::shared_ptr<ActionModule> d_actionModule;
+    std::shared_ptr<MotionScriptModule> d_motionScriptModule;
 
     // State observers
 

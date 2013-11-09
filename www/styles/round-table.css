@@ -484,12 +484,12 @@ div.module.histogram
 
 /*******************************************************************/
 
-div.module.actions
+div.module.motion-scripts
 {
     min-height: 60px;
 }
 
-div.module.actions button
+div.module.motion-scripts button
 {
     margin: 0 3px 4px 0;
     padding: 2px 6px;

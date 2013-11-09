@@ -241,11 +241,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./MotionModule/ActionModule/actionmodule.cc
+  ./MotionModule/HeadModule/headmodule.cc
 )
 
 add_class(BOLDHUMANOID
-  ./MotionModule/HeadModule/headmodule.cc
+  ./MotionModule/MotionScriptModule/motionscriptmodule.cc
 )
 
 add_class(BOLDHUMANOID
@@ -282,11 +282,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/ActionOption/hasTerminated.cc
-  ./Option/ActionOption/runPolicy.cc
-)
-
-add_class(BOLDHUMANOID
   ./Option/ApproachBall/runPolicy.cc
 )
 
@@ -314,6 +309,11 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./Option/LookAtGoal/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
+  ./Option/MotionScriptOption/hasTerminated.cc
+  ./Option/MotionScriptOption/runPolicy.cc
 )
 
 add_class(BOLDHUMANOID

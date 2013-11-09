@@ -1,7 +1,7 @@
 %{
 #include <MotionModule/motionmodule.hh>
-#include <MotionModule/ActionModule/actionmodule.hh>
 #include <MotionModule/HeadModule/headmodule.hh>
+#include <MotionModule/MotionScriptModule/motionscriptmodule.hh>
 #include <MotionModule/WalkModule/walkmodule.hh>
 #include <MotionScriptRunner/motionscriptrunner.hh>
 %}
@@ -14,10 +14,10 @@ namespace bold
     ~MotionModule();
   };
 
-  class ActionModule : public MotionModule
+  class MotionScriptModule : public MotionModule
   {
   public:
-    ~ActionModule();
+    ~MotionScriptModule();
 
     bool start(std::shared_ptr<bold::MotionScriptRunner> runner);
     bool isRunning();

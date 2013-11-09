@@ -1,6 +1,6 @@
-#include "actionoption.hh"
+#include "motionscriptoption.hh"
 
-#include "../../MotionModule/ActionModule/actionmodule.hh"
+#include "../../MotionModule/MotionScriptModule/motionscriptmodule.hh"
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
 
 #include <iostream>

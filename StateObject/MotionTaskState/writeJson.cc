@@ -29,7 +29,7 @@ using namespace std;
         committed: true
       },
       {
-        module: "action",
+        module: "motion-script",
         description: "Salute",
         priority: 1,
         committed: false
@@ -42,7 +42,7 @@ using namespace std;
         committed: true
       },
       {
-        module: "action",
+        module: "motion-script",
         description: "Salute",
         priority: 1,
         committed: false
@@ -50,7 +50,7 @@ using namespace std;
     ]
   }
 */
-  
+
 void MotionTaskState::writeJson(Writer<StringBuffer>& writer) const
 {
   auto writeSection = [&](string name, vector<shared_ptr<MotionTask>> const& tasks)
@@ -71,7 +71,7 @@ void MotionTaskState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
   };
-  
+
   writer.StartObject();
   {
     writeSection("head", d_headTasks);

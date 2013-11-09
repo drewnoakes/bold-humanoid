@@ -8,7 +8,7 @@ class minIni;
 
 namespace bold
 {
-  class ActionModule;
+  class MotionScriptModule;
   class Ambulator;
   class CameraModel;
   class Debugger;
@@ -24,7 +24,7 @@ namespace bold
                                                   std::shared_ptr<Debugger> debugger,
                                                   std::shared_ptr<CameraModel> cameraModel,
                                                   std::shared_ptr<Ambulator> ambulator,
-                                                  std::shared_ptr<ActionModule> actionModule,
+                                                  std::shared_ptr<MotionScriptModule> motionScriptModule,
                                                   std::shared_ptr<HeadModule> headModule,
                                                   std::shared_ptr<WalkModule> walkModule,
                                                   std::shared_ptr<FallDetector> fallDetector) = 0;

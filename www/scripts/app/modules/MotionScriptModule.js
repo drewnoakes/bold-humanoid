@@ -9,12 +9,12 @@ define(
     {
         'use strict';
 
-        var ActionModule = function()
+        var MotionScriptModule = function()
         {
             this.$container = $('<div></div>');
 
-            this.title = 'actions';
-            this.id = 'actions';
+            this.title = 'motion scripts';
+            this.id = 'motion-scripts';
             this.panes = [
                 {
                     title: 'main',
@@ -24,16 +24,16 @@ define(
             ];
         };
 
-        ActionModule.prototype.load = function()
+        MotionScriptModule.prototype.load = function()
         {
-            ControlBuilder.build('actions', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container));
+            ControlBuilder.build('motion-scripts', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container));
         };
 
-        ActionModule.prototype.unload = function()
+        MotionScriptModule.prototype.unload = function()
         {
             this.$container.empty();
         };
 
-        return ActionModule;
+        return MotionScriptModule;
     }
 );

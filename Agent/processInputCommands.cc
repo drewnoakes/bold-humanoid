@@ -88,11 +88,11 @@ void Agent::processInputCommands()
         {
           case 6:
             cout << "Left kick" << endl;
-            d_actionModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickLeft")));
+            d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickLeft")));
             break;
           case 7:
             cout << "Right kick" << endl;
-            d_actionModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickRight")));
+            d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickRight")));
             break;
           default:
             if (event.value == 1)

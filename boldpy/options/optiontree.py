@@ -5,7 +5,7 @@ from boldpy.agent import *
 from numpy import *
 
 from .fsmoption import *
-from .actionoption import *
+from .motionscriptoption import *
 from .stopwalking import *
 from .lookatfeet import *
 from .lookaround import *
@@ -15,23 +15,23 @@ from .lookatgoal import *
 #import boldpy.conf as conf
 
 class PyOptionTreeBuilder:
-    def createActionOptions(self, tree, namesScripts):
+    def createMotionScriptOptions(self, tree, namesScripts):
         for ns in namesScripts:
-            o = ActionOption(ns[0], ns[1]).__disown__()
+            o = MotionScriptOption(ns[0], ns[1]).__disown__()
             tree.addOption(o)
 
     def createOptions(self, tree):
-        actionOptions = [
-            ("sitdownaction", "sit down"),
-            ("standupaction", "stand up"),
-            ("leftkickaction", "lk"),
-            ("rightkickaction", "rk"),
-            ("diveleftaction", "left_dive"),
-            ("forwardgetupaction", "f up"),
-            ("backwardgetupaction", "b up")]
+        motionScriptOptions = [
+            ("sitdownscript", "sit down"),
+            ("standupscript", "stand up"),
+            ("leftkickscript", "lk"),
+            ("rightkickscript", "rk"),
+            ("diveleftscript", "left_dive"),
+            ("forwardgetupscript", "f up"),
+            ("backwardgetupscript", "b up")]
 
-        self.createActionOptions(tree, actionOptions)
-        
+        self.createMotionScriptOptions(tree, motionScriptOptions)
+
         self.sw = StopWalking("stopwalking").__disown__()
         tree.addOption(self.sw)
 
@@ -54,7 +54,7 @@ class PyOptionTreeBuilder:
         bootFSM = FSMOption("bootfsm").__disown__()
 
         # STATES
-        sitDownState = bootFSM.newState(options = [tree.getOption("sitdownaction")],
+        sitDownState = bootFSM.newState(options = [tree.getOption("sitdownscript")],
                                            startState = True,
                                            name = "sitdown")
 
@@ -81,14 +81,14 @@ class PyOptionTreeBuilder:
         bootingState = winFSM.newState(options = [tree.getOption("bootfsm")],
                                        startState = True,
                                        name = "bootfsm")
-        
+
         pausingState = winFSM.newState(options = [tree.getOption("stopwalking")],
                                        name = "pausing")
-        
-        pausedState = winFSM.newState(options = [tree.getOption("sitdownaction")],
+
+        pausedState = winFSM.newState(options = [tree.getOption("sitdownscript")],
                                       name = "paused")
 
-        unpausingState = winFSM.newState(options = [tree.getOption("standupaction")],
+        unpausingState = winFSM.newState(options = [tree.getOption("standupscript")],
                                          name = "unpausing")
 
         readyState = winFSM.newState(options = [tree.getOption("stopwalking")],
@@ -97,19 +97,19 @@ class PyOptionTreeBuilder:
         setState = winFSM.newState(options = [tree.getOption("stopwalking")],
                                    name = "set")
 
-        
+
         beforeTheirKickoff = winFSM.newState(options = [tree.getOption("stopwalking")],
                                              name = "beforetheirkickoff")
 
         #playingState = winFsm.newState("playing", {playingFsm});
-        
+
         penalizedState = winFSM.newState(options = [tree.getOption("stopwalking")],
                                          name = "penalized")
 
-        forwardGetUpState = winFSM.newState(options= [tree.getOption("forwardgetupaction")],
+        forwardGetUpState = winFSM.newState(options= [tree.getOption("forwardgetupscript")],
                                                 name ="forwardgetup")
-  
-        backwardGetUpState = winFSM.newState(options= [tree.getOption("backwardgetupaction")],
+
+        backwardGetUpState = winFSM.newState(options= [tree.getOption("backwardgetupscript")],
                                                 name ="backwardgetup")
 
         dbg = getAgent().getDebugger()
@@ -149,7 +149,7 @@ class PyOptionTreeBuilder:
             when(startButtonPressed)
 
         tree.addOption(winFSM, True)
-  
+
     def buildTree(self):
 
         #print("buildTree: " + conf.confimpl.getParamStr("agent.u2dDevName", "not found"))

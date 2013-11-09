@@ -1,4 +1,4 @@
-#include "actionmodule.hh"
+#include "motionscriptmodule.hh"
 
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
@@ -12,8 +12,8 @@
 using namespace bold;
 using namespace std;
 
-ActionModule::ActionModule(shared_ptr<MotionTaskScheduler> scheduler, vector<shared_ptr<MotionScript>> scripts)
-: MotionModule("action", scheduler)
+MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler, vector<shared_ptr<MotionScript>> scripts)
+: MotionModule("motion-script", scheduler)
 {
   // Sort scripts alphabetically by name
   sort(scripts.begin(), scripts.end(),
@@ -24,23 +24,23 @@ ActionModule::ActionModule(shared_ptr<MotionTaskScheduler> scheduler, vector<sha
 
   for (shared_ptr<MotionScript> script : scripts)
   {
-    cout << "[ActionModule::ActionModule] Adding motion script: " << script->getName() << endl;
+    cout << "[MotionScriptModule::MotionScriptModule] Adding motion script: " << script->getName() << endl;
     d_controls.push_back(Control::createAction(script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); }));
   }
 }
 
-void ActionModule::initialize()
+void MotionScriptModule::initialize()
 {
   // TODO is this necessary?
   d_runner = nullptr;
 }
 
-bool ActionModule::isRunning()
+bool MotionScriptModule::isRunning()
 {
   return d_runner && d_runner->getState() != MotionScriptRunnerState::Finished;
 }
 
-void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
+void MotionScriptModule::step(shared_ptr<JointSelection> selectedJoints)
 {
   assert(ThreadId::isMotionLoopThread());
 
@@ -59,7 +59,7 @@ void ActionModule::step(shared_ptr<JointSelection> selectedJoints)
     setCompletedFlag();
 }
 
-void ActionModule::applySection(shared_ptr<BodySection> section)
+void MotionScriptModule::applySection(shared_ptr<BodySection> section)
 {
   if (!d_runner)
     return;
@@ -71,17 +71,17 @@ void ActionModule::applySection(shared_ptr<BodySection> section)
   });
 }
 
-void ActionModule::applyHead(shared_ptr<HeadSection> head) { applySection(dynamic_pointer_cast<BodySection>(head)); }
-void ActionModule::applyArms(shared_ptr<ArmSection> arms) { applySection(dynamic_pointer_cast<BodySection>(arms)); }
-void ActionModule::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic_pointer_cast<BodySection>(legs)); }
+void MotionScriptModule::applyHead(shared_ptr<HeadSection> head) { applySection(dynamic_pointer_cast<BodySection>(head)); }
+void MotionScriptModule::applyArms(shared_ptr<ArmSection> arms) { applySection(dynamic_pointer_cast<BodySection>(arms)); }
+void MotionScriptModule::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic_pointer_cast<BodySection>(legs)); }
 
-bool ActionModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
+bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
 {
-  cout << "[ActionModule::start] Starting script " << scriptRunner->getScriptName() << endl;
+  cout << "[MotionScriptModule::start] Starting script " << scriptRunner->getScriptName() << endl;
 
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
-    cerr << "[ActionModule::start] Ignoring request to play script " << scriptRunner->getScriptName()
+    cerr << "[MotionScriptModule::start] Ignoring request to play script " << scriptRunner->getScriptName()
          << " -- already playing " << d_runner->getScriptName()
          << endl;
 

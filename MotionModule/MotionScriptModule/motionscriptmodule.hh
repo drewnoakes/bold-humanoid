@@ -14,14 +14,14 @@ namespace bold
   class MotionScriptRunner;
   class BodySection;
 
-  class ActionModule : public MotionModule
+  class MotionScriptModule : public MotionModule
   {
   private:
     std::shared_ptr<MotionScriptRunner> d_runner;
     std::vector<std::shared_ptr<Control const>> d_controls;
 
   public:
-    ActionModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
+    MotionScriptModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
 
     void initialize() override;
 

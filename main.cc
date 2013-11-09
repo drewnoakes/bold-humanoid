@@ -138,7 +138,7 @@ int main(int argc, char **argv)
                                                 agent->getDebugger(),
                                                 agent->getCameraModel(),
                                                 agent->getAmbulator(),
-                                                agent->getActionModule(),
+                                                agent->getMotionScriptModule(),
                                                 agent->getHeadModule(),
                                                 agent->getWalkModule(),
                                                 agent->getFallDetector());

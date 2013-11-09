@@ -4,7 +4,7 @@
 
 namespace bold
 {
-  class ActionModule;
+  class MotionScriptModule;
   class Ambulator;
   class BodyState;
   class Camera;
@@ -30,7 +30,7 @@ namespace bold
   public:
     Agent();
 
-    
+
     std::shared_ptr<Ambulator> getAmbulator() const;
     std::shared_ptr<Camera> getCamera() const;
     std::shared_ptr<CameraModel> getCameraModel() const;
@@ -45,7 +45,7 @@ namespace bold
 
     std::shared_ptr<HeadModule> getHeadModule() const;
     std::shared_ptr<WalkModule> getWalkModule() const;
-    std::shared_ptr<ActionModule> getActionModule() const;
+    std::shared_ptr<MotionScriptModule> getMotionScriptModule() const;
 
     unsigned getTeamNumber() const;
     void setTeamNumber(unsigned teamNumber);

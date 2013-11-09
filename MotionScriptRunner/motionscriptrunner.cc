@@ -40,7 +40,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
   if (d_state == MotionScriptRunnerState::Pending)
   {
-    // Special treatment for the first step of a new action
+    // Special treatment for the first step of a new script
 
     d_state = MotionScriptRunnerState::Running;
     d_sectionStepIndex = 0;
