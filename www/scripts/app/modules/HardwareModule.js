@@ -123,12 +123,11 @@ define(
         {
             var time = new Date().getTime();
 
+            // Only allow one point per second, to avoid using too much memory
             if (this.lastDataTime && (time - this.lastDataTime) < 1000)
                 return;
 
             this.lastDataTime = time;
-
-            // TODO this probably causes too many data points to be added -- conflate
 
             this.voltageSeries.append(time, data.volts);
 
