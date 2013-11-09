@@ -257,7 +257,7 @@ void MotionLoop::step(SequentialTimer& t)
       // TODO only create if someone is listening to this in the debugger
       if (dirtyDeviceCount > 0)
       {
-        AgentState::getInstance().set<BodyControlState>(make_shared<BodyControlState const>(d_bodyControl, d_cycleNumber));
+        AgentState::getInstance().set(make_shared<BodyControlState const>(d_bodyControl, d_cycleNumber));
 
         t.timeEvent("Set BodyControlState");
       }
