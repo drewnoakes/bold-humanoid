@@ -17,9 +17,9 @@ namespace bold
     struct JointControlState
     {
       ushort value;
-      uchar gainP;
-      uchar gainI;
-      uchar gainD;
+      uchar pGain;
+      uchar iGain;
+      uchar dGain;
     };
 
     BodyControlState(std::shared_ptr<BodyControl> bodyControl)
@@ -28,11 +28,10 @@ namespace bold
       {
         auto joint = bodyControl->getJoint((JointId)j);
 
-        // TODO consistent capitalisation
         d_jointStates[j - 1].value = joint->getValue();
-        d_jointStates[j - 1].gainP = joint->getPGain();
-        d_jointStates[j - 1].gainI = joint->getIGain();
-        d_jointStates[j - 1].gainD = joint->getDGain();
+        d_jointStates[j - 1].pGain = joint->getPGain();
+        d_jointStates[j - 1].iGain = joint->getIGain();
+        d_jointStates[j - 1].dGain = joint->getDGain();
       }
     };
 

@@ -51,17 +51,17 @@ namespace bold
 
     void setPidGains(uchar p, uchar i, uchar d);
 
-    uchar getPGain() const { return d_gainP; }
-    uchar getIGain() const { return d_gainI; }
-    uchar getDGain() const { return d_gainD; }
+    uchar getPGain() const { return d_pGain; }
+    uchar getIGain() const { return d_iGain; }
+    uchar getDGain() const { return d_dGain; }
 
   private:
     uchar d_jointId;
     ushort d_value;
     double d_degrees;
-    uchar d_gainP;
-    uchar d_gainI;
-    uchar d_gainD;
+    uchar d_pGain;
+    uchar d_iGain;
+    uchar d_dGain;
     Range<int> d_changedAddressRange;
   };
 
