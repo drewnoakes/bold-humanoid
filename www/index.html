@@ -37,13 +37,10 @@
         </div>
     </script>
 
-    <script id="hardware-body-model-template" type="text/x-handlebars-template">
-        <div class="hardware-body-model" style="width:{{this.containerWidth}}px; height:{{this.containerHeight}}px;">
+    <script id="body-figure-template" type="text/x-handlebars-template">
+        <div class="body-figure" style="width:{{this.containerWidth}}px; height:{{this.containerHeight}}px;">
             {{#each this.joints}}
-            <div class="joint" title="{{this.name}} ({{this.id}})" data-joint-id="{{this.id}}" style="left:{{this.x}}px; top:{{this.y}}px; width:{{this.width}}px; height:{{this.height}}px;">
-                <div class="temperature"></div>
-            </div>
-            {{/each}}
+            <div class="joint" title="{{this.name}} ({{this.id}})" data-joint-id="{{this.id}}" style="left:{{this.x}}px; top:{{this.y}}px; width:{{this.width}}px; height:{{this.height}}px;"></div>{{/each}}
         </div>
     </script>
 

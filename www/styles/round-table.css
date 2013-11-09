@@ -498,14 +498,14 @@ div.module.motion-scripts button
 
 /*******************************************************************/
 
-div.module.hardware div.hardware-body-model
+div.module.hardware div.body-figure
 {
     position: absolute;
     top: 20px;
     right: 0;
 }
 
-div.module.hardware div.hardware-body-model div.joint
+div.module.hardware div.body-figure div.joint
 {
     position: absolute;
     border: 1px dotted grey;
