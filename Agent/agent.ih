@@ -24,6 +24,7 @@
 #include "../Spatialiser/spatialiser.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
+#include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/DebugState/debugstate.hh"

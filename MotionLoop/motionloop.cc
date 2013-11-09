@@ -7,6 +7,7 @@
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
@@ -246,6 +247,17 @@ void MotionLoop::step(SequentialTimer& t)
       }
 
       t.timeEvent("Write to CM730");
+
+      //
+      // Update BodyControlState
+      //
+      // TODO only create if someone is listening to this in the debugger
+      if (dirtyDeviceCount > 0)
+      {
+        AgentState::getInstance().set<BodyControlState>(make_shared<BodyControlState const>(d_bodyControl));
+
+        t.timeEvent("Set BodyControlState");
+      }
     }
   }
 
