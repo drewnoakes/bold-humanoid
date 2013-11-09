@@ -5,9 +5,10 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <sigc++/signal.h>
-#include <vector>
 #include <mutex>
+#include <sigc++/signal.h>
+#include <type_traits>
+#include <vector>
 
 #include "../StateObject/stateobject.hh"
 #include "../StateObserver/stateobserver.hh"
@@ -115,9 +116,9 @@ namespace bold
     template <typename T>
     void set(std::shared_ptr<T const> state)
     {
+      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       assert(state);
 
-      // TODO can type traits be used here to guarantee that T derives from StateObject
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
 
