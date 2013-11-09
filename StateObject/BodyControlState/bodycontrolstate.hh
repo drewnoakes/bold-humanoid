@@ -22,7 +22,8 @@ namespace bold
       uchar dGain;
     };
 
-    BodyControlState(std::shared_ptr<BodyControl> bodyControl)
+    BodyControlState(std::shared_ptr<BodyControl> bodyControl, ulong motionCycleNumber)
+    : d_motionCycleNumber(motionCycleNumber)
     {
       for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
       {
@@ -38,6 +39,7 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
+    ulong d_motionCycleNumber;
     JointControlState d_jointStates[(uchar)JointId::MAX];
   };
 }

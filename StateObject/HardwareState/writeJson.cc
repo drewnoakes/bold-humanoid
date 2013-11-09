@@ -13,6 +13,8 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
+    writer.String("cycle").Uint64(d_motionCycleNumber);
+    
     writer.String("acc");
     writer.StartArray();
     writer.Double(d_cm730State->acc.x());

@@ -34,7 +34,7 @@ namespace bold
 
   private:
     void step(SequentialTimer& t);
-    
+
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
     std::shared_ptr<BodyControl> d_bodyControl;
@@ -46,9 +46,11 @@ namespace bold
     unsigned d_loopDurationMillis;
 
     pthread_t d_thread;
-    
+
     /// Whether the loop has read any values yet.
     bool d_readYet;
+
+    ulong d_cycleNumber;
 
     /// The method that governs the thread's lifetime and operation
     static void *threadMethod(void *param);

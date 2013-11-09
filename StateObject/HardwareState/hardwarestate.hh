@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <memory>
 #include <vector>
 
@@ -9,7 +10,8 @@
 namespace bold
 {
   typedef unsigned char uchar;
-  
+  typedef unsigned long ulong;
+
   class CM730Snapshot;
   class MX28Snapshot;
 
@@ -18,12 +20,14 @@ namespace bold
   public:
     HardwareState(std::shared_ptr<CM730Snapshot const> cm730State,
                   std::vector<std::shared_ptr<MX28Snapshot const>> mx28States,
-                  unsigned long rxBytes,
-                  unsigned long txBytes)
+                  ulong rxBytes,
+                  ulong txBytes,
+                  ulong motionCycleNumber)
     : d_cm730State(cm730State),
       d_mx28States(mx28States),
       d_rxBytes(rxBytes),
-      d_txBytes(txBytes)
+      d_txBytes(txBytes),
+      d_motionCycleNumber(motionCycleNumber)
     {
       assert(d_mx28States.size() == 20);
       assert(cm730State);
@@ -50,7 +54,8 @@ namespace bold
   private:
     std::shared_ptr<CM730Snapshot const> d_cm730State;
     std::vector<std::shared_ptr<MX28Snapshot const>> d_mx28States;
-    unsigned long d_rxBytes;
-    unsigned long d_txBytes;
+    ulong d_rxBytes;
+    ulong d_txBytes;
+    ulong d_motionCycleNumber;
   };
 }

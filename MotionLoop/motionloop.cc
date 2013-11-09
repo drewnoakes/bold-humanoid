@@ -25,7 +25,8 @@ MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
   d_isStarted(false),
   d_isStopRequested(false),
   d_loopDurationMillis(8),
-  d_readYet(false)
+  d_readYet(false),
+  d_cycleNumber(0)
 {
   d_bodyControl = make_shared<BodyControl>();
   d_dynamicBulkRead = make_shared<BulkRead>(CM730::P_DXL_POWER, CM730::P_VOLTAGE,
@@ -159,6 +160,8 @@ void *MotionLoop::threadMethod(void *param)
 
 void MotionLoop::step(SequentialTimer& t)
 {
+  d_cycleNumber++;
+
   if (d_readYet)
   {
     //
@@ -254,7 +257,7 @@ void MotionLoop::step(SequentialTimer& t)
       // TODO only create if someone is listening to this in the debugger
       if (dirtyDeviceCount > 0)
       {
-        AgentState::getInstance().set<BodyControlState>(make_shared<BodyControlState const>(d_bodyControl));
+        AgentState::getInstance().set<BodyControlState>(make_shared<BodyControlState const>(d_bodyControl, d_cycleNumber));
 
         t.timeEvent("Set BodyControlState");
       }
@@ -288,7 +291,7 @@ void MotionLoop::step(SequentialTimer& t)
   auto rxBytes = d_cm730->getReceivedByteCount();
   auto txBytes = d_cm730->getTransmittedByteCount();
 
-  AgentState::getInstance().set(make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes));
+  AgentState::getInstance().set(make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes, d_cycleNumber));
   t.timeEvent("Update HardwareState");
 
   if (!d_readYet)

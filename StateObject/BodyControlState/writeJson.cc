@@ -7,19 +7,26 @@ using namespace rapidjson;
 
 void BodyControlState::writeJson(Writer<StringBuffer>& writer) const
 {
-  writer.StartArray();
+  writer.StartObject();
   {
-    for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
+    writer.String("cycle").Uint64(d_motionCycleNumber);
+    
+    writer.String("joints");
+    writer.StartArray();
     {
-      writer.StartObject();
+      for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
       {
-        writer.String("v").Uint(d_jointStates[j - 1].value);
-        writer.String("p").Uint(d_jointStates[j - 1].pGain);
-        writer.String("i").Uint(d_jointStates[j - 1].iGain);
-        writer.String("d").Uint(d_jointStates[j - 1].dGain);
+        writer.StartObject();
+        {
+          writer.String("v").Uint(d_jointStates[j - 1].value);
+          writer.String("p").Uint(d_jointStates[j - 1].pGain);
+          writer.String("i").Uint(d_jointStates[j - 1].iGain);
+          writer.String("d").Uint(d_jointStates[j - 1].dGain);
+        }
+        writer.EndObject();
       }
-      writer.EndObject();
     }
+    writer.EndArray();
   }
-  writer.EndArray();
+  writer.EndObject();
 }

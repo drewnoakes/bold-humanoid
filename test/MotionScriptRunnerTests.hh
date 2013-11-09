@@ -49,7 +49,7 @@ TEST (DISABLED_MotionScriptRunnerTests, basics)
     mx28->presentPositionValue = 0;
     mx28States.push_back(mx28);
   }
-  AgentState::getInstance().set<HardwareState>(make_shared<HardwareState>(cm730State, mx28States, 0, 0));
+  AgentState::getInstance().set<HardwareState>(make_shared<HardwareState>(cm730State, mx28States, 0, 0, 0));
 
   auto stage = make_shared<MotionScript::Stage>();
 
