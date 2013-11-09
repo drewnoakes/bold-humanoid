@@ -518,3 +518,53 @@ div.module.hardware div.body-figure div.joint
     -o-transition: background-color 0.4s linear;
     -webkit-transition: background-color 0.4s linear;
 }
+
+
+/*******************************************************************/
+
+div.module.trajectory div.body-figure
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 25px;
+}
+
+div.module.trajectory div.body-figure div.joint
+{
+    position: absolute;
+    border: 1px dotted grey;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 20px;
+    color: #000;
+    transition: background-color 0.4s linear, color 0.4s linear;
+    -moz-transition: background-color 0.4s linear, color 0.4s linear;
+    -o-transition: background-color 0.4s linear, color 0.4s linear;
+    -webkit-transition: background-color 0.4s linear, color 0.4s linear;
+}
+
+div.module.trajectory div.body-figure div.selected
+{
+    border: 1px dotted grey;
+    background-color: #792485;
+    color: white;
+}
+
+div.module.trajectory canvas
+{
+    background-color: #000;
+}
+
+div.module.trajectory button.record
+{
+    margin: 0 3px 4px 0;
+    padding: 2px 6px;
+    font-size: 13px;
+}
+
+div.module.trajectory button.record.recording
+{
+    border-color: red;
+}
