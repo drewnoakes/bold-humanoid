@@ -3,7 +3,7 @@
 vector<shared_ptr<Option>> ActionOption::runPolicy()
 {
   cout << "[ActionOption::runPolicy] " << getID() << endl;
-  
+
   if (!d_runner || d_runner->getState() != MotionScriptRunnerState::Running)
   {
     auto runner = make_shared<MotionScriptRunner>(d_script);

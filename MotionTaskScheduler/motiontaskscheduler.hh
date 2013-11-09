@@ -11,7 +11,7 @@
 namespace bold
 {
   class MotionModule;
-  
+
   /** Tracks all active MotionTasks.
    *
    * Thread safe.
@@ -23,9 +23,9 @@ namespace bold
     : d_modules(),
       d_hasChange(false)
     {}
-    
+
     void registerModule(MotionModule* module) { d_modules.push_back(module); }
-    
+
     /** Enqueues motion tasks to be picked up in the next motion loop.
      *
      * Overall, the highest priority task per body section will be selected.
@@ -37,7 +37,7 @@ namespace bold
              Priority headPriority, bool requestCommitHead,
              Priority armsPriority, bool requestCommitArms,
              Priority legsPriority, bool requestCommitLegs);
-    
+
     /** Called at the end of each think loop, updating MotionTaskState.
      */
     void update();
@@ -46,5 +46,5 @@ namespace bold
     std::vector<std::shared_ptr<MotionTask>> d_tasks;
     std::vector<MotionModule*> d_modules;
     bool d_hasChange;
-  };  
+  };
 }

@@ -54,7 +54,7 @@ namespace bold
     uchar getPGain() const { return d_gainP; }
     uchar getIGain() const { return d_gainI; }
     uchar getDGain() const { return d_gainD; }
-    
+
   private:
     uchar d_jointId;
     ushort d_value;
@@ -83,11 +83,11 @@ namespace bold
 
     /** Sets all JointControl positions to match current hardware values. */
     void updateFromHardwareState();
-    
+
     std::shared_ptr<JointControl> getJoint(JointId const id) const { return d_joints[(int)id - 1]; }
 
     std::vector<std::shared_ptr<JointControl>> getJoints() const { return d_joints; }
-    
+
     std::shared_ptr<HeadSection> getHeadSection() const { return d_headSection; }
     std::shared_ptr<ArmSection>  getArmSection()  const { return d_armSection; }
     std::shared_ptr<LegSection>  getLegSection()  const { return d_legSection; }

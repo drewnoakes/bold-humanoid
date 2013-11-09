@@ -21,7 +21,7 @@ BodyControl::BodyControl()
 void BodyControl::updateFromHardwareState()
 {
   auto hw = AgentState::get<HardwareState>();
-  
+
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     shared_ptr<JointControl> joint = getJoint((JointId)jointId);
