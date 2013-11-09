@@ -10,6 +10,7 @@
 namespace bold
 {
   typedef unsigned char uchar;
+  typedef unsigned short ushort;
 
   class JointControl
   {
@@ -25,8 +26,8 @@ namespace bold
 
     uchar getId() const { return d_jointId; }
 
-    void setValue(unsigned value);
-    unsigned getValue() const { return d_value; }
+    void setValue(ushort value);
+    ushort getValue() const { return d_value; }
 
     /// Sets the target angle, in degrees
     void setDegrees(double degrees);
@@ -54,7 +55,7 @@ namespace bold
     
   private:
     uchar d_jointId;
-    unsigned d_value;
+    ushort d_value;
     double d_degrees;
     uchar d_gainP;
     uchar d_gainI;

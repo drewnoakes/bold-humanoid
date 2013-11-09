@@ -4,12 +4,14 @@
 
 namespace bold
 {
+  typedef unsigned short ushort;
+
   class MX28
   {
   public:
-    static const unsigned MIN_VALUE    = 0x0000;
-    static const unsigned CENTER_VALUE = 0x0800; // 2048
-    static const unsigned MAX_VALUE    = 0x0FFF; // 4095
+    static const ushort MIN_VALUE    = 0x0000;
+    static const ushort CENTER_VALUE = 0x0800; // 2048
+    static const ushort MAX_VALUE    = 0x0FFF; // 4095
 
     static constexpr double MIN_DEGS = -180.0;
     static constexpr double MAX_DEGS =  180.0;
@@ -28,22 +30,22 @@ namespace bold
     static constexpr double RATIO_VALUE2TORQUE = 0.01;
     static constexpr double RATIO_TORQUE2VALUE = 100;
 
-//  static unsigned getMirrorValue(unsigned value);
+//  static ushort getMirrorValue(ushort value);
 //  static double getMirrorAngle(double angle);
 
-    static unsigned degs2Value(double angle);
-    static double value2Degs(unsigned value);
+    static ushort degs2Value(double angle);
+    static double value2Degs(ushort value);
 
-    static unsigned rads2Value(double angle);
-    static double value2Rads(unsigned value);
-    
-    static unsigned clampValue(int value);
+    static ushort rads2Value(double angle);
+    static double value2Rads(ushort value);
 
-    static unsigned rpm2Value(double speed);
-    static double value2Rpm(unsigned value);
+    static ushort clampValue(int value);
 
-    static unsigned torque2Value(double speed);
-    static double talue2Torque(unsigned value);
+    static ushort rpm2Value(double speed);
+    static double value2Rpm(ushort value);
+
+    static ushort torque2Value(double speed);
+    static double talue2Torque(ushort value);
 
     /** EEPROM and RAM p. 4 in MX28 Technical Specifications PDF
      * This enum enumerates the adresses. The list depends on the version the MX28.

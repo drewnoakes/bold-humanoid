@@ -43,7 +43,7 @@ JointControl::JointControl(uchar jointId)
   d_changedAddressRange()
 {}
 
-void JointControl::setValue(unsigned value)
+void JointControl::setValue(ushort value)
 {
   value = Math::clamp(value, MX28::MIN_VALUE, MX28::MAX_VALUE);
   if (d_value == value)
