@@ -90,7 +90,10 @@ define(
 
     TimingPane.prototype.onData = function(data)
     {
-      this.fpsCount++;
+      if (this.lastCycleNumber) {
+        this.fpsCount += data.cycle - this.lastCycleNumber;
+      }
+      this.lastCycleNumber = data.cycle;
       var time = new Date().getTime();
       var timings = data.timings;
 
