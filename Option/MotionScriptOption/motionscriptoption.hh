@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../option.hh"
-#include "../../MotionScript/motionscript.hh"
 
 #include <string>
 
 namespace bold
 {
+  class MotionScript;
   class MotionScriptModule;
   class MotionScriptRunner;
 
@@ -23,24 +23,9 @@ namespace bold
 
   private:
     std::shared_ptr<MotionScriptModule> d_motionScriptModule;
-    /// The script associated with this MotionScriptfOption
+    /// The script associated with this MotionScriptOption
     std::shared_ptr<MotionScript const> d_script;
     /// The most recent MotionScriptRunner issued to the MotionScriptModule
     std::shared_ptr<MotionScriptRunner> d_runner;
   };
-
-  inline MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName)
-    : Option(id),
-      d_motionScriptModule(motionScriptModule)
-  {
-    d_script = MotionScript::fromFile(fileName);
-    if (!d_script)
-      throw std::runtime_error("File not found");
-  }
-
-  inline MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script)
-    : Option(id),
-      d_motionScriptModule(motionScriptModule),
-      d_script(script)
-  {}
 }

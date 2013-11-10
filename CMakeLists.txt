@@ -312,8 +312,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/MotionScriptOption/hasTerminated.cc
-  ./Option/MotionScriptOption/runPolicy.cc
+  ./Option/MotionScriptOption/motionscriptoption.cc
 )
 
 add_class(BOLDHUMANOID

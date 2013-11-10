@@ -5,6 +5,8 @@
 #include "../Camera/camera.hh"
 #include "../CameraModel/cameramodel.hh"
 #include "../Clock/clock.hh"
+#include "../CM730/cm730.hh"
+#include "../CM730Platform/CM730Linux/cm730linux.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
@@ -14,7 +16,13 @@
 #include "../joystick/joystick.hh"
 #include "../Localiser/localiser.hh"
 #include "../LUTBuilder/lutbuilder.hh"
+#include "../MotionLoop/motionloop.hh"
+#include "../MotionModule/HeadModule/headmodule.hh"
+#include "../MotionModule/MotionScriptModule/motionscriptmodule.hh"
+#include "../MotionModule/WalkModule/walkmodule.hh"
+#include "../MotionScript/motionscript.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
+#include "../MX28/mx28.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../Option/MotionScriptOption/motionscriptoption.hh"
 #include "../OptionTree/optiontree.hh"
@@ -42,14 +50,6 @@
 #include "../ThreadId/threadid.hh"
 #include "../VisualCortex/visualcortex.hh"
 #include "../Voice/voice.hh"
-
-#include "../CM730/cm730.hh"
-#include "../CM730Platform/CM730Linux/cm730linux.hh"
-#include "../MX28/mx28.hh"
-#include "../MotionLoop/motionloop.hh"
-#include "../MotionModule/HeadModule/headmodule.hh"
-#include "../MotionModule/MotionScriptModule/motionscriptmodule.hh"
-#include "../MotionModule/WalkModule/walkmodule.hh"
 
 #include <iostream>
 
