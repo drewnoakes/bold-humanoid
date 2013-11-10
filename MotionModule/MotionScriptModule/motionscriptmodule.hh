@@ -35,6 +35,12 @@ namespace bold
 
     std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; };
 
+    /** Attempts to start executing the provided script runner.
+     *
+     * @return true if the script has been accepted and scheduled to run,
+     * otherwise false indicating that the request to start was ignored due
+     * to another script already executing.
+     */
     bool start(std::shared_ptr<MotionScriptRunner> scriptRunner);
 
     bool isRunning();
