@@ -15,7 +15,7 @@ TEST (BodyStateTests, posture)
   // Create a body with all hinges at an angle of zero
   //
 
-  auto am1 = BodyState(angles);
+  auto am1 = BodyState(angles, 1);
   shared_ptr<Limb const> leftFoot = am1.getLimb("lFoot");
   shared_ptr<Limb const> rightFoot = am1.getLimb("rFoot");
 
@@ -34,7 +34,7 @@ TEST (BodyStateTests, posture)
   angles[(int)JointId::L_HIP_ROLL] = M_PI/2;
   angles[(int)JointId::R_HIP_ROLL] = M_PI/2;
 
-  auto am2 = BodyState(angles);
+  auto am2 = BodyState(angles, 2);
   leftFoot = am2.getLimb("lFoot");
   rightFoot = am2.getLimb("rFoot");
 
@@ -55,7 +55,7 @@ TEST (BodyStateTests, camera)
 
   Matrix3d expectedCameraRotation = AngleAxisd(M_PI/4, Vector3d::UnitY()).matrix();
 
-  auto body = BodyState(angles);
+  auto body = BodyState(angles, 3);
 
 //   Matrix3d actualCameraTorsoRotation = body.getLimb("camera")->transform.rotation().matrix();
 

@@ -92,10 +92,11 @@ define(
     {
       this.fpsCount++;
       var time = new Date().getTime();
+      var timings = data.timings;
 
-      _.each(_.keys(data), function (key)
+      _.each(_.keys(timings), function (key)
       {
-        var millis = data[key];
+        var millis = timings[key];
         this.getOrCreateEntry(key).update(time, millis);
       }.bind(this));
 

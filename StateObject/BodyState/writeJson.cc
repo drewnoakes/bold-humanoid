@@ -7,6 +7,8 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
+    writer.String("cycle").Uint64(d_cycleNumber);
+    
     writer.String("angles");
     writer.StartArray();
     {

@@ -27,7 +27,7 @@ protected:
 TEST_F (AgentStateTests, threadedAccess)
 {
   int loopCount = 50000;
-  
+
   thread producer([&]()
   {
     for (int i = 0; i < loopCount; i++)
@@ -35,18 +35,18 @@ TEST_F (AgentStateTests, threadedAccess)
       auto eventTimings = make_shared<vector<EventTiming>>();
       eventTimings->push_back(make_pair(0.1, "Event 1"));
       eventTimings->push_back(make_pair(0.2, "Event 2"));
-      AgentState::getInstance().set(make_shared<MotionTimingState const>(eventTimings));
+      AgentState::getInstance().set(make_shared<MotionTimingState const>(eventTimings, 1));
     }
   });
-  
+
   bool seenState = false;
-  
+
   thread consumer([&]()
   {
     for (int i = 0; i < loopCount; i++)
     {
       auto const& state = AgentState::get<MotionTimingState>();
-      
+
       if (state)
       {
         EXPECT_EQ(2, state->getTimings()->size());
@@ -54,10 +54,10 @@ TEST_F (AgentStateTests, threadedAccess)
       }
     }
   });
-  
+
   producer.join();
   consumer.join();
-  
+
   EXPECT_TRUE(seenState);
 }
 
@@ -66,10 +66,10 @@ TEST_F (AgentStateTests, setAndGet)
   auto eventTimings = make_shared<vector<EventTiming>>();
   eventTimings->push_back(make_pair(0.1, "Event 1"));
   eventTimings->push_back(make_pair(0.2, "Event 2"));
-  AgentState::getInstance().set(make_shared<MotionTimingState const>(eventTimings));
-  
+  AgentState::getInstance().set(make_shared<MotionTimingState const>(eventTimings, 2));
+
   shared_ptr<MotionTimingState const> state = AgentState::get<MotionTimingState>();
-  
+
   EXPECT_NE ( nullptr, state );
   EXPECT_EQ(2, state->getTimings()->size());
 }

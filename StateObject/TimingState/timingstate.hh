@@ -10,14 +10,15 @@
 namespace bold
 {
   typedef std::pair<double, std::string> EventTiming;
-  
+
   class TimingState : public StateObject
   {
   protected:
-    TimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings)
-    : d_eventTimings(eventTimings)
+    TimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber)
+    : d_eventTimings(eventTimings),
+      d_cycleNumber(cycleNumber)
     {}
-    
+
     virtual ~TimingState() {}
 
   public:
@@ -25,35 +26,42 @@ namespace bold
     {
       writer.StartObject();
       {
-        std::vector<EventTiming> const& timings = *d_eventTimings;
-        for (EventTiming const& timing : timings)
+        writer.String("cycle").Uint64(d_cycleNumber);
+        writer.String("timings");
+        writer.StartObject();
         {
-          writer.String(timing.second.c_str()); // event name
-          writer.Double(timing.first);          // duration in milliseconds
+          std::vector<EventTiming> const& timings = *d_eventTimings;
+          for (EventTiming const& timing : timings)
+          {
+            writer.String(timing.second.c_str()); // event name
+            writer.Double(timing.first);          // duration in milliseconds
+          }
         }
+        writer.EndObject();
       }
-      writer.EndObject();      
+      writer.EndObject();
     }
-    
+
     std::shared_ptr<std::vector<EventTiming> const> getTimings() const { return d_eventTimings; }
-    
+
   private:
    std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
+   ulong d_cycleNumber;
   };
-  
+
   class MotionTimingState : public TimingState
   {
   public:
-    MotionTimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings)
-    : TimingState(eventTimings)
+    MotionTimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber)
+    : TimingState(eventTimings, cycleNumber)
     {}
   };
-  
+
   class ThinkTimingState : public TimingState
   {
   public:
-    ThinkTimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings)
-    : TimingState(eventTimings)
+    ThinkTimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber)
+    : TimingState(eventTimings, cycleNumber)
     {}
   };
 }

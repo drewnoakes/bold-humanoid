@@ -1,9 +1,10 @@
 #include "bodystate.ih"
 
-BodyState::BodyState(double angles[])
+BodyState::BodyState(double angles[], ulong cycleNumber)
 : d_torso(),
   d_jointById(),
-  d_limbByName()
+  d_limbByName(),
+  d_cycleNumber(cycleNumber)
 {
   initBody(angles);
   updatePosture();

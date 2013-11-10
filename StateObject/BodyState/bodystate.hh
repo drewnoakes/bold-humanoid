@@ -14,11 +14,11 @@
 namespace bold
 {
   typedef unsigned char uchar;
-  
+
   class BodyState : public StateObject
   {
   public:
-    BodyState(double angles[]);
+    BodyState(double angles[], ulong thinkCycleNumber);
 
     void updatePosture();
 
@@ -74,6 +74,8 @@ namespace bold
     Eigen::Affine3d d_torsoWorldRotation;
     /// Transform of camera, including rotation of torso in agent/world frames
     Eigen::Affine3d d_cameraAgentTransform;
+
+    ulong d_cycleNumber;
 
   public:
     // Needed when having fixed sized Eigen member

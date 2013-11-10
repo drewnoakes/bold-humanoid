@@ -6,6 +6,8 @@ void Agent::think()
 
   assert(ThreadId::isThinkLoopThread());
 
+  d_cycleNumber++;
+
   SequentialTimer t;
 
   //
@@ -30,7 +32,7 @@ void Agent::think()
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       angles[jointId] = hw->getMX28State(jointId)->presentPosition;
 
-    AgentState::getInstance().set(make_shared<BodyState const>(angles));
+    AgentState::getInstance().set(make_shared<BodyState const>(angles, d_cycleNumber));
     t.timeEvent("Update BodyState");
   }
 
@@ -115,7 +117,7 @@ void Agent::think()
   //
   // Set timing data for the think cycle
   //
-  AgentState::getInstance().set(make_shared<ThinkTimingState const>(t.flush()));
+  AgentState::getInstance().set(make_shared<ThinkTimingState const>(t.flush(), d_cycleNumber));
 
   onThinkEnd();
 }

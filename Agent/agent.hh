@@ -35,6 +35,8 @@ namespace bold
   class Voice;
   class WalkModule;
 
+  typedef unsigned long ulong;
+
   class Agent : public Configurable
   {
   public:
@@ -123,6 +125,8 @@ namespace bold
     double d_joystickAAmpMax;
 
     std::unique_ptr<OptionTree> d_optionTree;
+
+    ulong d_cycleNumber;
 
     void initCamera();
 

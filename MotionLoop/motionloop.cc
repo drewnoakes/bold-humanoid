@@ -150,7 +150,7 @@ void *MotionLoop::threadMethod(void *param)
     t.timeEvent("Sleep");
 
     // Set timing data for the motion cycle
-    AgentState::getInstance().set(make_shared<MotionTimingState const>(t.flush()));
+    AgentState::getInstance().set(make_shared<MotionTimingState const>(t.flush(), loop->d_cycleNumber));
   }
 
   cout << "[MotionLoop::threadMethod] Exiting" << endl;

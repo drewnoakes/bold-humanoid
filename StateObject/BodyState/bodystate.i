@@ -8,7 +8,7 @@ namespace bold
   class BodyState : public StateObject
   {
   public:
-    BodyState(double angles[]);
+    BodyState(double angles[], ulong cycleNumber);
 
     double getTorsoHeight() const;
 
