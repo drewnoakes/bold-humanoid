@@ -158,6 +158,16 @@ define(
 
             var jointIds = this.selectedJointIds.length ? this.selectedJointIds : d3.range(1, 21);
 
+            // Draw tick markers to show when samples were taken
+            ctx.strokeStyle = '#888';
+            _.each(this.data, function (d)
+            {
+                var px = Math.round(x(d.cycle) - 0.5) + 0.5;
+                ctx.moveTo(px, chartHeight);
+                ctx.lineTo(px, chartHeight - 5);
+            });
+            ctx.stroke();
+
             var drawLine = function (jointId)
             {
                 jointId--;
