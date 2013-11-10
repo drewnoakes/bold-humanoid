@@ -1,13 +1,18 @@
-#include "option.ih"
+#include "option.hh"
 
-Option::Option(std::string const& id)
-  : Configurable(std::string("option.") + id),
+#include <iostream>
+
+using namespace bold;
+using namespace std;
+
+Option::Option(string const& id)
+  : Configurable(string("option.") + id),
     d_id(id)
 {
-  cout << "Creating option: " << id << endl;
+  cout << "[Option::Option] Creating option: " << d_id << endl;
 }
 
 Option::~Option()
 {
-  cout << "Destroying option: " << getID() << endl;
+  cout << "[Option::~Option] Destroying option: " << d_id << endl;
 }

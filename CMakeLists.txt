@@ -278,7 +278,6 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./Option/Option.cc
-  ./Option/getID.cc
 )
 
 add_class(BOLDHUMANOID

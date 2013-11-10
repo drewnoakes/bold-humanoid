@@ -8,11 +8,9 @@
 
 namespace bold
 {
-  class Option;
-
   /** Option
    *
-   * An option is an abstract description of an action, that may be
+   * An option is an abstract description of an action that may be
    * temporally extended and semi-markovian. This means it may be
    * active for any length of time, and its policy may rely not only
    * on the current state, but on any part of history. An option is
@@ -32,7 +30,7 @@ namespace bold
 
     /** Get this option's ID
      */
-    std::string getID() const;
+    std::string getID() const { return d_id; }
 
     /** Check whether this option is currently available
      *
@@ -49,11 +47,11 @@ namespace bold
 
     /** Select this option to be run
      *
-     * If this option returns a null pointer, this indicates that it
+     * If this option returns an empty vector, this indicates that it
      * is a primitive option.
      *
      * @returns the sub-option selected by the policy of this option;
-     * Default: null-pointer
+     * Default: empty vector
      */
     virtual std::vector<std::shared_ptr<Option> > runPolicy() { return std::vector<std::shared_ptr<Option>>(); }
 
