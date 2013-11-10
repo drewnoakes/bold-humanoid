@@ -33,14 +33,25 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
 
 double MotionScriptOption::hasTerminated()
 {
-  return d_runner && d_runner->getState() == MotionScriptRunnerState::Running ? 0.0 : 1.0;
+  // If we haven't run yet, then we haven't terminated
+  if (!d_runner)
+    return 0;
+
+  // TODO we are using the 'hasTerminated' function here to clear internal state, meaning the answer is not idempotent
+
+  if (d_runner->getState() == MotionScriptRunnerState::Finished)
+  {
+    cout << "[MotionScriptOption::hasTerminated] Motion script completed: " << getID() << endl;
+    d_runner = nullptr;
+    return 1.0;
+  }
+
+  return 0.0;
 }
 
 vector<shared_ptr<Option>> MotionScriptOption::runPolicy()
 {
-  cout << "[MotionScriptOption::runPolicy] " << getID() << endl;
-
-  if (!d_runner || d_runner->getState() != MotionScriptRunnerState::Running)
+  if (!d_runner || d_runner->getState() == MotionScriptRunnerState::Finished)
   {
     auto runner = make_shared<MotionScriptRunner>(d_script);
 
@@ -54,6 +65,7 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy()
     else
     {
       cout << "[MotionScriptOption::runPolicy] Request to start motion script denied: " << getID() << endl;
+      d_runner = nullptr;
     }
   }
 
