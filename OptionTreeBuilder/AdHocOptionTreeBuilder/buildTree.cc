@@ -163,8 +163,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
   auto startUpState = winFsm->newState("startUp", {sit}, false/*end state*/, true/* start state */);
   auto readyState = winFsm->newState("ready", {stopWalking});
-  auto pausingState = winFsm->newState("pausing", {stopWalking});
-  auto pausedState = winFsm->newState("paused", {sit});
+  auto pausing1State = winFsm->newState("pausing1", {stopWalking});
+  auto pausing2State = winFsm->newState("pausing2", {sit});
+  auto pausedState = winFsm->newState("paused", {});
   auto unpausingState = winFsm->newState("unpausing", {standUp});
   auto setState = winFsm->newState("set", {stopWalking});
   auto beforeTheirKickoff = winFsm->newState("beforeTheirKickOff", {stopWalking});
@@ -181,7 +182,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   playingState->onEnter = [debugger]() { debugger->showPlaying(); };
   penalizedState->onEnter = [debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); };
   pausedState->onEnter = [debugger]() { debugger->showPaused(); };
-  pausingState->onEnter = [debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); };
+  pausing1State->onEnter = [debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); };
   stopAgentAndExitState->onEnter = [agent]() { agent->getCM730()->torqueEnable(false); agent->stop(); };
 
   //
@@ -205,12 +206,16 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
     ->whenTerminated();
 
   playingState
-    ->transitionTo(pausingState)
+    ->transitionTo(pausing1State)
     ->when(startButtonPressed);
 
-  pausingState
-    ->transitionTo(pausedState)
+  pausing1State
+    ->transitionTo(pausing2State)
     ->when(negate(isWalking));
+
+  pausing2State
+    ->transitionTo(pausedState)
+    ->whenTerminated();
 
   //
   // PLAY MODE BUTTON
