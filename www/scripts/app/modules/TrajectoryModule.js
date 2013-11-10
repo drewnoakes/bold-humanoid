@@ -18,10 +18,6 @@ define(
 
         var TrajectoryModule = function ()
         {
-            this.isRecording = false;
-            this.skipFirstDatum = true;
-            this.hoverJointId = -1;
-            this.data = [];
             this.container = $('<div></div>');
             this.title = 'trajectory';
             this.id = 'trajectory';
@@ -36,13 +32,33 @@ define(
 
         TrajectoryModule.prototype.load = function ()
         {
+            this.mirrorValues = true;
+            this.isRecording = false;
+            this.skipFirstDatum = true;
+            this.hoverJointId = -1;
+            this.data = [];
+
             this.recordButton = document.createElement('button');
             this.recordButton.className = 'record';
             this.recordButton.textContent = 'record';
             this.recordButton.addEventListener('click', this.toggleIsRecording.bind(this));
+            var mirrorCheckbox = document.createElement('input');
+            mirrorCheckbox.id = 'mirror-checkbox';
+            mirrorCheckbox.type = 'checkbox';
+            mirrorCheckbox.checked = true;
+            mirrorCheckbox.addEventListener('change', function ()
+            {
+                this.mirrorValues = mirrorCheckbox.checked;
+                this.render();
+            }.bind(this));
+            var mirrorLabel = document.createElement('label');
+            mirrorLabel.htmlFor = mirrorCheckbox.id;
+            mirrorLabel.textContent = 'Mirror values';
             var controlContainer = document.createElement('div');
             controlContainer.className = 'controls';
             controlContainer.appendChild(this.recordButton);
+            controlContainer.appendChild(mirrorCheckbox);
+            controlContainer.appendChild(mirrorLabel);
             this.container.append(controlContainer);
 
             this.canvas = document.createElement('canvas');
@@ -154,6 +170,10 @@ define(
                 .range([0, chartHeight])
                 .domain([4096, 0]);
 
+            var yMirror = d3.scale.linear()
+                .range([0, chartHeight])
+                .domain([0, 4096]);
+
             ctx.clear();
 
             var jointIds = this.selectedJointIds.length ? this.selectedJointIds : d3.range(1, 21);
@@ -174,10 +194,11 @@ define(
                 ctx.beginPath();
                 _.each(this.data, function (d)
                 {
+                    var yScale = this.mirrorValues && jointId % 2 === 0 && jointId !== 20 ? yMirror : y;
                     var px = x(d.cycle),
-                        py = y(d.joints[jointId].v);
+                        py = yScale(d.joints[jointId].v);
                     ctx.lineTo(px, py);
-                });
+                }.bind(this));
                 ctx.stroke();
             }.bind(this);
 
