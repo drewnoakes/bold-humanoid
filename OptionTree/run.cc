@@ -17,7 +17,7 @@ void OptionTree::run()
     // Run it
     vector<shared_ptr<Option>> subOptions = option->runPolicy();
 
-    // Push any suboptions it created onto the back of the stack
+    // Push any suboptions it created onto the back of the queue
     queue.insert(queue.end(), subOptions.begin(), subOptions.end());
 
     // Remember the fact that we ran it

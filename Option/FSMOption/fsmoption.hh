@@ -14,7 +14,7 @@ namespace bold
 
   struct FSMTransition
   {
-    FSMTransition(std::string const& n);
+    FSMTransition(std::string const& name);
 
     std::string name;
 

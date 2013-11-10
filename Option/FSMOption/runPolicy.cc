@@ -15,8 +15,6 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
 
 //   cout << "[FSMOption::runPolicy] Current state: " << d_curState->name << endl;
 
-  const int MAX_LOOP_COUNT = 20;
-
   auto tryTransition = [this,setCurrentState](shared_ptr<FSMTransition> transition)
   {
     if (!transition->condition())
@@ -34,6 +32,8 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
 
     return true;
   };
+
+  const int MAX_LOOP_COUNT = 20;
 
   int loopCount = 0;
   bool transitionMade;
