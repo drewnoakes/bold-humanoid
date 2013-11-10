@@ -34,7 +34,5 @@ void Agent::run()
     think();
   }
 
-  // TODO if the agent is walking, allow it to come to a stable pose before terminating
-
   cout << "[Agent::run] Stopped" << endl;
 }
