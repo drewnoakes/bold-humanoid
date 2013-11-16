@@ -3,11 +3,12 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <mutex>
 #include <sigc++/signal.h>
 #include <type_traits>
+#include <typeindex>
 #include <vector>
 
 #include "../StateObject/stateobject.hh"
@@ -76,9 +77,8 @@ namespace bold
       // TODO fail if state type name already registered
       std::cout << "[AgentState::registerStateType] Registering state type: " << name << std::endl;
       std::lock_guard<std::mutex> guard(d_mutex);
-      const std::type_info* typeId = &typeid(T);
-      assert(d_trackerByTypeId.find(typeId) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
-      d_trackerByTypeId[typeId] = StateTracker::create<T>(name);
+      assert(d_trackerByTypeId.find(typeid(T)) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
+      d_trackerByTypeId[typeid(T)] = StateTracker::create<T>(name);
     }
 
     std::vector<std::shared_ptr<StateTracker>> getTrackers() const
@@ -100,15 +100,14 @@ namespace bold
     template<typename T>
     void registerObserver(std::shared_ptr<StateObserver> observer)
     {
-      std::type_info const* typeId = &typeid(TState);
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       assert(observer);
       std::lock_guard<std::mutex> guard(d_mutex);
-      auto it = d_observersByTypeId.find(typeId);
+      auto it = d_observersByTypeId.find(typeid(T));
       if (it == d_observersByTypeId.end())
       {
         std::vector<std::shared_ptr<StateObserver>> observers = { observer };
-        d_observersByTypeId[typeId] = observers;
+        d_observersByTypeId[typeid(T)] = observers;
       }
       else
       {
@@ -129,8 +128,7 @@ namespace bold
       std::lock_guard<std::mutex> guard(d_mutex);
       updated(tracker);
 
-      std::type_info const* typeId = &typeid(T);
-      auto it = d_observersByTypeId.find(typeId);
+      auto it = d_observersByTypeId.find(typeid(T));
       if (it != d_observersByTypeId.end())
       {
         std::vector<std::shared_ptr<StateObserver>> const& observers = it->second;
@@ -158,7 +156,7 @@ namespace bold
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       std::lock_guard<std::mutex> guard(d_mutex);
-      auto pair = d_trackerByTypeId.find(&typeid(T));
+      auto pair = d_trackerByTypeId.find(typeid(T));
       assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
       auto tracker = pair->second;
       auto state = tracker->state<T>();
@@ -170,7 +168,7 @@ namespace bold
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       std::lock_guard<std::mutex> guard(d_mutex);
-      auto pair = d_trackerByTypeId.find(&typeid(T));
+      auto pair = d_trackerByTypeId.find(typeid(T));
       assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
       auto tracker = pair->second;
       return tracker;
@@ -181,10 +179,8 @@ namespace bold
   private:
     mutable std::mutex d_mutex;
 
-    struct TypeInfoCompare { bool operator()(std::type_info const* a, std::type_info const* b) const { return a->before(*b); }; };
-
-    std::map<std::type_info const*, std::vector<std::shared_ptr<StateObserver>>, TypeInfoCompare> d_observersByTypeId;
-    std::map<std::type_info const*, std::shared_ptr<StateTracker>, TypeInfoCompare> d_trackerByTypeId;
+    std::unordered_map<std::type_index, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeId;
+    std::unordered_map<std::type_index, std::shared_ptr<StateTracker>> d_trackerByTypeId;
   };
 
   inline AgentState& AgentState::getInstance()
