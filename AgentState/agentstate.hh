@@ -23,6 +23,7 @@ namespace bold
     template<typename T>
     static std::shared_ptr<StateTracker> create(std::string name)
     {
+      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       return std::make_shared<StateTracker>(name);
     }
 
@@ -40,6 +41,7 @@ namespace bold
     template<typename T>
     std::shared_ptr<T const> state() const
     {
+      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       std::lock_guard<std::mutex> guard(d_mutex);
       return std::dynamic_pointer_cast<T const>(d_state);
     }
@@ -70,6 +72,7 @@ namespace bold
     template<typename T>
     void registerStateType(std::string name)
     {
+      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       // TODO fail if state type name already registered
       std::cout << "[AgentState::registerStateType] Registering state type: " << name << std::endl;
       std::lock_guard<std::mutex> guard(d_mutex);
@@ -94,11 +97,11 @@ namespace bold
     /** Fires when a state object is updated. */
     sigc::signal<void, std::shared_ptr<StateTracker>> updated;
 
-    template<typename TState>
+    template<typename T>
     void registerObserver(std::shared_ptr<StateObserver> observer)
     {
-      // TODO can type traits be used here to guarantee that T derives from StateObject
       std::type_info const* typeId = &typeid(TState);
+      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       assert(observer);
       std::lock_guard<std::mutex> guard(d_mutex);
       auto it = d_observersByTypeId.find(typeId);
@@ -146,12 +149,14 @@ namespace bold
     template <typename T>
     static std::shared_ptr<T const> get()
     {
+      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       return AgentState::getInstance().getTrackerState<T>();
     }
 
     template<typename T>
     std::shared_ptr<T const> getTrackerState() const
     {
+      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       std::lock_guard<std::mutex> guard(d_mutex);
       auto pair = d_trackerByTypeId.find(&typeid(T));
       assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
@@ -163,6 +168,7 @@ namespace bold
     template<typename T>
     std::shared_ptr<StateTracker> getTracker() const
     {
+      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       std::lock_guard<std::mutex> guard(d_mutex);
       auto pair = d_trackerByTypeId.find(&typeid(T));
       assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
