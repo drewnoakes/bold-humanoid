@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 
-#define CC_CONSOLE_COLOR_DEFAULT "\033[0m"
 #define CC_FORECOLOR(C) "\033[" #C "m"
 #define CC_BACKCOLOR(C) "\033[" #C "m"
 #define CC_ATTR(A) "\033[" #A "m"
@@ -42,7 +41,7 @@ namespace bold
     return command;
   }
 
-  const char *ccolor::console = CC_CONSOLE_COLOR_DEFAULT;
+  const char *ccolor::reset = CC_ATTR(0);
   const char *ccolor::bold = CC_ATTR(1);
   const char *ccolor::underline = CC_ATTR(4);
 

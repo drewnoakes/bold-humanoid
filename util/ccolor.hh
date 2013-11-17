@@ -51,7 +51,7 @@ namespace bold
     };
 
     static char *color(int attr, int fg, int bg);
-    static const char *console;
+    static const char *reset;
     static const char *bold;
     static const char *underline;
   };

@@ -67,7 +67,7 @@ int main(int argc, char **argv)
   cout << "| |_) | (_) | | (_| | | | | |  __/ (_| | |  | |_\\__ \\" << endl;
   cout << "|_.__/ \\___/|_|\\__,_| |_| |_|\\___|\\__,_|_|   \\__|___/" << endl;
   cout << endl;
-  cout << ccolor::console;
+  cout << ccolor::reset;
 
   cout << "[boldhumanoid] Starting boldhumanoid" << endl;
 
