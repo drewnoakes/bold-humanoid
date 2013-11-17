@@ -58,6 +58,13 @@ void convertMotionFile()
 
 int main(int argc, char **argv)
 {
+  cout << " _           _     _   _                     _       " << endl;
+  cout << "| |         | |   | | | |                   | |      " << endl;
+  cout << "| |__   ___ | | __| | | |__   ___  __ _ _ __| |_ ___ " << endl;
+  cout << "| '_ \\ / _ \\| |/ _` | | '_ \\ / _ \\/ _` | '__| __/ __|" << endl;
+  cout << "| |_) | (_) | | (_| | | | | |  __/ (_| | |  | |_\\__ \\" << endl;
+  cout << "|_.__/ \\___/|_|\\__,_| |_| |_|\\___|\\__,_|_|   \\__|___/" << endl;
+  cout << endl;
   cout << "[boldhumanoid] Starting boldhumanoid" << endl;
 
 //  convertMotionFile();
