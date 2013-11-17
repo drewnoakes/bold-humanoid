@@ -440,6 +440,10 @@ add_class(BOLDHUMANOID
   ./Voice/voice.cc
 )
 
+add_class(BOLDHUMANOID
+  ./util/ccolor.cc
+)
+
 #
 ## Reusable object files target
 #
