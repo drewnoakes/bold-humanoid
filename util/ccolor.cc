@@ -43,6 +43,7 @@ namespace bold
   }
 
   const char *ccolor::console = CC_CONSOLE_COLOR_DEFAULT;
+  const char *ccolor::bold = CC_ATTR(1);
   const char *ccolor::underline = CC_ATTR(4);
 
   const char *ccolor::fore::black = CC_FORECOLOR(30);

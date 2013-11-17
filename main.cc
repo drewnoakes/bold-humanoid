@@ -59,7 +59,7 @@ void convertMotionFile()
 
 int main(int argc, char **argv)
 {
-  cout << ccolor::fore::lightmagenta;
+  cout << ccolor::bold << ccolor::fore::lightmagenta;
   cout << " _           _     _   _                     _       " << endl;
   cout << "| |         | |   | | | |                   | |      " << endl;
   cout << "| |__   ___ | | __| | | |__   ___  __ _ _ __| |_ ___ " << endl;
