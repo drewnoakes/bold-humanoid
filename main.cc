@@ -1,16 +1,15 @@
 #include "Agent/agent.hh"
-#include "MotionScript/motionscript.hh"
+//#include "MotionScript/motionscript.hh"
 #include "OptionTree/optiontree.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
-#include "RobotisMotionFile/robotismotionfile.hh"
-#include "ThreadId/threadid.hh"
+// #include "RobotisMotionFile/robotismotionfile.hh"
+//#include "ThreadId/threadid.hh"
 #include "util/ccolor.hh"
 
 #include "Config/config.hh"
-#include <signal.h>
+#include <limits>
 
-#define U2D_DEV_NAME0 "/dev/ttyUSB0"
-#define U2D_DEV_NAME1 "/dev/ttyUSB1"
+#include <signal.h>
 
 using namespace bold;
 using namespace std;
@@ -24,10 +23,6 @@ void printUsage()
   cout << endl;
   cout << ccolor::fore::lightblue << "  -u <num> " << ccolor::fore::white << "uniform number (or --unum)" << endl;
   cout << ccolor::fore::lightblue << "  -t <num> " << ccolor::fore::white << "team number (or --team)" << endl;
-//  cout << ccolor::fore::lightblue << "  -t       " << ccolor::fore::white << "disable the option tree (or --no-tree)" << endl;
-//  cout << ccolor::fore::lightblue << "  -g       " << ccolor::fore::white << "disable auto get up from fallen (or --no-get-up)" << endl;
-//  cout << ccolor::fore::lightblue << "  -j       " << ccolor::fore::white << "allow control via joystick (or --joystick)" << endl;
-//  cout << ccolor::fore::lightblue << "  -r       " << ccolor::fore::white << "record one camera frame each second to PNG files (or --record)" << endl;
   cout << ccolor::fore::lightblue << "  -h       " << ccolor::fore::white << "show these options (or --help)" << endl;
   cout << ccolor::reset;
 }
@@ -41,24 +36,24 @@ void handleShutdownSignal(int sig)
   }
 }
 
-void convertMotionFile()
-{
-  vector<shared_ptr<MotionScript const>> motionScripts;
-
-  auto motionScriptFileName = "./motion_4096.bin";
-  cout << "[convertMotionFile] Processing Robotis-formatted motion file: " << motionScriptFileName << endl;
-  auto motionScriptFile = RobotisMotionFile(motionScriptFileName);
-  auto rootPageIndices = motionScriptFile.getSequenceRootPageIndices();
-  for (uchar rootPageIndex : rootPageIndices)
-  {
-    stringstream ss;
-    ss << "./motionscripts/motion_4096." << (int)rootPageIndex << ".json";
-    shared_ptr<MotionScript> motionScript = motionScriptFile.toMotionScript(rootPageIndex);
-    motionScripts.push_back(motionScript);
-    motionScript->writeJsonFile(ss.str());
-  }
-  motionScriptFile.toDotText(cout);
-}
+// void convertMotionFile()
+// {
+//   vector<shared_ptr<MotionScript const>> motionScripts;
+//
+//   auto motionScriptFileName = "./motion_4096.bin";
+//   cout << "[convertMotionFile] Processing Robotis-formatted motion file: " << motionScriptFileName << endl;
+//   auto motionScriptFile = RobotisMotionFile(motionScriptFileName);
+//   auto rootPageIndices = motionScriptFile.getSequenceRootPageIndices();
+//   for (uchar rootPageIndex : rootPageIndices)
+//   {
+//     stringstream ss;
+//     ss << "./motionscripts/motion_4096." << (int)rootPageIndex << ".json";
+//     shared_ptr<MotionScript> motionScript = motionScriptFile.toMotionScript(rootPageIndex);
+//     motionScripts.push_back(motionScript);
+//     motionScript->writeJsonFile(ss.str());
+//   }
+//   motionScriptFile.toDotText(cout);
+// }
 
 int main(int argc, char **argv)
 {
@@ -76,13 +71,7 @@ int main(int argc, char **argv)
 
 //  convertMotionFile();
 
-  Configurable::setConfImpl(new ConfImpl());
-
   // defaults
-//   bool useJoystick = false;
-//   bool autoGetUpFromFallen = true;
-//   bool recordFrames = false;
-//   bool useOptionTree = true;
   unsigned teamNumber = 3; // team number in eindhoven, wc2013
   unsigned uniformNumber = 0;
 
@@ -105,22 +94,6 @@ int main(int argc, char **argv)
     {
       uniformNumber = atoi(argv[++i]);
     }
-//     else if (arg == "-j" || arg == "--joystick")
-//     {
-//       useJoystick = true;
-//     }
-//     else if (arg == "-g" || arg == "--no-get-up")
-//     {
-//       autoGetUpFromFallen = false;
-//     }
-//     else if (arg == "-t" || arg == "--no-tree")
-//     {
-//       useOptionTree = false;
-//     }
-//     else if (arg == "-r" || arg == "--record")
-//     {
-//       recordFrames = true;
-//     }
     else
     {
       cout << ccolor::fore::red << "UNKNOWN ARGUMENT: " << arg << ccolor::reset << endl;

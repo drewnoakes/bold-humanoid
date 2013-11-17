@@ -22,13 +22,13 @@ namespace bold
         return;
 
       // Limit the rate of change to delta
-      
+
       if (diff > 0)
         d_current += std::min(d_delta, diff);
       else
         d_current -= std::min(d_delta, -diff);
     }
-    
+
     double getDelta() const { return d_delta; }
     void setDelta(double delta) { d_delta = delta; }
 

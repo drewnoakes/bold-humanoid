@@ -3,7 +3,7 @@
 void Ambulator::step()
 {
   assert(ThreadId::isThinkLoopThread());
-  
+
   double xAmp = d_xAmp.getNext();
   double yAmp = d_yAmp.getNext();
 
@@ -21,13 +21,13 @@ void Ambulator::step()
     d_walkModule->X_MOVE_AMPLITUDE = xAmp;
     d_walkModule->Y_MOVE_AMPLITUDE = yAmp;
     d_walkModule->A_MOVE_AMPLITUDE = turnAmp;
-    
+
     // TODO this doesn't support walking backwards (-ve x)
     // TODO examine using the acceleration (delta xAmp) as a input signal
-    
-    double alpha = Math::clamp(xAmp/d_maxHipPitchAtSpeed, 0.0, 1.0);
 
-    d_walkModule->HIP_PITCH_OFFSET = Math::lerp(alpha, d_minHipPitch, d_maxHipPitch);
+    double alpha = Math::clamp(xAmp/d_maxHipPitchAtSpeed->getValue(), 0.0, 1.0);
+
+    d_walkModule->HIP_PITCH_OFFSET = Math::lerp(alpha, d_minHipPitch->getValue(), d_maxHipPitch->getValue());
 
     if (!d_walkModule->isRunning())
     {

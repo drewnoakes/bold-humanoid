@@ -1,4 +1,15 @@
 {
+  "hardware": {
+    "cm730-path":   { "type": "string", "readonly": true, "default": "/dev/ttyUSB0" },
+    "video-path":   { "type": "string", "readonly": true, "default": "/dev/video0" },
+    "voice":        { "type": "string", "readonly": true, "default": "english-mb-en1" },
+    "joystick": {
+      "enabled":   { "type": "bool", "readonly": true, "default": false },
+      "x-amp-max": { "type": "double", "min": 1, "max": 30, "readonly": false, "default": 15 },
+      "y-amp-max": { "type": "double", "min": 1, "max": 30, "readonly": false, "default": 15 },
+      "a-amp-max": { "type": "double", "min": 1, "max": 30, "readonly": false, "default": 15 }
+    }
+  },
   "world": {
     "field-size-x":          { "type": "double", "readonly": true, "default": 6.0 },
     "field-size-y":          { "type": "double", "readonly": true, "default": 4.0 },
@@ -52,7 +63,7 @@
     }
   },
   "round-table": {
-    "tcp-port": { "type": "int", "min": 1025, "max": 65535, "default": 8080 },
+    "tcp-port": { "type": "int", "min": 1025, "max": 65535, "readonly": true, "default": 8080 },
     "camera-frame-frequency": { "type": "int", "min": 1, "max": 100, "default": 5 }
   },
   "localiser": {
@@ -104,12 +115,13 @@
     "d-gain":           { "type": "int", "default": 0 }
   },
   "ambulator": {
-    "x-amp-delta":   { "type": "double", "default": 5 },
-    "y-amp-delta":   { "type": "double", "default": 5 },
-    "turn-delta":    { "type": "double", "default": 1 },
-    "max-hip-pitch-at-speed": { "type": "double", "default": 15 },
-    "min-hip-pitch": { "type": "double", "default": 13 },
-    "max-hip-pitch": { "type": "double", "default": 17 }
+    "auto-balance":  { "type": "bool", "default": true, "description": "Enable auto-balance" },
+    "x-amp-delta":   { "type": "double", "default": 5, "description": "X smoothing delta" },
+    "y-amp-delta":   { "type": "double", "default": 5, "description": "Y smoothing delta" },
+    "turn-delta":    { "type": "double", "default": 1, "description": "Turn smoothing delta" },
+    "max-hip-pitch-at-speed": { "type": "double", "default": 15, "description": "Max hip pitch @ speed" },
+    "min-hip-pitch": { "type": "double", "default": 13, "description": "Min hip pitch" },
+    "max-hip-pitch": { "type": "double", "default": 17, "description": "Max hip pitch" }
   },
   "options": {
     "circle-ball": {

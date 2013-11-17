@@ -5,13 +5,13 @@
 
 #include "../Smoother/LinearSmoother/linearsmoother.hh"
 #include "../Control/control.hh"
-#include "../Configurable/configurable.hh"
 
 namespace bold
 {
   class WalkModule;
+  template<typename> class Setting;
 
-  class Ambulator : public Configurable
+  class Ambulator
   {
   public:
     Ambulator(std::shared_ptr<WalkModule> walkModule);
@@ -44,18 +44,15 @@ namespace bold
      */
     void setTurnAngle(double turnSpeed);
 
-    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
-
   private:
     std::shared_ptr<WalkModule> d_walkModule;
     LinearSmoother d_xAmp;
     LinearSmoother d_yAmp;
     LinearSmoother d_turnAmp;
-    double d_maxHipPitchAtSpeed;
-    double d_minHipPitch;
-    double d_maxHipPitch;
+    Setting<double>* d_maxHipPitchAtSpeed;
+    Setting<double>* d_minHipPitch;
+    Setting<double>* d_maxHipPitch;
     bool d_turnAngleSet;
     bool d_moveDirSet;
-    std::vector<std::shared_ptr<Control const>> d_controls;
   };
 }

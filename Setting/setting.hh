@@ -1,6 +1,9 @@
+#pragma once
+
 #include <iostream>
 #include <map>
 #include <string>
+#include <sigc++/signal.h>
 
 #include "../PixelLabel/pixellabel.hh"
 #include "../util/Range.hh"
@@ -64,8 +67,12 @@ namespace bold
       }
 
       d_value = value;
+      changed(value);
       return true;
     }
+
+    /// Fires when the setting's value is assigned.
+    sigc::signal<void, T const&> changed;
 
     //virtual T setValueFromJson(JsonReader* reader) = 0;
     //virtual void writeValueToJson(JsonWriter* writer) const = 0;
@@ -194,5 +201,28 @@ namespace bold
 
   private:
     Range<double> d_defaultValue;
+  };
+
+  /// Models a setting with a std::string value.
+  class StringSetting : public Setting<std::string>
+  {
+  public:
+    StringSetting(std::string path, std::string defaultValue, bool isReadOnly, bool isAdvanced)
+    : Setting(path, "string", isReadOnly, isAdvanced, defaultValue),
+      d_defaultValue(defaultValue)
+    {}
+
+    ~StringSetting() {}
+
+    bool isValidValue(std::string value) const override
+    {
+      // TODO validate this!
+      return true;
+    }
+
+    std::string getDefaultValue() const override { return d_defaultValue; }
+
+  private:
+    std::string d_defaultValue;
   };
 }

@@ -143,6 +143,27 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
 
       Config::addSetting(new BoolSetting(path, value, isReadOnly, isAdvanced));
     }
+    else if (type == "string")
+    {
+      const char* value;
+      if (!metaNode->TryGetStringValue("default", &value))
+      {
+        cerr << "[Config::processLevel] 'default' value for '" << path << "' must be a string" << endl;
+        throw runtime_error("JSON 'default' value must be a string");
+      }
+
+      if (confNode)
+      {
+        if (!confNode->IsString())
+        {
+          cerr << "[Config::processLevel] Configuration value for '" << path << "' must be a string" << endl;
+          throw runtime_error("JSON configuration value must be a string");
+        }
+        value = confNode->GetString();
+      }
+
+      Config::addSetting(new StringSetting(path, value, isReadOnly, isAdvanced));
+    }
     else if (type == "pixel-label")
     {
       auto parseObject = [name,path](Value* value) {

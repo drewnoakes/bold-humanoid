@@ -4,7 +4,7 @@ void Agent::initCamera()
 {
   cout << "[Agent::initCamera] Start" << endl;
 
-  d_camera = make_shared<Camera>("/dev/video0");
+  d_camera = make_shared<Camera>(Config::getValue<string>("hardware.video-path"));
 
   d_camera->open();
 
@@ -27,25 +27,27 @@ void Agent::initCamera()
     for (unsigned int i = 0; i < strlen(excludeChars); ++i)
       name.erase(remove(name.begin(), name.end(), excludeChars[i]), name.end());
 
-    if (!paramExists(name))
-    {
-      cout << "[Agent::initCamera] No config key for '" << name << "'" << endl;
-    }
-    else
-    {
-      ControlType type = control->getType();
-      switch (type) {
-        case ControlType::Action:
-        case ControlType::Unknown:
-        default:
-          break;
-        case ControlType::Bool:
-        case ControlType::Enum:
-        case ControlType::Int:
-          int value = getParam(name, control->getDefaultValue());
-          control->setValue(value);
-      }
-    }
+    // TODO reinstate camera control settings
+
+//     if (!paramExists(name))
+//     {
+//       cout << "[Agent::initCamera] No config key for '" << name << "'" << endl;
+//     }
+//     else
+//     {
+//       ControlType type = control->getType();
+//       switch (type) {
+//         case ControlType::Action:
+//         case ControlType::Unknown:
+//         default:
+//           break;
+//         case ControlType::Bool:
+//         case ControlType::Enum:
+//         case ControlType::Int:
+//           int value = getParam(name, control->getDefaultValue());
+//           control->setValue(value);
+//       }
+//     }
   }
 
   // HACK set some camera properties explicitly while we don't have a configuration system

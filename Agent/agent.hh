@@ -6,7 +6,6 @@
 #include <sigc++/signal.h>
 
 #include "../MX28Alarm/mx28alarm.hh"
-#include "../Configurable/configurable.hh"
 
 class Joystick;
 
@@ -30,6 +29,7 @@ namespace bold
   class MotionLoop;
   class MotionTaskScheduler;
   class OptionTree;
+  template<typename> class Setting;
   class Spatialiser;
   class VisualCortex;
   class Voice;
@@ -37,7 +37,7 @@ namespace bold
 
   typedef unsigned long ulong;
 
-  class Agent : public Configurable
+  class Agent
   {
   public:
     Agent();
@@ -120,9 +120,9 @@ namespace bold
     std::shared_ptr<VisualCortex> d_visualCortex;
     std::shared_ptr<Voice> d_voice;
 
-    double d_joystickXAmpMax;
-    double d_joystickYAmpMax;
-    double d_joystickAAmpMax;
+    Setting<double>* d_joystickXAmpMax;
+    Setting<double>* d_joystickYAmpMax;
+    Setting<double>* d_joystickAAmpMax;
 
     std::unique_ptr<OptionTree> d_optionTree;
 

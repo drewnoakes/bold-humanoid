@@ -25,7 +25,7 @@ namespace bold
   class VisualCortex;
   class WalkModule;
 
-  class Agent : public Configurable
+  class Agent
   {
   public:
     Agent();

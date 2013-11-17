@@ -8,6 +8,7 @@
 #include "../CM730/cm730.hh"
 #include "../CM730Platform/CM730Linux/cm730linux.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
+#include "../Config/config.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
 #include "../FieldMap/fieldmap.hh"

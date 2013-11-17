@@ -1,8 +1,7 @@
 #include "agent.ih"
 
 Agent::Agent()
-  : Configurable("agent"),
-    d_isRunning(false),
+  : d_isRunning(false),
     d_isStopRequested(false),
     d_teamNumber(0),
     d_uniformNumber(0),
@@ -15,6 +14,8 @@ Agent::Agent()
   cout << "[Agent::Agent] Start" << endl;
 
   cout << "[Agent::Agent] Creating voice" << endl;
+
+  // TODO specify these strings in configuration
 
   vector<string> phrases = {
     "Bold Hearts are go!",
@@ -29,10 +30,10 @@ Agent::Agent()
 //     "We eat ham and jam and Spam a lot"
   };
   srand(time(NULL));
-  d_voice = make_shared<Voice>("english-mb-en1");
+  d_voice = make_shared<Voice>(Config::getValue<string>("hardware.voice"));
   d_voice->say(phrases[rand() % phrases.size()]);
 
-  auto cm730DevicePath = getParam("u2dDevName", string("/dev/ttyUSB0"));
+  auto cm730DevicePath = Config::getValue<string>("hardware.cm730-path");
   cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
 
   vector<shared_ptr<MotionScript>> motionScripts = MotionScript::loadAllInPath("./motionscripts");
@@ -82,14 +83,12 @@ Agent::Agent()
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, this);
 
-  bool useJoystick = getParam("useJoystick", false);
-
-  if (useJoystick)
+  if (Config::getValue<bool>("hardware.joystick.enabled"))
   {
     d_joystick = make_shared<Joystick>(1);
-    d_joystickXAmpMax = Configurable::getParam("joystick", "xAmpMax", 15);
-    d_joystickYAmpMax = Configurable::getParam("joystick", "yAmpMax", 15);
-    d_joystickAAmpMax = Configurable::getParam("joystick", "aAmpMax", 15);
+    d_joystickXAmpMax = Config::getSetting<double>("hardware.joystick.x-amp-max");
+    d_joystickYAmpMax = Config::getSetting<double>("hardware.joystick.y-amp-max");
+    d_joystickAAmpMax = Config::getSetting<double>("hardware.joystick.a-amp-max");
   }
 
   // TODO only stream if argument specified?
@@ -97,7 +96,7 @@ Agent::Agent()
 
   // TODO a better abstraction over control providers
   d_streamer->registerControls("motion-scripts", d_motionScriptModule->getControls());
-  d_streamer->registerControls("ambulator", d_ambulator->getControls());
+//  d_streamer->registerControls("ambulator", d_ambulator->getControls());
   d_streamer->registerControls("camera", d_camera->getControls());
   d_streamer->registerControls("localiser", d_localiser->getControls());
     for (auto const& pair : d_visualCortex->getControlsByFamily())

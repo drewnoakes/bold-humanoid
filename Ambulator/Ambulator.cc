@@ -1,29 +1,30 @@
 #include "ambulator.hh"
 
 #include "../MotionModule/WalkModule/walkmodule.hh"
+#include "../Config/config.hh"
 
 using namespace bold;
 
 Ambulator::Ambulator(std::shared_ptr<WalkModule> walkModule)
-  : Configurable("ambulator"),
-    d_walkModule(walkModule),
-    d_xAmp(0.0, getParam("xAmpDelta", 3.0)),
-    d_yAmp(0.0, getParam("yAmpDelta", 3.0)),
-    d_turnAmp(0.0, getParam("turnDelta", 1.0)),
-    d_maxHipPitchAtSpeed(getParam("maxHipPitchAtSpeed", 15.0)),
-    d_minHipPitch(getParam("minHipPitch", 13.0)),
-    d_maxHipPitch(getParam("maxHipPitch", 17.0)),
+  : d_walkModule(walkModule),
+    d_xAmp(0, Config::getValue<double>("ambulator.x-amp-delta")),
+    d_yAmp(0, Config::getValue<double>("ambulator.y-amp-delta")),
+    d_turnAmp(0, Config::getValue<double>("ambulator.turn-delta")),
+    d_maxHipPitchAtSpeed(Config::getSetting<double>("ambulator.max-hip-pitch-at-speed")),
+    d_minHipPitch(Config::getSetting<double>("ambulator.min-hip-pitch")),
+    d_maxHipPitch(Config::getSetting<double>("ambulator.max-hip-pitch")),
     d_turnAngleSet(false),
-    d_moveDirSet(false),
-    d_controls()
+    d_moveDirSet(false)
 {
-  // TODO these should be double controls
-  d_controls.push_back(Control::createInt("Min hip pitch",         [this]() { return d_minHipPitch; },        [this](int value) { d_minHipPitch = value; }));
-  d_controls.push_back(Control::createInt("Max hip pitch",         [this]() { return d_maxHipPitch; },        [this](int value) { d_maxHipPitch = value; }));
-  d_controls.push_back(Control::createInt("Max hip pitch @ speed", [this]() { return d_maxHipPitchAtSpeed; }, [this](int value) { d_maxHipPitchAtSpeed = value; }));
-  d_controls.push_back(Control::createInt("X smoothing delta",     [this]() { return d_xAmp.getDelta(); },    [this](int value) { d_xAmp.setDelta(value); }));
-  d_controls.push_back(Control::createInt("Y smoothing delta",     [this]() { return d_yAmp.getDelta(); },    [this](int value) { d_yAmp.setDelta(value); }));
-  d_controls.push_back(Control::createInt("Turn smoothing delta",  [this]() { return d_turnAmp.getDelta(); }, [this](int value) { d_turnAmp.setDelta(value); }));
+  auto xAmpSetting = Config::getSetting<double>("ambulator.x-amp-delta");
+  auto yAmpSetting = Config::getSetting<double>("ambulator.y-amp-delta");
+  auto turnSetting = Config::getSetting<double>("ambulator.turn-delta");
+  auto autoBalanceSetting = Config::getSetting<bool>("ambulator.auto-balance");
 
-  d_controls.push_back(Control::createBool("Enable auto-balance",  [this]() { return d_walkModule->BALANCE_ENABLE; }, [this](bool value) { d_walkModule->BALANCE_ENABLE = value; }));
+  d_walkModule->BALANCE_ENABLE = autoBalanceSetting->getValue();
+
+  xAmpSetting->changed.connect([this](double value) { d_yAmp.setDelta(value); });
+  yAmpSetting->changed.connect([this](double value) { d_yAmp.setDelta(value); });
+  turnSetting->changed.connect([this](double value) { d_turnAmp.setDelta(value); });
+  autoBalanceSetting->changed.connect([this](bool value) { d_walkModule->BALANCE_ENABLE = value; });
 }

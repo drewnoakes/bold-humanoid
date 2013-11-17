@@ -1,4 +1,15 @@
 {
+  "hardware": {
+    "cm730-path": "/dev/ttyUSB0",
+    "video-path": "/dev/video0",
+    "voice": "english-mb-en1",
+    "joystick": {
+      "enabled": false,
+      "x-amp-max": 15,
+      "y-amp-max": 15,
+      "a-amp-max": 15
+    }
+  },
   "world": {
     "field-size-x": 6,
     "field-size-y": 4,
@@ -101,8 +112,9 @@
     "d-gain": 0
   },
   "ambulator": {
-    "x-amp-delta": 5,
-    "y-amp-delta": 5,
+    "auto-balance": true,
+    "x-amp-delta": 3,
+    "y-amp-delta": 3,
     "turn-delta": 1,
     "max-hip-pitch-at-speed": 15,
     "min-hip-pitch": 13,
