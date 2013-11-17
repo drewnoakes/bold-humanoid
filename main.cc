@@ -23,10 +23,10 @@ void printUsage()
   cout << endl;
   cout << ccolor::fore::lightblue << "  -u <num> " << ccolor::fore::white << "uniform number (or --unum)" << endl;
   cout << ccolor::fore::lightblue << "  -t <num> " << ccolor::fore::white << "team number (or --team)" << endl;
-  cout << ccolor::fore::lightblue << "  -t       " << ccolor::fore::white << "disable the option tree (or --no-tree)" << endl;
-  cout << ccolor::fore::lightblue << "  -g       " << ccolor::fore::white << "disable auto get up from fallen (or --no-get-up)" << endl;
-  cout << ccolor::fore::lightblue << "  -j       " << ccolor::fore::white << "allow control via joystick (or --joystick)" << endl;
-  cout << ccolor::fore::lightblue << "  -r       " << ccolor::fore::white << "record one camera frame each second to PNG files (or --record)" << endl;
+//  cout << ccolor::fore::lightblue << "  -t       " << ccolor::fore::white << "disable the option tree (or --no-tree)" << endl;
+//  cout << ccolor::fore::lightblue << "  -g       " << ccolor::fore::white << "disable auto get up from fallen (or --no-get-up)" << endl;
+//  cout << ccolor::fore::lightblue << "  -j       " << ccolor::fore::white << "allow control via joystick (or --joystick)" << endl;
+//  cout << ccolor::fore::lightblue << "  -r       " << ccolor::fore::white << "record one camera frame each second to PNG files (or --record)" << endl;
   cout << ccolor::fore::lightblue << "  -h       " << ccolor::fore::white << "show these options (or --help)" << endl;
   cout << ccolor::reset;
 }
