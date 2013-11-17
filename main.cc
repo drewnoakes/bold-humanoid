@@ -8,9 +8,8 @@
 
 #include <signal.h>
 
-#define MOTION_FILE_PATH    "./motion_4096.bin"
-#define U2D_DEV_NAME0       "/dev/ttyUSB0"
-#define U2D_DEV_NAME1       "/dev/ttyUSB1"
+#define U2D_DEV_NAME0 "/dev/ttyUSB0"
+#define U2D_DEV_NAME1 "/dev/ttyUSB1"
 
 using namespace bold;
 using namespace std;

@@ -39,7 +39,6 @@ def usage():
 
 def main(argv):
     U2D_DEV_NAME = "/dev/ttyUSB0"
-    MOTION_FILE_PATH = "./motion_4096.bin"
     CONF_FILE_PATH = "./germanopen.ini"
     TEAM_NUMBER = 24
     UNIFORM_NUMBER = -1
@@ -89,7 +88,6 @@ def main(argv):
 
     a = bold.Agent(U2D_DEV_NAME,
                    CONF_FILE_PATH,
-                   MOTION_FILE_PATH,
                    TEAM_NUMBER,
                    UNIFORM_NUMBER,
                    USE_JOYSTICK,
