@@ -10,7 +10,7 @@ PixelLabel PixelLabel::fromConfig(
   uchar vMin, uchar vMax)
 {
   Colour::hsvRange hsvRange;
-  
+
   hsvRange.hMin = Configurable::getParam("vision", objectName + ".hue.min", hMin);
   hsvRange.hMax = Configurable::getParam("vision", objectName + ".hue.max", hMax);
   hsvRange.sMin = Configurable::getParam("vision", objectName + ".sat.min", sMin);
