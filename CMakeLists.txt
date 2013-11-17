@@ -135,6 +135,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Config/config.cc
+)
+
+add_class(BOLDHUMANOID
   ./Configurable/static.cc
 )
 

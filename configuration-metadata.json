@@ -1,0 +1,127 @@
+{
+  "world": {
+    "field-size-x":          { "type": "double", "readonly": true, "default": 6.0 },
+    "field-size-y":          { "type": "double", "readonly": true, "default": 4.0 },
+    "goal-size-x":           { "type": "double", "readonly": true, "default": 0.5 },
+    "goal-size-y":           { "type": "double", "readonly": true, "default": 1.5 },
+    "goal-size-z":           { "type": "double", "readonly": true, "default": 0.8 },
+    "goal-post-diameter":    { "type": "double", "readonly": true, "default": 0.1 },
+    "goal-area-size-x":      { "type": "double", "readonly": true, "default": 0.6 },
+    "goal-area-size-y":      { "type": "double", "readonly": true, "default": 2.2 },
+    "penalty-mark-distance": { "type": "double", "readonly": true, "default": 0.8 },
+    "circle-diameter":       { "type": "double", "readonly": true, "default": 1.2 },
+    "line-width":            { "type": "double", "readonly": true, "default": 0.05 },
+    "penalty-line-length":   { "type": "double", "readonly": true, "default": 0.1 },
+    "outer-margin-minimum":  { "type": "double", "readonly": true, "default": 0.7 },
+    "ball-diameter":         { "type": "double", "readonly": true, "default": 0.067 }
+  },
+  "camera": {
+    "image-width":  { "type": "int", "readonly": true, "default": 320 },
+    "image-height": { "type": "int", "readonly": true, "default": 240 },
+    "focal-length": { "type": "double", "readonly": true, "default": 0.025 },
+    "field-of-view": {
+      "vertical-degrees":   { "type": "double", "readonly": true, "default": 46 },
+      "horizontal-degrees": { "type": "double", "readonly": true, "default": 58 }
+    },
+    "settings": {
+
+      "TODO": "these settings should be configured based upon what the camera reports",
+
+      "brightness":             { "type": "int", "min": 0, "max": 255, "default": 128 },
+      "contrast":               { "type": "int", "min": 0, "max": 255, "default": 32 },
+      "saturation":             { "type": "int", "min": 0, "max": 255, "default": 28 },
+      "gain":                   { "type": "int", "min": 0, "max": 255, "default": 255 },
+      "exposure":               { "type": "int", "min": 0, "max": 255, "default": 1000 },
+      "auto-wb":                { "type": "int", "min": 0, "max": 255, "default": 0 },
+      "power-line-frequency":   { "type": "int", "min": 0, "max": 255, "default": 2 },
+      "wb-temp-k":              { "type": "int", "min": 0, "max": 255, "default": 0 },
+      "sharpness":              { "type": "int", "min": 0, "max": 255, "default": 191 },
+      "backlight-compensation": { "type": "int", "min": 0, "max": 255, "default": 0 },
+      "exposure-auto":          { "type": "int", "min": 0, "max": 255, "default": 3 },
+      "exposure-absolute":      { "type": "int", "min": 0, "max": 255, "default": 133 },
+      "exposure-auto-priority": { "type": "int", "min": 0, "max": 255, "default": 0 }
+    }
+  },
+  "vision": {
+    "min-ball-area": { "type": "int", "min": 0, "max": 255, "default": 0 },
+    "pixel-labels": {
+      "goal":  { "type": "pixel-label", "default": { "hue": [44, 60],  "sat": [158, 236], "val": [124, 222] } },
+      "ball":  { "type": "pixel-label", "default": { "hue": [248, 23], "sat": [72, 255],  "val": [12, 255] } },
+      "field": { "type": "pixel-label", "default": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] } },
+      "line":  { "type": "pixel-label", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } }
+    }
+  },
+  "round-table": {
+    "tcp-port": { "type": "int", "min": 1025, "max": 65535, "default": 8080 },
+    "camera-frame-frequency": { "type": "int", "min": 1, "max": 100, "default": 5 }
+  },
+  "localiser": {
+    "particle-count":        { "type": "int", "min": 1, "max": 500, "default": 100 },
+    "smoothing-window-size": { "type": "int", "min": 1, "max": 50, "default": 5 },
+    "randomise-ratio":       { "type": "double", "min": 0.0, "max": 0.9, "default": 0.03 },
+    "reward-fall-off":       { "type": "double", "min": 0.0, "max": 1, "default": 0.5 },
+    "use-lines":             { "type": "bool", "default": true },
+    "min-goals-needed":      { "type": "int", "min": 0, "max": 3, "default": 1 },
+    "position-error":        { "type": "double", "min": 0.0, "max": 0.2, "default": 0.03 },
+    "angle-error-degrees":   { "type": "double", "min": 0.0, "max": 1, "default": 2.0 }
+  },
+  "head-module": {
+    "p-gain":             { "type": "int", "min": 1, "max": 255, "default": 8 },
+    "pan-limit-degrees":  { "type": "double-range", "default": [-80, 80] },
+    "tilt-limit-degrees": { "type": "double-range", "default": [-30, 0] },
+    "tracking": {
+      "pan": {
+        "p-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.03 },
+        "d-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 }
+      },
+      "tilt": {
+        "p-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.03 },
+        "d-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 }
+      }
+    }
+  },
+  "walk-module": {
+    "x-offset":         { "type": "double", "default": -10 },
+    "y-offset":         { "type": "double", "default": 5 },
+    "z-offset":         { "type": "double", "default": 20 },
+    "r-offset":         { "type": "double", "default": 0 },
+    "p-offset":         { "type": "double", "default": 0 },
+    "a-offset":         { "type": "double", "default": 0 },
+    "hip-pitch-offset": { "type": "double", "default": 17 },
+    "period-time":      { "type": "double", "default": 600 },
+    "dsp-ratio":        { "type": "double", "default": 0.1 },
+    "z-move-amplitude": { "type": "double", "default": 40 },
+    "y-swap-amplitude": { "type": "double", "default": 20 },
+    "z-swap-amplitude": { "type": "double", "default": 5 },
+    "pelvis-offset":    { "type": "double", "default": 3 },
+    "arm-swing-gain":   { "type": "double", "default": 1.5 },
+    "balance-knee-gain":        { "type": "double", "default": 1.2 },
+    "balance-ankle-pitch-gain": { "type": "double", "default": 3.6 },
+    "balance-hip-roll-gain":    { "type": "double", "default": 2 },
+    "balance-ankle-roll-gain":  { "type": "double", "default": 4 },
+    "p-gain":           { "type": "int", "default": 32 },
+    "i-gain":           { "type": "int", "default": 0 },
+    "d-gain":           { "type": "int", "default": 0 }
+  },
+  "ambulator": {
+    "x-amp-delta":   { "type": "double", "default": 5 },
+    "y-amp-delta":   { "type": "double", "default": 5 },
+    "turn-delta":    { "type": "double", "default": 1 },
+    "max-hip-pitch-at-speed": { "type": "double", "default": 15 },
+    "min-hip-pitch": { "type": "double", "default": 13 },
+    "max-hip-pitch": { "type": "double", "default": 17 }
+  },
+  "options": {
+    "circle-ball": {
+      "walk-x":    { "type": "double", "default": 1 },
+      "walk-y":    { "type": "double", "default": 20 },
+      "walk-turn": { "type": "double", "default": 15 }
+    },
+    "approach-ball": {
+      "turn-scale":        { "type": "double", "default": 17.5 },
+      "max-forward-speed": { "type": "double", "default": 30 },
+      "min-forward-speed": { "type": "double", "default": 5 },
+      "break-distance":    { "type": "double", "default": 0.5 }
+    }
+  }
+}

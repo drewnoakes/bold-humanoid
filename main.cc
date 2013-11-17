@@ -6,6 +6,7 @@
 #include "ThreadId/threadid.hh"
 #include "util/ccolor.hh"
 
+#include "Config/config.hh"
 #include <signal.h>
 
 #define U2D_DEV_NAME0 "/dev/ttyUSB0"
@@ -134,6 +135,8 @@ int main(int argc, char **argv)
     printUsage();
     return -1;
   }
+
+  Config::initialise("configuration-metadata.json", "configuration.json");
 
   cout << "[boldhumanoid] Creating Agent" << endl;
   cout << "[boldhumanoid] Team number " << teamNumber << ", uniform number " << uniformNumber << endl;
