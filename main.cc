@@ -18,14 +18,17 @@ unique_ptr<Agent> agent;
 
 void printUsage()
 {
+  cout << endl;
   cout << "Options:" << endl;
-  cout << "\t-t <num>\tteam number (or --team)" << endl;
-  cout << "\t-u <num>\tuniform number (or --unum)" << endl;
-  cout << "\t-t\tdisable the option tree (or --no-tree)" << endl;
-  cout << "\t-g\tdisable auto get up from fallen (or --no-get-up)" << endl;
-  cout << "\t-j\tallow control via joystick (or --joystick)" << endl;
-  cout << "\t-r\trecord one camera frame each second to PNG files (or --record)" << endl;
-  cout << "\t-h\tshow these options (or --help)" << endl;
+  cout << endl;
+  cout << ccolor::fore::lightblue << "  -u <num> " << ccolor::fore::white << "uniform number (or --unum)" << endl;
+  cout << ccolor::fore::lightblue << "  -t <num> " << ccolor::fore::white << "team number (or --team)" << endl;
+  cout << ccolor::fore::lightblue << "  -t       " << ccolor::fore::white << "disable the option tree (or --no-tree)" << endl;
+  cout << ccolor::fore::lightblue << "  -g       " << ccolor::fore::white << "disable auto get up from fallen (or --no-get-up)" << endl;
+  cout << ccolor::fore::lightblue << "  -j       " << ccolor::fore::white << "allow control via joystick (or --joystick)" << endl;
+  cout << ccolor::fore::lightblue << "  -r       " << ccolor::fore::white << "record one camera frame each second to PNG files (or --record)" << endl;
+  cout << ccolor::fore::lightblue << "  -h       " << ccolor::fore::white << "show these options (or --help)" << endl;
+  cout << ccolor::reset;
 }
 
 void handleShutdownSignal(int sig)
@@ -119,7 +122,7 @@ int main(int argc, char **argv)
 //     }
     else
     {
-      cout << "UNKNOWN ARGUMENT: " << arg << endl;
+      cout << ccolor::fore::red << "UNKNOWN ARGUMENT: " << arg << ccolor::reset << endl;
       printUsage();
       return -1;
     }
@@ -127,7 +130,7 @@ int main(int argc, char **argv)
 
   if (uniformNumber == 0)
   {
-    cout << "YOU MUST SUPPLY A UNIFORM NUMBER!" << endl;
+    cout << ccolor::fore::red << "YOU MUST SUPPLY A UNIFORM NUMBER!" << ccolor::reset << endl;
     printUsage();
     return -1;
   }
