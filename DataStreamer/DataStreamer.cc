@@ -1,8 +1,7 @@
 #include "datastreamer.ih"
 
 DataStreamer::DataStreamer(shared_ptr<Camera> camera)
-  : Configurable("datastreamer"),
-    d_controlsByIdByFamily(),
+  : d_controlsByIdByFamily(),
     d_image(),
     d_camera(camera),
     d_context(0),
@@ -10,7 +9,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 {
   cout << "[DataStreamer::DataStreamer] Starting" << endl;
 
-  d_port = getParam("tcpPort", 8080);
+  d_port = Config::getStaticValue<int>("round-table.tcp-port");
 
   // We have three special protocols: HTTP-only, Camera and Control.
   // These are followed by N other protocols, one per type of state in the system

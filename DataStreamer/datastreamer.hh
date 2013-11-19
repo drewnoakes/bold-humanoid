@@ -9,7 +9,6 @@
 #include <opencv2/opencv.hpp>
 
 #include "../StateObject/stateobject.hh"
-#include "../Configurable/configurable.hh"
 
 namespace cv
 {
@@ -33,7 +32,7 @@ namespace bold
     unsigned imgBytesSent;
   };
 
-  class DataStreamer : public Configurable
+  class DataStreamer
   {
   public:
     DataStreamer(std::shared_ptr<Camera> camera);
