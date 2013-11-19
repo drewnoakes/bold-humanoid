@@ -30,10 +30,10 @@ Agent::Agent()
 //     "We eat ham and jam and Spam a lot"
   };
   srand(time(NULL));
-  d_voice = make_shared<Voice>(Config::getValue<string>("hardware.voice"));
+  d_voice = make_shared<Voice>(Config::getStaticValue<string>("hardware.voice"));
   d_voice->say(phrases[rand() % phrases.size()]);
 
-  auto cm730DevicePath = Config::getValue<string>("hardware.cm730-path");
+  auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
   cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
 
   vector<shared_ptr<MotionScript>> motionScripts = MotionScript::loadAllInPath("./motionscripts");
@@ -83,7 +83,7 @@ Agent::Agent()
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, this);
 
-  if (Config::getValue<bool>("hardware.joystick.enabled"))
+  if (Config::getStaticValue<bool>("hardware.joystick.enabled"))
   {
     d_joystick = make_shared<Joystick>(1);
     d_joystickXAmpMax = Config::getSetting<double>("hardware.joystick.x-amp-max");

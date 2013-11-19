@@ -4,7 +4,7 @@ void Agent::initCamera()
 {
   cout << "[Agent::initCamera] Start" << endl;
 
-  d_camera = make_shared<Camera>(Config::getValue<string>("hardware.video-path"));
+  d_camera = make_shared<Camera>(Config::getStaticValue<string>("hardware.video-path"));
 
   d_camera->open();
 

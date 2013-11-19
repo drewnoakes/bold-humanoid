@@ -24,11 +24,11 @@ namespace bold
 
     CameraModel()
     {
-      d_imageWidth = Config::getValue<int>("camera.image-width");
-      d_imageHeight = Config::getValue<int>("camera.image-height");
-//       d_focalLength = Config::getValue<double>("camera.focal-length");
-      d_rangeVerticalDegs = Config::getValue<double>("camera.field-of-view.vertical-degrees");
-      d_rangeHorizontalDegs = Config::getValue<double>("camera.field-of-view.horizontal-degrees");
+      d_imageWidth = Config::getStaticValue<int>("camera.image-width");
+      d_imageHeight = Config::getStaticValue<int>("camera.image-height");
+//       d_focalLength = Config::getStaticValue<double>("camera.focal-length");
+      d_rangeVerticalDegs = Config::getStaticValue<double>("camera.field-of-view.vertical-degrees");
+      d_rangeHorizontalDegs = Config::getStaticValue<double>("camera.field-of-view.horizontal-degrees");
     }
 
     unsigned imageWidth() const { return d_imageWidth; }
