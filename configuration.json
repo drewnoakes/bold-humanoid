@@ -59,6 +59,9 @@
       "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
     }
   },
+  "game-controller": {
+    "tcp-port": 3838
+  },
   "round-table": {
     "tcp-port": 8080,
     "camera-frame-frequency": 5
