@@ -30,8 +30,10 @@ void Localiser::update()
     // Score observed lines
     //
 
-    if (d_useLines)
+    if (d_useLines->getValue())
     {
+      double rewardFalloff = d_rewardFalloff->getValue();
+
       for (LineSegment3d const& observed : agentFrame->getObservedLineSegments())
       {
         LineSegment2d observed2d(observed.to<2>());
@@ -47,7 +49,7 @@ void Localiser::update()
           double distance1 = (observed2d.p1() - Math::linePointClosestToPoint(candidateAgent, observed2d.p1())).norm();
           double distance2 = (observed2d.p2() - Math::linePointClosestToPoint(candidateAgent, observed2d.p2())).norm();
 
-          double score = d_rewardFalloff / (distance1 + distance2 + d_rewardFalloff);
+          double score = rewardFalloff / (distance1 + distance2 + rewardFalloff);
 
           double angle = observed2d.smallestAngleBetween(candidateAgent);
           score *= angle/(M_PI/2);
@@ -63,7 +65,7 @@ void Localiser::update()
           Vector2d wp2 = (worldAgent3d * observed.p2()).head<2>();
           double circDist1 = wp1.norm() - d_fieldMap->circleRadius();
           double circDist2 = wp2.norm() - d_fieldMap->circleRadius();
-          double circScore = d_rewardFalloff / (circDist1 + circDist2 + d_rewardFalloff);
+          double circScore = rewardFalloff / (circDist1 + circDist2 + rewardFalloff);
 
           if (circScore > bestScore)
           {
@@ -81,7 +83,7 @@ void Localiser::update()
     // Score observed goal posts
     //
 
-    if (agentFrame->getGoalObservations().size() >= d_minGoalsNeeded)
+    if (agentFrame->getGoalObservations().size() >= d_minGoalsNeeded->getValue())
     {
       for (Vector3d const& observed : agentFrame->getGoalObservations())
       {

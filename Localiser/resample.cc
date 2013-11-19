@@ -6,10 +6,11 @@ shared_ptr<vector<Particle>> Localiser::resample(shared_ptr<vector<Particle>> co
 
   auto cameraState = AgentState::get<CameraFrameState>();
 
-  bool seenLandmark = cameraState->getGoalObservations().size() >= d_minGoalsNeeded || (d_useLines && cameraState->getObservedLineSegments().size() != 0);
+  bool seenLandmark = cameraState->getGoalObservations().size() >= d_minGoalsNeeded->getValue()
+                || (d_useLines->getValue() && cameraState->getObservedLineSegments().size() != 0);
 
   unsigned randomizeCount = seenLandmark
-    ? particleCount * d_randomizeRatio
+    ? particleCount * d_randomizeRatio->getValue()
     : 0; // don't randomize if we haven't seen any fixed landmarks this cycle
 
   unsigned drawCount = particleCount - randomizeCount;

@@ -8,16 +8,16 @@
 #include "../Filter/ParticleFilter/particlefilter.hh"
 #include "../MovingAverage/movingaverage.hh"
 #include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
-#include "../Configurable/configurable.hh"
 
 namespace bold
 {
-  class FieldMap;
   class Control;
+  class FieldMap;
+  template<typename> class Setting;
 
   typedef ParticleFilter<3>::Particle Particle;
 
-  class Localiser : public Configurable
+  class Localiser
   {
   public:
     Localiser(std::shared_ptr<FieldMap> fieldMap);
@@ -45,13 +45,12 @@ namespace bold
     AgentPosition d_smoothedPos;
     MovingAverage<Eigen::Vector4d> d_avgPos;
     std::shared_ptr<FieldMap> d_fieldMap;
-    double d_randomizeRatio;
+
+    Setting<double>* d_randomizeRatio;
     /// smaller number gives faster falloff
-    double d_rewardFalloff;
-    bool d_useLines;
-    unsigned d_minGoalsNeeded;
-    unsigned d_positionError;
-    unsigned d_angleErrorDegs;
+    Setting<double>* d_rewardFalloff;
+    Setting<bool>* d_useLines;
+    Setting<int>* d_minGoalsNeeded;
 
     std::shared_ptr<ParticleFilter<3>> d_filter;
     std::function<double()> d_fieldXRng;
