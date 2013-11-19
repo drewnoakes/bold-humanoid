@@ -6,8 +6,7 @@ using namespace bold;
 using namespace std;
 
 Option::Option(string const& id)
-  : Configurable(string("option.") + id),
-    d_id(id)
+  : d_id(id)
 {
   cout << "[Option::Option] Creating option: " << d_id << endl;
 }

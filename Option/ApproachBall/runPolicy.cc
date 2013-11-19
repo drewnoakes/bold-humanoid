@@ -2,8 +2,8 @@
 
 std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
 {
-  assert(d_upperTurnLimitRads > d_lowerTurnLimitRads);
-  assert(d_brakeDistance != 0);
+  assert(d_upperTurnLimitDegs->getValue() > d_lowerTurnLimitDegs->getValue());
+  assert(d_brakeDistance->getValue() != 0);
 
   auto ballPos = AgentState::get<AgentFrameState>()->getBallObservation();
 
@@ -15,19 +15,19 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
 
   double dist = ballPos->head<2>().norm();
 
-  double speedDueToDistance = Math::clamp(dist/d_brakeDistance, 0.0, 1.0);
+  double speedDueToDistance = Math::clamp(dist/d_brakeDistance->getValue(), 0.0, 1.0);
 
   // NOTE atan has flipped x/y on purpose
   double ballAngleRads = -atan2(ballPos->x(), ballPos->y());
 
-  double speedScaleDueToAngle = Math::lerp(fabs(ballAngleRads), d_lowerTurnLimitRads, d_upperTurnLimitRads, 1.0, 0.0);
+  double speedScaleDueToAngle = Math::lerp(fabs(ballAngleRads), Math::degToRad(d_lowerTurnLimitDegs->getValue()), Math::degToRad(d_upperTurnLimitDegs->getValue()), 1.0, 0.0);
 
   Vector2d moveDir = Math::lerp(speedDueToDistance * speedScaleDueToAngle,
-                                Vector2d(d_minForwardSpeed, 0),
-                                Vector2d(d_maxForwardSpeed, 0));
+                                Vector2d(d_minForwardSpeed->getValue(), 0),
+                                Vector2d(d_maxForwardSpeed->getValue(), 0));
 
   d_ambulator->setMoveDir(moveDir);
-  d_ambulator->setTurnAngle(ballAngleRads * d_turnScale); // unspecified units
+  d_ambulator->setTurnAngle(ballAngleRads * d_turnScale->getValue()); // unspecified units
 
   return std::vector<std::shared_ptr<Option>>();
 }

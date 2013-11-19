@@ -2,6 +2,8 @@
 
 #include "../option.hh"
 
+#include "../../Config/config.hh"
+
 namespace bold
 {
   class HeadModule;
@@ -13,15 +15,15 @@ namespace bold
     : Option(id),
       d_headModule(headModule)
     {
-      d_feetX = getParam("feetX", 0);
-      d_feetY = getParam("feetY", -67.5);
+      d_panDegs = Config::getSetting<double>("options.look-at-feet.head-pan-degs");
+      d_tiltDegs = Config::getSetting<double>("options.look-at-feet.head-tilt-degs");
     }
 
     std::vector<std::shared_ptr<Option>> runPolicy() override;
 
   private:
     std::shared_ptr<HeadModule> d_headModule;
-    double d_feetX;
-    double d_feetY;
+    Setting<double>* d_panDegs;
+    Setting<double>* d_tiltDegs;
   };
 }

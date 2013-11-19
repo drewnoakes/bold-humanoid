@@ -149,8 +149,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
   auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookAtFeet", headModule));
   auto lookAtGoal = tree->addOption(make_shared<LookAtGoal>("lookAtGoal", cameraModel, headModule));
 
-  dataStreamer->registerControls("option/approach-ball", approachBall->getControls());
-
   // FSMs
 
   auto winFsm = tree->addOption(make_shared<FSMOption>("win"), /*isRoot*/true);
@@ -478,7 +476,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       {
         // Approach ball until we're within a given distance
         auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-        return ballObs && (ballObs->head<2>().norm() < playingFsm->getParam("approachBall.untilDistance", 0.075));
+        return ballObs && (ballObs->head<2>().norm() < Config::getValue<double>("options.approach-ball.stop-distance"));
       });
 
     lookForGoalState

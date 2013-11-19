@@ -143,10 +143,23 @@
       "walk-turn": { "type": "double", "default": 15.0 }
     },
     "approach-ball": {
-      "turn-scale":        { "type": "double", "default": 17.5 },
-      "max-forward-speed": { "type": "double", "default": 30.0 },
+      "turn-speed-scale":  { "type": "double", "default": 25.0 },
+      "max-forward-speed": { "type": "double", "default": 40.0 },
       "min-forward-speed": { "type": "double", "default": 5.0 },
-      "break-distance":    { "type": "double", "default": 0.5 }
+      "brake-distance":    { "type": "double", "default": 0.45 },
+      "stop-distance":     { "type": "double", "default": 0.075 },
+      "lower-turn-limit-degs": { "type": "double", "default": 20.0 },
+      "upper-turn-limit-degs": { "type": "double", "default": 35.0 }
+    },
+    "look-around": {
+      "top-angle":      { "type": "double", "default": 30.0 },
+      "bottom-angle":   { "type": "double", "default": -25.0 },
+      "horiz-duration": { "type": "double", "default": 2.3 },
+      "vert-duration":  { "type": "double", "default": 0.2 }
+    },
+    "look-at-feet": {
+      "head-pan-degs":  { "type": "double", "default": 0 },
+      "head-tilt-degs": { "type": "double", "default": -67.5 }
     }
   }
 }

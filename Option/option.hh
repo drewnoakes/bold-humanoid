@@ -4,8 +4,6 @@
 #include <memory>
 #include <string>
 
-#include "../Configurable/configurable.hh"
-
 namespace bold
 {
   /** Option
@@ -22,7 +20,7 @@ namespace bold
    *   action to take at which time
    *
    */
-  class Option : public Configurable
+  class Option
   {
   public:
     Option(std::string const& id);

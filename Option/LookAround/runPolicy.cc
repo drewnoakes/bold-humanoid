@@ -6,61 +6,64 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
 
   double t = Clock::getSeconds();
 
+  double durationHoriz = d_durationHoriz->getValue();
+  double durationVert = d_durationVert->getValue();
+
   if (t - d_lastTimeSeconds > 1)
   {
     // It's been long enough since we last ran that we consider this a re-start.
-    
+
     // Start quarter-way through the first phase, so the head is slightly
     // to the left, and pans right through the top of the box.
-    d_startTimeSeconds = t - (d_durationHoriz/4.0);
+    d_startTimeSeconds = t - (durationHoriz/4.0);
   }
 
   d_lastTimeSeconds = t;
 
-  double period = (d_durationHoriz + d_durationVert) * 2;
+  double period = (durationHoriz + durationVert) * 2;
 
   double phase = fmod(t - d_startTimeSeconds, period);
 
-  double hAngle = 0;
-  double vAngle = 0;
+  double panDegs = 0;
+  double tiltDegs = 0;
 
   assert(phase >= 0);
 
-  if (phase < d_durationHoriz)
+  if (phase < durationHoriz)
   {
     // moving right-to-left across top
-    vAngle = d_topAngle;
-    hAngle = Math::lerp(phase/d_durationHoriz, -d_sideAngle, d_sideAngle);
+    tiltDegs = d_topAngle->getValue();
+    panDegs = Math::lerp(phase/durationHoriz, -d_sideAngle, d_sideAngle);
   }
   else
   {
-    phase -= d_durationHoriz;
+    phase -= durationHoriz;
 
-    if (phase < d_durationVert)
+    if (phase < durationVert)
     {
       // moving top-to-bottom at left
-      vAngle = Math::lerp(phase/d_durationVert, d_topAngle, d_bottomAngle);
-      hAngle = d_sideAngle;
+      tiltDegs = Math::lerp(phase/durationVert, d_topAngle->getValue(), d_bottomAngle->getValue());
+      panDegs = d_sideAngle;
     }
     else
     {
-      phase -= d_durationVert;
+      phase -= durationVert;
 
-      if (phase < d_durationHoriz)
+      if (phase < durationHoriz)
       {
         // moving left-to-right across bottom
-        vAngle = d_bottomAngle;
-        hAngle = Math::lerp(phase/d_durationHoriz, d_sideAngle, -d_sideAngle);
+        tiltDegs = d_bottomAngle->getValue();
+        panDegs = Math::lerp(phase/durationHoriz, d_sideAngle, -d_sideAngle);
       }
       else
       {
-        phase -= d_durationHoriz;
+        phase -= durationHoriz;
 
-        if (phase < d_durationVert)
+        if (phase < durationVert)
         {
           // moving bottom-to-top at right
-          vAngle = Math::lerp(phase/d_durationVert, d_bottomAngle, d_topAngle);
-          hAngle = -d_sideAngle;
+          tiltDegs = Math::lerp(phase/durationVert, d_bottomAngle->getValue(), d_topAngle->getValue());
+          panDegs = -d_sideAngle;
         }
         else
         {
@@ -71,7 +74,7 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
   }
 
   // Move to the calculated position
-  d_headModule->moveToDegs(hAngle, vAngle);
+  d_headModule->moveToDegs(panDegs, tiltDegs);
 
   return std::vector<std::shared_ptr<Option>>();
 }

@@ -141,10 +141,23 @@
       "walk-turn": 15
     },
     "approach-ball": {
-      "turn-scale": 17.5,
-      "max-forward-speed": 30,
-      "min-forward-speed": 5,
-      "break-distance": 0.5
+      "turn-speed-scale": 25.0,
+      "max-forward-speed": 40.0,
+      "min-forward-speed": 5.0,
+      "brake-distance": 0.45,
+      "stop-distance": 0.075,
+      "lower-turn-limit-degs": 20.0,
+      "upper-turn-limit-degs": 35.0
+    },
+    "look-around": {
+      "top-angle": 30.0,
+      "bottom-angle": -25.0,
+      "horiz-duration": 2.3,
+      "vert-duration": 0.2
+    },
+    "look-at-feet": {
+      "head-pan-degs": 0,
+      "head-tilt-degs": -67.5
     }
   }
 }

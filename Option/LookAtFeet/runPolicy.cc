@@ -2,7 +2,7 @@
 
 std::vector<std::shared_ptr<Option>> LookAtFeet::runPolicy()
 {
-  d_headModule->moveToDegs(d_feetX, d_feetY);
+  d_headModule->moveToDegs(d_panDegs->getValue(), d_tiltDegs->getValue());
 
   return std::vector<std::shared_ptr<Option>>();
 }
