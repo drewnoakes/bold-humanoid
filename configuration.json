@@ -57,6 +57,10 @@
       "ball": { "hue": [248, 23], "sat": [72, 255], "val": [12, 255] },
       "field": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] },
       "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
+    },
+    "field-edge-pass": {
+      "smoothing-window-length": 15,
+      "min-vertical-run-length": 5
     }
   },
   "game-controller": {

@@ -60,6 +60,10 @@
       "ball":  { "type": "pixel-label", "default": { "hue": [248, 23], "sat": [72, 255],  "val": [12, 255] } },
       "field": { "type": "pixel-label", "default": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] } },
       "line":  { "type": "pixel-label", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } }
+    },
+    "field-edge-pass": {
+      "smoothing-window-length": { "type": "int", "min": 1, "max": 100, "default": 15, "advanced": true },
+      "min-vertical-run-length": { "type": "int", "min": 1, "max": 100, "default": 5, "advanced": true }
     }
   },
   "game-controller": {
