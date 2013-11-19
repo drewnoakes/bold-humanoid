@@ -5,14 +5,14 @@
     "voice": "english-mb-en1",
     "joystick": {
       "enabled": false,
-      "x-amp-max": 15,
-      "y-amp-max": 15,
-      "a-amp-max": 15
+      "x-amp-max": 15.0,
+      "y-amp-max": 15.0,
+      "a-amp-max": 15.0
     }
   },
   "world": {
-    "field-size-x": 6,
-    "field-size-y": 4,
+    "field-size-x": 6.0,
+    "field-size-y": 4.0,
     "goal-size-x": 0.5,
     "goal-size-y": 1.5,
     "goal-size-z": 0.8,
@@ -31,8 +31,8 @@
     "image-height": 240,
     "focal-length": 0.025,
     "field-of-view": {
-      "vertical-degrees": 46,
-      "horizontal-degrees": 58
+      "vertical-degrees": 46.0,
+      "horizontal-degrees": 58.0
     },
     "settings": {
       "brightness": 128,
