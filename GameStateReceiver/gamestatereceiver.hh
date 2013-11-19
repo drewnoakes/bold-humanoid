@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "../StateObject/GameState/gamestate.hh"
-#include "../Configurable/configurable.hh"
 
 namespace bold
 {
@@ -29,7 +28,7 @@ namespace bold
     ALIVE = 2
   };
 
-  class GameStateReceiver : public Configurable
+  class GameStateReceiver
   {
   public:
     GameStateReceiver(std::shared_ptr<Debugger> debugger, Agent* agent);

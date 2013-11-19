@@ -3,12 +3,11 @@
 #include "../UDPSocket/udpsocket.hh"
 
 GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, Agent* agent)
-  : Configurable("gamestatereceiver"),
-    d_debugger(debugger),
+  : d_debugger(debugger),
     d_agent(agent),
     d_receivedAnything(false)
 {
-  int port = getParam("port", 3838);
+  int port = Config::getStaticValue<int>("game-controller.tcp-port");
 
   cout << "[GameStateReceiver::receive] Creating socket for UDP port " << port << endl;
 

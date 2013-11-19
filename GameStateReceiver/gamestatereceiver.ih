@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "../Agent/agent.hh"
+#include "../Config/config.hh"
 #include "../Debugger/debugger.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../UDPSocket/udpsocket.hh"
