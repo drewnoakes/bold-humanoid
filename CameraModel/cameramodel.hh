@@ -51,7 +51,7 @@ namespace bold
 
     /** Gets a projection matrix
      *
-     * This matrixt projects from camera frame onto image frame, up to
+     * This matrix projects from camera frame onto image frame, up to
      * a scaling factor, which is given in the z element of the
      * transformed vector. i.e to get the pixel coordinate p of a
      * point v with projection matrix T: p' = Tv, p = p'/p'_z.
