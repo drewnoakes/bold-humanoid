@@ -4,12 +4,12 @@
 
 namespace bold
 {
-  class CameraModel : public Configurable
+  class CameraModel
   {
   public:
     unsigned imageWidth() const;
     unsigned imageHeight() const;
-    
+
     double focalLength() const;
     double rangeVerticalDegs() const;
     double rangeVerticalRads() const;

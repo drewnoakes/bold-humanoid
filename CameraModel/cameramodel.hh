@@ -3,20 +3,19 @@
 #include <string>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
-#include "../Configurable/configurable.hh"
-#include "../util/Maybe.hh"
+
+#include "../Config/config.hh"
 #include "../Math/math.hh"
 
 namespace bold
 {
   typedef std::function<Eigen::Vector2d(Eigen::Vector3d const&)> Projector;
 
-  class CameraModel : public Configurable
+  class CameraModel
   {
   public:
     CameraModel(unsigned imageWidth, unsigned imageHeight, double focalLength, double rangeVerticalDegs, double rangeHorizontalDegs)
-      : Configurable("cameramodel"),
-      d_imageWidth(imageWidth),
+    : d_imageWidth(imageWidth),
       d_imageHeight(imageHeight),
 //       d_focalLength(focalLength),
       d_rangeVerticalDegs(rangeVerticalDegs),
@@ -24,13 +23,12 @@ namespace bold
     {}
 
     CameraModel()
-      : Configurable("cameramodel")
     {
-      d_imageWidth = getParam("ImageWidth", 320);
-      d_imageHeight = getParam("ImageHeight", 240);
-//       d_focalLength = getParam("FocalLength", 0.025);
-      d_rangeVerticalDegs = getParam("RangeVerticalDegrees", 45.0);
-      d_rangeHorizontalDegs = getParam("rangeHorizontalDegrees", 60.0);
+      d_imageWidth = Config::getValue<int>("camera.image-width");
+      d_imageHeight = Config::getValue<int>("camera.image-height");
+//       d_focalLength = Config::getValue<double>("camera.focal-length");
+      d_rangeVerticalDegs = Config::getValue<double>("camera.field-of-view.vertical-degrees");
+      d_rangeHorizontalDegs = Config::getValue<double>("camera.field-of-view.horizontal-degrees");
     }
 
     unsigned imageWidth() const { return d_imageWidth; }
