@@ -109,8 +109,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   vector<shared_ptr<Control const>> objectDetectionControls = { minBallAreaControl, minGoalDimensionControl };
   d_controlsByFamily["vision/objects"] = objectDetectionControls;
 
-  d_controlsByFamily["vision/field-edge"] = d_fieldEdgePass->getControls();
-
   vector<shared_ptr<Control const>> lineDetectionControls;
   for (auto c : d_lineFinder->getControls())
     lineDetectionControls.push_back(c);

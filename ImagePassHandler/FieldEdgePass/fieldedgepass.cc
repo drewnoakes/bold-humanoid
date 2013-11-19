@@ -1,6 +1,6 @@
 #include "fieldedgepass.hh"
 
-#include "../../Control/control.hh"
+#include "../../Config/config.hh"
 #include "../../MovingAverage/movingaverage.hh"
 #include "../../PixelLabel/pixellabel.hh"
 
@@ -8,28 +8,16 @@ using namespace bold;
 using namespace std;
 
 FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
-: Configurable("fieldedgepass"),
-  d_fieldLabel(fieldLabel),
+: d_fieldLabel(fieldLabel),
   d_maxYByX(pixelWidth),
   d_runByX(pixelWidth),
   d_pixelWidth(pixelWidth),
   d_pixelHeight(pixelHeight),
-  d_smoothingWindowSize(15),
-  d_minVerticalRunLength(5)
+  d_smoothingWindowSize(Config::getValue<int>("vision.field-edge-pass.smoothing-window-length")),
+  d_minVerticalRunLength(Config::getValue<int>("vision.field-edge-pass.min-vertical-run-length"))
 {
-  d_smoothingWindowSize = getParam("FieldEdgeSmoothingWindow", 15);
-}
-
-vector<shared_ptr<Control const>> FieldEdgePass::getControls()
-{
-  auto smoothingWindowSizeControl = Control::createInt("Field edge smooth window size", [this]() { return d_smoothingWindowSize; }, [this](int value) { d_smoothingWindowSize = value; });
-  smoothingWindowSizeControl->setIsAdvanced(true);
-  smoothingWindowSizeControl->setLimitValues(1, 100);
-  auto minVerticalRunLengthControl = Control::createInt("Field edge noise tolerance", [this]() { return d_minVerticalRunLength; }, [this](int value) { d_minVerticalRunLength = value; });
-  minVerticalRunLengthControl->setIsAdvanced(true);
-  minVerticalRunLengthControl->setLimitValues(1, 100);
-  vector<shared_ptr<Control const>> fieldEdgeControls = { smoothingWindowSizeControl, minVerticalRunLengthControl };
-  return fieldEdgeControls;
+  Config::getSetting<int>("vision.field-edge-pass.smoothing-window-length")->changed.connect([this](int value) { d_smoothingWindowSize = value; });
+  Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->changed.connect([this](int value) { d_minVerticalRunLength = value; });
 }
 
 void FieldEdgePass::onImageStarting()

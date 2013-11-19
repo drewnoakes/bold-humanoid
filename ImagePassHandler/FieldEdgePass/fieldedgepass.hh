@@ -4,14 +4,12 @@
 #include <vector>
 
 #include "../imagepasshandler.hh"
-#include "../Configurable/configurable.hh"
 
 namespace bold
 {
-  class Control;
   class PixelLabel;
 
-  class FieldEdgePass : public ImagePassHandler<uchar>, Configurable
+  class FieldEdgePass : public ImagePassHandler<uchar>
   {
   public:
     FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight);
@@ -21,8 +19,6 @@ namespace bold
     void onImageComplete() override;
 
     ushort getEdgeYValue(ushort x) const;
-
-    std::vector<std::shared_ptr<Control const>> getControls();
 
   private:
     std::shared_ptr<PixelLabel> d_fieldLabel;
