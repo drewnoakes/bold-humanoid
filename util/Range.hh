@@ -3,6 +3,8 @@
 #include <cassert>
 #include <iostream>
 
+#include "../Math/math.hh"
+
 namespace bold
 {
   template<typename T>
@@ -55,6 +57,11 @@ namespace bold
     bool contains(T value) const
     {
       return d_min <= value && d_max >= value;
+    }
+
+    T clamp(T value) const
+    {
+      return Math::clamp(value, d_min, d_max);
     }
 
     bool operator==(Range<T> const& other) const

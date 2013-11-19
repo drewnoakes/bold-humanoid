@@ -6,6 +6,8 @@
 
 namespace bold
 {
+  template <typename> class Setting;
+  
   class WalkModule : public MotionModule
   {
   public:
@@ -101,38 +103,38 @@ namespace bold
     virtual ~WalkModule();
 
     // WalkModule initial pose
-    double X_OFFSET;
-    double Y_OFFSET;
-    double Z_OFFSET;
-    double A_OFFSET;
-    double P_OFFSET;
-    double R_OFFSET;
+    Setting<double>* X_OFFSET;
+    Setting<double>* Y_OFFSET;
+    Setting<double>* Z_OFFSET;
+    Setting<double>* YAW_OFFSET;
+    Setting<double>* PITCH_OFFSET;
+    Setting<double>* ROLL_OFFSET;
 
     // WalkModule control
-    double PERIOD_TIME;
-    double DSP_RATIO;
-    double STEP_FB_RATIO;
+    Setting<double>* PERIOD_TIME;
+    Setting<double>* DSP_RATIO;
+    Setting<double>* STEP_FB_RATIO;
     double X_MOVE_AMPLITUDE;
     double Y_MOVE_AMPLITUDE;
-    double Z_MOVE_AMPLITUDE;
+    Setting<double>* Z_MOVE_AMPLITUDE;
     double A_MOVE_AMPLITUDE;
-    bool A_MOVE_AIM_ON;
+    Setting<bool>* A_MOVE_AIM_ON;
 
     // Balance control
-    bool   BALANCE_ENABLE;
-    double BALANCE_KNEE_GAIN;
-    double BALANCE_ANKLE_PITCH_GAIN;
-    double BALANCE_HIP_ROLL_GAIN;
-    double BALANCE_ANKLE_ROLL_GAIN;
-    double Y_SWAP_AMPLITUDE;
-    double Z_SWAP_AMPLITUDE;
-    double ARM_SWING_GAIN;
-    double PELVIS_OFFSET;
+    Setting<bool>* BALANCE_ENABLE;
+    Setting<double>* BALANCE_KNEE_GAIN;
+    Setting<double>* BALANCE_ANKLE_PITCH_GAIN;
+    Setting<double>* BALANCE_HIP_ROLL_GAIN;
+    Setting<double>* BALANCE_ANKLE_ROLL_GAIN;
+    Setting<double>* Y_SWAP_AMPLITUDE;
+    Setting<double>* Z_SWAP_AMPLITUDE;
+    Setting<double>* ARM_SWING_GAIN;
+    Setting<double>* PELVIS_OFFSET;
     double HIP_PITCH_OFFSET;
 
-    int    P_GAIN;
-    int    I_GAIN;
-    int    D_GAIN;
+    Setting<int>* P_GAIN;
+    Setting<int>* I_GAIN;
+    Setting<int>* D_GAIN;
 
     void initialize() override;
     void step(std::shared_ptr<JointSelection> selectedJoints) override;

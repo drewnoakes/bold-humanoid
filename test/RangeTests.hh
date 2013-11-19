@@ -98,3 +98,18 @@ TEST (RangeTests, contains)
   EXPECT_FALSE( Range<int>(0, 10).contains(-1) );
   EXPECT_FALSE( Range<int>(0, 10).contains(11) );
 }
+
+TEST (RangeTests, clamp)
+{
+  EXPECT_EQ ( 5,  Range<int>(0, 10).clamp(5) );
+  EXPECT_EQ ( 0,  Range<int>(0, 10).clamp(0) );
+  EXPECT_EQ ( 10, Range<int>(0, 10).clamp(10) );
+  EXPECT_EQ ( 0,  Range<int>(0, 10).clamp(-1) );
+  EXPECT_EQ ( 10,  Range<int>(0, 10).clamp(11) );
+
+  EXPECT_EQ ( 0,   Range<int>(-10, 10).clamp(0) );
+  EXPECT_EQ ( -5,  Range<int>(-10, 10).clamp(-5) );
+  EXPECT_EQ ( -10, Range<int>(-10, 10).clamp(-10) );
+  EXPECT_EQ ( 10,  Range<int>(-10, 10).clamp(10) );
+}
+

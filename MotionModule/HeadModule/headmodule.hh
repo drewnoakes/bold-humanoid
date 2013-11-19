@@ -5,18 +5,20 @@
 #include "../motionmodule.hh"
 #include "../../Control/control.hh"
 #include "../../Math/math.hh"
+#include "../../Setting/setting.hh"
+#include "../../util/Range.hh"
 
 namespace bold
 {
-  class HeadSection;
   class ArmSection;
+  class HeadSection;
   class LegSection;
 
   class HeadModule : public MotionModule
   {
   public:
     HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler);
-    ~HeadModule();
+    ~HeadModule() override;
 
     std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
 
@@ -28,21 +30,21 @@ namespace bold
 
     // TODO don't store this here, but rather some static model of the body's limits
 
-    double getTopLimitDegs() const    { return d_limitTopDegs; }
-    double getBottomLimitDegs() const { return d_limitBottomDegs; }
-    double getRightLimitDegs() const  { return d_limitRightDegs; }
-    double getLeftLimitDegs() const   { return d_limitLeftDegs; }
+    double getTopLimitDegs() const    { return d_limitTiltDegs->getValue().max(); }
+    double getBottomLimitDegs() const { return d_limitTiltDegs->getValue().min(); }
+    double getRightLimitDegs() const  { return d_limitPanDegs->getValue().min(); }
+    double getLeftLimitDegs() const   { return d_limitPanDegs->getValue().max(); }
 
-    double getTopLimitRads() const    { return Math::degToRad(d_limitTopDegs); }
-    double getBottomLimitRads() const { return Math::degToRad(d_limitBottomDegs); }
-    double getRightLimitRads() const  { return Math::degToRad(d_limitRightDegs); }
-    double getLeftLimitRads() const   { return Math::degToRad(d_limitLeftDegs); }
+    double getTopLimitRads() const    { return Math::degToRad(getTopLimitDegs()); }
+    double getBottomLimitRads() const { return Math::degToRad(getBottomLimitDegs()); }
+    double getRightLimitRads() const  { return Math::degToRad(getRightLimitDegs()); }
+    double getLeftLimitRads() const   { return Math::degToRad(getLeftLimitDegs()); }
 
-    double getPanDegs() const  { return d_panAngle; }
-    double getTiltDegs() const { return d_tiltAngle; }
+    double getPanDegs() const  { return d_panAngleDegs; }
+    double getTiltDegs() const { return d_tiltAngleDegs; }
 
-    double getPanRads() const  { return Math::degToRad(d_panAngle); }
-    double getTiltRads() const { return Math::degToRad(d_tiltAngle); }
+    double getPanRads() const  { return Math::degToRad(d_panAngleDegs); }
+    double getTiltRads() const { return Math::degToRad(d_tiltAngleDegs); }
 
     /// Move the head to the position set as the 'home' position
     void moveToHome();
@@ -72,26 +74,24 @@ namespace bold
 
     std::vector<std::shared_ptr<Control const>> d_controls;
 
-    double d_limitLeftDegs;
-    double d_limitRightDegs;
-    double d_limitTopDegs;
-    double d_limitBottomDegs;
+    Setting<Range<double>>* d_limitPanDegs;
+    Setting<Range<double>>* d_limitTiltDegs;
 
-    double d_panHomeDegs;
-    double d_tiltHomeDegs;
+    Setting<double>* d_panHomeDegs;
+    Setting<double>* d_tiltHomeDegs;
 
     /// P gain value set on the MX28
-    double d_gainP;
+    Setting<int>* d_gainP;
 
-    double d_panGainP;  ///< P gain value for pan joint used in tracking calculations
-    double d_panGainD;  ///< D gain value for pan joint used in tracking calculations
-    double d_tiltGainP; ///< P gain value for tilt joint used in tracking calculations
-    double d_tiltGainD; ///< D gain value for tilt joint used in tracking calculations
+    Setting<double>* d_panGainP;  ///< P gain value for pan joint used in tracking calculations
+    Setting<double>* d_panGainD;  ///< D gain value for pan joint used in tracking calculations
+    Setting<double>* d_tiltGainP; ///< P gain value for tilt joint used in tracking calculations
+    Setting<double>* d_tiltGainD; ///< D gain value for tilt joint used in tracking calculations
 
     double d_lastPanError;
     double d_lastTiltError;
 
-    double d_panAngle;
-    double d_tiltAngle;
+    double d_panAngleDegs;
+    double d_tiltAngleDegs;
   };
 }

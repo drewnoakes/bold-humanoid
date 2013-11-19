@@ -19,12 +19,8 @@ Ambulator::Ambulator(std::shared_ptr<WalkModule> walkModule)
   auto xAmpSetting = Config::getSetting<double>("ambulator.x-amp-delta");
   auto yAmpSetting = Config::getSetting<double>("ambulator.y-amp-delta");
   auto turnSetting = Config::getSetting<double>("ambulator.turn-delta");
-  auto autoBalanceSetting = Config::getSetting<bool>("ambulator.auto-balance");
-
-  d_walkModule->BALANCE_ENABLE = autoBalanceSetting->getValue();
 
   xAmpSetting->changed.connect([this](double value) { d_yAmp.setDelta(value); });
   yAmpSetting->changed.connect([this](double value) { d_yAmp.setDelta(value); });
   turnSetting->changed.connect([this](double value) { d_turnAmp.setDelta(value); });
-  autoBalanceSetting->changed.connect([this](bool value) { d_walkModule->BALANCE_ENABLE = value; });
 }

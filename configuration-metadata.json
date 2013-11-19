@@ -5,9 +5,9 @@
     "voice":        { "type": "string", "readonly": true, "default": "english-mb-en1" },
     "joystick": {
       "enabled":   { "type": "bool", "readonly": true, "default": false },
-      "x-amp-max": { "type": "double", "min": 1, "max": 30, "readonly": false, "default": 15 },
-      "y-amp-max": { "type": "double", "min": 1, "max": 30, "readonly": false, "default": 15 },
-      "a-amp-max": { "type": "double", "min": 1, "max": 30, "readonly": false, "default": 15 }
+      "x-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "readonly": false, "default": 15.0 },
+      "y-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "readonly": false, "default": 15.0 },
+      "a-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "readonly": false, "default": 15.0 }
     }
   },
   "world": {
@@ -31,8 +31,8 @@
     "image-height": { "type": "int", "readonly": true, "default": 240 },
     "focal-length": { "type": "double", "readonly": true, "default": 0.025 },
     "field-of-view": {
-      "vertical-degrees":   { "type": "double", "readonly": true, "default": 46 },
-      "horizontal-degrees": { "type": "double", "readonly": true, "default": 58 }
+      "vertical-degrees":   { "type": "double", "readonly": true, "default": 46.0 },
+      "horizontal-degrees": { "type": "double", "readonly": true, "default": 58.0 }
     },
     "settings": {
 
@@ -76,8 +76,8 @@
   "localiser": {
     "particle-count":        { "type": "int", "min": 1, "max": 2000, "default": 100 },
     "smoothing-window-size": { "type": "int", "min": 1, "max": 100, "default": 5 },
-    "randomise-ratio":       { "type": "double", "min": 0.0, "max": 1, "default": 0.03 },
-    "reward-fall-off":       { "type": "double", "min": 0.0, "max": 1, "default": 0.5 },
+    "randomise-ratio":       { "type": "double", "min": 0.0, "max": 1.0, "default": 0.03 },
+    "reward-fall-off":       { "type": "double", "min": 0.0, "max": 1.0, "default": 0.5 },
     "use-lines":             { "type": "bool", "default": true },
     "min-goals-needed":      { "type": "int", "min": 1, "max": 5, "default": 1 },
     "position-error":        { "type": "double", "min": 0.0, "max": 0.1, "default": 0.03 },
@@ -85,8 +85,8 @@
   },
   "head-module": {
     "p-gain":             { "type": "int", "min": 1, "max": 255, "default": 8 },
-    "pan-limit-degrees":  { "type": "double-range", "default": [-80, 80] },
-    "tilt-limit-degrees": { "type": "double-range", "default": [-30, 0] },
+    "pan-limit-degrees":  { "type": "double-range", "default": [-135.0, 135.0] },
+    "tilt-limit-degrees": { "type": "double-range", "default": [-22.0, 40.0] },
     "tracking": {
       "pan": {
         "p-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.03 },
@@ -96,50 +96,56 @@
         "p-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.03 },
         "d-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 }
       }
-    }
+    },
+    "home-pan":  { "type": "double", "min": -80.0, "max": 80.0, "default": 0.0 },
+    "home-tilt": { "type": "double", "min": -22.0, "max": 40.0, "default": -10.0 }
   },
   "walk-module": {
-    "x-offset":         { "type": "double", "default": -10 },
-    "y-offset":         { "type": "double", "default": 5 },
-    "z-offset":         { "type": "double", "default": 20 },
-    "r-offset":         { "type": "double", "default": 0 },
-    "p-offset":         { "type": "double", "default": 0 },
-    "a-offset":         { "type": "double", "default": 0 },
-    "hip-pitch-offset": { "type": "double", "default": 17 },
-    "period-time":      { "type": "double", "default": 600 },
+    "x-offset":         { "type": "double", "default": -10.0 },
+    "y-offset":         { "type": "double", "default": 5.0 },
+    "z-offset":         { "type": "double", "default": 20.0 },
+    "roll-offset":      { "type": "double", "default": 0.0 },
+    "pitch-offset":     { "type": "double", "default": 0.0 },
+    "yaw-offset":       { "type": "double", "default": 0.0 },
+    "hip-pitch-offset": { "type": "double", "default": 17.0 },
+    "period-time":      { "type": "double", "default": 600.0 },
     "dsp-ratio":        { "type": "double", "default": 0.1 },
-    "z-move-amplitude": { "type": "double", "default": 40 },
-    "y-swap-amplitude": { "type": "double", "default": 20 },
-    "z-swap-amplitude": { "type": "double", "default": 5 },
-    "pelvis-offset":    { "type": "double", "default": 3 },
+    "foot-height":      { "type": "double", "default": 40.0 },
+    "swing-right-left": { "type": "double", "default": 20.0 },
+    "swing-top-down":   { "type": "double", "default": 5.0 },
+    "pelvis-offset":    { "type": "double", "default": 3.0 },
     "arm-swing-gain":   { "type": "double", "default": 1.5 },
-    "balance-knee-gain":        { "type": "double", "default": 1.2 },
-    "balance-ankle-pitch-gain": { "type": "double", "default": 3.6 },
-    "balance-hip-roll-gain":    { "type": "double", "default": 2 },
-    "balance-ankle-roll-gain":  { "type": "double", "default": 4 },
+    "step-fb-ratio":    { "type": "double", "default": 0.28 },
+    "a-move-aim-enable": { "type": "bool", "default": false },
+    "balance": {
+      "enable":           { "type": "bool", "default": true, "description": "Enable auto-balance" },
+      "knee-gain":        { "type": "double", "default": 1.2 },
+      "ankle-pitch-gain": { "type": "double", "default": 3.6 },
+      "hip-roll-gain":    { "type": "double", "default": 2.0 },
+      "ankle-roll-gain":  { "type": "double", "default": 4.0 }
+    },
     "p-gain":           { "type": "int", "default": 32 },
     "i-gain":           { "type": "int", "default": 0 },
     "d-gain":           { "type": "int", "default": 0 }
   },
   "ambulator": {
-    "auto-balance":  { "type": "bool", "default": true, "description": "Enable auto-balance" },
-    "x-amp-delta":   { "type": "double", "default": 5, "description": "X smoothing delta" },
-    "y-amp-delta":   { "type": "double", "default": 5, "description": "Y smoothing delta" },
-    "turn-delta":    { "type": "double", "default": 1, "description": "Turn smoothing delta" },
-    "max-hip-pitch-at-speed": { "type": "double", "default": 15, "description": "Max hip pitch @ speed" },
-    "min-hip-pitch": { "type": "double", "default": 13, "description": "Min hip pitch" },
-    "max-hip-pitch": { "type": "double", "default": 17, "description": "Max hip pitch" }
+    "x-amp-delta":   { "type": "double", "default": 5.0, "description": "X smoothing delta" },
+    "y-amp-delta":   { "type": "double", "default": 5.0, "description": "Y smoothing delta" },
+    "turn-delta":    { "type": "double", "default": 1.0, "description": "Turn smoothing delta" },
+    "max-hip-pitch-at-speed": { "type": "double", "default": 15.0, "description": "Max hip pitch @ speed" },
+    "min-hip-pitch": { "type": "double", "default": 13.0, "description": "Min hip pitch" },
+    "max-hip-pitch": { "type": "double", "default": 17.0, "description": "Max hip pitch" }
   },
   "options": {
     "circle-ball": {
-      "walk-x":    { "type": "double", "default": 1 },
-      "walk-y":    { "type": "double", "default": 20 },
-      "walk-turn": { "type": "double", "default": 15 }
+      "walk-x":    { "type": "double", "default": 1.0 },
+      "walk-y":    { "type": "double", "default": 20.0 },
+      "walk-turn": { "type": "double", "default": 15.0 }
     },
     "approach-ball": {
       "turn-scale":        { "type": "double", "default": 17.5 },
-      "max-forward-speed": { "type": "double", "default": 30 },
-      "min-forward-speed": { "type": "double", "default": 5 },
+      "max-forward-speed": { "type": "double", "default": 30.0 },
+      "min-forward-speed": { "type": "double", "default": 5.0 },
       "break-distance":    { "type": "double", "default": 0.5 }
     }
   }

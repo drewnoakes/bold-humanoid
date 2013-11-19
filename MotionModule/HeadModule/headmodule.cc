@@ -2,6 +2,7 @@
 
 #include "../AgentState/agentstate.hh"
 #include "../BodyControl/bodycontrol.hh"
+#include "../Config/config.hh"
 #include "../Math/math.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../ThreadId/threadid.hh"
@@ -15,23 +16,21 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 : MotionModule("head", scheduler)
 {
   // P gain values for MX28
-  d_gainP    = getParam("p_gain", 8);
+  d_gainP       = Config::getSetting<int>("head-module.p-gain");
 
   // PD gain values for tracking
-  d_panGainP    = getParam("tracking_pan_p_gain", 0.1);
-  d_panGainD    = getParam("tracking_pan_d_gain", 0.22);
-  d_tiltGainP   = getParam("tracking_tilt_p_gain", 0.1);
-  d_tiltGainD   = getParam("tracking_tilt_d_gain", 0.22);
+  d_panGainP    = Config::getSetting<double>("head-module.tracking.pan.p-gain");
+  d_panGainD    = Config::getSetting<double>("head-module.tracking.pan.d-gain");
+  d_tiltGainP   = Config::getSetting<double>("head-module.tracking.tilt.p-gain");
+  d_tiltGainD   = Config::getSetting<double>("head-module.tracking.tilt.d-gain");
 
   // Restrictions placed upon the range of movement by the head within this module
-  d_limitLeftDegs   = getParam("left_limit", 135.0);
-  d_limitRightDegs  = getParam("right_limit", -135.0);
-  d_limitTopDegs    = getParam("top_limit", 40.0);
-  d_limitBottomDegs = getParam("bottom_limit", -22.0);
+  d_limitPanDegs  = Config::getSetting<Range<double>>("head-module.pan-limit-degrees");
+  d_limitTiltDegs = Config::getSetting<Range<double>>("head-module.tilt-limit-degrees");
 
   // Home position
-  d_panHomeDegs     = getParam("pan_home", 0.0);
-  d_tiltHomeDegs    = getParam("tilt_home", -10.0);
+  d_panHomeDegs   = Config::getSetting<double>("head-module.home-pan");
+  d_tiltHomeDegs  = Config::getSetting<double>("head-module.home-tilt");
 
   // Controls
   d_controls.push_back(Control::createAction("&blacktriangleleft;",  [this]() { moveByDeltaDegs( 5, 0); }));
@@ -40,26 +39,6 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_controls.push_back(Control::createAction("&blacktriangleright;", [this]() { moveByDeltaDegs(-5, 0); }));
   d_controls.push_back(Control::createAction("home",                 [this]() { moveToHome(); }));
   d_controls.push_back(Control::createAction("zero",                 [this]() { moveToDegs(0, 0); }));
-
-  auto createControl = [this](double* target, string name, double min, double max, int scale = 1, bool isAdvanced = true)
-  {
-    auto control = Control::createInt(name, [target,scale]() { return int((*target)*scale); }, [this,target,scale](int value) { *target = value/double(scale); });
-    control->setLimitValues(min * scale, max * scale);
-    control->setIsAdvanced(isAdvanced);
-    d_controls.push_back(control);
-  };
-
-  createControl(&d_gainP, "P Gain", 0, 32);
-
-  createControl(&d_panGainP, "Tracking Pan P Gain", 0, 0.20, 100);
-  createControl(&d_panGainD, "Tracking Pan D Gain", 0, 0.40, 100);
-  createControl(&d_tiltGainP, "Tracking Tilt P Gain", 0, 0.20, 100);
-  createControl(&d_tiltGainD, "Tracking Tilt D Gain", 0, 0.40, 100);
-
-  createControl(&d_limitLeftDegs, "Pan Limit Left", 1, 150);
-  createControl(&d_limitRightDegs, "Pan Limit Right", -150, -1);
-
-  // No controls for top/bottom -- cannot go lower without damaging head, and no need to look upwards
 }
 
 HeadModule::~HeadModule()
@@ -68,8 +47,8 @@ HeadModule::~HeadModule()
 void HeadModule::checkLimit()
 {
   // Clamp pan/tilt within the box-shaped limit
-  d_panAngle = Math::clamp(d_panAngle, d_limitRightDegs, d_limitLeftDegs);
-  d_tiltAngle = Math::clamp(d_tiltAngle, d_limitBottomDegs, d_limitTopDegs);
+  d_panAngleDegs = d_limitPanDegs->getValue().clamp(d_panAngleDegs);
+  d_tiltAngleDegs = d_limitTiltDegs->getValue().clamp(d_tiltAngleDegs);
 
   // Lower corners of that box are disallowed as the head makes contact with the
   // shoulder, and the body occludes too much from the camera anyway.
@@ -82,20 +61,20 @@ void HeadModule::checkLimit()
   //
   //      -85     85
 
-  if (fabs(d_panAngle) > Math::degToRad(85))
+  if (fabs(d_panAngleDegs) > Math::degToRad(85))
   {
     // Outside of +/- 85 degrees, we need to prevent tilting too far down.
     // At 85 deg, we start tilting upwards to avoid the shoulder.
-    double limit = Math::lerp(fabs(d_panAngle), 85, 135, -22, 10);
-    if (d_tiltAngle < limit)
-      d_tiltAngle = limit;
+    double limit = Math::lerp(fabs(d_panAngleDegs), 85, 135, -22, 10);
+    if (d_tiltAngleDegs < limit)
+      d_tiltAngleDegs = limit;
   }
 }
 
 void HeadModule::initialize()
 {
-  d_panAngle = d_panHomeDegs;
-  d_tiltAngle = d_tiltHomeDegs;
+  d_panAngleDegs = d_panHomeDegs->getValue();
+  d_tiltAngleDegs = d_tiltHomeDegs->getValue();
   checkLimit();
   initTracking();
   moveToHome();
@@ -103,13 +82,13 @@ void HeadModule::initialize()
 
 void HeadModule::moveToHome()
 {
-  moveToDegs(d_panHomeDegs, d_tiltHomeDegs);
+  moveToDegs(d_panHomeDegs->getValue(), d_tiltHomeDegs->getValue());
 }
 
 void HeadModule::moveToDegs(double pan, double tilt)
 {
-  d_panAngle = pan;
-  d_tiltAngle = tilt;
+  d_panAngleDegs = pan;
+  d_tiltAngleDegs = tilt;
 
   getScheduler()->add(this,
                       Priority::Normal, false,  // HEAD   Interuptable::YES
@@ -121,7 +100,7 @@ void HeadModule::moveToDegs(double pan, double tilt)
 
 void HeadModule::moveByDeltaDegs(double panDelta, double tiltDelta)
 {
-  moveToDegs(d_panAngle + panDelta, d_tiltAngle + tiltDelta);
+  moveToDegs(d_panAngleDegs + panDelta, d_tiltAngleDegs + tiltDelta);
 }
 
 void HeadModule::initTracking()
@@ -151,8 +130,8 @@ void HeadModule::moveTracking(double panError, double tiltError)
     return pOffset + dOffset;
   };
 
-  d_panAngle  += calcPDOffset(panError,  panErrorDelta,  d_panGainP,  d_panGainD);
-  d_tiltAngle += calcPDOffset(tiltError, tiltErrorDelta, d_tiltGainP, d_tiltGainD);
+  d_panAngleDegs  += calcPDOffset(panError,  panErrorDelta,  d_panGainP->getValue(),  d_panGainD->getValue());
+  d_tiltAngleDegs += calcPDOffset(tiltError, tiltErrorDelta, d_tiltGainP->getValue(), d_tiltGainD->getValue());
 
   getScheduler()->add(this,
                       Priority::Normal, false,  // HEAD   Interuptable::YES
@@ -170,10 +149,11 @@ void HeadModule::step(shared_ptr<JointSelection> selectedJoints)
 
 void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
 {
-  head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPGain(d_gainP); });
+  auto gainP = d_gainP->getValue();
+  head->visitJoints([this,gainP](shared_ptr<JointControl> joint) { joint->setPGain(gainP); });
 
-  head->pan()->setDegrees(d_panAngle);
-  head->tilt()->setDegrees(d_tiltAngle);
+  head->pan()->setDegrees(d_panAngleDegs);
+  head->tilt()->setDegrees(d_tiltAngleDegs);
 }
 
 void HeadModule::applyArms(std::shared_ptr<ArmSection> arms) { cerr << "[HeadModule::applyArms] SHOULD NOT BE CALLED" << endl; }

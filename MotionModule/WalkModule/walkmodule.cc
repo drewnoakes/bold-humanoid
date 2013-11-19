@@ -6,6 +6,7 @@
 #include "../../AgentState/agentstate.hh"
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../CM730Snapshot/cm730snapshot.hh"
+#include "../../Config/config.hh"
 #include "../../MX28/mx28.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 #include "../../ThreadId/threadid.hh"
@@ -20,38 +21,37 @@ using namespace std;
 WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 : MotionModule("walk", scheduler)
 {
-  string section = "Walk Module";
+  X_OFFSET          = Config::getSetting<double>("walk-module.x-offset");
+  Y_OFFSET          = Config::getSetting<double>("walk-module.y-offset");
+  Z_OFFSET          = Config::getSetting<double>("walk-module.z-offset");
+  ROLL_OFFSET       = Config::getSetting<double>("walk-module.roll-offset");
+  PITCH_OFFSET      = Config::getSetting<double>("walk-module.pitch-offset");
+  YAW_OFFSET        = Config::getSetting<double>("walk-module.yaw-offset");
+  PERIOD_TIME       = Config::getSetting<double>("walk-module.period-time");
+  DSP_RATIO         = Config::getSetting<double>("walk-module.dsp-ratio");
+  STEP_FB_RATIO     = Config::getSetting<double>("walk-module.step-fb-ratio");
+  Z_MOVE_AMPLITUDE  = Config::getSetting<double>("walk-module.foot-height");
+  Y_SWAP_AMPLITUDE  = Config::getSetting<double>("walk-module.swing-right-left");
+  Z_SWAP_AMPLITUDE  = Config::getSetting<double>("walk-module.swing-top-down");
+  PELVIS_OFFSET     = Config::getSetting<double>("walk-module.pelvis-offset");
+  ARM_SWING_GAIN    = Config::getSetting<double>("walk-module.arm-swing-gain");
 
-  X_OFFSET          = getParam("x_offset", -10);
-  Y_OFFSET          = getParam("y_offset", 5);
-  Z_OFFSET          = getParam("z_offset", 20);
-  R_OFFSET          = getParam("roll_offset", 0);
-  P_OFFSET          = getParam("pitch_offset", 0);
-  A_OFFSET          = getParam("yaw_offset", 0);
-  HIP_PITCH_OFFSET  = getParam("hip_pitch_offset", 13.0);
-  PERIOD_TIME       = getParam("period_time", 600);
-  DSP_RATIO         = getParam("dsp_ratio", 0.1);
-  STEP_FB_RATIO     = getParam("step_forward_back_ratio", 0.28);
-  Z_MOVE_AMPLITUDE  = getParam("foot_height", 40);
-  Y_SWAP_AMPLITUDE  = getParam("swing_right_left", 20.0);
-  Z_SWAP_AMPLITUDE  = getParam("swing_top_down", 5);
-  PELVIS_OFFSET     = getParam("pelvis_offset", 3.0);
-  ARM_SWING_GAIN    = getParam("arm_swing_gain", 1.5);
+  BALANCE_ENABLE           = Config::getSetting<bool>("walk-module.balance.enable");
+  BALANCE_KNEE_GAIN        = Config::getSetting<double>("walk-module.balance.knee-gain");
+  BALANCE_ANKLE_PITCH_GAIN = Config::getSetting<double>("walk-module.balance.ankle-pitch-gain");
+  BALANCE_HIP_ROLL_GAIN    = Config::getSetting<double>("walk-module.balance.hip-roll-gain");
+  BALANCE_ANKLE_ROLL_GAIN  = Config::getSetting<double>("walk-module.balance.ankle-roll-gain");
 
-  BALANCE_KNEE_GAIN        = getParam("balance_knee_gain", 1.2);
-  BALANCE_ANKLE_PITCH_GAIN = getParam("balance_ankle_pitch_gain", 3.6);
-  BALANCE_HIP_ROLL_GAIN    = getParam("balance_hip_roll_gain", 2.0);
-  BALANCE_ANKLE_ROLL_GAIN  = getParam("balance_ankle_roll_gain", 4.0);
+  P_GAIN = Config::getSetting<int>("walk-module.p-gain");
+  I_GAIN = Config::getSetting<int>("walk-module.i-gain");
+  D_GAIN = Config::getSetting<int>("walk-module.d-gain");
 
-  P_GAIN = JointControl::P_GAIN_DEFAULT;
-  I_GAIN = JointControl::I_GAIN_DEFAULT;
-  D_GAIN = JointControl::D_GAIN_DEFAULT;
-
+  HIP_PITCH_OFFSET = 13.0;
   X_MOVE_AMPLITUDE = 0;
   Y_MOVE_AMPLITUDE = 0;
   A_MOVE_AMPLITUDE = 0;
-  A_MOVE_AIM_ON = false;
-  BALANCE_ENABLE = true;
+
+  A_MOVE_AIM_ON = Config::getSetting<bool>("walk-module.a-move-aim-enable");
 }
 
 WalkModule::~WalkModule()
@@ -145,9 +145,9 @@ bool WalkModule::computeIK(double *out, double x, double y, double z, double a, 
 
 void WalkModule::updateTimeParams()
 {
-  d_periodTime = PERIOD_TIME;
-  d_dspRatio = DSP_RATIO;
-  d_sspRatio = 1 - DSP_RATIO;
+  d_periodTime = PERIOD_TIME->getValue();
+  d_dspRatio = DSP_RATIO->getValue();
+  d_sspRatio = 1 - d_dspRatio;
 
   d_xSwapPeriodTime = d_periodTime / 2;
   d_xMovePeriodTime = d_periodTime * d_sspRatio;
@@ -167,16 +167,16 @@ void WalkModule::updateTimeParams()
   d_phaseTime2 = (d_sspTimeStartR + d_sspTimeEndL) / 2;
   d_phaseTime3 = (d_sspTimeEndR + d_sspTimeStartR) / 2;
 
-  d_pelvisOffset = PELVIS_OFFSET*MX28::RATIO_DEGS2VALUE;
+  d_pelvisOffset = PELVIS_OFFSET->getValue()*MX28::RATIO_DEGS2VALUE;
   d_pelvisSwing = d_pelvisOffset * 0.35;
-  d_armSwingGain = ARM_SWING_GAIN;
+  d_armSwingGain = ARM_SWING_GAIN->getValue();
 }
 
 void WalkModule::updateMovementParams()
 {
   // Forward/Back
   d_xMoveAmplitude = X_MOVE_AMPLITUDE;
-  d_xSwapAmplitude = X_MOVE_AMPLITUDE * STEP_FB_RATIO;
+  d_xSwapAmplitude = X_MOVE_AMPLITUDE * STEP_FB_RATIO->getValue();
 
   // Right/Left
   d_yMoveAmplitude = Y_MOVE_AMPLITUDE / 2;
@@ -184,15 +184,15 @@ void WalkModule::updateMovementParams()
     d_yMoveAmplitudeShift = d_yMoveAmplitude;
   else
     d_yMoveAmplitudeShift = -d_yMoveAmplitude;
-  d_ySwapAmplitude = Y_SWAP_AMPLITUDE + d_yMoveAmplitudeShift * 0.04;
+  d_ySwapAmplitude = Y_SWAP_AMPLITUDE->getValue() + d_yMoveAmplitudeShift * 0.04;
 
-  d_zMoveAmplitude = Z_MOVE_AMPLITUDE / 2;
+  d_zMoveAmplitude = Z_MOVE_AMPLITUDE->getValue() / 2;
   d_zMoveAmplitudeShift = d_zMoveAmplitude / 2;
-  d_zSwapAmplitude = Z_SWAP_AMPLITUDE;
+  d_zSwapAmplitude = Z_SWAP_AMPLITUDE->getValue();
   d_zSwapAmplitudeShift = d_zSwapAmplitude;
 
   // Direction
-  if (!A_MOVE_AIM_ON)
+  if (!A_MOVE_AIM_ON->getValue())
   {
     d_aMoveAmplitude = A_MOVE_AMPLITUDE * M_PI / 180.0 / 2;
     if (d_aMoveAmplitude > 0)
@@ -212,12 +212,12 @@ void WalkModule::updateMovementParams()
 
 void WalkModule::updateBalanceParams()
 {
-  d_xOffset = X_OFFSET;
-  d_yOffset = Y_OFFSET;
-  d_zOffset = Z_OFFSET;
-  d_rOffset = R_OFFSET * M_PI / 180.0;
-  d_pOffset = P_OFFSET * M_PI / 180.0;
-  d_aOffset = A_OFFSET * M_PI / 180.0;
+  d_xOffset = X_OFFSET->getValue();
+  d_yOffset = Y_OFFSET->getValue();
+  d_zOffset = Z_OFFSET->getValue();
+  d_rOffset = ROLL_OFFSET->getValue() * M_PI / 180.0;
+  d_pOffset = PITCH_OFFSET->getValue() * M_PI / 180.0;
+  d_aOffset = YAW_OFFSET->getValue() * M_PI / 180.0;
   d_hipPitchOffset = HIP_PITCH_OFFSET*MX28::RATIO_DEGS2VALUE;
 }
 
@@ -485,7 +485,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 
   // adjust balance offset
   // TODO convert this stabilisation to a generic and replaceable BodyControlModulator ?
-  if (BALANCE_ENABLE)
+  if (BALANCE_ENABLE->getValue())
   {
     auto hw = AgentState::get<HardwareState>();
     assert(hw);
@@ -497,17 +497,17 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     double rlGyroErr = gryoRaw.x();
     double fbGyroErr = gryoRaw.y();
 
-    d_outValue[1]  += (int)(dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN); // R_HIP_ROLL
-    d_outValue[7]  += (int)(dir[7] * rlGyroErr * BALANCE_HIP_ROLL_GAIN); // L_HIP_ROLL
+    d_outValue[1]  += (int)(dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // R_HIP_ROLL
+    d_outValue[7]  += (int)(dir[7] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // L_HIP_ROLL
 
-    d_outValue[3]  -= (int)(dir[3] * fbGyroErr * BALANCE_KNEE_GAIN); // R_KNEE
-    d_outValue[9]  -= (int)(dir[9] * fbGyroErr * BALANCE_KNEE_GAIN); // L_KNEE
+    d_outValue[3]  -= (int)(dir[3] * fbGyroErr * BALANCE_KNEE_GAIN->getValue()); // R_KNEE
+    d_outValue[9]  -= (int)(dir[9] * fbGyroErr * BALANCE_KNEE_GAIN->getValue()); // L_KNEE
 
-    d_outValue[4]  -= (int)(dir[4]  * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN); // R_ANKLE_PITCH
-    d_outValue[10] -= (int)(dir[10] * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN); // L_ANKLE_PITCH
+    d_outValue[4]  -= (int)(dir[4]  * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN->getValue()); // R_ANKLE_PITCH
+    d_outValue[10] -= (int)(dir[10] * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN->getValue()); // L_ANKLE_PITCH
 
-    d_outValue[5]  -= (int)(dir[5]  * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN); // R_ANKLE_ROLL
-    d_outValue[11] -= (int)(dir[11] * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN); // L_ANKLE_ROLL
+    d_outValue[5]  -= (int)(dir[5]  * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN->getValue()); // R_ANKLE_ROLL
+    d_outValue[11] -= (int)(dir[11] * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN->getValue()); // L_ANKLE_ROLL
   }
 
   if (!d_isRunning)
@@ -521,7 +521,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 void WalkModule::applyHead(shared_ptr<HeadSection> head)
 {
   // Ensure we have our standard PID values
-  head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPidGains(P_GAIN, I_GAIN, D_GAIN); });
+  head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
 
   head->pan()->setDegrees(A_MOVE_AMPLITUDE);
 }
@@ -529,7 +529,7 @@ void WalkModule::applyHead(shared_ptr<HeadSection> head)
 void WalkModule::applyArms(shared_ptr<ArmSection> arms)
 {
   // Arms move with a low P value of 8
-  arms->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPGain(8); });
+  arms->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPGain(8); joint->setIGain(0); joint->setDGain(0); });
 
   arms->shoulderPitchRight()->setValue(d_outValue[12]);
   arms->shoulderPitchLeft()->setValue(d_outValue[13]);
@@ -543,7 +543,7 @@ void WalkModule::applyArms(shared_ptr<ArmSection> arms)
 void WalkModule::applyLegs(shared_ptr<LegSection> legs)
 {
   // Ensure we have our standard PID values
-  legs->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPidGains(P_GAIN, I_GAIN, D_GAIN); });
+  legs->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
 
   legs->hipYawRight()->setValue(d_outValue[0]);
   legs->hipRollRight()->setValue(d_outValue[1]);
