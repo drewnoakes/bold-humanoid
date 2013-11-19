@@ -3,10 +3,11 @@
 #include "../option.hh"
 #include "../../Clock/clock.hh"
 
+#include <algorithm>
+#include <cassert>
+#include <memory>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <memory>
 
 namespace bold
 {
