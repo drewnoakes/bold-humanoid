@@ -4,11 +4,10 @@
 #include <Eigen/Core>
 
 #include "../geometry/LineSegment.hh"
-#include "../Configurable/configurable.hh"
 
 namespace bold
 {
-  class FieldMap : public Configurable
+  class FieldMap
   {
   public:
     FieldMap();

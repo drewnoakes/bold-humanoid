@@ -1,7 +1,7 @@
 #include "fieldmap.hh"
 
+#include "../Config/config.hh"
 #include "../geometry/LineSegment.hh"
-#include "../Configurable/configurable.hh"
 
 #include <iostream>
 #include <vector>
@@ -12,29 +12,28 @@ using namespace std;
 using namespace Eigen;
 
 FieldMap::FieldMap()
-  : Configurable("field")
 {
   std::cout << "[FieldMap::FieldMap] Start" << std::endl;
 
-  d_fieldLengthX              = getParam("FieldSizeX", 6.0);
-  d_fieldLengthY              = getParam("FieldSizeY", 4.0);
-//   double goalX               = getParam("GoalSizeX", 0.5);
-  double goalY               = getParam("GoalSizeY", 1.5);
-//   double goalZ               = getParam("GoalSizeZ", 0.8);
-//   double goalPostDiameter    = getParam("GoalPostDiameter", 0.1);
-  double goalAreaX           = getParam("GoalAreaSizeX", 0.6);
-  double goalAreaY           = getParam("GoalAreaSizeY", 2.2);
-//   double penaltyMarkDistance = getParam("PenaltyMarkDistance", 1.8);
-  double circleDiameter      = getParam("CircleDiameter", 1.2);
-//   double lineWidth           = getParam("LineWidth", 0.05);
-//   double penaltyLineLength   = getParam("PenaltyLineLength", 0.1);
-  d_outerMarginMinimum  = getParam("OuterMarginMinimum", 0.7);
-//   double ballDiameter        = getParam("BallDiameter", 0.067); // according to Wikipedia
+  d_fieldLengthX             = Config::getStaticValue<double>("world.field-size-x");
+  d_fieldLengthY             = Config::getStaticValue<double>("world.field-size-y");
+//double goalX               = Config::getStaticValue<double>("world.goal-size-x");
+  double goalY               = Config::getStaticValue<double>("world.goal-size-y");
+//double goalZ               = Config::getStaticValue<double>("world.goal-size-z");
+//double goalPostDiameter    = Config::getStaticValue<double>("world.goal-post-diameter");
+  double goalAreaX           = Config::getStaticValue<double>("world.goal-area-size-x");
+  double goalAreaY           = Config::getStaticValue<double>("world.goal-area-size-y");
+//double penaltyMarkDistance = Config::getStaticValue<double>("world.penalty-mark-distance");
+  double circleDiameter      = Config::getStaticValue<double>("world.circle-diameter");
+//double lineWidth           = Config::getStaticValue<double>("world.line-width");
+//double penaltyLineLength   = Config::getStaticValue<double>("world.penalty-line-length");
+  d_outerMarginMinimum       = Config::getStaticValue<double>("world.outer-margin-minimum");
+//double ballDiameter        = Config::getStaticValue<double>("world.ball-diameter");
 
-//   double halfCrossLength = penaltyLineLength/2;
-//   double penaltyX = d_fieldLengthX/2 - penaltyMarkDistance;
-//   double penaltyInnerX = penaltyX - halfCrossLength;
-//   double penaltyOuterX = penaltyX + halfCrossLength;
+//double halfCrossLength = penaltyLineLength/2;
+//double penaltyX = d_fieldLengthX/2 - penaltyMarkDistance;
+//double penaltyInnerX = penaltyX - halfCrossLength;
+//double penaltyOuterX = penaltyX + halfCrossLength;
   double halfFieldX = d_fieldLengthX/2;
   double halfFieldY = d_fieldLengthY/2;
   double halfGoalAreaY = goalAreaY/2;
