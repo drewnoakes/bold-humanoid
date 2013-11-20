@@ -26,6 +26,14 @@ namespace bold
         d_handlers.erase(it);
     }
 
+    void setHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler, bool enabled)
+    {
+      if (enabled)
+        addHandler(handler);
+      else
+        removeHandler(handler);
+    }
+
     void pass(cv::Mat& image) const
     {
       for (auto const& handler : d_handlers)

@@ -56,8 +56,9 @@ void Agent::initCamera()
     shared_ptr<Control const> c = d_camera->getControl(name);
     if (!c)
       cerr << "[Agent::initCamera] No camera control found for: " << name << endl;
-    else
-      c->setValue(value);
+    // TODO SETTINGS
+//     else
+//       c->setValue(value);
   };
   trySetCameraControl("Auto WB", 0); // off
   trySetCameraControl("Exposure, Auto", 1); // manual

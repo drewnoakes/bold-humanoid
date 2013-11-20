@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../imagepasshandler.hh"
+#include "../../Config/config.hh"
 #include "../../Control/control.hh"
 #include "../../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../../HoughLineExtractor/houghlineextractor.hh"
@@ -24,19 +25,18 @@ namespace bold
     std::shared_ptr<PixelLabel> const onLabel;
     LineRunTracker* d_rowTracker;
     std::vector<bold::LineRunTracker> d_colTrackers;
-    std::vector<std::shared_ptr<Control const>> d_controls;
-    uchar d_hysterisisLimit;
 
   public:
     std::vector<Eigen::Vector2i> lineDots;
 
-    LineDotPass(ushort imageWidth, std::shared_ptr<PixelLabel> const inLabel, std::shared_ptr<PixelLabel> const onLabel, uchar hysterisisLimit)
+    LineDotPass(ushort imageWidth, std::shared_ptr<PixelLabel> const inLabel, std::shared_ptr<PixelLabel> const onLabel)
     : d_imageWidth(imageWidth),
       inLabel(inLabel),
       onLabel(onLabel),
-      d_hysterisisLimit(hysterisisLimit),
       lineDots()
     {
+      auto hysterisisLimit = Config::getSetting<int>("vision.line-detection.line-dots.hysterisis");
+
       // Create trackers
 
       d_colTrackers = std::vector<bold::LineRunTracker>();
@@ -44,7 +44,7 @@ namespace bold
       for (ushort x = 0; x <= imageWidth; ++x)
       {
         d_colTrackers.push_back(bold::LineRunTracker(
-          inLabel->id(), onLabel->id(), /*otherCoordinate*/x, d_hysterisisLimit,
+          inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysterisisLimit->getValue(),
           [this](ushort const from, ushort const to, ushort const other) mutable {
             int mid = (from + to) / 2;
             lineDots.push_back(Eigen::Vector2i((int)other, mid));
@@ -54,7 +54,7 @@ namespace bold
 
       // TODO delete in destructor
       d_rowTracker = new LineRunTracker(
-        inLabel->id(), onLabel->id(), /*otherCoordinate*/0, d_hysterisisLimit,
+        inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysterisisLimit->getValue(),
         [this](ushort const from, ushort const to, ushort const other) mutable {
           int mid = (from + to) / 2;
           lineDots.push_back(Eigen::Vector2i(mid, (int)other));
@@ -63,23 +63,14 @@ namespace bold
 
       // Create controls
 
-      auto hysterisisControl = Control::createInt(
-        "Line Dot Hysterisis",
-        [this]() { return d_hysterisisLimit; },
-        [this](int const& value) mutable
-        {
-          d_hysterisisLimit = value;
-          d_rowTracker->setHysterisisLimit(d_hysterisisLimit);
-          for (LineRunTracker& colTracker : d_colTrackers)
-            colTracker.setHysterisisLimit(d_hysterisisLimit);
-        }
-      );
-      hysterisisControl->setLimitValues(0, 255);
-      hysterisisControl->setIsAdvanced(true);
-      d_controls.push_back(hysterisisControl);
-    }
+      hysterisisLimit->changed.connect([this](int const& value) mutable
+      {
+        d_rowTracker->setHysterisisLimit(value);
 
-    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
+        for (LineRunTracker& colTracker : d_colTrackers)
+          colTracker.setHysterisisLimit(value);
+      });
+    }
 
     void onImageStarting() override
     {

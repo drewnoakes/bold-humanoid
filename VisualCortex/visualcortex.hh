@@ -9,7 +9,7 @@
 #include "../Control/control.hh"
 #include "../geometry/LineSegment2i.hh"
 #include "../PixelLabel/pixellabel.hh"
-#include "../Configurable/configurable.hh"
+#include "../Setting/setting.hh"
 
 namespace bold
 {
@@ -23,14 +23,9 @@ namespace bold
   class SequentialTimer;
   class Spatialiser;
 
-  template <typename TPixel>
-  class ImagePassRunner;
-
-  template <typename TPixel>
-  class ImagePassHandler;
-
-  template <typename TPixel>
-  class LineDotPass;
+  template<typename> class ImagePassRunner;
+  template<typename> class ImagePassHandler;
+  template<typename> class LineDotPass;
   class BlobDetectPass;
   class CartoonPass;
   class FieldEdgePass;
@@ -45,7 +40,7 @@ namespace bold
   };
 
   /** Bold-humanoid's vision processing subsystem. */
-  class VisualCortex : public Configurable
+  class VisualCortex
   {
   public:
     static bool shouldMergeBallBlobs(Bounds2i const& larger, Bounds2i const& smaller);
@@ -67,44 +62,44 @@ namespace bold
     /** Composes and enqueues a debugging image. */
     void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer, SequentialTimer& timer);
 
-    void setShouldDetectLines(bool val) { d_shouldDetectLines = val; }
-    bool getShouldDetectLines() const { return d_shouldDetectLines; }
+    void setShouldDetectLines(bool val) { d_shouldDetectLines->setValue(val); }
+    bool getShouldDetectLines() const { return d_shouldDetectLines->getValue(); }
 
-    void setShouldCountLabels(bool val) { d_shouldCountLabels = val; }
-    bool getShouldCountLabels() const { return d_shouldCountLabels; }
+    void setShouldCountLabels(bool val) { d_shouldCountLabels->setValue(val); }
+    bool getShouldCountLabels() const { return d_shouldCountLabels->getValue(); }
 
-    void setShouldIgnoreAboveHorizon(bool val) { d_shouldIgnoreAboveHorizon = val; }
-    bool getShouldIgnoreAboveHorizon() const { return d_shouldIgnoreAboveHorizon; }
+    void setShouldIgnoreAboveHorizon(bool val) { d_shouldIgnoreAboveHorizon->setValue(val); }
+    bool getShouldIgnoreAboveHorizon() const { return d_shouldIgnoreAboveHorizon->getValue(); }
 
-    void setMinBallArea(unsigned val) { d_minBallArea = val; }
-    unsigned getMinBallArea() const { return d_minBallArea; }
+    void setMinBallArea(unsigned val) { d_minBallArea->setValue(val); }
+    unsigned getMinBallArea() const { return d_minBallArea->getValue(); }
 
-    void setMinGoalDimensionPixels(unsigned val) { d_minGoalDimensionPixels = val; }
-    unsigned getMinGoalDimensionPixels() const { return d_minGoalDimensionPixels; }
+    void setMinGoalDimensionPixels(unsigned val) { d_minGoalDimensionPixels->setValue(val); }
+    unsigned getMinGoalDimensionPixels() const { return d_minGoalDimensionPixels->getValue(); }
 
-    void setStreamFramePeriod(unsigned val) { d_streamFramePeriod = val; }
-    unsigned getStreamFramePeriod() const { return d_streamFramePeriod; }
+    void setStreamFramePeriod(unsigned val) { d_streamFramePeriod->setValue(val); }
+    unsigned getStreamFramePeriod() const { return d_streamFramePeriod->getValue(); }
 
-    void setShouldDrawBlobs(bool val) { d_shouldDrawBlobs = val; }
-    bool getShouldDrawBlobs() const { return d_shouldDrawBlobs; }
+    void setShouldDrawBlobs(bool val) { d_shouldDrawBlobs->setValue(val); }
+    bool getShouldDrawBlobs() const { return d_shouldDrawBlobs->getValue(); }
 
-    void setShouldDrawLineDots(bool val) { d_shouldDrawLineDots = val; }
-    bool getShouldDrawLineDots() const { return d_shouldDrawLineDots; }
+    void setShouldDrawLineDots(bool val) { d_shouldDrawLineDots->setValue(val); }
+    bool getShouldDrawLineDots() const { return d_shouldDrawLineDots->getValue(); }
 
-    void setShouldDrawExpectedLines(bool val) { d_shouldDrawExpectedLines = val; }
-    bool getShouldDrawExpectedLines() const { return d_shouldDrawExpectedLines; }
+    void setShouldDrawExpectedLines(bool val) { d_shouldDrawExpectedLines->setValue(val); }
+    bool getShouldDrawExpectedLines() const { return d_shouldDrawExpectedLines->getValue(); }
 
-    void setShouldDrawObservedObjects(bool val) { d_shouldDrawObservedObjects = val; }
-    bool getShouldDrawObservedObjects() const { return d_shouldDrawObservedObjects; }
+    void setShouldDrawObservedObjects(bool val) { d_shouldDrawObservedObjects->setValue(val); }
+    bool getShouldDrawObservedObjects() const { return d_shouldDrawObservedObjects->getValue(); }
 
-    void setShouldDrawObservedLines(bool val) { d_shouldDrawObservedLines = val; }
-    bool getShouldDrawObservedLines() const { return d_shouldDrawObservedLines; }
+    void setShouldDrawObservedLines(bool val) { d_shouldDrawObservedLines->setValue(val); }
+    bool getShouldDrawObservedLines() const { return d_shouldDrawObservedLines->getValue(); }
 
-    void setShouldDrawHorizon(bool val) { d_shouldDrawHorizon = val; }
-    bool getShouldDrawHorizon() const { return d_shouldDrawHorizon; }
+    void setShouldDrawHorizon(bool val) { d_shouldDrawHorizon->setValue(val); }
+    bool getShouldDrawHorizon() const { return d_shouldDrawHorizon->getValue(); }
 
-    void setShouldDrawFieldEdge(bool val) { d_shouldDrawFieldEdge = val; }
-    bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge; }
+    void setShouldDrawFieldEdge(bool val) { d_shouldDrawFieldEdge->setValue(val); }
+    bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge->getValue(); }
 
   private:
     std::map<std::string,std::vector<std::shared_ptr<Control const>>> d_controlsByFamily;
@@ -134,23 +129,25 @@ namespace bold
     std::shared_ptr<LabelCountPass> d_labelCountPass;
     std::shared_ptr<FieldEdgePass> d_fieldEdgePass;
 
-    bool d_shouldDetectLines;
-    bool d_shouldCountLabels;
-    bool d_shouldIgnoreAboveHorizon;
+    Setting<bool>* d_shouldDetectLines;
+    Setting<bool>* d_shouldCountLabels;
+    Setting<bool>* d_shouldIgnoreAboveHorizon;
 
-    unsigned d_minBallArea;
-    unsigned d_minGoalDimensionPixels;
+    Setting<int>* d_minBallArea;
+    Setting<int>* d_minGoalDimensionPixels;
 
-    ImageType d_imageType;
-    unsigned d_streamFramePeriod;
-    bool d_isRecordingFrames;
     bool d_recordNextFrame;
-    bool d_shouldDrawBlobs;
-    bool d_shouldDrawLineDots;
-    bool d_shouldDrawObservedObjects;
-    bool d_shouldDrawExpectedLines;
-    bool d_shouldDrawObservedLines;
-    bool d_shouldDrawHorizon;
-    bool d_shouldDrawFieldEdge;
+    Setting<bool>* d_isRecordingFrames;
+
+    Setting<ImageType>* d_imageType;
+    Setting<int>* d_streamFramePeriod;
+
+    Setting<bool>* d_shouldDrawBlobs;
+    Setting<bool>* d_shouldDrawLineDots;
+    Setting<bool>* d_shouldDrawObservedLines;
+    Setting<bool>* d_shouldDrawExpectedLines;
+    Setting<bool>* d_shouldDrawHorizon;
+    Setting<bool>* d_shouldDrawFieldEdge;
+    Setting<bool>* d_shouldDrawObservedObjects;
   };
 }

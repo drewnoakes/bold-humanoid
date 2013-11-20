@@ -98,7 +98,7 @@ int main(int argc, char **argv)
   auto blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
 
   // Resources for finding line dots
-  auto lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel, 3);
+  auto lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel);
 
   // Resources for creating a labelled image
   auto cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, labels, Colour::bgr(128,128,128));
@@ -117,7 +117,7 @@ int main(int argc, char **argv)
   randomPairLineFinder.setMinDotManhattanDistance(10);
 //randomPairLineFinder.setProcessDotCount(5000);
 
-  MaskWalkLineFinder maskWalkLineFinder(imageWidth, imageHeight);
+  MaskWalkLineFinder maskWalkLineFinder;
 
   cout << "Startup took " << Clock::getMillisSince(t) << " ms" << endl;
 

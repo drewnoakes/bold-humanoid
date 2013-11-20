@@ -7,7 +7,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     return;
 
   // Only provide an image every N cycles
-  if (AgentState::getInstance().getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod != 0)
+  if (AgentState::getInstance().getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod->getValue() != 0)
     return;
 
   auto lineDotColour = Colour::bgr(0, 0, 255);
@@ -18,33 +18,44 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
 
   Mat debugImage;
 
-  if (d_imageType == ImageType::YCbCr)
+  ImageType imageType = d_imageType->getValue();
+
+  // Select the base imagery
+  switch (imageType)
   {
-    debugImage = cameraImage;
-  }
-  else if (d_imageType == ImageType::RGB)
-  {
-    debugImage = cameraImage;
-    PixelFilterChain chain;
-    chain.pushFilter(&Colour::yCbCrToBgrInPlace);
-    chain.applyFilters(debugImage);
-  }
-  else if (d_imageType == ImageType::Cartoon)
-  {
-    debugImage = d_cartoonPass->mat();
-  }
-  else if (d_imageType == ImageType::None)
-  {
-    debugImage = Mat(cameraImage.size(), cameraImage.type(), Scalar(0));
-  }
-  else
-  {
-    cout << "[VisualCortex::streamDebugging] Unknown image type requested!" << endl;
+    case ImageType::YCbCr:
+    {
+      debugImage = cameraImage;
+      break;
+    }
+    case ImageType::RGB:
+    {
+      debugImage = cameraImage;
+      PixelFilterChain chain;
+      chain.pushFilter(&Colour::yCbCrToBgrInPlace);
+      chain.applyFilters(debugImage);
+      break;
+    }
+    case ImageType::Cartoon:
+    {
+      debugImage = d_cartoonPass->mat();
+      break;
+    }
+    case ImageType::None:
+    {
+      debugImage = Mat(cameraImage.size(), cameraImage.type(), Scalar(0));
+      break;
+    }
+    default:
+    {
+      cout << "[VisualCortex::streamDebugging] Unknown image type requested!" << endl;
+      break;
+    }
   }
 
   // Draw observed lines
   auto const& observedLineSegments = AgentState::get<CameraFrameState>()->getObservedLineSegments();
-  if (d_shouldDrawObservedLines && observedLineSegments.size() > 0)
+  if (d_shouldDrawObservedLines->getValue() && observedLineSegments.size() > 0)
   {
     for (LineSegment2i const& line : observedLineSegments)
     {
@@ -53,7 +64,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw line dots
-  if (d_shouldDetectLines && d_shouldDrawLineDots && d_lineDotPass->lineDots.size() > 0)
+  if (d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && d_lineDotPass->lineDots.size() > 0)
   {
     for (auto const& lineDot : d_lineDotPass->lineDots)
     {
@@ -62,12 +73,12 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw blobs
-  if (d_shouldDrawBlobs)
+  if (d_shouldDrawBlobs->getValue())
   {
     for (auto const& pixelLabel : d_blobDetectPass->pixelLabels())
     {
       auto blobColorBgr = pixelLabel->hsvRange().toBgr();
-      switch (d_imageType)
+      switch (imageType)
       {
         case ImageType::Cartoon:
         case ImageType::RGB:
@@ -89,7 +100,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw observed objects (ie. actual ball/goal posts chosen from blobs)
-  if (d_shouldDrawObservedObjects)
+  if (d_shouldDrawObservedObjects->getValue())
   {
     auto cameraFrame = AgentState::get<CameraFrameState>();
 
@@ -111,7 +122,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw expected lines
-  if (d_shouldDrawExpectedLines)
+  if (d_shouldDrawExpectedLines->getValue())
   {
     Affine3d const& agentWorld = AgentState::get<WorldFrameState>()->getPosition().agentWorldTransform();
     Affine3d const& cameraAgent = AgentState::get<BodyState>()->getCameraAgentTransform();
@@ -140,7 +151,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw horizon
-  if (d_shouldDrawHorizon)
+  if (d_shouldDrawHorizon->getValue())
   {
     auto const& body = AgentState::get<BodyState>();
     if (body)
@@ -161,7 +172,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw field edge
-  if (d_shouldDrawFieldEdge)
+  if (d_shouldDrawFieldEdge->getValue())
   {
     for (unsigned x = 0; x < debugImage.size().width; ++x)
     {

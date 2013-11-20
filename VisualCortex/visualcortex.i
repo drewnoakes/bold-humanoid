@@ -9,32 +9,32 @@ namespace bold
   class VisualCortex
   {
   public:
-    void setShouldDetectLines(bool val) { d_shouldDetectLines = val; }
-    bool getShouldDetectLines() const { return d_shouldDetectLines; }
+    void setShouldDetectLines(bool val) { d_shouldDetectLines->setValue(val); }
+    bool getShouldDetectLines() const { return d_shouldDetectLines->getValue(); }
 
-    void setShouldIgnoreAboveHorizon(bool val) { d_shouldIgnoreAboveHorizon = val; }
-    bool getShouldIgnoreAboveHorizon() const { return d_shouldIgnoreAboveHorizon; }
+    void setShouldIgnoreAboveHorizon(bool val) { d_shouldIgnoreAboveHorizon->setValue(val); }
+    bool getShouldIgnoreAboveHorizon() const { return d_shouldIgnoreAboveHorizon->getValue(); }
 
-    void setMinBallArea(unsigned val) { d_minBallArea = val; }
-    unsigned getMinBallArea() const { return d_minBallArea; }
+    void setMinBallArea(unsigned val) { d_minBallArea->setValue(val); }
+    unsigned getMinBallArea() const { return d_minBallArea->getValue(); }
 
-    void setStreamFramePeriod(unsigned val) { d_streamFramePeriod = val; }
-    unsigned getStreamFramePeriod() const { return d_streamFramePeriod; }
-    
-    void setShouldDrawBlobs(bool val) { d_shouldDrawBlobs = val; }
-    bool getShouldDrawBlobs() const { return d_shouldDrawBlobs; }
+    void setStreamFramePeriod(unsigned val) { d_streamFramePeriod->setValue(val); }
+    unsigned getStreamFramePeriod() const { return d_streamFramePeriod->getValue(); }
 
-    void setShouldDrawLineDots(bool val) { d_shouldDrawLineDots = val; }
-    bool getShouldDrawLineDots() const { return d_shouldDrawLineDots; }
+    void setShouldDrawBlobs(bool val) { d_shouldDrawBlobs->setValue(val); }
+    bool getShouldDrawBlobs() const { return d_shouldDrawBlobs->getValue(); }
 
-    void setShouldDrawExpectedLines(bool val) { d_shouldDrawExpectedLines = val; }
-    bool getShouldDrawExpectedLines() const { return d_shouldDrawExpectedLines; }
+    void setShouldDrawLineDots(bool val) { d_shouldDrawLineDots->setValue(val); }
+    bool getShouldDrawLineDots() const { return d_shouldDrawLineDots->getValue(); }
 
-    void setShouldDrawObservedLines(bool val) { d_shouldDrawObservedLines = val; }
-    bool getShouldDrawObservedLines() const { return d_shouldDrawObservedLines; }
+    void setShouldDrawExpectedLines(bool val) { d_shouldDrawExpectedLines->setValue(val); }
+    bool getShouldDrawExpectedLines() const { return d_shouldDrawExpectedLines->getValue(); }
 
-    void setShouldDrawHorizon(bool val) { d_shouldDrawHorizon = val; }
-    bool getShouldDrawHorizon() const { return d_shouldDrawHorizon; }
+    void setShouldDrawObservedLines(bool val) { d_shouldDrawObservedLines->setValue(val); }
+    bool getShouldDrawObservedLines() const { return d_shouldDrawObservedLines->getValue(); }
+
+    void setShouldDrawHorizon(bool val) { d_shouldDrawHorizon->setValue(val); }
+    bool getShouldDrawHorizon() const { return d_shouldDrawHorizon->getValue(); }
   };
 
   %extend VisualCortex {

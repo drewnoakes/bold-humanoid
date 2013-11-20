@@ -74,6 +74,14 @@ namespace bold
     /// Fires when the setting's value is assigned.
     sigc::signal<void, T const&> changed;
 
+    /// Invokes the callback immediately with the current value, and notifies
+    /// of any subsequent changes.
+    void track(std::function<void(T)> callback)
+    {
+      changed.connect(callback);
+      callback(d_value);
+    }
+
     //virtual T setValueFromJson(JsonReader* reader) = 0;
     //virtual void writeValueToJson(JsonWriter* writer) const = 0;
     virtual bool isValidValue(T value) const = 0;

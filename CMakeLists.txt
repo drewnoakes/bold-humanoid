@@ -337,7 +337,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./PixelLabel/fromConfig.cc
   ./PixelLabel/pixellabel.cc
 )
 

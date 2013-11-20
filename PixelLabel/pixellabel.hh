@@ -18,12 +18,6 @@ namespace bold
     std::string d_name;
 
   public:
-    static PixelLabel fromConfig(
-      std::string objectName,
-      uchar hMin, uchar hMax,
-      uchar sMin, uchar sMax,
-      uchar vMin, uchar vMax);
-
     PixelLabel() {}
 
     PixelLabel(Colour::hsvRange hsvRange, std::string name)

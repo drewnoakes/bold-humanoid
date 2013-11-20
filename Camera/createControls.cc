@@ -67,27 +67,31 @@ void Camera::createControls()
     {
       case V4L2ControlType::CT_BOOL:
       {
-        auto control = Control::createBool(
-          id,
-          name,
-          [getValue,id]() { return getValue(id) != 0; },
-          [setValue,id](bool const& value) { setValue(id, value ? 1 : 0); });
-        control->setDefaultValue(defaultValue);
-        control->setIsAdvanced(isAdvanced);
-        d_controls.push_back(control);
+        // TODO SETTINGS
+
+//         auto control = Control::createBool(
+//           id,
+//           name,
+//           [getValue,id]() { return getValue(id) != 0; },
+//           [setValue,id](bool const& value) { setValue(id, value ? 1 : 0); });
+//         control->setDefaultValue(defaultValue);
+//         control->setIsAdvanced(isAdvanced);
+//         d_controls.push_back(control);
         break;
       }
       case V4L2ControlType::CT_INT:
       {
-        auto control = Control::createInt(
-          id,
-          name,
-          [getValue,id]() { return getValue(id); },
-          [setValue,id](int const& value) { setValue(id, value); });
-        control->setDefaultValue(defaultValue);
-        control->setLimitValues(minimum, maximum);
-        control->setIsAdvanced(isAdvanced);
-        d_controls.push_back(control);
+        // TODO SETTINGS
+
+//         auto control = Control::createInt(
+//           id,
+//           name,
+//           [getValue,id]() { return getValue(id); },
+//           [setValue,id](int const& value) { setValue(id, value); });
+//         control->setDefaultValue(defaultValue);
+//         control->setLimitValues(minimum, maximum);
+//         control->setIsAdvanced(isAdvanced);
+//         d_controls.push_back(control);
         break;
       }
       case V4L2ControlType::CT_MENU:
@@ -96,29 +100,31 @@ void Camera::createControls()
         memset (&querymenu, 0, sizeof(querymenu));
         querymenu.id = id;
 
-        // Query all enum values
-        vector<ControlEnumValue> enumValues;
-        for (unsigned i = minimum; i <= maximum; i++)
-        {
-          querymenu.index = i;
+        // TODO SETTINGS
 
-          if (ioctl(d_fd, VIDIOC_QUERYMENU, &querymenu) == 0)
-          {
-            enumValues.push_back(ControlEnumValue(
-              querymenu.index,
-              string((const char*)querymenu.name)));
-          }
-        }
-
-        auto control = Control::createEnum(
-          id,
-          name,
-          enumValues,
-          [getValue,id]() { return (unsigned)getValue(id); },
-          [setValue,id](ControlEnumValue const& value) { setValue(id, value.getValue()); });
-        control->setDefaultValue(defaultValue);
-        control->setIsAdvanced(isAdvanced);
-        d_controls.push_back(control);
+//        // Query all enum values
+//         vector<ControlEnumValue> enumValues;
+//         for (unsigned i = minimum; i <= maximum; i++)
+//         {
+//           querymenu.index = i;
+//
+//           if (ioctl(d_fd, VIDIOC_QUERYMENU, &querymenu) == 0)
+//           {
+//             enumValues.push_back(ControlEnumValue(
+//               querymenu.index,
+//               string((const char*)querymenu.name)));
+//           }
+//         }
+//
+//         auto control = Control::createEnum(
+//           id,
+//           name,
+//           enumValues,
+//           [getValue,id]() { return (unsigned)getValue(id); },
+//           [setValue,id](ControlEnumValue const& value) { setValue(id, value.getValue()); });
+//         control->setDefaultValue(defaultValue);
+//         control->setIsAdvanced(isAdvanced);
+//         d_controls.push_back(control);
         break;
       }
       default:

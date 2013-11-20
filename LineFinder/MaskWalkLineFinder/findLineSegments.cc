@@ -4,6 +4,12 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
 {
   // IDEA instead of clearing the mask, just use a different value each time around -- clear every 255 runs
 
+  // load settings values as locals
+  int voteThreshold = d_voteThreshold->getValue();
+  int minLineLength = d_minLineLength->getValue();
+  int maxLineGap = d_maxLineGap->getValue();
+  int maxLineSegmentCount = d_maxLineSegmentCount->getValue();
+
   // shuffle lineDots to simulate drawing at random
   random_shuffle(lineDots.begin(), lineDots.end());
 
@@ -32,7 +38,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
     if (!mask0[dot.y()*d_imageWidth + dot.x()])
       continue;
 
-    int maxVotes = d_voteThreshold-1;
+    int maxVotes = voteThreshold-1;
     int maxTheta = 0;
     int* adata = (int*)d_accumulator.data;
 
@@ -53,7 +59,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
 
     // If the most votes we saw during the update of the accumulator is still
     // below our threshold, jump to processing the next dot.
-    if (maxVotes < d_voteThreshold)
+    if (maxVotes < voteThreshold)
       continue;
 
     // For both ends...
@@ -73,7 +79,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
           lineEnds[endIndex].x() = x;
           return false;
         }
-        else if (++gap > d_maxLineGap)
+        else if (++gap > maxLineGap)
         {
           // It's too long since we last saw a dot
           return true;
@@ -85,7 +91,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
     }
 
     // NOTE The length check only applies to the x or y component.
-    bool isLongEnough = (lineEnds[1] - lineEnds[0]).cwiseAbs().maxCoeff() >= d_minLineLength;
+    bool isLongEnough = (lineEnds[1] - lineEnds[0]).cwiseAbs().maxCoeff() >= minLineLength;
 
     // Now walk the line again, and clean up the mask/accum
     for (int endIndex = 0; endIndex <= 1; endIndex++)
@@ -124,7 +130,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
     {
       segments.push_back(LineSegment2i(lineEnds[0], lineEnds[1]));
 
-      if ((int)segments.size() >= d_maxLineSegmentCount)
+      if ((int)segments.size() >= maxLineSegmentCount)
       {
         // We've found enough segments now
         return segments;

@@ -40,10 +40,7 @@ void DataStreamer::processCommand(std::string json)
     return;
   }
 
-  shared_ptr<Control const> controls = it->second;
+  shared_ptr<Control const> action = it->second;
 
-  if (!controls->handleRequest(d))
-  {
-    cerr << "[DataStreamer::processCommand] Processing failed for: " << json << endl;
-  }
+  action->handleRequest();
 }

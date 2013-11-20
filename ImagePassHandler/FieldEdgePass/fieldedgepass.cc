@@ -12,12 +12,10 @@ FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixe
   d_maxYByX(pixelWidth),
   d_runByX(pixelWidth),
   d_pixelWidth(pixelWidth),
-  d_pixelHeight(pixelHeight),
-  d_smoothingWindowSize(Config::getValue<int>("vision.field-edge-pass.smoothing-window-length")),
-  d_minVerticalRunLength(Config::getValue<int>("vision.field-edge-pass.min-vertical-run-length"))
+  d_pixelHeight(pixelHeight)
 {
-  Config::getSetting<int>("vision.field-edge-pass.smoothing-window-length")->changed.connect([this](int value) { d_smoothingWindowSize = value; });
-  Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->changed.connect([this](int value) { d_minVerticalRunLength = value; });
+  Config::getSetting<int>("vision.field-edge-pass.smoothing-window-length")->track([this](int value) { d_smoothingWindowSize = value; });
+  Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = value; });
 }
 
 void FieldEdgePass::onImageStarting()

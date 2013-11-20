@@ -68,14 +68,16 @@ void VisualCortex::saveImage(cv::Mat const& image)
     // Current date and time
     writer.String("date").String(dateTimeString);
 
-    // Camera settings
-    writer.String("camera");
-    writer.StartObject();
-    {
-      for (shared_ptr<Control const> const& control : d_camera->getControls())
-        writer.String(control->getName().c_str()).Int(control->getValue());
-    }
-    writer.EndObject();
+    // TODO SETTINGS
+
+//    // Camera settings
+//     writer.String("camera");
+//     writer.StartObject();
+//     {
+//       for (shared_ptr<Control const> const& control : d_camera->getControls())
+//         writer.String(control->getName().c_str()).Int(control->getValue());
+//     }
+//     writer.EndObject();
 
     // Body pose
     writer.String("body");

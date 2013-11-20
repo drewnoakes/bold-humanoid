@@ -6,7 +6,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // Record frame, if required
   //
   static Clock::Timestamp lastRecordTime;
-  if (d_recordNextFrame || (d_isRecordingFrames && Clock::getSecondsSince(lastRecordTime) > 1.0))
+  if (d_recordNextFrame || (d_isRecordingFrames->getValue() && Clock::getSecondsSince(lastRecordTime) > 1.0))
   {
     saveImage(image);
     lastRecordTime = Clock::getTimestamp();
@@ -26,14 +26,14 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   // Produce an image of labelled pixels.
   // If the option is enabled, any pixels above the horizon will be set to zero.
-  d_imageLabeller->label(image, d_labelledImage, d_shouldIgnoreAboveHorizon);
+  d_imageLabeller->label(image, d_labelledImage, d_shouldIgnoreAboveHorizon->getValue());
   t.timeEvent("Pixel Label");
 
   // Perform the image pass
   d_imagePassRunner->pass(d_labelledImage);
   t.timeEvent("Pass");
 
-  if (d_shouldCountLabels)
+  if (d_shouldCountLabels->getValue())
   {
     AgentState::getInstance().set(make_shared<LabelCountState const>(d_labelCountPass->getCounts()));
     t.timeEvent("Store Label Count");
@@ -41,7 +41,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   // Find lines
   vector<LineSegment2i> observedLineSegments;
-  if (d_shouldDetectLines)
+  if (d_shouldDetectLines->getValue())
   {
     observedLineSegments = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
     t.timeEvent("Line Search");
@@ -70,7 +70,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       if (larger.area == 0)
         continue;
 
-      if (larger.area < d_minBallArea)
+      if (larger.area < d_minBallArea->getValue())
       {
         // Blobs are sorted, largest first, so if this is too small, the rest will be too
         break;
@@ -103,7 +103,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       }
 
       // Ignore balls that are too small (avoid noise)
-      if (ballBlob.area < d_minBallArea)
+      if (ballBlob.area < d_minBallArea->getValue())
       {
         // As blobs are sorted largest to smallest, stop at the first one that's too small
         break;
@@ -146,8 +146,8 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
     Vector2i wh = goalBlob.br - goalBlob.ul;
 
-    if (wh.minCoeff() > d_minGoalDimensionPixels &&  // Ignore small blobs
-        wh.y() > wh.x())                             // Taller than it is wide
+    if (wh.minCoeff() > d_minGoalDimensionPixels->getValue() &&  // Ignore small blobs
+        wh.y() > wh.x())                                         // Taller than it is wide
     {
       Run const& topRun = *goalBlob.runs.begin();
 

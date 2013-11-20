@@ -1,5 +1,7 @@
 #include "maskwalklinefinder.hh"
 
+#include "../../Config/config.hh"
+
 #include <opencv2/highgui/highgui.hpp>
 
 using namespace bold;

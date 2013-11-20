@@ -139,18 +139,14 @@ namespace bold
     };
 
     RandomPairLineFinder(int imageWidth, int imageHeight)
-    : d_minDotManhattanDistance(3),
-      d_controls()
+    : d_minDotManhattanDistance(3)
     {}
 
     std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) override;
 
     void setMinDotManhattanDistance(unsigned minDotManhattanDistance) { d_minDotManhattanDistance = minDotManhattanDistance; }
 
-    std::vector<std::shared_ptr<Control const>> getControls() const override { return d_controls; };
-
   private:
     unsigned d_minDotManhattanDistance;
-    std::vector<std::shared_ptr<Control const>> d_controls;
   };
 }
