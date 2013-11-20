@@ -35,9 +35,6 @@
       "horizontal-degrees": { "type": "double", "readonly": true, "default": 58.0 }
     },
     "settings": {
-
-      "TODO": "these settings should be configured based upon what the camera reports",
-
       "brightness":             { "type": "int", "min": 0, "max": 255, "default": 128 },
       "contrast":               { "type": "int", "min": 0, "max": 255, "default": 32 },
       "saturation":             { "type": "int", "min": 0, "max": 255, "default": 28 },
@@ -54,12 +51,32 @@
     }
   },
   "vision": {
-    "min-ball-area": { "type": "int", "min": 0, "max": 255, "default": 0 },
+    "min-ball-area":             { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
+    "min-goal-dimension-pixels": { "type": "int", "min": 1, "max": 50, "default": 1, "advanced": true },
     "pixel-labels": {
       "goal":  { "type": "pixel-label", "default": { "hue": [44, 60],  "sat": [158, 236], "val": [124, 222] } },
       "ball":  { "type": "pixel-label", "default": { "hue": [248, 23], "sat": [72, 255],  "val": [12, 255] } },
       "field": { "type": "pixel-label", "default": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] } },
       "line":  { "type": "pixel-label", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } }
+    },
+    "ignore-above-horizon": { "type": "bool", "default": true },
+    "recording-frames": { "type": "bool", "default": false },
+    "line-detection": {
+      "enable":      { "type": "bool", "default": false },
+      "line-dots": {
+        "hysterisis": { "type": "int", "min": 0, "max": 255, "default": 3, "advanced": true }
+      },
+      "mask-walk": {
+        "delta-r":            { "type": "double", "min": 1.0, "max": 20.0, "default": 3.0, "advanced": true },
+        "delta-theta-degs":   { "type": "double", "min": 1.0, "max": 20.0, "default": 3.0, "advanced": true },
+        "min-votes":          { "type": "int", "min": 1, "max": 20, "default": 10, "advanced": true },
+        "min-line-length":    { "type": "int", "min": 1, "default": 30, "advanced": true },
+        "max-line-gap":       { "type": "int", "min": 0, "max": 50, "default": 30, "advanced": true },
+        "max-lines-returned": { "type": "int", "min": 1, "max": 20, "default": 5, "advanced": true }
+      },
+    },
+    "label-counter": {
+      "enable": { "type": "bool", "default": false }
     },
     "field-edge-pass": {
       "smoothing-window-length": { "type": "int", "min": 1, "max": 100, "default": 15, "advanced": true },
@@ -71,7 +88,16 @@
   },
   "round-table": {
     "tcp-port": { "type": "int", "min": 1025, "max": 65535, "readonly": true, "default": 8080 },
-    "camera-frame-frequency": { "type": "int", "min": 1, "max": 100, "default": 5 }
+    "camera-frame-frequency": { "type": "int", "min": 1, "max": 100, "default": 5 },
+    "image-features": {
+      "blobs":          { "type": "bool", "default": true },
+      "line-dots":      { "type": "bool", "default": false },
+      "observed-lines": { "type": "bool", "default": false },
+      "expected-lines": { "type": "bool", "default": false },
+      "horizon":        { "type": "bool", "default": true },
+      "field-edge":     { "type": "bool", "default": true },
+      "objects":        { "type": "bool", "default": true }
+    }
   },
   "localiser": {
     "particle-count":        { "type": "int", "min": 1, "max": 2000, "default": 100 },

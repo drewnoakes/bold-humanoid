@@ -52,11 +52,31 @@
   },
   "vision": {
     "min-ball-area": 9,
+    "min-goal-dimension-pixels": 1,
     "pixel-labels": {
       "goal": { "hue": [44, 60], "sat": [158, 236], "val": [124, 222] },
       "ball": { "hue": [248, 23], "sat": [72, 255], "val": [12, 255] },
       "field": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] },
       "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
+    },
+    "ignore-above-horizon": true,
+    "recording-frames": false,
+    "line-detection": {
+      "enable": false,
+      "line-dots": {
+        "hysterisis": 3
+      },
+      "mask-walk": {
+        "delta-r": 3.0,
+        "delta-theta-degs": 3.0,
+        "min-votes": 10,
+        "min-line-length": 30,
+        "max-line-gap": 30,
+        "max-lines-returned": 5
+      },
+    },
+    "label-counter": {
+      "enable": false
     },
     "field-edge-pass": {
       "smoothing-window-length": 15,
@@ -68,7 +88,16 @@
   },
   "round-table": {
     "tcp-port": 8080,
-    "camera-frame-frequency": 5
+    "camera-frame-frequency": 5,
+    "image-features": {
+      "blobs": true,
+      "line-dots": false,
+      "observed-lines": false,
+      "expected-lines": false,
+      "horizon": true,
+      "field-edge": true,
+      "objects": true
+    }
   },
   "localiser": {
     "particle-count": 100,
