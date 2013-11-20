@@ -146,7 +146,6 @@ add_class(BOLDHUMANOID
   ./Control/create.cc
   ./Control/handleRequest.cc
   ./Control/staticfields.cc
-  ./Control/writeState.cc
 )
 
 add_class(BOLDHUMANOID

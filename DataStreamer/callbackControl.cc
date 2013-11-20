@@ -32,8 +32,11 @@ int DataStreamer::callback_control(
         for (auto pair2 : pair1.second)
         {
           writer.StartObject();
-          auto control = pair2.second;
-          control->writeState(writer);
+          {
+            auto action = pair2.second;
+            writer.String("name").String(action->getName().c_str());
+            writer.String("id").Uint(action->getId());
+          }
           writer.EndObject();
         }
 
