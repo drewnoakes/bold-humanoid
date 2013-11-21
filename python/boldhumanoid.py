@@ -4,15 +4,6 @@ import sys, getopt
 import bold
 import numpy as np
 
-class PyConf(bold.ConfImpl):
-    def getParamStr(self, path, defVal):
-        return defVal
-    def getParamInt(self, path, defVal):
-        return defVal
-    def getParamDbl(self, path, defVal):
-        return defVal
-
-
 def buildOptionTree():
     tree = bold.OptionTree()
     return tree
@@ -46,9 +37,6 @@ def main(argv):
     AUTO_GET_UP = True
     USE_OPTION_TREE = False
     RECORD_FRAMES = False
-
-    conf = PyConf()
-    bold.Configurable.setConfImpl(conf)
 
     try:
         opts, args = getopt.getopt(argv,

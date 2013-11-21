@@ -33,7 +33,6 @@
 %shared_ptr(bold::CameraFrameState)
 %shared_ptr(bold::CameraModel)
 %shared_ptr(bold::CM730Snapshot)
-%shared_ptr(bold::Configurable)
 %shared_ptr(bold::Debugger)
 %shared_ptr(bold::DebugState)
 %shared_ptr(bold::GameState)
@@ -64,7 +63,6 @@
 %feature("kwargs");
 
 %include "../Debugger/debugger.i"
-%include "../Configurable/configurable.i"
 %include "../VisualCortex/visualcortex.i"
 %include "../Agent/agent.i"
 %include "../BodyPart/bodypart.i"

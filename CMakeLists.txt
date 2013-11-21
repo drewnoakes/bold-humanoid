@@ -139,10 +139,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Configurable/static.cc
-)
-
-add_class(BOLDHUMANOID
   ./Debugger/debugger.cc
 )
 
