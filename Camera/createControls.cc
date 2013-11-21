@@ -1,7 +1,41 @@
 #include "camera.ih"
 
+#include <cctype>
+
 void Camera::createControls()
 {
+  d_controls.clear();
+  d_settings.clear();
+
+  //
+  // Query the device for all camera controls
+  //
+
+  v4l2_queryctrl queryctrl = {0,};
+  queryctrl.id = V4L2_CTRL_FLAG_NEXT_CTRL;
+
+  while (ioctl(d_fd, VIDIOC_QUERYCTRL, &queryctrl) == 0)
+  {
+    // Ignore disabled controls
+    if (queryctrl.flags & V4L2_CTRL_FLAG_DISABLED)
+      continue;
+
+    d_controls.push_back(make_shared<Control>(queryctrl));
+
+    // Get ready to query next item
+    queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
+  }
+
+  //
+  // Create Setting<T> objects for the camera controls
+  //
+
+  // NOTE unlike settings defined in configuration-metadata.json, these are not
+  // necessarily known before the process starts, and will vary based upon the
+  // available hardware.
+
+  set<string> advancedControlNames = { "Auto WB", "Exposure, Auto", "Exposure, Auto Priority", "Backlight Compensation", "Power Line Frequency" };
+
   auto getValue = [this](unsigned const& id) -> int
   {
     v4l2_control ctrl = {0,};
@@ -24,112 +58,84 @@ void Camera::createControls()
       cerr << "[Camera::setValue] Setting camera control with ID " << id << " failed -- set " << value << " but read back " << retrieved << endl;
   };
 
-  d_controls.clear();
-
-  v4l2_queryctrl queryctrl = {0,};
-  queryctrl.id = V4L2_CTRL_FLAG_NEXT_CTRL;
-
-  while (ioctl(d_fd, VIDIOC_QUERYCTRL, &queryctrl) == 0)
+  for (auto const& control : d_controls)
   {
-    // Ignore disabled controls
-    if (queryctrl.flags & V4L2_CTRL_FLAG_DISABLED)
-      continue;
-
-    unsigned id = queryctrl.id;
-    V4L2ControlType type = (V4L2ControlType)queryctrl.type;
-    std::string name = (const char*)queryctrl.name;
-    int minimum = queryctrl.minimum;
-    int maximum = queryctrl.maximum;
-    int defaultValue = queryctrl.default_value;
-
-    // Get ready to query next item
-    queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
-
     // Remove some we cannot use
-    if (name == "Pan (Absolute)" || name == "Tilt (Absolute)")
+    if (control->name == "Pan (Absolute)" || control->name == "Tilt (Absolute)")
       continue;
 
-    // Rename some verbose items
+    string name = control->name;
+    V4L2ControlType type = control->type;
+    const bool isReadOnly = false;
+
+    bool isAdvanced = advancedControlNames.find(name) != advancedControlNames.end();
+
+    // Shorten some verbose names
     if (name == "White Balance Temperature, Auto")
       name = "Auto WB";
     else if (name == "White Balance Temperature")
       name = "WB Temp (K)";
 
-    set<string> advancedControlNames = { "Auto WB", "Exposure, Auto", "Exposure, Auto Priority", "Backlight Compensation", "Power Line Frequency" };
-    bool isAdvanced = advancedControlNames.find(name) != advancedControlNames.end();
-
-    if (type == V4L2ControlType::CT_INT && minimum == 0 && maximum == 1)
-    {
+    // Reinterpret some two-valued INT controls as BOOL
+    if (type == V4L2ControlType::CT_INT && control->minimum == 0 && control->maximum == 1)
       type = V4L2ControlType::CT_BOOL;
+
+    // Create a path from this control's name. This will be used in the config file.
+    stringstream path;
+    path << "camera.settings.";
+    for (char const& c : name)
+    {
+      if (c == ' ')
+        path << '-';
+      else
+        path << tolower(c);
     }
 
+    int currentValue = getValue(control->id);
+
+    // Create the appropriate type of Setting<T>
     switch (type)
     {
       case V4L2ControlType::CT_BOOL:
       {
-        // TODO SETTINGS
-
-//         auto control = Control::createBool(
-//           id,
-//           name,
-//           [getValue,id]() { return getValue(id) != 0; },
-//           [setValue,id](bool const& value) { setValue(id, value ? 1 : 0); });
-//         control->setDefaultValue(defaultValue);
-//         control->setIsAdvanced(isAdvanced);
-//         d_controls.push_back(control);
+        auto setting = new BoolSetting(path.str(), control->defaultValue, isReadOnly, isAdvanced);
+        setting->setValue(currentValue != 0);
+        setting->changed.connect([setValue,control](bool value) { setValue(control->id, value ? 1 : 0); });
+        d_settings.push_back(setting);
         break;
       }
       case V4L2ControlType::CT_INT:
       {
-        // TODO SETTINGS
-
-//         auto control = Control::createInt(
-//           id,
-//           name,
-//           [getValue,id]() { return getValue(id); },
-//           [setValue,id](int const& value) { setValue(id, value); });
-//         control->setDefaultValue(defaultValue);
-//         control->setLimitValues(minimum, maximum);
-//         control->setIsAdvanced(isAdvanced);
-//         d_controls.push_back(control);
+        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, control->defaultValue, isReadOnly, isAdvanced);
+        setting->setValue(currentValue);
+        setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
+        d_settings.push_back(setting);
         break;
       }
       case V4L2ControlType::CT_MENU:
       {
         struct v4l2_querymenu querymenu;
         memset (&querymenu, 0, sizeof(querymenu));
-        querymenu.id = id;
+        querymenu.id = control->id;
 
-        // TODO SETTINGS
+        // Query all enum values
+        map<int,string> pairs;
+        for (unsigned i = control->minimum; i <= control->maximum; i++)
+        {
+          querymenu.index = i;
+          if (ioctl(d_fd, VIDIOC_QUERYMENU, &querymenu) == 0)
+            pairs[i] = (const char*)querymenu.name;
+        }
 
-//        // Query all enum values
-//         vector<ControlEnumValue> enumValues;
-//         for (unsigned i = minimum; i <= maximum; i++)
-//         {
-//           querymenu.index = i;
-//
-//           if (ioctl(d_fd, VIDIOC_QUERYMENU, &querymenu) == 0)
-//           {
-//             enumValues.push_back(ControlEnumValue(
-//               querymenu.index,
-//               string((const char*)querymenu.name)));
-//           }
-//         }
-//
-//         auto control = Control::createEnum(
-//           id,
-//           name,
-//           enumValues,
-//           [getValue,id]() { return (unsigned)getValue(id); },
-//           [setValue,id](ControlEnumValue const& value) { setValue(id, value.getValue()); });
-//         control->setDefaultValue(defaultValue);
-//         control->setIsAdvanced(isAdvanced);
-//         d_controls.push_back(control);
+        auto setting = new EnumSetting(path.str(), pairs, control->defaultValue, isReadOnly, isAdvanced);
+        setting->setValue(currentValue);
+        setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
+        d_settings.push_back(setting);
         break;
       }
       default:
       {
-        cerr << "Unsupported camera control type: " << (int)type << endl;
+        cerr << "[Camera::createControls] Unsupported camera control type: " << (int)type << endl;
       }
     }
   }

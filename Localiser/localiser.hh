@@ -11,7 +11,6 @@
 
 namespace bold
 {
-  class Control;
   class FieldMap;
   template<typename> class Setting;
 

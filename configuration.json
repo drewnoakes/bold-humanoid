@@ -73,7 +73,7 @@
         "min-line-length": 30,
         "max-line-gap": 30,
         "max-lines-returned": 5
-      },
+      }
     },
     "label-counter": {
       "enable": false

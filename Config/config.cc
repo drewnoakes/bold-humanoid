@@ -256,10 +256,12 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
 
 void Config::addAction(string id, string label, function<void()> callback)
 {
-  auto it = d_actionById.insert(pair<string,function<void()>(id, callback));
+  Action* action = new Action(id, label, callback);
+  auto it = d_actionById.insert(make_pair(id, action));
 
   if (it.second == false)
   {
+    delete action;
     cerr << "[Config::addAction] Action with id '" << id << "' already registered" << endl;
     throw runtime_error("Action already registered with provided id");
   }

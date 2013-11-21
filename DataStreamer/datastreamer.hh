@@ -18,7 +18,6 @@ namespace cv
 namespace bold
 {
   class Camera;
-  class Control;
 
   struct CameraSession
   {

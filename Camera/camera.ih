@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 
 #include "../Clock/clock.hh"
+#include "../Config/config.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 
 using namespace cv;

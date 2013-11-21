@@ -18,16 +18,16 @@ void Agent::initCamera()
 
   cout << "[Agent::initCamera] Configuring camera from ini file" << endl;
   string sectionName = "Camera";
-  for (shared_ptr<Control const> control : d_camera->getControls())
+  for (shared_ptr<Camera::Control const> control : d_camera->getControls())
   {
-    string name = control->getName();
+    string name = control->name;
 
     // strip strange characters from name
     char excludeChars[] = "()-, ";
     for (unsigned int i = 0; i < strlen(excludeChars); ++i)
       name.erase(remove(name.begin(), name.end(), excludeChars[i]), name.end());
 
-    // TODO reinstate camera control settings
+    // TODO SETTINGS reinstate camera control settings
 
 //     if (!paramExists(name))
 //     {
@@ -53,7 +53,7 @@ void Agent::initCamera()
   // HACK set some camera properties explicitly while we don't have a configuration system
   auto trySetCameraControl = [this](string name, int value)
   {
-    shared_ptr<Control const> c = d_camera->getControl(name);
+    shared_ptr<Camera::Control const> c = d_camera->getControl(name);
     if (!c)
       cerr << "[Agent::initCamera] No camera control found for: " << name << endl;
     // TODO SETTINGS
@@ -75,8 +75,8 @@ void Agent::initCamera()
   trySetCameraControl("Sharpness", 191);
 
   cout << "[Agent::initCamera] Controls (" << d_camera->getControls().size() << "):" << endl;;
-  for (std::shared_ptr<Control const> control : d_camera->getControls())
-    cout << "[Agent::initCamera]   " << *control << endl;
+  for (std::shared_ptr<Camera::Control const> control : d_camera->getControls())
+    cout << "[Agent::initCamera]   " << control->name << endl;
 
   cout << "[Agent::initCamera] Formats (" << d_camera->getFormats().size() << "):" << endl;;
   for (Camera::Format const& format : d_camera->getFormats())

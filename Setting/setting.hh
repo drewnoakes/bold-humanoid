@@ -117,6 +117,30 @@ namespace bold
     int d_defaultValue;
   };
 
+  /// Models a setting with an integer value selected from a set of valid numbers.
+  class EnumSetting : public Setting<int>
+  {
+  public:
+    EnumSetting(std::string path, std::map<int,std::string> pairs, int defaultValue, bool isReadOnly, bool isAdvanced)
+    : Setting(path, "enum", isReadOnly, isAdvanced, defaultValue),
+      d_pairs(pairs),
+      d_defaultValue(defaultValue)
+    {}
+
+    ~EnumSetting() {}
+
+    bool isValidValue(int value) const override
+    {
+      return d_pairs.find(value) != d_pairs.end();
+    }
+
+    int getDefaultValue() const override { return d_defaultValue; }
+
+  private:
+    std::map<int,std::string> d_pairs;
+    int d_defaultValue;
+  };
+
   /// Models a setting with a double value.
   class DoubleSetting : public Setting<double>
   {

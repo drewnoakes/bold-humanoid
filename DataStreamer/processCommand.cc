@@ -16,12 +16,12 @@ void DataStreamer::processCommand(std::string json)
 
   // TODO SETTINGS determine whether this is an action, or a setting change
 
-  string id;
+  char const* id;
   if (!d.TryGetStringValue("id", &id))
   {
     cerr << "[DataStreamer::processCommand] No 'id' specified in received command JSON" << endl;
     return;
   }
 
-  Config::triggerAction(id);
+  Config::getAction(string(id));
 }

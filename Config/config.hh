@@ -3,6 +3,7 @@
 #include <iostream>
 #include <functional>
 #include <map>
+#include <stack>
 #include <rapidjson/document.h>
 
 #include "../Setting/setting.hh"
@@ -133,6 +134,40 @@ namespace bold
     static void initialise(std::string metadataFile, std::string configFile);
 
     static void addAction(std::string id, std::string label, std::function<void()> callback);
+
+    static std::vector<Action*> getAllActions()
+    {
+      std::vector<Action*> actions;
+      for (auto const& pair : d_actionById)
+        actions.push_back(pair.second);
+      return actions;
+    }
+
+    static Action* getAction(std::string id)
+    {
+      auto it = d_actionById.find(id);
+      if (it == d_actionById.end())
+        return nullptr;
+      return it->second;
+    }
+
+    static std::vector<SettingBase*> getAllSettings()
+    {
+      std::vector<SettingBase*> settings;
+
+      std::stack<TreeNode const*> stack;
+      stack.push(&d_root);
+      while (!stack.empty())
+      {
+        TreeNode const* node = stack.top();
+        stack.pop();
+        for (auto const& pair : node->settingByName)
+          settings.push_back(pair.second);
+        for (auto const& pair : node->subNodeByName)
+          stack.push(&pair.second);
+      }
+      return settings;
+    }
 
   private:
     struct TreeNode

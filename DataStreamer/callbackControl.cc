@@ -25,11 +25,11 @@ int DataStreamer::callback_control(
       writer.String("actions");
       writer.StartArray();
       {
-        for (Action& action : Config::getAllActions())
+        for (Action* action : Config::getAllActions())
         {
           writer.StartObject();
           {
-            writer.String("id").Uint(action->getId());
+            writer.String("id").String(action->getId().c_str());
             writer.String("label").String(action->getLabel().c_str());
           }
           writer.EndObject();
@@ -40,7 +40,7 @@ int DataStreamer::callback_control(
       writer.String("settings");
       writer.StartArray();
       {
-        for (SettingBase& setting : Config::getAllSettings())
+        for (SettingBase* setting : Config::getAllSettings())
         {
           writer.StartObject();
           {

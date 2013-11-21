@@ -26,7 +26,9 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
   for (shared_ptr<MotionScript> script : scripts)
   {
     cout << "[MotionScriptModule::MotionScriptModule] Adding motion script: " << script->getName() << endl;
-    Config::addAction(script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); });
+    stringstream id;
+    id << "motion-script." << script->getName();
+    Config::addAction(id.str(), script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); });
   }
 }
 
