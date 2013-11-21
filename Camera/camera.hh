@@ -7,7 +7,6 @@
 #include <opencv2/opencv.hpp>
 
 #include "../util/Maybe.hh"
-#include "../Control/control.hh"
 
 namespace bold
 {
@@ -80,32 +79,32 @@ namespace bold
 
     void open();
 
-    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
+    std::vector<std::shared_ptr<CameraControl const>> getControls() const { return d_controls; }
 
-//     Maybe<Control const> getControl(unsigned const& controlId) const
+//     Maybe<CameraControl const> getControl(unsigned const& controlId) const
 //     {
-//       return getControl([&controlId](Control const& c)
+//       return getControl([&controlId](CameraControl const& c)
 //       {
 //         return c.getId() == controlId;
 //       });
 //     }
 
-    std::shared_ptr<Control const> getControl(std::string const& controlName) const
+    std::shared_ptr<CameraControl const> getControl(std::string const& controlName) const
     {
-      return getControl([&controlName](std::shared_ptr<Control const> c)
+      return getControl([&controlName](std::shared_ptr<CameraControl const> c)
       {
         assert(c);
         return c->getName() == controlName;
       });
     }
 
-    std::shared_ptr<Control const> getControl(std::function<bool(std::shared_ptr<Control const>)> const& pred) const
+    std::shared_ptr<CameraControl const> getControl(std::function<bool(std::shared_ptr<CameraControl const>)> const& pred) const
     {
       for (auto c : d_controls)
         if (pred(c))
           return c;
 
-      return Maybe<Control const>::empty();
+      return Maybe<CameraControl const>::empty();
     }
 
     std::vector<Format> getFormats() const { return d_formats; }
@@ -135,7 +134,7 @@ namespace bold
 
     v4l2_capability d_capabilities;
 
-    std::vector<std::shared_ptr<Control const>> d_controls;
+    std::vector<std::shared_ptr<CameraControl const>> d_controls;
     std::vector<Format> d_formats;
     PixelFormat d_pixelFormat;
 

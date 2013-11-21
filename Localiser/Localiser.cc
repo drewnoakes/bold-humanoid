@@ -47,11 +47,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
     resampler,
     extractor);
 
-  //
-  // Set up controls
-  //
-
-  d_controls.push_back(Control::createAction("Randomize", [this](){ d_filter->randomise(); }));
+  Config::addAction("localiser.randomize", "Randomize", [this](){ d_filter->randomise(); });
 
   updateStateObject();
 }

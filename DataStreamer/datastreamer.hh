@@ -46,15 +46,11 @@ namespace bold
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img);
 
-    void registerControls(std::string family, std::vector<std::shared_ptr<Control const>> controls);
-
   private:
     void sendImageBytes(libwebsocket* wsi, CameraSession* session);
 
     void processCommand(std::string json);
     int writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
-
-    std::map<std::string,std::map<unsigned, std::shared_ptr<Control const>>> d_controlsByIdByFamily;
 
     cv::Mat d_image;
 

@@ -6,7 +6,6 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 
-#include "../Control/control.hh"
 #include "../geometry/LineSegment2i.hh"
 #include "../PixelLabel/pixellabel.hh"
 #include "../Setting/setting.hh"
@@ -50,8 +49,6 @@ namespace bold
                  std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
                  std::shared_ptr<HeadModule> headModule);
-
-    std::map<std::string,std::vector<std::shared_ptr<Control const>>> getControlsByFamily() const { return d_controlsByFamily; }
 
     /** Process the provided image, extracting features. */
     void integrateImage(cv::Mat& cameraImage, SequentialTimer& timer);
@@ -102,8 +99,6 @@ namespace bold
     bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge->getValue(); }
 
   private:
-    std::map<std::string,std::vector<std::shared_ptr<Control const>>> d_controlsByFamily;
-
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;

@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "../motionmodule.hh"
-#include "../../Control/control.hh"
 #include "../../Math/math.hh"
 #include "../../Setting/setting.hh"
 #include "../../util/Range.hh"
@@ -19,8 +18,6 @@ namespace bold
   public:
     HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler);
     ~HeadModule() override;
-
-    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; }
 
     void initialize() override;
     void step(std::shared_ptr<JointSelection> selectedJoints) override;
@@ -71,8 +68,6 @@ namespace bold
 
   private:
     void checkLimit();
-
-    std::vector<std::shared_ptr<Control const>> d_controls;
 
     Setting<Range<double>>* d_limitPanDegs;
     Setting<Range<double>>* d_limitTiltDegs;

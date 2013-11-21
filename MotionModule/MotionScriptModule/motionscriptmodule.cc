@@ -1,6 +1,7 @@
 #include "motionscriptmodule.hh"
 
 #include "../../BodyControl/bodycontrol.hh"
+#include "../../Config/config.hh"
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
 #include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../ThreadId/threadid.hh"
@@ -25,7 +26,7 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
   for (shared_ptr<MotionScript> script : scripts)
   {
     cout << "[MotionScriptModule::MotionScriptModule] Adding motion script: " << script->getName() << endl;
-    d_controls.push_back(Control::createAction(script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); }));
+    Config::addAction(script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); });
   }
 }
 

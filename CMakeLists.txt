@@ -143,12 +143,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Control/create.cc
-  ./Control/handleRequest.cc
-  ./Control/staticfields.cc
-)
-
-add_class(BOLDHUMANOID
   ./Debugger/debugger.cc
 )
 
@@ -160,7 +154,6 @@ add_class(BOLDHUMANOID
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/processCommand.cc
-  ./DataStreamer/registerControls.cc
   ./DataStreamer/sendImageBytes.cc
   ./DataStreamer/streamImage.cc
   ./DataStreamer/update.cc

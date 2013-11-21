@@ -6,8 +6,6 @@
 #include <string>
 #include <set>
 
-#include "../../Control/control.hh"
-
 namespace bold
 {
   class MotionScript;
@@ -18,7 +16,6 @@ namespace bold
   {
   private:
     std::shared_ptr<MotionScriptRunner> d_runner;
-    std::vector<std::shared_ptr<Control const>> d_controls;
 
   public:
     MotionScriptModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
@@ -32,8 +29,6 @@ namespace bold
     void applyLegs(std::shared_ptr<LegSection> legs) override;
 
     void applySection(std::shared_ptr<BodySection> section);
-
-    std::vector<std::shared_ptr<Control const>> getControls() const { return d_controls; };
 
     /** Attempts to start executing the provided script runner.
      *

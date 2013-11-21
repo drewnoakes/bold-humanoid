@@ -1,9 +1,0 @@
-#include "control.hh"
-
-#include <iostream>
-#include <string>
-#include <vector>
-#include <functional>
-
-using namespace bold;
-using namespace std;

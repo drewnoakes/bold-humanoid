@@ -3,7 +3,6 @@
 #include <vector>
 #include <Eigen/Core>
 
-#include "../Control/control.hh"
 #include "../geometry/LineSegment2i.hh"
 
 namespace bold

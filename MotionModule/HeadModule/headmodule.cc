@@ -33,12 +33,12 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   d_tiltHomeDegs  = Config::getSetting<double>("head-module.home-tilt");
 
   // Controls
-  d_controls.push_back(Control::createAction("&blacktriangleleft;",  [this]() { moveByDeltaDegs( 5, 0); }));
-  d_controls.push_back(Control::createAction("&blacktriangle;",      [this]() { moveByDeltaDegs( 0, 5); }));
-  d_controls.push_back(Control::createAction("&blacktriangledown;",  [this]() { moveByDeltaDegs( 0,-5); }));
-  d_controls.push_back(Control::createAction("&blacktriangleright;", [this]() { moveByDeltaDegs(-5, 0); }));
-  d_controls.push_back(Control::createAction("home",                 [this]() { moveToHome(); }));
-  d_controls.push_back(Control::createAction("zero",                 [this]() { moveToDegs(0, 0); }));
+  Config::addAction("head-module.move-left", "&blacktriangleleft;",  [this]() { moveByDeltaDegs( 5, 0); });
+  Config::addAction("head-module.move-up",   "&blacktriangle;",      [this]() { moveByDeltaDegs( 0, 5); });
+  Config::addAction("head-module.move-down", "&blacktriangledown;",  [this]() { moveByDeltaDegs( 0,-5); });
+  Config::addAction("head-module.move-right","&blacktriangleright;", [this]() { moveByDeltaDegs(-5, 0); });
+  Config::addAction("head-module.move-home", "home",                 [this]() { moveToHome(); });
+  Config::addAction("head-module.move-zero", "zero",                 [this]() { moveToDegs(0, 0); });
 }
 
 HeadModule::~HeadModule()

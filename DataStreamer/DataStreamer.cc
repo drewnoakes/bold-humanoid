@@ -1,8 +1,7 @@
 #include "datastreamer.ih"
 
 DataStreamer::DataStreamer(shared_ptr<Camera> camera)
-  : d_controlsByIdByFamily(),
-    d_image(),
+  : d_image(),
     d_camera(camera),
     d_context(0),
     d_cameraSessions()

@@ -22,26 +22,34 @@ int DataStreamer::callback_control(
 
     writer.StartObject();
     {
-      for (auto& pair1 : d_controlsByIdByFamily)
+      writer.String("actions");
+      writer.StartArray();
       {
-        string family = pair1.first;
-
-        writer.String(family.c_str());
-        writer.StartArray();
-
-        for (auto pair2 : pair1.second)
+        for (Action& action : Config::getAllActions())
         {
           writer.StartObject();
           {
-            auto action = pair2.second;
-            writer.String("name").String(action->getName().c_str());
             writer.String("id").Uint(action->getId());
+            writer.String("label").String(action->getLabel().c_str());
           }
           writer.EndObject();
         }
-
-        writer.EndArray();
       }
+      writer.EndArray();
+
+      writer.String("settings");
+      writer.StartArray();
+      {
+        for (SettingBase& setting : Config::getAllSettings())
+        {
+          writer.StartObject();
+          {
+            // TODO SETTINGS write out details of all Settings objects as well
+          }
+          writer.EndObject();
+        }
+      }
+      writer.EndArray();
     }
     writer.EndObject();
 

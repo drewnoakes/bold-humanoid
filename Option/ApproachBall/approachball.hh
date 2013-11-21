@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../Config/config.hh"
-#include "../../Control/control.hh"
 #include "../../Math/math.hh"
 #include "../option.hh"
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <functional>
 #include <map>
 #include <rapidjson/document.h>
 
@@ -8,6 +9,27 @@
 
 namespace bold
 {
+  class Action
+  {
+  public:
+    Action(std::string id, std::string label, std::function<void()> callback)
+    : d_id(id),
+      d_label(label),
+      d_callback(callback)
+    {}
+
+    /** Handles a request against this control. */
+    void handleRequest() const { d_callback(); }
+
+    std::string getId() const { return d_id; }
+    std::string getLabel() const { return d_label; }
+
+  private:
+    std::string d_id;
+    std::string d_label;
+    std::function<void()> d_callback;
+  };
+
   /// Central store for all configuration data.
   class Config
   {
@@ -110,6 +132,8 @@ namespace bold
 
     static void initialise(std::string metadataFile, std::string configFile);
 
+    static void addAction(std::string id, std::string label, std::function<void()> callback);
+
   private:
     struct TreeNode
     {
@@ -127,5 +151,6 @@ namespace bold
     Config() {}
 
     static TreeNode d_root;
+    static std::map<std::string,Action*> d_actionById;
   };
 }

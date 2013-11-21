@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "../Smoother/LinearSmoother/linearsmoother.hh"
-#include "../Control/control.hh"
 
 namespace bold
 {

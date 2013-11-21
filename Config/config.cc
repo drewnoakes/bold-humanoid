@@ -14,6 +14,7 @@ using namespace rapidjson;
 using namespace std;
 
 Config::TreeNode Config::d_root;
+map<string,Action*> Config::d_actionById;
 
 void Config::initialise(string metadataFile, string configFile)
 {
@@ -250,5 +251,16 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
 
       processLevel(&it->value, confChild, treeNode, newPath.str(), childName);
     }
+  }
+}
+
+void Config::addAction(string id, string label, function<void()> callback)
+{
+  auto it = d_actionById.insert(pair<string,function<void()>(id, callback));
+
+  if (it.second == false)
+  {
+    cerr << "[Config::addAction] Action with id '" << id << "' already registered" << endl;
+    throw runtime_error("Action already registered with provided id");
   }
 }

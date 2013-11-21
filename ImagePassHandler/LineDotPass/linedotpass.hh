@@ -8,7 +8,6 @@
 
 #include "../imagepasshandler.hh"
 #include "../../Config/config.hh"
-#include "../../Control/control.hh"
 #include "../../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../LineRunTracker/lineruntracker.hh"

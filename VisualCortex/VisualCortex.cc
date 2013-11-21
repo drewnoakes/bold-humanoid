@@ -90,11 +90,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_lineFinder = make_shared<MaskWalkLineFinder>();
 
-  // HeadModule control
-  d_controlsByFamily["head"] = headModule->getControls();
-
-  // Image capture controls
-  vector<shared_ptr<Control const>> imageCaptureControls;
-  imageCaptureControls.push_back(Control::createAction("Save Frame", [this]() { d_recordNextFrame = true; }));
-  d_controlsByFamily["image-capture"] = imageCaptureControls;
+  // Image capture
+  Config::addAction("camera", "Save Frame", [this]() { d_recordNextFrame = true; });
 }
