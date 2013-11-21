@@ -5,6 +5,7 @@
 #include <iomanip>
 
 #include "../JointId/jointid.hh"
+#include "../util/ccolor.hh"
 
 using namespace bold;
 using namespace std;
@@ -448,7 +449,10 @@ bool CM730::connect()
 {
   if (!d_platform->openPort())
   {
-    cerr << "[CM730::connect] Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)" << endl;
+    cerr << ccolor::fore::lightred
+         << "[CM730::connect] Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)"
+         << ccolor::reset
+         << endl;
     return false;
   }
 
@@ -488,7 +492,7 @@ bool CM730::dxlPowerOn()
 void CM730::torqueEnable(bool enable)
 {
   cout << "[CM730::torqueEnable] " << (enable ? "Enabling" : "Disabling") << " all joint torque" << endl;
-  
+
   uchar error;
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {

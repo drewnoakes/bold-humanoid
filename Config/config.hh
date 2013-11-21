@@ -7,6 +7,7 @@
 #include <rapidjson/document.h>
 
 #include "../Setting/setting.hh"
+#include "../util/ccolor.hh"
 
 namespace bold
 {
@@ -51,7 +52,7 @@ namespace bold
         auto it = node->subNodeByName.find(nodeName);
         if (it == node->subNodeByName.end())
         {
-          std::cerr << "[Config::getSetting] Requested setting with path '" << path << "' but no node was found with name: " << nodeName << std::endl;
+          std::cerr << ccolor::fore::lightred << "[Config::getSetting] Requested setting with path '" << path << "' but no node was found with name: " << nodeName << ccolor::reset << std::endl;
           return nullptr;
         }
         node = &it->second;
@@ -63,7 +64,7 @@ namespace bold
 
       if (it == node->settingByName.end())
       {
-        std::cerr << "[Config::getSetting] Requested setting with path '" << path << "' but no setting was found with name: " << settingName << std::endl;
+        std::cerr << ccolor::fore::lightred << "[Config::getSetting] Requested setting with path '" << path << "' but no setting was found with name: " << settingName << ccolor::reset << std::endl;
         return nullptr;
       }
 
