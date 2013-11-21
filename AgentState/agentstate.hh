@@ -74,7 +74,6 @@ namespace bold
     void registerStateType(std::string name)
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
-      std::cout << "[AgentState::registerStateType] Registering state type: " << name << std::endl;
       std::lock_guard<std::mutex> guard(d_mutex);
       assert(d_trackerByTypeId.find(typeid(T)) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
       d_trackerByTypeId[typeid(T)] = StateTracker::create<T>(name);
