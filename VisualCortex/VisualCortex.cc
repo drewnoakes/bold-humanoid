@@ -44,6 +44,8 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel };
   vector<shared_ptr<PixelLabel>> blobPixelLabels = { d_ballLabel, d_goalLabel };
 
+  d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
+
   auto createLookupTable = [this,pixelLabels]()
   {
     cout << "[VisualCortex::VisualCortex] Creating LUT using pixel labels:" << endl;
@@ -60,8 +62,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   Config::getSetting<PixelLabel>("vision.pixel-labels.ball")->changed.connect([this,createLookupTable](PixelLabel value) { *d_ballLabel = value; createLookupTable(); });
   Config::getSetting<PixelLabel>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](PixelLabel value) { *d_fieldLabel = value; createLookupTable(); });
   Config::getSetting<PixelLabel>("vision.pixel-labels.line")->changed.connect([this,createLookupTable](PixelLabel value) { *d_lineLabel = value; createLookupTable(); });
-
-  d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
   d_minBallArea            = Config::getSetting<int>("vision.min-ball-area");
   d_minGoalDimensionPixels = Config::getSetting<int>("vision.min-goal-dimension-pixels");
