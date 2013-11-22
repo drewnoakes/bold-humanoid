@@ -27,12 +27,12 @@ void Agent::run()
     }
   }
 
-  cout << "[Agent::run] Starting think loop" << endl;
+  cout << ccolor::fore::lightgreen << "[Agent::run] Starting think loop" << ccolor::reset << endl;
 
   while (d_isRunning)
   {
     think();
   }
 
-  cout << "[Agent::run] Stopped" << endl;
+  cout << ccolor::fore::lightgreen << "[Agent::run] Stopped" << ccolor::reset << endl;
 }

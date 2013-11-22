@@ -119,7 +119,7 @@ Agent::Agent()
   }
   else
   {
-    cerr << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << endl;
+    cerr << ccolor::fore::lightred << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion system" << ccolor::reset << endl;
   }
 
   cout << "[Agent::Agent] Done" << endl;
