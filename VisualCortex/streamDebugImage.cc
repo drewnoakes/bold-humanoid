@@ -129,6 +129,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
 
     Affine3d const& cameraWorld = cameraAgent * agentWorld;
 
+    auto max = Vector2i(Config::getStaticValue("camera.image-width"),
+                        Config::getStaticValue("camera.image-height"));
+
     for (LineSegment3d const& line : d_fieldMap->getFieldLines())
     {
       // TODO this degrades when lines start/end outside of the camera's FOV
@@ -139,7 +142,6 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
       {
         auto p1v = p1->cast<int>();
         auto p2v = p2->cast<int>();
-        auto max = Vector2i(320, 240); // TODO get this properly
         if (p1v != p2v)
         {
           LineSegment2i line2i(max - p1v, max - p2v);
