@@ -7,6 +7,7 @@
 
 #include "../PixelLabel/pixellabel.hh"
 #include "../util/Range.hh"
+#include "../util/ccolor.hh"
 
 namespace bold
 {
@@ -62,7 +63,7 @@ namespace bold
 
       if (!isValidValue(value))
       {
-        std::cerr << "[Setting::setValue] Attempt to set invalid value '" << value << "' to setting: " << getPath() << std::endl;
+        std::cerr << ccolor::fore::lightred << "[Setting::setValue] Attempt to set invalid value '" << value << "' to setting: " << getPath() << ccolor::reset << std::endl;
         return false;
       }
 
