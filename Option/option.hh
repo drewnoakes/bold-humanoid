@@ -23,8 +23,11 @@ namespace bold
   class Option
   {
   public:
-    Option(std::string const& id);
-    virtual ~Option();
+    Option(std::string const& id)
+    : d_id(id)
+    {}
+
+    virtual ~Option() {}
 
     /** Get this option's ID
      */
