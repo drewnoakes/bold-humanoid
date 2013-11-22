@@ -99,7 +99,11 @@ Agent::Agent()
     "The rain in spain falls mainly in the plain"
   };
   for (auto saying : sayings)
-    Config::addAction("voice.speak", saying, [this,saying](){ d_voice->say(saying); });
+  {
+    stringstream id;
+    id << "voice.speak." << saying;
+    Config::addAction(id.str(), saying, [this,saying](){ d_voice->say(saying); });
+  }
 
   d_debugger->update(d_cm730);
 
