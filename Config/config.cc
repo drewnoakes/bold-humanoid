@@ -123,6 +123,45 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       auto max = metaNode->TryGetIntValue("max", numeric_limits<int>::max());
       Config::addSetting(new IntSetting(path, min, max, value, isReadOnly, isAdvanced));
     }
+    else if (type == "enum")
+    {
+      int value;
+      if (!metaNode->TryGetIntValue("default", &value))
+      {
+        cerr << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << endl;
+        throw runtime_error("JSON 'default' value must be an int");
+      }
+
+      if (confNode)
+      {
+        if (!confNode->IsInt())
+        {
+          cerr << "[Config::processLevel] Configuration value for '" << path << "' must be an int" << endl;
+          throw runtime_error("JSON configuration value must be an int");
+        }
+        value = confNode->GetInt();
+      }
+
+      auto valuesObj = metaNode->FindMember("values");
+      if (!valuesObj || !valuesObj->value.IsObject())
+      {
+        cerr << "[Config::processLevel] Configuration value for enum '" << path << "' must specify values" << endl;
+        throw runtime_error("JSON configuration for enum must specify values");
+      }
+
+      map<int, string> pairs;
+      for (auto it = valuesObj->value.MemberBegin(); it != valuesObj->value.MemberEnd(); it++)
+      {
+        if (!it->value.IsInt())
+        {
+          cerr << "[Config::processLevel] Configuration value for enum '" << path << "' has member with non-integral value" << endl;
+          throw runtime_error("JSON configuration for enum must have integral values");
+        }
+        pairs[it->value.GetInt()] = it->name.GetString();
+      }
+
+      Config::addSetting(new EnumSetting(path, pairs, value, isReadOnly, isAdvanced));
+    }
     else if (type == "bool")
     {
       bool value;

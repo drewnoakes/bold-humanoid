@@ -89,6 +89,7 @@
   "round-table": {
     "tcp-port": { "type": "int", "min": 1025, "max": 65535, "readonly": true, "default": 8080 },
     "camera-frame-frequency": { "type": "int", "min": 1, "max": 100, "default": 5 },
+    "image-type": { "type": "enum", "default": 2, "values": { "None": 0, "YCbCr": 1, "RGB": 2, "Cartoon": 3 } },
     "image-features": {
       "blobs":          { "type": "bool", "default": true },
       "line-dots":      { "type": "bool", "default": false },
