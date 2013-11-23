@@ -11,6 +11,7 @@
 namespace bold
 {
   typedef unsigned char uchar;
+  typedef unsigned int uint;
 
   class SettingBase;
   class SequentialTimer;
@@ -18,7 +19,7 @@ namespace bold
   class Camera
   {
   public:
-    enum class V4L2ControlType
+    enum class V4L2ControlType : uint
     {
       CT_INT        = 1,
       CT_BOOL       = 2,
