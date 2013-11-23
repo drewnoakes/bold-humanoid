@@ -35,6 +35,7 @@ void Camera::createControls()
   // available hardware.
 
   set<string> advancedControlNames = { "Auto WB", "Exposure, Auto", "Exposure, Auto Priority", "Backlight Compensation", "Power Line Frequency" };
+  set<string> ignoreControlNames = { "Pan (Absolute)", "Tilt (Absolute)" };
 
   auto getValue = [this](unsigned const& id) -> int
   {
@@ -60,13 +61,13 @@ void Camera::createControls()
 
   for (auto const& control : d_controls)
   {
-    // Remove some we cannot use
-    if (control->name == "Pan (Absolute)" || control->name == "Tilt (Absolute)")
-      continue;
-
     string name = control->name;
     V4L2ControlType type = control->type;
     const bool isReadOnly = false;
+
+    // Remove some we cannot use
+    if (ignoreControlNames.find(name) != ignoreControlNames.end())
+      continue;
 
     bool isAdvanced = advancedControlNames.find(name) != advancedControlNames.end();
 
