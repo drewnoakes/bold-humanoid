@@ -14,7 +14,8 @@ TAGS
 bold.py
 boldhumanoid
 build
-capture-*.png
+captures/*.json
+captures/*.png
 cachegrind*
 CMakeCache.txt
 CMakeFiles
@@ -36,4 +37,3 @@ tools/output.png
 tools/passtest
 vision
 www/.idea
-
