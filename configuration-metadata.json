@@ -33,21 +33,6 @@
     "field-of-view": {
       "vertical-degrees":   { "type": "double", "readonly": true, "default": 46.0 },
       "horizontal-degrees": { "type": "double", "readonly": true, "default": 58.0 }
-    },
-    "settings": {
-      "brightness":             { "type": "int", "min": 0, "max": 255, "default": 128 },
-      "contrast":               { "type": "int", "min": 0, "max": 255, "default": 32 },
-      "saturation":             { "type": "int", "min": 0, "max": 255, "default": 28 },
-      "gain":                   { "type": "int", "min": 0, "max": 255, "default": 255 },
-      "exposure":               { "type": "int", "min": 0, "max": 255, "default": 1000 },
-      "auto-wb":                { "type": "int", "min": 0, "max": 255, "default": 0 },
-      "power-line-frequency":   { "type": "int", "min": 0, "max": 255, "default": 2 },
-      "wb-temp-k":              { "type": "int", "min": 0, "max": 255, "default": 0 },
-      "sharpness":              { "type": "int", "min": 0, "max": 255, "default": 191 },
-      "backlight-compensation": { "type": "int", "min": 0, "max": 255, "default": 0 },
-      "exposure-auto":          { "type": "int", "min": 0, "max": 255, "default": 3 },
-      "exposure-absolute":      { "type": "int", "min": 0, "max": 255, "default": 133 },
-      "exposure-auto-priority": { "type": "int", "min": 0, "max": 255, "default": 0 }
     }
   },
   "vision": {
