@@ -112,8 +112,8 @@
   },
   "head-module": {
     "p-gain": 8,
-    "pan-limit-degrees": [-80, 80],
-    "tilt-limit-degrees": [-30, 0],
+    "pan-limit-degrees":  [-135.0, 135.0],
+    "tilt-limit-degrees": [-22.0, 40.0],
     "tracking": {
       "pan": {
         "p-gain": 0.03,
