@@ -89,7 +89,7 @@ void Camera::createControls()
       if (c == ' ')
         path << '-';
       else
-        path << tolower(c);
+        path << (char)tolower(c);
     }
 
     int currentValue = getValue(control->id);
