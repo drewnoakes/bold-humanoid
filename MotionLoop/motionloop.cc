@@ -71,7 +71,7 @@ bool MotionLoop::start()
   int error = pthread_attr_setschedpolicy(&attr, SCHED_RR);
   if (error != 0)
   {
-    cerr << "[MotionLoop::start] Error setting thread scheduling policy as RR: " << error << endl;
+    cerr << ccolor::error << "[MotionLoop::start] Error setting thread scheduling policy as RR: " << error << ccolor::reset << endl;
     return false;
   }
 
@@ -79,7 +79,7 @@ bool MotionLoop::start()
   error = pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
   if (error != 0)
   {
-    cerr << "[MotionLoop::start] Error setting thread scheduler inheritence as explicit: " << error << endl;
+    cerr << ccolor::error << "[MotionLoop::start] Error setting thread scheduler inheritence as explicit: " << error << ccolor::reset << endl;
     return false;
   }
 
@@ -90,7 +90,7 @@ bool MotionLoop::start()
   error = pthread_attr_setschedparam(&attr, &param);
   if (error != 0)
   {
-    cerr << "[MotionLoop::start] Error setting thread priority as realtime: " << error << endl;
+    cerr << ccolor::error << "[MotionLoop::start] Error setting thread priority as realtime: " << error << ccolor::reset << endl;
     return false;
   }
 
@@ -98,7 +98,7 @@ bool MotionLoop::start()
   error = pthread_create(&d_thread, &attr, threadMethod, this);
   if (error != 0)
   {
-    cerr << "[MotionLoop::start] Error starting thread: " << error << endl;
+    cerr << ccolor::error << "[MotionLoop::start] Error starting thread: " << error << ccolor::reset << endl;
     return false;
   }
 
@@ -277,7 +277,7 @@ void MotionLoop::step(SequentialTimer& t)
   if (res != CommResult::SUCCESS)
   {
     // TODO if this occurs N times in a row, consider recreating the CM730 instance (perhaps someone pressed the hardware reset button)
-    cerr << "[MotionLoop::process] Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState" << endl;
+    cerr << ccolor::warning << "[MotionLoop::process] Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState" << ccolor::reset << endl;
     return;
   }
 

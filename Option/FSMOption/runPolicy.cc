@@ -64,7 +64,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
 
     if (loopCount++ > MAX_LOOP_COUNT)
     {
-      cerr << "[FSMOption::runPolicy] Transition walk loop exceeded maximum number of iterations. Breaking from loop." << endl;
+      cerr << ccolor::error << "[FSMOption::runPolicy] Transition walk loop exceeded maximum number of iterations. Breaking from loop." << ccolor::reset << endl;
       break;
     }
   }

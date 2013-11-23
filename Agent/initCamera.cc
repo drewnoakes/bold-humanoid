@@ -55,7 +55,7 @@ void Agent::initCamera()
   {
     shared_ptr<Camera::Control const> c = d_camera->getControl(name);
     if (!c)
-      cerr << "[Agent::initCamera] No camera control found for: " << name << endl;
+      cerr << ccolor::error << "[Agent::initCamera] No camera control found for: " << name << ccolor::reset << endl;
     // TODO SETTINGS
 //     else
 //       c->setValue(value);

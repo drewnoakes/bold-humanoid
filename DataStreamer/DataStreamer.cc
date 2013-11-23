@@ -54,7 +54,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   if (d_hasWebSockets)
     cout << "[DataStreamer::DataStreamer] Listening on TCP port " << d_port << endl;
   else
-    cerr << "[DataStreamer::DataStreamer] libwebsocket context creation failed" << endl;
+    cerr << ccolor::error << "[DataStreamer::DataStreamer] libwebsocket context creation failed" << ccolor::reset << endl;
 
   //
   // Listen for state changes and publish them via websockets

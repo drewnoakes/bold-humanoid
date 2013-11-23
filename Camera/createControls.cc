@@ -139,7 +139,7 @@ void Camera::createControls()
       }
       default:
       {
-        cerr << "[Camera::createControls] Unsupported camera control type: " << (int)type << endl;
+        cerr << ccolor::error << "[Camera::createControls] Unsupported camera control type: " << (int)type << ccolor::reset << endl;
       }
     }
   }

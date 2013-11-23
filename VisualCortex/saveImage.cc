@@ -58,7 +58,7 @@ void VisualCortex::saveImage(cv::Mat const& image)
     char hostName[80];
     if (gethostname(hostName, 80) == -1)
     {
-      cerr << "[VisualCortex::saveImage] gethostname failed: " << strerror(errno) << endl;
+      cerr << ccolor::warning << "[VisualCortex::saveImage] gethostname failed: " << strerror(errno) << ccolor::reset << endl;
     }
     else
     {

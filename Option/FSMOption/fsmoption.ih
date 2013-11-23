@@ -4,5 +4,7 @@
 #include <algorithm>
 #include <list>
 
+#include "../util/ccolor.hh"
+
 using namespace bold;
 using namespace std;

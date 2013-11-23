@@ -10,7 +10,7 @@ void DataStreamer::processCommand(std::string json)
 
   if (d.HasParseError())
   {
-    cerr << "[DataStreamer::processCommand] Error parsing command JSON" << endl;
+    cerr << ccolor::error << "[DataStreamer::processCommand] Error parsing command JSON" << ccolor::reset << endl;
     return;
   }
 
@@ -19,7 +19,7 @@ void DataStreamer::processCommand(std::string json)
   char const* id;
   if (!d.TryGetStringValue("id", &id))
   {
-    cerr << "[DataStreamer::processCommand] No 'id' specified in received command JSON" << endl;
+    cerr << ccolor::error << "[DataStreamer::processCommand] No 'id' specified in received command JSON" << ccolor::reset << endl;
     return;
   }
 

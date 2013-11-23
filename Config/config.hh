@@ -82,7 +82,7 @@ namespace bold
       auto setting = getSetting<T>(path);
       if (!setting)
       {
-        std::cerr << "[Config::getValue] No setting exists with path: " << path << std::endl;
+        std::cerr << ccolor::error << "[Config::getValue] No setting exists with path: " << path << ccolor::reset << std::endl;
         throw std::runtime_error("No setting exists for requested path");
       }
       return setting->getValue();
@@ -95,12 +95,12 @@ namespace bold
       auto setting = getSetting<T>(path);
       if (!setting)
       {
-        std::cerr << "[Config::getValue] No setting exists with path: " << path << std::endl;
+        std::cerr << ccolor::error << "[Config::getValue] No setting exists with path: " << path << ccolor::reset << std::endl;
         throw std::runtime_error("No setting exists for requested path");
       }
       if (!setting->isReadOnly())
       {
-        std::cerr << "[Config::getValue] Requested static config value, however setting is not readonly: " << path << std::endl;
+        std::cerr << ccolor::error << "[Config::getValue] Requested static config value, however setting is not readonly: " << path << ccolor::reset << std::endl;
         throw std::runtime_error("Requested static config value, however setting is not readonly");
       }
       return setting->getValue();

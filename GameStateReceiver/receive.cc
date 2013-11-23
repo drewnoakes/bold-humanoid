@@ -25,7 +25,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
       if (memcmp(data, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(GAMECONTROLLER_RETURN_STRUCT_HEADER) - 1) != 0)
       {
         // Not a GC message, nor a status message
-        cerr << "[GameStateReceiver::receive] Ignoring game controller message with unexpected header" << endl;
+        cerr << ccolor::warning << "[GameStateReceiver::receive] Ignoring game controller message with unexpected header" << ccolor::reset << endl;
         d_debugger->notifyIgnoringUnrecognisedMessage();
       }
       continue;
@@ -36,7 +36,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
     // Verify the version of the message
     if (gameState->getVersion() != GAMECONTROLLER_STRUCT_VERSION)
     {
-      cerr << "[GameStateReceiver::receive] Ignoring game controller message with unexpected version" << endl;
+      cerr << ccolor::warning << "[GameStateReceiver::receive] Ignoring game controller message with unexpected version" << ccolor::reset << endl;
       d_debugger->notifyIgnoringUnrecognisedMessage();
       continue;
     }
@@ -45,7 +45,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
     if (gameState->teamInfo1().getTeamNumber() != d_agent->getTeamNumber() &&
         gameState->teamInfo2().getTeamNumber() != d_agent->getTeamNumber())
     {
-      cerr << "[GameStateReceiver::receive] Ignoring game controller message for incorrect team numbers " << (int)gameState->teamInfo1().getTeamNumber() << " and " << (int)gameState->teamInfo2().getTeamNumber() << " when our team number is " << d_agent->getTeamNumber() << endl;
+      cerr << ccolor::warning << "[GameStateReceiver::receive] Ignoring game controller message for incorrect team numbers " << (int)gameState->teamInfo1().getTeamNumber() << " and " << (int)gameState->teamInfo2().getTeamNumber() << " when our team number is " << d_agent->getTeamNumber() << ccolor::reset << endl;
       d_debugger->notifyIgnoringUnrecognisedMessage();
       continue;
     }
@@ -64,7 +64,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
 //     response.message = (int)GameControllerResponseMessage::ALIVE;
 //
 //     if (!d_socket->send((char*)(&response), sizeof(RoboCupGameControlReturnData)))
-//       cerr << "[GameStateReceiver::receive] Failed sending status response message to game controller" << endl;
+//       cerr << ccolor::warning << "[GameStateReceiver::receive] Failed sending status response message to game controller" << ccolor::reset << endl;
 
     return gameState;
   }

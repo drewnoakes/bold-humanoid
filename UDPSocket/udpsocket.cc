@@ -1,5 +1,7 @@
 #include "udpsocket.hh"
 
+#include "../util/ccolor.hh"
+
 #include <arpa/inet.h>
 #include <cassert>
 #include <cstdio>
@@ -25,7 +27,7 @@ UDPSocket::UDPSocket()
 
   if (d_socket == -1)
   {
-    cerr << "[UDPSocket::UDPSocket] Unable to create datagram socket (errono=" << errno << " " << strerror(errno) << ")" << endl;
+    cerr << ccolor::error << "[UDPSocket::UDPSocket] Unable to create datagram socket (errono=" << errno << " " << strerror(errno) << ")" << ccolor::reset << endl;
     throw runtime_error("Unable to create datagram socket");
   }
 
@@ -44,7 +46,7 @@ bool UDPSocket::setBlocking(bool isBlocking)
 
   if (flags < 0)
   {
-    cerr << "[UDPSocket::setBlocking] Error in F_GETFL: " << strerror(errno) << endl;
+    cerr << ccolor::error << "[UDPSocket::setBlocking] Error in F_GETFL: " << strerror(errno) << ccolor::reset << endl;
     return false;
   }
 
@@ -55,7 +57,7 @@ bool UDPSocket::setBlocking(bool isBlocking)
 
   if (fcntl(d_socket, F_SETFL, flags) == -1)
   {
-    cerr << "[UDPSocket::setBlocking] Error in F_SETFL: " << strerror(errno) << endl;
+    cerr << ccolor::error << "[UDPSocket::setBlocking] Error in F_SETFL: " << strerror(errno) << ccolor::reset << endl;
     return false;
   }
 
@@ -68,7 +70,7 @@ bool UDPSocket::setBroadcast(bool isBroadcast)
 
   if (setsockopt(d_socket, SOL_SOCKET, SO_BROADCAST, &isBroadcastInt, sizeof(int)))
   {
-    cerr << "[UDPSocket::setBroadcast] Error setting socket option SO_BROADCAST to " << isBroadcast << ": " << strerror(errno) << endl;
+    cerr << ccolor::error << "[UDPSocket::setBroadcast] Error setting socket option SO_BROADCAST to " << isBroadcast << ": " << strerror(errno) << ccolor::reset << endl;
     return false;
   }
 
@@ -81,7 +83,7 @@ bool UDPSocket::setMulticastLoopback(bool isLoopback)
 
   if (setsockopt(d_socket, IPPROTO_IP, IP_MULTICAST_LOOP, &isLoopbackChar, sizeof(char)))
   {
-    cerr << "[UDPSocket::setMulticastLoopback] Error setting socket option IP_MULTICAST_LOOP to " << isLoopback << ": " << strerror(errno) << endl;
+    cerr << ccolor::error << "[UDPSocket::setMulticastLoopback] Error setting socket option IP_MULTICAST_LOOP to " << isLoopback << ": " << strerror(errno) << ccolor::reset << endl;
     return false;
   }
 
@@ -92,7 +94,7 @@ bool UDPSocket::setMulticastTTL(const u_char ttl)
 {
   if (setsockopt(d_socket, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(u_char)) < 0)
   {
-    cerr << "[UDPSocket::setMulticastTTL] Unable to set socket option IP_MULTICAST_TTL to " << (int)ttl << endl;
+    cerr << ccolor::error << "[UDPSocket::setMulticastTTL] Unable to set socket option IP_MULTICAST_TTL to " << (int)ttl << ccolor::reset << endl;
     return false;
   }
   return true;
@@ -119,7 +121,7 @@ bool UDPSocket::bind(const string localIpAddress, int port)
 
   if (inet_pton(AF_INET, localIpAddress.c_str(), &(addr.sin_addr)))
   {
-    cerr << "[UDPSocket::bind] Failed due to invalid address: " << localIpAddress << endl;
+    cerr << ccolor::error << "[UDPSocket::bind] Failed due to invalid address: " << localIpAddress << ccolor::reset << endl;
     return false;
   }
 
@@ -128,13 +130,13 @@ bool UDPSocket::bind(const string localIpAddress, int port)
   // already in use' errors.
   if (setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&one, sizeof(int)) == -1)
   {
-    cerr << "[UDPSocket::bind] Unable to set socket option SO_REUSEADDR: " << strerror(errno) << endl;
+    cerr << ccolor::error << "[UDPSocket::bind] Unable to set socket option SO_REUSEADDR: " << strerror(errno) << ccolor::reset << endl;
     // Continue, despite this error
   }
 
   if (::bind(d_socket, (sockaddr*)&addr, sizeof(sockaddr_in)) == -1)
   {
-    cerr << "[UDPSocket::bind] Unable to bind socket: " << strerror(errno) << endl;
+    cerr << ccolor::error << "[UDPSocket::bind] Unable to bind socket: " << strerror(errno) << ccolor::reset << endl;
     return false;
   }
 
@@ -165,7 +167,7 @@ int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress,
       return 0;
     }
 
-    cerr << "[UDPSocket::receiveFrom] Error (" << errno << "): " << strerror(errno) << endl;
+    cerr << ccolor::error << "[UDPSocket::receiveFrom] Error (" << errno << "): " << strerror(errno) << ccolor::reset << endl;
   }
 
   assert(fromAddress->sin_family == AF_INET);
@@ -187,7 +189,7 @@ bool UDPSocket::send(const char* data, int dataLength)
   ssize_t bytesSent = sendto(d_socket, data, dataLength, 0, (sockaddr*)d_target, sizeof(sockaddr));
 
   if (bytesSent < 0)
-    cerr << "[UDPSocket::send] Error (" << errno << "): " << strerror(errno) << endl;
+    cerr << ccolor::error << "[UDPSocket::send] Error (" << errno << "): " << strerror(errno) << ccolor::reset << endl;
 
   return bytesSent > 0;
 }
@@ -202,7 +204,7 @@ bool UDPSocket::resolveIp4Address(const string ip4Address, int port, sockaddr_in
   // Populate addr->sin_addr
   if (inet_pton(AF_INET, ip4Address.c_str(), &(addr->sin_addr.s_addr)) != 1)
   {
-    cerr << "[UDPSocket::resolveIp4Address] Unable to resolve IP4 address string: " << ip4Address << endl;
+    cerr << ccolor::error << "[UDPSocket::resolveIp4Address] Unable to resolve IP4 address string: " << ip4Address << ccolor::reset << endl;
     return false;
   }
 

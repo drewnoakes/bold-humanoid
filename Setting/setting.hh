@@ -80,7 +80,7 @@ namespace bold
     {
       if (isReadOnly())
       {
-        std::cerr << "[Setting::setValue] Attempt to modify readonly setting: " << getPath() << std::endl;
+        std::cerr << ccolor::error << "[Setting::setValue] Attempt to modify readonly setting: " << getPath() << ccolor::reset << std::endl;
         return false;
       }
 

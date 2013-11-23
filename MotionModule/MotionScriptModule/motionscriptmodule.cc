@@ -84,8 +84,10 @@ bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
 
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
-    cerr << "[MotionScriptModule::start] Ignoring request to play script " << scriptRunner->getScriptName()
+    cerr << ccolor::warning
+         << "[MotionScriptModule::start] Ignoring request to play script " << scriptRunner->getScriptName()
          << " -- already playing " << d_runner->getScriptName()
+         << ccolor::reset
          << endl;
 
     return false;

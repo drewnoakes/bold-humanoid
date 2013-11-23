@@ -9,7 +9,7 @@ void Agent::readStaticHardwareState()
 
   if (res != CommResult::SUCCESS)
   {
-    cerr << "[Agent::readStaticHardwareState] Bulk read failed -- skipping update of StaticHardwareState" << endl;
+    cerr << ccolor::warning << "[Agent::readStaticHardwareState] Bulk read failed -- skipping update of StaticHardwareState" << ccolor::reset << endl;
     return;
   }
 

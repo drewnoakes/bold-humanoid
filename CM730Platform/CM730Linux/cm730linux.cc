@@ -1,3 +1,5 @@
+#include "cm730linux.hh"
+
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
@@ -10,8 +12,7 @@
 #include <iostream>
 
 #include "../Clock/clock.hh"
-
-#include "cm730linux.hh"
+#include "../util/ccolor.hh"
 
 using namespace bold;
 using namespace std;
@@ -79,7 +80,7 @@ bool CM730Linux::openPort()
   return true;
 
 UART_OPEN_ERROR:
-  cerr << "[CM730Linux::openPort] Error opening port" << endl;
+  cerr << ccolor::error << "[CM730Linux::openPort] Error opening port" << ccolor::reset << endl;
   closePort();
   return false;
 }

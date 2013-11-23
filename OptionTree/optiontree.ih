@@ -2,6 +2,8 @@
 
 #include "../AgentState/agentstate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
+#include "../util/ccolor.hh"
+
 #include <iostream>
 
 using namespace bold;

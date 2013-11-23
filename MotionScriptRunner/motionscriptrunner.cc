@@ -6,6 +6,7 @@
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../ThreadId/threadid.hh"
+#include "../util/ccolor.hh"
 
 #include <cassert>
 
@@ -30,7 +31,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
   if (d_state == MotionScriptRunnerState::Finished)
   {
-    cerr << "[MotionScriptRunner::step] already finished" << endl;
+    cerr << ccolor::error << "[MotionScriptRunner::step] already finished" << ccolor::reset << endl;
     return false;
   }
 
@@ -460,7 +461,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
       }
       default:
       {
-        cerr << "[MotionScriptRunner::step] Unexpected section: " << (int)d_section << endl;
+        cerr << ccolor::error << "[MotionScriptRunner::step] Unexpected section: " << (int)d_section << ccolor::reset << endl;
         throw new runtime_error("Unexpected section");
       }
     }

@@ -7,7 +7,7 @@ void Agent::requestStop()
 
   if (d_isStopRequested)
   {
-    cerr << "[Agent::requestStop] Forcing exit" << endl;
+    cerr << ccolor::warning << "[Agent::requestStop] Forcing exit" << ccolor::reset << endl;
     exit(1);
   }
 

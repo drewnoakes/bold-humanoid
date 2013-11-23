@@ -40,13 +40,13 @@ void Config::initialise(string metadataFile, string configFile)
 
   if (metaDocument.HasParseError())
   {
-    cerr << "[Config::initialise] Parse error in file " << metadataFile << ": " << metaDocument.GetParseError() << endl;
+    cerr << ccolor::error << "[Config::initialise] Parse error in file " << metadataFile << ": " << metaDocument.GetParseError() << ccolor::reset << endl;
     throw runtime_error("Parse error in configuration metadata JSON.");
   }
 
   if (confDocument.HasParseError())
   {
-    cerr << "[Config::initialise] Parse error in file " << configFile << ": " << confDocument.GetParseError() << endl;
+    cerr << ccolor::error << "[Config::initialise] Parse error in file " << configFile << ": " << confDocument.GetParseError() << ccolor::reset << endl;
     throw runtime_error("Parse error in configuration JSON.");
   }
 
@@ -66,7 +66,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
 
     if (!typeMember->value.IsString())
     {
-      cerr << "[Config::processLevel] 'type' property must have a string value" << endl;
+      cerr << ccolor::error << "[Config::processLevel] 'type' property must have a string value" << ccolor::reset << endl;
       throw runtime_error("JSON 'type' property must have a string value");
     }
 
@@ -82,7 +82,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       double value;
       if (!metaNode->TryGetDoubleValue("default", &value))
       {
-        cerr << "[Config::processLevel] 'default' value for '" << path << "' must be a double" << endl;
+        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a double" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be a double");
       }
 
@@ -90,7 +90,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       {
         if (!confNode->IsNumber())
         {
-          cerr << "[Config::processLevel] Configuration value for '" << path << "' must be a double" << endl;
+          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be a double" << ccolor::reset << endl;
           throw runtime_error("JSON configuration value must be a double");
         }
         value = confNode->GetDouble();
@@ -105,7 +105,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       int value;
       if (!metaNode->TryGetIntValue("default", &value))
       {
-        cerr << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << endl;
+        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be an int");
       }
 
@@ -113,7 +113,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       {
         if (!confNode->IsInt())
         {
-          cerr << "[Config::processLevel] Configuration value for '" << path << "' must be an int" << endl;
+          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be an int" << ccolor::reset << endl;
           throw runtime_error("JSON configuration value must be an int");
         }
         value = confNode->GetInt();
@@ -128,7 +128,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       int value;
       if (!metaNode->TryGetIntValue("default", &value))
       {
-        cerr << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << endl;
+        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be an int");
       }
 
@@ -136,7 +136,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       {
         if (!confNode->IsInt())
         {
-          cerr << "[Config::processLevel] Configuration value for '" << path << "' must be an int" << endl;
+          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be an int" << ccolor::reset << endl;
           throw runtime_error("JSON configuration value must be an int");
         }
         value = confNode->GetInt();
@@ -145,7 +145,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       auto valuesObj = metaNode->FindMember("values");
       if (!valuesObj || !valuesObj->value.IsObject())
       {
-        cerr << "[Config::processLevel] Configuration value for enum '" << path << "' must specify values" << endl;
+        cerr << ccolor::error << "[Config::processLevel] Configuration value for enum '" << path << "' must specify values" << ccolor::reset << endl;
         throw runtime_error("JSON configuration for enum must specify values");
       }
 
@@ -154,7 +154,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       {
         if (!it->value.IsInt())
         {
-          cerr << "[Config::processLevel] Configuration value for enum '" << path << "' has member with non-integral value" << endl;
+          cerr << ccolor::error << "[Config::processLevel] Configuration value for enum '" << path << "' has member with non-integral value" << ccolor::reset << endl;
           throw runtime_error("JSON configuration for enum must have integral values");
         }
         pairs[it->value.GetInt()] = it->name.GetString();
@@ -167,7 +167,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       bool value;
       if (!metaNode->TryGetBoolValue("default", &value))
       {
-        cerr << "[Config::processLevel] 'default' value for '" << path << "' must be a bool" << endl;
+        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a bool" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be a bool");
       }
 
@@ -175,7 +175,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       {
         if (!confNode->IsBool())
         {
-          cerr << "[Config::processLevel] Configuration value for '" << path << "' must be a bool" << endl;
+          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be a bool" << ccolor::reset << endl;
           throw runtime_error("JSON configuration value must be a bool");
         }
         value = confNode->GetBool();
@@ -188,7 +188,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       const char* value;
       if (!metaNode->TryGetStringValue("default", &value))
       {
-        cerr << "[Config::processLevel] 'default' value for '" << path << "' must be a string" << endl;
+        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a string" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be a string");
       }
 
@@ -196,7 +196,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       {
         if (!confNode->IsString())
         {
-          cerr << "[Config::processLevel] Configuration value for '" << path << "' must be a string" << endl;
+          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be a string" << ccolor::reset << endl;
           throw runtime_error("JSON configuration value must be a string");
         }
         value = confNode->GetString();
@@ -209,7 +209,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       auto parseObject = [name,path](Value* value) {
         if (!value->IsObject())
         {
-          cerr << "[Config::processLevel] Pixel label value for '" << path << "' must be an object" << endl;
+          cerr << ccolor::error << "[Config::processLevel] Pixel label value for '" << path << "' must be an object" << ccolor::reset << endl;
           throw runtime_error("JSON pixel label value must be an object");
         }
 
@@ -237,7 +237,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       auto parseObject = [path](Value* value) {
         if (!value->IsArray())
         {
-          cerr << "[Config::processLevel] Double range value for '" << path << "' must be a JSON array" << endl;
+          cerr << ccolor::error << "[Config::processLevel] Double range value for '" << path << "' must be a JSON array" << ccolor::reset << endl;
           throw runtime_error("JSON double range value must be an object");
         }
 
@@ -260,7 +260,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
     }
     else
     {
-      cerr << "[Config::processLevel] Unsupported 'type' property value: " << type << endl;
+      cerr << ccolor::error << "[Config::processLevel] Unsupported 'type' property value: " << type << ccolor::reset << endl;
       throw runtime_error("Unsupported JSON 'type' property value");
     }
 
@@ -284,7 +284,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
 
       if (!it->value.IsObject())
       {
-        cerr << "[Config::processLevel] Skipping non-object: " << childName << endl;
+        cerr << ccolor::warning << "[Config::processLevel] Skipping non-object: " << childName << ccolor::reset << endl;
         continue;
       }
 
@@ -301,7 +301,7 @@ void Config::addAction(string id, string label, function<void()> callback)
   if (it.second == false)
   {
     delete action;
-    cerr << "[Config::addAction] Action with id '" << id << "' already registered" << endl;
+    cerr << ccolor::error << "[Config::addAction] Action with id '" << id << "' already registered" << ccolor::reset << endl;
     throw runtime_error("Action already registered with provided id");
   }
 }

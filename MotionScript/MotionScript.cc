@@ -1,12 +1,13 @@
 #include "motionscript.hh"
 
-#include <rapidjson/prettywriter.h>
-#include <rapidjson/document.h>
-#include <rapidjson/filereadstream.h>
+#include "../util/ccolor.hh"
 
 #include <iostream>
 #include <sstream>
 #include <dirent.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/document.h>
+#include <rapidjson/filereadstream.h>
 
 using namespace bold;
 using namespace std;
@@ -19,7 +20,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(std::string fileName)
   FILE* pFile = fopen(fileName.c_str(), "rb");
   if (!pFile)
   {
-    cerr << "[MotionScript::fromFile] Unable to open file: " << fileName << endl;
+    cerr << ccolor::error << "[MotionScript::fromFile] Unable to open file: " << fileName << ccolor::reset << endl;
     return nullptr;
   }
 
@@ -30,7 +31,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(std::string fileName)
 
   if (document.HasParseError())
   {
-    cerr << "[MotionScript::fromFile] JSON parse error for " << fileName << ": " << document.GetParseError() << endl;
+    cerr << ccolor::error << "[MotionScript::fromFile] JSON parse error for " << fileName << ": " << document.GetParseError() << ccolor::reset << endl;
     return nullptr;
   }
 
@@ -83,7 +84,7 @@ vector<shared_ptr<MotionScript>> MotionScript::loadAllInPath(std::string path)
   struct dirent *ent;
   if ((dir = opendir(path.c_str())) == nullptr)
   {
-    cerr << "Unable to open motion scripts directory" << endl;
+    cerr << ccolor::error << "Unable to open motion scripts directory" << ccolor::reset << endl;
     throw std::runtime_error("Unable to open motion scripts directory");
   }
 
@@ -113,7 +114,7 @@ bool MotionScript::writeJsonFile(std::string fileName) const
 
   if (file == 0)
   {
-    cerr << "[MotionScript::writeJsonFile] Can not open output file for writing: " << fileName << endl;
+    cerr << ccolor::error << "[MotionScript::writeJsonFile] Can not open output file for writing: " << fileName << ccolor::reset << endl;
     return false;
   }
 

@@ -6,7 +6,7 @@ std::vector<std::shared_ptr<Option>> LookAtBall::runPolicy()
 
   if (!ballObs.hasValue())
   {
-//     cerr << "[LookAtBall::runPolicy] No ball observation in AgentFrame yet LookAtBall was run" << endl;
+//     cerr << ccolor::warning << "[LookAtBall::runPolicy] No ball observation in AgentFrame yet LookAtBall was run" << ccolor::reset << endl;
     return std::vector<std::shared_ptr<Option>>();
   }
 

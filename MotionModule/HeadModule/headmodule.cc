@@ -156,5 +156,5 @@ void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
   head->tilt()->setDegrees(d_tiltAngleDegs);
 }
 
-void HeadModule::applyArms(std::shared_ptr<ArmSection> arms) { cerr << "[HeadModule::applyArms] SHOULD NOT BE CALLED" << endl; }
-void HeadModule::applyLegs(std::shared_ptr<LegSection> legs) { cerr << "[HeadModule::applyLegs] SHOULD NOT BE CALLED" << endl; }
+void HeadModule::applyArms(std::shared_ptr<ArmSection> arms) { cerr << ccolor::error << "[HeadModule::applyArms] SHOULD NOT BE CALLED" << ccolor::reset << endl; }
+void HeadModule::applyLegs(std::shared_ptr<LegSection> legs) { cerr << ccolor::error << "[HeadModule::applyLegs] SHOULD NOT BE CALLED" << ccolor::reset << endl; }
