@@ -29,6 +29,18 @@ void Config::initialise(string metadataFile, string configFile)
   FILE* mf = fopen(metadataFile.c_str(), "rb");
   FILE* cf = fopen(configFile.c_str(), "rb");
 
+  if (!mf)
+  {
+    cerr << ccolor::error << "[Config::initialise] File not found: " << metadataFile << ccolor::reset << endl;
+    throw runtime_error("Configuration metadata file not found.");
+  }
+
+  if (!cf)
+  {
+    cerr << ccolor::error << "[Config::initialise] File not found: " << metadataFile << ccolor::reset << endl;
+    throw runtime_error("Configuration file not found.");
+  }
+
   char buffer[65536];
 
   Document metaDocument;
