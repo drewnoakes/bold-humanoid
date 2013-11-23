@@ -204,25 +204,65 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
 
       Config::addSetting(new StringSetting(path, value, isReadOnly, isAdvanced));
     }
-    else if (type == "pixel-label")
+    else if (type == "hsv-range")
     {
-      auto parseObject = [name,path](Value* value) {
+      auto parseObject = [name,path](Value* value)
+      {
         if (!value->IsObject())
         {
-          cerr << ccolor::error << "[Config::processLevel] Pixel label value for '" << path << "' must be an object" << ccolor::reset << endl;
-          throw runtime_error("JSON pixel label value must be an object");
+          cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' must be an object" << ccolor::reset << endl;
+          throw runtime_error("JSON hsv-range value must be an object");
         }
 
         Colour::hsvRange hsvRange;
 
-        // TODO populate HSV range
+        // {"hue":[44,60],"sat":[158,236],"val":[124,222]}
 
-        return PixelLabel(hsvRange, name);
+        auto parseChannel = [value,path](string channel, uchar* min, uchar* max)
+        {
+          auto mem = value->FindMember(channel.c_str());
+
+          if (!mem || !mem->value.IsArray() || mem->value.Size() != 2)
+          {
+            cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' '" << channel << "' must be present as an array of two values" << ccolor::reset << endl;
+            throw runtime_error("JSON hsv-range value must specify members 'hue', 'sat' and 'val' as arrays of two values");
+          }
+
+          if (!mem->value[0u].IsInt() || !mem->value[1u].IsInt())
+          {
+            cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' '" << channel << "' must be arrays of integers" << ccolor::reset << endl;
+            throw runtime_error("JSON hsv-range value must specify members 'hue', 'sat' and 'val' as arrays of two integer values");
+          }
+
+          auto v1 = mem->value[0u].GetInt();
+          auto v2 = mem->value[1u].GetInt();
+
+          if (v1 < 0 || v1 > 255 || v2 < 0 || v2 > 255)
+          {
+            cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' '" << channel << "' must be arrays of integers between 0 and 255 inclusive" << ccolor::reset << endl;
+            throw runtime_error("JSON hsv-range value must specify members 'hue', 'sat' and 'val' as arrays of two integer values between 0 and 255 inclusive");
+          }
+
+          *min = (uchar)v1,
+          *max = (uchar)v2;
+        };
+
+        parseChannel("hue", &hsvRange.hMin, &hsvRange.hMax);
+        parseChannel("sat", &hsvRange.sMin, &hsvRange.sMax);
+        parseChannel("val", &hsvRange.vMin, &hsvRange.vMax);
+
+        if (!hsvRange.isValid())
+        {
+          cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' parsed correctly but has invalid data" << ccolor::reset << endl;
+          throw runtime_error("JSON hsv-range value parsed correctly but has invalid data");
+        }
+
+        return hsvRange;
       };
 
       auto defaultMember = metaNode->FindMember("default");
 
-      PixelLabel value;
+      Colour::hsvRange value;
 
       if (defaultMember)
         value = parseObject(&defaultMember->value);
@@ -230,7 +270,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
       if (confNode)
         value = parseObject(confNode);
 
-      Config::addSetting(new PixelLabelSetting(path, value, isReadOnly, isAdvanced));
+      Config::addSetting(new HsvRangeSetting(path, value, isReadOnly, isAdvanced));
     }
     else if (type == "double-range")
     {

@@ -36,10 +36,10 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDrawFieldEdge       = Config::getSetting<bool>("round-table.image-features.field-edge");
   d_shouldDrawObservedObjects = Config::getSetting<bool>("round-table.image-features.objects");
 
-  d_goalLabel  = make_shared<PixelLabel>(Config::getValue<PixelLabel>("vision.pixel-labels.goal"));
-  d_ballLabel  = make_shared<PixelLabel>(Config::getValue<PixelLabel>("vision.pixel-labels.ball"));
-  d_fieldLabel = make_shared<PixelLabel>(Config::getValue<PixelLabel>("vision.pixel-labels.field"));
-  d_lineLabel  = make_shared<PixelLabel>(Config::getValue<PixelLabel>("vision.pixel-labels.line"));
+  d_goalLabel  = make_shared<PixelLabel>("Goal",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
+  d_ballLabel  = make_shared<PixelLabel>("Ball",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
+  d_fieldLabel = make_shared<PixelLabel>("Field", Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
+  d_lineLabel  = make_shared<PixelLabel>("Line",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel };
   vector<shared_ptr<PixelLabel>> blobPixelLabels = { d_ballLabel, d_goalLabel };
@@ -58,10 +58,10 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   createLookupTable();
 
   // Recreate lookup table on dynamic configuration changes
-  Config::getSetting<PixelLabel>("vision.pixel-labels.goal")->changed.connect([this,createLookupTable](PixelLabel value) { *d_goalLabel = value; createLookupTable(); });
-  Config::getSetting<PixelLabel>("vision.pixel-labels.ball")->changed.connect([this,createLookupTable](PixelLabel value) { *d_ballLabel = value; createLookupTable(); });
-  Config::getSetting<PixelLabel>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](PixelLabel value) { *d_fieldLabel = value; createLookupTable(); });
-  Config::getSetting<PixelLabel>("vision.pixel-labels.line")->changed.connect([this,createLookupTable](PixelLabel value) { *d_lineLabel = value; createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.goal") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_goalLabel ->setHsvRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.ball") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_ballLabel ->setHsvRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_fieldLabel->setHsvRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_lineLabel ->setHsvRange(value); createLookupTable(); });
 
   d_minBallArea            = Config::getSetting<int>("vision.min-ball-area");
   d_minGoalDimensionPixels = Config::getSetting<int>("vision.min-goal-dimension-pixels");

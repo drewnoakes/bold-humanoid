@@ -111,17 +111,17 @@ void BoolSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& 
 
 ///////////////////////////////////////////////////////////
 
-PixelLabelSetting::PixelLabelSetting(std::string path, PixelLabel defaultValue, bool isReadOnly, bool isAdvanced)
-: Setting(path, "pixel-label", isReadOnly, isAdvanced, defaultValue),
+HsvRangeSetting::HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced)
+: Setting(path, "hsv-range", isReadOnly, isAdvanced, defaultValue),
   d_defaultValue(defaultValue)
 {}
 
-bool PixelLabelSetting::isValidValue(PixelLabel value) const
+bool HsvRangeSetting::isValidValue(Colour::hsvRange value) const
 {
-  return value.hsvRange().isValid();
+  return value.isValid();
 }
 
-void PixelLabelSetting::writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value)
+void HsvRangeSetting::writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value)
 {
   writer.StartObject();
   {
@@ -132,15 +132,15 @@ void PixelLabelSetting::writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::Str
   writer.EndObject();
 }
 
-void PixelLabelSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void HsvRangeSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
 {
-  writeHsvRangeJsonObject(writer, getValue().hsvRange());
+  writeHsvRangeJsonObject(writer, getValue());
 }
 
-void PixelLabelSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void HsvRangeSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
 {
   writer.String("default");
-  writeHsvRangeJsonObject(writer, d_defaultValue.hsvRange());
+  writeHsvRangeJsonObject(writer, d_defaultValue);
 }
 
 ///////////////////////////////////////////////////////////

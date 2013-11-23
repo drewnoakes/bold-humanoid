@@ -20,7 +20,7 @@ namespace bold
   public:
     PixelLabel() {}
 
-    PixelLabel(Colour::hsvRange hsvRange, std::string name)
+    PixelLabel(std::string name, Colour::hsvRange hsvRange)
     : d_id(nextId++),
       d_hsvRange(hsvRange),
       d_name(name)

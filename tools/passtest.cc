@@ -70,16 +70,16 @@ int main(int argc, char **argv)
   // Build colour ranges for segmentation
 
   // hatfield (old, white field)
-//   shared_ptr<PixelLabel> ballLabel = make_shared<PixelLabel>(Colour::hsvRange::fromDoubles(354,   1, 0.74, 0.18, 0.71, 0.22), "Ball"); // red super ball
-//   shared_ptr<PixelLabel> goalLabel = make_shared<PixelLabel>(Colour::hsvRange::fromDoubles( 54,  15, 0.75, 0.20, 0.74, 0.20), "Goal"); // yellow paper
-//   shared_ptr<PixelLabel> fieldLabel= make_shared<PixelLabel>(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.25, 0.85, 0.35), "Field"); // white floor
-//   shared_ptr<PixelLabel> lineLabel = make_shared<PixelLabel>(Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.75, 0.00, 0.75), "Line"); // black line
+//   shared_ptr<PixelLabel> ballLabel = make_shared<PixelLabel>("Ball",  Colour::hsvRange::fromDoubles(354,   1, 0.74, 0.18, 0.71, 0.22)); // red super ball
+//   shared_ptr<PixelLabel> goalLabel = make_shared<PixelLabel>("Goal",  Colour::hsvRange::fromDoubles( 54,  15, 0.75, 0.20, 0.74, 0.20)); // yellow paper
+//   shared_ptr<PixelLabel> fieldLabel= make_shared<PixelLabel>("Field", Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.25, 0.85, 0.35)); // white floor
+//   shared_ptr<PixelLabel> lineLabel = make_shared<PixelLabel>("Line",  Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.75, 0.00, 0.75)); // black line
 
   // rgb.jpg
-  shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>(Colour::hsvRange(13, 30, 255, 95, 190, 95), "Ball");
-  shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>(Colour::hsvRange(40, 10, 210, 55, 190, 65), "Goal");
-  shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>(Colour::hsvRange(71, 20, 138, 55, 173, 65), "Field");
-  shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>(Colour::hsvRange(0, 255, 0, 70, 255, 70), "Line");
+  shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>("Ball",  Colour::hsvRange(13, 30, 255, 95, 190, 95));
+  shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>("Goal",  Colour::hsvRange(40, 10, 210, 55, 190, 65));
+  shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>("Field", Colour::hsvRange(71, 20, 138, 55, 173, 65));
+  shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>("Line",  Colour::hsvRange(0, 255, 0, 70, 255, 70));
 
   cout << "Using labels:" << endl
        << "  " << *ballLabel << endl

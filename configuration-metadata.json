@@ -39,10 +39,10 @@
     "min-ball-area":             { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
     "min-goal-dimension-pixels": { "type": "int", "min": 1, "max": 50, "default": 1, "advanced": true },
     "pixel-labels": {
-      "goal":  { "type": "pixel-label", "default": { "hue": [44, 60],  "sat": [158, 236], "val": [124, 222] } },
-      "ball":  { "type": "pixel-label", "default": { "hue": [248, 23], "sat": [72, 255],  "val": [12, 255] } },
-      "field": { "type": "pixel-label", "default": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] } },
-      "line":  { "type": "pixel-label", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } }
+      "goal":  { "type": "hsv-range", "default": { "hue": [44, 60],  "sat": [158, 236], "val": [124, 222] } },
+      "ball":  { "type": "hsv-range", "default": { "hue": [248, 23], "sat": [72, 255],  "val": [12, 255] } },
+      "field": { "type": "hsv-range", "default": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] } },
+      "line":  { "type": "hsv-range", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } }
     },
     "ignore-above-horizon": { "type": "bool", "default": true },
     "recording-frames": { "type": "bool", "default": false },

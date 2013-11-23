@@ -194,24 +194,24 @@ namespace bold
     bool d_defaultValue;
   };
 
-  /// Models a setting with a PixelLabel value.
-  class PixelLabelSetting : public Setting<PixelLabel>
+  /// Models a setting with a Colour::hsvRange value.
+  class HsvRangeSetting : public Setting<Colour::hsvRange>
   {
   public:
     static void writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value);
 
-    PixelLabelSetting(std::string path, PixelLabel defaultValue, bool isReadOnly, bool isAdvanced);
-    ~PixelLabelSetting() {}
+    HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced);
+    ~HsvRangeSetting() {}
 
-    bool isValidValue(PixelLabel value) const override;
-    PixelLabel getDefaultValue() const override { return d_defaultValue; }
+    bool isValidValue(Colour::hsvRange value) const override;
+    Colour::hsvRange getDefaultValue() const override { return d_defaultValue; }
 
   protected:
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
-    PixelLabel d_defaultValue;
+    Colour::hsvRange d_defaultValue;
   };
 
   /// Models a setting with a Range<double> value.
