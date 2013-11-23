@@ -268,16 +268,18 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
     }
     else if (type == "double-range")
     {
-      auto parseObject = [path](Value* value) {
-        if (!value->IsArray())
+      auto parseObject = [path](Value* value)
+      {
+        if (!value->IsArray() || value->Size() != 2 || !(*value)[0u].IsNumber() || !(*value)[1u].IsNumber())
         {
-          cerr << ccolor::error << "[Config::processLevel] Double range value for '" << path << "' must be a JSON array" << ccolor::reset << endl;
-          throw runtime_error("JSON double range value must be an object");
+          cerr << ccolor::error << "[Config::processLevel] Double range value for '" << path << "' must be a JSON array of two double values" << ccolor::reset << endl;
+          throw runtime_error("JSON double range value must be an array of two double values");
         }
 
-        // TODO populate double range
+        auto v1 = (*value)[0u].GetDouble();
+        auto v2 = (*value)[1u].GetDouble();
 
-        return Range<double>(0, 1);
+        return Range<double>(v1, v2);
       };
 
       auto defaultMember = metaNode->FindMember("default");
