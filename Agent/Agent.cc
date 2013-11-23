@@ -98,10 +98,11 @@ Agent::Agent()
     "Hello", "Bold Hearts", "Hooray", "Oh my",
     "The rain in spain falls mainly in the plain"
   };
+  int sayingIndex = 1;
   for (auto saying : sayings)
   {
     stringstream id;
-    id << "voice.speak." << saying;
+    id << "voice.speak.saying-" << sayingIndex++;
     Config::addAction(id.str(), saying, [this,saying](){ d_voice->say(saying); });
   }
 
