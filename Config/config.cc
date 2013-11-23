@@ -75,7 +75,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
 
     auto type = string(typeMember->value.GetString());
 
-    // TODO this mega-if-block should use some kind of polymorphism -- we'll need that later anyway'
+    // TODO SETTINGS this mega-if-block should use some kind of polymorphism -- we'll need that later anyway
 
     if (type == "double")
     {

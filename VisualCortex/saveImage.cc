@@ -70,6 +70,8 @@ void VisualCortex::saveImage(cv::Mat const& image)
 
     // TODO SETTINGS
 
+    // TODO Actually, why not write the entire settings file out here?
+
 //    // Camera settings
 //     writer.String("camera");
 //     writer.StartObject();

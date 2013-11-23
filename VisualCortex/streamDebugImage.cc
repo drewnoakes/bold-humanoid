@@ -10,6 +10,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   if (AgentState::getInstance().getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod->getValue() != 0)
     return;
 
+  // TODO SETTINGS create a BgrColourSetting class and allow specification of these via config
   auto lineDotColour = Colour::bgr(0, 0, 255);
   auto observedLineColour = Colour::bgr(255, 80, 80);
   auto expectedLineColour = Colour::bgr(255, 0, 0);
