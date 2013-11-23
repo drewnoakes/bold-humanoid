@@ -54,6 +54,10 @@ namespace bold
       back() {};
     };
 
+    static const char *error;
+    static const char *warning;
+    static const char *info;
+
     static char *color(int attr, int fg, int bg);
     static const char *reset;
     static const char *bold;

@@ -41,6 +41,10 @@ namespace bold
     return command;
   }
 
+  const char *ccolor::error = CC_FORECOLOR(91);
+  const char *ccolor::warning = CC_FORECOLOR(95);
+  const char *ccolor::info = CC_FORECOLOR(92);
+
   const char *ccolor::reset = CC_ATTR(0);
   const char *ccolor::bold = CC_ATTR(1);
   const char *ccolor::underline = CC_ATTR(4);
