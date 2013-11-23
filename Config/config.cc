@@ -222,15 +222,9 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
         {
           auto mem = value->FindMember(channel.c_str());
 
-          if (!mem || !mem->value.IsArray() || mem->value.Size() != 2)
+          if (!mem || !mem->value.IsArray() || mem->value.Size() != 2 || !mem->value[0u].IsInt() || !mem->value[1u].IsInt())
           {
-            cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' '" << channel << "' must be present as an array of two values" << ccolor::reset << endl;
-            throw runtime_error("JSON hsv-range value must specify members 'hue', 'sat' and 'val' as arrays of two values");
-          }
-
-          if (!mem->value[0u].IsInt() || !mem->value[1u].IsInt())
-          {
-            cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' '" << channel << "' must be arrays of integers" << ccolor::reset << endl;
+            cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' '" << channel << "' must be arrays of two integer values" << ccolor::reset << endl;
             throw runtime_error("JSON hsv-range value must specify members 'hue', 'sat' and 'val' as arrays of two integer values");
           }
 
