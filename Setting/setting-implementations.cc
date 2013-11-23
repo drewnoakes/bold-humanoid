@@ -1,4 +1,4 @@
-#include "setting.hh"
+#include "setting-implementations.hh"
 
 using namespace bold;
 

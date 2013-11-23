@@ -4,6 +4,7 @@
 #include <limits>
 
 #include "../PixelLabel/pixellabel.hh"
+#include "../Setting/setting-implementations.hh"
 #include "../util/Range.hh"
 
 #include <rapidjson/document.h>

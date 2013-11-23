@@ -9,6 +9,7 @@
 
 #include "../Clock/clock.hh"
 #include "../Config/config.hh"
+#include "../Setting/setting-implementations.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 
 using namespace cv;
