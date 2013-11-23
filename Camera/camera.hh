@@ -90,7 +90,7 @@ namespace bold
         defaultValue(ctrl.default_value)
       {}
 
-      uchar id;
+      uint id;
       std::string name;
       V4L2ControlType type;
       int minimum;
