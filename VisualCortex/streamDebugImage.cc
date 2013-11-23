@@ -129,8 +129,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
 
     Affine3d const& cameraWorld = cameraAgent * agentWorld;
 
-    auto max = Vector2i(Config::getStaticValue("camera.image-width"),
-                        Config::getStaticValue("camera.image-height"));
+    auto max = Vector2i(Config::getStaticValue<int>("camera.image-width"),
+                        Config::getStaticValue<int>("camera.image-height"));
 
     for (LineSegment3d const& line : d_fieldMap->getFieldLines())
     {

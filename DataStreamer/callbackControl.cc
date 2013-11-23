@@ -25,7 +25,7 @@ int DataStreamer::callback_control(
       writer.String("actions");
       writer.StartArray();
       {
-        for (Action* action : Config::getAllActions())
+        for (Action const* action : Config::getAllActions())
         {
           writer.StartObject();
           {
@@ -40,13 +40,9 @@ int DataStreamer::callback_control(
       writer.String("settings");
       writer.StartArray();
       {
-        for (SettingBase* setting : Config::getAllSettings())
+        for (SettingBase const* setting : Config::getAllSettings())
         {
-          writer.StartObject();
-          {
-            // TODO SETTINGS write out details of all Settings objects as well
-          }
-          writer.EndObject();
+          setting->writeFullJson(writer);
         }
       }
       writer.EndArray();
