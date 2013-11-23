@@ -2,13 +2,10 @@
 
 namespace bold
 {
-  class ccolor
+  struct ccolor
   {
-  public:
-
-    class fore
+    struct fore
     {
-    public:
       static const char *black;
       static const char *blue;
       static const char *red;
@@ -27,11 +24,13 @@ namespace bold
       static const char *lightcyan;
       static const char *lightyellow;
       static const char *lightwhite;
+
+    private:
+      fore() {};
     };
 
-    class back
+    struct back
     {
-    public:
       static const char *black;
       static const char *blue;
       static const char *red;
@@ -50,11 +49,17 @@ namespace bold
       static const char *lightcyan;
       static const char *lightyellow;
       static const char *lightwhite;
+
+    private:
+      back() {};
     };
 
     static char *color(int attr, int fg, int bg);
     static const char *reset;
     static const char *bold;
     static const char *underline;
+
+  private:
+    ccolor() {};
   };
 }
