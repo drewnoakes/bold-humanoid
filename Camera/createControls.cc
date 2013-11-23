@@ -20,7 +20,23 @@ void Camera::createControls()
     if (queryctrl.flags & V4L2_CTRL_FLAG_DISABLED)
       continue;
 
-    d_controls.push_back(make_shared<Control>(queryctrl));
+    map<int,string> pairs;
+    if (queryctrl.type == (uint)V4L2ControlType::CT_MENU)
+    {
+      struct v4l2_querymenu querymenu;
+      memset (&querymenu, 0, sizeof(querymenu));
+      querymenu.id = queryctrl.id;
+
+      // Query all enum values
+      for (unsigned i = queryctrl.minimum; i <= queryctrl.maximum; i++)
+      {
+        querymenu.index = i;
+        if (ioctl(d_fd, VIDIOC_QUERYMENU, &querymenu) == 0)
+          pairs[i] = (const char*)querymenu.name;
+      }
+    }
+
+    d_controls.push_back(make_shared<Control>(queryctrl, pairs));
 
     // Get ready to query next item
     queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
@@ -115,20 +131,7 @@ void Camera::createControls()
       }
       case V4L2ControlType::CT_MENU:
       {
-        struct v4l2_querymenu querymenu;
-        memset (&querymenu, 0, sizeof(querymenu));
-        querymenu.id = control->id;
-
-        // Query all enum values
-        map<int,string> pairs;
-        for (unsigned i = control->minimum; i <= control->maximum; i++)
-        {
-          querymenu.index = i;
-          if (ioctl(d_fd, VIDIOC_QUERYMENU, &querymenu) == 0)
-            pairs[i] = (const char*)querymenu.name;
-        }
-
-        auto setting = new EnumSetting(path.str(), pairs, control->defaultValue, isReadOnly, isAdvanced);
+        auto setting = new EnumSetting(path.str(), control->pairs, control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
         d_settings.push_back(setting);

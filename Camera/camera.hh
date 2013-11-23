@@ -81,13 +81,14 @@ namespace bold
 
     struct Control
     {
-      Control(v4l2_queryctrl const& ctrl)
+      Control(v4l2_queryctrl const& ctrl, std::map<int,std::string> pairs)
       : id(ctrl.id),
         name((const char*)ctrl.name),
         type((V4L2ControlType)ctrl.type),
         minimum(ctrl.minimum),
         maximum(ctrl.maximum),
-        defaultValue(ctrl.default_value)
+        defaultValue(ctrl.default_value),
+        pairs(pairs)
       {}
 
       uint id;
@@ -96,6 +97,7 @@ namespace bold
       int minimum;
       int maximum;
       int defaultValue;
+      std::map<int,std::string> pairs;
     };
 
     Camera(std::string const& device);
