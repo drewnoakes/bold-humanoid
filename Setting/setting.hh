@@ -122,6 +122,8 @@ namespace bold
     IntSetting(std::string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced);
     ~IntSetting() {}
 
+    int getMinimum() const { return d_min; }
+    int getMaximum() const { return d_max; }
     bool isValidValue(int value) const override;
     int getDefaultValue() const override { return d_defaultValue; }
 
