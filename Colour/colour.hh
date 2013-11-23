@@ -113,6 +113,8 @@ namespace bold
 
       bool contains(hsv const& hsv) const;
 
+      bool isValid() const;
+
       static hsvRange fromBytes(uchar hMin, uchar hMax, uchar sMin, uchar sMax, uchar vMin, uchar vMax);
       static hsvRange fromDoubles(double hMin, double hMax, double sMin, double sMax, double vMin, double vMax);
 

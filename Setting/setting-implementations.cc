@@ -118,8 +118,7 @@ PixelLabelSetting::PixelLabelSetting(std::string path, PixelLabel defaultValue, 
 
 bool PixelLabelSetting::isValidValue(PixelLabel value) const
 {
-  // TODO validate this!
-  return true;
+  return value.hsvRange().isValid();
 }
 
 void PixelLabelSetting::writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value)

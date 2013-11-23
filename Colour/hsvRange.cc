@@ -77,6 +77,11 @@ bool Colour::hsvRange::contains(Colour::hsv const& hsv) const
          hsv.v >= vMin && hsv.v <= vMax;
 }
 
+bool Colour::hsvRange::isValid() const
+{
+  return sMin <= sMax && vMin <= vMax;
+}
+
 Colour::hsvRange Colour::hsvRange::fromBytes(uchar hMin, uchar hMax, uchar sMin, uchar sMax, uchar vMin, uchar vMax)
 {
   return hsvRange(hMin, hMax, sMin, sMax, vMin, vMax);
