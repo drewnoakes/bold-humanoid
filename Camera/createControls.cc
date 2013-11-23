@@ -72,7 +72,7 @@ void Camera::createControls()
     int retrieved = getValue(id);
 
     if (retrieved != value)
-      cerr << "[Camera::setValue] Setting camera control with ID " << id << " failed -- set " << value << " but read back " << retrieved << endl;
+      cerr << ccolor::error << "[Camera::setValue] Setting camera control with ID " << id << " failed -- set " << value << " but read back " << retrieved << ccolor::reset << endl;
   };
 
   for (auto const& control : d_controls)

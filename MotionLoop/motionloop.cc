@@ -102,7 +102,7 @@ bool MotionLoop::start()
     return false;
   }
 
-  cout << ccolor::fore::lightgreen << "[MotionLoop::start] Started" << ccolor::reset << endl;
+  cout << ccolor::info << "[MotionLoop::start] Started" << ccolor::reset << endl;
 
   d_isStarted = true;
   return true;
@@ -123,7 +123,7 @@ void MotionLoop::stop()
   if ((error = pthread_join(d_thread, NULL)) != 0)
     exit(-1);
 
-  cout << ccolor::fore::lightgreen << "[MotionLoop::stop] Stopped" << ccolor::reset << endl;
+  cout << ccolor::info << "[MotionLoop::stop] Stopped" << ccolor::reset << endl;
 
   d_isStopRequested = false;
   d_isStarted = false;

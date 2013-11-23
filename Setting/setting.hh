@@ -86,7 +86,7 @@ namespace bold
 
       if (!isValidValue(value))
       {
-        std::cerr << ccolor::fore::lightred << "[Setting::setValue] Attempt to set invalid value '" << value << "' to setting: " << getPath() << ccolor::reset << std::endl;
+        std::cerr << ccolor::warning << "[Setting::setValue] Attempt to set invalid value '" << value << "' to setting: " << getPath() << ccolor::reset << std::endl;
         return false;
       }
 

@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      cout << ccolor::fore::red << "UNKNOWN ARGUMENT: " << arg << ccolor::reset << endl;
+      cout << ccolor::error << "UNKNOWN ARGUMENT: " << arg << ccolor::reset << endl;
       printUsage();
       return -1;
     }
@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 
   if (uniformNumber == 0)
   {
-    cout << ccolor::fore::red << "YOU MUST SUPPLY A UNIFORM NUMBER!" << ccolor::reset << endl;
+    cout << ccolor::error << "YOU MUST SUPPLY A UNIFORM NUMBER!" << ccolor::reset << endl;
     printUsage();
     return -1;
   }

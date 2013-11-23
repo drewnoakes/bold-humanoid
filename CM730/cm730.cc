@@ -449,7 +449,7 @@ bool CM730::connect()
 {
   if (!d_platform->openPort())
   {
-    cerr << ccolor::fore::lightred
+    cerr << ccolor::error
          << "[CM730::connect] Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)"
          << ccolor::reset
          << endl;

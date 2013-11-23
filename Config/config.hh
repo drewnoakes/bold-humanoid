@@ -52,7 +52,7 @@ namespace bold
         auto it = node->subNodeByName.find(nodeName);
         if (it == node->subNodeByName.end())
         {
-          std::cerr << ccolor::fore::lightred << "[Config::getSetting] Requested setting with path '" << path << "' but no node was found with name: " << nodeName << ccolor::reset << std::endl;
+          std::cerr << ccolor::warning << "[Config::getSetting] Requested setting with path '" << path << "' but no node was found with name: " << nodeName << ccolor::reset << std::endl;
           return nullptr;
         }
         node = &it->second;
@@ -64,7 +64,7 @@ namespace bold
 
       if (it == node->settingByName.end())
       {
-        std::cerr << ccolor::fore::lightred << "[Config::getSetting] Requested setting with path '" << path << "' but no setting was found with name: " << settingName << ccolor::reset << std::endl;
+        std::cerr << ccolor::warning << "[Config::getSetting] Requested setting with path '" << path << "' but no setting was found with name: " << settingName << ccolor::reset << std::endl;
         return nullptr;
       }
 
