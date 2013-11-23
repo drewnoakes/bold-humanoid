@@ -10,26 +10,26 @@ namespace bold
 {
   enum Color
   {
-    Black,
-    Red,
-    Green,
-    Yellow,
-    Blue,
-    Magenta,
-    Cyan,
-    White,
+    Black = 0,
+    Red = 1,
+    Green = 2,
+    Yellow = 3,
+    Blue = 4,
+    Magenta = 5,
+    Cyan = 6,
+    White = 7,
     Default = 9
   };
 
   enum Attributes
   {
-    Reset,
-    Bright,
-    Dim,
-    Underline,
-    Blink,
-    Reverse,
-    Hidden
+    Reset = 0,
+    Bright = 1,
+    Dim = 2,
+    Underline = 3,
+    Blink = 4,
+    Reverse = 5,
+    Hidden = 6
   };
 
   char *ccolor::color(int attr, int fg, int bg)
