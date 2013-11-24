@@ -8,6 +8,8 @@ int DataStreamer::callback_state(
   void* /*in*/,
   size_t /*len*/)
 {
+  assert(ThreadId::isThinkLoopThread());
+
   switch (reason)
   {
   case LWS_CALLBACK_ESTABLISHED:

@@ -59,6 +59,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   //
   AgentState::getInstance().updated.connect(
     [this](shared_ptr<StateTracker const> tracker) {
+      assert(ThreadId::isThinkLoopThread());
       if (!d_hasWebSockets)
         return;
       libwebsocket_protocols* protocol = tracker->websocketProtocol;

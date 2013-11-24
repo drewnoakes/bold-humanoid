@@ -8,6 +8,7 @@ int DataStreamer::callback_http(
   void* in,
   size_t /*len*/)
 {
+  assert(ThreadId::isThinkLoopThread());
 
   switch (reason)
   {
@@ -28,21 +29,21 @@ int DataStreamer::callback_http(
         std::cout << "[DataStreamer::callback_http] invalid request path: " << path << std::endl;
         return 1;
       }
-      
+
       // ignore query string (for now)
       size_t queryStart = string(path).find("?");
       if (queryStart != string::npos)
       {
         path[queryStart] = 0;
       }
-      
+
       std::cout << "[DataStreamer::callback_http] requested path: " << path << std::endl;
     }
     else
     {
       path = (char*)"/index.html";
     }
-    
+
     //
     // Determine the MIME type based upon the path extension
     //

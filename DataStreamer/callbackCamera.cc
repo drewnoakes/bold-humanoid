@@ -8,6 +8,8 @@ int DataStreamer::callback_camera(
   void* in,
   size_t len)
 {
+  assert(ThreadId::isThinkLoopThread());
+
   CameraSession* cameraSession = reinterpret_cast<CameraSession*>(session);
 
   switch (reason)

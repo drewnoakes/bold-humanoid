@@ -27,6 +27,7 @@
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../ThreadId/threadid.hh"
 
 using namespace bold;
 using namespace std;
