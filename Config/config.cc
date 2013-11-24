@@ -244,3 +244,33 @@ void Config::addAction(string id, string label, function<void()> callback)
     throw runtime_error("Action already registered with provided id");
   }
 }
+
+Value const* Config::getConfigJsonValue(string path)
+{
+  string delimiter = ".";
+  size_t start = 0;
+  rapidjson::Value const* configValue = d_configDocument;
+  while (true)
+  {
+    size_t end = path.find(delimiter, start);
+
+    auto nodeName = end != string::npos
+      ? path.substr(start, end - start)
+      : path.substr(start);
+
+    auto member = configValue->FindMember(nodeName.c_str());
+
+    if (!member)
+      return nullptr;
+
+    configValue = &member->value;
+
+    if (!configValue)
+      return nullptr;
+
+    if (end == string::npos)
+      return configValue;
+
+    start = end + delimiter.length();
+  }
+}

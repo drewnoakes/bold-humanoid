@@ -149,6 +149,8 @@ namespace bold
       }
     }
 
+    static rapidjson::Value const* getConfigJsonValue(std::string path);
+
     static void initialise(std::string metadataFile, std::string configFile);
 
     static void initialisationCompleted() { assert(d_isInitialising); d_isInitialising = false; }
