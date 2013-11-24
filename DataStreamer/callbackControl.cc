@@ -22,6 +22,8 @@ int DataStreamer::callback_control(
 
     writer.StartObject();
     {
+      writer.String("type").String("sync");
+
       writer.String("actions");
       writer.StartArray();
       {
