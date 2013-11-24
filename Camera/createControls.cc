@@ -105,7 +105,7 @@ void Camera::createControls()
     path << "camera.settings.";
     for (char const& c : name)
     {
-      if (c == '(' || c == ')')
+      if (c == '(' || c == ')' || c ==',')
         continue;
       else if (c == ' ')
         path << '-';
