@@ -3,8 +3,9 @@
 #include <iostream>
 #include <functional>
 #include <map>
-#include <stack>
 #include <rapidjson/document.h>
+#include <sigc++/signal.h>
+#include <stack>
 
 #include "../Setting/setting.hh"
 #include "../util/ccolor.hh"
@@ -36,6 +37,8 @@ namespace bold
   class Config
   {
   public:
+    static sigc::signal<void, SettingBase*> updated;
+
     static SettingBase* getSettingBase(std::string path);
 
     /// Retrieves a Setting<T> having the specified path.

@@ -18,6 +18,7 @@ Config::TreeNode Config::d_root;
 map<string,Action*> Config::d_actionById;
 Document* Config::d_configDocument;
 bool Config::d_isInitialising = true;
+sigc::signal<void, SettingBase*> Config::updated;
 
 void Config::initialise(string metadataFile, string configFile)
 {
@@ -306,12 +307,15 @@ void Config::addSetting(SettingBase* setting)
     throw runtime_error("Attempt to add duplicate setting");
   }
 
+  // If a config value exists for this setting, set it
   if (configValue != nullptr)
   {
     auto member = configValue->FindMember(settingName.c_str());
     if (member)
       setting->setValueFromJson(&member->value);
   }
+
+  setting->changedBase.connect([](SettingBase* s){ Config::updated.emit(s); });
 }
 
 void Config::addAction(string id, string label, function<void()> callback)
