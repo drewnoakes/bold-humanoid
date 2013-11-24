@@ -62,23 +62,23 @@ void Camera::createControls()
     return ctrl.value;
   };
 
-  auto setValue = [this,getValue](unsigned const& id, int const& value)
+  auto setValue = [this,getValue](shared_ptr<Control const> const& control, int const& value)
   {
     v4l2_control ctrl = {0,};
-    ctrl.id = id;
+    ctrl.id = control->id;
     ctrl.value = value;
     ioctl(d_fd, VIDIOC_S_CTRL, &ctrl);
 
     // Test whether the value we set was taken or not
-    int retrieved = getValue(id);
+    int retrieved = getValue(control->id);
 
     if (retrieved != value)
-      cerr << ccolor::error << "[Camera::setValue] Setting camera control with ID " << id << " failed -- set " << value << " but read back " << retrieved << ccolor::reset << endl;
+      cerr << ccolor::error << "[Camera::setValue] Setting camera control '" << control->name << "' failed -- set " << value << " but read back " << retrieved << ccolor::reset << endl;
   };
 
   vector<SettingBase*> settings;
 
-  for (auto const& control : d_controls)
+  for (shared_ptr<Control const> const& control : d_controls)
   {
     string name = control->name;
     V4L2ControlType type = control->type;
@@ -122,7 +122,7 @@ void Camera::createControls()
       {
         auto setting = new BoolSetting(path.str(), control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue != 0);
-        setting->changed.connect([setValue,control](bool value) { setValue(control->id, value ? 1 : 0); });
+        setting->changed.connect([setValue,control](bool value) { setValue(control, value ? 1 : 0); });
         settings.push_back(setting);
         break;
       }
@@ -130,7 +130,7 @@ void Camera::createControls()
       {
         auto setting = new IntSetting(path.str(), control->minimum, control->maximum, control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue);
-        setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
+        setting->changed.connect([setValue,control](int value) { setValue(control, value); });
         settings.push_back(setting);
         break;
       }
@@ -138,7 +138,7 @@ void Camera::createControls()
       {
         auto setting = new EnumSetting(path.str(), control->pairs, control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue);
-        setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
+        setting->changed.connect([setValue,control](int value) { setValue(control, value); });
         settings.push_back(setting);
         break;
       }
