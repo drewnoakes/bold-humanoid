@@ -122,6 +122,7 @@ namespace bold
 
     static Action* getAction(std::string id);
     static std::vector<Action*> getAllActions();
+    static std::vector<SettingBase*> getSettings(std::string prefix);
     static std::vector<SettingBase*> getAllSettings();
 
   private:

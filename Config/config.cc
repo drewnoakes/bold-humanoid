@@ -357,3 +357,36 @@ vector<SettingBase*> Config::getAllSettings()
   }
   return settings;
 }
+
+vector<SettingBase*> Config::getSettings(string prefix)
+{
+  string delimiter = ".";
+  size_t start = 0;
+  TreeNode const* node = &d_root;
+  while (true)
+  {
+    size_t end = prefix.find(delimiter, start);
+
+    auto nodeName = end != string::npos
+      ? prefix.substr(start, end - start)
+      : prefix.substr(start);
+
+    auto child = node->subNodeByName.find(nodeName);
+
+    if (child == node->subNodeByName.end())
+      return vector<SettingBase*>();
+
+    node = &child->second;
+
+    if (end == string::npos)
+    {
+      // Return all the settings in the current node
+      vector<SettingBase*> settings;
+      for (auto pair : node->settingByName)
+        settings.push_back(pair.second);
+      return settings;
+    }
+
+    start = end + delimiter.length();
+  }
+}
