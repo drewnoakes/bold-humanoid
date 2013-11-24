@@ -70,7 +70,7 @@ namespace bold
 
       auto setting = it->second;
 
-      // TODO check typeid
+      // TODO SETTINGS check typeid
 
       return (Setting<T>*)setting;
     }
