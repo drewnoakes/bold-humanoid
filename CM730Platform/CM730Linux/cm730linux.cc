@@ -71,7 +71,7 @@ bool CM730Linux::openPort()
   if (ioctl(d_socket, TIOCSSERIAL, &serinfo) < 0)
     goto UART_OPEN_ERROR;
 
-  cout << "[CM730Linux::openPort] Opened with " << baudrate << " bps baud" << endl;
+  cout << "[CM730Linux::openPort] Opened with " << (int)baudrate << " bps baud" << endl;
 
   tcflush(d_socket, TCIFLUSH);
 
