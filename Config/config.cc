@@ -77,6 +77,39 @@ void Config::initialise(string metadataFile, string configFile)
   processConfigMetaJsonValue(&metaDocument, &d_root, "", "");
 }
 
+SettingBase* Config::getSettingBase(string path)
+{
+  string delimiter = ".";
+  size_t start = 0;
+  size_t end;
+  TreeNode const* node = &d_root;
+  while ((end = path.find(delimiter, start)) != string::npos)
+  {
+    auto nodeName = path.substr(start, end - start);
+    start = end + delimiter.length();
+
+    auto it = node->subNodeByName.find(nodeName);
+    if (it == node->subNodeByName.end())
+    {
+      cerr << ccolor::warning << "[Config::getSettingBase] Requested setting with path '" << path << "' but no node was found with name: " << nodeName << ccolor::reset << endl;
+      return nullptr;
+    }
+    node = &it->second;
+  }
+
+  auto settingName = path.substr(start);
+
+  auto it = node->settingByName.find(settingName);
+
+  if (it == node->settingByName.end())
+  {
+    cerr << ccolor::warning << "[Config::getSettingBase] Requested setting with path '" << path << "' but no setting was found with name: " << settingName << ccolor::reset << endl;
+    return nullptr;
+  }
+
+  return it->second;
+}
+
 void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, string path, string name)
 {
   assert(metaNode->IsObject());

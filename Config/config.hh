@@ -36,39 +36,13 @@ namespace bold
   class Config
   {
   public:
+    static SettingBase* getSettingBase(std::string path);
+
     /// Retrieves a Setting<T> having the specified path.
     template<typename T>
     static Setting<T>* getSetting(std::string path)
     {
-      std::string delimiter = ".";
-      size_t start = 0;
-      size_t end;
-      TreeNode const* node = &d_root;
-      while ((end = path.find(delimiter, start)) != std::string::npos)
-      {
-        auto nodeName = path.substr(start, end - start);
-        start = end + delimiter.length();
-
-        auto it = node->subNodeByName.find(nodeName);
-        if (it == node->subNodeByName.end())
-        {
-          std::cerr << ccolor::warning << "[Config::getSetting] Requested setting with path '" << path << "' but no node was found with name: " << nodeName << ccolor::reset << std::endl;
-          return nullptr;
-        }
-        node = &it->second;
-      }
-
-      auto settingName = path.substr(start);
-
-      auto it = node->settingByName.find(settingName);
-
-      if (it == node->settingByName.end())
-      {
-        std::cerr << ccolor::warning << "[Config::getSetting] Requested setting with path '" << path << "' but no setting was found with name: " << settingName << ccolor::reset << std::endl;
-        return nullptr;
-      }
-
-      auto setting = it->second;
+      auto setting = getSettingBase(path);
 
       // TODO SETTINGS check typeid
 
