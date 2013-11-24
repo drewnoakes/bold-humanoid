@@ -68,18 +68,17 @@ void VisualCortex::saveImage(cv::Mat const& image)
     // Current date and time
     writer.String("date").String(dateTimeString);
 
-    // TODO SETTINGS
-
-    // TODO Actually, why not write the entire settings file out here?
-
-//    // Camera settings
-//     writer.String("camera");
-//     writer.StartObject();
-//     {
-//       for (shared_ptr<Control const> const& control : d_camera->getControls())
-//         writer.String(control->getName().c_str()).Int(control->getValue());
-//     }
-//     writer.EndObject();
+    // Camera settings
+    writer.String("camera-settings");
+    writer.StartObject();
+    {
+      for (SettingBase* setting : Config::getSettings("camera.settings"))
+      {
+        writer.String(setting->getName().c_str());
+        setting->writeJsonValue(writer);
+      }
+    }
+    writer.EndObject();
 
     // Body pose
     writer.String("body");
