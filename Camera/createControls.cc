@@ -2,6 +2,8 @@
 
 #include <cctype>
 
+using namespace rapidjson;
+
 void Camera::createControls()
 {
   d_controls.clear();
@@ -74,6 +76,8 @@ void Camera::createControls()
       cerr << ccolor::error << "[Camera::setValue] Setting camera control with ID " << id << " failed -- set " << value << " but read back " << retrieved << ccolor::reset << endl;
   };
 
+  vector<SettingBase*> settings;
+
   for (auto const& control : d_controls)
   {
     string name = control->name;
@@ -119,7 +123,7 @@ void Camera::createControls()
         auto setting = new BoolSetting(path.str(), control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue != 0);
         setting->changed.connect([setValue,control](bool value) { setValue(control->id, value ? 1 : 0); });
-        Config::addSetting(setting);
+        settings.push_back(setting);
         break;
       }
       case V4L2ControlType::CT_INT:
@@ -127,7 +131,7 @@ void Camera::createControls()
         auto setting = new IntSetting(path.str(), control->minimum, control->maximum, control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
-        Config::addSetting(setting);
+        settings.push_back(setting);
         break;
       }
       case V4L2ControlType::CT_MENU:
@@ -135,7 +139,7 @@ void Camera::createControls()
         auto setting = new EnumSetting(path.str(), control->pairs, control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
-        Config::addSetting(setting);
+        settings.push_back(setting);
         break;
       }
       default:
@@ -143,5 +147,47 @@ void Camera::createControls()
         cerr << ccolor::error << "[Camera::createControls] Unsupported camera control type: " << (int)type << ccolor::reset << endl;
       }
     }
+  }
+
+  // Camera settings must be set in a particular order. For example, you cannot
+  // explicitly set the white balance when 'auto wb' mode is on. The value will
+  // not stick.
+  //
+  // We use the order in which they're specified in the config document to
+  // signify the order they should be set in.
+  //
+  // Finally, any setting which were not referenced in the config file will be
+  // logged out, and appended in whatever order they were reported by the camera
+  // in.
+
+  Value const* jsonValue = Config::getConfigJsonValue("camera.settings");
+
+  for (Value::Member const* member = jsonValue->MemberBegin(); member != jsonValue->MemberEnd(); ++member)
+  {
+    string name = member->name.GetString();
+    stringstream pathstream;
+    pathstream << "camera.settings" << '.' << name;
+    string path = pathstream.str();
+
+    auto match = std::find_if(settings.begin(), settings.end(), [path](SettingBase* setting) { return setting->getPath() == path; });
+
+    if (match == settings.end())
+    {
+      cerr << ccolor::warning << "[Camera::createControls] Configuration document specifies '" << path << "' but no setting exists with that name" << ccolor::reset << endl;
+      continue;
+    }
+
+    SettingBase* setting = *match;
+
+    // This is not very efficient (O(N)) but this only occurs at startup, so...
+    settings.erase(match);
+
+    Config::addSetting(setting);
+  }
+
+  for (SettingBase* leftOver : settings)
+  {
+    cerr << ccolor::warning << "[Camera::createControls] Configuration document doesn't specify a value for camera setting: " << leftOver->getPath() << ccolor::reset << endl;
+    Config::addSetting(leftOver);
   }
 }

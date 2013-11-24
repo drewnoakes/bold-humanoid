@@ -38,19 +38,19 @@
       "horizontal-degrees": 58.0
     },
     "settings": {
+      "auto-wb": 0,
+      "exposure-auto": 3,
+      "exposure-absolute": 133,
+      "exposure-auto-priority": 0,
+      "backlight-compensation": 0,
+      "power-line-frequency": 2,
+      "exposure-absolute": 1000,
       "brightness": 128,
       "contrast": 32,
       "saturation": 28,
       "gain": 255,
-      "exposure": 1000,
-      "auto-wb": 0,
-      "power-line-frequency": 2,
       "wb-temp-k": 0,
-      "sharpness": 191,
-      "backlight-compensation": 0,
-      "exposure-auto": 3,
-      "exposure-absolute": 133,
-      "exposure-auto-priority": 0
+      "sharpness": 191
     }
   },
   "vision": {
