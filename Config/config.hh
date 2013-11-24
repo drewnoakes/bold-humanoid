@@ -137,9 +137,19 @@ namespace bold
 
       auto settingName = path.substr(start);
 
-      // TODO SETTINGS validate that the setting name is not also used for a tree node
+      // Validate that the setting name is not also used for a tree node
+      if (node->subNodeByName.find(settingName) != node->subNodeByName.end())
+      {
+        std::cerr << ccolor::error << "[Config::addSetting] Attempt to add setting but node already exists with path: " << setting->getPath() << ccolor::reset << std::endl;
+        throw std::runtime_error("Attempt to add setting over existing node");
+      }
 
-      node->settingByName[settingName] = setting;
+      // Insert, ensuring a setting does not already exist with that name
+      if (!node->settingByName.insert(std::make_pair(settingName, setting)).second)
+      {
+        std::cerr << ccolor::error << "[Config::addSetting] Attempt to add duplicate setting with path: " << setting->getPath() << ccolor::reset << std::endl;
+        throw std::runtime_error("Attempt to add duplicate setting");
+      }
 
       if (configValue != nullptr)
       {
