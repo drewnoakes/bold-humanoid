@@ -109,7 +109,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
         value = confNode->GetDouble();
       }
 
-      auto min = metaNode->TryGetDoubleValue("min", numeric_limits<double>::min());
+      auto min = metaNode->TryGetDoubleValue("min", -numeric_limits<double>::max());
       auto max = metaNode->TryGetDoubleValue("max", numeric_limits<double>::max());
       Config::addSetting(new DoubleSetting(path, min, max, value, isReadOnly, isAdvanced));
     }
@@ -132,7 +132,7 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
         value = confNode->GetInt();
       }
 
-      auto min = metaNode->TryGetIntValue("min", numeric_limits<int>::min());
+      auto min = metaNode->TryGetIntValue("min", -numeric_limits<int>::max());
       auto max = metaNode->TryGetIntValue("max", numeric_limits<int>::max());
       Config::addSetting(new IntSetting(path, min, max, value, isReadOnly, isAdvanced));
     }

@@ -22,7 +22,7 @@ void IntSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writ
 void IntSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
 {
   writer.String("default").Int(d_defaultValue);
-  if (d_min != std::numeric_limits<int>::min())
+  if (d_min != -std::numeric_limits<int>::max())
     writer.String("min").Int(d_min);
   if (d_max != std::numeric_limits<int>::max())
     writer.String("max").Int(d_max);
@@ -81,7 +81,7 @@ void DoubleSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& w
 void DoubleSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
 {
   writer.String("default").Double(d_defaultValue);
-  if (d_min != std::numeric_limits<double>::min())
+  if (d_min != -std::numeric_limits<double>::max())
     writer.String("min").Double(d_min);
   if (d_max != std::numeric_limits<double>::max())
     writer.String("max").Double(d_max);
