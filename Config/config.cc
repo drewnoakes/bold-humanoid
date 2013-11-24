@@ -232,6 +232,55 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
   }
 }
 
+void Config::addSetting(SettingBase* setting)
+{
+  string path = setting->getPath();
+  string delimiter = ".";
+  size_t start = 0;
+  size_t end;
+  TreeNode* node = &d_root;
+  Value* configValue = d_configDocument;
+  while ((end = path.find(delimiter, start)) != string::npos)
+  {
+    auto nodeName = path.substr(start, end - start);
+    start = end + delimiter.length();
+
+    // Insert or create new tree node.
+    auto ret = node->subNodeByName.insert(pair<string,TreeNode>(nodeName, TreeNode()));
+    node = &ret.first->second;
+
+    // Dereference the config node
+    if (configValue)
+    {
+      auto member = configValue->FindMember(nodeName.c_str());
+      configValue = member ? &member->value : nullptr;
+    }
+  }
+
+  auto settingName = path.substr(start);
+
+  // Validate that the setting name is not also used for a tree node
+  if (node->subNodeByName.find(settingName) != node->subNodeByName.end())
+  {
+    cerr << ccolor::error << "[Config::addSetting] Attempt to add setting but node already exists with path: " << setting->getPath() << ccolor::reset << endl;
+    throw runtime_error("Attempt to add setting over existing node");
+  }
+
+  // Insert, ensuring a setting does not already exist with that name
+  if (!node->settingByName.insert(make_pair(settingName, setting)).second)
+  {
+    cerr << ccolor::error << "[Config::addSetting] Attempt to add duplicate setting with path: " << setting->getPath() << ccolor::reset << endl;
+    throw runtime_error("Attempt to add duplicate setting");
+  }
+
+  if (configValue != nullptr)
+  {
+    auto member = configValue->FindMember(settingName.c_str());
+    if (member)
+      setting->setValueFromJson(&member->value);
+  }
+}
+
 void Config::addAction(string id, string label, function<void()> callback)
 {
   Action* action = new Action(id, label, callback);
@@ -249,7 +298,7 @@ Value const* Config::getConfigJsonValue(string path)
 {
   string delimiter = ".";
   size_t start = 0;
-  rapidjson::Value const* configValue = d_configDocument;
+  Value const* configValue = d_configDocument;
   while (true)
   {
     size_t end = path.find(delimiter, start);
@@ -273,4 +322,38 @@ Value const* Config::getConfigJsonValue(string path)
 
     start = end + delimiter.length();
   }
+}
+
+vector<Action*> Config::getAllActions()
+{
+  vector<Action*> actions;
+  for (auto const& pair : d_actionById)
+    actions.push_back(pair.second);
+  return actions;
+}
+
+Action* Config::getAction(string id)
+{
+  auto it = d_actionById.find(id);
+  if (it == d_actionById.end())
+    return nullptr;
+  return it->second;
+}
+
+vector<SettingBase*> Config::getAllSettings()
+{
+  vector<SettingBase*> settings;
+
+  stack<TreeNode const*> stack;
+  stack.push(&d_root);
+  while (!stack.empty())
+  {
+    TreeNode const* node = stack.top();
+    stack.pop();
+    for (auto const& pair : node->settingByName)
+      settings.push_back(pair.second);
+    for (auto const& pair : node->subNodeByName)
+      stack.push(&pair.second);
+  }
+  return settings;
 }

@@ -106,58 +106,12 @@ namespace bold
       return setting->getValue();
     }
 
-    /// Adds the specified Setting<T>.
+    /// Adds the specified setting.
     /// If a corresponding value exists in the config document, its value is
     /// retrieved and set on the provided setting.
-    template<typename T>
-    static void addSetting(Setting<T>* setting)
-    {
-      std::string path = setting->getPath();
-      std::string delimiter = ".";
-      size_t start = 0;
-      size_t end;
-      TreeNode* node = &d_root;
-      rapidjson::Value* configValue = d_configDocument;
-      while ((end = path.find(delimiter, start)) != std::string::npos)
-      {
-        auto nodeName = path.substr(start, end - start);
-        start = end + delimiter.length();
+    static void addSetting(SettingBase* setting);
 
-        // Insert or create new tree node.
-        auto ret = node->subNodeByName.insert(std::pair<std::string,TreeNode>(nodeName, TreeNode()));
-        node = &ret.first->second;
-
-        // Dereference the config node
-        if (configValue)
-        {
-          auto member = configValue->FindMember(nodeName.c_str());
-          configValue = member ? &member->value : nullptr;
-        }
-      }
-
-      auto settingName = path.substr(start);
-
-      // Validate that the setting name is not also used for a tree node
-      if (node->subNodeByName.find(settingName) != node->subNodeByName.end())
-      {
-        std::cerr << ccolor::error << "[Config::addSetting] Attempt to add setting but node already exists with path: " << setting->getPath() << ccolor::reset << std::endl;
-        throw std::runtime_error("Attempt to add setting over existing node");
-      }
-
-      // Insert, ensuring a setting does not already exist with that name
-      if (!node->settingByName.insert(std::make_pair(settingName, setting)).second)
-      {
-        std::cerr << ccolor::error << "[Config::addSetting] Attempt to add duplicate setting with path: " << setting->getPath() << ccolor::reset << std::endl;
-        throw std::runtime_error("Attempt to add duplicate setting");
-      }
-
-      if (configValue != nullptr)
-      {
-        auto member = configValue->FindMember(settingName.c_str());
-        if (member)
-          setting->setValueFromJson(&member->value);
-      }
-    }
+    static void addAction(std::string id, std::string label, std::function<void()> callback);
 
     static rapidjson::Value const* getConfigJsonValue(std::string path);
 
@@ -166,41 +120,9 @@ namespace bold
     static void initialisationCompleted() { assert(d_isInitialising); d_isInitialising = false; }
     static bool isInitialising() { return d_isInitialising; }
 
-    static void addAction(std::string id, std::string label, std::function<void()> callback);
-
-    static std::vector<Action*> getAllActions()
-    {
-      std::vector<Action*> actions;
-      for (auto const& pair : d_actionById)
-        actions.push_back(pair.second);
-      return actions;
-    }
-
-    static Action* getAction(std::string id)
-    {
-      auto it = d_actionById.find(id);
-      if (it == d_actionById.end())
-        return nullptr;
-      return it->second;
-    }
-
-    static std::vector<SettingBase*> getAllSettings()
-    {
-      std::vector<SettingBase*> settings;
-
-      std::stack<TreeNode const*> stack;
-      stack.push(&d_root);
-      while (!stack.empty())
-      {
-        TreeNode const* node = stack.top();
-        stack.pop();
-        for (auto const& pair : node->settingByName)
-          settings.push_back(pair.second);
-        for (auto const& pair : node->subNodeByName)
-          stack.push(&pair.second);
-      }
-      return settings;
-    }
+    static Action* getAction(std::string id);
+    static std::vector<Action*> getAllActions();
+    static std::vector<SettingBase*> getAllSettings();
 
   private:
     struct TreeNode
