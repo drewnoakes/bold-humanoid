@@ -142,7 +142,6 @@ namespace bold
     v4l2_capability d_capabilities;
 
     std::vector<std::shared_ptr<Control const>> d_controls;
-    std::vector<SettingBase*> d_settings;
     std::vector<Format> d_formats;
     PixelFormat d_pixelFormat;
 

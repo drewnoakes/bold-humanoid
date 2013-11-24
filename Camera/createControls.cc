@@ -5,7 +5,6 @@
 void Camera::createControls()
 {
   d_controls.clear();
-  d_settings.clear();
 
   //
   // Query the device for all camera controls
@@ -120,7 +119,7 @@ void Camera::createControls()
         auto setting = new BoolSetting(path.str(), control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue != 0);
         setting->changed.connect([setValue,control](bool value) { setValue(control->id, value ? 1 : 0); });
-        d_settings.push_back(setting);
+        Config::addSetting(setting);
         break;
       }
       case V4L2ControlType::CT_INT:
@@ -128,7 +127,7 @@ void Camera::createControls()
         auto setting = new IntSetting(path.str(), control->minimum, control->maximum, control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
-        d_settings.push_back(setting);
+        Config::addSetting(setting);
         break;
       }
       case V4L2ControlType::CT_MENU:
@@ -136,7 +135,7 @@ void Camera::createControls()
         auto setting = new EnumSetting(path.str(), control->pairs, control->defaultValue, isReadOnly, isAdvanced);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control](int value) { setValue(control->id, value); });
-        d_settings.push_back(setting);
+        Config::addSetting(setting);
         break;
       }
       default:
