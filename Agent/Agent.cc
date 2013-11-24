@@ -11,7 +11,7 @@ Agent::Agent()
 {
   ThreadId::setThreadId(ThreadId::ThinkLoop);
 
-  // TODO specify these strings in configuration
+  // TODO SETTINGS specify these strings in configuration
 
   vector<string> phrases = {
     "Bold Hearts are go!",

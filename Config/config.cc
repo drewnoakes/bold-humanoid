@@ -99,7 +99,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
 
     auto type = string(typeMember->value.GetString());
 
-    // TODO SETTINGS this mega-if-block should use some kind of polymorphism
+    // TODO SETTINGS replace mega-if-block with lookup in map<string,function<bool(Value*)>> populated with static factories on *Setting classes
 
     if (type == "double")
     {
