@@ -38,11 +38,11 @@
       "horizontal-degrees": 58.0
     },
     "settings": {
-      "auto-wb": 0,
-      "exposure-auto": 3,
+      "auto-wb": false,
+      "exposure-auto": 1,
       "exposure-absolute": 133,
-      "exposure-auto-priority": 0,
-      "backlight-compensation": 0,
+      "exposure-auto-priority": false,
+      "backlight-compensation": false,
       "power-line-frequency": 2,
       "exposure-absolute": 1000,
       "brightness": 128,
