@@ -16,6 +16,17 @@ bool IntSetting::isValidValue(int value) const
   return value >= d_min && value <= d_max;
 }
 
+string IntSetting::getValidationMessage(int value) const
+{
+  if (value < d_min || value > d_max)
+  {
+    stringstream msg;
+    msg << "Value must be between " << d_min << " and " << d_max;
+    return msg.str();
+  }
+  return "";
+}
+
 void IntSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writer.Int(getValue());
@@ -52,6 +63,17 @@ EnumSetting::EnumSetting(string path, map<int,string> pairs, int defaultValue, b
 bool EnumSetting::isValidValue(int value) const
 {
   return d_pairs.find(value) != d_pairs.end();
+}
+
+string EnumSetting::getValidationMessage(int value) const
+{
+  if (d_pairs.find(value) == d_pairs.end())
+  {
+    stringstream msg;
+    msg << "Value " << value << " does not exist in the enumeration";
+    return msg.str();
+  }
+  return "";
 }
 
 void EnumSetting::writeJsonValue(Writer<StringBuffer>& writer) const
@@ -97,6 +119,17 @@ bool DoubleSetting::isValidValue(double value) const
   return value >= d_min && value <= d_max;
 }
 
+string DoubleSetting::getValidationMessage(double value) const
+{
+  if (value < d_min || value > d_max)
+  {
+    stringstream msg;
+    msg << "Value must be between " << d_min << " and " << d_max;
+    return msg.str();
+  }
+  return "";
+}
+
 void DoubleSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writer.Double(getValue());
@@ -132,6 +165,11 @@ BoolSetting::BoolSetting(string path, bool defaultValue, bool isReadOnly, bool i
 bool BoolSetting::isValidValue(bool value) const
 {
   return true;
+}
+
+string BoolSetting::getValidationMessage(bool value) const
+{
+  return "";
 }
 
 void BoolSetting::writeJsonValue(Writer<StringBuffer>& writer) const
@@ -226,6 +264,13 @@ bool HsvRangeSetting::isValidValue(Colour::hsvRange value) const
   return value.isValid();
 }
 
+string HsvRangeSetting::getValidationMessage(Colour::hsvRange value) const
+{
+  if (!value.isValid())
+    return "Sat/Val max values must be greater than min values";
+  return "";
+}
+
 void HsvRangeSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writeHsvRangeJsonObject(writer, getValue());
@@ -286,6 +331,15 @@ bool DoubleRangeSetting::isValidValue(Range<double> value) const
   return !value.isEmpty() && value.min() <= value.max();
 }
 
+string DoubleRangeSetting::getValidationMessage(Range<double> value) const
+{
+  if (value.isEmpty())
+    return "Range may not be empty";
+  if (value.min() > value.max())
+    return "Range's min may not be greater than its max";
+  return "";
+}
+
 void DoubleRangeSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writeDoubleRangeJsonObject(writer, getValue());
@@ -318,6 +372,13 @@ StringSetting::StringSetting(string path, string defaultValue, bool isReadOnly, 
 bool StringSetting::isValidValue(string value) const
 {
   return value.size() > 0;
+}
+
+string StringSetting::getValidationMessage(string value) const
+{
+  if (value.size() == 0)
+    return "String may not have zero length";
+  return "";
 }
 
 void StringSetting::writeJsonValue(Writer<StringBuffer>& writer) const

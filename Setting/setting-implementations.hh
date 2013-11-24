@@ -25,6 +25,7 @@ namespace bold
     int getMinimum() const { return d_min; }
     int getMaximum() const { return d_max; }
     bool isValidValue(int value) const override;
+    std::string getValidationMessage(int value) const override;
     int getDefaultValue() const override { return d_defaultValue; }
     virtual bool setValueFromJson(rapidjson::Value* value) override;
 
@@ -46,6 +47,7 @@ namespace bold
     ~EnumSetting() {}
 
     bool isValidValue(int value) const override;
+    std::string getValidationMessage(int value) const override;
     int getDefaultValue() const override { return d_defaultValue; }
     virtual bool setValueFromJson(rapidjson::Value* value) override;
 
@@ -66,6 +68,7 @@ namespace bold
     ~DoubleSetting() {}
 
     bool isValidValue(double value) const override;
+    std::string getValidationMessage(double value) const override;
     double getDefaultValue() const override { return d_defaultValue; }
     virtual bool setValueFromJson(rapidjson::Value* value) override;
 
@@ -87,6 +90,7 @@ namespace bold
     ~BoolSetting() {}
 
     bool isValidValue(bool value) const override;
+    std::string getValidationMessage(bool value) const override;
     bool getDefaultValue() const override { return d_defaultValue; }
     virtual bool setValueFromJson(rapidjson::Value* value) override;
 
@@ -109,6 +113,7 @@ namespace bold
     ~HsvRangeSetting() {}
 
     bool isValidValue(Colour::hsvRange value) const override;
+    std::string getValidationMessage(Colour::hsvRange value) const override;
     Colour::hsvRange getDefaultValue() const override { return d_defaultValue; }
     virtual bool setValueFromJson(rapidjson::Value* value) override;
 
@@ -131,6 +136,7 @@ namespace bold
     ~DoubleRangeSetting() {}
 
     bool isValidValue(Range<double> value) const override;
+    std::string getValidationMessage(Range<double> value) const override;
     Range<double> getDefaultValue() const override { return d_defaultValue; }
     virtual bool setValueFromJson(rapidjson::Value* value) override;
 
@@ -150,6 +156,7 @@ namespace bold
     ~StringSetting() {}
 
     bool isValidValue(std::string value) const override;
+    std::string getValidationMessage(std::string value) const override;
     std::string getDefaultValue() const override { return d_defaultValue; }
     virtual bool setValueFromJson(rapidjson::Value* value) override;
 

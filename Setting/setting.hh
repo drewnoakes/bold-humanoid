@@ -91,7 +91,11 @@ namespace bold
 
       if (!isValidValue(value))
       {
-        std::cerr << ccolor::warning << "[Setting::setValue] Attempt to set invalid value '" << value << "' to setting: " << getPath() << ccolor::reset << std::endl;
+        std::cerr << ccolor::warning
+                  << "[Setting::setValue] Attempt to set invalid value '" << value << "' to setting '" << getPath() << "': "
+                  << getValidationMessage(value)
+                  << ccolor::reset
+                  << std::endl;
         return false;
       }
 
@@ -112,6 +116,7 @@ namespace bold
     }
 
     virtual bool isValidValue(T value) const = 0;
+    virtual std::string getValidationMessage(T value) const = 0;
     virtual T getDefaultValue() const = 0;
 
   private:
