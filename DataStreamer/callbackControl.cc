@@ -8,6 +8,8 @@ int DataStreamer::callback_control(
   void* in,
   size_t len)
 {
+  // TODO WEBSOCKETS use the session arg here to write JSON, as is done in callbackCamera.cc
+  
   switch (reason)
   {
   case LWS_CALLBACK_ESTABLISHED:
