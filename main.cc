@@ -67,8 +67,6 @@ int main(int argc, char **argv)
   cout << endl;
   cout << ccolor::reset;
 
-  cout << "[boldhumanoid] Starting boldhumanoid" << endl;
-
 //  convertMotionFile();
 
   // defaults
@@ -111,7 +109,6 @@ int main(int argc, char **argv)
 
   Config::initialise("configuration-metadata.json", "configuration.json");
 
-  cout << "[boldhumanoid] Creating Agent" << endl;
   cout << "[boldhumanoid] Team number " << teamNumber << ", uniform number " << uniformNumber << endl;
 
   agent.reset(new Agent());

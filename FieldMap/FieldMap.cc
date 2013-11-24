@@ -13,8 +13,6 @@ using namespace Eigen;
 
 FieldMap::FieldMap()
 {
-  std::cout << "[FieldMap::FieldMap] Start" << std::endl;
-
   d_fieldLengthX             = Config::getStaticValue<double>("world.field-size-x");
   d_fieldLengthY             = Config::getStaticValue<double>("world.field-size-y");
 //double goalX               = Config::getStaticValue<double>("world.goal-size-x");

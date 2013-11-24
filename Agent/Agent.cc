@@ -11,10 +11,6 @@ Agent::Agent()
 {
   ThreadId::setThreadId(ThreadId::ThinkLoop);
 
-  cout << "[Agent::Agent] Start" << endl;
-
-  cout << "[Agent::Agent] Creating voice" << endl;
-
   // TODO specify these strings in configuration
 
   vector<string> phrases = {
@@ -122,6 +118,4 @@ Agent::Agent()
   {
     cerr << ccolor::error << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion loop" << ccolor::reset << endl;
   }
-
-  cout << "[Agent::Agent] Done" << endl;
 }

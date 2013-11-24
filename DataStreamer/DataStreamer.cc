@@ -6,8 +6,6 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
     d_context(0),
     d_cameraSessions()
 {
-  cout << "[DataStreamer::DataStreamer] Starting" << endl;
-
   d_port = Config::getStaticValue<int>("round-table.tcp-port");
 
   // We have three special protocols: HTTP-only, Camera and Control.

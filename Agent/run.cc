@@ -2,8 +2,6 @@
 
 void Agent::run()
 {
-  cout << "[Agent::run] Start" << endl;
-
   if (d_isRunning)
     throw new std::runtime_error("Already running");
 

@@ -17,8 +17,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   assert(spatialiser);
   assert(headModule);
 
-  cout << "[VisualCortex::VisualCortex] Start" << endl;
-
   d_shouldDetectLines         = Config::getSetting<bool>("vision.line-detection.enable");
   d_shouldCountLabels         = Config::getSetting<bool>("vision.label-counter.enable");
 
