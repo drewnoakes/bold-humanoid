@@ -19,6 +19,7 @@ namespace bold
   {
   public:
     std::string getPath() const { return d_path; }
+    std::string getName() const { return d_name; }
     bool isReadOnly() const { return d_isReadOnly; }
     bool isAdvanced() const { return d_isAdvanced; }
     std::string getTypeName() const { return d_typeName; }
@@ -50,7 +51,15 @@ namespace bold
       d_typeName(typeName),
       d_isReadOnly(isReadOnly),
       d_isAdvanced(isAdvanced)
-    {}
+    {
+      auto last = d_path.find_last_of('.');
+      if (last == std::string::npos)
+      {
+        std::cerr << ccolor::error << "[SettingBase::SettingBase] Invalid path: " << d_path << ccolor::reset << std::endl;
+        throw std::runtime_error("Invalid setting path");
+      }
+      d_name = d_path.substr(last + 1);
+    }
 
     virtual ~SettingBase() {}
 
@@ -60,6 +69,7 @@ namespace bold
     static bool isInitialising();
 
   private:
+    std::string d_name;
     std::string d_path;
     std::string d_typeName;
     bool d_isReadOnly;
