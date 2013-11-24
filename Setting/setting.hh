@@ -44,6 +44,8 @@ namespace bold
     }
 
     virtual bool setValueFromJson(rapidjson::Value* value) = 0;
+    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
+    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
 
   protected:
     SettingBase(std::string path, std::string typeName, bool isReadOnly, bool isAdvanced)
@@ -62,9 +64,6 @@ namespace bold
     }
 
     virtual ~SettingBase() {}
-
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
 
     static bool isInitialising();
 
