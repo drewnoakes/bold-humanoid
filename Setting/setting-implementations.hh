@@ -26,6 +26,7 @@ namespace bold
     int getMaximum() const { return d_max; }
     bool isValidValue(int value) const override;
     int getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value* value) override;
 
   protected:
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
@@ -46,6 +47,7 @@ namespace bold
 
     bool isValidValue(int value) const override;
     int getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value* value) override;
 
   protected:
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
@@ -65,6 +67,7 @@ namespace bold
 
     bool isValidValue(double value) const override;
     double getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value* value) override;
 
   protected:
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
@@ -85,6 +88,7 @@ namespace bold
 
     bool isValidValue(bool value) const override;
     bool getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value* value) override;
 
   protected:
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
@@ -99,12 +103,14 @@ namespace bold
   {
   public:
     static void writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value);
+    static bool tryParseJsonValue(rapidjson::Value* value, Colour::hsvRange* hsvRange);
 
     HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced);
     ~HsvRangeSetting() {}
 
     bool isValidValue(Colour::hsvRange value) const override;
     Colour::hsvRange getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value* value) override;
 
   protected:
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
@@ -119,12 +125,14 @@ namespace bold
   {
   public:
     static void writeDoubleRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Range<double> const& value);
+    static bool tryParseJsonValue(rapidjson::Value* value, Range<double>* hsvRange);
 
     DoubleRangeSetting(std::string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced);
     ~DoubleRangeSetting() {}
 
     bool isValidValue(Range<double> value) const override;
     Range<double> getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value* value) override;
 
   protected:
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
@@ -143,6 +151,7 @@ namespace bold
 
     bool isValidValue(std::string value) const override;
     std::string getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value* value) override;
 
   protected:
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;

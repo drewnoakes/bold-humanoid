@@ -6,6 +6,7 @@
 #include <sigc++/signal.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
+#include <rapidjson/document.h>
 
 #include "../PixelLabel/pixellabel.hh"
 #include "../util/Range.hh"
@@ -41,6 +42,8 @@ namespace bold
       writer.EndObject();
     }
 
+    virtual bool setValueFromJson(rapidjson::Value* value) = 0;
+
   protected:
     SettingBase(std::string path, std::string typeName, bool isReadOnly, bool isAdvanced)
     : d_path(path),
@@ -53,6 +56,8 @@ namespace bold
 
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
+
+    static bool isInitialising();
 
   private:
     std::string d_path;
@@ -78,7 +83,7 @@ namespace bold
 
     bool setValue(T value)
     {
-      if (isReadOnly())
+      if (isReadOnly() && !isInitialising())
       {
         std::cerr << ccolor::error << "[Setting::setValue] Attempt to modify readonly setting: " << getPath() << ccolor::reset << std::endl;
         return false;
@@ -106,8 +111,6 @@ namespace bold
       callback(d_value);
     }
 
-    //virtual T setValueFromJson(JsonReader* reader) = 0;
-    //virtual void writeValueToJson(JsonWriter* writer) const = 0;
     virtual bool isValidValue(T value) const = 0;
     virtual T getDefaultValue() const = 0;
 

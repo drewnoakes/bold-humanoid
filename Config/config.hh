@@ -107,6 +107,8 @@ namespace bold
     }
 
     /// Adds the specified Setting<T>.
+    /// If a corresponding value exists in the config document, its value is
+    /// retrieved and set on the provided setting.
     template<typename T>
     static void addSetting(Setting<T>* setting)
     {
@@ -115,6 +117,7 @@ namespace bold
       size_t start = 0;
       size_t end;
       TreeNode* node = &d_root;
+      rapidjson::Value* configValue = d_configDocument;
       while ((end = path.find(delimiter, start)) != std::string::npos)
       {
         auto nodeName = path.substr(start, end - start);
@@ -123,16 +126,33 @@ namespace bold
         // Insert or create new tree node.
         auto ret = node->subNodeByName.insert(std::pair<std::string,TreeNode>(nodeName, TreeNode()));
         node = &ret.first->second;
+
+        // Dereference the config node
+        if (configValue)
+        {
+          auto member = configValue->FindMember(nodeName.c_str());
+          configValue = member ? &member->value : nullptr;
+        }
       }
 
       auto settingName = path.substr(start);
 
-      // TODO validate that the setting name is not also used for a tree node
+      // TODO SETTINGS validate that the setting name is not also used for a tree node
 
       node->settingByName[settingName] = setting;
+
+      if (configValue != nullptr)
+      {
+        auto member = configValue->FindMember(settingName.c_str());
+        if (member)
+          setting->setValueFromJson(&member->value);
+      }
     }
 
     static void initialise(std::string metadataFile, std::string configFile);
+
+    static void initialisationCompleted() { assert(d_isInitialising); d_isInitialising = false; }
+    static bool isInitialising() { return d_isInitialising; }
 
     static void addAction(std::string id, std::string label, std::function<void()> callback);
 
@@ -182,11 +202,13 @@ namespace bold
       std::map<std::string,TreeNode> subNodeByName;
     };
 
-    static void processLevel(rapidjson::Value* metaNode, rapidjson::Value* confNode, TreeNode* treeNode, std::string path, std::string name);
+    static void processConfigMetaJsonValue(rapidjson::Value* metaNode, TreeNode* treeNode, std::string path, std::string name);
 
     Config() {}
 
     static TreeNode d_root;
     static std::map<std::string,Action*> d_actionById;
+    static rapidjson::Document* d_configDocument;
+    static bool d_isInitialising;
   };
 }

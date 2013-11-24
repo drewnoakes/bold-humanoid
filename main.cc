@@ -116,6 +116,8 @@ int main(int argc, char **argv)
 
   agent.reset(new Agent());
 
+  Config::initialisationCompleted();
+
   agent->setTeamNumber(teamNumber);
   agent->setUniformNumber(uniformNumber);
 

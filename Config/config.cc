@@ -16,9 +16,17 @@ using namespace std;
 
 Config::TreeNode Config::d_root;
 map<string,Action*> Config::d_actionById;
+Document* Config::d_configDocument;
+bool Config::d_isInitialising = true;
 
 void Config::initialise(string metadataFile, string configFile)
 {
+  if (d_configDocument != nullptr || !d_isInitialising)
+  {
+    cerr << ccolor::error << "[Config::initialise] Already initialised" << ccolor::reset << endl;
+    throw runtime_error("Configuration already initialised.");
+  }
+
   // Walk through the metadata, creating settings as found.
   //
   // For each setting, attempt to set the initial value from the config file,
@@ -47,9 +55,9 @@ void Config::initialise(string metadataFile, string configFile)
   FileReadStream metaStream(mf, buffer, sizeof(buffer));
   metaDocument.ParseStream<0, UTF8<>, FileReadStream>(metaStream);
 
-  Document confDocument;
+  Document* confDocument = new Document();
   FileReadStream confStream(cf, buffer, sizeof(buffer));
-  confDocument.ParseStream<0, UTF8<>, FileReadStream>(confStream);
+  confDocument->ParseStream<0, UTF8<>, FileReadStream>(confStream);
 
   if (metaDocument.HasParseError())
   {
@@ -57,16 +65,19 @@ void Config::initialise(string metadataFile, string configFile)
     throw runtime_error("Parse error in configuration metadata JSON.");
   }
 
-  if (confDocument.HasParseError())
+  if (confDocument->HasParseError())
   {
-    cerr << ccolor::error << "[Config::initialise] Parse error in file " << configFile << ": " << confDocument.GetParseError() << ccolor::reset << endl;
+    cerr << ccolor::error << "[Config::initialise] Parse error in file " << configFile << ": " << confDocument->GetParseError() << ccolor::reset << endl;
+    delete confDocument;
     throw runtime_error("Parse error in configuration JSON.");
   }
 
-  processLevel(&metaDocument, &confDocument, &d_root, "", "");
+  d_configDocument = confDocument;
+
+  processConfigMetaJsonValue(&metaDocument, &d_root, "", "");
 }
 
-void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, string path, string name)
+void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, string path, string name)
 {
   assert(metaNode->IsObject());
 
@@ -88,71 +99,41 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
 
     auto type = string(typeMember->value.GetString());
 
-    // TODO SETTINGS this mega-if-block should use some kind of polymorphism -- we'll need that later anyway
+    // TODO SETTINGS this mega-if-block should use some kind of polymorphism
 
     if (type == "double")
     {
-      double value;
-      if (!metaNode->TryGetDoubleValue("default", &value))
+      double defaultValue;
+      if (!metaNode->TryGetDoubleValue("default", &defaultValue))
       {
         cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a double" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be a double");
       }
 
-      if (confNode)
-      {
-        if (!confNode->IsNumber())
-        {
-          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be a double" << ccolor::reset << endl;
-          throw runtime_error("JSON configuration value must be a double");
-        }
-        value = confNode->GetDouble();
-      }
-
       auto min = metaNode->TryGetDoubleValue("min", -numeric_limits<double>::max());
       auto max = metaNode->TryGetDoubleValue("max", numeric_limits<double>::max());
-      Config::addSetting(new DoubleSetting(path, min, max, value, isReadOnly, isAdvanced));
+      Config::addSetting(new DoubleSetting(path, min, max, defaultValue, isReadOnly, isAdvanced));
     }
     else if (type == "int")
     {
-      int value;
-      if (!metaNode->TryGetIntValue("default", &value))
+      int defaultValue;
+      if (!metaNode->TryGetIntValue("default", &defaultValue))
       {
         cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be an int");
-      }
-
-      if (confNode)
-      {
-        if (!confNode->IsInt())
-        {
-          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be an int" << ccolor::reset << endl;
-          throw runtime_error("JSON configuration value must be an int");
-        }
-        value = confNode->GetInt();
       }
 
       auto min = metaNode->TryGetIntValue("min", -numeric_limits<int>::max());
       auto max = metaNode->TryGetIntValue("max", numeric_limits<int>::max());
-      Config::addSetting(new IntSetting(path, min, max, value, isReadOnly, isAdvanced));
+      Config::addSetting(new IntSetting(path, min, max, defaultValue, isReadOnly, isAdvanced));
     }
     else if (type == "enum")
     {
-      int value;
-      if (!metaNode->TryGetIntValue("default", &value))
+      int defaultValue;
+      if (!metaNode->TryGetIntValue("default", &defaultValue))
       {
         cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be an int");
-      }
-
-      if (confNode)
-      {
-        if (!confNode->IsInt())
-        {
-          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be an int" << ccolor::reset << endl;
-          throw runtime_error("JSON configuration value must be an int");
-        }
-        value = confNode->GetInt();
       }
 
       auto valuesObj = metaNode->FindMember("values");
@@ -173,139 +154,51 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
         pairs[it->value.GetInt()] = it->name.GetString();
       }
 
-      Config::addSetting(new EnumSetting(path, pairs, value, isReadOnly, isAdvanced));
+      Config::addSetting(new EnumSetting(path, pairs, defaultValue, isReadOnly, isAdvanced));
     }
     else if (type == "bool")
     {
-      bool value;
-      if (!metaNode->TryGetBoolValue("default", &value))
+      bool defaultValue;
+      if (!metaNode->TryGetBoolValue("default", &defaultValue))
       {
         cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a bool" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be a bool");
       }
 
-      if (confNode)
-      {
-        if (!confNode->IsBool())
-        {
-          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be a bool" << ccolor::reset << endl;
-          throw runtime_error("JSON configuration value must be a bool");
-        }
-        value = confNode->GetBool();
-      }
-
-      Config::addSetting(new BoolSetting(path, value, isReadOnly, isAdvanced));
+      Config::addSetting(new BoolSetting(path, defaultValue, isReadOnly, isAdvanced));
     }
     else if (type == "string")
     {
-      const char* value;
-      if (!metaNode->TryGetStringValue("default", &value))
+      const char* defaultValue;
+      if (!metaNode->TryGetStringValue("default", &defaultValue))
       {
         cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a string" << ccolor::reset << endl;
         throw runtime_error("JSON 'default' value must be a string");
       }
 
-      if (confNode)
-      {
-        if (!confNode->IsString())
-        {
-          cerr << ccolor::error << "[Config::processLevel] Configuration value for '" << path << "' must be a string" << ccolor::reset << endl;
-          throw runtime_error("JSON configuration value must be a string");
-        }
-        value = confNode->GetString();
-      }
-
-      Config::addSetting(new StringSetting(path, value, isReadOnly, isAdvanced));
+      Config::addSetting(new StringSetting(path, defaultValue, isReadOnly, isAdvanced));
     }
     else if (type == "hsv-range")
     {
-      auto parseObject = [name,path](Value* value)
-      {
-        if (!value->IsObject())
-        {
-          cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' must be an object" << ccolor::reset << endl;
-          throw runtime_error("JSON hsv-range value must be an object");
-        }
-
-        Colour::hsvRange hsvRange;
-
-        // {"hue":[44,60],"sat":[158,236],"val":[124,222]}
-
-        auto parseChannel = [value,path](string channel, uchar* min, uchar* max)
-        {
-          auto mem = value->FindMember(channel.c_str());
-
-          if (!mem || !mem->value.IsArray() || mem->value.Size() != 2 || !mem->value[0u].IsInt() || !mem->value[1u].IsInt())
-          {
-            cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' '" << channel << "' must be arrays of two integer values" << ccolor::reset << endl;
-            throw runtime_error("JSON hsv-range value must specify members 'hue', 'sat' and 'val' as arrays of two integer values");
-          }
-
-          auto v1 = mem->value[0u].GetInt();
-          auto v2 = mem->value[1u].GetInt();
-
-          if (v1 < 0 || v1 > 255 || v2 < 0 || v2 > 255)
-          {
-            cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' '" << channel << "' must be arrays of integers between 0 and 255 inclusive" << ccolor::reset << endl;
-            throw runtime_error("JSON hsv-range value must specify members 'hue', 'sat' and 'val' as arrays of two integer values between 0 and 255 inclusive");
-          }
-
-          *min = (uchar)v1,
-          *max = (uchar)v2;
-        };
-
-        parseChannel("hue", &hsvRange.hMin, &hsvRange.hMax);
-        parseChannel("sat", &hsvRange.sMin, &hsvRange.sMax);
-        parseChannel("val", &hsvRange.vMin, &hsvRange.vMax);
-
-        if (!hsvRange.isValid())
-        {
-          cerr << ccolor::error << "[Config::processLevel] hsv-range value for '" << path << "' parsed correctly but has invalid data" << ccolor::reset << endl;
-          throw runtime_error("JSON hsv-range value parsed correctly but has invalid data");
-        }
-
-        return hsvRange;
-      };
-
       auto defaultMember = metaNode->FindMember("default");
 
-      Colour::hsvRange value;
+      Colour::hsvRange defaultValue;
 
-      if (defaultMember)
-        value = parseObject(&defaultMember->value);
+      if (defaultMember && !HsvRangeSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
+        throw runtime_error("Unable to parse hsv-range");
 
-      if (confNode)
-        value = parseObject(confNode);
-
-      Config::addSetting(new HsvRangeSetting(path, value, isReadOnly, isAdvanced));
+      Config::addSetting(new HsvRangeSetting(path, defaultValue, isReadOnly, isAdvanced));
     }
     else if (type == "double-range")
     {
-      auto parseObject = [path](Value* value)
-      {
-        if (!value->IsArray() || value->Size() != 2 || !(*value)[0u].IsNumber() || !(*value)[1u].IsNumber())
-        {
-          cerr << ccolor::error << "[Config::processLevel] Double range value for '" << path << "' must be a JSON array of two double values" << ccolor::reset << endl;
-          throw runtime_error("JSON double range value must be an array of two double values");
-        }
-
-        auto v1 = (*value)[0u].GetDouble();
-        auto v2 = (*value)[1u].GetDouble();
-
-        return Range<double>(v1, v2);
-      };
-
       auto defaultMember = metaNode->FindMember("default");
 
-      Range<double> value;
+      Range<double> defaultValue;
 
-      if (defaultMember)
-        value = parseObject(&defaultMember->value);
+      if (defaultMember && !DoubleRangeSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
+        throw runtime_error("Unable to parse double-range");
 
-      if (confNode)
-        value = parseObject(confNode);
-
-      Config::addSetting(new DoubleRangeSetting(path, value, isReadOnly, isAdvanced));
+      Config::addSetting(new DoubleRangeSetting(path, defaultValue, isReadOnly, isAdvanced));
     }
     else
     {
@@ -328,16 +221,13 @@ void Config::processLevel(Value* metaNode, Value* confNode, TreeNode* treeNode, 
         newPath << path << ".";
       newPath << childName;
 
-      auto confChildMember = confNode->FindMember(childName.c_str());
-      Value* confChild = confChildMember ? &confChildMember->value : nullptr;
-
       if (!it->value.IsObject())
       {
         cerr << ccolor::warning << "[Config::processLevel] Skipping non-object: " << childName << ccolor::reset << endl;
         continue;
       }
 
-      processLevel(&it->value, confChild, treeNode, newPath.str(), childName);
+      processConfigMetaJsonValue(&it->value, treeNode, newPath.str(), childName);
     }
   }
 }
