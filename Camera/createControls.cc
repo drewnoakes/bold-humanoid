@@ -102,7 +102,9 @@ void Camera::createControls()
     path << "camera.settings.";
     for (char const& c : name)
     {
-      if (c == ' ')
+      if (c == '(' || c == ')')
+        continue;
+      else if (c == ' ')
         path << '-';
       else
         path << (char)tolower(c);
