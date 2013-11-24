@@ -18,6 +18,8 @@ namespace bold
   class SettingBase
   {
   public:
+    sigc::signal<void, SettingBase*> changedBase;
+
     std::string getPath() const { return d_path; }
     std::string getName() const { return d_name; }
     bool isReadOnly() const { return d_isReadOnly; }
@@ -110,6 +112,7 @@ namespace bold
 
       d_value = value;
       changed(value);
+      changedBase(this);
       return true;
     }
 
