@@ -55,11 +55,7 @@ Agent::Agent()
   d_walkModule = make_shared<WalkModule>(d_motionSchedule);
   d_motionScriptModule = make_shared<MotionScriptModule>(d_motionSchedule, motionScripts);
 
-  // Attempt to connect to the CM730
   d_haveBody = d_cm730->connect();
-
-  if (!d_haveBody)
-    cout << "[Agent::Agent] Unable to connect to body" << endl;
 
   d_ambulator = make_shared<Ambulator>(d_walkModule),
 
