@@ -1,9 +1,10 @@
 #include "setting-implementations.hh"
 
 using namespace bold;
+using namespace rapidjson;
 using namespace std;
 
-IntSetting::IntSetting(std::string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced)
+IntSetting::IntSetting(string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced)
 : Setting(path, "int", isReadOnly, isAdvanced, defaultValue),
   d_min(min),
   d_max(max),
@@ -15,21 +16,21 @@ bool IntSetting::isValidValue(int value) const
   return value >= d_min && value <= d_max;
 }
 
-void IntSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void IntSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writer.Int(getValue());
 }
 
-void IntSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void IntSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
   writer.String("default").Int(d_defaultValue);
-  if (d_min != -std::numeric_limits<int>::max())
+  if (d_min != -numeric_limits<int>::max())
     writer.String("min").Int(d_min);
-  if (d_max != std::numeric_limits<int>::max())
+  if (d_max != numeric_limits<int>::max())
     writer.String("max").Int(d_max);
 }
 
-bool IntSetting::setValueFromJson(rapidjson::Value* value)
+bool IntSetting::setValueFromJson(Value* value)
 {
   if (!value->IsInt())
   {
@@ -42,7 +43,7 @@ bool IntSetting::setValueFromJson(rapidjson::Value* value)
 
 ///////////////////////////////////////////////////////////
 
-EnumSetting::EnumSetting(std::string path, std::map<int,std::string> pairs, int defaultValue, bool isReadOnly, bool isAdvanced)
+EnumSetting::EnumSetting(string path, map<int,string> pairs, int defaultValue, bool isReadOnly, bool isAdvanced)
 : Setting(path, "enum", isReadOnly, isAdvanced, defaultValue),
   d_pairs(pairs),
   d_defaultValue(defaultValue)
@@ -53,12 +54,12 @@ bool EnumSetting::isValidValue(int value) const
   return d_pairs.find(value) != d_pairs.end();
 }
 
-void EnumSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void EnumSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writer.Int(getValue());
 }
 
-void EnumSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void EnumSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
   writer.String("default").Int(d_defaultValue);
   writer.String("values");
@@ -71,7 +72,7 @@ void EnumSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& 
   writer.EndArray();
 }
 
-bool EnumSetting::setValueFromJson(rapidjson::Value* value)
+bool EnumSetting::setValueFromJson(Value* value)
 {
   if (!value->IsInt())
   {
@@ -84,7 +85,7 @@ bool EnumSetting::setValueFromJson(rapidjson::Value* value)
 
 ///////////////////////////////////////////////////////////
 
-DoubleSetting::DoubleSetting(std::string path, double min, double max, double defaultValue, bool isReadOnly, bool isAdvanced)
+DoubleSetting::DoubleSetting(string path, double min, double max, double defaultValue, bool isReadOnly, bool isAdvanced)
 : Setting(path, "double", isReadOnly, isAdvanced, defaultValue),
   d_min(min),
   d_max(max),
@@ -96,21 +97,21 @@ bool DoubleSetting::isValidValue(double value) const
   return value >= d_min && value <= d_max;
 }
 
-void DoubleSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void DoubleSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writer.Double(getValue());
 }
 
-void DoubleSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void DoubleSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
   writer.String("default").Double(d_defaultValue);
-  if (d_min != -std::numeric_limits<double>::max())
+  if (d_min != -numeric_limits<double>::max())
     writer.String("min").Double(d_min);
-  if (d_max != std::numeric_limits<double>::max())
+  if (d_max != numeric_limits<double>::max())
     writer.String("max").Double(d_max);
 }
 
-bool DoubleSetting::setValueFromJson(rapidjson::Value* value)
+bool DoubleSetting::setValueFromJson(Value* value)
 {
   if (!value->IsNumber())
   {
@@ -123,7 +124,7 @@ bool DoubleSetting::setValueFromJson(rapidjson::Value* value)
 
 ///////////////////////////////////////////////////////////
 
-BoolSetting::BoolSetting(std::string path, bool defaultValue, bool isReadOnly, bool isAdvanced)
+BoolSetting::BoolSetting(string path, bool defaultValue, bool isReadOnly, bool isAdvanced)
 : Setting(path, "bool", isReadOnly, isAdvanced, defaultValue),
   d_defaultValue(defaultValue)
 {}
@@ -133,17 +134,17 @@ bool BoolSetting::isValidValue(bool value) const
   return true;
 }
 
-void BoolSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void BoolSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writer.Bool(getValue());
 }
 
-void BoolSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void BoolSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
   writer.String("default").Bool(d_defaultValue);
 }
 
-bool BoolSetting::setValueFromJson(rapidjson::Value* value)
+bool BoolSetting::setValueFromJson(Value* value)
 {
   if (!value->IsBool())
   {
@@ -156,12 +157,12 @@ bool BoolSetting::setValueFromJson(rapidjson::Value* value)
 
 ///////////////////////////////////////////////////////////
 
-HsvRangeSetting::HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced)
+HsvRangeSetting::HsvRangeSetting(string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced)
 : Setting(path, "hsv-range", isReadOnly, isAdvanced, defaultValue),
   d_defaultValue(defaultValue)
 {}
 
-void HsvRangeSetting::writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value)
+void HsvRangeSetting::writeHsvRangeJsonObject(Writer<StringBuffer>& writer, Colour::hsvRange const& value)
 {
   writer.StartObject();
   {
@@ -172,7 +173,7 @@ void HsvRangeSetting::writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::Strin
   writer.EndObject();
 }
 
-bool HsvRangeSetting::tryParseJsonValue(rapidjson::Value* value, Colour::hsvRange* hsvRange)
+bool HsvRangeSetting::tryParseJsonValue(Value* value, Colour::hsvRange* hsvRange)
 {
   if (!value->IsObject())
   {
@@ -225,18 +226,18 @@ bool HsvRangeSetting::isValidValue(Colour::hsvRange value) const
   return value.isValid();
 }
 
-void HsvRangeSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void HsvRangeSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writeHsvRangeJsonObject(writer, getValue());
 }
 
-void HsvRangeSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void HsvRangeSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
   writer.String("default");
   writeHsvRangeJsonObject(writer, d_defaultValue);
 }
 
-bool HsvRangeSetting::setValueFromJson(rapidjson::Value* value)
+bool HsvRangeSetting::setValueFromJson(Value* value)
 {
   Colour::hsvRange hsvRange;
 
@@ -249,17 +250,17 @@ bool HsvRangeSetting::setValueFromJson(rapidjson::Value* value)
 
 ///////////////////////////////////////////////////////////
 
-DoubleRangeSetting::DoubleRangeSetting(std::string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced)
+DoubleRangeSetting::DoubleRangeSetting(string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced)
 : Setting(path, "double-range", isReadOnly, isAdvanced, defaultValue),
   d_defaultValue(defaultValue)
 {}
 
-void DoubleRangeSetting::writeDoubleRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Range<double> const& value)
+void DoubleRangeSetting::writeDoubleRangeJsonObject(Writer<StringBuffer>& writer, Range<double> const& value)
 {
   writer.StartArray().Double(value.min()).Double(value.max()).EndArray();
 }
 
-bool DoubleRangeSetting::tryParseJsonValue(rapidjson::Value* value, Range<double>* range)
+bool DoubleRangeSetting::tryParseJsonValue(Value* value, Range<double>* range)
 {
   if (!value->IsArray() || value->Size() != 2 || !(*value)[0u].IsNumber() || !(*value)[1u].IsNumber())
   {
@@ -285,18 +286,18 @@ bool DoubleRangeSetting::isValidValue(Range<double> value) const
   return !value.isEmpty() && value.min() <= value.max();
 }
 
-void DoubleRangeSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void DoubleRangeSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writeDoubleRangeJsonObject(writer, getValue());
 }
 
-void DoubleRangeSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void DoubleRangeSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
   writer.String("default");
   writeDoubleRangeJsonObject(writer, d_defaultValue);
 }
 
-bool DoubleRangeSetting::setValueFromJson(rapidjson::Value* value)
+bool DoubleRangeSetting::setValueFromJson(Value* value)
 {
   Range<double> range;
 
@@ -309,27 +310,27 @@ bool DoubleRangeSetting::setValueFromJson(rapidjson::Value* value)
 
 ///////////////////////////////////////////////////////////
 
-StringSetting::StringSetting(std::string path, std::string defaultValue, bool isReadOnly, bool isAdvanced)
+StringSetting::StringSetting(string path, string defaultValue, bool isReadOnly, bool isAdvanced)
 : Setting(path, "string", isReadOnly, isAdvanced, defaultValue),
   d_defaultValue(defaultValue)
 {}
 
-bool StringSetting::isValidValue(std::string value) const
+bool StringSetting::isValidValue(string value) const
 {
   return value.size() > 0;
 }
 
-void StringSetting::writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void StringSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 {
   writer.String(getValue().c_str());
 }
 
-void StringSetting::writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void StringSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
   writer.String("default").String(d_defaultValue.c_str());
 }
 
-bool StringSetting::setValueFromJson(rapidjson::Value* value)
+bool StringSetting::setValueFromJson(Value* value)
 {
   if (!value->IsString())
   {
