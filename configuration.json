@@ -1,4 +1,7 @@
 {
+  "team": {
+    "number": 3
+  },
   "hardware": {
     "cm730-path": "/dev/ttyUSB0",
     "video-path": "/dev/video0",

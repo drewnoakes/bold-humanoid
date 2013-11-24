@@ -1,4 +1,7 @@
 {
+  "team": {
+    "number": { "type": "int", "readonly": true, "default": 3 }
+  },
   "hardware": {
     "cm730-path":   { "type": "string", "readonly": true, "default": "/dev/ttyUSB0" },
     "video-path":   { "type": "string", "readonly": true, "default": "/dev/video0" },

@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 //  convertMotionFile();
 
   // defaults
-  unsigned teamNumber = 3; // team number in eindhoven, wc2013
+  unsigned teamNumber = -1;
   unsigned uniformNumber = 0;
 
   //
@@ -108,6 +108,9 @@ int main(int argc, char **argv)
   }
 
   Config::initialise("configuration-metadata.json", "configuration.json");
+
+  if (teamNumber == -1)
+    teamNumber = Config::getStaticValue<int>("team.number");
 
   cout << "[boldhumanoid] Team number " << teamNumber << ", uniform number " << uniformNumber << endl;
 
