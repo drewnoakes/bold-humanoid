@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-void DataStreamer::prepareImageBytes(libwebsocket* wsi, CameraSession* session) const
+void DataStreamer::prepareImageBytes(libwebsocket_context* context, libwebsocket* wsi, CameraSession* session) const
 {
   assert(session->imgReady);
 
@@ -74,7 +74,5 @@ void DataStreamer::prepareImageBytes(libwebsocket* wsi, CameraSession* session) 
   // Queue for more writing if we still have image remaining
   //
   if (session->imgSending)
-  {
-    libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
-  }
+    libwebsocket_callback_on_writable(context, wsi);
 }

@@ -62,8 +62,8 @@ namespace bold
     void streamImage(cv::Mat const& img);
 
   private:
-    void prepareImageBytes(libwebsocket* wsi, CameraSession* session) const;
     void prepareControlSyncBytes(ControlSession* controlSession) const;
+    void prepareImageBytes(libwebsocket_context* context, libwebsocket* wsi, CameraSession* session) const;
 
     void processCommand(std::string json);
 

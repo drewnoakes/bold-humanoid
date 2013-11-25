@@ -1,7 +1,7 @@
 #include "datastreamer.ih"
 
 int DataStreamer::callback_camera(
-  struct libwebsocket_context* /*context*/,
+  struct libwebsocket_context* context,
   struct libwebsocket *wsi,
   enum libwebsocket_callback_reasons reason,
   void* session,
@@ -34,7 +34,7 @@ int DataStreamer::callback_camera(
     // Can write to client
     if (cameraSession->imgReady)
     {
-      prepareImageBytes(wsi, cameraSession);
+      prepareImageBytes(context, wsi, cameraSession);
     }
     break;
   }
