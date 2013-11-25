@@ -47,7 +47,13 @@ namespace bold
     {
       auto setting = getSettingBase(path);
 
-      // TODO SETTINGS check typeid
+      std::type_index typeIndex = std::is_enum<T>::value ? typeid(int) : typeid(T);
+
+      if (typeIndex != setting->getTypeIndex())
+      {
+        std::cerr << ccolor::error << "[Config::getSetting] Attempt to get setting having different type: " << path << ccolor::reset << std::endl;
+        throw std::runtime_error("Attempt to get setting having different type");
+      }
 
       return (Setting<T>*)setting;
     }

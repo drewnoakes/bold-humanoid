@@ -7,6 +7,7 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/document.h>
+#include <typeindex>
 
 #include "../PixelLabel/pixellabel.hh"
 #include "../util/Range.hh"
@@ -25,8 +26,7 @@ namespace bold
     bool isReadOnly() const { return d_isReadOnly; }
     bool isAdvanced() const { return d_isAdvanced; }
     std::string getTypeName() const { return d_typeName; }
-
-    // TODO maybe return type_index as well, to allow validation
+    std::type_index getTypeIndex() const { return d_typeIndex; }
 
     void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
     {
@@ -50,9 +50,10 @@ namespace bold
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
 
   protected:
-    SettingBase(std::string path, std::string typeName, bool isReadOnly, bool isAdvanced)
+    SettingBase(std::string path, std::string typeName, std::type_index typeIndex, bool isReadOnly, bool isAdvanced)
     : d_path(path),
       d_typeName(typeName),
+      d_typeIndex(typeIndex),
       d_isReadOnly(isReadOnly),
       d_isAdvanced(isAdvanced)
     {
@@ -73,6 +74,7 @@ namespace bold
     std::string d_name;
     std::string d_path;
     std::string d_typeName;
+    std::type_index d_typeIndex;
     bool d_isReadOnly;
     bool d_isAdvanced;
   };
@@ -84,7 +86,7 @@ namespace bold
   {
   public:
     Setting(std::string path, std::string typeName, bool isReadOnly, bool isAdvanced, T value)
-    : SettingBase(path, typeName, isReadOnly, isAdvanced),
+    : SettingBase(path, typeName, typeid(T), isReadOnly, isAdvanced),
       d_value(value)
     {}
 
