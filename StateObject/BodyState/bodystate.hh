@@ -22,12 +22,13 @@ namespace bold
 
     void updatePosture();
 
-    std::shared_ptr<Limb const> getTorso() const { return d_torso; }
+    std::shared_ptr<Limb const> getTorso() const { assert(this); return d_torso; }
 
-    std::shared_ptr<Joint const> getHeadPanJoint() const { return getJoint(JointId::HEAD_PAN); }
+    std::shared_ptr<Joint const> getHeadPanJoint() const { assert(this); return getJoint(JointId::HEAD_PAN); }
 
     std::shared_ptr<Limb const> getLimb(std::string const& name) const
     {
+      assert(this);
       // NOTE cannot use '[]' on a const map
       auto const& i = d_limbByName.find(name);
       if (i == d_limbByName.end())
@@ -37,7 +38,7 @@ namespace bold
 
     std::shared_ptr<Joint const> getJoint(JointId jointId) const
     {
-      assert(jointId >= JointId::MIN && jointId <= JointId::MAX);
+      assert(this && jointId >= JointId::MIN && jointId <= JointId::MAX);
 
       // NOTE cannot use '[]' on a const map
       auto const& i = d_jointById.find((uchar)jointId);
@@ -48,6 +49,7 @@ namespace bold
 
     void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
     {
+      assert(this);
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
         auto joint = getJoint((JointId)jointId);
@@ -57,9 +59,9 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    Eigen::Affine3d getCameraAgentTransform() const { return d_cameraAgentTransform; }
+    Eigen::Affine3d getCameraAgentTransform() const { assert(this); return d_cameraAgentTransform; }
 
-    double getTorsoHeight() const { return d_torsoHeight; }
+    double getTorsoHeight() const { assert(this); return d_torsoHeight; }
 
   private:
     void initBody(double angles[]);
