@@ -27,6 +27,8 @@ void DataStreamer::processCommand(std::string json)
     // Handle ACTION
     //
 
+    // { "type": "action", "id": "some.action" }
+
     char const* id;
     if (!d.TryGetStringValue("id", &id))
     {
@@ -49,6 +51,8 @@ void DataStreamer::processCommand(std::string json)
     //
     // Handle SETTING
     //
+
+    // { "type": "setting", "path": "some.setting", "value": 1234 }
 
     char const* path;
     if (!d.TryGetStringValue("path", &path))

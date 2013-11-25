@@ -51,6 +51,8 @@ void DataStreamer::prepareImageBytes(libwebsocket_context* context, libwebsocket
 
     memcpy(p, jpgP, bufsize);
 
+    // TODO WEBSOCKETS use continuation/fin here to merge all frames into one message
+
     int res = libwebsocket_write(wsi, p, bufsize, LWS_WRITE_BINARY);
     if (res < 0)
     {
