@@ -17,6 +17,8 @@ void DataStreamer::update()
     }
   }
 
+  // TODO SETTINGS do we actually need this? this chain is kicked off directly in response to changes
+
   for (JsonSession* session : d_controlSessions)
   {
     if (!session->queue.empty())
