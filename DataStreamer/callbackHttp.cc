@@ -74,7 +74,7 @@ int DataStreamer::callback_http(
     char buf[256];
     sprintf(buf, "www%s", path);
 
-    if (libwebsockets_serve_http_file(context, wsi, buf, mimeType.c_str()))
+    if (libwebsockets_serve_http_file(context, wsi, buf, mimeType.c_str(), nullptr))
       lwsl_err("Failed to send HTTP file\n");
 
     break;

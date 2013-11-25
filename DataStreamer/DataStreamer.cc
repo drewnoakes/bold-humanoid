@@ -15,12 +15,10 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 
   d_protocols = new libwebsocket_protocols[protocolCount];
 
-                   // name, callback, per-session-data-size, rx-buffer-size, owning-server, protocol-index
-  d_protocols[0] = { "http-only", DataStreamer::_callback_http, 0, 0, NULL, 0 };
-  d_protocols[1] = { "camera-protocol", DataStreamer::_callback_camera, sizeof(CameraSession), 0, NULL, 0 };
-  // TODO WEBSOCKETS this 16kB hack gets around the outbound buffer size problem -- a better solution is to write in a loop until the pipe is choked
-  // see http://ml.libwebsockets.org/pipermail/libwebsockets/2013-April/000432.html
-  d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, sizeof(ControlSession), 16*1024, NULL, 0 };
+                   // name, callback, per-session-data-size, rx-buffer-size, no-buffer-all-partial-tx
+  d_protocols[0] = { "http-only",        DataStreamer::_callback_http,    0,                     0, 0 };
+  d_protocols[1] = { "camera-protocol",  DataStreamer::_callback_camera,  sizeof(CameraSession), 0, 0 };
+  d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, sizeof(JsonSession),   0, 0 };
 
   d_cameraProtocol = &d_protocols[1];
   d_controlProtocol = &d_protocols[2];
@@ -29,13 +27,13 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   unsigned protocolIndex = 3;
   for (shared_ptr<StateTracker> stateTracker : AgentState::getInstance().getTrackers())
   {
-    d_protocols[protocolIndex] = { stateTracker->name().c_str(), DataStreamer::_callback_state, 0, 0, NULL, 0 };
+    d_protocols[protocolIndex] = { stateTracker->name().c_str(), DataStreamer::_callback_state, 0, 0, 0 };
     stateTracker->websocketProtocol = &d_protocols[protocolIndex];
     protocolIndex++;
   }
 
   // Mark the end of the protocols
-  d_protocols[protocolIndex] = { NULL, NULL, 0, 0, NULL, 0 };
+  d_protocols[protocolIndex] = { nullptr, nullptr, 0, 0, 0 };
 
   //
   // Create the libwebsockets context object
