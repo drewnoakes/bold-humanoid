@@ -4,6 +4,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <queue>
 
 #include <libwebsockets.h>
 #include <opencv2/opencv.hpp>
@@ -31,6 +32,21 @@ namespace bold
     unsigned imgBytesSent;
   };
 
+  struct ControlSession
+  {
+    /** A queue of JSON strings to be sent to the client. */
+    std::queue<std::shared_ptr<std::vector<uchar> const>> queue;
+    /** The number of bytes sent from the front message in the queue. */
+    unsigned bytesSent;
+
+    static std::shared_ptr<std::vector<uchar>> createBytes(rapidjson::StringBuffer const& buffer)
+    {
+      auto bytes = std::make_shared<std::vector<uchar>>(buffer.GetSize());
+      memcpy(bytes.get()->data(), buffer.GetString(), buffer.GetSize());
+      return bytes;
+    }
+  };
+
   class DataStreamer
   {
   public:
@@ -40,15 +56,17 @@ namespace bold
     void close();
 
     /** Returns true if there is at least one client connected to the camera image protocol. */
-    bool hasImageClients() const { return d_cameraSessions.size() != 0; }
+    bool hasCameraClients() const { return d_cameraSessions.size() != 0; }
 
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img);
 
   private:
-    void sendImageBytes(libwebsocket* wsi, CameraSession* session);
+    void prepareImageBytes(libwebsocket* wsi, CameraSession* session) const;
+    void prepareControlSyncBytes(ControlSession* controlSession) const;
 
     void processCommand(std::string json);
+
     int writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
 
     cv::Mat d_image;
@@ -59,7 +77,9 @@ namespace bold
     libwebsocket_context* d_context;
     libwebsocket_protocols* d_protocols;
     libwebsocket_protocols* d_cameraProtocol;
+    libwebsocket_protocols* d_controlProtocol;
     std::vector<CameraSession*> d_cameraSessions;
+    std::vector<ControlSession*> d_controlSessions;
     bool d_hasWebSockets;
 
     //

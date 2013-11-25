@@ -8,11 +8,20 @@ void DataStreamer::update()
   //
   // Only request sending images if we have a client who needs servicing
   //
-  for (CameraSession* cameraSession : d_cameraSessions)
+  for (CameraSession* session : d_cameraSessions)
   {
-    if (cameraSession->imgReady)
+    if (session->imgReady)
     {
       libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
+      break;
+    }
+  }
+
+  for (ControlSession* session : d_controlSessions)
+  {
+    if (!session->queue.empty())
+    {
+      libwebsocket_callback_on_writable_all_protocol(d_controlProtocol);
       break;
     }
   }

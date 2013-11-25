@@ -34,7 +34,7 @@ int DataStreamer::callback_camera(
     // Can write to client
     if (cameraSession->imgReady)
     {
-      sendImageBytes(wsi, cameraSession);
+      prepareImageBytes(wsi, cameraSession);
     }
     break;
   }

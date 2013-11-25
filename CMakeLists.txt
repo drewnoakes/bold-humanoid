@@ -149,8 +149,9 @@ add_class(BOLDHUMANOID
   ./DataStreamer/callbackState.cc
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
+  ./DataStreamer/prepareControlSyncBytes.cc
+  ./DataStreamer/prepareImageBytes.cc
   ./DataStreamer/processCommand.cc
-  ./DataStreamer/sendImageBytes.cc
   ./DataStreamer/streamImage.cc
   ./DataStreamer/update.cc
   ./DataStreamer/writeJson.cc

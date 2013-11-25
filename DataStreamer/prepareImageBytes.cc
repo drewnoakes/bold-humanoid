@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-void DataStreamer::sendImageBytes(libwebsocket* wsi, CameraSession* session)
+void DataStreamer::prepareImageBytes(libwebsocket* wsi, CameraSession* session) const
 {
   assert(session->imgReady);
 

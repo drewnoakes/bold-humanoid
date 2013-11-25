@@ -20,9 +20,10 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   d_protocols[1] = { "camera-protocol", DataStreamer::_callback_camera, sizeof(CameraSession), 0, NULL, 0 };
   // TODO WEBSOCKETS this 16kB hack gets around the outbound buffer size problem -- a better solution is to write in a loop until the pipe is choked
   // see http://ml.libwebsockets.org/pipermail/libwebsockets/2013-April/000432.html
-  d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, 0, 16*1024, NULL, 0 };
+  d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, sizeof(ControlSession), 16*1024, NULL, 0 };
 
   d_cameraProtocol = &d_protocols[1];
+  d_controlProtocol = &d_protocols[2];
 
   // One protocol per state
   unsigned protocolIndex = 3;

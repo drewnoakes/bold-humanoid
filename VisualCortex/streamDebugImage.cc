@@ -3,7 +3,7 @@
 void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer> streamer, SequentialTimer& t)
 {
   // Only compose the image if at least one client is connected
-  if (!streamer->hasImageClients())
+  if (!streamer->hasCameraClients())
     return;
 
   // Only provide an image every N cycles
