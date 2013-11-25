@@ -76,8 +76,8 @@ int DataStreamer::callback_control(
     }
 
     // Queue for more writing later on if we still have data remaining
-    if (!controlSession->queue.empty())
-      libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
+    if (!jsonSession->queue.empty())
+      libwebsocket_callback_on_writable(context, wsi);
 
     break;
   }
