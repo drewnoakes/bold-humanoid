@@ -70,6 +70,9 @@ int DataStreamer::callback_http(
     else if (extension == "ico") {
       mimeType = "image/x-icon";
     }
+    else if (extension == "map") {
+      mimeType = "application/json";
+    }
 
     char buf[256];
     sprintf(buf, "www%s", path);
