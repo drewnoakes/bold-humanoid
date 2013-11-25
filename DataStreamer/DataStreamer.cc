@@ -67,4 +67,33 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       libwebsocket_callback_on_writable_all_protocol(protocol);
     }
   );
+
+  Config::updated.connect(
+    [this](SettingBase* setting)
+    {
+      assert(ThreadId::isThinkLoopThread());
+
+      if (!d_hasWebSockets || d_controlSessions.size() == 0)
+        return;
+
+      StringBuffer buffer;
+      Writer<StringBuffer> writer(buffer);
+
+      writer.StartObject();
+      {
+        writer.String("type").String("update");
+        writer.String("path").String(setting->getPath().c_str());
+        writer.String("value");
+        setting->writeJsonValue(writer);
+      }
+      writer.EndObject();
+
+      auto bytes = ControlSession::createBytes(buffer);
+
+      for (ControlSession* session : d_controlSessions)
+        session->queue.push(bytes);
+
+      libwebsocket_callback_on_writable_all_protocol(d_controlProtocol);
+    }
+  );
 }
