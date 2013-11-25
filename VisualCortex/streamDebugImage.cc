@@ -122,11 +122,13 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     }
   }
 
+  auto bodyState = AgentState::get<BodyState>();
+
   // Draw expected lines
-  if (d_shouldDrawExpectedLines->getValue())
+  if (bodyState && d_shouldDrawExpectedLines->getValue())
   {
     Affine3d const& agentWorld = AgentState::get<WorldFrameState>()->getPosition().agentWorldTransform();
-    Affine3d const& cameraAgent = AgentState::get<BodyState>()->getCameraAgentTransform();
+    Affine3d const& cameraAgent = bodyState->getCameraAgentTransform();
 
     Affine3d const& cameraWorld = cameraAgent * agentWorld;
 
@@ -154,24 +156,20 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw horizon
-  if (d_shouldDrawHorizon->getValue())
+  if (bodyState && d_shouldDrawHorizon->getValue())
   {
-    auto const& body = AgentState::get<BodyState>();
-    if (body)
-    {
-      auto neckJoint = body->getLimb("neck")->joints[0];
-      Affine3d cameraToFootRotation = body->getCameraAgentTransform();
+    auto neckJoint = bodyState->getLimb("neck")->joints[0];
+    Affine3d cameraToFootRotation = bodyState->getCameraAgentTransform();
 
-      Vector2i p1(0,0);
-      p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraToFootRotation);
+    Vector2i p1(0,0);
+    p1.y() = d_spatialiser->findHorizonForColumn(p1.x(), cameraToFootRotation);
 
-      Vector2i p2(d_cameraModel->imageWidth() - 1, 0);
-      p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraToFootRotation);
+    Vector2i p2(d_cameraModel->imageWidth() - 1, 0);
+    p2.y() = d_spatialiser->findHorizonForColumn(p2.x(), cameraToFootRotation);
 
-      LineSegment2i line2i(p1, p2);
+    LineSegment2i line2i(p1, p2);
 
-      line2i.draw(debugImage, horizonColour, 1);
-    }
+    line2i.draw(debugImage, horizonColour, 1);
   }
 
   // Draw field edge
