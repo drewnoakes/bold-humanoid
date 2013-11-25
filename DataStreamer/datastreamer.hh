@@ -32,7 +32,7 @@ namespace bold
     unsigned imgBytesSent;
   };
 
-  struct ControlSession
+  struct JsonSession
   {
     /** A queue of JSON strings to be sent to the client. */
     std::queue<std::shared_ptr<std::vector<uchar> const>> queue;
@@ -62,8 +62,8 @@ namespace bold
     void streamImage(cv::Mat const& img);
 
   private:
-    void prepareControlSyncBytes(ControlSession* controlSession) const;
     void prepareImageBytes(libwebsocket_context* context, libwebsocket* wsi, CameraSession* session) const;
+    void prepareControlSyncBytes(JsonSession* controlSession) const;
 
     void processCommand(std::string json);
 
@@ -79,7 +79,7 @@ namespace bold
     libwebsocket_protocols* d_cameraProtocol;
     libwebsocket_protocols* d_controlProtocol;
     std::vector<CameraSession*> d_cameraSessions;
-    std::vector<ControlSession*> d_controlSessions;
+    std::vector<JsonSession*> d_controlSessions;
     bool d_hasWebSockets;
 
     //

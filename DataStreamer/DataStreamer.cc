@@ -86,9 +86,9 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       }
       writer.EndObject();
 
-      auto bytes = ControlSession::createBytes(buffer);
+      auto bytes = JsonSession::createBytes(buffer);
 
-      for (ControlSession* session : d_controlSessions)
+      for (JsonSession* session : d_controlSessions)
         session->queue.push(bytes);
 
       libwebsocket_callback_on_writable_all_protocol(d_controlProtocol);

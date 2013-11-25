@@ -10,47 +10,47 @@ int DataStreamer::callback_control(
 {
   assert(ThreadId::isThinkLoopThread());
 
-  ControlSession* controlSession = reinterpret_cast<ControlSession*>(session);
+  JsonSession* jsonSession = reinterpret_cast<JsonSession*>(session);
 
   switch (reason)
   {
   case LWS_CALLBACK_ESTABLISHED:
   {
     // New client connected; initialize session
-    controlSession->bytesSent = 0;
-    controlSession->queue = queue<shared_ptr<vector<uchar> const>>();
-    d_controlSessions.push_back(controlSession);
-    prepareControlSyncBytes(controlSession);
+    jsonSession->bytesSent = 0;
+    jsonSession->queue = queue<shared_ptr<vector<uchar> const>>();
+    d_controlSessions.push_back(jsonSession);
+    prepareControlSyncBytes(jsonSession);
     libwebsocket_callback_on_writable(context, wsi);
     return 0;
   }
   case LWS_CALLBACK_CLOSED:
   {
     // Client disconnected
-    d_controlSessions.erase(find(d_controlSessions.begin(), d_controlSessions.end(), controlSession));
+    d_controlSessions.erase(find(d_controlSessions.begin(), d_controlSessions.end(), jsonSession));
     break;
   }
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
     // Fill the outbound pipe with frames of data
-    while (!lws_send_pipe_choked(wsi) && !controlSession->queue.empty())
+    while (!lws_send_pipe_choked(wsi) && !jsonSession->queue.empty())
     {
-      shared_ptr<vector<uchar> const> const& str = controlSession->queue.front();
+      shared_ptr<vector<uchar> const> const& str = jsonSession->queue.front();
 
       uint totalSize = str.get()->size();
 
-      assert(controlSession->bytesSent < totalSize);
+      assert(jsonSession->bytesSent < totalSize);
 
-      const uchar* start = str.get()->data() + controlSession->bytesSent;
+      const uchar* start = str.get()->data() + jsonSession->bytesSent;
 
-      uint remainingSize = totalSize - controlSession->bytesSent;
+      uint remainingSize = totalSize - jsonSession->bytesSent;
       uint frameSize = min(2048u, remainingSize);
       uchar frameBuffer[LWS_SEND_BUFFER_PRE_PADDING + frameSize + LWS_SEND_BUFFER_POST_PADDING];
       uchar *p = &frameBuffer[LWS_SEND_BUFFER_PRE_PADDING];
 
       memcpy(p, start, frameSize);
 
-      int writeMode = controlSession->bytesSent == 0
+      int writeMode = jsonSession->bytesSent == 0
         ? LWS_WRITE_TEXT
         : LWS_WRITE_CONTINUATION;
 
@@ -65,13 +65,13 @@ int DataStreamer::callback_control(
         return 1;
       }
 
-      controlSession->bytesSent += frameSize;
+      jsonSession->bytesSent += frameSize;
 
-      if (controlSession->bytesSent == totalSize)
+      if (jsonSession->bytesSent == totalSize)
       {
         // Done sending this queue item, so ditch it, reset and loop around again
-        controlSession->queue.pop();
-        controlSession->bytesSent = 0;
+        jsonSession->queue.pop();
+        jsonSession->bytesSent = 0;
       }
     }
 

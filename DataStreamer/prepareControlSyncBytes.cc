@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-void DataStreamer::prepareControlSyncBytes(ControlSession* controlSession) const
+void DataStreamer::prepareControlSyncBytes(JsonSession* jsonSession) const
 {
   StringBuffer buffer;
   Writer<StringBuffer> writer(buffer);
@@ -36,5 +36,5 @@ void DataStreamer::prepareControlSyncBytes(ControlSession* controlSession) const
   }
   writer.EndObject();
 
-  controlSession->queue.push(ControlSession::createBytes(buffer));
+  jsonSession->queue.push(JsonSession::createBytes(buffer));
 }

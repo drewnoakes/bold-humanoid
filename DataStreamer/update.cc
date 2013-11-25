@@ -17,7 +17,7 @@ void DataStreamer::update()
     }
   }
 
-  for (ControlSession* session : d_controlSessions)
+  for (JsonSession* session : d_controlSessions)
   {
     if (!session->queue.empty())
     {
