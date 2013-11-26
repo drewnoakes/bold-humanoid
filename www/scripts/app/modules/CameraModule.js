@@ -12,11 +12,6 @@ define(
     {
         'use strict';
 
-        var StateEnum = {
-            GET_PREFIX : 0,
-            GET_IMAGE : 1
-        };
-
         var CameraModule = function()
         {
             this.$container = $('<div></div>');
@@ -52,7 +47,6 @@ define(
 
             this.bindInteraction();
 
-            this.imgState = StateEnum.GET_PREFIX;
             this.createContext();
 
             this.subscription = DataProxy.subscribe(
@@ -142,61 +136,35 @@ define(
 
         CameraModule.prototype.onmessage = function(message)
         {
-            var self = this;
-            switch (this.imgState)
+            if (!(message.data instanceof Blob))
             {
-                case StateEnum.GET_PREFIX:
-                {
-                    if (typeof(message.data) === 'string')
-                    {
-                        this.imgToRead = parseInt(message.data);
-                        // clean out the blob
-                        this.imgBlob = new Blob([], {type: 'image/jpeg'});
-                        this.imgState = StateEnum.GET_IMAGE;
-                    }
-                    break;
-                }
-                case StateEnum.GET_IMAGE:
-                {
-                    if (!(message.data instanceof Blob))
-                    {
-                        console.warn('[CameraModule.js] Expected blob, got: ', message.data);
-                        this.imgState = StateEnum.GET_PREFIX;
-                        break;
-                    }
-
-                    // append to the blob (ignore weird syntax)
-                    this.imgBlob = new Blob([this.imgBlob, message.data], {type: 'image/jpeg'});
-
-                    this.imgToRead -= message.data.size;
-
-                    if (this.imgToRead <= 0)
-                    {
-                        var objectURL = (window.webkitURL || window.URL).createObjectURL(this.imgBlob);
-                        var img = new Image();
-                        img.onload = function()
-                        {
-                            var changedSize = false;
-                            if (img.width !== self.canvas.width) {
-                                self.canvas.width = img.width;
-                                changedSize = true;
-                            }
-                            if (img.height !== self.canvas.height) {
-                                self.canvas.height = img.height;
-                                changedSize = true;
-                            }
-                            if (changedSize) {
-                                // need to re-establish the context after changing the canvas size
-                                self.createContext();
-                            }
-                            self.context.drawImage(img, 0, 0);
-                        };
-                        img.src = objectURL;
-                        this.imgState = StateEnum.GET_PREFIX;
-                    }
-                    break;
-                }
+                console.warn('[CameraModule.js] Expected blob, got: ', message.data);
+                return;
             }
+
+            // append to the blob (ignore weird syntax)
+            this.imgBlob = new Blob([message.data], {type: 'image/jpeg'});
+
+            var objectURL = (window.webkitURL || window.URL).createObjectURL(this.imgBlob);
+            var img = new Image();
+            img.onload = function()
+            {
+                var changedSize = false;
+                if (img.width !== this.canvas.width) {
+                    this.canvas.width = img.width;
+                    changedSize = true;
+                }
+                if (img.height !== this.canvas.height) {
+                    this.canvas.height = img.height;
+                    changedSize = true;
+                }
+                if (changedSize) {
+                    // need to re-establish the context after changing the canvas size
+                    this.createContext();
+                }
+                this.context.drawImage(img, 0, 0);
+            }.bind(this);
+            img.src = objectURL;
         };
 
         return CameraModule;

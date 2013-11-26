@@ -29,7 +29,7 @@ namespace bold
     /** If imgSending is true, the encoded JPEG bytes will be here. */
     std::unique_ptr<std::vector<uchar>> imgJpgBuffer;
     /** If imgSending is true, the number of bytes already sent. */
-    unsigned imgBytesSent;
+    unsigned bytesSent;
   };
 
   struct JsonSession
