@@ -89,5 +89,5 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_lineFinder = make_shared<MaskWalkLineFinder>();
 
   // Image capture
-  Config::addAction("camera", "Save Frame", [this]() { d_recordNextFrame = true; });
+  Config::addAction("camera.save-frame", "Save Frame", [this]() { d_recordNextFrame = true; });
 }
