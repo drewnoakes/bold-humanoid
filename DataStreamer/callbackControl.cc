@@ -86,7 +86,7 @@ int DataStreamer::callback_control(
     if (len != 0)
     {
       string str((char const*)in, len);
-      processCommand(str);
+      processCommand(str, jsonSession, context, wsi);
     }
     break;
   }

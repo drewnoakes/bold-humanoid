@@ -66,7 +66,7 @@ namespace bold
     static std::shared_ptr<std::vector<uchar>> prepareControlSyncBytes();
     static std::shared_ptr<std::vector<uchar>> prepareSettingUpdateBytes(SettingBase* setting);
 
-    void processCommand(std::string json);
+    void processCommand(std::string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi);
 
     int writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
 

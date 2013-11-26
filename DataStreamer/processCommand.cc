@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-void DataStreamer::processCommand(std::string json)
+void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi)
 {
   cout << "[DataStreamer::processCommand] Processing: " << json << endl;
 
@@ -76,6 +76,12 @@ void DataStreamer::processCommand(std::string json)
       return;
     }
 
-    setting->setValueFromJson(&valueMember->value);
+    if (!setting->setValueFromJson(&valueMember->value))
+    {
+      // Setting the value failed. Send the current value back to the client
+      // that requested this invalid value.
+      jsonSession->queue.push(prepareSettingUpdateBytes(setting));
+      libwebsocket_callback_on_writable(context, wsi);
+    }
   }
 }
