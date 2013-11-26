@@ -88,7 +88,10 @@ void EnumSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   writer.StartArray();
   {
     for (auto const& pair : d_pairs) {
-      writer.StartObject().String(pair.second.c_str()).Int(pair.first).EndObject();
+      writer.StartObject()
+          .String("text").String(pair.second.c_str())
+          .String("value").Int(pair.first)
+          .EndObject();
     }
   }
   writer.EndArray();
