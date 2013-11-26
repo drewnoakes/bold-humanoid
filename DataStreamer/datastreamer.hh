@@ -19,6 +19,7 @@ namespace cv
 namespace bold
 {
   class Camera;
+  class SettingBase;
 
   struct CameraSession
   {
@@ -62,7 +63,8 @@ namespace bold
     void streamImage(cv::Mat const& img);
 
   private:
-    void prepareControlSyncBytes(JsonSession* controlSession) const;
+    static std::shared_ptr<std::vector<uchar>> prepareControlSyncBytes();
+    static std::shared_ptr<std::vector<uchar>> prepareSettingUpdateBytes(SettingBase* setting);
 
     void processCommand(std::string json);
 

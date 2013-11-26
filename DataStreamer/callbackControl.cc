@@ -20,7 +20,7 @@ int DataStreamer::callback_control(
     jsonSession->bytesSent = 0;
     jsonSession->queue = queue<shared_ptr<vector<uchar> const>>();
     d_controlSessions.push_back(jsonSession);
-    prepareControlSyncBytes(jsonSession);
+    jsonSession->queue.push(prepareControlSyncBytes());
     libwebsocket_callback_on_writable(context, wsi);
     return 0;
   }
@@ -36,7 +36,7 @@ int DataStreamer::callback_control(
     while (!lws_send_pipe_choked(wsi) && !jsonSession->queue.empty())
     {
       shared_ptr<vector<uchar> const> const& str = jsonSession->queue.front();
-
+      assert(str);
       uint totalSize = str.get()->size();
 
       assert(jsonSession->bytesSent < totalSize);

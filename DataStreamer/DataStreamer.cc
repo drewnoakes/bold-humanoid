@@ -74,19 +74,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       if (!d_hasWebSockets || d_controlSessions.size() == 0)
         return;
 
-      StringBuffer buffer;
-      Writer<StringBuffer> writer(buffer);
-
-      writer.StartObject();
-      {
-        writer.String("type").String("update");
-        writer.String("path").String(setting->getPath().c_str());
-        writer.String("value");
-        setting->writeJsonValue(writer);
-      }
-      writer.EndObject();
-
-      auto bytes = JsonSession::createBytes(buffer);
+      auto bytes = prepareSettingUpdateBytes(setting);
 
       for (JsonSession* session : d_controlSessions)
         session->queue.push(bytes);

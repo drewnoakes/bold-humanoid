@@ -150,6 +150,7 @@ add_class(BOLDHUMANOID
   ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/prepareControlSyncBytes.cc
+  ./DataStreamer/prepareSettingUpdateBytes.cc
   ./DataStreamer/processCommand.cc
   ./DataStreamer/streamImage.cc
   ./DataStreamer/update.cc
