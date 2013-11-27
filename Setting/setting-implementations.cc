@@ -4,8 +4,8 @@ using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-IntSetting::IntSetting(string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced)
-: Setting(path, "int", isReadOnly, isAdvanced, defaultValue),
+IntSetting::IntSetting(string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced, string description)
+: Setting(path, "int", isReadOnly, isAdvanced, defaultValue, description),
   d_min(min),
   d_max(max),
   d_defaultValue(defaultValue)
@@ -54,8 +54,8 @@ bool IntSetting::setValueFromJson(Value* value)
 
 ///////////////////////////////////////////////////////////
 
-EnumSetting::EnumSetting(string path, map<int,string> pairs, int defaultValue, bool isReadOnly, bool isAdvanced)
-: Setting(path, "enum", isReadOnly, isAdvanced, defaultValue),
+EnumSetting::EnumSetting(string path, map<int,string> pairs, int defaultValue, bool isReadOnly, bool isAdvanced, string description)
+: Setting(path, "enum", isReadOnly, isAdvanced, defaultValue, description),
   d_pairs(pairs),
   d_defaultValue(defaultValue)
 {}
@@ -110,8 +110,8 @@ bool EnumSetting::setValueFromJson(Value* value)
 
 ///////////////////////////////////////////////////////////
 
-DoubleSetting::DoubleSetting(string path, double min, double max, double defaultValue, bool isReadOnly, bool isAdvanced)
-: Setting(path, "double", isReadOnly, isAdvanced, defaultValue),
+DoubleSetting::DoubleSetting(string path, double min, double max, double defaultValue, bool isReadOnly, bool isAdvanced, string description)
+: Setting(path, "double", isReadOnly, isAdvanced, defaultValue, description),
   d_min(min),
   d_max(max),
   d_defaultValue(defaultValue)
@@ -160,8 +160,8 @@ bool DoubleSetting::setValueFromJson(Value* value)
 
 ///////////////////////////////////////////////////////////
 
-BoolSetting::BoolSetting(string path, bool defaultValue, bool isReadOnly, bool isAdvanced)
-: Setting(path, "bool", isReadOnly, isAdvanced, defaultValue),
+BoolSetting::BoolSetting(string path, bool defaultValue, bool isReadOnly, bool isAdvanced, string description)
+: Setting(path, "bool", isReadOnly, isAdvanced, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 
@@ -198,8 +198,8 @@ bool BoolSetting::setValueFromJson(Value* value)
 
 ///////////////////////////////////////////////////////////
 
-HsvRangeSetting::HsvRangeSetting(string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced)
-: Setting(path, "hsv-range", isReadOnly, isAdvanced, defaultValue),
+HsvRangeSetting::HsvRangeSetting(string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced, string description)
+: Setting(path, "hsv-range", isReadOnly, isAdvanced, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 
@@ -298,8 +298,8 @@ bool HsvRangeSetting::setValueFromJson(Value* value)
 
 ///////////////////////////////////////////////////////////
 
-DoubleRangeSetting::DoubleRangeSetting(string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced)
-: Setting(path, "double-range", isReadOnly, isAdvanced, defaultValue),
+DoubleRangeSetting::DoubleRangeSetting(string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced, string description)
+: Setting(path, "double-range", isReadOnly, isAdvanced, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 
@@ -367,8 +367,8 @@ bool DoubleRangeSetting::setValueFromJson(Value* value)
 
 ///////////////////////////////////////////////////////////
 
-StringSetting::StringSetting(string path, string defaultValue, bool isReadOnly, bool isAdvanced)
-: Setting(path, "string", isReadOnly, isAdvanced, defaultValue),
+StringSetting::StringSetting(string path, string defaultValue, bool isReadOnly, bool isAdvanced, string description)
+: Setting(path, "string", isReadOnly, isAdvanced, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 

@@ -27,6 +27,7 @@ namespace bold
     bool isAdvanced() const { return d_isAdvanced; }
     std::string getTypeName() const { return d_typeName; }
     std::type_index getTypeIndex() const { return d_typeIndex; }
+    std::string getDescription() const { return d_description; }
 
     void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
     {
@@ -34,6 +35,8 @@ namespace bold
       {
         writer.String("path").String(getPath().c_str());
         writer.String("type").String(getTypeName().c_str());
+        if (getDescription().size())
+          writer.String("description").String(getDescription().c_str());
         if (isAdvanced())
           writer.String("advanced").Bool(true);
         if (isReadOnly())
@@ -50,12 +53,13 @@ namespace bold
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
 
   protected:
-    SettingBase(std::string path, std::string typeName, std::type_index typeIndex, bool isReadOnly, bool isAdvanced)
+    SettingBase(std::string path, std::string typeName, std::type_index typeIndex, bool isReadOnly, bool isAdvanced, std::string description)
     : d_path(path),
       d_typeName(typeName),
       d_typeIndex(typeIndex),
       d_isReadOnly(isReadOnly),
-      d_isAdvanced(isAdvanced)
+      d_isAdvanced(isAdvanced),
+      d_description(description)
     {
       auto last = d_path.find_last_of('.');
       if (last == std::string::npos)
@@ -77,6 +81,7 @@ namespace bold
     std::type_index d_typeIndex;
     bool d_isReadOnly;
     bool d_isAdvanced;
+    std::string d_description;
   };
 
   /// Abstract model of a setting with a particular data type.
@@ -85,8 +90,8 @@ namespace bold
   class Setting : public SettingBase
   {
   public:
-    Setting(std::string path, std::string typeName, bool isReadOnly, bool isAdvanced, T value)
-    : SettingBase(path, typeName, typeid(T), isReadOnly, isAdvanced),
+    Setting(std::string path, std::string typeName, bool isReadOnly, bool isAdvanced, T value, std::string description)
+    : SettingBase(path, typeName, typeid(T), isReadOnly, isAdvanced, description),
       d_value(value)
     {}
 

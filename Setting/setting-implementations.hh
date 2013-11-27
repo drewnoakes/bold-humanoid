@@ -19,7 +19,7 @@ namespace bold
   class IntSetting : public Setting<int>
   {
   public:
-    IntSetting(std::string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced);
+    IntSetting(std::string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~IntSetting() {}
 
     int getMinimum() const { return d_min; }
@@ -41,7 +41,7 @@ namespace bold
   class EnumSetting : public Setting<int>
   {
   public:
-    EnumSetting(std::string path, std::map<int,std::string> pairs, int defaultValue, bool isReadOnly, bool isAdvanced);
+    EnumSetting(std::string path, std::map<int,std::string> pairs, int defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~EnumSetting() {}
 
     bool isValidValue(int value) const override;
@@ -60,7 +60,7 @@ namespace bold
   class DoubleSetting : public Setting<double>
   {
   public:
-    DoubleSetting(std::string path, double min, double max, double defaultValue, bool isReadOnly, bool isAdvanced);
+    DoubleSetting(std::string path, double min, double max, double defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~DoubleSetting() {}
 
     bool isValidValue(double value) const override;
@@ -80,7 +80,7 @@ namespace bold
   class BoolSetting : public Setting<bool>
   {
   public:
-    BoolSetting(std::string path, bool defaultValue, bool isReadOnly, bool isAdvanced);
+    BoolSetting(std::string path, bool defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~BoolSetting() {}
 
     bool isValidValue(bool value) const override;
@@ -101,7 +101,7 @@ namespace bold
     static void writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value);
     static bool tryParseJsonValue(rapidjson::Value* value, Colour::hsvRange* hsvRange);
 
-    HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced);
+    HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~HsvRangeSetting() {}
 
     bool isValidValue(Colour::hsvRange value) const override;
@@ -122,7 +122,7 @@ namespace bold
     static void writeDoubleRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Range<double> const& value);
     static bool tryParseJsonValue(rapidjson::Value* value, Range<double>* hsvRange);
 
-    DoubleRangeSetting(std::string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced);
+    DoubleRangeSetting(std::string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~DoubleRangeSetting() {}
 
     bool isValidValue(Range<double> value) const override;
@@ -140,7 +140,7 @@ namespace bold
   class StringSetting : public Setting<std::string>
   {
   public:
-    StringSetting(std::string path, std::string defaultValue, bool isReadOnly, bool isAdvanced);
+    StringSetting(std::string path, std::string defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~StringSetting() {}
 
     bool isValidValue(std::string value) const override;

@@ -120,7 +120,7 @@ void Camera::createControls()
     {
       case V4L2ControlType::CT_BOOL:
       {
-        auto setting = new BoolSetting(path.str(), control->defaultValue, isReadOnly, isAdvanced);
+        auto setting = new BoolSetting(path.str(), control->defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue != 0);
         setting->changed.connect([setValue,control](bool value) { setValue(control, value ? 1 : 0); });
         settings.push_back(setting);
@@ -128,7 +128,7 @@ void Camera::createControls()
       }
       case V4L2ControlType::CT_INT:
       {
-        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, control->defaultValue, isReadOnly, isAdvanced);
+        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, control->defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control](int value) { setValue(control, value); });
         settings.push_back(setting);
@@ -136,7 +136,7 @@ void Camera::createControls()
       }
       case V4L2ControlType::CT_MENU:
       {
-        auto setting = new EnumSetting(path.str(), control->pairs, control->defaultValue, isReadOnly, isAdvanced);
+        auto setting = new EnumSetting(path.str(), control->pairs, control->defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control](int value) { setValue(control, value); });
         settings.push_back(setting);

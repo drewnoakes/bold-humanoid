@@ -130,6 +130,8 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
 
     bool isReadOnly = metaNode->TryGetBoolValue("readonly", false);
     bool isAdvanced = metaNode->TryGetBoolValue("advanced", false);
+    const char* descriptionChars = metaNode->TryGetStringValue("description", (const char*)nullptr);
+    string description = descriptionChars == nullptr ? "" : descriptionChars;
 
     auto type = string(typeMember->value.GetString());
 
@@ -146,7 +148,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
 
       auto min = metaNode->TryGetDoubleValue("min", -numeric_limits<double>::max());
       auto max = metaNode->TryGetDoubleValue("max", numeric_limits<double>::max());
-      Config::addSetting(new DoubleSetting(path, min, max, defaultValue, isReadOnly, isAdvanced));
+      Config::addSetting(new DoubleSetting(path, min, max, defaultValue, isReadOnly, isAdvanced, description));
     }
     else if (type == "int")
     {
@@ -159,7 +161,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
 
       auto min = metaNode->TryGetIntValue("min", -numeric_limits<int>::max());
       auto max = metaNode->TryGetIntValue("max", numeric_limits<int>::max());
-      Config::addSetting(new IntSetting(path, min, max, defaultValue, isReadOnly, isAdvanced));
+      Config::addSetting(new IntSetting(path, min, max, defaultValue, isReadOnly, isAdvanced, description));
     }
     else if (type == "enum")
     {
@@ -188,7 +190,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
         pairs[it->value.GetInt()] = it->name.GetString();
       }
 
-      Config::addSetting(new EnumSetting(path, pairs, defaultValue, isReadOnly, isAdvanced));
+      Config::addSetting(new EnumSetting(path, pairs, defaultValue, isReadOnly, isAdvanced, description));
     }
     else if (type == "bool")
     {
@@ -199,7 +201,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
         throw runtime_error("JSON 'default' value must be a bool");
       }
 
-      Config::addSetting(new BoolSetting(path, defaultValue, isReadOnly, isAdvanced));
+      Config::addSetting(new BoolSetting(path, defaultValue, isReadOnly, isAdvanced, description));
     }
     else if (type == "string")
     {
@@ -210,7 +212,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
         throw runtime_error("JSON 'default' value must be a string");
       }
 
-      Config::addSetting(new StringSetting(path, defaultValue, isReadOnly, isAdvanced));
+      Config::addSetting(new StringSetting(path, defaultValue, isReadOnly, isAdvanced, description));
     }
     else if (type == "hsv-range")
     {
@@ -221,7 +223,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
       if (defaultMember && !HsvRangeSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
         throw runtime_error("Unable to parse hsv-range");
 
-      Config::addSetting(new HsvRangeSetting(path, defaultValue, isReadOnly, isAdvanced));
+      Config::addSetting(new HsvRangeSetting(path, defaultValue, isReadOnly, isAdvanced, description));
     }
     else if (type == "double-range")
     {
@@ -232,7 +234,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
       if (defaultMember && !DoubleRangeSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
         throw runtime_error("Unable to parse double-range");
 
-      Config::addSetting(new DoubleRangeSetting(path, defaultValue, isReadOnly, isAdvanced));
+      Config::addSetting(new DoubleRangeSetting(path, defaultValue, isReadOnly, isAdvanced, description));
     }
     else
     {
