@@ -17,17 +17,6 @@ void DataStreamer::update()
     }
   }
 
-  // TODO SETTINGS do we actually need this? this chain is kicked off directly in response to changes
-
-  for (JsonSession* session : d_controlSessions)
-  {
-    if (!session->queue.empty())
-    {
-      libwebsocket_callback_on_writable_all_protocol(d_controlProtocol);
-      break;
-    }
-  }
-
   //
   // Process whatever else needs doing on the socket (new clients, etc)
   // This is normally very fast
