@@ -29,24 +29,7 @@ namespace bold
     std::type_index getTypeIndex() const { return d_typeIndex; }
     std::string getDescription() const { return d_description; }
 
-    void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
-    {
-      writer.StartObject();
-      {
-        writer.String("path").String(getPath().c_str());
-        writer.String("type").String(getTypeName().c_str());
-        if (getDescription().size())
-          writer.String("description").String(getDescription().c_str());
-        if (isAdvanced())
-          writer.String("advanced").Bool(true);
-        if (isReadOnly())
-          writer.String("readonly").Bool(true);
-        writer.String("value");
-        writeJsonValue(writer);
-        writeJsonMetadata(writer);
-      }
-      writer.EndObject();
-    }
+    void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
 
     virtual bool setValueFromJson(rapidjson::Value* value) = 0;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
