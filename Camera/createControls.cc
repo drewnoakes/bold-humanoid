@@ -62,7 +62,7 @@ void Camera::createControls()
     return ctrl.value;
   };
 
-  auto setValue = [this,getValue](shared_ptr<Control const> const& control, int const& value)
+  auto setValue = [this,getValue](shared_ptr<Control const> const& control, int const& value, function<void(int)> setBack)
   {
     v4l2_control ctrl = {0,};
     ctrl.id = control->id;
@@ -73,7 +73,10 @@ void Camera::createControls()
     int retrieved = getValue(control->id);
 
     if (retrieved != value)
+    {
       cerr << ccolor::error << "[Camera::setValue] Setting camera control '" << control->name << "' failed -- set " << value << " but read back " << retrieved << ccolor::reset << endl;
+      setBack(retrieved);
+    }
   };
 
   vector<SettingBase*> settings;
@@ -122,7 +125,10 @@ void Camera::createControls()
       {
         auto setting = new BoolSetting(path.str(), control->defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue != 0);
-        setting->changed.connect([setValue,control](bool value) { setValue(control, value ? 1 : 0); });
+        setting->changed.connect([setValue,control,setting](bool value) {
+          setValue(control, value ? 1 : 0,
+                   [setting](int correction) { setting->setValue(correction != 0); });
+        });
         settings.push_back(setting);
         break;
       }
@@ -130,7 +136,10 @@ void Camera::createControls()
       {
         auto setting = new IntSetting(path.str(), control->minimum, control->maximum, control->defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue);
-        setting->changed.connect([setValue,control](int value) { setValue(control, value); });
+        setting->changed.connect([setValue,control,setting](int value) {
+          setValue(control, value,
+                   [setting](int correction) { setting->setValue(correction); });
+        });
         settings.push_back(setting);
         break;
       }
@@ -138,7 +147,10 @@ void Camera::createControls()
       {
         auto setting = new EnumSetting(path.str(), control->pairs, control->defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue);
-        setting->changed.connect([setValue,control](int value) { setValue(control, value); });
+        setting->changed.connect([setValue,control,setting](int value) {
+          setValue(control, value,
+                   [setting](int correction) { setting->setValue(correction); });
+        });
         settings.push_back(setting);
         break;
       }
