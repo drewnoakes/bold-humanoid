@@ -258,6 +258,11 @@ div.setting span.default-value
 
 /********************************************************************/
 
+div.module.camera .control-container
+{
+    max-width: 400px;
+}
+
 div.module.camera canvas.camera-canvas
 {
     width: 320px;
@@ -283,7 +288,6 @@ div.module.camera div.control-container.camera-settings
     width: 180px;
     top: 0;
     right: 0;
-    height: 440px;
     overflow: auto;
 }
 
