@@ -36,7 +36,7 @@ define(
                 return this.description;
 
             var i = this.path.lastIndexOf('.');
-            var desc = this.path.substr(i + 1).replace('-', ' ');
+            var desc = this.path.substr(i + 1).replace(/-/g, ' ');
             return desc.charAt(0).toUpperCase() + desc.slice(1)
         };
 
