@@ -10,58 +10,33 @@ define(
     {
         'use strict';
 
-        var PixelLabelInspector = function(width, height)
+        var PixelLabelInspector = function(canvas, width, height)
         {
-            this.canvas = document.createElement('canvas');
-            this.canvas.className = 'pixel-label-inspector';
+            this.canvas = canvas;
             this.canvas.width = width;
             this.canvas.height = height;
+            this.canvas.style.width = width;
+            this.canvas.style.height = height;
             this.context = this.canvas.getContext('2d');
 
-            this.labels = {};
             this.ready = false;
 
-            this.labels.ball  = {hue:{}, saturation:{}, value:{}, colour:'red'};
-            this.labels.line  = {hue:{}, saturation:{}, value:{}, colour:'white'};
-            this.labels.goal  = {hue:{}, saturation:{}, value:{}, colour:'yellow'};
-            this.labels.field = {hue:{}, saturation:{}, value:{}, colour:'green'};
-
-            ControlClient.withData('vision/lut', function(controls)
+            ControlClient.withSettings('vision.pixel-labels', function(settings)
             {
-                _.each(controls, function (control)
+                var ballSetting, goalSetting, fieldSetting, lineSetting;
+
+                _.each(settings, function (setting)
                 {
-                    switch (control.name)
+                    switch (setting.path)
                     {
-                        case 'Ball Hue Min': this.labels.ball.hue.min = control.value; break;
-                        case 'Ball Hue Max': this.labels.ball.hue.max = control.value; break;
-                        case 'Ball Sat Min': this.labels.ball.saturation.min = control.value; break;
-                        case 'Ball Sat Max': this.labels.ball.saturation.max = control.value; break;
-                        case 'Ball Val Min': this.labels.ball.value.min = control.value; break;
-                        case 'Ball Val Max': this.labels.ball.value.max = control.value; break;
-
-                        case 'Line Hue Min': this.labels.line.hue.min = control.value; break;
-                        case 'Line Hue Max': this.labels.line.hue.max = control.value; break;
-                        case 'Line Sat Min': this.labels.line.saturation.min = control.value; break;
-                        case 'Line Sat Max': this.labels.line.saturation.max = control.value; break;
-                        case 'Line Val Min': this.labels.line.value.min = control.value; break;
-                        case 'Line Val Max': this.labels.line.value.max = control.value; break;
-
-                        case 'Goal Hue Min': this.labels.goal.hue.min = control.value; break;
-                        case 'Goal Hue Max': this.labels.goal.hue.max = control.value; break;
-                        case 'Goal Sat Min': this.labels.goal.saturation.min = control.value; break;
-                        case 'Goal Sat Max': this.labels.goal.saturation.max = control.value; break;
-                        case 'Goal Val Min': this.labels.goal.value.min = control.value; break;
-                        case 'Goal Val Max': this.labels.goal.value.max = control.value; break;
-
-                        case 'Field Hue Min': this.labels.field.hue.min = control.value; break;
-                        case 'Field Hue Max': this.labels.field.hue.max = control.value; break;
-                        case 'Field Sat Min': this.labels.field.saturation.min = control.value; break;
-                        case 'Field Sat Max': this.labels.field.saturation.max = control.value; break;
-                        case 'Field Val Min': this.labels.field.value.min = control.value; break;
-                        case 'Field Val Max': this.labels.field.value.max = control.value; break;
+                        case 'vision.pixel-labels.ball':  ballSetting  = setting; break;
+                        case 'vision.pixel-labels.goal':  goalSetting  = setting; break;
+                        case 'vision.pixel-labels.field': fieldSetting = setting; break;
+                        case 'vision.pixel-labels.line':  lineSetting  = setting; break;
                     }
                 }.bind(this));
 
+                this.settings = [ballSetting, goalSetting, fieldSetting, lineSetting];
                 this.ready = true;
 
             }.bind(this));
@@ -86,13 +61,13 @@ define(
                 barHeight = 4,
                 barSpacing = 2,
                 componentSpacing = 2,
-                components = ['hue', 'saturation', 'value'],
+                componentNames = ['hue', 'sat', 'val'],
                 space = this.canvas.width - gutterWidth;
 
             var y = 0;
-            for (var component = 0; component < 3; component++)
+            for (var componentIndex = 0; componentIndex < 3; componentIndex++)
             {
-                if (component != 0)
+                if (componentIndex != 0)
                 {
                     // Draw horizontal separator line
                     context.lineWidth = 1;
@@ -104,23 +79,35 @@ define(
 
                 // Text label
                 context.fillStyle = 'black';
-                context.fillText('HSV'[component], 8, y + 16);
+                context.fillText('HSV'[componentIndex], 8, y + 16);
+
+                var componentName = componentNames[componentIndex];
 
                 var startY = y;
 
                 y += componentSpacing;
 
-                _.each(_.values(this.labels), function (label)
+                _.each(this.settings, function(setting)
                 {
-                    var labelData = label[components[component]],
-                        min = labelData.min,
-                        max = labelData.max;
+                    var val = setting.value;
+                    var labelData = val[componentName],
+                        min = labelData[0],
+                        max = labelData[1];
+
+                    console.assert(min >= 0);
+                    console.assert(max <= 255);
 
                     if (min < 0)
                         min = 0;
 
                     if (max > 255)
                         max = 255;
+
+                    var hAvg = (val.hue[0] + val.hue[1]) / 2,
+                        h = val.hue[0] < val.hue[1] ? hAvg : (hAvg + (255/2)) % 255,
+                        s = (val.sat[0] + val.sat[1]) / 2,
+                        v = (val.val[0] + val.val[1]) / 2,
+                        labelColour = 'hsla(' + (h*360/250).toFixed(2) + ',' + (s/2.55).toFixed(2) + '%,' + (v/2.55).toFixed(2) + '%,1)';
 
                     var drawComponentRange = function(y, minValue, maxValue)
                     {
@@ -129,7 +116,7 @@ define(
                             minX = minRatio*space,
                             maxX = maxRatio*space;
 
-                        context.fillStyle = label.colour;
+                        context.fillStyle = labelColour;
                         context.fillRect(gutterWidth + minX, y, maxX - minX, barHeight);
                     };
 
@@ -152,7 +139,7 @@ define(
 
                 if (this.hsv)
                 {
-                    var hoverRatio = this.hsv['hsv'[component]],
+                    var hoverRatio = this.hsv['hsv'[componentIndex]],
                         hoverX = Math.floor(gutterWidth + hoverRatio*space) + 0.5;
 
                     context.strokeStyle = 'rgba(0,0,0,0.7)';

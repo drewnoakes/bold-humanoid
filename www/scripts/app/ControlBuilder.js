@@ -3,10 +3,9 @@
  */
 define(
     [
-        'ControlTypeEnum',
         'ControlClient'
     ],
-    function (ControlTypeEnum, ControlClient)
+    function (ControlClient)
     {
         'use strict';
 
@@ -14,106 +13,182 @@ define(
 
         var ControlBuilder = {};
 
-        ControlBuilder.build = function(family, container)
+        ControlBuilder.action = function(id, target)
         {
-            container.empty();
-
-            ControlClient.withData(family, function(controls)
+            var button;
+            if (target instanceof HTMLButtonElement)
             {
-                _.each(controls, function(control)
-                {
-                    var element = $('<div></div>').addClass('control');
+                button = target;
+            }
+            else if (target instanceof HTMLElement)
+            {
+                button = document.createElement('button');
+                target.appendChild(button);
+            }
 
-                    if (control.advanced)
-                    {
-                        element.addClass('advanced');
-                    }
+            ControlClient.withAction(id, function(action)
+            {
+                if (!button.textContent)
+                    button.innerHTML = action.label;
 
-                    switch (control.type)
-                    {
-                        case ControlTypeEnum.INT:
-                        {
-                            var headingHtml = control.name;
-                            if (typeof(control.minimum) !== 'undefined' && typeof(control.maximum) !== 'undefined')
-                                headingHtml +=  ' <span class="value-range">(' + control.minimum + ' - ' + control.maximum + ')</span>';
-                            if (typeof(control.defaultValue) !== 'undefined')
-                                headingHtml += ' <span class="default-value">[' + control.defaultValue + ']</span>';
-                            var heading = $('<h3></h3>').html(headingHtml);
-                            var input = $('<input>', {type: 'text'})
-                                .val(control.value)
-                                .change(function ()
-                                {
-                                    ControlClient.sendCommand(family, control.id, parseInt(this.value));
-                                });
-
-                            element.append(heading).append(input);
-                            break;
-                        }
-
-                        case ControlTypeEnum.BOOL:
-                        {
-                            var id = family + (nextControlId++);
-                            var checkbox = $('<input>', {id: id, type: 'checkbox', checked: control.value});
-
-                            checkbox.change(function()
-                            {
-                                ControlClient.sendCommand(family, control.id, !!this.checked);
-                            });
-
-                            var labelHtml = control.name;
-                            if (typeof(control.defaultValue) !== 'undefined')
-                                labelHtml += ' <span class="default-value">[' + (control.defaultValue ? 'on' : 'off') + ']</span>';
-
-                            var checkboxLabel = $('<label>', {for: id})
-                                .html(labelHtml);
-
-                            element.append(checkbox).append(checkboxLabel);
-                            break;
-                        }
-
-                        case ControlTypeEnum.ENUM:
-                        {
-                            var headingText = control.name;
-                            if (typeof(control.defaultValue) !== 'undefined')
-                            {
-                                var defaultEnumValue = _.find(control.enumValues, function(ev) { return ev.value === control.defaultValue; });
-                                if (defaultEnumValue)
-                                {
-                                    headingText += ' <span class="default-value">[' + defaultEnumValue.name + ']</span>';
-                                }
-                            }
-                            element.append($('<h3></h3>').html(headingText));
-                            var menu = $('<select></select>').change(function()
-                            {
-                                ControlClient.sendCommand(family, control.id, parseInt(this.options[this.selectedIndex].value));
-                            });
-
-                            _.each(control.enumValues, function(enumValue)
-                            {
-                                var menuItem = $('<option></option>', {selected: control.value == enumValue.value})
-                                    .val(enumValue.value)
-                                    .text(enumValue.name);
-                                menu.append(menuItem);
-                            });
-                            element.append(menu);
-                            break;
-                        }
-
-                        case ControlTypeEnum.BUTTON:
-                        {
-                            var button = $('<button></button>').html(control.name).click(function()
-                            {
-                                ControlClient.sendCommand(family, control.id);
-                                return false;
-                            });
-                            element.append(button);
-                            break;
-                        }
-                    }
-
-                    container.append(element);
-                });
+                button.addEventListener('click', function() { action.activate(); });
             });
+
+            return button;
+        };
+
+        ControlBuilder.actions = function(idPrefix, target)
+        {
+            ControlClient.withActions(idPrefix, function(actions)
+            {
+                _.each(actions, function(action){ ControlBuilder.action(action.id, target)});
+            });
+        };
+
+        function createSetting(setting, container, closeables)
+        {
+            var heading, input,
+                wrapper = document.createElement('div');
+            wrapper.dataset.path = setting.path;
+            wrapper.className = 'setting control';
+
+            if (setting.isAdvanced)
+            {
+                wrapper.classList.add('advanced');
+            }
+
+            switch (setting.type)
+            {
+                case "bool":
+                {
+                    var checkboxName = 'checkbox' + (nextControlId++);
+
+                    var checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = checkboxName;
+                    checkbox.addEventListener('change', function ()
+                    {
+                        setting.setValue(checkbox.checked);
+                    });
+                    wrapper.appendChild(checkbox);
+                    var label = document.createElement('label');
+                    label.textContent = setting.getDescription();
+                    label.htmlFor = checkboxName;
+                    wrapper.appendChild(label);
+                    closeables.push(setting.track(function (value)
+                    {
+                        checkbox.checked = value;
+                    }));
+                    break;
+                }
+                case "enum":
+                {
+                    heading = document.createElement('h3');
+                    heading.textContent = setting.getDescription();
+                    wrapper.appendChild(heading);
+
+                    var select = document.createElement('select');
+                    _.each(setting.enumValues, function(enumValue)
+                    {
+                        var option = document.createElement('option');
+                        option.selected = setting.value === enumValue.value;
+                        option.text = enumValue.text;
+                        option.value = enumValue.value;
+                        select.appendChild(option);
+                    });
+                    select.addEventListener('change', function()
+                    {
+                        setting.setValue(parseInt(select.options[select.selectedIndex].value));
+                    });
+                    closeables.push(setting.track(function(value)
+                    {
+                        var option = _.find(select.options, function(option) { return parseInt(option.value) === value; });
+                        option.selected = true;
+                    }));
+                    wrapper.appendChild(select);
+                    break;
+                }
+                case "int":
+                {
+                    heading = document.createElement('h3');
+                    heading.textContent = setting.getDescription();
+                    wrapper.appendChild(heading);
+
+                    input = document.createElement('input');
+                    input.type = 'number';
+                    input.value = setting.value;
+                    if (typeof(setting.min) !== 'undefined')
+                        input.min = setting.min;
+                    if (typeof(setting.max) !== 'undefined')
+                        input.max = setting.max;
+                    wrapper.appendChild(input);
+
+                    input.addEventListener('change', function()
+                    {
+                        setting.setValue(parseInt(input.value));
+                    });
+                    closeables.push(setting.track(function(value)
+                    {
+                        input.value = value;
+                    }));
+                    break;
+                }
+                case "double":
+                {
+                    heading = document.createElement('h3');
+                    heading.textContent = setting.getDescription();
+                    wrapper.appendChild(heading);
+
+                    input = document.createElement('input');
+                    input.type = 'number';
+                    input.value = setting.value;
+                    if (typeof(setting.min) !== 'undefined')
+                        input.min = setting.min;
+                    if (typeof(setting.max) !== 'undefined')
+                        input.max = setting.max;
+                    wrapper.appendChild(input);
+
+                    input.addEventListener('change', function()
+                    {
+                        setting.setValue(parseInt(input.value));
+                    });
+                    closeables.push(setting.track(function(value)
+                    {
+                        input.value = value;
+                    }));
+                    break;
+                }
+                default:
+                {
+                    console.error("Unsupported setting type", setting.type);
+                }
+            }
+
+            container.appendChild(wrapper);
+        }
+
+        ControlBuilder.buildAll = function(idPrefix, container)
+        {
+            var closeables = [];
+            ControlClient.withSettings(idPrefix, function(settings)
+            {
+                _.each(settings, function (setting)
+                {
+                    createSetting(setting, container, closeables);
+                })
+            });
+
+            return closeables;
+        };
+
+        ControlBuilder.build = function(path, container)
+        {
+            var closeables = [];
+            ControlClient.withSetting(path, function(setting)
+            {
+                createSetting(setting, container, closeables);
+            });
+            return closeables;
         };
 
         return ControlBuilder;

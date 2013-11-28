@@ -52,7 +52,7 @@ define(
             this.particleSubscription = DataProxy.subscribe(Protocols.particleState,    { json: true, onmessage: _.bind(this.onParticleData, this) });
             this.cameraSubscription   = DataProxy.subscribe(Protocols.cameraFrameState, { json: true, onmessage: _.bind(this.onCameraData, this) });
 
-            ControlBuilder.build('localiser', $('<div></div>', {'class': 'control-container localiser-controls'}).appendTo(this.$container));
+            ControlBuilder.buildAll('localiser', $('<div></div>', {'class': 'control-container localiser-controls flow'}).appendTo(this.$container).get(0));
 
             // TODO show what is in the camera frame (ball, goals, lines...)
             this.$ballVisibleMarker = $('<div></div>').addClass('marker ball').appendTo(this.$container);

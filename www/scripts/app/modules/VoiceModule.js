@@ -26,7 +26,7 @@ define(
 
         VoiceModule.prototype.load = function()
         {
-            ControlBuilder.build('speech', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container));
+            ControlBuilder.actions('voice.speak', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container).get(0));
         };
 
         VoiceModule.prototype.unload = function()

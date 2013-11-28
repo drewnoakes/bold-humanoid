@@ -26,7 +26,7 @@ define(
 
         MotionScriptModule.prototype.load = function()
         {
-            ControlBuilder.build('motion-scripts', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container));
+            ControlBuilder.actions('motion-script', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container).get(0));
         };
 
         MotionScriptModule.prototype.unload = function()

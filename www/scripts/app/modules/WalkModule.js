@@ -37,16 +37,35 @@ define(
             this.canvas.height = size;
             this.context = this.canvas.getContext('2d');
 
-            ControlBuilder.build('ambulator', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container));
-            ControlBuilder.build('option/approach-ball', $('<div></div>', {'class': 'control-container approach-ball-controls'}).appendTo(this.$container));
+            ControlBuilder.buildAll('ambulator', $('<div></div>', {'class': 'control-container ambulator-controls flow'}).appendTo(this.$container).get(0));
+            ControlBuilder.buildAll('options.approach-ball', $('<div></div>', {'class': 'control-container approach-ball-controls flow'}).appendTo(this.$container).get(0));
 
             this.subscription = DataProxy.subscribe(Protocols.ambulatorState, { json: true, onmessage: _.bind(this.onData, this) });
+
+            this.drawCrossHairs();
         };
 
         WalkModule.prototype.unload = function()
         {
             this.$container.empty();
             this.subscription.close();
+        };
+
+        WalkModule.prototype.drawCrossHairs = function()
+        {
+            console.log('drawing');
+            var context = this.context;
+
+            var mid = Math.round(size / 2);
+
+            context.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            context.lineWidth = 2;
+            context.beginPath();
+            context.moveTo(mid, 0);
+            context.lineTo(mid, size);
+            context.moveTo(0, mid);
+            context.lineTo(size, mid);
+            context.stroke();
         };
 
         WalkModule.prototype.onData = function(data)
@@ -75,17 +94,9 @@ define(
 
             context.clearRect(0, 0, size, size);
 
-            var mid = (size / 2) + 0.5;
+            this.drawCrossHairs();
 
-            // Cross hairs
-            context.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-            context.lineWidth = 2;
-            context.beginPath();
-            context.moveTo(mid, 0);
-            context.lineTo(mid, size);
-            context.moveTo(0, mid);
-            context.lineTo(size, mid);
-            context.stroke();
+            var mid = (size / 2) + 0.5;
 
             //
             // Angles

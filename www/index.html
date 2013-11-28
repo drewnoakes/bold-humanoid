@@ -30,6 +30,27 @@
         </div>
     </script>
 
+    <script id="camera-module-template" type="text/x-handlebars-template">
+        <div>
+            <canvas class="camera-canvas" width="320" height="240"></canvas>
+            <div class="hover-pixel-info"></div>
+            <canvas class="pixel-label-inspector"></canvas>
+            <div class="movement control-container flow">
+                <button name="left">&blacktriangleleft;</button>
+                <button name="up">&blacktriangle;</button>
+                <button name="down">&blacktriangledown;</button>
+                <button name="right">&blacktriangleright;</button>
+                <button name="home">Home</button>
+                <button name="zero">Zero</button>
+            </div>
+            <div class="capture control-container flow advanced"></div>
+            <div class="vision-settings control-container flow"></div>
+            <div class="image-settings control-container flow"></div>
+            <div class="image-features control-container column"></div>
+            <div class="camera-settings control-container column"></div>
+        </div>
+    </script>
+
     <script id="state-dump-module-template" type="text/x-handlebars-template">
         <div>
             <select></select>
@@ -105,8 +126,8 @@
 
 <script type="text/javascript">
     require.config({
-//        urlArgs: 'v=1',
         baseUrl: 'scripts/app',
+//        urlArgs: 'v=1',
         urlArgs: 'noCache=' + new Date().getTime(),
         waitSeconds: 15
     });

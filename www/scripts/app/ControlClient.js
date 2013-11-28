@@ -4,37 +4,58 @@
 define(
     [
         'DataProxy',
-        'Protocols'
+        'Protocols',
+        'Action',
+        'Setting'
     ],
-    function (DataProxy, Protocols)
+    function (DataProxy, Protocols, Action, Setting)
     {
         var ControlClient = {};
 
-        var callbacksByFamily = {};
+        var actionsCallbacks = [],
+            settingsCallbacks = [];
 
-        var dataByFamily,
+        var actions,
+            settings,
             subscription;
 
         var onControlData = function(data)
         {
-            console.log('Received control data:', data);
-            // Store the control data
-            dataByFamily = data;
-
-            // Raise any queued callbacks
-            _.each(_.keys(data), function(family)
+            switch (data.type)
             {
-                if (callbacksByFamily[family])
+                case "sync":
                 {
-                    // Invoke all pending callbacks
-                    _.each(callbacksByFamily[family], function (callback)
-                    {
-                        callback(data[family]);
-                    });
-                    // Remove the callbacks now they've been satisfied
-                    callbacksByFamily[family].length = 0;
+                    console.log('Received control data:', data);
+
+                    actions = _.map(data.actions, function(actionData) { return new Action(actionData); });
+                    settings = _.map(data.settings, function(settingData) { return new Setting(settingData); });
+
+                    // Raise any queued callbacks
+                    _.each(actionsCallbacks, function(callback) { callback(); });
+                    _.each(settingsCallbacks, function(callback) { callback(); });
+
+                    actionsCallbacks = [];
+                    settingsCallbacks = [];
+
+                    break;
                 }
-            });
+                case "update":
+                {
+                    console.log('updating setting value', data.path, data.value);
+
+                    console.assert(settings);
+
+                    var setting = ControlClient.__findSetting(data.path);
+
+                    setting.__setValue(data.value);
+
+                    break;
+                }
+                default:
+                {
+                    console.error("Unsupported control data type: " + data.type);
+                }
+            }
         };
 
         ControlClient.connect = function()
@@ -48,40 +69,107 @@ define(
             );
         };
 
-        ControlClient.withData = function(family, callback)
+        ControlClient.__findSetting = function(path)
         {
-            if (dataByFamily)
+            return _.find(settings, function(setting) { return setting.path === path; });
+        };
+
+        ControlClient.withSetting = function(path, callback)
+        {
+            var process = function()
+            {
+                var match = ControlClient.__findSetting(path);
+                if (!match)
+                    console.error("No settings exists with path: " + path);
+                callback(match);
+            };
+
+            if (settings)
             {
                 // We have data, so provide it immediately
-                callback(dataByFamily[family]);
+                process();
             }
             else
             {
                 // No data yet, so store the callback
-                if (typeof(callbacksByFamily[family]) === 'undefined')
-                {
-                    callbacksByFamily[family] = [];
-                }
-
-                callbacksByFamily[family].push(callback);
+                settingsCallbacks.push(process);
             }
         };
 
-        ControlClient.sendCommand = function(family, id, value)
+        ControlClient.withSettings = function(pathPrefix, callback)
         {
-            var command = {
-                family: family,
-                id: id
+            var findSettings = function()
+            {
+                var matches = _.filter(settings, function(setting) { return setting.path.indexOf(pathPrefix) === 0; });
+                if (matches.length === 0)
+                    console.error("No settings exist with path prefix: " + pathPrefix);
+                callback(matches);
             };
 
-            if (typeof(value) !== 'undefined')
+            if (settings)
             {
-                command.value = value;
+                // We have data, so provide it immediately
+                findSettings();
             }
+            else
+            {
+                // No data yet, so store the callback
+                settingsCallbacks.push(findSettings);
+            }
+        };
 
-            console.log('Sending command', command);
+        ControlClient.withAction = function(id, callback)
+        {
+            var findAction = function()
+            {
+                var match = _.find(actions, function(action) { return action.id === id; });
+                if (!match)
+                    console.error("No action exist with ID: " + id);
+                callback(match);
+            };
 
-            subscription.send(JSON.stringify(command));
+            if (actions)
+            {
+                // We have data, so provide it immediately
+                findAction();
+            }
+            else
+            {
+                // No data yet, so store the callback
+                actionsCallbacks.push(findAction);
+            }
+        };
+
+        ControlClient.withActions = function(idPrefix, callback)
+        {
+            var findActions = function()
+            {
+                var matches = _.filter(actions, function(action) { return action.id.indexOf(idPrefix) === 0; });
+                if (matches.length === 0)
+                    console.error("No actions exist with ID prefix: " + idPrefix);
+                callback(matches);
+            };
+
+            if (actions)
+            {
+                // We have data, so provide it immediately
+                findActions();
+            }
+            else
+            {
+                // No data yet, so store the callback
+                actionsCallbacks.push(findActions);
+            }
+        };
+
+        ControlClient.send = function(message)
+        {
+            // { "type": "action", "id": "some.action" }
+            // { "type": "setting", "path": "some.setting", "value": 1234 }
+
+            console.log('Sending control message', message);
+
+            subscription.send(JSON.stringify(message));
         };
 
         return ControlClient;
