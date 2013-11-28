@@ -50,7 +50,7 @@
     },
     "ignore-above-horizon": { "type": "bool", "default": true },
     "line-detection": {
-      "enable":      { "type": "bool", "default": false },
+      "enable":      { "type": "bool", "default": false, "description": "Detect lines" },
       "line-dots": {
         "hysterisis": { "type": "int", "min": 0, "max": 255, "default": 3, "advanced": true }
       },
@@ -64,7 +64,7 @@
       }
     },
     "label-counter": {
-      "enable": { "type": "bool", "default": false }
+      "enable": { "type": "bool", "default": false, "description": "Count labels" }
     },
     "field-edge-pass": {
       "smoothing-window-length": { "type": "int", "min": 1, "max": 100, "default": 15, "advanced": true },
