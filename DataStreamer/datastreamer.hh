@@ -81,7 +81,6 @@ namespace bold
     libwebsocket_protocols* d_controlProtocol;
     std::vector<CameraSession*> d_cameraSessions;
     std::vector<JsonSession*> d_controlSessions;
-    bool d_hasWebSockets;
 
     //
     // libwebsocket callbacks

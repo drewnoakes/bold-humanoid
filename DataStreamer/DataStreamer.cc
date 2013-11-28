@@ -46,40 +46,41 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   contextInfo.user = this;
   d_context = libwebsocket_create_context(&contextInfo);
 
-  d_hasWebSockets = d_context != nullptr;
+  bool hasWebSockets = d_context != nullptr;
 
-  if (d_hasWebSockets)
+  if (hasWebSockets)
     cout << "[DataStreamer::DataStreamer] Listening on TCP port " << d_port << endl;
   else
     cerr << ccolor::error << "[DataStreamer::DataStreamer] libwebsocket context creation failed" << ccolor::reset << endl;
 
-  //
-  // Listen for state changes and publish them via websockets
-  //
-  AgentState::getInstance().updated.connect(
-    [this](shared_ptr<StateTracker const> tracker) {
-      assert(ThreadId::isThinkLoopThread());
-      if (!d_hasWebSockets)
-        return;
-      libwebsocket_protocols* protocol = tracker->websocketProtocol;
-      libwebsocket_callback_on_writable_all_protocol(protocol);
-    }
-  );
+  if (hasWebSockets)
+  {
+    // Listen for StateObject changes and publish them via websockets
+    AgentState::getInstance().updated.connect(
+      [this](shared_ptr<StateTracker const> tracker)
+      {
+        // TODO this assertion will not be met! we may be called from the motion thread... need a better approach...
+//      assert(ThreadId::isThinkLoopThread());
+        libwebsocket_callback_on_writable_all_protocol(tracker->websocketProtocol);
+      }
+    );
 
-  Config::updated.connect(
-    [this](SettingBase* setting)
-    {
-      assert(ThreadId::isThinkLoopThread());
+    // Listen for Setting<T> changes and publish them via websockets
+    Config::updated.connect(
+      [this](SettingBase* setting)
+      {
+        assert(ThreadId::isThinkLoopThread());
 
-      if (!d_hasWebSockets || d_controlSessions.size() == 0)
-        return;
+        if (d_controlSessions.size() == 0)
+          return;
 
-      auto bytes = prepareSettingUpdateBytes(setting);
+        auto bytes = prepareSettingUpdateBytes(setting);
 
-      for (JsonSession* session : d_controlSessions)
-        session->queue.push(bytes);
+        for (JsonSession* session : d_controlSessions)
+          session->queue.push(bytes);
 
-      libwebsocket_callback_on_writable_all_protocol(d_controlProtocol);
-    }
-  );
+        libwebsocket_callback_on_writable_all_protocol(d_controlProtocol);
+      }
+    );
+  }
 }
