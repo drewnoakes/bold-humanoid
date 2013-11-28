@@ -42,6 +42,7 @@ define(
         CameraModule.prototype.load = function()
         {
             var element = moduleTemplate.create();
+            this.$container.append(element);
 
             this.cameraCanvas = element.querySelector('.camera-canvas');
             this.$cameraCanvas = $(this.cameraCanvas);
@@ -51,9 +52,6 @@ define(
             var pixelLabelInspectorCanvas = element.querySelector('.pixel-label-inspector');
             this.pixelLabelInspector = new PixelLabelInspector(pixelLabelInspectorCanvas, 320, 85);
             this.pixelLabelInspector.setVisible(false);
-
-            this.$container.append(element)
-                           .append(this.pixelLabelInspector.canvas);
 
             this.bindInteraction();
 
