@@ -21,7 +21,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldCountLabels         = Config::getSetting<bool>("vision.label-counter.enable");
 
   d_shouldIgnoreAboveHorizon  = Config::getSetting<bool>("vision.ignore-above-horizon");
-  d_isRecordingFrames         = Config::getSetting<bool>("vision.recording-frames");
+  d_isRecordingFrames         = Config::getSetting<bool>("camera.recording-frames");
 
   d_streamFramePeriod         = Config::getSetting<int>("round-table.camera-frame-frequency");
   d_imageType                 = Config::getSetting<ImageType>("round-table.image-type");
