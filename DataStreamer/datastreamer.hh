@@ -68,8 +68,6 @@ namespace bold
 
     void processCommand(std::string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi);
 
-    int writeJson(libwebsocket* wsi, rapidjson::StringBuffer const& buffer);
-
     cv::Mat d_image;
 
     std::shared_ptr<Camera> d_camera;

@@ -154,7 +154,6 @@ add_class(BOLDHUMANOID
   ./DataStreamer/processCommand.cc
   ./DataStreamer/streamImage.cc
   ./DataStreamer/update.cc
-  ./DataStreamer/writeJson.cc
 )
 
 add_class(BOLDHUMANOID
