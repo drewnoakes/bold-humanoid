@@ -175,6 +175,19 @@ div.module div.module-column-3
     margin: 2px 6px 2px 0;
 }
 
+.flow .setting.control
+{
+    width: 100px;
+}
+
+.flow .control h3,
+.flow .control label
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .control-container.column .control input[type="text"],
 .control-container.column .control input[type="number"]
 {
@@ -183,7 +196,13 @@ div.module div.module-column-3
 
 .control-container.flow input[type="number"]
 {
-    width: 50px;
+    width: 95px;
+}
+
+.control-container.flow label
+{
+    display: inline-block;
+    width: 80px;
 }
 
 .control-container input[type="number"]
@@ -275,6 +294,13 @@ div.module.camera canvas.camera-canvas
 div.module.camera > div.pane-container
 {
     min-height: 410px
+}
+
+div.module.camera div.pane-container h2
+{
+    color: #555;
+    margin: 4px 0;
+    display: block;
 }
 
 div.module.camera canvas.pixel-label-inspector

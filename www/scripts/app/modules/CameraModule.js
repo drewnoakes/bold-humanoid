@@ -79,21 +79,27 @@ define(
             ControlBuilder.action('camera.save-frame', captureContainer);
             this.closables.add(ControlBuilder.build('camera.recording-frames', captureContainer));
 
-            var visionSettingsContainer = element.querySelector('div.vision-settings');
-            this.closables.add(ControlBuilder.build('vision.ignore-above-horizon', visionSettingsContainer));
+            var visionOptionsContainer = element.querySelector('div.vision-options');
+            this.closables.add(ControlBuilder.build('vision.ignore-above-horizon', visionOptionsContainer));
+            this.closables.add(ControlBuilder.build('vision.label-counter.enable', visionOptionsContainer));
+
+            var visionSettingsContainer = element.querySelector('div.object-detection');
             this.closables.add(ControlBuilder.build('vision.min-ball-area', visionSettingsContainer));
             this.closables.add(ControlBuilder.build('vision.min-goal-dimension-pixels', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.field-edge-pass.smoothing-window-length', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.label-counter.enable', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.line-dots.hysteresis', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.enable', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-r', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-theta-degs', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.max-line-gap', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.max-lines-returned', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.min-line-length', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.min-votes', visionSettingsContainer));
+
+            var fieldEdgeContainer = element.querySelector('div.field-edge');
+            this.closables.add(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', fieldEdgeContainer));
+            this.closables.add(ControlBuilder.build('vision.field-edge-pass.smoothing-window-length', fieldEdgeContainer));
+
+            var lineContainer = element.querySelector('div.line-detection');
+            this.closables.add(ControlBuilder.build('vision.line-detection.enable', lineContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.line-dots.hysteresis', lineContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-r', lineContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-theta-degs', lineContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.max-line-gap', lineContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.max-lines-returned', lineContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.min-line-length', lineContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.min-votes', lineContainer));
 
             var imageSettingsContainer = element.querySelector('div.image-settings');
             this.closables.add(ControlBuilder.build('round-table.image-type', imageSettingsContainer));
