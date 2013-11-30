@@ -45,7 +45,6 @@
       "exposure-auto-priority": false,
       "backlight-compensation": false,
       "power-line-frequency": 2,
-      "exposure-absolute": 1000,
       "brightness": 128,
       "contrast": 32,
       "saturation": 28,
