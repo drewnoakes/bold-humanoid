@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace bold
 {
   class ThreadId
@@ -15,6 +17,8 @@ namespace bold
     static int getThreadId() { return d_threadId; }
     static bool isMotionLoopThread() { return d_threadId == MotionLoop; }
     static bool isThinkLoopThread() { return d_threadId == ThinkLoop; }
+
+    static std::string getThreadName();
 
   private:
     static thread_local int d_threadId;
