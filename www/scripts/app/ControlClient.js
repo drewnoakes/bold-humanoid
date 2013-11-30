@@ -17,6 +17,8 @@ define(
 
         var actions,
             settings,
+            actionsJson,
+            settingsJson,
             subscription;
 
         var onControlData = function(data)
@@ -26,6 +28,9 @@ define(
                 case "sync":
                 {
                     console.log('Received control data:', data);
+
+                    actionsJson = data.actions;
+                    settingsJson = data.settings;
 
                     actions = _.map(data.actions, function(actionData) { return new Action(actionData); });
                     settings = _.map(data.settings, function(settingData) { return new Setting(settingData); });
@@ -49,11 +54,36 @@ define(
 
                     setting.__setValue(data.value);
 
+                    // Update cached settingsJson object
+                    var obj = _.find(settingsJson, function(o) { return o.path === data.path; });
+                    if (obj)
+                        obj.value = data.value;
+                    else
+                        console.error('No setting known with path', data.path);
+
                     break;
                 }
                 default:
                 {
                     console.error("Unsupported control data type: " + data.type);
+                }
+            }
+
+            _.each(onSettingChangeCallbacks, function(callback) { callback(); });
+        };
+
+        var onSettingChangeCallbacks = [];
+
+        ControlClient.onSettingChange = function(callback)
+        {
+            onSettingChangeCallbacks.push(callback);
+
+            return {
+                close: function()
+                {
+                    var i = onSettingChangeCallbacks.indexOf(callback);
+                    if (i !== -1)
+                        onSettingChangeCallbacks.splice(i, 1);
                 }
             }
         };
@@ -170,6 +200,12 @@ define(
             console.log('Sending control message', message);
 
             subscription.send(JSON.stringify(message));
+        };
+
+        ControlClient.getConfigText = function()
+        {
+            // TODO allow other types of config (actions, values only, ...?)
+            return settingsJson ? JSON.stringify(settingsJson, null, 4) : '';
         };
 
         return ControlClient;

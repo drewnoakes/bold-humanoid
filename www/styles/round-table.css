@@ -459,6 +459,21 @@ div.module.state > div.pane-container
 
 /********************************************************************/
 
+div.module.config .json-text
+{
+    white-space: pre;
+    font-family: Ubuntu Mono, consolas, monospace;
+    font-size: 11px;
+}
+
+div.module.config > div.pane-container
+{
+    height: 456px;
+    overflow: auto;
+}
+
+/********************************************************************/
+
 div.module.field div.hover-info
 {
     position: absolute;
