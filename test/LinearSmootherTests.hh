@@ -9,7 +9,7 @@ using namespace Eigen;
 TEST (LinearSmootherTests, basics)
 {
   LinearSmoother s(0, 5);
-  
+
   EXPECT_EQ ( 0, s.getCurrent() );
   EXPECT_EQ ( 0, s.getTarget() );
   EXPECT_EQ ( 0, s.getNext() );
@@ -25,7 +25,7 @@ TEST (LinearSmootherTests, basics)
   EXPECT_EQ ( 22, s.getNext() );
   EXPECT_EQ ( 22, s.getNext() );
   EXPECT_EQ ( 22, s.getNext() );
-  
+
   s.setTarget(-22);
 
   EXPECT_EQ ( 17, s.getNext() );
@@ -39,7 +39,7 @@ TEST (LinearSmootherTests, basics)
   EXPECT_EQ ( -22, s.getNext() );
   EXPECT_EQ ( -22, s.getNext() );
   EXPECT_EQ ( -22, s.getNext() );
-  
+
   s.setTarget(-21);
 
   EXPECT_EQ ( -21, s.getNext() );

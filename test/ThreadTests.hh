@@ -36,10 +36,10 @@ TEST (ThreadTests, DISABLED_multipleCounters)
   int threadCount = 5;
   int iterationCount = 10000;
   int expected = threadCount * iterationCount;
-  
+
   UnsafeCounter unsafeCounter;
   SafeCounter safeCounter;
-  
+
   auto countLoop = [&]()
   {
     for (int i = 0; i < iterationCount; i++)
@@ -48,14 +48,14 @@ TEST (ThreadTests, DISABLED_multipleCounters)
       safeCounter.increment();
     }
   };
-  
+
   vector<thread> threads;
   for (int t = 0; t < threadCount; t++)
     threads.push_back(thread(countLoop));
-  
+
   for (auto& thread : threads)
     thread.join();
-  
+
   EXPECT_EQ( safeCounter.value,   expected );
   EXPECT_NE( unsafeCounter.value, expected );
 }
@@ -65,13 +65,13 @@ TEST (ThreadTests, DISABLED_threadSafetyOfSignals)
   int threadCount = 5;
   int iterationCount = 10000;
 //   int expected = threadCount * iterationCount;
-  
+
   int count;
   sigc::signal<void> sig;
   mutex m;
-  
+
   sig.connect([&](){ count++; });
-  
+
   vector<thread> threads;
   for (int t = 0; t < threadCount; t++)
   {
@@ -84,10 +84,10 @@ TEST (ThreadTests, DISABLED_threadSafetyOfSignals)
       }
     }));
   }
-  
+
   for (auto& thread : threads)
     thread.join();
-  
+
 //   EXPECT_EQ( safeCounter.value,   expected );
 //   EXPECT_NE( unsafeCounter.value, expected );
 }
@@ -95,10 +95,10 @@ TEST (ThreadTests, DISABLED_threadSafetyOfSignals)
 TEST (ThreadTests, DISABLED_threadedProducerConsumer)
 {
   int loopCount = 50000;
-  
+
   shared_ptr<int> ptr;
   mutex m;
-  
+
   thread producer([loopCount,&ptr,&m]()
   {
     for (int i = 0; i < loopCount; i++)
@@ -110,7 +110,7 @@ TEST (ThreadTests, DISABLED_threadedProducerConsumer)
       ptr = make_shared<int>(i);
     }
   });
-  
+
   thread consumer([loopCount,&ptr,&m]()
   {
     int lastVal = 0;
@@ -124,7 +124,7 @@ TEST (ThreadTests, DISABLED_threadedProducerConsumer)
       lastVal = *state;
     }
   });
-  
+
   producer.join();
   consumer.join();
 }

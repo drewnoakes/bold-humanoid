@@ -8,9 +8,9 @@ using namespace bold;
 TEST (MX28AlarmTests, basics)
 {
   auto alarm = MX28Alarm(0);
-  
+
   EXPECT_FALSE ( alarm.hasError() );
-  
+
   EXPECT_FALSE ( alarm.hasInputVoltageError() );
   EXPECT_FALSE ( alarm.hasAngleLimitError() );
   EXPECT_FALSE ( alarm.hasOverheatedError() );
@@ -18,11 +18,11 @@ TEST (MX28AlarmTests, basics)
   EXPECT_FALSE ( alarm.hasChecksumError() );
   EXPECT_FALSE ( alarm.hasOverloadError() );
   EXPECT_FALSE ( alarm.hasInstructionError() );
-  
+
   alarm = MX28Alarm(0x7F);
-  
+
   EXPECT_TRUE ( alarm.hasError() );
-  
+
   EXPECT_TRUE ( alarm.hasInputVoltageError() );
   EXPECT_TRUE ( alarm.hasAngleLimitError() );
   EXPECT_TRUE ( alarm.hasOverheatedError() );

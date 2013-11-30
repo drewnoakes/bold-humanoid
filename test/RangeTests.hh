@@ -8,11 +8,11 @@ using namespace bold;
 TEST (RangeTests, cosntruction)
 {
   auto range = Range<int>();
-  
+
   EXPECT_TRUE ( range.isEmpty() );
 
   range = Range<int>(1, 2);
-  
+
   EXPECT_FALSE ( range.isEmpty() );
   EXPECT_EQ ( 1, range.min() );
   EXPECT_EQ ( 2, range.max() );
@@ -27,7 +27,7 @@ TEST (RangeTests, equality)
   EXPECT_NE ( Range<int>(1, 2), Range<int>() );
   EXPECT_NE ( Range<int>(1, 2), Range<int>(1, 1) );
   EXPECT_NE ( Range<int>(1, 2), Range<int>(2, 2) );
-  
+
   // Equal after reset
   auto range = Range<int>(1, 2);
   range.reset();
@@ -37,17 +37,17 @@ TEST (RangeTests, equality)
 TEST (RangeTests, expand)
 {
   auto range = Range<int>(1, 2);
-  
+
   range.expand(1); // NOOP
-  
+
   EXPECT_EQ ( Range<int>(1, 2), range );
-  
+
   range.expand(0);
-  
+
   EXPECT_EQ ( Range<int>(0, 2), range );
-  
+
   range.expand(3);
-  
+
   EXPECT_EQ ( Range<int>(0, 3), range );
 }
 
@@ -56,22 +56,22 @@ TEST (RangeTests, expandWithRange)
   auto range = Range<int>(1, 2);
 
   range.expand(Range<int>(0, 1));
-  
+
   EXPECT_EQ ( Range<int>(0, 2), range );
 
   range.expand(Range<int>(5, 6));
-  
-  EXPECT_EQ ( Range<int>(0, 6), range );  
+
+  EXPECT_EQ ( Range<int>(0, 6), range );
 }
 
 TEST (RangeTests, reset)
 {
   auto range = Range<int>(1, 2);
-  
+
   range.reset();
-  
+
   EXPECT_TRUE ( range.isEmpty() );
-  
+
   range.expand(1);
 
   EXPECT_FALSE ( range.isEmpty() );
