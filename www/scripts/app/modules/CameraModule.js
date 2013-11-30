@@ -10,14 +10,14 @@ define(
         'DOMTemplate',
         'PixelLabelInspector',
         'util/Colour',
+        'util/Closeable',
         'util/MouseEventUtil'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, DOMTemplate, PixelLabelInspector, Colour, MouseEventUtil)
+    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, DOMTemplate, PixelLabelInspector, Colour, Closeable, MouseEventUtil)
     {
         'use strict';
 
         // TODO LUT controls
-        // TODO close closeables on unload
 
         var moduleTemplate = new DOMTemplate("camera-module-template");
 
@@ -39,7 +39,7 @@ define(
                 }
             ];
 
-            this.closables = [];
+            this.closables = new Closeable();
         };
 
         CameraModule.prototype.load = function()
@@ -60,7 +60,7 @@ define(
 
             this.createContext();
 
-            this.closables.push(DataProxy.subscribe(
+            this.closables.add(DataProxy.subscribe(
                 Protocols.camera,
                 {
                     json: false,
@@ -77,31 +77,31 @@ define(
 
             var captureContainer = element.querySelector('.capture');
             ControlBuilder.action('camera.save-frame', captureContainer);
-            this.closables.push(ControlBuilder.build('camera.recording-frames', captureContainer));
+            this.closables.add(ControlBuilder.build('camera.recording-frames', captureContainer));
 
             var visionSettingsContainer = element.querySelector('div.vision-settings');
-            this.closables.push(ControlBuilder.build('vision.ignore-above-horizon', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.min-ball-area', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.min-goal-dimension-pixels', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.field-edge-pass.smoothing-window-length', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.label-counter.enable', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.line-detection.line-dots.hysterisis', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.line-detection.enable', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.line-detection.mask-walk.delta-r', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.line-detection.mask-walk.delta-theta-degs', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.line-detection.mask-walk.max-line-gap', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.line-detection.mask-walk.max-lines-returned', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.line-detection.mask-walk.min-line-length', visionSettingsContainer));
-            this.closables.push(ControlBuilder.build('vision.line-detection.mask-walk.min-votes', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.ignore-above-horizon', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.min-ball-area', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.min-goal-dimension-pixels', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.field-edge-pass.smoothing-window-length', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.label-counter.enable', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.line-dots.hysterisis', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.enable', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-r', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-theta-degs', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.max-line-gap', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.max-lines-returned', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.min-line-length', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.min-votes', visionSettingsContainer));
 
             var imageSettingsContainer = element.querySelector('div.image-settings');
-            this.closables.push(ControlBuilder.build('round-table.image-type', imageSettingsContainer));
-            this.closables.push(ControlBuilder.build('round-table.camera-frame-frequency', imageSettingsContainer));
+            this.closables.add(ControlBuilder.build('round-table.image-type', imageSettingsContainer));
+            this.closables.add(ControlBuilder.build('round-table.camera-frame-frequency', imageSettingsContainer));
 
-            this.closables.push(ControlBuilder.buildAll('round-table.image-features', element.querySelector('div.image-features')));
+            this.closables.add(ControlBuilder.buildAll('round-table.image-features', element.querySelector('div.image-features')));
 
-            this.closables.push(ControlBuilder.buildAll('camera.settings', element.querySelector('div.camera-settings')));
+            this.closables.add(ControlBuilder.buildAll('camera.settings', element.querySelector('div.camera-settings')));
 
 //            ControlBuilder.build('camera',                $('<div></div>', {'class': 'control-container camera-controls'}).appendTo(this.$container));
 //            ControlBuilder.build('debug-image',           $('<div></div>', {'class': 'control-container image-controls'}).appendTo(this.$container));
@@ -118,7 +118,8 @@ define(
         CameraModule.prototype.unload = function()
         {
             this.$container.empty();
-            this.subscription.close();
+
+            this.closables.closeAll();
         };
 
         CameraModule.prototype.bindInteraction = function()
