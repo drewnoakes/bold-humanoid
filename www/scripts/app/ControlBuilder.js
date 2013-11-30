@@ -15,6 +15,7 @@ define(
 
         ControlBuilder.action = function(id, target)
         {
+            console.assert(id && target);
             var button;
             if (target instanceof HTMLButtonElement)
             {
@@ -39,6 +40,7 @@ define(
 
         ControlBuilder.actions = function(idPrefix, target)
         {
+            console.assert(idPrefix && target);
             ControlClient.withActions(idPrefix, function(actions)
             {
                 _.each(actions, function(action){ ControlBuilder.action(action.id, target)});
@@ -169,6 +171,7 @@ define(
 
         ControlBuilder.buildAll = function(idPrefix, container)
         {
+            console.assert(idPrefix && container);
             var closeables = [];
             ControlClient.withSettings(idPrefix, function(settings)
             {
@@ -183,6 +186,7 @@ define(
 
         ControlBuilder.build = function(path, container)
         {
+            console.assert(path && container);
             var closeables = [];
             ControlClient.withSetting(path, function(setting)
             {
