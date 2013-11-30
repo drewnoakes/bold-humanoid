@@ -1,13 +1,12 @@
 #include "datastreamer.ih"
 
 DataStreamer::DataStreamer(shared_ptr<Camera> camera)
-  : d_image(),
+  : d_port(Config::getStaticValue<int>("round-table.tcp-port")),
     d_camera(camera),
+    d_image(),
     d_context(0),
     d_cameraSessions()
 {
-  d_port = Config::getStaticValue<int>("round-table.tcp-port");
-
   // We have three special protocols: HTTP-only, Camera and Control.
   // These are followed by N other protocols, one per type of state in the system
 

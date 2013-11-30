@@ -68,11 +68,10 @@ namespace bold
 
     void processCommand(std::string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi);
 
+    const int d_port;
+    const std::shared_ptr<Camera> d_camera;
+
     cv::Mat d_image;
-
-    std::shared_ptr<Camera> d_camera;
-
-    int d_port;
     libwebsocket_context* d_context;
     libwebsocket_protocols* d_protocols;
     libwebsocket_protocols* d_cameraProtocol;
