@@ -1,13 +1,14 @@
 define(
     [
         'DataProxy',
-        'Protocols'
+        'Protocols',
+        'DOMTemplate'
     ],
-    function(DataProxy, Protocols)
+    function(DataProxy, Protocols, DOMTemplate)
     {
         'use strict';
 
-        var moduleTemplate = Handlebars.compile($('#game-module-template').html());
+        var moduleTemplate = new DOMTemplate('game-module-template');
 
         var padLeft = function (nr, n, str)
         {
@@ -124,7 +125,8 @@ define(
             amendTeam(data.team1);
             amendTeam(data.team2);
 
-            this.$container.html(moduleTemplate(data));
+            this.$container.empty();
+            this.$container.append(moduleTemplate.create(data));
         };
 
         return GameStateModule;

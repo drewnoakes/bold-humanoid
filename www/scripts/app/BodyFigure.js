@@ -3,13 +3,14 @@
  */
 define(
     [
-        'Constants'
+        'Constants',
+        'DOMTemplate'
     ],
-    function (Constants)
+    function (Constants, DOMTemplate)
     {
         'use strict';
 
-        var bodyTemplate = Handlebars.compile($('#body-figure-template').html());
+        var bodyTemplate = new DOMTemplate('body-figure-template');
 
         var BodyFigure = function ()
         {
@@ -71,9 +72,7 @@ define(
                 bodyData.containerHeight = Math.max(bodyData.containerHeight, joint.y + joint.height);
             });
 
-            var bodyHtml = bodyTemplate(bodyData);
-            var doc = $('<div></div>').html(bodyHtml).get(0);
-            this.element = doc.children[0];
+            this.element = bodyTemplate.create(bodyData);
 
             this.jointElementById = [undefined];
 

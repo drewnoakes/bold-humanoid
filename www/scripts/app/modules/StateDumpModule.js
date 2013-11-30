@@ -4,13 +4,14 @@
 define(
     [
         'Protocols',
-        'DataProxy'
+        'DataProxy',
+        'DOMTemplate'
     ],
-    function(Protocols, DataProxy)
+    function(Protocols, DataProxy, DOMTemplate)
     {
         'use strict';
 
-        var moduleHtml = Handlebars.compile($('#state-dump-module-template').html())();
+        var moduleTemplate = new DOMTemplate('state-dump-module-template');
 
         var StateDumpModule = function()
         {
@@ -29,13 +30,13 @@ define(
 
         StateDumpModule.prototype.load = function()
         {
-            var templateRoot = $('<div></div>').html(moduleHtml).children();
+            var $templateRoot = $(moduleTemplate.create());
 
-            this.$container.append(templateRoot);
+            this.$container.append($templateRoot);
 
-            this.textElement = templateRoot.find('div.json-text').get(0);
+            this.textElement = $templateRoot.find('div.json-text').get(0);
 
-            var select = templateRoot.find('select');
+            var select = $templateRoot.find('select');
 
             select.append($('<option>').attr('value', '').text('(None)'));
             _.each(Protocols.allStates, function(stateName)

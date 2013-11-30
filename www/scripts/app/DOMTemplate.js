@@ -14,7 +14,9 @@ define(
         {
             this.contentType = contentType || "text/html";
             var templateElement = document.getElementById(templateId);
-            console.assert(templateElement);
+            if (!templateElement) {
+                console.error('No element found with id', templateId);
+            }
             var templateText = templateElement.textContent;
             console.assert(templateText);
             this.template = Handlebars.compile(templateText);

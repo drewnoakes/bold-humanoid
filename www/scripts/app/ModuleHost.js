@@ -3,8 +3,9 @@
  */
 define(
     [
+        'DOMTemplate'
     ],
-    function ()
+    function (DOMTemplate)
     {
         /* Modules are dynamic components, many instances of which make up the Round Table UI.
          *
@@ -47,7 +48,7 @@ define(
                 .appendTo(this.$linkContainer);
         };
 
-        var moduleTemplate = Handlebars.compile($('#module-template').html());
+        var moduleTemplate = new DOMTemplate('module-template');
 
         ModuleHost.prototype.load = function()
         {
@@ -78,8 +79,7 @@ define(
 
         ModuleHost.prototype.addModule = function(module)
         {
-            var moduleHtml = moduleTemplate(module),
-                moduleElement = $('<div></div>').html(moduleHtml).children().get(0),
+            var moduleElement = moduleTemplate.create(module),
                 $moduleElement = $(moduleElement);
 
             module.__$button.addClass('added');
