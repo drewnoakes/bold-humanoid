@@ -86,7 +86,7 @@ define(
             this.closables.add(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', visionSettingsContainer));
             this.closables.add(ControlBuilder.build('vision.field-edge-pass.smoothing-window-length', visionSettingsContainer));
             this.closables.add(ControlBuilder.build('vision.label-counter.enable', visionSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.line-dots.hysterisis', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.line-detection.line-dots.hysteresis', visionSettingsContainer));
             this.closables.add(ControlBuilder.build('vision.line-detection.enable', visionSettingsContainer));
             this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-r', visionSettingsContainer));
             this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-theta-degs', visionSettingsContainer));

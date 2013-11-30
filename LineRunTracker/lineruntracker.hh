@@ -11,7 +11,7 @@ namespace bold
   *
   * This type was designed for finding line segments in an image row/column.
   *
-  * Hysterisis is used to address both noise and gaps at borders between the
+  * Hysteresis is used to address both noise and gaps at borders between the
   * two labels being tracked.
   */
   class LineRunTracker
@@ -21,17 +21,17 @@ namespace bold
       uchar inLabel,
       uchar onLabel,
       ushort otherCoordinate,
-      uchar hysterisisLimit,
+      uchar hysteresisLimit,
       std::function<void(ushort const, ushort const, ushort const)> callback
     )
       : otherCoordinate(otherCoordinate),
 	inLabel(inLabel),
 	onLabel(onLabel),
-	hysterisisLimit(hysterisisLimit),
+	hysteresisLimit(hysteresisLimit),
 	state(State::Out),
 	startedAt(0),
 	callback(callback),
-	hysterisis(0)
+	hysteresis(0)
     {}
 
     void reset()
@@ -41,8 +41,8 @@ namespace bold
 
     void update(uchar label, ushort position);
 
-    uchar getHysterisisLimit() const { return hysterisisLimit; }
-    void setHysterisisLimit(uchar limit) { hysterisisLimit = limit; }
+    uchar getHysteresisLimit() const { return hysteresisLimit; }
+    void setHysteresisLimit(uchar limit) { hysteresisLimit = limit; }
 
     ushort otherCoordinate;
 
@@ -59,11 +59,11 @@ namespace bold
 
     uchar inLabel; // eg: green
     uchar onLabel; // eg: white
-    uchar hysterisisLimit;
+    uchar hysteresisLimit;
     State state;
     ushort startedAt;
     std::function<void(ushort const, ushort const, ushort const)> callback;
-    uint hysterisis;
+    uint hysteresis;
   };
 
   inline void LineRunTracker::update(uchar label, ushort position)
@@ -74,13 +74,13 @@ namespace bold
     {
       if (label == inLabel)
       {
-	hysterisis = 0;
+	hysteresis = 0;
 	state = State::In;
       }
       else
       {
-	if (hysterisis != 0)
-	  hysterisis--;
+	if (hysteresis != 0)
+	  hysteresis--;
       }
       break;
     }
@@ -89,18 +89,18 @@ namespace bold
       if (label == onLabel)
       {
 	state = State::On;
-	hysterisis = 0;
+	hysteresis = 0;
 	startedAt = position;
       }
       else if (label == inLabel)
       {
-	if (hysterisis != hysterisisLimit)
-	  hysterisis++;
+	if (hysteresis != hysteresisLimit)
+	  hysteresis++;
       }
       else
       {
-	if (hysterisis != 0)
-	  hysterisis--;
+	if (hysteresis != 0)
+	  hysteresis--;
 	else
 	  state = State::Out;
       }
@@ -112,18 +112,18 @@ namespace bold
       {
 	// we completed a run!
 	state = State::In;
-	hysterisis = 0;
+	hysteresis = 0;
 	callback(startedAt, position, otherCoordinate);
       }
       else if (label == onLabel)
       {
-	if (hysterisis != hysterisisLimit)
-	  hysterisis++;
+	if (hysteresis != hysteresisLimit)
+	  hysteresis++;
       }
       else
       {
-	if (hysterisis != 0)
-	  hysterisis--;
+	if (hysteresis != 0)
+	  hysteresis--;
 	else
 	  state = State::Out;
       }

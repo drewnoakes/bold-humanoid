@@ -66,7 +66,7 @@
     "line-detection": {
       "enable": false,
       "line-dots": {
-        "hysterisis": 3
+        "hysteresis": 3
       },
       "mask-walk": {
         "delta-r": 3.0,

@@ -34,7 +34,7 @@ namespace bold
       onLabel(onLabel),
       lineDots()
     {
-      auto hysterisisLimit = Config::getSetting<int>("vision.line-detection.line-dots.hysterisis");
+      auto hysteresisLimit = Config::getSetting<int>("vision.line-detection.line-dots.hysteresis");
 
       // Create trackers
 
@@ -43,7 +43,7 @@ namespace bold
       for (ushort x = 0; x <= imageWidth; ++x)
       {
         d_colTrackers.push_back(bold::LineRunTracker(
-          inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysterisisLimit->getValue(),
+          inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysteresisLimit->getValue(),
           [this](ushort const from, ushort const to, ushort const other) mutable {
             int mid = (from + to) / 2;
             lineDots.push_back(Eigen::Vector2i((int)other, mid));
@@ -53,7 +53,7 @@ namespace bold
 
       // TODO delete in destructor
       d_rowTracker = new LineRunTracker(
-        inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysterisisLimit->getValue(),
+        inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysteresisLimit->getValue(),
         [this](ushort const from, ushort const to, ushort const other) mutable {
           int mid = (from + to) / 2;
           lineDots.push_back(Eigen::Vector2i(mid, (int)other));
@@ -62,12 +62,12 @@ namespace bold
 
       // Create controls
 
-      hysterisisLimit->changed.connect([this](int const& value) mutable
+      hysteresisLimit->changed.connect([this](int const& value) mutable
       {
-        d_rowTracker->setHysterisisLimit(value);
+        d_rowTracker->setHysteresisLimit(value);
 
         for (LineRunTracker& colTracker : d_colTrackers)
-          colTracker.setHysterisisLimit(value);
+          colTracker.setHysteresisLimit(value);
       });
     }
 
