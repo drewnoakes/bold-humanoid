@@ -6,8 +6,6 @@
 #include "../../geometry/LineSegment2i.hh"
 #include "../linefinder.hh"
 
-class minIni;
-
 namespace bold
 {
   template<typename> class Setting;
@@ -16,8 +14,6 @@ namespace bold
   {
   public:
     MaskWalkLineFinder();
-
-    void initialise(minIni const& ini);
 
     void walkLine(Eigen::Vector2i const& start, float theta, bool forward, std::function<bool(int/*x*/,int/*y*/)> const& pred);
 

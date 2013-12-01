@@ -4,8 +4,6 @@
 
 #include "../OptionTree/optiontree.hh"
 
-class minIni;
-
 namespace bold
 {
   class MotionScriptModule;
