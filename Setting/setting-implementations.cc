@@ -51,6 +51,12 @@ bool IntSetting::tryParseJsonValue(Value const* value, int* i)
 
 bool IntSetting::setValueFromJson(Value const* value)
 {
+  if (value == nullptr)
+  {
+    cerr << ccolor::error << "[IntSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    return false;
+  }
+
   if (!value->IsInt())
   {
     cerr << ccolor::error << "[IntSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be an integer" << ccolor::reset << endl;
@@ -107,6 +113,12 @@ void EnumSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 
 bool EnumSetting::setValueFromJson(Value const* value)
 {
+  if (value == nullptr)
+  {
+    cerr << ccolor::error << "[EnumSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    return false;
+  }
+
   if (!value->IsInt())
   {
     cerr << ccolor::error << "[EnumSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be an integer" << ccolor::reset << endl;
@@ -157,6 +169,12 @@ void DoubleSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 
 bool DoubleSetting::setValueFromJson(Value const* value)
 {
+  if (value == nullptr)
+  {
+    cerr << ccolor::error << "[DoubleSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    return false;
+  }
+
   if (!value->IsNumber())
   {
     cerr << ccolor::error << "[DoubleSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be a double" << ccolor::reset << endl;
@@ -203,6 +221,12 @@ bool BoolSetting::tryParseJsonValue(Value const* value, bool* b)
 
 bool BoolSetting::setValueFromJson(Value const* value)
 {
+  if (value == nullptr)
+  {
+    cerr << ccolor::error << "[BoolSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    return false;
+  }
+
   if (!value->IsBool())
   {
     cerr << ccolor::error << "[BoolSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be a bool" << ccolor::reset << endl;
@@ -303,10 +327,19 @@ void HsvRangeSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 
 bool HsvRangeSetting::setValueFromJson(Value const* value)
 {
+  if (value == nullptr)
+  {
+    cerr << ccolor::error << "[HsvRangeSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    return false;
+  }
+
   Colour::hsvRange hsvRange;
 
   if (!tryParseJsonValue(value, &hsvRange))
+  {
+    cerr << ccolor::error << "[HsvRangeSetting::setValueFromJson] Invalid JSON Value provided for '" << getPath() << ccolor::reset << endl;
     return false;
+  }
 
   setValue(hsvRange);
   return true;
@@ -372,10 +405,19 @@ void DoubleRangeSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 
 bool DoubleRangeSetting::setValueFromJson(Value const* value)
 {
+  if (value == nullptr)
+  {
+    cerr << ccolor::error << "[DoubleRangeSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    return false;
+  }
+
   Range<double> range;
 
   if (!tryParseJsonValue(value, &range))
+  {
+    cerr << ccolor::error << "[DoubleRangeSetting::setValueFromJson] Invalid JSON Value provided for '" << getPath() << ccolor::reset << endl;
     return false;
+  }
 
   setValue(range);
   return true;
@@ -412,6 +454,12 @@ void StringSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 
 bool StringSetting::setValueFromJson(Value const* value)
 {
+  if (value == nullptr)
+  {
+    cerr << ccolor::error << "[StringSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    return false;
+  }
+
   if (!value->IsString())
   {
     cerr << ccolor::error << "[StringSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be a string" << ccolor::reset << endl;
