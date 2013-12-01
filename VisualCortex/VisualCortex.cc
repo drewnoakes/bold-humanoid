@@ -79,7 +79,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDetectLines->track([this](bool value) { d_imagePassRunner->setHandler(d_lineDotPass, value); });
   d_shouldCountLabels->track([this](bool value) { d_imagePassRunner->setHandler(d_labelCountPass, value); });
 
-  // TODO create a setting to turn this feature on and off
+  // TODO SETTINGS create a setting to turn this feature on and off
   d_imagePassRunner->addHandler(d_fieldEdgePass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
 
