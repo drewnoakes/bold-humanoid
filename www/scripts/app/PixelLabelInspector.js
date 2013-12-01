@@ -4,9 +4,10 @@
 define(
     [
         'ControlClient',
+        'HsvRange',
         'util/CanvasExtensions'
     ],
-    function(ControlClient)
+    function(ControlClient, HsvRange)
     {
         'use strict';
 
@@ -103,11 +104,7 @@ define(
                     if (max > 255)
                         max = 255;
 
-                    var hAvg = (val.hue[0] + val.hue[1]) / 2,
-                        h = val.hue[0] < val.hue[1] ? hAvg : (hAvg + (255/2)) % 255,
-                        s = (val.sat[0] + val.sat[1]) / 2,
-                        v = (val.val[0] + val.val[1]) / 2,
-                        labelColour = 'hsla(' + (h*360/250).toFixed(2) + ',' + (s/2.55).toFixed(2) + '%,' + (v/2.55).toFixed(2) + '%,1)';
+                    var labelColour = HsvRange.calculateColour(val);
 
                     var drawComponentRange = function(y, minValue, maxValue)
                     {

@@ -3,9 +3,10 @@
  */
 define(
     [
-        'ControlClient'
+        'ControlClient',
+        'HsvRangeEditor'
     ],
-    function (ControlClient)
+    function (ControlClient, HsvRangeEditor)
     {
         'use strict';
 
@@ -158,6 +159,20 @@ define(
                     {
                         input.value = value;
                     }));
+                    break;
+                }
+                case 'hsv-range':
+                {
+                    var editor = new HsvRangeEditor(setting.getDescription());
+                    editor.onChange(function(value)
+                    {
+                        setting.setValue(value);
+                    });
+                    closeables.push(setting.track(function(value)
+                    {
+                        editor.setValue(value);
+                    }));
+                    wrapper.appendChild(editor.element);
                     break;
                 }
                 default:

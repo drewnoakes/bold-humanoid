@@ -75,6 +75,8 @@ define(
             ControlBuilder.action('head-module.move-home', element.querySelector('button[name="home"]'));
             ControlBuilder.action('head-module.move-zero', element.querySelector('button[name="zero"]'));
 
+            this.closables.add(ControlBuilder.buildAll('vision.pixel-labels', element.querySelector('div.pixel-labels')));
+
             var captureContainer = element.querySelector('.capture');
             ControlBuilder.action('camera.save-frame', captureContainer);
             this.closables.add(ControlBuilder.build('camera.recording-frames', captureContainer));
