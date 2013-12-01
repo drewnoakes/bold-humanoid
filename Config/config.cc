@@ -347,6 +347,13 @@ Value const* Config::getConfigJsonValue(string path)
   string delimiter = ".";
   size_t start = 0;
   Value const* configValue = d_configDocument;
+
+  if (!configValue)
+  {
+    cerr << ccolor::error << "[Config::getConfigJsonValue] Config document has not yet been set" << ccolor::reset << endl;
+    throw runtime_error("Config document has not yet been set");
+  }
+
   while (true)
   {
     size_t end = path.find(delimiter, start);
@@ -355,6 +362,8 @@ Value const* Config::getConfigJsonValue(string path)
       ? path.substr(start, end - start)
       : path.substr(start);
 
+    assert(configValue);
+    
     auto member = configValue->FindMember(nodeName.c_str());
 
     if (!member)
@@ -362,8 +371,7 @@ Value const* Config::getConfigJsonValue(string path)
 
     configValue = &member->value;
 
-    if (!configValue)
-      return nullptr;
+    assert(configValue);
 
     if (end == string::npos)
       return configValue;
