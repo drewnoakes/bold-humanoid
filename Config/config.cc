@@ -46,7 +46,7 @@ void Config::initialise(string metadataFile, string configFile)
 
   if (!cf)
   {
-    cerr << ccolor::error << "[Config::initialise] File not found: " << metadataFile << ccolor::reset << endl;
+    cerr << ccolor::error << "[Config::initialise] File not found: " << configFile << ccolor::reset << endl;
     throw runtime_error("Configuration file not found.");
   }
 
@@ -363,7 +363,7 @@ Value const* Config::getConfigJsonValue(string path)
       : path.substr(start);
 
     assert(configValue);
-    
+
     auto member = configValue->FindMember(nodeName.c_str());
 
     if (!member)
