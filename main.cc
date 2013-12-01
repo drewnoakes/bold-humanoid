@@ -22,9 +22,10 @@ void printUsage()
   cout << endl;
   cout << "Options:" << endl;
   cout << endl;
-  cout << ccolor::fore::lightblue << "  -u <num> " << ccolor::fore::white << "uniform number (or --unum)" << endl;
-  cout << ccolor::fore::lightblue << "  -t <num> " << ccolor::fore::white << "team number (or --team)" << endl;
-  cout << ccolor::fore::lightblue << "  -h       " << ccolor::fore::white << "show these options (or --help)" << endl;
+  cout << ccolor::fore::lightblue << "  -u <num>  " << ccolor::fore::white << "uniform number (or --unum)" << endl;
+  cout << ccolor::fore::lightblue << "  -t <num>  " << ccolor::fore::white << "team number (or --team)" << endl;
+  cout << ccolor::fore::lightblue << "  -c <file> " << ccolor::fore::white << "use specified configuration file (or --config)" << endl;
+  cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
   cout << ccolor::reset;
 }
 
@@ -85,6 +86,8 @@ int main(int argc, char **argv)
   unsigned teamNumber = -1;
   unsigned uniformNumber = 0;
 
+  char const* configurationFile = "configuration.json";
+
   //
   // Process command line arguments
   //
@@ -104,6 +107,10 @@ int main(int argc, char **argv)
     {
       uniformNumber = atoi(argv[++i]);
     }
+    else if (arg == "-c" || arg == "--config")
+    {
+      configurationFile = argv[++i];
+    }
     else
     {
       cout << ccolor::error << "UNKNOWN ARGUMENT: " << arg << ccolor::reset << endl;
@@ -119,7 +126,7 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  Config::initialise("configuration-metadata.json", "configuration.json");
+  Config::initialise("configuration-metadata.json", configurationFile);
 
   if (teamNumber == -1)
     teamNumber = Config::getStaticValue<int>("team.number");
