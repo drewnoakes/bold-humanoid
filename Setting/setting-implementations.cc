@@ -41,6 +41,14 @@ void IntSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
     writer.String("max").Int(d_max);
 }
 
+bool IntSetting::tryParseJsonValue(Value const* value, int* i)
+{
+  if (value == nullptr || !value->IsInt())
+    return false;
+  *i = value->GetInt();
+  return true;
+}
+
 bool IntSetting::setValueFromJson(Value const* value)
 {
   if (!value->IsInt())
@@ -183,6 +191,14 @@ void BoolSetting::writeJsonValue(Writer<StringBuffer>& writer) const
 void BoolSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
   writer.String("default").Bool(d_defaultValue);
+}
+
+bool BoolSetting::tryParseJsonValue(Value const* value, bool* b)
+{
+  if (value == nullptr || !value->IsBool())
+    return false;
+  *b = value->GetBool();
+  return true;
 }
 
 bool BoolSetting::setValueFromJson(Value const* value)

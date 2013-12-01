@@ -19,6 +19,8 @@ namespace bold
   class IntSetting : public Setting<int>
   {
   public:
+    static bool tryParseJsonValue(rapidjson::Value const* value, int* i);
+
     IntSetting(std::string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~IntSetting() {}
 
@@ -80,6 +82,8 @@ namespace bold
   class BoolSetting : public Setting<bool>
   {
   public:
+    static bool tryParseJsonValue(rapidjson::Value const* value, bool* b);
+
     BoolSetting(std::string path, bool defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~BoolSetting() {}
 
