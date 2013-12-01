@@ -86,6 +86,13 @@
       "horizon":        { "type": "bool", "default": true },
       "field-edge":     { "type": "bool", "default": true },
       "objects":        { "type": "bool", "default": true }
+    },
+    "image-colours": {
+      "line-dot":      { "type": "bgr-colour", "default": { "b": 0, "g": 0, "r": 255 } },
+      "observed-line": { "type": "bgr-colour", "default": { "b": 255, "g": 80, "r": 80 } },
+      "expected-line": { "type": "bgr-colour", "default": { "b": 255, "g": 0, "r": 0 } },
+      "horizon":       { "type": "bgr-colour", "default": { "b": 0, "g": 128, "r": 255 } },
+      "field-edge":    { "type": "bgr-colour", "default": { "b": 0, "g": 255, "r": 0 } }
     }
   },
   "localiser": {

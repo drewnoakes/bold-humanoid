@@ -111,6 +111,8 @@ define(
 
             this.closables.add(ControlBuilder.buildAll('camera.settings', element.querySelector('div.camera-settings')));
 
+            this.closables.add(ControlBuilder.buildAll('round-table.image-colours', element.querySelector('div.image-colours')));
+
 //            ControlBuilder.build('camera',                $('<div></div>', {'class': 'control-container camera-controls'}).appendTo(this.$container));
 //            ControlBuilder.build('debug-image',           $('<div></div>', {'class': 'control-container image-controls'}).appendTo(this.$container));
 //            ControlBuilder.build('image-capture',         $('<div></div>', {'class': 'control-container image-capture-controls'}).appendTo(this.$container));

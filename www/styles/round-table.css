@@ -406,6 +406,10 @@ div.module.camera div.control-container.image-controls-features
     margin-top: 8px;
 }
 
+div.module.camera div.image-colours.flow div.setting.control
+{
+    width: 65px;
+}
 /********************************************************************/
 
 div.module.game div.play-mode

@@ -137,6 +137,12 @@ namespace bold
     Setting<ImageType>* d_imageType;
     Setting<int>* d_streamFramePeriod;
 
+    Setting<Colour::bgr>* d_lineDotColour;
+    Setting<Colour::bgr>* d_observedLineColour;
+    Setting<Colour::bgr>* d_expectedLineColour;
+    Setting<Colour::bgr>* d_horizonColour;
+    Setting<Colour::bgr>* d_fieldEdgeColour;
+
     Setting<bool>* d_shouldDrawBlobs;
     Setting<bool>* d_shouldDrawLineDots;
     Setting<bool>* d_shouldDrawObservedLines;

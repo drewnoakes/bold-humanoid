@@ -34,6 +34,12 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDrawFieldEdge       = Config::getSetting<bool>("round-table.image-features.field-edge");
   d_shouldDrawObservedObjects = Config::getSetting<bool>("round-table.image-features.objects");
 
+  d_lineDotColour             = Config::getSetting<Colour::bgr>("round-table.image-colours.line-dot");
+  d_observedLineColour        = Config::getSetting<Colour::bgr>("round-table.image-colours.observed-line");
+  d_expectedLineColour        = Config::getSetting<Colour::bgr>("round-table.image-colours.expected-line");
+  d_horizonColour             = Config::getSetting<Colour::bgr>("round-table.image-colours.horizon");
+  d_fieldEdgeColour           = Config::getSetting<Colour::bgr>("round-table.image-colours.field-edge");
+
   d_goalLabel  = make_shared<PixelLabel>("Goal",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
   d_ballLabel  = make_shared<PixelLabel>("Ball",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
   d_fieldLabel = make_shared<PixelLabel>("Field", Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
