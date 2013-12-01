@@ -41,7 +41,7 @@ void IntSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
     writer.String("max").Int(d_max);
 }
 
-bool IntSetting::setValueFromJson(Value* value)
+bool IntSetting::setValueFromJson(Value const* value)
 {
   if (!value->IsInt())
   {
@@ -97,7 +97,7 @@ void EnumSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   writer.EndArray();
 }
 
-bool EnumSetting::setValueFromJson(Value* value)
+bool EnumSetting::setValueFromJson(Value const* value)
 {
   if (!value->IsInt())
   {
@@ -147,7 +147,7 @@ void DoubleSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
     writer.String("max").Double(d_max);
 }
 
-bool DoubleSetting::setValueFromJson(Value* value)
+bool DoubleSetting::setValueFromJson(Value const* value)
 {
   if (!value->IsNumber())
   {
@@ -185,7 +185,7 @@ void BoolSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   writer.String("default").Bool(d_defaultValue);
 }
 
-bool BoolSetting::setValueFromJson(Value* value)
+bool BoolSetting::setValueFromJson(Value const* value)
 {
   if (!value->IsBool())
   {
@@ -214,7 +214,7 @@ void HsvRangeSetting::writeHsvRangeJsonObject(Writer<StringBuffer>& writer, Colo
   writer.EndObject();
 }
 
-bool HsvRangeSetting::tryParseJsonValue(Value* value, Colour::hsvRange* hsvRange)
+bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hsvRange)
 {
   if (!value->IsObject())
   {
@@ -285,7 +285,7 @@ void HsvRangeSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   writeHsvRangeJsonObject(writer, d_defaultValue);
 }
 
-bool HsvRangeSetting::setValueFromJson(Value* value)
+bool HsvRangeSetting::setValueFromJson(Value const* value)
 {
   Colour::hsvRange hsvRange;
 
@@ -308,7 +308,7 @@ void DoubleRangeSetting::writeDoubleRangeJsonObject(Writer<StringBuffer>& writer
   writer.StartArray().Double(value.min()).Double(value.max()).EndArray();
 }
 
-bool DoubleRangeSetting::tryParseJsonValue(Value* value, Range<double>* range)
+bool DoubleRangeSetting::tryParseJsonValue(Value const* value, Range<double>* range)
 {
   if (!value->IsArray() || value->Size() != 2 || !(*value)[0u].IsNumber() || !(*value)[1u].IsNumber())
   {
@@ -354,7 +354,7 @@ void DoubleRangeSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   writeDoubleRangeJsonObject(writer, d_defaultValue);
 }
 
-bool DoubleRangeSetting::setValueFromJson(Value* value)
+bool DoubleRangeSetting::setValueFromJson(Value const* value)
 {
   Range<double> range;
 
@@ -394,7 +394,7 @@ void StringSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   writer.String("default").String(d_defaultValue.c_str());
 }
 
-bool StringSetting::setValueFromJson(Value* value)
+bool StringSetting::setValueFromJson(Value const* value)
 {
   if (!value->IsString())
   {

@@ -32,7 +32,7 @@ namespace bold
     void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
 
     virtual void resetToDefaultValue() = 0;
-    virtual bool setValueFromJson(rapidjson::Value* value) = 0;
+    virtual bool setValueFromJson(rapidjson::Value const* value) = 0;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
 

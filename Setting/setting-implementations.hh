@@ -27,7 +27,7 @@ namespace bold
     bool isValidValue(int value) const override;
     std::string getValidationMessage(int value) const override;
     int getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value* value) override;
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -47,7 +47,7 @@ namespace bold
     bool isValidValue(int value) const override;
     std::string getValidationMessage(int value) const override;
     int getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value* value) override;
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -66,7 +66,7 @@ namespace bold
     bool isValidValue(double value) const override;
     std::string getValidationMessage(double value) const override;
     double getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value* value) override;
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -86,7 +86,7 @@ namespace bold
     bool isValidValue(bool value) const override;
     std::string getValidationMessage(bool value) const override;
     bool getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value* value) override;
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -99,7 +99,7 @@ namespace bold
   {
   public:
     static void writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value);
-    static bool tryParseJsonValue(rapidjson::Value* value, Colour::hsvRange* hsvRange);
+    static bool tryParseJsonValue(rapidjson::Value const* value, Colour::hsvRange* hsvRange);
 
     HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~HsvRangeSetting() {}
@@ -107,7 +107,7 @@ namespace bold
     bool isValidValue(Colour::hsvRange value) const override;
     std::string getValidationMessage(Colour::hsvRange value) const override;
     Colour::hsvRange getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value* value) override;
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -120,7 +120,7 @@ namespace bold
   {
   public:
     static void writeDoubleRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Range<double> const& value);
-    static bool tryParseJsonValue(rapidjson::Value* value, Range<double>* hsvRange);
+    static bool tryParseJsonValue(rapidjson::Value const* value, Range<double>* hsvRange);
 
     DoubleRangeSetting(std::string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
     ~DoubleRangeSetting() {}
@@ -128,7 +128,7 @@ namespace bold
     bool isValidValue(Range<double> value) const override;
     std::string getValidationMessage(Range<double> value) const override;
     Range<double> getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value* value) override;
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -146,7 +146,7 @@ namespace bold
     bool isValidValue(std::string value) const override;
     std::string getValidationMessage(std::string value) const override;
     std::string getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value* value) override;
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
