@@ -123,7 +123,11 @@ void Camera::createControls()
     {
       case V4L2ControlType::CT_BOOL:
       {
-        auto setting = new BoolSetting(path.str(), control->defaultValue, isReadOnly, isAdvanced, name);
+        bool defaultValue;
+        if (!BoolSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
+          defaultValue = control->defaultValue != 0;
+
+        auto setting = new BoolSetting(path.str(), defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue != 0);
         setting->changed.connect([setValue,control,setting](bool value) {
           setValue(control, value ? 1 : 0,
@@ -134,7 +138,13 @@ void Camera::createControls()
       }
       case V4L2ControlType::CT_INT:
       {
-        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, control->defaultValue, isReadOnly, isAdvanced, name);
+        int defaultValue;
+        if (!IntSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
+          defaultValue = control->defaultValue;
+        if (defaultValue < control->minimum || defaultValue > control->maximum)
+          cerr << ccolor::error << "[Camera::createControls] Invalid default value " << defaultValue << " for int setting " << path.str() << endl;
+
+        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control,setting](int value) {
           setValue(control, value,
@@ -145,7 +155,13 @@ void Camera::createControls()
       }
       case V4L2ControlType::CT_MENU:
       {
-        auto setting = new EnumSetting(path.str(), control->pairs, control->defaultValue, isReadOnly, isAdvanced, name);
+        int defaultValue;
+        if (!IntSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
+          defaultValue = control->defaultValue;
+        if (control->pairs.find(defaultValue) == control->pairs.end())
+          cerr << ccolor::error << "[Camera::createControls] Invalid default value " << defaultValue << " for enum setting " << path.str() << endl;
+
+        auto setting = new EnumSetting(path.str(), control->pairs, defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control,setting](int value) {
           setValue(control, value,
