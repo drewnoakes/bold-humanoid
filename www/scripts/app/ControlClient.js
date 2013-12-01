@@ -202,10 +202,24 @@ define(
             subscription.send(JSON.stringify(message));
         };
 
-        ControlClient.getConfigText = function()
+        ControlClient.getConfigText = function(matching)
         {
             // TODO allow other types of config (actions, values only, ...?)
-            return settingsJson ? JSON.stringify(settingsJson, null, 4) : '';
+
+            if (!settingsJson)
+                return '';
+
+            var response = settingsJson;
+
+            if (typeof(matching) === 'string' && matching.length !== 0)
+            {
+                response = _.filter(settingsJson, function (setting)
+                {
+                    return setting.path.indexOf(matching) !== -1;
+                });
+            }
+
+            return JSON.stringify(response, null, 4);
         };
 
         return ControlClient;

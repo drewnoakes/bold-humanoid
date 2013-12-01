@@ -43,6 +43,12 @@ define(
             console.assert(header);
             ControlBuilder.actions('config', header);
 
+            this.filter = document.createElement('input');
+            this.filter.type = 'text';
+            this.filter.placeholder = 'Type to filter...';
+            this.filter.addEventListener('input', this.updateText.bind(this));
+            header.appendChild(this.filter);
+
             this.updateText();
         };
 
@@ -59,7 +65,8 @@ define(
 
         ConfigModule.prototype.updateText = function()
         {
-            this.textElement.textContent = ControlClient.getConfigText();
+            var matching = this.filter.value;
+            this.textElement.textContent = ControlClient.getConfigText(matching);
         };
 
         return ConfigModule;
