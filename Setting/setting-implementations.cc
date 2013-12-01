@@ -468,3 +468,75 @@ bool StringSetting::setValueFromJson(Value const* value)
 
   return setValue(value->GetString());
 }
+
+
+///////////////////////////////////////////////////////////
+
+bool BgrColourSetting::tryParseJsonValue(Value const* value, Colour::bgr* bgr)
+{
+  if (value == nullptr)
+    return false;
+
+  if (!value->IsObject())
+    return false;
+
+  auto bMember = value->FindMember("b");
+  auto gMember = value->FindMember("g");
+  auto rMember = value->FindMember("r");
+
+  if (!bMember || !gMember || !rMember)
+    return false;
+
+  if (!bMember->value.IsInt() || !gMember->value.IsInt() || !rMember->value.IsInt())
+    return false;
+
+  *bgr = Colour::bgr(bMember->value.GetInt(), gMember->value.GetInt(), rMember->value.GetInt());
+  return true;
+}
+
+void BgrColourSetting::writeBgrColourJsonObject(Writer<StringBuffer>& writer, const Colour::bgr& value)
+{
+  writer.StartObject();
+  {
+    writer.String("r").Int(value.r);
+    writer.String("g").Int(value.g);
+    writer.String("b").Int(value.b);
+  }
+  writer.EndObject();
+}
+
+BgrColourSetting::BgrColourSetting(string path, Colour::bgr defaultValue, bool isReadOnly, bool isAdvanced, string description)
+: Setting(path, "bgr-colour", isReadOnly, isAdvanced, defaultValue, description),
+  d_defaultValue(defaultValue)
+{}
+
+bool BgrColourSetting::isValidValue(Colour::bgr value) const
+{
+  return true;
+}
+
+string BgrColourSetting::getValidationMessage(Colour::bgr value) const
+{
+  return "";
+}
+
+void BgrColourSetting::writeJsonValue(Writer<StringBuffer>& writer) const
+{
+  writeBgrColourJsonObject(writer, getValue());
+}
+
+void BgrColourSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
+{
+  writer.String("default");
+  writeBgrColourJsonObject(writer, getDefaultValue());
+}
+
+bool BgrColourSetting::setValueFromJson(Value const* value)
+{
+  Colour::bgr bgr;
+  if (tryParseJsonValue(value, &bgr))
+    return setValue(bgr);
+
+  cerr << ccolor::error << "[BgrColourSetting::setValueFromJson] Configuration value for '" << getPath() << "' must have 'b', 'g' and 'r' properties of integral type" << ccolor::reset << endl;
+  return false;
+}

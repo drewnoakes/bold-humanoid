@@ -288,6 +288,14 @@ define(
             return '#' + r + g + b;
         };
 
+        RgbColor.prototype.toByteObject = function()
+        {
+            var r = Math.round(this.R * 255);
+            var g = Math.round(this.G * 255);
+            var b = Math.round(this.B * 255);
+            return {r: r, g: g, b: b};
+        };
+
         return RgbColor;
     }
 );

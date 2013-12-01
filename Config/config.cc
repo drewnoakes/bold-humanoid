@@ -245,6 +245,17 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
 
       Config::addSetting(new DoubleRangeSetting(path, defaultValue, isReadOnly, isAdvanced, description));
     }
+    else if (type == "bgr-colour")
+    {
+      auto defaultMember = metaNode->FindMember("default");
+
+      Colour::bgr defaultValue;
+
+      if (defaultMember && !BgrColourSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
+        throw runtime_error("Unable to parse bgr-colour");
+
+      Config::addSetting(new BgrColourSetting(path, defaultValue, isReadOnly, isAdvanced, description));
+    }
     else
     {
       cerr << ccolor::error << "[Config::processLevel] Unsupported 'type' property value: " << type << ccolor::reset << endl;

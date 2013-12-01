@@ -4,9 +4,10 @@
 define(
     [
         'ControlClient',
-        'HsvRangeEditor'
+        'HsvRangeEditor',
+        'color/RgbColor'
     ],
-    function (ControlClient, HsvRangeEditor)
+    function (ControlClient, HsvRangeEditor, RgbColor)
     {
         'use strict';
 
@@ -175,9 +176,29 @@ define(
                     wrapper.appendChild(editor.element);
                     break;
                 }
+                case 'bgr-colour':
+                {
+                    heading = document.createElement('h3');
+                    heading.textContent = setting.getDescription();
+                    wrapper.appendChild(heading);
+
+                    var color = document.createElement('input');
+                    color.type = 'color';
+                    color.addEventListener('change', function()
+                    {
+                        var rgb = new RgbColor(color.value);
+                        setting.setValue(rgb.toByteObject());
+                    });
+                    closeables.push(setting.track(function(value)
+                    {
+                        color.value = new RgbColor(value.r/255, value.g/255, value.b/255).toString();
+                    }));
+                    wrapper.appendChild(color);
+                    break;
+                }
                 default:
                 {
-                    console.error("Unsupported setting type", setting.type);
+                    console.error("Unsupported setting type", setting.type, "for", setting.path);
                 }
             }
 

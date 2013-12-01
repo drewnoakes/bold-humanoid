@@ -157,4 +157,25 @@ namespace bold
   private:
     std::string d_defaultValue;
   };
+
+  /// Models a setting with a Colour::bgr value.
+  class BgrColourSetting : public Setting<Colour::bgr>
+  {
+  public:
+    static void writeBgrColourJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::bgr const& value);
+    static bool tryParseJsonValue(rapidjson::Value const* value, Colour::bgr* bgr);
+
+    BgrColourSetting(std::string path, Colour::bgr defaultValue, bool isReadOnly, bool isAdvanced, std::string description);
+    ~BgrColourSetting() {}
+
+    bool isValidValue(Colour::bgr value) const override;
+    std::string getValidationMessage(Colour::bgr value) const override;
+    Colour::bgr getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
+    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+
+  private:
+    Colour::bgr d_defaultValue;
+  };
 }
