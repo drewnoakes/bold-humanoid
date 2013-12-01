@@ -76,6 +76,15 @@ void Config::initialise(string metadataFile, string configFile)
   d_configDocument = confDocument;
 
   processConfigMetaJsonValue(&metaDocument, &d_root, "", "");
+
+  addAction("config.reset-defaults", "Reset default config", []
+  {
+    for (SettingBase* setting : getAllSettings())
+    {
+      if (!setting->isReadOnly())
+        setting->resetToDefaultValue();
+    }
+  });
 }
 
 SettingBase* Config::getSettingBase(string path)

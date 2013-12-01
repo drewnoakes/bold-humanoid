@@ -4,9 +4,10 @@
 define(
     [
         'ControlClient',
+        'ControlBuilder',
         'DOMTemplate'
     ],
-    function(ControlClient, DOMTemplate)
+    function(ControlClient, ControlBuilder, DOMTemplate)
     {
         'use strict';
 
@@ -37,6 +38,10 @@ define(
             console.assert(this.textElement);
 
             this.subscription = ControlClient.onSettingChange(this.updateText.bind(this));
+
+            var header = templateRoot.querySelector('div.header');
+            console.assert(header);
+            ControlBuilder.actions('config', header);
 
             this.updateText();
         };

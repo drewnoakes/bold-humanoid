@@ -31,6 +31,7 @@ namespace bold
 
     void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
 
+    virtual void resetToDefaultValue() = 0;
     virtual bool setValueFromJson(rapidjson::Value* value) = 0;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
@@ -115,6 +116,11 @@ namespace bold
     {
       changed.connect(callback);
       callback(d_value);
+    }
+
+    void resetToDefaultValue() override
+    {
+      setValue(getDefaultValue());
     }
 
     virtual bool isValidValue(T value) const = 0;
