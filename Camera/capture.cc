@@ -11,7 +11,7 @@ Mat Camera::capture(SequentialTimer& t)
 
   if (-1 == ioctl(d_fd, VIDIOC_DQBUF, &buf))
   {
-    cout << "[Camera::capture] Error dequeueing buffer" << endl;
+    cerr << ccolor::error << "[Camera::capture] Error dequeueing buffer: " << strerror(errno) << " (" << errno << ")" << ccolor::reset << endl;
     // NOTE saw this during a match when the robot fell and the cable came out of the camera
     exit(-1);
   }
@@ -19,7 +19,7 @@ Mat Camera::capture(SequentialTimer& t)
 
   if (-1 == ioctl(d_fd, VIDIOC_QBUF, &buf))
   {
-    cout << "[Camera] Error re-queueing buffer" << endl;
+    cerr << ccolor::error << "[Camera::capture] Error re-queueing buffer: " << strerror(errno) << " (" << errno << ")" << ccolor::reset << endl;
     exit(-1);
   }
   t.timeEvent("Requeue");

@@ -1,5 +1,8 @@
 #include "camera.ih"
 
+#include <string.h>
+#include <errno.h>
+
 void Camera::startCapture()
 {
   // Start memory mapping
@@ -15,7 +18,7 @@ void Camera::startCapture()
 
     if (-1 == ioctl(d_fd, VIDIOC_QBUF, &buf))
     {
-      cout << "[Camera] Buffer failure on capture start" << endl;
+      cerr << ccolor::error << "[Camera::startCapture] Buffer failure on capture start: " << strerror(errno) << " (" << errno << ")" << ccolor::reset << endl;
       exit(-1);
     }
   }
@@ -23,7 +26,7 @@ void Camera::startCapture()
   unsigned type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
   if (-1 == ioctl(d_fd, VIDIOC_STREAMON, &type))
   {
-    cout << "[Camera] Failed stream start" << endl;
+    cerr << ccolor::error << "[Camera::startCapture] Failed stream start: " << strerror(errno) << " (" << errno << ")" << ccolor::reset << endl;
     exit(-1);
   }
 }

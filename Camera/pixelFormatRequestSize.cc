@@ -13,10 +13,11 @@ bool Camera::PixelFormat::requestSize(unsigned width, unsigned height)
 
   if (res < 0)
   {
-    cout << "requestSize: "  << strerror(errno) << endl;
+    cerr << ccolor::error << "[Camera::PixelFormat::requestSize] Error setting camera size: " << strerror(errno) << " (" << errno << ")" << ccolor::reset << endl;
   }
+
   ioctl(owner->d_fd, VIDIOC_G_FMT, &formatReq);
-  
+
   owner->d_pixelFormat.width = formatReq.fmt.pix.width;
   owner->d_pixelFormat.height = formatReq.fmt.pix.height;
   owner->d_pixelFormat.bytesPerLine = formatReq.fmt.pix.bytesperline;
