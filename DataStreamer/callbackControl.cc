@@ -16,11 +16,13 @@ int DataStreamer::callback_control(
   {
     // New client connected; initialize session
     assert(ThreadId::isDataStreamerThread());
-    jsonSession->bytesSent = 0;
-    jsonSession->queue = queue<shared_ptr<vector<uchar> const>>();
+    jsonSession->initialise();
     d_controlSessions.push_back(jsonSession);
+
+    // Write control sync message, with current snapshot of state
     jsonSession->queue.push(prepareControlSyncBytes());
     libwebsocket_callback_on_writable(context, wsi);
+
     return 0;
   }
   case LWS_CALLBACK_CLOSED:
@@ -34,53 +36,7 @@ int DataStreamer::callback_control(
   {
     // Fill the outbound pipe with frames of data
     assert(ThreadId::isDataStreamerThread());
-    while (!lws_send_pipe_choked(wsi) && !jsonSession->queue.empty())
-    {
-      shared_ptr<vector<uchar> const> const& str = jsonSession->queue.front();
-      assert(str);
-      uint totalSize = str.get()->size();
-
-      assert(jsonSession->bytesSent < totalSize);
-
-      const uchar* start = str.get()->data() + jsonSession->bytesSent;
-
-      uint remainingSize = totalSize - jsonSession->bytesSent;
-      uint frameSize = min(2048u, remainingSize);
-      uchar frameBuffer[LWS_SEND_BUFFER_PRE_PADDING + frameSize + LWS_SEND_BUFFER_POST_PADDING];
-      uchar *p = &frameBuffer[LWS_SEND_BUFFER_PRE_PADDING];
-
-      memcpy(p, start, frameSize);
-
-      int writeMode = jsonSession->bytesSent == 0
-        ? LWS_WRITE_TEXT
-        : LWS_WRITE_CONTINUATION;
-
-      if (frameSize != remainingSize)
-        writeMode |= LWS_WRITE_NO_FIN;
-
-      int res = libwebsocket_write(wsi, p, frameSize, (libwebsocket_write_protocol)writeMode);
-
-      if (res < 0)
-      {
-        lwsl_err("ERROR %d writing to socket (control)\n", res);
-        return 1;
-      }
-
-      jsonSession->bytesSent += frameSize;
-
-      if (jsonSession->bytesSent == totalSize)
-      {
-        // Done sending this queue item, so ditch it, reset and loop around again
-        jsonSession->queue.pop();
-        jsonSession->bytesSent = 0;
-      }
-    }
-
-    // Queue for more writing later on if we still have data remaining
-    if (!jsonSession->queue.empty())
-      libwebsocket_callback_on_writable(context, wsi);
-
-    break;
+    return jsonSession->write(wsi, context);
   }
   case LWS_CALLBACK_RECEIVE:
   {

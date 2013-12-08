@@ -150,6 +150,7 @@ add_class(BOLDHUMANOID
   ./DataStreamer/callbackHttp.cc
   ./DataStreamer/callbackState.cc
   ./DataStreamer/DataStreamer.cc
+  ./DataStreamer/jsonsession.cc
   ./DataStreamer/prepareControlSyncBytes.cc
   ./DataStreamer/prepareSettingUpdateBytes.cc
   ./DataStreamer/processCommand.cc

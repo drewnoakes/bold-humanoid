@@ -28,7 +28,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   unsigned protocolIndex = 3;
   for (shared_ptr<StateTracker> stateTracker : AgentState::getInstance().getTrackers())
   {
-    d_protocols[protocolIndex] = { stateTracker->name().c_str(), DataStreamer::_callback_state, 0, 0, 0 };
+    d_protocols[protocolIndex] = { stateTracker->name().c_str(), DataStreamer::_callback_state, sizeof(JsonSession), 0, 0 };
     stateTracker->websocketProtocol = &d_protocols[protocolIndex];
     protocolIndex++;
   }
@@ -62,7 +62,51 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       {
         // TODO this assertion will not be met! we may be called from the motion thread... need a better approach...
 //      assert(ThreadId::isDataStreamerThread());
-        libwebsocket_callback_on_writable_all_protocol(tracker->websocketProtocol);
+
+        // NOTE we may be writing from one thread, while another is dealing with
+        // a client connection (which modifies d_stateSessions), or sending data
+        // (which modifies the JsonSession queue.)
+
+        // TODO if we're on the same thread as the data streamer, can we avoid the lock?
+        std::lock_guard<std::mutex> guard(d_stateSessionsMutex);
+        auto range = d_stateSessions.equal_range(tracker->name());
+        if (range.first != range.second)
+        {
+          shared_ptr<StateObject const> obj = tracker->stateBase();
+
+          if (obj)
+          {
+            StringBuffer buffer;
+            Writer<StringBuffer> writer(buffer);
+
+            obj->writeJson(writer);
+
+            auto bytes = JsonSession::createBytes(buffer);
+
+            for (auto session = range.first; session != range.second; ++session)
+            {
+              // If queue is too long, deal with it
+              const int MaxQueueSize = 200;
+              static int maxQueueSeen = 5;
+              int queueSize = session->second->queue.size();
+              if (queueSize > maxQueueSeen)
+              {
+                maxQueueSeen = queueSize;
+                cout << "[AgentStateUpdated] " << tracker->name() << " max queue seen " << queueSize << endl;
+              }
+              if (queueSize > MaxQueueSize)
+              {
+                cerr << ccolor::warning << "[AgentStateUpdated] JsonSession queue too long (" << queueSize << " > " << MaxQueueSize << "), purging" << ccolor::reset << endl;
+                queue<shared_ptr<vector<uchar> const>> empty;
+                swap(session->second->queue, empty);
+              }
+
+              session->second->queue.push(bytes);
+            }
+
+            libwebsocket_callback_on_writable_all_protocol(tracker->websocketProtocol);
+          }
+        }
       }
     );
 

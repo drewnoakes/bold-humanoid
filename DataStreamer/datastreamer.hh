@@ -6,6 +6,8 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <queue>
+#include <mutex>
 
 #include <libwebsockets.h>
 #include <opencv2/opencv.hpp>
@@ -40,6 +42,10 @@ namespace bold
     std::queue<std::shared_ptr<std::vector<uchar> const>> queue;
     /** The number of bytes sent from the front message in the queue. */
     unsigned bytesSent;
+
+    void initialise();
+
+    int write(libwebsocket* wsi, libwebsocket_context* context);
 
     static std::shared_ptr<std::vector<uchar>> createBytes(rapidjson::StringBuffer const& buffer)
     {
@@ -80,6 +86,8 @@ namespace bold
     libwebsocket_protocols* d_controlProtocol;
     std::vector<CameraSession*> d_cameraSessions;
     std::vector<JsonSession*> d_controlSessions;
+    std::multimap<std::string, JsonSession*> d_stateSessions;
+    std::mutex d_stateSessionsMutex;
     bool d_isStopRequested;
     std::thread d_thread;
 
