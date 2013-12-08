@@ -47,7 +47,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   // Find blobs
   auto blobsPerLabel = d_blobDetectPass->detectBlobs();
-  t.timeEvent("Blob Search");
+  t.timeEvent("Blob Detection");
 
   //
   // UPDATE STATE
@@ -129,6 +129,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
         break;
       }
     }
+    t.timeEvent("Ball Blob Selection");
   }
 
   // Do we have goal posts?
@@ -158,6 +159,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       goalPositions.push_back(pos);
     }
   }
+  t.timeEvent("Goal Blob Selection");
 
   AgentState::getInstance().set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments));
 
