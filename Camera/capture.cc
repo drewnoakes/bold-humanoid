@@ -24,6 +24,7 @@ Mat Camera::capture(SequentialTimer& t)
   }
   t.timeEvent("Requeue");
 
+  // TODO measure perf difference of reusing this image memory
   Mat img(d_pixelFormat.height, d_squash ? d_pixelFormat.width / 2 : d_pixelFormat.width, CV_8UC3);
 
   unsigned char* datCursor = d_buffers[buf.index].start;
