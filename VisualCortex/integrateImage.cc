@@ -14,8 +14,6 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     t.timeEvent("Saving Frame To File");
   }
 
-  auto cameraFrame = AgentState::get<CameraFrameState>();
-
   //
   // PROCESS THE IMAGE
   //
