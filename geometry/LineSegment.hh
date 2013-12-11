@@ -69,6 +69,16 @@ namespace bold
       return ((d_p1 - other.d_p1).cwiseAbs() + (d_p2 - other.d_p2).cwiseAbs()).sum() < epsilon;
     }
 
+    LineSegment<T,dim> operator+(Eigen::Matrix<T,dim,1> const& delta) const
+    {
+      return LineSegment<T,dim>(d_p1 + delta, d_p2 + delta);
+    }
+
+    LineSegment<T,dim> operator-(Eigen::Matrix<T,dim,1> const& delta) const
+    {
+      return LineSegment<T,dim>(d_p1 - delta, d_p2 - delta);
+    }
+
     friend std::ostream& operator<<(std::ostream& stream, LineSegment<T,dim> const& lineSegment)
     {
       return stream << "LineSegment (P1=" << lineSegment.d_p1.transpose() << " P2=" << lineSegment.d_p2.transpose() << ")";

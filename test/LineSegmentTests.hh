@@ -152,6 +152,18 @@ TEST (LineSegmentTests, smallestAngleBetween)
   EXPECT_NEAR ( M_PI/4, LineSegment2d(Vector2d(0,0),Vector2d(0,1)).smallestAngleBetween(LineSegment2d(Vector2d(0,0),Vector2d(1,-1))), 0.000001 );
 }
 
+TEST (LineSegmentTests, addAndSubtractAVector)
+{
+  EXPECT_EQ (LineSegment2i(Vector2i(0,0), Vector2i(0,1)), LineSegment2i(Vector2i(0,0), Vector2i(0,1)) + Vector2i(0, 0));
+  EXPECT_EQ (LineSegment2i(Vector2i(0,0), Vector2i(0,1)), LineSegment2i(Vector2i(0,0), Vector2i(0,1)) - Vector2i(0, 0));
+
+  EXPECT_EQ (LineSegment2i(Vector2i(1,1),   Vector2i(1,2)),  LineSegment2i(Vector2i(0,0), Vector2i(0,1)) + Vector2i(1, 1));
+  EXPECT_EQ (LineSegment2i(Vector2i(-1,-1), Vector2i(-1,0)), LineSegment2i(Vector2i(0,0), Vector2i(0,1)) - Vector2i(1, 1));
+
+  EXPECT_EQ (LineSegment2i(Vector2i(1,1),   Vector2i(1,2)),  LineSegment2i(Vector2i(0,0), Vector2i(0,1)) - Vector2i(-1, -1));
+  EXPECT_EQ (LineSegment2i(Vector2i(-1,-1), Vector2i(-1,0)), LineSegment2i(Vector2i(0,0), Vector2i(0,1)) + Vector2i(-1, -1));
+}
+
 /*
 TEST (LineSegmentTe/sts, toLine)
 {
