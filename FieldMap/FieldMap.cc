@@ -23,7 +23,7 @@ FieldMap::FieldMap()
   double goalAreaY           = Config::getStaticValue<double>("world.goal-area-size-y");
 //double penaltyMarkDistance = Config::getStaticValue<double>("world.penalty-mark-distance");
   double circleDiameter      = Config::getStaticValue<double>("world.circle-diameter");
-//double lineWidth           = Config::getStaticValue<double>("world.line-width");
+  double lineWidth           = Config::getStaticValue<double>("world.line-width");
 //double penaltyLineLength   = Config::getStaticValue<double>("world.penalty-line-length");
   d_outerMarginMinimum       = Config::getStaticValue<double>("world.outer-margin-minimum");
 //double ballDiameter        = Config::getStaticValue<double>("world.ball-diameter");
@@ -84,6 +84,17 @@ FieldMap::FieldMap()
     Vector3d point(sin(theta) * d_circleRadius, cos(theta) * d_circleRadius, 0);
     d_circleLines.push_back(LineSegment3d(lastPoint, point));
     lastPoint = point;
+  }
+
+  for (LineSegment3d const& line : d_fieldLines)
+  {
+    auto vec = (Vector3d)line.delta();
+    auto perp = vec.cross(Vector3d::UnitZ());
+    perp.normalize();
+    perp *= (lineWidth / 2);
+
+    d_fieldLineEdges.push_back(line + perp);
+    d_fieldLineEdges.push_back(line - perp);
   }
 
   // GOAL POST POSITIONS

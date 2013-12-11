@@ -124,7 +124,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   auto bodyState = AgentState::get<BodyState>();
 
   // Draw expected lines
-  if (bodyState && d_shouldDrawExpectedLines->getValue())
+  bool drawExpectedLines = d_shouldDrawExpectedLines->getValue();
+  bool drawExpectedLineEdges = d_shouldDrawExpectedLineEdges->getValue();
+  if (bodyState && (drawExpectedLines || drawExpectedLineEdges))
   {
     Affine3d const& agentWorld = AgentState::get<WorldFrameState>()->getPosition().agentWorldTransform();
     Affine3d const& cameraAgent = bodyState->getCameraAgentTransform();
@@ -134,7 +136,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     auto max = Vector2i(Config::getStaticValue<int>("camera.image-width"),
                         Config::getStaticValue<int>("camera.image-height"));
 
-    for (LineSegment3d const& line : d_fieldMap->getFieldLines())
+    for (LineSegment3d const& line : drawExpectedLineEdges ? d_fieldMap->getFieldLineEdges() : d_fieldMap->getFieldLines())
     {
       // TODO this degrades when lines start/end outside of the camera's FOV
       auto p1 = d_cameraModel->pixelForDirection(cameraWorld * line.p1());

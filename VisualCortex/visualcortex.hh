@@ -86,6 +86,9 @@ namespace bold
     void setShouldDrawExpectedLines(bool val) { d_shouldDrawExpectedLines->setValue(val); }
     bool getShouldDrawExpectedLines() const { return d_shouldDrawExpectedLines->getValue(); }
 
+    void setShouldDrawExpectedLineEdges(bool val) { d_shouldDrawExpectedLineEdges->setValue(val); }
+    bool getShouldDrawExpectedLineEdges() const { return d_shouldDrawExpectedLineEdges->getValue(); }
+
     void setShouldDrawObservedObjects(bool val) { d_shouldDrawObservedObjects->setValue(val); }
     bool getShouldDrawObservedObjects() const { return d_shouldDrawObservedObjects->getValue(); }
 
@@ -147,6 +150,7 @@ namespace bold
     Setting<bool>* d_shouldDrawLineDots;
     Setting<bool>* d_shouldDrawObservedLines;
     Setting<bool>* d_shouldDrawExpectedLines;
+    Setting<bool>* d_shouldDrawExpectedLineEdges;
     Setting<bool>* d_shouldDrawHorizon;
     Setting<bool>* d_shouldDrawFieldEdge;
     Setting<bool>* d_shouldDrawObservedObjects;

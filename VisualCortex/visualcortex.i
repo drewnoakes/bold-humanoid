@@ -30,6 +30,9 @@ namespace bold
     void setShouldDrawExpectedLines(bool val) { d_shouldDrawExpectedLines->setValue(val); }
     bool getShouldDrawExpectedLines() const { return d_shouldDrawExpectedLines->getValue(); }
 
+    void setShouldDrawExpectedLineEdges(bool val) { d_shouldDrawExpectedLineEdges->setValue(val); }
+    bool getShouldDrawExpectedLineEdges() const { return d_shouldDrawExpectedLineEdges->getValue(); }
+
     void setShouldDrawObservedLines(bool val) { d_shouldDrawObservedLines->setValue(val); }
     bool getShouldDrawObservedLines() const { return d_shouldDrawObservedLines->getValue(); }
 

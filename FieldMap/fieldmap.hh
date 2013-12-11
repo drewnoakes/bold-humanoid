@@ -12,13 +12,18 @@ namespace bold
   public:
     FieldMap();
 
-    /// Returns the positions of all field lines, in the world frame.
-    std::vector<LineSegment3d> getFieldLines() const { return d_fieldLines; }
+    // TODO return vectors of const objects so no user can modify them
 
-    std::vector<LineSegment3d> getCircleLines() const { return d_circleLines; }
+    /// Returns the positions of all field lines, in the world frame.
+    std::vector<LineSegment3d> const& getFieldLines() const { return d_fieldLines; }
+
+    /// Returns the positions of all field line edges (two per field line), in the world frame.
+    std::vector<LineSegment3d> const& getFieldLineEdges() const { return d_fieldLineEdges; }
+
+    std::vector<LineSegment3d> const& getCircleLines() const { return d_circleLines; }
 
     /// Positions of the base of four goal posts, in the world frame.
-    std::vector<Eigen::Vector3d> getGoalPostPositions() const { return d_goalPostPositions; }
+    std::vector<Eigen::Vector3d> const& getGoalPostPositions() const { return d_goalPostPositions; }
 
     /// The long length of the field, from goal to goal.
     double fieldLengthX() const { return d_fieldLengthX; }
@@ -33,6 +38,7 @@ namespace bold
 
   private:
     std::vector<LineSegment3d> d_fieldLines;
+    std::vector<LineSegment3d> d_fieldLineEdges;
     std::vector<LineSegment3d> d_circleLines;
     std::vector<Eigen::Vector3d> d_goalPostPositions;
 

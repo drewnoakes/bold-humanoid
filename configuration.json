@@ -97,6 +97,7 @@
       "line-dots": false,
       "observed-lines": false,
       "expected-lines": false,
+      "expected-line-edges": false,
       "horizon": true,
       "field-edge": true,
       "objects": true

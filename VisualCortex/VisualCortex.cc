@@ -30,6 +30,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDrawLineDots        = Config::getSetting<bool>("round-table.image-features.line-dots");
   d_shouldDrawObservedLines   = Config::getSetting<bool>("round-table.image-features.observed-lines");
   d_shouldDrawExpectedLines   = Config::getSetting<bool>("round-table.image-features.expected-lines");
+  d_shouldDrawExpectedLineEdges = Config::getSetting<bool>("round-table.image-features.expected-line-edges");
   d_shouldDrawHorizon         = Config::getSetting<bool>("round-table.image-features.horizon");
   d_shouldDrawFieldEdge       = Config::getSetting<bool>("round-table.image-features.field-edge");
   d_shouldDrawObservedObjects = Config::getSetting<bool>("round-table.image-features.objects");

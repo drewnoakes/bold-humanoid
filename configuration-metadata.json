@@ -83,6 +83,7 @@
       "line-dots":      { "type": "bool", "default": false },
       "observed-lines": { "type": "bool", "default": false },
       "expected-lines": { "type": "bool", "default": false },
+      "expected-line-edges": { "type": "bool", "default": false },
       "horizon":        { "type": "bool", "default": true },
       "field-edge":     { "type": "bool", "default": true },
       "objects":        { "type": "bool", "default": true }
