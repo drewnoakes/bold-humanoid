@@ -6,6 +6,7 @@
 // #include "RobotisMotionFile/robotismotionfile.hh"
 //#include "ThreadId/threadid.hh"
 #include "util/ccolor.hh"
+#include "util/log.hh"
 
 #include <limits>
 #include <vector>
@@ -25,6 +26,7 @@ void printUsage()
   cout << ccolor::fore::lightblue << "  -u <num>  " << ccolor::fore::white << "uniform number (or --unum)" << endl;
   cout << ccolor::fore::lightblue << "  -t <num>  " << ccolor::fore::white << "team number (or --team)" << endl;
   cout << ccolor::fore::lightblue << "  -c <file> " << ccolor::fore::white << "use specified configuration file (or --config)" << endl;
+  cout << ccolor::fore::lightblue << "  -v        " << ccolor::fore::white << "verbose logging (or --verbose)" << endl;
   cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
   cout << ccolor::reset;
 }
@@ -87,6 +89,7 @@ int main(int argc, char **argv)
   unsigned uniformNumber = 0;
 
   char const* configurationFile = "configuration.json";
+  log::minLevel = LogLevel::Info;
 
   auto nextArg = [&](int* i) -> char*
   {
@@ -123,6 +126,10 @@ int main(int argc, char **argv)
     else if (arg == "-c" || arg == "--config")
     {
       configurationFile = nextArg(&i);
+    }
+    else if (arg == "-v" || arg == "--verbose")
+    {
+      log::minLevel = LogLevel::Verbose;
     }
     else
     {
