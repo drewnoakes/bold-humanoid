@@ -17,8 +17,6 @@ define(
     {
         'use strict';
 
-        // TODO LUT controls
-
         var moduleTemplate = new DOMTemplate("camera-module-template");
 
         var CameraModule = function()
@@ -141,6 +139,7 @@ define(
                 if (isImageLarge) {
                     isImageLarge = false;
                     this.$cameraCanvas.css({width: this.cameraCanvas.width});
+                    // TODO BUG this is showing advanced control divs when in basic mode
                     $controlDivs.delay(400).fadeIn();
                     this.pixelLabelInspector.setVisible(true);
                 } else {
