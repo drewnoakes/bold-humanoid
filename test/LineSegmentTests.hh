@@ -165,7 +165,7 @@ TEST (LineSegmentTests, addAndSubtractAVector)
 }
 
 /*
-TEST (LineSegmentTe/sts, toLine)
+TEST (LineSegmentTests, toLine)
 {
   // Vertical line at x=10
   EXPECT_EQ (Line(10, 0), LineSegment2i(Vector2i(10,0), Vector2i(10,10)).toLine());
