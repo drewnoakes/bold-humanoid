@@ -48,7 +48,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     }
     default:
     {
-      cout << "[VisualCortex::streamDebugging] Unknown image type requested!" << endl;
+      cerr << ccolor::error << "[VisualCortex::streamDebugging] Unknown image type requested!" << ccolor::reset << endl;
       break;
     }
   }
