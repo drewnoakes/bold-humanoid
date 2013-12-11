@@ -358,6 +358,7 @@ add_class(BOLDHUMANOID
   ./StateObject/BodyState/initBody.cc
   ./StateObject/BodyState/updatePosture.cc
   ./StateObject/BodyState/writeJson.cc
+  ./StateObject/BodyState/zero.cc
 )
 
 add_class(BOLDHUMANOID

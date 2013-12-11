@@ -57,6 +57,13 @@ Agent::Agent()
 
   d_haveBody = d_cm730->connect();
 
+  if (!d_haveBody)
+  {
+    // No body exists, so provide a 'zero' position for all joints to
+    // allow better debugging of code on non-robot machines.
+    AgentState::getInstance().set<BodyState>(BodyState::zero());
+  }
+
   d_ambulator = make_shared<Ambulator>(d_walkModule),
 
   d_cameraModel = make_shared<CameraModel>();

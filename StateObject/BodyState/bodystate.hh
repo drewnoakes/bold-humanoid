@@ -18,6 +18,8 @@ namespace bold
   class BodyState : public StateObject
   {
   public:
+    static std::shared_ptr<BodyState const> zero(ulong thinkCycleNumber = 0);
+
     BodyState(double angles[], ulong thinkCycleNumber);
 
     void updatePosture();
