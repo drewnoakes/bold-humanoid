@@ -88,6 +88,19 @@ int main(int argc, char **argv)
 
   char const* configurationFile = "configuration.json";
 
+  auto nextArg = [&](int* i) -> char*
+  {
+    if (*i == argc - 1)
+    {
+      // No more arguments. Error!
+      cerr << ccolor::error << "Insufficient arguments" << endl;
+      exit(-1);
+    }
+    int j = *i + 1;
+    *i = j;
+    return argv[j];
+  };
+
   //
   // Process command line arguments
   //
@@ -101,15 +114,15 @@ int main(int argc, char **argv)
     }
     else if (arg == "-t" || arg == "--team")
     {
-      teamNumber = atoi(argv[++i]);
+      teamNumber = atoi(nextArg(&i));
     }
     else if (arg == "-u" || arg == "--unum")
     {
-      uniformNumber = atoi(argv[++i]);
+      uniformNumber = atoi(nextArg(&i));
     }
     else if (arg == "-c" || arg == "--config")
     {
-      configurationFile = argv[++i];
+      configurationFile = nextArg(&i);
     }
     else
     {
