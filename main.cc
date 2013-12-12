@@ -35,7 +35,7 @@ void handleShutdownSignal(int sig)
 {
   if (agent)
   {
-    cout << "[boldhumanoid] Stopping Agent" << endl;
+    log::info("boldhumanoid") << "Stopping Agent";
     agent->requestStop();
   }
 }
@@ -45,7 +45,7 @@ void handleShutdownSignal(int sig)
 //   vector<shared_ptr<MotionScript const>> motionScripts;
 //
 //   auto motionScriptFileName = "./motion_4096.bin";
-//   cout << "[convertMotionFile] Processing Robotis-formatted motion file: " << motionScriptFileName << endl;
+//   log::info("convertMotionFile") << "Processing Robotis-formatted motion file: " << motionScriptFileName;
 //   auto motionScriptFile = RobotisMotionFile(motionScriptFileName);
 //   auto rootPageIndices = motionScriptFile.getSequenceRootPageIndices();
 //   for (uchar rootPageIndex : rootPageIndices)
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     if (*i == argc - 1)
     {
       // No more arguments. Error!
-      cerr << ccolor::error << "Insufficient arguments" << endl;
+      log::error() << "Insufficient arguments";
       exit(-1);
     }
     int j = *i + 1;
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      cerr << ccolor::error << "UNKNOWN ARGUMENT: " << arg << ccolor::reset << endl;
+      log::error() << "UNKNOWN ARGUMENT: " << arg;
       printUsage();
       return -1;
     }
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
 
   if (uniformNumber == 0)
   {
-    cerr << ccolor::error << "YOU MUST SUPPLY A UNIFORM NUMBER!" << ccolor::reset << endl;
+    log::error() << "YOU MUST SUPPLY A UNIFORM NUMBER!";
     printUsage();
     return -1;
   }
@@ -151,7 +151,7 @@ int main(int argc, char **argv)
   if (teamNumber == -1)
     teamNumber = Config::getStaticValue<int>("team.number");
 
-  cout << "[boldhumanoid] Team number " << teamNumber << ", uniform number " << uniformNumber << endl;
+  log::info("boldhumanoid") << "Team number " << teamNumber << ", uniform number " << uniformNumber;
 
   agent.reset(new Agent());
 
@@ -178,10 +178,10 @@ int main(int argc, char **argv)
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);
 
-  cout << "[boldhumanoid] Running Agent" << endl;
+  log::info("boldhumanoid") << "Running Agent";
   agent->run();
 
-  cout << "[boldhumanoid] Finished" << endl;
+  log::info("boldhumanoid") << "Finished";
 
   return 0;
 }

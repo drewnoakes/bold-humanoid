@@ -6,31 +6,31 @@ void Agent::initCamera()
 
   d_camera->open();
 
-//   cout << "[Agent::initCamera] Capabilities:" << endl
-//        << "[Agent::initCamera]   Read/write: " << (d_camera->canRead() ? "YES" : "NO") << endl
-//        << "[Agent::initCamera]   Streaming:  " << (d_camera->canStream() ? "YES" : "NO") << endl;
-//
-//   cout << "[Agent::initCamera] Controls (" << d_camera->getControls().size() << "):" << endl;;
-//   for (std::shared_ptr<Camera::Control const> control : d_camera->getControls())
-//     cout << "[Agent::initCamera]   " << control->name << endl;
-//
-//   cout << "[Agent::initCamera] Formats (" << d_camera->getFormats().size() << "):" << endl;;
-//   for (Camera::Format const& format : d_camera->getFormats())
-//     cout << "[Agent::initCamera]   "  << format.description << endl;
+  log::verbose("Agent::initCamera") << "Capabilities:";
+  log::verbose("Agent::initCamera") << "  Read/write: " << (d_camera->canRead() ? "YES" : "NO");
+  log::verbose("Agent::initCamera") << "  Streaming:  " << (d_camera->canStream() ? "YES" : "NO");
+
+  log::verbose("Agent::initCamera") << "Controls (" << d_camera->getControls().size() << "):";
+  for (std::shared_ptr<Camera::Control const> control : d_camera->getControls())
+    log::verbose("Agent::initCamera") << "  " << control->name;
+
+  log::verbose("Agent::initCamera") << "Formats (" << d_camera->getFormats().size() << "):";
+  for (Camera::Format const& format : d_camera->getFormats())
+    log::verbose("Agent::initCamera") << "  "  << format.description;
 
   unsigned width = d_cameraModel->imageWidth();
   unsigned height = d_cameraModel->imageHeight();
   bool res = d_camera->getPixelFormat().requestSize(width, height);
 
   if (!res)
-    cerr << ccolor::error << "[Agent::initCamera] Requesting camera size " << width << "x" << height << " failed" << ccolor::reset << endl;
+    log::error() << "[Agent::initCamera] Requesting camera size " << width << "x" << height << " failed";
 
   auto pixelFormat = d_camera->getPixelFormat();
-  cout << "[Agent::initCamera] Current format:" << endl;;
-  cout << "[Agent::initCamera]   Width          : " << pixelFormat.width << endl;
-  cout << "[Agent::initCamera]   Height         : " << pixelFormat.height << endl;
-  cout << "[Agent::initCamera]   Bytes per line : " << pixelFormat.bytesPerLine << endl;
-  cout << "[Agent::initCamera]   Bytes total    : " << pixelFormat.imageByteSize << endl;
+  log::info("Agent::initCamera") << "Current format:";
+  log::info("Agent::initCamera") << "  Width          : " << pixelFormat.width;
+  log::info("Agent::initCamera") << "  Height         : " << pixelFormat.height;
+  log::info("Agent::initCamera") << "  Bytes per line : " << pixelFormat.bytesPerLine;
+  log::info("Agent::initCamera") << "  Bytes total    : " << pixelFormat.imageByteSize;
 
   d_camera->startCapture();
 }

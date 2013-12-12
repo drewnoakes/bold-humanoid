@@ -11,6 +11,7 @@
 #include "../Config/config.hh"
 #include "../Setting/setting-implementations.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
+#include "../util/log.hh"
 
 using namespace cv;
 using namespace bold;

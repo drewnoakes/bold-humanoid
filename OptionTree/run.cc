@@ -12,7 +12,7 @@ void OptionTree::run()
     shared_ptr<Option> option = queue.front();
     queue.pop_front();
 
-//     cout << "[OptionTree::run] Running option: " << option->getID() << endl;
+    log::verbose("OptionTree::run") << "Running option: " << option->getID();
 
     // Run it
     vector<shared_ptr<Option>> subOptions = option->runPolicy();

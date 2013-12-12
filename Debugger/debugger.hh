@@ -20,17 +20,7 @@ namespace bold
     // UDP Message Counts
     //
 
-    void notifyReceivedGameControllerMessage()
-    {
-      if (!d_seenGameControllerMessageYet)
-      {
-        std::cout << "[Debugger::notifyReceivedGameControllerMessage] Seen first message from game controller" << std::endl;
-        d_seenGameControllerMessageYet = true;
-      }
-
-      d_gameControllerMessageCount++;
-    }
-
+    void notifyReceivedGameControllerMessage();
     void notifyIgnoringUnrecognisedMessage() { d_ignoredMessageCount++; }
     void notifySendingTeamMessage() { d_sentTeamMessageCount++; }
     void notifyReceivedTeamMessage() { d_receivedTeamMessageCount++; }

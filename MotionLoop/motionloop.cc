@@ -59,7 +59,7 @@ void MotionLoop::removeModule(shared_ptr<MotionModule> module)
 
 bool MotionLoop::start()
 {
-  cout << "[MotionLoop::start] Starting" << endl;
+  log::info("MotionLoop::start") << "Starting";
 
   d_readYet = false;
 
@@ -71,7 +71,7 @@ bool MotionLoop::start()
   int error = pthread_attr_setschedpolicy(&attr, SCHED_RR);
   if (error != 0)
   {
-    cerr << ccolor::error << "[MotionLoop::start] Error setting thread scheduling policy as RR: " << error << ccolor::reset << endl;
+    log::error("MotionLoop::start") << "Error setting thread scheduling policy as RR: " << error;
     return false;
   }
 
@@ -79,7 +79,7 @@ bool MotionLoop::start()
   error = pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
   if (error != 0)
   {
-    cerr << ccolor::error << "[MotionLoop::start] Error setting thread scheduler inheritence as explicit: " << error << ccolor::reset << endl;
+    log::error("MotionLoop::start") << "Error setting thread scheduler inheritence as explicit: " << error;
     return false;
   }
 
@@ -90,7 +90,7 @@ bool MotionLoop::start()
   error = pthread_attr_setschedparam(&attr, &param);
   if (error != 0)
   {
-    cerr << ccolor::error << "[MotionLoop::start] Error setting thread priority as realtime: " << error << ccolor::reset << endl;
+    log::error("MotionLoop::start") << "Error setting thread priority as realtime: " << error;
     return false;
   }
 
@@ -98,11 +98,11 @@ bool MotionLoop::start()
   error = pthread_create(&d_thread, &attr, threadMethod, this);
   if (error != 0)
   {
-    cerr << ccolor::error << "[MotionLoop::start] Error starting thread: " << error << ccolor::reset << endl;
+    log::error("MotionLoop::start") << "Error starting thread: " << error;
     return false;
   }
 
-  cout << ccolor::info << "[MotionLoop::start] Started" << ccolor::reset << endl;
+  log::info("MotionLoop::start") << "Started";
 
   d_isStarted = true;
   return true;
@@ -110,7 +110,7 @@ bool MotionLoop::start()
 
 void MotionLoop::stop()
 {
-  cout << "[MotionLoop::stop] Stopping" << endl;
+  log::info("MotionLoop::stop") << "Stopping";
 
   if (!d_isStarted)
     return;
@@ -123,7 +123,7 @@ void MotionLoop::stop()
   if ((error = pthread_join(d_thread, NULL)) != 0)
     exit(-1);
 
-  cout << ccolor::info << "[MotionLoop::stop] Stopped" << ccolor::reset << endl;
+  log::info("MotionLoop::stop") << "Stopped";
 
   d_isStopRequested = false;
   d_isStarted = false;
@@ -131,7 +131,7 @@ void MotionLoop::stop()
 
 void *MotionLoop::threadMethod(void *param)
 {
-  cout << "[MotionLoop::threadMethod] Started" << endl;
+  log::info("MotionLoop::threadMethod") << "Started";
 
   ThreadId::setThreadId(ThreadId::MotionLoop);
 
@@ -156,7 +156,7 @@ void *MotionLoop::threadMethod(void *param)
     AgentState::getInstance().set(make_shared<MotionTimingState const>(t.flush(), loop->d_cycleNumber));
   }
 
-  cout << "[MotionLoop::threadMethod] Exiting" << endl;
+  log::info("MotionLoop::threadMethod") << "Exiting";
 
   pthread_exit(NULL);
 }
@@ -277,7 +277,7 @@ void MotionLoop::step(SequentialTimer& t)
   if (res != CommResult::SUCCESS)
   {
     // TODO if this occurs N times in a row, consider recreating the CM730 instance (perhaps someone pressed the hardware reset button)
-    cerr << ccolor::warning << "[MotionLoop::process] Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState" << ccolor::reset << endl;
+    log::warning("MotionLoop::process") << "Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState";
     return;
   }
 

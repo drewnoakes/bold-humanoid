@@ -29,7 +29,7 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
     id << "motion-script." << script->getName();
     Config::addAction(id.str(), script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); });
   }
-  cout << "[MotionScriptModule::MotionScriptModule] Loaded " << scripts.size() << " motion scripts" << endl;
+  log::info("MotionScriptModule::MotionScriptModule") << "Loaded " << scripts.size() << " motion scripts";
 }
 
 void MotionScriptModule::initialize()
@@ -80,16 +80,11 @@ void MotionScriptModule::applyLegs(shared_ptr<LegSection> legs) { applySection(d
 
 bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
 {
-  cout << "[MotionScriptModule::start] Starting script " << scriptRunner->getScriptName() << endl;
+  log::info("MotionScriptModule::start") << "Starting script " << scriptRunner->getScriptName();
 
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
-    cerr << ccolor::warning
-         << "[MotionScriptModule::start] Ignoring request to play script " << scriptRunner->getScriptName()
-         << " -- already playing " << d_runner->getScriptName()
-         << ccolor::reset
-         << endl;
-
+    log::warning("MotionScriptModule::start") << "Ignoring request to play script " << scriptRunner->getScriptName() << " -- already playing " << d_runner->getScriptName();
     return false;
   }
 

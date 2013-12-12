@@ -12,6 +12,7 @@
 #include "../PixelLabel/pixellabel.hh"
 #include "../util/Range.hh"
 #include "../util/ccolor.hh"
+#include "../util/log.hh"
 
 namespace bold
 {
@@ -48,7 +49,7 @@ namespace bold
       auto last = d_path.find_last_of('.');
       if (last == std::string::npos)
       {
-        std::cerr << ccolor::error << "[SettingBase::SettingBase] Invalid path: " << d_path << ccolor::reset << std::endl;
+        log::error("SettingBase::SettingBase") << "Invalid path: " << d_path;
         throw std::runtime_error("Invalid setting path");
       }
       d_name = d_path.substr(last + 1);
@@ -87,17 +88,13 @@ namespace bold
     {
       if (isReadOnly() && !isInitialising())
       {
-        std::cerr << ccolor::error << "[Setting::setValue] Attempt to modify readonly setting: " << getPath() << ccolor::reset << std::endl;
+        log::error("Setting::setValue") << "Attempt to modify readonly setting: " << getPath();
         return false;
       }
 
       if (!isValidValue(value))
       {
-        std::cerr << ccolor::warning
-                  << "[Setting::setValue] Attempt to set invalid value '" << value << "' to setting '" << getPath() << "': "
-                  << getValidationMessage(value)
-                  << ccolor::reset
-                  << std::endl;
+        log::error("Setting::setValue") << "Attempt to set invalid value '" << value << "' to setting '" << getPath() << "': " << getValidationMessage(value);
         return false;
       }
 

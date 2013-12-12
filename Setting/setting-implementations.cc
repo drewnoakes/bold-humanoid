@@ -1,5 +1,7 @@
 #include "setting-implementations.hh"
 
+#include "../util/log.hh"
+
 using namespace bold;
 using namespace rapidjson;
 using namespace std;
@@ -53,13 +55,13 @@ bool IntSetting::setValueFromJson(Value const* value)
 {
   if (value == nullptr)
   {
-    cerr << ccolor::error << "[IntSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("IntSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
     return false;
   }
 
   if (!value->IsInt())
   {
-    cerr << ccolor::error << "[IntSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be an integer" << ccolor::reset << endl;
+    log::error("IntSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be an integer";
     return false;
   }
 
@@ -115,13 +117,13 @@ bool EnumSetting::setValueFromJson(Value const* value)
 {
   if (value == nullptr)
   {
-    cerr << ccolor::error << "[EnumSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("EnumSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
     return false;
   }
 
   if (!value->IsInt())
   {
-    cerr << ccolor::error << "[EnumSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be an integer" << ccolor::reset << endl;
+    log::error("EnumSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be an integer";
     return false;
   }
 
@@ -171,13 +173,13 @@ bool DoubleSetting::setValueFromJson(Value const* value)
 {
   if (value == nullptr)
   {
-    cerr << ccolor::error << "[DoubleSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("DoubleSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
     return false;
   }
 
   if (!value->IsNumber())
   {
-    cerr << ccolor::error << "[DoubleSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be a double" << ccolor::reset << endl;
+    log::error("DoubleSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be a double";
     return false;
   }
 
@@ -223,13 +225,13 @@ bool BoolSetting::setValueFromJson(Value const* value)
 {
   if (value == nullptr)
   {
-    cerr << ccolor::error << "[BoolSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("BoolSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
     return false;
   }
 
   if (!value->IsBool())
   {
-    cerr << ccolor::error << "[BoolSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be a bool" << ccolor::reset << endl;
+    log::error("BoolSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be a bool";
     return false;
   }
 
@@ -258,7 +260,7 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hs
 {
   if (!value->IsObject())
   {
-    cerr << ccolor::error << "[HsvRangeSetting::tryParseObject] JSON value must be an object" << ccolor::reset << endl;
+    log::error("HsvRangeSetting::tryParseObject") << "JSON value must be an object";
     return false;
   }
 
@@ -270,7 +272,7 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hs
 
     if (!mem || !mem->value.IsArray() || mem->value.Size() != 2 || !mem->value[0u].IsInt() || !mem->value[1u].IsInt())
     {
-      cerr << ccolor::error << "[HsvRangeSetting::tryParseObject] hsv-range value for '" << channel << "' must be an array of two integer values" << ccolor::reset << endl;
+      log::error("HsvRangeSetting::tryParseObject") << "hsv-range value for '" << channel << "' must be an array of two integer values";
       return false;
     }
 
@@ -279,7 +281,7 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hs
 
     if (v1 < 0 || v1 > 255 || v2 < 0 || v2 > 255)
     {
-      cerr << ccolor::error << "[HsvRangeSetting::tryParseObject] hsv-range value for '" << channel << "' must be an array of integers between 0 and 255, inclusive" << ccolor::reset << endl;
+      log::error("HsvRangeSetting::tryParseObject") << "hsv-range value for '" << channel << "' must be an array of integers between 0 and 255, inclusive";
       return false;
     }
 
@@ -295,7 +297,7 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hs
 
   if (!hsvRange->isValid())
   {
-    cerr << ccolor::error << "[HsvRangeSetting::tryParseObject] hsv-range value parsed correctly but has invalid data" << ccolor::reset << endl;
+    log::error("HsvRangeSetting::tryParseObject") << "hsv-range value parsed correctly but has invalid data";
     return false;
   }
 
@@ -329,7 +331,7 @@ bool HsvRangeSetting::setValueFromJson(Value const* value)
 {
   if (value == nullptr)
   {
-    cerr << ccolor::error << "[HsvRangeSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("HsvRangeSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
     return false;
   }
 
@@ -337,7 +339,7 @@ bool HsvRangeSetting::setValueFromJson(Value const* value)
 
   if (!tryParseJsonValue(value, &hsvRange))
   {
-    cerr << ccolor::error << "[HsvRangeSetting::setValueFromJson] Invalid JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("HsvRangeSetting::setValueFromJson") << "Invalid JSON Value provided for '" << getPath();
     return false;
   }
 
@@ -361,7 +363,7 @@ bool DoubleRangeSetting::tryParseJsonValue(Value const* value, Range<double>* ra
 {
   if (!value->IsArray() || value->Size() != 2 || !(*value)[0u].IsNumber() || !(*value)[1u].IsNumber())
   {
-    cerr << ccolor::error << "[DoubleRangeSetting::tryParseJsonValue] Double range value must be a JSON array of two double values" << ccolor::reset << endl;
+    log::error("DoubleRangeSetting::tryParseJsonValue") << "Double range value must be a JSON array of two double values";
     return false;
   }
 
@@ -370,7 +372,7 @@ bool DoubleRangeSetting::tryParseJsonValue(Value const* value, Range<double>* ra
 
   if (v1 > v2)
   {
-    cerr << ccolor::error << "[DoubleRangeSetting::tryParseJsonValue] Double range must have min <= max" << ccolor::reset << endl;
+    log::error("DoubleRangeSetting::tryParseJsonValue") << "Double range must have min <= max";
     return false;
   }
 
@@ -407,7 +409,7 @@ bool DoubleRangeSetting::setValueFromJson(Value const* value)
 {
   if (value == nullptr)
   {
-    cerr << ccolor::error << "[DoubleRangeSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("DoubleRangeSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
     return false;
   }
 
@@ -415,7 +417,7 @@ bool DoubleRangeSetting::setValueFromJson(Value const* value)
 
   if (!tryParseJsonValue(value, &range))
   {
-    cerr << ccolor::error << "[DoubleRangeSetting::setValueFromJson] Invalid JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("DoubleRangeSetting::setValueFromJson") << "Invalid JSON Value provided for '" << getPath();
     return false;
   }
 
@@ -456,13 +458,13 @@ bool StringSetting::setValueFromJson(Value const* value)
 {
   if (value == nullptr)
   {
-    cerr << ccolor::error << "[StringSetting::setValueFromJson] Null JSON Value provided for '" << getPath() << ccolor::reset << endl;
+    log::error("StringSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
     return false;
   }
 
   if (!value->IsString())
   {
-    cerr << ccolor::error << "[StringSetting::setValueFromJson] Configuration value for '" << getPath() << "' must be a string" << ccolor::reset << endl;
+    log::error("StringSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be a string";
     return false;
   }
 
@@ -537,6 +539,6 @@ bool BgrColourSetting::setValueFromJson(Value const* value)
   if (tryParseJsonValue(value, &bgr))
     return setValue(bgr);
 
-  cerr << ccolor::error << "[BgrColourSetting::setValueFromJson] Configuration value for '" << getPath() << "' must have 'b', 'g' and 'r' properties of integral type" << ccolor::reset << endl;
+  log::error("BgrColourSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must have 'b', 'g' and 'r' properties of integral type";
   return false;
 }

@@ -48,9 +48,9 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   bool hasWebSockets = d_context != nullptr;
 
   if (hasWebSockets)
-    cout << "[DataStreamer::DataStreamer] Listening on TCP port " << d_port << endl;
+    log::info("DataStreamer::DataStreamer") << "Listening on TCP port " << d_port;
   else
-    cerr << ccolor::error << "[DataStreamer::DataStreamer] libwebsocket context creation failed" << ccolor::reset << endl;
+    log::error("DataStreamer::DataStreamer") << "libwebsocket context creation failed";
 
   if (hasWebSockets)
   {

@@ -54,13 +54,13 @@ int DataStreamer::callback_state(
         }
         else
         {
-          cerr << ccolor::error << "[DataStreamer::callbackState] No StateObject set for: " << protocol->name << ccolor::reset << endl;
+          log::error("DataStreamer::callbackState") << "No StateObject set for: " << protocol->name;
         }
 
         return 0;
       }
     }
-    cerr << ccolor::error << "[DataStreamer::callbackState] No StateTracker registered for: " << protocol->name << ccolor::reset << endl;
+    log::error("DataStreamer::callbackState") << "No StateTracker registered for: " << protocol->name;
     return 0;
   }
   default:

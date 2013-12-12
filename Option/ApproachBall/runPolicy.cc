@@ -9,7 +9,7 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
 
   if (!ballPos)
   {
-//     cerr << ccolor::warning << "[ApproachBall::runPolicy] No ball observation in AgentFrame yet ApproachBall was run" << ccolor::reset << endl;
+//     log::warning("ApproachBall::runPolicy") << "No ball observation in AgentFrame yet ApproachBall was run";
     return std::vector<std::shared_ptr<Option>>();
   }
 

@@ -38,7 +38,7 @@ void VisualCortex::saveImage(cv::Mat const& image)
 
   stringstream fileName;
   fileName << folderName << "/" << dateTimeString << ".png";
-  cout << "[VisualCortex::saveImage] Saving " << fileName.str() << endl;
+  log::info("VisualCortex::saveImage") << "Saving " << fileName.str();
 
   // Write the image file
   cv::imwrite(fileName.str(), image);
@@ -47,7 +47,7 @@ void VisualCortex::saveImage(cv::Mat const& image)
   fileName.str(std::string());
 
   fileName << folderName << "/" << dateTimeString << ".json";
-  cout << "[VisualCortex::saveImage] Saving " << fileName.str() << endl;
+  log::info("VisualCortex::saveImage") << "Saving " << fileName.str();
 
   // Build up the output JSON
   StringBuffer buffer;
@@ -58,7 +58,7 @@ void VisualCortex::saveImage(cv::Mat const& image)
     char hostName[80];
     if (gethostname(hostName, 80) == -1)
     {
-      cerr << ccolor::warning << "[VisualCortex::saveImage] gethostname failed: " << strerror(errno) << ccolor::reset << endl;
+      log::warning("VisualCortex::saveImage") << "gethostname failed: " << strerror(errno);
     }
     else
     {

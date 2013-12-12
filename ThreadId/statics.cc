@@ -1,6 +1,6 @@
 #include "threadid.hh"
 
-#include "../util/ccolor.hh"
+#include "../util/log.hh"
 
 #include <sstream>
 #include <iostream>
@@ -27,7 +27,7 @@ bool ThreadId::isMotionLoopThread()
 {
   if (d_threadId == MotionLoop)
     return true;
-  cerr << ccolor::error << "[ThreadId::isMotionLoopThread] Expected Motion Loop thread but was: " << getThreadName() << ccolor::reset << endl;
+  log::error("ThreadId::isMotionLoopThread") << "Expected Motion Loop thread but was: " << getThreadName();
   return false;
 }
 
@@ -35,6 +35,6 @@ bool ThreadId::isThinkLoopThread()
 {
   if (d_threadId == ThinkLoop)
     return true;
-  cerr << ccolor::error << "[ThreadId::isThinkLoopThread] Expected Think Loop thread but was: " << getThreadName() << ccolor::reset << endl;
+  log::error("ThreadId::isThinkLoopThread") << "Expected Think Loop thread but was: " << getThreadName();
   return false;
 }

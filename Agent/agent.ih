@@ -51,6 +51,7 @@
 #include "../ThreadId/threadid.hh"
 #include "../VisualCortex/visualcortex.hh"
 #include "../Voice/voice.hh"
+#include "../util/log.hh"
 
 #include <iostream>
 

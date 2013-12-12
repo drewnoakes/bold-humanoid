@@ -2,7 +2,7 @@
 
 void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi)
 {
-  cout << "[DataStreamer::processCommand] Processing: " << json << endl;
+  log::info("DataStreamer::processCommand") << "Processing: " << json;
 
   rapidjson::Document d;
 
@@ -10,14 +10,14 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
 
   if (d.HasParseError())
   {
-    cerr << ccolor::error << "[DataStreamer::processCommand] Error parsing command JSON" << ccolor::reset << endl;
+    log::error("DataStreamer::processCommand") << "Error parsing command JSON";
     return;
   }
 
   char const* type;
   if (!d.TryGetStringValue("type", &type))
   {
-    cerr << ccolor::error << "[DataStreamer::processCommand] No 'type' specified in received command JSON" << ccolor::reset << endl;
+    log::error("DataStreamer::processCommand") << "No 'type' specified in received command JSON";
     return;
   }
 
@@ -32,7 +32,7 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
     char const* id;
     if (!d.TryGetStringValue("id", &id))
     {
-      cerr << ccolor::error << "[DataStreamer::processCommand] No 'id' specified in received action JSON" << ccolor::reset << endl;
+      log::error("DataStreamer::processCommand") << "No 'id' specified in received action JSON";
       return;
     }
 
@@ -40,7 +40,7 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
 
     if (!action)
     {
-      cerr << ccolor::error << "[DataStreamer::processCommand] No action exists with id: " << id << ccolor::reset << endl;
+      log::error("DataStreamer::processCommand") << "No action exists with id: " << id;
       return;
     }
 
@@ -57,14 +57,14 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
     char const* path;
     if (!d.TryGetStringValue("path", &path))
     {
-      cerr << ccolor::error << "[DataStreamer::processCommand] No 'path' specified in received setting JSON" << ccolor::reset << endl;
+      log::error("DataStreamer::processCommand") << "No 'path' specified in received setting JSON";
       return;
     }
 
     auto valueMember = d.FindMember("value");
     if (!valueMember)
     {
-      cerr << ccolor::error << "[DataStreamer::processCommand] No 'value' specified in received setting JSON" << ccolor::reset << endl;
+      log::error("DataStreamer::processCommand") << "No 'value' specified in received setting JSON";
       return;
     }
 
@@ -72,7 +72,7 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
 
     if (!setting)
     {
-      cerr << ccolor::error << "[DataStreamer::processCommand] No setting exists with path: " << path << ccolor::reset << endl;
+      log::error("DataStreamer::processCommand") << "No setting exists with path: " << path;
       return;
     }
 

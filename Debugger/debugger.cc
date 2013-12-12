@@ -1,5 +1,7 @@
 #include "debugger.ih"
 
+#include "../util/log.hh"
+
 #define LED_RED   (0x01);
 #define LED_BLUE  (0x02);
 #define LED_GREEN (0x04);
@@ -88,6 +90,17 @@ void Debugger::update(shared_ptr<CM730> cm730)
   // clear accumulators for next cycle
   d_gameControllerMessageCount = 0;
   d_ignoredMessageCount = 0;
+}
+
+void Debugger::notifyReceivedGameControllerMessage()
+{
+  if (!d_seenGameControllerMessageYet)
+  {
+    log::info("Debugger::notifyReceivedGameControllerMessage") << "Seen first message from game controller";
+    d_seenGameControllerMessageYet = true;
+  }
+
+  d_gameControllerMessageCount++;
 }
 
 void Debugger::showReady() { showHeadColour(Colour::bgr(255,0,0)); showEyeColour(Colour::bgr(255,0,0)); };

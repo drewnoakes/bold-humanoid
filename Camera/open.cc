@@ -6,11 +6,11 @@ void Camera::open()
 
   if (d_fd < 0)
   {
-    cout << "[Camera::open] Failed opening device: " << d_device << endl;
     exit(0);
+    log::error("Camera::open") << "Failed opening device: " << d_device;
   }
 
-  cout << "[Camera::open] Camera opened" << endl;
+  log::info("Camera::open") << "Camera opened";
 
   // List capabilities
   ioctl(d_fd, VIDIOC_QUERYCAP, &d_capabilities);

@@ -6,7 +6,7 @@ std::vector<std::shared_ptr<Option>> LookAtGoal::runPolicy()
 
   if (goalObs.size() < 2)
   {
-    cerr << ccolor::warning << "[LookAtGoal::runPolicy] Couldn't see both goal posts!" << ccolor::reset << endl;
+    log::warning("LookAtGoal::runPolicy") << "Couldn't see both goal posts!";
     return std::vector<std::shared_ptr<Option>>();
   }
 

@@ -26,7 +26,7 @@ int DataStreamer::callback_http(
       else if (string(path).find("..") != string::npos)
       {
         // protect against ../ attacks
-        std::cout << "[DataStreamer::callback_http] invalid request path: " << path << std::endl;
+        log::info("DataStreamer::callback_http") << "invalid request path: " << path;
         return 1;
       }
 
@@ -37,7 +37,7 @@ int DataStreamer::callback_http(
         path[queryStart] = 0;
       }
 
-      std::cout << "[DataStreamer::callback_http] requested path: " << path << std::endl;
+      log::info("DataStreamer::callback_http") << "requested path: " << path;
     }
     else
     {

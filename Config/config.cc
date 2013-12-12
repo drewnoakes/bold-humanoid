@@ -6,6 +6,7 @@
 #include "../PixelLabel/pixellabel.hh"
 #include "../Setting/setting-implementations.hh"
 #include "../util/Range.hh"
+#include "../util/log.hh"
 
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
@@ -24,7 +25,7 @@ void Config::initialise(string metadataFile, string configFile)
 {
   if (d_configDocument != nullptr || !d_isInitialising)
   {
-    cerr << ccolor::error << "[Config::initialise] Already initialised" << ccolor::reset << endl;
+    log::error("Config::initialise") << "Already initialised";
     throw runtime_error("Configuration already initialised.");
   }
 
@@ -33,20 +34,20 @@ void Config::initialise(string metadataFile, string configFile)
   // For each setting, attempt to set the initial value from the config file,
   // otherwise fall back to the default value specified in the metadata.
 
-  cout << "[Config::initialise] Parsing configuration" << endl;
+  log::info("Config::initialise") << "Parsing configuration";
 
   FILE* mf = fopen(metadataFile.c_str(), "rb");
   FILE* cf = fopen(configFile.c_str(), "rb");
 
   if (!mf)
   {
-    cerr << ccolor::error << "[Config::initialise] File not found: " << metadataFile << ccolor::reset << endl;
+    log::error("Config::initialise") << "File not found: " << metadataFile;
     throw runtime_error("Configuration metadata file not found.");
   }
 
   if (!cf)
   {
-    cerr << ccolor::error << "[Config::initialise] File not found: " << configFile << ccolor::reset << endl;
+    log::error("Config::initialise") << "File not found: " << configFile;
     throw runtime_error("Configuration file not found.");
   }
 
@@ -62,13 +63,13 @@ void Config::initialise(string metadataFile, string configFile)
 
   if (metaDocument.HasParseError())
   {
-    cerr << ccolor::error << "[Config::initialise] Parse error in file " << metadataFile << ": " << metaDocument.GetParseError() << ccolor::reset << endl;
+    log::error("Config::initialise") << "Parse error in file " << metadataFile << ": " << metaDocument.GetParseError();
     throw runtime_error("Parse error in configuration metadata JSON.");
   }
 
   if (confDocument->HasParseError())
   {
-    cerr << ccolor::error << "[Config::initialise] Parse error in file " << configFile << ": " << confDocument->GetParseError() << ccolor::reset << endl;
+    log::error("Config::initialise") << "Parse error in file " << configFile << ": " << confDocument->GetParseError();
     delete confDocument;
     throw runtime_error("Parse error in configuration JSON.");
   }
@@ -101,7 +102,7 @@ SettingBase* Config::getSettingBase(string path)
     auto it = node->subNodeByName.find(nodeName);
     if (it == node->subNodeByName.end())
     {
-      cerr << ccolor::warning << "[Config::getSettingBase] Requested setting with path '" << path << "' but no node was found with name: " << nodeName << ccolor::reset << endl;
+      log::warning("Config::getSettingBase") << "Requested setting with path '" << path << "' but no node was found with name: " << nodeName;
       return nullptr;
     }
     node = &it->second;
@@ -113,7 +114,7 @@ SettingBase* Config::getSettingBase(string path)
 
   if (it == node->settingByName.end())
   {
-    cerr << ccolor::warning << "[Config::getSettingBase] Requested setting with path '" << path << "' but no setting was found with name: " << settingName << ccolor::reset << endl;
+    log::warning("Config::getSettingBase") << "Requested setting with path '" << path << "' but no setting was found with name: " << settingName;
     return nullptr;
   }
 
@@ -133,7 +134,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
 
     if (!typeMember->value.IsString())
     {
-      cerr << ccolor::error << "[Config::processLevel] 'type' property must have a string value" << ccolor::reset << endl;
+      log::error("Config::processLevel") << "'type' property must have a string value";
       throw runtime_error("JSON 'type' property must have a string value");
     }
 
@@ -151,7 +152,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
       double defaultValue;
       if (!metaNode->TryGetDoubleValue("default", &defaultValue))
       {
-        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a double" << ccolor::reset << endl;
+        log::error("Config::processLevel") << "'default' value for '" << path << "' must be a double";
         throw runtime_error("JSON 'default' value must be a double");
       }
 
@@ -164,7 +165,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
       int defaultValue;
       if (!metaNode->TryGetIntValue("default", &defaultValue))
       {
-        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << ccolor::reset << endl;
+        log::error("Config::processLevel") << "'default' value for '" << path << "' must be an int";
         throw runtime_error("JSON 'default' value must be an int");
       }
 
@@ -177,14 +178,14 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
       int defaultValue;
       if (!metaNode->TryGetIntValue("default", &defaultValue))
       {
-        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be an int" << ccolor::reset << endl;
+        log::error("Config::processLevel") << "'default' value for '" << path << "' must be an int";
         throw runtime_error("JSON 'default' value must be an int");
       }
 
       auto valuesObj = metaNode->FindMember("values");
       if (!valuesObj || !valuesObj->value.IsObject())
       {
-        cerr << ccolor::error << "[Config::processLevel] Configuration value for enum '" << path << "' must specify values" << ccolor::reset << endl;
+        log::error("Config::processLevel") << "Configuration value for enum '" << path << "' must specify values";
         throw runtime_error("JSON configuration for enum must specify values");
       }
 
@@ -193,7 +194,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
       {
         if (!it->value.IsInt())
         {
-          cerr << ccolor::error << "[Config::processLevel] Configuration value for enum '" << path << "' has member with non-integral value" << ccolor::reset << endl;
+          log::error("Config::processLevel") << "Configuration value for enum '" << path << "' has member with non-integral value";
           throw runtime_error("JSON configuration for enum must have integral values");
         }
         pairs[it->value.GetInt()] = it->name.GetString();
@@ -206,7 +207,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
       bool defaultValue;
       if (!metaNode->TryGetBoolValue("default", &defaultValue))
       {
-        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a bool" << ccolor::reset << endl;
+        log::error("Config::processLevel") << "'default' value for '" << path << "' must be a bool";
         throw runtime_error("JSON 'default' value must be a bool");
       }
 
@@ -217,7 +218,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
       const char* defaultValue;
       if (!metaNode->TryGetStringValue("default", &defaultValue))
       {
-        cerr << ccolor::error << "[Config::processLevel] 'default' value for '" << path << "' must be a string" << ccolor::reset << endl;
+        log::error("Config::processLevel") << "'default' value for '" << path << "' must be a string";
         throw runtime_error("JSON 'default' value must be a string");
       }
 
@@ -258,7 +259,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
     }
     else
     {
-      cerr << ccolor::error << "[Config::processLevel] Unsupported 'type' property value: " << type << ccolor::reset << endl;
+      log::error("Config::processLevel") << "Unsupported 'type' property value: " << type;
       throw runtime_error("Unsupported JSON 'type' property value");
     }
 
@@ -279,7 +280,7 @@ void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, str
 
       if (!it->value.IsObject())
       {
-        cerr << ccolor::warning << "[Config::processLevel] Skipping non-object: " << childName << ccolor::reset << endl;
+        log::warning("Config::processLevel") << "Skipping non-object: " << childName;
         continue;
       }
 
@@ -318,14 +319,14 @@ void Config::addSetting(SettingBase* setting)
   // Validate that the setting name is not also used for a tree node
   if (node->subNodeByName.find(settingName) != node->subNodeByName.end())
   {
-    cerr << ccolor::error << "[Config::addSetting] Attempt to add setting but node already exists with path: " << setting->getPath() << ccolor::reset << endl;
+    log::error("Config::addSetting") << "Attempt to add setting but node already exists with path: " << setting->getPath();
     throw runtime_error("Attempt to add setting over existing node");
   }
 
   // Insert, ensuring a setting does not already exist with that name
   if (!node->settingByName.insert(make_pair(settingName, setting)).second)
   {
-    cerr << ccolor::error << "[Config::addSetting] Attempt to add duplicate setting with path: " << setting->getPath() << ccolor::reset << endl;
+    log::error("Config::addSetting") << "Attempt to add duplicate setting with path: " << setting->getPath();
     throw runtime_error("Attempt to add duplicate setting");
   }
 
@@ -348,7 +349,7 @@ void Config::addAction(string id, string label, function<void()> callback)
   if (it.second == false)
   {
     delete action;
-    cerr << ccolor::error << "[Config::addAction] Action with id '" << id << "' already registered" << ccolor::reset << endl;
+    log::error("Config::addAction") << "Action with id '" << id << "' already registered";
     throw runtime_error("Action already registered with provided id");
   }
 }
@@ -361,7 +362,7 @@ Value const* Config::getConfigJsonValue(string path)
 
   if (!configValue)
   {
-    cerr << ccolor::error << "[Config::getConfigJsonValue] Config document has not yet been set" << ccolor::reset << endl;
+    log::error("Config::getConfigJsonValue") << "Config document has not yet been set";
     throw runtime_error("Config document has not yet been set");
   }
 

@@ -13,7 +13,7 @@ bool Camera::PixelFormat::requestSize(unsigned width, unsigned height)
 
   if (res < 0)
   {
-    cerr << ccolor::error << "[Camera::PixelFormat::requestSize] Error setting camera size: " << strerror(errno) << " (" << errno << ")" << ccolor::reset << endl;
+    log::error("Camera::PixelFormat::requestSize") << "Error setting camera size: " << strerror(errno) << " (" << errno << ")";
   }
 
   ioctl(owner->d_fd, VIDIOC_G_FMT, &formatReq);

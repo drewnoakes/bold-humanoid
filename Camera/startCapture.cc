@@ -18,7 +18,7 @@ void Camera::startCapture()
 
     if (-1 == ioctl(d_fd, VIDIOC_QBUF, &buf))
     {
-      cerr << ccolor::error << "[Camera::startCapture] Buffer failure on capture start: " << strerror(errno) << " (" << errno << ")" << ccolor::reset << endl;
+      log::error("Camera::startCapture") << "Buffer failure on capture start: " << strerror(errno) << " (" << errno << ")";
       exit(-1);
     }
   }
@@ -26,7 +26,7 @@ void Camera::startCapture()
   unsigned type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
   if (-1 == ioctl(d_fd, VIDIOC_STREAMON, &type))
   {
-    cerr << ccolor::error << "[Camera::startCapture] Failed stream start: " << strerror(errno) << " (" << errno << ")" << ccolor::reset << endl;
+    log::error("Camera::startCapture") << "Failed stream start: " << strerror(errno) << " (" << errno << ")";
     exit(-1);
   }
 }

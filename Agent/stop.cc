@@ -3,22 +3,22 @@
 void Agent::requestStop()
 {
   if (!d_isRunning)
-    throw new std::runtime_error("Not running");
+    throw new runtime_error("Not running");
 
   if (d_isStopRequested)
   {
-    cerr << ccolor::warning << "[Agent::requestStop] Forcing exit" << ccolor::reset << endl;
+    log::warning("Agent::requestStop") << "Forcing exit";
     exit(1);
   }
 
-  cout << "[Agent::requestStop]" << endl;
+  log::info("Agent::requestStop");
 
   d_isStopRequested = true;
 }
 
 void Agent::stop()
 {
-  cout << "[Agent::stop]" << endl;
+  log::info("Agent::stop");
   d_isRunning = false;
   d_motionLoop->stop();
 }

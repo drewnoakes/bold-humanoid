@@ -53,9 +53,9 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   auto createLookupTable = [this,pixelLabels]()
   {
-    cout << "[VisualCortex::VisualCortex] Creating LUT using pixel labels:" << endl;
+    log::info("VisualCortex::VisualCortex") << "Creating LUT using pixel labels:";
     for (shared_ptr<PixelLabel> label : pixelLabels)
-      cout << "[VisualCortex::VisualCortex]   " << *label << endl;
+      log::info("VisualCortex::VisualCortex") << "  " << *label;
 
     d_imageLabeller->updateLut(LUTBuilder::buildLookUpTableYCbCr18(pixelLabels));
   };

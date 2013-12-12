@@ -2,11 +2,11 @@
 
 void Agent::think()
 {
-//   cout << "[Agent::think]" << endl;
-
   assert(ThreadId::isThinkLoopThread());
 
   d_cycleNumber++;
+
+  log::verbose("Agent::think") << "Starting think cycle " << d_cycleNumber;
 
   SequentialTimer t;
 
@@ -120,4 +120,6 @@ void Agent::think()
   AgentState::getInstance().set(make_shared<ThinkTimingState const>(t.flush(), d_cycleNumber));
 
   onThinkEnd();
+
+  log::verbose("Agent::think") << "Ending think cycle " << d_cycleNumber;
 }

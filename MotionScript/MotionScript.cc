@@ -1,6 +1,6 @@
 #include "motionscript.hh"
 
-#include "../util/ccolor.hh"
+#include "../util/log.hh"
 
 #include <iostream>
 #include <sstream>
@@ -20,7 +20,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(std::string fileName)
   FILE* pFile = fopen(fileName.c_str(), "rb");
   if (!pFile)
   {
-    cerr << ccolor::error << "[MotionScript::fromFile] Unable to open file: " << fileName << ccolor::reset << endl;
+    log::error("MotionScript::fromFile") << "Unable to open file: " << fileName;
     return nullptr;
   }
 
@@ -31,7 +31,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(std::string fileName)
 
   if (document.HasParseError())
   {
-    cerr << ccolor::error << "[MotionScript::fromFile] JSON parse error for " << fileName << ": " << document.GetParseError() << ccolor::reset << endl;
+    log::error("MotionScript::fromFile") << "JSON parse error for " << fileName << ": " << document.GetParseError();
     return nullptr;
   }
 
@@ -84,7 +84,7 @@ vector<shared_ptr<MotionScript>> MotionScript::loadAllInPath(std::string path)
   struct dirent *ent;
   if ((dir = opendir(path.c_str())) == nullptr)
   {
-    cerr << ccolor::error << "Unable to open motion scripts directory" << ccolor::reset << endl;
+    log::error("MotionScript::loadAllInPath") << "Unable to open motion scripts directory";
     throw std::runtime_error("Unable to open motion scripts directory");
   }
 
@@ -114,11 +114,11 @@ bool MotionScript::writeJsonFile(std::string fileName) const
 
   if (file == 0)
   {
-    cerr << ccolor::error << "[MotionScript::writeJsonFile] Can not open output file for writing: " << fileName << ccolor::reset << endl;
+    log::error("MotionScript::writeJsonFile") << "Can not open output file for writing: " << fileName;
     return false;
   }
 
-  cout << "[MotionScript::writeJsonFile] Writing: " << fileName << endl;
+  log::info("MotionScript::writeJsonFile") << "Writing: " << fileName;
 
   char buffer[4096];
   FileWriteStream f(file, buffer, sizeof(buffer));

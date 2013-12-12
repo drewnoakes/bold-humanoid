@@ -13,6 +13,7 @@
 
 #include "../StateObject/stateobject.hh"
 #include "../StateObserver/stateobserver.hh"
+#include "../util/log.hh"
 
 struct libwebsocket_protocols;
 
@@ -74,6 +75,7 @@ namespace bold
     void registerStateType(std::string name)
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
+      log::verbose("AgentState::registerStateType") << "Registering state type: " << name;
       std::lock_guard<std::mutex> guard(d_mutex);
       assert(d_trackerByTypeId.find(typeid(T)) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
       d_trackerByTypeId[typeid(T)] = StateTracker::create<T>(name);

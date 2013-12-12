@@ -12,7 +12,7 @@
 #include <iostream>
 
 #include "../Clock/clock.hh"
-#include "../util/ccolor.hh"
+#include "../util/log.hh"
 
 using namespace bold;
 using namespace std;
@@ -39,7 +39,7 @@ CM730Linux::~CM730Linux()
 
 bool CM730Linux::openPort()
 {
-  cout << "[CM730Linux::openPort] Starting" << endl;
+  log::info("CM730Linux::openPort") << "Starting";
 
   struct termios newtio = {0,};
   struct serial_struct serinfo = {0,};
@@ -71,7 +71,7 @@ bool CM730Linux::openPort()
   if (ioctl(d_socket, TIOCSSERIAL, &serinfo) < 0)
     goto UART_OPEN_ERROR;
 
-  cout << "[CM730Linux::openPort] Opened with " << (int)baudrate << " bps baud" << endl;
+  log::info("CM730Linux::openPort") << "Opened with " << (int)baudrate << " bps baud";
 
   tcflush(d_socket, TCIFLUSH);
 
@@ -80,7 +80,7 @@ bool CM730Linux::openPort()
   return true;
 
 UART_OPEN_ERROR:
-  cerr << ccolor::error << "[CM730Linux::openPort] Error opening port" << ccolor::reset << endl;
+  log::error("CM730Linux::openPort") << "Error opening port";
   closePort();
   return false;
 }

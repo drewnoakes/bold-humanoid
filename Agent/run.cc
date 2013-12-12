@@ -17,7 +17,7 @@ void Agent::run()
 
     d_motionLoop->start();
 
-    cout << "[Agent::run] Waiting for HardwareState" << endl;
+    log::info("Agent::run") << "Waiting for HardwareState before starting motion loop";
     while (!AgentState::get<HardwareState>())
     {
       // Wait until the motion loop has read a hardware value
@@ -25,12 +25,12 @@ void Agent::run()
     }
   }
 
-  cout << ccolor::info << "[Agent::run] Starting think loop" << ccolor::reset << endl;
+  log::info("Agent::run") << "Starting think loop";
 
   while (d_isRunning)
   {
     think();
   }
 
-  cout << ccolor::info << "[Agent::run] Stopped" << ccolor::reset << endl;
+  log::info("Agent::run") << "Stopped";
 }

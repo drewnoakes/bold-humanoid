@@ -51,7 +51,7 @@ namespace bold
 
       if (typeIndex != setting->getTypeIndex())
       {
-        std::cerr << ccolor::error << "[Config::getSetting] Attempt to get setting having different type: " << path << ccolor::reset << std::endl;
+        log::error("Config::getSetting") << "Attempt to get setting having different type: " << path;
         throw std::runtime_error("Attempt to get setting having different type");
       }
 
@@ -65,7 +65,7 @@ namespace bold
       auto setting = getSetting<T>(path);
       if (!setting)
       {
-        std::cerr << ccolor::error << "[Config::getValue] No setting exists with path: " << path << ccolor::reset << std::endl;
+        log::error("Config::getValue") << "No setting exists with path: " << path;
         throw std::runtime_error("No setting exists for requested path");
       }
       return setting->getValue();
@@ -78,12 +78,12 @@ namespace bold
       auto setting = getSetting<T>(path);
       if (!setting)
       {
-        std::cerr << ccolor::error << "[Config::getValue] No setting exists with path: " << path << ccolor::reset << std::endl;
+        log::error("Config::getValue") << "No setting exists with path: " << path;
         throw std::runtime_error("No setting exists for requested path");
       }
       if (!setting->isReadOnly())
       {
-        std::cerr << ccolor::error << "[Config::getValue] Requested static config value, however setting is not readonly: " << path << ccolor::reset << std::endl;
+        log::error("Config::getValue") << "Requested static config value, however setting is not readonly: " << path;
         throw std::runtime_error("Requested static config value, however setting is not readonly");
       }
       return setting->getValue();

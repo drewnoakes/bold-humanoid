@@ -67,7 +67,7 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
         }
         else
         {
-          cout << "[LookAround::runPolicy] Failed to find phase of motion" << endl;
+          log::info("LookAround::runPolicy") << "Failed to find phase of motion";
         }
       }
     }

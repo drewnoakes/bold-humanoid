@@ -31,7 +31,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
   if (d_state == MotionScriptRunnerState::Finished)
   {
-    cerr << ccolor::error << "[MotionScriptRunner::step] already finished" << ccolor::reset << endl;
+    log::error("MotionScriptRunner::step") << "already finished";
     return false;
   }
 
@@ -461,7 +461,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
       }
       default:
       {
-        cerr << ccolor::error << "[MotionScriptRunner::step] Unexpected section: " << (int)d_section << ccolor::reset << endl;
+        log::error("MotionScriptRunner::step") << "Unexpected section: " << (int)d_section;
         throw new runtime_error("Unexpected section");
       }
     }

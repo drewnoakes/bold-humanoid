@@ -41,7 +41,7 @@ double MotionScriptOption::hasTerminated()
 
   if (d_runner->getState() == MotionScriptRunnerState::Finished)
   {
-//     cout << "[MotionScriptOption::hasTerminated] Motion script completed: " << getID() << endl;
+    log::verbose("MotionScriptOption::hasTerminated") << "Motion script completed: " << getID();
     d_runner = nullptr;
     return 1.0;
   }
@@ -59,12 +59,12 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy()
 
     if (started)
     {
-//       cout << "[MotionScriptOption::runPolicy] Started motion script: " << getID() << endl;
+      log::verbose("MotionScriptOption::runPolicy") << "Started motion script: " << getID();
       d_runner = runner;
     }
     else
     {
-//       cout << "[MotionScriptOption::runPolicy] Request to start motion script denied: " << getID() << endl;
+      log::verbose("MotionScriptOption::runPolicy") << "Request to start motion script denied: " << getID();
       d_runner = nullptr;
     }
   }

@@ -6,6 +6,7 @@
 
 #include "../JointId/jointid.hh"
 #include "../util/ccolor.hh"
+#include "../util/log.hh"
 
 using namespace bold;
 using namespace std;
@@ -302,7 +303,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
               // Checksum doesn't match
               res = CommResult::RX_CORRUPT;
 
-              cerr << ccolor::warning << "[CM730::txRxPacket] Received checksum didn't match" << ccolor::reset << endl;
+              log::warning("CM730::txRxPacket") << "Received checksum didn't match";
 
               for (int j = 0; j <= receivedCount - 2; j++)
                 rxpacket[j] = rxpacket[j + 2];
@@ -338,7 +339,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
     }
     else
     {
-      cerr << ccolor::warning << "[CM730::txRxPacket] Failed to write to port: " << bytesWritten << " of " << length << " written" << ccolor::reset << endl;
+      log::warning("CM730::txRxPacket") << "Failed to write to port: " << bytesWritten << " of " << length << " written";
       res = CommResult::TX_FAIL;
     }
   }
@@ -414,7 +415,7 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
 {
   unsigned txSize = 8 + (bytesPerDevice * deviceCount);
   if (txSize > 143)
-    cerr << ccolor::warning << "[CM730::syncWrite] Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size (" << (int)deviceCount << " devices, " << (int)bytesPerDevice << " bytes per device)" << ccolor::reset << endl;
+    log::warning("CM730::syncWrite") << "Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size (" << (int)deviceCount << " devices, " << (int)bytesPerDevice << " bytes per device)";
   uchar txpacket[txSize];
   // Sync write instructions do not receive status packet responses, so no buffer is needed.
   uchar* rxpacket = nullptr;
@@ -449,7 +450,7 @@ bool CM730::connect()
 {
   if (!d_platform->openPort())
   {
-    cerr << ccolor::error << "[CM730::connect] Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)" << ccolor::reset << endl;
+    log::error("CM730::connect") << "Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)";
     return false;
   }
 
@@ -460,7 +461,7 @@ bool CM730::changeBaud(unsigned baud)
 {
   if (d_platform->setBaud(baud) == false)
   {
-    cerr << ccolor::error << "[CM730::changeBaud] Failed to change baudrate" << ccolor::reset << endl;
+    log::error("CM730::changeBaud") << "Failed to change baudrate";
     return false;
   }
 
@@ -469,7 +470,7 @@ bool CM730::changeBaud(unsigned baud)
 
 bool CM730::dxlPowerOn()
 {
-  cout << "[CM730::dxlPowerOn] Turning Dynamixel power on" << endl;
+  log::info("CM730::dxlPowerOn") << "Turning Dynamixel power on";
 
   if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, 1, 0) == CommResult::SUCCESS)
   {
@@ -479,7 +480,7 @@ bool CM730::dxlPowerOn()
   }
   else
   {
-    cerr << ccolor::error << "[CM730::dxlPowerOn] Failed to change Dynamixel power" << ccolor::reset << endl;
+    log::error("CM730::dxlPowerOn") << "Failed to change Dynamixel power";
     return false;
   }
 
@@ -488,7 +489,7 @@ bool CM730::dxlPowerOn()
 
 void CM730::torqueEnable(bool enable)
 {
-  cout << "[CM730::torqueEnable] " << (enable ? "Enabling" : "Disabling") << " all joint torque" << endl;
+  log::info("CM730::torqueEnable") << "" << (enable ? "Enabling" : "Disabling") << " all joint torque";
 
   uchar error;
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
@@ -497,7 +498,7 @@ void CM730::torqueEnable(bool enable)
     if (error != 0)
     {
       // TODO better reporting of error, across all CM730 operations
-      cerr << ccolor::error << "[CM730::torqueEnable] Error for joint ID " << (int)jointId << ": 0x" << hex << (int)error << dec << ccolor::reset << endl;
+      log::error("CM730::torqueEnable") << "Error for joint ID " << (int)jointId << ": 0x" << hex << (int)error << dec;
     }
   }
 }

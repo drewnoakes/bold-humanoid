@@ -15,7 +15,7 @@ void Camera::initMemoryMapping()
   // Didn' t get more than 1 buffers
   if (req.count < 2)
   {
-    cout << "[Camera] Insufficient buffer memory" << endl;
+    log::info("Camera") << "Insufficient buffer memory";
     exit(-1);
   }
 
@@ -43,7 +43,7 @@ void Camera::initMemoryMapping()
 
     if (MAP_FAILED == d_buffers[i].start)
     {
-      cout << "[Camera] Failed mapping device memory" << endl;
+      log::info("Camera") << "Failed mapping device memory";
       exit(-1);
     }
   }

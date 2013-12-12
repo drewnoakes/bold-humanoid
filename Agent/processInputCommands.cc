@@ -79,7 +79,7 @@ void Agent::processInputCommands()
           d_ambulator->setMoveDir(Eigen::Vector2d(
             (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
             (-axis0/32767.0) * d_joystickYAmpMax->getValue()));
-          
+
         if (stick == 2)
           d_ambulator->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
       }
@@ -88,16 +88,16 @@ void Agent::processInputCommands()
         switch (event.number)
         {
           case 6:
-            cout << "Left kick" << endl;
+            log::info("Agent::processInputCommands") << "Left kick";
             d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickLeft")));
             break;
           case 7:
-            cout << "Right kick" << endl;
+            log::info("Agent::processInputCommands") << "Right kick";
             d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickRight")));
             break;
           default:
             if (event.value == 1)
-              cout << "Button " << event.number << endl;
+              log::info("Agent::processInputCommands") << "Button " << event.number;
             break;
         }
       }

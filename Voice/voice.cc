@@ -4,6 +4,8 @@
 #include <iostream>
 #include <future>
 
+#include "../util/log.hh"
+
 using namespace bold;
 using namespace std;
 
@@ -16,7 +18,7 @@ Voice::Voice(const string voice)
 
 void Voice::say(const string message)
 {
-  cout << "[Voice::say] Saying: " << message << endl;
+  log::info("Voice::say") << "Saying: " << message;
   std::async(launch::async, [message]()
              {
                espeak_Synth(message.c_str(), message.length(), 0, POS_CHARACTER, 0, espeakCHARS_AUTO, nullptr, nullptr);

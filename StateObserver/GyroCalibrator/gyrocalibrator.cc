@@ -2,6 +2,7 @@
 
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../util/log.hh"
 
 #include <cmath>
 #include <iostream>
@@ -30,8 +31,8 @@ void GyroCalibrator::observeTyped(std::shared_ptr<HardwareState const> hardwareS
   if (d_calibrationStatus == CalibrationState::COMPLETE)
     return;
 
-//   cout << "[GyroCalibrator::observeTyped] observing" << endl;
-  
+//   log::info("GyroCalibrator::observeTyped") << "observing";
+
   // TODO why not do up/down (Z) ?
   // TODO do the axes of the acc/gyro match the torso axes we've chosen?
 
@@ -52,7 +53,7 @@ void GyroCalibrator::observeTyped(std::shared_ptr<HardwareState const> hardwareS
     d_rlCenter = (int)round(d_lrAvgValue.getAverage());
     d_calibrationStatus = CalibrationState::COMPLETE;
 
-    cout << "[GyroCalibrator::update] Gyro calibrated with center at " << d_fbCenter << " (f/b) and " << d_rlCenter << " (l/r)" << endl;
+    log::info("GyroCalibrator::update") << "Gyro calibrated with center at " << d_fbCenter << " (f/b) and " << d_rlCenter << " (l/r)";
   }
   else
   {

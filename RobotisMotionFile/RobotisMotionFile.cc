@@ -2,7 +2,7 @@
 
 #include "../JointId/jointid.hh"
 #include "../MotionScript/motionscript.hh"
-#include "../util/ccolor.hh"
+#include "../util/log.hh"
 
 #include <iostream>
 #include <cstdio>
@@ -22,7 +22,7 @@ RobotisMotionFile::RobotisMotionFile(string const& filePath)
 
   if (file == 0)
   {
-    cerr << ccolor::error << "[RobotisMotionFile::RobotisMotionFile] Can not open motion file: " << filePath << ccolor::reset << endl;
+    log::error("RobotisMotionFile::RobotisMotionFile") << "Can not open motion file: " << filePath;
     throw runtime_error("Can not open motion file");
   }
 
@@ -32,7 +32,7 @@ RobotisMotionFile::RobotisMotionFile(string const& filePath)
   long expectedSize = sizeof(RobotisMotionFile::Page) * ((int)MAX_PAGE_ID + 1);
   if (actualSize != expectedSize)
   {
-    cerr << ccolor::error << "[RobotisMotionFile::RobotisMotionFile] Invalid motion file size for " << filePath << " expecting " << expectedSize << " but got " << actualSize << ccolor::reset << endl;
+    log::error("RobotisMotionFile::RobotisMotionFile") << "Invalid motion file size for " << filePath << " expecting " << expectedSize << " but got " << actualSize;
     fclose(file);
     throw runtime_error("Invalid motion file size");
   }
@@ -44,21 +44,21 @@ RobotisMotionFile::RobotisMotionFile(string const& filePath)
     // TODO do we even have to seek if we read the file sequentially?
     if (fseek(file, position, SEEK_SET) != 0)
     {
-      cerr << ccolor::error << "[RobotisMotionFile::RobotisMotionFile] Error seeking file position: " << position << ccolor::reset << endl;
+      log::error("RobotisMotionFile::RobotisMotionFile") << "Error seeking file position: " << position;
       fclose(file);
       throw runtime_error("Error seeking file position");
     }
 
     if (fread(&d_pages[pageIndex], 1, sizeof(RobotisMotionFile::Page), file) != sizeof(RobotisMotionFile::Page))
     {
-      cerr << ccolor::error << "[RobotisMotionFile::RobotisMotionFile] Error reading page index: " << pageIndex << ccolor::reset << endl;
+      log::error("RobotisMotionFile::RobotisMotionFile") << "Error reading page index: " << pageIndex;
       fclose(file);
       throw runtime_error("Error reading page");
     }
 
     if (!d_pages[pageIndex].isChecksumValid())
     {
-      cerr << ccolor::error << "[RobotisMotionFile::RobotisMotionFile] Checksum invalid for page index: " << pageIndex << ccolor::reset << endl;
+      log::error("RobotisMotionFile::RobotisMotionFile") << "Checksum invalid for page index: " << pageIndex;
       fclose(file);
       throw runtime_error("Checksum invalid for page");
     }

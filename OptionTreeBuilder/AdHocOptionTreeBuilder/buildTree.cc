@@ -521,11 +521,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
         double circleDurationSeconds = fabs(panRatio) * 4.5;
-        cout << "[circleBallState] circleDurationSeconds=" << circleDurationSeconds
-             << " secondsSinceStart=" << circleBallState->secondsSinceStart()
-             << " panRatio=" << panRatio
-             << " panAngle=" << panAngle
-             << " leftLimitDegs=" << headModule->getLeftLimitDegs() << endl;
+        log::info("circleBallState")
+            << "circleDurationSeconds=" << circleDurationSeconds
+            << " secondsSinceStart=" << circleBallState->secondsSinceStart()
+            << " panRatio=" << panRatio
+            << " panAngle=" << panAngle
+            << " leftLimitDegs=" << headModule->getLeftLimitDegs() << endl;
 
         return secondsSinceStart(circleDurationSeconds, circleBallState);
       });
@@ -547,7 +548,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
         if (ballObs && ballObs->y() <= 0.2 && ballObs->x() < 0)
         {
-          cout << "[lookAtFeet2kickLeft] Kicking with left foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")" << endl;
+          log::info("lookAtFeet2kickLeft") << "Kicking with left foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")";
           return true;
         }
         return false;
@@ -568,7 +569,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
 
         if (ballObs && ballObs->y() <= 0.2 && ballObs->x() > 0)
         {
-          cout << "[lookAtFeet2kickRight] Kicking with right foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")" << endl;
+          log::info("lookAtFeet2kickRight") << "Kicking with right foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")";
           return true;
         }
         return false;

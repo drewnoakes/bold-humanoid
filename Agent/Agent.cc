@@ -30,7 +30,7 @@ Agent::Agent()
   d_voice->say(phrases[rand() % phrases.size()]);
 
   auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
-  cout << "[Agent::Agent] Using CM730 Device Path: " << cm730DevicePath << endl;
+  log::info("Agent::Agent") << "Using CM730 Device Path: " << cm730DevicePath;
 
   vector<shared_ptr<MotionScript>> motionScripts = MotionScript::loadAllInPath("./motionscripts");
 
@@ -119,6 +119,6 @@ Agent::Agent()
   }
   else
   {
-    cerr << ccolor::error << "[Agent::Agent] Failed to connect to CM730 -- continuing without motion loop" << ccolor::reset << endl;
+    log::error("Agent::Agent") << "Failed to connect to CM730 -- continuing without motion loop";
   }
 }

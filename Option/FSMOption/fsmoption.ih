@@ -5,6 +5,7 @@
 #include <list>
 
 #include "../util/ccolor.hh"
+#include "../util/log.hh"
 
 using namespace bold;
 using namespace std;

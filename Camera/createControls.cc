@@ -74,7 +74,7 @@ void Camera::createControls()
 
     if (retrieved != value)
     {
-      cerr << ccolor::error << "[Camera::setValue] Setting camera control '" << control->name << "' failed -- set " << value << " but read back " << retrieved << ccolor::reset << endl;
+      log::error("Camera::setValue") << "Setting camera control '" << control->name << "' failed -- set " << value << " but read back " << retrieved;
       setBack(retrieved);
     }
   };
@@ -142,7 +142,7 @@ void Camera::createControls()
         if (!IntSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
           defaultValue = control->defaultValue;
         if (defaultValue < control->minimum || defaultValue > control->maximum)
-          cerr << ccolor::error << "[Camera::createControls] Invalid default value " << defaultValue << " for int setting " << path.str() << endl;
+          log::warning("Camera::createControls") << "Invalid default value " << defaultValue << " for int setting " << path.str();
 
         auto setting = new IntSetting(path.str(), control->minimum, control->maximum, defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue);
@@ -159,7 +159,7 @@ void Camera::createControls()
         if (!IntSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
           defaultValue = control->defaultValue;
         if (control->pairs.find(defaultValue) == control->pairs.end())
-          cerr << ccolor::error << "[Camera::createControls] Invalid default value " << defaultValue << " for enum setting " << path.str() << endl;
+          log::warning("Camera::createControls") << "Invalid default value " << defaultValue << " for enum setting " << path.str();
 
         auto setting = new EnumSetting(path.str(), control->pairs, defaultValue, isReadOnly, isAdvanced, name);
         setting->setValue(currentValue);
@@ -172,7 +172,7 @@ void Camera::createControls()
       }
       default:
       {
-        cerr << ccolor::error << "[Camera::createControls] Unsupported camera control type: " << (int)type << ccolor::reset << endl;
+        log::error("Camera::createControls") << "Unsupported camera control type: " << (int)type;
       }
     }
   }
@@ -201,7 +201,7 @@ void Camera::createControls()
 
     if (match == settings.end())
     {
-      cerr << ccolor::warning << "[Camera::createControls] Configuration document specifies '" << path << "' but no setting exists with that name" << ccolor::reset << endl;
+      log::warning("Camera::createControls") << "Configuration document specifies '" << path << "' but no setting exists with that name";
       continue;
     }
 
@@ -215,7 +215,7 @@ void Camera::createControls()
 
   for (SettingBase* leftOver : settings)
   {
-    cerr << ccolor::warning << "[Camera::createControls] Configuration document doesn't specify a value for camera setting: " << leftOver->getPath() << ccolor::reset << endl;
+    log::warning("Camera::createControls") << "Configuration document doesn't specify a value for camera setting: " << leftOver->getPath();
     Config::addSetting(leftOver);
   }
 }
