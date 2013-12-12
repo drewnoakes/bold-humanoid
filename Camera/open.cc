@@ -6,8 +6,8 @@ void Camera::open()
 
   if (d_fd < 0)
   {
-    exit(0);
     log::error("Camera::open") << "Failed opening device: " << d_device;
+    exit(-1);
   }
 
   log::info("Camera::open") << "Camera opened";
