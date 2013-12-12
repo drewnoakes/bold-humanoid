@@ -3,7 +3,7 @@
 int Spatialiser::findHorizonForColumn(int column)
 {
   auto body = AgentState::get<BodyState>();
-  
+
   if (!body)
     return -1;
 
@@ -17,7 +17,7 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraGroundTr
   // Equation of horizon line:
   // http://mi.eng.cam.ac.uk/~cipolla/lectures/4F12/Examples/old/solutions2.pdf
   //
-  // | x | 
+  // | x |
   // | y | . n = 0
   // | f |
   //
@@ -40,7 +40,7 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraGroundTr
     0, 0, 1, 0,
     0, 1, 0, 0,
     0, 0, 0, 1;
-  
+
   auto torsoToImage = t * cameraGroundTransform.inverse();
 
   // Normal to ground plane
@@ -52,7 +52,7 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraGroundTr
 
   double f = d_cameraModel->focalLength();
 
-  double y = -1 / up.y() * ( x * up.x() + f * up.z()); 
+  double y = -1 / up.y() * ( x * up.x() + f * up.z());
 
   double r = f * tan(d_cameraModel->rangeVerticalRads() / 2);
 
