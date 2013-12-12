@@ -7,7 +7,7 @@ int Spatialiser::findHorizonForColumn(int column)
   if (!body)
     return -1;
 
-  Affine3d cameraAgentTransform = body->getCameraAgentTransform();
+  Affine3d const& cameraAgentTransform = body->getCameraAgentTransform();
 
   return findHorizonForColumn(column, cameraAgentTransform);
 }

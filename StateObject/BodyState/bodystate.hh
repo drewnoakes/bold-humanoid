@@ -61,7 +61,7 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    Eigen::Affine3d getCameraAgentTransform() const { assert(this); return d_cameraAgentTransform; }
+    Eigen::Affine3d const& getCameraAgentTransform() const { assert(this); return d_cameraAgentTransform; }
 
     double getTorsoHeight() const { assert(this); return d_torsoHeight; }
 
