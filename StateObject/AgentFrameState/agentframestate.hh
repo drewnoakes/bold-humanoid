@@ -15,15 +15,18 @@ namespace bold
   public:
     AgentFrameState(Maybe<Eigen::Vector3d> ballObservation,
                     std::vector<Eigen::Vector3d> goalObservations,
-                    std::vector<LineSegment3d> observedLineSegments)
+                    std::vector<LineSegment3d> observedLineSegments,
+                    std::vector<Eigen::Vector3d> visibleFieldPoly)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
-      d_observedLineSegments(observedLineSegments)
+      d_observedLineSegments(observedLineSegments),
+      d_visibleFieldPoly(visibleFieldPoly)
     {}
 
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
+    std::vector<Eigen::Vector3d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
 
@@ -33,5 +36,6 @@ namespace bold
     Maybe<Eigen::Vector3d> d_ballObservation;
     std::vector<Eigen::Vector3d> d_goalObservations;
     std::vector<LineSegment3d> d_observedLineSegments;
+    std::vector<Eigen::Vector3d> d_visibleFieldPoly;
   };
 }

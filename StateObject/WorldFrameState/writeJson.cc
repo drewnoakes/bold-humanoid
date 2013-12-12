@@ -60,6 +60,19 @@ void WorldFrameState::writeJson(Writer<StringBuffer>& writer) const
       }
     }
     writer.EndArray();
+
+    writer.String("visible-field-poly");
+    writer.StartArray();
+    {
+      for (auto const& vertex : d_visibleFieldPoly)
+      {
+        writer.StartArray();
+        writer.Double(vertex.x());
+        writer.Double(vertex.y());
+        writer.EndArray();
+      }
+    }
+    writer.EndArray();
   }
   writer.EndObject();
 }

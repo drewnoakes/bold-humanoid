@@ -92,6 +92,7 @@ define(
         {
             this.agentPosition = data.pos;
             this.ballPosition = data.ball;
+            this.visibleFieldPoly = data['visible-field-poly'];
             this.lineSegments = [];
             this.goalPositions = [];
 
@@ -137,10 +138,13 @@ define(
         World2dModule.prototype.draw = function()
         {
             var options = {
+                    // TODO replace this scale with a transform on the canvas instead
                     scale: this.scale,
                     goalStrokeStyle: 'yellow',
                     groundFillStyle: '#008800',
                     lineStrokeStyle: '#ffffff',
+                    visibleFieldPolyLineWidth: 1,
+                    visibleFieldPolyStrokeStyle: '#0000ff',
                     particleStyle: 'cyan',
                     particleSize: 3,
                     fieldCenter: { x: this.fieldCenterX, y: this.fieldCenterY }
@@ -159,6 +163,9 @@ define(
 
             if (this.agentPosition)
                 FieldLinePlotter.drawAgentPosition(context, options, this.agentPosition);
+
+            if (this.visibleFieldPoly)
+                FieldLinePlotter.drawVisibleFieldPoly(context, options, this.visibleFieldPoly);
 
             if (this.ballPosition)
                 FieldLinePlotter.drawBall(context, options, this.ballPosition);

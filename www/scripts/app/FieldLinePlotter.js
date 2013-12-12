@@ -147,6 +147,25 @@ define(
                 });
                 context.stroke();
             },
+            drawVisibleFieldPoly: function (context, options, visibleFieldPoly)
+            {
+                if (visibleFieldPoly.length < 2)
+                    return;
+
+                var scale = options.scale || 1;
+
+                context.lineWidth = options.visibleFieldPolyLineWidth || 1;
+                context.strokeStyle = options.visibleFieldPolyStrokeStyle || '#00ff00';
+
+                context.beginPath();
+                context.moveTo(visibleFieldPoly[0][0]*scale, -visibleFieldPoly[0][1]*scale);
+                for (var i = 1; i < visibleFieldPoly.length; i++)
+                {
+                    context.lineTo(visibleFieldPoly[i][0]*scale, -visibleFieldPoly[i][1]*scale);
+                }
+                context.lineTo(visibleFieldPoly[0][0]*scale, -visibleFieldPoly[0][1]*scale);
+                context.stroke();
+            },
             drawBall: function(context, options, position)
             {
                 var scale = options.scale || 1;

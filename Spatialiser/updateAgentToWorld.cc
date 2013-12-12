@@ -27,6 +27,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
 
   vector<Vector3d> goals;
   vector<LineSegment3d> lineSegments;
+  vector<Vector3d> visibleFieldPoly;
 
   for (auto const& goalPos : agentFrame->getGoalObservations())
   {
@@ -42,5 +43,10 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
     lineSegments.push_back(lineSegment);
   }
 
-  AgentState::getInstance().set(make_shared<WorldFrameState const>(ball, goals, lineSegments, position));
+  for (auto const& vertex : agentFrame->getVisibleFieldPoly())
+  {
+    visibleFieldPoly.push_back(agentToWorld * vertex);
+  }
+
+  AgentState::getInstance().set(make_shared<WorldFrameState const>(ball, goals, lineSegments, visibleFieldPoly, position));
 }

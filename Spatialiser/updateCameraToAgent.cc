@@ -32,5 +32,37 @@ void Spatialiser::updateCameraToAgent()
     }
   }
 
-  AgentState::getInstance().set(make_shared<AgentFrameState const>(ball, goals, lineSegments));
+  // Determine observed field area polygon
+  vector<Vector3d> visibleFieldPoly;
+  auto const& cameraAgentTransform = AgentState::get<BodyState>()->getCameraAgentTransform();
+
+  int width = d_cameraModel->imageWidth();
+  int height = d_cameraModel->imageHeight();
+
+  int horiz1 = min(height - 1, findHorizonForColumn(0, cameraAgentTransform));
+  int horiz2 = min(height - 1, findHorizonForColumn(width - 1, cameraAgentTransform));
+
+  auto const& p1 = findGroundPointForPixel(Vector2d(0, 0) + Vector2d(0.5,0.5));
+  if (p1)
+    visibleFieldPoly.push_back(*p1);
+
+  if (horiz1 >= 0 && horiz1 < height)
+  {
+    auto const& p3 = findGroundPointForPixel(Vector2d(0, horiz1) + Vector2d(0.5,0.5));
+    if (p3)
+      visibleFieldPoly.push_back(*p3);
+  }
+
+  if (horiz2 >= 0 && horiz2 < height)
+  {
+    auto const& p4 = findGroundPointForPixel(Vector2d(width - 1, horiz2) + Vector2d(0.5,0.5));
+    if (p4)
+      visibleFieldPoly.push_back(*p4);
+  }
+
+  auto const& p2 = findGroundPointForPixel(Vector2d(width - 1, 0) + Vector2d(0.5,0.5));
+  if (p2)
+    visibleFieldPoly.push_back(*p2);
+
+  AgentState::getInstance().set(make_shared<AgentFrameState const>(ball, goals, lineSegments, visibleFieldPoly));
 }
