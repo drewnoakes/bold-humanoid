@@ -24,6 +24,7 @@
     "goal-area-size-y": 2.2,
     "penalty-mark-distance": 0.8,
     "circle-diameter": 1.2,
+    "circle-segment-count": 18,
     "line-width": 0.05,
     "penalty-line-length": 0.1,
     "outer-margin-minimum": 0.7,
