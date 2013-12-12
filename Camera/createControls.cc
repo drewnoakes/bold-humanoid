@@ -3,6 +3,7 @@
 #include <cctype>
 
 using namespace rapidjson;
+using namespace std;
 
 void Camera::createControls()
 {
@@ -197,7 +198,7 @@ void Camera::createControls()
     pathstream << "camera.settings" << '.' << name;
     string path = pathstream.str();
 
-    auto match = std::find_if(settings.begin(), settings.end(), [path](SettingBase* setting) { return setting->getPath() == path; });
+    auto match = find_if(settings.begin(), settings.end(), [path](SettingBase* setting) { return setting->getPath() == path; });
 
     if (match == settings.end())
     {

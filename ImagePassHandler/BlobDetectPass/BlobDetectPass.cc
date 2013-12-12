@@ -1,6 +1,6 @@
 #include "blobdetectpass.ih"
 
-BlobDetectPass::BlobDetectPass(ushort imageWidth, ushort imageHeight, std::vector<shared_ptr<PixelLabel>> const& pixelLabels)
+BlobDetectPass::BlobDetectPass(ushort imageWidth, ushort imageHeight, vector<shared_ptr<PixelLabel>> const& pixelLabels)
   : d_imageHeight(imageHeight),
     d_imageWidth(imageWidth),
     d_pixelLabels(pixelLabels),
@@ -17,7 +17,7 @@ BlobDetectPass::BlobDetectPass(ushort imageWidth, ushort imageHeight, std::vecto
 
     // Initialise a vector of Runs for each row in the image
     for (unsigned y = 0; y < d_imageHeight; ++y)
-      d_runsPerRowPerLabel[pixelLabelId].push_back(std::vector<bold::Run>());
+      d_runsPerRowPerLabel[pixelLabelId].push_back(vector<bold::Run>());
 
     // Initialize blob container
     d_blobsDetectedPerLabel[pixelLabel] = vector<Blob>();

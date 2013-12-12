@@ -11,7 +11,7 @@ void Agent::initCamera()
   log::verbose("Agent::initCamera") << "  Streaming:  " << (d_camera->canStream() ? "YES" : "NO");
 
   log::verbose("Agent::initCamera") << "Controls (" << d_camera->getControls().size() << "):";
-  for (std::shared_ptr<Camera::Control const> control : d_camera->getControls())
+  for (shared_ptr<Camera::Control const> control : d_camera->getControls())
     log::verbose("Agent::initCamera") << "  " << control->name;
 
   log::verbose("Agent::initCamera") << "Formats (" << d_camera->getFormats().size() << "):";

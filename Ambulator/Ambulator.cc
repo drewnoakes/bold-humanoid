@@ -4,8 +4,9 @@
 #include "../Config/config.hh"
 
 using namespace bold;
+using namespace std;
 
-Ambulator::Ambulator(std::shared_ptr<WalkModule> walkModule)
+Ambulator::Ambulator(shared_ptr<WalkModule> walkModule)
   : d_walkModule(walkModule),
     d_xAmp(0, Config::getValue<double>("ambulator.x-amp-delta")),
     d_yAmp(0, Config::getValue<double>("ambulator.y-amp-delta")),

@@ -15,7 +15,7 @@ using namespace rapidjson;
 
 // TODO consistent casing in JSON property names (p-gains / moveCycles)
 
-shared_ptr<MotionScript> MotionScript::fromFile(std::string fileName)
+shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 {
   FILE* pFile = fopen(fileName.c_str(), "rb");
   if (!pFile)
@@ -78,14 +78,14 @@ shared_ptr<MotionScript> MotionScript::fromFile(std::string fileName)
   return make_shared<MotionScript>(name, stages);
 }
 
-vector<shared_ptr<MotionScript>> MotionScript::loadAllInPath(std::string path)
+vector<shared_ptr<MotionScript>> MotionScript::loadAllInPath(string path)
 {
   DIR *dir;
   struct dirent *ent;
   if ((dir = opendir(path.c_str())) == nullptr)
   {
     log::error("MotionScript::loadAllInPath") << "Unable to open motion scripts directory";
-    throw std::runtime_error("Unable to open motion scripts directory");
+    throw runtime_error("Unable to open motion scripts directory");
   }
 
   vector<shared_ptr<MotionScript>> scripts;
@@ -108,7 +108,7 @@ vector<shared_ptr<MotionScript>> MotionScript::loadAllInPath(std::string path)
   return scripts;
 }
 
-bool MotionScript::writeJsonFile(std::string fileName) const
+bool MotionScript::writeJsonFile(string fileName) const
 {
   FILE *file = fopen(fileName.c_str(), "wb");
 
@@ -143,7 +143,7 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
     writer.String("stages");
     writer.StartArray();
     {
-      for (std::shared_ptr<Stage> stage : d_stages)
+      for (shared_ptr<Stage> stage : d_stages)
       {
         writer.StartObject();
         {

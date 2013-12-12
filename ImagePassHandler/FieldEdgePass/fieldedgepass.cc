@@ -7,7 +7,7 @@
 using namespace bold;
 using namespace std;
 
-FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
+FieldEdgePass::FieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
 : d_fieldLabel(fieldLabel),
   d_maxYByX(pixelWidth),
   d_runByX(pixelWidth),

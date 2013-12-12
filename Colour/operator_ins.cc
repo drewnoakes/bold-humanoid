@@ -14,7 +14,7 @@ ostream& bold::operator<<(ostream &stream, Colour::hsv const& hsv)
                 << " V=" << (unsigned int)hsv.v;
 }
 
-std::ostream& bold::operator<<(std::ostream &stream, Colour::hsvRange const& hsvRange)
+ostream& bold::operator<<(ostream &stream, Colour::hsvRange const& hsvRange)
 {
   return stream << setprecision(2)
                 <<  "H=" << (int)(360*(hsvRange.hMin/255.0)) << "->" << (int)(360*(hsvRange.hMax/255.0))

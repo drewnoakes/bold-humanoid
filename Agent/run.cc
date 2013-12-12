@@ -3,11 +3,11 @@
 void Agent::run()
 {
   if (d_isRunning)
-    throw new std::runtime_error("Already running");
+    throw new runtime_error("Already running");
 
   d_isRunning = true;
 
-  std::stringstream announcement;
+  stringstream announcement;
   announcement << "Player " << d_uniformNumber << " on team " << d_teamNumber;
   d_voice->say(announcement.str());
 
