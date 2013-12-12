@@ -1,5 +1,7 @@
 #include "log.hh"
 
+#include <cassert>
+
 #include "ccolor.hh"
 
 using namespace bold;
@@ -9,9 +11,9 @@ LogLevel log::minLevel = LogLevel::Verbose;
 
 log::~log()
 {
-  if (d_level < minLevel)
+  if (!d_message)
     return;
-
+  
   int fgColor = 39;
   int bgColor = 49;
 

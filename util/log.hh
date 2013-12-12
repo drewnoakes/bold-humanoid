@@ -20,15 +20,13 @@ namespace bold
   {
   private:
     log(LogLevel level)
-    : d_scope(),
-      d_level(level),
-      d_message(new std::ostringstream())
+    : log(std::string(), level)
     {}
 
     log(std::string scope, LogLevel level)
     : d_scope(scope),
       d_level(level),
-      d_message(new std::ostringstream())
+      d_message(level < minLevel ? nullptr : new std::ostringstream())
     {}
 
   public:
@@ -53,10 +51,11 @@ namespace bold
     ~log();
 
     template<typename T>
-    std::ostringstream& operator<<(T value)
+    log& operator<<(T value)
     {
-      *d_message << value;
-      return *d_message;
+      if (d_message)
+        *d_message << value;
+      return *this;
     }
 
   private:
