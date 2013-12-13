@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <Eigen/Core>
+#include <Eigen/Geometry>
 
 using namespace bold;
 using namespace std;
