@@ -36,7 +36,11 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  int loopCount = 20;
+  string configurationFile("../configuration.json");
+
+  Config::initialise("../configuration-metadata.json", configurationFile);
+
+  int loopCount = 100;
 
   auto inputFileName = argv[1];
 
