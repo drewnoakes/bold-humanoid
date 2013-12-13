@@ -148,7 +148,7 @@ namespace bold
 
   inline void BlobDetectPass::onRowStarting(ushort y, Eigen::Vector2i const& granularity)
   {
-    // TODO might miss last run on last row with this approach -- add
+    // TODO VISION might miss last run on last row with this approach -- add
     // onRowEnding, or copy into onImageComplete
     if (d_currentLabel != 0)
     {

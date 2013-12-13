@@ -73,6 +73,8 @@ void Agent::think()
   d_spatialiser->updateAgentToWorld(d_localiser->smoothedPosition());
   t.timeEvent("Agent to World Frame");
 
+  // TODO allow these updates when we don't have a body attached, for better debugging on non-robot machines
+  
   if (d_haveBody)
   {
     if (d_useOptionTree)

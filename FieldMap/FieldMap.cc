@@ -87,6 +87,8 @@ FieldMap::FieldMap()
     lastPoint = point;
   }
 
+  // TODO allow including circle in 'expected lines' view
+
   for (LineSegment3d const& line : d_fieldLines)
   {
     auto vec = (Vector3d)line.delta();
