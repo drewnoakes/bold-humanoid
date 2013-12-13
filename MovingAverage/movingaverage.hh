@@ -50,7 +50,7 @@ namespace bold
     T calculateStdDev()
     {
       // TODO unit test this
-      T sum;
+      T sum = 0;
       for (int i = 0; i < d_length; i++)
       {
         int index = (d_nextPointer - i - 1) % d_windowSize;
