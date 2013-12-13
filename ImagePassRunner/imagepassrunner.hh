@@ -17,12 +17,16 @@ namespace bold
     : d_granularityFunction([](int i) { return Eigen::Vector2i(1,1); })
     {}
 
+    /** Adds the specified handler, if it does not already exist in the runner.
+     */
     void addHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler)
     {
       if (std::find(d_handlers.begin(), d_handlers.end(), handler) == d_handlers.end())
         d_handlers.push_back(handler);
     }
 
+    /** Removes the specified handler, if it already exists in the runner.
+     */
     void removeHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler)
     {
       auto it = std::find(d_handlers.begin(), d_handlers.end(), handler);
@@ -31,6 +35,10 @@ namespace bold
         d_handlers.erase(it);
     }
 
+    /** Adds or removes the specified handler, depending upon the bool 'enabled' parameter.
+     *
+     * Idempotent.
+     */
     void setHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler, bool enabled)
     {
       if (enabled)
