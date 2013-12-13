@@ -4,6 +4,8 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include "../util/log.hh"
+
 using namespace Eigen;
 
 //PrintTo(const T&, ostream*)
@@ -61,6 +63,8 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);
+
+  log::minLevel = LogLevel::Warning;
 
   return RUN_ALL_TESTS();
 }
