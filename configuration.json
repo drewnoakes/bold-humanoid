@@ -93,6 +93,7 @@
     "tcp-port": 8080,
     "camera-frame-frequency": 5,
     "image-type": 2,
+    "image-granularity": 0,
     "image-features": {
       "blobs": true,
       "line-dots": false,

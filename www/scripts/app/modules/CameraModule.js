@@ -104,6 +104,7 @@ define(
             var imageSettingsContainer = element.querySelector('div.image-settings');
             this.closables.add(ControlBuilder.build('round-table.image-type', imageSettingsContainer));
             this.closables.add(ControlBuilder.build('round-table.camera-frame-frequency', imageSettingsContainer));
+            this.closables.add(ControlBuilder.build('round-table.image-granularity', imageSettingsContainer));
 
             this.closables.add(ControlBuilder.buildAll('round-table.image-features', element.querySelector('div.image-features')));
 

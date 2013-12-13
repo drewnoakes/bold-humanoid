@@ -38,6 +38,14 @@ namespace bold
     Cartoon = 3
   };
 
+  enum class ImageGranularity
+  {
+    All = 0,
+    Half = 1,
+    Third = 2,
+    Gradient = 3
+  };
+
   /** Bold-humanoid's vision processing subsystem. */
   class VisualCortex
   {

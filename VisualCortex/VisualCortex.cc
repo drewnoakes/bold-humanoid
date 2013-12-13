@@ -83,6 +83,33 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
 
+  Config::getSetting<ImageGranularity>("round-table.image-granularity")->track(
+    [this](ImageGranularity granularity)
+    {
+      switch (granularity)
+      {
+        case ImageGranularity::All:
+          d_imagePassRunner->setGranularityFunction([](int i) { return Eigen::Vector2i(1,1); });
+          break;
+        case ImageGranularity::Half:
+          d_imagePassRunner->setGranularityFunction([](int i) { return Eigen::Vector2i(2,2); });
+          break;
+        case ImageGranularity::Third:
+          d_imagePassRunner->setGranularityFunction([](int i) { return Eigen::Vector2i(3,3); });
+          break;
+        case ImageGranularity::Gradient:
+          d_imagePassRunner->setGranularityFunction([this](int i)
+          {
+            int delta = (d_cameraModel->imageHeight() - i)/40;
+            if (delta == 0)
+              delta = 1;
+            return Eigen::Vector2i(delta, delta);
+          });
+          break;
+      }
+    }
+  );
+
   d_shouldDetectLines->track([this](bool value) { d_imagePassRunner->setHandler(d_lineDotPass, value); });
   d_shouldCountLabels->track([this](bool value) { d_imagePassRunner->setHandler(d_labelCountPass, value); });
 
