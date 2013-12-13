@@ -88,9 +88,10 @@ int main(int argc, char **argv)
   unsigned teamNumber = -1;
   unsigned uniformNumber = 0;
 
-  char const* configurationFile = "configuration.json";
+  string configurationFile("configuration.json");
   log::minLevel = LogLevel::Info;
 
+  // TODO: use getopt
   auto nextArg = [&](int* i) -> char*
   {
     if (*i == argc - 1)
