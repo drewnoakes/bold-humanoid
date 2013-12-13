@@ -39,9 +39,10 @@ namespace bold
       }
     }
 
-    void onRowStarting(ushort y) override
+    void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override
     {
       d_ptr = d_mat.ptr<Colour::bgr>(y);
+      d_dx = granularity.x();
     }
 
     void onPixel(uchar value, ushort x, ushort y) override
@@ -50,7 +51,7 @@ namespace bold
       {
         *d_ptr = d_bgrByLabelId[value];
       }
-      d_ptr++;
+      d_ptr += d_dx;
     }
 
   private:
@@ -58,6 +59,7 @@ namespace bold
     Colour::bgr d_bgrByLabelId[8]; // assumes we'll never have more than 7 labels (1-8)
     bold::Colour::bgr d_backgroundColour;
     Colour::bgr* d_ptr;
+    int d_dx;
     std::vector<std::shared_ptr<PixelLabel>> d_labels;
   };
 }

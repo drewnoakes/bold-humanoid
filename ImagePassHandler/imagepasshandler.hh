@@ -1,10 +1,12 @@
 #pragma once
 
+#include <Eigen/Core>
+
 namespace bold
 {
   typedef unsigned char uchar;
   typedef unsigned short int ushort;
-  
+
   /**
    * Abstract base class for classes that process the pixels of an image.
    *
@@ -21,7 +23,7 @@ namespace bold
     virtual void onImageStarting() {}
 
     /** The row 'y' is about to start. */
-    virtual void onRowStarting(ushort y) {}
+    virtual void onRowStarting(ushort y, Eigen::Vector2i const& granularity) {}
 
     /**
      * The pixel at 'x', 'y', has a label of 'labelId'.

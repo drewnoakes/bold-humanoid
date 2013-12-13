@@ -81,7 +81,7 @@ namespace bold
       lineDots.clear();
     }
 
-    void onRowStarting(ushort y) override
+    void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override
     {
       d_rowTracker->reset();
       d_rowTracker->otherCoordinate = y;

@@ -98,7 +98,7 @@ namespace bold
 
     void onImageStarting() override;
 
-    void onRowStarting(ushort y) override;
+    void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override;
 
     void onPixel(uchar label, ushort x, ushort y) override;
 
@@ -118,6 +118,7 @@ namespace bold
     ushort d_imageWidth;
 
     std::vector<std::shared_ptr<PixelLabel>> d_pixelLabels;
+    std::vector<unsigned> d_rowIndices;
 
     // Image pass state Accumulated data for the most recently passed image.
     std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
@@ -142,9 +143,10 @@ namespace bold
     for (auto& pair : d_runsPerRowPerLabel)
       for (std::vector<Run>& runs : pair.second)
         runs.clear();
+    d_rowIndices.clear();
   }
 
-  inline void BlobDetectPass::onRowStarting(ushort y)
+  inline void BlobDetectPass::onRowStarting(ushort y, Eigen::Vector2i const& granularity)
   {
     // TODO might miss last run on last row with this approach -- add
     // onRowEnding, or copy into onImageComplete
@@ -155,6 +157,7 @@ namespace bold
     }
     d_currentRun.y = y;
     d_currentLabel = 0;
+    d_rowIndices.push_back(y);
   }
 
   inline void BlobDetectPass::onPixel(uchar label, ushort x, ushort y)
@@ -254,7 +257,6 @@ namespace bold
     auto size = br - ul;
     return cv::Rect(ul.x(), ul.y(), size.x(), size.y());
   }
-
 
   inline Bounds2i Blob::bounds() const
   {

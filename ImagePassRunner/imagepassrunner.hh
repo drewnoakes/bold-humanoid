@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <opencv2/core/core.hpp>
+#include <Eigen/Core>
 #include <vector>
 
 #include "../ImagePassHandler/imagepasshandler.hh"
@@ -12,6 +13,10 @@ namespace bold
   class ImagePassRunner
   {
   public:
+    ImagePassRunner()
+    : d_granularityFunction([](int i) { return Eigen::Vector2i(1,1); })
+    {}
+
     void addHandler(std::shared_ptr<ImagePassHandler<TPixel>> handler)
     {
       if (std::find(d_handlers.begin(), d_handlers.end(), handler) == d_handlers.end())
@@ -34,19 +39,34 @@ namespace bold
         removeHandler(handler);
     }
 
+    /** Allows processing fewer than all pixels in the image.
+     *
+     * Granularity is calculated based on y-value, and is specified in both
+     * x and y dimensions.
+     */
+    void setGranularityFunction(std::function<Eigen::Vector2i(int)> function)
+    {
+      d_granularityFunction = function;
+    }
+
     void pass(cv::Mat& image) const
     {
       for (auto const& handler : d_handlers)
         handler->onImageStarting();
 
-      for (int y = 0; y < image.rows; ++y)
+      Eigen::Vector2i granularity;
+
+      for (int y = 0; y < image.rows; y += granularity.y())
       {
+        granularity = d_granularityFunction(y);
+
         TPixel const* row = image.ptr<TPixel>(y);
 
         for (auto const& handler : d_handlers)
-          handler->onRowStarting(y);
+          handler->onRowStarting(y, granularity);
 
-        for (int x = 0; x < image.cols; ++x)
+        int dx = granularity.x();
+        for (int x = 0; x < image.cols; x += dx)
         {
           TPixel value = row[x];
 
@@ -61,5 +81,6 @@ namespace bold
 
   private:
     std::vector<std::shared_ptr<ImagePassHandler<TPixel>>> d_handlers;
+    std::function<Eigen::Vector2i(int)> d_granularityFunction;
   };
 }
