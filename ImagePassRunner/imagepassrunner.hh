@@ -59,6 +59,9 @@ namespace bold
 
     void pass(cv::Mat const& image) const
     {
+      assert(image.rows);
+      assert(image.cols);
+
       for (auto const& handler : d_handlers)
       {
         Eigen::Vector2i granularity(1,1);
