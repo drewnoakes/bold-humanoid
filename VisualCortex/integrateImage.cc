@@ -28,7 +28,8 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   t.timeEvent("Pixel Label");
 
   // Perform the image pass
-  d_imagePassRunner->pass(d_labelledImage);
+  long processedPixelCount = d_imagePassRunner->pass(d_labelledImage);
+  long totalPixelCount = d_labelledImage.rows * d_labelledImage.cols;
   t.timeEvent("Pass");
 
   if (d_shouldCountLabels->getValue())
@@ -161,7 +162,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   }
   t.timeEvent("Goal Blob Selection");
 
-  AgentState::getInstance().set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments));
+  AgentState::getInstance().set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, totalPixelCount, processedPixelCount));
 
   t.timeEvent("Updating State");
 }

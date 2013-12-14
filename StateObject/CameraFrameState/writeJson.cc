@@ -47,6 +47,9 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
       }
     }
     writer.EndArray();
+
+    writer.String("totalPixelCount").Uint64(d_totalPixelCount);
+    writer.String("processedPixelCount").Uint64(d_processedPixelCount);
   }
   writer.EndObject();
 }
