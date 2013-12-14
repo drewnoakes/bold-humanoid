@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
   Config::initialise("../configuration-metadata.json", configurationFile);
 
-  int loopCount = 100;
+  int loopCount = 25;
 
   auto inputFileName = argv[1];
 
@@ -80,10 +80,10 @@ int main(int argc, char **argv)
 //   shared_ptr<PixelLabel> lineLabel = make_shared<PixelLabel>("Line",  Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.75, 0.00, 0.75)); // black line
 
   // rgb.jpg
-  shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>("Ball",  Colour::hsvRange(13, 30, 255, 95, 190, 95));
-  shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>("Goal",  Colour::hsvRange(40, 10, 210, 55, 190, 65));
-  shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>("Field", Colour::hsvRange(71, 20, 138, 55, 173, 65));
-  shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>("Line",  Colour::hsvRange(0, 255, 0, 70, 255, 70));
+  shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>("Ball",  Colour::hsvRange(240, 45, 160, 255, 95, 255));
+  shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>("Goal",  Colour::hsvRange(30, 50, 155, 255, 125, 255));
+  shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>("Field", Colour::hsvRange(50, 90, 83, 193, 110, 255));
+  shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>("Line",  Colour::hsvRange(0, 255, 0, 70, 185, 255));
 
   cout << "Using labels:" << endl
        << "  " << *ballLabel << endl
