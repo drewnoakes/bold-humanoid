@@ -60,33 +60,31 @@ namespace bold
     void pass(cv::Mat& image) const
     {
       for (auto const& handler : d_handlers)
-        handler->onImageStarting();
-
-      Eigen::Vector2i granularity;
-
-      for (int y = 0; y < image.rows; y += granularity.y())
       {
-        granularity = d_granularityFunction(y);
+        Eigen::Vector2i granularity(1,1);
+        
+        handler->onImageStarting();
+        for (int y = 0; y < image.rows; y += granularity.y())
+        {
+          Eigen::Vector2i granularity = d_granularityFunction(y);
 
-        TPixel const* row = image.ptr<TPixel>(y);
+          TPixel const* row = image.ptr<TPixel>(y);
 
-        for (auto const& handler : d_handlers)
           handler->onRowStarting(y, granularity);
 
-        int dx = granularity.x();
-        for (int x = 0; x < image.cols; x += dx)
-        {
-          TPixel value = row[x];
-
-          for (auto const& handler : d_handlers)
+          int dx = granularity.x();
+          for (int x = 0; x < image.cols; x += dx)
+          {
+            TPixel value = row[x];
+            
             handler->onPixel(value, x, y);
+          }
         }
+
+        handler->onImageComplete();
       }
 
-      for (auto const& handler : d_handlers)
-        handler->onImageComplete();
     }
-
   private:
     std::vector<std::shared_ptr<ImagePassHandler<TPixel>>> d_handlers;
     std::function<Eigen::Vector2i(int)> d_granularityFunction;
