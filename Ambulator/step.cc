@@ -25,7 +25,9 @@ void Ambulator::step()
     // TODO this doesn't support walking backwards (-ve x)
     // TODO examine using the acceleration (delta xAmp) as a input signal
 
-    double alpha = Math::clamp(xAmp/d_maxHipPitchAtSpeed->getValue(), 0.0, 1.0);
+    // Lerp hip angle based on forward speed, or turn speed (whichever is greatest)
+    // TODO revisit this treatment of xAmp and turnAmp as though they're the same units
+    double alpha = Math::clamp(max(xAmp, turnAmp)/d_maxHipPitchAtSpeed->getValue(), 0.0, 1.0);
 
     d_walkModule->HIP_PITCH_OFFSET = Math::lerp(alpha, d_minHipPitch->getValue(), d_maxHipPitch->getValue());
 
