@@ -169,9 +169,9 @@
     "x-amp-delta": 3,
     "y-amp-delta": 3,
     "turn-delta": 1,
-    "max-hip-pitch-at-speed": 15,
-    "min-hip-pitch": 13,
-    "max-hip-pitch": 17
+    "max-hip-pitch-at-speed": 17,
+    "min-hip-pitch": 15,
+    "max-hip-pitch": 20
   },
   "options": {
     "circle-ball": {
@@ -180,10 +180,10 @@
       "walk-turn": 15
     },
     "approach-ball": {
-      "turn-speed-scale": 25.0,
+      "turn-speed-scale": 18.0,
       "max-forward-speed": 40.0,
       "min-forward-speed": 5.0,
-      "brake-distance": 0.45,
+      "brake-distance": 0.50,
       "stop-distance": 0.075,
       "lower-turn-limit-degs": 20.0,
       "upper-turn-limit-degs": 35.0
