@@ -66,7 +66,7 @@ namespace bold
         handler->onImageStarting();
         for (int y = 0; y < image.rows; y += granularity.y())
         {
-          Eigen::Vector2i granularity = d_granularityFunction(y);
+          granularity = d_granularityFunction(y);
 
           TPixel const* row = image.ptr<TPixel>(y);
 
