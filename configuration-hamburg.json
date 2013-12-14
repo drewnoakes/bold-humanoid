@@ -92,8 +92,8 @@
   "round-table": {
     "tcp-port": 8080,
     "camera-frame-frequency": 1,
-    "image-type": 2,
-    "image-granularity": 0,
+    "image-type": 3,
+    "image-granularity": 3,
     "image-features": {
       "blobs": true,
       "line-dots": false,
