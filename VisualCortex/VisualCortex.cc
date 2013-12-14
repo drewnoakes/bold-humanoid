@@ -103,7 +103,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     }
   );
 
-  Config::getSetting<ImageGranularity>("round-table.image-granularity")->track(
+  Config::getSetting<ImageGranularity>("vision.image-granularity")->track(
     [this](ImageGranularity granularity)
     {
       switch (granularity)

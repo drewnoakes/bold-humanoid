@@ -64,6 +64,7 @@
       "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
     },
     "ignore-above-horizon": true,
+    "image-granularity": 0,
     "line-detection": {
       "enable": false,
       "line-dots": {
@@ -96,7 +97,6 @@
     "tcp-port": 8080,
     "camera-frame-frequency": 5,
     "image-type": 2,
-    "image-granularity": 0,
     "image-features": {
       "blobs": true,
       "line-dots": false,
