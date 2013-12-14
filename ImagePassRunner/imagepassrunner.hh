@@ -57,7 +57,7 @@ namespace bold
       d_granularityFunction = function;
     }
 
-    void pass(cv::Mat& image) const
+    void pass(cv::Mat const& image) const
     {
       for (auto const& handler : d_handlers)
       {
