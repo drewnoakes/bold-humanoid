@@ -79,9 +79,29 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
   d_cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, pixelLabels, Colour::bgr(128,128,128));
   d_labelCountPass = make_shared<LabelCountPass>(pixelLabels);
-  d_fieldEdgePass = make_shared<FieldEdgePass>(d_fieldLabel, imageWidth, imageHeight);
+  d_completeFieldEdgePass = make_shared<CompleteFieldEdgePass>(d_fieldLabel, imageWidth, imageHeight);
+  d_periodicFieldEdgePass = make_shared<PeriodicFieldEdgePass>(d_fieldLabel, imageWidth, imageHeight, 1*2*3*4);
 
   d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
+
+  Config::getSetting<FieldEdgeType>("vision.field-edge-pass.field-edge-type")->track(
+    [this](FieldEdgeType fieldEdgeType)
+    {
+      switch (fieldEdgeType)
+      {
+        case FieldEdgeType::Complete:
+          d_imagePassRunner->removeHandler(d_periodicFieldEdgePass);
+          d_imagePassRunner->addHandler(d_completeFieldEdgePass);
+          d_fieldEdgePass = d_completeFieldEdgePass;
+          break;
+        case FieldEdgeType::Periodic:
+          d_imagePassRunner->removeHandler(d_completeFieldEdgePass);
+          d_imagePassRunner->addHandler(d_periodicFieldEdgePass);
+          d_fieldEdgePass = d_periodicFieldEdgePass;
+          break;
+      }
+    }
+  );
 
   Config::getSetting<ImageGranularity>("round-table.image-granularity")->track(
     [this](ImageGranularity granularity)
@@ -103,6 +123,8 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
             int delta = (d_cameraModel->imageHeight() - i)/40;
             if (delta == 0)
               delta = 1;
+            if (delta > 4)
+              delta = 4;
             return Eigen::Vector2i(delta, delta);
           });
           break;
@@ -114,7 +136,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldCountLabels->track([this](bool value) { d_imagePassRunner->setHandler(d_labelCountPass, value); });
 
   // TODO SETTINGS create a setting to turn this feature on and off
-  d_imagePassRunner->addHandler(d_fieldEdgePass);
+  d_imagePassRunner->addHandler(d_completeFieldEdgePass);
   d_imagePassRunner->addHandler(d_blobDetectPass);
 
   // Only include the cartoon pass when needed

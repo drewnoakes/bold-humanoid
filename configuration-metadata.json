@@ -68,8 +68,11 @@
       "enable": { "type": "bool", "default": false, "description": "Count labels" }
     },
     "field-edge-pass": {
-      "smoothing-window-length": { "type": "int", "min": 1, "max": 100, "default": 15, "advanced": true },
-      "min-vertical-run-length": { "type": "int", "min": 1, "max": 100, "default": 5, "advanced": true }
+      "field-edge-type": { "type": "enum", "default": 0, "values": { "Complete": 0, "Periodic": 1 }, "advanced": true },
+      "min-vertical-run-length": { "type": "int", "min": 1, "max": 100, "default": 5, "advanced": true },
+      "complete": {
+        "smoothing-window-length": { "type": "int", "min": 1, "max": 100, "default": 15, "advanced": true }
+      }
     }
   },
   "game-controller": {

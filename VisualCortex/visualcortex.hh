@@ -27,8 +27,10 @@ namespace bold
   template<typename> class LineDotPass;
   class BlobDetectPass;
   class CartoonPass;
+  class CompleteFieldEdgePass;
   class FieldEdgePass;
   class LabelCountPass;
+  class PeriodicFieldEdgePass;
 
   enum class ImageType
   {
@@ -44,6 +46,12 @@ namespace bold
     Half = 1,
     Third = 2,
     Gradient = 3
+  };
+
+  enum class FieldEdgeType
+  {
+    Complete = 0,
+    Periodic = 1
   };
 
   /** Bold-humanoid's vision processing subsystem. */
@@ -134,6 +142,8 @@ namespace bold
     std::shared_ptr<CartoonPass> d_cartoonPass;
     std::shared_ptr<LabelCountPass> d_labelCountPass;
     std::shared_ptr<FieldEdgePass> d_fieldEdgePass;
+    std::shared_ptr<CompleteFieldEdgePass> d_completeFieldEdgePass;
+    std::shared_ptr<PeriodicFieldEdgePass> d_periodicFieldEdgePass;
 
     Setting<bool>* d_shouldDetectLines;
     Setting<bool>* d_shouldCountLabels;

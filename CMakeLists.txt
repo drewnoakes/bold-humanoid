@@ -191,7 +191,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./ImagePassHandler/FieldEdgePass/fieldedgepass.cc
+  ./ImagePassHandler/FieldEdgePass/CompleteFieldEdgePass/completefieldedgepass.cc
+)
+
+add_class(BOLDHUMANOID
+  ./ImagePassHandler/FieldEdgePass/PeriodicFieldEdgePass/periodicfieldedgepass.cc
 )
 
 add_class(BOLDHUMANOID

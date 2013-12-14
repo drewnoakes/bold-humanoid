@@ -1,24 +1,21 @@
-#include "fieldedgepass.hh"
+#include "completefieldedgepass.hh"
 
-#include "../../Config/config.hh"
-#include "../../MovingAverage/movingaverage.hh"
-#include "../../PixelLabel/pixellabel.hh"
+#include "../../../Config/config.hh"
+#include "../../../MovingAverage/movingaverage.hh"
+#include "../../../PixelLabel/pixellabel.hh"
 
 using namespace bold;
 using namespace std;
 
-FieldEdgePass::FieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
-: d_fieldLabel(fieldLabel),
+CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
+: FieldEdgePass(fieldLabel, pixelWidth, pixelHeight),
   d_maxYByX(pixelWidth),
-  d_runByX(pixelWidth),
-  d_pixelWidth(pixelWidth),
-  d_pixelHeight(pixelHeight)
+  d_runByX(pixelWidth)
 {
-  Config::getSetting<int>("vision.field-edge-pass.smoothing-window-length")->track([this](int value) { d_smoothingWindowSize = value; });
-  Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = value; });
+  Config::getSetting<int>("vision.field-edge-pass.complete.smoothing-window-length")->track([this](int value) { d_smoothingWindowSize = value; });
 }
 
-void FieldEdgePass::onImageStarting()
+void CompleteFieldEdgePass::onImageStarting()
 {
   assert(d_maxYByX.size() == d_pixelWidth);
 
@@ -28,7 +25,7 @@ void FieldEdgePass::onImageStarting()
   memset(d_runByX.data(), 0, sizeof(ushort) * d_pixelWidth);
 }
 
-void FieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
+void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 {
 //   assert(x >= 0 && x < d_pixelWidth);
 
@@ -50,7 +47,7 @@ void FieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
   }
 }
 
-ushort FieldEdgePass::getEdgeYValue(ushort x) const
+ushort CompleteFieldEdgePass::getEdgeYValue(ushort x) const
 {
   assert(x < d_pixelWidth);
   assert(d_maxYByX[x] < d_pixelHeight);
@@ -58,7 +55,7 @@ ushort FieldEdgePass::getEdgeYValue(ushort x) const
   return d_maxYByX[x];
 }
 
-void FieldEdgePass::onImageComplete()
+void CompleteFieldEdgePass::onImageComplete()
 {
   // Bail out early if no smoothing is requested
   if (d_smoothingWindowSize == 1)

@@ -82,8 +82,11 @@
       "enable": false
     },
     "field-edge-pass": {
-      "smoothing-window-length": 15,
-      "min-vertical-run-length": 5
+      "field-edge-type": 0,
+      "min-vertical-run-length": 5,
+      "complete": {
+        "smoothing-window-length": 15
+      }
     }
   },
   "game-controller": {

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../imagepasshandler.hh"
+#include "../../Config/config.hh"
 
 namespace bold
 {
@@ -12,21 +13,23 @@ namespace bold
   class FieldEdgePass : public ImagePassHandler<uchar>
   {
   public:
-    FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight);
+    FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
+    : d_fieldLabel(fieldLabel),
+      d_pixelWidth(pixelWidth),
+      d_pixelHeight(pixelHeight)
+    {
+      Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = value; });
+    }
 
-    void onImageStarting() override;
-    void onPixel(uchar labelId, ushort x, ushort y) override;
-    void onImageComplete() override;
+    virtual ushort getEdgeYValue(ushort x) const = 0;
 
-    ushort getEdgeYValue(ushort x) const;
-
-  private:
+  protected:
     std::shared_ptr<PixelLabel> d_fieldLabel;
-    std::vector<ushort> d_maxYByX;
-    std::vector<ushort> d_runByX;
+//     std::vector<ushort> d_maxYByX;
+//     std::vector<ushort> d_runByX;
     ushort d_pixelWidth;
     ushort d_pixelHeight;
-    ushort d_smoothingWindowSize;
+//     ushort d_smoothingWindowSize;
     ushort d_minVerticalRunLength;
   };
 }

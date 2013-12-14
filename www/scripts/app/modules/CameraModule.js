@@ -88,8 +88,9 @@ define(
             this.closables.add(ControlBuilder.build('vision.min-goal-dimension-pixels', visionSettingsContainer));
 
             var fieldEdgeContainer = element.querySelector('div.field-edge');
+            this.closables.add(ControlBuilder.build('vision.field-edge-pass.field-edge-type', fieldEdgeContainer));
             this.closables.add(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', fieldEdgeContainer));
-            this.closables.add(ControlBuilder.build('vision.field-edge-pass.smoothing-window-length', fieldEdgeContainer));
+            this.closables.add(ControlBuilder.build('vision.field-edge-pass.complete.smoothing-window-length', fieldEdgeContainer));
 
             var lineContainer = element.querySelector('div.line-detection');
             this.closables.add(ControlBuilder.build('vision.line-detection.enable', lineContainer));
