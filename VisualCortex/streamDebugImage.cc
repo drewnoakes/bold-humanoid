@@ -176,9 +176,9 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   // Draw field edge
   if (d_shouldDrawFieldEdge->getValue())
   {
-    for (unsigned x = 0; x < debugImage.size().width; ++x)
+    for (ushort x = 0; x < debugImage.size().width; ++x)
     {
-      uchar y = d_fieldEdgePass->getEdgeYValue(x);
+      ushort y = d_fieldEdgePass->getEdgeYValue(x);
 
       debugImage.at<Colour::bgr>(y, x) = fieldEdgeColour;
     }
