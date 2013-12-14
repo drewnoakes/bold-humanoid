@@ -5,6 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests")
 set(BUILD_TOOLS ON CACHE BOOL "Choose whether to build tools")
+set(BUILD_BOLDPY ON CACHE BOOL "Choose whether to Python library")
 set(PRECOMPILE_HEADERS ON CACHE BOOL "Choose whether to precompile headers")
 set(UPLOAD_SCP_PATH "" CACHE STRING "Path to use in upload scp command. Format: user@server:path")
 set(BUNDLES_PATH "" CACHE STRING "Path to use to store bundles")
@@ -543,7 +544,9 @@ add_custom_target(tags DEPENDS ${CMAKE_SOURCE_DIR}/TAGS)
 #
 ## SWIG/Python
 #
-add_subdirectory(swig)
+if (BUILD_BOLDPY)
+  add_subdirectory(swig)
+endif (BUILD_BOLDPY)
 
 #
 ## Build and run test
