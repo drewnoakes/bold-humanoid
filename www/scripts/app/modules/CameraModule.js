@@ -89,6 +89,8 @@ define(
 
             var granularitySettingsContainer = element.querySelector('div.granularity');
             this.closables.add(ControlBuilder.build('vision.image-granularity', granularitySettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.max-granularity', granularitySettingsContainer));
+
             var fieldEdgeContainer = element.querySelector('div.field-edge');
             this.closables.add(ControlBuilder.build('vision.field-edge-pass.field-edge-type', fieldEdgeContainer));
             this.closables.add(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', fieldEdgeContainer));

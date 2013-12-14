@@ -118,13 +118,15 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
           d_imagePassRunner->setGranularityFunction([](int i) { return Eigen::Vector2i(3,3); });
           break;
         case ImageGranularity::Gradient:
-          d_imagePassRunner->setGranularityFunction([this](int i)
+          auto maxGranularity = Config::getSetting<int>("vision.max-granularity");
+          d_imagePassRunner->setGranularityFunction([this,maxGranularity](int i) mutable
           {
             int delta = (d_cameraModel->imageHeight() - i)/40;
             if (delta == 0)
               delta = 1;
-            if (delta > 4)
-              delta = 4;
+            auto max = maxGranularity->getValue();
+            if (delta > max)
+              delta = max;
             return Eigen::Vector2i(delta, delta);
           });
           break;

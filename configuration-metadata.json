@@ -51,6 +51,7 @@
     },
     "ignore-above-horizon": { "type": "bool", "default": true },
     "image-granularity": { "type": "enum", "default": 0, "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3 }, "advanced": false },
+    "max-granularity": { "type": "int", "min": 1, "max": 20, "default": 4, "advanced": true },
     "line-detection": {
       "enable":      { "type": "bool", "default": false, "description": "Detect lines" },
       "line-dots": {

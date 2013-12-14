@@ -65,6 +65,7 @@
     },
     "ignore-above-horizon": true,
     "image-granularity": 0,
+    "max-granularity": 4,
     "line-detection": {
       "enable": false,
       "line-dots": {
