@@ -13,9 +13,6 @@ Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2d const& pixel, doub
 {
   auto body = AgentState::get<BodyState>();
 
-  if (!body)
-    return Maybe<Vector3d>::empty();
-
   Affine3d const& cameraAgentTransform = body->getCameraAgentTransform();
 
   return findGroundPointForPixel(pixel, cameraAgentTransform, groundZ);
