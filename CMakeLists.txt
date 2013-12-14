@@ -4,6 +4,7 @@ project (BoldHumanoid)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests")
+set(BUILD_TOOLS ON CACHE BOOL "Choose whether to build tools")
 set(PRECOMPILE_HEADERS ON CACHE BOOL "Choose whether to precompile headers")
 set(UPLOAD_SCP_PATH "" CACHE STRING "Path to use in upload scp command. Format: user@server:path")
 set(BUNDLES_PATH "" CACHE STRING "Path to use to store bundles")
@@ -547,4 +548,7 @@ endif (BUILDRUN_UNIT_TEST)
 #
 ## Build tools
 #
-add_subdirectory(tools)
+if (BUILD_TOOLS)
+  add_subdirectory(tools)
+endif (BUILD_TOOLS)
+
