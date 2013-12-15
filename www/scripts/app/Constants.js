@@ -31,6 +31,34 @@ define(
 
         Constants.ballRadius = Constants.ballDiameter / 2;
 
+        Constants.update = function(settings)
+        {
+            _.each(settings, function(setting) {
+                switch (setting.path)
+                {
+                    case 'world.ball-diameter':
+                        Constants.ballDiameter = setting.value;
+                        Constants.ballRadius = setting.value / 2;
+                        break;
+                    case 'world.circle-diameter': Constants.circleDiameter = setting.value; break;
+                    case 'world.field-size-x': Constants.fieldX = setting.value; break;
+                    case 'world.field-size-y': Constants.fieldY = setting.value; break;
+                    case 'world.goal-area-size-x': Constants.goalAreaX = setting.value; break;
+                    case 'world.goal-area-size-y': Constants.goalAreaY = setting.value; break;
+                    case 'world.goal-post-diameter': Constants.goalPostDiameter = setting.value; break;
+                    case 'world.goal-size-x': Constants.goalX = setting.value; break;
+                    case 'world.goal-size-y': Constants.goalY = setting.value; break;
+                    case 'world.goal-size-z': Constants.goalZ = setting.value; break;
+                    case 'world.line-width': Constants.lineWidth = setting.value; break;
+                    case 'world.outer-margin-minimum': Constants.outerMarginMinimum = setting.value; break;
+                    case 'world.penalty-line-length': Constants.penaltyLineLength = setting.value; break;
+                    case 'world.penalty-mark-distance': Constants.penaltyMarkDistance = setting.value; break;
+                    case 'camera.field-of-view.horizontal-degrees.': Constants.cameraFovHorizontalDegrees = setting.value; break;
+                    case 'camera.field-of-view.vertical-degrees.': Constants.cameraFovVerticalDegrees = setting.value; break;
+                }
+            });
+        };
+
         Constants.webSocketPort = 8080;
 
         Constants.jointNames = {
