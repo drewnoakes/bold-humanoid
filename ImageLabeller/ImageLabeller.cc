@@ -20,35 +20,34 @@ ImageLabeller::ImageLabeller(shared_ptr<uchar const> const& lut, shared_ptr<Spat
 
 void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std::function<Eigen::Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
 {
-  // TODO just use a straight line for the horizon
-  // TODO use the granularity function to avoid labelling pixels we won't use
+  // TODO use the granularity function to avoid labelling pixels we won't use (?)
 
-  vector<int> horizonYAtCol(image.cols);
   uchar const* lut = d_LUT.get();
 
   // Everything above (and including) this row is guaranteed to be above horizon
-  int maxAboveHorizonY = -1;
+  int maxAboveHorizonY;
   // Everything below this row is guaranteed to be under horizon
   int minHorizonY = image.rows;
+  // The horizon's y level at the sides of the image. We assume it is a straight
+  // line and interpolate linearly between these two values.
+  int minXHorizonY, maxXHorizonY;
 
   // If we are ignoring everything above the horizon, find out where
-  // the horizon is for each column
-  // remember: y = 0 is bottom of field of view
-  // outer columns is enough
+  // the horizon is for each column.
+  // Remember, y = 0 is bottom of field of view (the image is upside down)
   if (ignoreAboveHorizon)
   {
-    for (int x = 0; x < image.cols; ++x)
-    {
-      int h = d_spatialiser->findHorizonForColumn(x);
-      horizonYAtCol[x] = h;
-      if (h > maxAboveHorizonY)
-        maxAboveHorizonY = h;
-      if (h < minHorizonY)
-        minHorizonY = h;
-    }
+    minXHorizonY = d_spatialiser->findHorizonForColumn(0);
+    maxXHorizonY = d_spatialiser->findHorizonForColumn(image.cols - 1);
+    minHorizonY = min(minXHorizonY, maxXHorizonY);
+    maxAboveHorizonY = max(minXHorizonY, maxXHorizonY);
   }
   else
+  {
+    minXHorizonY = image.rows;
+    maxXHorizonY = image.rows;
     maxAboveHorizonY = image.rows;
+  }
 
   timer.timeEvent("Find Horizon");
 
@@ -81,15 +80,19 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   if (ignoreAboveHorizon)
   {
     // Second batch: horizon goes through these rows
+    int horizonYRange = maxAboveHorizonY - minHorizonY;
     for (int y = minHorizonY; y < maxAboveHorizonY; ++y)
     {
       uchar* origpix = image.ptr<uchar>(y);
       uchar* labelledpix = labelled.ptr<uchar>(y);
 
+      double ratio = (y - minHorizonY) / (double)horizonYRange;
+      int horizonY = Math::lerp(ratio, minXHorizonY, maxXHorizonY);
+
       for (int x = 0; x < image.cols; ++x)
       {
         uchar l =
-          y > horizonYAtCol[x] ?
+          y > horizonY ?
           0 :
           lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
