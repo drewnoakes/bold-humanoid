@@ -8,7 +8,7 @@ using namespace bold;
 using namespace std;
 using namespace cv;
 
-ImageLabeller::ImageLabeller(shared_ptr<uchar> const& lut, shared_ptr<Spatialiser> spatialiser)
+ImageLabeller::ImageLabeller(shared_ptr<uchar const> const& lut, shared_ptr<Spatialiser> spatialiser)
   : d_LUT(lut),
     d_spatialiser(spatialiser)
 {}
@@ -18,8 +18,8 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   // TODO just use a straight line for the horizon
   // TODO use the granularity function to avoid labelling pixels we won't use
 
-  uchar* lut = d_LUT.get();
   vector<int> horizonYAtCol(image.cols);
+  uchar const* lut = d_LUT.get();
 
   // Everything above (and including) this row is guaranteed to be above horizon
   int maxAboveHorizonY = -1;

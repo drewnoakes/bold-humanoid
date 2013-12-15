@@ -21,10 +21,10 @@ namespace bold
         d_spatialiser(spatialiser)
     {}
 
-    ImageLabeller(std::shared_ptr<unsigned char> const& lut, std::shared_ptr<Spatialiser> spatialiser);
+    ImageLabeller(std::shared_ptr<uchar const> const& lut, std::shared_ptr<Spatialiser> spatialiser);
 
     /** Replaces the LUT used by this image labeller. */
-    void updateLut(std::shared_ptr<unsigned char> const& lut) { d_LUT = lut; }
+    void updateLut(std::shared_ptr<uchar const> const& lut) { d_LUT = lut; }
 
     /**
      * Labels an entire image's pixels.
@@ -41,7 +41,7 @@ namespace bold
     static void createCartoon(cv::Mat& labelledInput, cv::Mat& cartoonOutput, std::vector<bold::PixelLabel> const& labels);
 
   private:
-    std::shared_ptr<unsigned char> d_LUT;
+    std::shared_ptr<uchar const> d_LUT;
 
     std::shared_ptr<Spatialiser> d_spatialiser;
   };
