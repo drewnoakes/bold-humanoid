@@ -4,9 +4,10 @@
 
 #include <memory>
 
-using namespace bold;
-using namespace std;
 using namespace cv;
+using namespace bold;
+using namespace Eigen;
+using namespace std;
 
 ImageLabeller::ImageLabeller(shared_ptr<Spatialiser> spatialiser)
   : d_LUT(),
@@ -18,16 +19,14 @@ ImageLabeller::ImageLabeller(shared_ptr<uchar const> const& lut, shared_ptr<Spat
     d_spatialiser(spatialiser)
 {}
 
-void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std::function<Eigen::Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
+void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std::function<Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
 {
-  // TODO use the granularity function to avoid labelling pixels we won't use (?)
-
   uchar const* lut = d_LUT.get();
 
   // Everything above (and including) this row is guaranteed to be above horizon
-  int maxAboveHorizonY;
+  int maxHorizonY;
   // Everything below this row is guaranteed to be under horizon
-  int minHorizonY = image.rows;
+  int minHorizonY;
   // The horizon's y level at the sides of the image. We assume it is a straight
   // line and interpolate linearly between these two values.
   int minXHorizonY, maxXHorizonY;
@@ -37,41 +36,40 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   // Remember, y = 0 is bottom of field of view (the image is upside down)
   if (ignoreAboveHorizon)
   {
-    minXHorizonY = d_spatialiser->findHorizonForColumn(0);
-    maxXHorizonY = d_spatialiser->findHorizonForColumn(image.cols - 1);
+    minXHorizonY = min(image.rows, d_spatialiser->findHorizonForColumn(0));
+    maxXHorizonY = min(image.rows, d_spatialiser->findHorizonForColumn(image.cols - 1));
     minHorizonY = min(minXHorizonY, maxXHorizonY);
-    maxAboveHorizonY = max(minXHorizonY, maxXHorizonY);
+    maxHorizonY = max(minXHorizonY, maxXHorizonY);
   }
   else
   {
-    minXHorizonY = image.rows;
-    maxXHorizonY = image.rows;
-    maxAboveHorizonY = image.rows;
+    minHorizonY = image.rows;
   }
 
   timer.timeEvent("Find Horizon");
 
-  ++maxAboveHorizonY;
   minHorizonY = max(0, minHorizonY);
-  maxAboveHorizonY = min(image.rows, maxAboveHorizonY);
+
+  int y = 0;
+  Vector2i granularity;
 
   // First batch: everything guaranteed under the horizon
-  for (int y = 0; y < minHorizonY; ++y)
+  for (; y < minHorizonY; y += granularity.y())
   {
+    granularity = granularityFunction(y);
+
     uchar* origpix = image.ptr<uchar>(y);
     uchar* labelledpix = labelled.ptr<uchar>(y);
 
-    for (int x = 0; x < image.cols; ++x)
+    for (int x = 0; x < image.cols; x += granularity.x())
     {
       uchar l =
         lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
       *labelledpix = l;
 
-      ++origpix;
-      ++origpix;
-      ++origpix;
-      ++labelledpix;
+      origpix += granularity.x() * 3;
+      labelledpix += granularity.x();
     }
   }
 
@@ -79,17 +77,22 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
 
   if (ignoreAboveHorizon)
   {
+    ++maxHorizonY;
+    maxHorizonY = min(image.rows, maxHorizonY);
+
     // Second batch: horizon goes through these rows
-    int horizonYRange = maxAboveHorizonY - minHorizonY;
-    for (int y = minHorizonY; y < maxAboveHorizonY; ++y)
+    int horizonYRange = maxHorizonY - minHorizonY;
+    for (; y < maxHorizonY; y += granularity.y())
     {
+      granularity = granularityFunction(y);
+
       uchar* origpix = image.ptr<uchar>(y);
       uchar* labelledpix = labelled.ptr<uchar>(y);
 
       double ratio = (y - minHorizonY) / (double)horizonYRange;
       int horizonY = Math::lerp(ratio, minXHorizonY, maxXHorizonY);
 
-      for (int x = 0; x < image.cols; ++x)
+      for (int x = 0; x < image.cols; x += granularity.x())
       {
         uchar l =
           y > horizonY ?
@@ -98,18 +101,18 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
 
         *labelledpix = l;
 
-        ++origpix;
-        ++origpix;
-        ++origpix;
-        ++labelledpix;
+        origpix += granularity.x() * 3;
+        labelledpix += granularity.x();
       }
     }
 
     timer.timeEvent("Pixels Around");
 
     // Third batch: everything here is above the horizon
-    for (int y = maxAboveHorizonY; y < image.rows; ++y)
+    for (; y < image.rows; y += granularity.y())
     {
+      granularity = granularityFunction(y);
+
       uchar* labelledpix = labelled.ptr<uchar>(y);
       memset(labelledpix, 0, image.cols);
     }
