@@ -12,6 +12,7 @@
 
 namespace bold
 {
+  class Blob;
   class Camera;
   class CameraModel;
   class DataStreamer;
@@ -118,6 +119,8 @@ namespace bold
     bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge->getValue(); }
 
   private:
+    bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d* pos);
+
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;

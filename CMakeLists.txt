@@ -427,11 +427,12 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./VisualCortex/VisualCortex.cc
+  ./VisualCortex/canBlobBeBall.cc
   ./VisualCortex/integrateImage.cc
   ./VisualCortex/shouldMergeBallBlobs.cc
   ./VisualCortex/saveImage.cc
   ./VisualCortex/streamDebugImage.cc
+  ./VisualCortex/VisualCortex.cc
 )
 
 add_class(BOLDHUMANOID

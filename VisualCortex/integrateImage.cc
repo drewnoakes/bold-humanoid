@@ -115,17 +115,10 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       // Remember that the image appears upside down.
         continue;
 
-      Vector2d pos = ballBlob.mean;
-
-      // TODO discard blobs that would be too large/small for the ball we expect at that position of the frame
-//       d_cameraModel->directionForPixel(pos);
-      bool isCorrectSizeForPosition = true;
-
-      if (isCorrectSizeForPosition)
+      // Discard blobs that would be too large/small for the ball we expect at that position of the frame
+      Vector2d pos;
+      if (canBlobBeBall(ballBlob, &pos))
       {
-        // TODO take the curvature of the ball into account -- project middle of blob on the plane z=ballRadius
-        // Take the bottom of the ball as observation
-        pos.y() = ballBlob.ul.y();
         ballPosition = Maybe<Vector2d>(pos);
         break;
       }
