@@ -8,6 +8,11 @@ using namespace bold;
 using namespace std;
 using namespace cv;
 
+ImageLabeller::ImageLabeller(shared_ptr<Spatialiser> spatialiser)
+  : d_LUT(),
+    d_spatialiser(spatialiser)
+{}
+
 ImageLabeller::ImageLabeller(shared_ptr<uchar const> const& lut, shared_ptr<Spatialiser> spatialiser)
   : d_LUT(lut),
     d_spatialiser(spatialiser)

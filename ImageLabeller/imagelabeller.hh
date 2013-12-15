@@ -16,10 +16,7 @@ namespace bold
   class ImageLabeller
   {
   public:
-    ImageLabeller(std::shared_ptr<Spatialiser> spatialiser)
-      : d_LUT(),
-        d_spatialiser(spatialiser)
-    {}
+    ImageLabeller(std::shared_ptr<Spatialiser> spatialiser);
 
     ImageLabeller(std::shared_ptr<uchar const> const& lut, std::shared_ptr<Spatialiser> spatialiser);
 
