@@ -30,30 +30,34 @@ require(
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
 
-        var moduleHost = new ModuleHost('#header-module-links');
+        ControlClient.withSettings('', function(settings)
+        {
+            Constants.update(settings);
 
-        moduleHost.register(new CameraModule());
-        moduleHost.register(new World3dModule());
-        moduleHost.register(new World2dModule());
-        moduleHost.register(new ThinkTimingModule());
-        moduleHost.register(new MotionTimingModule());
-        moduleHost.register(new LocaliserModule());
-        moduleHost.register(new WalkModule());
-        moduleHost.register(new CommsModule());
-        moduleHost.register(new HardwareModule());
-        moduleHost.register(new HistogramModule());
-        moduleHost.register(new IMUModule());
-        moduleHost.register(new OptionTreeModule());
-        moduleHost.register(new GameStateModule());
-        moduleHost.register(new MotionScriptModule());
-        moduleHost.register(new TrajectoryModule());
-        moduleHost.register(new VoiceModule());
-        moduleHost.register(new StateDumpModule());
-        moduleHost.register(new ConfigModule());
+            var moduleHost = new ModuleHost('#header-module-links');
 
-        moduleHost.load();
+            moduleHost.register(new CameraModule());
+            moduleHost.register(new World3dModule());
+            moduleHost.register(new World2dModule());
+            moduleHost.register(new ThinkTimingModule());
+            moduleHost.register(new MotionTimingModule());
+            moduleHost.register(new LocaliserModule());
+            moduleHost.register(new WalkModule());
+            moduleHost.register(new CommsModule());
+            moduleHost.register(new HardwareModule());
+            moduleHost.register(new HistogramModule());
+            moduleHost.register(new IMUModule());
+            moduleHost.register(new OptionTreeModule());
+            moduleHost.register(new GameStateModule());
+            moduleHost.register(new MotionScriptModule());
+            moduleHost.register(new TrajectoryModule());
+            moduleHost.register(new VoiceModule());
+            moduleHost.register(new StateDumpModule());
+            moduleHost.register(new ConfigModule());
 
-        ControlClient.withSettings('', Constants.update);
+            moduleHost.load();
+        });
+        
         ControlClient.connect();
     }
 );
