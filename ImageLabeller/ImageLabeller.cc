@@ -13,6 +13,7 @@ ImageLabeller::ImageLabeller(shared_ptr<uchar> const& lut, shared_ptr<Spatialise
 
 void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std::function<Eigen::Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
 {
+  // TODO just use a straight line for the horizon
   // TODO use the granularity function to avoid labelling pixels we won't use
 
   uchar* lut = d_LUT.get();
@@ -26,7 +27,6 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   // If we are ignoring everything above the horizon, find out where
   // the horizon is for each column
   // remember: y = 0 is bottom of field of view
-  // TODO: is horizon a straight line?  If so, then just determining
   // outer columns is enough
   if (ignoreAboveHorizon)
   {
