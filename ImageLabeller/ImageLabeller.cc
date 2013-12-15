@@ -1,5 +1,7 @@
 #include "imagelabeller.hh"
 
+#include "../SequentialTimer/sequentialtimer.hh"
+
 #include <memory>
 
 using namespace bold;
@@ -43,6 +45,8 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   else
     maxAboveHorizonY = image.rows;
 
+  timer.timeEvent("Find Horizon");
+
   ++maxAboveHorizonY;
   minHorizonY = max(0, minHorizonY);
   maxAboveHorizonY = min(image.rows, maxAboveHorizonY);
@@ -66,6 +70,8 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
       ++labelledpix;
     }
   }
+
+  timer.timeEvent("Pixels Under");
 
   if (ignoreAboveHorizon)
   {
@@ -91,12 +97,16 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
       }
     }
 
+    timer.timeEvent("Pixels Around");
+
     // Third batch: everything here is above the horizon
     for (int y = maxAboveHorizonY; y < image.rows; ++y)
     {
       uchar* labelledpix = labelled.ptr<uchar>(y);
       memset(labelledpix, 0, image.cols);
     }
+
+    timer.timeEvent("Pixels Above");
   }
 }
 
