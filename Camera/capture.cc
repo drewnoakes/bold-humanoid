@@ -24,12 +24,12 @@ Mat Camera::capture(SequentialTimer& t)
   }
   t.timeEvent("Requeue");
 
-  // TODO measure perf difference of reusing this image memory
+  // TODO VISION measure perf difference of reusing this image memory
   Mat img(d_pixelFormat.height, d_squash ? d_pixelFormat.width / 2 : d_pixelFormat.width, CV_8UC3);
 
-  unsigned char* datCursor = d_buffers[buf.index].start;
-  unsigned char* datEnd = datCursor + 4 * d_pixelFormat.height * d_pixelFormat.width / 2;
-  unsigned char* imgCursor = img.data;
+  uchar* datCursor = d_buffers[buf.index].start;
+  uchar* datEnd = datCursor + 4 * d_pixelFormat.height * d_pixelFormat.width / 2;
+  uchar* imgCursor = img.data;
 
   // Convert each set of four input values into either one or two pixels
   if (d_squash)
@@ -38,8 +38,8 @@ Mat Camera::capture(SequentialTimer& t)
     {
       int y1 = datCursor[0];
       int y2 = datCursor[2];
-      int cb = datCursor[1];
-      int cr = datCursor[3];
+      uchar cb = datCursor[1];
+      uchar cr = datCursor[3];
 
       imgCursor[0] = y1 + y2 / 2;
       imgCursor[1] = cb;
@@ -53,10 +53,10 @@ Mat Camera::capture(SequentialTimer& t)
   {
     while (datCursor != datEnd)
     {
-      int y1 = datCursor[0];
-      int y2 = datCursor[2];
-      int cb = datCursor[1];
-      int cr = datCursor[3];
+      uchar y1 = datCursor[0];
+      uchar y2 = datCursor[2];
+      uchar cb = datCursor[1];
+      uchar cr = datCursor[3];
 
       imgCursor[0] = y1;
       imgCursor[1] = cb;
