@@ -54,7 +54,6 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // UPDATE STATE
   //
 
-  vector<Vector2d> goalPositions;
   Maybe<Vector2d> ballPosition = Maybe<Vector2d>::empty();
 
   // Might we have a ball?
@@ -127,6 +126,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   }
 
   // Do we have goal posts?
+  vector<Vector2d> goalPositions;
   for (Blob const& goalBlob : blobsPerLabel[d_goalLabel])
   {
     // Ignore goal if it appears outside of field
