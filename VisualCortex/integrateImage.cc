@@ -24,11 +24,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   // Produce an image of labelled pixels.
   // If the option is enabled, any pixels above the horizon will be set to zero.
-  d_imageLabeller->label(image, d_labelledImage, d_shouldIgnoreAboveHorizon->getValue());
-  t.timeEvent("Pixel Label");
+  t.enter("Pixel Label");
+  d_imageLabeller->label(image, d_labelledImage, t, d_granularityFunction, d_shouldIgnoreAboveHorizon->getValue());
+  t.exit();
 
   // Perform the image pass
-  long processedPixelCount = d_imagePassRunner->pass(d_labelledImage);
+  long processedPixelCount = d_imagePassRunner->pass(d_labelledImage, d_granularityFunction);
   long totalPixelCount = d_labelledImage.rows * d_labelledImage.cols;
   t.timeEvent("Pass");
 

@@ -2,6 +2,7 @@
 
 #include <Eigen/Core>
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <opencv2/core/core.hpp>
@@ -132,6 +133,8 @@ namespace bold
     std::shared_ptr<PixelLabel> d_lineLabel;
 
     std::shared_ptr<ImageLabeller> d_imageLabeller;
+
+    std::function<Eigen::Vector2i(int)> d_granularityFunction;
 
     /** A cached Mat, to be re-used each image pass. */
     cv::Mat d_labelledImage;

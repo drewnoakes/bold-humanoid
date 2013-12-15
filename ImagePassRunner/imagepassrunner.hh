@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <functional>
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
 #include <vector>
@@ -14,7 +15,6 @@ namespace bold
   {
   public:
     ImagePassRunner()
-    : d_granularityFunction([](int i) { return Eigen::Vector2i(1,1); })
     {}
 
     /** Adds the specified handler, if it does not already exist in the runner.
@@ -47,17 +47,17 @@ namespace bold
         removeHandler(handler);
     }
 
-    /** Allows processing fewer than all pixels in the image.
+    /** Passes over the image, calling out to all ImagePassHandlers with data from the image.
+     *
+     * A granularity function allows processing fewer than all pixels in the image.
      *
      * Granularity is calculated based on y-value, and is specified in both
      * x and y dimensions.
+     *
+     * @param image Labelled image data
+     * @param granularityFunction The function used to determine granularity within the image.
      */
-    void setGranularityFunction(std::function<Eigen::Vector2i(int)> function)
-    {
-      d_granularityFunction = function;
-    }
-
-    long pass(cv::Mat const& image) const
+    long pass(cv::Mat const& image, std::function<Eigen::Vector2i(int)> granularityFunction) const
     {
       assert(image.rows);
       assert(image.cols);
@@ -73,7 +73,7 @@ namespace bold
 
         for (int y = 0; y < image.rows; y += granularity.y())
         {
-          granularity = d_granularityFunction(y);
+          granularity = granularityFunction(y);
 
           pixelCount += image.cols / granularity.x();
 
@@ -98,6 +98,5 @@ namespace bold
 
   private:
     std::vector<std::shared_ptr<ImagePassHandler<TPixel>>> d_handlers;
-    std::function<Eigen::Vector2i(int)> d_granularityFunction;
   };
 }

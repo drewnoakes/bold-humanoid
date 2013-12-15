@@ -11,8 +11,10 @@ ImageLabeller::ImageLabeller(shared_ptr<uchar> const& lut, shared_ptr<Spatialise
     d_spatialiser(spatialiser)
 {}
 
-void ImageLabeller::label(Mat& image, Mat& labelled, bool ignoreAboveHorizon) const
+void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std::function<Eigen::Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
 {
+  // TODO use the granularity function to avoid labelling pixels we won't use
+
   uchar* lut = d_LUT.get();
   vector<int> horizonYAtCol(image.cols);
 

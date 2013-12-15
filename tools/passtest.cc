@@ -6,6 +6,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+#include "../Clock/clock.hh"
 #include "../geometry/Line.hh"
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../HoughLineExtractor/houghlineextractor.hh"
@@ -21,7 +22,7 @@
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../PixelLabel/pixellabel.hh"
-#include "../Clock/clock.hh"
+#include "../SequentialTimer/sequentialtimer.hh"
 
 using namespace cv;
 using namespace std;
@@ -129,8 +130,12 @@ int main(int argc, char **argv)
   // IMAGE LABELLING
   //
   t = Clock::getTimestamp();
+  auto granularityFunction = [](int y) { return Vector2i(1, 1); };
   for (int i = 0; i < loopCount; i++)
-    imageLabeller->label(colourImage, labelledImage);
+  {
+    SequentialTimer timer;
+    imageLabeller->label(colourImage, labelledImage, timer, granularityFunction);
+  }
   cout << "Labelled " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
@@ -138,7 +143,7 @@ int main(int argc, char **argv)
   //
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
-    passRunner.pass(labelledImage);
+    passRunner.pass(labelledImage, granularityFunction);
   cout << "Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
