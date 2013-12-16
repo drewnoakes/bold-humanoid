@@ -40,6 +40,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "ConditionalsTests.hh"
 #include "CppTests.hh"
 #include "ColourTests.hh"
+#include "ConsumerQueueThreadTests.hh"
 #include "DistributionTrackerTests.hh"
 #include "HalfHullBuilderTests.hh"
 #include "JointSelectionTests.hh"
