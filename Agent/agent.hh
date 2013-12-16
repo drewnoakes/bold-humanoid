@@ -40,7 +40,7 @@ namespace bold
   class Agent
   {
   public:
-    Agent();
+    Agent(bool useSpeech);
 
     std::shared_ptr<Ambulator> getAmbulator() const { return d_ambulator; }
     std::shared_ptr<Camera> getCamera() const { return d_camera; }

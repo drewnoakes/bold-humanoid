@@ -7,9 +7,12 @@ void Agent::run()
 
   d_isRunning = true;
 
-  stringstream announcement;
-  announcement << "Player " << d_uniformNumber << " on team " << d_teamNumber;
-  d_voice->say(announcement.str());
+  if (d_voice)
+  {
+    stringstream announcement;
+    announcement << "Player " << d_uniformNumber << " on team " << d_teamNumber;
+    d_voice->say(announcement.str());
+  }
 
   if (d_haveBody)
   {

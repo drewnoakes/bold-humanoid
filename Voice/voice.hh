@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "../util/consumerqueuethread.hh"
 
 namespace bold
 {
@@ -9,9 +10,15 @@ namespace bold
   public:
     Voice(std::string voice = "default");
 
-    void say(const std::string message);
+    void say(std::string message);
+
+    void stop();
 
   private:
+    void sayCallback(std::string message);
+
     std::string d_voiceName;
+    ConsumerQueueThread<std::string> d_queue;
+    bool d_initialised;
   };
 }

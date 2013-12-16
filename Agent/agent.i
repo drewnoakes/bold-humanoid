@@ -28,7 +28,7 @@ namespace bold
   class Agent
   {
   public:
-    Agent();
+    Agent(bool useSpeech);
 
 
     std::shared_ptr<Ambulator> getAmbulator() const;

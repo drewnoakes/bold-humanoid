@@ -1,6 +1,6 @@
 #include "agent.ih"
 
-Agent::Agent()
+Agent::Agent(bool useSpeech)
   : d_isRunning(false),
     d_isStopRequested(false),
     d_teamNumber(0),
@@ -11,23 +11,8 @@ Agent::Agent()
 {
   ThreadId::setThreadId(ThreadId::ThinkLoop);
 
-  // TODO SETTINGS specify these strings in configuration
-
-  vector<string> phrases = {
-    "Bold Hearts are go!",
-//     "I am a protector of the realm",
-//     "What do you despise? By this are you truly known.",
-//     "A day may come when the courage of men fails",
-//     "Duty is heavier than a mountain",
-//     "Humans have a knack for choosing precisely the things that are worst for them",
-//     "Ride for ruin and the world's ending!",
-//     "Kill if you will, but command me nothing!",
-//     "The existence of tricks does not imply the absence of magic",
-//     "We eat ham and jam and Spam a lot"
-  };
-  srand(time(NULL));
-  d_voice = make_shared<Voice>(Config::getStaticValue<string>("hardware.voice"));
-  d_voice->say(phrases[rand() % phrases.size()]);
+  if (useSpeech)
+    d_voice = make_shared<Voice>(Config::getStaticValue<string>("hardware.voice"));
 
   auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
   log::info("Agent::Agent") << "Using CM730 Device Path: " << cm730DevicePath;
@@ -92,18 +77,6 @@ Agent::Agent()
 
   // TODO only stream if argument specified?
   d_streamer = make_shared<DataStreamer>(d_camera);
-
-  string sayings[] = {
-    "Hello", "Bold Hearts", "Hooray", "Oh my",
-    "The rain in spain falls mainly in the plain"
-  };
-  int sayingIndex = 1;
-  for (auto saying : sayings)
-  {
-    stringstream id;
-    id << "voice.speak.saying-" << sayingIndex++;
-    Config::addAction(id.str(), saying, [this,saying](){ d_voice->say(saying); });
-  }
 
   d_debugger->update(d_cm730);
 

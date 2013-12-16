@@ -27,6 +27,7 @@ void printUsage()
   cout << ccolor::fore::lightblue << "  -t <num>  " << ccolor::fore::white << "team number (or --team)" << endl;
   cout << ccolor::fore::lightblue << "  -c <file> " << ccolor::fore::white << "use specified configuration file (or --config)" << endl;
   cout << ccolor::fore::lightblue << "  -v        " << ccolor::fore::white << "verbose logging (or --verbose)" << endl;
+  cout << ccolor::fore::lightblue << "  -q        " << ccolor::fore::white << "quiet/don't speak' (or --quiet)" << endl;
   cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
   cout << ccolor::reset;
 }
@@ -79,7 +80,8 @@ vector<string> banners = {
 
 int main(int argc, char **argv)
 {
-  srand(time(NULL));
+  srand(time(0));
+
   cout << ccolor::bold << ccolor::fore::lightmagenta << banners[rand() % banners.size()] << endl << endl << ccolor::reset;
 
 //  convertMotionFile();
@@ -87,6 +89,7 @@ int main(int argc, char **argv)
   // defaults
   unsigned teamNumber = -1;
   unsigned uniformNumber = 0;
+  bool useSpeech = true;
 
   string configurationFile("configuration.json");
   log::minLevel = LogLevel::Info;
@@ -132,6 +135,10 @@ int main(int argc, char **argv)
     {
       log::minLevel = LogLevel::Verbose;
     }
+    else if (arg == "-q" || arg == "--quiet")
+    {
+      useSpeech = false;
+    }
     else
     {
       log::error() << "UNKNOWN ARGUMENT: " << arg;
@@ -154,7 +161,7 @@ int main(int argc, char **argv)
 
   log::info("boldhumanoid") << "Team number " << teamNumber << ", uniform number " << uniformNumber;
 
-  agent.reset(new Agent());
+  agent.reset(new Agent(useSpeech));
 
   Config::initialisationCompleted();
 
