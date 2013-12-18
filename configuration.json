@@ -36,8 +36,8 @@
     "recording-frames": false,
     "focal-length": 0.025,
     "field-of-view": {
-      "vertical-degrees": 46.0,
-      "horizontal-degrees": 58.0
+      "vertical-degrees": 47.68,
+      "horizontal-degrees": 61.59
     },
     "settings": {
       "auto-wb": false,
