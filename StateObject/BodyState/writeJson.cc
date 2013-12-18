@@ -1,6 +1,9 @@
 #include "bodystate.hh"
 
+#include <Eigen/Geometry>
+
 using namespace bold;
+using namespace Eigen;
 using namespace rapidjson;
 
 void BodyState::writeJson(Writer<StringBuffer>& writer) const
@@ -31,6 +34,22 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
       writer.Double(translation.z());
     }
     writer.EndArray();
+
+    writer.String("camera-rotation");
+    writer.StartObject();
+    {
+      AngleAxisd angleAxis(d_cameraAgentTransform.rotation());
+      writer.String("angle").Double(angleAxis.angle());
+      writer.String("axis");
+      writer.StartArray();
+      {
+        writer.Double(angleAxis.axis().x());
+        writer.Double(angleAxis.axis().y());
+        writer.Double(angleAxis.axis().z());
+      }
+      writer.EndArray();
+    }
+    writer.EndObject();
   }
   writer.EndObject();
 }
