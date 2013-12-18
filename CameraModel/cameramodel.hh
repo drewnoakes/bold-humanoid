@@ -14,7 +14,7 @@ namespace bold
   class CameraModel
   {
   public:
-    CameraModel(unsigned imageWidth, unsigned imageHeight, double focalLength, double rangeVerticalDegs, double rangeHorizontalDegs)
+    CameraModel(ushort imageWidth, ushort imageHeight, double rangeVerticalDegs, double rangeHorizontalDegs)
     : d_imageWidth(imageWidth),
       d_imageHeight(imageHeight),
 //       d_focalLength(focalLength),

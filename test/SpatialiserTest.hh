@@ -17,11 +17,10 @@ Spatialiser createTestSpatialiser()
 {
   auto imageWidth = 11;
   auto imageHeight = 11;
-  auto focalLength = 1;
   auto rangeVertical = 90;
   auto rangeHorizontal = 90;
 
-  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
+  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
 
   return Spatialiser(cameraModel);
 }
@@ -50,11 +49,10 @@ TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
 {
   auto imageWidth = 11;
   auto imageHeight = 11;
-  auto focalLength = 1;
   auto rangeVertical = 60;
   auto rangeHorizontal = 90;
 
-  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
+  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
 
   Spatialiser spatialiser(cameraModel);
 
@@ -168,11 +166,10 @@ TEST (SpatialiserTests, findHorizonForColumnWideCam)
 {
   auto imageWidth = 11;
   auto imageHeight = 11;
-  auto focalLength = 1;
   auto rangeVertical = 45;
   auto rangeHorizontal = 60;
 
-  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, focalLength, rangeVertical, rangeHorizontal);
+  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
 
   Spatialiser spatialiser(cameraModel);
 
