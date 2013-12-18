@@ -39,7 +39,7 @@ void BodyState::initBody(double angles[])
   auto headCameraJoint = make_shared<Joint>();
   headCameraJoint->id = (JointId)0;
   headCameraJoint->name = "head-camera";
-  // Set angle offset of head hear. If this needs to be set for more
+  // Set angle offset of head here. If this needs to be set for more
   // stuff, probably best to add another joint before this one and set
   // it there
   headCameraJoint->axis = Vector3d(1, 0, 0);
@@ -270,12 +270,12 @@ void BodyState::initBody(double angles[])
     else
     {
       auto const joint = dynamic_pointer_cast<Joint>(bodyPart);
-      
+
       if (joint)
-      {   
+      {
         if ((int)joint->id != 0)
           action(joint);
-        
+
         walkJoints(joint->bodyPart, action);
       }
     }
