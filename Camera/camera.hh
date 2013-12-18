@@ -54,7 +54,8 @@ namespace bold
       {}
 
       PixelFormat(v4l2_pix_format const& pf)
-        : width (pf.width),
+        : id(pf.pixelformat),
+          width (pf.width),
           height(pf.height),
           pixelFormat(pf.pixelformat),
           bytesPerLine(pf.bytesperline),
@@ -63,6 +64,7 @@ namespace bold
 
       Camera* owner;
 
+      unsigned id;
       unsigned width;
       unsigned height;
       unsigned pixelFormat;
@@ -128,6 +130,8 @@ namespace bold
     cv::Mat capture(SequentialTimer& timer);
 
     void setSquashWidth(bool squash) { d_squash = squash; }
+
+    void logFrameIntervalDetails() const;
 
     friend struct PixelFormat;
 

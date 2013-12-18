@@ -23,5 +23,6 @@ bool Camera::PixelFormat::requestSize(unsigned width, unsigned height)
   owner->d_pixelFormat.bytesPerLine = formatReq.fmt.pix.bytesperline;
   owner->d_pixelFormat.imageByteSize = formatReq.fmt.pix.sizeimage;
 
-  return (owner->d_pixelFormat.width == width && owner->d_pixelFormat.height == height);
+  return owner->d_pixelFormat.width == width
+      && owner->d_pixelFormat.height == height;
 }
