@@ -129,7 +129,8 @@
       }
     },
     "home-pan":  { "type": "double", "min": -80.0, "max": 80.0, "default": 0.0 },
-    "home-tilt": { "type": "double", "min": -22.0, "max": 40.0, "default": -10.0 }
+    "home-tilt": { "type": "double", "min": -22.0, "max": 40.0, "default": -10.0 },
+    "move-fine": { "type": "bool", "default": false }
   },
   "walk-module": {
     "x-offset":         { "type": "double", "default": -10.0 },

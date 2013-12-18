@@ -72,6 +72,7 @@ define(
             ControlBuilder.action('head-module.move-right', element.querySelector('button[name="right"]'));
             ControlBuilder.action('head-module.move-home', element.querySelector('button[name="home"]'));
             ControlBuilder.action('head-module.move-zero', element.querySelector('button[name="zero"]'));
+            this.closables.add(ControlBuilder.build('head-module.move-fine', element.querySelector('div.movement')));
 
             this.closables.add(ControlBuilder.buildAll('vision.pixel-labels', element.querySelector('div.pixel-labels')));
 
