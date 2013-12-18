@@ -10,12 +10,6 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   if (AgentState::getInstance().getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod->getValue() != 0)
     return;
 
-  auto lineDotColour = d_lineDotColour->getValue();
-  auto observedLineColour = d_observedLineColour->getValue();
-  auto expectedLineColour = d_expectedLineColour->getValue();
-  auto horizonColour = d_horizonColour->getValue();
-  auto fieldEdgeColour = d_fieldEdgeColour->getValue();
-
   Mat debugImage;
 
   ImageType imageType = d_imageType->getValue();
@@ -57,6 +51,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   auto const& observedLineSegments = AgentState::get<CameraFrameState>()->getObservedLineSegments();
   if (d_shouldDrawObservedLines->getValue() && observedLineSegments.size() > 0)
   {
+    auto observedLineColour = d_observedLineColour->getValue();
     for (LineSegment2i const& line : observedLineSegments)
     {
       line.draw(debugImage, observedLineColour, 2);
@@ -66,6 +61,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   // Draw line dots
   if (d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && d_lineDotPass->lineDots.size() > 0)
   {
+    auto lineDotColour = d_lineDotColour->getValue();
     for (auto const& lineDot : d_lineDotPass->lineDots)
     {
       debugImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
@@ -136,6 +132,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     auto max = Vector2i(Config::getStaticValue<int>("camera.image-width"),
                         Config::getStaticValue<int>("camera.image-height"));
 
+    auto expectedLineColour = d_expectedLineColour->getValue();
+
     for (LineSegment3d const& line : drawExpectedLineEdges ? d_fieldMap->getFieldLineEdges() : d_fieldMap->getFieldLines())
     {
       // TODO this degrades when lines start/end outside of the camera's FOV
@@ -170,12 +168,13 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
 
     LineSegment2i line2i(p1, p2);
 
-    line2i.draw(debugImage, horizonColour, 1);
+    line2i.draw(debugImage, d_horizonColour->getValue(), 1);
   }
 
   // Draw field edge
   if (d_shouldDrawFieldEdge->getValue())
   {
+    auto fieldEdgeColour = d_fieldEdgeColour->getValue();
     for (ushort x = 0; x < debugImage.size().width; ++x)
     {
       ushort y = d_fieldEdgePass->getEdgeYValue(x);
