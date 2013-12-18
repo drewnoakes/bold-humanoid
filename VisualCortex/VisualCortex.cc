@@ -109,25 +109,25 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
       switch (granularity)
       {
         case ImageGranularity::All:
-          d_granularityFunction = [](int i) { return Eigen::Vector2i(1,1); };
+          d_granularityFunction = [](int y) { return Eigen::Vector2i(1,1); };
           break;
         case ImageGranularity::Half:
-          d_granularityFunction = [](int i) { return Eigen::Vector2i(2,2); };
+          d_granularityFunction = [](int y) { return Eigen::Vector2i(2,2); };
           break;
         case ImageGranularity::Third:
-          d_granularityFunction = [](int i) { return Eigen::Vector2i(3,3); };
+          d_granularityFunction = [](int y) { return Eigen::Vector2i(3,3); };
           break;
         case ImageGranularity::Gradient:
           auto maxGranularity = Config::getSetting<int>("vision.max-granularity");
-          d_granularityFunction = [this,maxGranularity](int i) mutable
+          d_granularityFunction = [this,maxGranularity](int y) mutable
           {
-            int delta = (d_cameraModel->imageHeight() - i)/40;
-            if (delta == 0)
-              delta = 1;
+            int pixelDelta = (d_cameraModel->imageHeight() - y)/40;
+            if (pixelDelta == 0)
+              pixelDelta = 1;
             auto max = maxGranularity->getValue();
-            if (delta > max)
-              delta = max;
-            return Eigen::Vector2i(delta, delta);
+            if (pixelDelta > max)
+              pixelDelta = max;
+            return Eigen::Vector2i(pixelDelta, pixelDelta);
           };
           break;
       }
