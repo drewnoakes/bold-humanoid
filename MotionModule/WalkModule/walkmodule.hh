@@ -7,7 +7,7 @@
 namespace bold
 {
   template <typename> class Setting;
-  
+
   class WalkModule : public MotionModule
   {
   public:
@@ -99,8 +99,10 @@ namespace bold
 
   public:
     WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler);
+    ~WalkModule() override;
 
-    virtual ~WalkModule();
+    WalkModule(const WalkModule&) = delete;
+    WalkModule& operator=(const WalkModule&) = delete;
 
     // WalkModule initial pose
     Setting<double>* X_OFFSET;

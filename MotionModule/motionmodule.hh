@@ -35,6 +35,9 @@ namespace bold
 
     virtual ~MotionModule() {}
 
+    MotionModule(const MotionModule&) = delete;
+    MotionModule& operator=(const MotionModule&) = delete;
+
     static const int TIME_UNIT = 8; //msec
 
     std::string getName() const { return d_name; }

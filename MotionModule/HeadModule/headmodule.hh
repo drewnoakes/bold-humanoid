@@ -19,6 +19,9 @@ namespace bold
     HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler);
     ~HeadModule() override;
 
+    HeadModule(const HeadModule&) = delete;
+    HeadModule& operator=(const HeadModule&) = delete;
+
     void initialize() override;
     void step(std::shared_ptr<JointSelection> selectedJoints) override;
     void applyHead(std::shared_ptr<HeadSection> head) override;
