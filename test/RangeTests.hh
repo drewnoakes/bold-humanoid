@@ -5,7 +5,7 @@
 using namespace std;
 using namespace bold;
 
-TEST (RangeTests, cosntruction)
+TEST (RangeTests, construction)
 {
   auto range = Range<int>();
 
