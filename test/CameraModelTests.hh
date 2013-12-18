@@ -12,12 +12,10 @@ TEST (CameraModelTests, directionForPixel)
 {
   auto imageWidth = 11;
   auto imageHeight = 11;
-  auto focalLength = 1;
   auto rangeVerticalDegs = 90;
   auto rangeHorizontalDegs = 90;
 
   CameraModel cameraModel1(imageWidth, imageHeight,
-                           focalLength,
                            rangeVerticalDegs, rangeHorizontalDegs);
 
   EXPECT_TRUE ( VectorsEqual(Vector3d(0, 1, 0).normalized(),
@@ -45,7 +43,6 @@ TEST (CameraModelTests, directionForPixel)
   double tv = tan(.5 * 45.0 / 180.0 * M_PI);
 
   CameraModel cameraModel2(imageWidth, imageHeight,
-                           focalLength,
                            rangeVerticalDegs, rangeHorizontalDegs);
 
   EXPECT_TRUE ( VectorsEqual(Vector3d(0, 1, 0).normalized(),
@@ -67,11 +64,10 @@ TEST (CameraModelTests, pixelForDirection)
 {
   auto imageWidth = 11;
   auto imageHeight = 11;
-  auto focalLength = 1;
   auto rangeVerticalDegs = 90;
   auto rangeHorizontalDegs = 90;
 
-  CameraModel cameraModel1(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
+  CameraModel cameraModel1(imageWidth, imageHeight, rangeVerticalDegs, rangeHorizontalDegs);
 
   EXPECT_EQ ( Maybe<Vector2d>::empty(), cameraModel1.pixelForDirection(Vector3d(0,  0, 0)) );
   EXPECT_EQ ( Maybe<Vector2d>::empty(), cameraModel1.pixelForDirection(Vector3d(1,  0, 0)) );
@@ -94,7 +90,7 @@ TEST (CameraModelTests, pixelForDirection)
   rangeVerticalDegs = 45;
   rangeHorizontalDegs = 60;
 
-  CameraModel cameraModel2(imageWidth, imageHeight, focalLength, rangeVerticalDegs, rangeHorizontalDegs);
+  CameraModel cameraModel2(imageWidth, imageHeight, rangeVerticalDegs, rangeHorizontalDegs);
 
   double th = tan(.5 * 60.0 / 180.0 * M_PI);
   double tv = tan(.5 * 45.0 / 180.0 * M_PI);

@@ -14,27 +14,53 @@ namespace bold
   class CameraModel
   {
   public:
+    /// Initialises a CameraModel using parameters defined in configuration.
+    CameraModel()
+    : CameraModel(Config::getStaticValue<int>("camera.image-width"),
+                  Config::getStaticValue<int>("camera.image-height"),
+                  Config::getStaticValue<double>("camera.field-of-view.vertical-degrees"),
+                  Config::getStaticValue<double>("camera.field-of-view.horizontal-degrees"))
+    {}
+
+    /// Initialises a CameraModel using the specified parameters.
     CameraModel(ushort imageWidth, ushort imageHeight, double rangeVerticalDegs, double rangeHorizontalDegs)
     : d_imageWidth(imageWidth),
       d_imageHeight(imageHeight),
-//       d_focalLength(focalLength),
       d_rangeVerticalDegs(rangeVerticalDegs),
       d_rangeHorizontalDegs(rangeHorizontalDegs)
-    {}
-
-    CameraModel()
     {
-      d_imageWidth = Config::getStaticValue<int>("camera.image-width");
-      d_imageHeight = Config::getStaticValue<int>("camera.image-height");
-//       d_focalLength = Config::getStaticValue<double>("camera.focal-length");
-      d_rangeVerticalDegs = Config::getStaticValue<double>("camera.field-of-view.vertical-degrees");
-      d_rangeHorizontalDegs = Config::getStaticValue<double>("camera.field-of-view.horizontal-degrees");
+      //
+      // Compute the focal length
+      //
+      d_focalLength = 1.0 / tan(.5 * rangeHorizontalRads());
+
+      //
+      // Compute the projection transform
+      //
+
+      double f = focalLength();
+      Eigen::Affine3d c;
+      c.matrix() <<
+        f, 0, 0, 0,
+        0, f, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 1, 0;
+
+      auto s = Eigen::Scaling((d_imageWidth - 1) / 2.0, (d_imageHeight - 1) / 2.0, 1.0);
+      Eigen::Affine3d t;
+      t.matrix() <<
+        -1, 0, 0, 0,
+        0, 0, 1, 0,
+        0, 1, 0, 0,
+        0, 0, 0, 1;
+
+      d_projectionTransform = s * c * t;
     }
 
-    unsigned imageWidth() const { return d_imageWidth; }
-    unsigned imageHeight() const { return d_imageHeight; }
+    ushort imageWidth() const { return d_imageWidth; }
+    ushort imageHeight() const { return d_imageHeight; }
 
-    double focalLength() const { return  1.0 / tan(.5 * rangeHorizontalRads()); } // TODO: cache
+    double focalLength() const { return d_focalLength; }
     double rangeVerticalDegs() const { return d_rangeVerticalDegs; }
     double rangeVerticalRads() const { return Math::degToRad(d_rangeVerticalDegs); }
     double rangeHorizontalDegs() const { return d_rangeHorizontalDegs; }
@@ -54,33 +80,14 @@ namespace bold
      * transformed vector. i.e to get the pixel coordinate p of a
      * point v with projection matrix T: p' = Tv, p = p'/p'_z.
      */
-    Eigen::Affine3d getProjectionTransform() const
-    {
-      // TODO: cache
-      double f = focalLength();
-      Eigen::Affine3d c;
-      c.matrix() <<
-        f, 0, 0, 0,
-        0, f, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 1, 0;
-
-      auto s = Eigen::Scaling((d_imageWidth - 1) / 2.0, (d_imageHeight - 1) / 2.0, 1.0);
-      Eigen::Affine3d t;
-      t.matrix() <<
-        -1, 0, 0, 0,
-        0, 0, 1, 0,
-        0, 1, 0, 0,
-        0, 0, 0, 1;
-
-      return s * c * t;
-    }
+    Eigen::Affine3d getProjectionTransform() const { return d_projectionTransform; }
 
   private:
-    unsigned d_imageWidth;
-    unsigned d_imageHeight;
-//     double d_focalLength;
+    ushort d_imageWidth;
+    ushort d_imageHeight;
+    double d_focalLength;
     double d_rangeVerticalDegs;
     double d_rangeHorizontalDegs;
+    Eigen::Affine3d d_projectionTransform;
   };
 }
