@@ -38,6 +38,9 @@ namespace bold
 
     void setShouldDrawHorizon(bool val) { d_shouldDrawHorizon->setValue(val); }
     bool getShouldDrawHorizon() const { return d_shouldDrawHorizon->getValue(); }
+
+    void setShouldDrawCalibration(bool val) { d_shouldDrawCalibration->setValue(val); }
+    bool getShouldDrawCalibration() const { return d_shouldDrawCalibration->getValue(); }
   };
 
   %extend VisualCortex {

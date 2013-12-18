@@ -92,6 +92,7 @@
       "expected-line-edges": { "type": "bool", "default": false },
       "horizon":        { "type": "bool", "default": true },
       "field-edge":     { "type": "bool", "default": true },
+      "calibration":    { "type": "bool", "default": false },
       "objects":        { "type": "bool", "default": true }
     },
     "image-colours": {
@@ -99,7 +100,8 @@
       "observed-line": { "type": "bgr-colour", "default": { "b": 255, "g": 80, "r": 80 } },
       "expected-line": { "type": "bgr-colour", "default": { "b": 255, "g": 0, "r": 0 } },
       "horizon":       { "type": "bgr-colour", "default": { "b": 0, "g": 128, "r": 255 } },
-      "field-edge":    { "type": "bgr-colour", "default": { "b": 0, "g": 255, "r": 0 } }
+      "field-edge":    { "type": "bgr-colour", "default": { "b": 0, "g": 255, "r": 0 } },
+      "calibration":   { "type": "bgr-colour", "default": { "b": 255, "g": 255, "r": 0 } }
     }
   },
   "localiser": {

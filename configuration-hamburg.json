@@ -106,6 +106,7 @@
       "expected-line-edges": false,
       "horizon": true,
       "field-edge": true,
+      "calibration": false,
       "objects": true
     }
   },

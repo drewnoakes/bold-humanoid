@@ -119,6 +119,9 @@ namespace bold
     void setShouldDrawFieldEdge(bool val) { d_shouldDrawFieldEdge->setValue(val); }
     bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge->getValue(); }
 
+    void setShouldDrawCalibration(bool val) { d_shouldDrawCalibration->setValue(val); }
+    bool getShouldDrawCalibration() const { return d_shouldDrawCalibration->getValue(); }
+
   private:
     bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d* pos);
 
@@ -169,6 +172,7 @@ namespace bold
     Setting<Colour::bgr>* d_expectedLineColour;
     Setting<Colour::bgr>* d_horizonColour;
     Setting<Colour::bgr>* d_fieldEdgeColour;
+    Setting<Colour::bgr>* d_calibrationColour;
 
     Setting<bool>* d_shouldDrawBlobs;
     Setting<bool>* d_shouldDrawLineDots;
@@ -177,6 +181,7 @@ namespace bold
     Setting<bool>* d_shouldDrawExpectedLineEdges;
     Setting<bool>* d_shouldDrawHorizon;
     Setting<bool>* d_shouldDrawFieldEdge;
+    Setting<bool>* d_shouldDrawCalibration;
     Setting<bool>* d_shouldDrawObservedObjects;
   };
 }

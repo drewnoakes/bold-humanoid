@@ -184,6 +184,18 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     }
   }
 
+  if (d_shouldDrawCalibration->getValue())
+  {
+    auto calibrationColour = d_calibrationColour->getValue().toScalar();
+
+    int w = d_cameraModel->imageWidth();
+    int h = d_cameraModel->imageHeight();
+    int midX = round(w / 2.0);
+    int midY = round(h / 2.0);
+    cv::line(debugImage, Point(0, midY), Point(w-1, midY), calibrationColour);
+    cv::line(debugImage, Point(midX, 0), Point(midX, h-1), calibrationColour);
+  }
+
   streamer->streamImage(debugImage);
   t.timeEvent("Debug Image Streaming");
 }
