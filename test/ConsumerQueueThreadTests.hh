@@ -39,3 +39,27 @@ TEST (ConsumerQueueThreadTests, basics)
     ASSERT_EQ ( i, values[i] );
   }
 }
+
+TEST (ConsumerQueueThreadTests, doesntBlockPusher)
+{
+  int callCount = 0;
+
+  ConsumerQueueThread<int> queue([&](int i)
+  {
+    this_thread::sleep_for(chrono::milliseconds(1));
+    callCount++;
+  });
+
+  int loopCount = 50;
+
+  for (int i = 0; i < loopCount; i++)
+    queue.push(1);
+
+  ASSERT_TRUE ( callCount < loopCount );
+  this_thread::sleep_for(chrono::milliseconds(loopCount / 2));
+  ASSERT_TRUE ( callCount > 0 && callCount < loopCount );
+  this_thread::sleep_for(chrono::milliseconds(loopCount * 2));
+  ASSERT_TRUE ( callCount == loopCount );
+
+  queue.stop(); // joins
+}
