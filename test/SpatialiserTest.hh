@@ -32,14 +32,14 @@ TEST (SpatialiserTests, findGroundPointForPixelLookingStraightDown)
   Spatialiser spatialiser = createTestSpatialiser();
 
   // Look straight down at the ground
-  Affine3d cameraGroundTransform = Translation3d(0,0,torsoHeight) * AngleAxisd(-M_PI/2, Vector3d::UnitX());
+  Affine3d cameraAgentTransform = Translation3d(0,0,torsoHeight) * AngleAxisd(-M_PI/2, Vector3d::UnitX());
 
-  EXPECT_TRUE ( VectorsEqual(cameraGroundTransform.matrix().col(0).head<3>(), Vector3d(1, 0,  0)) );
-  EXPECT_TRUE ( VectorsEqual(cameraGroundTransform.matrix().col(1).head<3>(), Vector3d(0, 0, -1)) );
-  EXPECT_TRUE ( VectorsEqual(cameraGroundTransform.matrix().col(2).head<3>(), Vector3d(0, 1,  0)) );
+  EXPECT_TRUE ( VectorsEqual(cameraAgentTransform.matrix().col(0).head<3>(), Vector3d(1, 0,  0)) );
+  EXPECT_TRUE ( VectorsEqual(cameraAgentTransform.matrix().col(1).head<3>(), Vector3d(0, 0, -1)) );
+  EXPECT_TRUE ( VectorsEqual(cameraAgentTransform.matrix().col(2).head<3>(), Vector3d(0, 1,  0)) );
 
   Maybe<Vector3d> groundPoint =
-    spatialiser.findGroundPointForPixel(Vector2d(5.5, 5.5), cameraGroundTransform);
+    spatialiser.findGroundPointForPixel(Vector2d(5.5, 5.5), cameraAgentTransform);
 
   ASSERT_TRUE ( groundPoint.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), *groundPoint) );
@@ -57,11 +57,11 @@ TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
   Spatialiser spatialiser(cameraModel);
 
   // Look straight down at the ground
-  Affine3d cameraGroundTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/4, Vector3d::UnitZ());
+  Affine3d cameraAgentTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/4, Vector3d::UnitZ());
 
   for (int y = 0; y < 4; y++)
   {
-    Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(5.5,y), cameraGroundTransform);
+    Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(5.5,y), cameraAgentTransform);
 
     ASSERT_TRUE ( groundPoint.hasValue() ) << "No luck with y=" << y;
     EXPECT_NEAR( (*groundPoint).x(), (*groundPoint).y(), 0.001 );
@@ -69,7 +69,7 @@ TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
 
   for (int y = 0; y < 4; y++)
   {
-    Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(0,y), cameraGroundTransform);
+    Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(0,y), cameraAgentTransform);
 
     ASSERT_TRUE ( groundPoint.hasValue() ) << "No luck with y=" << y;
     EXPECT_NEAR( (*groundPoint).y(), 0, 0.001 );
@@ -77,7 +77,7 @@ TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
 
   for (int y = 0; y < 4; y++)
   {
-    Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(11,y), cameraGroundTransform);
+    Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(11,y), cameraAgentTransform);
 
     ASSERT_TRUE ( groundPoint.hasValue() ) << "No luck with y=" << y;
     EXPECT_NEAR( (*groundPoint).x(), 0, 0.001 );
@@ -89,18 +89,18 @@ TEST (SpatialiserTests, findGroundPointForPixelLooking45DegreesDown)
   Spatialiser spatialiser = createTestSpatialiser();
 
   // Look 45 deg down at the ground
-  Affine3d cameraGroundTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/4, Vector3d::UnitX());
+  Affine3d cameraAgentTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/4, Vector3d::UnitX());
 
-  EXPECT_EQ ( 1, cameraGroundTransform.translation().z() );
+  EXPECT_EQ ( 1, cameraAgentTransform.translation().z() );
 
   Maybe<Vector3d> groundPoint =
-    spatialiser.findGroundPointForPixel(Vector2d(5.5,5.5), cameraGroundTransform);
+    spatialiser.findGroundPointForPixel(Vector2d(5.5,5.5), cameraAgentTransform);
 
   ASSERT_TRUE ( groundPoint.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,1,0), *groundPoint) );
 
   groundPoint =
-    spatialiser.findGroundPointForPixel(Vector2d(5.5,0), cameraGroundTransform);
+    spatialiser.findGroundPointForPixel(Vector2d(5.5,0), cameraAgentTransform);
 
   ASSERT_TRUE ( groundPoint.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), *groundPoint) );
@@ -111,9 +111,9 @@ TEST (SpatialiserTests, findGroundPointForPixelEmptyIfSkybound)
   Spatialiser spatialiser = createTestSpatialiser();
 
   // Look straight up at the sky
-  Affine3d cameraGroundTransform = Translation3d(0,0,torsoHeight) * AngleAxisd(M_PI/2, Vector3d::UnitX());
+  Affine3d cameraAgentTransform = Translation3d(0,0,torsoHeight) * AngleAxisd(M_PI/2, Vector3d::UnitX());
 
-  Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(5.5,5.5), cameraGroundTransform);
+  Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(5.5,5.5), cameraAgentTransform);
 
   EXPECT_FALSE ( groundPoint.hasValue() );
 }
