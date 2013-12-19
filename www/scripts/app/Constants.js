@@ -26,7 +26,9 @@ define(
             ballDiameter: 0.067, // according to Wikipedia
             footHeight: 0.0335,
             cameraFovHorizontalDegrees: 58,
-            cameraFovVerticalDegrees: 46
+            cameraFovVerticalDegrees: 46,
+            cameraImageWidth: 640,
+            cameraImageHeight: 480
         };
 
         Constants.ballRadius = Constants.ballDiameter / 2;
@@ -55,6 +57,8 @@ define(
                     case 'world.penalty-mark-distance': Constants.penaltyMarkDistance = setting.value; break;
                     case 'camera.field-of-view.horizontal-degrees': Constants.cameraFovHorizontalDegrees = setting.value; break;
                     case 'camera.field-of-view.vertical-degrees': Constants.cameraFovVerticalDegrees = setting.value; break;
+                    case 'camera.image-width': Constants.cameraWidth = setting.value; break;
+                    case 'camera.image-height': Constants.cameraHeight = setting.value; break;
                 }
             });
         };
