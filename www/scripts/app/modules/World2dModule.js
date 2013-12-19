@@ -44,7 +44,7 @@ define(
                 }.bind(this)
             });
 
-            this.$cameraCanvas.on('mousewheel', function (event)
+            this.$canvas.on('mousewheel', function (event)
             {
                 event.preventDefault();
                 // TODO zoom relative to the position of the mouse pointer, rather than (0,0)
@@ -53,7 +53,7 @@ define(
                 this.draw();
             }.bind(this));
 
-            this.$cameraCanvas.on('mousemove', function (event)
+            this.$canvas.on('mousemove', function (event)
             {
                 MouseEventUtil.polyfill(event);
                 var x = (event.offsetX - this.fieldCenterX) / this.scale,
@@ -61,16 +61,16 @@ define(
                 this.$hoverInfo.text(x.toFixed(2) + ', ' + y.toFixed(2));
             }.bind(this));
 
-            this.$cameraCanvas.on('mouseleave', function() { this.$hoverInfo.text(''); }.bind(this));
+            this.$canvas.on('mouseleave', function() { this.$hoverInfo.text(''); }.bind(this));
         };
 
         World2dModule.prototype.load = function()
         {
-            this.$cameraCanvas = $('<canvas></canvas>');
-            this.canvas = this.$cameraCanvas.get(0);
+            this.$canvas = $('<canvas></canvas>');
+            this.canvas = this.$canvas.get(0);
             this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
 
-            this.$container.append(this.$cameraCanvas)
+            this.$container.append(this.$canvas)
                            .append(this.$hoverInfo);
 
             this.bindEvents();
