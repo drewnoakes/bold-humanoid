@@ -53,8 +53,8 @@ define(
                     case 'world.outer-margin-minimum': Constants.outerMarginMinimum = setting.value; break;
                     case 'world.penalty-line-length': Constants.penaltyLineLength = setting.value; break;
                     case 'world.penalty-mark-distance': Constants.penaltyMarkDistance = setting.value; break;
-                    case 'camera.field-of-view.horizontal-degrees.': Constants.cameraFovHorizontalDegrees = setting.value; break;
-                    case 'camera.field-of-view.vertical-degrees.': Constants.cameraFovVerticalDegrees = setting.value; break;
+                    case 'camera.field-of-view.horizontal-degrees': Constants.cameraFovHorizontalDegrees = setting.value; break;
+                    case 'camera.field-of-view.vertical-degrees': Constants.cameraFovVerticalDegrees = setting.value; break;
                 }
             });
         };
