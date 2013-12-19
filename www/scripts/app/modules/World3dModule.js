@@ -110,6 +110,7 @@ define(
 
         World3dModule.prototype.unload = function()
         {
+            this.$element.empty();
             this.bodyStateSubscription.close();
             this.worldFrameSubscription.close();
             this.hardwareSubscription.close();
