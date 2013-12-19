@@ -13,15 +13,12 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-Spatialiser createTestSpatialiser()
+auto imageWidth = 11;
+auto imageHeight = 11;
+
+Spatialiser createTestSpatialiser(double rangeVertical = 90, double rangeHorizontal = 90)
 {
-  auto imageWidth = 11;
-  auto imageHeight = 11;
-  auto rangeVertical = 90;
-  auto rangeHorizontal = 90;
-
   shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
-
   return Spatialiser(cameraModel);
 }
 
@@ -45,14 +42,8 @@ TEST (SpatialiserTests, findGroundPointForPixelLookingStraightDown)
 
 TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
 {
-  auto imageWidth = 11;
-  auto imageHeight = 11;
-  auto rangeVertical = 60; // NOTE different vertical range
-  auto rangeHorizontal = 90;
-
-  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
-
-  Spatialiser spatialiser(cameraModel);
+  // NOTE different vertical range -- camera is wider than it is tall
+  Spatialiser spatialiser = createTestSpatialiser(/*rangeVertical*/60, /*rangeHorizontal*/90);
 
   //  ^y _ y==x
   //  |  /|
@@ -82,7 +73,7 @@ TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
 
   for (int y = 0; y < 4; y++)
   {
-    Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(11,y), cameraAgentTransform);
+    Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(imageWidth,y), cameraAgentTransform);
 
     ASSERT_TRUE ( groundPoint.hasValue() ) << "No luck with y=" << y;
     EXPECT_NEAR( (*groundPoint).x(), 0, 0.001 );
@@ -121,6 +112,96 @@ TEST (SpatialiserTests, findGroundPointForPixelEmptyIfSkybound)
   Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(5.5,5.5), cameraAgentTransform);
 
   EXPECT_FALSE ( groundPoint.hasValue() );
+}
+
+TEST (SpatialiserTests, findPixelForAgentPointLooking45DegreesDown)
+{
+  Spatialiser spatialiser = createTestSpatialiser();
+
+  // Look 45 deg down at the ground from one unit above the origin
+  Affine3d cameraAgentTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/4, Vector3d::UnitX());
+
+  // Find the pixel for the point one metre along the y-axis from the origin.
+  // This should be exactly in the middle of the camera, and therefore the image.
+  Maybe<Vector2d> pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,1,0), cameraAgentTransform);
+
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 5.5), *pixel) );
+
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0, 0, 0), cameraAgentTransform);
+
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 0.5), *pixel) );
+}
+
+TEST (SpatialiserTests, findPixelForAgentPointLookingStraightDown)
+{
+  // NOTE different vertical range -- camera is wider than it is tall
+  Spatialiser spatialiser = createTestSpatialiser(/*rangeVertical*/60, /*rangeHorizontal*/90);
+
+  // Look straight down down at the ground from one unit above the origin
+  Affine3d cameraAgentTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/2, Vector3d::UnitX());
+
+  Maybe<Vector2d> pixel;
+
+  // Find the pixel for the origin.
+  // This should be on the camera's y-axis, and therefore the middle of the image.
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,0,0), cameraAgentTransform);
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 5.5), *pixel) );
+
+  // NOTE that the image is flipped in both x and y axes
+  //
+  // At the right edge, pixel x = 0.5
+  //        left edge,  pixel x = 10.5
+
+  double extremeX = tan(spatialiser.getCameraModel()->rangeHorizontalRads() / 2.0);
+
+  ASSERT_NEAR( 1, extremeX, 0.0001 );
+
+  // Find the pixel at the RIGHT of the camera's view
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,0), cameraAgentTransform);
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(0.5, imageHeight/2.0), *pixel) );
+
+  // Find the pixel at the LEFT of the camera's view
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(-extremeX,0,0), cameraAgentTransform);
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(imageWidth-0.5, imageHeight/2.0), *pixel) );
+
+  // Find the pixel halfway from the origin to the RIGHT of the camera's view
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX/2.0,0,0), cameraAgentTransform);
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d((0.5+5.5)/2.0, imageHeight/2.0), *pixel) );
+
+  double extremeY = tan(spatialiser.getCameraModel()->rangeVerticalRads() / 2.0);
+
+  ASSERT_NEAR( 0.577350269, extremeY, 0.0001 );
+
+  // Find the pixel at the TOP of the camera's view
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,-extremeY,0), cameraAgentTransform);
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 0.5), *pixel) );
+
+  // Find the pixel at the BOTTOM of the camera's view
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,0), cameraAgentTransform);
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, imageHeight - 0.5), *pixel) );
+
+  // Test some locations which are outside the viewing frustum, but still mappable to the image plane
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX*2,0,0), cameraAgentTransform);
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(-4.5, 5.5), *pixel) );
+
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY*2,0), cameraAgentTransform);
+  ASSERT_TRUE ( pixel.hasValue() );
+  EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 15.5), *pixel) );
+
+  // Test some locations which are undefined in the camera's field of view
+  EXPECT_FALSE ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,1), cameraAgentTransform).hasValue() );
+  EXPECT_FALSE ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1), cameraAgentTransform).hasValue() );
+  EXPECT_FALSE ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1), cameraAgentTransform).hasValue() );
+  EXPECT_FALSE ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,2), cameraAgentTransform).hasValue() );
 }
 
 TEST (SpatialiserTests, findHorizonForColumnSquareCam)

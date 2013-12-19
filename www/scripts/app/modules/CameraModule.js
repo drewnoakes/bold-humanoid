@@ -189,7 +189,8 @@ define(
         {
             this.context = this.cameraCanvas.getContext('2d');
 
-            // rotate image to correct orientation
+            // The image arrives flipped in both x and y axes.
+            // Rotate image to correct orientation via scaling by -1 in x and y.
             this.context.translate(this.cameraCanvas.width, this.cameraCanvas.height);
             this.context.scale(-1, -1);
         };

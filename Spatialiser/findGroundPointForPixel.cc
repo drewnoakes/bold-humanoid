@@ -17,3 +17,14 @@ Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2d const& pixel, Affi
 
   return Math::intersectRayWithGroundPlane(position, direction, groundZ);
 }
+
+Maybe<Vector2d> Spatialiser::findPixelForAgentPoint(Vector3d const& agentPoint) const
+{
+  Affine3d const& cameraAgentTransform = AgentState::get<BodyState>()->getCameraAgentTransform();
+  return findPixelForAgentPoint(agentPoint, cameraAgentTransform);
+}
+
+Maybe<Vector2d> Spatialiser::findPixelForAgentPoint(Vector3d const& agentPoint, Affine3d const& cameraAgentTransform) const
+{
+  return d_cameraModel->pixelForDirection(cameraAgentTransform.inverse() * agentPoint);
+}
