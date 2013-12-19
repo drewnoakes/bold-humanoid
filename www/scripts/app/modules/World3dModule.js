@@ -14,6 +14,8 @@ define(
     {
         'use strict';
 
+        // TODO use requestAnimationFrame and a dirty flag to avoid unnecessary rendering
+
         var World3dModule = function()
         {
             // camera variables
@@ -197,8 +199,9 @@ define(
                             stepCount = 18;
                         for (var i = 0; i <= stepCount; i++) {
                             var theta = (i / stepCount) * Math.PI * 2;
-                            var vertex = new THREE.Vector3(midX + Math.cos(theta)*radius, midY + Math.sin(theta)*radius, 0);
-                            goalGeometry.vertices.push(vertex);
+                            goalGeometry.vertices.push(new THREE.Vector3(
+                                midX + Math.cos(theta) * radius,
+                                midY + Math.sin(theta) * radius, 0));
                         }
                         this.lineObject.add(new THREE.Line(goalGeometry, this.observedGoalMaterial));
                     }.bind(this));

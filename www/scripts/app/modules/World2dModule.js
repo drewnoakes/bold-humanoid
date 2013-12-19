@@ -14,6 +14,8 @@ define(
     {
         'use strict';
 
+        // TODO zoom relative to the position of the mouse pointer, rather than (0,0)
+
         var World2dModule = function()
         {
             this.$container = $('<div></div>');
@@ -49,7 +51,6 @@ define(
             this.$canvas.on('mousewheel', function (event)
             {
                 event.preventDefault();
-                // TODO zoom relative to the position of the mouse pointer, rather than (0,0)
                 this.scale += event.originalEvent.wheelDelta / 20;
                 this.scale = Math.max(this.minScale, this.scale);
                 this.needsRender = true;
