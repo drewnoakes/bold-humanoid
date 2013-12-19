@@ -72,13 +72,13 @@ define(
                 this.render();
             }.bind(this));
 
-            addCheckbox('draw-lines-checkbox', 'Draw observed lines', true, function(isChecked)
+            addCheckbox('draw-observed-lines-checkbox', 'Observed lines', true, function(isChecked)
             {
                 this.drawObservedLines = isChecked;
                 this.render();
             }.bind(this));
 
-            addCheckbox('draw-view-poly-checkbox', 'Draw view poly', false, function(isChecked)
+            addCheckbox('draw-view-poly-checkbox', 'View poly', false, function(isChecked)
             {
                 this.drawViewPoly = isChecked;
                 this.render();
