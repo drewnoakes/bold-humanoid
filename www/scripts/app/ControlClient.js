@@ -50,7 +50,7 @@ define(
 
                     console.assert(settings);
 
-                    var setting = ControlClient.__findSetting(data.path);
+                    var setting = ControlClient.getSetting(data.path);
 
                     setting.__setValue(data.value);
 
@@ -99,7 +99,7 @@ define(
             );
         };
 
-        ControlClient.__findSetting = function(path)
+        ControlClient.getSetting = function(path)
         {
             return _.find(settings, function(setting) { return setting.path === path; });
         };
@@ -108,7 +108,7 @@ define(
         {
             var process = function()
             {
-                var match = ControlClient.__findSetting(path);
+                var match = ControlClient.getSetting(path);
                 if (!match)
                     console.error("No settings exists with path: " + path);
                 callback(match);
