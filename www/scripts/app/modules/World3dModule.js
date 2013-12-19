@@ -143,6 +143,9 @@ define(
 
             if (data.ball && data.ball instanceof Array && data.ball.length === 3) {
                 this.setBallPosition(data.ball[0], data.ball[1], data.ball[2]);
+                this.ballMesh.visible = true;
+            } else {
+                this.ballMesh.visible = false;
             }
 
             // Clear any previous lines
