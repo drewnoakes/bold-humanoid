@@ -244,8 +244,8 @@ define(
 
         World3dModule.prototype.updateAgentHeightFromGround = function()
         {
-            var leftZ = new THREE.Vector3().getPositionFromMatrix(this.objectByName['foot-left'].matrixWorld).z;
-            var rightZ = new THREE.Vector3().getPositionFromMatrix(this.objectByName['foot-right'].matrixWorld).z;
+            var leftZ = new THREE.Vector3().setFromMatrixPosition(this.objectByName['foot-left'].matrixWorld).z;
+            var rightZ = new THREE.Vector3().setFromMatrixPosition(this.objectByName['foot-right'].matrixWorld).z;
             var error = Math.min(leftZ, rightZ) - Constants.footHeight;
             if (Math.abs(error) > 0.01) {
                 this.torsoHeight -= error;
@@ -268,7 +268,9 @@ define(
             }
 
             var rotation = hinge.rotationAxis.clone();
-            rotation.multiplyScalar(angle);
+            rotation.x *= angle;
+            rotation.y *= angle;
+            rotation.z *= angle;
             if (!hinge.rotation.equals(rotation)) {
                 hinge.rotation = rotation;
                 return true;
@@ -430,6 +432,7 @@ define(
 //          this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 
             this.renderer = new THREE.WebGLRenderer({ antialias: true, devicePixelRatio: 1 });
+            this.renderer.setClearColor(0xcccccc, 1.0);
             this.renderer.setSize(Constants.cameraWidth, Constants.cameraHeight, true);
             this.renderer.shadowMapEnabled = true;
             this.renderer.shadowMapSoft = true;

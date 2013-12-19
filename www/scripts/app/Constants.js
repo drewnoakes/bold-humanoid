@@ -149,14 +149,14 @@ define(
                     name: 'neck',
                     geometryPath: 'models/darwin/darwin-neck.json',
                     offset: { x: 0, y: 0, z: 0.051 },
-                    rotationAxis: new THREE.Vector3(0, 0, 1),
+                    rotationAxis: new THREE.Euler(0, 0, 1),
                     jointId: Constants.jointIds.headPan,
                     children: [
                         {
                             name: 'head',
                             geometryPath: 'models/darwin/darwin-head.json',
                             creaseAngle: 0.52,
-                            rotationAxis: new THREE.Vector3(1, 0, 0),
+                            rotationAxis: new THREE.Euler(1, 0, 0),
                             rotationOrigin: -Math.PI / 4,// TODO the 3D model has a rotation that should not be applied in the kinematic model
                             jointId: Constants.jointIds.headTilt,
                             children: [
@@ -179,42 +179,42 @@ define(
                     name: 'pelvis-left-yaw',
                     geometryPath: 'models/darwin/darwin-pelvis-yaw-left.json',
                     offset: { x: -0.037, y: -0.005, z: -0.1222 },
-                    rotationAxis: new THREE.Vector3(0, 0, -1),
+                    rotationAxis: new THREE.Euler(0, 0, -1),
                     jointId: Constants.jointIds.legTurnLeft,
                     children: [
                         {
                             name: 'pelvis-left',
                             geometryPath: 'models/darwin/darwin-pelvis-left.json',
                             offset: { x: 0, y: 0, z: 0 },
-                            rotationAxis: new THREE.Vector3(0, -1, 0),
+                            rotationAxis: new THREE.Euler(0, -1, 0),
                             jointId: Constants.jointIds.legOutLeft,
                             children: [
                                 {
                                     name: 'leg-upper-left',
                                     geometryPath: 'models/darwin/darwin-leg-upper-left.json',
                                     offset: { x: 0, y: 0, z: 0 },
-                                    rotationAxis: new THREE.Vector3(1, 0, 0),
+                                    rotationAxis: new THREE.Euler(1, 0, 0),
                                     jointId: Constants.jointIds.legForwardLeft,
                                     children: [
                                         {
                                             name: 'leg-lower-left',
                                             geometryPath: 'models/darwin/darwin-leg-lower-left.json',
                                             offset: { x: 0, y: 0, z: -0.093 },
-                                            rotationAxis: new THREE.Vector3(1, 0, 0),
+                                            rotationAxis: new THREE.Euler(1, 0, 0),
                                             jointId: Constants.jointIds.kneeLeft,
                                             children: [
                                                 {
                                                     name: 'ankle-left',
                                                     geometryPath: 'models/darwin/darwin-ankle-left.json',
                                                     offset: { x: 0, y: 0, z: -0.093 },
-                                                    rotationAxis: new THREE.Vector3(-1, 0, 0),
+                                                    rotationAxis: new THREE.Euler(-1, 0, 0),
                                                     jointId: Constants.jointIds.footForwardLeft,
                                                     children: [
                                                         {
                                                             name: 'foot-left',
                                                             geometryPath: 'models/darwin/darwin-foot-left.json',
                                                             offset: { x: 0, y: 0, z: 0 },
-                                                            rotationAxis: new THREE.Vector3(0, 1, 0),
+                                                            rotationAxis: new THREE.Euler(0, 1, 0),
                                                             jointId: Constants.jointIds.footOutLeft
                                                         }
                                                     ]
@@ -231,42 +231,42 @@ define(
                     name: 'pelvis-right-yaw',
                     geometryPath: 'models/darwin/darwin-pelvis-yaw-right.json',
                     offset: { x: 0.037, y: -0.005, z: -0.1222 },
-                    rotationAxis: new THREE.Vector3(0, 0, -1),
+                    rotationAxis: new THREE.Euler(0, 0, -1),
                     jointId: Constants.jointIds.legTurnRight,
                     children: [
                         {
                             name: 'pelvis-right',
                             geometryPath: 'models/darwin/darwin-pelvis-right.json',
                             offset: { x: 0, y: 0, z: 0 },
-                            rotationAxis: new THREE.Vector3(0, -1, 0),
+                            rotationAxis: new THREE.Euler(0, -1, 0),
                             jointId: Constants.jointIds.legOutRight,
                             children: [
                                 {
                                     name: 'leg-upper-right',
                                     geometryPath: 'models/darwin/darwin-leg-upper-right.json',
                                     offset: { x: 0, y: 0, z: 0 },
-                                    rotationAxis: new THREE.Vector3(-1, 0, 0),
+                                    rotationAxis: new THREE.Euler(-1, 0, 0),
                                     jointId: Constants.jointIds.legForwardRight,
                                     children: [
                                         {
                                             name: 'leg-lower-right',
                                             geometryPath: 'models/darwin/darwin-leg-lower-right.json',
                                             offset: { x: 0, y: 0, z: -0.093 },
-                                            rotationAxis: new THREE.Vector3(-1, 0, 0),
+                                            rotationAxis: new THREE.Euler(-1, 0, 0),
                                             jointId: Constants.jointIds.kneeRight,
                                             children: [
                                                 {
                                                     name: 'ankle-right',
                                                     geometryPath: 'models/darwin/darwin-ankle-right.json',
                                                     offset: { x: 0, y: 0, z: -0.093 },
-                                                    rotationAxis: new THREE.Vector3(1, 0, 0),
+                                                    rotationAxis: new THREE.Euler(1, 0, 0),
                                                     jointId: Constants.jointIds.footForwardRight,
                                                     children: [
                                                         {
                                                             name: 'foot-right',
                                                             geometryPath: 'models/darwin/darwin-foot-right.json',
                                                             offset: { x: 0, y: 0, z: 0 },
-                                                            rotationAxis: new THREE.Vector3(0, 1, 0),
+                                                            rotationAxis: new THREE.Euler(0, 1, 0),
                                                             jointId: Constants.jointIds.footOutRight
                                                         }
                                                     ]
@@ -283,14 +283,14 @@ define(
                     name: 'shoulder-left',
                     geometryPath: 'models/darwin/darwin-shoulder-left.json',
                     offset: { x: -0.082, y: 0, z: 0 },
-                    rotationAxis: new THREE.Vector3(-1, 0, 0),
+                    rotationAxis: new THREE.Euler(-1, 0, 0),
                     jointId: Constants.jointIds.shoulderForwardLeft,
                     children: [
                         {
                             name: 'arm-upper-left',
                             geometryPath: 'models/darwin/darwin-arm-upper-left.json',
                             offset: { x: 0, y: 0, z: -0.016 },
-                            rotationAxis: new THREE.Vector3(0, -1, 0),
+                            rotationAxis: new THREE.Euler(0, -1, 0),
                             rotationOrigin: -Math.PI / 4,
                             jointId: Constants.jointIds.shoulderOutwardLeft,
                             children: [
@@ -298,7 +298,7 @@ define(
                                     name: 'arm-lower-left',
                                     geometryPath: 'models/darwin/darwin-arm-lower-left.json',
                                     offset: { x: 0, y: 0.016, z: -0.06 },
-                                    rotationAxis: new THREE.Vector3(-1, 0, 0),
+                                    rotationAxis: new THREE.Euler(-1, 0, 0),
                                     rotationOrigin: -Math.PI / 2,
                                     jointId: Constants.jointIds.elbowLeft
                                 }
@@ -310,14 +310,14 @@ define(
                     name: 'shoulder-right',
                     geometryPath: 'models/darwin/darwin-shoulder-right.json',
                     offset: { x: 0.082, y: 0, z: 0 },
-                    rotationAxis: new THREE.Vector3(1, 0, 0),
+                    rotationAxis: new THREE.Euler(1, 0, 0),
                     jointId: Constants.jointIds.shoulderForwardRight,
                     children: [
                         {
                             name: 'arm-upper-right',
                             geometryPath: 'models/darwin/darwin-arm-upper-right.json',
                             offset: { x: 0, y: 0, z: -0.016 },
-                            rotationAxis: new THREE.Vector3(0, -1, 0),
+                            rotationAxis: new THREE.Euler(0, -1, 0),
                             rotationOrigin: Math.PI / 4,
                             jointId: Constants.jointIds.shoulderOutwardRight,
                             children: [
@@ -325,7 +325,7 @@ define(
                                     name: 'arm-lower-right',
                                     geometryPath: 'models/darwin/darwin-arm-lower-right.json',
                                     offset: { x: 0, y: 0.016, z: -0.06 },
-                                    rotationAxis: new THREE.Vector3(1, 0, 0),
+                                    rotationAxis: new THREE.Euler(1, 0, 0),
                                     rotationOrigin: Math.PI / 2,
                                     jointId: Constants.jointIds.elbowRight
                                 }
