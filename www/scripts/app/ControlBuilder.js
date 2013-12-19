@@ -154,7 +154,7 @@ define(
 
                     input.addEventListener('change', function()
                     {
-                        setting.setValue(parseInt(input.value));
+                        setting.setValue(parseFloat(input.value));
                     });
                     closeables.push(setting.track(function(value)
                     {
