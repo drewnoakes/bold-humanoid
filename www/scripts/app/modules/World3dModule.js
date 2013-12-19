@@ -496,6 +496,8 @@ define(
 
             container.addEventListener('mousewheel', function(event)
             {
+                if (!this.useThirdPerson)
+                    return;
                 event.preventDefault();
                 this.cameraDistance *= 1 - (event.wheelDeltaY/720);
                 this.cameraDistance = Math.max(0.1, Math.min(5, this.cameraDistance));
@@ -506,11 +508,15 @@ define(
             Dragger.bind(container, {
                 start: function()
                 {
+                    if (!this.useThirdPerson)
+                        return;
                     onMouseDownTheta = this.cameraTheta;
                     onMouseDownPhi = this.cameraPhi;
                 }.bind(this),
                 move: function(dx, dy)
                 {
+                    if (!this.useThirdPerson)
+                        return;
                     this.cameraTheta = -(dx * 0.01) + onMouseDownTheta;
                     this.cameraPhi = (dy * 0.01) + onMouseDownPhi;
                     this.cameraPhi = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, this.cameraPhi));
