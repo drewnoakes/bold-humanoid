@@ -13,6 +13,10 @@ namespace bold
 
     static Maybe<T> empty() { return Maybe<T>((std::shared_ptr<T>)nullptr); }
 
+    Maybe()
+      : std::shared_ptr<T>(nullptr)
+    {}
+
     Maybe(T value)
       : std::shared_ptr<T>(std::make_shared<T>(value))
     {}
