@@ -378,15 +378,14 @@ define(
             //
             // Render & Camera
             //
-            var canvasWidth = 640,
-                fovAspect = Constants.cameraFovHorizontalDegrees / Constants.cameraFovVerticalDegrees,
-                canvasHeight = canvasWidth / fovAspect;
+            var aspect = Constants.cameraWidth / Constants.cameraHeight,
+                canvasHeight = Constants.cameraHeight;
 
-            this.camera = new THREE.PerspectiveCamera(Constants.cameraFovHorizontalDegrees, canvasWidth / canvasHeight, 0.01, 100);
+            this.camera = new THREE.PerspectiveCamera(Constants.cameraFovVerticalDegrees, aspect, 0.01, 100);
 //          this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 
             this.renderer = new THREE.WebGLRenderer({ antialias: true });
-            this.renderer.setSize(canvasWidth, canvasHeight);
+            this.renderer.setSize(Constants.cameraWidth, Constants.cameraHeight);
             this.renderer.shadowMapEnabled = true;
             this.renderer.shadowMapSoft = true;
 
