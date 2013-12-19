@@ -1,5 +1,4 @@
-#ifndef TESTING_HELPER_HH
-#define TESTING_HELPER_HH
+#pragma once
 
 #include "gtest/gtest.h"
 
@@ -20,5 +19,3 @@
   else
     return ::testing::AssertionFailure() << "Actual: " << b << ", expected: " << a << " d = " << d;
 }
-
-#endif
