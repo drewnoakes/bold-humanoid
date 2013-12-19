@@ -1,0 +1,203 @@
+{
+  "team": {
+    "number": 3
+  },
+  "hardware": {
+    "cm730-path": "/dev/ttyUSB0",
+    "video-path": "/dev/video0",
+    "voice": "english-mb-en1",
+    "joystick": {
+      "enabled": false,
+      "x-amp-max": 15.0,
+      "y-amp-max": 15.0,
+      "a-amp-max": 15.0
+    }
+  },
+  "world": {
+    "field-size-x": 6.0,
+    "field-size-y": 4.0,
+    "goal-size-x": 0.5,
+    "goal-size-y": 1.5,
+    "goal-size-z": 0.8,
+    "goal-post-diameter": 0.1,
+    "goal-area-size-x": 0.6,
+    "goal-area-size-y": 2.2,
+    "penalty-mark-distance": 0.8,
+    "circle-diameter": 1.2,
+    "circle-segment-count": 18,
+    "line-width": 0.05,
+    "penalty-line-length": 0.1,
+    "outer-margin-minimum": 0.7,
+    "ball-diameter": 0.067
+  },
+  "camera": {
+    "image-width": 640,
+    "image-height": 480,
+    "recording-frames": false,
+    "focal-length": 0.025,
+    "field-of-view": {
+      "vertical-degrees": 47.68,
+      "horizontal-degrees": 61.59
+    },
+    "settings": {
+      "auto-wb": false,
+      "exposure-auto": 1,
+      "exposure-absolute": 200,
+      "exposure-auto-priority": false,
+      "backlight-compensation": false,
+      "power-line-frequency": 2,
+      "brightness": 128,
+      "contrast": 32,
+      "saturation": 32,
+      "gain": 255,
+      "wb-temp-k": 2000,
+      "sharpness": 191
+    }
+  },
+  "vision": {
+    "min-ball-area": 1,
+    "min-goal-dimension-pixels": 3,
+    "pixel-labels": {
+      "goal": { "hue": [30, 60], "sat": [158, 236], "val": [124, 222] },
+      "ball": { "hue": [248, 30], "sat": [72, 255], "val": [12, 255] },
+      "field": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] },
+      "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
+    },
+    "ignore-above-horizon": true,
+    "image-granularity": 4,
+    "max-granularity": 4,
+    "line-detection": {
+      "enable": false,
+      "line-dots": {
+        "hysteresis": 3
+      },
+      "mask-walk": {
+        "delta-r": 3.0,
+        "delta-theta-degs": 3.0,
+        "min-votes": 10,
+        "min-line-length": 30,
+        "max-line-gap": 30,
+        "max-lines-returned": 5
+      }
+    },
+    "label-counter": {
+      "enable": false
+    },
+    "field-edge-pass": {
+      "field-edge-type": 1,
+      "min-vertical-run-length": 5,
+      "complete": {
+        "smoothing-window-length": 5
+      }
+    }
+  },
+  "game-controller": {
+    "tcp-port": 3838
+  },
+  "round-table": {
+    "tcp-port": 8080,
+    "camera-frame-frequency": 1,
+    "image-type": 3,
+    "image-features": {
+      "blobs": true,
+      "line-dots": false,
+      "observed-lines": false,
+      "expected-lines": false,
+      "expected-line-edges": false,
+      "horizon": true,
+      "field-edge": true,
+      "calibration": false,
+      "objects": true
+    }
+  },
+  "localiser": {
+    "particle-count": 100,
+    "smoothing-window-size": 5,
+    "randomise-ratio": 0.03,
+    "reward-fall-off": 0.5,
+    "use-lines": true,
+    "min-goals-needed": 1,
+    "position-error": 0.03,
+    "angle-error-degrees": 2
+  },
+  "head-module": {
+    "p-gain": 8,
+    "pan-limit-degrees":  [-135.0, 135.0],
+    "tilt-limit-degrees": [-22.0, 40.0],
+    "tracking": {
+      "pan": {
+        "p-gain": 0.03,
+        "d-gain": 0.1
+      },
+      "tilt": {
+        "p-gain": 0.03,
+        "d-gain": 0.1
+      }
+    },
+    "home-pan":  0.0,
+    "home-tilt": -10.0
+  },
+  "walk-module": {
+    "x-offset": -10.0,
+    "y-offset": 5.0,
+    "z-offset": 20.0,
+    "roll-offset": 0.0,
+    "pitch-offset": 0.0,
+    "yaw-offset": 0.0,
+    "hip-pitch-offset": 17.0,
+    "period-time": 600.0,
+    "dsp-ratio": 0.1,
+    "foot-height": 40.0,
+    "swing-right-left": 20.0,
+    "swing-top-down": 5.0,
+    "pelvis-offset": 3.0,
+    "arm-swing-gain": 1.5,
+    "step-fb-ratio": 0.28,
+    "a-move-aim-enable": false,
+    "balance": {
+      "enable": true,
+      "knee-gain": 1.2,
+      "ankle-pitch-gain": 3.6,
+      "hip-roll-gain": 2.0,
+      "ankle-roll-gain": 4.0
+    },
+    "p-gain": 32,
+    "i-gain": 0,
+    "d-gain": 0
+  },
+  "ambulator": {
+    "auto-balance": true,
+    "x-amp-delta": 3,
+    "y-amp-delta": 3,
+    "turn-delta": 1,
+    "max-hip-pitch-at-speed": 17,
+    "min-hip-pitch": 15,
+    "max-hip-pitch": 20
+  },
+  "options": {
+    "circle-ball": {
+      "walk-x": 1,
+      "walk-y": 20,
+      "walk-turn": 15
+    },
+    "approach-ball": {
+      "turn-speed-scale": 18.0,
+      "max-forward-speed": 40.0,
+      "min-forward-speed": 5.0,
+      "brake-distance": 0.50,
+      "stop-distance": 0.075,
+      "lower-turn-limit-degs": 20.0,
+      "upper-turn-limit-degs": 35.0
+    },
+    "look-around": {
+      "top-angle": 30.0,
+      "bottom-angle": -25.0,
+      "horiz-duration": 2.3,
+      "vert-duration": 0.2
+    },
+    "look-at-feet": {
+      "head-pan-degs": 0,
+      "head-tilt-degs": -67.5
+    }
+  }
+}
