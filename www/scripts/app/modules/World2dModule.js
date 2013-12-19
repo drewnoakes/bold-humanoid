@@ -30,6 +30,8 @@ define(
                     supports: { fullScreen: true }
                 }
             ];
+
+            this.needsRender = false;
         };
 
         World2dModule.prototype.bindEvents = function()
@@ -40,7 +42,7 @@ define(
                 {
                     this.fieldCenterX += dx;
                     this.fieldCenterY += dy;
-                    this.draw();
+                    this.needsRender = true;
                 }.bind(this)
             });
 
@@ -50,7 +52,7 @@ define(
                 // TODO zoom relative to the position of the mouse pointer, rather than (0,0)
                 this.scale += event.originalEvent.wheelDelta / 20;
                 this.scale = Math.max(this.minScale, this.scale);
-                this.draw();
+                this.needsRender = true;
             }.bind(this));
 
             this.$canvas.on('mousemove', function (event)
@@ -79,10 +81,15 @@ define(
 
             // TODO only subscribe if use checks a box
             this.particleSubscription   = DataProxy.subscribe(Protocols.particleState,   { json: true, onmessage: _.bind(this.onParticleData, this) });
+
+            this.stopAnimation = false;
+            this.needsRender = true;
+            this.animate();
         };
 
         World2dModule.prototype.unload = function()
         {
+            this.stopAnimation = true;
             this.$container.empty();
             this.worldFrameSubscription.close();
             this.particleSubscription.close();
@@ -108,13 +115,13 @@ define(
                 this.goalPositions.push({ x: goalPos[0], y: goalPos[1] });
             }.bind(this));
 
-            this.draw(); // TODO only draw worldFrameData, on its own canvas
+            this.needsRender = true; // TODO only draw worldFrameData, on its own canvas
         };
 
         World2dModule.prototype.onParticleData = function(data)
         {
             this.particles = data;
-            this.draw(); // TODO only draw particles, on their own canvas
+            this.needsRender = true; // TODO only draw particles, on their own canvas
         };
 
         World2dModule.prototype.onResized = function(width, height)
@@ -132,11 +139,19 @@ define(
                 (width / ratio) / fieldLengthY);
             this.minScale = this.scale * 0.5; // can't zoom out too far
 
-            this.draw();
+            this.needsRender = true;
         };
 
-        World2dModule.prototype.draw = function()
+        World2dModule.prototype.animate = function()
         {
+            if (this.stopAnimation)
+                return;
+
+            window.requestAnimationFrame(this.animate.bind(this));
+
+            if (!this.needsRender)
+                return;
+
             var options = {
                     // TODO replace this scale with a transform on the canvas instead
                     scale: this.scale,
@@ -176,6 +191,8 @@ define(
             }
 
             FieldLinePlotter.end(context);
+
+            this.needsRender = false;
         };
 
         return World2dModule;
