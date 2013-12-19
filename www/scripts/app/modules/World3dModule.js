@@ -34,7 +34,6 @@ define(
                 {
                     title: 'main',
                     element: this.element,
-                    onResized: _.bind(this.onResized, this),
                     supports: { fullScreen: true }
                 }
             ];
@@ -100,13 +99,6 @@ define(
             this.bodyStateSubscription.close();
             this.worldFrameSubscription.close();
             this.hardwareSubscription.close();
-        };
-
-        World3dModule.prototype.onResized = function(width, height)
-        {
-            this.renderer.setSize(width, height);
-            this.camera.aspect = width / height;
-            this.camera.updateProjectionMatrix();
         };
 
         World3dModule.prototype.onBodyStateData = function(data)
@@ -387,8 +379,8 @@ define(
             this.camera = new THREE.PerspectiveCamera(Constants.cameraFovVerticalDegrees, aspect, 0.01, 100);
 //          this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 
-            this.renderer = new THREE.WebGLRenderer({ antialias: true });
-            this.renderer.setSize(Constants.cameraWidth, Constants.cameraHeight);
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, devicePixelRatio: 1 });
+            this.renderer.setSize(Constants.cameraWidth, Constants.cameraHeight, true);
             this.renderer.shadowMapEnabled = true;
             this.renderer.shadowMapSoft = true;
 
