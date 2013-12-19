@@ -134,8 +134,9 @@ define(
 
         World3dModule.prototype.onWorldFrameData = function(data)
         {
-            if (this.movePlayer && data.pos && data.pos instanceof Array && data.pos.length === 4) {
-                this.bodyRoot.position = new THREE.Vector3(data.pos[0], data.pos[1], 0);
+            if (this.movePlayer && data.pos && data.pos instanceof Array && data.pos.length === 3) {
+                this.bodyRoot.position.x = data.pos[0];
+                this.bodyRoot.position.y = data.pos[1];
                 this.bodyRoot.rotation.z = data.pos[2];
                 this.positionBodySpotlight(this.bodyRoot);
             }
