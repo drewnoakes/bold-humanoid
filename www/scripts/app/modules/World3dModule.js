@@ -72,9 +72,15 @@ define(
                 this.render();
             }.bind(this));
 
-            addCheckbox('draw-lines-checkbox', 'Draw lines', true, function(isChecked)
+            addCheckbox('draw-lines-checkbox', 'Draw observed lines', true, function(isChecked)
             {
                 this.drawLines = isChecked;
+                this.render();
+            }.bind(this));
+
+            addCheckbox('draw-view-poly-checkbox', 'Draw view poly', false, function(isChecked)
+            {
+                this.drawViewPoly = isChecked;
                 this.render();
             }.bind(this));
 
@@ -145,10 +151,10 @@ define(
                 this.scene.remove(this.lineObject);
             }
 
-            if (this.drawLines) {
-                this.lineObject = new THREE.Object3D();
-                this.scene.add(this.lineObject);
+            this.lineObject = new THREE.Object3D();
+            this.scene.add(this.lineObject);
 
+            if (this.drawLines) {
                 if (data.lines && data.lines instanceof Array && data.lines.length !== 0) {
                     _.each(data.lines, function (line)
                     {
@@ -157,6 +163,20 @@ define(
                         lineGeometry.vertices.push(new THREE.Vector3(line[3], line[4], /*line[5]*/0));
                         this.lineObject.add(new THREE.Line(lineGeometry, this.fieldLineMaterial));
                     }.bind(this));
+                }
+            }
+
+            if (this.drawViewPoly) {
+                var poly = data['visible-field-poly'];
+                if (poly && poly instanceof Array && poly.length !== 0) {
+                    var polyGeometry = new THREE.Geometry();
+                    _.each(poly, function (point)
+                    {
+                        polyGeometry.vertices.push(new THREE.Vector3(point[0], point[1], 0));
+                    }.bind(this));
+                    // close the loop
+                    polyGeometry.vertices.push(new THREE.Vector3(poly[0][0], poly[0][1], 0));
+                    this.lineObject.add(new THREE.Line(polyGeometry, this.visibleFieldPolyMaterial));
                 }
             }
 
@@ -367,6 +387,7 @@ define(
             // FIELD LINES
             //
             this.fieldLineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            this.visibleFieldPolyMaterial = new THREE.LineBasicMaterial({ color: 0x004400, linewidth: 2 });
 
 //            this.scene.add(new THREE.AxisHelper(1)); // [R,G,B] === (x,y,z)
 
