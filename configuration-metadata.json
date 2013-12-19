@@ -34,7 +34,6 @@
     "image-width":  { "type": "int", "readonly": true, "default": 320 },
     "image-height": { "type": "int", "readonly": true, "default": 240 },
     "recording-frames": { "type": "bool", "default": false },
-    "focal-length": { "type": "double", "readonly": true, "default": 0.025 },
     "field-of-view": {
       "vertical-degrees":   { "type": "double", "readonly": true, "default": 46.0 },
       "horizontal-degrees": { "type": "double", "readonly": true, "default": 58.0 }

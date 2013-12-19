@@ -34,7 +34,6 @@
     "image-width": 640,
     "image-height": 480,
     "recording-frames": false,
-    "focal-length": 0.025,
     "field-of-view": {
       "vertical-degrees": 47.68,
       "horizontal-degrees": 61.59
