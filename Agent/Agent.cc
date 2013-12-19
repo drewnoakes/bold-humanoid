@@ -28,7 +28,6 @@ Agent::Agent(bool useSpeech)
 
   d_cm730Linux = make_shared<CM730Linux>(cm730DevicePath);
   d_cm730 = make_shared<CM730>(d_cm730Linux);
-//   d_cm730->DEBUG_PRINT = true;
 
   // Prepare the motion schedule, that coordinates which motions are carried out
   d_motionSchedule = make_shared<MotionTaskScheduler>();

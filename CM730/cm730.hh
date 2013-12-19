@@ -185,8 +185,6 @@ namespace bold
         ((s >> 10) & 0x1F) / 31.0);
     }
 
-    bool DEBUG_PRINT;
-
     CM730(std::shared_ptr<CM730Platform> platform);
     ~CM730();
 
@@ -264,6 +262,6 @@ namespace bold
      */
     CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, std::shared_ptr<BulkRead> bulkRead);
 
-    static uchar calculateChecksum(uchar *packet);    
+    static uchar calculateChecksum(uchar *packet);
   };
 }

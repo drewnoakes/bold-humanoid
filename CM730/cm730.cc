@@ -11,7 +11,6 @@
 using namespace bold;
 using namespace std;
 
-
 // TODO get rid of these #defines
 
 #define ID                 (2)
@@ -29,6 +28,8 @@ using namespace std;
 #define INST_RESET         (6)
 #define INST_SYNC_WRITE    (131)   // 0x83
 #define INST_BULK_READ     (146)   // 0x92
+
+#define DEBUG_PRINT        (false)
 
 //////////
 ////////// BulkRead
@@ -111,8 +112,7 @@ int BulkReadTable::readWord(uchar address) const
 //////////
 
 CM730::CM730(shared_ptr<CM730Platform> platform)
-: DEBUG_PRINT(false),
-  d_platform(platform)
+: d_platform(platform)
 {}
 
 CM730::~CM730()
