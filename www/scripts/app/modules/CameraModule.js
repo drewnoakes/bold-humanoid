@@ -6,6 +6,7 @@ define(
         'WebSocketFactory',
         'Protocols',
         'DataProxy',
+        'ControlClient',
         'ControlBuilder',
         'DOMTemplate',
         'PixelLabelInspector',
@@ -13,7 +14,7 @@ define(
         'util/Closeable',
         'util/MouseEventUtil'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlBuilder, DOMTemplate, PixelLabelInspector, Colour, Closeable, MouseEventUtil)
+    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, Colour, Closeable, MouseEventUtil)
     {
         'use strict';
 
@@ -138,6 +139,8 @@ define(
 
         CameraModule.prototype.bindInteraction = function()
         {
+            var imageTypeSetting = ControlClient.getSetting('round-table.image-type');
+
             var isImageLarge = false;
             this.$cameraCanvas.click(function (event)
             {
@@ -147,7 +150,8 @@ define(
                     this.$cameraCanvas.css({width: this.cameraCanvas.width});
                     // TODO BUG this is showing advanced control divs when in basic mode
                     $controlDivs.delay(400).fadeIn();
-                    this.pixelLabelInspector.setVisible(true);
+                    if (imageTypeSetting.value === 2)
+                        this.pixelLabelInspector.setVisible(true);
                 } else {
                     if (event.shiftKey) {
                         var rgb = this.context.getImageData(event.offsetX, event.offsetY, 1, 1).data,
@@ -175,13 +179,15 @@ define(
                 var x = e.offsetX,
                     y = e.offsetY,
                     rgb = this.context.getImageData(x, y, 1, 1).data,
-                    hsv = Colour.rgbToHsv({r:rgb[0]/255, g:rgb[1]/255, b:rgb[2]/255});
-                this.hoverPixelInfo.textContent =
-                    'Pos: ' + (this.cameraCanvas.width - x) + ',' + (this.cameraCanvas.height - y) +
-                    ' RGB: ' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] +
-                    ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255);
-                this.pixelLabelInspector.setVisible(true);
-                this.pixelLabelInspector.highlightHsv(hsv);
+                    hsv = Colour.rgbToHsv({r:rgb[0]/255, g:rgb[1]/255, b:rgb[2]/255}),
+                    hoverText = 'Pos: ' + (this.cameraCanvas.width - x) + ',' + (this.cameraCanvas.height - y);
+                if (imageTypeSetting.value === 2) {
+                    this.pixelLabelInspector.setVisible(true);
+                    this.pixelLabelInspector.highlightHsv(hsv);
+                    hoverText += ' RGB: ' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] +
+                                 ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255);
+                }
+                this.hoverPixelInfo.textContent = hoverText;
             }.bind(this));
         };
 
