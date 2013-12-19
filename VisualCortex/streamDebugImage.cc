@@ -136,7 +136,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
 
     for (LineSegment3d const& line : drawExpectedLineEdges ? d_fieldMap->getFieldLineEdges() : d_fieldMap->getFieldLines())
     {
-      // TODO this degrades when lines start/end outside of the camera's FOV
+      // NOTE this degrades when lines start/end outside of the camera's FOV
+      // TODO crop/filter world lines based upon visible field poly before transforming to camera frame
       auto p1 = d_cameraModel->pixelForDirection(cameraWorld * line.p1());
       auto p2 = d_cameraModel->pixelForDirection(cameraWorld * line.p2());
 

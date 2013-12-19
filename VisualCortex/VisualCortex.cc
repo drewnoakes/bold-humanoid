@@ -120,6 +120,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
           d_granularityFunction = [](int y) { return Eigen::Vector2i(3,3); };
           break;
         case ImageGranularity::Gradient:
+        {
           auto maxGranularity = Config::getSetting<int>("vision.max-granularity");
           d_granularityFunction = [this,maxGranularity](int y) mutable
           {
@@ -132,6 +133,39 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
             return Eigen::Vector2i(pixelDelta, pixelDelta);
           };
           break;
+        }
+        case ImageGranularity::Projected:
+        {
+          auto maxGranularity = Config::getSetting<int>("vision.max-granularity");
+          d_granularityFunction = [this,maxGranularity](int y) mutable
+          {
+            Vector2d referencePixel(d_cameraModel->imageWidth()/2, y);
+
+            Maybe<Vector3d> midLineAgentSpace = d_spatialiser->findGroundPointForPixel(referencePixel);
+
+            int pixelDelta = numeric_limits<int>::max();
+
+            if (midLineAgentSpace)
+            {
+              double desiredDistanceMetres = 0.01; // TODO as setting
+              Vector3d offsetAgentSpace(*midLineAgentSpace + Vector3d(desiredDistanceMetres, 0, 0));
+              Maybe<Vector2d> offsetPixel = d_spatialiser->findPixelForAgentPoint(offsetAgentSpace);
+
+              if (offsetPixel)
+                pixelDelta = (int)round(abs((*offsetPixel - referencePixel).norm()));
+            }
+
+            auto max = maxGranularity->getValue();
+
+            if (pixelDelta > max)
+              pixelDelta = max;
+            else if (pixelDelta < 1)
+              pixelDelta = 1;
+
+            return Eigen::Vector2i(pixelDelta, pixelDelta);
+          };
+          break;
+        }
       }
     }
   );

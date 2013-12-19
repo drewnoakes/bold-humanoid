@@ -64,7 +64,7 @@
       "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
     },
     "ignore-above-horizon": true,
-    "image-granularity": 3,
+    "image-granularity": 4,
     "max-granularity": 4,
     "line-detection": {
       "enable": false,

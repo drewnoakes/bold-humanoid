@@ -50,7 +50,7 @@
       "line":  { "type": "hsv-range", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } }
     },
     "ignore-above-horizon": { "type": "bool", "default": true },
-    "image-granularity": { "type": "enum", "default": 0, "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3 }, "advanced": false },
+    "image-granularity": { "type": "enum", "default": 0, "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3, "Projected": 4 }, "advanced": false },
     "max-granularity": { "type": "int", "min": 1, "max": 20, "default": 4, "advanced": true },
     "line-detection": {
       "enable":      { "type": "bool", "default": false, "description": "Detect lines" },

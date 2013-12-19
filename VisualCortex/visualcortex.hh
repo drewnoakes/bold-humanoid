@@ -47,7 +47,8 @@ namespace bold
     All = 0,
     Half = 1,
     Third = 2,
-    Gradient = 3
+    Gradient = 3,
+    Projected = 4
   };
 
   enum class FieldEdgeType
