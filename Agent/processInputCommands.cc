@@ -2,42 +2,8 @@
 
 #include "../MotionScriptRunner/motionscriptrunner.hh"
 
-bool isInputAvailable()
-{
-  struct timeval tv;
-  fd_set fds;
-  tv.tv_sec = 0;
-  tv.tv_usec = 0;
-  FD_ZERO(&fds);
-  FD_SET(STDIN_FILENO, &fds);
-  select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
-  return (FD_ISSET(0, &fds));
-}
-
 void Agent::processInputCommands()
 {
-  //
-  // Control walking via keyboard
-  //
-  if (isInputAvailable())
-  {
-    char c;
-    std::cin >> c;
-    if (c == 'w') {
-      d_ambulator->setMoveDir(Eigen::Vector2d(20,0));
-    } else if (c == 's') {
-      d_ambulator->setMoveDir(Eigen::Vector2d(-20,0));
-    } else if (c == 'a') {
-      d_ambulator->setMoveDir(Eigen::Vector2d(0,15));
-    } else if (c == 'd') {
-      d_ambulator->setMoveDir(Eigen::Vector2d(0,-15));
-    } else if (c == ',') {
-      d_ambulator->setTurnAngle(25);
-    } else if (c == '.') {
-      d_ambulator->setTurnAngle(-25);
-    }
-  }
-
   //
   // Control via joystick
   //
