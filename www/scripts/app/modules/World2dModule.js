@@ -21,7 +21,7 @@ define(
             /////
 
             this.title = '2d world';
-            this.id = '2d';
+            this.id = 'world-2d';
             this.panes = [
                 {
                     title: 'main',
