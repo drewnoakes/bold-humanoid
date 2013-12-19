@@ -47,14 +47,21 @@ TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
 {
   auto imageWidth = 11;
   auto imageHeight = 11;
-  auto rangeVertical = 60;
+  auto rangeVertical = 60; // NOTE different vertical range
   auto rangeHorizontal = 90;
 
   shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
 
   Spatialiser spatialiser(cameraModel);
 
-  // Look straight down at the ground
+  //  ^y _ y==x
+  //  |  /|
+  //  | /
+  //  |/
+  //  *---> x
+
+  // From one unit of elevation, look down the y==x axis (rotated around Z by -45 degrees),
+  // parallel to the Z plane.
   Affine3d cameraAgentTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/4, Vector3d::UnitZ());
 
   for (int y = 0; y < 4; y++)
