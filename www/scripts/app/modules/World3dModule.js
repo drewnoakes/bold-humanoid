@@ -78,6 +78,12 @@ define(
                 this.render();
             }.bind(this));
 
+            addCheckbox('draw-observed-goals-checkbox', 'Observed goals', false, function(isChecked)
+            {
+                this.drawObservedGoals = isChecked;
+                this.render();
+            }.bind(this));
+
             addCheckbox('draw-view-poly-checkbox', 'View poly', false, function(isChecked)
             {
                 this.drawViewPoly = isChecked;
@@ -177,6 +183,25 @@ define(
                     // close the loop
                     polyGeometry.vertices.push(new THREE.Vector3(poly[0][0], poly[0][1], 0));
                     this.lineObject.add(new THREE.Line(polyGeometry, this.visibleFieldPolyMaterial));
+                }
+            }
+
+            if (this.drawObservedGoals) {
+                if (data.goals && data.goals instanceof Array && data.goals.length !== 0) {
+                    _.each(data.goals, function (goal)
+                    {
+                        var goalGeometry = new THREE.Geometry(),
+                            radius = Constants.goalPostDiameter/ 2,
+                            midX = goal[0],
+                            midY = goal[1],
+                            stepCount = 18;
+                        for (var i = 0; i <= stepCount; i++) {
+                            var theta = (i / stepCount) * Math.PI * 2;
+                            var vertex = new THREE.Vector3(midX + Math.cos(theta)*radius, midY + Math.sin(theta)*radius, 0);
+                            goalGeometry.vertices.push(vertex);
+                        }
+                        this.lineObject.add(new THREE.Line(goalGeometry, this.observedGoalMaterial));
+                    }.bind(this));
                 }
             }
 
@@ -387,6 +412,7 @@ define(
             // FIELD LINES
             //
             this.fieldLineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            this.observedGoalMaterial = new THREE.LineBasicMaterial({ color: 0xffd700 });
             this.visibleFieldPolyMaterial = new THREE.LineBasicMaterial({ color: 0x004400, linewidth: 2 });
 
 //            this.scene.add(new THREE.AxisHelper(1)); // [R,G,B] === (x,y,z)
