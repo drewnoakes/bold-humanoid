@@ -87,7 +87,6 @@ namespace bold
 
     unsigned d_teamNumber;
     unsigned d_uniformNumber;
-    bool d_useOptionTree;
 
     // Motion
 

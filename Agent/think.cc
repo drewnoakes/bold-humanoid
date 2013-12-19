@@ -74,14 +74,11 @@ void Agent::think()
   t.timeEvent("Agent to World Frame");
 
   // TODO allow these updates when we don't have a body attached, for better debugging on non-robot machines
-  
+
   if (d_haveBody)
   {
-    if (d_useOptionTree)
-    {
-      d_optionTree->run();
-      t.timeEvent("Option Tree");
-    }
+    d_optionTree->run();
+    t.timeEvent("Option Tree");
 
     //
     // Process input commands

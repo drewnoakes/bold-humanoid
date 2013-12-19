@@ -5,8 +5,6 @@ Agent::Agent(bool useSpeech)
     d_isStopRequested(false),
     d_teamNumber(0),
     d_uniformNumber(0),
-    d_autoGetUpFromFallen(true),
-    d_useOptionTree(true),
     d_cycleNumber(0)
 {
   ThreadId::setThreadId(ThreadId::ThinkLoop);
