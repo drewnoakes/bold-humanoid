@@ -81,7 +81,7 @@ void Agent::think()
     t.timeEvent("Option Tree");
 
     //
-    // Process input commands
+    // Process input commands (joystick)
     //
     processInputCommands();
     t.timeEvent("Process Human Input");
@@ -89,7 +89,7 @@ void Agent::think()
     //
     // Flush out new walking parameters
     //
-    // TODO this becomes part of the motion loop
+    // TODO this becomes part of the motion loop for smoother control
     d_ambulator->step();
     t.timeEvent("Ambulator Step");
 
