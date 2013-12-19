@@ -74,7 +74,7 @@ define(
 
             addCheckbox('draw-lines-checkbox', 'Draw observed lines', true, function(isChecked)
             {
-                this.drawLines = isChecked;
+                this.drawObservedLines = isChecked;
                 this.render();
             }.bind(this));
 
@@ -154,7 +154,7 @@ define(
             this.lineObject = new THREE.Object3D();
             this.scene.add(this.lineObject);
 
-            if (this.drawLines) {
+            if (this.drawObservedLines) {
                 if (data.lines && data.lines instanceof Array && data.lines.length !== 0) {
                     _.each(data.lines, function (line)
                     {
