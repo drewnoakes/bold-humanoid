@@ -49,8 +49,8 @@ namespace bold
       Eigen::Matrix<T,newDim,1> newp1 = Eigen::Matrix<T,newDim,1>::Zero();;
       Eigen::Matrix<T,newDim,1> newp2 = Eigen::Matrix<T,newDim,1>::Zero();;
 
-      newp1.template head< MIN<dim,newDim>::val >() = d_p1.template head< MIN<dim,newDim>::val >();
-      newp2.template head< MIN<dim,newDim>::val >() = d_p2.template head< MIN<dim,newDim>::val >();
+      newp1.template head< MIN<dim,newDim>::value >() = d_p1.template head< MIN<dim,newDim>::value >();
+      newp2.template head< MIN<dim,newDim>::value >() = d_p2.template head< MIN<dim,newDim>::value >();
 
       return LineSegment<T,newDim>(newp1, newp2);
     }
