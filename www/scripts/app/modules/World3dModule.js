@@ -14,8 +14,6 @@ define(
     {
         'use strict';
 
-        // TODO use requestAnimationFrame and a dirty flag to avoid unnecessary rendering
-
         var World3dModule = function()
         {
             // camera variables
@@ -45,7 +43,6 @@ define(
         {
             this.hinges = [];
             this.objectByName = {};
-            this.isRenderQueued = false;
 
             this.initialiseScene();
 
@@ -64,32 +61,32 @@ define(
             {
                 this.useThirdPerson = !isChecked;
                 this.updateCameraPosition();
-                this.render();
+                this.needsRender = true;
             }.bind(this));
 
             addCheckbox('move-player-checkbox', 'Move player', true, function(isChecked)
             {
                 this.movePlayer = isChecked;
                 this.updateCameraPosition();
-                this.render();
+                this.needsRender = true;
             }.bind(this));
 
             addCheckbox('draw-observed-lines-checkbox', 'Observed lines', true, function(isChecked)
             {
                 this.drawObservedLines = isChecked;
-                this.render();
+                this.needsRender = true;
             }.bind(this));
 
             addCheckbox('draw-observed-goals-checkbox', 'Observed goals', false, function(isChecked)
             {
                 this.drawObservedGoals = isChecked;
-                this.render();
+                this.needsRender = true;
             }.bind(this));
 
             addCheckbox('draw-view-poly-checkbox', 'View poly', false, function(isChecked)
             {
                 this.drawViewPoly = isChecked;
-                this.render();
+                this.needsRender = true;
             }.bind(this));
 
             this.bodyRoot = this.buildBody(Constants.bodyStructure, function()
@@ -98,7 +95,7 @@ define(
                 this.bodyRoot.rotation.z = -Math.PI/2;
                 //this.bodyRoot.add(new THREE.AxisHelper(0.2)); // [R,G,B] === (x,y,z)
                 this.scene.add(this.bodyRoot);
-                this.render();
+                this.needsRender = true;
             }.bind(this));
 
             this.positionBodySpotlight(this.bodyRoot);
@@ -106,10 +103,14 @@ define(
             this.bodyStateSubscription  = DataProxy.subscribe(Protocols.bodyState,       { json: true, onmessage: _.bind(this.onBodyStateData, this) });
             this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
             this.hardwareSubscription   = DataProxy.subscribe(Protocols.hardwareState,   { json: true, onmessage: _.bind(this.onHardwareData, this) });
+            this.stopAnimation = false;
+            this.needsRender = true;
+            this.animate();
         };
 
         World3dModule.prototype.unload = function()
         {
+            this.stopAnimation = true;
             this.$element.empty();
             this.bodyStateSubscription.close();
             this.worldFrameSubscription.close();
@@ -135,7 +136,7 @@ define(
             {
                 this.updateAgentHeightFromGround();
                 this.updateCameraPosition();
-                this.render();
+                this.needsRender = true;
             }
         };
 
@@ -209,7 +210,7 @@ define(
                 }
             }
 
-            this.render();
+            this.needsRender = true;
         };
 
         World3dModule.prototype.onHardwareData = function(data)
@@ -252,7 +253,7 @@ define(
                 this.torsoHeight -= error;
                 this.bodyRoot.position.z = this.torsoHeight;
                 //this.updateCameraPosition();
-                this.render();
+                this.needsRender = true;
             }
         };
 
@@ -269,6 +270,7 @@ define(
             }
 
             var rotation = hinge.rotationAxis.clone();
+//            rotation.multiplyScalar(angle);
             rotation.x *= angle;
             rotation.y *= angle;
             rotation.z *= angle;
@@ -291,7 +293,7 @@ define(
             var onTextureLoaded = function()
             {
                 if (--this.pendingTextureCount === 0)
-                    this.render();
+                    this.needsRender = true;
             }.bind(this);
 
             //
@@ -439,7 +441,6 @@ define(
             this.renderer.shadowMapSoft = true;
 
             this.updateCameraPosition();
-            this.render();
 
             this.$element.append(this.renderer.domElement);
 
@@ -551,7 +552,7 @@ define(
                 this.cameraDistance *= 1 - (event.wheelDeltaY/720);
                 this.cameraDistance = Math.max(0.1, Math.min(5, this.cameraDistance));
                 this.updateCameraPosition();
-                this.render();
+                this.needsRender = true;
             }.bind(this), false);
 
             Dragger.bind(container, {
@@ -570,7 +571,7 @@ define(
                     this.cameraPhi = (dy * 0.01) + onMouseDownPhi;
                     this.cameraPhi = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, this.cameraPhi));
                     this.updateCameraPosition();
-                    this.render();
+                    this.needsRender = true;
                 }.bind(this)
             });
         };
@@ -594,24 +595,22 @@ define(
             }
         };
 
-        World3dModule.prototype.render = function()
+        World3dModule.prototype.animate = function()
         {
+            if (this.stopAnimation)
+                return;
+
+            window.requestAnimationFrame(this.animate.bind(this));
+
+            if (!this.needsRender)
+                return;
+
             // Only render once all textures are loaded
             if (this.pendingTextureCount !== 0)
                 return;
 
-            // Only render once per frame, regardless of how many times requested
-            if (this.isRenderQueued)
-                return;
-
-            this.isRenderQueued = true;
-
-            // Request render in the next frame
-            requestAnimationFrame(function()
-            {
-                this.isRenderQueued = false;
-                this.renderer.render(this.scene, this.camera);
-            }.bind(this));
+            this.renderer.render(this.scene, this.camera);
+            this.needsRender = false;
         };
 
         return World3dModule;
