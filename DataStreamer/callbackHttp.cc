@@ -8,12 +8,12 @@ int DataStreamer::callback_http(
   void* in,
   size_t /*len*/)
 {
-  assert(ThreadId::isThinkLoopThread());
-
   switch (reason)
   {
   case LWS_CALLBACK_HTTP:
   {
+    assert(ThreadId::isDataStreamerThread());
+
     // TODO: make this std::string, or copy from string constant correctly
     char* path;
     if (in)
@@ -85,6 +85,7 @@ int DataStreamer::callback_http(
   case LWS_CALLBACK_HTTP_FILE_COMPLETION:
   {
     // async sending of file completed. kill the connection.
+    assert(ThreadId::isDataStreamerThread());
     return 1;
   }
   default:

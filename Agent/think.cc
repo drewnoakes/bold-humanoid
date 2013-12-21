@@ -105,15 +105,6 @@ void Agent::think()
   t.timeEvent("Update Motion Schedule");
 
   //
-  // Update websocket data
-  //
-  if (d_streamer != nullptr)
-  {
-    d_streamer->update();
-    t.timeEvent("Update DataStreamer");
-  }
-
-  //
   // Set timing data for the think cycle
   //
   AgentState::getInstance().set(make_shared<ThinkTimingState const>(t.flush(), d_cycleNumber));

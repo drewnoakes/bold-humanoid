@@ -16,6 +16,7 @@ std::string ThreadId::getThreadName()
   {
     case ThreadIds::MotionLoop: return "Motion Loop";
     case ThreadIds::ThinkLoop: return "Think Loop";
+    case ThreadIds::DataStreamer: return "Data Streamer";
     default:
       stringstream s;
       s << "Unknown (" << d_threadId << ")";
@@ -36,5 +37,13 @@ bool ThreadId::isThinkLoopThread()
   if (d_threadId == ThinkLoop)
     return true;
   log::error("ThreadId::isThinkLoopThread") << "Expected Think Loop thread but was: " << getThreadName();
+  return false;
+}
+
+bool ThreadId::isDataStreamerThread()
+{
+  if (d_threadId == DataStreamer)
+    return true;
+  log::error("ThreadId::isDataStreamerThread") << "Expected Data Streamer thread but was: " << getThreadName();
   return false;
 }

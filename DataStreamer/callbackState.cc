@@ -8,17 +8,18 @@ int DataStreamer::callback_state(
   void* /*in*/,
   size_t /*len*/)
 {
-  assert(ThreadId::isThinkLoopThread());
-
   switch (reason)
   {
   case LWS_CALLBACK_ESTABLISHED:
   {
+    assert(ThreadId::isDataStreamerThread());
     libwebsocket_callback_on_writable(context, wsi);
     return 0;
   }
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
+    assert(ThreadId::isDataStreamerThread());
+    
     // If we're being called, then there's some state to send.
     const libwebsocket_protocols* protocol = libwebsockets_get_protocol(wsi);
 

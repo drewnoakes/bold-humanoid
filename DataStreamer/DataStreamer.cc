@@ -5,7 +5,9 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
     d_camera(camera),
     d_image(),
     d_context(0),
-    d_cameraSessions()
+    d_cameraSessions(),
+    d_isStopRequested(false),
+    d_thread()
 {
   // We have three special protocols: HTTP-only, Camera and Control.
   // These are followed by N other protocols, one per type of state in the system
@@ -59,7 +61,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       [this](shared_ptr<StateTracker const> tracker)
       {
         // TODO this assertion will not be met! we may be called from the motion thread... need a better approach...
-//      assert(ThreadId::isThinkLoopThread());
+//      assert(ThreadId::isDataStreamerThread());
         libwebsocket_callback_on_writable_all_protocol(tracker->websocketProtocol);
       }
     );
@@ -68,7 +70,8 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
     Config::updated.connect(
       [this](SettingBase* setting)
       {
-        assert(ThreadId::isThinkLoopThread());
+        // These should only be changed by websocket users
+        assert(ThreadId::isDataStreamerThread());
 
         if (d_controlSessions.size() == 0)
           return;
@@ -82,4 +85,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       }
     );
   }
+
+  log::info("DataStreamer::DataStreamer") << "Starting DataStreamer thread";
+  d_thread = std::thread(&DataStreamer::run, this);
 }

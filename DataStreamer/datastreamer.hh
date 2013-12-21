@@ -1,10 +1,11 @@
 #pragma once
 
 #include <memory>
+#include <queue>
 #include <set>
 #include <string>
+#include <thread>
 #include <vector>
-#include <queue>
 
 #include <libwebsockets.h>
 #include <opencv2/opencv.hpp>
@@ -53,8 +54,7 @@ namespace bold
   public:
     DataStreamer(std::shared_ptr<Camera> camera);
 
-    void update();
-    void close();
+    void stop();
 
     /** Returns true if there is at least one client connected to the camera image protocol. */
     bool hasCameraClients() const { return d_cameraSessions.size() != 0; }
@@ -65,6 +65,8 @@ namespace bold
   private:
     static std::shared_ptr<std::vector<uchar>> prepareControlSyncBytes();
     static std::shared_ptr<std::vector<uchar>> prepareSettingUpdateBytes(SettingBase* setting);
+
+    void run();
 
     void processCommand(std::string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi);
 
@@ -78,6 +80,8 @@ namespace bold
     libwebsocket_protocols* d_controlProtocol;
     std::vector<CameraSession*> d_cameraSessions;
     std::vector<JsonSession*> d_controlSessions;
+    bool d_isStopRequested;
+    std::thread d_thread;
 
     //
     // libwebsocket callbacks

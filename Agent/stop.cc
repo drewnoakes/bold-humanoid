@@ -21,6 +21,7 @@ void Agent::stop()
   log::info("Agent::stop");
   d_isRunning = false;
   d_motionLoop->stop();
+  d_streamer->stop();
 
   if (d_voice)
     d_voice->stop();

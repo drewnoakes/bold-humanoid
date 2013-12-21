@@ -8,8 +8,6 @@ int DataStreamer::callback_control(
   void* in,
   size_t len)
 {
-  assert(ThreadId::isThinkLoopThread());
-
   JsonSession* jsonSession = reinterpret_cast<JsonSession*>(session);
 
   switch (reason)
@@ -17,6 +15,7 @@ int DataStreamer::callback_control(
   case LWS_CALLBACK_ESTABLISHED:
   {
     // New client connected; initialize session
+    assert(ThreadId::isDataStreamerThread());
     jsonSession->bytesSent = 0;
     jsonSession->queue = queue<shared_ptr<vector<uchar> const>>();
     d_controlSessions.push_back(jsonSession);
@@ -27,12 +26,14 @@ int DataStreamer::callback_control(
   case LWS_CALLBACK_CLOSED:
   {
     // Client disconnected
+    assert(ThreadId::isDataStreamerThread());
     d_controlSessions.erase(find(d_controlSessions.begin(), d_controlSessions.end(), jsonSession));
     break;
   }
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
     // Fill the outbound pipe with frames of data
+    assert(ThreadId::isDataStreamerThread());
     while (!lws_send_pipe_choked(wsi) && !jsonSession->queue.empty())
     {
       shared_ptr<vector<uchar> const> const& str = jsonSession->queue.front();
@@ -83,6 +84,7 @@ int DataStreamer::callback_control(
   }
   case LWS_CALLBACK_RECEIVE:
   {
+    assert(ThreadId::isDataStreamerThread());
     if (len != 0)
     {
       string str((char const*)in, len);

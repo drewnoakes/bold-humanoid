@@ -10,7 +10,8 @@ namespace bold
     enum ThreadIds
     {
       MotionLoop = 1,
-      ThinkLoop = 2
+      ThinkLoop = 2,
+      DataStreamer = 3
     };
 
     static void setThreadId(int threadId) { d_threadId = threadId; }
@@ -18,6 +19,7 @@ namespace bold
 
     static bool isMotionLoopThread();
     static bool isThinkLoopThread();
+    static bool isDataStreamerThread();
 
     static std::string getThreadName();
 

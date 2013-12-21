@@ -149,13 +149,13 @@ add_class(BOLDHUMANOID
   ./DataStreamer/callbackControl.cc
   ./DataStreamer/callbackHttp.cc
   ./DataStreamer/callbackState.cc
-  ./DataStreamer/close.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/prepareControlSyncBytes.cc
   ./DataStreamer/prepareSettingUpdateBytes.cc
   ./DataStreamer/processCommand.cc
+  ./DataStreamer/run.cc
+  ./DataStreamer/stop.cc
   ./DataStreamer/streamImage.cc
-  ./DataStreamer/update.cc
 )
 
 add_class(BOLDHUMANOID
