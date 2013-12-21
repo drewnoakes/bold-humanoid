@@ -55,6 +55,9 @@ require(
             moduleHost.register(new StateDumpModule());
             moduleHost.register(new ConfigModule());
 
+            $('#module-container').hide().fadeIn();
+            $('#loading-indicator').fadeOut(function() { $(this).remove(); });
+
             moduleHost.load();
         });
         
