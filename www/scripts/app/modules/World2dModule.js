@@ -89,7 +89,7 @@ define(
 
             this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
 
-            // TODO only subscribe if use checks a box
+            // TODO only subscribe if user checks a box
             this.particleSubscription   = DataProxy.subscribe(Protocols.particleState,   { json: true, onmessage: _.bind(this.onParticleData, this) });
 
             this.stopAnimation = false;
@@ -110,14 +110,14 @@ define(
             this.agentPosition = data.pos;
             this.ballPosition = data.ball;
             this.visibleFieldPoly = data['visible-field-poly'];
-            this.lineSegments = [];
+            this.observedLineSegments = [];
             this.goalPositions = [];
 
             _.each(data.lines, function (line)
             {
                 var p1 = { x: line[0], y: line[1]/*, z: line[2]*/ };
                 var p2 = { x: line[3], y: line[4]/*, z: line[5]*/ };
-                this.lineSegments.push({ p1: p1, p2: p2 });
+                this.observedLineSegments.push({ p1: p1, p2: p2 });
             }.bind(this));
 
             _.each(data.goals, function (goalPos)
@@ -180,8 +180,8 @@ define(
             FieldLinePlotter.drawFieldLines(context, options);
             FieldLinePlotter.drawGoals(context, options);
 
-            if (this.lineSegments && this.lineSegments.length)
-                FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
+            if (this.observedLineSegments && this.observedLineSegments.length)
+                FieldLinePlotter.drawLineSegments(context, options, this.observedLineSegments, 1, '#0000ff');
 
             if (this.agentPosition)
                 FieldLinePlotter.drawAgentPosition(context, options, this.agentPosition);
