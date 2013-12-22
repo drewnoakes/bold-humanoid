@@ -8,11 +8,14 @@ define(
         'Protocols',
         'FieldLinePlotter',
         'Constants',
-        'util/Dragger'
+        'util/Dragger',
+        'util/Geometry'
     ],
-    function(GeometryUtil, DataProxy, Protocols, FieldLinePlotter, Constants, Dragger)
+    function(GeometryUtil, DataProxy, Protocols, FieldLinePlotter, Constants, Dragger, Geometry)
     {
         'use strict';
+
+        var Transform = Geometry.Transform;
 
         var World3dModule = function()
         {
@@ -311,19 +314,17 @@ define(
                 groundSizeY = Constants.fieldY + 2*Constants.outerMarginMinimum,
                 fieldLineCanvas = document.createElement('canvas'),
                 fieldLineContext = fieldLineCanvas.getContext('2d'),
-                scale = 700,
+                scale = 200,
                 plotOptions = {
-                    scale: scale,
                     goalStrokeStyle: 'yellow',
                     groundFillStyle: '#008800',
-                    lineStrokeStyle: '#ffffff',
-                    fieldCenter: { x: scale*groundSizeX/2, y: scale*groundSizeY/2 }
+                    lineStrokeStyle: '#ffffff'
                 };
             fieldLineCanvas.width = groundSizeX * scale;
             fieldLineCanvas.height = groundSizeY * scale;
+            new Transform().scale(scale, scale).translate(groundSizeX/2, groundSizeY/2).applyTo(fieldLineContext);
             FieldLinePlotter.start(fieldLineContext, plotOptions);
             FieldLinePlotter.drawFieldLines(fieldLineContext, plotOptions);
-            FieldLinePlotter.end(fieldLineContext);
 
             var groundBumpMap = THREE.ImageUtils.loadTexture('images/felt.jpg', null, function(texture)
             {

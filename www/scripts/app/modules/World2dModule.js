@@ -8,13 +8,16 @@ define(
         'Constants',
         'DataProxy',
         'util/Dragger',
-        'util/MouseEventUtil'
+        'util/MouseEventUtil',
+        'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger, MouseEventUtil)
+    function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger, MouseEventUtil, Geometry)
     {
         'use strict';
 
         // TODO zoom relative to the position of the mouse pointer, rather than (0,0)
+
+        var Transform = Geometry.Transform;
 
         var World2dModule = function()
         {
@@ -42,8 +45,9 @@ define(
                 isRelative: true,
                 move: function(dx, dy)
                 {
-                    this.fieldCenterX += dx;
-                    this.fieldCenterY += dy;
+                    this.transform = new Transform()
+                        .translate(dx, dy)
+                        .multiply(this.transform);
                     this.needsRender = true;
                 }.bind(this)
             });
@@ -51,17 +55,20 @@ define(
             this.$canvas.on('mousewheel', function (event)
             {
                 event.preventDefault();
-                this.scale += event.originalEvent.wheelDelta / 20;
-                this.scale = Math.max(this.minScale, this.scale);
+                var scale = Math.pow(1.1, event.originalEvent.wheelDelta / 80);
+                this.transform = new Transform()
+                    .translate(event.offsetX, event.offsetY)
+                    .scale(scale, scale)
+                    .translate(-event.offsetX, -event.offsetY)
+                    .multiply(this.transform);
                 this.needsRender = true;
             }.bind(this));
 
             this.$canvas.on('mousemove', function (event)
             {
                 MouseEventUtil.polyfill(event);
-                var x = (event.offsetX - this.fieldCenterX) / this.scale,
-                    y = (event.offsetY - this.fieldCenterY) / this.scale;
-                this.$hoverInfo.text(x.toFixed(2) + ', ' + y.toFixed(2));
+                var p = this.transform.clone().invert().transformPoint(event.offsetX, event.offsetY);
+                this.$hoverInfo.text(p.x.toFixed(2) + ', ' + p.y.toFixed(2));
             }.bind(this));
 
             this.$canvas.on('mouseleave', function() { this.$hoverInfo.text(''); }.bind(this));
@@ -69,6 +76,8 @@ define(
 
         World2dModule.prototype.load = function()
         {
+            this.transform = new Transform();
+
             this.$canvas = $('<canvas></canvas>');
             this.canvas = this.$canvas.get(0);
             this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
@@ -133,13 +142,13 @@ define(
 
             this.canvas.width = width;
             this.canvas.height = width / ratio;
-            this.fieldCenterX = width/2;
-            this.fieldCenterY = (width / ratio)/2;
-            this.scale = Math.min(
+
+            var scale = Math.min(
                 width / fieldLengthX,
                 (width / ratio) / fieldLengthY);
-            this.minScale = this.scale * 0.5; // can't zoom out too far
-
+            this.transform = new Transform()
+                .scale(scale, scale)
+                .translate(fieldLengthX/2, fieldLengthY/2);
             this.needsRender = true;
         };
 
@@ -153,19 +162,19 @@ define(
             if (!this.needsRender)
                 return;
 
-            var options = {
-                    // TODO replace this scale with a transform on the canvas instead
-                    scale: this.scale,
+            var scale = this.transform.getScale(),
+                options = {
                     goalStrokeStyle: 'yellow',
                     groundFillStyle: '#008800',
                     lineStrokeStyle: '#ffffff',
-                    visibleFieldPolyLineWidth: 1,
+                    visibleFieldPolyLineWidth: 1/scale,
                     visibleFieldPolyStrokeStyle: '#0000ff',
                     particleStyle: 'cyan',
-                    particleSize: 3,
-                    fieldCenter: { x: this.fieldCenterX, y: this.fieldCenterY }
+                    particleSize: 3/scale
                 },
                 context = this.canvas.getContext('2d');
+
+            this.transform.applyTo(context);
 
             FieldLinePlotter.start(context, options);
             FieldLinePlotter.drawFieldLines(context, options);
@@ -174,11 +183,11 @@ define(
             if (this.lineSegments && this.lineSegments.length)
                 FieldLinePlotter.drawLineSegments(context, options, this.lineSegments, 1, '#0000ff');
 
-            if (this.particles)
-                FieldLinePlotter.drawParticles(context, options, this.particles);
-
             if (this.agentPosition)
                 FieldLinePlotter.drawAgentPosition(context, options, this.agentPosition);
+
+            if (this.particles)
+                FieldLinePlotter.drawParticles(context, options, this.particles);
 
             if (this.visibleFieldPoly)
                 FieldLinePlotter.drawVisibleFieldPoly(context, options, this.visibleFieldPoly);
@@ -191,7 +200,7 @@ define(
                 FieldLinePlotter.drawGoalPosts(context, options, this.goalPositions);
             }
 
-            FieldLinePlotter.end(context);
+//            FieldLinePlotter.end(context);
 
             this.needsRender = false;
         };
