@@ -774,3 +774,10 @@ div.module.trajectory button.record.recording
 {
     border-color: red;
 }
+
+/*******************************************************************/
+
+div.module.agent-2d div.pane-container
+{
+  min-height: 480px;
+}
