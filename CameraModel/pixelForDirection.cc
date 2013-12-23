@@ -2,7 +2,7 @@
 
 Maybe<Vector2d> CameraModel::pixelForDirection(Vector3d const& direction) const
 {
-  if (direction.y() <= 0)
+  if (direction.y() < std::numeric_limits<double>::epsilon())
     return Maybe<Vector2d>::empty();
 
   double r = focalLength() * tan(rangeVerticalRads() / 2);
