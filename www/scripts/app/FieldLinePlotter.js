@@ -9,7 +9,7 @@ define(
     {
         //noinspection UnnecessaryLocalVariableJS
         var FieldLinePlotter = {
-            start: function(context, options)
+            drawField: function(context, options)
             {
                 context.save();
                 context.setTransform(1, 0, 0, 1, 0, 0);

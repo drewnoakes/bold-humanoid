@@ -176,7 +176,7 @@ define(
 
             this.transform.applyTo(context);
 
-            FieldLinePlotter.start(context, options);
+            FieldLinePlotter.drawField(context, options);
             FieldLinePlotter.drawFieldLines(context, options);
             FieldLinePlotter.drawGoals(context, options);
 
@@ -199,8 +199,6 @@ define(
                 options.goalStrokeStyle = 'blue';
                 FieldLinePlotter.drawGoalPosts(context, options, this.goalPositions);
             }
-
-//            FieldLinePlotter.end(context);
 
             this.needsRender = false;
         };

@@ -323,7 +323,7 @@ define(
             fieldLineCanvas.width = groundSizeX * scale;
             fieldLineCanvas.height = groundSizeY * scale;
             new Transform().scale(scale, scale).translate(groundSizeX/2, groundSizeY/2).applyTo(fieldLineContext);
-            FieldLinePlotter.start(fieldLineContext, plotOptions);
+            FieldLinePlotter.drawField(fieldLineContext, plotOptions);
             FieldLinePlotter.drawFieldLines(fieldLineContext, plotOptions);
 
             var groundBumpMap = THREE.ImageUtils.loadTexture('images/felt.jpg', null, function(texture)
