@@ -7,6 +7,7 @@ set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests
 set(BUILD_TOOLS ON CACHE BOOL "Choose whether to build tools")
 set(BUILD_BOLDPY ON CACHE BOOL "Choose whether to Python library")
 set(PRECOMPILE_HEADERS ON CACHE BOOL "Choose whether to precompile headers")
+set(EIGEN_VECTORIZE OFF CACHE BOOL "Choose whether to enable Eigen vectorization")
 set(UPLOAD_SCP_PATH "" CACHE STRING "Path to use in upload scp command. Format: user@server:path")
 set(BUNDLES_PATH "" CACHE STRING "Path to use to store bundles")
 
@@ -93,7 +94,11 @@ link_directories(${BOLDHUMANOID_LINK_DIRS})
 #
 ## Additional compile flags
 #
-set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall  -Wno-deprecated-register -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare -Wno-c++11-narrowing -Wno-unknown-warning-option -Wno-deprecated")
+if (EIGEN_VECTORIZE)
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -Wall  -Wno-deprecated-register -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare -Wno-c++11-narrowing -Wno-unknown-warning-option -Wno-deprecated")
+else(EIGEN_VECTORIZE)
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -DEIGEN_DONT_VECTORIZE -Wall  -Wno-deprecated-register -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare -Wno-c++11-narrowing -Wno-unknown-warning-option -Wno-deprecated")
+endif(EIGEN_VECTORIZE)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(BOLDHUMANOID_COMPILE_FLAGS "-I/usr/include/i386-linux-gnu/c++/4.8 ${BOLDHUMANOID_COMPILE_FLAGS}")
