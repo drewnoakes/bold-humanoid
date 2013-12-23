@@ -5,8 +5,6 @@ void MotionTaskScheduler::add(MotionModule* module,
                               Priority armsPriority, bool requestCommitArms,
                               Priority legsPriority, bool requestCommitLegs)
 {
-  assert(ThreadId::isThinkLoopThread());
-
   auto handleSection = [this,module](SectionId section, Priority priority, bool requestCommit)
   {
     if (priority == Priority::None)
@@ -14,7 +12,7 @@ void MotionTaskScheduler::add(MotionModule* module,
     d_tasks.push_back(std::make_shared<MotionTask>(module, section, priority, requestCommit));
     d_hasChange = true;
   };
-  
+
   handleSection(SectionId::Head, headPriority, requestCommitHead);
   handleSection(SectionId::Arms, armsPriority, requestCommitArms);
   handleSection(SectionId::Legs, legsPriority, requestCommitLegs);
