@@ -88,13 +88,14 @@ define(
             }
         };
 
-        ControlClient.connect = function()
+        ControlClient.connect = function(onerror)
         {
             subscription = DataProxy.subscribe(
                 Protocols.control,
                 {
                     json: true,
-                    onmessage: _.bind(onControlData, this)
+                    onmessage: _.bind(onControlData, this),
+                    onerror: onerror
                 }
             );
         };

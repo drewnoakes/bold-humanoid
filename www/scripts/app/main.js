@@ -62,7 +62,12 @@ require(
 
             moduleHost.load();
         });
-        
-        ControlClient.connect();
+
+        var onerror = function ()
+        {
+            $('#loading-indicator').find('h1').text('No Connection');
+            $('#bouncer').fadeOut(function() { $(this).remove() });
+        };
+        ControlClient.connect(onerror);
     }
 );
