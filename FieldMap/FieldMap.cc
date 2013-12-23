@@ -76,6 +76,9 @@ FieldMap::FieldMap()
   // right, side
   d_fieldLines.push_back(LineSegment3d(Vector3d(halfFieldX-goalAreaX, halfGoalAreaY, 0), Vector3d(halfFieldX-goalAreaX, -halfGoalAreaY, 0)));
 
+  // CENTER LINE
+  d_fieldLines.push_back(LineSegment3d(Vector3d(0, -halfFieldY, 0), Vector3d(0, halfFieldY, 0)));
+
   // CIRCLE
   int segments = Config::getStaticValue<int>("world.circle-segment-count");
   Vector3d lastPoint(0, d_circleRadius, 0);
