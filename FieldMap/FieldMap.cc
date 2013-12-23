@@ -22,24 +22,23 @@ FieldMap::FieldMap()
 //double goalPostDiameter    = Config::getStaticValue<double>("world.goal-post-diameter");
   double goalAreaX           = Config::getStaticValue<double>("world.goal-area-size-x");
   double goalAreaY           = Config::getStaticValue<double>("world.goal-area-size-y");
-//double penaltyMarkDistance = Config::getStaticValue<double>("world.penalty-mark-distance");
+  double penaltyMarkDistance = Config::getStaticValue<double>("world.penalty-mark-distance");
   double circleDiameter      = Config::getStaticValue<double>("world.circle-diameter");
   double lineWidth           = Config::getStaticValue<double>("world.line-width");
-//double penaltyLineLength   = Config::getStaticValue<double>("world.penalty-line-length");
+  double penaltyLineLength   = Config::getStaticValue<double>("world.penalty-line-length");
   d_outerMarginMinimum       = Config::getStaticValue<double>("world.outer-margin-minimum");
 //double ballDiameter        = Config::getStaticValue<double>("world.ball-diameter");
 
-//double halfCrossLength = penaltyLineLength/2;
-//double penaltyX = d_fieldLengthX/2 - penaltyMarkDistance;
-//double penaltyInnerX = penaltyX - halfCrossLength;
-//double penaltyOuterX = penaltyX + halfCrossLength;
+  double halfCrossLength = penaltyLineLength/2;
+  double penaltyX = d_fieldLengthX/2 - penaltyMarkDistance;
+  double penaltyInnerX = penaltyX - halfCrossLength;
+  double penaltyOuterX = penaltyX + halfCrossLength;
   double halfFieldX = d_fieldLengthX/2;
   double halfFieldY = d_fieldLengthY/2;
   double halfGoalAreaY = goalAreaY/2;
   double halfGoalY = goalY/2;
   d_circleRadius = circleDiameter/2;
 
-/*
   // CROSS MARKS
   // center cross mark
   d_fieldLines.push_back(LineSegment3d(Vector3d(-halfCrossLength, 0, 0), Vector3d(halfCrossLength, 0, 0)));
@@ -50,7 +49,6 @@ FieldMap::FieldMap()
   // right penalty mark
   d_fieldLines.push_back(LineSegment3d(Vector3d(penaltyInnerX, 0, 0), Vector3d(penaltyOuterX, 0, 0)));
   d_fieldLines.push_back(LineSegment3d(Vector3d(penaltyX, -halfCrossLength, 0), Vector3d(penaltyX, halfCrossLength, 0)));
-*/
 
   // OUTER SQUARE
   // top
@@ -87,6 +85,7 @@ FieldMap::FieldMap()
     double theta = (i/(double)segments) * M_PI * 2;
     Vector3d point(sin(theta) * d_circleRadius, cos(theta) * d_circleRadius, 0);
     d_circleLines.push_back(LineSegment3d(lastPoint, point));
+    d_fieldLines.push_back(LineSegment3d(lastPoint, point));
     lastPoint = point;
   }
 
