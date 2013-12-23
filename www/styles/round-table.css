@@ -641,15 +641,6 @@ div.module.config > div.pane-container
 
 /********************************************************************/
 
-div.module.field div.hover-info
-{
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
-}
-
-/********************************************************************/
-
 table.timing-details tr td.duration,
 table.timing-details tr td.max-duration
 {
@@ -734,7 +725,6 @@ div.module.hardware div.body-figure div.joint
     -o-transition: background-color 0.4s linear;
     -webkit-transition: background-color 0.4s linear;
 }
-
 
 /*******************************************************************/
 

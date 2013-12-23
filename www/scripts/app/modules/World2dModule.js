@@ -15,8 +15,6 @@ define(
     {
         'use strict';
 
-        // TODO zoom relative to the position of the mouse pointer, rather than (0,0)
-
         var Transform = Geometry.Transform;
 
         var World2dModule = function()
