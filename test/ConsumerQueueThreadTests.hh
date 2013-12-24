@@ -56,8 +56,8 @@ TEST (ConsumerQueueThreadTests, doesntBlockPusher)
   for (int i = 0; i < loopCount; i++)
     queue.push(1);
 
-  ASSERT_TRUE ( callCount < loopCount );
-  this_thread::sleep_for(chrono::milliseconds(loopCount / 2));
+  ASSERT_LT ( callCount, loopCount );
+  this_thread::sleep_for(chrono::milliseconds(loopCount / 4));
   ASSERT_GT ( callCount, 0 );
   ASSERT_LT ( callCount, loopCount );
 
