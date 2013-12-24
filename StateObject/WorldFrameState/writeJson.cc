@@ -64,12 +64,15 @@ void WorldFrameState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("visible-field-poly");
     writer.StartArray();
     {
-      for (auto const& vertex : d_visibleFieldPoly)
+      if (d_visibleFieldPoly.hasValue())
       {
-        writer.StartArray();
-        writer.Double(vertex.x());
-        writer.Double(vertex.y());
-        writer.EndArray();
+        for (auto const& vertex : d_visibleFieldPoly.value())
+        {
+          writer.StartArray();
+          writer.Double(vertex.x());
+          writer.Double(vertex.y());
+          writer.EndArray();
+        }
       }
     }
     writer.EndArray();

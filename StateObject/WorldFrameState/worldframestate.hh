@@ -6,6 +6,7 @@
 
 #include "../AgentPosition/agentposition.hh"
 #include "../geometry/LineSegment2i.hh"
+#include "../geometry/Polygon2.hh"
 #include "../stateobject.hh"
 #include "../util/Maybe.hh"
 
@@ -17,7 +18,7 @@ namespace bold
     WorldFrameState(Maybe<Eigen::Vector3d> ballObservation,
                     std::vector<Eigen::Vector3d> goalObservations,
                     std::vector<LineSegment3d> observedLineSegments,
-                    std::vector<Eigen::Vector3d> visibleFieldPoly,
+                    Maybe<Polygon2d> visibleFieldPoly,
                     AgentPosition position)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
@@ -29,7 +30,7 @@ namespace bold
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
-    std::vector<Eigen::Vector3d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
+    Maybe<Polygon2d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
 
     AgentPosition getPosition() const { return d_position; }
 
@@ -41,7 +42,7 @@ namespace bold
     Maybe<Eigen::Vector3d> d_ballObservation;
     std::vector<Eigen::Vector3d> d_goalObservations;
     std::vector<LineSegment3d> d_observedLineSegments;
-    std::vector<Eigen::Vector3d> d_visibleFieldPoly;
+    Maybe<Polygon2d> d_visibleFieldPoly;
     AgentPosition d_position;
   };
 }

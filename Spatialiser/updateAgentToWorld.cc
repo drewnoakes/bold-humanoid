@@ -27,7 +27,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
 
   vector<Vector3d> goals;
   vector<LineSegment3d> lineSegments;
-  vector<Vector3d> visibleFieldPoly;
+  vector<Vector2d> vertices;
 
   for (auto const& goalPos : agentFrame->getGoalObservations())
   {
@@ -43,10 +43,16 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
     lineSegments.push_back(lineSegment);
   }
 
-  for (auto const& vertex : agentFrame->getVisibleFieldPoly())
+  if (agentFrame->getVisibleFieldPoly().hasValue())
   {
-    visibleFieldPoly.push_back(agentToWorld * vertex);
+    for (Vector2d const& vertex : agentFrame->getVisibleFieldPoly().value())
+    {
+      Vector3d vertex3;
+      vertex3 << vertex.x(), vertex.y(), 0;
+      vertices.push_back((agentToWorld * vertex3).head<2>());
+    }
   }
+  Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
   AgentState::getInstance().set(make_shared<WorldFrameState const>(ball, goals, lineSegments, visibleFieldPoly, position));
 }
