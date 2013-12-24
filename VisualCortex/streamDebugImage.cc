@@ -122,7 +122,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   // Draw expected lines
   bool drawExpectedLines = d_shouldDrawExpectedLines->getValue();
   bool drawExpectedLineEdges = d_shouldDrawExpectedLineEdges->getValue();
-  if (bodyState && (drawExpectedLines || drawExpectedLineEdges))
+  if (drawExpectedLines || drawExpectedLineEdges)
   {
     Affine3d const& agentWorld = AgentState::get<WorldFrameState>()->getPosition().agentWorldTransform();
     Affine3d const& cameraAgent = bodyState->getCameraAgentTransform();
@@ -156,7 +156,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw horizon
-  if (bodyState && d_shouldDrawHorizon->getValue())
+  if (d_shouldDrawHorizon->getValue())
   {
     auto neckJoint = bodyState->getLimb("neck")->joints[0];
     Affine3d const& cameraToFootRotation = bodyState->getCameraAgentTransform();
