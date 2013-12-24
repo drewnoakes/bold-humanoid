@@ -74,7 +74,7 @@ define(
 
         World2dModule.prototype.load = function()
         {
-            this.transform = new Transform();
+            this.transform = new Transform().scale(1, -1);
 
             this.$canvas = $('<canvas></canvas>');
             this.canvas = this.$canvas.get(0);
@@ -145,8 +145,8 @@ define(
                 width / fieldLengthX,
                 (width / ratio) / fieldLengthY);
             this.transform = new Transform()
-                .scale(scale, scale)
-                .translate(fieldLengthX/2, fieldLengthY/2);
+                .scale(scale, -scale)
+                .translate(fieldLengthX/2, -fieldLengthY/2);
             this.needsRender = true;
         };
 

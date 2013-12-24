@@ -79,7 +79,7 @@ define(
                 _.each(positions, function (pos)
                 {
                     context.beginPath();
-                    context.arc(pos.x, -pos.y, Constants.goalPostDiameter/2, 0, Math.PI*2, true);
+                    context.arc(pos.x, pos.y, Constants.goalPostDiameter/2, 0, Math.PI*2, true);
                     context.fill();
                 });
             },
@@ -125,8 +125,8 @@ define(
                 {
                     var p1 = lineSegment.p1,
                         p2 = lineSegment.p2;
-                    context.moveTo(p1.x, -p1.y);
-                    context.lineTo(p2.x, -p2.y);
+                    context.moveTo(p1.x, p1.y);
+                    context.lineTo(p2.x, p2.y);
                 });
                 context.stroke();
             },
@@ -139,10 +139,11 @@ define(
                 context.strokeStyle = options.visibleFieldPolyStrokeStyle || '#00ff00';
 
                 context.beginPath();
-                context.moveTo(visibleFieldPoly[0][0], -visibleFieldPoly[0][1]);
-                for (var i = 1; i < visibleFieldPoly.length; i++)
+                context.moveTo(visibleFieldPoly[0][0], visibleFieldPoly[0][1]);
+                var len = visibleFieldPoly.length === 4 ? 4 : 2;
+                for (var i = 1; i < len; i++)
                 {
-                    context.lineTo(visibleFieldPoly[i][0], -visibleFieldPoly[i][1]);
+                    context.lineTo(visibleFieldPoly[i][0], visibleFieldPoly[i][1]);
                 }
                 context.closePath();
                 context.stroke();
@@ -152,7 +153,7 @@ define(
                 context.fillStyle = options.ballFillStyle || 'orange';
 
                 context.beginPath();
-                context.arc(position[0], -position[1], Constants.ballRadius, 0, Math.PI*2, true);
+                context.arc(position[0], position[1], Constants.ballRadius, 0, Math.PI*2, true);
                 context.fill();
             },
             drawAgentPosition: function(context, options, agentPosition)
@@ -165,12 +166,12 @@ define(
                 context.fillStyle = options.agentPosStyle || 'red';
 
                 context.beginPath();
-                context.arc(agentPosition[0], -agentPosition[1], agentDotRadius, 0, Math.PI*2, true);
+                context.arc(agentPosition[0], agentPosition[1], agentDotRadius, 0, Math.PI*2, true);
                 context.fill();
                 context.beginPath();
-                context.moveTo(agentPosition[0], -agentPosition[1]);
+                context.moveTo(agentPosition[0], agentPosition[1]);
                 context.lineTo(agentPosition[0] + agentDirectionLength * Math.cos(heading),
-                              -agentPosition[1] - agentDirectionLength * Math.sin(heading));
+                               agentPosition[1] + agentDirectionLength * Math.sin(heading));
                 context.stroke();
             },
             drawParticles: function(context, options, particles)
@@ -182,7 +183,7 @@ define(
                 {
                     context.fillStyle = particle[3] === 0 ? 'black' : options.particleStyle || 'cyan';
                     var x = particle[0] - size/2,
-                        y = -particle[1] - size/2;
+                        y = particle[1] - size/2;
                     context.fillRect(x, y, size, size);
                 });
             }

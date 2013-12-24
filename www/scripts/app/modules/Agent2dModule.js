@@ -46,7 +46,7 @@ define(
                 this.scale = Math.max(20, this.scale);
                 this.transform = new Transform()
                     .translate(this.canvas.width/2, this.canvas.height/2)
-                    .scale(this.scale, this.scale);
+                    .scale(this.scale, -this.scale);
                 this.needsRender = true;
             }.bind(this));
 
@@ -117,7 +117,7 @@ define(
             this.scale = Math.min(width / 12, height / 12);
             this.transform = new Transform()
                 .translate(this.canvas.width/2, this.canvas.height/2)
-                .scale(this.scale, this.scale);
+                .scale(this.scale, -this.scale);
             this.needsRender = true;
         };
 
