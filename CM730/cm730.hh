@@ -40,7 +40,6 @@ namespace bold
 
     BulkReadTable const& getBulkReadData(uchar id) const;
 
-    // TODO why is this const_cast needed?
     uchar* getTxPacket() const { return const_cast<uchar*>(&d_txPacket[0]); }
 
   private:
