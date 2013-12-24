@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gtest/gtest.h"
+#include "../util/Maybe.hh"
 
 #include <Eigen/Core>
 
@@ -19,3 +20,11 @@
   else
     return ::testing::AssertionFailure() << "Actual: " << b << ", expected: " << a << " d = " << d;
 }
+
+#define ASSERT_EMPTY(condition) \
+  GTEST_TEST_BOOLEAN_(!(condition.hasValue()), #condition, Non-empty, Empty, \
+                      GTEST_FATAL_FAILURE_) << *condition
+
+#define EXPECT_EMPTY(condition) \
+  GTEST_TEST_BOOLEAN_(!(condition.hasValue()), #condition, Non-empty, Empty, \
+                      GTEST_NONFATAL_FAILURE_) << *condition

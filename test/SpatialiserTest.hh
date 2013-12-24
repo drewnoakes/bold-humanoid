@@ -111,7 +111,7 @@ TEST (SpatialiserTests, findGroundPointForPixelEmptyIfSkybound)
 
   Maybe<Vector3d> groundPoint = spatialiser.findGroundPointForPixel(Vector2d(5.5,5.5), cameraAgentTransform);
 
-  EXPECT_FALSE ( groundPoint.hasValue() );
+  EXPECT_EMPTY ( groundPoint );
 }
 
 TEST (SpatialiserTests, findPixelForAgentPointLooking45DegreesDown)
@@ -198,10 +198,10 @@ TEST (SpatialiserTests, findPixelForAgentPointLookingStraightDown)
   EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 15.5), *pixel) );
 
   // Test some locations which are undefined in the camera's field of view
-  EXPECT_FALSE ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,1), cameraAgentTransform).hasValue() );
-  EXPECT_FALSE ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1), cameraAgentTransform).hasValue() );
-  EXPECT_FALSE ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1), cameraAgentTransform).hasValue() );
-  EXPECT_FALSE ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,2), cameraAgentTransform).hasValue() );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,1), cameraAgentTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1), cameraAgentTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1), cameraAgentTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,2), cameraAgentTransform) );
 }
 
 TEST (SpatialiserTests, findHorizonForColumnSquareCam)
