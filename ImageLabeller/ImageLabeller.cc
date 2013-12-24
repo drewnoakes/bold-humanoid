@@ -24,12 +24,12 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   uchar const* lut = d_LUT.get();
 
   // Everything above (and including) this row is guaranteed to be above horizon
-  int maxHorizonY;
+  int maxHorizonY = 0;
   // Everything below this row is guaranteed to be under horizon
   int minHorizonY;
   // The horizon's y level at the sides of the image. We assume it is a straight
   // line and interpolate linearly between these two values.
-  int minXHorizonY, maxXHorizonY;
+  int minXHorizonY = 0, maxXHorizonY = 0;
 
   // If we are ignoring everything above the horizon, find out where
   // the horizon is for each column.
