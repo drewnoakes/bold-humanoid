@@ -39,3 +39,15 @@ TEST (MX28AlarmTests, toString)
   EXPECT_EQ ( "Angle Limit Breached", MX28Alarm(2).toString() );
   EXPECT_EQ ( "Input Voltage Limit Breached, Angle Limit Breached", MX28Alarm(3).toString() );
 }
+
+TEST (MX28AlarmTests, assignFromUchar)
+{
+  MX28Alarm a;
+
+  a = (uchar)2;
+  EXPECT_EQ ( 2, a.getFlags() );
+
+  a = (uchar)7;
+  EXPECT_EQ ( 7, a.getFlags() );
+}
+

@@ -491,15 +491,13 @@ void CM730::torqueEnable(bool enable)
 {
   log::info("CM730::torqueEnable") << "" << (enable ? "Enabling" : "Disabling") << " all joint torque";
 
-  uchar error;
+  MX28Alarm error;
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
-    if (error != 0)
-    {
-      // TODO better reporting of error, across all CM730 operations
-      log::error("CM730::torqueEnable") << "Error for joint ID " << (int)jointId << ": 0x" << hex << (int)error << dec;
-    }
+    
+    if (error.hasError())
+      log::error("CM730::torqueEnable") << "Error for joint ID " << (int)jointId << ": " << error;
   }
 }
 
@@ -513,7 +511,7 @@ void CM730::disconnect()
   d_platform->closePort();
 }
 
-CommResult CM730::ping(uchar id, uchar *error)
+CommResult CM730::ping(uchar id, MX28Alarm* error)
 {
   uchar txpacket[6];
   uchar rxpacket[6];
@@ -533,7 +531,7 @@ CommResult CM730::ping(uchar id, uchar *error)
   return result;
 }
 
-CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, uchar *error)
+CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error)
 {
   uchar txpacket[8];
   uchar rxpacket[7];
@@ -556,7 +554,7 @@ CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, uchar *error)
   return result;
 }
 
-CommResult CM730::readWord(uchar id, uchar address, int *pValue, uchar *error)
+CommResult CM730::readWord(uchar id, uchar address, int *pValue, MX28Alarm* error)
 {
   uchar txpacket[8];
   uchar rxpacket[8];
@@ -580,7 +578,7 @@ CommResult CM730::readWord(uchar id, uchar address, int *pValue, uchar *error)
   return result;
 }
 
-CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, uchar *error)
+CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, MX28Alarm* error)
 {
   int length = toAddress - fromAddress + 1;
 
@@ -607,7 +605,7 @@ CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar 
   return result;
 }
 
-CommResult CM730::writeByte(uchar id, uchar address, uchar value, uchar *error)
+CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* error)
 {
   uchar txpacket[8];
   uchar rxpacket[6];
@@ -629,7 +627,7 @@ CommResult CM730::writeByte(uchar id, uchar address, uchar value, uchar *error)
   return result;
 }
 
-CommResult CM730::writeWord(uchar id, uchar address, int value, uchar *error)
+CommResult CM730::writeWord(uchar id, uchar address, int value, MX28Alarm* error)
 {
   uchar txpacket[9];
   uchar rxpacket[6];

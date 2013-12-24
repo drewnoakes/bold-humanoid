@@ -7,6 +7,8 @@
 
 namespace bold
 {
+  typedef unsigned char uchar;
+
   /** Models the alarm state of an MX28.
   *
   * Bits are assigned as follows:
@@ -23,8 +25,6 @@ namespace bold
   class MX28Alarm
   {
   public:
-    typedef unsigned char uchar;
-
     const static uchar MAXBIT = 6;
 
     MX28Alarm()
@@ -33,6 +33,14 @@ namespace bold
     MX28Alarm(uchar flags)
     : d_flags (flags)
     {}
+
+    MX28Alarm& operator=(const uchar flags)
+    {
+      d_flags = flags;
+      return *this;
+    }
+
+    uchar getFlags() const { return d_flags; }
 
     bool isSet(uchar bitIndex) const
     {

@@ -7,6 +7,7 @@
 #include "../CM730Platform/cm730platform.hh"
 #include "../Math/math.hh"
 #include "../MX28/mx28.hh"
+#include "../MX28Alarm/mx28alarm.hh"
 
 namespace bold
 {
@@ -207,24 +208,24 @@ namespace bold
     void torqueEnable(bool enable);
 
     /// Check the existance of Dynamixel with selected id. Returns communication result enum value.
-    CommResult ping(uchar id, uchar *error);
+    CommResult ping(uchar id, MX28Alarm* error);
 
 
     /// Reads a byte from the CM730 control table. Returns communication result enum value.
-    CommResult readByte(uchar id, uchar address, uchar *pValue, uchar *error);
+    CommResult readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error);
 
     /// Reads two bytes from the CM730 control table. Returns communication result enum value.
-    CommResult readWord(uchar id, uchar address, int *pValue, uchar *error);
+    CommResult readWord(uchar id, uchar address, int *pValue, MX28Alarm* error);
 
     /// Reads a consecutive range of bytes from the CM730 control table. Returns communication result enum value.
-    CommResult readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, uchar *error);
+    CommResult readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, MX28Alarm* error);
 
 
     /// Writes a byte into the control table for the specified Dynamixel device. Returns communication result enum value.
-    CommResult writeByte(uchar id, uchar address, uchar value, uchar *error);
+    CommResult writeByte(uchar id, uchar address, uchar value, MX28Alarm* error);
 
     /// Writes two bytes into the control table for the specified Dynamixel device. Returns communication result enum value.
-    CommResult writeWord(uchar id, uchar address, int value, uchar *error);
+    CommResult writeWord(uchar id, uchar address, int value, MX28Alarm* error);
 
     /** Simultaneously write data to several Dynamixels at a time. Useful for motion control.
      *
