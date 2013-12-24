@@ -57,9 +57,9 @@ TEST (ConsumerQueueThreadTests, doesntBlockPusher)
 
   ASSERT_TRUE ( callCount < loopCount );
   this_thread::sleep_for(chrono::milliseconds(loopCount / 2));
-  ASSERT_TRUE ( callCount > 0 && callCount < loopCount );
+  ASSERT_TRUE ( callCount > 0 && callCount < loopCount ) << "Invalid callCount=" << callCount;
   this_thread::sleep_for(chrono::milliseconds(loopCount * 2));
-  ASSERT_TRUE ( callCount == loopCount );
+  ASSERT_TRUE ( callCount == loopCount ) << "Invalid loopCount=" << loopCount;
 
   queue.stop(); // joins
 }
