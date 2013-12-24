@@ -526,7 +526,7 @@ CommResult CM730::ping(uchar id, uchar *error)
 
   if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
-    if (error != 0)
+    if (error != nullptr)
       *error = rxpacket[ERRBIT];
   }
 
@@ -549,7 +549,7 @@ CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, uchar *error)
   if (result == CommResult::SUCCESS)
   {
     *pValue = rxpacket[PARAMETER];
-    if (error != 0)
+    if (error != nullptr)
       *error = rxpacket[ERRBIT];
   }
 
@@ -573,7 +573,7 @@ CommResult CM730::readWord(uchar id, uchar address, int *pValue, uchar *error)
   {
     *pValue = makeWord(rxpacket[PARAMETER], rxpacket[PARAMETER + 1]);
 
-    if (error != 0)
+    if (error != nullptr)
       *error = rxpacket[ERRBIT];
   }
 
@@ -600,7 +600,7 @@ CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar 
     for (int i = 0; i < length; i++)
       table[fromAddress + i] = rxpacket[PARAMETER + i];
 
-    if (error != 0)
+    if (error != nullptr)
       *error = rxpacket[ERRBIT];
   }
 
@@ -622,7 +622,7 @@ CommResult CM730::writeByte(uchar id, uchar address, uchar value, uchar *error)
 
   if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
-    if (error != 0)
+    if (error != nullptr)
       *error = rxpacket[ERRBIT];
   }
 
@@ -645,7 +645,7 @@ CommResult CM730::writeWord(uchar id, uchar address, int value, uchar *error)
 
   if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
-    if (error != 0)
+    if (error != nullptr)
       *error = rxpacket[ERRBIT];
   }
 
