@@ -46,13 +46,13 @@ void Spatialiser::updateCameraToAgent()
   if (p1)
     visibleFieldPoly.push_back(*p1);
 
-  auto const& p2 = findGroundPointForPixel(Vector2d(width - 1, 0) + Vector2d(0.5,0.5));
+  auto const& p2 = findGroundPointForPixel(Vector2d(width - 3, 0) + Vector2d(0.5,0.5));
   if (p2)
     visibleFieldPoly.push_back(*p2);
 
   if (horiz2 >= 0 && horiz2 < height)
   {
-    auto const& p3 = findGroundPointForPixel(Vector2d(width - 1, horiz2) + Vector2d(0.5,0.5));
+    auto const& p3 = findGroundPointForPixel(Vector2d(width - 3, horiz2) + Vector2d(0.5,0.5));
     if (p3)
       visibleFieldPoly.push_back(*p3);
   }
