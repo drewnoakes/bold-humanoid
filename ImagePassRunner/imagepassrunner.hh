@@ -47,6 +47,13 @@ namespace bold
         removeHandler(handler);
     }
 
+    /** Check whether the specified handler is enabled
+     */
+    bool isEnabled(std::shared_ptr<ImagePassHandler<TPixel>> handler)
+    {
+      return std::find(d_handlers.begin(), d_handlers.end(), handler) != d_handlers.end();
+    }
+
     /** Passes over the image, calling out to all ImagePassHandlers with data from the image.
      *
      * A granularity function allows processing fewer than all pixels in the image.
@@ -57,7 +64,7 @@ namespace bold
      * @param image Labelled image data
      * @param granularityFunction The function used to determine granularity within the image.
      */
-    long pass(cv::Mat const& image, std::function<Eigen::Vector2i(int)> granularityFunction) const
+    long pass(cv::Mat const& image, std::function<Eigen::Vector2i(int)> const& granularityFunction) const
     {
       assert(image.rows);
       assert(image.cols);
@@ -70,30 +77,65 @@ namespace bold
         Eigen::Vector2i granularity;
 
         handler->onImageStarting();
-
+        
         for (int y = 0; y < image.rows; y += granularity.y())
         {
           granularity = granularityFunction(y);
-
+          
           pixelCount += image.cols / granularity.x();
-
+          
           TPixel const* row = image.ptr<TPixel>(y);
-
+          
           handler->onRowStarting(y, granularity);
-
+          
           int dx = granularity.x();
           for (int x = 0; x < image.cols; x += dx)
           {
             TPixel value = row[x];
-
+            
             handler->onPixel(value, x, y);
           }
         }
-
+        
         handler->onImageComplete();
+        
       }
-
       return pixelCount / d_handlers.size();
+    }
+
+    template<typename T>
+    long passWithHandler(std::shared_ptr<T> handler, cv::Mat const& image, std::function<Eigen::Vector2i(int)> const& granularityFunction) const
+    {
+      assert(image.rows);
+      assert(image.cols);
+      assert(handler);
+
+      long pixelCount = 0;
+      Eigen::Vector2i granularity;
+
+      handler->T::onImageStarting();
+      
+      for (int y = 0; y < image.rows; y += granularity.y())
+      {
+        granularity = granularityFunction(y);
+        
+        pixelCount += image.cols / granularity.x();
+        
+        TPixel const* row = image.ptr<TPixel>(y);
+        
+        handler->T::onRowStarting(y, granularity);
+        
+        int dx = granularity.x();
+        for (int x = 0; x < image.cols; x += dx)
+        {
+          TPixel value = row[x];
+          
+          handler->T::onPixel(value, x, y);
+        }
+      }
+      
+      handler->T::onImageComplete();
+      return pixelCount;
     }
 
   private:

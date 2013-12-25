@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
   Config::initialise("../configuration-metadata.json", configurationFile);
 
-  int loopCount = 25;
+  int loopCount = 100;
 
   auto inputFileName = argv[1];
 
@@ -143,8 +143,20 @@ int main(int argc, char **argv)
   //
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
+  {
     passRunner.pass(labelledImage, granularityFunction);
-  cout << "Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
+  }
+  cout << "[simple pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
+
+  t = Clock::getTimestamp();
+  for (int i = 0; i < loopCount; i++)
+  {
+    passRunner.passWithHandler(lineDotPass, labelledImage, granularityFunction);
+    passRunner.passWithHandler(blobDetectPass, labelledImage, granularityFunction);
+    passRunner.passWithHandler(cartoonPass, labelledImage, granularityFunction);
+    passRunner.passWithHandler(labelCountPass, labelledImage, granularityFunction);
+  }
+  cout << "[direct pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
   // FIND LINES (RandomPairLineFinder)
