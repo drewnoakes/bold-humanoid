@@ -199,9 +199,8 @@ TEST (SpatialiserTests, findPixelForAgentPointLookingStraightDown)
 
   // Test some locations which are undefined in the camera's field of view
   EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,1), cameraAgentTransform) );
-  // NOTE interestingly, these two tests work on a 64-bit desktop, but fail on a 32-bit VM
-//   EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1), cameraAgentTransform) );
-//   EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1), cameraAgentTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1), cameraAgentTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1), cameraAgentTransform) );
   EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1.001), cameraAgentTransform) );
   EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1.001), cameraAgentTransform) );
   EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,2), cameraAgentTransform) );
