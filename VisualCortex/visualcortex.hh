@@ -14,7 +14,7 @@
 
 namespace bold
 {
-  class Blob;
+  struct Blob;
   class Camera;
   class CameraModel;
   class DataStreamer;

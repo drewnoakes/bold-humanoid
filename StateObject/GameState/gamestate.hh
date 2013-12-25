@@ -5,6 +5,7 @@
 #include <cassert>
 #include <stdexcept>
 #include <vector>
+#include <string>
 
 namespace bold
 {
@@ -53,23 +54,23 @@ namespace bold
       switch (d_penaltyType)
       {
         case PenaltyType::NONE:
-          return "No Penalty";
+          return std::string("No Penalty");
         case PenaltyType::BALL_MANIPULATION:
-          return "Ball Manipulation";
+          return std::string("Ball Manipulation");
         case PenaltyType::PHYSICAL_CONTACT:
-          return "Physical Contact";
+          return std::string("Physical Contact");
         case PenaltyType::ILLEGAL_ATTACK:
-          return "Illegal Attack";
+          return std::string("Illegal Attack");
         case PenaltyType::ILLEGAL_DEFENSE:
-          return "Illegal Defense";
+          return std::string("Illegal Defense");
         case PenaltyType::REQUEST_FOR_PICKUP:
-          return "Request For Pickup";
+          return std::string("Request For Pickup");
         case PenaltyType::REQUEST_FOR_SERVICE:
-          return "Request For Service";
+          return std::string("Request For Service");
         case PenaltyType::REQUEST_FOR_PICKUP_2_SERVICE:
-          return "Request For Pickup To Service";
+          return std::string("Request For Pickup To Service");
         case PenaltyType::MANUAL:
-          return "Manual";
+          return std::string("Manual");
         default:
           throw new std::runtime_error("Unsupported PenaltyType enum value.");
       }
@@ -120,15 +121,15 @@ namespace bold
       switch (PlayMode(d_data.playMode))
       {
         case PlayMode::INITIAL:
-          return "Initial";
+          return std::string("Initial");
         case PlayMode::READY:
-          return "Ready";
+          return std::string("Ready");
         case PlayMode::SET:
-          return "Set";
+          return std::string("Set");
         case PlayMode::PLAYING:
-          return "Playing";
+          return std::string("Playing");
         case PlayMode::FINISHED:
-          return "Finished";
+          return std::string("Finished");
         default:
           throw new std::runtime_error("Unsupported PlayMode enum value.");
       }

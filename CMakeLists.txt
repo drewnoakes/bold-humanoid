@@ -94,6 +94,10 @@ link_directories(${BOLDHUMANOID_LINK_DIRS})
 #
 set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT -Wall  -Wno-deprecated-register -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare -Wno-c++11-narrowing -Wno-unknown-warning-option -Wno-deprecated")
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-I/usr/include/i386-linux-gnu/c++/4.8 ${BOLDHUMANOID_COMPILE_FLAGS}")
+endif()
+
 add_class(BOLDHUMANOID
   ./Agent/Agent.cc
   ./Agent/initCamera.cc
@@ -508,7 +512,8 @@ add_executable(boldhumanoid
 #
 ## Link executable to libraries
 #
-set(BOLDHUMANOID_LINK_LIBRARIES ${OpenCV_LIBS} ${SigC++_LIBRARIES} websockets pthread rt espeak)
+set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} websockets pthread rt espeak)
+
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
 #
