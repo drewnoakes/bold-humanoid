@@ -6,6 +6,9 @@
 #include <Eigen/Geometry>
 
 #include "../util/log.hh"
+#include "../util/Maybe.hh"
+#include "LineSegment.hh"
+#include "LineSegment2.hh"
 
 namespace bold
 {
@@ -36,7 +39,7 @@ namespace bold
         Point const& b = d_vertices[j];
 
         if (((a.y() > point.y()) != (b.y() > point.y()))
-          && (point.x() < (b.x()-a.x()) * (point.y() - a.y()) / (b.y() - a.y()) + a.x()))
+          && (point.x() < (b.x() - a.x()) * (point.y() - a.y()) / (b.y() - a.y()) + a.x()))
         {
           isInside = !isInside;
         }
@@ -55,6 +58,61 @@ namespace bold
     typename std::vector<Point>::iterator end() { return d_vertices.end(); }
     typename std::vector<Point>::const_iterator begin() const { return d_vertices.begin(); }
     typename std::vector<Point>::const_iterator end() const { return d_vertices.end(); }
+
+    /// Returns the subsection of the provided that that resides within this polygon.
+    /// Assumes the poly is convex. Returns an empty result if no intersection exists.
+    Maybe<LineSegment2<T>> clipLine(LineSegment2<T> const& line)
+    {
+      bool contains1 = contains(line.p1());
+      bool contains2 = contains(line.p2());
+
+      // Line is completely inside the polygon.
+      // As we're convex, there cannot be any intersection.
+      if (contains1 && contains2)
+        return line;
+
+      std::vector<Point> intersectionPoints;
+      for (int i = 0, j = d_vertices.size() - 1; i < d_vertices.size(); j = i++)
+      {
+        Point const& a = d_vertices[i];
+        Point const& b = d_vertices[j];
+        LineSegment2<T> l(a, b);
+        auto result = l.tryIntersect(line);
+        if (result.hasValue())
+        {
+          // Ensure unique members of the list
+          if (intersectionPoints.size() > 0 && intersectionPoints[0] == result.value())
+            continue;
+          if (intersectionPoints.size() > 1 && intersectionPoints[1] == result.value())
+            continue;
+
+          intersectionPoints.push_back(std::move(result.value()));
+
+          // In a convex polygon, we should never see more than two intersections
+          if (intersectionPoints.size() == 2)
+            break;
+        }
+      }
+
+      if (intersectionPoints.size() == 0)
+      {
+        // Line is completely outside and does not intersect with polygon
+        return Maybe<LineSegment2<T>>::empty();
+      }
+
+      if (intersectionPoints.size() == 2)
+      {
+        // Line is completely outside and intersects with polygon
+        return LineSegment2<T>(intersectionPoints[0], intersectionPoints[1]);
+      }
+
+      // One end of the line is outside, and we have a single intersection
+      assert(intersectionPoints.size() == 1);
+      if (contains1)
+        return LineSegment2<T>(line.p1(), intersectionPoints[0]);
+      else
+        return LineSegment2<T>(intersectionPoints[0], line.p2());
+    }
 
   private:
     std::vector<Point> d_vertices;
