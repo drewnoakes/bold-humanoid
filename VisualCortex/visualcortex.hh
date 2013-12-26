@@ -10,6 +10,7 @@
 #include "../geometry/LineSegment2i.hh"
 #include "../PixelLabel/pixellabel.hh"
 #include "../Setting/setting.hh"
+#include "../util/meta.hh"
 
 namespace bold
 {
@@ -126,6 +127,9 @@ namespace bold
   private:
     bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d* pos);
 
+    template<typename T>
+    std::shared_ptr<T> getHandler() { return get<std::shared_ptr<T>>(d_imagePassHandlers); }
+
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;
@@ -147,13 +151,16 @@ namespace bold
 
     std::shared_ptr<ImagePassRunner<uchar>> d_imagePassRunner;
 
-    std::shared_ptr<LineDotPass<uchar>> d_lineDotPass;
-    std::shared_ptr<BlobDetectPass> d_blobDetectPass;
-    std::shared_ptr<CartoonPass> d_cartoonPass;
-    std::shared_ptr<LabelCountPass> d_labelCountPass;
+    std::tuple<
+      std::shared_ptr<LineDotPass<uchar>>,
+      std::shared_ptr<BlobDetectPass>,
+      std::shared_ptr<CartoonPass>,
+      std::shared_ptr<LabelCountPass>,
+      std::shared_ptr<CompleteFieldEdgePass>,
+      std::shared_ptr<PeriodicFieldEdgePass>
+      > d_imagePassHandlers;
+
     std::shared_ptr<FieldEdgePass> d_fieldEdgePass;
-    std::shared_ptr<CompleteFieldEdgePass> d_completeFieldEdgePass;
-    std::shared_ptr<PeriodicFieldEdgePass> d_periodicFieldEdgePass;
 
     Setting<bool>* d_shouldDetectLines;
     Setting<bool>* d_shouldCountLabels;

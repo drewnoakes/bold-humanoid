@@ -77,14 +77,16 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   int imageWidth = d_cameraModel->imageWidth();
   int imageHeight = d_cameraModel->imageHeight();
 
-  d_lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, d_fieldLabel, d_lineLabel);
-  d_blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
-  d_cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, pixelLabels, Colour::bgr(128,128,128));
-  d_labelCountPass = make_shared<LabelCountPass>(pixelLabels);
-  d_completeFieldEdgePass = make_shared<CompleteFieldEdgePass>(d_fieldLabel, imageWidth, imageHeight);
-  d_periodicFieldEdgePass = make_shared<PeriodicFieldEdgePass>(d_fieldLabel, imageWidth, imageHeight, 1*2*3*4);
+  d_imagePassHandlers = make_tuple(
+    shared_ptr<LineDotPass<uchar>>(new LineDotPass<uchar>(imageWidth, d_fieldLabel, d_lineLabel)),
+    shared_ptr<BlobDetectPass>(new BlobDetectPass(imageWidth, imageHeight, blobPixelLabels)),
+    shared_ptr<CartoonPass>(new CartoonPass(imageWidth, imageHeight, pixelLabels, Colour::bgr(128,128,128))),
+    shared_ptr<LabelCountPass>(new LabelCountPass(pixelLabels)),
+    shared_ptr<CompleteFieldEdgePass>(new CompleteFieldEdgePass(d_fieldLabel, imageWidth, imageHeight)),
+    shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(d_fieldLabel, imageWidth, imageHeight, 1*2*3*4))
+    );
 
-  d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
+  d_imagePassRunner = shared_ptr<ImagePassRunner<uchar>>(new ImagePassRunner<uchar>());
 
   Config::getSetting<FieldEdgeType>("vision.field-edge-pass.field-edge-type")->track(
     [this](FieldEdgeType fieldEdgeType)
@@ -92,14 +94,14 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
       switch (fieldEdgeType)
       {
         case FieldEdgeType::Complete:
-          d_imagePassRunner->removeHandler(d_periodicFieldEdgePass);
-          d_imagePassRunner->addHandler(d_completeFieldEdgePass);
-          d_fieldEdgePass = d_completeFieldEdgePass;
+          d_imagePassRunner->removeHandler(getHandler<PeriodicFieldEdgePass>());
+          d_imagePassRunner->addHandler(getHandler<CompleteFieldEdgePass>());
+          d_fieldEdgePass = getHandler<CompleteFieldEdgePass>();
           break;
         case FieldEdgeType::Periodic:
-          d_imagePassRunner->removeHandler(d_completeFieldEdgePass);
-          d_imagePassRunner->addHandler(d_periodicFieldEdgePass);
-          d_fieldEdgePass = d_periodicFieldEdgePass;
+          d_imagePassRunner->removeHandler(getHandler<CompleteFieldEdgePass>());
+          d_imagePassRunner->addHandler(getHandler<PeriodicFieldEdgePass>());
+          d_fieldEdgePass = getHandler<PeriodicFieldEdgePass>();
           break;
       }
     }
@@ -170,15 +172,15 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     }
   );
 
-  d_shouldDetectLines->track([this](bool value) { d_imagePassRunner->setHandler(d_lineDotPass, value); });
-  d_shouldCountLabels->track([this](bool value) { d_imagePassRunner->setHandler(d_labelCountPass, value); });
+  d_shouldDetectLines->track([this](bool value) { d_imagePassRunner->setHandler(getHandler<LineDotPass<uchar>>(), value); });
+  d_shouldCountLabels->track([this](bool value) { d_imagePassRunner->setHandler(getHandler<LabelCountPass>(), value); });
 
   // TODO SETTINGS create a setting to turn this feature on and off
-  d_imagePassRunner->addHandler(d_completeFieldEdgePass);
-  d_imagePassRunner->addHandler(d_blobDetectPass);
+  d_imagePassRunner->addHandler(getHandler<CompleteFieldEdgePass>());
+  d_imagePassRunner->addHandler(getHandler<BlobDetectPass>());
 
   // Only include the cartoon pass when needed
-  d_imageType->track([this](ImageType value) { d_imagePassRunner->setHandler(d_cartoonPass, value == ImageType::Cartoon); });
+  d_imageType->track([this](ImageType value) { d_imagePassRunner->setHandler(getHandler<CartoonPass>(), value == ImageType::Cartoon); });
 
   d_lineFinder = make_shared<MaskWalkLineFinder>();
 

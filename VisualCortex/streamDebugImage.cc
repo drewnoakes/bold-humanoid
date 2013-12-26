@@ -32,7 +32,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     }
     case ImageType::Cartoon:
     {
-      debugImage = d_cartoonPass->mat();
+      debugImage = getHandler<CartoonPass>()->mat();
       break;
     }
     case ImageType::None:
@@ -59,10 +59,10 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   }
 
   // Draw line dots
-  if (d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && d_lineDotPass->lineDots.size() > 0)
+  if (d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && getHandler<LineDotPass<uchar>>()->lineDots.size() > 0)
   {
     auto lineDotColour = d_lineDotColour->getValue();
-    for (auto const& lineDot : d_lineDotPass->lineDots)
+    for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
     {
       debugImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
     }
@@ -71,7 +71,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   // Draw blobs
   if (d_shouldDrawBlobs->getValue())
   {
-    for (auto const& pixelLabel : d_blobDetectPass->pixelLabels())
+    for (auto const& pixelLabel : getHandler<BlobDetectPass>()->pixelLabels())
     {
       auto blobColorBgr = pixelLabel->hsvRange().toBgr();
       switch (imageType)
@@ -85,7 +85,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
       }
 
       auto blobColor = blobColorBgr.toScalar();
-      auto detectedBlobs = d_blobDetectPass->getDetectedBlobs().at(pixelLabel);
+      auto detectedBlobs = getHandler<BlobDetectPass>()->getDetectedBlobs().at(pixelLabel);
       for (Blob const& blob : detectedBlobs)
       {
         // Blobs with zero area were merged into other blobs

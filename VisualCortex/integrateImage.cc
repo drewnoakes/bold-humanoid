@@ -35,7 +35,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   if (d_shouldCountLabels->getValue())
   {
-    AgentState::getInstance().set(make_shared<LabelCountState const>(d_labelCountPass->getCounts()));
+    AgentState::getInstance().set(make_shared<LabelCountState const>(getHandler<LabelCountPass>()->getCounts()));
     t.timeEvent("Store Label Count");
   }
 
@@ -43,12 +43,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   vector<LineSegment2i> observedLineSegments;
   if (d_shouldDetectLines->getValue())
   {
-    observedLineSegments = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
+    observedLineSegments = d_lineFinder->findLineSegments(getHandler<LineDotPass<uchar>>()->lineDots);
     t.timeEvent("Line Search");
   }
 
   // Find blobs
-  auto blobsPerLabel = d_blobDetectPass->detectBlobs();
+  auto blobsPerLabel = getHandler<BlobDetectPass>()->detectBlobs();
   t.timeEvent("Blob Detection");
 
   //
