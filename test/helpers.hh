@@ -2,6 +2,7 @@
 
 #include "gtest/gtest.h"
 #include "../util/Maybe.hh"
+#include "../geometry/LineSegment.hh"
 
 #include <Eigen/Core>
 
@@ -27,6 +28,16 @@
     return ::testing::AssertionSuccess();
   else
     return ::testing::AssertionFailure() << "Actual: " << b.transpose() << ", expected: " << a.transpose() << " d = " << d;
+}
+
+template<typename T, int dim>
+::testing::AssertionResult LinesEqual(bold::LineSegment<T,dim> const& a, bold::LineSegment<T,dim> const& b, const double delta = 0.000001) {
+  double d1 = (a.p1()-b.p1()).norm();
+  double d2 = (a.p2()-b.p2()).norm();
+  if (d1 <= delta && d2 <= delta)
+    return ::testing::AssertionSuccess();
+  else
+    return ::testing::AssertionFailure() << "Actual: " << b << ", expected: " << a << " d1=" << d1 << " d2=" << d2;
 }
 
 #define ASSERT_EMPTY(condition) \
