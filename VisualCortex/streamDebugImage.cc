@@ -124,7 +124,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
   bool drawExpectedLineEdges = d_shouldDrawExpectedLineEdges->getValue();
   if (drawExpectedLines || drawExpectedLineEdges)
   {
-    Affine3d const& agentWorld = AgentState::get<WorldFrameState>()->getPosition().agentWorldTransform();
+    auto const& worldFrameState = AgentState::get<WorldFrameState>();
+    Affine3d const& agentWorld = worldFrameState->getPosition().agentWorldTransform();
     Affine3d const& cameraAgent = bodyState->getCameraAgentTransform();
 
     Affine3d const& cameraWorld = cameraAgent * agentWorld;
@@ -134,22 +135,32 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
 
     auto expectedLineColour = d_expectedLineColour->getValue();
 
-    for (LineSegment3d const& line : drawExpectedLineEdges ? d_fieldMap->getFieldLineEdges() : d_fieldMap->getFieldLines())
+    auto visibleFieldPoly = worldFrameState->getVisibleFieldPoly();
+
+    if (visibleFieldPoly.hasValue())
     {
-      // NOTE this degrades when lines start/end outside of the camera's FOV
-      // TODO crop/filter world lines based upon visible field poly before transforming to camera frame
-      auto p1 = d_cameraModel->pixelForDirection(cameraWorld * line.p1());
-      auto p2 = d_cameraModel->pixelForDirection(cameraWorld * line.p2());
-
-      if (p1.hasValue() && p2.hasValue())
+      for (LineSegment3d const& expectedLine : drawExpectedLineEdges ? d_fieldMap->getFieldLineEdges() : d_fieldMap->getFieldLines())
       {
-        auto p1v = p1->cast<int>();
-        auto p2v = p2->cast<int>();
-        if (p1v != p2v)
+        // Clip world lines based upon visible field poly before transforming to camera frame
+        Maybe<LineSegment2d> clippedLine2 = visibleFieldPoly->clipLine(expectedLine.to<2>());
+        if (clippedLine2.hasValue())
         {
-          LineSegment2i line2i(max - p1v, max - p2v);
+          LineSegment3d clippedLine = clippedLine2.value().to<3>();
 
-          line2i.draw(debugImage, expectedLineColour, 1);
+          auto p1 = d_cameraModel->pixelForDirection(cameraWorld * clippedLine.p1());
+          auto p2 = d_cameraModel->pixelForDirection(cameraWorld * clippedLine.p2());
+
+          if (p1.hasValue() && p2.hasValue())
+          {
+            auto p1v = p1->cast<int>();
+            auto p2v = p2->cast<int>();
+            if (p1v != p2v)
+            {
+              LineSegment2i line2i(max - p1v, max - p2v);
+
+              line2i.draw(debugImage, expectedLineColour, 1);
+            }
+          }
         }
       }
     }
