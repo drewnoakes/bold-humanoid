@@ -8,26 +8,25 @@
 
 #include "Line.hh"
 #include "Bounds2i.hh"
-#include "LineSegment.hh"
+#include "LineSegment2.hh"
 
 namespace bold
 {
   class Line;
 
-  struct LineSegment2i : public LineSegment<int,2>
+  struct LineSegment2i : public LineSegment2<int>
   {
   public:
     LineSegment2i(LineSegment<int,2> const& other)
-    : LineSegment<int,2>::LineSegment(other.p1(), other.p2())
+    : LineSegment2<int>::LineSegment2(other.p1(), other.p2())
     {}
 
     LineSegment2i(Eigen::Vector2i const& p1, Eigen::Vector2i const& p2)
-    : LineSegment<int,2>::LineSegment(p1, p2)
+    : LineSegment2<int>::LineSegment2(p1, p2)
     {}
 
     LineSegment2i(int const x1, int const y1, int const x2, int const y2)
-    : LineSegment<int,2>::LineSegment(Eigen::Vector2i(x1, y1),
-                                      Eigen::Vector2i(x2, y2))
+    : LineSegment2<int>::LineSegment2(x1, y1, x2, y2)
     {}
 
     double gradient() const;
@@ -43,15 +42,5 @@ namespace bold
     Line toLine() const;
 
     Maybe<LineSegment2i> cropTo(Bounds2i const& bounds) const;
-
-    Maybe<Eigen::Vector2i> tryIntersect(LineSegment2i const& other) const;
-
-  private:
-    /**
-     * Returns the magnitude of the vector that would result from a regular
-     * 3D cross product of the input vectors, taking their Z values implicitly
-     * as 0 (i.e. treating the 2D space as a plane in the 3D space)
-     */
-    static double fake2dCross(Eigen::Vector2d const& a, Eigen::Vector2d const& b);
   };
 }

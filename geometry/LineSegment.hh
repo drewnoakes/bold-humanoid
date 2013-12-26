@@ -16,6 +16,8 @@ namespace bold
     : d_p1(p1),
       d_p2(p2)
     {
+      static_assert(std::is_arithmetic<T>::value, "Must be an arithmetic type");
+      
       if ((p2 - p1).cwiseAbs().maxCoeff() == 0)
         throw std::runtime_error("Points must have different values.");
     }
@@ -89,7 +91,6 @@ namespace bold
     Eigen::Matrix<T,dim,1> d_p2;
   };
 
-  typedef LineSegment<double,2> LineSegment2d;
   typedef LineSegment<double,3> LineSegment3d;
   typedef LineSegment<int,3> LineSegment3i;
 }

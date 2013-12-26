@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "../geometry/LineSegment.hh"
+#include "../geometry/LineSegment2.hh"
 #include "../util/Maybe.hh"
 
 namespace bold
