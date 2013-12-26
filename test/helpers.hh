@@ -13,7 +13,7 @@
     return ::testing::AssertionFailure() << "Actual: " << b.transpose() << ", expected: " << a.transpose() << " d = " << d;
 }
 
-::testing::AssertionResult VectorsEqual(Eigen::Vector2d const& a, Eigen::Vector2d const& b, const float delta = 0.00001) {
+::testing::AssertionResult VectorsEqual(Eigen::Vector2d const& a, Eigen::Vector2d const& b, const double delta = 0.00001) {
   double d = (a-b).norm();
   if (d < delta)
     return ::testing::AssertionSuccess();
