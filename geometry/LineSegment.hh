@@ -4,6 +4,7 @@
 
 #include <Eigen/Core>
 #include <stdexcept>
+#include <sstream>
 
 namespace bold
 {
@@ -17,9 +18,13 @@ namespace bold
       d_p2(p2)
     {
       static_assert(std::is_arithmetic<T>::value, "Must be an arithmetic type");
-      
+
       if ((p2 - p1).cwiseAbs().maxCoeff() == 0)
-        throw std::runtime_error("Points must have different values.");
+      {
+        std::stringstream s;
+        s << "Points must have different values. Both have: " << p1.transpose();
+        throw std::runtime_error(s.str());
+      }
     }
 
     Eigen::Matrix<T,dim,1> p1() const { return d_p1; }
