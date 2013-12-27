@@ -57,11 +57,12 @@ TEST (ConsumerQueueThreadTests, doesntBlockPusher)
     queue.push(1);
 
   ASSERT_LT ( callCount, loopCount );
+  auto start = Clock::getTimestamp();
   this_thread::sleep_for(chrono::milliseconds(loopCount / 4));
   ASSERT_GT ( callCount, 0 );
-  ASSERT_LT ( callCount, loopCount );
+  ASSERT_LT ( callCount, loopCount ) << "Slept for " << Clock::getMillisSince(start) << " ms";
 
-  auto start = Clock::getTimestamp();
+  start = Clock::getTimestamp();
   while (callCount < loopCount)
   {
     if (Clock::getSecondsSince(start) > 1.0)
