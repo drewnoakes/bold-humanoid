@@ -73,5 +73,11 @@ int main(int argc, char **argv)
 
   log::minLevel = LogLevel::Warning;
 
+  for (int i = 0; i < argc; i++)
+  {
+    if (strcmp("-v", argv[i]) == 0)
+      log::minLevel = LogLevel::Verbose;
+  }
+
   return RUN_ALL_TESTS();
 }
