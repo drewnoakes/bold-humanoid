@@ -124,6 +124,8 @@ TEST (LineSegmentTests, tryIntersect2i)
   EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(1, 1, 2, 2).tryIntersect(LineSegment2i(3, 3, 4, 4)) );
   // this case doesn't work -- is it important?
 //EXPECT_EQ( Maybe<Vector2i>(Vector2i(2,2)), LineSegment2i(1, 1, 2, 2).tryIntersect(LineSegment2i(2, 2, 3, 3)) );
+
+  EXPECT_EQ( Maybe<Vector2i>::empty(), LineSegment2i(0, 0, 0, 10).tryIntersect(LineSegment2i(5, 5, 15, 5)) );
 }
 
 TEST (LineSegmentTests, tryIntersect2d)
@@ -160,6 +162,8 @@ TEST (LineSegmentTests, tryIntersect2d)
   EXPECT_EQ( Maybe<Vector2d>::empty(), LineSegment2d(1, 1, 2, 2).tryIntersect(LineSegment2d(3, 3, 4, 4)) );
   // this case doesn't work -- is it important?
 //EXPECT_EQ( Maybe<Vector2d>(Vector2d(2,2)), LineSegment2d(1, 1, 2, 2).tryIntersect(LineSegment2d(2, 2, 3, 3)) );
+
+  EXPECT_EQ( Maybe<Vector2d>::empty(), LineSegment2d(0, 0, 0, 1).tryIntersect(LineSegment2d(0.5, 0.5, 1.5, 0.5)) );
 }
 
 TEST (LineSegmentTests, normalisedDot)

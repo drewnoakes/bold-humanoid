@@ -27,35 +27,56 @@ namespace bold
 
     Maybe<Point> tryIntersect(LineSegment2<T> const& other) const
     {
+      double t;
+      double u;
+      return tryIntersect(other, &t, &u);
+    }
+
+    Maybe<Point> tryIntersect(LineSegment2<T> const& other, double* t, double* u) const
+    {
       // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 
       Eigen::Vector2d pos1 = this->p1().template cast<double>();    // p
-      Eigen::Vector2d dir1 = this->delta().template cast<double>(); // q
-      Eigen::Vector2d pos2 = other.p1().template cast<double>();    // r
+      Eigen::Vector2d pos2 = other.p1().template cast<double>();    // q
+      Eigen::Vector2d dir1 = this->delta().template cast<double>(); // r
       Eigen::Vector2d dir2 = other.delta().template cast<double>(); // s
 
-      double denom = fake2dCross(dir1, dir2);
-      double numer = fake2dCross(pos2 - pos1, dir2);
+      // t = (q − p) × s / (r × s)
+      // u = (q − p) × r / (r × s)
 
-      if (/*numer == 0 ||*/ denom == 0)
+      double denom = fake2dCross(dir1, dir2);
+
+      if (denom == 0)
       {
         // lines are collinear or parallel
         return Maybe<Point>::empty();
       }
 
-      double t = numer / denom;
+      double t_numer = fake2dCross(pos2 - pos1, dir2);
+      double u_numer = fake2dCross(pos2 - pos1, dir1);
 
-      if (t < 0 || t > 1)
+      double tt = t_numer / denom;
+      double uu = u_numer / denom;
+
+      if (tt < 0 || tt > 1 || uu < 0 || uu > 1)
       {
         // line segments do not intersect within their ranges
         return Maybe<Point>::empty();
       }
 
-      Eigen::Vector2d intersectionPoint = pos1 + dir1 * t;
+      Eigen::Vector2d intersectionPoint = pos1 + dir1 * tt;
 
-      Eigen::Vector2d rounded = intersectionPoint.unaryExpr([](double v) { return round(v); });
+      *t = tt;
+      *u = uu;
 
-      return Maybe<Point>(rounded.cast<T>());
+      // If we are using integers, be sure to round the result before casting
+      if (std::is_same<T,int>())
+      {
+        Eigen::Vector2d rounded = intersectionPoint.unaryExpr([](double v) { return round(v); });
+        return Maybe<Point>(rounded.cast<T>());
+      }
+
+      return Maybe<Point>(intersectionPoint.cast<T>());
     }
 
   private:
@@ -64,7 +85,7 @@ namespace bold
      * 3D cross product of the input vectors, taking their Z values implicitly
      * as 0 (i.e. treating the 2D space as a plane in the 3D space)
      */
-    static double fake2dCross(Eigen::Vector2d const& a, Eigen::Vector2d const& b)
+    inline static double fake2dCross(Eigen::Vector2d const& a, Eigen::Vector2d const& b)
     {
       return a.x()*b.y() - a.y()*b.x();
     }
