@@ -39,3 +39,5 @@ vision
 www/.idea
 /www/scripts/app/util/Geometry.js
 /www/scripts/app/util/Geometry.js.map
+/www/scripts/app/Color.js
+/www/scripts/app/Color.js.map

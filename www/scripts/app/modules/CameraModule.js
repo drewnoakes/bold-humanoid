@@ -10,11 +10,11 @@ define(
         'ControlBuilder',
         'DOMTemplate',
         'PixelLabelInspector',
-        'util/Colour',
+        'Color',
         'util/Closeable',
         'util/MouseEventUtil'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, Colour, Closeable, MouseEventUtil)
+    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, color, Closeable, MouseEventUtil)
     {
         'use strict';
 
@@ -155,7 +155,7 @@ define(
                 } else {
                     if (event.shiftKey) {
                         var rgb = this.context.getImageData(event.offsetX, event.offsetY, 1, 1).data,
-                            hsv = Colour.rgbToHsv({r:rgb[0]/255, g:rgb[1]/255, b:rgb[2]/255});
+                            hsv = new color.Rgb(rgb[0]/255, rgb[1]/255, rgb[2]/255).toHsv();
                         console.log(Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255));
                     } else {
                         isImageLarge = true;
@@ -178,14 +178,14 @@ define(
                 MouseEventUtil.polyfill(e);
                 var x = e.offsetX,
                     y = e.offsetY,
-                    rgb = this.context.getImageData(x, y, 1, 1).data,
-                    hsv = Colour.rgbToHsv({r:rgb[0]/255, g:rgb[1]/255, b:rgb[2]/255}),
                     hoverText = 'Pos: ' + (this.cameraCanvas.width - x) + ',' + (this.cameraCanvas.height - y);
                 if (imageTypeSetting.value === 2) {
+                    var rgb = this.context.getImageData(x, y, 1, 1).data,
+                        hsv = new color.Rgb(rgb[0]/255, rgb[1]/255, rgb[2]/255).toHsv();
                     this.pixelLabelInspector.setVisible(true);
                     this.pixelLabelInspector.highlightHsv(hsv);
                     hoverText += ' RGB: ' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] +
-                                 ' HSV: ' + Math.round(hsv.h * 255) + ',' + Math.round(hsv.s * 255) + ',' + Math.round(hsv.v * 255);
+                                 ' HSV: ' + Math.round(hsv.H * 255) + ',' + Math.round(hsv.S * 255) + ',' + Math.round(hsv.V * 255);
                 }
                 this.hoverPixelInfo.textContent = hoverText;
             }.bind(this));

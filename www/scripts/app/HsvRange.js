@@ -3,9 +3,9 @@
  */
 define(
     [
-        'color/HsvColor'
+        'Color'
     ],
-    function (HsvColor)
+    function (color)
     {
         'use strict';
 
@@ -18,7 +18,7 @@ define(
                 s = (val.sat[0] + val.sat[1]) / 2,
                 v = (val.val[0] + val.val[1]) / 2;
 
-            return new HsvColor(h/255, s/255, v/255).toString();
+            return new color.Hsv(h/255, s/255, v/255).toString();
         };
 
         return HsvRange;

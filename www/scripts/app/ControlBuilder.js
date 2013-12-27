@@ -5,9 +5,9 @@ define(
     [
         'ControlClient',
         'HsvRangeEditor',
-        'color/RgbColor'
+        'Color'
     ],
-    function (ControlClient, HsvRangeEditor, RgbColor)
+    function (ControlClient, HsvRangeEditor, color)
     {
         'use strict';
 
@@ -182,18 +182,18 @@ define(
                     heading.textContent = setting.getDescription();
                     wrapper.appendChild(heading);
 
-                    var color = document.createElement('input');
-                    color.type = 'color';
-                    color.addEventListener('change', function()
+                    var colorInput = document.createElement('input');
+                    colorInput.type = 'color';
+                    colorInput.addEventListener('change', function()
                     {
-                        var rgb = new RgbColor(color.value);
+                        var rgb = new color.Rgb(colorInput.value);
                         setting.setValue(rgb.toByteObject());
                     });
                     closeables.push(setting.track(function(value)
                     {
-                        color.value = new RgbColor(value.r/255, value.g/255, value.b/255).toString();
+                        colorInput.value = new color.Rgb(value.r/255, value.g/255, value.b/255).toString();
                     }));
-                    wrapper.appendChild(color);
+                    wrapper.appendChild(colorInput);
                     break;
                 }
                 default:

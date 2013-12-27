@@ -1,3 +1,7 @@
+/**
+ * @author Drew Noakes http://drewnoakes.com
+ */
+
 //export interface IPoint
 //{
 //    x: number;

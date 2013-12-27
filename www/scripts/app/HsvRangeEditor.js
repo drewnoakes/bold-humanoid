@@ -4,9 +4,9 @@
 define(
     [
         'HsvRange',
-        'color/HsvColor'
+        'Color'
     ],
-    function (HsvRange, HsvColor)
+    function (HsvRange, color)
     {
         'use strict';
 
@@ -100,12 +100,12 @@ define(
             s /= 255;
             v /= 255;
 
-            this.rows.hue.minCol.style.backgroundColor = new HsvColor(value.hue[0]/255, s, v).toString();
-            this.rows.hue.maxCol.style.backgroundColor = new HsvColor(value.hue[1]/255, s, v).toString();
-            this.rows.sat.minCol.style.backgroundColor = new HsvColor(h, value.sat[0]/255, v).toString();
-            this.rows.sat.maxCol.style.backgroundColor = new HsvColor(h, value.sat[1]/255, v).toString();
-            this.rows.val.minCol.style.backgroundColor = new HsvColor(h, s, value.val[0]/255).toString();
-            this.rows.val.maxCol.style.backgroundColor = new HsvColor(h, s, value.val[1]/255).toString();
+            this.rows.hue.minCol.style.backgroundColor = new color.Hsv(value.hue[0]/255, s, v).toString();
+            this.rows.hue.maxCol.style.backgroundColor = new color.Hsv(value.hue[1]/255, s, v).toString();
+            this.rows.sat.minCol.style.backgroundColor = new color.Hsv(h, value.sat[0]/255, v).toString();
+            this.rows.sat.maxCol.style.backgroundColor = new color.Hsv(h, value.sat[1]/255, v).toString();
+            this.rows.val.minCol.style.backgroundColor = new color.Hsv(h, s, value.val[0]/255).toString();
+            this.rows.val.maxCol.style.backgroundColor = new color.Hsv(h, s, value.val[1]/255).toString();
 
             this.element.querySelector('h3').style.backgroundColor = HsvRange.calculateColour(value);
 
