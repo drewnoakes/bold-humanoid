@@ -54,6 +54,10 @@ namespace bold
       return counts;
     }
 
+    std::string id() const override
+    {
+      return std::string("LabelCountPass");
+    }
   private:
     uint d_countByLabelId[MAX_LABEL_COUNT];
     std::vector<std::shared_ptr<PixelLabel>> d_labels;

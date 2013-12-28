@@ -92,5 +92,10 @@ namespace bold
       d_rowTracker->update(label, x);
       d_colTrackers[x].update(label, y);
     }
+
+    std::string id() const override
+    {
+      return std::string("LineDotPass");
+    }
   };
 }

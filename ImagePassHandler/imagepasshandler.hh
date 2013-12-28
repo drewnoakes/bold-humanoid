@@ -33,5 +33,7 @@ namespace bold
 
     /** Processing of an image frame has completed. */
     virtual void onImageComplete() {}
+
+    virtual std::string id() const = 0;
   };
 }

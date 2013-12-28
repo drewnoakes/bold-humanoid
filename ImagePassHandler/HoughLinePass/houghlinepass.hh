@@ -48,5 +48,10 @@ namespace bold
 
       lines = extractor.findLines(accumulator, accumulator.count() / d_thresholdDivisor);
     }
+
+    std::string id() const override
+    {
+      return std::string("HoughLinePass");
+    }
   };
 }

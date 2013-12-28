@@ -17,6 +17,10 @@ namespace bold
 
     ushort getEdgeYValue(ushort x) const override;
 
+    std::string id() const override
+    {
+      return std::string("PeriodicFieldEdgePass");
+    }
   private:
     std::vector<ushort> d_maxYByC;
     std::vector<ushort> d_runByC;

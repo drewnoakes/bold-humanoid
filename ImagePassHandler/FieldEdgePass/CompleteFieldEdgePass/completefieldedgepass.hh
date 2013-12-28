@@ -18,6 +18,11 @@ namespace bold
 
     ushort getEdgeYValue(ushort x) const override;
 
+    std::string id() const override
+    {
+      return std::string("CompleteFieldEdgePass");
+    }
+
   private:
     std::vector<ushort> d_maxYByX;
     std::vector<ushort> d_runByX;

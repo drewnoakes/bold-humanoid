@@ -54,6 +54,10 @@ namespace bold
       d_ptr += d_dx;
     }
 
+    std::string id() const override
+    {
+      return std::string("CartoonPass");
+    }
   private:
     cv::Mat d_mat;
     Colour::bgr d_bgrByLabelId[8]; // assumes we'll never have more than 7 labels (1-8)
