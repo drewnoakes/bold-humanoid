@@ -128,7 +128,7 @@ namespace bold
     bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d* pos);
 
     template<typename T>
-    std::shared_ptr<T> getHandler() { return get<std::shared_ptr<T>>(d_imagePassHandlers); }
+    std::shared_ptr<T> getHandler() { return meta::get<std::shared_ptr<T>>(d_imagePassHandlers); }
 
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Camera> d_camera;
