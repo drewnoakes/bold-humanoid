@@ -30,26 +30,6 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-template<typename T>
-struct PassWrapper
-{
-  static ImagePassRunner<T> *runner;
-  static long pixelCount;
-
-  template<typename Handler>
-  static void do_it(std::shared_ptr<Handler> handler,
-                    cv::Mat const& image,
-                    std::function<Eigen::Vector2i(int)> const& granularityFunction)
-  {
-    pixelCount += runner->passWithHandler(handler, image, granularityFunction);
-  }
-};
-
-template<>
-ImagePassRunner<uchar>* PassWrapper<uchar>::runner = 0;
-template<>
-long PassWrapper<uchar>::pixelCount = 0;
-
 int main(int argc, char **argv)
 {
   if (argc != 2)
@@ -182,12 +162,10 @@ int main(int argc, char **argv)
   cout << "[direct pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   auto passTuple = make_tuple(lineDotPass, blobDetectPass, cartoonPass, labelCountPass);
-  PassWrapper<uchar>::runner = &passRunner;
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
   {
-    PassWrapper<uchar>::pixelCount = 0;
-    meta::for_each<PassWrapper<uchar>>(passTuple, labelledImage, granularityFunction);
+    passRunner.passWithHandlers(passTuple, labelledImage, granularityFunction);
   }
   cout << "[meta pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
