@@ -5,6 +5,7 @@
 using namespace std;
 using namespace bold;
 using namespace Eigen;
+using namespace std::placeholders;
 
 TEST (MetaTests, if_)
 {
@@ -46,15 +47,51 @@ TEST (MetaTests, get)
 
 double sum = 0;
 
-void addToSum(double v)
+struct AddToSum
 {
-  sum += v;
-}
+  static void do_it(double v)
+  {
+    sum += v;
+  }
+};
 
-TEST (MetaTest, for_each)
+struct MultAndSum
 {
+  static void do_it(double v, double factor)
+  {
+    sum += v * factor;
+  }
+};
+
+struct TemplFun
+{
+  template<typename T>
+  static void do_it(T v)
+  {
+    sum += 1;
+  }
+
+  static void do_it(int v)
+  {
+    sum += 10;
+  }
+};
+
+TEST (MetaTests, for_each)
+{
+  // Test unary function
+  sum = 0;
   std::tuple<int, double, float> tuple(1, 2.0, 3.0f);
-  meta::for_each(tuple, addToSum);
-
+  meta::for_each<AddToSum>(tuple);
   EXPECT_EQ( sum, 6 );
+
+  // Test multiple arguments
+  sum = 0;
+  meta::for_each<MultAndSum>(tuple, 2.0);
+  EXPECT_EQ( sum, 12 );
+
+  // Test template function
+  sum = 0;
+  meta::for_each<TemplFun>(tuple);
+  EXPECT_EQ( sum, 12 );
 }
