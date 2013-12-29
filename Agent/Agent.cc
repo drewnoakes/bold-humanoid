@@ -21,10 +21,12 @@ Agent::Agent(bool useSpeech)
 
   // Register state observers
   d_fallDetector = make_shared<FallDetector>();
-  AgentState::getInstance().registerObserver<HardwareState>(d_fallDetector);
-
   d_gyroCalibrator = make_shared<GyroCalibrator>();
+  d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
+
+  AgentState::getInstance().registerObserver<HardwareState>(d_fallDetector);
   AgentState::getInstance().registerObserver<HardwareState>(d_gyroCalibrator);
+  AgentState::getInstance().registerObserver<HardwareState>(d_healthAndSafety);
 
   d_cm730Linux = make_shared<CM730Linux>(cm730DevicePath);
   d_cm730 = make_shared<CM730>(d_cm730Linux);

@@ -422,6 +422,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObserver/HealthAndSafety/healthandsafety.cc
+)
+
+add_class(BOLDHUMANOID
   ./TeamCommunicator/teamcommunicator.cc
 )
 

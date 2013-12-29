@@ -192,5 +192,15 @@
       "head-pan-degs":  { "type": "double", "default": 0 },
       "head-tilt-degs": { "type": "double", "default": -67.5 }
     }
+  },
+  "health-and-safety": {
+    "voltage": {
+      "high-threshold":        { "type": "double", "default": 12.0, "readonly": true },
+      "low-threshold":         { "type": "double", "default": 10.5, "readonly": true },
+      "smoothing-window-size": { "type": "int", "default": 200, "readonly": true }
+    },
+    "temperature": {
+      "high-threshold":        { "type": "int", "default": 60, "readonly": true }
+    }
   }
 }

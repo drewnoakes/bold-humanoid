@@ -198,5 +198,15 @@
       "head-pan-degs": 0,
       "head-tilt-degs": -67.5
     }
+  },
+  "health-and-safety": {
+    "voltage": {
+      "high-threshold": 12.0,
+      "low-threshold": 10.5,
+      "smoothing-window-size": 200
+    },
+    "temperature": {
+      "high-threshold": 60
+    }
   }
 }
