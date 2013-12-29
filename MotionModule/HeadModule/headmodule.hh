@@ -40,12 +40,6 @@ namespace bold
     double getRightLimitRads() const  { return Math::degToRad(getRightLimitDegs()); }
     double getLeftLimitRads() const   { return Math::degToRad(getLeftLimitDegs()); }
 
-    double getPanDegs() const  { return d_panAngleDegs; }
-    double getTiltDegs() const { return d_tiltAngleDegs; }
-
-    double getPanRads() const  { return Math::degToRad(d_panAngleDegs); }
-    double getTiltRads() const { return Math::degToRad(d_tiltAngleDegs); }
-
     /// Move the head to the position set as the 'home' position
     void moveToHome();
 
@@ -89,7 +83,7 @@ namespace bold
     double d_lastPanError;
     double d_lastTiltError;
 
-    double d_panAngleDegs;
-    double d_tiltAngleDegs;
+    double d_targetPanAngleDegs;
+    double d_targetTiltAngleDegs;
   };
 }

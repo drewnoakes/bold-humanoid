@@ -5,6 +5,7 @@
 #include "../Config/config.hh"
 #include "../Math/math.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 #include "../ThreadId/threadid.hh"
 
 #include <iostream>
@@ -49,8 +50,8 @@ HeadModule::~HeadModule()
 void HeadModule::checkLimit()
 {
   // Clamp pan/tilt within the box-shaped limit
-  d_panAngleDegs = d_limitPanDegs->getValue().clamp(d_panAngleDegs);
-  d_tiltAngleDegs = d_limitTiltDegs->getValue().clamp(d_tiltAngleDegs);
+  d_targetPanAngleDegs = d_limitPanDegs->getValue().clamp(d_targetPanAngleDegs);
+  d_targetTiltAngleDegs = d_limitTiltDegs->getValue().clamp(d_targetTiltAngleDegs);
 
   // Lower corners of that box are disallowed as the head makes contact with the
   // shoulder, and the body occludes too much from the camera anyway.
@@ -63,21 +64,18 @@ void HeadModule::checkLimit()
   //
   //      -85     85
 
-  if (fabs(d_panAngleDegs) > Math::degToRad(85))
+  if (fabs(d_targetPanAngleDegs) > Math::degToRad(85))
   {
     // Outside of +/- 85 degrees, we need to prevent tilting too far down.
     // At 85 deg, we start tilting upwards to avoid the shoulder.
-    double limit = Math::lerp(fabs(d_panAngleDegs), 85, 135, -22, 10);
-    if (d_tiltAngleDegs < limit)
-      d_tiltAngleDegs = limit;
+    double limit = Math::lerp(fabs(d_targetPanAngleDegs), 85, 135, -22, 10);
+    if (d_targetTiltAngleDegs < limit)
+      d_targetTiltAngleDegs = limit;
   }
 }
 
 void HeadModule::initialize()
 {
-  d_panAngleDegs = d_panHomeDegs->getValue();
-  d_tiltAngleDegs = d_tiltHomeDegs->getValue();
-  checkLimit();
   initTracking();
   moveToHome();
 }
@@ -89,8 +87,8 @@ void HeadModule::moveToHome()
 
 void HeadModule::moveToDegs(double pan, double tilt)
 {
-  d_panAngleDegs = pan;
-  d_tiltAngleDegs = tilt;
+  d_targetPanAngleDegs = pan;
+  d_targetTiltAngleDegs = tilt;
 
   getScheduler()->add(this,
                       Priority::Normal, false,  // HEAD   Interuptable::YES
@@ -102,7 +100,10 @@ void HeadModule::moveToDegs(double pan, double tilt)
 
 void HeadModule::moveByDeltaDegs(double panDelta, double tiltDelta)
 {
-  moveToDegs(d_panAngleDegs + panDelta, d_tiltAngleDegs + tiltDelta);
+  auto body = AgentState::get<BodyState>();
+  double currentPanAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_PAN)->angle);
+  double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->angle);
+  moveToDegs(currentPanAngleDegs + panDelta, currentTiltAngleDegs + tiltDelta);
 }
 
 void HeadModule::initTracking()
@@ -132,8 +133,12 @@ void HeadModule::moveTracking(double panError, double tiltError)
     return pOffset + dOffset;
   };
 
-  d_panAngleDegs  += calcPDOffset(panError,  panErrorDelta,  d_panGainP->getValue(),  d_panGainD->getValue());
-  d_tiltAngleDegs += calcPDOffset(tiltError, tiltErrorDelta, d_tiltGainP->getValue(), d_tiltGainD->getValue());
+  auto body = AgentState::get<BodyState>();
+  double currentPanAngleDegs = body->getJoint(JointId::HEAD_PAN)->angle;
+  double currentTiltAngleDegs = body->getJoint(JointId::HEAD_TILT)->angle;
+
+  d_targetPanAngleDegs  = currentPanAngleDegs  + calcPDOffset(panError,  panErrorDelta,  d_panGainP->getValue(),  d_panGainD->getValue());
+  d_targetTiltAngleDegs = currentTiltAngleDegs + calcPDOffset(tiltError, tiltErrorDelta, d_tiltGainP->getValue(), d_tiltGainD->getValue());
 
   getScheduler()->add(this,
                       Priority::Normal, false,  // HEAD   Interuptable::YES
@@ -154,8 +159,8 @@ void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
   auto gainP = d_gainP->getValue();
   head->visitJoints([this,gainP](shared_ptr<JointControl> joint) { joint->setPGain(gainP); });
 
-  head->pan()->setDegrees(d_panAngleDegs);
-  head->tilt()->setDegrees(d_tiltAngleDegs);
+  head->pan()->setDegrees(d_targetPanAngleDegs);
+  head->tilt()->setDegrees(d_targetTiltAngleDegs);
 }
 
 void HeadModule::applyArms(std::shared_ptr<ArmSection> arms) { log::error("HeadModule::applyArms") << "SHOULD NOT BE CALLED"; }
