@@ -202,6 +202,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./IntegralImage/integralimage.cc
+)
+
+add_class(BOLDHUMANOID
   ./LineFinder/RandomPairLineFinder/findLineSegments.cc
 )
 
