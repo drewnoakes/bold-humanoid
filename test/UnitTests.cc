@@ -62,6 +62,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "RangeTests.hh"
 #include "RunTests.hh"
 #include "SequentialTimerTests.hh"
+#include "SchmittTriggerTests.hh"
 #include "SpatialiserTest.hh"
 #include "ThreadTests.hh"
 #include "ThreadIdTests.hh"
