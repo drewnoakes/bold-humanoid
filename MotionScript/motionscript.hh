@@ -43,7 +43,7 @@ namespace bold
       uchar pauseCycles;
       /// The number of cycles over which motion towards the target position is planned.
       uchar moveCycles;
-      /// The target motor position values, indexed by joint ID.
+      /// The target motor position values, indexed by joint ID - 1.
       ushort values[(uchar)JointId::MAX];
     };
 
@@ -71,7 +71,7 @@ namespace bold
       unsigned speed;
       /// The number of times this stage should be played. Defaults to 1.
       unsigned repeatCount;
-      /// The p-gain value to be used throught this stage, indexed by joint ID.
+      /// The p-gain value to be used throught this stage, indexed by joint ID - 1.
       uchar pGains[(uchar)JointId::MAX];
       /// The KeyFrames contained within this stage.
       std::vector<KeyFrame> keyFrames;

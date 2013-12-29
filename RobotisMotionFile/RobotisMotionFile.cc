@@ -149,8 +149,8 @@ shared_ptr<MotionScript> RobotisMotionFile::toMotionScript(uchar rootPageIndex)
       currentStage->repeatCount = page->repeatCount;
       currentStage->speed = page->speed;
 
-      for (int i = (uchar)JointId::MIN; i <= (uchar)JointId::MAX; i++)
-        currentStage->pGains[i] = page->getPGain(i);
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+        currentStage->pGains[jointId - 1] = page->getPGain(jointId);
     }
 
     for (uchar i = 0; i < page->stepCount; i++)
@@ -172,7 +172,7 @@ shared_ptr<MotionScript> RobotisMotionFile::toMotionScript(uchar rootPageIndex)
 
     Page const& nextPage = d_pages[page->nextPageIndex];
 
-    for (int j = (uchar)JointId::MIN; !startNewStage && j <= (uchar)JointId::MAX; j++)
+    for (uchar j = (uchar)JointId::MIN; !startNewStage && j <= (uchar)JointId::MAX; j++)
       startNewStage |= page->slopes[j] != nextPage.slopes[j];
 
     startNewStage |=
