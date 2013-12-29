@@ -12,7 +12,7 @@ namespace bold
   public:
     virtual void observe(std::shared_ptr<StateObject const> state) = 0;
   };
-  
+
   template<typename TState>
   class TypedStateObserver : public StateObserver
   {
@@ -23,7 +23,7 @@ namespace bold
       assert(typedState);
       observeTyped(typedState);
     }
-    
+
     virtual void observeTyped(std::shared_ptr<TState const> state) = 0;
   };
 }
