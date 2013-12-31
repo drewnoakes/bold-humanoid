@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../Clock/clock.hh"
-#include "../MovingAverage/movingaverage.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObserver/stateobserver.hh"
+#include "../stats/movingaverage.hh"
 #include "../util/schmitttrigger.hh"
 #include "../Voice/voice.hh"
 

@@ -1,7 +1,8 @@
 #include "gtest/gtest.h"
 
-#include "../MovingAverage/movingaverage.hh"
 #include "helpers.hh"
+
+#include "../stats/movingaverage.hh"
 
 #include <Eigen/Core>
 

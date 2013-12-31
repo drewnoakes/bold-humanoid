@@ -1,8 +1,8 @@
 #include "completefieldedgepass.hh"
 
 #include "../../../Config/config.hh"
-#include "../../../MovingAverage/movingaverage.hh"
 #include "../../../PixelLabel/pixellabel.hh"
+#include "../../../stats/movingaverage.hh"
 
 using namespace bold;
 using namespace std;

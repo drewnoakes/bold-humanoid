@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../MovingAverage/movingaverage.hh"
 #include "../StateObserver/stateobserver.hh"
+#include "../../stats/movingaverage.hh"
 
 namespace bold
 {

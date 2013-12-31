@@ -6,8 +6,8 @@
 
 #include "../AgentPosition/agentposition.hh"
 #include "../Filter/ParticleFilter/particlefilter.hh"
-#include "../MovingAverage/movingaverage.hh"
 #include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
+#include "../stats/movingaverage.hh"
 
 namespace bold
 {
