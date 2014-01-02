@@ -136,7 +136,7 @@ define(
 
                 if (this.hsv)
                 {
-                    var hoverRatio = this.hsv['hsv'[componentIndex]],
+                    var hoverRatio = this.hsv['HSV'[componentIndex]],
                         hoverX = Math.floor(gutterWidth + hoverRatio*space) + 0.5;
 
                     context.strokeStyle = 'rgba(0,0,0,0.7)';
