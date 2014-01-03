@@ -433,6 +433,40 @@ div.module.camera > div.pane-container
     min-height: 410px
 }
 
+/********************************************************************/
+
+dl.tab-control
+{
+    display: none;
+}
+
+div.tab-control ul.thumbs
+{
+    list-style: none;
+    padding: 0;
+    border-bottom: 1px solid black;
+}
+
+div.tab-control ul.thumbs li
+{
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 0 5px 0 0;
+    border: 1px solid #888;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    background: rgba(0,0,0,0.1);
+}
+
+
+div.tab-control ul.thumbs li.selected
+{
+    font-weight: bold;
+    background: rgba(255,255,255,0.1);
+}
+
+/********************************************************************/
+
 div.module.camera div.pane-container h2
 {
     color: #555;
