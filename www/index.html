@@ -32,47 +32,54 @@
 
     <script id="camera-module-template" type="text/x-handlebars-template">
         <div>
-            <canvas class="camera-canvas" width="320" height="240"></canvas>
-            <div class="hover-pixel-info"></div>
+            <div class="image-container">
+                <canvas class="camera-canvas" width="640" height="480"></canvas>
+                <div class="hover-pixel-info"></div>
+            </div>
+            <div class="camera-module-controls control-container flow"></div>
             <canvas class="pixel-label-inspector"></canvas>
-            <div class="movement control-container flow">
-                <button name="left">&blacktriangleleft;</button>
-                <button name="up">&blacktriangle;</button>
-                <button name="down">&blacktriangledown;</button>
-                <button name="right">&blacktriangleright;</button>
-                <button name="home">Home</button>
-                <button name="zero">Zero</button>
-            </div>
-            <div class="image-settings control-container flow">
-                <h2>general</h2>
-            </div>
-            <div class="control-container flow advanced">
-                <h2>pixel labels</h2>
+        </div>
+    </script>
+
+    <script id="vision-module-template" type="text/x-handlebars-template">
+        <dl class="tab-control">
+            <dt>debug</dt>
+            <dd>
+                <h2>render</h2>
+                <div class="image-features control-container column"></div>
+                <hr/>
+                <h2>colours</h2>
+                <div class="image-colours control-container flow"></div>
+                <hr/>
+                <h2>capture</h2>
+                <div class="capture control-container flow"></div>
+            </dd>
+            <dt>pixel labels</dt>
+            <dd>
                 <div class="pixel-labels"></div>
+            </dd>
+            <dt>general</dt>
+            <dd>
                 <h2>options</h2>
                 <div class="vision-options"></div>
-                <h2>object detection</h2>
-                <div class="object-detection"></div>
+                <hr/>
                 <h2>field edge</h2>
-                <div class="field-edge"></div>
-                <h2>granularity</h2>
-                <div class="granularity"></div>
+                <div class="field-edge control-container flow"></div>
+                <hr/>
+                <h2>object detection</h2>
+                <div class="object-detection control-container flow"></div>
+                <hr/>
                 <h2>line detection</h2>
-                <div class="line-detection"></div>
-            </div>
-            <div class="capture control-container flow advanced">
-                <h2>capture</h2>
-            </div>
-            <div class="image-features control-container column">
-                <h2>features</h2>
-            </div>
-            <div class="image-colours control-container column advanced flow">
-                <h2>colours</h2>
-            </div>
-            <div class="camera-settings control-container column">
-                <h2>settings</h2>
-            </div>
-        </div>
+                <div class="line-detection control-container flow"></div>
+                <hr/>
+                <h2>granularity</h2>
+                <div class="granularity control-container flow"></div>
+            </dd>
+            <dt>camera</dt>
+            <dd>
+                <div class="camera-settings control-container column"></div>
+            </dd>
+        </dl>
     </script>
 
     <script id="state-dump-module-template" type="text/x-handlebars-template">

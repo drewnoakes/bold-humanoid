@@ -299,6 +299,12 @@ div.module div.module-column-3
 
 /********************************************************************/
 
+.pixel-labels .control
+{
+    width: 155px;
+    margin: 0 16px 16px 0;
+}
+
 .hsv-range-editor .channel-row span
 {
     display: inline-block;
@@ -337,13 +343,7 @@ div.module div.module-column-3
     padding-bottom: 3px;
 }
 
-.control-container.flow .pixel-labels .control
-{
-    width: 155px;
-    margin: 0 10px 10px 0;
-}
-
-.channel-row
+.hsv-range-editor .channel-row
 {
     text-align: center;
 }
@@ -414,23 +414,28 @@ div.setting span.default-value
 
 /********************************************************************/
 
-div.module.camera .control-container
+div.module.camera div.hover-pixel-info
 {
-    max-width: 400px;
+    color: white;
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    pointer-events: none;
 }
 
-div.module.camera canvas.camera-canvas
+div.module.camera div.image-container
 {
-    width: 320px;
-    transition: width 0.4s;
-    -moz-transition: width 0.4s; /* Firefox 4 */
-    -webkit-transition: width 0.4s; /* Safari and Chrome */
-    -o-transition: width 0.4s; /* Opera */
+    position: relative;
 }
 
-div.module.camera > div.pane-container
+div.module.camera div.camera-module-controls h3
 {
-    min-height: 410px
+    display: none;
+}
+
+div.module.camera canvas.pixel-label-inspector
+{
+    margin: 16px 0;
 }
 
 /********************************************************************/
@@ -444,7 +449,8 @@ div.tab-control ul.thumbs
 {
     list-style: none;
     padding: 0;
-    border-bottom: 1px solid black;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #444;
 }
 
 div.tab-control ul.thumbs li
@@ -452,6 +458,7 @@ div.tab-control ul.thumbs li
     display: inline-block;
     padding: 4px 10px;
     margin: 0 5px 0 0;
+    color: #555;
     border: 1px solid #888;
     border-bottom: none;
     border-radius: 5px 5px 0 0;
@@ -463,73 +470,47 @@ div.tab-control ul.thumbs li.selected
 {
     font-weight: bold;
     background: rgba(255,255,255,0.1);
+    color: #000;
+    border-color: #444;
+    border-bottom: 1px solid #CBCBCB;
+    position: relative;
+    bottom: -1px;
 }
 
 /********************************************************************/
 
-div.module.camera div.pane-container h2
+div.module.vision div.pane-container h2
 {
     color: #555;
     margin: 4px 0;
     display: block;
 }
 
-div.module.camera canvas.pixel-label-inspector
+div.module.vision hr
 {
-    margin: 16px 0;
+    border: none;
+    border-bottom: 1px dotted #aaa;
 }
 
-div.module.camera div.control-container.camera-settings
-{
-    position: absolute;
-    width: 180px;
-    top: 0;
-    right: 0;
-    overflow: auto;
-}
-
-div.module.camera div.control-container.movement
-{
-    width: 320px;
-}
-
-div.module.camera div.control-container.lines-controls
-{
-    width: 350px;
-    margin-top: 8px;
-}
-
-div.module.camera div.control-container.lut-controls
-{
-    width: 350px;
-    margin-top: 8px;
-}
-
-div.module.camera div.control-container.camera-controls .setting .values
+div.module.vision div.control-container.camera-settings .setting .values
 {
     color: #666;
     font-size: 10px;
 }
 
-div.module.camera div.control-container.camera-controls .setting input[type=text],
-div.module.camera div.control-container.camera-controls .setting select
+div.module.vision div.control-container.camera-settings .setting input[type=text],
+div.module.vision div.control-container.camera-settings .setting input[type=number],
+div.module.vision div.control-container.camera-settings .setting select
 {
     width: 170px;
     box-sizing: border-box;
 }
 
-div.module.camera div.control-container.image-controls,
-div.module.camera div.control-container.image-controls-features
-{
-    width: 320px;
-    /*width: 260px;*/
-    margin-top: 8px;
-}
-
-div.module.camera div.image-colours.flow div.setting.control
+div.module.vision div.image-colours.flow div.setting.control
 {
     width: 65px;
 }
+
 /********************************************************************/
 
 div.module.game div.play-mode
