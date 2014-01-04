@@ -43,8 +43,8 @@ void BodyState::initBody(double angles[])
   // stuff, probably best to add another joint before this one and set
   // it there
   headCameraJoint->axis = Vector3d(1, 0, 0);
-  //headCameraJoint->angle = -0.7854;
-  headCameraJoint->angle = -0.68;
+  //headCameraJoint->angleRads = -0.7854;
+  headCameraJoint->angleRads = -0.68;
   headCameraJoint->anchors.first = Vector3d(0, 0, 0);
   headCameraJoint->anchors.second = Vector3d(0, -0.0332, -0.0344);
   head->joints.push_back(headCameraJoint);
@@ -284,7 +284,7 @@ void BodyState::initBody(double angles[])
   // Cache joints by ID
   walkJoints(d_torso, [this,angles](shared_ptr<Joint> joint)
   {
-    joint->angle = angles[(uchar)joint->id];
+    joint->angleRads = angles[(uchar)joint->id];
     d_jointById[(uchar)joint->id] = joint;
   });
 }

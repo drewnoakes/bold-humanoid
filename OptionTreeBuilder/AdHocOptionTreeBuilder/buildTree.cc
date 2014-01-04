@@ -501,7 +501,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->transitionTo(lookAtFeetState)
       ->when([]()
       {
-        double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angle;
+        double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angleRads;
         // TODO this angular limit in config
         return fabs(Math::radToDeg(panAngle)) < 25.0;
       });
@@ -517,7 +517,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
       ->when([circleBallState,&headModule,&secondsSinceStart]()
       {
         // TODO break dependency upon pan limit
-        double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angle;
+        double panAngle = AgentState::get<BodyState>()->getHeadPanJoint()->angleRads;
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
         double circleDurationSeconds = fabs(panRatio) * 4.5;

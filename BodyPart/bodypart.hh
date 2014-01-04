@@ -69,7 +69,7 @@ namespace bold
   struct Joint : public BodyPart
   {
     Joint()
-    : angle(0)
+    : angleRads(0)
 //    rate(0), torque(0), control(0)
     {}
 
@@ -83,7 +83,7 @@ namespace bold
 //    std::pair<double, double> bounds;
 
     /// Joint angle in radians
-    double angle;
+    double angleRads;
 
 //    /// Joint rate
 //    double rate;

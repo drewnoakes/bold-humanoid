@@ -41,7 +41,7 @@ void BodyState::updatePosture()
 
       shared_ptr<BodyPart> part2 = joint->bodyPart;
       part2->transform = joint->transform
-        * AngleAxisd(joint->angle, joint->axis)
+        * AngleAxisd(joint->angleRads, joint->axis)
         * Translation3d(-joint->anchors.second);
 
       partQueue.push_back(part2);
