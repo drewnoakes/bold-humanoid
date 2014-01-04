@@ -31,7 +31,7 @@ require(
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
 
-        ControlClient.withSettings('', function(settings)
+        var loadUi = function (settings)
         {
             Constants.update(settings);
 
@@ -58,16 +58,30 @@ require(
             moduleHost.register(new ConfigModule());
 
             $('#module-container').hide().fadeIn();
-            $('#loading-indicator').fadeOut(function() { $(this).remove(); });
+            $('#loading-indicator').fadeOut(function ()
+            {
+                $(this).remove();
+            });
 
             moduleHost.load();
-        });
+        };
+
+        ControlClient.withSettings('', loadUi);
 
         var onerror = function ()
         {
+            // Allow manual override. Useful when developing Round Table when no agent
+            // is available.
+            if (window.location.search.indexOf('forceload') !== -1)
+            {
+                loadUi();
+                return;
+            }
+
             $('#loading-indicator').find('h1').text('No Connection');
             $('#bouncer').fadeOut(function() { $(this).remove() });
         };
+
         ControlClient.connect(onerror);
     }
 );
