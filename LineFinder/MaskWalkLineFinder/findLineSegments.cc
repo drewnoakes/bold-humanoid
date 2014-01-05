@@ -40,7 +40,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
 
     int maxVotes = voteThreshold-1;
     int maxTheta = 0;
-    int* adata = (int*)d_accumulator.data;
+    int* adata = reinterpret_cast<int*>(d_accumulator.data);
 
     // Update accumulator, finding the most probable line during the sweep.
     for (int n = 0; n < d_tSteps; n++, adata += d_rSteps)
@@ -103,7 +103,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
           if (isLongEnough)
           {
             // Remove this line from the accumulator
-            adata = (int*)d_accumulator.data;
+            int* adata = reinterpret_cast<int*>(d_accumulator.data);
             for (int n = 0; n < d_tSteps; n++, adata += d_rSteps)
             {
               int r = cvRound(x * ttab[n*2] + y * ttab[n*2+1]);
