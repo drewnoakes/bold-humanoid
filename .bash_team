@@ -1,0 +1,12 @@
+# print out some status data for users to SSH in
+
+if [ -z $(pgrep boldhumanoid) ]
+then
+    echo "$(tput setaf 1)Boldhumanoid process is not running $(tput sgr 0)"
+else
+    echo "$(tput setaf 2)Boldhumanoid process is running $(tput sgr 0)"
+fi
+
+echo Build date: `date -r boldhumanoid +"%Y-%m-%d %H:%M"`
+
+alias h=history
