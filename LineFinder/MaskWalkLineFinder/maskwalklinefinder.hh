@@ -15,7 +15,7 @@ namespace bold
   public:
     MaskWalkLineFinder();
 
-    void walkLine(Eigen::Vector2i const& start, float theta, bool forward, std::function<bool(int/*x*/,int/*y*/)> const& pred);
+    void walkLine(Eigen::Vector2i const& start, float theta, bool forward, std::function<bool(int/*x*/,int/*y*/)> const& callback, uchar width = 1);
 
     std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) override;
 

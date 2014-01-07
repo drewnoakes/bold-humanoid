@@ -123,7 +123,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
         return false;
       };
       bool forward = endIndex == 0;
-      walkLine(dot, maxTheta, forward, pred);
+      walkLine(dot, maxTheta, forward, pred, /*width=*/2);
     }
 
     if (isLongEnough)

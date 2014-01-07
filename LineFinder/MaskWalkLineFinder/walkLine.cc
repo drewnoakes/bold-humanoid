@@ -1,7 +1,10 @@
 #include "maskwalklinefinder.ih"
 
-void MaskWalkLineFinder::walkLine(Vector2i const& start, float theta, bool forward, std::function<bool(int/*x*/,int/*y*/)> const& pred)
+// TODO determine expected thickness of line at the endpoints, and use this width when invoking the callback.
+
+void MaskWalkLineFinder::walkLine(Vector2i const& start, float theta, bool forward, std::function<bool(int/*x*/,int/*y*/)> const& callback, uchar width)
 {
+  assert(width);
 
   // From the current point walk in each direction along the found line and
   // extract the line segment
@@ -9,7 +12,7 @@ void MaskWalkLineFinder::walkLine(Vector2i const& start, float theta, bool forwa
   float tsin = -d_trigTable[theta*2+1];
   bool isVertical = fabs(tsin) > fabs(tcos);
 
-  // We using fixed-point integer arithmetic. This 'shift' is the amount to
+  // We use fixed-point integer arithmetic. This 'shift' is the amount to
   // bump integers up, providing space for fractions of whole numbers.
   // Outcomes are shifted back down again to give integer results.
   // Values 'x' and 'y', when shifted, become 'i' and 'j'.
@@ -44,17 +47,21 @@ void MaskWalkLineFinder::walkLine(Vector2i const& start, float theta, bool forwa
   // stop at the image border or in case of too big gap
   for (int i = i0, j = j0; ; i += di, j += dj)
   {
-    int x, y;
+    int x, y, dx, dy;
 
     if (isVertical)
     {
       x = i;
       y = j >> shift;
+      dx = 0;
+      dy = 1;
     }
     else
     {
       x = i >> shift;
       y = j;
+      dx = 1;
+      dy = 0;
     }
 
     if (x < 0 || x >= d_imageWidth || y < 0 || y >= d_imageHeight)
@@ -63,9 +70,16 @@ void MaskWalkLineFinder::walkLine(Vector2i const& start, float theta, bool forwa
       break;
     }
 
-    bool ret = pred(x, y);
-    if (ret)
+    if (callback(x, y))
       break;
+
+    while (dx < width && dy < width)
+    {
+      callback(x+dx, y+dy);
+      callback(x-dx, y-dy);
+      if (dx) dx++;
+      if (dy) dy++;
+    }
   }
 }
 
