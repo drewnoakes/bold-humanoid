@@ -83,6 +83,11 @@ namespace bold
           v == other.v;
       }
 
+      bgr toBgr() const
+      {
+        return hsv2bgr(*this);
+      }
+
       uchar h;
       uchar s;
       uchar v;
