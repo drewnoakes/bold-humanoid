@@ -35,6 +35,9 @@ namespace bold
     void showPenalized();
     void showPaused();
 
+    void showExitingAgent();
+    void showExitedAgent();
+
     /**
      * Update the debugger at the end of the think cycle.
      * Currently only updates LEDs.

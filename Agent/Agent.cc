@@ -19,14 +19,18 @@ Agent::Agent(bool useSpeech)
 
   registerStateTypes();
 
+  d_debugger = make_shared<Debugger>();
+
   // Register state observers
   d_fallDetector = make_shared<FallDetector>();
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
+  d_suicidePill = make_shared<SuicidePill>(this, d_debugger);
 
   AgentState::getInstance().registerObserver<HardwareState>(d_fallDetector);
   AgentState::getInstance().registerObserver<HardwareState>(d_gyroCalibrator);
   AgentState::getInstance().registerObserver<HardwareState>(d_healthAndSafety);
+  AgentState::getInstance().registerObserver<HardwareState>(d_suicidePill);
 
   d_cm730Linux = make_shared<CM730Linux>(cm730DevicePath);
   d_cm730 = make_shared<CM730>(d_cm730Linux);
@@ -55,8 +59,6 @@ Agent::Agent(bool useSpeech)
   d_spatialiser = make_shared<Spatialiser>(d_cameraModel);
 
   d_fieldMap = make_shared<FieldMap>();
-
-  d_debugger = make_shared<Debugger>();
 
   d_localiser = make_shared<Localiser>(d_fieldMap);
 

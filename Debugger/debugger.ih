@@ -9,6 +9,7 @@
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/DebugState/debugstate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
+#include "../stats/movingaverage.hh"
 
 using namespace bold;
 using namespace std;

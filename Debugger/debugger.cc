@@ -112,3 +112,21 @@ void Debugger::showPlaying() { showHeadColour(Colour::bgr(0,255,0)); showEyeColo
 void Debugger::showPenalized() { showHeadColour(Colour::bgr(0,0,255)); showEyeColour(Colour::bgr(255,0,0)); }
 
 void Debugger::showPaused() { showHeadColour(Colour::bgr(128,128,128)); showEyeColour(Colour::bgr(128,128,128)); }
+
+void Debugger::showExitedAgent() { showHeadColour(Colour::bgr(0,0,0)); showEyeColour(Colour::bgr(0,0,0)); }
+
+void Debugger::showExitingAgent()
+{
+  static auto prng = Math::createUniformRng(0, 1);
+  static MovingAverage<double> smoothedHue(3);
+  static MovingAverage<double> smoothedValue(3);
+
+  double hue = smoothedHue.next(prng());
+  double value = smoothedValue.next(prng());
+
+  Colour::bgr colour = Colour::hsv(int(hue * 255), 255, int(value * 255)).toBgr();
+
+  showHeadColour(colour);
+  showEyeColour(colour);
+}
+

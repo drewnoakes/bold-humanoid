@@ -32,6 +32,7 @@ namespace bold
   class OptionTree;
   template<typename> class Setting;
   class Spatialiser;
+  class SuicidePill;
   class VisualCortex;
   class Voice;
   class WalkModule;
@@ -104,6 +105,7 @@ namespace bold
     std::shared_ptr<FallDetector> d_fallDetector;
     std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
+    std::shared_ptr<SuicidePill> d_suicidePill;
 
     // Components
 

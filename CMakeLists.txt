@@ -426,6 +426,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObserver/SuicidePill/suicidepill.cc
+)
+
+add_class(BOLDHUMANOID
   ./TeamCommunicator/teamcommunicator.cc
 )
 
