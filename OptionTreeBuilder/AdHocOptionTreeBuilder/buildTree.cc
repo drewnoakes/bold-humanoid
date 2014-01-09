@@ -9,20 +9,20 @@
 #include "../../util/conditionals.hh"
 #include "../../util/Range.hh"
 
-unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(unsigned teamNumber,
-                                                         unsigned uniformNumber,
-                                                         Agent* agent,
-                                                         shared_ptr<DataStreamer> dataStreamer,
-                                                         shared_ptr<Debugger> debugger,
-                                                         shared_ptr<CameraModel> cameraModel,
-                                                         shared_ptr<Ambulator> ambulator,
-                                                         shared_ptr<MotionScriptModule> motionScriptModule,
-                                                         shared_ptr<HeadModule> headModule,
-                                                         shared_ptr<WalkModule> walkModule,
-                                                         shared_ptr<FallDetector> fallDetector)
+unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {
   const unsigned UNUM_GOALIE = 1;
   const unsigned UNUM_GOALIE_PENALTY = 5;
+
+  unsigned uniformNumber   = agent->getUniformNumber();
+  unsigned teamNumber      = agent->getTeamNumber();
+
+  auto const& debugger           = agent->getDebugger();
+  auto const& cameraModel        = agent->getCameraModel();
+  auto const& ambulator          = agent->getAmbulator();
+  auto const& motionScriptModule = agent->getMotionScriptModule();
+  auto const& headModule         = agent->getHeadModule();
+  auto const& fallDetector       = agent->getFallDetector();
 
   // TODO any / all / true functions
 

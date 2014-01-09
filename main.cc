@@ -188,19 +188,7 @@ int main(int argc, char **argv)
   agent->setUniformNumber(uniformNumber);
 
   AdHocOptionTreeBuilder optionTreeBuilder;
-  auto optionTree = optionTreeBuilder.buildTree(teamNumber,
-                                                uniformNumber,
-                                                agent.get(),
-                                                agent->getDataStreamer(),
-                                                agent->getDebugger(),
-                                                agent->getCameraModel(),
-                                                agent->getAmbulator(),
-                                                agent->getMotionScriptModule(),
-                                                agent->getHeadModule(),
-                                                agent->getWalkModule(),
-                                                agent->getFallDetector());
-
-  agent->setOptionTree(move(optionTree));
+  agent->setOptionTree(optionTreeBuilder.buildTree(agent.get()));
 
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);
