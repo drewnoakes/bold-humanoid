@@ -24,11 +24,8 @@ void printUsage()
   cout << endl;
   cout << "Options:" << endl;
   cout << endl;
-  cout << ccolor::fore::lightblue << "  -u <num>  " << ccolor::fore::white << "uniform number (or --unum)" << endl;
-  cout << ccolor::fore::lightblue << "  -t <num>  " << ccolor::fore::white << "team number (or --team)" << endl;
   cout << ccolor::fore::lightblue << "  -c <file> " << ccolor::fore::white << "use specified configuration file (or --config)" << endl;
   cout << ccolor::fore::lightblue << "  -v        " << ccolor::fore::white << "verbose logging (or --verbose)" << endl;
-  cout << ccolor::fore::lightblue << "  -q        " << ccolor::fore::white << "quiet/don't speak' (or --quiet)" << endl;
   cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
   cout << ccolor::fore::lightblue << "  -version  " << ccolor::fore::white << "print git version details at time of build" << endl;
   cout << ccolor::reset;
@@ -94,10 +91,6 @@ int main(int argc, char **argv)
 //  convertMotionFile();
 
   // defaults
-  unsigned teamNumber = -1;
-  unsigned uniformNumber = 0;
-  bool useSpeech = true;
-
   string configurationFile("configuration.json");
   log::minLevel = LogLevel::Info;
 
@@ -127,14 +120,6 @@ int main(int argc, char **argv)
       printUsage();
       return 0;
     }
-    else if (arg == "-t" || arg == "--team")
-    {
-      teamNumber = atoi(nextArg(&i));
-    }
-    else if (arg == "-u" || arg == "--unum")
-    {
-      uniformNumber = atoi(nextArg(&i));
-    }
     else if (arg == "-c" || arg == "--config")
     {
       configurationFile = nextArg(&i);
@@ -142,10 +127,6 @@ int main(int argc, char **argv)
     else if (arg == "-v" || arg == "--verbose")
     {
       log::minLevel = LogLevel::Verbose;
-    }
-    else if (arg == "-q" || arg == "--quiet")
-    {
-      useSpeech = false;
     }
     else if (arg == "--version")
     {
@@ -162,30 +143,15 @@ int main(int argc, char **argv)
     }
   }
 
-  if (uniformNumber == 0)
-  {
-    log::error() << "You must provide a uniform number (-u)";
-    printUsage();
-    return -1;
-  }
-
   printBanner();
 
   log::info() << Version::GIT_SHA1 << " (" << Version::describeTimeSinceGitDate() << ")\n";
 
   Config::initialise("configuration-metadata.json", configurationFile);
 
-  if (teamNumber == -1)
-    teamNumber = Config::getStaticValue<int>("team.number");
-
-  log::info("boldhumanoid") << "Team number " << teamNumber << ", uniform number " << uniformNumber;
-
-  agent.reset(new Agent(useSpeech));
+  agent.reset(new Agent());
 
   Config::initialisationCompleted();
-
-  agent->setTeamNumber(teamNumber);
-  agent->setUniformNumber(uniformNumber);
 
   AdHocOptionTreeBuilder optionTreeBuilder;
   agent->setOptionTree(optionTreeBuilder.buildTree(agent.get()));

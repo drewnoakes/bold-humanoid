@@ -1,4 +1,5 @@
 {
+  "use-speech": true,
   "hardware": {
     "cm730-path": "/dev/ttyUSB0",
     "video-path": "/dev/video0",

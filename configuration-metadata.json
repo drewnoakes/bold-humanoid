@@ -1,7 +1,7 @@
 {
-  "team": {
-    "number": { "type": "int", "readonly": true, "default": 3 }
-  },
+  "uniform-number": { "type": "int", "readonly": true, "default": 2, "min": 1 },
+  "team-number":    { "type": "int", "readonly": true, "default": 36 },
+  "use-speech":     { "type": "bool", "readonly": true, "default": true },
   "hardware": {
     "cm730-path":   { "type": "string", "readonly": true, "default": "/dev/ttyUSB0" },
     "video-path":   { "type": "string", "readonly": true, "default": "/dev/video0" },

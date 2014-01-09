@@ -1,15 +1,15 @@
 #include "agent.ih"
 
-Agent::Agent(bool useSpeech)
+Agent::Agent()
   : d_isRunning(false),
     d_isStopRequested(false),
-    d_teamNumber(0),
-    d_uniformNumber(0),
+    d_teamNumber(Config::getStaticValue<int>("team-number")),
+    d_uniformNumber(Config::getStaticValue<int>("team-number")),
     d_cycleNumber(0)
 {
   ThreadId::setThreadId(ThreadId::ThinkLoop);
 
-  if (useSpeech)
+  if (Config::getStaticValue<bool>("use-speech"))
     d_voice = make_shared<Voice>(Config::getStaticValue<string>("hardware.voice"));
 
   auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");

@@ -39,7 +39,7 @@ def thinkEndCallback():
     print(ambulatorState.getCurrentPhase())
 
     print("=====")
-    
+
     #goalObs = cameraState.getGoalObservations()
     #print(goalObs)
 
@@ -95,7 +95,6 @@ def main(argv):
     #    return
 
     agent = getAgent()
-    agent.setTeamNumber(3)
     print(agent)
 
     builder = PyOptionTreeBuilder()

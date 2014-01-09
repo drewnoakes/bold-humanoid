@@ -46,12 +46,9 @@ namespace bold
       d_isAdvanced(isAdvanced),
       d_description(description)
     {
-      auto last = d_path.find_last_of('.');
+      int last = d_path.find_last_of('.');
       if (last == std::string::npos)
-      {
-        log::error("SettingBase::SettingBase") << "Invalid path: " << d_path;
-        throw std::runtime_error("Invalid setting path");
-      }
+        last = -1;
       d_name = d_path.substr(last + 1);
     }
 

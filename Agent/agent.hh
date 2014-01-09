@@ -42,7 +42,7 @@ namespace bold
   class Agent
   {
   public:
-    Agent(bool useSpeech);
+    Agent();
 
     std::shared_ptr<Ambulator> getAmbulator() const { return d_ambulator; }
     std::shared_ptr<Camera> getCamera() const { return d_camera; }
@@ -64,9 +64,7 @@ namespace bold
     std::shared_ptr<CM730> getCM730() const { return d_cm730; }
 
     unsigned getTeamNumber() const { return d_teamNumber; }
-    void setTeamNumber(unsigned teamNumber) { d_teamNumber = teamNumber; }
     unsigned getUniformNumber() const { return d_uniformNumber; }
-    void setUniformNumber(unsigned uniformNumber) { d_uniformNumber = uniformNumber; }
 
     void setOptionTree(std::unique_ptr<OptionTree> tree);
 
@@ -87,8 +85,8 @@ namespace bold
     bool d_isRunning;
     bool d_isStopRequested;
 
-    unsigned d_teamNumber;
-    unsigned d_uniformNumber;
+    const unsigned d_teamNumber;
+    const unsigned d_uniformNumber;
 
     // Motion
 
