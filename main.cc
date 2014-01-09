@@ -7,6 +7,7 @@
 //#include "ThreadId/threadid.hh"
 #include "util/ccolor.hh"
 #include "util/log.hh"
+#include "version.hh"
 
 #include <limits>
 #include <vector>
@@ -29,6 +30,7 @@ void printUsage()
   cout << ccolor::fore::lightblue << "  -v        " << ccolor::fore::white << "verbose logging (or --verbose)" << endl;
   cout << ccolor::fore::lightblue << "  -q        " << ccolor::fore::white << "quiet/don't speak' (or --quiet)" << endl;
   cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
+  cout << ccolor::fore::lightblue << "  -version  " << ccolor::fore::white << "print git version details at time of build" << endl;
   cout << ccolor::reset;
 }
 
@@ -78,11 +80,16 @@ vector<string> banners = {
   "  ____        _     _   _   _                 _\n | __ )  ___ | | __| | | | | | ___  __ _ _ __| |_ ___\n |  _ \\ / _ \\| |/ _` | | |_| |/ _ \\/ _` | '__| __/ __|\n | |_) | (_) | | (_| | |  _  |  __| (_| | |  | |_\\__ \\\n |____/ \\___/|_|\\__,_| |_| |_|\\___|\\__,_|_|   \\__|___/"
 };
 
+void printBanner()
+{
+  cout << ccolor::bold << ccolor::fore::lightmagenta
+       << banners[rand() % banners.size()]
+       << endl << endl << ccolor::reset;
+}
+
 int main(int argc, char **argv)
 {
   srand(time(0));
-
-  cout << ccolor::bold << ccolor::fore::lightmagenta << banners[rand() % banners.size()] << endl << endl << ccolor::reset;
 
 //  convertMotionFile();
 
@@ -116,6 +123,7 @@ int main(int argc, char **argv)
     string arg(argv[i]);
     if (arg == "-h" || arg == "--help")
     {
+      printBanner();
       printUsage();
       return 0;
     }
@@ -139,6 +147,13 @@ int main(int argc, char **argv)
     {
       useSpeech = false;
     }
+    else if (arg == "--version")
+    {
+      cout << Version::GIT_SHA1 << endl
+           << Version::GIT_DATE << endl
+           << Version::GIT_COMMIT_SUBJECT << endl;
+      return 0;
+    }
     else
     {
       log::error() << "UNKNOWN ARGUMENT: " << arg;
@@ -153,6 +168,10 @@ int main(int argc, char **argv)
     printUsage();
     return -1;
   }
+
+  printBanner();
+
+  log::info() << Version::GIT_SHA1 << ")\n";
 
   Config::initialise("configuration-metadata.json", configurationFile);
 
