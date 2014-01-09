@@ -25,7 +25,7 @@ do
 
   # TODO ensure process isn't running remotely
   ssh darwin@darwin$i "mkdir -p swig && mkdir -p lib/"
-  rsync -zrP www motionscripts configuration.json configuration-*.json boldhumanoid.py boldhumanoid boldpy .bash_team darwin@darwin$i:
+  rsync -zrP www motionscripts configuration-team.json configuration-hatfield.json configuration-drews.json boldhumanoid.py boldhumanoid boldpy .bash_team darwin@darwin$i:
   rsync -zrP swig/bold.py swig/_bold.so darwin@darwin$i:swig/
   rsync -zrP libwebsockets/lib/libwebsockets.so.4.0.0 darwin@darwin$i:lib/
 
