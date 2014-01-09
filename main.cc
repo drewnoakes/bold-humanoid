@@ -156,7 +156,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      log::error() << "UNKNOWN ARGUMENT: " << arg;
+      log::error() << "Unknown argument: " << arg;
       printUsage();
       return -1;
     }
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 
   if (uniformNumber == 0)
   {
-    log::error() << "YOU MUST SUPPLY A UNIFORM NUMBER!";
+    log::error() << "You must provide a uniform number (-u)";
     printUsage();
     return -1;
   }
