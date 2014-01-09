@@ -1,7 +1,52 @@
 #include "version.hh"
 
+#include <ctime>
+#include <sstream>
+
 using namespace bold;
 
 const std::string Version::GIT_SHA1 = "@GIT_SHA1@";
 const std::string Version::GIT_DATE = "@GIT_DATE@";
 const std::string Version::GIT_COMMIT_SUBJECT = "@GIT_COMMIT_SUBJECT@";
+
+std::string Version::describeTimeSinceGitDate()
+{
+  tm buildTime;
+  if (!strptime(Version::GIT_DATE.c_str(), "%a %b %d %T %Y", &buildTime))
+    return "Failed to parse string";
+
+  time_t now;
+  time(&now);
+
+  int seconds = difftime(now, mktime(&buildTime));
+
+  if (seconds < 0)
+    return "In the future";
+
+  int minutes = seconds/60;
+  int hours = seconds/(60*60);
+  int days = seconds/(60*60*24);
+
+  std::stringstream out;
+
+  if (days > 2)
+  {
+    out << days << " day" << (days == 1?"":"s");
+  }
+  else if (minutes > 90)
+  {
+    out << hours << " hour" << (hours == 1?"":"s");
+  }
+  else if (seconds > 90)
+  {
+    out << minutes << " minute" << (minutes == 1?"":"s");
+  }
+  else
+  {
+    out << seconds << " second" << (seconds == 1?"":"s");
+  }
+
+  out << " ago";
+
+  return out.str();
+}

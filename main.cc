@@ -150,7 +150,7 @@ int main(int argc, char **argv)
     else if (arg == "--version")
     {
       cout << Version::GIT_SHA1 << endl
-           << Version::GIT_DATE << endl
+           << Version::GIT_DATE << " (" << Version::describeTimeSinceGitDate() << ")" << endl
            << Version::GIT_COMMIT_SUBJECT << endl;
       return 0;
     }
@@ -171,7 +171,7 @@ int main(int argc, char **argv)
 
   printBanner();
 
-  log::info() << Version::GIT_SHA1 << ")\n";
+  log::info() << Version::GIT_SHA1 << " (" << Version::describeTimeSinceGitDate() << ")\n";
 
   Config::initialise("configuration-metadata.json", configurationFile);
 
