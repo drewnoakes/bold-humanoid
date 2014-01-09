@@ -120,13 +120,13 @@ namespace bold
       std::map<std::string,TreeNode> subNodeByName;
     };
 
-    static void processConfigMetaJsonValue(rapidjson::Value* metaNode, TreeNode* treeNode, std::string path, std::string name);
+    static void processConfigMetaJsonValue(rapidjson::Value const* metaNode, TreeNode* treeNode, std::string path, std::string name);
 
     Config() {}
 
     static TreeNode d_root;
     static std::map<std::string,Action*> d_actionById;
-    static rapidjson::Document* d_configDocument;
+    static std::vector<std::unique_ptr<rapidjson::Document const>> d_configDocuments;
     static bool d_isInitialising;
   };
 }

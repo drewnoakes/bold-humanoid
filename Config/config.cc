@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <limits>
+#include <memory>
 
 #include "../PixelLabel/pixellabel.hh"
 #include "../Setting/setting-implementations.hh"
@@ -17,13 +18,42 @@ using namespace std;
 
 Config::TreeNode Config::d_root;
 map<string,Action*> Config::d_actionById;
-Document* Config::d_configDocument;
+vector<unique_ptr<Document const>> Config::d_configDocuments;
 bool Config::d_isInitialising = true;
 sigc::signal<void, SettingBase*> Config::updated;
 
+unique_ptr<Document const> loadJsonDocument(std::string path)
+{
+  FILE* file = fopen(path.c_str(), "rb");
+
+  if (!file)
+  {
+    log::error("loadJsonDocument") << "File not found: " << path;
+    throw runtime_error("Configuration metadata file not found.");
+  }
+
+  char buffer[65536];
+
+  Document* doc = new Document();
+  FileReadStream stream(file, buffer, sizeof(buffer));
+  doc->ParseStream<0, UTF8<>, FileReadStream>(stream);
+
+  if (fclose(file))
+    log::error("loadJsonDocument") << "Error closing file: " << errno;
+
+  if (doc->HasParseError())
+  {
+    log::error("loadJsonDocument") << "Parse error in file " << path << ": " << doc->GetParseError();
+    delete doc;
+    throw runtime_error("Parse error in JSON file");
+  }
+
+  return unique_ptr<Document const>(doc);
+}
+
 void Config::initialise(string metadataFile, string configFile)
 {
-  if (d_configDocument != nullptr || !d_isInitialising)
+  if (d_configDocuments.size() != 0 || !d_isInitialising)
   {
     log::error("Config::initialise") << "Already initialised";
     throw runtime_error("Configuration already initialised.");
@@ -36,48 +66,34 @@ void Config::initialise(string metadataFile, string configFile)
 
   log::info("Config::initialise") << "Parsing configuration";
 
-  FILE* mf = fopen(metadataFile.c_str(), "rb");
-  FILE* cf = fopen(configFile.c_str(), "rb");
+  // Load the single metadata JSON file
+  auto metaDocument = loadJsonDocument(metadataFile);
 
-  if (!mf)
+  // Load the configuration document cascade
+  string path = configFile;
+  while (true)
   {
-    log::error("Config::initialise") << "File not found: " << metadataFile;
-    throw runtime_error("Configuration metadata file not found.");
+    // The config document
+    auto confDocument = loadJsonDocument(path);
+
+    // Check whether a parent is specified in the 'inherits' property
+    auto it = confDocument->FindMember("inherits");
+    auto hasParent = it && it->value.IsString();
+    if (hasParent)
+      path = it->value.GetString();
+
+    // Move the document to the vector
+    d_configDocuments.push_back(move(confDocument));
+
+    // Terminate the loop if we have no more parents to process
+    if (!hasParent)
+      break;
   }
 
-  if (!cf)
-  {
-    log::error("Config::initialise") << "File not found: " << configFile;
-    throw runtime_error("Configuration file not found.");
-  }
+  // Walk the metadata document, building up a tree of Setting<T> objects
+  processConfigMetaJsonValue(metaDocument.get(), &d_root, "", "");
 
-  char buffer[65536];
-
-  Document metaDocument;
-  FileReadStream metaStream(mf, buffer, sizeof(buffer));
-  metaDocument.ParseStream<0, UTF8<>, FileReadStream>(metaStream);
-
-  Document* confDocument = new Document();
-  FileReadStream confStream(cf, buffer, sizeof(buffer));
-  confDocument->ParseStream<0, UTF8<>, FileReadStream>(confStream);
-
-  if (metaDocument.HasParseError())
-  {
-    log::error("Config::initialise") << "Parse error in file " << metadataFile << ": " << metaDocument.GetParseError();
-    throw runtime_error("Parse error in configuration metadata JSON.");
-  }
-
-  if (confDocument->HasParseError())
-  {
-    log::error("Config::initialise") << "Parse error in file " << configFile << ": " << confDocument->GetParseError();
-    delete confDocument;
-    throw runtime_error("Parse error in configuration JSON.");
-  }
-
-  d_configDocument = confDocument;
-
-  processConfigMetaJsonValue(&metaDocument, &d_root, "", "");
-
+  // TODO defaults are a bit confusing -- remove them from the meta document, and change this to "Reload config file"
   addAction("config.reset-defaults", "Reset default config", []
   {
     for (SettingBase* setting : getAllSettings())
@@ -121,7 +137,7 @@ SettingBase* Config::getSettingBase(string path)
   return it->second;
 }
 
-void Config::processConfigMetaJsonValue(Value* metaNode, TreeNode* treeNode, string path, string name)
+void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNode, string path, string name)
 {
   assert(metaNode->IsObject());
 
@@ -296,7 +312,6 @@ void Config::addSetting(SettingBase* setting)
   size_t start = 0;
   size_t end;
   TreeNode* node = &d_root;
-  Value* configValue = d_configDocument;
   while ((end = path.find(delimiter, start)) != string::npos)
   {
     auto nodeName = path.substr(start, end - start);
@@ -305,16 +320,10 @@ void Config::addSetting(SettingBase* setting)
     // Insert or create new tree node.
     auto ret = node->subNodeByName.insert(pair<string,TreeNode>(nodeName, TreeNode()));
     node = &ret.first->second;
-
-    // Dereference the config node
-    if (configValue)
-    {
-      auto member = configValue->FindMember(nodeName.c_str());
-      configValue = member ? &member->value : nullptr;
-    }
   }
 
   auto settingName = path.substr(start);
+  Value const* configValue = Config::getConfigJsonValue(path);
 
   // Validate that the setting name is not also used for a tree node
   if (node->subNodeByName.find(settingName) != node->subNodeByName.end())
@@ -332,12 +341,9 @@ void Config::addSetting(SettingBase* setting)
 
   // If a config value exists for this setting, set it
   if (configValue != nullptr)
-  {
-    auto member = configValue->FindMember(settingName.c_str());
-    if (member)
-      setting->setValueFromJson(&member->value);
-  }
+    setting->setValueFromJson(configValue);
 
+  // Propagate change events globally
   setting->changedBase.connect([](SettingBase* s){ Config::updated.emit(s); });
 }
 
@@ -356,40 +362,51 @@ void Config::addAction(string id, string label, function<void()> callback)
 
 Value const* Config::getConfigJsonValue(string path)
 {
-  string delimiter = ".";
-  size_t start = 0;
-  Value const* configValue = d_configDocument;
-
-  if (!configValue)
+  if (d_configDocuments.size() == 0)
   {
-    log::error("Config::getConfigJsonValue") << "Config document has not yet been set";
-    throw runtime_error("Config document has not yet been set");
+    log::error("Config::getConfigJsonValue") << "No config documents have been set";
+    throw runtime_error("No config documents have been set");
   }
 
-  while (true)
+  for (unique_ptr<Document const> const& configValue : d_configDocuments)
   {
-    size_t end = path.find(delimiter, start);
+    // Walk down the tree of each config document, looking for a match to 'path'
+    // TODO the config files could be flatted into a single map, reducing the complexity of lookups by some small amount
+    string delimiter = ".";
+    size_t start = 0;
+    Value const* node = configValue.get();
 
-    auto nodeName = end != string::npos
-      ? path.substr(start, end - start)
-      : path.substr(start);
+    while (true)
+    {
+      size_t end = path.find(delimiter, start);
 
-    assert(configValue);
+      auto childName = end != string::npos
+        ? path.substr(start, end - start)
+        : path.substr(start);
 
-    auto member = configValue->FindMember(nodeName.c_str());
+      auto childMember = node->FindMember(childName.c_str());
 
-    if (!member)
-      return nullptr;
+      if (!childMember)
+      {
+        // No match was found in this file, so break to the outer
+        // loop to look in the next document.
+        break;
+      }
 
-    configValue = &member->value;
+      node = &childMember->value;
 
-    assert(configValue);
+      assert(node);
 
-    if (end == string::npos)
-      return configValue;
+      if (end == string::npos)
+        return node;
 
-    start = end + delimiter.length();
+      // Continue along the string, evaluating the next level down in the tree
+      start = end + delimiter.length();
+    }
   }
+
+  // No match was made in any of the config files
+  return nullptr;
 }
 
 vector<Action*> Config::getAllActions()
