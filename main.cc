@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 //  convertMotionFile();
 
   // defaults
-  string configurationFile("configuration.json");
+  string configurationFile("configuration-agent.json");
   log::minLevel = LogLevel::Info;
 
   // TODO: use getopt
