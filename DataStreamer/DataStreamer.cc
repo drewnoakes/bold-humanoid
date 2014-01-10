@@ -87,9 +87,9 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
             {
               // If queue is too long, deal with it
               const int MaxQueueSize = 200;
-              static int maxQueueSeen = 5;
+              static int maxQueueSeen = 0;
               int queueSize = session->second->queue.size();
-              if (queueSize > maxQueueSeen)
+              if (queueSize/10 > maxQueueSeen/10)
               {
                 maxQueueSeen = queueSize;
                 cout << "[AgentStateUpdated] " << tracker->name() << " max queue seen " << queueSize << endl;
