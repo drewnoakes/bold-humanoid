@@ -474,9 +474,8 @@ bool CM730::dxlPowerOn()
 
   if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, 1, 0) == CommResult::SUCCESS)
   {
-//        WriteWord(CM730::ID_CM, CM730::P_LED_HEAD_L, MakeColor(255, 128, 0), 0);
     // TODO why is this sleep here?
-    d_platform->sleep(300); // about 300msec
+    d_platform->sleep(300); // milliseconds
   }
   else
   {
@@ -495,7 +494,7 @@ void CM730::torqueEnable(bool enable)
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
-    
+
     if (error.hasError())
       log::error("CM730::torqueEnable") << "Error for joint ID " << (int)jointId << ": " << error;
   }
@@ -503,8 +502,6 @@ void CM730::torqueEnable(bool enable)
 
 void CM730::disconnect()
 {
-  // Make the Head LED to green
-  //WriteWord(CM730::ID_CM, CM730::P_LED_HEAD_L, MakeColor(0, 255, 0), 0);
   const uchar txpacket[] = {0xFF, 0xFF, 0xC8, 0x05, 0x03, 0x1A, 0xE0, 0x03, 0x32};
   d_platform->writePort(txpacket, 9);
 
