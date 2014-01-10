@@ -10,7 +10,7 @@ void BodyControlState::writeJson(Writer<StringBuffer>& writer) const
   writer.StartObject();
   {
     writer.String("cycle").Uint64(d_motionCycleNumber);
-    
+
     writer.String("joints");
     writer.StartArray();
     {

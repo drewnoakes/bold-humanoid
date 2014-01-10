@@ -12,8 +12,6 @@ namespace bold
   typedef unsigned char uchar;
   typedef unsigned short ushort;
 
-  class BodyControlState;
-
   class JointControl
   {
   public:
