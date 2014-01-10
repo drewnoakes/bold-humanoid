@@ -92,11 +92,11 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
               if (queueSize/10 > maxQueueSeen/10)
               {
                 maxQueueSeen = queueSize;
-                cout << "[AgentStateUpdated] " << tracker->name() << " max queue seen " << queueSize << endl;
+                log::warning("AgentStateUpdated") << tracker->name() << " max queue seen " << queueSize;
               }
               if (queueSize > MaxQueueSize)
               {
-                cerr << ccolor::warning << "[AgentStateUpdated] JsonSession queue too long (" << queueSize << " > " << MaxQueueSize << "), purging" << ccolor::reset << endl;
+                log::error("AgentStateUpdated") << "JsonSession queue too long (" << queueSize << " > " << MaxQueueSize << "), purging";
                 queue<shared_ptr<vector<uchar> const>> empty;
                 swap(session->second->queue, empty);
               }
