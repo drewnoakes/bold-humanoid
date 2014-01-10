@@ -15,3 +15,6 @@
 [submodule "filters"]
 	path = filters
 	url = git@bitbucket.org:boldhearts/filters.git
+[submodule "mitecom"]
+	path = mitecom
+	url = https://github.com/fumanoids/mitecom

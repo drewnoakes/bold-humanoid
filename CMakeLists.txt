@@ -284,6 +284,12 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./mitecom/mitecom-handler.cpp
+  ./mitecom/mitecom-network.cpp
+  ./mitecom/mitecom-roledecider.cpp
+)
+
+add_class(BOLDHUMANOID
   ./MotionLoop/motionloop.cc
 )
 
@@ -454,6 +460,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/OpenTeamState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/OptionTreeState/writeJson.cc
 )
 
@@ -479,6 +489,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObserver/FallDetector/falldetector.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObserver/OpenTeamCommunicator/openteamcommunicator.cc
 )
 
 add_class(BOLDHUMANOID

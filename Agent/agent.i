@@ -18,6 +18,7 @@ namespace bold
   class GameStateReceiver;
   class Localiser;
   class MotionLoop;
+  class OpenTeamCommunicator;
   class OptionTree;
   class Spatialiser;
   class VisualCortex;

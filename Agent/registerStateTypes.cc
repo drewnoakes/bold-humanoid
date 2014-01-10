@@ -14,6 +14,7 @@ void Agent::registerStateTypes()
   State::registerStateType<MotionTaskState>("MotionTask");
   State::registerStateType<MotionTimingState>("MotionTiming");
   State::registerStateType<OdometryState>("Odometry");
+  State::registerStateType<OpenTeamState>("OpenTeam");
   State::registerStateType<OptionTreeState>("OptionTree");
   State::registerStateType<OrientationState>("Orientation");
   State::registerStateType<ParticleState>("Particle");

@@ -30,6 +30,7 @@ namespace bold
   class MotionTaskScheduler;
   class Odometer;
   class OptionTree;
+  class OpenTeamCommunicator;
   class OrientationTracker;
   template<typename> class Setting;
   class Spatialiser;
@@ -57,6 +58,7 @@ namespace bold
     std::shared_ptr<Localiser> getLocaliser() const { return d_localiser; }
     std::shared_ptr<VisualCortex> getVisualCortex() const { return d_visualCortex; }
     std::shared_ptr<GameStateReceiver> getGameStateReceiver() const { return d_gameStateReceiver; }
+    std::shared_ptr<OpenTeamCommunicator> getOpenTeamCommunicator() const { return d_openTeamCommunicator; }
 
     std::shared_ptr<HeadModule> getHeadModule() const { return d_headModule; }
     std::shared_ptr<WalkModule> getWalkModule() const { return d_walkModule; }
@@ -103,6 +105,7 @@ namespace bold
     std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
     std::shared_ptr<JamDetector> d_jamTracker;
+    std::shared_ptr<OpenTeamCommunicator> d_openTeamCommunicator;
     std::shared_ptr<SuicidePill> d_suicidePill;
     std::shared_ptr<Odometer> d_odometer;
     std::shared_ptr<OrientationTracker> d_orientationTracker;
@@ -128,6 +131,7 @@ namespace bold
     Setting<double>* d_joystickAAmpMax;
 
     ulong d_cycleNumber;
+
 
     void initCamera();
 

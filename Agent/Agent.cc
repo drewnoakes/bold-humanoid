@@ -19,7 +19,7 @@ Agent::Agent()
 
   auto debugControl = make_shared<DebugControl>();
   d_debugger = make_shared<Debugger>(debugControl);
-
+  
   // Prepare the motion schedule, that coordinates which motions are carried out
   d_motionSchedule = make_shared<MotionTaskScheduler>();
 
@@ -37,6 +37,7 @@ Agent::Agent()
   d_suicidePill = make_shared<SuicidePill>(this, d_debugger);
   d_odometer = make_shared<Odometer>(d_walkModule);
   d_orientationTracker = make_shared<OrientationTracker>();
+  d_openTeamCommunicator = make_shared<OpenTeamCommunicator>(d_teamNumber, d_uniformNumber);
 
   // Register StateObservers
   State::registerObserver(d_vocaliser);
@@ -46,6 +47,7 @@ Agent::Agent()
   State::registerObserver(d_jamTracker);
   State::registerObserver(d_suicidePill);
   State::registerObserver(d_odometer);
+  State::registerObserver(d_openTeamCommunicator);
   State::registerObserver(d_orientationTracker);
 
   d_ambulator = make_shared<Ambulator>(d_walkModule),
