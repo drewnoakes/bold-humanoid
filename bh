@@ -42,6 +42,9 @@ print_usage()
   echo "   bh halt N [M...]"
   echo "          shut down the specified robot(s)"
   echo
+  echo "   bh move <motion-script> [M...]"
+  echo "          play the named motion script on the specified robot(s)"
+  echo
   echo "   bh help"
   echo "          display this message"
   echo
@@ -278,6 +281,44 @@ case "$1" in
 
       if [ $? -ne 0 ]; then
         echo FAILED to query for boldhumanoid process on darwin$i
+        res=1
+      fi
+    done
+
+    exit $res
+
+    ;;
+
+  #
+  # MOVE task
+  #
+
+  "move")
+
+    if [[ $# -lt 3 ]] ; then
+      echo "Must provide a motion script name, and the ID of one or more robots"
+      exit 1
+    fi
+
+    res=0
+    for i in ${@:3}
+    do
+      export NODE_PATH=/usr/local/lib/node_modules
+
+      echo "new (require('websocket').client)() \
+              .on('connectFailed', function(error) { \
+                console.log(error); \
+                process.exit(1);
+              }) \
+              .on('connect', function(conn) { \
+                conn.on('error', function(error) { console.log(error); process.exit(1); }); \
+                conn.send('{\"type\":\"action\",\"id\":\"motion-script.$2\"}'); \
+                conn.close(); \
+              }) \
+              .connect('ws://darwin$i.local:8080', 'control-protocol');" | node
+
+      if [ $? -ne 0 ]; then
+        echo FAILED to move darwin$i
         res=1
       fi
     done
