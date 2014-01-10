@@ -10,4 +10,4 @@ fi
 echo Build date: `date -r boldhumanoid +"%Y-%m-%d %H:%M"`
 
 alias h=history
-alias dh=~/bh
+alias bh=~/bh
