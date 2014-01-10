@@ -1,0 +1,367 @@
+#!/bin/bash
+
+# boldhumanoid console utility
+
+print_usage()
+{
+  echo
+  echo "boldhumanoid console utility"
+  echo
+  echo "usage:"
+  echo
+  echo "   bh run"
+  echo "          run the boldhumanoid process locally"
+  echo
+  echo "   bh run N"
+  echo "          run the boldhumanoid process on darwinN"
+  echo
+  echo "   bh test"
+  echo "          compile and run the unit tests"
+  echo
+  echo "   bh deploy N [M...]"
+  echo "          deploy all necessary files to the target robot(s)"
+  echo
+  echo "   bh deploy-min N [M...]"
+  echo "          deploy boldhumanoid binary and config files to the target robot(s)"
+  echo
+  echo "   bh stop [N...]"
+  echo "          stop the boldhumanoid service locally, or on specified robot(s)"
+  echo
+  echo "   bh start [N...]"
+  echo "          start the boldhumanoid service locally, or on specified robot(s)"
+  echo
+  echo "   bh restart [N...]"
+  echo "          restart the boldhumanoid service locally, or on specified robot(s)"
+  echo
+  echo "   bh query [N...]"
+  echo "          query status either locally, or on specified robot(s)"
+  echo
+  echo "   bh kill [N...]"
+  echo "          kill (-9) the boldhumanoid process locally, or on specified robot(s)"
+  echo
+  echo "   bh help"
+  echo "          display this message"
+  echo
+}
+
+
+if [[ $# -eq 0 ]] ; then
+  print_usage
+  exit 1
+fi
+
+res=0
+
+case "$1" in
+
+  #
+  # RUN task
+  #
+
+  "run")
+
+    if [[ $# -eq 2 ]] ; then
+      ssh darwin@darwin$2 "sudo ./bh run"
+      exit $?
+    fi
+
+    if [[ $# -ne 1 ]] ; then
+      echo "'run' task accepts no arguments"
+      exit 1
+    fi
+
+    ./boldhumanoid
+    exit $?
+
+    ;;
+
+  #
+  # TEST task
+  #
+
+  "test")
+
+    if [[ $# -ne 1 ]] ; then
+      echo "'build' task accepts no arguments"
+      exit 1
+    fi
+
+    make unittests && test/unittests
+    exit $?
+
+    ;;
+
+  #
+  # DEPLOY task
+  #
+
+  "deploy")
+
+    if [[ $# -eq 1 ]] ; then
+      echo "deploy requires one or more target robot numbers"
+      exit 1
+    fi
+
+    for i in ${@:2}
+    do
+      echo deploying to darwin$i
+
+      ssh darwin@darwin$i "mkdir -p swig && mkdir -p lib/"
+
+      rsync -zrP www \
+                 motionscripts \
+                 configuration-team.json \
+                 configuration-hatfield.json \
+                 configuration-drews.json \
+                 configuration-metadata \
+                 boldhumanoid.py \
+                 boldpy \
+                 bh \
+                 .bash_team \
+                 boldhumanoid \
+                 darwin@darwin$i:
+
+      rsync -zrP swig/bold.py \
+                 swig/_bold.so \
+                 darwin@darwin$i:swig/
+
+      rsync -zrP libwebsockets/lib/libwebsockets.so.4.0.0 \
+                 darwin@darwin$i:lib/
+
+      if [ $? -ne 0 ]; then
+        echo FAILED to deploy to darwin$i
+        res=1
+      fi
+    done
+
+    exit $res
+
+    ;;
+
+  #
+  # DEPLOY-MIN task
+  #
+
+  "deploy-min")
+
+    if [[ $# -eq 1 ]] ; then
+      echo "deploy-min requires one or more target robot numbers"
+      exit 1
+    fi
+
+    for i in ${@:2}
+    do
+
+      echo deploying to darwin$i
+
+      rsync -zrP configuration-team.json \
+                 configuration-hatfield.json \
+                 configuration-drews.json \
+                 boldhumanoid \
+                 darwin@darwin$i:
+
+      if [ $? -ne 0 ]; then
+        echo FAILED to deploy to darwin$i
+        res=1
+      fi
+
+    done
+
+    exit $res
+
+    ;;
+
+  #
+  # STOP task
+  #
+
+  "stop")
+
+    if [[ $# -eq 1 ]] ; then
+      sudo stop boldhumanoid
+      exit 1
+    fi
+
+    for i in ${@:2}
+    do
+      ssh darwin@darwin$i "sudo stop boldhumanoid"
+
+      if [ $? -ne 0 ]; then
+        echo FAILED to stop the boldhumanoid service to darwin$i
+        res=1
+      fi
+    done
+
+    exit $res
+
+    ;;
+
+  #
+  # START task
+  #
+
+  "start")
+
+    if [[ $# -eq 1 ]] ; then
+      sudo start boldhumanoid
+      exit 1
+    fi
+
+    for i in ${@:2}
+    do
+      ssh darwin@darwin$i "sudo start boldhumanoid"
+
+      if [ $? -ne 0 ]; then
+        echo FAILED to start the boldhumanoid service to darwin$i
+        res=1
+      fi
+    done
+
+    exit $res
+
+    ;;
+
+  #
+  # RESTART task
+  #
+
+  "restart")
+
+    if [[ $# -eq 1 ]] ; then
+      sudo restart boldhumanoid
+      exit 1
+    fi
+
+    for i in ${@:2}
+    do
+      ssh darwin@darwin$i "sudo restart boldhumanoid"
+
+      if [ $? -ne 0 ]; then
+        echo FAILED to restart the boldhumanoid service to darwin$i
+        res=1
+      fi
+    done
+
+    exit $res
+
+    ;;
+
+  #
+  # QUERY task
+  #
+
+  "query")
+
+    if [[ $# -eq 1 ]] ; then
+      if [ -z $(pgrep boldhumanoid) ]
+      then
+          echo "$(tput setaf 1)Boldhumanoid process is not running $(tput sgr 0)"
+      else
+          echo "$(tput setaf 2)Boldhumanoid process is running $(tput sgr 0)"
+      fi
+    fi
+
+    res=0
+    for i in ${@:2}
+    do
+      if [ -z $(ssh darwin@darwin$i "pgrep boldhumanoid") ]
+      then
+          echo "$(tput setaf 1)Boldhumanoid process is not running $(tput sgr 0)"
+      else
+          echo "$(tput setaf 2)Boldhumanoid process is running $(tput sgr 0)"
+      fi
+
+      if [ $? -ne 0 ]; then
+        echo FAILED to query for boldhumanoid process on darwin$i
+        res=1
+      fi
+    done
+
+    exit $res
+
+    ;;
+
+  #
+  # KILL task
+  #
+
+  "kill")
+
+    if [[ $# -eq 1 ]] ; then
+      if [ -z $(pkill -9 boldhumanoid) ]
+      then
+          echo "$(tput setaf 1)Boldhumanoid process successfully killed $(tput sgr 0)"
+      else
+          echo "$(tput setaf 2)Boldhumanoid process was not killed$(tput sgr 0)"
+      fi
+    fi
+
+    for i in ${@:2}
+    do
+      if [ -z $(ssh darwin@darwin$i "sudo pkill -9 boldhumanoid") ]
+      then
+          echo "$(tput setaf 1)Boldhumanoid process successfully killed $(tput sgr 0)"
+      else
+          echo "$(tput setaf 2)Boldhumanoid process was not killed$(tput sgr 0)"
+      fi
+    done
+
+    ;;
+
+  #
+  # HELP task
+  #
+
+  "help")
+
+    print_usage
+
+    ;;
+
+  #
+  # VM-BUILD task
+  #
+
+  "vm-build")
+
+    git fetch bert \
+     && git reset --hard bert/`git rev-parse --abbrev-ref HEAD` \
+     && git submodule update \
+     && make -j1
+
+    if [[ $? -ne 0 ]] ; then
+      exit $?
+    fi
+
+    for i in ${@:2}
+    do
+      echo "deploying to darwin$i" \
+       && rsync -zrP boldhumanoid \
+                     configuration-team.json \
+                     configuration-hatfield.json \
+                     configuration-drews.json \
+                     configuration-metadata.json \
+                     darwin@darwin$i:
+
+      if [[ $? -ne 0 ]] ; then
+        echo FAILED to deploy to darwin$i
+        res=1
+      fi
+    done
+
+    if [[ $res -eq 0 ]] ; then
+      git --no-pager log -6 --oneline \
+       && date \
+       && ssh -X drew@bert 'DISPLAY=:0 notify-send -i face-monkey "Ook ook ook" "Build monkey says..."'
+    fi
+
+    exit $res
+
+    ;;
+
+  *)
+
+    echo "Unexpected command: $1"
+
+    ;;
+esac
