@@ -13,6 +13,7 @@ set(BUNDLES_PATH "" CACHE STRING "Path to use to store bundles")
 include(ExternalProject)
 include(AddPcih)
 include(AddClass)
+include(TypeScript)
 
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
@@ -599,3 +600,12 @@ endif (BUILDRUN_UNIT_TEST)
 if (BUILD_TOOLS)
   add_subdirectory(tools)
 endif (BUILD_TOOLS)
+
+#
+## Compile TypeScript stuff
+#
+add_typescript_target(
+  ./www/scripts/app/Color.ts
+  ./www/scripts/app/util/Controls.ts
+  ./www/scripts/app/util/Geometry.ts
+  )
