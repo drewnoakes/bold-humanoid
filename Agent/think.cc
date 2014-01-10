@@ -96,7 +96,7 @@ void Agent::think()
     //
     // Update LEDs on back, etc
     //
-    d_debugger->update(d_cm730);
+    d_debugger->update();
     t.timeEvent("Update Debugger");
   }
 

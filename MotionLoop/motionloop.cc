@@ -21,8 +21,9 @@
 using namespace bold;
 using namespace std;
 
-MotionLoop::MotionLoop(shared_ptr<CM730> cm730)
+MotionLoop::MotionLoop(shared_ptr<CM730> cm730, shared_ptr<DebugControl> debugControl)
 : d_cm730(cm730),
+  d_debugControl(debugControl),
   d_isStarted(false),
   d_isStopRequested(false),
   d_loopDurationMillis(8),
@@ -252,7 +253,7 @@ void MotionLoop::step(SequentialTimer& t)
         d_cm730->syncWrite(addrRange.min(), bytesPerDevice, dirtyDeviceCount, parameters);
       }
 
-      t.timeEvent("Write to CM730");
+      t.timeEvent("Write to MX28s");
 
       //
       // Update BodyControlState
@@ -264,6 +265,28 @@ void MotionLoop::step(SequentialTimer& t)
 
         t.timeEvent("Set BodyControlState");
       }
+    }
+
+    if (d_debugControl->isDirty())
+    {
+      int bytesToWrite = 1 + (1 + 2 + 2);
+      uchar parameters[bytesToWrite];
+      int n = 0;
+
+      ushort forehead = d_debugControl->getForeheadColourShort();
+      ushort eye = d_debugControl->getEyeColourShort();
+
+      parameters[n++] = CM730::ID_CM;
+      parameters[n++] = d_debugControl->getPanelLedByte();
+      parameters[n++] = CM730::getLowByte(forehead);
+      parameters[n++] = CM730::getHighByte(forehead);
+      parameters[n++] = CM730::getLowByte(eye);
+      parameters[n++] = CM730::getHighByte(eye);
+
+      d_cm730->syncWrite(CM730::P_LED_PANEL, bytesToWrite, 1, parameters);
+
+      d_debugControl->clearDirtyFlags();
+      t.timeEvent("Write to CM730");
     }
   }
 

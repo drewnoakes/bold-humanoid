@@ -19,7 +19,8 @@ Agent::Agent()
 
   registerStateTypes();
 
-  d_debugger = make_shared<Debugger>();
+  auto debugControl = make_shared<DebugControl>();
+  d_debugger = make_shared<Debugger>(debugControl);
 
   // Register state observers
   d_fallDetector = make_shared<FallDetector>();
@@ -79,13 +80,13 @@ Agent::Agent()
   // TODO only stream if argument specified?
   d_streamer = make_shared<DataStreamer>(d_camera);
 
-  d_debugger->update(d_cm730);
+  d_debugger->update();
 
   if (d_haveBody)
   {
     readStaticHardwareState();
 
-    d_motionLoop = make_shared<MotionLoop>(d_cm730);
+    d_motionLoop = make_shared<MotionLoop>(d_cm730, debugControl);
 
     d_motionLoop->addModule(d_motionScriptModule);
     d_motionLoop->addModule(d_walkModule);

@@ -11,12 +11,13 @@ namespace bold
   class BodyControl;
   class BulkRead;
   class CM730;
+  class DebugControl;
   class SequentialTimer;
 
   class MotionLoop
   {
   public:
-    MotionLoop(std::shared_ptr<CM730> cm730);
+    MotionLoop(std::shared_ptr<CM730> cm730, std::shared_ptr<DebugControl> debugControl);
 
     ~MotionLoop();
 
@@ -37,6 +38,7 @@ namespace bold
 
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
+    std::shared_ptr<DebugControl> d_debugControl;
     std::shared_ptr<BodyControl> d_bodyControl;
     std::shared_ptr<BulkRead> d_dynamicBulkRead;
 
