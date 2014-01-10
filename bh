@@ -258,9 +258,9 @@ case "$1" in
     if [[ $# -eq 1 ]] ; then
       if [ -z $(pgrep boldhumanoid) ]
       then
-          echo "$(tput setaf 1)Boldhumanoid process is not running $(tput sgr 0)"
+          echo "$(tput setaf 1)Boldhumanoid process is not running locally$(tput sgr 0)"
       else
-          echo "$(tput setaf 2)Boldhumanoid process is running $(tput sgr 0)"
+          echo "$(tput setaf 2)Boldhumanoid process is running locally$(tput sgr 0)"
       fi
     fi
 
@@ -269,10 +269,12 @@ case "$1" in
     do
       if [ -z $(ssh darwin@darwin$i "pgrep boldhumanoid") ]
       then
-          echo "$(tput setaf 1)Boldhumanoid process is not running $(tput sgr 0)"
+          echo "$(tput setaf 1)Boldhumanoid process is not running on darwin$i$(tput sgr 0)"
       else
-          echo "$(tput setaf 2)Boldhumanoid process is running $(tput sgr 0)"
+          echo "$(tput setaf 2)Boldhumanoid process is running on darwin$i$(tput sgr 0)"
       fi
+
+      ssh darwin@darwin$i "echo Data as of \`date\` on \`hostname\` && echo && lsb_release -a && echo && sudo apt-get clean && df -h --type ext4 && echo && sudo du -d 1 -h /home | grep "/home/" && echo && echo /etc/network/interfaces && echo && cat /etc/network/interfaces | grep -v '^\(#\|[[:space:]]*$\)' && echo && echo /etc/hosts && echo && cat /etc/hosts | grep -v '^\(#\|[[:space:]]*$\)' && echo && dpkg-query -W -f='\${Package;-40}\t\${Installed-Size;8}\t\${Status;1}\t\${Version}\n' | grep -v \"\sd\s\" | sort | cut -f1,2,4-" | less
 
       if [ $? -ne 0 ]; then
         echo FAILED to query for boldhumanoid process on darwin$i
