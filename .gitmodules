@@ -12,3 +12,6 @@
 	path = test/google-test
 	url = git@bitbucket.org:boldhearts/google-test.git
 	ignore = untracked
+[submodule "filters"]
+	path = filters
+	url = git@bitbucket.org:boldhearts/filters.git
