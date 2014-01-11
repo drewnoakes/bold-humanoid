@@ -5,13 +5,12 @@
 #include "../AgentState/agentstate.hh"
 #include "../Config/config.hh"
 #include "../FieldMap/fieldmap.hh"
-#include "../Filter/ParticleFilter/particlefilter.hh"
 #include "../Math/math.hh"
-#include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/ParticleState/particlestate.hh"
+#include "../filters/ObservationModel/JointObservationModel/jointobservationmodel.hh"
 
 using namespace std;
 using namespace bold;

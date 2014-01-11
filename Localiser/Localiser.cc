@@ -6,7 +6,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
     d_avgPos(1),
     d_fieldMap(fieldMap)
 {
-  auto particleCount  = Config::getSetting<int>("localiser.particle-count");
+  //auto particleCount  = Config::getSetting<int>("localiser.particle-count");
   auto smoothingWindowSize = Config::getSetting<int>("localiser.smoothing-window-size");
   d_randomizeRatio    = Config::getSetting<double>("localiser.randomise-ratio");
   d_rewardFalloff     = Config::getSetting<double>("localiser.reward-fall-off");
@@ -15,7 +15,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
   auto positionError  = Config::getSetting<double>("localiser.position-error");
   auto angleErrorDegs = Config::getSetting<double>("localiser.angle-error-degrees");
 
-  particleCount->changed.connect([this](int value) { d_filter->setParticleCount(value); });
+  //particleCount->changed.connect([this](int value) { d_filter->setParticleCount(value); });
   smoothingWindowSize->changed.connect([this](int value) { d_avgPos = MovingAverage<Vector4d>(value); });
   positionError->changed.connect([this](int value) { d_positionErrorRng = Math::createNormalRng(0, value); });
   angleErrorDegs->changed.connect([this](int value) { d_angleErrorRng = Math::createNormalRng(0, Math::degToRad(value)); });
@@ -32,22 +32,12 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
   d_positionErrorRng = Math::createNormalRng(0, positionError->getValue());
   d_angleErrorRng    = Math::createNormalRng(0, Math::degToRad(angleErrorDegs->getValue()));
 
-  ParticleFilter<3>::ParticleResampler resampler =
-    [this](shared_ptr<vector<Particle>> particles, unsigned particleCount)
-    {
-      return resample(particles, particleCount);
-    };
-
-  ParticleFilter<3>::ParticleExtractor extractor =
-    [this](shared_ptr<vector<Particle>> particles) { return extract(particles); };
-
-  d_filter = make_shared<ParticleFilter<3>>(
-    particleCount->getValue(),
-    [this]() { return createRandomState(); },
-    resampler,
-    extractor);
-
+  d_filter = make_shared<ParticleFilter3>();
   Config::addAction("localiser.randomize", "Randomize", [this](){ d_filter->randomise(); });
+  d_filter->setStateGenerator(
+    [this]() {
+      return ParticleFilter3::State(d_fieldXRng(), d_fieldYRng(), d_thetaRng());
+    });
 
   updateStateObject();
 }

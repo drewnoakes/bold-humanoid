@@ -13,6 +13,46 @@ void Localiser::update()
     );
   });
 
+  JointObservationModel<3> jointModel;
+
+  if (agentFrame->getGoalObservations().size() >= d_minGoalsNeeded->getValue())
+  {
+    auto goalPostModel = [&](Vector3d const& state) {
+      AgentPosition pos(state[0], state[1], state[2]);
+      Affine3d agentWorld3d(pos.agentWorldTransform());
+      Affine3d worldAgent3d(pos.worldAgentTransform());
+
+      double scoreProd = 1.0;
+      for (Vector3d const& observed : agentFrame->getGoalObservations())
+      {
+        Vector2d observed2d(observed.head<2>());
+        double bestScore = 0;
+      
+        for (Vector3d const& candidate : d_fieldMap->getGoalPostPositions())
+        {
+          Vector3d candidate3d(candidate.x(), candidate.y(), 0);
+          Vector3d candidateAgent3d(agentWorld3d * candidate3d);
+          Vector2d candidateAgent2d(candidateAgent3d.x(), candidateAgent3d.y());
+
+          // very naive scoring system for now...
+
+          double distance = (candidateAgent2d - observed2d).norm();
+
+          double score = exp(-distance*distance);
+
+          if (score > bestScore)
+            bestScore = score;
+        }
+        scoreProd *= bestScore;
+      }
+      return scoreProd;
+    };
+
+    jointModel.addModel(goalPostModel);
+  }
+  d_filter->update(jointModel);
+
+  /*
   d_filter->update([&agentFrame,this](Vector3d state) -> double
   {
     AgentPosition pos(state[0], state[1], state[2]);
@@ -114,10 +154,11 @@ void Localiser::update()
 
     return scoreSum;
   });
+  */
 
-  auto state = d_filter->extract();
+  auto stateWeight = d_filter->extract();
 
-  d_pos = AgentPosition(state[0], state[1], state[2]);
+  d_pos = AgentPosition(stateWeight.first.x(), stateWeight.first.y(), stateWeight.first.z());
 
   updateSmoothedPos();
 

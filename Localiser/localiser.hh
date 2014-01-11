@@ -5,16 +5,13 @@
 #include <memory>
 
 #include "../AgentPosition/agentposition.hh"
-#include "../Filter/ParticleFilter/particlefilter.hh"
-#include "../ParticleSamplerFactory/WheelSamplerFactory/wheelsamplerfactory.hh"
+#include "../filters/Filter/ParticleFilter/particlefilter.hh"
 #include "../stats/movingaverage.hh"
 
 namespace bold
 {
   class FieldMap;
   template<typename> class Setting;
-
-  typedef ParticleFilter<3>::Particle Particle;
 
   class Localiser
   {
@@ -32,11 +29,7 @@ namespace bold
     void updateSmoothedPos();
     void updateStateObject();
 
-    ParticleFilter<3>::State createRandomState();
-
-    ParticleFilter<3>::State extract(std::shared_ptr<std::vector<Particle>> const& particles);
-
-    std::shared_ptr<std::vector<Particle>> resample(std::shared_ptr<std::vector<Particle>> const& particles, unsigned particleCount);
+    ParticleFilter3::State createRandomState();
 
     AgentPosition d_pos;
     AgentPosition d_smoothedPos;
@@ -49,11 +42,10 @@ namespace bold
     Setting<bool>* d_useLines;
     Setting<int>* d_minGoalsNeeded;
 
-    std::shared_ptr<ParticleFilter<3>> d_filter;
+    std::shared_ptr<ParticleFilter3> d_filter;
     std::function<double()> d_fieldXRng;
     std::function<double()> d_fieldYRng;
     std::function<double()> d_thetaRng;
-    WheelSamplerFactory<3> d_wsf;
     std::function<double()> d_positionErrorRng;
     std::function<double()> d_angleErrorRng;
   };

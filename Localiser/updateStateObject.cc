@@ -2,7 +2,12 @@
 
 void Localiser::updateStateObject()
 {
-  auto const& particleState = std::make_shared<ParticleState const>(d_filter->getParticles());
+  MatrixXd states = d_filter->getParticles();
+  MatrixXd weights = d_filter->getWeights();
+
+  MatrixXd particles = MatrixXd::Ones(states.rows() + 1, weights.size());
+  particles << states, weights.transpose();
+  auto const& particleState = std::make_shared<ParticleState const>(particles);
 
   AgentState::getInstance().set(particleState);
 }
