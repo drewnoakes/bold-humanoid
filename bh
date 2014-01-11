@@ -119,7 +119,7 @@ case "$1" in
                  configuration-team.json \
                  configuration-hatfield.json \
                  configuration-drews.json \
-                 configuration-metadata \
+                 configuration-metadata.json \
                  boldhumanoid.py \
                  boldpy \
                  bh \
@@ -163,6 +163,7 @@ case "$1" in
       rsync -zrP configuration-team.json \
                  configuration-hatfield.json \
                  configuration-drews.json \
+                 configuration-metadata.json \
                  boldhumanoid \
                  darwin@darwin$i:
 
