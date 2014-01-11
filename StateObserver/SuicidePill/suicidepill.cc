@@ -40,7 +40,9 @@ void SuicidePill::observeTyped(shared_ptr<HardwareState const> state)
       {
         log::warning("SuicidePill::observeTyped") << "Both buttons held for " << stopServiceAfterSeconds << " seconds. Stopping service.";
         d_debugger->showExitedAgent();
-        system("stop boldhumanoid");
+        int res = system("stop boldhumanoid");
+        if (res != 0)
+          log::error("SuicidePill::observeTyped") << "System call to stop boldhumanoid service exited with: " << res;
         d_exited = true;
       }
       else if (seconds > stopProcessAfterSeconds)
