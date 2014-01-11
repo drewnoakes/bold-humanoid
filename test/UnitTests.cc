@@ -57,7 +57,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 #include "MX28AlarmTests.hh"
 #include "MX28Tests.hh"
 #include "MotionScriptRunnerTests.hh"
-#include "ParticleFilterTests.hh"
+//#include "ParticleFilterTests.hh"
 #include "Polygon2Tests.hh"
 #include "RangeTests.hh"
 #include "RunTests.hh"
