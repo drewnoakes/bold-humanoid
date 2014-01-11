@@ -44,7 +44,7 @@ void BodyState::initBody(double angles[])
   // it there
   headCameraJoint->axis = Vector3d(1, 0, 0);
   //headCameraJoint->angleRads = -0.7854;
-  headCameraJoint->angleRads = -0.68;
+  headCameraJoint->angleRads = -0.69;
   headCameraJoint->anchors.first = Vector3d(0, 0, 0);
   headCameraJoint->anchors.second = Vector3d(0, -0.0332, -0.0344);
   head->joints.push_back(headCameraJoint);

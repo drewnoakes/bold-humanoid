@@ -135,9 +135,9 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     // Ignore goal if it appears outside of field
     //
     // NOTE Process this before anything else as anything above the field edge is wasting our time
-    int allowedGoalFieldEdgeErrorPixels = 5;
-    if (goalBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x()) + allowedGoalFieldEdgeErrorPixels)
-        continue;
+    //int allowedGoalFieldEdgeErrorPixels = 5;
+    //if (goalBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x()) + allowedGoalFieldEdgeErrorPixels)
+    //    continue;
 
     // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
     Vector2i wh = goalBlob.br - goalBlob.ul;
