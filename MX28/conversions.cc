@@ -42,4 +42,4 @@ ushort MX28::rpm2Value(double speed) { int temp = ((int)(fabs(speed)*RATIO_RPM2V
 double MX28::value2Rpm(ushort value) { double temp = (value & 0x3FF)*RATIO_VALUE2RPM; if (value & 0x400) temp = -temp; return temp; }
 
 ushort MX28::torque2Value(double speed) { int temp = ((int)(fabs(speed)*RATIO_TORQUE2VALUE)) & 0x3FF; if (speed < 0) temp |= 0x400; return temp; }
-double MX28::talue2Torque(ushort value) { double temp = (value & 0x3FF)*RATIO_VALUE2TORQUE; if (value & 0x400) temp = -temp; return temp; }
+double MX28::value2Torque(ushort value) { double temp = (value & 0x3FF)*RATIO_VALUE2TORQUE; if (value & 0x400) temp = -temp; return temp; }

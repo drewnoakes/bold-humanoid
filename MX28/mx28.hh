@@ -45,7 +45,7 @@ namespace bold
     static double value2Rpm(ushort value);
 
     static ushort torque2Value(double speed);
-    static double talue2Torque(ushort value);
+    static double value2Torque(ushort value);
 
     /** EEPROM and RAM p. 4 in MX28 Technical Specifications PDF
      * This enum enumerates the adresses. The list depends on the version the MX28.
