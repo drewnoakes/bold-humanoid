@@ -28,23 +28,27 @@ define(
             }
         };
 
+        var red = '#ED303C',
+            grn = '#44C425',
+            blu = '#00A8C6';
+
         var charts = [
             {
                 title: 'gyro',
                 options: chartOptions,
                 series: [
-                    { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 },
-                    { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 1 },
-                    { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 }
+                    { strokeStyle: red, lineWidth: 1 },
+                    { strokeStyle: grn, lineWidth: 1 },
+                    { strokeStyle: blu, lineWidth: 1 }
                 ]
             },
             {
                 title: 'acc',
                 options: chartOptions,
                 series: [
-                    { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 },
-                    { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 1 },
-                    { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 }
+                    { strokeStyle: red, lineWidth: 1 },
+                    { strokeStyle: grn, lineWidth: 1 },
+                    { strokeStyle: blu, lineWidth: 1 }
                 ]
             }
         ];

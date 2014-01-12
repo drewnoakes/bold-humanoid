@@ -10,7 +10,7 @@ define(
         var PolarTrace = function ()
         {
             this.length = 200;
-            this.lineStyle = '#008800';
+            this.lineStyle = '#44C425';
             this.axisStyle = 'rgba(255,255,255,0.5)';
             this.ringStyle = 'rgba(255,255,255,0.5)';
             this.maxValue = 1.5;
