@@ -16,8 +16,6 @@ namespace bold
   class BodyState;
   class Camera;
   class CameraModel;
-  class CM730;
-  class CM730Linux;
   class DataStreamer;
   class Debugger;
   class FallDetector;
@@ -61,7 +59,6 @@ namespace bold
     std::shared_ptr<MotionScriptModule> getMotionScriptModule() const { return d_motionScriptModule; }
 
     std::shared_ptr<FallDetector> getFallDetector() const { return d_fallDetector; }
-    std::shared_ptr<CM730> getCM730() const { return d_cm730; }
 
     unsigned getTeamNumber() const { return d_teamNumber; }
     unsigned getUniformNumber() const { return d_uniformNumber; }
@@ -90,8 +87,6 @@ namespace bold
 
     // Motion
 
-    std::shared_ptr<CM730Linux> d_cm730Linux;
-    std::shared_ptr<CM730> d_cm730;
     std::shared_ptr<MotionLoop> d_motionLoop;
     std::shared_ptr<MotionTaskScheduler> d_motionSchedule;
     std::shared_ptr<WalkModule> d_walkModule;

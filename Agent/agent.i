@@ -9,8 +9,6 @@ namespace bold
   class BodyState;
   class Camera;
   class CameraModel;
-  class CM730;
-  class CM730Linux;
   class DataStreamer;
   class Debugger;
   class FallDetector;

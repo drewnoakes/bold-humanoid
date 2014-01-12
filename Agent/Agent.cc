@@ -33,8 +33,8 @@ Agent::Agent()
   AgentState::getInstance().registerObserver<HardwareState>(d_healthAndSafety);
   AgentState::getInstance().registerObserver<HardwareState>(d_suicidePill);
 
-  d_cm730Linux = make_shared<CM730Linux>(cm730DevicePath);
-  d_cm730 = make_shared<CM730>(d_cm730Linux);
+  auto cm730Linux = make_shared<CM730Linux>(cm730DevicePath);
+  auto cm730 = make_shared<CM730>(cm730Linux);
 
   // Prepare the motion schedule, that coordinates which motions are carried out
   d_motionSchedule = make_shared<MotionTaskScheduler>();
@@ -44,7 +44,7 @@ Agent::Agent()
   d_walkModule = make_shared<WalkModule>(d_motionSchedule);
   d_motionScriptModule = make_shared<MotionScriptModule>(d_motionSchedule, motionScripts);
 
-  d_haveBody = d_cm730->connect();
+  d_haveBody = cm730->connect();
 
   if (!d_haveBody)
   {
@@ -84,7 +84,7 @@ Agent::Agent()
 
   if (d_haveBody)
   {
-    d_motionLoop = make_shared<MotionLoop>(d_cm730, debugControl);
+    d_motionLoop = make_shared<MotionLoop>(cm730, debugControl);
 
     d_motionLoop->addModule(d_motionScriptModule);
     d_motionLoop->addModule(d_walkModule);
