@@ -66,6 +66,8 @@ bool MotionLoop::start()
 {
   log::info("MotionLoop::start") << "Starting";
 
+  d_cm730->torqueEnable(true);
+
   d_readYet = false;
 
   // Initialise default thread attributes
@@ -129,6 +131,8 @@ void MotionLoop::stop()
     exit(-1);
 
   log::info("MotionLoop::stop") << "Stopped";
+
+  d_cm730->torqueEnable(false);
 
   d_isStopRequested = false;
   d_isStarted = false;

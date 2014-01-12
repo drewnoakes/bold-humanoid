@@ -181,7 +181,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   penalizedState->onEnter = [debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); };
   pausedState->onEnter = [debugger]() { debugger->showPaused(); };
   pausing1State->onEnter = [debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); };
-  stopAgentAndExitState->onEnter = [agent]() { agent->getCM730()->torqueEnable(false); agent->stop(); };
+  stopAgentAndExitState->onEnter = [agent]() { agent->stop(); };
 
   //
   // START UP

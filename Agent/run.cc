@@ -16,14 +16,12 @@ void Agent::run()
 
   if (d_haveBody)
   {
-    d_cm730->torqueEnable(true);
-
     d_motionLoop->start();
 
-    log::info("Agent::run") << "Waiting for HardwareState before starting motion loop";
     while (!AgentState::get<HardwareState>())
     {
       // Wait until the motion loop has read a hardware value
+      log::info("Agent::run") << "Waiting for HardwareState before starting think loop";
       usleep(8000);
     }
   }
