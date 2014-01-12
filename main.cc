@@ -28,7 +28,7 @@ void printUsage()
   cout << ccolor::fore::lightblue << "  -c <file> " << ccolor::fore::white << "use specified configuration file (or --config)" << endl;
   cout << ccolor::fore::lightblue << "  -v        " << ccolor::fore::white << "verbose logging (or --verbose)" << endl;
   cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
-  cout << ccolor::fore::lightblue << "  -version  " << ccolor::fore::white << "print git version details at time of build" << endl;
+  cout << ccolor::fore::lightblue << "  --version " << ccolor::fore::white << "print git version details at time of build" << endl;
   cout << ccolor::reset;
 }
 
