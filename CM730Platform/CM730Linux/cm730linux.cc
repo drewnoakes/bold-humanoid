@@ -25,10 +25,6 @@ CM730Linux::CM730Linux(string name)
   d_txByteCount(0),
   d_rxByteCount(0)
 {
-  sem_init(&d_semIdLow, 0, 1);
-  sem_init(&d_semIdMid, 0, 1);
-  sem_init(&d_semIdHigh, 0, 1);
-
   setPortName(name);
 }
 
@@ -143,41 +139,6 @@ int CM730Linux::readPort(unsigned char* packet, size_t byteCount)
   if (i > 0)
     d_rxByteCount += i;
   return i;
-}
-
-void sem_wait_nointr(sem_t *sem)
-{
-  while((sem_wait(sem) == -1) && (errno == EINTR));
-}
-
-void CM730Linux::lowPriorityWait()
-{
-  sem_wait_nointr(&d_semIdLow);
-}
-
-void CM730Linux::midPriorityWait()
-{
-  sem_wait_nointr(&d_semIdMid);
-}
-
-void CM730Linux::highPriorityWait()
-{
-  sem_wait_nointr(&d_semIdHigh);
-}
-
-void CM730Linux::lowPriorityRelease()
-{
-  sem_post(&d_semIdLow);
-}
-
-void CM730Linux::midPriorityRelease()
-{
-  sem_post(&d_semIdMid);
-}
-
-void CM730Linux::highPriorityRelease()
-{
-  sem_post(&d_semIdHigh);
 }
 
 void CM730Linux::setPacketTimeout(int lenPacket)

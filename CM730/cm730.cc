@@ -5,6 +5,7 @@
 #include <iomanip>
 
 #include "../JointId/jointid.hh"
+#include "../ThreadId/threadid.hh"
 #include "../util/ccolor.hh"
 #include "../util/log.hh"
 
@@ -122,11 +123,7 @@ CM730::~CM730()
 
 CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, shared_ptr<BulkRead> bulkRead = nullptr)
 {
-  if (priority > 1)
-    d_platform->lowPriorityWait();
-  if (priority > 0)
-    d_platform->midPriorityWait();
-  d_platform->highPriorityWait();
+  assert(ThreadId::isMotionLoopThread());
 
   int length = txpacket[LENGTH] + 4;
 
@@ -350,12 +347,6 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, s
 
   if (DEBUG_PRINT)
     cout << "[CM730::txRxPacket] Round trip in " << setprecision(2) << d_platform->getPacketTime() << "ms  (" << getCommResultName(res) << ")" << endl;
-
-  d_platform->highPriorityRelease();
-  if (priority > 0)
-    d_platform->midPriorityRelease();
-  if (priority > 1)
-    d_platform->lowPriorityRelease();
 
   return res;
 }

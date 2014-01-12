@@ -32,15 +32,6 @@ namespace bold
     /// This is a non-blocking read, so if no bytes are available, the return value will be zero.
     virtual int readPort(uchar* packet, std::size_t byteCount) = 0;
 
-
-    virtual void lowPriorityWait() = 0;
-    virtual void midPriorityWait() = 0;
-    virtual void highPriorityWait() = 0;
-    virtual void lowPriorityRelease() = 0;
-    virtual void midPriorityRelease() = 0;
-    virtual void highPriorityRelease() = 0;
-
-
     /// Sets timeout for packet receipt, called after sending a packet for which a response is expected
     virtual void setPacketTimeout(int lenPacket) = 0;
 
