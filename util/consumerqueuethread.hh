@@ -63,6 +63,9 @@ namespace bold
 
         T item = d_queue.front();
         d_queue.pop();
+
+        lock.unlock();
+
         d_processor(item);
       }
     }
