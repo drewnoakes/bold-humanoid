@@ -199,8 +199,8 @@ namespace bold
     /// Releases CM730.
     void disconnect();
 
-    /// Turn on the CM730's Dynamixel power.
-    bool dxlPowerOn();
+    /// Control the CM730 power.
+    bool powerEnable(bool enable);
 
     /// Enable or disable torque for all joints.
     void torqueEnable(bool enable);

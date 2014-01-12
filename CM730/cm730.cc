@@ -445,7 +445,7 @@ bool CM730::connect()
     return false;
   }
 
-  return dxlPowerOn();
+  return powerEnable(true);
 }
 
 bool CM730::changeBaud(unsigned baud)
@@ -456,21 +456,21 @@ bool CM730::changeBaud(unsigned baud)
     return false;
   }
 
-  return dxlPowerOn();
+  return powerEnable(true);
 }
 
-bool CM730::dxlPowerOn()
+bool CM730::powerEnable(bool enable)
 {
-  log::info("CM730::dxlPowerOn") << "Turning Dynamixel power on";
+  log::info("CM730::powerEnable") << "Turning CM730 power " << (enable?"on":"off");
 
-  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, 1, 0) == CommResult::SUCCESS)
+  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, enable ? 1 : 0, 0) == CommResult::SUCCESS)
   {
     // TODO why is this sleep here?
     d_platform->sleep(300); // milliseconds
   }
   else
   {
-    log::error("CM730::dxlPowerOn") << "Failed to change Dynamixel power";
+    log::error("CM730::powerEnable") << "Failed to set CM730 power";
     return false;
   }
 
@@ -495,6 +495,8 @@ void CM730::disconnect()
 {
   const uchar txpacket[] = {0xFF, 0xFF, 0xC8, 0x05, 0x03, 0x1A, 0xE0, 0x03, 0x32};
   d_platform->writePort(txpacket, 9);
+
+  powerEnable(false);
 
   d_platform->closePort();
 }
