@@ -54,7 +54,8 @@ MotionLoop::MotionLoop(unique_ptr<CM730> cm730, shared_ptr<DebugControl> debugCo
 
 MotionLoop::~MotionLoop()
 {
-  stop();
+  if (d_isStarted && !d_isStopRequested)
+    stop();
 }
 
 void MotionLoop::addModule(shared_ptr<MotionModule> module)
@@ -127,10 +128,10 @@ bool MotionLoop::start()
 
 void MotionLoop::stop()
 {
-  log::info("MotionLoop::stop") << "Stopping";
-
-  if (!d_isStarted)
+  if (!d_isStarted || d_isStopRequested)
     return;
+
+  log::verbose("MotionLoop::stop") << "Stopping";
 
   // set the flag to end the thread
   d_isStopRequested = true;
@@ -175,7 +176,7 @@ void *MotionLoop::threadMethod(void *param)
     AgentState::getInstance().set(make_shared<MotionTimingState const>(t.flush(), loop->d_cycleNumber));
   }
 
-  log::info("MotionLoop::threadMethod") << "Exiting";
+  log::verbose("MotionLoop::threadMethod") << "Exiting";
 
   pthread_exit(NULL);
 }

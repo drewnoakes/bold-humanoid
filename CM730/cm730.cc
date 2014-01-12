@@ -493,6 +493,8 @@ void CM730::torqueEnable(bool enable)
 
 void CM730::disconnect()
 {
+  log::verbose("CM730::disconnect") << "Disconnecting from CM730";
+
   // Set eye/panel LEDs to indicate disconnection
   writeWord(CM730::ID_CM, CM730::P_LED_HEAD_L, CM730::color2Value(0, 255, 0), nullptr);
   writeWord(CM730::ID_CM, CM730::P_LED_EYE_L,  CM730::color2Value(0,   0, 0), nullptr);

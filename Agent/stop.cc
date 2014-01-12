@@ -13,12 +13,14 @@ void Agent::requestStop()
 
   log::info("Agent::requestStop");
 
+  // The option tree picks up this flag and performs a shutdown sequence
   d_isStopRequested = true;
 }
 
 void Agent::stop()
 {
-  log::info("Agent::stop");
+  log::verbose("Agent::stop") << "Stopping";
+
   d_isRunning = false;
   d_streamer->stop();
 
@@ -27,4 +29,6 @@ void Agent::stop()
 
   if (d_voice)
     d_voice->stop();
+
+  log::info("Agent::stop") << "Stopped";
 }
