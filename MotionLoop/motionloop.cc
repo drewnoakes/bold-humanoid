@@ -4,6 +4,7 @@
 #include "../BodyControl/bodycontrol.hh"
 #include "../CM730/cm730.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
+#include "../Config/config.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../StateObject/BodyState/bodystate.hh"
@@ -41,6 +42,11 @@ MotionLoop::MotionLoop(unique_ptr<CM730> cm730, shared_ptr<DebugControl> debugCo
   d_staticBulkRead = unique_ptr<BulkRead>(
     new BulkRead(CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
                  MX28::P_MODEL_NUMBER_L, MX28::P_LOCK));
+
+  // add an action that sets d_staticHardwareStateUpdateNeeded true
+  Config::addAction("motion-loop.query-static-hardware-state", "Query static HW state",
+    [this]() { d_staticHardwareStateUpdateNeeded = true; }
+  );
 
   for (uchar i = 0; i < (uchar)JointId::MAX; i++)
     d_offsets[i] = 0;
