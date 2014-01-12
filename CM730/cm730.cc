@@ -493,8 +493,10 @@ void CM730::torqueEnable(bool enable)
 
 void CM730::disconnect()
 {
-  const uchar txpacket[] = {0xFF, 0xFF, 0xC8, 0x05, 0x03, 0x1A, 0xE0, 0x03, 0x32};
-  d_platform->writePort(txpacket, 9);
+  // Set eye/panel LEDs to indicate disconnection
+  writeWord(CM730::ID_CM, CM730::P_LED_HEAD_L, CM730::color2Value(0, 255, 0), nullptr);
+  writeWord(CM730::ID_CM, CM730::P_LED_EYE_L,  CM730::color2Value(0,   0, 0), nullptr);
+  writeByte(CM730::ID_CM, CM730::P_LED_PANEL,  0, nullptr);
 
   powerEnable(false);
 
