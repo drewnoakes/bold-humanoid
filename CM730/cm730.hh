@@ -185,7 +185,7 @@ namespace bold
         ((s >> 10) & 0x1F) / 31.0);
     }
 
-    CM730(std::shared_ptr<CM730Platform> platform);
+    CM730(std::unique_ptr<CM730Platform> platform);
     ~CM730();
 
     static std::string getCommResultName(CommResult responseCode);
@@ -254,7 +254,7 @@ namespace bold
     void resetByteCounts() { d_platform->resetByteCounts(); }
 
   private:
-    std::shared_ptr<CM730Platform> d_platform;
+    std::unique_ptr<CM730Platform> d_platform;
     uchar d_controlTable[MAXNUM_ADDRESS];
 
     /**

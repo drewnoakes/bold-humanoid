@@ -112,8 +112,8 @@ int BulkReadTable::readWord(uchar address) const
 ////////// CM730
 //////////
 
-CM730::CM730(shared_ptr<CM730Platform> platform)
-: d_platform(platform)
+CM730::CM730(unique_ptr<CM730Platform> platform)
+: d_platform(move(platform))
 {}
 
 CM730::~CM730()

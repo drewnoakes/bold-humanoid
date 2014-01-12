@@ -22,8 +22,8 @@
 using namespace bold;
 using namespace std;
 
-MotionLoop::MotionLoop(shared_ptr<CM730> cm730, shared_ptr<DebugControl> debugControl)
-: d_cm730(cm730),
+MotionLoop::MotionLoop(unique_ptr<CM730> cm730, shared_ptr<DebugControl> debugControl)
+: d_cm730(move(cm730)),
   d_debugControl(debugControl),
   d_isStarted(false),
   d_isStopRequested(false),
