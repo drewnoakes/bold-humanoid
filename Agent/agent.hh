@@ -134,8 +134,6 @@ namespace bold
 
     void think();
 
-    void readSubBoardData();
-
     void processInputCommands();
 
     void readStaticHardwareState();
