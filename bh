@@ -45,6 +45,9 @@ print_usage()
   echo "   bh move <motion-script> [M...]"
   echo "          play the named motion script on the specified robot(s)"
   echo
+  echo "   bh cppcheck"
+  echo "          run the cppcheck program over the source code"
+  echo
   echo "   bh help"
   echo "          display this message"
   echo
@@ -362,6 +365,23 @@ case "$1" in
   "help")
 
     print_usage
+
+    ;;
+
+  #
+  # CPPCHECK task
+  #
+
+  "cppcheck")
+
+    cppcheck -i libwebsockets \
+             -i rapidjson \
+             -i test \
+             -i swig \
+             -i joystick \
+             -i CMakeFiles \
+             --enable=all \
+             . > /dev/null
 
     ;;
 
