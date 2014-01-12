@@ -36,6 +36,8 @@ namespace bold
   private:
     void step(SequentialTimer& t);
 
+    void updateStaticHardwareState();
+
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::shared_ptr<CM730> d_cm730;
     std::shared_ptr<DebugControl> d_debugControl;
@@ -53,6 +55,8 @@ namespace bold
     bool d_readYet;
 
     ulong d_cycleNumber;
+
+    bool d_staticHardwareStateUpdateNeeded;
 
     /// The method that governs the thread's lifetime and operation
     static void *threadMethod(void *param);

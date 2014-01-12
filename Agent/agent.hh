@@ -135,7 +135,5 @@ namespace bold
     void think();
 
     void processInputCommands();
-
-    void readStaticHardwareState();
   };
 }

@@ -10,6 +10,7 @@
 #include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
+#include "../StateObject/StaticHardwareState/statichardwarestate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
 #include "../ThreadId/threadid.hh"
 #include "../util/ccolor.hh"
@@ -28,11 +29,14 @@ MotionLoop::MotionLoop(shared_ptr<CM730> cm730, shared_ptr<DebugControl> debugCo
   d_isStopRequested(false),
   d_loopDurationMillis(8),
   d_readYet(false),
-  d_cycleNumber(0)
+  d_cycleNumber(0),
+  d_staticHardwareStateUpdateNeeded(true)
 {
   d_bodyControl = make_shared<BodyControl>();
   d_dynamicBulkRead = make_shared<BulkRead>(CM730::P_DXL_POWER, CM730::P_VOLTAGE,
                                             MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE);
+
+  // TODO add an action that sets d_staticHardwareStateUpdateNeeded true
 
   for (uchar i = 0; i < (uchar)JointId::MAX; i++)
     d_offsets[i] = 0;
@@ -294,6 +298,13 @@ void MotionLoop::step(SequentialTimer& t)
   // READ DATA
   //
 
+  if (d_staticHardwareStateUpdateNeeded)
+  {
+    updateStaticHardwareState();
+    d_staticHardwareStateUpdateNeeded = false;
+    t.timeEvent("Read StaticHardwareState");
+  }
+
   CommResult res = d_cm730->bulkRead(d_dynamicBulkRead);
   t.timeEvent("Read from CM730");
 
@@ -325,4 +336,28 @@ void MotionLoop::step(SequentialTimer& t)
     d_bodyControl->updateFromHardwareState();
     d_readYet = true;
   }
+}
+
+void MotionLoop::updateStaticHardwareState()
+{
+  // TODO doesn't need to be a shared_ptr here
+
+  auto staticBulkRead = make_shared<BulkRead>(CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
+                                              MX28::P_MODEL_NUMBER_L, MX28::P_LOCK);
+
+  CommResult res = d_cm730->bulkRead(staticBulkRead);
+
+  if (res != CommResult::SUCCESS)
+  {
+    log::warning("MotionLoop::updateStaticHardwareState") << "Bulk read failed -- skipping update of StaticHardwareState";
+    return;
+  }
+
+  auto cm730State = make_shared<StaticCM730State>(staticBulkRead->getBulkReadData(CM730::ID_CM));
+
+  auto mx28States = vector<shared_ptr<StaticMX28State const>>();
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    mx28States.push_back(make_shared<StaticMX28State>(staticBulkRead->getBulkReadData(jointId), jointId));
+
+  AgentState::getInstance().set(make_shared<StaticHardwareState const>(cm730State, mx28States));
 }

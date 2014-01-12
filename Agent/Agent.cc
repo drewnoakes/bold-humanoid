@@ -84,8 +84,6 @@ Agent::Agent()
 
   if (d_haveBody)
   {
-    readStaticHardwareState();
-
     d_motionLoop = make_shared<MotionLoop>(d_cm730, debugControl);
 
     d_motionLoop->addModule(d_motionScriptModule);
