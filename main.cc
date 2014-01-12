@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <signal.h>
+#include <string.h>
 
 using namespace bold;
 using namespace std;
@@ -35,7 +36,7 @@ void handleShutdownSignal(int sig)
 {
   if (agent)
   {
-    log::info("boldhumanoid") << "Stopping Agent";
+    log::info("boldhumanoid") << "Received signal '" << strsignal(sig) << "' (" << sig << ") - stopping agent";
     agent->requestStop();
   }
 }
