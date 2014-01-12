@@ -246,7 +246,7 @@ namespace bold
     CommResult reset(uchar id);
 
 
-    CommResult bulkRead(std::shared_ptr<BulkRead> bulkRead);
+    CommResult bulkRead(BulkRead* bulkRead);
 
 
     unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }
@@ -260,7 +260,7 @@ namespace bold
     /**
      * @param priority select the queue for this exchange: 0=high 1=med 2=low
      */
-    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, std::shared_ptr<BulkRead> bulkRead);
+    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead);
 
     static uchar calculateChecksum(uchar *packet);
   };

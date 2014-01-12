@@ -121,7 +121,7 @@ CM730::~CM730()
   disconnect();
 }
 
-CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, shared_ptr<BulkRead> bulkRead = nullptr)
+CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead = nullptr)
 {
   assert(ThreadId::isMotionLoopThread());
 
@@ -391,7 +391,7 @@ uchar CM730::calculateChecksum(uchar *packet)
   return (~checksum);
 }
 
-CommResult CM730::bulkRead(shared_ptr<BulkRead> bulkRead)
+CommResult CM730::bulkRead(BulkRead* bulkRead)
 {
   uchar rxpacket[bulkRead->rxLength];
 

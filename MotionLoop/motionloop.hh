@@ -42,7 +42,8 @@ namespace bold
     std::unique_ptr<CM730> d_cm730;
     std::shared_ptr<DebugControl> d_debugControl;
     std::shared_ptr<BodyControl> d_bodyControl;
-    std::shared_ptr<BulkRead> d_dynamicBulkRead;
+    std::unique_ptr<BulkRead> d_dynamicBulkRead;
+    std::unique_ptr<BulkRead> d_staticBulkRead;
 
     /// When false, calls to process have no effect
     bool d_isStarted;
