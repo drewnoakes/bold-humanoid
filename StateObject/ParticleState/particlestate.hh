@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../StateObject/stateobject.hh"
+#include "../stateobject.hh"
 
 #include <memory>
 #include <vector>

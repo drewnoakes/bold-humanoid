@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "../JointId/jointid.hh"
 #include "../stateobject.hh"
+#include "../../JointId/jointid.hh"
 
 namespace bold
 {

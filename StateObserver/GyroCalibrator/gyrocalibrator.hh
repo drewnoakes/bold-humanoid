@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../StateObserver/stateobserver.hh"
+#include "../stateobserver.hh"
 #include "../../stats/movingaverage.hh"
 
 namespace bold

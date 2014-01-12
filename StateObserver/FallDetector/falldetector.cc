@@ -1,6 +1,6 @@
 #include "falldetector.hh"
 
-#include "../CM730Snapshot/cm730snapshot.hh"
+#include "../../CM730Snapshot/cm730snapshot.hh"
 
 #include <iostream>
 

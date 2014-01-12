@@ -1,6 +1,6 @@
 #include "labelcountstate.hh"
 
-#include "../PixelLabel/pixellabel.hh"
+#include "../../PixelLabel/pixellabel.hh"
 
 using namespace bold;
 using namespace rapidjson;

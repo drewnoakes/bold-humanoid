@@ -11,8 +11,8 @@
 #include <sys/ioctl.h>
 #include <iostream>
 
-#include "../Clock/clock.hh"
-#include "../util/log.hh"
+#include "../../Clock/clock.hh"
+#include "../../util/log.hh"
 
 using namespace bold;
 using namespace std;

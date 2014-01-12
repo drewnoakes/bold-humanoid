@@ -1,8 +1,8 @@
 #include "healthandsafety.hh"
 
-#include "../CM730Snapshot/cm730snapshot.hh"
-#include "../Config/config.hh"
-#include "../MX28Snapshot/mx28snapshot.hh"
+#include "../../CM730Snapshot/cm730snapshot.hh"
+#include "../../Config/config.hh"
+#include "../../MX28Snapshot/mx28snapshot.hh"
 
 using namespace bold;
 using namespace std;

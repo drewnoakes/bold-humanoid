@@ -4,11 +4,11 @@
 
 #include <vector>
 
-#include "../AgentPosition/agentposition.hh"
-#include "../geometry/LineSegment2i.hh"
-#include "../geometry/Polygon2.hh"
 #include "../stateobject.hh"
-#include "../util/Maybe.hh"
+#include "../../AgentPosition/agentposition.hh"
+#include "../../geometry/LineSegment2i.hh"
+#include "../../geometry/Polygon2.hh"
+#include "../../util/Maybe.hh"
 
 namespace bold
 {

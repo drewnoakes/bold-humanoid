@@ -1,8 +1,8 @@
 #include "gyrocalibrator.hh"
 
-#include "../CM730Snapshot/cm730snapshot.hh"
-#include "../StateObject/HardwareState/hardwarestate.hh"
-#include "../util/log.hh"
+#include "../../CM730Snapshot/cm730snapshot.hh"
+#include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../util/log.hh"
 
 #include <cmath>
 #include <iostream>

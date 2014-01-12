@@ -1,6 +1,6 @@
 #include "bodystate.ih"
 
-#include "../MX28/mx28.hh"
+#include "../../MX28/mx28.hh"
 
 shared_ptr<BodyState const> BodyState::zero(ulong thinkCycleNumber)
 {

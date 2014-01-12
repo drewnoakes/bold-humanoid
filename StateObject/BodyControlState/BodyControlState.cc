@@ -1,6 +1,6 @@
 #include "bodycontrolstate.hh"
 
-#include "../BodyControl/bodycontrol.hh"
+#include "../../BodyControl/bodycontrol.hh"
 
 using namespace bold;
 using namespace std;

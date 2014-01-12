@@ -1,6 +1,6 @@
 #include "motiontaskstate.hh"
 
-#include "../MotionModule/motionmodule.hh"
+#include "../../MotionModule/motionmodule.hh"
 
 #include <memory>
 

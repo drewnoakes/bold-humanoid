@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../Clock/clock.hh"
-#include "../StateObject/HardwareState/hardwarestate.hh"
-#include "../StateObserver/stateobserver.hh"
-#include "../stats/movingaverage.hh"
-#include "../util/schmitttrigger.hh"
-#include "../Voice/voice.hh"
+#include "../stateobserver.hh"
+#include "../../Clock/clock.hh"
+#include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../stats/movingaverage.hh"
+#include "../../util/schmitttrigger.hh"
+#include "../../Voice/voice.hh"
 
 namespace bold
 {

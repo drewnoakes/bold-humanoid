@@ -1,12 +1,12 @@
 #include "headmodule.hh"
 
-#include "../AgentState/agentstate.hh"
-#include "../BodyControl/bodycontrol.hh"
-#include "../Config/config.hh"
-#include "../Math/math.hh"
-#include "../MotionTaskScheduler/motiontaskscheduler.hh"
-#include "../StateObject/BodyState/bodystate.hh"
-#include "../ThreadId/threadid.hh"
+#include "../../AgentState/agentstate.hh"
+#include "../../BodyControl/bodycontrol.hh"
+#include "../../Config/config.hh"
+#include "../../Math/math.hh"
+#include "../../MotionTaskScheduler/motiontaskscheduler.hh"
+#include "../../StateObject/BodyState/bodystate.hh"
+#include "../../ThreadId/threadid.hh"
 
 #include <iostream>
 

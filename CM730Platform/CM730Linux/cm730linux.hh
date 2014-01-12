@@ -3,12 +3,12 @@
 #include <semaphore.h>
 #include <string>
 
-#include "../CM730Platform/cm730platform.hh"
+#include "../../CM730Platform/cm730platform.hh"
 
 namespace bold
 {
   typedef unsigned char uchar;
-  
+
   class CM730Linux : public CM730Platform
   {
   private:

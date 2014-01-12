@@ -10,7 +10,7 @@
 
 #include "../stateobject.hh"
 #include "../../BodyPart/bodypart.hh"
-#include "../JointId/jointid.hh"
+#include "../../JointId/jointid.hh"
 
 namespace bold
 {

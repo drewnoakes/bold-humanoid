@@ -5,9 +5,9 @@
 #include <iostream>
 #include <sys/time.h>
 
-#include "../Clock/clock.hh"
-#include "../Math/math.hh"
-#include "../MotionModule/HeadModule/headmodule.hh"
+#include "../../Clock/clock.hh"
+#include "../../Math/math.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
 
 using namespace bold;
 using namespace std;

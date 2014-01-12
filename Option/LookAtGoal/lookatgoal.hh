@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../option.hh"
-#include "../CameraModel/cameramodel.hh"
+#include "../../CameraModel/cameramodel.hh"
 
 namespace bold
 {
