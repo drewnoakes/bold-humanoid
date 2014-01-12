@@ -54,7 +54,8 @@ namespace bold
       {}
 
       PixelFormat(v4l2_pix_format const& pf)
-        : id(pf.pixelformat),
+        : owner(nullptr),
+          id(pf.pixelformat),
           width (pf.width),
           height(pf.height),
           pixelFormat(pf.pixelformat),

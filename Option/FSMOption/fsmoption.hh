@@ -47,7 +47,8 @@ namespace bold
     FSMState(std::string const& name, std::vector<std::shared_ptr<Option>> options, bool isFinal = false)
     : name(name),
       isFinal(isFinal),
-      options(options)
+      options(options),
+      startTimestamp()
     {}
 
     /// State name

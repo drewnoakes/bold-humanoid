@@ -136,7 +136,7 @@ void *MotionLoop::threadMethod(void *param)
 
   ThreadId::setThreadId(ThreadId::MotionLoop);
 
-  MotionLoop *loop = (MotionLoop*)param;
+  MotionLoop *loop = static_cast<MotionLoop*>(param);
   static struct timespec next_time;
   clock_gettime(CLOCK_MONOTONIC, &next_time);
 

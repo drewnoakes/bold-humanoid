@@ -11,7 +11,7 @@ Colour::bgr Colour::hsv2bgr(hsv const& in)
   int const   nh = 256;         // Maximum hue value
   int const   hstep = nh / 3;   // Hue step size between red -> green -> blue
 
-  int chroma, F, I, X, M, r, g, b;
+  int r, g, b;
 
   if (in.s == 0)
   {
@@ -20,14 +20,14 @@ Colour::bgr Colour::hsv2bgr(hsv const& in)
   }
   else
   {
-    chroma = in.s * in.v / 255;
+    int chroma = in.s * in.v / 255;
 
-    I = 2 * in.h / hstep; // [0-5]
-    F = in.h % hstep; // [0-hstep)
+    int I = 2 * in.h / hstep; // [0-5]
+    int F = in.h % hstep; // [0-hstep)
 
     assert (I >= 0 && I <= 5);
 
-    X = chroma * (255 - abs(2 * 255 * F / hstep - 255)) / 255;
+    int X = chroma * (255 - abs(2 * 255 * F / hstep - 255)) / 255;
 
     switch (I)
     {
@@ -67,7 +67,7 @@ Colour::bgr Colour::hsv2bgr(hsv const& in)
       r = g = b = 0;
     }
 
-    M = in.v - chroma;
+    int M = in.v - chroma;
     r += M;
     g += M;
     b += M;

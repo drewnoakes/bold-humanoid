@@ -110,7 +110,7 @@ bool UDPSocket::setTarget(string targetIpAddress, int port)
   return resolveIp4Address(targetIpAddress, port, (sockaddr_in*)d_target);
 }
 
-bool UDPSocket::bind(const string localIpAddress, int port)
+bool UDPSocket::bind(string const& localIpAddress, int port)
 {
   static const int one = 1;
 
@@ -175,8 +175,9 @@ int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress,
   return bytesRead;
 }
 
-bool UDPSocket::send(const string message)
+bool UDPSocket::send(string const& message)
 {
+  return send(message.c_str(), message.length());
   return send(message.c_str(), message.length());
 }
 
@@ -194,7 +195,7 @@ bool UDPSocket::send(const char* data, int dataLength)
   return bytesSent > 0;
 }
 
-bool UDPSocket::resolveIp4Address(const string ip4Address, int port, sockaddr_in* addr)
+bool UDPSocket::resolveIp4Address(string const& ip4Address, int port, sockaddr_in* addr)
 {
   memset(addr, 0, sizeof(sockaddr_in));
 

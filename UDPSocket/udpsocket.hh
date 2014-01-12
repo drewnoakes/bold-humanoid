@@ -52,7 +52,7 @@ namespace bold
      * @param port the local UDP port number to bind to, or if zero one an
      *             ephemeral port will be automatically assigned by the OS
      */
-    bool bind(const std::string localIpAddress = "", int port = 0);
+    bool bind(std::string const& localIpAddress = "", int port = 0);
 
     /** Sends a message via this UDP socket.
      *
@@ -61,7 +61,7 @@ namespace bold
      *
      * @param message the content of the message to be sent, as a std::string
      */
-    bool send(const std::string message);
+    bool send(std::string const& message);
 
     /** Sends a message via this UDP socket.
      *
@@ -88,7 +88,7 @@ namespace bold
     int receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress, int* fromAddressLength);
 
   private:
-    bool resolveIp4Address(const std::string ip4Address, int port, sockaddr_in* addr);
+    bool resolveIp4Address(std::string const& ip4Address, int port, sockaddr_in* addr);
 
     int d_socket;
     sockaddr_in* d_target;

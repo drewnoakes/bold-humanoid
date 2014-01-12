@@ -30,7 +30,8 @@ namespace bold
     }
 
     StateTracker(std::string name)
-    : d_name(name)
+    : websocketProtocol(nullptr),
+      d_name(name)
     {}
 
     void set(std::shared_ptr<StateObject const> state)
