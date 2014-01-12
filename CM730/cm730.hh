@@ -185,12 +185,11 @@ namespace bold
         ((s >> 10) & 0x1F) / 31.0);
     }
 
-    CM730(std::unique_ptr<CM730Platform> platform);
-    ~CM730();
-
     static std::string getCommResultName(CommResult responseCode);
     static std::string getInstructionName(uchar instructionId);
 
+    CM730(std::unique_ptr<CM730Platform> platform);
+    ~CM730();
 
     /// Links CM730, returning true on success.
     bool connect();
@@ -226,12 +225,16 @@ namespace bold
     /// Writes two bytes into the control table for the specified Dynamixel device. Returns communication result enum value.
     CommResult writeWord(uchar id, uchar address, int value, MX28Alarm* error);
 
-    /** Simultaneously write data to several Dynamixels at a time. Useful for motion control.
+    /** Simultaneously write consecutive table values to one ore more devices.
      *
-     * This command is used to control several Dynamixels with one Instruction Packet transmission.
+     * This command can be used to control several Dynamixels with one instruction packet transmission.
+     * Similary, it can be used to write multiple consecutive values to a single device, such as the CM730.
+     * In combination, it may be used to write different values across the same addresses on multiple MX28s, which is very useful for motion control.
+     *
      * When this command is used, several commands are transmitted at once, reducing communication overhead.
      * The start address in the control table and the number of values to write is the same across all
      * devices, though the values may differ by device.
+     *
      * SyncWrite is a broadcast message, so no Status packet is expected in response, hence no error code.
      *
      * @param fromAddress starting address within the control table
