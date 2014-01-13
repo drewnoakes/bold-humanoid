@@ -44,6 +44,8 @@ namespace bold
 
     std::shared_ptr<std::vector<EventTiming> const> getTimings() const { return d_eventTimings; }
 
+    ulong getCycleNumber() const { return d_cycleNumber; }
+
   private:
    std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
    ulong d_cycleNumber;
