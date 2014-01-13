@@ -29,6 +29,7 @@ namespace bold
   class MotionTaskScheduler;
   class Odometer;
   class OptionTree;
+  class OrientationTracker;
   template<typename> class Setting;
   class Spatialiser;
   class SuicidePill;
@@ -101,6 +102,7 @@ namespace bold
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
     std::shared_ptr<SuicidePill> d_suicidePill;
     std::shared_ptr<Odometer> d_odometer;
+    std::shared_ptr<OrientationTracker> d_orientationTracker;
 
     // Components
 

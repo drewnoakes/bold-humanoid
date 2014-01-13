@@ -437,6 +437,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/OrientationState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/ParticleState/writeJson.cc
 )
 
@@ -466,6 +470,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObserver/Odometer/odometer.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObserver/OrientationTracker/orientationtracker.cc
 )
 
 add_class(BOLDHUMANOID

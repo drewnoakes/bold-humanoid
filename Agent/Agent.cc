@@ -32,19 +32,24 @@ Agent::Agent()
   d_walkModule = make_shared<WalkModule>(d_motionSchedule);
   d_motionScriptModule = make_shared<MotionScriptModule>(d_motionSchedule, motionScripts);
 
-  // Register state observers
+  // Create StateObservers
   d_fallDetector = make_shared<FallDetector>();
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
   d_suicidePill = make_shared<SuicidePill>(this, d_debugger);
   d_odometer = make_shared<Odometer>(d_walkModule);
+  d_orientationTracker = make_shared<OrientationTracker>();
 
+  // Register StateObservers
   AgentState::getInstance().registerObserver(d_fallDetector);
   AgentState::getInstance().registerObserver(d_gyroCalibrator);
   AgentState::getInstance().registerObserver(d_healthAndSafety);
   AgentState::getInstance().registerObserver(d_suicidePill);
   AgentState::getInstance().registerObserver(d_odometer);
+  AgentState::getInstance().registerObserver(d_orientationTracker);
 
+  // Connect to hardware subcontroller
+  // TODO let the motion loop do this, and implement a simple, perfect, loopback when no hardware is available
   d_haveBody = cm730->connect();
 
   if (!d_haveBody)
