@@ -20,7 +20,7 @@ namespace bold
     : d_isPanelLedDirty(false),
       d_isEyeDirty(false),
       d_isForeheadDirty(false),
-      d_panelLedByte(0xff),
+      d_panelLedByte(0),
       d_eyeColourShort(0),
       d_foreheadColourShort(0),
       d_eyeColour(0,0,0),
