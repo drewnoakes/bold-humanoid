@@ -80,6 +80,10 @@ namespace bold
       std::lock_guard<std::mutex> guard(d_mutex);
       assert(d_trackerByTypeId.find(typeid(T)) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
       d_trackerByTypeId[typeid(T)] = StateTracker::create<T>(name);
+
+      // Create an empty list for the observers so that we don't have to lock later on the observer map
+      std::vector<std::shared_ptr<StateObserver>> observers = {};
+      d_observersByTypeId[typeid(T)] = observers;
     }
 
     std::vector<std::shared_ptr<StateTracker>> getTrackers() const
@@ -94,26 +98,26 @@ namespace bold
 
     unsigned stateTypeCount() const { return d_trackerByTypeId.size(); }
 
-    // TODO get rid of the updated signal, as it causes updates to occur on the motion thread, when they should be on the think thread, or even another thread
-    /** Fires when a state object is updated. */
-    sigc::signal<void, std::shared_ptr<StateTracker>> updated;
+    /** Fires when a state object is updated.
+     *
+     * Currently only used by DataStreamer, which may serialise the StateObject
+     * for attached clients.
+     *
+     * A lock is held over d_mutex while this event is raised :(
+     *
+     * TODO avoid unbounded holding of d_mutex by getting rid of this signal and using a queue for the DataStreamer thread to process (?)
+     */
+    sigc::signal<void, std::shared_ptr<StateTracker const>> updated;
 
     template<typename T>
     void registerObserver(std::shared_ptr<StateObserver> observer)
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       assert(observer);
-      std::lock_guard<std::mutex> guard(d_mutex);
       auto it = d_observersByTypeId.find(typeid(T));
-      if (it == d_observersByTypeId.end())
-      {
-        std::vector<std::shared_ptr<StateObserver>> observers = { observer };
-        d_observersByTypeId[typeid(T)] = observers;
-      }
-      else
-      {
-        it->second.push_back(observer);
-      }
+      assert(it != d_observersByTypeId.end() && "Tracker type must be registered");
+      // TODO assert that we are in some kind of configuration phase
+      it->second.push_back(observer);
     }
 
     template <typename T>
@@ -125,22 +129,25 @@ namespace bold
       auto const& tracker = getTracker<T const>();
       tracker->set(state);
 
-      // TODO this blocks for too long. eventing won't work well. need to do all updates async, off the motion thread
-      std::lock_guard<std::mutex> guard(d_mutex);
-      updated(tracker);
+      std::vector<std::shared_ptr<StateObserver>>* observers;
 
-      auto it = d_observersByTypeId.find(typeid(T));
-      if (it != d_observersByTypeId.end())
+      // Raise event and look up observers while holding lock
       {
-        std::vector<std::shared_ptr<StateObserver>> const& observers = it->second;
-        assert(observers.size());
-        for (auto& observer : observers)
-        {
-          assert(observer);
-          observer->observe(state);
-        }
+        // TODO this blocks for too long. eventing won't work well. need to do all updates async, off the motion thread
+        std::lock_guard<std::mutex> guard(d_mutex);
+        updated(tracker);
+
+        auto it = d_observersByTypeId.find(typeid(T));
+        assert(it != d_observersByTypeId.end());
+        observers = &it->second;
       }
-      // TODO we hold this lock throughout all observers... dodgy!
+
+      // Release lock before notifying observers
+      for (auto& observer : *observers)
+      {
+        assert(observer);
+        observer->observe(state);
+      }
     }
 
     /** Get the StateObject of specified type T. May be nullptr.
