@@ -340,9 +340,9 @@ case "$1" in
     if [[ $# -eq 1 ]] ; then
       if [ -z $(pkill -9 boldhumanoid) ]
       then
-          echo "$(tput setaf 1)Boldhumanoid process successfully killed $(tput sgr 0)"
+          echo "$(tput setaf 2)Boldhumanoid process successfully killed $(tput sgr 0)"
       else
-          echo "$(tput setaf 2)Boldhumanoid process was not killed$(tput sgr 0)"
+          echo "$(tput setaf 1)Boldhumanoid process was not killed$(tput sgr 0)"
       fi
     fi
 
@@ -350,9 +350,9 @@ case "$1" in
     do
       if [ -z $(ssh darwin@darwin$i "sudo pkill -9 boldhumanoid") ]
       then
-          echo "$(tput setaf 1)Boldhumanoid process successfully killed $(tput sgr 0)"
+          echo "$(tput setaf 2)Boldhumanoid process successfully killed $(tput sgr 0)"
       else
-          echo "$(tput setaf 2)Boldhumanoid process was not killed$(tput sgr 0)"
+          echo "$(tput setaf 1)Boldhumanoid process was not killed$(tput sgr 0)"
       fi
     done
 
