@@ -28,6 +28,11 @@ define(
                 button = document.createElement('button');
                 target.appendChild(button);
             }
+            else
+            {
+                console.dir(target);
+                console.assert(false && "Unexpected target type")
+            }
 
             ControlClient.withAction(id, function(action)
             {
