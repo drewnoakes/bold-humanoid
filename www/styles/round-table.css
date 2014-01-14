@@ -636,6 +636,13 @@ div.module.sensors .polar-trace-container + .polar-trace-container
 
 /********************************************************************/
 
+div.module.orientation canvas
+{
+    float: left;
+}
+
+/********************************************************************/
+
 div.module.state .json-text
 {
     white-space: pre;
