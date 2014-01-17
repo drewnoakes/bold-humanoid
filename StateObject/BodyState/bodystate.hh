@@ -76,7 +76,7 @@ namespace bold
     /// Transform of camera, including rotation of torso in agent/world frames
     Eigen::Affine3d d_cameraAgentTransform;
 
-    ulong d_cycleNumber;
+    ulong d_motionCycleNumber;
 
   public:
     // Needed when having fixed sized Eigen member

@@ -4,7 +4,7 @@ BodyState::BodyState(double angles[], ulong cycleNumber)
 : d_torso(),
   d_jointById(),
   d_limbByName(),
-  d_cycleNumber(cycleNumber)
+  d_motionCycleNumber(cycleNumber)
 {
   initBody(angles);
   updatePosture();
