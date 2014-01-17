@@ -62,37 +62,41 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // Might we have a ball?
   if (blobsPerLabel[d_ballLabel].size() > 0)
   {
-    // Merge ball blobs
     vector<Blob>& ballBlobs = blobsPerLabel[d_ballLabel];
-    for (int i = 0; i < min(10, (int)ballBlobs.size()); ++i)
+
+    if (d_ballBlobMergingEnabled->getValue())
     {
-      Blob& larger = ballBlobs[i];
-
-      if (larger.area == 0)
-        continue;
-
-      if (larger.area < d_minBallArea->getValue())
+      // Merge ball blobs
+      for (int i = 0; i < min(10, (int)ballBlobs.size()); ++i)
       {
-        // Blobs are sorted, largest first, so if this is too small, the rest will be too
-        break;
-      }
+        Blob& larger = ballBlobs[i];
 
-      for (int j = i + 1; j < min(10, (int)ballBlobs.size()); ++j)
-      {
-        Blob& smaller = ballBlobs[j];
-
-        if (smaller.area == 0)
+        if (larger.area == 0)
           continue;
 
-        if (shouldMergeBallBlobs(larger.bounds(), smaller.bounds()))
+        if (larger.area < d_minBallArea->getValue())
         {
-          larger.merge(smaller);
-          // Indicate that the smaller one is no longer in use
-          smaller.area = 0;
+          // Blobs are sorted, largest first, so if this is too small, the rest will be too
+          break;
+        }
+
+        for (int j = i + 1; j < min(10, (int)ballBlobs.size()); ++j)
+        {
+          Blob& smaller = ballBlobs[j];
+
+          if (smaller.area == 0)
+            continue;
+
+          if (shouldMergeBallBlobs(larger.bounds(), smaller.bounds()))
+          {
+            larger.merge(smaller);
+            // Indicate that the smaller one is no longer in use
+            smaller.area = 0;
+          }
         }
       }
+      t.timeEvent("Ball Blob Merging");
     }
-    t.timeEvent("Ball Blob Merging");
 
     // The first is the biggest, topmost ball blob
     for (Blob const& ballBlob : ballBlobs)

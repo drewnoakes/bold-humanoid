@@ -58,6 +58,7 @@ define(
 
             var visionSettingsContainer = element.querySelector('div.object-detection');
             this.closables.add(ControlBuilder.build('vision.min-ball-area', visionSettingsContainer));
+            this.closables.add(ControlBuilder.build('vision.enable-ball-blob-merging', visionSettingsContainer));
             this.closables.add(ControlBuilder.build('vision.min-goal-dimension-pixels', visionSettingsContainer));
 
             var granularitySettingsContainer = element.querySelector('div.granularity');

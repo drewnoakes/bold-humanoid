@@ -42,6 +42,7 @@
   "vision": {
     "min-ball-area":             { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
     "min-goal-dimension-pixels": { "type": "int", "min": 1, "max": 50, "default": 1, "advanced": true },
+    "enable-ball-blob-merging":  { "type": "bool", "default": true, "advanced": true },
     "pixel-labels": {
       "goal":  { "type": "hsv-range", "default": { "hue": [44, 60],  "sat": [158, 236], "val": [124, 222] } },
       "ball":  { "type": "hsv-range", "default": { "hue": [248, 23], "sat": [72, 255],  "val": [12, 255] } },

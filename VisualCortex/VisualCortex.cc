@@ -36,6 +36,8 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDrawCalibration     = Config::getSetting<bool>("round-table.image-features.calibration");
   d_shouldDrawObservedObjects = Config::getSetting<bool>("round-table.image-features.objects");
 
+  d_ballBlobMergingEnabled     = Config::getSetting<bool>("vision.enable-ball-blob-merging");
+
   d_lineDotColour             = Config::getSetting<Colour::bgr>("round-table.image-colours.line-dot");
   d_observedLineColour        = Config::getSetting<Colour::bgr>("round-table.image-colours.observed-line");
   d_expectedLineColour        = Config::getSetting<Colour::bgr>("round-table.image-colours.expected-line");

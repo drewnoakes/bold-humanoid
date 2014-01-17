@@ -191,5 +191,7 @@ namespace bold
     Setting<bool>* d_shouldDrawFieldEdge;
     Setting<bool>* d_shouldDrawCalibration;
     Setting<bool>* d_shouldDrawObservedObjects;
+
+    Setting<bool>* d_ballBlobMergingEnabled;
   };
 }
