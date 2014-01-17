@@ -73,8 +73,6 @@ namespace bold
     std::map<uchar, std::shared_ptr<Joint>> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
 
-    /// Rotation of the torso, wrt the agent/world frames
-    Eigen::Affine3d d_torsoWorldRotation;
     /// Transform of camera, including rotation of torso in agent/world frames
     Eigen::Affine3d d_cameraAgentTransform;
 

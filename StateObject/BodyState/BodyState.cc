@@ -16,12 +16,12 @@ BodyState::BodyState(double angles[], ulong cycleNumber)
   // TODO determine stance foot
   Affine3d const& footTorsoTransform = getLimb("rFoot")->transform;
 
-  d_torsoWorldRotation = footTorsoTransform.inverse().rotation();
+  Affine3d torsoAgentRotation(footTorsoTransform.inverse().rotation());
 
   Affine3d const& cameraTorsoTransform = getLimb("camera")->transform;
 
   // This is a special transform that gives the position of the camera in
   // the agent's frame, taking any rotation of the torso into account
   // considering the orientation of the foot (which is assumed to be flat.)
-  d_cameraAgentTransform = Translation3d(0,0,-footTorsoTransform.translation().z()) * d_torsoWorldRotation * cameraTorsoTransform;
+  d_cameraAgentTransform = Translation3d(0,0,-footTorsoTransform.translation().z()) * torsoAgentRotation * cameraTorsoTransform;
 }
