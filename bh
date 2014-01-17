@@ -15,6 +15,9 @@ print_usage()
   echo "   bh run N"
   echo "          run the boldhumanoid process on darwinN"
   echo
+  echo "   bh run-with"
+  echo "          run the boldhumanoid process locally with specified arguments"
+  echo
   echo "   bh test"
   echo "          compile and run the unit tests"
   echo
@@ -80,6 +83,22 @@ case "$1" in
     fi
 
     ./boldhumanoid
+    exit $?
+
+    ;;
+
+  #
+  # RUN-WITH task
+  #
+
+  "run-with")
+
+    if [[ $# -eq 1 ]] ; then
+      echo "'run-with' task requires additional arguments"
+      exit 1
+    fi
+
+    ./boldhumanoid ${@:2}
     exit $?
 
     ;;
