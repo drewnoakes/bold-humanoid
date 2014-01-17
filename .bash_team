@@ -7,7 +7,7 @@ else
     echo "$(tput setaf 2)Boldhumanoid process is running $(tput sgr 0)"
 fi
 
-echo Build date: `date -r boldhumanoid +"%Y-%m-%d %H:%M"`
-
 alias h=history
 alias bh=~/bh
+
+bh boldhumanoid --version
