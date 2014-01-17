@@ -343,8 +343,12 @@ void MotionLoop::step(SequentialTimer& t)
   auto rxBytes = d_cm730->getReceivedByteCount();
   auto txBytes = d_cm730->getTransmittedByteCount();
 
-  AgentState::getInstance().set(make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes, d_cycleNumber));
+  auto hw = make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes, d_cycleNumber);
+  AgentState::getInstance().set(hw);
   t.timeEvent("Update HardwareState");
+
+  AgentState::getInstance().set(make_shared<BodyState const>(hw, d_cycleNumber));
+  t.timeEvent("Update BodyState");
 
   if (!d_readYet)
   {
