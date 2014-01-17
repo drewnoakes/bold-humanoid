@@ -7,7 +7,7 @@ Agent::Agent()
     d_uniformNumber(Config::getStaticValue<int>("team-number")),
     d_cycleNumber(0)
 {
-  ThreadId::setThreadId(ThreadId::ThinkLoop);
+  ThreadId::setThreadId(ThreadIds::ThinkLoop);
 
   if (Config::getStaticValue<bool>("use-speech"))
     d_voice = make_shared<Voice>(Config::getStaticValue<string>("hardware.voice"));

@@ -153,7 +153,7 @@ void *MotionLoop::threadMethod(void *param)
 {
   log::info("MotionLoop::threadMethod") << "Started";
 
-  ThreadId::setThreadId(ThreadId::MotionLoop);
+  ThreadId::setThreadId(ThreadIds::MotionLoop);
 
   MotionLoop *loop = static_cast<MotionLoop*>(param);
   static struct timespec next_time;

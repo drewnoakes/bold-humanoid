@@ -8,7 +8,7 @@
 using namespace bold;
 using namespace std;
 
-thread_local int ThreadId::d_threadId;
+thread_local ThreadIds ThreadId::d_threadId;
 
 std::string ThreadId::getThreadName()
 {
@@ -19,14 +19,14 @@ std::string ThreadId::getThreadName()
     case ThreadIds::DataStreamer: return "Data Streamer";
     default:
       stringstream s;
-      s << "Unknown (" << d_threadId << ")";
+      s << "Unknown (" << (int)d_threadId << ")";
       return s.str();
   }
 }
 
 bool ThreadId::isMotionLoopThread()
 {
-  if (d_threadId == MotionLoop)
+  if (d_threadId == ThreadIds::MotionLoop)
     return true;
   log::error("ThreadId::isMotionLoopThread") << "Expected Motion Loop thread but was: " << getThreadName();
   return false;
@@ -34,7 +34,7 @@ bool ThreadId::isMotionLoopThread()
 
 bool ThreadId::isThinkLoopThread()
 {
-  if (d_threadId == ThinkLoop)
+  if (d_threadId == ThreadIds::ThinkLoop)
     return true;
   log::error("ThreadId::isThinkLoopThread") << "Expected Think Loop thread but was: " << getThreadName();
   return false;
@@ -42,7 +42,7 @@ bool ThreadId::isThinkLoopThread()
 
 bool ThreadId::isDataStreamerThread()
 {
-  if (d_threadId == DataStreamer)
+  if (d_threadId == ThreadIds::DataStreamer)
     return true;
   log::error("ThreadId::isDataStreamerThread") << "Expected Data Streamer thread but was: " << getThreadName();
   return false;
