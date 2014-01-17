@@ -23,7 +23,7 @@ void AgentState::registerObserver(shared_ptr<StateObserver> observer)
   it2->second.push_back(observer);
 }
 
-void AgentState::callbackObservers(ThreadIds threadId, SequentialTimer& timer) const
+void AgentState::callbackObservers(ThreadId threadId, SequentialTimer& timer) const
 {
   // TODO STATE assert that we are NOT in the configuration phase
 

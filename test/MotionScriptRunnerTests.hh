@@ -38,7 +38,7 @@ void pushStep(shared_ptr<MotionScript::Stage> stage, ushort value, uchar moveCyc
 
 TEST (DISABLED_MotionScriptRunnerTests, basics)
 {
-  ThreadUtil::setThreadId(ThreadIds::MotionLoop);
+  ThreadUtil::setThreadId(ThreadId::MotionLoop);
 
   // TODO convenience method for populating a basic HardwareState object
   AgentState::getInstance().registerStateType<HardwareState>("Hardware");

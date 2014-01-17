@@ -8,7 +8,7 @@ using namespace bold;
 using namespace std;
 
 FallDetector::FallDetector()
-: TypedStateObserver<HardwareState>("Fall detector", ThreadIds::MotionLoop),
+: TypedStateObserver<HardwareState>("Fall detector", ThreadId::MotionLoop),
   d_windowSize(30),
   d_fbAvgValue(d_windowSize),
   d_forwardLimitValue(390),

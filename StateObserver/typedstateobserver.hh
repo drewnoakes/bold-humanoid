@@ -21,7 +21,7 @@ namespace bold
   class TypedStateObserver : public StateObserver
   {
   public:
-    TypedStateObserver(std::string observerName, ThreadIds callbackThread)
+    TypedStateObserver(std::string observerName, ThreadId callbackThread)
     : StateObserver(observerName, callbackThread),
       d_typeIndex(typeid(TState))
     {

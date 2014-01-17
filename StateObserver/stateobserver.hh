@@ -19,7 +19,7 @@ namespace bold
   class StateObserver
   {
   public:
-    StateObserver(std::string observerName, ThreadIds callbackThread)
+    StateObserver(std::string observerName, ThreadId callbackThread)
     : d_types(),
       d_callbackThreadId(callbackThread),
       d_name(observerName)
@@ -35,11 +35,11 @@ namespace bold
 
     std::string getName() const { return d_name; }
     std::vector<std::type_index> const& getTypes() const { return d_types; }
-    ThreadIds getCallbackThreadId() const { return d_callbackThreadId; }
+    ThreadId getCallbackThreadId() const { return d_callbackThreadId; }
 
   protected:
     std::vector<std::type_index> d_types;
-    const ThreadIds d_callbackThreadId;
+    const ThreadId d_callbackThreadId;
     const std::string d_name;
 
   private:

@@ -6,7 +6,7 @@ namespace bold
 {
   // TODO rename class as ThreadUtil and enum as ThreadUtil
 
-  enum class ThreadIds
+  enum class ThreadId
   {
     MotionLoop = 1,
     ThinkLoop = 2,
@@ -16,8 +16,8 @@ namespace bold
   class ThreadUtil
   {
   public:
-    static void setThreadId(ThreadIds threadId) { d_threadId = threadId; }
-    static ThreadIds getThreadId() { return d_threadId; }
+    static void setThreadId(ThreadId threadId) { d_threadId = threadId; }
+    static ThreadId getThreadId() { return d_threadId; }
 
     static bool isMotionLoopThread();
     static bool isThinkLoopThread();
@@ -26,6 +26,6 @@ namespace bold
     static std::string getThreadName();
 
   private:
-    static thread_local ThreadIds d_threadId;
+    static thread_local ThreadId d_threadId;
   };
 }

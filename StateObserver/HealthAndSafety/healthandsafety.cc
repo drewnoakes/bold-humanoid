@@ -8,7 +8,7 @@ using namespace bold;
 using namespace std;
 
 HealthAndSafety::HealthAndSafety(std::shared_ptr<Voice> voice)
-: TypedStateObserver<HardwareState>("Health & Safety", ThreadIds::MotionLoop),
+: TypedStateObserver<HardwareState>("Health & Safety", ThreadId::MotionLoop),
   d_voice(voice),
   d_voltageMovingAverage(Config::getStaticValue<int>("health-and-safety.voltage.smoothing-window-size")),
   d_voltageTrigger(

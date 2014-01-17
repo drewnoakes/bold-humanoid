@@ -74,8 +74,8 @@ namespace bold
     AgentState()
     {
       // Only allow observers to be called back on specified threads
-      d_observersByThreadId[(int)ThreadIds::MotionLoop] = std::vector<std::shared_ptr<StateObserver>>();
-      d_observersByThreadId[(int)ThreadIds::ThinkLoop] = std::vector<std::shared_ptr<StateObserver>>();
+      d_observersByThreadId[(int)ThreadId::MotionLoop] = std::vector<std::shared_ptr<StateObserver>>();
+      d_observersByThreadId[(int)ThreadId::ThinkLoop] = std::vector<std::shared_ptr<StateObserver>>();
     }
 
     template<typename T>
@@ -117,7 +117,7 @@ namespace bold
 
     void registerObserver(std::shared_ptr<StateObserver> observer);
 
-    void callbackObservers(ThreadIds threadId, SequentialTimer& timer) const;
+    void callbackObservers(ThreadId threadId, SequentialTimer& timer) const;
 
     template <typename T>
     void set(std::shared_ptr<T const> state)

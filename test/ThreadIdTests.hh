@@ -13,7 +13,7 @@ using namespace std;
 
 TEST (ThreadIdTests, threadIdAssignment)
 {
-  auto makeLoop = [](ThreadIds threadId)
+  auto makeLoop = [](ThreadId threadId)
   {
     return [threadId]()
     {
@@ -25,14 +25,14 @@ TEST (ThreadIdTests, threadIdAssignment)
 
   int threadCount = 10;
 
-  ThreadUtil::setThreadId((ThreadIds)0);
+  ThreadUtil::setThreadId((ThreadId)0);
 
   vector<thread> threads;
   for (int t = 1; t <= threadCount; t++)
-    threads.push_back(thread(makeLoop((ThreadIds)t)));
+    threads.push_back(thread(makeLoop((ThreadId)t)));
 
   for (auto& thread : threads)
     thread.join();
 
-  EXPECT_EQ( (ThreadIds)0, ThreadUtil::getThreadId() );
+  EXPECT_EQ( (ThreadId)0, ThreadUtil::getThreadId() );
 }

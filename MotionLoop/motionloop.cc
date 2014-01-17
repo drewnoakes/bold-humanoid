@@ -153,7 +153,7 @@ void *MotionLoop::threadMethod(void *param)
 {
   log::info("MotionLoop::threadMethod") << "Started";
 
-  ThreadUtil::setThreadId(ThreadIds::MotionLoop);
+  ThreadUtil::setThreadId(ThreadId::MotionLoop);
 
   MotionLoop *loop = static_cast<MotionLoop*>(param);
   static struct timespec next_time;
@@ -357,7 +357,7 @@ void MotionLoop::step(SequentialTimer& t)
   }
 
   t.enter("Observers");
-  AgentState::getInstance().callbackObservers(ThreadIds::MotionLoop, t);
+  AgentState::getInstance().callbackObservers(ThreadId::MotionLoop, t);
   t.exit();
 }
 

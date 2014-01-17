@@ -11,7 +11,7 @@ using namespace bold;
 using namespace std;
 
 GyroCalibrator::GyroCalibrator()
-: TypedStateObserver<HardwareState>("Gyro calibrator", ThreadIds::MotionLoop),
+: TypedStateObserver<HardwareState>("Gyro calibrator", ThreadId::MotionLoop),
   d_windowSize(100),
   d_fbAvgValue(d_windowSize),
   d_lrAvgValue(d_windowSize),

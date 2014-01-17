@@ -93,7 +93,7 @@ void Agent::think()
   onThinkEnd();
 
   t.enter("Observers");
-  AgentState::getInstance().callbackObservers(ThreadIds::ThinkLoop, t);
+  AgentState::getInstance().callbackObservers(ThreadId::ThinkLoop, t);
   t.exit();
 
   log::verbose("Agent::think") << "Ending think cycle " << d_cycleNumber;
