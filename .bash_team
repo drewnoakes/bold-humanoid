@@ -1,5 +1,7 @@
 # print out some status data for users to SSH in
 
+echo
+
 if [ -z $(pgrep boldhumanoid) ]
 then
     echo "$(tput setaf 1)Boldhumanoid process is not running $(tput sgr 0)"
@@ -10,4 +12,8 @@ fi
 alias h=history
 alias bh=~/bh
 
-bh boldhumanoid --version
+echo
+
+bh run-with --version | head -2
+
+echo
