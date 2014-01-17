@@ -11,7 +11,6 @@ class Joystick;
 
 namespace bold
 {
-  class MotionScriptModule;
   class Ambulator;
   class BodyState;
   class Camera;
@@ -20,12 +19,13 @@ namespace bold
   class Debugger;
   class FallDetector;
   class FieldMap;
+  class GameStateReceiver;
   class GyroCalibrator;
   class HealthAndSafety;
   class HeadModule;
-  class GameStateReceiver;
   class Localiser;
   class MotionLoop;
+  class MotionScriptModule;
   class MotionTaskScheduler;
   class OptionTree;
   template<typename> class Setting;
