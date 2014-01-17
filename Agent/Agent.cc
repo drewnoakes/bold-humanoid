@@ -12,9 +12,6 @@ Agent::Agent()
   if (Config::getStaticValue<bool>("use-speech"))
     d_voice = make_shared<Voice>(Config::getStaticValue<string>("hardware.voice"));
 
-  auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
-  log::info("Agent::Agent") << "Using CM730 Device Path: " << cm730DevicePath;
-
   vector<shared_ptr<MotionScript>> motionScripts = MotionScript::loadAllInPath("./motionscripts");
 
   registerStateTypes();
@@ -33,6 +30,8 @@ Agent::Agent()
   AgentState::getInstance().registerObserver<HardwareState>(d_healthAndSafety);
   AgentState::getInstance().registerObserver<HardwareState>(d_suicidePill);
 
+  auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
+  log::info("Agent::Agent") << "Using CM730 Device Path: " << cm730DevicePath;
   auto cm730Linux = unique_ptr<CM730Linux>(new CM730Linux(cm730DevicePath));
   auto cm730 = unique_ptr<CM730>(new CM730(move(cm730Linux)));
 
