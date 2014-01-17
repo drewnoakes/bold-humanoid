@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../stateobserver.hh"
+#include "../typedstateobserver.hh"
 #include "../../Clock/clock.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 #include "../../stats/movingaverage.hh"
@@ -14,7 +14,7 @@ namespace bold
   public:
     HealthAndSafety(std::shared_ptr<Voice> voice);
 
-    void observeTyped(std::shared_ptr<HardwareState const> state) override;
+    void observeTyped(std::shared_ptr<HardwareState const> state, SequentialTimer& timer) override;
 
   private:
     std::shared_ptr<Voice> d_voice;

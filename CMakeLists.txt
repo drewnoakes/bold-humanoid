@@ -115,6 +115,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./AgentState/agentstate.cc
+)
+
+add_class(BOLDHUMANOID
   ./Ambulator/Ambulator.cc
   ./Ambulator/setters.cc
   ./Ambulator/step.cc
@@ -438,6 +442,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/WorldFrameState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObserver/stateobserver.cc
 )
 
 add_class(BOLDHUMANOID

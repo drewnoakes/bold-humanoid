@@ -351,6 +351,10 @@ void MotionLoop::step(SequentialTimer& t)
     d_bodyControl->updateFromHardwareState();
     d_readYet = true;
   }
+
+  t.enter("Observers");
+  AgentState::getInstance().callbackObservers(ThreadIds::MotionLoop, t);
+  t.exit();
 }
 
 void MotionLoop::updateStaticHardwareState()

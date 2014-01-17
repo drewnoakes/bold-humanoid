@@ -25,10 +25,10 @@ Agent::Agent()
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
   d_suicidePill = make_shared<SuicidePill>(this, d_debugger);
 
-  AgentState::getInstance().registerObserver<HardwareState>(d_fallDetector);
-  AgentState::getInstance().registerObserver<HardwareState>(d_gyroCalibrator);
-  AgentState::getInstance().registerObserver<HardwareState>(d_healthAndSafety);
-  AgentState::getInstance().registerObserver<HardwareState>(d_suicidePill);
+  AgentState::getInstance().registerObserver(d_fallDetector);
+  AgentState::getInstance().registerObserver(d_gyroCalibrator);
+  AgentState::getInstance().registerObserver(d_healthAndSafety);
+  AgentState::getInstance().registerObserver(d_suicidePill);
 
   auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
   log::info("Agent::Agent") << "Using CM730 Device Path: " << cm730DevicePath;

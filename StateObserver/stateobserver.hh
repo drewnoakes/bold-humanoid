@@ -1,29 +1,48 @@
 #pragma once
 
+#include <atomic>
 #include <cassert>
 #include <memory>
+#include <vector>
+#include <typeindex>
+
+#include "../ThreadId/threadid.hh"
 
 namespace bold
 {
-  class StateObject;
+  class SequentialTimer;
+
+  //
+  // StateObserver class
+  //
 
   class StateObserver
   {
   public:
-    virtual void observe(std::shared_ptr<StateObject const> state) = 0;
-  };
+    StateObserver(std::string observerName, ThreadIds callbackThread)
+    : d_types(),
+      d_callbackThreadId(callbackThread),
+      d_name(observerName)
+    {}
 
-  template<typename TState>
-  class TypedStateObserver : public StateObserver
-  {
-  public:
-    void observe(std::shared_ptr<StateObject const> state) override
-    {
-      std::shared_ptr<TState const> typedState = std::dynamic_pointer_cast<TState const>(state);
-      assert(typedState);
-      observeTyped(typedState);
-    }
+    virtual ~StateObserver() {}
 
-    virtual void observeTyped(std::shared_ptr<TState const> state) = 0;
+    virtual void observe(SequentialTimer& timer) = 0;
+
+    void setDirty();
+
+    bool testAndClearDirty();
+
+    std::string getName() const { return d_name; }
+    std::vector<std::type_index> const& getTypes() const { return d_types; }
+    ThreadIds getCallbackThreadId() const { return d_callbackThreadId; }
+
+  protected:
+    std::vector<std::type_index> d_types;
+    const ThreadIds d_callbackThreadId;
+    const std::string d_name;
+
+  private:
+    std::atomic_flag d_lock = ATOMIC_FLAG_INIT;
   };
 }

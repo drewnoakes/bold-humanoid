@@ -8,7 +8,8 @@ using namespace bold;
 using namespace std;
 
 HealthAndSafety::HealthAndSafety(std::shared_ptr<Voice> voice)
-: d_voice(voice),
+: TypedStateObserver<HardwareState>("Health & Safety", ThreadIds::MotionLoop),
+  d_voice(voice),
   d_voltageMovingAverage(Config::getStaticValue<int>("health-and-safety.voltage.smoothing-window-size")),
   d_voltageTrigger(
     (float)Config::getStaticValue<double>("health-and-safety.voltage.low-threshold"),
@@ -17,7 +18,7 @@ HealthAndSafety::HealthAndSafety(std::shared_ptr<Voice> voice)
   d_temperatureThreshold(Config::getStaticValue<int>("health-and-safety.temperature.high-threshold"))
 {}
 
-void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> state)
+void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> state, SequentialTimer& timer)
 {
   float voltage = d_voltageMovingAverage.next(state->getCM730State()->voltage);
 

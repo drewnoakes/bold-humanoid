@@ -11,6 +11,7 @@
 #include <typeindex>
 #include <vector>
 
+#include "../SequentialTimer/sequentialtimer.hh"
 #include "../StateObject/stateobject.hh"
 #include "../StateObserver/stateobserver.hh"
 #include "../util/log.hh"
@@ -70,7 +71,12 @@ namespace bold
   class AgentState
   {
   public:
-    AgentState() {}
+    AgentState()
+    {
+      // Only allow observers to be called back on specified threads
+      d_observersByThreadId[(int)ThreadIds::MotionLoop] = std::vector<std::shared_ptr<StateObserver>>();
+      d_observersByThreadId[(int)ThreadIds::ThinkLoop] = std::vector<std::shared_ptr<StateObserver>>();
+    }
 
     template<typename T>
     void registerStateType(std::string name)
@@ -83,7 +89,7 @@ namespace bold
 
       // Create an empty list for the observers so that we don't have to lock later on the observer map
       std::vector<std::shared_ptr<StateObserver>> observers = {};
-      d_observersByTypeId[typeid(T)] = observers;
+      d_observersByTypeIndex[typeid(T)] = observers;
     }
 
     std::vector<std::shared_ptr<StateTracker>> getTrackers() const
@@ -109,16 +115,9 @@ namespace bold
      */
     sigc::signal<void, std::shared_ptr<StateTracker const>> updated;
 
-    template<typename T>
-    void registerObserver(std::shared_ptr<StateObserver> observer)
-    {
-      static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
-      assert(observer);
-      auto it = d_observersByTypeId.find(typeid(T));
-      assert(it != d_observersByTypeId.end() && "Tracker type must be registered");
-      // TODO assert that we are in some kind of configuration phase
-      it->second.push_back(observer);
-    }
+    void registerObserver(std::shared_ptr<StateObserver> observer);
+
+    void callbackObservers(ThreadIds threadId, SequentialTimer& timer) const;
 
     template <typename T>
     void set(std::shared_ptr<T const> state)
@@ -137,8 +136,8 @@ namespace bold
         std::lock_guard<std::mutex> guard(d_mutex);
         updated(tracker);
 
-        auto it = d_observersByTypeId.find(typeid(T));
-        assert(it != d_observersByTypeId.end());
+        auto it = d_observersByTypeIndex.find(typeid(T));
+        assert(it != d_observersByTypeIndex.end());
         observers = &it->second;
       }
 
@@ -146,7 +145,7 @@ namespace bold
       for (auto& observer : *observers)
       {
         assert(observer);
-        observer->observe(state);
+        observer->setDirty();
       }
     }
 
@@ -167,9 +166,10 @@ namespace bold
       auto pair = d_trackerByTypeId.find(typeid(T));
       assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
       auto tracker = pair->second;
-      auto state = tracker->state<T>();
-      return state;
+      return tracker->state<T>();
     }
+
+    std::shared_ptr<StateObject const> getByTypeIndex(std::type_index const& typeIndex);
 
     template<typename T>
     std::shared_ptr<StateTracker> getTracker() const
@@ -187,7 +187,8 @@ namespace bold
   private:
     mutable std::mutex d_mutex;
 
-    std::unordered_map<std::type_index, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeId;
+    std::unordered_map<std::type_index, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeIndex;
+    std::unordered_map<int, std::vector<std::shared_ptr<StateObserver>>> d_observersByThreadId;
     std::unordered_map<std::type_index, std::shared_ptr<StateTracker>> d_trackerByTypeId;
   };
 

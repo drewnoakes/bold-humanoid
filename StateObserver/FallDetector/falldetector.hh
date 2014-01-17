@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../typedstateobserver.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
-#include "../../StateObserver/stateobserver.hh"
 #include "../../stats/movingaverage.hh"
 
 namespace bold
@@ -20,7 +20,7 @@ namespace bold
   public:
     FallDetector();
 
-    void observeTyped(std::shared_ptr<HardwareState const> hardwareState) override;
+    void observeTyped(std::shared_ptr<HardwareState const> hardwareState, SequentialTimer& timer) override;
 
     FallState getFallenState() const { return d_fallenState; }
 

@@ -11,7 +11,8 @@ using namespace bold;
 using namespace std;
 
 GyroCalibrator::GyroCalibrator()
-: d_windowSize(100),
+: TypedStateObserver<HardwareState>("Gyro calibrator", ThreadIds::MotionLoop),
+  d_windowSize(100),
   d_fbAvgValue(d_windowSize),
   d_lrAvgValue(d_windowSize),
   d_standardDeviations(2.0)
@@ -26,7 +27,7 @@ void GyroCalibrator::reset()
   d_rlCenter = -1;
 }
 
-void GyroCalibrator::observeTyped(std::shared_ptr<HardwareState const> hardwareState)
+void GyroCalibrator::observeTyped(std::shared_ptr<HardwareState const> hardwareState, SequentialTimer& timer)
 {
   if (d_calibrationStatus == CalibrationState::COMPLETE)
     return;

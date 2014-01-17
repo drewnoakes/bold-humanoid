@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../stateobserver.hh"
+#include "../typedstateobserver.hh"
 #include "../../Clock/clock.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 
@@ -21,7 +21,7 @@ namespace bold
     SuicidePill(Agent* agent, std::shared_ptr<Debugger> debugger);
 
   private:
-    void observeTyped(std::shared_ptr<HardwareState const> state) override;
+    void observeTyped(std::shared_ptr<HardwareState const> state, SequentialTimer& timer) override;
 
     Agent* const d_agent;
     const std::shared_ptr<Debugger> d_debugger;

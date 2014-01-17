@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../stateobserver.hh"
+#include "../typedstateobserver.hh"
 #include "../../stats/movingaverage.hh"
 
 namespace bold
@@ -32,7 +32,7 @@ namespace bold
   public:
     GyroCalibrator();
 
-    void observeTyped(std::shared_ptr<HardwareState const> hardwareState) override;
+    void observeTyped(std::shared_ptr<HardwareState const> hardwareState, SequentialTimer& timer) override;
 
     void reset();
 

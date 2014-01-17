@@ -12,13 +12,16 @@ using namespace bold;
 using namespace std;
 
 SuicidePill::SuicidePill(Agent* agent, std::shared_ptr<Debugger> debugger)
-: d_agent(agent), d_debugger(debugger), d_exited(false)
+: TypedStateObserver<HardwareState>("Suicide Pill", ThreadIds::MotionLoop),
+  d_agent(agent),
+  d_debugger(debugger),
+  d_exited(false)
 {
   assert(agent);
   assert(debugger);
 }
 
-void SuicidePill::observeTyped(shared_ptr<HardwareState const> state)
+void SuicidePill::observeTyped(shared_ptr<HardwareState const> state, SequentialTimer& timer)
 {
   if (d_exited)
     return;

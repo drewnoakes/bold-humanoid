@@ -8,14 +8,15 @@ using namespace bold;
 using namespace std;
 
 FallDetector::FallDetector()
-: d_windowSize(30),
+: TypedStateObserver<HardwareState>("Fall detector", ThreadIds::MotionLoop),
+  d_windowSize(30),
   d_fbAvgValue(d_windowSize),
   d_forwardLimitValue(390),
   d_backwardLimitValue(580),
   d_fallenState(FallState::STANDUP)
 {}
 
-void FallDetector::observeTyped(std::shared_ptr<HardwareState const> hardwareState)
+void FallDetector::observeTyped(std::shared_ptr<HardwareState const> hardwareState, SequentialTimer& timer)
 {
   // Track the smoothed forward/backward acceleration to test for a consistent
   // indication that we have fallen.
