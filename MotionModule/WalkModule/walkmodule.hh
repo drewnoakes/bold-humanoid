@@ -13,9 +13,13 @@ namespace bold
   public:
     enum
     {
+      /// Left foot lifting up
       PHASE0 = 0,
+      /// Left foot moving down
       PHASE1 = 1,
+      /// Right foot lifting up
       PHASE2 = 2,
+      /// Right foot moving down
       PHASE3 = 3
     };
 
