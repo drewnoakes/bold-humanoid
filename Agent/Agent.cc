@@ -19,17 +19,6 @@ Agent::Agent()
   auto debugControl = make_shared<DebugControl>();
   d_debugger = make_shared<Debugger>(debugControl);
 
-  // Register state observers
-  d_fallDetector = make_shared<FallDetector>();
-  d_gyroCalibrator = make_shared<GyroCalibrator>();
-  d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
-  d_suicidePill = make_shared<SuicidePill>(this, d_debugger);
-
-  AgentState::getInstance().registerObserver(d_fallDetector);
-  AgentState::getInstance().registerObserver(d_gyroCalibrator);
-  AgentState::getInstance().registerObserver(d_healthAndSafety);
-  AgentState::getInstance().registerObserver(d_suicidePill);
-
   auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
   log::info("Agent::Agent") << "Using CM730 Device Path: " << cm730DevicePath;
   auto cm730Linux = unique_ptr<CM730Linux>(new CM730Linux(cm730DevicePath));
@@ -42,6 +31,19 @@ Agent::Agent()
   d_headModule = make_shared<HeadModule>(d_motionSchedule);
   d_walkModule = make_shared<WalkModule>(d_motionSchedule);
   d_motionScriptModule = make_shared<MotionScriptModule>(d_motionSchedule, motionScripts);
+
+  // Register state observers
+  d_fallDetector = make_shared<FallDetector>();
+  d_gyroCalibrator = make_shared<GyroCalibrator>();
+  d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
+  d_suicidePill = make_shared<SuicidePill>(this, d_debugger);
+  d_odometer = make_shared<Odometer>(d_walkModule);
+
+  AgentState::getInstance().registerObserver(d_fallDetector);
+  AgentState::getInstance().registerObserver(d_gyroCalibrator);
+  AgentState::getInstance().registerObserver(d_healthAndSafety);
+  AgentState::getInstance().registerObserver(d_suicidePill);
+  AgentState::getInstance().registerObserver(d_odometer);
 
   d_haveBody = cm730->connect();
 

@@ -465,6 +465,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObserver/Odometer/odometer.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObserver/SuicidePill/suicidepill.cc
 )
 

@@ -27,6 +27,7 @@ namespace bold
   class MotionLoop;
   class MotionScriptModule;
   class MotionTaskScheduler;
+  class Odometer;
   class OptionTree;
   template<typename> class Setting;
   class Spatialiser;
@@ -99,6 +100,7 @@ namespace bold
     std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
     std::shared_ptr<SuicidePill> d_suicidePill;
+    std::shared_ptr<Odometer> d_odometer;
 
     // Components
 
