@@ -16,14 +16,15 @@ namespace bold
 {
   typedef unsigned char uchar;
 
+  class HardwareState;
+
   class BodyState : public StateObject
   {
   public:
     static std::shared_ptr<BodyState const> zero(ulong thinkCycleNumber = 0);
 
-    BodyState(double angles[], ulong thinkCycleNumber);
-
-    void updatePosture();
+    BodyState(double angles[], ulong motionCycleNumber);
+    BodyState(std::shared_ptr<HardwareState const> const& hardwareState, ulong motionCycleNumber);
 
     std::shared_ptr<Limb const> getTorso() const { return d_torso; }
 
@@ -65,7 +66,7 @@ namespace bold
     double getTorsoHeight() const { return d_torsoHeight; }
 
   private:
-    void initBody(double angles[]);
+    void initialise(double angles[]);
 
     double d_torsoHeight;
     std::shared_ptr<Limb> d_torso;

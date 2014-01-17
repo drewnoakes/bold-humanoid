@@ -1,27 +1,25 @@
 #include "bodystate.ih"
 
+#include "../MX28Snapshot/mx28snapshot.hh"
+
 BodyState::BodyState(double angles[], ulong cycleNumber)
 : d_torso(),
   d_jointById(),
   d_limbByName(),
   d_motionCycleNumber(cycleNumber)
 {
-  initBody(angles);
-  updatePosture();
-  d_torsoHeight = std::max(
-    this->getLimb("lFoot")->transform.inverse().translation().z(),
-    this->getLimb("rFoot")->transform.inverse().translation().z()
-  );
+  initialise(angles);
+}
 
-  // TODO determine stance foot
-  Affine3d const& footTorsoTransform = getLimb("rFoot")->transform;
+BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, ulong cycleNumber)
+: d_torso(),
+  d_jointById(),
+  d_limbByName(),
+  d_motionCycleNumber(cycleNumber)
+{
+  double angles[(uchar)JointId::MAX + 1];
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    angles[jointId] = hardwareState->getMX28State(jointId)->presentPosition;
 
-  Affine3d torsoAgentRotation(footTorsoTransform.inverse().rotation());
-
-  Affine3d const& cameraTorsoTransform = getLimb("camera")->transform;
-
-  // This is a special transform that gives the position of the camera in
-  // the agent's frame, taking any rotation of the torso into account
-  // considering the orientation of the foot (which is assumed to be flat.)
-  d_cameraAgentTransform = Translation3d(0,0,-footTorsoTransform.translation().z()) * torsoAgentRotation * cameraTorsoTransform;
+  initialise(angles);
 }

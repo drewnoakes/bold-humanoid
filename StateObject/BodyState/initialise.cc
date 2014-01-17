@@ -1,6 +1,6 @@
 #include "bodystate.ih"
 
-void BodyState::initBody(double angles[])
+void BodyState::initialise(double angles[])
 {
   d_torso = make_shared<Limb>();
   d_torso->name = "torso";
@@ -287,4 +287,75 @@ void BodyState::initBody(double angles[])
     joint->angleRads = angles[(uchar)joint->id];
     d_jointById[(uchar)joint->id] = joint;
   });
+
+  //
+  // Update posture
+  //
+
+  list<shared_ptr<BodyPart>> partQueue;
+
+  d_torso->transform.setIdentity();
+
+  partQueue.push_back(d_torso);
+
+  while (!partQueue.empty())
+  {
+    shared_ptr<BodyPart> part = partQueue.front();
+    partQueue.pop_front();
+
+    // Limb: Determine transformation of all connected joints by
+    // applying proper translation
+    if (shared_ptr<Limb> limb = dynamic_pointer_cast<Limb>(part))
+    {
+      // Loop over all joints
+      for (auto joint : limb->joints)
+      {
+        // Transformation = that of limb plus translation to the joint
+        joint->transform =
+          limb->transform *
+          Translation3d(joint->anchors.first);
+
+        partQueue.push_back(joint);
+      }
+    }
+    else
+    {
+      shared_ptr<Joint> joint = dynamic_pointer_cast<Joint>(part);
+
+//       // NOTE we don't update for joints with negative IDs, as these are fixed (a bit hacky)
+//       if (joint->id >= 0)
+//       {
+//         // TODO take the angle from the joint itself, having been updated from the MX28 snapshot data elsewhere
+//         joint->angle = mx28States[joint->id].presentPosition;
+//       }
+
+      shared_ptr<BodyPart> part2 = joint->bodyPart;
+      part2->transform = joint->transform
+        * AngleAxisd(joint->angleRads, joint->axis)
+        * Translation3d(-joint->anchors.second);
+
+      partQueue.push_back(part2);
+    }
+  }
+
+  //
+  // Other bits
+  //
+  d_torsoHeight = std::max(
+    this->getLimb("lFoot")->transform.inverse().translation().z(),
+    this->getLimb("rFoot")->transform.inverse().translation().z()
+  );
+
+  // TODO determine stance foot
+  Affine3d const& footTorsoTransform = getLimb("rFoot")->transform;
+
+  Affine3d torsoAgentRotation(footTorsoTransform.inverse().rotation());
+
+  Affine3d const& cameraTorsoTransform = getLimb("camera")->transform;
+
+  // This is a special transform that gives the position of the camera in
+  // the agent's frame, taking any rotation of the torso into account
+  // considering the orientation of the foot (which is assumed to be flat.)
+  d_cameraAgentTransform = Translation3d(0,0,-footTorsoTransform.translation().z()) * torsoAgentRotation * cameraTorsoTransform;
+
 }
