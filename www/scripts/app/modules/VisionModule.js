@@ -85,6 +85,8 @@ define(
 
             this.closables.add(ControlBuilder.buildAll('round-table.image-colours', element.querySelector('div.image-colours')));
 
+            this.closables.add(ControlBuilder.buildAll('head-module', element.querySelector('div.head-settings')));
+
             new controls.TabControl(element);
         };
 
