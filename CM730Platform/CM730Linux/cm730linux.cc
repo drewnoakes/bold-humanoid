@@ -125,6 +125,11 @@ void CM730Linux::clearPort()
   tcflush(d_socket, TCIFLUSH);
 }
 
+bool CM730Linux::isPortOpen() const
+{
+  return d_socket != -1;
+}
+
 int CM730Linux::writePort(unsigned char const* packet, size_t byteCount)
 {
   int i = write(d_socket, packet, byteCount);

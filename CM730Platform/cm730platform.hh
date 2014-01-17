@@ -25,6 +25,8 @@ namespace bold
     /// Discards data received but not read
     virtual void clearPort() = 0;
 
+    virtual bool isPortOpen() const = 0;
+
     /// Writes up to byteCount bytes from packet to the CM730 port, returning the number of bytes written, or -1 on error
     virtual int writePort(uchar const* packet, std::size_t byteCount) = 0;
 

@@ -29,6 +29,8 @@ namespace bold
     unsigned long d_txByteCount;
     unsigned long d_rxByteCount;
 
+    bool d_isPortOpen;
+
   public:
     CM730Linux(std::string name);
     ~CM730Linux();
@@ -44,6 +46,7 @@ namespace bold
     bool setBaud(unsigned baud) override;
     void closePort() override;
     void clearPort() override;
+    bool isPortOpen() const override;
     int writePort(uchar const* packet, std::size_t numPacket) override;
     int readPort(uchar* packet, std::size_t numPacket) override;
 
