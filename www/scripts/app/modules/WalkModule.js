@@ -5,14 +5,16 @@ define(
     [
         'Protocols',
         'DataProxy',
+        'DOMTemplate',
         'ControlBuilder'
     ],
-    function(Protocols, DataProxy, ControlBuilder)
+    function(Protocols, DataProxy, DOMTemplate, ControlBuilder)
     {
         'use strict';
 
         var size = 300,
-            moveScale = 3;
+            moveScale = 3,
+            moduleTemplate = new DOMTemplate("walk-module-template");
 
         var WalkModule = function()
         {
@@ -31,14 +33,16 @@ define(
 
         WalkModule.prototype.load = function()
         {
-            this.$runningIndicator = $('<div></div>').addClass('connection-indicator connecting').appendTo(this.$container);
-            this.canvas = $('<canvas>', { width: size, height: size }).appendTo(this.$container).get(0);
-            this.canvas.width = size;
-            this.canvas.height = size;
+            var element = moduleTemplate.create({size: size});
+            this.$container.append(element);
+
+            this.$runningIndicator = $('.connection-indicator', element);
+            this.canvas = element.querySelector('canvas');
             this.context = this.canvas.getContext('2d');
 
-            ControlBuilder.buildAll('ambulator', $('<div></div>', {'class': 'control-container ambulator-controls flow'}).appendTo(this.$container).get(0));
-            ControlBuilder.buildAll('options.approach-ball', $('<div></div>', {'class': 'control-container approach-ball-controls flow'}).appendTo(this.$container).get(0));
+            ControlBuilder.buildAll('ambulator', element.querySelector('.ambulator-controls'));
+            ControlBuilder.buildAll('options.approach-ball', element.querySelector('.approach-ball-controls'));
+            ControlBuilder.buildAll('walk-module', element.querySelector('.walk-controls'));
 
             this.subscription = DataProxy.subscribe(Protocols.ambulatorState, { json: true, onmessage: _.bind(this.onData, this) });
 
@@ -53,7 +57,6 @@ define(
 
         WalkModule.prototype.drawCrossHairs = function()
         {
-            console.log('drawing');
             var context = this.context;
 
             var mid = Math.round(size / 2);

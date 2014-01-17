@@ -100,6 +100,19 @@
         </div>
     </script>
 
+    <script id="walk-module-template" type="text/x-handlebars-template">
+        <div>
+            <div class="connection-indicator connecting"></div>
+            <canvas width="{{size}}" height="{{size}}"></canvas>
+            <h2>ambulator</h2>
+            <div class="control-container ambulator-controls flow"></div>
+            <h2>approach ball</h2>
+            <div class="control-container approach-ball-controls flow"></div>
+            <h2>walk</h2>
+            <div class="control-container walk-controls flow"></div>
+        </div>
+    </script>
+
     <script id="body-figure-template" type="text/x-handlebars-template">
         <div class="body-figure" style="width:{{this.containerWidth}}px; height:{{this.containerHeight}}px;">
             {{#each this.joints}}
