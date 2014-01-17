@@ -12,7 +12,7 @@ int DataStreamer::callback_http(
   {
   case LWS_CALLBACK_HTTP:
   {
-    assert(ThreadId::isDataStreamerThread());
+    assert(ThreadUtil::isDataStreamerThread());
 
     // TODO: make this std::string, or copy from string constant correctly
     char* path;
@@ -85,7 +85,7 @@ int DataStreamer::callback_http(
   case LWS_CALLBACK_HTTP_FILE_COMPLETION:
   {
     // async sending of file completed. kill the connection.
-    assert(ThreadId::isDataStreamerThread());
+    assert(ThreadUtil::isDataStreamerThread());
     return 1;
   }
   default:

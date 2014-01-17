@@ -8,7 +8,7 @@
 //#include "../MX28/mx28.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
-#include "../ThreadId/threadid.hh"
+#include "../ThreadUtil/threadutil.hh"
 
 #include "helpers.hh"
 
@@ -38,7 +38,7 @@ void pushStep(shared_ptr<MotionScript::Stage> stage, ushort value, uchar moveCyc
 
 TEST (DISABLED_MotionScriptRunnerTests, basics)
 {
-  ThreadId::setThreadId(ThreadIds::MotionLoop);
+  ThreadUtil::setThreadId(ThreadIds::MotionLoop);
 
   // TODO convenience method for populating a basic HardwareState object
   AgentState::getInstance().registerStateType<HardwareState>("Hardware");

@@ -13,7 +13,7 @@
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../StateObject/StaticHardwareState/statichardwarestate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
-#include "../ThreadId/threadid.hh"
+#include "../ThreadUtil/threadutil.hh"
 #include "../util/ccolor.hh"
 
 #include <time.h>
@@ -153,7 +153,7 @@ void *MotionLoop::threadMethod(void *param)
 {
   log::info("MotionLoop::threadMethod") << "Started";
 
-  ThreadId::setThreadId(ThreadIds::MotionLoop);
+  ThreadUtil::setThreadId(ThreadIds::MotionLoop);
 
   MotionLoop *loop = static_cast<MotionLoop*>(param);
   static struct timespec next_time;

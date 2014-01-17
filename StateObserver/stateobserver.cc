@@ -7,7 +7,7 @@ void StateObserver::setDirty() { d_lock.clear(memory_order_release); }
 
 bool StateObserver::testAndClearDirty()
 {
-  assert(ThreadId::getThreadId() == d_callbackThreadId);
+  assert(ThreadUtil::getThreadId() == d_callbackThreadId);
   
   // Prevent race condition
   // If flag is false, then the state is dirty

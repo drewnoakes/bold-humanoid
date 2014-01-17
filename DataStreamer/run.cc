@@ -8,7 +8,7 @@ void DataStreamer::run()
     throw runtime_error("LWS context has not been established");
   }
 
-  ThreadId::setThreadId(ThreadIds::DataStreamer);
+  ThreadUtil::setThreadId(ThreadIds::DataStreamer);
 
   while (!d_isStopRequested)
   {

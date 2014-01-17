@@ -1,4 +1,4 @@
-#include "threadid.hh"
+#include "threadutil.hh"
 
 #include "../util/log.hh"
 
@@ -8,9 +8,9 @@
 using namespace bold;
 using namespace std;
 
-thread_local ThreadIds ThreadId::d_threadId;
+thread_local ThreadIds ThreadUtil::d_threadId;
 
-std::string ThreadId::getThreadName()
+std::string ThreadUtil::getThreadName()
 {
   switch (d_threadId)
   {
@@ -24,26 +24,26 @@ std::string ThreadId::getThreadName()
   }
 }
 
-bool ThreadId::isMotionLoopThread()
+bool ThreadUtil::isMotionLoopThread()
 {
   if (d_threadId == ThreadIds::MotionLoop)
     return true;
-  log::error("ThreadId::isMotionLoopThread") << "Expected Motion Loop thread but was: " << getThreadName();
+  log::error("ThreadUtil::isMotionLoopThread") << "Expected Motion Loop thread but was: " << getThreadName();
   return false;
 }
 
-bool ThreadId::isThinkLoopThread()
+bool ThreadUtil::isThinkLoopThread()
 {
   if (d_threadId == ThreadIds::ThinkLoop)
     return true;
-  log::error("ThreadId::isThinkLoopThread") << "Expected Think Loop thread but was: " << getThreadName();
+  log::error("ThreadUtil::isThinkLoopThread") << "Expected Think Loop thread but was: " << getThreadName();
   return false;
 }
 
-bool ThreadId::isDataStreamerThread()
+bool ThreadUtil::isDataStreamerThread()
 {
   if (d_threadId == ThreadIds::DataStreamer)
     return true;
-  log::error("ThreadId::isDataStreamerThread") << "Expected Data Streamer thread but was: " << getThreadName();
+  log::error("ThreadUtil::isDataStreamerThread") << "Expected Data Streamer thread but was: " << getThreadName();
   return false;
 }

@@ -2,7 +2,7 @@
 
 void MotionTaskScheduler::update()
 {
-  assert(ThreadId::isThinkLoopThread());
+  assert(ThreadUtil::isThinkLoopThread());
 
   // Remove committed tasks for motion modules that have completed
   for (MotionModule* module : d_modules)

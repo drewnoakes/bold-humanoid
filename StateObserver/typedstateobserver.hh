@@ -31,7 +31,7 @@ namespace bold
 
     void observe(SequentialTimer& timer) override
     {
-      assert(ThreadId::getThreadId() == d_callbackThreadId);
+      assert(ThreadUtil::getThreadId() == d_callbackThreadId);
       std::shared_ptr<StateObject const> state = AgentState::getInstance().getByTypeIndex(d_typeIndex);
       std::shared_ptr<TState const> typedState = std::dynamic_pointer_cast<TState const>(state);
       assert(typedState);

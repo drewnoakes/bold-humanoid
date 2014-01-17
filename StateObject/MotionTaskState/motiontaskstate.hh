@@ -7,7 +7,7 @@
 
 #include "../stateobject.hh"
 #include "../../MotionTask/motiontask.hh"
-#include "../../ThreadId/threadid.hh"
+#include "../../ThreadUtil/threadutil.hh"
 
 namespace bold
 {
@@ -25,7 +25,7 @@ namespace bold
       d_armTasks(armTasks),
       d_legTasks(legTasks)
     {
-      assert(ThreadId::isThinkLoopThread());
+      assert(ThreadUtil::isThinkLoopThread());
     }
 
     bool isEmpty() const { return d_moduleJointSelection->size() == 0; }

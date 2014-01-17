@@ -6,7 +6,7 @@
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../Setting/setting.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
-#include "../ThreadId/threadid.hh"
+#include "../ThreadUtil/threadutil.hh"
 
 #include <cassert>
 #include <iostream>

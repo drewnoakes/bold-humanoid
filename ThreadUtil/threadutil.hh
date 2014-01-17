@@ -4,7 +4,7 @@
 
 namespace bold
 {
-  // TODO rename class as ThreadUtil and enum as ThreadId
+  // TODO rename class as ThreadUtil and enum as ThreadUtil
 
   enum class ThreadIds
   {
@@ -13,7 +13,7 @@ namespace bold
     DataStreamer = 3
   };
 
-  class ThreadId
+  class ThreadUtil
   {
   public:
     static void setThreadId(ThreadIds threadId) { d_threadId = threadId; }

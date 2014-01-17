@@ -50,7 +50,7 @@
 #include "../StateObserver/GyroCalibrator/gyrocalibrator.hh"
 #include "../StateObserver/HealthAndSafety/healthandsafety.hh"
 #include "../StateObserver/SuicidePill/suicidepill.hh"
-#include "../ThreadId/threadid.hh"
+#include "../ThreadUtil/threadutil.hh"
 #include "../VisualCortex/visualcortex.hh"
 #include "../Voice/voice.hh"
 #include "../util/log.hh"

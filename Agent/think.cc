@@ -2,7 +2,7 @@
 
 void Agent::think()
 {
-  assert(ThreadId::isThinkLoopThread());
+  assert(ThreadUtil::isThinkLoopThread());
 
   d_cycleNumber++;
 

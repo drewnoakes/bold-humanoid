@@ -7,7 +7,7 @@
 #include "../JointId/jointid.hh"
 #include "../MotionTask/motiontask.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
-#include "../ThreadId/threadid.hh"
+#include "../ThreadUtil/threadutil.hh"
 
 namespace bold
 {
@@ -62,7 +62,7 @@ namespace bold
 
     void setCompletedFlag()
     {
-      assert(ThreadId::isMotionLoopThread());
+      assert(ThreadUtil::isMotionLoopThread());
 
       std::lock_guard<std::mutex> guard(d_isCompletedMutex);
       d_isCompleted = true;
@@ -70,7 +70,7 @@ namespace bold
 
     bool clearCompletedFlag()
     {
-      assert(ThreadId::isThinkLoopThread());
+      assert(ThreadUtil::isThinkLoopThread());
 
       std::lock_guard<std::mutex> guard(d_isCompletedMutex);
       bool isSet = d_isCompleted;

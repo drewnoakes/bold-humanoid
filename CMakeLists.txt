@@ -468,7 +468,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./ThreadId/statics.cc
+  ./ThreadUtil/statics.cc
 )
 
 add_class(BOLDHUMANOID

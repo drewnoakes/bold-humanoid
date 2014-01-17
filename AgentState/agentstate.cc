@@ -17,7 +17,7 @@ void AgentState::registerObserver(shared_ptr<StateObserver> observer)
     it->second.push_back(observer);
   }
 
-  // Store the observer by ThreadId
+  // Store the observer by ThreadUtil
   auto it2 = d_observersByThreadId.find((int)observer->getCallbackThreadId());
   assert(it2 != d_observersByThreadId.end() && "Observers not supported for this ThreadI");
   it2->second.push_back(observer);

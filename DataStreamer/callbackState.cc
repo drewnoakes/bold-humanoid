@@ -14,7 +14,7 @@ int DataStreamer::callback_state(
   {
   case LWS_CALLBACK_ESTABLISHED:
   {
-    assert(ThreadId::isDataStreamerThread());
+    assert(ThreadUtil::isDataStreamerThread());
     // New client connected; initialize session
     jsonSession->initialise();
     const libwebsocket_protocols* protocol = libwebsockets_get_protocol(wsi);
@@ -25,7 +25,7 @@ int DataStreamer::callback_state(
   case LWS_CALLBACK_CLOSED:
   {
     // Client disconnected
-    assert(ThreadId::isDataStreamerThread());
+    assert(ThreadUtil::isDataStreamerThread());
     const libwebsocket_protocols* protocol = libwebsockets_get_protocol(wsi);
     std::lock_guard<std::mutex> guard(d_stateSessionsMutex);
     auto range = d_stateSessions.equal_range(protocol->name);
@@ -43,7 +43,7 @@ int DataStreamer::callback_state(
   }
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
-    assert(ThreadId::isDataStreamerThread());
+    assert(ThreadUtil::isDataStreamerThread());
     std::lock_guard<std::mutex> guard(d_stateSessionsMutex);
     return jsonSession->write(wsi, context);
   }

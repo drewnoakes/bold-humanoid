@@ -5,7 +5,7 @@
 #include <iomanip>
 
 #include "../JointId/jointid.hh"
-#include "../ThreadId/threadid.hh"
+#include "../ThreadUtil/threadutil.hh"
 #include "../util/ccolor.hh"
 #include "../util/log.hh"
 
@@ -123,7 +123,7 @@ CM730::~CM730()
 
 CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead = nullptr)
 {
-  assert(ThreadId::isMotionLoopThread());
+  assert(ThreadUtil::isMotionLoopThread());
 
   int length = txpacket[LENGTH] + 4;
 

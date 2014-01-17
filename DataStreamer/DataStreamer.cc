@@ -61,7 +61,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       [this](shared_ptr<StateTracker const> tracker)
       {
         // TODO this assertion will not be met! we may be called from the motion thread... need a better approach...
-//      assert(ThreadId::isDataStreamerThread());
+//      assert(ThreadUtil::isDataStreamerThread());
 
         // NOTE we may be writing from one thread, while another is dealing with
         // a client connection (which modifies d_stateSessions), or sending data
@@ -115,7 +115,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       [this](SettingBase* setting)
       {
         // These should only be changed by websocket users
-        assert(ThreadId::isDataStreamerThread());
+        assert(ThreadUtil::isDataStreamerThread());
 
         if (d_controlSessions.size() == 0)
           return;

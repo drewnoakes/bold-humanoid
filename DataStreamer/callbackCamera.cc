@@ -14,7 +14,7 @@ int DataStreamer::callback_camera(
   {
   case LWS_CALLBACK_ESTABLISHED:
   {
-    assert(ThreadId::isDataStreamerThread());
+    assert(ThreadUtil::isDataStreamerThread());
     // New client connected; initialize session
     cameraSession->imgReady = false;
     cameraSession->imgSending = false;
@@ -25,13 +25,13 @@ int DataStreamer::callback_camera(
   case LWS_CALLBACK_CLOSED:
   {
     // Client disconnected
-    assert(ThreadId::isDataStreamerThread());
+    assert(ThreadUtil::isDataStreamerThread());
     d_cameraSessions.erase(find(d_cameraSessions.begin(), d_cameraSessions.end(), cameraSession));
     break;
   }
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
-    assert(ThreadId::isDataStreamerThread());
+    assert(ThreadUtil::isDataStreamerThread());
 
     if (!cameraSession->imgReady)
       break;

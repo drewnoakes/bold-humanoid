@@ -5,7 +5,7 @@
 #include "../MotionTask/motiontask.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
-#include "../ThreadId/threadid.hh"
+#include "../ThreadUtil/threadutil.hh"
 #include "../util/ccolor.hh"
 
 #include <cassert>
@@ -27,7 +27,7 @@ MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> script)
 
 bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 {
-  assert(ThreadId::isMotionLoopThread());
+  assert(ThreadUtil::isMotionLoopThread());
 
   if (d_state == MotionScriptRunnerState::Finished)
   {
