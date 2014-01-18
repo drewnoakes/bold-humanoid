@@ -148,11 +148,14 @@ define(
         {
             console.assert(message.data instanceof Blob);
 
-            // append to the blob (ignore weird syntax)
-            this.imgBlob = new Blob([message.data], {type: 'image/jpeg'});
+            // For some good information on Blob:
+            // https://www.inkling.com/read/javascript-definitive-guide-david-flanagan-6th/chapter-22/blobs
 
-            var objectURL = (window.webkitURL || window.URL).createObjectURL(this.imgBlob);
-            var img = new Image();
+            // Wrap the untyped Blob data in order to specify the content type
+            var imgBlob = new Blob([message.data], {type: 'image/jpeg'}),
+                objectURL = (window.webkitURL || window.URL).createObjectURL(imgBlob),
+                img = new Image();
+
             img.onload = function()
             {
                 var changedSize = false;
@@ -169,7 +172,12 @@ define(
                     this.createContext();
                 }
                 this.context.drawImage(img, 0, 0);
+
+                // Release the Blob's object URL
+                (window.webkitURL || window.URL).revokeObjectURL(objectURL);
             }.bind(this);
+
+            // Trigger the image to load from the object URL
             img.src = objectURL;
         };
 
