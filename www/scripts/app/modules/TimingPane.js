@@ -7,8 +7,6 @@ define(
   ],
   function(DataProxy)
   {
-    // TODO reorder table rows lexicographically
-
     var seriesOptions = {
       strokeStyle: 'rgb(0, 255, 0)',
       fillStyle: 'rgba(0, 255, 0, 0.3)',
@@ -136,7 +134,23 @@ define(
     {
       var entry = this.entryByLabel[label];
       if (!entry) {
-        var row = $('<tr></tr>').appendTo(this.table);
+        // If this entry is a child of another entry, try to find it's parent
+        var parts = label.split('/'),
+            hasParent = parts.length !== 1,
+            parent;
+
+        // Some messing around to get paths in a nice order, where parents appear above children
+        // Image Processing
+        // Image Processing/Pixel Label
+        // Image Processing/Pixel Label/Find Horizon
+        // Image Processing/Pixel Label/Pixels Above
+        for (var i = 1; i < parts.length; i++)
+        {
+            var parentPath = parts.slice(0, i).join('/');
+            parent = this.getOrCreateEntry(parentPath);
+        }
+
+        var row = $('<tr></tr>');
 
         $('<td></td>').text(label).appendTo(row);
         var cellMillis = $('<td></td>', {'class': 'duration'}).appendTo(row),
@@ -153,10 +167,16 @@ define(
               cellMaxMillis.text(millis.toFixed(3));
             }
             cellMillis.text(millis.toFixed(3));
-          }
+          },
+          children: []
         };
 
         this.entryByLabel[label] = entry;
+
+        if (hasParent)
+          parent.children.push(entry);
+
+        row.appendTo(this.table)
       }
       return entry;
     };
