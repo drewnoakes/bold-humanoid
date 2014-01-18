@@ -252,6 +252,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./LineFinder/ScanningLineFinder/findLineSegments.cc
+)
+
+add_class(BOLDHUMANOID
   ./Localiser/Localiser.cc
   ./Localiser/predict.cc
   ./Localiser/update.cc

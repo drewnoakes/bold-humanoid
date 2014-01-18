@@ -1,0 +1,7 @@
+#include "scanninglinefinder.hh"
+
+#include <Eigen/LU>
+
+using namespace bold;
+using namespace std;
+using namespace Eigen;
