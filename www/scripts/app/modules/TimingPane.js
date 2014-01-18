@@ -153,8 +153,8 @@ define(
         var row = $('<tr></tr>');
 
         $('<td></td>').text(label).appendTo(row);
-        var cellMillis = $('<td></td>', {'class': 'duration'}).appendTo(row),
-            cellMaxMillis = $('<td></td>', {'class': 'max-duration'}).appendTo(row);
+        var cellMillis = $('<td></td>', {'class': 'duration'}).appendTo(row).get(0),
+            cellMaxMillis = $('<td></td>', {'class': 'max-duration'}).appendTo(row).get(0);
 
         entry = {
           label: label,
@@ -164,9 +164,9 @@ define(
             if (!entry.maxMillis || entry.maxMillis < millis)
             {
               entry.maxMillis = millis;
-              cellMaxMillis.text(millis.toFixed(3));
+              cellMaxMillis.textContent = millis.toFixed(3);
             }
-            cellMillis.text(millis.toFixed(3));
+            cellMillis.textContent = millis.toFixed(3);
           },
           children: []
         };
