@@ -54,7 +54,7 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
 
     writer.String("joints");
     writer.StartArray();
-    for (shared_ptr<MX28Snapshot const> mx28 : d_mx28States)
+    for (auto const& mx28 : d_mx28States)
     {
       writer.StartObject();
       {

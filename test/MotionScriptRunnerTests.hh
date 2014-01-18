@@ -42,14 +42,14 @@ TEST (DISABLED_MotionScriptRunnerTests, basics)
 
   // TODO convenience method for populating a basic HardwareState object
   AgentState::getInstance().registerStateType<HardwareState>("Hardware");
-  auto cm730State = make_shared<CM730Snapshot>();
-  auto mx28States = vector<shared_ptr<MX28Snapshot const>>();
+  auto cm730State = unique_ptr<CM730Snapshot const>(new CM730Snapshot());
+  auto mx28States = vector<unique_ptr<MX28Snapshot const>>();
   for (int i = 0; i < 20; i++) {
-    auto mx28 = make_shared<MX28Snapshot>();
+    auto mx28 = unique_ptr<MX28Snapshot>(new MX28Snapshot());
     mx28->presentPositionValue = 0;
-    mx28States.push_back(mx28);
+    mx28States.push_back(move(mx28));
   }
-  AgentState::getInstance().set<HardwareState>(make_shared<HardwareState>(cm730State, mx28States, 0, 0, 0));
+  AgentState::getInstance().set<HardwareState>(make_shared<HardwareState>(move(cm730State), move(mx28States), 0, 0, 0));
 
   auto stage = make_shared<MotionScript::Stage>();
 

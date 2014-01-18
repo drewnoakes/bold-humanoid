@@ -38,9 +38,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto hw = AgentState::get<HardwareState>();
     if (!hw)
       return false;
-    auto cm730 = hw->getCM730State();
-    if (!cm730)
-      return false;
+    auto const& cm730 = hw->getCM730State();
 
     static bool lastState = false;
     if (lastState ^ cm730->isStartButtonPressed)
@@ -57,9 +55,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto hw = AgentState::get<HardwareState>();
     if (!hw)
       return false;
-    auto cm730 = hw->getCM730State();
-    if (!cm730)
-      return false;
+    auto const& cm730 = hw->getCM730State();
 
     static bool lastState = false;
     if (lastState ^ cm730->isModeButtonPressed)

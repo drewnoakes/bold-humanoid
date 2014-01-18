@@ -330,11 +330,11 @@ void MotionLoop::step(SequentialTimer& t)
     return;
   }
 
-  auto cm730Snapshot = make_shared<CM730Snapshot>(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM));
+  auto cm730Snapshot = unique_ptr<CM730Snapshot const>(new CM730Snapshot(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM)));
 
-  auto mx28Snapshots = vector<shared_ptr<MX28Snapshot const>>();
+  auto mx28Snapshots = vector<unique_ptr<MX28Snapshot const>>();
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    mx28Snapshots.push_back(make_shared<MX28Snapshot>(d_dynamicBulkRead->getBulkReadData(jointId), jointId));
+    mx28Snapshots.push_back(unique_ptr<MX28Snapshot const>(new MX28Snapshot(d_dynamicBulkRead->getBulkReadData(jointId), jointId)));
 
   //
   // UPDATE HARDWARE STATE
@@ -343,7 +343,7 @@ void MotionLoop::step(SequentialTimer& t)
   auto rxBytes = d_cm730->getReceivedByteCount();
   auto txBytes = d_cm730->getTransmittedByteCount();
 
-  auto hw = make_shared<HardwareState const>(cm730Snapshot, mx28Snapshots, rxBytes, txBytes, d_cycleNumber);
+  auto hw = make_shared<HardwareState const>(move(cm730Snapshot), move(mx28Snapshots), rxBytes, txBytes, d_cycleNumber);
   AgentState::getInstance().set(hw);
   t.timeEvent("Update HardwareState");
 
