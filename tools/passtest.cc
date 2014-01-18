@@ -19,11 +19,13 @@
 #include "../LineRunTracker/lineruntracker.hh"
 #include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"
 #include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
+#include "../LineFinder/ScanningLineFinder/scanninglinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../PixelLabel/pixellabel.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../util/meta.hh"
+
 
 using namespace cv;
 using namespace std;
@@ -32,15 +34,18 @@ using namespace Eigen;
 
 int main(int argc, char **argv)
 {
-  if (argc != 2)
+  if (argc < 2)
   {
-    cout <<" Usage: passtest <rgb-image>" << endl;
+    cout <<" Usage: passtest <rgb-image> [configuration]" << endl;
     return -1;
   }
 
-  string configurationFile("../configuration.json");
+  string configurationFile = "configuration.json";
+  if (argc > 2)
+    configurationFile = string(argv[2]);
+  cout << "Using config file: " << configurationFile << endl;
 
-  Config::initialise("../configuration-metadata.json", configurationFile);
+  Config::initialise("configuration-metadata.json", configurationFile);
 
   int loopCount = 100;
 
@@ -57,11 +62,9 @@ int main(int argc, char **argv)
   }
 
   // Convert YCbCr to BGR
-  /*
   PixelFilterChain chain;
   chain.pushFilter(&Colour::yCbCrToBgrInPlace);
   chain.applyFilters(colourImage);
-  */
 
   // Initialise random seed
   std::srand(unsigned(std::time(0)));
@@ -76,18 +79,10 @@ int main(int argc, char **argv)
   auto t = Clock::getTimestamp();
 
   // Build colour ranges for segmentation
-
-  // hatfield (old, white field)
-//   shared_ptr<PixelLabel> ballLabel = make_shared<PixelLabel>("Ball",  Colour::hsvRange::fromDoubles(354,   1, 0.74, 0.18, 0.71, 0.22)); // red super ball
-//   shared_ptr<PixelLabel> goalLabel = make_shared<PixelLabel>("Goal",  Colour::hsvRange::fromDoubles( 54,  15, 0.75, 0.20, 0.74, 0.20)); // yellow paper
-//   shared_ptr<PixelLabel> fieldLabel= make_shared<PixelLabel>("Field", Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.25, 0.85, 0.35)); // white floor
-//   shared_ptr<PixelLabel> lineLabel = make_shared<PixelLabel>("Line",  Colour::hsvRange::fromDoubles(  0, 360, 0.00, 0.75, 0.00, 0.75)); // black line
-
-  // rgb.jpg
-  shared_ptr<PixelLabel> ballLabel  = make_shared<PixelLabel>("Ball",  Colour::hsvRange(240, 45, 160, 255, 95, 255));
-  shared_ptr<PixelLabel> goalLabel  = make_shared<PixelLabel>("Goal",  Colour::hsvRange(30, 50, 155, 255, 125, 255));
-  shared_ptr<PixelLabel> fieldLabel = make_shared<PixelLabel>("Field", Colour::hsvRange(50, 90, 83, 193, 110, 255));
-  shared_ptr<PixelLabel> lineLabel  = make_shared<PixelLabel>("Line",  Colour::hsvRange(0, 255, 0, 70, 185, 255));
+  auto goalLabel  = make_shared<PixelLabel>("Goal",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
+  auto ballLabel  = make_shared<PixelLabel>("Ball",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
+  auto fieldLabel = make_shared<PixelLabel>("Field", Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
+  auto lineLabel  = make_shared<PixelLabel>("Line",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
 
   cout << "Using labels:" << endl
        << "  " << *ballLabel << endl
@@ -126,6 +121,8 @@ int main(int argc, char **argv)
 //randomPairLineFinder.setProcessDotCount(5000);
 
   MaskWalkLineFinder maskWalkLineFinder;
+
+  ScanningLineFinder scanningLineFinder;
 
   cout << "Startup took " << Clock::getMillisSince(t) << " ms" << endl;
 
@@ -188,13 +185,23 @@ int main(int argc, char **argv)
   cout << "RandomPairLineFinder ran " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
-  // FIND LINES (RandomPairLineFinder)
+  // FIND LINES (MaskWalkLineFinder)
   //
   t = Clock::getTimestamp();
   vector<LineSegment2i> maskWalkLines;
   for (int i = 0; i < loopCount; i++)
     maskWalkLines = maskWalkLineFinder.findLineSegments(lineDotPass->lineDots);
   cout << "MaskWalkLineFinder   ran " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
+
+  //
+  // FIND LINES (ScanningLineFinder)
+  //
+  t = Clock::getTimestamp();
+  vector<LineSegment2i> scanningLines;
+  for (int i = 0; i < loopCount; i++)
+    scanningLines = scanningLineFinder.findLineSegments(lineDotPass->lineDots);
+  cout << "ScanningLineFinder   ran " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
+
 
   //
   // PRINT SUMMARIES
@@ -263,6 +270,12 @@ int main(int argc, char **argv)
   }
   cout << "    " << maskWalkLines.size() << " line(s) via MaskWalkLineFinder" << endl;
   for (LineSegment2i const& line : maskWalkLines)
+  {
+    cout << "      " << line << endl;
+    //line.draw(colourImage, colours[colourIndex++ % colours.size()], 2);
+  }
+  cout << "    " << scanningLines.size() << " line(s) via ScanningLineFinder" << endl;
+  for (LineSegment2i const& line : scanningLines)
   {
     cout << "      " << line << endl;
     line.draw(colourImage, colours[colourIndex++ % colours.size()], 2);
