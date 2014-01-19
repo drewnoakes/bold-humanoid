@@ -146,14 +146,18 @@ define(
         // Image Processing/Pixel Label/Pixels Above
         for (var i = 1; i < parts.length; i++)
         {
-            var parentPath = parts.slice(0, i).join('/');
-            parent = this.getOrCreateEntry(parentPath);
+          var parentPath = parts.slice(0, i).join('/');
+          parent = this.getOrCreateEntry(parentPath);
+          parent.row.classList.add('parent');
+          if (i === 1)
+            parent.row.classList.add('root');
         }
 
         var row = $('<tr></tr>');
 
-        $('<td></td>').text(label).appendTo(row);
-        var cellMillis = $('<td></td>', {'class': 'duration'}).appendTo(row).get(0),
+        var cellExpand = $('<td></td>', {'class': 'expander'}).appendTo(row).get(0),
+            cellLabel = $('<td></td>').text(label).appendTo(row).get(0),
+            cellMillis = $('<td></td>', {'class': 'duration'}).appendTo(row).get(0),
             cellMaxMillis = $('<td></td>', {'class': 'max-duration'}).appendTo(row).get(0);
 
         entry = {
@@ -168,13 +172,46 @@ define(
             }
             cellMillis.textContent = millis.toFixed(3);
           },
-          children: []
+          row: row.get(0),
+          children: [],
+          isExpanded: false
         };
+
+        var setChildRowDisplay = function(e)
+        {
+          var display = e.isExpanded ? 'table-row' : 'none';
+          _.each(e.children, function (child)
+          {
+            child.row.style.display = display;
+            setChildRowDisplay(child);
+          });
+        };
+
+        var setRowExpansion = function(isExpanded)
+        {
+          entry.isExpanded = isExpanded;
+
+          if (isExpanded)
+            entry.row.classList.add("expanded");
+          else
+            entry.row.classList.remove("expanded");
+        };
+
+        entry.row.addEventListener('click', function()
+        {
+          setRowExpansion(!entry.isExpanded);
+          setChildRowDisplay(entry);
+        });
 
         this.entryByLabel[label] = entry;
 
         if (hasParent)
+        {
           parent.children.push(entry);
+          entry.row.style.display = parent.isExpanded ? 'table-row' : 'none';
+        }
+
+        setRowExpansion(entry.isExpanded);
 
         row.appendTo(this.table)
       }

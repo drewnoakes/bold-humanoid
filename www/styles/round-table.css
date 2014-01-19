@@ -679,6 +679,24 @@ table.timing-details td
     min-width: 60px;
 }
 
+table.timing-details td.expander
+{
+    width: 16px;
+    min-width: 16px;
+}
+
+table.timing-details tr.parent.root td.expander
+{
+  background: url(/images/sprite-arrows.png);
+}
+
+table.timing-details tr.parent.root.expanded td.expander
+{
+  background-position: 0 16px;
+}
+
+/*******************************************************************/
+
 div.module.think-timing div.fps,
 div.module.motion-timing div.fps
 {
