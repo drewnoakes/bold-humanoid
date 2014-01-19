@@ -84,6 +84,13 @@ define(
 
       clearInterval(this.fpsInterval);
       delete this.fpsInterval;
+
+      delete this.series;
+      delete this.chart;
+      delete this.table;
+      delete this.canvas;
+      delete this.entryByLabel;
+      delete this.subscription;
     };
 
     TimingPane.prototype.onData = function(data)
