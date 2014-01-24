@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh kill [N...]"
+    echo "          kill (-9) the boldhumanoid process locally, or on specified robot(s)"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    if [ -z $(pkill -9 boldhumanoid) ]
+    then
+        echo "$(tput setaf 2)Boldhumanoid process successfully killed $(tput sgr 0)"
+    else
+        echo "$(tput setaf 1)Boldhumanoid process was not killed$(tput sgr 0)"
+    fi
+fi
+
+for i in ${@:1}
+do
+    if [ -z $(ssh darwin@darwin$i "sudo pkill -9 boldhumanoid") ]
+    then
+        echo "$(tput setaf 2)Boldhumanoid process successfully killed $(tput sgr 0)"
+    else
+        echo "$(tput setaf 1)Boldhumanoid process was not killed$(tput sgr 0)"
+    fi
+done

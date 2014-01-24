@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh run N"
+    echo "          run the boldhumanoid process on darwinN"
+    exit
+fi
+
+if [[ $# -eq 1 ]] ; then
+    ssh darwin@darwin$2 "sudo ./bh run"
+    exit $?
+fi
+
+if [[ $# -ne 0 ]] ; then
+    echo "'run' task accepts no arguments"
+    exit 1
+fi
+
+./boldhumanoid
+
+exit $?

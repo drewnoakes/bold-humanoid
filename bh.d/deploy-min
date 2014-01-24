@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh deploy-min N [M...]"
+    echo "          deploy boldhumanoid binary and config files to the target robot(s)"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    echo "deploy-min requires one or more target robot numbers"
+    exit 1
+fi
+
+for i in ${@:1}
+do
+    
+    echo deploying to darwin$i
+    
+    rsync -zrP configuration-team.json \
+        configuration-hatfield.json \
+        configuration-drews.json \
+        configuration-metadata.json \
+        boldhumanoid \
+        darwin@darwin$i:
+    
+    if [ $? -ne 0 ]; then
+        echo FAILED to deploy to darwin$i
+        res=1
+    fi
+    
+done
+
+exit $res

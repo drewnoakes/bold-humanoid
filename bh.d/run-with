@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh run-with"
+    echo "          run the boldhumanoid process locally with specified arguments"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    echo "'run-with' task requires additional arguments"
+    exit 1
+fi
+
+./boldhumanoid ${@:1}
+
+exit $?

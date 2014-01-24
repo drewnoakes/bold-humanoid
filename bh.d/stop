@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh stop [N...]"
+    echo "          stop the boldhumanoid service locally, or on specified robot(s)"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    sudo stop boldhumanoid
+    exit 1
+fi
+
+for i in ${@:1}
+do
+    ssh darwin@darwin$i "sudo stop boldhumanoid"
+    
+    if [ $? -ne 0 ]; then
+        echo FAILED to stop the boldhumanoid service to darwin$i
+        res=1
+    fi
+done
+
+exit $res

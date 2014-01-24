@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ "$1" == "help" ]] ; then
+    echo "   bh test"
+    echo "          compile and run the unit tests"
+    exit
+fi
+
+if [[ $# -ne 0 ]] ; then
+    echo "'test' task accepts no arguments"
+    exit 1
+fi
+
+make unittests && test/unittests
+
+exit $?

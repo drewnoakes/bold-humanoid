@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh cppcheck"
+    echo "          run the cppcheck program over the source code"
+    exit
+fi
+
+cppcheck -i libwebsockets \
+    -i rapidjson \
+    -i test \
+    -i swig \
+    -i joystick \
+    -i CMakeFiles \
+    --enable=all \
+    . > /dev/null
