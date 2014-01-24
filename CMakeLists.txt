@@ -18,6 +18,7 @@ include(TypeScript)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(SigC++ REQUIRED)
+find_package(Git)
 
 set(JOYSTICKDIR ${CMAKE_SOURCE_DIR}/joystick)
 set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
