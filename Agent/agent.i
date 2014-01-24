@@ -26,8 +26,7 @@ namespace bold
   class Agent
   {
   public:
-    Agent(bool useSpeech);
-
+    Agent();
 
     std::shared_ptr<Ambulator> getAmbulator() const;
     std::shared_ptr<Camera> getCamera() const;
@@ -45,13 +44,16 @@ namespace bold
     std::shared_ptr<WalkModule> getWalkModule() const;
     std::shared_ptr<MotionScriptModule> getMotionScriptModule() const;
 
+    std::shared_ptr<FallDetector> getFallDetector() const;
+
     unsigned getTeamNumber() const;
-    void setTeamNumber(unsigned teamNumber);
     unsigned getUniformNumber() const;
-    void setUniformNumber(unsigned uniformNumber);
 
     void run();
+    void requestStop();
     void stop();
+    bool isStopRequested() const;
+
   };
 
   %extend Agent {

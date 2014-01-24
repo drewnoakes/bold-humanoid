@@ -31,7 +31,7 @@ namespace bold
     Eigen::Vector3d axis;
 
     JointId id;
-    double angle;
+    double angleRads;
     std::shared_ptr<BodyPart> bodyPart;
     std::pair<Eigen::Vector3d, Eigen::Vector3d> anchors;
 

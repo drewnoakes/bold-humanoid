@@ -22,8 +22,6 @@ namespace bold
     AgentState()
     {}
     
-    sigc::signal<void, std::shared_ptr<StateTracker> > updated;
-    
     template <typename T>
       static std::shared_ptr<T const> get();
     
