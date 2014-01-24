@@ -1,5 +1,6 @@
 find_package(SWIG REQUIRED)
-find_package(PythonLibs)
+find_package(PythonLibs 3.0 REQUIRED)
+find_package(NumPy REQUIRED)
 
 include(${SWIG_USE_FILE})
 #set(CMAKE_SWIG_FLAGS "-builtin") # builtin has one layer less, but can't extend classes with Python code
