@@ -21,6 +21,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldCountLabels         = Config::getSetting<bool>("vision.label-counter.enable");
 
   d_shouldIgnoreAboveHorizon  = Config::getSetting<bool>("vision.ignore-above-horizon");
+  d_shouldIgnoreOutsideField  = Config::getSetting<bool>("vision.ignore-outside-field");
   d_isRecordingFrames         = Config::getSetting<bool>("camera.recording-frames");
 
   d_streamFramePeriod         = Config::getSetting<int>("round-table.camera-frame-frequency");
@@ -73,6 +74,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_lineLabel ->setHsvRange(value); createLookupTable(); });
 
   d_minBallArea            = Config::getSetting<int>("vision.min-ball-area");
+  d_acceptedBallMeasuredSizeRatio = Config::getSetting<Range<double>>("vision.accepted-ball-measured-size-ratio");
   d_minGoalDimensionPixels = Config::getSetting<int>("vision.min-goal-dimension-pixels");
 
   // TODO don't pass this around -- look it up from config (?)

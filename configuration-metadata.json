@@ -40,9 +40,10 @@
     }
   },
   "vision": {
-    "min-ball-area":             { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
-    "min-goal-dimension-pixels": { "type": "int", "min": 1, "max": 50, "default": 1, "advanced": true },
-    "enable-ball-blob-merging":  { "type": "bool", "default": true, "advanced": true },
+    "min-ball-area":                { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
+    "accepted-ball-measured-size-ratio": { "type": "double-range", "default": [0.8, 1.5], "advanced": true }, 
+    "min-goal-dimension-pixels":    { "type": "int", "min": 1, "max": 50, "default": 1, "advanced": true },
+    "enable-ball-blob-merging":     { "type": "bool", "default": true, "advanced": true },
     "pixel-labels": {
       "goal":  { "type": "hsv-range", "default": { "hue": [44, 60],  "sat": [158, 236], "val": [124, 222] } },
       "ball":  { "type": "hsv-range", "default": { "hue": [248, 23], "sat": [72, 255],  "val": [12, 255] } },
@@ -50,6 +51,7 @@
       "line":  { "type": "hsv-range", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } }
     },
     "ignore-above-horizon": { "type": "bool", "default": true },
+    "ignore-outside-field": { "type": "bool", "default": true },
     "image-granularity": { "type": "enum", "default": 0, "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3, "Projected": 4 }, "advanced": false },
     "max-granularity": { "type": "int", "min": 1, "max": 20, "default": 4, "advanced": true },
     "line-detection": {

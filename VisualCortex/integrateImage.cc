@@ -116,18 +116,21 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
       // Ignore ball if it appears outside the field edge
       //
-      if (ballBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(ballBlob.ul.x()))
-      // This blob can not be the ball if its upper left corner is below the field edge.
-      // Remember that the image appears upside down.
+      if (d_shouldIgnoreOutsideField->getValue() && ballBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(ballBlob.ul.x()))
+      {
+        // This blob can not be the ball if its upper left corner is below the field edge.
+        // Remember that the image appears upside down.
         continue;
+      }
 
       // Discard blobs that would be too large/small for the ball we expect at that position of the frame
       Vector2d pos;
-      if (canBlobBeBall(ballBlob, &pos))
+      if (!canBlobBeBall(ballBlob, &pos))
       {
-        ballPosition = Maybe<Vector2d>(pos);
-        break;
+        continue;
       }
+
+      ballPosition = Maybe<Vector2d>(pos);
     }
     t.timeEvent("Ball Blob Selection");
   }

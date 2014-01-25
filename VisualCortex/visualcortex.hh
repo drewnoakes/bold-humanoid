@@ -165,8 +165,10 @@ namespace bold
     Setting<bool>* d_shouldDetectLines;
     Setting<bool>* d_shouldCountLabels;
     Setting<bool>* d_shouldIgnoreAboveHorizon;
+    Setting<bool>* d_shouldIgnoreOutsideField;
 
     Setting<int>* d_minBallArea;
+    Setting<Range<double>>* d_acceptedBallMeasuredSizeRatio;
     Setting<int>* d_minGoalDimensionPixels;
 
     bool d_recordNextFrame;
