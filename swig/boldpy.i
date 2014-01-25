@@ -62,6 +62,7 @@
 // (eg C++11 stuff, and usually inlined and private stuff)
 %feature("kwargs");
 
+%include "../util/log.i"
 %include "../util/range.i"
 
 %include "../Agent/agent.i"

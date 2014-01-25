@@ -52,6 +52,7 @@ def usage():
 
 def main(argv):
     configurationFile = "configuration-agent.json"
+    bold.log.setMinLevelInfo()
 
     # Parse command arguments
     try:
@@ -67,8 +68,8 @@ def main(argv):
         if opt in ('-c', '--conf'):
             configurationFile = arg
         elif opt in ('-v', '--verbose'):
-            # TODO: implement
-            print("Verbose logging not yet implemented")
+            print("Setting log level to verbose")
+            bold.log.setMinLevelVerbose()
         elif opt in ('-h', '--help'):
             usage()
             return
