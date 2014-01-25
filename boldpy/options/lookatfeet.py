@@ -5,12 +5,12 @@ class LookAtFeet(bold.Option):
     def __init__(self, id):
         super(LookAtFeet, self).__init__(id)
 
-        self.feetX = self.getParamDbl("feetX", 0.0)
-        self.feetY = self.getParamDbl("feetY", -67.5)
+        self.panDegs = bold.Config.getDoubleSetting("options.look-at-feet.head-pan-degs")
+        self.tiltDegs = bold.Config.getDoubleSetting("options.look-at-feet.head-tilt-degs")
 
     def runPolicy(self):
         hm = getAgent().getHeadModule()
-        hm.moveToDegs(self.feetX, self.feetY)
+        hm.moveToDegs(self.panDegs.getValue(), self.tiltDegs.getValue())
 
         return []
 
