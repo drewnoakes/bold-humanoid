@@ -62,13 +62,18 @@
 // (eg C++11 stuff, and usually inlined and private stuff)
 %feature("kwargs");
 
-%include "../Debugger/debugger.i"
-%include "../VisualCortex/visualcortex.i"
+%include "../util/range.i"
+
 %include "../Agent/agent.i"
 %include "../BodyPart/bodypart.i"
 %include "../CameraModel/cameramodel.i"
 %include "../CM730Snapshot/cm730snapshot.i"
+%include "../Config/config.i"
+%include "../Colour/colour.i"
+%include "../Debugger/debugger.i"
 %include "../MX28Snapshot/mx28snapshot.i"
+%include "../Setting/setting.i"
+%include "../VisualCortex/visualcortex.i"
 
 %include "../StateObject/stateobject.i"
 %include "../StateObject/AgentFrameState/agentframestate.i"
