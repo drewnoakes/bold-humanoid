@@ -490,7 +490,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     auto hw = AgentState::get<HardwareState>();
     assert(hw);
     // TODO pass calibration data here
-    auto gryoRaw = hw->getCM730State()->getBalancedGyroValue();
+    auto gryoRaw = hw->getCM730State().getBalancedGyroValue();
 
     // TODO review the gyro axes labels
     // TODO need to balance these values around the midpoint, taking calibration into account

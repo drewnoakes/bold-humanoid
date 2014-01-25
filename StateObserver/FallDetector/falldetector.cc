@@ -21,7 +21,7 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> hardwareSta
   // Track the smoothed forward/backward acceleration to test for a consistent
   // indication that we have fallen.
 
-  int avg = d_fbAvgValue.next(hardwareState->getCM730State()->accRaw.y());
+  int avg = d_fbAvgValue.next(hardwareState->getCM730State().accRaw.y());
 
   // TODO this might not detect if we fall perfectly to the left/right
 

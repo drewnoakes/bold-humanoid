@@ -25,7 +25,7 @@ void BodyControl::updateFromHardwareState()
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     shared_ptr<JointControl> joint = getJoint((JointId)jointId);
-    joint->setValue(hw->getMX28State(jointId)->presentPositionValue);
+    joint->setValue(hw->getMX28State(jointId).presentPositionValue);
     // Clear dirty flag. Value came from hardware, so no need to write it back again.
     joint->clearDirty();
   }

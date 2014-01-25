@@ -62,13 +62,13 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
       // copy the current pose
-      d_values[jointId] = hw->getMX28State(jointId)->presentPositionValue;
+      d_values[jointId] = hw->getMX28State(jointId).presentPositionValue;
 
       // Only update selected joints
       if (!(*selectedJoints)[jointId])
         continue;
 
-      d_keyFrameTargetAngles[jointId] = hw->getMX28State(jointId)->presentPositionValue;
+      d_keyFrameTargetAngles[jointId] = hw->getMX28State(jointId).presentPositionValue;
       d_sectionStartGoalSpeeds[jointId] = 0;
       d_keyFrameDeltaValue[jointId] = 0;
       d_goalSpeeds[jointId] = 0;

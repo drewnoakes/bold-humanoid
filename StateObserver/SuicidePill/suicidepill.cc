@@ -31,7 +31,7 @@ void SuicidePill::observeTyped(shared_ptr<HardwareState const> state, Sequential
 
   auto const& cm730 = state->getCM730State();
 
-  if (cm730->isStartButtonPressed && cm730->isModeButtonPressed)
+  if (cm730.isStartButtonPressed && cm730.isModeButtonPressed)
   {
     // Both buttons pressed
 

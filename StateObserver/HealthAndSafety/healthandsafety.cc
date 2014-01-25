@@ -20,7 +20,7 @@ HealthAndSafety::HealthAndSafety(std::shared_ptr<Voice> voice)
 
 void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> state, SequentialTimer& timer)
 {
-  float voltage = d_voltageMovingAverage.next(state->getCM730State()->voltage);
+  float voltage = d_voltageMovingAverage.next(state->getCM730State().voltage);
 
   switch (d_voltageTrigger.next(voltage))
   {
@@ -58,7 +58,7 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> state, Sequen
     uchar maxTemperatureJointId = 0;
     for (uchar jointId = (uchar)JointId::MIN; jointId < (uchar)JointId::MAX; jointId++)
     {
-      int temperature = state->getMX28State(jointId)->presentTemp;
+      int temperature = state->getMX28State(jointId).presentTemp;
       if (temperature > maxTemperature)
       {
         maxTemperature = temperature;

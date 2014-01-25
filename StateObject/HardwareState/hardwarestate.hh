@@ -32,17 +32,17 @@ namespace bold
       assert(cm730State);
     }
 
-    std::unique_ptr<CM730Snapshot const> const& getCM730State() const
+    CM730Snapshot const& getCM730State() const
     {
-      return d_cm730State;
+      return *d_cm730State;
     }
 
-    std::unique_ptr<MX28Snapshot const> const& getMX28State(uchar jointId) const
+    MX28Snapshot const& getMX28State(uchar jointId) const
     {
       assert(jointId >= (uchar)JointId::MIN && jointId <= (uchar)JointId::MAX);
       assert(d_mx28States.size() >= jointId);
 
-      return d_mx28States[jointId - 1];
+      return *d_mx28States[jointId - 1];
     }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;

@@ -19,7 +19,7 @@ BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, ulong
 {
   double angles[(uchar)JointId::MAX + 1];
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    angles[jointId] = hardwareState->getMX28State(jointId)->presentPosition;
+    angles[jointId] = hardwareState->getMX28State(jointId).presentPosition;
 
   initialise(angles);
 }

@@ -37,7 +37,7 @@ void GyroCalibrator::observeTyped(std::shared_ptr<HardwareState const> hardwareS
   // TODO why not do up/down (Z) ?
   // TODO do the axes of the acc/gyro match the torso axes we've chosen?
 
-  auto const& accRaw = hardwareState->getCM730State()->accRaw;
+  auto const& accRaw = hardwareState->getCM730State().accRaw;
 
   d_fbAvgValue.next(accRaw.y());
   d_lrAvgValue.next(accRaw.x());
