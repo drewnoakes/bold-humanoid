@@ -37,10 +37,10 @@ class PyOptionTreeBuilder:
         # tree.addOption(self.laf)
 
         self.lar = LookAround("lookaround").__disown__()
-        tree.addOption(self.lar, True)
+        tree.addOption(self.lar)
 
-        # self.lab = LookAtBall("lookatball").__disown__()
-        # tree.addOption(self.lab)
+        self.lab = LookAtBall("lookatball").__disown__()
+        tree.addOption(self.lab, True)
 
         # self.lag = LookAtGoal("lookatgoal").__disown__()
         # tree.addOption(self.lag)

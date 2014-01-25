@@ -198,6 +198,10 @@
     "look-at-feet": {
       "head-pan-degs":  { "type": "double", "default": 0 },
       "head-tilt-degs": { "type": "double", "default": -67.5 }
+    },
+    "look-at-ball": {
+      "gain": { "type": "double", "default": 0.85 },
+      "max-offset-deg": { "type": "double", "default": 5.0 }
     }
   },
   "health-and-safety": {
