@@ -5,7 +5,6 @@ from boldpy.agent import *
 from numpy import *
 
 from .fsmoption import *
-from .motionscriptoption import *
 from .stopwalking import *
 from .lookatfeet import *
 from .lookaround import *
@@ -15,20 +14,22 @@ from .lookatgoal import *
 class PyOptionTreeBuilder:
     def createMotionScriptOptions(self, tree, namesScripts):
         for ns in namesScripts:
-            o = MotionScriptOption(ns[0], ns[1]).__disown__()
+            o = bold.MotionScriptOption(ns[0], getAgent().getMotionScriptModule(), "./motionscripts/" + ns[1] + ".json")
             tree.addOption(o)
 
     def createOptions(self, tree):
-        # motionScriptOptions = [
-        #     ("sitdownscript", "sit down"),
-        #     ("standupscript", "stand up"),
-        #     ("leftkickscript", "lk"),
-        #     ("rightkickscript", "rk"),
-        #     ("diveleftscript", "left_dive"),
-        #     ("forwardgetupscript", "f up"),
-        #     ("backwardgetupscript", "b up")]
-
-        # self.createMotionScriptOptions(tree, motionScriptOptions)
+        motionScriptOptions = [
+            ("leftKickScript", "kick-left"),
+            ("rightKickScript", "kick-right"),
+            ("diveLeftScript", "dive-left"),
+            ("diveRightScript", "dive-right"),
+            ("forwardGetUpScript", "get-up-from-front"),
+            ("backwardGetUpScript", "get-up-from-back"),
+            ("bigStepLeftScript", "step-left-big"),
+            ("bigStepRightScript", "step-right-big"),
+            ("standUpScript", "stand-ready"),
+            ("sitDownScript", "sit-down")]
+        self.createMotionScriptOptions(tree, motionScriptOptions)
 
         # self.sw = StopWalking("stopwalking").__disown__()
         # tree.addOption(self.sw)
@@ -36,11 +37,11 @@ class PyOptionTreeBuilder:
         # self.laf = LookAtFeet("lookatfeet").__disown__()
         # tree.addOption(self.laf)
 
-        self.lar = LookAround("lookaround").__disown__()
-        tree.addOption(self.lar)
+        # self.lar = LookAround("lookaround").__disown__()
+        # tree.addOption(self.lar)
 
-        self.lab = LookAtBall("lookatball").__disown__()
-        tree.addOption(self.lab, True)
+        # self.lab = LookAtBall("lookatball").__disown__()
+        # tree.addOption(self.lab, True)
 
         # self.lag = LookAtGoal("lookatgoal").__disown__()
         # tree.addOption(self.lag)

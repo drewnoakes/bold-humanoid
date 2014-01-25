@@ -45,6 +45,7 @@
 %shared_ptr(bold::MotionScriptModule)
 %shared_ptr(bold::MX28Snapshot)
 %shared_ptr(bold::Option)
+%shared_ptr(bold::MotionScriptOption)
 %shared_ptr(bold::OptionTreeState)
 %shared_ptr(bold::ParticleState)
 %shared_ptr(bold::StateObject)
@@ -91,5 +92,6 @@
 %include "../Ambulator/ambulator.i"
 
 %include "../Option/option.i"
+%include "../Option/MotionScriptOption/motionscriptoption.i"
 
 %include "../OptionTree/optiontree.i"
