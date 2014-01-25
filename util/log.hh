@@ -23,7 +23,7 @@ namespace bold
     : log(std::string(), level)
     {}
 
-    log(std::string scope, LogLevel level)
+    log(std::string const& scope, LogLevel level)
     : d_scope(scope),
       d_level(level),
       d_message(level < minLevel ? nullptr : new std::ostringstream())
@@ -37,10 +37,10 @@ namespace bold
     static log warning() { return log(LogLevel::Warning); }
     static log error()   { return log(LogLevel::Error); }
 
-    static log info(std::string scope)    { return log(scope, LogLevel::Info); }
-    static log verbose(std::string scope) { return log(scope, LogLevel::Verbose); }
-    static log warning(std::string scope) { return log(scope, LogLevel::Warning); }
-    static log error(std::string scope)   { return log(scope, LogLevel::Error); }
+    static log info(std::string const& scope)    { return log(scope, LogLevel::Info); }
+    static log verbose(std::string const& scope) { return log(scope, LogLevel::Verbose); }
+    static log warning(std::string const& scope) { return log(scope, LogLevel::Warning); }
+    static log error(std::string const& scope)   { return log(scope, LogLevel::Error); }
 
     log(log&& log)
     : d_scope(log.d_scope),
