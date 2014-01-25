@@ -85,6 +85,10 @@ def main(argv):
 
     bold.Config.initialisationCompleted();
 
+    builder = PyOptionTreeBuilder()
+    tree = builder.buildTree()
+    agent.setOptionTree(tree);
+
     agent.onThinkEndConnect(thinkEndCallback);
 
     agent.run()

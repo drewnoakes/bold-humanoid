@@ -9,11 +9,11 @@ class LookAround(bold.Option):
         self.lastTimeSeconds = 0
         self.startTimeSeconds = 0
 
-        self.topAngle      = self.getParamDbl("topAngle",     30.0)
-        self.bottomAngle   = self.getParamDbl("bottomAngle", -25.0)
-        self.sideAngle     = self.getParamDbl("sideAngle",   100.0)
-        self.durationHoriz = self.getParamDbl("durationHoriz", 2.3)
-        self.durationVert  = self.getParamDbl("durationVert",  0.2)
+        self.topAngle      = bold.Config.getDoubleSetting("options.look-around.top-angle");
+        self.bottomAngle   = bold.Config.getDoubleSetting("options.look-around.bottom-angle");
+        self.sideAngle     = 100 #bold.Config.getDoubleSetting("options.look-around.side-angle");
+        self.durationHoriz = bold.Config.getDoubleSetting("options.look-around.horiz-duration");
+        self.durationVert  = bold.Config.getDoubleSetting("options.look-around.vert-duration");
 
     def runPolicy(self):
         # Make an oscillatory movement to search for the ball
@@ -24,11 +24,11 @@ class LookAround(bold.Option):
     
             # Start quarter-way through the first phase, so the head is slightly
             # to the left, and pans right through the top of the box.
-            self.startTimeSeconds = t - self.durationHoriz / 4.0
+            self.startTimeSeconds = t - self.durationHoriz.getValue() / 4.0
 
         self.lastTimeSeconds = t
 
-        period = (self.durationHoriz + self.durationVert) * 2
+        period = (self.durationHoriz.getValue() + self.durationVert.getValue()) * 2
 
         phase = (t - self.startTimeSeconds) % period
         hAngle = 0.0
@@ -37,27 +37,27 @@ class LookAround(bold.Option):
         def lerp(alpha, start, end):
             return (1.0 - alpha) * start + alpha * end
 
-        if phase < self.durationHoriz:
+        if phase < self.durationHoriz.getValue():
             # Movinf right-to-left across top
-            vAngle = self.topAngle
-            hAngle = lerp(phase / self.durationHoriz, -self.sideAngle, self.sideAngle)
+            vAngle = self.topAngle.getValue()
+            hAngle = lerp(phase / self.durationHoriz.getValue(), -self.sideAngle, self.sideAngle)
         else:
-            phase -= self.durationHoriz
-            if phase < self.durationVert:
+            phase -= self.durationHoriz.getValue()
+            if phase < self.durationVert.getValue():
                 # moving top-to-bottom at left
-                vAngle = lerp(phase / self.durationVert, self.topAngle, self.bottomAngle)
+                vAngle = lerp(phase / self.durationVert.getValue(), self.topAngle.getValue(), self.bottomAngle.getValue())
                 hAngle = self.sideAngle
             else:
-                phase -= self.durationVert
-                if phase < self.durationHoriz:
+                phase -= self.durationVert.getValue();
+                if phase < self.durationHoriz.getValue():
                     # moving left-to-right across bottom
-                    vAngle = self.bottomAngle
-                    hAngle = lerp(phase / self.durationHoriz, self.sideAngle, -self.sideAngle)
+                    vAngle = self.bottomAngle.getValue()
+                    hAngle = lerp(phase / self.durationHoriz.getValue(), self.sideAngle, -self.sideAngle)
                 else:
-                    phase -= self.durationHoriz
-                    if phase < self.durationVert:
+                    phase -= self.durationHoriz.getValue()
+                    if phase < self.durationVert.getValue():
                         # moving bottom-to-top at right
-                        vAngle = lerp(phase / self.durationVert, self.bottomAngle, self.topAngle)
+                        vAngle = lerp(phase / self.durationVert.getValue(), self.bottomAngle.getValue(), self.topAngle.getValue())
                         hAngle = -self.sideAngle
                     else:
                         print("[LookAround::runPolicy] Failed to find phase of motion")

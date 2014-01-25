@@ -12,8 +12,6 @@ from .lookaround import *
 from .lookatball import *
 from .lookatgoal import *
 
-#import boldpy.conf as conf
-
 class PyOptionTreeBuilder:
     def createMotionScriptOptions(self, tree, namesScripts):
         for ns in namesScripts:
@@ -21,34 +19,34 @@ class PyOptionTreeBuilder:
             tree.addOption(o)
 
     def createOptions(self, tree):
-        motionScriptOptions = [
-            ("sitdownscript", "sit down"),
-            ("standupscript", "stand up"),
-            ("leftkickscript", "lk"),
-            ("rightkickscript", "rk"),
-            ("diveleftscript", "left_dive"),
-            ("forwardgetupscript", "f up"),
-            ("backwardgetupscript", "b up")]
+        # motionScriptOptions = [
+        #     ("sitdownscript", "sit down"),
+        #     ("standupscript", "stand up"),
+        #     ("leftkickscript", "lk"),
+        #     ("rightkickscript", "rk"),
+        #     ("diveleftscript", "left_dive"),
+        #     ("forwardgetupscript", "f up"),
+        #     ("backwardgetupscript", "b up")]
 
-        self.createMotionScriptOptions(tree, motionScriptOptions)
+        # self.createMotionScriptOptions(tree, motionScriptOptions)
 
-        self.sw = StopWalking("stopwalking").__disown__()
-        tree.addOption(self.sw)
+        # self.sw = StopWalking("stopwalking").__disown__()
+        # tree.addOption(self.sw)
 
-        self.laf = LookAtFeet("lookatfeet").__disown__()
-        tree.addOption(self.laf)
+        # self.laf = LookAtFeet("lookatfeet").__disown__()
+        # tree.addOption(self.laf)
 
         self.lar = LookAround("lookaround").__disown__()
-        tree.addOption(self.lar)
+        tree.addOption(self.lar, True)
 
-        self.lab = LookAtBall("lookatball").__disown__()
-        tree.addOption(self.lab)
+        # self.lab = LookAtBall("lookatball").__disown__()
+        # tree.addOption(self.lab)
 
-        self.lag = LookAtGoal("lookatgoal").__disown__()
-        tree.addOption(self.lag)
+        # self.lag = LookAtGoal("lookatgoal").__disown__()
+        # tree.addOption(self.lag)
 
-        self.createBootFSM(tree)
-        self.createWinFSM(tree)
+        # self.createBootFSM(tree)
+        # self.createWinFSM(tree)
 
     def createBootFSM(self, tree):
         bootFSM = FSMOption("bootfsm").__disown__()
@@ -151,8 +149,6 @@ class PyOptionTreeBuilder:
         tree.addOption(winFSM, True)
 
     def buildTree(self):
-
-        #print("buildTree: " + conf.confimpl.getParamStr("agent.u2dDevName", "not found"))
         tree = bold.OptionTree()
 
         self.createOptions(tree)
