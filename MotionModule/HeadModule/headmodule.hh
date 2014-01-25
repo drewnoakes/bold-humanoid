@@ -76,12 +76,19 @@ namespace bold
     Setting<int>* d_gainP;
 
     Setting<double>* d_panGainP;  ///< P gain value for pan joint used in tracking calculations
+    Setting<double>* d_panGainI;  ///< I gain value for pan joint used in tracking calculations
+    Setting<double>* d_panILeak;  ///< I leak value for pan joint used in tracking calculations
     Setting<double>* d_panGainD;  ///< D gain value for pan joint used in tracking calculations
     Setting<double>* d_tiltGainP; ///< P gain value for tilt joint used in tracking calculations
+    Setting<double>* d_tiltGainI; ///< I gain value for tilt joint used in tracking calculations
+    Setting<double>* d_tiltILeak;  ///< I leak value for pan joint used in tracking calculations
     Setting<double>* d_tiltGainD; ///< D gain value for tilt joint used in tracking calculations
 
     double d_lastPanError;
     double d_lastTiltError;
+
+    double d_integratedPanError;
+    double d_integratedTiltError;
 
     double d_targetPanAngleDegs;
     double d_targetTiltAngleDegs;

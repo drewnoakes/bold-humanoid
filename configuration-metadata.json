@@ -122,11 +122,15 @@
     "tilt-limit-degrees": { "type": "double-range", "default": [-22.0, 40.0] },
     "tracking": {
       "pan": {
-        "p-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.03 },
+        "p-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.5 },
+        "i-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 },
+        "i-leak": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 },
         "d-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 }
       },
       "tilt": {
-        "p-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.03 },
+        "p-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.5 },
+        "i-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 },
+        "i-leak": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 },
         "d-gain": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.1 }
       }
     },

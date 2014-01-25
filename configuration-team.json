@@ -124,11 +124,15 @@
     "tilt-limit-degrees": [-22.0, 40.0],
     "tracking": {
       "pan": {
-        "p-gain": 0.03,
+        "p-gain": 0.5,
+        "i-gain": 0.1,
+        "i-leak": 0.1,
         "d-gain": 0.1
       },
       "tilt": {
-        "p-gain": 0.03,
+        "p-gain": 0.5,
+        "i-gain": 0.1,
+        "i-leak": 0.1,
         "d-gain": 0.1
       }
     },

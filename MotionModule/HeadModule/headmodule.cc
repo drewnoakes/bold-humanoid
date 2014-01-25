@@ -21,8 +21,12 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
 
   // PD gain values for tracking
   d_panGainP    = Config::getSetting<double>("head-module.tracking.pan.p-gain");
+  d_panGainI    = Config::getSetting<double>("head-module.tracking.pan.i-gain");
+  d_panILeak    = Config::getSetting<double>("head-module.tracking.pan.i-leak");
   d_panGainD    = Config::getSetting<double>("head-module.tracking.pan.d-gain");
   d_tiltGainP   = Config::getSetting<double>("head-module.tracking.tilt.p-gain");
+  d_tiltGainI   = Config::getSetting<double>("head-module.tracking.tilt.i-gain");
+  d_tiltILeak   = Config::getSetting<double>("head-module.tracking.tilt.i-leak");
   d_tiltGainD   = Config::getSetting<double>("head-module.tracking.tilt.d-gain");
 
   // Restrictions placed upon the range of movement by the head within this module
@@ -110,35 +114,41 @@ void HeadModule::initTracking()
 {
   d_lastPanError = 0;
   d_lastTiltError = 0;
+  d_integratedPanError = 0;
+  d_integratedTiltError = 0;
 }
 
 void HeadModule::moveTracking(double panError, double tiltError)
 {
   double panErrorDelta = panError - d_lastPanError;
   double tiltErrorDelta = tiltError - d_lastTiltError;
+  d_integratedPanError += -d_panILeak->getValue() * d_integratedPanError + panError;
+  d_integratedTiltError += -d_tiltILeak->getValue() * d_integratedTiltError + tiltError;
 
   d_lastPanError = panError;
   d_lastTiltError = tiltError;
 
-  auto calcPDOffset = [](double error, double errorDelta, double p, double d)
+  auto calcPIDOffset = [](double error, double integratedError, double errorDelta, double p, double i, double d)
   {
-    double pOffset = pow(error * p, 2);
-    if (error < 0)
-      pOffset = -pOffset;
+    double pOffset = p * error;
+    double iOffset = i * integratedError;
+    double dOffset = d * errorDelta;
 
-    double dOffset = pow(errorDelta * d, 2);
-    if (errorDelta < 0)
-      dOffset = -dOffset;
-
-    return pOffset + dOffset;
+    return pOffset + iOffset + dOffset;
   };
 
   auto body = AgentState::get<BodyState>();
-  double currentPanAngleDegs = body->getJoint(JointId::HEAD_PAN)->angleRads;
-  double currentTiltAngleDegs = body->getJoint(JointId::HEAD_TILT)->angleRads;
+  double currentPanAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_PAN)->angleRads);
+  double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->angleRads);
 
-  d_targetPanAngleDegs  = currentPanAngleDegs  + calcPDOffset(panError,  panErrorDelta,  d_panGainP->getValue(),  d_panGainD->getValue());
-  d_targetTiltAngleDegs = currentTiltAngleDegs + calcPDOffset(tiltError, tiltErrorDelta, d_tiltGainP->getValue(), d_tiltGainD->getValue());
+  d_targetPanAngleDegs =
+    currentPanAngleDegs +
+    calcPIDOffset(panError, d_integratedPanError, panErrorDelta,
+                  d_panGainP->getValue(), d_panGainI->getValue(), d_panGainD->getValue());
+  d_targetTiltAngleDegs =
+    currentTiltAngleDegs +
+    calcPIDOffset(tiltError, d_integratedTiltError, tiltErrorDelta,
+                  d_tiltGainP->getValue(), d_tiltGainI->getValue(), d_tiltGainD->getValue());
 
   getScheduler()->add(this,
                       Priority::Normal, false,  // HEAD   Interuptable::YES
