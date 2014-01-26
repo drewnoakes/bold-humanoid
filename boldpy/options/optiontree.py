@@ -31,20 +31,20 @@ class PyOptionTreeBuilder:
             ("sitDownScript", "sit-down")]
         self.createMotionScriptOptions(tree, motionScriptOptions)
 
-        # self.sw = StopWalking("stopwalking").__disown__()
-        # tree.addOption(self.sw)
+        self.lar = LookAround("lookaround").__disown__()
+        tree.addOption(self.lar)
 
-        # self.laf = LookAtFeet("lookatfeet").__disown__()
-        # tree.addOption(self.laf)
+        self.lab = LookAtBall("lookatball").__disown__()
+        tree.addOption(self.lab, True)
 
-        # self.lar = LookAround("lookaround").__disown__()
-        # tree.addOption(self.lar)
+        self.laf = LookAtFeet("lookatfeet").__disown__()
+        tree.addOption(self.laf)
 
-        # self.lab = LookAtBall("lookatball").__disown__()
-        # tree.addOption(self.lab, True)
+        self.sw = StopWalking("stopwalking").__disown__()
+        tree.addOption(self.sw)
 
-        # self.lag = LookAtGoal("lookatgoal").__disown__()
-        # tree.addOption(self.lag)
+        self.lag = LookAtGoal("lookatgoal").__disown__()
+        tree.addOption(self.lag)
 
         # self.createBootFSM(tree)
         # self.createWinFSM(tree)
