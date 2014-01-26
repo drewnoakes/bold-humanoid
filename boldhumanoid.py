@@ -18,25 +18,25 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 def thinkEndCallback():
-    print("===== HELLO =====")
-    cameraState = bold.AgentState.getCameraFrameState()
-    print("(Camera Frame) Ball visible: ", cameraState.isBallVisible())
-    ballObs = cameraState.getBallObservation()
-    print("(Camera Frame) Ball observations:")
-    print(ballObs)
+    bold.log.writeVerbose("===== HELLO =====")
+    # cameraState = bold.AgentState.getCameraFrameState()
+    # print("(Camera Frame) Ball visible: ", cameraState.isBallVisible())
+    # ballObs = cameraState.getBallObservation()
+    # print("(Camera Frame) Ball observations:")
+    # print(ballObs)
 
-    agentFrameState = bold.AgentState.getAgentFrameState()
-    print("(Agent Frame) Ball visible: ", agentFrameState.isBallVisible())
-    ballObs = agentFrameState.getBallObservation()
-    print("(Agent Frame) Ball observations:")
-    print(ballObs)
+    # agentFrameState = bold.AgentState.getAgentFrameState()
+    # print("(Agent Frame) Ball visible: ", agentFrameState.isBallVisible())
+    # ballObs = agentFrameState.getBallObservation()
+    # print("(Agent Frame) Ball observations:")
+    # print(ballObs)
 
-    ambulatorState = bold.AgentState.getAmbulatorState()
-    print(ambulatorState)
-    print("AmbulatorState): current phase")
-    print(ambulatorState.getCurrentPhase())
+    # ambulatorState = bold.AgentState.getAmbulatorState()
+    # print(ambulatorState)
+    # print("AmbulatorState): current phase")
+    # print(ambulatorState.getCurrentPhase())
 
-    print("=====")
+    # print("=====")
 
     #goalObs = cameraState.getGoalObservations()
     #print(goalObs)
@@ -51,6 +51,7 @@ def usage():
 
 
 def main(argv):
+    bold.log.writeInfo("=== Starting BoldPy Agent ===")
     configurationFile = "configuration-agent.json"
     bold.log.setMinLevelInfo()
 
