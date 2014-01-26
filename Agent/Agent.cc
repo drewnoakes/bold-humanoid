@@ -4,7 +4,7 @@ Agent::Agent()
   : d_isRunning(false),
     d_isStopRequested(false),
     d_teamNumber(Config::getStaticValue<int>("team-number")),
-    d_uniformNumber(Config::getStaticValue<int>("team-number")),
+    d_uniformNumber(Config::getStaticValue<int>("uniform-number")),
     d_cycleNumber(0)
 {
   ThreadUtil::setThreadId(ThreadId::ThinkLoop);
