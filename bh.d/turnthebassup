@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh turnthebassup N [M...]"
+    echo "          let the bassline take you higher"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    echo "turnthebassup requires one or more target robot numbers"
+    exit 1
+fi
+
+for i in ${@:1}
+do
+    echo turning the bass up on darwin$i
+    
+    ssh darwin@darwin$i "screen -S bass -d -m mplayer http://homepages.herts.ac.uk/~epics/boldhearts/DizzeeRascalBasslineJunkie.mp3"
+    
+    if [ $? -ne 0 ]; then
+        echo FAILED to turn up the base on darwin$i
+        res=1
+    fi
+done
+
+exit $res
