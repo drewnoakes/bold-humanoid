@@ -18,5 +18,5 @@ macro(add_typescript_target)
   endforeach()
 
 #  message("TypeScript output: ${_outFiles}")
-  add_custom_target(typescript DEPENDS ${_outFiles})
+  add_custom_target(typescript ALL DEPENDS ${_outFiles})
 endmacro(add_typescript_target)
