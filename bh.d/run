@@ -7,7 +7,8 @@ if [[ $1 == "help" ]] ; then
 fi
 
 if [[ $# -eq 1 ]] ; then
-    ssh darwin@darwin$2 "sudo ./bh run"
+    ssh darwin@darwin$1 "sudo ./bh run"
+    ssh darwin@darwin$1 "sudo pkill boldhumanoid"
     exit $?
 fi
 
@@ -16,6 +17,6 @@ if [[ $# -ne 0 ]] ; then
     exit 1
 fi
 
-./boldhumanoid
+sudo ./boldhumanoid
 
 exit $?

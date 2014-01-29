@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh run-py N"
+    echo "          run the boldhumanoid Python process on darwinN"
+    exit
+fi
+
+if [[ $# -eq 1 ]] ; then
+    ssh darwin@darwin$1 "sudo ./bh run-py"
+    ssh darwin@darwin$1 "sudo pkill -f boldhumanoid"
+    exit $?
+fi
+
+if [[ $# -ne 0 ]] ; then
+    echo "'run-py' task accepts no arguments"
+    exit 1
+fi
+
+sudo ./boldhumanoid.py
+
+exit $?
