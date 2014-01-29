@@ -22,12 +22,17 @@ class FSMTransition:
     def __init__(self, name, parentState = None):
         self.name = name
         self.condition = None
+
         self.onFire = None
         self.parentState = parentState
         self.childState = None
 
     def when(self, condition):
         self.condition = condition
+        return self
+
+    def whenTerminated(self):
+        self.condition = self.parentState.allOptionsTerminated
         return self
 
     def notify(self, callback):
@@ -54,10 +59,10 @@ class FSMState:
           when this action became active.
     """
 
-    def __init__(self, name, options = [], final = False):
+    def __init__(self, name, options = [], isFinal = False):
         self.name = name
         self.options = options
-        self.final = final
+        self.isFinal = isFinal
         self.transitions = []
         self.startTimeSeconds = 0
         self.onEnter = None
@@ -69,6 +74,8 @@ class FSMState:
     def allOptionsTerminated(self):
         """Return whether all options in this state report
         hasTerminated() != 0."""
+        for o in self.options:
+            bold.log.writeVerbose("FSMState.allOptionsTerminated", "Option: " + o.getID())
         return all(o.hasTerminated() for o in self.options)
 
     def newTransition(self, name = "", childState = None):
@@ -129,7 +136,7 @@ class FSMOption(bold.Option):
 
         Overrides bold.Option.hasTerminated.
         """
-        if not self.curState is None and self.curState.final:
+        if not self.curState is None and self.curState.isFinal:
             return 1.0
         else:
             return 0.0
