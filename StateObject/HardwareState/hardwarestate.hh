@@ -29,7 +29,6 @@ namespace bold
       d_motionCycleNumber(motionCycleNumber)
     {
       assert(d_mx28States.size() == 20);
-      assert(cm730State);
     }
 
     CM730Snapshot const& getCM730State() const
