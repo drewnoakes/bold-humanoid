@@ -8,13 +8,18 @@ namespace bold
   class AmbulatorState : public StateObject
   {
   public:
-    AmbulatorState(double targetX, double targetY, double targetTurn, std::shared_ptr<WalkModule> walker)
+    AmbulatorState(double targetX, double targetY, double targetTurn,
+                   double lastXDelta, double lastYDelta, double lastTurnDelta,
+                   std::shared_ptr<WalkModule> walker)
     : d_targetX(targetX),
       d_targetY(targetY),
       d_targetTurn(targetTurn),
       d_currentX(walker->X_MOVE_AMPLITUDE),
       d_currentY(walker->Y_MOVE_AMPLITUDE),
       d_currentTurn(walker->A_MOVE_AMPLITUDE),
+      d_lastXDelta(lastXDelta),
+      d_lastYDelta(lastYDelta),
+      d_lastTurnDelta(lastTurnDelta),
       d_isRunning(walker->isRunning()),
       d_currentPhase(walker->getCurrentPhase()),
       d_bodySwingY(walker->getBodySwingY()),
@@ -48,6 +53,9 @@ namespace bold
     double d_currentX;
     double d_currentY;
     double d_currentTurn;
+    double d_lastXDelta;
+    double d_lastYDelta;
+    double d_lastTurnDelta;
     bool d_isRunning;
     int d_currentPhase;
     double d_bodySwingY;

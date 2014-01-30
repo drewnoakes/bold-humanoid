@@ -4,10 +4,17 @@ void Ambulator::step()
 {
   assert(ThreadUtil::isThinkLoopThread());
 
+  double xAmpPrior = d_xAmp.getCurrent();
+  double yAmpPrior = d_yAmp.getCurrent();
+  double turnAmpPrior = d_turnAmp.getCurrent();
+
   double xAmp = d_xAmp.getNext();
   double yAmp = d_yAmp.getNext();
-
   double turnAmp = d_turnAmp.getNext();
+
+  double xAmpDelta = xAmp - xAmpPrior;
+  double yAmpDelta = yAmp - yAmpPrior;
+  double turnAmpDelta = turnAmp - turnAmpPrior;
 
   if (xAmp == 0 && yAmp == 0 && turnAmp == 0)
   {
@@ -46,5 +53,7 @@ void Ambulator::step()
   d_moveDirSet = false;
 
   AgentState::getInstance().set(make_shared<AmbulatorState const>(
-    d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(), d_walkModule));
+    d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(),
+    xAmpDelta, yAmpDelta, turnAmpDelta,
+    d_walkModule));
 }

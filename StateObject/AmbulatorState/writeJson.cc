@@ -25,6 +25,15 @@ void AmbulatorState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
+    writer.String("delta");
+    writer.StartArray();
+    {
+      writer.Double(d_lastXDelta);
+      writer.Double(d_lastYDelta);
+      writer.Double(d_lastTurnDelta);
+    }
+    writer.EndArray();
+
     writer.String("running").Bool(d_isRunning);
 
     writer.String("phase").Int(d_currentPhase);
