@@ -12,8 +12,8 @@ shared_ptr<GameState> GameStateReceiver::receive()
   static char data[MAX_LENGTH];
 
   // Process incoming game controller messages
-  sockaddr_in fromAddress;
-  int fromAddressLength;
+  sockaddr_in fromAddress = {};
+  int fromAddressLength = sizeof(sockaddr_in);
 
   // Process all pending messages, looping until done
   while (d_socket->receiveFrom(data, MAX_LENGTH, &fromAddress, &fromAddressLength) > 0)
