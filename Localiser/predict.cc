@@ -2,7 +2,7 @@
 
 void Localiser::predict(Eigen::Affine3d motion)
 {
-  // TODO implement prediciton step
+  // TODO implement prediction step
 //   d_filter->predict([](Vector3d state) -> Vector3d
 //   {
 //     AgentPosition pos(state);
