@@ -71,12 +71,7 @@ namespace bold
   class AgentState
   {
   public:
-    static void initialise()
-    {
-      // Only allow observers to be called back on specified threads
-      d_observersByThreadId[(int)ThreadId::MotionLoop] = std::vector<std::shared_ptr<StateObserver>>();
-      d_observersByThreadId[(int)ThreadId::ThinkLoop] = std::vector<std::shared_ptr<StateObserver>>();
-    }
+    static void initialise();
 
     template<typename T>
     static void registerStateType(std::string name)
@@ -92,15 +87,7 @@ namespace bold
       d_observersByTypeIndex[typeid(T)] = observers;
     }
 
-    static std::vector<std::shared_ptr<StateTracker>> getTrackers()
-    {
-      std::vector<std::shared_ptr<StateTracker>> stateObjects;
-      std::lock_guard<std::mutex> guard(d_mutex);
-      std::transform(d_trackerByTypeId.begin(), d_trackerByTypeId.end(),
-                     std::back_inserter(stateObjects),
-                     [](decltype(d_trackerByTypeId)::value_type const& pair) { return pair.second; });
-      return stateObjects;
-    }
+    static std::vector<std::shared_ptr<StateTracker>> getTrackers();
 
     static unsigned stateTypeCount() { return d_trackerByTypeId.size(); }
 

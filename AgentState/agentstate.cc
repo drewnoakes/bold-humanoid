@@ -11,6 +11,23 @@ unordered_map<type_index, vector<shared_ptr<StateObserver>>> AgentState::d_obser
 unordered_map<int, vector<shared_ptr<StateObserver>>> AgentState::d_observersByThreadId;
 unordered_map<type_index, shared_ptr<StateTracker>> AgentState::d_trackerByTypeId;
 
+void AgentState::initialise()
+{
+  // Only allow observers to be called back on specified threads
+  d_observersByThreadId[(int)ThreadId::MotionLoop] = vector<shared_ptr<StateObserver>>();
+  d_observersByThreadId[(int)ThreadId::ThinkLoop] = vector<shared_ptr<StateObserver>>();
+}
+
+vector<shared_ptr<StateTracker>> AgentState::getTrackers()
+{
+  vector<shared_ptr<StateTracker>> stateObjects;
+  lock_guard<mutex> guard(d_mutex);
+  transform(d_trackerByTypeId.begin(), d_trackerByTypeId.end(),
+                  back_inserter(stateObjects),
+                  [](decltype(d_trackerByTypeId)::value_type const& pair) { return pair.second; });
+  return stateObjects;
+}
+
 void AgentState::registerObserver(shared_ptr<StateObserver> observer)
 {
   assert(observer);
