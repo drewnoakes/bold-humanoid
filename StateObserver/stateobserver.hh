@@ -19,11 +19,7 @@ namespace bold
   class StateObserver
   {
   public:
-    StateObserver(std::string observerName, ThreadId callbackThread)
-    : d_types(),
-      d_callbackThreadId(callbackThread),
-      d_name(observerName)
-    {}
+    StateObserver(std::string observerName, ThreadId callbackThread);
 
     virtual ~StateObserver() {}
 
