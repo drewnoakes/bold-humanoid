@@ -22,12 +22,30 @@
     return ::testing::AssertionFailure() << "Actual: " << b.transpose() << ", expected: " << a.transpose() << " d = " << d;
 }
 
-::testing::AssertionResult VectorsEqual(Eigen::Vector2i const& a, Eigen::Vector2i const& b) {
+template<typename T, int N>
+::testing::AssertionResult VectorsEqual(Eigen::Matrix<T,N,1> const& a, Eigen::Matrix<T,N,1> const& b, const double delta = 0.00001) {
+  double d = (a-b).norm();
+  if (d < delta)
+    return ::testing::AssertionSuccess();
+  else
+    return ::testing::AssertionFailure() << "Actual: " << b.transpose() << ", expected: " << a.transpose() << " d = " << d;
+}
+
+template<int N>
+::testing::AssertionResult VectorsEqual(Eigen::Matrix<int,N,1> const& a, Eigen::Matrix<int,N,1> const& b) {
   double d = (a-b).norm();
   if (d == 0)
     return ::testing::AssertionSuccess();
   else
     return ::testing::AssertionFailure() << "Actual: " << b.transpose() << ", expected: " << a.transpose() << " d = " << d;
+}
+
+::testing::AssertionResult MatricesEqual(Eigen::MatrixXd const& a, Eigen::MatrixXd const& b, double delta = 0.000001) {
+  double d = (a-b).array().abs().sum();
+  if (d < delta)
+    return ::testing::AssertionSuccess();
+  else
+    return ::testing::AssertionFailure() << "Actual: " << std::endl << b << std::endl << "Expected: " << std::endl << a << std::endl << " d = " << d;
 }
 
 template<typename T, int dim>
