@@ -14,8 +14,8 @@ std::vector<std::shared_ptr<Option>> LookAtBall::runPolicy()
 
   static float r = 0.85;
 
-  unsigned w = d_cameraModel->imageWidth();
-  unsigned h = d_cameraModel->imageHeight();
+  static unsigned w = d_cameraModel->imageWidth();
+  static unsigned h = d_cameraModel->imageHeight();
 
   static Vector2d centerPx = Vector2d(w,h) / 2;
   static float happ = d_cameraModel->rangeHorizontalDegs() / w;
