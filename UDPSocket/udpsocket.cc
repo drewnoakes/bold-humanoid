@@ -168,6 +168,7 @@ int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress,
     }
 
     log::error("UDPSocket::receiveFrom") << "Error (" << errno << "): " << strerror(errno);
+    return -1;
   }
 
   assert(fromAddress->sin_family == AF_INET);
