@@ -6,7 +6,7 @@
 
 namespace bold
 {
-  class LinearSmoother : public virtual Smoother
+  class LinearSmoother : public Smoother
   {
   public:
     LinearSmoother(double initialValue, double delta)
