@@ -9,6 +9,8 @@ Agent::Agent()
 {
   ThreadUtil::setThreadId(ThreadId::ThinkLoop);
 
+  AgentState::initialise();
+
   if (Config::getStaticValue<bool>("use-speech"))
     d_voice = make_shared<Voice>(Config::getStaticValue<string>("hardware.voice"));
 
@@ -41,12 +43,12 @@ Agent::Agent()
   d_orientationTracker = make_shared<OrientationTracker>();
 
   // Register StateObservers
-  AgentState::getInstance().registerObserver(d_fallDetector);
-  AgentState::getInstance().registerObserver(d_gyroCalibrator);
-  AgentState::getInstance().registerObserver(d_healthAndSafety);
-  AgentState::getInstance().registerObserver(d_suicidePill);
-  AgentState::getInstance().registerObserver(d_odometer);
-  AgentState::getInstance().registerObserver(d_orientationTracker);
+  AgentState::registerObserver(d_fallDetector);
+  AgentState::registerObserver(d_gyroCalibrator);
+  AgentState::registerObserver(d_healthAndSafety);
+  AgentState::registerObserver(d_suicidePill);
+  AgentState::registerObserver(d_odometer);
+  AgentState::registerObserver(d_orientationTracker);
 
   // Connect to hardware subcontroller
   // TODO let the motion loop do this, and implement a simple, perfect, loopback when no hardware is available
@@ -56,7 +58,7 @@ Agent::Agent()
   {
     // No body exists, so provide a 'zero' position for all joints to
     // allow better debugging of code on non-robot machines.
-    AgentState::getInstance().set<BodyState>(BodyState::zero());
+    AgentState::set(BodyState::zero());
   }
 
   d_ambulator = make_shared<Ambulator>(d_walkModule),

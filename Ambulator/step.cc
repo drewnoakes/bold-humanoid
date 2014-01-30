@@ -52,7 +52,7 @@ void Ambulator::step()
   d_turnAngleSet = false;
   d_moveDirSet = false;
 
-  AgentState::getInstance().set(make_shared<AmbulatorState const>(
+  AgentState::set(make_shared<AmbulatorState const>(
     d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(),
     xAmpDelta, yAmpDelta, turnAmpDelta,
     d_walkModule));

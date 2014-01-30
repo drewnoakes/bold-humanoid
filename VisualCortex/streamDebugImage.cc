@@ -7,7 +7,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     return;
 
   // Only provide an image every N cycles
-  if (AgentState::getInstance().getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod->getValue() != 0)
+  if (AgentState::getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod->getValue() != 0)
     return;
 
   Mat debugImage;

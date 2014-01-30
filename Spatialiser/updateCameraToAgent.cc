@@ -68,5 +68,5 @@ void Spatialiser::updateCameraToAgent()
 
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
-  AgentState::getInstance().set(make_shared<AgentFrameState const>(ball, goals, lineSegments, visibleFieldPoly));
+  AgentState::set(make_shared<AgentFrameState const>(ball, goals, lineSegments, visibleFieldPoly));
 }

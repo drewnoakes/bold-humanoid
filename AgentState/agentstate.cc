@@ -3,6 +3,14 @@
 using namespace bold;
 using namespace std;
 
+sigc::signal<void, shared_ptr<StateTracker const>> AgentState::updated;
+
+mutex AgentState::d_mutex;
+
+unordered_map<type_index, vector<shared_ptr<StateObserver>>> AgentState::d_observersByTypeIndex;
+unordered_map<int, vector<shared_ptr<StateObserver>>> AgentState::d_observersByThreadId;
+unordered_map<type_index, shared_ptr<StateTracker>> AgentState::d_trackerByTypeId;
+
 void AgentState::registerObserver(shared_ptr<StateObserver> observer)
 {
   assert(observer);
@@ -10,7 +18,7 @@ void AgentState::registerObserver(shared_ptr<StateObserver> observer)
   // TODO STATE assert that we are in the configuration phase
 
   // Store the observer by each type is supports
-  for (std::type_index const& type : observer->getTypes())
+  for (type_index const& type : observer->getTypes())
   {
     auto it = d_observersByTypeIndex.find(type);
     assert(it != d_observersByTypeIndex.end() && "Tracker type must be registered");
@@ -23,7 +31,7 @@ void AgentState::registerObserver(shared_ptr<StateObserver> observer)
   it2->second.push_back(observer);
 }
 
-void AgentState::callbackObservers(ThreadId threadId, SequentialTimer& timer) const
+void AgentState::callbackObservers(ThreadId threadId, SequentialTimer& timer)
 {
   // TODO STATE assert that we are NOT in the configuration phase
 
@@ -42,7 +50,7 @@ void AgentState::callbackObservers(ThreadId threadId, SequentialTimer& timer) co
   }
 }
 
-std::shared_ptr<StateObject const> AgentState::getByTypeIndex(std::type_index const& typeIndex)
+shared_ptr<StateObject const> AgentState::getByTypeIndex(type_index const& typeIndex)
 {
   // TODO STATE if this is readonly at this point, do we need to lock? can trackers be added/removed dynamically? just assert we're not in configuration mode
   lock_guard<mutex> guard(d_mutex);

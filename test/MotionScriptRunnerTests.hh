@@ -41,7 +41,7 @@ TEST (DISABLED_MotionScriptRunnerTests, basics)
   ThreadUtil::setThreadId(ThreadId::MotionLoop);
 
   // TODO convenience method for populating a basic HardwareState object
-  AgentState::getInstance().registerStateType<HardwareState>("Hardware");
+  AgentState::registerStateType<HardwareState>("Hardware");
   auto cm730State = unique_ptr<CM730Snapshot const>(new CM730Snapshot());
   auto mx28States = vector<unique_ptr<MX28Snapshot const>>();
   for (int i = 0; i < 20; i++) {
@@ -49,7 +49,7 @@ TEST (DISABLED_MotionScriptRunnerTests, basics)
     mx28->presentPositionValue = 0;
     mx28States.push_back(move(mx28));
   }
-  AgentState::getInstance().set<HardwareState>(make_shared<HardwareState>(move(cm730State), move(mx28States), 0, 0, 0));
+  AgentState::set<HardwareState>(make_shared<HardwareState>(move(cm730State), move(mx28States), 0, 0, 0));
 
   auto stage = make_shared<MotionScript::Stage>();
 

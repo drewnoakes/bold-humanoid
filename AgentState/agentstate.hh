@@ -71,7 +71,7 @@ namespace bold
   class AgentState
   {
   public:
-    AgentState()
+    static void initialise()
     {
       // Only allow observers to be called back on specified threads
       d_observersByThreadId[(int)ThreadId::MotionLoop] = std::vector<std::shared_ptr<StateObserver>>();
@@ -79,7 +79,7 @@ namespace bold
     }
 
     template<typename T>
-    void registerStateType(std::string name)
+    static void registerStateType(std::string name)
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       log::verbose("AgentState::registerStateType") << "Registering state type: " << name;
@@ -92,7 +92,7 @@ namespace bold
       d_observersByTypeIndex[typeid(T)] = observers;
     }
 
-    std::vector<std::shared_ptr<StateTracker>> getTrackers() const
+    static std::vector<std::shared_ptr<StateTracker>> getTrackers()
     {
       std::vector<std::shared_ptr<StateTracker>> stateObjects;
       std::lock_guard<std::mutex> guard(d_mutex);
@@ -102,7 +102,7 @@ namespace bold
       return stateObjects;
     }
 
-    unsigned stateTypeCount() const { return d_trackerByTypeId.size(); }
+    static unsigned stateTypeCount() { return d_trackerByTypeId.size(); }
 
     /** Fires when a state object is updated.
      *
@@ -113,14 +113,14 @@ namespace bold
      *
      * TODO avoid unbounded holding of d_mutex by getting rid of this signal and using a queue for the DataStreamer thread to process (?)
      */
-    sigc::signal<void, std::shared_ptr<StateTracker const>> updated;
+    static sigc::signal<void, std::shared_ptr<StateTracker const>> updated;
 
-    void registerObserver(std::shared_ptr<StateObserver> observer);
+    static void registerObserver(std::shared_ptr<StateObserver> observer);
 
-    void callbackObservers(ThreadId threadId, SequentialTimer& timer) const;
+    static void callbackObservers(ThreadId threadId, SequentialTimer& timer);
 
     template <typename T>
-    void set(std::shared_ptr<T const> state)
+    static void set(std::shared_ptr<T const> state)
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       assert(state);
@@ -155,11 +155,11 @@ namespace bold
     static std::shared_ptr<T const> get()
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
-      return AgentState::getInstance().getTrackerState<T>();
+      return AgentState::getTrackerState<T>();
     }
 
     template<typename T>
-    std::shared_ptr<T const> getTrackerState() const
+    static std::shared_ptr<T const> getTrackerState()
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       std::lock_guard<std::mutex> guard(d_mutex);
@@ -169,10 +169,10 @@ namespace bold
       return tracker->state<T>();
     }
 
-    std::shared_ptr<StateObject const> getByTypeIndex(std::type_index const& typeIndex);
+    static std::shared_ptr<StateObject const> getByTypeIndex(std::type_index const& typeIndex);
 
     template<typename T>
-    std::shared_ptr<StateTracker> getTracker() const
+    static std::shared_ptr<StateTracker> getTracker()
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       std::lock_guard<std::mutex> guard(d_mutex);
@@ -182,19 +182,13 @@ namespace bold
       return tracker;
     }
 
-    static AgentState& getInstance();
-
   private:
-    mutable std::mutex d_mutex;
+    AgentState() = delete;
 
-    std::unordered_map<std::type_index, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeIndex;
-    std::unordered_map<int, std::vector<std::shared_ptr<StateObserver>>> d_observersByThreadId;
-    std::unordered_map<std::type_index, std::shared_ptr<StateTracker>> d_trackerByTypeId;
+    static std::mutex d_mutex;
+
+    static std::unordered_map<std::type_index, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeIndex;
+    static std::unordered_map<int, std::vector<std::shared_ptr<StateObserver>>> d_observersByThreadId;
+    static std::unordered_map<std::type_index, std::shared_ptr<StateTracker>> d_trackerByTypeId;
   };
-
-  inline AgentState& AgentState::getInstance()
-  {
-    static AgentState instance;
-    return instance;
-  }
 }

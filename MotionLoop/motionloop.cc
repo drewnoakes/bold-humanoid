@@ -173,7 +173,7 @@ void *MotionLoop::threadMethod(void *param)
     t.timeEvent("Sleep");
 
     // Set timing data for the motion cycle
-    AgentState::getInstance().set(make_shared<MotionTimingState const>(t.flush(), loop->d_cycleNumber));
+    AgentState::set(make_shared<MotionTimingState const>(t.flush(), loop->d_cycleNumber));
   }
 
   log::verbose("MotionLoop::threadMethod") << "Exiting";
@@ -280,7 +280,7 @@ void MotionLoop::step(SequentialTimer& t)
       // TODO only create if someone is listening to this in the debugger
       if (dirtyDeviceCount > 0)
       {
-        AgentState::getInstance().set(make_shared<BodyControlState const>(d_bodyControl, d_cycleNumber));
+        AgentState::set(make_shared<BodyControlState const>(d_bodyControl, d_cycleNumber));
 
         t.timeEvent("Set BodyControlState");
       }
@@ -344,10 +344,10 @@ void MotionLoop::step(SequentialTimer& t)
   auto txBytes = d_cm730->getTransmittedByteCount();
 
   auto hw = make_shared<HardwareState const>(move(cm730Snapshot), move(mx28Snapshots), rxBytes, txBytes, d_cycleNumber);
-  AgentState::getInstance().set(hw);
+  AgentState::set(hw);
   t.timeEvent("Update HardwareState");
 
-  AgentState::getInstance().set(make_shared<BodyState const>(hw, d_cycleNumber));
+  AgentState::set(make_shared<BodyState const>(hw, d_cycleNumber));
   t.timeEvent("Update BodyState");
 
   if (!d_readYet)
@@ -357,7 +357,7 @@ void MotionLoop::step(SequentialTimer& t)
   }
 
   t.enter("Observers");
-  AgentState::getInstance().callbackObservers(ThreadId::MotionLoop, t);
+  AgentState::callbackObservers(ThreadId::MotionLoop, t);
   t.exit();
 }
 
@@ -377,5 +377,5 @@ void MotionLoop::updateStaticHardwareState()
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     mx28States.push_back(make_shared<StaticMX28State>(d_staticBulkRead->getBulkReadData(jointId), jointId));
 
-  AgentState::getInstance().set(make_shared<StaticHardwareState const>(cm730State, mx28States));
+  AgentState::set(make_shared<StaticHardwareState const>(cm730State, mx28States));
 }

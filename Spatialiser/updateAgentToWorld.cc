@@ -54,5 +54,5 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   }
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
-  AgentState::getInstance().set(make_shared<WorldFrameState const>(ball, goals, lineSegments, visibleFieldPoly, position));
+  AgentState::set(make_shared<WorldFrameState const>(ball, goals, lineSegments, visibleFieldPoly, position));
 }

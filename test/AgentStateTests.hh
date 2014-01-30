@@ -20,7 +20,7 @@ class AgentStateTests : public ::testing::Test
 protected:
   static void SetUpTestCase()
   {
-    AgentState::getInstance().registerStateType<MotionTimingState>("MotionTiming");
+    AgentState::registerStateType<MotionTimingState>("MotionTiming");
   }
 };
 
@@ -35,7 +35,7 @@ TEST_F (AgentStateTests, threadedAccess)
       auto eventTimings = make_shared<vector<EventTiming>>();
       eventTimings->push_back(make_pair(0.1, "Event 1"));
       eventTimings->push_back(make_pair(0.2, "Event 2"));
-      AgentState::getInstance().set(make_shared<MotionTimingState const>(eventTimings, 1));
+      AgentState::set(make_shared<MotionTimingState const>(eventTimings, 1));
     }
   });
 
@@ -66,7 +66,7 @@ TEST_F (AgentStateTests, setAndGet)
   auto eventTimings = make_shared<vector<EventTiming>>();
   eventTimings->push_back(make_pair(0.1, "Event 1"));
   eventTimings->push_back(make_pair(0.2, "Event 2"));
-  AgentState::getInstance().set(make_shared<MotionTimingState const>(eventTimings, 2));
+  AgentState::set(make_shared<MotionTimingState const>(eventTimings, 2));
 
   shared_ptr<MotionTimingState const> state = AgentState::get<MotionTimingState>();
 

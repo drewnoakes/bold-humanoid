@@ -9,5 +9,5 @@ void Localiser::updateStateObject()
   particles << states, weights.transpose();
   auto const& particleState = std::make_shared<ParticleState const>(particles);
 
-  AgentState::getInstance().set(particleState);
+  AgentState::set(particleState);
 }

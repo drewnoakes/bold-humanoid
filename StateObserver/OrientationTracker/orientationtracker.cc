@@ -46,7 +46,7 @@ void OrientationTracker::observeTyped(shared_ptr<HardwareState const> state, Seq
 {
   filterUpdate(state->getCM730State().gyro, state->getCM730State().acc);
 
-  AgentState::getInstance().set(shared_ptr<OrientationState const>(new OrientationState(getQuaternion())));
+  AgentState::set(shared_ptr<OrientationState const>(new OrientationState(getQuaternion())));
 }
 
 void OrientationTracker::filterUpdate(Vector3d const& gyro, Vector3d const& acc)

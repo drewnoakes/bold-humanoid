@@ -12,7 +12,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   // We have three special protocols: HTTP-only, Camera and Control.
   // These are followed by N other protocols, one per type of state in the system
 
-  unsigned protocolCount = 3 + AgentState::getInstance().stateTypeCount() + 1;
+  unsigned protocolCount = 3 + AgentState::stateTypeCount() + 1;
 
   d_protocols = new libwebsocket_protocols[protocolCount];
 
@@ -26,7 +26,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 
   // One protocol per state
   unsigned protocolIndex = 3;
-  for (shared_ptr<StateTracker> stateTracker : AgentState::getInstance().getTrackers())
+  for (shared_ptr<StateTracker> stateTracker : AgentState::getTrackers())
   {
     d_protocols[protocolIndex] = { stateTracker->name().c_str(), DataStreamer::_callback_state, sizeof(JsonSession), 0, 0 };
     stateTracker->websocketProtocol = &d_protocols[protocolIndex];
@@ -57,7 +57,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   if (hasWebSockets)
   {
     // Listen for StateObject changes and publish them via websockets
-    AgentState::getInstance().updated.connect(
+    AgentState::updated.connect(
       [this](shared_ptr<StateTracker const> tracker)
       {
         // TODO this assertion will not be met! we may be called from the motion thread... need a better approach...

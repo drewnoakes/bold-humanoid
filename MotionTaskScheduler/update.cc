@@ -114,7 +114,7 @@ void MotionTaskScheduler::update()
   if (legTask  && legTask->isCommitRequested())  legTask->setCommitted();
   
   // Generate motion task state
-  AgentState::getInstance().set(make_shared<MotionTaskState const>(moduleJointSelection, headTasks, armTasks, legTasks));
+  AgentState::set(make_shared<MotionTaskState const>(moduleJointSelection, headTasks, armTasks, legTasks));
   
   // Clear out non-committed tasks as they should only be presented to the
   // motion loop once. As the motion loop runs in 8ms vs the think loop at 30ms,

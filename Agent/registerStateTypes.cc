@@ -2,21 +2,21 @@
 
 void Agent::registerStateTypes()
 {
-  AgentState::getInstance().registerStateType<AgentFrameState>("AgentFrame");
-  AgentState::getInstance().registerStateType<AmbulatorState>("Ambulator");
-  AgentState::getInstance().registerStateType<BodyState>("Body");
-  AgentState::getInstance().registerStateType<BodyControlState>("BodyControl");
-  AgentState::getInstance().registerStateType<CameraFrameState>("CameraFrame");
-  AgentState::getInstance().registerStateType<DebugState>("Debug");
-  AgentState::getInstance().registerStateType<MotionTimingState>("MotionTiming");
-  AgentState::getInstance().registerStateType<LabelCountState>("LabelCount");
-  AgentState::getInstance().registerStateType<ThinkTimingState>("ThinkTiming");
-  AgentState::getInstance().registerStateType<GameState>("Game");
-  AgentState::getInstance().registerStateType<HardwareState>("Hardware");
-  AgentState::getInstance().registerStateType<MotionTaskState>("MotionTask");
-  AgentState::getInstance().registerStateType<OptionTreeState>("OptionTree");
-  AgentState::getInstance().registerStateType<OrientationState>("Orientation");
-  AgentState::getInstance().registerStateType<ParticleState>("Particle");
-  AgentState::getInstance().registerStateType<StaticHardwareState>("StaticHardware");
-  AgentState::getInstance().registerStateType<WorldFrameState>("WorldFrame");
+  AgentState::registerStateType<AgentFrameState>("AgentFrame");
+  AgentState::registerStateType<AmbulatorState>("Ambulator");
+  AgentState::registerStateType<BodyState>("Body");
+  AgentState::registerStateType<BodyControlState>("BodyControl");
+  AgentState::registerStateType<CameraFrameState>("CameraFrame");
+  AgentState::registerStateType<DebugState>("Debug");
+  AgentState::registerStateType<MotionTimingState>("MotionTiming");
+  AgentState::registerStateType<LabelCountState>("LabelCount");
+  AgentState::registerStateType<ThinkTimingState>("ThinkTiming");
+  AgentState::registerStateType<GameState>("Game");
+  AgentState::registerStateType<HardwareState>("Hardware");
+  AgentState::registerStateType<MotionTaskState>("MotionTask");
+  AgentState::registerStateType<OptionTreeState>("OptionTree");
+  AgentState::registerStateType<OrientationState>("Orientation");
+  AgentState::registerStateType<ParticleState>("Particle");
+  AgentState::registerStateType<StaticHardwareState>("StaticHardware");
+  AgentState::registerStateType<WorldFrameState>("WorldFrame");
 }

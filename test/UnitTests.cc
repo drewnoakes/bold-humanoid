@@ -76,6 +76,8 @@ int main(int argc, char **argv)
 
   log::minLevel = LogLevel::Warning;
 
+  AgentState::initialise();
+
   for (int i = 0; i < argc; i++)
   {
     if (strcmp("-v", argv[i]) == 0)
