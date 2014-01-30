@@ -1,0 +1,8 @@
+_bh_show()
+{
+    local cur
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    COMPREPLY=($( compgen -W "$(for x in ~/bold-humanoid/bh.d/*; do echo $(basename ${x%}); done)" -- $cur ) )
+}
+complete -F _bh_show bh
