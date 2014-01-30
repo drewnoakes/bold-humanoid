@@ -32,7 +32,7 @@ void Agent::initCamera()
   log::info("Agent::initCamera") << "  Bytes per line : " << pixelFormat.bytesPerLine;
   log::info("Agent::initCamera") << "  Bytes total    : " << pixelFormat.imageByteSize;
 
-  d_camera->logFrameIntervalDetails();
+//d_camera->logFrameIntervalDetails();
 
   d_camera->startCapture();
 }
