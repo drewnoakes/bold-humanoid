@@ -40,10 +40,10 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   auto fine = Config::getSetting<bool>("head-module.move-fine");
 
   // Controls
-  Config::addAction("head-module.move-left", "&blacktriangleleft;",  [this,fine]() { fine->getValue() ? moveByDeltaDegs( 0.5, 0.0) : moveByDeltaDegs( 5, 0); });
-  Config::addAction("head-module.move-up",   "&blacktriangle;",      [this,fine]() { fine->getValue() ? moveByDeltaDegs( 0.0, 0.5) : moveByDeltaDegs( 0, 5); });
-  Config::addAction("head-module.move-down", "&blacktriangledown;",  [this,fine]() { fine->getValue() ? moveByDeltaDegs( 0.0,-0.5) : moveByDeltaDegs( 0,-5); });
-  Config::addAction("head-module.move-right","&blacktriangleright;", [this,fine]() { fine->getValue() ? moveByDeltaDegs(-0.5, 0.0) : moveByDeltaDegs(-5, 0); });
+  Config::addAction("head-module.move-left", "&blacktriangleleft;",  [this,fine]() { fine->getValue() ? moveByDeltaDegs( 1, 0) : moveByDeltaDegs( 5, 0); });
+  Config::addAction("head-module.move-up",   "&blacktriangle;",      [this,fine]() { fine->getValue() ? moveByDeltaDegs( 0, 1) : moveByDeltaDegs( 0, 5); });
+  Config::addAction("head-module.move-down", "&blacktriangledown;",  [this,fine]() { fine->getValue() ? moveByDeltaDegs( 0,-1) : moveByDeltaDegs( 0,-5); });
+  Config::addAction("head-module.move-right","&blacktriangleright;", [this,fine]() { fine->getValue() ? moveByDeltaDegs(-1, 0) : moveByDeltaDegs(-5, 0); });
   Config::addAction("head-module.move-home", "home",                 [this]() { moveToHome(); });
   Config::addAction("head-module.move-zero", "zero",                 [this]() { moveToDegs(0, 0); });
 }
