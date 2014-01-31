@@ -173,6 +173,14 @@ namespace bold
     static constexpr double RATIO_VALUE2RPS = (1600.0*(M_PI/180.0)) / 512.0;
     static constexpr double RATIO_VALUE2GS = 4.0 / 512.0;
 
+    static unsigned flipImuValue(unsigned value)
+    {
+      assert(value <= 1023);
+      if (value == 0)
+        return 1023;
+      return 1023 - value + 1;
+    }
+
     static double gyroValueToDps(unsigned value) { return ((int)value - 512)*RATIO_VALUE2DPS; }
     static double gyroValueToRps(unsigned value) { return ((int)value - 512)*RATIO_VALUE2RPS; }
     static double accValueToGs(unsigned value)   { return ((int)value - 512)*RATIO_VALUE2GS; }

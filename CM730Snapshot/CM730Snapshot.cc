@@ -37,9 +37,11 @@ CM730Snapshot::CM730Snapshot(BulkReadTable const& data)
   isStartButtonPressed = (buttons & 0x2) != 0;
 
   // TODO when IMU calibration data available, use it here
-  auto gyroZ = data.readWord(CM730::P_GYRO_Z_L);
-  auto gyroY = data.readWord(CM730::P_GYRO_Y_L);
-  auto gyroX = data.readWord(CM730::P_GYRO_X_L);
+  // NOTE the gyro uses a different set of axes than the agent frame,
+  //      so we swap and flip the X & Y axes here to make them identical.
+  auto gyroX = data.readWord(CM730::P_GYRO_Y_L);                      // X =  Y
+  auto gyroY = CM730::flipImuValue(data.readWord(CM730::P_GYRO_X_L)); // Y = -X
+  auto gyroZ = data.readWord(CM730::P_GYRO_Z_L);                      // Z =  Z
   gyroRaw = Vector3i(gyroX, gyroY, gyroZ);
   gyro = Vector3d(
     CM730::gyroValueToRps(gyroX),
@@ -48,9 +50,11 @@ CM730Snapshot::CM730Snapshot(BulkReadTable const& data)
   );
 
   // TODO when IMU calibration data available, use it here
-  auto accX = data.readWord(CM730::P_ACCEL_X_L);
-  auto accY = data.readWord(CM730::P_ACCEL_Y_L);
-  auto accZ = data.readWord(CM730::P_ACCEL_Z_L);
+  // NOTE the accelerometer uses a different set of axes than the agent frame,
+  //      so we flip the X & Y axes here to make them identical.
+  auto accX = CM730::flipImuValue(data.readWord(CM730::P_ACCEL_X_L)); // X = -X
+  auto accY = CM730::flipImuValue(data.readWord(CM730::P_ACCEL_Y_L)); // Y = -Y
+  auto accZ = data.readWord(CM730::P_ACCEL_Z_L);                      // Z =  Z
   accRaw = Vector3i(accX, accY, accZ);
   acc = Vector3d(
     CM730::accValueToGs(accX),

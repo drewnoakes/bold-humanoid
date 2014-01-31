@@ -16,3 +16,10 @@ TEST (CM730Tests, conversions)
   EXPECT_EQ( 0x5764, CM730::color2Value(0x20, 0xD8, 0xA8) ); // 10101 11011 00100
   EXPECT_EQ( 0x5764, CM730::color2Value(0x21, 0xD9, 0xA9) ); // same as prior, but with diff in LSB which is lost
 }
+
+TEST (CM730Tests, flipImuValue)
+{
+  EXPECT_EQ( 512,  CM730::flipImuValue(512) );
+  EXPECT_EQ( 1023, CM730::flipImuValue(0) );
+  EXPECT_EQ( 1,    CM730::flipImuValue(1023) );
+}

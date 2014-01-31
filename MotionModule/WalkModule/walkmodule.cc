@@ -494,8 +494,8 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 
     // TODO review the gyro axes labels
     // TODO need to balance these values around the midpoint, taking calibration into account
-    double rlGyroErr = gryoRaw.x();
-    double fbGyroErr = gryoRaw.y();
+    double rlGyroErr = -gryoRaw.y();
+    double fbGyroErr = gryoRaw.x();
 
     d_outValue[1]  += (int)(dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // R_HIP_ROLL
     d_outValue[7]  += (int)(dir[7] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // L_HIP_ROLL

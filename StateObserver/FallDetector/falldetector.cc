@@ -11,8 +11,8 @@ FallDetector::FallDetector()
 : TypedStateObserver<HardwareState>("Fall detector", ThreadId::MotionLoop),
   d_windowSize(30),
   d_fbAvgValue(d_windowSize),
-  d_forwardLimitValue(390),
-  d_backwardLimitValue(580),
+  d_forwardLimitValue(634),
+  d_backwardLimitValue(444),
   d_fallenState(FallState::STANDUP)
 {}
 
@@ -29,8 +29,8 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> hardwareSta
   {
     // Update our estimate of whether we've fallen or not
     d_fallenState
-      = avg < d_forwardLimitValue ? FallState::FORWARD
-      : avg > d_backwardLimitValue ? FallState::BACKWARD
+      = avg > d_forwardLimitValue ? FallState::FORWARD
+      : avg < d_backwardLimitValue ? FallState::BACKWARD
       : FallState::STANDUP;
   }
 }
