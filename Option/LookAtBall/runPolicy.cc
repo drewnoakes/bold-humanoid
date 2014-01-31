@@ -27,13 +27,22 @@ std::vector<std::shared_ptr<Option>> LookAtBall::runPolicy()
   offset.y() *= vapp; // pixel per angle
 
   float maxOffset = 20;
+  float minOffset = 2;
+
   offset = offset.cwiseMin(Vector2d(maxOffset,maxOffset)).cwiseMax(Vector2d(-maxOffset,-maxOffset));
 
 //   cout << "offset: " << offset.transpose() << endl;
-  if (offset.norm() < 2)
-    offset = Vector2d(0,0);
-
-  d_headModule->moveTracking(offset.x(), offset.y());
+  
+  if (offset.norm() < minOffset)
+  {
+    // The head is roughly looking at the ball so don't bother moving and
+    // reset any accumulated state in the tracking logic (PID build up.)
+    d_headModule->initTracking();
+  }
+  else
+  {
+    d_headModule->moveTracking(offset.x(), offset.y());
+  }
 
   return std::vector<std::shared_ptr<Option>>();
 }
