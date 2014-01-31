@@ -37,7 +37,9 @@ do
     
     rsync -zrP libwebsockets/lib/libwebsockets.so.4.0.0 \
         darwin@darwin$i:lib/
-    
+
+    ssh darwin@darwin$i "sudo ldconfig /home/darwin/lib"
+
     if [ $? -ne 0 ]; then
         echo FAILED to deploy to darwin$i
         res=1
