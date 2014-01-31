@@ -126,6 +126,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // OPTIONS
 
   auto sit = tree->addOption(make_shared<MotionScriptOption>("sitDownScript", motionScriptModule, "./motionscripts/sit-down.json"));
+  auto sitArmsBack = tree->addOption(make_shared<MotionScriptOption>("sitDownScript", motionScriptModule, "./motionscripts/sit-down-arms-back.json"));
   auto standUp = tree->addOption(make_shared<MotionScriptOption>("standUpScript", motionScriptModule, "./motionscripts/stand-ready.json"));
   auto forwardGetUp = tree->addOption(make_shared<MotionScriptOption>("forwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-front.json"));
   auto backwardGetUp = tree->addOption(make_shared<MotionScriptOption>("backwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-back.json"));
@@ -168,7 +169,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto forwardGetUpState = winFsm->newState("forwardGetUp", {forwardGetUp});
   auto backwardGetUpState = winFsm->newState("backwardGetUp", {backwardGetUp});
   auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
-  auto sitForShutdownState = winFsm->newState("sitForShutdown", {sit});
+  auto sitForShutdownState = winFsm->newState("sitForShutdown", {sitArmsBack});
   auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
 
   readyState->onEnter = [debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); };
