@@ -19,7 +19,7 @@ Odometer::Odometer(shared_ptr<WalkModule> walkModule)
   assert(walkModule);
 }
 
-void Odometer::observeTyped(shared_ptr<BodyState const> state, SequentialTimer& timer)
+void Odometer::observeTyped(shared_ptr<BodyState const> const& state, SequentialTimer& timer)
 {
   assert(state);
 

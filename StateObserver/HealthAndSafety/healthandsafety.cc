@@ -18,7 +18,7 @@ HealthAndSafety::HealthAndSafety(std::shared_ptr<Voice> voice)
   d_temperatureThreshold(Config::getStaticValue<int>("health-and-safety.temperature.high-threshold"))
 {}
 
-void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> state, SequentialTimer& timer)
+void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state, SequentialTimer& timer)
 {
   float voltage = d_voltageMovingAverage.next(state->getCM730State().voltage);
 

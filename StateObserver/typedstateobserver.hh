@@ -38,7 +38,7 @@ namespace bold
       observeTyped(typedState, timer);
     }
 
-    virtual void observeTyped(std::shared_ptr<TState const> state, SequentialTimer& timer) = 0;
+    virtual void observeTyped(std::shared_ptr<TState const> const& state, SequentialTimer& timer) = 0;
 
   private:
     std::type_index d_typeIndex;

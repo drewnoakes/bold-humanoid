@@ -20,7 +20,7 @@ namespace bold
     void reset();
 
   private:
-    void observeTyped(std::shared_ptr<HardwareState const> state, SequentialTimer& timer) override;
+    void observeTyped(std::shared_ptr<HardwareState const> const& state, SequentialTimer& timer) override;
 
     void filterUpdate(Eigen::Vector3d const& gyro, Eigen::Vector3d const& acc);
 

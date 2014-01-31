@@ -21,7 +21,7 @@ SuicidePill::SuicidePill(Agent* agent, std::shared_ptr<Debugger> debugger)
   assert(debugger);
 }
 
-void SuicidePill::observeTyped(shared_ptr<HardwareState const> state, SequentialTimer& timer)
+void SuicidePill::observeTyped(shared_ptr<HardwareState const> const& state, SequentialTimer& timer)
 {
   if (d_exited)
     return;

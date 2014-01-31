@@ -20,7 +20,7 @@ namespace bold
   public:
     FallDetector();
 
-    void observeTyped(std::shared_ptr<HardwareState const> hardwareState, SequentialTimer& timer) override;
+    void observeTyped(std::shared_ptr<HardwareState const> const& hardwareState, SequentialTimer& timer) override;
 
     FallState getFallenState() const { return d_fallenState; }
 

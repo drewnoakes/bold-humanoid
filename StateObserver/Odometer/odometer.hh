@@ -15,7 +15,7 @@ namespace bold
     Eigen::Vector3d flush();
 
   private:
-    void observeTyped(std::shared_ptr<BodyState const> state, SequentialTimer& timer) override;
+    void observeTyped(std::shared_ptr<BodyState const> const& state, SequentialTimer& timer) override;
 
     std::shared_ptr<WalkModule> const d_walkModule;
     std::shared_ptr<BodyState const> d_lastBodyState;

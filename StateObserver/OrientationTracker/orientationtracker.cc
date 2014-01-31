@@ -42,7 +42,7 @@ Quaterniond OrientationTracker::getQuaternion() const
   return Quaterniond(SEq_1, SEq_2, SEq_3, SEq_4);
 }
 
-void OrientationTracker::observeTyped(shared_ptr<HardwareState const> state, SequentialTimer& timer)
+void OrientationTracker::observeTyped(shared_ptr<HardwareState const> const& state, SequentialTimer& timer)
 {
   filterUpdate(state->getCM730State().gyro, state->getCM730State().acc);
 

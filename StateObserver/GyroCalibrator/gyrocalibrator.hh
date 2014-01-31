@@ -32,7 +32,7 @@ namespace bold
   public:
     GyroCalibrator();
 
-    void observeTyped(std::shared_ptr<HardwareState const> hardwareState, SequentialTimer& timer) override;
+    void observeTyped(std::shared_ptr<HardwareState const> const& hardwareState, SequentialTimer& timer) override;
 
     void reset();
 
