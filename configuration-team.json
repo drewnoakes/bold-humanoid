@@ -197,6 +197,11 @@
       "horiz-duration": 2.3,
       "vert-duration": 0.2
     },
+    "look-at-ball": {
+      "gain": 0.85,
+      "offset-min": 2.0,
+      "offset-max": 20.0
+    },
     "look-at-feet": {
       "head-pan-degs": 0,
       "head-tilt-degs": -67.5

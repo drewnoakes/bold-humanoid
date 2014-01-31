@@ -201,8 +201,9 @@
       "head-tilt-degs": { "type": "double", "default": -67.5 }
     },
     "look-at-ball": {
-      "gain": { "type": "double", "default": 0.85 },
-      "max-offset-deg": { "type": "double", "default": 5.0 }
+      "gain":       { "type": "double", "default": 0.85 },
+      "offset-min": { "type": "double", "default": 5.0 },
+      "offset-max": { "type": "double", "default": 20.0 }
     }
   },
   "health-and-safety": {

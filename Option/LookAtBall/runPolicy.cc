@@ -10,10 +10,6 @@ std::vector<std::shared_ptr<Option>> LookAtBall::runPolicy()
     return std::vector<std::shared_ptr<Option>>();
   }
 
-  Vector2d ballPos = ballObs->head<2>();
-
-  static float r = 0.85;
-
   static unsigned w = d_cameraModel->imageWidth();
   static unsigned h = d_cameraModel->imageHeight();
 
@@ -21,18 +17,21 @@ std::vector<std::shared_ptr<Option>> LookAtBall::runPolicy()
   static float happ = d_cameraModel->rangeHorizontalDegs() / w;
   static float vapp = d_cameraModel->rangeVerticalDegs() / h;
 
+  Vector2d ballPos = ballObs->head<2>();
+
+  float r = d_gain->getValue();
   Vector2d offset = (ballPos - centerPx) * r;
 
   offset.x() *= happ; // pixel per angle
   offset.y() *= vapp; // pixel per angle
 
-  float maxOffset = 20;
-  float minOffset = 2;
+  float maxOffset = d_maxOffset->getValue();
+  float minOffset = d_minOffset->getValue();
 
   offset = offset.cwiseMin(Vector2d(maxOffset,maxOffset)).cwiseMax(Vector2d(-maxOffset,-maxOffset));
 
 //   cout << "offset: " << offset.transpose() << endl;
-  
+
   if (offset.norm() < minOffset)
   {
     // The head is roughly looking at the ball so don't bother moving and
