@@ -29,6 +29,8 @@ void Ambulator::step()
     d_walkModule->Y_MOVE_AMPLITUDE = yAmp;
     d_walkModule->A_MOVE_AMPLITUDE = turnAmp;
 
+    // TODO allow swappable implementations of a WalkPitchPosture, and calculate every cycle on the motion thread
+
     // TODO this doesn't support walking backwards (-ve x)
     // TODO examine using the acceleration (delta xAmp) as a input signal
 
