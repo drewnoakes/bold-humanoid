@@ -4,14 +4,7 @@ void Localiser::update()
 {
   auto const& agentFrame = AgentState::get<AgentFrameState>();
 
-  d_filter->predict([this](Vector3d state) -> Vector3d
-  {
-    return Vector3d(
-      state[0] + d_positionErrorRng(),
-      state[1] + d_positionErrorRng(),
-      state[2] + d_angleErrorRng()
-    );
-  });
+  predict();
 
   JointObservationModel<3> jointModel;
 
@@ -101,7 +94,7 @@ void Localiser::update()
       }
       return scoreSum / agentFrame->getObservedLineSegments().size();
     };
-    jointModel.addModel(lineModel);
+    //jointModel.addModel(lineModel);
   }
   
   d_filter->update(jointModel);

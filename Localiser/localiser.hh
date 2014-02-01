@@ -18,18 +18,20 @@ namespace bold
   public:
     Localiser(std::shared_ptr<FieldMap> fieldMap);
 
-    void predict(Eigen::Affine3d motion);
-
     void update();
 
     AgentPosition position() const { return d_pos; }
     AgentPosition smoothedPosition() const { return d_smoothedPos; }
 
   private:
+    void predict();
     void updateSmoothedPos();
     void updateStateObject();
 
-    ParticleFilter3::State createRandomState();
+    ParticleFilter<3,50>::State createRandomState();
+
+    Eigen::Vector3d d_lastTranslation;
+    Eigen::Quaterniond d_lastQuaternion;
 
     AgentPosition d_pos;
     AgentPosition d_smoothedPos;
@@ -42,7 +44,7 @@ namespace bold
     Setting<bool>* d_useLines;
     Setting<int>* d_minGoalsNeeded;
 
-    std::shared_ptr<ParticleFilter3> d_filter;
+    std::shared_ptr<ParticleFilter<3,50>> d_filter;
     std::function<double()> d_fieldXRng;
     std::function<double()> d_fieldYRng;
     std::function<double()> d_thetaRng;

@@ -1,7 +1,9 @@
 #include "localiser.ih"
 
 Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
-  : d_pos(0, 0, 0),
+  : d_lastTranslation(0, 0, 0),
+    d_lastQuaternion(0, 0, 0,0),
+    d_pos(0, 0, 0),
     d_smoothedPos(0, 0, 0),
     d_avgPos(1),
     d_fieldMap(fieldMap)
@@ -32,7 +34,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
   d_positionErrorRng = Math::createNormalRng(0, positionError->getValue());
   d_angleErrorRng    = Math::createNormalRng(0, Math::degToRad(angleErrorDegs->getValue()));
 
-  d_filter = make_shared<ParticleFilter3>();
+  d_filter = make_shared<ParticleFilter<3,50>>();
   Config::addAction("localiser.randomize", "Randomize", [this](){ d_filter->randomise(); });
   d_filter->setStateGenerator(
     [this]() {

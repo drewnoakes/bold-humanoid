@@ -10,6 +10,8 @@
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/ParticleState/particlestate.hh"
+#include "../StateObject/OdometryState/odometrystate.hh"
+#include "../StateObject/OrientationState/orientationstate.hh"
 #include "../filters/ObservationModel/JointObservationModel/jointobservationmodel.hh"
 
 using namespace std;

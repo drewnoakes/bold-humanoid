@@ -9,9 +9,15 @@ namespace bold
   {
   public:
     AgentPosition(double x, double y, double theta)
-    : d_x(x),
-      d_y(y),
-      d_theta(theta)
+      : d_x(x),
+        d_y(y),
+        d_theta(theta)
+    {}
+
+    AgentPosition(Eigen::Vector3d const& vec)
+      : d_x(vec.x()),
+        d_y(vec.y()),
+        d_theta(vec(2))
     {}
 
     double x() const { return d_x; }

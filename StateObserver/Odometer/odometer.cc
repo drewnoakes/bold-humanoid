@@ -18,6 +18,7 @@ Odometer::Odometer(shared_ptr<WalkModule> walkModule)
   d_progressMutex()
 {
   assert(walkModule);
+  AgentState::set(make_shared<OdometryState const>(d_progress));
 }
 
 void Odometer::observeTyped(shared_ptr<BodyState const> const& state, SequentialTimer& timer)
