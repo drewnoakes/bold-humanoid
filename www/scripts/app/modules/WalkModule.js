@@ -12,9 +12,24 @@ define(
     {
         'use strict';
 
-        var size = 300,
+        var radarSize = 200,
             moveScale = 3,
             moduleTemplate = new DOMTemplate("walk-module-template");
+
+        var chartOptions = {
+            grid: {
+                strokeStyle: 'rgba(0,0,0,0.1)',
+                fillStyle: 'transparent',
+                lineWidth: 1,
+                millisPerLine: 250,
+                verticalSections: 5,
+                sharpLines: true
+            },
+            labels: {
+                fillStyle: 'rgba(0,0,0,0.5)',
+                precision: 0
+            }
+        };
 
         var WalkModule = function()
         {
@@ -33,12 +48,11 @@ define(
 
         WalkModule.prototype.load = function()
         {
-            var element = moduleTemplate.create({size: size});
+            var element = moduleTemplate.create({radarSize: radarSize, chartWidth: 440, chartHeight: 60});
             this.$container.append(element);
 
             this.runningIndicator = element.querySelector('.connection-indicator');
-            this.canvas = element.querySelector('canvas');
-            this.context = this.canvas.getContext('2d');
+            this.radarCanvas = element.querySelector('canvas.radar');
 
             ControlBuilder.buildAll('ambulator', element.querySelector('.ambulator-controls'));
             ControlBuilder.buildAll('options.approach-ball', element.querySelector('.approach-ball-controls'));
@@ -47,40 +61,62 @@ define(
             this.subscription = DataProxy.subscribe(Protocols.ambulatorState, { json: true, onmessage: _.bind(this.onData, this) });
 
             this.drawRadar();
+
+            this.pitchSeries = new TimeSeries();
+            this.xAmpCurrentSeries = new TimeSeries();
+            this.xAmpTargetSeries = new TimeSeries();
+            this.angleCurrentSeries = new TimeSeries();
+            this.angleTargetSeries = new TimeSeries();
+
+            var pitchChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: 10, maxValue: 15}));
+            pitchChart.addTimeSeries(this.pitchSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
+            pitchChart.streamTo(element.querySelector('canvas.pitch-chart'), /*delayMs*/ 0);
+
+            var xAmpChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: 0, maxValue: 40}));
+            xAmpChart.addTimeSeries(this.xAmpCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
+            xAmpChart.addTimeSeries(this.xAmpTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
+            xAmpChart.streamTo(element.querySelector('canvas.x-amp-chart'), /*delayMs*/ 0);
+
+            var turnChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: -25, maxValue: 25}));
+            turnChart.addTimeSeries(this.angleCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
+            turnChart.addTimeSeries(this.angleTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
+            turnChart.streamTo(element.querySelector('canvas.turn-chart'), /*delayMs*/ 0);
         };
 
         WalkModule.prototype.unload = function()
         {
             this.$container.empty();
             this.subscription.close();
-            delete this.canvas;
+            delete this.radarCanvas;
             delete this.runningIndicator;
             delete this.subscription;
         };
 
         WalkModule.prototype.drawRadar = function (data)
         {
-            var context = this.context;
+            // TODO use a dirty flag and only draw on animation frames
 
-            context.clearRect(0, 0, size, size);
+            var context = this.radarCanvas.getContext('2d');
+
+            context.clearRect(0, 0, radarSize, radarSize);
 
             // Draw crosshairs
 
-            var mid = Math.round(size / 2);
+            var mid = Math.round(radarSize / 2);
 
             context.strokeStyle = 'rgba(0, 0, 0, 0.3)';
             context.lineWidth = 2;
             context.beginPath();
             context.moveTo(mid, 0);
-            context.lineTo(mid, size);
+            context.lineTo(mid, radarSize);
             context.moveTo(0, mid);
-            context.lineTo(size, mid);
+            context.lineTo(radarSize, mid);
             context.stroke();
 
             if (!data)
                 return;
 
-            mid = (size / 2) + 0.5;
+            mid = (radarSize / 2) + 0.5;
 
             //
             // Angles
@@ -91,7 +127,7 @@ define(
             context.beginPath();
             context.lineCap = 'round';
             context.lineWidth = 20;
-            context.arc(mid, mid, size * 0.4, -Math.PI / 2, -Math.PI / 2 - (data.target[2] * Math.PI / 180), data.target[2] > 0);
+            context.arc(mid, mid, radarSize * 0.4, -Math.PI / 2, -Math.PI / 2 - (data.target[2] * Math.PI / 180), data.target[2] > 0);
             context.stroke();
 
             // Current
@@ -99,7 +135,7 @@ define(
             context.beginPath();
             context.lineCap = 'round';
             context.lineWidth = 9;
-            context.arc(mid, mid, size * 0.4, -Math.PI / 2, -Math.PI / 2 - (data.current[2] * Math.PI / 180), data.current[2] > 0);
+            context.arc(mid, mid, radarSize * 0.4, -Math.PI / 2, -Math.PI / 2 - (data.current[2] * Math.PI / 180), data.current[2] > 0);
             context.stroke();
 
             //
@@ -150,6 +186,13 @@ define(
                 this.runningIndicator.classList.add('disconnected');
                 this.runningIndicator.textContent = '';
             }
+
+            var time = new Date().getTime();
+            this.pitchSeries.append(time, data.hipPitch);
+            this.xAmpCurrentSeries.append(time, data.current[0]);
+            this.xAmpTargetSeries.append(time, data.target[0]);
+            this.angleCurrentSeries.append(time, data.current[2]);
+            this.angleTargetSeries.append(time, data.target[2]);
 
             this.drawRadar(data);
         };
