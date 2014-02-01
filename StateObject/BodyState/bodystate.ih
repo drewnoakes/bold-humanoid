@@ -3,6 +3,8 @@
 #include <list>
 
 #include "../HardwareState/hardwarestate.hh"
+#include "../../Math/math.hh"
+#include "../Config/config.hh"
 
 using namespace bold;
 using namespace std;

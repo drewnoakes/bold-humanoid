@@ -17,9 +17,10 @@ BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, ulong
   d_limbByName(),
   d_motionCycleNumber(cycleNumber)
 {
-  double angles[(uchar)JointId::MAX + 1];
+  double angles[(uchar)JointId::MAX + 2];
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     angles[jointId] = hardwareState->getMX28State(jointId).presentPosition;
+  angles[(uchar)JointId::CAMERA_TILT] = Math::degToRad(Config::getValue<double>("camera.vertical-angle-degrees"));
 
   initialise(angles);
 }

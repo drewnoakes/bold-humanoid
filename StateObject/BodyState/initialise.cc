@@ -37,14 +37,13 @@ void BodyState::initialise(double angles[])
   d_limbByName[head->name] = head;
 
   auto headCameraJoint = make_shared<Joint>();
-  headCameraJoint->id = (JointId)0;
+  headCameraJoint->id =JointId::CAMERA_TILT;
   headCameraJoint->name = "head-camera";
   // Set angle offset of head here. If this needs to be set for more
   // stuff, probably best to add another joint before this one and set
   // it there
   headCameraJoint->axis = Vector3d(1, 0, 0);
   //headCameraJoint->angleRads = -0.7854;
-  headCameraJoint->angleRads = -0.69;
   headCameraJoint->anchors.first = Vector3d(0, 0, 0);
   headCameraJoint->anchors.second = Vector3d(0, -0.0332, -0.0344);
   head->joints.push_back(headCameraJoint);
