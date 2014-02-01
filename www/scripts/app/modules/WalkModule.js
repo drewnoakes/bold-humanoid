@@ -46,7 +46,7 @@ define(
 
             this.subscription = DataProxy.subscribe(Protocols.ambulatorState, { json: true, onmessage: _.bind(this.onData, this) });
 
-            this.drawCrossHairs();
+            this.drawRadar();
         };
 
         WalkModule.prototype.unload = function()
@@ -55,9 +55,13 @@ define(
             this.subscription.close();
         };
 
-        WalkModule.prototype.drawCrossHairs = function()
+        WalkModule.prototype.drawRadar = function (data)
         {
             var context = this.context;
+
+            context.clearRect(0, 0, size, size);
+
+            // Draw crosshairs
 
             var mid = Math.round(size / 2);
 
@@ -69,37 +73,11 @@ define(
             context.moveTo(0, mid);
             context.lineTo(size, mid);
             context.stroke();
-        };
 
-        WalkModule.prototype.onData = function(data)
-        {
-//            var data = {
-//                target: [5,4,30],  // x, y, angle
-//                current: [8,10,20], // x, y, angle
-//                running: true,
-//                phase: 3,
-//                bodySwingY: 123,
-//                bodySwingZ: 321
-//            };
+            if (!data)
+                return;
 
-            if (data.running)
-            {
-                this.runningIndicator.classList.add('connected');
-                this.runningIndicator.classList.remove('disconnected');
-            }
-            else
-            {
-                this.runningIndicator.classList.remove('connected');
-                this.runningIndicator.classList.add('disconnected');
-            }
-
-            var context = this.context;
-
-            context.clearRect(0, 0, size, size);
-
-            this.drawCrossHairs();
-
-            var mid = (size / 2) + 0.5;
+            mid = (size / 2) + 0.5;
 
             //
             // Angles
@@ -110,7 +88,7 @@ define(
             context.beginPath();
             context.lineCap = 'round';
             context.lineWidth = 20;
-            context.arc(mid, mid, size*0.4, -Math.PI/2, -Math.PI/2 - (data.target[2]*Math.PI/180), data.target[2] > 0);
+            context.arc(mid, mid, size * 0.4, -Math.PI / 2, -Math.PI / 2 - (data.target[2] * Math.PI / 180), data.target[2] > 0);
             context.stroke();
 
             // Current
@@ -118,7 +96,7 @@ define(
             context.beginPath();
             context.lineCap = 'round';
             context.lineWidth = 9;
-            context.arc(mid, mid, size*0.4, -Math.PI/2, -Math.PI/2 - (data.current[2]*Math.PI/180), data.current[2] > 0);
+            context.arc(mid, mid, size * 0.4, -Math.PI / 2, -Math.PI / 2 - (data.current[2] * Math.PI / 180), data.current[2] > 0);
             context.stroke();
 
             //
@@ -142,6 +120,35 @@ define(
             context.moveTo(mid, mid);
             context.lineTo(mid + (data.current[1] * moveScale), mid - (data.current[0] * moveScale));
             context.stroke();
+        };
+
+        WalkModule.prototype.onData = function(data)
+        {
+//            var data = {
+//                target: [5,4,30],   // x, y, angle
+//                current: [8,10,20], // x, y, angle
+//                delta: [1,-1,2],    // x, y, angle
+//                running: true,
+//                phase: 3,
+//                hipPitch: 3,
+//                bodySwingY: 123,
+//                bodySwingZ: 321
+//            };
+
+            if (data.running)
+            {
+                this.runningIndicator.classList.add('connected');
+                this.runningIndicator.classList.remove('disconnected');
+                this.runningIndicator.textContent = data.phase;
+            }
+            else
+            {
+                this.runningIndicator.classList.remove('connected');
+                this.runningIndicator.classList.add('disconnected');
+                this.runningIndicator.textContent = '';
+            }
+
+            this.drawRadar(data);
         };
 
         return WalkModule;
