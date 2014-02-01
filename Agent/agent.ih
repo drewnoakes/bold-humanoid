@@ -41,6 +41,7 @@
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/LabelCountState/labelcountstate.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
+#include "../StateObject/OdometryState/odometrystate.hh"
 #include "../StateObject/OrientationState/orientationstate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../StateObject/ParticleState/particlestate.hh"

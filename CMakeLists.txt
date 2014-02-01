@@ -433,6 +433,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/OdometryState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/OptionTreeState/writeJson.cc
 )
 

@@ -2,6 +2,7 @@
 
 #include "../../util/log.hh"
 #include "../../StateObject/AmbulatorState/ambulatorstate.hh"
+#include "../../StateObject/OdometryState/odometrystate.hh"
 
 #include <cassert>
 
@@ -50,15 +51,21 @@ void Odometer::observeTyped(shared_ptr<BodyState const> const& state, Sequential
 
     lock_guard<mutex> lock(d_progressMutex);
     d_progress += (thisTranslation - lastTranslation);
+
+    AgentState::set(make_shared<OdometryState const>(d_progress));
   }
 
   d_lastBodyState = state;
 }
 
-Vector3d Odometer::flush()
+Vector3d Odometer::getTranslation() const
 {
   lock_guard<mutex> lock(d_progressMutex);
-  auto val = d_progress;
+  return d_progress;
+}
+
+void Odometer::reset()
+{
+  lock_guard<mutex> lock(d_progressMutex);
   d_progress = {};
-  return val;
 }
