@@ -36,7 +36,7 @@ define(
             var element = moduleTemplate.create({size: size});
             this.$container.append(element);
 
-            this.$runningIndicator = $('.connection-indicator', element);
+            this.runningIndicator = element.querySelector('.connection-indicator');
             this.canvas = element.querySelector('canvas');
             this.context = this.canvas.getContext('2d');
 
@@ -84,13 +84,13 @@ define(
 
             if (data.running)
             {
-                this.$runningIndicator.addClass('connected');
-                this.$runningIndicator.removeClass('disconnected');
+                this.runningIndicator.classList.add('connected');
+                this.runningIndicator.classList.remove('disconnected');
             }
             else
             {
-                this.$runningIndicator.removeClass('connected');
-                this.$runningIndicator.addClass('disconnected');
+                this.runningIndicator.classList.remove('connected');
+                this.runningIndicator.classList.add('disconnected');
             }
 
             var context = this.context;
