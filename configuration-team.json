@@ -189,8 +189,8 @@
       "turn-speed-scale": 18.0,
       "max-forward-speed": 40.0,
       "min-forward-speed": 5.0,
-      "brake-distance": 0.50,
-      "stop-distance": 0.075,
+      "brake-distance": 0.80,
+      "stop-distance": 0.09,
       "lower-turn-limit-degs": 20.0,
       "upper-turn-limit-degs": 35.0
     },
