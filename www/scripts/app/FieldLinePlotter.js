@@ -117,8 +117,8 @@ define(
             },
             drawLineSegments: function (context, options, lineSegments, lineWidth, strokeStyle)
             {
-                context.lineWidth = lineWidth || 1;
-                context.strokeStyle = strokeStyle || '#00ff00';
+                context.lineWidth = lineWidth || 0.01;
+                context.strokeStyle = strokeStyle || '#0000ff';
 
                 context.beginPath();
                 _.each(lineSegments, function (lineSegment)
@@ -181,7 +181,8 @@ define(
                 context.beginPath();
                 _.each(particles, function (particle)
                 {
-                    context.fillStyle = particle[3] === 0 ? 'black' : options.particleStyle || 'cyan';
+                    var opacity =  Math.min(1, (particle[3] / 0.04) + 0.5);
+                    context.fillStyle = 'hsla(' + options.particleHue + ', 100%, 50%, ' + opacity + ')';
                     var x = particle[0] - size/2,
                         y = particle[1] - size/2;
                     context.fillRect(x, y, size, size);

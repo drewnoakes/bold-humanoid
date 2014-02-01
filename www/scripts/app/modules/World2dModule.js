@@ -167,8 +167,9 @@ define(
                     lineStrokeStyle: '#ffffff',
                     visibleFieldPolyLineWidth: 1/scale,
                     visibleFieldPolyStrokeStyle: '#0000ff',
-                    particleStyle: 'cyan',
-                    particleSize: 3/scale
+                    particleHue: 200,
+                    particleSize: Math.max(0.015, 2/scale),
+                    ballFillStyle: 'red'
                 },
                 context = this.canvas.getContext('2d');
 
@@ -179,7 +180,7 @@ define(
             FieldLinePlotter.drawGoals(context, options);
 
             if (this.observedLineSegments && this.observedLineSegments.length)
-                FieldLinePlotter.drawLineSegments(context, options, this.observedLineSegments, 1, '#0000ff');
+                FieldLinePlotter.drawLineSegments(context, options, this.observedLineSegments, 0.02, '#000088');
 
             if (this.agentPosition)
                 FieldLinePlotter.drawAgentPosition(context, options, this.agentPosition);
@@ -194,7 +195,7 @@ define(
                 FieldLinePlotter.drawBall(context, options, this.ballPosition);
 
             if (this.goalPositions) {
-                options.goalStrokeStyle = 'blue';
+                options.goalStrokeStyle = '#FF5800';
                 FieldLinePlotter.drawGoalPosts(context, options, this.goalPositions);
             }
 
