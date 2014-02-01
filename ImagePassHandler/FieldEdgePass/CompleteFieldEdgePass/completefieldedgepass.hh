@@ -12,6 +12,8 @@ namespace bold
   public:
     CompleteFieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight);
 
+    ~CompleteFieldEdgePass() override = default;
+
     void onImageStarting() override;
     void onPixel(uchar labelId, ushort x, ushort y) override;
     void onImageComplete() override;

@@ -12,6 +12,8 @@ namespace bold
   public:
     PeriodicFieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight, ushort period);
 
+    ~PeriodicFieldEdgePass() override = default;
+
     void onImageStarting() override;
     void onPixel(uchar labelId, ushort x, ushort y) override;
 
