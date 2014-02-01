@@ -173,7 +173,8 @@
     "turn-delta":    { "type": "double", "default": 1.0, "description": "Turn smoothing delta" },
     "max-hip-pitch-at-speed": { "type": "double", "default": 15.0, "description": "Max hip pitch @ speed" },
     "min-hip-pitch": { "type": "double", "default": 13.0, "description": "Min hip pitch" },
-    "max-hip-pitch": { "type": "double", "default": 17.0, "description": "Max hip pitch" }
+    "max-hip-pitch": { "type": "double", "default": 17.0, "description": "Max hip pitch" },
+    "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "default": 2.0, "description": "Fwd acc hip pitch factor" }
   },
   "orientation-tracker": {
     "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 }, "advanced": false }

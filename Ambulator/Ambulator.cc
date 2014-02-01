@@ -14,6 +14,7 @@ Ambulator::Ambulator(shared_ptr<WalkModule> walkModule)
     d_maxHipPitchAtSpeed(Config::getSetting<double>("ambulator.max-hip-pitch-at-speed")),
     d_minHipPitch(Config::getSetting<double>("ambulator.min-hip-pitch")),
     d_maxHipPitch(Config::getSetting<double>("ambulator.max-hip-pitch")),
+    d_fwdAccelerationHipPitchFactor(Config::getSetting<double>("ambulator.fwd-acc-hip-pitch-factor")),
     d_turnAngleSet(false),
     d_moveDirSet(false)
 {

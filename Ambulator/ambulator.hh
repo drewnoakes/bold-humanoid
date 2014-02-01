@@ -51,6 +51,7 @@ namespace bold
     Setting<double>* d_maxHipPitchAtSpeed;
     Setting<double>* d_minHipPitch;
     Setting<double>* d_maxHipPitch;
+    Setting<double>* d_fwdAccelerationHipPitchFactor;
     bool d_turnAngleSet;
     bool d_moveDirSet;
   };
