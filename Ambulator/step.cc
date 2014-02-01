@@ -35,8 +35,9 @@ void Ambulator::step()
     // TODO examine using the acceleration (delta xAmp) as a input signal
 
     // Lerp hip angle based on forward speed, or turn speed (whichever is greatest)
-    // TODO revisit this treatment of xAmp and turnAmp as though they're the same units
-    double alpha = max(xAmp, turnAmp) / d_maxHipPitchAtSpeed->getValue();
+//    // TODO revisit this treatment of xAmp and turnAmp as though they're the same units
+//     double alpha = max(xAmp, turnAmp) / d_maxHipPitchAtSpeed->getValue();
+    double alpha = xAmp / d_maxHipPitchAtSpeed->getValue();
 
     alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAmpDelta;
 
