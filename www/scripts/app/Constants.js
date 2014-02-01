@@ -155,7 +155,7 @@ define(
                         {
                             name: 'head',
                             geometryPath: 'models/darwin/darwin-head.json',
-                            creaseAngle: 0.52,
+                            creaseAngle: 1.00,
                             rotationAxis: new THREE.Euler(1, 0, 0),
                             rotationOrigin: -Math.PI / 4,// TODO the 3D model has a rotation that should not be applied in the kinematic model
                             jointId: Constants.jointIds.headTilt,
