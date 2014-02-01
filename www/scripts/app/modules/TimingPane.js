@@ -52,7 +52,7 @@ define(
 
       this.series = new TimeSeries();
       this.chart.addTimeSeries(this.series, seriesOptions);
-      this.chart.streamTo(this.canvas, /*delayMs*/ 100);
+      this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
       this.$fps = $('<div></div>', {'class':'fps'}).appendTo(this.$container);
       $('<a></a>', {'class':'reset', href:'#'}).text('reset maximums').click(function() { this.resetMaximums(); return false; }.bind(this)).appendTo(this.$container);

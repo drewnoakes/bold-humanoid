@@ -57,7 +57,7 @@ define(
             this.gameSeries = new TimeSeries();
             this.chart.addTimeSeries(this.ignoreSeries, { strokeStyle: 'rgb(128, 0, 0)', fillStyle: 'rgba(0, 255, 0, 0.3)', lineWidth: 1 });
             this.chart.addTimeSeries(this.gameSeries,   { strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 255, 0, 0.3)', lineWidth: 1 });
-            this.chart.streamTo(this.canvas, /*delayMs*/ 100);
+            this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
             this.subscription = DataProxy.subscribe(
                 Protocols.debug,

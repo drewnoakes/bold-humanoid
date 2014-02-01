@@ -138,7 +138,7 @@ define(
 
                 this.chartCanvases.push(canvas);
 
-                chart.streamTo(canvas, /*delayMs*/ 200);
+                chart.streamTo(canvas, /*delayMs*/ 0);
 
                 _.each(chartDefinition.series, function(seriesDefinition)
                 {
