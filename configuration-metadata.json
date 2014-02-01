@@ -42,7 +42,7 @@
   },
   "vision": {
     "min-ball-area":                { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
-    "accepted-ball-measured-size-ratio": { "type": "double-range", "default": [0.8, 1.5], "advanced": true }, 
+    "accepted-ball-measured-size-ratio": { "type": "double-range", "default": [0.8, 1.5], "advanced": true },
     "min-goal-dimension-pixels":    { "type": "int", "min": 1, "max": 50, "default": 1, "advanced": true },
     "enable-ball-blob-merging":     { "type": "bool", "default": true, "advanced": true },
     "pixel-labels": {
@@ -174,6 +174,9 @@
     "max-hip-pitch-at-speed": { "type": "double", "default": 15.0, "description": "Max hip pitch @ speed" },
     "min-hip-pitch": { "type": "double", "default": 13.0, "description": "Min hip pitch" },
     "max-hip-pitch": { "type": "double", "default": 17.0, "description": "Max hip pitch" }
+  },
+  "orientation-tracker": {
+    "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 }, "advanced": false }
   },
   "options": {
     "circle-ball": {

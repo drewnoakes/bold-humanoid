@@ -23,7 +23,8 @@ using namespace Eigen;
 #define beta sqrt(3.0f / 4.0f) * gyroMeasError
 
 OrientationTracker::OrientationTracker()
-: TypedStateObserver<HardwareState>("Orientation tracker", ThreadId::MotionLoop)
+: TypedStateObserver<HardwareState>("Orientation tracker", ThreadId::MotionLoop),
+  d_technique(Config::getSetting<OrientationTechnique>("orientation-tracker.technique"))
 {
   reset();
   Config::addAction("orientation-tracker.zero", "Zero", [this]() { reset(); });
@@ -44,12 +45,21 @@ Quaterniond OrientationTracker::getQuaternion() const
 
 void OrientationTracker::observeTyped(shared_ptr<HardwareState const> const& state, SequentialTimer& timer)
 {
-  filterUpdate(state->getCM730State().gyro, state->getCM730State().acc);
+  switch (d_technique->getValue())
+  {
+    case OrientationTechnique::Madgwick:
+      updateMadgwick(state);
+      break;
+
+    default:
+      log::error("OrientationTracker::observeTyped") << "Unexpected OrientationTechnique value: " << (int)d_technique->getValue();
+      throw runtime_error("Unexpected OrientationTechnique value");
+  }
 
   AgentState::set(shared_ptr<OrientationState const>(new OrientationState(getQuaternion())));
 }
 
-void OrientationTracker::filterUpdate(Vector3d const& gyro, Vector3d const& acc)
+void OrientationTracker::updateMadgwick(shared_ptr<HardwareState const> const& state)
 {
   //
   // Using technique from paper:
@@ -58,6 +68,9 @@ void OrientationTracker::filterUpdate(Vector3d const& gyro, Vector3d const& acc)
   //
   //   Sebastian O.H. Madgwick, April 30, 2010
   //
+
+  Vector3d const& gyro(state->getCM730State().gyro);
+  Vector3d const& acc(state->getCM730State().acc);
 
   float w_x = gyro.x();
   float w_y = gyro.y();

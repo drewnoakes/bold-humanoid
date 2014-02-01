@@ -8,6 +8,14 @@
 
 namespace bold
 {
+  enum class OrientationTechnique
+  {
+    Madgwick = 0,
+    Sum = 1
+  };
+
+  template<class> class Setting;
+
   /** Tracks the orientation of the torso using data from the IMU.
    */
   class OrientationTracker : public TypedStateObserver<HardwareState>
@@ -22,9 +30,10 @@ namespace bold
   private:
     void observeTyped(std::shared_ptr<HardwareState const> const& state, SequentialTimer& timer) override;
 
-    void filterUpdate(Eigen::Vector3d const& gyro, Eigen::Vector3d const& acc);
+    void updateMadgwick(std::shared_ptr<HardwareState const> const& state);
 
     // estimated orientation quaternion elements
     float SEq_1, SEq_2, SEq_3, SEq_4;
+    Setting<OrientationTechnique>* d_technique;
   };
 }

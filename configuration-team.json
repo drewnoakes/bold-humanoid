@@ -176,6 +176,9 @@
     "min-hip-pitch": 15,
     "max-hip-pitch": 20
   },
+  "orientation-tracker": {
+    "technique": 0
+  },
   "options": {
     "circle-ball": {
       "walk-x": 1,

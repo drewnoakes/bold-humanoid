@@ -45,6 +45,7 @@ define(
             );
 
             ControlBuilder.actions("orientation-tracker", this.container.get(0));
+            ControlBuilder.buildAll("orientation-tracker", this.container.get(0));
         };
 
         OrientationModule.prototype.unload = function()
