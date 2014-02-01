@@ -21,6 +21,8 @@ namespace bold
       Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = value; });
     }
 
+    virtual ~FieldEdgePass() = default;
+
     virtual ushort getEdgeYValue(ushort x) const = 0;
 
   protected:
