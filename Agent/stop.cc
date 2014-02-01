@@ -15,6 +15,8 @@ void Agent::requestStop()
 
   // The option tree picks up this flag and performs a shutdown sequence
   d_isStopRequested = true;
+
+  d_voice->say("Shutting down");
 }
 
 void Agent::stop()
