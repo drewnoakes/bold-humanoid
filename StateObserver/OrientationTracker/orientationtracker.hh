@@ -32,6 +32,8 @@ namespace bold
 
     void updateMadgwick(std::shared_ptr<HardwareState const> const& state);
 
+    void updateSum(std::shared_ptr<HardwareState const> const& state);
+
     // estimated orientation quaternion elements
     float SEq_1, SEq_2, SEq_3, SEq_4;
     Setting<OrientationTechnique>* d_technique;

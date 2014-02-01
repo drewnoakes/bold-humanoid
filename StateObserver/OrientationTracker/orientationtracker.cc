@@ -51,6 +51,10 @@ void OrientationTracker::observeTyped(shared_ptr<HardwareState const> const& sta
       updateMadgwick(state);
       break;
 
+    case OrientationTechnique::Sum:
+      updateSum(state);
+      break;
+
     default:
       log::error("OrientationTracker::observeTyped") << "Unexpected OrientationTechnique value: " << (int)d_technique->getValue();
       throw runtime_error("Unexpected OrientationTechnique value");
@@ -148,4 +152,21 @@ void OrientationTracker::updateMadgwick(shared_ptr<HardwareState const> const& s
   SEq_2 /= norm;
   SEq_3 /= norm;
   SEq_4 /= norm;
+}
+
+void OrientationTracker::updateSum(shared_ptr<HardwareState const> const& state)
+{
+  Quaternionf curr(SEq_1, SEq_2, SEq_3, SEq_4);
+  Vector3d const& gyro(state->getCM730State().gyro);
+  Matrix3f m;
+  m = AngleAxisf(Math::degToRad(gyro.x()), Vector3f::UnitX())
+    * AngleAxisf(Math::degToRad(gyro.y()), Vector3f::UnitY())
+    * AngleAxisf(Math::degToRad(gyro.z()), Vector3f::UnitZ());
+
+  curr = curr * m;
+
+  SEq_1 = curr.w();
+  SEq_2 = curr.x();
+  SEq_3 = curr.y();
+  SEq_4 = curr.z();
 }
