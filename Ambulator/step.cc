@@ -39,7 +39,9 @@ void Ambulator::step()
 //     double alpha = max(xAmp, turnAmp) / d_maxHipPitchAtSpeed->getValue();
     double alpha = xAmp / d_maxHipPitchAtSpeed->getValue();
 
-    alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAmpDelta;
+    double xAmpTargetDiff = d_xAmp.getTarget() - xAmp;
+
+    alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAmpTargetDiff;
 
     d_walkModule->HIP_PITCH_OFFSET = Math::lerp(
       Math::clamp(alpha, 0.0, 1.0),
