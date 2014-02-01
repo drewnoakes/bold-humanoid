@@ -186,7 +186,8 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   // Only include the cartoon pass when needed
   d_imageType->track([this](ImageType value) { d_imagePassRunner->setHandler(getHandler<CartoonPass>(), value == ImageType::Cartoon); });
 
-  d_lineFinder = make_shared<MaskWalkLineFinder>();
+  //d_lineFinder = make_shared<MaskWalkLineFinder>();
+  d_lineFinder = make_shared<ScanningLineFinder>();
 
   // Image capture
   Config::addAction("camera.save-frame", "Save Frame", [this]() { d_recordNextFrame = true; });

@@ -19,6 +19,7 @@
 #include "../LineFinder/linefinder.hh"
 #include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"
 #include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
+#include "../LineFinder/ScanningLineFinder/scanninglinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../SequentialTimer/sequentialtimer.hh"

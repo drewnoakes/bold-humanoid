@@ -19,7 +19,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
 
   vector<RegressionState> regStates;
 
-  double maxError = 3;
+  double maxError = 5;
 
   auto x = Vector2d(0, 1);
   auto xx = x * x.transpose();
@@ -71,7 +71,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
     Vector2i p2(regState.xEnd, regState.beta.dot(Vector2d(regState.xEnd, 1)));
     double length = (p2 - p1).norm();
       double coverage = double(regState.n) / length;
-    if (coverage < 0.33 || length < 5)
+    if (coverage < 0.1 || length < 5)
       continue;
     lineSegments.push_back(LineSegment2i(p1, p2));
   }
