@@ -17,7 +17,7 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
 
   double speedDueToDistance = Math::clamp(dist/d_brakeDistance->getValue(), 0.0, 1.0);
 
-  // NOTE atan has flipped x/y on purpose
+  // NOTE atan2 has flipped x/y on purpose
   double ballAngleRads = -atan2(ballPos->x(), ballPos->y());
 
   double speedScaleDueToAngle = Math::lerp(fabs(ballAngleRads), Math::degToRad(d_lowerTurnLimitDegs->getValue()), Math::degToRad(d_upperTurnLimitDegs->getValue()), 1.0, 0.0);
