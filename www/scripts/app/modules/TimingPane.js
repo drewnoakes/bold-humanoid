@@ -41,7 +41,8 @@ define(
         yRangeFunction: function (range)
         {
           return {min: 0, max: Math.max(this.thresholdMillis, range.max)};
-        }.bind(this)
+        }.bind(this),
+        horizontalLines: [{color:'#FF0000', lineWidth: 1, value: this.thresholdMillis}]
       };
 
       this.chart = new SmoothieChart(chartOptions);
@@ -52,7 +53,6 @@ define(
       this.series = new TimeSeries();
       this.chart.addTimeSeries(this.series, seriesOptions);
       this.chart.streamTo(this.canvas, /*delayMs*/ 100);
-      this.chart.options.horizontalLines.push({color:'#FF0000', lineWidth: 1, value: this.thresholdMillis});
 
       this.$fps = $('<div></div>', {'class':'fps'}).appendTo(this.$container);
       $('<a></a>', {'class':'reset', href:'#'}).text('reset maximums').click(function() { this.resetMaximums(); return false; }.bind(this)).appendTo(this.$container);
