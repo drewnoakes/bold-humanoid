@@ -172,9 +172,9 @@
     "x-amp-delta": 3,
     "y-amp-delta": 3,
     "turn-delta": 1,
-    "max-hip-pitch-at-speed": 17,
-    "min-hip-pitch": 15,
-    "max-hip-pitch": 20
+    "max-hip-pitch-at-speed": 13,
+    "min-hip-pitch": 11,
+    "max-hip-pitch": 14
   },
   "orientation-tracker": {
     "technique": 0
