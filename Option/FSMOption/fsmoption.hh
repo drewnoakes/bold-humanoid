@@ -44,12 +44,7 @@ namespace bold
 
   struct FSMState : public std::enable_shared_from_this<FSMState>
   {
-    FSMState(std::string const& name, std::vector<std::shared_ptr<Option>> options, bool isFinal = false)
-    : name(name),
-      isFinal(isFinal),
-      options(options),
-      startTimestamp()
-    {}
+    FSMState(std::string const& name, std::vector<std::shared_ptr<Option>> options, bool isFinal = false);
 
     /// State name
     std::string name;
@@ -64,47 +59,15 @@ namespace bold
 
     Clock::Timestamp startTimestamp;
 
-    void start()
-    {
-      startTimestamp = Clock::getTimestamp();
+    void start();
 
-      // For transitions with condition factories, invoke them to clear out any accumulated state
-      for (std::shared_ptr<FSMTransition> const& transition : transitions)
-      {
-        if (transition->conditionFactory)
-          transition->condition = transition->conditionFactory();
-      }
+    double secondsSinceStart() const;
 
-      if (onEnter)
-        onEnter();
-    }
+    bool allOptionsTerminated() const;
 
-    double secondsSinceStart()
-    {
-      return Clock::getSecondsSince(startTimestamp);
-    }
+    std::shared_ptr<FSMTransition> newTransition(std::string name = "");
 
-    bool allOptionsTerminated() const
-    {
-      return std::all_of(options.begin(), options.end(), [](std::shared_ptr<Option> o) { return o->hasTerminated(); });
-    }
-
-    std::shared_ptr<FSMTransition> newTransition(std::string name = "")
-    {
-      std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>(name);
-      t->parentState = shared_from_this();
-      transitions.push_back(t);
-      return t;
-    }
-
-    std::shared_ptr<FSMTransition> transitionTo(std::shared_ptr<FSMState> targetState)
-    {
-      std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>("");
-      t->parentState = shared_from_this();
-      t->childState = targetState;
-      transitions.push_back(t);
-      return t;
-    }
+    std::shared_ptr<FSMTransition> transitionTo(std::shared_ptr<FSMState> targetState);
   };
 
   /** Finite State Machine
