@@ -73,6 +73,13 @@ define(
             this.chart.stop();
             this.$container.empty();
             this.subscription.close();
+
+            delete this.chart;
+            delete this.ignoreSeries;
+            delete this.gameSeries;
+            delete this.canvas;
+            delete this.subscription;
+
         };
 
         CommsModule.prototype.onData = function(data)

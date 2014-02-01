@@ -53,6 +53,9 @@ define(
         {
             this.$container.empty();
             this.subscription.close();
+            delete this.canvas;
+            delete this.runningIndicator;
+            delete this.subscription;
         };
 
         WalkModule.prototype.drawRadar = function (data)
