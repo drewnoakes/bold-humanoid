@@ -827,6 +827,11 @@ div.module.trajectory button.record.recording
 
 /*******************************************************************/
 
+div.module.agent-2d .hover-info
+{
+  float: right;
+}
+
 div.module.agent-2d div.pane-container
 {
   min-height: 480px;
