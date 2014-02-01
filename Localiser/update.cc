@@ -75,7 +75,7 @@ void Localiser::update()
       // Score observed lines
       //
 
-      double rewardFalloff = d_rewardFalloff->getValue();
+//       double rewardFalloff = d_rewardFalloff->getValue();
 
       for (LineSegment3d const& observed : agentFrame->getObservedLineSegments())
       {
