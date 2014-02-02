@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <Eigen/Core>
 #include <opencv2/core/core.hpp>
 
 namespace bold
@@ -25,6 +26,11 @@ namespace bold
       cv::Scalar toScalar() const
       {
         return cv::Scalar(b, g, r);
+      }
+
+      Eigen::Vector3d toRgbUnitVector() const
+      {
+        return Eigen::Vector3d(r/255.0, g/255.0, b/255.0);
       }
 
       bool operator==(bgr const& other) const
