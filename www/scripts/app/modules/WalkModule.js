@@ -68,25 +68,31 @@ define(
             this.angleCurrentSeries = new TimeSeries();
             this.angleTargetSeries = new TimeSeries();
 
-            var pitchChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: 10, maxValue: 15}));
-            pitchChart.addTimeSeries(this.pitchSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
-            pitchChart.streamTo(element.querySelector('canvas.pitch-chart'), /*delayMs*/ 0);
+            this.pitchChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: 10, maxValue: 15}));
+            this.pitchChart.addTimeSeries(this.pitchSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
+            this.pitchChart.streamTo(element.querySelector('canvas.pitch-chart'), /*delayMs*/ 0);
 
-            var xAmpChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: 0, maxValue: 40}));
-            xAmpChart.addTimeSeries(this.xAmpCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
-            xAmpChart.addTimeSeries(this.xAmpTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
-            xAmpChart.streamTo(element.querySelector('canvas.x-amp-chart'), /*delayMs*/ 0);
+            this.xAmpChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: 0, maxValue: 40}));
+            this.xAmpChart.addTimeSeries(this.xAmpCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
+            this.xAmpChart.addTimeSeries(this.xAmpTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
+            this.xAmpChart.streamTo(element.querySelector('canvas.x-amp-chart'), /*delayMs*/ 0);
 
-            var turnChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: -25, maxValue: 25}));
-            turnChart.addTimeSeries(this.angleCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
-            turnChart.addTimeSeries(this.angleTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
-            turnChart.streamTo(element.querySelector('canvas.turn-chart'), /*delayMs*/ 0);
+            this.turnChart = new SmoothieChart(_.extend({}, chartOptions, {minValue: -25, maxValue: 25}));
+            this.turnChart.addTimeSeries(this.angleCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
+            this.turnChart.addTimeSeries(this.angleTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
+            this.turnChart.streamTo(element.querySelector('canvas.turn-chart'), /*delayMs*/ 0);
         };
 
         WalkModule.prototype.unload = function()
         {
             this.$container.empty();
             this.subscription.close();
+            this.pitchChart.stop();
+            this.xAmpChart.stop();
+            this.turnChart.stop();
+            delete this.pitchChart;
+            delete this.xAmpChart;
+            delete this.turnChart;
             delete this.radarCanvas;
             delete this.runningIndicator;
             delete this.subscription;
