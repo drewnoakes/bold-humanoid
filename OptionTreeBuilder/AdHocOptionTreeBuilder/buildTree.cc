@@ -127,7 +127,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto sit = tree->addOption(make_shared<MotionScriptOption>("sitDownScript", motionScriptModule, "./motionscripts/sit-down.json"));
   auto sitArmsBack = tree->addOption(make_shared<MotionScriptOption>("sitDownScript", motionScriptModule, "./motionscripts/sit-down-arms-back.json"));
-  auto standUp = tree->addOption(make_shared<MotionScriptOption>("standUpScript", motionScriptModule, "./motionscripts/stand-ready.json"));
+  auto standUp = tree->addOption(make_shared<MotionScriptOption>("standUpScript", motionScriptModule, "./motionscripts/stand-ready-upright.json"));
   auto forwardGetUp = tree->addOption(make_shared<MotionScriptOption>("forwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-front.json"));
   auto backwardGetUp = tree->addOption(make_shared<MotionScriptOption>("backwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-back.json"));
   auto leftDive = tree->addOption(make_shared<MotionScriptOption>("diveleftScript", motionScriptModule, "./motionscripts/dive-left.json"));
