@@ -35,7 +35,12 @@ Voice::Voice(const string voice)
 
   string sayings[] = {
     "Hello", "Bold Hearts", "Hooray", "Oh my",
-    "The rain in spain falls mainly in the plain"
+    "The rain in spain falls mainly in the plain",
+    "Use those hands, Gareth", "Good Hands Gareth",
+    "Adventure on Ywain", "Ywain, you bastard",
+    "Kick it, Tor",
+    "Nimue, you're some kind of lady",
+    "Let's hear it for Oberon"
   };
 
   int sayingIndex = 1;
