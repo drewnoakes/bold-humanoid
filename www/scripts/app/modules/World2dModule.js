@@ -128,7 +128,7 @@ define(
 
         World2dModule.prototype.onParticleData = function(data)
         {
-            this.particles = data;
+            this.particles = data.particles;
             this.needsRender = true; // TODO only draw particles, on their own canvas
         };
 
