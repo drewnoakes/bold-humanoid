@@ -2,7 +2,6 @@
 
 #include "../../Agent/agent.hh"
 #include "../../Ambulator/ambulator.hh"
-#include "../../CM730/cm730.hh"
 #include "../../DataStreamer/datastreamer.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"

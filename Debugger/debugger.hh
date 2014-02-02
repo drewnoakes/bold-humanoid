@@ -7,7 +7,6 @@
 
 namespace bold
 {
-  class CM730;
   class DebugControl;
 
   // TODO this class's name suggests something grander than its reality

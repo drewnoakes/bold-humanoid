@@ -5,10 +5,8 @@
 
 #include "../AgentState/agentstate.hh"
 #include "../Clock/clock.hh"
-#include "../CM730/cm730.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/DebugState/debugstate.hh"
-#include "../StateObject/TimingState/timingstate.hh"
 #include "../stats/movingaverage.hh"
 
 using namespace bold;
