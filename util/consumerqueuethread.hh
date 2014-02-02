@@ -20,6 +20,12 @@ namespace bold
     ConsumerQueueThread(ConsumerQueueThread const&) = delete;
     ConsumerQueueThread& operator=(ConsumerQueueThread const&) = delete;
 
+    unsigned size() const
+    {
+      std::unique_lock<std::mutex> lock(d_mutex);
+      return d_queue.size();
+    }
+
     void push(const T& item)
     {
       if (d_stop)
@@ -71,7 +77,7 @@ namespace bold
     }
 
     std::queue<T> d_queue;
-    std::mutex d_mutex;
+    mutable std::mutex d_mutex;
     std::condition_variable d_condition;
     std::function<void(T)> d_processor;
     std::thread d_thread;
