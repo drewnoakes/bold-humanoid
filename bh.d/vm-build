@@ -23,6 +23,12 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
+# strip the binary to reduce size for rsync
+# if debug symbols needed, run "bh vm-build" with no arguments, then
+# run "bh deploy-min N" for the robot you're targetting
+
+strip boldhumanoid
+
 # deploy to specified robot(s)
 
 for i in ${@:1}
