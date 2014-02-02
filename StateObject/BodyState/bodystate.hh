@@ -23,6 +23,7 @@ namespace bold
   public:
     static std::shared_ptr<BodyState const> zero(ulong thinkCycleNumber = 0);
 
+    /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
     BodyState(double angles[], ulong motionCycleNumber);
     BodyState(std::shared_ptr<HardwareState const> const& hardwareState, ulong motionCycleNumber);
 
@@ -66,6 +67,7 @@ namespace bold
     double getTorsoHeight() const { return d_torsoHeight; }
 
   private:
+    /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
     void initialise(double angles[]);
 
     double d_torsoHeight;

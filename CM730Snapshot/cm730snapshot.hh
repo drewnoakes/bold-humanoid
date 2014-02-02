@@ -34,7 +34,6 @@ namespace bold
     /// Raw raw value of the accelerometer, in range [0,1023] corresponding to [-4,4] g.
     Eigen::Vector3i accRaw;
 
-    /// Parameterless constructor required for unit testing
     CM730Snapshot() {}
 
     CM730Snapshot(BulkReadTable const& data);
@@ -69,6 +68,8 @@ namespace bold
     unsigned char statusRetLevel;
 
     // skip dynamic addresses in the table -- they are captured in CM730Snapshot
+
+    StaticCM730State() {};
 
     StaticCM730State(BulkReadTable const& data);
   };

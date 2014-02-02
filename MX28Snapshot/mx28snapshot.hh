@@ -33,10 +33,9 @@ namespace bold
     /// The present temperature, in Celcius.
     uchar presentTemp;
 
-    /// Parameterless constructor required for unit testing
-    MX28Snapshot() {}
+    MX28Snapshot(uchar mx28ID) : id(mx28ID) {}
 
-    MX28Snapshot(BulkReadTable const& data, uchar mx28ID);
+    MX28Snapshot(uchar mx28ID, BulkReadTable const& data);
   };
 
   /** Models infrequently changing data table entries from an MX28 dynamixel device.
@@ -88,6 +87,8 @@ namespace bold
 //  uchar punch; // apparently this value is unused
 //  double goalAcceleration; // TODO introduce this from the read
 
-    StaticMX28State(BulkReadTable const& data, int const mx28ID);
+    StaticMX28State(uchar mx28ID, BulkReadTable const& data);
+
+    StaticMX28State(uchar mx28ID) : id(mx28ID) {}
   };
 }

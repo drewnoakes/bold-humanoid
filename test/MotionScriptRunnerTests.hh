@@ -44,8 +44,8 @@ TEST (DISABLED_MotionScriptRunnerTests, basics)
   AgentState::registerStateType<HardwareState>("Hardware");
   auto cm730State = unique_ptr<CM730Snapshot const>(new CM730Snapshot());
   auto mx28States = vector<unique_ptr<MX28Snapshot const>>();
-  for (int i = 0; i < 20; i++) {
-    auto mx28 = unique_ptr<MX28Snapshot>(new MX28Snapshot());
+  for (uchar id = 0; id < 20; id++) {
+    auto mx28 = unique_ptr<MX28Snapshot>(new MX28Snapshot(id));
     mx28->presentPositionValue = 0;
     mx28States.push_back(move(mx28));
   }

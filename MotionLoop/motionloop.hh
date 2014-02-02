@@ -12,12 +12,13 @@ namespace bold
   class BulkRead;
   class CM730;
   class DebugControl;
+  class HardwareState;
   class SequentialTimer;
 
   class MotionLoop
   {
   public:
-    MotionLoop(std::unique_ptr<CM730> cm730, std::shared_ptr<DebugControl> debugControl);
+    MotionLoop(std::shared_ptr<DebugControl> debugControl);
 
     ~MotionLoop();
 
@@ -36,6 +37,11 @@ namespace bold
   private:
     void step(SequentialTimer& t);
 
+    bool applyJointMotionTasks(SequentialTimer& t);
+    bool writeJointData(SequentialTimer& t);
+    std::shared_ptr<HardwareState const> readHardwareState(SequentialTimer& t);
+    std::shared_ptr<HardwareState const> readHardwareStateFake(SequentialTimer& t);
+
     bool updateStaticHardwareState();
 
     std::list<std::shared_ptr<MotionModule>> d_modules;
@@ -45,6 +51,8 @@ namespace bold
     std::unique_ptr<BulkRead> d_dynamicBulkRead;
     std::unique_ptr<BulkRead> d_staticBulkRead;
 
+    /// Whether we have connected to a CM730 subcontroller.
+    bool d_haveBody;
     /// When false, calls to process have no effect
     bool d_isStarted;
     bool d_isStopRequested;

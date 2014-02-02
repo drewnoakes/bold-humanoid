@@ -80,8 +80,6 @@ namespace bold
     sigc::signal<void> onThinkEnd;
 
   private:
-    /// Whether we have connected to a CM730 subcontroller.
-    bool d_haveBody;
     bool d_isRunning;
     bool d_isStopRequested;
 

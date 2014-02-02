@@ -54,32 +54,27 @@ void Agent::think()
   d_spatialiser->updateAgentToWorld(d_localiser->smoothedPosition());
   t.timeEvent("Agent to World Frame");
 
-  // TODO allow these updates when we don't have a body attached, for better debugging on non-robot machines
+  d_optionTree->run();
+  t.timeEvent("Option Tree");
 
-  if (d_haveBody)
-  {
-    d_optionTree->run();
-    t.timeEvent("Option Tree");
+  //
+  // Process input commands (joystick)
+  //
+  processInputCommands();
+  t.timeEvent("Process Human Input");
 
-    //
-    // Process input commands (joystick)
-    //
-    processInputCommands();
-    t.timeEvent("Process Human Input");
+  //
+  // Flush out new walking parameters
+  //
+  // TODO do this in the motion loop for smoother interpolation
+  d_ambulator->step();
+  t.timeEvent("Ambulator Step");
 
-    //
-    // Flush out new walking parameters
-    //
-    // TODO this becomes part of the motion loop for smoother control
-    d_ambulator->step();
-    t.timeEvent("Ambulator Step");
-
-    //
-    // Update LEDs on back, etc
-    //
-    d_debugger->update();
-    t.timeEvent("Update Debugger");
-  }
+  //
+  // Update LEDs on back, etc
+  //
+  d_debugger->update();
+  t.timeEvent("Update Debugger");
 
   // Refresh MotionTaskState, if one is needed
   d_motionSchedule->update();

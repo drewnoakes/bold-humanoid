@@ -21,11 +21,6 @@ Agent::Agent()
   auto debugControl = make_shared<DebugControl>();
   d_debugger = make_shared<Debugger>(debugControl);
 
-  auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
-  log::info("Agent::Agent") << "Using CM730 Device Path: " << cm730DevicePath;
-  auto cm730Linux = unique_ptr<CM730Linux>(new CM730Linux(cm730DevicePath));
-  auto cm730 = unique_ptr<CM730>(new CM730(move(cm730Linux)));
-
   // Prepare the motion schedule, that coordinates which motions are carried out
   d_motionSchedule = make_shared<MotionTaskScheduler>();
 
@@ -49,17 +44,6 @@ Agent::Agent()
   AgentState::registerObserver(d_suicidePill);
   AgentState::registerObserver(d_odometer);
   AgentState::registerObserver(d_orientationTracker);
-
-  // Connect to hardware subcontroller
-  // TODO let the motion loop do this, and implement a simple, perfect, loopback when no hardware is available
-  d_haveBody = cm730->connect();
-
-  if (!d_haveBody)
-  {
-    // No body exists, so provide a 'zero' position for all joints to
-    // allow better debugging of code on non-robot machines.
-    AgentState::set(BodyState::zero());
-  }
 
   d_ambulator = make_shared<Ambulator>(d_walkModule),
 
@@ -90,16 +74,8 @@ Agent::Agent()
 
   d_debugger->update();
 
-  if (d_haveBody)
-  {
-    d_motionLoop = make_shared<MotionLoop>(move(cm730), debugControl);
-
-    d_motionLoop->addModule(d_motionScriptModule);
-    d_motionLoop->addModule(d_walkModule);
-    d_motionLoop->addModule(d_headModule);
-  }
-  else
-  {
-    log::error("Agent::Agent") << "Failed to connect to CM730 -- continuing without motion loop";
-  }
+  d_motionLoop = make_shared<MotionLoop>(debugControl);
+  d_motionLoop->addModule(d_motionScriptModule);
+  d_motionLoop->addModule(d_walkModule);
+  d_motionLoop->addModule(d_headModule);
 }
