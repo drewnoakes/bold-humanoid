@@ -49,6 +49,11 @@ Voice::Voice(const string voice)
   }
 }
 
+unsigned int Voice::queueLength() const
+{
+  return d_queue.size();
+}
+
 void Voice::say(string message)
 {
   log::verbose("Voice::say") << "Enqueuing: " << message;

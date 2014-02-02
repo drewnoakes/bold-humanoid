@@ -18,6 +18,8 @@ namespace bold
 
     void stop();
 
+    unsigned queueLength() const;
+
   private:
     void sayCallback(std::string message);
 
