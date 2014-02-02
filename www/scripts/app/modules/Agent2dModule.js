@@ -40,10 +40,11 @@ define(
 
         Agent2dModule.prototype.bindEvents = function()
         {
-            this.$canvas.on('mousewheel', function (event)
+            this.canvas.addEventListener('mousewheel', function (event)
             {
                 event.preventDefault();
-                this.scale *= Math.pow(1.1, event.originalEvent.wheelDelta / 80);
+
+                this.scale *= Math.pow(1.1, event.wheelDelta / 80);
                 this.scale = Math.max(20, this.scale);
                 this.transform = new Transform()
                     .translate(this.canvas.width/2, this.canvas.height/2)
@@ -51,23 +52,23 @@ define(
                 this.needsRender = true;
             }.bind(this));
 
-            this.$canvas.on('mousemove', function (event)
+            this.canvas.addEventListener('mousemove', function (event)
             {
                 MouseEventUtil.polyfill(event);
                 var p = this.transform.clone().invert().transformPoint(event.offsetX, event.offsetY);
-                this.$hoverInfo.text(p.x.toFixed(2) + ', ' + p.y.toFixed(2));
+                this.hoverInfo.textContent = p.x.toFixed(2) + ', ' + p.y.toFixed(2);
             }.bind(this));
 
-            this.$canvas.on('mouseleave', function() { this.$hoverInfo.text(''); }.bind(this));
+            this.canvas.addEventListener('mouseleave', function() { this.hoverInfo.textContent = ''; }.bind(this));
         };
 
         Agent2dModule.prototype.load = function()
         {
             this.transform = new Transform();
 
-            this.$canvas = $('<canvas></canvas>');
-            this.canvas = this.$canvas.get(0);
-            this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
+            this.canvas = document.createElement('canvas');
+            this.hoverInfo = document.createElement('div');
+            this.hoverInfo.className = 'hover-info';
 
             var headControlsContainer = document.createElement('div');
             ControlBuilder.action('head-module.move-down', headControlsContainer);
@@ -77,8 +78,8 @@ define(
             ControlBuilder.action('head-module.move-home', headControlsContainer);
             ControlBuilder.action('head-module.move-zero', headControlsContainer);
 
-            this.$container.append(this.$canvas)
-                           .append(this.$hoverInfo)
+            this.$container.append(this.canvas)
+                           .append(this.hoverInfo)
                            .append(headControlsContainer);
 
             this.bindEvents();
