@@ -61,6 +61,7 @@ namespace bold
     std::shared_ptr<MotionScriptModule> getMotionScriptModule() const { return d_motionScriptModule; }
 
     std::shared_ptr<FallDetector> getFallDetector() const { return d_fallDetector; }
+    std::shared_ptr<Voice> getVoice() const { return d_voice; }
 
     unsigned getTeamNumber() const { return d_teamNumber; }
     unsigned getUniformNumber() const { return d_uniformNumber; }
