@@ -42,7 +42,7 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
     }
     case SchmittTriggerTransition::None:
     {
-      if (!d_voltageTrigger.isHigh() && Clock::getSecondsSince(d_lastVoltageWarningTime) > 15)
+      if (!d_voltageTrigger.isHigh() && Clock::getSecondsSince(d_lastVoltageWarningTime) > 20)
       {
         if (d_voice)
           d_voice->say("Help. My voltage is still low.");
@@ -52,7 +52,7 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
     }
   }
 
-  if (Clock::getSecondsSince(d_lastTemperatureWarningTime) > 15)
+  if (Clock::getSecondsSince(d_lastTemperatureWarningTime) > 20)
   {
     int maxTemperature = 0;
     uchar maxTemperatureJointId = 0;
