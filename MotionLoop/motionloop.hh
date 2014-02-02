@@ -36,7 +36,7 @@ namespace bold
   private:
     void step(SequentialTimer& t);
 
-    void updateStaticHardwareState();
+    bool updateStaticHardwareState();
 
     std::list<std::shared_ptr<MotionModule>> d_modules;
     std::unique_ptr<CM730> d_cm730;

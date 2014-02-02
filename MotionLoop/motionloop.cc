@@ -315,8 +315,8 @@ void MotionLoop::step(SequentialTimer& t)
 
   if (d_staticHardwareStateUpdateNeeded)
   {
-    updateStaticHardwareState();
-    d_staticHardwareStateUpdateNeeded = false;
+    if (updateStaticHardwareState())
+      d_staticHardwareStateUpdateNeeded = false;
     t.timeEvent("Read StaticHardwareState");
   }
 
@@ -361,14 +361,14 @@ void MotionLoop::step(SequentialTimer& t)
   t.exit();
 }
 
-void MotionLoop::updateStaticHardwareState()
+bool MotionLoop::updateStaticHardwareState()
 {
   CommResult res = d_cm730->bulkRead(d_staticBulkRead.get());
 
   if (res != CommResult::SUCCESS)
   {
     log::warning("MotionLoop::updateStaticHardwareState") << "Bulk read failed -- skipping update of StaticHardwareState";
-    return;
+    return false;
   }
 
   auto cm730State = make_shared<StaticCM730State>(d_staticBulkRead->getBulkReadData(CM730::ID_CM));
@@ -378,4 +378,5 @@ void MotionLoop::updateStaticHardwareState()
     mx28States.push_back(make_shared<StaticMX28State>(d_staticBulkRead->getBulkReadData(jointId), jointId));
 
   AgentState::set(make_shared<StaticHardwareState const>(cm730State, mx28States));
+  return true;
 }
