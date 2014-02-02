@@ -53,6 +53,13 @@ void Voice::say(string message)
   d_queue.push(message);
 }
 
+void Voice::sayOneOf(initializer_list<string> messages)
+{
+  size_t index = rand() % messages.size();
+  string message = *(messages.begin() + index);
+  say(message);
+}
+
 void Voice::sayCallback(string message)
 {
   if (!d_initialised)

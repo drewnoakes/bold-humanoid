@@ -35,7 +35,7 @@ Agent::Agent()
   d_motionScriptModule = make_shared<MotionScriptModule>(d_motionSchedule, motionScripts);
 
   // Create StateObservers
-  d_fallDetector = make_shared<FallDetector>();
+  d_fallDetector = make_shared<FallDetector>(d_voice);
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
   d_suicidePill = make_shared<SuicidePill>(this, d_debugger);

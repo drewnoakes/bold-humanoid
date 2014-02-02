@@ -1,6 +1,8 @@
 #pragma once
 
+#include <initializer_list>
 #include <string>
+
 #include "../util/consumerqueuethread.hh"
 
 namespace bold
@@ -11,6 +13,8 @@ namespace bold
     Voice(std::string voice = "default");
 
     void say(std::string message);
+
+    void sayOneOf(std::initializer_list<std::string> messages);
 
     void stop();
 
