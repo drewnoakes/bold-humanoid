@@ -181,6 +181,7 @@
     "technique": 0
   },
   "options": {
+    "announce-fsm-states": false,
     "circle-ball": {
       "walk-x": 1,
       "walk-y": 20,

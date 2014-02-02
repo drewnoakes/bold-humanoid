@@ -148,9 +148,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   // FSMs
 
-  auto winFsm = tree->addOption(make_shared<FSMOption>("win"), /*isRoot*/true);
+  auto winFsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "win"), /*isRoot*/true);
 
-  auto playingFsm = tree->addOption(make_shared<FSMOption>("playing"));
+  auto playingFsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "playing"));
 
   //
   // ========== WIN ==========
@@ -171,6 +171,9 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
   auto sitForShutdownState = winFsm->newState("sitForShutdown", {sitArmsBack});
   auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
+
+  // TODO control that allows announcing states entered, provided speech queue isn't too long (off by default)
+
 
   readyState->onEnter = [debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); };
   setState->onEnter = [debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); };

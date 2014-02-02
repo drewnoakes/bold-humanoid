@@ -3,9 +3,10 @@
  */
 define(
     [
-        'ControlBuilder'
+        'ControlBuilder',
+        'util/Closeable'
     ],
-    function(ControlBuilder)
+    function(ControlBuilder, Closeable)
     {
         'use strict';
 
@@ -22,16 +23,22 @@ define(
                     supports: { fullScreen: true, advanced: false }
                 }
             ];
+
+            this.closables = new Closeable();
         };
 
         VoiceModule.prototype.load = function()
         {
-            ControlBuilder.actions('voice.speak', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container).get(0));
+            this.closables.add(ControlBuilder.build('options.announce-fsm-states', this.$container.get(0)));
+
+            var controls = $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container).get(0);
+            ControlBuilder.actions('voice.speak', controls);
         };
 
         VoiceModule.prototype.unload = function()
         {
             this.$container.empty();
+            this.closables.closeAll();
         };
 
         return VoiceModule;

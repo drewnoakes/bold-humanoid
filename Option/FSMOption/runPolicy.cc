@@ -1,5 +1,8 @@
 #include "fsmoption.ih"
 
+#include "../../Config/config.hh"
+#include "../../Voice/voice.hh"
+
 vector<shared_ptr<Option>> FSMOption::runPolicy()
 {
   log::verbose("FSMOption::runPolicy") << " ----- Start -----";
@@ -8,6 +11,13 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
   {
     d_curState = state;
     d_curState->start();
+
+    static Setting<bool>* announceFsmStates = Config::getSetting<bool>("options.announce-fsm-states");
+    if (announceFsmStates->getValue())
+    {
+      if (d_voice->queueLength() < 2)
+        d_voice->say(state->name);
+    }
   };
 
   if (!d_curState)

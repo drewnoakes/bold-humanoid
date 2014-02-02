@@ -180,6 +180,7 @@
     "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 }, "advanced": false }
   },
   "options": {
+    "announce-fsm-states": { "type": "bool", "default": false },
     "circle-ball": {
       "walk-x":    { "type": "double", "default": 1.0 },
       "walk-y":    { "type": "double", "default": 20.0 },
