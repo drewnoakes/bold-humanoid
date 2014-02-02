@@ -28,7 +28,6 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
 
   static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
 
-  // TODO VISION threshold in config
   double ballMeasuredSizeRatio = radiusAgentSpace / ballRadius;
   if (ballMeasuredSizeRatio < d_acceptedBallMeasuredSizeRatio->getValue().min() ||
       ballMeasuredSizeRatio > d_acceptedBallMeasuredSizeRatio->getValue().max())
