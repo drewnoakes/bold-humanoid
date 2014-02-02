@@ -56,6 +56,9 @@ define(
 
         function createSetting(setting, container, closeables)
         {
+            if (setting.isReadOnly)
+                return;
+
             var heading, input,
                 wrapper = document.createElement('div');
             wrapper.dataset.path = setting.path;
