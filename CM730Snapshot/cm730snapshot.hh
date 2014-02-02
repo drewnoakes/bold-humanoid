@@ -14,8 +14,11 @@ namespace bold
   {
   public:
     bool isPowered;
+    /// Red LED
     bool isLed2On;
+    /// Blue LED
     bool isLed3On;
+    /// Green LED
     bool isLed4On;
     Eigen::Vector3d eyeColor;
     Eigen::Vector3d foreheadColor;
