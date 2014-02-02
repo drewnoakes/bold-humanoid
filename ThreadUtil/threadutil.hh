@@ -16,8 +16,8 @@ namespace bold
   class ThreadUtil
   {
   public:
-    static void setThreadId(ThreadId threadId) { d_threadId = threadId; }
     static ThreadId getThreadId() { return d_threadId; }
+    static void setThreadId(ThreadId threadId);
 
     static bool isMotionLoopThread();
     static bool isThinkLoopThread();

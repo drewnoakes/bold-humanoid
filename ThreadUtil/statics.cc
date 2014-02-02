@@ -4,11 +4,20 @@
 
 #include <sstream>
 #include <iostream>
+#include <pthread.h>
 
 using namespace bold;
 using namespace std;
 
 thread_local ThreadId ThreadUtil::d_threadId;
+
+void ThreadUtil::setThreadId(ThreadId threadId)
+{
+  d_threadId = threadId;
+
+  if (pthread_setname_np(pthread_self(), getThreadName().c_str()) != 0)
+    log::error("ThreadUtil::setThreadId") << "Error setting thread name";
+}
 
 std::string ThreadUtil::getThreadName()
 {
