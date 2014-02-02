@@ -15,10 +15,8 @@ Voice::Voice(const string voice)
   d_queue(std::bind(&Voice::sayCallback, this, std::placeholders::_1)),
   d_initialised(false)
 {
-  // TODO SETTINGS specify these strings in configuration
-
 /*
-  vector<string> phrases = {
+  d_voice->sayOneOf({
     "Bold Hearts are go",
 //     "I am a protector of the realm",
 //     "What do you despise? By this are you truly known.",
@@ -29,8 +27,7 @@ Voice::Voice(const string voice)
 //     "Kill if you will, but command me nothing!",
 //     "The existence of tricks does not imply the absence of magic",
 //     "We eat ham and jam and Spam a lot"
-  };
-  d_voice->say(phrases[rand() % phrases.size()]);
+  });
 */
 
   string sayings[] = {

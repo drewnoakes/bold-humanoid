@@ -28,7 +28,7 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
     {
       // Was probably plugged into a charger
       if (d_voice)
-        d_voice->say("Thank you"); // haha
+        d_voice->sayOneOf({"Thank you", "Oh. Yeah."}); // haha
       log::info("HealthAndSafety::observeTyped") << "Voltage level restored above " << d_voltageTrigger.getHighThreshold() << " volts";
       break;
     }
@@ -69,7 +69,7 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
     if (maxTemperature > d_temperatureThreshold)
     {
       if (d_voice)
-        d_voice->say("Temperature threshold breach. It's getting hot in here.");
+        d_voice->sayOneOf({"Temperature threshold breach.", "It's getting hot in here."});
       log::warning("HealthAndSafety::observeTyped") << "Joint " << (int)maxTemperatureJointId << " has temperature of " << maxTemperature << "°C";
       d_lastTemperatureWarningTime = Clock::getTimestamp();
     }
