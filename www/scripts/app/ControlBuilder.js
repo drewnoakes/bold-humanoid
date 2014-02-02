@@ -219,7 +219,8 @@ define(
             var closeables = [];
             ControlClient.withSettings(idPrefix, function(settings)
             {
-                _.each(settings, function (setting)
+                var sortedSettings = settings.sort(function (a, b) { return (a.type == "bool") != (b.type == "bool"); });
+                _.each(sortedSettings, function (setting)
                 {
                     createSetting(setting, container, closeables);
                 })
