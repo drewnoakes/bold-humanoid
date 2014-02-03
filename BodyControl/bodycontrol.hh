@@ -164,9 +164,10 @@ namespace bold
     Range<int> d_changedAddressRange;
   };
 
-  class HeadSection;
   class ArmSection;
+  class HeadSection;
   class LegSection;
+  class HardwareState;
 
   class BodyControl
   {
@@ -174,7 +175,7 @@ namespace bold
     BodyControl();
 
     /** Sets all JointControl positions to match current hardware values. */
-    void updateFromHardwareState();
+    void updateFromHardwareState(std::shared_ptr<HardwareState const> const& hw);
 
     JointControl* getJoint(JointId const id) const { return d_joints[(int)id - 1].get(); }
 

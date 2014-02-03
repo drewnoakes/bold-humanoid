@@ -18,10 +18,8 @@ BodyControl::BodyControl()
   d_legSection  = unique_ptr<LegSection> (new LegSection (this));
 }
 
-void BodyControl::updateFromHardwareState()
+void BodyControl::updateFromHardwareState(shared_ptr<HardwareState const> const& hw)
 {
-  auto hw = AgentState::get<HardwareState>();
-
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     JointControl* joint = getJoint((JointId)jointId);

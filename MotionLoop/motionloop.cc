@@ -378,7 +378,7 @@ void MotionLoop::step(SequentialTimer& t)
 
   if (!d_readYet)
   {
-    d_bodyControl->updateFromHardwareState();
+    d_bodyControl->updateFromHardwareState(hw);
     d_readYet = true;
   }
 
