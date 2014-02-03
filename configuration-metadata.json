@@ -8,9 +8,9 @@
     "voice":        { "type": "string", "readonly": true, "default": "english-mb-en1" },
     "joystick": {
       "enabled":   { "type": "bool", "readonly": true, "default": false },
-      "x-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "readonly": false, "default": 15.0 },
-      "y-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "readonly": false, "default": 15.0 },
-      "a-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "readonly": false, "default": 15.0 }
+      "x-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 },
+      "y-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 },
+      "a-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 }
     }
   },
   "world": {
@@ -38,7 +38,7 @@
       "vertical-degrees":   { "type": "double", "readonly": true, "default": 46.0 },
       "horizontal-degrees": { "type": "double", "readonly": true, "default": 58.0 }
     },
-    "vertical-angle-degrees": {"type": "double", "readonly": false, "default": -39 }
+    "vertical-angle-degrees": {"type": "double", "default": -39 }
   },
   "vision": {
     "min-ball-area":                { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
@@ -53,7 +53,7 @@
     },
     "ignore-above-horizon": { "type": "bool", "default": true },
     "ignore-outside-field": { "type": "bool", "default": true },
-    "image-granularity": { "type": "enum", "default": 0, "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3, "Projected": 4 }, "advanced": false },
+    "image-granularity": { "type": "enum", "default": 0, "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3, "Projected": 4 } },
     "max-granularity": { "type": "int", "min": 1, "max": 20, "default": 4, "advanced": true },
     "line-detection": {
       "enable":      { "type": "bool", "default": false, "description": "Detect lines" },
@@ -177,7 +177,7 @@
     "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "default": 2.0, "description": "Fwd acc hip pitch factor" }
   },
   "orientation-tracker": {
-    "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 }, "advanced": false }
+    "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 } }
   },
   "options": {
     "announce-fsm-states": { "type": "bool", "default": false },
