@@ -17,6 +17,7 @@ namespace bold
   typedef unsigned char uchar;
 
   class HardwareState;
+  template<class> class Setting;
 
   class BodyState : public StateObject
   {
@@ -80,6 +81,8 @@ namespace bold
     Eigen::Affine3d d_cameraAgentTransform;
 
     ulong d_motionCycleNumber;
+
+    Setting<double>* d_cameraTilt;
 
   public:
     // Needed when having fixed sized Eigen member
