@@ -11,11 +11,11 @@ using namespace std;
 BodyControl::BodyControl()
 {
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    d_joints.push_back(make_shared<JointControl>(jointId));
+    d_joints.push_back(unique_ptr<JointControl>(new JointControl(jointId)));
 
-  d_headSection = make_shared<HeadSection>(this);
-  d_armSection = make_shared<ArmSection>(this);
-  d_legSection = make_shared<LegSection>(this);
+  d_headSection = unique_ptr<HeadSection>(new HeadSection(this));
+  d_armSection  = unique_ptr<ArmSection> (new ArmSection (this));
+  d_legSection  = unique_ptr<LegSection> (new LegSection (this));
 }
 
 void BodyControl::updateFromHardwareState()
@@ -24,8 +24,11 @@ void BodyControl::updateFromHardwareState()
 
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
-    shared_ptr<JointControl> joint = getJoint((JointId)jointId);
+    JointControl* joint = getJoint((JointId)jointId);
+
+    // Set measured hardware position
     joint->setValue(hw->getMX28State(jointId).presentPositionValue);
+
     // Clear dirty flag. Value came from hardware, so no need to write it back again.
     joint->clearDirty();
   }

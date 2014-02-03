@@ -164,14 +164,14 @@ void HeadModule::step(shared_ptr<JointSelection> selectedJoints)
   // TODO implement a head movement that updates its target position every 8ms instead of every 30ms, for smoother movements
 }
 
-void HeadModule::applyHead(std::shared_ptr<HeadSection> head)
+void HeadModule::applyHead(HeadSection* head)
 {
   auto gainP = d_gainP->getValue();
-  head->visitJoints([this,gainP](shared_ptr<JointControl> joint) { joint->setPGain(gainP); });
+  head->visitJoints([this,gainP](JointControl* joint) { joint->setPGain(gainP); });
 
   head->pan()->setDegrees(d_targetPanAngleDegs);
   head->tilt()->setDegrees(d_targetTiltAngleDegs);
 }
 
-void HeadModule::applyArms(std::shared_ptr<ArmSection> arms) { log::error("HeadModule::applyArms") << "SHOULD NOT BE CALLED"; }
-void HeadModule::applyLegs(std::shared_ptr<LegSection> legs) { log::error("HeadModule::applyLegs") << "SHOULD NOT BE CALLED"; }
+void HeadModule::applyArms(ArmSection* arms) { log::error("HeadModule::applyArms") << "SHOULD NOT BE CALLED"; }
+void HeadModule::applyLegs(LegSection* legs) { log::error("HeadModule::applyLegs") << "SHOULD NOT BE CALLED"; }

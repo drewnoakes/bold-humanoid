@@ -247,7 +247,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
 
   uchar dirtyDeviceCount = 0;
   Range<int> addrRange;
-  for (shared_ptr<JointControl> joint : d_bodyControl->getJoints())
+  for (auto const& joint : d_bodyControl->getJoints())
   {
     if (joint->isDirty())
     {
@@ -263,7 +263,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
 
     uchar parameters[dirtyDeviceCount * bytesPerDevice];
     int n = 0;
-    for (shared_ptr<JointControl> joint : d_bodyControl->getJoints())
+    for (auto const& joint : d_bodyControl->getJoints())
     {
       if (joint->isDirty())
       {

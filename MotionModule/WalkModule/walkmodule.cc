@@ -518,18 +518,18 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     d_outValue[i] = MX28::clampValue(d_outValue[i]);
 }
 
-void WalkModule::applyHead(shared_ptr<HeadSection> head)
+void WalkModule::applyHead(HeadSection* head)
 {
   // Ensure we have our standard PID values
-  head->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
+  head->visitJoints([this](JointControl* joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
 
   head->pan()->setDegrees(A_MOVE_AMPLITUDE);
 }
 
-void WalkModule::applyArms(shared_ptr<ArmSection> arms)
+void WalkModule::applyArms(ArmSection* arms)
 {
   // Arms move with a low P value of 8
-  arms->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPGain(8); joint->setIGain(0); joint->setDGain(0); });
+  arms->visitJoints([this](JointControl* joint) { joint->setPGain(8); joint->setIGain(0); joint->setDGain(0); });
 
   arms->shoulderPitchRight()->setValue(d_outValue[12]);
   arms->shoulderPitchLeft()->setValue(d_outValue[13]);
@@ -540,10 +540,10 @@ void WalkModule::applyArms(shared_ptr<ArmSection> arms)
   arms->elbowLeft()->setDegrees(-29);
 }
 
-void WalkModule::applyLegs(shared_ptr<LegSection> legs)
+void WalkModule::applyLegs(LegSection* legs)
 {
   // Ensure we have our standard PID values
-  legs->visitJoints([this](shared_ptr<JointControl> joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
+  legs->visitJoints([this](JointControl* joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
 
   legs->hipYawRight()->setValue(d_outValue[0]);
   legs->hipRollRight()->setValue(d_outValue[1]);

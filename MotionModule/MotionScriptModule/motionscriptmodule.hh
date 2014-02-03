@@ -28,11 +28,11 @@ namespace bold
 
     void step(std::shared_ptr<JointSelection> selectedJoints) override;
 
-    void applyHead(std::shared_ptr<HeadSection> head) override;
-    void applyArms(std::shared_ptr<ArmSection> arms) override;
-    void applyLegs(std::shared_ptr<LegSection> legs) override;
+    void applyHead(HeadSection* head) override;
+    void applyArms(ArmSection* arms) override;
+    void applyLegs(LegSection* legs) override;
 
-    void applySection(std::shared_ptr<BodySection> section);
+    void applySection(BodySection* section);
 
     /** Attempts to start executing the provided script runner.
      *

@@ -78,6 +78,8 @@ int main(int argc, char **argv)
 
   AgentState::initialise();
 
+  Config::initialise("../configuration-metadata.json", "../configuration-team.json");
+
   for (int i = 0; i < argc; i++)
   {
     if (strcmp("-v", argv[i]) == 0)

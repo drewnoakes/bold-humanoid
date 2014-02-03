@@ -176,20 +176,20 @@ namespace bold
     /** Sets all JointControl positions to match current hardware values. */
     void updateFromHardwareState();
 
-    std::shared_ptr<JointControl> getJoint(JointId const id) const { return d_joints[(int)id - 1]; }
+    JointControl* getJoint(JointId const id) const { return d_joints[(int)id - 1].get(); }
 
-    std::vector<std::shared_ptr<JointControl>> getJoints() const { return d_joints; }
+    std::vector<std::unique_ptr<JointControl>> const& getJoints() const { return d_joints; }
 
-    std::shared_ptr<HeadSection> getHeadSection() const { return d_headSection; }
-    std::shared_ptr<ArmSection>  getArmSection()  const { return d_armSection; }
-    std::shared_ptr<LegSection>  getLegSection()  const { return d_legSection; }
+    HeadSection* getHeadSection() const { return d_headSection.get(); }
+    ArmSection*  getArmSection()  const { return d_armSection.get(); }
+    LegSection*  getLegSection()  const { return d_legSection.get(); }
 
   private:
-    std::vector<std::shared_ptr<JointControl>> d_joints;
+    std::vector<std::unique_ptr<JointControl>> d_joints;
 
-    std::shared_ptr<HeadSection> d_headSection;
-    std::shared_ptr<ArmSection> d_armSection;
-    std::shared_ptr<LegSection> d_legSection;
+    std::unique_ptr<HeadSection> d_headSection;
+    std::unique_ptr<ArmSection> d_armSection;
+    std::unique_ptr<LegSection> d_legSection;
   };
 
   class BodySection
@@ -204,7 +204,7 @@ namespace bold
         throw new std::runtime_error("Invalid min/max joint IDs");
     }
 
-    void visitJoints(std::function<void(std::shared_ptr<JointControl>)> action)
+    void visitJoints(std::function<void(JointControl*)> action)
     {
       for (uchar jointId = (uchar)d_minJointId; jointId <= (uchar)d_maxJointId; jointId++)
       {
@@ -223,8 +223,8 @@ namespace bold
   public:
     HeadSection(BodyControl* body) : BodySection(body, JointId::HEAD_PAN, JointId::HEAD_TILT) {}
 
-    std::shared_ptr<JointControl> pan() const { return d_body->getJoint(JointId::HEAD_PAN); }
-    std::shared_ptr<JointControl> tilt() const { return d_body->getJoint(JointId::HEAD_TILT); }
+    JointControl* pan() const { return d_body->getJoint(JointId::HEAD_PAN); }
+    JointControl* tilt() const { return d_body->getJoint(JointId::HEAD_TILT); }
   };
 
   class ArmSection : public BodySection
@@ -232,12 +232,12 @@ namespace bold
   public:
     ArmSection(BodyControl* body) : BodySection(body, JointId::R_SHOULDER_PITCH, JointId::L_ELBOW) {}
 
-    std::shared_ptr<JointControl> shoulderPitchLeft() const { return d_body->getJoint(JointId::L_SHOULDER_PITCH); }
-    std::shared_ptr<JointControl> shoulderPitchRight() const { return d_body->getJoint(JointId::R_SHOULDER_PITCH); }
-    std::shared_ptr<JointControl> shoulderRollLeft() const { return d_body->getJoint(JointId::L_SHOULDER_ROLL); }
-    std::shared_ptr<JointControl> shoulderRollRight() const { return d_body->getJoint(JointId::R_SHOULDER_ROLL); }
-    std::shared_ptr<JointControl> elbowLeft() const { return d_body->getJoint(JointId::L_ELBOW); }
-    std::shared_ptr<JointControl> elbowRight() const { return d_body->getJoint(JointId::R_ELBOW); }
+    JointControl* shoulderPitchLeft() const { return d_body->getJoint(JointId::L_SHOULDER_PITCH); }
+    JointControl* shoulderPitchRight() const { return d_body->getJoint(JointId::R_SHOULDER_PITCH); }
+    JointControl* shoulderRollLeft() const { return d_body->getJoint(JointId::L_SHOULDER_ROLL); }
+    JointControl* shoulderRollRight() const { return d_body->getJoint(JointId::R_SHOULDER_ROLL); }
+    JointControl* elbowLeft() const { return d_body->getJoint(JointId::L_ELBOW); }
+    JointControl* elbowRight() const { return d_body->getJoint(JointId::R_ELBOW); }
   };
 
   class LegSection : public BodySection
@@ -245,17 +245,17 @@ namespace bold
   public:
     LegSection(BodyControl* body) : BodySection(body, JointId::R_HIP_YAW, JointId::L_ANKLE_ROLL) {}
 
-    std::shared_ptr<JointControl> hipYawLeft() const { return d_body->getJoint(JointId::L_HIP_YAW); }
-    std::shared_ptr<JointControl> hipYawRight() const { return d_body->getJoint(JointId::R_HIP_YAW); }
-    std::shared_ptr<JointControl> hipRollLeft() const { return d_body->getJoint(JointId::L_HIP_ROLL); }
-    std::shared_ptr<JointControl> hipRollRight() const { return d_body->getJoint(JointId::R_HIP_ROLL); }
-    std::shared_ptr<JointControl> hipPitchLeft() const { return d_body->getJoint(JointId::L_HIP_PITCH); }
-    std::shared_ptr<JointControl> hipPitchRight() const { return d_body->getJoint(JointId::R_HIP_PITCH); }
-    std::shared_ptr<JointControl> kneeLeft() const { return d_body->getJoint(JointId::L_KNEE); }
-    std::shared_ptr<JointControl> kneeRight() const { return d_body->getJoint(JointId::R_KNEE); }
-    std::shared_ptr<JointControl> anklePitchLeft() const { return d_body->getJoint(JointId::L_ANKLE_PITCH); }
-    std::shared_ptr<JointControl> anklePitchRight() const { return d_body->getJoint(JointId::R_ANKLE_PITCH); }
-    std::shared_ptr<JointControl> ankleRollLeft() const { return d_body->getJoint(JointId::L_ANKLE_ROLL); }
-    std::shared_ptr<JointControl> ankleRollRight() const { return d_body->getJoint(JointId::R_ANKLE_ROLL); }
+    JointControl* hipYawLeft() const { return d_body->getJoint(JointId::L_HIP_YAW); }
+    JointControl* hipYawRight() const { return d_body->getJoint(JointId::R_HIP_YAW); }
+    JointControl* hipRollLeft() const { return d_body->getJoint(JointId::L_HIP_ROLL); }
+    JointControl* hipRollRight() const { return d_body->getJoint(JointId::R_HIP_ROLL); }
+    JointControl* hipPitchLeft() const { return d_body->getJoint(JointId::L_HIP_PITCH); }
+    JointControl* hipPitchRight() const { return d_body->getJoint(JointId::R_HIP_PITCH); }
+    JointControl* kneeLeft() const { return d_body->getJoint(JointId::L_KNEE); }
+    JointControl* kneeRight() const { return d_body->getJoint(JointId::R_KNEE); }
+    JointControl* anklePitchLeft() const { return d_body->getJoint(JointId::L_ANKLE_PITCH); }
+    JointControl* anklePitchRight() const { return d_body->getJoint(JointId::R_ANKLE_PITCH); }
+    JointControl* ankleRollLeft() const { return d_body->getJoint(JointId::L_ANKLE_ROLL); }
+    JointControl* ankleRollRight() const { return d_body->getJoint(JointId::R_ANKLE_ROLL); }
   };
 }

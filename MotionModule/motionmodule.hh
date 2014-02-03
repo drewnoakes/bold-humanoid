@@ -51,9 +51,9 @@ namespace bold
      */
     virtual void step(std::shared_ptr<JointSelection> selectedJoints) = 0;
 
-    virtual void applyHead(std::shared_ptr<HeadSection> head) = 0;
-    virtual void applyArms(std::shared_ptr<ArmSection> arms) = 0;
-    virtual void applyLegs(std::shared_ptr<LegSection> legs) = 0;
+    virtual void applyHead(HeadSection* head) = 0;
+    virtual void applyArms(ArmSection* arms) = 0;
+    virtual void applyLegs(LegSection* legs) = 0;
 
     std::shared_ptr<MotionTaskScheduler> getScheduler() const { return d_scheduler; }
 

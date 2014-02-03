@@ -65,21 +65,21 @@ void MotionScriptModule::step(shared_ptr<JointSelection> selectedJoints)
     setCompletedFlag();
 }
 
-void MotionScriptModule::applySection(shared_ptr<BodySection> section)
+void MotionScriptModule::applySection(BodySection* section)
 {
   if (!d_runner)
     return;
 
-  section->visitJoints([&section,this](shared_ptr<JointControl> joint)
+  section->visitJoints([&section,this](JointControl* joint)
   {
     joint->setValue(d_runner->getValue(joint->getId()));
     joint->setPGain(d_runner->getPGain(joint->getId()));
   });
 }
 
-void MotionScriptModule::applyHead(shared_ptr<HeadSection> head) { applySection(dynamic_pointer_cast<BodySection>(head)); }
-void MotionScriptModule::applyArms(shared_ptr<ArmSection> arms) { applySection(dynamic_pointer_cast<BodySection>(arms)); }
-void MotionScriptModule::applyLegs(shared_ptr<LegSection> legs) { applySection(dynamic_pointer_cast<BodySection>(legs)); }
+void MotionScriptModule::applyHead(HeadSection* head) { applySection(static_cast<BodySection*>(head)); }
+void MotionScriptModule::applyArms(ArmSection* arms) { applySection(static_cast<BodySection*>(arms)); }
+void MotionScriptModule::applyLegs(LegSection* legs) { applySection(static_cast<BodySection*>(legs)); }
 
 bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
 {
