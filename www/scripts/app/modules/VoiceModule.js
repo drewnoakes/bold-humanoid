@@ -29,10 +29,18 @@ define(
 
         VoiceModule.prototype.load = function()
         {
-            this.closables.add(ControlBuilder.build('options.announce-fsm-states', this.$container.get(0)));
+            var usage = document.createElement('div');
+            usage.className = 'control-container';
+            this.closables.add(ControlBuilder.build('options.announce-fsm-states', usage));
+            this.$container.append(usage);
 
-            var controls = $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container).get(0);
-            ControlBuilder.actions('voice.speak', controls);
+            var controls = document.createElement('div');
+            controls.className = 'control-container flow';
+            ControlBuilder.buildAll('voice', controls);
+            this.$container.append(controls);
+
+            var sayings = $('<div></div>', {'class': 'control-container'}).appendTo(this.$container).get(0);
+            ControlBuilder.actions('voice.speak', sayings);
         };
 
         VoiceModule.prototype.unload = function()

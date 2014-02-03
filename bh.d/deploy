@@ -39,6 +39,7 @@ do
         darwin@darwin$i:lib/
 
     ssh darwin@darwin$i "sudo ldconfig /home/darwin/lib"
+    ssh darwin@darwin$i 'espeak -p 0 -s 130 -v english-mb-en1 "Full deployment complete"' 2> /dev/null
 
     if [ $? -ne 0 ]; then
         echo FAILED to deploy to darwin$i

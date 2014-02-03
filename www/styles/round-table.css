@@ -181,7 +181,7 @@ div.module
 {
     box-sizing: content-box;
     width: 640px;
-    min-height: 320px;
+    min-height: 120px;
     display: inline-block;
     vertical-align: top;
     background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0,rgba(0,0,0,0.2) 12px);
@@ -835,4 +835,16 @@ div.module.agent-2d .hover-info
 div.module.agent-2d div.pane-container
 {
   min-height: 480px;
+}
+
+/*******************************************************************/
+
+div.module.voice div.control-container + div.control-container
+{
+    margin-top: 14px;
+}
+
+div.module.voice div.control-container.flow .setting.control
+{
+    width: 125px;
 }

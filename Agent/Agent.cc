@@ -11,8 +11,7 @@ Agent::Agent()
 
   AgentState::initialise();
 
-  if (Config::getStaticValue<bool>("use-speech"))
-    d_voice = make_shared<Voice>(Config::getStaticValue<string>("hardware.voice"));
+  d_voice = make_shared<Voice>();
 
   vector<shared_ptr<MotionScript>> motionScripts = MotionScript::loadAllInPath("./motionscripts");
 

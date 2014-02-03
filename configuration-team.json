@@ -1,9 +1,17 @@
 {
-  "use-speech": true,
+  "voice": {
+    "enabled": true,
+    "name":    1,
+    "rate":    130,
+    "volume":  140,
+    "pitch":   0,
+    "range":   80,
+    "word-gap-ms": 5,
+    "capital-accent-hz": 20
+  },
   "hardware": {
     "cm730-path": "/dev/ttyUSB0",
     "video-path": "/dev/video0",
-    "voice": "english-mb-en1",
     "joystick": {
       "enabled": false,
       "x-amp-max": 15.0,

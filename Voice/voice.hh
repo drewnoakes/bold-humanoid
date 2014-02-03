@@ -7,10 +7,13 @@
 
 namespace bold
 {
+  template<class> class Setting;
+
   class Voice
   {
   public:
-    Voice(std::string voice = "default");
+    Voice();
+    ~Voice();
 
     void say(std::string message);
 
@@ -23,8 +26,14 @@ namespace bold
   private:
     void sayCallback(std::string message);
 
-    std::string d_voiceName;
     ConsumerQueueThread<std::string> d_queue;
+    Setting<int>* d_name;
+    Setting<int>* d_rate;
+    Setting<int>* d_volume;
+    Setting<int>* d_pitch;
+    Setting<int>* d_range;
+    Setting<int>* d_wordGapMs;
+    Setting<int>* d_capitalAccentHz;
     bool d_initialised;
   };
 }

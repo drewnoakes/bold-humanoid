@@ -1,11 +1,33 @@
 {
   "uniform-number": { "type": "int", "readonly": true, "default": 2, "min": 1 },
   "team-number":    { "type": "int", "readonly": true, "default": 36 },
-  "use-speech":     { "type": "bool", "readonly": true, "default": true },
+  "voice": {
+    "name":    {
+      "type": "enum",
+      "default": 1,
+      "values": {
+        "english-mb-en1": 1,
+        "english":        2,
+        "en-scottish":    3,
+        "english-north":  4,
+        "english_rp":     5,
+        "english_wmids":  6,
+        "english-us":     7,
+        "german":         8,
+        "dutch":          9
+      }
+    },
+    "enabled": { "type": "bool", "default": true },
+    "rate":    { "type": "int", "min": 80, "max": 450, "default": 175 },
+    "volume":  { "type": "int", "min": 0,  "max": 200, "default": 100 },
+    "pitch":   { "type": "int", "min": 0, "max": 100, "default": 50 },
+    "range":   { "type": "int", "min": 0, "max": 100, "default": 50 },
+    "word-gap-ms":       { "type": "int", "min": 0, "max": 1000, "default": 0 },
+    "capital-accent-hz": { "type": "int", "min": 0, "max": 5000, "default": 0 }
+  },
   "hardware": {
     "cm730-path":   { "type": "string", "readonly": true, "default": "/dev/ttyUSB0" },
     "video-path":   { "type": "string", "readonly": true, "default": "/dev/video0" },
-    "voice":        { "type": "string", "readonly": true, "default": "english-mb-en1" },
     "joystick": {
       "enabled":   { "type": "bool", "readonly": true, "default": false },
       "x-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 },
