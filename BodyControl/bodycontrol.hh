@@ -170,13 +170,6 @@ namespace bold
 
   class BodyControl
   {
-  private:
-    std::vector<std::shared_ptr<JointControl>> d_joints;
-
-    std::shared_ptr<HeadSection> d_headSection;
-    std::shared_ptr<ArmSection> d_armSection;
-    std::shared_ptr<LegSection> d_legSection;
-
   public:
     BodyControl();
 
@@ -190,6 +183,13 @@ namespace bold
     std::shared_ptr<HeadSection> getHeadSection() const { return d_headSection; }
     std::shared_ptr<ArmSection>  getArmSection()  const { return d_armSection; }
     std::shared_ptr<LegSection>  getLegSection()  const { return d_legSection; }
+
+  private:
+    std::vector<std::shared_ptr<JointControl>> d_joints;
+
+    std::shared_ptr<HeadSection> d_headSection;
+    std::shared_ptr<ArmSection> d_armSection;
+    std::shared_ptr<LegSection> d_legSection;
   };
 
   class BodySection
