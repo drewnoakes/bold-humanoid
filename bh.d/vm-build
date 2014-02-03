@@ -8,6 +8,8 @@ fi
 
 # TODO don't couple this to remote name drew, host name drew, ssh target drew@bert, drew's config file
 
+touch version.cc.in
+
 # fetch multiple repos, hard-reset to remote version of current branch,
 # and build on one core
 
