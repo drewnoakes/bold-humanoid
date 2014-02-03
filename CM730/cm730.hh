@@ -25,7 +25,7 @@ namespace bold
     BulkReadTable();
 
     uchar readByte(uchar address) const;
-    int readWord(uchar address) const;
+    ushort readWord(uchar address) const;
   };
 
   class BulkRead
@@ -160,11 +160,11 @@ namespace bold
     };
 
   public:
-    static unsigned makeWord(uchar lowByte, uchar highByte) { return (highByte << 8) | lowByte; }
-    static uchar getLowByte(unsigned word) { return word & 0xFF; }
-    static uchar getHighByte(unsigned word) { return (word >> 8) & 0xFF; }
+    static ushort makeWord(uchar lowByte, uchar highByte) { return (highByte << 8) | lowByte; }
+    static uchar getLowByte(ushort word) { return word & 0xFF; }
+    static uchar getHighByte(ushort word) { return (word >> 8) & 0xFF; }
 
-    static unsigned color2Value(uchar red, uchar green, uchar blue) { return (unsigned)(((blue>>3)<<10)|((green>>3)<<5)|(red>>3)); }
+    static ushort color2Value(uchar red, uchar green, uchar blue) { return (ushort)(((blue>>3)<<10)|((green>>3)<<5)|(red>>3)); }
 
     // 0 -> -1600 dps
     // 512 -> 0 dps
@@ -173,7 +173,7 @@ namespace bold
     static constexpr double RATIO_VALUE2RPS = (1600.0*(M_PI/180.0)) / 512.0;
     static constexpr double RATIO_VALUE2GS = 4.0 / 512.0;
 
-    static unsigned flipImuValue(unsigned value)
+    static ushort flipImuValue(ushort value)
     {
       assert(value <= 1023);
       if (value == 0)
@@ -181,11 +181,11 @@ namespace bold
       return 1023 - value + 1;
     }
 
-    static double gyroValueToDps(unsigned value) { return ((int)value - 512)*RATIO_VALUE2DPS; }
-    static double gyroValueToRps(unsigned value) { return ((int)value - 512)*RATIO_VALUE2RPS; }
-    static double accValueToGs(unsigned value)   { return ((int)value - 512)*RATIO_VALUE2GS; }
+    static double gyroValueToDps(ushort value) { return ((int)value - 512)*RATIO_VALUE2DPS; }
+    static double gyroValueToRps(ushort value) { return ((int)value - 512)*RATIO_VALUE2RPS; }
+    static double accValueToGs(ushort value) { return ((int)value - 512)*RATIO_VALUE2GS; }
 
-    static Eigen::Vector3d shortToColour(unsigned short s)
+    static Eigen::Vector3d shortToColour(ushort s)
     {
       return Eigen::Vector3d(
         ( s        & 0x1F) / 31.0,
@@ -221,7 +221,7 @@ namespace bold
     CommResult readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error);
 
     /// Reads two bytes from the CM730 control table. Returns communication result enum value.
-    CommResult readWord(uchar id, uchar address, int *pValue, MX28Alarm* error);
+    CommResult readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* error);
 
     /// Reads a consecutive range of bytes from the CM730 control table. Returns communication result enum value.
     CommResult readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, MX28Alarm* error);
@@ -231,7 +231,7 @@ namespace bold
     CommResult writeByte(uchar id, uchar address, uchar value, MX28Alarm* error);
 
     /// Writes two bytes into the control table for the specified Dynamixel device. Returns communication result enum value.
-    CommResult writeWord(uchar id, uchar address, int value, MX28Alarm* error);
+    CommResult writeWord(uchar id, uchar address, ushort value, MX28Alarm* error);
 
     /** Simultaneously write consecutive table values to one ore more devices.
      *

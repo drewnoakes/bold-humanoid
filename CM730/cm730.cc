@@ -102,7 +102,7 @@ uchar BulkReadTable::readByte(uchar address) const
   return table[address];
 }
 
-int BulkReadTable::readWord(uchar address) const
+ushort BulkReadTable::readWord(uchar address) const
 {
   assert(address >= startAddress && address < (startAddress + length));
   return CM730::makeWord(table[address], table[address+1]);
@@ -551,7 +551,7 @@ CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* er
   return result;
 }
 
-CommResult CM730::readWord(uchar id, uchar address, int *pValue, MX28Alarm* error)
+CommResult CM730::readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* error)
 {
   uchar txpacket[8];
   uchar rxpacket[8];
@@ -624,7 +624,7 @@ CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* err
   return result;
 }
 
-CommResult CM730::writeWord(uchar id, uchar address, int value, MX28Alarm* error)
+CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* error)
 {
   uchar txpacket[9];
   uchar rxpacket[6];

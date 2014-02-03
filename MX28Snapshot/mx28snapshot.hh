@@ -5,6 +5,7 @@
 namespace bold
 {
   typedef unsigned char uchar;
+  typedef unsigned short ushort;
 
   class BulkReadTable;
 
@@ -23,7 +24,7 @@ namespace bold
     /// The present angle, in radians.
     double presentPosition;
     /// The present angle, in encoder units.
-    double presentPositionValue;
+    ushort presentPositionValue;
     /// The present speed, in revolutions per minute.
     double presentSpeedRPM;
     /// The present load.
