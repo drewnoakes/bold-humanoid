@@ -125,9 +125,9 @@ define(
             var time = new Date().getTime();
 
             var count = 0, sum = 0, max = 0;
-            for (var i = 0; i < data.particles.length; i++)
+            for (var i = 0; i < data.length; i++)
             {
-                var w = data.particles[i][3];
+                var w = data[i][3];
                 if (w !== 0)
                 {
                     count++;
