@@ -25,6 +25,7 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
+    /*
     writer.String("camera-translation");
     writer.StartArray();
     {
@@ -50,6 +51,7 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
       writer.EndArray();
     }
     writer.EndObject();
+    */
   }
   writer.EndObject();
 }
