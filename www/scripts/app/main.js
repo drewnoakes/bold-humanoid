@@ -28,7 +28,10 @@ require(
         'modules/World2dModule',
         'modules/World3dModule'
     ],
-    function(ControlClient, ModuleHost, Constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule, GameStateModule, HardwareModule, HistogramModule, IMUModule, OrientationModule, LocaliserModule, MotionTimingModule, OptionTreeModule, StateDumpModule, ThinkTimingModule, TrajectoryModule, VoiceModule, WalkModule, Agent2dModule, VisionModule, World2dModule, World3dModule)
+    function(ControlClient, ModuleHost, Constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule,
+             GameStateModule, HardwareModule, HistogramModule, IMUModule, OrientationModule, LocaliserModule,
+             MotionTimingModule, OptionTreeModule, StateDumpModule, ThinkTimingModule, TrajectoryModule, VoiceModule,
+             WalkModule, Agent2dModule, VisionModule, World2dModule, World3dModule)
     {
 //        if (!WebGLDetector.webgl)
 //            WebGLDetector.addGetWebGLMessage();
