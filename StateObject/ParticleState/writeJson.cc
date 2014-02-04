@@ -17,7 +17,7 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
       writer.Double(particle.x()); // x
       writer.Double(particle.y()); // y
       writer.Double(particle.z()); // theta
-      writer.Double(particle.w()); // weight
+      writer.Double(isnan(particle.w()) ? 0 : particle.w()); // weight
 
       writer.EndArray();
     }
