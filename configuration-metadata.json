@@ -207,6 +207,11 @@
   "orientation-tracker": {
     "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 } }
   },
+  "fall-detector": {
+    "window-size":          { "type": "int", "min": 1, "max": 1000, "default": 30, "readonly": true },
+    "forward-limit-value":  { "type": "int", "min": 0, "max": 1023, "default": 634 },
+    "backward-limit-value": { "type": "int", "min": 0, "max": 1023, "default": 444 }
+  },
   "options": {
     "announce-fsm-states": { "type": "bool", "default": false },
     "circle-ball": {

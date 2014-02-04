@@ -1,6 +1,7 @@
 #include "falldetector.hh"
 
 #include "../../CM730Snapshot/cm730snapshot.hh"
+#include "../../Config/config.hh"
 #include "../../Voice/voice.hh"
 
 #include <iostream>
@@ -11,10 +12,9 @@ using namespace std;
 FallDetector::FallDetector(shared_ptr<Voice> voice)
 : TypedStateObserver<HardwareState>("Fall detector", ThreadId::MotionLoop),
   d_voice(voice),
-  d_windowSize(30),
-  d_fbAvgValue(d_windowSize),
-  d_forwardLimitValue(634),
-  d_backwardLimitValue(444),
+  d_fbAvgValue(Config::getStaticValue<int>("fall-detector.window-size")),
+  d_forwardLimitValue(Config::getSetting<int>("fall-detector.forward-limit-value")),
+  d_backwardLimitValue(Config::getSetting<int>("fall-detector.backward-limit-value")),
   d_fallenState(FallState::STANDUP)
 {}
 
@@ -27,14 +27,14 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
 
   // TODO this might not detect if we fall perfectly to the left/right
 
-  if (d_fbAvgValue.count() == d_windowSize)
+  if (d_fbAvgValue.isMature())
   {
     bool standingBefore = d_fallenState == FallState::STANDUP;
 
     // Update our estimate of whether we've fallen or not
     d_fallenState
-      = avg > d_forwardLimitValue ? FallState::FORWARD
-      : avg < d_backwardLimitValue ? FallState::BACKWARD
+      = avg > d_forwardLimitValue->getValue() ? FallState::FORWARD
+      : avg < d_backwardLimitValue->getValue() ? FallState::BACKWARD
       : FallState::STANDUP;
 
     if (standingBefore && d_fallenState != FallState::STANDUP && d_voice->queueLength() == 0)

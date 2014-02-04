@@ -7,6 +7,7 @@
 namespace bold
 {
   class CM730Snapshot;
+  template<typename> class Setting;
   class Voice;
 
   enum class FallState
@@ -27,10 +28,9 @@ namespace bold
 
   private:
     std::shared_ptr<Voice> d_voice;
-    int d_windowSize;
     MovingAverage<int> d_fbAvgValue;
-    int d_forwardLimitValue;
-    int d_backwardLimitValue;
+    Setting<int>* d_forwardLimitValue;
+    Setting<int>* d_backwardLimitValue;
     FallState d_fallenState;
   };
 }
