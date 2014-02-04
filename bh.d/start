@@ -8,13 +8,13 @@ fi
 
 if [[ $# -eq 0 ]] ; then
     sudo start boldhumanoid
-    exit 1
+    exit $?
 fi
 
 for i in ${@:1}
 do
     ssh darwin@darwin$i "sudo start boldhumanoid"
-    
+
     if [ $? -ne 0 ]; then
         echo FAILED to start the boldhumanoid service to darwin$i
         res=1

@@ -8,7 +8,7 @@ fi
 
 if [[ $# -eq 0 ]] ; then
     sudo restart boldhumanoid
-    exit 1
+    exit $?
 fi
 
 for i in ${@:1}
