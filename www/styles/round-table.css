@@ -704,6 +704,36 @@ table.timing-details tr.parent.root.expanded td.expander
 
 /*******************************************************************/
 
+div.body-figure
+{
+    position: absolute;
+    top: 20px;
+    right: 0;
+}
+
+div.body-figure div.joint
+{
+    position: absolute;
+    border: 1px dotted grey;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 20px;
+    transition: background-color 0.4s linear;
+    -moz-transition: background-color 0.4s linear;
+    -o-transition: background-color 0.4s linear;
+    -webkit-transition: background-color 0.4s linear;
+}
+
+div.body-figure div.selected
+{
+    border: 1px dotted grey;
+    background-color: #792485;
+    color: white;
+}
+
+/*******************************************************************/
+
 div.module.think-timing div.fps,
 div.module.motion-timing div.fps
 {
@@ -755,57 +785,17 @@ div.module.motion-scripts button
 
 /*******************************************************************/
 
-div.module.hardware div.body-figure
+div.module.load div.pane-container
 {
-    position: absolute;
-    top: 20px;
-    right: 0;
-}
-
-div.module.hardware div.body-figure div.joint
-{
-    position: absolute;
-    border: 1px dotted grey;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 13px;
-    line-height: 20px;
-    transition: background-color 0.4s linear;
-    -moz-transition: background-color 0.4s linear;
-    -o-transition: background-color 0.4s linear;
-    -webkit-transition: background-color 0.4s linear;
+  min-height: 345px;
 }
 
 /*******************************************************************/
 
 div.module.trajectory div.body-figure
 {
-    position: absolute;
     top: 0;
-    right: 0;
     margin-top: 25px;
-}
-
-div.module.trajectory div.body-figure div.joint
-{
-    position: absolute;
-    border: 1px dotted grey;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 13px;
-    line-height: 20px;
-    color: #000;
-    transition: background-color 0.4s linear, color 0.4s linear;
-    -moz-transition: background-color 0.4s linear, color 0.4s linear;
-    -o-transition: background-color 0.4s linear, color 0.4s linear;
-    -webkit-transition: background-color 0.4s linear, color 0.4s linear;
-}
-
-div.module.trajectory div.body-figure div.selected
-{
-    border: 1px dotted grey;
-    background-color: #792485;
-    color: white;
 }
 
 div.module.trajectory canvas

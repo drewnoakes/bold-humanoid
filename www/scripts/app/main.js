@@ -15,6 +15,7 @@ require(
         'modules/HistogramModule',
         'modules/IMUModule',
         'modules/OrientationModule',
+        'modules/LoadModule',
         'modules/LocaliserModule',
         'modules/MotionTimingModule',
         'modules/OptionTreeModule',
@@ -29,7 +30,7 @@ require(
         'modules/World3dModule'
     ],
     function(ControlClient, ModuleHost, Constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule,
-             GameStateModule, HardwareModule, HistogramModule, IMUModule, OrientationModule, LocaliserModule,
+             GameStateModule, HardwareModule, HistogramModule, IMUModule, OrientationModule, LoadModule, LocaliserModule,
              MotionTimingModule, OptionTreeModule, StateDumpModule, ThinkTimingModule, TrajectoryModule, VoiceModule,
              WalkModule, Agent2dModule, VisionModule, World2dModule, World3dModule)
     {
@@ -59,6 +60,7 @@ require(
             moduleHost.register(new OptionTreeModule());
             moduleHost.register(new GameStateModule());
             moduleHost.register(new MotionScriptModule());
+            moduleHost.register(new LoadModule());
             moduleHost.register(new TrajectoryModule());
             moduleHost.register(new VoiceModule());
             moduleHost.register(new StateDumpModule());
