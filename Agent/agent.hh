@@ -23,6 +23,7 @@ namespace bold
   class GyroCalibrator;
   class HealthAndSafety;
   class HeadModule;
+  class JamDetector;
   class Localiser;
   class MotionLoop;
   class MotionScriptModule;
@@ -99,6 +100,7 @@ namespace bold
     std::shared_ptr<FallDetector> d_fallDetector;
     std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
+    std::shared_ptr<JamDetector> d_jamTracker;
     std::shared_ptr<SuicidePill> d_suicidePill;
     std::shared_ptr<Odometer> d_odometer;
     std::shared_ptr<OrientationTracker> d_orientationTracker;

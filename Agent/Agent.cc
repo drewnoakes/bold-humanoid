@@ -32,6 +32,7 @@ Agent::Agent()
   d_fallDetector = make_shared<FallDetector>(d_voice);
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
+  d_jamTracker = make_shared<JamDetector>(d_voice);
   d_suicidePill = make_shared<SuicidePill>(this, d_debugger);
   d_odometer = make_shared<Odometer>(d_walkModule);
   d_orientationTracker = make_shared<OrientationTracker>();
@@ -40,6 +41,7 @@ Agent::Agent()
   AgentState::registerObserver(d_fallDetector);
   AgentState::registerObserver(d_gyroCalibrator);
   AgentState::registerObserver(d_healthAndSafety);
+  AgentState::registerObserver(d_jamTracker);
   AgentState::registerObserver(d_suicidePill);
   AgentState::registerObserver(d_odometer);
   AgentState::registerObserver(d_orientationTracker);

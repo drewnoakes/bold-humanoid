@@ -68,6 +68,8 @@ namespace bold
 
     double getTorsoHeight() const { return d_torsoHeight; }
 
+    std::vector<int> const getPositionValueDiffs() const { return d_positionValueDiffs; }
+
   private:
     /// Initialise with the specified angles (radians), and position errors (values)
     /// Indexed by JointId (i.e. 0 is ignored.)

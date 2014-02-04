@@ -33,6 +33,12 @@
       "x-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 },
       "y-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 },
       "a-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 }
+    },
+    "jam-detector": {
+      "enabled":        { "type": "bool", "default": true },
+      "window-size":    { "type": "int", "min": 10, "max": 1250, "default": 500, "readonly": true },
+      "high-threshold": { "type": "int", "min": 10, "max": 1024, "default": 50,  "readonly": true },
+      "low-threshold":  { "type": "int", "min": 10, "max": 1024, "default": 20,  "readonly": true }
     }
   },
   "world": {

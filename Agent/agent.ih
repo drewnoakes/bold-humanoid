@@ -48,6 +48,7 @@
 #include "../StateObserver/FallDetector/falldetector.hh"
 #include "../StateObserver/GyroCalibrator/gyrocalibrator.hh"
 #include "../StateObserver/HealthAndSafety/healthandsafety.hh"
+#include "../StateObserver/JamDetector/jamdetector.hh"
 #include "../StateObserver/Odometer/odometer.hh"
 #include "../StateObserver/OrientationTracker/orientationtracker.hh"
 #include "../StateObserver/SuicidePill/suicidepill.hh"

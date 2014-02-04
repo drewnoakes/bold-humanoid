@@ -474,6 +474,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObserver/JamDetector/jamdetector.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObserver/Odometer/odometer.cc
 )
 

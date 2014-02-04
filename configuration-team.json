@@ -17,6 +17,12 @@
       "x-amp-max": 15.0,
       "y-amp-max": 15.0,
       "a-amp-max": 15.0
+    },
+    "jam-detector": {
+      "enabled": true,
+      "window-size": 500,
+      "high-threshold": 50,
+      "low-threshold": 20
     }
   },
   "world": {
