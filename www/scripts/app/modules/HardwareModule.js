@@ -117,6 +117,17 @@ define(
 
             this.container.empty();
             this.subscription.close();
+
+            delete this.voltageCanvas;
+            delete this.voltageChart;
+            delete this.voltageSeries;
+
+            delete this.temperatureCanvas;
+            delete this.temperatureChart;
+            delete this.temperatureSeriesById;
+
+            delete this.bodyFigure;
+            delete this.subscription;
         };
 
         HardwareModule.prototype.onData = function (data)

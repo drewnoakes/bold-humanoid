@@ -96,7 +96,7 @@ define(
         {
             this.container.empty();
 
-            if(this.subscription)
+            if (this.subscription)
             {
                 this.subscription.close();
                 delete this.subscription;
@@ -104,6 +104,9 @@ define(
             
             delete this.canvas;
             delete this.bodyFigure;
+            delete this.data;
+            delete this.selectedJointIds;
+            delete this.recordButton;
         };
 
         /*
