@@ -14,11 +14,11 @@ fi
 for i in ${@:1}
 do
     echo turning the bass up on darwin$i
-    
-    ssh darwin@darwin$i "screen -S bass -d -m mplayer http://homepages.herts.ac.uk/~epics/boldhearts/DizzeeRascalBasslineJunkie.mp3"
-    
+
+    ssh darwin@darwin$i.local "screen -S bass -d -m mplayer http://homepages.herts.ac.uk/~epics/boldhearts/DizzeeRascalBasslineJunkie.mp3"
+
     if [ $? -ne 0 ]; then
-        echo FAILED to turn up the base on darwin$i
+        echo FAILED to turn up the base on darwin$i.local
         res=1
     fi
 done

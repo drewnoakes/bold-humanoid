@@ -13,23 +13,23 @@ fi
 
 for i in ${@:1}
 do
-    
-    echo deploying to darwin$i
-    
+
+    echo deploying to darwin$i.local
+
     rsync -zrP configuration-team.json \
         configuration-hatfield.json \
         configuration-drews.json \
         configuration-metadata.json \
         boldhumanoid \
-        darwin@darwin$i:
-    
+        darwin@darwin$i.local:
+
     if [ $? -eq 0 ]; then
-        ssh darwin@darwin$i 'espeak -p 0 -s 130 -v english-mb-en1 "Minimal deployment complete"' 2> /dev/null
+        ssh darwin@darwin$i.local 'espeak -p 0 -s 130 -v english-mb-en1 "Minimal deployment complete"' 2> /dev/null
     else
-        echo FAILED to deploy to darwin$i
+        echo FAILED to deploy to darwin$i.local
         res=1
     fi
-    
+
 done
 
 exit $res

@@ -13,10 +13,10 @@ fi
 
 for i in ${@:1}
 do
-    ssh darwin@darwin$i "amixer set Master mute" > /dev/null
+    ssh darwin@darwin$i.local "amixer set Master mute" > /dev/null
 
     if [ $? -ne 0 ]; then
-        echo FAILED to mute darwin$i
+        echo FAILED to mute darwin$i.local
         res=1
     fi
 done

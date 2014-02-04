@@ -14,10 +14,10 @@ fi
 for i in ${@:1}
 do
     echo "halting darwin$i" \
-        && ssh darwin@darwin$i "sudo halt"
+        && ssh darwin@darwin$i.local "sudo halt"
 
     if [[ $? -ne 0 ]] ; then
-        echo FAILED to halt to darwin$i
+        echo FAILED to halt to darwin$i.local
         res=1
     fi
 done

@@ -13,15 +13,15 @@ fi
 
 for i in ${@:1}
 do
-    echo deploying to darwin$i
-    
+    echo deploying to darwin$i.local
+
     rsync -zrP \
         boldhumanoid.py \
         boldpy \
-        darwin@darwin$i:
-    
+        darwin@darwin$i.local:
+
     if [ $? -ne 0 ]; then
-        echo FAILED to deploy to darwin$i
+        echo FAILED to deploy to darwin$i.local
         res=1
     fi
 done

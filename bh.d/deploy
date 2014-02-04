@@ -13,10 +13,10 @@ fi
 
 for i in ${@:1}
 do
-    echo deploying to darwin$i
-    
-    ssh darwin@darwin$i "mkdir -p swig && mkdir -p lib/"
-    
+    echo deploying to darwin$i.local
+
+    ssh darwin@darwin$i.local "mkdir -p swig && mkdir -p lib/"
+
     rsync -zrP www \
         motionscripts \
         configuration-team.json \
@@ -29,20 +29,20 @@ do
         bh.d \
         .bash_team \
         boldhumanoid \
-        darwin@darwin$i:
-    
+        darwin@darwin$i.local:
+
     rsync -zrP swig/bold.py \
         swig/_bold.so \
-        darwin@darwin$i:swig/
-    
+        darwin@darwin$i.local:swig/
+
     rsync -zrP libwebsockets/lib/libwebsockets.so.4.0.0 \
         darwin@darwin$i:lib/
 
-    ssh darwin@darwin$i "sudo ldconfig /home/darwin/lib"
-    ssh darwin@darwin$i 'espeak -p 0 -s 130 -v english-mb-en1 "Full deployment complete"' 2> /dev/null
+    ssh darwin@darwin$i.local "sudo ldconfig /home/darwin/lib"
+    ssh darwin@darwin$i.local 'espeak -p 0 -s 130 -v english-mb-en1 "Full deployment complete"' 2> /dev/null
 
     if [ $? -ne 0 ]; then
-        echo FAILED to deploy to darwin$i
+        echo FAILED to deploy to darwin$i.local
         res=1
     fi
 done

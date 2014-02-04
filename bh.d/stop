@@ -13,10 +13,10 @@ fi
 
 for i in ${@:1}
 do
-    ssh darwin@darwin$i "sudo stop boldhumanoid"
+    ssh darwin@darwin$i.local "sudo stop boldhumanoid"
 
     if [ $? -ne 0 ]; then
-        echo FAILED to stop the boldhumanoid service to darwin$i
+        echo FAILED to stop the boldhumanoid service to darwin$i.local
         res=1
     fi
 done
