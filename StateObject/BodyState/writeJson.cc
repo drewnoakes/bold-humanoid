@@ -25,6 +25,14 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
+    writer.String("errors");
+    writer.StartArray();
+    {
+      for (int diff : d_positionValueDiffs)
+        writer.Int(diff);
+    }
+    writer.EndArray();
+
     /*
     writer.String("camera-translation");
     writer.StartArray();

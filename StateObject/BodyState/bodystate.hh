@@ -16,6 +16,7 @@ namespace bold
 {
   typedef unsigned char uchar;
 
+  class BodyControl;
   class HardwareState;
   template<class> class Setting;
 
@@ -25,8 +26,8 @@ namespace bold
     static std::shared_ptr<BodyState const> zero(ulong thinkCycleNumber = 0);
 
     /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
-    BodyState(double angles[], ulong motionCycleNumber);
-    BodyState(std::shared_ptr<HardwareState const> const& hardwareState, ulong motionCycleNumber);
+    BodyState(double angles[], std::vector<int> positionValueDiffs, ulong motionCycleNumber);
+    BodyState(std::shared_ptr<HardwareState const> const& hardwareState, std::shared_ptr<BodyControl> const& bodyControl, ulong motionCycleNumber);
 
     std::shared_ptr<Limb const> getTorso() const { return d_torso; }
 
@@ -68,8 +69,11 @@ namespace bold
     double getTorsoHeight() const { return d_torsoHeight; }
 
   private:
-    /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
+    /// Initialise with the specified angles (radians), and position errors (values)
+    /// Indexed by JointId (i.e. 0 is ignored.)
     void initialise(double angles[]);
+
+    std::vector<int> d_positionValueDiffs;
 
     double d_torsoHeight;
     std::shared_ptr<Limb> d_torso;

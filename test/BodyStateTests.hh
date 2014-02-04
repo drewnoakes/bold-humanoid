@@ -10,12 +10,13 @@ using namespace Eigen;
 TEST (BodyStateTests, posture)
 {
   double angles[21] = {0,};
+  std::vector<int> positionValueDiffs(21, 0);
 
   //
   // Create a body with all hinges at an angle of zero
   //
 
-  auto am1 = BodyState(angles, 1);
+  auto am1 = BodyState(angles, positionValueDiffs, 1);
   shared_ptr<Limb const> leftFoot = am1.getLimb("lFoot");
   shared_ptr<Limb const> rightFoot = am1.getLimb("rFoot");
 
@@ -34,7 +35,7 @@ TEST (BodyStateTests, posture)
   angles[(int)JointId::L_HIP_ROLL] = M_PI/2;
   angles[(int)JointId::R_HIP_ROLL] = M_PI/2;
 
-  auto am2 = BodyState(angles, 2);
+  auto am2 = BodyState(angles, positionValueDiffs, 2);
   leftFoot = am2.getLimb("lFoot");
   rightFoot = am2.getLimb("rFoot");
 
@@ -51,11 +52,12 @@ TEST (BodyStateTests, posture)
 
 TEST (BodyStateTests, camera)
 {
-  double angles[21] = {0,};
+  double angles[22] = {0,};
+  std::vector<int> positionValueDiffs(21, 0);
 
   Matrix3d expectedCameraRotation = AngleAxisd(M_PI/4, Vector3d::UnitY()).matrix();
 
-  auto body = BodyState(angles, 3);
+  auto body = BodyState(angles, positionValueDiffs, 3);
 
 //   Matrix3d actualCameraTorsoRotation = body.getLimb("camera")->transform.rotation().matrix();
 

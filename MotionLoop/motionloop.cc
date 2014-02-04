@@ -373,7 +373,7 @@ void MotionLoop::step(SequentialTimer& t)
 
   AgentState::set(hw);
 
-  AgentState::set(make_shared<BodyState const>(hw, d_cycleNumber));
+  AgentState::set(make_shared<BodyState const>(hw, d_bodyControl, d_cycleNumber));
   t.timeEvent("Update BodyState");
 
   if (!d_readYet)

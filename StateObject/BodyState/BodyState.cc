@@ -1,9 +1,11 @@
 #include "bodystate.ih"
 
+#include "../../BodyControl/bodycontrol.hh"
 #include "../../MX28Snapshot/mx28snapshot.hh"
 
-BodyState::BodyState(double angles[], ulong cycleNumber)
-: d_torso(),
+BodyState::BodyState(double angles[], vector<int> positionValueDiffs, ulong cycleNumber)
+: d_positionValueDiffs(positionValueDiffs),
+  d_torso(),
   d_jointById(),
   d_limbByName(),
   d_motionCycleNumber(cycleNumber),
@@ -12,8 +14,9 @@ BodyState::BodyState(double angles[], ulong cycleNumber)
   initialise(angles);
 }
 
-BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, ulong cycleNumber)
-: d_torso(),
+BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, shared_ptr<BodyControl> const& bodyControl, ulong cycleNumber)
+: d_positionValueDiffs((uchar)JointId::MAX + 1, 0),
+  d_torso(),
   d_jointById(),
   d_limbByName(),
   d_motionCycleNumber(cycleNumber),
@@ -25,7 +28,11 @@ BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, ulong
   double angles[(uchar)JointId::MAX + 2];
 
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    angles[jointId] = hardwareState->getMX28State(jointId).presentPosition;
+  {
+    auto const& joint = hardwareState->getMX28State(jointId);
+    angles[jointId] = joint.presentPosition;
+    d_positionValueDiffs[jointId] = (int)bodyControl->getJoint((JointId)jointId)->getValue() - joint.presentPositionValue;
+  }
 
   // Set the camera head tilt according to the configured angle
   angles[(uchar)JointId::CAMERA_TILT] = Math::degToRad(d_cameraTilt->getValue());
