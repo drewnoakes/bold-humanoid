@@ -11,19 +11,20 @@ namespace bold
   class MovingAverage
   {
   public:
-    MovingAverage(unsigned windowSize)
+    MovingAverage(int windowSize)
     : d_items(windowSize),
       d_length(0),
       d_nextPointer(0),
       d_windowSize(windowSize)
     {
-      if (windowSize == 0)
-        throw new std::runtime_error("Cannot have zero window size.");
+      if (windowSize <= 0)
+        throw new std::runtime_error("Window size must be greater than zero.");
       memset(&d_sum, 0, sizeof(d_sum));
     }
 
     int count() const { return d_length; }
-    unsigned getWindowSize() const { return d_windowSize; }
+    int getWindowSize() const { return d_windowSize; }
+    bool isMature() const { return d_length == d_windowSize; }
 
     T next(T value)
     {
@@ -62,10 +63,10 @@ namespace bold
 
   private:
     std::vector<T> d_items;
-    unsigned d_length;
+    int d_length;
     int d_nextPointer;
     T d_sum;
     T d_avg;
-    unsigned d_windowSize;
+    int d_windowSize;
   };
 }

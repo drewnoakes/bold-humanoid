@@ -25,6 +25,18 @@ TEST (StatsTests, MovingAverage_double)
   EXPECT_EQ( (5+6+7+8+9)/5.0, m.next(9) );
 }
 
+TEST (StatsTests, MovingAverage_int)
+{
+  MovingAverage<int> m(3);
+
+  EXPECT_EQ( 1, m.next(1) );
+  EXPECT_EQ( 1, m.next(1) );
+  EXPECT_EQ( (2+1+1)/3, m.next(2) );
+  EXPECT_EQ( (-2+2+1)/3, m.next(-2) );
+  EXPECT_EQ( (-10-2+1)/3, m.next(-10) );
+  EXPECT_EQ( (50-10-2)/3, m.next(50) );
+}
+
 TEST (StatsTests, MovingAverage_vector2d)
 {
   MovingAverage<Vector2d> m(2);
@@ -45,6 +57,9 @@ TEST (StatsTests, average_int)
 {
   vector<int> ints = {1, 2, 3, 4, 5, 6};
   EXPECT_EQ( (1+2+3+4+5+6)/6, bold::average<int>(ints.begin(), ints.end()) );
+
+  vector<int> ints2 = {-3, -2, -1, 1, 2, 3};
+  EXPECT_EQ( 0, bold::average<int>(ints2.begin(), ints2.end()) );
 }
 
 TEST (StatsTests, varianceAndStdDev_double)
