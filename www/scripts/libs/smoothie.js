@@ -352,6 +352,37 @@
   };
 
   /**
+   * Gets render options for the specified <code>TimeSeries</code>.
+   *
+   * As you may use a single <code>TimeSeries</code> in multiple charts with different formatting in each usage,
+   * these settings are stored in the chart.
+   */
+  SmoothieChart.prototype.getTimeSeriesOptions = function(timeSeries) {
+    // Find the correct timeseries to remove, and remove it
+    var numSeries = this.seriesSet.length;
+    for (var i = 0; i < numSeries; i++) {
+      if (this.seriesSet[i].timeSeries === timeSeries) {
+        return this.seriesSet[i].options;
+      }
+    }
+  };
+
+  /**
+   * Brings the specified <code>TimeSeries</code> to the top of the chart. It will be rendered last.
+   */
+  SmoothieChart.prototype.bringToFront = function(timeSeries) {
+    // Find the correct timeseries to remove, and remove it
+    var numSeries = this.seriesSet.length;
+    for (var i = 0; i < numSeries; i++) {
+      if (this.seriesSet[i].timeSeries === timeSeries) {
+        var set = this.seriesSet.splice(i, 1);
+        this.seriesSet.push(set[0]);
+        break;
+      }
+    }
+  };
+
+  /**
    * Instructs the <code>SmoothieChart</code> to start rendering to the provided canvas, with specified delay.
    *
    * @param canvas the target canvas element
