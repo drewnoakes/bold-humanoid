@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh mute [N...]"
+    echo "          mute the speaker locally, or on the specified robot(s)"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    amixer set Master mute > /dev/null
+    exit
+fi
+
+for i in ${@:1}
+do
+    ssh darwin@darwin$i "amixer set Master mute" > /dev/null
+
+    if [ $? -ne 0 ]; then
+        echo FAILED to mute darwin$i
+        res=1
+    fi
+done
+
+exit $res
