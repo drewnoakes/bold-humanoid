@@ -2,7 +2,7 @@
 
 echo
 
-if [ -z $(pgrep boldhumanoid) ]
+if [ -z $(pgrep -f boldhumanoid) ]
 then
     echo "$(tput setaf 1)Boldhumanoid process is not running $(tput sgr 0)"
 else
