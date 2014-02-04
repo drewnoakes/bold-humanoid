@@ -1,6 +1,6 @@
 #include "bodystate.ih"
 
-#include "../MX28Snapshot/mx28snapshot.hh"
+#include "../../MX28Snapshot/mx28snapshot.hh"
 
 BodyState::BodyState(double angles[], ulong cycleNumber)
 : d_torso(),
