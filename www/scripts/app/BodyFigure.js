@@ -4,21 +4,24 @@
 define(
     [
         'Constants',
-        'DOMTemplate'
+        'DOMTemplate',
+        'util'
     ],
-    function (Constants, DOMTemplate)
+    function (Constants, DOMTemplate, util)
     {
         'use strict';
 
         var bodyTemplate = new DOMTemplate('body-figure-template');
 
-        var BodyFigure = function ()
+        var BodyFigure = function (options)
         {
             var shoulderOffset = 60,
                 elbowOffset = 65,
                 hipOffset = 40,
                 kneeOffset = 45,
                 footOffset = 50;
+
+            options = _.extend({}, {hasHover: false, hasSelection: false}, options);
 
             // TODO rename Constants.jointIds to use consistent pitch/roll/yaw naming
 
@@ -74,17 +77,49 @@ define(
 
             this.element = bodyTemplate.create(bodyData);
 
-            this.jointElementById = [undefined];
+            this.hoverJointId = new util.Trackable();
+            this.selectedJointIds = new util.Trackable([]);
 
-            for (var i = 1; i <= 20; i++) {
-                var jointBlock = this.element.querySelector("div.joint[data-joint-id='" + i + "']");
-                this.jointElementById.push(jointBlock);
-            }
+            this.jointElementById = [undefined]; // pad index zero
+
+            this.visitJoints(function(jointId, jointDiv)
+            {
+                if (options.hasHover) {
+                    jointDiv.addEventListener('mouseenter', function() { this.hoverJointId.setValue(jointId); }.bind(this));
+                    jointDiv.addEventListener('mouseleave', function() { this.hoverJointId.setValue(undefined); }.bind(this));
+                }
+
+                if (options.hasSelection) {
+                    jointDiv.addEventListener('click', function()
+                    {
+                        if (jointDiv.classList.contains('selected')) {
+                            jointDiv.classList.remove('selected');
+                            this.selectedJointIds.setValue(_.filter(this.selectedJointIds.getValue(), function(d) { return d !== jointId; }));
+                        } else {
+                            jointDiv.classList.add('selected');
+                            this.selectedJointIds.getValue().push(jointId);
+                            this.selectedJointIds.triggerChange();
+                        }
+                    }.bind(this));
+                }
+
+                this.jointElementById.push(jointDiv);
+
+            }.bind(this));
         };
 
         BodyFigure.prototype.getJointElement = function(jointId)
         {
             return this.jointElementById[jointId];
+        };
+
+        BodyFigure.prototype.visitJoints = function(callback)
+        {
+            _.each(_.range(1, 21), function(jointId)
+            {
+                var jointDiv = this.element.querySelector("div.joint[data-joint-id='" + jointId + "']");
+                callback(jointId, jointDiv);
+            }.bind(this));
         };
 
         return BodyFigure;

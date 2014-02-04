@@ -66,30 +66,12 @@ define(
             this.canvas.height = chartHeight;
             this.container.append(this.canvas);
 
-            this.bodyFigure = new BodyFigure();
+            this.bodyFigure = new BodyFigure({hasHover: true, hasSelection: true});
             this.container.append(this.bodyFigure.element);
 
-            this.selectedJointIds = [];
-
-            var jointDivs = this.bodyFigure.element.querySelectorAll('div.joint');
-            _.each(jointDivs, function(jointDiv)
-            {
-                var jointId = parseInt(jointDiv.dataset.jointId);
-                jointDiv.textContent = jointId;
-                jointDiv.addEventListener('click', function()
-                {
-                    if (jointDiv.classList.contains('selected')) {
-                        jointDiv.classList.remove('selected');
-                        this.selectedJointIds = _.filter(this.selectedJointIds, function(d) { return d !== jointId; });
-                    } else {
-                        jointDiv.classList.add('selected');
-                        this.selectedJointIds.push(jointId);
-                    }
-                    this.render();
-                }.bind(this));
-                jointDiv.addEventListener('mouseenter', function() { this.hoverJointId = jointId; this.render(); }.bind(this));
-                jointDiv.addEventListener('mouseleave', function() { this.hoverJointId = -1; this.render(); }.bind(this));
-            }.bind(this));
+            this.bodyFigure.hoverJointId.track(this.render.bind(this));
+            this.bodyFigure.selectedJointIds.track(this.render.bind(this));
+            this.bodyFigure.visitJoints(function(jointId, jointDiv) { jointDiv.textContent = jointId; });
         };
 
         TrajectoryModule.prototype.unload = function ()
@@ -105,7 +87,6 @@ define(
             delete this.canvas;
             delete this.bodyFigure;
             delete this.data;
-            delete this.selectedJointIds;
             delete this.recordButton;
         };
 
@@ -179,7 +160,10 @@ define(
 
             ctx.clear();
 
-            var jointIds = this.selectedJointIds.length ? this.selectedJointIds : d3.range(1, 21);
+            var selectedJointIds = this.bodyFigure.selectedJointIds.getValue(),
+                hoverJointId = this.bodyFigure.hoverJointId.getValue();
+
+            var jointIds = selectedJointIds && selectedJointIds.length ? selectedJointIds : d3.range(1, 21);
 
             // Draw tick markers to show when samples were taken
             ctx.strokeStyle = '#888';
@@ -208,14 +192,14 @@ define(
             ctx.strokeStyle = '#792485';
             _.each(jointIds, function(jointId)
             {
-                if (this.hoverJointId === jointId)
+                if (hoverJointId === jointId)
                     return;
                 drawLine(jointId);
             }.bind(this));
 
-            if (this.hoverJointId > 0) {
+            if (hoverJointId > 0) {
                 ctx.strokeStyle = '#FFF';
-                drawLine(this.hoverJointId);
+                drawLine(hoverJointId);
             }
         };
 
