@@ -179,6 +179,7 @@ namespace bold
 
     JointControl* getJoint(JointId const id) const { return d_joints[(int)id - 1].get(); }
 
+    /// Gets a vector of all joints in ID order, starting with JointId 1 in position 0.
     std::vector<std::unique_ptr<JointControl>> const& getJoints() const { return d_joints; }
 
     HeadSection* getHeadSection() const { return d_headSection.get(); }
