@@ -9,13 +9,13 @@ namespace bold
   /** Option
    *
    * An option is an abstract description of an action that may be
-   * temporally extended and semi-markovian. This means it may be
+   * temporally extended and semi-Markovian. This means it may be
    * active for any length of time, and its policy may rely not only
    * on the current state, but on any part of history. An option is
    * formed by a three-tuple @f$<I,\beta,\mu>@f, where:
    *
    * * @f$I@f$ is the set of states in which this option can be active
-   * * @f$\beta@f$ gives the probaility of this option terminating now
+   * * @f$\beta@f$ gives the probability of this option terminating now
    * * @f$\mu@f$ is a policy over (sub)-options that selects which
    *   action to take at which time
    *
@@ -54,7 +54,7 @@ namespace bold
      * @returns the sub-option selected by the policy of this option;
      * Default: empty vector
      */
-    virtual std::vector<std::shared_ptr<Option> > runPolicy() { return std::vector<std::shared_ptr<Option>>(); }
+    virtual std::vector<std::shared_ptr<Option>> runPolicy() { return std::vector<std::shared_ptr<Option>>(); }
 
   private:
     std::string d_id;
