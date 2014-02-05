@@ -408,7 +408,7 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t
   if (res != CommResult::SUCCESS)
   {
     // TODO if this occurs N times in a row, consider recreating the CM730 instance (perhaps someone pressed the hardware reset button)
-    log::warning("MotionLoop::process") << "Bulk read failed (" << CM730::getCommResultName(res) << ") -- skipping update of HardwareState";
+    log::warning("MotionLoop::process") << "CM730 bulk read failed (" << CM730::getCommResultName(res) << ")";
     onReadFailure(++d_consecutiveReadFailureCount);
     return nullptr;
   }
