@@ -78,13 +78,13 @@ unsigned int Voice::queueLength() const
   return d_queue.size();
 }
 
-void Voice::say(string message)
+void Voice::say(string const& message)
 {
   log::verbose("Voice::say") << "Enqueuing: " << message;
   d_queue.push(message);
 }
 
-void Voice::sayOneOf(initializer_list<string> messages)
+void Voice::sayOneOf(initializer_list<string> const& messages)
 {
   size_t index = rand() % messages.size();
   string message = *(messages.begin() + index);

@@ -15,9 +15,9 @@ namespace bold
     Voice();
     ~Voice();
 
-    void say(std::string message);
+    void say(std::string const& message);
 
-    void sayOneOf(std::initializer_list<std::string> messages);
+    void sayOneOf(std::initializer_list<std::string> const& messages);
 
     void stop();
 
