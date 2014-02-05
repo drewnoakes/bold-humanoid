@@ -79,4 +79,18 @@ Agent::Agent()
   d_motionLoop->addModule(d_motionScriptModule);
   d_motionLoop->addModule(d_walkModule);
   d_motionLoop->addModule(d_headModule);
+
+  d_motionLoop->onReadFailure.connect([this](uint count) -> void {
+    // If we were unable to read once during the last second, then we've lost
+    // the CM730. This is probably because someone pressed the hardware reset
+    // button on the back. In this case, stop the agent. The upstart service
+    // should restart it immediately during competitions.
+    // TODO consider reconnecting to the CM730, as we already have a means of exiting the robot by holding down two buttons
+    // TODO place read failure timeout duration in config
+    if (count > 1000 / 8) // 1 second
+    {
+      log::error("Agent") << "MotionLoop has been unable to read " << count << " times, so shutting down";
+      stop();
+    }
+  });
 }
