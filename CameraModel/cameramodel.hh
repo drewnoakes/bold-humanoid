@@ -82,6 +82,8 @@ namespace bold
      */
     Eigen::Affine3d getProjectionTransform() const { return d_projectionTransform; }
 
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+
   private:
     ushort d_imageWidth;
     ushort d_imageHeight;

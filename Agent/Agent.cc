@@ -48,7 +48,7 @@ Agent::Agent()
 
   d_ambulator = make_shared<Ambulator>(d_walkModule),
 
-  d_cameraModel = make_shared<CameraModel>();
+  d_cameraModel = allocate_aligned_shared<CameraModel>();
 
   d_spatialiser = make_shared<Spatialiser>(d_cameraModel);
 
