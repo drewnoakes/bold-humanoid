@@ -23,6 +23,7 @@ namespace bold
     AgentPosition position() const { return d_pos; }
     AgentPosition smoothedPosition() const { return d_smoothedPos; }
 
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   private:
     void predict();
     void updateSmoothedPos();
