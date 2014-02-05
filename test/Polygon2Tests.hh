@@ -13,11 +13,10 @@ using namespace Eigen;
 
 TEST (Polygon2Tests, basics)
 {
-  vector<Vector2i> points = {
-    Vector2i(0,0),
-    Vector2i(0,1),
-    Vector2i(1,0)
-  };
+  Polygon2<int>::PointVector points;
+  points.push_back(Vector2i(0,0));
+  points.push_back(Vector2i(0,1));
+  points.push_back(Vector2i(1,0));
 
   Polygon2<int> poly(points);
 
@@ -29,12 +28,11 @@ TEST (Polygon2Tests, basics)
 
 TEST (Polygon2Tests, int_squareContains)
 {
-  vector<Vector2i> points = {
-    Vector2i(0,0),
-    Vector2i(0,2),
-    Vector2i(2,2),
-    Vector2i(2,0)
-  };
+  Polygon2<int>::PointVector points;
+  points.push_back(Vector2i(0,0));
+  points.push_back(Vector2i(0,2));
+  points.push_back(Vector2i(2,2));
+  points.push_back(Vector2i(2,0));
 
   Polygon2<int> poly(points);
 
@@ -56,12 +54,11 @@ TEST (Polygon2Tests, int_squareContains)
 
 TEST (Polygon2Tests, float_squareContains)
 {
-  vector<Vector2f> points = {
-    Vector2f(0,0),
-    Vector2f(0,2),
-    Vector2f(2,2),
-    Vector2f(2,0)
-  };
+  Polygon2<float>::PointVector points;
+  points.push_back(Vector2f(0,0));
+  points.push_back(Vector2f(0,2));
+  points.push_back(Vector2f(2,2));
+  points.push_back(Vector2f(2,0));
 
   Polygon2<float> poly(points);
 
@@ -85,12 +82,11 @@ TEST (Polygon2Tests, float_squareContains)
 
 TEST (Polygon2Tests, double_diamondContains)
 {
-  vector<Vector2d> points = {
-    Vector2d(0,0),
-    Vector2d(-1,1),
-    Vector2d(0,2),
-    Vector2d(1,1)
-  };
+  Polygon2<double>::PointVector points;
+  points.push_back(Vector2d(0,0));
+  points.push_back(Vector2d(-1,1));
+  points.push_back(Vector2d(0,2));
+  points.push_back(Vector2d(1,1));
 
   Polygon2<double> poly(points);
 
@@ -111,11 +107,10 @@ TEST (Polygon2Tests, double_diamondContains)
 
 TEST (Polygon2Tests, double_triangleContains)
 {
-  vector<Vector2d> points = {
-    Vector2d(0,0),
-    Vector2d(1,0),
-    Vector2d(0,1)
-  };
+  Polygon2<double>::PointVector points;
+  points.push_back(Vector2d(0,0));
+  points.push_back(Vector2d(1,0));
+  points.push_back(Vector2d(0,1));
 
   Polygon2<double> poly(points);
 
@@ -137,12 +132,11 @@ TEST (Polygon2Tests, double_triangleContains)
 TEST (Polygon2Tests, clip)
 {
   // unit square
-  vector<Vector2d> points = {
-    Vector2d(0,0),
-    Vector2d(1,0),
-    Vector2d(1,1),
-    Vector2d(0,1)
-  };
+  Polygon2<double>::PointVector points;
+  points.push_back(Vector2d(0,0));
+  points.push_back(Vector2d(1,0));
+  points.push_back(Vector2d(1,1));
+  points.push_back(Vector2d(0,1));
 
   Polygon2<double> poly(points);
 

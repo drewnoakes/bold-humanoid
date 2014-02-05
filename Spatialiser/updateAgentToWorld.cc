@@ -27,7 +27,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
 
   vector<Vector3d> goals;
   vector<LineSegment3d> lineSegments;
-  vector<Vector2d> vertices;
+  Polygon2d::PointVector vertices;
 
   for (auto const& goalPos : agentFrame->getGoalObservations())
   {

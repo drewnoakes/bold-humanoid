@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <Eigen/StdVector>
 
 #include "../util/log.hh"
 #include "../util/Maybe.hh"
@@ -19,8 +20,9 @@ namespace bold
   {
   public:
     typedef Eigen::Matrix<T, 2, 1> Point;
+    typedef std::vector<Point,Eigen::aligned_allocator<Point>> PointVector;
 
-    Polygon2(std::vector<Point> vertices)
+    Polygon2(PointVector const& vertices)
     : d_vertices(vertices)
     {
       if (vertices.size() < 3)
@@ -30,7 +32,7 @@ namespace bold
       }
     }
 
-    bool contains(Point point)
+    bool contains(Point const& point)
     {
       bool isInside = false;
       for (int i = 0, j = d_vertices.size() - 1; i < d_vertices.size(); j = i++)
@@ -54,10 +56,10 @@ namespace bold
       return d_vertices[i];
     }
 
-    typename std::vector<Point>::iterator begin() { return d_vertices.begin(); }
-    typename std::vector<Point>::iterator end() { return d_vertices.end(); }
-    typename std::vector<Point>::const_iterator begin() const { return d_vertices.begin(); }
-    typename std::vector<Point>::const_iterator end() const { return d_vertices.end(); }
+    typename PointVector::iterator begin() { return d_vertices.begin(); }
+    typename PointVector::iterator end() { return d_vertices.end(); }
+    typename PointVector::const_iterator begin() const { return d_vertices.begin(); }
+    typename PointVector::const_iterator end() const { return d_vertices.end(); }
 
     /// Returns the subsection of the provided that that resides within this polygon.
     /// Assumes the poly is convex. Returns an empty result if no intersection exists.
@@ -115,7 +117,7 @@ namespace bold
     }
 
   private:
-    std::vector<Point> d_vertices;
+    PointVector d_vertices;
   };
 
   typedef Polygon2<int> Polygon2i;
