@@ -13,6 +13,7 @@
 #include "../StateObject/OdometryState/odometrystate.hh"
 #include "../StateObject/OrientationState/orientationstate.hh"
 #include "../filters/ObservationModel/JointObservationModel/jointobservationmodel.hh"
+#include "../util/memory.hh"
 
 using namespace std;
 using namespace bold;

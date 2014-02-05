@@ -34,7 +34,7 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
   d_positionErrorRng = Math::createNormalRng(0, positionError->getValue());
   d_angleErrorRng    = Math::createNormalRng(0, Math::degToRad(angleErrorDegs->getValue()));
 
-  d_filter = make_shared<ParticleFilter<3,50>>();
+  d_filter = allocate_aligned_shared<ParticleFilter<3,50>>();
   Config::addAction("localiser.randomize", "Randomize", [this](){ d_filter->randomise(); });
   d_filter->setStateGenerator(
     [this]() {
