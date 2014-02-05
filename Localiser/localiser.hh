@@ -32,6 +32,7 @@ namespace bold
 
     Eigen::Vector3d d_lastTranslation;
     Eigen::Quaterniond d_lastQuaternion;
+    double d_preNormWeightSum;
 
     AgentPosition d_pos;
     AgentPosition d_smoothedPos;

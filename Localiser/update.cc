@@ -94,10 +94,13 @@ void Localiser::update()
       }
       return scoreSum / agentFrame->getObservedLineSegments().size();
     };
-    //jointModel.addModel(lineModel);
+    jointModel.addModel(lineModel);
   }
   
   d_filter->update(jointModel);
+  auto weights = d_filter->getWeights();
+  d_preNormWeightSum = weights.sum();
+  d_filter->normalize();
 
   auto stateWeight = d_filter->extract();
 

@@ -5,7 +5,8 @@ using namespace rapidjson;
 
 void ParticleState::writeJson(Writer<StringBuffer>& writer) const
 {
-  writer.StartArray();
+  writer.StartObject();
+  writer.String("particles").StartArray();
   {
     for (unsigned i = 0; i < d_particles.cols(); ++i)
     {
@@ -22,4 +23,6 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
     }
   }
   writer.EndArray();
+  writer.String("pnwsum").Double(d_preNormWeightSum);
+  writer.EndObject();
 }
