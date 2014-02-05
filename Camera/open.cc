@@ -25,4 +25,18 @@ void Camera::open()
 
   createControls();
   createFormats();
+
+  log::verbose("Camera::open") << "Capabilities:";
+  log::verbose("Camera::open") << "  Read/write: " << (canRead() ? "YES" : "NO");
+  log::verbose("Camera::open") << "  Streaming:  " << (canStream() ? "YES" : "NO");
+
+  log::verbose("Camera::open") << "Controls (" << getControls().size() << "):";
+  for (shared_ptr<Camera::Control const> control : getControls())
+    log::verbose("Camera::open") << "  " << control->name;
+
+  log::verbose("Camera::open") << "Formats (" << getFormats().size() << "):";
+  for (Camera::Format const& format : getFormats())
+    log::verbose("Camera::open") << "  "  << format.description;
+
+//logFrameIntervalDetails();
 }

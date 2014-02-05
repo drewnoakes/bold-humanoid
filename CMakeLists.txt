@@ -101,7 +101,6 @@ endif()
 
 add_class(BOLDHUMANOID
   ./Agent/Agent.cc
-  ./Agent/initCamera.cc
   ./Agent/processInputCommands.cc
   ./Agent/registerStateTypes.cc
   ./Agent/run.cc

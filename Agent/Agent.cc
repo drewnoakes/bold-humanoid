@@ -56,7 +56,21 @@ Agent::Agent()
 
   d_localiser = make_shared<Localiser>(d_fieldMap);
 
-  initCamera();
+  // Create camera
+  d_camera = make_shared<Camera>(Config::getStaticValue<string>("hardware.video-path"));
+  d_camera->open();
+
+  // Configure camera
+  unsigned width = d_cameraModel->imageWidth();
+  unsigned height = d_cameraModel->imageHeight();
+  if (!d_camera->getPixelFormat().requestSize(width, height))
+    log::error() << "[Agent::initCamera] Requesting camera size " << width << "x" << height << " failed";
+
+  auto pixelFormat = d_camera->getPixelFormat();
+  log::info("Agent::initCamera") << "Camera resolution: " << pixelFormat.width << "x" << pixelFormat.height;
+
+  // Start capturing camera images
+  d_camera->startCapture();
 
   d_visualCortex = make_shared<VisualCortex>(d_camera, d_cameraModel, d_fieldMap, d_spatialiser, d_headModule);
 
