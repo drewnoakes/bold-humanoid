@@ -7,7 +7,16 @@
 
 namespace bold
 {
-  template<typename> class Setting;;
+  typedef unsigned int uint;
+
+  template<typename> class Setting;
+
+  struct SpeechTask
+  {
+    std::string message;
+    uint rate;
+    bool pauseAfter;
+  };
 
   class Voice
   {
@@ -16,6 +25,7 @@ namespace bold
     ~Voice();
 
     void say(std::string const& message);
+    void say(SpeechTask const& task);
 
     void sayOneOf(std::initializer_list<std::string> const& messages);
 
@@ -24,9 +34,9 @@ namespace bold
     unsigned queueLength() const;
 
   private:
-    void sayCallback(std::string message);
+    void sayCallback(SpeechTask message);
 
-    ConsumerQueueThread<std::string> d_queue;
+    ConsumerQueueThread<SpeechTask> d_queue;
     Setting<int>* d_name;
     Setting<int>* d_rate;
     Setting<int>* d_volume;

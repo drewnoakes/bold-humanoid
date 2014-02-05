@@ -80,8 +80,14 @@ unsigned int Voice::queueLength() const
 
 void Voice::say(string const& message)
 {
-  log::verbose("Voice::say") << "Enqueuing: " << message;
-  d_queue.push(message);
+  SpeechTask task = { message, (uint)d_rate->getValue(), true };
+  say(task);
+}
+
+void Voice::say(SpeechTask const& task)
+{
+  log::verbose("Voice::say") << "Enqueuing: " << task.message;
+  d_queue.push(task);
 }
 
 void Voice::sayOneOf(initializer_list<string> const& messages)
@@ -91,7 +97,7 @@ void Voice::sayOneOf(initializer_list<string> const& messages)
   say(message);
 }
 
-void Voice::sayCallback(string message)
+void Voice::sayCallback(SpeechTask task)
 {
   if (!Config::getValue<bool>("voice.enabled"))
     return;
@@ -119,14 +125,21 @@ void Voice::sayCallback(string message)
     espeak_SetVoiceByName(it->second.c_str());
 
   // Set parameters each time, in case they change
-  espeak_SetParameter(espeakRATE,     d_rate->getValue(),            0);
+  espeak_SetParameter(espeakRATE,     task.rate,                     0);
   espeak_SetParameter(espeakVOLUME,   d_volume->getValue(),          0);
   espeak_SetParameter(espeakPITCH,    d_pitch->getValue(),           0);
   espeak_SetParameter(espeakRANGE,    d_range->getValue(),           0);
   espeak_SetParameter(espeakWORDGAP,  d_wordGapMs->getValue() / 10,  0); // units of 10ms
   espeak_SetParameter(espeakCAPITALS, d_capitalAccentHz->getValue(), 0);
 
+  auto const& message = task.message;
+
   log::verbose("Voice") << "Saying: " << message;
+
+  uint flags = espeakCHARS_AUTO; //  AUTO      8 bit or UTF8 automatically
+                                 //
+  if (task.pauseAfter)           //
+    flags |= espeakENDPAUSE;     // ENDPAUSE  sentence pause at end of text
 
   espeak_ERROR err = espeak_Synth(
     message.c_str(),   // text
@@ -134,8 +147,7 @@ void Voice::sayCallback(string message)
     0,                 // position to start from
     POS_CHARACTER,     // whether above 0 pos is chars/word/sentences
     message.size(),    // end position, 0 indicating no end
-    espeakCHARS_AUTO | // flags: AUTO      8 bit or UTF8 automatically
-    espeakENDPAUSE,    //        ENDPAUSE  sentence pause at end of text
+    flags,             // as above
     nullptr,           // message identifier given to callback (unused)
     nullptr);          // user data, passed to the callback function (unused)
 
