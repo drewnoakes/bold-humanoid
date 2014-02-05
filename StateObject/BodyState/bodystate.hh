@@ -18,7 +18,7 @@ namespace bold
 
   class BodyControl;
   class HardwareState;
-  template<class> class Setting;
+  template<typename> class Setting;;
 
   class BodyState : public StateObject
   {

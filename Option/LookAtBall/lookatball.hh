@@ -7,7 +7,7 @@ namespace bold
 {
   class CameraModel;
   class HeadModule;
-  template<class> class Setting;
+  template<typename> class Setting;
 
   class LookAtBall : public Option
   {

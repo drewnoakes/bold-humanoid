@@ -7,7 +7,7 @@
 
 namespace bold
 {
-  template<class> class Setting;
+  template<typename> class Setting;;
 
   class Voice
   {

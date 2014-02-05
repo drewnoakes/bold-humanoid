@@ -14,7 +14,7 @@ namespace bold
     Sum = 1
   };
 
-  template<class> class Setting;
+  template<typename> class Setting;;
 
   /** Tracks the orientation of the torso using data from the IMU.
    */
