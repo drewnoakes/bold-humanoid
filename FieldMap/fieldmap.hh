@@ -25,6 +25,12 @@ namespace bold
     /// Positions of the base of four goal posts, in the world frame.
     std::vector<Eigen::Vector3d> const& getGoalPostPositions() const { return d_goalPostPositions; }
 
+    /// Positions of the base of our two goal posts (which we defend), in the world frame.
+    std::vector<Eigen::Vector3d> const& getOurGoalPostPositions() const { return d_ourGoalPostPositions; }
+
+    /// Positions of the base of our their goal posts (which we attack), in the world frame.
+    std::vector<Eigen::Vector3d> const& getTheirGoalPostPositions() const { return d_theirGoalPostPositions; }
+
     /// The long length of the field, from goal to goal.
     double fieldLengthX() const { return d_fieldLengthX; }
 
@@ -41,6 +47,8 @@ namespace bold
     std::vector<LineSegment3d> d_fieldLineEdges;
     std::vector<LineSegment3d> d_circleLines;
     std::vector<Eigen::Vector3d> d_goalPostPositions;
+    std::vector<Eigen::Vector3d> d_ourGoalPostPositions;
+    std::vector<Eigen::Vector3d> d_theirGoalPostPositions;
 
     double d_fieldLengthX;
     double d_fieldLengthY;

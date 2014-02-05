@@ -109,4 +109,14 @@ FieldMap::FieldMap()
     Vector3d(halfFieldX, halfGoalY, 0),
     Vector3d(halfFieldX, -halfGoalY, 0)
   };
-};
+
+  d_ourGoalPostPositions = {
+    Vector3d(-halfFieldX, halfGoalY, 0),
+    Vector3d(-halfFieldX, -halfGoalY, 0)
+  };
+
+  d_theirGoalPostPositions = {
+    Vector3d(halfFieldX, halfGoalY, 0),
+    Vector3d(halfFieldX, -halfGoalY, 0)
+  };
+}
