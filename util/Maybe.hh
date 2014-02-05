@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "../util/memory.hh"
 #include <ostream>
 
 namespace bold
@@ -18,7 +19,7 @@ namespace bold
     {}
 
     Maybe(T value)
-      : std::shared_ptr<T>(std::make_shared<T>(value))
+      : std::shared_ptr<T>(bold::allocate_aligned_shared<T>(value)) // TODO: we don't need aligned allocation for all types
     {}
 
     Maybe(std::shared_ptr<T> value)
