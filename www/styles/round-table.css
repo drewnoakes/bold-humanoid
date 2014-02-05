@@ -181,7 +181,7 @@ div.module
 {
     box-sizing: content-box;
     width: 640px;
-    min-height: 120px;
+    min-height: 80px;
     display: inline-block;
     vertical-align: top;
     background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0,rgba(0,0,0,0.2) 12px);
