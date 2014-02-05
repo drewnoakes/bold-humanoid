@@ -2,12 +2,14 @@
 
 #include <Eigen/Core>
 #include <memory>
+#include <type_traits>
 
 namespace bold
 {
-  template<typename T>
-  std::shared_ptr<T> allocate_aligned_shared()
+  template<typename T, typename... Args>
+  std::shared_ptr<T> allocate_aligned_shared(Args... args)
   {
-    return std::allocate_shared<T>(Eigen::aligned_allocator<T>());
+    typedef std::remove_const<T> NonConst;
+    return std::allocate_shared<T>(Eigen::aligned_allocator<NonConst>(), args...);
   }
 }
