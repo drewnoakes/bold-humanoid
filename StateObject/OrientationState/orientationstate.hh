@@ -17,6 +17,8 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+
   private:
     Eigen::Quaterniond d_quaternion;
   };

@@ -60,7 +60,7 @@ void OrientationTracker::observeTyped(shared_ptr<HardwareState const> const& sta
       throw runtime_error("Unexpected OrientationTechnique value");
   }
 
-  AgentState::set(shared_ptr<OrientationState const>(new OrientationState(getQuaternion())));
+  AgentState::set(allocate_aligned_shared<OrientationState const>(getQuaternion()));
 }
 
 void OrientationTracker::updateMadgwick(shared_ptr<HardwareState const> const& state)
