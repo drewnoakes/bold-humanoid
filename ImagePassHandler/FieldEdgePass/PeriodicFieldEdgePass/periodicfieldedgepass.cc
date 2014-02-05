@@ -28,7 +28,7 @@ void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 {
 //   assert(x >= 0 && x < d_pixelWidth);
 
-  if (x % d_period != 0)
+  if (!x && x % d_period != 0)
     return;
 
   ushort c = x / d_period;
