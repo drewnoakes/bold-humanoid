@@ -2,12 +2,12 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-//export interface IPoint
-//{
-//    x: number;
-//    y: number;
-//}
-//
+export interface IPoint
+{
+    x: number;
+    y: number;
+}
+
 //export interface ISize
 //{
 //    width: number;

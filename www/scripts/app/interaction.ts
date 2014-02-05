@@ -2,7 +2,7 @@
  * @author Drew Noakes
  */
 
-import geometry = require('./Geometry');
+import geometry = require('util/Geometry');
 
 export enum MouseButton
 {
