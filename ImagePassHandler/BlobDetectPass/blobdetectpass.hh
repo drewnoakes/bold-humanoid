@@ -8,6 +8,7 @@
 #include <memory>
 #include <set>
 #include <vector>
+#include <Eigen/StdVector>
 
 #include "../imagepasshandler.hh"
 #include "../../DisjointSet/disjointset.hh"
@@ -42,8 +43,6 @@ namespace bold
     unsigned y;        ///< The row index of the horizontal run
     unsigned startX;   ///< The column index of the left-most pixel
     unsigned endX;     ///< The column index of the right-most pixel
-
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     inline friend std::ostream& operator<<(std::ostream& stream, Run const& run)
     {
@@ -87,6 +86,12 @@ namespace bold
     }
   };
 
+}
+
+EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(bold::Blob)
+
+namespace bold
+{
   /** Blob detection image pass
    *
    * Builds blobs while passing through an image
