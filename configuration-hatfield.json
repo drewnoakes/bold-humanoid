@@ -30,7 +30,7 @@
       "brightness": 128,
       "contrast": 32,
       "saturation": 28,
-      "gain": 0,
+      "gain": 200,
       "wb-temp-k": 0,
       "sharpness": 0
     }
