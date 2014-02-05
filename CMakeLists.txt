@@ -639,7 +639,9 @@ endif (BUILD_TOOLS)
 ## Compile TypeScript stuff
 #
 add_typescript_target(
+  ./www/scripts/app/interaction.ts
   ./www/scripts/app/Color.ts
+  ./www/scripts/app/util.ts
   ./www/scripts/app/util/Controls.ts
   ./www/scripts/app/util/Geometry.ts
   )
