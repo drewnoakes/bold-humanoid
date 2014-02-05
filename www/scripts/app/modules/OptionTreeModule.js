@@ -3,17 +3,19 @@
  */
 define(
     [
+        'util/Closeable',
+        'ControlBuilder',
         'DataProxy',
         'Protocols'
     ],
-    function(DataProxy, Protocols)
+    function(Closeable, ControlBuilder, DataProxy, Protocols)
     {
         'use strict';
 
         var OptionTreeModule = function()
         {
             this.$container = $('<div></div>');
-            this.options = {};
+            this.optionElementByName = {};
 
             this.title = 'option tree';
             this.id = 'optiontree';
@@ -23,10 +25,21 @@ define(
                     element: this.$container
                 }
             ];
+
+            this.closables = new Closeable();
         };
         
         OptionTreeModule.prototype.load = function()
         {
+            this.optionList = document.createElement('ul');
+            this.optionList.className = 'options';
+            this.$container.append(this.optionList);
+
+            var usage = document.createElement('div');
+            usage.className = 'control-container';
+            this.closables.add(ControlBuilder.build('options.announce-fsm-states', usage));
+            this.$container.append(usage);
+
             this.subscription = DataProxy.subscribe(
                 Protocols.optionTreeState,
                 {
@@ -40,35 +53,34 @@ define(
         {
             this.$container.empty();
             this.subscription.close();
+            this.closables.closeAll();
+
+            delete this.optionList;
+            delete this.subscription;
         };
 
         OptionTreeModule.prototype.onData = function(data)
         {
-            _.each(this.options, function (option)
+            _.each(this.optionElementByName, function(optionDiv)
             {
-                option.ran = false;
+                optionDiv.className = '';
             });
 
             for (var i = 0; i < data.ranoptions.length; i++)
             {
-                var name = data.ranoptions[i];
-                var option = this.options[name];
-                if (option) {
-                    option.ran = true;
+                var name = data.ranoptions[i],
+                    optionDiv = this.optionElementByName[name];
+
+                if (optionDiv) {
+                    optionDiv.classList.add('ran');
                 } else {
-                    var view = $('<div>' + name + '</div>').addClass('option');
-                    this.options[name] = {
-                        view: view,
-                        ran: true
-                    };
-                    this.$container.append(view);
+                    optionDiv = document.createElement('li');
+                    optionDiv.textContent = name;
+                    optionDiv.className = 'ran';
+                    this.optionElementByName[name] = optionDiv;
+                    this.optionList.appendChild(optionDiv);
                 }
             }
-
-            _.each(this.options, function (option)
-            {
-                option.view.toggleClass('ran', option.ran);
-            });
         };
 
         return OptionTreeModule;

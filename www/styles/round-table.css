@@ -748,8 +748,20 @@ div.module.motion-timing a.reset
 }
 
 /*******************************************************************/
-div.module.optiontree .option
+
+div.module.optiontree ul.options
 {
+    margin: 0;
+    padding: 0;
+}
+
+div.module.optiontree ul.options li
+{
+    margin: 1px 0;
+    padding: 1px 1px 1px 10px;
+    list-style-position: inside;
+    list-style-type: circle;
+    border-radius: 2px;
     background-color: transparent;
     transition: background-color 1s linear;
     -moz-transition: background-color 1s linear;
@@ -757,9 +769,17 @@ div.module.optiontree .option
     -webkit-transition: background-color 1s linear;
 }
 
-div.module.optiontree .option.ran
+div.module.optiontree ul.options li.ran
 {
     background-color: yellow;
+    list-style-type: disc;
+}
+
+div.module.optiontree div.control-container
+{
+    margin-top: 10px;
+    border-top: 1px dotted rgba(0, 0, 0, 0.2);
+    padding-top: 8px;
 }
 
 /*******************************************************************/
