@@ -196,6 +196,7 @@
   },
   "options": {
     "announce-fsm-states": false,
+    "announce-rate-wpm": 200,
     "circle-ball": {
       "walk-x": 1,
       "walk-y": 20,
