@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <memory>
 #include <list>
+#include <sigc++/signal.h>
 
 #include "../MotionModule/motionmodule.hh"
 
@@ -33,6 +34,10 @@ namespace bold
     /// May be used to compensate for angular positional errors.
     /// See also the offset_tuner project.
     int d_offsets[(uchar)JointId::MAX + 1];
+
+    /// Signal raised whenever the motion loop fails to read from the CM730.
+    /// Callback is passed the number of consecutive failures.
+    sigc::signal<void, uint> onReadFailure;
 
   private:
     void step(SequentialTimer& t);
@@ -66,6 +71,7 @@ namespace bold
     ulong d_cycleNumber;
 
     bool d_staticHardwareStateUpdateNeeded;
+    uint d_consecutiveReadFailureCount;
 
     /// The method that governs the thread's lifetime and operation
     static void *threadMethod(void *param);
