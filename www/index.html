@@ -198,6 +198,12 @@
         urlArgs: 'noCache=' + new Date().getTime(),
         waitSeconds: 15
     });
+    require.onError = function(err)
+    {
+        console.log('requirejs error', err);
+        $('#loading-indicator').find('h1').text(err.requireType);
+        $('#bouncer').fadeOut(function() { $(this).remove() });
+    };
 </script>
 
 </body>
