@@ -54,7 +54,7 @@ Agent::Agent()
 
   d_fieldMap = make_shared<FieldMap>();
 
-  d_localiser = make_shared<Localiser>(d_fieldMap);
+  d_localiser = allocate_aligned_shared<Localiser>(d_fieldMap);
 
   // Create camera
   d_camera = make_shared<Camera>(Config::getStaticValue<string>("hardware.video-path"));
