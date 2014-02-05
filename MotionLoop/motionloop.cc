@@ -16,6 +16,7 @@
 #include "../StateObject/TimingState/timingstate.hh"
 #include "../ThreadUtil/threadutil.hh"
 #include "../util/ccolor.hh"
+#include "../util/memory.hh"
 
 #include <time.h>
 #include <iostream>
@@ -373,7 +374,7 @@ void MotionLoop::step(SequentialTimer& t)
 
   AgentState::set(hw);
 
-  AgentState::set(make_shared<BodyState const>(hw, d_bodyControl, d_cycleNumber));
+  AgentState::set(allocate_aligned_shared<BodyState const>(hw, d_bodyControl, d_cycleNumber));
   t.timeEvent("Update BodyState");
 
   if (!d_readYet)
