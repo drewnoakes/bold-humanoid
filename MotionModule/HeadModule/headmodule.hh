@@ -45,8 +45,8 @@ namespace bold
 
     /** Move to the absolute angular position specified.
      *
-     * @param panDegsDelta zero center, positive left, negative right
-     * @param tiltDegsDelta zero center, positive up, negative down
+     * @param panDegs zero center, positive left, negative right
+     * @param tiltDegs zero center, positive up, negative down
      */
     void moveToDegs(double panDegs, double tiltDegs);
 
