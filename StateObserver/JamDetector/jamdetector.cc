@@ -45,7 +45,7 @@ void JamDetector::observeTyped(std::shared_ptr<BodyState const> const& bodyState
 
     if (transition == SchmittTriggerTransition::High)
     {
-      log::warning("JamDetector::observeTyped") << "Prolonged deviation of joint " << (int)jointId << " at avg level of " << avg << " over the last " << Config::getStaticValue<int>("hardware.jam-detector.window-size") << " cycles";
+      log::warning("JamDetector::observeTyped") << "Prolonged deviation of joint " << (int)jointId << " (" << JointName::getName(jointId) << ") at avg level of " << avg << " over the last " << Config::getStaticValue<int>("hardware.jam-detector.window-size") << " cycles";
       d_voice->say("Help, I'm stuck!");
 
       // TODO actually trigger a defensive movement

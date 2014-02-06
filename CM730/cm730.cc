@@ -487,7 +487,7 @@ void CM730::torqueEnable(bool enable)
     writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
 
     if (error.hasError())
-      log::error("CM730::torqueEnable") << "Error for joint ID " << (int)jointId << ": " << error;
+      log::error("CM730::torqueEnable") << "Error for joint ID " << (int)jointId << " (" << JointName::getName(jointId) << "): " << error;
   }
 }
 
