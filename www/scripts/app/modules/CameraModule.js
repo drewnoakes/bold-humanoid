@@ -74,6 +74,7 @@ define(
             imageSettingsContainer.appendChild(new HeadControls().element);
 
             this.closables.add(ControlBuilder.build('head-module.move-fine', imageSettingsContainer));
+            this.closables.add(ControlBuilder.actions('head-module.look-at', imageSettingsContainer));
         };
 
         CameraModule.prototype.unload = function()
@@ -81,6 +82,12 @@ define(
             this.$container.empty();
 
             this.closables.closeAll();
+
+            delete this.cameraCanvas;
+            delete this.$cameraCanvas;
+            delete this.hoverPixelInfo;
+            delete this.pixelLabelInspector;
+            delete this.context;
         };
 
         CameraModule.prototype.bindInteraction = function()
