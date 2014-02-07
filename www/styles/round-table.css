@@ -414,6 +414,13 @@ div.setting span.default-value
 
 /********************************************************************/
 
+div.head-controls
+{
+    display: inline-block;
+}
+
+/********************************************************************/
+
 div.module.camera div.hover-pixel-info
 {
     color: white;

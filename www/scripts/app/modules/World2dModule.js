@@ -7,11 +7,12 @@ define(
         'Protocols',
         'Constants',
         'DataProxy',
+        'HeadControls',
         'util/Dragger',
         'util/MouseEventUtil',
         'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, Constants, DataProxy, Dragger, MouseEventUtil, Geometry)
+    function(FieldLinePlotter, Protocols, Constants, DataProxy, HeadControls, Dragger, MouseEventUtil, Geometry)
     {
         'use strict';
 
@@ -81,6 +82,7 @@ define(
             this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
 
             this.$container.append(this.$canvas)
+                           .append(new HeadControls().element)
                            .append(this.$hoverInfo);
 
             this.bindEvents();

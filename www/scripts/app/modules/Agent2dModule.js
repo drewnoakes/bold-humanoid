@@ -6,13 +6,13 @@ define(
         'FieldLinePlotter',
         'Protocols',
         'Constants',
-        'ControlBuilder',
         'DataProxy',
+        'HeadControls',
         'util/Dragger',
         'util/MouseEventUtil',
         'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, Constants, ControlBuilder, DataProxy, Dragger, MouseEventUtil, Geometry)
+    function(FieldLinePlotter, Protocols, Constants, DataProxy, HeadControls, Dragger, MouseEventUtil, Geometry)
     {
         'use strict';
 
@@ -70,17 +70,9 @@ define(
             this.hoverInfo = document.createElement('div');
             this.hoverInfo.className = 'hover-info';
 
-            var headControlsContainer = document.createElement('div');
-            ControlBuilder.action('head-module.move-down', headControlsContainer);
-            ControlBuilder.action('head-module.move-up', headControlsContainer);
-            ControlBuilder.action('head-module.move-left', headControlsContainer);
-            ControlBuilder.action('head-module.move-right', headControlsContainer);
-            ControlBuilder.action('head-module.move-home', headControlsContainer);
-            ControlBuilder.action('head-module.move-zero', headControlsContainer);
-
             this.$container.append(this.canvas)
                            .append(this.hoverInfo)
-                           .append(headControlsContainer);
+                           .append(new HeadControls().element);
 
             this.bindEvents();
 

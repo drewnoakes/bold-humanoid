@@ -9,12 +9,13 @@ define(
         'ControlClient',
         'ControlBuilder',
         'DOMTemplate',
+        'HeadControls',
         'PixelLabelInspector',
         'Color',
         'util/Closeable',
         'util/MouseEventUtil'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, color, Closeable, MouseEventUtil)
+    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, HeadControls, PixelLabelInspector, color, Closeable, MouseEventUtil)
     {
         'use strict';
 
@@ -70,21 +71,9 @@ define(
             this.closables.add(ControlBuilder.build('round-table.image-type', imageSettingsContainer));
             this.closables.add(ControlBuilder.build('round-table.camera-frame-frequency', imageSettingsContainer));
 
-            ControlBuilder.action('head-module.move-down', imageSettingsContainer);
-            ControlBuilder.action('head-module.move-up', imageSettingsContainer);
-            ControlBuilder.action('head-module.move-left', imageSettingsContainer);
-            ControlBuilder.action('head-module.move-right', imageSettingsContainer);
-            ControlBuilder.action('head-module.move-home', imageSettingsContainer);
-            ControlBuilder.action('head-module.move-zero', imageSettingsContainer);
-            this.closables.add(ControlBuilder.build('head-module.move-fine', imageSettingsContainer));
+            imageSettingsContainer.appendChild(new HeadControls().element);
 
-//            ControlBuilder.action('head-module.move-down', element.querySelector('button[name="down"]'));
-//            ControlBuilder.action('head-module.move-up', element.querySelector('button[name="up"]'));
-//            ControlBuilder.action('head-module.move-left', element.querySelector('button[name="left"]'));
-//            ControlBuilder.action('head-module.move-right', element.querySelector('button[name="right"]'));
-//            ControlBuilder.action('head-module.move-home', element.querySelector('button[name="home"]'));
-//            ControlBuilder.action('head-module.move-zero', element.querySelector('button[name="zero"]'));
-//            this.closables.add(ControlBuilder.build('head-module.move-fine', imageSettingsContainer));
+            this.closables.add(ControlBuilder.build('head-module.move-fine', imageSettingsContainer));
         };
 
         CameraModule.prototype.unload = function()
