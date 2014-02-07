@@ -41,5 +41,15 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
       return ParticleFilter3::State(d_fieldXRng(), d_fieldYRng(), d_thetaRng());
     });
 
+  Config::addAction("localiser.flip", "Flip", [this]()
+  {
+    // Reset the state of the smoother so we flip instantly and don't glide
+    // have our position animated slowly across the field.
+    d_avgPos.reset();
+
+    // Flip the x-coordinate of every particle, and flip its rotation.
+    d_filter->transform([](Vector3d state) { return Vector3d(-state.x(), state.y(), -state[2]); });
+  });
+
   updateStateObject();
 }
