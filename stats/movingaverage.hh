@@ -15,11 +15,11 @@ namespace bold
     : d_items(windowSize),
       d_length(0),
       d_nextPointer(0),
+      d_sum(),
       d_windowSize(windowSize)
     {
       if (windowSize <= 0)
         throw new std::runtime_error("Window size must be greater than zero.");
-      memset(&d_sum, 0, sizeof(d_sum));
     }
 
     int count() const { return d_length; }
@@ -44,6 +44,13 @@ namespace bold
       d_avg = d_sum / d_length;
 
       return d_avg;
+    }
+
+    void reset()
+    {
+      d_length = 0;
+      d_nextPointer = 0;
+      d_sum = {};
     }
 
     T getAverage() const { return d_avg; }
