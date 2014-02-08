@@ -178,6 +178,20 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   }
   t.timeEvent("Goal Blob Selection");
 
+  if (log::minLevel <= LogLevel::Verbose && acceptedGoalBlobs.size() > 2)
+  {
+    // It's pretty rare that we should see three goal posts, so log information about the blobs
+    log::verbose("VisualCortex::integrateImage") << acceptedGoalBlobs.size() << " accepted goal blobs";
+    for (Blob const& goalBlob : acceptedGoalBlobs)
+    {
+      log::verbose("VisualCortex::integrateImage")
+        << goalBlob.br.x() << ","
+        << goalBlob.br.y() << ","
+        << goalBlob.ul.x() << ","
+        << goalBlob.ul.y();
+    }
+  }
+
   AgentState::set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, totalPixelCount, processedPixelCount));
 
   t.timeEvent("Updating State");
