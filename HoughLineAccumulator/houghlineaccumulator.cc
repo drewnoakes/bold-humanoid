@@ -13,7 +13,7 @@ void HoughLineAccumulator::add(int x, int y)
     // TODO store sin/cos in adjacent pairs for perf
     double radius = x*d_sinCache[t] + y*d_cosCache[t];
 
-    int radiusInt = (int)round(radius);
+    auto radiusInt = unsigned(round(radius));
 
     // Recenter, as we have both positive and negative radius values
     radiusInt += halfAccRadLen;

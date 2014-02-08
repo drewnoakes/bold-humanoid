@@ -15,9 +15,9 @@ Line HoughLineExtractor::findMaxLine(HoughLineAccumulator& accumulator) const
   //
   unsigned int maxY = 0, maxX = 0;
   uint16_t maxVotes = 0;
-  for (unsigned int y = 0; y < mat.rows; y++)
+  for (auto y = 0; y < mat.rows; y++)
   {
-    for (unsigned int x = 0; x < mat.cols; x++)
+    for (auto x = 0; x < mat.cols; x++)
     {
       uint16_t value = *ptr;
 

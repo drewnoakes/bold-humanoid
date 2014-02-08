@@ -21,9 +21,9 @@ TEST (ConsumerQueueThreadTests, basics)
     values.push_back(i);
   });
 
-  const int loopCount = 100;
+  auto loopCount = unsigned{100};
 
-  for (int i = 0; i < loopCount; i++)
+  for (auto i = unsigned{0}; i < loopCount; i++)
   {
     queue.push(i);
     if (i % 20 == 0)
@@ -35,7 +35,7 @@ TEST (ConsumerQueueThreadTests, basics)
   ASSERT_TRUE( values.size() > 0 );
   ASSERT_TRUE( values.size() <= loopCount );
 
-  for (int i = 0; i < values.size(); i++)
+  for (auto i = unsigned{0}; i < values.size(); i++)
   {
     ASSERT_EQ ( i, values[i] );
   }
@@ -53,7 +53,7 @@ TEST (ConsumerQueueThreadTests, doesntBlockPusher)
 
   int loopCount = 50;
 
-  for (int i = 0; i < loopCount; i++)
+  for (auto i = 0; i < loopCount; i++)
     queue.push(1);
 
   ASSERT_LT ( callCount, loopCount );

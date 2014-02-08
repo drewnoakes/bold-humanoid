@@ -101,8 +101,8 @@ TEST (MathTests, createNormalRng)
   double mean = 1.5;
   auto rng = Math::createNormalRng(mean, 1);
   double sum = 0;
-  unsigned loopCount = 1000;
-  for (int i = 0; i < loopCount; i++)
+  auto loopCount = unsigned{1000};
+  for (auto i = unsigned{0}; i < loopCount; i++)
   {
     sum += rng();
   }

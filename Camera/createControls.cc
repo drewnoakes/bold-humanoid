@@ -30,7 +30,7 @@ void Camera::createControls()
       querymenu.id = queryctrl.id;
 
       // Query all enum values
-      for (unsigned i = queryctrl.minimum; i <= queryctrl.maximum; i++)
+      for (auto i = queryctrl.minimum; i <= queryctrl.maximum; i++)
       {
         querymenu.index = i;
         if (ioctl(d_fd, VIDIOC_QUERYMENU, &querymenu) == 0)

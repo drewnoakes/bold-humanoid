@@ -71,7 +71,7 @@ TEST (StatsTests, varianceAndStdDev_double)
   EXPECT_NEAR( 0.045235, bold::variance<double>(inputs.begin() + 1, inputs.begin() + 4), 0.000001 );
   EXPECT_NEAR( 0.041054, bold::variance<double>(inputs.begin() + 2, inputs.begin() + 5), 0.000001 );
 
-  for (int i = 0; i < variances.size(); i++)
+  for (auto i = unsigned{0}; i < variances.size(); i++)
   {
     EXPECT_NEAR( variances[i],       bold::variance<double>(inputs.begin() + i, inputs.begin() + i + 3), 0.00001);
     EXPECT_NEAR( sqrt(variances[i]), bold::stdDev  <double>(inputs.begin() + i, inputs.begin() + i + 3), 0.00001);

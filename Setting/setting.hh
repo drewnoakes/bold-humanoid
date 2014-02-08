@@ -46,10 +46,11 @@ namespace bold
       d_isAdvanced(isAdvanced),
       d_description(description)
     {
-      int last = d_path.find_last_of('.');
-      if (last == std::string::npos)
-        last = -1;
-      d_name = d_path.substr(last + 1);
+      auto last = d_path.find_last_of('.');
+      auto nameStart = 
+        last == std::string::npos ?
+        0 : last + 1;
+      d_name = d_path.substr(nameStart);
     }
 
     virtual ~SettingBase() {}
