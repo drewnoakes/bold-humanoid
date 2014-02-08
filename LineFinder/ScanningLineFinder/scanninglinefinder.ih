@@ -1,6 +1,8 @@
 #include "scanninglinefinder.hh"
 
 #include <Eigen/LU>
+#include "../../util/memory.hh"
+#include <Eigen/StdVector>
 
 using namespace bold;
 using namespace std;

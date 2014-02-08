@@ -17,7 +17,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
     unsigned xEnd;
   };
 
-  vector<RegressionState> regStates;
+  vector<RegressionState,Eigen::aligned_allocator<RegressionState>> regStates;
 
   double maxError = 5;
 
