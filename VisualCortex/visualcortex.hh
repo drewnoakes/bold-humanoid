@@ -170,6 +170,7 @@ namespace bold
     Setting<int>* d_minBallArea;
     Setting<Range<double>>* d_acceptedBallMeasuredSizeRatio;
     Setting<int>* d_minGoalDimensionPixels;
+    Setting<int>* d_maxGoalFieldEdgeDistPixels;
 
     bool d_recordNextFrame;
     Setting<bool>* d_isRecordingFrames;

@@ -68,6 +68,7 @@
   "vision": {
     "min-ball-area": 1,
     "min-goal-dimension-pixels": 3,
+    "max-goal-field-edge-distance-px": 30,
     "enable-ball-blob-merging": false,
     "pixel-labels": {
       "goal": { "hue": [30, 60], "sat": [158, 236], "val": [124, 222] },

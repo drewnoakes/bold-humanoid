@@ -73,9 +73,10 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_fieldLabel->setHsvRange(value); createLookupTable(); });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_lineLabel ->setHsvRange(value); createLookupTable(); });
 
-  d_minBallArea            = Config::getSetting<int>("vision.min-ball-area");
+  d_minBallArea                   = Config::getSetting<int>("vision.min-ball-area");
   d_acceptedBallMeasuredSizeRatio = Config::getSetting<Range<double>>("vision.accepted-ball-measured-size-ratio");
-  d_minGoalDimensionPixels = Config::getSetting<int>("vision.min-goal-dimension-pixels");
+  d_minGoalDimensionPixels        = Config::getSetting<int>("vision.min-goal-dimension-pixels");
+  d_maxGoalFieldEdgeDistPixels    = Config::getSetting<int>("vision.max-goal-field-edge-distance-px");
 
   // TODO don't pass this around -- look it up from config (?)
   int imageWidth = d_cameraModel->imageWidth();
