@@ -51,3 +51,6 @@ www/.idea
 /www/scripts/app/util.js.map
 /www/scripts/app/util/math.js
 /www/scripts/app/util/math.js.map
+Release/
+RelWithDebInfo/
+Debug/
