@@ -643,4 +643,5 @@ add_typescript_target(
   ./www/scripts/app/util.ts
   ./www/scripts/app/util/Controls.ts
   ./www/scripts/app/util/Geometry.ts
+  ./www/scripts/app/util/math.ts
   )

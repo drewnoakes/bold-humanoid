@@ -49,3 +49,5 @@ www/.idea
 /www/scripts/app/interaction.js.map
 /www/scripts/app/util.js
 /www/scripts/app/util.js.map
+/www/scripts/app/util/math.js
+/www/scripts/app/util/math.js.map
