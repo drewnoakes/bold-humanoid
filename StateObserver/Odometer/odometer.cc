@@ -68,5 +68,5 @@ Vector3d Odometer::getTranslation() const
 void Odometer::reset()
 {
   lock_guard<mutex> lock(d_progressMutex);
-  d_progress = {};
+  d_progress = {0,0,0};
 }
