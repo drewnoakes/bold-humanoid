@@ -3,9 +3,10 @@
  */
 define(
     [
-        'DataProxy'
+        'DataProxy',
+        'util/math'
     ],
-    function (DataProxy)
+    function (DataProxy, math)
     {
         var seriesOptions = {
             strokeStyle: 'rgb(0, 255, 0)',
@@ -15,12 +16,13 @@ define(
 
         var chartHeight = 150;
 
-        var TimingPane = function (protocol, thresholdMillis)
+        var TimingPane = function (protocol, targetFps)
         {
             this.$container = $('<div></div>');
             this.container = this.$container.get(0);
             this.protocol = protocol;
-            this.thresholdMillis = thresholdMillis;
+            this.targetFps = targetFps;
+            this.thresholdMillis = 1000 / targetFps;
         };
 
         TimingPane.prototype.load = function ()
@@ -77,6 +79,7 @@ define(
 
             this.fpsInterval = setInterval(function ()
             {
+                // TODO change colour based on performance vs this.targetFps
                 this.$fps.text(this.fpsCount ? this.fpsCount + ' FPS' : '');
                 this.fpsCount = 0;
             }.bind(this), 1000);
@@ -146,6 +149,7 @@ define(
         TimingPane.prototype.getOrCreateEntry = function (label)
         {
             var entry = this.entryByLabel[label];
+
             if (!entry) {
                 // If this entry is a child of another entry, try to find it's parent
                 var parts = label.split('/'),
@@ -170,10 +174,12 @@ define(
                 var cellExpand = $('<td></td>', {'class': 'expander'}).appendTo(row).get(0),
                     cellLabel = $('<td></td>').text(label).appendTo(row).get(0),
                     cellMillis = $('<td></td>', {'class': 'duration'}).appendTo(row).get(0),
+                    cellMAvgMillis = $('<td></td>', {'class': 'avg-duration'}).appendTo(row).get(0),
                     cellMaxMillis = $('<td></td>', {'class': 'max-duration'}).appendTo(row).get(0);
 
                 entry = {
                     label: label,
+                    avg: new math.MovingAverage(this.targetFps * 4), // four second moving average
                     update: function (timestamp, millis)
                     {
                         entry.time = timestamp;
@@ -183,6 +189,7 @@ define(
                             cellMaxMillis.textContent = millis.toFixed(3);
                         }
                         cellMillis.textContent = millis.toFixed(3);
+                        cellMAvgMillis.textContent = entry.avg.next(millis).toFixed(3);
                     },
                     row: row.get(0),
                     children: [],
@@ -226,6 +233,7 @@ define(
 
                 row.appendTo(this.table)
             }
+
             return entry;
         };
 

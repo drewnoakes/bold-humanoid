@@ -681,6 +681,7 @@ div.module.config > div.pane-container
 /********************************************************************/
 
 table.timing-details tr td.duration,
+table.timing-details tr td.avg-duration,
 table.timing-details tr td.max-duration
 {
     text-align: right;

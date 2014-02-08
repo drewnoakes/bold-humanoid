@@ -14,7 +14,7 @@ define(
         {
             this.$container = $('<div></div>');
 
-            this.pane = new TimingPane(Protocols.motionTiming, 8);
+            this.pane = new TimingPane(Protocols.motionTiming, 125/*fps*/);
 
             /////
 
