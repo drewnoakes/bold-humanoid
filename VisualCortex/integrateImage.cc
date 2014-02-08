@@ -136,8 +136,8 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   }
 
   // Do we have goal posts?
-  vector<Vector2d> goalPositions;
-  vector<Blob> acceptedGoalBlobs;
+  vector<Vector2d,aligned_allocator<Vector2d>> goalPositions;
+  vector<Blob,aligned_allocator<Blob>> acceptedGoalBlobs;
   int allowedGoalFieldEdgeDistPixels = d_maxGoalFieldEdgeDistPixels->getValue();
   int minGoalDimensionPixels = d_minGoalDimensionPixels->getValue();
   for (Blob const& goalBlob : blobsPerLabel[d_goalLabel])
