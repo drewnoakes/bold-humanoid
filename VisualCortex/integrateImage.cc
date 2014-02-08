@@ -137,6 +137,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   // Do we have goal posts?
   vector<Vector2d> goalPositions;
+  vector<Blob> acceptedGoalBlobs;
   int allowedGoalFieldEdgeDistPixels = d_maxGoalFieldEdgeDistPixels->getValue();
   int minGoalDimensionPixels = d_minGoalDimensionPixels->getValue();
   for (Blob const& goalBlob : blobsPerLabel[d_goalLabel])
@@ -153,6 +154,16 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     if (wh.minCoeff() > minGoalDimensionPixels && // Ignore small blobs
         wh.y() > wh.x())                          // Taller than it is wide
     {
+      // Verify this blob does not overlap with a goal blob which was already accepted
+      for (auto const& other : acceptedGoalBlobs)
+      {
+        // Blobs are sorted by size, descending.
+        // If a smaller goal blob intersects a larger blob that we already
+        // accepted as a goal, ignore the smaller one.
+        if (goalBlob.bounds().overlaps(other.bounds()))
+          continue;
+      }
+
       Run const& topRun = *goalBlob.runs.begin();
 
       // Take center of topmost run (the first)
@@ -162,6 +173,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       );
 
       goalPositions.push_back(pos);
+      acceptedGoalBlobs.push_back(goalBlob);
     }
   }
   t.timeEvent("Goal Blob Selection");
