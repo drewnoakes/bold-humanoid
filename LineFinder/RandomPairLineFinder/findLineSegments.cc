@@ -78,6 +78,9 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
     if (hypothesis.count() < averageVotes)
       break;
 
+    if (hypothesis.min() == hypothesis.max())
+      break;
+
     satisfactory.push_back(LineSegment2i(
       Vector2i(hypothesis.min().x(), hypothesis.min().y()),
       Vector2i(hypothesis.max().x(), hypothesis.max().y())
