@@ -96,9 +96,9 @@ link_directories(${BOLDHUMANOID_LINK_DIRS})
 ## Additional compile flags
 #
 if (EIGEN_VECTORIZE)
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -Wall  -Wno-deprecated-register -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare -Wno-c++11-narrowing -Wno-unknown-warning-option -Wno-deprecated")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -Wall  -Wno-unused-local-typedefs")
 else(EIGEN_VECTORIZE)
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -DEIGEN_DONT_VECTORIZE -Wall  -Wno-deprecated-register -Wno-sign-compare -Wno-unused-local-typedefs -Wno-enum-compare -Wno-c++11-narrowing -Wno-unknown-warning-option -Wno-deprecated")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -DEIGEN_DONT_VECTORIZE -Wall  -Wno-unused-local-typedefs")
 endif(EIGEN_VECTORIZE)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
