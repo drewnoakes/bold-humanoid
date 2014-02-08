@@ -4,6 +4,7 @@
 #include "../CameraModel/cameramodel.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../util/Maybe.hh"
+#include "../util/memory.hh"
 
 #include <memory>
 #include <Eigen/Core>
@@ -18,7 +19,7 @@ auto imageHeight = 11;
 
 Spatialiser createTestSpatialiser(double rangeVertical = 90, double rangeHorizontal = 90)
 {
-  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
+  shared_ptr<CameraModel> cameraModel = allocate_aligned_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
   return Spatialiser(cameraModel);
 }
 
@@ -257,7 +258,7 @@ TEST (SpatialiserTests, findHorizonForColumnWideCam)
   auto rangeVertical = 45;
   auto rangeHorizontal = 60;
 
-  shared_ptr<CameraModel> cameraModel = make_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
+  shared_ptr<CameraModel> cameraModel = allocate_aligned_shared<CameraModel>(imageWidth, imageHeight, rangeVertical, rangeHorizontal);
 
   Spatialiser spatialiser(cameraModel);
 
