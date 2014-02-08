@@ -68,8 +68,9 @@ execute_process(COMMAND
   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 # generate version.cc
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.cc.in" "${CMAKE_CURRENT_BINARY_DIR}/version.cc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.hh" "${CMAKE_CURRENT_BINARY_DIR}/version.hh" @ONLY)
 # explicitly provide the dependency for version.cc, in case it has been deleted
-list(APPEND BOLDHUMANOID_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/version.cc" version.hh)
+list(APPEND BOLDHUMANOID_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/version.cc")
 
 #
 ## Include directories
@@ -647,10 +648,24 @@ endif (BUILD_TOOLS)
 ## Compile TypeScript stuff
 #
 add_typescript_target(
-  ./www/scripts/app/interaction.ts
-  ./www/scripts/app/Color.ts
-  ./www/scripts/app/util.ts
-  ./www/scripts/app/util/Controls.ts
-  ./www/scripts/app/util/Geometry.ts
-  ./www/scripts/app/util/math.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/Color.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/util.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/util/Controls.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/util/Geometry.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/util/math.ts
   )
+
+set(JSON_FILES
+  ${CMAKE_SOURCE_DIR}/configuration-drews.json
+  ${CMAKE_SOURCE_DIR}/configuration-hamburg.json
+  ${CMAKE_SOURCE_DIR}/configuration-hatfield.json
+  ${CMAKE_SOURCE_DIR}/configuration-metadata.json
+  ${CMAKE_SOURCE_DIR}/configuration-team.json
+)
+
+foreach(json_file ${JSON_FILES})
+  add_Custom_command(TARGET boldhumanoid PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${json_file} $<TARGET_FILE_DIR:boldhumanoid>)
+endforeach(json_file)
+
