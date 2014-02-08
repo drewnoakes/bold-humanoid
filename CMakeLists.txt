@@ -585,7 +585,7 @@ if(UPLOAD_SCP_PATH)
 
   add_custom_target(upload DEPENDS upload.stamp)
 else(UPLOAD_SCP_PATH)
-  message(WARNING "You have not set a path for uploading the binary; 'upload' target not generated")
+  message(STATUS "You have not set a path for uploading the binary; 'upload' target not generated")
 endif(UPLOAD_SCP_PATH)
 
 #
@@ -608,7 +608,7 @@ if(BUNDLES_PATH)
 
   add_custom_target(bundle DEPENDS bundle.stamp)
 else(BUNDLES_PATH)
-  message(WARNING "You have not set a path for storing bundles; 'bundle' target not generated")
+  message(STATUS "You have not set a path for storing bundles; 'bundle' target not generated")
 endif(BUNDLES_PATH)
 
 
