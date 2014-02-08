@@ -37,6 +37,18 @@ namespace bold
       return (v - d_min).minCoeff() >= 0 && (d_max - v).minCoeff() >= 0;
     }
 
+    bool overlaps(Bounds<T,dim> const& other) const
+    {
+      for (int i = 0; i < dim; i++)
+      {
+        if (d_max[i] <= other.d_min[i] ||
+            d_min[i] >= other.d_max[i])
+          return false;
+      }
+
+      return true;
+    }
+
     /** True if the any dimension of this bounding box are zero. */
     bool isEmpty() const
     {
