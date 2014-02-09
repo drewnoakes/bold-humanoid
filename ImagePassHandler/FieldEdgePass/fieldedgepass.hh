@@ -4,28 +4,25 @@
 #include <vector>
 
 #include "../imagepasshandler.hh"
-#include "../../Config/config.hh"
 
 namespace bold
 {
   class PixelLabel;
+  template<typename T> class Setting;
 
   class FieldEdgePass : public ImagePassHandler<uchar>
   {
   public:
-    FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
-    : d_fieldLabel(fieldLabel),
-      d_pixelWidth(pixelWidth),
-      d_pixelHeight(pixelHeight)
-    {
-      Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = value; });
-    }
+    FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight);
 
     virtual ~FieldEdgePass() = default;
 
     virtual ushort getEdgeYValue(ushort x) const = 0;
 
   protected:
+    static void applyConvexHull(std::vector<ushort>& points);
+
+    Setting<bool>* d_useConvexHull;
     std::shared_ptr<PixelLabel> d_fieldLabel;
     ushort d_pixelWidth;
     ushort d_pixelHeight;

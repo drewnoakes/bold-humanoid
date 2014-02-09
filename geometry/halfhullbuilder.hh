@@ -12,6 +12,7 @@ namespace bold
   };
 
   // TODO is it better to specify the side as a template parameter to compile away conditions?
+  // TODO below doesn't seem to work with ushort... is the problem being unsigned, or integral?
 
   template<typename T>
   class HalfHullBuilder

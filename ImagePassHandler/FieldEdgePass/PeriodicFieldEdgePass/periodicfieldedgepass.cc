@@ -9,15 +9,13 @@ using namespace std;
 
 PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight, ushort period)
 : FieldEdgePass(fieldLabel, pixelWidth, pixelHeight),
-  d_maxYByC(pixelWidth),
+  d_maxYByC(pixelWidth/period),
   d_runByC(pixelWidth/period),
   d_period(period)
 {}
 
 void PeriodicFieldEdgePass::onImageStarting()
 {
-  assert(d_maxYByC.size() == d_pixelWidth);
-
   for (ushort c = 0; c < d_runByC.size(); c++)
     d_maxYByC[c] = d_pixelHeight - 1;
 
@@ -65,4 +63,10 @@ ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
   }
 
   return Math::lerp((double)rem/d_period, d_maxYByC[c], d_maxYByC[c + 1]);
+}
+
+void PeriodicFieldEdgePass::onImageComplete()
+{
+  if (d_useConvexHull->getValue())
+    applyConvexHull(d_maxYByC);
 }

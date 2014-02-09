@@ -104,6 +104,7 @@
     "field-edge-pass": {
       "field-edge-type": { "type": "enum", "default": 0, "values": { "Complete": 0, "Periodic": 1 }, "advanced": true },
       "min-vertical-run-length": { "type": "int", "min": 1, "max": 100, "default": 5, "advanced": true },
+      "use-convex-hull": { "type": "bool", "default": true },
       "complete": {
         "smoothing-window-length": { "type": "int", "min": 1, "max": 100, "default": 15, "advanced": true }
       }

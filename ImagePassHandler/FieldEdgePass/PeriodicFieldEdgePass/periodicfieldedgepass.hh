@@ -16,6 +16,7 @@ namespace bold
 
     void onImageStarting() override;
     void onPixel(uchar labelId, ushort x, ushort y) override;
+    void onImageComplete() override;
 
     ushort getEdgeYValue(ushort x) const override;
 
@@ -23,6 +24,7 @@ namespace bold
     {
       return std::string("PeriodicFieldEdgePass");
     }
+
   private:
     std::vector<ushort> d_maxYByC;
     std::vector<ushort> d_runByC;

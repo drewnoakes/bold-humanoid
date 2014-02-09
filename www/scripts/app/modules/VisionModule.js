@@ -72,6 +72,7 @@ define(
             this.closables.add(ControlBuilder.build('vision.field-edge-pass.field-edge-type', fieldEdgeContainer));
             this.closables.add(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', fieldEdgeContainer));
             this.closables.add(ControlBuilder.build('vision.field-edge-pass.complete.smoothing-window-length', fieldEdgeContainer));
+            this.closables.add(ControlBuilder.build('vision.field-edge-pass.use-convex-hull', fieldEdgeContainer));
 
             var lineContainer = element.querySelector('div.line-detection');
             this.closables.add(ControlBuilder.build('vision.line-detection.enable', lineContainer));

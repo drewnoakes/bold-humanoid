@@ -99,6 +99,7 @@
     "field-edge-pass": {
       "field-edge-type": 1,
       "min-vertical-run-length": 5,
+      "use-convex-hull": true,
       "complete": {
         "smoothing-window-length": 5
       }

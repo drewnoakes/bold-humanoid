@@ -57,19 +57,21 @@ ushort CompleteFieldEdgePass::getEdgeYValue(ushort x) const
 
 void CompleteFieldEdgePass::onImageComplete()
 {
-  // Bail out early if no smoothing is requested
-  if (d_smoothingWindowSize == 1)
-    return;
-
-  MovingAverage<unsigned> avg(d_smoothingWindowSize);
-
-  int offset = int(d_smoothingWindowSize)/2;
-  for (int x = 0, t = -offset; x < d_pixelWidth; x++, t++)
+  if (d_smoothingWindowSize > 1)
   {
-    auto smoothedY = avg.next(d_maxYByX[x]);
-    if (t >= 0 && smoothedY > d_maxYByX[t])
+    MovingAverage<unsigned> avg(d_smoothingWindowSize);
+
+    int offset = int(d_smoothingWindowSize)/2;
+    for (int x = 0, t = -offset; x < d_pixelWidth; x++, t++)
     {
-      d_maxYByX[x] = smoothedY;
+      auto smoothedY = avg.next(d_maxYByX[x]);
+      if (t >= 0 && smoothedY > d_maxYByX[t])
+      {
+        d_maxYByX[x] = smoothedY;
+      }
     }
   }
+
+  if (d_useConvexHull->getValue())
+    applyConvexHull(d_maxYByX);
 }
