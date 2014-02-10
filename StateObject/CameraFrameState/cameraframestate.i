@@ -22,11 +22,11 @@ namespace bold
     std::vector<PyObject*> getGoalObservations() const
     {
       std::vector<PyObject*> out;
-      std::vector<Eigen::Vector2d> in = $self->getGoalObservations();
-      for (int i = 0; i < in.size(); ++i)
+      auto in = $self->getGoalObservations();
+      for (auto &obs : in)
       {
         PyObject *resultobj = 0;
-        ConvertFromEigenToNumPyMatrix(&resultobj, &(in[i]));
+        ConvertFromEigenToNumPyMatrix(&resultobj, &obs);
         out.push_back(resultobj);
       }
       return out;

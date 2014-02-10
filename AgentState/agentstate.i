@@ -19,13 +19,8 @@ namespace bold
   class AgentState
   {
   public:
-    AgentState()
-    {}
-    
     template <typename T>
-      static std::shared_ptr<T const> get();
-    
-    static AgentState& getInstance();
+    static std::shared_ptr<T const> get();
   };
 }
 

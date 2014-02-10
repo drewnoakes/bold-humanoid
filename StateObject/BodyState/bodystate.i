@@ -8,8 +8,6 @@ namespace bold
   class BodyState : public StateObject
   {
   public:
-    BodyState(double angles[], ulong cycleNumber);
-
     double getTorsoHeight() const;
 
     std::shared_ptr<Limb const> getTorso() const;
