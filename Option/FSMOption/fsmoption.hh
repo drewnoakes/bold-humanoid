@@ -13,7 +13,7 @@
 namespace bold
 {
   struct FSMState;
-  struct Voice;
+  class Voice;
 
   struct FSMTransition
   {

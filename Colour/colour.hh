@@ -71,8 +71,7 @@ namespace bold
       uchar cr;
     };
 
-    class hsv;
-    class bgr;
+    struct hsv;
 
     hsv bgr2hsv(bgr const& in);
     bgr hsv2bgr(hsv const& in);
