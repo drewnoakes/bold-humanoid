@@ -26,41 +26,22 @@ namespace bold
     static std::shared_ptr<BodyState const> zero(ulong thinkCycleNumber = 0);
 
     /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
-    BodyState(double angles[], std::vector<int> positionValueDiffs, ulong motionCycleNumber);
-    BodyState(std::shared_ptr<HardwareState const> const& hardwareState, std::shared_ptr<BodyControl> const& bodyControl, ulong motionCycleNumber);
+    BodyState(double angles[],
+              std::vector<int> positionValueDiffs,
+              ulong motionCycleNumber);
+    BodyState(std::shared_ptr<HardwareState const> const& hardwareState,
+              std::shared_ptr<BodyControl> const& bodyControl,
+              ulong motionCycleNumber);
 
     std::shared_ptr<Limb const> getTorso() const { return d_torso; }
 
     std::shared_ptr<Joint const> getHeadPanJoint() const { return getJoint(JointId::HEAD_PAN); }
 
-    std::shared_ptr<Limb const> getLimb(std::string const& name) const
-    {
-      // NOTE cannot use '[]' on a const map
-      auto const& i = d_limbByName.find(name);
-      if (i == d_limbByName.end())
-        throw std::runtime_error("Invalid limb name: " + name);
-      return i->second;
-    }
+    std::shared_ptr<Limb const> getLimb(std::string const& name) const;
 
-    std::shared_ptr<Joint const> getJoint(JointId jointId) const
-    {
-      assert(jointId >= JointId::MIN && jointId <= JointId::MAX);
+    std::shared_ptr<Joint const> getJoint(JointId jointId) const;
 
-      // NOTE cannot use '[]' on a const map
-      auto const& i = d_jointById.find((uchar)jointId);
-      if (i == d_jointById.end())
-        throw std::runtime_error("Invalid JointId" /*+ jointId*/);
-      return i->second;
-    }
-
-    void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
-    {
-      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-      {
-        auto joint = getJoint((JointId)jointId);
-        action(joint);
-      }
-    }
+    void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action);
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -94,4 +75,34 @@ namespace bold
     // Needed when having fixed sized Eigen member
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   };
+
+  inline std::shared_ptr<Limb const> BodyState::getLimb(std::string const& name) const
+  {
+    // NOTE cannot use '[]' on a const map
+    auto const& i = d_limbByName.find(name);
+    if (i == d_limbByName.end())
+      throw std::runtime_error("Invalid limb name: " + name);
+    return i->second;
+  }
+
+  inline std::shared_ptr<Joint const> BodyState::getJoint(JointId jointId) const
+  {
+    assert(jointId >= JointId::MIN && jointId <= JointId::MAX);
+    
+    // NOTE cannot use '[]' on a const map
+    auto const& i = d_jointById.find((uchar)jointId);
+    if (i == d_jointById.end())
+      throw std::runtime_error("Invalid JointId" /*+ jointId*/);
+    return i->second;
+  }
+
+  inline void BodyState::visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
+  {
+    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    {
+      auto joint = getJoint((JointId)jointId);
+      action(joint);
+    }
+  }
+  
 }
