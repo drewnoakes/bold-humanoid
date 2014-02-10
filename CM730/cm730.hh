@@ -266,7 +266,7 @@ namespace bold
 
   private:
     std::unique_ptr<CM730Platform> d_platform;
-    uchar d_controlTable[MAXNUM_ADDRESS];
+    //uchar d_controlTable[MAXNUM_ADDRESS];
 
     /**
      * @param priority select the queue for this exchange: 0=high 1=med 2=low

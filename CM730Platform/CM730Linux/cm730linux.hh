@@ -10,27 +10,6 @@ namespace bold
 
   class CM730Linux : public CM730Platform
   {
-  private:
-    /// The FD for the socket connected to the CM730
-    int d_socket;
-
-    /// Timestamp of when we start waiting for a response (status) packet, in millis
-    double d_packetStartTimeMillis;
-
-    /// Amount of time to wait for a packet, relative to d_PacketStartTime, in millis
-    double d_packetWaitTimeMillis;
-
-    /// The estimated amount of time required to send a single byte, in millis. Calculated from baud rate.
-    double d_byteTransferTimeMillis;
-
-    /// A string that defines the port of the CM730
-    std::string d_portName;
-
-    unsigned long d_txByteCount;
-    unsigned long d_rxByteCount;
-
-    bool d_isPortOpen;
-
   public:
     CM730Linux(std::string name);
     ~CM730Linux();
@@ -55,5 +34,27 @@ namespace bold
     double getPacketTime() override;
 
     virtual void sleep(double msec) override;
+
+  private:
+    /// The FD for the socket connected to the CM730
+    int d_socket;
+
+    /// Timestamp of when we start waiting for a response (status) packet, in millis
+    double d_packetStartTimeMillis;
+
+    /// Amount of time to wait for a packet, relative to d_PacketStartTime, in millis
+    double d_packetWaitTimeMillis;
+
+    /// The estimated amount of time required to send a single byte, in millis. Calculated from baud rate.
+    double d_byteTransferTimeMillis;
+
+    /// A string that defines the port of the CM730
+    std::string d_portName;
+
+    unsigned long d_txByteCount;
+    unsigned long d_rxByteCount;
+
+    //bool d_isPortOpen;
+
   };
 }
