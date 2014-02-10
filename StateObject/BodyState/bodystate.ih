@@ -4,8 +4,8 @@
 
 #include "../HardwareState/hardwarestate.hh"
 #include "../../Math/math.hh"
-#include "../Config/config.hh"
-#include "../util/memory.hh"
+#include "../../Config/config.hh"
+#include "../../util/memory.hh"
 
 using namespace bold;
 using namespace std;
