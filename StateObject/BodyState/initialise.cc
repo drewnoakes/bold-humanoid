@@ -185,10 +185,10 @@ void BodyState::initialise(double angles[22])
   lankleFootJoint->anchors.second = Vector3d(0, 0, 0.0335);
   llowerLegAnkleJoint->bodyPart = lankleFootJoint;
 
-  auto leftFoot = allocate_aligned_shared<Limb>();
-  leftFoot->name = "lFoot";
-  lankleFootJoint->bodyPart = leftFoot;
-  d_limbByName[leftFoot->name] = leftFoot;
+  auto lfoot = allocate_aligned_shared<Limb>();
+  lfoot->name = "lFoot";
+  lankleFootJoint->bodyPart = lfoot;
+  d_limbByName[lfoot->name] = lfoot;
 
   // RIGHT LEG
 
