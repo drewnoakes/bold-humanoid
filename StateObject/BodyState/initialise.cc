@@ -288,7 +288,7 @@ void BodyState::initialise(double angles[22])
   });
 
   //
-  // Update posture
+  // Build all Joint and Limb transforms
   //
 
   list<shared_ptr<BodyPart>> partQueue;
@@ -302,10 +302,11 @@ void BodyState::initialise(double angles[22])
     shared_ptr<BodyPart> part = partQueue.front();
     partQueue.pop_front();
 
-    // Limb: Determine transformation of all connected joints by
-    // applying proper translation
     if (shared_ptr<Limb> limb = dynamic_pointer_cast<Limb>(part))
     {
+      // Limb: Determine transformation of all connected joints by applying
+      // proper translation.
+
       // Loop over all joints
       for (auto joint : limb->joints)
       {
@@ -319,21 +320,17 @@ void BodyState::initialise(double angles[22])
     }
     else
     {
+      // Joint: Determine transformation of joint, apply rotation, then
+      // subsequent translation to child part.
+
       shared_ptr<Joint> joint = dynamic_pointer_cast<Joint>(part);
+      shared_ptr<BodyPart> childPart = joint->bodyPart;
 
-//       // NOTE we don't update for joints with negative IDs, as these are fixed (a bit hacky)
-//       if (joint->id >= 0)
-//       {
-//         // TODO take the angle from the joint itself, having been updated from the MX28 snapshot data elsewhere
-//         joint->angle = mx28States[joint->id].presentPosition;
-//       }
-
-      shared_ptr<BodyPart> part2 = joint->bodyPart;
-      part2->transform = joint->transform
+      childPart->transform = joint->transform
         * AngleAxisd(joint->angleRads, joint->axis)
         * Translation3d(-joint->anchors.second);
 
-      partQueue.push_back(part2);
+      partQueue.push_back(childPart);
     }
   }
 
