@@ -69,8 +69,6 @@ namespace bold
 
     ulong d_motionCycleNumber;
 
-    Setting<double>* d_cameraTilt;
-
   public:
     // Needed when having fixed sized Eigen member
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

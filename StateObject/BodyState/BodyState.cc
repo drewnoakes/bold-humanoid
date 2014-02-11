@@ -8,8 +8,7 @@ BodyState::BodyState(double angles[], vector<int> positionValueDiffs, ulong cycl
   d_torso(),
   d_jointById(),
   d_limbByName(),
-  d_motionCycleNumber(cycleNumber),
-  d_cameraTilt(Config::getSetting<double>("camera.vertical-angle-degrees"))
+  d_motionCycleNumber(cycleNumber)
 {
   initialise(angles);
 }
@@ -19,8 +18,7 @@ BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, share
   d_torso(),
   d_jointById(),
   d_limbByName(),
-  d_motionCycleNumber(cycleNumber),
-  d_cameraTilt(Config::getSetting<double>("camera.vertical-angle-degrees"))
+  d_motionCycleNumber(cycleNumber)
 {
   // Add two extra as:
   // - we don't use index 0
@@ -34,8 +32,10 @@ BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, share
     d_positionValueDiffs[jointId] = (int)bodyControl->getJoint((JointId)jointId)->getValue() - joint.presentPositionValue;
   }
 
+  static auto tiltSetting = Config::getSetting<double>("camera.vertical-angle-degrees");
+
   // Set the camera head tilt according to the configured angle
-  angles[(uchar)JointId::CAMERA_TILT] = Math::degToRad(d_cameraTilt->getValue());
+  angles[(uchar)JointId::CAMERA_TILT] = Math::degToRad(tiltSetting->getValue());
 
   initialise(angles);
 }
