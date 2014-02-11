@@ -26,7 +26,7 @@ namespace bold
     static std::shared_ptr<BodyState const> zero(ulong thinkCycleNumber = 0);
 
     /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
-    BodyState(double angles[],
+    BodyState(double angles[22],
               std::vector<int> positionValueDiffs,
               ulong motionCycleNumber);
     BodyState(std::shared_ptr<HardwareState const> const& hardwareState,
@@ -53,8 +53,8 @@ namespace bold
 
   private:
     /// Initialise with the specified angles (radians), and position errors (values)
-    /// Indexed by JointId (i.e. 0 is ignored.)
-    void initialise(double angles[]);
+    /// Indexed by JointId (i.e. 0 is ignored.), including camera tilt angle
+    void initialise(double angles[22]);
 
     std::vector<int> d_positionValueDiffs;
 

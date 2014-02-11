@@ -1,6 +1,6 @@
 #include "bodystate.ih"
 
-void BodyState::initialise(double angles[])
+void BodyState::initialise(double angles[22])
 {
   d_torso = allocate_aligned_shared<Limb>();
   d_torso->name = "torso";

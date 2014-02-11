@@ -9,7 +9,7 @@ using namespace Eigen;
 
 TEST (BodyStateTests, posture)
 {
-  double angles[21] = {0,};
+  double angles[22] = {0,};
   std::vector<int> positionValueDiffs(21, 0);
 
   //
