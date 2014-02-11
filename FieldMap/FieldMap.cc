@@ -29,6 +29,11 @@ FieldMap::FieldMap()
   d_outerMarginMinimum       = Config::getStaticValue<double>("world.outer-margin-minimum");
 //double ballDiameter        = Config::getStaticValue<double>("world.ball-diameter");
 
+  d_maxDiagnoalFieldDistance = Vector2d(
+    d_fieldLengthX + 2*d_outerMarginMinimum,
+    d_fieldLengthY + 2*d_outerMarginMinimum
+  ).norm();
+
   double halfCrossLength = penaltyLineLength/2;
   double penaltyX = d_fieldLengthX/2 - penaltyMarkDistance;
   double penaltyInnerX = penaltyX - halfCrossLength;

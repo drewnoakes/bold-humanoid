@@ -33,6 +33,11 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
       ballMeasuredSizeRatio > d_acceptedBallMeasuredSizeRatio->getValue().max())
     return false;
 
+  // If the ball would be further than the max diagonal distance of the field,
+  // then we assume it is not the ball.
+  if (midPointAgentSpace->norm() > d_fieldMap->getMaxDiagnoalFieldDistance())
+    return false;
+
   *pos = basePos;
   return true;
 }
