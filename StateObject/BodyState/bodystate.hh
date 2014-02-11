@@ -19,6 +19,23 @@ namespace bold
   class BodyControl;
   class HardwareState;
   template<typename> class Setting;
+
+  /** Models the kinematic chain of the robot's body.
+   *
+   * The coordinate frame of body parts has x pointing to the right,
+   * y pointing forwards, and z pointing up, relative to the agent's forward
+   * facing direction.
+   *
+   * The body is modelled using subclasses of BodyPart:
+   * - Limb represents a rigid body part
+   * - Joint represents a single revolute joint that connects two body parts
+   *
+   * The torso is the root of the kinematic chain, from which five chains
+   * extend: the two legs, two arms and the head.
+   *
+   * All body parts know their transform, which contains the translation and
+   * rotation of the part's coordinate frame, in the frame of the torso.
+   */
   class BodyState : public StateObject
   {
   public:
