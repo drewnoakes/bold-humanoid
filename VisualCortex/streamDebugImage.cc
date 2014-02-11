@@ -32,7 +32,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     }
     case ImageType::Cartoon:
     {
-      debugImage = getHandler<CartoonPass>()->mat();
+      debugImage = getHandler<CartoonPass>()->mat().clone();
       break;
     }
     case ImageType::None:

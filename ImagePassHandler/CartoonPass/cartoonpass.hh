@@ -26,7 +26,7 @@ namespace bold
       d_labels(labels)
     {}
 
-    cv::Mat& mat() { return d_mat; }
+    cv::Mat mat() { return d_mat; }
 
     void onImageStarting() override
     {
