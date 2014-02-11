@@ -3,7 +3,6 @@
 #include "../stateobject.hh"
 #include "../../Colour/colour.hh"
 
-#include <iostream>
 #include <memory>
 #include <vector>
 

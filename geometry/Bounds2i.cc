@@ -1,6 +1,5 @@
 #include "Bounds2i.hh"
 
-#include <iostream>
 #include <vector>
 #include <cassert>
 #include <cmath>

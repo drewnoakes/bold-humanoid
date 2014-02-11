@@ -3,7 +3,6 @@
 #include "../Config/config.hh"
 #include "../geometry/LineSegment.hh"
 
-#include <iostream>
 #include <vector>
 #include <Eigen/Core>
 #include <Eigen/Geometry>

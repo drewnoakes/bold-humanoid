@@ -8,8 +8,6 @@
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../ThreadUtil/threadutil.hh"
 
-#include <iostream>
-
 using namespace bold;
 using namespace std;
 

@@ -1,7 +1,5 @@
 #include "colour.ih"
 
-#include <iostream>
-
 using namespace std;
 
 Colour::bgr Colour::hsv2bgr(hsv const& in)

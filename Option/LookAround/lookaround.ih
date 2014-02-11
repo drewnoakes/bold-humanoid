@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <cassert>
-#include <iostream>
 #include <sys/time.h>
 
 #include "../../Clock/clock.hh"

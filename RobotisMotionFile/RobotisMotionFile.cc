@@ -4,7 +4,6 @@
 #include "../MotionScript/motionscript.hh"
 #include "../util/log.hh"
 
-#include <iostream>
 #include <cstdio>
 #include <vector>
 #include <stdexcept>

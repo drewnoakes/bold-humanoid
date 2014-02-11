@@ -5,7 +5,6 @@
 #include "../../Math/math.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 
-#include <iostream>
 #include <Eigen/Core>
 
 using namespace bold;

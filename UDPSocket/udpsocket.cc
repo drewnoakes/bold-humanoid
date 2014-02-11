@@ -8,7 +8,6 @@
 #include <cstring>
 #include <errno.h>
 #include <ifaddrs.h>
-#include <iostream>
 #include <fcntl.h>
 #include <net/if.h>
 #include <netdb.h>

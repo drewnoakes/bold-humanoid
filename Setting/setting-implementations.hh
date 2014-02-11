@@ -2,7 +2,6 @@
 
 #include "setting.hh"
 
-#include <iostream>
 #include <map>
 #include <string>
 #include <sigc++/signal.h>

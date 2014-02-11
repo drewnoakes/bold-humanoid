@@ -34,7 +34,6 @@
 #include <Eigen/Geometry>
 
 #include <cmath>
-#include <iostream>
 #include <memory>
 
 using namespace bold;

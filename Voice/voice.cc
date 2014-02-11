@@ -2,7 +2,6 @@
 
 #include <espeak/speak_lib.h>
 #include <string>
-#include <iostream>
 
 #include "../Config/config.hh"
 #include "../util/log.hh"

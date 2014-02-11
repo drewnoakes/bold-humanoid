@@ -9,7 +9,6 @@
 #include <sys/time.h>
 #include <linux/serial.h>
 #include <sys/ioctl.h>
-#include <iostream>
 
 #include "../../Clock/clock.hh"
 #include "../../util/log.hh"

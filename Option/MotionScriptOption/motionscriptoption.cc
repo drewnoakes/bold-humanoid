@@ -4,7 +4,6 @@
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
 #include "../../MotionScript/motionscript.hh"
 
-#include <iostream>
 #include <cassert>
 
 using namespace bold;

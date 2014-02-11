@@ -1,7 +1,5 @@
 #include "colour.ih"
 
-#include <iostream>
-
 Colour::hsv Colour::bgr2hsv(bgr const& in)
 {
   int const hstep = 255 / 3;   // Hue step size between red -> green -> blue

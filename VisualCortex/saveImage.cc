@@ -6,7 +6,6 @@
 
 #include <rapidjson/prettywriter.h>
 
-#include <iostream>
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>

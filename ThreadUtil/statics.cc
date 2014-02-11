@@ -3,7 +3,6 @@
 #include "../util/log.hh"
 
 #include <sstream>
-#include <iostream>
 #include <pthread.h>
 
 using namespace bold;

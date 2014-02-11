@@ -1,7 +1,6 @@
 #include "walkmodule.hh"
 
 #include <cmath>
-#include <iostream>
 
 #include "../../AgentState/agentstate.hh"
 #include "../../BodyControl/bodycontrol.hh"

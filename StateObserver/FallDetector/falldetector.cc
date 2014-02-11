@@ -4,8 +4,6 @@
 #include "../../Config/config.hh"
 #include "../../Voice/voice.hh"
 
-#include <iostream>
-
 using namespace bold;
 using namespace std;
 

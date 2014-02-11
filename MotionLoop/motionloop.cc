@@ -19,7 +19,6 @@
 #include "../util/memory.hh"
 
 #include <time.h>
-#include <iostream>
 #include <string.h>
 
 using namespace bold;

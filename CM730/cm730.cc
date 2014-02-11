@@ -1,7 +1,6 @@
 #include "cm730.hh"
 
 #include <cassert>
-#include <iostream>
 #include <iomanip>
 
 #include "../JointId/jointid.hh"

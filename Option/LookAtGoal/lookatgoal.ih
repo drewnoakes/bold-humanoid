@@ -6,7 +6,6 @@
 #include "../../VisualCortex/visualcortex.hh"
 
 #include <cmath>
-#include <iostream>
 #include <Eigen/Core>
 
 using namespace bold;

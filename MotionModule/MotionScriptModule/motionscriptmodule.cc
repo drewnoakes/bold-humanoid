@@ -7,8 +7,6 @@
 #include "../../ThreadUtil/threadutil.hh"
 
 #include <cassert>
-#include <iostream>
-#include <string.h>
 
 using namespace bold;
 using namespace std;

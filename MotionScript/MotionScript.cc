@@ -2,7 +2,6 @@
 
 #include "../util/log.hh"
 
-#include <iostream>
 #include <sstream>
 #include <dirent.h>
 #include <rapidjson/prettywriter.h>

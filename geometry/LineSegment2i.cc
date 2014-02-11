@@ -1,6 +1,5 @@
 #include "LineSegment2i.hh"
 
-#include <iostream>
 #include <vector>
 #include <set>
 #include <cassert>

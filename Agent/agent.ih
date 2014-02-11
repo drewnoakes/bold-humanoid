@@ -58,8 +58,6 @@
 #include "../util/log.hh"
 #include "../util/memory.hh"
 
-#include <iostream>
-
 using namespace std;
 using namespace bold;
 using namespace Eigen;

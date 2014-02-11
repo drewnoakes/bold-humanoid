@@ -5,7 +5,6 @@
 #include "../../util/log.hh"
 
 #include <cmath>
-#include <iostream>
 
 using namespace bold;
 using namespace std;
