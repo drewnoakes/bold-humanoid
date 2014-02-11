@@ -33,7 +33,7 @@ namespace bold
       d_mat = d_backgroundColour.toScalar();
 
       // Do this each frame, as label definitions can change at runtime
-      for (std::shared_ptr<PixelLabel> const label : d_labels)
+      for (std::shared_ptr<PixelLabel> const& label : d_labels)
       {
         d_bgrByLabelId[label->id()] = label->hsvRange().toBgr();
       }
