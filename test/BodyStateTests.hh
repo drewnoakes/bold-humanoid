@@ -28,11 +28,11 @@ TEST (BodyStateTests, posture)
 
   EXPECT_EQ( Vector3d(-footSide, footForward, -footDownward),
              Vector3d(leftFoot->transform.translation()) );
-  EXPECT_TRUE( (leftFoot->transform.rotation() - Matrix3d::Identity()).isZero() );
+  EXPECT_TRUE( (leftFoot->transform.rotation() - Matrix3d::Identity()).isZero() ) << "Has no rotation";
 
   EXPECT_EQ( Vector3d(footSide, footForward, -footDownward),
              Vector3d(rightFoot->transform.translation()) );
-  EXPECT_TRUE( (rightFoot->transform.rotation() - Matrix3d::Identity()).isZero() );
+  EXPECT_TRUE( (rightFoot->transform.rotation() - Matrix3d::Identity()).isZero() ) << "Has no rotation";
 
   //
   // Roll the legs out 90 degrees and check again
