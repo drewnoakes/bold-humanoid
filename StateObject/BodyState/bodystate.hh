@@ -11,6 +11,7 @@
 #include "../stateobject.hh"
 #include "../../BodyPart/bodypart.hh"
 #include "../../JointId/jointid.hh"
+#include "../../util/log.hh"
 
 namespace bold
 {
@@ -95,7 +96,10 @@ namespace bold
     // NOTE cannot use '[]' on a const map
     auto const& i = d_limbByName.find(name);
     if (i == d_limbByName.end())
+    {
+      log::error("BodyState::getJoint") << "Invalid limb name: " << name;
       throw std::runtime_error("Invalid limb name: " + name);
+    }
     return i->second;
   }
 
@@ -106,7 +110,10 @@ namespace bold
     // NOTE cannot use '[]' on a const map
     auto const& i = d_jointById.find((uchar)jointId);
     if (i == d_jointById.end())
-      throw std::runtime_error("Invalid JointId" /*+ jointId*/);
+    {
+      log::error("BodyState::getJoint") << "Invalid JointId: " << (int)jointId;
+      throw std::runtime_error("Invalid JointId");
+    }
     return i->second;
   }
 
