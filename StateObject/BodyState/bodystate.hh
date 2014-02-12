@@ -52,8 +52,6 @@ namespace bold
 
     std::shared_ptr<Limb const> getTorso() const { return d_torso; }
 
-    std::shared_ptr<Joint const> getHeadPanJoint() const { return getJoint(JointId::HEAD_PAN); }
-
     std::shared_ptr<Limb const> getLimb(std::string const& name) const;
 
     std::shared_ptr<Joint const> getJoint(JointId jointId) const;
