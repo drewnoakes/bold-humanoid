@@ -28,7 +28,7 @@ namespace bold
      */
     Eigen::Affine3d transform;
 
-    Eigen::Vector3d getPosition()
+    Eigen::Vector3d getPosition() const
     {
       return transform.translation().head<3>();
     }
