@@ -4,7 +4,6 @@ void BodyState::initialise(double angles[22])
 {
   d_torso = allocate_aligned_shared<Limb>();
   d_torso->name = "torso";
-  d_limbByName["torso"] = d_torso;
 
   // TODO add gyro / acc joints, as done for camera
 
@@ -21,7 +20,6 @@ void BodyState::initialise(double angles[22])
   auto neck = allocate_aligned_shared<Limb>();
   neck->name = "neck";
   torsoNeckJoint->bodyPart = neck;
-  d_limbByName[neck->name] = neck;
 
   auto neckHeadJoint = allocate_aligned_shared<Joint>();
   neckHeadJoint->id = JointId::HEAD_TILT;
@@ -34,7 +32,6 @@ void BodyState::initialise(double angles[22])
   auto head = allocate_aligned_shared<Limb>();
   head->name = "head";
   neckHeadJoint->bodyPart = head;
-  d_limbByName[head->name] = head;
 
   auto headCameraJoint = allocate_aligned_shared<Joint>();
   headCameraJoint->id =JointId::CAMERA_TILT;
@@ -51,7 +48,6 @@ void BodyState::initialise(double angles[22])
   auto camera = allocate_aligned_shared<Limb>();
   camera->name = "camera";
   headCameraJoint->bodyPart = camera;
-  d_limbByName[camera->name] = camera;
 
   // LEFT ARM
 
@@ -74,7 +70,6 @@ void BodyState::initialise(double angles[22])
   auto lupperArm = allocate_aligned_shared<Limb>();
   lupperArm->name = "lUpperArm";
   lshoulderShoulderJoint->bodyPart = lupperArm;
-  d_limbByName[lupperArm->name] = lupperArm;
 
   auto lupperLowerArmJoint = allocate_aligned_shared<Joint>();
   lupperLowerArmJoint->id = JointId::L_ELBOW;
@@ -87,7 +82,6 @@ void BodyState::initialise(double angles[22])
   auto llowerArm = allocate_aligned_shared<Limb>();
   llowerArm->name = "lLowerArm";
   lupperLowerArmJoint->bodyPart = llowerArm;
-  d_limbByName[llowerArm->name] = llowerArm;
 
   // RIGHT ARM
 
@@ -110,7 +104,6 @@ void BodyState::initialise(double angles[22])
   auto rupperArm = allocate_aligned_shared<Limb>();
   rupperArm->name = "rUpperArm";
   rshoulderShoulderJoint->bodyPart = rupperArm;
-  d_limbByName[rupperArm->name] = rupperArm;
 
   auto rupperLowerArmJoint = allocate_aligned_shared<Joint>();
   rupperLowerArmJoint->id = JointId::R_ELBOW;
@@ -123,7 +116,6 @@ void BodyState::initialise(double angles[22])
   auto rlowerArm = allocate_aligned_shared<Limb>();
   rlowerArm->name = "rLowerArm";
   rupperLowerArmJoint->bodyPart = rlowerArm;
-  d_limbByName[rlowerArm->name] = rlowerArm;
 
   // LEFT LEG
 
@@ -154,7 +146,6 @@ void BodyState::initialise(double angles[22])
   auto lupperLeg = allocate_aligned_shared<Limb>();
   lupperLeg->name = "lUpperLeg";
   lHipHip2Joint->bodyPart = lupperLeg;
-  d_limbByName[lupperLeg->name] = lupperLeg;
 
   auto lupperLowerLegJoint = allocate_aligned_shared<Joint>();
   lupperLowerLegJoint->id = JointId::L_KNEE;
@@ -167,7 +158,6 @@ void BodyState::initialise(double angles[22])
   auto llowerLeg = allocate_aligned_shared<Limb>();
   llowerLeg->name = "lLowerLeg";
   lupperLowerLegJoint->bodyPart = llowerLeg;
-  d_limbByName[llowerLeg->name] = llowerLeg;
 
   auto llowerLegAnkleJoint = allocate_aligned_shared<Joint>();
   llowerLegAnkleJoint->id = JointId::L_ANKLE_PITCH;
@@ -188,7 +178,6 @@ void BodyState::initialise(double angles[22])
   auto lfoot = allocate_aligned_shared<Limb>();
   lfoot->name = "lFoot";
   lankleFootJoint->bodyPart = lfoot;
-  d_limbByName[lfoot->name] = lfoot;
 
   // RIGHT LEG
 
@@ -219,7 +208,6 @@ void BodyState::initialise(double angles[22])
   auto rupperLeg = allocate_aligned_shared<Limb>();
   rupperLeg->name = "rUpperLeg";
   rHipHip2Joint->bodyPart = rupperLeg;
-  d_limbByName[rupperLeg->name] = rupperLeg;
 
   auto rupperLowerLegJoint = allocate_aligned_shared<Joint>();
   rupperLowerLegJoint->id = JointId::R_KNEE;
@@ -232,7 +220,6 @@ void BodyState::initialise(double angles[22])
   auto rlowerLeg = allocate_aligned_shared<Limb>();
   rlowerLeg->name = "rLowerLeg";
   rupperLowerLegJoint->bodyPart = rlowerLeg;
-  d_limbByName[rlowerLeg->name] = rlowerLeg;
 
   auto rlowerLegAnkleJoint = allocate_aligned_shared<Joint>();
   rlowerLegAnkleJoint->id = JointId::R_ANKLE_PITCH;
@@ -253,48 +240,14 @@ void BodyState::initialise(double angles[22])
   auto rfoot = allocate_aligned_shared<Limb>();
   rfoot->name = "rFoot";
   rankleFootJoint->bodyPart = rfoot;
-  d_limbByName[rfoot->name] = rfoot;
-
-  // Visitor pattern with function for all joints in the body
-  function<void(shared_ptr<BodyPart>, function<void(shared_ptr<Joint>)>)> walkJoints;
-  walkJoints = [&](shared_ptr<BodyPart> bodyPart, function<void(shared_ptr<Joint>)> action)
-  {
-    auto const limb = dynamic_pointer_cast<Limb>(bodyPart);
-
-    if (limb)
-    {
-      for (auto const& joint : limb->joints)
-        walkJoints(joint, action);
-    }
-    else
-    {
-      auto const joint = dynamic_pointer_cast<Joint>(bodyPart);
-
-      if (joint)
-      {
-        if ((int)joint->id != 0)
-          action(joint);
-
-        walkJoints(joint->bodyPart, action);
-      }
-    }
-  };
-
-  // Cache joints by ID
-  walkJoints(d_torso, [this,angles](shared_ptr<Joint> joint)
-  {
-    joint->angleRads = angles[(uchar)joint->id];
-    d_jointById[(uchar)joint->id] = joint;
-  });
 
   //
   // Build all Joint and Limb transforms
   //
 
-  list<shared_ptr<BodyPart>> partQueue;
-
   d_torso->transform.setIdentity();
 
+  list<shared_ptr<BodyPart>> partQueue;
   partQueue.push_back(d_torso);
 
   while (!partQueue.empty())
@@ -307,7 +260,9 @@ void BodyState::initialise(double angles[22])
       // Limb: Determine transformation of all connected joints by applying
       // proper translation.
 
-      // Loop over all joints
+      d_limbByName[limb->name] = limb;
+
+      // Loop over all joints extending outwards from this limb
       for (auto joint : limb->joints)
       {
         // Transformation = that of limb plus translation to the joint
@@ -324,13 +279,18 @@ void BodyState::initialise(double angles[22])
       // subsequent translation to child part.
 
       shared_ptr<Joint> joint = dynamic_pointer_cast<Joint>(part);
-      shared_ptr<BodyPart> childPart = joint->bodyPart;
 
-      childPart->transform = joint->transform
+      assert(joint);
+
+      d_jointById[(uchar)joint->id] = joint;
+
+      joint->angleRads = angles[(uchar)joint->id];
+
+      joint->bodyPart->transform = joint->transform
         * AngleAxisd(joint->angleRads, joint->axis)
         * Translation3d(-joint->anchors.second);
 
-      partQueue.push_back(childPart);
+      partQueue.push_back(joint->bodyPart);
     }
   }
 
