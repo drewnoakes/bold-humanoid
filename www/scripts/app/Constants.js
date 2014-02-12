@@ -176,6 +176,60 @@ define(
                     ]
                 },
                 {
+                    name: 'shoulder-left',
+                    geometryPath: 'models/darwin/darwin-shoulder-left.json',
+                    offset: { x: -0.082, y: 0, z: 0 },
+                    rotationAxis: new THREE.Euler(-1, 0, 0),
+                    jointId: Constants.jointIds.shoulderForwardLeft,
+                    children: [
+                        {
+                            name: 'arm-upper-left',
+                            geometryPath: 'models/darwin/darwin-arm-upper-left.json',
+                            offset: { x: 0, y: 0, z: -0.016 },
+                            rotationAxis: new THREE.Euler(0, -1, 0),
+                            rotationOrigin: -Math.PI / 4,
+                            jointId: Constants.jointIds.shoulderOutwardLeft,
+                            children: [
+                                {
+                                    name: 'arm-lower-left',
+                                    geometryPath: 'models/darwin/darwin-arm-lower-left.json',
+                                    offset: { x: 0, y: 0.016, z: -0.06 },
+                                    rotationAxis: new THREE.Euler(-1, 0, 0),
+                                    rotationOrigin: -Math.PI / 2,
+                                    jointId: Constants.jointIds.elbowLeft
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'shoulder-right',
+                    geometryPath: 'models/darwin/darwin-shoulder-right.json',
+                    offset: { x: 0.082, y: 0, z: 0 },
+                    rotationAxis: new THREE.Euler(1, 0, 0),
+                    jointId: Constants.jointIds.shoulderForwardRight,
+                    children: [
+                        {
+                            name: 'arm-upper-right',
+                            geometryPath: 'models/darwin/darwin-arm-upper-right.json',
+                            offset: { x: 0, y: 0, z: -0.016 },
+                            rotationAxis: new THREE.Euler(0, -1, 0),
+                            rotationOrigin: Math.PI / 4,
+                            jointId: Constants.jointIds.shoulderOutwardRight,
+                            children: [
+                                {
+                                    name: 'arm-lower-right',
+                                    geometryPath: 'models/darwin/darwin-arm-lower-right.json',
+                                    offset: { x: 0, y: 0.016, z: -0.06 },
+                                    rotationAxis: new THREE.Euler(1, 0, 0),
+                                    rotationOrigin: Math.PI / 2,
+                                    jointId: Constants.jointIds.elbowRight
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
                     name: 'pelvis-left-yaw',
                     geometryPath: 'models/darwin/darwin-pelvis-yaw-left.json',
                     offset: { x: -0.037, y: -0.005, z: -0.1222 },
@@ -274,60 +328,6 @@ define(
                                             ]
                                         }
                                     ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: 'shoulder-left',
-                    geometryPath: 'models/darwin/darwin-shoulder-left.json',
-                    offset: { x: -0.082, y: 0, z: 0 },
-                    rotationAxis: new THREE.Euler(-1, 0, 0),
-                    jointId: Constants.jointIds.shoulderForwardLeft,
-                    children: [
-                        {
-                            name: 'arm-upper-left',
-                            geometryPath: 'models/darwin/darwin-arm-upper-left.json',
-                            offset: { x: 0, y: 0, z: -0.016 },
-                            rotationAxis: new THREE.Euler(0, -1, 0),
-                            rotationOrigin: -Math.PI / 4,
-                            jointId: Constants.jointIds.shoulderOutwardLeft,
-                            children: [
-                                {
-                                    name: 'arm-lower-left',
-                                    geometryPath: 'models/darwin/darwin-arm-lower-left.json',
-                                    offset: { x: 0, y: 0.016, z: -0.06 },
-                                    rotationAxis: new THREE.Euler(-1, 0, 0),
-                                    rotationOrigin: -Math.PI / 2,
-                                    jointId: Constants.jointIds.elbowLeft
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: 'shoulder-right',
-                    geometryPath: 'models/darwin/darwin-shoulder-right.json',
-                    offset: { x: 0.082, y: 0, z: 0 },
-                    rotationAxis: new THREE.Euler(1, 0, 0),
-                    jointId: Constants.jointIds.shoulderForwardRight,
-                    children: [
-                        {
-                            name: 'arm-upper-right',
-                            geometryPath: 'models/darwin/darwin-arm-upper-right.json',
-                            offset: { x: 0, y: 0, z: -0.016 },
-                            rotationAxis: new THREE.Euler(0, -1, 0),
-                            rotationOrigin: Math.PI / 4,
-                            jointId: Constants.jointIds.shoulderOutwardRight,
-                            children: [
-                                {
-                                    name: 'arm-lower-right',
-                                    geometryPath: 'models/darwin/darwin-arm-lower-right.json',
-                                    offset: { x: 0, y: 0.016, z: -0.06 },
-                                    rotationAxis: new THREE.Euler(1, 0, 0),
-                                    rotationOrigin: Math.PI / 2,
-                                    jointId: Constants.jointIds.elbowRight
                                 }
                             ]
                         }
