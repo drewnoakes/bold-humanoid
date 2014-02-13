@@ -44,7 +44,7 @@ void BodyState::initialise(double angles[22])
   auto ltorsoShoulderJoint = allocate_aligned_shared<Joint>(JointId::L_SHOULDER_PITCH, "left-shoulder-pitch");
   ltorsoShoulderJoint->axis = Vector3d(-1, 0, 0);
   ltorsoShoulderJoint->anchors.first = Vector3d(-0.082, 0, 0);
-  ltorsoShoulderJoint->anchors.second = Vector3d(0, 0, 0);
+  ltorsoShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
   d_torso->joints.push_back(ltorsoShoulderJoint);
 
   auto lshoulderShoulderJoint = allocate_aligned_shared<Joint>(JointId::L_SHOULDER_ROLL, "left-shoulder-roll");
@@ -72,14 +72,14 @@ void BodyState::initialise(double angles[22])
   auto rtorsoShoulderJoint = allocate_aligned_shared<Joint>(JointId::R_SHOULDER_PITCH, "right-shoulder-pitch");
   rtorsoShoulderJoint->axis = Vector3d(1, 0, 0);
   rtorsoShoulderJoint->anchors.first = Vector3d(0.082, 0, 0);
-  rtorsoShoulderJoint->anchors.second = Vector3d(0, 0, 0);
+  rtorsoShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
   d_torso->joints.push_back(rtorsoShoulderJoint);
 
   auto rshoulderShoulderJoint = allocate_aligned_shared<Joint>(JointId::R_SHOULDER_ROLL, "right-shoulder-roll");
   rshoulderShoulderJoint->rotationOrigin = M_PI/4.0;
   rshoulderShoulderJoint->axis = Vector3d(0, -1, 0);
   rshoulderShoulderJoint->anchors.first = Vector3d(0, 0, 0);
-  rshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
+  rshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0);
   rtorsoShoulderJoint->childPart = rshoulderShoulderJoint;
 
   auto rupperArm = allocate_aligned_shared<Limb>("rUpperArm");
