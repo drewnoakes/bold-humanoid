@@ -57,7 +57,7 @@ namespace bold
     std::shared_ptr<Joint const> getJoint(JointId jointId) const;
 
     void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const;
-
+    
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     Eigen::Affine3d const& getCameraAgentTransform() const { return d_cameraAgentTransform; }
@@ -118,10 +118,6 @@ namespace bold
   inline void BodyState::visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const
   {
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    {
-      auto joint = getJoint((JointId)jointId);
-      action(joint);
-    }
+      action(getJoint((JointId)jointId));
   }
-  
 }
