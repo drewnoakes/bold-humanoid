@@ -21,7 +21,7 @@ FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixe
 void FieldEdgePass::applyConvexHull(vector<ushort>& points)
 {
   vector<Matrix<float,2,1>> input;
-  for (int c = 0; c < points.size(); c++)
+  for (unsigned c = 0; c < points.size(); c++)
     input.push_back(Matrix<float,2,1>(c, points[c]));
 
   auto output = HalfHullBuilder<float>().findHalfHull(input, HalfHull::Top);
@@ -33,7 +33,7 @@ void FieldEdgePass::applyConvexHull(vector<ushort>& points)
   int outputIndex = 0;
   int lastMatchedColumn = 0;
 
-  for (int c = 0; c < points.size(); c++)
+  for (unsigned c = 0; c < points.size(); c++)
   {
     if (output[outputIndex].x() == c)
     {

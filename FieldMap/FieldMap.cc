@@ -84,7 +84,7 @@ FieldMap::FieldMap()
   // CIRCLE
   int segments = Config::getStaticValue<int>("world.circle-segment-count");
   Vector3d lastPoint(0, d_circleRadius, 0);
-  for (unsigned i = 1; i <= segments; i++)
+  for (int i = 1; i <= segments; i++)
   {
     double theta = (i/(double)segments) * M_PI * 2;
     Vector3d point(sin(theta) * d_circleRadius, cos(theta) * d_circleRadius, 0);
