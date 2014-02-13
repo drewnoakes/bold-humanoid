@@ -34,6 +34,17 @@ namespace bold
      */
     Eigen::Affine3d transform;
 
+    /** An offset for the joint's rotation.
+     *
+     * This is relative to the description in the kinematic model, and exists
+     * in cases where the model is simpler to lay out using non-zero hinge
+     * positions. For example, the DARwIn-OPs shoulder roll joints push the
+     * elbows out to 45 degrees when at zero. The model used describes the
+     * robot with arms pointing down, parallel to one another, and the origin
+     * for rotation is used to adjust.
+     */
+    double rotationOrigin;
+
     /** Get the position of the body part, relative to the torso. */
     Eigen::Vector3d getPosition() const
     {

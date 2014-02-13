@@ -48,6 +48,7 @@ void BodyState::initialise(double angles[22])
   d_torso->joints.push_back(ltorsoShoulderJoint);
 
   auto lshoulderShoulderJoint = allocate_aligned_shared<Joint>(JointId::L_SHOULDER_ROLL, "left-shoulder-roll");
+  lshoulderShoulderJoint->rotationOrigin = -M_PI/4.0;
   lshoulderShoulderJoint->axis = Vector3d(0, -1, 0);
   lshoulderShoulderJoint->anchors.first = Vector3d(0, 0, 0);
   lshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
@@ -57,6 +58,7 @@ void BodyState::initialise(double angles[22])
   lshoulderShoulderJoint->bodyPart = lupperArm;
 
   auto lupperLowerArmJoint = allocate_aligned_shared<Joint>(JointId::L_ELBOW, "left-elbow");
+  lupperLowerArmJoint->rotationOrigin = -M_PI/2.0;
   lupperLowerArmJoint->axis = Vector3d(-1, 0, 0);
   lupperLowerArmJoint->anchors.first = Vector3d(0, 0.016, -0.060);
   lupperLowerArmJoint->anchors.second = Vector3d(0, 0, 0);
@@ -74,6 +76,7 @@ void BodyState::initialise(double angles[22])
   d_torso->joints.push_back(rtorsoShoulderJoint);
 
   auto rshoulderShoulderJoint = allocate_aligned_shared<Joint>(JointId::R_SHOULDER_ROLL, "right-shoulder-roll");
+  rshoulderShoulderJoint->rotationOrigin = M_PI/4.0;
   rshoulderShoulderJoint->axis = Vector3d(0, -1, 0);
   rshoulderShoulderJoint->anchors.first = Vector3d(0, 0, 0);
   rshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
@@ -83,6 +86,7 @@ void BodyState::initialise(double angles[22])
   rshoulderShoulderJoint->bodyPart = rupperArm;
 
   auto rupperLowerArmJoint = allocate_aligned_shared<Joint>(JointId::R_ELBOW, "right-elbow");
+  rupperLowerArmJoint->rotationOrigin = M_PI/2.0;
   rupperLowerArmJoint->axis = Vector3d(1, 0, 0);
   rupperLowerArmJoint->anchors.first = Vector3d(0, 0.016, -0.060);
   rupperLowerArmJoint->anchors.second = Vector3d(0, 0, 0);
@@ -231,7 +235,7 @@ void BodyState::initialise(double angles[22])
       joint->angleRads = angles[(uchar)joint->id];
 
       joint->bodyPart->transform = joint->transform
-        * AngleAxisd(joint->angleRads, joint->axis)
+        * AngleAxisd(joint->rotationOrigin + joint->angleRads, joint->axis)
         * Translation3d(-joint->anchors.second);
 
       partQueue.push_back(joint->bodyPart);
@@ -257,5 +261,4 @@ void BodyState::initialise(double angles[22])
   // the agent's frame, taking any rotation of the torso into account
   // considering the orientation of the foot (which is assumed to be flat.)
   d_cameraAgentTransform = Translation3d(0,0,-footTorsoTransform.translation().z()) * torsoAgentRotation * cameraTorsoTransform;
-
 }
