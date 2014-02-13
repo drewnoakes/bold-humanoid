@@ -139,7 +139,7 @@ define(
         // NOTE forehead-camera geometry is not included
         // TODO define the offsets/rotations/etc below in terms of measurements from Constants?
 
-        Constants.cameraOffsetInHead = new THREE.Vector3(0, 0.0329074, 0.0359816);
+        Constants.cameraOffsetInHead = new THREE.Vector3(0, 0.0332, 0.0344);
 
         Constants.bodyStructure = {
             name: 'torso',
@@ -148,7 +148,7 @@ define(
                 {
                     name: 'neck',
                     geometryPath: 'models/darwin/darwin-neck.json',
-                    offset: { x: 0, y: 0, z: 0.051 },
+                    offset: { x: 0, y: 0, z: 0.0505 },
                     rotationAxis: new THREE.Euler(0, 0, 1),
                     jointId: Constants.jointIds.headPan,
                     children: [
