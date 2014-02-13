@@ -56,7 +56,7 @@ namespace bold
 
     std::shared_ptr<Joint const> getJoint(JointId jointId) const;
 
-    void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action);
+    void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const;
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -115,7 +115,7 @@ namespace bold
     return i->second;
   }
 
-  inline void BodyState::visitJoints(std::function<void(std::shared_ptr<Joint const>)> action)
+  inline void BodyState::visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const
   {
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
