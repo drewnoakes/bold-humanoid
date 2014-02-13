@@ -139,6 +139,12 @@ define(
         // NOTE forehead-camera geometry is not included
         // TODO define the offsets/rotations/etc below in terms of measurements from Constants?
 
+        // TODO move this function the the math module
+        function degToRad(deg)
+        {
+          return Math.PI * deg/180;
+        }
+
         Constants.cameraOffsetInHead = new THREE.Vector3(0, 0.0332, 0.0344);
 
         Constants.bodyStructure = {
@@ -157,7 +163,7 @@ define(
                             geometryPath: 'models/darwin/darwin-head.json',
                             creaseAngle: 1.00,
                             rotationAxis: new THREE.Euler(1, 0, 0),
-                            rotationOrigin: -Math.PI / 4,// TODO the 3D model has a rotation that should not be applied in the kinematic model
+                            rotationOrigin: degToRad(-40),
                             jointId: Constants.jointIds.headTilt,
                             children: [
                                 {
