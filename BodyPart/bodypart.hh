@@ -13,6 +13,12 @@ namespace bold
    */
   struct BodyPart
   {
+    BodyPart(std::string name)
+    : name(name),
+      transform(),
+      rotationOrigin()
+    {}
+
     virtual ~BodyPart() {}
 
     /// Name of body part
@@ -44,6 +50,15 @@ namespace bold
    */
   struct Limb : public BodyPart
   {
+    Limb(std::string name)
+    : BodyPart(name),
+      weight(),
+      relativeWeight(),
+      size(),
+      joints(),
+      id()
+    {}
+
     /// Weight of limb
     double weight;
 
@@ -68,9 +83,15 @@ namespace bold
    */
   struct Joint : public BodyPart
   {
-    Joint()
-    : angleRads(0)
+    Joint(JointId id, std::string name)
+    : BodyPart(name),
+      axis(),
+//    bounds(),
+      id(id),
 //    rate(0), torque(0), control(0)
+      angleRads(0),
+      bodyPart(),
+      anchors()
     {}
 
     /// Axis of joint in local coordinate system
