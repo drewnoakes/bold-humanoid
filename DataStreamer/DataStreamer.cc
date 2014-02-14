@@ -60,14 +60,10 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
     AgentState::updated.connect(
       [this](shared_ptr<StateTracker const> tracker)
       {
-        // TODO this assertion will not be met! we may be called from the motion thread... need a better approach...
-//      assert(ThreadUtil::isDataStreamerThread());
-
         // NOTE we may be writing from one thread, while another is dealing with
         // a client connection (which modifies d_stateSessions), or sending data
         // (which modifies the JsonSession queue.)
 
-        // TODO if we're on the same thread as the data streamer, can we avoid the lock?
         std::lock_guard<std::mutex> guard(d_stateSessionsMutex);
         auto range = d_stateSessions.equal_range(tracker->name());
         if (range.first != range.second)
