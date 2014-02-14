@@ -526,6 +526,25 @@ void CM730::disconnect()
 
     d_platform->closePort();
   }
+
+bool CM730::isPowerEnabled()
+{
+  uchar value;
+  MX28Alarm alarm;
+
+  if (readByte(CM730::ID_CM, CM730::P_DXL_POWER, &value, &alarm) != CommResult::SUCCESS)
+  {
+    log::error("CM730::isPowerEnabled") << "Comm error reading CM730 power level";
+    return false;
+  }
+
+  if (alarm.hasError())
+  {
+    log::error("CM730::isPowerEnabled") << "Error reading CM730 power level: " << alarm;
+    return false;
+  }
+
+  return value == 1;
 }
 
 CommResult CM730::ping(uchar id, MX28Alarm* error)

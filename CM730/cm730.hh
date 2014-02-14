@@ -219,6 +219,10 @@ namespace bold
     /// Enable or disable torque for all joints.
     void torqueEnable(bool enable);
 
+    /// Ask the CM730 if the power is enabled.
+    bool isPowerEnabled();
+
+
     unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }
     unsigned long getTransmittedByteCount() const { return d_platform->getTransmittedByteCount(); }
     void resetByteCounts() { d_platform->resetByteCounts(); }
