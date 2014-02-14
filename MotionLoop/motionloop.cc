@@ -97,6 +97,8 @@ bool MotionLoop::start()
   }
   else
   {
+    if (!d_cm730->powerEnable(true))
+      log::error("MotionLoop::start") << "Error enabling power";
     if (!d_cm730->torqueEnable(true))
       log::error("MotionLoop::start") << "Error enabling torque";
   }
@@ -172,6 +174,8 @@ void MotionLoop::stop()
 
   if (d_haveBody)
   {
+    if (!d_cm730->powerEnable(false))
+      log::error("MotionLoop::start") << "Error disabling power";
     if (!d_cm730->torqueEnable(false))
       log::error("MotionLoop::start") << "Error disabling torque";
   }
