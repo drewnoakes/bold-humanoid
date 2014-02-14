@@ -11,8 +11,6 @@
 
 namespace bold
 {
-  class CM730Platform;
-
   typedef unsigned char uchar;
 
   class BulkReadTable
