@@ -156,7 +156,320 @@ CM730::~CM730()
   disconnect();
 }
 
-CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead = nullptr)
+bool CM730::connect()
+{
+  if (!d_platform->openPort())
+  {
+    log::error("CM730::connect") << "Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)";
+    return false;
+  }
+
+  return powerEnable(true);
+}
+
+bool CM730::disconnect()
+{
+  bool success = true;
+  if (d_platform->isPortOpen())
+  {
+    log::verbose("CM730::disconnect") << "Disconnecting from CM730";
+
+    // Set eye/panel LEDs to indicate disconnection
+    MX28Alarm alarm1;
+    MX28Alarm alarm2;
+    MX28Alarm alarm3;
+    writeWord(CM730::ID_CM, CM730::P_LED_HEAD_L, CM730::color2Value(0, 255, 0), &alarm1);
+    writeWord(CM730::ID_CM, CM730::P_LED_EYE_L,  CM730::color2Value(0,   0, 0), &alarm2);
+    writeByte(CM730::ID_CM, CM730::P_LED_PANEL,  0, &alarm3);
+
+    MX28Alarm alarm = alarm1.getFlags() | alarm2.getFlags() | alarm3.getFlags();
+
+    if (alarm.hasError())
+    {
+      log::error("CM730::disconnect") << "Error setting eye/head/panel LED colours: " << alarm;
+      return false;
+    }
+
+    if (!powerEnable(false))
+    {
+      log::error("CM730::disconnect") << "Error turning power off";
+      success = false;
+    }
+
+    if (!d_platform->closePort())
+    {
+      log::error("CM730::disconnect") << "Error closing port";
+      success = false;
+    }
+  }
+  return success;
+}
+
+bool CM730::changeBaud(unsigned baud)
+{
+  if (!d_platform->setBaud(baud))
+  {
+    log::error("CM730::changeBaud") << "Failed to change baudrate to " << baud;
+    return false;
+  }
+
+  return powerEnable(true);
+}
+
+bool CM730::torqueEnable(bool enable)
+{
+  log::info("CM730::torqueEnable") << "" << (enable ? "Enabling" : "Disabling") << " all joint torque";
+
+  bool allSuccessful = true;
+  MX28Alarm error;
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+  {
+    auto res = writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
+
+    if (res != CommResult::SUCCESS)
+    {
+      log::error("CM730::torqueEnable") << "Comm error for " << JointName::getName(jointId) << " (" << (int)jointId << "): " << getCommResultName(res);
+      allSuccessful = false;
+    }
+
+    if (error.hasError())
+    {
+      log::error("CM730::torqueEnable") << "Error for " << JointName::getName(jointId) << " (" << (int)jointId << "): " << error;
+      allSuccessful = false;
+    }
+  }
+  return allSuccessful;
+}
+
+bool CM730::isPowerEnabled()
+{
+  uchar value;
+  MX28Alarm alarm;
+
+  if (readByte(CM730::ID_CM, CM730::P_DXL_POWER, &value, &alarm) != CommResult::SUCCESS)
+  {
+    log::error("CM730::isPowerEnabled") << "Comm error reading CM730 power level";
+    return false;
+  }
+
+  if (alarm.hasError())
+  {
+    log::error("CM730::isPowerEnabled") << "Error reading CM730 power level: " << alarm;
+    return false;
+  }
+
+  return value == 1;
+}
+
+bool CM730::powerEnable(bool enable)
+{
+  log::info("CM730::powerEnable") << "Turning CM730 power " << (enable ? "on" : "off");
+
+  MX28Alarm alarm;
+  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, enable ? 1 : 0, &alarm) != CommResult::SUCCESS)
+  {
+    log::error("CM730::powerEnable") << "Comm error turning CM730 power " << (enable ? "on" : "off");
+    return false;
+  }
+
+  if (alarm.hasError())
+  {
+    log::error("CM730::powerEnable") << "Error turning CM730 power " << (enable ? "on" : "off") << ": " << alarm;
+    return false;
+  }
+
+  // TODO why is this sleep here?
+  d_platform->sleep(300); // milliseconds
+
+  return true;
+}
+
+CommResult CM730::ping(uchar id, MX28Alarm* error)
+{
+  uchar txpacket[6];
+  uchar rxpacket[6];
+
+  txpacket[ID]           = id;
+  txpacket[INSTRUCTION]  = INST_PING;
+  txpacket[LENGTH]       = 2;
+
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+
+  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
+  {
+    if (error != nullptr)
+      *error = rxpacket[ERRBIT];
+  }
+
+  return result;
+}
+
+CommResult CM730::reset(uchar id)
+{
+  uchar txpacket[6];
+  uchar rxpacket[6];
+
+  txpacket[ID]            = id;
+  txpacket[INSTRUCTION]   = INST_RESET;
+  txpacket[LENGTH] = 2;
+
+  return txRxPacket(txpacket, rxpacket, 0);
+}
+
+CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error)
+{
+  uchar txpacket[8];
+  uchar rxpacket[7];
+
+  txpacket[ID]           = id;
+  txpacket[INSTRUCTION]  = INST_READ;
+  txpacket[PARAMETER]    = address;
+  txpacket[PARAMETER+1]  = 1;
+  txpacket[LENGTH]       = 4;
+
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+
+  if (result == CommResult::SUCCESS)
+  {
+    *pValue = rxpacket[PARAMETER];
+    if (error != nullptr)
+      *error = rxpacket[ERRBIT];
+  }
+
+  return result;
+}
+
+CommResult CM730::readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* error)
+{
+  uchar txpacket[8];
+  uchar rxpacket[8];
+
+  txpacket[ID]           = id;
+  txpacket[INSTRUCTION]  = INST_READ;
+  txpacket[PARAMETER]    = address;
+  txpacket[PARAMETER+1]  = 2;
+  txpacket[LENGTH]       = 4;
+
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+
+  if (result == CommResult::SUCCESS)
+  {
+    *pValue = makeWord(rxpacket[PARAMETER], rxpacket[PARAMETER + 1]);
+
+    if (error != nullptr)
+      *error = rxpacket[ERRBIT];
+  }
+
+  return result;
+}
+
+CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, MX28Alarm* error)
+{
+  int length = toAddress - fromAddress + 1;
+
+  uchar txpacket[8];
+  uchar rxpacket[6 + length];
+
+  txpacket[ID]           = id;
+  txpacket[INSTRUCTION]  = INST_READ;
+  txpacket[PARAMETER]    = fromAddress;
+  txpacket[PARAMETER+1]  = length;
+  txpacket[LENGTH]       = 4;
+
+  CommResult result = txRxPacket(txpacket, rxpacket, 1);
+
+  if (result == CommResult::SUCCESS)
+  {
+    for (int i = 0; i < length; i++)
+      table[fromAddress + i] = rxpacket[PARAMETER + i];
+
+    if (error != nullptr)
+      *error = rxpacket[ERRBIT];
+  }
+
+  return result;
+}
+
+CommResult CM730::bulkRead(BulkRead* bulkRead)
+{
+  uchar rxpacket[bulkRead->rxLength];
+
+  bulkRead->error = -1;
+
+  assert(bulkRead->getTxPacket()[LENGTH] != 0);
+
+  return txRxPacket(bulkRead->getTxPacket(), rxpacket, 0, bulkRead);
+}
+
+CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* error)
+{
+  uchar txpacket[8];
+  uchar rxpacket[6];
+
+  txpacket[ID]           = id;
+  txpacket[INSTRUCTION]  = INST_WRITE;
+  txpacket[PARAMETER]    = address;
+  txpacket[PARAMETER+1]  = value;
+  txpacket[LENGTH]       = 4;
+
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+
+  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
+  {
+    if (error != nullptr)
+      *error = rxpacket[ERRBIT];
+  }
+
+  return result;
+}
+
+CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* error)
+{
+  uchar txpacket[9];
+  uchar rxpacket[6];
+
+  txpacket[ID]           = id;
+  txpacket[INSTRUCTION]  = INST_WRITE;
+  txpacket[PARAMETER]    = address;
+  txpacket[PARAMETER+1]  = (uchar)getLowByte(value);
+  txpacket[PARAMETER+2]  = (uchar)getHighByte(value);
+  txpacket[LENGTH]       = 5;
+
+  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+
+  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
+  {
+    if (error != nullptr)
+      *error = rxpacket[ERRBIT];
+  }
+
+  return result;
+}
+
+CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar deviceCount, uchar *parameters)
+{
+  unsigned txSize = 8 + (bytesPerDevice * deviceCount);
+  if (txSize > 143)
+    log::warning("CM730::syncWrite") << "Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size (" << (int)deviceCount << " devices, " << (int)bytesPerDevice << " bytes per device)";
+  uchar txpacket[txSize];
+  // Sync write instructions do not receive status packet responses, so no buffer is needed.
+  uchar* rxpacket = nullptr;
+
+  txpacket[ID]            = (uchar)ID_BROADCAST;
+  txpacket[INSTRUCTION]   = INST_SYNC_WRITE;
+  txpacket[PARAMETER]     = fromAddress;
+  txpacket[PARAMETER + 1] = (bytesPerDevice - 1);
+
+  int n;
+  for (n = 0; n < (deviceCount * bytesPerDevice); n++)
+    txpacket[PARAMETER + 2 + n] = parameters[n];
+
+  txpacket[LENGTH] = n + 4;
+
+  return txRxPacket(txpacket, rxpacket, 0);
+}
+
+CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead)
 {
   // TODO: assert fails, fix this
   //assert(ThreadUtil::isMotionLoopThread());
@@ -393,317 +706,4 @@ uchar CM730::calculateChecksum(uchar *packet)
   for (int i = 2; i < packet[LENGTH] + 3; i++)
     checksum += packet[i];
   return (~checksum);
-}
-
-CommResult CM730::bulkRead(BulkRead* bulkRead)
-{
-  uchar rxpacket[bulkRead->rxLength];
-
-  bulkRead->error = -1;
-
-  assert(bulkRead->getTxPacket()[LENGTH] != 0);
-
-  return txRxPacket(bulkRead->getTxPacket(), rxpacket, 0, bulkRead);
-}
-
-CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar deviceCount, uchar *parameters)
-{
-  unsigned txSize = 8 + (bytesPerDevice * deviceCount);
-  if (txSize > 143)
-    log::warning("CM730::syncWrite") << "Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size (" << (int)deviceCount << " devices, " << (int)bytesPerDevice << " bytes per device)";
-  uchar txpacket[txSize];
-  // Sync write instructions do not receive status packet responses, so no buffer is needed.
-  uchar* rxpacket = nullptr;
-
-  txpacket[ID]            = (uchar)ID_BROADCAST;
-  txpacket[INSTRUCTION]   = INST_SYNC_WRITE;
-  txpacket[PARAMETER]     = fromAddress;
-  txpacket[PARAMETER + 1] = (bytesPerDevice - 1);
-
-  int n;
-  for (n = 0; n < (deviceCount * bytesPerDevice); n++)
-    txpacket[PARAMETER + 2 + n] = parameters[n];
-
-  txpacket[LENGTH] = n + 4;
-
-  return txRxPacket(txpacket, rxpacket, 0);
-}
-
-CommResult CM730::reset(uchar id)
-{
-  uchar txpacket[6];
-  uchar rxpacket[6];
-
-  txpacket[ID]            = id;
-  txpacket[INSTRUCTION]   = INST_RESET;
-  txpacket[LENGTH] = 2;
-
-  return txRxPacket(txpacket, rxpacket, 0);
-}
-
-bool CM730::connect()
-{
-  if (!d_platform->openPort())
-  {
-    log::error("CM730::connect") << "Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)";
-    return false;
-  }
-
-  return powerEnable(true);
-}
-
-bool CM730::changeBaud(unsigned baud)
-{
-  if (!d_platform->setBaud(baud))
-  {
-    log::error("CM730::changeBaud") << "Failed to change baudrate to " << baud;
-    return false;
-  }
-
-  return powerEnable(true);
-}
-
-bool CM730::powerEnable(bool enable)
-{
-  log::info("CM730::powerEnable") << "Turning CM730 power " << (enable ? "on" : "off");
-
-  MX28Alarm alarm;
-  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, enable ? 1 : 0, &alarm) != CommResult::SUCCESS)
-  {
-    log::error("CM730::powerEnable") << "Comm error turning CM730 power " << (enable ? "on" : "off");
-    return false;
-  }
-
-  if (alarm.hasError())
-  {
-    log::error("CM730::powerEnable") << "Error turning CM730 power " << (enable ? "on" : "off") << ": " << alarm;
-    return false;
-  }
-
-  // TODO why is this sleep here?
-  d_platform->sleep(300); // milliseconds
-
-  return true;
-}
-
-bool CM730::torqueEnable(bool enable)
-{
-  log::info("CM730::torqueEnable") << "" << (enable ? "Enabling" : "Disabling") << " all joint torque";
-
-  bool allSuccessful = true;
-  MX28Alarm error;
-  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-  {
-    auto res = writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
-
-    if (res != CommResult::SUCCESS)
-    {
-      log::error("CM730::torqueEnable") << "Comm error for " << JointName::getName(jointId) << " (" << (int)jointId << "): " << getCommResultName(res);
-      allSuccessful = false;
-    }
-
-    if (error.hasError())
-    {
-      log::error("CM730::torqueEnable") << "Error for " << JointName::getName(jointId) << " (" << (int)jointId << "): " << error;
-      allSuccessful = false;
-    }
-  }
-  return allSuccessful;
-}
-
-bool CM730::disconnect()
-{
-  bool success = true;
-  if (d_platform->isPortOpen())
-  {
-    log::verbose("CM730::disconnect") << "Disconnecting from CM730";
-
-    // Set eye/panel LEDs to indicate disconnection
-    MX28Alarm alarm1;
-    MX28Alarm alarm2;
-    MX28Alarm alarm3;
-    writeWord(CM730::ID_CM, CM730::P_LED_HEAD_L, CM730::color2Value(0, 255, 0), &alarm1);
-    writeWord(CM730::ID_CM, CM730::P_LED_EYE_L,  CM730::color2Value(0,   0, 0), &alarm2);
-    writeByte(CM730::ID_CM, CM730::P_LED_PANEL,  0, &alarm3);
-
-    MX28Alarm alarm = alarm1.getFlags() | alarm2.getFlags() | alarm3.getFlags();
-
-    if (alarm.hasError())
-    {
-      log::error("CM730::disconnect") << "Error setting eye/head/panel LED colours: " << alarm;
-      return false;
-    }
-
-    if (!powerEnable(false))
-    {
-      log::error("CM730::disconnect") << "Error turning power off";
-      success = false;
-    }
-
-    if (!d_platform->closePort())
-    {
-      log::error("CM730::disconnect") << "Error closing port";
-      success = false;
-    }
-  }
-  return success;
-}
-
-bool CM730::isPowerEnabled()
-{
-  uchar value;
-  MX28Alarm alarm;
-
-  if (readByte(CM730::ID_CM, CM730::P_DXL_POWER, &value, &alarm) != CommResult::SUCCESS)
-  {
-    log::error("CM730::isPowerEnabled") << "Comm error reading CM730 power level";
-    return false;
-  }
-
-  if (alarm.hasError())
-  {
-    log::error("CM730::isPowerEnabled") << "Error reading CM730 power level: " << alarm;
-    return false;
-  }
-
-  return value == 1;
-}
-
-CommResult CM730::ping(uchar id, MX28Alarm* error)
-{
-  uchar txpacket[6];
-  uchar rxpacket[6];
-
-  txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_PING;
-  txpacket[LENGTH]       = 2;
-
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
-
-  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
-  {
-    if (error != nullptr)
-      *error = rxpacket[ERRBIT];
-  }
-
-  return result;
-}
-
-CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error)
-{
-  uchar txpacket[8];
-  uchar rxpacket[7];
-
-  txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_READ;
-  txpacket[PARAMETER]    = address;
-  txpacket[PARAMETER+1]  = 1;
-  txpacket[LENGTH]       = 4;
-
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
-
-  if (result == CommResult::SUCCESS)
-  {
-    *pValue = rxpacket[PARAMETER];
-    if (error != nullptr)
-      *error = rxpacket[ERRBIT];
-  }
-
-  return result;
-}
-
-CommResult CM730::readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* error)
-{
-  uchar txpacket[8];
-  uchar rxpacket[8];
-
-  txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_READ;
-  txpacket[PARAMETER]    = address;
-  txpacket[PARAMETER+1]  = 2;
-  txpacket[LENGTH]       = 4;
-
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
-
-  if (result == CommResult::SUCCESS)
-  {
-    *pValue = makeWord(rxpacket[PARAMETER], rxpacket[PARAMETER + 1]);
-
-    if (error != nullptr)
-      *error = rxpacket[ERRBIT];
-  }
-
-  return result;
-}
-
-CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, MX28Alarm* error)
-{
-  int length = toAddress - fromAddress + 1;
-
-  uchar txpacket[8];
-  uchar rxpacket[6 + length];
-
-  txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_READ;
-  txpacket[PARAMETER]    = fromAddress;
-  txpacket[PARAMETER+1]  = length;
-  txpacket[LENGTH]       = 4;
-
-  CommResult result = txRxPacket(txpacket, rxpacket, 1);
-
-  if (result == CommResult::SUCCESS)
-  {
-    for (int i = 0; i < length; i++)
-      table[fromAddress + i] = rxpacket[PARAMETER + i];
-
-    if (error != nullptr)
-      *error = rxpacket[ERRBIT];
-  }
-
-  return result;
-}
-
-CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* error)
-{
-  uchar txpacket[8];
-  uchar rxpacket[6];
-
-  txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_WRITE;
-  txpacket[PARAMETER]    = address;
-  txpacket[PARAMETER+1]  = value;
-  txpacket[LENGTH]       = 4;
-
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
-
-  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
-  {
-    if (error != nullptr)
-      *error = rxpacket[ERRBIT];
-  }
-
-  return result;
-}
-
-CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* error)
-{
-  uchar txpacket[9];
-  uchar rxpacket[6];
-
-  txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_WRITE;
-  txpacket[PARAMETER]    = address;
-  txpacket[PARAMETER+1]  = (uchar)getLowByte(value);
-  txpacket[PARAMETER+2]  = (uchar)getHighByte(value);
-  txpacket[LENGTH]       = 5;
-
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
-
-  if (result == CommResult::SUCCESS && id != ID_BROADCAST)
-  {
-    if (error != nullptr)
-      *error = rxpacket[ERRBIT];
-  }
-
-  return result;
 }

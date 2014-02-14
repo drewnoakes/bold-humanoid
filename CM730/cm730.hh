@@ -208,23 +208,23 @@ namespace bold
     /// Links CM730, returning true on success.
     bool connect();
 
-    /// Changes the communication baud rate, returning true on success.
-    bool changeBaud(unsigned baud);
-
     /// Releases CM730, returning true on success.
     bool disconnect();
 
-    /// Enable or disable the CM730 power, returning true on success.
-    bool powerEnable(bool enable);
+    /// True if connected to the CM730.
+    bool isConnected() const { return d_platform->isPortOpen(); }
+
+    /// Changes the communication baud rate, returning true on success.
+    bool changeBaud(unsigned baud);
 
     /// Enable or disable torque for all joints, returning true on success.
     bool torqueEnable(bool enable);
 
+    /// Enable or disable the CM730 power, returning true on success.
+    bool powerEnable(bool enable);
+
     /// Ask the CM730 if the power is enabled.
     bool isPowerEnabled();
-
-    /// True if connected to the CM730.
-    bool isConnected() const { return d_platform->isPortOpen(); }
 
 
     unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }
@@ -284,7 +284,7 @@ namespace bold
     /**
      * @param priority select the queue for this exchange: 0=high 1=med 2=low
      */
-    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead);
+    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead = nullptr);
 
     static uchar calculateChecksum(uchar *packet);
   };
