@@ -219,8 +219,16 @@ namespace bold
     /// Enable or disable torque for all joints.
     void torqueEnable(bool enable);
 
+    unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }
+    unsigned long getTransmittedByteCount() const { return d_platform->getTransmittedByteCount(); }
+    void resetByteCounts() { d_platform->resetByteCounts(); }
+
+
     /// Check the existance of Dynamixel with selected id. Returns communication result enum value.
     CommResult ping(uchar id, MX28Alarm* error);
+
+    /// Restores the state of the specified Dynamixel to the factory default setting.
+    CommResult reset(uchar id);
 
 
     /// Reads a byte from the CM730 control table. Returns communication result enum value.
@@ -231,6 +239,9 @@ namespace bold
 
     /// Reads a consecutive range of bytes from the CM730 control table. Returns communication result enum value.
     CommResult readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, MX28Alarm* error);
+
+    // Executes a bulk read operation, as specified in bulkRead. Returns communication result enum value.
+    CommResult bulkRead(BulkRead* bulkRead);
 
 
     /// Writes a byte into the control table for the specified Dynamixel device. Returns communication result enum value.
@@ -257,18 +268,6 @@ namespace bold
      * @param parameters parameters to be written, of length (number*bytesPerDevice)
      */
     CommResult syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar deviceCount, uchar *parameters);
-
-
-    /// Restores the state of the specified Dynamixel to the factory default setting.
-    CommResult reset(uchar id);
-
-
-    CommResult bulkRead(BulkRead* bulkRead);
-
-
-    unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }
-    unsigned long getTransmittedByteCount() const { return d_platform->getTransmittedByteCount(); }
-    void resetByteCounts() { d_platform->resetByteCounts(); }
 
   private:
     std::unique_ptr<CM730Platform> d_platform;
