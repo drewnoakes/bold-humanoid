@@ -80,7 +80,7 @@ namespace bold
     /// Dimensions of limb
 //    Eigen::Vector3d size;
 
-    /// List of joints attached to this limb
+    /// Vector of joints attached to this limb
     std::vector<std::shared_ptr<Joint>> joints;
 
     // This bodypart's identifier
