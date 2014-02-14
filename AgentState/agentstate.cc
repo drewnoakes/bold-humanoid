@@ -10,12 +10,26 @@ mutex AgentState::d_mutex;
 unordered_map<type_index, vector<shared_ptr<StateObserver>>> AgentState::d_observersByTypeIndex;
 unordered_map<int, vector<shared_ptr<StateObserver>>> AgentState::d_observersByThreadId;
 unordered_map<type_index, shared_ptr<StateTracker>> AgentState::d_trackerByTypeId;
+unordered_map<string, shared_ptr<StateTracker>> AgentState::d_trackerByName;
 
 void AgentState::initialise()
 {
   // Only allow observers to be called back on specified threads
   d_observersByThreadId[(int)ThreadId::MotionLoop] = vector<shared_ptr<StateObserver>>();
   d_observersByThreadId[(int)ThreadId::ThinkLoop] = vector<shared_ptr<StateObserver>>();
+}
+
+shared_ptr<StateObject const> AgentState::getByName(string name)
+{
+  auto it = d_trackerByName.find(name);
+  if (it == d_trackerByName.end())
+  {
+    log::warning("AgentState::getByName") << "No tracker exists with name " << name;
+    return nullptr;
+  }
+
+  shared_ptr<StateTracker> const& tracker = it->second;
+  return tracker->stateBase();
 }
 
 vector<shared_ptr<StateTracker>> AgentState::getTrackers()

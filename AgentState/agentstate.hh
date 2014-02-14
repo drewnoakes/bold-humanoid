@@ -104,6 +104,8 @@ namespace bold
     template <typename T>
     static std::shared_ptr<T const> get();
 
+    static std::shared_ptr<StateObject const> getByName(std::string name);
+
     template<typename T>
     static std::shared_ptr<T const> getTrackerState();
 
@@ -119,6 +121,7 @@ namespace bold
     static std::unordered_map<std::type_index, std::vector<std::shared_ptr<StateObserver>>> d_observersByTypeIndex;
     static std::unordered_map<int, std::vector<std::shared_ptr<StateObserver>>> d_observersByThreadId;
     static std::unordered_map<std::type_index, std::shared_ptr<StateTracker>> d_trackerByTypeId;
+    static std::unordered_map<std::string,     std::shared_ptr<StateTracker>> d_trackerByName;
   };
 
   template<typename T>
@@ -126,13 +129,15 @@ namespace bold
   {
     static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
     log::verbose("AgentState::registerStateType") << "Registering state type: " << name;
+
     std::lock_guard<std::mutex> guard(d_mutex);
     assert(d_trackerByTypeId.find(typeid(T)) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
-    d_trackerByTypeId[typeid(T)] = StateTracker::create<T>(name);
-    
-    // Create an empty list for the observers so that we don't have to lock later on the observer map
-    std::vector<std::shared_ptr<StateObserver>> observers = {};
-    d_observersByTypeIndex[typeid(T)] = observers;
+    auto const& tracker = StateTracker::create<T>(name);
+    d_trackerByTypeId[typeid(T)] = tracker;
+    d_trackerByName[name] = tracker;
+
+    // Create an empty vector for the observers so that we don't have to lock later on the observer map
+    d_observersByTypeIndex[typeid(T)] = {};
   }
 
   template <typename T>
@@ -193,5 +198,4 @@ namespace bold
     auto tracker = pair->second;
     return tracker;
   }
-  
 }
