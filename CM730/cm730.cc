@@ -511,8 +511,9 @@ bool CM730::torqueEnable(bool enable)
   return allSuccessful;
 }
 
-void CM730::disconnect()
+bool CM730::disconnect()
 {
+  bool success = true;
   if (d_platform->isPortOpen())
   {
     log::verbose("CM730::disconnect") << "Disconnecting from CM730";
@@ -533,10 +534,20 @@ void CM730::disconnect()
       return false;
     }
 
-    powerEnable(false);
+    if (!powerEnable(false))
+    {
+      log::error("CM730::disconnect") << "Error turning power off";
+      success = false;
+    }
 
-    d_platform->closePort();
+    if (!d_platform->closePort())
+    {
+      log::error("CM730::disconnect") << "Error closing port";
+      success = false;
+    }
   }
+  return success;
+}
 
 bool CM730::isPowerEnabled()
 {

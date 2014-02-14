@@ -211,7 +211,7 @@ namespace bold
     bool changeBaud(unsigned baud);
 
     /// Releases CM730.
-    void disconnect();
+    bool disconnect();
 
     /// Control the CM730 power.
     bool powerEnable(bool enable);
