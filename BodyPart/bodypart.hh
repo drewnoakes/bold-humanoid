@@ -52,21 +52,21 @@ namespace bold
   {
     Limb(std::string name)
     : BodyPart(name),
-      weight(),
-      relativeWeight(),
-      size(),
+//       weight(),
+//       relativeWeight(),
+//       size(),
       joints(),
       id()
     {}
 
     /// Weight of limb
-    double weight;
+//    double weight;
 
     /// Weight of limb divided by the robot's total weight
-    double relativeWeight;
+//    double relativeWeight;
 
     /// Dimensions of limb
-    Eigen::Vector3d size;
+//    Eigen::Vector3d size;
 
     /// List of joints attached to this limb
     std::vector<std::shared_ptr<Joint>> joints;
