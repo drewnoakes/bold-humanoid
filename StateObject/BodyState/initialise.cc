@@ -104,7 +104,7 @@ void BodyState::initialise(double angles[22])
   d_torso->joints.push_back(ltorsoHipJoint);
 
   auto lHipHip1Joint = allocate_aligned_shared<Joint>(JointId::L_HIP_ROLL, "left-hip-roll");
-  lHipHip1Joint->axis = Vector3d(0, 1, 0);
+  lHipHip1Joint->axis = Vector3d(0, -1, 0);
   lHipHip1Joint->anchors.first = Vector3d(0, 0, 0);
   lHipHip1Joint->anchors.second = Vector3d(0, 0, 0);
   ltorsoHipJoint->childPart = lHipHip1Joint;
