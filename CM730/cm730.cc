@@ -454,7 +454,7 @@ bool CM730::connect()
 
 bool CM730::changeBaud(unsigned baud)
 {
-  if (d_platform->setBaud(baud) == false)
+  if (!d_platform->setBaud(baud))
   {
     log::error("CM730::changeBaud") << "Failed to change baudrate";
     return false;
@@ -465,7 +465,7 @@ bool CM730::changeBaud(unsigned baud)
 
 bool CM730::powerEnable(bool enable)
 {
-  log::info("CM730::powerEnable") << "Turning CM730 power " << (enable?"on":"off");
+  log::info("CM730::powerEnable") << "Turning CM730 power " << (enable ? "on" : "off");
 
   if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, enable ? 1 : 0, 0) == CommResult::SUCCESS)
   {
