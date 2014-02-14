@@ -97,7 +97,8 @@ bool MotionLoop::start()
   }
   else
   {
-    d_cm730->torqueEnable(true);
+    if (!d_cm730->torqueEnable(true))
+      log::error("MotionLoop::start") << "Error enabling torque";
   }
 
   d_readYet = false;
@@ -170,7 +171,10 @@ void MotionLoop::stop()
   log::info("MotionLoop::stop") << "Stopped";
 
   if (d_haveBody)
-    d_cm730->torqueEnable(false);
+  {
+    if (!d_cm730->torqueEnable(false))
+      log::error("MotionLoop::start") << "Error disabling torque";
+  }
 
   d_isStopRequested = false;
   d_isStarted = false;
@@ -313,13 +317,15 @@ void MotionLoop::step(SequentialTimer& t)
     {
       if (d_powerChangeNeeded)
       {
-        d_cm730->powerEnable(d_powerChangeToValue);
+        if (!d_cm730->powerEnable(d_powerChangeToValue))
+          log::error("MotionLoop::step") << "Error setting power to " << d_powerChangeToValue;
         d_powerChangeNeeded = false;
       }
 
       if (d_torqueChangeNeeded)
       {
-        d_cm730->torqueEnable(d_torqueChangeToValue);
+        if (!d_cm730->torqueEnable(d_torqueChangeToValue))
+          log::error("MotionLoop::step") << "Error setting torque to " << d_torqueChangeToValue;
         d_torqueChangeNeeded = false;
       }
     }
