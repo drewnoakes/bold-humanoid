@@ -5,10 +5,11 @@ define(
     [
         'DataProxy',
         'Constants',
+        'ControlBuilder',
         'Protocols',
         'BodyFigure'
     ],
-    function (DataProxy, Constants, Protocols, BodyFigure)
+    function (DataProxy, Constants, ControlBuilder, Protocols, BodyFigure)
     {
         'use strict';
 
@@ -100,6 +101,11 @@ define(
 
             this.bodyFigure = new BodyFigure();
             this.container.append(this.bodyFigure.element);
+
+            var controlContainer = document.createElement('div');
+            controlContainer.className = 'control-container';
+            ControlBuilder.actions("hardware", controlContainer);
+            this.container.append(controlContainer);
 
             this.subscription = DataProxy.subscribe(
                 Protocols.hardwareState,

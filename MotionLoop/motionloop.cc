@@ -43,10 +43,11 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
     new BulkRead(CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
                  MX28::P_MODEL_NUMBER_L, MX28::P_LOCK));
 
-  // add an action that sets d_staticHardwareStateUpdateNeeded true
-  Config::addAction("motion-loop.query-static-hardware-state", "Query static HW state",
-    [this]() { d_staticHardwareStateUpdateNeeded = true; }
-  );
+  Config::addAction("hardware.query-static-hardware-state", "Query static HW state", [this]() { d_staticHardwareStateUpdateNeeded = true; });
+  Config::addAction("hardware.cm730-power-on",  "CM730 On",  [this]() { d_powerChangeToValue = true;  d_powerChangeNeeded = true; });
+  Config::addAction("hardware.cm730-power-off", "CM730 Off", [this]() { d_powerChangeToValue = false; d_powerChangeNeeded = true; });
+  Config::addAction("hardware.motor-torque-on",  "Torque On",  [this]() { d_torqueChangeToValue = true;  d_torqueChangeNeeded = true; });
+  Config::addAction("hardware.motor-torque-off", "Torque Off", [this]() { d_torqueChangeToValue = false; d_torqueChangeNeeded = true; });
 
   for (uchar i = 0; i < (uchar)JointId::MAX; i++)
     d_offsets[i] = 0;
@@ -308,6 +309,21 @@ void MotionLoop::step(SequentialTimer& t)
   // Don't write until we've read
   if (d_readYet)
   {
+    if (d_haveBody)
+    {
+      if (d_powerChangeNeeded)
+      {
+        d_cm730->powerEnable(d_powerChangeToValue);
+        d_powerChangeNeeded = false;
+      }
+
+      if (d_torqueChangeNeeded)
+      {
+        d_cm730->torqueEnable(d_torqueChangeToValue);
+        d_torqueChangeNeeded = false;
+      }
+    }
+
     //
     // LET MOTION MODULES UPDATE BODY CONTROL
     //

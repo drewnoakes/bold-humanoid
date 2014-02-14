@@ -73,6 +73,11 @@ namespace bold
     bool d_staticHardwareStateUpdateNeeded;
     uint d_consecutiveReadFailureCount;
 
+    bool d_powerChangeNeeded;
+    bool d_powerChangeToValue;
+    bool d_torqueChangeNeeded;
+    bool d_torqueChangeToValue;
+
     /// The method that governs the thread's lifetime and operation
     static void *threadMethod(void *param);
   };
