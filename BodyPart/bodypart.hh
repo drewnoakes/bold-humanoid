@@ -102,7 +102,7 @@ namespace bold
       id(id),
 //    rate(0), torque(0), control(0)
       angleRads(0),
-      bodyPart(),
+      childPart(),
       anchors()
     {}
 
@@ -127,8 +127,8 @@ namespace bold
 //    /// Control velocity set at last time step
 //    double control;
 
-    /// Body part connected by this joint. May be a Limb, or another Joint.
-    std::shared_ptr<BodyPart> bodyPart;
+    /// Child part connected by this joint. May be a Limb, or another Joint.
+    std::shared_ptr<BodyPart> childPart;
 
     /// Anchor points of joint on body parts, relative to their center
     std::pair<Eigen::Vector3d, Eigen::Vector3d> anchors;

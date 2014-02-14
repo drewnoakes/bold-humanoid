@@ -15,7 +15,7 @@ void BodyState::initialise(double angles[22])
   d_torso->joints.push_back(torsoNeckJoint);
 
   auto neck = allocate_aligned_shared<Limb>("neck");
-  torsoNeckJoint->bodyPart = neck;
+  torsoNeckJoint->childPart = neck;
 
   auto neckHeadJoint = allocate_aligned_shared<Joint>(JointId::HEAD_TILT, "head-tilt");
   neckHeadJoint->axis = Vector3d(1, 0, 0);
@@ -24,7 +24,7 @@ void BodyState::initialise(double angles[22])
   neck->joints.push_back(neckHeadJoint);
 
   auto head = allocate_aligned_shared<Limb>("head");
-  neckHeadJoint->bodyPart = head;
+  neckHeadJoint->childPart = head;
 
   auto headCameraJoint = allocate_aligned_shared<Joint>(JointId::CAMERA_TILT, "head-camera");
   // Set angle offset of head here. If this needs to be set for more
@@ -37,7 +37,7 @@ void BodyState::initialise(double angles[22])
   head->joints.push_back(headCameraJoint);
 
   auto camera = allocate_aligned_shared<Limb>("camera");
-  headCameraJoint->bodyPart = camera;
+  headCameraJoint->childPart = camera;
 
   // LEFT ARM
 
@@ -51,11 +51,11 @@ void BodyState::initialise(double angles[22])
   lshoulderShoulderJoint->rotationOrigin = -M_PI/4.0;
   lshoulderShoulderJoint->axis = Vector3d(0, -1, 0);
   lshoulderShoulderJoint->anchors.first = Vector3d(0, 0, 0);
-  lshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
-  ltorsoShoulderJoint->bodyPart = lshoulderShoulderJoint;
+  lshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0);
+  ltorsoShoulderJoint->childPart = lshoulderShoulderJoint;
 
   auto lupperArm = allocate_aligned_shared<Limb>("lUpperArm");
-  lshoulderShoulderJoint->bodyPart = lupperArm;
+  lshoulderShoulderJoint->childPart = lupperArm;
 
   auto lupperLowerArmJoint = allocate_aligned_shared<Joint>(JointId::L_ELBOW, "left-elbow");
   lupperLowerArmJoint->rotationOrigin = -M_PI/2.0;
@@ -65,7 +65,7 @@ void BodyState::initialise(double angles[22])
   lupperArm->joints.push_back(lupperLowerArmJoint);
 
   auto llowerArm = allocate_aligned_shared<Limb>("lLowerArm");
-  lupperLowerArmJoint->bodyPart = llowerArm;
+  lupperLowerArmJoint->childPart = llowerArm;
 
   // RIGHT ARM
 
@@ -80,10 +80,10 @@ void BodyState::initialise(double angles[22])
   rshoulderShoulderJoint->axis = Vector3d(0, -1, 0);
   rshoulderShoulderJoint->anchors.first = Vector3d(0, 0, 0);
   rshoulderShoulderJoint->anchors.second = Vector3d(0, 0, 0.016);
-  rtorsoShoulderJoint->bodyPart = rshoulderShoulderJoint;
+  rtorsoShoulderJoint->childPart = rshoulderShoulderJoint;
 
   auto rupperArm = allocate_aligned_shared<Limb>("rUpperArm");
-  rshoulderShoulderJoint->bodyPart = rupperArm;
+  rshoulderShoulderJoint->childPart = rupperArm;
 
   auto rupperLowerArmJoint = allocate_aligned_shared<Joint>(JointId::R_ELBOW, "right-elbow");
   rupperLowerArmJoint->rotationOrigin = M_PI/2.0;
@@ -93,7 +93,7 @@ void BodyState::initialise(double angles[22])
   rupperArm->joints.push_back(rupperLowerArmJoint);
 
   auto rlowerArm = allocate_aligned_shared<Limb>("rLowerArm");
-  rupperLowerArmJoint->bodyPart = rlowerArm;
+  rupperLowerArmJoint->childPart = rlowerArm;
 
   // LEFT LEG
 
@@ -107,16 +107,16 @@ void BodyState::initialise(double angles[22])
   lHipHip1Joint->axis = Vector3d(0, 1, 0);
   lHipHip1Joint->anchors.first = Vector3d(0, 0, 0);
   lHipHip1Joint->anchors.second = Vector3d(0, 0, 0);
-  ltorsoHipJoint->bodyPart = lHipHip1Joint;
+  ltorsoHipJoint->childPart = lHipHip1Joint;
 
   auto lHipHip2Joint = allocate_aligned_shared<Joint>(JointId::L_HIP_PITCH, "left-hip-pitch");
   lHipHip2Joint->axis = Vector3d(1, 0, 0);
   lHipHip2Joint->anchors.first = Vector3d(0, 0, 0);
   lHipHip2Joint->anchors.second = Vector3d(0, 0, 0);
-  lHipHip1Joint->bodyPart = lHipHip2Joint;
+  lHipHip1Joint->childPart = lHipHip2Joint;
 
   auto lupperLeg = allocate_aligned_shared<Limb>("lUpperLeg");
-  lHipHip2Joint->bodyPart = lupperLeg;
+  lHipHip2Joint->childPart = lupperLeg;
 
   auto lupperLowerLegJoint = allocate_aligned_shared<Joint>(JointId::L_KNEE, "left-knee");
   lupperLowerLegJoint->axis = Vector3d(1, 0, 0);
@@ -125,7 +125,7 @@ void BodyState::initialise(double angles[22])
   lupperLeg->joints.push_back(lupperLowerLegJoint);
 
   auto llowerLeg = allocate_aligned_shared<Limb>("lLowerLeg");
-  lupperLowerLegJoint->bodyPart = llowerLeg;
+  lupperLowerLegJoint->childPart = llowerLeg;
 
   auto llowerLegAnkleJoint = allocate_aligned_shared<Joint>(JointId::L_ANKLE_PITCH, "left-ankle-pitch");
   llowerLegAnkleJoint->axis = Vector3d(-1, 0, 0);
@@ -137,10 +137,10 @@ void BodyState::initialise(double angles[22])
   lankleFootJoint->axis = Vector3d(0, 1, 0);
   lankleFootJoint->anchors.first = Vector3d(0, 0, 0);
   lankleFootJoint->anchors.second = Vector3d(0, 0, 0.0335);
-  llowerLegAnkleJoint->bodyPart = lankleFootJoint;
+  llowerLegAnkleJoint->childPart = lankleFootJoint;
 
   auto lfoot = allocate_aligned_shared<Limb>("lFoot");
-  lankleFootJoint->bodyPart = lfoot;
+  lankleFootJoint->childPart = lfoot;
 
   // RIGHT LEG
 
@@ -154,16 +154,16 @@ void BodyState::initialise(double angles[22])
   rHipHip1Joint->axis = Vector3d(0, -1, 0);
   rHipHip1Joint->anchors.first = Vector3d(0, 0, 0);
   rHipHip1Joint->anchors.second = Vector3d(0, 0, 0);
-  rtorsoHipJoint->bodyPart = rHipHip1Joint;
+  rtorsoHipJoint->childPart = rHipHip1Joint;
 
   auto rHipHip2Joint = allocate_aligned_shared<Joint>(JointId::R_HIP_PITCH, "right-hip-pitch");
   rHipHip2Joint->axis = Vector3d(-1, 0, 0);
   rHipHip2Joint->anchors.first = Vector3d(0, 0, 0);
   rHipHip2Joint->anchors.second = Vector3d(0, 0, 0);
-  rHipHip1Joint->bodyPart = rHipHip2Joint;
+  rHipHip1Joint->childPart = rHipHip2Joint;
 
   auto rupperLeg = allocate_aligned_shared<Limb>("rUpperLeg");
-  rHipHip2Joint->bodyPart = rupperLeg;
+  rHipHip2Joint->childPart = rupperLeg;
 
   auto rupperLowerLegJoint = allocate_aligned_shared<Joint>(JointId::R_KNEE, "right-knee");
   rupperLowerLegJoint->axis = Vector3d(-1, 0, 0);
@@ -172,7 +172,7 @@ void BodyState::initialise(double angles[22])
   rupperLeg->joints.push_back(rupperLowerLegJoint);
 
   auto rlowerLeg = allocate_aligned_shared<Limb>("rLowerLeg");
-  rupperLowerLegJoint->bodyPart = rlowerLeg;
+  rupperLowerLegJoint->childPart = rlowerLeg;
 
   auto rlowerLegAnkleJoint = allocate_aligned_shared<Joint>(JointId::R_ANKLE_PITCH, "right-ankle-pitch");
   rlowerLegAnkleJoint->axis = Vector3d(1, 0, 0);
@@ -184,10 +184,10 @@ void BodyState::initialise(double angles[22])
   rankleFootJoint->axis = Vector3d(0, 1, 0);
   rankleFootJoint->anchors.first = Vector3d(0, 0, 0);
   rankleFootJoint->anchors.second = Vector3d(0, 0, 0.0335);
-  rlowerLegAnkleJoint->bodyPart = rankleFootJoint;
+  rlowerLegAnkleJoint->childPart = rankleFootJoint;
 
   auto rfoot = allocate_aligned_shared<Limb>("rFoot");
-  rankleFootJoint->bodyPart = rfoot;
+  rankleFootJoint->childPart = rfoot;
 
   //
   // Build all Joint and Limb transforms
@@ -234,12 +234,12 @@ void BodyState::initialise(double angles[22])
 
       joint->angleRads = angles[(uchar)joint->id];
 
-      joint->bodyPart->transform
+      joint->childPart->transform
         = joint->transform
         * AngleAxisd(joint->rotationOrigin + joint->angleRads, joint->axis)
         * Translation3d(-joint->anchors.second);
 
-      partQueue.push_back(joint->bodyPart);
+      partQueue.push_back(joint->childPart);
     }
   }
 
