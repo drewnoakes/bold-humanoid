@@ -111,6 +111,42 @@ ushort BulkReadTable::readWord(uchar address) const
 ////////// CM730
 //////////
 
+//// Static members
+
+string CM730::getCommResultName(CommResult responseCode)
+{
+  switch(responseCode)
+  {
+    case CommResult::SUCCESS:     return "SUCCESS";
+    case CommResult::TX_CORRUPT:  return "TX_CORRUPT";
+    case CommResult::TX_FAIL:     return "TX_FAIL";
+    case CommResult::RX_FAIL:     return "RX_FAIL";
+    case CommResult::RX_TIMEOUT:  return "RX_TIMEOUT";
+    case CommResult::RX_CORRUPT:  return "RX_CORRUPT";
+
+    default:          return "UNKNOWN";
+  }
+}
+
+string CM730::getInstructionName(uchar instructionId)
+{
+  switch(instructionId)
+  {
+    case INST_PING:       return "PING";
+    case INST_READ:       return "READ";
+    case INST_WRITE:      return "WRITE";
+    case INST_REG_WRITE:  return "REG_WRITE";
+    case INST_ACTION:     return "ACTION";
+    case INST_RESET:      return "RESET";
+    case INST_SYNC_WRITE: return "SYNC_WRITE";
+    case INST_BULK_READ:  return "BULK_READ";
+
+    default:              return "UNKNOWN";
+  }
+}
+
+//// Instance members
+
 CM730::CM730(unique_ptr<CM730Platform> platform)
 : d_platform(move(platform))
 {}
@@ -349,38 +385,6 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
     cout << "[CM730::txRxPacket] Round trip in " << setprecision(2) << d_platform->getPacketTime() << "ms  (" << getCommResultName(res) << ")" << endl;
 
   return res;
-}
-
-string CM730::getCommResultName(CommResult responseCode)
-{
-  switch(responseCode)
-  {
-    case CommResult::SUCCESS:     return "SUCCESS";
-    case CommResult::TX_CORRUPT:  return "TX_CORRUPT";
-    case CommResult::TX_FAIL:     return "TX_FAIL";
-    case CommResult::RX_FAIL:     return "RX_FAIL";
-    case CommResult::RX_TIMEOUT:  return "RX_TIMEOUT";
-    case CommResult::RX_CORRUPT:  return "RX_CORRUPT";
-
-    default:          return "UNKNOWN";
-  }
-}
-
-string CM730::getInstructionName(uchar instructionId)
-{
-  switch(instructionId)
-  {
-    case INST_PING:       return "PING";
-    case INST_READ:       return "READ";
-    case INST_WRITE:      return "WRITE";
-    case INST_REG_WRITE:  return "REG_WRITE";
-    case INST_ACTION:     return "ACTION";
-    case INST_RESET:      return "RESET";
-    case INST_SYNC_WRITE: return "SYNC_WRITE";
-    case INST_BULK_READ:  return "BULK_READ";
-
-    default:              return "UNKNOWN";
-  }
 }
 
 uchar CM730::calculateChecksum(uchar *packet)
