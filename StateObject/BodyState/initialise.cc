@@ -214,9 +214,9 @@ void BodyState::initialise(double angles[22])
       for (auto joint : limb->joints)
       {
         // Transformation = that of limb plus translation to the joint
-        joint->transform =
-          limb->transform *
-          Translation3d(joint->anchors.first);
+        joint->transform
+          = limb->transform
+          * Translation3d(joint->anchors.first);
 
         partQueue.push_back(joint);
       }
@@ -234,7 +234,8 @@ void BodyState::initialise(double angles[22])
 
       joint->angleRads = angles[(uchar)joint->id];
 
-      joint->bodyPart->transform = joint->transform
+      joint->bodyPart->transform
+        = joint->transform
         * AngleAxisd(joint->rotationOrigin + joint->angleRads, joint->axis)
         * Translation3d(-joint->anchors.second);
 
