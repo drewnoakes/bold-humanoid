@@ -34,6 +34,7 @@ namespace bold
      */
     Eigen::Affine3d transform;
 
+    /** Get the position of the body part, relative to the torso. */
     Eigen::Vector3d getPosition() const
     {
       return transform.translation().head<3>();
@@ -115,7 +116,7 @@ namespace bold
 //    /// Control velocity set at last time step
 //    double control;
 
-    /// Body part connected by this joint
+    /// Body part connected by this joint. May be a Limb, or another Joint.
     std::shared_ptr<BodyPart> bodyPart;
 
     /// Anchor points of joint on body parts, relative to their center

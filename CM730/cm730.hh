@@ -208,15 +208,16 @@ namespace bold
     /// Links CM730, returning true on success.
     bool connect();
 
+    /// Changes the communication baud rate, returning true on success.
     bool changeBaud(unsigned baud);
 
-    /// Releases CM730.
+    /// Releases CM730, returning true on success.
     bool disconnect();
 
-    /// Control the CM730 power.
+    /// Enable or disable the CM730 power, returning true on success.
     bool powerEnable(bool enable);
 
-    /// Enable or disable torque for all joints.
+    /// Enable or disable torque for all joints, returning true on success.
     bool torqueEnable(bool enable);
 
     /// Ask the CM730 if the power is enabled.
