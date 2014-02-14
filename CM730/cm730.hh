@@ -223,6 +223,9 @@ namespace bold
     /// Ask the CM730 if the power is enabled.
     bool isPowerEnabled();
 
+    /// True if connected to the CM730.
+    bool isConnected() const { return d_platform->isPortOpen(); }
+
 
     unsigned long getReceivedByteCount() const { return d_platform->getReceivedByteCount(); }
     unsigned long getTransmittedByteCount() const { return d_platform->getTransmittedByteCount(); }
