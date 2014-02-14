@@ -486,18 +486,29 @@ bool CM730::powerEnable(bool enable)
   return true;
 }
 
-void CM730::torqueEnable(bool enable)
+bool CM730::torqueEnable(bool enable)
 {
   log::info("CM730::torqueEnable") << "" << (enable ? "Enabling" : "Disabling") << " all joint torque";
 
+  bool allSuccessful = true;
   MX28Alarm error;
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
-    writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
+    auto res = writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
+
+    if (res != CommResult::SUCCESS)
+    {
+      log::error("CM730::torqueEnable") << "Comm error for " << JointName::getName(jointId) << " (" << (int)jointId << "): " << getCommResultName(res);
+      allSuccessful = false;
+    }
 
     if (error.hasError())
-      log::error("CM730::torqueEnable") << "Error for joint ID " << (int)jointId << " (" << JointName::getName(jointId) << "): " << error;
+    {
+      log::error("CM730::torqueEnable") << "Error for " << JointName::getName(jointId) << " (" << (int)jointId << "): " << error;
+      allSuccessful = false;
+    }
   }
+  return allSuccessful;
 }
 
 void CM730::disconnect()

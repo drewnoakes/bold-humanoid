@@ -217,7 +217,7 @@ namespace bold
     bool powerEnable(bool enable);
 
     /// Enable or disable torque for all joints.
-    void torqueEnable(bool enable);
+    bool torqueEnable(bool enable);
 
     /// Ask the CM730 if the power is enabled.
     bool isPowerEnabled();
