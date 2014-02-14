@@ -58,6 +58,8 @@ namespace bold
 
     /// Whether we have connected to a CM730 subcontroller.
     bool d_haveBody;
+    /// Whether the CM730 subcontroller is powered. Updated every N cycles.
+    bool d_isCM730PowerEnabled;
     /// When false, calls to process have no effect
     bool d_isStarted;
     bool d_isStopRequested;
