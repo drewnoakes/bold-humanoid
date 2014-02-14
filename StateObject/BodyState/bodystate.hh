@@ -42,6 +42,11 @@ namespace bold
   public:
     static std::shared_ptr<BodyState const> zero(ulong thinkCycleNumber = 0);
 
+    static Eigen::Vector3d distanceBetween(std::shared_ptr<BodyPart const> const& p1, std::shared_ptr<BodyPart const> const& p2)
+    {
+      return p2->getPosition() - p1->getPosition();
+    }
+
     /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
     BodyState(double angles[22],
               std::vector<int> positionValueDiffs,
