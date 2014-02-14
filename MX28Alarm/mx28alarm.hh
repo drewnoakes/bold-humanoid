@@ -27,10 +27,11 @@ namespace bold
     const static uchar MAXBIT = 6;
 
     MX28Alarm()
+    : d_flags(0)
     {}
 
     MX28Alarm(uchar flags)
-    : d_flags (flags)
+    : d_flags(flags)
     {}
 
     MX28Alarm& operator=(const uchar flags)
