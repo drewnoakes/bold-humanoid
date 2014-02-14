@@ -160,6 +160,10 @@ namespace bold
     };
 
   public:
+    //
+    // ----------------- Static members
+    //
+
     static ushort makeWord(uchar lowByte, uchar highByte) { return (highByte << 8) | lowByte; }
     static uchar getLowByte(ushort word) { return word & 0xFF; }
     static uchar getHighByte(ushort word) { return (word >> 8) & 0xFF; }
@@ -195,6 +199,10 @@ namespace bold
 
     static std::string getCommResultName(CommResult responseCode);
     static std::string getInstructionName(uchar instructionId);
+
+    //
+    // ----------------- Instance members
+    //
 
     CM730(std::unique_ptr<CM730Platform> platform);
     ~CM730();
