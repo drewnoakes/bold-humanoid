@@ -15,11 +15,35 @@ int DataStreamer::callback_state(
   case LWS_CALLBACK_ESTABLISHED:
   {
     assert(ThreadUtil::isDataStreamerThread());
+
     // New client connected; initialize session
     jsonSession->initialise();
     const libwebsocket_protocols* protocol = libwebsockets_get_protocol(wsi);
     std::lock_guard<std::mutex> guard(d_stateSessionsMutex);
     d_stateSessions.insert(make_pair(protocol->name, jsonSession));
+
+    // Some state objects change very infrequently (such as StaticHardwareState)
+    // and so we send the latest object to a client when they connect.
+
+    // Find any existing state object
+    shared_ptr<StateObject const> stateObject = AgentState::getByName(protocol->name);
+
+    if (stateObject)
+    {
+      // A state object exists
+
+      // Generate JSON bytes
+      StringBuffer buffer;
+      Writer<StringBuffer> writer(buffer);
+      stateObject->writeJson(writer);
+      auto bytes = JsonSession::createBytes(buffer);
+
+      // Enqueue it for this client
+      jsonSession->queue.push(bytes);
+
+      libwebsocket_callback_on_writable(context, wsi);
+    }
+
     return 0;
   }
   case LWS_CALLBACK_CLOSED:
