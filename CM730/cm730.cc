@@ -456,7 +456,7 @@ bool CM730::changeBaud(unsigned baud)
 {
   if (!d_platform->setBaud(baud))
   {
-    log::error("CM730::changeBaud") << "Failed to change baudrate";
+    log::error("CM730::changeBaud") << "Failed to change baudrate to " << baud;
     return false;
   }
 
