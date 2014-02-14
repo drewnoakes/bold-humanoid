@@ -467,16 +467,21 @@ bool CM730::powerEnable(bool enable)
 {
   log::info("CM730::powerEnable") << "Turning CM730 power " << (enable ? "on" : "off");
 
-  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, enable ? 1 : 0, 0) == CommResult::SUCCESS)
+  MX28Alarm alarm;
+  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, enable ? 1 : 0, &alarm) != CommResult::SUCCESS)
   {
-    // TODO why is this sleep here?
-    d_platform->sleep(300); // milliseconds
-  }
-  else
-  {
-    log::error("CM730::powerEnable") << "Failed to set CM730 power";
+    log::error("CM730::powerEnable") << "Comm error turning CM730 power " << (enable ? "on" : "off");
     return false;
   }
+
+  if (alarm.hasError())
+  {
+    log::error("CM730::powerEnable") << "Error turning CM730 power " << (enable ? "on" : "off") << ": " << alarm;
+    return false;
+  }
+
+  // TODO why is this sleep here?
+  d_platform->sleep(300); // milliseconds
 
   return true;
 }
@@ -502,9 +507,20 @@ void CM730::disconnect()
     log::verbose("CM730::disconnect") << "Disconnecting from CM730";
 
     // Set eye/panel LEDs to indicate disconnection
-    writeWord(CM730::ID_CM, CM730::P_LED_HEAD_L, CM730::color2Value(0, 255, 0), nullptr);
-    writeWord(CM730::ID_CM, CM730::P_LED_EYE_L,  CM730::color2Value(0,   0, 0), nullptr);
-    writeByte(CM730::ID_CM, CM730::P_LED_PANEL,  0, nullptr);
+    MX28Alarm alarm1;
+    MX28Alarm alarm2;
+    MX28Alarm alarm3;
+    writeWord(CM730::ID_CM, CM730::P_LED_HEAD_L, CM730::color2Value(0, 255, 0), &alarm1);
+    writeWord(CM730::ID_CM, CM730::P_LED_EYE_L,  CM730::color2Value(0,   0, 0), &alarm2);
+    writeByte(CM730::ID_CM, CM730::P_LED_PANEL,  0, &alarm3);
+
+    MX28Alarm alarm = alarm1.getFlags() | alarm2.getFlags() | alarm3.getFlags();
+
+    if (alarm.hasError())
+    {
+      log::error("CM730::disconnect") << "Error setting eye/head/panel LED colours: " << alarm;
+      return false;
+    }
 
     powerEnable(false);
 
