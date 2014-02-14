@@ -20,10 +20,10 @@ namespace bold
     virtual bool setBaud(unsigned baud) = 0;
 
     /// Closes CM730 port
-    virtual void closePort() = 0;
+    virtual bool closePort() = 0;
 
     /// Discards data received but not read
-    virtual void clearPort() = 0;
+    virtual bool clearPort() = 0;
 
     virtual bool isPortOpen() const = 0;
 

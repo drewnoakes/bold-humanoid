@@ -23,8 +23,8 @@ namespace bold
 
     bool openPort() override;
     bool setBaud(unsigned baud) override;
-    void closePort() override;
-    void clearPort() override;
+    bool closePort() override;
+    bool clearPort() override;
     bool isPortOpen() const override;
     int writePort(uchar const* packet, std::size_t numPacket) override;
     int readPort(uchar* packet, std::size_t numPacket) override;

@@ -112,16 +112,20 @@ bool CM730Linux::setBaud(unsigned baud)
   return true;
 }
 
-void CM730Linux::closePort()
+bool CM730Linux::closePort()
 {
   if (d_socket != -1)
-    close(d_socket);
+  {
+    if (close(d_socket) != 0)
+      return false;
+  }
   d_socket = -1;
+  return true;
 }
 
-void CM730Linux::clearPort()
+bool CM730Linux::clearPort()
 {
-  tcflush(d_socket, TCIFLUSH);
+  return tcflush(d_socket, TCIFLUSH) == 0;
 }
 
 bool CM730Linux::isPortOpen() const
@@ -132,6 +136,7 @@ bool CM730Linux::isPortOpen() const
 int CM730Linux::writePort(unsigned char const* packet, size_t byteCount)
 {
   int i = write(d_socket, packet, byteCount);
+  // errors are negative, which we don't want in the byte count
   if (i > 0)
     d_txByteCount += i;
   return i;
@@ -140,6 +145,7 @@ int CM730Linux::writePort(unsigned char const* packet, size_t byteCount)
 int CM730Linux::readPort(unsigned char* packet, size_t byteCount)
 {
   int i = read(d_socket, packet, byteCount);
+  // errors are negative, which we don't want in the byte count
   if (i > 0)
     d_rxByteCount += i;
   return i;
