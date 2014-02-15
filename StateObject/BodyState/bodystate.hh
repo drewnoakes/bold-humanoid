@@ -36,6 +36,8 @@ namespace bold
    *
    * All body parts know their transform, which contains the translation and
    * rotation of the part's coordinate frame, in the frame of the torso.
+   *
+   * For more detail on the naming and use of transforms, see EigenTests.hh.
    */
   class BodyState : public StateObject
   {
