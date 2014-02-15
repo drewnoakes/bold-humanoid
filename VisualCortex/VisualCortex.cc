@@ -75,6 +75,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_minBallArea                   = Config::getSetting<int>("vision.min-ball-area");
   d_acceptedBallMeasuredSizeRatio = Config::getSetting<Range<double>>("vision.accepted-ball-measured-size-ratio");
+  d_acceptedGoalMeasuredWidthRatio = Config::getSetting<Range<double>>("vision.accepted-goal-measured-width-ratio");
   d_minGoalDimensionPixels        = Config::getSetting<int>("vision.min-goal-dimension-pixels");
   d_maxGoalFieldEdgeDistPixels    = Config::getSetting<int>("vision.max-goal-field-edge-distance-px");
 

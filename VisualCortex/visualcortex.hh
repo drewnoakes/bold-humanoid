@@ -126,6 +126,7 @@ namespace bold
 
   private:
     bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d* pos);
+    bool canBlobBeGoal(Blob const& goalBlob, Eigen::Vector2d* pos);
 
     template<typename T>
     std::shared_ptr<T> getHandler() { return meta::get<std::shared_ptr<T>>(d_imagePassHandlers); }
@@ -171,6 +172,7 @@ namespace bold
     Setting<Range<double>>* d_acceptedBallMeasuredSizeRatio;
     Setting<int>* d_minGoalDimensionPixels;
     Setting<int>* d_maxGoalFieldEdgeDistPixels;
+    Setting<Range<double>>* d_acceptedGoalMeasuredWidthRatio;
 
     bool d_recordNextFrame;
     Setting<bool>* d_isRecordingFrames;

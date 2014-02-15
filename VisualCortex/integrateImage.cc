@@ -164,13 +164,10 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
           continue;
       }
 
-      Run const& topRun = *goalBlob.runs.begin();
-
-      // Take center of topmost run (the first)
-      Vector2d pos(
-        (topRun.endX + topRun.startX) / 2.0f,
-        topRun.y
-      );
+      // Discard blobs that would be too wide/narrow for the goal we expect at that position of the frame
+      Vector2d pos;
+      if (!canBlobBeGoal(goalBlob, &pos))
+        continue;
 
       goalPositions.push_back(pos);
       acceptedGoalBlobs.push_back(goalBlob);
