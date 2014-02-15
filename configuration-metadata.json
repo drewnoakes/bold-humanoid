@@ -66,7 +66,7 @@
       "vertical-degrees":   { "type": "double", "readonly": true, "default": 46.0 },
       "horizontal-degrees": { "type": "double", "readonly": true, "default": 58.0 }
     },
-    "vertical-angle-degrees": {"type": "double", "default": -39 }
+    "vertical-angle-degrees": {"type": "double", "default": -40 }
   },
   "vision": {
     "min-ball-area":                   { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
