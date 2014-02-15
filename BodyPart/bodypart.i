@@ -19,9 +19,9 @@ namespace bold
   struct Limb : public BodyPart
   {
     unsigned id;
-    double weight;
-    double relativeWeight;
-    Eigen::Vector3d size;
+//    double weight;
+//    double relativeWeight;
+//    Eigen::Vector3d size;
 
     std::vector<std::shared_ptr<Joint> > joints;
   };
@@ -32,7 +32,7 @@ namespace bold
 
     JointId id;
     double angleRads;
-    std::shared_ptr<BodyPart> bodyPart;
+    std::shared_ptr<BodyPart> childPart;
     std::pair<Eigen::Vector3d, Eigen::Vector3d> anchors;
 
     Eigen::Vector3d getAxisVec() const;
