@@ -1,92 +1,281 @@
 #include "gtest/gtest.h"
 
-#include "../StateObject/BodyState/bodystate.hh"
+#include "helpers.hh"
+
 #include "../JointId/jointid.hh"
+#include "../Math/math.hh"
+#include "../StateObject/BodyState/bodystate.hh"
 
 using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-TEST (BodyStateTests, posture)
+// See DARwIn-OP_Kinematics.pdf
+
+const double footSide = 0.074/2;
+const double footForward = -0.005;
+const double legLength = 0.093 + 0.093 + 0.0335;
+const double footDownward = 0.1222 + legLength;
+
+/// Length of the upper arm in x/y dimensions, when at zero
+/// position (pointing outwards at 45 degrees.)
+const double diagArmLen = cos(M_PI/4) * 0.060;
+
+TEST (BodyStateTests, posture_zeroed)
 {
+  // All hinges at an angle of zero
+
   double angles[22] = {0,};
-  std::vector<int> positionValueDiffs(21, 0);
-
-  //
-  // Create a body with all hinges at an angle of zero
-  //
-
-  auto am1 = BodyState(angles, positionValueDiffs, 1);
-  shared_ptr<Limb const> leftFoot = am1.getLimb("lFoot");
-  shared_ptr<Limb const> rightFoot = am1.getLimb("rFoot");
-
-  // See DARwIn-OP_Kinematics.pdf
-
-  double footSide = 0.074/2;
-  double footForward = -0.005;
-  double footDownward = 0.1222 + 0.093 + 0.093 + 0.0335;
+  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  auto leftFoot = body.getLimb("lFoot");
+  auto rightFoot = body.getLimb("rFoot");
 
   EXPECT_EQ( Vector3d(-footSide, footForward, -footDownward),
              Vector3d(leftFoot->transform.translation()) );
   EXPECT_TRUE( (leftFoot->transform.rotation() - Matrix3d::Identity()).isZero() ) << "Has no rotation";
 
+  EXPECT_EQ ( Vector3d(-footSide, footForward, -footDownward),
+              leftFoot->transform * Vector3d(0,0,0) );
+
+  EXPECT_EQ ( Vector3d(footSide, -footForward, footDownward),
+              leftFoot->transform.inverse() * Vector3d(0,0,0) );
+
   EXPECT_EQ( Vector3d(footSide, footForward, -footDownward),
              Vector3d(rightFoot->transform.translation()) );
   EXPECT_TRUE( (rightFoot->transform.rotation() - Matrix3d::Identity()).isZero() ) << "Has no rotation";
 
-  //
-  // Roll the legs out 90 degrees and check again
-  //
+  // Neck
 
-  angles[(int)JointId::L_HIP_ROLL] = M_PI/2;
-  angles[(int)JointId::R_HIP_ROLL] = M_PI/2;
+  EXPECT_EQ( Vector3d( 0, 0, 0.0505),
+             body.getJoint(JointId::HEAD_PAN)->getPosition() );
 
-  auto am2 = BodyState(angles, positionValueDiffs, 2);
-  leftFoot = am2.getLimb("lFoot");
-  rightFoot = am2.getLimb("rFoot");
+  EXPECT_EQ( Vector3d( 0, 0, 0.0505),
+             body.getJoint(JointId::HEAD_TILT)->getPosition() );
 
-  EXPECT_EQ( Vector3d(-0.074/2 - 0.093 - 0.093 - 0.0335, footForward, -0.1222),
-             Vector3d(leftFoot->transform.translation()) );
-  EXPECT_EQ( AngleAxisd(M_PI/2, Vector3d::UnitY()).matrix(),
-             leftFoot->transform.rotation().matrix() );
+  // Left arm
 
-  EXPECT_EQ( Vector3d(0.074/2 + 0.093 + 0.093 + 0.0335, footForward, -0.1222),
-             Vector3d(rightFoot->transform.translation()) );
-  EXPECT_EQ( AngleAxisd(-M_PI/2, Vector3d::UnitY()).matrix(),
-             rightFoot->transform.rotation().matrix() );
+  EXPECT_EQ( Vector3d(-0.082, 0, 0),
+             body.getJoint(JointId::L_SHOULDER_PITCH)->getPosition() );
+
+  EXPECT_EQ( Vector3d(-0.082, 0, -0.016),
+             body.getJoint(JointId::L_SHOULDER_ROLL)->getPosition() );
+
+  EXPECT_EQ( Vector3d(-0.082 - diagArmLen, 0.016, -0.016 - diagArmLen),
+             body.getJoint(JointId::L_ELBOW)->getPosition() );
+
+  // Right arm
+
+  EXPECT_EQ( Vector3d(0.082, 0, 0),
+             body.getJoint(JointId::R_SHOULDER_PITCH)->getPosition() );
+
+  EXPECT_EQ( Vector3d(0.082, 0, -0.016),
+             body.getJoint(JointId::R_SHOULDER_ROLL)->getPosition() );
+
+  EXPECT_EQ( Vector3d(0.082 + diagArmLen, 0.016, -0.016 - diagArmLen),
+             body.getJoint(JointId::R_ELBOW)->getPosition() );
+
+  // Misc distances
+
+  EXPECT_EQ ( Vector3d(diagArmLen, 0.016, -diagArmLen),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::R_SHOULDER_ROLL),
+                body.getJoint(JointId::R_ELBOW)) );
+
+  EXPECT_EQ ( Vector3d(2*0.082 + 2*diagArmLen, 0, 0),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::L_ELBOW),
+                body.getJoint(JointId::R_ELBOW)) );
+
+  // Verify all three hip joints are coincident
+
+  EXPECT_EQ ( Vector3d(0, 0, 0),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::HEAD_TILT),
+                body.getJoint(JointId::HEAD_PAN)) ) << "Coincident joints";
+
+  EXPECT_EQ ( Vector3d(0, 0, 0),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::L_HIP_PITCH),
+                body.getJoint(JointId::L_HIP_ROLL)) ) << "Coincident joints";
+
+  EXPECT_EQ ( Vector3d(0, 0, 0),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::L_HIP_YAW),
+                body.getJoint(JointId::L_HIP_ROLL)) ) << "Coincident joints";
+
+  EXPECT_EQ ( Vector3d(-diagArmLen, 0.016, -diagArmLen),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::L_SHOULDER_ROLL),
+                body.getJoint(JointId::L_ELBOW)) );
+
+  EXPECT_TRUE(
+    VectorsEqual(
+      Vector3d( diagArmLen + 0.082 + 0.074/2,
+               -0.016 - 0.005,
+                diagArmLen + 0.016 - 0.1222 - 0.093 - 0.093),
+      BodyState::distanceBetween(
+        body.getJoint(JointId::L_ELBOW),
+        body.getJoint(JointId::R_ANKLE_ROLL))) );
 }
 
-TEST (BodyStateTests, camera)
+TEST (BodyStateTests, posture_legsToSides)
+{
+  // Roll the legs out 90 degrees
+
+  double angles[22] = {0,};
+  angles[(int)JointId::L_HIP_ROLL] = -M_PI/2;
+  angles[(int)JointId::R_HIP_ROLL] =  M_PI/2;
+
+  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  auto leftFoot = body.getLimb("lFoot");
+  auto rightFoot = body.getLimb("rFoot");
+
+  EXPECT_EQ( Vector3d(-0.074/2 - legLength, footForward, -0.1222), Vector3d(leftFoot ->transform.translation()) );
+  EXPECT_EQ( Vector3d( 0.074/2 + legLength, footForward, -0.1222), Vector3d(rightFoot->transform.translation()) );
+
+  EXPECT_EQ( AngleAxisd( M_PI/2, Vector3d::UnitY()).matrix(), leftFoot ->transform.rotation().matrix() );
+  EXPECT_EQ( AngleAxisd(-M_PI/2, Vector3d::UnitY()).matrix(), rightFoot->transform.rotation().matrix() );
+
+  EXPECT_EQ ( Vector3d(4*0.093 + 0.074, 0, 0),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::L_ANKLE_PITCH),
+                body.getJoint(JointId::R_ANKLE_PITCH)) );
+}
+
+TEST (BodyStateTests, posture_legsForwards)
+{
+  // Pitch the legs forwards 90 degrees
+
+  double angles[22] = {0,};
+  angles[(int)JointId::L_HIP_PITCH] =  M_PI/2;
+  angles[(int)JointId::R_HIP_PITCH] = -M_PI/2;
+
+  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  auto leftFoot = body.getLimb("lFoot");
+  auto rightFoot = body.getLimb("rFoot");
+
+  EXPECT_EQ( Vector3d(-0.074/2, footForward + legLength, -0.1222), Vector3d(leftFoot ->transform.translation()) );
+  EXPECT_EQ( Vector3d( 0.074/2, footForward + legLength, -0.1222), Vector3d(rightFoot->transform.translation()) );
+
+  EXPECT_EQ( AngleAxisd(M_PI/2, Vector3d::UnitX()).matrix(), leftFoot ->transform.rotation().matrix() );
+  EXPECT_EQ( AngleAxisd(M_PI/2, Vector3d::UnitX()).matrix(), rightFoot->transform.rotation().matrix() );
+
+  EXPECT_EQ ( Vector3d(0.074, 0, 0),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::L_ANKLE_PITCH),
+                body.getJoint(JointId::R_ANKLE_PITCH)) );
+}
+
+TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
+{
+  // Bend the knees back 90 degrees
+
+  double angles[22] = {0,};
+  angles[(int)JointId::L_KNEE] = -M_PI/2; // TODO VERIFY ANGLES
+  angles[(int)JointId::R_KNEE] =  M_PI/2;
+
+  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  auto leftFoot = body.getLimb("lFoot");
+  auto rightFoot = body.getLimb("rFoot");
+
+  EXPECT_EQ( Vector3d(-0.074/2, footForward, -0.1222 - 0.093), body.getJoint(JointId::L_KNEE)->getPosition() );
+  EXPECT_EQ( Vector3d( 0.074/2, footForward, -0.1222 - 0.093), body.getJoint(JointId::R_KNEE)->getPosition() );
+
+  EXPECT_EQ( Vector3d(-0.074/2, footForward - 0.093, -0.1222 - 0.093), body.getJoint(JointId::L_ANKLE_PITCH)->getPosition() );
+  EXPECT_EQ( Vector3d( 0.074/2, footForward - 0.093, -0.1222 - 0.093), body.getJoint(JointId::R_ANKLE_PITCH)->getPosition() );
+
+  EXPECT_EQ( Vector3d(-0.074/2, footForward - 0.093 - 0.0335, -0.1222 - 0.093), Vector3d(leftFoot ->transform.translation()) );
+  EXPECT_EQ( Vector3d( 0.074/2, footForward - 0.093 - 0.0335, -0.1222 - 0.093), Vector3d(rightFoot->transform.translation()) );
+
+  EXPECT_EQ( AngleAxisd(-M_PI/2, Vector3d::UnitX()).matrix(), leftFoot ->transform.rotation().matrix() );
+  EXPECT_EQ( AngleAxisd(-M_PI/2, Vector3d::UnitX()).matrix(), rightFoot->transform.rotation().matrix() );
+
+  EXPECT_EQ ( Vector3d(0.074, 0, 0),
+              BodyState::distanceBetween(
+                body.getJoint(JointId::L_ANKLE_PITCH),
+                body.getJoint(JointId::R_ANKLE_PITCH)) );
+}
+
+TEST (BodyStateTests, camera_zeroed)
 {
   double angles[22] = {0,};
-  std::vector<int> positionValueDiffs(21, 0);
+  angles[(uchar)JointId::CAMERA_TILT] = Math::degToRad(40);
 
-  Matrix3d expectedCameraRotation = AngleAxisd(M_PI/4, Vector3d::UnitY()).matrix();
+  auto body = BodyState(angles, std::vector<int>(21, 0), 0);
 
-  auto body = BodyState(angles, positionValueDiffs, 3);
+  Affine3d cameraTransform = body.getLimb("camera")->transform;
 
-//   Matrix3d actualCameraTorsoRotation = body.getLimb("camera")->transform.rotation().matrix();
+  Matrix3d expectedCameraRotation = AngleAxisd(Math::degToRad(40), Vector3d::UnitX()).matrix();
+  Matrix3d actualCameraRotation = cameraTransform.rotation().matrix();
 
-//   EXPECT_EQ(Vector3d(0, 0.0332, 0.0505 + 0.0344),
-//             Vector3d(body.getLimb("camera")->transform.translation()));
+  // These values describe the position of the camera in the head frame
+  const double newZ = 0.00501138;
+  const double newY = 0.0475446;
 
-//   EXPECT_EQ(expectedCameraRotation, actualCameraTorsoRotation);
+  EXPECT_TRUE( VectorsEqual(Vector3d(0, newY, 0.0505 + newZ),
+                            Vector3d(cameraTransform.translation())) );
 
-  // From DARwIn-OP_Kinematics.pdf
-  double cameraHeight = (33.5 + 93 + 93 + 122.2 + 50.5 + 34.4) / 1000.0;
+  EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualCameraRotation) );
 
-  EXPECT_EQ(0.4266, cameraHeight);
+  const double cameraHeight = 0.0335 + 0.093 + 0.093 + 0.1222 + 0.0505 + newZ;
 
-//   EXPECT_EQ(Vector3d(0, 0.0332, cameraHeight),
-//             Vector3d(body.getCameraAgentTransform().translation()));
+  EXPECT_TRUE( VectorsEqual(Vector3d(0, newY, cameraHeight),
+                            Vector3d(body.getCameraAgentTransform().translation())) );
 
   Matrix3d actualCameraAgentRotation = body.getCameraAgentTransform().rotation().matrix();
 
-  cout << "Expected:" << endl;
-  cout << expectedCameraRotation << endl;
+  EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualCameraAgentRotation) );
+}
 
-  cout << "Actual:" << endl;
-  cout << actualCameraAgentRotation << endl;
+TEST (BodyStateTests, camera_headTiltedBack)
+{
+  double angles[22] = {0,};
+  // When the camera is tilted up 40 degrees, the image plane is parallel with the torso's z-axis.
+  angles[(uchar)JointId::HEAD_TILT] = Math::degToRad(40);
+  angles[(uchar)JointId::CAMERA_TILT] = -Math::degToRad(40);
 
-//   EXPECT_EQ(expectedCameraRotation, actualCameraAgentRotation);
+  auto body = BodyState(angles, std::vector<int>(21, 0), 0);
+
+  Affine3d cameraTransform = body.getLimb("camera")->transform;
+
+  Matrix3d expectedCameraRotation = AngleAxisd(0, Vector3d::UnitX()).matrix();
+  Matrix3d actualCameraRotation = cameraTransform.rotation().matrix();
+
+  EXPECT_TRUE( VectorsEqual(Vector3d(0, 0.0332, 0.0505 + 0.0344),
+                            Vector3d(cameraTransform.translation())) );
+
+  EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualCameraRotation) );
+
+  const double cameraHeight = (33.5 + 93 + 93 + 122.2 + 50.5 + 34.4) / 1000.0;
+
+  EXPECT_EQ(0.4266, cameraHeight);
+
+  EXPECT_TRUE( VectorsEqual(Vector3d(0, 0.0332, cameraHeight),
+                            Vector3d(body.getCameraAgentTransform().translation())) );
+
+  Matrix3d actualCameraAgentRotation = body.getCameraAgentTransform().rotation().matrix();
+
+  EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualCameraAgentRotation) );
+}
+
+TEST (BodyStateTests, cameraNeckJointTransform)
+{
+  // TODO
+}
+
+TEST (BodyStateTests, torsoHeight)
+{
+  double angles[22] = {0,};
+  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+
+  EXPECT_EQ ( (33.5 + 93 + 93 + 122.2) / 1000.0, body.getTorsoHeight() );
+}
+
+TEST (JointTest, initialState)
+{
+  Joint joint(JointId::L_KNEE, "test-joint");
+
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.axis) );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.anchors.first) );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.anchors.second) );
 }
