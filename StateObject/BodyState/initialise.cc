@@ -254,20 +254,19 @@ void BodyState::initialise(double angles[22])
   //
   // Other bits
   //
-  d_torsoHeight = std::max(
-    lfoot->transform.inverse().translation().z(),
-    rfoot->transform.inverse().translation().z()
-  );
 
-  // TODO determine stance foot
-  Affine3d const& footTorsoTransform = rfoot->transform;
+  double zl = lfoot->transform.translation().z();
+  double zr = rfoot->transform.translation().z();
+  auto lowestFoot = zl < zr ? lfoot : rfoot;
 
-  Affine3d torsoAgentRotation(footTorsoTransform.inverse().rotation());
+  d_torsoHeight = -std::min(zl, zr);
 
+  // TODO this rotation includes any yaw from the leg which isn't wanted here
+  Affine3d torsoAgentRotation(lowestFoot->transform.inverse().rotation());
   Affine3d const& cameraTorsoTransform = camera->transform;
 
   // This is a special transform that gives the position of the camera in
   // the agent's frame, taking any rotation of the torso into account
   // considering the orientation of the foot (which is assumed to be flat.)
-  d_cameraAgentTransform = Translation3d(0,0,-footTorsoTransform.translation().z()) * torsoAgentRotation * cameraTorsoTransform;
+  d_cameraAgentTransform = Translation3d(0, 0, d_torsoHeight) * torsoAgentRotation * cameraTorsoTransform;
 }
