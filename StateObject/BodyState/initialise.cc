@@ -275,4 +275,7 @@ void BodyState::initialise(double angles[23])
   // the agent's frame, taking any rotation of the torso into account
   // considering the orientation of the foot (which is assumed to be flat.)
   d_cameraAgentTransform = Translation3d(0, 0, d_torsoHeight) * torsoAgentRotation * cameraTorsoTransform;
+
+  // We use the inverse a lot, so calculate it once here.
+  d_agentCameraTransform = d_cameraAgentTransform.inverse();
 }

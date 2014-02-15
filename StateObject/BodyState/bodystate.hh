@@ -68,6 +68,7 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     Eigen::Affine3d const& getCameraAgentTransform() const { return d_cameraAgentTransform; }
+    Eigen::Affine3d const& getAgentCameraTransform() const { return d_agentCameraTransform; }
 
     double getTorsoHeight() const { return d_torsoHeight; }
 
@@ -85,8 +86,8 @@ namespace bold
     std::shared_ptr<Joint> d_jointById[23];
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
 
-    /// Transform of camera, including rotation of torso in agent/world frames
     Eigen::Affine3d d_cameraAgentTransform;
+    Eigen::Affine3d d_agentCameraTransform;
 
     ulong d_motionCycleNumber;
 
