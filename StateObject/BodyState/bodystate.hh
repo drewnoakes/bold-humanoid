@@ -80,8 +80,7 @@ namespace bold
 
     double d_torsoHeight;
     std::shared_ptr<Limb> d_torso;
-    // TODO replace with a vector<sp<Joint>> for performance of lookup
-    std::map<uchar, std::shared_ptr<Joint>> d_jointById;
+    std::shared_ptr<Joint> d_jointById[21];
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
 
     /// Transform of camera, including rotation of torso in agent/world frames
@@ -109,20 +108,12 @@ namespace bold
   inline std::shared_ptr<Joint const> BodyState::getJoint(JointId jointId) const
   {
     assert(jointId >= JointId::MIN && jointId <= JointId::MAX);
-    
-    // NOTE cannot use '[]' on a const map
-    auto const& i = d_jointById.find((uchar)jointId);
-    if (i == d_jointById.end())
-    {
-      log::error("BodyState::getJoint") << "Invalid JointId: " << (int)jointId;
-      throw std::runtime_error("Invalid JointId");
-    }
-    return i->second;
+    return d_jointById[(uchar)jointId];
   }
 
   inline void BodyState::visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const
   {
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-      action(getJoint((JointId)jointId));
+      action(d_jointById[(uchar)jointId]);
   }
 }

@@ -19,8 +19,8 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
     {
       for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
       {
-        auto it = d_jointById.find(j);
-        writer.Double(it->second->angleRads, "%.3f");
+        auto const& it = d_jointById[j];
+        writer.Double(it->angleRads, "%.3f");
       }
     }
     writer.EndArray();
