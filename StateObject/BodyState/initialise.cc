@@ -26,14 +26,22 @@ void BodyState::initialise(double angles[22])
   auto head = allocate_aligned_shared<Limb>("head");
   neckHeadJoint->childPart = head;
 
+  // Camera tilt is not an MX28, but rather an adjustable 'hinge' for the
+  // camera's orientation within the head, and may be used for calibration.
+  // The tilt angle is set via the "camera.vertical-angle-degrees" setting
+  // TODO add another setting for camera pan calibration
   auto headCameraJoint = allocate_aligned_shared<Joint>(JointId::CAMERA_TILT, "head-camera");
-  // Set angle offset of head here. If this needs to be set for more
-  // stuff, probably best to add another joint before this one and set
-  // it there
   headCameraJoint->axis = Vector3d(1, 0, 0);
-  //headCameraJoint->angleRads = -0.7854;
-  headCameraJoint->anchors.first = Vector3d(0, 0, 0);
-  headCameraJoint->anchors.second = Vector3d(0, -0.0332, -0.0344);
+  // Camera position is defined in PDF docs when head is tilted up 40 degrees.
+  // We need to rotate this around to get the position in the actual frame of
+  // the head.
+  const double distFromNext = sqrt(pow(0.0332, 2.0) + pow(0.0344, 2.0)); // 0.0478079
+  const double theta = atan2(0.0344, 0.0332); // Z==y,Y==x               // 0.803148
+  const double adjustedTheta = theta - Math::degToRad(40);               // 0.105016
+  const double newZ = distFromNext * sin(adjustedTheta);                 // 0.00501138
+  const double newY = distFromNext * cos(adjustedTheta);                 // 0.0475446
+  headCameraJoint->anchors.first = Vector3d(0, newY, newZ);
+  headCameraJoint->anchors.second = Vector3d(0, 0, 0);
   head->joints.push_back(headCameraJoint);
 
   auto camera = allocate_aligned_shared<Limb>("camera");
