@@ -16,7 +16,7 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
   Vector2d basePos = blob.mean;
   basePos.y() = blob.ul.y();
 
-  Vector2d sidePos = basePos + Vector2d(maxDimension/2, 0);
+  Vector2d sidePos = basePos + Vector2d(maxDimension/2.0, 0);
 
   auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(basePos, cameraAgentTransform);
   auto sidePointAgentSpace = d_spatialiser->findGroundPointForPixel(sidePos, cameraAgentTransform);
