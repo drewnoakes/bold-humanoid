@@ -68,8 +68,10 @@
   },
   "vision": {
     "min-ball-area": 1,
+    "accepted-ball-measured-size-ratio": [0.8, 1.5],
     "min-goal-dimension-pixels": 3,
     "max-goal-field-edge-distance-px": 30,
+    "accepted-goal-measured-width-ratio": [0.6, 1.4],
     "enable-ball-blob-merging": false,
     "pixel-labels": {
       "goal": { "hue": [30, 60], "sat": [158, 236], "val": [124, 222] },
@@ -78,6 +80,7 @@
       "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
     },
     "ignore-above-horizon": true,
+    "ignore-outside-field": true,
     "image-granularity": 4,
     "max-granularity": 4,
     "line-detection": {
@@ -154,7 +157,8 @@
       }
     },
     "home-pan":  0.0,
-    "home-tilt": 20.0
+    "home-tilt": 20.0,
+    "move-fine": false
   },
   "walk-module": {
     "x-offset": -10.0,
@@ -197,6 +201,11 @@
   "orientation-tracker": {
     "technique": 0
   },
+  "fall-detector": {
+    "window-size": 30,
+    "forward-limit-value": 634,
+    "backward-limit-value": 444
+  },
   "options": {
     "announce-fsm-states": false,
     "announce-rate-wpm": 200,
@@ -220,14 +229,14 @@
       "horiz-duration": 2.3,
       "vert-duration": 0.2
     },
+    "look-at-feet": {
+      "head-pan-degs": 0,
+      "head-tilt-degs": -67.5
+    },
     "look-at-ball": {
       "gain": 0.85,
       "offset-min": 2.0,
       "offset-max": 20.0
-    },
-    "look-at-feet": {
-      "head-pan-degs": 0,
-      "head-tilt-degs": -67.5
     }
   },
   "health-and-safety": {
