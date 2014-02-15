@@ -121,15 +121,16 @@ TEST (SpatialiserTests, findPixelForAgentPointLooking45DegreesDown)
 
   // Look 45 deg down at the ground from one unit above the origin
   Affine3d cameraAgentTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/4, Vector3d::UnitX());
+  Affine3d agentCameraTransform = cameraAgentTransform.inverse();
 
   // Find the pixel for the point one metre along the y-axis from the origin.
   // This should be exactly in the middle of the camera, and therefore the image.
-  Maybe<Vector2d> pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,1,0), cameraAgentTransform);
+  Maybe<Vector2d> pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,1,0), agentCameraTransform);
 
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 5.5), *pixel) );
 
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0, 0, 0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0, 0, 0), agentCameraTransform);
 
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 0.5), *pixel) );
@@ -142,12 +143,13 @@ TEST (SpatialiserTests, findPixelForAgentPointLookingStraightDown)
 
   // Look straight down down at the ground from one unit above the origin
   Affine3d cameraAgentTransform = Translation3d(0,0,1) * AngleAxisd(-M_PI/2, Vector3d::UnitX());
+  Affine3d agentCameraTransform = cameraAgentTransform.inverse();
 
   Maybe<Vector2d> pixel;
 
   // Find the pixel for the origin.
   // This should be on the camera's y-axis, and therefore the middle of the image.
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,0,0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,0,0), agentCameraTransform);
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 5.5), *pixel) );
 
@@ -161,17 +163,17 @@ TEST (SpatialiserTests, findPixelForAgentPointLookingStraightDown)
   ASSERT_NEAR( 1, extremeX, 0.0001 );
 
   // Find the pixel at the RIGHT of the camera's view
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,0), agentCameraTransform);
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(0.5, imageHeight/2.0), *pixel) );
 
   // Find the pixel at the LEFT of the camera's view
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(-extremeX,0,0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(-extremeX,0,0), agentCameraTransform);
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(imageWidth-0.5, imageHeight/2.0), *pixel) );
 
   // Find the pixel halfway from the origin to the RIGHT of the camera's view
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX/2.0,0,0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX/2.0,0,0), agentCameraTransform);
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d((0.5+5.5)/2.0, imageHeight/2.0), *pixel) );
 
@@ -180,31 +182,31 @@ TEST (SpatialiserTests, findPixelForAgentPointLookingStraightDown)
   ASSERT_NEAR( 0.577350269, extremeY, 0.0001 );
 
   // Find the pixel at the TOP of the camera's view
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,-extremeY,0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,-extremeY,0), agentCameraTransform);
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 0.5), *pixel) );
 
   // Find the pixel at the BOTTOM of the camera's view
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,0), agentCameraTransform);
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, imageHeight - 0.5), *pixel) );
 
   // Test some locations which are outside the viewing frustum, but still mappable to the image plane
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX*2,0,0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(extremeX*2,0,0), agentCameraTransform);
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(-4.5, 5.5), *pixel) );
 
-  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY*2,0), cameraAgentTransform);
+  pixel = spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY*2,0), agentCameraTransform);
   ASSERT_TRUE ( pixel.hasValue() );
   EXPECT_TRUE ( VectorsEqual(Vector2d(5.5, 15.5), *pixel) );
 
   // Test some locations which are undefined in the camera's field of view
-  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,1), cameraAgentTransform) );
-  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1), cameraAgentTransform) );
-  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1), cameraAgentTransform) );
-  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1.001), cameraAgentTransform) );
-  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1.001), cameraAgentTransform) );
-  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,2), cameraAgentTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,1), agentCameraTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1), agentCameraTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1), agentCameraTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,extremeY,1.001), agentCameraTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(extremeX,0,1.001), agentCameraTransform) );
+  EXPECT_EMPTY ( spatialiser.findPixelForAgentPoint(Vector3d(0,0,2), agentCameraTransform) );
 }
 
 TEST (SpatialiserTests, findHorizonForColumnSquareCam)

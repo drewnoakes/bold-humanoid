@@ -20,11 +20,10 @@ Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2d const& pixel, Affi
 
 Maybe<Vector2d> Spatialiser::findPixelForAgentPoint(Vector3d const& agentPoint) const
 {
-  Affine3d const& cameraAgentTransform = AgentState::get<BodyState>()->getCameraAgentTransform();
-  return findPixelForAgentPoint(agentPoint, cameraAgentTransform);
+  return findPixelForAgentPoint(agentPoint, AgentState::get<BodyState>()->getAgentCameraTransform());
 }
 
-Maybe<Vector2d> Spatialiser::findPixelForAgentPoint(Vector3d const& agentPoint, Affine3d const& cameraAgentTransform) const
+Maybe<Vector2d> Spatialiser::findPixelForAgentPoint(Vector3d const& agentPoint, Affine3d const& agentCameraTransform) const
 {
-  return d_cameraModel->pixelForDirection(cameraAgentTransform.inverse() * agentPoint);
+  return d_cameraModel->pixelForDirection(agentCameraTransform * agentPoint);
 }
