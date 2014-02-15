@@ -25,7 +25,7 @@ TEST (BodyStateTests, posture_zeroed)
 {
   // All hinges at an angle of zero
 
-  double angles[22] = {0,};
+  double angles[23] = {0,};
   auto body = BodyState(angles, std::vector<int>(21, 0), 1);
   auto leftFoot = body.getLimb("lFoot");
   auto rightFoot = body.getLimb("rFoot");
@@ -122,7 +122,7 @@ TEST (BodyStateTests, posture_legsToSides)
 {
   // Roll the legs out 90 degrees
 
-  double angles[22] = {0,};
+  double angles[23] = {0,};
   angles[(int)JointId::L_HIP_ROLL] = -M_PI/2;
   angles[(int)JointId::R_HIP_ROLL] =  M_PI/2;
 
@@ -146,7 +146,7 @@ TEST (BodyStateTests, posture_legsForwards)
 {
   // Pitch the legs forwards 90 degrees
 
-  double angles[22] = {0,};
+  double angles[23] = {0,};
   angles[(int)JointId::L_HIP_PITCH] =  M_PI/2;
   angles[(int)JointId::R_HIP_PITCH] = -M_PI/2;
 
@@ -170,7 +170,7 @@ TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
 {
   // Bend the knees back 90 degrees
 
-  double angles[22] = {0,};
+  double angles[23] = {0,};
   angles[(int)JointId::L_KNEE] = -M_PI/2; // TODO VERIFY ANGLES
   angles[(int)JointId::R_KNEE] =  M_PI/2;
 
@@ -198,7 +198,7 @@ TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
 
 TEST (BodyStateTests, camera_zeroed)
 {
-  double angles[22] = {0,};
+  double angles[23] = {0,};
   angles[(uchar)JointId::CAMERA_CALIB_TILT] = -Math::degToRad(40);
 
   auto body = BodyState(angles, std::vector<int>(21, 0), 0);
@@ -229,10 +229,10 @@ TEST (BodyStateTests, camera_zeroed)
 
 TEST (BodyStateTests, camera_headTiltedBack)
 {
-  double angles[22] = {0,};
+  double angles[23] = {0,};
   // When the camera is tilted up 40 degrees, the image plane is parallel with the torso's z-axis.
   angles[(uchar)JointId::HEAD_TILT] = Math::degToRad(40);
-  angles[(uchar)JointId::CAMERA_TILT] = -Math::degToRad(40);
+  angles[(uchar)JointId::CAMERA_CALIB_TILT] = -Math::degToRad(40);
 
   auto body = BodyState(angles, std::vector<int>(21, 0), 0);
 
@@ -265,7 +265,7 @@ TEST (BodyStateTests, cameraNeckJointTransform)
 
 TEST (BodyStateTests, torsoHeight)
 {
-  double angles[22] = {0,};
+  double angles[23] = {0,};
   auto body = BodyState(angles, std::vector<int>(21, 0), 1);
 
   EXPECT_EQ ( (33.5 + 93 + 93 + 122.2) / 1000.0, body.getTorsoHeight() );

@@ -87,6 +87,7 @@ define(
             this.closables.add(ControlBuilder.buildAll('round-table.image-features', element.querySelector('div.image-features')));
 
             this.closables.add(ControlBuilder.buildAll('camera.settings', element.querySelector('div.camera-settings')));
+            this.closables.add(ControlBuilder.buildAll('camera.calibration', element.querySelector('div.camera-calibration')));
 
             this.closables.add(ControlBuilder.buildAll('round-table.image-colours', element.querySelector('div.image-colours')));
 

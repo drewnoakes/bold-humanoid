@@ -31,7 +31,8 @@ namespace bold
     HEAD_PAN         = 19,
     HEAD_TILT        = 20,
 
-    CAMERA_TILT      = 21,
+    CAMERA_CALIB_TILT = 21,
+    CAMERA_CALIB_PAN  = 22,
 
     // Some convenience pointers
     ARMS_START = R_SHOULDER_PITCH,

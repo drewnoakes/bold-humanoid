@@ -1,6 +1,6 @@
 #include "bodystate.ih"
 
-void BodyState::initialise(double angles[22])
+void BodyState::initialise(double angles[23])
 {
   d_torso = allocate_aligned_shared<Limb>("torso");
 
@@ -28,10 +28,9 @@ void BodyState::initialise(double angles[22])
 
   // Camera tilt is not an MX28, but rather an adjustable 'hinge' for the
   // camera's orientation within the head, and may be used for calibration.
-  // The tilt angle is set via the "camera.vertical-angle-degrees" setting
-  // TODO add another setting for camera pan calibration
-  auto headCameraJoint = allocate_aligned_shared<Joint>(JointId::CAMERA_TILT, "head-camera");
-  headCameraJoint->axis = Vector3d(1, 0, 0);
+  // The tilt angle is set via the "camera.calibration.tilt-angle-degrees" setting
+  auto headCameraTiltJoint = allocate_aligned_shared<Joint>(JointId::CAMERA_CALIB_TILT, "head-camera-tilt");
+  headCameraTiltJoint->axis = Vector3d(1, 0, 0);
   // Camera position is defined in PDF docs when head is tilted up 40 degrees.
   // We need to rotate this around to get the position in the actual frame of
   // the head.
@@ -40,12 +39,19 @@ void BodyState::initialise(double angles[22])
   const double adjustedTheta = theta - Math::degToRad(40);               // 0.105016
   const double newZ = distFromNext * sin(adjustedTheta);                 // 0.00501138
   const double newY = distFromNext * cos(adjustedTheta);                 // 0.0475446
-  headCameraJoint->anchors.first = Vector3d(0, newY, newZ);
-  headCameraJoint->anchors.second = Vector3d(0, 0, 0);
-  head->joints.push_back(headCameraJoint);
+  headCameraTiltJoint->anchors.first = Vector3d(0, newY, newZ);
+  headCameraTiltJoint->anchors.second = Vector3d(0, 0, 0);
+  head->joints.push_back(headCameraTiltJoint);
+
+  // The pan angle is set via the "camera.calibration.pan-angle-degrees" setting
+  auto headCameraPanJoint = allocate_aligned_shared<Joint>(JointId::CAMERA_CALIB_PAN, "head-camera-pan");
+  headCameraPanJoint->axis = Vector3d(0, 0, 1);
+  headCameraPanJoint->anchors.first = Vector3d(0, 0, 0);
+  headCameraPanJoint->anchors.second = Vector3d(0, 0, 0);
+  headCameraTiltJoint->childPart = headCameraPanJoint;
 
   auto camera = allocate_aligned_shared<Limb>("camera");
-  headCameraJoint->childPart = camera;
+  headCameraPanJoint->childPart = camera;
 
   // LEFT ARM
 
