@@ -2,14 +2,10 @@
 
 int Spatialiser::findHorizonForColumn(int column)
 {
-  auto body = AgentState::get<BodyState>();
-
-  Affine3d const& cameraAgentTransform = body->getCameraAgentTransform();
-
-  return findHorizonForColumn(column, cameraAgentTransform);
+  return findHorizonForColumn(column, AgentState::get<BodyState>()->getAgentCameraTransform());
 }
 
-int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraAgentTransform)
+int Spatialiser::findHorizonForColumn(int column, Affine3d const& agentCameraTransform)
 {
   // Equation of horizon line:
   // http://mi.eng.cam.ac.uk/~cipolla/lectures/4F12/Examples/old/solutions2.pdf
@@ -38,7 +34,7 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraAgentTra
     0, 1, 0, 0,
     0, 0, 0, 1;
 
-  auto torsoToImage = t * cameraAgentTransform.inverse();
+  auto torsoToImage = t * agentCameraTransform;
 
   // Normal to ground plane
   Vector3d up = torsoToImage.matrix().col(2).head<3>();

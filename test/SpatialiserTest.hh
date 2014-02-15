@@ -214,43 +214,43 @@ TEST (SpatialiserTests, findHorizonForColumnSquareCam)
   Spatialiser spatialiser = createTestSpatialiser();
 
   // Look straight ahead
-  Affine3d cameraTorsoTransform(Matrix4d::Identity());
+  Affine3d agentCameraTransform(Matrix4d::Identity());
 
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 
   // Vertical displacement should not matter
-  cameraTorsoTransform = Translation3d(0, 0, 1.0);
+  agentCameraTransform = Translation3d(0, 0, -1.0);
 
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 
   // Look 45 degrees down
-  cameraTorsoTransform =  AngleAxisd(-M_PI/4.0, Vector3d::UnitX());
+  agentCameraTransform =  AngleAxisd(-M_PI/4.0, Vector3d::UnitX()).inverse();
 
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 
   // Tilted 45 degrees
-  cameraTorsoTransform =  AngleAxisd(-M_PI/4.0, Vector3d::UnitY());
-  EXPECT_EQ ( 0, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  agentCameraTransform =  AngleAxisd(-M_PI/4.0, Vector3d::UnitY()).inverse();
+  EXPECT_EQ ( 0, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 
   // Rotation around z-axis should not matter
-  cameraTorsoTransform = AngleAxisd(M_PI/2.0, Vector3d::UnitZ());
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  agentCameraTransform = AngleAxisd(M_PI/2.0, Vector3d::UnitZ()).inverse();
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 
   // Rotation around z-axis while leaning forward
-  cameraTorsoTransform = AngleAxisd(-M_PI/4.0, Vector3d::UnitX()) * AngleAxisd(M_PI/2.0, Vector3d::UnitZ());
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 0, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  agentCameraTransform = (AngleAxisd(-M_PI/4.0, Vector3d::UnitX()) * AngleAxisd(M_PI/2.0, Vector3d::UnitZ())).inverse();
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 0, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 }
 
 TEST (SpatialiserTests, findHorizonForColumnWideCam)
@@ -265,30 +265,30 @@ TEST (SpatialiserTests, findHorizonForColumnWideCam)
   Spatialiser spatialiser(cameraModel);
 
   // Look straight ahead
-  Affine3d cameraTorsoTransform(Matrix4d::Identity());
+  Affine3d agentCameraTransform(Matrix4d::Identity());
 
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 
   // Vertical displacement should not matter
-  cameraTorsoTransform = Translation3d(0, 0, 1.0);
+  agentCameraTransform = Translation3d(0, 0, -1.0);
 
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 
   // Look 22.5 degrees down
-  cameraTorsoTransform =  AngleAxisd(-M_PI/8.0, Vector3d::UnitX());
+  agentCameraTransform =  AngleAxisd(-M_PI/8.0, Vector3d::UnitX()).inverse();
 
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 
   // Tilt to have horizon go through corners
   // atan(2/3)
-  cameraTorsoTransform =  AngleAxisd(-0.622, Vector3d::UnitY());
-  EXPECT_EQ ( 0, spatialiser.findHorizonForColumn(0, cameraTorsoTransform) );
-  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, cameraTorsoTransform) );
-  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, cameraTorsoTransform) );
+  agentCameraTransform =  AngleAxisd(-0.622, Vector3d::UnitY()).inverse();
+  EXPECT_EQ ( 0, spatialiser.findHorizonForColumn(0, agentCameraTransform) );
+  EXPECT_EQ ( 5, spatialiser.findHorizonForColumn(5, agentCameraTransform) );
+  EXPECT_EQ ( 10, spatialiser.findHorizonForColumn(10, agentCameraTransform) );
 }

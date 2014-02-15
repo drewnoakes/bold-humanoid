@@ -32,7 +32,7 @@ namespace bold
     Maybe<Eigen::Vector2d> findPixelForAgentPoint(Eigen::Vector3d const& agentPoint, Eigen::Affine3d const& agentCameraTransform) const;
 
     int findHorizonForColumn(int column);
-    int findHorizonForColumn(int column, Eigen::Affine3d const& cameraAgentTransform);
+    int findHorizonForColumn(int column, Eigen::Affine3d const& agentCameraTransform);
 
     void updateCameraToAgent();
 

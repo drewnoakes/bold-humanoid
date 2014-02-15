@@ -36,13 +36,13 @@ void Spatialiser::updateCameraToAgent()
 
   // Determine observed field area polygon
   Polygon2d::PointVector vertices;
-  auto const& cameraAgentTransform = AgentState::get<BodyState>()->getCameraAgentTransform();
+  auto const& agentCameraTransform = AgentState::get<BodyState>()->getAgentCameraTransform();
 
   int width = d_cameraModel->imageWidth();
   int height = d_cameraModel->imageHeight();
 
-  int horiz1 = min(height - 1, findHorizonForColumn(0, cameraAgentTransform));
-  int horiz2 = min(height - 1, findHorizonForColumn(width - 1, cameraAgentTransform));
+  int horiz1 = min(height - 1, findHorizonForColumn(0, agentCameraTransform));
+  int horiz2 = min(height - 1, findHorizonForColumn(width - 1, agentCameraTransform));
 
   auto const& p1 = findGroundPointForPixel(Vector2d(0, 0) + Vector2d(0.5,0.5));
   if (p1)
