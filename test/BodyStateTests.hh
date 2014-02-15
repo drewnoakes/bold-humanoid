@@ -199,13 +199,13 @@ TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
 TEST (BodyStateTests, camera_zeroed)
 {
   double angles[22] = {0,};
-  angles[(uchar)JointId::CAMERA_TILT] = Math::degToRad(40);
+  angles[(uchar)JointId::CAMERA_CALIB_TILT] = -Math::degToRad(40);
 
   auto body = BodyState(angles, std::vector<int>(21, 0), 0);
 
   Affine3d cameraTransform = body.getLimb("camera")->transform;
 
-  Matrix3d expectedCameraRotation = AngleAxisd(Math::degToRad(40), Vector3d::UnitX()).matrix();
+  Matrix3d expectedCameraRotation = AngleAxisd(-Math::degToRad(40), Vector3d::UnitX()).matrix();
   Matrix3d actualCameraRotation = cameraTransform.rotation().matrix();
 
   // These values describe the position of the camera in the head frame
