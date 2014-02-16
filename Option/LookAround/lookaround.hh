@@ -11,8 +11,9 @@ namespace bold
   class LookAround : public Option
   {
   public:
-    LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle)
+    LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle, std::function<double()> speedCallback = nullptr)
     : Option(id),
+      d_speedCallback(speedCallback),
       d_headModule(headModule),
       d_lastTimeSeconds(0)
     {
@@ -26,6 +27,7 @@ namespace bold
     virtual std::vector<std::shared_ptr<Option>> runPolicy() override;
 
   private:
+    std::function<double()> d_speedCallback;
     std::shared_ptr<HeadModule> d_headModule;
 
     /// The head's upwards tilt angle

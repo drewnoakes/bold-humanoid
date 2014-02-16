@@ -141,6 +141,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto circleBall = tree->addOption(make_shared<CircleBall>("circleBall", ambulator, headModule));
   auto lookAround = tree->addOption(make_shared<LookAround>("lookAround", headModule, 100.0));
   auto lookAroundNarrow = tree->addOption(make_shared<LookAround>("lookAroundNarrow", headModule, 45.0));
+  auto lookForBall = tree->addOption(make_shared<LookAround>("lookForBall", headModule, 100.0, []() { return AgentState::get<CameraFrameState>()->isBallVisible() ? 0.25 : 1.0; }));
   auto lookAtBall = tree->addOption(make_shared<LookAtBall>("lookAtBall", cameraModel, headModule));
   auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookAtFeet", headModule));
   auto lookAtGoal = tree->addOption(make_shared<LookAtGoal>("lookAtGoal", cameraModel, headModule));
@@ -317,7 +318,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     // TODO add logic to kick ball away from goal if close to keeper
 
     auto standUpState = playingFsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-    auto lookForBallState = playingFsm->newState("lookForBall", {stopWalking, lookAround});
+    auto lookForBallState = playingFsm->newState("lookForBall", {stopWalking, lookForBall});
     auto lookAtBallState = playingFsm->newState("lookAtBall", {stopWalking, lookAtBall});
     auto bigStepLeftState = playingFsm->newState("bigStepLeft", {bigStepLeft});
     auto bigStepRightState = playingFsm->newState("bigStepRight", {bigStepRight});
@@ -424,7 +425,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     //
 
     auto standUpState = playingFsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-    auto lookForBallState = playingFsm->newState("lookForBall", {stopWalking, lookAround});
+    auto lookForBallState = playingFsm->newState("lookForBall", {stopWalking, lookForBall});
     auto circleToFindLostBallState = playingFsm->newState("lookForBallCircling", {circleBall});
     auto lookAtBallState = playingFsm->newState("lookAtBall", {stopWalking, lookAtBall});
     auto approachBallState = playingFsm->newState("approachBall", {approachBall, lookAtBall});

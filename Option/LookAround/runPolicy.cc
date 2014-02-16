@@ -17,6 +17,13 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
     // to the left, and pans right through the top of the box.
     d_startTimeSeconds = t - (durationHoriz/4.0);
   }
+  else if (d_speedCallback)
+  {
+    double speed = Math::clamp(d_speedCallback(), 0.0, 1.0);
+
+    // Predicate tells us not to progress this step... stall!
+    d_startTimeSeconds += (1 - speed) * (t - d_lastTimeSeconds);
+  }
 
   d_lastTimeSeconds = t;
 
