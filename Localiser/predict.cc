@@ -2,8 +2,8 @@
 
 void Localiser::predict()
 {
-  auto orientationState = AgentState::get<OrientationState>();
-  auto odometryState = AgentState::get<OdometryState>();
+  auto orientationState = AgentState::get<OrientationState>(StateTime::CameraImage);
+  auto odometryState = AgentState::get<OdometryState>(StateTime::CameraImage);
   if (!orientationState || !odometryState)
     return;
 
@@ -28,7 +28,7 @@ void Localiser::predict()
                           state.y() + worldTranslation.y() + d_positionErrorRng(),
                           state(2) + deltaTheta + d_angleErrorRng());
                      });
-    
+
   }
 
   d_lastTranslation = odometryState->getTranslation();

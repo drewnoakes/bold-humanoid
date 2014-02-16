@@ -117,7 +117,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, shared_ptr<DataStreamer
     }
   }
 
-  auto bodyState = AgentState::get<BodyState>();
+  auto bodyState = AgentState::get<BodyState>(StateTime::CameraImage);
 
   // Draw expected lines
   bool drawExpectedLines = d_shouldDrawExpectedLines->getValue();

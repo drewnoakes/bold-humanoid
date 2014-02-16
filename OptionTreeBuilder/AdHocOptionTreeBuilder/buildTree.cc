@@ -500,7 +500,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       ->transitionTo(lookAtFeetState)
       ->when([]()
       {
-        double panAngle = AgentState::get<BodyState>()->getJoint(JointId::HEAD_PAN)->angleRads;
+        double panAngle = AgentState::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
         // TODO this angular limit in config
         return fabs(Math::radToDeg(panAngle)) < 25.0;
       });
@@ -516,7 +516,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       ->when([circleBallState,headModule,secondsSinceStart]()
       {
         // TODO break dependency upon pan limit
-        double panAngle = AgentState::get<BodyState>()->getJoint(JointId::HEAD_PAN)->angleRads;
+        double panAngle = AgentState::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
         double circleDurationSeconds = fabs(panRatio) * 4.5;

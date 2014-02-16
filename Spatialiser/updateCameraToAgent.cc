@@ -36,7 +36,7 @@ void Spatialiser::updateCameraToAgent()
 
   // Determine observed field area polygon
   Polygon2d::PointVector vertices;
-  auto const& agentCameraTransform = AgentState::get<BodyState>()->getAgentCameraTransform();
+  auto const& agentCameraTransform = AgentState::get<BodyState>(StateTime::CameraImage)->getAgentCameraTransform();
 
   int width = d_cameraModel->imageWidth();
   int height = d_cameraModel->imageHeight();

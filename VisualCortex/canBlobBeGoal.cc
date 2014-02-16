@@ -2,7 +2,7 @@
 
 bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d* pos)
 {
-  auto body = AgentState::get<BodyState>();
+  auto body = AgentState::get<BodyState>(StateTime::CameraImage);
   Affine3d const& cameraAgentTransform = body->getCameraAgentTransform();
 
   // Find a measure of the width of the goal post in agent space

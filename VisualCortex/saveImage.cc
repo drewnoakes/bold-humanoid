@@ -81,7 +81,7 @@ void VisualCortex::saveImage(cv::Mat const& image)
 
     // Body pose
     writer.String("body");
-    StateObject::writeJsonOrNull(writer, AgentState::get<BodyState>());
+    StateObject::writeJsonOrNull(writer, AgentState::get<BodyState>(StateTime::CameraImage));
 
     // Camera Frame
     writer.String("cameraFrame");
