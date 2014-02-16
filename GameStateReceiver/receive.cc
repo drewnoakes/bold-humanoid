@@ -41,13 +41,27 @@ shared_ptr<GameState> GameStateReceiver::receive()
       continue;
     }
 
+    // Track the other team numbers we see, and log them as new ones arrive
+
+    bool areWeTeam1 = gameState->teamInfo1().getTeamNumber() == d_agent->getTeamNumber();
+    bool areWeTeam2 = gameState->teamInfo2().getTeamNumber() != d_agent->getTeamNumber();
+
     // Verify that we're one of the teams mentioned in the message
-    if (gameState->teamInfo1().getTeamNumber() != d_agent->getTeamNumber() &&
-        gameState->teamInfo2().getTeamNumber() != d_agent->getTeamNumber())
+    if (!areWeTeam1 && !areWeTeam2)
     {
       log::warning("GameStateReceiver::receive") << "Ignoring game controller message for incorrect team numbers " << (int)gameState->teamInfo1().getTeamNumber() << " and " << (int)gameState->teamInfo2().getTeamNumber() << " when our team number is " << d_agent->getTeamNumber();
       d_debugger->notifyIgnoringUnrecognisedMessage();
       continue;
+    }
+
+    uint8 otherTeamNumber = areWeTeam1
+      ? gameState->teamInfo2().getTeamNumber()
+      : gameState->teamInfo1().getTeamNumber();
+
+    if (d_observedTeamNumbers.find(otherTeamNumber) == d_observedTeamNumbers.end())
+    {
+      log::info("GameStateReceiver::receive") << "Seen first game controller message for our team and team number " << otherTeamNumber;
+      d_observedTeamNumbers.insert(otherTeamNumber);
     }
 
     d_debugger->notifyReceivedGameControllerMessage();

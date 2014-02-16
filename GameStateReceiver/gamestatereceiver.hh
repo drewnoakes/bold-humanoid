@@ -3,6 +3,7 @@
 #define GAMECONTROLLER_PORT 3838
 
 #include <memory>
+#include <set>
 
 #include "../StateObject/GameState/gamestate.hh"
 
@@ -38,6 +39,7 @@ namespace bold
   private:
     std::shared_ptr<UDPSocket> d_socket;
     std::shared_ptr<Debugger> d_debugger;
+    std::set<uint8> d_observedTeamNumbers;
     Agent* d_agent;
     bool d_receivedAnything;
   };

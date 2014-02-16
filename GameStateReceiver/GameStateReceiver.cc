@@ -4,6 +4,7 @@
 
 GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, Agent* agent)
   : d_debugger(debugger),
+    d_observedTeamNumbers(),
     d_agent(agent),
     d_receivedAnything(false)
 {
