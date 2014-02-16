@@ -16,7 +16,7 @@
     "line-width": 0.05,
     "penalty-line-length": 0.1,
     "outer-margin-minimum": 0.7,
-    "ball-diameter": 0.067
+    "ball-diameter": 0.1
   },
 
   "camera": {
