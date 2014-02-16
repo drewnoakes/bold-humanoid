@@ -20,11 +20,16 @@ void Agent::run()
     throw runtime_error("Unable to start motion loop");
   }
 
-  while (!AgentState::get<HardwareState>())
+  //
+  // Become the think loop...
+  //
+
+  if (!AgentState::get<HardwareState>())
   {
     // Wait until the motion loop has read a hardware value
     log::info("Agent::run") << "Waiting for HardwareState before starting think loop";
-    usleep(8000);
+    while (!AgentState::get<HardwareState>())
+      usleep(8000);
   }
 
   log::info("Agent::run") << "Starting think loop";

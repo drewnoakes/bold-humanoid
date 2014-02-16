@@ -313,7 +313,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
 void MotionLoop::step(SequentialTimer& t)
 {
   // Rate the limit at which we make this call to the CM730.
-  if (d_cycleNumber % 60 == 0)
+  if (d_cycleNumber % 60 == 0 && d_haveBody)
   {
     d_isCM730PowerEnabled = d_cm730->isPowerEnabled();
     t.timeEvent("Check Power");
