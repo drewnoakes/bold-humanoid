@@ -70,10 +70,10 @@
   },
   "vision": {
     "min-ball-area": 1,
-    "accepted-ball-measured-size-ratio": [0.8, 1.5],
+    "accepted-ball-measured-size-ratio": [0.6, 1.5],
     "min-goal-dimension-pixels": 3,
     "max-goal-field-edge-distance-px": 30,
-    "accepted-goal-measured-width-ratio": [0.6, 1.4],
+    "accepted-goal-measured-width-ratio": [0.5, 1.4],
     "enable-ball-blob-merging": false,
     "pixel-labels": {
       "goal": { "hue": [30, 60], "sat": [158, 236], "val": [124, 222] },
