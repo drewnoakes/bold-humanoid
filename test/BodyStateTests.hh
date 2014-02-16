@@ -336,4 +336,31 @@ TEST (JointTest, initialState)
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.axis) );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.anchors.first) );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.anchors.second) );
+  EXPECT_EQ   ( nullptr, joint.childPart );
+
+  auto sharedJoint = allocate_aligned_shared<Joint>(JointId::L_KNEE, "test-limb");
+
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), sharedJoint->axis) );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), sharedJoint->anchors.first) );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), sharedJoint->anchors.second) );
+  EXPECT_EQ   ( nullptr, sharedJoint->childPart );
+}
+
+TEST (LimbTest, initialState)
+{
+  Limb limb("test-limb");
+
+  EXPECT_EQ ( "test-limb", limb.name );
+  EXPECT_EQ ( 0, limb.rotationOrigin );
+  EXPECT_EQ ( 0, limb.joints.size() );
+
+  auto sharedLimb = allocate_aligned_shared<Limb>("test-limb");
+
+  EXPECT_EQ ( "test-limb", sharedLimb->name );
+  EXPECT_EQ ( 0, sharedLimb->rotationOrigin );
+  EXPECT_EQ ( 0, sharedLimb->joints.size() );
+
+  // NOTE we don't test the transform value here as it will always be explicitly
+  //      set, overwriting the initial value and we don't need to waste time
+  //      initialising the value at construction.
 }
