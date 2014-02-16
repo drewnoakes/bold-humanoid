@@ -2,8 +2,9 @@
 
 #include "helpers.hh"
 
-#include <memory>
+#include <functional>
 #include <map>
+#include <memory>
 
 using namespace std;
 
@@ -283,6 +284,15 @@ TEST(CppTests, mutateVectorInMap)
   retrieved[1] = 3;
 
   EXPECT_EQ(3, data[1][1]);
+}
+
+TEST(CppTests, std_function)
+{
+  function<bool()> fun = nullptr;
+
+  ASSERT_TRUE ( fun == nullptr );
+  ASSERT_TRUE ( !fun );
+  ASSERT_FALSE ( fun );
 }
 
 ///
