@@ -19,6 +19,12 @@ struct libwebsocket_protocols;
 
 namespace bold
 {
+  enum class StateTime
+  {
+    MostRecent,
+    CameraImage
+  };
+
   class StateTracker
   {
   public:
@@ -37,22 +43,36 @@ namespace bold
     void set(std::shared_ptr<StateObject const> state)
     {
       std::lock_guard<std::mutex> guard(d_mutex);
-      d_state = state;
+      d_stateMostRecent = state;
       d_updateCount++;
     }
 
+    void snapshot(StateTime time)
+    {
+      if (time == StateTime::CameraImage)
+      {
+        std::lock_guard<std::mutex> guard(d_mutex);
+        d_stateCameraImage = d_stateMostRecent;
+      }
+      else
+      {
+        log::error("StateTracker::snapshot") << "Unexpected StateTime value: " << (int)time;
+        throw std::runtime_error("Unexpected StateTime value");
+      }
+    }
+
     template<typename T>
-    std::shared_ptr<T const> state() const
+    std::shared_ptr<T const> state(StateTime time = StateTime::MostRecent) const
     {
       static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
       std::lock_guard<std::mutex> guard(d_mutex);
-      return std::dynamic_pointer_cast<T const>(d_state);
+      return std::dynamic_pointer_cast<T const>(time == StateTime::MostRecent ? d_stateMostRecent : d_stateCameraImage);
     }
 
-    std::shared_ptr<StateObject const> stateBase() const
+    std::shared_ptr<StateObject const> stateBase(StateTime time = StateTime::MostRecent) const
     {
       std::lock_guard<std::mutex> guard(d_mutex);
-      return d_state;
+      return time == StateTime::MostRecent ? d_stateMostRecent : d_stateCameraImage;
     }
 
     std::string name() const { return d_name; }
@@ -63,7 +83,8 @@ namespace bold
   private:
     mutable std::mutex d_mutex;
     const std::string d_name;
-    std::shared_ptr<StateObject const> d_state;
+    std::shared_ptr<StateObject const> d_stateMostRecent;
+    std::shared_ptr<StateObject const> d_stateCameraImage;
     long long unsigned d_updateCount;
   };
 
@@ -102,17 +123,25 @@ namespace bold
     /** Get the StateObject of specified type T. May be nullptr.
      */
     template <typename T>
-    static std::shared_ptr<T const> get();
+    static std::shared_ptr<T const> get(StateTime time = StateTime::MostRecent);
 
     static std::shared_ptr<StateObject const> getByName(std::string name);
 
     template<typename T>
-    static std::shared_ptr<T const> getTrackerState();
+    static std::shared_ptr<T const> getTrackerState(StateTime time = StateTime::MostRecent);
 
     static std::shared_ptr<StateObject const> getByTypeIndex(std::type_index const& typeIndex);
 
     template<typename T>
     static std::shared_ptr<StateTracker> getTracker();
+
+    static void snapshot(StateTime time)
+    {
+      std::lock_guard<std::mutex> guard(d_mutex);
+      for (auto const& pair : d_trackerByTypeId)
+        pair.second->snapshot(time);
+    }
+
   private:
     AgentState() = delete;
 
@@ -171,21 +200,20 @@ namespace bold
   }
 
   template <typename T>
-  std::shared_ptr<T const> AgentState::get()
+  std::shared_ptr<T const> AgentState::get(StateTime time)
   {
     static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
-    return AgentState::getTrackerState<T>();
+    return AgentState::getTrackerState<T>(time);
   }
 
   template<typename T>
-  std::shared_ptr<T const> AgentState::getTrackerState()
+  std::shared_ptr<T const> AgentState::getTrackerState(StateTime time)
   {
     static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
     std::lock_guard<std::mutex> guard(d_mutex);
     auto pair = d_trackerByTypeId.find(typeid(T));
     assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
-    auto tracker = pair->second;
-    return tracker->state<T>();
+    return pair->second->state<T>(time);
   }
 
   template<typename T>
