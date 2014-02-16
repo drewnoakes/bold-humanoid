@@ -39,7 +39,7 @@ unique_ptr<Document const> loadJsonDocument(std::string path)
   doc->ParseStream<0, UTF8<>, FileReadStream>(stream);
 
   if (fclose(file))
-    log::error("loadJsonDocument") << "Error closing file: " << errno;
+    log::error("loadJsonDocument") << "Error closing file: " << strerror(errno) << " (" << errno << ")";
 
   if (doc->HasParseError())
   {

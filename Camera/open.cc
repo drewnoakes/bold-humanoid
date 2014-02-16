@@ -6,7 +6,7 @@ void Camera::open()
 
   if (d_fd < 0)
   {
-    log::error("Camera::open") << "Failed opening device: " << d_device;
+    log::error("Camera::open") << "Failed opening device " << d_device << ": " << strerror(errno) << " (" << errno << ")";
     exit(-1);
   }
 

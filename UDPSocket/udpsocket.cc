@@ -45,7 +45,7 @@ bool UDPSocket::setBlocking(bool isBlocking)
 
   if (flags < 0)
   {
-    log::error("UDPSocket::setBlocking") << "Error in F_GETFL: " << strerror(errno);
+    log::error("UDPSocket::setBlocking") << "Error in F_GETFL: " << strerror(errno) << " (" << errno << ")";
     return false;
   }
 
@@ -56,7 +56,7 @@ bool UDPSocket::setBlocking(bool isBlocking)
 
   if (fcntl(d_socket, F_SETFL, flags) == -1)
   {
-    log::error("UDPSocket::setBlocking") << "Error in F_SETFL: " << strerror(errno);
+    log::error("UDPSocket::setBlocking") << "Error in F_SETFL: " << strerror(errno) << " (" << errno << ")";
     return false;
   }
 
@@ -69,7 +69,7 @@ bool UDPSocket::setBroadcast(bool isBroadcast)
 
   if (setsockopt(d_socket, SOL_SOCKET, SO_BROADCAST, &isBroadcastInt, sizeof(int)))
   {
-    log::error("UDPSocket::setBroadcast") << "Error setting socket option SO_BROADCAST to " << isBroadcast << ": " << strerror(errno);
+    log::error("UDPSocket::setBroadcast") << "Error setting socket option SO_BROADCAST to " << isBroadcast << ": " << strerror(errno) << " (" << errno << ")";
     return false;
   }
 
@@ -82,7 +82,7 @@ bool UDPSocket::setMulticastLoopback(bool isLoopback)
 
   if (setsockopt(d_socket, IPPROTO_IP, IP_MULTICAST_LOOP, &isLoopbackChar, sizeof(char)))
   {
-    log::error("UDPSocket::setMulticastLoopback") << "Error setting socket option IP_MULTICAST_LOOP to " << isLoopback << ": " << strerror(errno);
+    log::error("UDPSocket::setMulticastLoopback") << "Error setting socket option IP_MULTICAST_LOOP to " << isLoopback << ": " << strerror(errno) << " (" << errno << ")";
     return false;
   }
 
@@ -129,13 +129,13 @@ bool UDPSocket::bind(string const& localIpAddress, int port)
   // already in use' errors.
   if (setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&one, sizeof(int)) == -1)
   {
-    log::error("UDPSocket::bind") << "Unable to set socket option SO_REUSEADDR: " << strerror(errno);
+    log::error("UDPSocket::bind") << "Unable to set socket option SO_REUSEADDR: " << strerror(errno) << " (" << errno << ")";
     // Continue, despite this error
   }
 
   if (::bind(d_socket, (sockaddr*)&addr, sizeof(sockaddr_in)) == -1)
   {
-    log::error("UDPSocket::bind") << "Unable to bind socket: " << strerror(errno);
+    log::error("UDPSocket::bind") << "Unable to bind socket: " << strerror(errno) << " (" << errno << ")";
     return false;
   }
 
