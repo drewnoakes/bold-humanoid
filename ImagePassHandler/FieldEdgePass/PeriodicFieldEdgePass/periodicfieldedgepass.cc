@@ -9,8 +9,8 @@ using namespace std;
 
 PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight, ushort period)
 : FieldEdgePass(fieldLabel, pixelWidth, pixelHeight),
-  d_maxYByC(pixelWidth/period),
-  d_runByC(pixelWidth/period),
+  d_maxYByC((pixelWidth/period)+1),
+  d_runByC((pixelWidth/period)+1),
   d_period(period)
 {}
 
