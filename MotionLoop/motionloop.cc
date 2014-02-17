@@ -320,7 +320,7 @@ void MotionLoop::step(SequentialTimer& t)
   }
 
   // When unpowered, don't perform any update at all in the cycle
-  if (!d_isCM730PowerEnabled)
+  if (d_haveBody && !d_isCM730PowerEnabled)
     return;
 
   d_cycleNumber++;
