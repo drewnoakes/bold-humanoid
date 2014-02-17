@@ -53,7 +53,7 @@ ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
 {
   assert(x < d_pixelWidth);
 
-  // Map from the x-postiion to the periodic samples.
+  // Map from the x-position to the periodic samples.
 
   ushort rem = x % d_period;
   ushort c = x / d_period;
