@@ -18,6 +18,24 @@
     }
   },
 
+  "world": {
+    "field-size-x": 3.4,
+    "field-size-y": 1.9,
+    "goal-size-x": 0.2,
+    "goal-size-y": 0.85,
+    "goal-size-z": 0.6,
+    "goal-post-diameter": 0.1,
+    "goal-area-size-x": 0.4,
+    "goal-area-size-y": 1.6,
+    "penalty-mark-distance": 1.1,
+    "circle-diameter": 0.5,
+    "circle-segment-count": 18,
+    "line-width": 0.05,
+    "penalty-line-length": 0.1,
+    "outer-margin-minimum": 0.2,
+    "ball-diameter": 0.1
+  },
+
   "vision": {
     "pixel-labels": {
       "goal":  { "hue": [30,  60], "sat": [158, 255], "val": [100, 222] },
