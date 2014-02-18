@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../imagepasshandler.hh"
+#include "../../Config/config.hh"
 #include "../../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../PixelLabel/pixellabel.hh"
@@ -20,9 +21,9 @@ namespace bold
     /**
      * @param backgroundColour The colour to use for non-labelled pixels. Defaults to black.
      */
-    CartoonPass(ushort width, ushort height, std::vector<std::shared_ptr<PixelLabel>> const& labels, Colour::bgr backgroundColour = Colour::bgr(0,0,0))
+    CartoonPass(ushort width, ushort height, std::vector<std::shared_ptr<PixelLabel>> const& labels)
     : d_mat(height, width, CV_8UC3),
-      d_backgroundColour(backgroundColour),
+      d_backgroundColour(Config::getSetting<Colour::bgr>("round-table.cartoon.background-colour")),
       d_labels(labels)
     {}
 
@@ -30,7 +31,7 @@ namespace bold
 
     void onImageStarting() override
     {
-      d_mat = d_backgroundColour.toScalar();
+      d_mat = d_backgroundColour->getValue().toScalar();
 
       // Do this each frame, as label definitions can change at runtime
       for (std::shared_ptr<PixelLabel> const& label : d_labels)
@@ -61,7 +62,7 @@ namespace bold
   private:
     cv::Mat d_mat;
     Colour::bgr d_bgrByLabelId[8]; // assumes we'll never have more than 7 labels (1-8)
-    bold::Colour::bgr d_backgroundColour;
+    Setting<bold::Colour::bgr>* d_backgroundColour;
     Colour::bgr* d_ptr;
     int d_dx;
     std::vector<std::shared_ptr<PixelLabel>> d_labels;

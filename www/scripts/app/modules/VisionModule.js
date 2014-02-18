@@ -89,7 +89,9 @@ define(
             this.closables.add(ControlBuilder.buildAll('camera.settings', element.querySelector('div.camera-settings')));
             this.closables.add(ControlBuilder.buildAll('camera.calibration', element.querySelector('div.camera-calibration')));
 
-            this.closables.add(ControlBuilder.buildAll('round-table.image-colours', element.querySelector('div.image-colours')));
+            var imageColoursContainer = element.querySelector('div.image-colours');
+            this.closables.add(ControlBuilder.buildAll('round-table.image-colours', imageColoursContainer));
+            this.closables.add(ControlBuilder.build('round-table.cartoon.background-colour', imageColoursContainer));
 
             this.closables.add(ControlBuilder.buildAll('head-module', element.querySelector('div.head-settings')));
 

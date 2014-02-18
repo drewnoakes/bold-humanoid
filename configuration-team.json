@@ -128,6 +128,9 @@
       "field-edge": true,
       "calibration": false,
       "objects": true
+    },
+    "cartoon": {
+      "background-colour": { "b": 0, "g": 0, "r": 0 }
     }
   },
   "localiser": {

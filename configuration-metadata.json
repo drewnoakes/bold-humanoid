@@ -139,6 +139,9 @@
       "horizon":       { "type": "bgr-colour", "default": { "b": 0, "g": 128, "r": 255 } },
       "field-edge":    { "type": "bgr-colour", "default": { "b": 0, "g": 255, "r": 0 } },
       "calibration":   { "type": "bgr-colour", "default": { "b": 255, "g": 255, "r": 0 } }
+    },
+    "cartoon": {
+      "background-colour": { "type": "bgr-colour", "default": { "b": 0, "g": 0, "r": 0 } }
     }
   },
   "localiser": {
