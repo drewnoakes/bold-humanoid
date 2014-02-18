@@ -6,13 +6,14 @@ define(
         'FieldLinePlotter',
         'Protocols',
         'Constants',
+        'ControlBuilder',
         'DataProxy',
         'HeadControls',
         'util/Dragger',
         'util/MouseEventUtil',
         'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, Constants, DataProxy, HeadControls, Dragger, MouseEventUtil, Geometry)
+    function(FieldLinePlotter, Protocols, Constants, ControlBuilder, DataProxy, HeadControls, Dragger, MouseEventUtil, Geometry)
     {
         'use strict';
 
@@ -81,8 +82,13 @@ define(
             this.canvas = this.$canvas.get(0);
             this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
 
+            var localiserControlContainer = document.createElement('div');
+            localiserControlContainer.className = 'localiser-controls';
+            ControlBuilder.actions('localiser', localiserControlContainer);
+
             this.$container.append(this.$canvas)
                            .append(new HeadControls().element)
+                           .append(localiserControlContainer)
                            .append(this.$hoverInfo);
 
             this.bindEvents();

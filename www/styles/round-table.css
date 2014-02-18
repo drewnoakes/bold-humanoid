@@ -866,3 +866,12 @@ div.module.voice div.control-container.flow .setting.control
 {
     width: 125px;
 }
+
+
+/*******************************************************************/
+
+div.module.world-2d div.pane-container .localiser-controls
+{
+    display: inline-block;
+    margin-left: 8px;
+}
