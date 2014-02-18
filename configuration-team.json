@@ -20,7 +20,7 @@
     },
     "jam-detector": {
       "enabled": true,
-      "window-size": 500,
+      "window-size": 2000,
       "high-threshold": 50,
       "low-threshold": 20
     }
