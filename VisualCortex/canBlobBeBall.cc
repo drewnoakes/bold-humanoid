@@ -2,6 +2,10 @@
 
 bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
 {
+  //
+  // Basic filtering
+  //
+
   if (blob.area == 0)
   {
     // Ignore blobs that were previously merged into another blob (zero area)
@@ -16,12 +20,16 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
 
   // Ignore ball if it appears outside the field edge
   //
-  if (d_shouldIgnoreOutsideField->getValue() && blob.ul.y() > d_fieldEdgePass->getEdgeYValue(blob.ul.x()))
+  if (d_shouldIgnoreOutsideField->getValue() && basePos.y() > d_fieldEdgePass->getEdgeYValue(basePos.x()))
   {
     // This blob can not be the ball if its upper left corner is below the field edge.
     // Remember that the image appears upside down.
     return false;
   }
+
+  //
+  // Verify blob is about the expected pixel size at that position of the frame
+  //
 
   auto body = AgentState::get<BodyState>(StateTime::CameraImage);
   Affine3d const& cameraAgentTransform = body->getCameraAgentTransform();
