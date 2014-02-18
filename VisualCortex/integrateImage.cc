@@ -108,14 +108,13 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
         break;
       }
 
-      // Discard blobs that would be too large/small for the ball we expect at that position of the frame
+      // Filter out invalid ball blobs
       Vector2d pos;
-      if (!canBlobBeBall(ballBlob, &pos))
+      if (canBlobBeBall(ballBlob, &pos))
       {
-        continue;
+        ballPosition = Maybe<Vector2d>(pos);
+        break;
       }
-
-      ballPosition = Maybe<Vector2d>(pos);
     }
     t.timeEvent("Ball Blob Selection");
   }
