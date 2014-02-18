@@ -129,6 +129,14 @@
       "calibration": false,
       "objects": true
     },
+    "image-colours": {
+      "line-dot":      { "b": 0, "g": 0, "r": 255 },
+      "observed-line": { "b": 255, "g": 80, "r": 80 },
+      "expected-line": { "b": 255, "g": 0, "r": 0 },
+      "horizon":       { "b": 0, "g": 128, "r": 255 },
+      "field-edge":    { "b": 0, "g": 255, "r": 0 },
+      "calibration":   { "b": 255, "g": 255, "r": 0 }
+    },
     "cartoon": {
       "background-colour": { "b": 0, "g": 0, "r": 0 }
     }
