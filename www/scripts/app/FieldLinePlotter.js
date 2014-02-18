@@ -181,7 +181,7 @@ define(
                 context.beginPath();
                 _.each(particles, function (particle)
                 {
-                    var opacity =  Math.min(1, (particle[3] / 0.04) + 0.5);
+                    var opacity =  Math.min(1, (particle[3] / 0.03) + 0.5);
                     context.fillStyle = 'hsla(' + options.particleHue + ', 100%, 50%, ' + opacity + ')';
                     var x = particle[0] - size/2,
                         y = particle[1] - size/2;

@@ -130,7 +130,7 @@ define(
 
         World2dModule.prototype.onParticleData = function(data)
         {
-            this.particles = data;
+            this.particles = data.particles;
             this.needsRender = true; // TODO only draw particles, on their own canvas
         };
 
@@ -169,7 +169,7 @@ define(
                     lineStrokeStyle: '#ffffff',
                     visibleFieldPolyLineWidth: 1/scale,
                     visibleFieldPolyStrokeStyle: '#0000ff',
-                    particleHue: 200,
+                    particleHue: 240,
                     particleSize: Math.max(0.015, 2/scale),
                     ballFillStyle: 'red'
                 },
