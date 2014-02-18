@@ -101,26 +101,11 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     // The first is the biggest, topmost ball blob
     for (Blob const& ballBlob : ballBlobs)
     {
-      if (ballBlob.area == 0)
-      {
-        // Ignore blobs that were previously merged into another blob (zero area)
-        continue;
-      }
-
       // Ignore balls that are too small (avoid noise)
       if (ballBlob.area < d_minBallArea->getValue())
       {
         // As blobs are sorted largest to smallest, stop at the first one that's too small
         break;
-      }
-
-      // Ignore ball if it appears outside the field edge
-      //
-      if (d_shouldIgnoreOutsideField->getValue() && ballBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(ballBlob.ul.x()))
-      {
-        // This blob can not be the ball if its upper left corner is below the field edge.
-        // Remember that the image appears upside down.
-        continue;
       }
 
       // Discard blobs that would be too large/small for the ball we expect at that position of the frame

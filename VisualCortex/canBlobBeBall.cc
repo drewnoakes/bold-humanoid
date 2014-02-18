@@ -2,6 +2,27 @@
 
 bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
 {
+  if (blob.area == 0)
+  {
+    // Ignore blobs that were previously merged into another blob (zero area)
+    return false;
+  }
+
+  // TODO take the curvature of the ball into account -- project middle of blob on the plane z=ballRadius
+
+  // Take the bottom of the ball as observation
+  Vector2d basePos = blob.mean;
+  basePos.y() = blob.ul.y();
+
+  // Ignore ball if it appears outside the field edge
+  //
+  if (d_shouldIgnoreOutsideField->getValue() && blob.ul.y() > d_fieldEdgePass->getEdgeYValue(blob.ul.x()))
+  {
+    // This blob can not be the ball if its upper left corner is below the field edge.
+    // Remember that the image appears upside down.
+    return false;
+  }
+
   auto body = AgentState::get<BodyState>(StateTime::CameraImage);
   Affine3d const& cameraAgentTransform = body->getCameraAgentTransform();
 
@@ -9,12 +30,6 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
 
   Rect rect = blob.toRect();
   int maxDimension = max(rect.width, rect.height);
-
-  // TODO take the curvature of the ball into account -- project middle of blob on the plane z=ballRadius
-
-  // Take the bottom of the ball as observation
-  Vector2d basePos = blob.mean;
-  basePos.y() = blob.ul.y();
 
   Vector2d sidePos = basePos + Vector2d(maxDimension/2.0, 0);
 
