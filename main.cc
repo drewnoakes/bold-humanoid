@@ -131,9 +131,15 @@ int main(int argc, char **argv)
     }
     else if (arg == "--version")
     {
-      cout << Version::GIT_SHA1 << endl
-           << Version::GIT_DATE << " (" << Version::describeTimeSinceGitDate() << ")" << endl
-           << Version::GIT_COMMIT_SUBJECT << endl;
+      cout << ccolor::fore::lightblue << "SHA1:        " << ccolor::reset << Version::GIT_SHA1 << endl
+#if EIGEN_ALIGN
+           << ccolor::fore::lightblue << "Eigen align: " << ccolor::reset << "Yes" << endl
+#else
+           << ccolor::fore::lightblue << "Eigen align: " << ccolor::reset << "No" << endl
+#endif
+           << ccolor::fore::lightblue << "Build type:  " << ccolor::reset << Version::BUILD_TYPE << endl
+           << ccolor::fore::lightblue << "Commit date: " << ccolor::reset << Version::GIT_DATE << " (" << Version::describeTimeSinceGitDate() << ")" << endl
+           << ccolor::fore::lightblue << "Message:     " << ccolor::reset << Version::GIT_COMMIT_SUBJECT << endl;
       return 0;
     }
     else
@@ -146,7 +152,13 @@ int main(int argc, char **argv)
 
   printBanner();
 
-  log::info() << Version::GIT_SHA1 << " (" << Version::describeTimeSinceGitDate() << ")\n";
+  log::info("BUILD") << Version::GIT_SHA1 << " (committed " << Version::describeTimeSinceGitDate() << ")";
+#if EIGEN_ALIGN
+  log::info("EIGEN_ALIGN") << "Yes";
+#else
+  log::info("EIGEN_ALIGN") << "No";
+#endif
+  log::info("BUILD_TYPE") << Version::BUILD_TYPE << "\n";
 
   Config::initialise("configuration-metadata.json", configurationFile);
 
