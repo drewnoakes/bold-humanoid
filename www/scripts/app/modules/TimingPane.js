@@ -28,6 +28,7 @@ define(
         TimingPane.prototype.load = function ()
         {
             var chartOptions = {
+                interpolation: 'step',
                 grid: {
                     strokeStyle: 'rgb(40, 40, 40)',
                     fillStyle: 'rgb(0, 0, 0)',
