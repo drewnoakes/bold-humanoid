@@ -483,6 +483,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       ->transitionTo(lookAtGoalState)
       ->when([]()
       {
+        // TODO use the localiser here rather than requiring both posts to be in frame
         auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
         return goalsObs.size() >= 2;
       });
