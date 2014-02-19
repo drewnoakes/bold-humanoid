@@ -72,7 +72,9 @@ Agent::Agent()
   // Start capturing camera images
   d_camera->startCapture();
 
-  d_visualCortex = make_shared<VisualCortex>(d_camera, d_cameraModel, d_fieldMap, d_spatialiser, d_headModule);
+  d_streamer = make_shared<DataStreamer>(d_camera);
+
+  d_visualCortex = make_shared<VisualCortex>(d_camera, d_cameraModel, d_streamer, d_fieldMap, d_spatialiser, d_headModule);
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, this);
 
@@ -83,9 +85,6 @@ Agent::Agent()
     d_joystickYAmpMax = Config::getSetting<double>("hardware.joystick.y-amp-max");
     d_joystickAAmpMax = Config::getSetting<double>("hardware.joystick.a-amp-max");
   }
-
-  // TODO only stream if argument specified?
-  d_streamer = make_shared<DataStreamer>(d_camera);
 
   d_debugger->update();
 

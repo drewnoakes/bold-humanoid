@@ -24,7 +24,7 @@ void Agent::think()
   d_visualCortex->integrateImage(image, t);
   t.exit();
 
-  d_visualCortex->streamDebugImage(image, d_streamer, t);
+  d_visualCortex->streamDebugImage(image, t);
 
   //
   // Listen for any game control data

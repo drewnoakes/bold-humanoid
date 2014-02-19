@@ -66,6 +66,7 @@ namespace bold
 
     VisualCortex(std::shared_ptr<Camera> camera,
                  std::shared_ptr<CameraModel> cameraModel,
+                 std::shared_ptr<DataStreamer> dataStreamer,
                  std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
                  std::shared_ptr<HeadModule> headModule);
@@ -77,7 +78,7 @@ namespace bold
     void saveImage(cv::Mat const& image);
 
     /** Composes and enqueues a debugging image. */
-    void streamDebugImage(cv::Mat cameraImage, std::shared_ptr<DataStreamer> streamer, SequentialTimer& timer);
+    void streamDebugImage(cv::Mat cameraImage, SequentialTimer& timer);
 
     void setShouldDetectLines(bool val) { d_shouldDetectLines->setValue(val); }
     bool getShouldDetectLines() const { return d_shouldDetectLines->getValue(); }
@@ -134,6 +135,7 @@ namespace bold
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;
+    std::shared_ptr<DataStreamer> d_dataStreamer;
     std::shared_ptr<Spatialiser> d_spatialiser;
 
     std::shared_ptr<PixelLabel> d_goalLabel;

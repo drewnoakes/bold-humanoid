@@ -2,17 +2,20 @@
 
 VisualCortex::VisualCortex(shared_ptr<Camera> camera,
                            shared_ptr<CameraModel> cameraModel,
+                           shared_ptr<DataStreamer> dataStreamer,
                            shared_ptr<FieldMap> fieldMap,
                            shared_ptr<Spatialiser> spatialiser,
                            shared_ptr<HeadModule> headModule)
   : d_fieldMap(fieldMap),
     d_camera(camera),
     d_cameraModel(cameraModel),
+    d_dataStreamer(dataStreamer),
     d_spatialiser(spatialiser),
     d_recordNextFrame(false)
 {
   assert(camera);
   assert(cameraModel);
+  assert(dataStreamer);
   assert(fieldMap);
   assert(spatialiser);
   assert(headModule);
