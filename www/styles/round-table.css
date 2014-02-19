@@ -680,6 +680,11 @@ div.module.config > div.pane-container
 
 /********************************************************************/
 
+table.timing-details tr:hover
+{
+  background: rgba(0,0,0,0.1);
+}
+
 table.timing-details tr td.duration,
 table.timing-details tr td.avg-duration,
 table.timing-details tr td.max-duration
