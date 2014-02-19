@@ -68,10 +68,10 @@ define(
             {
                 MouseEventUtil.polyfill(event);
                 var p = this.transform.clone().invert().transformPoint(event.offsetX, event.offsetY);
-                this.$hoverInfo.text(p.x.toFixed(2) + ', ' + p.y.toFixed(2));
+                this.hoverInfo.textContent = p.x.toFixed(2) + ', ' + p.y.toFixed(2);
             }.bind(this));
 
-            this.$canvas.on('mouseleave', function() { this.$hoverInfo.text(''); }.bind(this));
+            this.$canvas.on('mouseleave', function() { this.hoverInfo.textContent = ''; }.bind(this));
         };
 
         World2dModule.prototype.load = function()
@@ -80,7 +80,8 @@ define(
 
             this.$canvas = $('<canvas></canvas>');
             this.canvas = this.$canvas.get(0);
-            this.$hoverInfo = $('<div></div>', {'class': 'hover-info'});
+            this.hoverInfo = document.createElement('div');
+            this.hoverInfo.className = 'hover-info';
 
             var localiserControlContainer = document.createElement('div');
             localiserControlContainer.className = 'localiser-controls';
@@ -89,7 +90,7 @@ define(
             this.$container.append(this.$canvas)
                            .append(new HeadControls().element)
                            .append(localiserControlContainer)
-                           .append(this.$hoverInfo);
+                           .append(this.hoverInfo);
 
             this.bindEvents();
 
