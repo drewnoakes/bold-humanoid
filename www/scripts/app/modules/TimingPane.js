@@ -60,7 +60,7 @@ define(
             this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
             this.$fps = $('<div></div>', {'class': 'fps'}).appendTo(this.$container);
-            $('<a></a>', {'class': 'reset', href: '#'}).text('reset maximums').click(function ()
+            $('<a></a>', {'class': 'reset', href: '#'}).text('reset').click(function ()
             {
                 this.resetMaximums();
                 return false;
