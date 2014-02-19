@@ -102,6 +102,8 @@ namespace bold
   public:
     BlobDetectPass(ushort imageWidth, ushort imageHeight, std::vector<std::shared_ptr<PixelLabel>> const& blobTypes);
 
+    void clear();
+
     void onImageStarting(SequentialTimer& timer) override;
 
     void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override;
@@ -148,6 +150,11 @@ namespace bold
   //// -------- BlobDetectPass --------
   //
   inline void BlobDetectPass::onImageStarting(SequentialTimer& timer)
+  {
+    clear();
+  }
+
+  inline void BlobDetectPass::clear()
   {
     // Clear all persistent data
     for (auto& pair : d_runsPerRowPerLabel)
