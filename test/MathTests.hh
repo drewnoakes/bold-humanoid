@@ -106,7 +106,7 @@ TEST (MathTests, createNormalRng)
   {
     sum += rng();
   }
-  EXPECT_NEAR(mean, sum/loopCount, 0.1);
+  EXPECT_NEAR(mean, sum/loopCount, 0.2);
 }
 
 TEST (MathTests, degreesRadiansConversion)
