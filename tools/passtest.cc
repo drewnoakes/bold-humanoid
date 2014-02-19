@@ -104,7 +104,7 @@ int main(int argc, char **argv)
   auto lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel);
 
   // Resources for creating a labelled image
-  auto cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, labels, Colour::bgr(128,128,128));
+  auto cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, labels);
 
   // Resources for counting the number of labels
   auto labelCountPass = make_shared<LabelCountPass>(labels);
@@ -141,20 +141,22 @@ int main(int argc, char **argv)
   //
   // IMAGE PASS
   //
+  SequentialTimer timer;
+
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
   {
-    passRunner.pass(labelledImage, granularityFunction);
+    passRunner.pass(labelledImage, granularityFunction, timer);
   }
   cout << "[simple pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
   {
-    passRunner.passWithHandler(lineDotPass, labelledImage, granularityFunction);
-    passRunner.passWithHandler(blobDetectPass, labelledImage, granularityFunction);
-    passRunner.passWithHandler(cartoonPass, labelledImage, granularityFunction);
-    passRunner.passWithHandler(labelCountPass, labelledImage, granularityFunction);
+    passRunner.passWithHandler(lineDotPass, labelledImage, granularityFunction, timer);
+    passRunner.passWithHandler(blobDetectPass, labelledImage, granularityFunction, timer);
+    passRunner.passWithHandler(cartoonPass, labelledImage, granularityFunction, timer);
+    passRunner.passWithHandler(labelCountPass, labelledImage, granularityFunction, timer);
   }
   cout << "[direct pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
@@ -162,7 +164,7 @@ int main(int argc, char **argv)
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
   {
-    passRunner.passWithHandlers(passTuple, labelledImage, granularityFunction);
+    passRunner.passWithHandlers(passTuple, labelledImage, granularityFunction, timer);
   }
   cout << "[meta pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
