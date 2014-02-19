@@ -182,7 +182,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldCountLabels->track([this](bool value) { d_imagePassRunner->setHandler(getHandler<LabelCountPass>(), value); });
 
   // TODO SETTINGS create a setting to turn this feature on and off
-  d_imagePassRunner->addHandler(getHandler<CompleteFieldEdgePass>());
   d_imagePassRunner->addHandler(getHandler<BlobDetectPass>());
 
   // Only include the cartoon pass when needed
