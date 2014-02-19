@@ -18,7 +18,7 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
     DisjointSet<Run> rSet;
 
     // Just insert all runs of top row
-    for (Run& run : runsPerRow[d_rowIndices[0]])
+    for (Run const& run : runsPerRow[d_rowIndices[0]])
     {
       rSet.insert(run);
     }
