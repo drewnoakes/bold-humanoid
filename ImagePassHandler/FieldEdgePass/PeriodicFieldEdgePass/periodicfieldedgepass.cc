@@ -2,6 +2,7 @@
 
 #include "../../../Config/config.hh"
 #include "../../../PixelLabel/pixellabel.hh"
+#include "../../../SequentialTimer/sequentialtimer.hh"
 #include "../../../stats/movingaverage.hh"
 
 using namespace bold;
@@ -14,12 +15,14 @@ PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
   d_period(period)
 {}
 
-void PeriodicFieldEdgePass::onImageStarting()
+void PeriodicFieldEdgePass::onImageStarting(SequentialTimer& timer)
 {
   for (ushort c = 0; c < d_runByC.size(); c++)
     d_maxYByC[c] = d_pixelHeight - 1;
 
   memset(d_runByC.data(), 0, sizeof(ushort) * d_runByC.size());
+
+  timer.timeEvent("Clear");
 }
 
 void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
@@ -73,8 +76,11 @@ ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
   return Math::lerp((double)rem/d_period, d_maxYByC[c], d_maxYByC[c + 1]);
 }
 
-void PeriodicFieldEdgePass::onImageComplete()
+void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
 {
   if (d_useConvexHull->getValue())
+  {
     applyConvexHull(d_maxYByC);
+    timer.timeEvent("Convex Hull");
+  }
 }

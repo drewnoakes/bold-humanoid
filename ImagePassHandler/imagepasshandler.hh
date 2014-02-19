@@ -7,6 +7,8 @@ namespace bold
   typedef unsigned char uchar;
   typedef unsigned short int ushort;
 
+  class SequentialTimer;
+
   /**
    * Abstract base class for classes that process the pixels of an image.
    *
@@ -20,7 +22,7 @@ namespace bold
     virtual ~ImagePassHandler() {}
 
     /** Processing of an image frame is about to begin. */
-    virtual void onImageStarting() {}
+    virtual void onImageStarting(SequentialTimer& timer) {}
 
     /** The row 'y' is about to start. */
     virtual void onRowStarting(ushort y, Eigen::Vector2i const& granularity) {}
@@ -32,7 +34,7 @@ namespace bold
     virtual void onPixel(TPixel labelId, ushort x, ushort y) = 0;
 
     /** Processing of an image frame has completed. */
-    virtual void onImageComplete() {}
+    virtual void onImageComplete(SequentialTimer& timer) {}
 
     virtual std::string id() const = 0;
   };

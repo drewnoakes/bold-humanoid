@@ -2,6 +2,7 @@
 
 #include "../../../Config/config.hh"
 #include "../../../PixelLabel/pixellabel.hh"
+#include "../../../SequentialTimer/sequentialtimer.hh"
 #include "../../../stats/movingaverage.hh"
 
 using namespace bold;
@@ -15,7 +16,7 @@ CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
   Config::getSetting<int>("vision.field-edge-pass.complete.smoothing-window-length")->track([this](int value) { d_smoothingWindowSize = value; });
 }
 
-void CompleteFieldEdgePass::onImageStarting()
+void CompleteFieldEdgePass::onImageStarting(SequentialTimer& timer)
 {
   assert(d_maxYByX.size() == d_pixelWidth);
 
@@ -23,6 +24,8 @@ void CompleteFieldEdgePass::onImageStarting()
     d_maxYByX[x] = d_pixelHeight - 1;
 
   memset(d_runByX.data(), 0, sizeof(ushort) * d_pixelWidth);
+
+  timer.timeEvent("Clear");
 }
 
 void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
@@ -55,7 +58,7 @@ ushort CompleteFieldEdgePass::getEdgeYValue(ushort x) const
   return d_maxYByX[x];
 }
 
-void CompleteFieldEdgePass::onImageComplete()
+void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
 {
   if (d_smoothingWindowSize > 1)
   {
@@ -70,8 +73,14 @@ void CompleteFieldEdgePass::onImageComplete()
         d_maxYByX[x] = smoothedY;
       }
     }
+
+    timer.timeEvent("Smooth");
   }
 
+
   if (d_useConvexHull->getValue())
+  {
     applyConvexHull(d_maxYByX);
+    timer.timeEvent("Convex Hull");
+  }
 }

@@ -12,6 +12,7 @@
 #include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../LineRunTracker/lineruntracker.hh"
 #include "../../PixelLabel/pixellabel.hh"
+#include "../../SequentialTimer/sequentialtimer.hh"
 
 namespace bold
 {
@@ -71,7 +72,7 @@ namespace bold
       });
     }
 
-    void onImageStarting() override
+    void onImageStarting(SequentialTimer& timer) override
     {
       // reset all run trackers
       d_rowTracker->reset();
@@ -79,6 +80,8 @@ namespace bold
         d_colTrackers[x].reset();
 
       lineDots.clear();
+      
+      timer.timeEvent("Clear");
     }
 
     void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override

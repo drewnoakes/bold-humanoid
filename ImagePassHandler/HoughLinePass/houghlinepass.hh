@@ -6,6 +6,7 @@
 #include "../imagepasshandler.hh"
 #include "../../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../../HoughLineExtractor/houghlineextractor.hh"
+#include "../../SequentialTimer/sequentialtimer.hh"
 
 namespace bold
 {
@@ -29,9 +30,11 @@ namespace bold
       lines()
     {}
 
-    void onImageStarting() override
+    void onImageStarting(SequentialTimer& timer) override
     {
       accumulator.clear();
+
+      timer.timeEvent("Clear");
     }
 
     void onPixel(T value, ushort x, ushort y) override
@@ -42,11 +45,13 @@ namespace bold
       }
     }
 
-    void onImageComplete() override
+    void onImageComplete(SequentialTimer& timer) override
     {
       auto extractor = HoughLineExtractor();
 
       lines = extractor.findLines(accumulator, accumulator.count() / d_thresholdDivisor);
+
+      timer.timeEvent("Find lines");
     }
 
     std::string id() const override

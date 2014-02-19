@@ -7,6 +7,7 @@
 #include "../../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../PixelLabel/pixellabel.hh"
+#include "../../SequentialTimer/sequentialtimer.hh"
 
 namespace bold
 {
@@ -25,13 +26,15 @@ namespace bold
         d_labels(labels)
     {}
 
-    void onImageStarting() override
+    void onImageStarting(SequentialTimer& timer) override
     {
       for (std::shared_ptr<PixelLabel> label : d_labels)
       {
         assert(label->id() < MAX_LABEL_COUNT);
         d_countByLabelId[label->id()] = 0;
       }
+
+      timer.timeEvent("Clear");
     }
 
     void onPixel(uchar value, ushort x, ushort y) override

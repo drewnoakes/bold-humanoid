@@ -20,13 +20,11 @@ void Agent::think()
   //
   // Process the image
   //
-  t.enter("Image Processing");
+  t.enter("Vision");
   d_visualCortex->integrateImage(image, t);
   t.exit();
 
-  t.enter("Image Streaming");
   d_visualCortex->streamDebugImage(image, d_streamer, t);
-  t.exit();
 
   //
   // Listen for any game control data

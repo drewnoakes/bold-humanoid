@@ -29,7 +29,7 @@ namespace bold
 
     cv::Mat mat() { return d_mat; }
 
-    void onImageStarting() override
+    void onImageStarting(SequentialTimer& timer) override
     {
       d_mat = d_backgroundColour->getValue().toScalar();
 
@@ -38,6 +38,7 @@ namespace bold
       {
         d_bgrByLabelId[label->id()] = label->hsvRange().toBgr();
       }
+      timer.timeEvent("Clear");
     }
 
     void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override

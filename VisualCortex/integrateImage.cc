@@ -29,11 +29,10 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   t.exit();
 
   // Perform the image pass
-  //long processedPixelCount = d_imagePassRunner->pass(d_labelledImage, d_granularityFunction);
-  long processedPixelCount = d_imagePassRunner->passWithHandlers(d_imagePassHandlers, d_labelledImage, d_granularityFunction);
+//long processedPixelCount = d_imagePassRunner->pass(d_labelledImage, d_granularityFunction, t);
+  long processedPixelCount = d_imagePassRunner->passWithHandlers(d_imagePassHandlers, d_labelledImage, d_granularityFunction, t);
 
   long totalPixelCount = d_labelledImage.rows * d_labelledImage.cols;
-  t.timeEvent("Pass");
 
   if (d_shouldCountLabels->getValue())
   {
