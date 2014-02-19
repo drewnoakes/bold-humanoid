@@ -193,7 +193,14 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   });
 
   // Only include the cartoon pass when needed
-  d_imageType->track([this](ImageType value) { d_imagePassRunner->setHandler(getHandler<CartoonPass>(), value == ImageType::Cartoon); });
+  auto setCartoonHandler = [this]()
+  {
+    bool enable = d_imageType->getValue() == ImageType::Cartoon
+               && d_dataStreamer->hasCameraClients();
+    d_imagePassRunner->setHandler(getHandler<CartoonPass>(), enable);
+  };
+  d_imageType->track([setCartoonHandler](ImageType value) { setCartoonHandler(); });
+  d_dataStreamer->hasClientChanged.connect([setCartoonHandler](std::string protocol, bool enabled) { if (protocol == "camera-protocol") setCartoonHandler(); });
 
   //d_lineFinder = make_shared<MaskWalkLineFinder>();
   d_lineFinder = make_shared<ScanningLineFinder>();
