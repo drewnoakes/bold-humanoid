@@ -261,6 +261,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./LineFinder/ScanningLineFinder/ScanningLineFinder.cc
   ./LineFinder/ScanningLineFinder/findLineSegments.cc
 )
 
