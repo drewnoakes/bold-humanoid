@@ -41,8 +41,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
 
     setCurrentState(transition->childState);
 
-    if (transition->onFire)
-      transition->onFire();
+    transition->onFire();
 
     return true;
   };

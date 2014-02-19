@@ -7,6 +7,7 @@ FSMState::FSMState(string const& name, vector<shared_ptr<Option>> options, bool 
 : name(name),
   isFinal(isFinal),
   options(options),
+  onEnter(),
   startTimestamp()
 {}
 
@@ -21,8 +22,7 @@ void FSMState::start()
       transition->condition = transition->conditionFactory();
   }
 
-  if (onEnter)
-    onEnter();
+  onEnter();
 }
 
 double FSMState::secondsSinceStart() const

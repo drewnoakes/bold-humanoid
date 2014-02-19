@@ -175,13 +175,13 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // TODO control that allows announcing states entered, provided speech queue isn't too long (off by default)
 
 
-  readyState->onEnter = [debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); };
-  setState->onEnter = [debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); };
-  playingState->onEnter = [debugger]() { debugger->showPlaying(); };
-  penalizedState->onEnter = [debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); };
-  pausedState->onEnter = [debugger]() { debugger->showPaused(); };
-  pausing1State->onEnter = [debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); };
-  stopAgentAndExitState->onEnter = [agent]() { agent->stop(); };
+  readyState->onEnter.connect([debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); });
+  setState->onEnter.connect([debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); });
+  playingState->onEnter.connect([debugger]() { debugger->showPlaying(); });
+  penalizedState->onEnter.connect([debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); });
+  pausedState->onEnter.connect([debugger]() { debugger->showPaused(); });
+  pausing1State->onEnter.connect([debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); });
+  stopAgentAndExitState->onEnter.connect([agent]() { agent->stop(); });
 
   //
   // START UP

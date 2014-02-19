@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <sigc++/signal.h>
 
 namespace bold
 {
@@ -30,7 +31,7 @@ namespace bold
     std::function<std::function<bool()>()> conditionFactory;
 
     /// Function to be called when this transition is fired
-    std::function<void()> onFire;
+    sigc::signal<void> onFire;
 
     /// State this transition goes from
     std::shared_ptr<FSMState> parentState;
@@ -56,7 +57,7 @@ namespace bold
     /// Outgoing transitions
     std::vector<std::shared_ptr<FSMTransition>> transitions;
 
-    std::function<void()> onEnter;
+    sigc::signal<void> onEnter;
 
     Clock::Timestamp startTimestamp;
 

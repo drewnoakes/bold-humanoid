@@ -28,6 +28,6 @@ FSMTransition* FSMTransition::whenTerminated()
 
 FSMTransition* FSMTransition::notify(std::function<void()> callback)
 {
-  this->onFire = callback;
+  this->onFire.connect(callback);
   return this;
 }
