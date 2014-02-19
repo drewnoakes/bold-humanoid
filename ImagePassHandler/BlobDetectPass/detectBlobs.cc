@@ -1,6 +1,8 @@
 #include "blobdetectpass.ih"
 
-map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
+#include "../../SequentialTimer/sequentialtimer.hh"
+
+map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(SequentialTimer& timer)
 {
   assert(d_rowIndices.size() > 1);
 
@@ -51,6 +53,8 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
 
     // TODO: why isn't blobSet a set again? That would auto-sort
     std::sort(blobSet.begin(), blobSet.end(), greater<Blob>());
+
+    timer.timeEvent(string(pixelLabel->name()));
   }
 
   return d_blobsDetectedPerLabel;

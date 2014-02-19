@@ -85,13 +85,14 @@ namespace bold
       return stream << "Blob (ul=[" << blob.ul.transpose() << "] br=[" << blob.br.transpose() << "])";
     }
   };
-
 }
 
 EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(bold::Blob)
 
 namespace bold
 {
+  class SequentialTimer;
+
   /** Blob detection image pass
    *
    * Builds blobs while passing through an image
@@ -110,7 +111,7 @@ namespace bold
     std::vector<std::shared_ptr<PixelLabel>> pixelLabels() const { return d_pixelLabels; }
 
     // Processes Runs into Blobs. Returns a set of blobs per label
-    std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> const& detectBlobs();
+    std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> const& detectBlobs(SequentialTimer& timer);
 
     std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> const& getDetectedBlobs() const { return d_blobsDetectedPerLabel; }
 

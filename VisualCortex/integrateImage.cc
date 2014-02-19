@@ -49,8 +49,9 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   }
 
   // Find blobs
-  auto blobsPerLabel = getHandler<BlobDetectPass>()->detectBlobs();
-  t.timeEvent("Blob Detection");
+  t.enter("Blob Detect");
+  auto blobsPerLabel = getHandler<BlobDetectPass>()->detectBlobs(t);
+  t.exit();
 
   //
   // UPDATE STATE
