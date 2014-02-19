@@ -44,7 +44,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
     // Track the other team numbers we see, and log them as new ones arrive
 
     bool areWeTeam1 = gameState->teamInfo1().getTeamNumber() == d_agent->getTeamNumber();
-    bool areWeTeam2 = gameState->teamInfo2().getTeamNumber() != d_agent->getTeamNumber();
+    bool areWeTeam2 = gameState->teamInfo2().getTeamNumber() == d_agent->getTeamNumber();
 
     // Verify that we're one of the teams mentioned in the message
     if (!areWeTeam1 && !areWeTeam2)
