@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../JointId/jointid.hh"
+#include "../Math/math.hh"
 
 namespace bold
 {
@@ -103,6 +104,9 @@ namespace bold
 
     /// Joint angle in radians
     double angleRads;
+
+    /// Joint angle in degrees (computed from radians.)
+    double angleDegs() const { return Math::radToDeg(angleRads); }
 
 //    /// Joint rate
 //    double rate;
