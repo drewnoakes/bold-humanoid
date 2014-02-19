@@ -21,7 +21,6 @@ std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
   {
     double speed = Math::clamp(d_speedCallback(), 0.0, 1.0);
 
-    // Predicate tells us not to progress this step... stall!
     d_startTimeSeconds += (1 - speed) * (t - d_lastTimeSeconds);
   }
 
