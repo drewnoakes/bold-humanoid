@@ -5,9 +5,9 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
   assert(d_rowIndices.size() > 1);
 
   // For each label that we're configured to look at
-  for (auto const& pixelLabels : d_pixelLabels)
+  for (shared_ptr<PixelLabel> const& pixelLabel : d_pixelLabels)
   {
-    uchar pixelLabelId = pixelLabels->id();
+    uchar pixelLabelId = pixelLabel->id();
 
     // Go through all runs and add them to the disjoint set
 
@@ -41,7 +41,7 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs()
 
     set<set<Run>> runSets = rSet.getSubSets();
 
-    auto& blobSet = d_blobsDetectedPerLabel[pixelLabels];
+    auto& blobSet = d_blobsDetectedPerLabel[pixelLabel];
     blobSet.clear();
 
     // Convert sets of run-sets to sets of blob
