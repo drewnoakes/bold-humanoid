@@ -437,6 +437,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto leftKickState = playingFsm->newState("leftKick", {leftKick});
     auto rightKickState = playingFsm->newState("rightKick", {rightKick});
 
+    lookAtFeetState->onEnter.connect([lookAtFeet]() { lookAtFeet->reset(); });
+
     standUpState
       ->transitionTo(lookForBallState)
       ->whenTerminated();
@@ -536,7 +538,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
     lookAtFeetState
       ->transitionTo(leftKickState)
-      ->when([lookAtFeetState]()
+      ->when([lookAtFeet,lookAtFeetState]()
       {
         if (lookAtFeetState->secondsSinceStart() < 1)
           return false;
@@ -545,19 +547,21 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         if (!lookAtFeetState->allOptionsTerminated())
           return false;
 
-        auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-
-        if (ballObs && ballObs->y() <= 0.2 && ballObs->x() < 0)
+        if (lookAtFeet->hasPosition())
         {
-          log::info("lookAtFeet2kickLeft") << "Kicking with left foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")";
-          return true;
+          auto ballPos = lookAtFeet->getAverageBallPositionAgentFrame();
+          if (ballPos.y() <= 0.2 && ballPos.x() < 0)
+          {
+            log::info("lookAtFeet2kickLeft") << "Kicking with left foot when ball at (" << ballPos.x() << "," << ballPos.y() << ")";
+            return true;
+          }
         }
         return false;
       });
 
     lookAtFeetState
       ->transitionTo(rightKickState)
-      ->when([lookAtFeetState]()
+      ->when([lookAtFeet,lookAtFeetState]()
       {
         if (lookAtFeetState->secondsSinceStart() < 1)
           return false;
@@ -566,12 +570,14 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         if (!lookAtFeetState->allOptionsTerminated())
           return false;
 
-        auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-
-        if (ballObs && ballObs->y() <= 0.2 && ballObs->x() > 0)
+        if (lookAtFeet->hasPosition())
         {
-          log::info("lookAtFeet2kickRight") << "Kicking with right foot when ball at (" << ballObs->x() << "," << ballObs->y() << ")";
-          return true;
+          auto ballPos = lookAtFeet->getAverageBallPositionAgentFrame();
+          if (ballPos.y() <= 0.2 && ballPos.x() < 0)
+          {
+            log::info("lookAtFeet2kickRight") << "Kicking with right foot when ball at (" << ballPos.x() << "," << ballPos.y() << ")";
+            return true;
+          }
         }
         return false;
       });
