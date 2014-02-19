@@ -11,6 +11,7 @@
 
 #include <libwebsockets.h>
 #include <opencv2/opencv.hpp>
+#include <sigc++/signal.h>
 
 #include "../StateObject/stateobject.hh"
 
@@ -61,6 +62,9 @@ namespace bold
     DataStreamer(std::shared_ptr<Camera> camera);
 
     void stop();
+
+    /// Emits signal whenever the first client connects to a protocol, or the last disconnects.
+    sigc::signal<void,std::string,bool> hasClientChanged;
 
     /** Returns true if there is at least one client connected to the camera image protocol. */
     bool hasCameraClients() const { return d_cameraSessions.size() != 0; }

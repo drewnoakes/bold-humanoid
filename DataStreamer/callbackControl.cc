@@ -18,6 +18,8 @@ int DataStreamer::callback_control(
     assert(ThreadUtil::isDataStreamerThread());
     jsonSession->initialise();
     d_controlSessions.push_back(jsonSession);
+    if (d_controlSessions.size() == 1)
+      hasClientChanged("control-protocol", true);
 
     // Write control sync message, with current snapshot of state
     jsonSession->queue.push(prepareControlSyncBytes());
@@ -30,6 +32,8 @@ int DataStreamer::callback_control(
     // Client disconnected
     assert(ThreadUtil::isDataStreamerThread());
     d_controlSessions.erase(find(d_controlSessions.begin(), d_controlSessions.end(), jsonSession));
+    if (d_controlSessions.size() == 0)
+      hasClientChanged("control-protocol", false);
     break;
   }
   case LWS_CALLBACK_SERVER_WRITEABLE:

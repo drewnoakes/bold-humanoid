@@ -22,6 +22,9 @@ int DataStreamer::callback_state(
     std::lock_guard<std::mutex> guard(d_stateSessionsMutex);
     d_stateSessions.insert(make_pair(protocol->name, jsonSession));
 
+    if (d_stateSessions.count(protocol->name) == 1)
+      hasClientChanged(protocol->name, true);
+
     // Some state objects change very infrequently (such as StaticHardwareState)
     // and so we send the latest object to a client when they connect.
 
@@ -59,6 +62,8 @@ int DataStreamer::callback_state(
       {
         // Found the session to remove. Remove it.
         d_stateSessions.erase(it);
+        if (d_stateSessions.count(protocol->name) == 0)
+          hasClientChanged(protocol->name, false);
         return 0;
       }
     }
