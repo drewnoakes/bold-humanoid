@@ -151,7 +151,11 @@ namespace bold
   //
   inline void BlobDetectPass::onImageStarting(SequentialTimer& timer)
   {
-    clear();
+    // Clear all persistent data
+    for (auto& pair : d_runsPerRowPerLabel)
+      for (std::vector<Run>& runs : pair.second)
+        runs.clear();
+    d_rowIndices.clear();
   }
 
   inline void BlobDetectPass::clear()
@@ -161,6 +165,11 @@ namespace bold
       for (std::vector<Run>& runs : pair.second)
         runs.clear();
     d_rowIndices.clear();
+    for (auto& pair : d_blobsDetectedPerLabel)
+    {
+      auto& blobs = pair.second;
+      blobs.clear();
+    }
   }
 
   inline void BlobDetectPass::onRowStarting(ushort y, Eigen::Vector2i const& granularity)

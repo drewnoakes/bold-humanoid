@@ -56,6 +56,9 @@ define(
             this.closables.add(ControlBuilder.build('vision.ignore-above-horizon', visionOptionsContainer));
             this.closables.add(ControlBuilder.build('vision.label-counter.enable', visionOptionsContainer));
 
+            var blobSettingsContainer = element.querySelector('div.blob-detection');
+            this.closables.add(ControlBuilder.build('vision.blob-detection.enable', blobSettingsContainer));
+
             var ballSettingsContainer = element.querySelector('div.ball-detection');
             this.closables.add(ControlBuilder.build('vision.enable-ball-blob-merging', ballSettingsContainer));
             this.closables.add(ControlBuilder.build('vision.min-ball-area', ballSettingsContainer));

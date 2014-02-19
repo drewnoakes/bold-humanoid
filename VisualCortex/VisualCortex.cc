@@ -19,6 +19,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_shouldDetectLines         = Config::getSetting<bool>("vision.line-detection.enable");
   d_shouldCountLabels         = Config::getSetting<bool>("vision.label-counter.enable");
+  d_shouldDetectBlobs         = Config::getSetting<bool>("vision.blob-detection.enable");
 
   d_shouldIgnoreAboveHorizon  = Config::getSetting<bool>("vision.ignore-above-horizon");
   d_shouldIgnoreOutsideField  = Config::getSetting<bool>("vision.ignore-outside-field");
@@ -180,9 +181,13 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_shouldDetectLines->track([this](bool value) { d_imagePassRunner->setHandler(getHandler<LineDotPass<uchar>>(), value); });
   d_shouldCountLabels->track([this](bool value) { d_imagePassRunner->setHandler(getHandler<LabelCountPass>(), value); });
-
-  // TODO SETTINGS create a setting to turn this feature on and off
-  d_imagePassRunner->addHandler(getHandler<BlobDetectPass>());
+  d_shouldDetectBlobs->track([this](bool value)
+  {
+    auto const& handler = getHandler<BlobDetectPass>();
+    d_imagePassRunner->setHandler(handler, value);
+    if (!value)
+      handler->clear();
+  });
 
   // Only include the cartoon pass when needed
   d_imageType->track([this](ImageType value) { d_imagePassRunner->setHandler(getHandler<CartoonPass>(), value == ImageType::Cartoon); });

@@ -165,6 +165,7 @@ namespace bold
 
     Setting<bool>* d_shouldDetectLines;
     Setting<bool>* d_shouldCountLabels;
+    Setting<bool>* d_shouldDetectBlobs;
     Setting<bool>* d_shouldIgnoreAboveHorizon;
     Setting<bool>* d_shouldIgnoreOutsideField;
 

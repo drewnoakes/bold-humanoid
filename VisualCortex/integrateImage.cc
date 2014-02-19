@@ -48,128 +48,131 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     t.timeEvent("Line Search");
   }
 
-  // Find blobs
-  t.enter("Blob Detect");
-  auto blobsPerLabel = getHandler<BlobDetectPass>()->detectBlobs(t);
-  t.exit();
-
-  //
-  // UPDATE STATE
-  //
-
   Maybe<Vector2d> ballPosition = Maybe<Vector2d>::empty();
+  vector<Vector2d,aligned_allocator<Vector2d>> goalPositions;
 
-  // Might we have a ball?
-  if (blobsPerLabel[d_ballLabel].size() > 0)
+  if (d_shouldDetectBlobs->getValue())
   {
-    vector<Blob>& ballBlobs = blobsPerLabel[d_ballLabel];
+    // Find blobs
+    t.enter("Blob Detect");
+    auto blobsPerLabel = getHandler<BlobDetectPass>()->detectBlobs(t);
+    t.exit();
 
-    if (d_ballBlobMergingEnabled->getValue())
+    //
+    // UPDATE STATE
+    //
+
+    // Might we have a ball?
+    if (blobsPerLabel[d_ballLabel].size() > 0)
     {
-      // Merge ball blobs
-      for (int i = 0; i < min(10, (int)ballBlobs.size()); ++i)
+      vector<Blob>& ballBlobs = blobsPerLabel[d_ballLabel];
+
+      if (d_ballBlobMergingEnabled->getValue())
       {
-        Blob& larger = ballBlobs[i];
-
-        if (larger.area == 0)
-          continue;
-
-        if (larger.area < d_minBallArea->getValue())
+        // Merge ball blobs
+        for (int i = 0; i < min(10, (int)ballBlobs.size()); ++i)
         {
-          // Blobs are sorted, largest first, so if this is too small, the rest will be too
+          Blob& larger = ballBlobs[i];
+
+          if (larger.area == 0)
+            continue;
+
+          if (larger.area < d_minBallArea->getValue())
+          {
+            // Blobs are sorted, largest first, so if this is too small, the rest will be too
+            break;
+          }
+
+          for (int j = i + 1; j < min(10, (int)ballBlobs.size()); ++j)
+          {
+            Blob& smaller = ballBlobs[j];
+
+            if (smaller.area == 0)
+              continue;
+
+            if (shouldMergeBallBlobs(larger.bounds(), smaller.bounds()))
+            {
+              larger.merge(smaller);
+              // Indicate that the smaller one is no longer in use
+              smaller.area = 0;
+            }
+          }
+        }
+        t.timeEvent("Ball Blob Merging");
+      }
+
+      // The first is the biggest, topmost ball blob
+      for (Blob const& ballBlob : ballBlobs)
+      {
+        // Ignore balls that are too small (avoid noise)
+        if (ballBlob.area < d_minBallArea->getValue())
+        {
+          // As blobs are sorted largest to smallest, stop at the first one that's too small
           break;
         }
 
-        for (int j = i + 1; j < min(10, (int)ballBlobs.size()); ++j)
+        // Filter out invalid ball blobs
+        Vector2d pos;
+        if (canBlobBeBall(ballBlob, &pos))
         {
-          Blob& smaller = ballBlobs[j];
-
-          if (smaller.area == 0)
-            continue;
-
-          if (shouldMergeBallBlobs(larger.bounds(), smaller.bounds()))
-          {
-            larger.merge(smaller);
-            // Indicate that the smaller one is no longer in use
-            smaller.area = 0;
-          }
+          ballPosition = Maybe<Vector2d>(pos);
+          break;
         }
       }
-      t.timeEvent("Ball Blob Merging");
+      t.timeEvent("Ball Blob Selection");
     }
 
-    // The first is the biggest, topmost ball blob
-    for (Blob const& ballBlob : ballBlobs)
+    // Do we have goal posts?
+    vector<Blob,aligned_allocator<Blob>> acceptedGoalBlobs;
+    int allowedGoalFieldEdgeDistPixels = d_maxGoalFieldEdgeDistPixels->getValue();
+    int minGoalDimensionPixels = d_minGoalDimensionPixels->getValue();
+    for (Blob const& goalBlob : blobsPerLabel[d_goalLabel])
     {
-      // Ignore balls that are too small (avoid noise)
-      if (ballBlob.area < d_minBallArea->getValue())
-      {
-        // As blobs are sorted largest to smallest, stop at the first one that's too small
-        break;
-      }
-
-      // Filter out invalid ball blobs
-      Vector2d pos;
-      if (canBlobBeBall(ballBlob, &pos))
-      {
-        ballPosition = Maybe<Vector2d>(pos);
-        break;
-      }
-    }
-    t.timeEvent("Ball Blob Selection");
-  }
-
-  // Do we have goal posts?
-  vector<Vector2d,aligned_allocator<Vector2d>> goalPositions;
-  vector<Blob,aligned_allocator<Blob>> acceptedGoalBlobs;
-  int allowedGoalFieldEdgeDistPixels = d_maxGoalFieldEdgeDistPixels->getValue();
-  int minGoalDimensionPixels = d_minGoalDimensionPixels->getValue();
-  for (Blob const& goalBlob : blobsPerLabel[d_goalLabel])
-  {
-    // Ignore goal if it appears outside of field
-    //
-    // NOTE Process this before anything else as anything above the field edge is wasting our time
-    if (goalBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x()) + allowedGoalFieldEdgeDistPixels)
-       continue;
-
-    // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
-    Vector2i wh = goalBlob.br - goalBlob.ul;
-
-    if (wh.minCoeff() > minGoalDimensionPixels && // Ignore small blobs
-        wh.y() > wh.x())                          // Taller than it is wide
-    {
-      // Verify this blob does not overlap with a goal blob which was already accepted
-      for (auto const& other : acceptedGoalBlobs)
-      {
-        // Blobs are sorted by size, descending.
-        // If a smaller goal blob intersects a larger blob that we already
-        // accepted as a goal, ignore the smaller one.
-        if (goalBlob.bounds().overlaps(other.bounds()))
-          continue;
-      }
-
-      // Discard blobs that would be too wide/narrow for the goal we expect at that position of the frame
-      Vector2d pos;
-      if (!canBlobBeGoal(goalBlob, &pos))
+      // Ignore goal if it appears outside of field
+      //
+      // NOTE Process this before anything else as anything above the field edge is wasting our time
+      if (goalBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x()) + allowedGoalFieldEdgeDistPixels)
         continue;
 
-      goalPositions.push_back(pos);
-      acceptedGoalBlobs.push_back(goalBlob);
-    }
-  }
-  t.timeEvent("Goal Blob Selection");
+      // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
+      Vector2i wh = goalBlob.br - goalBlob.ul;
 
-  if (log::minLevel <= LogLevel::Verbose && acceptedGoalBlobs.size() > 2)
-  {
-    // It's pretty rare that we should see three goal posts, so log information about the blobs
-    log::verbose("VisualCortex::integrateImage") << acceptedGoalBlobs.size() << " accepted goal blobs";
-    for (Blob const& goalBlob : acceptedGoalBlobs)
+      if (wh.minCoeff() > minGoalDimensionPixels && // Ignore small blobs
+          wh.y() > wh.x())                          // Taller than it is wide
+      {
+        // Verify this blob does not overlap with a goal blob which was already accepted
+        for (auto const& other : acceptedGoalBlobs)
+        {
+          // Blobs are sorted by size, descending.
+          // If a smaller goal blob intersects a larger blob that we already
+          // accepted as a goal, ignore the smaller one.
+          if (goalBlob.bounds().overlaps(other.bounds()))
+            continue;
+        }
+
+        // Discard blobs that would be too wide/narrow for the goal we expect at that position of the frame
+        Vector2d pos;
+        if (!canBlobBeGoal(goalBlob, &pos))
+          continue;
+
+        goalPositions.push_back(pos);
+        acceptedGoalBlobs.push_back(goalBlob);
+      }
+    }
+    t.timeEvent("Goal Blob Selection");
+
+    if (log::minLevel <= LogLevel::Verbose && acceptedGoalBlobs.size() > 2)
     {
-      log::verbose("VisualCortex::integrateImage")
-        << goalBlob.br.x() << ","
-        << goalBlob.br.y() << ","
-        << goalBlob.ul.x() << ","
-        << goalBlob.ul.y();
+      // It's pretty rare that we should see three goal posts, so log information about the blobs
+      log::verbose("VisualCortex::integrateImage") << acceptedGoalBlobs.size() << " accepted goal blobs";
+      for (Blob const& goalBlob : acceptedGoalBlobs)
+      {
+        log::verbose("VisualCortex::integrateImage")
+          << goalBlob.br.x() << ","
+          << goalBlob.br.y() << ","
+          << goalBlob.ul.x() << ","
+          << goalBlob.ul.y();
+      }
     }
   }
 
