@@ -1,8 +1,11 @@
 #pragma once
 
 #include "../option.hh"
-
 #include "../../Config/config.hh"
+#include "../../stats/movingaverage.hh"
+#include "../../util/log.hh"
+
+#include <Eigen/Core>
 
 namespace bold
 {
@@ -13,15 +16,32 @@ namespace bold
   public:
     LookAtFeet(std::string const& id, std::shared_ptr<HeadModule> headModule)
     : Option(id),
+      d_avgBallPos(30),
       d_headModule(headModule)
     {
       d_panDegs = Config::getSetting<double>("options.look-at-feet.head-pan-degs");
       d_tiltDegs = Config::getSetting<double>("options.look-at-feet.head-tilt-degs");
     }
 
+    void reset() { d_avgBallPos.reset(); }
+
     std::vector<std::shared_ptr<Option>> runPolicy() override;
 
+    bool hasPosition() const { return d_avgBallPos.count() != 0; }
+
+    Eigen::Vector3d getAverageBallPositionAgentFrame() const
+    {
+      if (d_avgBallPos.count() == 0)
+      {
+        log::error("LookAtFeet::getBallPositionAgentFrame") << "No ball observations available";
+        throw std::runtime_error("No ball observations available");
+      }
+
+      return d_avgBallPos.getAverage();
+    }
+
   private:
+    MovingAverage<Eigen::Vector3d> d_avgBallPos;
     std::shared_ptr<HeadModule> d_headModule;
     Setting<double>* d_panDegs;
     Setting<double>* d_tiltDegs;
