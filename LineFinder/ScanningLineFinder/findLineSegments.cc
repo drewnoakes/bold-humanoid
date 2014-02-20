@@ -71,7 +71,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
         }
       }
     }
-  
+
     if (closest != regStates.end())
     {
       // Fit found; add point
@@ -108,7 +108,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
 
   float minLength = d_minLength->getValue();
   float minCoverage = d_minCoverage->getValue();
-  float maxRMSError = d_maxRMSError->getValue();
+//   float maxRMSError = d_maxRMSError->getValue();
 
   vector<LineSegment2i> lineSegments;
   for (auto& regState : regStates)

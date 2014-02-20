@@ -13,7 +13,7 @@ void Localiser::predict()
     auto transformMatrix = deltaQuaternion.matrix();
     Vector2d forward = transformMatrix.col(1).head<2>();
     double deltaTheta = -atan2(forward.x(), forward.y());
-    auto rotationTransform = AngleAxisd(deltaTheta, Vector3d(0,0,1));
+//     auto rotationTransform = AngleAxisd(deltaTheta, Vector3d(0,0,1));
     auto agentTranslation = odometryState->getTranslation() - d_lastTranslation;
 
     d_filter->predict([deltaTheta,&agentTranslation,this](Vector3d const& state) -> Vector3d
