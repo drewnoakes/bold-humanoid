@@ -105,7 +105,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     {
       auto ballColor = Colour::bgr(0, 0, 255);
       Rect rect((int)round(ball->x()), (int)round(ball->y()), 5, 5);
-      cv::rectangle(debugImage, rect, ballColor.toScalar());
+      cv::rectangle(debugImage, rect, ballColor.toScalar(), CV_FILLED);
     }
 
     auto goals = cameraFrame->getGoalObservations();
