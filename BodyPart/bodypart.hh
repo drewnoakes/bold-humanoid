@@ -62,8 +62,7 @@ namespace bold
   struct Limb : public BodyPart
   {
     Limb(std::string name)
-    : BodyPart(name),
-      id()
+    : BodyPart(name)
     {}
 
     /// Weight of limb
@@ -77,9 +76,6 @@ namespace bold
 
     /// Vector of joints attached to this limb
     std::vector<std::shared_ptr<Joint>> joints;
-
-    // This bodypart's identifier
-    unsigned id;
 
     // Needed when having fixed sized Eigen member
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
