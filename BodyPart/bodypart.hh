@@ -15,8 +15,7 @@ namespace bold
   {
     BodyPart(std::string name)
     : name(name),
-      transform(),
-      rotationOrigin()
+      rotationOrigin(0)
     {}
 
     virtual ~BodyPart() {}
@@ -64,10 +63,6 @@ namespace bold
   {
     Limb(std::string name)
     : BodyPart(name),
-//       weight(),
-//       relativeWeight(),
-//       size(),
-      joints(),
       id()
     {}
 
@@ -97,13 +92,8 @@ namespace bold
   {
     Joint(JointId id, std::string name)
     : BodyPart(name),
-      axis(),
-//    bounds(),
       id(id),
-//    rate(0), torque(0), control(0)
-      angleRads(0),
-      childPart(),
-      anchors()
+      angleRads(0)
     {}
 
     /// Axis of joint in local coordinate system
