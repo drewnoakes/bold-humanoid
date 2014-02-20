@@ -15,8 +15,8 @@ namespace bold
   {
     BodyPart(std::string name)
     : name(name),
-      transform(Eigen::Affine3d::Identity()),
-      rotationOrigin(0)
+      transform(),
+      rotationOrigin()
     {}
 
     virtual ~BodyPart() {}
@@ -68,7 +68,7 @@ namespace bold
 //       relativeWeight(),
 //       size(),
       joints(),
-      id(0)
+      id()
     {}
 
     /// Weight of limb
@@ -97,13 +97,13 @@ namespace bold
   {
     Joint(JointId id, std::string name)
     : BodyPart(name),
-      axis(0,0,0),
+      axis(),
 //    bounds(),
       id(id),
 //    rate(0), torque(0), control(0)
       angleRads(0),
-      childPart(nullptr),
-      anchors({0,0,0},{0,0,0})
+      childPart(),
+      anchors()
     {}
 
     /// Axis of joint in local coordinate system

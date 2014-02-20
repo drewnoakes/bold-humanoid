@@ -30,83 +30,102 @@ TEST (BodyStateTests, posture_zeroed)
   auto leftFoot = body.getLimb("lFoot");
   auto rightFoot = body.getLimb("rFoot");
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(-footSide, footForward, -footDownward),
-                             Vector3d(leftFoot->transform.translation()) ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-footSide, footForward, -footDownward),
+             Vector3d(leftFoot->transform.translation()) ));
   EXPECT_TRUE( (leftFoot->transform.rotation() - Matrix3d::Identity()).isZero() ) << "Has no rotation";
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(-footSide, footForward, -footDownward),
-                             leftFoot->transform * Vector3d(0,0,0) ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-footSide, footForward, -footDownward),
+             leftFoot->transform * Vector3d(0,0,0) ));
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(footSide, -footForward, footDownward),
-                             leftFoot->transform.inverse() * Vector3d(0,0,0) ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(footSide, -footForward, footDownward),
+             leftFoot->transform.inverse() * Vector3d(0,0,0) ));
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(footSide, footForward, -footDownward),
-                             Vector3d(rightFoot->transform.translation()) ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(footSide, footForward, -footDownward),
+             Vector3d(rightFoot->transform.translation()) ))
+  ;
   EXPECT_TRUE( (rightFoot->transform.rotation() - Matrix3d::Identity()).isZero() ) << "Has no rotation";
 
   // Neck
 
-  EXPECT_TRUE( VectorsEqual( Vector3d( 0, 0, 0.0505),
-                             body.getJoint(JointId::HEAD_PAN)->getPosition() ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d( 0, 0, 0.0505),
+             body.getJoint(JointId::HEAD_PAN)->getPosition() ));
 
-  EXPECT_TRUE( VectorsEqual( Vector3d( 0, 0, 0.0505),
-                             body.getJoint(JointId::HEAD_TILT)->getPosition() ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d( 0, 0, 0.0505),
+             body.getJoint(JointId::HEAD_TILT)->getPosition() ));
 
   // Left arm
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(-0.082, 0, 0),
-                             body.getJoint(JointId::L_SHOULDER_PITCH)->getPosition() ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-0.082, 0, 0),
+             body.getJoint(JointId::L_SHOULDER_PITCH)->getPosition() ));
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(-0.082, 0, -0.016),
-                             body.getJoint(JointId::L_SHOULDER_ROLL)->getPosition() ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-0.082, 0, -0.016),
+             body.getJoint(JointId::L_SHOULDER_ROLL)->getPosition() ));
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(-0.082 - diagArmLen, 0.016, -0.016 - diagArmLen),
-                             body.getJoint(JointId::L_ELBOW)->getPosition() ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-0.082 - diagArmLen, 0.016, -0.016 - diagArmLen),
+             body.getJoint(JointId::L_ELBOW)->getPosition() ));
 
   // Right arm
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(0.082, 0, 0),
-                             body.getJoint(JointId::R_SHOULDER_PITCH)->getPosition() ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(0.082, 0, 0),
+             body.getJoint(JointId::R_SHOULDER_PITCH)->getPosition() ));
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(0.082, 0, -0.016),
-                             body.getJoint(JointId::R_SHOULDER_ROLL)->getPosition() ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(0.082, 0, -0.016),
+             body.getJoint(JointId::R_SHOULDER_ROLL)->getPosition() ));
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(0.082 + diagArmLen, 0.016, -0.016 - diagArmLen),
-                             body.getJoint(JointId::R_ELBOW)->getPosition() ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(0.082 + diagArmLen, 0.016, -0.016 - diagArmLen),
+             body.getJoint(JointId::R_ELBOW)->getPosition() ));
 
   // Misc distances
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(diagArmLen, 0.016, -diagArmLen),
-                             BodyState::distanceBetween(
-                               body.getJoint(JointId::R_SHOULDER_ROLL),
-                               body.getJoint(JointId::R_ELBOW)) ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(diagArmLen, 0.016, -diagArmLen),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::R_SHOULDER_ROLL),
+               body.getJoint(JointId::R_ELBOW)) ));
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(2*0.082 + 2*diagArmLen, 0, 0),
-                             BodyState::distanceBetween(
-                               body.getJoint(JointId::L_ELBOW),
-                               body.getJoint(JointId::R_ELBOW)) ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(2*0.082 + 2*diagArmLen, 0, 0),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::L_ELBOW),
+               body.getJoint(JointId::R_ELBOW)) ));
 
   // Verify all three hip joints are coincident
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(0, 0, 0),
-                             BodyState::distanceBetween(
-                               body.getJoint(JointId::HEAD_TILT),
-                               body.getJoint(JointId::HEAD_PAN)) ) ) << "Coincident joints";
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(0, 0, 0),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::HEAD_TILT),
+               body.getJoint(JointId::HEAD_PAN)) )) << "Coincident joints";
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(0, 0, 0),
-                             BodyState::distanceBetween(
-                               body.getJoint(JointId::L_HIP_PITCH),
-                               body.getJoint(JointId::L_HIP_ROLL)) ) ) << "Coincident joints";
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(0, 0, 0),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::L_HIP_PITCH),
+               body.getJoint(JointId::L_HIP_ROLL)) )) << "Coincident joints";
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(0, 0, 0),
-                             BodyState::distanceBetween(
-                               body.getJoint(JointId::L_HIP_YAW),
-                               body.getJoint(JointId::L_HIP_ROLL)) ) ) << "Coincident joints";
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(0, 0, 0),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::L_HIP_YAW),
+               body.getJoint(JointId::L_HIP_ROLL)) )) << "Coincident joints";
 
-  EXPECT_TRUE( VectorsEqual( Vector3d(-diagArmLen, 0.016, -diagArmLen),
-                             BodyState::distanceBetween(
-                               body.getJoint(JointId::L_SHOULDER_ROLL),
-                               body.getJoint(JointId::L_ELBOW)) ) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-diagArmLen, 0.016, -diagArmLen),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::L_SHOULDER_ROLL),
+               body.getJoint(JointId::L_ELBOW)) ));
 
   EXPECT_TRUE(
     VectorsEqual(
@@ -115,7 +134,7 @@ TEST (BodyStateTests, posture_zeroed)
                 diagArmLen + 0.016 - 0.1222 - 0.093 - 0.093),
       BodyState::distanceBetween(
         body.getJoint(JointId::L_ELBOW),
-        body.getJoint(JointId::R_ANKLE_ROLL))) );
+        body.getJoint(JointId::R_ANKLE_ROLL)) ));
 }
 
 TEST (BodyStateTests, posture_legsToSides)
@@ -130,16 +149,27 @@ TEST (BodyStateTests, posture_legsToSides)
   auto leftFoot = body.getLimb("lFoot");
   auto rightFoot = body.getLimb("rFoot");
 
-  EXPECT_EQ( Vector3d(-0.074/2 - legLength, footForward, -0.1222), Vector3d(leftFoot ->transform.translation()) );
-  EXPECT_EQ( Vector3d( 0.074/2 + legLength, footForward, -0.1222), Vector3d(rightFoot->transform.translation()) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-0.074/2 - legLength, footForward, -0.1222),
+             Vector3d(leftFoot ->transform.translation()) ));
 
-  EXPECT_EQ( AngleAxisd( M_PI/2, Vector3d::UnitY()).matrix(), leftFoot ->transform.rotation().matrix() );
-  EXPECT_EQ( AngleAxisd(-M_PI/2, Vector3d::UnitY()).matrix(), rightFoot->transform.rotation().matrix() );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d( 0.074/2 + legLength, footForward, -0.1222),
+             Vector3d(rightFoot->transform.translation()) ));
 
-  EXPECT_EQ ( Vector3d(4*0.093 + 0.074, 0, 0),
-              BodyState::distanceBetween(
-                body.getJoint(JointId::L_ANKLE_PITCH),
-                body.getJoint(JointId::R_ANKLE_PITCH)) );
+  EXPECT_TRUE(MatricesEqual(
+             AngleAxisd( M_PI/2, Vector3d::UnitY()).matrix(),
+             leftFoot ->transform.rotation().matrix() ));
+
+  EXPECT_TRUE(MatricesEqual(
+             AngleAxisd(-M_PI/2, Vector3d::UnitY()).matrix(),
+             rightFoot->transform.rotation().matrix() ));
+
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(4*0.093 + 0.074, 0, 0),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::L_ANKLE_PITCH),
+               body.getJoint(JointId::R_ANKLE_PITCH)) ));
 }
 
 TEST (BodyStateTests, posture_legsForwards)
@@ -154,16 +184,27 @@ TEST (BodyStateTests, posture_legsForwards)
   auto leftFoot = body.getLimb("lFoot");
   auto rightFoot = body.getLimb("rFoot");
 
-  EXPECT_EQ( Vector3d(-0.074/2, footForward + legLength, -0.1222), Vector3d(leftFoot ->transform.translation()) );
-  EXPECT_EQ( Vector3d( 0.074/2, footForward + legLength, -0.1222), Vector3d(rightFoot->transform.translation()) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-0.074/2, footForward + legLength, -0.1222),
+             Vector3d(leftFoot ->transform.translation()) ));
 
-  EXPECT_EQ( AngleAxisd(M_PI/2, Vector3d::UnitX()).matrix(), leftFoot ->transform.rotation().matrix() );
-  EXPECT_EQ( AngleAxisd(M_PI/2, Vector3d::UnitX()).matrix(), rightFoot->transform.rotation().matrix() );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d( 0.074/2, footForward + legLength, -0.1222),
+             Vector3d(rightFoot->transform.translation()) ));
 
-  EXPECT_EQ ( Vector3d(0.074, 0, 0),
-              BodyState::distanceBetween(
-                body.getJoint(JointId::L_ANKLE_PITCH),
-                body.getJoint(JointId::R_ANKLE_PITCH)) );
+  EXPECT_TRUE(MatricesEqual(
+             AngleAxisd(M_PI/2, Vector3d::UnitX()).matrix(),
+             leftFoot ->transform.rotation().matrix() ));
+
+  EXPECT_TRUE(MatricesEqual(
+             AngleAxisd(M_PI/2, Vector3d::UnitX()).matrix(),
+             rightFoot->transform.rotation().matrix() ));
+
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(0.074, 0, 0),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::L_ANKLE_PITCH),
+               body.getJoint(JointId::R_ANKLE_PITCH)) ));
 }
 
 TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
@@ -178,22 +219,39 @@ TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
   auto leftFoot = body.getLimb("lFoot");
   auto rightFoot = body.getLimb("rFoot");
 
-  EXPECT_EQ( Vector3d(-0.074/2, footForward, -0.1222 - 0.093), body.getJoint(JointId::L_KNEE)->getPosition() );
-  EXPECT_EQ( Vector3d( 0.074/2, footForward, -0.1222 - 0.093), body.getJoint(JointId::R_KNEE)->getPosition() );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-0.074/2, footForward, -0.1222 - 0.093),
+             body.getJoint(JointId::L_KNEE)->getPosition() ));
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d( 0.074/2, footForward, -0.1222 - 0.093),
+             body.getJoint(JointId::R_KNEE)->getPosition() ));
 
-  EXPECT_EQ( Vector3d(-0.074/2, footForward - 0.093, -0.1222 - 0.093), body.getJoint(JointId::L_ANKLE_PITCH)->getPosition() );
-  EXPECT_EQ( Vector3d( 0.074/2, footForward - 0.093, -0.1222 - 0.093), body.getJoint(JointId::R_ANKLE_PITCH)->getPosition() );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-0.074/2, footForward - 0.093, -0.1222 - 0.093),
+             body.getJoint(JointId::L_ANKLE_PITCH)->getPosition() ));
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d( 0.074/2, footForward - 0.093, -0.1222 - 0.093),
+             body.getJoint(JointId::R_ANKLE_PITCH)->getPosition() ));
 
-  EXPECT_EQ( Vector3d(-0.074/2, footForward - 0.093 - 0.0335, -0.1222 - 0.093), Vector3d(leftFoot ->transform.translation()) );
-  EXPECT_EQ( Vector3d( 0.074/2, footForward - 0.093 - 0.0335, -0.1222 - 0.093), Vector3d(rightFoot->transform.translation()) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(-0.074/2, footForward - 0.093 - 0.0335, -0.1222 - 0.093),
+             Vector3d(leftFoot ->transform.translation()) ));
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d( 0.074/2, footForward - 0.093 - 0.0335, -0.1222 - 0.093),
+             Vector3d(rightFoot->transform.translation()) ));
 
-  EXPECT_EQ( AngleAxisd(-M_PI/2, Vector3d::UnitX()).matrix(), leftFoot ->transform.rotation().matrix() );
-  EXPECT_EQ( AngleAxisd(-M_PI/2, Vector3d::UnitX()).matrix(), rightFoot->transform.rotation().matrix() );
+  EXPECT_TRUE(MatricesEqual(
+             AngleAxisd(-M_PI/2, Vector3d::UnitX()).matrix(),
+             leftFoot ->transform.rotation().matrix() ));
+  EXPECT_TRUE(MatricesEqual(
+             AngleAxisd(-M_PI/2, Vector3d::UnitX()).matrix(),
+             rightFoot->transform.rotation().matrix() ));
 
-  EXPECT_EQ ( Vector3d(0.074, 0, 0),
-              BodyState::distanceBetween(
-                body.getJoint(JointId::L_ANKLE_PITCH),
-                body.getJoint(JointId::R_ANKLE_PITCH)) );
+  EXPECT_TRUE(VectorsEqual(
+             Vector3d(0.074, 0, 0),
+             BodyState::distanceBetween(
+               body.getJoint(JointId::L_ANKLE_PITCH),
+               body.getJoint(JointId::R_ANKLE_PITCH)) ));
 }
 
 TEST (BodyStateTests, camera_zeroed)
@@ -278,4 +336,31 @@ TEST (JointTest, initialState)
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.axis) );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.anchors.first) );
   EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), joint.anchors.second) );
+  EXPECT_EQ   ( nullptr, joint.childPart );
+
+  auto sharedJoint = allocate_aligned_shared<Joint>(JointId::L_KNEE, "test-limb");
+
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), sharedJoint->axis) );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), sharedJoint->anchors.first) );
+  EXPECT_TRUE ( VectorsEqual(Vector3d(0,0,0), sharedJoint->anchors.second) );
+  EXPECT_EQ   ( nullptr, sharedJoint->childPart );
+}
+
+TEST (LimbTest, initialState)
+{
+  Limb limb("test-limb");
+
+  EXPECT_EQ ( "test-limb", limb.name );
+  EXPECT_EQ ( 0, limb.rotationOrigin );
+  EXPECT_EQ ( 0, limb.joints.size() );
+
+  auto sharedLimb = allocate_aligned_shared<Limb>("test-limb");
+
+  EXPECT_EQ ( "test-limb", sharedLimb->name );
+  EXPECT_EQ ( 0, sharedLimb->rotationOrigin );
+  EXPECT_EQ ( 0, sharedLimb->joints.size() );
+
+  // NOTE we don't test the transform value here as it will always be explicitly
+  //      set, overwriting the initial value and we don't need to waste time
+  //      initialising the value at construction.
 }
