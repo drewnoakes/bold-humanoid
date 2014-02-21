@@ -496,11 +496,12 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       {
         // If the ball is far away, then stop looking for the goal
         // TODO use filtered ball position
-        return stepUpDownThreshold(5, []()
+        return stepUpDownThreshold(6, []()
         {
           auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
           static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
-          return ballObs && ballObs->head<2>().norm() > 3 * stoppingDistance->getValue();
+          // TODO introduce another setting 'max-kick-distance' instead of this scaling of the stop distance
+          return ballObs && ballObs->head<2>().norm() > 2 * stoppingDistance->getValue();
         });
       });
 
