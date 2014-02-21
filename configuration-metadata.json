@@ -249,8 +249,8 @@
       "upper-turn-limit-degs": { "type": "double", "default": 35.0 }
     },
     "look-around": {
-      "top-angle":      { "type": "double", "default": 30.0 },
-      "bottom-angle":   { "type": "double", "default": -25.0 },
+      "top-angle":      { "type": "double", "default": 23.0 },
+      "bottom-angle":   { "type": "double", "default": -17.0 },
       "horiz-duration": { "type": "double", "default": 2.3 },
       "vert-duration":  { "type": "double", "default": 0.2 }
     },
