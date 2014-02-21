@@ -37,20 +37,26 @@ TEST(SequentialTimerTests, enterExit)
   t.timeEvent("1");
 
   t.enter("a");
-  EXPECT_EQ("a", t.getPrefix());
+  {
+    EXPECT_EQ("a", t.getPrefix());
+    usleep(5000);
 
-  t.timeEvent("2");
+    t.timeEvent("2");
 
-  t.enter("b");
-  EXPECT_EQ("a/b", t.getPrefix());
+    t.enter("b");
+    {
+      EXPECT_EQ("a/b", t.getPrefix());
+      usleep(5000);
 
-  t.timeEvent("3");
+      t.timeEvent("3");
+    }
+    t.exit();
 
-  t.exit();
-  EXPECT_EQ("a", t.getPrefix());
+    EXPECT_EQ("a", t.getPrefix());
 
-  t.timeEvent("4");
-
+    usleep(5000);
+    t.timeEvent("4");
+  }
   t.exit();
   EXPECT_EQ("", t.getPrefix());
 
@@ -67,4 +73,43 @@ TEST(SequentialTimerTests, enterExit)
   EXPECT_EQ("a/4", items[4].second);
   EXPECT_EQ("a", items[5].second);
   EXPECT_EQ("5", items[6].second);
+
+  EXPECT_NEAR(
+    items[1].first + items[3].first + items[4].first,
+    items[5].first, 2); // within 2ms
+}
+
+
+TEST(SequentialTimerTests, nesting)
+{
+  SequentialTimer t;
+  t.enter("a");
+  {
+    t.enter("b");
+    {
+      usleep(5000);
+      t.timeEvent("1");
+      usleep(2000);
+      t.timeEvent("2");
+    }
+    t.exit();
+  }
+  t.exit();
+
+  auto items = *t.flush();
+
+  EXPECT_EQ(4, items.size());
+
+  EXPECT_EQ("a/b/1", items[0].second);
+  EXPECT_EQ("a/b/2", items[1].second);
+  EXPECT_EQ("a/b",   items[2].second);
+  EXPECT_EQ("a",     items[3].second);
+
+  EXPECT_NEAR(
+    items[0].first + items[1].first,
+    items[3].first, 1);
+
+  EXPECT_NEAR(
+    items[0].first + items[1].first,
+    items[3].first, 1);
 }
