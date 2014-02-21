@@ -474,8 +474,10 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       ->when([playingFsm]()
       {
         // Approach ball until we're within a given distance
+        // TODO use filtered ball position
         auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-        return ballObs && (ballObs->head<2>().norm() < Config::getValue<double>("options.approach-ball.stop-distance"));
+        static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
+        return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
       });
 
     lookForGoalState
@@ -485,6 +487,21 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         // TODO use the localiser here rather than requiring both posts to be in frame
         auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
         return goalsObs.size() >= 2;
+      });
+
+    // if we notice the ball has gone while looking for the goal, quit
+    lookForGoalState
+      ->transitionTo(lookForBallState)
+      ->when([]()
+      {
+        // If the ball is far away, then stop looking for the goal
+        // TODO use filtered ball position
+        return stepUpDownThreshold(5, []()
+        {
+          auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+          static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
+          return ballObs && ballObs->head<2>().norm() > 3 * stoppingDistance->getValue();
+        });
       });
 
     // limit how long we will look for the goal
