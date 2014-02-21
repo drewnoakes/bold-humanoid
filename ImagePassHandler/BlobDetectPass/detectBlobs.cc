@@ -9,6 +9,8 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(Sequ
   // For each label that we're configured to look at
   for (shared_ptr<PixelLabel> const& pixelLabel : d_pixelLabels)
   {
+    timer.enter(pixelLabel->name());
+
     uchar pixelLabelId = pixelLabel->id();
 
     // Go through all runs and add them to the disjoint set
@@ -41,7 +43,11 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(Sequ
       }
     }
 
+    timer.timeEvent("Build Run Set");
+
     set<set<Run>> runSets = rSet.getSubSets();
+
+    timer.timeEvent("Get SubSets");
 
     auto& blobSet = d_blobsDetectedPerLabel[pixelLabel];
     blobSet.clear();
@@ -51,10 +57,14 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(Sequ
               inserter(blobSet, blobSet.end()),
               runSetToBlob);
 
+    timer.timeEvent("Convert");
+
     // TODO: why isn't blobSet a set again? That would auto-sort
     std::sort(blobSet.begin(), blobSet.end(), greater<Blob>());
 
-    timer.timeEvent(string(pixelLabel->name()));
+    timer.timeEvent("Sort");
+
+    timer.exit();
   }
 
   return d_blobsDetectedPerLabel;
