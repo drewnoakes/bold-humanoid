@@ -63,8 +63,8 @@ require(
             moduleHost.register(new LoadModule());
             moduleHost.register(new TrajectoryModule());
             moduleHost.register(new VoiceModule());
-            moduleHost.register(new StateDumpModule());
             moduleHost.register(new ConfigModule());
+            moduleHost.register(new StateDumpModule());
 
             $('#module-container').hide().fadeIn();
             $('#loading-indicator').fadeOut(function ()
