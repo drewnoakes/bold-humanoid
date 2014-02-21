@@ -256,7 +256,7 @@
     },
     "look-at-feet": {
       "head-pan-degs":  { "type": "double", "default": 0 },
-      "head-tilt-degs": { "type": "double", "default": -67.5 }
+      "head-tilt-degs": { "type": "double", "default": -22.0 }
     },
     "look-at-ball": {
       "gain":       { "type": "double", "default": 0.85 },
