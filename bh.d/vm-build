@@ -17,17 +17,23 @@ git fetch --multiple bert bb \
  && git reset --hard bert/`git rev-parse --abbrev-ref HEAD` \
  && git submodule init \
  && git submodule update \
- && make -j1
+ && make -j 2
 
-# if no target number provided, we're done
-
+# if there was an error, propagate it
 if [[ $? -ne 0 ]] ; then
   exit $?
+fi
+
+# if no target number provided, we're done
+if [[ $# -eq 0 ]] ; then
+  exit 0
 fi
 
 # strip the binary to reduce size for rsync
 # if debug symbols needed, run "bh vm-build" with no arguments, then
 # run "bh deploy-min N" for the robot you're targetting
+
+echo "Stripping binary to reduce transfer size. If debug symbols are needed, don't pass any agent number(s) and use bh deploy-min"
 
 strip boldhumanoid
 
