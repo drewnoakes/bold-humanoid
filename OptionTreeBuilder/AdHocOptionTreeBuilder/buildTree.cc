@@ -172,9 +172,6 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto sitForShutdownState = winFsm->newState("sitForShutdown", {sitArmsBack});
   auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
 
-  // TODO control that allows announcing states entered, provided speech queue isn't too long (off by default)
-
-
   readyState->onEnter.connect([debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); });
   setState->onEnter.connect([debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); });
   playingState->onEnter.connect([debugger]() { debugger->showPlaying(); });
