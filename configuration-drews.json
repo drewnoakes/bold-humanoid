@@ -37,6 +37,7 @@
   },
 
   "vision": {
+    "max-goal-field-edge-distance-px": 0,
     "pixel-labels": {
       "goal":  { "hue": [30,  60], "sat": [158, 255], "val": [100, 222] },
       "ball":  { "hue": [248, 30], "sat": [72,  255], "val": [12,  255] },
