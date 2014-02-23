@@ -531,7 +531,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
     // control duration of ball circling
     circleBallState
-      ->transitionTo(lookForGoalState)
+      ->transitionTo(lookAtGoalState)
       ->when([circleBallState,headModule,secondsSinceStart]()
       {
         // TODO break dependency upon pan limit
