@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include "helpers.hh"
+
 #include "../SequentialTimer/sequentialtimer.hh"
 
 #include <memory>
@@ -79,18 +81,26 @@ TEST(SequentialTimerTests, enterExit)
     items[5].first, 2); // within 2ms
 }
 
-
 TEST(SequentialTimerTests, nesting)
 {
   SequentialTimer t;
-  t.enter("a");
+  usleep(5000);
+  t.timeEvent("a");
+
+  t.enter("b");
   {
-    t.enter("b");
+    t.enter("c");
     {
+      t.enter("1");
+      {
+        usleep(7000);
+      }
+      t.exit();
+
       usleep(5000);
-      t.timeEvent("1");
-      usleep(2000);
       t.timeEvent("2");
+      usleep(2000);
+      t.timeEvent("3");
     }
     t.exit();
   }
@@ -98,18 +108,45 @@ TEST(SequentialTimerTests, nesting)
 
   auto items = *t.flush();
 
-  EXPECT_EQ(4, items.size());
+  EXPECT_EQ(6, items.size());
 
-  EXPECT_EQ("a/b/1", items[0].second);
-  EXPECT_EQ("a/b/2", items[1].second);
-  EXPECT_EQ("a/b",   items[2].second);
-  EXPECT_EQ("a",     items[3].second);
-
-  EXPECT_NEAR(
-    items[0].first + items[1].first,
-    items[3].first, 1);
+  EXPECT_EQ("a",     items[0].second); EXPECT_BETWEEN( 5,  7, items[0].first);
+  EXPECT_EQ("b/c/1", items[1].second); EXPECT_BETWEEN( 7,  9, items[1].first);
+  EXPECT_EQ("b/c/2", items[2].second); EXPECT_BETWEEN( 5,  7, items[2].first);
+  EXPECT_EQ("b/c/3", items[3].second); EXPECT_BETWEEN( 2,  4, items[3].first);
+  EXPECT_EQ("b/c",   items[4].second); EXPECT_BETWEEN(14, 17, items[4].first);
+  EXPECT_EQ("b",     items[5].second); EXPECT_BETWEEN(14, 17, items[5].first);
 
   EXPECT_NEAR(
-    items[0].first + items[1].first,
-    items[3].first, 1);
+    items[1].first + items[2].first + items[3].first,
+    items[4].first, 1);
+
+  EXPECT_NEAR(
+    items[4].first,
+    items[5].first, 0.1);
+}
+
+TEST(SequentialTimerTests, nesting2)
+{
+  SequentialTimer t;
+  t.enter("a");
+  {
+    usleep(5000);
+    t.enter("b");
+    {
+      usleep(5000);
+      t.timeEvent("c");
+      usleep(5000);
+    }
+    t.exit();
+  }
+  t.exit();
+
+  auto items = *t.flush();
+
+  EXPECT_EQ(3, items.size());
+
+  EXPECT_EQ("a/b/c", items[0].second); EXPECT_BETWEEN( 5,  7, items[0].first);
+  EXPECT_EQ("a/b",   items[1].second); EXPECT_BETWEEN(10, 12, items[1].first);
+  EXPECT_EQ("a",     items[2].second); EXPECT_BETWEEN(15, 17, items[2].first);
 }

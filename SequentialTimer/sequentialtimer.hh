@@ -34,13 +34,16 @@ namespace bold
 
     std::shared_ptr<std::vector<EventTiming>> flush()
     {
+      assert(d_entered.size() == 0);
       d_flushed = true;
       return d_eventTimings;
     }
 
     void enter(std::string name)
     {
-      d_entered.push_back(std::make_pair(name, Clock::getTimestamp()));
+      auto now = Clock::getTimestamp();
+      d_last = now;
+      d_entered.push_back(std::make_pair(name, now));
       rebuildPrefix();
     }
 
