@@ -37,6 +37,8 @@ namespace bold
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
 
+    int getGoalObservationCount() const { return d_goalObservations.size(); }
+
     virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:

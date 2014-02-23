@@ -139,8 +139,8 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto stopWalking = tree->addOption(make_shared<StopWalking>("stopWalking", ambulator));
   auto approachBall = tree->addOption(make_shared<ApproachBall>("approachBall", ambulator));
   auto circleBall = tree->addOption(make_shared<CircleBall>("circleBall", ambulator, headModule));
-  auto lookAround = tree->addOption(make_shared<LookAround>("lookAround", headModule, 100.0));
   auto lookAroundNarrow = tree->addOption(make_shared<LookAround>("lookAroundNarrow", headModule, 45.0));
+  auto lookForGoal = tree->addOption(make_shared<LookAround>("lookForGoal", headModule, 100.0, []() { return 1 - 0.33*AgentState::get<CameraFrameState>()->getGoalObservationCount(); }));
   auto lookForBall = tree->addOption(make_shared<LookAround>("lookForBall", headModule, 100.0, []() { return AgentState::get<CameraFrameState>()->isBallVisible() ? 0.25 : 1.0; }));
   auto lookAtBall = tree->addOption(make_shared<LookAtBall>("lookAtBall", cameraModel, headModule));
   auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookAtFeet", headModule));
@@ -426,7 +426,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto circleToFindLostBallState = playingFsm->newState("lookForBallCircling", {circleBall});
     auto lookAtBallState = playingFsm->newState("lookAtBall", {stopWalking, lookAtBall});
     auto approachBallState = playingFsm->newState("approachBall", {approachBall, lookAtBall});
-    auto lookForGoalState = playingFsm->newState("lookForGoal", {stopWalking, lookAround});
+    auto lookForGoalState = playingFsm->newState("lookForGoal", {stopWalking, lookForGoal});
     auto lookAtGoalState = playingFsm->newState("lookAtGoal", {stopWalking, lookAtGoal});
     auto aimState = playingFsm->newState("aim", {});
     auto circleBallState = playingFsm->newState("circleBall", {circleBall});
