@@ -65,3 +65,9 @@ template<typename T, int dim>
 #define EXPECT_EMPTY(condition) \
   GTEST_TEST_BOOLEAN_(!(condition.hasValue()), #condition, Non-empty, Empty, \
                       GTEST_NONFATAL_FAILURE_) << *condition
+
+#define EXPECT_BETWEEN(lower, upper, val) \
+  do { \
+  EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperGE, val, lower); \
+  EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperLE, val, upper); \
+  } while (0)
