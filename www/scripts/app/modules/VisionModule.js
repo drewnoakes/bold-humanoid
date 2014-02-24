@@ -48,6 +48,9 @@ define(
             var pixelLabelContainer = element.querySelector('div.pixel-labels');
             this.closables.add(ControlBuilder.buildAll('vision.pixel-labels', pixelLabelContainer));
 
+            var dataStreamerContainer = element.querySelector('div.data-streamer');
+            this.closables.add(ControlBuilder.buildAll('data-streamer', dataStreamerContainer));
+
             var captureContainer = element.querySelector('div.capture');
             ControlBuilder.action('camera.save-frame', captureContainer);
             this.closables.add(ControlBuilder.build('camera.recording-frames', captureContainer));

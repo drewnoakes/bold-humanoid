@@ -30,6 +30,8 @@ void DataStreamer::run()
     //
     libwebsocket_service(d_context, 0);
 
-    this_thread::sleep_for(chrono::milliseconds(2));
+    // TODO would using some kind of signal between threads be more efficient than sleeping for a fixed period?
+    static Setting<int>* dataStreamerSleepMicroseconds = Config::getSetting<int>("data-streamer.thread-sleep-microseconds");
+    this_thread::sleep_for(chrono::microseconds(dataStreamerSleepMicroseconds->getValue()));
   }
 }
