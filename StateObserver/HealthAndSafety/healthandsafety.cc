@@ -69,7 +69,13 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
     if (maxTemperature > d_temperatureThreshold)
     {
       if (d_voice)
-        d_voice->sayOneOf({"Temperature threshold breach.", "It's getting hot in here."});
+      {
+        stringstream msg;
+        msg << "My " << JointName::getNiceName(maxTemperatureJointId)
+            << " is " << maxTemperature << " degrees";
+        d_voice->say(msg.str());
+      }
+
       log::warning("HealthAndSafety::observeTyped") << "Joint " << (int)maxTemperatureJointId << " has temperature of " << maxTemperature << "°C";
       d_lastTemperatureWarningTime = Clock::getTimestamp();
     }
