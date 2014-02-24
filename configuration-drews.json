@@ -36,10 +36,16 @@
     "ball-diameter": 0.1
   },
 
+  "localiser": {
+    "smoothing-window-size": 7,
+    "position-error": 0.01,
+    "angle-error-degrees": 0.5
+  },
+
   "vision": {
     "max-goal-field-edge-distance-px": 0,
     "pixel-labels": {
-      "goal":  { "hue": [30,  60], "sat": [158, 255], "val": [100, 222] },
+      "goal":  { "hue": [30,  60], "sat": [158, 255], "val": [110, 222] },
       "ball":  { "hue": [248, 30], "sat": [72,  255], "val": [105, 255] },
       "field": { "hue": [72, 118], "sat": [166, 236], "val": [52,  192] },
       "line":  { "hue": [0,  255], "sat": [0,   167], "val": [161, 255] }
