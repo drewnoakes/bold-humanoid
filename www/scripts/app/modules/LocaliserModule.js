@@ -122,12 +122,13 @@ define(
 
         LocaliserModule.prototype.onParticleData = function (data)
         {
-            var time = new Date().getTime();
+            var time = new Date().getTime(),
+                particles = data.particles;
 
             var count = 0, sum = 0, max = 0;
-            for (var i = 0; i < data.length; i++)
+            for (var i = 0; i < particles.length; i++)
             {
-                var w = data[i][3];
+                var w = particles[i][3];
                 if (w !== 0)
                 {
                     count++;
