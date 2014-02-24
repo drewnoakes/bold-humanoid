@@ -177,8 +177,9 @@ namespace bold
     Setting<int>* d_maxGoalFieldEdgeDistPixels;
     Setting<Range<double>>* d_acceptedGoalMeasuredWidthRatio;
 
-    bool d_recordNextFrame;
-    Setting<bool>* d_isRecordingFrames;
+    bool d_saveNextYUVFrame;
+    Setting<bool>* d_isRecordingYUVFrames;
+    bool d_saveNextDebugFrame;
 
     Setting<ImageType>* d_imageType;
     Setting<int>* d_streamFramePeriod;

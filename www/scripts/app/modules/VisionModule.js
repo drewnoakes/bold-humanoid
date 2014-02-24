@@ -52,7 +52,8 @@ define(
             this.closables.add(ControlBuilder.buildAll('data-streamer', dataStreamerContainer));
 
             var captureContainer = element.querySelector('div.capture');
-            ControlBuilder.action('camera.save-frame', captureContainer);
+            ControlBuilder.action('camera.save-yuv-frame', captureContainer);
+            ControlBuilder.action('camera.save-debug-frame', captureContainer);
             this.closables.add(ControlBuilder.build('camera.recording-frames', captureContainer));
 
             var visionOptionsContainer = element.querySelector('div.vision-options');

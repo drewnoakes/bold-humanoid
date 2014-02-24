@@ -6,12 +6,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
   // Record frame, if required
   //
   static Clock::Timestamp lastRecordTime;
-  if (d_recordNextFrame || (d_isRecordingFrames->getValue() && Clock::getSecondsSince(lastRecordTime) > 1.0))
+  if (d_saveNextYUVFrame || (d_isRecordingYUVFrames->getValue() && Clock::getSecondsSince(lastRecordTime) > 1.0))
   {
     saveImage(image);
     lastRecordTime = Clock::getTimestamp();
-    d_recordNextFrame = false;
-    t.timeEvent("Saving Frame To File");
+    d_saveNextYUVFrame = false;
+    t.timeEvent("Save YUV Frame");
   }
 
   //

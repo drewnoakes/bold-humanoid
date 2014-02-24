@@ -11,7 +11,8 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     d_cameraModel(cameraModel),
     d_dataStreamer(dataStreamer),
     d_spatialiser(spatialiser),
-    d_recordNextFrame(false)
+    d_saveNextYUVFrame(false),
+    d_saveNextDebugFrame(false)
 {
   assert(camera);
   assert(cameraModel);
@@ -25,7 +26,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDetectBlobs         = Config::getSetting<bool>("vision.blob-detection.enable");
 
   d_shouldIgnoreAboveHorizon  = Config::getSetting<bool>("vision.ignore-above-horizon");
-  d_isRecordingFrames         = Config::getSetting<bool>("camera.recording-frames");
+  d_isRecordingYUVFrames      = Config::getSetting<bool>("camera.recording-frames");
 
   d_streamFramePeriod         = Config::getSetting<int>("round-table.camera-frame-frequency");
   d_imageType                 = Config::getSetting<ImageType>("round-table.image-type");
@@ -209,5 +210,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_lineFinder = make_shared<ScanningLineFinder>();
 
   // Image capture
-  Config::addAction("camera.save-frame", "Save Frame", [this]() { d_recordNextFrame = true; });
+  Config::addAction("camera.save-yuv-frame",   "Save YUV Frame",   [this]() { d_saveNextYUVFrame   = true; });
+  Config::addAction("camera.save-debug-frame", "Save Debug Frame", [this]() { d_saveNextDebugFrame = true; });
 }
