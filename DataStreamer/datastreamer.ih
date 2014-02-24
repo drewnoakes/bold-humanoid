@@ -29,5 +29,6 @@
 #include "../ThreadUtil/threadutil.hh"
 
 using namespace bold;
+using namespace cv;
 using namespace std;
 using namespace rapidjson;

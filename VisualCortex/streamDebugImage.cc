@@ -207,7 +207,11 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     cv::line(debugImage, Point(midX, 0), Point(midX, h-1), calibrationColour);
   }
 
-  d_dataStreamer->streamImage(debugImage);
+  auto imageEncoding = d_imageType->getValue() == ImageType::None || d_imageType->getValue() == ImageType::Cartoon
+    ? ".png"
+    : ".jpg";
+
+  d_dataStreamer->streamImage(debugImage, imageEncoding);
   t.timeEvent("Stream Debug Image");
 
   if (d_saveNextDebugFrame)

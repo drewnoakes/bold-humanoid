@@ -70,7 +70,7 @@ namespace bold
     bool hasCameraClients() const { return d_cameraSessions.size() != 0; }
 
     /** Enqueues an image to be sent to connected clients. */
-    void streamImage(cv::Mat const& img);
+    void streamImage(cv::Mat const& img, std::string imageEncoding);
 
   private:
     static std::shared_ptr<std::vector<uchar>> prepareControlSyncBytes();
@@ -84,6 +84,7 @@ namespace bold
     const std::shared_ptr<Camera> d_camera;
 
     cv::Mat d_image;
+    std::string d_imageEncoding;
     libwebsocket_context* d_context;
     libwebsocket_protocols* d_protocols;
     libwebsocket_protocols* d_cameraProtocol;

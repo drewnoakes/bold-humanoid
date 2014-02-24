@@ -43,7 +43,7 @@ int DataStreamer::callback_camera(
     if (!cameraSession->imgSending)
     {
       // Encode JPEG
-      cv::imencode(".jpg", d_image, *(cameraSession->imgJpgBuffer));
+      cv::imencode(d_imageEncoding, d_image, *(cameraSession->imgJpgBuffer));
 
       cameraSession->imgSending = true;
       cameraSession->bytesSent = 0;
