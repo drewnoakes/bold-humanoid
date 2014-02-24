@@ -4,7 +4,6 @@
     {
       "keyFrames": [
         {
-          "pauseCycles": 10,
           "moveCycles": 1,
           "values": [
             58,
