@@ -241,8 +241,8 @@
     "look-around": {
       "top-angle": 30.0,
       "bottom-angle": -25.0,
-      "horiz-duration": 2.3,
-      "vert-duration": 0.2
+      "horiz-duration": 2.1,
+      "vert-duration": 0.4
     },
     "look-at-feet": {
       "head-pan-degs": 0,
