@@ -77,7 +77,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
           if (larger.area == 0)
             continue;
 
-          if (larger.area < d_minBallAreaPixels->getValue())
+          if (larger.area < unsigned(d_minBallAreaPixels->getValue()))
           {
             // Blobs are sorted, largest first, so if this is too small, the rest will be too
             break;
@@ -105,7 +105,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       for (Blob const& ballBlob : ballBlobs)
       {
         // Ignore balls that are too small (avoid noise)
-        if (ballBlob.area < d_minBallAreaPixels->getValue())
+        if (ballBlob.area < unsigned(d_minBallAreaPixels->getValue()))
         {
           // As blobs are sorted largest to smallest, stop at the first one that's too small
           break;
