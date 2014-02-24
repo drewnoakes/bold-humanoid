@@ -89,8 +89,8 @@ namespace bold
     void setShouldIgnoreAboveHorizon(bool val) { d_shouldIgnoreAboveHorizon->setValue(val); }
     bool getShouldIgnoreAboveHorizon() const { return d_shouldIgnoreAboveHorizon->getValue(); }
 
-    void setMinBallArea(unsigned val) { d_minBallArea->setValue(val); }
-    unsigned getMinBallArea() const { return d_minBallArea->getValue(); }
+    void setMinBallArea(unsigned val) { d_minBallAreaPixels->setValue(val); }
+    unsigned getMinBallArea() const { return d_minBallAreaPixels->getValue(); }
 
     void setMinGoalDimensionPixels(unsigned val) { d_minGoalDimensionPixels->setValue(val); }
     unsigned getMinGoalDimensionPixels() const { return d_minGoalDimensionPixels->getValue(); }
@@ -169,9 +169,9 @@ namespace bold
     Setting<bool>* d_shouldCountLabels;
     Setting<bool>* d_shouldDetectBlobs;
     Setting<bool>* d_shouldIgnoreAboveHorizon;
-    Setting<bool>* d_shouldIgnoreOutsideField;
+    Setting<int>* d_maxBallFieldEdgeDistPixels;
 
-    Setting<int>* d_minBallArea;
+    Setting<int>* d_minBallAreaPixels;
     Setting<Range<double>>* d_acceptedBallMeasuredSizeRatio;
     Setting<int>* d_minGoalDimensionPixels;
     Setting<int>* d_maxGoalFieldEdgeDistPixels;

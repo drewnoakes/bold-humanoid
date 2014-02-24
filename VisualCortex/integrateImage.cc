@@ -77,7 +77,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
           if (larger.area == 0)
             continue;
 
-          if (larger.area < d_minBallArea->getValue())
+          if (larger.area < d_minBallAreaPixels->getValue())
           {
             // Blobs are sorted, largest first, so if this is too small, the rest will be too
             break;
@@ -105,7 +105,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       for (Blob const& ballBlob : ballBlobs)
       {
         // Ignore balls that are too small (avoid noise)
-        if (ballBlob.area < d_minBallArea->getValue())
+        if (ballBlob.area < d_minBallAreaPixels->getValue())
         {
           // As blobs are sorted largest to smallest, stop at the first one that's too small
           break;
@@ -131,7 +131,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
       // Ignore goal if it appears outside of field
       //
       // NOTE Process this before anything else as anything above the field edge is wasting our time
-      if (goalBlob.ul.y() > d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x()) + allowedGoalFieldEdgeDistPixels)
+      if (goalBlob.ul.y() > int(d_fieldEdgePass->getEdgeYValue(goalBlob.ul.x())) + allowedGoalFieldEdgeDistPixels)
         continue;
 
       // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs

@@ -60,12 +60,10 @@ define(
             this.closables.add(ControlBuilder.build('vision.blob-detection.enable', blobSettingsContainer));
 
             var ballSettingsContainer = element.querySelector('div.ball-detection');
-            this.closables.add(ControlBuilder.build('vision.enable-ball-blob-merging', ballSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.min-ball-area', ballSettingsContainer));
+            this.closables.add(ControlBuilder.buildAll('vision.ball-detection', ballSettingsContainer));
 
             var goalSettingsContainer = element.querySelector('div.goal-detection');
-            this.closables.add(ControlBuilder.build('vision.min-goal-dimension-pixels', goalSettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.max-goal-field-edge-distance-px', goalSettingsContainer));
+            this.closables.add(ControlBuilder.buildAll('vision.goal-detection', goalSettingsContainer));
 
             var granularitySettingsContainer = element.querySelector('div.granularity');
             this.closables.add(ControlBuilder.build('vision.image-granularity', granularitySettingsContainer));

@@ -18,11 +18,12 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
   Vector2d basePos = blob.mean;
   basePos.y() = blob.ul.y();
 
-  // Ignore ball if it appears outside the field edge
+  // Ignore ball if it is too far from the field edge
   //
-  if (d_shouldIgnoreOutsideField->getValue() && basePos.y() > d_fieldEdgePass->getEdgeYValue(basePos.x()))
+  int allowedBallFieldEdgeDistPixels = d_maxBallFieldEdgeDistPixels->getValue();
+  if (basePos.y() > int(d_fieldEdgePass->getEdgeYValue(basePos.x())) + allowedBallFieldEdgeDistPixels)
   {
-    // This blob can not be the ball if its upper left corner is below the field edge.
+    // This blob can not be the ball if its upper left corner is too far below the field edge.
     // Remember that the image appears upside down.
     return false;
   }

@@ -25,7 +25,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDetectBlobs         = Config::getSetting<bool>("vision.blob-detection.enable");
 
   d_shouldIgnoreAboveHorizon  = Config::getSetting<bool>("vision.ignore-above-horizon");
-  d_shouldIgnoreOutsideField  = Config::getSetting<bool>("vision.ignore-outside-field");
   d_isRecordingFrames         = Config::getSetting<bool>("camera.recording-frames");
 
   d_streamFramePeriod         = Config::getSetting<int>("round-table.camera-frame-frequency");
@@ -41,7 +40,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDrawCalibration     = Config::getSetting<bool>("round-table.image-features.calibration");
   d_shouldDrawObservedObjects = Config::getSetting<bool>("round-table.image-features.objects");
 
-  d_ballBlobMergingEnabled     = Config::getSetting<bool>("vision.enable-ball-blob-merging");
+  d_ballBlobMergingEnabled     = Config::getSetting<bool>("vision.ball-detection.enable-blob-merging");
 
   d_lineDotColour             = Config::getSetting<Colour::bgr>("round-table.image-colours.line-dot");
   d_observedLineColour        = Config::getSetting<Colour::bgr>("round-table.image-colours.observed-line");
@@ -77,11 +76,15 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_fieldLabel->setHsvRange(value); createLookupTable(); });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_lineLabel ->setHsvRange(value); createLookupTable(); });
 
-  d_minBallArea                   = Config::getSetting<int>("vision.min-ball-area");
-  d_acceptedBallMeasuredSizeRatio = Config::getSetting<Range<double>>("vision.accepted-ball-measured-size-ratio");
-  d_acceptedGoalMeasuredWidthRatio = Config::getSetting<Range<double>>("vision.accepted-goal-measured-width-ratio");
-  d_minGoalDimensionPixels        = Config::getSetting<int>("vision.min-goal-dimension-pixels");
-  d_maxGoalFieldEdgeDistPixels    = Config::getSetting<int>("vision.max-goal-field-edge-distance-px");
+  // ball detection settings
+  d_minBallAreaPixels              = Config::getSetting<int>("vision.ball-detection.min-area-px");
+  d_maxBallFieldEdgeDistPixels     = Config::getSetting<int>("vision.ball-detection.max-field-edge-distance-px");
+  d_acceptedBallMeasuredSizeRatio  = Config::getSetting<Range<double>>("vision.ball-detection.accepted-size-ratio");
+
+  // goal detection settings
+  d_minGoalDimensionPixels         = Config::getSetting<int>("vision.goal-detection.min-dimension-px");
+  d_maxGoalFieldEdgeDistPixels     = Config::getSetting<int>("vision.goal-detection.max-field-edge-distance-px");
+  d_acceptedGoalMeasuredWidthRatio = Config::getSetting<Range<double>>("vision.goal-detection.accepted-width-ratio");
 
   // TODO don't pass this around -- look it up from config (?)
   int imageWidth = d_cameraModel->imageWidth();
