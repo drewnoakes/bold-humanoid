@@ -40,9 +40,6 @@ namespace bold
     MovingAverage<Eigen::Vector4d> d_avgPos;
     std::shared_ptr<FieldMap> d_fieldMap;
 
-    Setting<double>* d_randomizeRatio;
-    /// smaller number gives faster falloff
-    Setting<double>* d_rewardFalloff;
     Setting<bool>* d_useLines;
     Setting<int>* d_minGoalsNeeded;
 

@@ -142,10 +142,8 @@
     }
   },
   "localiser": {
-    "particle-count": 100,
     "smoothing-window-size": 5,
     "randomise-ratio": 0.03,
-    "reward-fall-off": 0.5,
     "use-lines": true,
     "min-goals-needed": 1,
     "position-error": 0.03,
