@@ -141,7 +141,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto circleBall = tree->addOption(make_shared<CircleBall>("circleBall", ambulator, headModule));
   auto lookAroundNarrow = tree->addOption(make_shared<LookAround>("lookAroundNarrow", headModule, 45.0));
   auto lookForGoal = tree->addOption(make_shared<LookAround>("lookForGoal", headModule, 100.0, []() { return 1 - 0.33*AgentState::get<CameraFrameState>()->getGoalObservationCount(); }));
-  auto lookForBall = tree->addOption(make_shared<LookAround>("lookForBall", headModule, 100.0, []() { return AgentState::get<CameraFrameState>()->isBallVisible() ? 0.25 : 1.0; }));
+  auto lookForBall = tree->addOption(make_shared<LookAround>("lookForBall", headModule, 135.0, []() { return AgentState::get<CameraFrameState>()->isBallVisible() ? 0.25 : 1.0; }));
   auto lookAtBall = tree->addOption(make_shared<LookAtBall>("lookAtBall", cameraModel, headModule));
   auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookAtFeet", headModule));
   auto lookAtGoal = tree->addOption(make_shared<LookAtGoal>("lookAtGoal", cameraModel, headModule));
