@@ -228,13 +228,13 @@ bool CM730::torqueEnable(bool enable)
 
     if (res != CommResult::SUCCESS)
     {
-      log::error("CM730::torqueEnable") << "Comm error for " << JointName::getName(jointId) << " (" << (int)jointId << "): " << getCommResultName(res);
+      log::error("CM730::torqueEnable") << "Comm error for " << JointName::getEnumName(jointId) << " (" << (int)jointId << "): " << getCommResultName(res);
       allSuccessful = false;
     }
 
     if (error.hasError())
     {
-      log::error("CM730::torqueEnable") << "Error for " << JointName::getName(jointId) << " (" << (int)jointId << "): " << error;
+      log::error("CM730::torqueEnable") << "Error for " << JointName::getEnumName(jointId) << " (" << (int)jointId << "): " << error;
       allSuccessful = false;
     }
   }

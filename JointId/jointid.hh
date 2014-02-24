@@ -53,12 +53,45 @@ namespace bold
   public:
     JointName() = delete;
 
-    static std::string getName(uchar jointId)
+    static std::string getNiceName(uchar jointId)
     {
-      return getName((JointId)jointId);
+      return getNiceName((JointId)jointId);
     }
 
-    static std::string getName(JointId jointId)
+    static std::string getNiceName(JointId jointId)
+    {
+      switch (jointId)
+      {
+        case JointId::R_SHOULDER_PITCH: return "right shoulder pitch";
+        case JointId::L_SHOULDER_PITCH: return "left shoulder pitch";
+        case JointId::R_SHOULDER_ROLL:  return "right shoulder roll";
+        case JointId::L_SHOULDER_ROLL:  return "left shoulder roll";
+        case JointId::R_ELBOW:          return "right elbow";
+        case JointId::L_ELBOW:          return "left elbow";
+        case JointId::R_HIP_YAW:        return "right hip yaw";
+        case JointId::L_HIP_YAW:        return "left hip yaw";
+        case JointId::R_HIP_ROLL:       return "right hip roll";
+        case JointId::L_HIP_ROLL:       return "left hip roll";
+        case JointId::R_HIP_PITCH:      return "right hip pitch";
+        case JointId::L_HIP_PITCH:      return "left hip pitch";
+        case JointId::R_KNEE:           return "right knee";
+        case JointId::L_KNEE:           return "left knee";
+        case JointId::R_ANKLE_PITCH:    return "right ankle pitch";
+        case JointId::L_ANKLE_PITCH:    return "left ankle pitch";
+        case JointId::R_ANKLE_ROLL:     return "right ankle roll";
+        case JointId::L_ANKLE_ROLL:     return "left ankle roll";
+        case JointId::HEAD_PAN:         return "head pan";
+        case JointId::HEAD_TILT:        return "head tilt";
+        default:                        return "unknown";
+      }
+    }
+
+    static std::string getEnumName(uchar jointId)
+    {
+      return getEnumName((JointId)jointId);
+    }
+
+    static std::string getEnumName(JointId jointId)
     {
       switch (jointId)
       {
