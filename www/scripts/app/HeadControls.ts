@@ -2,8 +2,6 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-/// <reference path="./ControlBuilder.js" />
-
 import ControlBuilder = require('ControlBuilder');
 
 class HeadControls
