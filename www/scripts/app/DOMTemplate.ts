@@ -2,6 +2,8 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
+/// <reference path="../libs/handlebars.d.ts" />
+
 var parser: DOMParser = new DOMParser();
 
 class DOMTemplate
