@@ -13,9 +13,9 @@ define(
         'PixelLabelInspector',
         'Color',
         'util/Closeable',
-        'util/MouseEventUtil'
+        'util/mouse'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, HeadControls, PixelLabelInspector, color, Closeable, MouseEventUtil)
+    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, HeadControls, PixelLabelInspector, color, Closeable, mouse)
     {
         'use strict';
 
@@ -114,7 +114,7 @@ define(
             {
                 if (!this.context)
                     return;
-                MouseEventUtil.polyfill(e);
+                mouse.polyfill(e);
                 var x = e.offsetX,
                     y = e.offsetY,
                     hoverText = 'Pos: ' + (this.cameraCanvas.width - x) + ',' + (this.cameraCanvas.height - y);

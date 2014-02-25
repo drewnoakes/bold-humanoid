@@ -9,10 +9,10 @@ define(
         'DataProxy',
         'HeadControls',
         'util/Dragger',
-        'util/MouseEventUtil',
+        'util/mouse',
         'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, Constants, DataProxy, HeadControls, Dragger, MouseEventUtil, Geometry)
+    function(FieldLinePlotter, Protocols, Constants, DataProxy, HeadControls, Dragger, mouse, Geometry)
     {
         'use strict';
 
@@ -54,7 +54,7 @@ define(
 
             this.canvas.addEventListener('mousemove', function (event)
             {
-                MouseEventUtil.polyfill(event);
+                mouse.polyfill(event);
                 var p = this.transform.clone().invert().transformPoint(event.offsetX, event.offsetY);
                 this.hoverInfo.textContent = p.x.toFixed(2) + ', ' + p.y.toFixed(2);
             }.bind(this));
