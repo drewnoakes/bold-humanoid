@@ -41,6 +41,8 @@ www/.idea
 /configuration-agent.json
 /www/scripts/app/Color.js
 /www/scripts/app/Color.js.map
+/www/scripts/app/HeadControls.js
+/www/scripts/app/HeadControls.js.map
 /www/scripts/app/interaction.js
 /www/scripts/app/interaction.js.map
 /www/scripts/app/PolarTrace.js
