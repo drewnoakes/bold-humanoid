@@ -59,6 +59,7 @@ www/.idea
 /www/scripts/app/util/math.js
 /www/scripts/app/util/mouse.js
 /www/scripts/app/util/TabControl.js
+/www/scripts/app/WebSocketFactory.js
 Release/
 RelWithDebInfo/
 Debug/
