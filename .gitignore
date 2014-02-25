@@ -47,14 +47,14 @@ www/.idea
 /www/scripts/app/PolarTrace.js.map
 /www/scripts/app/util.js
 /www/scripts/app/util.js.map
-/www/scripts/app/util/Controls.js
-/www/scripts/app/util/Controls.js.map
 /www/scripts/app/util/Geometry.js
 /www/scripts/app/util/Geometry.js.map
 /www/scripts/app/util/math.js
 /www/scripts/app/util/math.js.map
 /www/scripts/app/util/mouse.js
 /www/scripts/app/util/mouse.js.map
+/www/scripts/app/util/TabControl.js
+/www/scripts/app/util/TabControl.js.map
 Release/
 RelWithDebInfo/
 Debug/

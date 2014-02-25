@@ -654,10 +654,10 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Color.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PolarTrace.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/util/Controls.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/Geometry.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/math.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/mouse.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/util/TabControl.ts
   )
 
 set(JSON_FILES

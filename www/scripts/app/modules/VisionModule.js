@@ -12,9 +12,9 @@ define(
         'PixelLabelInspector',
         'Color',
         'util/Closeable',
-        'util/Controls'
+        'util/TabControl'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, color, Closeable, controls)
+    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, color, Closeable, TabControl)
     {
         'use strict';
 
@@ -100,7 +100,7 @@ define(
 
             this.closables.add(ControlBuilder.buildAll('head-module', element.querySelector('div.head-settings')));
 
-            new controls.TabControl(element);
+            new TabControl(element);
         };
 
         VisionModule.prototype.unload = function()

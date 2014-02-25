@@ -4,14 +4,13 @@
 
 /// <reference path="../../libs/lodash.d.ts"/>
 
-
 interface ITabItem
 {
     thumb: HTMLElement;
     content: HTMLDivElement;
 }
 
-export class TabControl
+class TabControl
 {
     private thumbContainer: HTMLUListElement;
     private contentContainer: HTMLDivElement;
@@ -83,3 +82,5 @@ export class TabControl
         this.contentContainer.appendChild(this.items[index].content);
     }
 }
+
+export = TabControl;
