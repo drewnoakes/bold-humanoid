@@ -50,6 +50,7 @@ www/.idea
 /www/scripts/app/HeadControls.js
 /www/scripts/app/interaction.js
 /www/scripts/app/PolarTrace.js
+/www/scripts/app/Setting.js
 /www/scripts/app/Settings.js
 /www/scripts/app/util.js
 /www/scripts/app/util/Geometry.js
