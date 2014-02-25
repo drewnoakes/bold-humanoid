@@ -93,16 +93,33 @@ void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
   bool allNegative = true;
   bool anyNegative = false;
 
-  for (auto y : d_maxYByC)
+  // If the edges are untouched (-1) we exclude them from the convex hull.
+  // These variables track where the convex hull should start and end.
+  int fromIndex = 0;
+  int toIndex = d_maxYByC.size() - 1;
+
+  for (ushort c = 0; c < d_maxYByC.size(); c++)
   {
+    auto y = d_maxYByC[c];
+
     if (y == -1)
+    {
       anyNegative = true;
+
+      if (allNegative)
+        fromIndex = c + 1;
+    }
     else
+    {
       allNegative = false;
+      toIndex = c;
+    }
   }
 
   if (allNegative)
   {
+    // TODO control this via a setting, and disable by default -- if looking off the field, don't start chasing rubbish
+
     // set line at top of image
     for (ushort c = 0; c < d_runByC.size(); c++)
       d_maxYByC[c] = d_pixelHeight - 1;
@@ -120,11 +137,9 @@ void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
     }
   }
 
-  // TODO should avoid convex hull for untouched columns at the right/left edges
-
-  if (d_useConvexHull->getValue())
+  if (d_useConvexHull->getValue() && fromIndex < toIndex)
   {
-    applyConvexHull(d_maxYByC);
+    applyConvexHull(d_maxYByC, fromIndex, toIndex);
     timer.timeEvent("Convex Hull");
   }
 }

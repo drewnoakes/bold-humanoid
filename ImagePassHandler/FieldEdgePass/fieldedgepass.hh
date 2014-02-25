@@ -20,7 +20,7 @@ namespace bold
     virtual ushort getEdgeYValue(ushort x) const = 0;
 
   protected:
-    static void applyConvexHull(std::vector<short>& points);
+    static void applyConvexHull(std::vector<short>& points, unsigned fromIndex, unsigned toIndex);
 
     Setting<bool>* d_useConvexHull;
     std::shared_ptr<PixelLabel> d_fieldLabel;

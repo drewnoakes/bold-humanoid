@@ -77,10 +77,9 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
     timer.timeEvent("Smooth");
   }
 
-
   if (d_useConvexHull->getValue())
   {
-    applyConvexHull(d_maxYByX);
+    applyConvexHull(d_maxYByX, 0, d_pixelWidth - 1);
     timer.timeEvent("Convex Hull");
   }
 }
