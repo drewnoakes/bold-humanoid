@@ -652,6 +652,7 @@ endif (BUILD_TOOLS)
 add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Color.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/PolarTrace.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/Controls.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/Geometry.ts
