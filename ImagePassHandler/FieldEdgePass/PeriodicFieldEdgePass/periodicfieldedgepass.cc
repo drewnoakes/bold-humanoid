@@ -18,7 +18,7 @@ PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
 void PeriodicFieldEdgePass::onImageStarting(SequentialTimer& timer)
 {
   for (ushort c = 0; c < d_runByC.size(); c++)
-    d_maxYByC[c] = d_pixelHeight - 1;
+    d_maxYByC[c] = -1;
 
   memset(d_runByC.data(), 0, sizeof(ushort) * d_runByC.size());
 
@@ -78,6 +78,50 @@ ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
 
 void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
 {
+  // d_maxYByC is initialised with -1 in all positions.
+  //
+  // If we didn't observe a single column with enough green, then we will set
+  // the entire line at of top the screen (when image is the right way up.)
+  //
+  // If we did see some good columns, take any that remain at -1 and set them
+  // to the bottom of the screen.
+  //
+  // This stops the line jumping from the bottom to the top, which can happen
+  // when the bot is near the side of the field and looking down its length.
+  // The convex hull makes this issue much worse.
+
+  bool allNegative = true;
+  bool anyNegative = false;
+
+  for (auto y : d_maxYByC)
+  {
+    if (y == -1)
+      anyNegative = true;
+    else
+      allNegative = false;
+  }
+
+  if (allNegative)
+  {
+    // set line at top of image
+    for (ushort c = 0; c < d_runByC.size(); c++)
+      d_maxYByC[c] = d_pixelHeight - 1;
+
+    // skip convex hull as line is straight
+    return;
+  }
+  else if (anyNegative)
+  {
+    // set untouched columns to the bottom of the image
+    for (ushort c = 0; c < d_runByC.size(); c++)
+    {
+      if (d_maxYByC[c] == -1)
+        d_maxYByC[c] = 0;
+    }
+  }
+
+  // TODO should avoid convex hull for untouched columns at the right/left edges
+
   if (d_useConvexHull->getValue())
   {
     applyConvexHull(d_maxYByC);

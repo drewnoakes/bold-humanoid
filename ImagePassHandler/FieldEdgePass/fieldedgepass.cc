@@ -18,7 +18,7 @@ FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixe
   d_useConvexHull = Config::getSetting<bool>("vision.field-edge-pass.use-convex-hull");
 }
 
-void FieldEdgePass::applyConvexHull(vector<ushort>& points)
+void FieldEdgePass::applyConvexHull(vector<short>& points)
 {
   vector<Matrix<float,2,1>> input;
   for (unsigned c = 0; c < points.size(); c++)

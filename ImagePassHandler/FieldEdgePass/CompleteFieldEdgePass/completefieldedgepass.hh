@@ -26,7 +26,7 @@ namespace bold
     }
 
   private:
-    std::vector<ushort> d_maxYByX;
+    std::vector<short> d_maxYByX;
     std::vector<ushort> d_runByX;
     ushort d_smoothingWindowSize;
   };

@@ -62,7 +62,7 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
 {
   if (d_smoothingWindowSize > 1)
   {
-    MovingAverage<unsigned> avg(d_smoothingWindowSize);
+    MovingAverage<int> avg(d_smoothingWindowSize);
 
     int offset = int(d_smoothingWindowSize)/2;
     for (int x = 0, t = -offset; x < d_pixelWidth; x++, t++)
