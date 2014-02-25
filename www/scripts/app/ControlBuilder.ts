@@ -4,7 +4,7 @@
 
 import ControlClient = require('ControlClient');
 import HsvRangeEditor = require('HsvRangeEditor');
-import color = require('Color');
+import color = require('color');
 
 var nextControlId = 0;
 

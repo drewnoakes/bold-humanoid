@@ -10,7 +10,7 @@ define(
         'ControlBuilder',
         'DOMTemplate',
         'PixelLabelInspector',
-        'Color',
+        'color',
         'util/Closeable',
         'util/TabControl'
     ],

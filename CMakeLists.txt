@@ -650,9 +650,10 @@ endif (BUILD_TOOLS)
 ## Compile TypeScript stuff
 #
 add_typescript_target(
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/Color.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/color.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/ControlBuilder.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HeadControls.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRange.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PolarTrace.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util.ts

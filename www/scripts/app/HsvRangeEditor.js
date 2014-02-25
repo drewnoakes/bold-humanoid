@@ -4,7 +4,7 @@
 define(
     [
         'HsvRange',
-        'Color'
+        'color'
     ],
     function (HsvRange, color)
     {

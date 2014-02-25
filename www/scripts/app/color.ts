@@ -355,8 +355,11 @@ export class Rgb implements IColor
 
 export class Hsv implements IColor
 {
+    /** The 'hue', between 0 and 1. */
     public H: number;
+    /** The 'saturation', between 0 and 1. */
     public S: number;
+    /** The 'value', between 0 and 1. */
     public V: number;
 
     public ColorType: any = Hsv;

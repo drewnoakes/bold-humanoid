@@ -11,7 +11,7 @@ define(
         'DOMTemplate',
         'HeadControls',
         'PixelLabelInspector',
-        'Color',
+        'color',
         'util/Closeable',
         'util/mouse'
     ],
