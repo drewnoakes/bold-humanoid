@@ -3,9 +3,9 @@
  */
 define(
     [
-        'Constants'
+        'constants'
     ],
-    function (Constants)
+    function (constants)
     {
         //noinspection UnnecessaryLocalVariableJS
         var FieldLinePlotter = {
@@ -20,15 +20,15 @@ define(
             drawFieldLines: function (context, options)
             {
                 // prepare to draw field lines
-                context.lineWidth = Constants.lineWidth;
+                context.lineWidth = constants.lineWidth;
                 context.strokeStyle = options.lineStrokeStyle || '#ffffff';
 
                 // center circle
                 context.beginPath();
-                context.arc(0, 0, Constants.circleDiameter/2, 0, Math.PI*2, true);
+                context.arc(0, 0, constants.circleDiameter/2, 0, Math.PI*2, true);
 
-                var halfCrossLengthScaled = Constants.penaltyLineLength / 2,
-                    penaltyX = (Constants.fieldX/2 - Constants.penaltyMarkDistance),
+                var halfCrossLengthScaled = constants.penaltyLineLength / 2,
+                    penaltyX = (constants.fieldX/2 - constants.penaltyMarkDistance),
                     penaltyInnerX = penaltyX - halfCrossLengthScaled,
                     penaltyOuterX = penaltyX + halfCrossLengthScaled;
 
@@ -49,25 +49,25 @@ define(
                 context.lineTo(penaltyX, -halfCrossLengthScaled);
 
                 // outer square
-                var x = Constants.fieldX/2,
-                    y = Constants.fieldY/2;
-                context.strokeRect(-x, -y, Constants.fieldX, Constants.fieldY);
+                var x = constants.fieldX/2,
+                    y = constants.fieldY/2;
+                context.strokeRect(-x, -y, constants.fieldX, constants.fieldY);
 
                 context.moveTo(0, y);
                 context.lineTo(0, -y);
 
-                var goalAreaY = Constants.goalAreaY / 2;
+                var goalAreaY = constants.goalAreaY / 2;
 
                 // left goal area
                 context.moveTo(-x, -goalAreaY);
-                context.lineTo(-x + Constants.goalAreaX, -goalAreaY);
-                context.lineTo(-x + Constants.goalAreaX, goalAreaY);
+                context.lineTo(-x + constants.goalAreaX, -goalAreaY);
+                context.lineTo(-x + constants.goalAreaX, goalAreaY);
                 context.lineTo(-x, goalAreaY);
 
                 // right goal area
                 context.moveTo(x, -goalAreaY);
-                context.lineTo(x - Constants.goalAreaX, -goalAreaY);
-                context.lineTo(x - Constants.goalAreaX, goalAreaY);
+                context.lineTo(x - constants.goalAreaX, -goalAreaY);
+                context.lineTo(x - constants.goalAreaX, goalAreaY);
                 context.lineTo(x, goalAreaY);
 
                 context.stroke();
@@ -79,14 +79,14 @@ define(
                 _.each(positions, function (pos)
                 {
                     context.beginPath();
-                    context.arc(pos.x, pos.y, Constants.goalPostDiameter/2, 0, Math.PI*2, true);
+                    context.arc(pos.x, pos.y, constants.goalPostDiameter/2, 0, Math.PI*2, true);
                     context.fill();
                 });
             },
             drawGoals: function(context, options)
             {
-                var goalY = Constants.goalY / 2,
-                    x = Constants.fieldX/2;
+                var goalY = constants.goalY / 2,
+                    x = constants.fieldX/2;
 
                 // TODO the position of these circles is slightly wrong, as the perimeter should line up with the edge of the line
 
@@ -103,14 +103,14 @@ define(
 
                 // left goal
                 context.moveTo(-x, -goalY);
-                context.lineTo(-x - Constants.goalX, -goalY);
-                context.lineTo(-x - Constants.goalX, goalY);
+                context.lineTo(-x - constants.goalX, -goalY);
+                context.lineTo(-x - constants.goalX, goalY);
                 context.lineTo(-x, goalY);
 
                 // right goal
                 context.moveTo(x, -goalY);
-                context.lineTo(x + Constants.goalX, -goalY);
-                context.lineTo(x + Constants.goalX, goalY);
+                context.lineTo(x + constants.goalX, -goalY);
+                context.lineTo(x + constants.goalX, goalY);
                 context.lineTo(x, goalY);
 
                 context.stroke();
@@ -153,7 +153,7 @@ define(
                 context.fillStyle = options.ballFillStyle || 'orange';
 
                 context.beginPath();
-                context.arc(position[0], position[1], Constants.ballRadius, 0, Math.PI*2, true);
+                context.arc(position[0], position[1], constants.ballRadius, 0, Math.PI*2, true);
                 context.fill();
             },
             drawAgentPosition: function(context, options, agentPosition)

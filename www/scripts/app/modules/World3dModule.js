@@ -7,11 +7,11 @@ define(
         'DataProxy',
         'Protocols',
         'FieldLinePlotter',
-        'Constants',
+        'constants',
         'util/Dragger',
         'util/Geometry'
     ],
-    function(GeometryUtil, DataProxy, Protocols, FieldLinePlotter, Constants, Dragger, Geometry)
+    function(GeometryUtil, DataProxy, Protocols, FieldLinePlotter, constants, Dragger, Geometry)
     {
         'use strict';
 
@@ -92,7 +92,7 @@ define(
                 this.needsRender = true;
             }.bind(this));
 
-            this.bodyRoot = this.buildBody(Constants.bodyStructure, function()
+            this.bodyRoot = this.buildBody(constants.bodyStructure, function()
             {
                 this.bodyRoot.position.z = this.torsoHeight;
                 this.bodyRoot.rotation.z = -Math.PI/2;
@@ -198,7 +198,7 @@ define(
                     _.each(data.goals, function (goal)
                     {
                         var goalGeometry = new THREE.Geometry(),
-                            radius = Constants.goalPostDiameter/ 2,
+                            radius = constants.goalPostDiameter/ 2,
                             midX = goal[0],
                             midY = goal[1],
                             stepCount = 18;
@@ -251,7 +251,7 @@ define(
         {
             var leftZ = new THREE.Vector3().setFromMatrixPosition(this.objectByName['foot-left'].matrixWorld).z;
             var rightZ = new THREE.Vector3().setFromMatrixPosition(this.objectByName['foot-right'].matrixWorld).z;
-            var error = Math.min(leftZ, rightZ) - Constants.footHeight;
+            var error = Math.min(leftZ, rightZ) - constants.footHeight;
             if (Math.abs(error) > 0.01) {
                 this.torsoHeight -= error;
                 this.bodyRoot.position.z = this.torsoHeight;
@@ -310,8 +310,8 @@ define(
             //
             // Ground
             //
-            var groundSizeX = Constants.fieldX + 2*Constants.outerMarginMinimum,
-                groundSizeY = Constants.fieldY + 2*Constants.outerMarginMinimum,
+            var groundSizeX = constants.fieldX + 2*constants.outerMarginMinimum,
+                groundSizeY = constants.fieldY + 2*constants.outerMarginMinimum,
                 fieldLineCanvas = document.createElement('canvas'),
                 fieldLineContext = fieldLineCanvas.getContext('2d'),
                 scale = 200,
@@ -376,7 +376,7 @@ define(
             });
 
             var ballSegments = 20;
-            this.ballMesh = new THREE.Mesh(new THREE.SphereGeometry(Constants.ballRadius, ballSegments, ballSegments), ballMaterial);
+            this.ballMesh = new THREE.Mesh(new THREE.SphereGeometry(constants.ballRadius, ballSegments, ballSegments), ballMaterial);
             this.ballMesh.castShadow = true;
             this.ballMesh.receiveShadow = false;
             this.scene.add(this.ballMesh);
@@ -386,12 +386,12 @@ define(
             // Goal posts
             //
             var goalMaterial = new THREE.MeshLambertMaterial({ color: 0xfcd116, ambient: 0x555555 }),
-                goalRadius = Constants.goalPostDiameter / 2,
-                goalPostHeight = Constants.goalZ + goalRadius,
+                goalRadius = constants.goalPostDiameter / 2,
+                goalPostHeight = constants.goalZ + goalRadius,
                 addGoalPost = function(scaleX, scaleY)
                 {
-                    var x = (Constants.fieldX / 2 + goalRadius) * scaleX,
-                        y = (Constants.goalY / 2 + goalRadius) * scaleY,
+                    var x = (constants.fieldX / 2 + goalRadius) * scaleX,
+                        y = (constants.goalY / 2 + goalRadius) * scaleY,
                         cylinder = new THREE.Mesh(new THREE.CylinderGeometry(goalRadius, goalRadius, goalPostHeight, 36, 36, false), goalMaterial),
                         sphere = new THREE.Mesh(new THREE.SphereGeometry(goalRadius, 36, 36), goalMaterial);
                     cylinder.rotation.x = Math.PI/2;
@@ -402,9 +402,9 @@ define(
                 }.bind(this),
                 addGoalBar = function(scaleX)
                 {
-                    var x = (Constants.fieldX / 2 + goalRadius) * scaleX,
-                        barLength = Constants.goalY + goalRadius * 2,
-                        barHeight = Constants.goalZ + goalRadius,
+                    var x = (constants.fieldX / 2 + goalRadius) * scaleX,
+                        barLength = constants.goalY + goalRadius * 2,
+                        barHeight = constants.goalZ + goalRadius,
                         bar = new THREE.Mesh(new THREE.CylinderGeometry(goalRadius, goalRadius, barLength, 36, 36, false), goalMaterial);
                     bar.position.set(x, 0, barHeight);
                     this.scene.add(bar);
@@ -429,15 +429,15 @@ define(
             //
             // Render & Camera
             //
-            var aspect = Constants.cameraWidth / Constants.cameraHeight,
-                canvasHeight = Constants.cameraHeight;
+            var aspect = constants.cameraWidth / constants.cameraHeight,
+                canvasHeight = constants.cameraHeight;
 
-            this.camera = new THREE.PerspectiveCamera(Constants.cameraFovVerticalDegrees, aspect, 0.01, 100);
+            this.camera = new THREE.PerspectiveCamera(constants.cameraFovVerticalDegrees, aspect, 0.01, 100);
 //          this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 
             this.renderer = new THREE.WebGLRenderer({ antialias: true, devicePixelRatio: 1 });
             this.renderer.setClearColor(0xcccccc, 1.0);
-            this.renderer.setSize(Constants.cameraWidth, Constants.cameraHeight, true);
+            this.renderer.setSize(constants.cameraWidth, constants.cameraHeight, true);
             this.renderer.shadowMapEnabled = true;
             this.renderer.shadowMapSoft = true;
 
@@ -451,7 +451,7 @@ define(
         World3dModule.prototype.setBallPosition = function(x, y, z)
         {
             if (Math.abs(z) < 1e-3)
-                z = Constants.ballRadius;
+                z = constants.ballRadius;
 
             this.ballMesh.position.set(x, y, z);
         };
@@ -591,7 +591,7 @@ define(
             } else {
                 // First person -- position camera in player's head
                 var headMatrix = this.objectByName['head'].matrixWorld;
-                this.camera.position = Constants.cameraOffsetInHead.clone().applyMatrix4(headMatrix);
+                this.camera.position = constants.cameraOffsetInHead.clone().applyMatrix4(headMatrix);
                 this.camera.lookAt(new THREE.Vector3(0, 0, 1).applyMatrix4(headMatrix));
             }
         };

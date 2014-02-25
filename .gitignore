@@ -43,6 +43,7 @@ www/.idea
 /www/scripts/app/Action.js
 /www/scripts/app/BodyFigure.js
 /www/scripts/app/color.js
+/www/scripts/app/constants.js
 /www/scripts/app/ControlBuilder.js
 /www/scripts/app/DOMTemplate.js
 /www/scripts/app/HsvRange.js

@@ -5,14 +5,14 @@ define(
     [
         'FieldLinePlotter',
         'Protocols',
-        'Constants',
+        'constants',
         'DataProxy',
         'HeadControls',
         'util/Dragger',
         'util/mouse',
         'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, Constants, DataProxy, HeadControls, Dragger, mouse, Geometry)
+    function(FieldLinePlotter, Protocols, constants, DataProxy, HeadControls, Dragger, mouse, Geometry)
     {
         'use strict';
 
@@ -149,8 +149,8 @@ define(
             FieldLinePlotter.drawField(context, options);
 
             var maxDistance = Math.sqrt(
-                Math.pow(Constants.fieldX + 2*Constants.outerMarginMinimum, 2) +
-                Math.pow(Constants.fieldY + 2*Constants.outerMarginMinimum, 2));
+                Math.pow(constants.fieldX + 2*constants.outerMarginMinimum, 2) +
+                Math.pow(constants.fieldY + 2*constants.outerMarginMinimum, 2));
 
             context.strokeStyle = 'white';
             context.lineWidth = 0.5/this.scale;

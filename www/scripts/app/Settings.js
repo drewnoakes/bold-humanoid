@@ -3,9 +3,9 @@
  */
 define(
     [
-        'Constants'
+        'constants'
     ],
-    function (Constants)
+    function (constants)
     {
         'use strict';
 
@@ -35,7 +35,7 @@ define(
                 host = u.split('/')[0];
             }
 
-            return "ws://" + host + ":" + Constants.webSocketPort;
+            return "ws://" + host + ":" + constants.webSocketPort;
         };
 
         //noinspection UnnecessaryLocalVariableJS

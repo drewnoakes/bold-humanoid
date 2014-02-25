@@ -5,7 +5,7 @@ require(
     [
         'ControlClient',
         'ModuleHost',
-        'Constants',
+        'constants',
         'modules/MotionScriptModule',
         'modules/CameraModule',
         'modules/CommsModule',
@@ -29,7 +29,7 @@ require(
         'modules/World2dModule',
         'modules/World3dModule'
     ],
-    function(ControlClient, ModuleHost, Constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule,
+    function(ControlClient, ModuleHost, constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule,
              GameStateModule, HardwareModule, HistogramModule, IMUModule, OrientationModule, LoadModule, LocaliserModule,
              MotionTimingModule, OptionTreeModule, StateDumpModule, ThinkTimingModule, TrajectoryModule, VoiceModule,
              WalkModule, Agent2dModule, VisionModule, World2dModule, World3dModule)
@@ -39,7 +39,7 @@ require(
 
         var loadUi = function (settings)
         {
-            Constants.update(settings);
+            constants.update(settings);
 
             var moduleHost = new ModuleHost('#header-module-links');
 

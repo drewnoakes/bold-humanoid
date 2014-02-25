@@ -4,11 +4,10 @@
 define(
     [
         'DataProxy',
-        'Constants',
         'Protocols',
         'BodyFigure'
     ],
-    function (DataProxy, Constants, Protocols, BodyFigure)
+    function (DataProxy, Protocols, BodyFigure)
     {
         'use strict';
 

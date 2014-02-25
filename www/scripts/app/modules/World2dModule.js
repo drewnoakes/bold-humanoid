@@ -5,7 +5,7 @@ define(
     [
         'FieldLinePlotter',
         'Protocols',
-        'Constants',
+        'constants',
         'ControlBuilder',
         'DataProxy',
         'HeadControls',
@@ -13,7 +13,7 @@ define(
         'util/mouse',
         'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, Constants, ControlBuilder, DataProxy, HeadControls, Dragger, mouse, Geometry)
+    function(FieldLinePlotter, Protocols, constants, ControlBuilder, DataProxy, HeadControls, Dragger, mouse, Geometry)
     {
         'use strict';
 
@@ -143,8 +143,8 @@ define(
 
         World2dModule.prototype.onResized = function(width, height)
         {
-            var fieldLengthX = (Constants.fieldX + 2 * Constants.outerMarginMinimum);
-            var fieldLengthY = (Constants.fieldY + 2 * Constants.outerMarginMinimum);
+            var fieldLengthX = (constants.fieldX + 2 * constants.outerMarginMinimum);
+            var fieldLengthY = (constants.fieldY + 2 * constants.outerMarginMinimum);
             var ratio = fieldLengthX / fieldLengthY;
 
             this.canvas.width = width;

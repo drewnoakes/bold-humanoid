@@ -2,6 +2,8 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
+/// <reference path="../libs/lodash.d.ts" />
+
 import ControlClient = require('ControlClient');
 import HsvRangeEditor = require('HsvRangeEditor');
 import color = require('color');
