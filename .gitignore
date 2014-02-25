@@ -39,6 +39,8 @@ vision
 /version.cc
 www/.idea
 /configuration-agent.json
+/www/scripts/app/Action.js
+/www/scripts/app/Action.js.map
 /www/scripts/app/color.js
 /www/scripts/app/color.js.map
 /www/scripts/app/ControlBuilder.js

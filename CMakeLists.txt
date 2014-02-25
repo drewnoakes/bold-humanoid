@@ -650,6 +650,7 @@ endif (BUILD_TOOLS)
 ## Compile TypeScript stuff
 #
 add_typescript_target(
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/Action.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/color.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/ControlBuilder.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HeadControls.ts
