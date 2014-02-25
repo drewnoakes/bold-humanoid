@@ -46,6 +46,7 @@ www/.idea
 /www/scripts/app/constants.js
 /www/scripts/app/ControlBuilder.js
 /www/scripts/app/ControlClient.js
+/www/scripts/app/DataProxy.js
 /www/scripts/app/DOMTemplate.js
 /www/scripts/app/HsvRange.js
 /www/scripts/app/HeadControls.js

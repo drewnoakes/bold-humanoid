@@ -52,7 +52,7 @@ var onControlData = (data: any) =>
             setting.__setValue(data.value);
 
             // Update cached settingsJson object
-            var obj = _.find(settingsJson, o => o.path === data.path);
+            var obj = <any>_.find(settingsJson, o => o.path === data.path);
             if (obj)
                 obj.value = data.value;
             else
