@@ -4,7 +4,6 @@
 define(
     [
         'WebSocketFactory',
-        'Protocols',
         'DataProxy',
         'ControlClient',
         'ControlBuilder',
@@ -14,7 +13,7 @@ define(
         'util/Closeable',
         'util/TabControl'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, color, Closeable, TabControl)
+    function(WebSocketFactory, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, color, Closeable, TabControl)
     {
         'use strict';
 

@@ -4,7 +4,6 @@
 define(
     [
         'FieldLinePlotter',
-        'Protocols',
         'constants',
         'DataProxy',
         'HeadControls',
@@ -12,7 +11,7 @@ define(
         'util/mouse',
         'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, constants, DataProxy, HeadControls, Dragger, mouse, Geometry)
+    function(FieldLinePlotter, constants, DataProxy, HeadControls, Dragger, mouse, Geometry)
     {
         'use strict';
 
@@ -76,7 +75,7 @@ define(
 
             this.bindEvents();
 
-            this.agentFrameSubscription = DataProxy.subscribe(Protocols.agentFrameState, { json: true, onmessage: _.bind(this.onAgentFrameData, this) });
+            this.agentFrameSubscription = DataProxy.subscribe(constants.protocols.agentFrameState, { json: true, onmessage: _.bind(this.onAgentFrameData, this) });
 
             this.stopAnimation = false;
             this.needsRender = true;

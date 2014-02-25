@@ -4,9 +4,9 @@
 define(
     [
         'DataProxy',
-        'Protocols'
+        'constants'
     ],
-    function(DataProxy, Protocols)
+    function(DataProxy, constants)
     {
         'use strict';
 
@@ -60,7 +60,7 @@ define(
             this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
             this.subscription = DataProxy.subscribe(
-                Protocols.debug,
+                constants.protocols.debug,
                 {
                     json: true,
                     onmessage: _.bind(this.onData, this)

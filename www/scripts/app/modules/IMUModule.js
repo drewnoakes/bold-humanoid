@@ -4,10 +4,10 @@
 define(
     [
         'DataProxy',
-        'Protocols',
+        'constants',
         'PolarTrace'
     ],
-    function(DataProxy, Protocols, PolarTrace)
+    function(DataProxy, constants, PolarTrace)
     {
         'use strict';
 
@@ -96,7 +96,7 @@ define(
             this.polarTraceXZ = addPolarTrace('X|Z');
 
             this.subscription = DataProxy.subscribe(
-                Protocols.hardwareState,
+                constants.protocols.hardwareState,
                 {
                     json: true,
                     onmessage: _.bind(this.onData, this)

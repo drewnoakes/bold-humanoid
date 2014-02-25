@@ -5,9 +5,9 @@ define(
     [
         'DataProxy',
         'ControlBuilder',
-        'Protocols'
+        'constants'
     ],
-    function(DataProxy, ControlBuilder, Protocols)
+    function(DataProxy, ControlBuilder, constants)
     {
         'use strict';
 
@@ -49,8 +49,8 @@ define(
         {
             this.buildChart();
 
-            this.particleSubscription = DataProxy.subscribe(Protocols.particleState,    { json: true, onmessage: _.bind(this.onParticleData, this) });
-            this.cameraSubscription   = DataProxy.subscribe(Protocols.cameraFrameState, { json: true, onmessage: _.bind(this.onCameraData, this) });
+            this.particleSubscription = DataProxy.subscribe(constants.protocols.particleState,    { json: true, onmessage: _.bind(this.onParticleData, this) });
+            this.cameraSubscription   = DataProxy.subscribe(constants.protocols.cameraFrameState, { json: true, onmessage: _.bind(this.onCameraData, this) });
 
             var container = $('<div></div>', {'class': 'control-container localiser-controls flow'}).appendTo(this.$container).get(0);
             ControlBuilder.actions('localiser', container);

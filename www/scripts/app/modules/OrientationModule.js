@@ -6,9 +6,9 @@ define(
         'DataProxy',
         'ControlBuilder',
         'GeometryUtil',
-        'Protocols'
+        'constants'
     ],
-    function(DataProxy, ControlBuilder, GeometryUtil, Protocols)
+    function(DataProxy, ControlBuilder, GeometryUtil, constants)
     {
         'use strict';
 
@@ -37,7 +37,7 @@ define(
             this.animate();
 
             this.subscription = DataProxy.subscribe(
-                Protocols.orientationState,
+                constants.protocols.orientationState,
                 {
                     json: true,
                     onmessage: _.bind(this.onData, this)

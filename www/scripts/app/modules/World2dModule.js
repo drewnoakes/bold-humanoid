@@ -4,7 +4,6 @@
 define(
     [
         'FieldLinePlotter',
-        'Protocols',
         'constants',
         'ControlBuilder',
         'DataProxy',
@@ -13,7 +12,7 @@ define(
         'util/mouse',
         'util/Geometry'
     ],
-    function(FieldLinePlotter, Protocols, constants, ControlBuilder, DataProxy, HeadControls, Dragger, mouse, Geometry)
+    function(FieldLinePlotter, constants, ControlBuilder, DataProxy, HeadControls, Dragger, mouse, Geometry)
     {
         'use strict';
 
@@ -94,10 +93,10 @@ define(
 
             this.bindEvents();
 
-            this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
+            this.worldFrameSubscription = DataProxy.subscribe(constants.protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
 
             // TODO only subscribe if user checks a box
-            this.particleSubscription   = DataProxy.subscribe(Protocols.particleState,   { json: true, onmessage: _.bind(this.onParticleData, this) });
+            this.particleSubscription   = DataProxy.subscribe(constants.protocols.particleState,   { json: true, onmessage: _.bind(this.onParticleData, this) });
 
             this.stopAnimation = false;
             this.needsRender = true;

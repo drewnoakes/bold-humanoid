@@ -338,4 +338,52 @@ export var bodyStructure = {
             ]
         }
     ]
-}
+};
+
+export var protocols = {
+    camera: 'camera-protocol',
+    control: 'control-protocol',
+
+    // One per StateObject...
+    agentFrameState: 'AgentFrame',
+    ambulatorState: 'Ambulator',
+    bodyState: 'Body',
+    bodyControlState: 'BodyControl',
+    cameraFrameState: 'CameraFrame',
+    debug: 'Debug',
+    gameState: 'Game',
+    hardwareState: 'Hardware',
+    labelCount: 'LabelCount',
+    motionTask: 'MotionTask',
+    motionTiming: 'MotionTiming',
+    odometryState: 'Odometry',
+    optionTreeState: 'OptionTree',
+    orientationState: 'Orientation',
+    particleState: 'Particle',
+    staticHardware: 'StaticHardware',
+    thinkTiming: 'ThinkTiming',
+    worldFrameState: 'WorldFrame'
+};
+
+// TODO populate this from the server somehow, but must only list those using JSON encoding
+
+export var allStateProtocols = [
+    protocols.agentFrameState,
+    protocols.ambulatorState,
+    protocols.cameraFrameState,
+    protocols.bodyState,
+    protocols.bodyControlState,
+    protocols.debug,
+    protocols.gameState,
+    protocols.hardwareState,
+    protocols.labelCount,
+    protocols.motionTask,
+    protocols.motionTiming,
+    protocols.odometryState,
+    protocols.optionTreeState,
+    protocols.orientationState,
+    protocols.particleState,
+    protocols.staticHardware,
+    protocols.thinkTiming,
+    protocols.worldFrameState
+];

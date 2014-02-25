@@ -4,10 +4,10 @@
 define(
     [
         'DataProxy',
-        'Protocols',
+        'constants',
         'BodyFigure'
     ],
-    function (DataProxy, Protocols, BodyFigure)
+    function (DataProxy, constants, BodyFigure)
     {
         'use strict';
 
@@ -122,7 +122,7 @@ define(
                 this.recordButton.classList.add('recording');
                 this.recordButton.textContent = 'recording...';
                 this.subscription = DataProxy.subscribe(
-                    Protocols.bodyControlState,
+                    constants.protocols.bodyControlState,
                     {
                         json: true,
                         onmessage: _.bind(this.onData, this)

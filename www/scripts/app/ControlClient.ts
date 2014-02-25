@@ -5,7 +5,7 @@
 /// <reference path="../libs/lodash.d.ts" />
 
 import DataProxy = require('DataProxy');
-import Protocols = require('Protocols');
+import constants = require('constants');
 import Action = require('Action');
 import Setting = require('Setting');
 
@@ -91,7 +91,7 @@ class ControlClient
     public static connect(onerror)
     {
         subscription = DataProxy.subscribe(
-            Protocols.control,
+            constants.protocols.control,
             {
                 json: true,
                 onmessage: _.bind(onControlData, this),

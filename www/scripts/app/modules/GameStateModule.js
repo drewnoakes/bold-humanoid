@@ -4,10 +4,10 @@
 define(
     [
         'DataProxy',
-        'Protocols',
+        'constants',
         'DOMTemplate'
     ],
-    function(DataProxy, Protocols, DOMTemplate)
+    function(DataProxy, constants, DOMTemplate)
     {
         'use strict';
 
@@ -36,7 +36,7 @@ define(
         GameStateModule.prototype.load = function()
         {
             this.subscription = DataProxy.subscribe(
-                Protocols.gameState,
+                constants.protocols.gameState,
                 {
                     json: true,
                     onmessage: _.bind(this.onData, this)

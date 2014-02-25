@@ -6,9 +6,9 @@ define(
         'util/Closeable',
         'ControlBuilder',
         'DataProxy',
-        'Protocols'
+        'constants'
     ],
-    function(Closeable, ControlBuilder, DataProxy, Protocols)
+    function(Closeable, ControlBuilder, DataProxy, constants)
     {
         'use strict';
 
@@ -41,7 +41,7 @@ define(
             this.$container.append(usage);
 
             this.subscription = DataProxy.subscribe(
-                Protocols.optionTreeState,
+                constants.protocols.optionTreeState,
                 {
                     json: true,
                     onmessage: _.bind(this.onData, this)

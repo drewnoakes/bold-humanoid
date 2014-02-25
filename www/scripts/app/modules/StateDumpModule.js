@@ -3,11 +3,11 @@
  */
 define(
     [
-        'Protocols',
+        'constants',
         'DataProxy',
         'DOMTemplate'
     ],
-    function(Protocols, DataProxy, DOMTemplate)
+    function(constants, DataProxy, DOMTemplate)
     {
         'use strict';
 
@@ -39,7 +39,7 @@ define(
             var select = $templateRoot.find('select');
 
             select.append($('<option>').attr('value', '').text('(None)'));
-            _.each(Protocols.allStates, function(stateName)
+            _.each(constants.protocols.allStates, function(stateName)
             {
                 select.append($('<option>').attr('value', stateName).text(stateName));
             });

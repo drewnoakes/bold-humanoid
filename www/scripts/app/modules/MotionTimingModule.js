@@ -4,9 +4,9 @@
 define(
     [
         'modules/TimingPane',
-        'Protocols'
+        'constants'
     ],
-    function(TimingPane, Protocols)
+    function(TimingPane, constants)
     {
         'use strict';
 
@@ -14,7 +14,7 @@ define(
         {
             this.$container = $('<div></div>');
 
-            this.pane = new TimingPane(Protocols.motionTiming, 125/*fps*/);
+            this.pane = new TimingPane(constants.protocols.motionTiming, 125/*fps*/);
 
             /////
 

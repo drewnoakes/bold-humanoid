@@ -5,10 +5,10 @@ define(
     [
         'DataProxy',
         'ControlBuilder',
-        'Protocols',
+        'constants',
         'BodyFigure'
     ],
-    function (DataProxy, ControlBuilder, Protocols, BodyFigure)
+    function (DataProxy, ControlBuilder, constants, BodyFigure)
     {
         'use strict';
 
@@ -107,7 +107,7 @@ define(
             this.container.append(controlContainer);
 
             this.subscription = DataProxy.subscribe(
-                Protocols.hardwareState,
+                constants.protocols.hardwareState,
                 {
                     json: true,
                     onmessage: _.bind(this.onData, this)

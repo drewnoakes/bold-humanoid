@@ -3,10 +3,10 @@
  */
 define(
     [
-        'Protocols',
+        'constants',
         'DataProxy'
     ],
-    function(Protocols, DataProxy)
+    function(constants, DataProxy)
     {
         'use strict';
 
@@ -40,7 +40,7 @@ define(
         HistogramModule.prototype.load = function()
         {
             this.subscription = DataProxy.subscribe(
-                Protocols.labelCount,
+                constants.protocols.labelCount,
                 {
                     json: true,
                     onmessage: _.bind(this.onmessage, this)

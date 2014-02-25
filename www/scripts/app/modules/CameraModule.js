@@ -4,7 +4,7 @@
 define(
     [
         'WebSocketFactory',
-        'Protocols',
+        'constants',
         'DataProxy',
         'ControlClient',
         'ControlBuilder',
@@ -15,7 +15,7 @@ define(
         'util/Closeable',
         'util/mouse'
     ],
-    function(WebSocketFactory, Protocols, DataProxy, ControlClient, ControlBuilder, DOMTemplate, HeadControls, PixelLabelInspector, color, Closeable, mouse)
+    function(WebSocketFactory, constants, DataProxy, ControlClient, ControlBuilder, DOMTemplate, HeadControls, PixelLabelInspector, color, Closeable, mouse)
     {
         'use strict';
 
@@ -60,7 +60,7 @@ define(
             this.createContext();
 
             this.closables.add(DataProxy.subscribe(
-                Protocols.camera,
+                constants.protocols.camera,
                 {
                     json: false,
                     onmessage: _.bind(this.onmessage, this)

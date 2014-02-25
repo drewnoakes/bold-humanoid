@@ -5,13 +5,12 @@ define(
     [
         'GeometryUtil',
         'DataProxy',
-        'Protocols',
         'FieldLinePlotter',
         'constants',
         'util/Dragger',
         'util/Geometry'
     ],
-    function(GeometryUtil, DataProxy, Protocols, FieldLinePlotter, constants, Dragger, Geometry)
+    function(GeometryUtil, DataProxy, FieldLinePlotter, constants, Dragger, Geometry)
     {
         'use strict';
 
@@ -103,9 +102,9 @@ define(
 
             this.positionBodySpotlight(this.bodyRoot);
 
-            this.bodyStateSubscription  = DataProxy.subscribe(Protocols.bodyState,       { json: true, onmessage: _.bind(this.onBodyStateData, this) });
-            this.worldFrameSubscription = DataProxy.subscribe(Protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
-            this.hardwareSubscription   = DataProxy.subscribe(Protocols.hardwareState,   { json: true, onmessage: _.bind(this.onHardwareData, this) });
+            this.bodyStateSubscription  = DataProxy.subscribe(constants.protocols.bodyState,       { json: true, onmessage: _.bind(this.onBodyStateData, this) });
+            this.worldFrameSubscription = DataProxy.subscribe(constants.protocols.worldFrameState, { json: true, onmessage: _.bind(this.onWorldFrameData, this) });
+            this.hardwareSubscription   = DataProxy.subscribe(constants.protocols.hardwareState,   { json: true, onmessage: _.bind(this.onHardwareData, this) });
             this.stopAnimation = false;
             this.needsRender = true;
             this.animate();

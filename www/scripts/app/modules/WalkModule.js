@@ -3,12 +3,12 @@
  */
 define(
     [
-        'Protocols',
+        'constants',
         'DataProxy',
         'DOMTemplate',
         'ControlBuilder'
     ],
-    function(Protocols, DataProxy, DOMTemplate, ControlBuilder)
+    function(constants, DataProxy, DOMTemplate, ControlBuilder)
     {
         'use strict';
 
@@ -58,7 +58,7 @@ define(
             ControlBuilder.buildAll('options.approach-ball', element.querySelector('.approach-ball-controls'));
             ControlBuilder.buildAll('walk-module', element.querySelector('.walk-controls'));
 
-            this.subscription = DataProxy.subscribe(Protocols.ambulatorState, { json: true, onmessage: _.bind(this.onData, this) });
+            this.subscription = DataProxy.subscribe(constants.protocols.ambulatorState, { json: true, onmessage: _.bind(this.onData, this) });
 
             this.drawRadar();
 
