@@ -651,6 +651,7 @@ endif (BUILD_TOOLS)
 #
 add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Action.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/BodyFigure.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/color.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/ControlBuilder.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/DOMTemplate.ts
