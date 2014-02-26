@@ -1,83 +1,71 @@
 /**
  * @author Drew Noakes http://drewnoakes.com
  */
-define(
-    [
-        'util/Closeable',
-        'ControlBuilder',
-        'DataProxy',
-        'constants'
-    ],
-    function(Closeable, ControlBuilder, DataProxy, constants)
+
+/// <reference path="../../libs/lodash.d.ts" />
+
+import constants = require('constants');
+import DataProxy = require('DataProxy');
+import ControlBuilder = require('ControlBuilder');
+import Closeable = require('util/Closeable');
+import state = require('state');
+import Module = require('Module');
+
+class OptionTreeModule extends Module
+{
+    private optionElementByName: {[name:string]:HTMLLIElement} = {};
+    private optionList: HTMLUListElement;
+
+    constructor()
     {
-        'use strict';
-
-        var OptionTreeModule = function()
-        {
-            this.$container = $('<div></div>');
-            this.optionElementByName = {};
-
-            this.title = 'option tree';
-            this.id = 'optiontree';
-            this.element = this.$container.get(0);
-
-            this.closables = new Closeable();
-        };
-
-        OptionTreeModule.prototype.load = function()
-        {
-            this.optionList = document.createElement('ul');
-            this.optionList.className = 'options';
-            this.$container.append(this.optionList);
-
-            var usage = document.createElement('div');
-            usage.className = 'control-container';
-            ControlBuilder.build('options.announce-fsm-states', usage, this.closeables);
-            this.$container.append(usage);
-
-            this.subscription = DataProxy.subscribe(
-                constants.protocols.optionTreeState,
-                {
-                    json: true,
-                    onmessage: this.onData.bind(this)
-                }
-            );
-        };
-
-        OptionTreeModule.prototype.unload = function()
-        {
-            this.$container.empty();
-            this.subscription.close();
-            this.closables.closeAll();
-
-            delete this.optionList;
-            delete this.subscription;
-        };
-
-        OptionTreeModule.prototype.onData = function(data)
-        {
-            _.each(this.optionElementByName, function(optionDiv)
-            {
-                optionDiv.className = '';
-            });
-
-            for (var i = 0; i < data.ranoptions.length; i++)
-            {
-                var name = data.ranoptions[i],
-                    optionDiv = this.optionElementByName[name];
-
-                if (optionDiv) {
-                    optionDiv.classList.add('ran');
-                } else {
-                    optionDiv = document.createElement('li');
-                    optionDiv.textContent = name;
-                    optionDiv.className = 'ran';
-                    this.optionElementByName[name] = optionDiv;
-                    this.optionList.appendChild(optionDiv);
-                }
-            }
-        };
-
-        return OptionTreeModule;
+        super('optiontree', 'option-tree');
     }
-);
+
+    public load(element: HTMLDivElement)
+    {
+        this.optionList = document.createElement('ul');
+        this.optionList.className = 'options';
+        element.appendChild(this.optionList);
+
+        var usage = document.createElement('div');
+        usage.className = 'control-container';
+        ControlBuilder.build('options.announce-fsm-states', usage, this.closeables);
+        element.appendChild(usage);
+
+        this.closeables.add(DataProxy.subscribe(
+            constants.protocols.optionTreeState,
+            {
+                json: true,
+                onmessage: this.onData.bind(this)
+            }
+        ));
+    }
+
+    public unload()
+    {
+        delete this.optionList;
+    }
+
+    private onData(data: state.OptionTree)
+    {
+        _.each(this.optionElementByName, optionDiv => optionDiv.className = '');
+
+        for (var i = 0; i < data.ranoptions.length; i++)
+        {
+            var name = data.ranoptions[i],
+                optionDiv = this.optionElementByName[name];
+
+            if (optionDiv) {
+                optionDiv.classList.add('ran');
+            } else {
+                optionDiv = document.createElement('li');
+                optionDiv.textContent = name;
+                optionDiv.className = 'ran';
+                this.optionElementByName[name] = optionDiv;
+                this.optionList.appendChild(optionDiv);
+            }
+        }
+    }
+}
+
+export = OptionTreeModule;
