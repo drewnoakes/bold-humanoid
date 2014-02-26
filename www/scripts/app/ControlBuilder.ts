@@ -7,6 +7,7 @@
 import ControlClient = require('ControlClient');
 import HsvRangeEditor = require('HsvRangeEditor');
 import color = require('color');
+import Setting = require('Setting');
 
 var nextControlId = 0;
 
@@ -34,12 +35,12 @@ class ControlBuilder
             console.assert(false && "Unexpected target type")
         }
 
-        ControlClient.withAction(id, function(action)
+        ControlClient.withAction(id, action =>
         {
             if (!button.textContent)
                 button.innerHTML = action.label;
 
-            button.addEventListener('click', function() { action.activate(); });
+            button.addEventListener('click', () => action.activate());
         });
 
         return button;
@@ -49,13 +50,13 @@ class ControlBuilder
     {
         console.assert(!!idPrefix && !!target);
 
-        ControlClient.withActions(idPrefix, function(actions)
+        ControlClient.withActions(idPrefix, actions =>
         {
-            _.each(actions, function(action){ ControlBuilder.action(action.id, target)});
+            _.each(actions, action => ControlBuilder.action(action.id, target));
         });
     }
 
-    private static createSetting(setting, container, closeables)
+    private static createSetting(setting: Setting, container, closeables)
     {
         if (setting.isReadOnly)
             return;
@@ -79,19 +80,13 @@ class ControlBuilder
                 var checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.id = checkboxName;
-                checkbox.addEventListener('change', function ()
-                {
-                    setting.setValue(checkbox.checked);
-                });
+                checkbox.addEventListener('change', () => setting.setValue(checkbox.checked));
                 wrapper.appendChild(checkbox);
                 var label = document.createElement('label');
                 label.textContent = setting.getDescription();
                 label.htmlFor = checkboxName;
                 wrapper.appendChild(label);
-                closeables.push(setting.track(function (value)
-                {
-                    checkbox.checked = value;
-                }));
+                closeables.push(setting.track(value => checkbox.checked = value));
                 break;
             }
             case "enum":
@@ -100,8 +95,8 @@ class ControlBuilder
                 heading.textContent = setting.getDescription();
                 wrapper.appendChild(heading);
 
-                var select = document.createElement('select');
-                _.each(setting.enumValues, function(enumValue)
+                var select = <HTMLSelectElement>document.createElement('select');
+                _.each(setting.enumValues, enumValue =>
                 {
                     var option = document.createElement('option');
                     option.selected = setting.value === enumValue.value;
@@ -109,13 +104,10 @@ class ControlBuilder
                     option.value = enumValue.value;
                     select.appendChild(option);
                 });
-                select.addEventListener('change', function()
+                select.addEventListener('change', () => setting.setValue(parseInt(select.options[select.selectedIndex].value)));
+                closeables.push(setting.track(value =>
                 {
-                    setting.setValue(parseInt(select.options[select.selectedIndex].value));
-                });
-                closeables.push(setting.track(function(value)
-                {
-                    var option = _.find(select.options, function(option) { return parseInt(option.value) === value; });
+                    var option = <HTMLOptionElement>_.find(select.options, option => parseInt(option.value) === value);
                     option.selected = true;
                 }));
                 wrapper.appendChild(select);
@@ -136,14 +128,8 @@ class ControlBuilder
                     input.max = setting.max;
                 wrapper.appendChild(input);
 
-                input.addEventListener('change', function()
-                {
-                    setting.setValue(parseInt(input.value));
-                });
-                closeables.push(setting.track(function(value)
-                {
-                    input.value = value;
-                }));
+                input.addEventListener('change', () => setting.setValue(parseInt(input.value)));
+                closeables.push(setting.track(value => input.value = value));
                 break;
             }
             case "double":
@@ -161,27 +147,15 @@ class ControlBuilder
                     input.max = setting.max;
                 wrapper.appendChild(input);
 
-                input.addEventListener('change', function()
-                {
-                    setting.setValue(parseFloat(input.value));
-                });
-                closeables.push(setting.track(function(value)
-                {
-                    input.value = value;
-                }));
+                input.addEventListener('change', () => setting.setValue(parseFloat(input.value)));
+                closeables.push(setting.track(value => input.value = value));
                 break;
             }
             case 'hsv-range':
             {
                 var editor = new HsvRangeEditor(setting.getDescription());
-                editor.onChange(function(value)
-                {
-                    setting.setValue(value);
-                });
-                closeables.push(setting.track(function(value)
-                {
-                    editor.setValue(value);
-                }));
+                editor.onChange(value => setting.setValue(value));
+                closeables.push(setting.track(value => editor.setValue(value)));
                 wrapper.appendChild(editor.element);
                 break;
             }
@@ -193,15 +167,12 @@ class ControlBuilder
 
                 var colorInput = document.createElement('input');
                 colorInput.type = 'color';
-                colorInput.addEventListener('change', function()
+                colorInput.addEventListener('change', () =>
                 {
                     var rgb = new color.Rgb(colorInput.value);
                     setting.setValue(rgb.toByteObject());
                 });
-                closeables.push(setting.track(function(value)
-                {
-                    colorInput.value = new color.Rgb(value.r/255, value.g/255, value.b/255).toString();
-                }));
+                closeables.push(setting.track(value => colorInput.value = new color.Rgb(value.r/255, value.g/255, value.b/255).toString()));
                 wrapper.appendChild(colorInput);
                 break;
             }
@@ -219,13 +190,10 @@ class ControlBuilder
         console.assert(!!idPrefix && !!container);
 
         var closeables = [];
-        ControlClient.withSettings(idPrefix, function(settings)
+        ControlClient.withSettings(idPrefix, settings =>
         {
-            var sortedSettings = settings.sort(function (a, b) { return (a.type == "bool") != (b.type == "bool"); });
-            _.each(sortedSettings, function (setting)
-            {
-                ControlBuilder.createSetting(setting, container, closeables);
-            })
+            var sortedSettings = settings.sort((a, b) => (a.type == "bool") != (b.type == "bool"));
+            _.each(sortedSettings, setting => ControlBuilder.createSetting(setting, container, closeables))
         });
         return closeables;
     }
@@ -235,10 +203,7 @@ class ControlBuilder
         console.assert(!!path && !!container);
 
         var closeables = [];
-        ControlClient.withSetting(path, function(setting)
-        {
-            ControlBuilder.createSetting(setting, container, closeables);
-        });
+        ControlClient.withSetting(path, setting => ControlBuilder.createSetting(setting, container, closeables));
         return closeables;
     }
 }

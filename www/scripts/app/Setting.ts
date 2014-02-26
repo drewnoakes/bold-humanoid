@@ -4,17 +4,18 @@
 
 class Setting
 {
-    private path: string;
-    private type: string;
-    private isReadOnly: boolean;
-    private isAdvanced: boolean;
-    private defaultValue: any;
-    private value: any;
-    private description: string;
-    private callbacks: {(value:any):void}[];
-    private enumValues: any[];
-    private min: number;
-    private max: number;
+    public path: string;
+    public type: string;
+    public isReadOnly: boolean;
+    public isAdvanced: boolean;
+    public defaultValue: any;
+    public value: any;
+    public description: string;
+    public enumValues: {text:string;value:string}[];
+    public min: number;
+    public max: number;
+
+    private callbacks: {(value:any):void}[] = [];
 
     constructor(settingData)
     {
@@ -25,7 +26,6 @@ class Setting
         this.defaultValue = settingData.default;
         this.value = settingData.value;
         this.description = settingData.description;
-        this.callbacks = [];
 
         if (this.type === "enum") {
             this.enumValues = settingData.values;
