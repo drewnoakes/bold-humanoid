@@ -56,13 +56,13 @@ class CameraModule extends Module
         ));
 
         var imageSettingsContainer = <HTMLElement>content.querySelector('div.camera-module-controls');
-        this.closeables.add(ControlBuilder.build('round-table.image-type', imageSettingsContainer));
-        this.closeables.add(ControlBuilder.build('round-table.camera-frame-frequency', imageSettingsContainer));
+        ControlBuilder.build('round-table.image-type', imageSettingsContainer, this.closeables);
+        ControlBuilder.build('round-table.camera-frame-frequency', imageSettingsContainer, this.closeables);
 
         imageSettingsContainer.appendChild(new HeadControls().element);
 
-        this.closeables.add(ControlBuilder.build('head-module.move-fine', imageSettingsContainer));
-        this.closeables.add(ControlBuilder.actions('head-module.look-at', imageSettingsContainer));
+        ControlBuilder.build('head-module.move-fine', imageSettingsContainer, this.closeables);
+        ControlBuilder.actions('head-module.look-at', imageSettingsContainer);
     }
 
     public unload()

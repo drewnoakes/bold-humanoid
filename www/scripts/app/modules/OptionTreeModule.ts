@@ -23,7 +23,7 @@ define(
 
             this.closables = new Closeable();
         };
-        
+
         OptionTreeModule.prototype.load = function()
         {
             this.optionList = document.createElement('ul');
@@ -32,7 +32,7 @@ define(
 
             var usage = document.createElement('div');
             usage.className = 'control-container';
-            this.closables.add(ControlBuilder.build('options.announce-fsm-states', usage));
+            ControlBuilder.build('options.announce-fsm-states', usage, this.closeables);
             this.$container.append(usage);
 
             this.subscription = DataProxy.subscribe(
