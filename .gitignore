@@ -53,6 +53,7 @@ www/.idea
 /www/scripts/app/HeadControls.js
 /www/scripts/app/interaction.js
 /www/scripts/app/ModuleHost.js
+/www/scripts/app/PixelLabelInspector.js
 /www/scripts/app/PolarTrace.js
 /www/scripts/app/Setting.js
 /www/scripts/app/Settings.js
