@@ -32,7 +32,7 @@ class BodyFigure
     public hoverJointId: util.Trackable<number> = new util.Trackable<number>();
     public selectedJointIds: util.Trackable<number[]> = new util.Trackable<number[]>([]);
 
-    constructor(options: any)
+    constructor(options?: any)
     {
         var shoulderOffset = 60,
             elbowOffset = 65,
