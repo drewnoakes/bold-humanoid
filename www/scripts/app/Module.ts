@@ -7,7 +7,7 @@ import util = require('util');
 
 class Module
 {
-    private element: HTMLElement;
+    public element: HTMLElement;
 
     public closeables: Closeable = new Closeable();
 
