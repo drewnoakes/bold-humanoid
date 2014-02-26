@@ -18,8 +18,33 @@ var actions,
     settingsJson,
     subscription;
 
+interface ControlData
+{
+    type: string;
 
-var onControlData = (data: any) =>
+    // For 'sync' type
+    actions?: {id: string; label: string;}[];
+    settings?: any[];
+
+    // For 'update' type
+    path?: string;
+    value?: any;
+}
+
+/*
+// TODO change this from a static class to a module, export this interface and use it on the API
+// { "type": "action", "id": "some.action" }
+// { "type": "setting", "path": "some.setting", "value": 1234 }
+interface ControlMessage
+{
+    type: string;
+    id?: string;
+    path?: string;
+    value?: any;
+}
+*/
+
+var onControlData = (data: ControlData) =>
 {
     switch (data.type) {
         case "sync":
@@ -73,7 +98,6 @@ var onSettingChangeCallbacks = [];
 
 class ControlClient
 {
-
     public static onSettingChange(callback)
     {
         onSettingChangeCallbacks.push(callback);
@@ -100,12 +124,12 @@ class ControlClient
         );
     }
 
-    public static getSetting(path)
+    public static getSetting(path) : Setting
     {
-        return _.find(settings, setting => setting.path === path);
+        return <Setting>_.find(settings, setting => setting.path === path);
     }
 
-    public static withSetting(path, callback)
+    public static withSetting(path, callback: (setting:Setting)=>void)
     {
         var process = () =>
         {
@@ -129,7 +153,7 @@ class ControlClient
     {
         var findSettings = () =>
         {
-            var matches = _.filter(settings, setting => setting.path.indexOf(pathPrefix) === 0);
+            var matches = <Setting[]>_.filter(settings, setting => setting.path.indexOf(pathPrefix) === 0);
             if (matches.length === 0)
                 console.error("No settings exist with path prefix: " + pathPrefix);
             callback(matches);
@@ -145,11 +169,11 @@ class ControlClient
         }
     }
 
-    public static withAction(id, callback)
+    public static withAction(id, callback: (action:Action)=>void)
     {
         var findAction = () =>
         {
-            var match = _.find(actions, action => action.id === id);
+            var match = <Action>_.find(actions, action => action.id === id);
             if (!match)
                 console.error("No action exist with ID: " + id);
             callback(match);
@@ -165,11 +189,11 @@ class ControlClient
         }
     }
 
-    public static withActions(idPrefix, callback)
+    public static withActions(idPrefix, callback: (actions:Action[])=>void)
     {
         var findActions = () =>
         {
-            var matches = _.filter(actions, action => action.id.indexOf(idPrefix) === 0);
+            var matches = <Action[]>_.filter(actions, action => action.id.indexOf(idPrefix) === 0);
             if (matches.length === 0)
                 console.error("No actions exist with ID prefix: " + idPrefix);
             callback(matches);
@@ -185,7 +209,7 @@ class ControlClient
         }
     }
 
-    public static send(message)
+    public static send(message: any)
     {
         // { "type": "action", "id": "some.action" }
         // { "type": "setting", "path": "some.setting", "value": 1234 }
@@ -195,7 +219,7 @@ class ControlClient
         subscription.send(JSON.stringify(message));
     }
 
-    public static getConfigText(matching)
+    public static getConfigText(matching?: string)
     {
         // TODO allow other types of config (actions, values only, ...?)
 
