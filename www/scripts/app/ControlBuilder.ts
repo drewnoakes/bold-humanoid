@@ -53,7 +53,7 @@ class ControlBuilder
         });
     }
 
-    private static createSetting(setting: Setting, container: Element, closeables: Closeable[])
+    private static createSetting(setting: Setting, container: Element, closeable: Closeable)
     {
         if (setting.isReadOnly)
             return;
@@ -83,7 +83,7 @@ class ControlBuilder
                 label.textContent = setting.getDescription();
                 label.htmlFor = checkboxName;
                 wrapper.appendChild(label);
-                closeables.push(setting.track(value => checkbox.checked = value));
+                closeable.add(setting.track(value => checkbox.checked = value));
                 break;
             }
             case "enum":
@@ -102,7 +102,7 @@ class ControlBuilder
                     select.appendChild(option);
                 });
                 select.addEventListener('change', () => setting.setValue(parseInt(select.options[select.selectedIndex].value)));
-                closeables.push(setting.track(value =>
+                closeable.add(setting.track(value =>
                 {
                     var option = <HTMLOptionElement>_.find(select.options, option => parseInt(option.value) === value);
                     option.selected = true;
@@ -126,7 +126,7 @@ class ControlBuilder
                 wrapper.appendChild(input);
 
                 input.addEventListener('change', () => setting.setValue(parseInt(input.value)));
-                closeables.push(setting.track(value => input.value = value));
+                closeable.add(setting.track(value => input.value = value));
                 break;
             }
             case "double":
@@ -145,14 +145,14 @@ class ControlBuilder
                 wrapper.appendChild(input);
 
                 input.addEventListener('change', () => setting.setValue(parseFloat(input.value)));
-                closeables.push(setting.track(value => input.value = value));
+                closeable.add(setting.track(value => input.value = value));
                 break;
             }
             case 'hsv-range':
             {
                 var editor = new HsvRangeEditor(setting.getDescription());
                 editor.onChange(value => setting.setValue(value));
-                closeables.push(setting.track(value => editor.setValue(value)));
+                closeable.add(setting.track(value => editor.setValue(value)));
                 wrapper.appendChild(editor.element);
                 break;
             }
@@ -169,7 +169,7 @@ class ControlBuilder
                     var rgb = new color.Rgb(colorInput.value);
                     setting.setValue(rgb.toByteObject());
                 });
-                closeables.push(setting.track(value => colorInput.value = new color.Rgb(value.r/255, value.g/255, value.b/255).toString()));
+                closeable.add(setting.track(value => colorInput.value = new color.Rgb(value.r/255, value.g/255, value.b/255).toString()));
                 wrapper.appendChild(colorInput);
                 break;
             }
@@ -182,26 +182,22 @@ class ControlBuilder
         container.appendChild(wrapper);
     }
 
-    public static buildAll(idPrefix: string, container: Element): Closeable[]
+    public static buildAll(idPrefix: string, container: Element, closeable: Closeable)
     {
         console.assert(!!idPrefix && !!container);
 
-        var closeables: Closeable[] = [];
         ControlClient.withSettings(idPrefix, settings =>
         {
-            var sortedSettings = settings.sort((a, b) => (a.type == "bool") != (b.type == "bool"));
-            _.each(sortedSettings, setting => ControlBuilder.createSetting(setting, container, closeables))
+            var sortedSettings = settings.sort((a, b) => (a.type == "bool") != (b.type == "bool") ? 1 : 0);
+            _.each(sortedSettings, setting => ControlBuilder.createSetting(setting, container, closeable))
         });
-        return closeables;
     }
 
-    public static build(path: string, container: Element): Closeable[]
+    public static build(path: string, container: Element, closeable: Closeable)
     {
         console.assert(!!path && !!container);
 
-        var closeables = [];
-        ControlClient.withSetting(path, setting => ControlBuilder.createSetting(setting, container, closeables));
-        return closeables;
+        ControlClient.withSetting(path, setting => ControlBuilder.createSetting(setting, container, closeable));
     }
 }
 
