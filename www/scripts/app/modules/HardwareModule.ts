@@ -1,6 +1,9 @@
 /**
  * @author Drew Noakes http://drewnoakes.com
  */
+
+/// <reference path="../../libs/lodash.d.ts" />
+
 define(
     [
         'DataProxy',

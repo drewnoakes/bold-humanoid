@@ -2,6 +2,8 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
+/// <reference path="../../libs/lodash.d.ts" />
+
 import FieldLinePlotter = require('FieldLinePlotter');
 import constants = require('constants');
 import DataProxy = require('DataProxy');
