@@ -44,7 +44,7 @@ void StaticHardwareState::writeJson(Writer<StringBuffer>& writer) const
         writer.String("returnDelayTimeMicroSeconds").Int(mx28->returnDelayTimeMicroSeconds);
         writer.String("angleLimitCW").Double(mx28->angleLimitCW);
         writer.String("angleLimitCCW").Double(mx28->angleLimitCCW);
-        writer.String("tempLimitHighCelcius").Int(mx28->tempLimitHighCelcius);
+        writer.String("tempLimitHighCelsius").Int(mx28->tempLimitHighCelsius);
         writer.String("voltageLimitLow").Double(mx28->voltageLimitLow);
         writer.String("voltageLimitHigh").Double(mx28->voltageLimitHigh);
         writer.String("maxTorque").Int(mx28->maxTorque);

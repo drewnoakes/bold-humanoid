@@ -31,7 +31,7 @@ namespace bold
     double presentLoad;
     /// The present voltage.
     double presentVoltage;
-    /// The present temperature, in Celcius.
+    /// The present temperature, in Celsius.
     uchar presentTemp;
 
     MX28Snapshot(uchar mx28ID) : id(mx28ID) {}
@@ -51,7 +51,7 @@ namespace bold
     unsigned int returnDelayTimeMicroSeconds;
     double angleLimitCW;
     double angleLimitCCW;
-    uchar tempLimitHighCelcius;
+    uchar tempLimitHighCelsius;
     double voltageLimitLow;
     double voltageLimitHigh;
     unsigned short maxTorque;

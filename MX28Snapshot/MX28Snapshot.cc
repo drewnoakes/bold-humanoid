@@ -59,7 +59,7 @@ StaticMX28State::StaticMX28State(uchar mx28ID, BulkReadTable const& data)
   angleLimitCCW    = MX28::value2Rads(data.readWord(MX28::P_CCW_ANGLE_LIMIT_L)); // 0x0FFF
 
   // If temp passes this limit, Heating Error Bit (Bit2) of status packet is set, and alarm is triggered
-  tempLimitHighCelcius = data.readByte(MX28::P_HIGH_LIMIT_TEMPERATURE);       // 0x50 (80 degrees)
+  tempLimitHighCelsius = data.readByte(MX28::P_HIGH_LIMIT_TEMPERATURE);       // 0x50 (80 degrees)
 
   // If voltage passes these limits, Voltage Range Error Bit (Bit0) of status packet is set, and alarm is triggered
   voltageLimitLow  = data.readByte(MX28::P_LOW_LIMIT_VOLTAGE) * 0.1;          // 0x3C (6.0 V)
