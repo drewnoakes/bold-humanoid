@@ -2,7 +2,7 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-interface IPoint2 { x: number; y: number; }
+import geometry = require('util/Geometry');
 
 class PolarTrace
 {
@@ -21,7 +21,7 @@ class PolarTrace
     private seriesCanvas: HTMLCanvasElement;
     private seriesContext: CanvasRenderingContext2D;
 
-    private lastPosition: IPoint2;
+    private lastPosition: geometry.IPoint;
 
     public element: HTMLDivElement;
 
