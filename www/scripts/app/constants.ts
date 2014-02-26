@@ -2,6 +2,12 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
+/// <reference path="../libs/lodash.d.ts" />
+/// <reference path="../libs/three.d.ts" />
+
+import Setting = require('Setting');
+import geometry = require('util/Geometry');
+
 // All lengths are in metres
 
 // These values are defaults that will be overwritten by data from the server once connected
@@ -29,9 +35,9 @@ export var cameraImageHeight = 480;
 
 export var ballRadius = ballDiameter / 2;
 
-export function update(settings)
+export function update(settings: Setting[])
 {
-    _.each(settings, function(setting)
+    _.each(settings, (setting: Setting) =>
     {
         switch (setting.path)
         {
@@ -145,7 +151,20 @@ function degToRad(deg)
 
 export var cameraOffsetInHead = new THREE.Vector3(0, 0.0332, 0.0344);
 
-export var bodyStructure = {
+export interface IBodyPart
+{
+    name: string;
+    geometryPath: string;
+    offset?: geometry.IPoint3;
+    rotationAxis?: THREE.Euler;
+    rotationOrigin?: number;
+    creaseAngle?: number;
+    jointId?: number;
+
+    children?: IBodyPart[];
+}
+
+export var bodyStructure: IBodyPart = {
     name: 'torso',
     geometryPath: 'models/darwin/darwin-body.json',
     children: [
