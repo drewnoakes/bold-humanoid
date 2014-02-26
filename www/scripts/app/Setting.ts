@@ -2,6 +2,9 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
+/// <reference path="../libs/lodash.d.ts" />
+/// <reference path="../libs/require.d.ts" />
+
 class Setting
 {
     public path: string;
@@ -51,7 +54,7 @@ class Setting
         require('ControlClient').send({type: "setting", path: this.path, value: value});
     }
 
-    private __setValue(value)
+    public __setValue(value)
     {
         this.value = value;
         _.each(this.callbacks, callback => callback(value));
