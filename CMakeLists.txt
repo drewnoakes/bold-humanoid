@@ -662,7 +662,9 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRange.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRangeEditor.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/Module.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/ModuleHost.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/VoiceModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PixelLabelInspector.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PolarTrace.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Setting.ts

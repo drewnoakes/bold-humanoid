@@ -100,7 +100,7 @@ class ModuleHost
         this.moduleContainer.appendChild(moduleElement);
     
         var headerLinks = moduleElement.querySelector('.module-header-links');
-        var container = moduleElement.querySelector('.module-content');
+        var container = <HTMLDivElement>moduleElement.querySelector('.module-content');
 
         var closeLink = document.createElement('a');
         closeLink.href = '#';
@@ -115,13 +115,9 @@ class ModuleHost
 
         util.clearChildren(container);
 
-        if (module.load)
-            module.load();
+        module.load(container);
 
-        container.appendChild(module.element);
-
-        if (module.onResized)
-            module.onResized(container.clientWidth, container.clientHeight);
+        module.onResized(container.clientWidth, container.clientHeight);
 
         this.updateHash();
     }
@@ -140,8 +136,9 @@ class ModuleHost
         this.moduleContainer.removeChild(element);
 
         // Tell it to clean up
-        if (module.unload)
-            module.unload();
+        module.unload();
+
+        module.closeables.closeAll();
 
         delete this.elementById[module.id];
 

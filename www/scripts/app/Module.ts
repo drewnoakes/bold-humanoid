@@ -2,16 +2,26 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-interface Module
+import Closeable = require('util/Closeable');
+import util = require('util');
+
+class Module
 {
-    id: string;
-    title: string;
-    element: HTMLElement;
+    private element: HTMLElement;
 
-    load?:()=>void;
-    unload?:()=>void;
+    public closeables: Closeable = new Closeable();
 
-    onResized?:(width: number, height: number)=>void;
+    constructor(public id:string, public title:string)
+    {}
+
+    public load(element: HTMLDivElement)
+    {}
+
+    public unload()
+    {}
+
+    public onResized(width: number, height: number)
+    {}
 }
 
 export = Module;
