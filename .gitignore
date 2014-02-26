@@ -58,6 +58,7 @@ www/.idea
 /www/scripts/app/Setting.js
 /www/scripts/app/Settings.js
 /www/scripts/app/util.js
+/www/scripts/app/util/Closeable.js
 /www/scripts/app/util/Geometry.js
 /www/scripts/app/util/math.js
 /www/scripts/app/util/mouse.js
