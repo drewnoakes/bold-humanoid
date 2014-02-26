@@ -2,6 +2,8 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
+/// <reference path="../libs/require.d.ts" />
+
 class Action
 {
     public label: string;
