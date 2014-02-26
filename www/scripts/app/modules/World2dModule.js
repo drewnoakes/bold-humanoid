@@ -26,14 +26,7 @@ define(
 
             this.title = '2d world';
             this.id = 'world-2d';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    onResized: _.bind(this.onResized, this),
-                    supports: { fullScreen: true }
-                }
-            ];
+            this.element = this.$container.get(0);
 
             this.needsRender = false;
         };

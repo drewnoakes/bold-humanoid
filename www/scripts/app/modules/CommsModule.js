@@ -36,14 +36,7 @@ define(
 
             this.title = 'communication';
             this.id = 'comms';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    onResized: _.bind(this.onResized, this),
-                    supports: { fullScreen: true }
-                }
-            ];
+            this.element = this.$container.get(0);
         };
 
         CommsModule.prototype.load = function()

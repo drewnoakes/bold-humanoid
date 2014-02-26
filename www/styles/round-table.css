@@ -207,14 +207,14 @@ div.module h2
     font-weight: normal;
 }
 
-div.module > div.pane-container
+div.module > div.module-content
 {
     position: relative;
     min-height: 32px;
     cursor: default;
 }
 
-div.module > div.pane-header
+div.module > div.module-header
 {
     position: relative;
     height: 24px;
@@ -222,20 +222,20 @@ div.module > div.pane-header
     margin-bottom: 10px;
 }
 
-div.module > div.pane-header > div.pane-header-links
+div.module > div.module-header > div.module-header-links
 {
     position: absolute;
     right: 2px;
     top: 0;
 }
 
-div.module > div.pane-header > div.pane-header-links > a
+div.module > div.module-header > div.module-header-links > a
 {
     text-decoration: none;
     margin-left: 12px;
 }
 
-div.module > div.pane-header > div.pane-header-links > a:hover
+div.module > div.module-header > div.module-header-links > a:hover
 {
     text-decoration: underline;
 }
@@ -486,7 +486,7 @@ div.tab-control ul.thumbs li.selected
 
 /********************************************************************/
 
-div.module.vision div.pane-container h2
+div.module.vision div.module-content h2
 {
     color: #555;
     margin: 4px 0;
@@ -520,7 +520,7 @@ div.module.vision div.image-colours.flow div.setting.control
 
 /********************************************************************/
 
-div.module.walk div.pane-container h2
+div.module.walk div.module-content h2
 {
     color: #444;
     margin: 12px 0 6px;
@@ -657,7 +657,7 @@ div.module.state .json-text
     font-size: 11px;
 }
 
-div.module.state > div.pane-container
+div.module.state > div.module-content
 {
     height: 456px;
     overflow: auto;
@@ -672,7 +672,7 @@ div.module.config .json-text
     font-size: 11px;
 }
 
-div.module.config > div.pane-container
+div.module.config > div.module-content
 {
     height: 456px;
     overflow: auto;
@@ -823,7 +823,7 @@ div.module.motion-scripts button
 
 /*******************************************************************/
 
-div.module.load div.pane-container
+div.module.load div.module-content
 {
   min-height: 345px;
 }
@@ -860,7 +860,7 @@ div.module.agent-2d .hover-info
   float: right;
 }
 
-div.module.agent-2d div.pane-container
+div.module.agent-2d div.module-content
 {
   min-height: 480px;
 }
@@ -880,7 +880,7 @@ div.module.voice div.control-container.flow .setting.control
 
 /*******************************************************************/
 
-div.module.world-2d div.pane-container .localiser-controls
+div.module.world-2d div.module-content .localiser-controls
 {
     display: inline-block;
     margin-left: 8px;

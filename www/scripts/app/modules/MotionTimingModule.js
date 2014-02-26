@@ -12,22 +12,13 @@ define(
 
         var MotionTimingModule = function()
         {
-            this.$container = $('<div></div>');
-
             this.pane = new TimingPane(constants.protocols.motionTiming, 125/*fps*/);
 
             /////
 
             this.title = 'motion timing';
             this.id = 'motion-timing';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.pane.container,
-                    onResized: _.bind(this.pane.onResized, this.pane),
-                    supports: { fullScreen: false }
-                }
-            ];
+            this.element = this.pane.container;
         };
 
         MotionTimingModule.prototype.load = function()

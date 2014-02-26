@@ -30,13 +30,7 @@ define(
             this.title = 'camera';
             this.id = 'camera';
             this.supports = { advanced: false };
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    supports: { fullScreen: true, advanced: false }
-                }
-            ];
+            this.element = this.$container.get(0);
 
             this.closables = new Closeable();
         };

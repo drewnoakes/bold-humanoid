@@ -45,13 +45,7 @@ define(
 
             this.title = 'hardware';
             this.id = 'hardware';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.container,
-                    supports: { fullScreen: false }
-                }
-            ];
+            this.element = this.container.get(0);
         };
 
         HardwareModule.prototype.load = function ()

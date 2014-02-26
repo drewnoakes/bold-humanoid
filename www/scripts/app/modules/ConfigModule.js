@@ -19,13 +19,7 @@ define(
 
             this.title = 'config';
             this.id = 'config';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.container,
-                    supports: { fullScreen: false, advanced: false }
-                }
-            ];
+            this.element = this.container;
         };
 
         ConfigModule.prototype.load = function()

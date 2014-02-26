@@ -20,13 +20,7 @@ define(
 
             this.title = 'orientation';
             this.id = 'orientation';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.container,
-                    supports: { fullScreen: true }
-                }
-            ];
+            this.element = this.container;
         };
 
         OrientationModule.prototype.load = function()

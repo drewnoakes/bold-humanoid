@@ -19,12 +19,7 @@ define(
 
             this.title = 'option tree';
             this.id = 'optiontree';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container
-                }
-            ];
+            this.element = this.$container.get(0);
 
             this.closables = new Closeable();
         };
@@ -44,7 +39,7 @@ define(
                 constants.protocols.optionTreeState,
                 {
                     json: true,
-                    onmessage: _.bind(this.onData, this)
+                    onmessage: this.onData.bind(this)
                 }
             );
         };

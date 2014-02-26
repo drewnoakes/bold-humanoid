@@ -26,19 +26,12 @@ define(
             this.torsoHeight = 0.341;
 
             this.$element = $('<div></div>');
-            this.element = this.$element.get(0);
 
             /////
 
             this.title = '3d world';
             this.id = 'world-3d';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.element,
-                    supports: { fullScreen: true }
-                }
-            ];
+            this.element = this.$element.get(0);
         };
 
         World3dModule.prototype.load = function()

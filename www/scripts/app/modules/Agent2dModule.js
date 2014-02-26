@@ -25,14 +25,7 @@ define(
 
             this.title = '2d agent';
             this.id = 'agent-2d';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    onResized: _.bind(this.onResized, this),
-                    supports: { fullScreen: true }
-                }
-            ];
+            this.element = this.$container.get(0);
 
             this.needsRender = false;
         };

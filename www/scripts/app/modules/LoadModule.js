@@ -45,13 +45,7 @@ define(
 
             this.title = 'load';
             this.id = 'load';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.container,
-                    supports: { fullScreen: false }
-                }
-            ];
+            this.element = this.container.get(0);
         };
 
         LoadModule.prototype.load = function ()

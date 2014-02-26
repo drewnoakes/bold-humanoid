@@ -20,13 +20,7 @@ define(
             this.container = $('<div></div>');
             this.title = 'trajectory';
             this.id = 'trajectory';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.container,
-                    supports: { fullScreen: false }
-                }
-            ];
+            this.element = this.container.get(0);
         };
 
         TrajectoryModule.prototype.load = function ()

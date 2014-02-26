@@ -28,13 +28,7 @@ define(
 
             this.title = 'histogram';
             this.id = 'histogram';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    supports: { fullScreen: true, advanced: false }
-                }
-            ];
+            this.element = this.$container.get(0);
         };
 
         HistogramModule.prototype.load = function()

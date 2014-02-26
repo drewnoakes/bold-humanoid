@@ -15,13 +15,7 @@ define(
 
             this.title = 'motion scripts';
             this.id = 'motion-scripts';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    supports: { fullScreen: true, advanced: false }
-                }
-            ];
+            this.element = this.$container.get(0);
         };
 
         MotionScriptModule.prototype.load = function()

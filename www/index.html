@@ -30,13 +30,13 @@
 
     <script id="module-template" type="text/x-handlebars-template">
         <div class="module {{this.id}}">
-            <div class="pane-header">
+            <div class="module-header">
                 {{#if this.title}}
                 <h1>{{this.title}}</h1>
                 {{/if}}
-                <div class="pane-header-links"></div>
+                <div class="module-header-links"></div>
             </div>
-            <div class="pane-container"></div>
+            <div class="module-content"></div>
         </div>
     </script>
 
@@ -211,7 +211,7 @@
     <div id="bouncer"></div>
 </div>
 
-<ul id="module-container"></ul>
+<div id="module-container"></div>
 
 <script type="text/javascript">
     require.onError = function(err)

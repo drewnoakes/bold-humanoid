@@ -63,14 +63,7 @@ define(
 
             this.title = 'IMU';
             this.id = 'sensors';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.container,
-                    onResized: _.bind(this.onResized, this),
-                    supports: { fullScreen: true }
-                }
-            ];
+            this.element = this.container.get(0);
         };
 
         IMUModule.prototype.load = function()

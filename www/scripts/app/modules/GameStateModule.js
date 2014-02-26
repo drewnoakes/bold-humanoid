@@ -25,12 +25,7 @@ define(
 
             this.title = 'game';
             this.id = 'game';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container
-                }
-            ];
+            this.element = this.$container.get(0);
         };
         
         GameStateModule.prototype.load = function()

@@ -27,14 +27,7 @@ define(
 
             this.title = 'vision';
             this.id = 'vision';
-            this.supports = { advanced: true };
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    supports: { fullScreen: false, advanced: true }
-                }
-            ];
+            this.element = this.$container.get(0);
 
             this.closables = new Closeable();
         };

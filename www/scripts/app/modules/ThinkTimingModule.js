@@ -12,22 +12,13 @@ define(
 
         var ThinkTimingModule = function()
         {
-            this.$container = $('<div></div>');
-
             this.pane = new TimingPane(constants.protocols.thinkTiming, 30/*fps*/);
 
             /////
 
             this.title = 'think timing';
             this.id = 'think-timing';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.pane.container,
-                    onResized: _.bind(this.pane.onResized, this.pane),
-                    supports: { fullScreen: false }
-                }
-            ];
+            this.element = this.pane.container;
         };
 
         ThinkTimingModule.prototype.load = function()

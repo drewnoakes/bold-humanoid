@@ -113,4 +113,11 @@ export function arrayToHsla(hsl: number[], override?: { s?: number; l?: number }
     var s = override && override.s || hsl[1];
     var l = override && override.l || hsl[2];
     return 'hsla(' + hsl[0] + ',' + (s * 100) + '%,' + (l * 100) + '%,1)';
-};
+}
+
+export function clearChildren(el: Element)
+{
+    while (el.hasChildNodes()) {
+        el.removeChild(el.lastChild);
+    }
+}

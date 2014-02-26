@@ -19,13 +19,7 @@ define(
 
             this.title = 'state dump';
             this.id = 'state';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    supports: { fullScreen: true, advanced: false }
-                }
-            ];
+            this.element = this.$container.get(0);
         };
 
         StateDumpModule.prototype.load = function()

@@ -52,6 +52,7 @@ www/.idea
 /www/scripts/app/HsvRangeEditor.js
 /www/scripts/app/HeadControls.js
 /www/scripts/app/interaction.js
+/www/scripts/app/ModuleHost.js
 /www/scripts/app/PolarTrace.js
 /www/scripts/app/Setting.js
 /www/scripts/app/Settings.js

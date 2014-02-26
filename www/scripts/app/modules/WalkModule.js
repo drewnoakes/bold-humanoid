@@ -37,13 +37,7 @@ define(
 
             this.title = 'walk';
             this.id = 'walk';
-            this.panes = [
-                {
-                    title: 'main',
-                    element: this.$container.get(0),
-                    supports: { fullScreen: true, advanced: false }
-                }
-            ];
+            this.element = this.$container.get(0);
         };
 
         WalkModule.prototype.load = function()
