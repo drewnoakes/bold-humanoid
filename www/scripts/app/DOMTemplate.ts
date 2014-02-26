@@ -28,7 +28,7 @@ class DOMTemplate
         this.template = Handlebars.compile(templateText);
     }
 
-    public create(data)
+    public create(data?)
     {
         var obj = parser.parseFromString(this.template(data), this.contentType);
 
