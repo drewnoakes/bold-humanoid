@@ -53,6 +53,24 @@ class ControlBuilder
         });
     }
 
+    public static buildAll(idPrefix: string, container: Element, closeable: Closeable)
+    {
+        console.assert(!!idPrefix && !!container);
+
+        ControlClient.withSettings(idPrefix, settings =>
+        {
+            var sortedSettings = settings.sort((a, b) => (a.type == "bool") != (b.type == "bool") ? 1 : 0);
+            _.each(sortedSettings, setting => ControlBuilder.createSetting(setting, container, closeable))
+        });
+    }
+
+    public static build(path: string, container: Element, closeable: Closeable)
+    {
+        console.assert(!!path && !!container);
+
+        ControlClient.withSetting(path, setting => ControlBuilder.createSetting(setting, container, closeable));
+    }
+
     private static createSetting(setting: Setting, container: Element, closeable: Closeable)
     {
         if (setting.isReadOnly)
@@ -180,24 +198,6 @@ class ControlBuilder
         }
 
         container.appendChild(wrapper);
-    }
-
-    public static buildAll(idPrefix: string, container: Element, closeable: Closeable)
-    {
-        console.assert(!!idPrefix && !!container);
-
-        ControlClient.withSettings(idPrefix, settings =>
-        {
-            var sortedSettings = settings.sort((a, b) => (a.type == "bool") != (b.type == "bool") ? 1 : 0);
-            _.each(sortedSettings, setting => ControlBuilder.createSetting(setting, container, closeable))
-        });
-    }
-
-    public static build(path: string, container: Element, closeable: Closeable)
-    {
-        console.assert(!!path && !!container);
-
-        ControlClient.withSetting(path, setting => ControlBuilder.createSetting(setting, container, closeable));
     }
 }
 
