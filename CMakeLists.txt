@@ -664,6 +664,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Module.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/ModuleHost.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CommsModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/VoiceModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PixelLabelInspector.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PolarTrace.ts
