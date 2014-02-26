@@ -55,6 +55,7 @@ www/.idea
 /www/scripts/app/Module.js
 /www/scripts/app/ModuleHost.js
 /www/scripts/app/modules/CommsModule.js
+/www/scripts/app/modules/OrientationModule.js
 /www/scripts/app/modules/VoiceModule.js
 /www/scripts/app/PixelLabelInspector.js
 /www/scripts/app/PolarTrace.js

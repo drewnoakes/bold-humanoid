@@ -1,10 +1,10 @@
-declare interface ITimeSeriesOptions
+interface ITimeSeriesOptions
 {
     resetBounds?: boolean;
     resetBoundsInterval?: number;
 }
 
-declare interface ITimeSeriesPresentationOptions
+interface ITimeSeriesPresentationOptions
 {
     strokeStyle?: string;
     fillStyle?: string;
@@ -49,7 +49,7 @@ declare class TimeSeries
     dropOldData(oldestValidTime: number, maxDataSetLength: number);
 }
 
-declare interface IGridOptions
+interface IGridOptions
 {
     /** The background colour of the chart. */
     fillStyle?: string;
@@ -67,7 +67,7 @@ declare interface IGridOptions
     borderVisible?: boolean;
 }
 
-declare interface ILabelOptions
+interface ILabelOptions
 {
     /** Enables/disables labels showing the min/max values. */
     disabled?: boolean;
@@ -78,16 +78,16 @@ declare interface ILabelOptions
     precision?: number;
 }
 
-declare interface IRange { min: number; max: number }
+interface IRange { min: number; max: number }
 
-declare interface IHorizontalLine
+interface IHorizontalLine
 {
     value?: number;
     color?: string;
     lineWidth?: number;
 }
 
-declare interface IChartOptions
+interface IChartOptions
 {
     /** Specify to clamp the lower y-axis to a given value. */
     minValue?: number;
