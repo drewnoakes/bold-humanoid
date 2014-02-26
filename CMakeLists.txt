@@ -660,6 +660,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/DOMTemplate.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HeadControls.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRange.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRangeEditor.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PolarTrace.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Setting.ts

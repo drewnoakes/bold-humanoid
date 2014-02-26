@@ -49,6 +49,7 @@ www/.idea
 /www/scripts/app/DataProxy.js
 /www/scripts/app/DOMTemplate.js
 /www/scripts/app/HsvRange.js
+/www/scripts/app/HsvRangeEditor.js
 /www/scripts/app/HeadControls.js
 /www/scripts/app/interaction.js
 /www/scripts/app/PolarTrace.js
