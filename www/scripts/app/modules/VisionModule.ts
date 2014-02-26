@@ -1,107 +1,83 @@
 /**
  * @author Drew Noakes http://drewnoakes.com
  */
-define(
-    [
-        'WebSocketFactory',
-        'DataProxy',
-        'ControlClient',
-        'ControlBuilder',
-        'DOMTemplate',
-        'PixelLabelInspector',
-        'color',
-        'util/Closeable',
-        'util/TabControl'
-    ],
-    function(WebSocketFactory, DataProxy, ControlClient, ControlBuilder, DOMTemplate, PixelLabelInspector, color, Closeable, TabControl)
+
+import ControlBuilder = require('ControlBuilder');
+import DOMTemplate = require('DOMTemplate');
+import TabControl = require('util/TabControl');
+import Module = require('Module');
+
+var moduleTemplate = new DOMTemplate("vision-module-template");
+
+class VisionModule extends Module
+{
+    constructor()
     {
-        'use strict';
-
-        var moduleTemplate = new DOMTemplate("vision-module-template");
-
-        var VisionModule = function()
-        {
-            this.$container = $('<div></div>');
-
-            /////
-
-            this.title = 'vision';
-            this.id = 'vision';
-            this.element = this.$container.get(0);
-
-            this.closables = new Closeable();
-        };
-
-        VisionModule.prototype.load = function()
-        {
-            var element = moduleTemplate.create();
-            this.$container.append(element);
-
-            var pixelLabelContainer = element.querySelector('div.pixel-labels');
-            this.closables.add(ControlBuilder.buildAll('vision.pixel-labels', pixelLabelContainer));
-
-            var dataStreamerContainer = element.querySelector('div.data-streamer');
-            this.closables.add(ControlBuilder.buildAll('data-streamer', dataStreamerContainer));
-
-            var captureContainer = element.querySelector('div.capture');
-            ControlBuilder.action('camera.save-yuv-frame', captureContainer);
-            ControlBuilder.action('camera.save-debug-frame', captureContainer);
-            this.closables.add(ControlBuilder.build('camera.recording-frames', captureContainer));
-
-            var visionOptionsContainer = element.querySelector('div.vision-options');
-            this.closables.add(ControlBuilder.build('vision.ignore-above-horizon', visionOptionsContainer));
-            this.closables.add(ControlBuilder.build('vision.label-counter.enable', visionOptionsContainer));
-
-            var blobSettingsContainer = element.querySelector('div.blob-detection');
-            this.closables.add(ControlBuilder.build('vision.blob-detection.enable', blobSettingsContainer));
-
-            var ballSettingsContainer = element.querySelector('div.ball-detection');
-            this.closables.add(ControlBuilder.buildAll('vision.ball-detection', ballSettingsContainer));
-
-            var goalSettingsContainer = element.querySelector('div.goal-detection');
-            this.closables.add(ControlBuilder.buildAll('vision.goal-detection', goalSettingsContainer));
-
-            var granularitySettingsContainer = element.querySelector('div.granularity');
-            this.closables.add(ControlBuilder.build('vision.image-granularity', granularitySettingsContainer));
-            this.closables.add(ControlBuilder.build('vision.max-granularity', granularitySettingsContainer));
-
-            var fieldEdgeContainer = element.querySelector('div.field-edge');
-            this.closables.add(ControlBuilder.build('vision.field-edge-pass.field-edge-type', fieldEdgeContainer));
-            this.closables.add(ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', fieldEdgeContainer));
-            this.closables.add(ControlBuilder.build('vision.field-edge-pass.complete.smoothing-window-length', fieldEdgeContainer));
-            this.closables.add(ControlBuilder.build('vision.field-edge-pass.use-convex-hull', fieldEdgeContainer));
-
-            var lineContainer = element.querySelector('div.line-detection');
-            this.closables.add(ControlBuilder.build('vision.line-detection.enable', lineContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.line-dots.hysteresis', lineContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-r', lineContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.delta-theta-degs', lineContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.max-line-gap', lineContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.max-lines-returned', lineContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.min-line-length', lineContainer));
-            this.closables.add(ControlBuilder.build('vision.line-detection.mask-walk.min-votes', lineContainer));
-
-            this.closables.add(ControlBuilder.buildAll('round-table.image-features', element.querySelector('div.image-features')));
-
-            this.closables.add(ControlBuilder.buildAll('camera.settings', element.querySelector('div.camera-settings')));
-            this.closables.add(ControlBuilder.buildAll('camera.calibration', element.querySelector('div.camera-calibration')));
-
-            var imageColoursContainer = element.querySelector('div.image-colours');
-            this.closables.add(ControlBuilder.buildAll('round-table.image-colours', imageColoursContainer));
-            this.closables.add(ControlBuilder.build('round-table.cartoon.background-colour', imageColoursContainer));
-
-            this.closables.add(ControlBuilder.buildAll('head-module', element.querySelector('div.head-settings')));
-
-            new TabControl(element);
-        };
-
-        VisionModule.prototype.unload = function()
-        {
-            this.$container.empty();
-
-            this.closables.closeAll();
-        };
-
-        return VisionModule;
+        super('vision', 'vision');
     }
-);
+
+    public load(element: HTMLDivElement)
+    {
+        var content = <HTMLDListElement>moduleTemplate.create();
+        element.appendChild(content);
+
+        var pixelLabelContainer = content.querySelector('div.pixel-labels');
+        ControlBuilder.buildAll('vision.pixel-labels', pixelLabelContainer, this.closeables);
+
+        var dataStreamerContainer = content.querySelector('div.data-streamer');
+        ControlBuilder.buildAll('data-streamer', dataStreamerContainer, this.closeables);
+
+        var captureContainer = content.querySelector('div.capture');
+        ControlBuilder.action('camera.save-yuv-frame', captureContainer);
+        ControlBuilder.action('camera.save-debug-frame', captureContainer);
+        ControlBuilder.build('camera.recording-frames', captureContainer, this.closeables);
+
+        var visionOptionsContainer = content.querySelector('div.vision-options');
+        ControlBuilder.build('vision.ignore-above-horizon', visionOptionsContainer, this.closeables);
+        ControlBuilder.build('vision.label-counter.enable', visionOptionsContainer, this.closeables);
+
+        var blobSettingsContainer = content.querySelector('div.blob-detection');
+        ControlBuilder.build('vision.blob-detection.enable', blobSettingsContainer, this.closeables);
+
+        var ballSettingsContainer = content.querySelector('div.ball-detection');
+        ControlBuilder.buildAll('vision.ball-detection', ballSettingsContainer, this.closeables);
+
+        var goalSettingsContainer = content.querySelector('div.goal-detection');
+        ControlBuilder.buildAll('vision.goal-detection', goalSettingsContainer, this.closeables);
+
+        var granularitySettingsContainer = content.querySelector('div.granularity');
+        ControlBuilder.build('vision.image-granularity', granularitySettingsContainer, this.closeables);
+        ControlBuilder.build('vision.max-granularity', granularitySettingsContainer, this.closeables);
+
+        var fieldEdgeContainer = content.querySelector('div.field-edge');
+        ControlBuilder.build('vision.field-edge-pass.field-edge-type', fieldEdgeContainer, this.closeables);
+        ControlBuilder.build('vision.field-edge-pass.min-vertical-run-length', fieldEdgeContainer, this.closeables);
+        ControlBuilder.build('vision.field-edge-pass.complete.smoothing-window-length', fieldEdgeContainer, this.closeables);
+        ControlBuilder.build('vision.field-edge-pass.use-convex-hull', fieldEdgeContainer, this.closeables);
+
+        var lineContainer = content.querySelector('div.line-detection');
+        ControlBuilder.build('vision.line-detection.enable', lineContainer, this.closeables);
+        ControlBuilder.build('vision.line-detection.line-dots.hysteresis', lineContainer, this.closeables);
+        ControlBuilder.build('vision.line-detection.mask-walk.delta-r', lineContainer, this.closeables);
+        ControlBuilder.build('vision.line-detection.mask-walk.delta-theta-degs', lineContainer, this.closeables);
+        ControlBuilder.build('vision.line-detection.mask-walk.max-line-gap', lineContainer, this.closeables);
+        ControlBuilder.build('vision.line-detection.mask-walk.max-lines-returned', lineContainer, this.closeables);
+        ControlBuilder.build('vision.line-detection.mask-walk.min-line-length', lineContainer, this.closeables);
+        ControlBuilder.build('vision.line-detection.mask-walk.min-votes', lineContainer, this.closeables);
+
+        ControlBuilder.buildAll('round-table.image-features', content.querySelector('div.image-features'), this.closeables);
+
+        ControlBuilder.buildAll('camera.settings', content.querySelector('div.camera-settings'), this.closeables);
+        ControlBuilder.buildAll('camera.calibration', content.querySelector('div.camera-calibration'), this.closeables);
+
+        var imageColoursContainer = content.querySelector('div.image-colours');
+        ControlBuilder.buildAll('round-table.image-colours', imageColoursContainer, this.closeables);
+        ControlBuilder.build('round-table.cartoon.background-colour', imageColoursContainer, this.closeables);
+
+        ControlBuilder.buildAll('head-module', content.querySelector('div.head-settings'), this.closeables);
+
+        new TabControl(content);
+    }
+}
+
+export = VisionModule;
