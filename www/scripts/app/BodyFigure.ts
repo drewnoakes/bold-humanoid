@@ -10,16 +10,27 @@ import util = require('util');
 
 var bodyTemplate = new DOMTemplate('body-figure-template');
 
+interface JointDetail
+{
+    id: number;
+    name: string;
+    row: number;
+    group: number;
+    xOffset: number;
+    x?: number;
+    y?: number;
+    height?: number;
+    width?: number;
+}
+
 class BodyFigure
 {
     public element: HTMLDivElement;
 
     private jointElementById: HTMLDivElement[];
 
-    // TODO use typed Trackable<T> here
-
-    public hoverJointId: util.Trackable = new util.Trackable();
-    public selectedJointIds: util.Trackable = new util.Trackable([]);
+    public hoverJointId: util.Trackable<number> = new util.Trackable<number>();
+    public selectedJointIds: util.Trackable<number[]> = new util.Trackable<number[]>([]);
 
     constructor(options: any)
     {
@@ -29,12 +40,12 @@ class BodyFigure
             kneeOffset = 45,
             footOffset = 50;
 
-        options = _.extend({}, {hasHover: false, hasSelection: false}, options);
+        options = _.extend<any,any,any,any,any>({}, {hasHover: false, hasSelection: false}, options);
 
         // TODO rename constants.jointIds to use consistent pitch/roll/yaw naming
 
         var bodyData = {
-            joints: [
+            joints: <JointDetail[]>[
                 { id: constants.jointIds.headTilt, name: 'Head Tilt', row: 0, group: 0, xOffset: 0 },
                 { id: constants.jointIds.headPan,  name: 'Head Pan', row: 1, group: 0, xOffset: 0 },
 
