@@ -8,6 +8,7 @@ import ControlClient = require('ControlClient');
 import HsvRangeEditor = require('HsvRangeEditor');
 import color = require('color');
 import Setting = require('Setting');
+import Closeable = require('util/Closeable');
 
 var nextControlId = 0;
 
@@ -15,7 +16,7 @@ class ControlBuilder
 {
     constructor() { throw new Error("Cannot instantiate this class."); }
 
-    public static action(id: string, target: HTMLElement)
+    public static action(id: string, target: Element)
     {
         console.assert(!!id && !!target);
 
@@ -24,15 +25,11 @@ class ControlBuilder
         {
             button = target;
         }
-        else if (target instanceof HTMLElement)
-        {
-            button = document.createElement('button');
-            target.appendChild(button);
-        }
         else
         {
-            console.dir(target);
-            console.assert(false && "Unexpected target type")
+            console.assert(target instanceof Element);
+            button = document.createElement('button');
+            (<Element>target).appendChild(button);
         }
 
         ControlClient.withAction(id, action =>
@@ -46,7 +43,7 @@ class ControlBuilder
         return button;
     }
 
-    public static actions(idPrefix: string, target: HTMLElement)
+    public static actions(idPrefix: string, target: Element)
     {
         console.assert(!!idPrefix && !!target);
 
@@ -56,7 +53,7 @@ class ControlBuilder
         });
     }
 
-    private static createSetting(setting: Setting, container, closeables)
+    private static createSetting(setting: Setting, container: Element, closeables: Closeable[])
     {
         if (setting.isReadOnly)
             return;
@@ -185,11 +182,11 @@ class ControlBuilder
         container.appendChild(wrapper);
     }
 
-    public static buildAll(idPrefix: string, container: HTMLElement)
+    public static buildAll(idPrefix: string, container: Element): Closeable[]
     {
         console.assert(!!idPrefix && !!container);
 
-        var closeables = [];
+        var closeables: Closeable[] = [];
         ControlClient.withSettings(idPrefix, settings =>
         {
             var sortedSettings = settings.sort((a, b) => (a.type == "bool") != (b.type == "bool"));
@@ -198,7 +195,7 @@ class ControlBuilder
         return closeables;
     }
 
-    public static build(path: string, container: HTMLElement)
+    public static build(path: string, container: Element): Closeable[]
     {
         console.assert(!!path && !!container);
 
