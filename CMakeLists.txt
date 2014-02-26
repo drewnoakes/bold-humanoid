@@ -664,9 +664,29 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Module.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/ModuleHost.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/Agent2dModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CameraModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CommsModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/ConfigModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/GameStateModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/HardwareModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/HistogramModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/IMUModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/LoadModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/LocaliserModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/MotionScriptModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/MotionTimingModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/OrientationModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/OptionTreeModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/StateDumpModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/ThinkTimingModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/TimingPane.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/TrajectoryModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/VisionModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/VoiceModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/WalkModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World2dModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World3dModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PixelLabelInspector.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/PolarTrace.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Setting.ts
