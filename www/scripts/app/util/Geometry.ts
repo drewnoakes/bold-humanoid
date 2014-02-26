@@ -8,6 +8,12 @@ export interface IPoint
     y: number;
 }
 
+export interface ILineSegment
+{
+    p1: IPoint;
+    p2: IPoint;
+}
+
 //export interface ISize
 //{
 //    width: number;
