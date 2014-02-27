@@ -39,7 +39,7 @@ class HistogramModule extends Module
             constants.protocols.labelCount,
             {
                 json: true,
-                onmessage: _.bind(this.onmessage, this)
+                onmessage: this.onmessage.bind(this)
             }
         ));
 

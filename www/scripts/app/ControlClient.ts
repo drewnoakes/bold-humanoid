@@ -118,7 +118,7 @@ class ControlClient
             constants.protocols.control,
             {
                 json: true,
-                onmessage: _.bind(onControlData, this),
+                onmessage: onControlData.bind(this),
                 onerror: onerror
             }
         );

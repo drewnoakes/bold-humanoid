@@ -51,7 +51,7 @@ class CameraModule extends Module
             constants.protocols.camera,
             {
                 json: false,
-                onmessage: _.bind(this.onmessage, this)
+                onmessage: this.onmessage.bind(this)
             }
         ));
 

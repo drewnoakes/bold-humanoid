@@ -98,7 +98,7 @@ class IMUModule extends Module
             constants.protocols.hardwareState,
             {
                 json: true,
-                onmessage: _.bind(this.onData, this)
+                onmessage: this.onData.bind(this)
             }
         ));
 

@@ -63,7 +63,7 @@ class StateDumpModule extends Module
                     protocol,
                     {
                         json: true,
-                        onmessage: _.bind(this.onData, this)
+                        onmessage: this.onData.bind(this)
                     }
                 );
             }

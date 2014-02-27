@@ -108,7 +108,7 @@ class TimingPane
             this.protocol,
             {
                 json: true,
-                onmessage: _.bind(this.onData, this)
+                onmessage: this.onData.bind(this)
             }
         ));
 
