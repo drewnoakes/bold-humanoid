@@ -13,7 +13,7 @@ Makefile
 TAGS
 bold.py
 boldhumanoid
-build
+/build
 captures/*.json
 captures/*.png
 cachegrind*
