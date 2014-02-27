@@ -1,33 +1,25 @@
 /**
  * @author Drew Noakes http://drewnoakes.com
  */
-define(
-    [
-        'ControlBuilder'
-    ],
-    function(ControlBuilder)
+
+import ControlBuilder = require('ControlBuilder');
+import Module = require('Module');
+
+class MotionScriptModule extends Module
+{
+    constructor()
     {
-        'use strict';
-
-        var MotionScriptModule = function()
-        {
-            this.$container = $('<div></div>');
-
-            this.title = 'motion scripts';
-            this.id = 'motion-scripts';
-            this.element = this.$container.get(0);
-        };
-
-        MotionScriptModule.prototype.load = function()
-        {
-            ControlBuilder.actions('motion-script', $('<div></div>', {'class': 'control-container ambulator-controls'}).appendTo(this.$container).get(0));
-        };
-
-        MotionScriptModule.prototype.unload = function()
-        {
-            this.$container.empty();
-        };
-
-        return MotionScriptModule;
+        super('motion-scripts', 'motion scripts');
     }
-);
+
+    public load(element: HTMLDivElement)
+    {
+        var container = document.createElement('div');
+        container.className = 'control-container ambulator-controls';
+        element.appendChild(container);
+
+        ControlBuilder.actions('motion-script', container);
+    }
+}
+
+export = MotionScriptModule;
