@@ -85,6 +85,7 @@ www/.idea
 /www/scripts/app/Settings.js
 /www/scripts/app/state.js
 /www/scripts/app/util.js
+/www/scripts/app/util/canvas.js
 /www/scripts/app/util/Closeable.js
 /www/scripts/app/util/Geometry.js
 /www/scripts/app/util/math.js
