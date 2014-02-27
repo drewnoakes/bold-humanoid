@@ -149,6 +149,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
 
       d_section = Section::MAIN;
       d_sectionStepCount =  d_keyFrameMotionStepCount - (d_accelStepCount << 1);
+      assert(d_sectionStepCount != 0);
 
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
@@ -180,6 +181,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
 
       d_section = Section::POST;
       d_sectionStepCount = d_accelStepCount;
+      assert(d_sectionStepCount != 0);
 
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
@@ -196,6 +198,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
 
         d_section = Section::PAUSE;
         d_sectionStepCount = d_keyFramePauseStepCount;
+        assert(d_sectionStepCount != 0);
       }
       else
       {
@@ -389,6 +392,7 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints
   }
 
   d_sectionStepCount = d_accelStepCount;
+  assert(d_sectionStepCount != 0);
 
   return true;
 }

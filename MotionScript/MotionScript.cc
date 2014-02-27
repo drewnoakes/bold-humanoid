@@ -64,6 +64,15 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
       keyFrame.pauseCycles = keyFrameMember.TryGetIntValue("pauseCycles", 0);
       keyFrame.moveCycles = keyFrameMember["moveCycles"].GetInt();
 
+      if (keyFrame.moveCycles < 3)
+      {
+        // NOTE the MotionScriptRunner hits an arithmetic error (div by zero) if
+        //      moveCycles is less than 3. Should really fix the bug there, but
+        //      this is easier for now and provides quick feedback.
+        log::error("MotionScript::fromFile") << "moveCycles value must be greater than 2 in for " << fileName;
+        return nullptr;
+      }
+
       auto const& valuesMember = keyFrameMember["values"];
       for (uchar v = 0; v < (uchar)JointId::MAX; v++)
         keyFrame.values[v] = valuesMember[v].GetInt();
