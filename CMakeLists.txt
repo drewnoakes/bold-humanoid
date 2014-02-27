@@ -658,6 +658,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/ControlClient.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/DataProxy.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/DOMTemplate.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/FieldLinePlotter.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HeadControls.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRange.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRangeEditor.ts
