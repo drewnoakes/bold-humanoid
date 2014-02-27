@@ -1,41 +1,35 @@
 /**
  * @author Drew Noakes http://drewnoakes.com
  */
-define(
-    [
-        'modules/TimingPane',
-        'constants'
-    ],
-    function(TimingPane, constants)
+
+import constants = require('constants');
+import TimingPane = require('modules/TimingPane');
+import Module = require('Module');
+
+class ThinkTimingModule extends Module
+{
+    private pane: TimingPane;
+
+    constructor()
     {
-        'use strict';
-
-        var ThinkTimingModule = function()
-        {
-            this.pane = new TimingPane(constants.protocols.thinkTiming, 30/*fps*/);
-
-            /////
-
-            this.title = 'think timing';
-            this.id = 'think-timing';
-            this.element = this.pane.container;
-        };
-
-        ThinkTimingModule.prototype.load = function()
-        {
-            this.pane.load();
-        };
-
-        ThinkTimingModule.prototype.unload = function()
-        {
-            this.pane.unload();
-        };
-
-        ThinkTimingModule.prototype.onResized = function(width, height)
-        {
-            this.pane.onResized(width, height);
-        };
-
-        return ThinkTimingModule;
+        super('think-timing', 'think timing');
+        this.pane = new TimingPane(constants.protocols.thinkTiming, 30/*fps*/);
     }
-);
+
+    public load(element: HTMLDivElement)
+    {
+        this.pane.load(element);
+    }
+
+    public unload()
+    {
+        this.pane.unload();
+    }
+
+    public onResized(width, height)
+    {
+        this.pane.onResized(width, height);
+    }
+}
+
+export = ThinkTimingModule;
