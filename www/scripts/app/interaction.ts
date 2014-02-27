@@ -36,29 +36,31 @@ export class Dragger
 
     constructor(private element: Element, private ondrag: (distance: IDragEvent) => void)
     {
-        this.element.addEventListener('mousedown', this.onmousedown.bind(this));
+        this.element.addEventListener('mousedown', this.onmousedown.bind(this), false);
         this.onmouseup = this.onmouseup.bind(this);
         this.onmousemove = this.onmousemove.bind(this);
     }
 
     private onmousedown(e: MouseEvent)
     {
+        event.preventDefault();
+        event.stopImmediatePropagation();
         this.fixEvent(e);
         this.lastScreenPoint = { x: e.screenX, y: e.screenY };
         this.startScreenPoint = { x: e.screenX, y: e.screenY };
         this.startEvent = e;
         this.isDragging = true;
         this.isStart = true;
-        this.element.ownerDocument.addEventListener('mouseup', this.onmouseup);
-        this.element.ownerDocument.addEventListener('mousemove', this.onmousemove);
+        this.element.ownerDocument.addEventListener('mouseup', this.onmouseup, false);
+        this.element.ownerDocument.addEventListener('mousemove', this.onmousemove, false);
     }
 
     private onmouseup(e: MouseEvent)
     {
         this.fixEvent(e);
         this.isDragging = false;
-        this.element.ownerDocument.removeEventListener('mouseup', this.onmouseup);
-        this.element.ownerDocument.removeEventListener('mousemove', this.onmousemove);
+        this.element.ownerDocument.removeEventListener('mouseup', this.onmouseup, false);
+        this.element.ownerDocument.removeEventListener('mousemove', this.onmousemove, false);
         this.raiseEvent(e, true);
     }
 
