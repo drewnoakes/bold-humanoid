@@ -1,84 +1,87 @@
 /**
  * @author Drew Noakes http://drewnoakes.com
  */
-define(
-    [
-        'constants',
-        'DataProxy',
-        'DOMTemplate'
-    ],
-    function(constants, DataProxy, DOMTemplate)
+
+/// <reference path="../../libs/lodash.d.ts" />
+
+import constants = require('constants');
+import DataProxy = require('DataProxy');
+import DOMTemplate = require('DOMTemplate');
+import Module = require('Module');
+
+var moduleTemplate = new DOMTemplate('state-dump-module-template');
+
+interface ICloseable
+{
+    close();
+}
+
+class StateDumpModule extends Module
+{
+    private subscription: ICloseable;
+    private textElement: HTMLDivElement;
+
+    constructor()
     {
-        'use strict';
+        super('state', 'state dump');
+    }
 
-        var moduleTemplate = new DOMTemplate('state-dump-module-template');
+    public load(element: HTMLDivElement)
+    {
+        var templateRoot = <HTMLElement>moduleTemplate.create();
 
-        var StateDumpModule = function()
+        element.appendChild(templateRoot);
+
+        this.textElement = <HTMLDivElement>templateRoot.querySelector('div.json-text');
+
+        var select = <HTMLSelectElement>templateRoot.querySelector('select');
+
+        var none = document.createElement('option');
+        none.value = '';
+        none.text = '(None)';
+        select.appendChild(none);
+
+        _.each(constants.allStateProtocols, stateName =>
         {
-            this.$container = $('<div></div>');
+            var option = document.createElement('option');
+            option.value = stateName;
+            option.text = stateName;
+            select.appendChild(option);
+        });
 
-            this.title = 'state dump';
-            this.id = 'state';
-            this.element = this.$container.get(0);
-        };
-
-        StateDumpModule.prototype.load = function()
+        select.addEventListener('change', () =>
         {
-            var $templateRoot = $(moduleTemplate.create());
-
-            this.$container.append($templateRoot);
-
-            this.textElement = $templateRoot.find('div.json-text').get(0);
-
-            var select = $templateRoot.find('select');
-
-            select.append($('<option>').attr('value', '').text('(None)'));
-            _.each(constants.protocols.allStates, function(stateName)
-            {
-                select.append($('<option>').attr('value', stateName).text(stateName));
-            });
-
-            var setState = function(state)
-            {
-                if (this.subscription) {
-                    this.subscription.close();
-                }
-
-                this.textElement.textContent = state ? 'Waiting for an update...' : '';
-
-                if (state) {
-                    this.subscription = DataProxy.subscribe(
-                        state,
-                        {
-                            json: true,
-                            onmessage: _.bind(this.onData, this)
-                        }
-                    );
-                }
-            }.bind(this);
-
-            select.change(function()
-            {
-                var state = select.get(0).value;
-                setState(state);
-            });
-        };
-
-        StateDumpModule.prototype.unload = function()
-        {
-            this.$container.empty();
-
-            delete this.textElement;
+            var protocol = select.options[select.selectedIndex].value;
 
             if (this.subscription)
                 this.subscription.close();
-        };
 
-        StateDumpModule.prototype.onData = function(data)
-        {
-            this.textElement.textContent = JSON.stringify(data, undefined, 2);
-        };
+            this.textElement.textContent = protocol ? 'Waiting for an update...' : '';
 
-        return StateDumpModule;
+            if (protocol !== '') {
+                this.subscription = DataProxy.subscribe(
+                    protocol,
+                    {
+                        json: true,
+                        onmessage: _.bind(this.onData, this)
+                    }
+                );
+            }
+        });
     }
-);
+
+    public unload()
+    {
+        delete this.textElement;
+
+        if (this.subscription)
+            this.subscription.close();
+    }
+
+    private onData(data: any)
+    {
+        this.textElement.textContent = JSON.stringify(data, undefined, 2);
+    }
+}
+
+export = StateDumpModule;
