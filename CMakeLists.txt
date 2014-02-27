@@ -699,6 +699,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/math.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/mouse.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/TabControl.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/util/three.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/WebSocketFactory.ts
   )
 
