@@ -2,12 +2,21 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
+// TODO rename as IPoint2
 export interface IPoint
 {
     x: number;
     y: number;
 }
 
+export interface IPoint3
+{
+    x: number;
+    y: number;
+    z: number;
+}
+
+// TODO rename as ILineSegment2
 export interface ILineSegment
 {
     p1: IPoint;
