@@ -52,7 +52,6 @@ void Camera::createControls()
   // necessarily known before the process starts, and will vary based upon the
   // available hardware.
 
-  set<string> advancedControlNames = { "Auto WB", "Exposure, Auto", "Exposure, Auto Priority", "Backlight Compensation", "Power Line Frequency" };
   set<string> ignoreControlNames = { "Pan (Absolute)", "Tilt (Absolute)" };
 
   auto getValue = [this](unsigned const& id) -> int
@@ -92,8 +91,6 @@ void Camera::createControls()
     if (ignoreControlNames.find(name) != ignoreControlNames.end())
       continue;
 
-    bool isAdvanced = advancedControlNames.find(name) != advancedControlNames.end();
-
     // Shorten some verbose names
     if (name == "White Balance Temperature, Auto")
       name = "Auto WB";
@@ -128,7 +125,7 @@ void Camera::createControls()
         if (!BoolSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
           defaultValue = control->defaultValue != 0;
 
-        auto setting = new BoolSetting(path.str(), defaultValue, isReadOnly, isAdvanced, name);
+        auto setting = new BoolSetting(path.str(), defaultValue, isReadOnly, name);
         setting->setValue(currentValue != 0);
         setting->changed.connect([setValue,control,setting](bool value) {
           setValue(control, value ? 1 : 0,
@@ -145,7 +142,7 @@ void Camera::createControls()
         if (defaultValue < control->minimum || defaultValue > control->maximum)
           log::warning("Camera::createControls") << "Invalid default value " << defaultValue << " for int setting " << path.str();
 
-        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, defaultValue, isReadOnly, isAdvanced, name);
+        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, defaultValue, isReadOnly, name);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control,setting](int value) {
           setValue(control, value,
@@ -162,7 +159,7 @@ void Camera::createControls()
         if (control->pairs.find(defaultValue) == control->pairs.end())
           log::warning("Camera::createControls") << "Invalid default value " << defaultValue << " for enum setting " << path.str();
 
-        auto setting = new EnumSetting(path.str(), control->pairs, defaultValue, isReadOnly, isAdvanced, name);
+        auto setting = new EnumSetting(path.str(), control->pairs, defaultValue, isReadOnly, name);
         setting->setValue(currentValue);
         setting->changed.connect([setValue,control,setting](int value) {
           setValue(control, value,

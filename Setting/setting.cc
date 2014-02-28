@@ -17,8 +17,6 @@ void SettingBase::writeFullJson(rapidjson::Writer< rapidjson::StringBuffer >& wr
     writer.String("type").String(getTypeName().c_str());
     if (getDescription().size())
       writer.String("description").String(getDescription().c_str());
-    if (isAdvanced())
-      writer.String("advanced").Bool(true);
     if (isReadOnly())
       writer.String("readonly").Bool(true);
     writer.String("value");

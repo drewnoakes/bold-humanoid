@@ -396,16 +396,6 @@ div.module div.module-column-3
     letter-spacing: -0.1em;
 }
 
-div.module .advanced
-{
-    display: none;
-}
-
-div.module.advanced .advanced
-{
-    display: inline-block;
-}
-
 div.setting span.value-range,
 div.setting span.default-value
 {

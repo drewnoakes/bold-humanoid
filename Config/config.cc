@@ -155,7 +155,6 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
     }
 
     bool isReadOnly = metaNode->TryGetBoolValue("readonly", false);
-    bool isAdvanced = metaNode->TryGetBoolValue("advanced", false);
     const char* descriptionChars = metaNode->TryGetStringValue("description", (const char*)nullptr);
     string description = descriptionChars == nullptr ? "" : descriptionChars;
 
@@ -174,7 +173,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
 
       auto min = metaNode->TryGetDoubleValue("min", -numeric_limits<double>::max());
       auto max = metaNode->TryGetDoubleValue("max", numeric_limits<double>::max());
-      Config::addSetting(new DoubleSetting(path, min, max, defaultValue, isReadOnly, isAdvanced, description));
+      Config::addSetting(new DoubleSetting(path, min, max, defaultValue, isReadOnly, description));
     }
     else if (type == "int")
     {
@@ -187,7 +186,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
 
       auto min = metaNode->TryGetIntValue("min", -numeric_limits<int>::max());
       auto max = metaNode->TryGetIntValue("max", numeric_limits<int>::max());
-      Config::addSetting(new IntSetting(path, min, max, defaultValue, isReadOnly, isAdvanced, description));
+      Config::addSetting(new IntSetting(path, min, max, defaultValue, isReadOnly, description));
     }
     else if (type == "enum")
     {
@@ -216,7 +215,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
         pairs[it->value.GetInt()] = it->name.GetString();
       }
 
-      Config::addSetting(new EnumSetting(path, pairs, defaultValue, isReadOnly, isAdvanced, description));
+      Config::addSetting(new EnumSetting(path, pairs, defaultValue, isReadOnly, description));
     }
     else if (type == "bool")
     {
@@ -227,7 +226,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
         throw runtime_error("JSON 'default' value must be a bool");
       }
 
-      Config::addSetting(new BoolSetting(path, defaultValue, isReadOnly, isAdvanced, description));
+      Config::addSetting(new BoolSetting(path, defaultValue, isReadOnly, description));
     }
     else if (type == "string")
     {
@@ -238,7 +237,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
         throw runtime_error("JSON 'default' value must be a string");
       }
 
-      Config::addSetting(new StringSetting(path, defaultValue, isReadOnly, isAdvanced, description));
+      Config::addSetting(new StringSetting(path, defaultValue, isReadOnly, description));
     }
     else if (type == "hsv-range")
     {
@@ -249,7 +248,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
       if (defaultMember && !HsvRangeSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
         throw runtime_error("Unable to parse hsv-range");
 
-      Config::addSetting(new HsvRangeSetting(path, defaultValue, isReadOnly, isAdvanced, description));
+      Config::addSetting(new HsvRangeSetting(path, defaultValue, isReadOnly, description));
     }
     else if (type == "double-range")
     {
@@ -260,7 +259,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
       if (defaultMember && !DoubleRangeSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
         throw runtime_error("Unable to parse double-range");
 
-      Config::addSetting(new DoubleRangeSetting(path, defaultValue, isReadOnly, isAdvanced, description));
+      Config::addSetting(new DoubleRangeSetting(path, defaultValue, isReadOnly, description));
     }
     else if (type == "bgr-colour")
     {
@@ -271,7 +270,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
       if (defaultMember && !BgrColourSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
         throw runtime_error("Unable to parse bgr-colour");
 
-      Config::addSetting(new BgrColourSetting(path, defaultValue, isReadOnly, isAdvanced, description));
+      Config::addSetting(new BgrColourSetting(path, defaultValue, isReadOnly, description));
     }
     else
     {

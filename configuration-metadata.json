@@ -74,7 +74,7 @@
   "vision": {
     "ignore-above-horizon": { "type": "bool", "default": true },
     "image-granularity": { "type": "enum", "default": 0, "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3, "Projected": 4 } },
-    "max-granularity": { "type": "int", "min": 1, "max": 20, "default": 4, "advanced": true },
+    "max-granularity": { "type": "int", "min": 1, "max": 20, "default": 4 },
     "pixel-labels": {
       "goal":  { "type": "hsv-range", "default": { "hue": [44, 60],  "sat": [158, 236], "val": [124, 222] } },
       "ball":  { "type": "hsv-range", "default": { "hue": [248, 23], "sat": [72, 255],  "val": [12, 255] } },
@@ -85,28 +85,28 @@
       "enable": { "type": "bool", "default": true }
     },
     "ball-detection": {
-      "enable-blob-merging": { "type": "bool", "default": true, "advanced": true },
-      "min-area-px":         { "type": "int", "min": 0, "max": 255, "default": 0, "advanced": true },
-      "accepted-size-ratio": { "type": "double-range", "default": [0.8, 1.5], "advanced": true },
-      "max-field-edge-distance-px": { "type": "int", "min": -50, "max": 500, "default": 0, "advanced": true }
+      "enable-blob-merging": { "type": "bool", "default": true },
+      "min-area-px":         { "type": "int", "min": 0, "max": 255, "default": 0 },
+      "accepted-size-ratio": { "type": "double-range", "default": [0.8, 1.5] },
+      "max-field-edge-distance-px": { "type": "int", "min": -50, "max": 500, "default": 0 }
     },
     "goal-detection": {
-      "min-dimension-px":       { "type": "int", "min": 1, "max": 50, "default": 1, "advanced": true },
-      "accepted-width-ratio":       { "type": "double-range", "default": [0.6, 1.4], "advanced": true },
-      "max-field-edge-distance-px": { "type": "int", "min": -50, "max": 500, "default": 30, "advanced": true }
+      "min-dimension-px":       { "type": "int", "min": 1, "max": 50, "default": 1 },
+      "accepted-width-ratio":       { "type": "double-range", "default": [0.6, 1.4] },
+      "max-field-edge-distance-px": { "type": "int", "min": -50, "max": 500, "default": 30 }
     },
     "line-detection": {
       "enable":      { "type": "bool", "default": false, "description": "Detect lines" },
       "line-dots": {
-        "hysteresis": { "type": "int", "min": 0, "max": 255, "default": 3, "advanced": true }
+        "hysteresis": { "type": "int", "min": 0, "max": 255, "default": 3 }
       },
       "mask-walk": {
-        "delta-r":            { "type": "double", "min": 1.0, "max": 20.0, "default": 3.0, "advanced": true },
-        "delta-theta-degs":   { "type": "double", "min": 1.0, "max": 20.0, "default": 3.0, "advanced": true },
-        "min-votes":          { "type": "int", "min": 1, "max": 20, "default": 10, "advanced": true },
-        "min-line-length":    { "type": "int", "min": 1, "default": 30, "advanced": true },
-        "max-line-gap":       { "type": "int", "min": 0, "max": 50, "default": 30, "advanced": true },
-        "max-lines-returned": { "type": "int", "min": 1, "max": 20, "default": 5, "advanced": true }
+        "delta-r":            { "type": "double", "min": 1.0, "max": 20.0, "default": 3.0 },
+        "delta-theta-degs":   { "type": "double", "min": 1.0, "max": 20.0, "default": 3.0 },
+        "min-votes":          { "type": "int", "min": 1, "max": 20, "default": 10 },
+        "min-line-length":    { "type": "int", "min": 1, "default": 30 },
+        "max-line-gap":       { "type": "int", "min": 0, "max": 50, "default": 30 },
+        "max-lines-returned": { "type": "int", "min": 1, "max": 20, "default": 5 }
       },
       "scanning": {
         "min-length": { "type": "double", "min": 1.0, "max": 1024.0, "default": 30.0 },
@@ -120,11 +120,11 @@
       "enable": { "type": "bool", "default": false, "description": "Count labels" }
     },
     "field-edge-pass": {
-      "field-edge-type": { "type": "enum", "default": 0, "values": { "Complete": 0, "Periodic": 1 }, "advanced": true },
-      "min-vertical-run-length": { "type": "int", "min": 1, "max": 100, "default": 5, "advanced": true },
+      "field-edge-type": { "type": "enum", "default": 0, "values": { "Complete": 0, "Periodic": 1 } },
+      "min-vertical-run-length": { "type": "int", "min": 1, "max": 100, "default": 5 },
       "use-convex-hull": { "type": "bool", "default": true },
       "complete": {
-        "smoothing-window-length": { "type": "int", "min": 1, "max": 100, "default": 15, "advanced": true }
+        "smoothing-window-length": { "type": "int", "min": 1, "max": 100, "default": 15 }
       }
     }
   },

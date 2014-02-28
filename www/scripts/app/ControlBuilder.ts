@@ -81,11 +81,6 @@ class ControlBuilder
         wrapper.dataset['path'] = setting.path;
         wrapper.className = 'setting control';
 
-        if (setting.isAdvanced)
-        {
-            wrapper.classList.add('advanced');
-        }
-
         switch (setting.type)
         {
             case "bool":

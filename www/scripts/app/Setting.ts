@@ -10,7 +10,6 @@ class Setting
     public path: string;
     public type: string;
     public isReadOnly: boolean;
-    public isAdvanced: boolean;
     public defaultValue: any;
     public value: any;
     public description: string;
@@ -25,7 +24,6 @@ class Setting
         this.path = settingData.path;
         this.type = settingData.type;
         this.isReadOnly = settingData.readonly;
-        this.isAdvanced = settingData.advanced;
         this.defaultValue = settingData.default;
         this.value = settingData.value;
         this.description = settingData.description;

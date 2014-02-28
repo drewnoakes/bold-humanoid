@@ -6,8 +6,8 @@ using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-IntSetting::IntSetting(string path, int min, int max, int defaultValue, bool isReadOnly, bool isAdvanced, string description)
-: Setting(path, "int", isReadOnly, isAdvanced, defaultValue, description),
+IntSetting::IntSetting(string path, int min, int max, int defaultValue, bool isReadOnly, string description)
+: Setting(path, "int", isReadOnly, defaultValue, description),
   d_min(min),
   d_max(max),
   d_defaultValue(defaultValue)
@@ -70,8 +70,8 @@ bool IntSetting::setValueFromJson(Value const* value)
 
 ///////////////////////////////////////////////////////////
 
-EnumSetting::EnumSetting(string path, map<int,string> pairs, int defaultValue, bool isReadOnly, bool isAdvanced, string description)
-: Setting(path, "enum", isReadOnly, isAdvanced, defaultValue, description),
+EnumSetting::EnumSetting(string path, map<int,string> pairs, int defaultValue, bool isReadOnly, string description)
+: Setting(path, "enum", isReadOnly, defaultValue, description),
   d_pairs(pairs),
   d_defaultValue(defaultValue)
 {}
@@ -132,8 +132,8 @@ bool EnumSetting::setValueFromJson(Value const* value)
 
 ///////////////////////////////////////////////////////////
 
-DoubleSetting::DoubleSetting(string path, double min, double max, double defaultValue, bool isReadOnly, bool isAdvanced, string description)
-: Setting(path, "double", isReadOnly, isAdvanced, defaultValue, description),
+DoubleSetting::DoubleSetting(string path, double min, double max, double defaultValue, bool isReadOnly, string description)
+: Setting(path, "double", isReadOnly, defaultValue, description),
   d_min(min),
   d_max(max),
   d_defaultValue(defaultValue)
@@ -188,8 +188,8 @@ bool DoubleSetting::setValueFromJson(Value const* value)
 
 ///////////////////////////////////////////////////////////
 
-BoolSetting::BoolSetting(string path, bool defaultValue, bool isReadOnly, bool isAdvanced, string description)
-: Setting(path, "bool", isReadOnly, isAdvanced, defaultValue, description),
+BoolSetting::BoolSetting(string path, bool defaultValue, bool isReadOnly, string description)
+: Setting(path, "bool", isReadOnly, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 
@@ -240,8 +240,8 @@ bool BoolSetting::setValueFromJson(Value const* value)
 
 ///////////////////////////////////////////////////////////
 
-HsvRangeSetting::HsvRangeSetting(string path, Colour::hsvRange defaultValue, bool isReadOnly, bool isAdvanced, string description)
-: Setting(path, "hsv-range", isReadOnly, isAdvanced, defaultValue, description),
+HsvRangeSetting::HsvRangeSetting(string path, Colour::hsvRange defaultValue, bool isReadOnly, string description)
+: Setting(path, "hsv-range", isReadOnly, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 
@@ -349,8 +349,8 @@ bool HsvRangeSetting::setValueFromJson(Value const* value)
 
 ///////////////////////////////////////////////////////////
 
-DoubleRangeSetting::DoubleRangeSetting(string path, Range<double> defaultValue, bool isReadOnly, bool isAdvanced, string description)
-: Setting(path, "double-range", isReadOnly, isAdvanced, defaultValue, description),
+DoubleRangeSetting::DoubleRangeSetting(string path, Range<double> defaultValue, bool isReadOnly, string description)
+: Setting(path, "double-range", isReadOnly, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 
@@ -427,8 +427,8 @@ bool DoubleRangeSetting::setValueFromJson(Value const* value)
 
 ///////////////////////////////////////////////////////////
 
-StringSetting::StringSetting(string path, string defaultValue, bool isReadOnly, bool isAdvanced, string description)
-: Setting(path, "string", isReadOnly, isAdvanced, defaultValue, description),
+StringSetting::StringSetting(string path, string defaultValue, bool isReadOnly, string description)
+: Setting(path, "string", isReadOnly, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 
@@ -507,8 +507,8 @@ void BgrColourSetting::writeBgrColourJsonObject(Writer<StringBuffer>& writer, co
   writer.EndObject();
 }
 
-BgrColourSetting::BgrColourSetting(string path, Colour::bgr defaultValue, bool isReadOnly, bool isAdvanced, string description)
-: Setting(path, "bgr-colour", isReadOnly, isAdvanced, defaultValue, description),
+BgrColourSetting::BgrColourSetting(string path, Colour::bgr defaultValue, bool isReadOnly, string description)
+: Setting(path, "bgr-colour", isReadOnly, defaultValue, description),
   d_defaultValue(defaultValue)
 {}
 

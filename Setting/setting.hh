@@ -24,7 +24,6 @@ namespace bold
     std::string getPath() const { return d_path; }
     std::string getName() const { return d_name; }
     bool isReadOnly() const { return d_isReadOnly; }
-    bool isAdvanced() const { return d_isAdvanced; }
     std::string getTypeName() const { return d_typeName; }
     std::type_index getTypeIndex() const { return d_typeIndex; }
     std::string getDescription() const { return d_description; }
@@ -37,16 +36,15 @@ namespace bold
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
 
   protected:
-    SettingBase(std::string path, std::string typeName, std::type_index typeIndex, bool isReadOnly, bool isAdvanced, std::string description)
+    SettingBase(std::string path, std::string typeName, std::type_index typeIndex, bool isReadOnly, std::string description)
     : d_path(path),
       d_typeName(typeName),
       d_typeIndex(typeIndex),
       d_isReadOnly(isReadOnly),
-      d_isAdvanced(isAdvanced),
       d_description(description)
     {
       auto last = d_path.find_last_of('.');
-      auto nameStart = 
+      auto nameStart =
         last == std::string::npos ?
         0 : last + 1;
       d_name = d_path.substr(nameStart);
@@ -62,7 +60,6 @@ namespace bold
     std::string d_typeName;
     std::type_index d_typeIndex;
     bool d_isReadOnly;
-    bool d_isAdvanced;
     std::string d_description;
   };
 
@@ -72,8 +69,8 @@ namespace bold
   class Setting : public SettingBase
   {
   public:
-    Setting(std::string path, std::string typeName, bool isReadOnly, bool isAdvanced, T value, std::string description)
-    : SettingBase(path, typeName, typeid(T), isReadOnly, isAdvanced, description),
+    Setting(std::string path, std::string typeName, bool isReadOnly, T value, std::string description)
+    : SettingBase(path, typeName, typeid(T), isReadOnly, description),
       d_value(value)
     {}
 
