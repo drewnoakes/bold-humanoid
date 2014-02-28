@@ -1,12 +1,15 @@
 #pragma once
 
 #include "../Option/option.hh"
+
 #include <map>
 #include <cassert>
 
 namespace bold
 {
   // TODO rename 'top' as 'root'?
+
+  class FSMOption;
 
   class OptionTree
   {
@@ -29,6 +32,7 @@ namespace bold
 
     std::shared_ptr<Option> getOption(std::string const& id) const;
     std::shared_ptr<Option> getTop() const;
+    std::vector<std::shared_ptr<FSMOption>> getFSMs() const;
 
     unsigned optionCount() const { return d_options.size(); }
 
