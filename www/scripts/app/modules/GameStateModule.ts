@@ -13,7 +13,7 @@ import util = require('util');
 
 var moduleTemplate = new DOMTemplate('game-module-template');
 
-var padLeft = function (nr, n, str)
+var padLeft = (nr, n, str) =>
 {
     return new Array(n - String(nr).length + 1).join(str || '0') + nr;
 };

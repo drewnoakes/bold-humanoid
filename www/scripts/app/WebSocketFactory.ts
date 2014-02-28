@@ -15,7 +15,7 @@ declare class MozWebSocket
 var elementContainer = document.querySelector('#socket-connections');
 
 var WebSocketFactory = {
-    open: function(protocol: string) : WebSocket
+    open: (protocol: string) : WebSocket =>
     {
         var socket: WebSocket = typeof MozWebSocket !== 'undefined'
             ? <WebSocket>new MozWebSocket(Settings.webSocketUrl, protocol)
@@ -40,7 +40,7 @@ var WebSocketFactory = {
 
         return socket;
     },
-    close: function (protocol: string)
+    close: (protocol: string) =>
     {
         socketByProtocol[protocol].close();
         delete socketByProtocol[protocol];

@@ -18,7 +18,7 @@ interface IProtocol
     socket: WebSocket;
 }
 
-var proxyEvent = function (protocol: IProtocol, eventName: string)
+var proxyEvent = (protocol: IProtocol, eventName: string) =>
 {
     return msg =>
     {

@@ -251,7 +251,7 @@ export class Rgb implements IColor
             // loop through each of the colour parser definitions
             _.each(
                 colorParsers,
-                function(parser)
+                parser =>
                 {
                     var match = parser.regex.exec(colorString);
                     if (match) {

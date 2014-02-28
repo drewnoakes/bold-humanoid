@@ -107,7 +107,7 @@ class OrientationModule extends Module
         {
             loader.load(path, (geometry, materials) =>
             {
-                _.each(materials, function (m)
+                _.each(materials, m =>
                 {
                     m.opacity = 0.85;
                     m.transparent = true;

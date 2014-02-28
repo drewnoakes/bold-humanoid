@@ -4,7 +4,7 @@
 
 import constants = require('constants');
 
-var getQueryStringParameterByName = function(name)
+var getQueryStringParameterByName = name =>
 {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -16,7 +16,7 @@ var getQueryStringParameterByName = function(name)
         return decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
-var getWebSocketUrl = function ()
+var getWebSocketUrl = () =>
 {
     var host = getQueryStringParameterByName("host");
 

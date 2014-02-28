@@ -112,7 +112,7 @@ class IMUModule extends Module
         {
             var chart = new SmoothieChart(chartDefinition.options);
             this.charts.push(chart);
-            chart.options.yRangeFunction = function(range)
+            chart.options.yRangeFunction = range =>
             {
                 // Find the greatest absolute value
                 var max = Math.max(Math.abs(range.min), Math.abs(range.max));

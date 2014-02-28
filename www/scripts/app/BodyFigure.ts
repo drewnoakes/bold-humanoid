@@ -83,7 +83,7 @@ class BodyFigure
             groupSpacing = 6,
             center = 70;
 
-        _.each(bodyData.joints, function (joint)
+        _.each(bodyData.joints, joint =>
         {
             joint.y = groupSpacing * joint.group + blockSpacing * joint.row;
             joint.x = center + joint.xOffset;
@@ -131,11 +131,11 @@ class BodyFigure
 
     public visitJoints(callback: (jointId:number, jointDiv:HTMLDivElement) => void)
     {
-        _.each(_.range(1, 21), function(jointId)
+        _.each(_.range(1, 21), jointId =>
         {
             var jointDiv = <HTMLDivElement>this.element.querySelector("div.joint[data-joint-id='" + jointId + "']");
             callback(jointId, jointDiv);
-        }.bind(this));
+        });
     }
 }
 

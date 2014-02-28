@@ -65,13 +65,11 @@ class HardwareModule extends Module
         element.appendChild(voltageCanvas);
 
         this.voltageChart = new SmoothieChart(chartOptions);
-        this.voltageChart.options.yRangeFunction = function(range)
-        {
-            return {
+        this.voltageChart.options.yRangeFunction = range =>
+            ({
                 min: Math.floor(Math.min(range.min, lowVoltage)),
                 max: Math.ceil(Math.max(range.max, highVoltage))
-            };
-        };
+            });
         this.voltageChart.streamTo(voltageCanvas, /*delayMs*/ 200);
 
         this.voltageSeries = new TimeSeries();
@@ -89,13 +87,11 @@ class HardwareModule extends Module
         element.appendChild(temperatureCanvas);
 
         this.temperatureChart = new SmoothieChart(chartOptions);
-        this.temperatureChart.options.yRangeFunction = function(range)
-        {
-            return {
+        this.temperatureChart.options.yRangeFunction = range =>
+            ({
                 min: Math.floor(Math.min(range.min, lowTemperature)),
                 max: Math.ceil(Math.max(range.max, highTemperature))
-            };
-        };
+            });
         this.temperatureChart.streamTo(temperatureCanvas, /*delayMs*/ 200);
 
         for (var i = 1; i <= 20; i++) {

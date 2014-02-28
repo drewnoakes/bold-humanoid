@@ -95,11 +95,11 @@ class HsvRangeEditor
     {
         this.updatesSuspended = true;
 
-        _.each(channels, function (channel)
+        _.each(channels, channel =>
         {
             this.rows[channel].minInput.value = value[channel][0];
             this.rows[channel].maxInput.value = value[channel][1];
-        }.bind(this));
+        });
 
         var hAvg = (value.hue[0] + value.hue[1]) / 2,
             h = value.hue[0] < value.hue[1] ? hAvg : (hAvg + (255/2)) % 255,
