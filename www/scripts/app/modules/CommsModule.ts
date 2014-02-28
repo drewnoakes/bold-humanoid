@@ -6,7 +6,8 @@
 /// <reference path="../../libs/smoothie.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
+import state = require('state');
 import Module = require('Module');
 
 var chartOptions = {
@@ -52,10 +53,9 @@ class CommsModule extends Module
         this.chart.addTimeSeries(this.gameSeries,   { strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 255, 0, 0.3)', lineWidth: 1 });
         this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.Debug>(
             constants.protocols.debug,
             {
-                json: true,
                 onmessage: this.onData.bind(this)
             }
         ));
@@ -68,7 +68,7 @@ class CommsModule extends Module
         super.unload();
     }
 
-    private onData(data)
+    private onData(data: state.Debug)
     {
         var time = new Date().getTime();
 

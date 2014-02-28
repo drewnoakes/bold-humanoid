@@ -6,7 +6,7 @@
 /// <reference path="../../libs/smoothie.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import ControlBuilder = require('ControlBuilder');
 import state = require('state');
 import Module = require('Module');
@@ -62,15 +62,19 @@ class LocaliserModule extends Module
         this.chart.addTimeSeries(this.averageSeries, {lineWidth:1, strokeStyle:'#0040ff', fillStyle:'rgba(0,64,255,0.26)'});
         this.chart.addTimeSeries(this.maxSeries, {lineWidth:1, strokeStyle:'#00ff00'});
 
-        this.closeables.add(DataProxy.subscribe(constants.protocols.particleState, {
-            json: true,
-            onmessage: this.onParticleData.bind(this)
-        }));
+        this.closeables.add(new data.Subscription<state.Particle>(
+            constants.protocols.particleState,
+            {
+                onmessage: this.onParticleData.bind(this)
+            }
+        ));
 
-        this.closeables.add(DataProxy.subscribe(constants.protocols.cameraFrameState, {
-            json: true,
-            onmessage: this.onCameraData.bind(this)
-        }));
+        this.closeables.add(new data.Subscription<state.CameraFrame>(
+            constants.protocols.cameraFrameState,
+            {
+                onmessage: this.onCameraData.bind(this)
+            }
+        ));
 
         var controls = document.createElement('div');
         controls.className = 'control-container localiser-controls flow';

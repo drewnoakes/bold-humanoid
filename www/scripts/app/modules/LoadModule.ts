@@ -6,7 +6,7 @@
 /// <reference path="../../libs/smoothie.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import BodyFigure = require('BodyFigure');
 import state = require('state');
 import Module = require('Module');
@@ -86,10 +86,9 @@ class LoadModule extends Module
         this.bodyFigure.selectedJointIds.track(this.updateSeriesColours.bind(this));
         element.appendChild(this.bodyFigure.element);
 
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.Body>(
             constants.protocols.bodyState,
             {
-                json: true,
                 onmessage: this.onData.bind(this)
             }
         ));

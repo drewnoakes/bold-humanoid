@@ -6,7 +6,7 @@
 /// <reference path="../../libs/d3.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import BodyFigure = require('BodyFigure');
 import Module = require('Module');
 import state = require('state');
@@ -116,10 +116,9 @@ class TrajectoryModule extends Module
             canvas.clear(this.canvas.getContext('2d'));
             this.recordButton.classList.add('recording');
             this.recordButton.textContent = 'recording...';
-            this.subscription = DataProxy.subscribe(
+            this.subscription = new data.Subscription<state.BodyControl>(
                 constants.protocols.bodyControlState,
                 {
-                    json: true,
                     onmessage: this.onData.bind(this)
                 }
             );

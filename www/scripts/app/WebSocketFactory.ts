@@ -9,13 +9,13 @@ var socketByProtocol = {};
 
 declare class MozWebSocket
 {
-    constructor(url:string, protocol:string);
+    constructor(url: string, protocol: string);
 }
 
 var elementContainer = document.querySelector('#socket-connections');
 
 var WebSocketFactory = {
-    open: function(protocol)
+    open: function(protocol: string) : WebSocket
     {
         var socket: WebSocket = typeof MozWebSocket !== 'undefined'
             ? <WebSocket>new MozWebSocket(Settings.webSocketUrl, protocol)
@@ -36,11 +36,11 @@ var WebSocketFactory = {
 
         socket.onopen = () => connectionIndicator.className = 'connection-indicator connected';
         socket.onclose = () => connectionIndicator.className = 'connection-indicator disconnected';
-        socket.onerror = (e) => connectionIndicator.className = 'connection-indicator error';
+        socket.onerror = (e: ErrorEvent) => connectionIndicator.className = 'connection-indicator error';
 
         return socket;
     },
-    close: function (protocol)
+    close: function (protocol: string)
     {
         socketByProtocol[protocol].close();
         delete socketByProtocol[protocol];

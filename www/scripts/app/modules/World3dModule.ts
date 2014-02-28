@@ -6,7 +6,7 @@
 /// <reference path="../../libs/three.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import plotter = require('FieldLinePlotter');
 import GeometryUtil = require('util/three');
 import interaction = require('interaction');
@@ -128,9 +128,9 @@ class World3dModule extends Module
 
         this.positionBodySpotlight(this.bodyRoot);
 
-        this.closeables.add(DataProxy.subscribe(constants.protocols.bodyState,       { json: true, onmessage: this.onBodyStateData.bind(this) }));
-        this.closeables.add(DataProxy.subscribe(constants.protocols.worldFrameState, { json: true, onmessage: this.onWorldFrameData.bind(this) }));
-        this.closeables.add(DataProxy.subscribe(constants.protocols.hardwareState,   { json: true, onmessage: this.onHardwareData.bind(this) }));
+        this.closeables.add(new data.Subscription<state.Body>      (constants.protocols.bodyState,       { onmessage: this.onBodyStateData.bind(this) }));
+        this.closeables.add(new data.Subscription<state.WorldFrame>(constants.protocols.worldFrameState, { onmessage: this.onWorldFrameData.bind(this) }));
+        this.closeables.add(new data.Subscription<state.Hardware>  (constants.protocols.hardwareState,   { onmessage: this.onHardwareData.bind(this) }));
 
         this.stopAnimation = false;
         this.needsRender = true;

@@ -7,7 +7,7 @@
 
 import constants = require('constants');
 import ControlBuilder = require('ControlBuilder');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import DOMTemplate = require('DOMTemplate');
 import util = require('util');
 import state = require('state');
@@ -64,10 +64,12 @@ class WalkModule extends Module
         ControlBuilder.buildAll('options.approach-ball', templateRoot.querySelector('.approach-ball-controls'), this.closeables);
         ControlBuilder.buildAll('walk-module', templateRoot.querySelector('.walk-controls'), this.closeables);
 
-        this.closeables.add(DataProxy.subscribe(constants.protocols.ambulatorState, {
-            json: true,
-            onmessage: this.onData.bind(this)
-        }));
+        this.closeables.add(new data.Subscription<state.Ambulator>(
+            constants.protocols.ambulatorState,
+            {
+                onmessage: this.onData.bind(this)
+            }
+        ));
 
         this.drawRadar();
 

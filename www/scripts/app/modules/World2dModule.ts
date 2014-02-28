@@ -6,7 +6,7 @@
 
 import constants = require('constants');
 import ControlBuilder = require('ControlBuilder');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import plotter = require('FieldLinePlotter');
 import HeadControls = require('HeadControls');
 import interaction = require('interaction');
@@ -87,16 +87,19 @@ class World2dModule extends Module
 
         this.bindEvents();
 
-        this.closeables.add(DataProxy.subscribe(constants.protocols.worldFrameState, {
-            json: true,
-            onmessage: this.onWorldFrameData.bind(this)
-        }));
+        this.closeables.add(new data.Subscription<state.WorldFrame>(
+            constants.protocols.worldFrameState,
+            {
+                onmessage: this.onWorldFrameData.bind(this)
+            }
+        ));
 
         // TODO only subscribe if user checks a box
-        this.closeables.add(DataProxy.subscribe(constants.protocols.particleState, {
-            json: true,
-            onmessage: this.onParticleData.bind(this)
-        }));
+        this.closeables.add(new data.Subscription<state.Particle>(
+            constants.protocols.particleState, {
+                onmessage: this.onParticleData.bind(this)
+            }
+        ));
 
         this.stopAnimation = false;
         this.needsRender = true;

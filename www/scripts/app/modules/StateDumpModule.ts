@@ -5,7 +5,7 @@
 /// <reference path="../../libs/lodash.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import DOMTemplate = require('DOMTemplate');
 import Module = require('Module');
 
@@ -59,10 +59,9 @@ class StateDumpModule extends Module
             this.textElement.textContent = protocol ? 'Waiting for an update...' : '';
 
             if (protocol !== '') {
-                this.subscription = DataProxy.subscribe(
+                this.subscription = new data.Subscription<any>(
                     protocol,
                     {
-                        json: true,
                         onmessage: this.onData.bind(this)
                     }
                 );

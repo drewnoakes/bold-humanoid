@@ -6,7 +6,7 @@
 /// <reference path="../../libs/smoothie.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import Closeable = require('util/Closeable');
 import math = require('util/math');
 import state = require('state');
@@ -104,10 +104,9 @@ class TimingPane
 
         this.entryByLabel = {};
 
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.Timing>(
             this.protocol,
             {
-                json: true,
                 onmessage: this.onData.bind(this)
             }
         ));

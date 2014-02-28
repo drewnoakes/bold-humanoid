@@ -6,7 +6,7 @@
 /// <reference path="../../libs/smoothie.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import ControlBuilder = require('ControlBuilder');
 import BodyFigure = require('BodyFigure');
 import state = require('state');
@@ -112,10 +112,9 @@ class HardwareModule extends Module
         ControlBuilder.actions("hardware", controlContainer);
         element.appendChild(controlContainer);
 
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.Hardware>(
             constants.protocols.hardwareState,
             {
-                json: true,
                 onmessage: this.onData.bind(this)
             }
         ));

@@ -4,7 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
-import DataProxy = require('DataProxy');
+import data = require('data');
 import constants = require('constants');
 import DOMTemplate = require('DOMTemplate');
 import Module = require('Module');
@@ -27,10 +27,9 @@ class GameStateModule extends Module
 
     public load(element: HTMLDivElement)
     {
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.Game>(
             constants.protocols.gameState,
             {
-                json: true,
                 onmessage: this.onData.bind(this)
             }
         ));

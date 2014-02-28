@@ -6,7 +6,7 @@
 
 import FieldLinePlotter = require('FieldLinePlotter');
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import HeadControls = require('HeadControls');
 import mouse = require('util/mouse');
 import geometry = require('util/Geometry');
@@ -47,10 +47,11 @@ class Agent2dModule extends Module
 
         this.bindEvents();
 
-        this.closeables.add(DataProxy.subscribe(constants.protocols.agentFrameState, {
-            json: true,
-            onmessage: this.onAgentFrameData.bind(this)
-        }));
+        this.closeables.add(new data.Subscription<state.AgentFrame>(
+            constants.protocols.agentFrameState,
+            {
+                onmessage: this.onAgentFrameData.bind(this)
+            }));
 
         this.closeables.add(() => this.stopAnimation = true);
 

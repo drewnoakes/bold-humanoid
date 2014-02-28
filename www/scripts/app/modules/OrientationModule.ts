@@ -8,7 +8,8 @@
 import constants = require('constants');
 import ControlBuilder = require('ControlBuilder');
 import threeUtil = require('util/three');
-import DataProxy = require('DataProxy');
+import data = require('data');
+import state = require('state');
 import Module = require('Module');
 
 class OrientationModule extends Module
@@ -37,10 +38,9 @@ class OrientationModule extends Module
 
         this.animate();
 
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.Orientation>(
             constants.protocols.orientationState,
             {
-                json: true,
                 onmessage: this.onData.bind(this)
             }
         ));
@@ -58,7 +58,7 @@ class OrientationModule extends Module
         delete this.renderer;
     }
 
-    private onData(data)
+    private onData(data: state.Orientation)
     {
         // Data values are (w,x,y,z), but THREE.Quaternion needs them (x,y,z,w)
         this.body.quaternion.set(data.quaternion[1], data.quaternion[2], data.quaternion[3], data.quaternion[0]);

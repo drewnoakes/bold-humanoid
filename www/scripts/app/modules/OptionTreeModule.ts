@@ -5,7 +5,7 @@
 /// <reference path="../../libs/lodash.d.ts" />
 
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import ControlBuilder = require('ControlBuilder');
 import Closeable = require('util/Closeable');
 import state = require('state');
@@ -32,10 +32,9 @@ class OptionTreeModule extends Module
         ControlBuilder.build('options.announce-fsm-states', usage, this.closeables);
         element.appendChild(usage);
 
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.OptionTree>(
             constants.protocols.optionTreeState,
             {
-                json: true,
                 onmessage: this.onData.bind(this)
             }
         ));

@@ -5,7 +5,8 @@
 /// <reference path="../../libs/lodash.d.ts" />
 /// <reference path="../../libs/d3.d.ts" />
 
-import DataProxy = require('DataProxy');
+import data = require('data');
+import state = require('state');
 import constants = require('constants');
 import Module = require('Module');
 
@@ -35,10 +36,9 @@ class HistogramModule extends Module
 
     public load(element: HTMLDivElement)
     {
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.LabelCount>(
             constants.protocols.labelCount,
             {
-                json: true,
                 onmessage: this.onmessage.bind(this)
             }
         ));
@@ -74,7 +74,7 @@ class HistogramModule extends Module
         delete this.yScale;
     }
 
-    private onmessage(data)
+    private onmessage(data: state.LabelCount)
     {
         var labels = data.labels;
 

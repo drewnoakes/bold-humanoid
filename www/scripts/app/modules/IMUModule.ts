@@ -6,7 +6,8 @@
 /// <reference path="../../libs/d3.d.ts" />
 /// <reference path="../../libs/smoothie.d.ts" />
 
-import DataProxy = require('DataProxy');
+import data = require('data');
+import state = require('state');
 import constants = require('constants');
 import PolarTrace = require('PolarTrace');
 import Module = require('Module');
@@ -94,10 +95,9 @@ class IMUModule extends Module
         this.polarTraceYZ = addPolarTrace('Y|Z');
         this.polarTraceXZ = addPolarTrace('X|Z');
 
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<state.Hardware>(
             constants.protocols.hardwareState,
             {
-                json: true,
                 onmessage: this.onData.bind(this)
             }
         ));
@@ -150,7 +150,7 @@ class IMUModule extends Module
         _.each(this.chartCanvases, canvas => canvas.width = width);
     }
 
-    private onData(data)
+    private onData(data: state.Hardware)
     {
         var time = new Date().getTime();
 

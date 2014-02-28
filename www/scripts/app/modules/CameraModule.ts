@@ -6,7 +6,7 @@
 
 import WebSocketFactory = require('WebSocketFactory');
 import constants = require('constants');
-import DataProxy = require('DataProxy');
+import data = require('data');
 import ControlClient = require('ControlClient');
 import ControlBuilder = require('ControlBuilder');
 import DOMTemplate = require('DOMTemplate');
@@ -47,10 +47,10 @@ class CameraModule extends Module
 
         this.createContext();
 
-        this.closeables.add(DataProxy.subscribe(
+        this.closeables.add(new data.Subscription<any>(
             constants.protocols.camera,
             {
-                json: false,
+                parseJson: false,
                 onmessage: this.onmessage.bind(this)
             }
         ));
@@ -123,7 +123,7 @@ class CameraModule extends Module
         this.context.scale(-1, -1);
     }
 
-    private onmessage(message)
+    private onmessage(message: any)
     {
         console.assert(message.data instanceof Blob);
 
