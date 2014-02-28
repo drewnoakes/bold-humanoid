@@ -4,9 +4,8 @@ string FSMOption::toDot() const
 {
   ostringstream out;
   out << "digraph "  << getID() << "{" << endl;
-  list<shared_ptr<FSMState>> stateQueue;
-  stateQueue.push_back(d_startState);
 
+  list<shared_ptr<FSMState>> stateQueue{d_startState};
   list<shared_ptr<FSMState>> visitedStates;
 
   while (!stateQueue.empty())

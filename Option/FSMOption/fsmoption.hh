@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
 #include <sigc++/signal.h>
 
 namespace bold
@@ -103,6 +105,8 @@ namespace bold
     std::shared_ptr<FSMTransition> wildcardTransitionTo(std::shared_ptr<FSMState> targetState);
 
     std::string toDot() const;
+
+    void toJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
 
   private:
     std::vector<std::shared_ptr<FSMState>> d_states;
