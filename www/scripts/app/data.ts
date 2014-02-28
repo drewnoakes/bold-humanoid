@@ -18,24 +18,29 @@ interface IProtocol
     socket: WebSocket;
 }
 
-var proxyEvent = (protocol: IProtocol, eventName: string) =>
+var proxyEvent = (protocol: IProtocol, eventName: string, unsubscribe: ()=>void) =>
 {
     return msg =>
     {
         var parsed;
         for (var i = 0; i < protocol.clients.length; i++) {
             var client = protocol.clients[i];
-            var c = client[eventName];
-            if (typeof(c) === 'function') {
+            var callback = client[eventName];
+            console.assert(typeof(callback) === 'function');
+            try {
                 if (client.parseJson) {
                     if (!parsed && msg.data) {
                         parsed = JSON.parse(msg.data);
                     }
-                    c(parsed);
+                    callback(parsed);
                 } else {
                     // TODO use arguments instead of 'msg'?
-                    c(msg);
+                    callback(msg);
                 }
+            } catch(ex) {
+                console.error(protocol.name, 'subscription handler raised an error. Forcing unsubscribe.', ex);
+                unsubscribe();
+                throw ex;
             }
         }
     }
@@ -46,6 +51,7 @@ var dataByProtocol: {[name: string]: IProtocol} = {};
 export interface ISubscriptionOptions<TData>
 {
     onmessage: (data: TData)=>void;
+    /** Called with WebSocket errors. */
     onerror?: (data: ErrorEvent)=>void;
     parseJson?: boolean;
 }
@@ -64,8 +70,8 @@ export class Subscription<TData>
             var socket = WebSocketFactory.open(protocolName);
             this.protocol = { name: protocolName, clients: [], socket: socket };
             dataByProtocol[protocolName] = this.protocol;
-            this.protocol.socket.onmessage = proxyEvent(this.protocol, 'onmessage');
-            this.protocol.socket.onerror = proxyEvent(this.protocol, 'onerror');
+            this.protocol.socket.onmessage = proxyEvent(this.protocol, 'onmessage', () => this.close());
+            this.protocol.socket.onerror = proxyEvent(this.protocol, 'onerror', () => this.close());
         }
 
         this.client = {
