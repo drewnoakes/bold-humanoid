@@ -17,6 +17,9 @@ var elementContainer = document.querySelector('#socket-connections');
 var WebSocketFactory = {
     open: (protocol: string) : WebSocket =>
     {
+        if (!protocol || protocol === '')
+            throw new Error("Invalid protocol: " + protocol);
+
         var socket: WebSocket = typeof MozWebSocket !== 'undefined'
             ? <WebSocket>new MozWebSocket(Settings.webSocketUrl, protocol)
             : new WebSocket(Settings.webSocketUrl, protocol);
