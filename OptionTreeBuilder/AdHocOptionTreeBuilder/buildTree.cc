@@ -185,7 +185,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   //
 
   startUpState
-    ->transitionTo(readyState)
+    ->transitionTo(readyState, "initialised")
     ->whenTerminated();
 
   //
@@ -193,23 +193,23 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   //
 
   pausedState
-    ->transitionTo(unpausingState)
+    ->transitionTo(unpausingState, "button2")
     ->when(startButtonPressed);
 
   unpausingState
-    ->transitionTo(setState)
+    ->transitionTo(setState, "done")
     ->whenTerminated();
 
   playingState
-    ->transitionTo(pausing1State)
+    ->transitionTo(pausing1State, "button2")
     ->when(startButtonPressed);
 
   pausing1State
-    ->transitionTo(pausing2State)
+    ->transitionTo(pausing2State, "stop-walk")
     ->when(negate(isWalking));
 
   pausing2State
-    ->transitionTo(pausedState)
+    ->transitionTo(pausedState, "done")
     ->whenTerminated();
 
   //
@@ -217,15 +217,15 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   //
 
   readyState
-    ->transitionTo(setState)
+    ->transitionTo(setState, "button1")
     ->when(modeButtonPressed);
 
   setState
-    ->transitionTo(penalizedState)
+    ->transitionTo(penalizedState, "button1")
     ->when(modeButtonPressed);
 
   penalizedState
-    ->transitionTo(playingState)
+    ->transitionTo(playingState, "button1")
     ->when(modeButtonPressed);
 
   //
@@ -233,56 +233,56 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   //
 
   readyState
-    ->transitionTo(setState)
+    ->transitionTo(setState, "gc-set")
     ->when(isSetPlayMode);
 
   readyState
-    ->transitionTo(playingState)
+    ->transitionTo(playingState, "gc-playing")
     ->when(isPlayingPlayMode);
 
   setState
-    ->transitionTo(penalizedState)
+    ->transitionTo(penalizedState, "gc-penalised")
     ->when(isPenalised);
 
   setState
-    ->transitionTo(playingState)
+    ->transitionTo(playingState, "gc-playing")
     ->when(isPlayingPlayMode);
 
   playingState
-    ->transitionTo(penalizedState)
+    ->transitionTo(penalizedState, "gc-penalised")
     ->when(isPenalised);
 
   playingState
-    ->transitionTo(readyState)
+    ->transitionTo(readyState, "gc-ready")
     ->when(nonPenalisedPlayMode(PlayMode::READY));
 
   playingState
-    ->transitionTo(setState)
+    ->transitionTo(setState, "gc-set")
     ->when(nonPenalisedPlayMode(PlayMode::SET));
 
   penalizedState
-    ->transitionTo(setState)
+    ->transitionTo(setState, "gc-unpenalised")
     ->when(nonPenalisedPlayMode(PlayMode::SET));
 
   penalizedState
-    ->transitionTo(playingState)
+    ->transitionTo(playingState, "gc-unpenalised")
     ->when(nonPenalisedPlayMode(PlayMode::PLAYING));
 
   // FALLEN TRANSITIONS
   playingState
-    ->transitionTo(forwardGetUpState)
+    ->transitionTo(forwardGetUpState, "fall-fwd")
     ->when(hasFallenForward);
 
   playingState
-    ->transitionTo(backwardGetUpState)
+    ->transitionTo(backwardGetUpState, "fall-back")
     ->when(hasFallenBackward);
 
   forwardGetUpState
-    ->transitionTo(playingState)
+    ->transitionTo(playingState, "done")
     ->whenTerminated();
 
   backwardGetUpState
-    ->transitionTo(playingState)
+    ->transitionTo(playingState, "done")
     ->whenTerminated();
 
   //
@@ -292,15 +292,15 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // TODO express this sequence more elegantly
 
   winFsm
-    ->wildcardTransitionTo(stopWalkingForShutdownState)
+    ->wildcardTransitionTo(stopWalkingForShutdownState, "shutdown-request")
     ->when(isAgentShutdownRequested);
 
   stopWalkingForShutdownState
-    ->transitionTo(sitForShutdownState)
+    ->transitionTo(sitForShutdownState, "stopped")
     ->when(negate(isWalking)); // TODO why can't this be whenTerminated() -- doesn't seem to work (here and in other places)
 
   sitForShutdownState
-    ->transitionTo(stopAgentAndExitState)
+    ->transitionTo(stopAgentAndExitState, "sitting")
     ->whenTerminated();
 
   //
@@ -321,19 +321,19 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto bigStepRightState = playingFsm->newState("bigStepRight", {bigStepRight});
 
     standUpState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "standing")
       ->whenTerminated();
 
     lookForBallState
-      ->transitionTo(lookAtBallState)
+      ->transitionTo(lookAtBallState, "found")
       ->when(ballFoundConditionFactory);
 
     lookAtBallState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "lost")
       ->when(ballLostConditionFactory);
 
     lookAtBallState
-      ->transitionTo(bigStepLeftState)
+      ->transitionTo(bigStepLeftState, "ball-left")
       ->when([]()
       {
         return trueForMillis(1000, []()
@@ -344,7 +344,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       });
 
     lookAtBallState
-      ->transitionTo(bigStepRightState)
+      ->transitionTo(bigStepRightState, "ball-right")
       ->when([]()
       {
         return trueForMillis(1000, []()
@@ -355,11 +355,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       });
 
     bigStepLeftState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "done")
       ->whenTerminated();
 
     bigStepRightState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "done")
       ->whenTerminated();
 
   }
@@ -374,19 +374,19 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto rightDiveState = playingFsm->newState("rightDive", {rightDive});
 
     standUpState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "standing")
       ->whenTerminated();
 
     lookForBallState
-      ->transitionTo(lookAtBallState)
+      ->transitionTo(lookAtBallState, "found")
       ->when(ballFoundConditionFactory);
 
     lookAtBallState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "lost-ball")
       ->when(ballLostConditionFactory);
 
     lookAtBallState
-      ->transitionTo(leftDiveState)
+      ->transitionTo(leftDiveState, "ball-left")
       ->when([]()
       {
         return trueForMillis(100, []()
@@ -397,7 +397,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       });
 
     lookAtBallState
-      ->transitionTo(rightDiveState)
+      ->transitionTo(rightDiveState, "ball-right")
       ->when([]()
       {
         return trueForMillis(100, []()
@@ -408,11 +408,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       });
 
     leftDiveState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "done")
       ->whenTerminated();
 
     rightDiveState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "done")
       ->whenTerminated();
   }
   else
@@ -437,40 +437,40 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     lookAtFeetState->onEnter.connect([lookAtFeet]() { lookAtFeet->reset(); });
 
     standUpState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "standing")
       ->whenTerminated();
 
     lookForBallState
-      ->transitionTo(lookAtBallState)
+      ->transitionTo(lookAtBallState, "found")
       ->when([ballVisibleCondition]() { return stepUpDownThreshold(5, ballVisibleCondition); });
 
     // walk a circle if we don't find the ball within some time limit
     lookForBallState
-      ->transitionTo(circleToFindLostBallState)
+      ->transitionTo(circleToFindLostBallState, "lost-ball-long")
       ->when(secondsSinceStart(8, lookForBallState));
 
     // after 5 seconds of circling, look for the ball again
     circleToFindLostBallState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "done")
       ->when(secondsSinceStart(5, circleToFindLostBallState));
 
     lookAtBallState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "lost-ball")
       ->when(ballLostConditionFactory);
 
     // start approaching the ball when we have the confidence that it's really there
     // TODO this doesn't filter the ball position, so may be misled by jitter
     lookAtBallState
-      ->transitionTo(approachBallState)
+      ->transitionTo(approachBallState, "found")
       ->when([ballVisibleCondition]() { return stepUpDownThreshold(10, ballVisibleCondition); });
 
     approachBallState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "lost-ball")
       ->when(ballLostConditionFactory);
 
     // stop walking to ball once we're close enough
     approachBallState
-      ->transitionTo(lookForGoalState)
+      ->transitionTo(lookForGoalState, "near-ball")
       ->when([playingFsm]()
       {
         // Approach ball until we're within a given distance
@@ -481,7 +481,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       });
 
     lookForGoalState
-      ->transitionTo(lookAtGoalState)
+      ->transitionTo(lookAtGoalState, "see-both-goals")
       ->when([]()
       {
         // TODO use the localiser here rather than requiring both posts to be in frame
@@ -491,7 +491,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
     // if we notice the ball has gone while looking for the goal, quit
     lookForGoalState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "ball-gone")
       ->when([]()
       {
         // If the ball is far away, then stop looking for the goal
@@ -507,16 +507,16 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
     // limit how long we will look for the goal
     lookForGoalState
-      ->transitionTo(lookAtFeetState)
+      ->transitionTo(lookAtFeetState, "give-up")
       ->when(secondsSinceStart(7, lookForGoalState));
 
     lookAtGoalState
-      ->transitionTo(aimState)
+      ->transitionTo(aimState, "confident")
       ->when(secondsSinceStart(0.5, lookAtGoalState));
 
     // start kick procedure if goal is in front of us
     aimState
-      ->transitionTo(lookAtFeetState)
+      ->transitionTo(lookAtFeetState, "square-to-goal")
       ->when([]()
       {
         double panAngle = AgentState::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
@@ -526,12 +526,12 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
     // circle immediately, if goal is not in front (prior transition didn't fire)
     aimState
-      ->transitionTo(circleBallState)
+      ->transitionTo(circleBallState, "goal-at-angle")
       ->when([]() { return true; });
 
     // control duration of ball circling
     circleBallState
-      ->transitionTo(lookAtGoalState)
+      ->transitionTo(lookAtGoalState, "done")
       ->when([circleBallState,headModule,secondsSinceStart]()
       {
         // TODO break dependency upon pan limit
@@ -552,7 +552,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     // TODO if ball too central, step to left/right slightly, or use different kick
 
     lookAtFeetState
-      ->transitionTo(leftKickState)
+      ->transitionTo(leftKickState, "ball-left")
       ->when([lookAtFeet,lookAtFeetState]()
       {
         if (lookAtFeetState->secondsSinceStart() < 1)
@@ -575,7 +575,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       });
 
     lookAtFeetState
-      ->transitionTo(rightKickState)
+      ->transitionTo(rightKickState, "ball-right")
       ->when([lookAtFeet,lookAtFeetState]()
       {
         if (lookAtFeetState->secondsSinceStart() < 1)
@@ -598,7 +598,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       });
 
     lookAtFeetState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "ball-gone")
       ->when([lookAtFeetState]()
       {
         // TODO create and use 'all' operator
@@ -610,11 +610,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       });
 
     leftKickState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "done")
       ->whenTerminated();
 
     rightKickState
-      ->transitionTo(lookForBallState)
+      ->transitionTo(lookForBallState, "done")
       ->whenTerminated();
   } // uniformNumber != 1
 
