@@ -23,6 +23,7 @@ namespace cv
 namespace bold
 {
   class Camera;
+  class OptionTree;
   class SettingBase;
 
   struct CameraSession
@@ -72,13 +73,16 @@ namespace bold
     /** Enqueues an image to be sent to connected clients. */
     void streamImage(cv::Mat const& img, std::string imageEncoding);
 
+    void setOptionTree(std::shared_ptr<OptionTree> optionTree) { d_optionTree = optionTree; }
+
   private:
-    static std::shared_ptr<std::vector<uchar>> prepareControlSyncBytes();
     static std::shared_ptr<std::vector<uchar>> prepareSettingUpdateBytes(SettingBase* setting);
 
     void run();
 
     void processCommand(std::string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi);
+
+    std::shared_ptr<std::vector<uchar>> prepareControlSyncBytes();
 
     const int d_port;
     const std::shared_ptr<Camera> d_camera;
@@ -95,6 +99,7 @@ namespace bold
     std::mutex d_stateSessionsMutex;
     bool d_isStopRequested;
     std::thread d_thread;
+    std::shared_ptr<OptionTree> d_optionTree;
 
     //
     // libwebsocket callbacks

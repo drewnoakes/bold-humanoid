@@ -1,5 +1,8 @@
 #include "datastreamer.ih"
 
+#include "../OptionTree/optiontree.hh"
+#include "../Option/FSMOption/fsmoption.hh"
+
 shared_ptr<vector<uchar>> DataStreamer::prepareControlSyncBytes()
 {
   StringBuffer buffer;
@@ -30,6 +33,16 @@ shared_ptr<vector<uchar>> DataStreamer::prepareControlSyncBytes()
       for (SettingBase const* setting : Config::getAllSettings())
       {
         setting->writeFullJson(writer);
+      }
+    }
+    writer.EndArray();
+
+    writer.String("fsms");
+    writer.StartArray();
+    {
+      for (auto const& fsm : d_optionTree->getFSMs())
+      {
+        fsm->toJson(writer);
       }
     }
     writer.EndArray();
