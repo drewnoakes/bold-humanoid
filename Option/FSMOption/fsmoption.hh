@@ -102,7 +102,7 @@ namespace bold
       return s;
     }
 
-    std::shared_ptr<FSMTransition> wildcardTransitionTo(std::shared_ptr<FSMState> targetState);
+    std::shared_ptr<FSMTransition> wildcardTransitionTo(std::shared_ptr<FSMState> targetState, std::string name = "");
 
     std::string toDot() const;
 
@@ -136,9 +136,9 @@ namespace bold
     }
   }
 
-  inline std::shared_ptr<FSMTransition> FSMOption::wildcardTransitionTo(std::shared_ptr<FSMState> targetState)
+  inline std::shared_ptr<FSMTransition> FSMOption::wildcardTransitionTo(std::shared_ptr<FSMState> targetState, std::string name)
   {
-    std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>("");
+    std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>(name);
     t->childState = targetState;
     d_wildcardTransitions.push_back(t);
     return t;
