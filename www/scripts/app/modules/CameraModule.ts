@@ -7,8 +7,7 @@
 import WebSocketFactory = require('WebSocketFactory');
 import constants = require('constants');
 import data = require('data');
-import ControlClient = require('ControlClient');
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import DOMTemplate = require('DOMTemplate');
 import HeadControls = require('HeadControls');
 import PixelLabelInspector = require('PixelLabelInspector');
@@ -56,13 +55,13 @@ class CameraModule extends Module
         ));
 
         var imageSettingsContainer = <HTMLElement>content.querySelector('div.camera-module-controls');
-        ControlBuilder.build('round-table.image-type', imageSettingsContainer, this.closeables);
-        ControlBuilder.build('round-table.camera-frame-frequency', imageSettingsContainer, this.closeables);
+        control.buildSetting('round-table.image-type', imageSettingsContainer, this.closeables);
+        control.buildSetting('round-table.camera-frame-frequency', imageSettingsContainer, this.closeables);
 
         imageSettingsContainer.appendChild(new HeadControls().element);
 
-        ControlBuilder.build('head-module.move-fine', imageSettingsContainer, this.closeables);
-        ControlBuilder.actions('head-module.look-at', imageSettingsContainer);
+        control.buildSetting('head-module.move-fine', imageSettingsContainer, this.closeables);
+        control.buildActions('head-module.look-at', imageSettingsContainer);
     }
 
     public unload()
@@ -75,7 +74,7 @@ class CameraModule extends Module
 
     private bindInteraction()
     {
-        var imageTypeSetting = ControlClient.getSetting('round-table.image-type');
+        var imageTypeSetting = control.getSetting('round-table.image-type');
 
         // If the image is clicked when shift is held, log the HSV value in the image to the console
         this.cameraCanvas.addEventListener('click', event =>

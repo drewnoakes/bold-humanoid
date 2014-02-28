@@ -7,7 +7,7 @@
 
 import constants = require('constants');
 import data = require('data');
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import state = require('state');
 import Module = require('Module');
 
@@ -79,8 +79,8 @@ class LocaliserModule extends Module
         var controls = document.createElement('div');
         controls.className = 'control-container localiser-controls flow';
         element.appendChild(controls);
-        ControlBuilder.actions('localiser', controls);
-        ControlBuilder.buildAll('localiser', controls, this.closeables);
+        control.buildActions('localiser', controls);
+        control.buildSettings('localiser', controls, this.closeables);
 
         // TODO show the number of lines visible
         // TODO show the % of the camera frame which is within the field

@@ -17,7 +17,7 @@ class Action
 
     public activate()
     {
-        require('ControlClient').send({type: "action", id: this.id});
+        require('control').send({type: "action", id: this.id});
     }
 }
 

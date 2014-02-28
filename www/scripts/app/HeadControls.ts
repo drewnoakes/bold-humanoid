@@ -2,7 +2,7 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 
 class HeadControls
 {
@@ -13,13 +13,13 @@ class HeadControls
         this.element = document.createElement('div');
         this.element.className = "head-controls";
 
-        ControlBuilder.action('head-module.move-left', this.element);
-        ControlBuilder.action('head-module.move-up', this.element);
-        ControlBuilder.action('head-module.move-down', this.element);
-        ControlBuilder.action('head-module.move-right', this.element);
+        control.buildAction('head-module.move-left', this.element);
+        control.buildAction('head-module.move-up', this.element);
+        control.buildAction('head-module.move-down', this.element);
+        control.buildAction('head-module.move-right', this.element);
 
-        ControlBuilder.action('head-module.move-home', this.element);
-        ControlBuilder.action('head-module.move-zero', this.element);
+        control.buildAction('head-module.move-home', this.element);
+        control.buildAction('head-module.move-zero', this.element);
     }
 }
 

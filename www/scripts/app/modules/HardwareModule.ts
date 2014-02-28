@@ -7,7 +7,7 @@
 
 import constants = require('constants');
 import data = require('data');
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import BodyFigure = require('BodyFigure');
 import state = require('state');
 import Module = require('Module');
@@ -105,7 +105,7 @@ class HardwareModule extends Module
 
         var controlContainer = document.createElement('div');
         controlContainer.className = 'control-container';
-        ControlBuilder.actions("hardware", controlContainer);
+        control.buildActions("hardware", controlContainer);
         element.appendChild(controlContainer);
 
         this.closeables.add(new data.Subscription<state.Hardware>(

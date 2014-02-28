@@ -5,7 +5,7 @@
 /// <reference path="../../libs/lodash.d.ts" />
 
 import constants = require('constants');
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import data = require('data');
 import plotter = require('FieldLinePlotter');
 import HeadControls = require('HeadControls');
@@ -78,7 +78,7 @@ class World2dModule extends Module
 
         var localiserControlContainer = document.createElement('div');
         localiserControlContainer.className = 'localiser-controls';
-        ControlBuilder.actions('localiser', localiserControlContainer);
+        control.buildActions('localiser', localiserControlContainer);
 
         element.appendChild(this.canvas);
         element.appendChild(new HeadControls().element);

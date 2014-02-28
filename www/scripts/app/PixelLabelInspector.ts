@@ -2,9 +2,9 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-import ControlClient = require('ControlClient');
 import HsvRange = require ('HsvRange');
 import color = require ('color');
+import control = require ('control');
 import Setting = require('Setting');
 import canvasUtil = require('util/canvas');
 
@@ -23,7 +23,7 @@ class PixelLabelInspector
         this.canvas.style.height = height + 'px';
         this.context = this.canvas.getContext('2d');
 
-        ControlClient.withSettings('vision.pixel-labels', settings =>
+        control.withSettings('vision.pixel-labels', settings =>
         {
             var ballSetting, goalSetting, fieldSetting, lineSetting;
 

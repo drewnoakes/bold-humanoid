@@ -49,7 +49,7 @@ class Setting
 
     public setValue(value)
     {
-        require('ControlClient').send({type: "setting", path: this.path, value: value});
+        require('control').send({type: "setting", path: this.path, value: value});
     }
 
     public __setValue(value)

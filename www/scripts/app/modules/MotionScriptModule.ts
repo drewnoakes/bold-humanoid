@@ -2,7 +2,7 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import Module = require('Module');
 
 class MotionScriptModule extends Module
@@ -18,7 +18,7 @@ class MotionScriptModule extends Module
         container.className = 'control-container ambulator-controls';
         element.appendChild(container);
 
-        ControlBuilder.actions('motion-script', container);
+        control.buildActions('motion-script', container);
     }
 }
 

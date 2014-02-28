@@ -6,7 +6,7 @@
 /// <reference path="../../libs/three.d.ts" />
 
 import constants = require('constants');
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import threeUtil = require('util/three');
 import data = require('data');
 import state = require('state');
@@ -47,8 +47,8 @@ class OrientationModule extends Module
 
         this.closeables.add(() => this.stopAnimation = true);
 
-        ControlBuilder.actions("orientation-tracker", element);
-        ControlBuilder.buildAll("orientation-tracker", element, this.closeables);
+        control.buildActions("orientation-tracker", element);
+        control.buildSettings("orientation-tracker", element, this.closeables);
     }
 
     public unload()

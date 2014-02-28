@@ -6,7 +6,7 @@
 
 import constants = require('constants');
 import data = require('data');
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import Closeable = require('util/Closeable');
 import state = require('state');
 import Module = require('Module');
@@ -29,7 +29,7 @@ class OptionTreeModule extends Module
 
         var usage = document.createElement('div');
         usage.className = 'control-container';
-        ControlBuilder.build('options.announce-fsm-states', usage, this.closeables);
+        control.buildSetting('options.announce-fsm-states', usage, this.closeables);
         element.appendChild(usage);
 
         this.closeables.add(new data.Subscription<state.OptionTree>(

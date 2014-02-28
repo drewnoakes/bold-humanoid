@@ -4,7 +4,7 @@
 
 /// <reference path="../libs/lodash.d.ts" />
 
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import constants = require('constants');
 import geometry = require('util/geometry');
 

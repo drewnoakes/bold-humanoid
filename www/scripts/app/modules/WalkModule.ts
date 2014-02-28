@@ -6,7 +6,7 @@
 /// <reference path="../../libs/smoothie.d.ts" />
 
 import constants = require('constants');
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import data = require('data');
 import DOMTemplate = require('DOMTemplate');
 import util = require('util');
@@ -60,9 +60,9 @@ class WalkModule extends Module
         this.runningIndicator = <HTMLDivElement>templateRoot.querySelector('.connection-indicator');
         this.radarCanvas = <HTMLCanvasElement>templateRoot.querySelector('canvas.radar');
 
-        ControlBuilder.buildAll('ambulator', templateRoot.querySelector('.ambulator-controls'), this.closeables);
-        ControlBuilder.buildAll('options.approach-ball', templateRoot.querySelector('.approach-ball-controls'), this.closeables);
-        ControlBuilder.buildAll('walk-module', templateRoot.querySelector('.walk-controls'), this.closeables);
+        control.buildSettings('ambulator', templateRoot.querySelector('.ambulator-controls'), this.closeables);
+        control.buildSettings('options.approach-ball', templateRoot.querySelector('.approach-ball-controls'), this.closeables);
+        control.buildSettings('walk-module', templateRoot.querySelector('.walk-controls'), this.closeables);
 
         this.closeables.add(new data.Subscription<state.Ambulator>(
             constants.protocols.ambulatorState,

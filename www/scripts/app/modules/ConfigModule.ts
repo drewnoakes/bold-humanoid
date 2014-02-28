@@ -4,8 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
-import ControlClient = require('ControlClient');
-import ControlBuilder = require('ControlBuilder');
+import control = require('control');
 import DOMTemplate = require('DOMTemplate');
 import Module = require('Module');
 
@@ -29,10 +28,10 @@ class ConfigModule extends Module
 
         this.textElement = <HTMLDivElement>templateRoot.querySelector('div.json-text');
 
-        this.closeables.add(ControlClient.onSettingChange(this.updateText.bind(this)));
+        this.closeables.add(control.onSettingChange(this.updateText.bind(this)));
 
         var header = templateRoot.querySelector('div.header');
-        ControlBuilder.actions('config', header);
+        control.buildActions('config', header);
 
         this.filter = document.createElement('input');
         this.filter.type = 'text';
@@ -51,7 +50,7 @@ class ConfigModule extends Module
     private updateText()
     {
         var matching = this.filter.value;
-        this.textElement.textContent = ControlClient.getConfigText(matching);
+        this.textElement.textContent = control.getConfigText(matching);
     }
 }
 

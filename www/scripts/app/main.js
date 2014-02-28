@@ -3,7 +3,7 @@
  */
 require(
     [
-        'ControlClient',
+        'control',
         'ModuleHost',
         'constants',
         'modules/MotionScriptModule',
@@ -29,7 +29,7 @@ require(
         'modules/World2dModule',
         'modules/World3dModule'
     ],
-    function(ControlClient, ModuleHost, constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule,
+    function(control, ModuleHost, constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule,
              GameStateModule, HardwareModule, HistogramModule, IMUModule, OrientationModule, LoadModule, LocaliserModule,
              MotionTimingModule, OptionTreeModule, StateDumpModule, ThinkTimingModule, TrajectoryModule, VoiceModule,
              WalkModule, Agent2dModule, VisionModule, World2dModule, World3dModule)
@@ -75,7 +75,7 @@ require(
             moduleHost.load();
         };
 
-        ControlClient.withSettings('', loadUi);
+        control.withSettings('', loadUi);
 
         var onerror = function ()
         {
@@ -91,6 +91,6 @@ require(
             $('#bouncer').fadeOut(function() { $(this).remove() });
         };
 
-        ControlClient.connect(onerror);
+        control.connect(onerror);
     }
 );
