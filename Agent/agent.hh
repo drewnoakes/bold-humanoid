@@ -67,7 +67,7 @@ namespace bold
     unsigned getTeamNumber() const { return d_teamNumber; }
     unsigned getUniformNumber() const { return d_uniformNumber; }
 
-    void setOptionTree(std::unique_ptr<OptionTree> tree);
+    void setOptionTree(std::shared_ptr<OptionTree> tree);
 
     Agent(Agent const&) = delete;
     Agent& operator=(Agent const&) = delete;
@@ -115,16 +115,15 @@ namespace bold
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
     std::shared_ptr<Joystick> d_joystick;
-    std::shared_ptr<Spatialiser> d_spatialiser;
     std::shared_ptr<Localiser> d_localiser;
+    std::shared_ptr<OptionTree> d_optionTree;
+    std::shared_ptr<Spatialiser> d_spatialiser;
     std::shared_ptr<VisualCortex> d_visualCortex;
     std::shared_ptr<Voice> d_voice;
 
     Setting<double>* d_joystickXAmpMax;
     Setting<double>* d_joystickYAmpMax;
     Setting<double>* d_joystickAAmpMax;
-
-    std::unique_ptr<OptionTree> d_optionTree;
 
     ulong d_cycleNumber;
 

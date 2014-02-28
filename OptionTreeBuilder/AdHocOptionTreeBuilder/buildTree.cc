@@ -8,7 +8,7 @@
 #include "../../util/conditionals.hh"
 #include "../../util/Range.hh"
 
-unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
+shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {
   const unsigned UNUM_GOALIE = 1;
   const unsigned UNUM_GOALIE_PENALTY = 5;
@@ -120,7 +120,7 @@ unique_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   // BUILD TREE
 
-  unique_ptr<OptionTree> tree(new OptionTree());
+  auto tree = make_shared<OptionTree>();
 
   // OPTIONS
 

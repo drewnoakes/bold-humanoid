@@ -10,6 +10,6 @@ namespace bold
   class OptionTreeBuilder
   {
   public:
-    virtual std::unique_ptr<OptionTree> buildTree(Agent* agent) = 0;
+    virtual std::shared_ptr<OptionTree> buildTree(Agent* agent) = 0;
   };
 }

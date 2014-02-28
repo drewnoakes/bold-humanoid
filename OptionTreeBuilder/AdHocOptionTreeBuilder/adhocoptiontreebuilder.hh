@@ -16,6 +16,6 @@ namespace bold
   class AdHocOptionTreeBuilder
   {
   public:
-    std::unique_ptr<OptionTree> buildTree(Agent* agent);
+    std::shared_ptr<OptionTree> buildTree(Agent* agent);
   };
 }
