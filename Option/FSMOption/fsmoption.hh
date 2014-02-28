@@ -71,7 +71,7 @@ namespace bold
 
     std::shared_ptr<FSMTransition> newTransition(std::string name = "");
 
-    std::shared_ptr<FSMTransition> transitionTo(std::shared_ptr<FSMState> targetState);
+    std::shared_ptr<FSMTransition> transitionTo(std::shared_ptr<FSMState> targetState, std::string name = "");
   };
 
   /** Finite State Machine

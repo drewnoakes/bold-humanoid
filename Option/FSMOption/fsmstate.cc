@@ -43,9 +43,9 @@ shared_ptr<FSMTransition> FSMState::newTransition(string name)
   return t;
 }
 
-shared_ptr<FSMTransition> FSMState::transitionTo(shared_ptr<FSMState> targetState)
+shared_ptr<FSMTransition> FSMState::transitionTo(shared_ptr<FSMState> targetState, string name)
 {
-  shared_ptr<FSMTransition> t = make_shared<FSMTransition>("");
+  shared_ptr<FSMTransition> t = make_shared<FSMTransition>(name);
   t->parentState = shared_from_this();
   t->childState = targetState;
   transitions.push_back(t);
