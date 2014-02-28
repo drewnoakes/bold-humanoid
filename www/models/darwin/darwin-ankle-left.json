@@ -1,6 +1,8 @@
 {
     "scale" : 1,
 
+    "metadata": {},
+
     "materials": [
         {
             "DbgName" : "Servo Material",
