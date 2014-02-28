@@ -82,6 +82,10 @@ export class Subscription<TData>
         };
 
         this.protocol.clients.push(this.client);
+
+        // Ensure our functions are always called with this instance.
+        this.send = this.send.bind(this);
+        this.close = this.close.bind(this);
     }
 
     public send(message)
