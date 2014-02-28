@@ -3,6 +3,8 @@
  */
 
 /// <reference path="../../libs/lodash.d.ts" />
+/// <reference path="../../libs/jquery.d.ts" />
+/// <reference path="../../libs/jointjs.d.ts" />
 
 import constants = require('constants');
 import data = require('data');
@@ -15,6 +17,7 @@ class OptionTreeModule extends Module
 {
     private optionElementByName: {[name:string]:HTMLLIElement} = {};
     private optionList: HTMLUListElement;
+    private graph: HTMLDivElement;
 
     constructor()
     {
@@ -38,11 +41,79 @@ class OptionTreeModule extends Module
                 onmessage: this.onData.bind(this)
             }
         ));
+
+        var fsm = control.getFSM('playing');
+
+        this.graph = document.createElement('div');
+        this.graph.className = 'graph';
+        element.appendChild(this.graph);
+
+        // The model
+        var graph = new joint.dia.Graph();
+
+        // The view
+        new joint.dia.Paper({
+            el: this.graph,
+            width: 640,
+            height: 640,
+            gridSize: 1,
+            model: graph
+        });
+
+        // Create state elements
+        _.each(fsm.states, state =>
+        {
+            var lines = state.id.split('\n');
+            var maxLineLength = _.max(lines, l => l.length).length;
+
+            // Compute width/height of the rectangle based on the number
+            // of lines in the label and the letter size. 0.6 * letterSize is
+            // an approximation of the monospaced font letter width.
+            var letterSize = 12,
+                minWidth = 90;
+            var width = Math.max(minWidth, 0.6 * letterSize * maxLineLength);
+            var height = 2 * lines.length * letterSize;
+
+            var block = new joint.shapes.basic.Rect({
+                id: state.id,
+                size: { width: width, height: height },
+                attrs: {
+                    text: { text: state.id, 'font-size': letterSize, 'font-family': '"Ubuntu Mono", monospace' },
+                    rect: {
+                        width: width, height: height,
+                        rx: 5, ry: 5,
+                        stroke: '#792485'
+                    }
+                }
+            });
+
+            graph.addCell(block);
+        });
+
+        // Create transitions
+        _.each(fsm.transitions, (transition: control.FSMTransition) =>
+        {
+            var link = new joint.dia.Link({
+                source: { id: transition.from },
+                target: { id: transition.to },
+                attrs: { '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' } },
+                smooth: true
+            });
+            graph.addCell(link);
+        });
+
+        // Swallow mousedown events so that dragging graph elements
+        // doesn't pick up the module instead.
+        graph.on('batch:start', () => window.event.stopPropagation());
+
+        // Perform layout
+        (<any>joint).layout.DirectedGraph.layout(graph, { setLinkVertices: false });
     }
 
     public unload()
     {
         delete this.optionList;
+        delete this.graph;
     }
 
     private onData(data: state.OptionTree)

@@ -68,7 +68,6 @@ var allActions: Action[],
     allFSMs: FSM[],
     actionsJson,
     settingsJson,
-    fsmJson,
     subscription;
 
 var onSettingChangeCallbacks: {():void}[] = [];
@@ -83,9 +82,19 @@ export interface ControlMessage
     value?: any;
 }
 
-export function getSetting(path: string) : Setting
+export function getSetting(path: string): Setting
 {
     return <Setting>_.find(allSettings, setting => setting.path === path);
+}
+
+export function getFsmDescriptions(): FSM[]
+{
+    return allFSMs;
+}
+
+export function getFSM(name: string): FSM
+{
+    return _.find(allFSMs, fsm => fsm.name === name);
 }
 
 function withAction(id: string, callback: (action:Action)=>void)
@@ -220,10 +229,10 @@ function onControlData(data: ControlData)
 
             actionsJson = syncData.actions;
             settingsJson = syncData.settings;
-            fsmJson = syncData.fsms;
 
             allActions = _.map(syncData.actions, actionData => new Action(actionData));
             allSettings = _.map(syncData.settings, settingData => new Setting(settingData));
+            allFSMs = syncData.fsms;
 
             // Raise any queued callbacks
             _.each(actionsCallbacks, callback => callback());
