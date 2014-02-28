@@ -16,17 +16,51 @@ var actions,
     settings,
     actionsJson,
     settingsJson,
+    fsmJson,
     subscription;
+
+interface FSMState
+{
+    id: string;
+}
+
+interface FSMTransition
+{
+    label: string;
+    from: string;
+    to: string;
+}
+
+interface FSMWildcardTransition
+{
+    label: string;
+    to: string;
+}
+
+interface FSM
+{
+    name: string;
+    start: string;
+    states: FSMState[];
+    transitions: FSMTransition[];
+    wildcardTransitions: FSMWildcardTransition[];
+}
 
 interface ControlData
 {
+    /** Either 'sync' or 'update'. */
     type: string;
+}
 
-    // For 'sync' type
+interface ControlSyncData extends ControlData
+{
     actions?: {id: string; label: string;}[];
     settings?: any[];
+    fsms: FSM[];
+}
 
-    // For 'update' type
+interface ControlUpdateData extends ControlData
+{
     path?: string;
     value?: any;
 }
@@ -49,13 +83,16 @@ var onControlData = (data: ControlData) =>
     switch (data.type) {
         case "sync":
         {
-            console.log('Received control data:', data);
+            var syncData = <ControlSyncData>data;
 
-            actionsJson = data.actions;
-            settingsJson = data.settings;
+            console.log('Received control data:', syncData);
 
-            actions = _.map(data.actions, actionData => new Action(actionData));
-            settings = _.map(data.settings, settingData => new Setting(settingData));
+            actionsJson = syncData.actions;
+            settingsJson = syncData.settings;
+            fsmJson = syncData.fsms;
+
+            actions = _.map(syncData.actions, actionData => new Action(actionData));
+            settings = _.map(syncData.settings, settingData => new Setting(settingData));
 
             // Raise any queued callbacks
             _.each(actionsCallbacks, callback => callback());
@@ -68,20 +105,21 @@ var onControlData = (data: ControlData) =>
         }
         case "update":
         {
-            console.log('updating setting value', data.path, data.value);
+            var updateData = <ControlUpdateData>data;
 
+            console.log('updating setting value', updateData.path, updateData.value);
             console.assert(settings);
 
-            var setting = ControlClient.getSetting(data.path);
+            var setting = ControlClient.getSetting(updateData.path);
 
-            setting.__setValue(data.value);
+            setting.__setValue(updateData.value);
 
             // Update cached settingsJson object
-            var obj = <any>_.find(settingsJson, o => o.path === data.path);
+            var obj = <any>_.find(settingsJson, o => o.path === updateData.path);
             if (obj)
-                obj.value = data.value;
+                obj.value = updateData.value;
             else
-                console.error('No setting known with path', data.path);
+                console.error('No setting known with path', updateData.path);
 
             break;
         }
