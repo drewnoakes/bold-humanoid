@@ -272,8 +272,13 @@ class World3dModule extends Module
 
     private updateAgentHeightFromGround()
     {
-        var leftZ = new THREE.Vector3().setFromMatrixPosition(this.objectByName['foot-left'].matrixWorld).z;
-        var rightZ = new THREE.Vector3().setFromMatrixPosition(this.objectByName['foot-right'].matrixWorld).z;
+        var leftFoot = this.objectByName['foot-left'];
+        var rightFoot = this.objectByName['foot-right'];
+        // Ensure we've loaded everything
+        if (this.pendingTextureCount !== 0 || leftFoot == null || rightFoot == null)
+            return;
+        var leftZ = new THREE.Vector3().setFromMatrixPosition(leftFoot.matrixWorld).z;
+        var rightZ = new THREE.Vector3().setFromMatrixPosition(rightFoot.matrixWorld).z;
         var error = Math.min(leftZ, rightZ) - constants.footHeight;
         if (Math.abs(error) > 0.01) {
             this.torsoHeight -= error;
