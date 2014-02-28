@@ -39,14 +39,14 @@ class ModuleHost
         };
         (<any>jQuery)(this.moduleContainer).sortable(sortableOptions); //.disableSelection();
     }
-    
+
     public register(module: Module)
     {
         if (this.loaded)
           throw 'Cannot register modules once the ModuleHost is loaded.';
-    
+
         this.moduleById[module.id] = module;
-    
+
         var link = document.createElement('a');
         link.className = 'module-button';
         link.href = '#';
@@ -63,17 +63,17 @@ class ModuleHost
         this.linkById[module.id] = link;
         this.linkContainer.appendChild(link);
     }
-    
+
     public load()
     {
         if (_.keys(this.moduleById).length === 0)
             throw 'No modules registered in ModuleHost.';
-    
+
         if (this.loaded)
           throw 'ModuleHost already loaded.';
-    
+
         this.loaded = true;
-    
+
         // Load any modules found in the hash
         if (window.location.hash && window.location.hash.length > 1 && window.location.hash[0] === '#')
         {
@@ -86,7 +86,7 @@ class ModuleHost
             });
         }
     }
-    
+
     private addModule(module: Module)
     {
         // Create a new element for the module
@@ -98,7 +98,7 @@ class ModuleHost
 
         this.elementById[module.id] = moduleElement;
         this.moduleContainer.appendChild(moduleElement);
-    
+
         var headerLinks = moduleElement.querySelector('.module-header-links');
         var container = <HTMLDivElement>moduleElement.querySelector('.module-content');
 
@@ -121,7 +121,7 @@ class ModuleHost
 
         this.updateHash();
     }
-    
+
     private removeModule(module: Module)
     {
         var element = this.elementById[module.id];
@@ -129,9 +129,6 @@ class ModuleHost
         if (!element)
             throw 'Has not been added';
 
-        var link = this.linkById[module.id];
-        link.classList.remove('added');
-    
         // Remove from the DOM
         this.moduleContainer.removeChild(element);
 
@@ -142,9 +139,11 @@ class ModuleHost
 
         delete this.elementById[module.id];
 
+        this.linkById[module.id].classList.remove('added');
+
         this.updateHash();
     }
-    
+
     private updateHash()
     {
         var hash = '';
