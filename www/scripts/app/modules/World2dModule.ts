@@ -11,7 +11,7 @@ import plotter = require('FieldLinePlotter');
 import HeadControls = require('HeadControls');
 import interaction = require('interaction');
 import mouse = require('util/mouse');
-import geometry = require('util/Geometry');
+import geometry = require('../util/geometry');
 import state = require('state');
 import Module = require('Module');
 
@@ -26,8 +26,8 @@ class World2dModule extends Module
     private agentPosition: number[];
     private ballPosition: number[];
     private visibleFieldPoly: number[][];
-    private observedLineSegments: geometry.ILineSegment[];
-    private goalPositions: geometry.IPoint[];
+    private observedLineSegments: geometry.ILineSegment2[];
+    private goalPositions: geometry.IPoint2[];
 
     private hoverInfo: HTMLDivElement;
 

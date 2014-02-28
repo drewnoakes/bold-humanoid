@@ -6,7 +6,7 @@
 /// <reference path="../libs/three.d.ts" />
 
 import Setting = require('Setting');
-import geometry = require('util/Geometry');
+import geometry = require('util/geometry');
 
 // All lengths are in metres
 

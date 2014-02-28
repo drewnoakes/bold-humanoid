@@ -9,7 +9,7 @@ import constants = require('constants');
 import data = require('data');
 import HeadControls = require('HeadControls');
 import mouse = require('util/mouse');
-import geometry = require('util/Geometry');
+import geometry = require('../util/geometry');
 import Module = require('Module');
 import state = require('state');
 
@@ -23,9 +23,9 @@ class Agent2dModule extends Module
     private needsRender: boolean;
 
     private ballPosition: number[];
-    private goalPositions: geometry.IPoint[];
+    private goalPositions: geometry.IPoint2[];
     private visibleFieldPoly: number[][];
-    private observedLineSegments: geometry.ILineSegment[];
+    private observedLineSegments: geometry.ILineSegment2[];
     private scale: number;
 
     constructor()

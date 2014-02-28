@@ -2,7 +2,7 @@
  * @author Drew Noakes
  */
 
-import geometry = require('util/Geometry');
+import geometry = require('util/geometry');
 
 export enum MouseButton
 {
@@ -29,8 +29,8 @@ export interface IDragEvent
 export class Dragger
 {
     private isDragging: boolean;
-    private startScreenPoint: geometry.IPoint;
-    private lastScreenPoint: geometry.IPoint;
+    private startScreenPoint: geometry.IPoint2;
+    private lastScreenPoint: geometry.IPoint2;
     private startEvent: MouseEvent;
     private isStart: boolean;
 

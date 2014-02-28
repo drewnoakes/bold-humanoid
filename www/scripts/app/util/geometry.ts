@@ -2,8 +2,7 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-// TODO rename as IPoint2
-export interface IPoint
+export interface IPoint2
 {
     x: number;
     y: number;
@@ -16,11 +15,10 @@ export interface IPoint3
     z: number;
 }
 
-// TODO rename as ILineSegment2
-export interface ILineSegment
+export interface ILineSegment2
 {
-    p1: IPoint;
-    p2: IPoint;
+    p1: IPoint2;
+    p2: IPoint2;
 }
 
 //export interface ISize

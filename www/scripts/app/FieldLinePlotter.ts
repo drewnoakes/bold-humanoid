@@ -6,7 +6,7 @@
 
 import ControlBuilder = require('ControlBuilder');
 import constants = require('constants');
-import geometry = require('util/Geometry');
+import geometry = require('util/geometry');
 
 export function drawField(context: CanvasRenderingContext2D, options)
 {
@@ -73,7 +73,7 @@ export function drawFieldLines(context: CanvasRenderingContext2D, options)
     context.stroke();
 }
 
-export function drawGoalPosts(context: CanvasRenderingContext2D, options, positions: geometry.IPoint[])
+export function drawGoalPosts(context: CanvasRenderingContext2D, options, positions: geometry.IPoint2[])
 {
     context.fillStyle = options.goalStrokeStyle || 'yellow';
 
@@ -118,7 +118,7 @@ export function drawGoals(context: CanvasRenderingContext2D, options)
     context.stroke();
 }
 
-export function drawLineSegments(context: CanvasRenderingContext2D, options, lineSegments: geometry.ILineSegment[], lineWidth, strokeStyle)
+export function drawLineSegments(context: CanvasRenderingContext2D, options, lineSegments: geometry.ILineSegment2[], lineWidth, strokeStyle)
 {
     context.lineWidth = lineWidth || 0.01;
     context.strokeStyle = strokeStyle || '#0000ff';

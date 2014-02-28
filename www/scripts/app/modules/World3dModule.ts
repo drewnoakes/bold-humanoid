@@ -10,7 +10,7 @@ import data = require('data');
 import plotter = require('FieldLinePlotter');
 import GeometryUtil = require('util/three');
 import interaction = require('interaction');
-import geometry = require('util/Geometry');
+import geometry = require('../util/geometry');
 import state = require('state');
 import Module = require('Module');
 
