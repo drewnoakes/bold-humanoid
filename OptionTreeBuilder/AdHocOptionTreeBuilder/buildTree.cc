@@ -163,7 +163,6 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto pausedState = winFsm->newState("paused", {});
   auto unpausingState = winFsm->newState("unpausing", {standUp});
   auto setState = winFsm->newState("set", {stopWalking});
-  auto beforeTheirKickoff = winFsm->newState("beforeTheirKickOff", {stopWalking});
   auto playingState = winFsm->newState("playing", {playingFsm});
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
   auto forwardGetUpState = winFsm->newState("forwardGetUp", {forwardGetUp});
