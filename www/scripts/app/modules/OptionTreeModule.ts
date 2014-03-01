@@ -106,7 +106,11 @@ class OptionTreeModule extends Module
                 id: state.id,
                 size: { width: width, height: height },
                 attrs: {
-                    text: { text: state.id, 'font-size': letterSize, 'font-family': '"Ubuntu Mono", monospace' },
+                    text: {
+                        text: state.id,
+                        'font-size': letterSize,
+                        'font-family': '"Ubuntu Mono", monospace'
+                    },
                     rect: {
                         width: width, height: height,
                         rx: 5, ry: 5,
@@ -141,7 +145,10 @@ class OptionTreeModule extends Module
             var link = new joint.dia.Link({
                 source: { id: transition.from },
                 target: { id: transition.to },
-                attrs: { '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' } },
+                attrs: {
+                    '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' },
+                    '.connection': { opacity: 0.6 }
+                },
                 smooth: true,
                 labels: [
                     {
