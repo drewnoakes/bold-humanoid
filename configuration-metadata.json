@@ -56,7 +56,7 @@
     "line-width":            { "type": "double", "readonly": true, "default": 0.05 },
     "penalty-line-length":   { "type": "double", "readonly": true, "default": 0.1 },
     "outer-margin-minimum":  { "type": "double", "readonly": true, "default": 0.7 },
-    "ball-diameter":         { "type": "double", "readonly": true, "default": 0.067 }
+    "ball-diameter":         { "type": "double", "readonly": true, "default": 0.1 }
   },
   "camera": {
     "image-width":  { "type": "int", "readonly": true, "default": 320 },
