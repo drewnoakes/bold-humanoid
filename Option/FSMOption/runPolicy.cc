@@ -39,6 +39,17 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
       << " (" << transition->name << ") after "
       << (int)Clock::getMillisSince(d_curState->startTimestamp) << "ms";
 
+    static Setting<bool>* announceFsmTransitions = Config::getSetting<bool>("options.announce-fsm-transitions");
+    static Setting<int>* announceRate = Config::getSetting<int>("options.announce-rate-wpm");
+    if (announceFsmTransitions->getValue() && transition->name.size())
+    {
+      if (d_voice->queueLength() < 2)
+      {
+        SpeechTask task = { transition->name, (uint)announceRate->getValue(), false };
+        d_voice->say(task);
+      }
+    }
+
     setCurrentState(transition->childState);
 
     transition->onFire();

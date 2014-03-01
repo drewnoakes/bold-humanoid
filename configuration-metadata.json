@@ -241,6 +241,7 @@
   },
   "options": {
     "announce-fsm-states": { "type": "bool", "default": false },
+    "announce-fsm-transitions": { "type": "bool", "default": false },
     "announce-rate-wpm":   { "type": "int", "min": 80, "max": 450, "default": 200 },
     "circle-ball": {
       "walk-x":    { "type": "double", "default": 1.0 },
