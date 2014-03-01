@@ -5,7 +5,7 @@
 
 vector<shared_ptr<Option>> FSMOption::runPolicy()
 {
-  log::verbose("FSMOption::runPolicy") << " ----- Start -----";
+  log::verbose(getID()) << " ----- Start -----";
 
   auto setCurrentState = [this](shared_ptr<FSMState> state)
   {
@@ -27,7 +27,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
   if (!d_curState)
     setCurrentState(d_startState);
 
-  log::verbose("FSMOption::runPolicy") << "Current state: " << d_curState->name;
+  log::verbose(getID()) << "Current state: " << d_curState->name;
 
   auto tryTransition = [this,setCurrentState](shared_ptr<FSMTransition> transition)
   {
@@ -77,13 +77,13 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
 
     if (loopCount++ > MAX_LOOP_COUNT)
     {
-      log::error("FSMOption::runPolicy") << "Transition walk loop exceeded maximum number of iterations. Breaking from loop.";
+      log::error(getID()) << "Transition walk loop exceeded maximum number of iterations. Breaking from loop.";
       break;
     }
   }
   while (transitionMade);
 
-  log::verbose("FSMOption::runPolicy") << "Final state: " << d_curState->name;
+  log::verbose(getID()) << "Final state: " << d_curState->name;
 
   return d_curState->options;
 }
