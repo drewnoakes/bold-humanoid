@@ -567,7 +567,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         if (lookAtFeet->hasPosition())
         {
           auto ballPos = lookAtFeet->getAverageBallPositionAgentFrame();
-          if (ballPos.y() <= 0.2 && ballPos.x() < 0)
+          if (ballPos.x() < 0)
           {
             log::info("lookAtFeet2kickLeft") << "Kicking with left foot when ball at (" << ballPos.x() << "," << ballPos.y() << ")";
             return true;
@@ -591,7 +591,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         if (lookAtFeet->hasPosition())
         {
           auto ballPos = lookAtFeet->getAverageBallPositionAgentFrame();
-          if (ballPos.y() <= 0.2 && ballPos.x() < 0)
+          if (ballPos.x() >= 0)
           {
             log::info("lookAtFeet2kickRight") << "Kicking with right foot when ball at (" << ballPos.x() << "," << ballPos.y() << ")";
             return true;
