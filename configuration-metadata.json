@@ -228,6 +228,9 @@
     "max-hip-pitch": { "type": "double", "default": 17.0, "description": "Max hip pitch" },
     "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "default": 2.0, "description": "Fwd acc hip pitch factor" }
   },
+  "kick": {
+    "max-ball-distance": { "type": "double", "default": 0.2, "min": 0, "max": 0.4 }
+  },
   "orientation-tracker": {
     "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 } }
   },

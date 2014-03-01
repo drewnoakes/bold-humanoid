@@ -213,6 +213,9 @@
     "max-hip-pitch": 14,
     "fwd-acc-hip-pitch-factor": 2.0
   },
+  "kick": {
+    "max-ball-distance": 0.2
+  },
   "orientation-tracker": {
     "technique": 0
   },

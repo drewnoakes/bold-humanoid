@@ -498,9 +498,8 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         return stepUpDownThreshold(6, []()
         {
           auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-          static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
-          // TODO introduce another setting 'max-kick-distance' instead of this scaling of the stop distance
-          return ballObs && ballObs->head<2>().norm() > 2 * stoppingDistance->getValue();
+          static auto maxKickDistance = Config::getSetting<double>("kick.max-ball-distance");
+          return ballObs && ballObs->head<2>().norm() > maxKickDistance->getValue();
         });
       });
 
