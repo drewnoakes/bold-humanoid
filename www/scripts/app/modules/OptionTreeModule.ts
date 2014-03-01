@@ -5,6 +5,7 @@
 /// <reference path="../../libs/lodash.d.ts" />
 /// <reference path="../../libs/jquery.d.ts" />
 /// <reference path="../../libs/jointjs.d.ts" />
+/// <reference path="../../libs/joint.layout.DirectedGraph.d.ts" />
 
 import constants = require('constants');
 import data = require('data');
@@ -107,7 +108,7 @@ class OptionTreeModule extends Module
         graph.on('batch:start', () => window.event.stopPropagation());
 
         // Perform layout
-        (<any>joint).layout.DirectedGraph.layout(graph, { setLinkVertices: false });
+        joint.layout.DirectedGraph.layout(graph, { setLinkVertices: false });
     }
 
     public unload()
