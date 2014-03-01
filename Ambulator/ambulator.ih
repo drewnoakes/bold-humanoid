@@ -1,10 +1,10 @@
 #include "ambulator.hh"
 
-#include "../AgentState/agentstate.hh"
 #include "../Math/math.hh"
 #include "../MotionModule/WalkModule/walkmodule.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../Setting/setting.hh"
+#include "../State/state.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 #include "../ThreadUtil/threadutil.hh"
 

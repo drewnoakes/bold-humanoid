@@ -7,7 +7,7 @@ std::vector<std::shared_ptr<Option>> LookAtFeet::runPolicy()
 {
   d_headModule->moveToDegs(d_panDegs->getValue(), d_tiltDegs->getValue());
 
-  auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+  auto ballObs = State::get<AgentFrameState>()->getBallObservation();
 
   if (ballObs)
   {

@@ -18,14 +18,14 @@ Odometer::Odometer(shared_ptr<WalkModule> walkModule)
   d_progressMutex()
 {
   assert(walkModule);
-  AgentState::set(make_shared<OdometryState const>(d_progress));
+  State::set(make_shared<OdometryState const>(d_progress));
 }
 
 void Odometer::observeTyped(shared_ptr<BodyState const> const& state, SequentialTimer& timer)
 {
   assert(state);
 
-  auto ambulatorState = AgentState::get<AmbulatorState>();
+  auto ambulatorState = State::get<AmbulatorState>();
 
   if (!ambulatorState || !ambulatorState->isRunning())
   {
@@ -53,7 +53,7 @@ void Odometer::observeTyped(shared_ptr<BodyState const> const& state, Sequential
     lock_guard<mutex> lock(d_progressMutex);
     d_progress += (thisTranslation - lastTranslation);
 
-    AgentState::set(make_shared<OdometryState const>(d_progress));
+    State::set(make_shared<OdometryState const>(d_progress));
   }
 
   d_lastBodyState = state;

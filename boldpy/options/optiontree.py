@@ -55,7 +55,7 @@ class PyOptionTreeBuilder:
 
         @static_var("lastState", False)
         def startButtonPressed():
-            hw = bold.AgentState.getHardwareState()
+            hw = bold.State.getHardwareState()
             if not hw:
                 return False
             cm730 = hw.getCM730State()
@@ -66,7 +66,7 @@ class PyOptionTreeBuilder:
 
         @static_var("lastState", False)
         def modeButtonPressed():
-            hw = bold.AgentState.getHardwareState()
+            hw = bold.State.getHardwareState()
             if not hw:
                 return False
             cm730 = hw.getCM730State()

@@ -1,8 +1,8 @@
 #include "bodycontrol.hh"
 
-#include "../AgentState/agentstate.hh"
 #include "../MX28/mx28.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
+#include "../State/state.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 
 using namespace bold;

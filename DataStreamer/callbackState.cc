@@ -29,7 +29,7 @@ int DataStreamer::callback_state(
     // and so we send the latest object to a client when they connect.
 
     // Find any existing state object
-    shared_ptr<StateObject const> stateObject = AgentState::getByName(protocol->name);
+    shared_ptr<StateObject const> stateObject = State::getByName(protocol->name);
 
     if (stateObject)
     {

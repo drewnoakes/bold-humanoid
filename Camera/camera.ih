@@ -6,11 +6,11 @@
 #include <stropts.h>
 #include <sys/stat.h>
 
-#include "../AgentState/agentstate.hh"
 #include "../Clock/clock.hh"
 #include "../Config/config.hh"
 #include "../Setting/setting-implementations.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
+#include "../State/state.hh"
 #include "../util/log.hh"
 
 using namespace cv;

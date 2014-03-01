@@ -1,8 +1,8 @@
 #include "orientationtracker.hh"
 
-#include "../../AgentState/agentstate.hh"
 #include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../Config/config.hh"
+#include "../../State/state.hh"
 #include "../../StateObject/OrientationState/orientationstate.hh"
 #include "../../util/log.hh"
 
@@ -60,7 +60,7 @@ void OrientationTracker::observeTyped(shared_ptr<HardwareState const> const& sta
       throw runtime_error("Unexpected OrientationTechnique value");
   }
 
-  AgentState::set(allocate_aligned_shared<OrientationState const>(getQuaternion()));
+  State::set(allocate_aligned_shared<OrientationState const>(getQuaternion()));
 }
 
 void OrientationTracker::updateMadgwick(shared_ptr<HardwareState const> const& state)

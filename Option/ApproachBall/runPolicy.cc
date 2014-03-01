@@ -5,7 +5,7 @@ std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
   assert(d_upperTurnLimitDegs->getValue() > d_lowerTurnLimitDegs->getValue());
   assert(d_brakeDistance->getValue() != 0);
 
-  auto ballPos = AgentState::get<AgentFrameState>()->getBallObservation();
+  auto ballPos = State::get<AgentFrameState>()->getBallObservation();
 
   if (!ballPos)
   {

@@ -2,7 +2,7 @@
 
 std::vector<std::shared_ptr<Option>> LookAtGoal::runPolicy()
 {
-  auto const& goalObs = AgentState::get<CameraFrameState>()->getGoalObservations();
+  auto const& goalObs = State::get<CameraFrameState>()->getGoalObservations();
 
   if (goalObs.size() < 2)
   {

@@ -1,6 +1,6 @@
 #include "visualcortex.ih"
 
-#include "../AgentState/agentstate.hh"
+#include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 
@@ -81,15 +81,15 @@ void VisualCortex::saveImage(cv::Mat const& image)
 
     // Body pose
     writer.String("body");
-    StateObject::writeJsonOrNull(writer, AgentState::get<BodyState>(StateTime::CameraImage));
+    StateObject::writeJsonOrNull(writer, State::get<BodyState>(StateTime::CameraImage));
 
     // Camera Frame
     writer.String("cameraFrame");
-    StateObject::writeJsonOrNull(writer, AgentState::get<CameraFrameState>());
+    StateObject::writeJsonOrNull(writer, State::get<CameraFrameState>());
 
     // Agent Frame
     writer.String("agentFrame");
-    StateObject::writeJsonOrNull(writer, AgentState::get<AgentFrameState>());
+    StateObject::writeJsonOrNull(writer, State::get<AgentFrameState>());
   }
   writer.EndObject();
 

@@ -1,6 +1,5 @@
 #include "motionloop.hh"
 
-#include "../AgentState/agentstate.hh"
 #include "../BodyControl/bodycontrol.hh"
 #include "../CM730/cm730.hh"
 #include "../CM730Platform/CM730Linux/cm730linux.hh"
@@ -8,6 +7,7 @@
 #include "../Config/config.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
+#include "../State/state.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
@@ -208,7 +208,7 @@ void *MotionLoop::threadMethod(void *param)
     t.timeEvent("Sleep");
 
     // Set timing data for the motion cycle
-    AgentState::set(make_shared<MotionTimingState const>(t.flush(), loop->d_cycleNumber));
+    State::set(make_shared<MotionTimingState const>(t.flush(), loop->d_cycleNumber));
   }
 
   log::verbose("MotionLoop::threadMethod") << "Exiting";
@@ -218,7 +218,7 @@ void *MotionLoop::threadMethod(void *param)
 
 bool MotionLoop::applyJointMotionTasks(SequentialTimer& t)
 {
-  auto tasks = AgentState::get<MotionTaskState>();
+  auto tasks = State::get<MotionTaskState>();
 
   if (!tasks || tasks->isEmpty())
     return false;
@@ -363,7 +363,7 @@ void MotionLoop::step(SequentialTimer& t)
       if (anythingChanged)
       {
         // TODO only create if someone is listening to this in the debugger
-        AgentState::set(make_shared<BodyControlState const>(d_bodyControl, d_cycleNumber));
+        State::set(make_shared<BodyControlState const>(d_bodyControl, d_cycleNumber));
         t.timeEvent("Set BodyControlState");
       }
     }
@@ -408,9 +408,9 @@ void MotionLoop::step(SequentialTimer& t)
   if (hw == nullptr)
     return;
 
-  AgentState::set(hw);
+  State::set(hw);
 
-  AgentState::set(allocate_aligned_shared<BodyState const>(hw, d_bodyControl, d_cycleNumber));
+  State::set(allocate_aligned_shared<BodyState const>(hw, d_bodyControl, d_cycleNumber));
   t.timeEvent("Update BodyState");
 
   if (!d_readYet)
@@ -420,7 +420,7 @@ void MotionLoop::step(SequentialTimer& t)
   }
 
   t.enter("Observers");
-  AgentState::callbackObservers(ThreadId::MotionLoop, t);
+  State::callbackObservers(ThreadId::MotionLoop, t);
   t.exit();
 }
 
@@ -488,7 +488,7 @@ bool MotionLoop::updateStaticHardwareState()
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     mx28States.push_back(make_shared<StaticMX28State>(jointId, d_staticBulkRead->getBulkReadData(jointId)));
 
-  AgentState::set(make_shared<StaticHardwareState const>(cm730State, mx28States));
+  State::set(make_shared<StaticHardwareState const>(cm730State, mx28States));
   return true;
 }
 
@@ -513,7 +513,7 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareStateFake(SequentialTime
     }
 
     auto cm730State = make_shared<StaticCM730State>();
-    AgentState::set(make_shared<StaticHardwareState const>(cm730State, mx28States));
+    State::set(make_shared<StaticHardwareState const>(cm730State, mx28States));
 
     d_staticHardwareStateUpdateNeeded = false;
     t.timeEvent("Read StaticHardwareState");

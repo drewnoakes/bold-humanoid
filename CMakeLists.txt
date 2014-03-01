@@ -121,10 +121,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./AgentState/agentstate.cc
-)
-
-add_class(BOLDHUMANOID
   ./Ambulator/Ambulator.cc
   ./Ambulator/setters.cc
   ./Ambulator/step.cc
@@ -398,6 +394,10 @@ add_class(BOLDHUMANOID
   ./Spatialiser/findHorizonForColumn.cc
   ./Spatialiser/updateCameraToAgent.cc
   ./Spatialiser/updateAgentToWorld.cc
+)
+
+add_class(BOLDHUMANOID
+  ./State/state.cc
 )
 
 add_class(BOLDHUMANOID

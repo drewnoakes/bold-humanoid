@@ -19,19 +19,19 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 def thinkEndCallback():
     bold.log.writeVerbose("===== HELLO =====")
-    # cameraState = bold.AgentState.getCameraFrameState()
+    # cameraState = bold.State.getCameraFrameState()
     # print("(Camera Frame) Ball visible: ", cameraState.isBallVisible())
     # ballObs = cameraState.getBallObservation()
     # print("(Camera Frame) Ball observations:")
     # print(ballObs)
 
-    # agentFrameState = bold.AgentState.getAgentFrameState()
+    # agentFrameState = bold.State.getAgentFrameState()
     # print("(Agent Frame) Ball visible: ", agentFrameState.isBallVisible())
     # ballObs = agentFrameState.getBallObservation()
     # print("(Agent Frame) Ball observations:")
     # print(ballObs)
 
-    # ambulatorState = bold.AgentState.getAmbulatorState()
+    # ambulatorState = bold.State.getAmbulatorState()
     # print(ambulatorState)
     # print("AmbulatorState): current phase")
     # print(ambulatorState.getCurrentPhase())

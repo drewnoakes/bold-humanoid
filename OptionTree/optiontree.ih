@@ -1,6 +1,6 @@
 #include "optiontree.hh"
 
-#include "../AgentState/agentstate.hh"
+#include "../State/state.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../util/ccolor.hh"
 

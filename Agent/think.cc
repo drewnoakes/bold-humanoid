@@ -31,7 +31,7 @@ void Agent::think()
   //
   shared_ptr<GameState const> gameState = d_gameStateReceiver->receive();
   if (gameState)
-    AgentState::set(gameState);
+    State::set(gameState);
   t.timeEvent("Integrate Game Control");
 
   //
@@ -81,12 +81,12 @@ void Agent::think()
   //
   // Set timing data for the think cycle
   //
-  AgentState::set(make_shared<ThinkTimingState const>(t.flush(), d_cycleNumber));
+  State::set(make_shared<ThinkTimingState const>(t.flush(), d_cycleNumber));
 
   onThinkEnd();
 
   t.enter("Observers");
-  AgentState::callbackObservers(ThreadId::ThinkLoop, t);
+  State::callbackObservers(ThreadId::ThinkLoop, t);
   t.exit();
 
   log::verbose("Agent::think") << "Ending think cycle " << d_cycleNumber;

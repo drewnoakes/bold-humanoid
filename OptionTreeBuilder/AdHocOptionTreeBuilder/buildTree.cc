@@ -34,7 +34,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto startButtonPressed = []()
   {
-    auto hw = AgentState::get<HardwareState>();
+    auto hw = State::get<HardwareState>();
     if (!hw)
       return false;
     auto const& cm730 = hw->getCM730State();
@@ -51,7 +51,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto modeButtonPressed = []()
   {
-    auto hw = AgentState::get<HardwareState>();
+    auto hw = State::get<HardwareState>();
     if (!hw)
       return false;
     auto const& cm730 = hw->getCM730State();
@@ -68,13 +68,13 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto ballVisibleCondition = []()
   {
-    return AgentState::get<CameraFrameState>()->isBallVisible();
+    return State::get<CameraFrameState>()->isBallVisible();
   };
 
   auto ballTooFarToKick = []()
   {
     // TODO use filtered ball position
-    auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+    auto ballObs = State::get<AgentFrameState>()->getBallObservation();
     static auto maxKickDistance = Config::getSetting<double>("kick.max-ball-distance");
     return ballObs && ballObs->head<2>().norm() > maxKickDistance->getValue();
   };
@@ -85,13 +85,13 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto isPenalised = [=]()
   {
-    auto gameState = AgentState::get<GameState>();
+    auto gameState = State::get<GameState>();
     return gameState && gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
   auto isNotPenalised = [=]()
   {
-    auto gameState = AgentState::get<GameState>();
+    auto gameState = State::get<GameState>();
     return gameState && !gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
@@ -99,7 +99,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   {
     return [isNotPenalised,playMode]()
     {
-      auto gameState = AgentState::get<GameState>();
+      auto gameState = State::get<GameState>();
       return gameState && isNotPenalised() && gameState->getPlayMode() == playMode;
     };
   };
@@ -108,7 +108,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   {
     return [=]()
     {
-      auto gameState = AgentState::get<GameState>();
+      auto gameState = State::get<GameState>();
       if (!gameState)
         return defaultValue;
       return gameState->getPlayMode() == playMode;
@@ -148,8 +148,8 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto approachBall = tree->addOption(make_shared<ApproachBall>("approachBall", ambulator));
   auto circleBall = tree->addOption(make_shared<CircleBall>("circleBall", ambulator, headModule));
   auto lookAroundNarrow = tree->addOption(make_shared<LookAround>("lookAroundNarrow", headModule, 45.0));
-  auto lookForGoal = tree->addOption(make_shared<LookAround>("lookForGoal", headModule, 100.0, []() { return 1 - 0.33*AgentState::get<CameraFrameState>()->getGoalObservationCount(); }));
-  auto lookForBall = tree->addOption(make_shared<LookAround>("lookForBall", headModule, 135.0, []() { return AgentState::get<CameraFrameState>()->isBallVisible() ? 0.25 : 1.0; }));
+  auto lookForGoal = tree->addOption(make_shared<LookAround>("lookForGoal", headModule, 100.0, []() { return 1 - 0.33*State::get<CameraFrameState>()->getGoalObservationCount(); }));
+  auto lookForBall = tree->addOption(make_shared<LookAround>("lookForBall", headModule, 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.25 : 1.0; }));
   auto lookAtBall = tree->addOption(make_shared<LookAtBall>("lookAtBall", cameraModel, headModule));
   auto lookAtFeet = tree->addOption(make_shared<LookAtFeet>("lookAtFeet", headModule));
   auto lookAtGoal = tree->addOption(make_shared<LookAtGoal>("lookAtGoal", cameraModel, headModule));
@@ -345,7 +345,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       {
         return trueForMillis(1000, []()
         {
-          auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+          auto ball = State::get<AgentFrameState>()->getBallObservation();
           return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(-0.75, -0.3).contains(ball->x());
         });
       });
@@ -356,7 +356,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       {
         return trueForMillis(1000, []()
         {
-          auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+          auto ball = State::get<AgentFrameState>()->getBallObservation();
           return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(0.3, 0.75).contains(ball->x());
         });
       });
@@ -398,7 +398,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       {
         return trueForMillis(100, []()
         {
-          auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+          auto ball = State::get<AgentFrameState>()->getBallObservation();
           return ball && ball->y() < 1.0 && ball->x() < -0.1;
         });
       });
@@ -409,7 +409,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       {
         return trueForMillis(100, []()
         {
-          auto ball = AgentState::get<AgentFrameState>()->getBallObservation();
+          auto ball = State::get<AgentFrameState>()->getBallObservation();
           return ball && ball->y() < 1.0 && ball->x() > 0.1;
         });
       });
@@ -482,7 +482,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       {
         // Approach ball until we're within a given distance
         // TODO use filtered ball position
-        auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+        auto ballObs = State::get<AgentFrameState>()->getBallObservation();
         static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
         return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
       });
@@ -492,7 +492,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       ->when([]()
       {
         // TODO use the localiser here rather than requiring both posts to be in frame
-        auto goalsObs = AgentState::get<AgentFrameState>()->getGoalObservations();
+        auto goalsObs = State::get<AgentFrameState>()->getGoalObservations();
         return goalsObs.size() >= 2;
       });
 
@@ -515,7 +515,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       ->transitionTo(lookAtFeetState, "square-to-goal")
       ->when([]()
       {
-        double panAngle = AgentState::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
+        double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
         // TODO this angular limit in config
         return fabs(Math::radToDeg(panAngle)) < 25.0;
       });
@@ -531,7 +531,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       ->when([circleBallState,headModule,secondsSinceStart]()
       {
         // TODO break dependency upon pan limit
-        double panAngle = AgentState::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
+        double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
         double panAngleRange = headModule->getLeftLimitRads();
         double panRatio = panAngle / panAngleRange;
         double circleDurationSeconds = fabs(panRatio) * 4.5;

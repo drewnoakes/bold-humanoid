@@ -24,5 +24,5 @@ void OptionTree::run()
     ranOptions.push_back(option);
   }
 
-  AgentState::set(make_shared<OptionTreeState const>(ranOptions));
+  State::set(make_shared<OptionTreeState const>(ranOptions));
 }

@@ -1,6 +1,5 @@
 #include "visualcortex.hh"
 
-#include "../AgentState/agentstate.hh"
 #include "../Camera/camera.hh"
 #include "../CameraModel/cameramodel.hh"
 #include "../Config/config.hh"
@@ -24,6 +23,7 @@
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../Spatialiser/spatialiser.hh"
+#include "../State/state.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/LabelCountState/labelcountstate.hh"

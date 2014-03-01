@@ -1,6 +1,6 @@
 #include "spatialiser.hh"
 
-#include "../AgentState/agentstate.hh"
+#include "../State/state.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
@@ -11,7 +11,7 @@ using namespace std;
 
 void Spatialiser::updateAgentToWorld(AgentPosition position)
 {
-  auto agentFrame = AgentState::get<AgentFrameState>();
+  auto agentFrame = State::get<AgentFrameState>();
 
   //
   // Transform from agent to world space
@@ -54,5 +54,5 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   }
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
-  AgentState::set(make_shared<WorldFrameState const>(ball, goals, lineSegments, visibleFieldPoly, position));
+  State::set(make_shared<WorldFrameState const>(ball, goals, lineSegments, visibleFieldPoly, position));
 }

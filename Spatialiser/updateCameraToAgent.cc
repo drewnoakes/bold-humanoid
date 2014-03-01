@@ -4,7 +4,7 @@
 
 void Spatialiser::updateCameraToAgent()
 {
-  auto cameraFrame = AgentState::get<CameraFrameState>();
+  auto cameraFrame = State::get<CameraFrameState>();
 
   auto const& ballObs = cameraFrame->getBallObservation();
 
@@ -38,7 +38,7 @@ void Spatialiser::updateCameraToAgent()
 
   // Determine observed field area polygon
   Polygon2d::PointVector vertices;
-  auto const& agentCameraTransform = AgentState::get<BodyState>(StateTime::CameraImage)->getAgentCameraTransform();
+  auto const& agentCameraTransform = State::get<BodyState>(StateTime::CameraImage)->getAgentCameraTransform();
 
   int width = d_cameraModel->imageWidth();
   int height = d_cameraModel->imageHeight();
@@ -70,5 +70,5 @@ void Spatialiser::updateCameraToAgent()
 
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
-  AgentState::set(make_shared<AgentFrameState const>(ball, goals, lineSegments, visibleFieldPoly));
+  State::set(make_shared<AgentFrameState const>(ball, goals, lineSegments, visibleFieldPoly));
 }

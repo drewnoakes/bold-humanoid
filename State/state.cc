@@ -1,30 +1,30 @@
-#include "agentstate.hh"
+#include "state.hh"
 
 using namespace bold;
 using namespace std;
 
-sigc::signal<void, shared_ptr<StateTracker const>> AgentState::updated;
+sigc::signal<void, shared_ptr<StateTracker const>> State::updated;
 
-mutex AgentState::d_mutex;
+mutex State::d_mutex;
 
-unordered_map<type_index, vector<shared_ptr<StateObserver>>> AgentState::d_observersByTypeIndex;
-unordered_map<int, vector<shared_ptr<StateObserver>>> AgentState::d_observersByThreadId;
-unordered_map<type_index, shared_ptr<StateTracker>> AgentState::d_trackerByTypeId;
-unordered_map<string, shared_ptr<StateTracker>> AgentState::d_trackerByName;
+unordered_map<type_index, vector<shared_ptr<StateObserver>>> State::d_observersByTypeIndex;
+unordered_map<int, vector<shared_ptr<StateObserver>>> State::d_observersByThreadId;
+unordered_map<type_index, shared_ptr<StateTracker>> State::d_trackerByTypeId;
+unordered_map<string, shared_ptr<StateTracker>> State::d_trackerByName;
 
-void AgentState::initialise()
+void State::initialise()
 {
   // Only allow observers to be called back on specified threads
   d_observersByThreadId[(int)ThreadId::MotionLoop] = vector<shared_ptr<StateObserver>>();
   d_observersByThreadId[(int)ThreadId::ThinkLoop] = vector<shared_ptr<StateObserver>>();
 }
 
-shared_ptr<StateObject const> AgentState::getByName(string name)
+shared_ptr<StateObject const> State::getByName(string name)
 {
   auto it = d_trackerByName.find(name);
   if (it == d_trackerByName.end())
   {
-    log::warning("AgentState::getByName") << "No tracker exists with name " << name;
+    log::warning("State::getByName") << "No tracker exists with name " << name;
     return nullptr;
   }
 
@@ -32,7 +32,7 @@ shared_ptr<StateObject const> AgentState::getByName(string name)
   return tracker->stateBase();
 }
 
-vector<shared_ptr<StateTracker>> AgentState::getTrackers()
+vector<shared_ptr<StateTracker>> State::getTrackers()
 {
   vector<shared_ptr<StateTracker>> stateObjects;
   lock_guard<mutex> guard(d_mutex);
@@ -42,7 +42,7 @@ vector<shared_ptr<StateTracker>> AgentState::getTrackers()
   return stateObjects;
 }
 
-void AgentState::registerObserver(shared_ptr<StateObserver> observer)
+void State::registerObserver(shared_ptr<StateObserver> observer)
 {
   assert(observer);
 
@@ -62,7 +62,7 @@ void AgentState::registerObserver(shared_ptr<StateObserver> observer)
   it2->second.push_back(observer);
 }
 
-void AgentState::callbackObservers(ThreadId threadId, SequentialTimer& timer)
+void State::callbackObservers(ThreadId threadId, SequentialTimer& timer)
 {
   // TODO STATE assert that we are NOT in the configuration phase
 
@@ -81,7 +81,7 @@ void AgentState::callbackObservers(ThreadId threadId, SequentialTimer& timer)
   }
 }
 
-shared_ptr<StateObject const> AgentState::getByTypeIndex(type_index const& typeIndex)
+shared_ptr<StateObject const> State::getByTypeIndex(type_index const& typeIndex)
 {
   // TODO STATE if this is readonly at this point, do we need to lock? can trackers be added/removed dynamically? just assert we're not in configuration mode
   lock_guard<mutex> guard(d_mutex);

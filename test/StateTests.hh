@@ -2,7 +2,7 @@
 
 #include "helpers.hh"
 
-#include "../AgentState/agentstate.hh"
+#include "../State/state.hh"
 #include "../StateObject/TimingState/timingstate.hh"
 
 #include <atomic>
@@ -15,16 +15,16 @@ using namespace std;
 
 // NOTE these tests ensure the same threading characteristics on development and production environments
 
-class AgentStateTests : public ::testing::Test
+class StateTests : public ::testing::Test
 {
 protected:
   static void SetUpTestCase()
   {
-    AgentState::registerStateType<MotionTimingState>("MotionTiming");
+    State::registerStateType<MotionTimingState>("MotionTiming");
   }
 };
 
-TEST_F (AgentStateTests, threadedAccess)
+TEST_F (StateTests, threadedAccess)
 {
   int loopCount = 50000;
 
@@ -35,7 +35,7 @@ TEST_F (AgentStateTests, threadedAccess)
       auto eventTimings = make_shared<vector<EventTiming>>();
       eventTimings->push_back(make_pair(0.1, "Event 1"));
       eventTimings->push_back(make_pair(0.2, "Event 2"));
-      AgentState::set(make_shared<MotionTimingState const>(eventTimings, 1));
+      State::set(make_shared<MotionTimingState const>(eventTimings, 1));
     }
   });
 
@@ -45,7 +45,7 @@ TEST_F (AgentStateTests, threadedAccess)
   {
     for (int i = 0; i < loopCount; i++)
     {
-      auto const& state = AgentState::get<MotionTimingState>();
+      auto const& state = State::get<MotionTimingState>();
 
       if (state)
       {
@@ -61,14 +61,14 @@ TEST_F (AgentStateTests, threadedAccess)
   EXPECT_TRUE(seenState);
 }
 
-TEST_F (AgentStateTests, setAndGet)
+TEST_F (StateTests, setAndGet)
 {
   auto eventTimings = make_shared<vector<EventTiming>>();
   eventTimings->push_back(make_pair(0.1, "Event 1"));
   eventTimings->push_back(make_pair(0.2, "Event 2"));
-  AgentState::set(make_shared<MotionTimingState const>(eventTimings, 2));
+  State::set(make_shared<MotionTimingState const>(eventTimings, 2));
 
-  shared_ptr<MotionTimingState const> state = AgentState::get<MotionTimingState>();
+  shared_ptr<MotionTimingState const> state = State::get<MotionTimingState>();
 
   EXPECT_NE ( nullptr, state );
   EXPECT_EQ(2, state->getTimings()->size());

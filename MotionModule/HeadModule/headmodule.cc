@@ -1,10 +1,10 @@
 #include "headmodule.hh"
 
-#include "../../AgentState/agentstate.hh"
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../Config/config.hh"
 #include "../../Math/math.hh"
 #include "../../MotionTaskScheduler/motiontaskscheduler.hh"
+#include "../../State/state.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../ThreadUtil/threadutil.hh"
 
@@ -102,7 +102,7 @@ void HeadModule::moveToDegs(double pan, double tilt)
 
 void HeadModule::moveByDeltaDegs(double panDelta, double tiltDelta)
 {
-  auto body = AgentState::get<BodyState>();
+  auto body = State::get<BodyState>();
   double currentPanAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_PAN)->angleRads);
   double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->angleRads);
   moveToDegs(currentPanAngleDegs + panDelta, currentTiltAngleDegs + tiltDelta);
@@ -135,7 +135,7 @@ void HeadModule::moveTracking(double panError, double tiltError)
     return pOffset + iOffset + dOffset;
   };
 
-  auto body = AgentState::get<BodyState>();
+  auto body = State::get<BodyState>();
   double currentPanAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_PAN)->angleRads);
   double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->angleRads);
 

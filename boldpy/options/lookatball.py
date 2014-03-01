@@ -10,7 +10,7 @@ class LookAtBall(bold.Option):
         self.maxOffset = bold.Config.getDoubleSetting("options.look-at-ball.max-offset-deg");
 
     def runPolicy(self):
-        cameraState = bold.AgentState.getCameraFrameState()
+        cameraState = bold.State.getCameraFrameState()
         ballObs = cameraState.getBallObservation()
 
         if ballObs is None:

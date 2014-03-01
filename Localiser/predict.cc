@@ -2,8 +2,8 @@
 
 void Localiser::predict()
 {
-  auto orientationState = AgentState::get<OrientationState>(StateTime::CameraImage);
-  auto odometryState = AgentState::get<OdometryState>(StateTime::CameraImage);
+  auto orientationState = State::get<OrientationState>(StateTime::CameraImage);
+  auto odometryState = State::get<OdometryState>(StateTime::CameraImage);
   if (!orientationState || !odometryState)
     return;
 

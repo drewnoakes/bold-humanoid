@@ -9,7 +9,7 @@ Agent::Agent()
 {
   ThreadUtil::setThreadId(ThreadId::ThinkLoop);
 
-  AgentState::initialise();
+  State::initialise();
 
   d_voice = make_shared<Voice>();
 
@@ -38,13 +38,13 @@ Agent::Agent()
   d_orientationTracker = make_shared<OrientationTracker>();
 
   // Register StateObservers
-  AgentState::registerObserver(d_fallDetector);
-  AgentState::registerObserver(d_gyroCalibrator);
-  AgentState::registerObserver(d_healthAndSafety);
-  AgentState::registerObserver(d_jamTracker);
-  AgentState::registerObserver(d_suicidePill);
-  AgentState::registerObserver(d_odometer);
-  AgentState::registerObserver(d_orientationTracker);
+  State::registerObserver(d_fallDetector);
+  State::registerObserver(d_gyroCalibrator);
+  State::registerObserver(d_healthAndSafety);
+  State::registerObserver(d_jamTracker);
+  State::registerObserver(d_suicidePill);
+  State::registerObserver(d_odometer);
+  State::registerObserver(d_orientationTracker);
 
   d_ambulator = make_shared<Ambulator>(d_walkModule),
 

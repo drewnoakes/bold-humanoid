@@ -1,12 +1,14 @@
 #include "adhocoptiontreebuilder.hh"
 
 #include "../../CM730Snapshot/cm730snapshot.hh"
-#include "../../AgentState/agentstate.hh"
 #include "../../Clock/clock.hh"
+#include "../../Debugger/debugger.hh"
+#include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../../StateObject/GameState/gamestate.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../StateObserver/FallDetector/falldetector.hh"
 #include "../../Option/ApproachBall/approachball.hh"
 #include "../../Option/CircleBall/circleball.hh"
 #include "../../Option/FSMOption/fsmoption.hh"
@@ -16,8 +18,6 @@
 #include "../../Option/LookAtGoal/lookatgoal.hh"
 #include "../../Option/MotionScriptOption/motionscriptoption.hh"
 #include "../../Option/StopWalking/stopwalking.hh"
-#include "../../Debugger/debugger.hh"
-#include "../../StateObserver/FallDetector/falldetector.hh"
 
 #include <algorithm>
 #include <fstream>

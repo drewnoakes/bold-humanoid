@@ -1,6 +1,5 @@
 #include "agent.hh"
 
-#include "../AgentState/agentstate.hh"
 #include "../Ambulator/ambulator.hh"
 #include "../Camera/camera.hh"
 #include "../CameraModel/cameramodel.hh"
@@ -28,6 +27,7 @@
 #include "../RobotisMotionFile/robotismotionfile.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../Spatialiser/spatialiser.hh"
+#include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/AmbulatorState/ambulatorstate.hh"
 #include "../StateObject/BodyControlState/bodycontrolstate.hh"

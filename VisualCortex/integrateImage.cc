@@ -36,7 +36,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
 
   if (d_shouldCountLabels->getValue())
   {
-    AgentState::set(make_shared<LabelCountState const>(getHandler<LabelCountPass>()->getCounts()));
+    State::set(make_shared<LabelCountState const>(getHandler<LabelCountPass>()->getCounts()));
     t.timeEvent("Store Label Count");
   }
 
@@ -176,7 +176,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     }
   }
 
-  AgentState::set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, totalPixelCount, processedPixelCount));
+  State::set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, totalPixelCount, processedPixelCount));
 
   t.timeEvent("Updating State");
 }

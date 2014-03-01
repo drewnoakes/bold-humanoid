@@ -2,7 +2,7 @@
 
 std::vector<std::shared_ptr<Option>> LookAtBall::runPolicy()
 {
-  auto const& ballObs = AgentState::get<CameraFrameState>()->getBallObservation();
+  auto const& ballObs = State::get<CameraFrameState>()->getBallObservation();
 
   if (!ballObs.hasValue())
   {

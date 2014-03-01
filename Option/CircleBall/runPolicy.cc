@@ -2,7 +2,7 @@
 
 std::vector<std::shared_ptr<Option>> CircleBall::runPolicy()
 {
-  auto bodyState = AgentState::get<BodyState>();
+  auto bodyState = State::get<BodyState>();
 
   double panAngle = bodyState->getJoint(JointId::HEAD_PAN)->angleRads;
   // TODO don't get this information from the head module, but rather some static model of the body's limits

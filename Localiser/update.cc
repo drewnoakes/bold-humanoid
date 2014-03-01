@@ -2,7 +2,7 @@
 
 void Localiser::update()
 {
-  auto const& agentFrame = AgentState::get<AgentFrameState>();
+  auto const& agentFrame = State::get<AgentFrameState>();
 
   predict();
 

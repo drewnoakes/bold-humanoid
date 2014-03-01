@@ -2,22 +2,22 @@
 
 void Agent::registerStateTypes()
 {
-  AgentState::registerStateType<AgentFrameState>("AgentFrame");
-  AgentState::registerStateType<AmbulatorState>("Ambulator");
-  AgentState::registerStateType<BodyControlState>("BodyControl");
-  AgentState::registerStateType<BodyState>("Body");
-  AgentState::registerStateType<CameraFrameState>("CameraFrame");
-  AgentState::registerStateType<DebugState>("Debug");
-  AgentState::registerStateType<GameState>("Game");
-  AgentState::registerStateType<HardwareState>("Hardware");
-  AgentState::registerStateType<LabelCountState>("LabelCount");
-  AgentState::registerStateType<MotionTaskState>("MotionTask");
-  AgentState::registerStateType<MotionTimingState>("MotionTiming");
-  AgentState::registerStateType<OdometryState>("Odometry");
-  AgentState::registerStateType<OptionTreeState>("OptionTree");
-  AgentState::registerStateType<OrientationState>("Orientation");
-  AgentState::registerStateType<ParticleState>("Particle");
-  AgentState::registerStateType<StaticHardwareState>("StaticHardware");
-  AgentState::registerStateType<ThinkTimingState>("ThinkTiming");
-  AgentState::registerStateType<WorldFrameState>("WorldFrame");
+  State::registerStateType<AgentFrameState>("AgentFrame");
+  State::registerStateType<AmbulatorState>("Ambulator");
+  State::registerStateType<BodyControlState>("BodyControl");
+  State::registerStateType<BodyState>("Body");
+  State::registerStateType<CameraFrameState>("CameraFrame");
+  State::registerStateType<DebugState>("Debug");
+  State::registerStateType<GameState>("Game");
+  State::registerStateType<HardwareState>("Hardware");
+  State::registerStateType<LabelCountState>("LabelCount");
+  State::registerStateType<MotionTaskState>("MotionTask");
+  State::registerStateType<MotionTimingState>("MotionTiming");
+  State::registerStateType<OdometryState>("Odometry");
+  State::registerStateType<OptionTreeState>("OptionTree");
+  State::registerStateType<OrientationState>("Orientation");
+  State::registerStateType<ParticleState>("Particle");
+  State::registerStateType<StaticHardwareState>("StaticHardware");
+  State::registerStateType<ThinkTimingState>("ThinkTiming");
+  State::registerStateType<WorldFrameState>("WorldFrame");
 }

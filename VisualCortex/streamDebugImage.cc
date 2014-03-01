@@ -7,7 +7,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     return;
 
   // Only provide an image every N cycles
-  if (AgentState::getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod->getValue() != 0)
+  if (State::getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod->getValue() != 0)
     return;
 
   Mat debugImage;
@@ -48,7 +48,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw observed lines
-  auto const& observedLineSegments = AgentState::get<CameraFrameState>()->getObservedLineSegments();
+  auto const& observedLineSegments = State::get<CameraFrameState>()->getObservedLineSegments();
   if (d_shouldDrawObservedLines->getValue() && observedLineSegments.size() > 0)
   {
     auto observedLineColour = d_observedLineColour->getValue();
@@ -98,7 +98,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   // Draw observed objects (ie. actual ball/goal posts chosen from blobs)
   if (d_shouldDrawObservedObjects->getValue())
   {
-    auto cameraFrame = AgentState::get<CameraFrameState>();
+    auto cameraFrame = State::get<CameraFrameState>();
 
     auto ball = cameraFrame->getBallObservation();
     if (ball)
@@ -117,14 +117,14 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     }
   }
 
-  auto bodyState = AgentState::get<BodyState>(StateTime::CameraImage);
+  auto bodyState = State::get<BodyState>(StateTime::CameraImage);
 
   // Draw expected lines
   bool drawExpectedLines = d_shouldDrawExpectedLines->getValue();
   bool drawExpectedLineEdges = d_shouldDrawExpectedLineEdges->getValue();
   if (drawExpectedLines || drawExpectedLineEdges)
   {
-    auto const& worldFrameState = AgentState::get<WorldFrameState>();
+    auto const& worldFrameState = State::get<WorldFrameState>();
     Affine3d const& agentWorld = worldFrameState->getPosition().agentWorldTransform();
     Affine3d const& cameraAgent = bodyState->getCameraAgentTransform();
 

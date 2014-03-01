@@ -18,7 +18,7 @@ void Debugger::update()
   // Update Hardware LEDs
   //
 
-  auto const& cameraFrame = AgentState::get<CameraFrameState>();
+  auto const& cameraFrame = State::get<CameraFrameState>();
 
   if (!cameraFrame)
     return;
@@ -46,7 +46,7 @@ void Debugger::update()
 
   // TODO track whether there's actually anything to update, avoiding unnecessary DebugState changes
 
-  AgentState::set(
+  State::set(
     make_shared<DebugState const>(
       d_gameControllerMessageCount, d_ignoredMessageCount,
       d_sentTeamMessageCount, d_receivedTeamMessageCount,

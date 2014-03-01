@@ -1,9 +1,9 @@
 #include "motionscriptrunner.hh"
 
-#include "../AgentState/agentstate.hh"
 #include "../Math/math.hh"
 #include "../MotionTask/motiontask.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
+#include "../State/state.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../ThreadUtil/threadutil.hh"
 #include "../util/ccolor.hh"
@@ -55,7 +55,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
     memset(&d_mainAngles1024, 0, sizeof(d_mainAngles1024));
 
-    auto hw = AgentState::get<HardwareState>();
+    auto hw = State::get<HardwareState>();
 
     assert(hw);
 

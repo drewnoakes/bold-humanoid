@@ -7,7 +7,7 @@ class LookAtGoal(bold.Option):
         super(LookAtGoal, self).__init__(id)
 
     def runPolicy(self):
-        cameraState = bold.AgentState.getCameraFrameState()
+        cameraState = bold.State.getCameraFrameState()
         goalObs = cameraState.getGoalObservations()
 
         if len(goalObs) < 2:

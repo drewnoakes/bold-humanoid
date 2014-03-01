@@ -26,7 +26,7 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
   // Verify blob is about the expected pixel size at that position of the frame
   //
 
-  auto body = AgentState::get<BodyState>(StateTime::CameraImage);
+  auto body = State::get<BodyState>(StateTime::CameraImage);
   Affine3d const& cameraAgentTransform = body->getCameraAgentTransform();
 
   // At the point we think the ball is, find the distance in agent space between points left-to-right from there

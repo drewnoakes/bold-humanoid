@@ -19,7 +19,7 @@ Mat Camera::capture(SequentialTimer& t)
 
   // Snapshot some state objects at this moment
   // TODO can buf.timestamp already old at this point? if so, do we need to snapshot an older time?
-  AgentState::snapshot(StateTime::CameraImage);
+  State::snapshot(StateTime::CameraImage);
   t.timeEvent("Snapshot State");
 
   if (-1 == ioctl(d_fd, VIDIOC_QBUF, &buf))

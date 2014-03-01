@@ -20,9 +20,9 @@
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
 
-#include "../AgentState/agentstate.hh"
 #include "../Camera/camera.hh"
 #include "../Config/config.hh"
+#include "../State/state.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"

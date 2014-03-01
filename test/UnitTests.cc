@@ -36,7 +36,7 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 }
 
 #include "AgentPositionTests.hh"
-#include "AgentStateTests.hh"
+#include "StateTests.hh"
 #include "BodyStateTests.hh"
 #include "BlobTests.hh"
 #include "Bounds2iTests.hh"
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 
   log::minLevel = LogLevel::Warning;
 
-  AgentState::initialise();
+  State::initialise();
 
   Config::initialise("../configuration-metadata.json", "../configuration-team.json");
 

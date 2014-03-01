@@ -1,8 +1,8 @@
 #include "approachball.hh"
 
-#include "../../AgentState/agentstate.hh"
 #include "../../Ambulator/ambulator.hh"
 #include "../../Math/math.hh"
+#include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 
 #include <Eigen/Core>

@@ -1,7 +1,7 @@
 #include "lookatfeet.hh"
 
-#include "../../AgentState/agentstate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../State/state.hh"
 #include "../../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../../VisualCortex/visualcortex.hh"
 

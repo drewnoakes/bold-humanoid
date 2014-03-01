@@ -1,8 +1,8 @@
 #include "circleball.hh"
 
 #include "../../Ambulator/ambulator.hh"
-#include "../../AgentState/agentstate.hh"
-#include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../State/state.hh"
+#include "../../StateObject/BodyState/bodystate.hh"
 
 using namespace bold;

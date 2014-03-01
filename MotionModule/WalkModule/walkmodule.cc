@@ -2,11 +2,11 @@
 
 #include <cmath>
 
-#include "../../AgentState/agentstate.hh"
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../Config/config.hh"
 #include "../../MX28/mx28.hh"
+#include "../../State/state.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 #include "../../ThreadUtil/threadutil.hh"
 
@@ -486,7 +486,7 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   // TODO convert this stabilisation to a generic and replaceable BodyControlModulator ?
   if (BALANCE_ENABLE->getValue())
   {
-    auto hw = AgentState::get<HardwareState>();
+    auto hw = State::get<HardwareState>();
     assert(hw);
     // TODO pass calibration data here
     auto gryoRaw = hw->getCM730State().getBalancedGyroValue();

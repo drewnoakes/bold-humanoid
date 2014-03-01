@@ -9,7 +9,7 @@ def buildOptionTree():
     return tree
 
 def thinkEndCallback():
-    cameraState = bold.AgentState.getCameraFrameState()
+    cameraState = bold.State.getCameraFrameState()
     print(cameraState)
     print("Ball visible: ", cameraState.isBallVisible())
     ballObs = cameraState.getBallObservation()

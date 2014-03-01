@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
-#include "../AgentState/agentstate.hh"
 #include "../MotionTask/motiontask.hh"
+#include "../State/state.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 
 namespace bold

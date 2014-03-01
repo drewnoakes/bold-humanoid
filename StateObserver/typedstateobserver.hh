@@ -6,7 +6,8 @@
 #include <vector>
 
 #include "stateobserver.hh"
-#include "../AgentState/agentstate.hh"
+
+#include "../State/state.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 
 namespace bold
@@ -32,7 +33,7 @@ namespace bold
     void observe(SequentialTimer& timer) override
     {
       assert(ThreadUtil::getThreadId() == d_callbackThreadId);
-      std::shared_ptr<StateObject const> state = AgentState::getByTypeIndex(d_typeIndex);
+      std::shared_ptr<StateObject const> state = State::getByTypeIndex(d_typeIndex);
       std::shared_ptr<TState const> typedState = std::dynamic_pointer_cast<TState const>(state);
       assert(typedState);
       observeTyped(typedState, timer);
