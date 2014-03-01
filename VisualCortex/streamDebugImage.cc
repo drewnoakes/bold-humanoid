@@ -103,17 +103,17 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     auto ball = cameraFrame->getBallObservation();
     if (ball)
     {
-      auto ballColor = Colour::bgr(0, 0, 255);
+      static auto ballColor = Colour::bgr(0, 0, 255).toScalar();
       Rect rect((int)round(ball->x()), (int)round(ball->y()), 5, 5);
-      cv::rectangle(debugImage, rect, ballColor.toScalar(), CV_FILLED);
+      cv::rectangle(debugImage, rect, ballColor, CV_FILLED);
     }
 
     auto goals = cameraFrame->getGoalObservations();
     for (auto goal : goals)
     {
-      auto goalColor = Colour::bgr(0, 255, 255);
+      static auto goalColor = Colour::bgr(0, 255, 255).toScalar();
       Rect rect((int)round(goal.x()), (int)round(goal.y()), 5, 5);
-      cv::rectangle(debugImage, rect, goalColor.toScalar(), CV_FILLED);
+      cv::rectangle(debugImage, rect, goalColor, CV_FILLED);
     }
   }
 
