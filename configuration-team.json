@@ -214,7 +214,7 @@
     "fwd-acc-hip-pitch-factor": 2.0
   },
   "kick": {
-    "max-ball-distance": 0.2
+    "max-ball-distance": 0.155
   },
   "orientation-tracker": {
     "technique": 0
@@ -238,7 +238,7 @@
       "max-forward-speed": 40.0,
       "min-forward-speed": 5.0,
       "brake-distance": 0.80,
-      "stop-distance": 0.09,
+      "stop-distance": 0.12,
       "lower-turn-limit-degs": 20.0,
       "upper-turn-limit-degs": 35.0
     },

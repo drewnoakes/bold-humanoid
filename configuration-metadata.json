@@ -229,7 +229,7 @@
     "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "default": 2.0, "description": "Fwd acc hip pitch factor" }
   },
   "kick": {
-    "max-ball-distance": { "type": "double", "default": 0.2, "min": 0, "max": 0.4 }
+    "max-ball-distance": { "type": "double", "default": 0.155, "min": 0, "max": 0.4 }
   },
   "orientation-tracker": {
     "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 } }
@@ -253,7 +253,7 @@
       "max-forward-speed": { "type": "double", "default": 40.0 },
       "min-forward-speed": { "type": "double", "default": 5.0 },
       "brake-distance":    { "type": "double", "default": 0.45 },
-      "stop-distance":     { "type": "double", "default": 0.075 },
+      "stop-distance":     { "type": "double", "default": 0.12 },
       "lower-turn-limit-degs": { "type": "double", "default": 20.0 },
       "upper-turn-limit-degs": { "type": "double", "default": 35.0 }
     },
