@@ -26,7 +26,7 @@ export interface FSMTransition
 
 export interface FSMWildcardTransition
 {
-    label: string;
+    id: string;
     to: string;
 }
 

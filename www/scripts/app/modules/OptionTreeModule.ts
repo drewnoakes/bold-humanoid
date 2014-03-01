@@ -118,6 +118,23 @@ class OptionTreeModule extends Module
             graph.addCell(block);
         });
 
+        if (fsm.wildcardTransitions.length !== 0)
+        {
+            var wildcard = new joint.shapes.basic.Circle({
+                id: 'wildcard',
+                size: { width: 20, height: 20 },
+                attrs: {
+                    circle: {
+                        transform: 'translate(10, 10)',
+                        r: 10,
+                        fill: 'black'
+                    }
+                }
+            });
+
+            graph.addCell(wildcard);
+        }
+
         // Create transitions
         _.each(fsm.transitions, (transition: control.FSMTransition) =>
         {
@@ -142,12 +159,39 @@ class OptionTreeModule extends Module
             graph.addCell(link);
         });
 
+        // Create wildcard transitions
+        _.each(fsm.wildcardTransitions, (wildcardTransition: control.FSMWildcardTransition) =>
+        {
+            var link = new joint.dia.Link({
+                source: { id: 'wildcard' },
+                target: { id: wildcardTransition.to },
+                attrs: {
+                    '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' },
+                    '.connection': { 'stroke-dasharray': '2 3', opacity: 0.6 }
+                },
+                smooth: true,
+                labels: [
+                    {
+                        position: 0.3,
+                        attrs: {
+                            rect: { fill: 'transparent' },
+                            text: {
+                                'font-size': 9,
+                                text: wildcardTransition.id
+                            }
+                        }
+                    }
+                ]
+            });
+            graph.addCell(link);
+        });
+
         // Perform layout
         joint.layout.DirectedGraph.layout(graph, {
             setLinkVertices: false,
             rankSep: 35,
             edgeSep: 35,
-            nodeSep: 120
+            nodeSep: 20
         });
     }
 
