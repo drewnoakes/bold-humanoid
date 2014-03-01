@@ -31,10 +31,10 @@ class OptionTreeModule extends Module
         this.optionList.className = 'options';
         element.appendChild(this.optionList);
 
-        var usage = document.createElement('div');
-        usage.className = 'control-container';
-        control.buildSetting('options.announce-fsm-states', usage, this.closeables);
-        element.appendChild(usage);
+        var controls = document.createElement('div');
+        controls.className = 'control-container';
+        control.buildSetting('options.announce-fsm-states', controls, this.closeables);
+        element.appendChild(controls);
 
         this.closeables.add(new data.Subscription<state.OptionTree>(
             constants.protocols.optionTreeState,
@@ -43,14 +43,16 @@ class OptionTreeModule extends Module
             }
         ));
 
-        var fsm = control.getFSM('playing');
-
         this.graph = document.createElement('div');
         this.graph.className = 'graph';
         element.appendChild(this.graph);
 
         // The model
         var graph = new joint.dia.Graph();
+
+        // Swallow mousedown events so that dragging graph elements
+        // doesn't pick up the module instead.
+        graph.on('batch:start', () => window.event.stopPropagation());
 
         // The view
         new joint.dia.Paper({
@@ -61,11 +63,36 @@ class OptionTreeModule extends Module
             model: graph
         });
 
+        // Control to select the displayed FSM
+        var select = document.createElement('select');
+        _.each(control.getFsmDescriptions(), fsm =>
+        {
+            var option = document.createElement('option');
+            option.text = fsm.name;
+            option.value = fsm.name;
+            select.appendChild(option);
+        });
+        select.addEventListener('change', () => this.buildFsmGraph(control.getFSM(select.options[select.selectedIndex].value), graph));
+        controls.appendChild(select);
+
+        this.buildFsmGraph(control.getFSM(select.options[0].value), graph);
+    }
+
+    public unload()
+    {
+        delete this.optionList;
+        delete this.graph;
+    }
+
+    private buildFsmGraph(fsm: control.FSM, graph: joint.dia.Graph)
+    {
+        graph.clear();
+
         // Create state elements
         _.each(fsm.states, state =>
         {
             var lines = state.id.split('\n');
-            var maxLineLength = _.max(lines, l => l.length).length;
+            var maxLineLength = _.max(lines,l => l.length).length;
 
             // Compute width/height of the rectangle based on the number
             // of lines in the label and the letter size. 0.6 * letterSize is
@@ -99,23 +126,21 @@ class OptionTreeModule extends Module
                 target: { id: transition.to },
                 attrs: { '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' } },
                 smooth: true,
-                labels: [{
-                    position: 0.3,
-                    attrs: {
-                        rect: { fill: 'transparent' },
-                        text: {
-                            'font-size': 9,
-                            text: transition.id
+                labels: [
+                    {
+                        position: 0.3,
+                        attrs: {
+                            rect: { fill: 'transparent' },
+                            text: {
+                                'font-size': 9,
+                                text: transition.id
+                            }
                         }
                     }
-                }]
+                ]
             });
             graph.addCell(link);
         });
-
-        // Swallow mousedown events so that dragging graph elements
-        // doesn't pick up the module instead.
-        graph.on('batch:start', () => window.event.stopPropagation());
 
         // Perform layout
         joint.layout.DirectedGraph.layout(graph, {
@@ -124,12 +149,6 @@ class OptionTreeModule extends Module
             edgeSep: 35,
             nodeSep: 120
         });
-    }
-
-    public unload()
-    {
-        delete this.optionList;
-        delete this.graph;
     }
 
     private onData(data: state.OptionTree)
