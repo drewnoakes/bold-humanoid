@@ -93,7 +93,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
               }
               if (queueSize > MaxQueueSize)
               {
-                log::error("AgentStateUpdated") << "JsonSession queue too long (" << queueSize << " > " << MaxQueueSize << "), purging";
+                log::error("AgentStateUpdated") << "JsonSession queue for '" << session->first << "' too long (" << queueSize << " > " << MaxQueueSize << "), purging";
                 queue<shared_ptr<vector<uchar> const>> empty;
                 swap(session->second->queue, empty);
               }
