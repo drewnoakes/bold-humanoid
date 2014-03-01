@@ -73,7 +73,7 @@ class OptionTreeModule extends Module
             var letterSize = 12,
                 minWidth = 90;
             var width = Math.max(minWidth, 0.6 * letterSize * maxLineLength);
-            var height = 2 * lines.length * letterSize;
+            var height = 1.6 * lines.length * letterSize;
 
             var block = new joint.shapes.basic.Rect({
                 id: state.id,
@@ -118,7 +118,12 @@ class OptionTreeModule extends Module
         graph.on('batch:start', () => window.event.stopPropagation());
 
         // Perform layout
-        joint.layout.DirectedGraph.layout(graph, { setLinkVertices: false });
+        joint.layout.DirectedGraph.layout(graph, {
+            setLinkVertices: false,
+            rankSep: 35,
+            edgeSep: 35,
+            nodeSep: 120
+        });
     }
 
     public unload()
