@@ -71,6 +71,14 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     return AgentState::get<CameraFrameState>()->isBallVisible();
   };
 
+  auto ballTooFarToKick = []()
+  {
+    // TODO use filtered ball position
+    auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
+    static auto maxKickDistance = Config::getSetting<double>("kick.max-ball-distance");
+    return ballObs && ballObs->head<2>().norm() > maxKickDistance->getValue();
+  };
+
   // TODO review this one-size-fits-all approach on a case-by-case basis below
   auto ballFoundConditionFactory = [ballVisibleCondition]() { return trueForMillis(1000, ballVisibleCondition); };
   auto ballLostConditionFactory = [ballVisibleCondition]() { return trueForMillis(1000, negate(ballVisibleCondition)); };
@@ -488,20 +496,10 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         return goalsObs.size() >= 2;
       });
 
-    // if we notice the ball has gone while looking for the goal, quit
+    // If we notice the ball is too far to kick, abort kick
     lookForGoalState
-      ->transitionTo(lookForBallState, "ball-gone")
-      ->when([]()
-      {
-        // If the ball is far away, then stop looking for the goal
-        // TODO use filtered ball position
-        return stepUpDownThreshold(6, []()
-        {
-          auto ballObs = AgentState::get<AgentFrameState>()->getBallObservation();
-          static auto maxKickDistance = Config::getSetting<double>("kick.max-ball-distance");
-          return ballObs && ballObs->head<2>().norm() > maxKickDistance->getValue();
-        });
-      });
+      ->transitionTo(lookForBallState, "ball-too-far")
+      ->when([ballTooFarToKick]() { return stepUpDownThreshold(6, ballTooFarToKick); });
 
     // limit how long we will look for the goal
     lookForGoalState
@@ -547,12 +545,18 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         return secondsSinceStart(circleDurationSeconds, circleBallState);
       });
 
+    // If we notice the ball is too far to kick, abort kick
+    lookAtFeetState
+      ->transitionTo(lookForBallState, "ball-too-far")
+      ->when([ballTooFarToKick]() { return stepUpDownThreshold(10, ballTooFarToKick); });
+
     // TODO if ball too central, step to left/right slightly, or use different kick
 
     lookAtFeetState
       ->transitionTo(leftKickState, "ball-left")
       ->when([lookAtFeet,lookAtFeetState]()
       {
+        // Look at feet for one second
         if (lookAtFeetState->secondsSinceStart() < 1)
           return false;
 
@@ -576,6 +580,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       ->transitionTo(rightKickState, "ball-right")
       ->when([lookAtFeet,lookAtFeetState]()
       {
+        // Look at feet for one second
         if (lookAtFeetState->secondsSinceStart() < 1)
           return false;
 
