@@ -98,7 +98,17 @@ class OptionTreeModule extends Module
                 source: { id: transition.from },
                 target: { id: transition.to },
                 attrs: { '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' } },
-                smooth: true
+                smooth: true,
+                labels: [{
+                    position: 0.3,
+                    attrs: {
+                        rect: { fill: 'transparent' },
+                        text: {
+                            'font-size': 9,
+                            text: transition.id
+                        }
+                    }
+                }]
             });
             graph.addCell(link);
         });

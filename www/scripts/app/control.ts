@@ -19,7 +19,7 @@ export interface FSMState
 
 export interface FSMTransition
 {
-    label: string;
+    id: string;
     from: string;
     to: string;
 }
