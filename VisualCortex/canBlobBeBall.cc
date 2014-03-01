@@ -12,16 +12,10 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
     return false;
   }
 
-  // TODO take the curvature of the ball into account -- project middle of blob on the plane z=ballRadius
-
-  // Take the bottom of the ball as observation
-  Vector2d basePos = blob.mean;
-  basePos.y() = blob.ul.y();
-
   // Ignore ball if it is too far from the field edge
   //
   int allowedBallFieldEdgeDistPixels = d_maxBallFieldEdgeDistPixels->getValue();
-  if (basePos.y() > int(d_fieldEdgePass->getEdgeYValue(basePos.x())) + allowedBallFieldEdgeDistPixels)
+  if (blob.ul.y() > int(d_fieldEdgePass->getEdgeYValue(blob.mean.x())) + allowedBallFieldEdgeDistPixels)
   {
     // This blob can not be the ball if its upper left corner is too far below the field edge.
     // Remember that the image appears upside down.
@@ -40,17 +34,17 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
   Rect rect = blob.toRect();
   int maxDimension = max(rect.width, rect.height);
 
-  Vector2d sidePos = basePos + Vector2d(maxDimension/2.0, 0);
+  Vector2d sidePos = blob.mean + Vector2d(maxDimension/2.0, 0);
 
-  auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(basePos, cameraAgentTransform);
-  auto sidePointAgentSpace = d_spatialiser->findGroundPointForPixel(sidePos, cameraAgentTransform);
+  static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
+
+  auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(blob.mean, cameraAgentTransform, ballRadius);
+  auto sidePointAgentSpace = d_spatialiser->findGroundPointForPixel(sidePos, cameraAgentTransform, ballRadius);
 
   if (!midPointAgentSpace || !sidePointAgentSpace)
     return false;
 
   double radiusAgentSpace = abs((*midPointAgentSpace - *sidePointAgentSpace).norm());
-
-  static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
 
   double ballMeasuredSizeRatio = radiusAgentSpace / ballRadius;
   if (ballMeasuredSizeRatio < d_acceptedBallMeasuredSizeRatio->getValue().min() ||
@@ -62,6 +56,6 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
   if (midPointAgentSpace->norm() > d_fieldMap->getMaxDiagnoalFieldDistance())
     return false;
 
-  *pos = basePos;
+  *pos = blob.mean;
   return true;
 }

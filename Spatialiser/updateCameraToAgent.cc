@@ -8,8 +8,10 @@ void Spatialiser::updateCameraToAgent()
 
   auto const& ballObs = cameraFrame->getBallObservation();
 
+  static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
+
   Maybe<Vector3d> ball = ballObs.hasValue()
-    ? findGroundPointForPixel(*ballObs)
+    ? findGroundPointForPixel(*ballObs, ballRadius)
     : Maybe<Vector3d>::empty();
 
   std::vector<Vector3d> goals;
