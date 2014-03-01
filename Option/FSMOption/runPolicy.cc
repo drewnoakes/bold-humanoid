@@ -34,9 +34,9 @@ vector<shared_ptr<Option>> FSMOption::runPolicy()
     if (!transition->condition())
       return false;
 
-    log::info("FSMOption::runPolicy")
-      << "(" << getID() << ") transitioning from '" << d_curState->name
-      << "' to '" << transition->childState->name << "' after "
+    log::info(getID())
+      << d_curState->name << "->" << transition->childState->name
+      << " (" << transition->name << ") after "
       << (int)Clock::getMillisSince(d_curState->startTimestamp) << "ms";
 
     setCurrentState(transition->childState);
