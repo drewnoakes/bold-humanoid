@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Eigen/Core>
-
 #include <Eigen/StdVector>
 #include <vector>
 
@@ -19,25 +18,25 @@ namespace bold
     CameraFrameState(Maybe<Eigen::Vector2d> ballObservation,
                      Vector2dVector goalObservations,
                      std::vector<LineSegment2i> observedLineSegments,
-                     long totalPixelCount, long processedPixelCount
-                    )
+                     std::vector<LineSegment2i> occlusionRays,
+                     long totalPixelCount, long processedPixelCount)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments),
+      d_occlusionRays(occlusionRays),
       d_totalPixelCount(totalPixelCount),
       d_processedPixelCount(processedPixelCount)
     {}
 
     Maybe<Eigen::Vector2d> getBallObservation() const { return d_ballObservation; }
+    bool isBallVisible() const { return d_ballObservation.hasValue(); }
     Vector2dVector getGoalObservations() const { return d_goalObservations; }
+    int getGoalObservationCount() const { return d_goalObservations.size(); }
+    std::vector<LineSegment2i> getOcclusionRays() const { return d_occlusionRays; }
     std::vector<LineSegment2i> getObservedLineSegments() const { return d_observedLineSegments; }
     long getTotalPixelCount() const { return d_totalPixelCount; }
     long getProcessedPixelCount() const { return d_processedPixelCount; }
     float getProcessedPixelRatio() const { return (float)d_processedPixelCount/d_totalPixelCount; }
-
-    bool isBallVisible() const { return d_ballObservation.hasValue(); }
-
-    int getGoalObservationCount() const { return d_goalObservations.size(); }
 
     virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -45,6 +44,7 @@ namespace bold
     Maybe<Eigen::Vector2d> d_ballObservation;
     Vector2dVector d_goalObservations;
     std::vector<LineSegment2i> d_observedLineSegments;
+    std::vector<LineSegment2i> d_occlusionRays;
     long d_totalPixelCount;
     long d_processedPixelCount;
   };

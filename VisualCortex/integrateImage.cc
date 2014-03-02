@@ -176,7 +176,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     }
   }
 
-  State::set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, totalPixelCount, processedPixelCount));
+  State::set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, d_fieldEdgePass->getOcclusionRays(), totalPixelCount, processedPixelCount));
 
   t.timeEvent("Updating State");
 }
