@@ -23,39 +23,7 @@ namespace bold
     {}
 
     /// Initialises a CameraModel using the specified parameters.
-    CameraModel(ushort imageWidth, ushort imageHeight, double rangeVerticalDegs, double rangeHorizontalDegs)
-    : d_imageWidth(imageWidth),
-      d_imageHeight(imageHeight),
-      d_rangeVerticalDegs(rangeVerticalDegs),
-      d_rangeHorizontalDegs(rangeHorizontalDegs)
-    {
-      //
-      // Compute the focal length
-      //
-      d_focalLength = 1.0 / tan(.5 * rangeHorizontalRads());
-
-      //
-      // Compute the projection transform
-      //
-
-      double f = focalLength();
-      Eigen::Affine3d c;
-      c.matrix() <<
-        f, 0, 0, 0,
-        0, f, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 1, 0;
-
-      auto s = Eigen::Scaling((d_imageWidth - 1) / 2.0, (d_imageHeight - 1) / 2.0, 1.0);
-      Eigen::Affine3d t;
-      t.matrix() <<
-        -1, 0, 0, 0,
-        0, 0, 1, 0,
-        0, 1, 0, 0,
-        0, 0, 0, 1;
-
-      d_projectionTransform = s * c * t;
-    }
+    CameraModel(ushort imageWidth, ushort imageHeight, double rangeVerticalDegs, double rangeHorizontalDegs);
 
     ushort imageWidth() const { return d_imageWidth; }
     ushort imageHeight() const { return d_imageHeight; }
