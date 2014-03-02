@@ -6,6 +6,7 @@
 #include "../../../stats/movingaverage.hh"
 
 using namespace bold;
+using namespace Eigen;
 using namespace std;
 
 PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight, ushort period)
@@ -147,14 +148,14 @@ void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
   timer.timeEvent("Convex Hull");
 }
 
-vector<LineSegment2i> PeriodicFieldEdgePass::getOcclusionRays() const
+vector<pair<Vector2i,Vector2i>> PeriodicFieldEdgePass::getOcclusionRays() const
 {
-  vector<LineSegment2i> deltas;
+  vector<pair<Vector2i,Vector2i>> deltas;
 
   ushort x = 0;
   for (ushort c = 0; c < d_maxYByC.size(); c++)
   {
-    deltas.emplace_back(x, d_maxYByC[c], x, d_maxYByCConvex[c]);
+    deltas.emplace_back(Vector2i(x, d_maxYByC[c]), Vector2i(x, d_maxYByCConvex[c]));
     x += d_period;
   }
 

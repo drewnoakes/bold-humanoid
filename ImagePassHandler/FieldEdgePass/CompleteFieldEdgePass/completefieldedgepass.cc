@@ -6,6 +6,7 @@
 #include "../../../stats/movingaverage.hh"
 
 using namespace bold;
+using namespace Eigen;
 using namespace std;
 
 CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
@@ -82,12 +83,12 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
   timer.timeEvent("Convex Hull");
 }
 
-vector<LineSegment2i> CompleteFieldEdgePass::getOcclusionRays() const
+vector<pair<Vector2i,Vector2i>> CompleteFieldEdgePass::getOcclusionRays() const
 {
-  vector<LineSegment2i> deltas;
+  vector<pair<Vector2i,Vector2i>> deltas;
 
   for (ushort x = 0; x < d_pixelWidth; x++)
-    deltas.emplace_back(x, d_maxYByX[x], x, d_maxYByXConvex[x]);
+    deltas.emplace_back(Vector2i(x, d_maxYByX[x]), Vector2i(x, d_maxYByXConvex[x]));
 
   return deltas;
 }

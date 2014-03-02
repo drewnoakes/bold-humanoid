@@ -20,7 +20,7 @@ namespace bold
 
     virtual ushort getEdgeYValue(ushort x) const = 0;
 
-    virtual std::vector<LineSegment2i> getOcclusionRays() const = 0;
+    virtual std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> getOcclusionRays() const = 0;
 
   protected:
     static void applyConvexHull(std::vector<short>& points, unsigned fromIndex, unsigned toIndex);
