@@ -11,6 +11,7 @@ using namespace std;
 PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight, ushort period)
 : FieldEdgePass(fieldLabel, pixelWidth, pixelHeight),
   d_maxYByC((pixelWidth/period)+1),
+  d_maxYByCConvex((pixelWidth/period)+1),
   d_runByC((pixelWidth/period)+1),
   d_period(period)
 {}
@@ -61,19 +62,21 @@ ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
   ushort rem = x % d_period;
   ushort c = x / d_period;
 
+  auto const& maxYByC = d_useConvexHull->getValue() ? d_maxYByCConvex : d_maxYByC;
+
   if (rem == 0 || c == d_runByC.size() - 1)
   {
     // x is an exact multiple of the period, so return the value directly.
-    assert(d_maxYByC[c] < d_pixelHeight);
-    return d_maxYByC[c];
+    assert(maxYByC[c] < d_pixelHeight);
+    return maxYByC[c];
   }
 
   // Pixels at the far edge of the image may be beyond the last sampled column.
-  if (c == d_maxYByC.size())
-    return d_maxYByC[c - 1];
+  if (c == maxYByC.size())
+    return maxYByC[c - 1];
 
   // Interpolate between the two closest samples.
-  return Math::lerp((double)rem/d_period, d_maxYByC[c], d_maxYByC[c + 1]);
+  return Math::lerp((double)rem/d_period, maxYByC[c], maxYByC[c + 1]);
 }
 
 void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
@@ -137,9 +140,9 @@ void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
     }
   }
 
-  if (d_useConvexHull->getValue() && fromIndex < toIndex)
-  {
-    applyConvexHull(d_maxYByC, fromIndex, toIndex);
-    timer.timeEvent("Convex Hull");
-  }
+  // Create convex hull values
+  std::copy(d_maxYByC.begin(), d_maxYByC.end(), d_maxYByCConvex.begin());
+  if (fromIndex < toIndex)
+    applyConvexHull(d_maxYByCConvex, fromIndex, toIndex);
+  timer.timeEvent("Convex Hull");
 }

@@ -27,6 +27,7 @@ namespace bold
 
   private:
     std::vector<short> d_maxYByC;
+    std::vector<short> d_maxYByCConvex;
     std::vector<ushort> d_runByC;
     ushort d_period;
   };
