@@ -4,22 +4,12 @@
 #include <vector>
 
 #include "../imagepasshandler.hh"
+#include "../../geometry/LineSegment2i.hh"
 
 namespace bold
 {
   class PixelLabel;
   template<typename T> class Setting;
-
-  struct FieldEdgeDelta
-  {
-    FieldEdgeDelta(ushort x, ushort yRaw, ushort yConvex)
-    : x(x), yRaw(yRaw), yConvex(yConvex)
-    {}
-
-    ushort x;
-    ushort yRaw;
-    ushort yConvex;
-  };
 
   class FieldEdgePass : public ImagePassHandler<uchar>
   {
@@ -30,7 +20,7 @@ namespace bold
 
     virtual ushort getEdgeYValue(ushort x) const = 0;
 
-    virtual std::vector<FieldEdgeDelta> getEdgeDeltas() const = 0;
+    virtual std::vector<LineSegment2i> getOcclusionRays() const = 0;
 
   protected:
     static void applyConvexHull(std::vector<short>& points, unsigned fromIndex, unsigned toIndex);

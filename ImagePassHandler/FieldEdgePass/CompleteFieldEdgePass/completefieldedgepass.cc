@@ -82,12 +82,12 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
   timer.timeEvent("Convex Hull");
 }
 
-vector<FieldEdgeDelta> CompleteFieldEdgePass::getEdgeDeltas() const
+vector<LineSegment2i> CompleteFieldEdgePass::getOcclusionRays() const
 {
-  vector<FieldEdgeDelta> deltas;
+  vector<LineSegment2i> deltas;
 
   for (ushort x = 0; x < d_pixelWidth; x++)
-    deltas.emplace_back(x, d_maxYByX[x], d_maxYByXConvex[x]);
+    deltas.emplace_back(x, d_maxYByX[x], x, d_maxYByXConvex[x]);
 
   return deltas;
 }

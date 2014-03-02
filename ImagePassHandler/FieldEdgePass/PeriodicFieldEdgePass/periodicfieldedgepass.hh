@@ -19,7 +19,7 @@ namespace bold
     void onImageComplete(SequentialTimer& timer) override;
 
     ushort getEdgeYValue(ushort x) const override;
-    std::vector<FieldEdgeDelta> getEdgeDeltas() const override;
+    std::vector<LineSegment2i> getOcclusionRays() const override;
 
     std::string id() const override
     {
