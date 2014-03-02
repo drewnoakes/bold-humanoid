@@ -53,9 +53,8 @@ void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 ushort CompleteFieldEdgePass::getEdgeYValue(ushort x) const
 {
   assert(x < d_pixelWidth);
-  assert(d_maxYByX[x] < d_pixelHeight);
 
-  return d_maxYByX[x];
+  return d_useConvexHull->getValue() ? d_maxYByXConvex[x] : d_maxYByX[x];
 }
 
 void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
@@ -77,9 +76,18 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
     timer.timeEvent("Smooth");
   }
 
-  if (d_useConvexHull->getValue())
-  {
-    applyConvexHull(d_maxYByX, 0, d_pixelWidth - 1);
-    timer.timeEvent("Convex Hull");
-  }
+  // Create convex hull values
+  std::copy(d_maxYByX.begin(), d_maxYByX.end(), d_maxYByXConvex.begin());
+  applyConvexHull(d_maxYByXConvex, 0, d_pixelWidth - 1);
+  timer.timeEvent("Convex Hull");
+}
+
+vector<FieldEdgeDelta> CompleteFieldEdgePass::getEdgeDeltas() const
+{
+  vector<FieldEdgeDelta> deltas;
+
+  for (ushort x = 0; x < d_pixelWidth; x++)
+    deltas.emplace_back(x, d_maxYByX[x], d_maxYByXConvex[x]);
+
+  return deltas;
 }

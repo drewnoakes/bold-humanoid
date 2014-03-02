@@ -146,3 +146,17 @@ void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
     applyConvexHull(d_maxYByCConvex, fromIndex, toIndex);
   timer.timeEvent("Convex Hull");
 }
+
+vector<FieldEdgeDelta> PeriodicFieldEdgePass::getEdgeDeltas() const
+{
+  vector<FieldEdgeDelta> deltas;
+
+  ushort x = 0;
+  for (ushort c = 0; c < d_maxYByC.size(); c++)
+  {
+    deltas.emplace_back(x, d_maxYByC[c], d_maxYByCConvex[c]);
+    x += d_period;
+  }
+
+  return deltas;
+}

@@ -19,6 +19,7 @@ namespace bold
     void onImageComplete(SequentialTimer& timer) override;
 
     ushort getEdgeYValue(ushort x) const override;
+    std::vector<FieldEdgeDelta> getEdgeDeltas() const override;
 
     std::string id() const override
     {
@@ -27,6 +28,7 @@ namespace bold
 
   private:
     std::vector<short> d_maxYByX;
+    std::vector<short> d_maxYByXConvex;
     std::vector<ushort> d_runByX;
     ushort d_smoothingWindowSize;
   };
