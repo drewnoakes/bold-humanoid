@@ -11,8 +11,8 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
     if (d_ballObservation.hasValue())
     {
       writer.StartArray();
-      writer.Double(d_ballObservation->x());
-      writer.Double(d_ballObservation->y());
+      writer.Double(d_ballObservation->x(), "%.1f");
+      writer.Double(d_ballObservation->y(), "%.1f");
       writer.EndArray();
     }
     else
@@ -26,8 +26,8 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
       for (auto const& goalPos : d_goalObservations)
       {
         writer.StartArray();
-        writer.Double(goalPos.x());
-        writer.Double(goalPos.y());
+        writer.Double(goalPos.x(), "%.1f");
+        writer.Double(goalPos.y(), "%.1f");
         writer.EndArray();
       }
     }
@@ -39,10 +39,10 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
       for (LineSegment2i const& lineSeg : d_observedLineSegments)
       {
         writer.StartArray();
-        writer.Double(lineSeg.p1().x());
-        writer.Double(lineSeg.p1().y());
-        writer.Double(lineSeg.p2().x());
-        writer.Double(lineSeg.p2().y());
+        writer.Double(lineSeg.p1().x(), "%.1f");
+        writer.Double(lineSeg.p1().y(), "%.1f");
+        writer.Double(lineSeg.p2().x(), "%.1f");
+        writer.Double(lineSeg.p2().y(), "%.1f");
         writer.EndArray();
       }
     }

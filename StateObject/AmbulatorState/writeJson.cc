@@ -10,27 +10,27 @@ void AmbulatorState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("target");
     writer.StartArray();
     {
-      writer.Double(d_targetX);
-      writer.Double(d_targetY);
-      writer.Double(d_targetTurn);
+      writer.Double(d_targetX, "%.2f");
+      writer.Double(d_targetY, "%.2f");
+      writer.Double(d_targetTurn, "%.2f");
     }
     writer.EndArray();
 
     writer.String("current");
     writer.StartArray();
     {
-      writer.Double(d_currentX);
-      writer.Double(d_currentY);
-      writer.Double(d_currentTurn);
+      writer.Double(d_currentX, "%.2f");
+      writer.Double(d_currentY, "%.2f");
+      writer.Double(d_currentTurn, "%.2f");
     }
     writer.EndArray();
 
     writer.String("delta");
     writer.StartArray();
     {
-      writer.Double(d_lastXDelta);
-      writer.Double(d_lastYDelta);
-      writer.Double(d_lastTurnDelta);
+      writer.Double(d_lastXDelta, "%.2f");
+      writer.Double(d_lastYDelta, "%.2f");
+      writer.Double(d_lastTurnDelta, "%.2f");
     }
     writer.EndArray();
 
@@ -38,9 +38,9 @@ void AmbulatorState::writeJson(Writer<StringBuffer>& writer) const
 
     writer.String("phase").Int(d_currentPhase);
 
-    writer.String("hipPitch").Double(d_hipPitch);
-    writer.String("bodySwingY").Double(d_bodySwingY);
-    writer.String("bodySwingZ").Double(d_bodySwingZ);
+    writer.String("hipPitch").Double(d_hipPitch, "%.3f");
+    writer.String("bodySwingY").Double(d_bodySwingY, "%.3f");
+    writer.String("bodySwingZ").Double(d_bodySwingZ, "%.3f");
   }
   writer.EndObject();
 }

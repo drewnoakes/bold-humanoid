@@ -17,37 +17,37 @@ void HardwareState::writeJson(Writer<StringBuffer>& writer) const
 
     writer.String("acc");
     writer.StartArray();
-    writer.Double(d_cm730State->acc.x());
-    writer.Double(d_cm730State->acc.y());
-    writer.Double(d_cm730State->acc.z());
+    writer.Double(d_cm730State->acc.x(), "%.3f");
+    writer.Double(d_cm730State->acc.y(), "%.3f");
+    writer.Double(d_cm730State->acc.z(), "%.3f");
     writer.EndArray();
 
     writer.String("gyro");
     writer.StartArray();
-    writer.Double(d_cm730State->gyro.x());
-    writer.Double(d_cm730State->gyro.y());
-    writer.Double(d_cm730State->gyro.z());
+    writer.Double(d_cm730State->gyro.x(), "%.3f");
+    writer.Double(d_cm730State->gyro.y(), "%.3f");
+    writer.Double(d_cm730State->gyro.z(), "%.3f");
     writer.EndArray();
 
     writer.String("eye");
     writer.StartArray();
-    writer.Double(d_cm730State->eyeColor.x());
-    writer.Double(d_cm730State->eyeColor.y());
-    writer.Double(d_cm730State->eyeColor.z());
+    writer.Double(d_cm730State->eyeColor.x(), "%.3f");
+    writer.Double(d_cm730State->eyeColor.y(), "%.3f");
+    writer.Double(d_cm730State->eyeColor.z(), "%.3f");
     writer.EndArray();
 
     writer.String("forehead");
     writer.StartArray();
-    writer.Double(d_cm730State->foreheadColor.x());
-    writer.Double(d_cm730State->foreheadColor.y());
-    writer.Double(d_cm730State->foreheadColor.z());
+    writer.Double(d_cm730State->foreheadColor.x(), "%.3f");
+    writer.Double(d_cm730State->foreheadColor.y(), "%.3f");
+    writer.Double(d_cm730State->foreheadColor.z(), "%.3f");
     writer.EndArray();
 
     writer.String("led2").Bool(d_cm730State->isLed2On);
     writer.String("led3").Bool(d_cm730State->isLed3On);
     writer.String("led4").Bool(d_cm730State->isLed4On);
 
-    writer.String("volts").Double(d_cm730State->voltage);
+    writer.String("volts").Double(d_cm730State->voltage, "%.1f");
 
     writer.String("rxBytes").Uint64(d_rxBytes);
     writer.String("txBytes").Uint64(d_txBytes);

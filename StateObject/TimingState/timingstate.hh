@@ -33,7 +33,7 @@ namespace bold
           for (EventTiming const& timing : timings)
           {
             writer.String(timing.second.c_str()); // event name
-            writer.Double(timing.first);          // duration in milliseconds
+            writer.Double(timing.first, "%.3f");  // duration in milliseconds
           }
         }
         writer.EndObject();

@@ -10,9 +10,9 @@ void OdometryState::writeJson(Writer<StringBuffer>& writer) const
   {
     writer.String("translation");
     writer.StartArray();
-    writer.Double(d_translation.x());
-    writer.Double(d_translation.y());
-    writer.Double(d_translation.z());
+    writer.Double(d_translation.x(), "%.4f");
+    writer.Double(d_translation.y(), "%.4f");
+    writer.Double(d_translation.z(), "%.4f");
     writer.EndArray();
   }
   writer.EndObject();

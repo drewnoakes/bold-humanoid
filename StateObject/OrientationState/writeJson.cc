@@ -9,10 +9,10 @@ void OrientationState::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& wri
   {
     writer.String("quaternion");
     writer.StartArray();
-    writer.Double(d_quaternion.w());
-    writer.Double(d_quaternion.x());
-    writer.Double(d_quaternion.y());
-    writer.Double(d_quaternion.z());
+    writer.Double(d_quaternion.w(), "%.5f");
+    writer.Double(d_quaternion.x(), "%.5f");
+    writer.Double(d_quaternion.y(), "%.5f");
+    writer.Double(d_quaternion.z(), "%.5f");
     writer.EndArray();
 
     /*

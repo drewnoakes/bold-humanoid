@@ -12,11 +12,10 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.StartArray();
 
-      // TODO find a way to write these numbers with less precision, to keep the JSON size down
       auto particle = d_particles.col(i);
-      writer.Double(particle.x()); // x
-      writer.Double(particle.y()); // y
-      writer.Double(particle.z()); // theta
+      writer.Double(particle.x(), "%.3f"); // x
+      writer.Double(particle.y(), "%.3f"); // y
+      writer.Double(particle.z(), "%.3f"); // theta
       writer.Double(isnan(particle.w()) ? 0 : particle.w()); // weight
 
       writer.EndArray();
