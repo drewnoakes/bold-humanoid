@@ -26,6 +26,7 @@ class World2dModule extends Module
     private agentPosition: number[];
     private ballPosition: number[];
     private visibleFieldPoly: number[][];
+    private occlusionRays: number[][];
     private observedLineSegments: geometry.ILineSegment2[];
     private goalPositions: geometry.IPoint2[];
 
@@ -141,6 +142,7 @@ class World2dModule extends Module
 
         var scale = this.transform.getScale(),
             options = {
+                lineWidth: 1/scale,
                 goalStrokeStyle: 'yellow',
                 groundFillStyle: '#008800',
                 lineStrokeStyle: '#ffffff',
@@ -178,6 +180,9 @@ class World2dModule extends Module
             plotter.drawGoalPosts(context, options, this.goalPositions);
         }
 
+        if (this.occlusionRays)
+            plotter.drawOcclusionRays(context, options, this.occlusionRays);
+
         this.needsRender = false;
     }
 
@@ -186,6 +191,7 @@ class World2dModule extends Module
         this.agentPosition = data.pos;
         this.ballPosition = data.ball;
         this.visibleFieldPoly = data.visibleFieldPoly;
+        this.occlusionRays = data.occlusionRays;
         this.observedLineSegments = [];
         this.goalPositions = [];
 

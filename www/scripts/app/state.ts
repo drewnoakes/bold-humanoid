@@ -16,6 +16,7 @@ export interface AgentFrame
     /** [[x,y],...] */
     visibleFieldPoly: number[][];
 
+    /** [[x1,y1,x2,y2],...] */
     occlusionRays: number[][];
 }
 
@@ -236,4 +237,7 @@ export interface WorldFrame
 
     /** [[x,y],...] */
     visibleFieldPoly: number[][];
+
+    /** [[x1,y1,x2,y2],...] */
+    occlusionRays: number[][];
 }
