@@ -85,6 +85,29 @@ export function drawGoalPosts(context: CanvasRenderingContext2D, options, positi
     });
 }
 
+export function drawOcclusionRays(context: CanvasRenderingContext2D, options, rays: number[][])
+{
+    context.fillStyle = options.occlusionRayFillStyle || 'rgba(0,0,0,0.15)';
+    context.beginPath();
+    for (var i = 0; i < rays.length; i++)
+        context.lineTo(rays[i][0], rays[i][1]);
+    for (var i = rays.length - 1; i >= 0; i--)
+        context.lineTo(rays[i][2], rays[i][3]);
+    context.fill();
+
+    context.strokeStyle = options.occlusionEdgeStrokeStyle || 'rgba(0,0,0,0.5)';
+    context.beginPath();
+    for (var i = 0; i < rays.length; i++)
+        context.lineTo(rays[i][0], rays[i][1]);
+    context.stroke();
+
+    context.strokeStyle = options.fieldEdgeStrokeStyle || 'rgba(100,255,100,1)';
+    context.beginPath();
+    for (var i = rays.length - 1; i >= 0; i--)
+        context.lineTo(rays[i][2], rays[i][3]);
+    context.stroke();
+}
+
 export function drawGoals(context: CanvasRenderingContext2D, options)
 {
     var goalY = constants.goalY / 2,

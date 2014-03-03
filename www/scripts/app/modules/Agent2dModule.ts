@@ -25,6 +25,7 @@ class Agent2dModule extends Module
     private ballPosition: number[];
     private goalPositions: geometry.IPoint2[];
     private visibleFieldPoly: number[][];
+    private occlusionRays: number[][];
     private observedLineSegments: geometry.ILineSegment2[];
     private scale: number;
 
@@ -92,6 +93,7 @@ class Agent2dModule extends Module
     {
         this.ballPosition = data.ball;
         this.visibleFieldPoly = data.visibleFieldPoly;
+        this.occlusionRays = data.occlusionRays;
         this.observedLineSegments = [];
         this.goalPositions = [];
 
@@ -173,6 +175,9 @@ class Agent2dModule extends Module
 
         if (this.goalPositions)
             FieldLinePlotter.drawGoalPosts(context, options, this.goalPositions);
+
+        if (this.occlusionRays)
+            FieldLinePlotter.drawOcclusionRays(context, options, this.occlusionRays);
 
         this.needsRender = false;
     }
