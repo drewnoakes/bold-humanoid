@@ -67,6 +67,21 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
       }
     }
     writer.EndArray();
+
+    writer.String("occlusion-rays");
+    writer.StartArray();
+    {
+      for (auto const& ray : d_occlusionRays)
+      {
+        writer.StartArray();
+        writer.Double(ray.first.x());
+        writer.Double(ray.first.y());
+        writer.Double(ray.second.x());
+        writer.Double(ray.second.y());
+        writer.EndArray();
+      }
+    }
+    writer.EndArray();
   }
   writer.EndObject();
 }
