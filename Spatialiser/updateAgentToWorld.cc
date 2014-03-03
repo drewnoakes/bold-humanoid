@@ -17,19 +17,19 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   // Transform from agent to world space
   //
 
-  Affine3d agentToWorld = position.worldAgentTransform();
+  Affine3d worldAgentTransform = position.worldAgentTransform();
 
   // Project ball observation
   auto const& ballAgent = agentFrame->getBallObservation();
   Maybe<Vector3d> ball = ballAgent.hasValue()
-    ? agentToWorld * (*ballAgent)
+    ? worldAgentTransform * (*ballAgent)
     : Maybe<Vector3d>::empty();
 
   // Project goal observations
   vector<Vector3d> goals;
   for (auto const& goalPos : agentFrame->getGoalObservations())
   {
-    goals.emplace_back(agentToWorld * goalPos);
+    goals.emplace_back(worldAgentTransform * goalPos);
   }
 
   // Project observed lines
@@ -37,8 +37,8 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   for (auto const& lineSegmentAgent : agentFrame->getObservedLineSegments())
   {
     auto lineSegment = LineSegment3d(
-      agentToWorld * lineSegmentAgent.p1(),
-      agentToWorld * lineSegmentAgent.p2()
+      worldAgentTransform * lineSegmentAgent.p1(),
+      worldAgentTransform * lineSegmentAgent.p2()
     );
     lineSegments.emplace_back(lineSegment);
   }
@@ -47,8 +47,8 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   vector<pair<Vector3d,Vector3d>> occlusionRays;
   for (pair<Vector3d,Vector3d> const& pair : agentFrame->getOcclusionRays())
   {
-    occlusionRays.emplace_back(agentToWorld * pair.first,
-                               agentToWorld * pair.second);
+    occlusionRays.emplace_back(worldAgentTransform * pair.first,
+                               worldAgentTransform * pair.second);
   }
 
   // Determine observed field area polygon
@@ -59,7 +59,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
     {
       Vector3d vertex3;
       vertex3 << vertex.x(), vertex.y(), 0;
-      vertices.emplace_back((agentToWorld * vertex3).head<2>());
+      vertices.emplace_back((worldAgentTransform * vertex3).head<2>());
     }
   }
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
