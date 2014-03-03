@@ -47,8 +47,8 @@ void Spatialiser::updateCameraToAgent()
   Polygon2d::PointVector vertices;
   auto const& agentCameraTransform = State::get<BodyState>(StateTime::CameraImage)->getAgentCameraTransform();
 
-  int width = d_cameraModel->imageWidth();
-  int height = d_cameraModel->imageHeight();
+  static int width = d_cameraModel->imageWidth();
+  static int height = d_cameraModel->imageHeight();
 
   int horiz1 = min(height - 1, findHorizonForColumn(0, agentCameraTransform));
   int horiz2 = min(height - 1, findHorizonForColumn(width - 1, agentCameraTransform));

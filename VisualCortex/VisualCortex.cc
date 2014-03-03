@@ -90,8 +90,8 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_acceptedGoalMeasuredWidthRatio = Config::getSetting<Range<double>>("vision.goal-detection.accepted-width-ratio");
 
   // TODO don't pass this around -- look it up from config (?)
-  int imageWidth = d_cameraModel->imageWidth();
-  int imageHeight = d_cameraModel->imageHeight();
+  static int imageWidth = d_cameraModel->imageWidth();
+  static int imageHeight = d_cameraModel->imageHeight();
 
   d_imagePassHandlers = make_tuple(
     shared_ptr<LineDotPass<uchar>>(new LineDotPass<uchar>(imageWidth, d_fieldLabel, d_lineLabel)),
