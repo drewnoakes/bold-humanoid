@@ -52,7 +52,7 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("visible-field-poly");
+    writer.String("visibleFieldPoly");
     writer.StartArray();
     {
       if (d_visibleFieldPoly.hasValue())
@@ -68,7 +68,7 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("occlusion-rays");
+    writer.String("occlusionRays");
     writer.StartArray();
     {
       for (auto const& ray : d_occlusionRays)

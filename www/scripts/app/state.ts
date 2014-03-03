@@ -14,7 +14,9 @@ export interface AgentFrame
     lines: number[][];
 
     /** [[x,y],...] */
-    'visible-field-poly': number[][];
+    visibleFieldPoly: number[][];
+
+    occlusionRays: number[][];
 }
 
 export interface Ambulator
@@ -233,5 +235,5 @@ export interface WorldFrame
     lines: number[][];
 
     /** [[x,y],...] */
-    'visible-field-poly': number[][];
+    visibleFieldPoly: number[][];
 }

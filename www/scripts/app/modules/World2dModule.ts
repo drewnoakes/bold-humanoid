@@ -185,7 +185,7 @@ class World2dModule extends Module
     {
         this.agentPosition = data.pos;
         this.ballPosition = data.ball;
-        this.visibleFieldPoly = data['visible-field-poly'];
+        this.visibleFieldPoly = data.visibleFieldPoly;
         this.observedLineSegments = [];
         this.goalPositions = [];
 

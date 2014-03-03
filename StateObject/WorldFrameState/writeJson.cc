@@ -61,7 +61,7 @@ void WorldFrameState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("visible-field-poly");
+    writer.String("visibleFieldPoly");
     writer.StartArray();
     {
       if (d_visibleFieldPoly.hasValue())

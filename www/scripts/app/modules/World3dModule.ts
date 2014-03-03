@@ -203,7 +203,7 @@ class World3dModule extends Module
         }
 
         if (this.drawViewPoly) {
-            var poly = data['visible-field-poly'];
+            var poly = data.visibleFieldPoly;
             if (poly && poly instanceof Array && poly.length !== 0) {
                 var polyGeometry = new THREE.Geometry();
                 _.each(poly, point =>

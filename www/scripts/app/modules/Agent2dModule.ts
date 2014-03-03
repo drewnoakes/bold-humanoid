@@ -91,7 +91,7 @@ class Agent2dModule extends Module
     private onAgentFrameData(data: state.AgentFrame)
     {
         this.ballPosition = data.ball;
-        this.visibleFieldPoly = data['visible-field-poly'];
+        this.visibleFieldPoly = data.visibleFieldPoly;
         this.observedLineSegments = [];
         this.goalPositions = [];
 
