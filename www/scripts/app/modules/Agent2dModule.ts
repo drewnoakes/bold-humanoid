@@ -133,6 +133,7 @@ class Agent2dModule extends Module
 
         var scale = this.transform.getScale(),
             options = {
+                lineWidth: 1/scale,
                 goalStrokeStyle: 'yellow',
                 groundFillStyle: '#008800',
                 lineStrokeStyle: '#ffffff',

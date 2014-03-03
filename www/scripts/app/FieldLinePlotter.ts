@@ -87,6 +87,8 @@ export function drawGoalPosts(context: CanvasRenderingContext2D, options, positi
 
 export function drawOcclusionRays(context: CanvasRenderingContext2D, options, rays: number[][])
 {
+    context.lineWidth = options.lineWidth || 1.0;
+
     context.fillStyle = options.occlusionRayFillStyle || 'rgba(0,0,0,0.15)';
     context.beginPath();
     for (var i = 0; i < rays.length; i++)
