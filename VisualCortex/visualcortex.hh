@@ -122,6 +122,9 @@ namespace bold
     void setShouldDrawFieldEdge(bool val) { d_shouldDrawFieldEdge->setValue(val); }
     bool getShouldDrawFieldEdge() const { return d_shouldDrawFieldEdge->getValue(); }
 
+    void setShouldDrawOcclusionEdge(bool val) { d_shouldDrawOcclusionEdge->setValue(val); }
+    bool getShouldDrawOcclusionEdge() const { return d_shouldDrawOcclusionEdge->getValue(); }
+
     void setShouldDrawCalibration(bool val) { d_shouldDrawCalibration->setValue(val); }
     bool getShouldDrawCalibration() const { return d_shouldDrawCalibration->getValue(); }
 
@@ -189,6 +192,7 @@ namespace bold
     Setting<Colour::bgr>* d_expectedLineColour;
     Setting<Colour::bgr>* d_horizonColour;
     Setting<Colour::bgr>* d_fieldEdgeColour;
+    Setting<Colour::bgr>* d_occlusionEdgeColour;
     Setting<Colour::bgr>* d_calibrationColour;
 
     Setting<bool>* d_shouldDrawBlobs;
@@ -198,6 +202,7 @@ namespace bold
     Setting<bool>* d_shouldDrawExpectedLineEdges;
     Setting<bool>* d_shouldDrawHorizon;
     Setting<bool>* d_shouldDrawFieldEdge;
+    Setting<bool>* d_shouldDrawOcclusionEdge;
     Setting<bool>* d_shouldDrawCalibration;
     Setting<bool>* d_shouldDrawObservedObjects;
 

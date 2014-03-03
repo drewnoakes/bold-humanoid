@@ -130,6 +130,7 @@
       "expected-line-edges": false,
       "horizon": true,
       "field-edge": true,
+      "occlusion-edge": true,
       "calibration": false,
       "objects": true
     },
@@ -139,6 +140,7 @@
       "expected-line": { "b": 255, "g": 0, "r": 0 },
       "horizon":       { "b": 0, "g": 128, "r": 255 },
       "field-edge":    { "b": 0, "g": 255, "r": 0 },
+      "occlusion-edge":{ "b": 80, "g": 80, "r": 80 },
       "calibration":   { "b": 255, "g": 255, "r": 0 }
     },
     "cartoon": {

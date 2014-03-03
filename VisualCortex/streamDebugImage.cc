@@ -183,6 +183,30 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     line2i.draw(debugImage, d_horizonColour->getValue(), 1);
   }
 
+  // Draw occlusion edge
+  if (d_shouldDrawOcclusionEdge->getValue())
+  {
+    auto occlusionColour = d_occlusionEdgeColour->getValue().toScalar();
+    auto rays = d_fieldEdgePass->getOcclusionRays();
+    auto lastPoint = rays[0].first;
+    for (auto const& ray : rays)
+    {
+      // Connected left-to-right lines
+      cv::line(debugImage,
+               Point(lastPoint.x(), lastPoint.y()),
+               Point(ray.first.x(), ray.first.y()),
+               occlusionColour);
+
+      // Lines from front to back
+      cv::line(debugImage,
+               Point(ray.first.x(), ray.first.y()),
+               Point(ray.second.x(), ray.second.y()),
+               occlusionColour);
+
+      lastPoint = ray.first;
+    }
+  }
+
   // Draw field edge
   if (d_shouldDrawFieldEdge->getValue())
   {
@@ -195,6 +219,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     }
   }
 
+  // Draw calibration lines
   if (d_shouldDrawCalibration->getValue())
   {
     auto calibrationColour = d_calibrationColour->getValue().toScalar();
