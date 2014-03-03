@@ -17,17 +17,20 @@ namespace bold
     AgentFrameState(Maybe<Eigen::Vector3d> ballObservation,
                     std::vector<Eigen::Vector3d> goalObservations,
                     std::vector<LineSegment3d> observedLineSegments,
-                    Maybe<Polygon2d> visibleFieldPoly)
+                    Maybe<Polygon2d> visibleFieldPoly,
+                    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments),
-      d_visibleFieldPoly(visibleFieldPoly)
+      d_visibleFieldPoly(visibleFieldPoly),
+      d_occlusionRays(occlusionRays)
     {}
 
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
     Maybe<Polygon2d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
+    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> getOcclusionRays() const { return d_occlusionRays; }
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
 
@@ -38,5 +41,6 @@ namespace bold
     std::vector<Eigen::Vector3d> d_goalObservations;
     std::vector<LineSegment3d> d_observedLineSegments;
     Maybe<Polygon2d> d_visibleFieldPoly;
+    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> d_occlusionRays;
   };
 }

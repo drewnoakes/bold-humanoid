@@ -36,6 +36,16 @@ void Spatialiser::updateCameraToAgent()
     }
   }
 
+  //
+  vector<pair<Vector3d,Vector3d>> occlusionRays;
+  for (pair<Vector2i,Vector2i> const& pair : cameraFrame->getOcclusionRays())
+  {
+    auto const& p1 = findGroundPointForPixel(pair.first.cast<double>() + Vector2d(0.5,0.5));
+    auto const& p2 = findGroundPointForPixel(pair.second.cast<double>() + Vector2d(0.5,0.5));
+    if (p1.hasValue() && p2.hasValue())
+      occlusionRays.emplace_back(*p1, *p2);
+  }
+
   // Determine observed field area polygon
   Polygon2d::PointVector vertices;
   auto const& agentCameraTransform = State::get<BodyState>(StateTime::CameraImage)->getAgentCameraTransform();
@@ -70,5 +80,5 @@ void Spatialiser::updateCameraToAgent()
 
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
-  State::set(make_shared<AgentFrameState const>(ball, goals, lineSegments, visibleFieldPoly));
+  State::set(make_shared<AgentFrameState const>(ball, goals, lineSegments, visibleFieldPoly, occlusionRays));
 }
