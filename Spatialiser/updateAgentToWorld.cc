@@ -29,7 +29,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   vector<Vector3d> goals;
   for (auto const& goalPos : agentFrame->getGoalObservations())
   {
-    goals.push_back(agentToWorld * goalPos);
+    goals.emplace_back(agentToWorld * goalPos);
   }
 
   // Project observed lines
@@ -40,7 +40,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
       agentToWorld * lineSegmentAgent.p1(),
       agentToWorld * lineSegmentAgent.p2()
     );
-    lineSegments.push_back(lineSegment);
+    lineSegments.emplace_back(lineSegment);
   }
 
   // Project occlusion rays
@@ -59,7 +59,7 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
     {
       Vector3d vertex3;
       vertex3 << vertex.x(), vertex.y(), 0;
-      vertices.push_back((agentToWorld * vertex3).head<2>());
+      vertices.emplace_back((agentToWorld * vertex3).head<2>());
     }
   }
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
