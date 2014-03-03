@@ -48,7 +48,7 @@ namespace bold
      * transformed vector. i.e to get the pixel coordinate p of a
      * point v with projection matrix T: p' = Tv, p = p'/p'_z.
      */
-    Eigen::Affine3d getProjectionTransform() const { return d_projectionTransform; }
+    Eigen::Affine3d getImageCameraTransform() const { return d_projectionTransform; }
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
