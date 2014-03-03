@@ -6,11 +6,10 @@ void Spatialiser::updateCameraToAgent()
 {
   auto cameraFrame = State::get<CameraFrameState>();
 
-  auto const& ballObs = cameraFrame->getBallObservation();
-
   static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
 
   // Project ball observation
+  auto const& ballObs = cameraFrame->getBallObservation();
   Maybe<Vector3d> ball = ballObs.hasValue()
     ? findGroundPointForPixel(*ballObs, ballRadius)
     : Maybe<Vector3d>::empty();

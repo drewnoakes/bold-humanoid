@@ -19,21 +19,21 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
 
   Affine3d agentToWorld = position.worldAgentTransform();
 
+  // Project ball observation
   auto const& ballAgent = agentFrame->getBallObservation();
-
   Maybe<Vector3d> ball = ballAgent.hasValue()
     ? agentToWorld * (*ballAgent)
     : Maybe<Vector3d>::empty();
 
+  // Project goal observations
   vector<Vector3d> goals;
-  vector<LineSegment3d> lineSegments;
-  Polygon2d::PointVector vertices;
-
   for (auto const& goalPos : agentFrame->getGoalObservations())
   {
     goals.push_back(agentToWorld * goalPos);
   }
 
+  // Project observed lines
+  vector<LineSegment3d> lineSegments;
   for (auto const& lineSegmentAgent : agentFrame->getObservedLineSegments())
   {
     auto lineSegment = LineSegment3d(
@@ -51,6 +51,8 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
                                agentToWorld * pair.second);
   }
 
+  // Determine observed field area polygon
+  Polygon2d::PointVector vertices;
   if (agentFrame->getVisibleFieldPoly().hasValue())
   {
     for (Vector2d const& vertex : agentFrame->getVisibleFieldPoly().value())
