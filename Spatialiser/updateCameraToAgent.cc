@@ -10,13 +10,13 @@ void Spatialiser::updateCameraToAgent()
 
   static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
 
+  // Project ball observation
   Maybe<Vector3d> ball = ballObs.hasValue()
     ? findGroundPointForPixel(*ballObs, ballRadius)
     : Maybe<Vector3d>::empty();
 
+  // Project goal observations
   std::vector<Vector3d> goals;
-  std::vector<LineSegment3d> lineSegments;
-
   for (Vector2d const& goal : cameraFrame->getGoalObservations())
   {
     auto const& pos3d = findGroundPointForPixel(goal);
@@ -24,6 +24,8 @@ void Spatialiser::updateCameraToAgent()
       goals.emplace_back(*pos3d);
   }
 
+  // Project observed lines
+  std::vector<LineSegment3d> lineSegments;
   for (LineSegment2i const& lineSegment : cameraFrame->getObservedLineSegments())
   {
     auto const& p1 = findGroundPointForPixel(lineSegment.p1().cast<double>() + Vector2d(0.5,0.5));
@@ -32,7 +34,7 @@ void Spatialiser::updateCameraToAgent()
       lineSegments.emplace_back(*p1, *p2);
   }
 
-  //
+  // Project occlusion rays
   vector<pair<Vector3d,Vector3d>> occlusionRays;
   for (pair<Vector2i,Vector2i> const& pair : cameraFrame->getOcclusionRays())
   {
