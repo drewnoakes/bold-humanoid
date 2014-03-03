@@ -19,11 +19,13 @@ namespace bold
                     std::vector<Eigen::Vector3d> goalObservations,
                     std::vector<LineSegment3d> observedLineSegments,
                     Maybe<Polygon2d> visibleFieldPoly,
+                    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
                     AgentPosition position)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments),
       d_visibleFieldPoly(visibleFieldPoly),
+      d_occlusionRays(occlusionRays),
       d_position(position)
     {}
 
@@ -31,6 +33,7 @@ namespace bold
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
     Maybe<Polygon2d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
+    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> getOcclusionRays() const { return d_occlusionRays; }
 
     AgentPosition getPosition() const { return d_position; }
 
@@ -43,6 +46,7 @@ namespace bold
     std::vector<Eigen::Vector3d> d_goalObservations;
     std::vector<LineSegment3d> d_observedLineSegments;
     Maybe<Polygon2d> d_visibleFieldPoly;
+    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> d_occlusionRays;
     AgentPosition d_position;
   };
 }

@@ -43,6 +43,14 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
     lineSegments.push_back(lineSegment);
   }
 
+  // Project occlusion rays
+  vector<pair<Vector3d,Vector3d>> occlusionRays;
+  for (pair<Vector3d,Vector3d> const& pair : agentFrame->getOcclusionRays())
+  {
+    occlusionRays.emplace_back(agentToWorld * pair.first,
+                               agentToWorld * pair.second);
+  }
+
   if (agentFrame->getVisibleFieldPoly().hasValue())
   {
     for (Vector2d const& vertex : agentFrame->getVisibleFieldPoly().value())
@@ -54,5 +62,5 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   }
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
-  State::set(make_shared<WorldFrameState const>(ball, goals, lineSegments, visibleFieldPoly, position));
+  State::set(make_shared<WorldFrameState const>(ball, goals, lineSegments, visibleFieldPoly, occlusionRays, position));
 }
