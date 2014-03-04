@@ -329,7 +329,7 @@ TEST (BodyStateTests, torsoHeight)
   EXPECT_EQ ( (33.5 + 93 + 93 + 122.2) / 1000.0, body.getTorsoHeight() );
 }
 
-TEST (JointTest, initialState)
+TEST (DISABLED_JointTest, initialState)
 {
   Joint joint(JointId::L_KNEE, "test-joint");
 
