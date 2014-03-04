@@ -17,15 +17,12 @@ CameraModel::CameraModel(ushort imageWidth, ushort imageHeight, double rangeVert
   //
 
   // Perspective transform
-  double f = focalLength();
   Eigen::Affine3d c;
   c.matrix() <<
     1, 0, 0, 0,
     0, 1, 0, 0,
     0, 0, 1, 0,
     0, 0, 1, 0;
-
-  double r = tan(0.5 * rangeVerticalRads()) / tan(0.5 * rangeHorizontalRads());
 
   double ws = d_imageWidth / 2.0;
   double hs = d_imageHeight / 2.0;
