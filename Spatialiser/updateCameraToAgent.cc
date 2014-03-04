@@ -4,6 +4,8 @@
 
 void Spatialiser::updateCameraToAgent()
 {
+  d_zeroGroundPixelTr = findGroundPixelTransform(0.0);
+
   auto cameraFrame = State::get<CameraFrameState>();
 
   static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
