@@ -278,11 +278,11 @@ TEST (BodyStateTests, camera_zeroed)
   const double cameraHeight = 0.0335 + 0.093 + 0.093 + 0.1222 + 0.0505 + newZ;
 
   EXPECT_TRUE( VectorsEqual(Vector3d(0, newY, cameraHeight),
-                            Vector3d(body.getCameraAgentTransform().translation())) );
+                            Vector3d(body.getAgentCameraTransform().translation())) );
 
-  Matrix3d actualCameraAgentRotation = body.getCameraAgentTransform().rotation().matrix();
+  Matrix3d actualAgentCameraRotation = body.getAgentCameraTransform().rotation().matrix();
 
-  EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualCameraAgentRotation) );
+  EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualAgentCameraRotation) );
 }
 
 TEST (BodyStateTests, camera_headTiltedBack)
@@ -309,11 +309,11 @@ TEST (BodyStateTests, camera_headTiltedBack)
   EXPECT_EQ(0.4266, cameraHeight);
 
   EXPECT_TRUE( VectorsEqual(Vector3d(0, 0.0332, cameraHeight),
-                            Vector3d(body.getCameraAgentTransform().translation())) );
+                            Vector3d(body.getAgentCameraTransform().translation())) );
 
-  Matrix3d actualCameraAgentRotation = body.getCameraAgentTransform().rotation().matrix();
+  Matrix3d actualAgentCameraRotation = body.getAgentCameraTransform().rotation().matrix();
 
-  EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualCameraAgentRotation) );
+  EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualAgentCameraRotation) );
 }
 
 TEST (BodyStateTests, cameraNeckJointTransform)

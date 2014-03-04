@@ -67,9 +67,17 @@ namespace bold
     
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    Eigen::Affine3d const& getCameraAgentTransform() const { return d_cameraAgentTransform; }
-    Eigen::Affine3d const& getAgentCameraTransform() const { return d_agentCameraTransform; }
+    /** Transformation describing camera frame in agent frame, used to
+     * transform camera coordinates to agent coordinates */
+    Eigen::Affine3d const& getAgentCameraTransform() const { return d_agentCameraTr; }
 
+    /** Transformation describing agent frame in camera frame, used to
+     * transform agent coordinates to camera coordinates */
+    Eigen::Affine3d const& getCameraAgentTransform() const { return d_cameraAgentTr; }
+
+    /** Height of torso center above the ground
+     *
+     * Assumes the lowest foot is flat on the floor */
     double getTorsoHeight() const { return d_torsoHeight; }
 
     std::vector<int> const getPositionValueDiffs() const { return d_positionValueDiffs; }
@@ -86,8 +94,8 @@ namespace bold
     std::shared_ptr<Joint> d_jointById[23];
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
 
-    Eigen::Affine3d d_cameraAgentTransform;
-    Eigen::Affine3d d_agentCameraTransform;
+    Eigen::Affine3d d_cameraAgentTr;
+    Eigen::Affine3d d_agentCameraTr;
 
     ulong d_motionCycleNumber;
 
