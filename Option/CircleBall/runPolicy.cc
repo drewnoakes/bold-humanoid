@@ -16,5 +16,5 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   d_ambulator->setMoveDir(Eigen::Vector2d(x, y));
   d_ambulator->setTurnAngle(a);
 
-  return std::vector<std::shared_ptr<Option>>();
+  return vector<shared_ptr<Option>>();
 }

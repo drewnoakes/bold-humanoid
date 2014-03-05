@@ -7,7 +7,7 @@ vector<shared_ptr<Option>> LookAtGoal::runPolicy(Writer<StringBuffer>& writer)
   if (goalObs.size() < 2)
   {
     log::warning("LookAtGoal::runPolicy") << "Couldn't see both goal posts!";
-    return std::vector<std::shared_ptr<Option>>();
+    return vector<shared_ptr<Option>>();
   }
 
   auto middle = (goalObs[0] + goalObs[1]) / 2;
@@ -35,5 +35,5 @@ vector<shared_ptr<Option>> LookAtGoal::runPolicy(Writer<StringBuffer>& writer)
 
   d_headModule->moveTracking(offset.x(), offset.y());
 
-  return std::vector<std::shared_ptr<Option>>();
+  return vector<shared_ptr<Option>>();
 }

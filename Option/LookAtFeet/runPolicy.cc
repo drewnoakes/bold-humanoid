@@ -15,5 +15,5 @@ vector<shared_ptr<Option>> LookAtFeet::runPolicy(Writer<StringBuffer>& writer)
     d_avgBallPos.next(*ballObs);
   }
 
-  return std::vector<std::shared_ptr<Option>>();
+  return vector<shared_ptr<Option>>();
 }

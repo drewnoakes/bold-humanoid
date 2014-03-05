@@ -7,7 +7,7 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
   if (!ballObs.hasValue())
   {
 //     log::warning("LookAtBall::runPolicy") << "No ball observation in AgentFrame yet LookAtBall was run";
-    return std::vector<std::shared_ptr<Option>>();
+    return vector<shared_ptr<Option>>();
   }
 
   static unsigned w = d_cameraModel->imageWidth();
@@ -43,5 +43,5 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
     d_headModule->moveTracking(offset.x(), offset.y());
   }
 
-  return std::vector<std::shared_ptr<Option>>();
+  return vector<shared_ptr<Option>>();
 }

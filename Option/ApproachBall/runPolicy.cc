@@ -10,7 +10,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   if (!ballPos)
   {
 //     log::warning("ApproachBall::runPolicy") << "No ball observation in AgentFrame yet ApproachBall was run";
-    return std::vector<std::shared_ptr<Option>>();
+    return vector<shared_ptr<Option>>();
   }
 
   double dist = ballPos->head<2>().norm();
@@ -29,5 +29,5 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   d_ambulator->setMoveDir(moveDir);
   d_ambulator->setTurnAngle(ballAngleRads * d_turnScale->getValue()); // unspecified units
 
-  return std::vector<std::shared_ptr<Option>>();
+  return vector<shared_ptr<Option>>();
 }

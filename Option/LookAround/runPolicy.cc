@@ -82,5 +82,5 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   // Move to the calculated position
   d_headModule->moveToDegs(panDegs, tiltDegs);
 
-  return std::vector<std::shared_ptr<Option>>();
+  return vector<shared_ptr<Option>>();
 }
