@@ -124,7 +124,7 @@ class OptionTreeModule extends Module
 
         if (fsm.wildcardTransitions.length !== 0)
         {
-            var wildcard = new joint.shapes.basic.Circle({
+            graph.addCell(new joint.shapes.basic.Circle({
                 id: 'wildcard',
                 size: { width: 20, height: 20 },
                 attrs: {
@@ -134,15 +134,13 @@ class OptionTreeModule extends Module
                         fill: 'black'
                     }
                 }
-            });
-
-            graph.addCell(wildcard);
+            }));
         }
 
         // Create transitions
         _.each(fsm.transitions, (transition: control.FSMTransition) =>
         {
-            var link = new joint.dia.Link({
+            graph.addCell(new joint.dia.Link({
                 source: { id: transition.from },
                 target: { id: transition.to },
                 attrs: {
@@ -162,14 +160,13 @@ class OptionTreeModule extends Module
                         }
                     }
                 ]
-            });
-            graph.addCell(link);
+            }));
         });
 
         // Create wildcard transitions
         _.each(fsm.wildcardTransitions, (wildcardTransition: control.FSMWildcardTransition) =>
         {
-            var link = new joint.dia.Link({
+            graph.addCell(new joint.dia.Link({
                 source: { id: 'wildcard' },
                 target: { id: wildcardTransition.to },
                 attrs: {
@@ -189,8 +186,7 @@ class OptionTreeModule extends Module
                         }
                     }
                 ]
-            });
-            graph.addCell(link);
+            }));
         });
 
         // Perform layout
