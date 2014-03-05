@@ -23,8 +23,9 @@ namespace bold
   class Option
   {
   public:
-    Option(std::string const& id)
-    : d_id(id)
+    Option(std::string const& id, std::string const& typeName)
+    : d_id(id),
+      d_typeName(typeName)
     {}
 
     virtual ~Option() {}
@@ -32,6 +33,10 @@ namespace bold
     /** Get this option's ID
      */
     std::string getId() const { return d_id; }
+
+    /** Get the type of this option, as a string
+     */
+    std::string getTypeName() const { return d_typeName; }
 
     /** Check whether this option is currently available
      *
@@ -58,5 +63,6 @@ namespace bold
 
   private:
     std::string d_id;
+    std::string d_typeName;
   };
 }

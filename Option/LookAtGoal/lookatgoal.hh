@@ -11,7 +11,7 @@ namespace bold
   {
   public:
     LookAtGoal(std::string const& id, std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<HeadModule> headModule)
-    : Option(id),
+    : Option(id, "LookAtGoal"),
       d_cameraModel(cameraModel),
       d_headModule(headModule)
     {}

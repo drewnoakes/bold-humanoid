@@ -11,7 +11,7 @@ namespace bold
   {
   public:
     CircleBall(std::string const& id, std::shared_ptr<Ambulator> ambulator, std::shared_ptr<HeadModule> headModule)
-    : Option(id),
+    : Option(id, "CircleBall"),
       d_ambulator(ambulator),
       d_headModule(headModule)
     {}

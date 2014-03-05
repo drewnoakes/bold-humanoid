@@ -15,7 +15,7 @@ namespace bold
   {
   public:
     LookAtFeet(std::string const& id, std::shared_ptr<HeadModule> headModule)
-    : Option(id),
+    : Option(id, "LookAtFeet"),
       d_avgBallPos(30),
       d_headModule(headModule)
     {

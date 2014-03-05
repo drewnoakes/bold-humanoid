@@ -13,7 +13,7 @@ namespace bold
   {
   public:
     LookAtBall(std::string const& id, std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<HeadModule> headModule)
-    : Option(id),
+    : Option(id, "LookAtBall"),
       d_cameraModel(cameraModel),
       d_headModule(headModule),
       d_gain(Config::getSetting<double>("options.look-at-ball.gain")),

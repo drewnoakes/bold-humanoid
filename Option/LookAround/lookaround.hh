@@ -12,7 +12,7 @@ namespace bold
   {
   public:
     LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle, std::function<double()> speedCallback = nullptr)
-    : Option(id),
+    : Option(id, "LookAround"),
       d_speedCallback(speedCallback),
       d_headModule(headModule),
       d_lastTimeSeconds(0)

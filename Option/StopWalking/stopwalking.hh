@@ -10,7 +10,7 @@ namespace bold
   {
   public:
     StopWalking(std::string const& id, std::shared_ptr<Ambulator> ambulator)
-    : Option(id),
+    : Option(id, "StopWalking"),
       d_ambulator(ambulator)
     {}
 

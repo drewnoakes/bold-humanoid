@@ -10,7 +10,7 @@ using namespace bold;
 using namespace std;
 
 MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName)
-: Option(id),
+: Option(id, "MotionScript"),
   d_motionScriptModule(motionScriptModule),
   d_runner()
 {
@@ -21,7 +21,7 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
 }
 
 MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script)
-: Option(id),
+: Option(id, "MotionScript"),
   d_motionScriptModule(motionScriptModule),
   d_script(script),
   d_runner()

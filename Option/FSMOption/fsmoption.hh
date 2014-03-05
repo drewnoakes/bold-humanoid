@@ -80,7 +80,7 @@ namespace bold
   {
   public:
     FSMOption(std::shared_ptr<Voice> voice, std::string const& id)
-    : Option(id),
+    : Option(id, "FSM"),
       d_voice(voice)
     {}
 

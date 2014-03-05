@@ -12,7 +12,7 @@ namespace bold
   {
   public:
     ApproachBall(std::string const& id, std::shared_ptr<Ambulator> ambulator)
-    : Option(id),
+    : Option(id, "ApproachBall"),
       d_ambulator(ambulator)
     {
       d_turnScale          = Config::getSetting<double>("options.approach-ball.turn-speed-scale");
