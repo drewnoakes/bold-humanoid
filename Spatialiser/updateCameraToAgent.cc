@@ -4,7 +4,7 @@
 
 void Spatialiser::updateCameraToAgent()
 {
-  d_zeroGroundPixelTr = findGroundPixelTransform(0.0);
+  updateZeroGroundPixelTransform();
 
   auto cameraFrame = State::get<CameraFrameState>();
 
@@ -47,13 +47,12 @@ void Spatialiser::updateCameraToAgent()
 
   // Determine observed field area polygon
   Polygon2d::PointVector vertices;
-  auto const& agentCameraTransform = State::get<BodyState>(StateTime::CameraImage)->getAgentCameraTransform();
 
   static int width = d_cameraModel->imageWidth();
   static int height = d_cameraModel->imageHeight();
 
-  int horiz1 = min(height - 1, findHorizonForColumn(0, agentCameraTransform));
-  int horiz2 = min(height - 1, findHorizonForColumn(width - 1, agentCameraTransform));
+  int horiz1 = min(height - 1, findHorizonForColumn(0));
+  int horiz2 = min(height - 1, findHorizonForColumn(width - 1));
 
   auto const& p1 = findGroundPointForPixel(Vector2d(0, 0) + Vector2d(0.5,0.5));
   if (p1)

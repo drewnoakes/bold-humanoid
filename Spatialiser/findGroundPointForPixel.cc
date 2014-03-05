@@ -2,7 +2,9 @@
 
 Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2d const& pixel, double groundZ) const
 {
-  return findGroundPointForPixel(pixel, d_zeroGroundPixelTr);
+  return findGroundPointForPixel(pixel, groundZ == 0 ?
+                                 d_zeroGroundPixelTr :
+                                 findGroundPixelTransform(State::get<BodyState>(StateTime::CameraImage)->getAgentCameraTransform(), groundZ));
 }
 
 Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2d const& pixel,
@@ -13,7 +15,7 @@ Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2d const& pixel,
   return findGroundPointForPixel(pixel, groundPixelTr);
 }
 
-Maybe<Eigen::Vector3d> Spatialiser::findGroundPointForPixel(Eigen::Vector2d const& pixel, Eigen::Matrix3d const& groundPixelTr) const
+Maybe<Vector3d> Spatialiser::findGroundPointForPixel(Vector2d const& pixel, Matrix3d const& groundPixelTr) const
 {
   auto b = Vector3d{pixel(0) - d_cameraModel->imageWidth() / 2.0,
                     pixel(1) - d_cameraModel->imageHeight() / 2.0,
@@ -30,12 +32,23 @@ Maybe<Eigen::Vector3d> Spatialiser::findGroundPointForPixel(Eigen::Vector2d cons
   }
 }
 
-Maybe<Vector2d> Spatialiser::findPixelForAgentPoint(Vector3d const& agentPoint) const
+
+pair<MatrixXd, VectorXi> Spatialiser::findGroundPountsForPixels(MatrixXd const& pixels,
+                                                                double groundZ) const
 {
-  return findPixelForAgentPoint(agentPoint, State::get<BodyState>(StateTime::CameraImage)->getAgentCameraTransform());
 }
 
-Maybe<Vector2d> Spatialiser::findPixelForAgentPoint(Vector3d const& agentPoint, Affine3d const& agentCameraTransform) const
+pair<MatrixXd, VectorXi> Spatialiser::findGroundPountsForPixels(MatrixXd const& pixels,
+                                                                Affine3d const& agentCameraTr,
+                                                                double groundZ) const
 {
-  return d_cameraModel->pixelForDirection(agentCameraTransform * agentPoint);
 }
+
+pair<MatrixXd, VectorXi> Spatialiser::findGroundPountsForPixels(MatrixXd const& pixels,
+                                                                Matrix3d const& groundPixelTr) const
+{
+  auto b = (MatrixXd{3, pixels.cols()} << pixels, VectorXd::Zero(pixels.cols())).finished();
+  auto pts = groundPixelTr * b;
+  //pts.colwise()
+}
+

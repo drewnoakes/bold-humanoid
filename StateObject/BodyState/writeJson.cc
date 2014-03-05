@@ -37,7 +37,7 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("camera-translation");
     writer.StartArray();
     {
-      auto translation = d_cameraAgentTransform.translation();
+      auto translation = d_agentCameraTransform.translation();
       writer.Double(translation.x());
       writer.Double(translation.y());
       writer.Double(translation.z());
@@ -47,7 +47,7 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("camera-rotation");
     writer.StartObject();
     {
-      AngleAxisd angleAxis(d_cameraAgentTransform.rotation());
+      AngleAxisd angleAxis(d_agentCameraTransform.rotation());
       writer.String("angle").Double(angleAxis.angle());
       writer.String("axis");
       writer.StartArray();

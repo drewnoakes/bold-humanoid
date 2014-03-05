@@ -9,6 +9,7 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraAgentTr)
 {
   // TODO: can we derive directly from perspective transform?
 
+  // 
   // Equation of horizon line:
   // http://mi.eng.cam.ac.uk/~cipolla/lectures/4F12/Examples/old/solutions2.pdf
   //
@@ -25,6 +26,7 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraAgentTr)
   assert(d_cameraModel->imageWidth() > 1);
 
   // x on projection plane
+  // Todo: should be column + 0.5 to match convention elsewhere?
   double x = (2.0 * column / (d_cameraModel->imageWidth() - 1.0)) - 1.0;
 
   // From camera to clip space frame (intermediate of camera to image transform)

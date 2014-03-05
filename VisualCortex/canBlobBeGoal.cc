@@ -2,9 +2,6 @@
 
 bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d* pos)
 {
-  auto body = State::get<BodyState>(StateTime::CameraImage);
-  Affine3d const& cameraAgentTransform = body->getCameraAgentTransform();
-
   // Find a measure of the width of the goal post in agent space
 
   // Take center of topmost run (the first)
@@ -24,8 +21,8 @@ bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d* pos)
 
   Vector2d sidePos = basePos + Vector2d(width/2.0, 0);
 
-  auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(basePos, cameraAgentTransform);
-  auto sidePointAgentSpace = d_spatialiser->findGroundPointForPixel(sidePos, cameraAgentTransform);
+  auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(basePos);
+  auto sidePointAgentSpace = d_spatialiser->findGroundPointForPixel(sidePos);
 
   if (!midPointAgentSpace || !sidePointAgentSpace)
     return false;
