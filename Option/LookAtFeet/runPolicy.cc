@@ -3,7 +3,7 @@
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 
-std::vector<std::shared_ptr<Option>> LookAtFeet::runPolicy()
+vector<shared_ptr<Option>> LookAtFeet::runPolicy(Writer<StringBuffer>& writer)
 {
   d_headModule->moveToDegs(d_panDegs->getValue(), d_tiltDegs->getValue());
 

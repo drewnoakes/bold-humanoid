@@ -25,7 +25,7 @@ namespace bold
 
     void reset() { d_avgBallPos.reset(); }
 
-    std::vector<std::shared_ptr<Option>> runPolicy() override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
     bool hasPosition() const { return d_avgBallPos.count() != 0; }
 

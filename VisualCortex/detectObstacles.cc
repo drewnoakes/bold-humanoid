@@ -9,7 +9,7 @@ vector<Obstacle> VisualCortex::detectObstacles(Maybe<Vector2d> const& ballPositi
 
   auto makeObstacle = [&]()
   {
-    if (points.size())
+    if (!points.empty())
     {
       Vector2d rightNear = points[0].first;
       Vector2d leftNear = points[points.size() - 1].first;
@@ -25,13 +25,13 @@ vector<Obstacle> VisualCortex::detectObstacles(Maybe<Vector2d> const& ballPositi
     Vector2d farAgent = d_spatialiser->findGroundPointForPixel(Vector2d(delta.x, delta.yConvex));
 
     // TODO review and consider alternative thresholds
-    //      
+    //
 
     bool isObstaclePoint = (farAgent - nearAgent).norm() < d_fieldMap->outerMarginMinimum();
 
     if (isObstaclePoint)
     {
-      points.push_back(nearAgent, farAgent));
+      points.push_back(nearAgent, farAgent);
     }
     else
     {

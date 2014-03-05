@@ -1,6 +1,6 @@
 #include "lookatball.ih"
 
-std::vector<std::shared_ptr<Option>> LookAtBall::runPolicy()
+vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
 {
   auto const& ballObs = State::get<CameraFrameState>()->getBallObservation();
 

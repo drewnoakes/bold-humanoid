@@ -1,6 +1,6 @@
 #include "lookaround.ih"
 
-std::vector<std::shared_ptr<Option>> LookAround::runPolicy()
+vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 {
   // Make an oscillatory movement to search for the ball
 

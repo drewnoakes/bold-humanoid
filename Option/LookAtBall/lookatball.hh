@@ -21,7 +21,7 @@ namespace bold
       d_maxOffset(Config::getSetting<double>("options.look-at-ball.offset-max"))
     {}
 
-    std::vector<std::shared_ptr<Option>> runPolicy() override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
     std::shared_ptr<CameraModel> d_cameraModel;

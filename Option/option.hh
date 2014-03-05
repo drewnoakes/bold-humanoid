@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
 
 namespace bold
 {
@@ -59,7 +61,7 @@ namespace bold
      * @returns the sub-option selected by the policy of this option;
      * Default: empty vector
      */
-    virtual std::vector<std::shared_ptr<Option>> runPolicy() { return std::vector<std::shared_ptr<Option>>(); }
+    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) { return std::vector<std::shared_ptr<Option>>(); }
 
   private:
     std::string d_id;

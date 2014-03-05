@@ -88,7 +88,7 @@ namespace bold
 
     virtual double hasTerminated() override;
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy() override;
+    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
     void addState(std::shared_ptr<FSMState> state, bool startState = false);
 

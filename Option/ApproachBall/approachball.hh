@@ -23,7 +23,7 @@ namespace bold
       d_upperTurnLimitDegs = Config::getSetting<double>("options.approach-ball.upper-turn-limit-degs");
     }
 
-    std::vector<std::shared_ptr<Option>> runPolicy() override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
     std::shared_ptr<Ambulator> d_ambulator;

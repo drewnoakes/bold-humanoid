@@ -7,6 +7,7 @@
 #include <cassert>
 
 using namespace bold;
+using namespace rapidjson;
 using namespace std;
 
 MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName)
@@ -48,7 +49,7 @@ double MotionScriptOption::hasTerminated()
   return 0.0;
 }
 
-vector<shared_ptr<Option>> MotionScriptOption::runPolicy()
+vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& writer)
 {
   if (!d_runner || d_runner->getState() == MotionScriptRunnerState::Finished)
   {

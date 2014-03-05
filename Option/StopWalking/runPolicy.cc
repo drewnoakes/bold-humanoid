@@ -1,6 +1,6 @@
 #include "stopwalking.ih"
 
-std::vector<std::shared_ptr<Option>> StopWalking::runPolicy()
+vector<shared_ptr<Option>> StopWalking::runPolicy(Writer<StringBuffer>& writer)
 {
   d_ambulator->setMoveDir(Eigen::Vector2d(0,0));
   d_ambulator->setTurnAngle(0);

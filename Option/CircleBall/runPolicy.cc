@@ -1,6 +1,6 @@
 #include "circleball.ih"
 
-std::vector<std::shared_ptr<Option>> CircleBall::runPolicy()
+vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 {
   auto bodyState = State::get<BodyState>();
 

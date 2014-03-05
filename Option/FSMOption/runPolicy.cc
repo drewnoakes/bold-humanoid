@@ -3,7 +3,7 @@
 #include "../../Config/config.hh"
 #include "../../Voice/voice.hh"
 
-vector<shared_ptr<Option>> FSMOption::runPolicy()
+vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 {
   log::verbose(getId()) << " ----- Start -----";
 

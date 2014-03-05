@@ -24,7 +24,7 @@ namespace bold
       d_durationVert  = Config::getSetting<double>("options.look-around.vert-duration");
     }
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy() override;
+    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
     std::function<double()> d_speedCallback;

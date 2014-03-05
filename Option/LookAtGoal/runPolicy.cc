@@ -1,6 +1,6 @@
 #include "lookatgoal.ih"
 
-std::vector<std::shared_ptr<Option>> LookAtGoal::runPolicy()
+vector<shared_ptr<Option>> LookAtGoal::runPolicy(Writer<StringBuffer>& writer)
 {
   auto const& goalObs = State::get<CameraFrameState>()->getGoalObservations();
 

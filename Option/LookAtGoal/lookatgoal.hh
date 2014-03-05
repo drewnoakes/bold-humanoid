@@ -16,7 +16,7 @@ namespace bold
       d_headModule(headModule)
     {}
 
-    std::vector<std::shared_ptr<Option>> runPolicy() override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
     std::shared_ptr<CameraModel> d_cameraModel;

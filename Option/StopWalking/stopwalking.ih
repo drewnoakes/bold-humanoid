@@ -3,3 +3,5 @@
 #include "../../Ambulator/ambulator.hh"
 
 using namespace bold;
+using namespace rapidjson;
+using namespace std;

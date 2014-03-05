@@ -1,6 +1,6 @@
 #include "approachball.ih"
 
-std::vector<std::shared_ptr<Option>> ApproachBall::runPolicy()
+vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 {
   assert(d_upperTurnLimitDegs->getValue() > d_lowerTurnLimitDegs->getValue());
   assert(d_brakeDistance->getValue() != 0);

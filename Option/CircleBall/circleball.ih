@@ -6,3 +6,5 @@
 #include "../../StateObject/BodyState/bodystate.hh"
 
 using namespace bold;
+using namespace rapidjson;
+using namespace std;

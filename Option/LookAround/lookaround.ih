@@ -9,4 +9,5 @@
 #include "../../MotionModule/HeadModule/headmodule.hh"
 
 using namespace bold;
+using namespace rapidjson;
 using namespace std;
