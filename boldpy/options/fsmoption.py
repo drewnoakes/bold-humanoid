@@ -75,7 +75,7 @@ class FSMState:
         """Return whether all options in this state report
         hasTerminated() != 0."""
         for o in self.options:
-            bold.log.writeVerbose("FSMState.allOptionsTerminated", "Option: " + o.getID())
+            bold.log.writeVerbose("FSMState.allOptionsTerminated", "Option: " + o.getId())
         return all(o.hasTerminated() for o in self.options)
 
     def newTransition(self, name = "", childState = None):
@@ -182,7 +182,7 @@ class FSMOption(bold.Option):
             transitionMade = False
             for t in self.curState.transitions:
                 if (t.condition()):
-                    print("[FSMOption::runPolicy] (" + self.getID() + ") transitioning from '" +
+                    print("[FSMOption::runPolicy] (" + self.getId() + ") transitioning from '" +
                           self.curState.name + "' to '" + t.childState.name +
                           "' after " + str((time.time() - self.curState.startTimeSeconds) * 1000) + "ms")
 

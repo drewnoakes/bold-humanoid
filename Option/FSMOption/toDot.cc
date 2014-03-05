@@ -3,7 +3,7 @@
 string FSMOption::toDot() const
 {
   ostringstream out;
-  out << "digraph "  << getID() << "{" << endl;
+  out << "digraph "  << getId() << "{" << endl;
 
   list<shared_ptr<FSMState>> stateQueue{d_startState};
   list<shared_ptr<FSMState>> visitedStates;

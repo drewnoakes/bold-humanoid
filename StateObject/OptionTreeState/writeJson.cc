@@ -7,7 +7,7 @@ void OptionTreeState::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writ
     writer.String("ranoptions");
     writer.StartArray();
     for (auto option : d_ranOptions)
-      writer.String(option->getID().c_str());
+      writer.String(option->getId().c_str());
     writer.EndArray();
   }
   writer.EndObject();

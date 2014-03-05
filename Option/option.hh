@@ -31,7 +31,7 @@ namespace bold
 
     /** Get this option's ID
      */
-    std::string getID() const { return d_id; }
+    std::string getId() const { return d_id; }
 
     /** Check whether this option is currently available
      *

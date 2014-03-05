@@ -19,7 +19,7 @@ namespace bold
     template<typename OptionType>
     std::shared_ptr<OptionType> addOption(std::shared_ptr<OptionType> option, bool isTop = false)
     {
-      d_options[option->getID()] = std::dynamic_pointer_cast<Option>(option);
+      d_options[option->getId()] = std::dynamic_pointer_cast<Option>(option);
 
       if (isTop)
       {

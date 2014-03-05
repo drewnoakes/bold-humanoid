@@ -20,7 +20,7 @@ void FSMOption::toJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("name").String(getID().c_str());
+    writer.String("name").String(getId().c_str());
     writer.String("start").String(d_startState->name.c_str());
 
     writer.String("states");
