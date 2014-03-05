@@ -3930,8 +3930,8 @@ joint.layout.DirectedGraph = {
         layoutGraph.eachNode(function(u, value) {
             if (!value.dummy) {
                 graph.get('cells').get(u).set('position', {
-                    x: value.x - value.width/2,
-                    y: value.y - value.height/2
+                    x: Math.round(value.x - value.width/2),
+                    y: Math.round(value.y - value.height/2)
                 });
             }
         });

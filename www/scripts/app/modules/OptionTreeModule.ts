@@ -99,8 +99,8 @@ class OptionTreeModule extends Module
             // an approximation of the monospaced font letter width.
             var letterSize = 12,
                 minWidth = 90;
-            var width = Math.max(minWidth, 0.6 * letterSize * maxLineLength);
-            var height = 1.6 * lines.length * letterSize;
+            var width = Math.round(Math.max(minWidth, 0.6 * letterSize * maxLineLength));
+            var height = Math.round(1.6 * lines.length * letterSize);
 
             var block = new joint.shapes.basic.Rect({
                 id: state.id,
