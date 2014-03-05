@@ -129,6 +129,26 @@ TEST (SpatialiserTests, findRaisedGroundPointForPixel)
 
 }
 
+TEST (SpatialiserTests, findGroundPointForPixelScanUp)
+{
+  // When scanning up in the image when looking straight ahead, y should increase
+  Spatialiser spatialiser = createTestSpatialiser();
+  auto agentCameraTr = Affine3d{Translation3d{0, 0, 1}};
+   
+  Maybe<Vector3d> groundPoint;
+   
+  groundPoint = spatialiser.findGroundPointForPixel(Vector2d(5.5, 0), agentCameraTr, 0);
+  ASSERT_TRUE ( groundPoint.hasValue() );
+  double previousY = groundPoint->y();
+  for (unsigned y = 1; y <=5; ++y)
+  {
+    groundPoint = spatialiser.findGroundPointForPixel(Vector2d(5.5, y), agentCameraTr, 0);
+    ASSERT_TRUE ( groundPoint.hasValue() );
+    ASSERT_TRUE ( groundPoint->y() > previousY ) << "For pixel: " << y << "; y: " << groundPoint->y() << "; prev: " << previousY;
+    previousY = groundPoint->y();
+  }
+}
+
 TEST (SpatialiserTests, findGroundPointForPixelFromCorner)
 {
   // NOTE different vertical range -- camera is wider than it is tall

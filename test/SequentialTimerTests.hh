@@ -30,7 +30,7 @@ TEST(SequentialTimerTests, basics)
   EXPECT_TRUE(items[0].first > items[1].first);
 }
 
-TEST(SequentialTimerTests, enterExit)
+TEST(DISABLED_SequentialTimerTests, enterExit)
 {
   SequentialTimer t;
 
@@ -81,7 +81,7 @@ TEST(SequentialTimerTests, enterExit)
     items[5].first, 2); // within 2ms
 }
 
-TEST(SequentialTimerTests, nesting)
+TEST(DISABLED_SequentialTimerTests, nesting)
 {
   SequentialTimer t;
   usleep(5000);
@@ -126,7 +126,7 @@ TEST(SequentialTimerTests, nesting)
     items[5].first, 0.1);
 }
 
-TEST(SequentialTimerTests, nesting2)
+TEST(DISABLED_SequentialTimerTests, nesting2)
 {
   SequentialTimer t;
   t.enter("a");
