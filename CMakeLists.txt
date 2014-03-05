@@ -391,7 +391,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Spatialiser/updateZeroGroundPixelTransform.cc
+  ./Spatialiser/findGroundPixelTransform.cc
   ./Spatialiser/findGroundPointForPixel.cc
+  ./Spatialiser/findPixelForAgentPoint.cc
   ./Spatialiser/findHorizonForColumn.cc
   ./Spatialiser/updateCameraToAgent.cc
   ./Spatialiser/updateAgentToWorld.cc
