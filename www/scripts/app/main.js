@@ -4,6 +4,7 @@
 require(
     [
         'control',
+        'data',
         'ModuleHost',
         'constants',
         'modules/MotionScriptModule',
@@ -29,7 +30,7 @@ require(
         'modules/World2dModule',
         'modules/World3dModule'
     ],
-    function(control, ModuleHost, constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule,
+    function(control, data, ModuleHost, constants, MotionScriptModule, CameraModule, CommsModule, ConfigModule,
              GameStateModule, HardwareModule, HistogramModule, IMUModule, OrientationModule, LoadModule, LocaliserModule,
              MotionTimingModule, OptionTreeModule, StateDumpModule, ThinkTimingModule, TrajectoryModule, VoiceModule,
              WalkModule, Agent2dModule, VisionModule, World2dModule, World3dModule)
@@ -76,6 +77,14 @@ require(
         };
 
         control.withSettings('', loadUi);
+
+        var disconnectLink = document.querySelector('div#header-content a.disconnect');
+        disconnectLink.addEventListener('click', function(e)
+        {
+            e.preventDefault();
+            data.disconnectAll();
+            $(disconnectLink).fadeOut();
+        });
 
         var onerror = function ()
         {

@@ -12,7 +12,7 @@ declare class MozWebSocket
     constructor(url: string, protocol: string);
 }
 
-var elementContainer = document.querySelector('#socket-connections');
+var elementContainer = document.querySelector('#connections .indicators');
 
 function openWebSocket(protocol: string) : WebSocket
 {
@@ -51,6 +51,11 @@ function closeWebSocket(protocol: string): void
     delete socketByProtocol[protocol];
     indicatorByProtocol[protocol].remove();
     delete indicatorByProtocol[protocol];
+}
+
+export function disconnectAll()
+{
+    _.each(_.values(socketByProtocol), socket => socket.close());
 }
 
 interface IClient

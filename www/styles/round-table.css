@@ -122,11 +122,6 @@ div#header-content
     margin: 6px;
 }
 
-div#header-content div#socket-connections
-{
-    margin-top: 12px;
-}
-
 div#header-content h1
 {
     margin: 0;
@@ -138,6 +133,29 @@ div#header-content h2
     margin: 0;
     color: rgb(121, 36, 133);
     font-weight: normal;
+}
+
+div#header-content div#connections
+{
+    margin-top: 12px;
+}
+
+div#header-content div.indicators
+{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+div#header-content a.disconnect
+{
+    text-decoration: none;
+    display: none;
+}
+
+div#header-content:hover a.disconnect
+{
+    display: inline-block;
+    vertical-align: middle;
 }
 
 div#header-module-links
