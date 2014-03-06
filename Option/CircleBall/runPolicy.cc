@@ -9,6 +9,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   double panAngleRange = d_headModule->getLeftLimitRads();
   double panRatio = panAngle / panAngleRange;
 
+  // TODO these move/turn values in config
+
   double x = 1;
   double y = panRatio < 0 ? 20 : -20;
   double a = panRatio < 0 ? -15 : 15;

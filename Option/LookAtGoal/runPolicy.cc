@@ -31,10 +31,12 @@ vector<shared_ptr<Option>> LookAtGoal::runPolicy(Writer<StringBuffer>& writer)
   offset.x() *= happ; // pixel per angle
   offset.y() *= vapp; // pixel per angle
 
+  // TODO this max offset in config
   float maxOffset = 20;
   offset = offset.cwiseMin(Vector2d(maxOffset,maxOffset)).cwiseMax(Vector2d(-maxOffset,-maxOffset));
 
 //   cout << "offset: " << offset.transpose() << endl;
+  // TODO this min offset norm in config
   if (offset.norm() < 2)
     offset = Vector2d(0,0);
 
