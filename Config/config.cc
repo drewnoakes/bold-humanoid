@@ -346,7 +346,8 @@ void Config::addSetting(SettingBase* setting)
   setting->changedBase.connect([](SettingBase* s){ Config::updated.emit(s); });
 }
 
-void Config::addAction(string id, string label, function<void()> callback)
+void Config::addAction(string const& id, string const& label,
+                       function<void(unique_ptr<rapidjson::Document>)> callback)
 {
   Action* action = new Action(id, label, callback);
   auto it = d_actionById.insert(make_pair(id, action));

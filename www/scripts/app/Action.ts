@@ -15,8 +15,13 @@ class Action
         this.label = actionData.label;
     }
 
-    public activate()
+    public activate(args)
     {
+        if (!args)
+          args = {};
+        args.type = "action";
+        args.id = this.id;
+
         require('control').send({type: "action", id: this.id});
     }
 }

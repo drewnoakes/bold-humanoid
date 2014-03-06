@@ -14,14 +14,15 @@ namespace bold
   class Action
   {
   public:
-    Action(std::string id, std::string label, std::function<void()> callback)
+    Action(std::string id, std::string label, std::function<void(std::unique_ptr<rapidjson::Document>)> callback)
     : d_id(id),
       d_label(label),
       d_callback(callback)
     {}
 
     /** Handles a request against this control. */
-    void handleRequest() const { d_callback(); }
+    void handleRequest() const { d_callback(nullptr); }
+    void handleRequest(std::unique_ptr<rapidjson::Document> args) const { d_callback(std::move(args)); }
 
     std::string getId() const { return d_id; }
     std::string getLabel() const { return d_label; }
@@ -29,7 +30,7 @@ namespace bold
   private:
     std::string d_id;
     std::string d_label;
-    std::function<void()> d_callback;
+    std::function<void(std::unique_ptr<rapidjson::Document>)> d_callback;
   };
 
   /// Central store for all configuration data.
@@ -93,7 +94,12 @@ namespace bold
     /// retrieved and set on the provided setting.
     static void addSetting(SettingBase* setting);
 
-    static void addAction(std::string id, std::string label, std::function<void()> callback);
+    static void addAction(std::string const& id, std::string const& label, std::function<void()> callback)
+    {
+      addAction(id, label, [callback](std::unique_ptr<rapidjson::Document> doc) {callback();});
+    }
+
+    static void addAction(std::string const& id, std::string const& label, std::function<void(std::unique_ptr<rapidjson::Document>)> callback);
 
     static rapidjson::Value const* getConfigJsonValue(std::string path);
 

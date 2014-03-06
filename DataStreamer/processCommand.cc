@@ -4,18 +4,18 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
 {
   log::info("DataStreamer::processCommand") << "Processing: " << json;
 
-  rapidjson::Document d;
+  auto d = unique_ptr<rapidjson::Document>{new rapidjson::Document{}};
 
-  d.Parse<0>(json.c_str());
+  d->Parse<0>(json.c_str());
 
-  if (d.HasParseError())
+  if (d->HasParseError())
   {
     log::error("DataStreamer::processCommand") << "Error parsing command JSON";
     return;
   }
 
   char const* type;
-  if (!d.TryGetStringValue("type", &type))
+  if (!d->TryGetStringValue("type", &type))
   {
     log::error("DataStreamer::processCommand") << "No 'type' specified in received command JSON";
     return;
@@ -30,7 +30,7 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
     // { "type": "action", "id": "some.action" }
 
     char const* id;
-    if (!d.TryGetStringValue("id", &id))
+    if (!d->TryGetStringValue("id", &id))
     {
       log::error("DataStreamer::processCommand") << "No 'id' specified in received action JSON";
       return;
@@ -44,7 +44,7 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
       return;
     }
 
-    action->handleRequest();
+    action->handleRequest(move(d));
   }
   else if (strcmp(type, "setting") == 0)
   {
@@ -55,13 +55,13 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
     // { "type": "setting", "path": "some.setting", "value": 1234 }
 
     char const* path;
-    if (!d.TryGetStringValue("path", &path))
+    if (!d->TryGetStringValue("path", &path))
     {
       log::error("DataStreamer::processCommand") << "No 'path' specified in received setting JSON";
       return;
     }
 
-    auto valueMember = d.FindMember("value");
+    auto valueMember = d->FindMember("value");
     if (!valueMember)
     {
       log::error("DataStreamer::processCommand") << "No 'value' specified in received setting JSON";
