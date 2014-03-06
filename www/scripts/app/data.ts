@@ -2,7 +2,56 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-import WebSocketFactory = require('WebSocketFactory');
+import Settings = require('Settings');
+
+var indicatorByProtocol = {};
+var socketByProtocol: {[protocol:string]:WebSocket} = {};
+
+declare class MozWebSocket
+{
+    constructor(url: string, protocol: string);
+}
+
+var elementContainer = document.querySelector('#socket-connections');
+
+function openWebSocket(protocol: string) : WebSocket
+{
+    if (!protocol || protocol === '')
+        throw new Error("Invalid protocol: " + protocol);
+    if (socketByProtocol[protocol] !== undefined)
+        throw new Error("WebSocket already open for protocol: " + protocol);
+
+    var socket: WebSocket = typeof MozWebSocket !== 'undefined'
+        ? <WebSocket>new MozWebSocket(Settings.webSocketUrl, protocol)
+        : new WebSocket(Settings.webSocketUrl, protocol);
+
+    socketByProtocol[protocol] = socket;
+
+    // Reuse the indicator, in case we are re-connecting
+    var connectionIndicator = indicatorByProtocol[protocol];
+    if (!connectionIndicator) {
+        connectionIndicator = document.createElement('div');
+        connectionIndicator.title = protocol;
+        elementContainer.appendChild(connectionIndicator);
+        indicatorByProtocol[protocol] = connectionIndicator;
+    }
+
+    connectionIndicator.className = 'connection-indicator connecting';
+
+    socket.onopen = () => connectionIndicator.className = 'connection-indicator connected';
+    socket.onclose = () => connectionIndicator.className = 'connection-indicator disconnected';
+    socket.onerror = e => connectionIndicator.className = 'connection-indicator error';
+
+    return socket;
+}
+
+function closeWebSocket(protocol: string): void
+{
+    socketByProtocol[protocol].close();
+    delete socketByProtocol[protocol];
+    indicatorByProtocol[protocol].remove();
+    delete indicatorByProtocol[protocol];
+}
 
 interface IClient
 {
@@ -67,7 +116,7 @@ export class Subscription<TData>
 
         if (!this.protocol) {
             // First client of this protocol
-            var socket = WebSocketFactory.open(protocolName);
+            var socket = openWebSocket(protocolName);
             this.protocol = { name: protocolName, clients: [], socket: socket };
             dataByProtocol[protocolName] = this.protocol;
             this.protocol.socket.onmessage = proxyEvent(this.protocol, 'onmessage', () => this.close());
@@ -105,8 +154,8 @@ export class Subscription<TData>
 
                 if (this.protocol.clients.length === 0)
                 {
-                    // No one is using this socket anymore, so close it down
-                    WebSocketFactory.close(this.protocol.name);
+                    // No one is using this socket any more, so close it down
+                    closeWebSocket(this.protocol.name);
 
                     delete dataByProtocol[this.protocol.name];
                 }
