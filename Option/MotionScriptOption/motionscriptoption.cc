@@ -67,6 +67,8 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
       log::verbose("MotionScriptOption::runPolicy") << "Request to start motion script denied: " << getId();
       d_runner = nullptr;
     }
+
+    writer.String("state").String(MotionScriptRunner::getStateName(d_runner->getState()).c_str());
   }
 
   return vector<shared_ptr<Option>>();

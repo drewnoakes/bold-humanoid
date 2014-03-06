@@ -4,6 +4,11 @@ vector<shared_ptr<Option>> LookAtGoal::runPolicy(Writer<StringBuffer>& writer)
 {
   auto const& goalObs = State::get<CameraFrameState>()->getGoalObservations();
 
+  writer.String("goals").StartArray();
+  for (auto const& goal : goalObs)
+    writer.String("goals").StartArray().Double(goal.x()).Double(goal.y()).EndArray(2);
+  writer.EndArray();
+
   if (goalObs.size() < 2)
   {
     log::warning("LookAtGoal::runPolicy") << "Couldn't see both goal posts!";
@@ -34,6 +39,8 @@ vector<shared_ptr<Option>> LookAtGoal::runPolicy(Writer<StringBuffer>& writer)
     offset = Vector2d(0,0);
 
   d_headModule->moveTracking(offset.x(), offset.y());
+
+  writer.String("offset").StartArray().Double(offset.x()).Double(offset.y()).EndArray(2);
 
   return vector<shared_ptr<Option>>();
 }

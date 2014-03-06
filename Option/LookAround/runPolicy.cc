@@ -20,9 +20,11 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   else if (d_speedCallback)
   {
     double speed = Math::clamp(d_speedCallback(), 0.0, 1.0);
-
+    writer.String("speed").Double(speed);
     d_startTimeSeconds += (1 - speed) * (t - d_lastTimeSeconds);
   }
+
+  writer.String("t").Double(t);
 
   d_lastTimeSeconds = t;
 
@@ -32,6 +34,8 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 
   double panDegs = 0;
   double tiltDegs = 0;
+
+  writer.String("phase").Double(phase);
 
   assert(phase >= 0);
 
@@ -78,6 +82,9 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
       }
     }
   }
+
+  writer.String("pan").Double(panDegs);
+  writer.String("tilt").Double(tiltDegs);
 
   // Move to the calculated position
   d_headModule->moveToDegs(panDegs, tiltDegs);

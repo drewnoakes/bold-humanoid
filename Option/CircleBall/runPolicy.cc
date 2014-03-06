@@ -16,5 +16,11 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   d_ambulator->setMoveDir(Eigen::Vector2d(x, y));
   d_ambulator->setTurnAngle(a);
 
+  writer.String("panAngle").Double(panAngle);
+  writer.String("panAngleRange").Double(panAngleRange);
+  writer.String("panRatio").Double(panRatio);
+  writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
+  writer.String("turn").Double(a);
+
   return vector<shared_ptr<Option>>();
 }
