@@ -31,6 +31,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
   auto tryTransition = [this,setCurrentState](shared_ptr<FSMTransition>& transition)
   {
+    // TODO pass JSON writer to conditions too, so they can provide debug information
     if (!transition->condition())
       return false;
 
@@ -59,6 +60,10 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
   const int MAX_LOOP_COUNT = 20;
 
+  writer.String("start").String(d_curState->name.c_str());
+
+  writer.String("transitions").StartArray();
+
   int loopCount = 0;
   bool transitionMade;
   do
@@ -69,6 +74,11 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
     {
       if (tryTransition(transition))
       {
+        writer.StartObject();
+        writer.String("to").String(d_curState->name.c_str());
+        writer.String("via").String(transition->name.c_str());
+        writer.String("wildcard").Bool(true);
+        writer.EndObject();
         transitionMade = true;
         break;
       }
@@ -80,6 +90,10 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
       {
         if (tryTransition(transition))
         {
+          writer.StartObject();
+          writer.String("to").String(d_curState->name.c_str());
+          writer.String("via").String(transition->name.c_str());
+          writer.EndObject();
           transitionMade = true;
           break;
         }
@@ -93,6 +107,11 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
     }
   }
   while (transitionMade);
+
+  writer.EndArray();
+
+  if (loopCount > MAX_LOOP_COUNT)
+    writer.String("warning").String("Max transition count exceeded. Infinite loop?");
 
   log::verbose(getId()) << "Final state: " << d_curState->name;
 
