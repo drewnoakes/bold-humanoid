@@ -64,6 +64,17 @@ namespace bold
   class MotionScriptRunner
   {
   public:
+    static std::string getStateName(MotionScriptRunnerState const& state)
+    {
+      switch (state)
+      {
+        case MotionScriptRunnerState::Pending: return "Pending";
+        case MotionScriptRunnerState::Running: return "Running";
+        case MotionScriptRunnerState::Finished: return "Finished";
+        default: return "Unknown";
+      }
+    }
+
     MotionScriptRunner(std::shared_ptr<MotionScript const> script);
 
     std::string getScriptName() const { return d_script->getName(); }
