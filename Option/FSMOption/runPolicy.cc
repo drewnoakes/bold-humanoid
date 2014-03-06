@@ -29,7 +29,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
   log::verbose(getId()) << "Current state: " << d_curState->name;
 
-  auto tryTransition = [this,setCurrentState](shared_ptr<FSMTransition> transition)
+  auto tryTransition = [this,setCurrentState](shared_ptr<FSMTransition>& transition)
   {
     if (!transition->condition())
       return false;
@@ -65,7 +65,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
   {
     transitionMade = false;
 
-    for (auto transition : d_wildcardTransitions)
+    for (auto& transition : d_wildcardTransitions)
     {
       if (tryTransition(transition))
       {
@@ -76,7 +76,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
     if (!transitionMade)
     {
-      for (auto transition : d_curState->transitions)
+      for (auto& transition : d_curState->transitions)
       {
         if (tryTransition(transition))
         {
