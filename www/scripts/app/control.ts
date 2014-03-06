@@ -84,7 +84,7 @@ export interface ControlMessage
 
 export function getSetting(path: string): Setting
 {
-    return <Setting>_.find(allSettings, setting => setting.path === path);
+    return _.find<Setting>(allSettings, setting => setting.path === path);
 }
 
 export function getFsmDescriptions(): FSM[]
@@ -94,14 +94,14 @@ export function getFsmDescriptions(): FSM[]
 
 export function getFSM(name: string): FSM
 {
-    return _.find(allFSMs, fsm => fsm.name === name);
+    return _.find<FSM>(allFSMs, fsm => fsm.name === name);
 }
 
 function withAction(id: string, callback: (action:Action)=>void)
 {
     var findAction = () =>
     {
-        var match = <Action>_.find(allActions, action => action.id === id);
+        var match = _.find<Action>(allActions, action => action.id === id);
         if (!match)
             console.error("No action exist with ID: " + id);
         callback(match);
@@ -121,7 +121,7 @@ function withActions(idPrefix: string, callback: (actions:Action[])=>void)
 {
     var findActions = () =>
     {
-        var matches = <Action[]>_.filter(allActions, action => action.id.indexOf(idPrefix) === 0);
+        var matches = _.filter<Action>(allActions, action => action.id.indexOf(idPrefix) === 0);
         if (matches.length === 0)
             console.error("No actions exist with ID prefix: " + idPrefix);
         callback(matches);
@@ -157,7 +157,7 @@ export function getConfigText(matching?: string)
     var response = settingsJson;
 
     if (typeof(matching) === 'string' && matching.length !== 0) {
-        response = _.filter(settingsJson, setting => setting.path.indexOf(matching) !== -1);
+        response = _.filter<Setting>(settingsJson, setting => setting.path.indexOf(matching) !== -1);
     }
 
     return JSON.stringify(response, null, 4);
@@ -255,7 +255,7 @@ function onControlData(data: ControlData)
             setting.__setValue(updateData.value);
 
             // Update cached settingsJson object
-            var obj = <any>_.find(settingsJson, o => o.path === updateData.path);
+            var obj = _.find<ControlUpdateData>(settingsJson, o => o.path === updateData.path);
             if (obj)
                 obj.value = updateData.value;
             else
@@ -321,7 +321,7 @@ export function withSettings(pathPrefix: string, callback: (settings:Setting[])=
 {
     var findSettings = () =>
     {
-        var matches = <Setting[]>_.filter(allSettings, setting => setting.path.indexOf(pathPrefix) === 0);
+        var matches = _.filter<Setting>(allSettings, setting => setting.path.indexOf(pathPrefix) === 0);
         if (matches.length === 0)
             console.error("No settings exist with path prefix: " + pathPrefix);
         callback(matches);
@@ -383,7 +383,7 @@ function createSetting(setting: Setting, container: Element, closeable: Closeabl
             select.addEventListener('change', () => setting.setValue(parseInt(select.options[select.selectedIndex].value)));
             closeable.add(setting.track(value =>
             {
-                var option = <HTMLOptionElement>_.find(select.options, option => parseInt(option.value) === value);
+                var option = _.find<HTMLOptionElement>(select.options, option => parseInt(option.value) === value);
                 option.selected = true;
             }));
             wrapper.appendChild(select);

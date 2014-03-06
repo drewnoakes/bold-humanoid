@@ -92,7 +92,7 @@ class OptionTreeModule extends Module
         _.each(fsm.states, state =>
         {
             var lines = state.id.split('\n');
-            var maxLineLength = _.max(lines,l => l.length).length;
+            var maxLineLength = _.max<string>(lines,l => l.length).length;
 
             // Compute width/height of the rectangle based on the number
             // of lines in the label and the letter size. 0.6 * letterSize is

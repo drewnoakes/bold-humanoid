@@ -110,7 +110,7 @@ class BodyFigure
                 {
                     if (jointDiv.classList.contains('selected')) {
                         jointDiv.classList.remove('selected');
-                        this.selectedJointIds.setValue(_.filter(this.selectedJointIds.getValue(), d => d !== jointId));
+                        this.selectedJointIds.setValue(_.filter<number>(this.selectedJointIds.getValue(), d => d !== jointId));
                     } else {
                         jointDiv.classList.add('selected');
                         this.selectedJointIds.getValue().push(jointId);

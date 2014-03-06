@@ -36,7 +36,7 @@ class TabControl
         element.parentNode.removeChild(element);
 
         // Find all tabs, and build our tab items
-        var nodes = <HTMLElement[]>_.filter(element.childNodes, n => n.nodeType === 1);
+        var nodes = _.filter<HTMLElement>(element.childNodes, n => n.nodeType === 1);
         for (var i = 0; i < nodes.length - 1; i += 2)
         {
             var dt = nodes[i],
