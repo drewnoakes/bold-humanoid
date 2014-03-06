@@ -4,7 +4,6 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
-import WebSocketFactory = require('WebSocketFactory');
 import constants = require('constants');
 import data = require('data');
 import control = require('control');
