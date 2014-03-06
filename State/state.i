@@ -1,5 +1,5 @@
 %{
-#include <AgentState/agentstate.hh>
+#include <State/state.hh>
 #include <StateObject/AgentFrameState/agentframestate.hh>
 #include <StateObject/HardwareState/hardwarestate.hh>
 #include <StateObject/CameraFrameState/cameraframestate.hh>
@@ -15,8 +15,8 @@
 namespace bold
 {
   class StateTracker;
-  
-  class AgentState
+
+  class State
   {
   public:
     template <typename T>
@@ -26,7 +26,7 @@ namespace bold
 
 // Must list all template instantiations
 %define STATEOBJECT_TEMPLATE(O)
-%template(get ## O) bold::AgentState::get<bold::O>;
+%template(get ## O) bold::State::get<bold::O>;
 %enddef
 
 STATEOBJECT_TEMPLATE(AgentFrameState);

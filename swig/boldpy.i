@@ -85,7 +85,7 @@
 %include "../StateObject/GameState/gamestate.i"
 %include "../StateObject/HardwareState/hardwarestate.i"
 
-%include "../AgentState/agentstate.i"
+%include "../State/state.i"
 
 %include "../MotionModule/motionmodule.i"
 
