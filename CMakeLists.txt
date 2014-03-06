@@ -667,6 +667,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRange.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRangeEditor.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/main.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Module.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/ModuleHost.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/Agent2dModule.ts
@@ -705,7 +706,6 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/mouse.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/TabControl.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/three.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/WebSocketFactory.ts
   )
 
 set(JSON_FILES

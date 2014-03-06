@@ -49,11 +49,11 @@ www/.idea
 /www/scripts/app/data.js
 /www/scripts/app/DOMTemplate.js
 /www/scripts/app/FieldLinePlotter.js
-/www/scripts/app/util/three.js
 /www/scripts/app/HsvRange.js
 /www/scripts/app/HsvRangeEditor.js
 /www/scripts/app/HeadControls.js
 /www/scripts/app/interaction.js
+/www/scripts/app/main.js
 /www/scripts/app/Module.js
 /www/scripts/app/ModuleHost.js
 /www/scripts/app/modules/Agent2dModule.js
@@ -91,7 +91,7 @@ www/.idea
 /www/scripts/app/util/math.js
 /www/scripts/app/util/mouse.js
 /www/scripts/app/util/TabControl.js
-/www/scripts/app/WebSocketFactory.js
+/www/scripts/app/util/three.js
 Release/
 RelWithDebInfo/
 Debug/
