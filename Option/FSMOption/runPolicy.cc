@@ -31,6 +31,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
   auto tryTransition = [this,setCurrentState](shared_ptr<FSMTransition>& transition)
   {
+    // TODO include information about transitions that were not taken
     // TODO pass JSON writer to conditions too, so they can provide debug information
     if (!transition->condition())
       return false;
