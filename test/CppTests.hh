@@ -295,6 +295,20 @@ TEST(CppTests, std_function)
   ASSERT_FALSE ( fun );
 }
 
+TEST(CppTests, setsAndSharedPtr)
+{
+  auto p1 = make_shared<int>(1);
+  auto p2 = make_shared<int>(1);
+  auto p1copy = p1;
+
+  set<shared_ptr<int>> s;
+  s.insert(p1);
+
+  EXPECT_TRUE(s.find(p1) != s.end());
+  EXPECT_TRUE(s.find(p1copy) != s.end());
+  EXPECT_TRUE(s.find(p2) == s.end());
+}
+
 ///
 /// ATOMIC OPERATIONS
 ///
