@@ -115,6 +115,11 @@ class Protocol
         }
     }
 
+    public isConnected() : boolean
+    {
+        return this.socket && this.socket.readyState == WebSocket.OPEN;
+    }
+
     private proxyEventToClients(eventName: string): (arg:any)=>void
     {
         return msg =>
@@ -155,6 +160,10 @@ export function reconnectAll()
 {
     _.each<Protocol>(protocols, protocol => protocol.reconnect());
 }
+
+export function isAnyDisconnected()
+{
+    return _.any<Protocol>(protocols, protocol => protocol.isConnected());
 }
 
 export interface ISubscriptionOptions<TData>
