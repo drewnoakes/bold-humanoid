@@ -47,7 +47,7 @@ interface ControlData
 
 interface ControlSyncData extends ControlData
 {
-    actions?: {id: string; label: string;}[];
+    actions?: {id: string; label: string; hasArguments:boolean}[];
     settings?: any[];
     fsms: FSM[];
 }

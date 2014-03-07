@@ -347,6 +347,20 @@ void Config::addSetting(SettingBase* setting)
 }
 
 void Config::addAction(string const& id, string const& label,
+                       function<void()> callback)
+{
+  Action* action = new Action(id, label, callback);
+  auto it = d_actionById.insert(make_pair(id, action));
+
+  if (it.second == false)
+  {
+    delete action;
+    log::error("Config::addAction") << "Action with id '" << id << "' already registered";
+    throw runtime_error("Action already registered with provided id");
+  }
+}
+
+void Config::addAction(string const& id, string const& label,
                        function<void(unique_ptr<rapidjson::Document>)> callback)
 {
   Action* action = new Action(id, label, callback);

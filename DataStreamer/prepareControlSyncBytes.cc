@@ -21,6 +21,7 @@ shared_ptr<vector<uchar>> DataStreamer::prepareControlSyncBytes()
         {
           writer.String("id").String(action->getId().c_str());
           writer.String("label").String(action->getLabel().c_str());
+          writer.String("hasArguments").Bool(action->hasArguments());
         }
         writer.EndObject();
       }

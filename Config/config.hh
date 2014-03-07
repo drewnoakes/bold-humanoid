@@ -14,10 +14,18 @@ namespace bold
   class Action
   {
   public:
+    Action(std::string id, std::string label, std::function<void()> callback)
+    : d_id(id),
+      d_label(label),
+      d_callback([callback](std::unique_ptr<rapidjson::Document> doc) { callback(); }),
+      d_requiresArguments(false)
+    {}
+
     Action(std::string id, std::string label, std::function<void(std::unique_ptr<rapidjson::Document>)> callback)
     : d_id(id),
       d_label(label),
-      d_callback(callback)
+      d_callback(callback),
+      d_requiresArguments(true)
     {}
 
     /** Handles a request against this control. */
@@ -26,11 +34,13 @@ namespace bold
 
     std::string getId() const { return d_id; }
     std::string getLabel() const { return d_label; }
+    bool hasArguments() const { return d_requiresArguments; }
 
   private:
     std::string d_id;
     std::string d_label;
     std::function<void(std::unique_ptr<rapidjson::Document>)> d_callback;
+    bool d_requiresArguments;
   };
 
   /// Central store for all configuration data.
@@ -94,10 +104,7 @@ namespace bold
     /// retrieved and set on the provided setting.
     static void addSetting(SettingBase* setting);
 
-    static void addAction(std::string const& id, std::string const& label, std::function<void()> callback)
-    {
-      addAction(id, label, [callback](std::unique_ptr<rapidjson::Document> doc) {callback();});
-    }
+    static void addAction(std::string const& id, std::string const& label, std::function<void()> callback);
 
     static void addAction(std::string const& id, std::string const& label, std::function<void(std::unique_ptr<rapidjson::Document>)> callback);
 
