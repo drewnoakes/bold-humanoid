@@ -47,3 +47,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   return vector<shared_ptr<Option>>();
 }
+
+void ApproachBall::reset()
+{
+  d_ambulator->reset();
+}
