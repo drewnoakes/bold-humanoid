@@ -40,13 +40,13 @@ namespace bold
     /**
      * Set the direction of motion, where positive X is in the forwards
      * direction, and positive Y is to the right. The length of the vector
-     * determines the velocity of motion (unspecfied units).
+     * determines the velocity of motion (unspecified units).
      */
     void setMoveDir(Eigen::Vector2d const& moveDir);
 
     /**
      * Set the rate of turning, where positive values turn right (clockwise)
-     * and negative values turn left (counter-clockwise) (unspecfied units).
+     * and negative values turn left (counter-clockwise) (unspecified units).
      */
     void setTurnAngle(double turnSpeed);
 
