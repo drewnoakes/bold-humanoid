@@ -71,9 +71,18 @@ class Protocol
 
         // Wire up the indicator
         this.indicator.className = 'connection-indicator connecting';
-        this.socket.onopen = () => this.indicator.className = 'connection-indicator connected';
-        this.socket.onclose = () => this.indicator.className = 'connection-indicator disconnected';
-        this.socket.onerror = e => this.indicator.className = 'connection-indicator error';
+        this.socket.onopen = () => {
+            this.indicator.className = 'connection-indicator connected';
+            raiseConnectionChanged();
+        };
+        this.socket.onclose = () => {
+            this.indicator.className = 'connection-indicator disconnected';
+            raiseConnectionChanged();
+        };
+        this.socket.onerror = e => {
+            this.indicator.className = 'connection-indicator error';
+            raiseConnectionChanged();
+        };
 
         // The callback logic for errors and messages is very similar.
         // In both cases, just proxy the argument onwards.
@@ -153,18 +162,32 @@ class Protocol
 
 export function disconnectAll()
 {
+    console.log('Disconnecting all protocols');
     _.each<Protocol>(protocols, protocol => protocol.disconnect());
 }
 
 export function reconnectAll()
 {
+    console.log('Reconnecting all protocols');
     _.each<Protocol>(protocols, protocol => protocol.reconnect());
 }
 
-export function isAnyDisconnected()
+export function isAllDisconnected()
 {
-    return _.any<Protocol>(protocols, protocol => protocol.isConnected());
+    return _.all<Protocol>(protocols, protocol => !protocol.isConnected());
 }
+
+var callbacks: {():void}[] = [];
+
+export function onConnectionChanged(callback: ()=>void)
+{
+    callbacks.push(callback);
+}
+
+var raiseConnectionChanged = function ()
+{
+    _.each<()=>void>(callbacks, callback => callback());
+};
 
 export interface ISubscriptionOptions<TData>
 {
@@ -173,6 +196,7 @@ export interface ISubscriptionOptions<TData>
     onerror?: (data: ErrorEvent)=>void;
     parseJson?: boolean;
 }
+
 export class Subscription<TData>
 {
     private protocol: Protocol;

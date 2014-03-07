@@ -79,8 +79,16 @@ var disconnectLink = <HTMLAnchorElement>document.querySelector('div#header-conte
 disconnectLink.addEventListener('click', e =>
 {
     e.preventDefault();
-    data.disconnectAll();
-    $(disconnectLink).fadeOut(function() { $(this).remove(); });
+
+    if (data.isAllDisconnected())
+        data.reconnectAll();
+    else
+        data.disconnectAll();
+});
+
+data.onConnectionChanged(() =>
+{
+    disconnectLink.textContent = data.isAllDisconnected() ? "reconnect" : "disconnect";
 });
 
 var onerror = () =>
