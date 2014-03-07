@@ -181,6 +181,8 @@ export function buildAction(id: string, target: Element)
 
     withAction(id, action =>
     {
+        console.assert(!action.hasArguments);
+
         if (!button.textContent)
             button.innerHTML = action.label;
 
@@ -196,7 +198,11 @@ export function buildActions(idPrefix: string, target: Element)
 
     withActions(idPrefix, actions =>
     {
-        _.each(actions, action => buildAction(action.id, target));
+        _.each(actions, action =>
+        {
+            if (!action.hasArguments)
+                buildAction(action.id, target);
+        });
     });
 }
 
@@ -339,7 +345,7 @@ export function withSettings(pathPrefix: string, callback: (settings:Setting[])=
 
 function createSetting(setting: Setting, container: Element, closeable: Closeable)
 {
-    if (setting.isReadOnly)
+    if (!setting || setting.isReadOnly)
         return;
 
     var heading, input,
