@@ -28,6 +28,13 @@ namespace bold
       d_turnAmp.setTarget(0);
     }
 
+    /**
+     * Immediately set all walk parameters to zero.
+     *
+     * Call stop instead to have walking stop smoothly.
+     */
+    void reset();
+
     bool isRunning() const;
 
     /**

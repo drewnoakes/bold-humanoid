@@ -6,7 +6,7 @@ void Ambulator::setMoveDir(Eigen::Vector2d const& moveDir)
 {
   if (d_moveDirSet)
     log::error("Ambulator::setMoveDir") << "Movement direction set twice between calls to step";
-  
+
   d_moveDirSet = true;
   d_xAmp.setTarget(moveDir.x());
   d_yAmp.setTarget(moveDir.y());
@@ -19,4 +19,12 @@ void Ambulator::setTurnAngle(double turnSpeed)
 
   d_turnAngleSet = true;
   d_turnAmp.setTarget(turnSpeed);
+}
+
+void Ambulator::reset()
+{
+  d_xAmp.reset();
+  d_yAmp.reset();
+  d_turnAmp.reset();
+  d_walkModule->stop();
 }
