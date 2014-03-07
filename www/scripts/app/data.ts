@@ -12,6 +12,7 @@ declare class MozWebSocket
 // GLOBAL STATE
 
 var elementContainer = document.querySelector('#connections .indicators');
+var protocols: Protocol[] = [];
 var protocolByName: {[name: string]: Protocol} = {};
 
 // CLIENT
@@ -40,6 +41,8 @@ class Protocol
         this.indicator.className = 'connection-indicator connecting';
 
         elementContainer.appendChild(this.indicator);
+
+        protocols.push(this);
     }
 
     public addClient(client: IClient)
@@ -145,12 +148,13 @@ class Protocol
 
 export function disconnectAll()
 {
-    _.each<Protocol>(_.values(protocolByName), protocol => protocol.disconnect());
+    _.each<Protocol>(protocols, protocol => protocol.disconnect());
 }
 
 export function reconnectAll()
 {
-    _.each<Protocol>(_.values(protocolByName), protocol => protocol.reconnect());
+    _.each<Protocol>(protocols, protocol => protocol.reconnect());
+}
 }
 
 export interface ISubscriptionOptions<TData>
