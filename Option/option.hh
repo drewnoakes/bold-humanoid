@@ -53,6 +53,8 @@ namespace bold
      */
     virtual double hasTerminated() { return 1; }
 
+    virtual void reset() {}
+
     /** Select this option to be run
      *
      * If this option returns an empty vector, this indicates that it
