@@ -38,5 +38,11 @@ namespace bold
       step();
       return getCurrent();
     }
+
+    void reset()
+    {
+      d_target = 0;
+      d_current = 0;
+    }
   };
 }
