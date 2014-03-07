@@ -2,6 +2,8 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
+/// <reference path="../libs/jquery.d.ts" />
+
 import Settings = require('Settings');
 
 declare class MozWebSocket
@@ -39,6 +41,7 @@ class Protocol
         this.indicator = document.createElement('div');
         this.indicator.title = protocolName;
         this.indicator.className = 'connection-indicator connecting';
+        this.indicator.style.display = 'none';
 
         elementContainer.appendChild(this.indicator);
 
@@ -51,6 +54,7 @@ class Protocol
         {
             // This is the first client, so open the socket
             this.createSocket();
+            $(this.indicator).fadeIn();
         }
 
         this.clients.push(client);
@@ -105,23 +109,27 @@ class Protocol
                     // No one is using this socket any more, so close it down
                     this.socket.close();
                     delete this.socket;
+                    $(this.indicator).fadeOut();
                 }
 
                 break;
             }
         }
     }
+
     public disconnect()
     {
-        this.socket.close();
+        if (this.socket.readyState !== WebSocket.CLOSED)
+            this.socket.close();
     }
 
     public reconnect()
     {
+        if (this.clients.length === 0)
+            return;
+
         if (this.socket.readyState === WebSocket.CLOSED)
-        {
            this.createSocket();
-        }
     }
 
     public isConnected() : boolean
