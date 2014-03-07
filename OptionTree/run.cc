@@ -38,7 +38,7 @@ void OptionTree::run()
   list<shared_ptr<Option>> queue = {d_top};
 
   function<void(shared_ptr<Option>)> runOption;
-  runOption = [&runOption,&writer,&ranOptions](shared_ptr<Option> option)
+  runOption = [this,&runOption,&writer,&ranOptions](shared_ptr<Option> option)
   {
     log::verbose("OptionTree::run") << "Running " << option->getTypeName() << " option: " << option->getId();
 
@@ -46,6 +46,13 @@ void OptionTree::run()
 
     writer.String("id").String(option->getId().c_str());
     writer.String("type").String(option->getTypeName().c_str());
+
+    // If not wasn't run last cycle, reset it
+    if (d_optionsLastCycle.find(option) == d_optionsLastCycle.end())
+    {
+      writer.String("reset").Bool(true);
+      option->reset();
+    }
 
     // Run it
     writer.String("run").StartObject();
@@ -75,4 +82,7 @@ void OptionTree::run()
   doc->Parse<0,UTF8<>>(buffer.GetString());
 
   State::set(make_shared<OptionTreeState const>(ranOptions, std::move(doc)));
+
+  d_optionsLastCycle.clear();
+  d_optionsLastCycle.insert(ranOptions.begin(), ranOptions.end());
 }

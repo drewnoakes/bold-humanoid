@@ -2,8 +2,9 @@
 
 #include "../Option/option.hh"
 
-#include <map>
 #include <cassert>
+#include <map>
+#include <set>
 
 namespace bold
 {
@@ -38,6 +39,7 @@ namespace bold
 
   private:
     std::map<std::string, std::shared_ptr<Option> > d_options;
+    std::set<std::shared_ptr<Option>> d_optionsLastCycle;
     std::shared_ptr<Option> d_top;
   };
 
