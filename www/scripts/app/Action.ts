@@ -17,7 +17,7 @@ class Action
         this.hasArguments = actionData.hasArguments;
     }
 
-    public activate(args)
+    public activate(args?: any)
     {
         if (!args)
           args = {};

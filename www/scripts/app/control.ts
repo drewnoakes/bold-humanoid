@@ -184,7 +184,7 @@ export function buildAction(id: string, target: Element)
         if (!button.textContent)
             button.innerHTML = action.label;
 
-        button.addEventListener('click', () => action.activate(null));
+        button.addEventListener('click', () => action.activate());
     });
 
     return button;
