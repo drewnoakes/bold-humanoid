@@ -32,7 +32,7 @@ class OptionTreeModule extends Module
         element.appendChild(this.optionList);
 
         var controls = document.createElement('div');
-        controls.className = 'control-container';
+        controls.className = 'control-container flow';
         control.buildSetting('options.announce-fsm-states', controls, this.closeables);
         control.buildSetting('options.announce-fsm-transitions', controls, this.closeables);
         control.buildSettings('options.fsms', controls, this.closeables);
