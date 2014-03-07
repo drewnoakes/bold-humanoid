@@ -16,6 +16,8 @@ for i in ${@:2}
 do
     export NODE_PATH=/usr/local/lib/node_modules
 
+    echo "Running script $1 on darwin$i.local"
+
     echo "new (require('websocket').client)() \
               .on('connectFailed', function(error) { \
                 console.log(error); \
@@ -23,7 +25,7 @@ do
               }) \
               .on('connect', function(conn) { \
                 conn.on('error', function(error) { console.log(error); process.exit(1); }); \
-                conn.send('{\"type\":\"action\",\"id\":\"motion-script.$2\"}'); \
+                conn.send('{\"type\":\"action\",\"id\":\"motion-script.$1\"}'); \
                 conn.close(); \
               }) \
               .connect('ws://darwin$i.local:8080', 'control-protocol');" | node
