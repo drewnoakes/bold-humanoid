@@ -19,12 +19,17 @@ class Action
 
     public activate(args?: any)
     {
-        if (!args)
-          args = {};
-        args.type = "action";
-        args.id = this.id;
+        console.assert(this.hasArguments === !!args);
 
-        require('control').send({type: "action", id: this.id});
+        var message: any = {
+            type: "action",
+            id: this.id
+        };
+
+        if (this.hasArguments)
+            message.args = args;
+
+        require('control').send(message);
     }
 }
 
