@@ -51,9 +51,12 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
       }
     }
 
-    setCurrentState(transition->childState);
-
-    transition->onFire();
+    // If the FSM is paused, don't take the transition
+    if (!d_paused->getValue())
+    {
+      setCurrentState(transition->childState);
+      transition->onFire();
+    }
 
     return true;
   };
@@ -106,7 +109,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
       break;
     }
   }
-  while (transitionMade);
+  while (transitionMade && !d_paused->getValue());
 
   writer.EndArray();
 

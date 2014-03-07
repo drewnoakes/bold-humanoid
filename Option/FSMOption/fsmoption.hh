@@ -16,6 +16,7 @@
 namespace bold
 {
   struct FSMState;
+  template<typename> class Setting;
   class Voice;
 
   struct FSMTransition
@@ -79,10 +80,7 @@ namespace bold
   class FSMOption : public Option
   {
   public:
-    FSMOption(std::shared_ptr<Voice> voice, std::string const& id)
-    : Option(id, "FSM"),
-      d_voice(voice)
-    {}
+    FSMOption(std::shared_ptr<Voice> voice, std::string const& id);
 
     virtual bool isAvailable() override;
 
@@ -114,6 +112,7 @@ namespace bold
     std::shared_ptr<FSMState> d_startState;
     std::shared_ptr<FSMState> d_curState;
     std::shared_ptr<Voice> d_voice;
+    Setting<bool>* d_paused;
   };
 
   inline bool FSMOption::isAvailable()

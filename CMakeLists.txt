@@ -332,6 +332,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/FSMOption/FSMOption.cc
   ./Option/FSMOption/fsmstate.cc
   ./Option/FSMOption/fsmtransition.cc
   ./Option/FSMOption/runPolicy.cc
