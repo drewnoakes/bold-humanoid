@@ -3,6 +3,7 @@
  */
 
 /// <reference path="../libs/lodash.d.ts"/>
+/// <reference path="../libs/jquery.d.ts"/>
 
 import control = require('control');
 import constants = require('constants');
