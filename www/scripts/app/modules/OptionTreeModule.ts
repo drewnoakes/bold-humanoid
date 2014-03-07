@@ -34,6 +34,7 @@ class OptionTreeModule extends Module
         var controls = document.createElement('div');
         controls.className = 'control-container';
         control.buildSetting('options.announce-fsm-states', controls, this.closeables);
+        control.buildSettings('options.fsms', controls, this.closeables);
         element.appendChild(controls);
 
         this.closeables.add(new data.Subscription<state.OptionTree>(
