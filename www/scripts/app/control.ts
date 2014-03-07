@@ -147,10 +147,8 @@ export function send(message: ControlMessage)
     subscription.send(JSON.stringify(message));
 }
 
-export function getConfigText(matching?: string)
+export function getSettingText(matching?: string)
 {
-    // TODO allow other types of config (actions, values only, ...?)
-
     if (!settingsJson)
         return '';
 
@@ -158,6 +156,20 @@ export function getConfigText(matching?: string)
 
     if (typeof(matching) === 'string' && matching.length !== 0) {
         response = _.filter<Setting>(settingsJson, setting => setting.path.indexOf(matching) !== -1);
+    }
+
+    return JSON.stringify(response, null, 4);
+}
+
+export function getActionText(matching?: string)
+{
+    if (!actionsJson)
+        return '';
+
+    var response = actionsJson;
+
+    if (typeof(matching) === 'string' && matching.length !== 0) {
+        response = _.filter<Action>(actionsJson, action => action.id.indexOf(matching) !== -1);
     }
 
     return JSON.stringify(response, null, 4);
