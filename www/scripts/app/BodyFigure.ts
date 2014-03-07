@@ -124,14 +124,14 @@ class BodyFigure
         });
     }
 
-    public getJointElement(jointId)
+    public getJointElement(jointId: number)
     {
         return this.jointElementById[jointId];
     }
 
     public visitJoints(callback: (jointId:number, jointDiv:HTMLDivElement) => void)
     {
-        _.each(_.range(1, 21), jointId =>
+        _.each<number>(_.range(1, 21), jointId =>
         {
             var jointDiv = <HTMLDivElement>this.element.querySelector("div.joint[data-joint-id='" + jointId + "']");
             callback(jointId, jointDiv);
