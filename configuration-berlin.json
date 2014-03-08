@@ -23,7 +23,7 @@
     "settings": {
       "auto-wb": false,
       "exposure-auto": 1,
-      "exposure-absolute": 333,
+      "exposure-absolute": 733,
       "exposure-auto-priority": false,
       "backlight-compensation": false,
       "power-line-frequency": 2,
@@ -41,9 +41,9 @@
       "accepted-width-ratio": [0.6, 1.8]
     },
     "pixel-labels": {
-      "goal": { "hue": [35, 60], "sat": [138, 255], "val": [120,160] },
-      "ball": { "hue": [248, 25], "sat": [72, 255], "val": [60, 255] },
-      "field": { "hue": [80, 118], "sat": [90, 236], "val": [70, 192] },
+      "goal": { "hue": [45, 65], "sat": [138, 255], "val": [90,120] },
+      "ball": { "hue": [248, 25], "sat": [72, 255], "val": [30, 220] },
+      "field": { "hue": [80, 118], "sat": [155, 236], "val": [60, 192] },
       "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
     }
   }
