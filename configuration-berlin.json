@@ -38,7 +38,7 @@
 
   "vision": {
     "goal-detection": {
-      "accepted-width-ratio": [0.6, 1.8]
+      "accepted-width-ratio": [0.3, 1.8]
     },
     "pixel-labels": {
       "goal": { "hue": [45, 65], "sat": [138, 255], "val": [90,120] },
