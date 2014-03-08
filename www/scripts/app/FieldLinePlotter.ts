@@ -180,7 +180,7 @@ export function drawVisibleFieldPoly(context: CanvasRenderingContext2D, options,
 
 export function drawBall(context: CanvasRenderingContext2D, options, position: number[])
 {
-    context.fillStyle = options.ballFillStyle || 'orange';
+    context.fillStyle = options.ballFillStyle || 'red';
 
     context.beginPath();
     context.arc(position[0], position[1], constants.ballRadius, 0, Math.PI*2, true);
