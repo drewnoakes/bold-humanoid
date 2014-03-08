@@ -19,13 +19,15 @@ namespace bold
                      Vector2dVector goalObservations,
                      std::vector<LineSegment2i> observedLineSegments,
                      std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> occlusionRays,
-                     long totalPixelCount, long processedPixelCount)
+                     long totalPixelCount, long processedPixelCount,
+                     ulong thinkCycleNumber)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments),
       d_occlusionRays(occlusionRays),
       d_totalPixelCount(totalPixelCount),
-      d_processedPixelCount(processedPixelCount)
+      d_processedPixelCount(processedPixelCount),
+      d_thinkCycleNumber(thinkCycleNumber)
     {}
 
     Maybe<Eigen::Vector2d> getBallObservation() const { return d_ballObservation; }
@@ -37,6 +39,7 @@ namespace bold
     long getTotalPixelCount() const { return d_totalPixelCount; }
     long getProcessedPixelCount() const { return d_processedPixelCount; }
     float getProcessedPixelRatio() const { return (float)d_processedPixelCount/d_totalPixelCount; }
+    ulong getThinkCycleNumber() const { return d_thinkCycleNumber; }
 
     virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -47,5 +50,6 @@ namespace bold
     std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> d_occlusionRays;
     long d_totalPixelCount;
     long d_processedPixelCount;
+    ulong d_thinkCycleNumber;
   };
 }

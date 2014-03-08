@@ -72,7 +72,7 @@ namespace bold
                  std::shared_ptr<HeadModule> headModule);
 
     /** Process the provided image, extracting features. */
-    void integrateImage(cv::Mat& cameraImage, SequentialTimer& timer);
+    void integrateImage(cv::Mat& cameraImage, SequentialTimer& timer, ulong thinkCycleNumber);
 
     /** Saves the provided image to a file, along with information about the current agent's state in a JSON file. */
     void saveImage(cv::Mat const& image);

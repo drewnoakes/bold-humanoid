@@ -18,12 +18,14 @@ namespace bold
                     std::vector<Eigen::Vector3d> goalObservations,
                     std::vector<LineSegment3d> observedLineSegments,
                     Maybe<Polygon2d> visibleFieldPoly,
-                    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays)
+                    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
+                    ulong thinkCycleNumber)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
       d_observedLineSegments(observedLineSegments),
       d_visibleFieldPoly(visibleFieldPoly),
-      d_occlusionRays(occlusionRays)
+      d_occlusionRays(occlusionRays),
+      d_thinkCycleNumber(thinkCycleNumber)
     {}
 
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
@@ -33,6 +35,7 @@ namespace bold
     std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> getOcclusionRays() const { return d_occlusionRays; }
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
+    ulong getThinkCycleNumber() const { return d_thinkCycleNumber; }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -42,5 +45,6 @@ namespace bold
     std::vector<LineSegment3d> d_observedLineSegments;
     Maybe<Polygon2d> d_visibleFieldPoly;
     std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> d_occlusionRays;
+    ulong d_thinkCycleNumber;
   };
 }

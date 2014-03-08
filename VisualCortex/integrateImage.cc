@@ -1,6 +1,6 @@
 #include "visualcortex.ih"
 
-void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
+void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCycleNumber)
 {
   //
   // Record frame, if required
@@ -176,7 +176,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t)
     }
   }
 
-  State::set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, d_fieldEdgePass->getOcclusionRays(), totalPixelCount, processedPixelCount));
+  State::set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, d_fieldEdgePass->getOcclusionRays(), totalPixelCount, processedPixelCount, thinkCycleNumber));
 
   t.timeEvent("Updating State");
 }

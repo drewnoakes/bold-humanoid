@@ -21,7 +21,7 @@ void Agent::think()
   // Process the image
   //
   t.enter("Vision");
-  d_visualCortex->integrateImage(image, t);
+  d_visualCortex->integrateImage(image, t, d_cycleNumber);
   t.exit();
 
   d_visualCortex->streamDebugImage(image, t);

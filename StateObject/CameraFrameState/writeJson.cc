@@ -7,6 +7,8 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
+    writer.String("thinkCycle").Uint64(d_thinkCycleNumber);
+
     writer.String("ball");
     if (d_ballObservation.hasValue())
     {
