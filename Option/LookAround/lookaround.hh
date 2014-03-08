@@ -14,6 +14,7 @@ namespace bold
     LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle, std::function<double()> speedCallback = nullptr)
     : Option(id, "LookAround"),
       d_speedCallback(speedCallback),
+      d_isResetNeeded(true),
       d_headModule(headModule),
       d_lastTimeSeconds(0)
     {
@@ -42,6 +43,7 @@ namespace bold
     /// The time spent in each vertical movement
     Setting<double>* d_durationVert;
 
+    bool d_isResetNeeded;
     /// The last time this runPolicy was called
     double d_lastTimeSeconds;
     /// The time at which this option was considered started

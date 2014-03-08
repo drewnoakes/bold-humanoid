@@ -9,13 +9,12 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   double durationHoriz = d_durationHoriz->getValue();
   double durationVert = d_durationVert->getValue();
 
-  if (t - d_lastTimeSeconds > 1)
+  if (d_isResetNeeded)
   {
-    // It's been long enough since we last ran that we consider this a re-start.
-
     // Start quarter-way through the first phase, so the head is slightly
     // to the left, and pans right through the top of the box.
     d_startTimeSeconds = t - (durationHoriz/4.0);
+    d_isResetNeeded = false;
   }
   else if (d_speedCallback)
   {
