@@ -39,8 +39,6 @@ OpenTeamCommunicator::OpenTeamCommunicator(const unsigned teamNumber, const unsi
 
 void OpenTeamCommunicator::observe(SequentialTimer& timer)
 {
-  timer.enter("Open Team Comms Send");
-
   // Update time data
   d_currentTime = Clock::getTimestamp();
   assert(d_lastBroadcast <= d_currentTime);
@@ -48,9 +46,6 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
   // Send values using mitecom
   d_commState = OpenTeamCommunicatorStatus::SENDING;
   d_commState = sendData();
-  timer.timeEvent("Send");
-
-  timer.exit();
 }
 
 OpenTeamCommunicatorStatus OpenTeamCommunicator::recieveData()
