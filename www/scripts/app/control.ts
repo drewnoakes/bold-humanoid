@@ -436,13 +436,45 @@ function createSetting(setting: Setting, container: Element, closeable: Closeabl
             input.type = 'number';
             input.value = setting.value;
             if (typeof(setting.min) !== 'undefined')
-                input.min = setting.min;
+                input.min = setting.min.toString();
             if (typeof(setting.max) !== 'undefined')
-                input.max = setting.max;
+                input.max = setting.max.toString();
             wrapper.appendChild(input);
 
             input.addEventListener('change', () => setting.setValue(parseFloat(input.value)));
             closeable.add(setting.track(value => input.value = value));
+            break;
+        }
+        case "double-range":
+        {
+            heading = document.createElement('h3');
+            heading.textContent = setting.getDescription();
+            wrapper.appendChild(heading);
+
+            console.assert(setting.value instanceof Array && setting.value.length === 2);
+
+            var minInput = document.createElement('input');
+            minInput.type = 'number';
+            minInput.value = setting.value[0];
+            if (typeof(setting.min) !== 'undefined')
+                minInput.min = setting.min.toString();
+            if (typeof(setting.max) !== 'undefined')
+                minInput.max = setting.max.toString();
+            wrapper.appendChild(minInput);
+
+            var maxInput = document.createElement('input');
+            maxInput.type = 'number';
+            maxInput.value = setting.value[1];
+            if (typeof(setting.min) !== 'undefined')
+                maxInput.min = setting.min.toString();
+            if (typeof(setting.max) !== 'undefined')
+                maxInput.max = setting.max.toString();
+            wrapper.appendChild(maxInput);
+
+            var onChange = () => setting.setValue([parseFloat(minInput.value), parseFloat(maxInput.value)]);
+            minInput.addEventListener('change', onChange);
+            maxInput.addEventListener('change', onChange);
+            closeable.add(setting.track(value => { minInput.value = value[0]; maxInput.value = value[1]; }));
             break;
         }
         case 'hsv-range':
