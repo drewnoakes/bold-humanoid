@@ -4,21 +4,21 @@ bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d* pos)
 {
   // Find a measure of the width of the goal post in agent space
 
-  // Take center of topmost run (the first)
+  // Take center of topmost run (the first) (bottom in image)
   Run const& topRun = *blob.runs.begin();
   Vector2d basePos(
-    (topRun.endX + topRun.startX) / 2.0,
+    topRun.midX(),
     topRun.y
   );
 
-  uint width = 0;
+  // Determine width as the average run length
+  // TODO would be interesting to ensure low variance here, as well as just the average
+  ulong widthSum = 0;
   for (Run const& run : blob.runs)
-  {
-    uint len = run.length();
-    if (len > width)
-      width = len;
-  }
+    widthSum += run.length();
+  double width = widthSum / blob.runs.size();
 
+  // Ensure the goal is rougly the expected radius (in metres)
   Vector2d sidePos = basePos + Vector2d(width/2.0, 0);
 
   auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(basePos);
