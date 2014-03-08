@@ -44,6 +44,8 @@ namespace bold
     unsigned startX;   ///< The column index of the left-most pixel
     unsigned endX;     ///< The column index of the right-most pixel
 
+    double midX() const { return (endX + startX) / 2.0; }
+
     inline friend std::ostream& operator<<(std::ostream& stream, Run const& run)
     {
       return stream << "Run (y=" << run.y << " x=[" << run.startX << "," << run.endX << "] len=" << run.length() << ")";
