@@ -506,6 +506,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObserver/Vocaliser/vocaliser.cc
+)
+
+add_class(BOLDHUMANOID
   ./TeamCommunicator/teamcommunicator.cc
 )
 

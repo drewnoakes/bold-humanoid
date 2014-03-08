@@ -35,6 +35,7 @@ namespace bold
   class Spatialiser;
   class SuicidePill;
   class VisualCortex;
+  class Vocaliser;
   class Voice;
   class WalkModule;
 
@@ -97,6 +98,7 @@ namespace bold
 
     // State observers
 
+    std::shared_ptr<Vocaliser> d_vocaliser;
     std::shared_ptr<FallDetector> d_fallDetector;
     std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;

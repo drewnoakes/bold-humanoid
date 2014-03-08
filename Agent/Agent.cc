@@ -29,6 +29,7 @@ Agent::Agent()
   d_motionScriptModule = make_shared<MotionScriptModule>(d_motionSchedule, motionScripts);
 
   // Create StateObservers
+  d_vocaliser = make_shared<Vocaliser>(d_voice);
   d_fallDetector = make_shared<FallDetector>(d_voice);
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
@@ -38,6 +39,7 @@ Agent::Agent()
   d_orientationTracker = make_shared<OrientationTracker>();
 
   // Register StateObservers
+  State::registerObserver(d_vocaliser);
   State::registerObserver(d_fallDetector);
   State::registerObserver(d_gyroCalibrator);
   State::registerObserver(d_healthAndSafety);

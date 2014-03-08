@@ -25,6 +25,9 @@
     "word-gap-ms":       { "type": "int", "min": 0, "max": 1000, "default": 0 },
     "capital-accent-hz": { "type": "int", "min": 0, "max": 5000, "default": 0 }
   },
+  "vocaliser": {
+    "announce-ball-position": { "type": "bool", "default": false, "description": "Say ball pos" }
+  },
   "hardware": {
     "cm730-path":   { "type": "string", "readonly": true, "default": "/dev/ttyUSB0" },
     "video-path":   { "type": "string", "readonly": true, "default": "/dev/video0" },

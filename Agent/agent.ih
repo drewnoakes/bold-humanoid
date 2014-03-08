@@ -52,6 +52,7 @@
 #include "../StateObserver/Odometer/odometer.hh"
 #include "../StateObserver/OrientationTracker/orientationtracker.hh"
 #include "../StateObserver/SuicidePill/suicidepill.hh"
+#include "../StateObserver/Vocaliser/vocaliser.hh"
 #include "../ThreadUtil/threadutil.hh"
 #include "../VisualCortex/visualcortex.hh"
 #include "../Voice/voice.hh"

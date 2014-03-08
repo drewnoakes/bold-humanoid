@@ -19,10 +19,15 @@ class VoiceModule extends Module
         control.buildSetting('options.announce-fsm-states', usage, this.closeables);
         element.appendChild(usage);
 
-        var controls = document.createElement('div');
-        controls.className = 'control-container flow';
-        control.buildSettings('voice', controls, this.closeables);
-        element.appendChild(controls);
+        var voiceControls = document.createElement('div');
+        voiceControls.className = 'control-container flow';
+        control.buildSettings('voice', voiceControls, this.closeables);
+        element.appendChild(voiceControls);
+
+        var vocaliserControls = document.createElement('div');
+        vocaliserControls.className = 'control-container flow';
+        control.buildSettings('vocaliser', vocaliserControls, this.closeables);
+        element.appendChild(vocaliserControls);
 
         var sayings = document.createElement('div');
         sayings.className = 'control-container';
