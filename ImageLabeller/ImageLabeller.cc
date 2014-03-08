@@ -36,22 +36,23 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   // Remember, y = 0 is bottom of field of view (the image is upside down)
   if (ignoreAboveHorizon)
   {
-    minXHorizonY = min(image.rows, d_spatialiser->findHorizonForColumn(0));
-    maxXHorizonY = min(image.rows, d_spatialiser->findHorizonForColumn(image.cols - 1));
+    minXHorizonY = d_spatialiser->findHorizonForColumn(0);
+    maxXHorizonY = d_spatialiser->findHorizonForColumn(image.cols - 1);
     minHorizonY = min(minXHorizonY, maxXHorizonY);
     maxHorizonY = max(minXHorizonY, maxXHorizonY);
   }
   else
   {
+    // If we shouldn't ignore above horizon, just say it's at the top of the image
     minHorizonY = image.rows;
   }
 
   timer.timeEvent("Find Horizon");
 
-  minHorizonY = max(0, minHorizonY);
-
   int y = 0;
   Vector2i granularity;
+
+  minHorizonY = min(minHorizonY, image.rows);
 
   // First batch: everything guaranteed under the horizon
   for (; y < minHorizonY; y += granularity.y())
@@ -74,28 +75,35 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   }
 
   timer.timeEvent("Pixels Under");
-
-  if (ignoreAboveHorizon)
+  double horizonYRange = maxXHorizonY - minXHorizonY;
+  if (ignoreAboveHorizon && minHorizonY < image.rows)
   {
     ++maxHorizonY;
-    maxHorizonY = min(image.rows, maxHorizonY);
+
+    bool horizonUpwards = maxXHorizonY > minXHorizonY;
 
     // Second batch: horizon goes through these rows
-    int horizonYRange = maxHorizonY - minHorizonY;
-    for (; y < maxHorizonY; y += granularity.y())
+    for (; y < maxHorizonY && y < image.rows; y += granularity.y())
     {
       granularity = granularityFunction(y);
 
       uchar* origpix = image.ptr<uchar>(y);
       uchar* labelledpix = labelled.ptr<uchar>(y);
 
-      double ratio = (y - minHorizonY) / (double)horizonYRange;
-      int horizonY = Math::lerp(ratio, minXHorizonY, maxXHorizonY);
+      double ratio = double(y - minXHorizonY) / double(horizonYRange);
 
+      int horizonX = Math::lerp(ratio, 0, image.cols - 1);
+      // TODO: wrap two loops in for loop? Our Atom can't do branch
+      // prediction, so doing same check inside loop may be costly
+      // We can also directly fill the line we know to be 0
       for (int x = 0; x < image.cols; x += granularity.x())
       {
+        bool aboveHorizon =
+          (horizonUpwards && x < horizonX) ||
+          (!horizonUpwards && x > horizonX);
+
         uchar l =
-          y > horizonY ?
+          aboveHorizon ?
           0 :
           lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
