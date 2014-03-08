@@ -26,3 +26,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   return vector<shared_ptr<Option>>();
 }
+
+void CircleBall::reset()
+{
+  d_ambulator->reset();
+}

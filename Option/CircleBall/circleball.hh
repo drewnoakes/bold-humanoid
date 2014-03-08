@@ -18,6 +18,8 @@ namespace bold
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
+    virtual void reset() override;
+
   private:
     std::shared_ptr<Ambulator> d_ambulator;
     std::shared_ptr<HeadModule> d_headModule;
