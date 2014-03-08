@@ -39,16 +39,11 @@ OpenTeamCommunicator::OpenTeamCommunicator(const unsigned teamNumber, const unsi
 
 void OpenTeamCommunicator::observe(SequentialTimer& timer)
 {
-  timer.enter("Open Team Comms");
+  timer.enter("Open Team Comms Send");
 
   // Update time data
   d_currentTime = Clock::getTimestamp();
   assert(d_lastBroadcast <= d_currentTime);
-
-  // Receive vlaues using mitecom
-  d_commState = OpenTeamCommunicatorStatus::RECIEVING;
-  d_commState = recieveData();
-  timer.timeEvent("Receive");
 
   // Send values using mitecom
   d_commState = OpenTeamCommunicatorStatus::SENDING;
@@ -58,7 +53,6 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
   timer.exit();
 }
 
-// TODO This should be moved as only recieves when observation changes!!
 OpenTeamCommunicatorStatus OpenTeamCommunicator::recieveData()
 {
   char buffer[BUFFER_SIZE];
