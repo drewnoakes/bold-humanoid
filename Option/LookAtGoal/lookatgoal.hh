@@ -2,11 +2,10 @@
 
 #include "../option.hh"
 #include "../../CameraModel/cameramodel.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
 
 namespace bold
 {
-  class HeadModule;
-
   class LookAtGoal : public Option
   {
   public:
@@ -17,6 +16,8 @@ namespace bold
     {}
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
+
+    virtual void reset() override { d_headModule->initTracking(); }
 
   private:
     std::shared_ptr<CameraModel> d_cameraModel;
