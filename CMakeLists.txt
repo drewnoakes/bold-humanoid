@@ -10,6 +10,7 @@ set(PRECOMPILE_HEADERS OFF CACHE BOOL "Choose whether to precompile headers")
 set(EIGEN_VECTORIZE OFF CACHE BOOL "Choose whether to enable Eigen vectorization")
 set(UPLOAD_SCP_PATH "" CACHE STRING "Path to use in upload scp command. Format: user@server:path")
 set(BUNDLES_PATH "" CACHE STRING "Path to use to store bundles")
+set(TARGET_ATOM "" ON CACHE BOOL "Choose whether to optimize for atom")
 
 include(ExternalProject)
 include(AddPcih)
@@ -92,13 +93,20 @@ include_directories(${BOLDHUMANOID_INCLUDE_DIRS})
 set(BOLDHUMANOID_LINK_DIRS ${LIBWEBSOCKETDIR}/lib)
 link_directories(${BOLDHUMANOID_LINK_DIRS})
 
+SET(ATOM "")
+if(TARGET_ATOM)
+  SET(ATOM " -march=atom -mtune=atom")
+endif(TARGET_ATOM)
+
 #
 ## Additional compile flags
 #
 if (EIGEN_VECTORIZE)
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -Wall  -Wno-unused-local-typedefs")
+#  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -Wall  -Wno-unused-local-typedefs")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -Wall -Wno-unused-local-typedefs" ${ATOM})
 else(EIGEN_VECTORIZE)
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall  -Wno-unused-local-typedefs")
+#  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall  -Wno-unused-local-typedefs")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall -Wno-unused-local-typedefs" ${ATOM})
 endif(EIGEN_VECTORIZE)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
