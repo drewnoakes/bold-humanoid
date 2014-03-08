@@ -47,6 +47,7 @@ do
                  configuration-team.json \
                  configuration-hatfield.json \
                  configuration-drews.json \
+                 configuration-berlin.json \
                  configuration-metadata.json \
                  darwin@darwin$i.local:
 

@@ -21,6 +21,7 @@ do
         motionscripts \
         configuration-team.json \
         configuration-hatfield.json \
+        configuration-berlin.json \
         configuration-drews.json \
         configuration-metadata.json \
         boldhumanoid.py \

@@ -19,6 +19,7 @@ do
     rsync -zrP configuration-team.json \
         configuration-hatfield.json \
         configuration-drews.json \
+        configuration-berlin.json \
         configuration-metadata.json \
         boldhumanoid \
         darwin@darwin$i.local:
