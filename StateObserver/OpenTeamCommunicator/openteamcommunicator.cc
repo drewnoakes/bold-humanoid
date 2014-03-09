@@ -116,8 +116,6 @@ void OpenTeamCommunicator::sendData()
     myInformation.data[BALL_RELATIVE_Y] = ballObservation->y() * 1000;
   }
 
-  // TODO Get bot's belief in its position
-
   uint32_t messageDataLength = 0;
 
   // Serialize and Broadcast Data
