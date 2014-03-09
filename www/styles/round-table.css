@@ -808,15 +808,28 @@ div.module.optiontree div.control-container
     padding-top: 8px;
 }
 
-div.module.optiontree div.graph svg g rect
+div.module.optiontree div.graph svg g.element rect
 {
     transition: fill 1s linear;
 }
 
-div.module.optiontree div.graph svg g.active rect
+div.module.optiontree div.graph svg g.element.active rect
 {
     transition: fill 0s linear;
     fill: yellow;
+}
+
+div.module.optiontree div.graph svg g.link path.connection
+{
+    transition: stroke-width 1s linear, stroke 1s linear;
+    stroke-width: 1;
+}
+
+div.module.optiontree div.graph svg g.link.active path.connection
+{
+    transition: stroke-width 0s linear, stroke 0s linear;
+    stroke-width: 5;
+    stroke: #792485;
 }
 
 /*******************************************************************/

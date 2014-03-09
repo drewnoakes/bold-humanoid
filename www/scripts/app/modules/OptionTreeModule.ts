@@ -237,13 +237,21 @@ class OptionTreeModule extends Module
 
             var fsmData = <state.FSMOptionData>data.run;
 
-            var block = this.blockByStateId[fsmData.start];
+            var stateName = fsmData.start;
+            this.highlight(this.blockByStateId[ stateName]);
 
-            console.assert(!!block);
-
-            var v: SVGElement = this.paper.findViewByModel(block).el;
-            (<any>v).classList.add("active");
-            this.highlightedLastCycle.push(v);
+            // walk transitions, highlighting links and target states
+            _.each(fsmData.transitions, d =>
+            {
+                var transitionKey = this.createTransitionKey({
+                    id: d.via,
+                    to: d.to,
+                    from: d.wildcard ? undefined : stateName
+                });
+                this.highlight(this.blockByStateId[d.to]);
+                this.highlight(this.linkByTransitionKey[transitionKey]);
+                stateName = d.to;
+            });
         }
 
         // OPTION LIST
@@ -265,6 +273,13 @@ class OptionTreeModule extends Module
                 this.optionList.appendChild(optionDiv);
             }
         }
+    }
+
+    private highlight(block: any)
+    {
+        var v: SVGElement = this.paper.findViewByModel(block).el;
+        (<any>v).classList.add("active");
+        this.highlightedLastCycle.push(v);
     }
 }
 
