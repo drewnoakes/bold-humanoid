@@ -54,10 +54,14 @@ void OpenTeamCommunicator::receiveData()
 {
   char buffer[BUFFER_SIZE];
 
-  // Receive a message (if available), this call is nonblocking
-  ssize_t messageLength = mitecom_receive(d_sock, buffer, BUFFER_SIZE);
-  if (messageLength > 0)
+  while (true)
   {
+    // Receive a message (if available), this call is nonblocking
+    ssize_t messageLength = mitecom_receive(d_sock, buffer, BUFFER_SIZE);
+
+    if (messageLength <= 0)
+      break;
+
     // Message received, update our view of the Team
     MixedTeamMate teamMate = MixedTeamParser::parseIncoming(buffer, messageLength, d_teamNumber);
     if (teamMate.robotID != d_uniformNumber)
