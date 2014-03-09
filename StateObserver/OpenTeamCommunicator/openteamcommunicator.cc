@@ -20,6 +20,7 @@ OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniform
   d_uniformNumber(uniformNumber),
   d_localPort(Config::getStaticValue<int>("mitecom.local-port")),
   d_remotePort(Config::getStaticValue<int>("mitecom.remote-port")),
+  d_sendPeriodSeconds(Config::getSetting<double>("mitecom.send-period-seconds")),
   d_lastBroadcast(Clock::getTimestamp())
 {
   d_types.push_back(typeid(AgentFrameState));
@@ -38,8 +39,7 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
   d_currentTime = Clock::getTimestamp();
   assert(d_lastBroadcast <= d_currentTime);
 
-  // TODO period in config
-  if (Clock::getSecondsSince(d_lastBroadcast) > 0.5)
+  if (Clock::getSecondsSince(d_lastBroadcast) > d_sendPeriodSeconds->getValue())
   {
     // Send values using mitecom
     sendData();

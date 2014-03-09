@@ -1,7 +1,8 @@
 {
   "mitecom": {
     "local-port": 12321,
-    "remote-port": 12321
+    "remote-port": 12321,
+    "send-period-seconds": 0.5
   },
   "voice": {
     "enabled": true,
