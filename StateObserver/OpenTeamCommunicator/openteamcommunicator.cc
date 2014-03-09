@@ -43,9 +43,13 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
   d_currentTime = Clock::getTimestamp();
   assert(d_lastBroadcast <= d_currentTime);
 
-  // Send values using mitecom
-  d_commState = OpenTeamCommunicatorStatus::SENDING;
-  d_commState = sendData();
+  // TODO period in config
+  if (Clock::getSecondsSince(d_lastBroadcast) > 0.5)
+  {
+    // Send values using mitecom
+    d_commState = OpenTeamCommunicatorStatus::SENDING;
+    d_commState = sendData();
+  }
 }
 
 OpenTeamCommunicatorStatus OpenTeamCommunicator::receiveData()
@@ -84,45 +88,40 @@ void OpenTeamCommunicator::update(MixedTeamMate const& mate)
 
 OpenTeamCommunicatorStatus OpenTeamCommunicator::sendData()
 {
-  // TODO period in config
+  // NOTE protocol uses millimeters, we use meters -- scale values
 
-  if (Clock::getSecondsSince(d_lastBroadcast) > 0.5)
+  auto const& agentFrameState = State::get<AgentFrameState>();
+  auto const& worldFrameState = State::get<WorldFrameState>();
+
+  // Get values to be sent
+  auto const& ballObservation = agentFrameState->getBallObservation();
+  auto const& agentPosition = worldFrameState->getPosition();
+
+  MixedTeamMate myInformation;
+  myInformation.robotID = d_uniformNumber;
+  myInformation.data[ROBOT_CURRENT_ROLE] = ROLE_IN_TEAM; // TODO Check whether this is needed
+  myInformation.data[ROBOT_ABSOLUTE_X] = uint(agentPosition.x() * 1000);
+  myInformation.data[ROBOT_ABSOLUTE_Y] = uint(agentPosition.y() * 1000);
+  myInformation.data[ROBOT_ABSOLUTE_ORIENTATION] = Math::radToDeg(agentPosition.theta());
+
+  if (ballObservation)
   {
-    // NOTE protocol uses millimeters, we use meters -- scale values
-
-    auto const& agentFrameState = State::get<AgentFrameState>();
-    auto const& worldFrameState = State::get<WorldFrameState>();
-
-    // Get values to be sent
-    auto const& ballObservation = agentFrameState->getBallObservation();
-    auto const& agentPosition = worldFrameState->getPosition();
-
-    MixedTeamMate myInformation;
-    myInformation.robotID = d_uniformNumber;
-    myInformation.data[ROBOT_CURRENT_ROLE] = ROLE_IN_TEAM; // TODO Check whether this is needed
-    myInformation.data[ROBOT_ABSOLUTE_X] = uint(agentPosition.x() * 1000);
-    myInformation.data[ROBOT_ABSOLUTE_Y] = uint(agentPosition.y() * 1000);
-    myInformation.data[ROBOT_ABSOLUTE_ORIENTATION] = Math::radToDeg(agentPosition.theta());
-
-    if (ballObservation)
-    {
-      myInformation.data[BALL_RELATIVE_X] = ballObservation->x() * 1000;
-      myInformation.data[BALL_RELATIVE_Y] = ballObservation->y() * 1000;
-    }
-
-    // TODO Get bot's belief in its position
-
-    uint32_t messageDataLength = 0;
-
-    // Serialize and Broadcast Data
-    auto messageData = unique_ptr<MixedTeamCommMessage>(MixedTeamParser::create(&messageDataLength, myInformation, d_teamNumber, d_uniformNumber));
-    assert(messageData != nullptr);
-    assert(messageDataLength > 0);
-
-    mitecom_broadcast(d_sock, REMOTE_PORT, messageData.get(), messageDataLength);
-
-    d_lastBroadcast = d_currentTime;
+    myInformation.data[BALL_RELATIVE_X] = ballObservation->x() * 1000;
+    myInformation.data[BALL_RELATIVE_Y] = ballObservation->y() * 1000;
   }
+
+  // TODO Get bot's belief in its position
+
+  uint32_t messageDataLength = 0;
+
+  // Serialize and Broadcast Data
+  auto messageData = unique_ptr<MixedTeamCommMessage>(MixedTeamParser::create(&messageDataLength, myInformation, d_teamNumber, d_uniformNumber));
+  assert(messageData != nullptr);
+  assert(messageDataLength > 0);
+
+  mitecom_broadcast(d_sock, REMOTE_PORT, messageData.get(), messageDataLength);
+
+  d_lastBroadcast = d_currentTime;
 
   return OpenTeamCommunicatorStatus::IDLE;
 }
