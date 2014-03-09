@@ -27,7 +27,7 @@ namespace bold
   class OpenTeamCommunicator : public StateObserver
   {
   public:
-    OpenTeamCommunicator(const unsigned teamNumber, const unsigned uniformNumber);
+    OpenTeamCommunicator(unsigned teamNumber, unsigned uniformNumber);
 
     void observe(SequentialTimer& timer) override;
 

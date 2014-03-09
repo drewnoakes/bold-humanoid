@@ -20,7 +20,7 @@ using namespace Eigen;
 #define REMOTE_PORT 8082
 #define ROLE_IN_TEAM ROLE_OTHER
 
-OpenTeamCommunicator::OpenTeamCommunicator(const unsigned teamNumber, const unsigned uniformNumber)
+OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniformNumber)
 : StateObserver::StateObserver("Open Team Communicator", ThreadId::ThinkLoop),
   d_commState(OpenTeamCommunicatorStatus::IDLE),
   d_teamNumber(teamNumber),
