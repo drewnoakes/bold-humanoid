@@ -19,6 +19,10 @@ class OptionTreeModule extends Module
     private optionElementByName: {[name:string]:HTMLLIElement} = {};
     private optionList: HTMLUListElement;
     private graph: HTMLDivElement;
+    private selectedFSM: control.FSM;
+    private paper: joint.dia.Paper;
+    private linkByTransitionKey: {[name:string]:joint.dia.Link};
+    private blockByStateId: {[name:string]:joint.shapes.basic.Rect};
 
     constructor()
     {
@@ -57,7 +61,7 @@ class OptionTreeModule extends Module
         graph.on('batch:start', () => window.event.stopPropagation());
 
         // The view
-        new joint.dia.Paper({
+        this.paper = new joint.dia.Paper({
             el: this.graph,
             width: 640,
             height: 640,
@@ -86,8 +90,17 @@ class OptionTreeModule extends Module
         delete this.graph;
     }
 
+    private createTransitionKey(transition: {id: string; to: string; from?: string;}): string
+    {
+        return (transition.from || '*') + '->' + transition.to + '[' + transition.id + ']';
+    }
+
     private buildFsmGraph(fsm: control.FSM, graph: joint.dia.Graph)
     {
+        this.selectedFSM = fsm;
+        this.linkByTransitionKey = {};
+        this.blockByStateId = {};
+
         graph.clear();
 
         // Create state elements
@@ -121,9 +134,11 @@ class OptionTreeModule extends Module
                 }
             });
 
+            this.blockByStateId[state.id] = block;
             graph.addCell(block);
         });
 
+        // Create a wildcard 'from' node, if we have any wildcard transitions
         if (fsm.wildcardTransitions.length !== 0)
         {
             graph.addCell(new joint.shapes.basic.Circle({
@@ -142,7 +157,7 @@ class OptionTreeModule extends Module
         // Create transitions
         _.each(fsm.transitions, (transition: control.FSMTransition) =>
         {
-            graph.addCell(new joint.dia.Link({
+            var link = new joint.dia.Link({
                 source: { id: transition.from },
                 target: { id: transition.to },
                 attrs: {
@@ -162,13 +177,15 @@ class OptionTreeModule extends Module
                         }
                     }
                 ]
-            }));
+            });
+            this.linkByTransitionKey[this.createTransitionKey(transition)] = link;
+            graph.addCell(link);
         });
 
         // Create wildcard transitions
         _.each(fsm.wildcardTransitions, (wildcardTransition: control.FSMWildcardTransition) =>
         {
-            graph.addCell(new joint.dia.Link({
+            var link = new joint.dia.Link({
                 source: { id: 'wildcard' },
                 target: { id: wildcardTransition.to },
                 attrs: {
@@ -188,7 +205,9 @@ class OptionTreeModule extends Module
                         }
                     }
                 ]
-            }));
+            });
+            this.linkByTransitionKey[this.createTransitionKey(wildcardTransition)] = link;
+            graph.addCell(link);
         });
 
         // Perform layout
@@ -200,13 +219,40 @@ class OptionTreeModule extends Module
         });
     }
 
-    private onData(data: state.OptionTree)
+    private highlightedLastCycle: SVGElement[] = [];
+
+    private onData(optionTreeData: state.OptionTree)
     {
+        // FSM GRAPH
+
+        // Find selected FSM data
+        var data = state.findOptionData(optionTreeData.path, this.selectedFSM.name);
+
+        _.each(this.highlightedLastCycle, v => (<any>v).classList.remove("active"));
+        this.highlightedLastCycle = [];
+
+        if (data)
+        {
+            console.assert(data.type === 'FSM');
+
+            var fsmData = <state.FSMOptionData>data.run;
+
+            var block = this.blockByStateId[fsmData.start];
+
+            console.assert(!!block);
+
+            var v: SVGElement = this.paper.findViewByModel(block).el;
+            (<any>v).classList.add("active");
+            this.highlightedLastCycle.push(v);
+        }
+
+        // OPTION LIST
+
         _.each(this.optionElementByName, optionDiv => optionDiv.className = '');
 
-        for (var i = 0; i < data.ranoptions.length; i++)
+        for (var i = 0; i < optionTreeData.ranoptions.length; i++)
         {
-            var name = data.ranoptions[i],
+            var name = optionTreeData.ranoptions[i],
                 optionDiv = this.optionElementByName[name];
 
             if (optionDiv) {

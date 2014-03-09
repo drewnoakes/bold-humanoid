@@ -808,6 +808,17 @@ div.module.optiontree div.control-container
     padding-top: 8px;
 }
 
+div.module.optiontree div.graph svg g rect
+{
+    transition: fill 1s linear;
+}
+
+div.module.optiontree div.graph svg g.active rect
+{
+    transition: fill 0s linear;
+    fill: yellow;
+}
+
 /*******************************************************************/
 
 div.module.histogram
