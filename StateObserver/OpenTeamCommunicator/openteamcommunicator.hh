@@ -45,7 +45,7 @@ namespace bold
     const unsigned d_uniformNumber;
     Clock::Timestamp d_currentTime;
     Clock::Timestamp d_lastBroadcast;
-    signed d_sock;
+    int d_sock;
     MixedTeamMates d_teamMates;
   };
 }
