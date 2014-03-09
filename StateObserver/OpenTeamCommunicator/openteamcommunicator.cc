@@ -8,17 +8,14 @@
 #include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
-#include <limits.h>
 
 using namespace std;
 using namespace bold;
 using namespace Eigen;
 
 // TODO Move hard-coded values into config file
-#define BUFFER_SIZE SHRT_MAX
 #define LOCAL_PORT 8081
 #define REMOTE_PORT 8082
-#define ROLE_IN_TEAM ROLE_OTHER
 
 OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniformNumber)
 : StateObserver::StateObserver("Open Team Communicator", ThreadId::ThinkLoop),
@@ -53,6 +50,8 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
 void OpenTeamCommunicator::receiveData()
 {
   // TODO this buffer size is probably way too large
+  const uint BUFFER_SIZE = 32767;
+
   char buffer[BUFFER_SIZE];
 
   while (true)
@@ -97,7 +96,7 @@ void OpenTeamCommunicator::sendData()
 
   MixedTeamMate myInformation;
   myInformation.robotID = d_uniformNumber;
-  myInformation.data[ROBOT_CURRENT_ROLE] = ROLE_IN_TEAM; // TODO Check whether this is needed
+  myInformation.data[ROBOT_CURRENT_ROLE] = ROLE_OTHER; // TODO Check whether this is needed
   myInformation.data[ROBOT_ABSOLUTE_X] = uint(agentPosition.x() * 1000);
   myInformation.data[ROBOT_ABSOLUTE_Y] = uint(agentPosition.y() * 1000);
   myInformation.data[ROBOT_ABSOLUTE_ORIENTATION] = Math::radToDeg(agentPosition.theta());
