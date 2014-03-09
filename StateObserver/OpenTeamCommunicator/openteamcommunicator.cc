@@ -53,6 +53,8 @@ void OpenTeamCommunicator::receiveData()
 
   char buffer[BUFFER_SIZE];
 
+  bool updated = false;
+
   while (true)
   {
     // Receive a message (if available), this call is nonblocking
@@ -87,6 +89,11 @@ void OpenTeamCommunicator::receiveData()
     // Remember the last time (i.e. now) that we heard from this robot
     d_teamMates[teamMate.robotID].lastUpdate = d_currentTime;
 
+    updated = true;
+  }
+
+  if (updated)
+  {
     // Make visible to State
     State::set(make_shared<OpenTeamState const>(d_teamMates));
   }
