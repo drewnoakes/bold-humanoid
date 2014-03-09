@@ -64,21 +64,22 @@ void OpenTeamCommunicator::receiveData()
 
     // Message received, update our view of the Team
     MixedTeamMate teamMate = MixedTeamParser::parseIncoming(buffer, messageLength, d_teamNumber);
-    if (teamMate.robotID != d_uniformNumber)
-    {
-      // Update data on Teammate
-      if (d_teamMates.find(teamMate.robotID) == d_teamMates.end())
-        log::info("OpenTeamCommunicator::observeTyped") << "Adding player " + teamMate.robotID;
 
-      // Add team teamMate to our map
-      d_teamMates[teamMate.robotID] = teamMate;
+    if (teamMate.robotID == d_uniformNumber)
+      continue;
 
-      // Remember the last time (i.e. now) that we heard from this robot
-      d_teamMates[teamMate.robotID].lastUpdate = d_currentTime;
+    // Update data on Teammate
+    if (d_teamMates.find(teamMate.robotID) == d_teamMates.end())
+      log::info("OpenTeamCommunicator::observeTyped") << "Adding player " + teamMate.robotID;
 
-      // Make visible to State
-      State::set(make_shared<OpenTeamState const>(d_teamMates));
-    }
+    // Add team teamMate to our map
+    d_teamMates[teamMate.robotID] = teamMate;
+
+    // Remember the last time (i.e. now) that we heard from this robot
+    d_teamMates[teamMate.robotID].lastUpdate = d_currentTime;
+
+    // Make visible to State
+    State::set(make_shared<OpenTeamState const>(d_teamMates));
   }
 }
 
