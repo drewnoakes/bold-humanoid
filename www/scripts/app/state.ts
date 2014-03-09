@@ -183,6 +183,24 @@ export interface FSMOptionData
     warning?: string;
 }
 
+/** Walks recursively through the option data, attempting to find data for an option with the specified id. */
+export function findOptionData(data: OptionData, optionId: string): OptionData
+{
+    if (data.id === optionId)
+        return data;
+
+    for (var i = 0; !!data.children && i < data.children.length; i++)
+    {
+        var childResult = findOptionData(data.children[i], optionId);
+        if (childResult)
+            return childResult;
+    }
+
+    return null;
+}
+
+// TODO inline OptionData into OptionTree and create exported function to get ranOptions from walk of path
+
 export interface OptionTree
 {
     ranoptions: string[];
