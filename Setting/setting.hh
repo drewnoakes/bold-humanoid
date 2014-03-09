@@ -121,4 +121,6 @@ namespace bold
   private:
     T d_value;
   };
+
+  std::ostream& operator<<(std::ostream &stream, std::vector<std::string> const& strings);
 }

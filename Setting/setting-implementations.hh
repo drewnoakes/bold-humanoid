@@ -7,6 +7,7 @@
 #include <sigc++/signal.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
+#include <vector>
 
 #include "../PixelLabel/pixellabel.hh"
 #include "../util/Range.hh"
@@ -155,6 +156,27 @@ namespace bold
 
   private:
     std::string d_defaultValue;
+  };
+
+  /// Models a setting with a std::string value.
+  class StringArraySetting : public Setting<std::vector<std::string>>
+  {
+  public:
+    static void writeStringArrayJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, std::vector<std::string> const& value);
+    static bool tryParseJsonValue(rapidjson::Value const* value, std::vector<std::string>* strings);
+
+    StringArraySetting(std::string path, std::vector<std::string> defaultValue, bool isReadOnly, std::string description);
+    ~StringArraySetting() {}
+
+    bool isValidValue(std::vector<std::string> value) const override;
+    std::string getValidationMessage(std::vector<std::string> value) const override;
+    std::vector<std::string> getDefaultValue() const override { return d_defaultValue; }
+    virtual bool setValueFromJson(rapidjson::Value const* value) override;
+    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+
+  private:
+    std::vector<std::string> d_defaultValue;
   };
 
   /// Models a setting with a Colour::bgr value.

@@ -239,6 +239,17 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
 
       Config::addSetting(new StringSetting(path, defaultValue, isReadOnly, description));
     }
+    else if (type == "string[]")
+    {
+      auto defaultMember = metaNode->FindMember("default");
+
+      vector<string> defaultValue;
+
+      if (defaultMember && !StringArraySetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
+        throw runtime_error("Unable to parse string[]");
+
+      Config::addSetting(new StringArraySetting(path, defaultValue, isReadOnly, description));
+    }
     else if (type == "hsv-range")
     {
       auto defaultMember = metaNode->FindMember("default");

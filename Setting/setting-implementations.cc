@@ -471,6 +471,75 @@ bool StringSetting::setValueFromJson(Value const* value)
   return setValue(value->GetString());
 }
 
+///////////////////////////////////////////////////////////
+
+bool StringArraySetting::tryParseJsonValue(Value const* value, std::vector<std::string>* strings)
+{
+  if (value == nullptr)
+    return false;
+
+  if (!value->IsArray())
+    return false;
+
+  *strings = std::vector<std::string>();
+
+  for (uint i = 0; i < value->Size(); i++)
+  {
+    Value const& v = (*value)[i];
+    if (!v.IsString())
+      return false;
+    strings->push_back(v.GetString());
+  }
+
+  return true;
+}
+
+void StringArraySetting::writeStringArrayJsonObject(Writer<StringBuffer>& writer, std::vector<std::string> const& value)
+{
+  writer.StartArray();
+  {
+    for (auto const& s : value)
+      writer.String(s.c_str());
+  }
+  writer.EndArray();
+}
+
+StringArraySetting::StringArraySetting(string path, vector<string> defaultValue, bool isReadOnly, string description)
+: Setting(path, "string[]", isReadOnly, defaultValue, description),
+  d_defaultValue(defaultValue)
+{}
+
+bool StringArraySetting::isValidValue(vector<string> value) const
+{
+  return true;
+}
+
+string StringArraySetting::getValidationMessage(vector<string> value) const
+{
+  return "";
+}
+
+void StringArraySetting::writeJsonValue(Writer<StringBuffer>& writer) const
+{
+  writeStringArrayJsonObject(writer, getValue());
+}
+
+void StringArraySetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
+{
+  writer.String("default");
+  writeStringArrayJsonObject(writer, d_defaultValue);
+}
+
+bool StringArraySetting::setValueFromJson(Value const* value)
+{
+  vector<string> strings;
+  if (tryParseJsonValue(value, &strings))
+    return setValue(strings);
+
+  log::error("StringArraySetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must have be an array of strings";
+  return false;
+}
+
 
 ///////////////////////////////////////////////////////////
 
