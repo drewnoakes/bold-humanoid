@@ -21,7 +21,7 @@ OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniform
   d_localPort(Config::getStaticValue<int>("mitecom.local-port")),
   d_remotePort(Config::getStaticValue<int>("mitecom.remote-port")),
   d_sendPeriodSeconds(Config::getSetting<double>("mitecom.send-period-seconds")),
-  d_lastBroadcast(Clock::getTimestamp())
+  d_lastBroadcast(0)
 {
   d_types.push_back(typeid(AgentFrameState));
   d_types.push_back(typeid(WorldFrameState));
@@ -35,14 +35,13 @@ OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniform
 
 void OpenTeamCommunicator::observe(SequentialTimer& timer)
 {
-  // Update time data
-  d_currentTime = Clock::getTimestamp();
-  assert(d_lastBroadcast <= d_currentTime);
+  auto now = Clock::getTimestamp();
 
   if (Clock::getSecondsSince(d_lastBroadcast) > d_sendPeriodSeconds->getValue())
   {
-    // Send values using mitecom
     sendData();
+
+    d_lastBroadcast = now;
   }
 }
 
@@ -87,7 +86,7 @@ void OpenTeamCommunicator::receiveData()
     d_teamMates[teamMate.robotID] = teamMate;
 
     // Remember the last time (i.e. now) that we heard from this robot
-    d_teamMates[teamMate.robotID].lastUpdate = d_currentTime;
+    d_teamMates[teamMate.robotID].lastUpdate = Clock::getTimestamp();
 
     updated = true;
   }
@@ -131,6 +130,4 @@ void OpenTeamCommunicator::sendData()
   assert(messageDataLength > 0);
 
   mitecom_broadcast(d_sock, d_remotePort, messageData.get(), messageDataLength);
-
-  d_lastBroadcast = d_currentTime;
 }
