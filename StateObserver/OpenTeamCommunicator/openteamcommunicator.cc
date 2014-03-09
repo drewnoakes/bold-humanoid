@@ -48,7 +48,7 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
   d_commState = sendData();
 }
 
-OpenTeamCommunicatorStatus OpenTeamCommunicator::recieveData()
+OpenTeamCommunicatorStatus OpenTeamCommunicator::receiveData()
 {
   char buffer[BUFFER_SIZE];
 
@@ -56,7 +56,7 @@ OpenTeamCommunicatorStatus OpenTeamCommunicator::recieveData()
   ssize_t messageLength = mitecom_receive(d_sock, buffer, BUFFER_SIZE);
   if (messageLength > 0)
   {
-    // Message recieved, update our view of the Team
+    // Message received, update our view of the Team
     MixedTeamMate teamMate = MixedTeamParser::parseIncoming(buffer, messageLength, d_teamNumber);
     if (teamMate.robotID != d_uniformNumber)
     {

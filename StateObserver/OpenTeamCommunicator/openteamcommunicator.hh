@@ -20,7 +20,7 @@ namespace bold
     IDLE,
     WAITING,
     SENDING,
-    RECIEVING,
+    RECEIVING,
     SOCKET_FAILURE
   };
 
@@ -31,7 +31,7 @@ namespace bold
 
     void observe(SequentialTimer& timer) override;
 
-    OpenTeamCommunicatorStatus recieveData();
+    OpenTeamCommunicatorStatus receiveData();
 
     void update(MixedTeamMate const& mate);
 

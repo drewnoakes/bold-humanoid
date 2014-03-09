@@ -54,13 +54,13 @@ void Agent::think()
 
   d_optionTree->run();
   t.timeEvent("Option Tree");
-  
+
   //
-  // Attempt to recieve from other agents
+  // Attempt to receive from other agents
   //
-  d_openTeamCommunicator->recieveData();
-  t.timeEvent("Open Team Recieve");
-  
+  d_openTeamCommunicator->receiveData();
+  t.timeEvent("Open Team Receive");
+
   //
   // Process input commands (joystick)
   //
