@@ -441,8 +441,6 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto leftKickState = playingFsm->newState("leftKick", {leftKick});
     auto rightKickState = playingFsm->newState("rightKick", {rightKick});
 
-    lookAtFeetState->onEnter.connect([lookAtFeet]() { lookAtFeet->reset(); });
-
     standUpState
       ->transitionTo(lookForBallState, "standing")
       ->whenTerminated();
