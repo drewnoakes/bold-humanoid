@@ -166,9 +166,27 @@ export interface Odometry
     translation: number[];
 }
 
+export interface OptionData
+{
+    id: string;
+    type: string;
+    reset?: boolean;
+    run: any;
+    children: OptionData[];
+}
+
+export interface FSMOptionData
+{
+    /** Starting state name. */
+    start: string;
+    transitions: {to: string; via: string; wildcard?: boolean}[];
+    warning?: string;
+}
+
 export interface OptionTree
 {
     ranoptions: string[];
+    path: OptionData;
 }
 
 export interface Orientation
