@@ -70,7 +70,7 @@ void OpenTeamCommunicator::receiveData()
 
     // Update data on Teammate
     if (d_teamMates.find(teamMate.robotID) == d_teamMates.end())
-      log::info("OpenTeamCommunicator::receiveData") << "Adding player " + teamMate.robotID;
+      log::info("OpenTeamCommunicator::receiveData") << "First message seen from team mate " << teamMate.robotID;
 
     // Add team teamMate to our map
     d_teamMates[teamMate.robotID] = teamMate;
