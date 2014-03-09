@@ -63,24 +63,19 @@ void OpenTeamCommunicator::receiveData()
     if (teamMate.robotID != d_uniformNumber)
     {
       // Update data on Teammate
-      update(teamMate);
+      if (d_teamMates.find(teamMate.robotID) == d_teamMates.end())
+        log::info("OpenTeamCommunicator::observeTyped") << "Adding player " + teamMate.robotID;
+
+      // Add team teamMate to our map
+      d_teamMates[teamMate.robotID] = teamMate;
+
+      // Remember the last time (i.e. now) that we heard from this robot
+      d_teamMates[teamMate.robotID].lastUpdate = d_currentTime;
+
+      // Make visible to State
+      State::set(make_shared<OpenTeamState const>(d_teamMates));
     }
   }
-}
-
-void OpenTeamCommunicator::update(MixedTeamMate const& mate)
-{
-  if (d_teamMates.find(mate.robotID) == d_teamMates.end())
-    log::info("OpenTeamCommunicator::observeTyped") << "Adding player " + mate.robotID;
-
-  // Add team mate to our map
-  d_teamMates[mate.robotID] = mate;
-
-  // Remember the last time (i.e. now) that we heard from this robot
-  d_teamMates[mate.robotID].lastUpdate = d_currentTime;
-
-  // Make visible to State
-  State::set(make_shared<OpenTeamState const>(d_teamMates));
 }
 
 void OpenTeamCommunicator::sendData()

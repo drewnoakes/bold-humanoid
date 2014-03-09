@@ -22,8 +22,6 @@ namespace bold
 
     void receiveData();
 
-    void update(MixedTeamMate const& mate);
-
     void sendData();
 
   private:
