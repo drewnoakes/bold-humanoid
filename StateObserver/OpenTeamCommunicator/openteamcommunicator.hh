@@ -13,17 +13,6 @@
 
 namespace bold
 {
-  /** State of communication
-   */
-  enum class OpenTeamCommunicatorStatus
-  {
-    IDLE,
-    WAITING,
-    SENDING,
-    RECEIVING,
-    SOCKET_FAILURE
-  };
-
   class OpenTeamCommunicator : public StateObserver
   {
   public:
@@ -31,16 +20,13 @@ namespace bold
 
     void observe(SequentialTimer& timer) override;
 
-    OpenTeamCommunicatorStatus receiveData();
+    void receiveData();
 
     void update(MixedTeamMate const& mate);
 
-    OpenTeamCommunicatorStatus sendData();
-
-    OpenTeamCommunicatorStatus getCommunicatorState() const { return d_commState; }
+    void sendData();
 
   private:
-    OpenTeamCommunicatorStatus d_commState;
     const unsigned d_teamNumber;
     const unsigned d_uniformNumber;
     Clock::Timestamp d_currentTime;

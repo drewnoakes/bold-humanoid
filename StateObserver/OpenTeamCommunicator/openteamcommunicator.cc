@@ -22,7 +22,6 @@ using namespace Eigen;
 
 OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniformNumber)
 : StateObserver::StateObserver("Open Team Communicator", ThreadId::ThinkLoop),
-  d_commState(OpenTeamCommunicatorStatus::IDLE),
   d_teamNumber(teamNumber),
   d_uniformNumber(uniformNumber),
   d_lastBroadcast(Clock::getTimestamp())
@@ -47,12 +46,11 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
   if (Clock::getSecondsSince(d_lastBroadcast) > 0.5)
   {
     // Send values using mitecom
-    d_commState = OpenTeamCommunicatorStatus::SENDING;
-    d_commState = sendData();
+    sendData();
   }
 }
 
-OpenTeamCommunicatorStatus OpenTeamCommunicator::receiveData()
+void OpenTeamCommunicator::receiveData()
 {
   char buffer[BUFFER_SIZE];
 
@@ -68,7 +66,6 @@ OpenTeamCommunicatorStatus OpenTeamCommunicator::receiveData()
       update(teamMate);
     }
   }
-  return OpenTeamCommunicatorStatus::IDLE;
 }
 
 void OpenTeamCommunicator::update(MixedTeamMate const& mate)
@@ -86,7 +83,7 @@ void OpenTeamCommunicator::update(MixedTeamMate const& mate)
   State::set(make_shared<OpenTeamState const>(d_teamMates));
 }
 
-OpenTeamCommunicatorStatus OpenTeamCommunicator::sendData()
+void OpenTeamCommunicator::sendData()
 {
   // NOTE protocol uses millimeters, we use meters -- scale values
 
@@ -122,6 +119,4 @@ OpenTeamCommunicatorStatus OpenTeamCommunicator::sendData()
   mitecom_broadcast(d_sock, REMOTE_PORT, messageData.get(), messageDataLength);
 
   d_lastBroadcast = d_currentTime;
-
-  return OpenTeamCommunicatorStatus::IDLE;
 }
