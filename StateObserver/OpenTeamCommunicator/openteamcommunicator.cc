@@ -52,6 +52,7 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
 
 void OpenTeamCommunicator::receiveData()
 {
+  // TODO this buffer size is probably way too large
   char buffer[BUFFER_SIZE];
 
   while (true)
