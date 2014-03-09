@@ -64,8 +64,18 @@ void OpenTeamCommunicator::receiveData()
     // Message received, update our view of the Team
     MixedTeamMate teamMate = MixedTeamParser::parseIncoming(buffer, messageLength, d_teamNumber);
 
+    // Ignore messages from ourselves.
     if (teamMate.robotID == d_uniformNumber)
       continue;
+
+    // An ID of -1 indicates that the message was invalid.
+    if (teamMate.robotID == -1)
+    {
+      log::error("OpenTeamCommunicator::receiveData") << "Error parsing open team message";
+      continue;
+    }
+
+    log::verbose("OpenTeamCommunicator::receiveData") << "Received message with length " << messageLength << " bytes from robot " << teamMate.robotID;
 
     // Update data on Teammate
     if (d_teamMates.find(teamMate.robotID) == d_teamMates.end())
