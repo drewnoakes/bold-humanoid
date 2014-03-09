@@ -1,6 +1,10 @@
 {
   "uniform-number": { "type": "int", "readonly": true, "default": 2, "min": 1 },
   "team-number":    { "type": "int", "readonly": true, "default": 36 },
+  "mitecom": {
+    "local-port":  { "type": "int", "readonly": true, "default": 12321, "min": 1024, "max": 65535 },
+    "remote-port": { "type": "int", "readonly": true, "default": 12321, "min": 1024, "max": 65535 }
+  },
   "voice": {
     "name":    {
       "type": "enum",

@@ -27,6 +27,8 @@ namespace bold
   private:
     const unsigned d_teamNumber;
     const unsigned d_uniformNumber;
+    const int d_localPort;
+    const int d_remotePort;
     Clock::Timestamp d_currentTime;
     Clock::Timestamp d_lastBroadcast;
     int d_sock;

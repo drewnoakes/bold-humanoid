@@ -1,6 +1,7 @@
 #include "openteamcommunicator.hh"
 
 #include "../../Clock/clock.hh"
+#include "../../Config/config.hh"
 #include "../../Math/math.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/OpenTeamState/openteamstate.hh"
@@ -13,24 +14,22 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-// TODO Move hard-coded values into config file
-#define LOCAL_PORT 8081
-#define REMOTE_PORT 8082
-
 OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniformNumber)
 : StateObserver::StateObserver("Open Team Communicator", ThreadId::ThinkLoop),
   d_teamNumber(teamNumber),
   d_uniformNumber(uniformNumber),
+  d_localPort(Config::getStaticValue<int>("mitecom.local-port")),
+  d_remotePort(Config::getStaticValue<int>("mitecom.remote-port")),
   d_lastBroadcast(Clock::getTimestamp())
 {
   d_types.push_back(typeid(AgentFrameState));
   d_types.push_back(typeid(WorldFrameState));
 
   // Open listening UDP socket on given port
-  d_sock = mitecom_open(LOCAL_PORT);
+  d_sock = mitecom_open(d_localPort);
 
   if (d_sock == -1)
-    log::error("OpenTeamCommunicator::observeTyped") << "Failure binding socket to port " << LOCAL_PORT;
+    log::error("OpenTeamCommunicator::observeTyped") << "Failure binding socket to port " << d_localPort;
 }
 
 void OpenTeamCommunicator::observe(SequentialTimer& timer)
@@ -116,7 +115,7 @@ void OpenTeamCommunicator::sendData()
   assert(messageData != nullptr);
   assert(messageDataLength > 0);
 
-  mitecom_broadcast(d_sock, REMOTE_PORT, messageData.get(), messageDataLength);
+  mitecom_broadcast(d_sock, d_remotePort, messageData.get(), messageDataLength);
 
   d_lastBroadcast = d_currentTime;
 }

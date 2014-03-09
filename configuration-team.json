@@ -1,4 +1,8 @@
 {
+  "mitecom": {
+    "local-port": 12321,
+    "remote-port": 12321
+  },
   "voice": {
     "enabled": true,
     "name":    1,
