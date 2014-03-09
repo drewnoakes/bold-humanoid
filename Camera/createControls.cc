@@ -1,6 +1,7 @@
 #include "camera.ih"
 
 #include <cctype>
+#include <vector>
 
 using namespace rapidjson;
 using namespace std;
@@ -179,18 +180,14 @@ void Camera::createControls()
   // explicitly set the white balance when 'auto wb' mode is on. The value will
   // not stick.
   //
-  // We use the order in which they're specified in the config document to
-  // signify the order they should be set in.
-  //
   // Finally, any setting which were not referenced in the config file will be
   // logged out, and appended in whatever order they were reported by the camera
   // in.
 
-  Value const* jsonValue = Config::getConfigJsonValue("camera.settings");
+  Setting<vector<string>>* controlOrder = Config::getSetting<vector<string>>("camera.settings.initialise-order");
 
-  for (Value::Member const* member = jsonValue->MemberBegin(); member != jsonValue->MemberEnd(); ++member)
+  for (string const& name : controlOrder->getValue())
   {
-    string name = member->name.GetString();
     stringstream pathstream;
     pathstream << "camera.settings" << '.' << name;
     string path = pathstream.str();

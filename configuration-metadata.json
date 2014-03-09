@@ -72,6 +72,9 @@
     "calibration": {
       "tilt-angle-degrees": { "type": "double", "default": -40 },
       "pan-angle-degrees":  { "type": "double", "default": 0 }
+    },
+    "settings": {
+      "initialise-order": { "type": "string[]", "readonly": true, "default": [] }
     }
   },
   "vision": {

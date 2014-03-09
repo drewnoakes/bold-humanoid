@@ -57,6 +57,11 @@
       "tilt-angle-degrees": -40
     },
     "settings": {
+      "initialise-order": [
+        "auto-wb", "exposure-auto", "exposure-absolute", "exposure-auto-priority",
+        "backlight-compensation", "power-line-frequency", "brightness", "contrast",
+        "saturation", "gain", "wb-temp-k", "sharpness"
+      ],
       "auto-wb": false,
       "exposure-auto": 1,
       "exposure-absolute": 400,
