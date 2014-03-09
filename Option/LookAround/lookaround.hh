@@ -14,8 +14,8 @@ namespace bold
     LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle, std::function<double()> speedCallback = nullptr)
     : Option(id, "LookAround"),
       d_speedCallback(speedCallback),
-      d_isResetNeeded(true),
       d_headModule(headModule),
+      d_isResetNeeded(true),
       d_lastTimeSeconds(0)
     {
       d_topAngle      = Config::getSetting<double>("options.look-around.top-angle");

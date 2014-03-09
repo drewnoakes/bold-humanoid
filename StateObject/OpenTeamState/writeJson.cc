@@ -14,7 +14,6 @@ void OpenTeamState::writeJson(Writer<StringBuffer>& writer) const
     writer.StartArray();
     {
       for (auto const& pair : d_teamMates) {
-        uint const& count = pair.first;
         MixedTeamMate teamMate = pair.second;
         writer.StartObject();
         {
