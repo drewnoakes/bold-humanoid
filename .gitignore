@@ -41,6 +41,7 @@ vision
 www/.idea
 /configuration-agent.json
 *.js.map
+/www/main-built.js
 /www/scripts/app/Action.js
 /www/scripts/app/color.js
 /www/scripts/app/constants.js

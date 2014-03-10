@@ -1,1 +1,10 @@
 find . -name "*.ts" | xargs tsc -m amd --sourcemap
+
+# To optimise, run:
+#
+#    r.js -o build.js
+#
+# Requires the Node package be installed:
+#
+#    sudo npm install -g requirejs
+
