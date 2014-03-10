@@ -5,6 +5,7 @@
 /// <reference path="../../libs/lodash.d.ts" />
 /// <reference path="../../libs/three.d.ts" />
 
+import Animator = require('Animator');
 import constants = require('constants');
 import data = require('data');
 import plotter = require('FieldLinePlotter');
@@ -23,9 +24,6 @@ interface Hinge
 
 class World3dModule extends Module
 {
-    private stopAnimation: boolean;
-    private needsRender: boolean;
-
     private cameraDistance: number = 0.55;
     private cameraTheta: number = -5.22;
     private cameraPhi: number = 0.34;
@@ -51,11 +49,15 @@ class World3dModule extends Module
     private visibleFieldPolyMaterial: THREE.LineBasicMaterial;
     private observedGoalMaterial: THREE.LineBasicMaterial;
 
+    private animator: Animator;
+
     private hinges: Hinge[];
 
     constructor()
     {
         super('world-3d', '3d world');
+
+        this.animator = new Animator(this.render.bind(this));
     }
 
     public load(element: HTMLDivElement)
@@ -89,32 +91,32 @@ class World3dModule extends Module
         {
             this.useThirdPerson = !isChecked;
             this.updateCameraPosition();
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         addCheckbox('move-player-checkbox', 'Move player', true, isChecked =>
         {
             this.movePlayer = isChecked;
             this.updateCameraPosition();
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         addCheckbox('draw-observed-lines-checkbox', 'Observed lines', true, isChecked =>
         {
             this.drawObservedLines = isChecked;
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         addCheckbox('draw-observed-goals-checkbox', 'Observed goals', false, isChecked =>
         {
             this.drawObservedGoals = isChecked;
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         addCheckbox('draw-view-poly-checkbox', 'View poly', false, isChecked =>
         {
             this.drawViewPoly = isChecked;
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         this.bodyRoot = this.buildBody(constants.bodyStructure, () =>
@@ -123,7 +125,7 @@ class World3dModule extends Module
             this.bodyRoot.rotation.z = -Math.PI/2;
             //this.bodyRoot.add(new THREE.AxisHelper(0.2)); // [R,G,B] === (x,y,z)
             this.scene.add(this.bodyRoot);
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         this.positionBodySpotlight(this.bodyRoot);
@@ -132,15 +134,12 @@ class World3dModule extends Module
         this.closeables.add(new data.Subscription<state.WorldFrame>(constants.protocols.worldFrameState, { onmessage: this.onWorldFrameData.bind(this) }));
         this.closeables.add(new data.Subscription<state.Hardware>  (constants.protocols.hardwareState,   { onmessage: this.onHardwareData.bind(this) }));
 
-        this.stopAnimation = false;
-        this.needsRender = true;
-
-        this.animate();
+        this.animator.start();
     }
 
     public unload()
     {
-        this.stopAnimation = true;
+        this.animator.stop();
     }
 
     private onBodyStateData(data: state.Body)
@@ -162,7 +161,7 @@ class World3dModule extends Module
         {
             this.updateAgentHeightFromGround();
             this.updateCameraPosition();
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         }
     }
 
@@ -236,7 +235,7 @@ class World3dModule extends Module
             }
         }
 
-        this.needsRender = true;
+        this.animator.setRenderNeeded();
     }
 
     private onHardwareData(data: state.Hardware)
@@ -284,7 +283,7 @@ class World3dModule extends Module
             this.torsoHeight -= error;
             this.bodyRoot.position.z = this.torsoHeight;
             //this.updateCameraPosition();
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         }
     }
 
@@ -324,7 +323,7 @@ class World3dModule extends Module
         var onTextureLoaded = () =>
         {
             if (--this.pendingTextureCount === 0)
-                this.needsRender = true;
+                this.animator.setRenderNeeded();
         };
 
         //
@@ -582,7 +581,7 @@ class World3dModule extends Module
             this.cameraDistance *= 1 - (event.wheelDelta/720);
             this.cameraDistance = Math.max(0.1, Math.min(5, this.cameraDistance));
             this.updateCameraPosition();
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         new interaction.Dragger(container, e => {
@@ -601,7 +600,7 @@ class World3dModule extends Module
                 this.cameraPhi = (e.totalDeltaY * 0.01) + onMouseDownPhi;
                 this.cameraPhi = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, this.cameraPhi));
                 this.updateCameraPosition();
-                this.needsRender = true;
+                this.animator.setRenderNeeded();
             }
         });
     }
@@ -625,22 +624,13 @@ class World3dModule extends Module
         }
     }
 
-    private animate()
+    private render()
     {
-        if (this.stopAnimation)
-            return;
-
-        window.requestAnimationFrame(this.animate.bind(this));
-
-        if (!this.needsRender)
-            return;
-
         // Only render once all textures are loaded
         if (this.pendingTextureCount !== 0)
             return;
 
         this.renderer.render(this.scene, this.camera);
-        this.needsRender = false;
     }
 }
 

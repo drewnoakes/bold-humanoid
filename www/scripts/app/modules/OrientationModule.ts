@@ -5,6 +5,7 @@
 /// <reference path="../../libs/lodash.d.ts" />
 /// <reference path="../../libs/three.d.ts" />
 
+import Animator = require('Animator');
 import constants = require('constants');
 import control = require('control');
 import threeUtil = require('util/three');
@@ -14,29 +15,24 @@ import Module = require('Module');
 
 class OrientationModule extends Module
 {
-    private stopAnimation: boolean;
-    private needsRender: boolean;
-
     private renderer: THREE.WebGLRenderer;
     private camera: THREE.PerspectiveCamera;
     private scene: THREE.Scene;
     private body: THREE.Object3D;
+    private animator: Animator;
 
     constructor()
     {
         super('orientation', 'orientation');
+
+        this.animator = new Animator(() => this.renderer.render(this.scene, this.camera));
     }
 
     public load(element: HTMLDivElement)
     {
-        this.stopAnimation = false;
-        this.needsRender = true;
-
         this.initialiseScene();
 
         element.appendChild(this.renderer.domElement);
-
-        this.animate();
 
         this.closeables.add(new data.Subscription<state.Orientation>(
             constants.protocols.orientationState,
@@ -45,14 +41,16 @@ class OrientationModule extends Module
             }
         ));
 
-        this.closeables.add(() => this.stopAnimation = true);
-
         control.buildActions("orientation-tracker", element);
         control.buildSettings("orientation-tracker", element, this.closeables);
+
+        this.animator.start();
     }
 
     public unload()
     {
+        this.animator.stop();
+
         delete this.body;
         delete this.scene;
         delete this.renderer;
@@ -62,7 +60,7 @@ class OrientationModule extends Module
     {
         // Data values are (w,x,y,z), but THREE.Quaternion needs them (x,y,z,w)
         this.body.quaternion.set(data.quaternion[1], data.quaternion[2], data.quaternion[3], data.quaternion[0]);
-        this.needsRender = true;
+        this.animator.setRenderNeeded();
     }
 
     private initialiseScene()
@@ -124,7 +122,7 @@ class OrientationModule extends Module
                 if (offset && offset.y) mesh.position.y = offset.y;
                 if (offset && offset.z) mesh.position.z = offset.z;
                 this.body.add(mesh);
-                this.needsRender = true;
+                this.animator.setRenderNeeded();
             });
         };
         loadPart('models/darwin/darwin-body.json', 0.20);
@@ -142,20 +140,6 @@ class OrientationModule extends Module
         referenceAxes.material.transparent = true;
         referenceAxes.material.opacity = 0.3;
         this.scene.add(referenceAxes);
-    }
-
-    private animate()
-    {
-        if (this.stopAnimation)
-            return;
-
-        window.requestAnimationFrame(this.animate.bind(this));
-
-        if (!this.needsRender)
-            return;
-
-        this.renderer.render(this.scene, this.camera);
-        this.needsRender = false;
     }
 }
 

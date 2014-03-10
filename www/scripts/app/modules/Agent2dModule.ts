@@ -4,6 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
+import Animator = require('Animator');
 import FieldLinePlotter = require('FieldLinePlotter');
 import constants = require('constants');
 import data = require('data');
@@ -19,19 +20,19 @@ class Agent2dModule extends Module
     private hoverInfo: HTMLDivElement;
     private transform: geometry.Transform;
 
-    private stopAnimation: boolean;
-    private needsRender: boolean;
-
     private ballPosition: number[];
     private goalPositions: geometry.IPoint2[];
     private visibleFieldPoly: number[][];
     private occlusionRays: number[][];
     private observedLineSegments: geometry.ILineSegment2[];
     private scale: number;
+    private animator: Animator;
 
     constructor()
     {
         super('agent-2d', '2d agent');
+
+        this.animator = new Animator(this.render.bind(this));
     }
 
     public load(element: HTMLDivElement)
@@ -54,12 +55,9 @@ class Agent2dModule extends Module
                 onmessage: this.onAgentFrameData.bind(this)
             }));
 
-        this.closeables.add(() => this.stopAnimation = true);
+        this.closeables.add(() => this.animator.stop());
 
-        this.stopAnimation = false;
-        this.needsRender = true;
-
-        this.animate();
+        this.animator.start();
     }
 
     private bindEvents()
@@ -73,7 +71,7 @@ class Agent2dModule extends Module
             this.transform = new geometry.Transform()
                 .translate(this.canvas.width / 2, this.canvas.height / 2)
                 .scale(this.scale, -this.scale);
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         this.canvas.addEventListener('mousemove', event =>
@@ -106,7 +104,7 @@ class Agent2dModule extends Module
 
         _.each(data.goals, goalPos => this.goalPositions.push({ x: goalPos[0], y: goalPos[1] }));
 
-        this.needsRender = true; // TODO only draw agentFrameData, on its own canvas
+        this.animator.setRenderNeeded(); // TODO only draw agentFrameData, on its own canvas
     }
 
     public onResized(width, height)
@@ -118,19 +116,11 @@ class Agent2dModule extends Module
         this.transform = new geometry.Transform()
             .translate(this.canvas.width / 2, this.canvas.height / 2)
             .scale(this.scale, -this.scale);
-        this.needsRender = true;
+        this.animator.setRenderNeeded();
     }
 
-    private animate()
+    private render()
     {
-        if (this.stopAnimation)
-            return;
-
-        window.requestAnimationFrame(this.animate.bind(this));
-
-        if (!this.needsRender)
-            return;
-
         var scale = this.transform.getScale(),
             options = {
                 lineWidth: 1/scale,
@@ -179,8 +169,6 @@ class Agent2dModule extends Module
 
         if (this.occlusionRays)
             FieldLinePlotter.drawOcclusionRays(context, options, this.occlusionRays);
-
-        this.needsRender = false;
     }
 }
 
