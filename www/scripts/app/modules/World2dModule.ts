@@ -38,8 +38,23 @@ class World2dModule extends Module
         this.animator = new Animator(this.render.bind(this));
     }
 
-    bindEvents()
+    public load(element: HTMLDivElement)
     {
+        this.transform = new geometry.Transform().scale(1, -1);
+
+        this.canvas = document.createElement('canvas');
+        this.hoverInfo = document.createElement('div');
+        this.hoverInfo.className = 'hover-info';
+
+        var localiserControlContainer = document.createElement('div');
+        localiserControlContainer.className = 'localiser-controls';
+        control.buildActions('localiser', localiserControlContainer);
+
+        element.appendChild(this.canvas);
+        element.appendChild(new HeadControls().element);
+        element.appendChild(localiserControlContainer);
+        element.appendChild(this.hoverInfo);
+
         new interaction.Dragger(this.canvas, (evt: interaction.IDragEvent) =>
         {
             this.transform = new geometry.Transform()
@@ -68,27 +83,6 @@ class World2dModule extends Module
         });
 
         this.canvas.addEventListener('mouseleave', () => this.hoverInfo.textContent = '');
-    }
-
-    public load(element: HTMLDivElement)
-    {
-        this.transform = new geometry.Transform().scale(1, -1);
-
-        this.canvas = document.createElement('canvas');
-        this.hoverInfo = document.createElement('div');
-        this.hoverInfo.className = 'hover-info';
-
-        var localiserControlContainer = document.createElement('div');
-        localiserControlContainer.className = 'localiser-controls';
-        control.buildActions('localiser', localiserControlContainer);
-
-        element.appendChild(this.canvas);
-        element.appendChild(new HeadControls().element);
-        element.appendChild(localiserControlContainer);
-        element.appendChild(this.hoverInfo);
-
-        this.bindEvents();
-
         this.closeables.add(new data.Subscription<state.WorldFrame>(
             constants.protocols.worldFrameState,
             {

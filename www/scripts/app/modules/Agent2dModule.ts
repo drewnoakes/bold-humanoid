@@ -47,21 +47,6 @@ class Agent2dModule extends Module
         element.appendChild(this.hoverInfo);
         element.appendChild(new HeadControls().element);
 
-        this.bindEvents();
-
-        this.closeables.add(new data.Subscription<state.AgentFrame>(
-            constants.protocols.agentFrameState,
-            {
-                onmessage: this.onAgentFrameData.bind(this)
-            }));
-
-        this.closeables.add(() => this.animator.stop());
-
-        this.animator.start();
-    }
-
-    private bindEvents()
-    {
         this.canvas.addEventListener('mousewheel', event =>
         {
             event.preventDefault();
@@ -85,6 +70,16 @@ class Agent2dModule extends Module
         {
             this.hoverInfo.textContent = '';
         });
+
+        this.closeables.add(new data.Subscription<state.AgentFrame>(
+            constants.protocols.agentFrameState,
+            {
+                onmessage: this.onAgentFrameData.bind(this)
+            }));
+
+        this.closeables.add(() => this.animator.stop());
+
+        this.animator.start();
     }
 
     private onAgentFrameData(data: state.AgentFrame)
