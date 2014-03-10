@@ -2,7 +2,7 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-import control = require('../control');
+import control = require('control');
 
 class HeadControls
 {

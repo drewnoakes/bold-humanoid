@@ -3,7 +3,7 @@
  */
 
 import control = require('control');
-import Module = require('../Module');
+import Module = require('Module');
 
 class VoiceModule extends Module
 {

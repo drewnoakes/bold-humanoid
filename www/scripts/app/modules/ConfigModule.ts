@@ -7,7 +7,7 @@
 import control = require('control');
 import DOMTemplate = require('DOMTemplate');
 import Module = require('Module');
-import TabControl = require('../controls/TabControl');
+import TabControl = require('controls/TabControl');
 
 var moduleTemplate = new DOMTemplate('config-module-template');
 

@@ -4,7 +4,7 @@
 
 import control = require('control');
 import DOMTemplate = require('DOMTemplate');
-import TabControl = require('../controls/TabControl');
+import TabControl = require('controls/TabControl');
 import Module = require('Module');
 
 var moduleTemplate = new DOMTemplate("vision-module-template");

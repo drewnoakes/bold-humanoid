@@ -9,7 +9,7 @@
 import data = require('data');
 import state = require('state');
 import constants = require('constants');
-import PolarTrace = require('../controls/PolarTrace');
+import PolarTrace = require('controls/PolarTrace');
 import Module = require('Module');
 
 // TODO reuse RGB <==> XYZ colour coding on polar trace axes

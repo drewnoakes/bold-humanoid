@@ -5,8 +5,8 @@
 import HsvRange = require ('../HsvRange');
 import color = require ('../color');
 import control = require ('../control');
-import Setting = require('../Setting');
-import canvasUtil = require('../util/canvas');
+import Setting = require('Setting');
+import canvasUtil = require('util/canvas');
 
 class PixelLabelInspector
 {

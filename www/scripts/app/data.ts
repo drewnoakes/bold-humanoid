@@ -141,10 +141,12 @@ class Protocol
     {
         return msg =>
         {
-            var parsed;
+            var parsed: any;
             for (var i = 0; i < this.clients.length; i++) {
                 var client = this.clients[i];
                 var callback = client[eventName];
+                if (!callback)
+                    continue;
                 console.assert(typeof(callback) === 'function');
                 try {
                     if (client.parseJson) {

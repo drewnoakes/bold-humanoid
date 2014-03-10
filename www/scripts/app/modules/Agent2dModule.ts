@@ -7,9 +7,9 @@
 import FieldLinePlotter = require('FieldLinePlotter');
 import constants = require('constants');
 import data = require('data');
-import HeadControls = require('../controls/HeadControls');
+import HeadControls = require('controls/HeadControls');
 import mouse = require('util/mouse');
-import geometry = require('../util/geometry');
+import geometry = require('util/geometry');
 import Module = require('Module');
 import state = require('state');
 
