@@ -683,20 +683,23 @@ endif (BUILD_TOOLS)
 #
 add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Action.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/BodyFigure.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/color.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/constants.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/control.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/BodyFigure.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/HeadControls.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/HsvRangeEditor.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/ModuleHost.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/PixelLabelInspector.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/PolarTrace.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/TabControl.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/data.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/DOMTemplate.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/FieldLinePlotter.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/HeadControls.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRange.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRangeEditor.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/main.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Module.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/ModuleHost.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/Agent2dModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CameraModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CommsModule.ts
@@ -720,8 +723,6 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/WalkModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World2dModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World3dModule.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/PixelLabelInspector.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/PolarTrace.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Setting.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Settings.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/state.ts
@@ -731,7 +732,6 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/geometry.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/math.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/mouse.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/util/TabControl.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/three.ts
   )
 

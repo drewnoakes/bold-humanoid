@@ -2,7 +2,7 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-import geometry = require('util/geometry');
+import geometry = require('../util/geometry');
 
 class PolarTrace
 {

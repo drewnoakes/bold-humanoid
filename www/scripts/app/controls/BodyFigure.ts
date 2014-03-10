@@ -2,7 +2,7 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-/// <reference path="../libs/lodash.d.ts" />
+/// <reference path="../../libs/lodash.d.ts" />
 
 import constants = require('constants');
 import DOMTemplate = require('DOMTemplate');

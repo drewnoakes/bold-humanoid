@@ -7,7 +7,7 @@
 
 import constants = require('constants');
 import data = require('data');
-import BodyFigure = require('BodyFigure');
+import BodyFigure = require('../controls/BodyFigure');
 import Module = require('Module');
 import state = require('state');
 import canvas = require('util/canvas');

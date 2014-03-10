@@ -8,7 +8,7 @@
 import control = require('control');
 import constants = require('constants');
 import data = require('data');
-import ModuleHost = require('ModuleHost');
+import ModuleHost = require('controls/ModuleHost');
 import Setting = require('Setting');
 
 import MotionScriptModule = require('modules/MotionScriptModule');

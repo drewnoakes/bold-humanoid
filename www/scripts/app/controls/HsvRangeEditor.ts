@@ -2,8 +2,8 @@
  * @author Drew Noakes http://drewnoakes.com
  */
 
-import HsvRange = require('HsvRange');
-import color = require('color');
+import HsvRange = require('../HsvRange');
+import color = require('../color');
 
 var channels = ['hue', 'sat', 'val'];
 
