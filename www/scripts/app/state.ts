@@ -166,6 +166,24 @@ export interface Odometry
     translation: number[];
 }
 
+export interface TeammateData
+{
+    robotId: number;
+    lastUpdate: number;
+    state: number;
+    role: number;
+    x: number;
+    y: number;
+    theta: number;
+    ballX: number;
+    ballY: number;
+}
+
+export interface OpenTeam
+{
+    teammates: TeammateData[];
+}
+
 export interface OptionData
 {
     id: string;
