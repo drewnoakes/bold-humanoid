@@ -92,7 +92,7 @@ class TrajectoryModule extends Module
         delete this.recordButton;
     }
 
-    private onData(data: state.BodyControl)
+    private onBodyControlState(data: state.BodyControl)
     {
         console.assert(this.data.length < maxDataLength);
 
@@ -119,7 +119,7 @@ class TrajectoryModule extends Module
             this.subscription = new data.Subscription<state.BodyControl>(
                 constants.protocols.bodyControlState,
                 {
-                    onmessage: this.onData.bind(this)
+                    onmessage: this.onBodyControlState.bind(this)
                 }
             );
             this.skipFirstDatum = true;

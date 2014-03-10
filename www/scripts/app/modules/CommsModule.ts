@@ -56,7 +56,7 @@ class CommsModule extends Module
         this.closeables.add(new data.Subscription<state.Debug>(
             constants.protocols.debug,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onDebugState.bind(this)
             }
         ));
 
@@ -68,7 +68,7 @@ class CommsModule extends Module
         super.unload();
     }
 
-    private onData(data: state.Debug)
+    private onDebugState(data: state.Debug)
     {
         var time = new Date().getTime();
 

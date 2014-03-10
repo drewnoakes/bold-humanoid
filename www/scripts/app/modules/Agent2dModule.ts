@@ -74,7 +74,7 @@ class Agent2dModule extends Module
         this.closeables.add(new data.Subscription<state.AgentFrame>(
             constants.protocols.agentFrameState,
             {
-                onmessage: this.onAgentFrameData.bind(this)
+                onmessage: this.onAgentFrameState.bind(this)
             }));
 
         this.closeables.add(() => this.animator.stop());
@@ -82,7 +82,19 @@ class Agent2dModule extends Module
         this.animator.start();
     }
 
-    private onAgentFrameData(data: state.AgentFrame)
+    public onResized(width, height)
+    {
+        this.canvas.width = width;
+        this.canvas.height = height;
+
+        this.scale = Math.min(width / 12, height / 12);
+        this.transform = new geometry.Transform()
+            .translate(this.canvas.width / 2, this.canvas.height / 2)
+            .scale(this.scale, -this.scale);
+        this.animator.setRenderNeeded();
+    }
+
+    private onAgentFrameState(data: state.AgentFrame)
     {
         this.ballPosition = data.ball;
         this.visibleFieldPoly = data.visibleFieldPoly;
@@ -100,18 +112,6 @@ class Agent2dModule extends Module
         _.each(data.goals, goalPos => this.goalPositions.push({ x: goalPos[0], y: goalPos[1] }));
 
         this.animator.setRenderNeeded(); // TODO only draw agentFrameData, on its own canvas
-    }
-
-    public onResized(width, height)
-    {
-        this.canvas.width = width;
-        this.canvas.height = height;
-
-        this.scale = Math.min(width / 12, height / 12);
-        this.transform = new geometry.Transform()
-            .translate(this.canvas.width / 2, this.canvas.height / 2)
-            .scale(this.scale, -this.scale);
-        this.animator.setRenderNeeded();
     }
 
     private render()

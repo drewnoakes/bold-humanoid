@@ -98,7 +98,7 @@ class IMUModule extends Module
         this.closeables.add(new data.Subscription<state.Hardware>(
             constants.protocols.hardwareState,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onHardwareState.bind(this)
             }
         ));
 
@@ -150,7 +150,7 @@ class IMUModule extends Module
         _.each(this.chartCanvases, canvas => canvas.width = width);
     }
 
-    private onData(data: state.Hardware)
+    private onHardwareState(data: state.Hardware)
     {
         var time = new Date().getTime();
 

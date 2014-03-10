@@ -65,14 +65,14 @@ class LocaliserModule extends Module
         this.closeables.add(new data.Subscription<state.Particle>(
             constants.protocols.particleState,
             {
-                onmessage: this.onParticleData.bind(this)
+                onmessage: this.onParticleState.bind(this)
             }
         ));
 
         this.closeables.add(new data.Subscription<state.CameraFrame>(
             constants.protocols.cameraFrameState,
             {
-                onmessage: this.onCameraData.bind(this)
+                onmessage: this.onCameraFrameState.bind(this)
             }
         ));
 
@@ -107,7 +107,7 @@ class LocaliserModule extends Module
         this.chartCanvas.width = width;
     }
 
-    private onCameraData(data: state.CameraFrame)
+    private onCameraFrameState(data: state.CameraFrame)
     {
         if (data.ball) {
             this.ballVisibleMarker.classList.add('visible');
@@ -134,7 +134,7 @@ class LocaliserModule extends Module
         }
     }
 
-    private onParticleData(data: state.Particle)
+    private onParticleState(data: state.Particle)
     {
         var time = new Date().getTime(),
             particles = data.particles;

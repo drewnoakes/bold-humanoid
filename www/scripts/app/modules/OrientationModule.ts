@@ -37,7 +37,7 @@ class OrientationModule extends Module
         this.closeables.add(new data.Subscription<state.Orientation>(
             constants.protocols.orientationState,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onOrientationState.bind(this)
             }
         ));
 
@@ -56,7 +56,7 @@ class OrientationModule extends Module
         delete this.renderer;
     }
 
-    private onData(data: state.Orientation)
+    private onOrientationState(data: state.Orientation)
     {
         // Data values are (w,x,y,z), but THREE.Quaternion needs them (x,y,z,w)
         this.body.quaternion.set(data.quaternion[1], data.quaternion[2], data.quaternion[3], data.quaternion[0]);

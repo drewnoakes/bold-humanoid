@@ -111,7 +111,7 @@ class HardwareModule extends Module
         this.closeables.add(new data.Subscription<state.Hardware>(
             constants.protocols.hardwareState,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onHardwareState.bind(this)
             }
         ));
     }
@@ -128,7 +128,7 @@ class HardwareModule extends Module
         delete this.bodyFigure;
     }
 
-    private onData(data: state.Hardware)
+    private onHardwareState(data: state.Hardware)
     {
         var time = new Date().getTime();
 

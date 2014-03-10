@@ -86,14 +86,14 @@ class World2dModule extends Module
         this.closeables.add(new data.Subscription<state.WorldFrame>(
             constants.protocols.worldFrameState,
             {
-                onmessage: this.onWorldFrameData.bind(this)
+                onmessage: this.onWorldFrameState.bind(this)
             }
         ));
 
         // TODO only subscribe if user checks a box
         this.closeables.add(new data.Subscription<state.Particle>(
             constants.protocols.particleState, {
-                onmessage: this.onParticleData.bind(this)
+                onmessage: this.onParticleState.bind(this)
             }
         ));
 
@@ -171,7 +171,7 @@ class World2dModule extends Module
             plotter.drawOcclusionRays(context, options, this.occlusionRays);
     }
 
-    private onWorldFrameData(data: state.WorldFrame)
+    private onWorldFrameState(data: state.WorldFrame)
     {
         this.agentPosition = data.pos;
         this.ballPosition = data.ball;
@@ -195,7 +195,7 @@ class World2dModule extends Module
         this.animator.setRenderNeeded(); // TODO only draw worldFrameData, on its own canvas
     }
 
-    private onParticleData(data: state.Particle)
+    private onParticleState(data: state.Particle)
     {
         this.particles = data.particles;
         this.animator.setRenderNeeded(); // TODO only draw particles, on their own canvas

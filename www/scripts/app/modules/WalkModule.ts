@@ -67,7 +67,7 @@ class WalkModule extends Module
         this.closeables.add(new data.Subscription<state.Ambulator>(
             constants.protocols.ambulatorState,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onAmbulatorState.bind(this)
             }
         ));
 
@@ -176,7 +176,7 @@ class WalkModule extends Module
         context.stroke();
     }
 
-    private onData(data: state.Ambulator)
+    private onAmbulatorState(data: state.Ambulator)
     {
         if (data.running)
         {

@@ -39,7 +39,7 @@ class HistogramModule extends Module
         this.closeables.add(new data.Subscription<state.LabelCount>(
             constants.protocols.labelCount,
             {
-                onmessage: this.onmessage.bind(this)
+                onmessage: this.onLabelCountState.bind(this)
             }
         ));
 
@@ -74,7 +74,7 @@ class HistogramModule extends Module
         delete this.yScale;
     }
 
-    private onmessage(data: state.LabelCount)
+    private onLabelCountState(data: state.LabelCount)
     {
         var labels = data.labels;
 

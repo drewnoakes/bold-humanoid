@@ -30,12 +30,12 @@ class GameStateModule extends Module
         this.closeables.add(new data.Subscription<state.Game>(
             constants.protocols.gameState,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onGameState.bind(this)
             }
         ));
     }
 
-    private onData(data: state.Game)
+    private onGameState(data: state.Game)
     {
         var templateData: any = data;
 

@@ -107,7 +107,7 @@ class TimingPane
         this.closeables.add(new data.Subscription<state.Timing>(
             this.protocol,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onTimingState.bind(this)
             }
         ));
 
@@ -139,7 +139,7 @@ class TimingPane
         this.canvas.width = width;
     }
 
-    private onData(data: state.Timing)
+    private onTimingState(data: state.Timing)
     {
         if (this.lastCycleNumber) {
             this.fpsCount += data.cycle - this.lastCycleNumber;

@@ -130,9 +130,9 @@ class World3dModule extends Module
 
         this.positionBodySpotlight(this.bodyRoot);
 
-        this.closeables.add(new data.Subscription<state.Body>      (constants.protocols.bodyState,       { onmessage: this.onBodyStateData.bind(this) }));
-        this.closeables.add(new data.Subscription<state.WorldFrame>(constants.protocols.worldFrameState, { onmessage: this.onWorldFrameData.bind(this) }));
-        this.closeables.add(new data.Subscription<state.Hardware>  (constants.protocols.hardwareState,   { onmessage: this.onHardwareData.bind(this) }));
+        this.closeables.add(new data.Subscription<state.Body>      (constants.protocols.bodyState,       { onmessage: this.onBodyState.bind(this) }));
+        this.closeables.add(new data.Subscription<state.WorldFrame>(constants.protocols.worldFrameState, { onmessage: this.onWorldFrameState.bind(this) }));
+        this.closeables.add(new data.Subscription<state.Hardware>  (constants.protocols.hardwareState,   { onmessage: this.onHardwareState.bind(this) }));
 
         this.animator.start();
     }
@@ -142,7 +142,7 @@ class World3dModule extends Module
         this.animator.stop();
     }
 
-    private onBodyStateData(data: state.Body)
+    private onBodyState(data: state.Body)
     {
         if (!data.angles || data.angles.length !== 20)
         {
@@ -165,7 +165,7 @@ class World3dModule extends Module
         }
     }
 
-    private onWorldFrameData(data: state.WorldFrame)
+    private onWorldFrameState(data: state.WorldFrame)
     {
         if (this.movePlayer && data.pos && data.pos instanceof Array && data.pos.length === 3) {
             this.bodyRoot.position.x = data.pos[0];
@@ -238,7 +238,7 @@ class World3dModule extends Module
         this.animator.setRenderNeeded();
     }
 
-    private onHardwareData(data: state.Hardware)
+    private onHardwareState(data: state.Hardware)
     {
         // TODO only set if changed?
 

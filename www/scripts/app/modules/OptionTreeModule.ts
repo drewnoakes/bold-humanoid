@@ -23,6 +23,7 @@ class OptionTreeModule extends Module
     private paper: joint.dia.Paper;
     private linkByTransitionKey: {[name:string]:joint.dia.Link};
     private blockByStateId: {[name:string]:joint.shapes.basic.Rect};
+    private highlightedLastCycle: SVGElement[] = [];
 
     constructor()
     {
@@ -45,7 +46,7 @@ class OptionTreeModule extends Module
         this.closeables.add(new data.Subscription<state.OptionTree>(
             constants.protocols.optionTreeState,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onOptionTreeState.bind(this)
             }
         ));
 
@@ -90,7 +91,7 @@ class OptionTreeModule extends Module
         delete this.graph;
     }
 
-    private createTransitionKey(transition: {id: string; to: string; from?: string;}): string
+    private static createTransitionKey(transition: {id: string; to: string; from?: string;}): string
     {
         return (transition.from || '*') + '->' + transition.to + '[' + transition.id + ']';
     }
@@ -178,7 +179,7 @@ class OptionTreeModule extends Module
                     }
                 ]
             });
-            this.linkByTransitionKey[this.createTransitionKey(transition)] = link;
+            this.linkByTransitionKey[OptionTreeModule.createTransitionKey(transition)] = link;
             graph.addCell(link);
         });
 
@@ -206,7 +207,7 @@ class OptionTreeModule extends Module
                     }
                 ]
             });
-            this.linkByTransitionKey[this.createTransitionKey(wildcardTransition)] = link;
+            this.linkByTransitionKey[OptionTreeModule.createTransitionKey(wildcardTransition)] = link;
             graph.addCell(link);
         });
 
@@ -219,9 +220,7 @@ class OptionTreeModule extends Module
         });
     }
 
-    private highlightedLastCycle: SVGElement[] = [];
-
-    private onData(optionTreeData: state.OptionTree)
+    private onOptionTreeState(optionTreeData: state.OptionTree)
     {
         // FSM GRAPH
 
@@ -243,7 +242,7 @@ class OptionTreeModule extends Module
             // walk transitions, highlighting links and target states
             _.each(fsmData.transitions, d =>
             {
-                var transitionKey = this.createTransitionKey({
+                var transitionKey = OptionTreeModule.createTransitionKey({
                     id: d.via,
                     to: d.to,
                     from: d.wildcard ? undefined : stateName

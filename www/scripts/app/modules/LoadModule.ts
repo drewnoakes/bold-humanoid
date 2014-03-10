@@ -89,7 +89,7 @@ class LoadModule extends Module
         this.closeables.add(new data.Subscription<state.Body>(
             constants.protocols.bodyState,
             {
-                onmessage: this.onData.bind(this)
+                onmessage: this.onBodyState.bind(this)
             }
         ));
     }
@@ -122,7 +122,7 @@ class LoadModule extends Module
         });
     }
 
-    private onData(data: state.Body)
+    private onBodyState(data: state.Body)
     {
         var time = new Date().getTime();
 

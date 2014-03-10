@@ -49,7 +49,7 @@ class CameraModule extends Module
             constants.protocols.camera,
             {
                 parseJson: false,
-                onmessage: this.onmessage.bind(this)
+                onmessage: this.onCameraData.bind(this)
             }
         ));
 
@@ -121,7 +121,7 @@ class CameraModule extends Module
         this.context.scale(-1, -1);
     }
 
-    private onmessage(message: any)
+    private onCameraData(message: any)
     {
         console.assert(message.data instanceof Blob);
 

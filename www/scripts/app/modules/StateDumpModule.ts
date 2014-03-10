@@ -62,7 +62,7 @@ class StateDumpModule extends Module
                 this.subscription = new data.Subscription<any>(
                     protocol,
                     {
-                        onmessage: this.onData.bind(this)
+                        onmessage: this.onState.bind(this)
                     }
                 );
             }
@@ -77,7 +77,7 @@ class StateDumpModule extends Module
             this.subscription.close();
     }
 
-    private onData(data: any)
+    private onState(data: any)
     {
         this.textElement.textContent = JSON.stringify(data, undefined, 2);
     }
