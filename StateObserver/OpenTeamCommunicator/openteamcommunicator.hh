@@ -1,15 +1,8 @@
 #pragma once
 
 #include "../../Clock/clock.hh"
-#include "../../mitecom/mitecom-network.h"
-#include "../../mitecom/mitecom-handler.h"
-#include "../../StateObject/AgentFrameState/agentframestate.hh"
-#include "../../StateObject/WorldFrameState/worldframestate.hh"
+#include "../../mitecom/mitecom-data.h"
 #include "../../StateObserver/stateobserver.hh"
-#include "../../util/Maybe.hh"
-
-#include <Eigen/Core>
-#include <memory>
 
 namespace bold
 {
