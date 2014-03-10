@@ -10,7 +10,7 @@ void OpenTeamState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("team-data");
+    writer.String("teammates");
     writer.StartArray();
     {
       for (auto const& pair : d_teamMates)
@@ -18,13 +18,13 @@ void OpenTeamState::writeJson(Writer<StringBuffer>& writer) const
         MixedTeamMate teamMate = pair.second;
         writer.StartObject();
         {
-          writer.String("robot-id").Uint(teamMate.robotID);
+          writer.String("robotId").Uint(teamMate.robotID);
           writer.String("role").Uint(teamMate.data[ROBOT_CURRENT_ROLE]);
           writer.String("x").Uint(teamMate.data[ROBOT_ABSOLUTE_X]);
           writer.String("y").Uint(teamMate.data[ROBOT_ABSOLUTE_Y]);
           writer.String("theta").Uint(teamMate.data[ROBOT_ABSOLUTE_ORIENTATION]);
-          writer.String("ball-x").Uint(teamMate.data[BALL_RELATIVE_X]);
-          writer.String("ball-y").Uint(teamMate.data[BALL_RELATIVE_Y]);
+          writer.String("ballX").Uint(teamMate.data[BALL_RELATIVE_X]);
+          writer.String("ballY").Uint(teamMate.data[BALL_RELATIVE_Y]);
         }
         writer.EndObject();
       }
