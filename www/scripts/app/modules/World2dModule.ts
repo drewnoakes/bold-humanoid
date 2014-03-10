@@ -14,12 +14,10 @@ import mouse = require('util/mouse');
 import geometry = require('../util/geometry');
 import state = require('state');
 import Module = require('Module');
+import Animator = require('Animator');
 
 class World2dModule extends Module
 {
-    private needsRender: boolean = false;
-    private stopAnimation: boolean = false;
-
     private particles: number[][];
     private transform: geometry.Transform;
     private canvas: HTMLCanvasElement;
@@ -31,10 +29,13 @@ class World2dModule extends Module
     private goalPositions: geometry.IPoint2[];
 
     private hoverInfo: HTMLDivElement;
+    private animator: Animator;
 
     constructor()
     {
         super('world-2d', '2d world');
+
+        this.animator = new Animator(this.render.bind(this));
     }
 
     bindEvents()
@@ -44,7 +45,7 @@ class World2dModule extends Module
             this.transform = new geometry.Transform()
                 .translate(evt.lastDeltaX, evt.lastDeltaY)
                 .multiply(this.transform);
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         this.canvas.addEventListener('mousewheel', event =>
@@ -56,7 +57,7 @@ class World2dModule extends Module
                 .scale(scale, scale)
                 .translate(-event.offsetX, -event.offsetY)
                 .multiply(this.transform);
-            this.needsRender = true;
+            this.animator.setRenderNeeded();
         });
 
         this.canvas.addEventListener('mousemove', event =>
@@ -102,14 +103,12 @@ class World2dModule extends Module
             }
         ));
 
-        this.stopAnimation = false;
-        this.needsRender = true;
-        this.animate();
+        this.animator.start();
     }
 
     public unload()
     {
-        this.stopAnimation = true;
+        this.animator.stop();
     }
 
     public onResized(width: number, height: number)
@@ -124,22 +123,16 @@ class World2dModule extends Module
         var scale = Math.min(
             width / fieldLengthX,
             (width / ratio) / fieldLengthY);
+
         this.transform = new geometry.Transform()
             .scale(scale, -scale)
             .translate(fieldLengthX/2, -fieldLengthY/2);
-        this.needsRender = true;
+
+        this.animator.setRenderNeeded();
     }
 
-    private animate()
+    private render()
     {
-        if (this.stopAnimation)
-            return;
-
-        window.requestAnimationFrame(this.animate.bind(this));
-
-        if (!this.needsRender)
-            return;
-
         var scale = this.transform.getScale(),
             options = {
                 lineWidth: 1/scale,
@@ -182,8 +175,6 @@ class World2dModule extends Module
 
         if (this.occlusionRays)
             plotter.drawOcclusionRays(context, options, this.occlusionRays);
-
-        this.needsRender = false;
     }
 
     private onWorldFrameData(data: state.WorldFrame)
@@ -207,13 +198,13 @@ class World2dModule extends Module
             this.goalPositions.push({ x: goalPos[0], y: goalPos[1] });
         });
 
-        this.needsRender = true; // TODO only draw worldFrameData, on its own canvas
+        this.animator.setRenderNeeded(); // TODO only draw worldFrameData, on its own canvas
     }
 
     private onParticleData(data: state.Particle)
     {
         this.particles = data.particles;
-        this.needsRender = true; // TODO only draw particles, on their own canvas
+        this.animator.setRenderNeeded(); // TODO only draw particles, on their own canvas
     }
 }
 
