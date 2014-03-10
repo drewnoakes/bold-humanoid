@@ -4,7 +4,7 @@
 
 /// <reference path="../libs/jquery.d.ts" />
 
-import Settings = require('Settings');
+import constants = require('constants');
 
 declare class MozWebSocket
 {
@@ -70,8 +70,8 @@ class Protocol
         }
 
         this.socket = typeof MozWebSocket !== 'undefined'
-            ? <WebSocket>new MozWebSocket(Settings.webSocketUrl, this.protocolName)
-            : new WebSocket(Settings.webSocketUrl, this.protocolName);
+            ? <WebSocket>new MozWebSocket(constants.webSocketUrl, this.protocolName)
+            : new WebSocket(constants.webSocketUrl, this.protocolName);
 
         // Wire up the indicator
         this.indicator.className = 'connection-indicator connecting';

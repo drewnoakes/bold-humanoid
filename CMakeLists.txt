@@ -724,7 +724,6 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World2dModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World3dModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Setting.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/Settings.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/state.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/canvas.ts
