@@ -43,6 +43,7 @@ www/.idea
 *.js.map
 /www/main-built.js
 /www/scripts/app/Action.js
+/www/scripts/app/Animator.js
 /www/scripts/app/color.js
 /www/scripts/app/constants.js
 /www/scripts/app/control.js

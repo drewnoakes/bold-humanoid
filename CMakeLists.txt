@@ -683,6 +683,7 @@ endif (BUILD_TOOLS)
 #
 add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Action.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/Animator.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/color.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/constants.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/control.ts
