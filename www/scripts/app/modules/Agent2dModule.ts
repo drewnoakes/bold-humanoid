@@ -5,7 +5,7 @@
 /// <reference path="../../libs/lodash.d.ts" />
 
 import Animator = require('Animator');
-import FieldLinePlotter = require('FieldLinePlotter');
+import plotter = require('plotter');
 import constants = require('constants');
 import data = require('data');
 import HeadControls = require('controls/HeadControls');
@@ -129,7 +129,7 @@ class Agent2dModule extends Module
 
         this.transform.applyTo(context);
 
-        FieldLinePlotter.drawField(context, options);
+        plotter.drawField(context, options);
 
         var maxDistance = Math.sqrt(
             Math.pow(constants.fieldX + 2 * constants.outerMarginMinimum, 2) +
@@ -151,19 +151,19 @@ class Agent2dModule extends Module
         }
 
         if (this.observedLineSegments && this.observedLineSegments.length)
-            FieldLinePlotter.drawLineSegments(context, options, this.observedLineSegments, 1, '#0000ff');
+            plotter.drawLineSegments(context, options, this.observedLineSegments, 1, '#0000ff');
 
         if (this.visibleFieldPoly)
-            FieldLinePlotter.drawVisibleFieldPoly(context, options, this.visibleFieldPoly);
+            plotter.drawVisibleFieldPoly(context, options, this.visibleFieldPoly);
 
         if (this.ballPosition)
-            FieldLinePlotter.drawBall(context, options, this.ballPosition);
+            plotter.drawBall(context, options, this.ballPosition);
 
         if (this.goalPositions)
-            FieldLinePlotter.drawGoalPosts(context, options, this.goalPositions);
+            plotter.drawGoalPosts(context, options, this.goalPositions);
 
         if (this.occlusionRays)
-            FieldLinePlotter.drawOcclusionRays(context, options, this.occlusionRays);
+            plotter.drawOcclusionRays(context, options, this.occlusionRays);
     }
 }
 

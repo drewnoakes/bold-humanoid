@@ -56,7 +56,6 @@ www/.idea
 /www/scripts/app/controls/TabControl.js
 /www/scripts/app/data.js
 /www/scripts/app/DOMTemplate.js
-/www/scripts/app/FieldLinePlotter.js
 /www/scripts/app/HsvRange.js
 /www/scripts/app/interaction.js
 /www/scripts/app/main.js
@@ -84,6 +83,7 @@ www/.idea
 /www/scripts/app/modules/WalkModule.js
 /www/scripts/app/modules/World2dModule.js
 /www/scripts/app/modules/World3dModule.js
+/www/scripts/app/plotter.js
 /www/scripts/app/Setting.js
 /www/scripts/app/state.js
 /www/scripts/app/util.js

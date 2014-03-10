@@ -696,7 +696,6 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/TabControl.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/data.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/DOMTemplate.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/FieldLinePlotter.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRange.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/main.ts
@@ -724,6 +723,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/WalkModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World2dModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World3dModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/plotter.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Setting.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/state.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util.ts
