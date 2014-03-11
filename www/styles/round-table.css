@@ -913,9 +913,9 @@ div.module.agent-2d .hover-info
   float: right;
 }
 
-div.module.agent-2d div.module-content
+div.module.agent-2d div.localiser-controls
 {
-  min-height: 480px;
+  display: inline-block;
 }
 
 /*******************************************************************/

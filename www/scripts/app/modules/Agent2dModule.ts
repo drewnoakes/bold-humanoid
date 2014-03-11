@@ -4,155 +4,67 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
-import Animator = require('Animator');
-import plotter = require('plotter');
-import constants = require('constants');
-import data = require('data');
+import control = require('control');
 import HeadControls = require('controls/HeadControls');
-import mouse = require('util/mouse');
-import geometry = require('util/geometry');
+import mapping = require('controls/mapping');
 import Module = require('Module');
-import state = require('state');
+import util = require('util');
+import geometry = require('util/geometry');
 
 class Agent2dModule extends Module
 {
-    private canvas: HTMLCanvasElement;
-    private hoverInfo: HTMLDivElement;
-    private transform: geometry.Transform;
-
-    private ballPosition: number[];
-    private goalPositions: number[][];
-    private visibleFieldPoly: number[][];
-    private occlusionRays: number[][];
-    private observedLineSegments: number[][];
-    private scale: number;
-    private animator: Animator;
+    private map: mapping.Map;
 
     constructor()
     {
         super('agent-2d', '2d agent');
-
-        this.animator = new Animator(this.render.bind(this));
     }
 
     public load(element: HTMLDivElement)
     {
-        this.transform = new geometry.Transform();
+        var mapDiv = document.createElement('div');
+        mapDiv.className = 'map-layer-container';
 
-        this.canvas = document.createElement('canvas');
-        this.hoverInfo = document.createElement('div');
-        this.hoverInfo.className = 'hover-info';
+        var checkboxDiv = document.createElement('div');
+        checkboxDiv.className = 'map-layer-checkboxes';
 
-        element.appendChild(this.canvas);
-        element.appendChild(this.hoverInfo);
+        var transform = new util.Trackable<geometry.Transform>();
+
+        this.map = new mapping.Map(mapDiv, checkboxDiv, transform);
+
+        var hoverInfo = document.createElement('div');
+        hoverInfo.className = 'hover-info';
+
+        this.map.hoverPoint.track(p => { hoverInfo.textContent = p ? p.x.toFixed(2) + ', ' + p.y.toFixed(2) : ''; });
+
+        var localiserControlContainer = document.createElement('div');
+        localiserControlContainer.className = 'localiser-controls';
+        control.buildActions('localiser', localiserControlContainer);
+
+        element.appendChild(mapDiv);
+        element.appendChild(hoverInfo);
+        element.appendChild(checkboxDiv);
         element.appendChild(new HeadControls().element);
+        element.appendChild(localiserControlContainer);
 
-        this.canvas.addEventListener('mousewheel', event =>
-        {
-            event.preventDefault();
-
-            this.scale *= Math.pow(1.1, event.wheelDelta / 80);
-            this.scale = Math.max(20, this.scale);
-            this.transform = new geometry.Transform()
-                .translate(this.canvas.width / 2, this.canvas.height / 2)
-                .scale(this.scale, -this.scale);
-            this.animator.setRenderNeeded();
-        });
-
-        this.canvas.addEventListener('mousemove', event =>
-        {
-            mouse.polyfill(event);
-            var p = this.transform.clone().invert().transformPoint(event.offsetX, event.offsetY);
-            this.hoverInfo.textContent = p.x.toFixed(2) + ', ' + p.y.toFixed(2);
-        });
-
-        this.canvas.addEventListener('mouseleave', () =>
-        {
-            this.hoverInfo.textContent = '';
-        });
-
-        this.closeables.add(new data.Subscription<state.AgentFrame>(
-            constants.protocols.agentFrameState,
-            {
-                onmessage: this.onAgentFrameState.bind(this)
-            }));
-
-        this.closeables.add(() => this.animator.stop());
-
-        this.animator.start();
+        this.map.addLayer(new mapping.AgentReferenceLayer(transform));
+        this.map.addLayer(new mapping.AgentObservedLineLayer(transform));
+        this.map.addLayer(new mapping.AgentVisibleFieldPolyLayer(transform));
+        this.map.addLayer(new mapping.AgentBallPositionLayer(transform));
+        this.map.addLayer(new mapping.AgentObservedGoalLayer(transform));
+        this.map.addLayer(new mapping.AgentOcclusionAreaLayer(transform));
     }
 
     public onResized(width, height)
     {
-        this.canvas.width = width;
-        this.canvas.height = height;
+        var scale = this.map.transform.getValue().getScale();
+//        var scale = Math.min(width / 12, height / 12);
+        this.map.transform.setValue(
+            new geometry.Transform()
+            .translate(width / 2, height / 2)
+            .scale(scale, -scale));
 
-        this.scale = Math.min(width / 12, height / 12);
-        this.transform = new geometry.Transform()
-            .translate(this.canvas.width / 2, this.canvas.height / 2)
-            .scale(this.scale, -this.scale);
-        this.animator.setRenderNeeded();
-    }
-
-    private onAgentFrameState(data: state.AgentFrame)
-    {
-        this.ballPosition = data.ball;
-        this.visibleFieldPoly = data.visibleFieldPoly;
-        this.occlusionRays = data.occlusionRays;
-        this.observedLineSegments = data.lines;
-        this.goalPositions = data.goals;
-
-        this.animator.setRenderNeeded(); // TODO only draw agentFrameData, on its own canvas
-    }
-
-    private render()
-    {
-        var scale = this.transform.getScale(),
-            options = {
-                lineWidth: 1/scale,
-                goalStrokeStyle: 'yellow',
-                groundFillStyle: '#008800',
-                lineStrokeStyle: '#ffffff',
-                visibleFieldPolyLineWidth: 1 / scale,
-                visibleFieldPolyStrokeStyle: '#0000ff'
-            },
-            context = this.canvas.getContext('2d');
-
-        this.transform.applyTo(context);
-
-        plotter.drawField(context, options);
-
-        var maxDistance = constants.minDiagonalFieldDistance;
-
-        context.strokeStyle = 'white';
-        context.lineWidth = 0.5 / this.scale;
-        context.beginPath();
-        context.moveTo(0, maxDistance);
-        context.lineTo(0, -maxDistance);
-        context.moveTo(-maxDistance, 0);
-        context.lineTo(maxDistance, 0);
-        context.stroke();
-
-        for (var r = 1; r < maxDistance; r++) {
-            context.beginPath();
-            context.arc(0, 0, r, 0, Math.PI * 2);
-            context.stroke();
-        }
-
-        if (this.observedLineSegments && this.observedLineSegments.length)
-            plotter.drawLineSegments(context, this.observedLineSegments, 1, '#0000ff');
-
-        if (this.visibleFieldPoly)
-            plotter.drawVisibleFieldPoly(context, options, this.visibleFieldPoly);
-
-        if (this.ballPosition)
-            plotter.drawBall(context, options, this.ballPosition);
-
-        if (this.goalPositions)
-            plotter.drawGoalPosts(context, options, this.goalPositions);
-
-        if (this.occlusionRays)
-            plotter.drawOcclusionRays(context, options, this.occlusionRays);
+        this.map.setPixelSize(width, height);
     }
 }
 

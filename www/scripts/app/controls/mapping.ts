@@ -20,7 +20,7 @@ export class Map
 
     private layers: MapLayer[] = [];
 
-    constructor(private layerContainer: HTMLDivElement, private checkboxContainer: HTMLDivElement, private transform: util.Trackable<geometry.Transform>)
+    constructor(private layerContainer: HTMLDivElement, private checkboxContainer: HTMLDivElement, public transform: util.Trackable<geometry.Transform>)
     {
         this.transform.setValue(new geometry.Transform().scale(1, -1));
 
@@ -298,6 +298,119 @@ export class OcclusionAreaLayer extends DataLayer<state.WorldFrame>
         super(
             transform,
             constants.protocols.worldFrameState,
+            "Occlusion area",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data && this.data.occlusionRays)
+                    plotter.drawOcclusionRays(this.context, {lineWidth:1/this.transform.getValue().getScale()}, this.data.occlusionRays)
+            });
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export class AgentReferenceLayer extends MapLayer
+{
+    constructor(transform: util.Trackable<geometry.Transform>)
+    {
+        super(transform, "Agent frame");
+
+        this.transform.track(t =>
+        {
+            plotter.drawField(this.context, {});
+
+            var maxDistance = constants.minDiagonalFieldDistance;
+            var context = this.context;
+
+            context.strokeStyle = 'white';
+            context.lineWidth = 0.5 / t.getScale();
+            context.beginPath();
+            context.moveTo(0, maxDistance);
+            context.lineTo(0, -maxDistance);
+            context.moveTo(-maxDistance, 0);
+            context.lineTo(maxDistance, 0);
+            context.stroke();
+
+            for (var r = 1; r < maxDistance; r++) {
+                context.beginPath();
+                context.arc(0, 0, r, 0, Math.PI * 2);
+                context.stroke();
+            }
+        });
+    }
+}
+
+export class AgentObservedLineLayer extends DataLayer<state.AgentFrame>
+{
+    constructor(transform: util.Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.agentFrameState,
+            "Observed lines",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data && this.data.lines)
+                    plotter.drawLineSegments(this.context, this.data.lines, 0.02, '#000088')
+            });
+    }
+}
+
+export class AgentVisibleFieldPolyLayer extends DataLayer<state.AgentFrame>
+{
+    constructor(transform: util.Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.agentFrameState,
+            "Visible area",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data && this.data.visibleFieldPoly)
+                    plotter.drawVisibleFieldPoly(this.context, {visibleFieldPolyLineWidth: 1/this.transform.getValue().getScale()}, this.data.visibleFieldPoly)
+            });
+    }
+}
+
+export class AgentBallPositionLayer extends DataLayer<state.AgentFrame>
+{
+    constructor(transform: util.Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.agentFrameState,
+            "Ball",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data && this.data.ball)
+                    plotter.drawBall(this.context, {}, this.data.ball)
+            });
+    }
+}
+
+export class AgentObservedGoalLayer extends DataLayer<state.AgentFrame>
+{
+    constructor(transform: util.Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.agentFrameState,
+            "Observed goals",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data && this.data.goals)
+                    plotter.drawGoalPosts(this.context, {goalStrokeStyle:'#FF5800'}, this.data.goals)
+            });
+    }
+}
+
+export class AgentOcclusionAreaLayer extends DataLayer<state.AgentFrame>
+{
+    constructor(transform: util.Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.agentFrameState,
             "Occlusion area",
             () => {
                 canvasUtil.clear(this.context, true);
