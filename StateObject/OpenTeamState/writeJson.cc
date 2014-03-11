@@ -16,10 +16,12 @@ void OpenTeamState::writeJson(Writer<StringBuffer>& writer) const
       for (auto const& pair : d_teamMates)
       {
         MixedTeamMate teamMate = pair.second;
+
         writer.StartObject();
         {
           writer.String("lastUpdate").Uint(Clock::timestampToMillis(teamMate.lastUpdate));
           writer.String("robotId").Uint(teamMate.robotID);
+          writer.String("action").Int(teamMate.data[ROBOT_CURRENT_ACTION]);
           writer.String("state").Int(teamMate.data[ROBOT_CURRENT_STATE]);
           writer.String("role").Int(teamMate.data[ROBOT_CURRENT_ROLE]);
           writer.String("x").Int(teamMate.data[ROBOT_ABSOLUTE_X]);
