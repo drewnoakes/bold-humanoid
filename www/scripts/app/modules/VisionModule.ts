@@ -67,7 +67,10 @@ class VisionModule extends Module
 
         control.buildSettings('round-table.image-features', content.querySelector('div.image-features'), this.closeables);
 
-        control.buildSettings('camera.settings', content.querySelector('div.camera-settings'), this.closeables);
+        var cameraSettings = content.querySelector('div.camera-settings');
+        control.buildAction('camera.refresh-all-control-values', cameraSettings);
+        control.buildSettings('camera.settings', cameraSettings, this.closeables);
+
         control.buildSettings('camera.calibration', content.querySelector('div.camera-calibration'), this.closeables);
 
         var imageColoursContainer = content.querySelector('div.image-colours');

@@ -81,6 +81,7 @@ void Camera::createControls()
   };
 
   vector<SettingBase*> settings;
+  vector<function<void()>> refreshAllActions;
 
   for (shared_ptr<Control const> const& control : d_controls)
   {
@@ -133,6 +134,7 @@ void Camera::createControls()
                    [setting](int correction) { setting->setValue(correction != 0); });
         });
         settings.push_back(setting);
+        refreshAllActions.emplace_back([setting,control,getValue]() { setting->setValue(getValue(control->id) != 0); });
         break;
       }
       case V4L2ControlType::CT_INT:
@@ -150,6 +152,7 @@ void Camera::createControls()
                    [setting](int correction) { setting->setValue(correction); });
         });
         settings.push_back(setting);
+        refreshAllActions.emplace_back([setting,control,getValue]() { setting->setValue(getValue(control->id)); });
         break;
       }
       case V4L2ControlType::CT_MENU:
@@ -167,6 +170,7 @@ void Camera::createControls()
                    [setting](int correction) { setting->setValue(correction); });
         });
         settings.push_back(setting);
+        refreshAllActions.emplace_back([setting,control,getValue]() { setting->setValue(getValue(control->id)); });
         break;
       }
       default:
@@ -175,6 +179,12 @@ void Camera::createControls()
       }
     }
   }
+
+  Config::addAction("camera.refresh-all-control-values", "Refresh all", [refreshAllActions]()
+  {
+    for (auto& fun : refreshAllActions)
+      fun();
+  });
 
   // Camera settings must be set in a particular order. For example, you cannot
   // explicitly set the white balance when 'auto wb' mode is on. The value will
