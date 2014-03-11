@@ -42,10 +42,10 @@ class World2dModule extends Module
         control.buildActions('localiser', localiserControlContainer);
 
         element.appendChild(mapDiv);
+        element.appendChild(this.hoverInfo);
         element.appendChild(checkboxDiv);
         element.appendChild(new HeadControls().element);
         element.appendChild(localiserControlContainer);
-        element.appendChild(this.hoverInfo);
 
         this.map.addLayer(new mapping.FieldLineLayer(transform));
         this.map.addLayer(new mapping.ParticleLayer(transform));
