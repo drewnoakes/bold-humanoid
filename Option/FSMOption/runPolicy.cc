@@ -62,7 +62,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
       if (tryTransition(transition))
       {
         writer.StartObject();
-        writer.String("to").String(d_curState->name.c_str());
+        writer.String("to").String(transition->childState->name.c_str());
         writer.String("via").String(transition->name.c_str());
         writer.String("wildcard").Bool(true);
         writer.EndObject();
@@ -78,7 +78,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
         if (tryTransition(transition))
         {
           writer.StartObject();
-          writer.String("to").String(d_curState->name.c_str());
+          writer.String("to").String(transition->childState->name.c_str());
           writer.String("via").String(transition->name.c_str());
           writer.EndObject();
           transitionMade = true;
