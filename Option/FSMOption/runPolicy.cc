@@ -7,29 +7,12 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 {
   log::verbose(getId()) << " ----- Start -----";
 
-  auto setCurrentState = [this](shared_ptr<FSMState> state)
-  {
-    d_curState = state;
-    d_curState->start();
-
-    static Setting<bool>* announceFsmStates = Config::getSetting<bool>("options.announce-fsm-states");
-    static Setting<int>* announceRate = Config::getSetting<int>("options.announce-rate-wpm");
-    if (announceFsmStates->getValue())
-    {
-      if (d_voice->queueLength() < 2)
-      {
-        SpeechTask task = { state->name, (uint)announceRate->getValue(), false };
-        d_voice->say(task);
-      }
-    }
-  };
-
   if (!d_curState)
     setCurrentState(d_startState);
 
   log::verbose(getId()) << "Current state: " << d_curState->name;
 
-  auto tryTransition = [this,setCurrentState](shared_ptr<FSMTransition>& transition)
+  auto tryTransition = [this](shared_ptr<FSMTransition>& transition)
   {
     // TODO include information about transitions that were not taken
     // TODO pass JSON writer to conditions too, so they can provide debug information

@@ -2,6 +2,7 @@
 
 #include "../../Config/config.hh"
 #include "../../Setting/setting-implementations.hh"
+#include "../../Voice/voice.hh"
 
 #include <sstream>
 
@@ -39,4 +40,21 @@ shared_ptr<FSMState> FSMOption::getState(string name) const
     return nullptr;
 
   return *it;
+}
+
+void FSMOption::setCurrentState(shared_ptr<FSMState> state)
+{
+  d_curState = state;
+  d_curState->start();
+
+  static Setting<bool>* announceFsmStates = Config::getSetting<bool>("options.announce-fsm-states");
+  static Setting<int>* announceRate = Config::getSetting<int>("options.announce-rate-wpm");
+  if (announceFsmStates->getValue())
+  {
+    if (d_voice->queueLength() < 2)
+    {
+      SpeechTask task = { state->name, (uint)announceRate->getValue(), false };
+      d_voice->say(task);
+    }
+  }
 }

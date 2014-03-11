@@ -111,6 +111,8 @@ namespace bold
     void toJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
 
   private:
+    void setCurrentState(std::shared_ptr<FSMState> state);
+
     std::vector<std::shared_ptr<FSMState>> d_states;
     std::vector<std::shared_ptr<FSMTransition>> d_wildcardTransitions;
     std::shared_ptr<FSMState> d_startState;
