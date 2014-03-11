@@ -50,6 +50,7 @@ www/.idea
 /www/scripts/app/controls/BodyFigure.js
 /www/scripts/app/controls/Button.js
 /www/scripts/app/controls/Checkbox.js
+/www/scripts/app/controls/ColorPicker.js
 /www/scripts/app/controls/HeadControls.js
 /www/scripts/app/controls/HsvRangeEditor.js
 /www/scripts/app/controls/mapping.js
