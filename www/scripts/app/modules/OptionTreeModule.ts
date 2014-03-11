@@ -27,7 +27,7 @@ class OptionTreeModule extends Module
 
     constructor()
     {
-        super('optiontree', 'option-tree');
+        super('optiontree', 'option tree');
     }
 
     public load(element: HTMLDivElement)
