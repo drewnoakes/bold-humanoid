@@ -829,6 +829,11 @@ div.module.optiontree div.control-container
     padding-top: 8px;
 }
 
+div.module.optiontree div.graph
+{
+    margin-top: 16px;
+}
+
 div.module.optiontree div.graph svg g.element rect
 {
     transition: fill 1s linear;
