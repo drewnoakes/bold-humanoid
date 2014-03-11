@@ -317,6 +317,11 @@ div.module div.module-column-3
 
 /********************************************************************/
 
+div.map-layer-container > canvas
+{
+  position: absolute;
+}
+
 /********************************************************************/
 
 div.checkbox input[type="checkbox"]

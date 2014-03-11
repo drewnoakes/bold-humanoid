@@ -52,6 +52,7 @@ www/.idea
 /www/scripts/app/controls/Checkbox.js
 /www/scripts/app/controls/HeadControls.js
 /www/scripts/app/controls/HsvRangeEditor.js
+/www/scripts/app/controls/mapping.js
 /www/scripts/app/controls/ModuleHost.js
 /www/scripts/app/controls/PixelLabelInspector.js
 /www/scripts/app/controls/PolarTrace.js

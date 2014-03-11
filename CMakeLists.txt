@@ -692,6 +692,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/Checkbox.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/HeadControls.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/HsvRangeEditor.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/mapping.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/ModuleHost.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/PixelLabelInspector.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/PolarTrace.ts
