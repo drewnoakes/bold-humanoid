@@ -8,20 +8,53 @@
 
 using namespace bold;
 using namespace std;
+using namespace rapidjson;
 
 FSMOption::FSMOption(shared_ptr<Voice> voice, string const& id)
 : Option(id, "FSM"),
   d_voice(voice)
 {
-  std::stringstream path;
-  path << "options.fsms." << id << ".paused";
+  stringstream pausePath;
+  pausePath << "options.fsms." << id << ".paused";
 
-  std::stringstream desc;
-  desc << "Pause " << id;
+  stringstream pauseDesc;
+  pauseDesc << "Pause " << id;
 
-  d_paused = new BoolSetting(path.str(), false, false, desc.str());
+  d_paused = new BoolSetting(pausePath.str(), false, false, pauseDesc.str());
 
   Config::addSetting(d_paused);
+
+  stringstream jumpPath;
+  jumpPath << "options.fsms." << id << ".goto";
+
+  stringstream jumpDesc;
+  jumpDesc << "Set state for " << id << " FSM";
+
+  Config::addAction(jumpPath.str(), jumpDesc.str(), [this](Value* args)
+  {
+    if (!args || !args->IsObject())
+    {
+      log::warning("FSMOption::goto") << "Invalid request JSON. Must be an object.";
+      return;
+    }
+
+    const char* stateName;
+    if (!args->TryGetStringValue("state", &stateName))
+    {
+      log::warning("FSMOption::goto") << "Invalid request JSON. Must have a 'state' property of type 'string'.";
+      return;
+    }
+
+    // find state having this name
+    auto state = getState(string(stateName));
+    if (!state)
+    {
+      log::warning("FSMOption::goto") << "Invalid request to go to unknown state: " << stateName;
+      return;
+    }
+
+    setCurrentState(state);
+  });
 }
 
 void FSMOption::reset()

@@ -136,7 +136,14 @@ class OptionTreeModule extends Module
             });
 
             this.blockByStateId[state.id] = block;
+
             graph.addCell(block);
+
+            this.paper.findViewByModel(block).el.addEventListener('click', () =>
+            {
+                if (window.event.shiftKey)
+                    control.getAction("options.fsms." + fsm.name + ".goto").activate({ state: state.id });
+            });
         });
 
         // Create a wildcard 'from' node, if we have any wildcard transitions
