@@ -39,6 +39,11 @@ export class Trackable<T>
             this.callbacks[i](this.value, oldValue);
         }
     }
+
+    public onchange(callback: ()=>void)
+    {
+        this.callbacks.push(callback);
+    }
 }
 
 export function roundUpHumane(value: number)
