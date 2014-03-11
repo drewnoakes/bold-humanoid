@@ -44,4 +44,5 @@ class DOMTemplate
         }
     }
 }
+
 export = DOMTemplate;
