@@ -32,6 +32,9 @@ export var cameraFovVerticalDegrees = 46;
 export var cameraImageWidth = 640;
 export var cameraImageHeight = 480;
 
+export var minDiagonalFieldDistance = Math.sqrt(
+    Math.pow(fieldX + 2 * outerMarginMinimum, 2) +
+    Math.pow(fieldY + 2 * outerMarginMinimum, 2));
 
 export var ballRadius = ballDiameter / 2;
 

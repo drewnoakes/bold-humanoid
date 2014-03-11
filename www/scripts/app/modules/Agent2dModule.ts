@@ -122,9 +122,7 @@ class Agent2dModule extends Module
 
         plotter.drawField(context, options);
 
-        var maxDistance = Math.sqrt(
-            Math.pow(constants.fieldX + 2 * constants.outerMarginMinimum, 2) +
-            Math.pow(constants.fieldY + 2 * constants.outerMarginMinimum, 2));
+        var maxDistance = constants.minDiagonalFieldDistance;
 
         context.strokeStyle = 'white';
         context.lineWidth = 0.5 / this.scale;
