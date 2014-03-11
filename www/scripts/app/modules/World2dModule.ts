@@ -14,7 +14,6 @@ import geometry = require('util/geometry');
 class World2dModule extends Module
 {
     private map: mapping.Map;
-    private hoverInfo: HTMLDivElement;
 
     constructor()
     {
@@ -32,17 +31,17 @@ class World2dModule extends Module
         var transform = new util.Trackable<geometry.Transform>();
         this.map = new mapping.Map(mapDiv, checkboxDiv, transform);
 
-        this.hoverInfo = document.createElement('div');
-        this.hoverInfo.className = 'hover-info';
+        var hoverInfo = document.createElement('div');
+        hoverInfo.className = 'hover-info';
 
-        this.map.hoverPoint.track(p => { this.hoverInfo.textContent = p ? p.x.toFixed(2) + ', ' + p.y.toFixed(2) : ''; });
+        this.map.hoverPoint.track(p => { hoverInfo.textContent = p ? p.x.toFixed(2) + ', ' + p.y.toFixed(2) : ''; });
 
         var localiserControlContainer = document.createElement('div');
         localiserControlContainer.className = 'localiser-controls';
         control.buildActions('localiser', localiserControlContainer);
 
         element.appendChild(mapDiv);
-        element.appendChild(this.hoverInfo);
+        element.appendChild(hoverInfo);
         element.appendChild(checkboxDiv);
         element.appendChild(new HeadControls().element);
         element.appendChild(localiserControlContainer);
