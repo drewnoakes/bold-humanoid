@@ -7,6 +7,7 @@
 import control = require('control');
 import constants = require('constants');
 import geometry = require('util/geometry');
+import state = require('state');
 
 export function drawField(context: CanvasRenderingContext2D, options: {groundFillStyle?: string})
 {
@@ -225,5 +226,17 @@ export function drawParticles(context: CanvasRenderingContext2D, options: {parti
         var x = particle[0] - size/2,
             y = particle[1] - size/2;
         context.fillRect(x, y, size, size);
+    });
+}
+
+export function drawTeammates(context: CanvasRenderingContext2D, teammates: state.TeammateData[], scale: number)
+{
+    var agentPosOptions = {};
+
+    // TODO draw other teammate data here, such as the ball position, role, action, robotId...
+
+    _.each<state.TeammateData>(teammates, (teammate: state.TeammateData) =>
+    {
+        drawAgentPosition(context, agentPosOptions, [teammate.x, teammate.y, teammate.theta]);
     });
 }

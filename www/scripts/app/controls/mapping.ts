@@ -307,6 +307,22 @@ export class OcclusionAreaLayer extends DataLayer<state.WorldFrame>
     }
 }
 
+export class TeamLayer extends DataLayer<state.OpenTeam>
+{
+    constructor(transform: util.Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.openTeamState,
+            "Team",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data && this.data.teammates)
+                    plotter.drawTeammates(this.context, this.data.teammates, this.transform.getValue().getScale());
+            });
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class AgentReferenceLayer extends MapLayer

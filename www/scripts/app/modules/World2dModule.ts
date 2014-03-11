@@ -54,6 +54,7 @@ class World2dModule extends Module
         this.map.addLayer(new mapping.BallPositionLayer(transform));
         this.map.addLayer(new mapping.ObservedGoalLayer(transform));
         this.map.addLayer(new mapping.OcclusionAreaLayer(transform));
+        this.map.addLayer(new mapping.TeamLayer(transform));
     }
 
     public unload()
