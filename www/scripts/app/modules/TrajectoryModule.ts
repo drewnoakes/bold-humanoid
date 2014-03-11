@@ -6,11 +6,13 @@
 /// <reference path="../../libs/d3.d.ts" />
 
 import constants = require('constants');
+import Checkbox = require('controls/Checkbox');
 import data = require('data');
 import BodyFigure = require('controls/BodyFigure');
 import Module = require('Module');
 import state = require('state');
 import canvas = require('util/canvas');
+import util = require('util');
 
 var chartHeight = 300,
     chartWidth = 430,
@@ -25,7 +27,7 @@ class TrajectoryModule extends Module
 {
     private data: state.BodyControl[] = [];
 
-    private mirrorValues: boolean = true;
+    private mirrorValues: util.Trackable<boolean> = new util.Trackable<boolean>(true);
     private isRecording: boolean = false;
     private skipFirstDatum: boolean = true;
     private hoverJointId: number = -1;
@@ -38,6 +40,8 @@ class TrajectoryModule extends Module
     constructor()
     {
         super('trajectory', 'trajectory');
+
+        this.mirrorValues.onchange(() => this.render());
     }
 
     public load(element: HTMLDivElement)
@@ -46,23 +50,13 @@ class TrajectoryModule extends Module
         this.recordButton.className = 'record';
         this.recordButton.textContent = 'record';
         this.recordButton.addEventListener('click', this.toggleIsRecording.bind(this));
-        var mirrorCheckbox = document.createElement('input');
-        mirrorCheckbox.id = 'mirror-checkbox';
-        mirrorCheckbox.type = 'checkbox';
-        mirrorCheckbox.checked = true;
-        mirrorCheckbox.addEventListener('change', () =>
-        {
-            this.mirrorValues = mirrorCheckbox.checked;
-            this.render();
-        });
-        var mirrorLabel = document.createElement('label');
-        mirrorLabel.htmlFor = mirrorCheckbox.id;
-        mirrorLabel.textContent = 'Mirror values';
+
+        var mirrorCheckbox = new Checkbox('Mirror values', this.mirrorValues);
+
         var controlContainer = document.createElement('div');
         controlContainer.className = 'controls';
         controlContainer.appendChild(this.recordButton);
-        controlContainer.appendChild(mirrorCheckbox);
-        controlContainer.appendChild(mirrorLabel);
+        controlContainer.appendChild(mirrorCheckbox.element);
         element.appendChild(controlContainer);
 
         this.canvas = document.createElement('canvas');
@@ -174,7 +168,7 @@ class TrajectoryModule extends Module
             ctx.beginPath();
             _.each(this.data, d =>
             {
-                var yScale = this.mirrorValues && jointId % 2 === 0 && jointId !== 20 ? yMirror : y;
+                var yScale = this.mirrorValues.getValue() && jointId % 2 === 0 && jointId !== 20 ? yMirror : y;
                 var px = x(d.cycle),
                     py = yScale(d.joints[jointId].v);
                 ctx.lineTo(px, py);
