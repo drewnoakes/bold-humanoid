@@ -166,12 +166,39 @@ export interface Odometry
     translation: number[];
 }
 
+export enum RobotState
+{
+    Inactive = 0,
+    Active = 1,
+    Penalized = 2
+}
+
+export enum RobotRole
+{
+    Idling = 0,
+    Other = 1,
+    Striker = 2,
+    Supporter = 3,
+    Defender = 4,
+    Goalie = 5
+}
+
+export enum RobotAction
+{
+    Undefined = 0,
+    Positioning = 1,
+    GoingToBall = 2,
+    TryingToScore = 3,
+    Waiting = 4
+}
+
 export interface TeammateData
 {
     robotId: number;
     lastUpdate: number;
-    state: number;
-    role: number;
+    action: RobotAction;
+    state: RobotState;
+    role: RobotRole;
     x: number;
     y: number;
     theta: number;
