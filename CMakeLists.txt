@@ -688,6 +688,8 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/constants.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/control.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/BodyFigure.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/Button.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/Checkbox.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/HeadControls.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/HsvRangeEditor.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/ModuleHost.ts

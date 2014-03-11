@@ -317,6 +317,22 @@ div.module div.module-column-3
 
 /********************************************************************/
 
+/********************************************************************/
+
+div.checkbox input[type="checkbox"]
+{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+div.checkbox label
+{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/********************************************************************/
+
 .pixel-labels .control
 {
     width: 155px;

@@ -48,6 +48,8 @@ www/.idea
 /www/scripts/app/constants.js
 /www/scripts/app/control.js
 /www/scripts/app/controls/BodyFigure.js
+/www/scripts/app/controls/Button.js
+/www/scripts/app/controls/Checkbox.js
 /www/scripts/app/controls/HeadControls.js
 /www/scripts/app/controls/HsvRangeEditor.js
 /www/scripts/app/controls/ModuleHost.js
