@@ -853,6 +853,12 @@ div.module.optiontree div.graph svg g.link.active path.connection
     stroke: #792485;
 }
 
+div.module.optiontree div.graph svg g.link-tools,
+div.module.optiontree div.graph svg g.marker-arrowheads
+{
+    display: none;
+}
+
 /*******************************************************************/
 
 div.module.histogram
