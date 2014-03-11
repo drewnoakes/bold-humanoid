@@ -6,8 +6,9 @@
 #include <sstream>
 
 using namespace bold;
+using namespace std;
 
-FSMOption::FSMOption(std::shared_ptr<Voice> voice, std::string const& id)
+FSMOption::FSMOption(shared_ptr<Voice> voice, string const& id)
 : Option(id, "FSM"),
   d_voice(voice)
 {
@@ -25,4 +26,17 @@ FSMOption::FSMOption(std::shared_ptr<Voice> voice, std::string const& id)
 void FSMOption::reset()
 {
   d_curState = d_startState;
+}
+
+shared_ptr<FSMState> FSMOption::getState(string name) const
+{
+  auto it = std::find_if(
+    d_states.begin(),
+    d_states.end(),
+    [&name](shared_ptr<FSMState> const& state) { return state->name == name; });
+
+  if (it == d_states.end())
+    return nullptr;
+
+  return *it;
 }
