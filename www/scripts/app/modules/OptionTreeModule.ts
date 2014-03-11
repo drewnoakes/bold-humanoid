@@ -221,9 +221,9 @@ class OptionTreeModule extends Module
         // Perform layout
         joint.layout.DirectedGraph.layout(graph, {
             setLinkVertices: false,
-            rankSep: 35,
+            rankSep: 45,
             edgeSep: 35,
-            nodeSep: 20
+            nodeSep: 25
         });
     }
 
