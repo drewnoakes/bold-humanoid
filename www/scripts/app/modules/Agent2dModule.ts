@@ -21,10 +21,10 @@ class Agent2dModule extends Module
     private transform: geometry.Transform;
 
     private ballPosition: number[];
-    private goalPositions: geometry.IPoint2[];
+    private goalPositions: number[][];
     private visibleFieldPoly: number[][];
     private occlusionRays: number[][];
-    private observedLineSegments: geometry.ILineSegment2[];
+    private observedLineSegments: number[][];
     private scale: number;
     private animator: Animator;
 
@@ -99,17 +99,8 @@ class Agent2dModule extends Module
         this.ballPosition = data.ball;
         this.visibleFieldPoly = data.visibleFieldPoly;
         this.occlusionRays = data.occlusionRays;
-        this.observedLineSegments = [];
-        this.goalPositions = [];
-
-        _.each(data.lines, line =>
-        {
-            var p1 = { x: line[0], y: line[1]/*, z: line[2]*/ };
-            var p2 = { x: line[3], y: line[4]/*, z: line[5]*/ };
-            this.observedLineSegments.push({ p1: p1, p2: p2 });
-        });
-
-        _.each(data.goals, goalPos => this.goalPositions.push({ x: goalPos[0], y: goalPos[1] }));
+        this.observedLineSegments = data.lines;
+        this.goalPositions = data.goals;
 
         this.animator.setRenderNeeded(); // TODO only draw agentFrameData, on its own canvas
     }
@@ -151,7 +142,7 @@ class Agent2dModule extends Module
         }
 
         if (this.observedLineSegments && this.observedLineSegments.length)
-            plotter.drawLineSegments(context, options, this.observedLineSegments, 1, '#0000ff');
+            plotter.drawLineSegments(context, this.observedLineSegments, 1, '#0000ff');
 
         if (this.visibleFieldPoly)
             plotter.drawVisibleFieldPoly(context, options, this.visibleFieldPoly);

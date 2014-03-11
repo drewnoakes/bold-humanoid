@@ -8,7 +8,7 @@ import control = require('control');
 import constants = require('constants');
 import geometry = require('util/geometry');
 
-export function drawField(context: CanvasRenderingContext2D, options)
+export function drawField(context: CanvasRenderingContext2D, options: {groundFillStyle?: string})
 {
     context.save();
     context.setTransform(1, 0, 0, 1, 0, 0);
@@ -17,7 +17,7 @@ export function drawField(context: CanvasRenderingContext2D, options)
     context.restore();
 }
 
-export function drawFieldLines(context: CanvasRenderingContext2D, options)
+export function drawFieldLines(context: CanvasRenderingContext2D, options: {lineStrokeStyle?: string})
 {
     // prepare to draw field lines
     context.lineWidth = constants.lineWidth;
@@ -73,19 +73,26 @@ export function drawFieldLines(context: CanvasRenderingContext2D, options)
     context.stroke();
 }
 
-export function drawGoalPosts(context: CanvasRenderingContext2D, options, positions: geometry.IPoint2[])
+export function drawGoalPosts(context: CanvasRenderingContext2D, options: {goalStrokeStyle?: string}, positions: number[][])
 {
     context.fillStyle = options.goalStrokeStyle || 'yellow';
 
     _.each(positions, pos =>
     {
         context.beginPath();
-        context.arc(pos.x, pos.y, constants.goalPostDiameter/2, 0, Math.PI*2, true);
+        context.arc(pos[0], pos[1], constants.goalPostDiameter/2, 0, Math.PI*2, true);
         context.fill();
     });
 }
 
-export function drawOcclusionRays(context: CanvasRenderingContext2D, options, rays: number[][])
+export function drawOcclusionRays(context: CanvasRenderingContext2D,
+                                  options: {
+                                      lineWidth?: number;
+                                      occlusionRayFillStyle?: string;
+                                      occlusionEdgeStrokeStyle?: string;
+                                      fieldEdgeStrokeStyle?: string
+                                  },
+                                  rays: number[][])
 {
     context.lineWidth = options.lineWidth || 1.0;
 
@@ -110,7 +117,7 @@ export function drawOcclusionRays(context: CanvasRenderingContext2D, options, ra
     context.stroke();
 }
 
-export function drawGoals(context: CanvasRenderingContext2D, options)
+export function drawGoals(context: CanvasRenderingContext2D, options: {goalStrokeStyle?: string})
 {
     var goalY = constants.goalY / 2,
         x = constants.fieldX/2;
@@ -118,10 +125,10 @@ export function drawGoals(context: CanvasRenderingContext2D, options)
     // TODO the position of these circles is slightly wrong, as the perimeter should line up with the edge of the line
 
     drawGoalPosts(context, options, [
-        {x: x, y: goalY},
-        {x: x, y:-goalY},
-        {x:-x, y: goalY},
-        {x:-x, y:-goalY}
+        [ x,  goalY],
+        [ x, -goalY],
+        [-x,  goalY],
+        [-x, -goalY]
     ]);
 
     context.strokeStyle = options.goalStrokeStyle || 'yellow';
@@ -143,7 +150,7 @@ export function drawGoals(context: CanvasRenderingContext2D, options)
     context.stroke();
 }
 
-export function drawLineSegments(context: CanvasRenderingContext2D, options, lineSegments: geometry.ILineSegment2[], lineWidth, strokeStyle)
+export function drawLineSegments(context: CanvasRenderingContext2D, lineSegments: number[][], lineWidth, strokeStyle)
 {
     context.lineWidth = lineWidth || 0.01;
     context.strokeStyle = strokeStyle || '#0000ff';
@@ -151,21 +158,20 @@ export function drawLineSegments(context: CanvasRenderingContext2D, options, lin
     context.beginPath();
     _.each(lineSegments, lineSegment =>
     {
-        var p1 = lineSegment.p1,
-            p2 = lineSegment.p2;
-        context.moveTo(p1.x, p1.y);
-        context.lineTo(p2.x, p2.y);
+        // TODO change line segment data to be in 2D as z is always zero
+        context.moveTo(lineSegment[0], lineSegment[1]);
+        context.lineTo(lineSegment[3], lineSegment[4]);
     });
     context.stroke();
 }
 
-export function drawVisibleFieldPoly(context: CanvasRenderingContext2D, options, visibleFieldPoly: number[][])
+export function drawVisibleFieldPoly(context: CanvasRenderingContext2D, options: {visibleFieldPolyLineWidth?:number; visibleFieldPolyStrokeStyle?: string}, visibleFieldPoly: number[][])
 {
     if (visibleFieldPoly.length < 2)
         return;
 
     context.lineWidth = options.visibleFieldPolyLineWidth || 0.01;
-    context.strokeStyle = options.visibleFieldPolyStrokeStyle || '#00ff00';
+    context.strokeStyle = options.visibleFieldPolyStrokeStyle || '#0000ff';
 
     context.beginPath();
     context.moveTo(visibleFieldPoly[0][0], visibleFieldPoly[0][1]);
@@ -178,7 +184,7 @@ export function drawVisibleFieldPoly(context: CanvasRenderingContext2D, options,
     context.stroke();
 }
 
-export function drawBall(context: CanvasRenderingContext2D, options, position: number[])
+export function drawBall(context: CanvasRenderingContext2D, options: {ballFillStyle?: string}, position: number[])
 {
     context.fillStyle = options.ballFillStyle || 'red';
 
@@ -187,7 +193,7 @@ export function drawBall(context: CanvasRenderingContext2D, options, position: n
     context.fill();
 }
 
-export function drawAgentPosition(context: CanvasRenderingContext2D, options, agentPosition: number[])
+export function drawAgentPosition(context: CanvasRenderingContext2D, options: {agentDotRadius?: number; agentDirectionLength?: number; agentPosStyle?: string}, agentPosition: number[])
 {
     var agentDotRadius = options.agentDotRadius || 0.1,
         agentDirectionLength = options.agentDirectionLength || 0.2,
@@ -195,6 +201,7 @@ export function drawAgentPosition(context: CanvasRenderingContext2D, options, ag
 
     context.strokeStyle = options.agentPosStyle || 'red';
     context.fillStyle = options.agentPosStyle || 'red';
+    context.lineWidth = agentDotRadius / 5;
 
     context.beginPath();
     context.arc(agentPosition[0], agentPosition[1], agentDotRadius, 0, Math.PI*2, true);
@@ -206,7 +213,7 @@ export function drawAgentPosition(context: CanvasRenderingContext2D, options, ag
     context.stroke();
 }
 
-export function drawParticles(context: CanvasRenderingContext2D, options, particles: number[][])
+export function drawParticles(context: CanvasRenderingContext2D, options: {particleSize?:number; particleHue:number}, particles: number[][])
 {
     var size = options.particleSize || 0.01;
 
