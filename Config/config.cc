@@ -373,7 +373,7 @@ void Config::addAction(string const& id, string const& label,
 }
 
 void Config::addAction(string const& id, string const& label,
-                       function<void(unique_ptr<rapidjson::Document>)> callback)
+                       function<void(rapidjson::Value*)> callback)
 {
   Action* action = new Action(id, label, callback);
   assert(action->hasArguments());

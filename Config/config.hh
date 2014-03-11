@@ -17,11 +17,11 @@ namespace bold
     Action(std::string id, std::string label, std::function<void()> callback)
     : d_id(id),
       d_label(label),
-      d_callback([callback](std::unique_ptr<rapidjson::Document> doc) { callback(); }),
+      d_callback([callback](rapidjson::Value* doc) { callback(); }),
       d_requiresArguments(false)
     {}
 
-    Action(std::string id, std::string label, std::function<void(std::unique_ptr<rapidjson::Document>)> callback)
+    Action(std::string id, std::string label, std::function<void(rapidjson::Value*)> callback)
     : d_id(id),
       d_label(label),
       d_callback(callback),
@@ -30,7 +30,8 @@ namespace bold
 
     /** Handles a request against this control. */
     void handleRequest() const { d_callback(nullptr); }
-    void handleRequest(std::unique_ptr<rapidjson::Document> args) const { d_callback(std::move(args)); }
+    /** Handles a request against this control that includes JSON arguments. */
+    void handleRequest(rapidjson::Value* args) const { d_callback(args); }
 
     std::string getId() const { return d_id; }
     std::string getLabel() const { return d_label; }
@@ -39,7 +40,7 @@ namespace bold
   private:
     std::string d_id;
     std::string d_label;
-    std::function<void(std::unique_ptr<rapidjson::Document>)> d_callback;
+    std::function<void(rapidjson::Value*)> d_callback;
     bool d_requiresArguments;
   };
 
@@ -106,7 +107,7 @@ namespace bold
 
     static void addAction(std::string const& id, std::string const& label, std::function<void()> callback);
 
-    static void addAction(std::string const& id, std::string const& label, std::function<void(std::unique_ptr<rapidjson::Document>)> callback);
+    static void addAction(std::string const& id, std::string const& label, std::function<void(rapidjson::Value*)> callback);
 
     static rapidjson::Value const* getConfigJsonValue(std::string path);
 
