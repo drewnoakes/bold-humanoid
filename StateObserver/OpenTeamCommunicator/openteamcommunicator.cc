@@ -119,7 +119,8 @@ void OpenTeamCommunicator::sendData()
 
   MixedTeamMate myInformation;
   myInformation.robotID = d_uniformNumber;
-  myInformation.data[ROBOT_CURRENT_ROLE] = ROLE_OTHER; // TODO Check whether this is needed
+  myInformation.data[ROBOT_CURRENT_ACTION] = ACTION_UNDEFINED; // TODO set actual value
+  myInformation.data[ROBOT_CURRENT_ROLE] = ROLE_OTHER;         // TODO set actual value
   myInformation.data[ROBOT_ABSOLUTE_X] = int(agentPosition.x() * 1000);
   myInformation.data[ROBOT_ABSOLUTE_Y] = int(agentPosition.y() * 1000);
   myInformation.data[ROBOT_ABSOLUTE_ORIENTATION] = Math::radToDeg(agentPosition.theta());
