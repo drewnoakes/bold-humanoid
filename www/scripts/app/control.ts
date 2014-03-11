@@ -97,11 +97,16 @@ export function getFSM(name: string): FSM
     return _.find<FSM>(allFSMs, fsm => fsm.name === name);
 }
 
+export function getAction(id: string): Action
+{
+    return _.find<Action>(allActions, action => action.id === id);
+}
+
 function withAction(id: string, callback: (action:Action)=>void)
 {
     var findAction = () =>
     {
-        var match = _.find<Action>(allActions, action => action.id === id);
+        var match = getAction(id);
         if (!match)
             console.error("No action exist with ID: " + id);
         callback(match);
