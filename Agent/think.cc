@@ -52,14 +52,17 @@ void Agent::think()
   d_spatialiser->updateAgentToWorld(d_localiser->smoothedPosition());
   t.timeEvent("Agent to World Frame");
 
-  d_optionTree->run();
-  t.timeEvent("Option Tree");
-
   //
   // Attempt to receive from other agents
   //
   d_openTeamCommunicator->receiveData();
   t.timeEvent("Open Team Receive");
+
+  //
+  // Run the option tree to determine and update behaviour
+  //
+  d_optionTree->run();
+  t.timeEvent("Option Tree");
 
   //
   // Process input commands (joystick)
