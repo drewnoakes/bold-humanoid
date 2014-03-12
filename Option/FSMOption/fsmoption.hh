@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <chrono>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 #include <sigc++/signal.h>
@@ -45,6 +46,7 @@ namespace bold
     FSMTransition* when(std::function<std::function<bool()>()> conditionFactory);
     FSMTransition* whenTerminated();
     FSMTransition* notify(std::function<void()> callback);
+    FSMTransition* after(std::chrono::milliseconds time);
   };
 
   struct FSMState : public std::enable_shared_from_this<FSMState>
@@ -66,6 +68,7 @@ namespace bold
 
     void start();
 
+    std::chrono::duration<double> timeSinceStart() const;
     double secondsSinceStart() const;
 
     bool allOptionsTerminated() const;

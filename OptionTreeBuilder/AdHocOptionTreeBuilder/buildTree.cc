@@ -27,11 +27,6 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   // GENERAL FUNCTIONS
 
-  auto secondsSinceStart = [](double seconds, shared_ptr<FSMState> state)
-  {
-    return [state,seconds]() { return state->secondsSinceStart() >= seconds; };
-  };
-
   auto startButtonPressed = []()
   {
     auto hw = State::get<HardwareState>();
@@ -452,12 +447,12 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     // walk a circle if we don't find the ball within some time limit
     lookForBallState
       ->transitionTo(circleToFindLostBallState, "lost-ball-long")
-      ->when(secondsSinceStart(8, lookForBallState));
+      ->after(chrono::seconds(8));
 
     // after 5 seconds of circling, look for the ball again
     circleToFindLostBallState
       ->transitionTo(lookForBallState, "done")
-      ->when(secondsSinceStart(5, circleToFindLostBallState));
+      ->after(chrono::seconds(5));
 
     lookAtBallState
       ->transitionTo(lookForBallState, "lost-ball")
@@ -502,11 +497,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     // limit how long we will look for the goal
     lookForGoalState
       ->transitionTo(lookAtFeetState, "give-up")
-      ->when(secondsSinceStart(7, lookForGoalState));
+      ->after(chrono::seconds(7));
 
     lookAtGoalState
       ->transitionTo(aimState, "confident")
-      ->when(secondsSinceStart(0.5, lookAtGoalState));
+      ->after(chrono::milliseconds(500));
 
     // start kick procedure if goal is in front of us
     aimState
@@ -526,7 +521,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     // control duration of ball circling
     circleBallState
       ->transitionTo(lookAtGoalState, "done")
-      ->when([circleBallState,headModule,secondsSinceStart]()
+      ->when([circleBallState,headModule]()
       {
         // TODO break dependency upon pan limit
         double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
@@ -540,7 +535,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
             << " panAngle=" << panAngle
             << " leftLimitDegs=" << headModule->getLeftLimitDegs();
 
-        return secondsSinceStart(circleDurationSeconds, circleBallState);
+        // Return a function that closes over the computed duration
+        return [circleBallState,circleDurationSeconds]()
+        {
+          return circleBallState->secondsSinceStart() >= circleDurationSeconds;
+        };
       });
 
     // If we notice the ball is too far to kick, abort kick

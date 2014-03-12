@@ -31,3 +31,8 @@ FSMTransition* FSMTransition::notify(std::function<void()> callback)
   this->onFire.connect(callback);
   return this;
 }
+
+FSMTransition* FSMTransition::after(std::chrono::milliseconds time)
+{
+  return when([this,time]() { return parentState->timeSinceStart() >= time; });
+}

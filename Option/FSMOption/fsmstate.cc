@@ -25,6 +25,11 @@ void FSMState::start()
   onEnter();
 }
 
+std::chrono::duration<double> FSMState::timeSinceStart() const
+{
+  return std::chrono::duration<double>(Clock::getSecondsSince(startTimestamp));
+}
+
 double FSMState::secondsSinceStart() const
 {
   return Clock::getSecondsSince(startTimestamp);

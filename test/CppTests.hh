@@ -2,6 +2,7 @@
 
 #include "helpers.hh"
 
+#include <chrono>
 #include <functional>
 #include <map>
 #include <memory>
@@ -307,6 +308,12 @@ TEST(CppTests, setsAndSharedPtr)
   EXPECT_TRUE(s.find(p1) != s.end());
   EXPECT_TRUE(s.find(p1copy) != s.end());
   EXPECT_TRUE(s.find(p2) == s.end());
+}
+
+TEST(CppTests, chrono_duration)
+{
+  EXPECT_TRUE( chrono::seconds(2) > chrono::seconds(1) );
+  EXPECT_TRUE( chrono::milliseconds(1001) > chrono::seconds(1) );
 }
 
 ///
