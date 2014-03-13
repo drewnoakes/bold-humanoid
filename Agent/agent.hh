@@ -6,6 +6,7 @@
 #include <sigc++/signal.h>
 
 #include "../MX28Alarm/mx28alarm.hh"
+#include "../StateObject/TeamState/teamstate.hh"
 
 class Joystick;
 
@@ -72,6 +73,11 @@ namespace bold
     unsigned getTeamNumber() const { return d_teamNumber; }
     unsigned getUniformNumber() const { return d_uniformNumber; }
 
+    PlayerStatus getPlayerStatus() const { return d_status; }
+    void setPlayerStatus(PlayerStatus status) { d_status = status; }
+    PlayerActivity getPlayerActivity() const { return d_activity; }
+    void setPlayerActivity(PlayerActivity activity) { d_activity = activity; }
+
     void setOptionTree(std::shared_ptr<OptionTree> tree);
 
     Agent(Agent const&) = delete;
@@ -135,6 +141,8 @@ namespace bold
 
     ulong d_cycleNumber;
 
+    PlayerStatus d_status;
+    PlayerActivity d_activity;
 
     void initCamera();
 
