@@ -1,8 +1,10 @@
 #include "openteamcommunicator.hh"
 
+#include "../../Agent/agent.hh"
 #include "../../Clock/clock.hh"
 #include "../../Config/config.hh"
 #include "../../Math/math.hh"
+#include "../../RoleDecider/roledecider.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../StateObject/TeamState/teamstate.hh"
@@ -22,8 +24,9 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniformNumber)
+OpenTeamCommunicator::OpenTeamCommunicator(Agent* agent, unsigned teamNumber, unsigned uniformNumber)
 : StateObserver::StateObserver("Open Team Communicator", ThreadId::ThinkLoop),
+  d_agent(agent),
   d_teamNumber(teamNumber),
   d_uniformNumber(uniformNumber),
   d_localPort(Config::getStaticValue<int>("mitecom.local-port")),
@@ -55,9 +58,9 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
     playerState.uniformNumber = myUniformNumber;
     playerState.teamNumber = myTeamNumber;
 
-    playerState.activity = PlayerActivity::Other; // TODO get this value from somewhere
-    playerState.status = PlayerStatus::Active;    // TODO get this value from somewhere
-    playerState.role = PlayerRole::Other;         // TODO get this value from somewhere
+    playerState.activity = d_agent->getPlayerActivity();
+    playerState.status = d_agent->getPlayerStatus();
+    playerState.role = d_agent->getRoleDecider()->getRole();
 
     auto const& agentFrameState = State::get<AgentFrameState>();
     if (agentFrameState)

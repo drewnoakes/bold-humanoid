@@ -37,7 +37,7 @@ Agent::Agent()
   d_suicidePill = make_shared<SuicidePill>(this, d_debugger);
   d_odometer = make_shared<Odometer>(d_walkModule);
   d_orientationTracker = make_shared<OrientationTracker>();
-  d_teamCommunicator = make_shared<OpenTeamCommunicator>(d_teamNumber, d_uniformNumber);
+  d_teamCommunicator = make_shared<OpenTeamCommunicator>(this, d_teamNumber, d_uniformNumber);
 
   // Register StateObservers
   State::registerObserver(d_vocaliser);

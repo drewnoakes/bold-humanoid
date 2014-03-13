@@ -8,13 +8,14 @@
 
 namespace bold
 {
+  class Agent;
   class SequentialTimer;
   template<typename> class Setting;
 
   class OpenTeamCommunicator : public StateObserver
   {
   public:
-    OpenTeamCommunicator(unsigned teamNumber, unsigned uniformNumber);
+    OpenTeamCommunicator(Agent* agent, unsigned teamNumber, unsigned uniformNumber);
 
     void observe(SequentialTimer& timer) override;
 
@@ -33,6 +34,7 @@ namespace bold
 
     void mergePlayerState(PlayerState& state);
 
+    Agent* d_agent;
     const unsigned d_teamNumber;
     const unsigned d_uniformNumber;
     const int d_localPort;
