@@ -59,7 +59,7 @@ FSMOption::FSMOption(shared_ptr<Voice> voice, string const& id)
 
 void FSMOption::reset()
 {
-  d_curState = d_startState;
+  setCurrentState(d_startState);
 }
 
 shared_ptr<FSMState> FSMOption::getState(string name) const
