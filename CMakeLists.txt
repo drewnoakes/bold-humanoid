@@ -468,7 +468,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/OpenTeamState/writeJson.cc
+  ./StateObject/TeamState/writeJson.cc
 )
 
 add_class(BOLDHUMANOID

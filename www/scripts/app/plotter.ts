@@ -229,14 +229,15 @@ export function drawParticles(context: CanvasRenderingContext2D, options: {parti
     });
 }
 
-export function drawTeammates(context: CanvasRenderingContext2D, teammates: state.TeammateData[], scale: number)
+export function drawTeammates(context: CanvasRenderingContext2D, players: state.PlayerData[], scale: number)
 {
     var agentPosOptions = {};
 
     // TODO draw other teammate data here, such as the ball position, role, action, robotId...
 
-    _.each<state.TeammateData>(teammates, (teammate: state.TeammateData) =>
+    _.each<state.PlayerData>(players, (player: state.PlayerData) =>
     {
-        drawAgentPosition(context, agentPosOptions, [teammate.x, teammate.y, teammate.theta]);
+        if (!player.isMe)
+            drawAgentPosition(context, agentPosOptions, player.pos);
     });
 }

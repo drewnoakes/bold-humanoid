@@ -5,7 +5,7 @@
 #include "../../Math/math.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
-#include "../../StateObject/OpenTeamState/openteamstate.hh"
+#include "../../StateObject/TeamState/teamstate.hh"
 #include "../../StateObject/WorldFrameState/worldframestate.hh"
 
 #include "../../mitecom/mitecom-network.h"
@@ -43,11 +43,43 @@ OpenTeamCommunicator::OpenTeamCommunicator(unsigned teamNumber, unsigned uniform
 
 void OpenTeamCommunicator::observe(SequentialTimer& timer)
 {
+  static int myUniformNumber = Config::getStaticValue<int>("uniform-number");
+  static int myTeamNumber = Config::getStaticValue<int>("team-number");
+
   auto now = Clock::getTimestamp();
 
   if (Clock::getSecondsSince(d_lastBroadcast) > d_sendPeriodSeconds->getValue())
   {
-    sendData();
+    // Create a PlayerState object for this agent
+    PlayerState playerState;
+    playerState.uniformNumber = myUniformNumber;
+    playerState.teamNumber = myTeamNumber;
+
+    playerState.activity = PlayerActivity::Other; // TODO get this value from somewhere
+    playerState.status = PlayerStatus::Active;    // TODO get this value from somewhere
+    playerState.role = PlayerRole::Other;         // TODO get this value from somewhere
+
+    auto const& agentFrameState = State::get<AgentFrameState>();
+    if (agentFrameState)
+    {
+      auto const& ballObservation = agentFrameState->getBallObservation();
+      if (ballObservation.hasValue())
+        playerState.ballRelative = Vector2d(ballObservation->x(), ballObservation->y());
+    }
+
+    auto const& worldFrameState = State::get<WorldFrameState>();
+    if (worldFrameState)
+    {
+      playerState.pos = worldFrameState->getPosition();
+      // TODO come up with a proper confidence value
+      playerState.posConfidence = 1.0;
+    }
+    else
+    {
+      playerState.posConfidence = 0.0;
+    }
+
+    sendData(playerState);
 
     d_lastBroadcast = now;
   }
@@ -71,72 +103,198 @@ void OpenTeamCommunicator::receiveData()
       break;
 
     // Message received, update our view of the Team
-    MixedTeamMate teamMate = MixedTeamParser::parseIncoming(buffer, messageLength, d_teamNumber);
+    MixedTeamMate message = MixedTeamParser::parseIncoming(buffer, messageLength, d_teamNumber);
 
     // Ignore messages from ourselves.
-    if (teamMate.robotID == d_uniformNumber)
+    if (message.robotID == d_uniformNumber)
       continue;
 
     // An ID of -1 indicates that the message was invalid.
-    if (teamMate.robotID == -1)
+    if (message.robotID == -1)
     {
-      log::error("OpenTeamCommunicator::receiveData") << "Error parsing open team message";
+      log::error("OpenTeamCommunicator::receiveData") << "Error parsing open mitecom message";
       continue;
     }
 
-    log::verbose("OpenTeamCommunicator::receiveData") << "Received message with length " << messageLength << " bytes from robot " << teamMate.robotID;
+    log::verbose("OpenTeamCommunicator::receiveData") << "Received mitecom message with length " << messageLength << " bytes from robot " << message.robotID;
 
-    // Update data on Teammate
-    if (d_teamMates.find(teamMate.robotID) == d_teamMates.end())
-      log::info("OpenTeamCommunicator::receiveData") << "First message seen from team mate " << teamMate.robotID;
+    static int ourTeamNumber = Config::getStaticValue<int>("uniform-number");
 
-    // Add team teamMate to our map
-    d_teamMates[teamMate.robotID] = teamMate;
+    PlayerState teammateState;
+    teammateState.uniformNumber = message.robotID;
+    // TODO need a way to verify that this message is actually from *our* team
+    teammateState.teamNumber = ourTeamNumber;
 
-    // Remember the last time (i.e. now) that we heard from this robot
-    d_teamMates[teamMate.robotID].lastUpdate = Clock::getTimestamp();
+    auto posX = message.data.find(ROBOT_ABSOLUTE_X);
+    auto posY = message.data.find(ROBOT_ABSOLUTE_Y);
+    auto theta = message.data.find(ROBOT_ABSOLUTE_ORIENTATION);
+    if (posX != message.data.end() && posX != message.data.end() && posX != message.data.end())
+      teammateState.pos = AgentPosition(posX->second/1000.0, posY->second/1000.0, Math::degToRad(theta->second));
+
+    auto posConfidence = message.data.find(ROBOT_ABSOLUTE_BELIEF);
+    if (posConfidence != message.data.end())
+      teammateState.posConfidence = posConfidence->second/255.0;
+
+    auto ballX = message.data.find(BALL_RELATIVE_X);
+    auto ballY = message.data.find(BALL_RELATIVE_Y);
+    if (ballX != message.data.end() && ballY != message.data.end())
+      teammateState.ballRelative = Vector2d(ballX->second/1000.0, ballY->second/1000.0);
+
+    auto action = message.data.find(ROBOT_CURRENT_ACTION);
+    if (action != message.data.end())
+      teammateState.activity = decodePlayerActivity(action->second);
+
+    auto role = message.data.find(ROBOT_CURRENT_ROLE);
+    if (role != message.data.end())
+      teammateState.role = decodePlayerRole(role->second);
+
+    auto state = message.data.find(ROBOT_CURRENT_STATE);
+    if (state != message.data.end())
+      teammateState.status = decodePlayerStatus(state->second);
+
+    mergePlayerState(teammateState);
 
     updated = true;
   }
 
   if (updated)
-  {
-    // Make visible to State
-    State::set(make_shared<OpenTeamState const>(d_teamMates));
-  }
+    State::set(make_shared<TeamState const>(d_players));
 }
 
-void OpenTeamCommunicator::sendData()
+void OpenTeamCommunicator::sendData(PlayerState& state)
 {
+  mergePlayerState(state);
+
   // NOTE protocol uses millimeters, we use meters -- scale values
-
-  auto const& agentFrameState = State::get<AgentFrameState>();
-  auto const& worldFrameState = State::get<WorldFrameState>();
-
-  // Get values to be sent
-  auto const& ballObservation = agentFrameState->getBallObservation();
-  auto const& agentPosition = worldFrameState->getPosition();
 
   MixedTeamMate myInformation;
   myInformation.robotID = d_uniformNumber;
-  myInformation.data[ROBOT_CURRENT_ACTION] = ACTION_UNDEFINED; // TODO set actual value
-  myInformation.data[ROBOT_CURRENT_ROLE] = ROLE_OTHER;         // TODO set actual value
-  myInformation.data[ROBOT_ABSOLUTE_X] = int(agentPosition.x() * 1000);
-  myInformation.data[ROBOT_ABSOLUTE_Y] = int(agentPosition.y() * 1000);
-  myInformation.data[ROBOT_ABSOLUTE_ORIENTATION] = Math::radToDeg(agentPosition.theta());
+  myInformation.data[ROBOT_CURRENT_ACTION] = encodePlayerActivity(state.activity);
+  myInformation.data[ROBOT_CURRENT_ROLE]   = encodePlayerRole(state.role);
+  myInformation.data[ROBOT_CURRENT_STATE]  = encodePlayerStatus(state.status);
+  myInformation.data[ROBOT_ABSOLUTE_X] = static_cast<int>(state.pos.x() * 1000);
+  myInformation.data[ROBOT_ABSOLUTE_Y] = static_cast<int>(state.pos.y() * 1000);
+  myInformation.data[ROBOT_ABSOLUTE_ORIENTATION] = Math::radToDeg(state.pos.theta());
+  myInformation.data[ROBOT_ABSOLUTE_BELIEF] = Math::clamp(static_cast<int>(state.posConfidence * 255), 0, 255);
 
-  if (ballObservation)
+  if (state.ballRelative.hasValue())
   {
-    myInformation.data[BALL_RELATIVE_X] = ballObservation->x() * 1000;
-    myInformation.data[BALL_RELATIVE_Y] = ballObservation->y() * 1000;
+    myInformation.data[BALL_RELATIVE_X] = state.ballRelative->x() * 1000;
+    myInformation.data[BALL_RELATIVE_Y] = state.ballRelative->y() * 1000;
   }
 
   uint32_t messageDataLength = 0;
 
-  // Serialize and Broadcast Data
+  // Serialize and broadcast data
   auto messageData = unique_ptr<MixedTeamCommMessage>(MixedTeamParser::create(&messageDataLength, myInformation, d_teamNumber, d_uniformNumber));
   assert(messageData != nullptr);
   assert(messageDataLength > 0);
 
   mitecom_broadcast(d_sock, d_remotePort, messageData.get(), messageDataLength);
+
+  State::set(make_shared<TeamState const>(d_players));
+}
+
+void OpenTeamCommunicator::mergePlayerState(PlayerState& state)
+{
+  // Remember the last time (i.e. now) that we heard from this robot
+  state.updateTime = Clock::getTimestamp();
+
+  auto it = find_if(d_players.begin(), d_players.end(), [&state](PlayerState const& player) { return state.uniformNumber == player.uniformNumber; });
+
+  if (it == d_players.end())
+  {
+    log::info("OpenTeamCommunicator::receiveData") << "First message seen from player " << state.uniformNumber;
+    d_players.push_back(state);
+  }
+  else
+  {
+    *it = state;
+  }
+}
+
+//
+//// Functions for conversion between our enums, and the mitecom ones
+//
+
+PlayerRole OpenTeamCommunicator::decodePlayerRole(int value)
+{
+  switch (value)
+  {
+    case ROLE_DEFENDER:  return PlayerRole::Defender;
+    case ROLE_GOALIE:    return PlayerRole::Keeper;
+    case ROLE_IDLING:    return PlayerRole::Idle;
+    case ROLE_STRIKER:   return PlayerRole::Striker;
+    case ROLE_SUPPORTER: return PlayerRole::Supporter;
+
+    case ROLE_OTHER:
+    default:             return PlayerRole::Other;
+  }
+}
+
+PlayerActivity OpenTeamCommunicator::decodePlayerActivity(int value)
+{
+  switch (value)
+  {
+    case ACTION_GOING_TO_BALL:   return PlayerActivity::ApproachingBall;
+    case ACTION_POSITIONING:     return PlayerActivity::Positioning;
+    case ACTION_TRYING_TO_SCORE: return PlayerActivity::AttackingGoal;
+    case ACTION_WAITING:         return PlayerActivity::Waiting;
+
+    case ACTION_UNDEFINED:
+    default:                     return PlayerActivity::Other;
+  }
+}
+
+PlayerStatus OpenTeamCommunicator::decodePlayerStatus(int value)
+{
+  switch (value)
+  {
+    case STATE_ACTIVE:    return PlayerStatus::Active;
+    case STATE_PENALIZED: return PlayerStatus::Penalised;
+
+    case STATE_INACTIVE:
+    default:              return PlayerStatus::Inactive;
+  }
+}
+
+
+int OpenTeamCommunicator::encodePlayerRole(PlayerRole role)
+{
+  switch (role)
+  {
+    case PlayerRole::Defender:  return ROLE_DEFENDER;
+    case PlayerRole::Keeper:    return ROLE_GOALIE;
+    case PlayerRole::Idle:      return ROLE_IDLING;
+    case PlayerRole::Striker:   return ROLE_STRIKER;
+    case PlayerRole::Supporter: return ROLE_SUPPORTER;
+
+    case PlayerRole::Other:
+    default:                    return ROLE_OTHER;
+  }
+}
+
+int OpenTeamCommunicator::encodePlayerActivity(PlayerActivity activity)
+{
+  switch (activity)
+  {
+    case PlayerActivity::ApproachingBall: return ACTION_GOING_TO_BALL;
+    case PlayerActivity::Positioning:     return ACTION_POSITIONING;
+    case PlayerActivity::AttackingGoal:   return ACTION_TRYING_TO_SCORE;
+    case PlayerActivity::Waiting:         return ACTION_WAITING;
+
+    case PlayerActivity::Other:
+    default:                              return ACTION_UNDEFINED;
+  }
+}
+
+int OpenTeamCommunicator::encodePlayerStatus(PlayerStatus status)
+{
+  switch (status)
+  {
+    case PlayerStatus::Active:    return STATE_ACTIVE;
+    case PlayerStatus::Penalised: return STATE_PENALIZED;
+    case PlayerStatus::Inactive:
+    default:                      return STATE_INACTIVE;
+  }
 }

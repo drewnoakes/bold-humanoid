@@ -40,7 +40,7 @@
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../StateObject/OdometryState/odometrystate.hh"
 #include "../StateObject/OrientationState/orientationstate.hh"
-#include "../StateObject/OpenTeamState/openteamstate.hh"
+#include "../StateObject/TeamState/teamstate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../StateObject/ParticleState/particlestate.hh"
 #include "../StateObject/StaticHardwareState/statichardwarestate.hh"

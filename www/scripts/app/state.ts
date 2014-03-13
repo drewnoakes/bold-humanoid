@@ -166,49 +166,100 @@ export interface Odometry
     translation: number[];
 }
 
-export enum RobotState
+export enum PlayerRole
 {
-    Inactive = 0,
-    Active = 1,
-    Penalized = 2
-}
+    /// Robot is running, but paused or otherwise indisposed and should not be
+    /// considered as actively on the team at present.
+    Idle = 0,
 
-export enum RobotRole
-{
-    Idling = 0,
-    Other = 1,
-    Striker = 2,
-    Supporter = 3,
+    /// Robot is acting as the keeper, determined by uniform number.
+    /// By convention, the keeper has unum 1.
+    Keeper = 1,
+
+    /// Robot is positioning to receive a pass towards the goal.
+    Supporter = 2,
+
+    /// Robot is claiming possession of the ball and advancing it towards the
+    /// opponent's goal.
+    Striker = 3,
+
+    /// Robot is positioning so as to block an opponent's advance towards
+    /// our goal.
     Defender = 4,
-    Goalie = 5
+
+    /// Robot is acting as a keeper during a penalty shootout.
+    PenaltyKeeper = 5,
+
+    /// Robot is acting as a striker during a penalty shootout.
+    PenaltyStriker = 6,
+
+    /// Robot role is unknown.
+    /// This status will not be transmitted by the Bold Hearts as our agents
+    /// default to striker/keeper in the absence of sufficient information to
+    /// decide otherwise.
+    Other = 7
 }
 
-export enum RobotAction
+export enum PlayerActivity
 {
-    Undefined = 0,
-    Positioning = 1,
-    GoingToBall = 2,
-    TryingToScore = 3,
-    Waiting = 4
+    /// Robot is moving to a supporting or defending position.
+    Positioning = 0,
+
+    /// Robot is moving towards the ball, either as a striker or a defender.
+    ApproachingBall = 1,
+
+    /// Robot has possession of the ball and is attacking the opponent's goal,
+    /// as a striker.
+    AttackingGoal = 2,
+
+    /// Robot is not taking any action, as keeper, supporter, or defender.
+    Waiting = 3,
+
+    /// Robot activity is unknown.
+    /// This status will not be transmitted by the Bold Hearts as the other
+    /// enum members sufficiently cover our activities. This value may be
+    /// seen when playing in a mixed team, however.
+    Other = 4
 }
 
-export interface TeammateData
+export enum PlayerStatus
 {
-    robotId: number;
-    lastUpdate: number;
-    action: RobotAction;
-    state: RobotState;
-    role: RobotRole;
-    x: number;
-    y: number;
-    theta: number;
-    ballX: number;
-    ballY: number;
+    /// Robot is not doing anything, or is incapable. It may have fallen, or
+    /// the game may be in a play mode that does not permit motion (eg. Set.)
+    /// The activity should be set to Waiting and the role set to Idle.
+    Inactive = 0,
+
+    /// Robot is active and able.
+    Active = 1,
+
+    /// The robot has been penalised and is not permitted to take any action.
+    Penalised = 2
 }
 
-export interface OpenTeam
+export interface PlayerData
 {
-    teammates: TeammateData[];
+    /** The player's uniform number. */
+    unum: number;
+    /** The player's team number. */
+    team: number;
+    /** Whether this object represents the robot reporting this data. */
+    isMe: boolean;
+    activity: PlayerActivity;
+    state: PlayerStatus;
+    role: PlayerRole;
+    /** The agent's estimate of its position in the world frame: [x,y,theta] in [m,m,rads] */
+    pos: number[];
+    /** Between 0 and 1 */
+    posConfidence: number;
+    /** [x,y] in metres, relative to the agent's frame. */
+    ballRelative: number[];
+    /** Time, in milliseconds. */
+    updateTime: number;
+}
+
+export interface Team
+{
+    players: PlayerData[];
 }
 
 export interface OptionData

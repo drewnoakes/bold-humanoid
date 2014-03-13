@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits>
+
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
@@ -8,6 +10,12 @@ namespace bold
   class AgentPosition
   {
   public:
+    AgentPosition()
+    : d_x(std::numeric_limits<double>::signaling_NaN()),
+      d_y(std::numeric_limits<double>::signaling_NaN()),
+      d_theta(std::numeric_limits<double>::signaling_NaN())
+    {}
+
     AgentPosition(double x, double y, double theta)
       : d_x(x),
         d_y(y),

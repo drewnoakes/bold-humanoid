@@ -307,18 +307,18 @@ export class OcclusionAreaLayer extends DataLayer<state.WorldFrame>
     }
 }
 
-export class TeamLayer extends DataLayer<state.OpenTeam>
+export class TeamLayer extends DataLayer<state.Team>
 {
     constructor(transform: util.Trackable<geometry.Transform>)
     {
         super(
             transform,
-            constants.protocols.openTeamState,
+            constants.protocols.teamState,
             "Team",
             () => {
                 canvasUtil.clear(this.context, true);
-                if (this.data && this.data.teammates)
-                    plotter.drawTeammates(this.context, this.data.teammates, this.transform.getValue().getScale());
+                if (this.data && this.data.players)
+                    plotter.drawTeammates(this.context, this.data.players, this.transform.getValue().getScale());
             });
     }
 }
