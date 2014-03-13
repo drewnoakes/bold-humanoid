@@ -13,19 +13,19 @@ namespace bold
 {
   class UDPSocket;
   class Debugger;
-  
+
   class TeamCommunicator
   {
   public:
     TeamCommunicator(std::shared_ptr<Debugger> debugger, int ourTeamNumber, int port);
-    
+
     /** Used in unit testing. */
     void enableLoopback();
-    
+
     bool send(rapidjson::StringBuffer buffer);
 
     Maybe<rapidjson::Document> tryReceive();
-    
+
   private:
     std::shared_ptr<UDPSocket> d_socket;
     std::shared_ptr<Debugger> d_debugger;
