@@ -55,8 +55,8 @@ void Agent::think()
   //
   // Attempt to receive from other agents
   //
-  d_openTeamCommunicator->receiveData();
-  t.timeEvent("Open Team Receive");
+  d_teamCommunicator->receiveData();
+  t.timeEvent("Team Receive");
 
   //
   // Decide role

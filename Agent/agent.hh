@@ -59,7 +59,7 @@ namespace bold
     std::shared_ptr<Localiser> getLocaliser() const { return d_localiser; }
     std::shared_ptr<VisualCortex> getVisualCortex() const { return d_visualCortex; }
     std::shared_ptr<GameStateReceiver> getGameStateReceiver() const { return d_gameStateReceiver; }
-    std::shared_ptr<OpenTeamCommunicator> getOpenTeamCommunicator() const { return d_openTeamCommunicator; }
+    std::shared_ptr<OpenTeamCommunicator> getOpenTeamCommunicator() const { return d_teamCommunicator; }
     std::shared_ptr<RoleDecider> getRoleDecider() const { return d_roleDecider; }
 
     std::shared_ptr<HeadModule> getHeadModule() const { return d_headModule; }
@@ -107,7 +107,7 @@ namespace bold
     std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
     std::shared_ptr<JamDetector> d_jamTracker;
-    std::shared_ptr<OpenTeamCommunicator> d_openTeamCommunicator;
+    std::shared_ptr<OpenTeamCommunicator> d_teamCommunicator;
     std::shared_ptr<RoleDecider> d_roleDecider;
     std::shared_ptr<SuicidePill> d_suicidePill;
     std::shared_ptr<Odometer> d_odometer;
