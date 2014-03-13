@@ -69,7 +69,7 @@ namespace bold
   {
     /// Robot is not doing anything, or is incapable. It may have fallen, or
     /// the game may be in a play mode that does not permit motion (eg. Set.)
-    /// The activity should be set to Waiting and the role set to Idle.
+    /// The activity should be set to Waiting.
     Inactive = 0,
 
     /// Robot is active and able.
@@ -106,6 +106,10 @@ namespace bold
     {}
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+
+    bool empty() const { return d_playerStates.empty(); }
+
+    std::vector<PlayerState> const& players() const { return d_playerStates; }
 
   private:
     std::vector<PlayerState> d_playerStates;
