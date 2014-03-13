@@ -25,6 +25,7 @@
 #include "../OptionTree/optiontree.hh"
 #include "../OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 #include "../RobotisMotionFile/robotismotionfile.hh"
+#include "../RoleDecider/roledecider.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../State/state.hh"

@@ -32,6 +32,7 @@ namespace bold
   class OptionTree;
   class OpenTeamCommunicator;
   class OrientationTracker;
+  class RoleDecider;
   template<typename> class Setting;
   class Spatialiser;
   class SuicidePill;
@@ -59,6 +60,7 @@ namespace bold
     std::shared_ptr<VisualCortex> getVisualCortex() const { return d_visualCortex; }
     std::shared_ptr<GameStateReceiver> getGameStateReceiver() const { return d_gameStateReceiver; }
     std::shared_ptr<OpenTeamCommunicator> getOpenTeamCommunicator() const { return d_openTeamCommunicator; }
+    std::shared_ptr<RoleDecider> getRoleDecider() const { return d_roleDecider; }
 
     std::shared_ptr<HeadModule> getHeadModule() const { return d_headModule; }
     std::shared_ptr<WalkModule> getWalkModule() const { return d_walkModule; }
@@ -106,6 +108,7 @@ namespace bold
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
     std::shared_ptr<JamDetector> d_jamTracker;
     std::shared_ptr<OpenTeamCommunicator> d_openTeamCommunicator;
+    std::shared_ptr<RoleDecider> d_roleDecider;
     std::shared_ptr<SuicidePill> d_suicidePill;
     std::shared_ptr<Odometer> d_odometer;
     std::shared_ptr<OrientationTracker> d_orientationTracker;

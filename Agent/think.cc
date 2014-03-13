@@ -59,6 +59,12 @@ void Agent::think()
   t.timeEvent("Open Team Receive");
 
   //
+  // Decide role
+  //
+  d_roleDecider->update();
+  t.timeEvent("Role Decision");
+
+  //
   // Run the option tree to determine and update behaviour
   //
   d_optionTree->run();

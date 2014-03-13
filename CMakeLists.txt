@@ -401,6 +401,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./RoleDecider/roledecider.cc
+)
+
+add_class(BOLDHUMANOID
   ./Setting/setting.cc
   ./Setting/setting-implementations.cc
 )
