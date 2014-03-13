@@ -121,6 +121,20 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto isAgentShutdownRequested = changedTo(true, [agent]() { return agent->isStopRequested(); });
 
+  // Utility functions for setting status flags as we enter states
+
+  auto setPlayerActivityInStates = [agent](PlayerActivity activity, std::vector<shared_ptr<FSMState>> states)
+  {
+    for (shared_ptr<FSMState>& state : states)
+      state->onEnter.connect([agent,activity]() { agent->setPlayerActivity(activity); });
+  };
+
+  auto setPlayerStatusInStates = [agent](PlayerStatus status, std::vector<shared_ptr<FSMState>> states)
+  {
+    for (shared_ptr<FSMState>& state : states)
+      state->onEnter.connect([agent,status]() { agent->setPlayerStatus(status); });
+  };
+
   // BUILD TREE
 
   auto tree = make_shared<OptionTree>();
@@ -173,6 +187,24 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
   auto sitForShutdownState = winFsm->newState("sitForShutdown", {sitArmsBack});
   auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
+
+  // In the Win FSM, any state other than 'playing' corresponds to the 'waiting' activity.
+  setPlayerActivityInStates(
+    PlayerActivity::Waiting,
+    { startUpState, readyState, pausing1State, pausing2State, pausedState,
+      unpausingState, setState, penalizedState, forwardGetUpState,
+      backwardGetUpState, stopWalkingForShutdownState, sitForShutdownState,
+      stopAgentAndExitState });
+
+  // In the Win FSM, any state other than 'playing' and 'penalised' corresponds to the 'inactive' status.
+  setPlayerStatusInStates(
+    PlayerStatus::Inactive,
+    { startUpState, readyState, pausing1State, pausing2State, pausedState,
+      unpausingState, setState, forwardGetUpState,
+      backwardGetUpState, stopWalkingForShutdownState, sitForShutdownState,
+      stopAgentAndExitState });
+  setPlayerStatusInStates(PlayerStatus::Active, { playingState });
+  setPlayerStatusInStates(PlayerStatus::Penalised, { penalizedState });
 
   readyState->onEnter.connect([debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); });
   setState->onEnter.connect([debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); });
@@ -322,6 +354,8 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto bigStepLeftState = playingFsm->newState("bigStepLeft", {bigStepLeft});
     auto bigStepRightState = playingFsm->newState("bigStepRight", {bigStepRight});
 
+    setPlayerActivityInStates(PlayerActivity::Waiting, { standUpState, lookForBallState, lookForBallState, lookAtBallState, bigStepLeftState, bigStepRightState });
+
     standUpState
       ->transitionTo(lookForBallState, "standing")
       ->whenTerminated();
@@ -435,6 +469,10 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto lookAtFeetState = playingFsm->newState("lookAtFeet", {lookAtFeet});
     auto leftKickState = playingFsm->newState("leftKick", {leftKick});
     auto rightKickState = playingFsm->newState("rightKick", {rightKick});
+
+    setPlayerActivityInStates(PlayerActivity::ApproachingBall, { approachBallState });
+    setPlayerActivityInStates(PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState });
+    setPlayerActivityInStates(PlayerActivity::AttackingGoal, { lookForGoalState, lookAtGoalState, aimState, circleBallState, lookAtFeetState, leftKickState, rightKickState });
 
     standUpState
       ->transitionTo(lookForBallState, "standing")
