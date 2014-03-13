@@ -94,6 +94,8 @@ namespace bold
     Maybe<Eigen::Vector2d> ballRelative;
 
     Clock::Timestamp updateTime;
+
+    bool isMe() const;
   };
 
   class TeamState : public StateObject
