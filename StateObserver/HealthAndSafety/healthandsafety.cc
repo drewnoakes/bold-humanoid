@@ -28,14 +28,14 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
     {
       // Was probably plugged into a charger
       if (d_voice)
-        d_voice->sayOneOf({"Thank you", "Oh. Yeah."}); // haha
+        d_voice->sayOneOf({"Thank you", "Ooo yeah."}); // haha
       log::info("HealthAndSafety::observeTyped") << "Voltage level restored above " << d_voltageTrigger.getHighThreshold() << " volts";
       break;
     }
     case SchmittTriggerTransition::Low:
     {
       if (d_voice)
-        d_voice->say("Help. Low voltage warning.");
+        d_voice->say("Low voltage warning.");
       log::warning("HealthAndSafety::observeTyped") << "Voltage level dropped below " << d_voltageTrigger.getLowThreshold() << " volts";
       d_lastVoltageWarningTime = Clock::getTimestamp();
       break;
@@ -45,7 +45,7 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
       if (!d_voltageTrigger.isHigh() && Clock::getSecondsSince(d_lastVoltageWarningTime) > 20)
       {
         if (d_voice)
-          d_voice->say("Help. My voltage is still low.");
+          d_voice->say("My voltage is still low.");
         d_lastVoltageWarningTime = Clock::getTimestamp();
       }
       break;
