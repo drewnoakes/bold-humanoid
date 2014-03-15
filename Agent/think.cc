@@ -65,7 +65,7 @@ void Agent::think()
   t.timeEvent("Role Decision");
 
   //
-  // Run the option tree to determine and update behaviour
+  // Run the option tree to execute behaviour
   //
   d_optionTree->run();
   t.timeEvent("Option Tree");
@@ -98,11 +98,18 @@ void Agent::think()
   //
   State::set(make_shared<ThinkTimingState const>(t.flush(), d_cycleNumber));
 
+  //
+  // Raise the Agent::onThinkEnd signal
+  //
   onThinkEnd();
 
+  //
+  // Invoke observers which requested to be called back from the think loop
+  //
   t.enter("Observers");
   State::callbackObservers(ThreadId::ThinkLoop, t);
   t.exit();
+
 
   log::verbose("Agent::think") << "Ending think cycle " << d_cycleNumber;
 }
