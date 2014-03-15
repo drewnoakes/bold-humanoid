@@ -395,9 +395,9 @@ export var allStateProtocols = [
     protocols.agentFrameState,
     protocols.ambulatorState,
     protocols.behaviourControlState,
-    protocols.cameraFrameState,
-    protocols.bodyState,
     protocols.bodyControlState,
+    protocols.bodyState,
+    protocols.cameraFrameState,
     protocols.debug,
     protocols.gameState,
     protocols.hardwareState,
@@ -406,10 +406,10 @@ export var allStateProtocols = [
     protocols.motionTiming,
     protocols.odometryState,
     protocols.optionTreeState,
-    protocols.teamState,
     protocols.orientationState,
     protocols.particleState,
     protocols.staticHardware,
+    protocols.teamState,
     protocols.thinkTiming,
     protocols.worldFrameState
 ];
