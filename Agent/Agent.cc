@@ -83,7 +83,7 @@ Agent::Agent()
 
   d_visualCortex = make_shared<VisualCortex>(d_camera, d_cameraModel, d_streamer, d_fieldMap, d_spatialiser, d_headModule);
 
-  d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, this);
+  d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger);
 
   if (Config::getStaticValue<bool>("hardware.joystick.enabled"))
   {

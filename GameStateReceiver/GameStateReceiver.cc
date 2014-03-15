@@ -2,9 +2,8 @@
 
 #include "../UDPSocket/udpsocket.hh"
 
-GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, Agent* agent)
+GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger)
   : d_debugger(debugger),
-    d_agent(agent),
     d_sendResponseMessages(Config::getSetting<bool>("game-controller.send-response-messages")),
     d_receivedAnything(false)
 {

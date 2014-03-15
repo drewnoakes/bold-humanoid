@@ -39,14 +39,13 @@ namespace bold
   class GameStateReceiver
   {
   public:
-    GameStateReceiver(std::shared_ptr<Debugger> debugger, Agent* agent);
+    GameStateReceiver(std::shared_ptr<Debugger> debugger);
 
     void receive();
 
   private:
     void processGameControllerInfoMessage(char const* data);
 
-    Agent* d_agent;
     std::shared_ptr<Debugger> d_debugger;
     std::shared_ptr<UDPSocket> d_socket;
     Setting<bool>* d_sendResponseMessages;

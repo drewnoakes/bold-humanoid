@@ -8,6 +8,8 @@ void GameStateReceiver::receive()
   static constexpr uint MaxMessageSize = GameStateData::SIZE; //max(GameStateData::SIZE, RoboCupGameControlReturnData::SIZE);
 
   static std::set<uint32> ignoredHeaders;
+  static uint8 teamNumber = static_cast<uint8>(Config::getStaticValue<int>("team-number"));
+  static uint8 uniformNumber = static_cast<uint8>(Config::getStaticValue<int>("uniform-number"));
 
   // Reuse data buffer. Makes this method unthreadsafe.
   static char data[MaxMessageSize];
@@ -116,8 +118,8 @@ void GameStateReceiver::receive()
     RoboCupGameControlReturnData response;
     memcpy(&response.header, RoboCupGameControlReturnData::HEADER, sizeof(response.header));
     response.version = RoboCupGameControlReturnData::VERSION;
-    response.teamNumber = (uint8)d_agent->getTeamNumber();
-    response.uniformNumber = (uint8)d_agent->getUniformNumber();
+    response.teamNumber = teamNumber;
+    response.uniformNumber = uniformNumber;
     response.message = (int)GameControllerResponseMessage::ALIVE;
 
     if (!d_socket->send(reinterpret_cast<char*>(&response), sizeof(RoboCupGameControlReturnData)))
@@ -131,6 +133,8 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
     static std::set<uint8> ignoredTeamNumbers;
     static std::set<uint8> observedOpponentTeamNumbers;
 
+    static int teamNumber = Config::getStaticValue<int>("team-number");
+
     auto gameState = make_shared<GameState const>(data);
 
     assert(gameState->getVersion() == GameStateData::VERSION);
@@ -140,8 +144,8 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
     uint8 teamNumber1 = gameState->teamInfo1().getTeamNumber();
     uint8 teamNumber2 = gameState->teamInfo2().getTeamNumber();
 
-    bool areWeTeam1 = teamNumber1 == d_agent->getTeamNumber();
-    bool areWeTeam2 = teamNumber2 == d_agent->getTeamNumber();
+    bool areWeTeam1 = teamNumber1 == teamNumber;
+    bool areWeTeam2 = teamNumber2 == teamNumber;
 
     // Verify that we're one of the teams mentioned in the message
     if (!areWeTeam1 && !areWeTeam2)
@@ -155,7 +159,7 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
         log::warning("GameStateReceiver::receive")
           << "Ignoring game controller message for incorrect team numbers "
           << (int)teamNumber1 << " and " << (int)teamNumber2
-          << " when our team number is " << d_agent->getTeamNumber();
+          << " when our team number is " << teamNumber;
       }
 
       d_debugger->notifyIgnoringUnrecognisedMessage();
