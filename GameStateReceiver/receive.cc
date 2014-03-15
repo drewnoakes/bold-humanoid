@@ -62,7 +62,6 @@ void GameStateReceiver::receive()
   if (received && d_sendResponseMessages->getValue())
   {
     // Send a response to the game controller (the sender), stating we're alive and well
-    cout << (int)fromAddress.sin_family << endl;
     assert(fromAddress.sin_family == AF_INET);
     d_socket->setTarget(fromAddress);
 
