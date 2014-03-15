@@ -89,6 +89,8 @@ namespace bold
 
     bool isStopRequested() const { return d_isStopRequested; }
 
+    ulong getThinkCycleNumber() const { return d_cycleNumber; }
+
     sigc::signal<void> onThinkEnd;
 
   private:
