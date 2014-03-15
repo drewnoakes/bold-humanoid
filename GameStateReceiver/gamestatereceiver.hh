@@ -37,6 +37,8 @@ namespace bold
     void receive();
 
   private:
+    void processGameControllerInfoMessage(char const* data);
+
     std::shared_ptr<UDPSocket> d_socket;
     std::shared_ptr<Debugger> d_debugger;
     std::set<uint32> d_observedVersionNumbers;
