@@ -3,15 +3,9 @@
 #include "../State/state.hh"
 #include "../StateObject/GameState/gamestate.hh"
 
-#define GAMECONTROLLER_STRUCT_HEADER "RGme"
-#define GAMECONTROLLER_STRUCT_VERSION 7
-
-#define GAMECONTROLLER_RETURN_STRUCT_HEADER "RGrt"
-#define GAMECONTROLLER_RETURN_STRUCT_VERSION 1
-
 void GameStateReceiver::receive()
 {
-  static constexpr uint MaxMessageSize = GameState::InfoSizeBytes; //max(GameState::InfoSizeBytes, GameState::PongSizeBytes);
+  static constexpr uint MaxMessageSize = GameStateData::SIZE; //max(GameStateData::SIZE, RoboCupGameControlReturnData::SIZE);
 
   static std::set<uint32> ignoredHeaders;
 
@@ -29,8 +23,21 @@ void GameStateReceiver::receive()
     if (ignoredLengths.find(bytesRead) == ignoredLengths.end())
     {
       ignoredLengths.insert(bytesRead);
-      log::warning("GameStateReceiver::receive") << "First game controller message with wrong size seen (" << bytesRead << " but expecting " << GameState::InfoSizeBytes << ")";
+      log::warning("GameStateReceiver::receive") << "First game controller message with invalid size seen (" << bytesRead << ")";
     }
+    d_debugger->notifyIgnoringUnrecognisedMessage();
+  };
+
+  auto logBadVersion = [this](uint8 observed, uint8 expected)
+  {
+    static std::set<pair<uint8,uint8>> ignoredVersions;
+    auto key = make_pair(observed, expected);
+    if (ignoredVersions.find(key) == ignoredVersions.end())
+    {
+      ignoredVersions.insert(key);
+      log::warning("GameStateReceiver::receive") << "First game controller message with wrong version seen (" << (int)observed << " but expecting " << (int)expected << ")";
+    }
+    d_debugger->notifyIgnoringUnrecognisedMessage();
   };
 
   // Process all pending messages, looping until done
@@ -50,10 +57,9 @@ void GameStateReceiver::receive()
     // For version 7 messages, the version spans 4 bytes, but only the first
     // byte need be read. So only one byte is needed to differentiate between
     // version 7 and 8 messages.
-    if (bytesRead <= 5)
+    if (bytesRead < 5)
     {
       logBadSize(bytesRead);
-      d_debugger->notifyIgnoringUnrecognisedMessage();
       break;
     }
 
@@ -61,38 +67,28 @@ void GameStateReceiver::receive()
     // Determine the message type
     //
 
-    const char* infoHeaderChars = "RGme";
-    const char* responseHeaderChars = "RGme";
-    const uint32 infoHeaderInt  = *reinterpret_cast<uint32 const*>(infoHeaderChars);
-    const uint32 responseHeader = *reinterpret_cast<uint32 const*>(responseHeaderChars);
-
     uint32 observedHeader = *reinterpret_cast<uint32*>(data);
+    uint8  observedVersion = *reinterpret_cast<uint8*>(data + 4);
 
-    if (observedHeader == infoHeaderInt)
+    if (observedHeader == GameStateData::HEADER_INT)
     {
-      if (bytesRead != GameState::InfoSizeBytes)
-      {
+      if (observedVersion != GameStateData::VERSION)
+        logBadVersion(observedVersion, GameStateData::VERSION);
+      else if (bytesRead != GameStateData::SIZE)
         logBadSize(bytesRead);
-        d_debugger->notifyIgnoringUnrecognisedMessage();
-      }
       else
-      {
         processGameControllerInfoMessage(data);
-      }
     }
-    else if (observedHeader == responseHeader)
+    else if (observedHeader == RoboCupGameControlReturnData::HEADER_INT)
     {
       // This is a response message
-      if (bytesRead != GameState::PongSizeBytes)
-      {
+      if (observedVersion != RoboCupGameControlReturnData::VERSION)
+        logBadVersion(observedVersion, RoboCupGameControlReturnData::VERSION);
+      else if (bytesRead != RoboCupGameControlReturnData::SIZE)
         logBadSize(bytesRead);
-        d_debugger->notifyIgnoringUnrecognisedMessage();
-      }
-      else
-      {
-        // TODO process response messages as information about teammates or opponents
-//       processGameControllerResponseMessage(data);
-      }
+      // TODO process response messages as information about teammates or opponents
+//    else
+//      processGameControllerResponseMessage(data);
     }
     else
     {
@@ -100,7 +96,7 @@ void GameStateReceiver::receive()
       if (ignoredHeaders.find(observedHeader) == ignoredHeaders.end())
       {
         ignoredHeaders.insert(observedHeader);
-        log::warning("GameStateReceiver::receive") << "First game controller message with unexpected header '" << string(reinterpret_cast<char*>(data), 4) << "' seen";
+        log::warning("GameStateReceiver::receive") << "First game controller message with unexpected header '" << string(reinterpret_cast<char*>(data), 4) << "' (0x" << hex << observedHeader << dec << ") seen";
       }
 
       d_debugger->notifyIgnoringUnrecognisedMessage();
@@ -118,10 +114,10 @@ void GameStateReceiver::receive()
     d_socket->setTarget(fromAddress);
 
     RoboCupGameControlReturnData response;
-    memcpy(&response.header, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(response.header));
-    response.version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
-    response.teamNumber = (uint16)d_agent->getTeamNumber();
-    response.uniformNumber = (uint16)d_agent->getUniformNumber();
+    memcpy(&response.header, RoboCupGameControlReturnData::HEADER, sizeof(response.header));
+    response.version = RoboCupGameControlReturnData::VERSION;
+    response.teamNumber = (uint8)d_agent->getTeamNumber();
+    response.uniformNumber = (uint8)d_agent->getUniformNumber();
     response.message = (int)GameControllerResponseMessage::ALIVE;
 
     if (!d_socket->send(reinterpret_cast<char*>(&response), sizeof(RoboCupGameControlReturnData)))
@@ -137,18 +133,7 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
 
     auto gameState = make_shared<GameState const>(data);
 
-    // Verify the version of the message
-    uint32 version = gameState->getVersion();
-    if (version != GAMECONTROLLER_STRUCT_VERSION)
-    {
-      if (observedVersionNumbers.find(version) == observedVersionNumbers.end())
-      {
-        log::warning("GameStateReceiver::receive") << "First game controller message with unexpected version " << version << " seen";
-        observedVersionNumbers.insert(version);
-      }
-      d_debugger->notifyIgnoringUnrecognisedMessage();
-      return;
-    }
+    assert(gameState->getVersion() == GameStateData::VERSION);
 
     // Track the other team numbers we see, and log them as new ones arrive
 

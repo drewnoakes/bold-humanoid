@@ -28,25 +28,26 @@ namespace bold
   {
     NORMAL = 0,
     PENALTYSHOOT = 1,
-    OVERTIME = 2
+    OVERTIME = 2,
+    TIMEOUT = 3
   };
 
-  enum class PenaltyType : uint16
+  enum class PenaltyType : uint8
   {
     NONE = 0,
     BALL_MANIPULATION = 1,
     PHYSICAL_CONTACT = 2,
     ILLEGAL_ATTACK = 3,
     ILLEGAL_DEFENSE = 4,
-    REQUEST_FOR_PICKUP = 5,
-    REQUEST_FOR_SERVICE = 6,
-    REQUEST_FOR_PICKUP_2_SERVICE = 7,
+    PICKUP_OR_INCAPABLE = 5,
+    SERVICE = 6,
+    SUBSTITUTE = 14,
     MANUAL = 15
   };
 
-  class PlayerInfo
+  /// Model of the PlayerInfo struct (version 8)
+  struct PlayerInfo
   {
-  public:
     bool hasPenalty() const { return d_penaltyType != PenaltyType::NONE; }
     PenaltyType getPenaltyType() const { return d_penaltyType; }
     std::string getPenaltyTypeString() const
@@ -63,12 +64,12 @@ namespace bold
           return std::string("Illegal Attack");
         case PenaltyType::ILLEGAL_DEFENSE:
           return std::string("Illegal Defense");
-        case PenaltyType::REQUEST_FOR_PICKUP:
-          return std::string("Request For Pickup");
-        case PenaltyType::REQUEST_FOR_SERVICE:
-          return std::string("Request For Service");
-        case PenaltyType::REQUEST_FOR_PICKUP_2_SERVICE:
-          return std::string("Request For Pickup To Service");
+        case PenaltyType::PICKUP_OR_INCAPABLE:
+          return std::string("Pickup or Incapable");
+        case PenaltyType::SERVICE:
+          return std::string("Service");
+        case PenaltyType::SUBSTITUTE:
+          return std::string("Substitute");
         case PenaltyType::MANUAL:
           return std::string("Manual");
         default:
@@ -76,34 +77,73 @@ namespace bold
       }
     }
     /** estimate of time till unpenalised */
-    uint16 getSecondsUntilPenaltyLifted() const { return d_secondsUntilPenaltyLifted; }
+    uint8 getSecondsUntilPenaltyLifted() const { return d_secondsUntilPenaltyLifted; }
+
+    static constexpr uint8 VERSION = 8;
+    static constexpr uint8 SIZE = 2;
 
   private:
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
     PenaltyType d_penaltyType;
-    uint16 d_secondsUntilPenaltyLifted;
+    uint8 d_secondsUntilPenaltyLifted;
   };
 
-  class TeamInfo
+  /// Model of the TeamInfo struct (version 8)
+  struct TeamInfo
   {
-  public:
     uint8 getTeamNumber() const { return d_teamNumber; }
     uint8 isBlueTeam() const { return d_teamColour == 0; }
-    uint8 getGoalColour() const { return d_goalColour; }
     uint8 getScore() const { return d_score; }
+    uint8 getPenaltyShotCount() const { return d_penaltyShot; }
+    bool wasPenaltySuccessful(uint8 number) const
+    {
+      assert(number < d_penaltyShot);
+      return ((1 << number) & d_singleShots) != 0;
+    }
+
     PlayerInfo const& getPlayer(uint8 unum) const
     {
       assert(unum > 0 && unum <= MAX_NUM_PLAYERS);
       return d_players[unum - 1];
     }
 
+    static constexpr uint8 VERSION = 8;
+    static constexpr uint8 SIZE = 46 + (1+MAX_NUM_PLAYERS)*PlayerInfo::SIZE;
+
   private:
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
-    uint8 d_teamNumber;          // unique team number
-    uint8 d_teamColour;          // colour of the team
-    uint8 d_goalColour;          // colour of the goal
-    uint8 d_score;               // team's score
-    PlayerInfo d_players[MAX_NUM_PLAYERS];       // the team's players
+    uint8 d_teamNumber;   // Unique team number
+    uint8 d_teamColour;   // Colour of the team
+    uint8 d_score;        // Team's score
+    uint8 d_penaltyShot;  // Penalty shot counter
+    uint16 d_singleShots; // Bits represent penalty shot success
+    uint8 d_coachMessage[40]; // For SPL only (ignore in kid-size league)
+    PlayerInfo d_coach;       // For SPL only (ignore in kid-size league)
+    PlayerInfo d_players[MAX_NUM_PLAYERS]; // the team's players
+  };
+
+  /// Model of the GameStateData struct (version 8)
+  struct GameStateData
+  {
+    // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
+    char header[4];                // Header to identify the structure
+    uint8 version;                 // Version of the data structure
+    uint8 packetNumber;            //
+    uint8 playersPerTeam;          // The number of players on a team
+    uint8 playMode;                // state of the game (STATE_READY, STATE_PLAYING, etc)
+    uint8 isFirstHalf;             // 1 = game in first half, 0 otherwise
+    uint8 nextKickOffTeamNumber;   // The next team to kick off
+    uint8 secondaryState;          // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+    uint8 dropInTeamNumber;        // Team that caused last drop in
+    uint16 secondsSinceLastDropIn; // Number of seconds passed since the last drop in.  -1 before first drop in.
+    uint16 secondsRemaining;       // Estimate of number of seconds remaining in the half
+    uint16 secondaryTime;          // Sub-time (remaining in ready state, etc.) in seconds
+    TeamInfo teams[2];
+
+    static constexpr const char* HEADER = "RGme";
+    static constexpr uint32 HEADER_INT = 0x656d4752;
+    static constexpr uint8 VERSION = 8;
+    static constexpr uint8 SIZE = 18 + 2*TeamInfo::SIZE;
   };
 
   class GameState : public StateObject
@@ -114,11 +154,11 @@ namespace bold
       memcpy(&d_data, data, sizeof(GameStateData));
     }
 
-    int getSecondsRemaining() const { return d_data.secondsRemaining; }
     PlayMode getPlayMode() const { return PlayMode(d_data.playMode); }
+
     std::string getPlayModeString() const
     {
-      switch (PlayMode(d_data.playMode))
+      switch (getPlayMode())
       {
         case PlayMode::INITIAL:
           return std::string("Initial");
@@ -135,15 +175,20 @@ namespace bold
       }
     }
 
-    uint32 getVersion() const { return d_data.version; }
+    uint8 getVersion() const { return d_data.version; }
+    uint8 getPacketNumber() const { return d_data.packetNumber; }
     uint8 getPlayersPerTeam() const { return d_data.playersPerTeam; }
     bool isFirstHalf() const { return d_data.isFirstHalf == 1; }
     /** The next team to kick off. */
     uint8 getNextKickOffTeamNumber() const { return d_data.nextKickOffTeamNumber; }
     bool isPenaltyShootout() const { return ExtraState(d_data.secondaryState) == ExtraState::PENALTYSHOOT; }
     bool isOvertime() const { return ExtraState(d_data.secondaryState) == ExtraState::OVERTIME; }
-    uint8 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn; }
+    bool isTimeout() const { return ExtraState(d_data.secondaryState) == ExtraState::TIMEOUT; }
     uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamNumber; }
+    uint16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn; }
+    uint16 getSecondsRemaining() const { return d_data.secondsRemaining; }
+    uint16 getSecondaryTime() const { return d_data.secondaryTime; }
+
     TeamInfo const& teamInfo1() const { return d_data.teams[0]; }
     TeamInfo const& teamInfo2() const { return d_data.teams[1]; }
 
@@ -161,26 +206,6 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
-    struct GameStateData
-    {
-      // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
-      char header[4];          // header to identify the structure
-      uint32 version;          // version of the data structure
-      uint8 playersPerTeam;    // The number of players on a team
-      uint8 playMode;       // state of the game (STATE_READY, STATE_PLAYING, etc)
-      uint8 isFirstHalf;       // 1 = game in first half, 0 otherwise
-      uint8 nextKickOffTeamNumber;       // the next team to kick off
-      uint8 secondaryState; // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
-      uint8 dropInTeamNumber;        // team that caused last drop in
-      uint16 secondsSinceLastDropIn;       // number of seconds passed since the last drop in.  -1 before first dropin
-      uint32 secondsRemaining; // estimate of number of seconds remaining in the half
-      TeamInfo teams[2];
-    };
-
     GameStateData d_data;
-
-  public:
-    static constexpr ushort InfoSizeBytes = sizeof(GameStateData);
-    static constexpr ushort PongSizeBytes = 16;
   };
 }

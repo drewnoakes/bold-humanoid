@@ -14,19 +14,25 @@ namespace bold
   class Debugger;
   template<typename> class Setting;
 
+  /// Model of the RoboCupGameControlReturnData struct (version 2)
   struct RoboCupGameControlReturnData
   {
     char header[4];
-    uint32 version;
-    uint16 teamNumber;
-    uint16 uniformNumber;
-    uint32 message;
+    uint8 version;
+    uint8 teamNumber;
+    uint8 uniformNumber;
+    uint8 message;
+
+    static constexpr char const* HEADER = "RGrt";
+    static constexpr uint32 HEADER_INT = 0x74724752;
+    static constexpr uint8 VERSION = 2;
+    static constexpr uint8 SIZE = 8;
   };
 
-  enum class GameControllerResponseMessage : uint32
+  enum class GameControllerResponseMessage : uint8
   {
-    PENALISE = 0,
-    UNPENALISE = 1,
+    MANUAL_PENALISE = 0,
+    MANUAL_UNPENALISE = 1,
     ALIVE = 2
   };
 

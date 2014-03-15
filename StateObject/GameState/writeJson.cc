@@ -1,12 +1,7 @@
 #include "gamestate.hh"
 
-#include "../../GameStateReceiver/RoboCupGameControlData.h"
-
 using namespace bold;
 using namespace rapidjson;
-
-static_assert(GameState::InfoSizeBytes == sizeof(RoboCupGameControlData), "");
-static_assert(GameState::PongSizeBytes == sizeof(RoboCupGameControlReturnData), "");
 
 void GameState::writeJson(Writer<StringBuffer>& writer) const
 {
