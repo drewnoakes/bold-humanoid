@@ -6,6 +6,7 @@
 /// <reference path="../../libs/smoothie.d.ts" />
 
 import constants = require('constants');
+import control = require('control');
 import data = require('data');
 import state = require('state');
 import Module = require('Module');
@@ -42,6 +43,10 @@ class CommsModule extends Module
 
     public load(element: HTMLDivElement)
     {
+        var controls = document.createElement('div');
+        control.buildSettings("game-controller", controls, this.closeables);
+        element.appendChild(controls);
+
         this.chart = new SmoothieChart(chartOptions);
         this.canvas = document.createElement('canvas');
         this.canvas.height = chartHeight;
