@@ -140,6 +140,7 @@
     }
   },
   "game-controller": {
+    "send-response-messages": { "type": "bool", "default": true },
     "tcp-port": { "type": "int", "min": 1025, "max": 65535, "readonly": true, "default": 3838 }
   },
   "round-table": {

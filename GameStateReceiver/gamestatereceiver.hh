@@ -12,6 +12,7 @@ namespace bold
   class UDPSocket;
   class Agent;
   class Debugger;
+  template<typename> class Setting;
 
   struct RoboCupGameControlReturnData
   {
@@ -43,6 +44,7 @@ namespace bold
     std::shared_ptr<Debugger> d_debugger;
     std::set<uint32> d_observedVersionNumbers;
     std::set<uint8> d_observedTeamNumbers;
+    Setting<bool>* d_sendResponseMessages;
     Agent* d_agent;
     bool d_receivedAnything;
   };

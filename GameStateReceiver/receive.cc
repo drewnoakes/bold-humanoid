@@ -19,6 +19,7 @@ void GameStateReceiver::receive()
   // Process incoming game controller messages
   sockaddr_in fromAddress = {};
   int fromAddressLength = sizeof(sockaddr_in);
+  bool received = false;
 
   // Process all pending messages, looping until done
   while (true)
@@ -31,39 +32,49 @@ void GameStateReceiver::receive()
     if (bytesRead <= 0)
       break;
 
-    // If the message is not of the expected size, don't continue.
+    received = true;
+
+    //
+    // Determine the message type
+    //
+
     if (bytesRead == GameState::InfoSizeBytes && memcmp(data, GAMECONTROLLER_STRUCT_HEADER, sizeof(GAMECONTROLLER_STRUCT_HEADER) - 1) == 0)
     {
       processGameControllerInfoMessage(data);
-      continue;
     }
-
-    if (bytesRead == GameState::PongSizeBytes && memcmp(data, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(GAMECONTROLLER_RETURN_STRUCT_HEADER) - 1) == 0)
+    else if (bytesRead == GameState::PongSizeBytes && memcmp(data, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(GAMECONTROLLER_RETURN_STRUCT_HEADER) - 1) == 0)
     {
       // This is a response message
 //       processGameControllerResponseMessage(data);
-      continue;
     }
+    else
+    {
+      // Not a GC message, nor a status message
+      log::warning("GameStateReceiver::receive") << "Ignoring game controller message with unexpected header";
+      d_debugger->notifyIgnoringUnrecognisedMessage();
+    }
+  }
 
-    // Not a GC message, nor a status message
-    log::warning("GameStateReceiver::receive") << "Ignoring game controller message with unexpected header";
-    d_debugger->notifyIgnoringUnrecognisedMessage();
+  //
+  // Send response message to Game Controller
+  //
 
-    // TODO add a setting to enable/disable sending the response message
+  if (received && d_sendResponseMessages->getValue())
+  {
+    // Send a response to the game controller (the sender), stating we're alive and well
+    cout << (int)fromAddress.sin_family << endl;
+    assert(fromAddress.sin_family == AF_INET);
+    d_socket->setTarget(fromAddress);
 
-//     // Send a response to the game controller (the sender), stating we're alive and well
-//     assert(fromAddress.sa_family == AF_INET);
-//     d_socket->setTarget(fromAddress);
-//
-//     RoboCupGameControlReturnData response;
-//     memcpy(&response.header, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(response.header));
-//     response.version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
-//     response.teamNumber = (uint16)d_agent->getTeamNumber();
-//     response.uniformNumber = (uint16)d_agent->getUniformNumber();
-//     response.message = (int)GameControllerResponseMessage::ALIVE;
-//
-//     if (!d_socket->send((char*)(&response), sizeof(RoboCupGameControlReturnData)))
-//       log::warning("GameStateReceiver::receive") << "Failed sending status response message to game controller";
+    RoboCupGameControlReturnData response;
+    memcpy(&response.header, GAMECONTROLLER_RETURN_STRUCT_HEADER, sizeof(response.header));
+    response.version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
+    response.teamNumber = (uint16)d_agent->getTeamNumber();
+    response.uniformNumber = (uint16)d_agent->getUniformNumber();
+    response.message = (int)GameControllerResponseMessage::ALIVE;
+
+    if (!d_socket->send(reinterpret_cast<char*>(&response), sizeof(RoboCupGameControlReturnData)))
+      log::warning("GameStateReceiver::receive") << "Failed sending status response message to game controller";
   }
 }
 

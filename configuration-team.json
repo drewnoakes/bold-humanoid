@@ -129,6 +129,7 @@
     }
   },
   "game-controller": {
+    "send-response-messages": true,
     "tcp-port": 3838
   },
   "round-table": {
