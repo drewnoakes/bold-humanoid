@@ -11,9 +11,9 @@ GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, Agent* agent
 {
   int port = Config::getStaticValue<int>("game-controller.tcp-port");
 
-  log::info("GameStateReceiver::receive") << "Creating socket for UDP port " << port;
-
   d_socket = make_shared<UDPSocket>();
   d_socket->setBlocking(false);
   d_socket->bind("", port);
+
+  log::info("GameStateReceiver::GameStateReceiver") << "Listening on UDP port " << port;
 }
