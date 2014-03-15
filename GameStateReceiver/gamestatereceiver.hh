@@ -40,13 +40,10 @@ namespace bold
   private:
     void processGameControllerInfoMessage(char const* data);
 
-    std::shared_ptr<UDPSocket> d_socket;
-    std::shared_ptr<Debugger> d_debugger;
-    std::set<uint32> d_observedVersionNumbers;
-    std::set<uint8> d_observedOpponentTeamNumbers;
-    std::set<uint8> d_ignoredTeamNumbers;
-    Setting<bool>* d_sendResponseMessages;
     Agent* d_agent;
+    std::shared_ptr<Debugger> d_debugger;
+    std::shared_ptr<UDPSocket> d_socket;
+    Setting<bool>* d_sendResponseMessages;
     bool d_receivedAnything;
   };
 }
