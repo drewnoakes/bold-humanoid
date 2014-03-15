@@ -94,7 +94,7 @@ void Agent::think()
   //
   // Set timing data for the think cycle
   //
-  State::set(make_shared<ThinkTimingState const>(t.flush(), d_cycleNumber));
+  State::make<ThinkTimingState>(t.flush(), d_cycleNumber);
 
   //
   // Raise the Agent::onThinkEnd signal

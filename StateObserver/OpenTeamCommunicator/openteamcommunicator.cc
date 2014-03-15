@@ -162,7 +162,7 @@ void OpenTeamCommunicator::receiveData()
   }
 
   if (updated)
-    State::set(make_shared<TeamState const>(d_players));
+    State::make<TeamState>(d_players);
 }
 
 void OpenTeamCommunicator::sendData(PlayerState& state)
@@ -196,7 +196,7 @@ void OpenTeamCommunicator::sendData(PlayerState& state)
 
   mitecom_broadcast(d_sock, d_remotePort, messageData.get(), messageDataLength);
 
-  State::set(make_shared<TeamState const>(d_players));
+  State::make<TeamState>(d_players);
 }
 
 void OpenTeamCommunicator::mergePlayerState(PlayerState& state)

@@ -15,5 +15,5 @@ BehaviourControl::BehaviourControl(Agent& agent)
 
 void BehaviourControl::updateStateObject() const
 {
-  State::set(make_shared<BehaviourControlState const>(d_agent.getThinkCycleNumber(), d_playerRole, d_playerActivity, d_playerStatus));
+  State::make<BehaviourControlState>(d_agent.getThinkCycleNumber(), d_playerRole, d_playerActivity, d_playerStatus);
 }

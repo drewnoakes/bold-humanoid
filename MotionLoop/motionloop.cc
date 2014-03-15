@@ -208,7 +208,7 @@ void *MotionLoop::threadMethod(void *param)
     t.timeEvent("Sleep");
 
     // Set timing data for the motion cycle
-    State::set(make_shared<MotionTimingState const>(t.flush(), loop->d_cycleNumber));
+    State::make<MotionTimingState>(t.flush(), loop->d_cycleNumber);
   }
 
   log::verbose("MotionLoop::threadMethod") << "Exiting";
@@ -363,7 +363,7 @@ void MotionLoop::step(SequentialTimer& t)
       if (anythingChanged)
       {
         // TODO only create if someone is listening to this in the debugger
-        State::set(make_shared<BodyControlState const>(d_bodyControl, d_cycleNumber));
+        State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
         t.timeEvent("Set BodyControlState");
       }
     }
@@ -410,7 +410,7 @@ void MotionLoop::step(SequentialTimer& t)
 
   State::set(hw);
 
-  State::set(allocate_aligned_shared<BodyState const>(hw, d_bodyControl, d_cycleNumber));
+  State::make<BodyState>(hw, d_bodyControl, d_cycleNumber);
   t.timeEvent("Update BodyState");
 
   if (!d_readYet)
@@ -488,7 +488,7 @@ bool MotionLoop::updateStaticHardwareState()
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     mx28States.push_back(make_shared<StaticMX28State>(jointId, d_staticBulkRead->getBulkReadData(jointId)));
 
-  State::set(make_shared<StaticHardwareState const>(cm730State, mx28States));
+  State::make<StaticHardwareState>(cm730State, mx28States);
   return true;
 }
 
@@ -513,7 +513,7 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareStateFake(SequentialTime
     }
 
     auto cm730State = make_shared<StaticCM730State>();
-    State::set(make_shared<StaticHardwareState const>(cm730State, mx28States));
+    State::make<StaticHardwareState>(cm730State, mx28States);
 
     d_staticHardwareStateUpdateNeeded = false;
     t.timeEvent("Read StaticHardwareState");

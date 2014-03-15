@@ -14,6 +14,7 @@
 #include "../StateObject/stateobject.hh"
 #include "../StateObserver/stateobserver.hh"
 #include "../util/log.hh"
+#include "../util/memory.hh"
 
 struct libwebsocket_protocols;
 
@@ -120,6 +121,9 @@ namespace bold
     template <typename T>
     static void set(std::shared_ptr<T const> state);
 
+    template<typename T, typename... TArgs>
+    static void make(TArgs&&... args);
+
     /** Get the StateObject of specified type T. May be nullptr.
      */
     template <typename T>
@@ -197,6 +201,12 @@ namespace bold
       assert(observer);
       observer->setDirty();
     }
+  }
+
+  template<typename T, typename... Args>
+  void State::make(Args&&... args)
+  {
+    set(allocate_aligned_shared<T const>(std::forward<Args>(args)...));
   }
 
   template <typename T>

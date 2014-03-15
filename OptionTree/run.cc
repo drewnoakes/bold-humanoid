@@ -81,7 +81,7 @@ void OptionTree::run()
   unique_ptr<Document> doc(new Document());
   doc->Parse<0,UTF8<>>(buffer.GetString());
 
-  State::set(make_shared<OptionTreeState const>(ranOptions, std::move(doc)));
+  State::make<OptionTreeState>(ranOptions, std::move(doc));
 
   d_optionsLastCycle.clear();
   d_optionsLastCycle.insert(ranOptions.begin(), ranOptions.end());

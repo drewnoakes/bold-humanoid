@@ -48,12 +48,10 @@ void Debugger::update()
 
   // TODO track whether there's actually anything to update, avoiding unnecessary DebugState changes
 
-  State::set(
-    make_shared<DebugState const>(
-      d_gameControllerMessageCount, d_ignoredMessageCount,
-      d_sentTeamMessageCount, d_receivedTeamMessageCount,
-      d_debugControl
-    )
+  State::make<DebugState>(
+    d_gameControllerMessageCount, d_ignoredMessageCount,
+    d_sentTeamMessageCount, d_receivedTeamMessageCount,
+    d_debugControl
   );
 
   // clear accumulators for next cycle

@@ -7,7 +7,6 @@ void Localiser::updateStateObject()
 
   MatrixXd particles = MatrixXd::Ones(states.rows() + 1, weights.size());
   particles << states, weights.transpose();
-  auto const& particleState = std::make_shared<ParticleState const>(particles, d_preNormWeightSum);
 
-  State::set(particleState);
+  State::make<ParticleState>(particles, d_preNormWeightSum);
 }

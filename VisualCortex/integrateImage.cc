@@ -36,7 +36,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
 
   if (d_shouldCountLabels->getValue())
   {
-    State::set(make_shared<LabelCountState const>(getHandler<LabelCountPass>()->getCounts()));
+    State::make<LabelCountState>(getHandler<LabelCountPass>()->getCounts());
     t.timeEvent("Store Label Count");
   }
 
@@ -176,7 +176,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
     }
   }
 
-  State::set(make_shared<CameraFrameState const>(ballPosition, goalPositions, observedLineSegments, d_fieldEdgePass->getOcclusionRays(), totalPixelCount, processedPixelCount, thinkCycleNumber));
+  State::make<CameraFrameState>(ballPosition, goalPositions, observedLineSegments, d_fieldEdgePass->getOcclusionRays(), totalPixelCount, processedPixelCount, thinkCycleNumber);
 
   t.timeEvent("Updating State");
 }
