@@ -135,6 +135,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./BehaviourControl/behaviourcontrol.cc
+)
+
+add_class(BOLDHUMANOID
   ./BodyControl/bodycontrol.cc
 )
 
@@ -429,6 +433,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/AmbulatorState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/BehaviourControlState/behaviourcontrolstate.cc
 )
 
 add_class(BOLDHUMANOID

@@ -1,6 +1,7 @@
 #include "roledecider.hh"
 
 #include "../Config/config.hh"
+#include "../BehaviourControl/behaviourcontrol.hh"
 #include "../Debugger/debugger.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
@@ -29,7 +30,7 @@ void RoleDecider::update()
   auto setRole = [this](PlayerRole role)
   {
     d_debugger->showRole(role);
-    d_role = role;
+    d_behaviourControl->setPlayerRole(role);
   };
 
   if (uniformNumber == 1)

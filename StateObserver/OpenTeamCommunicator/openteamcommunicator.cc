@@ -1,6 +1,7 @@
 #include "openteamcommunicator.hh"
 
 #include "../../Agent/agent.hh"
+#include "../../BehaviourControl/behaviourcontrol.hh"
 #include "../../Clock/clock.hh"
 #include "../../Config/config.hh"
 #include "../../Math/math.hh"
@@ -58,9 +59,9 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
     playerState.uniformNumber = myUniformNumber;
     playerState.teamNumber = myTeamNumber;
 
-    playerState.activity = d_agent->getPlayerActivity();
-    playerState.status = d_agent->getPlayerStatus();
-    playerState.role = d_agent->getRoleDecider()->getRole();
+    playerState.activity = d_agent->getBehaviourControl()->getPlayerActivity();
+    playerState.status = d_agent->getBehaviourControl()->getPlayerStatus();
+    playerState.role = d_agent->getBehaviourControl()->getPlayerRole();
 
     auto const& agentFrameState = State::get<AgentFrameState>();
     if (agentFrameState)

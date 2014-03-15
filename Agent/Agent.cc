@@ -12,6 +12,7 @@ Agent::Agent()
   State::initialise();
 
   d_voice = make_shared<Voice>();
+  d_behaviourControl = make_shared<BehaviourControl>(*this);
 
   vector<shared_ptr<MotionScript>> motionScripts = MotionScript::loadAllInPath("./motionscripts");
 
@@ -60,7 +61,7 @@ Agent::Agent()
 
   d_localiser = allocate_aligned_shared<Localiser>(d_fieldMap);
 
-  d_roleDecider = make_shared<RoleDecider>(d_debugger);
+  d_roleDecider = make_shared<RoleDecider>(d_behaviourControl, d_debugger);
 
   // Create camera
   d_camera = make_shared<Camera>(Config::getStaticValue<string>("hardware.video-path"));

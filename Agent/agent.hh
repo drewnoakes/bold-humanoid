@@ -13,6 +13,7 @@ class Joystick;
 namespace bold
 {
   class Ambulator;
+  class BehaviourControl;
   class BodyState;
   class Camera;
   class CameraModel;
@@ -62,6 +63,7 @@ namespace bold
     std::shared_ptr<GameStateReceiver> getGameStateReceiver() const { return d_gameStateReceiver; }
     std::shared_ptr<OpenTeamCommunicator> getOpenTeamCommunicator() const { return d_teamCommunicator; }
     std::shared_ptr<RoleDecider> getRoleDecider() const { return d_roleDecider; }
+    std::shared_ptr<BehaviourControl> getBehaviourControl() const { return d_behaviourControl; }
 
     std::shared_ptr<HeadModule> getHeadModule() const { return d_headModule; }
     std::shared_ptr<WalkModule> getWalkModule() const { return d_walkModule; }
@@ -72,11 +74,6 @@ namespace bold
 
     unsigned getTeamNumber() const { return d_teamNumber; }
     unsigned getUniformNumber() const { return d_uniformNumber; }
-
-    PlayerStatus getPlayerStatus() const { return d_status; }
-    void setPlayerStatus(PlayerStatus status) { d_status = status; }
-    PlayerActivity getPlayerActivity() const { return d_activity; }
-    void setPlayerActivity(PlayerActivity activity) { d_activity = activity; }
 
     void setOptionTree(std::shared_ptr<OptionTree> tree);
 
@@ -117,6 +114,7 @@ namespace bold
     std::shared_ptr<JamDetector> d_jamTracker;
     std::shared_ptr<OpenTeamCommunicator> d_teamCommunicator;
     std::shared_ptr<RoleDecider> d_roleDecider;
+    std::shared_ptr<BehaviourControl> d_behaviourControl;
     std::shared_ptr<SuicidePill> d_suicidePill;
     std::shared_ptr<Odometer> d_odometer;
     std::shared_ptr<OrientationTracker> d_orientationTracker;
@@ -142,9 +140,6 @@ namespace bold
     Setting<double>* d_joystickAAmpMax;
 
     ulong d_cycleNumber;
-
-    PlayerStatus d_status;
-    PlayerActivity d_activity;
 
     void initCamera();
 

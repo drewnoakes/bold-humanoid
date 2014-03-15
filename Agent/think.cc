@@ -59,7 +59,7 @@ void Agent::think()
   t.timeEvent("Team Receive");
 
   //
-  // Decide role
+  // Decide role, updating BehaviourControl
   //
   d_roleDecider->update();
   t.timeEvent("Role Decision");

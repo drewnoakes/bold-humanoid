@@ -370,6 +370,7 @@ export var protocols = {
     agentFrameState: 'AgentFrame',
     ambulatorState: 'Ambulator',
     bodyState: 'Body',
+    behaviourControlState: 'BehaviourControl',
     bodyControlState: 'BodyControl',
     cameraFrameState: 'CameraFrame',
     debug: 'Debug',
@@ -393,6 +394,7 @@ export var protocols = {
 export var allStateProtocols = [
     protocols.agentFrameState,
     protocols.ambulatorState,
+    protocols.behaviourControlState,
     protocols.cameraFrameState,
     protocols.bodyState,
     protocols.bodyControlState,

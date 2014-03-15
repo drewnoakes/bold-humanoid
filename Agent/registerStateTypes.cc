@@ -4,6 +4,7 @@ void Agent::registerStateTypes()
 {
   State::registerStateType<AgentFrameState>("AgentFrame");
   State::registerStateType<AmbulatorState>("Ambulator");
+  State::registerStateType<BehaviourControlState>("BehaviourControl");
   State::registerStateType<BodyControlState>("BodyControl");
   State::registerStateType<BodyState>("Body");
   State::registerStateType<CameraFrameState>("CameraFrame");

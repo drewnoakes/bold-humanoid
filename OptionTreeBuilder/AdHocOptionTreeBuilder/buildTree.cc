@@ -2,6 +2,7 @@
 
 #include "../../Agent/agent.hh"
 #include "../../Ambulator/ambulator.hh"
+#include "../../BehaviourControl/behaviourcontrol.hh"
 #include "../../DataStreamer/datastreamer.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
@@ -126,13 +127,13 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto setPlayerActivityInStates = [agent](PlayerActivity activity, std::vector<shared_ptr<FSMState>> states)
   {
     for (shared_ptr<FSMState>& state : states)
-      state->onEnter.connect([agent,activity]() { agent->setPlayerActivity(activity); });
+      state->onEnter.connect([agent,activity]() { agent->getBehaviourControl()->setPlayerActivity(activity); });
   };
 
   auto setPlayerStatusInStates = [agent](PlayerStatus status, std::vector<shared_ptr<FSMState>> states)
   {
     for (shared_ptr<FSMState>& state : states)
-      state->onEnter.connect([agent,status]() { agent->setPlayerStatus(status); });
+      state->onEnter.connect([agent,status]() { agent->getBehaviourControl()->setPlayerStatus(status); });
   };
 
   // BUILD TREE
