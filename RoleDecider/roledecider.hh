@@ -1,10 +1,10 @@
 #pragma once
 
+#include <memory>
 #include "../StateObject/TeamState/teamstate.hh"
 
 namespace bold
 {
-  class Agent;
   class Debugger;
 
   class RoleDecider
