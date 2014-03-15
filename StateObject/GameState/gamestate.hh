@@ -178,5 +178,9 @@ namespace bold
     };
 
     GameStateData d_data;
+
+  public:
+    static constexpr ushort InfoSizeBytes = sizeof(GameStateData);
+    static constexpr ushort PongSizeBytes = 16;
   };
 }
