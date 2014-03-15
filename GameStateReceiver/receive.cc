@@ -1,12 +1,14 @@
 #include "gamestatereceiver.ih"
 
+#include "../State/state.hh"
+
 #define GAMECONTROLLER_STRUCT_HEADER "RGme"
 #define GAMECONTROLLER_STRUCT_VERSION 7
 
 #define GAMECONTROLLER_RETURN_STRUCT_HEADER "RGrt"
 #define GAMECONTROLLER_RETURN_STRUCT_VERSION 1
 
-shared_ptr<GameState> GameStateReceiver::receive()
+void GameStateReceiver::receive()
 {
   const int MAX_LENGTH = 4096; // TODO can this just be sizeof(RoboCupGameControlData)
   static char data[MAX_LENGTH];
@@ -31,7 +33,7 @@ shared_ptr<GameState> GameStateReceiver::receive()
       continue;
     }
 
-    auto gameState = make_shared<GameState>(data);
+    auto gameState = make_shared<GameState const>(data);
 
     // Verify the version of the message
     if (gameState->getVersion() != GAMECONTROLLER_STRUCT_VERSION)
@@ -80,8 +82,6 @@ shared_ptr<GameState> GameStateReceiver::receive()
 //     if (!d_socket->send((char*)(&response), sizeof(RoboCupGameControlReturnData)))
 //       log::warning("GameStateReceiver::receive") << "Failed sending status response message to game controller";
 
-    return gameState;
+    State::set(gameState);
   }
-
-  return nullptr;
 }

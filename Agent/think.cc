@@ -29,9 +29,7 @@ void Agent::think()
   //
   // Listen for any game control data
   //
-  shared_ptr<GameState const> gameState = d_gameStateReceiver->receive();
-  if (gameState)
-    State::set(gameState);
+  d_gameStateReceiver->receive();
   t.timeEvent("Integrate Game Control");
 
   //
