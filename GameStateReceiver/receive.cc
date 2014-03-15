@@ -36,9 +36,14 @@ void GameStateReceiver::receive()
     auto gameState = make_shared<GameState const>(data);
 
     // Verify the version of the message
-    if (gameState->getVersion() != GAMECONTROLLER_STRUCT_VERSION)
+    auto version = gameState->getVersion();
+    if (version != GAMECONTROLLER_STRUCT_VERSION)
     {
-      log::warning("GameStateReceiver::receive") << "Ignoring game controller message with unexpected version";
+      if (d_observedVersionNumbers.find(version) == d_observedVersionNumbers.end())
+      {
+        log::warning("GameStateReceiver::receive") << "First game controller message with unexpected version " << version << " seen";
+        d_observedVersionNumbers.insert(version);
+      }
       d_debugger->notifyIgnoringUnrecognisedMessage();
       continue;
     }
