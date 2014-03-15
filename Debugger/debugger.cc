@@ -72,10 +72,26 @@ void Debugger::notifyReceivedGameControllerMessage()
 
 void Debugger::showReady()       { d_foreheadColour = Colour::bgr(255,0,0);     d_eyeColour = Colour::bgr(255,0,0); };
 void Debugger::showSet()         { d_foreheadColour = Colour::bgr(0,255,255);   d_eyeColour = Colour::bgr(255,0,0); };
-void Debugger::showPlaying()     { d_foreheadColour = Colour::bgr(0,255,0);     d_eyeColour = Colour::bgr(255,0,0); }
+void Debugger::showPlaying()     { d_foreheadColour = Colour::bgr(0,255,0);     d_eyeColour = Colour::bgr(64,64,64); }
 void Debugger::showPenalized()   { d_foreheadColour = Colour::bgr(0,0,255);     d_eyeColour = Colour::bgr(255,0,0); }
 void Debugger::showPaused()      { d_foreheadColour = Colour::bgr(128,128,128); d_eyeColour = Colour::bgr(128,128,128); }
 void Debugger::showExitedAgent() { d_foreheadColour = Colour::bgr(0,0,0);       d_eyeColour = Colour::bgr(0,0,0); }
+
+void Debugger::showRole(PlayerRole role)
+{
+  switch (role)
+  {
+    case PlayerRole::Idle:           d_eyeColour = Colour::bgr(64, 64, 64); break;
+    case PlayerRole::Defender:       d_eyeColour = Colour::bgr(200, 0, 0); break;
+    case PlayerRole::Supporter:      d_eyeColour = Colour::bgr(0, 200, 0); break;
+    case PlayerRole::Striker:
+    case PlayerRole::PenaltyStriker: d_eyeColour = Colour::bgr(0, 0, 200); break;
+    case PlayerRole::Keeper:
+    case PlayerRole::PenaltyKeeper:  d_eyeColour = Colour::bgr(148, 0, 211); break;
+    case PlayerRole::Other:
+    default:                         d_eyeColour = Colour::bgr(139, 0, 139); break;
+  }
+}
 
 void Debugger::showExitingAgent()
 {

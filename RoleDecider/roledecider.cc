@@ -1,6 +1,7 @@
 #include "roledecider.hh"
 
 #include "../Config/config.hh"
+#include "../Debugger/debugger.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/TeamState/teamstate.hh"
@@ -25,22 +26,28 @@ void RoleDecider::update()
 
   static int uniformNumber = Config::getStaticValue<int>("uniform-number");
 
+  auto setRole = [this](PlayerRole role)
+  {
+    d_debugger->showRole(role);
+    d_role = role;
+  };
+
   if (uniformNumber == 1)
   {
-    d_role = PlayerRole::Keeper;
+    setRole(PlayerRole::Keeper);
     return;
   }
 
   if (uniformNumber == 5)
   {
-    d_role = PlayerRole::PenaltyKeeper;
+    setRole(PlayerRole::PenaltyKeeper);
     return;
   }
 
   if (uniformNumber == 6)
   {
     // TODO we don't have any special logic for the penalty striker yet...
-    d_role = PlayerRole::PenaltyStriker;
+    setRole(PlayerRole::PenaltyStriker);
     return;
   }
 
@@ -53,7 +60,7 @@ void RoleDecider::update()
   if (!agentFrame || !agentFrame->getBallObservation().hasValue())
   {
     // TODO if we cannot see the ball, use info from teammates to determine our role
-    d_role = PlayerRole::Idle;
+    setRole(PlayerRole::Idle);
     return;
   }
 
@@ -63,7 +70,7 @@ void RoleDecider::update()
   {
     // We have no information about our teammates' position or roles, so default
     // to being a striker.
-    d_role = PlayerRole::Striker;
+    setRole(PlayerRole::Striker);
     return;
   }
 
@@ -108,14 +115,15 @@ void RoleDecider::update()
     }
   }
 
-  // TODO if I am closest, become the striker
-
+  // If I am closest, become the striker
   double dist = agentFrame->getBallObservation()->norm();
-
   if (dist < closestDistance)
   {
     // We are closest to the ball, so become the striker
-    d_role = PlayerRole::Striker;
+    setRole(PlayerRole::Striker);
     return;
   }
+
+  // Otherwise become a supporter
+  setRole(PlayerRole::Striker);
 }

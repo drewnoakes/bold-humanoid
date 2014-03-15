@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "../Colour/colour.hh"
+#include "../StateObject/TeamState/teamstate.hh"
 
 namespace bold
 {
@@ -36,6 +37,8 @@ namespace bold
 
     void showExitingAgent();
     void showExitedAgent();
+
+    void showRole(PlayerRole role);
 
     /**
      * Update the debugger at the end of the think cycle.

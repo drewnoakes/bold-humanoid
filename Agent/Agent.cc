@@ -60,7 +60,7 @@ Agent::Agent()
 
   d_localiser = allocate_aligned_shared<Localiser>(d_fieldMap);
 
-  d_roleDecider = make_shared<RoleDecider>();
+  d_roleDecider = make_shared<RoleDecider>(d_debugger);
 
   // Create camera
   d_camera = make_shared<Camera>(Config::getStaticValue<string>("hardware.video-path"));
