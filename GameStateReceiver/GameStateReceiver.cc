@@ -4,7 +4,8 @@
 
 GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, Agent* agent)
   : d_debugger(debugger),
-    d_observedTeamNumbers(),
+    d_observedOpponentTeamNumbers(),
+    d_ignoredTeamNumbers(),
     d_sendResponseMessages(Config::getSetting<bool>("game-controller.send-response-messages")),
     d_agent(agent),
     d_receivedAnything(false)

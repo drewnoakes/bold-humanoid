@@ -82,7 +82,7 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
     auto gameState = make_shared<GameState const>(data);
 
     // Verify the version of the message
-    auto version = gameState->getVersion();
+    uint32 version = gameState->getVersion();
     if (version != GAMECONTROLLER_STRUCT_VERSION)
     {
       if (d_observedVersionNumbers.find(version) == d_observedVersionNumbers.end())
@@ -96,25 +96,37 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
 
     // Track the other team numbers we see, and log them as new ones arrive
 
-    bool areWeTeam1 = gameState->teamInfo1().getTeamNumber() == d_agent->getTeamNumber();
-    bool areWeTeam2 = gameState->teamInfo2().getTeamNumber() == d_agent->getTeamNumber();
+    uint8 teamNumber1 = gameState->teamInfo1().getTeamNumber();
+    uint8 teamNumber2 = gameState->teamInfo2().getTeamNumber();
+
+    bool areWeTeam1 = teamNumber1 == d_agent->getTeamNumber();
+    bool areWeTeam2 = teamNumber2 == d_agent->getTeamNumber();
 
     // Verify that we're one of the teams mentioned in the message
     if (!areWeTeam1 && !areWeTeam2)
     {
-      log::warning("GameStateReceiver::receive") << "Ignoring game controller message for incorrect team numbers " << (int)gameState->teamInfo1().getTeamNumber() << " and " << (int)gameState->teamInfo2().getTeamNumber() << " when our team number is " << d_agent->getTeamNumber();
+      if (d_ignoredTeamNumbers.find(teamNumber1) == d_ignoredTeamNumbers.end() ||
+          d_ignoredTeamNumbers.find(teamNumber2) == d_ignoredTeamNumbers.end())
+      {
+        d_ignoredTeamNumbers.insert(teamNumber1);
+        d_ignoredTeamNumbers.insert(teamNumber2);
+
+        log::warning("GameStateReceiver::receive")
+          << "Ignoring game controller message for incorrect team numbers "
+          << (int)teamNumber1 << " and " << (int)teamNumber2
+          << " when our team number is " << d_agent->getTeamNumber();
+      }
+
       d_debugger->notifyIgnoringUnrecognisedMessage();
       return;
     }
 
-    uint8 otherTeamNumber = areWeTeam1
-      ? gameState->teamInfo2().getTeamNumber()
-      : gameState->teamInfo1().getTeamNumber();
+    uint8 otherTeamNumber = areWeTeam1 ? teamNumber2 : teamNumber1;
 
-    if (d_observedTeamNumbers.find(otherTeamNumber) == d_observedTeamNumbers.end())
+    if (d_observedOpponentTeamNumbers.find(otherTeamNumber) == d_observedOpponentTeamNumbers.end())
     {
       log::info("GameStateReceiver::receive") << "Seen first game controller message for our team and team number " << otherTeamNumber;
-      d_observedTeamNumbers.insert(otherTeamNumber);
+      d_observedOpponentTeamNumbers.insert(otherTeamNumber);
     }
 
     d_debugger->notifyReceivedGameControllerMessage();

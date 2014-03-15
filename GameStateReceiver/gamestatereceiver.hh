@@ -43,7 +43,8 @@ namespace bold
     std::shared_ptr<UDPSocket> d_socket;
     std::shared_ptr<Debugger> d_debugger;
     std::set<uint32> d_observedVersionNumbers;
-    std::set<uint8> d_observedTeamNumbers;
+    std::set<uint8> d_observedOpponentTeamNumbers;
+    std::set<uint8> d_ignoredTeamNumbers;
     Setting<bool>* d_sendResponseMessages;
     Agent* d_agent;
     bool d_receivedAnything;
