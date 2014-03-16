@@ -36,8 +36,9 @@ class DOMTemplate
 
         if (this.contentType === "text/html") {
             console.assert(!!obj.body);
-            console.assert(!!obj.body.childNodes.length);
-            return obj.body.firstChild;
+            if (obj.body.children.length !== 1)
+                console.error("Template '" + this.templateId + "' specifies " + obj.body.children.length + " children, where only one is allowed.");
+            return obj.body.firstElementChild;
         }
         else {
             return obj;
