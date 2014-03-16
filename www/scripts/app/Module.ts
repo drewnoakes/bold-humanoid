@@ -7,8 +7,6 @@ import util = require('util');
 
 class Module
 {
-    public element: HTMLElement;
-
     public closeables: Closeable = new Closeable();
 
     constructor(public id:string, public title:string)

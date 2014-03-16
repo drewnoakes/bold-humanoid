@@ -20,6 +20,8 @@ var padLeft = (nr, n, str) =>
 
 class GameStateModule extends Module
 {
+    private element: HTMLDivElement;
+
     constructor()
     {
         super('game', 'game');
@@ -27,6 +29,7 @@ class GameStateModule extends Module
 
     public load(element: HTMLDivElement)
     {
+        this.element = element;
         this.closeables.add(new data.Subscription<state.Game>(
             constants.protocols.gameState,
             {
