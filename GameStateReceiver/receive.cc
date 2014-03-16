@@ -7,7 +7,7 @@ void GameStateReceiver::receive()
 {
   static constexpr uint MaxMessageSize = GameStateData::SIZE; //max(GameStateData::SIZE, RoboCupGameControlReturnData::SIZE);
 
-  static std::set<uint32> ignoredHeaders;
+  static set<uint32> ignoredHeaders;
   static uint8 teamNumber = static_cast<uint8>(Config::getStaticValue<int>("team-number"));
   static uint8 uniformNumber = static_cast<uint8>(Config::getStaticValue<int>("uniform-number"));
 
@@ -21,7 +21,7 @@ void GameStateReceiver::receive()
 
   auto logBadSize = [this](int bytesRead)
   {
-    static std::set<int> ignoredLengths;
+    static set<int> ignoredLengths;
     if (ignoredLengths.find(bytesRead) == ignoredLengths.end())
     {
       ignoredLengths.insert(bytesRead);
@@ -32,7 +32,7 @@ void GameStateReceiver::receive()
 
   auto logBadVersion = [this](uint8 observed, uint8 expected)
   {
-    static std::set<pair<uint8,uint8>> ignoredVersions;
+    static set<pair<uint8,uint8>> ignoredVersions;
     auto key = make_pair(observed, expected);
     if (ignoredVersions.find(key) == ignoredVersions.end())
     {
@@ -129,9 +129,9 @@ void GameStateReceiver::receive()
 
 void GameStateReceiver::processGameControllerInfoMessage(char const* data)
 {
-    static std::set<uint32> observedVersionNumbers;
-    static std::set<uint8> ignoredTeamNumbers;
-    static std::set<uint8> observedOpponentTeamNumbers;
+    static set<uint32> observedVersionNumbers;
+    static set<uint8> ignoredTeamNumbers;
+    static set<uint8> observedOpponentTeamNumbers;
 
     static int teamNumber = Config::getStaticValue<int>("team-number");
 
