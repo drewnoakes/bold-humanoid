@@ -12,6 +12,7 @@ namespace bold
   #define MAX_NUM_PLAYERS 11
 
   typedef unsigned char  uint8;
+  typedef short          int16;
   typedef unsigned short uint16;
   typedef unsigned int   uint32;
 
@@ -135,9 +136,9 @@ namespace bold
     uint8 nextKickOffTeamNumber;   // The next team to kick off
     uint8 secondaryState;          // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     uint8 dropInTeamNumber;        // Team that caused last drop in
-    uint16 secondsSinceLastDropIn; // Number of seconds passed since the last drop in.  -1 before first drop in.
-    uint16 secondsRemaining;       // Estimate of number of seconds remaining in the half
-    uint16 secondaryTime;          // Sub-time (remaining in ready state, etc.) in seconds
+    int16 secondsSinceLastDropIn;  // Number of seconds passed since the last drop in.  -1 before first drop in.
+    int16 secondsRemaining;        // Estimate of number of seconds remaining in the half
+    int16 secondaryTime;           // Sub-time (remaining in ready state, etc.) in seconds
     TeamInfo teams[2];
 
     static constexpr const char* HEADER = "RGme";
@@ -185,9 +186,9 @@ namespace bold
     bool isOvertime() const { return ExtraState(d_data.secondaryState) == ExtraState::OVERTIME; }
     bool isTimeout() const { return ExtraState(d_data.secondaryState) == ExtraState::TIMEOUT; }
     uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamNumber; }
-    uint16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn; }
-    uint16 getSecondsRemaining() const { return d_data.secondsRemaining; }
-    uint16 getSecondaryTime() const { return d_data.secondaryTime; }
+    int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn; }
+    int16 getSecondsRemaining() const { return d_data.secondsRemaining; }
+    int16 getSecondaryTime() const { return d_data.secondaryTime; }
 
     TeamInfo const& teamInfo1() const { return d_data.teams[0]; }
     TeamInfo const& teamInfo2() const { return d_data.teams[1]; }
