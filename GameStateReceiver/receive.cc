@@ -125,6 +125,23 @@ void GameStateReceiver::receive()
     if (!d_socket->send(reinterpret_cast<char*>(&response), sizeof(RoboCupGameControlReturnData)))
       log::warning("GameStateReceiver::receive") << "Failed sending status response message to game controller";
   }
+
+  //
+  // Announce if we lose the game controller
+  //
+
+  if (d_receivedInfoMessageRecently)
+  {
+    const double silenceThresholdSeconds = 5;
+
+    auto secondsOfSilence = Clock::getSecondsSince(d_lastReceivedInfoMessageAt);
+    if (secondsOfSilence > silenceThresholdSeconds)
+    {
+      d_voice->say("Lost game controller");
+      log::warning("GameStateReceiver::receive") << "No game controller message received for " << silenceThresholdSeconds << " seconds";
+      d_receivedInfoMessageRecently = false;
+    }
+  }
 }
 
 void GameStateReceiver::processGameControllerInfoMessage(char const* data)
@@ -175,6 +192,12 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
     }
 
     d_debugger->notifyReceivedGameControllerMessage();
+
+
+    if (!d_receivedInfoMessageRecently)
+      log::info("GameStateReceiver::processGameControllerInfoMessage") << "Connection with game controller established";
+    d_receivedInfoMessageRecently = true;
+    d_lastReceivedInfoMessageAt = Clock::getTimestamp();
 
     State::set(gameState);
 }

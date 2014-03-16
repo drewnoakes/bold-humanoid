@@ -3,14 +3,16 @@
 #include <memory>
 #include <set>
 
+#include "../Clock/clock.hh"
 #include "../StateObject/GameState/gamestate.hh"
 
 namespace bold
 {
-  class UDPSocket;
   class Agent;
   class Debugger;
   template<typename> class Setting;
+  class UDPSocket;
+  class Voice;
 
   /// Model of the RoboCupGameControlReturnData struct (version 2)
   struct RoboCupGameControlReturnData
@@ -37,7 +39,7 @@ namespace bold
   class GameStateReceiver
   {
   public:
-    GameStateReceiver(std::shared_ptr<Debugger> debugger);
+    GameStateReceiver(std::shared_ptr<Debugger> debugger, std::shared_ptr<Voice> voice);
 
     void receive();
 
@@ -46,6 +48,9 @@ namespace bold
 
     std::shared_ptr<Debugger> d_debugger;
     std::shared_ptr<UDPSocket> d_socket;
+    std::shared_ptr<Voice> d_voice;
     Setting<bool>* d_sendResponseMessages;
+    bool d_receivedInfoMessageRecently;
+    Clock::Timestamp d_lastReceivedInfoMessageAt;
   };
 }
