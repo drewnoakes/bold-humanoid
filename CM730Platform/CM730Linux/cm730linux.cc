@@ -34,7 +34,7 @@ CM730Linux::~CM730Linux()
 
 bool CM730Linux::openPort()
 {
-  log::info("CM730Linux::openPort") << "Starting";
+  log::verbose("CM730Linux::openPort") << "Starting";
 
   struct termios newtio = {0,};
   struct serial_struct serinfo = {0,};
@@ -75,7 +75,7 @@ bool CM730Linux::openPort()
   return true;
 
 UART_OPEN_ERROR:
-  log::error("CM730Linux::openPort") << "Error opening port";
+  log::error("CM730Linux::openPort") << "Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)";
   closePort();
   return false;
 }

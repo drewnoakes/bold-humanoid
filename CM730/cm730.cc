@@ -158,13 +158,7 @@ CM730::~CM730()
 
 bool CM730::connect()
 {
-  if (!d_platform->openPort())
-  {
-    log::error("CM730::connect") << "Failed to open CM730 port (either the CM730 is in use by another program, or you do not have root privileges)";
-    return false;
-  }
-
-  return powerEnable(true);
+  return d_platform->openPort() && powerEnable(true);
 }
 
 bool CM730::disconnect()

@@ -76,7 +76,7 @@ void MotionLoop::removeModule(shared_ptr<MotionModule> module)
 
 bool MotionLoop::start()
 {
-  log::info("MotionLoop::start") << "Starting";
+  log::verbose("MotionLoop::start") << "Starting";
 
   if (d_isStarted)
   {
@@ -93,7 +93,7 @@ bool MotionLoop::start()
 
   if (!d_haveBody)
   {
-    log::error("MotionLoop::start") << "Failed to connect to CM730";
+    log::warning("MotionLoop::start") << "Motion loop running without a body";
   }
   else
   {
