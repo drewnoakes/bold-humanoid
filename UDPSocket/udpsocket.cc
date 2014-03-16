@@ -178,7 +178,6 @@ int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress,
 bool UDPSocket::send(string const& message)
 {
   return send(message.c_str(), message.length());
-  return send(message.c_str(), message.length());
 }
 
 bool UDPSocket::send(const char* data, int dataLength)
