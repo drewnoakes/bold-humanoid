@@ -60,7 +60,7 @@ class GameStateModule extends Module
     {
         var templateData: ITemplateData = data;
 
-        templateData.timeString = Math.floor(data.secondsRemaining / 60) + ':' + padLeft(data.secondsRemaining % 60, 2, '0');
+        templateData.timeString = Math.floor(data.secondsRemaining / 60) + ':' + padLeft(Math.abs(data.secondsRemaining % 60), 2, '0');
 
         var amendTeam = (team: ExtendedTeamData) =>
         {
