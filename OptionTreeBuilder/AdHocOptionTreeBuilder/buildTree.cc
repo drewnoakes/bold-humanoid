@@ -9,6 +9,8 @@
 #include "../../util/conditionals.hh"
 #include "../../util/Range.hh"
 
+using namespace robocup;
+
 shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {
   const unsigned UNUM_GOALIE = 1;

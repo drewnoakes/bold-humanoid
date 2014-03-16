@@ -14,38 +14,6 @@ namespace bold
   class UDPSocket;
   class Voice;
 
-  /// Model of the RoboCupGameControlReturnData struct (version 2)
-  struct RoboCupGameControlReturnData
-  {
-    RoboCupGameControlReturnData(uint8 teamNumber, uint8 uniformNumber, GameControllerResponseMessage message)
-    {
-      memcpy(&header, HEADER, sizeof(header));
-      version = VERSION;
-
-      this->teamNumber = teamNumber;
-      this->uniformNumber = uniformNumber;
-      this->message = static_cast<uint8>(message);
-    }
-
-    char header[4];
-    uint8 version;
-    uint8 teamNumber;
-    uint8 uniformNumber;
-    uint8 message;
-
-    static constexpr char const* HEADER = "RGrt";
-    static constexpr uint32 HEADER_INT = 0x74724752;
-    static constexpr uint8 VERSION = 2;
-    static constexpr uint8 SIZE = 8;
-  };
-
-  enum class GameControllerResponseMessage : uint8
-  {
-    MANUAL_PENALISE = 0,
-    MANUAL_UNPENALISE = 1,
-    ALIVE = 2
-  };
-
   class GameStateReceiver
   {
   public:

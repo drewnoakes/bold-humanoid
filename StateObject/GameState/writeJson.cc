@@ -2,6 +2,7 @@
 
 using namespace bold;
 using namespace rapidjson;
+using namespace robocup;
 
 void GameState::writeJson(Writer<StringBuffer>& writer) const
 {

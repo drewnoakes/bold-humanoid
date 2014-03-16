@@ -1,7 +1,10 @@
 #include "gamestatereceiver.ih"
 
+#include "gamecontrollertypes.hh"
 #include "../State/state.hh"
 #include "../StateObject/GameState/gamestate.hh"
+
+using namespace robocup;
 
 void GameStateReceiver::receive()
 {
