@@ -1,11 +1,8 @@
 #include "gamestatereceiver.ih"
 
-#include "../UDPSocket/udpsocket.hh"
-
 GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger)
   : d_debugger(debugger),
     d_sendResponseMessages(Config::getSetting<bool>("game-controller.send-response-messages")),
-    d_receivedAnything(false)
 {
   int port = Config::getStaticValue<int>("game-controller.tcp-port");
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#define GAMECONTROLLER_PORT 3838
-
 #include <memory>
 #include <set>
 
@@ -49,6 +47,5 @@ namespace bold
     std::shared_ptr<Debugger> d_debugger;
     std::shared_ptr<UDPSocket> d_socket;
     Setting<bool>* d_sendResponseMessages;
-    bool d_receivedAnything;
   };
 }
