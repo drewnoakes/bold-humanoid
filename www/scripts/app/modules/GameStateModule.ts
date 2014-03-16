@@ -58,7 +58,7 @@ class GameStateModule extends Module
 
     private onGameState(data: state.Game)
     {
-        var templateData: ITemplateData = data;
+        var templateData: ITemplateData = util.clone(data);
 
         templateData.timeString = Math.floor(data.secondsRemaining / 60) + ':' + padLeft(Math.abs(data.secondsRemaining % 60), 2, '0');
 
