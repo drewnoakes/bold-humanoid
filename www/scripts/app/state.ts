@@ -92,6 +92,7 @@ export interface PlayerData
 export interface TeamData
 {
     num: number;
+    isBlue: boolean;
     score: number;
     players: PlayerData[];
 }
@@ -99,14 +100,17 @@ export interface TeamData
 export interface Game
 {
     playMode: string;
+    packet: string;
     playerPerTeam: number;
     isFirstHalf: boolean;
     nextKickOffTeamNumber: boolean;
     isPenaltyShootOut: boolean;
     isOvertime: boolean;
+    isTimeout: boolean;
     lastDropInTeamNumber: number;
     secSinceDropIn: number;
     secondsRemaining: number;
+    secondsSecondaryTime: number;
     team1: TeamData;
     team2: TeamData;
 }
