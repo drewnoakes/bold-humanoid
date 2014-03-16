@@ -25,9 +25,9 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-OpenTeamCommunicator::OpenTeamCommunicator(Agent* agent, unsigned teamNumber, unsigned uniformNumber)
+OpenTeamCommunicator::OpenTeamCommunicator(shared_ptr<BehaviourControl> behaviourControl, unsigned teamNumber, unsigned uniformNumber)
 : StateObserver::StateObserver("Open Team Communicator", ThreadId::ThinkLoop),
-  d_agent(agent),
+  d_behaviourControl(behaviourControl),
   d_teamNumber(teamNumber),
   d_uniformNumber(uniformNumber),
   d_localPort(Config::getStaticValue<int>("mitecom.local-port")),
@@ -59,9 +59,9 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
     playerState.uniformNumber = myUniformNumber;
     playerState.teamNumber = myTeamNumber;
 
-    playerState.activity = d_agent->getBehaviourControl()->getPlayerActivity();
-    playerState.status = d_agent->getBehaviourControl()->getPlayerStatus();
-    playerState.role = d_agent->getBehaviourControl()->getPlayerRole();
+    playerState.activity = d_behaviourControl->getPlayerActivity();
+    playerState.status = d_behaviourControl->getPlayerStatus();
+    playerState.role = d_behaviourControl->getPlayerRole();
 
     auto const& agentFrameState = State::get<AgentFrameState>();
     if (agentFrameState)
