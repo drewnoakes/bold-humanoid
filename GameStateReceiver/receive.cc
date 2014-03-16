@@ -113,6 +113,7 @@ void GameStateReceiver::receive()
   {
     // Send a response to the game controller (the sender), stating we're alive and well
     assert(fromAddress.sin_family == AF_INET);
+    fromAddress.sin_port = htons(d_gameControllerPort);
     d_socket->setTarget(fromAddress);
 
 

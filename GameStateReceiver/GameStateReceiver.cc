@@ -4,13 +4,12 @@ GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, shared_ptr<V
   : d_debugger(debugger),
     d_voice(voice),
     d_sendResponseMessages(Config::getSetting<bool>("game-controller.send-response-messages")),
+    d_gameControllerPort(Config::getStaticValue<int>("game-controller.tcp-port")),
     d_receivedInfoMessageRecently(false)
 {
-  int port = Config::getStaticValue<int>("game-controller.tcp-port");
-
   d_socket = make_shared<UDPSocket>();
   d_socket->setBlocking(false);
-  d_socket->bind("", port);
+  d_socket->bind("", d_gameControllerPort);
 
-  log::info("GameStateReceiver::GameStateReceiver") << "Listening on UDP port " << port;
+  log::info("GameStateReceiver::GameStateReceiver") << "Listening on UDP port " << d_gameControllerPort;
 }

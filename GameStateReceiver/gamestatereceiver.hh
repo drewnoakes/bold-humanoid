@@ -60,6 +60,7 @@ namespace bold
     std::shared_ptr<UDPSocket> d_socket;
     std::shared_ptr<Voice> d_voice;
     Setting<bool>* d_sendResponseMessages;
+    int d_gameControllerPort;
     bool d_receivedInfoMessageRecently;
     Clock::Timestamp d_lastReceivedInfoMessageAt;
   };
