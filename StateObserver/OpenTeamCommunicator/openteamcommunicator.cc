@@ -25,11 +25,11 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-OpenTeamCommunicator::OpenTeamCommunicator(shared_ptr<BehaviourControl> behaviourControl, unsigned teamNumber, unsigned uniformNumber)
+OpenTeamCommunicator::OpenTeamCommunicator(shared_ptr<BehaviourControl> behaviourControl)
 : StateObserver::StateObserver("Open Team Communicator", ThreadId::ThinkLoop),
   d_behaviourControl(behaviourControl),
-  d_teamNumber(teamNumber),
-  d_uniformNumber(uniformNumber),
+  d_teamNumber(Config::getStaticValue<int>("team-number")),
+  d_uniformNumber(Config::getStaticValue<int>("uniform-number")),
   d_localPort(Config::getStaticValue<int>("mitecom.local-port")),
   d_remotePort(Config::getStaticValue<int>("mitecom.remote-port")),
   d_sendPeriodSeconds(Config::getSetting<double>("mitecom.send-period-seconds")),

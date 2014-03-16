@@ -15,7 +15,7 @@ namespace bold
   class OpenTeamCommunicator : public StateObserver
   {
   public:
-    OpenTeamCommunicator(std::shared_ptr<BehaviourControl> behaviourControl, unsigned teamNumber, unsigned uniformNumber);
+    OpenTeamCommunicator(std::shared_ptr<BehaviourControl> behaviourControl);
 
     void observe(SequentialTimer& timer) override;
 
