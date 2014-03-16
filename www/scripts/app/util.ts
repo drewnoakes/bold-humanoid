@@ -126,3 +126,8 @@ export function clearChildren(el: Element)
         el.removeChild(el.lastChild);
     }
 }
+
+export function clone<T>(obj: T): T
+{
+    return <T>JSON.parse(JSON.stringify(obj));
+}
