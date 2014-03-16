@@ -1,10 +1,39 @@
-#include "gamestatereceiver.ih"
+#include "gamestatereceiver.hh"
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <memory>
 
 #include "gamecontrollertypes.hh"
+#include "../Agent/agent.hh"
+#include "../Config/config.hh"
+#include "../Debugger/debugger.hh"
 #include "../State/state.hh"
 #include "../StateObject/GameState/gamestate.hh"
+#include "../UDPSocket/udpsocket.hh"
+#include "../Voice/voice.hh"
 
+using namespace bold;
 using namespace robocup;
+using namespace std;
+
+GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, shared_ptr<Voice> voice)
+  : d_debugger(debugger),
+    d_voice(voice),
+    d_sendResponseMessages(Config::getSetting<bool>("game-controller.send-response-messages")),
+    d_gameControllerPort(Config::getStaticValue<int>("game-controller.tcp-port")),
+    d_receivedInfoMessageRecently(false)
+{
+  d_socket = make_shared<UDPSocket>();
+  d_socket->setBlocking(false);
+  d_socket->bind("", d_gameControllerPort);
+
+  log::info("GameStateReceiver::GameStateReceiver") << "Listening on UDP port " << d_gameControllerPort;
+}
 
 void GameStateReceiver::receive()
 {
@@ -119,8 +148,8 @@ void GameStateReceiver::receive()
     fromAddress.sin_port = htons(d_gameControllerPort);
     d_socket->setTarget(fromAddress);
 
-
     RoboCupGameControlReturnData response(teamNumber, uniformNumber, GameControllerResponseMessage::ALIVE);
+
     if (!d_socket->send(reinterpret_cast<char*>(&response), sizeof(RoboCupGameControlReturnData)))
       log::warning("GameStateReceiver::receive") << "Failed sending status response message to game controller";
   }
