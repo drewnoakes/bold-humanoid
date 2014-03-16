@@ -200,6 +200,22 @@ export enum PlayerRole
     Other = 7
 }
 
+export function getPlayerRoleName(role: PlayerRole)
+{
+    switch (role)
+    {
+        case PlayerRole.Idle: return "Idle";
+        case PlayerRole.Keeper: return "Keeper";
+        case PlayerRole.Supporter: return "Supporter";
+        case PlayerRole.Striker: return "Striker";
+        case PlayerRole.Defender: return "Defender";
+        case PlayerRole.PenaltyKeeper: return "PenaltyKeeper";
+        case PlayerRole.PenaltyStriker: return "PenaltyStriker";
+        case PlayerRole.Other: return "Other";
+        default: return "Unknown";
+    }
+}
+
 export enum PlayerActivity
 {
     /// Robot is moving to a supporting or defending position.
@@ -222,6 +238,19 @@ export enum PlayerActivity
     Other = 4
 }
 
+export function getPlayerActivityName(activity: PlayerActivity)
+{
+    switch (activity)
+    {
+        case PlayerActivity.Positioning: return "Positioning";
+        case PlayerActivity.ApproachingBall: return "ApproachingBall";
+        case PlayerActivity.AttackingGoal: return "AttackingGoal";
+        case PlayerActivity.Waiting: return "Waiting";
+        case PlayerActivity.Other: return "Other";
+        default: return "Unknown";
+    }
+}
+
 export enum PlayerStatus
 {
     /// Robot is not doing anything, or is incapable. It may have fallen, or
@@ -234,6 +263,17 @@ export enum PlayerStatus
 
     /// The robot has been penalised and is not permitted to take any action.
     Penalised = 2
+}
+
+export function getPlayerStatusName(status: PlayerStatus)
+{
+    switch (status)
+    {
+        case PlayerStatus.Inactive: return "Inactive";
+        case PlayerStatus.Active: return "Active";
+        case PlayerStatus.Penalised: return "Penalised";
+        default: return "Unknown";
+    }
 }
 
 export interface PlayerData
