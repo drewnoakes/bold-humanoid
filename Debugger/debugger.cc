@@ -9,7 +9,6 @@ Debugger::Debugger(std::shared_ptr<DebugControl> debugControl)
 : d_debugControl(debugControl),
   d_gameControllerMessageCount(0),
   d_ignoredMessageCount(0),
-  d_seenGameControllerMessageYet(false),
   d_eyeColour(0,0,0),
   d_foreheadColour(0,0,0)
 {}
@@ -61,12 +60,6 @@ void Debugger::update()
 
 void Debugger::notifyReceivedGameControllerMessage()
 {
-  if (!d_seenGameControllerMessageYet)
-  {
-    log::info("Debugger::notifyReceivedGameControllerMessage") << "Seen first message from game controller";
-    d_seenGameControllerMessageYet = true;
-  }
-
   d_gameControllerMessageCount++;
 }
 

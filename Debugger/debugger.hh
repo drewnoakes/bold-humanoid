@@ -51,7 +51,6 @@ namespace bold
     unsigned d_ignoredMessageCount;
     unsigned d_sentTeamMessageCount;
     unsigned d_receivedTeamMessageCount;
-    bool d_seenGameControllerMessageYet;
 
     Colour::bgr d_eyeColour;
     Colour::bgr d_foreheadColour;
