@@ -47,17 +47,14 @@ OpenTeamCommunicator::OpenTeamCommunicator(shared_ptr<BehaviourControl> behaviou
 
 void OpenTeamCommunicator::observe(SequentialTimer& timer)
 {
-  static int myUniformNumber = Config::getStaticValue<int>("uniform-number");
-  static int myTeamNumber = Config::getStaticValue<int>("team-number");
-
   auto now = Clock::getTimestamp();
 
   if (Clock::getSecondsSince(d_lastBroadcast) > d_sendPeriodSeconds->getValue())
   {
     // Create a PlayerState object for this agent
     PlayerState playerState;
-    playerState.uniformNumber = myUniformNumber;
-    playerState.teamNumber = myTeamNumber;
+    playerState.uniformNumber = d_uniformNumber;
+    playerState.teamNumber = d_teamNumber;
 
     playerState.activity = d_behaviourControl->getPlayerActivity();
     playerState.status = d_behaviourControl->getPlayerStatus();
@@ -122,12 +119,10 @@ void OpenTeamCommunicator::receiveData()
 
     log::verbose("OpenTeamCommunicator::receiveData") << "Received mitecom message with length " << messageLength << " bytes from robot " << message.robotID;
 
-    static int ourTeamNumber = Config::getStaticValue<int>("uniform-number");
-
     PlayerState teammateState;
     teammateState.uniformNumber = message.robotID;
     // TODO need a way to verify that this message is actually from *our* team
-    teammateState.teamNumber = ourTeamNumber;
+    teammateState.teamNumber = d_teamNumber;
 
     auto posX = message.data.find(ROBOT_ABSOLUTE_X);
     auto posY = message.data.find(ROBOT_ABSOLUTE_Y);
