@@ -7,78 +7,53 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("playMode");
-    writer.String(getPlayModeString().c_str());
-
-    writer.String("playerPerTeam");
-    writer.Int(getPlayersPerTeam());
-
-    writer.String("isFirstHalf");
-    writer.Bool(isFirstHalf());
-
-    writer.String("nextKickOffTeamNum");
-    writer.Int(getNextKickOffTeamNumber());
-
-    writer.String("isPenaltyShootOut");
-    writer.Bool(isPenaltyShootout());
-
-    writer.String("isOvertime");
-    writer.Bool(isOvertime());
-
-    writer.String("lastDropInTeamNum");
-    writer.Int(getLastDropInTeamNumber());
-
-    writer.String("secSinceDropIn");
-    writer.Int(getSecondsSinceLastDropIn());
-
-    writer.String("secondsRemaining");
-    writer.Int(getSecondsRemaining());
+    writer.String("playMode").String(getPlayModeString().c_str());
+    writer.String("playerPerTeam").Int(getPlayersPerTeam());
+    writer.String("isFirstHalf").Bool(isFirstHalf());
+    writer.String("nextKickOffTeamNum").Int(getNextKickOffTeamNumber());
+    writer.String("isPenaltyShootOut").Bool(isPenaltyShootout());
+    writer.String("isOvertime").Bool(isOvertime());
+    writer.String("lastDropInTeamNum").Int(getLastDropInTeamNumber());
+    writer.String("secSinceDropIn").Int(getSecondsSinceLastDropIn());
+    writer.String("secondsRemaining").Int(getSecondsRemaining());
 
     auto writeTeam = [&writer,this](TeamInfo const& team)
     {
-      writer.String("num");
-      writer.Int(team.getTeamNumber());
-
-      writer.String("score");
-      writer.Int(team.getScore());
-
-      writer.String("players");
-      writer.StartArray();
+      writer.StartObject();
       {
-        for (int p = 1; p <= getPlayersPerTeam(); ++p) {
-          auto const& player = team.getPlayer(p);
-          writer.StartObject();
-          {
-            writer.String("penalty");
-            if (player.getPenaltyType() == PenaltyType::NONE) {
-              writer.Null();
-            } else {
-              writer.String(player.getPenaltyTypeString().c_str());
+        writer.String("num").Int(team.getTeamNumber());
+        writer.String("score").Int(team.getScore());
 
-              writer.String("penaltySecondsRemaining");
-              writer.Int(player.getSecondsUntilPenaltyLifted());
+        writer.String("players");
+        writer.StartArray();
+        {
+          for (int p = 1; p <= getPlayersPerTeam(); ++p) {
+            auto const& player = team.getPlayer(p);
+            writer.StartObject();
+            {
+              writer.String("penalty");
+              if (player.getPenaltyType() == PenaltyType::NONE) {
+                writer.Null();
+              } else {
+                writer.String(player.getPenaltyTypeString().c_str());
+
+                writer.String("penaltySecondsRemaining");
+                writer.Int(player.getSecondsUntilPenaltyLifted());
+              }
             }
+            writer.EndObject();
           }
-          writer.EndObject();
         }
+        writer.EndArray();
       }
-      writer.EndArray();
+      writer.EndObject();
     };
 
     writer.String("team1");
-    writer.StartObject();
-    {
-      writeTeam(teamInfo1());
-    }
-    writer.EndObject();
+    writeTeam(teamInfo1());
 
     writer.String("team2");
-    writer.StartObject();
-    {
-      writeTeam(teamInfo2());
-    }
-    writer.EndObject();
-
+    writeTeam(teamInfo2());
   }
   writer.EndObject();
 }
