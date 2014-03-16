@@ -18,6 +18,24 @@ var padLeft = (nr, n, str) =>
     return new Array(n - String(nr).length + 1).join(str || '0') + nr;
 };
 
+interface ExtendedTeamData extends state.TeamData
+{
+    players: ExtendedPlayerData[];
+}
+
+interface ExtendedPlayerData extends state.PlayerData
+{
+    num?: number;
+    isDone?: boolean;
+}
+
+interface ITemplateData extends state.Game
+{
+    timeString?: string;
+    team1: ExtendedTeamData;
+    team2: ExtendedTeamData;
+}
+
 class GameStateModule extends Module
 {
     private element: HTMLDivElement;
@@ -40,15 +58,15 @@ class GameStateModule extends Module
 
     private onGameState(data: state.Game)
     {
-        var templateData: any = data;
+        var templateData: ITemplateData = data;
 
         templateData.timeString = Math.floor(data.secondsRemaining / 60) + ':' + padLeft(data.secondsRemaining % 60, 2, '0');
 
-        var amendTeam = (team: any) =>
+        var amendTeam = (team: ExtendedTeamData) =>
         {
             for (var i = 0; i < team.players.length; i++)
             {
-                var p = team.players[i];
+                var p: ExtendedPlayerData = team.players[i];
                 p.num = i;
                 if (typeof(p.penaltySecondsRemaining) !== 'undefined')
                 {
