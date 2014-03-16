@@ -8,9 +8,9 @@ var parser: DOMParser = new DOMParser();
 
 class DOMTemplate
 {
-    private template: any;
+    private template: (context?: any, options?: any) => string;
 
-    constructor(templateId: string, public contentType?: string)
+    constructor(private templateId: string, public contentType?: string)
     {
         this.contentType = contentType || "text/html";
 
@@ -28,7 +28,7 @@ class DOMTemplate
         this.template = Handlebars.compile(templateText);
     }
 
-    public create(data?)
+    public create(data?: any): Node
     {
         var obj = parser.parseFromString(this.template(data), this.contentType);
 
