@@ -115,13 +115,8 @@ void GameStateReceiver::receive()
     assert(fromAddress.sin_family == AF_INET);
     d_socket->setTarget(fromAddress);
 
-    RoboCupGameControlReturnData response;
-    memcpy(&response.header, RoboCupGameControlReturnData::HEADER, sizeof(response.header));
-    response.version = RoboCupGameControlReturnData::VERSION;
-    response.teamNumber = teamNumber;
-    response.uniformNumber = uniformNumber;
-    response.message = (int)GameControllerResponseMessage::ALIVE;
 
+    RoboCupGameControlReturnData response(teamNumber, uniformNumber, GameControllerResponseMessage::ALIVE);
     if (!d_socket->send(reinterpret_cast<char*>(&response), sizeof(RoboCupGameControlReturnData)))
       log::warning("GameStateReceiver::receive") << "Failed sending status response message to game controller";
   }

@@ -17,6 +17,16 @@ namespace bold
   /// Model of the RoboCupGameControlReturnData struct (version 2)
   struct RoboCupGameControlReturnData
   {
+    RoboCupGameControlReturnData(uint8 teamNumber, uint8 uniformNumber, GameControllerResponseMessage message)
+    {
+      memcpy(&header, HEADER, sizeof(header));
+      version = VERSION;
+
+      this->teamNumber = teamNumber;
+      this->uniformNumber = uniformNumber;
+      this->message = static_cast<uint8>(message);
+    }
+
     char header[4];
     uint8 version;
     uint8 teamNumber;
