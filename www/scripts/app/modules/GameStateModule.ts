@@ -32,6 +32,7 @@ interface ExtendedPlayerData extends state.PlayerData
 interface ITemplateData extends state.Game
 {
     timeString?: string;
+    secondaryTimeString?: string;
     team1: ExtendedTeamData;
     team2: ExtendedTeamData;
 }
@@ -56,11 +57,17 @@ class GameStateModule extends Module
         ));
     }
 
+    private formatTimeString(seconds: number): string
+    {
+        return Math.floor(seconds / 60) + ':' + padLeft(Math.abs(seconds % 60), 2, '0')
+    }
+
     private onGameState(data: state.Game)
     {
         var templateData: ITemplateData = util.clone(data);
 
-        templateData.timeString = Math.floor(data.secondsRemaining / 60) + ':' + padLeft(Math.abs(data.secondsRemaining % 60), 2, '0');
+        templateData.timeString = this.formatTimeString(data.secondsRemaining);
+        templateData.secondaryTimeString = this.formatTimeString(data.secondsSecondaryTime);
 
         var amendTeam = (team: ExtendedTeamData) =>
         {

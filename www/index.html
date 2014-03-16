@@ -164,7 +164,16 @@
         <div>
             <div class="module-column-3">
                 <div class="play-mode {{this.playMode}}">{{this.playMode}}</div>
-                <div class="time-remaining">Time {{this.timeString}}</div>
+                <div class="time-remaining">
+                  Time {{this.timeString}}
+                  {{#if this.secondsSecondaryTime}}<span class="secondary">/ {{this.secondaryTimeString}}</span>{{/if}}
+                </div>
+                {{#if this.isPenaltyShootOut}}
+                <div class="period penalties">Penalty Shootout</div>
+                {{else}}
+                <div class="period">{{#if this.isFirstHalf}}First Half{{else}}Second Half{{/if}}</div>
+                {{/if}}
+                {{#if this.isTimeout}}<div class="period timeout">Timeout</div>{{/if}}
             </div>
             <div class="module-column-3 team1">
                 <h2>Team 1</h2>

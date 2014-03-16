@@ -576,6 +576,29 @@ div.module.game div.play-mode.Set { background-color: #FF0; }
 div.module.game div.play-mode.Playing { background-color: #0F0; }
 div.module.game div.play-mode.Finished { background-color: #444; color: #FFF; }
 
+div.module.game div.period
+{
+    margin-top: 10px;
+    margin-right: 6px;
+    padding: 4px 10px;
+    display: inline-block;
+    border-radius: 6px;
+    background: #FFF;
+    color: #000;
+}
+
+div.module.game div.period.timeout
+{
+    background: #00F;
+    color: #FFF;
+}
+
+div.module.game div.period.penalties
+{
+    background: #00F;
+    color: #FFF;
+}
+
 div.module.game ul.penalties
 {
     list-style: none;
@@ -613,6 +636,11 @@ div.module.game ul.penalties li div.time
 div.module.game div.time-remaining
 {
     margin-top: 22px;
+}
+
+div.module.game div.time-remaining span.secondary
+{
+    color: #444;
 }
 
 div.module.game div.score
