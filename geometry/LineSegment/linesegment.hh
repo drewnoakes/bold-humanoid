@@ -40,7 +40,9 @@ namespace bold
     /** Returns the vector formed by <code>p2() - p1()</code> */
     Eigen::Matrix<T,dim,1> delta() const { return p2() - p1(); }
 
-    double normalisedDot(LineSegment<T,dim> other)
+    T length() const { return delta().norm(); }
+
+    double normalisedDot(LineSegment<T,dim> other) const
     {
       return delta().normalized().dot( other.delta().normalized() );
     }
