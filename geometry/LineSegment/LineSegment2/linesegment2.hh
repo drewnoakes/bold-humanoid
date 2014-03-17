@@ -55,19 +55,16 @@ namespace bold
       double t_numer = fake2dCross(pos2 - pos1, dir2);
       double u_numer = fake2dCross(pos2 - pos1, dir1);
 
-      double tt = t_numer / denom;
-      double uu = u_numer / denom;
+      t = t_numer / denom;
+      u = u_numer / denom;
 
-      if (tt < 0 || tt > 1 || uu < 0 || uu > 1)
+      if (t < 0 || t > 1 || u < 0 || u > 1)
       {
         // line segments do not intersect within their ranges
         return Maybe<Point>::empty();
       }
 
-      Eigen::Vector2d intersectionPoint = pos1 + dir1 * tt;
-
-      t = tt;
-      u = uu;
+      Eigen::Vector2d intersectionPoint = pos1 + dir1 * t;
 
       // If we are using integers, be sure to round the result before casting
       if (std::is_same<T,int>())
