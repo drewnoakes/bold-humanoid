@@ -601,17 +601,12 @@ add_executable(boldhumanoid
   $<TARGET_OBJECTS:boldhumanoid_objects>
 )
 
-add_library(bold SHARED
-  $<TARGET_OBJECTS:boldhumanoid_objects>
-)
-
 #
 ## Link executable to libraries
 #
 set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} websockets pthread rt espeak)
 
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
-target_link_libraries(bold ${BOLDHUMANOID_LINK_LIBRARIES})
 
 #
 ## Additional compile flags
