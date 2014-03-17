@@ -1,12 +1,10 @@
 #include "gtest/gtest.h"
 
-#include "helpers.hh"
 
 #include "../MotionTask/motiontask.hh"
 
 using namespace std;
 using namespace bold;
-using namespace Eigen;
 
 TEST (JointSelectionTests, constructor)
 {

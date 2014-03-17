@@ -1,7 +1,8 @@
 #include "gtest/gtest.h"
 
-#include "helpers.hh"
 #include "../MX28/mx28.hh"
+
+using namespace bold;
 
 // TEST (MX28Tests, getMirrorValue)
 // {

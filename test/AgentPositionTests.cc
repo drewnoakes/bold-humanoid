@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "helpers.hh"
-
 #include "../AgentPosition/agentposition.hh"
 
 using namespace std;

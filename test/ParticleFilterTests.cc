@@ -5,8 +5,8 @@
 #include <memory>
 #include <stdexcept>
 
-#include "helpers.hh"
 #include "../filters/Filter/ParticleFilter/particlefilter.hh"
+#include "helpers.hh"
 
 using namespace std;
 using namespace bold;

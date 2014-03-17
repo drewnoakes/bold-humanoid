@@ -5,8 +5,11 @@
 #include <Eigen/Geometry>
 
 #include "../util/log.hh"
+#include "../State/state.hh"
+#include "../Config/config.hh"
 
 using namespace Eigen;
+using namespace bold;
 
 //PrintTo(const T&, ostream*)
 
@@ -34,44 +37,6 @@ bool operator==(Vector2i const& a, Vector2i const& b)
 {
   return a.x() == b.x() && a.y() == b.y();
 }
-
-#include "AgentPositionTests.hh"
-#include "StateTests.hh"
-#include "BodyStateTests.hh"
-#include "BlobTests.hh"
-#include "Bounds2iTests.hh"
-#include "BoundsTests.hh"
-#include "CameraModelTests.hh"
-#include "CM730Tests.hh"
-#include "ConditionalsTests.hh"
-#include "CppTests.hh"
-#include "ColourTests.hh"
-#include "ConsumerQueueThreadTests.hh"
-#include "DistributionTrackerTests.hh"
-#include "EigenTests.hh"
-#include "HalfHullBuilderTests.hh"
-#include "IntegralImageTests.hh"
-#include "JointSelectionTests.hh"
-#include "LinearSmootherTests.hh"
-#include "LineSegmentTests.hh"
-#include "MathTests.hh"
-#include "MetaTests.hh"
-#include "MX28AlarmTests.hh"
-#include "MX28Tests.hh"
-#include "MotionScriptRunnerTests.hh"
-#include "ParticleFilterTests.hh"
-#include "Polygon2Tests.hh"
-#include "RangeTests.hh"
-#include "RunTests.hh"
-#include "SequentialTimerTests.hh"
-#include "SchmittTriggerTests.hh"
-#include "SignalTests.hh"
-#include "SpatialiserTest.hh"
-#include "StatsTests.hh"
-#include "ThreadTests.hh"
-#include "ThreadIdTests.hh"
-#include "UDPSocketTests.hh"
-#include "VisualCortexTests.hh"
 
 int main(int argc, char **argv)
 {

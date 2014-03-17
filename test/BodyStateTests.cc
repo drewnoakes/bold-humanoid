@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "helpers.hh"
-
 #include "../JointId/jointid.hh"
 #include "../Math/math.hh"
 #include "../StateObject/BodyState/bodystate.hh"

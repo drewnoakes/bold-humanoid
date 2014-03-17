@@ -1,10 +1,13 @@
 #include "gtest/gtest.h"
 
+#include "helpers.hh"
 #include "../CameraModel/cameramodel.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../LineJunctionFinder/linejunctionfinder.hh"
 
 using namespace bold;
+using namespace std;
+using namespace Eigen;
 
 shared_ptr<Spatialiser> createTestSpatialiser(unsigned imageWidth = 11, unsigned imageHeight = 11, double rangeVertical = 90, double rangeHorizontal = 90)
 {

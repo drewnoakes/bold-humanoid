@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 
-#include "helpers.hh"
 #include "../MX28Alarm/mx28alarm.hh"
 
 using namespace bold;

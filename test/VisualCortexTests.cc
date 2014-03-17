@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 
-#include "helpers.hh"
 
 #include "../VisualCortex/visualcortex.hh"
 

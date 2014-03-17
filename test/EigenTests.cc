@@ -6,7 +6,6 @@
 #include <Eigen/Geometry>
 
 using namespace std;
-using namespace bold;
 using namespace Eigen;
 
 const Vector3d origin(0, 0, 0);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-
+#include <functional>
 #include "../Clock/clock.hh"
 
 namespace bold
@@ -94,7 +94,7 @@ namespace bold
 
   auto oneShot = [](std::function<std::function<bool()>()> factory)
   {
-    auto currentFun = make_shared<std::function<bool()>>();
+    auto currentFun = std::make_shared<std::function<bool()>>();
     auto hasFun = std::make_shared<bool>(false);
 
     return [currentFun,factory,hasFun]()

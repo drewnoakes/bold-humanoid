@@ -1,12 +1,13 @@
 #include "gtest/gtest.h"
 
-#include "helpers.hh"
 #include "../CM730/cm730.hh"
+
+using namespace bold;
 
 TEST (CM730Tests, conversions)
 {
-  EXPECT_EQ( (uchar)0xFF, CM730::getHighByte(0xFF88) );
-  EXPECT_EQ( (uchar)0x88, CM730::getLowByte(0xFF88) );
+  EXPECT_EQ( (unsigned char)0xFF, CM730::getHighByte(0xFF88) );
+  EXPECT_EQ( (unsigned char)0x88, CM730::getLowByte(0xFF88) );
   EXPECT_EQ( 0xFF88, CM730::makeWord(0x88, 0xFF) );
 
   // Colours are encoded as BGR with 5 bits per channel

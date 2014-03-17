@@ -1,9 +1,11 @@
 #include "gtest/gtest.h"
-#include "helpers.hh"
 #include "../UDPSocket/udpsocket.hh"
 #include "../util/Maybe.hh"
 
 #include <sys/socket.h>
+
+using namespace bold;
+using namespace std;
 
 TEST (UDPSocketTests, DISABLED_communication)
 {

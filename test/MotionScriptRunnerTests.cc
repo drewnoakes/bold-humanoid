@@ -10,7 +10,6 @@
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../ThreadUtil/threadutil.hh"
 
-#include "helpers.hh"
 
 #include <memory>
 #include <vector>

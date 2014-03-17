@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 
-#include "helpers.hh"
 
 #include "../State/state.hh"
 #include "../StateObject/TimingState/timingstate.hh"

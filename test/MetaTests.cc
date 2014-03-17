@@ -4,8 +4,6 @@
 
 using namespace std;
 using namespace bold;
-using namespace Eigen;
-using namespace std::placeholders;
 
 TEST (MetaTests, if_)
 {

@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "helpers.hh"
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -6,7 +7,9 @@
 #include "../CameraModel/cameramodel.hh"
 #include "../geometry/Bounds2i.hh"
 #include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
-#include "helpers.hh"
+
+using namespace bold;
+using namespace Eigen;
 
 TEST (CameraModelTests, directionForPixel)
 {

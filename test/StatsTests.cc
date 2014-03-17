@@ -1,14 +1,15 @@
 #include "gtest/gtest.h"
 
-#include "helpers.hh"
 
 #include "../stats/stats.hh"
 #include "../stats/movingaverage.hh"
+#include "helpers.hh"
 
 #include <Eigen/Core>
 
 using namespace Eigen;
 using namespace bold;
+using namespace std;
 
 TEST (StatsTests, MovingAverage_double)
 {

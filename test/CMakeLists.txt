@@ -1,8 +1,46 @@
 cmake_minimum_required (VERSION 2.8)
 
 set(TEST_SOURCES
-  ./UnitTests.cc
-  ./google-test/src/gtest-all.cc
+  UnitTests.cc
+  google-test/src/gtest-all.cc
+  AgentPositionTests.cc
+  BlobTests.cc
+  BodyStateTests.cc
+  Bounds2iTests.cc
+  BoundsTests.cc
+  CameraModelTests.cc
+  CM730Tests.cc
+  ColourTests.cc
+  ConditionalsTests.cc
+  ConsumerQueueThreadTests.cc
+  CppTests.cc
+  DistributionTrackerTests.cc
+  EigenTests.cc
+  HalfHullBuilderTests.cc
+  IntegralImageTests.cc
+  JointSelectionTests.cc
+  LinearSmootherTests.cc
+  LineJunctionFinderTests.cc
+  LineSegmentTests.cc
+  MathTests.cc
+  MetaTests.cc
+  MotionScriptRunnerTests.cc
+  MX28AlarmTests.cc
+  MX28Tests.cc
+  ParticleFilterTests.cc
+  Polygon2Tests.cc
+  RangeTests.cc
+  RunTests.cc
+  SchmittTriggerTests.cc
+  SequentialTimerTests.cc
+  SignalTests.cc
+  SpatialiserTest.cc
+  StateTests.cc
+  StatsTests.cc
+  ThreadIdTests.cc
+  ThreadTests.cc
+  UDPSocketTests.cc
+  VisualCortexTests.cc
   $<TARGET_OBJECTS:boldhumanoid_objects>
 )
 

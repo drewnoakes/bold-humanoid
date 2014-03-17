@@ -1,11 +1,11 @@
 #include "gtest/gtest.h"
-#include "helpers.hh"
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <vector>
 
 #include "../geometry/Polygon2.hh"
+#include "helpers.hh"
 
 using namespace std;
 using namespace bold;

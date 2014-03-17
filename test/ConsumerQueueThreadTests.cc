@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "helpers.hh"
 #include "../util/consumerqueuethread.hh"
 #include "../Clock/clock.hh"
 

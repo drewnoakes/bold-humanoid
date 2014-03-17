@@ -6,7 +6,7 @@
 
 #include <Eigen/Core>
 
-::testing::AssertionResult VectorsEqual(Eigen::Vector3d const& a, Eigen::Vector3d const& b, const float delta = 0.00001) {
+inline ::testing::AssertionResult VectorsEqual(Eigen::Vector3d const& a, Eigen::Vector3d const& b, const float delta = 0.00001) {
   double d = (a-b).norm();
   if (d < delta)
     return ::testing::AssertionSuccess();
@@ -14,7 +14,7 @@
     return ::testing::AssertionFailure() << "Actual: " << b.transpose() << ", expected: " << a.transpose() << " d = " << d;
 }
 
-::testing::AssertionResult VectorsEqual(Eigen::Vector2d const& a, Eigen::Vector2d const& b, const double delta = 0.00001) {
+inline ::testing::AssertionResult VectorsEqual(Eigen::Vector2d const& a, Eigen::Vector2d const& b, const double delta = 0.00001) {
   double d = (a-b).norm();
   if (d < delta)
     return ::testing::AssertionSuccess();
@@ -23,7 +23,7 @@
 }
 
 template<typename T, int N>
-::testing::AssertionResult VectorsEqual(Eigen::Matrix<T,N,1> const& a, Eigen::Matrix<T,N,1> const& b, const double delta = 0.00001) {
+inline ::testing::AssertionResult VectorsEqual(Eigen::Matrix<T,N,1> const& a, Eigen::Matrix<T,N,1> const& b, const double delta = 0.00001) {
   double d = (a-b).norm();
   if (d < delta)
     return ::testing::AssertionSuccess();
@@ -32,7 +32,7 @@ template<typename T, int N>
 }
 
 template<int N>
-::testing::AssertionResult VectorsEqual(Eigen::Matrix<int,N,1> const& a, Eigen::Matrix<int,N,1> const& b) {
+inline ::testing::AssertionResult VectorsEqual(Eigen::Matrix<int,N,1> const& a, Eigen::Matrix<int,N,1> const& b) {
   double d = (a-b).norm();
   if (d == 0)
     return ::testing::AssertionSuccess();
@@ -40,7 +40,7 @@ template<int N>
     return ::testing::AssertionFailure() << "Actual: " << b.transpose() << ", expected: " << a.transpose() << " d = " << d;
 }
 
-::testing::AssertionResult MatricesEqual(Eigen::MatrixXd const& a, Eigen::MatrixXd const& b, double delta = 0.000001) {
+inline ::testing::AssertionResult MatricesEqual(Eigen::MatrixXd const& a, Eigen::MatrixXd const& b, double delta = 0.000001) {
   double d = (a-b).array().abs().sum();
   if (d < delta)
     return ::testing::AssertionSuccess();
@@ -49,7 +49,7 @@ template<int N>
 }
 
 template<typename T, int dim>
-::testing::AssertionResult LinesEqual(bold::LineSegment<T,dim> const& a, bold::LineSegment<T,dim> const& b, const double delta = 0.000001) {
+inline ::testing::AssertionResult LinesEqual(bold::LineSegment<T,dim> const& a, bold::LineSegment<T,dim> const& b, const double delta = 0.000001) {
   double d1 = (a.p1()-b.p1()).norm();
   double d2 = (a.p2()-b.p2()).norm();
   if (d1 <= delta && d2 <= delta)
