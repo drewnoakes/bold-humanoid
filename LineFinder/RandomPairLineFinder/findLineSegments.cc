@@ -1,6 +1,6 @@
 #include "randompairlinefinder.hh"
 
-#include "../../geometry/LineSegment2i.hh"
+#include "../../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 
 using namespace bold;
 using namespace std;

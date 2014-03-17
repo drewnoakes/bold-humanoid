@@ -3,8 +3,8 @@
 #include <Eigen/Core>
 #include <functional>
 
-#include "../geometry/LineSegment.hh"
-#include "../geometry/LineSegment2.hh"
+#include "../geometry/LineSegment/linesegment.hh"
+#include "../geometry/LineSegment/LineSegment2/linesegment2.hh"
 #include "../util/Maybe.hh"
 
 namespace bold

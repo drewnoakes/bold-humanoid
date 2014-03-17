@@ -6,7 +6,7 @@
 
 #include "../stateobject.hh"
 #include "../../util/Maybe.hh"
-#include "../../geometry/LineSegment.hh"
+#include "../../geometry/LineSegment/linesegment.hh"
 #include "../../geometry/Polygon2.hh"
 
 namespace bold

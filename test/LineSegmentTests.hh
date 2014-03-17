@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 #include "../geometry/Bounds2i.hh"
-#include "../geometry/LineSegment2i.hh"
+#include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 
 using namespace std;
 using namespace bold;
@@ -31,7 +31,7 @@ TEST (LineSegmentTests, gradient)
   EXPECT_EQ (0.5, LineSegment2i(Vector2i(1,0), Vector2i(3,1)).gradient());
 
   // Vertical lines have infinite gradient
-  EXPECT_EQ (FP_INFINITE, LineSegment2i(Vector2i(0,0), Vector2i(0,10)).gradient());
+  EXPECT_EQ (numeric_limits<double>::infinity(), LineSegment2i(Vector2i(0,0), Vector2i(0,10)).gradient());
 }
 
 TEST (LineSegmentTests, yIntersection)
@@ -42,7 +42,7 @@ TEST (LineSegmentTests, yIntersection)
   EXPECT_EQ (-0.5, LineSegment2i(Vector2i(1,0),   Vector2i(3,1)).yIntersection());
 
   // Vertical lines have no yIntersection
-  EXPECT_EQ (FP_NAN, LineSegment2i(Vector2i(10,0), Vector2i(10,10)).yIntersection());
+  EXPECT_TRUE (std::isnan(LineSegment2i(Vector2i(10,0), Vector2i(10,10)).yIntersection()));
 }
 
 TEST (LineSegmentTests, angle)

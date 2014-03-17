@@ -3,7 +3,7 @@
 #include <vector>
 #include <Eigen/Core>
 
-#include "../geometry/LineSegment.hh"
+#include "../geometry/LineSegment/linesegment.hh"
 
 namespace bold
 {

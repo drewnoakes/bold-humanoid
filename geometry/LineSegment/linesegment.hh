@@ -9,16 +9,26 @@
 namespace bold
 {
   template<typename T,int dim>
-  struct LineSegment
+  struct LineSegment : Eigen::Matrix<T,dim,2>
   {
+    typedef Eigen::Matrix<T,dim,2> Base;
+
   public:
+    LineSegment(Base const& m)
+      : Base(m)
+    {
+      static_assert(std::is_arithmetic<T>::value, "Must be an arithmetic type");
+    }
+
     LineSegment(Eigen::Matrix<T,dim,1> const& p1,
                 Eigen::Matrix<T,dim,1> const& p2)
-    : d_p1(p1),
-      d_p2(p2)
     {
       static_assert(std::is_arithmetic<T>::value, "Must be an arithmetic type");
 
+      Base::col(0) = p1;
+      Base::col(1) = p2;
+
+      // TODO: costly at runtime, perhaps make assert?
       if ((p2 - p1).cwiseAbs().maxCoeff() == 0)
       {
         std::stringstream s;
@@ -27,11 +37,11 @@ namespace bold
       }
     }
 
-    Eigen::Matrix<T,dim,1> p1() const { return d_p1; }
-    Eigen::Matrix<T,dim,1> p2() const { return d_p2; }
+    Eigen::Matrix<T,dim,1> p1() const { return Base::col(0); }
+    Eigen::Matrix<T,dim,1> p2() const { return Base::col(1); }
 
     /** Returns the vector formed by <code>p2() - p1()</code> */
-    Eigen::Matrix<T,dim,1> delta() const { return d_p2 - d_p1; }
+    Eigen::Matrix<T,dim,1> delta() const { return p2() - p1(); }
 
     double normalisedDot(LineSegment<T,dim> other)
     {
@@ -53,47 +63,35 @@ namespace bold
     template<int newDim>
     LineSegment<T,newDim> to() const
     {
-      Eigen::Matrix<T,newDim,1> newp1 = Eigen::Matrix<T,newDim,1>::Zero();;
-      Eigen::Matrix<T,newDim,1> newp2 = Eigen::Matrix<T,newDim,1>::Zero();;
-
-      newp1.template head< meta::min<dim,newDim>::value >() = d_p1.template head< meta::min<dim,newDim>::value >();
-      newp2.template head< meta::min<dim,newDim>::value >() = d_p2.template head< meta::min<dim,newDim>::value >();
-
-      return LineSegment<T,newDim>(newp1, newp2);
-    }
-
-    template<typename newT>
-    LineSegment<newT,dim> cast()
-    {
-      return LineSegment<newT,dim>(d_p1.template cast<newT>(),
-                                   d_p2.template cast<newT>());
+      auto newLineSegment = LineSegment<T,newDim>{LineSegment<T,newDim>::Zero()};
+      newLineSegment.col(0).template head< meta::min<dim,newDim>::value >() =
+        Base::col(0).template head< meta::min<dim,newDim>::value >();
+      newLineSegment.col(1).template head< meta::min<dim,newDim>::value >() =
+        Base::col(1).template head< meta::min<dim,newDim>::value >();
+      return newLineSegment;
     }
 
     bool operator==(LineSegment<T,dim> const& other) const
     {
       const double epsilon = 0.0000004;
-
-      return ((d_p1 - other.d_p1).cwiseAbs() + (d_p2 - other.d_p2).cwiseAbs()).sum() < epsilon;
+      return (Base::array() - other.array()).abs().sum() < epsilon;
     }
 
     LineSegment<T,dim> operator+(Eigen::Matrix<T,dim,1> const& delta) const
     {
-      return LineSegment<T,dim>(d_p1 + delta, d_p2 + delta);
+      return LineSegment<T,dim>{Base::colwise() + delta};
     }
 
     LineSegment<T,dim> operator-(Eigen::Matrix<T,dim,1> const& delta) const
     {
-      return LineSegment<T,dim>(d_p1 - delta, d_p2 - delta);
+      return LineSegment<T,dim>{Base::colwise() - delta};
     }
 
     friend std::ostream& operator<<(std::ostream& stream, LineSegment<T,dim> const& lineSegment)
     {
-      return stream << "LineSegment (P1=" << lineSegment.d_p1.transpose() << " P2=" << lineSegment.d_p2.transpose() << ")";
+      return stream << "LineSegment (P1=" << lineSegment.p1().transpose() << " P2=" << lineSegment.p2().transpose() << ")";
     }
 
-  protected:
-    Eigen::Matrix<T,dim,1> d_p1;
-    Eigen::Matrix<T,dim,1> d_p2;
   };
 
   typedef LineSegment<double,3> LineSegment3d;

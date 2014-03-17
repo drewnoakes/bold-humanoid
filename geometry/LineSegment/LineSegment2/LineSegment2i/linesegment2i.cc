@@ -1,21 +1,14 @@
-#include "LineSegment2i.hh"
+#include "linesegment2i.hh"
 
-#include <vector>
-#include <set>
 #include <cassert>
 #include <cmath>
-#include <stdexcept>
+#include <limits>
+#include <vector>
+#include <set>
 
-#include <Eigen/Core>
-#include <opencv2/core/core.hpp>
-
-#include "../util/Maybe.hh"
-#include "../Colour/colour.hh"
-
-#include "Line.hh"
+#include "../../../../util/Maybe.hh"
 
 using namespace bold;
-using namespace cv;
 using namespace Eigen;
 using namespace std;
 
@@ -23,15 +16,15 @@ double LineSegment2i::gradient() const
 {
   auto d = delta();
   if (d.x() == 0)
-    return FP_INFINITE;
+    return numeric_limits<double>::infinity();
   return d.y() / (double)d.x();
 }
 
 double LineSegment2i::yIntersection() const
 {
-  if (d_p1.x() == d_p2.x())
-    return FP_NAN;
-  return (double)d_p1.y() - gradient() * (double)d_p1.x();
+  if (p1().x() == p2().x())
+    return numeric_limits<double>::quiet_NaN();
+  return double(p1().y()) - gradient() * double(p1().x());
 }
 
 double LineSegment2i::angle() const
@@ -40,16 +33,11 @@ double LineSegment2i::angle() const
   return atan2(delta.y(), delta.x());
 }
 
-void LineSegment2i::draw(Mat& image, Colour::bgr const& bgr, int thickness) const
-{
-  cv::line(image, cv::Point(d_p1.x(), d_p1.y()), cv::Point(d_p2.x(), d_p2.y()), bgr.toScalar(), thickness);
-}
-
 Line LineSegment2i::toLine() const
 {
-  double theta = atan2(d_p2.y() - d_p1.y(), d_p1.x() - d_p2.x());
+  double theta = atan2(p2().y() - p1().y(), p1().x() - p2().x());
 
-  double radius = d_p1.x()*sin(theta) + d_p1.y()*cos(theta);
+  double radius = p1().x() * std::sin(theta) + p1().y() * std::cos(theta);
 
   while (theta < 0)
   {
@@ -85,10 +73,10 @@ Maybe<LineSegment2i> LineSegment2i::cropTo(Bounds2i const& bounds) const
   set<Vector2i, Vector2iCompare> ends;
 
   // Add ends if they're in bounds
-  if (bounds.contains(d_p1))
-    ends.insert(d_p1);
-  if (bounds.contains(d_p2))
-    ends.insert(d_p2);
+  if (bounds.contains(p1()))
+    ends.insert(p1());
+  if (bounds.contains(p2()))
+    ends.insert(p2());
 
   // If we have two ends, we don't need to test for intersections with the edges
   if (ends.size() != 2)
@@ -112,4 +100,3 @@ Maybe<LineSegment2i> LineSegment2i::cropTo(Bounds2i const& bounds) const
     ? Maybe<LineSegment2i>(LineSegment2i(endsVec[0], endsVec[1]))
     : Maybe<LineSegment2i>::empty();
 }
-

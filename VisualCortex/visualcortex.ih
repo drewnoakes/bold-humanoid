@@ -5,7 +5,7 @@
 #include "../Config/config.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../FieldMap/fieldmap.hh"
-#include "../geometry/LineSegment.hh"
+#include "../geometry/LineSegment/linesegment.hh"
 #include "../geometry/Bounds2i.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../ImagePassRunner/imagepassrunner.hh"

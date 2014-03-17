@@ -3,7 +3,7 @@
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
 
-#include "../../geometry/LineSegment2i.hh"
+#include "../../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../linefinder.hh"
 
 namespace bold

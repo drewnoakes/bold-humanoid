@@ -6,7 +6,7 @@
 
 #include "../stateobject.hh"
 #include "../../AgentPosition/agentposition.hh"
-#include "../../geometry/LineSegment2i.hh"
+#include "../../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../../geometry/Polygon2.hh"
 #include "../../util/Maybe.hh"
 

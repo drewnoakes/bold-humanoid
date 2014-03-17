@@ -5,7 +5,7 @@
 
 #include "../CameraModel/cameramodel.hh"
 #include "../geometry/Bounds2i.hh"
-#include "../geometry/LineSegment2i.hh"
+#include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "helpers.hh"
 
 TEST (CameraModelTests, directionForPixel)

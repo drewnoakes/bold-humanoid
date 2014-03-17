@@ -1,20 +1,20 @@
 #pragma once
 
-#include "LineSegment.hh"
-#include "../util/Maybe.hh"
+#include "../linesegment.hh"
+#include "../../util/Maybe.hh"
 
 #include <Eigen/Core>
 
 namespace bold
 {
   template<typename T>
-  class LineSegment2 : public LineSegment<T, 2>
+  class LineSegment2 : public LineSegment<T,2>
   {
   public:
-    typedef Eigen::Matrix<T, 2, 1> Point;
+    typedef Eigen::Matrix<T,2,1> Point;
 
-    LineSegment2(LineSegment<T,2> line)
-    : LineSegment<T, 2>::LineSegment(line.p1(), line.p2())
+    LineSegment2(LineSegment<T,2> const& line)
+      : LineSegment<T,2>(line)
     {}
 
     LineSegment2(Point const& p1, Point const& p2)
@@ -29,10 +29,10 @@ namespace bold
     {
       double t;
       double u;
-      return tryIntersect(other, &t, &u);
+      return tryIntersect(other, t, u);
     }
 
-    Maybe<Point> tryIntersect(LineSegment2<T> const& other, double* t, double* u) const
+    Maybe<Point> tryIntersect(LineSegment2<T> const& other, double& t, double& u) const
     {
       // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 
@@ -66,8 +66,8 @@ namespace bold
 
       Eigen::Vector2d intersectionPoint = pos1 + dir1 * tt;
 
-      *t = tt;
-      *u = uu;
+      t = tt;
+      u = uu;
 
       // If we are using integers, be sure to round the result before casting
       if (std::is_same<T,int>())

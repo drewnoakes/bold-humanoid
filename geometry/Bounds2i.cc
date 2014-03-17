@@ -10,7 +10,7 @@
 #include "../util/Maybe.hh"
 #include "../Colour/colour.hh"
 
-#include "LineSegment2i.hh"
+#include "LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 
 using namespace bold;
 using namespace cv;

@@ -8,8 +8,8 @@
 
 #include "../util/log.hh"
 #include "../util/Maybe.hh"
-#include "LineSegment.hh"
-#include "LineSegment2.hh"
+#include "LineSegment/linesegment.hh"
+#include "LineSegment/LineSegment2/linesegment2.hh"
 
 namespace bold
 {

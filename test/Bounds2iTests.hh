@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "../geometry/Bounds2i.hh"
-#include "../geometry/LineSegment2i.hh"
+#include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 
 using namespace std;
 using namespace bold;

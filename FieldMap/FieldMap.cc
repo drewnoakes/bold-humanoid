@@ -1,7 +1,7 @@
 #include "fieldmap.hh"
 
 #include "../Config/config.hh"
-#include "../geometry/LineSegment.hh"
+#include "../geometry/LineSegment/linesegment.hh"
 
 #include <vector>
 #include <Eigen/Core>

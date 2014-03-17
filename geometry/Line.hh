@@ -8,10 +8,10 @@
 #include <Eigen/Core>
 #include <opencv2/core/core.hpp>
 
-#include "LineSegment.hh"
+#include "LineSegment/linesegment.hh"
 #include "Bounds.hh"
 #include "Bounds2i.hh"
-#include "LineSegment2i.hh"
+#include "LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../util/Maybe.hh"
 
 namespace bold

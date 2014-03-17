@@ -7,7 +7,7 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 
-#include "../geometry/LineSegment2i.hh"
+#include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../PixelLabel/pixellabel.hh"
 #include "../Setting/setting.hh"
 #include "../util/meta.hh"
