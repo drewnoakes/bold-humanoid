@@ -277,6 +277,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./LineJunctionFinder/findLineJunctions.cc
+  ./LineJunctionFinder/tryFindLineJunction.cc
+)
+
+add_class(BOLDHUMANOID
   ./Localiser/Localiser.cc
   ./Localiser/predict.cc
   ./Localiser/update.cc

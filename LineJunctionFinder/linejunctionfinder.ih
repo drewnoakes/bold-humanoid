@@ -1,0 +1,9 @@
+#include "linejunctionfinder.hh"
+
+#include "../Spatialiser/spatialiser.hh"
+
+#include <iostream>
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
