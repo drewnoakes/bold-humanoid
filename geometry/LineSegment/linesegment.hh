@@ -14,11 +14,6 @@ namespace bold
     typedef Eigen::Matrix<T,dim,2> Base;
 
   public:
-    LineSegment(Base const& m)
-      : Base(m)
-    {
-      static_assert(std::is_arithmetic<T>::value, "Must be an arithmetic type");
-    }
 
     LineSegment(Eigen::Matrix<T,dim,1> const& p1,
                 Eigen::Matrix<T,dim,1> const& p2)
@@ -36,6 +31,8 @@ namespace bold
         throw std::runtime_error(s.str());
       }
     }
+
+    using Base::Matrix;
 
     Eigen::Matrix<T,dim,1> p1() const { return Base::col(0); }
     Eigen::Matrix<T,dim,1> p2() const { return Base::col(1); }
