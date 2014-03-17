@@ -173,7 +173,7 @@ int main(int argc, char **argv)
   //
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
-    blobDetectPass->detectBlobs();
+    blobDetectPass->detectBlobs(timer);
   cout << "BlobDetectPass::detectBlobs ran " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
                                                                     
 
@@ -280,7 +280,7 @@ int main(int argc, char **argv)
   for (LineSegment2i const& line : scanningLines)
   {
     cout << "      " << line << endl;
-    line.draw(colourImage, colours[colourIndex++ % colours.size()], 2);
+    //line.draw(colourImage, colours[colourIndex++ % colours.size()], 2);
   }
 
   // Draw blobs
