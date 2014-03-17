@@ -58,7 +58,7 @@ namespace bold
      * @returns a pair containing a 3xN matrix of ground locations and
      * an N-dimensional vector that denotes whether these are valid
      */
-    std::pair<Eigen::MatrixXd,Eigen::VectorXi> findGroundPountsForPixels(Eigen::MatrixXd const& pixels,
+    std::pair<Eigen::MatrixXd,Eigen::VectorXi> findGroundPointsForPixels(Eigen::MatrixXd const& pixels,
                                                                          double groundZ = 0.0) const;
 
     /** Returns the ground-plane locations, in agent space, for a
@@ -68,7 +68,7 @@ namespace bold
      * @param agentCameraTr The transformation from camera to agent frame
      * @param groundZ The z coordinate of the ground plane that is used; default is 0
      */
-    std::pair<Eigen::MatrixXd,Eigen::VectorXi> findGroundPountsForPixels(Eigen::MatrixXd const& pixels,
+    std::pair<Eigen::MatrixXd,Eigen::VectorXi> findGroundPointsForPixels(Eigen::MatrixXd const& pixels,
                                                                          Eigen::Affine3d const& agentCameraTr,
                                                                          double groundZ = 0.0) const;
 
@@ -90,7 +90,7 @@ namespace bold
   private:
     Maybe<Eigen::Vector3d> findGroundPointForPixel(Eigen::Vector2d const& pixel,
                                                    Eigen::Matrix3d const& groundPixelTr) const;
-    std::pair<Eigen::MatrixXd, Eigen::VectorXi> findGroundPountsForPixels(Eigen::MatrixXd const& pixels,
+    std::pair<Eigen::MatrixXd, Eigen::VectorXi> findGroundPointsForPixels(Eigen::MatrixXd const& pixels,
                                                                           Eigen::Matrix3d const& groundPixelTr) const;
 
     std::shared_ptr<CameraModel> d_cameraModel;
