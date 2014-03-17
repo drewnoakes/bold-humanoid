@@ -53,9 +53,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   {
     auto observedLineColour = d_observedLineColour->getValue();
     for (LineSegment2i const& line : observedLineSegments)
-    {
-      line.draw(debugImage, observedLineColour, 2);
-    }
+      draw(line, debugImage, observedLineColour, 2);
   }
 
   // Draw line dots
@@ -63,9 +61,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   {
     auto lineDotColour = d_lineDotColour->getValue();
     for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
-    {
       debugImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
-    }
   }
 
   // Draw blobs
@@ -158,7 +154,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
             {
               LineSegment2i line2i(max - p1v, max - p2v);
 
-              line2i.draw(debugImage, expectedLineColour, 1);
+              draw(line2i, debugImage, expectedLineColour, 1);
             }
           }
         }
@@ -180,7 +176,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
 
     LineSegment2i line2i(p1, p2);
 
-    line2i.draw(debugImage, d_horizonColour->getValue(), 1);
+    draw(line2i, debugImage, d_horizonColour->getValue(), 1);
   }
 
   // Draw occlusion edge
