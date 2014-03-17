@@ -40,4 +40,10 @@ namespace bold
         : stream << "Maybe (hasValue=false)";
     }
   };
+
+  template<typename T>
+  Maybe<T> make_maybe(T&& value)
+  {
+    return Maybe<T>{std::forward<T>(value)};
+  }
 }
