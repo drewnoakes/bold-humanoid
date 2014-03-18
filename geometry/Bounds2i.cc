@@ -57,10 +57,10 @@ vector<Vector2i> Bounds2i::getCorners() const
   return corners;
 }
 
-vector<LineSegment2i> Bounds2i::getEdges() const
+vector<LineSegment2i, aligned_allocator<LineSegment2i>> Bounds2i::getEdges() const
 {
   auto corners = getCorners();
-  vector<LineSegment2i> edges;
+  vector<LineSegment2i, aligned_allocator<LineSegment2i>> edges;
   for (unsigned i = 0, lastIndex = 3; i < 4; lastIndex = i++)
   {
     if (corners[lastIndex] != corners[i])

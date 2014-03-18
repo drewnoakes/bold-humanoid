@@ -67,7 +67,7 @@ Maybe<LineSegment2i> LineSegment2i::cropTo(Bounds2i const& bounds) const
     }
   };
 
-  vector<LineSegment2i> edges = bounds.getEdges();
+  auto edges = bounds.getEdges();
 
   // we use a set, as duplicates can be created if lines pass through corners
   set<Vector2i, Vector2iCompare> ends;

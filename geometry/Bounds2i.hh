@@ -34,6 +34,6 @@ namespace bold
     /** Returns corners in clockwise order, starting at 'min'. */
     std::vector<Eigen::Vector2i> getCorners() const;
 
-    std::vector<LineSegment2i> getEdges() const;
+    std::vector<LineSegment2i, Eigen::aligned_allocator<LineSegment2i>> getEdges() const;
   };
 }
