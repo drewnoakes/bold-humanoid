@@ -40,7 +40,7 @@ export class Trackable<T>
         }
     }
 
-    public onchange(callback: ()=>void)
+    public onchange(callback: (value: T)=>void)
     {
         this.callbacks.push(callback);
     }

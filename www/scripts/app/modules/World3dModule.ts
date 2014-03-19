@@ -14,6 +14,8 @@ import interaction = require('interaction');
 import geometry = require('util/geometry');
 import state = require('state');
 import Module = require('Module');
+import Checkbox = require('controls/Checkbox');
+import util = require('util');
 
 interface Hinge
 {
@@ -29,11 +31,11 @@ class World3dModule extends Module
     private cameraPhi: number = 0.34;
     private torsoHeight: number = 0.341;
 
-    private useThirdPerson: boolean = true;
-    private movePlayer: boolean = true;
-    private drawObservedLines: boolean = true;
-    private drawViewPoly: boolean = false;
-    private drawObservedGoals: boolean = true;
+    private useThirdPerson: util.Trackable<boolean>;
+    private movePlayer: util.Trackable<boolean>;
+    private drawObservedLines: util.Trackable<boolean>;
+    private drawObservedGoals: util.Trackable<boolean>;
+    private drawViewPoly: util.Trackable<boolean>;
 
     private pendingTextureCount: number;
 
@@ -65,59 +67,33 @@ class World3dModule extends Module
         this.hinges = [];
         this.objectByName = {};
 
+        var controls = document.createElement('div');
+
+        this.useThirdPerson = new util.Trackable<boolean>(true);
+        this.useThirdPerson.onchange(() => { this.updateCameraPosition(); this.animator.setRenderNeeded(); });
+        controls.appendChild(new Checkbox('Third person view', this.useThirdPerson).element);
+
+        this.movePlayer = new util.Trackable<boolean>(true);
+        this.movePlayer.onchange(() => { this.updateCameraPosition(); this.animator.setRenderNeeded(); });
+        controls.appendChild(new Checkbox('Move player', this.movePlayer).element);
+
+        this.drawObservedLines = new util.Trackable<boolean>(true);
+        this.drawObservedLines.onchange(() => this.animator.setRenderNeeded());
+        controls.appendChild(new Checkbox('Observed lines', this.drawObservedLines).element);
+
+        this.drawObservedGoals = new util.Trackable<boolean>(true);
+        this.drawObservedGoals.onchange(() => this.animator.setRenderNeeded());
+        controls.appendChild(new Checkbox('Observed goals', this.drawObservedGoals).element);
+
+        this.drawViewPoly = new util.Trackable<boolean>(false);
+        this.drawViewPoly.onchange(() => this.animator.setRenderNeeded());
+        controls.appendChild(new Checkbox('View poly', this.drawViewPoly).element);
+
+
         this.initialiseScene();
 
         element.appendChild(this.renderer.domElement);
-
-        var addCheckbox = (id: string, text: string, checked: boolean, onchange: (isChecked:boolean)=>void) =>
-        {
-            var checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.id = id;
-            checkbox.addEventListener('change', e => onchange(checkbox.checked));
-            checkbox.checked = !!checked;
-
-            element.appendChild(checkbox);
-
-            var label = document.createElement('label');
-            label.htmlFor = id;
-            label.textContent = text;
-            element.appendChild(label);
-
-            onchange(!!checked);
-        };
-
-        addCheckbox('first-person-checkbox', 'First person view', false, isChecked =>
-        {
-            this.useThirdPerson = !isChecked;
-            this.updateCameraPosition();
-            this.animator.setRenderNeeded();
-        });
-
-        addCheckbox('move-player-checkbox', 'Move player', true, isChecked =>
-        {
-            this.movePlayer = isChecked;
-            this.updateCameraPosition();
-            this.animator.setRenderNeeded();
-        });
-
-        addCheckbox('draw-observed-lines-checkbox', 'Observed lines', true, isChecked =>
-        {
-            this.drawObservedLines = isChecked;
-            this.animator.setRenderNeeded();
-        });
-
-        addCheckbox('draw-observed-goals-checkbox', 'Observed goals', false, isChecked =>
-        {
-            this.drawObservedGoals = isChecked;
-            this.animator.setRenderNeeded();
-        });
-
-        addCheckbox('draw-view-poly-checkbox', 'View poly', false, isChecked =>
-        {
-            this.drawViewPoly = isChecked;
-            this.animator.setRenderNeeded();
-        });
+        element.appendChild(controls);
 
         this.bodyRoot = this.buildBody(constants.bodyStructure, () =>
         {
@@ -167,7 +143,7 @@ class World3dModule extends Module
 
     private onWorldFrameState(data: state.WorldFrame)
     {
-        if (this.movePlayer && data.pos && data.pos instanceof Array && data.pos.length === 3) {
+        if (this.movePlayer.getValue() && data.pos && data.pos instanceof Array && data.pos.length === 3) {
             this.bodyRoot.position.x = data.pos[0];
             this.bodyRoot.position.y = data.pos[1];
             this.bodyRoot.rotation.z = data.pos[2];
@@ -189,7 +165,7 @@ class World3dModule extends Module
         this.lineObject = new THREE.Object3D();
         this.scene.add(this.lineObject);
 
-        if (this.drawObservedLines) {
+        if (this.drawObservedLines.getValue()) {
             if (data.lines && data.lines instanceof Array && data.lines.length !== 0) {
                 _.each(data.lines, line =>
                 {
@@ -201,7 +177,7 @@ class World3dModule extends Module
             }
         }
 
-        if (this.drawViewPoly) {
+        if (this.drawViewPoly.getValue()) {
             var poly = data.visibleFieldPoly;
             if (poly && poly instanceof Array && poly.length !== 0) {
                 var polyGeometry = new THREE.Geometry();
@@ -215,7 +191,7 @@ class World3dModule extends Module
             }
         }
 
-        if (this.drawObservedGoals) {
+        if (this.drawObservedGoals.getValue()) {
             if (data.goals && data.goals instanceof Array && data.goals.length !== 0) {
                 _.each(data.goals, goal =>
                 {
@@ -575,7 +551,7 @@ class World3dModule extends Module
 
         container.addEventListener('mousewheel', event =>
         {
-            if (!this.useThirdPerson)
+            if (!this.useThirdPerson.getValue())
                 return;
             event.preventDefault();
             this.cameraDistance *= 1 - (event.wheelDelta/720);
@@ -587,14 +563,14 @@ class World3dModule extends Module
         new interaction.Dragger(container, e => {
             if (e.isStart)
             {
-                if (!this.useThirdPerson)
+                if (!this.useThirdPerson.getValue())
                     return;
                 onMouseDownTheta = this.cameraTheta;
                 onMouseDownPhi = this.cameraPhi;
             }
             else
             {
-                if (!this.useThirdPerson)
+                if (!this.useThirdPerson.getValue())
                     return;
                 this.cameraTheta = -(e.totalDeltaX * 0.01) + onMouseDownTheta;
                 this.cameraPhi = (e.totalDeltaY * 0.01) + onMouseDownPhi;
@@ -607,7 +583,7 @@ class World3dModule extends Module
 
     private updateCameraPosition()
     {
-        if (this.useThirdPerson) {
+        if (this.useThirdPerson.getValue()) {
             // Third person -- position camera outside player
             var torsoPosition = this.bodyRoot ? this.bodyRoot.position : new THREE.Vector3(0, 0, 0);
             this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
