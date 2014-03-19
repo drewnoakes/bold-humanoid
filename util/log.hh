@@ -3,9 +3,25 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <vector>
 
 namespace bold
 {
+  inline std::ostream& operator<<(std::ostream &stream, std::vector<std::string> const& strings)
+  {
+    stream <<  "[";
+    bool comma = false;
+    for (auto const& s : strings)
+    {
+      if (comma)
+        stream << ",";
+      comma = true;
+      stream << "\"" << s << "\"";
+    }
+    stream <<  "]";
+    return stream;
+  }
+
   enum class LogLevel
   {
     Verbose,

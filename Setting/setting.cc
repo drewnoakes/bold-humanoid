@@ -26,18 +26,3 @@ void SettingBase::writeFullJson(rapidjson::Writer< rapidjson::StringBuffer >& wr
   }
   writer.EndObject();
 }
-
-ostream& bold::operator<<(ostream &stream, vector<string> const& strings)
-{
-  stream <<  "[";
-  bool comma = false;
-  for (auto const& s : strings)
-  {
-    if (comma)
-      stream << ",";
-    comma = true;
-    stream << "\"" << s << "\"";
-  }
-  stream <<  "]";
-  return stream;
-}
