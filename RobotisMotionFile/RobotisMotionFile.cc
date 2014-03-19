@@ -184,7 +184,7 @@ shared_ptr<MotionScript> RobotisMotionFile::toMotionScript(uchar rootPageIndex)
     page = &nextPage;
   }
 
-  return make_shared<MotionScript>(name, stages);
+  return make_shared<MotionScript>(name, stages, true, true, true);
 }
 
 ///////////////////////////////// PAGE FUNCTIONS

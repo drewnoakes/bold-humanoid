@@ -87,9 +87,13 @@ namespace bold
 
     /** Initialises the MotionScript with specified name and stages.
      */
-    MotionScript(std::string name, std::vector<std::shared_ptr<Stage>> stages)
+    MotionScript(std::string name, std::vector<std::shared_ptr<Stage>> stages,
+                 bool controlsHead, bool controlsArms, bool controlsLegs)
     : d_name(name),
-      d_stages(stages)
+      d_stages(stages),
+      d_controlsHead(controlsHead),
+      d_controlsArms(controlsArms),
+      d_controlsLegs(controlsLegs)
     {}
 
     std::string getName() const { return d_name; }
@@ -101,8 +105,15 @@ namespace bold
     int getStageCount() const { return d_stages.size(); }
     std::shared_ptr<Stage const> getStage(unsigned index) const { return d_stages[index]; }
 
+    bool getControlsHead() const { return d_controlsHead; }
+    bool getControlsArms() const { return d_controlsArms; }
+    bool getControlsLegs() const { return d_controlsLegs; }
+
   private:
     std::string d_name;
     std::vector<std::shared_ptr<Stage>> d_stages;
+    bool d_controlsHead;
+    bool d_controlsArms;
+    bool d_controlsLegs;
   };
 }

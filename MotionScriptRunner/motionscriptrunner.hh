@@ -77,7 +77,7 @@ namespace bold
 
     MotionScriptRunner(std::shared_ptr<MotionScript const> script);
 
-    std::string getScriptName() const { return d_script->getName(); }
+    std::shared_ptr<MotionScript const> getScript() const { return d_script; }
 
     MotionScriptRunnerState getState() const { return d_state; }
 

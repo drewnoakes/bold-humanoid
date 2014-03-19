@@ -81,11 +81,13 @@ void MotionScriptModule::applyLegs(LegSection* legs) { applySection(static_cast<
 
 bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
 {
-  log::info("MotionScriptModule::start") << "Starting script " << scriptRunner->getScriptName();
+  auto const& script = scriptRunner->getScript();
+
+  log::info("MotionScriptModule::start") << "Starting script " << script->getName();
 
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
-    log::warning("MotionScriptModule::start") << "Ignoring request to play script " << scriptRunner->getScriptName() << " -- already playing " << d_runner->getScriptName();
+    log::warning("MotionScriptModule::start") << "Ignoring request to play script " << script->getName() << " -- already playing " << d_runner->getScript()->getName();
     return false;
   }
 
@@ -94,9 +96,9 @@ bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
   // NOTE currently we assume that motion scripts control all body parts
 
   getScheduler()->add(this,
-                      Priority::Optional,  true,  // HEAD   Interuptable::YES
-                      Priority::Important, true,  // ARMS
-                      Priority::Important, true); // LEGS
+                      Priority::Optional,  scriptRunner->getScript()->getControlsHead(),  // HEAD   Interuptable::YES
+                      Priority::Important, scriptRunner->getScript()->getControlsArms(),  // ARMS
+                      Priority::Important, scriptRunner->getScript()->getControlsLegs()); // LEGS
 
   return true;
 }

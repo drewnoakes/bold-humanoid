@@ -4,12 +4,10 @@
 #include "../MotionScript/motionscript.hh"
 #include "../MotionScriptRunner/motionscriptrunner.hh"
 #include "../MotionTask/motiontask.hh"
-//#include "../MX28/mx28.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../State/state.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../ThreadUtil/threadutil.hh"
-
 
 #include <memory>
 #include <vector>
@@ -55,14 +53,14 @@ TEST (DISABLED_MotionScriptRunnerTests, basics)
   pushStep(stage, 100, 5, 0);
 
   vector<shared_ptr<MotionScript::Stage>> stages = { stage };
-  auto script = make_shared<MotionScript>("test-script", stages);
+  auto script = make_shared<MotionScript>("test-script", stages, true, true, true);
 
   MotionScriptRunner runner(script);
 
   EXPECT_EQ(MotionScriptRunnerState::Pending, runner.getState());
   EXPECT_EQ(0, runner.getCurrentStageIndex());
   EXPECT_EQ(0, runner.getCurrentKeyFrameIndex());
-  EXPECT_EQ("test-script", runner.getScriptName());
+  EXPECT_EQ(script, runner.getScript());
 
   EXPECT_TRUE(runner.step(JointSelection::all()));
 

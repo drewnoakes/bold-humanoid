@@ -36,6 +36,10 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 
   auto name = document["name"].GetString();
 
+  bool controlsHead = document.TryGetBoolValue("controls-head", true);
+  bool controlsArms = document.TryGetBoolValue("controls-arms", true);
+  bool controlsLegs = document.TryGetBoolValue("controls-legs", true);
+
   vector<shared_ptr<Stage>> stages;
 
   auto const& stagesArray = document["stages"];
@@ -83,7 +87,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
     stages.push_back(stage);
   }
 
-  return make_shared<MotionScript>(name, stages);
+  return make_shared<MotionScript>(name, stages, controlsHead, controlsArms, controlsLegs);
 }
 
 vector<shared_ptr<MotionScript>> MotionScript::loadAllInPath(string path)
