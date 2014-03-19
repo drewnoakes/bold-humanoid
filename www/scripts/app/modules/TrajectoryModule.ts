@@ -30,6 +30,7 @@ class TrajectoryModule extends Module
     private mirrorValues: util.Trackable<boolean> = new util.Trackable<boolean>(true);
     private isRecording: boolean = false;
     private skipFirstDatum: boolean = true;
+    private hoverJointId: number = -1;
 
     private subscription: ICloseable;
     private bodyFigure: BodyFigure;
