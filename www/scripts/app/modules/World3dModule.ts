@@ -46,6 +46,7 @@ class World3dModule extends Module
     private lineObject: THREE.Object3D;
     private bodyRoot: THREE.Object3D;
     private objectByName: {[name:string]:THREE.Mesh};
+    private staticObjects: THREE.Object3D;
 
     private fieldLineMaterial: THREE.LineBasicMaterial;
     private visibleFieldPolyMaterial: THREE.LineBasicMaterial;
@@ -89,6 +90,13 @@ class World3dModule extends Module
         this.drawViewPoly.onchange(() => this.animator.setRenderNeeded());
         controls.appendChild(new Checkbox('View poly', this.drawViewPoly).element);
 
+        var showStaticObjects = new util.Trackable<boolean>(true);
+        showStaticObjects.onchange(value =>
+        {
+            this.staticObjects.traverse(child => child.visible = value);
+            this.animator.setRenderNeeded();
+        });
+        controls.appendChild(new Checkbox('Show static objects', showStaticObjects).element);
 
         this.initialiseScene();
 
@@ -294,6 +302,9 @@ class World3dModule extends Module
         this.scene = new THREE.Scene();
         this.scene.add(new THREE.AmbientLight(0x727876)); // standard fluorescent light
 
+        this.staticObjects = new THREE.Object3D();
+        this.scene.add(this.staticObjects);
+
         this.pendingTextureCount = 3;
 
         var onTextureLoaded = () =>
@@ -366,7 +377,7 @@ class World3dModule extends Module
 
         var groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(groundSizeX, groundSizeY), groundMaterial);
         groundMesh.receiveShadow = true;
-        this.scene.add(groundMesh);
+        this.staticObjects.add(groundMesh);
 
         //
         // Ball
@@ -400,8 +411,8 @@ class World3dModule extends Module
                 cylinder.rotation.x = Math.PI/2;
                 cylinder.position.set(x, y, goalPostHeight/2);
                 sphere.position.set(x, y, goalPostHeight);
-                this.scene.add(cylinder);
-                this.scene.add(sphere);
+                this.staticObjects.add(cylinder);
+                this.staticObjects.add(sphere);
             },
             addGoalBar = (scaleX:number) =>
             {
@@ -410,7 +421,7 @@ class World3dModule extends Module
                     barHeight = constants.goalZ + goalRadius,
                     bar = new THREE.Mesh(new THREE.CylinderGeometry(goalRadius, goalRadius, barLength, 36, 36, false), goalMaterial);
                 bar.position.set(x, 0, barHeight);
-                this.scene.add(bar);
+                this.staticObjects.add(bar);
             };
 
         addGoalPost(1,1);
