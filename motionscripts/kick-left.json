@@ -1,5 +1,6 @@
 {
   "name": "kick-left",
+  "controls-head": false,
   "stages": [
     {
       "p-gains": [
