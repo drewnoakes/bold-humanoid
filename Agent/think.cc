@@ -11,6 +11,11 @@ void Agent::think()
   SequentialTimer t;
 
   //
+  // Update Spatialiser internals
+  //
+  d_spatialiser->updateZeroGroundPixelTransform();
+
+  //
   // Capture the image (YCbCr format)
   //
   t.enter("Image Capture");
