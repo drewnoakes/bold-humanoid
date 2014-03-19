@@ -78,7 +78,7 @@ void OptionTree::run()
 
   // NOTE this is a bit weird/wasteful... we should generate the Document
   //      above and pass it instead of creating the string then parsing it...
-  unique_ptr<Document> doc(new Document());
+  auto doc = make_unique<Document>();
   doc->Parse<0,UTF8<>>(buffer.GetString());
 
   State::make<OptionTreeState>(ranOptions, std::move(doc));

@@ -87,8 +87,7 @@ bool MotionLoop::start()
   // Connect to hardware subcontroller
   auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
   log::info("MotionLoop::start") << "Using CM730 Device Path: " << cm730DevicePath;
-  auto cm730Linux = unique_ptr<CM730Linux>(new CM730Linux(cm730DevicePath));
-  d_cm730 = unique_ptr<CM730>(new CM730(move(cm730Linux)));
+  d_cm730 = unique_ptr<CM730>(new CM730(make_unique<CM730Linux>(cm730DevicePath)));
   d_haveBody = d_cm730->connect();
 
   if (!d_haveBody)
@@ -452,11 +451,11 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t
   if (d_consecutiveReadFailureCount)
     d_consecutiveReadFailureCount--;
 
-  auto cm730Snapshot = unique_ptr<CM730Snapshot const>(new CM730Snapshot(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM)));
+  auto cm730Snapshot = make_unique<CM730Snapshot const>(d_dynamicBulkRead->getBulkReadData(CM730::ID_CM));
 
   auto mx28Snapshots = vector<unique_ptr<MX28Snapshot const>>();
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    mx28Snapshots.push_back(unique_ptr<MX28Snapshot const>(new MX28Snapshot(jointId, d_dynamicBulkRead->getBulkReadData(jointId))));
+    mx28Snapshots.push_back(make_unique<MX28Snapshot const>(jointId, d_dynamicBulkRead->getBulkReadData(jointId)));
 
   //
   // UPDATE HARDWARE STATE

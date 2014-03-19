@@ -18,7 +18,7 @@ int DataStreamer::callback_camera(
     // New client connected; initialize session
     cameraSession->imgReady = false;
     cameraSession->imgSending = false;
-    cameraSession->imgJpgBuffer = unique_ptr<vector<uchar>>(new vector<uchar>());
+    cameraSession->imgJpgBuffer = make_unique<vector<uchar>>();
     d_cameraSessions.push_back(cameraSession);
     if (d_cameraSessions.size() == 1)
       hasClientChanged("camera-protocol", true);

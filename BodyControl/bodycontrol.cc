@@ -11,11 +11,11 @@ using namespace std;
 BodyControl::BodyControl()
 {
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    d_joints.push_back(unique_ptr<JointControl>(new JointControl(jointId)));
+    d_joints.push_back(make_unique<JointControl>(jointId));
 
-  d_headSection = unique_ptr<HeadSection>(new HeadSection(this));
-  d_armSection  = unique_ptr<ArmSection> (new ArmSection (this));
-  d_legSection  = unique_ptr<LegSection> (new LegSection (this));
+  d_headSection = make_unique<HeadSection>(this);
+  d_armSection  = make_unique<ArmSection>(this);
+  d_legSection  = make_unique<LegSection>(this);
 }
 
 void BodyControl::updateFromHardwareState(shared_ptr<HardwareState const> const& hw)
