@@ -261,7 +261,7 @@ namespace bold
     /** Simultaneously write consecutive table values to one ore more devices.
      *
      * This command can be used to control several Dynamixels with one instruction packet transmission.
-     * Similary, it can be used to write multiple consecutive values to a single device, such as the CM730.
+     * Similarly, it can be used to write multiple consecutive values to a single device, such as the CM730.
      * In combination, it may be used to write different values across the same addresses on multiple MX28s, which is very useful for motion control.
      *
      * When this command is used, several commands are transmitted at once, reducing communication overhead.

@@ -41,7 +41,7 @@ bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d* pos)
 
   // If the goal would be further than the max diagonal distance of the field,
   // then we assume it is not the ball.
-  if (midPointAgentSpace->norm() > d_fieldMap->getMaxDiagnoalFieldDistance())
+  if (midPointAgentSpace->norm() > d_fieldMap->getMaxDiagonalFieldDistance())
     return false;
   */
 

@@ -2,7 +2,7 @@
 
 unsigned CameraModel::expectedPixelSize(Vector3d const& position, double diameter)
 {
-  // Up in camera fram
+  // Up in camera frame
   Vector3d up(0, 0, 1);
   
   // Perpendicular to object direction
