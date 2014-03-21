@@ -33,6 +33,9 @@ void Spatialiser::updateCameraToAgent()
       lineSegments.emplace_back(*p1, *p2);
   }
 
+  // Find line junctions
+  auto lineJunctions = d_lineJunctionFinder->findLineJunctions(lineSegments);
+
   // Project occlusion rays
   vector<pair<Vector3d,Vector3d>> occlusionRays;
   for (pair<Vector2i,Vector2i> const& pair : cameraFrame->getOcclusionRays())
@@ -76,5 +79,8 @@ void Spatialiser::updateCameraToAgent()
 
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
-  State::make<AgentFrameState>(ball, goals, lineSegments, visibleFieldPoly, occlusionRays, cameraFrame->getThinkCycleNumber());
+  State::make<AgentFrameState>(ball, goals,
+                               lineSegments, lineJunctions,
+                               visibleFieldPoly, occlusionRays,
+                               cameraFrame->getThinkCycleNumber());
 }

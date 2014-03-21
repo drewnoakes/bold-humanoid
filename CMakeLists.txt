@@ -421,6 +421,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Spatialiser/Spatialiser.cc
   ./Spatialiser/updateZeroGroundPixelTransform.cc
   ./Spatialiser/findGroundPixelTransform.cc
   ./Spatialiser/findGroundPointForPixel.cc

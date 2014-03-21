@@ -5,17 +5,17 @@
 #include <Eigen/Geometry>
 
 #include "../AgentPosition/agentposition.hh"
-#include "../CameraModel/cameramodel.hh"
 #include "../util/Maybe.hh"
 
 namespace bold
 {
+  class CameraModel;
+  class LineJunctionFinder;
+
   class Spatialiser
   {
   public:
-    Spatialiser(std::shared_ptr<CameraModel> cameraModel)
-    : d_cameraModel(cameraModel)
-    {}
+    Spatialiser(std::shared_ptr<CameraModel> cameraModel);
 
     void updateZeroGroundPixelTransform();
 
@@ -94,6 +94,8 @@ namespace bold
                                                                           Eigen::Matrix3d const& groundPixelTr) const;
 
     std::shared_ptr<CameraModel> d_cameraModel;
+    std::shared_ptr<LineJunctionFinder> d_lineJunctionFinder;
+
     Eigen::Matrix3d d_zeroGroundPixelTr;
   };
 }
