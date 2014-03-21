@@ -42,8 +42,8 @@ namespace bold
   };
 
   template<typename T>
-  Maybe<T> make_maybe(T&& value)
+  Maybe<T> make_maybe(T value)
   {
-    return Maybe<T>{std::forward<T>(value)};
+    return Maybe<T>{value};
   }
 }
