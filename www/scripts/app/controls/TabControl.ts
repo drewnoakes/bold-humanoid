@@ -68,8 +68,6 @@ class TabControl
 
     public setSelectedIndex(index: number)
     {
-        var tabItem = this.items[index];
-
         // Remove any existing content
         while (this.contentContainer.childNodes.length !== 0)
             this.contentContainer.removeChild(this.contentContainer.children[0]);
