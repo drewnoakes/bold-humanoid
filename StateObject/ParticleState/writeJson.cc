@@ -10,7 +10,7 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("particles");
     writer.StartArray();
     {
-      for (unsigned i = 0; i < d_particles.cols(); ++i)
+      for (int i = 0; i < d_particles.cols(); ++i)
       {
         writer.StartArray();
 

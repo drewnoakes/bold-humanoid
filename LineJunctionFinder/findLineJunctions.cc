@@ -5,10 +5,10 @@ vector<LineJunction, aligned_allocator<LineJunction>> LineJunctionFinder::findLi
   // For each line segment pair, check where they intersect
   vector<LineJunction, aligned_allocator<LineJunction>> junctions;
 
-  for (unsigned i = 0; i < lineSegments.size(); ++i)
+  for (unsigned i = 0; i < static_cast<unsigned>(lineSegments.size()); ++i)
   {
     auto& segment1 = lineSegments[i];
-    for (unsigned j = i + 1; j < lineSegments.size(); ++j)
+    for (unsigned j = i + 1; j < static_cast<unsigned>(lineSegments.size()); ++j)
     {
       auto& segment2 = lineSegments[j];
       auto junction = tryFindLineJunction(segment1, segment2);

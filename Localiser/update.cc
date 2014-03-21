@@ -8,7 +8,7 @@ void Localiser::update()
 
   JointObservationModel<3> jointModel;
 
-  if (agentFrame->getGoalObservations().size() >= d_minGoalsNeeded->getValue())
+  if (agentFrame->getGoalObservations().size() >= static_cast<uint>(d_minGoalsNeeded->getValue()))
   {
     auto goalPostModel = [&](Vector3d const& state) {
       AgentPosition pos(state[0], state[1], state[2]);

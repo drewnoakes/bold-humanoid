@@ -23,7 +23,7 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
     auto dot1 = lineDots[dotIndex--];
     auto dot2 = lineDots[dotIndex];
 
-    if (abs(dot1.x() - dot2.x()) + abs(dot1.y() - dot2.y()) < d_minDotManhattanDistance)
+    if (abs(dot1.x() - dot2.x()) + abs(dot1.y() - dot2.y()) < static_cast<int>(d_minDotManhattanDistance))
     {
       // Ignore very short lines as they are indistinguishable from noise
       continue;
@@ -49,7 +49,7 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
       hypotheses.push_back(LineHypothesis(line, dot1, dot2));
     }
   }
-  
+
   if (hypotheses.size() == 0)
     return vector<LineSegment2i>();
 

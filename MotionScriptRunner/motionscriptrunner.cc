@@ -247,7 +247,7 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints
 
   auto keyFrameCount = d_currentStage->keyFrames.size();
 
-  if (d_currentKeyFrameIndex == keyFrameCount)
+  if (d_currentKeyFrameIndex == static_cast<int>(keyFrameCount))
   {
     // The current stage is complete
 
@@ -270,7 +270,7 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints
     }
     d_currentKeyFrameIndex = 0;
   }
-  else if (d_currentKeyFrameIndex == keyFrameCount - 1)
+  else if (d_currentKeyFrameIndex == static_cast<int>(keyFrameCount) - 1)
   {
     // This is the last step of the current page
     bool isFinishing = d_repeatCurrentStageCount == 1 && d_currentStageIndex == d_script->getStageCount() - 1;
@@ -313,7 +313,7 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints
 
     // Find Next target angle
     ushort nextTargetAngle;
-    if (d_currentKeyFrameIndex == d_currentStage->keyFrames.size())
+    if (d_currentKeyFrameIndex == static_cast<int>(d_currentStage->keyFrames.size()))
     {
       if (d_isPlayingFinished)
       {
