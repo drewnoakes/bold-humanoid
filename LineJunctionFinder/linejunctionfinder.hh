@@ -20,17 +20,10 @@ namespace bold
         NONE
     };
 
-    LineJunctionFinder(std::shared_ptr<Spatialiser> spatialiser)
-      : d_spatialiser(spatialiser)
-    {}
+    LineJunctionFinder() = default;
 
-    /** Find line junctions in agent frame given line segments in camera frame */
-    std::vector<std::pair<Eigen::Vector2d, JunctionType>> findLineJunctions(std::vector<LineSegment2i> const& lineSegments);
+    std::vector<std::pair<Eigen::Vector2d, JunctionType>> findLineJunctions(std::vector<LineSegment3d> const& lineSegments);
 
-    Maybe<std::pair<Eigen::Vector2d, JunctionType>> tryFindLineJunction(LineSegment2d const& segment1, LineSegment2d const& segment2, double distToEndThreshold = 0.2);
-
-  private:
-    std::shared_ptr<Spatialiser> d_spatialiser;
-
+    Maybe<std::pair<Eigen::Vector2d, JunctionType>> tryFindLineJunction(LineSegment3d const& segment1, LineSegment3d const& segment2, double distToEndThreshold = 0.2);
   };
 }

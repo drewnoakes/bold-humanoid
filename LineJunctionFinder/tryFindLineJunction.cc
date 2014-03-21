@@ -1,14 +1,17 @@
 #include "linejunctionfinder.ih"
 
-Maybe<pair<Vector2d, LineJunctionFinder::JunctionType>> LineJunctionFinder::tryFindLineJunction(LineSegment2d const& segment1, LineSegment2d const& segment2, double distToEndThreshold)
+Maybe<pair<Vector2d, LineJunctionFinder::JunctionType>> LineJunctionFinder::tryFindLineJunction(LineSegment3d const& segment1, LineSegment3d const& segment2, double distToEndThreshold)
 {
-  auto length1 = segment1.length();
-  auto length2 = segment2.length();
+  LineSegment2d segment2d1 = segment1.to<2>();
+  LineSegment2d segment2d2 = segment2.to<2>();
+
+  auto length1 = segment2d1.length();
+  auto length2 = segment2d2.length();
 
   double t{-1.0};
   double u{-1.0};
 
-  segment1.tryIntersect(segment2, t, u);
+  segment2d1.tryIntersect(segment2d2, t, u);
   // Lines were parallel, no crossing
   if (t < 0)
     return Maybe<pair<Vector2d, JunctionType>>::empty();
@@ -35,7 +38,7 @@ Maybe<pair<Vector2d, LineJunctionFinder::JunctionType>> LineJunctionFinder::tryF
     junction = JunctionType::L;
 
   if (junction != JunctionType::NONE)
-    return make_maybe(make_pair(Vector2d{segment1.p1() + segment1.delta() * t}, junction));
+    return make_maybe(make_pair(Vector2d{segment2d1.p1() + segment2d1.delta() * t}, junction));
   else
     return Maybe<pair<Vector2d, JunctionType>>::empty();
 }

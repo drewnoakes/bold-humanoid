@@ -22,11 +22,11 @@ TEST (LineJunctionFinder, findJunctions)
 
   auto spatialiser = createTestSpatialiser();
 
-  LineJunctionFinder finder(spatialiser);
+  LineJunctionFinder finder{};
 
   // X junctions
-  auto segment1 = LineSegment2d{Vector2d{-1.0, 0.0}, Vector2d{1.0, 0.0}};
-  auto segment2 = LineSegment2d{Vector2d{0.0, -1.0}, Vector2d{0.0, 1.0}};
+  auto segment1 = LineSegment3d{Vector3d{-1.0, 0.0, 0.0}, Vector3d{1.0, 0.0, 0.0}};
+  auto segment2 = LineSegment3d{Vector3d{0.0, -1.0, 0.0}, Vector3d{0.0, 1.0, 0.0}};
 
   auto junction = finder.tryFindLineJunction(segment1, segment2);
 
@@ -37,8 +37,8 @@ TEST (LineJunctionFinder, findJunctions)
   EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(0.0, 0.0) ) );
 
 
-  segment1 = LineSegment2d{Vector2d{-1.0, -1.0}, Vector2d{1.0,  1.0}};
-  segment2 = LineSegment2d{Vector2d{-1.0,  1.0}, Vector2d{1.0, -1.0}};
+  segment1 = LineSegment3d{Vector3d{-1.0, -1.0, 0.0}, Vector3d{1.0,  1.0, 0.0}};
+  segment2 = LineSegment3d{Vector3d{-1.0,  1.0, 0.0}, Vector3d{1.0, -1.0, 0.0}};
 
   junction = finder.tryFindLineJunction(segment1, segment2);
 
@@ -50,8 +50,8 @@ TEST (LineJunctionFinder, findJunctions)
 
 
   // T junctions
-  segment1 = LineSegment2d{Vector2d{-1.0, 0.0}, Vector2d{1.0,  0.0}};
-  segment2 = LineSegment2d{Vector2d{0.0,  0.0}, Vector2d{0.0,  1.0}};
+  segment1 = LineSegment3d{Vector3d{-1.0, 0.0, 0.0}, Vector3d{1.0,  0.0, 0.0}};
+  segment2 = LineSegment3d{Vector3d{0.0,  0.0, 0.0}, Vector3d{0.0,  1.0, 0.0}};
 
   junction = finder.tryFindLineJunction(segment1, segment2);
 
@@ -62,8 +62,8 @@ TEST (LineJunctionFinder, findJunctions)
   EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(0.0, 0.0) ) );
 
 
-  segment1 = LineSegment2d{Vector2d{-1.0, -1.0}, Vector2d{1.0,  1.0}};
-  segment2 = LineSegment2d{Vector2d{0.0,  0.0}, Vector2d{1.0,  -1.0}};
+  segment1 = LineSegment3d{Vector3d{-1.0, -1.0, 0.0}, Vector3d{1.0,  1.0, 0.0}};
+  segment2 = LineSegment3d{Vector3d{0.0,  0.0, 0.0}, Vector3d{1.0,  -1.0, 0.0}};
 
   junction = finder.tryFindLineJunction(segment1, segment2);
 
@@ -75,8 +75,8 @@ TEST (LineJunctionFinder, findJunctions)
 
 
   // L junctions
-  segment1 = LineSegment2d{Vector2d{0.0, 0.0}, Vector2d{0.0,  1.0}};
-  segment2 = LineSegment2d{Vector2d{0.0,  0.0}, Vector2d{1.0,  0}};
+  segment1 = LineSegment3d{Vector3d{0.0, 0.0, 0.0}, Vector3d{0.0,  1.0, 0.0}};
+  segment2 = LineSegment3d{Vector3d{0.0,  0.0, 0.0}, Vector3d{1.0,  0, 0.0}};
 
   junction = finder.tryFindLineJunction(segment1, segment2);
 
@@ -87,8 +87,8 @@ TEST (LineJunctionFinder, findJunctions)
   EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(0.0, 0.0) ) );
 
 
-  segment1 = LineSegment2d{Vector2d{0.0, 0.0}, Vector2d{1.0,  1.0}};
-  segment2 = LineSegment2d{Vector2d{2.0,  0.0}, Vector2d{1.0, 1.0}};
+  segment1 = LineSegment3d{Vector3d{0.0, 0.0, 0.0}, Vector3d{1.0,  1.0, 0.0}};
+  segment2 = LineSegment3d{Vector3d{2.0,  0.0, 0.0}, Vector3d{1.0, 1.0, 0.0}};
 
   junction = finder.tryFindLineJunction(segment1, segment2);
 
@@ -100,16 +100,16 @@ TEST (LineJunctionFinder, findJunctions)
 
 
   // No junction
-  segment1 = LineSegment2d{Vector2d{0.0, 0.0}, Vector2d{1.0,  0.0}};
-  segment2 = LineSegment2d{Vector2d{0.5,  0.21}, Vector2d{0.5, 1.0}};
+  segment1 = LineSegment3d{Vector3d{0.0, 0.0, 0.0}, Vector3d{1.0,  0.0, 0.0}};
+  segment2 = LineSegment3d{Vector3d{0.5,  0.21, 0.0}, Vector3d{0.5, 1.0, 0.0}};
 
   junction = finder.tryFindLineJunction(segment1, segment2, 0.2);
 
   EXPECT_TRUE ( !junction.hasValue() );
 
 
-  segment1 = LineSegment2d{Vector2d{0.0, 0.0}, Vector2d{0.5,  0.5}};
-  segment2 = LineSegment2d{Vector2d{2.0,  0.0}, Vector2d{1.5, 0.5}};
+  segment1 = LineSegment3d{Vector3d{0.0, 0.0, 0.0}, Vector3d{0.5,  0.5, 0.0}};
+  segment2 = LineSegment3d{Vector3d{2.0,  0.0, 0.0}, Vector3d{1.5, 0.5, 0.0}};
 
   junction = finder.tryFindLineJunction(segment1, segment2);
 
