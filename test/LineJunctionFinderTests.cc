@@ -17,9 +17,6 @@ shared_ptr<Spatialiser> createTestSpatialiser(unsigned imageWidth = 11, unsigned
 
 TEST (LineJunctionFinder, findJunctions)
 {
-  Vector2d junctionPoint;
-  LineJunctionFinder::JunctionType junctionType;
-
   auto spatialiser = createTestSpatialiser();
 
   LineJunctionFinder finder{};
@@ -32,9 +29,8 @@ TEST (LineJunctionFinder, findJunctions)
 
   EXPECT_TRUE ( junction.hasValue() );
 
-  tie(junctionPoint, junctionType) = *junction;
-  EXPECT_EQ( junctionType, LineJunctionFinder::JunctionType::X );
-  EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(0.0, 0.0) ) );
+  EXPECT_EQ( junction->type, LineJunction::Type::X );
+  EXPECT_TRUE( VectorsEqual( junction->position, Vector2d(0.0, 0.0) ) );
 
 
   segment1 = LineSegment3d{Vector3d{-1.0, -1.0, 0.0}, Vector3d{1.0,  1.0, 0.0}};
@@ -44,9 +40,8 @@ TEST (LineJunctionFinder, findJunctions)
 
   EXPECT_TRUE ( junction.hasValue() );
 
-  tie(junctionPoint, junctionType) = *junction;
-  EXPECT_EQ( junctionType, LineJunctionFinder::JunctionType::X );
-  EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(0.0, 0.0) ) );
+  EXPECT_EQ( junction->type, LineJunction::Type::X );
+  EXPECT_TRUE( VectorsEqual( junction->position, Vector2d(0.0, 0.0) ) );
 
 
   // T junctions
@@ -57,9 +52,8 @@ TEST (LineJunctionFinder, findJunctions)
 
   EXPECT_TRUE ( junction.hasValue() );
 
-  tie(junctionPoint, junctionType) = *junction;
-  EXPECT_EQ( junctionType, LineJunctionFinder::JunctionType::T );
-  EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(0.0, 0.0) ) );
+  EXPECT_EQ( junction->type, LineJunction::Type::T );
+  EXPECT_TRUE( VectorsEqual( junction->position, Vector2d(0.0, 0.0) ) );
 
 
   segment1 = LineSegment3d{Vector3d{-1.0, -1.0, 0.0}, Vector3d{1.0,  1.0, 0.0}};
@@ -69,9 +63,8 @@ TEST (LineJunctionFinder, findJunctions)
 
   EXPECT_TRUE ( junction.hasValue() );
 
-  tie(junctionPoint, junctionType) = *junction;
-  EXPECT_EQ( junctionType, LineJunctionFinder::JunctionType::T );
-  EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(0.0, 0.0) ) );
+  EXPECT_EQ( junction->type, LineJunction::Type::T );
+  EXPECT_TRUE( VectorsEqual( junction->position, Vector2d(0.0, 0.0) ) );
 
 
   // L junctions
@@ -82,9 +75,8 @@ TEST (LineJunctionFinder, findJunctions)
 
   EXPECT_TRUE ( junction.hasValue() );
 
-  tie(junctionPoint, junctionType) = *junction;
-  EXPECT_EQ( junctionType, LineJunctionFinder::JunctionType::L );
-  EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(0.0, 0.0) ) );
+  EXPECT_EQ( junction->type, LineJunction::Type::L );
+  EXPECT_TRUE( VectorsEqual( junction->position, Vector2d(0.0, 0.0) ) );
 
 
   segment1 = LineSegment3d{Vector3d{0.0, 0.0, 0.0}, Vector3d{1.0,  1.0, 0.0}};
@@ -94,9 +86,8 @@ TEST (LineJunctionFinder, findJunctions)
 
   EXPECT_TRUE ( junction.hasValue() );
 
-  tie(junctionPoint, junctionType) = *junction;
-  EXPECT_EQ( junctionType, LineJunctionFinder::JunctionType::L );
-  EXPECT_TRUE( VectorsEqual( junctionPoint, Vector2d(1.0, 1.0) ) );
+  EXPECT_EQ( junction->type, LineJunction::Type::L );
+  EXPECT_TRUE( VectorsEqual( junction->position, Vector2d(1.0, 1.0) ) );
 
 
   // No junction

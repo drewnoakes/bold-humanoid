@@ -18,7 +18,7 @@ namespace bold
     AgentFrameState(Maybe<Eigen::Vector3d> ballObservation,
                     std::vector<Eigen::Vector3d> goalObservations,
                     std::vector<LineSegment3d> observedLineSegments,
-                    std::vector<std::pair<Eigen::Vector2d, LineJunctionFinder::JunctionType>> observedLineJunctions,
+                    std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> observedLineJunctions,
                     Maybe<Polygon2d> visibleFieldPoly,
                     std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
                     ulong thinkCycleNumber)
@@ -45,7 +45,7 @@ namespace bold
     Maybe<Eigen::Vector3d> d_ballObservation;
     std::vector<Eigen::Vector3d> d_goalObservations;
     std::vector<LineSegment3d> d_observedLineSegments;
-    std::vector<std::pair<Eigen::Vector2d,LineJunctionFinder::JunctionType>> d_observerdLineJunctions;
+    std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> d_observerdLineJunctions;
     Maybe<Polygon2d> d_visibleFieldPoly;
     std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> d_occlusionRays;
     ulong d_thinkCycleNumber;

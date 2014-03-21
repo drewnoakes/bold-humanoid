@@ -1,6 +1,6 @@
 #include "linejunctionfinder.ih"
 
-Maybe<pair<Vector2d, LineJunctionFinder::JunctionType>> LineJunctionFinder::tryFindLineJunction(LineSegment3d const& segment1, LineSegment3d const& segment2, double distToEndThreshold)
+Maybe<LineJunction> LineJunctionFinder::tryFindLineJunction(LineSegment3d const& segment1, LineSegment3d const& segment2, double distToEndThreshold)
 {
   LineSegment2d segment2d1 = segment1.to<2>();
   LineSegment2d segment2d2 = segment2.to<2>();
@@ -14,7 +14,7 @@ Maybe<pair<Vector2d, LineJunctionFinder::JunctionType>> LineJunctionFinder::tryF
   segment2d1.tryIntersect(segment2d2, t, u);
   // Lines were parallel, no crossing
   if (t < 0)
-    return Maybe<pair<Vector2d, JunctionType>>::empty();
+    return Maybe<LineJunction>::empty();
 
   cout << "t: " << t << ", u: " << u << endl;
 
@@ -27,19 +27,24 @@ Maybe<pair<Vector2d, LineJunctionFinder::JunctionType>> LineJunctionFinder::tryF
   bool atEnd1 = distToEnd1 < distToEndThreshold;
   bool atEnd2 = distToEnd2 < distToEndThreshold;
 
-  JunctionType junction = JunctionType::NONE;
+  LineJunction junction;
+  junction.type = LineJunction::Type::NONE;
 
   if (on1 && on2 && !atEnd1 && !atEnd2)
-    junction = JunctionType::X;
+    junction.type = LineJunction::Type::X;
   else if ((on1 && !atEnd1 && atEnd2) ||
            (on2 && !atEnd2 && atEnd1))
-    junction = JunctionType::T;
+    junction.type = LineJunction::Type::T;
   else if (atEnd1 && atEnd2)
-    junction = JunctionType::L;
+    junction.type = LineJunction::Type::L;
 
-  if (junction != JunctionType::NONE)
-    return make_maybe(make_pair(Vector2d{segment2d1.p1() + segment2d1.delta() * t}, junction));
+  if (junction.type != LineJunction::Type::NONE)
+  {
+    junction.position = Vector2d{segment2d1.p1() + segment2d1.delta() * t};
+    junction.angle = segment2d1.smallestAngleBetween(segment2d2);
+    return make_maybe(junction);
+  }
   else
-    return Maybe<pair<Vector2d, JunctionType>>::empty();
+    return Maybe<LineJunction>::empty();
 }
 

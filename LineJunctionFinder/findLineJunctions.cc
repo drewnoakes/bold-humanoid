@@ -1,9 +1,9 @@
 #include "linejunctionfinder.ih"
 
-vector<pair<Vector2d, LineJunctionFinder::JunctionType>> LineJunctionFinder::findLineJunctions(vector<LineSegment3d> const& lineSegments)
+vector<LineJunction, aligned_allocator<LineJunction>> LineJunctionFinder::findLineJunctions(vector<LineSegment3d> const& lineSegments)
 {
   // For each line segment pair, check where they intersect
-  vector<pair<Vector2d, JunctionType>> junctions;
+  vector<LineJunction, aligned_allocator<LineJunction>> junctions;
 
   for (unsigned i = 0; i < lineSegments.size(); ++i)
   {
