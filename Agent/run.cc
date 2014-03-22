@@ -24,13 +24,10 @@ void Agent::run()
   // Become the think loop...
   //
 
-  if (!State::get<HardwareState>())
-  {
-    // Wait until the motion loop has read a hardware value
-    log::info("Agent::run") << "Waiting for HardwareState before starting think loop";
-    while (!State::get<HardwareState>())
-      usleep(8000);
-  }
+  // Wait until the motion loop has read a hardware value
+  log::info("Agent::run") << "Waiting for sufficient Motion Loop cycles";
+  while (d_motionLoop->getCycleNumber() < 5)
+    usleep(8000);
 
   log::info("Agent::run") << "Starting think loop";
 
