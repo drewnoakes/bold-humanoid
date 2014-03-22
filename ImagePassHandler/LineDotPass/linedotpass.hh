@@ -43,20 +43,20 @@ namespace bold
 
       for (ushort x = 0; x <= imageWidth; ++x)
       {
-        d_colTrackers.push_back(bold::LineRunTracker(
+        d_colTrackers.emplace_back(
           inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysteresisLimit->getValue(),
           [this](ushort const from, ushort const to, ushort const other) mutable {
             int mid = (from + to) / 2;
-            lineDots.push_back(Eigen::Vector2i((int)other, mid));
+            lineDots.emplace_back((int)other, mid);
           }
-        ));
+        );
       }
 
       d_rowTracker = std::make_unique<LineRunTracker>(
         inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysteresisLimit->getValue(),
         [this](ushort const from, ushort const to, ushort const other) mutable {
           int mid = (from + to) / 2;
-          lineDots.push_back(Eigen::Vector2i(mid, (int)other));
+          lineDots.emplace_back(mid, (int)other);
         }
       );
 
