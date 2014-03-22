@@ -25,6 +25,7 @@ namespace bold
     std::shared_ptr<PixelLabel> const onLabel;
     std::unique_ptr<LineRunTracker> d_rowTracker;
     std::vector<bold::LineRunTracker> d_colTrackers;
+    int d_lastXGranularity;
 
   public:
     std::vector<Eigen::Vector2i> lineDots;
@@ -33,6 +34,7 @@ namespace bold
     : d_imageWidth(imageWidth),
       inLabel(inLabel),
       onLabel(onLabel),
+      d_lastXGranularity(-1),
       lineDots()
     {
       auto hysteresisLimit = Config::getSetting<int>("vision.line-detection.line-dots.hysteresis");
@@ -87,6 +89,31 @@ namespace bold
     {
       d_rowTracker->reset();
       d_rowTracker->otherCoordinate = y;
+
+      if (d_lastXGranularity != granularity.x())
+      {
+        // Granularity should only be decreasing, as we process the image from
+        // bottom to top.
+        assert(d_lastXGranularity > granularity.x());
+
+        // We've transitioned between x-granularities and need to reset columns
+        // for which we have just stopped observing pixels, as otherwise they
+        // will carry incorrect state across vertical regions of the image.
+
+        // If this isn't the first row of the image...
+        if (d_lastXGranularity != -1)
+        {
+          // Interate through at the previous granularity. Any column which is
+          // not a multiple of the new granularity must be reset.
+          for (ushort x = 0; x < d_imageWidth; x += granularity.x())
+          {
+            if (x % d_lastXGranularity != 0)
+              d_colTrackers[x].reset();
+          }
+        }
+
+        d_lastXGranularity = granularity.x();
+      }
     }
 
     void onPixel(T label, ushort x, ushort y) override
