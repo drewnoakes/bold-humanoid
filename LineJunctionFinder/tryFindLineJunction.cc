@@ -16,8 +16,6 @@ Maybe<LineJunction> LineJunctionFinder::tryFindLineJunction(LineSegment3d const&
   if (t < 0)
     return Maybe<LineJunction>::empty();
 
-  cout << "t: " << t << ", u: " << u << endl;
-
   bool on1 = t >= 0.0 && t <= 1.0;
   bool on2 = u >= 0.0 && u <= 1.0;
 
