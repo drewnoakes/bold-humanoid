@@ -23,7 +23,7 @@
     "settings": {
       "auto-wb": false,
       "exposure-auto": 1,
-      "exposure-absolute": 1000,
+      "exposure-absolute": 300,
       "exposure-auto-priority": false,
       "backlight-compensation": false,
       "power-line-frequency": 2,
