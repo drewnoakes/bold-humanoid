@@ -166,7 +166,7 @@ export function drawLineSegments(context: CanvasRenderingContext2D, lineSegments
     context.stroke();
 }
 
-export function drawJunctions(context: CanvasRenderingContext2D, junctions: {p: number[]; a: number; t: number}[], scale: number)
+export function drawJunctions(context: CanvasRenderingContext2D, junctions: {p: number[]; a: number; t: number}[])
 {
     context.lineWidth = 0.03;
     context.strokeStyle = '#800080';
