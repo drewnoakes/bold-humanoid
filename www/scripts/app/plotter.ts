@@ -166,6 +166,35 @@ export function drawLineSegments(context: CanvasRenderingContext2D, lineSegments
     context.stroke();
 }
 
+export function drawJunctions(context: CanvasRenderingContext2D, junctions: {p: number[]; a: number; t: number}[], scale: number)
+{
+    context.lineWidth = 0.03;
+    context.strokeStyle = '#800080';
+    var markerRadius = 0.1;
+    _.each(junctions, junction =>
+           {
+               context.beginPath();
+               context.arc(junction.p[0], junction.p[1], markerRadius, 0, 2 * Math.PI);
+               if (junction.t == 0) { // X
+                   context.moveTo(junction.p[0], junction.p[1] + markerRadius);
+                   context.lineTo(junction.p[0], junction.p[1] - markerRadius);
+                   context.moveTo(junction.p[0] - markerRadius, junction.p[1]);
+                   context.lineTo(junction.p[0] + markerRadius, junction.p[1]);
+               } else if (junction.t == 1) { // T
+                   context.moveTo(junction.p[0] - markerRadius, junction.p[1]);
+                   context.lineTo(junction.p[0] + markerRadius, junction.p[1]);
+                   context.moveTo(junction.p[0], junction.p[1]);
+                   context.lineTo(junction.p[0], junction.p[1] - markerRadius);
+               } else if (junction.t == 2) { // L
+                   context.moveTo(junction.p[0], junction.p[1]);
+                   context.lineTo(junction.p[0] + markerRadius, junction.p[1]);
+                   context.moveTo(junction.p[0], junction.p[1]);
+                   context.lineTo(junction.p[0], junction.p[1] + markerRadius);
+               }
+               context.stroke();
+           });
+}
+
 export function drawVisibleFieldPoly(context: CanvasRenderingContext2D, options: {visibleFieldPolyLineWidth?:number; visibleFieldPolyStrokeStyle?: string}, visibleFieldPoly: number[][])
 {
     if (visibleFieldPoly.length < 2)

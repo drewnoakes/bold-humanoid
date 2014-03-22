@@ -49,6 +49,7 @@ class Agent2dModule extends Module
 
         this.map.addLayer(new mapping.AgentReferenceLayer(transform));
         this.map.addLayer(new mapping.AgentObservedLineLayer(transform));
+        this.map.addLayer(new mapping.AgentObservedLineJunctionLayer(transform));
         this.map.addLayer(new mapping.AgentVisibleFieldPolyLayer(transform));
         this.map.addLayer(new mapping.AgentBallPositionLayer(transform));
         this.map.addLayer(new mapping.AgentObservedGoalLayer(transform));

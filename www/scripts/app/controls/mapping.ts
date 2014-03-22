@@ -372,6 +372,22 @@ export class AgentObservedLineLayer extends DataLayer<state.AgentFrame>
     }
 }
 
+export class AgentObservedLineJunctionLayer extends DataLayer<state.AgentFrame>
+{
+    constructor(transform: util.Trackable<geometry.Transform>)
+    {
+        super(
+            transform, 
+            constants.protocols.agentFrameState,
+            "Observed Line junctions",
+            () => {
+                canvasUtil.clear(this.context, true)
+                if (this.data && this.data.junctions)
+                    plotter.drawJunctions(this.context, this.data.junctions);
+            });
+    }
+}
+
 export class AgentVisibleFieldPolyLayer extends DataLayer<state.AgentFrame>
 {
     constructor(transform: util.Trackable<geometry.Transform>)

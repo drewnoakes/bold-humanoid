@@ -13,6 +13,9 @@ export interface AgentFrame
     /** [[x1,y1,z1,x2,y2,z2],...] */
     lines: number[][];
 
+    /** [{p,a,t},{p,a,t},...] */
+    junctions: {p: number[]; a: number; t: number}[];
+
     /** [[x,y],...] */
     visibleFieldPoly: number[][];
 
