@@ -1,6 +1,7 @@
 #include "scanninglinefinder.ih"
 
-ScanningLineFinder::ScanningLineFinder()
+ScanningLineFinder::ScanningLineFinder(shared_ptr<CameraModel> cameraModel)
+  : d_cameraModel(move(cameraModel))
 {
   d_minLength = Config::getSetting<double>("vision.line-detection.scanning.min-length");
   d_minCoverage = Config::getSetting<double>("vision.line-detection.scanning.min-coverage");

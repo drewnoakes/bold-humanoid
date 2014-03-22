@@ -1,8 +1,10 @@
 #include "scanninglinefinder.hh"
 
+#include "../../CameraModel/cameramodel.hh"
 #include <Eigen/LU>
 #include "../../util/memory.hh"
 #include <Eigen/StdVector>
+#include <Eigen/Sparse>
 
 using namespace bold;
 using namespace std;

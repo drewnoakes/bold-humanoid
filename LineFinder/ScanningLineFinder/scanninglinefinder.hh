@@ -5,14 +5,18 @@
 
 namespace bold
 {
+  class CameraModel;
+
   class ScanningLineFinder : public LineFinder
   {
   public:
-    ScanningLineFinder();
+    ScanningLineFinder(std::shared_ptr<CameraModel> cameraModel);
 
     std::vector<LineSegment2i> findLineSegments(std::vector<Eigen::Vector2i>& lineDots) override;
 
   private:
+    std::shared_ptr<CameraModel> d_cameraModel;
+
     // Minimum line segment length required
     Setting<double>* d_minLength;
     // Minimum ratio of dots / length required

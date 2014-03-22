@@ -209,7 +209,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_dataStreamer->hasClientChanged.connect([setCartoonHandler](std::string protocol, bool enabled) { if (protocol == "camera-protocol") setCartoonHandler(); });
 
   //d_lineFinder = make_shared<MaskWalkLineFinder>();
-  d_lineFinder = make_shared<ScanningLineFinder>();
+  d_lineFinder = make_shared<ScanningLineFinder>(d_cameraModel);
 
   // Image capture
   Config::addAction("camera.save-yuv-frame",   "Save YUV Frame",   [this]() { d_saveNextYUVFrame   = true; });
