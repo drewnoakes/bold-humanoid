@@ -44,8 +44,9 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
   vector<LineSegment2i> observedLineSegments;
   if (d_shouldDetectLines->getValue())
   {
+    t.enter("Line Search");
     observedLineSegments = d_lineFinder->findLineSegments(getHandler<LineDotPass<uchar>>()->lineDots);
-    t.timeEvent("Line Search");
+    t.exit();
   }
 
   Maybe<Vector2d> ballPosition = Maybe<Vector2d>::empty();
