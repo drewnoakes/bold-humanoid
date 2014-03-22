@@ -23,7 +23,7 @@ namespace bold
     const ushort d_imageWidth;
     std::shared_ptr<PixelLabel> const inLabel;
     std::shared_ptr<PixelLabel> const onLabel;
-    LineRunTracker* d_rowTracker;
+    std::unique_ptr<LineRunTracker> d_rowTracker;
     std::vector<bold::LineRunTracker> d_colTrackers;
 
   public:
@@ -52,8 +52,7 @@ namespace bold
         ));
       }
 
-      // TODO delete in destructor
-      d_rowTracker = new LineRunTracker(
+      d_rowTracker = std::make_unique<LineRunTracker>(
         inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysteresisLimit->getValue(),
         [this](ushort const from, ushort const to, ushort const other) mutable {
           int mid = (from + to) / 2;
@@ -80,7 +79,7 @@ namespace bold
         d_colTrackers[x].reset();
 
       lineDots.clear();
-      
+
       timer.timeEvent("Clear");
     }
 
