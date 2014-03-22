@@ -11,16 +11,18 @@ void Agent::think()
   SequentialTimer t;
 
   //
-  // Update Spatialiser internals
-  //
-  d_spatialiser->updateZeroGroundPixelTransform();
-
-  //
   // Capture the image (YCbCr format)
+  // This should be the very first thing done in the think loop, to
+  // ensure a BodyState snapshot is available
   //
   t.enter("Image Capture");
   cv::Mat image = d_camera->capture(t);
   t.exit();
+
+  //
+  // Update Spatialiser internals
+  //
+  d_spatialiser->updateZeroGroundPixelTransform();
 
   //
   // Process the image
