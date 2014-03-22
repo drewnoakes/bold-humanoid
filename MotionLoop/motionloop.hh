@@ -39,6 +39,8 @@ namespace bold
     /// Callback is passed the number of consecutive failures.
     sigc::signal<void, uint> onReadFailure;
 
+    ulong getCycleNumber() const { return d_cycleNumber; }
+
   private:
     void step(SequentialTimer& t);
 
