@@ -22,17 +22,19 @@ namespace bold
                     Maybe<Polygon2d> visibleFieldPoly,
                     std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
                     ulong thinkCycleNumber)
-    : d_ballObservation(ballObservation),
-      d_goalObservations(goalObservations),
-      d_observedLineSegments(observedLineSegments),
-      d_visibleFieldPoly(visibleFieldPoly),
-      d_occlusionRays(occlusionRays),
+      : d_ballObservation(std::move(ballObservation)),
+      d_goalObservations(std::move(goalObservations)),
+      d_observedLineSegments(std::move(observedLineSegments)),
+      d_observedLineJunctions(std::move(observedLineJunctions)),
+      d_visibleFieldPoly(std::move(visibleFieldPoly)),
+      d_occlusionRays(std::move(occlusionRays)),
       d_thinkCycleNumber(thinkCycleNumber)
     {}
 
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
+    std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> getObservedLineJunctions() const { return d_observedLineJunctions; }
     Maybe<Polygon2d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
     std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> getOcclusionRays() const { return d_occlusionRays; }
 
@@ -45,7 +47,7 @@ namespace bold
     Maybe<Eigen::Vector3d> d_ballObservation;
     std::vector<Eigen::Vector3d> d_goalObservations;
     std::vector<LineSegment3d> d_observedLineSegments;
-    std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> d_observerdLineJunctions;
+    std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> d_observedLineJunctions;
     Maybe<Polygon2d> d_visibleFieldPoly;
     std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> d_occlusionRays;
     ulong d_thinkCycleNumber;

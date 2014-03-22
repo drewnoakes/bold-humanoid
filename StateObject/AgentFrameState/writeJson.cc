@@ -40,7 +40,7 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("lines");
     writer.StartArray();
     {
-      for (LineSegment3d const& lineSeg : d_observedLineSegments)
+      for (auto const& lineSeg : d_observedLineSegments)
       {
         writer.StartArray();
         writer.Double(lineSeg.p1().x(), "%.3f");
@@ -50,6 +50,26 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
         writer.Double(lineSeg.p2().y(), "%.3f");
         writer.Double(lineSeg.p2().z(), "%.3f");
         writer.EndArray();
+      }
+    }
+    writer.EndArray();
+
+    writer.String("junctions");
+    writer.StartArray();
+    {
+      for (auto const& junction : d_observedLineJunctions)
+      {
+        writer.StartObject();
+        writer.String("p")
+          .StartArray()
+          .Double(junction.position(0), "%.3f")
+          .Double(junction.position(1), "%.3f")
+          .EndArray();
+        writer.String("a")
+          .Double(junction.angle);
+        writer.String("t")
+          .Uint(static_cast<unsigned>(junction.type));
+        writer.EndObject();
       }
     }
     writer.EndArray();
