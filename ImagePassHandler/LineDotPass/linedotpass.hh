@@ -90,6 +90,15 @@ namespace bold
       d_rowTracker->reset();
       d_rowTracker->otherCoordinate = y;
 
+      // ************************************************* 1
+      // ************************************************* 1
+      // * * * * * * * * * * * * * * * * * * * * * * * * * 2
+      // * * * * * * * * * * * * * * * * * * * * * * * * * 2
+      // *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 3
+      // *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 3
+      // *   *   *   *   *   *   *   *   *   *   *   *   * 4
+      // *   *   *   *   *   *   *   *   *   *   *   *   * 4
+
       if (d_lastXGranularity != granularity.x())
       {
         // Granularity should only be decreasing, as we process the image from
