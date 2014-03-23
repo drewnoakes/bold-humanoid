@@ -1,6 +1,7 @@
 #include "imagelabeller.hh"
 
 #include "../SequentialTimer/sequentialtimer.hh"
+#include "../Spatialiser/spatialiser.hh"
 #include "../Math/math.hh"
 
 #include <memory>

@@ -6,11 +6,11 @@
 #include <memory>
 
 #include "../PixelLabel/pixellabel.hh"
-#include "../Spatialiser/spatialiser.hh"
 
 namespace bold
 {
   class SequentialTimer;
+  class Spatialiser;
 
   class ImageLabeller
   {
