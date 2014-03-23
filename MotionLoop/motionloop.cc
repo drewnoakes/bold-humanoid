@@ -35,13 +35,13 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
 {
   d_bodyControl = make_shared<BodyControl>();
 
-  d_dynamicBulkRead = unique_ptr<BulkRead>(
-    new BulkRead(CM730::P_DXL_POWER, CM730::P_VOLTAGE,
-                 MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE));
+  d_dynamicBulkRead = make_unique<BulkRead>(
+    CM730::P_DXL_POWER, CM730::P_VOLTAGE,
+    MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE);
 
-  d_staticBulkRead = unique_ptr<BulkRead>(
-    new BulkRead(CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
-                 MX28::P_MODEL_NUMBER_L, MX28::P_LOCK));
+  d_staticBulkRead = make_unique<BulkRead>(
+    CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
+    MX28::P_MODEL_NUMBER_L, MX28::P_LOCK);
 
   Config::addAction("hardware.query-static-hardware-state", "Query static HW state", [this]() { d_staticHardwareStateUpdateNeeded = true; });
   Config::addAction("hardware.cm730-power-on",  "CM730 On",  [this]() { d_powerChangeToValue = true;  d_powerChangeNeeded = true; });
