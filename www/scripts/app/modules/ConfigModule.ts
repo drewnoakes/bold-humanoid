@@ -5,17 +5,15 @@
 /// <reference path="../../libs/lodash.d.ts" />
 
 import control = require('control');
-import DOMTemplate = require('DOMTemplate');
 import Module = require('Module');
 import TabControl = require('controls/TabControl');
 
-var moduleTemplate = new DOMTemplate('config-module-template');
-
 class ConfigModule extends Module
 {
-    private settingTextElement: HTMLDivElement;
-    private actionTextElement: HTMLDivElement;
+    private settingList: HTMLUListElement;
+    private actionList: HTMLUListElement;
     private filter: HTMLInputElement;
+    private tabControl: TabControl;
 
     constructor()
     {
@@ -24,40 +22,123 @@ class ConfigModule extends Module
 
     public load(element: HTMLDivElement)
     {
-        var templateRoot = <HTMLDListElement>moduleTemplate.create();
+        /*
+            <div class="filter">
+                <input type="text" placeholder="Type to filter..." />
+            </div>
+            <dl class="tab-control">
+                <dt>settings</dt>
+                <dd class="settings">
+                    <div class="header"></div>
+                    <ul></ul>
+                </dd>
+                <dt>actions</dt>
+                <dd class="actions">
+                    <ul></ul>
+                </dd>
+            </dl>
+        */
+        var filter = document.createElement('input');
+        filter.className = 'filter';
+        filter.type = 'text';
+        filter.placeholder = 'Type to filter...';
+        filter.addEventListener('input', () => this.setFilterText(filter.value));
+        element.appendChild(filter);
 
-        element.appendChild(templateRoot);
+        var dl = document.createElement('dl');
+        dl.className = 'tab-control';
 
-        this.settingTextElement = <HTMLDivElement>templateRoot.querySelector('dd.settings > div.json-text');
-        this.actionTextElement = <HTMLDivElement>templateRoot.querySelector('dd.actions > div.json-text');
+        /////////////////////// SETTINGS
 
-        this.closeables.add(control.onSettingChange(this.updateSettingText.bind(this)));
+        var settingsTab = document.createElement('dt');
+        settingsTab.textContent = 'settings';
+        dl.appendChild(settingsTab);
 
-        var header = templateRoot.querySelector('dd.settings > div.header');
+        var settingsPane = document.createElement('dd');
+        settingsPane.className = 'settings';
+        dl.appendChild(settingsPane);
+
+        var header = document.createElement('div');
+        header.className = 'header';
+        settingsPane.appendChild(header);
         control.buildActions('config', header);
 
-        this.filter = document.createElement('input');
-        this.filter.type = 'text';
-        this.filter.placeholder = 'Type to filter...';
-        this.filter.addEventListener('input', this.updateSettingText.bind(this));
-        header.appendChild(this.filter);
+        this.settingList = document.createElement('ul');
+        settingsPane.appendChild(this.settingList);
 
-        this.updateSettingText();
+        _.each(control.getAllSettings(), setting =>
+        {
+            if (setting.isReadOnly)
+                return;
 
-        this.actionTextElement.textContent = control.getActionText();
+            var li = document.createElement('li');
+            li.dataset['path'] = setting.path;
+            // TODO add more details here
+            control.createSettingControl(setting, li, this.closeables, /*hideLabel*/true);
+            var desc = document.createElement('span');
+            desc.className = 'description';
+            desc.textContent = setting.path;
+            li.appendChild(desc);
+            this.settingList.appendChild(li);
+        });
 
-        new TabControl(templateRoot);
+        /////////////////////// ACTIONS
+
+        var actionsTab = document.createElement('dt');
+        actionsTab.textContent = 'actions';
+        dl.appendChild(actionsTab);
+
+        var actionsPane = document.createElement('dd');
+        actionsPane.className = 'actions';
+        dl.appendChild(actionsPane);
+
+        this.actionList = document.createElement('ul');
+        actionsPane.appendChild(this.actionList);
+
+        _.each(control.getAllActions(), action =>
+        {
+            if (action.hasArguments)
+                return;
+
+            var li = document.createElement('li');
+            li.dataset['path'] = action.id;
+            // TODO add more details here
+            control.createActionControl(action, li);
+            var desc = document.createElement('span');
+            desc.className = 'description';
+            desc.textContent = action.id;
+            li.appendChild(desc);
+            this.actionList.appendChild(li);
+        });
+
+        ///////////////////////
+
+        element.appendChild(dl);
+
+        this.tabControl = new TabControl(dl);
     }
 
     public unload()
     {
-        delete this.settingTextElement;
+        delete this.settingList;
+        delete this.actionList;
+        delete this.filter;
+        delete this.tabControl;
     }
 
-    private updateSettingText()
+    private setFilterText(filterText: string)
     {
-        var matching = this.filter.value;
-        this.settingTextElement.textContent = control.getSettingText(matching);
+        _.each(this.settingList.children, (li: HTMLLIElement) =>
+        {
+            var path = li.dataset['path'];
+            li.style.display = !filterText.length || path.indexOf(filterText) !== -1 ? 'block' : 'none';
+        });
+
+        _.each(this.actionList.children, (li: HTMLLIElement) =>
+        {
+            var path = li.dataset['path'];
+            li.style.display = !(!filterText.length || path.indexOf(filterText) !== -1) ? 'none' : 'block';
+        });
     }
 }
 

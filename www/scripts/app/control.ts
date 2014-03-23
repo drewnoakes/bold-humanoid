@@ -70,8 +70,6 @@ var allActions: Action[],
     settingsJson,
     subscription;
 
-var onSettingChangeCallbacks: {():void}[] = [];
-
 // { "type": "action", "id": "some.action" }
 // { "type": "setting", "path": "some.setting", "value": 1234 }
 export interface ControlMessage
@@ -87,6 +85,11 @@ export function getSetting(path: string): Setting
     return _.find<Setting>(allSettings, setting => setting.path === path);
 }
 
+export function getAllSettings()
+{
+    return allSettings;
+}
+
 export function getFsmDescriptions(): FSM[]
 {
     return allFSMs;
@@ -100,6 +103,11 @@ export function getFSM(name: string): FSM
 export function getAction(id: string): Action
 {
     return _.find<Action>(allActions, action => action.id === id);
+}
+
+export function getAllActions()
+{
+    return allActions;
 }
 
 function withAction(id: string, callback: (action:Action)=>void)
@@ -152,20 +160,6 @@ export function send(message: ControlMessage)
     subscription.send(JSON.stringify(message));
 }
 
-export function getSettingText(matching?: string)
-{
-    if (!settingsJson)
-        return '';
-
-    var response = settingsJson;
-
-    if (typeof(matching) === 'string' && matching.length !== 0) {
-        response = _.filter<Setting>(settingsJson, setting => setting.path.indexOf(matching) !== -1);
-    }
-
-    return JSON.stringify(response, null, 4);
-}
-
 export function getActionText(matching?: string)
 {
     if (!actionsJson)
@@ -184,29 +178,7 @@ export function buildAction(id: string, target: Element)
 {
     console.assert(!!id && !!target);
 
-    var button;
-    if (target instanceof HTMLButtonElement)
-    {
-        button = target;
-    }
-    else
-    {
-        console.assert(target instanceof Element);
-        button = document.createElement('button');
-        (<Element>target).appendChild(button);
-    }
-
-    withAction(id, action =>
-    {
-        console.assert(!action.hasArguments);
-
-        if (!button.textContent)
-            button.innerHTML = action.label;
-
-        button.addEventListener('click', () => action.activate());
-    });
-
-    return button;
+    withAction(id, action => createActionControl(action, target));
 }
 
 export function buildActions(idPrefix: string, target: Element)
@@ -227,7 +199,7 @@ export function buildSetting(path: string, container: Element, closeable: Closea
 {
     console.assert(!!path && !!container);
 
-    withSetting(path, setting => createSetting(setting, container, closeable));
+    withSetting(path, setting => createSettingControl(setting, container, closeable));
 }
 
 export function buildSettings(pathPrefix: string, container: Element, closeable: Closeable)
@@ -237,7 +209,7 @@ export function buildSettings(pathPrefix: string, container: Element, closeable:
     withSettings(pathPrefix, settings =>
     {
         var sortedSettings = settings.sort((a, b) => (a.type == "bool") != (b.type == "bool") ? 1 : 0);
-        _.each(sortedSettings, setting => createSetting(setting, container, closeable))
+        _.each(sortedSettings, setting => createSettingControl(setting, container, closeable))
     });
 }
 
@@ -289,22 +261,6 @@ function onControlData(data: ControlData)
         default:
         {
             console.error("Unsupported control data type: " + data.type);
-        }
-    }
-
-    _.each(onSettingChangeCallbacks, callback => callback());
-}
-
-export function onSettingChange(callback: ()=>void)
-{
-    onSettingChangeCallbacks.push(callback);
-
-    return {
-        close: () =>
-        {
-            var i = onSettingChangeCallbacks.indexOf(callback);
-            if (i !== -1)
-                onSettingChangeCallbacks.splice(i, 1);
         }
     }
 }
@@ -360,10 +316,36 @@ export function withSettings(pathPrefix: string, callback: (settings:Setting[])=
     }
 }
 
-function createSetting(setting: Setting, container: Element, closeable: Closeable)
+export function createActionControl(action: Action, target: Element)
+{
+    console.assert(!action.hasArguments);
+    console.assert(!!target);
+
+    var button;
+    if (target instanceof HTMLButtonElement)
+    {
+        button = target;
+    }
+    else
+    {
+        console.assert(target instanceof Element);
+        button = document.createElement('button');
+        (<Element>target).appendChild(button);
+    }
+
+    if (!button.textContent)
+        button.innerHTML = action.label;
+
+    button.addEventListener('click', () => action.activate());
+}
+
+export function createSettingControl(setting: Setting, container: Element, closeable: Closeable, hideLabel?: boolean)
 {
     if (!setting || setting.isReadOnly)
         return;
+
+    if (hideLabel == null)
+        hideLabel = false;
 
     var heading, input,
         wrapper = document.createElement('div');
@@ -381,18 +363,24 @@ function createSetting(setting: Setting, container: Element, closeable: Closeabl
             checkbox.id = checkboxName;
             checkbox.addEventListener('change', () => setting.setValue(checkbox.checked));
             wrapper.appendChild(checkbox);
-            var label = document.createElement('label');
-            label.textContent = setting.getDescription();
-            label.htmlFor = checkboxName;
-            wrapper.appendChild(label);
+            if (!hideLabel)
+            {
+                var label = document.createElement('label');
+                label.textContent = setting.getDescription();
+                label.htmlFor = checkboxName;
+                wrapper.appendChild(label);
+            }
             closeable.add(setting.track(value => checkbox.checked = value));
             break;
         }
         case "enum":
         {
-            heading = document.createElement('h3');
-            heading.textContent = setting.getDescription();
-            wrapper.appendChild(heading);
+            if (!hideLabel)
+            {
+                heading = document.createElement('h3');
+                heading.textContent = setting.getDescription();
+                wrapper.appendChild(heading);
+            }
 
             var select = <HTMLSelectElement>document.createElement('select');
             _.each(setting.enumValues, enumValue =>
@@ -414,9 +402,12 @@ function createSetting(setting: Setting, container: Element, closeable: Closeabl
         }
         case "int":
         {
-            heading = document.createElement('h3');
-            heading.textContent = setting.getDescription();
-            wrapper.appendChild(heading);
+            if (!hideLabel)
+            {
+                heading = document.createElement('h3');
+                heading.textContent = setting.getDescription();
+                wrapper.appendChild(heading);
+            }
 
             input = document.createElement('input');
             input.type = 'number';
@@ -433,9 +424,12 @@ function createSetting(setting: Setting, container: Element, closeable: Closeabl
         }
         case "double":
         {
-            heading = document.createElement('h3');
-            heading.textContent = setting.getDescription();
-            wrapper.appendChild(heading);
+            if (!hideLabel)
+            {
+                heading = document.createElement('h3');
+                heading.textContent = setting.getDescription();
+                wrapper.appendChild(heading);
+            }
 
             input = document.createElement('input');
             input.type = 'number';
@@ -452,9 +446,12 @@ function createSetting(setting: Setting, container: Element, closeable: Closeabl
         }
         case "double-range":
         {
-            heading = document.createElement('h3');
-            heading.textContent = setting.getDescription();
-            wrapper.appendChild(heading);
+            if (!hideLabel)
+            {
+                heading = document.createElement('h3');
+                heading.textContent = setting.getDescription();
+                wrapper.appendChild(heading);
+            }
 
             console.assert(setting.value instanceof Array && setting.value.length === 2);
 
@@ -492,9 +489,12 @@ function createSetting(setting: Setting, container: Element, closeable: Closeabl
         }
         case 'bgr-colour':
         {
-            heading = document.createElement('h3');
-            heading.textContent = setting.getDescription();
-            wrapper.appendChild(heading);
+            if (!hideLabel)
+            {
+                heading = document.createElement('h3');
+                heading.textContent = setting.getDescription();
+                wrapper.appendChild(heading);
+            }
 
             var colorInput = document.createElement('input');
             colorInput.type = 'color';
