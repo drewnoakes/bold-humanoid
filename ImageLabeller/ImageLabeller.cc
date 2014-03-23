@@ -29,7 +29,7 @@ void ImageLabeller::updateLut(std::shared_ptr<uchar const> const& lut)
   d_LUT = lut;
 }
 
-void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std::function<Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
+void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& timer, std::function<Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
 {
   // Make a threadsafe copy of the shared ptr, in case another thread reassigns the LUT (avoids segfault)
   unique_lock<mutex> guard(d_lutMutex);
@@ -74,7 +74,7 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
   {
     granularity = granularityFunction(y);
 
-    uchar* origpix = image.ptr<uchar>(y);
+    uchar const* origpix = image.ptr<uchar>(y);
     uchar* labelledpix = labelled.ptr<uchar>(y);
 
     for (int x = 0; x < image.cols; x += granularity.x())
@@ -102,7 +102,7 @@ void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std
     {
       granularity = granularityFunction(y);
 
-      uchar* origpix = image.ptr<uchar>(y);
+      uchar const* origpix = image.ptr<uchar>(y);
       uchar* labelledpix = labelled.ptr<uchar>(y);
 
       double ratio = double(y - minXHorizonY) / double(horizonYRange);

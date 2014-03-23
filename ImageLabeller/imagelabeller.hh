@@ -29,7 +29,7 @@ namespace bold
      * @param image The input, colour image.
      * @param labelled The target image, in which labels are stored per-pixel.
      */
-    void label(cv::Mat& image, cv::Mat& labelled, SequentialTimer& timer, std::function<Eigen::Vector2i(int)> granularityFunction, bool ignoreAboveHorizon = false) const;
+    void label(cv::Mat const& image, cv::Mat& labelled, SequentialTimer& timer, std::function<Eigen::Vector2i(int)> granularityFunction, bool ignoreAboveHorizon = false) const;
 
     /**
      * Generates an image in which each pixel is coloured according to the label
