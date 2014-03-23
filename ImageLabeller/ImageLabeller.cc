@@ -13,17 +13,30 @@ using namespace std;
 
 ImageLabeller::ImageLabeller(shared_ptr<Spatialiser> spatialiser)
   : d_LUT(),
-    d_spatialiser(spatialiser)
+    d_spatialiser(spatialiser),
+    d_lutMutex()
 {}
 
 ImageLabeller::ImageLabeller(shared_ptr<uchar const> const& lut, shared_ptr<Spatialiser> spatialiser)
   : d_LUT(lut),
-    d_spatialiser(spatialiser)
+    d_spatialiser(spatialiser),
+    d_lutMutex()
 {}
+
+void ImageLabeller::updateLut(std::shared_ptr<uchar const> const& lut)
+{
+  lock_guard<mutex> guard(d_lutMutex);
+  d_LUT = lut;
+}
 
 void ImageLabeller::label(Mat& image, Mat& labelled, SequentialTimer& timer, std::function<Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
 {
-  uchar const* lut = d_LUT.get();
+  // Make a threadsafe copy of the shared ptr, in case another thread reassigns the LUT (avoids segfault)
+  unique_lock<mutex> guard(d_lutMutex);
+  auto lutPtr = d_LUT;
+  guard.unlock();
+
+  uchar const* lut = lutPtr.get();
 
   // Everything above (and including) this row is guaranteed to be above horizon
   int maxHorizonY = 0;

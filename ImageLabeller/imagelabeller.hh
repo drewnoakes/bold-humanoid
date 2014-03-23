@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <memory>
+#include <mutex>
 
 #include "../PixelLabel/pixellabel.hh"
 
@@ -20,7 +21,7 @@ namespace bold
     ImageLabeller(std::shared_ptr<uchar const> const& lut, std::shared_ptr<Spatialiser> spatialiser);
 
     /** Replaces the LUT used by this image labeller. */
-    void updateLut(std::shared_ptr<uchar const> const& lut) { d_LUT = lut; }
+    void updateLut(std::shared_ptr<uchar const> const& lut);
 
     /**
      * Labels an entire image's pixels.
@@ -38,7 +39,7 @@ namespace bold
 
   private:
     std::shared_ptr<uchar const> d_LUT;
-
     std::shared_ptr<Spatialiser> d_spatialiser;
+    mutable std::mutex d_lutMutex;
   };
 }
