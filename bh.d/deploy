@@ -37,7 +37,7 @@ do
         darwin@darwin$i.local:swig/
 
     rsync -zrP libwebsockets/lib/libwebsockets.so.4.0.0 \
-        darwin@darwin$i:lib/
+        darwin@darwin$i.local:lib/
 
     ssh darwin@darwin$i.local "sudo ldconfig /home/darwin/lib"
     ssh darwin@darwin$i.local 'espeak -p 0 -s 130 -v english-mb-en1 "Full deployment complete"' 2> /dev/null
