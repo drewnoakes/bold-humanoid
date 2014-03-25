@@ -53,7 +53,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   {
     auto observedLineColour = d_observedLineColour->getValue();
     for (LineSegment2i const& line : observedLineSegments)
-      draw(line, debugImage, observedLineColour, 2);
+      Painter::draw(line, debugImage, observedLineColour, 2);
   }
 
   // Draw line dots
@@ -154,7 +154,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
             {
               LineSegment2i line2i(max - p1v, max - p2v);
 
-              draw(line2i, debugImage, expectedLineColour, 1);
+              Painter::draw(line2i, debugImage, expectedLineColour, 1);
             }
           }
         }
@@ -176,7 +176,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
 
     LineSegment2i line2i(p1, p2);
 
-    draw(line2i, debugImage, d_horizonColour->getValue(), 1);
+    Painter::draw(line2i, debugImage, d_horizonColour->getValue(), 1);
   }
 
   // Draw occlusion edge

@@ -132,8 +132,6 @@ namespace bold
     bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d* pos);
     bool canBlobBeGoal(Blob const& goalBlob, Eigen::Vector2d* pos);
 
-    void draw(LineSegment2i const& segment, cv::Mat& img, Colour::bgr const& colour, unsigned thickness);
-
     template<typename T>
     std::shared_ptr<T> getHandler() { return meta::get<std::shared_ptr<T>>(d_imagePassHandlers); }
 

@@ -6,6 +6,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+#include "../CameraModel/cameramodel.hh"
 #include "../Clock/clock.hh"
 #include "../geometry/Line.hh"
 #include "../HoughLineAccumulator/houghlineaccumulator.hh"
@@ -21,6 +22,7 @@
 #include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
 #include "../LineFinder/ScanningLineFinder/scanninglinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
+#include "../Painter/painter.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../PixelLabel/pixellabel.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
@@ -122,7 +124,8 @@ int main(int argc, char **argv)
 
   MaskWalkLineFinder maskWalkLineFinder;
 
-  ScanningLineFinder scanningLineFinder;
+  auto cameraModel = allocate_aligned_shared<CameraModel>();
+  ScanningLineFinder scanningLineFinder(cameraModel);
 
   cout << "Startup took " << Clock::getMillisSince(t) << " ms" << endl;
 
@@ -256,11 +259,11 @@ int main(int argc, char **argv)
   // Draw line segments
 //   vector<LineSegment2i> segments = lineFinder.find(lineDotPass->lineDots);
 //   cout << "    " << segments.size() << " line segments" << endl;
-//   for (LineSegment2i const& segment : segments)
-//   {
-//     cout << segment << endl;
-//     segment.draw(colourImage, Colour::bgr(0,255,255));
-//   }
+   for (LineSegment2i const& segment : scanningLines)
+   {
+     cout << segment << endl;
+     Painter::draw(segment, colourImage, Colour::bgr(0,255,255), 2);
+   }
 
   // Draw lines
   int colourIndex = 0;

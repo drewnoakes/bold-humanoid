@@ -400,6 +400,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Painter/draw.cc
+)
+
+add_class(BOLDHUMANOID
   ./PixelFilterChain/applyFilters.cc
 )
 
@@ -566,7 +570,6 @@ add_class(BOLDHUMANOID
 add_class(BOLDHUMANOID
   ./VisualCortex/canBlobBeBall.cc
   ./VisualCortex/canBlobBeGoal.cc
-  ./VisualCortex/draw.cc
   ./VisualCortex/integrateImage.cc
   ./VisualCortex/shouldMergeBallBlobs.cc
   ./VisualCortex/saveImage.cc
