@@ -90,6 +90,8 @@ namespace bold
       d_rowTracker->reset();
       d_rowTracker->otherCoordinate = y;
 
+      // *   *   *   *   *   *   *   *   *   *   *   *   * 4
+      // *   *   *   *   *   *   *   *   *   *   *   *   * 4
       // ************************************************* 1
       // ************************************************* 1
       // * * * * * * * * * * * * * * * * * * * * * * * * * 2
@@ -101,10 +103,6 @@ namespace bold
 
       if (d_lastXGranularity != granularity.x())
       {
-        // Granularity should only be decreasing, as we process the image from
-        // bottom to top.
-        assert(d_lastXGranularity > granularity.x());
-
         // We've transitioned between x-granularities and need to reset columns
         // for which we have just stopped observing pixels, as otherwise they
         // will carry incorrect state across vertical regions of the image.
