@@ -112,9 +112,9 @@ namespace bold
         {
           // Interate through at the previous granularity. Any column which is
           // not a multiple of the new granularity must be reset.
-          for (ushort x = 0; x < d_imageWidth; x += granularity.x())
+          for (ushort x = 0; x < d_imageWidth; x += d_lastXGranularity)
           {
-            if (x % d_lastXGranularity != 0)
+            if (x % granularity.x() != 0)
               d_colTrackers[x].reset();
           }
         }
