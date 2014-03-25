@@ -101,7 +101,7 @@ void GameStateReceiver::receive()
     // Determine the message type
     //
 
-    uint32 observedHeader = *reinterpret_cast<uint32*>(data);
+    uint32 observedHeader = (data[3] << 24) | (data[2] << 16) | (data[1] << 8) | (data[0]);
     uint8  observedVersion = *reinterpret_cast<uint8*>(data + 4);
 
     if (observedHeader == GameStateData::HEADER_INT)
