@@ -17,18 +17,19 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   // least squares solution:
   // b = (X^T X)^-1 X^T * y
   //   = (1/n \sum_i xi xi^T)^-1 (1/2 \sum_i xi y
+
   unsigned nRegressions = 0;
 
   // Structure keeping track of regression for a single line segment
   struct RegressionState
   {
-    //MatrixXf X;
-    //VectorXf y;
+    unsigned idx;
     Matrix2f xxSum;
     Vector2f xySum;
     unsigned n;
     Vector2f beta;
-    Vector2f betaDeltaSum;
+    float sqError;
+    float rms;
     unsigned xStart;
     unsigned xEnd;
     Vector2i head;
@@ -41,23 +42,22 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   // Maximum y-error to consider point member of line segment
   float maxError = d_maxLineDist->getValue();
 
+  // Matrix is col-major, so outersize is width
   for (unsigned k = 0; k < linePointsMatrix.outerSize(); ++k)
+    // Iterate over all elements in column k
     for (SparseMatrix<bool>::InnerIterator it(linePointsMatrix, k); it; ++it)
     {
-      
-      it.value();
-      it.row();   // row index
-      it.col();   // col index (here it is equal to k)
-      it.index(); // inner index, here it is equal to it.row()
-
       Vector2i point{it.col(), it.row()};
       auto x = Vector2f{point.x(), 1};
       auto xx = x * x.transpose();
 
       auto closest = regStates.end();
       float error = 0;
-
+      
+      // Find line segment that 1) has head closest to point 2) has least residual between line and point
+      // Minimum distance to head found so far
       float minDist = maxDist;
+      // Minimum offset of line found so far
       float minError = 2 * maxError;
 
       for (auto iter = begin(regStates); iter != end(regStates); ++iter)
@@ -68,8 +68,9 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
         {
           if (state.n > 1)
           {
+            // Error should not be more than current RMSE
             float e = abs(state.beta.dot(x) - point.y());
-            if (e > maxError)
+            if (fabs(e) > state.rms)
               continue;
             error = e;
           }
@@ -88,8 +89,6 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
       if (closest != regStates.end())
       {
         // Fit found; add point
-        //closest->X.row(closest->n) = x.transpose();
-        //closest->y(closest->n) = point.y();
         closest->xxSum += xx;
         closest->xySum += x * point.y();
         closest->n++;
@@ -97,9 +96,10 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
         {
           auto oldBeta = closest->beta;
           closest->beta = (closest->xxSum / closest->n).inverse() * (closest->xySum / closest->n);
-          closest->betaDeltaSum.array() += (oldBeta - closest->beta).array().abs();
           ++nRegressions;
         }
+        closest->sqError += error * error;
+        closest->rms = sqrt(closest->sqError / closest->n);
         closest->xEnd = point.x() + 1;
         closest->head = point;
       }
@@ -107,6 +107,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
       {
         // Start new line segment
         RegressionState newState;
+        newState.idx = regStates.size() + 1;
         //newState.X = MatrixXf(linePoints.size(), 2);
         //newState.y = VectorXf(linePoints.size());
         //newState.X.row(0) = x.transpose();
@@ -115,6 +116,8 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
         newState.xySum = x * point.y();
         newState.n = 1;
         newState.beta = Vector2f(0,point.y());
+        newState.sqError = 0;
+        newState.rms = 0;
         newState.xEnd = (newState.xStart = point.x()) + 1;
         newState.head = point;
         regStates.push_back(newState);
@@ -125,7 +128,6 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   float minCoverage = d_minCoverage->getValue();
 //   float maxRMSError = d_maxRMSError->getValue();
 
-  cout << "---" << endl;
   vector<LineSegment2i> lineSegments;
   for (auto& regState : regStates)
   {
@@ -133,7 +135,6 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
     regState.beta =
       (regState.xxSum / regState.n).inverse() *
       (regState.xySum / regState.n);
-    regState.betaDeltaSum.array() += (oldBeta - regState.beta).array().abs();
 
     Vector2i p1(regState.xStart, regState.beta.dot(Vector2f(regState.xStart, 1)));
     Vector2i p2(regState.xEnd, regState.beta.dot(Vector2f(regState.xEnd, 1)));
