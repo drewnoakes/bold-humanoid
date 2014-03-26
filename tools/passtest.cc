@@ -239,6 +239,15 @@ int main(int argc, char **argv)
     Colour::bgr(255,255,0) // cyan
   };
 
+  // Draw line segments
+//   vector<LineSegment2i> segments = lineFinder.find(lineDotPass->lineDots);
+//   cout << "    " << segments.size() << " line segments" << endl;
+   for (LineSegment2i const& segment : scanningLines)
+   {
+     cout << segment << endl;
+     Painter::draw(segment, colourImage, Colour::bgr(192,0,0), 2);
+   }
+
   // Draw line dots
 //   cv::Mat lineDotImageGray(colourImage.size(), CV_8U);
 //   lineDotImageGray = Scalar(0);
@@ -255,15 +264,6 @@ int main(int argc, char **argv)
     imwrite("line-dots.png", lineDotImageColour);
 //     imwrite("line-dots-gray.bmp", lineDotImageGray);
   }
-
-  // Draw line segments
-//   vector<LineSegment2i> segments = lineFinder.find(lineDotPass->lineDots);
-//   cout << "    " << segments.size() << " line segments" << endl;
-   for (LineSegment2i const& segment : scanningLines)
-   {
-     cout << segment << endl;
-     Painter::draw(segment, colourImage, Colour::bgr(0,255,255), 2);
-   }
 
   // Draw lines
   int colourIndex = 0;
