@@ -39,16 +39,13 @@ interface ITemplateData extends state.Game
 
 class GameStateModule extends Module
 {
-    private element: HTMLDivElement;
-
     constructor()
     {
         super('game', 'game');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
-        this.element = element;
         this.closeables.add(new data.Subscription<state.Game>(
             constants.protocols.gameState,
             {

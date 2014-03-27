@@ -41,16 +41,16 @@ class CommsModule extends Module
         super('comms', 'communication');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var controls = document.createElement('div');
         control.buildSettings("game-controller", controls, this.closeables);
-        element.appendChild(controls);
+        this.element.appendChild(controls);
 
         this.chart = new SmoothieChart(chartOptions);
         this.canvas = document.createElement('canvas');
         this.canvas.height = chartHeight;
-        element.appendChild(this.canvas);
+        this.element.appendChild(this.canvas);
 
         this.ignoreSeries = new TimeSeries();
         this.gameSeries = new TimeSeries();

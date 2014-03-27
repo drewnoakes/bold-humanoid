@@ -43,7 +43,7 @@ class TrajectoryModule extends Module
         this.mirrorValues.onchange(() => this.render());
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         this.recordButton = document.createElement('button');
         this.recordButton.className = 'record';
@@ -56,15 +56,15 @@ class TrajectoryModule extends Module
         controlContainer.className = 'controls';
         controlContainer.appendChild(this.recordButton);
         controlContainer.appendChild(mirrorCheckbox.element);
-        element.appendChild(controlContainer);
+        this.element.appendChild(controlContainer);
 
         this.canvas = document.createElement('canvas');
         this.canvas.width = chartWidth;
         this.canvas.height = chartHeight;
-        element.appendChild(this.canvas);
+        this.element.appendChild(this.canvas);
 
         this.bodyFigure = new BodyFigure({hasHover: true, hasSelection: true});
-        element.appendChild(this.bodyFigure.element);
+        this.element.appendChild(this.bodyFigure.element);
 
         this.bodyFigure.hoverJointId.track(this.render.bind(this));
         this.bodyFigure.selectedJointIds.track(this.render.bind(this));

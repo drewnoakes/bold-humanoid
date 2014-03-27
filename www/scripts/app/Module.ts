@@ -9,11 +9,12 @@ class Module
 {
     public closeables: Closeable = new Closeable();
     public isFullScreen: Trackable<boolean> = new Trackable<boolean>(false);
+    public element: HTMLDivElement;
 
     constructor(public id:string, public title:string, public options?: { fullScreen: boolean })
     {}
 
-    public load(element: HTMLDivElement)
+    public load()
     {}
 
     public unload()

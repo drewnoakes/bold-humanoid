@@ -45,14 +45,14 @@ class LocaliserModule extends Module
         super('localiser', 'localiser');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         this.chart = new SmoothieChart(chartOptions);
 
         this.chartCanvas = document.createElement('canvas');
         this.chartCanvas.width = 640;
         this.chartCanvas.height = chartHeight;
-        element.appendChild(this.chartCanvas);
+        this.element.appendChild(this.chartCanvas);
 
         this.chart.streamTo(this.chartCanvas, /*delayMs*/ 200);
 
@@ -78,7 +78,7 @@ class LocaliserModule extends Module
 
         var controls = document.createElement('div');
         controls.className = 'control-container localiser-controls flow';
-        element.appendChild(controls);
+        this.element.appendChild(controls);
         control.buildActions('localiser', controls);
         control.buildSettings('localiser', controls, this.closeables);
 
@@ -88,7 +88,7 @@ class LocaliserModule extends Module
         var createMarker = type => {
             var marker = document.createElement('div');
             marker.className = 'marker ' + type;
-            element.appendChild(marker);
+            this.element.appendChild(marker);
             return marker;
         };
 

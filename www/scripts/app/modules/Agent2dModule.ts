@@ -20,7 +20,7 @@ class Agent2dModule extends Module
         super('agent-2d', '2d agent');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var mapDiv = document.createElement('div');
         mapDiv.className = 'map-layer-container';
@@ -41,11 +41,11 @@ class Agent2dModule extends Module
         localiserControlContainer.className = 'localiser-controls';
         control.buildActions('localiser', localiserControlContainer);
 
-        element.appendChild(mapDiv);
-        element.appendChild(hoverInfo);
-        element.appendChild(checkboxDiv);
-        element.appendChild(new HeadControls().element);
-        element.appendChild(localiserControlContainer);
+        this.element.appendChild(mapDiv);
+        this.element.appendChild(hoverInfo);
+        this.element.appendChild(checkboxDiv);
+        this.element.appendChild(new HeadControls().element);
+        this.element.appendChild(localiserControlContainer);
 
         this.map.addLayer(new mapping.AgentReferenceLayer(transform));
         this.map.addLayer(new mapping.AgentObservedLineLayer(transform));

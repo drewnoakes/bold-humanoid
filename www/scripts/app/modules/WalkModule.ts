@@ -52,10 +52,10 @@ class WalkModule extends Module
         super('walk', 'walk');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var templateRoot = <HTMLElement>moduleTemplate.create({radarSize: radarSize, chartWidth: 440, chartHeight: 60});
-        element.appendChild(templateRoot);
+        this.element.appendChild(templateRoot);
 
         this.runningIndicator = <HTMLDivElement>templateRoot.querySelector('.connection-indicator');
         this.radarCanvas = <HTMLCanvasElement>templateRoot.querySelector('canvas.radar');

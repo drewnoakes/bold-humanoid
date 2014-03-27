@@ -28,11 +28,11 @@ class OrientationModule extends Module
         this.animator = new Animator(() => this.renderer.render(this.scene, this.camera));
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         this.initialiseScene();
 
-        element.appendChild(this.renderer.domElement);
+        this.element.appendChild(this.renderer.domElement);
 
         this.closeables.add(new data.Subscription<state.Orientation>(
             constants.protocols.orientationState,
@@ -41,8 +41,8 @@ class OrientationModule extends Module
             }
         ));
 
-        control.buildActions("orientation-tracker", element);
-        control.buildSettings("orientation-tracker", element, this.closeables);
+        control.buildActions("orientation-tracker", this.element);
+        control.buildSettings("orientation-tracker", this.element, this.closeables);
 
         this.animator.start();
     }

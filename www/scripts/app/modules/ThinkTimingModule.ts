@@ -16,9 +16,9 @@ class ThinkTimingModule extends Module
         this.pane = new TimingPane(constants.protocols.thinkTiming, 30/*fps*/);
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
-        this.pane.load(element);
+        this.pane.load(this.element);
     }
 
     public unload()
@@ -26,7 +26,7 @@ class ThinkTimingModule extends Module
         this.pane.unload();
     }
 
-    public onResized(width, height)
+    public onResized(width: number, height: number)
     {
         this.pane.onResized(width, height);
     }

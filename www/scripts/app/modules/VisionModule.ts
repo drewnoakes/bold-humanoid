@@ -16,10 +16,10 @@ class VisionModule extends Module
         super('vision', 'vision');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var content = <HTMLDListElement>moduleTemplate.create();
-        element.appendChild(content);
+        this.element.appendChild(content);
 
         var pixelLabelContainer = content.querySelector('div.pixel-labels');
         control.buildSettings('vision.pixel-labels', pixelLabelContainer, this.closeables);

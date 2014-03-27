@@ -34,7 +34,7 @@ class HistogramModule extends Module
         super('histogram', 'histogram');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         this.closeables.add(new data.Subscription<state.LabelCount>(
             constants.protocols.labelCount,
@@ -45,7 +45,7 @@ class HistogramModule extends Module
 
         this.svg = <SVGElement>document.createElementNS(d3.ns.prefix.svg, 'svg');
 
-        element.appendChild(this.svg);
+        this.element.appendChild(this.svg);
 
         this.chart = d3.select(this.svg)
                 .attr('class', 'chart')

@@ -12,11 +12,11 @@ class MotionScriptModule extends Module
         super('motion-scripts', 'motion scripts');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var container = document.createElement('div');
         container.className = 'control-container ambulator-controls';
-        element.appendChild(container);
+        this.element.appendChild(container);
 
         control.buildActions('motion-script', container);
     }

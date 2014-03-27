@@ -51,18 +51,18 @@ class HardwareModule extends Module
         super('hardware', 'hardware');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         // VOLTAGE
 
         var voltageHeader = document.createElement('h2');
         voltageHeader.textContent = 'voltage';
-        element.appendChild(voltageHeader);
+        this.element.appendChild(voltageHeader);
 
         var voltageCanvas = document.createElement('canvas');
         voltageCanvas.width = chartWidth;
         voltageCanvas.height = chartHeight;
-        element.appendChild(voltageCanvas);
+        this.element.appendChild(voltageCanvas);
 
         this.voltageChart = new SmoothieChart(chartOptions);
         this.voltageChart.options.yRangeFunction = range =>
@@ -79,12 +79,12 @@ class HardwareModule extends Module
 
         var tempHeader = document.createElement('h2');
         tempHeader.textContent = 'temperature';
-        element.appendChild(tempHeader);
+        this.element.appendChild(tempHeader);
 
         var temperatureCanvas = document.createElement('canvas');
         temperatureCanvas.width = chartWidth;
         temperatureCanvas.height = chartHeight;
-        element.appendChild(temperatureCanvas);
+        this.element.appendChild(temperatureCanvas);
 
         this.temperatureChart = new SmoothieChart(chartOptions);
         this.temperatureChart.options.yRangeFunction = range =>
@@ -101,12 +101,12 @@ class HardwareModule extends Module
         }
 
         this.bodyFigure = new BodyFigure();
-        element.appendChild(this.bodyFigure.element);
+        this.element.appendChild(this.bodyFigure.element);
 
         var controlContainer = document.createElement('div');
         controlContainer.className = 'control-container';
         control.buildActions("hardware", controlContainer);
-        element.appendChild(controlContainer);
+        this.element.appendChild(controlContainer);
 
         this.closeables.add(new data.Subscription<state.Hardware>(
             constants.protocols.hardwareState,

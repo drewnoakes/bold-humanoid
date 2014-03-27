@@ -20,7 +20,7 @@ class ConfigModule extends Module
         super('config', 'config');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         /*
             <div class="filter">
@@ -43,7 +43,7 @@ class ConfigModule extends Module
         filter.type = 'text';
         filter.placeholder = 'Type to filter...';
         filter.addEventListener('input', () => this.setFilterText(filter.value));
-        element.appendChild(filter);
+        this.element.appendChild(filter);
 
         var dl = document.createElement('dl');
         dl.className = 'tab-control';
@@ -113,7 +113,7 @@ class ConfigModule extends Module
 
         ///////////////////////
 
-        element.appendChild(dl);
+        this.element.appendChild(dl);
 
         this.tabControl = new TabControl(dl);
     }

@@ -70,12 +70,12 @@ class IMUModule extends Module
         super('sensors', 'IMU');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         this.seriesArray = [];
         this.chartCanvases = [];
 
-        this.buildCharts(element);
+        this.buildCharts(this.element);
 
         var addPolarTrace = name =>
         {
@@ -87,7 +87,7 @@ class IMUModule extends Module
             div.appendChild(h2);
             div.appendChild(trace.element);
 
-            element.appendChild(div);
+            this.element.appendChild(div);
             return trace;
         };
 

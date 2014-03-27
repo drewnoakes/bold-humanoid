@@ -26,11 +26,11 @@ class StateDumpModule extends Module
         super('state', 'state dump');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var templateRoot = <HTMLElement>moduleTemplate.create();
 
-        element.appendChild(templateRoot);
+        this.element.appendChild(templateRoot);
 
         this.textElement = <HTMLDivElement>templateRoot.querySelector('div.json-text');
 

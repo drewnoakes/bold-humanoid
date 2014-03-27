@@ -30,18 +30,18 @@ class OptionTreeModule extends Module
         super('optiontree', 'option tree');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         this.optionList = document.createElement('ul');
         this.optionList.className = 'options';
-        element.appendChild(this.optionList);
+        this.element.appendChild(this.optionList);
 
         var controls = document.createElement('div');
         controls.className = 'control-container flow';
         control.buildSetting('options.announce-fsm-states', controls, this.closeables);
         control.buildSetting('options.announce-fsm-transitions', controls, this.closeables);
         control.buildSettings('options.fsms', controls, this.closeables);
-        element.appendChild(controls);
+        this.element.appendChild(controls);
 
         this.closeables.add(new data.Subscription<state.OptionTree>(
             constants.protocols.optionTreeState,
@@ -52,7 +52,7 @@ class OptionTreeModule extends Module
 
         this.graph = document.createElement('div');
         this.graph.className = 'graph';
-        element.appendChild(this.graph);
+        this.element.appendChild(this.graph);
 
         // The model
         var graph = new joint.dia.Graph();

@@ -49,16 +49,16 @@ class LoadModule extends Module
         super('load', 'load');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var posErrHeader = document.createElement('h2');
         posErrHeader.textContent = 'position error';
-        element.appendChild(posErrHeader);
+        this.element.appendChild(posErrHeader);
 
         this.diffCanvas = document.createElement('canvas');
         this.diffCanvas.width = chartWidth;
         this.diffCanvas.height = chartHeight;
-        element.appendChild(this.diffCanvas);
+        this.element.appendChild(this.diffCanvas);
 
         this.diffChart = new SmoothieChart(chartOptions);
         this.diffChart.options.yRangeFunction = range =>
@@ -84,7 +84,7 @@ class LoadModule extends Module
         this.bodyFigure = new BodyFigure({ hasHover: true, hasSelection: true });
         this.bodyFigure.hoverJointId.track(this.updateSeriesColours.bind(this));
         this.bodyFigure.selectedJointIds.track(this.updateSeriesColours.bind(this));
-        element.appendChild(this.bodyFigure.element);
+        this.element.appendChild(this.bodyFigure.element);
 
         this.closeables.add(new data.Subscription<state.Body>(
             constants.protocols.bodyState,

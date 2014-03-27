@@ -12,27 +12,27 @@ class VoiceModule extends Module
         super('voice', 'voice');
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var usage = document.createElement('div');
         usage.className = 'control-container';
         control.buildSetting('options.announce-fsm-states', usage, this.closeables);
-        element.appendChild(usage);
+        this.element.appendChild(usage);
 
         var voiceControls = document.createElement('div');
         voiceControls.className = 'control-container flow';
         control.buildSettings('voice', voiceControls, this.closeables);
-        element.appendChild(voiceControls);
+        this.element.appendChild(voiceControls);
 
         var vocaliserControls = document.createElement('div');
         vocaliserControls.className = 'control-container flow';
         control.buildSettings('vocaliser', vocaliserControls, this.closeables);
-        element.appendChild(vocaliserControls);
+        this.element.appendChild(vocaliserControls);
 
         var sayings = document.createElement('div');
         sayings.className = 'control-container';
         control.buildActions('voice.speak', sayings);
-        element.appendChild(sayings);
+        this.element.appendChild(sayings);
     }
 }
 

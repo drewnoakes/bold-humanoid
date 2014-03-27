@@ -143,7 +143,8 @@ class ModuleHost
 
         util.clearChildren(container);
 
-        module.load(container);
+        module.element = container;
+        module.load();
 
         module.onResized(container.clientWidth, container.clientHeight);
 

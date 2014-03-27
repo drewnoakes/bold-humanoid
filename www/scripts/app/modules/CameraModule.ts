@@ -29,10 +29,10 @@ class CameraModule extends Module
         super('camera', 'camera', {fullScreen: true});
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         var content = <HTMLElement>moduleTemplate.create();
-        element.appendChild(content);
+        this.element.appendChild(content);
 
         this.cameraCanvas = <HTMLCanvasElement>content.querySelector('.camera-canvas');
         this.hoverPixelInfo = <HTMLDivElement>content.querySelector('.hover-pixel-info');

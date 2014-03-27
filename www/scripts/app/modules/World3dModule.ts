@@ -63,7 +63,7 @@ class World3dModule extends Module
         this.animator = new Animator(this.render.bind(this));
     }
 
-    public load(element: HTMLDivElement)
+    public load()
     {
         this.hinges = [];
         this.objectByName = {};
@@ -100,8 +100,8 @@ class World3dModule extends Module
 
         this.initialiseScene();
 
-        element.appendChild(this.renderer.domElement);
-        element.appendChild(controls);
+        this.element.appendChild(this.renderer.domElement);
+        this.element.appendChild(controls);
 
         this.bodyRoot = this.buildBody(constants.bodyStructure, () =>
         {
