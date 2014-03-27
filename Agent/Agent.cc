@@ -87,6 +87,7 @@ Agent::Agent()
 
   if (Config::getStaticValue<bool>("hardware.joystick.enabled"))
   {
+    log::info("Agent::Agent") << "Creating joystick";
     d_joystick = make_shared<Joystick>(1);
     d_joystickXAmpMax = Config::getSetting<double>("hardware.joystick.x-amp-max");
     d_joystickYAmpMax = Config::getSetting<double>("hardware.joystick.y-amp-max");
