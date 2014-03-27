@@ -6,10 +6,10 @@
 
 import control = require('control');
 import HeadControls = require('controls/HeadControls');
+import geometry = require('util/geometry');
 import mapping = require('controls/mapping');
 import Module = require('Module');
 import Trackable = require('util/Trackable');
-import geometry = require('util/geometry');
 
 class Agent2dModule extends Module
 {

@@ -4,16 +4,16 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
+import Closeable = require('util/Closeable');
+import color = require('color');
 import constants = require('constants');
-import data = require('data');
 import control = require('control');
+import data = require('data');
 import DOMTemplate = require('DOMTemplate');
 import HeadControls = require('controls/HeadControls');
-import PixelLabelInspector = require('controls/PixelLabelInspector');
-import color = require('color');
-import Closeable = require('util/Closeable');
 import mouse = require('util/mouse');
 import Module = require('Module');
+import PixelLabelInspector = require('controls/PixelLabelInspector');
 
 var moduleTemplate = new DOMTemplate("camera-module-template");
 
