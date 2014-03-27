@@ -51,15 +51,18 @@ void Agent::processInputCommands()
       }
       else if (event.isButton() && event.value == 1 && !event.isInitialState())
       {
+        static auto leftKickScript = make_shared<MotionScriptRunner>(MotionScript::fromFile("./motionscripts/kick-left.json"));
+        static auto rightKickScript = make_shared<MotionScriptRunner>(MotionScript::fromFile("./motionscripts/kick-right.json"));
+
         switch (event.number)
         {
           case 6:
             log::info("Agent::processInputCommands") << "Left kick";
-            d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("./motionscripts/kick-left.json")));
+            d_motionScriptModule->start(leftKickScript);
             break;
           case 7:
             log::info("Agent::processInputCommands") << "Right kick";
-            d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("./motionscripts/kick-right.json")));
+            d_motionScriptModule->start(rightKickScript);
             break;
           default:
             if (event.value == 1)
