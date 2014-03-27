@@ -22,6 +22,7 @@
     "video-path": "/dev/video0",
     "joystick": {
       "enabled": false,
+      "path": "/dev/input/js0",
       "x-amp-max": 15.0,
       "y-amp-max": 15.0,
       "a-amp-max": 15.0
