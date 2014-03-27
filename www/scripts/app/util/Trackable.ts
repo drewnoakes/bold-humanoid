@@ -16,6 +16,20 @@ class Trackable<T>
         this.callbacks.push(callback);
         if (typeof (this.value) !== 'undefined' && this.value !== null)
             callback(this.value, undefined);
+
+        return () => this.removeCallback(callback);
+    }
+
+    public removeCallback(callback: (value: T, oldValue?: T) => void)
+    {
+        var index = this.callbacks.indexOf(callback);
+        if (index === -1)
+        {
+            console.warn("Attempt to remove an unregistered callback from Trackable");
+            return false;
+        }
+        this.callbacks.splice(index, 1);
+        return true;
     }
 
     public setValue(value: T)
