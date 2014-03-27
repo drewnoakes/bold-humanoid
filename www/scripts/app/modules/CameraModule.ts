@@ -26,7 +26,7 @@ class CameraModule extends Module
 
     constructor()
     {
-        super('camera', 'camera');
+        super('camera', 'camera', {fullScreen: true});
     }
 
     public load(element: HTMLDivElement)

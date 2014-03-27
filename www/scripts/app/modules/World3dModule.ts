@@ -58,7 +58,7 @@ class World3dModule extends Module
 
     constructor()
     {
-        super('world-3d', '3d world');
+        super('world-3d', '3d world', {fullScreen: true});
 
         this.animator = new Animator(this.render.bind(this));
     }
@@ -362,7 +362,7 @@ class World3dModule extends Module
         groundBumpMap.repeat.set(120, 120);
         groundBumpMap.wrapS = groundBumpMap.wrapT = THREE.RepeatWrapping;
 
-        var fieldLineTexture = new THREE.Texture(fieldLineCanvas);
+        var fieldLineTexture = new THREE.Texture(<HTMLCanvasElement>fieldLineCanvas);
         fieldLineTexture.needsUpdate = true;
         fieldLineTexture.minFilter = THREE.LinearFilter;
         fieldLineTexture.magFilter = THREE.LinearFilter;

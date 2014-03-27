@@ -102,6 +102,34 @@ class ModuleHost
         var headerLinks = moduleElement.querySelector('.module-header-links');
         var container = <HTMLDivElement>moduleElement.querySelector('.module-content');
 
+        if (module.options && module.options.fullScreen)
+        {
+            var fullScreenLink = document.createElement('a');
+            fullScreenLink.href = '#';
+            fullScreenLink.textContent = 'zoom';
+            fullScreenLink.addEventListener('click', event =>
+            {
+                event.preventDefault();
+                module.isFullScreen.setValue(!module.isFullScreen.getValue());
+                return false;
+            });
+            headerLinks.appendChild(fullScreenLink);
+
+            module.closeables.add(module.isFullScreen.track(isFullScreen =>
+            {
+                if (isFullScreen)
+                {
+                    moduleElement.classList.add('full-screen');
+                    fullScreenLink.textContent = 'unzoom';
+                }
+                else
+                {
+                    moduleElement.classList.remove('full-screen');
+                    fullScreenLink.textContent = 'zoom';
+                }
+            }));
+        }
+
         var closeLink = document.createElement('a');
         closeLink.href = '#';
         closeLink.textContent = 'close';

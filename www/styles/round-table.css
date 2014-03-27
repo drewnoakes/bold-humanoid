@@ -209,6 +209,21 @@ div.module
     cursor: move;
 }
 
+div.module.full-screen
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: default;
+    background-color: #fff;
+    box-sizing: border-box;
+    margin: 0;
+    border-radius: 0;
+    z-index: 1;
+}
+
 div.module h1
 {
     margin: 0 0 12px 0;
