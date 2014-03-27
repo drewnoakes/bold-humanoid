@@ -55,11 +55,11 @@ void Agent::processInputCommands()
         {
           case 6:
             log::info("Agent::processInputCommands") << "Left kick";
-            d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickLeft")));
+            d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("./motionscripts/kick-left.json")));
             break;
           case 7:
             log::info("Agent::processInputCommands") << "Right kick";
-            d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("KickRight")));
+            d_motionScriptModule->start(make_shared<MotionScriptRunner>(MotionScript::fromFile("./motionscripts/kick-right.json")));
             break;
           default:
             if (event.value == 1)
