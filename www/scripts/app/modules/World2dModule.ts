@@ -8,7 +8,7 @@ import control = require('control');
 import HeadControls = require('controls/HeadControls');
 import mapping = require('controls/mapping');
 import Module = require('Module');
-import util = require('util');
+import Trackable = require('util/Trackable');
 import geometry = require('util/geometry');
 
 class World2dModule extends Module
@@ -28,7 +28,7 @@ class World2dModule extends Module
         var checkboxDiv = document.createElement('div');
         checkboxDiv.className = 'map-layer-checkboxes';
 
-        var transform = new util.Trackable<geometry.Transform>();
+        var transform = new Trackable<geometry.Transform>();
         this.map = new mapping.Map(mapDiv, checkboxDiv, transform);
 
         var hoverInfo = document.createElement('div');

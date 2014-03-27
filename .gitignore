@@ -97,6 +97,7 @@ www/.idea
 /www/scripts/app/util/math.js
 /www/scripts/app/util/mouse.js
 /www/scripts/app/util/three.js
+/www/scripts/app/util/Trackable.js
 Release/
 RelWithDebInfo/
 Debug/

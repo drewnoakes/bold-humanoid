@@ -15,7 +15,7 @@ import geometry = require('util/geometry');
 import state = require('state');
 import Module = require('Module');
 import Checkbox = require('controls/Checkbox');
-import util = require('util');
+import Trackable = require('util/Trackable');
 
 interface Hinge
 {
@@ -31,11 +31,11 @@ class World3dModule extends Module
     private cameraPhi: number = 0.34;
     private torsoHeight: number = 0.341;
 
-    private useThirdPerson: util.Trackable<boolean>;
-    private movePlayer: util.Trackable<boolean>;
-    private drawObservedLines: util.Trackable<boolean>;
-    private drawObservedGoals: util.Trackable<boolean>;
-    private drawViewPoly: util.Trackable<boolean>;
+    private useThirdPerson: Trackable<boolean>;
+    private movePlayer: Trackable<boolean>;
+    private drawObservedLines: Trackable<boolean>;
+    private drawObservedGoals: Trackable<boolean>;
+    private drawViewPoly: Trackable<boolean>;
 
     private pendingTextureCount: number;
 
@@ -70,27 +70,27 @@ class World3dModule extends Module
 
         var controls = document.createElement('div');
 
-        this.useThirdPerson = new util.Trackable<boolean>(true);
+        this.useThirdPerson = new Trackable<boolean>(true);
         this.useThirdPerson.onchange(() => { this.updateCameraPosition(); this.animator.setRenderNeeded(); });
         controls.appendChild(new Checkbox('Third person view', this.useThirdPerson).element);
 
-        this.movePlayer = new util.Trackable<boolean>(true);
+        this.movePlayer = new Trackable<boolean>(true);
         this.movePlayer.onchange(() => { this.updateCameraPosition(); this.animator.setRenderNeeded(); });
         controls.appendChild(new Checkbox('Move player', this.movePlayer).element);
 
-        this.drawObservedLines = new util.Trackable<boolean>(true);
+        this.drawObservedLines = new Trackable<boolean>(true);
         this.drawObservedLines.onchange(() => this.animator.setRenderNeeded());
         controls.appendChild(new Checkbox('Observed lines', this.drawObservedLines).element);
 
-        this.drawObservedGoals = new util.Trackable<boolean>(true);
+        this.drawObservedGoals = new Trackable<boolean>(true);
         this.drawObservedGoals.onchange(() => this.animator.setRenderNeeded());
         controls.appendChild(new Checkbox('Observed goals', this.drawObservedGoals).element);
 
-        this.drawViewPoly = new util.Trackable<boolean>(false);
+        this.drawViewPoly = new Trackable<boolean>(false);
         this.drawViewPoly.onchange(() => this.animator.setRenderNeeded());
         controls.appendChild(new Checkbox('View poly', this.drawViewPoly).element);
 
-        var showStaticObjects = new util.Trackable<boolean>(true);
+        var showStaticObjects = new Trackable<boolean>(true);
         showStaticObjects.onchange(value =>
         {
             this.staticObjects.traverse(child => child.visible = value);

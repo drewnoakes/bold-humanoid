@@ -3,12 +3,12 @@
  */
 
 import Closeable = require('util/Closeable');
-import util = require('util');
+import Trackable = require('util/Trackable');
 
 class Module
 {
     public closeables: Closeable = new Closeable();
-    public isFullScreen: util.Trackable<boolean> = new util.Trackable<boolean>(false);
+    public isFullScreen: Trackable<boolean> = new Trackable<boolean>(false);
 
     constructor(public id:string, public title:string, public options?: { fullScreen: boolean })
     {}

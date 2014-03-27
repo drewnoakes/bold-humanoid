@@ -12,7 +12,7 @@ import BodyFigure = require('controls/BodyFigure');
 import Module = require('Module');
 import state = require('state');
 import canvas = require('util/canvas');
-import util = require('util');
+import Trackable = require('util/Trackable');
 
 var chartHeight = 300,
     chartWidth = 430,
@@ -27,10 +27,9 @@ class TrajectoryModule extends Module
 {
     private data: state.BodyControl[] = [];
 
-    private mirrorValues: util.Trackable<boolean> = new util.Trackable<boolean>(true);
+    private mirrorValues: Trackable<boolean> = new Trackable<boolean>(true);
     private isRecording: boolean = false;
     private skipFirstDatum: boolean = true;
-    private hoverJointId: number = -1;
 
     private subscription: ICloseable;
     private bodyFigure: BodyFigure;

@@ -12,15 +12,16 @@ import interaction = require('interaction');
 import mouse = require('util/mouse');
 import plotter = require('plotter');
 import state = require('state');
+import Trackable = require('util/Trackable');
 import util = require('util');
 
 export class Map
 {
-    public hoverPoint: util.Trackable<geometry.IPoint2> = new util.Trackable<geometry.IPoint2>();
+    public hoverPoint: Trackable<geometry.IPoint2> = new Trackable<geometry.IPoint2>();
 
     private layers: MapLayer[] = [];
 
-    constructor(private layerContainer: HTMLDivElement, private checkboxContainer: HTMLDivElement, public transform: util.Trackable<geometry.Transform>)
+    constructor(private layerContainer: HTMLDivElement, private checkboxContainer: HTMLDivElement, public transform: Trackable<geometry.Transform>)
     {
         this.transform.setValue(new geometry.Transform().scale(1, -1));
 
@@ -102,9 +103,9 @@ export class MapLayer
 {
     public canvas: HTMLCanvasElement;
     public context: CanvasRenderingContext2D;
-    public enabled: util.Trackable<boolean>;
+    public enabled: Trackable<boolean>;
 
-    constructor(public transform: util.Trackable<geometry.Transform>,
+    constructor(public transform: Trackable<geometry.Transform>,
                 public name: string,
                 initiallyEnabled: boolean = true)
     {
@@ -113,7 +114,7 @@ export class MapLayer
 
         console.assert(!!this.context);
 
-        this.enabled = new util.Trackable<boolean>(initiallyEnabled);
+        this.enabled = new Trackable<boolean>(initiallyEnabled);
         this.enabled.track(isEnabled => this.canvas.style.display = isEnabled ? 'block' : 'none');
         this.transform.track(t => t.applyTo(this.context));
     }
@@ -131,7 +132,7 @@ export class DataLayer<T> extends MapLayer
 {
     public data: T;
 
-    constructor(transform: util.Trackable<geometry.Transform>,
+    constructor(transform: Trackable<geometry.Transform>,
                 protocolName: string,
                 layerName: string,
                 render: () => void,
@@ -172,7 +173,7 @@ export class DataLayer<T> extends MapLayer
 
 export class FieldLineLayer extends MapLayer
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(transform, "Field lines");
 
@@ -187,7 +188,7 @@ export class FieldLineLayer extends MapLayer
 
 export class ParticleLayer extends DataLayer<state.Particle>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -213,7 +214,7 @@ export class ParticleLayer extends DataLayer<state.Particle>
 
 export class ObservedLineLayer extends DataLayer<state.WorldFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -229,7 +230,7 @@ export class ObservedLineLayer extends DataLayer<state.WorldFrame>
 
 export class AgentPositionLayer extends DataLayer<state.WorldFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -245,7 +246,7 @@ export class AgentPositionLayer extends DataLayer<state.WorldFrame>
 
 export class VisibleFieldPolyLayer extends DataLayer<state.WorldFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -261,7 +262,7 @@ export class VisibleFieldPolyLayer extends DataLayer<state.WorldFrame>
 
 export class BallPositionLayer extends DataLayer<state.WorldFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -277,7 +278,7 @@ export class BallPositionLayer extends DataLayer<state.WorldFrame>
 
 export class ObservedGoalLayer extends DataLayer<state.WorldFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -293,7 +294,7 @@ export class ObservedGoalLayer extends DataLayer<state.WorldFrame>
 
 export class OcclusionAreaLayer extends DataLayer<state.WorldFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -309,7 +310,7 @@ export class OcclusionAreaLayer extends DataLayer<state.WorldFrame>
 
 export class TeamLayer extends DataLayer<state.Team>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -327,7 +328,7 @@ export class TeamLayer extends DataLayer<state.Team>
 
 export class AgentReferenceLayer extends MapLayer
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(transform, "Agent frame");
 
@@ -358,7 +359,7 @@ export class AgentReferenceLayer extends MapLayer
 
 export class AgentObservedLineLayer extends DataLayer<state.AgentFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -374,10 +375,10 @@ export class AgentObservedLineLayer extends DataLayer<state.AgentFrame>
 
 export class AgentObservedLineJunctionLayer extends DataLayer<state.AgentFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
-            transform, 
+            transform,
             constants.protocols.agentFrameState,
             "Observed Line junctions",
             () => {
@@ -390,7 +391,7 @@ export class AgentObservedLineJunctionLayer extends DataLayer<state.AgentFrame>
 
 export class AgentVisibleFieldPolyLayer extends DataLayer<state.AgentFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -406,7 +407,7 @@ export class AgentVisibleFieldPolyLayer extends DataLayer<state.AgentFrame>
 
 export class AgentBallPositionLayer extends DataLayer<state.AgentFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -422,7 +423,7 @@ export class AgentBallPositionLayer extends DataLayer<state.AgentFrame>
 
 export class AgentObservedGoalLayer extends DataLayer<state.AgentFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,
@@ -438,7 +439,7 @@ export class AgentObservedGoalLayer extends DataLayer<state.AgentFrame>
 
 export class AgentOcclusionAreaLayer extends DataLayer<state.AgentFrame>
 {
-    constructor(transform: util.Trackable<geometry.Transform>)
+    constructor(transform: Trackable<geometry.Transform>)
     {
         super(
             transform,

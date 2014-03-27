@@ -2,13 +2,13 @@
  * @author Drew Noakes https://drewnoakes.com
  */
 
-import util = require('util');
+import Trackable = require('util/Trackable');
 
 export class ColorPicker
 {
     public element: HTMLInputElement;
 
-    constructor(trackable: util.Trackable<string>)
+    constructor(trackable: Trackable<string>)
     {
         this.element = <HTMLInputElement>document.createElement('input');
         this.element.type = 'color';

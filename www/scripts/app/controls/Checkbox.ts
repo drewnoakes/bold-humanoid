@@ -2,7 +2,7 @@
  * @author Drew Noakes https://drewnoakes.com
  */
 
-import util = require('util');
+import Trackable = require('util/Trackable');
 
 class Checkbox
 {
@@ -10,7 +10,7 @@ class Checkbox
 
     public element: HTMLDivElement;
 
-    constructor(labelText: string, trackable: util.Trackable<boolean>, id?: string)
+    constructor(labelText: string, trackable: Trackable<boolean>, id?: string)
     {
         this.element = document.createElement('div');
         this.element.className = 'checkbox control';

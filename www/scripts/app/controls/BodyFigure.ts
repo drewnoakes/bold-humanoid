@@ -6,7 +6,7 @@
 
 import constants = require('constants');
 import DOMTemplate = require('DOMTemplate');
-import util = require('util');
+import Trackable = require('util/Trackable');
 
 var bodyTemplate = new DOMTemplate('body-figure-template');
 
@@ -29,8 +29,8 @@ class BodyFigure
 
     private jointElementById: HTMLDivElement[];
 
-    public hoverJointId: util.Trackable<number> = new util.Trackable<number>();
-    public selectedJointIds: util.Trackable<number[]> = new util.Trackable<number[]>([]);
+    public hoverJointId: Trackable<number> = new Trackable<number>();
+    public selectedJointIds: Trackable<number[]> = new Trackable<number[]>([]);
 
     constructor(options?: any)
     {
