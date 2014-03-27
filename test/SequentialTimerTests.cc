@@ -149,3 +149,30 @@ TEST(DISABLED_SequentialTimerTests, nesting2)
   EXPECT_EQ("a/b",   items[1].second); EXPECT_BETWEEN(10, 12, items[1].first);
   EXPECT_EQ("a",     items[2].second); EXPECT_BETWEEN(15, 17, items[2].first);
 }
+
+TEST(SequentialTimerTests, nesting3)
+{
+  SequentialTimer t;
+  usleep(50000);
+  t.timeEvent("a");
+  usleep(50000);
+  t.enter("b"); // Should warn "Potential misuse of SequentialTimer: 50ms elapsed between last recording and enter"
+  {
+    usleep(50000);
+    t.enter("c"); // And again here
+    {
+      usleep(50000);
+    }
+    t.exit();
+    usleep(50000);
+  }
+  t.exit();
+
+  auto items = *t.flush();
+
+  ASSERT_EQ(3, items.size());
+
+  EXPECT_EQ("a",   items[0].second); EXPECT_BETWEEN( 50,  70, items[0].first);
+  EXPECT_EQ("b/c", items[1].second); EXPECT_BETWEEN( 50,  70, items[1].first);
+  EXPECT_EQ("b",   items[2].second); EXPECT_BETWEEN(150, 190, items[2].first);
+}
