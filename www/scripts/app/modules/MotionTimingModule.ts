@@ -12,7 +12,7 @@ class MotionTimingModule extends Module
 
     constructor()
     {
-        super('motion-timing', 'motion timing');
+        super('motion-timing', 'motion timing', {fullScreen: true});
         this.pane = new TimingPane(constants.protocols.motionTiming, 125/*fps*/);
     }
 
@@ -26,7 +26,7 @@ class MotionTimingModule extends Module
         this.pane.unload();
     }
 
-    public onResized(width: number, height: number)
+    public onResized(width: number, height: number, isFullScreen: boolean)
     {
         this.pane.onResized(width, height);
     }

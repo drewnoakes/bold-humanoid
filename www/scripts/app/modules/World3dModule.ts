@@ -126,6 +126,23 @@ class World3dModule extends Module
         this.animator.stop();
     }
 
+    public onResized(width: number, height: number, isFullScreen: boolean)
+    {
+        console.log("Resizing", width, height);
+
+        // Make space for bottom controls if fullscreen
+        if (isFullScreen)
+            height -= 50;
+        else
+            height = constants.cameraImageHeight;
+
+        this.camera.aspect = width/height;
+        this.camera.updateProjectionMatrix();
+        this.animator.setRenderNeeded();
+
+        this.renderer.setSize(width, height, true);
+    }
+
     private onBodyState(data: state.Body)
     {
         if (!data.angles || data.angles.length !== 20)

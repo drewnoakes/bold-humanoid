@@ -38,7 +38,7 @@ class CommsModule extends Module
 
     constructor()
     {
-        super('comms', 'communication');
+        super('comms', 'communication', {fullScreen: true});
     }
 
     public load()
@@ -81,7 +81,7 @@ class CommsModule extends Module
         this.gameSeries.append(time, data.gameControllerMessages);
     }
 
-    public onResized(width, height)
+    public onResized(width: number, height: number, isFullScreen: boolean)
     {
         this.canvas.width = width;
     }

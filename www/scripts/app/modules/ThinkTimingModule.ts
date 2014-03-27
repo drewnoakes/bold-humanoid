@@ -12,7 +12,7 @@ class ThinkTimingModule extends Module
 
     constructor()
     {
-        super('think-timing', 'think timing');
+        super('think-timing', 'think timing', {fullScreen: true});
         this.pane = new TimingPane(constants.protocols.thinkTiming, 30/*fps*/);
     }
 
@@ -26,7 +26,7 @@ class ThinkTimingModule extends Module
         this.pane.unload();
     }
 
-    public onResized(width: number, height: number)
+    public onResized(width: number, height: number, isFullScreen: boolean)
     {
         this.pane.onResized(width, height);
     }

@@ -17,7 +17,7 @@ class Agent2dModule extends Module
 
     constructor()
     {
-        super('agent-2d', '2d agent');
+        super('agent-2d', '2d agent', {fullScreen: true});
     }
 
     public load()
@@ -56,8 +56,12 @@ class Agent2dModule extends Module
         this.map.addLayer(new mapping.AgentOcclusionAreaLayer(transform));
     }
 
-    public onResized(width, height)
+    public onResized(width: number, height: number, isFullScreen: boolean)
     {
+        // Make space for bottom controls if fullscreen
+        if (isFullScreen)
+            height -= 50;
+
         var scale = this.map.transform.getValue().getScale();
 //        var scale = Math.min(width / 12, height / 12);
         this.map.transform.setValue(

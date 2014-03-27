@@ -24,6 +24,7 @@ class ModuleHost
 
     // Data per module...
 
+    private fullScreenModule: Module;
     private moduleById: {[id:string]: Module} = {};
     private linkById: {[id:string]: HTMLAnchorElement} = {};
     private elementById: {[id:string]: HTMLDivElement} = {};
@@ -38,6 +39,15 @@ class ModuleHost
             update: this.updateHash.bind(this)
         };
         (<any>jQuery)(this.moduleContainer).sortable(sortableOptions); //.disableSelection();
+
+        window.addEventListener('resize', () =>
+        {
+            if (this.fullScreenModule)
+                this.fullScreenModule.onResized(
+                    this.fullScreenModule.element.clientWidth,
+                    this.fullScreenModule.element.clientHeight,
+                    true)
+        });
     }
 
     public register(module: Module)
@@ -146,7 +156,14 @@ class ModuleHost
         module.element = container;
         module.load();
 
-        module.onResized(container.clientWidth, container.clientHeight);
+        module.closeables.add(module.isFullScreen.track(isFullScreen =>
+        {
+            module.onResized(container.clientWidth, container.clientHeight, isFullScreen);
+            if (isFullScreen)
+                this.fullScreenModule = module;
+            else
+                this.fullScreenModule = null;
+        }));
 
         this.updateHash();
     }

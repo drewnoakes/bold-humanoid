@@ -67,7 +67,7 @@ class IMUModule extends Module
 
     constructor()
     {
-        super('sensors', 'IMU');
+        super('sensors', 'IMU', {fullScreen: true});
     }
 
     public load()
@@ -145,7 +145,7 @@ class IMUModule extends Module
         });
     }
 
-    public onResized(width: number, height: number)
+    public onResized(width: number, height: number, isFullScreen: boolean)
     {
         _.each(this.chartCanvases, canvas => canvas.width = width);
     }

@@ -17,7 +17,7 @@ class World2dModule extends Module
 
     constructor()
     {
-        super('world-2d', '2d world');
+        super('world-2d', '2d world', {fullScreen: true});
     }
 
     public load()
@@ -62,8 +62,12 @@ class World2dModule extends Module
         this.map.unload();
     }
 
-    public onResized(width: number, height: number)
+    public onResized(width: number, height: number, isFullScreen: boolean)
     {
+        // Make space for bottom controls if fullscreen
+        if (isFullScreen)
+            height -= 50;
+
         this.map.setPixelSize(width, height);
     }
 }

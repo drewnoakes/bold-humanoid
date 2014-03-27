@@ -20,7 +20,7 @@ class Module
     public unload()
     {}
 
-    public onResized(width: number, height: number)
+    public onResized(width: number, height: number, isFullScreen: boolean)
     {}
 }
 
