@@ -104,7 +104,7 @@
       "accepted-width-ratio": [0.5, 1.4]
     },
     "line-detection": {
-      "enable": false,
+      "enable": true,
       "line-dots": {
         "hysteresis": 3
       },
@@ -140,7 +140,7 @@
     "image-features": {
       "blobs": true,
       "line-dots": false,
-      "observed-lines": false,
+      "observed-lines": true,
       "expected-lines": false,
       "expected-line-edges": false,
       "horizon": true,
@@ -165,7 +165,7 @@
   "localiser": {
     "smoothing-window-size": 5,
     "randomise-ratio": 0.03,
-    "use-lines": true,
+    "use-lines": false,
     "min-goals-needed": 1,
     "position-error": 0.03,
     "angle-error-degrees": 2
