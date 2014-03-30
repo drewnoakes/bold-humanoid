@@ -9,7 +9,7 @@ void MotionTaskScheduler::add(MotionModule* module,
   {
     if (priority == Priority::None)
       return;
-    d_tasks.push_back(std::make_shared<MotionTask>(module, section, priority, requestCommit));
+    d_tasks.push_back(make_shared<MotionTask>(module, section, priority, requestCommit));
     d_hasChange = true;
   };
 
