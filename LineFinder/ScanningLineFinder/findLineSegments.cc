@@ -43,7 +43,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   float maxError = d_maxLineDist->getValue();
 
   // Matrix is col-major, so outersize is width
-  for (unsigned k = 0; k < linePointsMatrix.outerSize(); ++k)
+  for (unsigned k = 0; k < static_cast<unsigned>(linePointsMatrix.outerSize()); ++k)
     // Iterate over all elements in column k
     for (SparseMatrix<bool>::InnerIterator it(linePointsMatrix, k); it; ++it)
     {
@@ -94,7 +94,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
         closest->n++;
         if (error > .5 * maxError)
         {
-          auto oldBeta = closest->beta;
+//           auto oldBeta = closest->beta;
           closest->beta = (closest->xxSum / closest->n).inverse() * (closest->xySum / closest->n);
           ++nRegressions;
         }
@@ -131,7 +131,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   vector<LineSegment2i> lineSegments;
   for (auto& regState : regStates)
   {
-    auto oldBeta = regState.beta;
+//     auto oldBeta = regState.beta;
     regState.beta =
       (regState.xxSum / regState.n).inverse() *
       (regState.xySum / regState.n);
