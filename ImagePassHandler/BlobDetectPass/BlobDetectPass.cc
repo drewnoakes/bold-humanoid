@@ -17,7 +17,7 @@ BlobDetectPass::BlobDetectPass(ushort imageWidth, ushort imageHeight, vector<sha
 
     // Initialise a vector of Runs for each row in the image
     for (unsigned y = 0; y < d_imageHeight; ++y)
-      d_runsPerRowPerLabel[pixelLabelId].push_back(vector<bold::Run>());
+      d_runsPerRowPerLabel[pixelLabelId].emplace_back();
 
     // Initialize blob container
     d_blobsDetectedPerLabel[pixelLabel] = vector<Blob>();

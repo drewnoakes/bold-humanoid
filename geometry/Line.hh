@@ -84,16 +84,16 @@ namespace bold
       std::vector<Eigen::Matrix<T,2,1>> edgeContactPoints;
 
       if (xWhenYMin >= minX && xWhenYMin <= maxX)
-        edgeContactPoints.push_back(Eigen::Matrix<T,2,1>(xWhenYMin, minY));
+        edgeContactPoints.emplace_back(xWhenYMin, minY);
 
       if (xWhenYMax >= minX && xWhenYMax <= maxX)
-        edgeContactPoints.push_back(Eigen::Matrix<T,2,1>(xWhenYMax, maxY));
+        edgeContactPoints.emplace_back(xWhenYMax, maxY);
 
       if (yWhenXMin >= minY && yWhenXMin <= maxY)
-        edgeContactPoints.push_back(Eigen::Matrix<T,2,1>(minX, yWhenXMin));
+        edgeContactPoints.emplace_back(minX, yWhenXMin);
 
       if (yWhenXMax >= minY && yWhenXMax <= maxY)
-        edgeContactPoints.push_back(Eigen::Matrix<T,2,1>(maxX, yWhenXMax));
+        edgeContactPoints.emplace_back(maxX, yWhenXMax);
 
       if (edgeContactPoints.size() == 0)
         return Maybe<LineSegment<T,2>>::empty();

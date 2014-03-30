@@ -50,7 +50,7 @@ TEST (ThreadTests, DISABLED_multipleCounters)
 
   vector<thread> threads;
   for (int t = 0; t < threadCount; t++)
-    threads.push_back(thread(countLoop));
+    threads.emplace_back(countLoop);
 
   for (auto& thread : threads)
     thread.join();
@@ -74,14 +74,14 @@ TEST (ThreadTests, DISABLED_threadSafetyOfSignals)
   vector<thread> threads;
   for (int t = 0; t < threadCount; t++)
   {
-    threads.push_back(thread([&]()
+    threads.emplace_back([&]()
     {
       for (int i = 0; i < iterationCount; i++)
       {
         lock_guard<mutex> guard(m);
         sig();
       }
-    }));
+    });
   }
 
   for (auto& thread : threads)

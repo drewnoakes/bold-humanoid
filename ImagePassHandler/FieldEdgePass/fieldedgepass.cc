@@ -24,7 +24,7 @@ void FieldEdgePass::applyConvexHull(vector<short>& points, unsigned fromIndex, u
 
   vector<Matrix<float,2,1>> input;
   for (unsigned c = fromIndex; c <= toIndex; c++)
-    input.push_back(Matrix<float,2,1>(c, points[c]));
+    input.emplace_back(c, points[c]);
 
   auto output = HalfHullBuilder<float>().findHalfHull(input, HalfHull::Top);
 

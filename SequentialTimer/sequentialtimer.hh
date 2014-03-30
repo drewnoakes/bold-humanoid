@@ -28,7 +28,7 @@ namespace bold
       auto now = Clock::getTimestamp();
       auto timeMillis = Clock::timestampToMillis(now - d_last);
       std::string name = d_prefix.size() ? d_prefix + '/' + eventName : eventName;
-      d_eventTimings->push_back(EventTiming(timeMillis, name));
+      d_eventTimings->emplace_back(timeMillis, name);
       d_last = now;
     }
 
@@ -43,7 +43,7 @@ namespace bold
     {
       auto now = Clock::getTimestamp();
       d_last = now;
-      d_entered.push_back(std::make_pair(name, now));
+      d_entered.emplace_back(name, now);
       rebuildPrefix();
     }
 
@@ -53,7 +53,7 @@ namespace bold
       auto now = Clock::getTimestamp();
       auto top = d_entered[d_entered.size() - 1];
       auto timeMillis = Clock::timestampToMillis(now - top.second);
-      d_eventTimings->push_back(EventTiming(timeMillis, d_prefix));
+      d_eventTimings->emplace_back(timeMillis, d_prefix);
       d_last = now;
       d_entered.pop_back();
       rebuildPrefix();

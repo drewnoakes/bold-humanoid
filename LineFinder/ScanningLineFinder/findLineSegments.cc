@@ -53,7 +53,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
 
       auto closest = regStates.end();
       float error = 0;
-      
+
       // Find line segment that 1) has head closest to point 2) has least residual between line and point
       // Minimum distance to head found so far
       float minDist = maxDist;
@@ -153,7 +153,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
     if (rms > maxRMSError)
       continue;
     */
-    lineSegments.push_back(LineSegment2i(p1, p2));
+    lineSegments.emplace_back(p1, p2);
   }
   return lineSegments;
 }

@@ -128,7 +128,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
 
     if (isLongEnough)
     {
-      segments.push_back(LineSegment2i(lineEnds[0], lineEnds[1]));
+      segments.emplace_back(lineEnds[0], lineEnds[1]);
 
       if ((int)segments.size() >= maxLineSegmentCount)
       {

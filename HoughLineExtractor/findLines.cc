@@ -79,7 +79,7 @@ vector<Candidate<Line>> HoughLineExtractor::findLines(HoughLineAccumulator& accu
           double theta = accumulator.getTheta(y);
           double radius = accumulator.getRadius(x);
 
-          lines.push_back(Candidate<Line>(Line(radius, theta), peakValue));
+          lines.emplace_back(Line(radius, theta), peakValue);
 
           // If we found a local maximum, then the next 'radiusSearch' pixels
           // cannot be local maxima.

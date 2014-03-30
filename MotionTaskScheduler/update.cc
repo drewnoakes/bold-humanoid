@@ -80,32 +80,32 @@ void MotionTaskScheduler::update()
   if (headModule == armModule && armModule == legModule)
   {
     // All sections controlled by same module
-    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::all()));
+    if (headModule) moduleJointSelection->emplace_back(headModule, JointSelection::all());
   }
   else if (headModule == armModule)
   {
     // Head and arm sections controlled by same module
-    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::headAndArms()));
-    if (legModule)  moduleJointSelection->push_back(make_pair(legModule,  JointSelection::legs()));
+    if (headModule) moduleJointSelection->emplace_back(headModule, JointSelection::headAndArms());
+    if (legModule)  moduleJointSelection->emplace_back(legModule,  JointSelection::legs());
   }
   else if (armModule == legModule)
   {
     // Arm and leg sections controlled by same module
-    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::head()));
-    if (armModule)  moduleJointSelection->push_back(make_pair(armModule,  JointSelection::armsAndLegs()));
+    if (headModule) moduleJointSelection->emplace_back(headModule, JointSelection::head());
+    if (armModule)  moduleJointSelection->emplace_back(armModule,  JointSelection::armsAndLegs());
   }
   else if (headModule == legModule)
   {
     // Head and leg sections controlled by same module
-    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::headAndLegs()));
-    if (armModule)  moduleJointSelection->push_back(make_pair(armModule,  JointSelection::arms()));
+    if (headModule) moduleJointSelection->emplace_back(headModule, JointSelection::headAndLegs());
+    if (armModule)  moduleJointSelection->emplace_back(armModule,  JointSelection::arms());
   }
   else
   {
     // Each section controlled by different modules
-    if (headModule) moduleJointSelection->push_back(make_pair(headModule, JointSelection::head()));
-    if (armModule)  moduleJointSelection->push_back(make_pair(armModule,  JointSelection::arms()));
-    if (legModule)  moduleJointSelection->push_back(make_pair(legModule,  JointSelection::legs()));
+    if (headModule) moduleJointSelection->emplace_back(headModule, JointSelection::head());
+    if (armModule)  moduleJointSelection->emplace_back(armModule,  JointSelection::arms());
+    if (legModule)  moduleJointSelection->emplace_back(legModule,  JointSelection::legs());
   }
 
   // Commit selected tasks if they require it

@@ -64,7 +64,7 @@ vector<LineSegment2i, aligned_allocator<LineSegment2i>> Bounds2i::getEdges() con
   for (unsigned i = 0, lastIndex = 3; i < 4; lastIndex = i++)
   {
     if (corners[lastIndex] != corners[i])
-      edges.push_back(LineSegment2i(corners[lastIndex], corners[i]));
+      edges.emplace_back(corners[lastIndex], corners[i]);
   }
 
   return edges;

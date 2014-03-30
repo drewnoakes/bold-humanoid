@@ -10,7 +10,7 @@ void Camera::createFormats()
 
   while (ioctl(d_fd, VIDIOC_ENUM_FMT, &fmtDesc) == 0)
   {
-    d_formats.push_back(Format(fmtDesc));
+    d_formats.emplace_back(fmtDesc);
     fmtDesc.index++;
   }
 }

@@ -28,7 +28,7 @@ TEST (ThreadIdTests, threadIdAssignment)
 
   vector<thread> threads;
   for (int t = 1; t <= threadCount; t++)
-    threads.push_back(thread(makeLoop((ThreadId)t)));
+    threads.emplace_back(makeLoop((ThreadId)t));
 
   for (auto& thread : threads)
     thread.join();

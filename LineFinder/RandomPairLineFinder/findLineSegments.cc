@@ -46,7 +46,7 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
     // If not, create one
     if (!found)
     {
-      hypotheses.push_back(LineHypothesis(line, dot1, dot2));
+      hypotheses.emplace_back(line, dot1, dot2);
     }
   }
 
@@ -81,10 +81,10 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
     if (hypothesis.min() == hypothesis.max())
       break;
 
-    satisfactory.push_back(LineSegment2i(
+    satisfactory.emplace_back(
       Vector2i(hypothesis.min().x(), hypothesis.min().y()),
       Vector2i(hypothesis.max().x(), hypothesis.max().y())
-    ));
+    );
   }
   return satisfactory;
 }
