@@ -71,6 +71,29 @@ class CameraModule extends Module
         delete this.context;
     }
 
+    public onResized(width: number, height: number, isFullScreen: boolean)
+    {
+        if (isFullScreen)
+        {
+            this.cameraCanvas.style.width = "100%";
+        }
+        else
+        {
+            this.cameraCanvas.style.width = constants.cameraImageWidth + 'px';
+        }
+    }
+
+    private scaleImagePoint(offsetX: number, offsetY: number)
+    {
+        var xScale = constants.cameraImageWidth / this.cameraCanvas.clientWidth,
+            yScale = constants.cameraImageHeight / this.cameraCanvas.clientHeight;
+
+        return {
+            x: Math.round(offsetX * xScale),
+            y: Math.round(offsetY * yScale)
+        };
+    }
+
     private bindInteraction()
     {
         var imageTypeSetting = control.getSetting('round-table.image-type');
@@ -79,7 +102,8 @@ class CameraModule extends Module
         this.cameraCanvas.addEventListener('click', event =>
         {
             if (event.shiftKey) {
-                var rgb = this.context.getImageData(event.offsetX, event.offsetY, 1, 1).data,
+                var point = this.scaleImagePoint(event.offsetX, event.offsetY),
+                    rgb = this.context.getImageData(point.x, point.y, 1, 1).data,
                     hsv = new color.Rgb(rgb[0]/255, rgb[1]/255, rgb[2]/255).toHsv();
                 console.log(Math.round(hsv.H * 255) + ',' + Math.round(hsv.S * 255) + ',' + Math.round(hsv.V * 255));
             }
@@ -96,11 +120,12 @@ class CameraModule extends Module
             if (!this.context)
                 return;
             mouse.polyfill(e);
-            var x = e.offsetX,
-                y = e.offsetY,
-                hoverText = 'Pos: ' + (this.cameraCanvas.width - x) + ',' + (this.cameraCanvas.height - y);
+            var point = this.scaleImagePoint(event.offsetX, event.offsetY),
+                hoverX = this.cameraCanvas.clientWidth - 1 - point.x,
+                hoverY = this.cameraCanvas.clientHeight - 1 - point.y,
+                hoverText = 'Pos: ' + hoverX + ',' + hoverY;
             if (imageTypeSetting.value === 2) {
-                var rgb = this.context.getImageData(x, y, 1, 1).data,
+                var rgb = this.context.getImageData(point.x, point.y, 1, 1).data,
                     hsv = new color.Rgb(rgb[0]/255, rgb[1]/255, rgb[2]/255).toHsv();
                 this.pixelLabelInspector.setVisible(true);
                 this.pixelLabelInspector.highlightHsv(hsv);
