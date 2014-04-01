@@ -135,6 +135,7 @@ namespace bold
     std::shared_ptr<VisualCortex> d_visualCortex;
     std::shared_ptr<Voice> d_voice;
 
+    Setting<double>* d_joystickHeadSpeed;
     Setting<double>* d_joystickXAmpMax;
     Setting<double>* d_joystickYAmpMax;
     Setting<double>* d_joystickAAmpMax;

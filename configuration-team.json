@@ -23,6 +23,7 @@
     "joystick": {
       "enabled": false,
       "path": "/dev/input/js0",
+      "head-speed": 15.0,
       "x-amp-max": 15.0,
       "y-amp-max": 15.0,
       "a-amp-max": 15.0

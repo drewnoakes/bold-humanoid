@@ -92,6 +92,7 @@ Agent::Agent()
     d_joystick = make_shared<Joystick>(joystickDevicePath);
     if (!d_joystick->isFound())
       log::error("Agent::Agent") << "Joystick not found";
+    d_joystickHeadSpeed = Config::getSetting<double>("hardware.joystick.head-speed");
     d_joystickXAmpMax = Config::getSetting<double>("hardware.joystick.x-amp-max");
     d_joystickYAmpMax = Config::getSetting<double>("hardware.joystick.y-amp-max");
     d_joystickAAmpMax = Config::getSetting<double>("hardware.joystick.a-amp-max");

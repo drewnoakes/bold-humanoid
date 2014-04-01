@@ -78,8 +78,8 @@ void Agent::processInputCommands()
     if (isButton1Down)
     {
       d_headModule->moveByDeltaDegs(
-        (-axis0/32767.0) * 5,
-        (-axis1/32767.0) * 5);
+        (-axis0/32767.0) * d_joystickHeadSpeed->getValue(),
+        (-axis1/32767.0) * d_joystickHeadSpeed->getValue());
     }
     else
     {
