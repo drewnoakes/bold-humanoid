@@ -36,6 +36,7 @@ class World3dModule extends Module
     private drawObservedLines: Trackable<boolean>;
     private drawObservedGoals: Trackable<boolean>;
     private drawViewPoly: Trackable<boolean>;
+    private showStaticObjects: Trackable<boolean>;
 
     private pendingTextureCount: number;
 
@@ -90,13 +91,13 @@ class World3dModule extends Module
         this.drawViewPoly.onchange(() => this.animator.setRenderNeeded());
         controls.appendChild(new Checkbox('View poly', this.drawViewPoly).element);
 
-        var showStaticObjects = new Trackable<boolean>(true);
-        showStaticObjects.onchange(value =>
+        this.showStaticObjects = new Trackable<boolean>(true);
+        this.showStaticObjects.onchange(value =>
         {
             this.staticObjects.traverse(child => child.visible = value);
             this.animator.setRenderNeeded();
         });
-        controls.appendChild(new Checkbox('Show static objects', showStaticObjects).element);
+        controls.appendChild(new Checkbox('Show static objects', this.showStaticObjects).element);
 
         this.initialiseScene();
 
@@ -272,6 +273,9 @@ class World3dModule extends Module
 
     private updateAgentHeightFromGround()
     {
+        if (!this.showStaticObjects.getValue())
+            return;
+
         var leftFoot = this.objectByName['foot-left'];
         var rightFoot = this.objectByName['foot-right'];
         // Ensure we've loaded everything
@@ -487,6 +491,9 @@ class World3dModule extends Module
 
     private positionBodySpotlight(body: THREE.Object3D)
     {
+        if (!this.showStaticObjects.getValue())
+            return;
+
         var dist = 4,
             unit = Math.sqrt(dist*dist / 3),
             spotlight = (<any>body).spotlight;
