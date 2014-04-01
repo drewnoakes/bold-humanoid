@@ -1,8 +1,9 @@
 #include "odometer.hh"
 
-#include "../../util/log.hh"
+#include "../../Config/config.hh"
 #include "../../StateObject/AmbulatorState/ambulatorstate.hh"
 #include "../../StateObject/OdometryState/odometrystate.hh"
+#include "../../util/log.hh"
 
 #include <cassert>
 
@@ -19,6 +20,12 @@ Odometer::Odometer(shared_ptr<WalkModule> walkModule)
 {
   assert(walkModule);
   State::make<OdometryState>(d_progress);
+
+  Config::addAction("odometer.reset", "Reset odometer", [this]()
+  {
+    lock_guard<mutex> lock(d_progressMutex);
+    d_progress = {0,0,0};
+  });
 }
 
 void Odometer::observeTyped(shared_ptr<BodyState const> const& state, SequentialTimer& timer)
@@ -63,10 +70,4 @@ Vector3d Odometer::getTranslation() const
 {
   lock_guard<mutex> lock(d_progressMutex);
   return d_progress;
-}
-
-void Odometer::reset()
-{
-  lock_guard<mutex> lock(d_progressMutex);
-  d_progress = {0,0,0};
 }

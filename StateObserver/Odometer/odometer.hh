@@ -14,8 +14,6 @@ namespace bold
 
     Eigen::Vector3d getTranslation() const;
 
-    void reset();
-
   private:
     void observeTyped(std::shared_ptr<BodyState const> const& state, SequentialTimer& timer) override;
 
