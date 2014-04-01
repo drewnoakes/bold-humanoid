@@ -225,6 +225,8 @@ function onControlData(data: ControlData)
             actionsJson = syncData.actions;
             settingsJson = syncData.settings;
 
+            // TODO merge new actions with old actions, updating old values as needed, so that reconnect works properly
+
             allActions = _.map(syncData.actions, actionData => new Action(actionData));
             allSettings = _.map(syncData.settings, settingData => new Setting(settingData));
             allFSMs = syncData.fsms;
