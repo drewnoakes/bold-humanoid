@@ -68,11 +68,6 @@ class CommsModule extends Module
         this.closeables.add(() => this.chart.stop());
     }
 
-    public unload()
-    {
-        super.unload();
-    }
-
     private onDebugState(data: state.Debug)
     {
         var time = new Date().getTime();
