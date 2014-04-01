@@ -159,7 +159,10 @@ class Protocol
                         callback(msg);
                     }
                 } catch(ex) {
-                    console.error(this.protocolName, 'subscription handler raised an error. Closing WebSocket.', ex);
+                    if (ex instanceof SyntaxError)
+                        console.error(this.protocolName, 'Error parsing message. Closing WebSocket.', ex, msg);
+                    else
+                        console.error(this.protocolName, 'subscription handler raised an error. Closing WebSocket.', ex);
                     this.socket.close();
                     throw ex;
                 }
