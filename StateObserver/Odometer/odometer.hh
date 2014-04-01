@@ -7,6 +7,10 @@ namespace bold
 {
   class WalkModule;
 
+  /** Calculates cumulative translation of the torso over time.
+   *
+   * Done by observing HardwareState and knowledge of the stance foot.
+   */
   class Odometer : public TypedStateObserver<BodyState>
   {
   public:
