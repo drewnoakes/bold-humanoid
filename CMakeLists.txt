@@ -743,6 +743,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/OrientationModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/OptionTreeModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/StateDumpModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/TeamModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/ThinkTimingModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/TimingPane.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/TrajectoryModule.ts

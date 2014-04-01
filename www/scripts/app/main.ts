@@ -25,6 +25,7 @@ import LocaliserModule = require('modules/LocaliserModule');
 import MotionTimingModule = require('modules/MotionTimingModule');
 import OptionTreeModule = require('modules/OptionTreeModule');
 import StateDumpModule = require('modules/StateDumpModule');
+import TeamModule = require('modules/TeamModule');
 import ThinkTimingModule = require('modules/ThinkTimingModule');
 import TrajectoryModule = require('modules/TrajectoryModule');
 import VoiceModule = require('modules/VoiceModule');
@@ -53,6 +54,7 @@ var loadUi = (settings?: Setting[]) =>
     moduleHost.register(new MotionTimingModule());
     moduleHost.register(new LocaliserModule());
     moduleHost.register(new WalkModule());
+    moduleHost.register(new TeamModule());
     moduleHost.register(new CommsModule());
     moduleHost.register(new HardwareModule());
     moduleHost.register(new HistogramModule());

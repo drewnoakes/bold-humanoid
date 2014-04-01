@@ -199,6 +199,20 @@
         </div>
     </script>
 
+    <script id="team-module-template" type="text/x-handlebars-template">
+        <table>
+          <tr><td>unum</td>{{#each this}}<td class="{{this.clazz}}">{{this.unum}}</td>{{/each}}</tr>
+          <tr><td>team</td>{{#each this}}<td class="{{this.clazz}}">{{this.team}}</td>{{/each}}</tr>
+          <tr><td>activity</td>{{#each this}}<td class="{{this.clazz}}">{{this.activity}}</td>{{/each}}</tr>
+          <tr><td>state</td>{{#each this}}<td class="{{this.clazz}}">{{this.state}}</td>{{/each}}</tr>
+          <tr><td>role</td>{{#each this}}<td class="{{this.clazz}}">{{this.role}}</td>{{/each}}</tr>
+          <tr><td>pos</td>{{#each this}}<td class="{{this.clazz}}">{{this.pos}}</td>{{/each}}</tr>
+          <tr><td>pos confidence</td>{{#each this}}<td class="{{this.clazz}}">{{this.posConfidence}}</td>{{/each}}</tr>
+          <tr><td>ball relative</td>{{#each this}}<td class="{{this.clazz}}">{{this.ballRelative}}</td>{{/each}}</tr>
+          <tr><td>data age</td>{{#each this}}<td class="{{this.clazz}}">{{this.age}}</td>{{/each}}</tr>
+        </table>
+    </script>
+
 </head>
 
 <body>

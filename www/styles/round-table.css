@@ -1048,7 +1048,6 @@ div.module.voice div.control-container.flow .setting.control
     width: 125px;
 }
 
-
 /*******************************************************************/
 
 div.module.world-2d div.module-content .localiser-controls
@@ -1060,4 +1059,41 @@ div.module.world-2d div.module-content .localiser-controls
 div.module.world-2d .hover-info
 {
   float: right;
+}
+
+/*******************************************************************/
+
+div.module.team table
+{
+    border-collapse: collapse;
+}
+
+div.module.team td
+{
+    padding: 2px 4px;
+}
+
+div.module.team tr td:first-child()
+{
+    font-weight: bold;
+}
+
+div.module.team td.me.teammate
+{
+    background-color: rgba(43, 65, 206, 0.3);
+}
+
+div.module.team td.teammate
+{
+    background-color: rgba(43, 65, 206, 0.2);
+}
+
+div.module.team td.opponent
+{
+    background-color: rgba(206, 44, 73, 0.30);
+}
+
+div.module.team td.old
+{
+    color: rgba(80,0,0, 0.4)
 }

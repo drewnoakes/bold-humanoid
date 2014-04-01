@@ -87,3 +87,13 @@ export function clone<T>(obj: T): T
 {
     return <T>JSON.parse(JSON.stringify(obj));
 }
+
+export function radToDeg(rad: number)
+{
+    return 180.0 * rad / Math.PI;
+}
+
+export function degToRad(deg: number)
+{
+    return Math.PI * deg / 180.0;
+}
