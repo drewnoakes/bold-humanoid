@@ -9,6 +9,8 @@ void Agent::processInputCommands()
   //
   if (d_joystick != nullptr)
   {
+    static bool isButton1Down = false;
+
     JoystickEvent event;
     while (d_joystick->sample(&event))
     {
@@ -42,12 +44,27 @@ void Agent::processInputCommands()
         }
 
         if (stick == 1)
-          d_ambulator->setMoveDir(Eigen::Vector2d(
-            (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
-            (-axis0/32767.0) * d_joystickYAmpMax->getValue()));
+        {
+          if (isButton1Down)
+          {
+            d_headModule->moveByDeltaDegs(
+              (-axis0/32767.0) * 5,
+              (-axis1/32767.0) * 5);
+          }
+          else
+          {
+            d_ambulator->setMoveDir(Eigen::Vector2d(
+              (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
+              (-axis0/32767.0) * d_joystickYAmpMax->getValue()));
+          }
+        }
 
         if (stick == 2)
           d_ambulator->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
+      }
+      else if (event.isButton() && event.number == 1)
+      {
+        isButton1Down = event.value == 1;
       }
       else if (event.isButton() && event.value == 1 && !event.isInitialState())
       {
