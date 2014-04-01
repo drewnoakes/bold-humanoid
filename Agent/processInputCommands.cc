@@ -66,7 +66,7 @@ void Agent::processInputCommands()
             break;
           default:
             if (event.value == 1)
-              log::info("Agent::processInputCommands") << "Button " << event.number;
+              log::info("Agent::processInputCommands") << "Button " << (int)event.number;
             break;
         }
       }
