@@ -92,6 +92,7 @@ namespace bold
     AgentPosition pos;
     double posConfidence;
     Maybe<Eigen::Vector2d> ballRelative;
+//    double ballConfidence;
 
     /// Time that the message was received according to the agent's own clock.
     Clock::Timestamp updateTime;
