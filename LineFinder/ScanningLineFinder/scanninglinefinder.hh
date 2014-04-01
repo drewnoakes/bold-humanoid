@@ -22,7 +22,7 @@ namespace bold
     // Minimum ratio of dots / length required
     Setting<double>* d_minCoverage;
     // Maximum root mean square error allowed
-    Setting<double>* d_maxRMSError;
+    Setting<double>* d_maxRMSFactor;
     // Maximum distance between new point and segment head
     Setting<double>* d_maxHeadDist;
     // Maximum distance between new point and line 

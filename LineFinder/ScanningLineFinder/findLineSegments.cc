@@ -33,6 +33,16 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
     unsigned xStart;
     unsigned xEnd;
     Vector2i head;
+
+    RegressionState(unsigned _idx, Matrix2f _xxSum, Vector2f _xySum, Vector2f _beta, unsigned _xStart, unsigned _xEnd, Vector2i _head)
+      : idx{_idx},
+      xxSum{move(_xxSum)}, xySum{move(_xySum)},
+      n{1},
+      beta{move(_beta)},
+      sqError{0}, rms{0},
+      xStart{_xStart}, xEnd{_xEnd},
+      head{move(_head)}
+    {}
   };
 
   vector<RegressionState,Eigen::aligned_allocator<RegressionState>> regStates;
@@ -41,6 +51,8 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   float maxDist = d_maxHeadDist->getValue();;
   // Maximum y-error to consider point member of line segment
   float maxError = d_maxLineDist->getValue();
+
+  float maxRMSFactor = d_maxRMSFactor->getValue();
 
   // Matrix is col-major, so outersize is width
   for (unsigned k = 0; k < static_cast<unsigned>(linePointsMatrix.outerSize()); ++k)
@@ -64,13 +76,13 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
       {
         auto& state = *iter;
         float dist = (state.head.cast<float>() - point.cast<float>()).norm();
-        if (dist < minDist)
+        if (dist <= minDist)
         {
           if (state.n > 1)
           {
             // Error should not be more than current RMSE
-            float e = abs(state.beta.dot(x) - point.y());
-            if (fabs(e) > state.rms)
+            auto e = std::abs(state.beta.dot(x) - point.y());
+            if (e > /*maxRMSFactor * */ state.rms)
               continue;
             error = e;
           }
@@ -92,46 +104,32 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
         closest->xxSum += xx;
         closest->xySum += x * point.y();
         closest->n++;
-        if (error > .5 * maxError)
+        //if (error > .5 * maxError)
         {
-//           auto oldBeta = closest->beta;
           closest->beta = (closest->xxSum / closest->n).inverse() * (closest->xySum / closest->n);
           ++nRegressions;
         }
-        closest->sqError += error * error;
+        closest->sqError += minError * minError;
+        auto oldrms = closest->rms;
         closest->rms = sqrt(closest->sqError / closest->n);
+
         closest->xEnd = point.x() + 1;
         closest->head = point;
       }
       else
       {
         // Start new line segment
-        RegressionState newState;
-        newState.idx = regStates.size() + 1;
-        //newState.X = MatrixXf(linePoints.size(), 2);
-        //newState.y = VectorXf(linePoints.size());
-        //newState.X.row(0) = x.transpose();
-        //newState.y(0) = point.y();
-        newState.xxSum = xx;
-        newState.xySum = x * point.y();
-        newState.n = 1;
-        newState.beta = Vector2f(0,point.y());
-        newState.sqError = 0;
-        newState.rms = 0;
-        newState.xEnd = (newState.xStart = point.x()) + 1;
-        newState.head = point;
+        RegressionState newState{regStates.size(), xx, x * point.y(), Vector2f{0, point.y()}, point.x() + 1, point.x() + 1, point};;
         regStates.push_back(newState);
       }
     }
 
   float minLength = d_minLength->getValue();
   float minCoverage = d_minCoverage->getValue();
-//   float maxRMSError = d_maxRMSError->getValue();
 
   vector<LineSegment2i> lineSegments;
   for (auto& regState : regStates)
   {
-//     auto oldBeta = regState.beta;
     regState.beta =
       (regState.xxSum / regState.n).inverse() *
       (regState.xySum / regState.n);
