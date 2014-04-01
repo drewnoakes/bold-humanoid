@@ -9,6 +9,8 @@ using namespace std;
 
 void TeamState::writeJson(Writer<StringBuffer>& writer) const
 {
+  auto swapNaN = [](double d, double nanVal) -> double { return std::isnan(d) ? nanVal : d; };
+
   writer.StartObject();
   {
     writer.String("players");
@@ -26,9 +28,9 @@ void TeamState::writeJson(Writer<StringBuffer>& writer) const
           writer.String("role").Int(static_cast<int>(player.role));
           writer.String("pos")
             .StartArray()
-              .Double(player.pos.x())
-              .Double(player.pos.y())
-              .Double(player.pos.theta())
+              .Double(swapNaN(player.pos.x(), 0))
+              .Double(swapNaN(player.pos.y(), 0))
+              .Double(swapNaN(player.pos.theta(), 0))
             .EndArray();
           writer.String("posConfidence").Double(player.posConfidence);
           writer.String("ballRelative").StartArray();
