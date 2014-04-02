@@ -469,6 +469,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     auto lookAtGoalState = playingFsm->newState("lookAtGoal", {stopWalking, lookAtGoal});
     auto aimState = playingFsm->newState("aim", {});
     auto circleBallState = playingFsm->newState("circleBall", {circleBall});
+    auto aboutFaceState = playingFsm->newState("aboutFace", {circleBall});
     auto lookAtFeetState = playingFsm->newState("lookAtFeet", {lookAtFeet});
     auto leftKickState = playingFsm->newState("leftKick", {leftKick});
     auto rightKickState = playingFsm->newState("rightKick", {rightKick});
@@ -521,6 +522,46 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
         return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
       });
 
+    // Abort attack if it looks like we are going to kick an own goal
+    lookForGoalState
+      ->transitionTo(aboutFaceState, "abort-attack-own-goal")
+      ->when([]()
+      {
+        // If the keeper is telling us that the ball is close to our goal, and
+        // we see a goalpost nearly that far away, then we should abort the
+        // attack.
+        auto team = State::get<TeamState>();
+        auto agentFrame = State::get<AgentFrameState>();
+
+        auto keeper = team->getKeeperState();
+        auto const& goalObses = agentFrame->getGoalObservations();
+
+        auto closestGoalDist = std::numeric_limits<double>::max();
+        for (auto const& obs : goalObses)
+        {
+          auto dist = obs.head<2>().norm();
+          if (dist < closestGoalDist)
+            closestGoalDist = dist;
+        }
+
+        if (!goalObses.empty() && keeper != nullptr && keeper->getAgeMillis() < 10000)
+        {
+          auto ballObs = keeper->ballRelative;
+          if (ballObs.hasValue() && ballObs->norm() < 3 && closestGoalDist < 4)
+          {
+            log::info("lookForGoalState->aboutFaceState") << "Goalie's ball dist " << ballObs->norm() << ", closest goal dist " << closestGoalDist;
+            return true;
+          }
+        }
+        else
+        {
+          // TODO IMPORTANT!!!!!!! this is to assist testing and must be removed
+          log::warning("lookForGoalState->aboutFaceState") << "DEBUG ABORT ATTACK SHOULD BE REMOVED";
+          return closestGoalDist < 4;
+        }
+        return false;
+      });
+
     lookForGoalState
       ->transitionTo(lookAtGoalState, "see-both-goals")
       ->when([]()
@@ -539,6 +580,10 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     lookForGoalState
       ->transitionTo(lookAtFeetState, "give-up")
       ->after(chrono::seconds(7));
+
+    aboutFaceState
+      ->transitionTo(lookForGoalState, "rotate-done")
+      ->after(chrono::seconds(10));
 
     lookAtGoalState
       ->transitionTo(aimState, "confident")
