@@ -206,3 +206,22 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
   }
   writer.EndObject();
 }
+
+shared_ptr<MotionScript::Stage const> MotionScript::getFinalStage() const
+{
+  assert(d_stages.size());
+  return d_stages[d_stages.size() - 1];
+}
+
+shared_ptr<MotionScript::Stage const> MotionScript::getFirstStage() const
+{
+  assert(d_stages.size());
+  return d_stages[0];
+}
+
+MotionScript::KeyFrame const& MotionScript::getFinalKeyFrame() const
+{
+  auto finalStage = getFinalStage();
+  assert(finalStage->keyFrames.size());
+  return finalStage->keyFrames[finalStage->keyFrames.size() - 1];
+}

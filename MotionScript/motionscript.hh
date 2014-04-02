@@ -104,6 +104,9 @@ namespace bold
 
     int getStageCount() const { return d_stages.size(); }
     std::shared_ptr<Stage const> getStage(unsigned index) const { return d_stages[index]; }
+    std::shared_ptr<Stage const> getFirstStage() const;
+    std::shared_ptr<Stage const> getFinalStage() const;
+    KeyFrame const& getFinalKeyFrame() const;
 
     bool getControlsHead() const { return d_controlsHead; }
     bool getControlsArms() const { return d_controlsArms; }
