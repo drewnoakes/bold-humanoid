@@ -35,8 +35,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   d_ambulator->setMoveDir(Vector2d(diff.y(), diff.x())); //  NOTE x and y intentionally swapped
   d_ambulator->setTurnAngle(a);
 
-  writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
-  writer.String("turn").Double(a);
+//   writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
+//   writer.String("turn").Double(a);
 
   // Look at ball to make sure we don't lose track of it
   return { d_lookAtBall };
