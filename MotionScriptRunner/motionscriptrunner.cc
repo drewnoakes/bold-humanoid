@@ -480,3 +480,19 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
     d_pGains[jointId] = d_currentStage->getPGain(jointId);
   }
 }
+
+bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script)
+{
+  auto hw = State::get<HardwareState>();
+
+  auto frame = script->getFinalKeyFrame();
+
+  for (uchar jointId = (uchar)JointId::MIN; jointId < (uchar)JointId::MAX; jointId++)
+  {
+    int delta = (int)hw->getMX28State(jointId).presentPositionValue - (int)frame.values[jointId];
+    if (abs(delta) > 100)
+      return false;
+  }
+
+  return true;
+}
