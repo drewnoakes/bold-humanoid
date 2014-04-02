@@ -33,7 +33,7 @@ void RoleDecider::update()
     d_behaviourControl->setPlayerRole(role);
   };
 
-  if (uniformNumber == 1)
+  if (uniformNumber == GOALIE_UNUM)
   {
     setRole(PlayerRole::Keeper);
     return;
