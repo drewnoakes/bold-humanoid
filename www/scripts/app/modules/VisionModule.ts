@@ -57,13 +57,11 @@ class VisionModule extends Module
 
         var lineContainer = content.querySelector('div.line-detection');
         control.buildSetting('vision.line-detection.enable', lineContainer, this.closeables);
+        control.buildSettings('vision.line-detection.scanning', lineContainer, this.closeables);
+
+        /*
         control.buildSetting('vision.line-detection.line-dots.hysteresis', lineContainer, this.closeables);
-        control.buildSetting('vision.line-detection.mask-walk.delta-r', lineContainer, this.closeables);
-        control.buildSetting('vision.line-detection.mask-walk.delta-theta-degs', lineContainer, this.closeables);
-        control.buildSetting('vision.line-detection.mask-walk.max-line-gap', lineContainer, this.closeables);
-        control.buildSetting('vision.line-detection.mask-walk.max-lines-returned', lineContainer, this.closeables);
-        control.buildSetting('vision.line-detection.mask-walk.min-line-length', lineContainer, this.closeables);
-        control.buildSetting('vision.line-detection.mask-walk.min-votes', lineContainer, this.closeables);
+        */
 
         control.buildSettings('round-table.image-features', content.querySelector('div.image-features'), this.closeables);
 
