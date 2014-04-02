@@ -102,6 +102,7 @@ namespace bold
     Clock::Timestamp updateTime;
 
     bool isMe() const;
+    double getAgeMillis() const;
   };
 
   class TeamState : public StateObject

@@ -56,3 +56,8 @@ bool PlayerState::isMe() const
 
   return uniformNumber == myUniformNumber && teamNumber == myTeamNumber;
 }
+
+double PlayerState::getAgeMillis() const
+{
+  return Clock::getMillisSince(updateTime);
+}
