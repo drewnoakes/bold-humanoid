@@ -35,7 +35,7 @@ namespace bold
     static double smallestAngleBetween(Eigen::Vector2d v1, Eigen::Vector2d v2);
 
     template<typename T>
-    static double clamp(T val, T min, T max)
+    static T clamp(T val, T min, T max)
     {
       if (val < min)
         return min;
