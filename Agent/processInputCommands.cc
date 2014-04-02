@@ -22,8 +22,8 @@ void Agent::processInputCommands()
   static short int axis0 = 0;
   static short int axis1 = 0;
   static short int axis2 = 0;
-  static short int axis3 = 0;
-  static short int axis4 = 0;
+//   static short int axis3 = 0;
+//   static short int axis4 = 0;
   static short int axis5 = 0;
 
   //
@@ -40,8 +40,8 @@ void Agent::processInputCommands()
         case 0: axis0 = event.value; break;
         case 1: axis1 = event.value; break;
         case 2: axis2 = event.value; break;
-        case 3: axis3 = event.value; break;
-        case 4: axis4 = event.value; break;
+//         case 3: axis3 = event.value; break;
+//         case 4: axis4 = event.value; break;
         case 5: axis5 = event.value; break;
         default:
           log::info("Agent::processInputCommands") << "Axis " << (int)event.number << " value " << (int)event.value;
@@ -54,7 +54,7 @@ void Agent::processInputCommands()
     }
     else if (event.isButton() && event.value == 1 && !event.isInitialState())
     {
-      auto runIfStanding = [this,standReadyScript](shared_ptr<MotionScript const> const& script)
+      auto runIfStanding = [this](shared_ptr<MotionScript const> const& script)
       {
         bool isStanding = MotionScriptRunner::isInFinalPose(standReadyScript);
         if (isStanding)
