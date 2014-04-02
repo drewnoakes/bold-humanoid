@@ -9,6 +9,10 @@
 
 namespace bold
 {
+  typedef unsigned char uchar;
+
+  constexpr uchar GOALIE_UNUM = 1;
+
   enum class PlayerRole
   {
     /// Robot is running, but paused or otherwise indisposed and should not be
@@ -112,6 +116,14 @@ namespace bold
     bool empty() const { return d_playerStates.empty(); }
 
     std::vector<PlayerState> const& players() const { return d_playerStates; }
+
+    PlayerState const* getKeeperState() const
+    {
+      auto it = std::find_if(d_playerStates.begin(), d_playerStates.end(),
+                             [](PlayerState const& p) { return p.uniformNumber == GOALIE_UNUM; });
+
+      return it == d_playerStates.end() ? nullptr : &(*it);
+    }
 
   private:
     std::vector<PlayerState> d_playerStates;
