@@ -5,14 +5,16 @@ using namespace Eigen;
 
 void OrientationState::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
 {
+  auto swapNaN = [](double d, double nanVal) -> double { return std::isnan(d) ? nanVal : d; };
+
   writer.StartObject();
   {
     writer.String("quaternion");
     writer.StartArray();
-    writer.Double(d_quaternion.w(), "%.5f");
-    writer.Double(d_quaternion.x(), "%.5f");
-    writer.Double(d_quaternion.y(), "%.5f");
-    writer.Double(d_quaternion.z(), "%.5f");
+    writer.Double(swapNaN(d_quaternion.w(), 0), "%.5f");
+    writer.Double(swapNaN(d_quaternion.x(), 0), "%.5f");
+    writer.Double(swapNaN(d_quaternion.y(), 0), "%.5f");
+    writer.Double(swapNaN(d_quaternion.z(), 0), "%.5f");
     writer.EndArray();
 
     /*

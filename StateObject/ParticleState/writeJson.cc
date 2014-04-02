@@ -5,6 +5,8 @@ using namespace rapidjson;
 
 void ParticleState::writeJson(Writer<StringBuffer>& writer) const
 {
+  auto swapNaN = [](double d, double nanVal) -> double { return std::isnan(d) ? nanVal : d; };
+
   writer.StartObject();
   {
     writer.String("particles");
@@ -18,7 +20,7 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
         writer.Double(particle.x(), "%.3f"); // x
         writer.Double(particle.y(), "%.3f"); // y
         writer.Double(particle.z(), "%.3f"); // theta
-        writer.Double(isnan(particle.w()) ? 0 : particle.w()); // weight
+        writer.Double(swapNaN(particle.w(), 0)); // weight
 
         writer.EndArray();
       }
