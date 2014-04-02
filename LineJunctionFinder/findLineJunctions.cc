@@ -13,7 +13,12 @@ vector<LineJunction, aligned_allocator<LineJunction>> LineJunctionFinder::findLi
       auto& segment2 = lineSegments[j];
       auto junction = tryFindLineJunction(segment1, segment2);
       if (junction)
+      {
+        auto angleDelta = std::abs(std::abs(junction->angle) - M_PI / 2);
+        if (angleDelta > M_PI / 16)
+          continue;
         junctions.push_back(*junction);
+      }
     }
   }
 
