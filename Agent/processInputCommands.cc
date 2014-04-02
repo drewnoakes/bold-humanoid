@@ -37,9 +37,12 @@ void Agent::processInputCommands()
         case 2:
           axis2 = event.value;
           break;
-//      case 3:
+        case 3:
 //        axis3 = event.value;
-//        break;
+          break;
+        default:
+          log::info("Agent::processInputCommands") << "Axis " << (int)event.number << " value " << (int)event.value;
+          break;
       }
     }
     else if (event.isButton() && event.number == 1)
