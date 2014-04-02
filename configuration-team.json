@@ -247,16 +247,18 @@
     "announce-fsm-transitions": false,
     "announce-rate-wpm": 200,
     "circle-ball": {
-      "walk-x": 1,
-      "walk-y": 20,
-      "walk-turn": 15
+      "max-speed-x": 20.0,
+      "max-speed-y": 20.0,
+      "turn-speed": 15.0,
+      "p-gain-x": 20.0,
+      "p-gain-y": 20.0
     },
     "approach-ball": {
       "turn-speed-scale": 18.0,
       "max-forward-speed": 40.0,
       "min-forward-speed": 5.0,
       "brake-distance": 0.80,
-      "stop-distance": 0.12,
+      "stop-distance": 0.25,
       "lower-turn-limit-degs": 20.0,
       "upper-turn-limit-degs": 35.0
     },

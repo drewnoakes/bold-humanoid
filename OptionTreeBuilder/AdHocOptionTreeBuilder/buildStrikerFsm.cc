@@ -7,13 +7,13 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getAmbulator());
   auto approachBall = make_shared<ApproachBall>("approachBall", agent->getAmbulator());
-  auto circleBall = make_shared<CircleBall>("circleBall", agent->getAmbulator(), agent->getHeadModule());
 //   auto lookAroundNarrow = make_shared<LookAround>("lookAroundNarrow", agent->getHeadModule(), 45.0);
   auto lookForGoal = make_shared<LookAround>("lookForGoal", agent->getHeadModule(), 100.0, []() { return 1 - 0.33*State::get<CameraFrameState>()->getGoalObservationCount(); });
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto lookAtGoal = make_shared<LookAtGoal>("lookAtGoal", agent->getCameraModel(), agent->getHeadModule());
+  auto circleBall = make_shared<CircleBall>("circleBall", agent->getAmbulator(), agent->getHeadModule(), lookAtFeet, lookAtBall);
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
 
@@ -163,19 +163,22 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // control duration of ball circling
   circleBallState
     ->transitionTo(lookAtGoalState, "done")
-    ->when([circleBallState,agent]()
+    ->when([circleBall,circleBallState,agent]()
     {
       // TODO break dependency upon pan limit
       double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
       double panAngleRange = agent->getHeadModule()->getLeftLimitRads();
       double panRatio = panAngle / panAngleRange;
-      double circleDurationSeconds = fabs(panRatio) * 4.5;
+      double circleDurationSeconds = fabs(panRatio) * 5;
       log::info("circleBallState")
           << "circleDurationSeconds=" << circleDurationSeconds
           << " secondsSinceStart=" << circleBallState->secondsSinceStart()
           << " panRatio=" << panRatio
           << " panAngle=" << panAngle
           << " leftLimitDegs=" << agent->getHeadModule()->getLeftLimitDegs();
+
+      // TODO assigning state in this condition factory is not very explicit or clear
+      circleBall->setIsLeftTurn(panAngle < 0);
 
       // Return a function that closes over the computed duration
       return [circleBallState,circleDurationSeconds]()

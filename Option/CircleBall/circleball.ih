@@ -3,7 +3,7 @@
 #include "../../Ambulator/ambulator.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../State/state.hh"
-#include "../../StateObject/BodyState/bodystate.hh"
+#include "../../StateObject/AgentFrameState/agentframestate.hh"
 
 using namespace bold;
 using namespace rapidjson;
