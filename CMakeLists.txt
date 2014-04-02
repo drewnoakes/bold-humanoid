@@ -328,7 +328,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./MotionScript/MotionScript.cc
+  ./MotionScript/motionscript.cc
 )
 
 add_class(BOLDHUMANOID
