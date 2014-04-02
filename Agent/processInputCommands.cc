@@ -7,6 +7,13 @@ void Agent::processInputCommands()
   if (d_joystick == nullptr || !d_joystick->isFound())
     return;
 
+  static auto leftKickScript = MotionScript::fromFile("./motionscripts/kick-left.json");
+  static auto rightKickScript = MotionScript::fromFile("./motionscripts/kick-right.json");
+  static auto leftSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-left.json");
+  static auto rightSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-right.json");
+  static auto standReadyScript = MotionScript::fromFile("./motionscripts/stand-ready.json");
+  static auto sitDownScript = MotionScript::fromFile("./motionscripts/sit-down.json");
+
   //
   // Control via joystick
   //
@@ -47,17 +54,19 @@ void Agent::processInputCommands()
     }
     else if (event.isButton() && event.value == 1 && !event.isInitialState())
     {
-      static auto leftKickScript = MotionScript::fromFile("./motionscripts/kick-left.json");
-      static auto rightKickScript = MotionScript::fromFile("./motionscripts/kick-right.json");
-      static auto leftSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-left.json");
-      static auto rightSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-right.json");
+      auto runIfStanding = [this,standReadyScript](shared_ptr<MotionScript const> const& script)
+      {
+        bool isStanding = MotionScriptRunner::isInFinalPose(standReadyScript);
+        if (isStanding)
+          d_motionScriptModule->start(make_shared<MotionScriptRunner>(script));
+      };
 
       switch (event.number)
       {
-        case 4: d_motionScriptModule->start(make_shared<MotionScriptRunner>(leftSideKickScript)); break;
-        case 5: d_motionScriptModule->start(make_shared<MotionScriptRunner>(rightSideKickScript)); break;
-        case 6: d_motionScriptModule->start(make_shared<MotionScriptRunner>(leftKickScript)); break;
-        case 7: d_motionScriptModule->start(make_shared<MotionScriptRunner>(rightKickScript)); break;
+        case 4: runIfStanding(leftSideKickScript);  break;
+        case 5: runIfStanding(rightSideKickScript); break;
+        case 6: runIfStanding(leftKickScript);      break;
+        case 7: runIfStanding(rightKickScript);     break;
         default:
           if (event.value == 1)
             log::info("Agent::processInputCommands") << "Button " << (int)event.number;
@@ -88,9 +97,6 @@ void Agent::processInputCommands()
 
   if (axis2 != 0)
     d_ambulator->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
-
-  static auto standReadyScript = MotionScript::fromFile("./motionscripts/stand-ready.json");
-  static auto sitDownScript = MotionScript::fromFile("./motionscripts/sit-down.json");
 
   if (axis5 < 0 && !MotionScriptRunner::isInFinalPose(standReadyScript))
     d_motionScriptModule->start(make_shared<MotionScriptRunner>(standReadyScript));
