@@ -68,8 +68,7 @@ export class Map
             fieldLengthY = (constants.fieldY + 2 * constants.outerMarginMinimum),
             ratio = fieldLengthX / fieldLengthY;
 
-        // TODO review this approach of forcing the height -- should take advantage of whatever's available
-        height = width/ratio;
+        height = Math.min(width/ratio, height);
 
         this.layerContainer.style.width = width + 'px';
         this.layerContainer.style.height = height + 'px';
@@ -78,12 +77,12 @@ export class Map
 
         var scale = Math.min(
             width / fieldLengthX,
-            (width / ratio) / fieldLengthY);
+            height / fieldLengthY);
 
         this.transform.setValue(
             new geometry.Transform()
             .scale(scale, -scale)
-            .translate(fieldLengthX/2, -fieldLengthY/2));
+            .translate((width/scale)/2, -(height/scale)/2));
     }
 
     public unload()

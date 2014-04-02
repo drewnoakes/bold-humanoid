@@ -67,6 +67,8 @@ class World2dModule extends Module
         // Make space for bottom controls if fullscreen
         if (isFullScreen)
             height -= 50;
+        else
+            height = 480;
 
         this.map.setPixelSize(width, height);
     }
