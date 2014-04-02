@@ -15,7 +15,9 @@ void Agent::processInputCommands()
   static short int axis0 = 0;
   static short int axis1 = 0;
   static short int axis2 = 0;
-//static short int axis3 = 0;
+  static short int axis3 = 0;
+  static short int axis4 = 0;
+  static short int axis5 = 0;
 
   //
   // Process any new joystick events, updating state
@@ -28,18 +30,12 @@ void Agent::processInputCommands()
     {
       switch (event.number)
       {
-        case 0:
-          axis0 = event.value;
-          break;
-        case 1:
-          axis1 = event.value;
-          break;
-        case 2:
-          axis2 = event.value;
-          break;
-        case 3:
-//        axis3 = event.value;
-          break;
+        case 0: axis0 = event.value; break;
+        case 1: axis1 = event.value; break;
+        case 2: axis2 = event.value; break;
+        case 3: axis3 = event.value; break;
+        case 4: axis4 = event.value; break;
+        case 5: axis5 = event.value; break;
         default:
           log::info("Agent::processInputCommands") << "Axis " << (int)event.number << " value " << (int)event.value;
           break;
@@ -53,17 +49,15 @@ void Agent::processInputCommands()
     {
       static auto leftKickScript = MotionScript::fromFile("./motionscripts/kick-left.json");
       static auto rightKickScript = MotionScript::fromFile("./motionscripts/kick-right.json");
+      static auto leftSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-left.json");
+      static auto rightSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-right.json");
 
       switch (event.number)
       {
-        case 6:
-          log::info("Agent::processInputCommands") << "Left kick";
-          d_motionScriptModule->start(make_shared<MotionScriptRunner>(leftKickScript));
-          break;
-        case 7:
-          log::info("Agent::processInputCommands") << "Right kick";
-          d_motionScriptModule->start(make_shared<MotionScriptRunner>(rightKickScript));
-          break;
+        case 4: d_motionScriptModule->start(make_shared<MotionScriptRunner>(leftSideKickScript)); break;
+        case 5: d_motionScriptModule->start(make_shared<MotionScriptRunner>(rightSideKickScript)); break;
+        case 6: d_motionScriptModule->start(make_shared<MotionScriptRunner>(leftKickScript)); break;
+        case 7: d_motionScriptModule->start(make_shared<MotionScriptRunner>(rightKickScript)); break;
         default:
           if (event.value == 1)
             log::info("Agent::processInputCommands") << "Button " << (int)event.number;
@@ -94,4 +88,12 @@ void Agent::processInputCommands()
 
   if (axis2 != 0)
     d_ambulator->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
+
+  static auto standReadyScript = MotionScript::fromFile("./motionscripts/stand-ready.json");
+  static auto sitDownScript = MotionScript::fromFile("./motionscripts/sit-down.json");
+
+  if (axis5 < 0 && !MotionScriptRunner::isInFinalPose(standReadyScript))
+    d_motionScriptModule->start(make_shared<MotionScriptRunner>(standReadyScript));
+  else if (axis5 > 0 && !MotionScriptRunner::isInFinalPose(sitDownScript))
+    d_motionScriptModule->start(make_shared<MotionScriptRunner>(sitDownScript));
 }
