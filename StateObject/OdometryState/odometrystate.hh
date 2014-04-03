@@ -9,17 +9,18 @@ namespace bold
   class OdometryState : public StateObject
   {
   public:
-    OdometryState(Eigen::Vector3d translation)
-    : d_translation(translation)
+    OdometryState(Eigen::Affine3d transform)
+      : d_transform{std::move(transform)}
     {}
 
-    /// Gets the cumulative translation of the torso.
-    /// Users of this value can compute their own delta values.
-    Eigen::Vector3d const& getTranslation() const { return d_translation; };
+    /** Gets the cumulative transform of the agent frame
+     * Users of this value can compute their own delta values.
+     */
+    Eigen::Affine3d const& getTransform() const { return d_transform; };
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
-    Eigen::Vector3d d_translation;
+    Eigen::Affine3d d_transform;
   };
 }

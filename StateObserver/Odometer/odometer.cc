@@ -13,18 +13,18 @@ using namespace std;
 
 Odometer::Odometer(shared_ptr<WalkModule> walkModule)
 : TypedStateObserver<BodyState>("Odometer", ThreadId::MotionLoop),
-  d_walkModule(walkModule),
-  d_lastBodyState(),
-  d_progress(),
-  d_progressMutex()
+  d_walkModule{walkModule},
+  d_lastBodyState{},
+  d_transform{Affine3d::Identity()}
 {
   ASSERT(walkModule);
+  State::make<OdometryState>(d_transform);
   State::make<OdometryState>(d_progress);
 
   Config::addAction("odometer.reset", "Reset odometer", [this]()
   {
-    lock_guard<mutex> lock(d_progressMutex);
-    d_progress = {0,0,0};
+    lock_guard<mutex> lock(d_transformMutex);
+    d_transform = Affine3d::Identity();
   });
 }
 
@@ -44,30 +44,26 @@ void Odometer::observeTyped(shared_ptr<BodyState const> const& state, Sequential
   {
     // Measure delta of movement
 
+    // AtA0 = AtAt-1 * At-1A0
+    //      = AtFt * FtAt-1 * At-1A0
+    //      = AtFt * FtFt-1 * Ft-1At-1 * At-1A0
+    //      = AtFt * Ft-1At-1 * At-1A0
     int phase = walkState->getCurrentPhase();
 
     bool isLeftSupportFoot = phase == WalkEngine::PHASE0 || phase == WalkEngine::PHASE1;
 
-    JointId supportFootJointId = isLeftSupportFoot
-      ? JointId::L_ANKLE_ROLL
-      : JointId::R_ANKLE_ROLL;
+    auto lastFootAgentTr = d_lastBodyState->determineAgentFootTr(isLeftSupportFoot).inverse();
+    auto agentFootTr = state->determineAgentFootTr(isLeftSupportFoot);
 
-    // TODO this is only approximate -- translating like this doesn't account for rotation
-
-    Vector3d thisTranslation = state          ->getJoint(supportFootJointId)->transform.translation();
-    Vector3d lastTranslation = d_lastBodyState->getJoint(supportFootJointId)->transform.translation();
-
-    lock_guard<mutex> lock(d_progressMutex);
-    d_progress += (thisTranslation - lastTranslation);
-
-    State::make<OdometryState>(d_progress);
+    lock_guard<mutex> lock(d_transformMutex);
+    d_transform = agentFootTr * lastFootAgentTr * d_transform;
+    State::make<OdometryState>(d_transform);
   }
 
   d_lastBodyState = state;
 }
 
-Vector3d Odometer::getTranslation() const
-{
-  lock_guard<mutex> lock(d_progressMutex);
-  return d_progress;
+Eigen::Affine3d Odometer::getTransform() const {
+  lock_guard<mutex> lock(d_transformMutex);
+  return d_transform;
 }
