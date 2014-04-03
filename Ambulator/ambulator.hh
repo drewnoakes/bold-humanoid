@@ -39,8 +39,11 @@ namespace bold
 
     /**
      * Set the direction of motion, where positive X is in the forwards
-     * direction, and positive Y is to the right. The length of the vector
+     * direction, and positive Y is to the left. The length of the vector
      * determines the velocity of motion (unspecified units).
+     *
+     * Note that the same value will result in different speeds in the X and Y
+     * axes.
      */
     void setMoveDir(Eigen::Vector2d const& moveDir);
 
