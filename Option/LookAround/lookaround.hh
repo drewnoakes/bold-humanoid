@@ -27,6 +27,8 @@ namespace bold
 
     virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
+    virtual void reset() override { d_isResetNeeded = true; }
+
   private:
     std::function<double()> d_speedCallback;
     std::shared_ptr<HeadModule> d_headModule;
