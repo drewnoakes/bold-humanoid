@@ -13,7 +13,7 @@ touch version.cc.in
 # fetch multiple repos, hard-reset to remote version of current branch,
 # and build on one core
 
-git fetch --multiple bert bb \
+git fetch --multiple bert \
  && git reset --hard bert/`git rev-parse --abbrev-ref HEAD` \
  && git submodule init \
  && git submodule update \
