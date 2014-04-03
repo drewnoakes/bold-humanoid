@@ -249,9 +249,12 @@
     "circle-ball": {
       "max-speed-x": 20.0,
       "max-speed-y": 20.0,
-      "turn-speed": 15.0,
       "p-gain-x": 20.0,
-      "p-gain-y": 20.0
+      "p-gain-y": 20.0,
+      "turn-speed-x": 20.0,
+      "turn-speed-y": 1.0,
+      "turn-speed-a": 15.0,
+      "brake-distance": 0.2
     },
     "approach-ball": {
       "turn-speed-scale": 18.0,
