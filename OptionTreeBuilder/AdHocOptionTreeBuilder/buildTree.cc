@@ -553,12 +553,12 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
             return true;
           }
         }
-        else
-        {
-          // TODO IMPORTANT!!!!!!! this is to assist testing and must be removed
-          log::warning("lookForGoalState->aboutFaceState") << "DEBUG ABORT ATTACK SHOULD BE REMOVED";
-          return closestGoalDist < 4;
-        }
+//         else
+//         {
+//           // TODO IMPORTANT!!!!!!! this is to assist testing and must be removed
+//           log::warning("lookForGoalState->aboutFaceState") << "DEBUG ABORT ATTACK SHOULD BE REMOVED";
+//           return closestGoalDist < 4;
+//         }
         return false;
       });
 
