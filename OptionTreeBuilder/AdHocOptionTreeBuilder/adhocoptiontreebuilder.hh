@@ -4,14 +4,7 @@
 
 namespace bold
 {
-  class DataStreamer;
-  class MotionScriptModule;
   class Agent;
-  class Ambulator;
-  class CameraModel;
-  class Debugger;
-  class HeadModule;
-  class WalkModule;
 
   class AdHocOptionTreeBuilder
   {
