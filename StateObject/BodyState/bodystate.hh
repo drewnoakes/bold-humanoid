@@ -82,6 +82,8 @@ namespace bold
 
     std::vector<int> const getPositionValueDiffs() const { return d_positionValueDiffs; }
 
+    Eigen::Affine3d determineAgentFootTr(bool leftFoot) const;
+
   private:
     /// Initialise with the specified angles (radians), and position errors (values)
     /// Indexed by JointId (i.e. 0 is ignored.), including camera tilt angle
