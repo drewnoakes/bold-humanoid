@@ -47,7 +47,6 @@ void RoleDecider::update()
 
   if (uniformNumber == 6)
   {
-    // TODO we don't have any special logic for the penalty striker yet...
     setRole(PlayerRole::PenaltyStriker);
     return;
   }
@@ -61,7 +60,7 @@ void RoleDecider::update()
   if (!agentFrame || !agentFrame->getBallObservation().hasValue())
   {
     // TODO if we cannot see the ball, use info from teammates to determine our role
-    setRole(PlayerRole::Idle);
+    setRole(PlayerRole::Striker);
     return;
   }
 
@@ -85,7 +84,6 @@ void RoleDecider::update()
   // Find who is the closest to the ball
   //
 
-//   PlayerState const* closest = nullptr;
   double closestDistance = std::numeric_limits<double>::max();
 
   for (PlayerState const& player : teamState->players())
@@ -110,21 +108,11 @@ void RoleDecider::update()
     double dist = player.ballRelative->norm();
 
     if (dist < closestDistance)
-    {
       closestDistance = dist;
-//       closest = &player;
-    }
   }
 
-  // If I am closest, become the striker
   double dist = agentFrame->getBallObservation()->norm();
-  if (dist < closestDistance)
-  {
-    // We are closest to the ball, so become the striker
-    setRole(PlayerRole::Striker);
-    return;
-  }
 
-  // Otherwise become a supporter
-  setRole(PlayerRole::Striker);
+  // If I am closest, become the striker, otherwise support
+  setRole(dist < closestDistance ? PlayerRole::Striker : PlayerRole::Supporter);
 }
