@@ -11,7 +11,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   if (!agentFrame->isBallVisible())
   {
-    // Look at feet (where the ball is liekly to be)
+    // Look at feet (where the ball is likely to be)
     return { d_lookAtFeet };
   }
 
@@ -19,7 +19,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   // value represents the bias in the foot
   auto targetBallPos = Vector2d(0.1, 0.25);
   auto observedBallPos = agentFrame->getBallObservation()->head<2>();
-  Vector2d diff = observedBallPos - targetBallPos;
+  Vector2d error = observedBallPos - targetBallPos;
 
   static Setting<double>* maxSpeedX = Config::getSetting<double>("options.circle-ball.max-speed-x");
   static Setting<double>* maxSpeedY = Config::getSetting<double>("options.circle-ball.max-speed-y");
@@ -27,12 +27,14 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   static Setting<double>* pGainX = Config::getSetting<double>("options.circle-ball.p-gain-x");
   static Setting<double>* pGainY = Config::getSetting<double>("options.circle-ball.p-gain-y");
 
-  diff.x() = Math::clamp(diff.x() * pGainX->getValue(), -maxSpeedX->getValue(), maxSpeedX->getValue());
-  diff.y() = Math::clamp(diff.y() * pGainY->getValue(), -maxSpeedY->getValue(), maxSpeedY->getValue());
+  Vector2d control(
+    Math::clamp(error.x() * pGainX->getValue(), -maxSpeedX->getValue(), maxSpeedX->getValue()),
+    Math::clamp(error.y() * pGainY->getValue(), -maxSpeedY->getValue(), maxSpeedY->getValue())
+  );
 
   double a = d_isLeftTurn ? -turnSpeed->getValue() : turnSpeed->getValue();
 
-  d_ambulator->setMoveDir(Vector2d(diff.y(), diff.x())); //  NOTE x and y intentionally swapped
+  d_ambulator->setMoveDir(Vector2d(control.y(), control.x())); //  NOTE x and y intentionally swapped
   d_ambulator->setTurnAngle(a);
 
 //   writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
