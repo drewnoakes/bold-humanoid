@@ -81,13 +81,27 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto ballFoundConditionFactory = [ballVisibleCondition]() { return trueForMillis(1000, ballVisibleCondition); };
   auto ballLostConditionFactory = [ballVisibleCondition]() { return trueForMillis(1000, negate(ballVisibleCondition)); };
 
-  auto isPenalised = [=]()
+  auto isPlayMode = [](PlayMode playMode, bool defaultValue)
+  {
+    return [playMode,defaultValue]()
+    {
+      auto gameState = State::get<GameState>();
+      if (!gameState)
+        return defaultValue;
+      return gameState->getPlayMode() == playMode;
+    };
+  };
+
+  auto isSetPlayMode = isPlayMode(PlayMode::SET, false);
+  auto isPlayingPlayMode = isPlayMode(PlayMode::PLAYING, false);
+
+  auto isPenalised = [teamNumber,uniformNumber]()
   {
     auto gameState = State::get<GameState>();
     return gameState && gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
-  auto isNotPenalised = [=]()
+  auto isNotPenalised = [teamNumber,uniformNumber]()
   {
     auto gameState = State::get<GameState>();
     return gameState && !gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
@@ -101,20 +115,6 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
       return gameState && isNotPenalised() && gameState->getPlayMode() == playMode;
     };
   };
-
-  auto isPlayMode = [](PlayMode playMode, bool defaultValue)
-  {
-    return [=]()
-    {
-      auto gameState = State::get<GameState>();
-      if (!gameState)
-        return defaultValue;
-      return gameState->getPlayMode() == playMode;
-    };
-  };
-
-  auto isSetPlayMode = isPlayMode(PlayMode::SET, false);
-  auto isPlayingPlayMode = isPlayMode(PlayMode::PLAYING, false);
 
   auto isWalking = [ambulator]() { return ambulator->isRunning(); };
 
