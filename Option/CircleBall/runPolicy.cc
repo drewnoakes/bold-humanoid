@@ -56,7 +56,9 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
        << " ALPHA " << alpha
        << endl;
 
-  d_ambulator->setMoveDir(Vector2d(y, x)); // NOTE x and y intentionally swapped
+  // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
+  // direction being inverted.
+  d_ambulator->setMoveDir(Vector2d(-y, x));
   d_ambulator->setTurnAngle(a);
 
   writer.String("error").StartArray().Double(error.x()).Double(error.y()).EndArray(2);
