@@ -145,6 +145,60 @@ TEST (MathTests, smallestAngleBetween)
   EXPECT_NEAR( M_PI/4, Math::smallestAngleBetween(Vector2d(-1,-1), Vector2d(-1,0)), 0.0000001 );
 }
 
+TEST (MathTests, alignUp)
+{
+  auto transform = Affine3d::Identity();
+
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(transform).matrix() ) );
+
+  auto rotated = AngleAxisd(.5 * M_PI, Vector3d(0, 0, 1)) * transform;
+  EXPECT_TRUE( MatricesEqual( rotated.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(M_PI, Vector3d(0, 0, 1)) * transform;
+  EXPECT_TRUE( MatricesEqual( rotated.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(1.5 * M_PI, Vector3d(0, 0, 1)) * transform;
+  EXPECT_TRUE( MatricesEqual( rotated.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(2 * M_PI, Vector3d(0, 0, 1)) * transform;
+  EXPECT_TRUE( MatricesEqual( rotated.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(0.64637 * M_PI, Vector3d(0, 0, 1)) * transform;
+  EXPECT_TRUE( MatricesEqual( rotated.matrix(), Math::alignUp(rotated).matrix() ) );
+  
+  rotated = AngleAxisd(0.1 * M_PI, Vector3d(1, 0, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(0.25 * M_PI, Vector3d(1, 0, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(0.49 * M_PI, Vector3d(1, 0, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+
+  rotated = AngleAxisd(-0.1 * M_PI, Vector3d(1, 0, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(-0.25 * M_PI, Vector3d(1, 0, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(-0.49 * M_PI, Vector3d(1, 0, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+
+  rotated = AngleAxisd(0.1 * M_PI, Vector3d(0, 1, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(0.25 * M_PI, Vector3d(0, 1, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(0.49 * M_PI, Vector3d(0, 1, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+
+  rotated = AngleAxisd(-0.1 * M_PI, Vector3d(0, 1, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(-0.25 * M_PI, Vector3d(0, 1, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(-0.49 * M_PI, Vector3d(0, 1, 0)) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+
+  rotated = AngleAxisd(0.1 * M_PI, Vector3d(1, 1, 0).normalized()) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(0.25 * M_PI, Vector3d(1, 1, 0).normalized()) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+  rotated = AngleAxisd(0.49 * M_PI, Vector3d(1, 1, 0).normalized()) * transform;
+  EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
+
+}
+
 TEST(MathTests, lerp)
 {
   // Ratio based
