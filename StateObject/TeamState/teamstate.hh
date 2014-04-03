@@ -47,6 +47,8 @@ namespace bold
     Other = 7
   };
 
+  std::ostream& operator<<(std::ostream &stream, PlayerRole const& role);
+
   enum class PlayerActivity
   {
     /// Robot is moving to a supporting or defending position.

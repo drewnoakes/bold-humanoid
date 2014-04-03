@@ -61,3 +61,20 @@ double PlayerState::getAgeMillis() const
 {
   return Clock::getMillisSince(updateTime);
 }
+
+std::ostream& bold::operator<<(std::ostream &stream, PlayerRole const& role)
+{
+  switch (role)
+  {
+    case PlayerRole::Idle: stream << "Idle"; break;
+    case PlayerRole::Keeper: stream << "Keeper"; break;
+    case PlayerRole::Supporter: stream << "Supporter"; break;
+    case PlayerRole::Striker: stream << "Striker"; break;
+    case PlayerRole::Defender: stream << "Defender"; break;
+    case PlayerRole::PenaltyKeeper: stream << "PenaltyKeeper"; break;
+    case PlayerRole::PenaltyStriker: stream << "PenaltyStriker"; break;
+    case PlayerRole::Other: stream << "Other"; break;
+    default: stream << "Unknown " << (int)role; break;
+  }
+  return stream;
+}
