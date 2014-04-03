@@ -161,6 +161,11 @@ shared_ptr<FSMOption> buildStrikerFsm(Agent* agent, shared_ptr<OptionTree> tree)
     ->transitionTo(lookForBallState, "done")
     ->after(chrono::seconds(5));
 
+  // stop turning if the ball comes into view
+  circleToFindLostBallState
+    ->transitionTo(lookAtBallState, "found")
+    ->when([]() { return stepUpDownThreshold(5, ballVisibleCondition); });
+
   lookAtBallState
     ->transitionTo(lookForBallState, "lost-ball")
     ->when(ballLostConditionFactory);
