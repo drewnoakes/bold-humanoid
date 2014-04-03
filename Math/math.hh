@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <functional>
 
 #include "../geometry/LineSegment/linesegment.hh"
@@ -33,6 +34,8 @@ namespace bold
     static constexpr double radToDeg(double radians) { return (radians / M_PI) * 180.0; }
 
     static double smallestAngleBetween(Eigen::Vector2d v1, Eigen::Vector2d v2);
+
+    static Eigen::Affine3d alignUp(Eigen::Affine3d const& transform);
 
     template<typename T>
     static T clamp(T val, T min, T max)
