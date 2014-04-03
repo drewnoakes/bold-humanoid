@@ -12,15 +12,15 @@ namespace bold
   // Utility functions for setting status flags as we enter states
   //
 
-  auto setPlayerActivityInStates = [](Agent* agent, PlayerActivity activity, std::vector<shared_ptr<FSMState>> states)
+  auto setPlayerActivityInStates = [](Agent* agent, PlayerActivity activity, std::vector<std::shared_ptr<FSMState>> states)
   {
-    for (shared_ptr<FSMState>& state : states)
+    for (std::shared_ptr<FSMState>& state : states)
       state->onEnter.connect([agent,activity]() { agent->getBehaviourControl()->setPlayerActivity(activity); });
   };
 
-  auto setPlayerStatusInStates = [](Agent* agent, PlayerStatus status, std::vector<shared_ptr<FSMState>> states)
+  auto setPlayerStatusInStates = [](Agent* agent, PlayerStatus status, std::vector<std::shared_ptr<FSMState>> states)
   {
-    for (shared_ptr<FSMState>& state : states)
+    for (std::shared_ptr<FSMState>& state : states)
       state->onEnter.connect([agent,status]() { agent->getBehaviourControl()->setPlayerStatus(status); });
   };
 
