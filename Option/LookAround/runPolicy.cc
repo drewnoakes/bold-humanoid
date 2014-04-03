@@ -6,14 +6,15 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 
   double t = Clock::getSeconds();
 
-  double durationHoriz = d_durationHoriz->getValue();
+  double durationHorizUpper = d_durationHorizUpper->getValue();
+  double durationHorizLower = d_durationHorizLower->getValue();
   double durationVert = d_durationVert->getValue();
 
   if (d_isResetNeeded)
   {
     // Start quarter-way through the first phase, so the head is slightly
     // to the left, and pans right through the top of the box.
-    d_startTimeSeconds = t - (durationHoriz/4.0);
+    d_startTimeSeconds = t - (durationHorizUpper/4.0);
     d_isResetNeeded = false;
   }
   else if (d_speedCallback)
@@ -27,7 +28,7 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 
   d_lastTimeSeconds = t;
 
-  double period = (durationHoriz + durationVert) * 2;
+  double period = durationHorizUpper + durationHorizLower + (durationVert * 2);
 
   double phase = fmod(t - d_startTimeSeconds, period);
 
@@ -38,15 +39,15 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 
   assert(phase >= 0);
 
-  if (phase < durationHoriz)
+  if (phase < durationHorizUpper)
   {
     // moving right-to-left across top
     tiltDegs = d_topAngle->getValue();
-    panDegs = Math::lerp(phase/durationHoriz, -d_sideAngle, d_sideAngle);
+    panDegs = Math::lerp(phase/durationHorizUpper, -d_sideAngle, d_sideAngle);
   }
   else
   {
-    phase -= durationHoriz;
+    phase -= durationHorizUpper;
 
     if (phase < durationVert)
     {
@@ -58,15 +59,15 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
     {
       phase -= durationVert;
 
-      if (phase < durationHoriz)
+      if (phase < durationHorizLower)
       {
         // moving left-to-right across bottom
         tiltDegs = d_bottomAngle->getValue();
-        panDegs = Math::lerp(phase/durationHoriz, d_sideAngle, -d_sideAngle);
+        panDegs = Math::lerp(phase/durationHorizLower, d_sideAngle, -d_sideAngle);
       }
       else
       {
-        phase -= durationHoriz;
+        phase -= durationHorizLower;
 
         if (phase < durationVert)
         {

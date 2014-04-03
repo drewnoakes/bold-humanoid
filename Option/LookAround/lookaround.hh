@@ -21,7 +21,8 @@ namespace bold
       d_topAngle      = Config::getSetting<double>("options.look-around.top-angle");
       d_bottomAngle   = Config::getSetting<double>("options.look-around.bottom-angle");
       d_sideAngle     = sideAngle; //Config::getSetting<double>("options.look-around.side-angle");
-      d_durationHoriz = Config::getSetting<double>("options.look-around.horiz-duration");
+      d_durationHorizUpper = Config::getSetting<double>("options.look-around.horiz-duration-upper");
+      d_durationHorizLower = Config::getSetting<double>("options.look-around.horiz-duration-lower");
       d_durationVert  = Config::getSetting<double>("options.look-around.vert-duration");
     }
 
@@ -40,8 +41,10 @@ namespace bold
     /// The head's maximum pan angle (negated for left side)
     double d_sideAngle;
 
-    /// The time spent in each horizontal movement
-    Setting<double>* d_durationHoriz;
+    /// The time spent in the upper horizontal movement
+    Setting<double>* d_durationHorizUpper;
+    /// The time spent in the lower horizontal movement
+    Setting<double>* d_durationHorizLower;
     /// The time spent in each vertical movement
     Setting<double>* d_durationVert;
 

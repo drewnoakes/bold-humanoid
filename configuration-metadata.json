@@ -276,7 +276,8 @@
     "look-around": {
       "top-angle":      { "type": "double", "default": 23.0 },
       "bottom-angle":   { "type": "double", "default": -17.0 },
-      "horiz-duration": { "type": "double", "default": 2.3 },
+      "horiz-duration-upper": { "type": "double", "default": 2.3 },
+      "horiz-duration-lower": { "type": "double", "default": 1.3 },
       "vert-duration":  { "type": "double", "default": 0.2 }
     },
     "look-at-feet": {
