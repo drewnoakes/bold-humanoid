@@ -302,5 +302,23 @@
     "temperature": {
       "high-threshold":        { "type": "int", "default": 60, "readonly": true }
     }
+  },
+  "role-decider": {
+    "override": {
+      "type": "enum",
+      "description": "Role",
+      "default": -1,
+      "values": {
+        "auto":           -1,
+        "idle":            0,
+        "keeper":          1,
+        "supporter":       2,
+        "striker":         3,
+        "defender":        4,
+        "penalty-keeper":  5,
+        "penalty-striker": 6,
+        "other":           7
+      }
+    }
   }
 }

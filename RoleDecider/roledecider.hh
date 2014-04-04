@@ -6,19 +6,18 @@ namespace bold
 {
   class BehaviourControl;
   class Debugger;
+  template<typename> class Setting;
 
   class RoleDecider
   {
   public:
-    RoleDecider(std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger)
-    : d_behaviourControl(behaviourControl),
-      d_debugger(debugger)
-    {}
+    RoleDecider(std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger);
 
     void update();
 
   private:
     std::shared_ptr<BehaviourControl> d_behaviourControl;
     std::shared_ptr<Debugger> d_debugger;
+    Setting<int>* d_roleOverride;
   };
 }

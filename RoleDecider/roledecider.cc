@@ -5,11 +5,18 @@
 #include "../Debugger/debugger.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
+#include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/TeamState/teamstate.hh"
 
 #include <limits>
 
 using namespace bold;
+
+RoleDecider::RoleDecider(std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger)
+: d_behaviourControl(behaviourControl),
+  d_debugger(debugger),
+  d_roleOverride(Config::getSetting<int>("role-decider.override"))
+{}
 
 void RoleDecider::update()
 {
@@ -36,6 +43,13 @@ void RoleDecider::update()
   if (uniformNumber == GOALIE_UNUM)
   {
     setRole(PlayerRole::Keeper);
+    return;
+  }
+
+  if (d_roleOverride->getValue() != -1)
+  {
+    // The role is overridden in config to a fixed value
+    setRole(static_cast<PlayerRole>(d_roleOverride->getValue()));
     return;
   }
 
