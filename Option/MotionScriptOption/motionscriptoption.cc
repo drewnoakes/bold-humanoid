@@ -73,3 +73,8 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 
   return {};
 }
+
+void MotionScriptOption::reset()
+{
+  d_runner = nullptr;
+}
