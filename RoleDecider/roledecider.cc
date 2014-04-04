@@ -48,6 +48,7 @@ void RoleDecider::update()
       str << role;
       if (d_announceRoles->getValue())
         d_voice->say(str.str());
+      log::verbose("RoleDecider::update") << "Changing role to " << str.str();
     }
     d_behaviourControl->setPlayerRole(role);
   };
