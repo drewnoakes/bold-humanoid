@@ -11,7 +11,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   {
     writer.String("ball").Null();
 //     log::warning("ApproachBall::runPolicy") << "No ball observation in AgentFrame yet ApproachBall was run";
-    return vector<shared_ptr<Option>>();
+    return {};
   }
 
   writer.String("ballPos").StartArray().Double(ballPos->x()).Double(ballPos->y()).EndArray(2);
@@ -45,7 +45,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("turn").Double(turnSpeed);
 
-  return vector<shared_ptr<Option>>();
+  return {};
 }
 
 void ApproachBall::reset()

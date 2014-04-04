@@ -20,5 +20,5 @@ vector<shared_ptr<Option>> LookAtFeet::runPolicy(Writer<StringBuffer>& writer)
     writer.String("ball").Null();
   }
 
-  return vector<shared_ptr<Option>>();
+  return {};
 }

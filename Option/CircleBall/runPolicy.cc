@@ -24,7 +24,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
   writer.String("turn").Double(a);
 
-  return vector<shared_ptr<Option>>();
+  return {};
 }
 
 void CircleBall::reset()

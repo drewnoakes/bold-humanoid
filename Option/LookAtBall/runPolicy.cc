@@ -8,7 +8,7 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
   {
     writer.String("ball").Null();
 //     log::warning("LookAtBall::runPolicy") << "No ball observation in AgentFrame yet LookAtBall was run";
-    return vector<shared_ptr<Option>>();
+    return {};
   }
 
   static unsigned w = d_cameraModel->imageWidth();
@@ -46,5 +46,5 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("offset").StartArray().Double(offset.x()).Double(offset.y()).EndArray(2);
 
-  return vector<shared_ptr<Option>>();
+  return {};
 }

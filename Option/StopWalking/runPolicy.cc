@@ -7,5 +7,5 @@ vector<shared_ptr<Option>> StopWalking::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("ambulatorRunning").Bool(d_ambulator->isRunning());
 
-  return vector<shared_ptr<Option>>();
+  return {};
 }

@@ -12,7 +12,7 @@ vector<shared_ptr<Option>> LookAtGoal::runPolicy(Writer<StringBuffer>& writer)
   if (goalObs.size() < 2)
   {
     log::warning("LookAtGoal::runPolicy") << "Couldn't see both goal posts!";
-    return vector<shared_ptr<Option>>();
+    return {};
   }
 
   auto middle = (goalObs[0] + goalObs[1]) / 2;
@@ -44,5 +44,5 @@ vector<shared_ptr<Option>> LookAtGoal::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("offset").StartArray().Double(offset.x()).Double(offset.y()).EndArray(2);
 
-  return vector<shared_ptr<Option>>();
+  return {};
 }
