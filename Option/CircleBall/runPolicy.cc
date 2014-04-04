@@ -28,17 +28,18 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   // TODO base the Y position from the idealkicking distance as the position to keep
   auto targetBallPos = Vector2d(0.1, 0.20);
   auto observedBallPos = agentFrame->getBallObservation()->head<2>();
-  Vector2d error = observedBallPos - targetBallPos;
+  Vector2d error = targetBallPos - observedBallPos;
 
   // Alpha controls how much turning is attempted. Max turn occurs when we have
   // no positional error for the ball.
   // If the error is greater than the brake distance, then turning is disabled
   // to allow the position to be corrected.
   // Value is linearly interpolated as a ratio of error length to brake distance.
-  double alpha = Math::clamp(1.0 - (error.norm()/brakeDistance->getValue()), 0.0, 1.0);
+  double alpha = Math::clamp(1.0 - (error.norm()/brakeDistance->getValue()), 0.5, 1.0);
 
   // Set movement speed in x/y based on error distance
-  double x = error.x() * pGainX->getValue();
+  //double x = error.x() * pGainX->getValue();
+  double x = pGainX->getValue();
   double y = error.y() * pGainY->getValue();
 
   // Add turn movement, based upon ratio of error
@@ -59,7 +60,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
   // direction being inverted.
-  d_ambulator->setMoveDir(Vector2d(-y, x));
+  d_ambulator->setMoveDir(Vector2d(-y, -x));
   d_ambulator->setTurnAngle(a);
 
   writer.String("error").StartArray().Double(error.x()).Double(error.y()).EndArray(2);
