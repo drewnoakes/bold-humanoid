@@ -26,6 +26,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   // TODO set this position based upon which foot is closest to the ball when commencing
   auto targetBallPos = Vector2d(0.1, 0.25);
+  // TODO base the Y position from the idealkicking distance as the position to keep
+  auto targetBallPos = Vector2d(0.1, 0.20);
   auto observedBallPos = agentFrame->getBallObservation()->head<2>();
   Vector2d error = observedBallPos - targetBallPos;
 
