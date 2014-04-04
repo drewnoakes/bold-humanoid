@@ -17,6 +17,7 @@ class VoiceModule extends Module
         var usage = document.createElement('div');
         usage.className = 'control-container';
         control.buildSetting('options.announce-fsm-states', usage, this.closeables);
+        control.buildSetting('role-decider.announce-roles', usage, this.closeables);
         this.element.appendChild(usage);
 
         var voiceControls = document.createElement('div');

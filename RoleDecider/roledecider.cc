@@ -7,15 +7,20 @@
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/TeamState/teamstate.hh"
+#include "../Voice/voice.hh"
 
 #include <limits>
+#include <sstream>
 
 using namespace bold;
+using namespace std;
 
-RoleDecider::RoleDecider(std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger)
+RoleDecider::RoleDecider(shared_ptr<BehaviourControl> behaviourControl, shared_ptr<Debugger> debugger, shared_ptr<Voice> voice)
 : d_behaviourControl(behaviourControl),
   d_debugger(debugger),
-  d_roleOverride(Config::getSetting<int>("role-decider.override"))
+  d_voice(voice),
+  d_roleOverride(Config::getSetting<int>("role-decider.override")),
+  d_announceRoles(Config::getSetting<bool>("role-decider.announce-roles"))
 {}
 
 void RoleDecider::update()
@@ -37,6 +42,13 @@ void RoleDecider::update()
   auto setRole = [this](PlayerRole role)
   {
     d_debugger->showRole(role);
+    if (d_behaviourControl->getPlayerRole() != role)
+    {
+      stringstream str;
+      str << role;
+      if (d_announceRoles->getValue())
+        d_voice->say(str.str());
+    }
     d_behaviourControl->setPlayerRole(role);
   };
 
@@ -100,7 +112,7 @@ void RoleDecider::update()
   // Find who is the closest to the ball
   //
 
-  double closestDistance = std::numeric_limits<double>::max();
+  double closestDistance = numeric_limits<double>::max();
 
   for (PlayerState const& player : teamState->getBallObservers())
   {

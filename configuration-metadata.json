@@ -309,6 +309,7 @@
     }
   },
   "role-decider": {
+    "announce-roles": { "type": "bool", "default": false },
     "override": {
       "type": "enum",
       "description": "Role",
