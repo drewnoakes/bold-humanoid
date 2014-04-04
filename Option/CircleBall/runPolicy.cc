@@ -30,7 +30,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   diff.x() = Math::clamp(diff.x() * pGainX->getValue(), -maxSpeedX->getValue(), maxSpeedX->getValue());
   diff.y() = Math::clamp(diff.y() * pGainY->getValue(), -maxSpeedY->getValue(), maxSpeedY->getValue());
 
-  double a = d_leftTurn ? -turnSpeed->getValue() : turnSpeed->getValue();
+  double a = d_isLeftTurn ? -turnSpeed->getValue() : turnSpeed->getValue();
 
   d_ambulator->setMoveDir(Vector2d(diff.y(), diff.x())); //  NOTE x and y intentionally swapped
   d_ambulator->setTurnAngle(a);
@@ -70,8 +70,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
 void CircleBall::setIsLeftTurn(bool leftTurn)
 {
-  d_leftTurn = leftTurn;
->>>>>>> CircleBall controls position of ball while rotating.
+  d_isLeftTurn = leftTurn;
 }
 
 void CircleBall::reset()
