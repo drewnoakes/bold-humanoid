@@ -50,13 +50,17 @@ void Odometer::observeTyped(shared_ptr<BodyState const> const& state, Sequential
     //      = AtFt * Ft-1At-1 * At-1A0
     int phase = walkState->getCurrentPhase();
 
-    bool isLeftSupportFoot = phase == WalkEngine::PHASE0 || phase == WalkEngine::PHASE1;
+    auto leftAgentFootTr = state->determineAgentFootTr(true);
+    auto rightAgentFootTr = state->determineAgentFootTr(false);
+
+    bool isLeftSupportFoot = leftAgentFootTr.translation().z() > rightAgentFootTr.translation().z();
 
     auto lastFootAgentTr = d_lastBodyState->determineAgentFootTr(isLeftSupportFoot).inverse();
     auto agentFootTr = state->determineAgentFootTr(isLeftSupportFoot);
 
     lock_guard<mutex> lock(d_transformMutex);
     d_transform = agentFootTr * lastFootAgentTr * d_transform;
+
     State::make<OdometryState>(d_transform);
   }
 
