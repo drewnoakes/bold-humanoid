@@ -78,3 +78,32 @@ std::ostream& bold::operator<<(std::ostream &stream, PlayerRole const& role)
   }
   return stream;
 }
+
+vector<PlayerState> TeamState::getBallObservers() const
+{
+  vector<PlayerState> observers = {};
+
+  for (PlayerState const& player : d_playerStates)
+  {
+    if (player.isMe())
+      continue;
+
+    // TODO review this threshold
+    if (Clock::getMillisSince(player.updateTime) > 5000)
+      continue;
+
+    if (!player.ballRelative.hasValue())
+      continue;
+
+    if (player.status == PlayerStatus::Inactive || player.status == PlayerStatus::Penalised)
+      continue;
+
+    // TODO if the ball is *right* in front of the keeper, let the keeper kick it away...
+    if (player.role == PlayerRole::Keeper)
+      continue;
+
+    observers.push_back(player);
+  }
+
+  return observers;
+}

@@ -86,25 +86,8 @@ void RoleDecider::update()
 
   double closestDistance = std::numeric_limits<double>::max();
 
-  for (PlayerState const& player : teamState->players())
+  for (PlayerState const& player : teamState->getBallObservers())
   {
-    if (player.isMe())
-      continue;
-
-    // TODO review this threshold
-    if (Clock::getMillisSince(player.updateTime) > 5000)
-      continue;
-
-    if (!player.ballRelative.hasValue())
-      continue;
-
-    if (player.status == PlayerStatus::Inactive || player.status == PlayerStatus::Penalised)
-      continue;
-
-    // TODO if the ball is *right* in front of the keeper, let the keeper kick it away...
-    if (player.role == PlayerRole::Keeper)
-      continue;
-
     double dist = player.ballRelative->norm();
 
     if (dist < closestDistance)

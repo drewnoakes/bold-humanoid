@@ -128,6 +128,8 @@ namespace bold
       return it == d_playerStates.end() ? nullptr : &(*it);
     }
 
+    std::vector<PlayerState> getBallObservers() const;
+
   private:
     std::vector<PlayerState> d_playerStates;
   };
