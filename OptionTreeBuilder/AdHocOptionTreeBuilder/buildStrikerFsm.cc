@@ -14,12 +14,13 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto lookAtGoal = make_shared<LookAtGoal>("lookAtGoal", agent->getCameraModel(), agent->getHeadModule());
   auto circleBall = make_shared<CircleBall>("circleBall", agent->getAmbulator(), agent->getHeadModule(), lookAtFeet, lookAtBall);
+  auto searchBall = make_shared<SearchBall>("searchBall", agent->getAmbulator(), agent->getHeadModule());
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
   auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookForBall});
-  auto circleToFindLostBallState = fsm->newState("lookForBallCircling", {circleBall});
+  auto circleToFindLostBallState = fsm->newState("lookForBallCircling", {searchBall});
   auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
   auto lookForGoalState = fsm->newState("lookForGoal", {stopWalking, lookForGoal});

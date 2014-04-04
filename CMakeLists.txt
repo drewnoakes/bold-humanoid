@@ -390,6 +390,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/SearchBall/runPolicy.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/StopWalking/runPolicy.cc
   ./Option/StopWalking/hasTerminated.cc
 )
