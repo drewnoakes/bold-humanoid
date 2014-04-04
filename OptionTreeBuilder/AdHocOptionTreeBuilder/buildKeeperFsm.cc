@@ -32,7 +32,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
 
   lookAtBallState
     ->transitionTo(lookForBallState, "lost")
-    ->when(ballLostConditionFactory);
+    ->when([]() { return trueForMillis(2000, negate(ballVisibleCondition)); });
 
   lookAtBallState
     ->transitionTo(bigStepLeftState, "ball-left")
