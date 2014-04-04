@@ -53,6 +53,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   x = Math::clamp(x, -maxSpeedX->getValue(), maxSpeedX->getValue());
   y = Math::clamp(y, -maxSpeedY->getValue(), maxSpeedY->getValue());
 
+  x = d_isLeftTurn ? -x : x;
+
   cout << "ERR " << error.x() << ", " << error.y()
        << " CTL " << x << ", " << y
        << " ALPHA " << alpha

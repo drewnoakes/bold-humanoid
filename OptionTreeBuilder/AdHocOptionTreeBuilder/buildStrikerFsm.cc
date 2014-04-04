@@ -169,7 +169,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
       double panAngleRange = agent->getHeadModule()->getLeftLimitRads();
       double panRatio = panAngle / panAngleRange;
-      double circleDurationSeconds = fabs(panRatio) * 5;
+      double circleDurationSeconds = fabs(panRatio) * 10;
       log::info("circleBallState")
           << "circleDurationSeconds=" << circleDurationSeconds
           << " secondsSinceStart=" << circleBallState->secondsSinceStart()
