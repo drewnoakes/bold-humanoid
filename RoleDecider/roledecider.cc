@@ -46,6 +46,13 @@ void RoleDecider::update()
     return;
   }
 
+  // TODO HACK HACK HACK
+  // TODO HACK HACK HACK
+  // TODO HACK HACK HACK
+  // TODO HACK HACK HACK
+  setRole(PlayerRole::Striker);
+  return;
+
   if (d_roleOverride->getValue() != -1)
   {
     // The role is overridden in config to a fixed value
