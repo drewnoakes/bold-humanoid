@@ -41,7 +41,6 @@ void RoleDecider::update()
 
   auto setRole = [this](PlayerRole role)
   {
-    d_debugger->showRole(role);
     if (d_behaviourControl->getPlayerRole() != role)
     {
       stringstream str;
@@ -49,20 +48,21 @@ void RoleDecider::update()
       if (d_announceRoles->getValue())
         d_voice->say(str.str());
       log::verbose("RoleDecider::update") << "Changing role to " << str.str();
+      d_debugger->showRole(role);
+      d_behaviourControl->setPlayerRole(role);
     }
-    d_behaviourControl->setPlayerRole(role);
   };
-
-  if (uniformNumber == GOALIE_UNUM)
-  {
-    setRole(PlayerRole::Keeper);
-    return;
-  }
 
   if (d_roleOverride->getValue() != -1)
   {
     // The role is overridden in config to a fixed value
     setRole(static_cast<PlayerRole>(d_roleOverride->getValue()));
+    return;
+  }
+
+  if (uniformNumber == GOALIE_UNUM)
+  {
+    setRole(PlayerRole::Keeper);
     return;
   }
 
