@@ -33,7 +33,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
     ->transitionTo(leftDiveState, "ball-left")
     ->when([]()
     {
-      return trueForMillis(100, []()
+      return stepUpDownThreshold(3, []()
       {
         auto ball = State::get<AgentFrameState>()->getBallObservation();
         return ball && ball->y() < 1.0 && ball->x() < -0.1;
@@ -44,7 +44,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
     ->transitionTo(rightDiveState, "ball-right")
     ->when([]()
     {
-      return trueForMillis(100, []()
+      return stepUpDownThreshold(3, []()
       {
         auto ball = State::get<AgentFrameState>()->getBallObservation();
         return ball && ball->y() < 1.0 && ball->x() > 0.1;
