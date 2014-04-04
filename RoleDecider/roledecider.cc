@@ -72,7 +72,7 @@ void RoleDecider::update()
   {
     setRole(uniformNumber == GOALIE_UNUM
       ? PlayerRole::PenaltyKeeper
-      : PlayerRole::PenaltyKeeper);
+      : PlayerRole::PenaltyStriker);
     return;
   }
 
