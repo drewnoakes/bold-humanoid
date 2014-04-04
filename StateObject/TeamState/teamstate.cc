@@ -95,8 +95,12 @@ vector<PlayerState> TeamState::getBallObservers() const
     if (!player.ballRelative.hasValue())
       continue;
 
-    if (player.status == PlayerStatus::Inactive || player.status == PlayerStatus::Penalised)
+    if (
+//       player.status == PlayerStatus::Inactive ||
+      player.status == PlayerStatus::Penalised)
+    {
       continue;
+    }
 
     // TODO if the ball is *right* in front of the keeper, let the keeper kick it away...
     if (player.role == PlayerRole::Keeper)
