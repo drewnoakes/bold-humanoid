@@ -46,15 +46,6 @@ void RoleDecider::update()
     return;
   }
 
-  // TODO HACK HACK HACK
-  // TODO HACK HACK HACK
-  // TODO HACK HACK HACK
-  // TODO HACK HACK HACK
-  setRole(uniformNumber == GOALIE_UNUM
-    ? PlayerRole::PenaltyKeeper
-    : PlayerRole::PenaltyKeeper);
-  return;
-
   if (d_roleOverride->getValue() != -1)
   {
     // The role is overridden in config to a fixed value
