@@ -3,6 +3,7 @@
 #include "../option.hh"
 #include "../../util/log.hh"
 
+#include <sstream>
 #include <map>
 #include <memory>
 
@@ -25,12 +26,20 @@ namespace bold
     virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override
     {
       T key = d_keyGetter();
+
+      std::stringstream keyStr;
+      keyStr << key;
+      writer.String("key").String(keyStr.str().c_str());
+
       auto it = d_optionByKey.find(key);
       if (it == d_optionByKey.end())
       {
         log::error("DispatchOption::runPolicy") << "No option available for key " << key;
+        writer.String("found").Bool(false);
         return {};
       }
+
+      writer.String("found").Bool(true);
       return { it->second };
     }
 
