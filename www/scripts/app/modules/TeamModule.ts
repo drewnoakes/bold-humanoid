@@ -43,7 +43,7 @@ class TeamModule extends Module
                 unum: player.unum,
                 team: player.team,
                 activity: state.getPlayerActivityName(player.activity),
-                state: state.getPlayerStatusName(player.state),
+                state: state.getPlayerStatusName(player.status),
                 role: state.getPlayerRoleName(player.role),
                 pos: '[' + player.pos[0].toFixed(2) + ', ' + player.pos[1].toFixed(2) + '] ' + Math.round(util.radToDeg(player.pos[2])).toString() + '°',
                 posConfidence: player.posConfidence.toFixed(2),

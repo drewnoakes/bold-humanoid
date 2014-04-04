@@ -292,7 +292,7 @@ export interface PlayerData
     /** Whether this object represents the robot reporting this data. */
     isMe: boolean;
     activity: PlayerActivity;
-    state: PlayerStatus;
+    status: PlayerStatus;
     role: PlayerRole;
     /** The agent's estimate of its position in the world frame: [x,y,theta] in [m,m,rads] */
     pos: number[];
