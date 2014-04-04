@@ -110,9 +110,8 @@ void OpenTeamCommunicator::receiveData()
     if (message.robotID == d_uniformNumber)
       continue;
 
-    // An ID of -1 indicates that the message was invalid.
-    // TODO: Clang says this is always false, because robotID is unsigned short
-    if (message.robotID == -1)
+    // An ID of -1 (0xFFFF) indicates that the message was invalid.
+    if (message.robotID == 0xFFFF)
     {
       log::error("OpenTeamCommunicator::receiveData") << "Error parsing open mitecom message";
       continue;
