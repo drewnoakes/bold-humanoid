@@ -1,5 +1,7 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../../FieldMap/fieldmap.hh"
+
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent, shared_ptr<OptionTree> tree)
 {
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
@@ -29,6 +31,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
     ->transitionTo(lookForBallState, "lost-ball")
     ->when(ballLostConditionFactory);
 
+  const static double goalWidth = agent->getFieldMap()->getGoalY();
+
   lookAtBallState
     ->transitionTo(leftDiveState, "ball-left")
     ->when([]()
@@ -36,7 +40,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
       return stepUpDownThreshold(3, []()
       {
         auto ball = State::get<AgentFrameState>()->getBallObservation();
-        return ball && ball->y() < 1.0 && ball->x() < -0.1;
+        return ball &&
+               ball->y() < 1.0 && ball->y() > -0.2 &&
+               ball->x() < -0.1 && ball->x() > -goalWidth/1.5;
       });
     });
 
@@ -47,7 +53,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
       return stepUpDownThreshold(3, []()
       {
         auto ball = State::get<AgentFrameState>()->getBallObservation();
-        return ball && ball->y() < 1.0 && ball->x() > 0.1;
+        return ball &&
+               ball->y() < 1.0 && ball->y() > -0.2 &&
+              ball->x() > 0.1 && ball->x() < goalWidth/1.5;
       });
     });
 
