@@ -6,8 +6,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, sh
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getAmbulator());
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
+  auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto keepPosition = make_shared<KeepPosition>("keepPosition", PlayerRole::Supporter, agent->getAmbulator());
-  auto circleBall = make_shared<CircleBall>("circleBall", agent->getAmbulator(), agent->getHeadModule());
+  auto circleBall = make_shared<CircleBall>("circleBall", agent->getAmbulator(), agent->getHeadModule(), lookAtFeet, lookAtBall);
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "supporter"));
 

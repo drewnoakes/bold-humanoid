@@ -18,7 +18,7 @@ namespace bold
       d_headModule(headModule),
       d_lookAtFeet(lookAtFeet),
       d_lookAtBall(lookAtBall),
-      d_leftTurn(true)
+      d_isLeftTurn(true)
     {}
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
@@ -32,6 +32,6 @@ namespace bold
     std::shared_ptr<HeadModule> d_headModule;
     std::shared_ptr<LookAtFeet> d_lookAtFeet;
     std::shared_ptr<LookAtBall> d_lookAtBall;
-    bool d_leftTurn;
+    bool d_isLeftTurn;
   };
 }
