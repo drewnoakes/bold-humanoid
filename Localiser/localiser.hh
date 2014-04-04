@@ -22,8 +22,6 @@ namespace bold
   class Localiser
   {
   public:
-    typedef Eigen::Vector3d FilterState;
-
     Localiser();
 
     void update();
@@ -33,7 +31,8 @@ namespace bold
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   private:
-    typedef ParticleFilter<3, 50> ParticleFilterUsed;
+    typedef Eigen::Vector4d FilterState;
+    typedef ParticleFilter<4, 50> ParticleFilterUsed;
 
     void predict();
     void updateSmoothedPos();
@@ -41,7 +40,8 @@ namespace bold
 
     FilterState createRandomState();
 
-    Eigen::Vector3d d_lastTranslation;
+    bool d_haveLastAgentTransform;
+    Eigen::Affine3d d_lastAgentTransform;
     Eigen::Quaterniond d_lastQuaternion;
     double d_preNormWeightSum;
 
@@ -53,7 +53,7 @@ namespace bold
     Setting<int>* d_minGoalsNeeded;
 
     FilterType d_filterType;
-    std::shared_ptr<Filter<3>> d_filter;
+    std::shared_ptr<Filter<4>> d_filter;
 
     std::function<double()> d_fieldXRng;
     std::function<double()> d_fieldYRng;

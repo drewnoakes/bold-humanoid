@@ -6,12 +6,12 @@ void Localiser::update()
 
   predict();
 
-  JointObservationModel<3> jointModel;
+  JointObservationModel<4> jointModel;
 
   if (agentFrame->getGoalObservations().size() >= static_cast<uint>(d_minGoalsNeeded->getValue()))
   {
-    auto goalPostModel = [&](Vector3d const& state) {
-      AgentPosition pos(state[0], state[1], state[2]);
+    auto goalPostModel = [&](Vector4d const& state) {
+      AgentPosition pos(state);
       Affine3d agentWorld3d(pos.agentWorldTransform());
       Affine3d worldAgent3d(pos.worldAgentTransform());
 
@@ -52,8 +52,8 @@ void Localiser::update()
   if (d_useLines->getValue() &&  agentFrame->getObservedLineSegments().size() > 0)
   {
     log::verbose("Localiser::update") << "Using line model";
-    auto lineModel = [&](Vector3d const& state) {
-      AgentPosition pos(state[0], state[1], state[2]);
+    auto lineModel = [&](Vector4d const& state) {
+      AgentPosition pos(state);
 
       Affine3d agentWorld3d(pos.agentWorldTransform());
       Affine3d worldAgent3d(pos.worldAgentTransform());
@@ -107,7 +107,7 @@ void Localiser::update()
 
   auto stateWeight = d_filter->extract();
 
-  d_pos = AgentPosition(stateWeight.first.x(), stateWeight.first.y(), stateWeight.first.z());
+  d_pos = AgentPosition(stateWeight.first);
 
   updateSmoothedPos();
 

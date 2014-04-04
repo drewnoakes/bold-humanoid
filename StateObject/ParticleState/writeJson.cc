@@ -19,8 +19,8 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
         auto particle = d_particles.col(i);
         writer.Double(particle.x(), "%.3f"); // x
         writer.Double(particle.y(), "%.3f"); // y
-        writer.Double(particle.z(), "%.3f"); // theta
-        writer.Double(swapNaN(particle.w(), 0)); // weight
+        writer.Double(atan2(particle(3), particle(2)), "%.3f"); // theta
+        writer.Double(swapNaN(particle(4), 0)); // weight
 
         writer.EndArray();
       }

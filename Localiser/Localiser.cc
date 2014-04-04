@@ -1,7 +1,7 @@
 #include "localiser.ih"
 
 Localiser::Localiser()
-  : d_lastTranslation(0, 0, 0),
+  : d_haveLastAgentTransform(false),
     d_lastQuaternion(0, 0, 0,0),
     d_pos(0, 0, 0),
     d_smoothedPos(0, 0, 0),
@@ -34,7 +34,9 @@ Localiser::Localiser()
     
     filter->setStateGenerator(
       [this]() {
-        return FilterState(d_fieldXRng(), d_fieldYRng(), d_thetaRng());
+      auto theta = d_thetaRng();
+      auto state = FilterState(d_fieldXRng(), d_fieldYRng(), cos(theta), sin(theta));
+      return state;
       });
 
     Config::getSetting<double>("localiser.randomise-ratio")->changed.connect(
@@ -51,7 +53,7 @@ Localiser::Localiser()
                         d_avgPos.reset();
                         
                         // Flip the x-coordinate of every particle, and flip its rotation.
-                        filter->transform([](Vector3d state) { return Vector3d(-state.x(), state.y(), -state[2]); });
+                        filter->transform([](FilterState state) { return FilterState(-state.x(), state.y(), -state(2), -state(3)); });
                       });
     
     d_filter = filter;
@@ -60,7 +62,7 @@ Localiser::Localiser()
     
   case FilterType::Kalman:
   {
-    d_filter = allocate_aligned_shared<KalmanFilter<3>>();
+    d_filter = allocate_aligned_shared<KalmanFilter<4>>();
   }
   }
 
