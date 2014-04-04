@@ -16,7 +16,7 @@ FieldMap::FieldMap()
   d_fieldLengthX             = Config::getStaticValue<double>("world.field-size-x");
   d_fieldLengthY             = Config::getStaticValue<double>("world.field-size-y");
 //double goalX               = Config::getStaticValue<double>("world.goal-size-x");
-  double goalY               = Config::getStaticValue<double>("world.goal-size-y");
+  d_goalY                    = Config::getStaticValue<double>("world.goal-size-y");
 //double goalZ               = Config::getStaticValue<double>("world.goal-size-z");
 //double goalPostDiameter    = Config::getStaticValue<double>("world.goal-post-diameter");
   double goalAreaX           = Config::getStaticValue<double>("world.goal-area-size-x");
@@ -40,7 +40,7 @@ FieldMap::FieldMap()
   double halfFieldX = d_fieldLengthX/2;
   double halfFieldY = d_fieldLengthY/2;
   double halfGoalAreaY = goalAreaY/2;
-  double halfGoalY = goalY/2;
+  double halfGoalY = d_goalY/2;
   d_circleRadius = circleDiameter/2;
 
   // CROSS MARKS

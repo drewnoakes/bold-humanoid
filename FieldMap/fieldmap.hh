@@ -43,6 +43,8 @@ namespace bold
     double outerMarginMinimum() const { return d_outerMarginMinimum; }
 
     double circleRadius() const { return d_circleRadius; }
+    /// The distance between the centre of goal posts along the y axis.
+    double getGoalY() const { return d_goalY; };
 
   private:
     std::vector<LineSegment3d> d_fieldLines;
@@ -57,5 +59,6 @@ namespace bold
     double d_outerMarginMinimum;
     double d_circleRadius;
     double d_maxDiagnoalFieldDistance;
+    double d_goalY;
   };
 }
