@@ -1078,8 +1078,25 @@ div.module.team td
     padding: 2px 4px;
 }
 
+div.module.team table
+{
+    overflow: auto;
+}
+
+div.module.team table th,
+div.module.team table td
+{
+    width: 125px;
+}
+
 div.module.team tr td:first-child()
 {
+    font-weight: bold;
+}
+
+div.module.team tr.unum td
+{
+    font-size: 30px;
     font-weight: bold;
 }
 
