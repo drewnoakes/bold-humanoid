@@ -39,17 +39,19 @@ void RoleDecider::update()
     return;
   }
 
-//   if (uniformNumber == 5)
-//   {
-//     setRole(PlayerRole::PenaltyKeeper);
-//     return;
-//   }
-//
-//   if (uniformNumber == 6)
-//   {
-//     setRole(PlayerRole::PenaltyStriker);
-//     return;
-//   }
+  //
+  // Penalty Shootouts
+  //
+
+  auto gameState = State::get<GameState>();
+
+  if (gameState && gameState->isPenaltyShootout())
+  {
+    setRole(uniformNumber == GOALIE_UNUM
+      ? PlayerRole::PenaltyKeeper
+      : PlayerRole::PenaltyKeeper);
+    return;
+  }
 
   //
   // Decide between: striker, supporter & defender
