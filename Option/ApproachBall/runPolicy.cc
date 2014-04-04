@@ -24,9 +24,9 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   }
   else
   {
-    // TODO subtract the stopping distance here so that the bot doesn't stop too suddenly!!!
-//     static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
-//     dist -= stoppingDistance->getValue();
+    // subtract the stopping distance here so that the bot doesn't stop too suddenly!!!
+    static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
+    dist -= stoppingDistance->getValue();
   }
 
   if (dist < 0)
