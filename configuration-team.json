@@ -178,15 +178,15 @@
     "tracking": {
       "pan": {
         "p-gain": 0.5,
-        "i-gain": 0.1,
-        "i-leak": 0.1,
-        "d-gain": 0.1
+        "i-gain": 0.0,
+        "i-leak": 0.0,
+        "d-gain": 0.0
       },
       "tilt": {
         "p-gain": 0.5,
-        "i-gain": 0.1,
-        "i-leak": 0.1,
-        "d-gain": 0.1
+        "i-gain": 0.0,
+        "i-leak": 0.0,
+        "d-gain": 0.0
       }
     },
     "home-pan":  0.0,
