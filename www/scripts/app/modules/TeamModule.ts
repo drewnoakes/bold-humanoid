@@ -37,6 +37,8 @@ class TeamModule extends Module
         var newestTime = _.max<number>(_.map(data.players, player => player.updateTime));
         var myTeamNumber = _.findWhere<state.PlayerData>(data.players, player => player.isMe).team;
 
+        data.players.sort((a,b) => a.unum < b.unum ? -1 : a.unum === b.unum ? 0 : 1);
+
         var playerViewModels = _.map<state.PlayerData,any>(
             data.players,
             player => ({
