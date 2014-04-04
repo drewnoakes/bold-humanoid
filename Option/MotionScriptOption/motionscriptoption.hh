@@ -13,9 +13,9 @@ namespace bold
   class MotionScriptOption : public Option
   {
   public:
-    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName);
+    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName, bool ifNotFinalPose = false);
 
-    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script);
+    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script, bool ifNotFinalPose = false);
 
     virtual double hasTerminated() override;
 
@@ -29,5 +29,6 @@ namespace bold
     std::shared_ptr<MotionScript const> d_script;
     /// The most recent MotionScriptRunner issued to the MotionScriptModule
     std::shared_ptr<MotionScriptRunner> d_runner;
+    bool d_ifNotFinalPose;
   };
 }

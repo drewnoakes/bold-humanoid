@@ -10,10 +10,11 @@ using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName)
+MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName, bool ifNotFinalPose)
 : Option(id, "MotionScript"),
   d_motionScriptModule(motionScriptModule),
-  d_runner()
+  d_runner(),
+  d_ifNotFinalPose(ifNotFinalPose)
 {
   d_script = MotionScript::fromFile(fileName);
 
@@ -21,11 +22,12 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
     throw runtime_error("File not found");
 }
 
-MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script)
+MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script, bool ifNotFinalPose)
 : Option(id, "MotionScript"),
   d_motionScriptModule(motionScriptModule),
   d_script(script),
-  d_runner()
+  d_runner(),
+  d_ifNotFinalPose(ifNotFinalPose)
 {
   assert(d_script);
   assert(d_motionScriptModule);
@@ -53,6 +55,13 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 {
   if (!d_runner || d_runner->getState() == MotionScriptRunnerState::Finished)
   {
+    if (d_ifNotFinalPose && MotionScriptRunner::isInFinalPose(d_script))
+    {
+      // Don't run.
+      d_runner = nullptr;
+      return {};
+    }
+
     auto runner = make_shared<MotionScriptRunner>(d_script);
 
     bool started = d_motionScriptModule->start(runner);
