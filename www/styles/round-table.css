@@ -301,6 +301,11 @@ div.module div.module-column-3
     width: 100px;
 }
 
+.flow .setting.control select
+{
+    max-width: 100px;
+}
+
 .flow .control h3,
 .flow .control label
 {
