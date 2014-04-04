@@ -28,6 +28,12 @@ namespace bold
         d_theta(vec(2))
     {}
 
+    AgentPosition(Eigen::Vector4d const& vec)
+      : d_x(vec.x()),
+        d_y(vec.y()),
+        d_theta(atan2(d_y, d_x))
+    {}
+
     double x() const { return d_x; }
     double y() const { return d_y; }
     double theta() const { return d_theta; }
