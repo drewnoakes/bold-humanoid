@@ -50,7 +50,9 @@ void RoleDecider::update()
   // TODO HACK HACK HACK
   // TODO HACK HACK HACK
   // TODO HACK HACK HACK
-  setRole(PlayerRole::Striker);
+  setRole(uniformNumber == GOALIE_UNUM
+    ? PlayerRole::PenaltyKeeper
+    : PlayerRole::PenaltyKeeper);
   return;
 
   if (d_roleOverride->getValue() != -1)
