@@ -75,7 +75,7 @@ namespace bold
       }
     }
 
-    static bool isInFinalPose(std::shared_ptr<MotionScript const> const& script);
+    static bool isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead = false);
 
     MotionScriptRunner(std::shared_ptr<MotionScript const> script);
 

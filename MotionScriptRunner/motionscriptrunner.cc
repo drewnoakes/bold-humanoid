@@ -481,13 +481,15 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
   }
 }
 
-bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script)
+bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead)
 {
   auto hw = State::get<HardwareState>();
 
   auto frame = script->getFinalKeyFrame();
 
-  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+  auto upper = includeHead ? JointId::MAX : JointId::L_ANKLE_ROLL;
+
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)upper; jointId++)
   {
     int presentValue = hw->getMX28State(jointId).presentPositionValue;
     int targetValue = frame.values[jointId - 1];
