@@ -68,7 +68,7 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
       d_runner = nullptr;
     }
 
-    writer.String("state").String(MotionScriptRunner::getStateName(d_runner->getState()).c_str());
+    writer.String("state").String(MotionScriptRunner::getStateName(runner->getState()).c_str());
   }
 
   return {};
