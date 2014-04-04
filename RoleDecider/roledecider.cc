@@ -39,17 +39,17 @@ void RoleDecider::update()
     return;
   }
 
-  if (uniformNumber == 5)
-  {
-    setRole(PlayerRole::PenaltyKeeper);
-    return;
-  }
-
-  if (uniformNumber == 6)
-  {
-    setRole(PlayerRole::PenaltyStriker);
-    return;
-  }
+//   if (uniformNumber == 5)
+//   {
+//     setRole(PlayerRole::PenaltyKeeper);
+//     return;
+//   }
+//
+//   if (uniformNumber == 6)
+//   {
+//     setRole(PlayerRole::PenaltyStriker);
+//     return;
+//   }
 
   //
   // Decide between: striker, supporter & defender
