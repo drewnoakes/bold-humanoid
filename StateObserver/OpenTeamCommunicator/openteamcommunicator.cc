@@ -113,7 +113,12 @@ void OpenTeamCommunicator::receiveData()
     // An ID of -1 (0xFFFF) indicates that the message was invalid.
     if (message.robotID == 0xFFFF)
     {
-      log::error("OpenTeamCommunicator::receiveData") << "Error parsing open mitecom message";
+      static bool errorYet = false;
+      if (!errorYet)
+      {
+        log::error("OpenTeamCommunicator::receiveData") << "Error parsing open mitecom message (will not report future errors)";
+        errorYet = true;
+      }
       continue;
     }
 
