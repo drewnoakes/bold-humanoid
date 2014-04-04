@@ -54,6 +54,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto performRole = make_shared<DispatchOption<PlayerRole>>("performRole", [agent](){ return agent->getBehaviourControl()->getPlayerRole(); });
   performRole->setOption(PlayerRole::Keeper, buildKeeperFsm(agent, tree));
   performRole->setOption(PlayerRole::Striker, buildStrikerFsm(agent, tree));
+  performRole->setOption(PlayerRole::Supporter, buildSupporterFsm(agent, tree));
   // NOTE for now we re-use the same striker behaviour for the regular striker as the penalty striker
   auto strikerFsm = buildPenaltyKeeperFsm(agent, tree);
   performRole->setOption(PlayerRole::PenaltyStriker, strikerFsm);

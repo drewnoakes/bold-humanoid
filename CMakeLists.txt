@@ -366,6 +366,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/KeepPosition/keepposition.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/LookAround/runPolicy.cc
 )
 
@@ -396,10 +400,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildTree.cc
-  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildStrikerFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildKeeperFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildPenaltyKeeperFsm.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildTree.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildSupporterFsm.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildStrikerFsm.cc
 )
 
 add_class(BOLDHUMANOID

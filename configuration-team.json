@@ -275,6 +275,9 @@
       "gain": 0.85,
       "offset-min": 2.0,
       "offset-max": 20.0
+    },
+    "keep-position": {
+      "spacing": 1.4
     }
   },
   "health-and-safety": {
