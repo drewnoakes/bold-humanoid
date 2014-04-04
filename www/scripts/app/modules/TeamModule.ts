@@ -47,7 +47,8 @@ class TeamModule extends Module
                 role: state.getPlayerRoleName(player.role),
                 pos: '[' + player.pos[0].toFixed(2) + ', ' + player.pos[1].toFixed(2) + '] ' + Math.round(util.radToDeg(player.pos[2])).toString() + '°',
                 posConfidence: player.posConfidence.toFixed(2),
-                ballRelative: player.ballRelative ? '-' : '[' + player.ballRelative[0].toFixed(2) + ', ' + player.ballRelative[1].toFixed(2) + ']',
+                ballRelative: !player.ballRelative.length ? '-' : '[' + player.ballRelative[0].toFixed(2) + ', ' + player.ballRelative[1].toFixed(2) + ']',
+                ballDistance: !player.ballRelative.length ? '-' : Math.sqrt(Math.pow(player.ballRelative[0], 2) + Math.pow(player.ballRelative[1], 2)).toFixed(2),
                 age: (newestTime - player.updateTime).toString(),
 
                 clazz: (player.isMe ? 'me ' : '')
