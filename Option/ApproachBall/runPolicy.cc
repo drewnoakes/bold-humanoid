@@ -18,6 +18,14 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   double dist = ballPos->head<2>().norm();
 
+  if (d_useCustomStopDistance)
+  {
+    dist -= d_stopDistance;
+  }
+
+  if (dist < 0)
+    dist = 0;
+
   writer.String("ballDist").Double(dist);
 
   double speedDueToDistance = Math::clamp(dist/d_brakeDistance->getValue(), 0.0, 1.0);

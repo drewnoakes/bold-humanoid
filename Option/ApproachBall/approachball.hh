@@ -27,6 +27,12 @@ namespace bold
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
+    void setStopDistance(double stopDistance)
+    {
+      d_useCustomStopDistance = true;
+      d_stopDistance = stopDistance;
+    }
+
   private:
     std::shared_ptr<Ambulator> d_ambulator;
     Setting<double>* d_turnScale;
@@ -35,5 +41,7 @@ namespace bold
     Setting<double>* d_brakeDistance;
     Setting<double>* d_lowerTurnLimitDegs;
     Setting<double>* d_upperTurnLimitDegs;
+    bool d_useCustomStopDistance;
+    double d_stopDistance;
   };
 }
