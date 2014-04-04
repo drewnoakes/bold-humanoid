@@ -1119,3 +1119,21 @@ div.module.team td.old
 {
     color: rgba(80,0,0, 0.4)
 }
+
+div.module.team div.role-indicator
+{
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    vertical-align: middle;
+
+    transition: background-color 0.5s linear;
+    -moz-transition: background-color 0.5s linear;
+    -o-transition: background-color 0.5s linear;
+    -webkit-transition: background-color 0.5s linear;
+}
+
+div.module.team div.role-indicator.Striker { background-color: purple; }
+div.module.team div.role-indicator.Keeper { background-color: white; }
+div.module.team div.role-indicator.Supporter { background-color: green; }
