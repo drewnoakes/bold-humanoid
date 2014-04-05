@@ -46,10 +46,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, sh
     ->transitionTo(circleToFindLostBallState, "lost-ball-long")
     ->after(chrono::seconds(8));
 
-  // after 5 seconds of circling, look for the ball again
+  // after 10 seconds of circling, look for the ball again
   circleToFindLostBallState
     ->transitionTo(lookForBallState, "done")
-    ->after(chrono::seconds(5));
+    ->after(chrono::seconds(10));
 
   // stop turning if the ball comes into view
   circleToFindLostBallState
