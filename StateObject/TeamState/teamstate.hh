@@ -130,6 +130,8 @@ namespace bold
 
     std::vector<PlayerState> getBallObservers() const;
 
+    bool isTeamMate(PlayerActivity AttackingGoal) const;
+
   private:
     std::vector<PlayerState> d_playerStates;
   };

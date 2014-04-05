@@ -111,3 +111,29 @@ vector<PlayerState> TeamState::getBallObservers() const
 
   return observers;
 }
+
+bool TeamState::isTeamMate(PlayerActivity activity) const
+{
+  for (PlayerState const& player : d_playerStates)
+  {
+    if (player.isMe())
+      continue;
+
+    // TODO review this threshold
+    if (Clock::getMillisSince(player.updateTime) > 5000)
+      continue;
+
+    if (!player.ballRelative.hasValue())
+      continue;
+
+    if (
+//       player.status == PlayerStatus::Inactive ||
+      player.status == PlayerStatus::Penalised)
+      continue;
+
+    if (player.activity == activity)
+      return true;
+  }
+
+  return false;
+}
