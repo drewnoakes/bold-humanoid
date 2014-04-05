@@ -1,5 +1,25 @@
 #include "adhocoptiontreebuilder.ih"
 
+auto shouldYieldToOtherAttacker = []()
+{
+  auto team = State::get<TeamState>();
+  auto agentFrame = State::get<AgentFrameState>();
+
+  if (!team || !agentFrame || !agentFrame->isBallVisible())
+    return false;
+
+  double dist = agentFrame->getBallObservation()->norm();
+
+  bool isTeamMateAttacking = team->isTeamMate(PlayerActivity::AttackingGoal);
+
+  cout << "YIELD isTeamMateAttacking=" << isTeamMateAttacking << " dist=" << dist << endl;
+
+  if (dist > 0.5 && dist < 1.5 && isTeamMateAttacking)
+    return true;
+
+  return false;
+};
+
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shared_ptr<OptionTree> tree)
 {
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
@@ -31,9 +51,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookAtFeetState = fsm->newState("lookAtFeet", {lookAtFeet});
   auto leftKickState = fsm->newState("leftKick", {leftKick});
   auto rightKickState = fsm->newState("rightKick", {rightKick});
+  auto waitForOtherStrikerState = fsm->newState("wait", {stopWalking,lookAtBall});
 
   setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
-  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState });
+  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState, waitForOtherStrikerState });
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { lookForGoalState, lookAtGoalState, aimState, circleBallState, lookAtFeetState, leftKickState, rightKickState });
 
   standUpState
@@ -73,6 +94,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->transitionTo(lookForBallState, "lost-ball")
     ->when(ballLostConditionFactory);
 
+  // Let another player shine if they're closer and attempting to score
+  approachBallState
+    ->transitionTo(waitForOtherStrikerState, "yield")
+    ->when([]() { return stepUpDownThreshold(10, shouldYieldToOtherAttacker); });
+
   // stop walking to ball once we're close enough
   approachBallState
     ->transitionTo(lookForGoalState, "near-ball")
@@ -84,6 +110,14 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
       return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
     });
+
+  waitForOtherStrikerState
+    ->transitionTo(lookAtBallState)
+    ->after(chrono::seconds(5));
+
+  waitForOtherStrikerState
+    ->transitionTo(lookAtBallState)
+    ->when([]() { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
   // Abort attack if it looks like we are going to kick an own goal
   lookForGoalState
