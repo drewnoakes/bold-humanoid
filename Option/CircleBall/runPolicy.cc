@@ -26,10 +26,24 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   // TODO set this position based upon which foot is closest to the ball when commencing
   // TODO base the Y position from the idealkicking distance as the position to keep
-  auto targetBallPos = Vector2d(0.1, 0.20);
+  auto targetBallPos = Vector2d(0.0, 0.15);
   auto observedBallPos = agentFrame->getBallObservation()->head<2>();
   Vector2d error = targetBallPos - observedBallPos;
+  Vector2d errorNorm = error.normalized();
 
+
+  // Always walk sideways, but not if error becomes too big
+  double x = (1.0 - fabs(error.x())) * d_isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue();
+
+  // Try to keep forward distance stable
+  double y = Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedY->getValue();
+
+  // Turn to keep ball centered
+  double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
+  double a = errorDir * Math::clamp(fabs(errorNorm.x()), 0.75, 1.0) * turnSpeedA->getValue();
+
+  /*
+  // Keep distance same
   // Alpha controls how much turning is attempted. Max turn occurs when we have
   // no positional error for the ball.
   // If the error is greater than the brake distance, then turning is disabled
@@ -39,26 +53,27 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   // Set movement speed in x/y based on error distance
   //double x = error.x() * pGainX->getValue();
-  double x = pGainX->getValue();
+  double x = pGainX->getValue() - errorNorm.x() * pGainX->getValue();;
   double y = error.y() * pGainY->getValue();
 
   // Add turn movement, based upon ratio of error
-  x += alpha * turnSpeedX->getValue();
-  y += alpha * turnSpeedY->getValue();
+  //x += alpha * turnSpeedX->getValue();
+  //y += alpha * turnSpeedY->getValue();
 
   // Blend turn speed
-  double a = alpha * (d_isLeftTurn ? -turnSpeedA->getValue() : turnSpeedA->getValue());
+  double a = (1.0 - fabs(errorNorm.x())) * (d_isLeftTurn ? -turnSpeedA->getValue() : turnSpeedA->getValue());
 
   // Clamp movement direction to within maximums
-  x = Math::clamp(x, -maxSpeedX->getValue(), maxSpeedX->getValue());
-  y = Math::clamp(y, -maxSpeedY->getValue(), maxSpeedY->getValue());
 
   x = d_isLeftTurn ? -x : x;
+  */
 
-  cout << "ERR " << error.x() << ", " << error.y()
-       << " CTL " << x << ", " << y
-       << " ALPHA " << alpha
-       << endl;
+  x = Math::clamp(x, -maxSpeedX->getValue(), maxSpeedX->getValue());
+  y = Math::clamp(y, -maxSpeedY->getValue(), maxSpeedY->getValue());
+  if (!d_isLeftTurn)
+    a = Math::clamp(a, 0.0, turnSpeedA->getValue());
+  else
+    a = Math::clamp(a, -turnSpeedA->getValue(), 0.0);
 
   // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
   // direction being inverted.
