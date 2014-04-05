@@ -15,40 +15,41 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
   double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->angleRads);
 
   static Setting<double>* turnSpeed = Config::getSetting<double>("options.search-ball.turn-speed");
-  static Setting<double>* d_topAngle = Config::getSetting<double>("options.search-ball.max-height");
-  static Setting<double>* d_bottomAngle = Config::getSetting<double>("options.search-ball.min-height");
-  static Setting<double>* d_sideAngle = Config::getSetting<double>("options.search-ball.max-side");
+  static Setting<double>* d_topAngle = Config::getSetting<double>("options.search-ball.max-target-height");
+  static Setting<double>* d_bottomAngle = Config::getSetting<double>("options.search-ball.min-target-height");
+  static Setting<double>* d_sideAngle = Config::getSetting<double>("options.search-ball.max-target-side");
+  static Setting<double>* d_speedX = Config::getSetting<double>("options.search-ball.speed-x");
+  static Setting<double>* d_speedY = Config::getSetting<double>("options.search-ball.speed-y");
 
   double a = turnSpeed->getValue();
-  double maxHeight = d_topAngle->getValue();
-  double minHeight = d_bottomAngle->getValue();
-  double maxSide = d_sideAngle->getValue();
+  double maxTargetHeight = d_topAngle->getValue();
+  double minTargetHeight = d_bottomAngle->getValue();
+  double maxTargetSide = d_sideAngle->getValue();
+  double speedX = d_speedX->getValue();
+  double speedY = d_speedY->getValue();
 
-  double speedX = 10;
-  double speedY = 10;
-
-  if (currentPanAngleDegs <= (maxSide - 4))
+  // make sure head isfully turned in the direction we are turning to maximize our chances of seeing the ball
+  if (currentPanAngleDegs <= (maxTargetSide - speedX))
   {
     // utilize this opportunity to reset ourselves to be looking for the top first
     d_searchTop = true;
 
-    // make head go towards correct side
-    d_headModule->moveToDegs(maxSide, currentTiltAngleDegs);
+    // make head go towards correct side, overshoot
+    d_headModule->moveToDegs(maxTargetSide + speedX, currentTiltAngleDegs);
   }
   else
   {
-    // if we are too far one way, force the correct movement
-    if (currentTiltAngleDegs >= (maxHeight - 2))d_searchTop = false;
-    if (currentTiltAngleDegs <= (minHeight + 2))d_searchTop = true;
+    // if we are too far one way, force the need to correct movement
+    if (currentTiltAngleDegs >= (maxTargetHeight - 2))d_searchTop = false;
+    if (currentTiltAngleDegs <= (minTargetHeight + 2))d_searchTop = true;
 
     // start searching once we have maxed out to one side
     if (d_searchTop)
     {
-      if (currentTiltAngleDegs <= (maxHeight - 4))
+      if (currentTiltAngleDegs <= (maxTargetHeight - speedY))
       {
-        // top not reached so aim for it
-        //d_headModule->moveToDegs(currentPanAngleDegs, currentTiltAngleDegs + speedY);
-        d_headModule->moveToDegs(currentPanAngleDegs, maxHeight);
+        // top not reached so aim for it, overshoot
+        d_headModule->moveToDegs(currentPanAngleDegs, maxTargetHeight + speedY);
       }
       else
       {
@@ -58,11 +59,10 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
     }
     else
     {
-      if (currentTiltAngleDegs >= (minHeight + 4))
+      if (currentTiltAngleDegs >= (minTargetHeight + speedY))
       {
-        // bottom not reached so aim for it
-        //d_headModule->moveToDegs(currentPanAngleDegs, currentTiltAngleDegs - speedY);
-        d_headModule->moveToDegs(currentPanAngleDegs, minHeight);
+        // bottom not reached so aim for it, overshoot
+        d_headModule->moveToDegs(currentPanAngleDegs, minTargetHeight - speedY);
       }
       else
       {
@@ -75,6 +75,7 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
     d_ambulator->setTurnAngle(a);
   }
 
+  // return nothing
   return {};
 }
 
