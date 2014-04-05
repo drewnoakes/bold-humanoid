@@ -39,7 +39,7 @@ vector<shared_ptr<Option>> KeepPosition::runPolicy(Writer<StringBuffer>& writer)
   }
 
   //
-  // Determine our rank among team mates
+  // Determine our rank among teammates
   //
 
   auto observers = team->getBallObservers();
