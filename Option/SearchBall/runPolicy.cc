@@ -29,13 +29,13 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
   double speedY = d_speedY->getValue();
 
   // make sure head isfully turned in the direction we are turning to maximize our chances of seeing the ball
-  if (currentPanAngleDegs <= (maxTargetSide - speedX))
+  if (d_isLeftTurn ? currentPanAngleDegs <= (maxTargetSide - speedX) : currentPanAngleDegs >= (-maxTargetSide + speedX))
   {
     // utilize this opportunity to reset ourselves to be looking for the top first
     d_searchTop = true;
 
     // make head go towards correct side, overshoot
-    d_headModule->moveToDegs(maxTargetSide + speedX, currentTiltAngleDegs);
+    d_headModule->moveToDegs(d_isLeftTurn ? maxTargetSide + speedX : -maxTargetSide - speedX, currentTiltAngleDegs);
   }
   else
   {
@@ -72,7 +72,7 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
     }
 
     // finnaly we need to turn ourselves
-    d_ambulator->setTurnAngle(a);
+    d_ambulator->setTurnAngle(d_isLeftTurn ? a : -a);
   }
 
   // return nothing
