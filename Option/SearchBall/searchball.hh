@@ -14,7 +14,8 @@ namespace bold
     : Option(id, "SearchBall"),
       d_ambulator(ambulator),
       d_headModule(headModule),
-      d_isLeftTurn(true)
+      d_isLeftTurn(true),
+      d_searchTop(true)
     {}
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
@@ -27,5 +28,6 @@ namespace bold
     std::shared_ptr<Ambulator> d_ambulator;
     std::shared_ptr<HeadModule> d_headModule;
     bool d_isLeftTurn;
+    bool d_searchTop;
   };
 }

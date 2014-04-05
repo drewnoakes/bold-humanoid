@@ -296,6 +296,12 @@
     },
     "keep-position": {
       "spacing": { "type": "double", "min": 0.2, "default": 1.4 }
+    },
+    "search-ball": {
+      "turn-speed": { "type": "double", "default": 15},
+      "max-height": { "type": "double", "default": 20},
+      "min-height": { "type": "double", "default": -13},
+      "max-side": { "type": "double", "default": 65}
     }
   },
   "health-and-safety": {
