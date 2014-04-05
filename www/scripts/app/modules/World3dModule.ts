@@ -620,7 +620,9 @@ class World3dModule extends Module
     {
         if (this.useThirdPerson.getValue()) {
             // Third person -- position camera outside player
-            var torsoPosition = this.bodyRoot ? this.bodyRoot.position : new THREE.Vector3(0, 0, 0);
+            var torsoPosition = this.bodyRoot
+                ? this.bodyRoot.position.clone().add(new THREE.Vector3(0,0,-0.05))
+                : new THREE.Vector3(0, 0, 0);
             this.camera.position.x = this.cameraDistance * Math.sin(this.cameraTheta) * Math.cos(this.cameraPhi);
             this.camera.position.y = -this.cameraDistance * Math.cos(this.cameraTheta) * Math.cos(this.cameraPhi);
             this.camera.position.z = this.cameraDistance * Math.sin(this.cameraPhi);
