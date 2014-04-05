@@ -66,6 +66,14 @@ void RoleDecider::update()
     return;
   }
 
+  // HACK HACK HACK
+  // HACK HACK HACK
+  // HACK HACK HACK
+  // HACK HACK HACK
+  // TODO remove this when implementing roles
+  setRole(PlayerRole::Striker);
+  return;
+
   //
   // Penalty Shootouts
   //
