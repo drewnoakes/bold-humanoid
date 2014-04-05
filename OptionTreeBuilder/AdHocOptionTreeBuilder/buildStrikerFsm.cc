@@ -197,7 +197,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // control duration of ball circling
   circleBallState
-    ->transitionTo(lookAtGoalState, "done")
+    ->transitionTo(lookForGoalState, "done")
     ->when([circleBall,circleBallState,agent]()
     {
       // TODO break dependency upon pan limit
