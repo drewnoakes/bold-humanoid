@@ -27,7 +27,7 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
   double speedX = 10;
   double speedY = 10;
 
-  if (currentPanAngleDegs < (maxSide - 4))
+  if (currentPanAngleDegs <= (maxSide - 4))
   {
     // utilize this opportunity to reset ourselves to be looking for the top first
     d_searchTop = true;
@@ -37,9 +37,9 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
   }
   else
   {
-    //If we are too far one way, force the correct movement
-    if (currentTiltAngleDegs >= (maxHeight - 1))d_searchTop = false;
-    if (currentTiltAngleDegs <= (minHeight + 1))d_searchTop = true;
+    // if we are too far one way, force the correct movement
+    if (currentTiltAngleDegs >= (maxHeight - 2))d_searchTop = false;
+    if (currentTiltAngleDegs <= (minHeight + 2))d_searchTop = true;
 
     // start searching once we have maxed out to one side
     if (d_searchTop)
