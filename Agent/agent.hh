@@ -14,7 +14,6 @@ namespace bold
   class DataStreamer;
   class Debugger;
   class FallDetector;
-  class FieldMap;
   class GameStateReceiver;
   class GyroCalibrator;
   class HealthAndSafety;
@@ -49,7 +48,6 @@ namespace bold
     std::shared_ptr<CameraModel> getCameraModel() const { return d_cameraModel; }
     std::shared_ptr<DataStreamer> getDataStreamer() const { return d_streamer; }
     std::shared_ptr<Debugger> getDebugger() const { return d_debugger; }
-    std::shared_ptr<FieldMap> getFieldMap() const { return d_fieldMap; }
     std::shared_ptr<Spatialiser> getSpatialiser() const { return d_spatialiser; }
     std::shared_ptr<Localiser> getLocaliser() const { return d_localiser; }
     std::shared_ptr<VisualCortex> getVisualCortex() const { return d_visualCortex; }
@@ -120,7 +118,6 @@ namespace bold
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<DataStreamer> d_streamer;
     std::shared_ptr<Debugger> d_debugger;
-    std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
     std::shared_ptr<Localiser> d_localiser;
     std::shared_ptr<OptionTree> d_optionTree;

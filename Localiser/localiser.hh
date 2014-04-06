@@ -10,13 +10,12 @@
 
 namespace bold
 {
-  class FieldMap;
   template<typename> class Setting;
 
   class Localiser
   {
   public:
-    Localiser(std::shared_ptr<FieldMap> fieldMap);
+    Localiser();
 
     void update();
 
@@ -38,7 +37,6 @@ namespace bold
     AgentPosition d_pos;
     AgentPosition d_smoothedPos;
     MovingAverage<Eigen::Vector4d> d_avgPos;
-    std::shared_ptr<FieldMap> d_fieldMap;
 
     Setting<bool>* d_useLines;
     Setting<int>* d_minGoalsNeeded;

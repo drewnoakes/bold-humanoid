@@ -26,7 +26,7 @@ void Localiser::update()
         Vector2d observed2d(observed.head<2>());
         double bestScore = 0;
 
-        for (Vector3d const& candidate : d_fieldMap->getGoalPostPositions())
+        for (Vector3d const& candidate : FieldMap::getGoalPostPositions())
         {
           Vector3d candidate3d(candidate.x(), candidate.y(), 0);
           Vector3d candidateAgent3d(agentWorld3d * candidate3d);
@@ -74,7 +74,7 @@ void Localiser::update()
 
         double bestScore = 0;
 
-        for (LineSegment3d const& candidate : d_fieldMap->getFieldLines())
+        for (LineSegment3d const& candidate : FieldMap::getFieldLines())
         {
           LineSegment2d candidateAgent = LineSegment3d(agentWorld3d * candidate.p1(), agentWorld3d * candidate.p2()).to<2>();
 

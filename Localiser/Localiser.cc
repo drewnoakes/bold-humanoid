@@ -1,12 +1,11 @@
 #include "localiser.ih"
 
-Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
+Localiser::Localiser()
   : d_lastTranslation(0, 0, 0),
     d_lastQuaternion(0, 0, 0,0),
     d_pos(0, 0, 0),
     d_smoothedPos(0, 0, 0),
-    d_avgPos(1),
-    d_fieldMap(fieldMap)
+    d_avgPos(1)
 {
   auto smoothingWindowSize = Config::getSetting<int>("localiser.smoothing-window-size");
   d_useLines          = Config::getSetting<bool>("localiser.use-lines");
@@ -20,8 +19,8 @@ Localiser::Localiser(shared_ptr<FieldMap> fieldMap)
   positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });
   angleErrorDegs->track([this](double value) { d_angleErrorRng = Math::createNormalRng(0, Math::degToRad(value)); });
 
-  double xMax = (fieldMap->fieldLengthX() + fieldMap->outerMarginMinimum()) / 2.0;
-  double yMax = (fieldMap->fieldLengthY() + fieldMap->outerMarginMinimum()) / 2.0;
+  double xMax = (FieldMap::fieldLengthX() + FieldMap::outerMarginMinimum()) / 2.0;
+  double yMax = (FieldMap::fieldLengthY() + FieldMap::outerMarginMinimum()) / 2.0;
 
   d_fieldXRng = Math::createUniformRng(-xMax, xMax);
   d_fieldYRng = Math::createUniformRng(-yMax, yMax);

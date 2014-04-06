@@ -67,7 +67,6 @@ namespace bold
     VisualCortex(std::shared_ptr<Camera> camera,
                  std::shared_ptr<CameraModel> cameraModel,
                  std::shared_ptr<DataStreamer> dataStreamer,
-                 std::shared_ptr<FieldMap> fieldMap,
                  std::shared_ptr<Spatialiser> spatialiser,
                  std::shared_ptr<HeadModule> headModule);
 
@@ -135,7 +134,6 @@ namespace bold
     template<typename T>
     std::shared_ptr<T> getHandler() { return meta::get<std::shared_ptr<T>>(d_imagePassHandlers); }
 
-    std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<DataStreamer> d_dataStreamer;

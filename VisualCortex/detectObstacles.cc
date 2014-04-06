@@ -27,7 +27,7 @@ vector<Obstacle> VisualCortex::detectObstacles(Maybe<Vector2d> const& ballPositi
     // TODO review and consider alternative thresholds
     //
 
-    bool isObstaclePoint = (farAgent - nearAgent).norm() < d_fieldMap->outerMarginMinimum();
+    bool isObstaclePoint = (farAgent - nearAgent).norm() < FieldMap::outerMarginMinimum();
 
     if (isObstaclePoint)
     {

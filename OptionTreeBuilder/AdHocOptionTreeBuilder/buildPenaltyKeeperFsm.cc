@@ -31,7 +31,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
     ->transitionTo(lookForBallState, "lost-ball")
     ->when(ballLostConditionFactory);
 
-  const static double goalWidth = agent->getFieldMap()->getGoalY();
+  const static double goalWidth = FieldMap::getGoalY();
 
   lookAtBallState
     ->transitionTo(leftDiveState, "ball-left")

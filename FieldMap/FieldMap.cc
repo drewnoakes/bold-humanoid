@@ -11,7 +11,21 @@ using namespace bold;
 using namespace std;
 using namespace Eigen;
 
-FieldMap::FieldMap()
+vector<LineSegment3d> FieldMap::d_fieldLines;
+vector<LineSegment3d> FieldMap::d_fieldLineEdges;
+vector<LineSegment3d> FieldMap::d_circleLines;
+vector<Vector3d> FieldMap::d_goalPostPositions;
+vector<Vector3d> FieldMap::d_ourGoalPostPositions;
+vector<Vector3d> FieldMap::d_theirGoalPostPositions;
+
+double FieldMap::d_fieldLengthX;
+double FieldMap::d_fieldLengthY;
+double FieldMap::d_outerMarginMinimum;
+double FieldMap::d_circleRadius;
+double FieldMap::d_maxDiagnoalFieldDistance;
+double FieldMap::d_goalY;
+
+void FieldMap::initialise()
 {
   d_fieldLengthX             = Config::getStaticValue<double>("world.field-size-x");
   d_fieldLengthY             = Config::getStaticValue<double>("world.field-size-y");

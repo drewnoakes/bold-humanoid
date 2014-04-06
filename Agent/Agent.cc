@@ -11,6 +11,8 @@ Agent::Agent()
 
   State::initialise();
 
+  FieldMap::initialise();
+
   d_voice = make_shared<Voice>();
   d_behaviourControl = make_shared<BehaviourControl>(*this);
 
@@ -57,9 +59,7 @@ Agent::Agent()
 
   d_spatialiser = make_shared<Spatialiser>(d_cameraModel);
 
-  d_fieldMap = make_shared<FieldMap>();
-
-  d_localiser = allocate_aligned_shared<Localiser>(d_fieldMap);
+  d_localiser = allocate_aligned_shared<Localiser>();
 
   d_roleDecider = make_shared<RoleDecider>(d_behaviourControl, d_debugger, d_voice);
 
@@ -81,7 +81,7 @@ Agent::Agent()
 
   d_streamer = make_shared<DataStreamer>(d_camera);
 
-  d_visualCortex = make_shared<VisualCortex>(d_camera, d_cameraModel, d_streamer, d_fieldMap, d_spatialiser, d_headModule);
+  d_visualCortex = make_shared<VisualCortex>(d_camera, d_cameraModel, d_streamer, d_spatialiser, d_headModule);
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, d_voice);
 

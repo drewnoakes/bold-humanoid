@@ -7,6 +7,7 @@
 #include "../../Clock/clock.hh"
 #include "../../DataStreamer/datastreamer.hh"
 #include "../../Debugger/debugger.hh"
+#include "../../FieldMap/fieldmap.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../Option/ApproachBall/approachball.hh"
 #include "../../Option/CircleBall/circleball.hh"

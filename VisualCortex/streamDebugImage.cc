@@ -135,7 +135,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
 
     if (visibleFieldPoly.hasValue())
     {
-      for (LineSegment3d const& expectedLine : drawExpectedLineEdges ? d_fieldMap->getFieldLineEdges() : d_fieldMap->getFieldLines())
+      for (LineSegment3d const& expectedLine : drawExpectedLineEdges ? FieldMap::getFieldLineEdges() : FieldMap::getFieldLines())
       {
         // Clip world lines based upon visible field poly before transforming to camera frame
         Maybe<LineSegment2d> clippedLine2 = visibleFieldPoly->clipLine(expectedLine.to<2>());
