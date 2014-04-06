@@ -97,7 +97,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // In the Win FSM, any state other than 'playing' corresponds to the 'waiting' activity.
   setPlayerActivityInStates(agent,
     PlayerActivity::Waiting,
-    { startUpState, readyState, pausing1State, pausing2State, pausedState,
+    { startUpState, readyState, pausedState,
       unpausingState, setState, penalizedState, forwardGetUpState,
       backwardGetUpState, stopWalkingForShutdownState, sitForShutdownState,
       stopAgentAndExitState });
@@ -113,6 +113,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   setPlayerStatusInStates(agent, PlayerStatus::Active, { playingState });
   setPlayerStatusInStates(agent, PlayerStatus::Penalised, { penalizedState });
+  setPlayerStatusInStates(agent, PlayerStatus::Paused, { pausing1State, pausing2State, pausedState });
 
   auto const& debugger = agent->getDebugger();
   readyState->onEnter.connect([debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); });
