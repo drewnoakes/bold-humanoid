@@ -92,7 +92,10 @@ namespace bold
     Active = 1,
 
     /// The robot has been penalised and is not permitted to take any action.
-    Penalised = 2
+    Penalised = 2,
+
+    /// The robot is manually paused.
+    Paused = 3
   };
 
   std::string getPlayerStatusString(PlayerStatus status);
