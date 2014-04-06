@@ -5,6 +5,7 @@
 #include "../stateobject.hh"
 #include "../../AgentPosition/agentposition.hh"
 #include "../../Clock/clock.hh"
+#include "../../FieldMap/fieldmap.hh"
 #include "../../util/Maybe.hh"
 
 namespace bold
@@ -131,6 +132,8 @@ namespace bold
     std::vector<PlayerState> getBallObservers() const;
 
     bool isTeamMate(PlayerActivity AttackingGoal) const;
+
+    FieldSide getKeeperBallSideEstimate() const;
 
   private:
     std::vector<PlayerState> d_playerStates;
