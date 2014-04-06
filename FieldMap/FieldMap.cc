@@ -24,6 +24,8 @@ double FieldMap::d_outerMarginMinimum;
 double FieldMap::d_circleRadius;
 double FieldMap::d_maxDiagnoalFieldDistance;
 double FieldMap::d_goalY;
+double FieldMap::d_goalAreaLengthX;
+double FieldMap::d_goalAreaLengthY;
 
 void FieldMap::initialise()
 {
@@ -33,8 +35,8 @@ void FieldMap::initialise()
   d_goalY                    = Config::getStaticValue<double>("world.goal-size-y");
 //double goalZ               = Config::getStaticValue<double>("world.goal-size-z");
 //double goalPostDiameter    = Config::getStaticValue<double>("world.goal-post-diameter");
-  double goalAreaX           = Config::getStaticValue<double>("world.goal-area-size-x");
-  double goalAreaY           = Config::getStaticValue<double>("world.goal-area-size-y");
+  d_goalAreaLengthX          = Config::getStaticValue<double>("world.goal-area-size-x");
+  d_goalAreaLengthY          = Config::getStaticValue<double>("world.goal-area-size-y");
   double penaltyMarkDistance = Config::getStaticValue<double>("world.penalty-mark-distance");
   double circleDiameter      = Config::getStaticValue<double>("world.circle-diameter");
   double lineWidth           = Config::getStaticValue<double>("world.line-width");
@@ -53,7 +55,7 @@ void FieldMap::initialise()
   double penaltyOuterX = penaltyX + halfCrossLength;
   double halfFieldX = d_fieldLengthX/2;
   double halfFieldY = d_fieldLengthY/2;
-  double halfGoalAreaY = goalAreaY/2;
+  double halfGoalAreaY = d_goalAreaLengthY/2;
   double halfGoalY = d_goalY/2;
   d_circleRadius = circleDiameter/2;
 
@@ -80,17 +82,17 @@ void FieldMap::initialise()
 
   // GOAL AREAS
   // left, top
-  d_fieldLines.emplace_back(Vector3d(-halfFieldX, halfGoalAreaY, 0), Vector3d(-halfFieldX+goalAreaX, halfGoalAreaY, 0));
+  d_fieldLines.emplace_back(Vector3d(-halfFieldX, halfGoalAreaY, 0), Vector3d(-halfFieldX+d_goalAreaLengthX, halfGoalAreaY, 0));
   // left, bottom
-  d_fieldLines.emplace_back(Vector3d(-halfFieldX, -halfGoalAreaY, 0), Vector3d(-halfFieldX+goalAreaX, -halfGoalAreaY, 0));
+  d_fieldLines.emplace_back(Vector3d(-halfFieldX, -halfGoalAreaY, 0), Vector3d(-halfFieldX+d_goalAreaLengthX, -halfGoalAreaY, 0));
   // left, side
-  d_fieldLines.emplace_back(Vector3d(-halfFieldX+goalAreaX, halfGoalAreaY, 0), Vector3d(-halfFieldX+goalAreaX, -halfGoalAreaY, 0));
+  d_fieldLines.emplace_back(Vector3d(-halfFieldX+d_goalAreaLengthX, halfGoalAreaY, 0), Vector3d(-halfFieldX+d_goalAreaLengthX, -halfGoalAreaY, 0));
   // right, top
-  d_fieldLines.emplace_back(Vector3d(halfFieldX, halfGoalAreaY, 0), Vector3d(halfFieldX-goalAreaX, halfGoalAreaY, 0));
+  d_fieldLines.emplace_back(Vector3d(halfFieldX, halfGoalAreaY, 0), Vector3d(halfFieldX-d_goalAreaLengthX, halfGoalAreaY, 0));
   // right, bottom
-  d_fieldLines.emplace_back(Vector3d(halfFieldX, -halfGoalAreaY, 0), Vector3d(halfFieldX-goalAreaX, -halfGoalAreaY, 0));
+  d_fieldLines.emplace_back(Vector3d(halfFieldX, -halfGoalAreaY, 0), Vector3d(halfFieldX-d_goalAreaLengthX, -halfGoalAreaY, 0));
   // right, side
-  d_fieldLines.emplace_back(Vector3d(halfFieldX-goalAreaX, halfGoalAreaY, 0), Vector3d(halfFieldX-goalAreaX, -halfGoalAreaY, 0));
+  d_fieldLines.emplace_back(Vector3d(halfFieldX-d_goalAreaLengthX, halfGoalAreaY, 0), Vector3d(halfFieldX-d_goalAreaLengthX, -halfGoalAreaY, 0));
 
   // CENTER LINE
   d_fieldLines.emplace_back(Vector3d(0, -halfFieldY, 0), Vector3d(0, halfFieldY, 0));

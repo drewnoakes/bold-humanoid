@@ -50,8 +50,16 @@ namespace bold
     static double outerMarginMinimum() { return d_outerMarginMinimum; }
 
     static double circleRadius() { return d_circleRadius; }
+
     /// The distance between the centre of goal posts along the y axis.
     static double getGoalY() { return d_goalY; };
+
+    /// The longer length of the goal (penalty) area.
+    /// Larger than the distance between the goal posts.
+    static double goalAreaLengthX() { return d_goalAreaLengthX; }
+
+    /// The shorter length of the goal (penalty) area.
+    static double goalAreaLengthY() { return d_goalAreaLengthY; }
 
   private:
     FieldMap() = delete;
@@ -69,5 +77,7 @@ namespace bold
     static double d_circleRadius;
     static double d_maxDiagnoalFieldDistance;
     static double d_goalY;
+    static double d_goalAreaLengthX;
+    static double d_goalAreaLengthY;
   };
 }
