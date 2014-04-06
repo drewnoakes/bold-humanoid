@@ -21,6 +21,11 @@ namespace bold
       d_playerStatus(playerStatus)
     {}
 
+    ulong getMotionCycleNumber() const { return d_motionCycleNumber; }
+    PlayerRole getPlayerRole() const { return d_playerRole; }
+    PlayerActivity getPlayerActivity() { return d_playerActivity; }
+    PlayerStatus getPlayerStatus() const { return d_playerStatus; }
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
