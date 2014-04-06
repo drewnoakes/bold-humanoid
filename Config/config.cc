@@ -95,7 +95,7 @@ void Config::initialise(string metadataFile, string configFile)
   // Walk the metadata document, building up a tree of Setting<T> objects
   processConfigMetaJsonValue(metaDocument.get(), &d_root, "", "");
 
-  // TODO defaults are a bit confusing -- remove them from the meta document, and change this to "Reload config file"
+  // TODO defaults are a bit confusing -- remove them from the meta document, and change this to "Reload config from disk"
   addAction("config.reset-defaults", "Reset default config", []
   {
     for (SettingBase* setting : getAllSettings())
