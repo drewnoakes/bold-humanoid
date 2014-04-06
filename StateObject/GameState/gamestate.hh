@@ -2,6 +2,7 @@
 
 #include "../stateobject.hh"
 
+#include "../../Clock/clock.hh"
 #include "../../GameStateReceiver/gamecontrollertypes.hh"
 
 #include <cassert>
@@ -15,6 +16,7 @@ namespace bold
   {
   public:
     GameState(char const* data)
+    : d_receivedAt(Clock::getTimestamp())
     {
       memcpy(&d_data, data, sizeof(robocup::GameStateData));
     }
@@ -50,9 +52,14 @@ namespace bold
     bool isOvertime() const { return robocup::ExtraState(d_data.secondaryState) == robocup::ExtraState::OVERTIME; }
     bool isTimeout() const { return robocup::ExtraState(d_data.secondaryState) == robocup::ExtraState::TIMEOUT; }
     uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamNumber; }
-    int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn; }
-    int16 getSecondsRemaining() const { return d_data.secondsRemaining; }
+    int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn + (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
+    int16 getSecondsRemaining() const { return d_data.secondsRemaining - (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
     int16 getSecondaryTime() const { return d_data.secondaryTime; }
+
+    bool isClockRunning() const
+    {
+      return getPlayMode() == robocup::PlayMode::PLAYING;
+    }
 
     robocup::TeamInfo const& teamInfo1() const { return d_data.teams[0]; }
     robocup::TeamInfo const& teamInfo2() const { return d_data.teams[1]; }
@@ -71,6 +78,7 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
+    Clock::Timestamp d_receivedAt;
     robocup::GameStateData d_data;
   };
 }
