@@ -122,7 +122,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // Abort attack if it looks like we are going to kick an own goal
   lookForGoalState
     ->transitionTo(aboutFaceState, "abort-attack-own-goal")
-    ->when([]()
+    ->when([agent]()
     {
       // If the keeper is telling us that the ball is close to our goal, and
       // we see a goalpost nearly that far away, then we should abort the
@@ -130,26 +130,42 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       auto team = State::get<TeamState>();
       auto agentFrame = State::get<AgentFrameState>();
 
-      auto keeper = team->getKeeperState();
-      auto const& goalObses = agentFrame->getGoalObservations();
+      if (team == nullptr || agentFrame == nullptr)
+        return false;
 
-      auto closestGoalDist = std::numeric_limits<double>::max();
-      for (auto const& obs : goalObses)
+      FieldSide ballSide = team->getKeeperBallSideEstimate();
+
+      if (ballSide == FieldSide::Unknown)
+        return false;
+
+      auto closestGoalObs = agentFrame->getClosestGoalObservation();
+
+      if (!closestGoalObs.hasValue())
+        return false;
+
+      // ASSUME the ball is approximately at our feet
+
+      double closestGoalDist = closestGoalObs->norm();
+
+      const double maxPositionMeasurementError = 0.4; // TODO review this experimentally
+
+      if (ballSide == FieldSide::Ours && closestGoalDist < (FieldMap::fieldLengthX()/2.0) - maxPositionMeasurementError)
       {
-        auto dist = obs.head<2>().norm();
-        if (dist < closestGoalDist)
-          closestGoalDist = dist;
+        log::info("lookForGoalState->aboutFaceState") << "Keeper believes ball is on our side, and closest goal is too close at " << closestGoalDist;
+        return true;
       }
 
-      if (!goalObses.empty() && keeper != nullptr && keeper->getAgeMillis() < 10000)
+      double theirsThreshold = Vector2d(
+        (FieldMap::fieldLengthX() / 2.0) + maxPositionMeasurementError,
+         FieldMap::fieldLengthY() / 2.0
+      ).norm();
+
+      if (ballSide == FieldSide::Theirs && closestGoalDist > theirsThreshold)
       {
-        auto ballObs = keeper->ballRelative;
-        if (ballObs.hasValue() && ballObs->norm() < 3 && closestGoalDist < 4)
-        {
-          log::info("lookForGoalState->aboutFaceState") << "Goalie's ball dist " << ballObs->norm() << ", closest goal dist " << closestGoalDist;
-          return true;
-        }
+        log::info("lookForGoalState->aboutFaceState") << "Keeper believes ball is on the opponent's side, and closest goal is too far at " << closestGoalDist;
+        return true;
       }
+
       return false;
     });
 
