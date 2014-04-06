@@ -76,10 +76,10 @@ void Agent::think()
   t.timeEvent("Option Tree");
 
   //
-  // Process input commands (joystick)
+  // Process remote control (eg. joystick)
   //
-  processInputCommands();
-  t.timeEvent("Process Human Input");
+  d_remoteControl->update();
+  t.timeEvent("Remote Control");
 
   //
   // Flush out new walking parameters

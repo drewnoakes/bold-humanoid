@@ -37,8 +37,8 @@
     "cm730-path":   { "type": "string", "readonly": true, "default": "/dev/ttyUSB0" },
     "video-path":   { "type": "string", "readonly": true, "default": "/dev/video0" },
     "joystick": {
-      "enabled":   { "type": "bool", "readonly": true, "default": false },
-      "path":      { "type": "string", "readonly": true, "default": "/dev/input/js0" },
+      "enabled":   { "type": "bool", "readonly": false, "default": false },
+      "path":      { "type": "string", "readonly": false, "default": "/dev/input/js0" },
       "head-speed": { "type": "double", "min": 1.0, "max": 75.0, "default": 15.0 },
       "x-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 },
       "y-amp-max": { "type": "double", "min": 1.0, "max": 30.0, "default": 15.0 },

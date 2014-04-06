@@ -1,11 +1,60 @@
-#include "agent.ih"
+#include "remotecontrol.hh"
 
+#include <Eigen/Core>
+
+#include "../Agent/agent.hh"
+#include "../Ambulator/ambulator.hh"
+#include "../Config/config.hh"
+#include "../joystick/joystick.hh"
+#include "../MotionModule/HeadModule/headmodule.hh"
+#include "../MotionModule/MotionScriptModule/motionscriptmodule.hh"
 #include "../MotionScriptRunner/motionscriptrunner.hh"
+#include "../util/log.hh"
 
-void Agent::processInputCommands()
+using namespace bold;
+using namespace std;
+using namespace Eigen;
+
+RemoteControl::RemoteControl(Agent* agent)
+: d_agent(agent),
+  d_joystickEnabled(Config::getSetting<bool>("hardware.joystick.enabled")),
+  d_joystickDevicePath(Config::getSetting<string>("hardware.joystick.path")),
+  d_joystickHeadSpeed(Config::getSetting<double>("hardware.joystick.head-speed")),
+  d_joystickXAmpMax(Config::getSetting<double>("hardware.joystick.x-amp-max")),
+  d_joystickYAmpMax(Config::getSetting<double>("hardware.joystick.y-amp-max")),
+  d_joystickAAmpMax(Config::getSetting<double>("hardware.joystick.a-amp-max"))
 {
-  if (d_joystick == nullptr || !d_joystick->isFound())
+  d_ambulator = agent->getAmbulator();
+  d_headModule = agent->getHeadModule();
+  d_motionScriptModule = agent->getMotionScriptModule();
+
+  if (d_joystickEnabled)
+  {
+    openJoystick();
+
+    if (!d_joystick->isFound())
+      log::warning("Agent::Agent") << "Joystick not found at " << d_joystickDevicePath->getValue();
+  }
+}
+
+void RemoteControl::openJoystick()
+{
+  d_joystick = make_shared<Joystick>(d_joystickDevicePath->getValue());
+}
+
+void RemoteControl::update()
+{
+  if (!d_joystickEnabled->getValue())
     return;
+
+  if (d_joystick == nullptr || !d_joystick->isFound())
+  {
+    if (d_agent->getThinkCycleNumber() % 50)
+      openJoystick();
+
+    if (!d_joystick->isFound())
+      return;
+  }
 
   static auto leftKickScript = MotionScript::fromFile("./motionscripts/kick-left.json");
   static auto rightKickScript = MotionScript::fromFile("./motionscripts/kick-right.json");

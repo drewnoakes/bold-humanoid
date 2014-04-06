@@ -4,9 +4,6 @@
 #include <memory>
 #include <sigc++/signal.h>
 
-
-class Joystick;
-
 namespace bold
 {
   class Ambulator;
@@ -31,8 +28,8 @@ namespace bold
   class OptionTree;
   class OpenTeamCommunicator;
   class OrientationTracker;
+  class RemoteControl;
   class RoleDecider;
-  template<typename> class Setting;
   class Spatialiser;
   class SuicidePill;
   class VisualCortex;
@@ -53,12 +50,12 @@ namespace bold
     std::shared_ptr<DataStreamer> getDataStreamer() const { return d_streamer; }
     std::shared_ptr<Debugger> getDebugger() const { return d_debugger; }
     std::shared_ptr<FieldMap> getFieldMap() const { return d_fieldMap; }
-    std::shared_ptr<Joystick> getJoystick() const { return d_joystick; }
     std::shared_ptr<Spatialiser> getSpatialiser() const { return d_spatialiser; }
     std::shared_ptr<Localiser> getLocaliser() const { return d_localiser; }
     std::shared_ptr<VisualCortex> getVisualCortex() const { return d_visualCortex; }
     std::shared_ptr<GameStateReceiver> getGameStateReceiver() const { return d_gameStateReceiver; }
     std::shared_ptr<OpenTeamCommunicator> getOpenTeamCommunicator() const { return d_teamCommunicator; }
+    std::shared_ptr<RemoteControl> getRemoteControl() const { return d_remoteControl; }
     std::shared_ptr<RoleDecider> getRoleDecider() const { return d_roleDecider; }
     std::shared_ptr<BehaviourControl> getBehaviourControl() const { return d_behaviourControl; }
 
@@ -125,17 +122,12 @@ namespace bold
     std::shared_ptr<Debugger> d_debugger;
     std::shared_ptr<FieldMap> d_fieldMap;
     std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
-    std::shared_ptr<Joystick> d_joystick;
     std::shared_ptr<Localiser> d_localiser;
     std::shared_ptr<OptionTree> d_optionTree;
+    std::shared_ptr<RemoteControl> d_remoteControl;
     std::shared_ptr<Spatialiser> d_spatialiser;
     std::shared_ptr<VisualCortex> d_visualCortex;
     std::shared_ptr<Voice> d_voice;
-
-    Setting<double>* d_joystickHeadSpeed;
-    Setting<double>* d_joystickXAmpMax;
-    Setting<double>* d_joystickYAmpMax;
-    Setting<double>* d_joystickAAmpMax;
 
     ulong d_cycleNumber;
 
@@ -144,7 +136,5 @@ namespace bold
     void registerStateTypes();
 
     void think();
-
-    void processInputCommands();
   };
 }

@@ -115,7 +115,6 @@ endif()
 
 add_class(BOLDHUMANOID
   ./Agent/Agent.cc
-  ./Agent/processInputCommands.cc
   ./Agent/registerStateTypes.cc
   ./Agent/run.cc
   ./Agent/setOptionTree.cc
@@ -421,6 +420,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./PixelLabel/pixellabel.cc
+)
+
+add_class(BOLDHUMANOID
+  ./RemoteControl/remotecontrol.cc
 )
 
 add_class(BOLDHUMANOID

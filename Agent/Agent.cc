@@ -85,18 +85,7 @@ Agent::Agent()
 
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, d_voice);
 
-  if (Config::getStaticValue<bool>("hardware.joystick.enabled"))
-  {
-    auto joystickDevicePath = Config::getStaticValue<string>("hardware.joystick.path");
-    log::info("Agent::Agent") << "Creating joystick from path " << joystickDevicePath;
-    d_joystick = make_shared<Joystick>(joystickDevicePath);
-    if (!d_joystick->isFound())
-      log::error("Agent::Agent") << "Joystick not found";
-    d_joystickHeadSpeed = Config::getSetting<double>("hardware.joystick.head-speed");
-    d_joystickXAmpMax = Config::getSetting<double>("hardware.joystick.x-amp-max");
-    d_joystickYAmpMax = Config::getSetting<double>("hardware.joystick.y-amp-max");
-    d_joystickAAmpMax = Config::getSetting<double>("hardware.joystick.a-amp-max");
-  }
+  d_remoteControl = make_shared<RemoteControl>(this);
 
   d_debugger->update();
 
