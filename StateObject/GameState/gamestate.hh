@@ -5,6 +5,7 @@
 #include "../../Clock/clock.hh"
 #include "../../GameStateReceiver/gamecontrollertypes.hh"
 #include "../../util/assert.hh"
+#include "../../Config/config.hh"
 
 #include <stdexcept>
 #include <vector>
@@ -69,6 +70,12 @@ namespace bold
       return teamInfo1().getTeamNumber() == teamNumber ? teamInfo1() : teamInfo2();
     }
 
+    robocup::TeamInfo const& ourTeamInfo() const
+    {
+      static auto team = Config::getStaticValue<unsigned>("team-number");
+      return teamInfo(team);
+    }
+
     robocup::PlayerInfo const& playerInfo(unsigned team, unsigned unum) const
     {
       ASSERT(team < 2);
@@ -76,6 +83,14 @@ namespace bold
     }
 
     double getAgeMillis() const { return Clock::getMillisSince(d_receivedAt); }
+
+    robocup::PlayerInfo const& myPlayerInfo() const
+    {
+      static auto team = Config::getStaticValue<unsigned>("team-number");
+      static auto unum = Config::getStaticValue<unsigned>("team-number");
+
+      return playerInfo(team, unum);
+    }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
