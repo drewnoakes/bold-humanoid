@@ -61,10 +61,10 @@
     "goal-area-size-x":      { "type": "double", "readonly": true, "default": 0.6 },
     "goal-area-size-y":      { "type": "double", "readonly": true, "default": 2.2 },
     "penalty-mark-distance": { "type": "double", "readonly": true, "default": 0.8 },
+    "penalty-mark-length":   { "type": "double", "readonly": true, "default": 0.1 },
     "circle-diameter":       { "type": "double", "readonly": true, "default": 1.2 },
     "circle-segment-count":  { "type": "int",    "readonly": true, "default": 18 },
     "line-width":            { "type": "double", "readonly": true, "default": 0.05 },
-    "penalty-line-length":   { "type": "double", "readonly": true, "default": 0.1 },
     "outer-margin-minimum":  { "type": "double", "readonly": true, "default": 0.7 },
     "ball-diameter":         { "type": "double", "readonly": true, "default": 0.1 }
   },

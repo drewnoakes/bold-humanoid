@@ -38,9 +38,9 @@ void FieldMap::initialise()
   d_goalAreaLengthX          = Config::getStaticValue<double>("world.goal-area-size-x");
   d_goalAreaLengthY          = Config::getStaticValue<double>("world.goal-area-size-y");
   double penaltyMarkDistance = Config::getStaticValue<double>("world.penalty-mark-distance");
+  double penaltyMarkLength   = Config::getStaticValue<double>("world.penalty-mark-length");
   double circleDiameter      = Config::getStaticValue<double>("world.circle-diameter");
   double lineWidth           = Config::getStaticValue<double>("world.line-width");
-  double penaltyLineLength   = Config::getStaticValue<double>("world.penalty-line-length");
   d_outerMarginMinimum       = Config::getStaticValue<double>("world.outer-margin-minimum");
 //double ballDiameter        = Config::getStaticValue<double>("world.ball-diameter");
 
@@ -49,10 +49,10 @@ void FieldMap::initialise()
     d_fieldLengthY + 2*d_outerMarginMinimum
   ).norm();
 
-  double halfCrossLength = penaltyLineLength/2;
-  double penaltyX = d_fieldLengthX/2 - penaltyMarkDistance;
-  double penaltyInnerX = penaltyX - halfCrossLength;
-  double penaltyOuterX = penaltyX + halfCrossLength;
+  double halfCrossLength = penaltyMarkLength/2;
+  double penaltyMarkX = d_fieldLengthX/2 - penaltyMarkDistance;
+  double penaltyMarkInnerX = penaltyMarkX - halfCrossLength;
+  double penaltyMarkOuterX = penaltyMarkX + halfCrossLength;
   double halfFieldX = d_fieldLengthX/2;
   double halfFieldY = d_fieldLengthY/2;
   double halfGoalAreaY = d_goalAreaLengthY/2;
@@ -64,11 +64,11 @@ void FieldMap::initialise()
   d_fieldLines.emplace_back(Vector3d(-halfCrossLength, 0, 0), Vector3d(halfCrossLength, 0, 0));
 //  d_fieldLines.emplace_back(Vector3d(0, -halfCrossLength, 0), Vector3d(0, halfCrossLength, 0)));
   // left penalty mark
-  d_fieldLines.emplace_back(Vector3d(-penaltyInnerX, 0, 0), Vector3d(-penaltyOuterX, 0, 0));
-  d_fieldLines.emplace_back(Vector3d(-penaltyX, -halfCrossLength, 0), Vector3d(-penaltyX, halfCrossLength, 0));
+  d_fieldLines.emplace_back(Vector3d(-penaltyMarkInnerX, 0, 0), Vector3d(-penaltyMarkOuterX, 0, 0));
+  d_fieldLines.emplace_back(Vector3d(-penaltyMarkX, -halfCrossLength, 0), Vector3d(-penaltyMarkX, halfCrossLength, 0));
   // right penalty mark
-  d_fieldLines.emplace_back(Vector3d(penaltyInnerX, 0, 0), Vector3d(penaltyOuterX, 0, 0));
-  d_fieldLines.emplace_back(Vector3d(penaltyX, -halfCrossLength, 0), Vector3d(penaltyX, halfCrossLength, 0));
+  d_fieldLines.emplace_back(Vector3d(penaltyMarkInnerX, 0, 0), Vector3d(penaltyMarkOuterX, 0, 0));
+  d_fieldLines.emplace_back(Vector3d(penaltyMarkX, -halfCrossLength, 0), Vector3d(penaltyMarkX, halfCrossLength, 0));
 
   // OUTER SQUARE
   // top
