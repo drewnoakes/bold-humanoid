@@ -14,6 +14,8 @@ Localiser::Localiser()
   d_minGoalsNeeded    = Config::getSetting<int>("localiser.min-goals-needed");
   auto positionError  = Config::getSetting<double>("localiser.position-error");
   auto angleErrorDegs = Config::getSetting<double>("localiser.angle-error-degrees");
+  d_defaultKidnapWeight = Config::getSetting<double>("localiser.default-kidnap-weight");
+  d_penaltyKidnapWeight = Config::getSetting<double>("localiser.penalty-kidnap-weight");
 
   smoothingWindowSize->track([this](int value) { d_avgPos = MovingAverage<Vector4d>(value); });
   positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });
@@ -36,8 +38,18 @@ Localiser::Localiser()
       [this]() {
       auto theta = d_thetaRng();
       auto state = FilterState(d_fieldXRng(), d_fieldYRng(), cos(theta), sin(theta));
-      return state;
-      });
+
+      // Weight should be probability of being kidnapped
+      // (Weight of other particles should actually be multiplied by 1 - this probability)
+      auto gameState = State::get<GameState>();
+      
+      auto kidnapWeight =
+        gameState->myPlayerInfo().hasPenalty() ? 
+        d_penaltyKidnapWeight->getValue() : 
+        d_defaultKidnapWeight->getValue();
+
+      return make_pair(state, kidnapWeight);
+    });
 
     Config::getSetting<double>("localiser.randomise-ratio")->changed.connect(
       [filter](double value) {

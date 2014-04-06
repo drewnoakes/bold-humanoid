@@ -51,6 +51,8 @@ namespace bold
 
     Setting<bool>* d_useLines;
     Setting<int>* d_minGoalsNeeded;
+    Setting<double>* d_defaultKidnapWeight;
+    Setting<double>* d_penaltyKidnapWeight;
 
     FilterType d_filterType;
     std::shared_ptr<Filter<4>> d_filter;
