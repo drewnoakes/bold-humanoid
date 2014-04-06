@@ -48,15 +48,14 @@ void Odometer::observeTyped(shared_ptr<BodyState const> const& state, Sequential
     //      = AtFt * FtAt-1 * At-1A0
     //      = AtFt * FtFt-1 * Ft-1At-1 * At-1A0
     //      = AtFt * Ft-1At-1 * At-1A0
-    int phase = walkState->getCurrentPhase();
+    auto leftFootAgentTr = state->determineFootAgentTr(true);
+    auto rightFootAgentTr = state->determineFootAgentTr(false);
 
-    auto leftAgentFootTr = state->determineAgentFootTr(true);
-    auto rightAgentFootTr = state->determineAgentFootTr(false);
+    // Translation is location of agent/torso iin foot frame, so stance/lowest foot has highest z
+    bool isLeftSupportFoot = leftFootAgentTr.translation().z() > rightFootAgentTr.translation().z();
 
-    bool isLeftSupportFoot = leftAgentFootTr.translation().z() > rightAgentFootTr.translation().z();
-
-    auto lastFootAgentTr = d_lastBodyState->determineAgentFootTr(isLeftSupportFoot).inverse();
-    auto agentFootTr = state->determineAgentFootTr(isLeftSupportFoot);
+    auto lastFootAgentTr = d_lastBodyState->determineFootAgentTr(isLeftSupportFoot);
+    auto agentFootTr = isLeftSupportFoot ? leftFootAgentTr.inverse() : rightFootAgentTr.inverse();
 
     lock_guard<mutex> lock(d_transformMutex);
     d_transform = agentFootTr * lastFootAgentTr * d_transform;

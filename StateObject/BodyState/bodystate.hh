@@ -82,7 +82,7 @@ namespace bold
 
     std::vector<int> const getPositionValueDiffs() const { return d_positionValueDiffs; }
 
-    Eigen::Affine3d determineAgentFootTr(bool leftFoot) const;
+    Eigen::Affine3d determineFootAgentTr(bool leftFoot) const;
 
   private:
     /// Initialise with the specified angles (radians), and position errors (values)
