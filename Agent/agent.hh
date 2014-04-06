@@ -2,11 +2,8 @@
 
 #include <Eigen/Core>
 #include <memory>
-#include <opencv2/opencv.hpp>
 #include <sigc++/signal.h>
 
-#include "../MX28Alarm/mx28alarm.hh"
-#include "../StateObject/TeamState/teamstate.hh"
 
 class Joystick;
 
