@@ -34,6 +34,8 @@ namespace bold
     typedef Eigen::Vector4d FilterState;
     typedef ParticleFilter<4, 50> ParticleFilterUsed;
 
+    std::pair<FilterState, double> generateState();
+
     void predict();
     void updateSmoothedPos();
     void updateStateObject();

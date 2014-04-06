@@ -51,6 +51,8 @@ Localiser::Localiser()
       return make_pair(state, kidnapWeight);
     });
 
+    filter->setStateGenerator([this]() { return this->generateState();});
+
     Config::getSetting<double>("localiser.randomise-ratio")->changed.connect(
       [filter](double value) {
         filter->setRandomizeRatio(value);
