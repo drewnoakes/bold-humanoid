@@ -121,6 +121,8 @@ namespace bold
     static std::vector<SettingBase*> getSettings(std::string prefix);
     static std::vector<SettingBase*> getAllSettings();
 
+    static std::vector<std::string> getConfigDocumentNames() { return d_configFileNames; }
+
   private:
     struct TreeNode
     {
@@ -140,6 +142,7 @@ namespace bold
     static TreeNode d_root;
     static std::map<std::string,Action*> d_actionById;
     static std::vector<std::unique_ptr<rapidjson::Document const>> d_configDocuments;
+    static std::vector<std::string> d_configFileNames;
     static bool d_isInitialising;
   };
 }

@@ -19,6 +19,7 @@ using namespace std;
 Config::TreeNode Config::d_root;
 map<string,Action*> Config::d_actionById;
 vector<unique_ptr<Document const>> Config::d_configDocuments;
+vector<string> Config::d_configFileNames;
 bool Config::d_isInitialising = true;
 sigc::signal<void, SettingBase*> Config::updated;
 
@@ -83,8 +84,8 @@ void Config::initialise(string metadataFile, string configFile)
     if (hasParent)
       path = it->value.GetString();
 
-    // Move the document to the vector
     d_configDocuments.push_back(move(confDocument));
+    d_configFileNames.push_back(path);
 
     // Terminate the loop if we have no more parents to process
     if (!hasParent)

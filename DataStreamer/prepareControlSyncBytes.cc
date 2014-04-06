@@ -10,6 +10,14 @@ shared_ptr<vector<uchar>> DataStreamer::prepareControlSyncBytes()
 
   writer.StartObject();
   {
+    writer.String("files");
+    writer.StartArray();
+    {
+      for (auto const& fileName : Config::getConfigDocumentNames())
+        writer.String(fileName.c_str());
+    }
+    writer.EndArray();
+
     writer.String("type").String("sync");
 
     writer.String("actions");
