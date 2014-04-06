@@ -64,7 +64,7 @@ void Config::initialise(string metadataFile, string configFile)
   // For each setting, attempt to set the initial value from the config file,
   // otherwise fall back to the default value specified in the metadata.
 
-  log::info("Config::initialise") << "Parsing configuration";
+  log::info("Config::initialise") << "Parsing configuration metadata";
 
   // Load the single metadata JSON file
   auto metaDocument = loadJsonDocument(metadataFile);
@@ -74,6 +74,7 @@ void Config::initialise(string metadataFile, string configFile)
   while (true)
   {
     // The config document
+    log::info("Config::initialise") << "Parsing configuration file: " << path;
     auto confDocument = loadJsonDocument(path);
 
     // Check whether a parent is specified in the 'inherits' property
