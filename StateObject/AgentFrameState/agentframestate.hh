@@ -41,6 +41,8 @@ namespace bold
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
     ulong getThinkCycleNumber() const { return d_thinkCycleNumber; }
 
+    uint goalObservationCount() const { return d_goalObservations.size(); }
+
     Maybe<Eigen::Vector3d> getClosestGoalObservation() const
     {
       if (d_goalObservations.empty())
