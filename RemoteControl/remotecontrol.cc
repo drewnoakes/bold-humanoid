@@ -108,6 +108,8 @@ void RemoteControl::update()
         bool isStanding = MotionScriptRunner::isInFinalPose(standReadyScript);
         if (isStanding)
           d_motionScriptModule->start(make_shared<MotionScriptRunner>(script));
+        else
+          log::info("runIfStanding") << "Skipping motion script " << script->getName() << " as not standing";
       };
 
       switch (event.number)
