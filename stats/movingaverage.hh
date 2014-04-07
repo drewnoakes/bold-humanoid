@@ -115,10 +115,13 @@ namespace bold
       for (int i = 0; i < d_length; i++)
       {
         int index = (d_nextPointer - i - 1) % d_windowSize;
+        if (index < 0)
+          index += d_windowSize;
+        assert(index >= 0 && index < d_length);
         T diff = d_items[index] - d_avg;
         sum += diff * diff;
       }
-      return sqrt(sum / d_windowSize);
+      return sqrt(sum / d_length);
     }
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
