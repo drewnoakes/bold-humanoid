@@ -481,18 +481,22 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
   }
 }
 
-int MotionScriptRunner::getMaxDeltaFromFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead)
+int MotionScriptRunner::getMaxDeltaFromFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead, bool includeArms)
 {
   auto hw = State::get<HardwareState>();
 
   auto frame = script->getFinalKeyFrame();
 
-  auto upper = includeHead ? JointId::MAX : JointId::L_ANKLE_ROLL;
-
   int maxDelta = 0;
 
-  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)upper; jointId++)
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
+    if (!includeArms && isArmJoint((JointId)jointId))
+      continue;
+
+    if (!includeHead && isHeadJoint((JointId)jointId))
+      continue;
+
     int presentValue = hw->getMX28State(jointId).presentPositionValue;
     int targetValue = frame.values[jointId - 1];
     int delta = presentValue - targetValue;
@@ -503,9 +507,9 @@ int MotionScriptRunner::getMaxDeltaFromFinalPose(std::shared_ptr<MotionScript co
   return maxDelta;
 }
 
-bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead, unsigned valueTolerance)
+bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead, bool includeArms, unsigned valueTolerance)
 {
-  int delta = getMaxDeltaFromFinalPose(script, includeHead);
+  int delta = getMaxDeltaFromFinalPose(script, includeHead, includeArms);
 
   return abs(delta) > valueTolerance;
 }
