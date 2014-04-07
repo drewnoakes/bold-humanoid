@@ -38,6 +38,30 @@ TEST (StatsTests, MovingAverage_int)
   EXPECT_EQ( (50-10-2)/3, m.next(50) );
 }
 
+TEST (StatsTests, MovingAverage_stdDevOfVectors)
+{
+  MovingAverage<Vector2d> m(4);
+
+  Vector2d v;
+
+  m.next(Vector2d(0,1));
+  m.next(Vector2d(0,-1));
+  m.next(Vector2d(1,0));
+  m.next(Vector2d(-1,0));
+
+  vector<Vector2d> vecs = {
+    Vector2d(0,1),
+    Vector2d(0,-1),
+    Vector2d(1,0),
+    Vector2d(-1,0)
+  };
+
+  EXPECT_TRUE( m.isMature() );
+  EXPECT_TRUE( VectorsEqual(Vector2d(0,0), m.getAverage()) );
+  double d = sqrt(2)/4.0;
+  EXPECT_TRUE( VectorsEqual(Vector2d(d,d), m.calculateStdDev()) );
+}
+
 TEST (StatsTests, MovingAverage_vector2d)
 {
   MovingAverage<Vector2d> m(2);

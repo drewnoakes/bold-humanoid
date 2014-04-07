@@ -137,7 +137,7 @@ namespace bold
     {
       delete[] d_items;
     }
-    
+
     void copy(MovingAverage const& other)
     {
       d_windowSize = other.d_windowSize;
@@ -151,4 +151,50 @@ namespace bold
       d_avg = other.d_avg;
     }
   };
+
+  template <>
+  inline Eigen::Vector3d MovingAverage<Eigen::Vector3d>::calculateStdDev()
+  {
+    Eigen::Matrix3d sum = Eigen::Matrix3d::Zero();
+    for (int i = 0; i < d_length; i++)
+    {
+      int index = (d_nextPointer - i - 1) % d_windowSize;
+      if (index < 0)
+        index += d_windowSize;
+      assert(index >= 0 && index < d_length);
+      Eigen::Vector3d diff = d_items[index] - d_avg;
+      sum += diff * diff.transpose();
+    }
+    Eigen::Vector3d r = sum.diagonal();
+    for (int i = 0; i < r.size(); i++)
+      r[i] = sqrt(r[i]);
+    return r / d_length;
+  }
+
+  template <>
+  inline Eigen::Vector2d MovingAverage<Eigen::Vector2d>::calculateStdDev()
+  {
+//     std::cout << "------------------------" << std::endl;
+//     std::cout << "d_avg = " << d_avg.transpose() << std::endl;
+    Eigen::Matrix2d sum = Eigen::Matrix2d::Zero();
+    for (int i = 0; i < d_length; i++)
+    {
+      int index = (d_nextPointer - i - 1) % d_windowSize;
+      if (index < 0)
+        index += d_windowSize;
+      assert(index >= 0 && index < d_length);
+      Eigen::Vector2d diff = d_items[index] - d_avg;
+      sum += diff * diff.transpose();
+//       std::cout << "---- index " << index << std::endl
+//           << "diff " << diff.transpose() << std::endl
+//           << "sum" << std::endl << sum << std::endl;
+    }
+    Eigen::Vector2d r = sum.diagonal();
+//     std::cout << "r = " << r.transpose() << std::endl;
+    for (int i = 0; i < r.size(); i++)
+      r[i] = sqrt(r[i]);
+//     std::cout << "r_squared = " << r.transpose() << std::endl;
+//     std::cout << "stddev = " << (r/d_length).transpose() << std::endl;
+    return r / d_length;
+  }
 }
