@@ -105,11 +105,12 @@ void RemoteControl::update()
     {
       auto runIfStanding = [this](shared_ptr<MotionScript const> const& script)
       {
-        bool isStanding = MotionScriptRunner::isInFinalPose(standReadyScript);
+        int maxDelta = MotionScriptRunner::getMaxDeltaFromFinalPose(standReadyScript);
+        bool isStanding = abs(maxDelta) < 100;
         if (isStanding)
           d_motionScriptModule->start(make_shared<MotionScriptRunner>(script));
         else
-          log::info("runIfStanding") << "Skipping motion script " << script->getName() << " as not standing";
+          log::info("runIfStanding") << "Skipping motion script " << script->getName() << " as not standing, delta " << maxDelta;
       };
 
       switch (event.number)
