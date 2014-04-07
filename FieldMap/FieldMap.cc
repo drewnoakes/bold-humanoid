@@ -26,6 +26,7 @@ double FieldMap::d_maxDiagnoalFieldDistance;
 double FieldMap::d_goalY;
 double FieldMap::d_goalAreaLengthX;
 double FieldMap::d_goalAreaLengthY;
+double FieldMap::d_goalPostDiameter;
 
 void FieldMap::initialise()
 {
@@ -34,7 +35,7 @@ void FieldMap::initialise()
 //double goalX               = Config::getStaticValue<double>("world.goal-size-x");
   d_goalY                    = Config::getStaticValue<double>("world.goal-size-y");
 //double goalZ               = Config::getStaticValue<double>("world.goal-size-z");
-//double goalPostDiameter    = Config::getStaticValue<double>("world.goal-post-diameter");
+  d_goalPostDiameter         = Config::getStaticValue<double>("world.goal-post-diameter");
   d_goalAreaLengthX          = Config::getStaticValue<double>("world.goal-area-size-x");
   d_goalAreaLengthY          = Config::getStaticValue<double>("world.goal-area-size-y");
   double penaltyMarkDistance = Config::getStaticValue<double>("world.penalty-mark-distance");
@@ -123,20 +124,26 @@ void FieldMap::initialise()
   }
 
   // GOAL POST POSITIONS
+
+  // NOTE the rules define the goal width (D) as the space *between* the inner
+  // goal post edges, not their centers.
+
+  double goalRadius = d_goalPostDiameter / 2.0;
+
   d_goalPostPositions = {
-    Vector3d(-halfFieldX, halfGoalY, 0),
-    Vector3d(-halfFieldX, -halfGoalY, 0),
-    Vector3d(halfFieldX, halfGoalY, 0),
-    Vector3d(halfFieldX, -halfGoalY, 0)
+    Vector3d(-halfFieldX,  halfGoalY + goalRadius, 0),
+    Vector3d(-halfFieldX, -halfGoalY - goalRadius, 0),
+    Vector3d(halfFieldX,  halfGoalY + goalRadius, 0),
+    Vector3d(halfFieldX, -halfGoalY - goalRadius, 0)
   };
 
   d_ourGoalPostPositions = {
-    Vector3d(-halfFieldX, halfGoalY, 0),
-    Vector3d(-halfFieldX, -halfGoalY, 0)
+    Vector3d(-halfFieldX,  halfGoalY + goalRadius, 0),
+    Vector3d(-halfFieldX, -halfGoalY - goalRadius, 0)
   };
 
   d_theirGoalPostPositions = {
-    Vector3d(halfFieldX, halfGoalY, 0),
-    Vector3d(halfFieldX, -halfGoalY, 0)
+    Vector3d(halfFieldX,  halfGoalY + goalRadius, 0),
+    Vector3d(halfFieldX, -halfGoalY - goalRadius, 0)
   };
 }

@@ -120,10 +120,8 @@ export function drawOcclusionRays(context: CanvasRenderingContext2D,
 
 export function drawGoals(context: CanvasRenderingContext2D, options: {goalStrokeStyle?: string})
 {
-    var goalY = constants.goalY / 2,
-        x = constants.fieldX/2;
-
-    // TODO the position of these circles is slightly wrong, as the perimeter should line up with the edge of the line
+    var goalY = (constants.goalY + constants.goalPostDiameter) / 2,
+        x = constants.fieldX/2 + constants.goalPostDiameter/2 - constants.lineWidth/2;
 
     drawGoalPosts(context, options, [
         [ x,  goalY],

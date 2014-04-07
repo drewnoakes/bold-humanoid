@@ -61,6 +61,8 @@ namespace bold
     /// The shorter length of the goal (penalty) area.
     static double goalAreaLengthY() { return d_goalAreaLengthY; }
 
+    static double goalPostDiameter() { return d_goalPostDiameter; }
+
   private:
     FieldMap() = delete;
 
@@ -79,5 +81,6 @@ namespace bold
     static double d_goalY;
     static double d_goalAreaLengthX;
     static double d_goalAreaLengthY;
+    static double d_goalPostDiameter;
   };
 }
