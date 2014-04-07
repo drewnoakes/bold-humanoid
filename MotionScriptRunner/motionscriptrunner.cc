@@ -481,7 +481,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
   }
 }
 
-bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead)
+bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead, unsigned valueTolerance)
 {
   auto hw = State::get<HardwareState>();
 
@@ -494,7 +494,7 @@ bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const
     int presentValue = hw->getMX28State(jointId).presentPositionValue;
     int targetValue = frame.values[jointId - 1];
     int delta = presentValue - targetValue;
-    if (abs(delta) > 100)
+    if (abs(delta) > valueTolerance)
       return false;
   }
 
