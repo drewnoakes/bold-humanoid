@@ -56,12 +56,12 @@ void RemoteControl::update()
       return;
   }
 
-  static auto leftKickScript = MotionScript::fromFile("./motionscripts/kick-left.json");
-  static auto rightKickScript = MotionScript::fromFile("./motionscripts/kick-right.json");
-  static auto leftSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-left.json");
-  static auto rightSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-right.json");
-  static auto standReadyScript = MotionScript::fromFile("./motionscripts/stand-ready.json");
-  static auto sitDownScript = MotionScript::fromFile("./motionscripts/sit-down.json");
+  static shared_ptr<MotionScript const> leftKickScript = MotionScript::fromFile("./motionscripts/kick-left.json");
+  static shared_ptr<MotionScript const> rightKickScript = MotionScript::fromFile("./motionscripts/kick-right.json");
+  static shared_ptr<MotionScript const> leftSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-left.json");
+  static shared_ptr<MotionScript const> rightSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-right.json");
+  static shared_ptr<MotionScript const> standReadyScript = MotionScript::fromFile("./motionscripts/stand-ready.json");
+  static shared_ptr<MotionScript const> sitDownScript = MotionScript::fromFile("./motionscripts/sit-down.json");
 
   //
   // Control via joystick
@@ -134,21 +134,25 @@ void RemoteControl::update()
   {
     if (isButton1Down)
     {
+      // Move head with left joystick when button 1 is depressed
       d_headModule->moveByDeltaDegs(
         (-axis0/32767.0) * d_joystickHeadSpeed->getValue(),
         (-axis1/32767.0) * d_joystickHeadSpeed->getValue());
     }
     else
     {
+      // Set walk direction with left joystick
       d_ambulator->setMoveDir(Eigen::Vector2d(
         (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
         (-axis0/32767.0) * d_joystickYAmpMax->getValue()));
     }
   }
 
+  // Control turn angle with right joystick
   if (axis2 != 0)
     d_ambulator->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
 
+  // Up/down on D-Pad makes robot stand/sit
   if (axis5 < 0 && !MotionScriptRunner::isInFinalPose(standReadyScript))
     d_motionScriptModule->start(make_shared<MotionScriptRunner>(standReadyScript));
   else if (axis5 > 0 && !MotionScriptRunner::isInFinalPose(sitDownScript))
