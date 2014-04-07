@@ -481,7 +481,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
   }
 }
 
-bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead, unsigned valueTolerance)
+int MotionScriptRunner::getMaxDeltaFromFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead)
 {
   auto hw = State::get<HardwareState>();
 
@@ -489,14 +489,23 @@ bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const
 
   auto upper = includeHead ? JointId::MAX : JointId::L_ANKLE_ROLL;
 
+  int maxDelta = 0;
+
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)upper; jointId++)
   {
     int presentValue = hw->getMX28State(jointId).presentPositionValue;
     int targetValue = frame.values[jointId - 1];
     int delta = presentValue - targetValue;
-    if (abs(delta) > valueTolerance)
-      return false;
+    if (abs(delta) > abs(maxDelta))
+      maxDelta = delta;;
   }
 
-  return true;
+  return maxDelta;
+}
+
+bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead, unsigned valueTolerance)
+{
+  int delta = getMaxDeltaFromFinalPose(script, includeHead);
+
+  return abs(delta) > valueTolerance;
 }

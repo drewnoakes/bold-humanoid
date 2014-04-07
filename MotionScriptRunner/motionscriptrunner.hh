@@ -75,6 +75,7 @@ namespace bold
       }
     }
 
+    static int getMaxDeltaFromFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead = false);
     static bool isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead = false, unsigned valueTolerance = 100);
 
     MotionScriptRunner(std::shared_ptr<MotionScript const> script);
