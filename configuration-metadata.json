@@ -329,7 +329,8 @@
         "defender":        4,
         "penalty-keeper":  5,
         "penalty-striker": 6,
-        "other":           7
+        "other":           7,
+        "kick-learner":    8
       }
     }
   }

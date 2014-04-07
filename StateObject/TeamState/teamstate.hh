@@ -45,7 +45,12 @@ namespace bold
     /// This status will not be transmitted by the Bold Hearts as our agents
     /// default to striker/keeper in the absence of sufficient information to
     /// decide otherwise.
-    Other = 7
+    Other = 7,
+
+    /// The robot will stand and kick the ball around in order to learn the
+    /// outcome of specific kicks given starting ball positions.
+    /// This is not a role in a normal game, and using roles to do this may not be the best way.
+    KickLearner = 8
   };
 
   std::ostream& operator<<(std::ostream &stream, PlayerRole const& role);

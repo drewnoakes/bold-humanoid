@@ -16,5 +16,6 @@ namespace bold
     std::shared_ptr<FSMOption> buildSupporterFsm(Agent* agent, std::shared_ptr<OptionTree> tree);
     std::shared_ptr<FSMOption> buildKeeperFsm(Agent* agent, std::shared_ptr<OptionTree> tree);
     std::shared_ptr<FSMOption> buildPenaltyKeeperFsm(Agent* agent, std::shared_ptr<OptionTree> tree);
+    std::shared_ptr<FSMOption> buildKickLearnerFsm(Agent* agent, std::shared_ptr<OptionTree> tree);
   };
 }

@@ -408,6 +408,7 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildKeeperFsm.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildKickLearnerFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildPenaltyKeeperFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildTree.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildSupporterFsm.cc

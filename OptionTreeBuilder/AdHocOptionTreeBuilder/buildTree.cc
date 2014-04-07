@@ -59,6 +59,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   performRole->setOption(PlayerRole::Supporter, buildSupporterFsm(agent, tree));
   performRole->setOption(PlayerRole::PenaltyStriker, strikerFsm);
   performRole->setOption(PlayerRole::PenaltyKeeper, buildPenaltyKeeperFsm(agent, tree));
+  performRole->setOption(PlayerRole::KickLearner, buildKickLearnerFsm(agent, tree));
 
   //
   // Build the top-level FSM
