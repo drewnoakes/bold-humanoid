@@ -260,6 +260,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./JointId/jointid.cc
+)
+
+add_class(BOLDHUMANOID
   ./LineFinder/RandomPairLineFinder/findLineSegments.cc
 )
 

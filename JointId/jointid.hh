@@ -48,6 +48,12 @@ namespace bold
     MAX = HEAD_TILT
   };
 
+  bool isHeadJoint(JointId id);
+
+  bool isArmJoint(JointId id);
+
+  bool isLegJoint(JointId id);
+
   class JointName
   {
   public:
