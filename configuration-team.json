@@ -21,7 +21,7 @@
     "cm730-path": "/dev/ttyUSB0",
     "video-path": "/dev/video0",
     "joystick": {
-      "enabled": false,
+      "enabled": true,
       "path": "/dev/input/js0",
       "head-speed": 15.0,
       "x-amp-max": 15.0,
