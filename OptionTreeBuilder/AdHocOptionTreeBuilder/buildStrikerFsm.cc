@@ -85,7 +85,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->when(ballLostConditionFactory);
 
   // start approaching the ball when we have the confidence that it's really there
-  // TODO this doesn't filter the ball position, so may be misled by jitter
   lookAtBallState
     ->transitionTo(approachBallState, "confident")
     ->when([]() { return stepUpDownThreshold(10, ballVisibleCondition; });
