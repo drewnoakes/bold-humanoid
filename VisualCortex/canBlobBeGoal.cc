@@ -1,6 +1,6 @@
 #include "visualcortex.ih"
 
-bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d* pos)
+bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d& pos)
 {
   // Find a measure of the width of the goal post in agent space
 
@@ -45,6 +45,6 @@ bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d* pos)
     return false;
   */
 
-  *pos = basePos;
+  pos = basePos;
   return true;
 }

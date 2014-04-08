@@ -128,8 +128,8 @@ namespace bold
     bool getShouldDrawCalibration() const { return d_shouldDrawCalibration->getValue(); }
 
   private:
-    bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d* pos);
-    bool canBlobBeGoal(Blob const& goalBlob, Eigen::Vector2d* pos);
+    bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d& imagePos, Eigen::Vector3d& agentFramePos);
+    bool canBlobBeGoal(Blob const& goalBlob, Eigen::Vector2d& pos);
 
     template<typename T>
     std::shared_ptr<T> getHandler() { return meta::get<std::shared_ptr<T>>(d_imagePassHandlers); }

@@ -21,11 +21,9 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(Sequ
 
     DisjointSet<Run> rSet;
 
-    // Just insert all runs of top row
+    // Just insert all runs of first (bottom) row
     for (Run const& run : runsPerRow[d_rowIndices[0]])
-    {
       rSet.insert(run);
-    }
 
     // From the second row on...
     for (unsigned i = 1; i < d_rowIndices.size(); ++i)
@@ -58,11 +56,6 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(Sequ
               runSetToBlob);
 
     timer.timeEvent("Convert");
-
-    // TODO: why isn't blobSet a set again? That would auto-sort
-    std::sort(blobSet.begin(), blobSet.end(), greater<Blob>());
-
-    timer.timeEvent("Sort");
 
     timer.exit();
   }

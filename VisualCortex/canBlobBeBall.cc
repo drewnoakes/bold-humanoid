@@ -1,16 +1,15 @@
 #include "visualcortex.ih"
 
-bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
+bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d& imagePos, Vector3d& agentFramePos)
 {
   //
   // Basic filtering
   //
 
-  if (blob.area == 0)
-  {
-    // Ignore blobs that were previously merged into another blob (zero area)
+  // Ignore balls that are too small (avoid noise)
+  // Also ignores blobs that were previously merged into another blob (zero area)
+  if (blob.area < unsigned(d_minBallAreaPixels->getValue()))
     return false;
-  }
 
   // Ignore ball if it is too far from the field edge
   //
@@ -41,7 +40,7 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
   if (!midPointAgentSpace || !sidePointAgentSpace)
     return false;
 
-  double radiusAgentSpace = abs((*midPointAgentSpace - *sidePointAgentSpace).norm());
+  double radiusAgentSpace = (*midPointAgentSpace - *sidePointAgentSpace).norm();
 
   double ballMeasuredSizeRatio = radiusAgentSpace / ballRadius;
   if (ballMeasuredSizeRatio < d_acceptedBallMeasuredSizeRatio->getValue().min() ||
@@ -53,6 +52,7 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d* pos)
   if (midPointAgentSpace->norm() > FieldMap::getMaxDiagonalFieldDistance())
     return false;
 
-  *pos = blob.mean;
+  imagePos = blob.mean;
+  agentFramePos = *midPointAgentSpace;
   return true;
 }

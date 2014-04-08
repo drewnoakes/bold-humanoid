@@ -103,22 +103,25 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
       }
 
       // The first is the biggest, topmost ball blob
-      for (Blob const& ballBlob : ballBlobs)
-      {
-        // Ignore balls that are too small (avoid noise)
-        if (ballBlob.area < unsigned(d_minBallAreaPixels->getValue()))
-        {
-          // As blobs are sorted largest to smallest, stop at the first one that's too small
-          break;
-        }
+      auto ballPositionCandidates = vector<pair<Vector2d, Vector3d>>();
 
-        // Filter out invalid ball blobs
-        Vector2d pos;
-        if (canBlobBeBall(ballBlob, &pos))
-        {
-          ballPosition = Maybe<Vector2d>(pos);
-          break;
-        }
+      // Filter out invalid ball blobs
+      Vector2d imagePos;
+      Vector3d agentFramePos;
+      for (Blob const& ballBlob : ballBlobs)
+        if (canBlobBeBall(ballBlob, imagePos, agentFramePos))
+          ballPositionCandidates.push_back(make_pair(imagePos, agentFramePos));
+      
+      // Take the ball that is closest
+      if (ballPositionCandidates.size() == 0)
+        ballPosition = ballPosition.empty();
+      else
+      {
+        auto nearest = min_element(begin(ballPositionCandidates), end(ballPositionCandidates),
+                                   [](pair<Vector2d, Vector3d> const& pos1, pair<Vector2d, Vector3d> const& pos2) {
+                                     return pos1.second.head<2>().norm() < pos2.second.head<2>().norm();
+                                   });
+        ballPosition = Maybe<Vector2d>(nearest->first);
       }
       t.timeEvent("Ball Blob Selection");
     }
@@ -153,7 +156,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
 
         // Discard blobs that would be too wide/narrow for the goal we expect at that position of the frame
         Vector2d pos;
-        if (!canBlobBeGoal(goalBlob, &pos))
+        if (!canBlobBeGoal(goalBlob, pos))
           continue;
 
         goalPositions.push_back(pos);
