@@ -5,6 +5,7 @@
 
 #include <sstream>
 #include <map>
+#include <set>
 #include <memory>
 
 namespace bold
@@ -34,7 +35,12 @@ namespace bold
       auto it = d_optionByKey.find(key);
       if (it == d_optionByKey.end())
       {
-        log::error("DispatchOption::runPolicy") << "No option available for key " << key;
+        static std::set<T> unknownKeys;
+        if (unknownKeys.find(key) == unknownKeys.end())
+        {
+          log::error("DispatchOption::runPolicy") << "No option available for key " << key;
+          unknownKeys.insert(key);
+        }
         writer.String("found").Bool(false);
         return {};
       }
