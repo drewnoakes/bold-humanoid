@@ -65,14 +65,19 @@ namespace bold
     robocup::TeamInfo const& teamInfo1() const { return d_data.teams[0]; }
     robocup::TeamInfo const& teamInfo2() const { return d_data.teams[1]; }
 
+    unsigned getTeamIndex(unsigned teamNumber) const
+    {
+      return teamInfo1().getTeamNumber() == teamNumber ? 0 : 1;
+    }
+
     robocup::TeamInfo const& teamInfo(unsigned teamNumber) const
     {
-      return teamInfo1().getTeamNumber() == teamNumber ? teamInfo1() : teamInfo2();
+      return d_data.teams[getTeamIndex(teamNumber)];
     }
 
     robocup::TeamInfo const& ourTeamInfo() const
     {
-      static auto team = Config::getStaticValue<unsigned>("team-number");
+      static auto team = Config::getStaticValue<int>("team-number");
       return teamInfo(team);
     }
 
@@ -86,8 +91,8 @@ namespace bold
 
     robocup::PlayerInfo const& myPlayerInfo() const
     {
-      static auto team = Config::getStaticValue<unsigned>("team-number");
-      static auto unum = Config::getStaticValue<unsigned>("team-number");
+      static auto team = Config::getStaticValue<int>("team-number");
+      static auto unum = Config::getStaticValue<int>("team-number");
 
       return playerInfo(team, unum);
     }
