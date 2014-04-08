@@ -51,18 +51,27 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
       };
     });
 
-  selectKickState->transitionTo(kickSideLeftState) ->when([]() { return ballStartPos.x() < 0; });
-  selectKickState->transitionTo(kickSideRightState)->when([]() { return ballStartPos.x() > 0; });
+  selectKickState->onEnter.connect([]()
+  {
+    static auto rng = Math::createUniformRng(0, 4);
+    switch (static_cast<int>(floor(rng())))
+    {
+      case 0: kickUsed = "left"; break;
+      case 1: kickUsed = "right"; break;
+      case 2: kickUsed = "left-side"; break;
+      case 3: kickUsed = "right-side"; break;
+    }
+  });
+
+  selectKickState->transitionTo(kickLeftState) ->when([]() { return kickUsed == "left"; });
+  selectKickState->transitionTo(kickRightState)->when([]() { return kickUsed == "right"; });
+  selectKickState->transitionTo(kickSideLeftState) ->when([]() { return kickUsed == "left-side"; });
+  selectKickState->transitionTo(kickSideRightState)->when([]() { return kickUsed == "right-side"; });
 
   kickLeftState->transitionTo(watchBallRollState)->whenTerminated();
   kickRightState->transitionTo(watchBallRollState)->whenTerminated();
   kickSideLeftState->transitionTo(watchBallRollState)->whenTerminated();
   kickSideRightState->transitionTo(watchBallRollState)->whenTerminated();
-
-  kickLeftState->onEnter.connect([](){ kickUsed = "left"; });
-  kickRightState->onEnter.connect([](){ kickUsed = "right"; });
-  kickSideLeftState->onEnter.connect([](){ kickUsed = "left-side"; });
-  kickSideRightState->onEnter.connect([](){ kickUsed = "right-side"; });
 
   watchBallRollState
     ->transitionTo(recordOutcomeState, "ball-end-observed")
