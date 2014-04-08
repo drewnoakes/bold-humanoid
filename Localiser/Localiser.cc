@@ -7,13 +7,13 @@ Localiser::Localiser()
     d_smoothedPos(0, 0, 0),
     d_avgPos(1)
 {
+  d_filterType = Config::getValue<FilterType>("localiser.filter-type");
+
   auto smoothingWindowSize = Config::getSetting<int>("localiser.smoothing-window-size");
   d_useLines          = Config::getSetting<bool>("localiser.use-lines");
   d_minGoalsNeeded    = Config::getSetting<int>("localiser.min-goals-needed");
   auto positionError  = Config::getSetting<double>("localiser.position-error");
   auto angleErrorDegs = Config::getSetting<double>("localiser.angle-error-degrees");
-
-  Config::getSetting<double>("localiser.randomise-ratio")->changed.connect([this](double value) { d_filter->setRandomizeRatio(value); });
 
   smoothingWindowSize->track([this](int value) { d_avgPos = MovingAverage<Vector4d>(value); });
   positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });
@@ -26,22 +26,43 @@ Localiser::Localiser()
   d_fieldYRng = Math::createUniformRng(-yMax, yMax);
   d_thetaRng  = Math::createUniformRng(-M_PI, M_PI);
 
-  d_filter = allocate_aligned_shared<ParticleFilter<3,50>>();
-  Config::addAction("localiser.randomize", "Randomize", [this](){ d_filter->randomise(); });
-  d_filter->setStateGenerator(
-    [this]() {
-      return ParticleFilter3::State(d_fieldXRng(), d_fieldYRng(), d_thetaRng());
-    });
-
-  Config::addAction("localiser.flip", "Flip", [this]()
+  switch (d_filterType)
   {
-    // Reset the state of the smoother so we flip instantly and don't glide
-    // have our position animated slowly across the field.
-    d_avgPos.reset();
+  case FilterType::Particle:
+  {
+    auto filter = allocate_aligned_shared<ParticleFilterUsed>();
+    
+    filter->setStateGenerator(
+      [this]() {
+        return FilterState(d_fieldXRng(), d_fieldYRng(), d_thetaRng());
+      });
 
-    // Flip the x-coordinate of every particle, and flip its rotation.
-    d_filter->transform([](Vector3d state) { return Vector3d(-state.x(), state.y(), -state[2]); });
-  });
+    Config::getSetting<double>("localiser.randomise-ratio")->changed.connect(
+      [filter](double value) {
+        filter->setRandomizeRatio(value);
+      });
+
+    Config::addAction("localiser.randomize", "Randomize", [filter](){ filter->randomise(); });
+
+    Config::addAction("localiser.flip", "Flip", [this,filter]()
+                      {
+                        // Reset the state of the smoother so we flip instantly and don't glide
+                        // have our position animated slowly across the field.
+                        d_avgPos.reset();
+                        
+                        // Flip the x-coordinate of every particle, and flip its rotation.
+                        filter->transform([](Vector3d state) { return Vector3d(-state.x(), state.y(), -state[2]); });
+                      });
+    
+    d_filter = filter;
+    break;
+  }
+    
+  case FilterType::Kalman:
+  {
+    d_filter = allocate_aligned_shared<KalmanFilter<3>>();
+  }
+  }
 
   updateStateObject();
 }

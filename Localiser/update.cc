@@ -96,9 +96,14 @@ void Localiser::update()
   }
 
   d_filter->update(jointModel);
-  auto weights = d_filter->getWeights();
-  d_preNormWeightSum = weights.sum();
-  d_filter->normalize();
+  if (d_filterType == FilterType::Particle)
+  {
+    auto filter = static_pointer_cast<ParticleFilterUsed>(d_filter);
+
+    auto weights = filter->getWeights();
+    d_preNormWeightSum = weights.sum();
+    filter->normalize();
+  }
 
   auto stateWeight = d_filter->extract();
 
