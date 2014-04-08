@@ -47,7 +47,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
         if (!agentFrame || !agentFrame->isBallVisible())
           return false;
         ballStartPos = avg->next(*agentFrame->getBallObservation());
-        return avg->isMature() && avg->calculateStdDev().norm() < StationaryDeviation;
+        return avg->isMature() && ballStartPos.y() < 0.22 && avg->calculateStdDev().norm() < StationaryDeviation;
       };
     });
 
