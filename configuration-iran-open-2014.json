@@ -31,6 +31,10 @@
       "accepted-width-ratio": [0.6, 1.6]
     },
 
+    "field-edge-pass": {
+      "min-vertical-run-length": 10
+    },
+
     "pixel-labels": {
         "ball": { "hue": [0, 20], "sat": [150, 250], "val": [40, 19] },
         "field": { "hue": [80, 120], "sat": [80, 230], "val": [50, 190] },
