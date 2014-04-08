@@ -22,6 +22,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
   auto kickRightState = fsm->newState("kickRight", {kickRight,lookAtBall});
   auto kickSideLeftState  = fsm->newState("kickSideLeft",  {kickSideLeft, lookAtBall});
   auto kickSideRightState = fsm->newState("kickSideRight", {kickSideRight,lookAtBall});
+  auto lookUpForBallState = fsm->newState("lookUp", {});
   auto watchBallRollState = fsm->newState("watchBallRoll", {lookAtBall});
   auto recordOutcomeState = fsm->newState("recordOutcome", {});
 
@@ -68,10 +69,26 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
   selectKickState->transitionTo(kickSideLeftState) ->when([]() { return kickUsed == "left-side"; });
   selectKickState->transitionTo(kickSideRightState)->when([]() { return kickUsed == "right-side"; });
 
-  kickLeftState->transitionTo(watchBallRollState)->whenTerminated();
-  kickRightState->transitionTo(watchBallRollState)->whenTerminated();
-  kickSideLeftState->transitionTo(watchBallRollState)->whenTerminated();
-  kickSideRightState->transitionTo(watchBallRollState)->whenTerminated();
+  kickLeftState->transitionTo(lookUpForBallState)->whenTerminated();
+  kickRightState->transitionTo(lookUpForBallState)->whenTerminated();
+  kickSideLeftState->transitionTo(lookUpForBallState)->whenTerminated();
+  kickSideRightState->transitionTo(lookUpForBallState)->whenTerminated();
+
+  lookUpForBallState->onEnter.connect([agent]()
+  {
+    if (kickUsed=="left")
+      agent->getHeadModule()->moveToDegs(5, 20);
+    else if (kickUsed=="right")
+      agent->getHeadModule()->moveToDegs(-5, 20);
+    else if (kickUsed=="left-side")
+      agent->getHeadModule()->moveToDegs(-35, 35);
+    else if (kickUsed=="right-side")
+      agent->getHeadModule()->moveToDegs(35, 35);
+  });
+
+  lookUpForBallState
+    ->transitionTo(watchBallRollState)
+    ->after(chrono::milliseconds(200));
 
   watchBallRollState
     ->transitionTo(recordOutcomeState, "ball-end-observed")
