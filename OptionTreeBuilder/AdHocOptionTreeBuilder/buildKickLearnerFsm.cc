@@ -23,7 +23,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
   auto watchBallRollState = fsm->newState("watchBallRoll", {lookAtBall});
   auto recordOutcomeState = fsm->newState("recordOutcome", {});
 
-  constexpr int ObservationCount = 30;
+  constexpr int ObservationCount = 60;
   constexpr double StationaryDeviation = 0.01;
 
   static Vector3d ballStartPos;
