@@ -124,9 +124,6 @@ bool TeamState::isTeamMate(PlayerActivity activity) const
     if (Clock::getMillisSince(player.updateTime) > 5000)
       continue;
 
-    if (!player.ballRelative.hasValue())
-      continue;
-
     if (
 //       player.status == PlayerStatus::Inactive ||
       player.status == PlayerStatus::Penalised)
