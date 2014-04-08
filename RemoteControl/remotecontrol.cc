@@ -107,7 +107,7 @@ void RemoteControl::update()
       {
         // TODO devise a better way of detecting when we are standing with legs extended
         int maxDelta = MotionScriptRunner::getMaxDeltaFromFinalPose(standReadyScript);
-        bool isStanding = abs(maxDelta) < 100;
+        bool isStanding = abs(maxDelta) < 200;
         if (isStanding)
           d_motionScriptModule->start(make_shared<MotionScriptRunner>(script));
         else
