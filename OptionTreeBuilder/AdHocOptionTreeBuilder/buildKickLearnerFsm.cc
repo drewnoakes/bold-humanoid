@@ -87,7 +87,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
     ->transitionTo(waitForBallState)
     ->when([]()
     {
-      log::info("LearnKickResult") << kickUsed << " " << ballStartPos.transpose() << ", " << ballEndPos.transpose();
+      auto hw = State::get<HardwareState>();
+      log::info("LearnKickResult") << kickUsed << " " << ballStartPos.transpose() << ", " << ballEndPos.transpose() << ", " << (hw ? hw->getCM730State().voltage : -1);
       return true;
     });
 
