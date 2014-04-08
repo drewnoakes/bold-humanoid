@@ -240,10 +240,20 @@ bool CM730::isPowerEnabled()
   uchar value;
   MX28Alarm alarm;
 
+  static bool commError = false;
+
   if (readByte(CM730::ID_CM, CM730::P_DXL_POWER, &value, &alarm) != CommResult::SUCCESS)
   {
-    log::error("CM730::isPowerEnabled") << "Comm error reading CM730 power level";
+    if (!commError)
+    {
+      log::error("CM730::isPowerEnabled") << "Comm error reading CM730 power level";
+      commError = true;
+    }
     return false;
+  }
+  else
+  {
+    commError = false;
   }
 
   if (alarm.hasError())
