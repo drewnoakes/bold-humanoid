@@ -31,7 +31,7 @@ namespace bold
     AgentPosition(Eigen::Vector4d const& vec)
       : d_x(vec.x()),
         d_y(vec.y()),
-        d_theta(atan2(vec(3), vec(2)))
+        d_theta(atan2(-vec(2), vec(3)))
     {}
 
     double x() const { return d_x; }
