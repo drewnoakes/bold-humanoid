@@ -148,7 +148,8 @@ string CM730::getInstructionName(uchar instructionId)
 //// Instance members
 
 CM730::CM730(unique_ptr<CM730Platform> platform)
-: d_platform(move(platform))
+: d_platform(move(platform)),
+  d_isPowerEnableRequested(false)
 {}
 
 CM730::~CM730()
@@ -237,32 +238,33 @@ bool CM730::torqueEnable(bool enable)
 
 bool CM730::isPowerEnabled()
 {
-  uchar value;
-  MX28Alarm alarm;
-
-  static bool commError = false;
-
-  if (readByte(CM730::ID_CM, CM730::P_DXL_POWER, &value, &alarm) != CommResult::SUCCESS)
-  {
-    if (!commError)
-    {
-      log::error("CM730::isPowerEnabled") << "Comm error reading CM730 power level";
-      commError = true;
-    }
-    return false;
-  }
-  else
-  {
-    commError = false;
-  }
-
-  if (alarm.hasError())
-  {
-    log::error("CM730::isPowerEnabled") << "Error reading CM730 power level: " << alarm;
-    return false;
-  }
-
-  return value == 1;
+  return d_isPowerEnableRequested;
+//   uchar value;
+//   MX28Alarm alarm;
+//
+//   static bool commError = false;
+//
+//   if (readByte(CM730::ID_CM, CM730::P_DXL_POWER, &value, &alarm) != CommResult::SUCCESS)
+//   {
+//     if (!commError)
+//     {
+//       log::error("CM730::isPowerEnabled") << "Comm error reading CM730 power level";
+//       commError = true;
+//     }
+//     return false;
+//   }
+//   else
+//   {
+//     commError = false;
+//   }
+//
+//   if (alarm.hasError())
+//   {
+//     log::error("CM730::isPowerEnabled") << "Error reading CM730 power level: " << alarm;
+//     return false;
+//   }
+//
+//   return value == 1;
 }
 
 bool CM730::powerEnable(bool enable)
@@ -281,6 +283,8 @@ bool CM730::powerEnable(bool enable)
     log::error("CM730::powerEnable") << "Error turning CM730 power " << (enable ? "on" : "off") << ": " << alarm;
     return false;
   }
+
+  d_isPowerEnableRequested = enable;
 
   // TODO why is this sleep here?
   d_platform->sleep(300); // milliseconds

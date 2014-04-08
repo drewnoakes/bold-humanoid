@@ -279,6 +279,7 @@ namespace bold
 
   private:
     std::unique_ptr<CM730Platform> d_platform;
+    bool d_isPowerEnableRequested;
     //uchar d_controlTable[MAXNUM_ADDRESS];
 
     /**
