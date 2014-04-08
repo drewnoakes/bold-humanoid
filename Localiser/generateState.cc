@@ -5,7 +5,8 @@ pair<Localiser::Filter::State, double> Localiser::generateState()
   auto gameState = State::get<GameState>();
   auto behaviourControlState = State::get<BehaviourControlState>();
   bool kidnapped = 
-    gameState->myPlayerInfo().hasPenalty() || 
+    (gameState && gameState->myPlayerInfo().hasPenalty()) || 
+    behaviourControlState->getPlayerStatus() == PlayerStatus::Penalised ||
     behaviourControlState->getPlayerStatus() == PlayerStatus::Paused;
 
   // If kidnapped, assume we are somewhere on our side of the
@@ -27,10 +28,9 @@ pair<Localiser::Filter::State, double> Localiser::generateState()
 
     // Assume facing into field
     auto state = Filter::State(x, y, 0, left ? 1.0 : -1.0);
-    
     return make_pair(state, d_penaltyKidnapWeight->getValue());
   }
-  else if (gameState->getPlayMode() != robocup::PlayMode::PLAYING)
+  else if (gameState && gameState->getPlayMode() != robocup::PlayMode::PLAYING)
   {
     auto theta = -.5 * M_PI + d_thetaRng() / 4;
     auto state = Filter::State(-std::abs(d_fieldXRng()), d_fieldYRng(), cos(theta), sin(theta));
