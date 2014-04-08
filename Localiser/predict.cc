@@ -2,6 +2,12 @@
 
 void Localiser::predict()
 {
+  if (d_shouldRandomise)
+  {
+    d_filter->randomise();
+    d_shouldRandomise = false;
+  }
+
   auto orientationState = State::get<OrientationState>(StateTime::CameraImage);
   auto odometryState = State::get<OdometryState>(StateTime::CameraImage);
   if (!orientationState || !odometryState)

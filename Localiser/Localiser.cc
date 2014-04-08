@@ -3,6 +3,7 @@
 Localiser::Localiser()
   : d_haveLastAgentTransform(false),
     d_lastQuaternion(0, 0, 0,0),
+    d_shouldRandomise(false),
     d_pos(0, 0, 0),
     d_smoothedPos(0, 0, 0),
     d_avgPos(1)

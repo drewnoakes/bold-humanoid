@@ -47,6 +47,8 @@ namespace bold
     Eigen::Quaterniond d_lastQuaternion;
     double d_preNormWeightSum;
 
+    bool d_shouldRandomise;
+
     AgentPosition d_pos;
     AgentPosition d_smoothedPos;
     MovingAverage<Eigen::Vector4d> d_avgPos;
