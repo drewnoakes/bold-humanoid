@@ -113,10 +113,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   waitForOtherStrikerState
     ->transitionTo(lookAtBallState)
-    ->after(chrono::seconds(5));
-
-  waitForOtherStrikerState
-    ->transitionTo(lookAtBallState)
     ->when([]() { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
   // Abort attack if it looks like we are going to kick an own goal
