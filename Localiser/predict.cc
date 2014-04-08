@@ -4,8 +4,13 @@ void Localiser::predict()
 {
   if (d_shouldRandomise)
   {
-    d_filter->randomise();
-    d_shouldRandomise = false;
+    if (d_filterType == FilterType::Particle)
+    {
+      auto filter = static_pointer_cast<ParticleFilterUsed>(d_filter);
+      filter->randomise();
+      filter->normalize();
+      d_shouldRandomise = false;
+    }
   }
 
   auto orientationState = State::get<OrientationState>(StateTime::CameraImage);
@@ -26,7 +31,7 @@ void Localiser::predict()
       0, 0, 1;
 
     d_filter->predict(
-      [deltaAgentMat,this](FilterState const& state) -> Filter::State
+      [deltaAgentMat,this](FilterState const& state) -> FilterState
       {
         Matrix3d worldAgentMat;
         worldAgentMat <<

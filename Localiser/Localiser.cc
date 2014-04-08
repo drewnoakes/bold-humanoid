@@ -35,23 +35,6 @@ Localiser::Localiser()
   {
     auto filter = allocate_aligned_shared<ParticleFilterUsed>();
     
-    filter->setStateGenerator(
-      [this]() {
-      auto theta = d_thetaRng();
-      auto state = FilterState(d_fieldXRng(), d_fieldYRng(), cos(theta), sin(theta));
-
-      // Weight should be probability of being kidnapped
-      // (Weight of other particles should actually be multiplied by 1 - this probability)
-      auto gameState = State::get<GameState>();
-      
-      auto kidnapWeight =
-        gameState->myPlayerInfo().hasPenalty() ? 
-        d_penaltyKidnapWeight->getValue() : 
-        d_defaultKidnapWeight->getValue();
-
-      return make_pair(state, kidnapWeight);
-    });
-
     filter->setStateGenerator([this]() { return this->generateState();});
 
     Config::getSetting<double>("localiser.randomise-ratio")->changed.connect(

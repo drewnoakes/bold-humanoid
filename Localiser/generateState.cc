@@ -1,6 +1,6 @@
 #include "localiser.ih"
 
-pair<Localiser::Filter::State, double> Localiser::generateState()
+pair<Localiser::FilterState, double> Localiser::generateState()
 {
   auto gameState = State::get<GameState>();
   auto behaviourControlState = State::get<BehaviourControlState>();
@@ -27,20 +27,20 @@ pair<Localiser::Filter::State, double> Localiser::generateState()
     auto y = (left ? -1.0 : 1.0) * (d_fieldMap->fieldLengthY() / 2.0 + 0.5);
 
     // Assume facing into field
-    auto state = Filter::State(x, y, 0, left ? 1.0 : -1.0);
+    auto state = FilterState(x, y, 0, left ? 1.0 : -1.0);
     return make_pair(state, d_penaltyKidnapWeight->getValue());
   }
   else if (gameState && gameState->getPlayMode() != robocup::PlayMode::PLAYING)
   {
     auto theta = -.5 * M_PI + d_thetaRng() / 4;
-    auto state = Filter::State(-std::abs(d_fieldXRng()), d_fieldYRng(), cos(theta), sin(theta));
+    auto state = FilterState(-std::abs(d_fieldXRng()), d_fieldYRng(), cos(theta), sin(theta));
 
     return make_pair(state, d_defaultKidnapWeight->getValue());
   }
   else
   {
     auto theta = d_thetaRng();
-    auto state = Filter::State(d_fieldXRng(), d_fieldYRng(), cos(theta), sin(theta));
+    auto state = FilterState(d_fieldXRng(), d_fieldYRng(), cos(theta), sin(theta));
         
     return make_pair(state, d_defaultKidnapWeight->getValue());
   }
