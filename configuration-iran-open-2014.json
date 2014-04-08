@@ -1,0 +1,47 @@
+{
+  "inherits": "configuration-team.json",
+
+  "camera": {
+    "settings": {
+      "auto-wb": false,
+      "exposure-auto": 1,
+      "exposure-absolute": 400,
+      "exposure-auto-priority": false,
+      "backlight-compensation": false,
+      "power-line-frequency": 2,
+      "brightness": 128,
+      "contrast": 32,
+      "saturation": 28,
+      "gain": 100,
+      "wb-temp-k": 6200,
+      "sharpness": 0
+    }
+  },
+
+  "world": {
+    "ball-diameter": 0.12
+  },
+
+  "vision": {
+    "goal-detection": {
+      "accepted-width-ratio": [0.3, 4]
+    },
+
+    "COMMENT--------------ball-detection": {
+      "accepted-width-ratio": [0.6, 1.6]
+    },
+
+    "pixel-labels": {
+        "ball": { "hue": [0, 20], "sat": [150, 250], "val": [40, 19] },
+        "field": { "hue": [80, 120], "sat": [80, 230], "val": [50, 190] },
+        "goal": { "hue": [30, 50], "sat": [120, 230], "val": [80,160] },
+        "line": { "hue": [0, 255], "sat": [0, 167], "val": [120, 255] }
+    }
+  },
+
+  "options": {
+    "approach-ball": {
+      "stop-distance": 0.15
+    }
+  }
+}
