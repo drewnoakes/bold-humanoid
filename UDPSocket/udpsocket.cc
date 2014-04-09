@@ -170,7 +170,7 @@ int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress,
     return -1;
   }
 
-  assert(fromAddress->sin_family == AF_INET);
+  assert(!fromAddress || fromAddress->sin_family == AF_INET);
 
   return bytesRead;
 }
