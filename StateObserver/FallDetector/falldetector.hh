@@ -14,7 +14,9 @@ namespace bold
   {
     STANDUP,
     BACKWARD,
-    FORWARD
+    FORWARD,
+    LEFT,
+    RIGHT
   };
 
   class FallDetector : public TypedStateObserver<HardwareState>
@@ -29,8 +31,10 @@ namespace bold
   private:
     std::shared_ptr<Voice> d_voice;
     MovingAverage<int> d_fbAvgValue;
-    Setting<int>* d_forwardLimitValue;
-    Setting<int>* d_backwardLimitValue;
+    MovingAverage<int> d_lrAvgValue;
+    Setting<int>* d_maxLimitValue;
     FallState d_fallenState;
+    int d_neutralAccPos = 512;
+    Setting<double>* d_turnFbRatio;
   };
 }

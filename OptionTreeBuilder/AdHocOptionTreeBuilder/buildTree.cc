@@ -36,6 +36,10 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto hasFallenBackward = [fallDetector]() { return fallDetector->getFallenState() == FallState::BACKWARD; };
 
+  auto hasFallenLeft = [fallDetector]() { return fallDetector->getFallenState() == FallState::LEFT; };
+
+  auto hasFallenRight = [fallDetector]() { return fallDetector->getFallenState() == FallState::RIGHT; };
+
   auto isAgentShutdownRequested = changedTo(true, [agent]() { return agent->isStopRequested(); });
 
   // BUILD TREE
@@ -49,6 +53,8 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto standUp = make_shared<MotionScriptOption>("standUpScript", motionScriptModule, "./motionscripts/stand-ready-upright.json");
   auto forwardGetUp = make_shared<MotionScriptOption>("forwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-front.json");
   auto backwardGetUp = make_shared<MotionScriptOption>("backwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-back.json");
+  auto leftGetUp = make_shared<MotionScriptOption>("leftGetUpScript", motionScriptModule, "./motionscripts/get-up-from-left.json");
+  auto rightGetUp = make_shared<MotionScriptOption>("rightGetUpScript", motionScriptModule, "./motionscripts/get-up-from-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", ambulator);
 
   auto performRole = make_shared<DispatchOption<PlayerRole>>("performRole", [agent](){ return agent->getBehaviourControl()->getPlayerRole(); });
@@ -81,6 +87,8 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
   auto forwardGetUpState = winFsm->newState("forwardGetUp", {forwardGetUp});
   auto backwardGetUpState = winFsm->newState("backwardGetUp", {backwardGetUp});
+  auto leftGetUpState = winFsm->newState("leftGetUp", {leftGetUp});
+  auto rightGetUpState = winFsm->newState("rightGetUp", {rightGetUp});
   auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
   auto sitForShutdownState = winFsm->newState("sitForShutdown", {sitArmsBack});
   auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
@@ -209,11 +217,27 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->transitionTo(backwardGetUpState, "fall-back")
     ->when(hasFallenBackward);
 
+  playingState
+    ->transitionTo(leftGetUpState, "fall-left")
+    ->when(hasFallenLeft);
+
+  playingState
+    ->transitionTo(rightGetUpState, "fall-right")
+    ->when(hasFallenRight);
+
   forwardGetUpState
     ->transitionTo(playingState, "done")
     ->whenTerminated();
 
   backwardGetUpState
+    ->transitionTo(playingState, "done")
+    ->whenTerminated();
+
+  leftGetUpState
+    ->transitionTo(playingState, "done")
+    ->whenTerminated();
+
+  rightGetUpState
     ->transitionTo(playingState, "done")
     ->whenTerminated();
 
