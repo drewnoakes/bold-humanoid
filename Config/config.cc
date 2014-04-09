@@ -120,7 +120,10 @@ SettingBase* Config::getSettingBase(string path)
     auto it = node->subNodeByName.find(nodeName);
     if (it == node->subNodeByName.end())
     {
-      log::warning("Config::getSettingBase") << "Requested setting with path '" << path << "' but no node was found with name: " << nodeName;
+      if (d_root.subNodeByName.size() == 0 && d_root.settingByName.size() == 0)
+        log::warning("Config::getSettingBase") << "Requested setting with path '" << path << "' but not settings have been loaded yet.";
+      else
+        log::warning("Config::getSettingBase") << "Requested setting with path '" << path << "' but no node was found with name: " << nodeName;
       return nullptr;
     }
     node = &it->second;
