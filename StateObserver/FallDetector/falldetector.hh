@@ -35,9 +35,9 @@ namespace bold
     MovingAverage<int> d_fbAvgValue;
     MovingAverage<int> d_lrAvgValue;
     Setting<int>* d_maxLimitValue;
+    Setting<double>* d_turnFbRatio;
     FallState d_fallenState;
     Clock::Timestamp d_startTime;
     int d_neutralAccPos = 512;
-    Setting<double>* d_turnFbRatio;
   };
 }
