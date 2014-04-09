@@ -44,7 +44,7 @@ void GameStateReceiver::receive()
   static uint8 uniformNumber = static_cast<uint8>(Config::getStaticValue<int>("uniform-number"));
 
   // Reuse data buffer. Makes this method unthreadsafe.
-  static char data[MaxMessageSize];
+  static char data[MaxMessageSize + 1];
 
   // Process incoming game controller messages
   sockaddr_in fromAddress = {};
