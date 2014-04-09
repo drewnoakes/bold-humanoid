@@ -1137,3 +1137,14 @@ div.module.team div.role-indicator
 div.module.team div.role-indicator.Striker { background-color: purple; }
 div.module.team div.role-indicator.Keeper { background-color: white; }
 div.module.team div.role-indicator.Supporter { background-color: green; }
+
+/*******************************************************************/
+
+div.module.drawbridge div.player-tile
+{
+  display: inline-block;
+  background: rgba(0,0,0,0.1);
+  border-radius: 5px;
+  margin: 4px;
+  padding: 4px;
+}

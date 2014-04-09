@@ -214,6 +214,48 @@
         </table>
     </script>
 
+    <script id="drawbridge-module-template" type="text/x-handlebars-template">
+        <div class="player-tile">
+            <div class="unum">{{this.unum}}</div>
+            <div class="team-num">{{this.teamnum}}</div>
+            <div class="activity">{{this.activity}}</div>
+            <div class="role">{{this.role}}</div>
+            <div class="status">{{this.status}}</div>
+            <div class="version">{{this.ver}}</div>
+
+          <!--
+            {{#if this.agent}}
+            {{#if this.agent.ball}}
+            <div class="agent-ball">{{this.agent.ball0}}, {{this.agent.ball1}}</div>
+            {{/if}}
+            {{#each this.agent.goals}}
+            <div class="agent-goal">{{this0}}, {{this1}}</div>
+            {{/each}}
+            {{/if}}
+          -->
+
+            {{#if this.game}}
+            <div class="game-mode">{{this.game.mode}}</div>
+            <div class="game-age">({{this.game.age}} ms old)</div>
+            {{/if}}
+
+            {{#if this.hw}}
+            <div class="hw-volt">{{this.hw.volt}}</div>
+            <div class="hw-temps">
+            {{#each this.hw.temps}}
+            <span>{{this}} </span>
+            {{/each}}
+            </div>
+            {{/if}}
+
+            {{#if this.team}}
+            {{#each this.team}}
+            <div class="team-member">{{this.unum}} ({{this.ms}} ms old)</div>
+            {{/each}}
+            {{/if}}
+        </div>
+    </script>
+
 </head>
 
 <body>

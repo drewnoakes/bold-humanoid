@@ -15,6 +15,7 @@ import MotionScriptModule = require('modules/MotionScriptModule');
 import CameraModule = require('modules/CameraModule');
 import CommsModule = require('modules/CommsModule');
 import ConfigModule = require('modules/ConfigModule');
+import DrawbridgeModule = require('modules/DrawbridgeModule');
 import GameStateModule = require('modules/GameStateModule');
 import HardwareModule = require('modules/HardwareModule');
 import HistogramModule = require('modules/HistogramModule');
@@ -66,6 +67,7 @@ var loadUi = (settings?: Setting[]) =>
     moduleHost.register(new LoadModule());
     moduleHost.register(new TrajectoryModule());
     moduleHost.register(new VoiceModule());
+    moduleHost.register(new DrawbridgeModule());
     moduleHost.register(new ConfigModule());
     moduleHost.register(new StateDumpModule());
 
