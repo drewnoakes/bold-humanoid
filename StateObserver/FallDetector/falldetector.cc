@@ -4,6 +4,8 @@
 #include "../../Config/config.hh"
 #include "../../Voice/voice.hh"
 
+#include <iomanip>
+
 using namespace bold;
 using namespace std;
 
@@ -14,7 +16,8 @@ FallDetector::FallDetector(shared_ptr<Voice> voice)
   d_lrAvgValue(Config::getStaticValue<int>("fall-detector.window-size")),
   d_maxLimitValue(Config::getSetting<int>("fall-detector.max-limit-value")),
   d_turnFbRatio(Config::getSetting<double>("fall-detector.turn-fb-ratio")),
-  d_fallenState(FallState::STANDUP)
+  d_fallenState(FallState::STANDUP),
+  d_startTime(Clock::getTimestamp())
 {}
 
 void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hardwareState, SequentialTimer& timer)
@@ -46,6 +49,38 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
     }
 
     if (standingBefore && d_fallenState != FallState::STANDUP && d_voice->queueLength() == 0)
+    {
+      // Log a bunch of data when a fall is detected
+      stringstream msg;
+      msg << setprecision(3) << Clock::getSecondsSince(d_startTime) << ","
+          << getFallStateString(d_fallenState) << "," << fbAvg << "," << lrAvg
+          << "," << hardwareState->getCM730State().voltage;
+
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+        msg << "," << (int)hardwareState->getMX28State(jointId).presentTemp;
+
+      log::info("fall-data") << msg.str();
+
       d_voice->sayOneOf({"Ouch!", "Dammit", "Ooopsy", "Bah", "Shit"});
+    }
+  }
+}
+
+string FallDetector::getFallStateString(FallState fallState)
+{
+  switch (fallState)
+  {
+    case FallState::STANDUP:
+      return "Standup";
+    case FallState::BACKWARD:
+      return "Backward";
+    case FallState::FORWARD:
+      return "Forward";
+    case FallState::LEFT:
+      return "Left";
+    case FallState::RIGHT:
+      return "Right";
+    default:
+      return "Unknown";
   }
 }
