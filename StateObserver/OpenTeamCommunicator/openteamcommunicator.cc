@@ -208,7 +208,12 @@ void OpenTeamCommunicator::mergePlayerState(PlayerState& state)
 
   if (it == d_players.end())
   {
-    log::info("OpenTeamCommunicator::receiveData") << "First message seen from player " << state.uniformNumber;
+    if (static_cast<unsigned>(state.uniformNumber) != d_uniformNumber ||
+        static_cast<unsigned>(state.teamNumber) != d_teamNumber)
+    {
+      log::info("OpenTeamCommunicator::receiveData") << "First message seen from player " << state.uniformNumber;
+    }
+
     d_players.push_back(state);
   }
   else
