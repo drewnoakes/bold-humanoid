@@ -129,7 +129,7 @@ namespace bold
     PlayerState const* getKeeperState() const
     {
       auto it = std::find_if(d_playerStates.begin(), d_playerStates.end(),
-                             [](PlayerState const& p) { return p.uniformNumber == GOALIE_UNUM; });
+                             [](PlayerState const& p) { return p.role == PlayerRole::Keeper; });
 
       return it == d_playerStates.end() ? nullptr : &(*it);
     }
