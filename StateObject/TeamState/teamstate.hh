@@ -53,6 +53,8 @@ namespace bold
     KickLearner = 8
   };
 
+  std::string getPlayerRoleString(PlayerRole role);
+
   std::ostream& operator<<(std::ostream &stream, PlayerRole const& role);
 
   enum class PlayerActivity
@@ -77,6 +79,8 @@ namespace bold
     Other = 4
   };
 
+  std::string getPlayerActivityString(PlayerActivity activity);
+
   enum class PlayerStatus
   {
     /// Robot is not doing anything, or is incapable. It may have fallen, or
@@ -90,6 +94,8 @@ namespace bold
     /// The robot has been penalised and is not permitted to take any action.
     Penalised = 2
   };
+
+  std::string getPlayerStatusString(PlayerStatus status);
 
   class PlayerState
   {
