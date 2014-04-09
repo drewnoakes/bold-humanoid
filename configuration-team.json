@@ -6,6 +6,7 @@
   },
   "drawbridge": {
     "udp-port": 8074,
+    "websocket-port": 8888
   },
   "voice": {
     "enabled": true,

@@ -648,6 +648,21 @@ set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPI
 #
 add_dependencies(boldhumanoid libwebsockets_lib)
 
+#
+## Drawbridge
+#
+
+add_executable(drawbridge
+  ./drawbridge.cc
+  $<TARGET_OBJECTS:boldhumanoid_objects>
+)
+
+target_link_libraries(drawbridge ${BOLDHUMANOID_LINK_LIBRARIES})
+set_target_properties(drawbridge PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
+
+#
+## Deployment
+#
 
 set(BOLDHUMANOID_DEPLOY_FILES
   $<TARGET_FILE:boldhumanoid>

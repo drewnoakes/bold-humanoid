@@ -8,6 +8,7 @@
   },
   "drawbridge": {
     "udp-port":       { "type": "int", "readonly": true, "default": 8074, "min": 1024, "max": 65535 },
+    "websocket-port": { "type": "int", "readonly": true, "default": 8888, "min": 1024, "max": 65535 }
   },
   "voice": {
     "name":    {
