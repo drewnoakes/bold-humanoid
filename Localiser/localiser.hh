@@ -6,6 +6,7 @@
 
 #include "../AgentPosition/agentposition.hh"
 #include "../filters/Filter/KalmanFilter/kalmanfilter.hh"
+#include "../filters/Filter/UnscentedKalmanFilter/unscentedkalmanfilter.hh"
 #include "../filters/Filter/ParticleFilter/particlefilter.hh"
 #include "../stats/movingaverage.hh"
 
