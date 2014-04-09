@@ -209,6 +209,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./DrawBridgeComms/drawbridgecomms.cc
+)
+
+add_class(BOLDHUMANOID
   ./FieldMap/FieldMap.cc
 )
 

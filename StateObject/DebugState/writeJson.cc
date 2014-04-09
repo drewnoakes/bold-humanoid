@@ -15,6 +15,8 @@ void DebugState::writeJson(Writer<StringBuffer>& writer) const
       .Int(d_sentTeamMessageCount)
     .String("receivedTeamMessages")
       .Int(d_receivedTeamMessageCount)
+    .String("sentDrawbridgeMessages")
+      .Int(d_sentDrawbridgeMessageCount)
     .String("eyeColour")
       .StartArray()
         .Int(d_eyeColour.r)

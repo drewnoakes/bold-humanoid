@@ -115,6 +115,16 @@ void Agent::think()
   State::callbackObservers(ThreadId::ThinkLoop, t);
   t.exit();
 
+  //
+  // Send a message for drawbridge use within matches, containing status of the agent.
+  //
+  if (d_cycleNumber % 30 == 0)
+  {
+    d_drawBridgeComms->publish();
+
+    if (d_debugger)
+      d_debugger->notifySendingDrawbridgeMessage();
+  }
 
   log::verbose("Agent::think") << "Ending think cycle " << d_cycleNumber;
 }

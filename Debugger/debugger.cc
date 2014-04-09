@@ -50,6 +50,7 @@ void Debugger::update()
   State::make<DebugState>(
     d_gameControllerMessageCount, d_ignoredMessageCount,
     d_sentTeamMessageCount, d_receivedTeamMessageCount,
+    d_sentDrawbridgeMessageCount,
     d_debugControl
   );
 

@@ -8,6 +8,7 @@
 #include "../Config/config.hh"
 #include "../DataStreamer/datastreamer.hh"
 #include "../Debugger/debugger.hh"
+#include "../DrawBridgeComms/drawbridgecomms.hh"
 #include "../FieldMap/fieldmap.hh"
 #include "../GameStateReceiver/gamestatereceiver.hh"
 #include "../ImageLabeller/imagelabeller.hh"

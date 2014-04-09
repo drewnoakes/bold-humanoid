@@ -4,6 +4,9 @@
     "remote-port": 12321,
     "send-period-seconds": 0.1
   },
+  "drawbridge": {
+    "udp-port": 8074,
+  },
   "voice": {
     "enabled": true,
     "name":    1,

@@ -75,6 +75,8 @@ namespace bold
       return d_data.teams[team].getPlayer(unum);
     }
 
+    double getAgeMillis() const { return Clock::getMillisSince(d_receivedAt); }
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:

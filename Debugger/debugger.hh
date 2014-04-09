@@ -24,6 +24,7 @@ namespace bold
     void notifyIgnoringUnrecognisedMessage() { d_ignoredMessageCount++; }
     void notifySendingTeamMessage() { d_sentTeamMessageCount++; }
     void notifyReceivedTeamMessage() { d_receivedTeamMessageCount++; }
+    void notifySendingDrawbridgeMessage() { d_sentDrawbridgeMessageCount++; }
 
     //
     // Display status
@@ -51,6 +52,7 @@ namespace bold
     unsigned d_ignoredMessageCount;
     unsigned d_sentTeamMessageCount;
     unsigned d_receivedTeamMessageCount;
+    unsigned d_sentDrawbridgeMessageCount;
 
     Colour::bgr d_eyeColour;
     Colour::bgr d_foreheadColour;

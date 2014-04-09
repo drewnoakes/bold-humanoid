@@ -13,6 +13,7 @@ namespace bold
   class CameraModel;
   class DataStreamer;
   class Debugger;
+  class DrawBridgeComms;
   class FallDetector;
   class GameStateReceiver;
   class GyroCalibrator;
@@ -118,6 +119,7 @@ namespace bold
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<DataStreamer> d_streamer;
     std::shared_ptr<Debugger> d_debugger;
+    std::shared_ptr<DrawBridgeComms> d_drawBridgeComms;
     std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
     std::shared_ptr<Localiser> d_localiser;
     std::shared_ptr<OptionTree> d_optionTree;

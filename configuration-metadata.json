@@ -6,6 +6,9 @@
     "remote-port": { "type": "int", "readonly": true, "default": 12321, "min": 1024, "max": 65535 },
     "send-period-seconds": { "type": "double", "default": 0.5, "min": 0.01, "max": 5 }
   },
+  "drawbridge": {
+    "udp-port":       { "type": "int", "readonly": true, "default": 8074, "min": 1024, "max": 65535 },
+  },
   "voice": {
     "name":    {
       "type": "enum",
