@@ -22,7 +22,7 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
   // Track the smoothed forward/backward acceleration to test for a consistent
   // indication that we have fallen.
 
-  int fbAvg = d_fbAvgValue.next(hardwareState->getCM730State().accRaw.y()) - d_neutralAccPos;
+  int fbAvg =   d_fbAvgValue.next(hardwareState->getCM730State().accRaw.y()) - d_neutralAccPos;
   int lrAvg = -(d_lrAvgValue.next(hardwareState->getCM730State().accRaw.x()) - d_neutralAccPos);
 
   if (d_fbAvgValue.isMature())
@@ -34,12 +34,16 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
     // Update our estimate of whether we've fallen or not
     if (dist > d_maxLimitValue->getValue())
     {
-      // only do the turn movement if we are really of our side
-      fbAvg *= d_turnFbRatio->getValue();
-      d_fallenState = abs(fbAvg) > abs(lrAvg) ? (fbAvg > 0 ? FallState::FORWARD : FallState::BACKWARD) : (lrAvg > 0 ? FallState::LEFT : FallState::RIGHT);
+      // Only do the turn movement if we are really on our side
+      double scaledFbAvg = fbAvg * d_turnFbRatio->getValue();
+      d_fallenState = abs(scaledFbAvg) > abs(lrAvg)
+        ? (scaledFbAvg > 0 ? FallState::FORWARD : FallState::BACKWARD)
+        : (lrAvg       > 0 ? FallState::LEFT    : FallState::RIGHT);
     }
     else
+    {
       d_fallenState = FallState::STANDUP;
+    }
 
     if (standingBefore && d_fallenState != FallState::STANDUP && d_voice->queueLength() == 0)
       d_voice->sayOneOf({"Ouch!", "Dammit", "Ooopsy", "Bah", "Shit"});
