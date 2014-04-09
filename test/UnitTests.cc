@@ -44,15 +44,15 @@ int main(int argc, char **argv)
 
   log::minLevel = LogLevel::Warning;
 
-  State::initialise();
-
-  Config::initialise("../configuration-metadata.json", "../configuration-team.json");
-
   for (int i = 0; i < argc; i++)
   {
     if (strcmp("-v", argv[i]) == 0)
       log::minLevel = LogLevel::Verbose;
   }
+
+  State::initialise();
+
+  Config::initialise("../configuration-metadata.json", "../configuration-team.json");
 
   return RUN_ALL_TESTS();
 }
