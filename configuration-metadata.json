@@ -278,6 +278,9 @@
       "lower-turn-limit-degs": { "type": "double", "default": 20.0 },
       "upper-turn-limit-degs": { "type": "double", "default": 35.0 }
     },
+    "turn-to-goal": {
+      "time-scaling": { "type": "double", "default": 10 }
+    },
     "look-around": {
       "top-angle":      { "type": "double", "default": 23.0 },
       "bottom-angle":   { "type": "double", "default": -17.0 },

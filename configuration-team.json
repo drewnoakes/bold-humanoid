@@ -265,6 +265,9 @@
       "lower-turn-limit-degs": 1.0,
       "upper-turn-limit-degs": 35.0
     },
+    "turn-to-goal": {
+      "time-scaling": 8
+    },
     "look-around": {
       "top-angle": 30.0,
       "bottom-angle": -25.0,

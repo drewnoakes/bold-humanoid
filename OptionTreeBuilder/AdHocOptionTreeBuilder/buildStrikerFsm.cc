@@ -46,7 +46,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookForGoalState = fsm->newState("lookForGoal", {stopWalking, lookForGoal});
   auto lookAtGoalState = fsm->newState("lookAtGoal", {stopWalking, lookAtGoal});
   auto aimState = fsm->newState("aim", {});
-  auto circleBallState = fsm->newState("circleBall", {circleBall});
+  auto turnToGoalState = fsm->newState("turnToGoal", {circleBall});
   auto aboutFaceState = fsm->newState("aboutFace", {circleBall});
   auto lookAtFeetState = fsm->newState("lookAtFeet", {lookAtFeet});
   auto leftKickState = fsm->newState("leftKick", {leftKick});
@@ -55,7 +55,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState, waitForOtherStrikerState });
-  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { lookForGoalState, lookAtGoalState, aimState, circleBallState, lookAtFeetState, leftKickState, rightKickState });
+  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { lookForGoalState, lookAtGoalState, aimState, turnToGoalState, lookAtFeetState, leftKickState, rightKickState });
 
   standUpState
     ->transitionTo(lookForBallState, "standing")
@@ -203,22 +203,22 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // circle immediately, if goal is not in front (prior transition didn't fire)
   aimState
-    ->transitionTo(circleBallState, "goal-at-angle")
+    ->transitionTo(turnToGoalState, "goal-at-angle")
     ->when([]() { return true; });
 
   // control duration of ball circling
-  circleBallState
+  turnToGoalState
     ->transitionTo(lookForGoalState, "done")
-    ->when([circleBall,circleBallState,agent]()
+    ->when([circleBall,turnToGoalState,agent]()
     {
       // TODO break dependency upon pan limit
       double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
       double panAngleRange = agent->getHeadModule()->getLeftLimitRads();
       double panRatio = panAngle / panAngleRange;
-      double circleDurationSeconds = fabs(panRatio) * 10;
+      double circleDurationSeconds = fabs(panRatio) * Config::getValue<double>("options.turn-to-goal.time-scaling");
       log::info("circleBallState")
           << "circleDurationSeconds=" << circleDurationSeconds
-          << " secondsSinceStart=" << circleBallState->secondsSinceStart()
+          << " secondsSinceStart=" << turnToGoalState->secondsSinceStart()
           << " panRatio=" << panRatio
           << " panAngle=" << panAngle
           << " leftLimitDegs=" << agent->getHeadModule()->getLeftLimitDegs();
@@ -227,9 +227,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       circleBall->setIsLeftTurn(panAngle < 0);
 
       // Return a function that closes over the computed duration
-      return [circleBallState,circleDurationSeconds]()
+      return [turnToGoalState,circleDurationSeconds]()
       {
-        return circleBallState->secondsSinceStart() >= circleDurationSeconds;
+        return turnToGoalState->secondsSinceStart() >= circleDurationSeconds;
       };
     });
 
