@@ -143,6 +143,7 @@ void RemoteControl::update()
     }
     else
     {
+      // TODO only do this if we are standing (need better test for standing though)
       // Set walk direction with left joystick
       d_ambulator->setMoveDir(Eigen::Vector2d(
         (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
@@ -151,6 +152,7 @@ void RemoteControl::update()
   }
 
   // Control turn angle with right joystick
+  // TODO only do this if we are standing (need better test for standing though)
   if (axis2 != 0)
     d_ambulator->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
 
