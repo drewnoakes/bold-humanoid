@@ -16,6 +16,7 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
     // to the left, and pans right through the top of the box.
     d_startTimeSeconds = t - (durationHorizUpper/4.0);
     d_isResetNeeded = false;
+    writer.String("reset").Bool(true);
   }
   else if (d_speedCallback)
   {
@@ -44,6 +45,7 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
     // moving right-to-left across top
     tiltDegs = d_topAngle->getValue();
     panDegs = Math::lerp(phase/durationHorizUpper, -d_sideAngle, d_sideAngle);
+    writer.String("stage").Int(1);
   }
   else
   {
@@ -54,6 +56,7 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
       // moving top-to-bottom at left
       tiltDegs = Math::lerp(phase/durationVert, d_topAngle->getValue(), d_bottomAngle->getValue());
       panDegs = d_sideAngle;
+      writer.String("stage").Int(2);
     }
     else
     {
@@ -64,20 +67,23 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
         // moving left-to-right across bottom
         tiltDegs = d_bottomAngle->getValue();
         panDegs = Math::lerp(phase/durationHorizLower, d_sideAngle, -d_sideAngle);
+        writer.String("stage").Int(3);
       }
       else
       {
         phase -= durationHorizLower;
 
-        if (phase < durationVert)
+        if (phase <= durationVert)
         {
           // moving bottom-to-top at right
           tiltDegs = Math::lerp(phase/durationVert, d_bottomAngle->getValue(), d_topAngle->getValue());
           panDegs = -d_sideAngle;
+          writer.String("stage").Int(4);
         }
         else
         {
           log::info("LookAround::runPolicy") << "Failed to find phase of motion";
+          writer.String("stage").Int(-1);
         }
       }
     }
