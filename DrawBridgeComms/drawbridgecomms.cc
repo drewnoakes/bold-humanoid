@@ -10,6 +10,7 @@
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/TeamState/teamstate.hh"
 #include "../UDPSocket/udpsocket.hh"
+#include "../version.hh"
 
 using namespace bold;
 using namespace rapidjson;
@@ -40,8 +41,7 @@ void DrawBridgeComms::publish()
   d_socket->send(buffer.GetString(), buffer.GetSize());
 }
 
-// TODO include: GIT SHA1
-//               FPS (think/motion)
+// TODO include: FPS (think/motion)
 //               Uptime
 //               Memory usage
 
@@ -56,6 +56,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
   {
     writer.String("unum").Int(unum);
     writer.String("team").Int(team);
+    writer.String("ver").String(Version::GIT_SHA1.c_str());
 
     auto agentFrame = State::get<AgentFrameState>();
     if (agentFrame)
