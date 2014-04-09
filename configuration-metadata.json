@@ -305,6 +305,10 @@
       "max-height": { "type": "double", "default": 23},
       "min-height": { "type": "double", "default": -13},
       "max-side": { "type": "double", "default": 65}
+    },
+    "yield": {
+      "min-dist": { "type": "double", "default": 0.5 },
+      "max-dist": { "type": "double", "default": 1.5 }
     }
   },
   "health-and-safety": {

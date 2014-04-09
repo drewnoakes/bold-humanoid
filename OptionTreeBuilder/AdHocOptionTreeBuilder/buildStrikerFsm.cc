@@ -12,12 +12,10 @@ auto shouldYieldToOtherAttacker = []()
 
   bool isTeamMateAttacking = team->isTeamMate(PlayerActivity::AttackingGoal);
 
-  cout << "YIELD isTeamMateAttacking=" << isTeamMateAttacking << " dist=" << dist << endl;
+  static auto yieldMinDist = Config::getSetting<double>("options.yield.min-dist");
+  static auto yieldMaxDist = Config::getSetting<double>("options.yield.max-dist");
 
-  if (dist > 0.5 && dist < 1.5 && isTeamMateAttacking)
-    return true;
-
-  return false;
+  return dist > yieldMinDist->getValue() && yieldMaxDist->getValue() < 1.5 && isTeamMateAttacking;
 };
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shared_ptr<OptionTree> tree)
