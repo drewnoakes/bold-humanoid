@@ -4,8 +4,7 @@
     {
       "keyFrames": [
         {
-          "pauseCycles": 5,
-          "moveCycles": 10,
+          "moveCycles": 90,
           "values": [
             2122,
             3983,
@@ -30,8 +29,7 @@
           ]
         },
         {
-          "pauseCycles": 5,
-          "moveCycles": 10,
+          "moveCycles": 90,
           "values": [
             2122,
             3050,
