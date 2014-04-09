@@ -3,7 +3,9 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
+#include "../BehaviourControl/behaviourcontrol.hh"
 #include "../Config/config.hh"
+#include "../Debugger/debugger.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/GameState/gamestate.hh"
@@ -16,8 +18,10 @@ using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-DrawBridgeComms::DrawBridgeComms()
-: d_socket(make_unique<UDPSocket>())
+DrawBridgeComms::DrawBridgeComms(std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger)
+: d_behaviourControl(behaviourControl),
+  d_debugger(debugger),
+  d_socket(make_unique<UDPSocket>())
 {
   int port = Config::getStaticValue<int>("drawbridge.udp-port");
 
@@ -39,6 +43,9 @@ void DrawBridgeComms::publish()
   buildMessage(buffer);
 
   d_socket->send(buffer.GetString(), buffer.GetSize());
+
+  if (d_debugger)
+    d_debugger->notifySendingDrawbridgeMessage();
 }
 
 // TODO include: FPS (think/motion)
@@ -57,6 +64,10 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     writer.String("unum").Int(unum);
     writer.String("team").Int(team);
     writer.String("ver").String(Version::GIT_SHA1.c_str());
+
+    writer.String("activity").String(getPlayerActivityString(d_behaviourControl->getPlayerActivity()).c_str());
+    writer.String("role").String(getPlayerRoleString(d_behaviourControl->getPlayerRole()).c_str());
+    writer.String("status").String(getPlayerStatusString(d_behaviourControl->getPlayerStatus()).c_str());
 
     auto agentFrame = State::get<AgentFrameState>();
     if (agentFrame)
