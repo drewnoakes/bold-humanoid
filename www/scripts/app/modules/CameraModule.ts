@@ -38,7 +38,7 @@ class CameraModule extends Module
         this.hoverPixelInfo = <HTMLDivElement>content.querySelector('.hover-pixel-info');
 
         var pixelLabelInspectorCanvas = <HTMLCanvasElement>content.querySelector('.pixel-label-inspector');
-        this.pixelLabelInspector = new PixelLabelInspector(pixelLabelInspectorCanvas, 320, 85);
+        this.pixelLabelInspector = new PixelLabelInspector(pixelLabelInspectorCanvas, 320, 120);
         this.pixelLabelInspector.setVisible(false);
 
         this.bindInteraction();

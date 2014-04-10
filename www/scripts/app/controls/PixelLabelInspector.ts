@@ -25,7 +25,7 @@ class PixelLabelInspector
 
         control.withSettings('vision.pixel-labels', settings =>
         {
-            var ballSetting, goalSetting, fieldSetting, lineSetting;
+            var ballSetting, goalSetting, fieldSetting, lineSetting, cyanSetting, magentaSetting;
 
             _.each(settings, setting =>
             {
@@ -42,10 +42,16 @@ class PixelLabelInspector
                     case 'vision.pixel-labels.line':
                         lineSetting = setting;
                         break;
+                    case 'vision.pixel-labels.cyan':
+                        cyanSetting = setting;
+                        break;
+                    case 'vision.pixel-labels.magenta':
+                        magentaSetting = setting;
+                        break;
                 }
             });
 
-            this.settings = [ballSetting, goalSetting, fieldSetting, lineSetting];
+            this.settings = [ballSetting, goalSetting, fieldSetting, lineSetting, cyanSetting, magentaSetting];
             this.ready = true;
         });
     }
