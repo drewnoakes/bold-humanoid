@@ -43,6 +43,11 @@
       "goal": { "hue": [30, 60], "sat": [120, 230], "val": [80,160] },
       "line": { "hue": [0, 255], "sat": [0, 167], "val": [120, 255] }
     },
+
+    "ball-detection": {
+      "accepted-size-ratio": [0.4, 3.0]
+    },
+
   },
 
   "options": {
@@ -50,7 +55,7 @@
       "turn-speed-scale": 18.0,
       "max-forward-speed": 40.0,
       "min-forward-speed": 5.0,
-      "brake-distance": 0.8,
+      "brake-distance": 1.0,
       "stop-distance": 0.15,
       "lower-turn-limit-degs": 1.0,
       "upper-turn-limit-degs": 35.0
