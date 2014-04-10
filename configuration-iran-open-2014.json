@@ -2,7 +2,7 @@
   "inherits": "configuration-team.json",
 
   "team-number": 7,
-
+    "team-colour": 1,
   "camera": {
     "settings": {
       "auto-wb": false,
@@ -31,6 +31,10 @@
 
     "COMMENT--------------ball-detection": {
       "accepted-width-ratio": [0.6, 1.6]
+    },
+
+    "player-detection": {
+        "enable": true
     },
 
     "field-edge-pass": {
