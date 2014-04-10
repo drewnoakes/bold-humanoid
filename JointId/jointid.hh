@@ -8,6 +8,9 @@ namespace bold
 
   enum class JointId : unsigned char
   {
+    // -------------------
+    // Actual MX28 joint IDs
+
     R_SHOULDER_PITCH = 1,
     L_SHOULDER_PITCH = 2,
     R_SHOULDER_ROLL  = 3,
@@ -21,8 +24,10 @@ namespace bold
     L_HIP_ROLL       = 10,
     R_HIP_PITCH      = 11,
     L_HIP_PITCH      = 12,
+
     R_KNEE           = 13,
     L_KNEE           = 14,
+
     R_ANKLE_PITCH    = 15,
     L_ANKLE_PITCH    = 16,
     R_ANKLE_ROLL     = 17,
@@ -31,10 +36,15 @@ namespace bold
     HEAD_PAN         = 19,
     HEAD_TILT        = 20,
 
+    // -------------------
+    // Psuedo joints
+
     CAMERA_CALIB_TILT = 21,
     CAMERA_CALIB_PAN  = 22,
 
+    // -------------------
     // Some convenience pointers
+
     ARMS_START = R_SHOULDER_PITCH,
     ARMS_END = L_ELBOW,
 
