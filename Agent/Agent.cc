@@ -88,7 +88,7 @@ Agent::Agent()
 
   d_remoteControl = make_shared<RemoteControl>(this);
 
-  d_drawBridgeComms = make_shared<DrawBridgeComms>(this, d_behaviourControl, d_debugger);
+//   d_drawBridgeComms = make_shared<DrawBridgeComms>(this, d_behaviourControl, d_debugger);
 
   d_debugger->update();
 
