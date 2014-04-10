@@ -128,6 +128,10 @@ namespace bold
     bool getShouldDrawCalibration() const { return d_shouldDrawCalibration->getValue(); }
 
   private:
+
+    Maybe<Eigen::Vector2d> detectBall(std::vector<Blob>& ballBlobs, SequentialTimer& t);
+    std::vector<Eigen::Vector2d,Eigen::aligned_allocator<Eigen::Vector2d>> detectGoal(std::vector<Blob>& goalBlobs, SequentialTimer& t);
+
     bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d& imagePos, Eigen::Vector3d& agentFramePos);
     bool canBlobBeGoal(Blob const& goalBlob, Eigen::Vector2d& pos);
 

@@ -584,6 +584,8 @@ add_class(BOLDHUMANOID
 add_class(BOLDHUMANOID
   ./VisualCortex/canBlobBeBall.cc
   ./VisualCortex/canBlobBeGoal.cc
+  ./VisualCortex/detectBall.cc
+  ./VisualCortex/detectGoal.cc
   ./VisualCortex/integrateImage.cc
   ./VisualCortex/shouldMergeBallBlobs.cc
   ./VisualCortex/saveImage.cc
