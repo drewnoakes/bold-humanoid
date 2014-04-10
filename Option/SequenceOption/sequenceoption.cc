@@ -34,6 +34,7 @@ vector<shared_ptr<Option>> SequenceOption::runPolicy(Writer<StringBuffer>& write
   {
     auto option = d_sequence[0];
     option->reset();
+    d_index++;
     return {option};
   }
 

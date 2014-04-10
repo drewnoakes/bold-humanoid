@@ -20,6 +20,7 @@
 #include "../../Option/LookAtGoal/lookatgoal.hh"
 #include "../../Option/MotionScriptOption/motionscriptoption.hh"
 #include "../../Option/SearchBall/searchball.hh"
+#include "../../Option/SequenceOption/sequenceoption.hh"
 #include "../../Option/StopWalking/stopwalking.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"

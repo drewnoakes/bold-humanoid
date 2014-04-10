@@ -86,10 +86,10 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto setState = winFsm->newState("set", {stopWalking});
   auto playingState = winFsm->newState("playing", {performRole});
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
-  auto forwardGetUpState = winFsm->newState("forwardGetUp", {stopWalkingImmediately, forwardGetUp});
-  auto backwardGetUpState = winFsm->newState("backwardGetUp", {stopWalkingImmediately, backwardGetUp});
-  auto leftGetUpState = winFsm->newState("leftGetUp", {stopWalkingImmediately, leftGetUp});
-  auto rightGetUpState = winFsm->newState("rightGetUp", {stopWalkingImmediately, rightGetUp});
+  auto forwardGetUpState  = winFsm->newState("forwardGetUp",  {SequenceOption::make("forward-get-up-sequence",  {stopWalkingImmediately,forwardGetUp})});
+  auto backwardGetUpState = winFsm->newState("backwardGetUp", {SequenceOption::make("backward-get-up-sequence", {stopWalkingImmediately,backwardGetUp})});
+  auto leftGetUpState     = winFsm->newState("leftGetUp",     {SequenceOption::make("left-get-up-sequence",     {stopWalkingImmediately,leftGetUp})});
+  auto rightGetUpState    = winFsm->newState("rightGetUp",    {SequenceOption::make("right-get-up-sequence",    {stopWalkingImmediately,rightGetUp})});
   auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
   auto sitForShutdownState = winFsm->newState("sitForShutdown", {sitArmsBack});
   auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
