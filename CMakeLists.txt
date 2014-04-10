@@ -402,6 +402,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/SequenceOption/sequenceoption.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/StopWalking/stopwalking.cc
 )
 
