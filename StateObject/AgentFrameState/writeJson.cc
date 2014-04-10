@@ -37,6 +37,20 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
+    writer.String("teammates");
+    writer.StartArray();
+    {
+      for (auto const& teamMatePos : d_teamMateObservations)
+      {
+        writer.StartArray();
+        writer.Double(teamMatePos.x(), "%.3f");
+        writer.Double(teamMatePos.y(), "%.3f");
+        writer.Double(teamMatePos.z(), "%.3f");
+        writer.EndArray();
+      }
+    }
+    writer.EndArray();
+
     writer.String("lines");
     writer.StartArray();
     {

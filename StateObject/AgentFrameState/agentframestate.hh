@@ -17,6 +17,7 @@ namespace bold
   public:
     AgentFrameState(Maybe<Eigen::Vector3d> ballObservation,
                     std::vector<Eigen::Vector3d> goalObservations,
+                    std::vector<Eigen::Vector3d> teamMateObservations,
                     std::vector<LineSegment3d> observedLineSegments,
                     std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> observedLineJunctions,
                     Maybe<Polygon2d> visibleFieldPoly,
@@ -24,6 +25,7 @@ namespace bold
                     ulong thinkCycleNumber)
       : d_ballObservation(std::move(ballObservation)),
       d_goalObservations(std::move(goalObservations)),
+      d_teamMateObservations(std::move(teamMateObservations)),
       d_observedLineSegments(std::move(observedLineSegments)),
       d_observedLineJunctions(std::move(observedLineJunctions)),
       d_visibleFieldPoly(std::move(visibleFieldPoly)),
@@ -33,6 +35,7 @@ namespace bold
 
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
+    std::vector<Eigen::Vector3d> getTeamMateObservations() const { return d_teamMateObservations; }
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
     std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> getObservedLineJunctions() const { return d_observedLineJunctions; }
     Maybe<Polygon2d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
@@ -69,6 +72,7 @@ namespace bold
   private:
     Maybe<Eigen::Vector3d> d_ballObservation;
     std::vector<Eigen::Vector3d> d_goalObservations;
+    std::vector<Eigen::Vector3d> d_teamMateObservations;
     std::vector<LineSegment3d> d_observedLineSegments;
     std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> d_observedLineJunctions;
     Maybe<Polygon2d> d_visibleFieldPoly;

@@ -7,6 +7,7 @@ void Spatialiser::updateCameraToAgent()
   auto cameraFrame = State::get<CameraFrameState>();
 
   static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
+  static double goalieMarkerHeight = Config::getStaticValue<double>("vision.player-detection.goalie-marker-height");
 
   // Project ball observation
   auto const& ballObs = cameraFrame->getBallObservation();
@@ -21,6 +22,15 @@ void Spatialiser::updateCameraToAgent()
     auto const& pos3d = findGroundPointForPixel(goal);
     if (pos3d.hasValue())
       goals.emplace_back(*pos3d);
+  }
+
+  // Project team mate observations
+  std::vector<Vector3d> teamMates;
+  for (auto const& teamMate : cameraFrame->getTeamMateObservations())
+  {
+    auto const& pos3d = findGroundPointForPixel(teamMate, goalieMarkerHeight);
+    if (pos3d.hasValue())
+      teamMates.emplace_back(*pos3d);
   }
 
   // Project observed lines
@@ -79,7 +89,7 @@ void Spatialiser::updateCameraToAgent()
 
   Maybe<Polygon2d> visibleFieldPoly = vertices.size() == 4 ? Maybe<Polygon2d>(Polygon2d(vertices)) : Maybe<Polygon2d>::empty();
 
-  State::make<AgentFrameState>(ball, goals,
+  State::make<AgentFrameState>(ball, goals, teamMates,
                                lineSegments, lineJunctions,
                                visibleFieldPoly, occlusionRays,
                                cameraFrame->getThinkCycleNumber());
