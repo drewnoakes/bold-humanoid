@@ -49,13 +49,15 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_occlusionEdgeColour       = Config::getSetting<Colour::bgr>("round-table.image-colours.occlusion-edge");
   d_calibrationColour         = Config::getSetting<Colour::bgr>("round-table.image-colours.calibration");
 
-  d_goalLabel  = make_shared<PixelLabel>("Goal",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
-  d_ballLabel  = make_shared<PixelLabel>("Ball",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
-  d_fieldLabel = make_shared<PixelLabel>("Field", Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
-  d_lineLabel  = make_shared<PixelLabel>("Line",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
+  d_goalLabel     = make_shared<PixelLabel>("Goal",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
+  d_ballLabel     = make_shared<PixelLabel>("Ball",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
+  d_fieldLabel    = make_shared<PixelLabel>("Field",   Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
+  d_lineLabel     = make_shared<PixelLabel>("Line",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
+  d_cyanLabel     = make_shared<PixelLabel>("Cyan",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.cyan"));
+  d_magentaLabel  = make_shared<PixelLabel>("Magenta", Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
 
-  vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel };
-  vector<shared_ptr<PixelLabel>> blobPixelLabels = { d_ballLabel, d_goalLabel };
+  vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel, d_cyanLabel, d_magentaLabel };
+  vector<shared_ptr<PixelLabel>> blobPixelLabels = { d_ballLabel, d_goalLabel, d_cyanLabel, d_magentaLabel };
 
   d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
@@ -75,6 +77,8 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.ball") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_ballLabel ->setHsvRange(value); createLookupTable(); });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_fieldLabel->setHsvRange(value); createLookupTable(); });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_lineLabel ->setHsvRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.cyan") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_cyanLabel ->setHsvRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.magenta") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_magentaLabel ->setHsvRange(value); createLookupTable(); });
 
   // ball detection settings
   d_minBallAreaPixels              = Config::getSetting<int>("vision.ball-detection.min-area-px");

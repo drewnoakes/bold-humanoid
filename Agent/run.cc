@@ -9,8 +9,12 @@ void Agent::run()
 
   if (d_voice)
   {
-    stringstream announcement;
-    announcement << "Player " << d_uniformNumber << " on team " << d_teamNumber;
+    ostringstream announcement;
+    announcement <<
+      "Player " << d_uniformNumber <<
+      " on team " << d_teamNumber <<
+      ", " <<
+      (d_teamColour == TeamColour::Cyan ? "cyan" : "magenta");
     d_voice->say(announcement.str());
   }
 

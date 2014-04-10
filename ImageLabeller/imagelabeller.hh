@@ -13,6 +13,12 @@ namespace bold
   class SequentialTimer;
   class Spatialiser;
 
+  enum class TeamColour
+  {
+    Cyan = 1,
+    Magenta = 2
+  };
+
   class ImageLabeller
   {
   public:

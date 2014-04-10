@@ -143,6 +143,8 @@ namespace bold
     std::shared_ptr<PixelLabel> d_ballLabel;
     std::shared_ptr<PixelLabel> d_fieldLabel;
     std::shared_ptr<PixelLabel> d_lineLabel;
+    std::shared_ptr<PixelLabel> d_cyanLabel;
+    std::shared_ptr<PixelLabel> d_magentaLabel;
 
     std::shared_ptr<ImageLabeller> d_imageLabeller;
 

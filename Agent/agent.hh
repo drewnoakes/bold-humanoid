@@ -41,6 +41,8 @@ namespace bold
 
   typedef unsigned long ulong;
 
+  enum class TeamColour;
+
   class Agent
   {
   public:
@@ -90,8 +92,9 @@ namespace bold
     bool d_isRunning;
     bool d_isStopRequested;
 
-    const unsigned d_teamNumber;
-    const unsigned d_uniformNumber;
+    unsigned const d_teamNumber;
+    unsigned const d_uniformNumber;
+    TeamColour const d_teamColour;
 
     // Motion
 
