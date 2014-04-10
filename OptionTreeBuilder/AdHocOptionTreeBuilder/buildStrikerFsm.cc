@@ -112,10 +112,12 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->transitionTo(lookAtBallState)
     ->when([]() { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
+  auto maxGoalieGoalDistance      = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
+
   // Abort attack if it looks like we are going to kick an own goal
   lookForGoalState
     ->transitionTo(aboutFaceState, "abort-attack-own-goal")
-    ->when([agent]()
+    ->when([agent,maxGoalieGoalDistance]()
     {
       // If the keeper is telling us that the ball is close to our goal, and
       // we see a goalpost nearly that far away, then we should abort the
@@ -129,7 +131,19 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       FieldSide ballSide = team->getKeeperBallSideEstimate();
 
       if (ballSide == FieldSide::Unknown)
+      {
+        // Check if we see goalie in between goal posts
+        auto goalObservations = agentFrame->getGoalObservations();
+        auto teamMateObservations = agentFrame->getTeamMateObservations();
+        if (goalObservations.size() == 2 && teamMateObservations.size() > 0)
+        {
+          auto goalMidpointAgentFrame = (goalObservations[0] + goalObservations[1]) / 2.0;
+          for (auto const& teamMateObs : teamMateObservations)
+            if ((goalMidpointAgentFrame - teamMateObs).head<2>().norm() < maxGoalieGoalDistance->getValue())
+              return true;
+        }
         return false;
+      }
 
       auto closestGoalObs = agentFrame->getClosestGoalObservation();
 
