@@ -5,7 +5,8 @@ Agent::Agent()
     d_isStopRequested(false),
     d_teamNumber(Config::getStaticValue<int>("team-number")),
     d_uniformNumber(Config::getStaticValue<int>("uniform-number")),
-    d_cycleNumber(0)
+    d_cycleNumber(0),
+    d_startTime(Clock::getTimestamp())
 {
   ThreadUtil::setThreadId(ThreadId::ThinkLoop);
 
@@ -87,7 +88,7 @@ Agent::Agent()
 
   d_remoteControl = make_shared<RemoteControl>(this);
 
-  d_drawBridgeComms = make_shared<DrawBridgeComms>(d_behaviourControl, d_debugger);
+  d_drawBridgeComms = make_shared<DrawBridgeComms>(this, d_behaviourControl, d_debugger);
 
   d_debugger->update();
 

@@ -4,6 +4,8 @@
 #include <memory>
 #include <sigc++/signal.h>
 
+#include "../Clock/clock.hh"
+
 namespace bold
 {
   class Ambulator;
@@ -81,6 +83,8 @@ namespace bold
 
     ulong getThinkCycleNumber() const { return d_cycleNumber; }
 
+    double getUptimeSeconds() const { return Clock::getSecondsSince(d_startTime); }
+
     sigc::signal<void> onThinkEnd;
 
   private:
@@ -129,6 +133,8 @@ namespace bold
     std::shared_ptr<Voice> d_voice;
 
     ulong d_cycleNumber;
+
+    Clock::Timestamp d_startTime;
 
     void initCamera();
 

@@ -19,6 +19,8 @@ interface IDrawbridgeData
     unum: number;
     teamnum: number;
 
+    uptime: number;
+
     activity: string;
     role: string;
     status: string;

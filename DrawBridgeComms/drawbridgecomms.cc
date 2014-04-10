@@ -3,6 +3,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
+#include "../Agent/agent.hh"
 #include "../BehaviourControl/behaviourcontrol.hh"
 #include "../Config/config.hh"
 #include "../Debugger/debugger.hh"
@@ -20,8 +21,9 @@ using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-DrawBridgeComms::DrawBridgeComms(std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger)
-: d_behaviourControl(behaviourControl),
+DrawBridgeComms::DrawBridgeComms(Agent* agent, std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger)
+: d_agent(agent),
+  d_behaviourControl(behaviourControl),
   d_debugger(debugger),
   d_socket(make_unique<UDPSocket>())
 {
@@ -66,6 +68,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     writer.String("unum").Int(unum);
     writer.String("team").Int(team);
     writer.String("ver").String(Version::GIT_SHA1.c_str());
+    writer.String("uptime").Uint(static_cast<int>(d_agent->getUptimeSeconds()));
 
     writer.String("activity").String(getPlayerActivityString(d_behaviourControl->getPlayerActivity()).c_str());
     writer.String("role").String(getPlayerRoleString(d_behaviourControl->getPlayerRole()).c_str());
