@@ -17,12 +17,14 @@ namespace bold
   public:
     CameraFrameState(Maybe<Eigen::Vector2d> ballObservation,
                      Vector2dVector goalObservations,
+                     Vector2dVector teamMateObservations,
                      std::vector<LineSegment2i> observedLineSegments,
                      std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> occlusionRays,
                      long totalPixelCount, long processedPixelCount,
                      ulong thinkCycleNumber)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
+      d_teamMateObservations(teamMateObservations),
       d_observedLineSegments(observedLineSegments),
       d_occlusionRays(occlusionRays),
       d_totalPixelCount(totalPixelCount),
@@ -33,6 +35,7 @@ namespace bold
     Maybe<Eigen::Vector2d> getBallObservation() const { return d_ballObservation; }
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
     Vector2dVector getGoalObservations() const { return d_goalObservations; }
+    Vector2dVector getTeamMateObservations() const { return d_teamMateObservations; }
     int getGoalObservationCount() const { return d_goalObservations.size(); }
     std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> getOcclusionRays() const { return d_occlusionRays; }
     std::vector<LineSegment2i> getObservedLineSegments() const { return d_observedLineSegments; }
@@ -46,6 +49,7 @@ namespace bold
   private:
     Maybe<Eigen::Vector2d> d_ballObservation;
     Vector2dVector d_goalObservations;
+    Vector2dVector d_teamMateObservations;
     std::vector<LineSegment2i> d_observedLineSegments;
     std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> d_occlusionRays;
     long d_totalPixelCount;

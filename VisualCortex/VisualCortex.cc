@@ -40,6 +40,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDrawObservedObjects = Config::getSetting<bool>("round-table.image-features.objects");
 
   d_ballBlobMergingEnabled     = Config::getSetting<bool>("vision.ball-detection.enable-blob-merging");
+  d_playerDetectionEnabled     = Config::getSetting<bool>("vision.player-detection.enable");
 
   d_lineDotColour             = Config::getSetting<Colour::bgr>("round-table.image-colours.line-dot");
   d_observedLineColour        = Config::getSetting<Colour::bgr>("round-table.image-colours.observed-line");
@@ -56,8 +57,12 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_cyanLabel     = make_shared<PixelLabel>("Cyan",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.cyan"));
   d_magentaLabel  = make_shared<PixelLabel>("Magenta", Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
 
+
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel, d_cyanLabel, d_magentaLabel };
-  vector<shared_ptr<PixelLabel>> blobPixelLabels = { d_ballLabel, d_goalLabel, d_cyanLabel, d_magentaLabel };
+  auto blobPixelLabels = 
+    d_playerDetectionEnabled->getValue() ? 
+    vector<shared_ptr<PixelLabel>>({ d_ballLabel, d_goalLabel, d_cyanLabel, d_magentaLabel }) :
+    vector<shared_ptr<PixelLabel>>({ d_ballLabel, d_goalLabel });
 
   d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
@@ -89,6 +94,10 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_minGoalDimensionPixels         = Config::getSetting<int>("vision.goal-detection.min-dimension-px");
   d_maxGoalFieldEdgeDistPixels     = Config::getSetting<int>("vision.goal-detection.max-field-edge-distance-px");
   d_acceptedGoalMeasuredWidthRatio = Config::getSetting<Range<double>>("vision.goal-detection.accepted-width-ratio");
+
+  // player detection settings
+  d_minPlayerAreaPixels            = Config::getSetting<int>("vision.player-detection.min-area-px");
+  d_goalieMarkerHeight             = Config::getSetting<double>("vision.player-detection.goalie-marker-height");
 
   // TODO don't pass this around -- look it up from config (?)
   static int imageWidth = d_cameraModel->imageWidth();

@@ -51,6 +51,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
 
   Maybe<Vector2d> ballPosition = Maybe<Vector2d>::empty();
   vector<Vector2d,aligned_allocator<Vector2d>> goalPositions;
+  vector<Vector2d,aligned_allocator<Vector2d>> teamMatePositions;
 
   if (d_shouldDetectBlobs->getValue())
   {
@@ -65,19 +66,32 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
     // Might we have a ball?
     if (blobsPerLabel[d_ballLabel].size() > 0)
     {
-      vector<Blob>& ballBlobs = blobsPerLabel[d_ballLabel];
+      auto& ballBlobs = blobsPerLabel[d_ballLabel];
       ballPosition = detectBall(ballBlobs, t);
     }
 
     // Do we have goal posts?
     if (blobsPerLabel[d_goalLabel].size() > 0)
     {
-      vector<Blob>& goalBlobs = blobsPerLabel[d_goalLabel];
+      auto& goalBlobs = blobsPerLabel[d_goalLabel];
       goalPositions = detectGoal(goalBlobs, t);
+    }
+
+    auto teamColour = Config::getStaticValue<TeamColour>("team-colour");
+
+    auto ourColourLabel = teamColour == TeamColour::Cyan ? d_cyanLabel : d_magentaLabel;
+
+    // Do we have own teammate blobs?
+    if (d_playerDetectionEnabled->getValue() && blobsPerLabel[ourColourLabel].size() > 0)
+    {
+      auto& playerBlobs = blobsPerLabel[ourColourLabel];
+      teamMatePositions = detectPlayers(playerBlobs, t);
     }
   }
 
-  State::make<CameraFrameState>(ballPosition, goalPositions, observedLineSegments, d_fieldEdgePass->getOcclusionRays(), totalPixelCount, processedPixelCount, thinkCycleNumber);
+  State::make<CameraFrameState>(ballPosition, goalPositions, teamMatePositions, 
+                                observedLineSegments, d_fieldEdgePass->getOcclusionRays(),
+                                totalPixelCount, processedPixelCount, thinkCycleNumber);
 
   t.timeEvent("Updating State");
 }

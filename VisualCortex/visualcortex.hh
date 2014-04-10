@@ -131,9 +131,11 @@ namespace bold
 
     Maybe<Eigen::Vector2d> detectBall(std::vector<Blob>& ballBlobs, SequentialTimer& t);
     std::vector<Eigen::Vector2d,Eigen::aligned_allocator<Eigen::Vector2d>> detectGoal(std::vector<Blob>& goalBlobs, SequentialTimer& t);
+    std::vector<Eigen::Vector2d,Eigen::aligned_allocator<Eigen::Vector2d>> detectPlayers(std::vector<Blob>& playerBlobs, SequentialTimer& t);
 
     bool canBlobBeBall(Blob const& ballBlob, Eigen::Vector2d& imagePos, Eigen::Vector3d& agentFramePos);
     bool canBlobBeGoal(Blob const& goalBlob, Eigen::Vector2d& pos);
+    bool canBlobBePlayer(Blob const& playerBlob, Eigen::Vector2d& imagePos, Eigen::Vector3d& agentFramePos);
 
     template<typename T>
     std::shared_ptr<T> getHandler() { return meta::get<std::shared_ptr<T>>(d_imagePassHandlers); }
@@ -180,10 +182,14 @@ namespace bold
 
     Setting<int>* d_minBallAreaPixels;
     Setting<Range<double>>* d_acceptedBallMeasuredSizeRatio;
+
     Setting<int>* d_minGoalDimensionPixels;
     Setting<int>* d_maxGoalFieldEdgeDistPixels;
     Setting<Range<double>>* d_acceptedGoalMeasuredWidthRatio;
 
+    Setting<int>* d_minPlayerAreaPixels;
+    Setting<double>* d_goalieMarkerHeight;
+    
     bool d_saveNextYUVFrame;
     Setting<bool>* d_isRecordingYUVFrames;
     bool d_saveNextDebugFrame;
@@ -211,5 +217,7 @@ namespace bold
     Setting<bool>* d_shouldDrawObservedObjects;
 
     Setting<bool>* d_ballBlobMergingEnabled;
+
+    Setting<bool>* d_playerDetectionEnabled;
   };
 }
