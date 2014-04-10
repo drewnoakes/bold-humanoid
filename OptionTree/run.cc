@@ -35,8 +35,6 @@ void OptionTree::run()
   StringBuffer buffer;
   Writer<StringBuffer> writer(buffer);
 
-  list<shared_ptr<Option>> queue = {d_top};
-
   function<void(shared_ptr<Option>)> runOption;
   runOption = [this,&runOption,&writer,&ranOptions](shared_ptr<Option> option)
   {
