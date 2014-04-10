@@ -61,7 +61,7 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
 
       log::info("fall-data") << msg.str();
 
-      d_voice->sayOneOf({"Ouch!", "Dammit", "Ooopsy", "Bah", "Shit"});
+      d_voice->sayOneOf({"Ouch!", "Dammit", "Ooopsy", "Bah", "Why", "Not again"});
     }
   }
 }
