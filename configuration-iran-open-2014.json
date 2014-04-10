@@ -46,7 +46,7 @@
 
     "ball-detection": {
       "accepted-size-ratio": [0.4, 3.0]
-    },
+    }
 
   },
 
