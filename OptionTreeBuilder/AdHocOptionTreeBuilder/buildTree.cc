@@ -106,9 +106,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   setPlayerStatusInStates(agent,
     PlayerStatus::Inactive,
     { startUpState, readyState, pausing1State, pausing2State, pausedState,
-      unpausingState, setState, forwardGetUpState,
-      backwardGetUpState, stopWalkingForShutdownState, sitForShutdownState,
+      unpausingState, setState,
+      forwardGetUpState, backwardGetUpState, leftGetUpState, rightGetUpState,
+      stopWalkingForShutdownState, sitForShutdownState,
       stopAgentAndExitState });
+
   setPlayerStatusInStates(agent, PlayerStatus::Active, { playingState });
   setPlayerStatusInStates(agent, PlayerStatus::Penalised, { penalizedState });
 
