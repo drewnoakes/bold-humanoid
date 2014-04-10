@@ -15,7 +15,7 @@ auto shouldYieldToOtherAttacker = []()
   static auto yieldMinDist = Config::getSetting<double>("options.yield.min-dist");
   static auto yieldMaxDist = Config::getSetting<double>("options.yield.max-dist");
 
-  return dist > yieldMinDist->getValue() && yieldMaxDist->getValue() < 1.5 && isTeamMateAttacking;
+  return dist > yieldMinDist->getValue() && dist < yieldMaxDist->getValue() && isTeamMateAttacking;
 };
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shared_ptr<OptionTree> tree)
