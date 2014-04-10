@@ -78,6 +78,10 @@ namespace bold
       return isSet;
     }
 
+    void setCompleted(bool complete){ d_isCompleted = complete; }
+
+    std::mutex& getMutex(){ return d_isCompletedMutex; }
+
   private:
     std::mutex d_isCompletedMutex;
     std::shared_ptr<MotionTaskScheduler> d_scheduler;

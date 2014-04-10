@@ -86,6 +86,7 @@ namespace bold
 
     bool   d_isStopRequested;
     bool   d_isRunning;
+    bool   d_isStabilizing;
     double d_time;
 
     int    d_phase;
@@ -144,9 +145,11 @@ namespace bold
 
     void initialize() override;
     void step(std::shared_ptr<JointSelection> selectedJoints) override;
+    bool stoppingCorrection();
     void applyHead(HeadSection* head) override;
     void applyArms(ArmSection* arms) override;
     void applyLegs(LegSection* legs) override;
+    void setCompletedFlag();
 
     int getCurrentPhase() const  { return d_phase; }
     double getBodySwingY() const { return d_bodySwingY; }

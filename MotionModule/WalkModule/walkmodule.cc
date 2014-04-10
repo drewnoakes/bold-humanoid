@@ -51,6 +51,8 @@ WalkModule::WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   A_MOVE_AMPLITUDE = 0;
 
   A_MOVE_AIM_ON = Config::getSetting<bool>("walk-module.a-move-aim-enable");
+
+  d_isStabilizing = false;
 }
 
 WalkModule::~WalkModule()
@@ -60,6 +62,10 @@ constexpr double WalkModule::THIGH_LENGTH;
 constexpr double WalkModule::CALF_LENGTH;
 constexpr double WalkModule::ANKLE_LENGTH;
 constexpr double WalkModule::LEG_LENGTH;
+
+//                     R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
+int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
+double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
 
 double WalkModule::wsin(double time, double period, double period_shift, double mag, double mag_shift)
 {
@@ -464,10 +470,6 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   for (int i = 0; i < 12; i++)
     angle[i] *= 180.0 / M_PI;
 
-  //                     R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
-  int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
-  double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
-
   // Compute motor value
   for (int i = 0; i < 14; i++)
   {
@@ -482,6 +484,19 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     d_outValue[i] = MX28::degs2Value(initAngle[i]) + (int)offset;
   }
 
+  stoppingCorrection();
+
+  if (!d_isRunning)
+    setCompletedFlag();
+
+  // Ensure all values are within the valid range
+  for (int i = 0; i < 14; ++i)
+    d_outValue[i] = MX28::clampValue(d_outValue[i]);
+}
+
+// Returns true if stop is allowed
+bool WalkModule::stoppingCorrection()
+{
   // adjust balance offset
   // TODO convert this stabilisation to a generic and replaceable BodyControlModulator ?
   if (BALANCE_ENABLE->getValue())
@@ -495,6 +510,8 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
     // TODO need to balance these values around the midpoint, taking calibration into account
     double rlGyroErr = -gryoRaw.y();
     double fbGyroErr = gryoRaw.x();
+    
+    if (d_isStabilizing) rlGyroErr /= 2;
 
     d_outValue[1]  += (int)(dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // R_HIP_ROLL
     d_outValue[7]  += (int)(dir[7] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // L_HIP_ROLL
@@ -507,14 +524,11 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
 
     d_outValue[5]  -= (int)(dir[5]  * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN->getValue()); // R_ANKLE_ROLL
     d_outValue[11] -= (int)(dir[11] * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN->getValue()); // L_ANKLE_ROLL
+
+    // Check to see if we are now balanced
+    if (fabs(rlGyroErr) <= 1 && fabs(fbGyroErr) <= 1) return false;
   }
-
-  if (!d_isRunning)
-    setCompletedFlag();
-
-  // Ensure all values are within the valid range
-  for (int i = 0; i < 14; ++i)
-    d_outValue[i] = MX28::clampValue(d_outValue[i]);
+  return true;
 }
 
 void WalkModule::applyHead(HeadSection* head)
@@ -556,4 +570,21 @@ void WalkModule::applyLegs(LegSection* legs)
   legs->kneeLeft()->setValue(d_outValue[9]);
   legs->anklePitchLeft()->setValue(d_outValue[10]);
   legs->ankleRollLeft()->setValue(d_outValue[11]);
+}
+
+// The flag will be set from on thread, and cleared from another,
+// but a single field write/read should be thread safe.
+
+void WalkModule::setCompletedFlag()
+{
+  assert(ThreadUtil::isMotionLoopThread());
+
+  if (!d_isRunning)d_isStabilizing = true;
+
+  if (!WalkModule::stoppingCorrection())
+  {
+    std::lock_guard<std::mutex> guard(WalkModule::getMutex());
+    WalkModule::setCompleted(true);
+    d_isStabilizing = false;
+  }
 }
