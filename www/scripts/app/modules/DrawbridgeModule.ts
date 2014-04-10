@@ -44,6 +44,8 @@ interface IDrawbridgeData
         unum: number;
         ms: number;
     }[];
+
+    options: string[];
 }
 
 class TeamModule extends Module

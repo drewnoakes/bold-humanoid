@@ -253,6 +253,14 @@
             <div class="team-member">{{this.unum}} ({{this.ms}} ms old)</div>
             {{/each}}
             {{/if}}
+
+            {{#if this.options}}
+            <div class="options">
+            {{#each this.options}}
+            <span>{{this}} </span>
+            {{/each}}
+            </div>
+            {{/if}}
         </div>
     </script>
 

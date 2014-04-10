@@ -6,10 +6,12 @@
 #include "../BehaviourControl/behaviourcontrol.hh"
 #include "../Config/config.hh"
 #include "../Debugger/debugger.hh"
+#include "../Option/option.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
+#include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../StateObject/TeamState/teamstate.hh"
 #include "../UDPSocket/udpsocket.hh"
 #include "../version.hh"
@@ -139,6 +141,18 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
           }
           writer.EndObject();
         }
+      }
+      writer.EndArray();
+    }
+
+    auto optionTree = State::get<OptionTreeState>();
+    if (optionTree)
+    {
+      writer.String("options");
+      writer.StartArray();
+      {
+        for (auto const& option : optionTree->getRanOptions())
+          writer.String(option->getId().c_str());
       }
       writer.EndArray();
     }
