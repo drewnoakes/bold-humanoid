@@ -98,7 +98,7 @@
       "ball":  { "type": "hsv-range", "default": { "hue": [0, 23], "sat": [72, 255],  "val": [12, 255] } },
       "field": { "type": "hsv-range", "default": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] } },
       "line":  { "type": "hsv-range", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } },
-      "cyan":  { "type": "hsv-range", "default": { "hue": [125, 145], "sat": [100, 180],  "val": [40, 100] } },
+      "cyan":  { "type": "hsv-range", "default": { "hue": [125, 155], "sat": [100, 255],  "val": [40, 100] } },
       "magenta":  { "type": "hsv-range", "default": { "hue": [235, 0], "sat": [100, 150],  "val": [40, 100] } }
     },
     "blob-detection": {
