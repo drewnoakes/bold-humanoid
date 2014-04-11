@@ -294,6 +294,9 @@
     "yield": {
       "min-dist": 0.5,
       "max-dist": 1.5
+    },
+    "perfect-line": {
+      "enabled": true
     }
   },
   "health-and-safety": {

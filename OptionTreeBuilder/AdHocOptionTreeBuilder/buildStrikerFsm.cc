@@ -18,9 +18,91 @@ auto shouldYieldToOtherAttacker = []()
   return dist > yieldMinDist->getValue() && dist < yieldMaxDist->getValue() && isTeamMateAttacking;
 };
 
+auto ballIsStoppingDistance = []()
+{
+  // Approach ball until we're within a given distance
+  // TODO use filtered ball position
+  auto ballObs = State::get<AgentFrameState>()->getBallObservation();
+  static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
+  return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
+};
+
+auto isPerfectLineForAttack = []()
+{
+  static auto isPerfectLineEnabled = Config::getSetting<bool>("options.perfect-line.enabled");
+
+  if (!isPerfectLineEnabled->getValue())
+    return false;
+
+//   FieldSide ballSide = team->getKeeperBallSideEstimate();
+//   if (ballSide == FieldSide::Ours)
+//     return false;
+
+  auto agentFrame = State::get<AgentFrameState>();
+  if (!agentFrame->isBallVisible())
+    return false;
+
+  auto const& goals = agentFrame->getGoalObservations();
+  if (goals.size() != 2)
+    return false;
+
+  // ASSUME we are looking at the ball
+  // Must be looking approximately straight ahead (the ball is directly in front of us)
+  double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
+  if (fabs(Math::radToDeg(panAngle)) > 5.0)
+  {
+    log::info("isPerfectLineForAttack") << "FALSE - pan angle too great: " << panAngle;
+    return false;
+  }
+
+  // Verify goals are approximately the correct distance apart
+  double goalDist = (goals[0] - goals[1]).norm();
+  if (fabs(goalDist - FieldMap::getGoalY()) > FieldMap::getGoalY()/3.0)
+  {
+    log::info("isPerfectLineForAttack") << "FALSE - goal post distance ("<<goalDist<<") too far from expected ("<<FieldMap::getGoalY()<<")";
+    return false;
+  }
+
+  // If we have team data...
+  auto team = State::get<TeamState>();
+  if (team)
+  {
+    // Verify the distance from the ball to the goal midpoint is sufficiently
+    // different to the keeper's observed distance, if they see the ball.
+    auto keeperBall = team->getKeeperState()->ballRelative;
+    if (team->getKeeperState()->getAgeMillis() < 5000 && keeperBall.hasValue())
+    {
+      Vector3d goalMidpoint = (goals[0] + goals[1]) / 2.0;
+      double ballToGoalDist = (agentFrame->getBallObservation().value() - goalMidpoint).norm();
+
+      if (fabs(keeperBall->norm() - ballToGoalDist) < 1.5)
+      {
+        log::info("isPerfectLineForAttack") << "FALSE - keeper-ball dist (" << keeperBall->norm() << ") too similar to our goal-ball dist (" << ballToGoalDist << ")";
+        return false;
+      }
+    }
+  }
+
+  // The goals must appear to either side of the ball
+  double ballX = agentFrame->getBallObservation()->x();
+  bool isRight0 = goals[0].x() > ballX;
+  bool isRight1 = goals[1].x() > ballX;
+  if (isRight0 == isRight1)
+  {
+    log::info("isPerfectLineForAttack") << "FALSE - goals do not appear on either side of ball";
+    log::info("isPerfectLineForAttack") << " - goal[0]: " << goals[0].head<2>().transpose();
+    log::info("isPerfectLineForAttack") << " - goal[1]: " << goals[1].head<2>().transpose();
+    log::info("isPerfectLineForAttack") << " - ball:    " << agentFrame->getBallObservation()->head<2>().transpose();
+    return false;
+  }
+
+  log::info("isPerfectLineForAttack") << "TRUE - transition to direct goal attack as line is good";
+  return true;
+};
+
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shared_ptr<OptionTree> tree)
 {
-  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
+  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", /* ifNotInFinalPose */ true);
   auto leftKick = make_shared<MotionScriptOption>("leftKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
   auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
@@ -41,6 +123,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto circleToFindLostBallState = fsm->newState("lookForBallCircling", {searchBall});
   auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
+  auto directAttackState = fsm->newState("directAttack", {approachBall, lookAtBall});
   auto lookForGoalState = fsm->newState("lookForGoal", {stopWalking, lookForGoal});
   auto lookAtGoalState = fsm->newState("lookAtGoal", {stopWalking, lookAtGoal});
   auto aimState = fsm->newState("aim", {});
@@ -100,14 +183,15 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // stop walking to ball once we're close enough
   approachBallState
     ->transitionTo(lookForGoalState, "near-ball")
-    ->when([fsm]()
-    {
-      // Approach ball until we're within a given distance
-      // TODO use filtered ball position
-      auto ballObs = State::get<AgentFrameState>()->getBallObservation();
-      static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
-      return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
-    });
+    ->when(ballIsStoppingDistance);
+
+  approachBallState
+    ->transitionTo(directAttackState, "good-line")
+    ->when(isPerfectLineForAttack);
+
+  directAttackState
+    ->transitionTo(lookAtFeetState, "near-ball")
+    ->when(ballIsStoppingDistance);
 
   waitForOtherStrikerState
     ->transitionTo(lookAtBallState)

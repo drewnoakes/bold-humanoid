@@ -324,6 +324,9 @@
       "max-target-side":   { "type": "double", "default": 65 },
       "speed-x":           { "type": "double", "default": 2 },
       "speed-y":           { "type": "double", "default": 2 }
+    },
+    "perfect-line": {
+      "enabled": { "type": "bool", "default": true }
     }
   },
   "health-and-safety": {
