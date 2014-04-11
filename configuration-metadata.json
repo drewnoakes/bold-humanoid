@@ -118,7 +118,7 @@
     "player-detection": {
       "enable":                 { "type": "bool", "default": false },
       "min-area-px":             { "type": "int", "min": 1, "max": 10000, "default": 10 },
-      "goalie-marker-height":    { "type": "double", "min": 0, "max": 0.7, "default": 0.2, "readonly": true },
+      "goalie-marker-height":    { "type": "double", "min": 0, "max": 0.7, "default": 0.28, "readonly": true },
       "max-goalie-goal-dist":    { "type": "double", "min": 0, "max": 2.5, "default": 1.0, "readonly": true }
     },
     "line-detection": {
