@@ -445,10 +445,11 @@ void WalkModule::step(shared_ptr<JointSelection> selectedJoints)
   }
 
   // Compute angles
-  if (computeIK(&angle[0], ep[0], ep[1], ep[2], ep[3], ep[4], ep[5]) != 1 ||
-      computeIK(&angle[6], ep[6], ep[7], ep[8], ep[9], ep[10], ep[11]) != 1)
+  if (!computeIK(&angle[0], ep[0], ep[1], ep[2], ep[3], ep[4], ep[5]) ||
+      !computeIK(&angle[6], ep[6], ep[7], ep[8], ep[9], ep[10], ep[11]))
   {
-    // Do not use angle;
+    // Do not use angle
+    log::error("WalkModule::step") << "Error computing inverse kinematics";
     if (!d_isRunning)
       setCompletedFlag();
     return;
