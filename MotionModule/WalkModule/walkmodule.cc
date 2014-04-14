@@ -234,17 +234,6 @@ void WalkModule::initialize()
   d_bodySwingY = 0;
   d_bodySwingZ = 0;
 
-  d_xSwapPhaseShift = M_PI;
-  d_xSwapAmplitudeaShift = 0;
-  d_xMovePhaseShift = M_PI / 2;
-  d_xMoveAmplitudeShift = 0;
-  d_ySwapPhaseShift = 0;
-  d_ySwapAmplitudeShift = 0;
-  d_yMovePhaseShift = M_PI / 2;
-  d_zSwapPhaseShift = M_PI * 3 / 2;
-  d_zMovePhaseShift = M_PI / 2;
-  d_aMovePhaseShift = M_PI / 2;
-
   d_isStopRequested = false;
   d_isRunning = false;
   d_time = 0;

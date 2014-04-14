@@ -56,25 +56,36 @@ namespace bold
     double d_pOffset;
     double d_aOffset;
 
-    double d_xSwapPhaseShift;
+    static constexpr double d_xSwapPhaseShift = M_PI;
+    static constexpr double d_xSwapAmplitudeaShift = 0;
+    static constexpr double d_xMovePhaseShift = M_PI / 2;
+    static constexpr double d_xMoveAmplitudeShift = 0;
+    static constexpr double d_ySwapPhaseShift = 0;
+    static constexpr double d_ySwapAmplitudeShift = 0;
+    static constexpr double d_yMovePhaseShift = M_PI / 2;
+    static constexpr double d_zSwapPhaseShift = M_PI * 3 / 2;
+    static constexpr double d_zMovePhaseShift = M_PI / 2;
+    static constexpr double d_aMovePhaseShift = M_PI / 2;
+
+//     double d_xSwapPhaseShift;
     double d_xSwapAmplitude;
-    double d_xSwapAmplitudeaShift;
-    double d_xMovePhaseShift;
+//     double d_xSwapAmplitudeaShift;
+//     double d_xMovePhaseShift;
     double d_xMoveAmplitude;
-    double d_xMoveAmplitudeShift;
-    double d_ySwapPhaseShift;
+//     double d_xMoveAmplitudeShift;
+//     double d_ySwapPhaseShift;
     double d_ySwapAmplitude;
-    double d_ySwapAmplitudeShift;
-    double d_yMovePhaseShift;
+//     double d_ySwapAmplitudeShift;
+//     double d_yMovePhaseShift;
     double d_yMoveAmplitude;
     double d_yMoveAmplitudeShift;
-    double d_zSwapPhaseShift;
+//     double d_zSwapPhaseShift;
     double d_zSwapAmplitude;
     double d_zSwapAmplitudeShift;
-    double d_zMovePhaseShift;
+//     double d_zMovePhaseShift;
     double d_zMoveAmplitude;
     double d_zMoveAmplitudeShift;
-    double d_aMovePhaseShift;
+//     double d_aMovePhaseShift;
     double d_aMoveAmplitude;
     double d_aMoveAmplitudeShift;
 
