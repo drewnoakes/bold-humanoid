@@ -52,9 +52,9 @@ void Ambulator::step()
     {
       // TODO this will look more sane when we make Ambulator the MotionModule, and have a generic WalkEngine with RobotisWalkEngine
       d_walkModule->getScheduler()->add(d_walkModule.get(),
-                                        Priority::Optional,  true,  // HEAD   Interuptable::YES
-                                        Priority::Important, true,  // ARMS
-                                        Priority::Important, true); // LEGS
+                                        Priority::Optional,  true,   // HEAD   Interuptable::YES
+                                        Priority::Important, false,  // ARMS
+                                        Priority::Important, false); // LEGS
       d_walkModule->start();
     }
   }
