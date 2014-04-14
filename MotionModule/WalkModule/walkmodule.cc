@@ -162,7 +162,6 @@ void WalkModule::updateTimeParams()
   d_zMovePeriodTime = d_periodTime * d_sspRatio / 2;
   d_aMovePeriodTime = d_periodTime * d_sspRatio;
 
-  d_sspTime = d_periodTime * d_sspRatio;
   d_sspTimeStartL = (1 - d_sspRatio) * d_periodTime / 4;
   d_sspTimeEndL = (1 + d_sspRatio) * d_periodTime / 4;
   d_sspTimeStartR = (3 - d_sspRatio) * d_periodTime / 4;

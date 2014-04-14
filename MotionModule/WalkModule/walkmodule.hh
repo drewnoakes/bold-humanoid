@@ -41,7 +41,6 @@ namespace bold
     double d_zSwapPeriodTime;
     double d_zMovePeriodTime;
     double d_aMovePeriodTime;
-    double d_sspTime;
     double d_sspTimeStartL;
     double d_sspTimeEndL;
     double d_sspTimeStartR;
