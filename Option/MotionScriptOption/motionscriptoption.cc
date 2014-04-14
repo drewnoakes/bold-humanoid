@@ -37,16 +37,10 @@ double MotionScriptOption::hasTerminated()
 {
   // If we haven't run yet, then we haven't terminated
   if (!d_runner)
-    return 0;
-
-  // TODO we are using the 'hasTerminated' function here to clear internal state, meaning the answer is not idempotent
+    return 0.0;
 
   if (d_runner->getState() == MotionScriptRunnerState::Finished)
-  {
-    log::verbose("MotionScriptOption::hasTerminated") << "Motion script completed: " << getId();
-    d_runner = nullptr;
     return 1.0;
-  }
 
   return 0.0;
 }
