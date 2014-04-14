@@ -510,7 +510,7 @@ bool WalkModule::stoppingCorrection()
     // TODO need to balance these values around the midpoint, taking calibration into account
     double rlGyroErr = -gryoRaw.y();
     double fbGyroErr = gryoRaw.x();
-    
+
     if (d_isStabilizing) rlGyroErr /= 2;
 
     d_outValue[1]  += (int)(dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // R_HIP_ROLL
@@ -536,6 +536,7 @@ void WalkModule::applyHead(HeadSection* head)
   // Ensure we have our standard PID values
   head->visitJoints([this](JointControl* joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
 
+  // Head pan follows turn, if any
   head->pan()->setDegrees(A_MOVE_AMPLITUDE);
 }
 

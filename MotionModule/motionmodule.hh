@@ -60,6 +60,9 @@ namespace bold
     // The flag will be set from on thread, and cleared from another,
     // but a single field write/read should be thread safe.
 
+    /// Called by the motion module (on the motion loop thread) when the module
+    /// has completed. For example, when a motion script has reached it's final
+    /// pose, or when walking has come to a stop.
     void setCompletedFlag()
     {
       assert(ThreadUtil::isMotionLoopThread());
@@ -68,6 +71,11 @@ namespace bold
       d_isCompleted = true;
     }
 
+    /// Called by the MotionTaskScheduler (on the think thread) to test whether
+    /// the module completed since the time this method was called. For each call
+    /// to setCompletedFlag, this method will return true once.
+    /// When true is returned, any motion tasks associated with this module that
+    /// were committed will be removed from the schedule.
     bool clearCompletedFlag()
     {
       assert(ThreadUtil::isThinkLoopThread());

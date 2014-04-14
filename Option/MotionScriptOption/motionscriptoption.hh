@@ -10,6 +10,11 @@ namespace bold
   class MotionScriptModule;
   class MotionScriptRunner;
 
+  /// An option that requests a particular motion script be played when its
+  /// policy is run.  Note that the motion scheduler may reject the request to
+  /// play the script if the relevant body sections are already engaged.
+  ///
+  /// Indicates termination only when the script completes.
   class MotionScriptOption : public Option
   {
   public:
@@ -17,10 +22,13 @@ namespace bold
 
     MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script, bool ifNotFinalPose = false);
 
+    /// Returns a truthy value when the script has completed execution.
     virtual double hasTerminated() override;
 
     virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
+    /// Clears any previous attempt at running a motion script. Subsequent
+    /// calls to runPolicy will make a new request of the motion task scheduler.
     virtual void reset() override;
 
   private:
