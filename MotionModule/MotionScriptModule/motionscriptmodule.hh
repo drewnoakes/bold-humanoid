@@ -14,15 +14,9 @@ namespace bold
 
   class MotionScriptModule : public MotionModule
   {
-  private:
-    std::shared_ptr<MotionScriptRunner> d_runner;
-
   public:
     MotionScriptModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
     ~MotionScriptModule() override;
-
-    MotionScriptModule(const MotionScriptModule&) = delete;
-    MotionScriptModule& operator=(const MotionScriptModule&) = delete;
 
     void initialize() override;
 
@@ -43,5 +37,11 @@ namespace bold
     bool start(std::shared_ptr<MotionScriptRunner> scriptRunner);
 
     bool isRunning();
+
+  private:
+    MotionScriptModule(const MotionScriptModule&) = delete;
+    MotionScriptModule& operator=(const MotionScriptModule&) = delete;
+
+    std::shared_ptr<MotionScriptRunner> d_runner;
   };
 }
