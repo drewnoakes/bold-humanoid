@@ -51,7 +51,7 @@ auto isPerfectLineForAttack = []()
   double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
   if (fabs(Math::radToDeg(panAngle)) > 5.0)
   {
-    log::info("isPerfectLineForAttack") << "FALSE - pan angle too great: " << panAngle;
+    log::verbose("isPerfectLineForAttack") << "FALSE - pan angle too great: " << panAngle;
     return false;
   }
 
@@ -59,7 +59,7 @@ auto isPerfectLineForAttack = []()
   double goalDist = (goals[0] - goals[1]).norm();
   if (fabs(goalDist - FieldMap::getGoalY()) > FieldMap::getGoalY()/3.0)
   {
-    log::info("isPerfectLineForAttack") << "FALSE - goal post distance ("<<goalDist<<") too far from expected ("<<FieldMap::getGoalY()<<")";
+    log::verbose("isPerfectLineForAttack") << "FALSE - goal post distance ("<<goalDist<<") too far from expected ("<<FieldMap::getGoalY()<<")";
     return false;
   }
 
@@ -77,7 +77,7 @@ auto isPerfectLineForAttack = []()
 
       if (fabs(keeperBall->norm() - ballToGoalDist) < 1.5)
       {
-        log::info("isPerfectLineForAttack") << "FALSE - keeper-ball dist (" << keeperBall->norm() << ") too similar to our goal-ball dist (" << ballToGoalDist << ")";
+        log::verbose("isPerfectLineForAttack") << "FALSE - keeper-ball dist (" << keeperBall->norm() << ") too similar to our goal-ball dist (" << ballToGoalDist << ")";
         return false;
       }
     }
@@ -89,14 +89,14 @@ auto isPerfectLineForAttack = []()
   bool isRight1 = goals[1].x() > ballX;
   if (isRight0 == isRight1)
   {
-    log::info("isPerfectLineForAttack") << "FALSE - goals do not appear on either side of ball";
-    log::info("isPerfectLineForAttack") << " - goal[0]: " << goals[0].head<2>().transpose();
-    log::info("isPerfectLineForAttack") << " - goal[1]: " << goals[1].head<2>().transpose();
-    log::info("isPerfectLineForAttack") << " - ball:    " << agentFrame->getBallObservation()->head<2>().transpose();
+    log::verbose("isPerfectLineForAttack") << "FALSE - goals do not appear on either side of ball";
+    log::verbose("isPerfectLineForAttack") << " - goal[0]: " << goals[0].head<2>().transpose();
+    log::verbose("isPerfectLineForAttack") << " - goal[1]: " << goals[1].head<2>().transpose();
+    log::verbose("isPerfectLineForAttack") << " - ball:    " << agentFrame->getBallObservation()->head<2>().transpose();
     return false;
   }
 
-  log::info("isPerfectLineForAttack") << "TRUE - transition to direct goal attack as line is good";
+  log::verbose("isPerfectLineForAttack") << "TRUE - transition to direct goal attack as line is good";
   return true;
 };
 
