@@ -34,7 +34,7 @@ vector<shared_ptr<Option>> KeepPosition::runPolicy(Writer<StringBuffer>& writer)
   auto agentFrame = State::get<AgentFrameState>();
   if (!agentFrame->isBallVisible())
   {
-    d_walkModule->setMoveDir(Vector2d(0, 0));
+    d_walkModule->stop();
     return {};
   }
 
@@ -66,7 +66,7 @@ vector<shared_ptr<Option>> KeepPosition::runPolicy(Writer<StringBuffer>& writer)
 
   if (dist < maxDistance)
   {
-    d_walkModule->setMoveDir(Vector2d(0, 0));
+    d_walkModule->stop();
     return {};
   }
 
