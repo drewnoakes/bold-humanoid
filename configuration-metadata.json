@@ -227,7 +227,6 @@
     "pelvis-offset":    { "type": "double", "default": 3.0 },
     "arm-swing-gain":   { "type": "double", "default": 1.5 },
     "step-fb-ratio":    { "type": "double", "default": 0.28 },
-    "a-move-aim-enable": { "type": "bool", "default": false },
     "balance": {
       "enable":           { "type": "bool", "default": true, "description": "Enable auto-balance" },
       "knee-gain":        { "type": "double", "default": 1.2 },

@@ -158,7 +158,6 @@ namespace bold
     Setting<double>* DSP_RATIO;
     Setting<double>* STEP_FB_RATIO;
     Setting<double>* Z_MOVE_AMPLITUDE;
-    Setting<bool>* A_MOVE_AIM_ON;
 
     // Balance control
     Setting<bool>* BALANCE_ENABLE;

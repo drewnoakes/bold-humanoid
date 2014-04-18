@@ -213,7 +213,6 @@
     "pelvis-offset": 3.0,
     "arm-swing-gain": 1.5,
     "step-fb-ratio": 0.28,
-    "a-move-aim-enable": false,
     "balance": {
       "enable": true,
       "knee-gain": 1.2,

@@ -49,8 +49,6 @@ WalkEngine::WalkEngine()
   X_MOVE_AMPLITUDE = 0;
   Y_MOVE_AMPLITUDE = 0;
   A_MOVE_AMPLITUDE = 0;
-
-  A_MOVE_AIM_ON = Config::getSetting<bool>("walk-engine.a-move-aim-enable");
 }
 
 constexpr double WalkEngine::THIGH_LENGTH;
@@ -191,23 +189,11 @@ void WalkEngine::updateMovementParams()
   d_zSwapAmplitudeShift = d_zSwapAmplitude;
 
   // Direction
-  // TODO this appears to only reverse the turn direction -- remove this
-  if (!A_MOVE_AIM_ON->getValue())
-  {
-    d_aMoveAmplitude = Math::degToRad(A_MOVE_AMPLITUDE) / 2.0;
-    if (d_aMoveAmplitude > 0)
-      d_aMoveAmplitudeShift = d_aMoveAmplitude;
-    else
-      d_aMoveAmplitudeShift = -d_aMoveAmplitude;
-  }
+  d_aMoveAmplitude = Math::degToRad(A_MOVE_AMPLITUDE) / 2.0;
+  if (d_aMoveAmplitude > 0)
+    d_aMoveAmplitudeShift = d_aMoveAmplitude;
   else
-  {
-    d_aMoveAmplitude = -Math::degToRad(A_MOVE_AMPLITUDE) / 2.0;
-    if (d_aMoveAmplitude > 0)
-      d_aMoveAmplitudeShift = -d_aMoveAmplitude;
-    else
-      d_aMoveAmplitudeShift = d_aMoveAmplitude;
-  }
+    d_aMoveAmplitudeShift = -d_aMoveAmplitude;
 }
 
 void WalkEngine::updateBalanceParams()
