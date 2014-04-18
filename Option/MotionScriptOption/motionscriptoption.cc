@@ -47,11 +47,14 @@ double MotionScriptOption::hasTerminated()
 
 vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& writer)
 {
+  writer.String("hasRunner").Bool(d_runner != nullptr);
+
   if (!d_runner || d_runner->getState() == MotionScriptRunnerState::Finished)
   {
     if (d_ifNotFinalPose && MotionScriptRunner::isInFinalPose(d_script))
     {
       // Don't run.
+      writer.String("skip").String("Already in final pose");
       d_runner = nullptr;
       return {};
     }
@@ -71,6 +74,7 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
       d_runner = nullptr;
     }
 
+    writer.String("started").Bool(started);
     writer.String("state").String(MotionScriptRunner::getStateName(runner->getState()).c_str());
   }
 
