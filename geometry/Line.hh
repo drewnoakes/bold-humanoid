@@ -12,6 +12,7 @@
 #include "Bounds.hh"
 #include "Bounds2i.hh"
 #include "LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
+#include "../Math/math.hh"
 #include "../util/Maybe.hh"
 
 namespace bold
@@ -41,7 +42,7 @@ namespace bold
 
     double radius() const { return d_radius; }
     double theta() const { return d_theta; }
-    double thetaDegrees() const { return theta()*180.0/M_PI; }
+    double thetaDegrees() const { return Math::radToDeg(d_theta); }
 
     double gradient() const { return tanh(d_theta); }
     double yIntersection() const { return d_radius / cos(d_theta); }

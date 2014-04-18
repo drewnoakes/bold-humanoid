@@ -171,9 +171,9 @@ namespace bold
     // 0 -> -1600 dps
     // 512 -> 0 dps
     // 1023 -> +1600 dps
-    static constexpr double RATIO_VALUE2DPS =  1600.0               / 512.0;
-    static constexpr double RATIO_VALUE2RPS = (1600.0*(M_PI/180.0)) / 512.0;
-    static constexpr double RATIO_VALUE2GS = 4.0 / 512.0;
+    static constexpr double RATIO_VALUE2DPS =                1600.0  / 512.0;
+    static constexpr double RATIO_VALUE2RPS = Math::degToRad(1600.0) / 512.0;
+    static constexpr double RATIO_VALUE2GS  = 4.0 / 512.0;
 
     static ushort flipImuValue(ushort value)
     {

@@ -51,7 +51,7 @@ namespace bold
         double dt = line.theta() - d_theta;
         double dr = line.radius() - d_radius;
 
-        const double dtThreshold = 10/180.0 * M_PI;
+        const double dtThreshold = Math::degToRad(10);
         const double drThreshold = 15;
 
         if (fabs(dt) < dtThreshold && fabs(dr) < drThreshold)
