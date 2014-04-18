@@ -55,6 +55,7 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
     {
       // Don't run.
       writer.String("skip").String("Already in final pose");
+      writer.String("maxDelta").Int(MotionScriptRunner::getMaxDeltaFromFinalPose(d_script));
       d_runner = nullptr;
       return {};
     }
