@@ -65,7 +65,7 @@ auto isPerfectLineForAttack = []()
 
   // If we have team data...
   auto team = State::get<TeamState>();
-  if (team)
+  if (team && team->getKeeperState())
   {
     // Verify the distance from the ball to the goal midpoint is sufficiently
     // different to the keeper's observed distance, if they see the ball.
