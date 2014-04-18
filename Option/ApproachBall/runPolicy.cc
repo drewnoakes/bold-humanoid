@@ -45,17 +45,17 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("angleSpeed").Double(speedScaleDueToAngle);
 
-  Vector2d moveDir = Math::lerp(speedDueToDistance * speedScaleDueToAngle,
-                                Vector2d(d_minForwardSpeed->getValue(), 0),
-                                Vector2d(d_maxForwardSpeed->getValue(), 0));
+  double xSpeed = Math::lerp(speedDueToDistance * speedScaleDueToAngle,
+                             d_minForwardSpeed->getValue(),
+                             d_maxForwardSpeed->getValue());
 
   // unspecified units
   double turnSpeed = ballAngleRads * d_turnScale->getValue();
 
-  d_walkModule->setMoveDir(moveDir);
+  d_walkModule->setMoveDir(xSpeed, 0);
   d_walkModule->setTurnAngle(turnSpeed);
 
-  writer.String("moveDir").StartArray().Double(moveDir.x()).Double(moveDir.y()).EndArray(2);
+  writer.String("moveDir").StartArray().Double(xSpeed).Double(0).EndArray(2);
 
   writer.String("turn").Double(turnSpeed);
 

@@ -77,7 +77,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
   // direction being inverted.
-  d_walkModule->setMoveDir(Vector2d(-y, -x));
+  d_walkModule->setMoveDir(-y, -x);
   d_walkModule->setTurnAngle(a);
 
   writer.String("error").StartArray().Double(error.x()).Double(error.y()).EndArray(2);
@@ -101,7 +101,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   double y = panRatio < 0 ? 20 : -20;
   double a = panRatio < 0 ? -15 : 15;
 
-  d_walkModule->setMoveDir(Eigen::Vector2d(x, y));
+  d_walkModule->setMoveDir(x, y);
   d_walkModule->setTurnAngle(a);
 
   writer.String("panAngle").Double(panAngle);

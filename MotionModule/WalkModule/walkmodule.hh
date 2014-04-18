@@ -57,7 +57,7 @@ namespace bold
      * Note that the same value will result in different speeds in the X and Y
      * axes.
      */
-    void setMoveDir(Eigen::Vector2d const& moveDir);
+    void setMoveDir(double x, double y);
 
     /**
      * Set the rate of turning, where positive values turn right (clockwise)

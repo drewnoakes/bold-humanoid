@@ -55,20 +55,20 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   turnSetting->changed.connect([this](double value) { d_turnAmp.setDelta(value); });
 }
 
-void WalkModule::setMoveDir(Vector2d const& moveDir)
+void WalkModule::setMoveDir(double x, double y)
 {
-  if (moveDir.x() == 0 && moveDir.y() == 0 && d_status == WalkStatus::Stopped)
+  if (x == 0 && y == 0 && d_status == WalkStatus::Stopped)
     return;
 
-  if (moveDir.x() == d_xAmp.getTarget() && moveDir.y() == d_yAmp.getTarget())
+  if (x == d_xAmp.getTarget() && y == d_yAmp.getTarget())
     return;
 
   if (d_moveDirSet)
     log::error("WalkModule::setMoveDir") << "Movement direction set twice between calls to step";
 
   d_moveDirSet = true;
-  d_xAmp.setTarget(moveDir.x());
-  d_yAmp.setTarget(moveDir.y());
+  d_xAmp.setTarget(x);
+  d_yAmp.setTarget(y);
 
   if (d_status == WalkStatus::Stopped)
   {

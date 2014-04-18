@@ -145,9 +145,9 @@ void RemoteControl::update()
     {
       // TODO only do this if we are standing (need better test for standing though)
       // Set walk direction with left joystick
-      d_walkModule->setMoveDir(Eigen::Vector2d(
+      d_walkModule->setMoveDir(
         (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
-        (-axis0/32767.0) * d_joystickYAmpMax->getValue()));
+        (-axis0/32767.0) * d_joystickYAmpMax->getValue());
     }
   }
 
