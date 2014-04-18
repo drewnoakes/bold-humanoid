@@ -8,10 +8,19 @@ using namespace std;
 
 vector<shared_ptr<Option>> StopWalking::runPolicy(Writer<StringBuffer>& writer)
 {
-  d_walkModule->setMoveDir(Eigen::Vector2d(0,0));
-  d_walkModule->setTurnAngle(0);
+  writer.String("immediately").Bool(d_stopImmediately);
 
-  writer.String("walkRunning").Bool(d_walkModule->isRunning());
+  if (d_stopImmediately)
+  {
+    d_walkModule->stopImmediately();
+  }
+  else
+  {
+    d_walkModule->setMoveDir(Eigen::Vector2d(0,0));
+    d_walkModule->setTurnAngle(0);
+
+    writer.String("walkRunning").Bool(d_walkModule->isRunning());
+  }
 
   return {};
 }

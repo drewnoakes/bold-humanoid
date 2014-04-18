@@ -9,9 +9,10 @@ namespace bold
   class StopWalking : public Option
   {
   public:
-    StopWalking(std::string const& id, std::shared_ptr<WalkModule> walkModule)
+    StopWalking(std::string const& id, std::shared_ptr<WalkModule> walkModule, bool stopImmediately = false)
     : Option(id, "StopWalking"),
-      d_walkModule(walkModule)
+      d_walkModule(walkModule),
+      d_stopImmediately(stopImmediately)
     {}
 
     double hasTerminated() override;
@@ -20,5 +21,6 @@ namespace bold
 
   private:
     std::shared_ptr<WalkModule> d_walkModule;
+    bool d_stopImmediately;
   };
 }
