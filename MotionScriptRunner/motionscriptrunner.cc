@@ -511,5 +511,5 @@ bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const
 {
   int delta = getMaxDeltaFromFinalPose(script, includeHead, includeArms);
 
-  return abs(delta) > valueTolerance;
+  return abs(delta) > static_cast<int>(valueTolerance);
 }
