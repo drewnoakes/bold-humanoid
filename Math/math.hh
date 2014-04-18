@@ -29,8 +29,8 @@ namespace bold
     static std::function<double()> createUniformRng(double min, double max, bool randomSeed = true);
     static std::function<double()> createNormalRng(double mean, double stddev, bool randomSeed = true);
 
-    static double degToRad(double degrees) { return (degrees * M_PI) / 180.0; }
-    static double radToDeg(double radians) { return (radians / M_PI) * 180.0; }
+    static constexpr double degToRad(double degrees) { return (degrees * M_PI) / 180.0; }
+    static constexpr double radToDeg(double radians) { return (radians / M_PI) * 180.0; }
 
     static double smallestAngleBetween(Eigen::Vector2d v1, Eigen::Vector2d v2);
 
@@ -63,12 +63,12 @@ namespace bold
     };
 
     template<typename T>
-    static T lerp(double const& ratio, T const& lowerOutput, T const& upperOutput)
+    static constexpr T lerp(double const& ratio, T const& lowerOutput, T const& upperOutput)
     {
       return lowerOutput + (upperOutput - lowerOutput) * ratio;
     };
 
   private:
-    Math() {}
+    Math() = delete;
   };
 }
