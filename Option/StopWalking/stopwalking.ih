@@ -1,7 +1,0 @@
-#include "stopwalking.hh"
-
-#include "../../MotionModule/WalkModule/walkmodule.hh"
-
-using namespace bold;
-using namespace rapidjson;
-using namespace std;
