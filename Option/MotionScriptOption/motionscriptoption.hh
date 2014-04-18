@@ -37,6 +37,7 @@ namespace bold
     std::shared_ptr<MotionScript const> d_script;
     /// The most recent MotionScriptRunner issued to the MotionScriptModule
     std::shared_ptr<MotionScriptRunner> d_runner;
+    bool d_hasTerminated;
     bool d_ifNotFinalPose;
   };
 }

@@ -14,6 +14,7 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
 : Option(id, "MotionScript"),
   d_motionScriptModule(motionScriptModule),
   d_runner(),
+  d_hasTerminated(false),
   d_ifNotFinalPose(ifNotFinalPose)
 {
   d_script = MotionScript::fromFile(fileName);
@@ -27,6 +28,7 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
   d_motionScriptModule(motionScriptModule),
   d_script(script),
   d_runner(),
+  d_hasTerminated(false),
   d_ifNotFinalPose(ifNotFinalPose)
 {
   assert(d_script);
@@ -35,28 +37,24 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
 
 double MotionScriptOption::hasTerminated()
 {
-  // If we haven't run yet, then we haven't terminated
-  if (!d_runner)
-    return 0.0;
-
-  if (d_runner->getState() == MotionScriptRunnerState::Finished)
-    return 1.0;
-
-  return 0.0;
+  return d_hasTerminated ? 1.0 : 0.0;
 }
 
 vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& writer)
 {
   writer.String("hasRunner").Bool(d_runner != nullptr);
 
-  if (!d_runner || d_runner->getState() == MotionScriptRunnerState::Finished)
+  if (!d_runner)
   {
+    // This is the first execution since being reset
+
     if (d_ifNotFinalPose && MotionScriptRunner::isInFinalPose(d_script))
     {
       // Don't run.
       writer.String("skip").String("Already in final pose");
       writer.String("maxDelta").Int(MotionScriptRunner::getMaxDeltaFromFinalPose(d_script));
       d_runner = nullptr;
+      d_hasTerminated = true;
       return {};
     }
 
@@ -72,11 +70,15 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
     else
     {
       log::verbose("MotionScriptOption::runPolicy") << "Request to start motion script denied: " << getId();
-      d_runner = nullptr;
     }
 
     writer.String("started").Bool(started);
     writer.String("state").String(MotionScriptRunner::getStateName(runner->getState()).c_str());
+  }
+  else
+  {
+    if (d_runner->getState() == MotionScriptRunnerState::Finished)
+      d_hasTerminated = true;
   }
 
   return {};
@@ -85,5 +87,6 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 void MotionScriptOption::reset()
 {
   log::verbose("MotionScriptOption::reset") << getId();
+  d_hasTerminated = false;
   d_runner = nullptr;
 }
