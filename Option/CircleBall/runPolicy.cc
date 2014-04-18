@@ -17,12 +17,12 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   static Setting<double>* maxSpeedX = Config::getSetting<double>("options.circle-ball.max-speed-x");
   static Setting<double>* maxSpeedY = Config::getSetting<double>("options.circle-ball.max-speed-y");
-  static Setting<double>* pGainX = Config::getSetting<double>("options.circle-ball.p-gain-x");
-  static Setting<double>* pGainY = Config::getSetting<double>("options.circle-ball.p-gain-y");
-  static Setting<double>* turnSpeedX = Config::getSetting<double>("options.circle-ball.turn-speed-x");
-  static Setting<double>* turnSpeedY = Config::getSetting<double>("options.circle-ball.turn-speed-y");
+//   static Setting<double>* pGainX = Config::getSetting<double>("options.circle-ball.p-gain-x");
+//   static Setting<double>* pGainY = Config::getSetting<double>("options.circle-ball.p-gain-y");
+//   static Setting<double>* turnSpeedX = Config::getSetting<double>("options.circle-ball.turn-speed-x");
+//   static Setting<double>* turnSpeedY = Config::getSetting<double>("options.circle-ball.turn-speed-y");
   static Setting<double>* turnSpeedA = Config::getSetting<double>("options.circle-ball.turn-speed-a");
-  static Setting<double>* brakeDistance = Config::getSetting<double>("options.circle-ball.brake-distance");
+//   static Setting<double>* brakeDistance = Config::getSetting<double>("options.circle-ball.brake-distance");
 
   // TODO set this position based upon which foot is closest to the ball when commencing
   // TODO base the Y position from the idealkicking distance as the position to keep
