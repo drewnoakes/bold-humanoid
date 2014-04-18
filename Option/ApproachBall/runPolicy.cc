@@ -46,7 +46,11 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   // NOTE atan2 has flipped x/y on purpose
   double ballAngleRads = -atan2(ballPos->x() - 0.04, ballPos->y());
 
-  double speedScaleDueToAngle = Math::lerp(fabs(ballAngleRads), Math::degToRad(d_lowerTurnLimitDegs->getValue()), Math::degToRad(d_upperTurnLimitDegs->getValue()), 1.0, 0.0);
+  double speedScaleDueToAngle = Math::lerp(fabs(ballAngleRads),
+                                           Math::degToRad(d_lowerTurnLimitDegs->getValue()),
+                                           Math::degToRad(d_upperTurnLimitDegs->getValue()),
+                                           1.0,
+                                           0.0);
 
   writer.String("angleSpeed").Double(speedScaleDueToAngle);
 
