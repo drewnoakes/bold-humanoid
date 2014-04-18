@@ -3,13 +3,13 @@
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, shared_ptr<OptionTree> tree)
 {
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
-  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getAmbulator());
+  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
-  auto keepPosition = make_shared<KeepPosition>("keepPosition", PlayerRole::Supporter, agent->getAmbulator());
-  auto circleBall = make_shared<CircleBall>("circleBall", agent->getAmbulator(), agent->getHeadModule(), lookAtFeet, lookAtBall);
-  auto searchBall = make_shared<SearchBall>("searchBall", agent->getAmbulator(), agent->getHeadModule());
+  auto keepPosition = make_shared<KeepPosition>("keepPosition", PlayerRole::Supporter, agent->getWalkModule());
+  auto circleBall = make_shared<CircleBall>("circleBall", agent->getWalkModule(), agent->getHeadModule(), lookAtFeet, lookAtBall);
+  auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "supporter"));
 

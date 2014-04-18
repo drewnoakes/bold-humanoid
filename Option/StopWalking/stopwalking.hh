@@ -4,14 +4,14 @@
 
 namespace bold
 {
-  class Ambulator;
+  class WalkModule;
 
   class StopWalking : public Option
   {
   public:
-    StopWalking(std::string const& id, std::shared_ptr<Ambulator> ambulator)
+    StopWalking(std::string const& id, std::shared_ptr<WalkModule> walkModule)
     : Option(id, "StopWalking"),
-      d_ambulator(ambulator)
+      d_walkModule(walkModule)
     {}
 
     double hasTerminated() override;
@@ -19,6 +19,6 @@ namespace bold
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
-    std::shared_ptr<Ambulator> d_ambulator;
+    std::shared_ptr<WalkModule> d_walkModule;
   };
 }

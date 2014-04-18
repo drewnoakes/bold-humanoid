@@ -197,7 +197,7 @@
     "home-tilt": 20.0,
     "move-fine": false
   },
-  "walk-module": {
+  "walk-engine": {
     "x-offset": -10.0,
     "y-offset": 5.0,
     "z-offset": 20.0,
@@ -225,15 +225,16 @@
     "i-gain": 0,
     "d-gain": 0
   },
-  "ambulator": {
+  "walk-module": {
     "auto-balance": true,
-    "x-amp-delta": 3,
-    "y-amp-delta": 3,
-    "turn-delta": 1,
+    "x-amp-delta": 0.72,
+    "y-amp-delta": 0.72,
+    "turn-delta": 0.24,
     "max-hip-pitch-at-speed": 13,
     "min-hip-pitch": 11,
     "max-hip-pitch": 14,
-    "fwd-acc-hip-pitch-factor": 2.0
+    "fwd-acc-hip-pitch-factor": 2.0,
+    "stabilisation-time-ms": 300
   },
   "kick": {
     "max-ball-distance": 0.2

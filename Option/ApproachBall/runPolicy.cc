@@ -52,8 +52,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   // unspecified units
   double turnSpeed = ballAngleRads * d_turnScale->getValue();
 
-  d_ambulator->setMoveDir(moveDir);
-  d_ambulator->setTurnAngle(turnSpeed);
+  d_walkModule->setMoveDir(moveDir);
+  d_walkModule->setTurnAngle(turnSpeed);
 
   writer.String("moveDir").StartArray().Double(moveDir.x()).Double(moveDir.y()).EndArray(2);
 
@@ -64,5 +64,5 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
 void ApproachBall::reset()
 {
-  d_ambulator->reset();
+//   d_walkModule->reset();
 }

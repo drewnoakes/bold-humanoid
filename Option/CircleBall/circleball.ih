@@ -1,7 +1,7 @@
 #include "circleball.hh"
 
-#include "../../Ambulator/ambulator.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 

@@ -71,8 +71,8 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
       }
     }
 
-    // finnaly we need to turn ourselves
-    d_ambulator->setTurnAngle(d_isLeftTurn ? a : -a);
+    // finaly we need to turn ourselves
+    d_walkModule->setTurnAngle(d_isLeftTurn ? a : -a);
   }
 
   // return nothing
@@ -86,5 +86,5 @@ void SearchBall::setIsLeftTurn(bool leftTurn)
 
 void SearchBall::reset()
 {
-  d_ambulator->reset();
+//   d_walkModule->reset();
 }

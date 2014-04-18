@@ -4,7 +4,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {
   unsigned uniformNumber   = agent->getUniformNumber();
   unsigned teamNumber      = agent->getTeamNumber();
-  auto const& ambulator          = agent->getAmbulator();
+  auto const& walkModule         = agent->getWalkModule();
   auto const& motionScriptModule = agent->getMotionScriptModule();
   auto const& headModule         = agent->getHeadModule();
   auto const& fallDetector       = agent->getFallDetector();
@@ -30,7 +30,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     };
   };
 
-  auto isWalking = [ambulator]() { return ambulator->isRunning(); };
+  auto isWalking = [walkModule]() { return walkModule->isRunning(); };
 
   auto hasFallenForward = [fallDetector]() { return fallDetector->getFallenState() == FallState::FORWARD; };
 
@@ -55,7 +55,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto backwardGetUp = make_shared<MotionScriptOption>("backwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-back.json");
   auto leftGetUp = make_shared<MotionScriptOption>("leftGetUpScript", motionScriptModule, "./motionscripts/get-up-from-left.json");
   auto rightGetUp = make_shared<MotionScriptOption>("rightGetUpScript", motionScriptModule, "./motionscripts/get-up-from-right.json");
-  auto stopWalking = make_shared<StopWalking>("stopWalking", ambulator);
+  auto stopWalking = make_shared<StopWalking>("stopWalking", walkModule);
 
   auto performRole = make_shared<DispatchOption<PlayerRole>>("performRole", [agent](){ return agent->getBehaviourControl()->getPlayerRole(); });
   performRole->setOption(PlayerRole::Keeper, buildKeeperFsm(agent, tree));

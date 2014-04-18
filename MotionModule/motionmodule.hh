@@ -33,15 +33,13 @@ namespace bold
       d_scheduler->registerModule(this);
     }
 
-    virtual ~MotionModule() {}
+    virtual ~MotionModule() = default;
 
-    MotionModule(const MotionModule&) = delete;
-    MotionModule& operator=(const MotionModule&) = delete;
-
-    static const int TIME_UNIT = 8; //msec
+    static constexpr int TIME_UNIT = 8; //msec
 
     std::string getName() const { return d_name; }
 
+    /** Called once, when the module is added to the MotionLoop. */
     virtual void initialize() = 0;
 
     /** Updates the position.
@@ -57,11 +55,11 @@ namespace bold
 
     std::shared_ptr<MotionTaskScheduler> getScheduler() const { return d_scheduler; }
 
-    // The flag will be set from on thread, and cleared from another,
+    // The flag will be set from one thread, and cleared from another,
     // but a single field write/read should be thread safe.
 
     /// Called by the motion module (on the motion loop thread) when the module
-    /// has completed. For example, when a motion script has reached it's final
+    /// has completed. For example, when a motion script has reached its final
     /// pose, or when walking has come to a stop.
     void setCompletedFlag()
     {
@@ -86,11 +84,10 @@ namespace bold
       return isSet;
     }
 
-    void setCompleted(bool complete){ d_isCompleted = complete; }
-
-    std::mutex& getMutex(){ return d_isCompletedMutex; }
-
   private:
+    MotionModule(const MotionModule&) = delete;
+    MotionModule& operator=(const MotionModule&) = delete;
+
     std::mutex d_isCompletedMutex;
     std::shared_ptr<MotionTaskScheduler> d_scheduler;
     std::string d_name;

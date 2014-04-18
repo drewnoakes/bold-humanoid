@@ -8,7 +8,7 @@ class Joystick;
 namespace bold
 {
   class Agent;
-  class Ambulator;
+  class WalkModule;
   class HeadModule;
   class MotionScriptModule;
   template<typename> class Setting;
@@ -29,7 +29,7 @@ namespace bold
     std::shared_ptr<Joystick> d_joystick;
     std::shared_ptr<MotionScriptModule> d_motionScriptModule;
     std::shared_ptr<HeadModule> d_headModule;
-    std::shared_ptr<Ambulator> d_ambulator;
+    std::shared_ptr<WalkModule> d_walkModule;
 
     Setting<bool>* d_joystickEnabled;
     Setting<std::string>* d_joystickDevicePath;

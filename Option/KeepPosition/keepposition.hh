@@ -5,19 +5,19 @@
 
 namespace bold
 {
-  class Ambulator;
+  class WalkModule;
   class ApproachBall;
   template<typename> class Setting;
 
   class KeepPosition : public Option
   {
   public:
-    KeepPosition(std::string id, PlayerRole role, std::shared_ptr<Ambulator> ambulator);
+    KeepPosition(std::string id, PlayerRole role, std::shared_ptr<WalkModule> walkModule);
 
     virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
-    std::shared_ptr<Ambulator> d_ambulator;
+    std::shared_ptr<WalkModule> d_walkModule;
     PlayerRole d_role;
     std::shared_ptr<ApproachBall> d_approachBall;
     Setting<double>* d_supporterSpacing;

@@ -1,6 +1,5 @@
 #include "agent.hh"
 
-#include "../Ambulator/ambulator.hh"
 #include "../BehaviourControl/behaviourcontrol.hh"
 #include "../Camera/camera.hh"
 #include "../CameraModel/cameramodel.hh"
@@ -32,7 +31,6 @@
 #include "../Spatialiser/spatialiser.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
-#include "../StateObject/AmbulatorState/ambulatorstate.hh"
 #include "../StateObject/BehaviourControlState/behaviourcontrolstate.hh"
 #include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
@@ -49,6 +47,7 @@
 #include "../StateObject/ParticleState/particlestate.hh"
 #include "../StateObject/StaticHardwareState/statichardwarestate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
+#include "../StateObject/WalkState/walkstate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"
 #include "../StateObserver/FallDetector/falldetector.hh"
 #include "../StateObserver/GyroCalibrator/gyrocalibrator.hh"

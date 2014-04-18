@@ -60,14 +60,14 @@ class WalkModule extends Module
         this.runningIndicator = <HTMLDivElement>templateRoot.querySelector('.connection-indicator');
         this.radarCanvas = <HTMLCanvasElement>templateRoot.querySelector('canvas.radar');
 
-        control.buildSettings('ambulator', templateRoot.querySelector('.ambulator-controls'), this.closeables);
         control.buildSettings('options.approach-ball', templateRoot.querySelector('.approach-ball-controls'), this.closeables);
-        control.buildSettings('walk-module', templateRoot.querySelector('.walk-controls'), this.closeables);
+        control.buildSettings('walk-engine', templateRoot.querySelector('.walk-engine-controls'), this.closeables);
+        control.buildSettings('walk-module', templateRoot.querySelector('.walk-module-controls'), this.closeables);
 
-        this.closeables.add(new data.Subscription<state.Ambulator>(
-            constants.protocols.ambulatorState,
+        this.closeables.add(new data.Subscription<state.Walk>(
+            constants.protocols.walkState,
             {
-                onmessage: this.onAmbulatorState.bind(this)
+                onmessage: this.onWalkState.bind(this)
             }
         ));
 
@@ -107,7 +107,7 @@ class WalkModule extends Module
         delete this.runningIndicator;
     }
 
-    private drawRadar(data?: state.Ambulator)
+    private drawRadar(data?: state.Walk)
     {
         // TODO use a dirty flag and only draw on animation frames
 
@@ -176,7 +176,7 @@ class WalkModule extends Module
         context.stroke();
     }
 
-    private onAmbulatorState(data: state.Ambulator)
+    private onWalkState(data: state.Walk)
     {
         if (data.running)
         {

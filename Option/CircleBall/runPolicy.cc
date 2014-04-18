@@ -77,8 +77,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
   // direction being inverted.
-  d_ambulator->setMoveDir(Vector2d(-y, -x));
-  d_ambulator->setTurnAngle(a);
+  d_walkModule->setMoveDir(Vector2d(-y, -x));
+  d_walkModule->setTurnAngle(a);
 
   writer.String("error").StartArray().Double(error.x()).Double(error.y()).EndArray(2);
   writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
@@ -101,8 +101,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   double y = panRatio < 0 ? 20 : -20;
   double a = panRatio < 0 ? -15 : 15;
 
-  d_ambulator->setMoveDir(Eigen::Vector2d(x, y));
-  d_ambulator->setTurnAngle(a);
+  d_walkModule->setMoveDir(Eigen::Vector2d(x, y));
+  d_walkModule->setTurnAngle(a);
 
   writer.String("panAngle").Double(panAngle);
   writer.String("panAngleRange").Double(panAngleRange);
@@ -121,5 +121,5 @@ void CircleBall::setIsLeftTurn(bool leftTurn)
 
 void CircleBall::reset()
 {
-  d_ambulator->reset();
+//   d_walkModule->reset();
 }

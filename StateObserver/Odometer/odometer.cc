@@ -1,7 +1,8 @@
 #include "odometer.hh"
 
 #include "../../Config/config.hh"
-#include "../../StateObject/AmbulatorState/ambulatorstate.hh"
+#include "../../WalkEngine/walkengine.hh"
+#include "../../StateObject/WalkState/walkstate.hh"
 #include "../../StateObject/OdometryState/odometrystate.hh"
 #include "../../util/log.hh"
 
@@ -32,9 +33,9 @@ void Odometer::observeTyped(shared_ptr<BodyState const> const& state, Sequential
 {
   assert(state);
 
-  auto ambulatorState = State::get<AmbulatorState>();
+  auto walkState = State::get<WalkState>();
 
-  if (!ambulatorState || !ambulatorState->isRunning())
+  if (!walkState || !walkState->isRunning())
   {
     d_lastBodyState = nullptr;
     return;
@@ -44,9 +45,9 @@ void Odometer::observeTyped(shared_ptr<BodyState const> const& state, Sequential
   {
     // Measure delta of movement
 
-    int phase = ambulatorState->getCurrentPhase();
+    int phase = walkState->getCurrentPhase();
 
-    bool isLeftSupportFoot = phase == WalkModule::PHASE0 || phase == WalkModule::PHASE1;
+    bool isLeftSupportFoot = phase == WalkEngine::PHASE0 || phase == WalkEngine::PHASE1;
 
     JointId supportFootJointId = isLeftSupportFoot
       ? JointId::L_ANKLE_ROLL

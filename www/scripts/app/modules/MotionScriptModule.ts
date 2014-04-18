@@ -15,7 +15,7 @@ class MotionScriptModule extends Module
     public load()
     {
         var container = document.createElement('div');
-        container.className = 'control-container ambulator-controls';
+        container.className = 'control-container motion-script-controls';
         this.element.appendChild(container);
 
         control.buildActions('motion-script', container);

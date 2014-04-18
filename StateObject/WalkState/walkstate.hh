@@ -1,31 +1,26 @@
 #pragma once
 
-#include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../stateobject.hh"
+#include "../../MotionModule/WalkModule/walkmodule.hh"
 
 namespace bold
 {
-  class AmbulatorState : public StateObject
+  class WalkEngine;
+
+  class WalkState : public StateObject
   {
   public:
-    AmbulatorState(double targetX, double targetY, double targetTurn,
+    WalkState(double targetX, double targetY, double targetTurn,
                    double lastXDelta, double lastYDelta, double lastTurnDelta,
-                   std::shared_ptr<WalkModule> walker)
-    : d_targetX(targetX),
-      d_targetY(targetY),
-      d_targetTurn(targetTurn),
-      d_currentX(walker->X_MOVE_AMPLITUDE),
-      d_currentY(walker->Y_MOVE_AMPLITUDE),
-      d_currentTurn(walker->A_MOVE_AMPLITUDE),
-      d_lastXDelta(lastXDelta),
-      d_lastYDelta(lastYDelta),
-      d_lastTurnDelta(lastTurnDelta),
-      d_isRunning(walker->isRunning()),
-      d_currentPhase(walker->getCurrentPhase()),
-      d_bodySwingY(walker->getBodySwingY()),
-      d_bodySwingZ(walker->getBodySwingZ()),
-      d_hipPitch(walker->HIP_PITCH_OFFSET)
-    {}
+                   WalkModule* walkModule,
+                   std::shared_ptr<WalkEngine> walkEngine);
+
+    // From walk module
+
+    bool isRunning() const { return d_isRunning; }
+    WalkStatus getStatus() const { return d_status; }
+
+    // From walk engine
 
     double getTargetX() const { return d_targetX; }
     double getTargetY() const { return d_targetY; }
@@ -34,8 +29,6 @@ namespace bold
     double getCurrentX() const { return d_currentX; }
     double getCurrentY() const { return d_currentY; }
     double getCurrentTurn() const { return d_currentTurn; }
-
-    bool isRunning() const { return d_isRunning; }
 
     int getCurrentPhase() const { return d_currentPhase; }
 
@@ -47,6 +40,11 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
+    // From walk module
+    bool d_isRunning;
+    WalkStatus d_status;
+
+    // From walk engine
     double d_targetX;
     double d_targetY;
     double d_targetTurn;
@@ -56,7 +54,6 @@ namespace bold
     double d_lastXDelta;
     double d_lastYDelta;
     double d_lastTurnDelta;
-    bool d_isRunning;
     int d_currentPhase;
     double d_bodySwingY;
     double d_bodySwingZ;

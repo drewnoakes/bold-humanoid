@@ -82,13 +82,6 @@ void Agent::think()
   t.timeEvent("Remote Control");
 
   //
-  // Flush out new walking parameters
-  //
-  // TODO do this in the motion loop for smoother interpolation
-  d_ambulator->step();
-  t.timeEvent("Ambulator Step");
-
-  //
   // Update LEDs on back, etc
   //
   d_debugger->update();

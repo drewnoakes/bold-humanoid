@@ -368,7 +368,6 @@ export var protocols = {
 
     // One per StateObject...
     agentFrameState: 'AgentFrame',
-    ambulatorState: 'Ambulator',
     bodyState: 'Body',
     behaviourControlState: 'BehaviourControl',
     bodyControlState: 'BodyControl',
@@ -386,6 +385,7 @@ export var protocols = {
     particleState: 'Particle',
     staticHardware: 'StaticHardware',
     thinkTiming: 'ThinkTiming',
+    walkState: 'Walk',
     worldFrameState: 'WorldFrame'
 };
 
@@ -393,7 +393,6 @@ export var protocols = {
 
 export var allStateProtocols = [
     protocols.agentFrameState,
-    protocols.ambulatorState,
     protocols.behaviourControlState,
     protocols.bodyControlState,
     protocols.bodyState,
@@ -411,6 +410,7 @@ export var allStateProtocols = [
     protocols.staticHardware,
     protocols.teamState,
     protocols.thinkTiming,
+    protocols.walkState,
     protocols.worldFrameState
 ];
 

@@ -62,7 +62,7 @@
     }
   },
 
-  "walk-module": {
+  "walk-engine": {
     "x-offset": -10.0,
     "y-offset": 5.0,
     "z-offset": 20.0,
@@ -90,11 +90,11 @@
     "i-gain": 0,
     "d-gain": 0
   },
-  "ambulator": {
+  "walk-module": {
     "auto-balance": true,
-    "x-amp-delta": 2.5,
-    "y-amp-delta": 2.5,
-    "turn-delta": 1,
+    "x-amp-delta": 0.6,
+    "y-amp-delta": 0.6,
+    "turn-delta": 0.24,
     "max-hip-pitch-at-speed": 13,
     "min-hip-pitch": 12,
     "max-hip-pitch": 15.5,

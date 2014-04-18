@@ -6,14 +6,14 @@
 
 namespace bold
 {
-  class Ambulator;
+  class WalkModule;
 
   class ApproachBall : public Option
   {
   public:
-    ApproachBall(std::string const& id, std::shared_ptr<Ambulator> ambulator)
+    ApproachBall(std::string const& id, std::shared_ptr<WalkModule> walkModule)
     : Option(id, "ApproachBall"),
-      d_ambulator(ambulator)
+      d_walkModule(walkModule)
     {
       d_turnScale          = Config::getSetting<double>("options.approach-ball.turn-speed-scale");
       d_maxForwardSpeed    = Config::getSetting<double>("options.approach-ball.max-forward-speed");
@@ -34,7 +34,7 @@ namespace bold
     }
 
   private:
-    std::shared_ptr<Ambulator> d_ambulator;
+    std::shared_ptr<WalkModule> d_walkModule;
     Setting<double>* d_turnScale;
     Setting<double>* d_maxForwardSpeed;
     Setting<double>* d_minForwardSpeed;

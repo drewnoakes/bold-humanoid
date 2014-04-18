@@ -54,8 +54,6 @@ Agent::Agent()
   State::registerObserver(d_teamCommunicator);
   State::registerObserver(d_orientationTracker);
 
-  d_ambulator = make_shared<Ambulator>(d_walkModule),
-
   d_cameraModel = allocate_aligned_shared<CameraModel>();
 
   d_spatialiser = make_shared<Spatialiser>(d_cameraModel);

@@ -1,7 +1,7 @@
 #include "keepposition.hh"
 
-#include "../../Ambulator/ambulator.hh"
 #include "../../Config/config.hh"
+#include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../../Option/ApproachBall/approachball.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
@@ -11,11 +11,11 @@ using namespace std;
 using namespace rapidjson;
 using namespace Eigen;
 
-KeepPosition::KeepPosition(string id, PlayerRole role, shared_ptr<Ambulator> ambulator)
+KeepPosition::KeepPosition(string id, PlayerRole role, shared_ptr<WalkModule> walkModule)
 : Option(id, "KeepPosition"),
-  d_ambulator(ambulator),
+  d_walkModule(walkModule),
   d_role(role),
-  d_approachBall(make_shared<ApproachBall>("approachBallKeepingPosition", ambulator)),
+  d_approachBall(make_shared<ApproachBall>("approachBallKeepingPosition", walkModule)),
   d_supporterSpacing(Config::getSetting<double>("options.keep-position.spacing"))
 {}
 
@@ -34,7 +34,7 @@ vector<shared_ptr<Option>> KeepPosition::runPolicy(Writer<StringBuffer>& writer)
   auto agentFrame = State::get<AgentFrameState>();
   if (!agentFrame->isBallVisible())
   {
-    d_ambulator->setMoveDir(Vector2d(0, 0));
+    d_walkModule->setMoveDir(Vector2d(0, 0));
     return {};
   }
 
@@ -66,7 +66,7 @@ vector<shared_ptr<Option>> KeepPosition::runPolicy(Writer<StringBuffer>& writer)
 
   if (dist < maxDistance)
   {
-    d_ambulator->setMoveDir(Vector2d(0, 0));
+    d_walkModule->setMoveDir(Vector2d(0, 0));
     return {};
   }
 

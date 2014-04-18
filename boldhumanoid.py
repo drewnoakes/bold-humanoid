@@ -31,10 +31,10 @@ def thinkEndCallback():
     # print("(Agent Frame) Ball observations:")
     # print(ballObs)
 
-    # ambulatorState = bold.State.getAmbulatorState()
-    # print(ambulatorState)
-    # print("AmbulatorState): current phase")
-    # print(ambulatorState.getCurrentPhase())
+    # walkState = bold.State.getWalkState()
+    # print(walkState)
+    # print("WalkState): current phase")
+    # print(walkState.getCurrentPhase())
 
     # print("=====")
 
@@ -81,7 +81,7 @@ def main(argv):
 
 
     bold.Config.initialise("configuration-metadata.json", configurationFile)
-    
+
     agent = getAgent()
     print(agent)
 

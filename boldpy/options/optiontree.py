@@ -50,7 +50,7 @@ class PyOptionTreeBuilder:
 
     def createWinFSM(self, tree):
         winFSM = FSMOption("win").__disown__()
-        
+
         # GENERAL FUNCTIONS
 
         @static_var("lastState", False)
@@ -114,7 +114,7 @@ class PyOptionTreeBuilder:
 
         dbg = getAgent().getDebugger()
         hm = getAgent().getHeadModule()
-        
+
         readyState.onEnter = lambda: [dbg.showReady(), hm.moveToHome()]
         setState.onEnter = lambda: [dbg.showSet(), hm.moveToHome()]
         playingState.onEnter = dbg.showPlaying
@@ -122,7 +122,7 @@ class PyOptionTreeBuilder:
         pausedState.onEnter = dbg.showPaused
         pausing1State.onEnter = lambda: [dbg.showPaused(), hm.moveToHome()]
         stopAgentAndExitState.onEnter = getAgent().stop
-        
+
         # TRANSITIONS
         startUpState.\
             transitionTo(readyState).\
@@ -142,7 +142,7 @@ class PyOptionTreeBuilder:
 
         pausing1State.\
             transitionTo(pausing2State).\
-            when(negate(getAgent().getAmbulator().isRunning))
+            when(negate(getAgent().getWalkModule().isRunning))
 
         pausing2State.\
             transitionTo(pausedState).\

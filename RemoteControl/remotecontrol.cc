@@ -3,11 +3,11 @@
 #include <Eigen/Core>
 
 #include "../Agent/agent.hh"
-#include "../Ambulator/ambulator.hh"
 #include "../Config/config.hh"
 #include "../joystick/joystick.hh"
 #include "../MotionModule/HeadModule/headmodule.hh"
 #include "../MotionModule/MotionScriptModule/motionscriptmodule.hh"
+#include "../MotionModule/WalkModule/walkmodule.hh"
 #include "../MotionScriptRunner/motionscriptrunner.hh"
 #include "../util/log.hh"
 
@@ -24,7 +24,7 @@ RemoteControl::RemoteControl(Agent* agent)
   d_joystickYAmpMax(Config::getSetting<double>("hardware.joystick.y-amp-max")),
   d_joystickAAmpMax(Config::getSetting<double>("hardware.joystick.a-amp-max"))
 {
-  d_ambulator = agent->getAmbulator();
+  d_walkModule = agent->getWalkModule();
   d_headModule = agent->getHeadModule();
   d_motionScriptModule = agent->getMotionScriptModule();
 
@@ -145,7 +145,7 @@ void RemoteControl::update()
     {
       // TODO only do this if we are standing (need better test for standing though)
       // Set walk direction with left joystick
-      d_ambulator->setMoveDir(Eigen::Vector2d(
+      d_walkModule->setMoveDir(Eigen::Vector2d(
         (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
         (-axis0/32767.0) * d_joystickYAmpMax->getValue()));
     }
@@ -154,7 +154,7 @@ void RemoteControl::update()
   // Control turn angle with right joystick
   // TODO only do this if we are standing (need better test for standing though)
   if (axis2 != 0)
-    d_ambulator->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
+    d_walkModule->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
 
   // Up/down on D-Pad makes robot stand/sit
   if (axis5 < 0 && !MotionScriptRunner::isInFinalPose(standReadyScript))

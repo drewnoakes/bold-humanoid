@@ -3,7 +3,6 @@
 void Agent::registerStateTypes()
 {
   State::registerStateType<AgentFrameState>("AgentFrame");
-  State::registerStateType<AmbulatorState>("Ambulator");
   State::registerStateType<BehaviourControlState>("BehaviourControl");
   State::registerStateType<BodyControlState>("BodyControl");
   State::registerStateType<BodyState>("Body");
@@ -21,5 +20,6 @@ void Agent::registerStateTypes()
   State::registerStateType<ParticleState>("Particle");
   State::registerStateType<StaticHardwareState>("StaticHardware");
   State::registerStateType<ThinkTimingState>("ThinkTiming");
+  State::registerStateType<WalkState>("Walk");
   State::registerStateType<WorldFrameState>("WorldFrame");
 }

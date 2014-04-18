@@ -23,15 +23,17 @@ export interface AgentFrame
     occlusionRays: number[][];
 }
 
-export interface Ambulator
+export interface Walk
 {
+    running: boolean;
+    status: string;
+
     /** [x,y,turn] */
     target: number[];
     /** [x,y,turn] */
     current: number[];
     /** [x,y,turn] */
     delta: number[];
-    running: boolean;
     phase: number;
     hipPitch: number;
     bodySwingY: number;

@@ -128,12 +128,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Ambulator/Ambulator.cc
-  ./Ambulator/setters.cc
-  ./Ambulator/step.cc
-)
-
-add_class(BOLDHUMANOID
   ./BehaviourControl/behaviourcontrol.cc
 )
 
@@ -329,9 +323,6 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./MotionModule/WalkModule/walkmodule.cc
-  ./MotionModule/WalkModule/Matrix.cpp
-  ./MotionModule/WalkModule/Point.cpp
-  ./MotionModule/WalkModule/Vector.cpp
 )
 
 add_class(BOLDHUMANOID
@@ -468,7 +459,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/AmbulatorState/writeJson.cc
+  ./StateObject/WalkState/walkstate.cc
 )
 
 add_class(BOLDHUMANOID
@@ -603,6 +594,13 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./Voice/voice.cc
+)
+
+add_class(BOLDHUMANOID
+  ./WalkEngine/walkengine.cc
+  ./WalkEngine/Matrix.cpp
+  ./WalkEngine/Point.cpp
+  ./WalkEngine/Vector.cpp
 )
 
 add_class(BOLDHUMANOID

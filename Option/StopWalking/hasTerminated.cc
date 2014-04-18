@@ -2,5 +2,5 @@
 
 double StopWalking::hasTerminated()
 {
-  return d_ambulator->isRunning() ? 1.0 : 0.0;
+  return d_walkModule->isRunning() ? 1.0 : 0.0;
 }

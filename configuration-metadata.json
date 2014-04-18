@@ -211,7 +211,7 @@
     "home-tilt": { "type": "double", "min": -22.0, "max": 40.0, "default": -10.0 },
     "move-fine": { "type": "bool", "default": false }
   },
-  "walk-module": {
+  "walk-engine": {
     "x-offset":         { "type": "double", "default": -10.0 },
     "y-offset":         { "type": "double", "default": 5.0 },
     "z-offset":         { "type": "double", "default": 20.0 },
@@ -239,14 +239,15 @@
     "i-gain":           { "type": "int", "default": 0 },
     "d-gain":           { "type": "int", "default": 0 }
   },
-  "ambulator": {
-    "x-amp-delta":   { "type": "double", "default": 5.0, "description": "X smoothing delta" },
-    "y-amp-delta":   { "type": "double", "default": 5.0, "description": "Y smoothing delta" },
-    "turn-delta":    { "type": "double", "default": 1.0, "description": "Turn smoothing delta" },
+  "walk-module": {
+    "x-amp-delta":   { "type": "double", "default": 1.2, "description": "X smoothing delta" },
+    "y-amp-delta":   { "type": "double", "default": 1.2, "description": "Y smoothing delta" },
+    "turn-delta":    { "type": "double", "default": 0.24, "description": "Turn smoothing delta" },
     "max-hip-pitch-at-speed": { "type": "double", "default": 15.0, "description": "Speed for max hip pitch" },
     "min-hip-pitch": { "type": "double", "default": 13.0, "description": "Min hip pitch" },
     "max-hip-pitch": { "type": "double", "default": 17.0, "description": "Max hip pitch" },
-    "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "default": 2.0, "description": "Fwd acc hip pitch factor" }
+    "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "default": 2.0, "description": "Fwd acc hip pitch factor" },
+    "stabilisation-time-ms":    { "type": "int", "min": 0, "default": 300 }
   },
   "kick": {
     "max-ball-distance": { "type": "double", "default": 0.155, "min": 0, "max": 0.4 }

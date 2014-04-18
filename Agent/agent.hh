@@ -8,7 +8,7 @@
 
 namespace bold
 {
-  class Ambulator;
+  class WalkModule;
   class BehaviourControl;
   class BodyState;
   class Camera;
@@ -46,7 +46,6 @@ namespace bold
   public:
     Agent();
 
-    std::shared_ptr<Ambulator> getAmbulator() const { return d_ambulator; }
     std::shared_ptr<Camera> getCamera() const { return d_camera; }
     std::shared_ptr<CameraModel> getCameraModel() const { return d_cameraModel; }
     std::shared_ptr<DataStreamer> getDataStreamer() const { return d_streamer; }
@@ -118,7 +117,6 @@ namespace bold
 
     // Components
 
-    std::shared_ptr<Ambulator> d_ambulator;
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<DataStreamer> d_streamer;
