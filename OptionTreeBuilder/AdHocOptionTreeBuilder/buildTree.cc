@@ -56,6 +56,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto leftGetUp = make_shared<MotionScriptOption>("leftGetUpScript", motionScriptModule, "./motionscripts/get-up-from-left.json");
   auto rightGetUp = make_shared<MotionScriptOption>("rightGetUpScript", motionScriptModule, "./motionscripts/get-up-from-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", walkModule);
+  auto stopWalkingImmediately = make_shared<StopWalking>("stopWalking", walkModule, /*immediately*/ true);
 
   auto performRole = make_shared<DispatchOption<PlayerRole>>("performRole", [agent](){ return agent->getBehaviourControl()->getPlayerRole(); });
   performRole->setOption(PlayerRole::Keeper, buildKeeperFsm(agent, tree));
@@ -85,10 +86,10 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto setState = winFsm->newState("set", {stopWalking});
   auto playingState = winFsm->newState("playing", {performRole});
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
-  auto forwardGetUpState = winFsm->newState("forwardGetUp", {forwardGetUp});
-  auto backwardGetUpState = winFsm->newState("backwardGetUp", {backwardGetUp});
-  auto leftGetUpState = winFsm->newState("leftGetUp", {leftGetUp});
-  auto rightGetUpState = winFsm->newState("rightGetUp", {rightGetUp});
+  auto forwardGetUpState = winFsm->newState("forwardGetUp", {stopWalkingImmediately, forwardGetUp});
+  auto backwardGetUpState = winFsm->newState("backwardGetUp", {stopWalkingImmediately, backwardGetUp});
+  auto leftGetUpState = winFsm->newState("leftGetUp", {stopWalkingImmediately, leftGetUp});
+  auto rightGetUpState = winFsm->newState("rightGetUp", {stopWalkingImmediately, rightGetUp});
   auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
   auto sitForShutdownState = winFsm->newState("sitForShutdown", {sitArmsBack});
   auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
