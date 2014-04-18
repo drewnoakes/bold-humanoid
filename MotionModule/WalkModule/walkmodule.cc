@@ -32,9 +32,9 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_walkEngine(make_shared<WalkEngine>()),
   d_stabilisationTimeMillis(Config::getSetting<int>("walk-module.stabilisation-time-ms")),
   d_stabilisationCyclesRemaining(0),
-  d_xAmp(0, Config::getValue<double>("walk-module.x-amp-delta")),
-  d_yAmp(0, Config::getValue<double>("walk-module.y-amp-delta")),
-  d_turnAmp(0, Config::getValue<double>("walk-module.turn-delta")),
+  d_xAmp(0, 1),
+  d_yAmp(0, 1),
+  d_turnAmp(0, 1),
   d_maxHipPitchAtSpeed(Config::getSetting<double>("walk-module.max-hip-pitch-at-speed")),
   d_minHipPitch(Config::getSetting<double>("walk-module.min-hip-pitch")),
   d_maxHipPitch(Config::getSetting<double>("walk-module.max-hip-pitch")),
@@ -43,16 +43,9 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_moveDirSet(false),
   d_status(WalkStatus::Stopped)
 {
-  // TODO introduce and use 'bind' here and elsewhere
-//   Config::bind<double>("walk-module.x-amp-delta", [this](double value) { d_yAmp.setDelta(value); });
-
-  auto xAmpSetting = Config::getSetting<double>("walk-module.x-amp-delta");
-  auto yAmpSetting = Config::getSetting<double>("walk-module.y-amp-delta");
-  auto turnSetting = Config::getSetting<double>("walk-module.turn-delta");
-
-  xAmpSetting->changed.connect([this](double value) { d_xAmp.setDelta(value); });
-  yAmpSetting->changed.connect([this](double value) { d_yAmp.setDelta(value); });
-  turnSetting->changed.connect([this](double value) { d_turnAmp.setDelta(value); });
+  Config::getSetting<double>("walk-module.x-amp-delta")->track([this](double value) { d_xAmp.setDelta(value); });
+  Config::getSetting<double>("walk-module.y-amp-delta")->track([this](double value) { d_yAmp.setDelta(value); });
+  Config::getSetting<double>("walk-module.turn-delta") ->track([this](double value) { d_turnAmp.setDelta(value); });
 }
 
 void WalkModule::setMoveDir(double x, double y)
