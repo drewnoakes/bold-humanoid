@@ -79,5 +79,6 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 
 void MotionScriptOption::reset()
 {
+  log::verbose("MotionScriptOption::reset") << getId();
   d_runner = nullptr;
 }
