@@ -50,7 +50,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   auto yAmpSetting = Config::getSetting<double>("walk-module.y-amp-delta");
   auto turnSetting = Config::getSetting<double>("walk-module.turn-delta");
 
-  xAmpSetting->changed.connect([this](double value) { d_yAmp.setDelta(value); });
+  xAmpSetting->changed.connect([this](double value) { d_xAmp.setDelta(value); });
   yAmpSetting->changed.connect([this](double value) { d_yAmp.setDelta(value); });
   turnSetting->changed.connect([this](double value) { d_turnAmp.setDelta(value); });
 }
