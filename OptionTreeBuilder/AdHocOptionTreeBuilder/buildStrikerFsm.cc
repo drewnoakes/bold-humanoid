@@ -34,10 +34,6 @@ auto isPerfectLineForAttack = []()
   if (!isPerfectLineEnabled->getValue())
     return false;
 
-//   FieldSide ballSide = team->getKeeperBallSideEstimate();
-//   if (ballSide == FieldSide::Ours)
-//     return false;
-
   auto agentFrame = State::get<AgentFrameState>();
   if (!agentFrame->isBallVisible())
     return false;
