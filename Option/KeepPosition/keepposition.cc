@@ -1,5 +1,6 @@
 #include "keepposition.hh"
 
+#include "../../Agent/agent.hh"
 #include "../../Config/config.hh"
 #include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../../Option/ApproachBall/approachball.hh"
@@ -11,11 +12,11 @@ using namespace std;
 using namespace rapidjson;
 using namespace Eigen;
 
-KeepPosition::KeepPosition(string id, PlayerRole role, shared_ptr<WalkModule> walkModule)
+KeepPosition::KeepPosition(string id, PlayerRole role, Agent* agent)
 : Option(id, "KeepPosition"),
-  d_walkModule(walkModule),
+  d_walkModule(agent->getWalkModule()),
   d_role(role),
-  d_approachBall(make_shared<ApproachBall>("approachBallKeepingPosition", walkModule)),
+  d_approachBall(make_shared<ApproachBall>("approachBallKeepingPosition", agent->getWalkModule(), agent->getBehaviourControl())),
   d_supporterSpacing(Config::getSetting<double>("options.keep-position.spacing"))
 {}
 

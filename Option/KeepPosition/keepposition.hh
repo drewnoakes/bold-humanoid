@@ -5,14 +5,15 @@
 
 namespace bold
 {
-  class WalkModule;
+  class Agent;
   class ApproachBall;
   template<typename> class Setting;
+  class WalkModule;
 
   class KeepPosition : public Option
   {
   public:
-    KeepPosition(std::string id, PlayerRole role, std::shared_ptr<WalkModule> walkModule);
+    KeepPosition(std::string id, PlayerRole role, Agent* agent);
 
     virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 

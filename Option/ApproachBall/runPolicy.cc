@@ -18,6 +18,11 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   double dist = ballPos->head<2>().norm();
 
+  d_behaviourControl->setPlayerActivity(
+    dist < 0.5
+      ? PlayerActivity::AttackingGoal
+      : PlayerActivity::ApproachingBall);
+
   if (d_useCustomStopDistance)
   {
     dist -= d_stopDistance;

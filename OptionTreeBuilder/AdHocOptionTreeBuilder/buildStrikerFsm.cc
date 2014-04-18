@@ -24,7 +24,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto leftKick = make_shared<MotionScriptOption>("leftKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
   auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
-  auto approachBall = make_shared<ApproachBall>("approachBall", agent->getWalkModule());
+  auto approachBall = make_shared<ApproachBall>("approachBall", agent->getWalkModule(), agent->getBehaviourControl());
 //   auto lookAroundNarrow = make_shared<LookAround>("lookAroundNarrow", agent->getHeadModule(), 45.0);
   auto lookForGoal = make_shared<LookAround>("lookForGoal", agent->getHeadModule(), 100.0, []() { return 1 - 0.33*State::get<CameraFrameState>()->getGoalObservationCount(); });
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 0.5; });
@@ -51,7 +51,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto rightKickState = fsm->newState("rightKick", {rightKick});
   auto waitForOtherStrikerState = fsm->newState("wait", {stopWalking,lookAtBall});
 
-  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
+  // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
+//  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState, waitForOtherStrikerState });
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { lookForGoalState, lookAtGoalState, aimState, turnToGoalState, lookAtFeetState, leftKickState, rightKickState });
 
