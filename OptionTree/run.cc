@@ -45,18 +45,17 @@ void OptionTree::run()
     writer.String("id").String(option->getId().c_str());
     writer.String("type").String(option->getTypeName().c_str());
 
-    // If not wasn't run last cycle, reset it
-    if (d_optionsLastCycle.find(option) == d_optionsLastCycle.end())
-    {
-      writer.String("reset").Bool(true);
-      option->reset();
-    }
+    // Remove options that run from the set of last cycle
+    auto it = d_optionsLastCycle.find(option);
+    if (it != d_optionsLastCycle.end())
+      d_optionsLastCycle.erase(it);
 
     // Run it
     writer.String("run").StartObject();
     vector<shared_ptr<Option>> subOptions = option->runPolicy(writer);
     writer.EndObject();
 
+    // Recurse through any sub-options
     if (!subOptions.empty())
     {
       writer.String("children");
@@ -80,6 +79,10 @@ void OptionTree::run()
   doc->Parse<0,UTF8<>>(buffer.GetString());
 
   State::make<OptionTreeState>(ranOptions, std::move(doc));
+
+  // Reset options that ran in the last cycle but not in this one
+  for (auto const& o : d_optionsLastCycle)
+    o->reset();
 
   d_optionsLastCycle.clear();
   d_optionsLastCycle.insert(ranOptions.begin(), ranOptions.end());
