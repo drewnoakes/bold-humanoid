@@ -5,6 +5,8 @@ void MotionTaskScheduler::add(MotionModule* module,
                               Priority armsPriority, bool requestCommitArms,
                               Priority legsPriority, bool requestCommitLegs)
 {
+  assert(ThreadUtil::isThinkLoopThread());
+
   auto handleSection = [this,module](SectionId section, Priority priority, bool requestCommit)
   {
     if (priority == Priority::None)
