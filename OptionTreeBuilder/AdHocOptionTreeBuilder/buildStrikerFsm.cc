@@ -125,7 +125,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto aimState = fsm->newState("aim", {});
   auto turnToGoalState = fsm->newState("turnToGoal", {circleBall});
   auto aboutFaceState = fsm->newState("aboutFace", {circleBall});
-  auto lookAtFeetState = fsm->newState("lookAtFeet", {lookAtFeet});
+  auto lookAtFeetState = fsm->newState("lookAtFeet", {lookAtFeet,stopWalking});
   auto leftKickState = fsm->newState("leftKick", {leftKick});
   auto rightKickState = fsm->newState("rightKick", {rightKick});
   auto waitForOtherStrikerState = fsm->newState("wait", {stopWalking,lookAtBall});
