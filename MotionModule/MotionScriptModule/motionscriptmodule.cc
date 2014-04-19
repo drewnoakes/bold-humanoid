@@ -87,7 +87,9 @@ bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
 
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
-    log::warning("MotionScriptModule::start") << "Ignoring request to play script " << script->getName() << " -- already playing " << d_runner->getScript()->getName();
+    log::warning("MotionScriptModule::start") << "Ignoring request to play script " << script->getName()
+        << " -- already playing " << d_runner->getScript()->getName()
+        << " in state " << MotionScriptRunner::getStateName(d_runner->getState());
     return false;
   }
 
