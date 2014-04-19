@@ -100,8 +100,10 @@ namespace bold
 
     /// Called by the framework when a task that requests committal is started.
     void setCommitted() { assert(d_isCommitRequested); d_isCommitted = true; }
-//    /// Called by the framework when the task's module signals completion.
-//     void clearCommitted() { d_isCommitted = false; }
+
+    /// For testing purposes
+    void clearCommitted() { d_isCommitted = false; }
+    void setPriority(Priority priority) { d_priority = priority; }
 
   private:
     MotionModule* d_module;

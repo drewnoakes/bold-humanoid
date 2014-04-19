@@ -25,6 +25,7 @@ set(TEST_SOURCES
   MathTests.cc
   MetaTests.cc
   MotionScriptRunnerTests.cc
+  MotionTaskSchedulerTests.cc
   MX28AlarmTests.cc
   MX28Tests.cc
   ParticleFilterTests.cc
