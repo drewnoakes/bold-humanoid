@@ -3,12 +3,11 @@
 #include <memory>
 #include <vector>
 
-#include "../MotionTask/motiontask.hh"
-#include "../State/state.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 
 namespace bold
 {
+  class MotionTask;
   class MotionModule;
 
   /** Tracks all active MotionTasks.
@@ -18,10 +17,9 @@ namespace bold
   class MotionTaskScheduler
   {
   public:
-    MotionTaskScheduler()
-    : d_modules(),
-      d_hasChange(false)
-    {}
+    static void sortTasks(std::vector<std::shared_ptr<MotionTask>>& tasks);
+
+    MotionTaskScheduler();
 
     void registerModule(MotionModule* module) { d_modules.push_back(module); }
 

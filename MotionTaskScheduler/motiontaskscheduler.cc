@@ -1,4 +1,40 @@
-#include "motiontaskscheduler.ih"
+#include "motiontaskscheduler.hh"
+
+#include "../MotionModule/motionmodule.hh"
+#include "../MotionTask/motiontask.hh"
+#include "../State/state.hh"
+#include "../ThreadUtil/threadutil.hh"
+
+#include <cassert>
+#include <algorithm>
+
+using namespace bold;
+using namespace std;
+
+MotionTaskScheduler::MotionTaskScheduler()
+: d_modules(),
+  d_hasChange(false)
+{}
+
+void MotionTaskScheduler::add(MotionModule* module,
+                              Priority headPriority, bool requestCommitHead,
+                              Priority armsPriority, bool requestCommitArms,
+                              Priority legsPriority, bool requestCommitLegs)
+{
+  assert(ThreadUtil::isThinkLoopThread());
+
+  auto handleSection = [this,module](SectionId section, Priority priority, bool requestCommit)
+  {
+    if (priority == Priority::None)
+      return;
+    d_tasks.push_back(make_shared<MotionTask>(module, section, priority, requestCommit));
+    d_hasChange = true;
+  };
+
+  handleSection(SectionId::Head, headPriority, requestCommitHead);
+  handleSection(SectionId::Arms, armsPriority, requestCommitArms);
+  handleSection(SectionId::Legs, legsPriority, requestCommitLegs);
+}
 
 void MotionTaskScheduler::update()
 {
@@ -46,23 +82,6 @@ void MotionTaskScheduler::update()
     if (task->getSection() == SectionId::Legs)
       legTasks.push_back(task);
   }
-
-  auto sortTasks = [](vector<shared_ptr<MotionTask>>& tasks)
-  {
-    std::stable_sort(
-      tasks.begin(),
-      tasks.end(),
-      [](shared_ptr<MotionTask> a, shared_ptr<MotionTask> b)
-      {
-        // Committed first
-        if (a->isCommitted() && !b->isCommitted())
-          return true;
-
-        // Sort larger priorities first
-        return a->getPriority() >= b->getPriority();
-      }
-    );
-  };
 
   sortTasks(headTasks);
   sortTasks(armTasks);
@@ -131,4 +150,21 @@ void MotionTaskScheduler::update()
   );
 
   d_hasChange = it2 == d_tasks.end();
+}
+
+void MotionTaskScheduler::sortTasks(vector<shared_ptr<MotionTask>>& tasks)
+{
+  std::stable_sort(
+    tasks.begin(),
+    tasks.end(),
+    [](shared_ptr<MotionTask> a, shared_ptr<MotionTask> b)
+    {
+      // Committed first
+      if (a->isCommitted() && !b->isCommitted())
+        return true;
+
+      // Sort larger priorities first
+      return a->getPriority() >= b->getPriority();
+    }
+  );
 }

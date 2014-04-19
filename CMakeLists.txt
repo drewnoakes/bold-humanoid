@@ -334,8 +334,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./MotionTaskScheduler/add.cc
-  ./MotionTaskScheduler/update.cc
+  ./MotionTaskScheduler/motiontaskscheduler.cc
 )
 
 add_class(BOLDHUMANOID

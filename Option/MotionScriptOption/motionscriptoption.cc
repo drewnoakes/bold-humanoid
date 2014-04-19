@@ -3,6 +3,7 @@
 #include "../../MotionModule/MotionScriptModule/motionscriptmodule.hh"
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
 #include "../../MotionScript/motionscript.hh"
+#include "../../util/log.hh"
 
 #include <cassert>
 
