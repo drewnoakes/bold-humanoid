@@ -3,6 +3,7 @@
 #include <cassert>
 #include <memory>
 #include <string>
+#include <mutex>
 
 #include "../JointId/jointid.hh"
 #include "../MotionTask/motiontask.hh"
