@@ -167,4 +167,13 @@ void MotionTaskScheduler::sortTasks(vector<shared_ptr<MotionTask>>& tasks)
       return a->getPriority() > b->getPriority();
     }
   );
+
+  for (unsigned i = 1; i < tasks.size(); i++)
+  {
+    if (tasks[i]->isCommitted())
+    {
+      log::error("MotionTaskScheduler::sortTasks") << "Task at index " << i << " is committed";
+      throw runtime_error("Task other than first committed");
+    }
+  }
 }
