@@ -946,6 +946,12 @@ div.module.optiontree div.graph
     margin-top: 16px;
 }
 
+div.module.optiontree div.graph svg
+{
+    height: 100%;
+    width: 100%;
+}
+
 div.module.optiontree div.graph svg g.element rect
 {
     transition: fill 1s linear;

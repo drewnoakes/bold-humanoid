@@ -27,7 +27,7 @@ class OptionTreeModule extends Module
 
     constructor()
     {
-        super('optiontree', 'option tree');
+        super('optiontree', 'option tree', {fullScreen: true});
     }
 
     public load()
