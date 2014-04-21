@@ -26,6 +26,7 @@ using namespace std;
 
 MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
 : d_debugControl(debugControl),
+  d_haveBody(false),
   d_isStarted(false),
   d_isStopRequested(false),
   d_loopDurationMillis(8),
@@ -88,19 +89,6 @@ bool MotionLoop::start()
   auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
   log::info("MotionLoop::start") << "Using CM730 Device Path: " << cm730DevicePath;
   d_cm730 = unique_ptr<CM730>(new CM730(make_unique<CM730Linux>(cm730DevicePath)));
-  d_haveBody = d_cm730->connect();
-
-  if (!d_haveBody)
-  {
-    log::warning("MotionLoop::start") << "Motion loop running without a body";
-  }
-  else
-  {
-    if (!d_cm730->powerEnable(true))
-      log::error("MotionLoop::start") << "Error enabling power";
-    if (!d_cm730->torqueEnable(true))
-      log::error("MotionLoop::start") << "Error enabling torque";
-  }
 
   d_readYet = false;
 
@@ -190,6 +178,21 @@ void *MotionLoop::threadMethod(void *param)
   ThreadUtil::setThreadId(ThreadId::MotionLoop);
 
   MotionLoop *loop = static_cast<MotionLoop*>(param);
+
+  loop->d_haveBody = loop->d_cm730->connect();
+
+  if (!loop->d_haveBody)
+  {
+    log::warning("MotionLoop::start") << "Motion loop running without a body";
+  }
+  else
+  {
+    if (!loop->d_cm730->powerEnable(true))
+      log::error("MotionLoop::start") << "Error enabling power";
+    if (!loop->d_cm730->torqueEnable(true))
+      log::error("MotionLoop::start") << "Error enabling torque";
+  }
+
   static struct timespec next_time;
   clock_gettime(CLOCK_MONOTONIC, &next_time);
 
