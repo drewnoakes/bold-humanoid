@@ -4,9 +4,8 @@
 #include "../../WalkEngine/walkengine.hh"
 #include "../../StateObject/WalkState/walkstate.hh"
 #include "../../StateObject/OdometryState/odometrystate.hh"
+#include "../../util/assert.hh"
 #include "../../util/log.hh"
-
-#include <cassert>
 
 using namespace bold;
 using namespace Eigen;
@@ -19,7 +18,7 @@ Odometer::Odometer(shared_ptr<WalkModule> walkModule)
   d_progress(),
   d_progressMutex()
 {
-  assert(walkModule);
+  ASSERT(walkModule);
   State::make<OdometryState>(d_progress);
 
   Config::addAction("odometer.reset", "Reset odometer", [this]()
@@ -31,7 +30,7 @@ Odometer::Odometer(shared_ptr<WalkModule> walkModule)
 
 void Odometer::observeTyped(shared_ptr<BodyState const> const& state, SequentialTimer& timer)
 {
-  assert(state);
+  ASSERT(state);
 
   auto walkState = State::get<WalkState>();
 

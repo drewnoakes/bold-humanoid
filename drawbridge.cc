@@ -43,10 +43,10 @@ int websocket_callback(libwebsocket_context *context, libwebsocket *wsi, libwebs
       while (!lws_send_pipe_choked(wsi) && session->data)
       {
         shared_ptr<vector<uchar> const> const& str = session->data;
-        assert(str);
+        ASSERT(str);
         uint totalSize = str.get()->size();
 
-        assert(session->bytesSent < totalSize);
+        ASSERT(session->bytesSent < totalSize);
 
         const uchar* start = str.get()->data() + session->bytesSent;
 

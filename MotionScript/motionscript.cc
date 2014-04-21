@@ -1,5 +1,6 @@
 #include "motionscript.hh"
 
+#include "../util/assert.hh"
 #include "../util/log.hh"
 
 #include <sstream>
@@ -209,19 +210,19 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
 
 shared_ptr<MotionScript::Stage const> MotionScript::getFinalStage() const
 {
-  assert(d_stages.size());
+  ASSERT(d_stages.size());
   return d_stages[d_stages.size() - 1];
 }
 
 shared_ptr<MotionScript::Stage const> MotionScript::getFirstStage() const
 {
-  assert(d_stages.size());
+  ASSERT(d_stages.size());
   return d_stages[0];
 }
 
 MotionScript::KeyFrame const& MotionScript::getFinalKeyFrame() const
 {
   auto finalStage = getFinalStage();
-  assert(finalStage->keyFrames.size());
+  ASSERT(finalStage->keyFrames.size());
   return finalStage->keyFrames[finalStage->keyFrames.size() - 1];
 }

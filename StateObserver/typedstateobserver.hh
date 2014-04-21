@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <cassert>
 #include <memory>
 #include <vector>
 
@@ -9,6 +8,7 @@
 
 #include "../State/state.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
+#include "../util/assert.hh"
 
 namespace bold
 {
@@ -32,10 +32,10 @@ namespace bold
 
     void observe(SequentialTimer& timer) override
     {
-      assert(ThreadUtil::getThreadId() == d_callbackThreadId);
+      ASSERT(ThreadUtil::getThreadId() == d_callbackThreadId);
       std::shared_ptr<StateObject const> state = State::getByTypeIndex(d_typeIndex);
       std::shared_ptr<TState const> typedState = std::dynamic_pointer_cast<TState const>(state);
-      assert(typedState);
+      ASSERT(typedState);
       observeTyped(typedState, timer);
     }
 

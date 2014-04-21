@@ -1,5 +1,7 @@
 #include "colour.hh"
 
+#include "../util/assert.hh"
+
 using namespace bold;
 using namespace std;
 using namespace cv;
@@ -19,8 +21,8 @@ Colour::hsvRange::hsvRange(
   vMin(vMin), vMax(vMax)
 {
   // NOTE if hMin > hMax, then the hue value wraps around 360 degrees (255 in 8-bit form)
-  assert(sMin <= sMax);
-  assert(vMin <= vMax);
+  ASSERT(sMin <= sMax);
+  ASSERT(vMin <= vMax);
 }
 
 /** Obtain the center colour for the range, in BGR format. */
@@ -44,7 +46,7 @@ uchar Colour::hsvRange::getHMid() const
   int mid = hMaxInt + ((hMinInt+255-hMaxInt)/2);
   while (mid > 255)
     mid -= 255;
-  assert(mid >= 0);
+  ASSERT(mid >= 0);
   return mid;
 }
 
@@ -89,12 +91,12 @@ Colour::hsvRange Colour::hsvRange::fromBytes(uchar hMin, uchar hMax, uchar sMin,
 
 Colour::hsvRange Colour::hsvRange::fromDoubles(double hMin, double hMax, double sMin, double sMax, double vMin, double vMax)
 {
-  assert(hMin >= 0.0 && hMin <= 360.0);
-  assert(hMax >= 0.0 && hMax <= 360.0);
-  assert(sMin >= 0.0 && sMin <= 1.0);
-  assert(sMax >= 0.0 && sMax <= 1.0);
-  assert(vMin >= 0.0 && vMin <= 1.0);
-  assert(vMax >= 0.0 && vMax <= 1.0);
+  ASSERT(hMin >= 0.0 && hMin <= 360.0);
+  ASSERT(hMax >= 0.0 && hMax <= 360.0);
+  ASSERT(sMin >= 0.0 && sMin <= 1.0);
+  ASSERT(sMax >= 0.0 && sMax <= 1.0);
+  ASSERT(vMin >= 0.0 && vMin <= 1.0);
+  ASSERT(vMax >= 0.0 && vMax <= 1.0);
 
   return hsvRange((hMin/360.0)*255, (hMax/360)*255, sMin*255, sMax*255, vMin*255, vMax*255);
 }

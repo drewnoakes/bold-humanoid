@@ -191,8 +191,8 @@ void OpenTeamCommunicator::sendData(PlayerState& state)
 
   // Serialize and broadcast data
   auto messageData = unique_ptr<MixedTeamCommMessage>(MixedTeamParser::create(&messageDataLength, myInformation, d_teamNumber, d_uniformNumber));
-  assert(messageData != nullptr);
-  assert(messageDataLength > 0);
+  ASSERT(messageData != nullptr);
+  ASSERT(messageDataLength > 0);
 
   mitecom_broadcast(d_sock, d_remotePort, messageData.get(), messageDataLength);
 

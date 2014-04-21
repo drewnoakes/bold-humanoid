@@ -7,8 +7,8 @@ using namespace std;
 
 IntegralImage IntegralImage::create(cv::Mat const& image)
 {
-  assert(image.rows > 0 && image.cols > 0 && "Must have at least one row and one column");
-  assert(image.type() == CV_8UC1 && "Image must be of type CV_8UC1");
+  ASSERT(image.rows > 0 && image.cols > 0 && "Must have at least one row and one column");
+  ASSERT(image.type() == CV_8UC1 && "Image must be of type CV_8UC1");
 
   cv::Mat integral(image.size(), CV_32SC1);
 

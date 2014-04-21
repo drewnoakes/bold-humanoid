@@ -144,7 +144,7 @@ SettingBase* Config::getSettingBase(string path)
 
 void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNode, string path, string name)
 {
-  assert(metaNode->IsObject());
+  ASSERT(metaNode->IsObject());
 
   // Any JSON object that defines a 'type' member is considered a value definition
   auto typeMember = metaNode->FindMember("type");
@@ -366,7 +366,7 @@ void Config::addAction(string const& id, string const& label,
                        function<void()> callback)
 {
   Action* action = new Action(id, label, callback);
-  assert(!action->hasArguments());
+  ASSERT(!action->hasArguments());
   auto it = d_actionById.insert(make_pair(id, action));
 
   if (it.second == false)
@@ -381,7 +381,7 @@ void Config::addAction(string const& id, string const& label,
                        function<void(rapidjson::Value*)> callback)
 {
   Action* action = new Action(id, label, callback);
-  assert(action->hasArguments());
+  ASSERT(action->hasArguments());
   auto it = d_actionById.insert(make_pair(id, action));
 
   if (it.second == false)
@@ -427,7 +427,7 @@ Value const* Config::getConfigJsonValue(string path)
 
       node = &childMember->value;
 
-      assert(node);
+      ASSERT(node);
 
       if (end == string::npos)
         return node;

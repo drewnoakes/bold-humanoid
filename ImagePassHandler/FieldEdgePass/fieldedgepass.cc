@@ -20,7 +20,7 @@ FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixe
 
 void FieldEdgePass::applyConvexHull(vector<short>& points, unsigned fromIndex, unsigned toIndex)
 {
-  assert(toIndex < points.size());
+  ASSERT(toIndex < points.size());
 
   vector<Matrix<float,2,1>> input;
   for (unsigned c = fromIndex; c <= toIndex; c++)

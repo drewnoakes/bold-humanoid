@@ -3,9 +3,8 @@
 #include "../../MotionModule/MotionScriptModule/motionscriptmodule.hh"
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
 #include "../../MotionScript/motionscript.hh"
+#include "../../util/assert.hh"
 #include "../../util/log.hh"
-
-#include <cassert>
 
 using namespace bold;
 using namespace rapidjson;
@@ -32,8 +31,8 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
   d_hasTerminated(false),
   d_ifNotFinalPose(ifNotFinalPose)
 {
-  assert(d_script);
-  assert(d_motionScriptModule);
+  ASSERT(d_script);
+  ASSERT(d_motionScriptModule);
 }
 
 double MotionScriptOption::hasTerminated()

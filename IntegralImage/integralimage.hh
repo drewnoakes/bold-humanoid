@@ -4,6 +4,8 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 
+#include "../util/assert.hh"
+
 namespace bold
 {
   typedef unsigned char uchar;
@@ -28,7 +30,7 @@ namespace bold
     IntegralImage(cv::Mat data)
     : d_mat(data)
     {
-      assert(data.type() == CV_32SC1 && "Image must be of type CV_32SC1");
+      ASSERT(data.type() == CV_32SC1 && "Image must be of type CV_32SC1");
     }
 
     /** Lookup the sum of intensities between the min/max coordinates, inclusive.

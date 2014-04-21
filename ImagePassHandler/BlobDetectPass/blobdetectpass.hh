@@ -4,7 +4,6 @@
 #include <Eigen/Core>
 
 #include <algorithm>
-#include <cassert>
 #include <memory>
 #include <set>
 #include <vector>
@@ -14,6 +13,7 @@
 #include "../../DisjointSet/disjointset.hh"
 #include "../../PixelLabel/pixellabel.hh"
 #include "../../geometry/Bounds2i.hh"
+#include "../../util/assert.hh"
 
 namespace bold
 {
@@ -197,7 +197,7 @@ namespace bold
       if (d_currentLabel != 0)
       {
         // Finished run
-        assert(x > 0);
+        ASSERT(x > 0);
         addRun(x - 1);
       }
 
@@ -214,7 +214,7 @@ namespace bold
 
   inline void BlobDetectPass::addRun(unsigned endX)
   {
-    assert(endX >= d_currentRun.startX);
+    ASSERT(endX >= d_currentRun.startX);
 
     // finish whatever run we were on
     d_currentRun.endX = endX;
@@ -293,7 +293,7 @@ namespace bold
 
   inline void Blob::merge(Blob& other)
   {
-    assert(other.area != 0);
+    ASSERT(other.area != 0);
     mean = ((mean * area) + (other.mean * other.area)) / (area + other.area);
     area += other.area;
     // TODO can we do this more nicely using Eigen?

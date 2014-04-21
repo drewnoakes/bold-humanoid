@@ -1,12 +1,12 @@
 #include "lookaround.hh"
 
 #include <cmath>
-#include <cassert>
 #include <sys/time.h>
 
 #include "../../Clock/clock.hh"
 #include "../../Math/math.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../util/assert.hh"
 
 using namespace bold;
 using namespace rapidjson;

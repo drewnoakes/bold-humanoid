@@ -4,9 +4,9 @@
 #include "../../Config/config.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/OrientationState/orientationstate.hh"
+#include "../../util/assert.hh"
 #include "../../util/log.hh"
 
-#include <cassert>
 #include <math.h>
 
 using namespace bold;

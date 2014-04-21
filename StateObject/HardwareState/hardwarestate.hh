@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cassert>
 #include <memory>
 #include <vector>
 
@@ -8,6 +7,7 @@
 #include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../JointId/jointid.hh"
 #include "../../MX28Snapshot/mx28snapshot.hh"
+#include "../../util/assert.hh"
 
 namespace bold
 {
@@ -28,7 +28,7 @@ namespace bold
       d_txBytes(txBytes),
       d_motionCycleNumber(motionCycleNumber)
     {
-      assert(d_mx28States.size() == 20);
+      ASSERT(d_mx28States.size() == 20);
     }
 
     CM730Snapshot const& getCM730State() const
@@ -38,8 +38,8 @@ namespace bold
 
     MX28Snapshot const& getMX28State(uchar jointId) const
     {
-      assert(jointId >= (uchar)JointId::MIN && jointId <= (uchar)JointId::MAX);
-      assert(d_mx28States.size() >= jointId);
+      ASSERT(jointId >= (uchar)JointId::MIN && jointId <= (uchar)JointId::MAX);
+      ASSERT(d_mx28States.size() >= jointId);
 
       return *d_mx28States[jointId - 1];
     }

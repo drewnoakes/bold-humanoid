@@ -251,7 +251,7 @@ bool WalkEngine::canStopNow() const
 
 void WalkEngine::step()
 {
-  assert(ThreadUtil::isMotionLoopThread());
+  ASSERT(ThreadUtil::isMotionLoopThread());
 
   // Update walk parameters
   //
@@ -455,7 +455,7 @@ void WalkEngine::balance(double ratio)
     return;
 
   auto hw = State::get<HardwareState>();
-  assert(hw);
+  ASSERT(hw);
   // TODO pass gyro calibration data here
   auto gryoRaw = hw->getCM730State().getBalancedGyroValue();
 

@@ -2,9 +2,9 @@
 
 #include <opencv2/core/core.hpp>
 #include <string>
-#include <cassert>
 
 #include "../Colour/colour.hh"
+#include "../util/assert.hh"
 
 namespace bold
 {
@@ -25,7 +25,7 @@ namespace bold
       d_hsvRange(hsvRange),
       d_name(name)
     {
-      assert(d_id != 0);
+      ASSERT(d_id != 0);
     }
 
     uchar id() const { return d_id; }

@@ -1,9 +1,9 @@
 #include "udpsocket.hh"
 
+#include "../util/assert.hh"
 #include "../util/log.hh"
 
 #include <arpa/inet.h>
-#include <cassert>
 #include <cstdio>
 #include <cstring>
 #include <errno.h>
@@ -154,7 +154,7 @@ int UDPSocket::receive(char* data, int dataLength)
 
 int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress, int* fromAddressLength)
 {
-  assert(bool(fromAddress) == bool(fromAddressLength));
+  ASSERT(bool(fromAddress) == bool(fromAddressLength));
 
   ssize_t bytesRead = recvfrom(d_socket, data, dataLength, 0, (sockaddr*)fromAddress, (socklen_t*)fromAddressLength);
 
@@ -170,7 +170,7 @@ int UDPSocket::receiveFrom(char* data, int dataLength, sockaddr_in* fromAddress,
     return -1;
   }
 
-  assert(!fromAddress || fromAddress->sin_family == AF_INET);
+  ASSERT(!fromAddress || fromAddress->sin_family == AF_INET);
 
   return bytesRead;
 }
@@ -182,9 +182,9 @@ bool UDPSocket::send(string const& message)
 
 bool UDPSocket::send(const char* data, int dataLength)
 {
-  assert(dataLength > 0);
-  assert(d_target);
-  assert(d_target->sin_family == AF_INET);
+  ASSERT(dataLength > 0);
+  ASSERT(d_target);
+  ASSERT(d_target->sin_family == AF_INET);
 
   ssize_t bytesSent = sendto(d_socket, data, dataLength, 0, (sockaddr*)d_target, sizeof(sockaddr));
 

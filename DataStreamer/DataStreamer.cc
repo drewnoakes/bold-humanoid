@@ -112,7 +112,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
       [this](SettingBase* setting)
       {
         // These should only be changed by websocket users
-        assert(ThreadUtil::isDataStreamerThread());
+        ASSERT(ThreadUtil::isDataStreamerThread());
 
         if (d_controlSessions.size() == 0)
           return;

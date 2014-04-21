@@ -8,8 +8,7 @@
 #include "../../StateObject/WalkState/walkstate.hh"
 #include "../../ThreadUtil/threadutil.hh"
 #include "../../WalkEngine/walkengine.hh"
-
-#include <cassert>
+#include "../../util/assert.hh"
 
 using namespace bold;
 using namespace Eigen;
@@ -130,8 +129,8 @@ void WalkModule::stopImmediately()
 
 void WalkModule::step(std::shared_ptr<JointSelection> selectedJoints)
 {
-  assert(ThreadUtil::isMotionLoopThread());
-  assert(d_stabilisationCyclesRemaining >= 0);
+  ASSERT(ThreadUtil::isMotionLoopThread());
+  ASSERT(d_stabilisationCyclesRemaining >= 0);
 
   if (d_status == WalkStatus::Stopped)
     return;
@@ -183,12 +182,12 @@ void WalkModule::step(std::shared_ptr<JointSelection> selectedJoints)
     else
     {
       // This should never happen
-      assert(false && "Logic error");
+      ASSERT(false && "Logic error");
     }
   }
   else
   {
-    assert(d_status == WalkStatus::Walking);
+    ASSERT(d_status == WalkStatus::Walking);
 
     d_walkEngine->X_MOVE_AMPLITUDE = xAmp;
     d_walkEngine->Y_MOVE_AMPLITUDE = yAmp;

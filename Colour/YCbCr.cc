@@ -11,12 +11,12 @@ Colour::YCbCr::YCbCr()
 Colour::YCbCr::YCbCr(uchar y, uchar cb, uchar cr)
 : y(y), cb(cb), cr(cr)
 {
-//assert(y >= 16);
-//assert(y <= 235);
-//assert(cb >= 16);
-//assert(cb <= 240);
-//assert(cr >= 16);
-//assert(cr <= 240);
+//ASSERT(y >= 16);
+//ASSERT(y <= 235);
+//ASSERT(cb >= 16);
+//ASSERT(cb <= 240);
+//ASSERT(cr >= 16);
+//ASSERT(cr <= 240);
 }
 
 bool Colour::YCbCr::isValid() const
@@ -28,7 +28,7 @@ bool Colour::YCbCr::isValid() const
 
 Colour::bgr Colour::YCbCr::toBgrInt() const
 {
-//assert(isValid());
+//ASSERT(isValid());
 //{ 33292, -6472, -9519, 18678 }
   // YUV coefficients
   /*
@@ -72,7 +72,7 @@ Colour::bgr Colour::YCbCr::toBgrInt() const
 
 Colour::bgr Colour::YCbCr::toBgrFloat() const
 {
-//assert(isValid());
+//ASSERT(isValid());
 
   float y = this->y;
   float cb = this->cb;

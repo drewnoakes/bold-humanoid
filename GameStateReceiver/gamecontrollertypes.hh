@@ -1,8 +1,9 @@
 #pragma once
 
-#include <cassert>
 #include <string>
 #include <string.h>
+
+#include "../util/assert.hh"
 
 #define MAX_NUM_PLAYERS 11
 
@@ -95,13 +96,13 @@ namespace robocup
     uint8 getPenaltyShotCount() const { return d_penaltyShot; }
     bool wasPenaltySuccessful(uint8 number) const
     {
-      assert(number < d_penaltyShot);
+      ASSERT(number < d_penaltyShot);
       return ((1 << number) & d_singleShots) != 0;
     }
 
     PlayerInfo const& getPlayer(uint8 unum) const
     {
-      assert(unum > 0 && unum <= MAX_NUM_PLAYERS);
+      ASSERT(unum > 0 && unum <= MAX_NUM_PLAYERS);
       return d_players[unum - 1];
     }
 

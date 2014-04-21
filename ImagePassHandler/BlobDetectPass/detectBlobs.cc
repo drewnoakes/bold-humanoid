@@ -4,7 +4,7 @@
 
 map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(SequentialTimer& timer)
 {
-  assert(d_rowIndices.size() > 1);
+  ASSERT(d_rowIndices.size() > 1);
 
   // For each label that we're configured to look at
   for (shared_ptr<PixelLabel> const& pixelLabel : d_pixelLabels)

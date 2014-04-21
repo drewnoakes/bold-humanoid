@@ -19,7 +19,7 @@ CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
 
 void CompleteFieldEdgePass::onImageStarting(SequentialTimer& timer)
 {
-  assert(d_maxYByX.size() == d_pixelWidth);
+  ASSERT(d_maxYByX.size() == d_pixelWidth);
 
   for (ushort x = 0; x < d_pixelWidth; x++)
     d_maxYByX[x] = d_pixelHeight - 1;
@@ -31,11 +31,11 @@ void CompleteFieldEdgePass::onImageStarting(SequentialTimer& timer)
 
 void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 {
-//   assert(x >= 0 && x < d_pixelWidth);
+//   ASSERT(x >= 0 && x < d_pixelWidth);
 
   if (labelId == d_fieldLabel->id())
   {
-//     assert(y >= d_maxYByX[x]);
+//     ASSERT(y >= d_maxYByX[x]);
 
     ushort run = d_runByX[x];
     run++;
@@ -53,7 +53,7 @@ void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 
 ushort CompleteFieldEdgePass::getEdgeYValue(ushort x) const
 {
-  assert(x < d_pixelWidth);
+  ASSERT(x < d_pixelWidth);
 
   return d_useConvexHull->getValue() ? d_maxYByXConvex[x] : d_maxYByX[x];
 }

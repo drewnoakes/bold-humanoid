@@ -4,8 +4,8 @@
 #include "../MotionTask/motiontask.hh"
 #include "../State/state.hh"
 #include "../ThreadUtil/threadutil.hh"
+#include "../util/assert.hh"
 
-#include <cassert>
 #include <algorithm>
 
 using namespace bold;
@@ -21,7 +21,7 @@ void MotionTaskScheduler::add(MotionModule* module,
                               Priority armsPriority, bool requestCommitArms,
                               Priority legsPriority, bool requestCommitLegs)
 {
-  assert(ThreadUtil::isThinkLoopThread());
+  ASSERT(ThreadUtil::isThinkLoopThread());
 
   auto handleSection = [this,module](SectionId section, Priority priority, bool requestCommit)
   {
@@ -38,7 +38,7 @@ void MotionTaskScheduler::add(MotionModule* module,
 
 void MotionTaskScheduler::update()
 {
-  assert(ThreadUtil::isThinkLoopThread());
+  ASSERT(ThreadUtil::isThinkLoopThread());
 
   // Remove committed tasks for motion modules that have completed
   for (MotionModule* module : d_modules)

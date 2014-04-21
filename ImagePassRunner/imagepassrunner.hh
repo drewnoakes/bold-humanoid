@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cassert>
 #include <functional>
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
@@ -9,6 +8,7 @@
 
 #include "../ImagePassHandler/imagepasshandler.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
+#include "../util/assert.hh"
 #include "../util/meta.hh"
 
 namespace bold
@@ -72,9 +72,9 @@ namespace bold
      */
     long pass(cv::Mat const& image, std::function<Eigen::Vector2i(int)> const& granularityFunction, SequentialTimer& timer) const
     {
-      assert(image.rows);
-      assert(image.cols);
-      assert(d_handlers.size());
+      ASSERT(image.rows);
+      ASSERT(image.cols);
+      ASSERT(d_handlers.size());
 
       long pixelCount = 0;
 
@@ -133,9 +133,9 @@ namespace bold
                          cv::Mat const& image, std::function<Eigen::Vector2i(int)> const& granularityFunction,
                          SequentialTimer& timer) const
     {
-      assert(image.rows);
-      assert(image.cols);
-      assert(handler);
+      ASSERT(image.rows);
+      ASSERT(image.cols);
+      ASSERT(handler);
 
       timer.enter(handler->id());
 

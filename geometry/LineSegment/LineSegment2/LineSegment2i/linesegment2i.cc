@@ -1,11 +1,11 @@
 #include "linesegment2i.hh"
 
-#include <cassert>
 #include <cmath>
 #include <limits>
 #include <vector>
 #include <set>
 
+#include "../../../../util/assert.hh"
 #include "../../../../util/Maybe.hh"
 
 using namespace bold;
@@ -91,8 +91,8 @@ Maybe<LineSegment2i> LineSegment2i::cropTo(Bounds2i const& bounds) const
     }
   }
 
-  assert(ends.size() <= 2);
-  assert(ends.size() != 1);
+  ASSERT(ends.size() <= 2);
+  ASSERT(ends.size() != 1);
 
   vector<Vector2i> endsVec(ends.begin(), ends.end());
 

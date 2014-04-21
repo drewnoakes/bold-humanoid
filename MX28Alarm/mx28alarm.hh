@@ -1,8 +1,9 @@
 #pragma once
 
 #include <sstream>
-#include <cassert>
 #include <vector>
+
+#include "../util/assert.hh"
 
 namespace bold
 {
@@ -44,7 +45,7 @@ namespace bold
 
     bool isSet(uchar bitIndex) const
     {
-      assert(bitIndex <= MAXBIT);
+      ASSERT(bitIndex <= MAXBIT);
 
       return ((d_flags >> bitIndex) & 1) == 1;
     }
@@ -102,7 +103,7 @@ namespace bold
 
     static std::string getName(uchar bitIndex)
     {
-      assert(bitIndex <= MAXBIT);
+      ASSERT(bitIndex <= MAXBIT);
 
       static std::vector<std::string> names = {
         "Input Voltage Limit Breached",

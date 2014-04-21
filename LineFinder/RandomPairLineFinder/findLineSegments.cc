@@ -65,7 +65,7 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
       break;
     sumVotes += hypothesis.count();
   }
-  assert(takeTop != 0);
+  ASSERT(takeTop != 0);
   int averageVotes = sumVotes / takeTop;
 
   vector<LineSegment2i> satisfactory;

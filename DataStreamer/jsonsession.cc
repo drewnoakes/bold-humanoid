@@ -15,10 +15,10 @@ int JsonSession::write(libwebsocket* wsi, libwebsocket_context* context)
   while (!lws_send_pipe_choked(wsi) && !queue.empty())
   {
     shared_ptr<vector<uchar> const> const& str = queue.front();
-    assert(str);
+    ASSERT(str);
     uint totalSize = str.get()->size();
 
-    assert(bytesSent < totalSize);
+    ASSERT(bytesSent < totalSize);
 
     const uchar* start = str.get()->data() + bytesSent;
 

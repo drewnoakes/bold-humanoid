@@ -242,7 +242,7 @@ void BodyState::initialise(double angles[23])
 
       shared_ptr<Joint> joint = dynamic_pointer_cast<Joint>(part);
 
-      assert(joint);
+      ASSERT(joint);
 
       d_jointById[(uchar)joint->id] = joint;
 

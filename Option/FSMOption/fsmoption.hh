@@ -2,9 +2,9 @@
 
 #include "../option.hh"
 #include "../../Clock/clock.hh"
+#include "../../util/assert.hh"
 
 #include <algorithm>
-#include <cassert>
 #include <memory>
 #include <string>
 #include <vector>
@@ -139,7 +139,7 @@ namespace bold
     d_states.push_back(state);
     if (startState)
     {
-      assert(!d_startState);
+      ASSERT(!d_startState);
       d_startState = state;
     }
   }

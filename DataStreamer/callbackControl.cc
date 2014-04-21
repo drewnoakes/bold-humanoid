@@ -15,7 +15,7 @@ int DataStreamer::callback_control(
   case LWS_CALLBACK_ESTABLISHED:
   {
     // New client connected; initialize session
-    assert(ThreadUtil::isDataStreamerThread());
+    ASSERT(ThreadUtil::isDataStreamerThread());
     jsonSession->initialise();
     d_controlSessions.push_back(jsonSession);
     if (d_controlSessions.size() == 1)
@@ -30,7 +30,7 @@ int DataStreamer::callback_control(
   case LWS_CALLBACK_CLOSED:
   {
     // Client disconnected
-    assert(ThreadUtil::isDataStreamerThread());
+    ASSERT(ThreadUtil::isDataStreamerThread());
     d_controlSessions.erase(find(d_controlSessions.begin(), d_controlSessions.end(), jsonSession));
     if (d_controlSessions.size() == 0)
       hasClientChanged("control-protocol", false);
@@ -39,12 +39,12 @@ int DataStreamer::callback_control(
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
     // Fill the outbound pipe with frames of data
-    assert(ThreadUtil::isDataStreamerThread());
+    ASSERT(ThreadUtil::isDataStreamerThread());
     return jsonSession->write(wsi, context);
   }
   case LWS_CALLBACK_RECEIVE:
   {
-    assert(ThreadUtil::isDataStreamerThread());
+    ASSERT(ThreadUtil::isDataStreamerThread());
     if (len != 0)
     {
       string str((char const*)in, len);

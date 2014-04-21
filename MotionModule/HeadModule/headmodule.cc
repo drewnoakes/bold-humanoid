@@ -158,7 +158,7 @@ void HeadModule::moveTracking(double panError, double tiltError)
 
 void HeadModule::step(shared_ptr<JointSelection> selectedJoints)
 {
-  assert(ThreadUtil::isMotionLoopThread());
+  ASSERT(ThreadUtil::isMotionLoopThread());
   // TODO implement a head movement that updates its target position every 8ms instead of every 30ms, for smoother movements
 }
 

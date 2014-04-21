@@ -113,7 +113,7 @@ namespace bold
 
     static void initialise(std::string metadataFile, std::string configFile);
 
-    static void initialisationCompleted() { assert(d_isInitialising); d_isInitialising = false; }
+    static void initialisationCompleted() { ASSERT(d_isInitialising); d_isInitialising = false; }
     static bool isInitialising() { return d_isInitialising; }
 
     static Action* getAction(std::string id);

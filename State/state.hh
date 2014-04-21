@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <cassert>
 #include <unordered_map>
 #include <memory>
 #include <mutex>
@@ -13,6 +12,7 @@
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../StateObject/stateobject.hh"
 #include "../StateObserver/stateobserver.hh"
+#include "../util/assert.hh"
 #include "../util/log.hh"
 #include "../util/memory.hh"
 
@@ -164,7 +164,7 @@ namespace bold
     log::verbose("State::registerStateType") << "Registering state type: " << name;
 
     std::lock_guard<std::mutex> guard(d_mutex);
-    assert(d_trackerByTypeId.find(typeid(T)) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
+    ASSERT(d_trackerByTypeId.find(typeid(T)) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
     auto const& tracker = StateTracker::create<T>(name);
     d_trackerByTypeId[typeid(T)] = tracker;
     d_trackerByName[name] = tracker;
@@ -177,7 +177,7 @@ namespace bold
   void State::set(std::shared_ptr<T const> state)
   {
     static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
-    assert(state);
+    ASSERT(state);
 
     auto const& tracker = getTracker<T const>();
     tracker->set(state);
@@ -191,14 +191,14 @@ namespace bold
       updated(tracker);
 
       auto it = d_observersByTypeIndex.find(typeid(T));
-      assert(it != d_observersByTypeIndex.end());
+      ASSERT(it != d_observersByTypeIndex.end());
       observers = &it->second;
     }
 
     // Release lock before notifying observers
     for (auto& observer : *observers)
     {
-      assert(observer);
+      ASSERT(observer);
       observer->setDirty();
     }
   }
@@ -222,7 +222,7 @@ namespace bold
     static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
     std::lock_guard<std::mutex> guard(d_mutex);
     auto pair = d_trackerByTypeId.find(typeid(T));
-    assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
+    ASSERT(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
     return pair->second->state<T>(time);
   }
 
@@ -232,7 +232,7 @@ namespace bold
     static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
     std::lock_guard<std::mutex> guard(d_mutex);
     auto pair = d_trackerByTypeId.find(typeid(T));
-    assert(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
+    ASSERT(pair != d_trackerByTypeId.end() && "Tracker type must be registered");
     auto tracker = pair->second;
     return tracker;
   }

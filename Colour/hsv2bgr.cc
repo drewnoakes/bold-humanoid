@@ -61,7 +61,7 @@ Colour::bgr Colour::hsv2bgr(hsv const& in)
       break;
     default:
       // Should never hit this
-      assert(false && "IMPOSSIBLE CASE");
+      ASSERT(false && "IMPOSSIBLE CASE");
       r = g = b = 0;
     }
 

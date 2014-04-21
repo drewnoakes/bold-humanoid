@@ -8,7 +8,7 @@ using namespace rapidjson;
 
 void BodyState::writeJson(Writer<StringBuffer>& writer) const
 {
-  assert(this);
+  ASSERT(this);
 
   writer.StartObject();
   {

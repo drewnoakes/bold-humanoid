@@ -8,6 +8,7 @@ set(BUILD_TOOLS ON CACHE BOOL "Choose whether to build tools")
 set(BUILD_BOLDPY ON CACHE BOOL "Choose whether to Python library")
 set(PRECOMPILE_HEADERS OFF CACHE BOOL "Choose whether to precompile headers")
 set(EIGEN_VECTORIZE OFF CACHE BOOL "Choose whether to enable Eigen vectorization")
+set(INCLUDE_ASSERTIONS ON CACHE BOOL "Choose whether to include assertions in compiled code")
 set(UPLOAD_SCP_PATH "" CACHE STRING "Path to use in upload scp command. Format: user@server:path")
 set(BUNDLES_PATH "" CACHE STRING "Path to use to store bundles")
 set(TARGET_ATOM "" ON CACHE BOOL "Choose whether to optimize for atom")
@@ -93,25 +94,31 @@ include_directories(${BOLDHUMANOID_INCLUDE_DIRS})
 set(BOLDHUMANOID_LINK_DIRS ${LIBWEBSOCKETDIR}/lib)
 link_directories(${BOLDHUMANOID_LINK_DIRS})
 
-SET(ATOM "")
-if(TARGET_ATOM)
-  SET(ATOM " -march=atom -mtune=atom")
-endif(TARGET_ATOM)
-
 #
 ## Additional compile flags
 #
-if (EIGEN_VECTORIZE)
-#  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -Wall  -Wno-unused-local-typedefs")
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -Wall -Wno-unused-local-typedefs -Wno-multichar ${ATOM}")
+
+if(EIGEN_VECTORIZE)
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -Wall -Wno-unused-local-typedefs -Wno-multichar")
 else(EIGEN_VECTORIZE)
-#  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -march=atom -mtune=atom -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall  -Wno-unused-local-typedefs")
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall -Wno-unused-local-typedefs -Wno-multichar ${ATOM}")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall -Wno-unused-local-typedefs -Wno-multichar")
 endif(EIGEN_VECTORIZE)
+
+if(TARGET_ATOM)
+  set(BOLDHUMANOID_COMPILE_FLAGS "${BOLDHUMANOID_COMPILE_FLAGS} -march=atom -mtune=atom")
+endif(TARGET_ATOM)
+
+if(INCLUDE_ASSERTIONS)
+  set(BOLDHUMANOID_COMPILE_FLAGS "${BOLDHUMANOID_COMPILE_FLAGS} -DINCLUDE_ASSERTIONS")
+endif(INCLUDE_ASSERTIONS)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(BOLDHUMANOID_COMPILE_FLAGS "-I/usr/include/i386-linux-gnu/c++/4.8 ${BOLDHUMANOID_COMPILE_FLAGS}")
 endif()
+
+#
+## Class source files
+#
 
 add_class(BOLDHUMANOID
   ./Agent/Agent.cc

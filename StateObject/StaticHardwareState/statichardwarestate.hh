@@ -1,16 +1,16 @@
 #pragma once
 
-#include <cassert>
 #include <memory>
 #include <vector>
 
 #include "../stateobject.hh"
 #include "../../JointId/jointid.hh"
+#include "../../util/assert.hh"
 
 namespace bold
 {
   typedef unsigned char uchar;
-  
+
   class StaticCM730State;
   class StaticMX28State;
 
@@ -22,7 +22,7 @@ namespace bold
     : d_cm730State(cm730State),
       d_mx28States(mx28States)
     {
-      assert(d_mx28States.size() == (uchar)JointId::MAX);
+      ASSERT(d_mx28States.size() == (uchar)JointId::MAX);
     }
 
     std::shared_ptr<StaticCM730State const> getCM730State() const
@@ -32,7 +32,7 @@ namespace bold
 
     std::shared_ptr<StaticMX28State const> getMX28State(uchar jointId) const
     {
-      assert(jointId >= (uchar)JointId::MIN && jointId <= (uchar)JointId::MAX);
+      ASSERT(jointId >= (uchar)JointId::MIN && jointId <= (uchar)JointId::MAX);
 
       return d_mx28States[jointId - 1];
     }

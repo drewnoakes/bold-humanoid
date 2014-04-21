@@ -1,13 +1,13 @@
 #pragma once
 
 #include <algorithm>
-#include <cassert>
 #include <memory>
 #include <vector>
 
 #include "../stateobject.hh"
 #include "../../MotionTask/motiontask.hh"
 #include "../../ThreadUtil/threadutil.hh"
+#include "../../util/assert.hh"
 
 namespace bold
 {
@@ -25,14 +25,14 @@ namespace bold
       d_armTasks(armTasks),
       d_legTasks(legTasks)
     {
-      assert(ThreadUtil::isThinkLoopThread());
+      ASSERT(ThreadUtil::isThinkLoopThread());
     }
 
     bool isEmpty() const { return d_moduleJointSelection->size() == 0; }
-    
+
     /// Provides which modules to step, and what JointSelection to pass them
     std::shared_ptr<std::vector<std::pair<MotionModule*, std::shared_ptr<JointSelection>>>> getModuleJointSelection() const { return d_moduleJointSelection; }
-    
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:

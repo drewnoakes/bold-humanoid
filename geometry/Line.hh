@@ -2,7 +2,6 @@
 
 #include <iomanip>
 #include <vector>
-#include <cassert>
 #include <cmath>
 
 #include <Eigen/Core>
@@ -13,6 +12,7 @@
 #include "Bounds2i.hh"
 #include "LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../Math/math.hh"
+#include "../util/assert.hh"
 #include "../util/Maybe.hh"
 
 namespace bold
@@ -35,9 +35,9 @@ namespace bold
     : d_radius(radius),
       d_theta(theta)
     {
-      assert(theta >= 0);
-      assert(theta <= M_PI);
-      assert(!std::isnan(theta) && !std::isnan(radius) && !std::isinf(theta) && !std::isinf(radius));
+      ASSERT(theta >= 0);
+      ASSERT(theta <= M_PI);
+      ASSERT(!std::isnan(theta) && !std::isnan(radius) && !std::isinf(theta) && !std::isinf(radius));
     };
 
     double radius() const { return d_radius; }
@@ -62,7 +62,7 @@ namespace bold
     template<typename T>
     Maybe<LineSegment<T,2>> intersectWith(Bounds<T,2> bounds) const
     {
-      assert(d_theta >= 0 && d_theta <= M_PI);
+      ASSERT(d_theta >= 0 && d_theta <= M_PI);
 
       double tsin = sin(d_theta);
       double tcos = cos(d_theta);
@@ -99,7 +99,7 @@ namespace bold
       if (edgeContactPoints.size() == 0)
         return Maybe<LineSegment<T,2>>::empty();
 
-      assert(edgeContactPoints.size() == 2);
+      ASSERT(edgeContactPoints.size() == 2);
 
       if (edgeContactPoints.size() != 2)
         return Maybe<LineSegment<T,2>>::empty();

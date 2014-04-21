@@ -1,10 +1,10 @@
 #include "cm730.hh"
 
-#include <cassert>
 #include <iomanip>
 
 #include "../JointId/jointid.hh"
 #include "../ThreadUtil/threadutil.hh"
+#include "../util/assert.hh"
 #include "../util/ccolor.hh"
 #include "../util/log.hh"
 
@@ -55,7 +55,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 
   auto writeDeviceRequest = [&p,this](uchar deviceId, uchar startAddress, uchar endAddress)
   {
-    assert(startAddress < endAddress);
+    ASSERT(startAddress < endAddress);
 
     uchar requestedByteCount = endAddress - startAddress + 1;
 
@@ -97,13 +97,13 @@ BulkReadTable::BulkReadTable()
 
 uchar BulkReadTable::readByte(uchar address) const
 {
-  assert(address >= startAddress && address < (startAddress + length));
+  ASSERT(address >= startAddress && address < (startAddress + length));
   return table[address];
 }
 
 ushort BulkReadTable::readWord(uchar address) const
 {
-  assert(address >= startAddress && address < (startAddress + length));
+  ASSERT(address >= startAddress && address < (startAddress + length));
   return CM730::makeWord(table[address], table[address+1]);
 }
 
@@ -404,7 +404,7 @@ CommResult CM730::bulkRead(BulkRead* bulkRead)
 
   bulkRead->error = -1;
 
-  assert(bulkRead->getTxPacket()[LENGTH] != 0);
+  ASSERT(bulkRead->getTxPacket()[LENGTH] != 0);
 
   return txRxPacket(bulkRead->getTxPacket(), rxpacket, 0, bulkRead);
 }
@@ -599,7 +599,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
   }
   else if (txpacket[INSTRUCTION] == INST_BULK_READ)
   {
-    assert(bulkRead);
+    ASSERT(bulkRead);
 
     bulkRead->error = rxpacket[ERRBIT];
 
@@ -673,8 +673,8 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
           {
             unsigned dataIndex = rxpacket[ID] == CM730::ID_CM ? 0 : rxpacket[ID];
             unsigned address = bulkRead->data[dataIndex].startAddress + j;
-            assert(dataIndex < 21);
-            assert(address < MX28::MAXNUM_ADDRESS);
+            ASSERT(dataIndex < 21);
+            ASSERT(address < MX28::MAXNUM_ADDRESS);
             bulkRead->data[dataIndex].table[address] = rxpacket[PARAMETER + j];
           }
 

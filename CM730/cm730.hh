@@ -177,7 +177,7 @@ namespace bold
 
     static ushort flipImuValue(ushort value)
     {
-      assert(value <= 1023);
+      ASSERT(value <= 1023);
       if (value == 0)
         return 1023;
       return 1023 - value + 1;

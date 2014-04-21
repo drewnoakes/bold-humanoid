@@ -30,7 +30,7 @@ namespace bold
     {
       for (std::shared_ptr<PixelLabel> label : d_labels)
       {
-        assert(label->id() < MAX_LABEL_COUNT);
+        ASSERT(label->id() < MAX_LABEL_COUNT);
         d_countByLabelId[label->id()] = 0;
       }
 

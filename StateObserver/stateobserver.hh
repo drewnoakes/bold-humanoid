@@ -1,12 +1,12 @@
 #pragma once
 
 #include <atomic>
-#include <cassert>
 #include <memory>
 #include <vector>
 #include <typeindex>
 
 #include "../ThreadUtil/threadutil.hh"
+#include "../util/assert.hh"
 
 namespace bold
 {

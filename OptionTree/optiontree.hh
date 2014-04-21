@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../Option/option.hh"
+#include "../util/assert.hh"
 
-#include <cassert>
 #include <map>
 #include <set>
 
@@ -24,7 +24,7 @@ namespace bold
 
       if (isTop)
       {
-        assert(!d_top && "top option already added");
+        ASSERT(!d_top && "top option already added");
         d_top = std::dynamic_pointer_cast<Option>(option);
       }
 

@@ -61,7 +61,7 @@ Colour::hsv Colour::bgr2hsv(bgr const& in)
   if (h >= 255) // TODO would this be faster using mod?
     h -= 255;
 
-  assert(h >= 0 && h < 256);
+  ASSERT(h >= 0 && h < 256);
 
   out.h = h;
 

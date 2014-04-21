@@ -1,12 +1,12 @@
 #include "Bounds2i.hh"
 
 #include <vector>
-#include <cassert>
 #include <cmath>
 
 #include <Eigen/Core>
 #include <opencv2/core/core.hpp>
 
+#include "../util/assert.hh"
 #include "../util/Maybe.hh"
 #include "../Colour/colour.hh"
 

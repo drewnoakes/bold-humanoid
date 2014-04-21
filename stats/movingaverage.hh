@@ -6,6 +6,8 @@
 #include <string.h>
 #include <Eigen/Core>
 
+#include "../util/assert.hh"
+
 namespace bold
 {
   /** Compile time test whether a type has a \a fill member
@@ -24,11 +26,11 @@ namespace bold
 
     template<typename U>
     static yes test(decltype(&U::fill));
-                                       
+
     template<typename U>
     static no test(...);
-                       
-    static const bool value = sizeof(test<T>(0)) == sizeof(yes);  
+
+    static const bool value = sizeof(test<T>(0)) == sizeof(yes);
   };
 
   /// Traits used to select correct method of zero-ing the used type
@@ -36,7 +38,7 @@ namespace bold
   {
     template<typename T>
     static void zero(T& v, typename std::enable_if<has_fill_member<T>::value>::type* dummy = 0) { v.fill(0); }
-    
+
     template<typename T>
     static void zero(T& v, typename std::enable_if<std::is_arithmetic<T>::value>::type* dummy = 0) { v = 0; }
   };
@@ -88,13 +90,13 @@ namespace bold
       {
         d_length++;
       }
-   
+
       d_items[d_nextPointer] = value;
       d_sum += value;
       d_nextPointer = (d_nextPointer + 1) % d_windowSize;
-      
+
       d_avg = d_sum / int{d_length};
-      
+
       return d_avg;
     }
 
@@ -117,7 +119,7 @@ namespace bold
         int index = (d_nextPointer - i - 1) % d_windowSize;
         if (index < 0)
           index += d_windowSize;
-        assert(index >= 0 && index < d_length);
+        ASSERT(index >= 0 && index < d_length);
         T diff = d_items[index] - d_avg;
         sum += diff * diff;
       }
@@ -161,7 +163,7 @@ namespace bold
       int index = (d_nextPointer - i - 1) % d_windowSize;
       if (index < 0)
         index += d_windowSize;
-      assert(index >= 0 && index < d_length);
+      ASSERT(index >= 0 && index < d_length);
       Eigen::Vector3d diff = d_items[index] - d_avg;
       sum += diff * diff.transpose();
     }
@@ -182,7 +184,7 @@ namespace bold
       int index = (d_nextPointer - i - 1) % d_windowSize;
       if (index < 0)
         index += d_windowSize;
-      assert(index >= 0 && index < d_length);
+      ASSERT(index >= 0 && index < d_length);
       Eigen::Vector2d diff = d_items[index] - d_avg;
       sum += diff * diff.transpose();
 //       std::cout << "---- index " << index << std::endl

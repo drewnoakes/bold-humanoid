@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cassert>
 #include <functional>
 #include <future>
 #include <map>
@@ -11,6 +10,7 @@
 #include "../stateobject.hh"
 #include "../../BodyPart/bodypart.hh"
 #include "../../JointId/jointid.hh"
+#include "../../util/assert.hh"
 #include "../../util/log.hh"
 
 namespace bold
@@ -64,7 +64,7 @@ namespace bold
     std::shared_ptr<Joint const> getJoint(JointId jointId) const;
 
     void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const;
-    
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     /** Transformation describing camera frame in agent frame, used to
@@ -118,7 +118,7 @@ namespace bold
 
   inline std::shared_ptr<Joint const> BodyState::getJoint(JointId jointId) const
   {
-    assert(jointId >= JointId::MIN && jointId <= JointId::MAX);
+    ASSERT(jointId >= JointId::MIN && jointId <= JointId::MAX);
     return d_jointById[(uchar)jointId];
   }
 

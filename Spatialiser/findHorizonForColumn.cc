@@ -22,8 +22,8 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraAgentTr)
   // x nx + f ny + z nz = 0
   // y = -1/ny (x nx + f nz)
 
-  assert(d_cameraModel);
-  assert(d_cameraModel->imageWidth() > 1);
+  ASSERT(d_cameraModel);
+  ASSERT(d_cameraModel->imageWidth() > 1);
 
   // x on projection plane
   // Todo: should be column + 0.5 to match convention elsewhere?
@@ -45,7 +45,7 @@ int Spatialiser::findHorizonForColumn(int column, Affine3d const& cameraAgentTr)
 
   // In this case, we're looking straight up or down
   // TODO: handle better
-  assert(up.y() != 0);
+  ASSERT(up.y() != 0);
 
   double f = d_cameraModel->focalLength();
 

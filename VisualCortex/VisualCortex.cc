@@ -12,11 +12,11 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     d_saveNextYUVFrame(false),
     d_saveNextDebugFrame(false)
 {
-  assert(camera);
-  assert(cameraModel);
-  assert(dataStreamer);
-  assert(spatialiser);
-  assert(headModule);
+  ASSERT(camera);
+  ASSERT(cameraModel);
+  ASSERT(dataStreamer);
+  ASSERT(spatialiser);
+  ASSERT(headModule);
 
   d_shouldDetectLines         = Config::getSetting<bool>("vision.line-detection.enable");
   d_shouldCountLabels         = Config::getSetting<bool>("vision.label-counter.enable");

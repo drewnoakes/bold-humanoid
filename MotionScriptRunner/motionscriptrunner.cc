@@ -6,9 +6,8 @@
 #include "../State/state.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../ThreadUtil/threadutil.hh"
+#include "../util/assert.hh"
 #include "../util/ccolor.hh"
-
-#include <cassert>
 
 using namespace bold;
 using namespace std;
@@ -19,15 +18,15 @@ MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> script)
   d_currentKeyFrameIndex(0),
   d_state(MotionScriptRunnerState::Pending)
 {
-  assert(script);
-  assert(script->getStageCount());
+  ASSERT(script);
+  ASSERT(script->getStageCount());
 }
 
 // TODO can we avoid passing selectedJoints at each step, to ensure it doesn't change during execution?
 
 bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 {
-  assert(ThreadUtil::isMotionLoopThread());
+  ASSERT(ThreadUtil::isMotionLoopThread());
 
   if (d_state == MotionScriptRunnerState::Finished)
   {
@@ -57,7 +56,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
     auto hw = State::get<HardwareState>();
 
-    assert(hw);
+    ASSERT(hw);
 
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
@@ -81,7 +80,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
 
   if (d_sectionStepIndex >= d_sectionStepCount)
   {
-    assert(d_sectionStepIndex == d_sectionStepCount);
+    ASSERT(d_sectionStepIndex == d_sectionStepCount);
 
     if (!progressToNextSection(selectedJoints))
       return false;
@@ -149,7 +148,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
 
       d_section = Section::MAIN;
       d_sectionStepCount =  d_keyFrameMotionStepCount - (d_accelStepCount << 1);
-      assert(d_sectionStepCount != 0);
+      ASSERT(d_sectionStepCount != 0);
 
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
@@ -181,7 +180,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
 
       d_section = Section::POST;
       d_sectionStepCount = d_accelStepCount;
-      assert(d_sectionStepCount != 0);
+      ASSERT(d_sectionStepCount != 0);
 
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
       {
@@ -198,7 +197,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
 
         d_section = Section::PAUSE;
         d_sectionStepCount = d_keyFramePauseStepCount;
-        assert(d_sectionStepCount != 0);
+        ASSERT(d_sectionStepCount != 0);
       }
       else
       {
@@ -253,7 +252,7 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints
 
     // Check if it needs to be repeated
     d_repeatCurrentStageCount--;
-    assert(d_repeatCurrentStageCount >= 0);
+    ASSERT(d_repeatCurrentStageCount >= 0);
 
     if (d_repeatCurrentStageCount == 0)
     {
@@ -392,7 +391,7 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints
   }
 
   d_sectionStepCount = d_accelStepCount;
-  assert(d_sectionStepCount != 0);
+  ASSERT(d_sectionStepCount != 0);
 
   return true;
 }
@@ -456,7 +455,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selec
           else
           {
             // Linear progress towards target
-            assert(d_finishSpeeds[jointId] == FinishSpeed::NON_ZERO);
+            ASSERT(d_finishSpeeds[jointId] == FinishSpeed::NON_ZERO);
             value = d_sectionStartAngles[jointId] + (short)(((long)(d_mainAngles1024[jointId]) * d_sectionStepIndex) / d_sectionStepCount);
             d_goalSpeeds[jointId] = d_mainSpeeds1024[jointId];
           }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cassert>
 #include <memory>
 #include <string>
 #include <mutex>
@@ -9,6 +8,7 @@
 #include "../MotionTask/motiontask.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../ThreadUtil/threadutil.hh"
+#include "../util/assert.hh"
 
 namespace bold
 {
@@ -64,7 +64,7 @@ namespace bold
     /// pose, or when walking has come to a stop.
     void setCompletedFlag()
     {
-      assert(ThreadUtil::isMotionLoopThread());
+      ASSERT(ThreadUtil::isMotionLoopThread());
 
       std::lock_guard<std::mutex> guard(d_isCompletedMutex);
       d_isCompleted = true;
@@ -77,7 +77,7 @@ namespace bold
     /// were committed will be removed from the schedule.
     bool clearCompletedFlag()
     {
-      assert(ThreadUtil::isThinkLoopThread());
+      ASSERT(ThreadUtil::isThinkLoopThread());
 
       std::lock_guard<std::mutex> guard(d_isCompletedMutex);
       bool isSet = d_isCompleted;

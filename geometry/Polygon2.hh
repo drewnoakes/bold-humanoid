@@ -6,10 +6,11 @@
 #include <Eigen/Geometry>
 #include <Eigen/StdVector>
 
-#include "../util/log.hh"
-#include "../util/Maybe.hh"
 #include "LineSegment/linesegment.hh"
 #include "LineSegment/LineSegment2/linesegment2.hh"
+#include "../util/assert.hh"
+#include "../util/log.hh"
+#include "../util/Maybe.hh"
 
 namespace bold
 {
@@ -109,7 +110,7 @@ namespace bold
       }
 
       // One end of the line is outside, and we have a single intersection
-      assert(intersectionPoints.size() == 1);
+      ASSERT(intersectionPoints.size() == 1);
       if (contains1)
         return LineSegment2<T>(line.p1(), intersectionPoints[0]);
       else

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cassert>
 #include <iostream>
 
 #include "../Math/math.hh"
+#include "assert.hh"
 
 namespace bold
 {
@@ -12,7 +12,7 @@ namespace bold
   {
   public:
     Range() : d_isEmpty(true), d_min(), d_max() {}
-    Range(T min, T max) : d_isEmpty(false), d_min(min), d_max(max) { assert(min <= max); }
+    Range(T min, T max) : d_isEmpty(false), d_min(min), d_max(max) { ASSERT(min <= max); }
 
     bool isEmpty() const { return d_isEmpty; }
     T min() const { return d_min; }

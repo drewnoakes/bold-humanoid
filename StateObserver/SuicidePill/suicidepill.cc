@@ -3,9 +3,9 @@
 #include "../../Agent/agent.hh"
 #include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../Debugger/debugger.hh"
+#include "../../util/assert.hh"
 #include "../../util/log.hh"
 
-#include <cassert>
 #include <stdlib.h>
 
 using namespace bold;
@@ -17,8 +17,8 @@ SuicidePill::SuicidePill(Agent* agent, std::shared_ptr<Debugger> debugger)
   d_debugger(debugger),
   d_exited(false)
 {
-  assert(agent);
-  assert(debugger);
+  ASSERT(agent);
+  ASSERT(debugger);
 }
 
 void SuicidePill::observeTyped(shared_ptr<HardwareState const> const& state, SequentialTimer& timer)

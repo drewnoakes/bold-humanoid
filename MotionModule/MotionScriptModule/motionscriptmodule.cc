@@ -5,8 +5,7 @@
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
 #include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../ThreadUtil/threadutil.hh"
-
-#include <cassert>
+#include "../../util/assert.hh"
 
 using namespace bold;
 using namespace std;
@@ -46,7 +45,7 @@ bool MotionScriptModule::isRunning()
 
 void MotionScriptModule::step(shared_ptr<JointSelection> selectedJoints)
 {
-  assert(ThreadUtil::isMotionLoopThread());
+  ASSERT(ThreadUtil::isMotionLoopThread());
 
   if (!d_runner)
     return;

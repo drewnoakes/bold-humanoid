@@ -1,11 +1,11 @@
 #include "mx28snapshot.hh"
 
-#include <cassert>
 #include <cstdio>
 #include <cmath>
 
 #include "../MX28/mx28.hh"
 #include "../CM730/cm730.hh"
+#include "../util/assert.hh"
 
 using namespace bold;
 
@@ -44,7 +44,7 @@ StaticMX28State::StaticMX28State(uchar mx28ID, BulkReadTable const& data)
   firmwareVersion  = data.readByte(MX28::P_VERSION);
   id               = data.readByte(MX28::P_ID);
 
-  assert(id == mx28ID);
+  ASSERT(id == mx28ID);
 
   // TODO migrate to MX28::value2Baud(uchar)
   auto baudByte    = data.readByte(MX28::P_BAUD_RATE);                        // 0x22

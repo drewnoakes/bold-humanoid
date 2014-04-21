@@ -145,6 +145,11 @@ int main(int argc, char **argv)
            << ccolor::fore::lightblue << "Eigen align: " << ccolor::reset << "No" << endl
 #endif
            << ccolor::fore::lightblue << "Build type:  " << ccolor::reset << Version::BUILD_TYPE << endl
+#if INCLUDE_ASSERTIONS
+           << ccolor::fore::lightblue << "Assertions:  " << ccolor::reset << "Yes" << endl
+#else
+           << ccolor::fore::lightblue << "Assertions:  " << ccolor::reset << "No" << endl
+#endif
            << ccolor::fore::lightblue << "Commit date: " << ccolor::reset << Version::GIT_DATE << " (" << Version::describeTimeSinceGitDate() << ")" << endl
            << ccolor::fore::lightblue << "Message:     " << ccolor::reset << Version::GIT_COMMIT_SUBJECT << endl;
       return 0;
@@ -160,6 +165,11 @@ int main(int argc, char **argv)
   printBanner();
 
   log::info("BUILD") << Version::GIT_SHA1 << " (committed " << Version::describeTimeSinceGitDate() << ")";
+#if INCLUDE_ASSERTIONS
+  log::info("ASSERTIONS") << "Yes";
+#else
+  log::info("ASSERTIONS") << "No";
+#endif
 #if EIGEN_ALIGN
   log::info("EIGEN_ALIGN") << "Yes";
 #else

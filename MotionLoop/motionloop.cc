@@ -61,7 +61,7 @@ MotionLoop::~MotionLoop()
 
 void MotionLoop::addModule(shared_ptr<MotionModule> module)
 {
-  assert(module);
+  ASSERT(module);
 
   // Initialise modules each time they are added
   module->initialize();
@@ -227,8 +227,8 @@ bool MotionLoop::applyJointMotionTasks(SequentialTimer& t)
     MotionModule* module = pair.first;
     shared_ptr<JointSelection> jointSelection = pair.second;
 
-    assert(module);
-    assert(jointSelection);
+    ASSERT(module);
+    ASSERT(jointSelection);
 
     module->step(jointSelection);
 
@@ -287,7 +287,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
 
         if (addrRange.contains(MX28::P_GOAL_POSITION_L))
         {
-          assert(addrRange.contains(MX28::P_GOAL_POSITION_H));
+          ASSERT(addrRange.contains(MX28::P_GOAL_POSITION_H));
           parameters[n++] = CM730::getLowByte(goalPosition);
           parameters[n++] = CM730::getHighByte(goalPosition);
         }
@@ -295,7 +295,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
         joint->clearDirty();
       }
     }
-    assert(n == dirtyDeviceCount * bytesPerDevice);
+    ASSERT(n == dirtyDeviceCount * bytesPerDevice);
 
     //
     // Send the SyncWrite message, if anything changed
@@ -425,7 +425,7 @@ void MotionLoop::step(SequentialTimer& t)
 
 shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t)
 {
-  assert(d_haveBody);
+  ASSERT(d_haveBody);
 
   //
   // READ DATA
@@ -471,7 +471,7 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t
 
 bool MotionLoop::updateStaticHardwareState()
 {
-  assert(d_haveBody);
+  ASSERT(d_haveBody);
 
   CommResult res = d_cm730->bulkRead(d_staticBulkRead.get());
 
@@ -493,7 +493,7 @@ bool MotionLoop::updateStaticHardwareState()
 
 shared_ptr<HardwareState const> MotionLoop::readHardwareStateFake(SequentialTimer& t)
 {
-  assert(!d_haveBody);
+  ASSERT(!d_haveBody);
 
   //
   // Dummy StaticHardwareState

@@ -1,14 +1,14 @@
 #include "houghlineextractor.hh"
 
-#include <cassert>
+#include "../util/assert.hh"
 
 using namespace bold;
 using namespace std;
 
 vector<Candidate<Line>> HoughLineExtractor::findLines(HoughLineAccumulator& accumulator, int threshold, double angleSearch, int radiusSearch) const
 {
-  assert(angleSearch != 0);
-  assert(radiusSearch != 0);
+  ASSERT(angleSearch != 0);
+  ASSERT(radiusSearch != 0);
 
   auto lines = vector<Candidate<Line>>();
 
@@ -60,8 +60,8 @@ vector<Candidate<Line>> HoughLineExtractor::findLines(HoughLineAccumulator& accu
             nx = ((nx - halfAccumulatorWidth) * -1) + halfAccumulatorWidth;
           }
 
-          assert(ny >= 0 && ny < accumulatorHeight);
-          assert(nx >= 0 && nx < accumulatorWidth);
+          ASSERT(ny >= 0 && ny < accumulatorHeight);
+          ASSERT(nx >= 0 && nx < accumulatorWidth);
 
           ushort neighbourValue = accumulator.getMat().at<ushort>(ny, nx);
 

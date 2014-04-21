@@ -144,7 +144,7 @@ void GameStateReceiver::receive()
   if (received && d_sendResponseMessages->getValue())
   {
     // Send a response to the game controller (the sender), stating we're alive and well
-    assert(fromAddress.sin_family == AF_INET);
+    ASSERT(fromAddress.sin_family == AF_INET);
     fromAddress.sin_port = htons(d_gameControllerPort);
     d_socket->setTarget(fromAddress);
 
@@ -182,7 +182,7 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
 
     auto gameState = make_shared<GameState const>(data);
 
-    assert(gameState->getVersion() == GameStateData::VERSION);
+    ASSERT(gameState->getVersion() == GameStateData::VERSION);
 
     // Track the other team numbers we see, and log them as new ones arrive
 

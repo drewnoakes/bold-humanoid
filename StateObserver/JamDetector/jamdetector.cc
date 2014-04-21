@@ -25,7 +25,7 @@ void JamDetector::observeTyped(std::shared_ptr<BodyState const> const& bodyState
 {
   const auto& diffs = bodyState->getPositionValueDiffs();
 
-  assert(diffs.size() == (int)JointId::MAX + 1);
+  ASSERT(diffs.size() == (int)JointId::MAX + 1);
 
   // TODO Don't just detect large error, but also the fact that the joint is hardly moving
   //      This is because during some motion script playback, there may be very large errors for a short while

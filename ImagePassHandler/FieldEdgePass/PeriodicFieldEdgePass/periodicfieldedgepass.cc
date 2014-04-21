@@ -29,7 +29,7 @@ void PeriodicFieldEdgePass::onImageStarting(SequentialTimer& timer)
 
 void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 {
-//   assert(x >= 0 && x < d_pixelWidth);
+//   ASSERT(x >= 0 && x < d_pixelWidth);
 
   if (x % d_period != 0)
     return;
@@ -38,7 +38,7 @@ void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 
   if (labelId == d_fieldLabel->id())
   {
-//     assert(y >= d_maxYByX[c]);
+//     ASSERT(y >= d_maxYByX[c]);
 
     ushort run = d_runByC[c];
     run++;
@@ -56,7 +56,7 @@ void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 
 ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
 {
-  assert(x < d_pixelWidth);
+  ASSERT(x < d_pixelWidth);
 
   // Map from the x-position to the periodic samples.
 
@@ -68,7 +68,7 @@ ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
   if (rem == 0 || c == d_runByC.size() - 1)
   {
     // x is an exact multiple of the period, so return the value directly.
-    assert(maxYByC[c] < d_pixelHeight);
+    ASSERT(maxYByC[c] < d_pixelHeight);
     return maxYByC[c];
   }
 

@@ -4,7 +4,7 @@
 
 void MaskWalkLineFinder::walkLine(Vector2i const& start, float theta, bool forward, std::function<bool(int/*x*/,int/*y*/)> const& callback, uchar width)
 {
-  assert(width);
+  ASSERT(width);
 
   // From the current point walk in each direction along the found line and
   // extract the line segment

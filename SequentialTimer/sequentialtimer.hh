@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cassert>
 #include <vector>
 #include <memory>
 #include <deque>
 #include <sstream>
 
 #include "../Clock/clock.hh"
+#include "../util/assert.hh"
 
 namespace bold
 {
@@ -24,7 +24,7 @@ namespace bold
 
     void timeEvent(std::string const& eventName)
     {
-      assert(!d_flushed);
+      ASSERT(!d_flushed);
       auto now = Clock::getTimestamp();
       auto timeMillis = Clock::timestampToMillis(now - d_last);
       std::string name = d_prefix.size() ? d_prefix + '/' + eventName : eventName;
@@ -34,7 +34,7 @@ namespace bold
 
     std::shared_ptr<std::vector<EventTiming>> flush()
     {
-      assert(d_entered.size() == 0);
+      ASSERT(d_entered.size() == 0);
       d_flushed = true;
       return d_eventTimings;
     }
@@ -49,7 +49,7 @@ namespace bold
 
     void exit()
     {
-      assert(d_entered.size() != 0);
+      ASSERT(d_entered.size() != 0);
       auto now = Clock::getTimestamp();
       auto top = d_entered[d_entered.size() - 1];
       auto timeMillis = Clock::timestampToMillis(now - top.second);

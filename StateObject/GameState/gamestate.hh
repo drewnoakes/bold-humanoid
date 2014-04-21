@@ -4,8 +4,8 @@
 
 #include "../../Clock/clock.hh"
 #include "../../GameStateReceiver/gamecontrollertypes.hh"
+#include "../../util/assert.hh"
 
-#include <cassert>
 #include <stdexcept>
 #include <vector>
 #include <string>
@@ -71,7 +71,7 @@ namespace bold
 
     robocup::PlayerInfo const& playerInfo(unsigned team, unsigned unum) const
     {
-      assert(team < 2);
+      ASSERT(team < 2);
       return d_data.teams[team].getPlayer(unum);
     }
 

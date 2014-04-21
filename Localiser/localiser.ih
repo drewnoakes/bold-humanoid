@@ -1,7 +1,5 @@
 #include "localiser.hh"
 
-#include <cassert>
-
 #include "../Config/config.hh"
 #include "../FieldMap/fieldmap.hh"
 #include "../Math/math.hh"
@@ -13,6 +11,7 @@
 #include "../StateObject/OdometryState/odometrystate.hh"
 #include "../StateObject/OrientationState/orientationstate.hh"
 #include "../filters/ObservationModel/JointObservationModel/jointobservationmodel.hh"
+#include "../util/assert.hh"
 #include "../util/memory.hh"
 
 using namespace std;

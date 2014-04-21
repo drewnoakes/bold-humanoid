@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cassert>
 #include <memory>
 
 #include "../JointId/jointid.hh"
+#include "../util/assert.hh"
 
 namespace bold
 {
@@ -99,7 +99,7 @@ namespace bold
     bool isCommitted() const { return d_isCommitted; }
 
     /// Called by the framework when a task that requests committal is started.
-    void setCommitted() { assert(d_isCommitRequested); d_isCommitted = true; }
+    void setCommitted() { ASSERT(d_isCommitRequested); d_isCommitted = true; }
 
     /// For testing purposes
     void clearCommitted() { d_isCommitted = false; }
