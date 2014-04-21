@@ -52,7 +52,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   // Maximum y-error to consider point member of line segment
   float maxError = d_maxLineDist->getValue();
 
-  float maxRMSFactor = d_maxRMSFactor->getValue();
+//   float maxRMSFactor = d_maxRMSFactor->getValue();
 
   // Matrix is col-major, so outersize is width
   for (unsigned k = 0; k < static_cast<unsigned>(linePointsMatrix.outerSize()); ++k)
@@ -110,7 +110,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
           ++nRegressions;
         }
         closest->sqError += minError * minError;
-        auto oldrms = closest->rms;
+//         auto oldrms = closest->rms;
         closest->rms = sqrt(closest->sqError / closest->n);
 
         closest->xEnd = point.x() + 1;
