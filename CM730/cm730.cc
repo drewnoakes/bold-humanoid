@@ -591,8 +591,8 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
       }
       else if (d_platform->isPacketTimeout())
       {
-        res = receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
-        break;
+        log::error("CM730::txRxPacket") << "Timeout waiting for response (" << d_platform->getPacketTimeoutMillis() << " ms) -- " << receivedCount << " of " << expectedLength << " bytes read";
+        return receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
       }
     }
   }
@@ -639,9 +639,8 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
       }
       else if (d_platform->isPacketTimeout())
       {
-        res = receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
         log::error("CM730::txRxPacket") << "Timeout waiting for bulk read response (" << d_platform->getPacketTimeoutMillis() << " ms) -- " << receivedCount << " of " << expectedLength << " bytes read";
-        break;
+        return receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
       }
     }
 
