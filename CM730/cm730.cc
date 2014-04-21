@@ -512,9 +512,14 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
   // Send the instruction packet
   int bytesWritten = d_platform->writePort(txpacket, length);
 
-  if (bytesWritten != length)
+  if (bytesWritten < 0)
   {
-    log::warning("CM730::txRxPacket") << "Failed to write to port: " << bytesWritten << " of " << length << " written";
+    log::error("CM730::txRxPacket") << "Error writing to CM730 port: " << strerror(errno) << " (" << errno << ")";
+    return CommResult::TX_FAIL;
+  }
+  else if (bytesWritten != length)
+  {
+    log::warning("CM730::txRxPacket") << "Failed to write entire packet to port: " << bytesWritten << " of " << length << " written";
     return CommResult::TX_FAIL;
   }
 
@@ -531,15 +536,25 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
     int receivedCount = 0;
     while (true)
     {
-      length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
-      if (length && DEBUG_PRINT)
+      int bytesRead = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
+
+      if (DEBUG_PRINT && bytesRead > 0)
       {
-        cout << "[CM730::txRxPacket]   RX[" << length << "]" << hex << setfill('0');
-        for (int n = 0; n < length; n++)
+        cout << "[CM730::txRxPacket]   RX[" << bytesRead << "]" << hex << setfill('0');
+        for (int n = 0; n < bytesRead; n++)
           cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
         cout << dec << endl;
       }
-      receivedCount += length;
+
+      if (bytesRead < 0)
+      {
+        log::error("CM730::txRxPacket") << "Error reading from CM730 port: " << strerror(errno) << " (" << errno << ")";
+        return CommResult::TX_FAIL;
+      }
+      else
+      {
+        receivedCount += bytesRead;
+      }
 
       if (receivedCount == expectedLength)
       {
@@ -597,15 +612,25 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
     // Read until we get enough bytes, or there's a timeout
     while (true)
     {
-      length = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
-      if (length && DEBUG_PRINT)
+      int bytesRead = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
+
+      if (DEBUG_PRINT && bytesRead > 0)
       {
-        cout << "[CM730::txRxPacket]   RX[" << length << "]" << hex << setfill('0');
-        for (int n = 0; n < length; n++)
+        cout << "[CM730::txRxPacket]   RX[" << bytesRead << "]" << hex << setfill('0');
+        for (int n = 0; n < bytesRead; n++)
           cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
         cout << dec << endl;
       }
-      receivedCount += length;
+
+      if (bytesRead < 0)
+      {
+        log::error("CM730::txRxPacket") << "Error reading from CM730 port: " << strerror(errno) << " (" << errno << ")";
+        return CommResult::TX_FAIL;
+      }
+      else
+      {
+        receivedCount += bytesRead;
+      }
 
       if (receivedCount == expectedLength)
       {
