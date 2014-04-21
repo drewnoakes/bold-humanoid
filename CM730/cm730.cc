@@ -582,6 +582,7 @@ CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, B
         else
         {
           // Header was found later in the data
+          log::warning("CM730::txRxPacket") << "Skipping " << i << " byte" << (i==1?"":"s") << " until response header -- possible corruption";
           // Move all data forward in the array
           // This will then loop around until the expected number of bytes are read
           for (int j = 0; j < (receivedCount - i); j++)
