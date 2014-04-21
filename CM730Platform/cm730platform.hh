@@ -43,6 +43,9 @@ namespace bold
     /// Gets the time since the last packet was started
     virtual double getPacketTime() = 0;
 
+    /// Gets the amount of time the current packet will be waited for, in milliseconds.
+    virtual double getPacketTimeoutMillis() const = 0;
+
     virtual unsigned long getReceivedByteCount() const = 0;
     virtual unsigned long getTransmittedByteCount() const = 0;
     virtual void resetByteCounts() = 0;

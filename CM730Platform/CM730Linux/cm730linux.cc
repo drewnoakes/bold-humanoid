@@ -172,6 +172,11 @@ double CM730Linux::getPacketTime()
   return time;
 }
 
+double CM730Linux::getPacketTimeoutMillis() const
+{
+  return d_packetWaitTimeMillis;
+}
+
 void CM730Linux::sleep(double msec)
 {
   double start_time = Clock::getMillis();

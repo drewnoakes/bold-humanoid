@@ -32,6 +32,7 @@ namespace bold
     void setPacketTimeout(int lenPacket) override;
     bool isPacketTimeout() override;
     double getPacketTime() override;
+    double getPacketTimeoutMillis() const override;
 
     virtual void sleep(double msec) override;
 
