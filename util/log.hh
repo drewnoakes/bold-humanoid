@@ -58,6 +58,9 @@ namespace bold
     static log warning(std::string const& scope) { return log(scope, LogLevel::Warning); }
     static log error(std::string const& scope)   { return log(scope, LogLevel::Error); }
 
+    static bool isStdOutRedirected();
+    static bool isStdErrRedirected();
+
     log(log&& log)
     : d_scope(log.d_scope),
       d_level(log.d_level),

@@ -80,9 +80,16 @@ vector<string> banners = {
 
 void printBanner()
 {
-  cout << ccolor::bold << ccolor::fore::lightmagenta
-       << banners[rand() % banners.size()]
-       << endl << endl << ccolor::reset;
+  if (log::isStdOutRedirected())
+  {
+    cout << banners[rand() % banners.size()] << endl << endl;
+  }
+  else
+  {
+    cout << ccolor::bold << ccolor::fore::lightmagenta
+        << banners[rand() % banners.size()]
+        << endl << endl << ccolor::reset;
+  }
 }
 
 int main(int argc, char **argv)
