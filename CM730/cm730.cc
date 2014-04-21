@@ -479,8 +479,7 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
 
 CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead)
 {
-  // TODO: assert fails, fix this
-  //assert(ThreadUtil::isMotionLoopThread());
+  ASSERT(ThreadUtil::isMotionLoopThread());
 
   int length = txpacket[LENGTH] + 4;
 
