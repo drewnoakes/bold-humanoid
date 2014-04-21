@@ -13,7 +13,7 @@ class MotionTimingModule extends Module
     constructor()
     {
         super('motion-timing', 'motion timing', {fullScreen: true});
-        this.pane = new TimingPane(constants.protocols.motionTiming, 125/*fps*/);
+        this.pane = new TimingPane(constants.protocols.motionTimingState, 125/*fps*/);
     }
 
     public load()

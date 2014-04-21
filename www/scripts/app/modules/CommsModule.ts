@@ -59,7 +59,7 @@ class CommsModule extends Module
         this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
         this.closeables.add(new data.Subscription<state.Debug>(
-            constants.protocols.debug,
+            constants.protocols.debugState,
             {
                 onmessage: this.onDebugState.bind(this)
             }

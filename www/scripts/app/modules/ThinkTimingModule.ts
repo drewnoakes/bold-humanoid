@@ -13,7 +13,7 @@ class ThinkTimingModule extends Module
     constructor()
     {
         super('think-timing', 'think timing', {fullScreen: true});
-        this.pane = new TimingPane(constants.protocols.thinkTiming, 30/*fps*/);
+        this.pane = new TimingPane(constants.protocols.thinkTimingState, 30/*fps*/);
     }
 
     public load()
