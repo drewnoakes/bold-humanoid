@@ -50,7 +50,7 @@ interface IDrawbridgeData
     options: string[];
 }
 
-class TeamModule extends Module
+class DrawbridgeModule extends Module
 {
     private socket: WebSocket;
     private containerByUnum: {[unum:string]:HTMLDivElement} = {};
@@ -88,4 +88,4 @@ class TeamModule extends Module
     }
 }
 
-export = TeamModule;
+export = DrawbridgeModule;
