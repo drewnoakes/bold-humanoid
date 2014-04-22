@@ -136,8 +136,6 @@ bool MotionLoop::start()
     return false;
   }
 
-  log::info("MotionLoop::start") << "Started";
-
   d_isStarted = true;
   return true;
 }
