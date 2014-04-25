@@ -3,16 +3,15 @@
 #include <string.h>
 #include <cmath>
 
+#include "../PoseProvider/poseprovider.hh"
+
 namespace bold
 {
-  class ArmSection;
-  class HeadSection;
-  class LegSection;
   template <typename> class Setting;
 
   /** Computes body angles for walking.
    */
-  class WalkEngine
+  class WalkEngine : public PoseProvider
   {
   public:
     enum
@@ -36,9 +35,9 @@ namespace bold
 
     void balance(double ratio);
 
-    void applyHead(HeadSection* head);
-    void applyArms(ArmSection* arms);
-    void applyLegs(LegSection* legs);
+    void applyHead(HeadSection* head) override;
+    void applyArms(ArmSection* arms) override;
+    void applyLegs(LegSection* legs) override;
 
     /** Whether the body would be stable if walking would cease now.
      *

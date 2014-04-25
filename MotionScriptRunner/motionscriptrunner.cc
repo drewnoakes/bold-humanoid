@@ -1,5 +1,6 @@
 #include "motionscriptrunner.hh"
 
+#include "../BodyControl/bodycontrol.hh"
 #include "../Math/math.hh"
 #include "../MotionTask/motiontask.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
@@ -512,3 +513,16 @@ bool MotionScriptRunner::isInFinalPose(std::shared_ptr<MotionScript const> const
 
   return abs(delta) < static_cast<int>(valueTolerance);
 }
+
+void MotionScriptRunner::applySection(BodySection* section) const
+{
+  section->visitJoints([&section,this](JointControl* joint)
+  {
+    joint->setValue(d_values[joint->getId()]);
+    joint->setPGain(d_pGains[joint->getId()]);
+  });
+}
+
+void MotionScriptRunner::applyHead(bold::HeadSection* head) { applySection(static_cast<BodySection*>(head)); }
+void MotionScriptRunner::applyArms(bold::ArmSection*  arms) { applySection(static_cast<BodySection*>(arms)); }
+void MotionScriptRunner::applyLegs(bold::LegSection*  legs) { applySection(static_cast<BodySection*>(legs)); }

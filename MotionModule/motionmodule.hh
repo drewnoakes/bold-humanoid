@@ -7,6 +7,7 @@
 #include "../JointId/jointid.hh"
 #include "../MotionTask/motiontask.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
+#include "../PoseProvider/poseprovider.hh"
 #include "../ThreadUtil/threadutil.hh"
 #include "../util/assert.hh"
 
@@ -16,14 +17,11 @@ namespace bold
   typedef unsigned short ushort;
   typedef unsigned long ulong;
 
-  class ArmSection;
-  class HeadSection;
   class MotionTaskScheduler;
-  class LegSection;
 
   /** Abstract base for types of motion such as walking, running scripts or controlling the head.
    */
-  class MotionModule
+  class MotionModule : public PoseProvider
   {
     friend class MotionTaskScheduler;
 
@@ -42,16 +40,12 @@ namespace bold
 
     std::string getName() const { return d_name; }
 
-    /** Updates the position.
+    /** Calculate the position for the next timestep.
      *
      * @param selectedJoints indicates which body sections and joints may be
      *                       controlled.
      */
     virtual void step(std::shared_ptr<JointSelection> selectedJoints) = 0;
-
-    virtual void applyHead(HeadSection* head) = 0;
-    virtual void applyArms(ArmSection* arms) = 0;
-    virtual void applyLegs(LegSection* legs) = 0;
 
     std::shared_ptr<MotionTaskScheduler> getScheduler() const { return d_scheduler; }
 

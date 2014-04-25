@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../MotionScript/motionscript.hh"
+#include "../PoseProvider/poseprovider.hh"
 
 #include <memory>
 
@@ -57,11 +58,12 @@ namespace bold
 
   typedef unsigned char uchar;
 
+  class BodySection;
   class JointSelection;
 
   enum class MotionScriptRunnerState { Pending, Running, Finished };
 
-  class MotionScriptRunner
+  class MotionScriptRunner : public PoseProvider
   {
   public:
     static std::string getStateName(MotionScriptRunnerState const& state)
@@ -86,6 +88,10 @@ namespace bold
 
     bool step(std::shared_ptr<JointSelection> selectedJoints);
 
+    void applyHead(HeadSection* head) override;
+    void applyArms(ArmSection* arms) override;
+    void applyLegs(LegSection* legs) override;
+
     unsigned getValue(uchar jointId) const { return d_values[jointId]; }
     uchar getPGain(uchar jointId) const { return d_pGains[jointId]; }
 
@@ -93,6 +99,8 @@ namespace bold
     int getCurrentKeyFrameIndex() const { return d_currentKeyFrameIndex; }
 
   private:
+    void applySection(BodySection* section) const;
+
     bool progressToNextSection(std::shared_ptr<JointSelection> selectedJoints);
     void continueCurrentSection(std::shared_ptr<JointSelection> selectedJoints);
     bool startKeyFrame(std::shared_ptr<JointSelection> selectedJoints);

@@ -10,7 +10,6 @@ namespace bold
 {
   class MotionScript;
   class MotionScriptRunner;
-  class BodySection;
 
   class MotionScriptModule : public MotionModule
   {
@@ -23,8 +22,6 @@ namespace bold
     void applyHead(HeadSection* head) override;
     void applyArms(ArmSection* arms) override;
     void applyLegs(LegSection* legs) override;
-
-    void applySection(BodySection* section);
 
     /** Attempts to start executing the provided script runner.
      *
