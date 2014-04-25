@@ -25,6 +25,8 @@ namespace bold
    */
   class MotionModule
   {
+    friend class MotionTaskScheduler;
+
   public:
     MotionModule(std::string const& type, std::shared_ptr<MotionTaskScheduler> scheduler)
     : d_scheduler(scheduler),
@@ -56,9 +58,7 @@ namespace bold
 
     std::shared_ptr<MotionTaskScheduler> getScheduler() const { return d_scheduler; }
 
-    // The flag will be set from one thread, and cleared from another,
-    // but a single field write/read should be thread safe.
-
+  protected:
     /// Called by the motion module (on the motion loop thread) when the module
     /// has completed. For example, when a motion script has reached its final
     /// pose, or when walking has come to a stop.
