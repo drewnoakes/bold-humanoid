@@ -1,6 +1,8 @@
 {
   "inherits": "configuration-team.json",
 
+  "team-number": 3,
+
   "camera": {
     "settings": {
       "auto-wb": false,
