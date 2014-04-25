@@ -37,7 +37,7 @@ double FSMState::secondsSinceStart() const
 
 bool FSMState::allOptionsTerminated() const
 {
-  return all_of(options.begin(), options.end(), [](shared_ptr<Option> o) { return o->hasTerminated(); });
+  return all_of(options.begin(), options.end(), [](shared_ptr<Option> const& o) { return o->hasTerminated(); });
 }
 
 shared_ptr<FSMTransition> FSMState::newTransition(string name)
