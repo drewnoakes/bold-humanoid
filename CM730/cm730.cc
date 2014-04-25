@@ -164,7 +164,6 @@ bool CM730::connect()
 
 bool CM730::disconnect()
 {
-  bool success = true;
   if (d_platform->isPortOpen())
   {
     log::verbose("CM730::disconnect") << "Disconnecting from CM730";
@@ -188,16 +187,17 @@ bool CM730::disconnect()
     if (!powerEnable(false))
     {
       log::error("CM730::disconnect") << "Error turning power off";
-      success = false;
+      return false;
     }
 
     if (!d_platform->closePort())
     {
       log::error("CM730::disconnect") << "Error closing port";
-      success = false;
+      return false;
     }
   }
-  return success;
+
+  return true;
 }
 
 bool CM730::changeBaud(unsigned baud)
