@@ -9,8 +9,6 @@ set(BUILD_BOLDPY ON CACHE BOOL "Choose whether to Python library")
 set(PRECOMPILE_HEADERS OFF CACHE BOOL "Choose whether to precompile headers")
 set(EIGEN_VECTORIZE OFF CACHE BOOL "Choose whether to enable Eigen vectorization")
 set(INCLUDE_ASSERTIONS ON CACHE BOOL "Choose whether to include assertions in compiled code")
-set(UPLOAD_SCP_PATH "" CACHE STRING "Path to use in upload scp command. Format: user@server:path")
-set(BUNDLES_PATH "" CACHE STRING "Path to use to store bundles")
 set(TARGET_ATOM "" ON CACHE BOOL "Choose whether to optimize for atom")
 
 include(ExternalProject)
@@ -680,44 +678,6 @@ set(BOLDHUMANOID_DEPLOY_FILES
   ${CMAKE_SOURCE_DIR}/www
   ${CMAKE_SOURCE_DIR}/motion_4096.bin
 )
-
-#
-## Upload target
-#
-if(UPLOAD_SCP_PATH)
-  add_custom_command(OUTPUT upload.stamp
-    COMMAND rsync -rzP ${BOLDHUMANOID_DEPLOY_FILES} ${UPLOAD_SCP_PATH}
-    COMMAND touch upload.stamp
-    DEPENDS boldhumanoid)
-
-  add_custom_target(upload DEPENDS upload.stamp)
-else(UPLOAD_SCP_PATH)
-  message(STATUS "You have not set a path for uploading the binary; 'upload' target not generated")
-endif(UPLOAD_SCP_PATH)
-
-#
-## Bundle target
-#
-if(BUNDLES_PATH)
-  add_custom_command(OUTPUT bundle.stamp
-    COMMAND if [ \"\${TAG}\" != \"\" ]\;
-          then
-            git tag \${TAG}\;
-            mkdir -p ${BUNDLES_PATH}/\${TAG}\;
-            cp -r ${BOLDHUMANOID_DEPLOY_FILES} ${BUNDLES_PATH}/\${TAG}\;
-          else
-            echo \"No tag given. Usage: make bundle TAG=<tag>\"\;
-          fi
-    COMMAND touch bundle.stamp
-    DEPENDS boldhumanoid
-
-    )
-
-  add_custom_target(bundle DEPENDS bundle.stamp)
-else(BUNDLES_PATH)
-  message(STATUS "You have not set a path for storing bundles; 'bundle' target not generated")
-endif(BUNDLES_PATH)
-
 
 #
 ## CTAGS target (for emacs users)
