@@ -17,10 +17,10 @@ namespace bold
    */
   enum class Priority
   {
-    Important = 3,
-    Normal    = 2,
-    Optional  = 1,
-    None      = 0
+    High   = 3,
+    Normal = 2,
+    Low    = 1,
+    None   = 0
   };
 
   enum class SectionId

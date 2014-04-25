@@ -76,9 +76,9 @@ bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> const& scriptRunne
   // NOTE currently we assume that motion scripts control all body parts
 
   getScheduler()->add(this,
-                      Priority::Optional,  scriptRunner->getScript()->getControlsHead(),  // HEAD   Interuptable::YES
-                      Priority::Important, scriptRunner->getScript()->getControlsArms(),  // ARMS
-                      Priority::Important, scriptRunner->getScript()->getControlsLegs()); // LEGS
+                      Priority::Low,  scriptRunner->getScript()->getControlsHead(),  // HEAD   Interuptable::YES
+                      Priority::High, scriptRunner->getScript()->getControlsArms(),  // ARMS
+                      Priority::High, scriptRunner->getScript()->getControlsLegs()); // LEGS
 
   return true;
 }

@@ -42,7 +42,7 @@ TEST (MotionTaskSchedulerTests, sortTasks)
 
   task3->clearCommitted();
   task1->setCommitted();
-  task2->setPriority(Priority::Important);
+  task2->setPriority(Priority::High);
 
   MotionTaskScheduler::sortTasks(tasks);
 
