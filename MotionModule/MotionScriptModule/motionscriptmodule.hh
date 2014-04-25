@@ -17,7 +17,7 @@ namespace bold
     MotionScriptModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
     ~MotionScriptModule() override = default;
 
-    void step(std::shared_ptr<JointSelection> selectedJoints) override;
+    void step(std::shared_ptr<JointSelection> const& selectedJoints) override;
 
     void applyHead(HeadSection* head) override;
     void applyArms(ArmSection* arms) override;
@@ -29,7 +29,7 @@ namespace bold
      * otherwise false indicating that the request to start was ignored due
      * to another script already executing.
      */
-    bool start(std::shared_ptr<MotionScriptRunner> scriptRunner);
+    bool start(std::shared_ptr<MotionScriptRunner> const& scriptRunner);
 
     bool isRunning();
 

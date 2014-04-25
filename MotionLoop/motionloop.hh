@@ -26,8 +26,8 @@ namespace bold
     bool start();
     void stop();
 
-    void addModule(std::shared_ptr<MotionModule> module);
-    void removeModule(std::shared_ptr<MotionModule> module);
+    void addModule(std::shared_ptr<MotionModule> const& module);
+    void removeModule(std::shared_ptr<MotionModule> const& module);
 
     /// TODO allow specifying these in config
     /// Set of static offsets to be added to all target positions sent to hardware.

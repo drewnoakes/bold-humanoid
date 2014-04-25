@@ -11,7 +11,7 @@
 using namespace bold;
 using namespace std;
 
-HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
+HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> const& scheduler)
 : MotionModule("head", scheduler)
 {
   // P gain values for MX28
@@ -149,7 +149,7 @@ void HeadModule::moveTracking(double panError, double tiltError)
   checkLimit();
 }
 
-void HeadModule::step(shared_ptr<JointSelection> selectedJoints)
+void HeadModule::step(shared_ptr<JointSelection> const& selectedJoints)
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
   // TODO implement a head movement that updates its target position every 8ms instead of every 30ms, for smoother movements

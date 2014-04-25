@@ -13,7 +13,7 @@
 using namespace bold;
 using namespace std;
 
-MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> script)
+MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> const& script)
 : d_script(script),
   d_currentStageIndex(0),
   d_currentKeyFrameIndex(0),
@@ -25,7 +25,7 @@ MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> script)
 
 // TODO can we avoid passing selectedJoints at each step, to ensure it doesn't change during execution?
 
-bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
+bool MotionScriptRunner::step(shared_ptr<JointSelection> const& selectedJoints)
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
 
@@ -120,7 +120,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> selectedJoints)
   return true;
 }
 
-bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> selectedJoints)
+bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> const& selectedJoints)
 {
   d_sectionStepIndex = 0;
 
@@ -233,7 +233,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> select
   return true;
 }
 
-bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints)
+bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> const& selectedJoints)
 {
   //
   // Move to next key frame
@@ -397,7 +397,7 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> selectedJoints
   return true;
 }
 
-void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> selectedJoints)
+void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> const& selectedJoints)
 {
   d_sectionStepIndex++;
 

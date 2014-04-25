@@ -27,7 +27,7 @@ namespace bold
     WalkModule(std::shared_ptr<MotionTaskScheduler> scheduler);
     ~WalkModule() override = default;
 
-    void step(std::shared_ptr<JointSelection> selectedJoints) override;
+    void step(std::shared_ptr<JointSelection> const& selectedJoints) override;
 
     void applyHead(HeadSection* head) override;
     void applyArms(ArmSection* arms) override;

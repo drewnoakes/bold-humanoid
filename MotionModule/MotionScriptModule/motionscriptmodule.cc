@@ -34,7 +34,7 @@ bool MotionScriptModule::isRunning()
   return d_runner && d_runner->getState() != MotionScriptRunnerState::Finished;
 }
 
-void MotionScriptModule::step(shared_ptr<JointSelection> selectedJoints)
+void MotionScriptModule::step(shared_ptr<JointSelection> const& selectedJoints)
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
 
@@ -57,7 +57,7 @@ void MotionScriptModule::applyHead(HeadSection* head) { if (d_runner) d_runner->
 void MotionScriptModule::applyArms(ArmSection*  arms) { if (d_runner) d_runner->applyArms(arms); }
 void MotionScriptModule::applyLegs(LegSection*  legs) { if (d_runner) d_runner->applyLegs(legs); }
 
-bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> scriptRunner)
+bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> const& scriptRunner)
 {
   auto const& script = scriptRunner->getScript();
 

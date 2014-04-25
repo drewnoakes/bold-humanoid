@@ -80,13 +80,13 @@ namespace bold
     static int getMaxDeltaFromFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead = false, bool includeArms = false);
     static bool isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead = false, bool includeArms = false, unsigned valueTolerance = 100);
 
-    MotionScriptRunner(std::shared_ptr<MotionScript const> script);
+    MotionScriptRunner(std::shared_ptr<MotionScript const> const& script);
 
     std::shared_ptr<MotionScript const> getScript() const { return d_script; }
 
     MotionScriptRunnerState getState() const { return d_state; }
 
-    bool step(std::shared_ptr<JointSelection> selectedJoints);
+    bool step(std::shared_ptr<JointSelection> const& selectedJoints);
 
     void applyHead(HeadSection* head) override;
     void applyArms(ArmSection* arms) override;
@@ -101,9 +101,9 @@ namespace bold
   private:
     void applySection(BodySection* section) const;
 
-    bool progressToNextSection(std::shared_ptr<JointSelection> selectedJoints);
-    void continueCurrentSection(std::shared_ptr<JointSelection> selectedJoints);
-    bool startKeyFrame(std::shared_ptr<JointSelection> selectedJoints);
+    bool progressToNextSection(std::shared_ptr<JointSelection> const& selectedJoints);
+    void continueCurrentSection(std::shared_ptr<JointSelection> const& selectedJoints);
+    bool startKeyFrame(std::shared_ptr<JointSelection> const& selectedJoints);
 
     enum class Section : uchar { PRE = 1, MAIN = 2, POST = 3, PAUSE = 4 };
     enum class FinishSpeed : uchar { ZERO = 1, NON_ZERO = 2 };

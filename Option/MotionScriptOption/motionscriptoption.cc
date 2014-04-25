@@ -10,7 +10,7 @@ using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName, bool ifNotFinalPose)
+MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::string const& fileName, bool ifNotFinalPose)
 : Option(id, "MotionScript"),
   d_motionScriptModule(motionScriptModule),
   d_runner(),
@@ -23,7 +23,7 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
     throw runtime_error("File not found");
 }
 
-MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script, bool ifNotFinalPose)
+MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::shared_ptr<MotionScript const> const& script, bool ifNotFinalPose)
 : Option(id, "MotionScript"),
   d_motionScriptModule(motionScriptModule),
   d_script(script),

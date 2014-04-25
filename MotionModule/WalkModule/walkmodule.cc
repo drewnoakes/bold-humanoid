@@ -115,7 +115,7 @@ void WalkModule::stopImmediately()
   d_immediateStopRequested = true;
 }
 
-void WalkModule::step(std::shared_ptr<JointSelection> selectedJoints)
+void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
   ASSERT(d_stabilisationCyclesRemaining >= 0);

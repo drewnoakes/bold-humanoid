@@ -18,9 +18,9 @@ namespace bold
   class MotionScriptOption : public Option
   {
   public:
-    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::string const& fileName, bool ifNotFinalPose = false);
+    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::string const& fileName, bool ifNotFinalPose = false);
 
-    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> motionScriptModule, std::shared_ptr<MotionScript const> script, bool ifNotFinalPose = false);
+    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::shared_ptr<MotionScript const> const& script, bool ifNotFinalPose = false);
 
     /// Returns a truthy value when the script has completed execution.
     virtual double hasTerminated() override;

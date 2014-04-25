@@ -26,7 +26,7 @@ namespace bold
     friend class MotionTaskScheduler;
 
   public:
-    MotionModule(std::string const& type, std::shared_ptr<MotionTaskScheduler> scheduler)
+    MotionModule(std::string const& type, std::shared_ptr<MotionTaskScheduler> const& scheduler)
     : d_scheduler(scheduler),
       d_name(type),
       d_isCompleted(false)
@@ -45,7 +45,7 @@ namespace bold
      * @param selectedJoints indicates which body sections and joints may be
      *                       controlled.
      */
-    virtual void step(std::shared_ptr<JointSelection> selectedJoints) = 0;
+    virtual void step(std::shared_ptr<JointSelection> const& selectedJoints) = 0;
 
     std::shared_ptr<MotionTaskScheduler> getScheduler() const { return d_scheduler; }
 

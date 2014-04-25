@@ -60,13 +60,13 @@ MotionLoop::~MotionLoop()
     stop();
 }
 
-void MotionLoop::addModule(shared_ptr<MotionModule> module)
+void MotionLoop::addModule(shared_ptr<MotionModule> const& module)
 {
   ASSERT(module);
   d_modules.push_back(module);
 }
 
-void MotionLoop::removeModule(shared_ptr<MotionModule> module)
+void MotionLoop::removeModule(shared_ptr<MotionModule>const& module)
 {
   ASSERT(module);
   d_modules.remove(module);

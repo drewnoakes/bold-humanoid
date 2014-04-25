@@ -16,13 +16,14 @@ namespace bold
   class HeadModule : public MotionModule
   {
   public:
-    HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler);
+    HeadModule(std::shared_ptr<MotionTaskScheduler> const& scheduler);
     ~HeadModule() override = default;
 
     HeadModule(const HeadModule&) = delete;
     HeadModule& operator=(const HeadModule&) = delete;
 
-    void step(std::shared_ptr<JointSelection> selectedJoints) override;
+    void step(std::shared_ptr<JointSelection> const& selectedJoints) override;
+
     void applyHead(HeadSection* head) override;
     void applyArms(ArmSection* arms) override;
     void applyLegs(LegSection* legs) override;
