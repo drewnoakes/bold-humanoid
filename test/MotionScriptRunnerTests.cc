@@ -38,7 +38,6 @@ TEST (DISABLED_MotionScriptRunnerTests, basics)
   ThreadUtil::setThreadId(ThreadId::MotionLoop);
 
   // TODO convenience method for populating a basic HardwareState object
-  State::registerStateType<HardwareState>("Hardware");
   auto cm730State = make_unique<CM730Snapshot const>();
   auto mx28States = vector<unique_ptr<MX28Snapshot const>>();
   for (uchar id = 0; id < 20; id++) {

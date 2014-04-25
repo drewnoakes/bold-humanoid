@@ -14,16 +14,7 @@ using namespace std;
 
 // NOTE these tests ensure the same threading characteristics on development and production environments
 
-class StateTests : public ::testing::Test
-{
-protected:
-  static void SetUpTestCase()
-  {
-    State::registerStateType<MotionTimingState>("MotionTiming");
-  }
-};
-
-TEST_F (StateTests, threadedAccess)
+TEST (StateTests, threadedAccess)
 {
   int loopCount = 50000;
 
@@ -60,7 +51,7 @@ TEST_F (StateTests, threadedAccess)
   EXPECT_TRUE(seenState);
 }
 
-TEST_F (StateTests, setAndGet)
+TEST (StateTests, setAndGet)
 {
   auto eventTimings = make_shared<vector<EventTiming>>();
   eventTimings->emplace_back(0.1, "Event 1");

@@ -4,9 +4,10 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include "../util/log.hh"
-#include "../State/state.hh"
+#include "../Agent/agent.hh"
 #include "../Config/config.hh"
+#include "../State/state.hh"
+#include "../util/log.hh"
 
 using namespace Eigen;
 using namespace bold;
@@ -51,6 +52,8 @@ int main(int argc, char **argv)
   }
 
   State::initialise();
+
+  Agent::registerStateTypes();
 
   Config::initialise("../configuration-metadata.json", "../configuration-team.json");
 

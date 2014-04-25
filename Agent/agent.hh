@@ -46,6 +46,8 @@ namespace bold
   class Agent
   {
   public:
+    static void registerStateTypes();
+
     Agent();
 
     std::shared_ptr<Camera> getCamera() const { return d_camera; }
@@ -138,8 +140,6 @@ namespace bold
     Clock::Timestamp d_startTime;
 
     void initCamera();
-
-    void registerStateTypes();
 
     void think();
   };
