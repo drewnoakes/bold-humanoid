@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <mutex>
 
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 
@@ -42,6 +43,7 @@ namespace bold
   private:
     std::vector<std::shared_ptr<MotionTask>> d_tasks;
     std::vector<MotionModule*> d_modules;
+    std::mutex d_mutex;
     bool d_hasChange;
   };
 }

@@ -21,7 +21,7 @@ void MotionTaskScheduler::add(MotionModule* module,
                               Priority armsPriority, bool requestCommitArms,
                               Priority legsPriority, bool requestCommitLegs)
 {
-  ASSERT(ThreadUtil::isThinkLoopThread());
+  lock_guard<mutex> guard(d_mutex);
 
   auto handleSection = [this,module](SectionId section, Priority priority, bool requestCommit)
   {
@@ -39,6 +39,8 @@ void MotionTaskScheduler::add(MotionModule* module,
 void MotionTaskScheduler::update()
 {
   ASSERT(ThreadUtil::isThinkLoopThread());
+
+  lock_guard<mutex> guard(d_mutex);
 
   // Remove committed tasks for motion modules that have completed
   for (MotionModule* module : d_modules)
