@@ -45,7 +45,7 @@ namespace bold
      */
     void stopImmediately();
 
-    bool isRunning() const { return d_status != WalkStatus::Stopped; }
+    bool isRunning() const { return !d_immediateStopRequested && d_status != WalkStatus::Stopped; }
 
     WalkStatus getStatus() const { return d_status; }
 
@@ -86,6 +86,7 @@ namespace bold
 
     bool d_turnAngleSet;
     bool d_moveDirSet;
+    bool d_immediateStopRequested;
     WalkStatus d_status;
   };
 }

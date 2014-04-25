@@ -40,6 +40,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_fwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.fwd-acc-hip-pitch-factor")),
   d_turnAngleSet(false),
   d_moveDirSet(false),
+  d_immediateStopRequested(false),
   d_status(WalkStatus::Stopped)
 {
   Config::getSetting<double>("walk-module.x-amp-delta")->track([this](double value) { d_xAmp.setDelta(value); });
@@ -111,20 +112,7 @@ void WalkModule::stopImmediately()
   if (d_status == WalkStatus::Stopped)
     return;
 
-  // Hard set everything to zero
-  d_xAmp.reset();
-  d_yAmp.reset();
-  d_turnAmp.reset();
-  d_status = WalkStatus::Stopped;
-
-  // Indicate we no longer need to be committed
-  setCompletedFlag();
-
-  State::make<WalkState>(
-    d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(),
-    0, 0, 0,
-    this,
-    d_walkEngine);
+  d_immediateStopRequested = true;
 }
 
 void WalkModule::step(std::shared_ptr<JointSelection> selectedJoints)
@@ -134,6 +122,23 @@ void WalkModule::step(std::shared_ptr<JointSelection> selectedJoints)
 
   if (d_status == WalkStatus::Stopped)
     return;
+
+  if (d_immediateStopRequested)
+  {
+    // Hard set everything to zero
+    d_xAmp.reset();
+    d_yAmp.reset();
+    d_turnAmp.reset();
+    d_status = WalkStatus::Stopped;
+    d_immediateStopRequested = false;
+
+    // Indicate we no longer need to be committed
+    setCompletedFlag();
+
+    State::make<WalkState>(0, 0, 0, 0, 0, 0, this, d_walkEngine);
+
+    return;
+  }
 
   if (d_status == WalkStatus::Starting)
   {
