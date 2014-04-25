@@ -14,7 +14,9 @@ namespace bold
   class MotionScriptModule : public MotionModule
   {
   public:
-    MotionScriptModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
+    static void createActions(std::string const& path, std::shared_ptr<MotionScriptModule> const& module);
+
+    MotionScriptModule(std::shared_ptr<MotionTaskScheduler> scheduler);
     ~MotionScriptModule() override = default;
 
     void step(std::shared_ptr<JointSelection> const& selectedJoints) override;

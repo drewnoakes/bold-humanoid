@@ -10,9 +10,10 @@
 using namespace bold;
 using namespace std;
 
-MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler, vector<shared_ptr<MotionScript>> scripts)
-: MotionModule("motion-script", scheduler)
+void MotionScriptModule::createActions(string const& path, shared_ptr<MotionScriptModule> const& module)
 {
+  vector<shared_ptr<MotionScript>> scripts = MotionScript::loadAllInPath(path);
+
   // Sort scripts alphabetically by name
   sort(scripts.begin(), scripts.end(),
       [](shared_ptr<MotionScript> const& a, shared_ptr<MotionScript> const& b) -> bool
@@ -24,10 +25,17 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
   {
     stringstream id;
     id << "motion-script." << script->getName();
-    Config::addAction(id.str(), script->getName(), [this,script]() { start(make_shared<MotionScriptRunner>(script)); });
+    Config::addAction(id.str(), script->getName(), [module,script]() { module->start(make_shared<MotionScriptRunner>(script)); });
   }
+
   log::info("MotionScriptModule::MotionScriptModule") << "Loaded " << scripts.size() << " motion scripts";
 }
+
+//////////////////////////////////////////////////////////////////////////////
+
+MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler)
+: MotionModule("motion-script", scheduler)
+{}
 
 bool MotionScriptModule::isRunning()
 {

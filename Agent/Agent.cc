@@ -18,8 +18,6 @@ Agent::Agent()
   d_voice = make_shared<Voice>();
   d_behaviourControl = make_shared<BehaviourControl>(*this);
 
-  vector<shared_ptr<MotionScript>> motionScripts = MotionScript::loadAllInPath("./motionscripts");
-
   registerStateTypes();
 
   auto debugControl = make_shared<DebugControl>();
@@ -31,7 +29,9 @@ Agent::Agent()
   // Create motion modules
   d_headModule = make_shared<HeadModule>(d_motionSchedule);
   d_walkModule = make_shared<WalkModule>(d_motionSchedule);
-  d_motionScriptModule = make_shared<MotionScriptModule>(d_motionSchedule, motionScripts);
+  d_motionScriptModule = make_shared<MotionScriptModule>(d_motionSchedule);
+
+  MotionScriptModule::createActions("./motionscripts", d_motionScriptModule);
 
   // Create StateObservers
   d_vocaliser = make_shared<Vocaliser>(d_voice);
