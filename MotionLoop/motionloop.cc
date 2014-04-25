@@ -63,12 +63,12 @@ MotionLoop::~MotionLoop()
 void MotionLoop::addModule(shared_ptr<MotionModule> module)
 {
   ASSERT(module);
-
   d_modules.push_back(module);
 }
 
 void MotionLoop::removeModule(shared_ptr<MotionModule> module)
 {
+  ASSERT(module);
   d_modules.remove(module);
 }
 
