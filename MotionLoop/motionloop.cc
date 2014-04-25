@@ -64,9 +64,6 @@ void MotionLoop::addModule(shared_ptr<MotionModule> module)
 {
   ASSERT(module);
 
-  // Initialise modules each time they are added
-  module->initialize();
-
   d_modules.push_back(module);
 }
 

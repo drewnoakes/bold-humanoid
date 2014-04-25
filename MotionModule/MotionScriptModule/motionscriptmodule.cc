@@ -29,12 +29,6 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
   log::info("MotionScriptModule::MotionScriptModule") << "Loaded " << scripts.size() << " motion scripts";
 }
 
-void MotionScriptModule::initialize()
-{
-  // TODO is this necessary?
-  d_runner = nullptr;
-}
-
 bool MotionScriptModule::isRunning()
 {
   return d_runner && d_runner->getState() != MotionScriptRunnerState::Finished;

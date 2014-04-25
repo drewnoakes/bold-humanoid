@@ -22,7 +22,6 @@ namespace bold
     HeadModule(const HeadModule&) = delete;
     HeadModule& operator=(const HeadModule&) = delete;
 
-    void initialize() override;
     void step(std::shared_ptr<JointSelection> selectedJoints) override;
     void applyHead(HeadSection* head) override;
     void applyArms(ArmSection* arms) override;

@@ -18,8 +18,6 @@ namespace bold
     MotionScriptModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
     ~MotionScriptModule() override = default;
 
-    void initialize() override;
-
     void step(std::shared_ptr<JointSelection> selectedJoints) override;
 
     void applyHead(HeadSection* head) override;

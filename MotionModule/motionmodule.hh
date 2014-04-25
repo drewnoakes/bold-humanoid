@@ -42,9 +42,6 @@ namespace bold
 
     std::string getName() const { return d_name; }
 
-    /** Called once, when the module is added to the MotionLoop. */
-    virtual void initialize() = 0;
-
     /** Updates the position.
      *
      * @param selectedJoints indicates which body sections and joints may be
