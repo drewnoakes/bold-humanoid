@@ -181,14 +181,14 @@ void *MotionLoop::threadMethod(void *param)
 
   if (!loop->d_haveBody)
   {
-    log::warning("MotionLoop::start") << "Motion loop running without a body";
+    log::warning("MotionLoop::threadMethod") << "Motion loop running without a body";
   }
   else
   {
     if (!loop->d_cm730->powerEnable(true))
-      log::error("MotionLoop::start") << "Error enabling power";
+      log::error("MotionLoop::threadMethod") << "Error enabling power";
     if (!loop->d_cm730->torqueEnable(true))
-      log::error("MotionLoop::start") << "Error enabling torque";
+      log::error("MotionLoop::threadMethod") << "Error enabling torque";
   }
 
   static struct timespec next_time;
