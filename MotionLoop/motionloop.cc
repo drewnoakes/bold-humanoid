@@ -211,6 +211,9 @@ void *MotionLoop::threadMethod(void *param)
     State::make<MotionTimingState>(t.flush(), loop->d_cycleNumber);
   }
 
+  // Destroy the CM730 object on the motion thread
+  loop->d_cm730.reset();
+
   log::verbose("MotionLoop::threadMethod") << "Exiting";
 
   pthread_exit(NULL);
