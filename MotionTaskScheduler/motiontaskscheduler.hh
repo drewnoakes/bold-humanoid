@@ -28,8 +28,7 @@ namespace bold
      *
      * Overall, the highest priority task per body section will be selected.
      * If the task has a commit request and is selected, it will be set
-     * as committed until the corresponding MotionModule::step function
-     * returns false.
+     * as committed until the corresponding MotionModule clears the committed flag.
      */
     void add(MotionModule* module,
              Priority headPriority, bool requestCommitHead,
