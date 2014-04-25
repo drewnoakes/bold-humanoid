@@ -77,6 +77,7 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
   }
   else
   {
+    writer.String("state").String(MotionScriptRunner::getStateName(d_runner->getState()).c_str());
     if (d_runner->getState() == MotionScriptRunnerState::Finished)
       d_hasTerminated = true;
   }
