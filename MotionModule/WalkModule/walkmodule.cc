@@ -64,13 +64,7 @@ void WalkModule::setMoveDir(double x, double y)
   d_yAmp.setTarget(y);
 
   if (d_status == WalkStatus::Stopped)
-  {
-    d_status = WalkStatus::Starting;
-    getScheduler()->add(this,
-                        Priority::Low,  false, // HEAD (interruptable)
-                        Priority::High, true,  // ARMS (committed)
-                        Priority::High, true); // LEGS (committed)
-  }
+    start();
 }
 
 void WalkModule::setTurnAngle(double turnAngle)
@@ -88,13 +82,16 @@ void WalkModule::setTurnAngle(double turnAngle)
   d_turnAmp.setTarget(turnAngle);
 
   if (d_status == WalkStatus::Stopped)
-  {
-    d_status = WalkStatus::Starting;
-    getScheduler()->add(this,
-                        Priority::Low,  false, // HEAD (interruptable)
-                        Priority::High, true,  // ARMS (committed)
-                        Priority::High, true); // LEGS (committed)
-  }
+    start();
+}
+
+void WalkModule::start()
+{
+  d_status = WalkStatus::Starting;
+  getScheduler()->add(this,
+                      Priority::Low,  false, // HEAD (interruptable)
+                      Priority::High, true,  // ARMS (committed)
+                      Priority::High, true); // LEGS (committed)
 }
 
 void WalkModule::stop()

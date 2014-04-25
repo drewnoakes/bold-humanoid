@@ -67,6 +67,8 @@ namespace bold
     WalkModule(const WalkModule&) = delete;
     WalkModule& operator=(const WalkModule&) = delete;
 
+    void start();
+
     std::shared_ptr<WalkEngine> d_walkEngine;
 
     Setting<int>* d_stabilisationTimeMillis;
