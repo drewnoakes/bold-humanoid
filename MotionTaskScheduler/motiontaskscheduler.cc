@@ -168,6 +168,8 @@ void MotionTaskScheduler::sortTasks(vector<shared_ptr<MotionTask>>& tasks)
     }
   );
 
+#ifdef INCLUDE_ASSERTIONS
+  // Ensure we never end up with more than one committed task
   for (unsigned i = 1; i < tasks.size(); i++)
   {
     if (tasks[i]->isCommitted())
@@ -176,4 +178,5 @@ void MotionTaskScheduler::sortTasks(vector<shared_ptr<MotionTask>>& tasks)
       throw runtime_error("Task other than first committed");
     }
   }
+#endif
 }
