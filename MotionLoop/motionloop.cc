@@ -207,8 +207,6 @@ void *MotionLoop::threadMethod(void *param)
   {
     if (!loop->d_cm730->torqueEnable(false))
       log::error("MotionLoop::threadMethod") << "Error disabling torque";
-    if (!loop->d_cm730->powerEnable(false))
-      log::error("MotionLoop::threadMethod") << "Error disabling power";
   }
 
   // Destroy the CM730 object on the motion thread
