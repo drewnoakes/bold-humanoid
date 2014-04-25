@@ -46,9 +46,6 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler)
   Config::addAction("head-module.move-zero", "zero",                 [this]() { moveToDegs(0, 0); });
 }
 
-HeadModule::~HeadModule()
-{}
-
 void HeadModule::checkLimit()
 {
   // Clamp pan/tilt within the box-shaped limit

@@ -29,9 +29,6 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
   log::info("MotionScriptModule::MotionScriptModule") << "Loaded " << scripts.size() << " motion scripts";
 }
 
-MotionScriptModule::~MotionScriptModule()
-{}
-
 void MotionScriptModule::initialize()
 {
   // TODO is this necessary?

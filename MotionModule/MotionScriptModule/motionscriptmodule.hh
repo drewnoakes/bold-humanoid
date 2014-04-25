@@ -16,7 +16,7 @@ namespace bold
   {
   public:
     MotionScriptModule(std::shared_ptr<MotionTaskScheduler> scheduler, std::vector<std::shared_ptr<MotionScript>> scripts);
-    ~MotionScriptModule() override;
+    ~MotionScriptModule() override = default;
 
     void initialize() override;
 

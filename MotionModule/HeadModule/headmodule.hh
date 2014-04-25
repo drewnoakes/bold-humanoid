@@ -17,7 +17,7 @@ namespace bold
   {
   public:
     HeadModule(std::shared_ptr<MotionTaskScheduler> scheduler);
-    ~HeadModule() override;
+    ~HeadModule() override = default;
 
     HeadModule(const HeadModule&) = delete;
     HeadModule& operator=(const HeadModule&) = delete;
