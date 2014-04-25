@@ -11,9 +11,9 @@ namespace bold
   {
   public:
     WalkState(double targetX, double targetY, double targetTurn,
-                   double lastXDelta, double lastYDelta, double lastTurnDelta,
-                   WalkModule* walkModule,
-                   std::shared_ptr<WalkEngine> walkEngine);
+              double lastXDelta, double lastYDelta, double lastTurnDelta,
+              WalkModule* walkModule,
+              std::shared_ptr<WalkEngine> walkEngine);
 
     // From walk module
 
