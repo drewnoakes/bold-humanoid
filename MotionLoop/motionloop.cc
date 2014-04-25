@@ -157,14 +157,6 @@ void MotionLoop::stop()
 
   log::info("MotionLoop::stop") << "Stopped";
 
-  if (d_haveBody)
-  {
-    if (!d_cm730->powerEnable(false))
-      log::error("MotionLoop::start") << "Error disabling power";
-    if (!d_cm730->torqueEnable(false))
-      log::error("MotionLoop::start") << "Error disabling torque";
-  }
-
   d_isStopRequested = false;
   d_isStarted = false;
 }
@@ -209,6 +201,14 @@ void *MotionLoop::threadMethod(void *param)
 
     // Set timing data for the motion cycle
     State::make<MotionTimingState>(t.flush(), loop->d_cycleNumber);
+  }
+
+  if (loop->d_haveBody)
+  {
+    if (!loop->d_cm730->powerEnable(false))
+      log::error("MotionLoop::threadMethod") << "Error disabling power";
+    if (!loop->d_cm730->torqueEnable(false))
+      log::error("MotionLoop::threadMethod") << "Error disabling torque";
   }
 
   // Destroy the CM730 object on the motion thread
