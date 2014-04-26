@@ -48,33 +48,6 @@ HeadModule::HeadModule(std::shared_ptr<MotionTaskScheduler> const& scheduler)
   initTracking();
 }
 
-void HeadModule::checkLimit()
-{
-  // Clamp pan/tilt within the box-shaped limit
-  d_targetPanAngleDegs = d_limitPanDegs->getValue().clamp(d_targetPanAngleDegs);
-  d_targetTiltAngleDegs = d_limitTiltDegs->getValue().clamp(d_targetTiltAngleDegs);
-
-  // Lower corners of that box are disallowed as the head makes contact with the
-  // shoulder, and the body occludes too much from the camera anyway.
-  //
-  //  -135           135
-  //
-  //     \           /  10
-  //      \         /
-  //       \_______/    -22
-  //
-  //      -85     85
-
-  if (fabs(d_targetPanAngleDegs) > Math::degToRad(85))
-  {
-    // Outside of +/- 85 degrees, we need to prevent tilting too far down.
-    // At 85 deg, we start tilting upwards to avoid the shoulder.
-    double limit = Math::lerp(fabs(d_targetPanAngleDegs), 85, 135, -22, 10);
-    if (d_targetTiltAngleDegs < limit)
-      d_targetTiltAngleDegs = limit;
-  }
-}
-
 void HeadModule::moveToHome()
 {
   moveToDegs(d_panHomeDegs->getValue(), d_tiltHomeDegs->getValue());
@@ -89,8 +62,6 @@ void HeadModule::moveToDegs(double pan, double tilt)
                       Priority::Normal, false,  // HEAD   Interuptable::YES
                       Priority::None,   false,  // ARMS
                       Priority::None,   false); // LEGS
-
-  checkLimit();
 }
 
 void HeadModule::moveByDeltaDegs(double panDelta, double tiltDelta)
@@ -145,8 +116,6 @@ void HeadModule::moveTracking(double panError, double tiltError)
                       Priority::Normal, false,  // HEAD   Interuptable::YES
                       Priority::None,   false,  // ARMS
                       Priority::None,   false); // LEGS
-
-  checkLimit();
 }
 
 void HeadModule::step(shared_ptr<JointSelection> const& selectedJoints)
@@ -157,11 +126,39 @@ void HeadModule::step(shared_ptr<JointSelection> const& selectedJoints)
 
 void HeadModule::applyHead(HeadSection* head)
 {
+  // TODO move this bounds-checking lower down in the stack so that it applies to all motion modules
+
+  // Clamp pan/tilt within the box-shaped limit
+  double panDegs = d_limitPanDegs->getValue().clamp(d_targetPanAngleDegs);
+  double tiltDegs = d_limitTiltDegs->getValue().clamp(d_targetTiltAngleDegs);
+
+  // Lower corners of that box are disallowed as the head makes contact with the
+  // shoulder, and the body occludes too much from the camera anyway.
+  //
+  //  -135           135
+  //
+  //     \           /  10
+  //      \         /
+  //       \_______/    -22
+  //
+  //      -85     85
+
+  if (fabs(panDegs) > Math::degToRad(85))
+  {
+    // Outside of +/- 85 degrees, we need to prevent tilting too far down.
+    // At 85 deg, we start tilting upwards to avoid the shoulder.
+    double limit = Math::lerp(fabs(panDegs), 85, 135, -22, 10);
+    if (tiltDegs < limit)
+      tiltDegs = limit;
+  }
+
+  // Set motor gains
   auto gainP = d_gainP->getValue();
   head->visitJoints([this,gainP](JointControl* joint) { joint->setPGain(gainP); });
 
-  head->pan()->setDegrees(d_targetPanAngleDegs);
-  head->tilt()->setDegrees(d_targetTiltAngleDegs);
+  // Set motor positions
+  head->pan()->setDegrees(panDegs);
+  head->tilt()->setDegrees(tiltDegs);
 }
 
 void HeadModule::applyArms(ArmSection* arms) { log::error("HeadModule::applyArms") << "SHOULD NOT BE CALLED"; }
