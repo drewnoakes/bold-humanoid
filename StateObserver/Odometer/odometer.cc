@@ -19,7 +19,6 @@ Odometer::Odometer(shared_ptr<WalkModule> walkModule)
 {
   ASSERT(walkModule);
   State::make<OdometryState>(d_transform);
-  State::make<OdometryState>(d_progress);
 
   Config::addAction("odometer.reset", "Reset odometer", [this]()
   {
