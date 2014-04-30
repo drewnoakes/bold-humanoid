@@ -89,9 +89,9 @@ void WalkModule::start()
 {
   d_status = WalkStatus::Starting;
   getScheduler()->add(this,
-                      Priority::Low,  false, // HEAD (interruptable)
-                      Priority::High, true,  // ARMS (committed)
-                      Priority::High, true); // LEGS (committed)
+                      Priority::Low,  Required::No,  RequestCommit::No,   // HEAD
+                      Priority::High, Required::Yes, RequestCommit::Yes,  // ARMS
+                      Priority::High, Required::Yes, RequestCommit::Yes); // LEGS
 }
 
 void WalkModule::stop()

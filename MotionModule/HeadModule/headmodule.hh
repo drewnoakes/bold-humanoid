@@ -64,6 +64,8 @@ namespace bold
     void moveTracking(double panError, double tiltError);
 
   private:
+    void scheduleMotion();
+
     Setting<Range<double>>* d_limitPanDegs;
     Setting<Range<double>>* d_limitTiltDegs;
 

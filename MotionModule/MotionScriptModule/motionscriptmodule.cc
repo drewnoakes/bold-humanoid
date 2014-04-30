@@ -84,9 +84,9 @@ bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> const& scriptRunne
   // NOTE currently we assume that motion scripts control all body parts
 
   getScheduler()->add(this,
-                      Priority::Low,  scriptRunner->getScript()->getControlsHead(),  // HEAD   Interuptable::YES
-                      Priority::High, scriptRunner->getScript()->getControlsArms(),  // ARMS
-                      Priority::High, scriptRunner->getScript()->getControlsLegs()); // LEGS
+                      Priority::Low,  Required::No,  scriptRunner->getScript()->getControlsHead() ? RequestCommit::Yes : RequestCommit::No,  // HEAD
+                      Priority::High, Required::Yes, scriptRunner->getScript()->getControlsArms() ? RequestCommit::Yes : RequestCommit::No,  // ARMS
+                      Priority::High, Required::Yes, scriptRunner->getScript()->getControlsLegs() ? RequestCommit::Yes : RequestCommit::No); // LEGS
 
   return true;
 }

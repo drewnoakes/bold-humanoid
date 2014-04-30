@@ -53,18 +53,22 @@ using namespace std;
 
 void MotionTaskState::writeJson(Writer<StringBuffer>& writer) const
 {
-  auto writeSection = [&](string name, vector<shared_ptr<MotionTask>> const& tasks)
+  auto writeSection = [this,&writer](string name, SectionId section, shared_ptr<MotionTask> const& selected)
   {
     writer.String(name.c_str());
     writer.StartArray();
     {
-      for (shared_ptr<MotionTask> const& task : tasks)
+      for (shared_ptr<MotionTask> const& task : d_allTasks)
       {
+        if (task->getSection() != section)
+          continue;
+
         writer.StartObject();
         {
           writer.String("module").String(task->getModule()->getName().c_str());
           writer.String("priority").Int((int)task->getPriority());
           writer.String("committed").Bool(task->isCommitted());
+          writer.String("selected").Bool(task == selected);
         }
         writer.EndObject();
       }
@@ -74,9 +78,9 @@ void MotionTaskState::writeJson(Writer<StringBuffer>& writer) const
 
   writer.StartObject();
   {
-    writeSection("head", d_headTasks);
-    writeSection("arms", d_armTasks);
-    writeSection("legs", d_legTasks);
+    writeSection("head", SectionId::Head, d_headTask);
+    writeSection("arms", SectionId::Arms, d_armsTask);
+    writeSection("legs", SectionId::Legs, d_legsTask);
   }
   writer.EndObject();
 }

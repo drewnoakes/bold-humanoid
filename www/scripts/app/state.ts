@@ -160,6 +160,7 @@ export interface BodySectionTaskData
     module: string;
     priority: number; // TODO is this an enum?
     committed: boolean;
+    selected: boolean;
 }
 
 export interface MotionTask

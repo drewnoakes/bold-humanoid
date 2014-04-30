@@ -58,10 +58,7 @@ void HeadModule::moveToDegs(double pan, double tilt)
   d_targetPanAngleDegs = pan;
   d_targetTiltAngleDegs = tilt;
 
-  getScheduler()->add(this,
-                      Priority::Normal, false,  // HEAD   Interuptable::YES
-                      Priority::None,   false,  // ARMS
-                      Priority::None,   false); // LEGS
+  scheduleMotion();
 }
 
 void HeadModule::moveByDeltaDegs(double panDelta, double tiltDelta)
@@ -112,10 +109,15 @@ void HeadModule::moveTracking(double panError, double tiltError)
     calcPIDOffset(tiltError, d_integratedTiltError, tiltErrorDelta,
                   d_tiltGainP->getValue(), d_tiltGainI->getValue(), d_tiltGainD->getValue());
 
+  scheduleMotion();
+}
+
+void HeadModule::scheduleMotion()
+{
   getScheduler()->add(this,
-                      Priority::Normal, false,  // HEAD   Interuptable::YES
-                      Priority::None,   false,  // ARMS
-                      Priority::None,   false); // LEGS
+                      Priority::Normal, Required::No, RequestCommit::No,  // HEAD
+                      Priority::None,   Required::No, RequestCommit::No,  // ARMS
+                      Priority::None,   Required::No, RequestCommit::No); // LEGS
 }
 
 void HeadModule::step(shared_ptr<JointSelection> const& selectedJoints)

@@ -16,14 +16,16 @@ namespace bold
   public:
     MotionTaskState(
       std::shared_ptr<std::vector<std::pair<MotionModule*, std::shared_ptr<JointSelection>>>> moduleJointSelection,
-      std::vector<std::shared_ptr<MotionTask>> headTasks,
-      std::vector<std::shared_ptr<MotionTask>> armTasks,
-      std::vector<std::shared_ptr<MotionTask>> legTasks
+      std::shared_ptr<MotionTask> headTask,
+      std::shared_ptr<MotionTask> armsTask,
+      std::shared_ptr<MotionTask> legsTask,
+      std::vector<std::shared_ptr<MotionTask>> allTasks
     )
     : d_moduleJointSelection(moduleJointSelection),
-      d_headTasks(headTasks),
-      d_armTasks(armTasks),
-      d_legTasks(legTasks)
+      d_headTask(headTask),
+      d_armsTask(armsTask),
+      d_legsTask(legsTask),
+      d_allTasks(allTasks)
     {
       ASSERT(ThreadUtil::isThinkLoopThread());
     }
@@ -37,8 +39,9 @@ namespace bold
 
   private:
     std::shared_ptr<std::vector<std::pair<MotionModule*, std::shared_ptr<JointSelection>>>> d_moduleJointSelection;
-    std::vector<std::shared_ptr<MotionTask>> d_headTasks;
-    std::vector<std::shared_ptr<MotionTask>> d_armTasks;
-    std::vector<std::shared_ptr<MotionTask>> d_legTasks;
+    std::shared_ptr<MotionTask> d_headTask;
+    std::shared_ptr<MotionTask> d_armsTask;
+    std::shared_ptr<MotionTask> d_legsTask;
+    std::vector<std::shared_ptr<MotionTask>> d_allTasks;
   };
 }
