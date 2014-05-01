@@ -139,17 +139,28 @@ TEST (CppTests, swappingSharedPointers)
 
 TEST (CppTests, vectorEraseRemove)
 {
-  vector<int> vec = {1, 2, 3, 3, 3, 4};
+  // See http://en.wikipedia.org/wiki/Erase-remove_idiom
 
-  auto it = vec.erase(
-    remove_if(
-      vec.begin(), vec.end(),
-      [](int i) { return i == 3;}
-    ),
-    vec.end()
+  vector<int> vec = {1, 2, 3, 3, 4, 3};
+
+  auto it1 = remove_if(
+    vec.begin(), vec.end(),
+    [](int i) { return i == 3;}
   );
 
-  EXPECT_EQ( 3, *it );
+  EXPECT_EQ( 6, vec.size() );
+  EXPECT_EQ( 1, vec[0] );
+  EXPECT_EQ( 2, vec[1] );
+  EXPECT_EQ( 4, vec[2] ); // NOTE 4 moved forwards
+  EXPECT_EQ( 3, vec[3] );
+  EXPECT_EQ( 4, vec[4] ); // NOTE 4 still exists in this position
+  EXPECT_EQ( 3, vec[5] );
+
+  EXPECT_EQ ( &(*it1), vec.data() + 3 ); // points to start of data to remove
+
+  auto it2 = vec.erase(it1, vec.end());
+
+  EXPECT_EQ( vec.end(), it2 );
 
   EXPECT_EQ( 3, vec.size() );
   EXPECT_EQ( 1, vec[0] );
