@@ -99,6 +99,8 @@ namespace bold
     std::shared_ptr<MotionTask const> getArmsTask() const { return d_armsTask; }
     std::shared_ptr<MotionTask const> getLegsTask() const { return d_legsTask; }
 
+    bool hasCompleted() const;
+
   protected:
     void setSectionTask(SectionId section, std::shared_ptr<MotionTask> const& task);
 

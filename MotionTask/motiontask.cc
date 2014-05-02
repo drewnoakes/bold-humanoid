@@ -115,3 +115,9 @@ MotionRequestStatus MotionRequest::getStatus() const
   // Otherwise, we must be complete
   return MotionRequestStatus::Completed;
 }
+
+bool MotionRequest::hasCompleted() const
+{
+  auto status = getStatus();
+  return status == MotionRequestStatus::Completed || status == MotionRequestStatus::Ignored;
+}
