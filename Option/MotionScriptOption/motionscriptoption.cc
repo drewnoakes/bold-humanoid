@@ -19,7 +19,10 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
   d_script = MotionScript::fromFile(fileName);
 
   if (!d_script)
+  {
+    log::error("MotionScriptOption::MotionScriptOption") << "Motion script file not found: " << fileName;
     throw runtime_error("File not found");
+  }
 }
 
 double MotionScriptOption::hasTerminated()
