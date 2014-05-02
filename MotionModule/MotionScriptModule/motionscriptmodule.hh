@@ -31,7 +31,7 @@ namespace bold
      * otherwise false indicating that the request to start was ignored due
      * to another script already executing.
      */
-    bool start(std::shared_ptr<MotionScriptRunner> const& scriptRunner);
+    bool run(std::shared_ptr<MotionScriptRunner> const& scriptRunner);
 
     bool isRunning();
 

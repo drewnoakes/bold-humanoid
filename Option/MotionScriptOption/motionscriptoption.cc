@@ -60,7 +60,7 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 
     auto runner = make_shared<MotionScriptRunner>(d_script);
 
-    bool started = d_motionScriptModule->start(runner);
+    bool started = d_motionScriptModule->run(runner);
 
     if (started)
     {

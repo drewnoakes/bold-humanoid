@@ -109,7 +109,7 @@ void RemoteControl::update()
         int maxDelta = MotionScriptRunner::getMaxDeltaFromFinalPose(standReadyScript);
         bool isStanding = abs(maxDelta) < 200;
         if (isStanding)
-          d_motionScriptModule->start(make_shared<MotionScriptRunner>(script));
+          d_motionScriptModule->run(make_shared<MotionScriptRunner>(script));
         else
           log::info("runIfStanding") << "Skipping motion script " << script->getName() << " as not standing, delta " << maxDelta;
       };
@@ -158,7 +158,7 @@ void RemoteControl::update()
 
   // Up/down on D-Pad makes robot stand/sit
   if (axis5 < 0 && !MotionScriptRunner::isInFinalPose(standReadyScript))
-    d_motionScriptModule->start(make_shared<MotionScriptRunner>(standReadyScript));
+    d_motionScriptModule->run(make_shared<MotionScriptRunner>(standReadyScript));
   else if (axis5 > 0 && !MotionScriptRunner::isInFinalPose(sitDownScript))
-    d_motionScriptModule->start(make_shared<MotionScriptRunner>(sitDownScript));
+    d_motionScriptModule->run(make_shared<MotionScriptRunner>(sitDownScript));
 }

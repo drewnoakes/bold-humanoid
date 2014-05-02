@@ -25,7 +25,7 @@ void MotionScriptModule::createActions(string const& path, shared_ptr<MotionScri
   {
     stringstream id;
     id << "motion-script." << script->getName();
-    Config::addAction(id.str(), script->getName(), [module,script]() { module->start(make_shared<MotionScriptRunner>(script)); });
+    Config::addAction(id.str(), script->getName(), [module,script]() { module->run(make_shared<MotionScriptRunner>(script)); });
   }
 
   log::info("MotionScriptModule::MotionScriptModule") << "Loaded " << scripts.size() << " motion scripts";
@@ -65,15 +65,15 @@ void MotionScriptModule::applyHead(HeadSection* head) { if (d_runner) d_runner->
 void MotionScriptModule::applyArms(ArmSection*  arms) { if (d_runner) d_runner->applyArms(arms); }
 void MotionScriptModule::applyLegs(LegSection*  legs) { if (d_runner) d_runner->applyLegs(legs); }
 
-bool MotionScriptModule::start(shared_ptr<MotionScriptRunner> const& scriptRunner)
+bool MotionScriptModule::run(shared_ptr<MotionScriptRunner> const& scriptRunner)
 {
   auto const& script = scriptRunner->getScript();
 
-  log::info("MotionScriptModule::start") << "Starting script " << script->getName();
+  log::verbose("MotionScriptModule::run") << "Request to run script: " << script->getName();
 
   if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
   {
-    log::warning("MotionScriptModule::start") << "Ignoring request to play script " << script->getName()
+    log::warning("MotionScriptModule::run") << "Ignoring request to play script " << script->getName()
         << " -- already playing " << d_runner->getScript()->getName()
         << " in state " << getMotionScriptRunnerStateName(d_runner->getState());
     return false;
