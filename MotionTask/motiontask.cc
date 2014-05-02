@@ -98,7 +98,8 @@ MotionRequestStatus MotionRequest::getStatus() const
     }
   }
 
-  ASSERT(countNotNull != 0 && "Should have at least one non-nullptr MotionTask");
+  if (countNotNull == 0)
+    return MotionRequestStatus::Ignored;
 
   // If any task is pending, then the request is pending
   if (countPending != 0)

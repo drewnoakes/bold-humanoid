@@ -328,3 +328,10 @@ TEST_F (MotionTaskSchedulerTests, addRequiredAtopCommittedOtherBodySection)
   EXPECT_TRUE ( scheduler->getArmTask()->isCommitted() );
   EXPECT_TRUE ( scheduler->getLegTask()->isCommitted() );
 }
+
+TEST(MotionRequestTests, emptyIsIgnored)
+{
+  auto request = make_shared<MotionRequest const>();
+
+  EXPECT_EQ ( MotionRequestStatus::Ignored, request->getStatus() );
+}
