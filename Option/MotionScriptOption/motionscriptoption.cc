@@ -13,7 +13,6 @@ using namespace std;
 MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::string const& fileName, bool ifNotFinalPose)
 : Option(id, "MotionScript"),
   d_motionScriptModule(motionScriptModule),
-  d_runner(),
   d_hasTerminated(false),
   d_ifNotFinalPose(ifNotFinalPose)
 {
