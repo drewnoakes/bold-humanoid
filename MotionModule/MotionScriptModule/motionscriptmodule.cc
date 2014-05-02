@@ -37,7 +37,7 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
 : MotionModule("motion-script", scheduler)
 {}
 
-bool MotionScriptModule::isRunning()
+bool MotionScriptModule::isRunning() const
 {
   return d_runner && d_runner->getState() != MotionScriptRunnerState::Finished;
 }

@@ -41,7 +41,7 @@ namespace bold
      */
     bool run(std::shared_ptr<MotionScript const> const& scriptRunner);
 
-    bool isRunning();
+    bool isRunning() const;
 
   private:
     MotionScriptModule(const MotionScriptModule&) = delete;
