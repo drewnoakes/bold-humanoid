@@ -13,6 +13,17 @@
 using namespace bold;
 using namespace std;
 
+std::string bold::getMotionScriptRunnerStateName(MotionScriptRunnerState const& state)
+{
+  switch (state)
+  {
+    case MotionScriptRunnerState::Pending:  return "Pending";
+    case MotionScriptRunnerState::Running:  return "Running";
+    case MotionScriptRunnerState::Finished: return "Finished";
+    default: return "Unknown";
+  }
+}
+
 MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> const& script)
 : d_script(script),
   d_currentStageIndex(0),

@@ -63,20 +63,11 @@ namespace bold
 
   enum class MotionScriptRunnerState { Pending, Running, Finished };
 
+  std::string getMotionScriptRunnerStateName(MotionScriptRunnerState const& state);
+
   class MotionScriptRunner : public PoseProvider
   {
   public:
-    static std::string getStateName(MotionScriptRunnerState const& state)
-    {
-      switch (state)
-      {
-        case MotionScriptRunnerState::Pending: return "Pending";
-        case MotionScriptRunnerState::Running: return "Running";
-        case MotionScriptRunnerState::Finished: return "Finished";
-        default: return "Unknown";
-      }
-    }
-
     static int getMaxDeltaFromFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead = false, bool includeArms = false);
     static bool isInFinalPose(std::shared_ptr<MotionScript const> const& script, bool includeHead = false, bool includeArms = false, unsigned valueTolerance = 100);
 
