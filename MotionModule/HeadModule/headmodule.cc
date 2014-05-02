@@ -114,10 +114,11 @@ void HeadModule::moveTracking(double panError, double tiltError)
 
 void HeadModule::scheduleMotion()
 {
-  getScheduler()->add(this,
-                      Priority::Normal, Required::No, RequestCommit::No,  // HEAD
-                      Priority::None,   Required::No, RequestCommit::No,  // ARMS
-                      Priority::None,   Required::No, RequestCommit::No); // LEGS
+  getScheduler()->request(
+    this,
+    Priority::Normal, Required::No, RequestCommit::No,  // HEAD
+    Priority::None,   Required::No, RequestCommit::No,  // ARMS
+    Priority::None,   Required::No, RequestCommit::No); // LEGS
 }
 
 void HeadModule::step(shared_ptr<JointSelection> const& selectedJoints)

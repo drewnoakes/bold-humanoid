@@ -4,10 +4,12 @@
 
 #include "../JointId/jointid.hh"
 #include "../util/assert.hh"
+#include "../util/log.hh"
 
 namespace bold
 {
   class MotionModule;
+  class MotionTask;
 
   typedef unsigned char uchar;
 
@@ -30,27 +32,14 @@ namespace bold
     Legs
   };
 
+  //////////////////////////////////////////////////////////////////////////////
+
   /** Models a set of joints.
    */
   class JointSelection
   {
   public:
-    JointSelection(bool head, bool arms, bool legs)
-    : d_head(head),
-      d_arms(arms),
-      d_legs(legs)
-    {
-      bool set = arms;
-      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-      {
-        if (jointId == (int)JointId::LEGS_START)
-          set = legs;
-        else if (jointId == (int)JointId::HEAD_START)
-          set = head;
-
-        d_set[jointId] = set;
-      }
-    }
+    JointSelection(bool head, bool arms, bool legs);
 
     bool const& operator[] (uchar jointId) const { return d_set[jointId]; }
 
@@ -73,6 +62,66 @@ namespace bold
     bool d_legs;
   };
 
+  //////////////////////////////////////////////////////////////////////////////
+
+  enum class MotionRequestStatus
+  {
+    /// Request is queued in the scheduler but has not yet been evaluated for
+    /// selection.
+    Pending,
+
+    /// Request was selected by the scheduler and is executing.
+    Selected,
+
+    /// Request was selected and has since run to completion, either by
+    /// completing its single think cycle of control, or by being committed and
+    /// signaling completion explicitly.
+    Completed,
+
+    /// Request did not succeed in being selected. Another request may have been
+    /// committed, or had higher priority.
+    Ignored
+  };
+
+  std::string getMotionRequestStatusName(MotionRequestStatus status);
+
+  /** Models a request to control one or more body sections by a MotionModule.
+   *
+   * Within this request, different parameters may be selected per body section.
+   */
+  class MotionRequest
+  {
+    friend class MotionTaskScheduler;
+
+  public:
+    MotionRequestStatus getStatus() const;
+    std::shared_ptr<MotionTask const> getHeadTask() const { return d_headTask; }
+    std::shared_ptr<MotionTask const> getArmsTask() const { return d_armsTask; }
+    std::shared_ptr<MotionTask const> getLegsTask() const { return d_legsTask; }
+
+  protected:
+    void setSectionTask(SectionId section, std::shared_ptr<MotionTask> const& task);
+
+  private:
+    std::shared_ptr<MotionTask const> d_headTask;
+    std::shared_ptr<MotionTask const> d_armsTask;
+    std::shared_ptr<MotionTask const> d_legsTask;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  enum class MotionTaskStatus
+  {
+    Pending,
+    Selected,
+    Completed,
+    Ignored
+  };
+
+  std::string getMotionTaskStatusName(MotionTaskStatus status);
+
+  //////////////////////////////////////////////////////////////////////////////
+
   /** Represents a desire to control a body section using a particular motion module.
    *
    * May also request to maintain control of the body section until some later
@@ -84,17 +133,20 @@ namespace bold
   class MotionTask
   {
   public:
-    MotionTask(MotionModule* module, SectionId section, Priority priority, bool isCommitRequested)
-    : d_module(module),
+    MotionTask(std::shared_ptr<MotionRequest> request, MotionModule* module, SectionId section, Priority priority, bool isCommitRequested)
+    : d_request(request),
+      d_module(module),
       d_section(section),
       d_priority(priority),
       d_isCommitRequested(isCommitRequested),
-      d_isCommitted(false)
+      d_isCommitted(false),
+      d_status(MotionTaskStatus::Pending)
     {}
 
     MotionModule* getModule() const { return d_module; }
     SectionId getSection() const { return d_section; }
     Priority getPriority() const { return d_priority; }
+    MotionTaskStatus getStatus() const { return d_status; }
     bool isCommitRequested() const { return d_isCommitRequested; }
     bool isCommitted() const { return d_isCommitted; }
 
@@ -105,11 +157,19 @@ namespace bold
     void clearCommitted() { d_isCommitted = false; }
     void setPriority(Priority priority) { d_priority = priority; }
 
+    void setSelected()  { ASSERT(d_status == MotionTaskStatus::Pending  || d_status == MotionTaskStatus::Selected);  d_status = MotionTaskStatus::Selected; }
+    void setIgnored()   { ASSERT(d_status == MotionTaskStatus::Pending  || d_status == MotionTaskStatus::Ignored);   d_status = MotionTaskStatus::Ignored; }
+    void setCompleted() { ASSERT(d_status == MotionTaskStatus::Selected || d_status == MotionTaskStatus::Completed); d_status = MotionTaskStatus::Completed; }
+
   private:
+    std::shared_ptr<MotionRequest> d_request;
     MotionModule* d_module;
     SectionId d_section;
     Priority d_priority;
     bool d_isCommitRequested;
     bool d_isCommitted;
+    MotionTaskStatus d_status;
   };
 }
+
+std::ostream& operator<<(std::ostream& stream, bold::MotionRequestStatus status);

@@ -23,25 +23,32 @@ string getSectionIdName(SectionId section)
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 MotionTaskScheduler::MotionTaskScheduler()
 : d_modules(),
   d_hasChange(false)
 {}
 
-void MotionTaskScheduler::add(MotionModule* module,
-                              Priority headPriority, Required headRequired, RequestCommit headRequestCommit,
-                              Priority armsPriority, Required armsRequired, RequestCommit armsRequestCommit,
-                              Priority legsPriority, Required legsRequired, RequestCommit legsRequestCommit)
+shared_ptr<MotionRequest const> MotionTaskScheduler::request(
+  MotionModule* module,
+  Priority headPriority, Required headRequired, RequestCommit headRequestCommit,
+  Priority armsPriority, Required armsRequired, RequestCommit armsRequestCommit,
+  Priority legsPriority, Required legsRequired, RequestCommit legsRequestCommit)
 {
   lock_guard<mutex> guard(d_mutex);
 
-  auto handleSection = [this,module](SectionId section, Priority priority, RequestCommit requestCommit) -> shared_ptr<MotionTask>
+  auto request = make_shared<MotionRequest>();
+
+  auto handleSection = [this,module,&request](SectionId section, Priority priority, RequestCommit requestCommit) -> shared_ptr<MotionTask>
   {
     if (priority == Priority::None)
       return nullptr;
-    auto task = make_shared<MotionTask>(module, section, priority, requestCommit == RequestCommit::Yes);
+
+    auto task = make_shared<MotionTask>(request, module, section, priority, requestCommit == RequestCommit::Yes);
     d_tasks.push_back(task);
     d_hasChange = true;
+    request->setSectionTask(section, task);
     return task;
   };
 
@@ -64,6 +71,8 @@ void MotionTaskScheduler::add(MotionModule* module,
   linkDependencies(headRequired, headTask, armTask, legTask);
   linkDependencies(armsRequired, armTask,  headTask, legTask);
   linkDependencies(legsRequired, legTask,  headTask, armTask);
+
+  return request;
 }
 
 void MotionTaskScheduler::update()
@@ -78,20 +87,25 @@ void MotionTaskScheduler::update()
     if (module->clearCompletedFlag())
     {
       // Remove any committed tasks for which the corresponding module has completed
-      auto it1 = d_tasks.erase(
+      d_tasks.erase(
         remove_if(
           d_tasks.begin(),
           d_tasks.end(),
-          [module](shared_ptr<MotionTask> const& task) { return task->isCommitted() && task->getModule() == module; }
+          [this,module](shared_ptr<MotionTask> const& task)
+          {
+            if (task->isCommitted() && task->getModule() == module)
+            {
+              // Set dirty state
+              d_hasChange = true;
+              // Notify the task that it has completed
+              task->setCompleted();
+              return true;
+            }
+            return false;
+          }
         ),
         d_tasks.end()
       );
-
-      if (it1 != d_tasks.end())
-      {
-        // Something was removed
-        d_hasChange = true;
-      }
     }
   }
 
@@ -112,6 +126,8 @@ void MotionTaskScheduler::update()
 
   auto selectTask = [&](shared_ptr<MotionTask> const& task)
   {
+    task->setSelected();
+
     auto section = task->getSection();
 
     switch (section)
@@ -125,7 +141,16 @@ void MotionTaskScheduler::update()
       remove_if(
         tasks.begin(),
         tasks.end(),
-        [section](shared_ptr<MotionTask> const& t) { return t->getSection() == section; }
+        [&task,section](shared_ptr<MotionTask> const& t)
+        {
+          if (t->getSection() == section)
+          {
+            if (t != task)
+              t->setIgnored();
+            return true;
+          }
+          return false;
+        }
       ),
       tasks.end()
     );
@@ -172,6 +197,13 @@ void MotionTaskScheduler::update()
           selectTask(first);
           for (auto dep = dependencies.first; dep != dependencies.second; dep++)
             selectTask(dep->second);
+        }
+        else
+        {
+          // Set the task and its dependencies as ignored
+          first->setIgnored();
+          for (auto dep = dependencies.first; dep != dependencies.second; dep++)
+            dep->second->setIgnored();
         }
       }
 
@@ -237,16 +269,23 @@ void MotionTaskScheduler::update()
   // the stored MotionTaskState is guaranteed to be executed at least once.
   // Hence we can remove non-committed tasks now, readying this set of tasks
   // for the next think cycle.
-  auto it2 = d_tasks.erase(
+  d_tasks.erase(
     remove_if(
       d_tasks.begin(),
       d_tasks.end(),
-      [](shared_ptr<MotionTask> const& task) { return !task->isCommitted(); }
+      [this](shared_ptr<MotionTask> const& task)
+      {
+        if (!task->isCommitted() && task->getStatus() == MotionTaskStatus::Selected)
+        {
+          d_hasChange = true;
+          task->setCompleted();
+          return true;
+        }
+        return false;
+      }
     ),
     d_tasks.end()
   );
-
-  d_hasChange = it2 == d_tasks.end();
 
   d_dependencies.clear();
 }

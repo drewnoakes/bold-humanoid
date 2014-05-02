@@ -5,11 +5,11 @@
 #include <map>
 #include <mutex>
 
+#include "../MotionTask/motiontask.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 
 namespace bold
 {
-  class MotionTask;
   class MotionModule;
 
   enum class Required
@@ -34,7 +34,6 @@ namespace bold
     Yes
   };
 
-  /** Tracks all active MotionTasks.
   /** Schedules tasks that control the motion of the robot's body sections.
    *
    * Thread-safe.
@@ -48,9 +47,11 @@ namespace bold
 
     void registerModule(MotionModule* module) { d_modules.push_back(module); }
 
-    /** Enqueues motion tasks to be picked up in the next motion loop.
+    /** Enqueues a request to control body sections.
      *
-     * Overall, the highest priority task per body section will be selected.
+     * Requests are divided by body section and processed separately.
+     *
+     * Priorities are used when more than one request is made during a cycle.
      *
      * If the task has a commit request and is selected, it will be set
      * as committed until the corresponding MotionModule clears the committed flag.
@@ -60,12 +61,17 @@ namespace bold
      * a 'stand up' motion is added, then the arms and legs would be required
      * as it makes no sense for only the head to be selected.
      */
-    void add(MotionModule* module,
-             Priority headPriority, Required headRequired, RequestCommit headRequestCommit,
-             Priority armsPriority, Required armsRequired, RequestCommit armsRequestCommit,
-             Priority legsPriority, Required legsRequired, RequestCommit legsRequestCommit);
+    std::shared_ptr<MotionRequest const> request(
+      MotionModule* module,
+      Priority headPriority, Required headRequired, RequestCommit headRequestCommit,
+      Priority armsPriority, Required armsRequired, RequestCommit armsRequestCommit,
+      Priority legsPriority, Required legsRequired, RequestCommit legsRequestCommit);
 
-    /** Called at the end of each think loop, updating MotionTaskState.
+    /** Integrate any requests made since the last update, and check for completion of committed tasks.
+     *
+     * Called at the end of each think loop.
+     *
+     * Updates MotionTaskState.
      */
     void update();
 

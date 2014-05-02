@@ -341,6 +341,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./MotionTask/motiontask.cc
+)
+
+add_class(BOLDHUMANOID
   ./MotionTaskScheduler/motiontaskscheduler.cc
 )
 
