@@ -20,8 +20,6 @@ namespace bold
   public:
     MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::string const& fileName, bool ifNotFinalPose = false);
 
-    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::shared_ptr<MotionScript const> const& script, bool ifNotFinalPose = false);
-
     /// Returns a truthy value when the script has completed execution.
     virtual double hasTerminated() override;
 

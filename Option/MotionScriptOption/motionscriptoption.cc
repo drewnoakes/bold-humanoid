@@ -23,18 +23,6 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
     throw runtime_error("File not found");
 }
 
-MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::shared_ptr<MotionScript const> const& script, bool ifNotFinalPose)
-: Option(id, "MotionScript"),
-  d_motionScriptModule(motionScriptModule),
-  d_script(script),
-  d_runner(),
-  d_hasTerminated(false),
-  d_ifNotFinalPose(ifNotFinalPose)
-{
-  ASSERT(d_script);
-  ASSERT(d_motionScriptModule);
-}
-
 double MotionScriptOption::hasTerminated()
 {
   return d_hasTerminated ? 1.0 : 0.0;
