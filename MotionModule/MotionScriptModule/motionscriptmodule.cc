@@ -39,7 +39,7 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
 
 bool MotionScriptModule::isRunning() const
 {
-  return d_runner && d_runner->getState() != MotionScriptRunnerState::Finished;
+  return d_runner && d_runner->getStatus() != MotionScriptRunnerStatus::Finished;
 }
 
 void MotionScriptModule::step(shared_ptr<JointSelection> const& selectedJoints)
@@ -49,7 +49,7 @@ void MotionScriptModule::step(shared_ptr<JointSelection> const& selectedJoints)
   if (!d_runner)
     return;
 
-  if (d_runner->getState() == MotionScriptRunnerState::Finished)
+  if (d_runner->getStatus() == MotionScriptRunnerStatus::Finished)
   {
     d_runner = nullptr;
     return;
@@ -76,11 +76,11 @@ bool MotionScriptModule::run(shared_ptr<MotionScriptRunner> const& scriptRunner)
 
   log::verbose("MotionScriptModule::run") << "Request to run script: " << script->getName();
 
-  if (d_runner && d_runner->getState() != MotionScriptRunnerState::Finished)
+  if (d_runner && d_runner->getStatus() != MotionScriptRunnerStatus::Finished)
   {
     log::warning("MotionScriptModule::run") << "Ignoring request to play script " << script->getName()
         << " -- already playing " << d_runner->getScript()->getName()
-        << " in state " << getMotionScriptRunnerStateName(d_runner->getState());
+        << " with status " << getMotionScriptRunnerStatusName(d_runner->getStatus());
     return false;
   }
 

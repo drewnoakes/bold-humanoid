@@ -56,14 +56,14 @@ TEST (DISABLED_MotionScriptRunnerTests, basics)
 
   MotionScriptRunner runner(script);
 
-  EXPECT_EQ(MotionScriptRunnerState::Pending, runner.getState());
+  EXPECT_EQ(MotionScriptRunnerStatus::Pending, runner.getStatus());
   EXPECT_EQ(0, runner.getCurrentStageIndex());
   EXPECT_EQ(0, runner.getCurrentKeyFrameIndex());
   EXPECT_EQ(script, runner.getScript());
 
   EXPECT_TRUE(runner.step(JointSelection::all()));
 
-  EXPECT_EQ(MotionScriptRunnerState::Running, runner.getState());
+  EXPECT_EQ(MotionScriptRunnerStatus::Running, runner.getStatus());
 
   while (runner.step(JointSelection::all()))
   {}

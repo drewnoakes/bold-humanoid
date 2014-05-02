@@ -73,12 +73,12 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
     }
 
     writer.String("started").Bool(started);
-    writer.String("state").String(getMotionScriptRunnerStateName(runner->getState()).c_str());
+    writer.String("status").String(getMotionScriptRunnerStatusName(runner->getStatus()).c_str());
   }
   else
   {
-    writer.String("state").String(getMotionScriptRunnerStateName(d_runner->getState()).c_str());
-    if (d_runner->getState() == MotionScriptRunnerState::Finished)
+    writer.String("status").String(getMotionScriptRunnerStatusName(d_runner->getStatus()).c_str());
+    if (d_runner->getStatus() == MotionScriptRunnerStatus::Finished)
       d_hasTerminated = true;
   }
 

@@ -13,13 +13,13 @@
 using namespace bold;
 using namespace std;
 
-std::string bold::getMotionScriptRunnerStateName(MotionScriptRunnerState const& state)
+std::string bold::getMotionScriptRunnerStatusName(MotionScriptRunnerStatus const& state)
 {
   switch (state)
   {
-    case MotionScriptRunnerState::Pending:  return "Pending";
-    case MotionScriptRunnerState::Running:  return "Running";
-    case MotionScriptRunnerState::Finished: return "Finished";
+    case MotionScriptRunnerStatus::Pending:  return "Pending";
+    case MotionScriptRunnerStatus::Running:  return "Running";
+    case MotionScriptRunnerStatus::Finished: return "Finished";
     default: return "Unknown";
   }
 }
@@ -28,7 +28,7 @@ MotionScriptRunner::MotionScriptRunner(shared_ptr<MotionScript const> const& scr
 : d_script(script),
   d_currentStageIndex(0),
   d_currentKeyFrameIndex(0),
-  d_state(MotionScriptRunnerState::Pending)
+  d_state(MotionScriptRunnerStatus::Pending)
 {
   ASSERT(script);
   ASSERT(script->getStageCount());
@@ -40,7 +40,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> const& selectedJoints)
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
 
-  if (d_state == MotionScriptRunnerState::Finished)
+  if (d_state == MotionScriptRunnerStatus::Finished)
   {
     log::error("MotionScriptRunner::step") << "already finished";
     return false;
@@ -50,11 +50,11 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> const& selectedJoints)
   // Initialise
   //
 
-  if (d_state == MotionScriptRunnerState::Pending)
+  if (d_state == MotionScriptRunnerStatus::Pending)
   {
     // Special treatment for the first step of a new script
 
-    d_state = MotionScriptRunnerState::Running;
+    d_state = MotionScriptRunnerStatus::Running;
     d_sectionStepIndex = 0;
     d_sectionStepCount = 0;
     d_keyFramePauseStepCount = 0;
@@ -234,7 +234,7 @@ bool MotionScriptRunner::progressToNextSection(shared_ptr<JointSelection> const&
   {
     if (d_isPlayingFinished)
     {
-      d_state = MotionScriptRunnerState::Finished;
+      d_state = MotionScriptRunnerStatus::Finished;
       return false;
     }
 
@@ -273,7 +273,7 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> const& selecte
       if (d_currentStageIndex == d_script->getStageCount())
       {
         d_isPlayingFinished = true;
-        d_state = MotionScriptRunnerState::Finished;
+        d_state = MotionScriptRunnerStatus::Finished;
         return false;
       }
       d_currentStage = d_script->getStage(d_currentStageIndex);

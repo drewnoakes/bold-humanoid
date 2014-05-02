@@ -61,9 +61,9 @@ namespace bold
   class BodySection;
   class JointSelection;
 
-  enum class MotionScriptRunnerState { Pending, Running, Finished };
+  enum class MotionScriptRunnerStatus { Pending, Running, Finished };
 
-  std::string getMotionScriptRunnerStateName(MotionScriptRunnerState const& state);
+  std::string getMotionScriptRunnerStatusName(MotionScriptRunnerStatus const& state);
 
   class MotionScriptRunner : public PoseProvider
   {
@@ -75,7 +75,7 @@ namespace bold
 
     std::shared_ptr<MotionScript const> getScript() const { return d_script; }
 
-    MotionScriptRunnerState getState() const { return d_state; }
+    MotionScriptRunnerStatus getStatus() const { return d_state; }
 
     bool step(std::shared_ptr<JointSelection> const& selectedJoints);
 
@@ -151,6 +151,6 @@ namespace bold
     /// The current section within the current keyframe
     Section d_section;
 
-    MotionScriptRunnerState d_state;
+    MotionScriptRunnerStatus d_state;
   };
 }
