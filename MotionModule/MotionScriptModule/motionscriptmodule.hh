@@ -25,13 +25,21 @@ namespace bold
     void applyArms(ArmSection* arms) override;
     void applyLegs(LegSection* legs) override;
 
-    /** Attempts to start executing the provided script runner.
+    /** Attempts to execute the provided script runner.
      *
      * @return true if the script has been accepted and scheduled to run,
      * otherwise false indicating that the request to start was ignored due
      * to another script already executing.
      */
     bool run(std::shared_ptr<MotionScriptRunner> const& scriptRunner);
+
+    /** Attempts to run the provided script.
+     *
+     * @return true if the script has been accepted and scheduled to run,
+     * otherwise false indicating that the request to start was ignored due
+     * to another script already executing.
+     */
+    bool run(std::shared_ptr<MotionScript const> const& scriptRunner);
 
     bool isRunning();
 

@@ -25,7 +25,7 @@ void MotionScriptModule::createActions(string const& path, shared_ptr<MotionScri
   {
     stringstream id;
     id << "motion-script." << script->getName();
-    Config::addAction(id.str(), script->getName(), [module,script]() { module->run(make_shared<MotionScriptRunner>(script)); });
+    Config::addAction(id.str(), script->getName(), [module,script]() { module->run(script); });
   }
 
   log::info("MotionScriptModule::MotionScriptModule") << "Loaded " << scripts.size() << " motion scripts";
@@ -64,6 +64,11 @@ void MotionScriptModule::step(shared_ptr<JointSelection> const& selectedJoints)
 void MotionScriptModule::applyHead(HeadSection* head) { if (d_runner) d_runner->applyHead(head); }
 void MotionScriptModule::applyArms(ArmSection*  arms) { if (d_runner) d_runner->applyArms(arms); }
 void MotionScriptModule::applyLegs(LegSection*  legs) { if (d_runner) d_runner->applyLegs(legs); }
+
+bool MotionScriptModule::run(shared_ptr<MotionScript const> const& script)
+{
+  return run(make_shared<MotionScriptRunner>(script));
+}
 
 bool MotionScriptModule::run(shared_ptr<MotionScriptRunner> const& scriptRunner)
 {
