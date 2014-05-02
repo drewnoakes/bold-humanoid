@@ -48,5 +48,6 @@ namespace bold
     MotionScriptModule& operator=(const MotionScriptModule&) = delete;
 
     std::shared_ptr<MotionScriptRunner> d_runner;
+    std::shared_ptr<MotionRequest const> d_motionRequest;
   };
 }

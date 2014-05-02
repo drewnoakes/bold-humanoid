@@ -88,7 +88,7 @@ bool MotionScriptModule::run(shared_ptr<MotionScriptRunner> const& scriptRunner)
 
   // NOTE currently we assume that motion scripts control all body parts
 
-  getScheduler()->request(
+  d_motionRequest = getScheduler()->request(
     this,
     Priority::Low,  Required::No,  scriptRunner->getScript()->getControlsHead() ? RequestCommit::Yes : RequestCommit::No,  // HEAD
     Priority::High, Required::Yes, scriptRunner->getScript()->getControlsArms() ? RequestCommit::Yes : RequestCommit::No,  // ARMS
