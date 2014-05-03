@@ -32,9 +32,9 @@ double MotionScriptOption::hasTerminated()
 
 vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& writer)
 {
-  writer.String("hasRunner").Bool(d_runner != nullptr);
+  writer.String("hasExisting").Bool(d_request != nullptr);
 
-  if (!d_runner)
+  if (!d_request)
   {
     // This is the first execution since being reset
 
@@ -43,32 +43,26 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
       // Don't run.
       writer.String("skip").String("Already in final pose");
       writer.String("maxDelta").Int(MotionScriptRunner::getMaxDeltaFromFinalPose(d_script));
-      d_runner = nullptr;
+      d_request = nullptr;
       d_hasTerminated = true;
       return {};
     }
 
-    auto runner = make_shared<MotionScriptRunner>(d_script);
+    d_request = d_motionScriptModule->run(d_script);
 
-    bool started = d_motionScriptModule->run(runner);
+    // TODO fix << operator for MotionRequestStatus
 
-    if (started)
-    {
-      log::verbose("MotionScriptOption::runPolicy") << "Started motion script: " << getId();
-      d_runner = runner;
-    }
-    else
-    {
-      log::verbose("MotionScriptOption::runPolicy") << "Request to start motion script denied: " << getId();
-    }
+    log::verbose("MotionScriptOption::runPolicy") << "Motion script '" << getId() << "' requested with status: " << getMotionRequestStatusName(d_request->getStatus());
 
-    writer.String("started").Bool(started);
-    writer.String("status").String(getMotionScriptRunnerStatusName(runner->getStatus()).c_str());
+    writer.String("status").String(getMotionRequestStatusName(d_request->getStatus()).c_str());
   }
   else
   {
-    writer.String("status").String(getMotionScriptRunnerStatusName(d_runner->getStatus()).c_str());
-    if (d_runner->getStatus() == MotionScriptRunnerStatus::Finished)
+    // We're continuing a previous motion request. Check its status.
+
+    writer.String("status").String(getMotionRequestStatusName(d_request->getStatus()).c_str());
+
+    if (d_request->hasCompleted())
       d_hasTerminated = true;
   }
 
@@ -79,5 +73,5 @@ void MotionScriptOption::reset()
 {
   log::verbose("MotionScriptOption::reset") << getId();
   d_hasTerminated = false;
-  d_runner = nullptr;
+  d_request = nullptr;
 }

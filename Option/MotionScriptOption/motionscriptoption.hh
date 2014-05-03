@@ -6,9 +6,9 @@
 
 namespace bold
 {
+  class MotionRequest;
   class MotionScript;
   class MotionScriptModule;
-  class MotionScriptRunner;
 
   /// An option that requests a particular motion script be played when its
   /// policy is run.  Note that the motion scheduler may reject the request to
@@ -33,8 +33,8 @@ namespace bold
     std::shared_ptr<MotionScriptModule> d_motionScriptModule;
     /// The script associated with this MotionScriptOption
     std::shared_ptr<MotionScript const> d_script;
-    /// The most recent MotionScriptRunner issued to the MotionScriptModule
-    std::shared_ptr<MotionScriptRunner> d_runner;
+    /// The most recent MotionRequest issued to the MotionScriptModule
+    std::shared_ptr<MotionRequest const> d_request;
     bool d_hasTerminated;
     bool d_ifNotFinalPose;
   };

@@ -39,7 +39,8 @@ MotionScriptModule::MotionScriptModule(shared_ptr<MotionTaskScheduler> scheduler
 
 bool MotionScriptModule::isRunning() const
 {
-  return d_runner && d_runner->getStatus() != MotionScriptRunnerStatus::Finished;
+  return d_runner && d_runner->getStatus() != MotionScriptRunnerStatus::Finished
+      && d_motionRequest && !d_motionRequest->hasCompleted();
 }
 
 void MotionScriptModule::step(shared_ptr<JointSelection> const& selectedJoints)
@@ -65,23 +66,29 @@ void MotionScriptModule::applyHead(HeadSection* head) { if (d_runner) d_runner->
 void MotionScriptModule::applyArms(ArmSection*  arms) { if (d_runner) d_runner->applyArms(arms); }
 void MotionScriptModule::applyLegs(LegSection*  legs) { if (d_runner) d_runner->applyLegs(legs); }
 
-bool MotionScriptModule::run(shared_ptr<MotionScript const> const& script)
+shared_ptr<MotionRequest const> MotionScriptModule::run(shared_ptr<MotionScript const> const& script)
 {
   return run(make_shared<MotionScriptRunner>(script));
 }
 
-bool MotionScriptModule::run(shared_ptr<MotionScriptRunner> const& scriptRunner)
+shared_ptr<MotionRequest const> MotionScriptModule::run(shared_ptr<MotionScriptRunner> const& scriptRunner)
 {
+  // TODO thread safety!
+
+  ASSERT(ThreadUtil::isThinkLoopThread() || ThreadUtil::isDataStreamerThread());
+
   auto const& script = scriptRunner->getScript();
 
   log::verbose("MotionScriptModule::run") << "Request to run script: " << script->getName();
 
-  if (d_runner && d_runner->getStatus() != MotionScriptRunnerStatus::Finished)
+  if (isRunning())
   {
     log::warning("MotionScriptModule::run") << "Ignoring request to play script " << script->getName()
         << " -- already playing " << d_runner->getScript()->getName()
         << " with status " << getMotionScriptRunnerStatusName(d_runner->getStatus());
-    return false;
+
+    // An empty MotionRequest has Ignored status
+    return make_shared<MotionRequest const>();
   }
 
   d_runner = scriptRunner;
@@ -94,5 +101,5 @@ bool MotionScriptModule::run(shared_ptr<MotionScriptRunner> const& scriptRunner)
     Priority::High, Required::Yes, scriptRunner->getScript()->getControlsArms() ? RequestCommit::Yes : RequestCommit::No,  // ARMS
     Priority::High, Required::Yes, scriptRunner->getScript()->getControlsLegs() ? RequestCommit::Yes : RequestCommit::No); // LEGS
 
-  return true;
+  return d_motionRequest;
 }
