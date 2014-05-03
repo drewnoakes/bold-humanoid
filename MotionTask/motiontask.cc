@@ -37,6 +37,23 @@ std::ostream& operator<<(std::ostream& stream, MotionTaskStatus status)
   return stream << bold::getMotionTaskStatusName(status);
 }
 
+std::string bold::getPriorityName(Priority priority)
+{
+  switch (priority)
+  {
+    case Priority::High:   return "High";
+    case Priority::Normal: return "Normal";
+    case Priority::Low:    return "Low";
+    case Priority::None:   return "None";
+    default: return "Unknown";
+  }
+}
+
+std::ostream& operator<<(std::ostream& stream, Priority priority)
+{
+  return stream << bold::getPriorityName(priority);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 JointSelection::JointSelection(bool head, bool arms, bool legs)

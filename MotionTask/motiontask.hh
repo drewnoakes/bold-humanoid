@@ -32,6 +32,8 @@ namespace bold
     Legs
   };
 
+  std::string getPriorityName(Priority priority);
+
   //////////////////////////////////////////////////////////////////////////////
 
   /** Models a set of joints.
