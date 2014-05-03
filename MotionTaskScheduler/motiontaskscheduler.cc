@@ -301,6 +301,9 @@ void MotionTaskScheduler::sortTasks(vector<shared_ptr<MotionTask>>& tasks)
       if (a->isCommitted() && !b->isCommitted())
         return true;
 
+      if (b->isCommitted() && !a->isCommitted())
+        return false;
+
       // Sort higher priorities first
       return a->getPriority() > b->getPriority();
     }

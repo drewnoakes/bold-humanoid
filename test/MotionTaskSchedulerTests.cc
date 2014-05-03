@@ -75,6 +75,37 @@ TEST_F (MotionTaskSchedulerTests, sortTasks)
   EXPECT_EQ ( task3.get(), tasks[2].get() );
 }
 
+TEST_F (MotionTaskSchedulerTests, sortTasks2)
+{
+  // This test is to address a bug that sorted:
+  //
+  // pre-sort  [motion-scriptHeadSelectedLow**] [motion-scriptArmsSelectedHigh**] [motion-scriptLegsSelectedHigh**] [headHeadPendingNormal]
+  // post-sort [motion-scriptArmsSelectedHigh**] [motion-scriptLegsSelectedHigh**] [headHeadPendingNormal] [motion-scriptHeadSelectedLow**]
+
+  auto request1 = make_shared<MotionRequest>();
+  auto task1 = make_shared<MotionTask>(request1, motionScriptModule, SectionId::Head, Priority::Low, true);
+  auto task2 = make_shared<MotionTask>(request1, motionScriptModule, SectionId::Arms, Priority::High, true);
+  auto task3 = make_shared<MotionTask>(request1, motionScriptModule, SectionId::Legs, Priority::High, true);
+  auto request2 = make_shared<MotionRequest>();
+  auto task4 = make_shared<MotionTask>(request2, walkModule, SectionId::Head, Priority::Normal, false);
+
+  task1->setCommitted();
+  task2->setCommitted();
+  task3->setCommitted();
+  task1->setSelected();
+  task2->setSelected();
+  task3->setSelected();
+
+  vector<shared_ptr<MotionTask>> tasks = {task1, task2, task3, task4};
+
+  MotionTaskScheduler::sortTasks(tasks);
+
+  EXPECT_EQ ( task2.get(), tasks[0].get() );
+  EXPECT_EQ ( task3.get(), tasks[1].get() );
+  EXPECT_EQ ( task1.get(), tasks[2].get() );
+  EXPECT_EQ ( task4.get(), tasks[3].get() );
+}
+
 TEST_F (MotionTaskSchedulerTests, addAndUpdate)
 {
   auto request1 = scheduler->request(
