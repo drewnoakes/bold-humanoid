@@ -137,6 +137,9 @@ void MotionTaskScheduler::update()
       case SectionId::Legs: ASSERT(legsTask == nullptr || legsTask == task); legsTask = task; break;
     }
 
+    if (task->isCommitRequested() && !task->isCommitted())
+      task->setCommitted();
+
     tasks.erase(
       remove_if(
         tasks.begin(),
@@ -170,9 +173,9 @@ void MotionTaskScheduler::update()
       // Otherwise, we select this task if it has no dependencies, or its
       // dependencies can also be selected.
 
-      auto dependencies = d_dependencies.equal_range(first);
+      auto depRange = d_dependencies.equal_range(first);
 
-      if (dependencies.first == dependencies.second)
+      if (depRange.first == depRange.second)
       {
         // No dependencies, so just apply it
         selectTask(first);
@@ -181,28 +184,31 @@ void MotionTaskScheduler::update()
       {
         // Only select this task if its dependencies may also be selected
         bool canSelect = true;
-        for (auto dep = dependencies.first; dep != dependencies.second; dep++)
+        for (auto dep = depRange.first; dep != depRange.second; dep++)
         {
-          auto depSection = dep->second->getSection();
-          if (depSection == SectionId::Head && (headTask != nullptr && headTask != dep->second))
-            canSelect = false;
-          else if (depSection == SectionId::Arms && (armsTask != nullptr && armsTask != dep->second))
-            canSelect = false;
-          else if (depSection == SectionId::Legs && (legsTask != nullptr && legsTask != dep->second))
-            canSelect = false;
+          auto const& dependency = dep->second;
+          auto depSection = dependency->getSection();
+          if (dependency->getStatus() == MotionTaskStatus::Ignored)
+          { canSelect = false; break; }
+          if (depSection == SectionId::Head && !(headTask == nullptr || headTask == dependency))
+          { canSelect = false; break; }
+          if (depSection == SectionId::Arms && !(armsTask == nullptr || armsTask == dependency))
+          { canSelect = false; break; }
+          if (depSection == SectionId::Legs && !(legsTask == nullptr || legsTask == dependency))
+          { canSelect = false; break; }
         }
 
         if (canSelect)
         {
           selectTask(first);
-          for (auto dep = dependencies.first; dep != dependencies.second; dep++)
+          for (auto dep = depRange.first; dep != depRange.second; dep++)
             selectTask(dep->second);
         }
         else
         {
           // Set the task and its dependencies as ignored
           first->setIgnored();
-          for (auto dep = dependencies.first; dep != dependencies.second; dep++)
+          for (auto dep = depRange.first; dep != depRange.second; dep++)
             dep->second->setIgnored();
         }
       }
@@ -212,15 +218,11 @@ void MotionTaskScheduler::update()
     }
   }
 
-  d_headTask = headTask;
-  d_armTask  = armsTask;
-  d_legTask  = legsTask;
-
   //////////
 
-  MotionModule* headModule = d_headTask ? d_headTask->getModule() : nullptr;
-  MotionModule* armModule  = d_armTask  ? d_armTask->getModule() : nullptr;
-  MotionModule* legModule  = d_legTask  ? d_legTask->getModule() : nullptr;
+  MotionModule* headModule = headTask ? headTask->getModule() : nullptr;
+  MotionModule* armModule  = armsTask ? armsTask->getModule() : nullptr;
+  MotionModule* legModule  = legsTask ? legsTask->getModule() : nullptr;
 
   auto moduleJointSelection = make_shared<vector<pair<MotionModule*, shared_ptr<JointSelection>>>>();
 
@@ -256,13 +258,12 @@ void MotionTaskScheduler::update()
     if (legModule)  moduleJointSelection->emplace_back(legModule,  JointSelection::legs());
   }
 
-  // Commit selected tasks if they require it
-  if (d_headTask && d_headTask->isCommitRequested()) d_headTask->setCommitted();
-  if (d_armTask  && d_armTask->isCommitRequested())  d_armTask->setCommitted();
-  if (d_legTask  && d_legTask->isCommitRequested())  d_legTask->setCommitted();
-
   // Generate motion task state
   State::make<MotionTaskState>(moduleJointSelection, headTask, armsTask, legsTask, d_tasks);
+
+  d_headTask = headTask;
+  d_armTask  = armsTask;
+  d_legTask  = legsTask;
 
   // Clear out non-committed tasks as they should only be presented to the
   // motion loop once. As the motion loop runs in 8ms vs the think loop at 30ms,
@@ -275,10 +276,11 @@ void MotionTaskScheduler::update()
       d_tasks.end(),
       [this](shared_ptr<MotionTask> const& task)
       {
-        if (!task->isCommitted() && task->getStatus() == MotionTaskStatus::Selected)
+        if (!task->isCommitted())
         {
           d_hasChange = true;
-          task->setCompleted();
+          if (task->getStatus() == MotionTaskStatus::Selected)
+            task->setCompleted();
           return true;
         }
         return false;

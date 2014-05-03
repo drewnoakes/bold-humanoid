@@ -153,6 +153,32 @@ TEST_F (MotionTaskSchedulerTests, addAndUpdate)
   EXPECT_EQ ( walkModule, scheduler->getLegTask()->getModule() );
 }
 
+TEST_F (MotionTaskSchedulerTests, staysCommitted)
+{
+  auto request = scheduler->request(
+    walkModule,
+    Priority::Normal, Required::No,  RequestCommit::No,   // HEAD
+    Priority::Normal, Required::Yes, RequestCommit::No,   // ARMS
+    Priority::Normal, Required::Yes, RequestCommit::Yes); // LEGS
+
+  EXPECT_EQ ( MotionRequestStatus::Pending, request->getStatus() );
+
+  scheduler->update();
+  scheduler->update();
+  scheduler->update();
+  scheduler->update();
+  scheduler->update();
+
+  EXPECT_EQ ( MotionRequestStatus::Selected, request->getStatus() );
+
+  EXPECT_EQ ( nullptr, scheduler->getHeadTask() );
+  EXPECT_EQ ( nullptr, scheduler->getArmTask() );
+  EXPECT_EQ ( walkModule, scheduler->getLegTask()->getModule() );
+
+  EXPECT_TRUE  ( scheduler->getLegTask()->isCommitRequested() );
+  EXPECT_TRUE  ( scheduler->getLegTask()->isCommitted() );
+}
+
 TEST_F (MotionTaskSchedulerTests, twoInOneCycle_perfectTie)
 {
   ASSERT_EQ ( nullptr, scheduler->getHeadTask() );
