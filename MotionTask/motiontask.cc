@@ -96,8 +96,6 @@ MotionRequestStatus MotionRequest::getStatus() const
   int countNotNull = 0;
   int countIgnored = 0;
   int countCompleted = 0;
-  int countPending = 0;
-  int countSelected = 0;
 
   for (auto const& task : tasks)
   {
@@ -108,23 +106,21 @@ MotionRequestStatus MotionRequest::getStatus() const
 
     switch (task->getStatus())
     {
+      case MotionTaskStatus::Pending:
+        // If any task is pending, then the request is pending
+        return MotionRequestStatus::Pending;
+
+      case MotionTaskStatus::Selected:
+        // If anything is being run, then we're selected
+        return MotionRequestStatus::Selected;
+
       case MotionTaskStatus::Completed: countCompleted++; break;
       case MotionTaskStatus::Ignored:   countIgnored++;   break;
-      case MotionTaskStatus::Pending:   countPending++;   break;
-      case MotionTaskStatus::Selected:  countSelected++;  break;
     }
   }
 
   if (countNotNull == 0)
     return MotionRequestStatus::Ignored;
-
-  // If any task is pending, then the request is pending
-  if (countPending != 0)
-    return MotionRequestStatus::Pending;
-
-  // If anything is being run, then we're selected
-  if (countSelected != 0)
-    return MotionRequestStatus::Selected;
 
   // If all tasks were ignored, then the entire request was ignored
   if (countIgnored == countNotNull)
