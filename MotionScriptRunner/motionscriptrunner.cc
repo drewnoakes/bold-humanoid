@@ -55,6 +55,7 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> const& selectedJoints)
     // Special treatment for the first step of a new script
 
     d_state = MotionScriptRunnerStatus::Running;
+    d_isPlayingFinished = false;
     d_sectionStepIndex = 0;
     d_sectionStepCount = 0;
     d_keyFramePauseStepCount = 0;
