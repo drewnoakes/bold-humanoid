@@ -34,6 +34,8 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 {
   writer.String("hasExisting").Bool(d_request != nullptr);
 
+  ASSERT(!d_hasTerminated);
+
   if (!d_request)
   {
     // This is the first execution since being reset
@@ -62,8 +64,18 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 
     writer.String("status").String(getMotionRequestStatusName(d_request->getStatus()).c_str());
 
-    if (d_request->hasCompleted())
-      d_hasTerminated = true;
+    switch (d_request->getStatus())
+    {
+      case MotionRequestStatus::Completed:
+        d_hasTerminated = true;
+        break;
+      case MotionRequestStatus::Ignored:
+        log::verbose("MotionScriptOption::runPolicy") << "Retrying ignored motion request for script: " << d_script->getName();
+        d_request = d_motionScriptModule->run(d_script);
+        break;
+      default:
+        break;
+    }
   }
 
   return {};
