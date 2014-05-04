@@ -18,6 +18,7 @@ var radarSize = 200,
     moduleTemplate = new DOMTemplate("walk-module-template");
 
 var chartOptions = {
+    interpolation: 'step',
     grid: {
         strokeStyle: 'rgba(0,0,0,0.1)',
         fillStyle: 'transparent',
