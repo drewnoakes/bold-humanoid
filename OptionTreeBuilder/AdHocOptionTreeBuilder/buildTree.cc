@@ -79,10 +79,8 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto startUpState = winFsm->newState("startUp", {sit}, false/*end state*/, true/* start state */);
   auto readyState = winFsm->newState("ready", {stopWalking});
-  auto pausing1State = winFsm->newState("pausing1", {stopWalking});
-  auto pausing2State = winFsm->newState("pausing2", {sit});
-  auto pausedState = winFsm->newState("paused", {});
-  auto unpausingState = winFsm->newState("unpausing", {standUp});
+  auto pauseState = winFsm->newState("pause", {SequenceOption::make("pause-sequence", {stopWalking,sit})});
+  auto unpausingState = winFsm->newState("unpause", {standUp});
   auto setState = winFsm->newState("set", {stopWalking});
   auto playingState = winFsm->newState("playing", {performRole});
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
@@ -97,7 +95,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // In the Win FSM, any state other than 'playing' corresponds to the 'waiting' activity.
   setPlayerActivityInStates(agent,
     PlayerActivity::Waiting,
-    { startUpState, readyState, pausedState,
+    { startUpState, readyState, pauseState,
       unpausingState, setState, penalizedState, forwardGetUpState,
       backwardGetUpState, stopWalkingForShutdownState, sitForShutdownState,
       stopAgentAndExitState });
@@ -105,7 +103,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // In the Win FSM, any state other than 'playing' and 'penalised' corresponds to the 'inactive' status.
   setPlayerStatusInStates(agent,
     PlayerStatus::Inactive,
-    { startUpState, readyState, pausing1State, pausing2State, pausedState,
+    { startUpState, readyState, pauseState,
       unpausingState, setState,
       forwardGetUpState, backwardGetUpState, leftGetUpState, rightGetUpState,
       stopWalkingForShutdownState, sitForShutdownState,
@@ -113,15 +111,14 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   setPlayerStatusInStates(agent, PlayerStatus::Active, { playingState });
   setPlayerStatusInStates(agent, PlayerStatus::Penalised, { penalizedState });
-  setPlayerStatusInStates(agent, PlayerStatus::Paused, { pausing1State, pausing2State, pausedState });
+  setPlayerStatusInStates(agent, PlayerStatus::Paused, { pauseState });
 
   auto const& debugger = agent->getDebugger();
   readyState->onEnter.connect([debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); });
   setState->onEnter.connect([debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); });
   playingState->onEnter.connect([debugger]() { debugger->showPlaying(); });
   penalizedState->onEnter.connect([debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); });
-  pausedState->onEnter.connect([debugger]() { debugger->showPaused(); });
-  pausing1State->onEnter.connect([debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); });
+  pauseState->onEnter.connect([debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); });
   stopAgentAndExitState->onEnter.connect([agent]() { agent->stop(); });
 
   //
@@ -136,24 +133,16 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // PAUSE BUTTON
   //
 
-  pausedState
+  playingState
+    ->transitionTo(pauseState, "button2")
+    ->when(startButtonPressed);
+
+  pauseState
     ->transitionTo(unpausingState, "button2")
     ->when(startButtonPressed);
 
   unpausingState
     ->transitionTo(setState, "done")
-    ->whenTerminated();
-
-  playingState
-    ->transitionTo(pausing1State, "button2")
-    ->when(startButtonPressed);
-
-  pausing1State
-    ->transitionTo(pausing2State, "stop-walk")
-    ->when(negate(isWalking));
-
-  pausing2State
-    ->transitionTo(pausedState, "done")
     ->whenTerminated();
 
   //
