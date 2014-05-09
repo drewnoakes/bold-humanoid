@@ -357,6 +357,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/ActionOption/actionoption.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/ApproachBall/runPolicy.cc
 )
 
