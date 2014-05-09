@@ -80,8 +80,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto startUpState = winFsm->newState("startUp", {sit}, false/*end state*/, true/* start state */);
   auto readyState = winFsm->newState("ready", {stopWalking});
   auto pauseState = winFsm->newState("pause", {SequenceOption::make("pause-sequence", {stopWalking,sit})});
-  auto unpausingState = winFsm->newState("unpause", {standUp});
-  auto setState = winFsm->newState("set", {stopWalking});
+  auto setState = winFsm->newState("set", {SequenceOption::make("pause-sequence", {stopWalking,standUp})});
   auto playingState = winFsm->newState("playing", {performRole});
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
   auto forwardGetUpState  = winFsm->newState("forwardGetUp",  {SequenceOption::make("forward-get-up-sequence",  {stopWalkingImmediately,forwardGetUp})});
@@ -96,7 +95,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   setPlayerActivityInStates(agent,
     PlayerActivity::Waiting,
     { startUpState, readyState, pauseState,
-      unpausingState, setState, penalizedState, forwardGetUpState,
+      setState, penalizedState, forwardGetUpState,
       backwardGetUpState, stopWalkingForShutdownState, sitForShutdownState,
       stopAgentAndExitState });
 
@@ -104,7 +103,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   setPlayerStatusInStates(agent,
     PlayerStatus::Inactive,
     { startUpState, readyState, pauseState,
-      unpausingState, setState,
+      setState,
       forwardGetUpState, backwardGetUpState, leftGetUpState, rightGetUpState,
       stopWalkingForShutdownState, sitForShutdownState,
       stopAgentAndExitState });
@@ -138,12 +137,8 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->when(startButtonPressed);
 
   pauseState
-    ->transitionTo(unpausingState, "button2")
+    ->transitionTo(setState, "button2")
     ->when(startButtonPressed);
-
-  unpausingState
-    ->transitionTo(setState, "done")
-    ->whenTerminated();
 
   //
   // PLAY MODE BUTTON
