@@ -57,6 +57,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto rightGetUp = make_shared<MotionScriptOption>("rightGetUpScript", motionScriptModule, "./motionscripts/get-up-from-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", walkModule);
   auto stopWalkingImmediately = make_shared<StopWalking>("stopWalking", walkModule, /*immediately*/ true);
+  auto stopAgent = make_shared<ActionOption>("stopAgent", [agent]() { agent->stop(); });
 
   auto performRole = make_shared<DispatchOption<PlayerRole>>("performRole", [agent](){ return agent->getBehaviourControl()->getPlayerRole(); });
   performRole->setOption(PlayerRole::Keeper, buildKeeperFsm(agent, tree));
@@ -87,27 +88,26 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto backwardGetUpState = winFsm->newState("backwardGetUp", {SequenceOption::make("backward-get-up-sequence", {stopWalkingImmediately,backwardGetUp})});
   auto leftGetUpState     = winFsm->newState("leftGetUp",     {SequenceOption::make("left-get-up-sequence",     {stopWalkingImmediately,leftGetUp})});
   auto rightGetUpState    = winFsm->newState("rightGetUp",    {SequenceOption::make("right-get-up-sequence",    {stopWalkingImmediately,rightGetUp})});
-  auto stopWalkingForShutdownState = winFsm->newState("stopWalkingForShutdown", {stopWalking});
-  auto sitForShutdownState = winFsm->newState("sitForShutdown", {sitArmsBack});
-  auto stopAgentAndExitState = winFsm->newState("stopAgentAndExit", {});
+  auto shutdownState = winFsm->newState("shutdown", {SequenceOption::make("shutdown-sequence", {stopWalking,sitArmsBack,stopAgent})});
 
   // In the Win FSM, any state other than 'playing' corresponds to the 'waiting' activity.
   setPlayerActivityInStates(agent,
     PlayerActivity::Waiting,
-    { startUpState, readyState, pauseState,
-      setState, penalizedState,
+    {
+      startUpState, readyState, pauseState, setState, penalizedState,
       forwardGetUpState, backwardGetUpState, leftGetUpState, rightGetUpState,
-      stopWalkingForShutdownState, sitForShutdownState,
-      stopAgentAndExitState });
+      shutdownState
+    });
 
   // In the Win FSM, any state other than 'playing' and 'penalised' corresponds to the 'inactive' status.
   setPlayerStatusInStates(agent,
     PlayerStatus::Inactive,
-    { startUpState, readyState, pauseState,
+    {
+      startUpState, readyState, pauseState,
       setState,
       forwardGetUpState, backwardGetUpState, leftGetUpState, rightGetUpState,
-      stopWalkingForShutdownState, sitForShutdownState,
-      stopAgentAndExitState });
+      shutdownState
+    });
 
   setPlayerStatusInStates(agent, PlayerStatus::Active, { playingState });
   setPlayerStatusInStates(agent, PlayerStatus::Penalised, { penalizedState });
@@ -119,7 +119,6 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   playingState->onEnter.connect([debugger]() { debugger->showPlaying(); });
   penalizedState->onEnter.connect([debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); });
   pauseState->onEnter.connect([debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); });
-  stopAgentAndExitState->onEnter.connect([agent]() { agent->stop(); });
 
   //
   // START UP
@@ -234,19 +233,9 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // SHUTDOWN
   //
 
-  // TODO express this sequence more elegantly
-
   winFsm
-    ->wildcardTransitionTo(stopWalkingForShutdownState, "shutdown-request")
+    ->wildcardTransitionTo(shutdownState, "shutdown-request")
     ->when(isAgentShutdownRequested);
-
-  stopWalkingForShutdownState
-    ->transitionTo(sitForShutdownState, "stopped")
-    ->when(negate(isWalking)); // TODO why can't this be whenTerminated() -- doesn't seem to work (here and in other places)
-
-  sitForShutdownState
-    ->transitionTo(stopAgentAndExitState, "sitting")
-    ->whenTerminated();
 
   ofstream winOut("fsm-win.dot");
   winOut << winFsm->toDot();
