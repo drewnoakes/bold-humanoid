@@ -95,8 +95,9 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   setPlayerActivityInStates(agent,
     PlayerActivity::Waiting,
     { startUpState, readyState, pauseState,
-      setState, penalizedState, forwardGetUpState,
-      backwardGetUpState, stopWalkingForShutdownState, sitForShutdownState,
+      setState, penalizedState,
+      forwardGetUpState, backwardGetUpState, leftGetUpState, rightGetUpState,
+      stopWalkingForShutdownState, sitForShutdownState,
       stopAgentAndExitState });
 
   // In the Win FSM, any state other than 'playing' and 'penalised' corresponds to the 'inactive' status.
