@@ -141,6 +141,8 @@ export class DataLayer<T> extends MapLayer
         var animator = new Animator(render);
         var subscription: data.Subscription<T>;
 
+        this.transform.track(_ => animator.setRenderNeeded());
+
         this.enabled.track(isEnabled =>
         {
             if (isEnabled)
