@@ -190,6 +190,11 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
   }
   else
   {
+    // It may be that we've had new walking params set during the
+    // stabilisation phase.
+    if (d_status == WalkStatus::Stabilising)
+      d_status = WalkStatus::Walking;
+
     ASSERT(d_status == WalkStatus::Walking);
 
     d_walkEngine->X_MOVE_AMPLITUDE = xAmp;
