@@ -15,7 +15,7 @@
       "contrast": 32,
       "saturation": 32,
       "gain": 255,
-      "wb-temp-k": 2000,
+      "wb-temp-k": 0,
       "sharpness": 191
     }
   },
