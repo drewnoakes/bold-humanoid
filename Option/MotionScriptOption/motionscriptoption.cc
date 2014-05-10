@@ -34,7 +34,11 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 {
   writer.String("hasExisting").Bool(d_request != nullptr);
 
-  ASSERT(!d_hasTerminated);
+  if (d_hasTerminated)
+  {
+    writer.String("hasTerminated").Bool(true);
+    return {};
+  }
 
   if (!d_request)
   {
@@ -47,6 +51,7 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
       writer.String("maxDelta").Int(MotionScriptRunner::getMaxDeltaFromFinalPose(d_script));
       d_request = nullptr;
       d_hasTerminated = true;
+      writer.String("hasTerminated").Bool(true);
       return {};
     }
 
@@ -78,6 +83,7 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
     }
   }
 
+  writer.String("hasTerminated").Bool(d_hasTerminated);
   return {};
 }
 
