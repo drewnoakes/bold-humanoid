@@ -365,6 +365,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/BuildStationaryMap/buildstationarymap.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/CircleBall/runPolicy.cc
 )
 
@@ -542,6 +546,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/StaticHardwareState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/StationaryMapState/stationarymapstate.cc
 )
 
 add_class(BOLDHUMANOID

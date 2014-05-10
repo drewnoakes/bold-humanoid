@@ -18,6 +18,7 @@ void Agent::registerStateTypes()
   State::registerStateType<OptionTreeState>("OptionTree");
   State::registerStateType<OrientationState>("Orientation");
   State::registerStateType<ParticleState>("Particle");
+  State::registerStateType<StationaryMapState>("StationaryMap");
   State::registerStateType<StaticHardwareState>("StaticHardware");
   State::registerStateType<ThinkTimingState>("ThinkTiming");
   State::registerStateType<WalkState>("Walk");

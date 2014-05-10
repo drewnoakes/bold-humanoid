@@ -46,6 +46,7 @@
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../StateObject/ParticleState/particlestate.hh"
 #include "../StateObject/StaticHardwareState/statichardwarestate.hh"
+#include "../StateObject/StationaryMapState/stationarymapstate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
 #include "../StateObject/WalkState/walkstate.hh"
 #include "../StateObject/WorldFrameState/worldframestate.hh"

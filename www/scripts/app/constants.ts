@@ -384,6 +384,7 @@ export var protocols = {
     orientationState: 'Orientation',
     particleState: 'Particle',
     staticHardwareState: 'StaticHardware',
+    stationaryMapState: 'StationaryMap',
     thinkTimingState: 'ThinkTiming',
     walkState: 'Walk',
     worldFrameState: 'WorldFrame'
@@ -408,6 +409,7 @@ export var allStateProtocols = [
     protocols.orientationState,
     protocols.particleState,
     protocols.staticHardwareState,
+    protocols.stationaryMapState,
     protocols.teamState,
     protocols.thinkTimingState,
     protocols.walkState,

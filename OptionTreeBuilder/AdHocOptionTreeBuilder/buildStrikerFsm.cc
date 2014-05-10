@@ -98,6 +98,7 @@ auto isPerfectLineForAttack = []()
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shared_ptr<OptionTree> tree)
 {
+  auto buildStationaryMap = make_shared<BuildStationaryMap>("buildStationaryMap");
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", /* ifNotInFinalPose */ true);
   auto leftKick = make_shared<MotionScriptOption>("leftKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
   auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
@@ -115,13 +116,13 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookForBall});
+  auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookForBall, buildStationaryMap});
   auto circleToFindLostBallState = fsm->newState("lookForBallCircling", {searchBall});
   auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
   auto directAttackState = fsm->newState("directAttack", {approachBall, lookAtBall});
-  auto lookForGoalState = fsm->newState("lookForGoal", {stopWalking, lookForGoal});
-  auto lookAtGoalState = fsm->newState("lookAtGoal", {stopWalking, lookAtGoal});
+  auto lookForGoalState = fsm->newState("lookForGoal", {stopWalking, lookForGoal, buildStationaryMap});
+  auto lookAtGoalState = fsm->newState("lookAtGoal", {stopWalking, lookAtGoal, buildStationaryMap});
   auto aimState = fsm->newState("aim", {});
   auto turnToGoalState = fsm->newState("turnToGoal", {circleBall});
   auto aboutFaceState = fsm->newState("aboutFace", {circleBall});

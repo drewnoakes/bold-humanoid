@@ -368,6 +368,18 @@ export interface Particle
     pnwsum: number;
 }
 
+export interface AveragePosition
+{
+    pos: number[];
+    count: number;
+}
+
+export interface StationaryMap
+{
+    balls: AveragePosition[];
+    goals: AveragePosition[];
+}
+
 export interface StaticJointData
 {
     id: number;
