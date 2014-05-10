@@ -2,8 +2,9 @@
 
 using namespace bold;
 using namespace Eigen;
+using namespace rapidjson;
 
-void StationaryMapState::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {

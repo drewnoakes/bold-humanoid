@@ -2,8 +2,9 @@
 
 using namespace bold;
 using namespace Eigen;
+using namespace rapidjson;
 
-void OrientationState::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+void OrientationState::writeJson(Writer<StringBuffer>& writer) const
 {
   auto swapNaN = [](double d, double nanVal) -> double { return std::isnan(d) ? nanVal : d; };
 
