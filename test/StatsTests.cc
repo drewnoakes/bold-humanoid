@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 
+#include "../stats/average.hh"
 #include "../stats/stats.hh"
 #include "../stats/movingaverage.hh"
 #include "helpers.hh"
@@ -101,6 +102,50 @@ TEST (StatsTests, varianceAndStdDev_double)
     EXPECT_NEAR( variances[i],       bold::variance<double>(inputs.begin() + i, inputs.begin() + i + 3), 0.00001);
     EXPECT_NEAR( sqrt(variances[i]), bold::stdDev  <double>(inputs.begin() + i, inputs.begin() + i + 3), 0.00001);
   }
+}
+
+TEST (StatsTest, average_double)
+{
+  Average<double> avg;
+
+  EXPECT_EQ( 0, avg.getCount() );
+
+  avg.add(1);
+
+  EXPECT_EQ( 1, avg.getAverage() );
+  EXPECT_EQ( 1, avg.getCount() );
+
+  avg.add(2);
+
+  EXPECT_EQ( 1.5, avg.getAverage() );
+  EXPECT_EQ( 2,   avg.getCount() );
+
+  avg.add(3);
+
+  EXPECT_EQ( 2, avg.getAverage() );
+  EXPECT_EQ( 3, avg.getCount() );
+}
+
+TEST (StatsTest, average_vector2d)
+{
+  Average<Eigen::Vector2d> avg;
+
+  EXPECT_EQ( 0, avg.getCount() );
+
+  avg.add(Vector2d(1,1));
+
+  EXPECT_TRUE( VectorsEqual(Vector2d(1,1), avg.getAverage()) );
+  EXPECT_EQ( 1, avg.getCount() );
+
+  avg.add(Vector2d(2,2));
+
+  EXPECT_TRUE( VectorsEqual(Vector2d(1.5,1.5), avg.getAverage()) );
+  EXPECT_EQ( 2,   avg.getCount() );
+
+  avg.add(Vector2d(3,3));
+
+  EXPECT_TRUE( VectorsEqual(Vector2d(2,2), avg.getAverage()) );
+  EXPECT_EQ( 3, avg.getCount() );
 }
 
 // TEST (StatsTests, stdDev_int)
