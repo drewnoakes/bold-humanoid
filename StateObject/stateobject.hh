@@ -9,7 +9,7 @@ namespace bold
   class StateObject
   {
   protected:
-    virtual ~StateObject() {}
+    virtual ~StateObject() = default;
 
   public:
     virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
