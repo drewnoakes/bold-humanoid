@@ -34,4 +34,7 @@ void DataStreamer::run()
     static Setting<int>* dataStreamerSleepMicroseconds = Config::getSetting<int>("data-streamer.thread-sleep-microseconds");
     this_thread::sleep_for(chrono::microseconds(dataStreamerSleepMicroseconds->getValue()));
   }
+
+  if (d_context)
+    libwebsocket_context_destroy(d_context);
 }

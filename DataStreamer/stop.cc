@@ -11,7 +11,4 @@ void DataStreamer::stop()
   d_isStopRequested = true;
 
   d_thread.join();
-
-  if (d_context)
-    libwebsocket_context_destroy(d_context);
 }
