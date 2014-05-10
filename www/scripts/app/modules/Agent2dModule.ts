@@ -61,12 +61,11 @@ class Agent2dModule extends Module
     {
         // Make space for bottom controls if fullscreen
         if (isFullScreen)
-            height -= 50;
+            height -= 80;
         else
             height = 480;
 
         var scale = this.map.transform.getValue().getScale();
-//        var scale = Math.min(width / 12, height / 12);
         this.map.transform.setValue(
             new geometry.Transform()
             .translate(width / 2, height / 2)

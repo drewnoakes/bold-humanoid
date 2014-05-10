@@ -68,7 +68,6 @@ export class Map
             fieldLengthY = (constants.fieldY + 2 * constants.outerMarginMinimum),
             ratio = fieldLengthX / fieldLengthY;
 
-        height = Math.min(width/ratio, height);
 
         this.layerContainer.style.width = width + 'px';
         this.layerContainer.style.height = height + 'px';
