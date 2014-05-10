@@ -222,7 +222,7 @@ export class ObservedLineLayer extends DataLayer<state.WorldFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.lines)
-                    plotter.drawLineSegments(this.context, this.data.lines, 0.02, '#000088')
+                    plotter.drawLineSegments(this.context, this.data.lines, 0.02, '#000088');
             });
     }
 }
@@ -238,7 +238,7 @@ export class AgentPositionLayer extends DataLayer<state.WorldFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.pos)
-                    plotter.drawAgentPosition(this.context, {}, this.data.pos)
+                    plotter.drawAgentPosition(this.context, {}, this.data.pos);
             });
     }
 }
@@ -254,7 +254,7 @@ export class VisibleFieldPolyLayer extends DataLayer<state.WorldFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.visibleFieldPoly)
-                    plotter.drawVisibleFieldPoly(this.context, {visibleFieldPolyLineWidth: 1/this.transform.getValue().getScale()}, this.data.visibleFieldPoly)
+                    plotter.drawVisibleFieldPoly(this.context, {visibleFieldPolyLineWidth: 1/this.transform.getValue().getScale()}, this.data.visibleFieldPoly);
             });
     }
 }
@@ -270,7 +270,7 @@ export class BallPositionLayer extends DataLayer<state.WorldFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.ball)
-                    plotter.drawBall(this.context, {}, this.data.ball)
+                    plotter.drawBall(this.context, {}, this.data.ball);
             });
     }
 }
@@ -286,7 +286,7 @@ export class ObservedGoalLayer extends DataLayer<state.WorldFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.goals)
-                    plotter.drawGoalPosts(this.context, {goalStrokeStyle:'#FF5800'}, this.data.goals)
+                    plotter.drawGoalPosts(this.context, {goalStrokeStyle:'#FF5800'}, this.data.goals);
             });
     }
 }
@@ -302,7 +302,7 @@ export class OcclusionAreaLayer extends DataLayer<state.WorldFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.occlusionRays)
-                    plotter.drawOcclusionRays(this.context, {lineWidth:1/this.transform.getValue().getScale()}, this.data.occlusionRays)
+                    plotter.drawOcclusionRays(this.context, {lineWidth:1/this.transform.getValue().getScale()}, this.data.occlusionRays);
             });
     }
 }
@@ -367,7 +367,7 @@ export class AgentObservedLineLayer extends DataLayer<state.AgentFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.lines)
-                    plotter.drawLineSegments(this.context, this.data.lines, 0.02, '#000088')
+                    plotter.drawLineSegments(this.context, this.data.lines, 0.02, '#000088');
             });
     }
 }
@@ -399,7 +399,7 @@ export class AgentVisibleFieldPolyLayer extends DataLayer<state.AgentFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.visibleFieldPoly)
-                    plotter.drawVisibleFieldPoly(this.context, {visibleFieldPolyLineWidth: 1/this.transform.getValue().getScale()}, this.data.visibleFieldPoly)
+                    plotter.drawVisibleFieldPoly(this.context, {visibleFieldPolyLineWidth: 1/this.transform.getValue().getScale()}, this.data.visibleFieldPoly);
             });
     }
 }
@@ -415,7 +415,7 @@ export class AgentBallPositionLayer extends DataLayer<state.AgentFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.ball)
-                    plotter.drawBall(this.context, {}, this.data.ball)
+                    plotter.drawBall(this.context, {}, this.data.ball);
             });
     }
 }
@@ -431,7 +431,7 @@ export class AgentObservedGoalLayer extends DataLayer<state.AgentFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.goals)
-                    plotter.drawGoalPosts(this.context, {goalStrokeStyle:'#FF5800'}, this.data.goals)
+                    plotter.drawGoalPosts(this.context, {goalStrokeStyle:'#FF5800'}, this.data.goals);
             });
     }
 }
@@ -447,7 +447,7 @@ export class AgentOcclusionAreaLayer extends DataLayer<state.AgentFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.occlusionRays)
-                    plotter.drawOcclusionRays(this.context, {lineWidth:1/this.transform.getValue().getScale()}, this.data.occlusionRays)
+                    plotter.drawOcclusionRays(this.context, {lineWidth:1/this.transform.getValue().getScale()}, this.data.occlusionRays);
             });
     }
 }
