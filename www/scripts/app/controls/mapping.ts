@@ -420,6 +420,22 @@ export class AgentBallPositionLayer extends DataLayer<state.AgentFrame>
     }
 }
 
+export class AgentStationaryMapLayer extends DataLayer<state.StationaryMap>
+{
+    constructor(transform: Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.stationaryMapState,
+            "Stationary Map",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data)
+                    plotter.drawStationaryMap(this.context, this.data);
+            });
+    }
+}
+
 export class AgentObservedGoalLayer extends DataLayer<state.AgentFrame>
 {
     constructor(transform: Trackable<geometry.Transform>)

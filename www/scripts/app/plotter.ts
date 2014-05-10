@@ -268,3 +268,30 @@ export function drawTeammates(context: CanvasRenderingContext2D, players: state.
             drawAgentPosition(context, agentPosOptions, player.pos);
     });
 }
+
+export function drawStationaryMap(context: CanvasRenderingContext2D, data: state.StationaryMap)
+{
+    context.lineWidth = 0.01;
+
+    var maxBallCount = 0,
+        maxGoalCount = 0;
+
+    _.each(data.balls, ball => maxBallCount = Math.max(maxBallCount, ball.count));
+    _.each(data.goals, goal => maxGoalCount = Math.max(maxGoalCount, goal.count));
+
+    _.each(data.balls, ball =>
+    {
+        context.strokeStyle = 'rgba(255,0,0,' + (ball.count / maxBallCount) + ')';
+        context.beginPath();
+        context.arc(ball.pos[0], ball.pos[1], constants.ballRadius, 0, Math.PI*2, true);
+        context.stroke();
+    });
+
+    _.each(data.goals, goal =>
+    {
+        context.strokeStyle = 'rgba(255,255,0,' + (goal.count / maxGoalCount) + ')';
+        context.beginPath();
+        context.arc(goal.pos[0], goal.pos[1], constants.goalPostDiameter/2, 0, Math.PI*2, true);
+        context.stroke();
+    });
+}
