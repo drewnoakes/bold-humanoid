@@ -8,7 +8,7 @@ namespace bold
   {
   public:
     ActionOption(std::string const& id, std::function<void()> action)
-    : Option(id, "ActionOption"),
+    : Option(id, "Action"),
       d_action(action),
       d_needsRunning(true)
     {}
