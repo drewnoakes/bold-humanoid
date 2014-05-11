@@ -37,6 +37,7 @@ double FSMState::secondsSinceStart() const
 
 bool FSMState::allOptionsTerminated() const
 {
+  // NOTE this isn't recursive, so if a state's child returns a sub-option that hasn't terminated, the parent must currently handle this
   return all_of(options.begin(), options.end(), [](shared_ptr<Option> const& o) { return o->hasTerminated(); });
 }
 
