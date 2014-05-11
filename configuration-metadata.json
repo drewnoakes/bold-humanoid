@@ -267,9 +267,7 @@
     "technique": { "type": "enum", "default": 0, "values": { "Madgwick": 0, "Sum": 1 } }
   },
   "fall-detector": {
-    "window-size":          { "type": "int", "min": 1, "max": 1000, "default": 30, "readonly": true },
-    "max-limit-value":      { "type": "int", "min": 0, "max": 1023, "default": 100 },
-    "turn-fb-ratio":        { "type": "double", "default": 3.0 }
+    "window-size":          { "type": "int", "min": 1, "max": 1000, "default": 30, "readonly": true }
   },
   "options": {
     "announce-fsm-states": { "type": "bool", "default": false, "description": "Say states" },

@@ -7,7 +7,6 @@
 namespace bold
 {
   class CM730Snapshot;
-  template<typename> class Setting;
   class Voice;
 
   enum class FallState
@@ -32,12 +31,10 @@ namespace bold
 
   private:
     std::shared_ptr<Voice> d_voice;
-    MovingAverage<int> d_fbAvgValue;
-    MovingAverage<int> d_lrAvgValue;
-    Setting<int>* d_maxLimitValue;
-    Setting<double>* d_turnFbRatio;
+    MovingAverage<int> d_xAvg;
+    MovingAverage<int> d_yAvg;
+    MovingAverage<int> d_zAvg;
     FallState d_fallenState;
     Clock::Timestamp d_startTime;
-    int d_neutralAccPos = 512;
   };
 }

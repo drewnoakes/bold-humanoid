@@ -242,9 +242,7 @@
     "technique": 0
   },
   "fall-detector": {
-    "window-size": 30,
-    "forward-limit-value": 634,
-    "backward-limit-value": 444
+    "window-size": 30
   },
   "options": {
     "announce-fsm-states": false,
