@@ -50,7 +50,7 @@ void Odometer::observeTyped(shared_ptr<BodyState const> const& state, Sequential
     auto leftFootAgentTr = state->determineFootAgentTr(true);
     auto rightFootAgentTr = state->determineFootAgentTr(false);
 
-    // Translation is location of agent/torso iin foot frame, so stance/lowest foot has highest z
+    // Translation is location of agent/torso in foot frame, so stance/lowest foot has highest z
     bool isLeftSupportFoot = leftFootAgentTr.translation().z() > rightFootAgentTr.translation().z();
 
     auto lastFootAgentTr = d_lastBodyState->determineFootAgentTr(isLeftSupportFoot);

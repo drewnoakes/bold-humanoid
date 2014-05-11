@@ -21,8 +21,9 @@ void Localiser::predict()
   if (d_haveLastAgentTransform)
   {
     // Particle represents WA
-    // Predict new A': WA' = WA * AA'
-    auto deltaAgentTransform = odometryState->getTransform() * d_lastAgentTransform.inverse();
+    // Odometer gives AA0
+    // Predict new A': WA' = WA * AA' = WA * AA0 * A0A'
+    auto deltaAgentTransform = d_lastAgentTransform * odometryState->getTransform().inverse();
 
     auto deltaAgentMat4 = deltaAgentTransform.matrix();
     Matrix3d deltaAgentMat;
