@@ -5,9 +5,7 @@
 #include <memory>
 
 #include "../AgentPosition/agentposition.hh"
-#include "../filters/Filter/KalmanFilter/kalmanfilter.hh"
-#include "../filters/Filter/UnscentedKalmanFilter/unscentedkalmanfilter.hh"
-#include "../filters/Filter/ParticleFilter/particlefilter.hh"
+#include "../filters/Filter/filter.hh"
 #include "../stats/movingaverage.hh"
 
 namespace bold
@@ -33,7 +31,6 @@ namespace bold
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   private:
     typedef Eigen::Vector4d FilterState;
-    typedef ParticleFilter<4, 50> ParticleFilterUsed;
 
     std::pair<FilterState, double> generateState();
 

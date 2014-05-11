@@ -15,7 +15,12 @@
 #include "../filters/ObservationModel/JointObservationModel/jointobservationmodel.hh"
 #include "../util/assert.hh"
 #include "../util/memory.hh"
+#include "../filters/Filter/KalmanFilter/kalmanfilter.hh"
+#include "../filters/Filter/UnscentedKalmanFilter/unscentedkalmanfilter.hh"
+#include "../filters/Filter/ParticleFilter/particlefilter.hh"
 
 using namespace std;
 using namespace bold;
 using namespace Eigen;
+
+typedef ParticleFilter<4, 50> ParticleFilterUsed;
