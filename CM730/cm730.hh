@@ -162,11 +162,11 @@ namespace bold
     // ----------------- Static members
     //
 
-    static ushort makeWord(uchar lowByte, uchar highByte) { return (highByte << 8) | lowByte; }
-    static uchar getLowByte(ushort word) { return word & 0xFF; }
-    static uchar getHighByte(ushort word) { return (word >> 8) & 0xFF; }
+    static constexpr ushort makeWord(uchar lowByte, uchar highByte) { return (highByte << 8) | lowByte; }
+    static constexpr uchar getLowByte(ushort word) { return word & 0xFF; }
+    static constexpr uchar getHighByte(ushort word) { return (word >> 8) & 0xFF; }
 
-    static ushort color2Value(uchar red, uchar green, uchar blue) { return (ushort)(((blue>>3)<<10)|((green>>3)<<5)|(red>>3)); }
+    static constexpr ushort color2Value(uchar red, uchar green, uchar blue) { return (ushort)(((blue>>3)<<10)|((green>>3)<<5)|(red>>3)); }
 
     // 0 -> -1600 dps
     // 512 -> 0 dps
@@ -174,6 +174,8 @@ namespace bold
     static constexpr double RATIO_VALUE2DPS =                1600.0  / 512.0;
     static constexpr double RATIO_VALUE2RPS = Math::degToRad(1600.0) / 512.0;
     static constexpr double RATIO_VALUE2GS  = 4.0 / 512.0;
+    static constexpr int ACC_VALUE_MID = 512;
+    static constexpr int GYRO_VALUE_MID = 512;
 
     static ushort flipImuValue(ushort value)
     {
@@ -183,9 +185,9 @@ namespace bold
       return 1023 - value + 1;
     }
 
-    static double gyroValueToDps(ushort value) { return ((int)value - 512)*RATIO_VALUE2DPS; }
-    static double gyroValueToRps(ushort value) { return ((int)value - 512)*RATIO_VALUE2RPS; }
-    static double accValueToGs(ushort value) { return ((int)value - 512)*RATIO_VALUE2GS; }
+    static constexpr double gyroValueToDps(ushort value) { return ((int)value - GYRO_VALUE_MID)*RATIO_VALUE2DPS; }
+    static constexpr double gyroValueToRps(ushort value) { return ((int)value - GYRO_VALUE_MID)*RATIO_VALUE2RPS; }
+    static constexpr double accValueToGs(ushort value)   { return ((int)value - ACC_VALUE_MID)*RATIO_VALUE2GS; }
 
     static Eigen::Vector3d shortToColour(ushort s)
     {
@@ -280,7 +282,6 @@ namespace bold
   private:
     std::unique_ptr<CM730Platform> d_platform;
     bool d_isPowerEnableRequested;
-    //uchar d_controlTable[MAXNUM_ADDRESS];
 
     /**
      * @param priority select the queue for this exchange: 0=high 1=med 2=low
