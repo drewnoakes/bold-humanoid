@@ -46,18 +46,12 @@ auto isPerfectLineForAttack = []()
   // Must be looking approximately straight ahead (the ball is directly in front of us)
   double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
   if (fabs(Math::radToDeg(panAngle)) > 5.0)
-  {
-    log::verbose("isPerfectLineForAttack") << "FALSE - pan angle too great: " << panAngle;
     return false;
-  }
 
   // Verify goals are approximately the correct distance apart
   double goalDist = (goals[0] - goals[1]).norm();
   if (fabs(goalDist - FieldMap::getGoalY()) > FieldMap::getGoalY()/3.0)
-  {
-    log::verbose("isPerfectLineForAttack") << "FALSE - goal post distance ("<<goalDist<<") too far from expected ("<<FieldMap::getGoalY()<<")";
     return false;
-  }
 
   // If we have team data...
   auto team = State::get<TeamState>();
@@ -72,10 +66,7 @@ auto isPerfectLineForAttack = []()
       double ballToGoalDist = (agentFrame->getBallObservation().value() - goalMidpoint).norm();
 
       if (fabs(keeperBall->norm() - ballToGoalDist) < 1.5)
-      {
-        log::verbose("isPerfectLineForAttack") << "FALSE - keeper-ball dist (" << keeperBall->norm() << ") too similar to our goal-ball dist (" << ballToGoalDist << ")";
         return false;
-      }
     }
   }
 
@@ -84,15 +75,9 @@ auto isPerfectLineForAttack = []()
   bool isRight0 = goals[0].x() > ballX;
   bool isRight1 = goals[1].x() > ballX;
   if (isRight0 == isRight1)
-  {
-    log::verbose("isPerfectLineForAttack") << "FALSE - goals do not appear on either side of ball";
-    log::verbose("isPerfectLineForAttack") << " - goal[0]: " << goals[0].head<2>().transpose();
-    log::verbose("isPerfectLineForAttack") << " - goal[1]: " << goals[1].head<2>().transpose();
-    log::verbose("isPerfectLineForAttack") << " - ball:    " << agentFrame->getBallObservation()->head<2>().transpose();
     return false;
-  }
 
-  log::verbose("isPerfectLineForAttack") << "TRUE - transition to direct goal attack as line is good";
+  // All checks pass - transition to direct attack
   return true;
 };
 
@@ -104,7 +89,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
   auto approachBall = make_shared<ApproachBall>("approachBall", agent->getWalkModule(), agent->getBehaviourControl());
-//   auto lookAroundNarrow = make_shared<LookAround>("lookAroundNarrow", agent->getHeadModule(), 45.0);
   auto lookForGoal = make_shared<LookAround>("lookForGoal", agent->getHeadModule(), 100.0, []() { return 1 - 0.33*State::get<CameraFrameState>()->getGoalObservationCount(); });
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 0.5; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
