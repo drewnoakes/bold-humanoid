@@ -53,7 +53,7 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
       // Log a bunch of data when a fall is detected
       stringstream msg;
       msg << setprecision(3) << Clock::getSecondsSince(d_startTime) << ","
-          << getFallStateString(d_fallenState) << "," << fbAvg << "," << lrAvg
+          << getFallStateName(d_fallenState) << "," << fbAvg << "," << lrAvg
           << "," << hardwareState->getCM730State().voltage;
 
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
@@ -66,7 +66,7 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
   }
 }
 
-string FallDetector::getFallStateString(FallState fallState)
+string bold::getFallStateName(FallState fallState)
 {
   switch (fallState)
   {

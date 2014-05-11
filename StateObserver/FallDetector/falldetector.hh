@@ -19,11 +19,11 @@ namespace bold
     RIGHT
   };
 
+  std::string getFallStateName(FallState fallState);
+
   class FallDetector : public TypedStateObserver<HardwareState>
   {
   public:
-    static std::string getFallStateString(FallState fallState);
-
     FallDetector(std::shared_ptr<Voice> voice);
 
     void observeTyped(std::shared_ptr<HardwareState const> const& hardwareState, SequentialTimer& timer) override;
