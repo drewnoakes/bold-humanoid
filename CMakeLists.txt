@@ -382,6 +382,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/GetUpOption/getupoption.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/KeepPosition/keepposition.cc
 )
 

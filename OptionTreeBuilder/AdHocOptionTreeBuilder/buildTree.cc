@@ -31,14 +31,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   };
 
   auto isWalking = [walkModule]() { return walkModule->isRunning(); };
-
-  auto hasFallenForward = [fallDetector]() { return fallDetector->getFallenState() == FallState::FORWARD; };
-
-  auto hasFallenBackward = [fallDetector]() { return fallDetector->getFallenState() == FallState::BACKWARD; };
-
-  auto hasFallenLeft = [fallDetector]() { return fallDetector->getFallenState() == FallState::LEFT; };
-
-  auto hasFallenRight = [fallDetector]() { return fallDetector->getFallenState() == FallState::RIGHT; };
+  auto hasFallen = [fallDetector]() { return fallDetector->getFallenState() != FallState::STANDUP; };
 
   auto isAgentShutdownRequested = changedTo(true, [agent]() { return agent->isStopRequested(); });
 
@@ -51,10 +44,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto sit = make_shared<MotionScriptOption>("sitDownScript", motionScriptModule, "./motionscripts/sit-down.json");
   auto sitArmsBack = make_shared<MotionScriptOption>("sitDownScript", motionScriptModule, "./motionscripts/sit-down-arms-back.json");
   auto standUp = make_shared<MotionScriptOption>("standUpScript", motionScriptModule, "./motionscripts/stand-ready-upright.json");
-  auto forwardGetUp = make_shared<MotionScriptOption>("forwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-front.json");
-  auto backwardGetUp = make_shared<MotionScriptOption>("backwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-back.json");
-  auto leftGetUp = make_shared<MotionScriptOption>("leftGetUpScript", motionScriptModule, "./motionscripts/get-up-from-left.json");
-  auto rightGetUp = make_shared<MotionScriptOption>("rightGetUpScript", motionScriptModule, "./motionscripts/get-up-from-right.json");
+  auto getUp = make_shared<GetUpOption>("getUp", agent);
   auto stopWalking = make_shared<StopWalking>("stopWalking", walkModule);
   auto stopWalkingImmediately = make_shared<StopWalking>("stopWalking", walkModule, /*immediately*/ true);
   auto stopAgent = make_shared<ActionOption>("stopAgent", [agent]() { agent->stop(); });
@@ -84,10 +74,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto setState = winFsm->newState("set", {SequenceOption::make("pause-sequence", {stopWalking,standUp})});
   auto playingState = winFsm->newState("playing", {performRole});
   auto penalizedState = winFsm->newState("penalized", {stopWalking});
-  auto forwardGetUpState  = winFsm->newState("forwardGetUp",  {SequenceOption::make("forward-get-up-sequence",  {stopWalkingImmediately,forwardGetUp})});
-  auto backwardGetUpState = winFsm->newState("backwardGetUp", {SequenceOption::make("backward-get-up-sequence", {stopWalkingImmediately,backwardGetUp})});
-  auto leftGetUpState     = winFsm->newState("leftGetUp",     {SequenceOption::make("left-get-up-sequence",     {stopWalkingImmediately,leftGetUp})});
-  auto rightGetUpState    = winFsm->newState("rightGetUp",    {SequenceOption::make("right-get-up-sequence",    {stopWalkingImmediately,rightGetUp})});
+  auto getUpState = winFsm->newState("getUp", {SequenceOption::make("get-up-sequence",  {stopWalkingImmediately,getUp})});
   auto shutdownState = winFsm->newState("shutdown", {SequenceOption::make("shutdown-sequence", {stopWalking,sitArmsBack,stopAgent})});
 
   // In the Win FSM, any state other than 'playing' corresponds to the 'waiting' activity.
@@ -95,7 +82,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     PlayerActivity::Waiting,
     {
       startUpState, readyState, pauseState, setState, penalizedState,
-      forwardGetUpState, backwardGetUpState, leftGetUpState, rightGetUpState,
+      getUpState,
       shutdownState
     });
 
@@ -105,7 +92,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     {
       startUpState, readyState, pauseState,
       setState,
-      forwardGetUpState, backwardGetUpState, leftGetUpState, rightGetUpState,
+      getUpState,
       shutdownState
     });
 
@@ -196,36 +183,15 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->transitionTo(playingState, "gc-unpenalised")
     ->when(nonPenalisedPlayMode(PlayMode::PLAYING));
 
-  // FALLEN TRANSITIONS
-  playingState
-    ->transitionTo(forwardGetUpState, "fall-fwd")
-    ->when(hasFallenForward);
+  //
+  // GET UP FROM FALL
+  //
 
   playingState
-    ->transitionTo(backwardGetUpState, "fall-back")
-    ->when(hasFallenBackward);
+    ->transitionTo(getUpState, "fallen")
+    ->when(hasFallen);
 
-  playingState
-    ->transitionTo(leftGetUpState, "fall-left")
-    ->when(hasFallenLeft);
-
-  playingState
-    ->transitionTo(rightGetUpState, "fall-right")
-    ->when(hasFallenRight);
-
-  forwardGetUpState
-    ->transitionTo(playingState, "done")
-    ->whenTerminated();
-
-  backwardGetUpState
-    ->transitionTo(playingState, "done")
-    ->whenTerminated();
-
-  leftGetUpState
-    ->transitionTo(playingState, "done")
-    ->whenTerminated();
-
-  rightGetUpState
+  getUpState
     ->transitionTo(playingState, "done")
     ->whenTerminated();
 
