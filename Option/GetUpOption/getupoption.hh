@@ -4,9 +4,8 @@
 
 namespace bold
 {
-
-class MotionScriptOption;
   class Agent;
+  class MotionScriptOption;
 
   class GetUpOption : public Option
   {
