@@ -14,10 +14,10 @@ GetUpOption::GetUpOption(const string& id, Agent* agent)
 {
   auto const& motionScriptModule = agent->getMotionScriptModule();
 
-  d_forwardGetUp  = make_shared<MotionScriptOption>("forwardGetUpScript",  motionScriptModule, "./motionscripts/get-up-from-front.json");
-  d_backwardGetUp = make_shared<MotionScriptOption>("backwardGetUpScript", motionScriptModule, "./motionscripts/get-up-from-back.json");
-  d_leftGetUp     = make_shared<MotionScriptOption>("leftGetUpScript",     motionScriptModule, "./motionscripts/get-up-from-left.json");
-  d_rightGetUp    = make_shared<MotionScriptOption>("rightGetUpScript",    motionScriptModule, "./motionscripts/get-up-from-right.json");
+  d_forwardGetUp     = make_shared<MotionScriptOption>("forwardGetUpScript",     motionScriptModule, "./motionscripts/get-up-from-front.json");
+  d_backwardGetUp    = make_shared<MotionScriptOption>("backwardGetUpScript",    motionScriptModule, "./motionscripts/get-up-from-back.json");
+  d_rollLeftToFront  = make_shared<MotionScriptOption>("rollLeftToFrontScript",  motionScriptModule, "./motionscripts/roll-left-to-front.json");
+  d_rollRightToFront = make_shared<MotionScriptOption>("rollRightToFrontScript", motionScriptModule, "./motionscripts/roll-right-to-front.json");
 }
 
 vector<shared_ptr<Option>> GetUpOption::runPolicy(Writer<StringBuffer>& writer)
@@ -39,10 +39,10 @@ vector<shared_ptr<Option>> GetUpOption::runPolicy(Writer<StringBuffer>& writer)
     // First time to run. Determine the direction of the fall and choose the appropriate script to run
     switch (fallState)
     {
-      case FallState::BACKWARD: d_activeScript = d_backwardGetUp; break;
-      case FallState::FORWARD:  d_activeScript = d_forwardGetUp;  break;
-      case FallState::LEFT:     d_activeScript = d_leftGetUp;     break;
-      case FallState::RIGHT:    d_activeScript = d_rightGetUp;    break;
+      case FallState::BACKWARD: d_activeScript = d_backwardGetUp;    break;
+      case FallState::FORWARD:  d_activeScript = d_forwardGetUp;     break;
+      case FallState::LEFT:     d_activeScript = d_rollLeftToFront;  break;
+      case FallState::RIGHT:    d_activeScript = d_rollRightToFront; break;
       case FallState::STANDUP:
         // Somehow we've been asked to run when already standing.
         return {};
@@ -56,8 +56,8 @@ void GetUpOption::reset()
 {
   d_forwardGetUp->reset();
   d_backwardGetUp->reset();
-  d_leftGetUp->reset();
-  d_rightGetUp->reset();
+  d_rollLeftToFront->reset();
+  d_rollRightToFront->reset();
 
   d_activeScript = nullptr;
 }

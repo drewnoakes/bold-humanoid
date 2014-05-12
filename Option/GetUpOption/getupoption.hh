@@ -24,7 +24,7 @@ namespace bold
 
     std::shared_ptr<MotionScriptOption> d_forwardGetUp;
     std::shared_ptr<MotionScriptOption> d_backwardGetUp;
-    std::shared_ptr<MotionScriptOption> d_leftGetUp;
-    std::shared_ptr<MotionScriptOption> d_rightGetUp;
+    std::shared_ptr<MotionScriptOption> d_rollLeftToFront;
+    std::shared_ptr<MotionScriptOption> d_rollRightToFront;
   };
 }
