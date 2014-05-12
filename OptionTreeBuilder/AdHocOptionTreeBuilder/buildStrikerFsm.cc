@@ -96,6 +96,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookAtGoal = make_shared<LookAtGoal>("lookAtGoal", agent->getCameraModel(), agent->getHeadModule());
   auto circleBall = make_shared<CircleBall>("circleBall", agent->getWalkModule(), agent->getHeadModule(), lookAtFeet, lookAtBall);
   auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
+  auto kick = make_shared<KickOption>("kick", agent);
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
 
@@ -113,6 +114,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookAtFeetState = fsm->newState("lookAtFeet", {lookAtFeet,stopWalking});
   auto leftKickState = fsm->newState("leftKick", {leftKick});
   auto rightKickState = fsm->newState("rightKick", {rightKick});
+  auto kickState = fsm->newState("kick", {kick});
   auto waitForOtherStrikerState = fsm->newState("wait", {stopWalking,lookAtBall});
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
@@ -256,28 +258,13 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->transitionTo(lookForBallState, "ball-too-far")
     ->when([]() { return stepUpDownThreshold(6, ballTooFarToKick); });
 
-  // If the stationary map suggests we're aligned with the goal posts, try to kick.
-  // This helps in cases where we cannot see both goal posts at the same time.
   lookForGoalState
-    ->transitionTo(lookAtFeetState, "goal-mapped")
-    ->when([]()
-    {
-      auto map = State::get<StationaryMapState>();
-      if (!map)
-        return false;
-      bool hasLeft = false, hasRight = false;
-      for (auto const& goal : map->getGoalEstimates())
-      {
-        if (goal.getCount() > 10) // TODO magic number!!
-        {
-          if (goal.getAverage().x() > 0)
-            hasRight = true;
-          else
-            hasLeft = true;
-        }
-      }
-      return hasLeft && hasRight;
-    });
+    ->transitionTo(kickState, "can-kick")
+    ->when([kick]() { return kick->canKick(); });
+
+  kickState
+    ->transitionTo(lookForBallState, "done")
+    ->whenTerminated();
 
   // limit how long we will look for the goal
   lookForGoalState
@@ -287,6 +274,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   aboutFaceState
     ->transitionTo(lookForGoalState, "rotate-done")
     ->after(chrono::seconds(10));
+
+  lookAtGoalState
+    ->transitionTo(kickState, "can-kick")
+    ->when([kick]() { return kick->canKick(); });
 
   lookAtGoalState
     ->transitionTo(aimState, "confident")
@@ -303,6 +294,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     });
 
   // circle immediately, if goal is not in front (prior transition didn't fire)
+  // TODO consider static map when turning to goal -- don't require us seeing both posts at the same time
+  //      - test this by putting a bot in front of the goal where it cannot see both goal posts, facing sideways across the field -- it should still turn to the goal instead of doing a give-up kick
   aimState
     ->transitionTo(turnToGoalState, "goal-at-angle")
     ->when([]() { return true; });

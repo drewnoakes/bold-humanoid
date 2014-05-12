@@ -386,6 +386,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/KickOption/kickoption.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/KeepPosition/keepposition.cc
 )
 
