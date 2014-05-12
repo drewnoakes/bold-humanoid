@@ -75,7 +75,7 @@ shared_ptr<MotionRequest const> MotionScriptModule::run(shared_ptr<MotionScriptR
 {
   // TODO thread safety!
 
-  ASSERT(ThreadUtil::isThinkLoopThread() || ThreadUtil::isDataStreamerThread());
+  ASSERT(ThreadUtil::isThinkLoopThread(false) || ThreadUtil::isDataStreamerThread());
 
   auto const& script = scriptRunner->getScript();
 

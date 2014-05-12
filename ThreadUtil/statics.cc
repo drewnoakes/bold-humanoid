@@ -32,26 +32,29 @@ std::string ThreadUtil::getThreadName()
   }
 }
 
-bool ThreadUtil::isMotionLoopThread()
+bool ThreadUtil::isMotionLoopThread(bool logError)
 {
   if (d_threadId == ThreadId::MotionLoop)
     return true;
-  log::error("ThreadUtil::isMotionLoopThread") << "Expected Motion Loop thread but was: " << getThreadName();
+  if (logError)
+    log::error("ThreadUtil::isMotionLoopThread") << "Expected Motion Loop thread but was: " << getThreadName();
   return false;
 }
 
-bool ThreadUtil::isThinkLoopThread()
+bool ThreadUtil::isThinkLoopThread(bool logError)
 {
   if (d_threadId == ThreadId::ThinkLoop)
     return true;
-  log::error("ThreadUtil::isThinkLoopThread") << "Expected Think Loop thread but was: " << getThreadName();
+  if (logError)
+    log::error("ThreadUtil::isThinkLoopThread") << "Expected Think Loop thread but was: " << getThreadName();
   return false;
 }
 
-bool ThreadUtil::isDataStreamerThread()
+bool ThreadUtil::isDataStreamerThread(bool logError)
 {
   if (d_threadId == ThreadId::DataStreamer)
     return true;
-  log::error("ThreadUtil::isDataStreamerThread") << "Expected Data Streamer thread but was: " << getThreadName();
+  if (logError)
+    log::error("ThreadUtil::isDataStreamerThread") << "Expected Data Streamer thread but was: " << getThreadName();
   return false;
 }
