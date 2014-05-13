@@ -20,9 +20,16 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   }
   else if (d_speedCallback)
   {
-    double speed = Math::clamp(d_speedCallback(), 0.0, 1.0);
+    double speed = d_speed;
+    double requestedSpeed = d_speedCallback();
+    // Smooth speed increase, with instant decrease
+    speed += d_speedStep->getValue();
+    if (requestedSpeed < speed)
+      speed = requestedSpeed;
+    speed = Math::clamp(speed, 0.0, 1.0);
     writer.String("speed").Double(speed);
     d_startTimeSeconds += (1 - speed) * (t - d_lastTimeSeconds);
+    d_speed = speed;
   }
 
   writer.String("t").Double(t);
