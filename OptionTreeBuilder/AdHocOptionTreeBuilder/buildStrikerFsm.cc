@@ -109,7 +109,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto aimState = fsm->newState("aim", {});
   auto turnToGoalState = fsm->newState("turnToGoal", {circleBall});
   auto aboutFaceState = fsm->newState("aboutFace", {circleBall});
-  auto lookAtFeetState = fsm->newState("lookAtFeet", {lookAtFeet,stopWalking});
+  auto kickForwardsState = fsm->newState("kickForwards", {stopWalking,lookAtFeet});
   auto leftKickState = fsm->newState("leftKick", {leftKick});
   auto rightKickState = fsm->newState("rightKick", {rightKick});
   auto kickState = fsm->newState("kick", {kick});
@@ -118,7 +118,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
 //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState, waitForOtherStrikerState });
-  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, aimState, turnToGoalState, lookAtFeetState, leftKickState, rightKickState });
+  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, aimState, turnToGoalState, kickForwardsState, leftKickState, rightKickState });
 
   standUpState
     ->transitionTo(lookForBallState, "standing")
@@ -308,23 +308,27 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       };
     });
 
+  //
+  // KICK FORWARDS
+  //
+
   // If we notice the ball is too far to kick, abort kick
-  lookAtFeetState
+  kickForwardsState
     ->transitionTo(lookForBallState, "ball-too-far")
     ->when([]() { return stepUpDownThreshold(10, ballTooFarToKick); });
 
   // TODO if ball too central, step to left/right slightly, or use different kick
 
-  lookAtFeetState
+  kickForwardsState
     ->transitionTo(leftKickState, "ball-left")
-    ->when([lookAtFeet,lookAtFeetState]()
+    ->when([lookAtFeet,kickForwardsState]()
     {
       // Look at feet for one second
-      if (lookAtFeetState->secondsSinceStart() < 1)
+      if (kickForwardsState->secondsSinceStart() < 1)
         return false;
 
       // Wait until we've finished looking down
-      if (!lookAtFeetState->allOptionsTerminated())
+      if (!kickForwardsState->allOptionsTerminated())
         return false;
 
       if (lookAtFeet->hasPosition())
@@ -339,16 +343,16 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       return false;
     });
 
-  lookAtFeetState
+  kickForwardsState
     ->transitionTo(rightKickState, "ball-right")
-    ->when([lookAtFeet,lookAtFeetState]()
+    ->when([lookAtFeet,kickForwardsState]()
     {
       // Look at feet for one second
-      if (lookAtFeetState->secondsSinceStart() < 1)
+      if (kickForwardsState->secondsSinceStart() < 1)
         return false;
 
       // Wait until we've finished looking down
-      if (!lookAtFeetState->allOptionsTerminated())
+      if (!kickForwardsState->allOptionsTerminated())
         return false;
 
       if (lookAtFeet->hasPosition())
@@ -363,16 +367,16 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       return false;
     });
 
-  lookAtFeetState
+  kickForwardsState
     ->transitionTo(lookForBallState, "ball-gone")
-    ->when([lookAtFeetState]()
+    ->when([kickForwardsState]()
     {
       // TODO create and use 'all' operator
-      if (lookAtFeetState->secondsSinceStart() < 1)
+      if (kickForwardsState->secondsSinceStart() < 1)
         return false;
 
       // Wait until we've finished looking down
-      return lookAtFeetState->allOptionsTerminated();
+      return kickForwardsState->allOptionsTerminated();
     });
 
   leftKickState
