@@ -93,7 +93,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 0.5; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
-  auto lookAtGoal = make_shared<LookAtGoal>("lookAtGoal", agent->getCameraModel(), agent->getHeadModule());
   auto circleBall = make_shared<CircleBall>("circleBall", agent->getWalkModule(), agent->getHeadModule(), lookAtFeet, lookAtBall);
   auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
   auto kick = make_shared<KickOption>("kick", agent);
@@ -107,7 +106,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
   auto directAttackState = fsm->newState("directAttack", {approachBall, lookAtBall});
   auto atBallState = fsm->newState("atBall", {stopWalking, lookForGoal, buildStationaryMap});
-  auto lookAtGoalState = fsm->newState("lookAtGoal", {stopWalking, lookAtGoal, buildStationaryMap});
   auto aimState = fsm->newState("aim", {});
   auto turnToGoalState = fsm->newState("turnToGoal", {circleBall});
   auto aboutFaceState = fsm->newState("aboutFace", {circleBall});
@@ -120,7 +118,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
 //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState, waitForOtherStrikerState });
-  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, lookAtGoalState, aimState, turnToGoalState, lookAtFeetState, leftKickState, rightKickState });
+  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, aimState, turnToGoalState, lookAtFeetState, leftKickState, rightKickState });
 
   standUpState
     ->transitionTo(lookForBallState, "standing")
@@ -244,15 +242,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       return false;
     });
 
-  atBallState
-    ->transitionTo(lookAtGoalState, "see-both-goals")
-    ->when([]()
-    {
-      // TODO use the localiser here rather than requiring both posts to be in frame
-      auto goalsObs = State::get<AgentFrameState>()->getGoalObservations();
-      return goalsObs.size() >= 2;
-    });
-
   // If we notice the ball is too far to kick, abort kick
   atBallState
     ->transitionTo(lookForBallState, "ball-too-far")
@@ -274,14 +263,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   aboutFaceState
     ->transitionTo(atBallState, "rotate-done")
     ->after(chrono::seconds(10));
-
-  lookAtGoalState
-    ->transitionTo(kickState, "can-kick")
-    ->when([kick]() { return kick->canKick(); });
-
-  lookAtGoalState
-    ->transitionTo(aimState, "confident")
-    ->after(chrono::milliseconds(500));
 
   // start kick procedure if goal is in front of us
   aimState
