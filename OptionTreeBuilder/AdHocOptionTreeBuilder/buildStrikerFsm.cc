@@ -106,7 +106,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
   auto directAttackState = fsm->newState("directAttack", {approachBall, lookAtBall});
-  auto lookForGoalState = fsm->newState("lookForGoal", {stopWalking, lookForGoal, buildStationaryMap});
+  auto atBallState = fsm->newState("atBall", {stopWalking, lookForGoal, buildStationaryMap});
   auto lookAtGoalState = fsm->newState("lookAtGoal", {stopWalking, lookAtGoal, buildStationaryMap});
   auto aimState = fsm->newState("aim", {});
   auto turnToGoalState = fsm->newState("turnToGoal", {circleBall});
@@ -120,7 +120,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
 //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState, waitForOtherStrikerState });
-  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { lookForGoalState, lookAtGoalState, aimState, turnToGoalState, lookAtFeetState, leftKickState, rightKickState });
+  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, lookAtGoalState, aimState, turnToGoalState, lookAtFeetState, leftKickState, rightKickState });
 
   standUpState
     ->transitionTo(lookForBallState, "standing")
@@ -165,7 +165,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // stop walking to ball once we're close enough
   approachBallState
-    ->transitionTo(lookForGoalState, "near-ball")
+    ->transitionTo(atBallState, "near-ball")
     ->when(ballIsStoppingDistance);
 
   approachBallState
@@ -183,7 +183,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto maxGoalieGoalDistance      = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
 
   // Abort attack if it looks like we are going to kick an own goal
-  lookForGoalState
+  atBallState
     ->transitionTo(aboutFaceState, "abort-attack-own-goal")
     ->when([agent,maxGoalieGoalDistance]()
     {
@@ -244,7 +244,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       return false;
     });
 
-  lookForGoalState
+  atBallState
     ->transitionTo(lookAtGoalState, "see-both-goals")
     ->when([]()
     {
@@ -254,11 +254,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     });
 
   // If we notice the ball is too far to kick, abort kick
-  lookForGoalState
+  atBallState
     ->transitionTo(lookForBallState, "ball-too-far")
     ->when([]() { return stepUpDownThreshold(6, ballTooFarToKick); });
 
-  lookForGoalState
+  atBallState
     ->transitionTo(kickState, "can-kick")
     ->when([kick]() { return kick->canKick(); });
 
@@ -267,12 +267,12 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->whenTerminated();
 
   // limit how long we will look for the goal
-  lookForGoalState
+  atBallState
     ->transitionTo(lookAtFeetState, "give-up")
     ->after(chrono::seconds(7));
 
   aboutFaceState
-    ->transitionTo(lookForGoalState, "rotate-done")
+    ->transitionTo(atBallState, "rotate-done")
     ->after(chrono::seconds(10));
 
   lookAtGoalState
@@ -302,7 +302,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // control duration of ball circling
   turnToGoalState
-    ->transitionTo(lookForGoalState, "done")
+    ->transitionTo(atBallState, "done")
     ->when([circleBall,turnToGoalState,agent]()
     {
       // TODO break dependency upon pan limit
