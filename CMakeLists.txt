@@ -406,10 +406,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/LookAtGoal/runPolicy.cc
-)
-
-add_class(BOLDHUMANOID
   ./Option/MotionScriptOption/motionscriptoption.cc
 )
 
