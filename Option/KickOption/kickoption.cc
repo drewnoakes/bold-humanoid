@@ -76,29 +76,33 @@ bool KickOption::canKick() const
   return selectKick() != nullptr;
 }
 
-Kick const* KickOption::selectKick() const
+bool KickOption::canSelectKick() const
 {
-  const int samplesNeeded = 10; // TODO magic number!!
-
   auto map = State::get<StationaryMapState>();
 
   if (!map)
-    return nullptr;
-
+    return false;
   if (map->getBallEstimates().size() == 0)
-    return nullptr;
+    return false;
   if (map->getGoalEstimates().size() < 2)
-    return nullptr;
-  if (map->getGoalEstimates()[1].getCount() < samplesNeeded)
+    return false;
+  if (map->getGoalEstimates()[1].getCount() < GoalSamplesNeeded)
+    return false;
+  if (map->getBallEstimates()[0].getCount() < BallSamplesNeeded)
+    return false;
+  return true;
+}
+
+Kick const* KickOption::selectKick() const
+{
+  if (!canSelectKick())
     return nullptr;
 
+  auto map = State::get<StationaryMapState>();
   auto const& ballEstimate = map->getBallEstimates()[0];
 
-  if (ballEstimate.getCount() < samplesNeeded)
-    return nullptr;
-
   // TODO when more than one kick is possible, take the best, not the first
-  // TODO the end pos doens't necessarily have to be between the goals -- sometimes just nearer the goal is enough
+  // TODO the end pos doesn't necessarily have to be between the goals -- sometimes just nearer the goal is enough
 
   for (auto const& kick : d_kicks)
   {
@@ -113,7 +117,7 @@ Kick const* KickOption::selectKick() const
     bool hasLeft = false, hasRight = false;
     for (auto const& goal : map->getGoalEstimates())
     {
-      if (goal.getCount() < samplesNeeded)
+      if (goal.getCount() < GoalSamplesNeeded)
         break;
 
       auto goalPos = goal.getAverage();

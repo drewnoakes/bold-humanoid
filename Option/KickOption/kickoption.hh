@@ -41,6 +41,9 @@ namespace bold
   class KickOption : public Option
   {
   public:
+    static constexpr int GoalSamplesNeeded = 10; // TODO magic number!!
+    static constexpr int BallSamplesNeeded = 20; // TODO magic number!!
+
     KickOption(std::string const& id, Agent* agent);
 
     /** Indicates whether, given the current static map, the ball may be kicked in an advantageous way. */
@@ -51,6 +54,9 @@ namespace bold
     virtual void reset() override;
 
     virtual double hasTerminated() override;
+
+    /// Indicates whether the StationaryMap contains enough data to attempt kick selection.
+    bool canSelectKick() const;
 
   private:
     /** Selects the most advantageous kick from the current position, if any. */
