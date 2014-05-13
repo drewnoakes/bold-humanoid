@@ -1,9 +1,26 @@
-#include "circleball.ih"
+#include "circleball.hh"
 
+#include "../../Agent/agent.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../MotionModule/WalkModule/walkmodule.hh"
+#include "../../State/state.hh"
+#include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../LookAtBall/lookatball.hh"
 #include "../LookAtFeet/lookatfeet.hh"
 
+using namespace bold;
 using namespace Eigen;
+using namespace rapidjson;
+using namespace std;
+
+CircleBall::CircleBall(std::string const& id, Agent* agent)
+: Option(id, "CircleBall"),
+  d_walkModule(agent->getWalkModule()),
+  d_headModule(agent->getHeadModule()),
+  d_lookAtFeet(make_shared<LookAtFeet>("lookAtFeet", d_headModule)),
+  d_lookAtBall(make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), d_headModule)),
+  d_isLeftTurn(true)
+{}
 
 vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 {

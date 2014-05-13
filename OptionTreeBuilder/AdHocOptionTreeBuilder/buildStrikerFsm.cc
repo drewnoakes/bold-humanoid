@@ -93,7 +93,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 0.5; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
-  auto circleBall = make_shared<CircleBall>("circleBall", agent->getWalkModule(), agent->getHeadModule(), lookAtFeet, lookAtBall);
+  auto circleBall = make_shared<CircleBall>("circleBall", agent);
   auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
   auto kick = make_shared<KickOption>("kick", agent);
 
@@ -171,7 +171,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->when(isPerfectLineForAttack);
 
   directAttackState
-    ->transitionTo(lookAtFeetState, "near-ball")
+    ->transitionTo(kickForwardsState, "near-ball")
     ->when(ballIsStoppingDistance);
 
   waitForOtherStrikerState
@@ -257,7 +257,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // limit how long we will look for the goal
   atBallState
-    ->transitionTo(lookAtFeetState, "give-up")
+    ->transitionTo(kickForwardsState, "give-up")
     ->after(chrono::seconds(7));
 
   aboutFaceState
@@ -266,7 +266,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // start kick procedure if goal is in front of us
   aimState
-    ->transitionTo(lookAtFeetState, "square-to-goal")
+    ->transitionTo(kickForwardsState, "square-to-goal")
     ->when([]()
     {
       double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;

@@ -4,6 +4,7 @@
 
 namespace bold
 {
+  class Agent;
   class WalkModule;
   class HeadModule;
   class LookAtFeet;
@@ -12,14 +13,7 @@ namespace bold
   class CircleBall : public Option
   {
   public:
-    CircleBall(std::string const& id, std::shared_ptr<WalkModule> walkModule, std::shared_ptr<HeadModule> headModule, std::shared_ptr<LookAtFeet> lookAtFeet, std::shared_ptr<LookAtBall> lookAtBall)
-    : Option(id, "CircleBall"),
-      d_walkModule(walkModule),
-      d_headModule(headModule),
-      d_lookAtFeet(lookAtFeet),
-      d_lookAtBall(lookAtBall),
-      d_isLeftTurn(true)
-    {}
+    CircleBall(std::string const& id, Agent* agent);
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
