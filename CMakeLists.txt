@@ -480,7 +480,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/AgentFrameState/writeJson.cc
+  ./StateObject/AgentFrameState/agentframestate.cc
 )
 
 add_class(BOLDHUMANOID
