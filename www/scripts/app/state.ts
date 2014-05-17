@@ -378,6 +378,7 @@ export interface StationaryMap
 {
     balls: AveragePosition[];
     goals: AveragePosition[];
+    teammates: AveragePosition[];
 }
 
 export interface StaticJointData

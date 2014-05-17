@@ -3,34 +3,30 @@
 using namespace bold;
 using namespace Eigen;
 using namespace rapidjson;
+using namespace std;
 
 void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
 {
+  auto writeEstimates = [&writer](vector<Average<Vector3d>> const& estimates, string name)
+  {
+    writer.String(name.c_str()).StartArray();
+    for (auto const& estimate : estimates)
+    {
+      writer.StartObject();
+      {
+        writer.String("pos").StartArray().Double(estimate.getAverage().x()).Double(estimate.getAverage().y()).EndArray();
+        writer.String("count").Int(estimate.getCount());
+      }
+      writer.EndObject();
+    }
+    writer.EndArray();
+  };
+
   writer.StartObject();
   {
-    writer.String("balls").StartArray();
-    for (auto const& ball : d_ballEstimates)
-    {
-      writer.StartObject();
-      {
-        writer.String("pos").StartArray().Double(ball.getAverage().x()).Double(ball.getAverage().y()).EndArray();
-        writer.String("count").Int(ball.getCount());
-      }
-      writer.EndObject();
-    }
-    writer.EndArray();
-
-    writer.String("goals").StartArray();
-    for (auto const& goal : d_goalEstimates)
-    {
-      writer.StartObject();
-      {
-        writer.String("pos").StartArray().Double(goal.getAverage().x()).Double(goal.getAverage().y()).EndArray();
-        writer.String("count").Int(goal.getCount());
-      }
-      writer.EndObject();
-    }
-    writer.EndArray();
+    writeEstimates(d_ballEstimates, "balls");
+    writeEstimates(d_goalEstimates, "goals");
+    writeEstimates(d_teammateEstimates, "teammates");
   }
   writer.EndObject();
 }

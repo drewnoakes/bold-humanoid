@@ -34,6 +34,12 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
     hasChange = true;
   }
 
+  for (auto const& teammate : agentFrame->getTeamMateObservations())
+  {
+    integrate(d_teammateEstimates, teammate, 0.5); // TODO magic number!
+    hasChange = true;
+  }
+
   if (hasChange)
     updateStateObject();
 
@@ -42,13 +48,14 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
 
 void BuildStationaryMap::updateStateObject() const
 {
-  State::make<StationaryMapState>(d_ballEstimates, d_goalEstimates);
+  State::make<StationaryMapState>(d_ballEstimates, d_goalEstimates, d_teammateEstimates);
 }
 
 void BuildStationaryMap::reset()
 {
   d_ballEstimates.clear();
   d_goalEstimates.clear();
+  d_teammateEstimates.clear();
 
   updateStateObject();
 }

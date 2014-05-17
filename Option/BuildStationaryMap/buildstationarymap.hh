@@ -24,5 +24,6 @@ namespace bold
 
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
     std::vector<Average<Eigen::Vector3d>> d_goalEstimates;
+    std::vector<Average<Eigen::Vector3d>> d_teammateEstimates;
   };
 }
