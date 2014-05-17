@@ -20,7 +20,7 @@ namespace bold
   private:
     void updateStateObject() const;
 
-    void integrate(std::vector<Average<Eigen::Vector3d>>& estimates, Eigen::Vector3d pos, double mergeDistance);
+    static void integrate(std::vector<Average<Eigen::Vector3d>>& estimates, Eigen::Vector3d pos, double mergeDistance);
 
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
     std::vector<Average<Eigen::Vector3d>> d_goalEstimates;
