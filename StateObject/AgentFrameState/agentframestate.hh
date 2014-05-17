@@ -69,6 +69,8 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
+    bool shouldSeeAgentFrameGroundPoint(Eigen::Vector2d groundAgent) const;
+
   private:
     Maybe<Eigen::Vector3d> d_ballObservation;
     std::vector<Eigen::Vector3d> d_goalObservations;

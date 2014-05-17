@@ -1,7 +1,14 @@
 #include "agentframestate.hh"
 
 using namespace bold;
+using namespace Eigen;
 using namespace rapidjson;
+
+bool AgentFrameState::shouldSeeAgentFrameGroundPoint(Vector2d groundAgent) const
+{
+  // TODO accept a 3d vector, and use similar triangles to transform such that z == 0
+  return d_visibleFieldPoly->contains(groundAgent);
+}
 
 void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
 {
