@@ -9,6 +9,9 @@ using namespace Eigen;
 using namespace rapidjson;
 using namespace std;
 
+// TODO decrease the 'score' of an estimate if it should be seen, but isn't
+// TODO build a map of the closest occluded area, radially from our position -- prove by side-kicking instead of forward kicking when keeper in the way
+
 BuildStationaryMap::BuildStationaryMap(string const& id)
 : Option(id, "BuildStationaryMap")
 {}
