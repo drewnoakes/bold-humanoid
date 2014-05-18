@@ -8,27 +8,55 @@
 
 namespace bold
 {
+  /// Indicates which team owns a goal post.
+  enum class GoalLabel
+  {
+    /// The ownership of the goal post could not be determined.
+    Unknown,
+    /// Our goal. Defend it!
+    Ours,
+    /// Their goal. Attack it!
+    Theirs
+  };
+
+  std::string getGoalLabelName(GoalLabel label);
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  class GoalEstimate
+  {
+  public:
+    GoalEstimate(Average<Eigen::Vector3d> estimate, GoalLabel label)
+    : d_estimate(estimate),
+      d_label(label)
+    {}
+
+    Eigen::Vector3d getAverage() const { return d_estimate.getAverage(); }
+    int getCount() const { return d_estimate.getCount(); }
+    GoalLabel getLabel() const { return d_label; }
+
+  private:
+    Average<Eigen::Vector3d> d_estimate;
+    GoalLabel d_label;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
   class StationaryMapState : public StateObject
   {
   public:
     StationaryMapState(std::vector<Average<Eigen::Vector3d>> ballEstimates,
                        std::vector<Average<Eigen::Vector3d>> goalEstimates,
-                       std::vector<Average<Eigen::Vector3d>> teammateEstimates)
-    : d_ballEstimates(ballEstimates),
-      d_goalEstimates(goalEstimates),
-      d_teammateEstimates(teammateEstimates)
-    {
-      // Sort estimates such that those with greater numbers of observations appear first
-      std::sort(d_ballEstimates.begin(), d_ballEstimates.end(), compareAverages);
-      std::sort(d_goalEstimates.begin(), d_goalEstimates.end(), compareAverages);
-      std::sort(d_teammateEstimates.begin(), d_teammateEstimates.end(), compareAverages);
-    }
+                       std::vector<Average<Eigen::Vector3d>> teammateEstimates);
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     std::vector<Average<Eigen::Vector3d>> const& getBallEstimates() const { return d_ballEstimates; };
-    std::vector<Average<Eigen::Vector3d>> const& getGoalEstimates() const { return d_goalEstimates; };
     std::vector<Average<Eigen::Vector3d>> const& getTeammateEstimates() const { return d_teammateEstimates; };
+    std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; };
+
+    uint countGoalsWithSamples(int sampleThreshold) const;
+    bool hasBallWithSamples(int sampleThreshold) const;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
@@ -38,8 +66,12 @@ namespace bold
       return a.getCount() > b.getCount();
     }
 
+    static std::vector<GoalEstimate> labelGoalObservations(
+      std::vector<Average<Eigen::Vector3d>> const& teammateEstimates,
+      std::vector<Average<Eigen::Vector3d>> const& goalEstimates);
+
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
-    std::vector<Average<Eigen::Vector3d>> d_goalEstimates;
     std::vector<Average<Eigen::Vector3d>> d_teammateEstimates;
+    std::vector<GoalEstimate> d_goalEstimates;
   };
 }

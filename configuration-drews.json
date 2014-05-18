@@ -47,7 +47,8 @@
   "vision": {
     "goal-detection": {
       "max-field-edge-distance-px": 0,
-      "accepted-width-ratio": [0.4, 1.4]
+      "accepted-width-ratio": [0.4, 1.4],
+      "max-pair-error-dist": 1.0
     },
     "pixel-labels": {
       "goal":  { "hue": [30,  60], "sat": [110, 255], "val": [70, 222] },

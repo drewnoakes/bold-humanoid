@@ -43,6 +43,7 @@ namespace bold
   public:
     static constexpr int GoalSamplesNeeded = 10; // TODO magic number!!
     static constexpr int BallSamplesNeeded = 20; // TODO magic number!!
+    static constexpr int KeeperSamplesNeeded = 5; // TODO magic number!!
 
     KickOption(std::string const& id, Agent* agent);
 
