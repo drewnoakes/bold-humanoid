@@ -94,12 +94,12 @@
     "image-granularity": { "type": "enum", "default": 0, "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3, "Projected": 4 } },
     "max-granularity": { "type": "int", "min": 1, "max": 20, "default": 4 },
     "pixel-labels": {
-      "goal":  { "type": "hsv-range", "default": { "hue": [44, 60],  "sat": [158, 236], "val": [124, 222] } },
-      "ball":  { "type": "hsv-range", "default": { "hue": [0, 23], "sat": [72, 255],  "val": [12, 255] } },
-      "field": { "type": "hsv-range", "default": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] } },
-      "line":  { "type": "hsv-range", "default": { "hue": [0, 255],  "sat": [0, 167],   "val": [161, 255] } },
-      "cyan":  { "type": "hsv-range", "default": { "hue": [125, 155], "sat": [100, 255],  "val": [40, 100] } },
-      "magenta":  { "type": "hsv-range", "default": { "hue": [235, 0], "sat": [100, 150],  "val": [40, 100] } }
+      "goal":    { "type": "hsv-range", "default": { "hue": [44, 60],   "sat": [158, 236], "val": [124, 222] } },
+      "ball":    { "type": "hsv-range", "default": { "hue": [0, 23],    "sat": [72, 255],  "val": [12, 255] } },
+      "field":   { "type": "hsv-range", "default": { "hue": [72, 118],  "sat": [166, 236], "val": [52, 192] } },
+      "line":    { "type": "hsv-range", "default": { "hue": [0, 255],   "sat": [0, 167],   "val": [161, 255] } },
+      "cyan":    { "type": "hsv-range", "default": { "hue": [125, 155], "sat": [100, 255], "val": [40, 100] } },
+      "magenta": { "type": "hsv-range", "default": { "hue": [235, 0],   "sat": [100, 150], "val": [40, 100] } }
     },
     "blob-detection": {
       "enable": { "type": "bool", "default": true }
@@ -111,16 +111,16 @@
       "max-field-edge-distance-px": { "type": "int", "min": -50, "max": 500, "default": 0 }
     },
     "goal-detection": {
-      "min-dimension-px":       { "type": "int", "min": 1, "max": 50, "default": 1 },
+      "min-dimension-px":           { "type": "int", "min": 1, "max": 50, "default": 1 },
       "accepted-width-ratio":       { "type": "double-range", "default": [0.6, 1.4] },
       "max-field-edge-distance-px": { "type": "int", "min": -50, "max": 500, "default": 30 },
       "max-pair-error-dist":        { "type": "double", "min": 0, "max": 2, "default": 0.5 }
     },
     "player-detection": {
-      "enable":                 { "type": "bool", "default": false },
-      "min-area-px":             { "type": "int", "min": 1, "max": 10000, "default": 10 },
-      "goalie-marker-height":    { "type": "double", "min": 0, "max": 0.7, "default": 0.28, "readonly": true },
-      "max-goalie-goal-dist":    { "type": "double", "min": 0, "max": 2.5, "default": 1.0, "readonly": true }
+      "enable":               { "type": "bool", "default": false },
+      "min-area-px":          { "type": "int", "min": 1, "max": 10000, "default": 10 },
+      "goalie-marker-height": { "type": "double", "min": 0, "max": 0.7, "default": 0.28, "readonly": true },
+      "max-goalie-goal-dist": { "type": "double", "min": 0, "max": 2.5, "default": 1.0, "readonly": true }
     },
     "line-detection": {
       "enable":      { "type": "bool", "default": false, "description": "Detect lines" },
