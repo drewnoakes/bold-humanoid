@@ -4,6 +4,25 @@ using namespace bold;
 using namespace Eigen;
 using namespace rapidjson;
 
+AgentFrameState::AgentFrameState(
+  Maybe<Eigen::Vector3d> ballObservation,
+  std::vector<Eigen::Vector3d> goalObservations,
+  std::vector<Eigen::Vector3d> teamMateObservations,
+  std::vector<LineSegment3d> observedLineSegments,
+  std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> observedLineJunctions,
+  Maybe<Polygon2d> visibleFieldPoly,
+  std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
+  ulong thinkCycleNumber)
+: d_ballObservation(std::move(ballObservation)),
+  d_goalObservations(std::move(goalObservations)),
+  d_teamMateObservations(std::move(teamMateObservations)),
+  d_observedLineSegments(std::move(observedLineSegments)),
+  d_observedLineJunctions(std::move(observedLineJunctions)),
+  d_visibleFieldPoly(std::move(visibleFieldPoly)),
+  d_occlusionRays(std::move(occlusionRays)),
+  d_thinkCycleNumber(thinkCycleNumber)
+{}
+
 bool AgentFrameState::shouldSeeAgentFrameGroundPoint(Vector2d groundAgent) const
 {
   // TODO accept a 3d vector, and use similar triangles to transform such that z == 0

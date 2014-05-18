@@ -22,16 +22,7 @@ namespace bold
                     std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> observedLineJunctions,
                     Maybe<Polygon2d> visibleFieldPoly,
                     std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
-                    ulong thinkCycleNumber)
-      : d_ballObservation(std::move(ballObservation)),
-      d_goalObservations(std::move(goalObservations)),
-      d_teamMateObservations(std::move(teamMateObservations)),
-      d_observedLineSegments(std::move(observedLineSegments)),
-      d_observedLineJunctions(std::move(observedLineJunctions)),
-      d_visibleFieldPoly(std::move(visibleFieldPoly)),
-      d_occlusionRays(std::move(occlusionRays)),
-      d_thinkCycleNumber(thinkCycleNumber)
-    {}
+                    ulong thinkCycleNumber);
 
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
