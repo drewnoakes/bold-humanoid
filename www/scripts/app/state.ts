@@ -374,10 +374,22 @@ export interface AveragePosition
     count: number;
 }
 
+export enum GoalLabel
+{
+    Unknown = 0,
+    Ours = 1,
+    Theirs = 2
+}
+
+export interface AverageGoalPosition extends AveragePosition
+{
+    label: GoalLabel;
+}
+
 export interface StationaryMap
 {
     balls: AveragePosition[];
-    goals: AveragePosition[];
+    goals: AverageGoalPosition[];
     teammates: AveragePosition[];
 }
 

@@ -12,11 +12,11 @@ namespace bold
   enum class GoalLabel
   {
     /// The ownership of the goal post could not be determined.
-    Unknown,
+    Unknown = 0,
     /// Our goal. Defend it!
-    Ours,
+    Ours = 1,
     /// Their goal. Attack it!
-    Theirs
+    Theirs = 2
   };
 
   std::string getGoalLabelName(GoalLabel label);

@@ -48,8 +48,8 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
       writer.StartObject();
       {
         writer.String("pos").StartArray().Double(estimate.getAverage().x()).Double(estimate.getAverage().y()).EndArray();
-        writer.String("count").Int(estimate.getCount());
-        writer.String("label").String(getGoalLabelName(estimate.getLabel()).c_str());
+        writer.String("count").Uint(estimate.getCount());
+        writer.String("label").Uint(static_cast<int>(estimate.getLabel()));
       }
       writer.EndObject();
     }
