@@ -3,7 +3,6 @@
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../StateObject/StationaryMapState/stationarymapstate.hh"
-#include "../LookAround/lookaround.hh"
 
 using namespace bold;
 using namespace Eigen;
