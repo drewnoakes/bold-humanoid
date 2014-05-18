@@ -51,7 +51,8 @@ namespace bold
 
     static double circleRadius() { return d_circleRadius; }
 
-    /// The distance between the centre of goal posts along the y axis.
+    /// The width between each of a pair of goal posts.
+    /// Distance along the Y axis is measured between the midpoint Z vectors.
     static double getGoalY() { return d_goalY; };
 
     /// The longer length of the goal (penalty) area.
