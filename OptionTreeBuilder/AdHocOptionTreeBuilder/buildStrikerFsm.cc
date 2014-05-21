@@ -94,36 +94,34 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
   auto approachBall = make_shared<ApproachBall>("approachBall", agent->getWalkModule(), agent->getBehaviourControl());
-  auto lookForGoal = make_shared<LookAround>("lookForGoal", agent->getHeadModule(), 100.0, []() { return 1 - 0.33*State::get<CameraFrameState>()->getGoalObservationCount(); });
+  auto kickMotion = make_shared<MotionScriptOption>("kick", agent->getMotionScriptModule());
+  auto atBall = make_shared<AtBall>("atBall", agent);
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 0.5; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto circleBall = make_shared<CircleBall>("circleBall", agent);
   auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
-  auto kick = make_shared<KickOption>("kick", agent);
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookForBall, buildStationaryMap});
+  auto lookForBallState = fsm->newState("lookForBall", {stopWalking, buildStationaryMap, lookForBall});
   auto circleToFindLostBallState = fsm->newState("lookForBallCircling", {searchBall});
   auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
   auto directAttackState = fsm->newState("directAttack", {approachBall, lookAtBall});
-  auto atBallState = fsm->newState("atBall", {stopWalking, lookForGoal, buildStationaryMap});
-  auto aimState = fsm->newState("aim", {});
-  auto turnToGoalState = fsm->newState("turnToGoal", {circleBall});
-  auto aboutFaceState = fsm->newState("aboutFace", {circleBall});
+  auto atBallState = fsm->newState("atBall", {stopWalking, buildStationaryMap, atBall});
+  auto turnAroundBallState = fsm->newState("turnAroundBall", {circleBall});
   auto kickForwardsState = fsm->newState("kickForwards", {stopWalking,lookAtFeet});
   auto leftKickState = fsm->newState("leftKick", {leftKick});
   auto rightKickState = fsm->newState("rightKick", {rightKick});
-  auto kickState = fsm->newState("kick", {kick});
+  auto kickState = fsm->newState("kick", {kickMotion});
   auto waitForOtherStrikerState = fsm->newState("wait", {stopWalking,lookAtBall});
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
 //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState, waitForOtherStrikerState });
-  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, aimState, turnToGoalState, kickForwardsState, leftKickState, rightKickState });
+  setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
 
   standUpState
     ->transitionTo(lookForBallState, "standing")
@@ -183,135 +181,60 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->transitionTo(lookAtBallState)
     ->when([]() { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
-  auto maxGoalieGoalDistance      = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
-
-  // Abort attack if it looks like we are going to kick an own goal
-  atBallState
-    ->transitionTo(aboutFaceState, "abort-attack-own-goal")
-    ->when([agent,maxGoalieGoalDistance]()
-    {
-      // If the keeper is telling us that the ball is close to our goal, and
-      // we see a goalpost nearly that far away, then we should abort the
-      // attack.
-      auto team = State::get<TeamState>();
-      auto agentFrame = State::get<AgentFrameState>();
-
-      if (team == nullptr || agentFrame == nullptr)
-        return false;
-
-      FieldSide ballSide = team->getKeeperBallSideEstimate();
-
-      if (ballSide == FieldSide::Unknown)
-      {
-        // Check if we see goalie in between goal posts
-        auto goalObservations = agentFrame->getGoalObservations();
-        auto teamMateObservations = agentFrame->getTeamMateObservations();
-        if (goalObservations.size() == 2 && teamMateObservations.size() > 0)
-        {
-          auto goalMidpointAgentFrame = (goalObservations[0] + goalObservations[1]) / 2.0;
-          for (auto const& teamMateObs : teamMateObservations)
-            if ((goalMidpointAgentFrame - teamMateObs).head<2>().norm() < maxGoalieGoalDistance->getValue())
-              return true;
-        }
-        return false;
-      }
-
-      auto closestGoalObs = agentFrame->getClosestGoalObservation();
-
-      if (!closestGoalObs.hasValue())
-        return false;
-
-      // ASSUME the ball is approximately at our feet
-
-      double closestGoalDist = closestGoalObs->norm();
-
-      const double maxPositionMeasurementError = 0.4; // TODO review this experimentally
-
-      if (ballSide == FieldSide::Ours && closestGoalDist < (FieldMap::fieldLengthX()/2.0) - maxPositionMeasurementError)
-      {
-        log::info("lookForGoalState->aboutFaceState") << "Keeper believes ball is on our side, and closest goal is too close at " << closestGoalDist;
-        return true;
-      }
-
-      double theirsThreshold = Vector2d(
-        (FieldMap::fieldLengthX() / 2.0) + maxPositionMeasurementError,
-         FieldMap::fieldLengthY() / 2.0
-      ).norm();
-
-      if (ballSide == FieldSide::Theirs && closestGoalDist > theirsThreshold)
-      {
-        log::info("lookForGoalState->aboutFaceState") << "Keeper believes ball is on the opponent's side, and closest goal is too far at " << closestGoalDist;
-        return true;
-      }
-
-      return false;
-    });
-
-  // If we notice the ball is too far to kick, abort kick
-  atBallState
-    ->transitionTo(lookForBallState, "ball-too-far")
-    ->when([]() { return stepUpDownThreshold(6, ballTooFarToKick); });
+  //
+  // AT-BALL EXIT TRANSITIONS
+  //
 
   atBallState
     ->transitionTo(kickState, "can-kick")
-    ->when([kick]() { return kick->canKick(); });
+    ->when([kickMotion,agent]()
+    {
+      auto map = State::get<StationaryMapState>();
+      if (map && map->canKick())
+      {
+        auto kick = map->getKick();
+        if (kick != nullptr)
+        {
+          kickMotion->setMotionScript(kick->getMotionScript());
+          return true;
+        }
+      }
+      return false;
+    });
 
-  kickState
-    ->transitionTo(lookForBallState, "done")
-    ->whenTerminated();
+  atBallState
+    ->transitionTo(turnAroundBallState)
+    ->when([circleBall]()
+    {
+      auto map = State::get<StationaryMapState>();
+      if (!map)
+        return false;
+      double turnAngle = map->getTurnAngleRads();
+      if (turnAngle == 0)
+        return false;
+      // TODO provide onResetBefore virtual on Option, and capure this there
+      // TODO copy required agent-frame ball pos to circlBall too
+      circleBall->setTurnAngle(turnAngle);
+      return true;
+    });
 
   // limit how long we will look for the goal
   atBallState
     ->transitionTo(kickForwardsState, "give-up")
     ->after(chrono::seconds(7));
 
-  aboutFaceState
-    ->transitionTo(atBallState, "rotate-done")
-    ->after(chrono::seconds(10));
+  // If we notice the ball is too far to kick, abort kick
+  atBallState
+    ->transitionTo(lookForBallState, "ball-too-far")
+    ->when([]() { return stepUpDownThreshold(6, ballTooFarToKick); });
 
-  // start kick procedure if goal is in front of us
-  aimState
-    ->transitionTo(kickForwardsState, "square-to-goal")
-    ->when([]()
-    {
-      double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
-      // TODO this angular limit in config
-      return fabs(Math::radToDeg(panAngle)) < 25.0;
-    });
+  kickState
+    ->transitionTo(lookForBallState, "done")
+    ->whenTerminated();
 
-  // circle immediately, if goal is not in front (prior transition didn't fire)
-  // TODO consider static map when turning to goal -- don't require us seeing both posts at the same time
-  //      - test this by putting a bot in front of the goal where it cannot see both goal posts, facing sideways across the field -- it should still turn to the goal instead of doing a give-up kick
-  aimState
-    ->transitionTo(turnToGoalState, "goal-at-angle")
-    ->when([]() { return true; });
-
-  // control duration of ball circling
-  turnToGoalState
+  turnAroundBallState
     ->transitionTo(atBallState, "done")
-    ->when([circleBall,turnToGoalState,agent]()
-    {
-      // TODO break dependency upon pan limit
-      double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
-      double panAngleRange = agent->getHeadModule()->getLeftLimitRads();
-      double panRatio = panAngle / panAngleRange;
-      double circleDurationSeconds = fabs(panRatio) * Config::getValue<double>("options.turn-to-goal.time-scaling");
-      log::info("circleBallState")
-          << "circleDurationSeconds=" << circleDurationSeconds
-          << " secondsSinceStart=" << turnToGoalState->secondsSinceStart()
-          << " panRatio=" << panRatio
-          << " panAngle=" << panAngle
-          << " leftLimitDegs=" << agent->getHeadModule()->getLeftLimitDegs();
-
-      // TODO assigning state in this condition factory is not very explicit or clear
-      circleBall->setIsLeftTurn(panAngle < 0);
-
-      // Return a function that closes over the computed duration
-      return [turnToGoalState,circleDurationSeconds]()
-      {
-        return turnToGoalState->secondsSinceStart() >= circleDurationSeconds;
-      };
-    });
+    ->whenTerminated();
 
   //
   // KICK FORWARDS

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../stateobject.hh"
+#include "../../Kick/kick.hh"
 #include "../../stats/average.hh"
 
 #include <vector>
@@ -26,6 +27,8 @@ namespace bold
   class GoalEstimate
   {
   public:
+    GoalEstimate() = default;
+
     GoalEstimate(Average<Eigen::Vector3d> estimate, GoalLabel label)
     : d_estimate(estimate),
       d_label(label)
@@ -52,26 +55,71 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     std::vector<Average<Eigen::Vector3d>> const& getBallEstimates() const { return d_ballEstimates; };
-    std::vector<Average<Eigen::Vector3d>> const& getTeammateEstimates() const { return d_teammateEstimates; };
+    std::vector<Average<Eigen::Vector3d>> const& getTeammateEstimates() const { return d_keeperEstimates; };
     std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; };
 
-    uint countGoalsWithSamples(int sampleThreshold) const;
-    bool hasBallWithSamples(int sampleThreshold) const;
+    bool hasEnoughBallObservations() const { return existsWithSamples(d_ballEstimates, BallSamplesNeeded); };
+    bool hasEnoughGoalObservations() const { return countWithSamples(d_goalEstimates, GoalSamplesNeeded) >= 2; };
+    bool hasEnoughBallAndGoalObservations() const { return hasEnoughBallObservations() && hasEnoughGoalObservations(); };
+
+    bool canKick() const { return d_kick != nullptr; }
+    std::shared_ptr<Kick const> getKick() const { return d_kick; }
+
+    double getTurnAngleRads() const { return d_turnAngleRads; };
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
   private:
+    static constexpr int GoalSamplesNeeded = 10; // TODO magic number!!
+    static constexpr int BallSamplesNeeded = 20; // TODO magic number!!
+    static constexpr int KeeperSamplesNeeded = 5; // TODO magic number!!
+
     static bool compareAverages(Average<Eigen::Vector3d> const& a, Average<Eigen::Vector3d> const& b)
     {
       return a.getCount() > b.getCount();
     }
 
     static std::vector<GoalEstimate> labelGoalObservations(
-      std::vector<Average<Eigen::Vector3d>> const& teammateEstimates,
+      std::vector<Average<Eigen::Vector3d>> const& keeperEstimates,
       std::vector<Average<Eigen::Vector3d>> const& goalEstimates);
 
+    static std::shared_ptr<Kick const> selectKick(
+      std::vector<Average<Eigen::Vector3d>> const& ballEstimates,
+      std::vector<GoalEstimate> const& goalEstimates);
+
+    double calculateTurnAngle(
+      std::vector<Average<Eigen::Vector3d>> const& ballEstimates,
+      std::vector<GoalEstimate> const& goalEstimates);
+
+    template<typename T>
+    inline static bool existsWithSamples(std::vector<T> const& estimates, int sampleThreshold);
+    template<typename T>
+    inline static uint countWithSamples(std::vector<T> const& estimates, int sampleThreshold);
+
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
-    std::vector<Average<Eigen::Vector3d>> d_teammateEstimates;
+    std::vector<Average<Eigen::Vector3d>> d_keeperEstimates;
     std::vector<GoalEstimate> d_goalEstimates;
+    std::shared_ptr<Kick const> d_kick;
+    double d_turnAngleRads;
   };
+
+  template<typename T>
+  bool StationaryMapState::existsWithSamples(std::vector<T> const& estimates, int sampleThreshold)
+  {
+    return estimates.size() && estimates[0].getCount() >= sampleThreshold;
+  }
+
+  template<typename T>
+  uint StationaryMapState::countWithSamples(std::vector<T> const& estimates, int sampleThreshold)
+  {
+    uint count = 0;
+    for (auto const& estimate : estimates)
+    {
+      if (estimate.getCount() >= sampleThreshold)
+        count++;
+      else
+        break; // list is ordered
+    }
+    return count;
+  }
 }

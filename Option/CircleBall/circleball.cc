@@ -19,7 +19,9 @@ CircleBall::CircleBall(std::string const& id, Agent* agent)
   d_headModule(agent->getHeadModule()),
   d_lookAtFeet(make_shared<LookAtFeet>("lookAtFeet", d_headModule)),
   d_lookAtBall(make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), d_headModule)),
-  d_isLeftTurn(true)
+  d_turnAngleRads(0),
+  d_durationSeconds(0),
+  d_startTime(0)
 {}
 
 vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
@@ -48,9 +50,10 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   Vector2d error = targetBallPos - observedBallPos;
   Vector2d errorNorm = error.normalized();
 
+  bool isLeftTurn = d_turnAngleRads < 0;
 
   // Always walk sideways, but not if error becomes too big
-  double x = (1.0 - fabs(error.x())) * d_isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue();
+  double x = (1.0 - fabs(error.x())) * isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue();
 
   // Try to keep forward distance stable
   double y = Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedY->getValue();
@@ -87,10 +90,10 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   x = Math::clamp(x, -maxSpeedX->getValue(), maxSpeedX->getValue());
   y = Math::clamp(y, -maxSpeedY->getValue(), maxSpeedY->getValue());
-  if (!d_isLeftTurn)
-    a = Math::clamp(a, 0.0, turnSpeedA->getValue());
-  else
+  if (isLeftTurn)
     a = Math::clamp(a, -turnSpeedA->getValue(), 0.0);
+  else
+    a = Math::clamp(a, 0.0, turnSpeedA->getValue());
 
   // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
   // direction being inverted.
@@ -131,9 +134,18 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   */
 }
 
-void CircleBall::setIsLeftTurn(bool leftTurn)
+void CircleBall::setTurnAngle(double turnAngleRads)
 {
-  d_isLeftTurn = leftTurn;
+  d_turnAngleRads = turnAngleRads;
+
+  static const auto timeScalingSetting = Config::getSetting<double>("options.circle-ball.time-scaling");
+  d_durationSeconds = fabs(turnAngleRads) * timeScalingSetting->getValue();
+  d_startTime = Clock::getTimestamp();
+}
+
+double CircleBall::hasTerminated()
+{
+  return Clock::getSecondsSince(d_startTime) >= d_durationSeconds;
 }
 
 void CircleBall::reset()

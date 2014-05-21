@@ -257,7 +257,8 @@
       "turn-speed-x": 20.0,
       "turn-speed-y": 1.0,
       "turn-speed-a": 25.0,
-      "brake-distance": 0.2
+      "brake-distance": 0.2,
+      "time-scaling": 8
     },
     "approach-ball": {
       "turn-speed-scale": 18.0,
@@ -267,9 +268,6 @@
       "stop-distance": 0.15,
       "lower-turn-limit-degs": 1.0,
       "upper-turn-limit-degs": 35.0
-    },
-    "turn-to-goal": {
-      "time-scaling": 8
     },
     "look-around": {
       "top-angle": 30.0,

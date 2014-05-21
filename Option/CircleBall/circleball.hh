@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../option.hh"
+#include "../../Clock/clock.hh"
 
 namespace bold
 {
@@ -17,15 +18,19 @@ namespace bold
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    void setIsLeftTurn(bool leftTurn);
-
     virtual void reset() override;
+
+    virtual double hasTerminated() override;
+
+    void setTurnAngle(double angleRads);
 
   private:
     std::shared_ptr<WalkModule> d_walkModule;
     std::shared_ptr<HeadModule> d_headModule;
     std::shared_ptr<LookAtFeet> d_lookAtFeet;
     std::shared_ptr<LookAtBall> d_lookAtBall;
-    bool d_isLeftTurn;
+    double d_turnAngleRads;
+    double d_durationSeconds;
+    Clock::Timestamp d_startTime;
   };
 }

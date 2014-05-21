@@ -16,12 +16,15 @@ MotionScriptOption::MotionScriptOption(std::string const& id, std::shared_ptr<Mo
   d_hasTerminated(false),
   d_ifNotFinalPose(ifNotFinalPose)
 {
-  d_script = MotionScript::fromFile(fileName);
-
-  if (!d_script)
+  if (fileName.size())
   {
-    log::error("MotionScriptOption::MotionScriptOption") << "Motion script file not found: " << fileName;
-    throw runtime_error("File not found");
+    d_script = MotionScript::fromFile(fileName);
+
+    if (!d_script)
+    {
+      log::error("MotionScriptOption::MotionScriptOption") << "Motion script file not found: " << fileName;
+      throw runtime_error("File not found");
+    }
   }
 }
 
@@ -39,6 +42,8 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
     writer.String("hasTerminated").Bool(true);
     return {};
   }
+
+  ASSERT(d_script != nullptr);
 
   if (!d_request)
   {

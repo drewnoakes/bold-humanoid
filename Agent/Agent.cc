@@ -1,5 +1,7 @@
 #include "agent.ih"
 
+#include "../Kick/kick.hh"
+
 Agent::Agent()
   : d_isRunning(false),
     d_isStopRequested(false),
@@ -14,6 +16,8 @@ Agent::Agent()
   State::initialise();
 
   FieldMap::initialise();
+
+  Kick::loadAll();
 
   d_voice = make_shared<Voice>();
   d_behaviourControl = make_shared<BehaviourControl>(*this);

@@ -282,7 +282,8 @@
       "turn-speed-x":   { "type": "double", "default": 20.0 },
       "turn-speed-y":   { "type": "double", "default": 1.0 },
       "turn-speed-a":   { "type": "double", "default": 15.0 },
-      "brake-distance": { "type": "double", "default": 0.2 }
+      "brake-distance": { "type": "double", "default": 0.2 },
+      "time-scaling":   { "type": "double", "default": 10.0 }
     },
     "approach-ball": {
       "turn-speed-scale":  { "type": "double", "default": 25.0 },
@@ -292,9 +293,6 @@
       "stop-distance":     { "type": "double", "default": 0.12 },
       "lower-turn-limit-degs": { "type": "double", "default": 20.0 },
       "upper-turn-limit-degs": { "type": "double", "default": 35.0 }
-    },
-    "turn-to-goal": {
-      "time-scaling": { "type": "double", "default": 10 }
     },
     "look-around": {
       "top-angle":      { "type": "double", "default": 23.0 },

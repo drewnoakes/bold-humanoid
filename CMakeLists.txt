@@ -267,6 +267,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Kick/kick.cc
+)
+
+add_class(BOLDHUMANOID
   ./LineFinder/RandomPairLineFinder/findLineSegments.cc
 )
 
@@ -365,6 +369,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/AtBall/atball.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/BuildStationaryMap/buildstationarymap.cc
 )
 
@@ -383,10 +391,6 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./Option/GetUpOption/getupoption.cc
-)
-
-add_class(BOLDHUMANOID
-  ./Option/KickOption/kickoption.cc
 )
 
 add_class(BOLDHUMANOID

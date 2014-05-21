@@ -18,7 +18,7 @@ namespace bold
   class MotionScriptOption : public Option
   {
   public:
-    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::string const& fileName, bool ifNotFinalPose = false);
+    MotionScriptOption(std::string const& id, std::shared_ptr<MotionScriptModule> const& motionScriptModule, std::string const& fileName = "", bool ifNotFinalPose = false);
 
     /// Returns a truthy value when the script has completed execution.
     virtual double hasTerminated() override;
@@ -28,6 +28,8 @@ namespace bold
     /// Clears any previous attempt at running a motion script. Subsequent
     /// calls to runPolicy will make a new request of the motion task scheduler.
     virtual void reset() override;
+
+    void setMotionScript(std::shared_ptr<MotionScript const> script) { d_script = script; }
 
   private:
     std::shared_ptr<MotionScriptModule> d_motionScriptModule;
