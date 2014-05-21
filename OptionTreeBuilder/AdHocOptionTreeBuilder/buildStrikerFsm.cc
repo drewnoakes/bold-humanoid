@@ -27,6 +27,11 @@ auto ballIsStoppingDistance = []()
   return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
 };
 
+// Indicates whether at this moment we observe the ball straight in front of us,
+// and in line with our goal such that we should walk directly to it, and kick
+// straight without looking around once we reach the ball.
+// Unlike the building of the stationary map, this is based on a single cycle's
+// observation and so may be used during motion (when not staionary.)
 auto isPerfectLineForAttack = []()
 {
   static auto isPerfectLineEnabled = Config::getSetting<bool>("options.perfect-line.enabled");
