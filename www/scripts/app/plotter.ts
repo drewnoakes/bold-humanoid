@@ -297,21 +297,31 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.stroke();
     });
 
+    var getGoalColour = (label: state.GoalLabel) =>
+    {
+        switch (label)
+        {
+            case state.GoalLabel.Ours:    return new color.Rgb(1, 0.8, 0); break;
+            case state.GoalLabel.Theirs:  return new color.Rgb(0.8, 1, 0); break;
+            case state.GoalLabel.Unknown: return new color.Rgb(0.7, 0.7, 0); break;
+        }
+    };
+
     _.each(data.goalPosts, goalPost =>
     {
-        var baseColor: color.Rgb;
-
-        switch (goalPost.label)
-        {
-            case state.GoalLabel.Ours:    baseColor = new color.Rgb(1, 0.8, 0); break;
-            case state.GoalLabel.Theirs:  baseColor = new color.Rgb(0.8, 1, 0); break;
-            case state.GoalLabel.Unknown: baseColor = new color.Rgb(0.7, 0.7, 0); break;
-        }
-
         var alpha = goalPost.count / maxGoalPostCount;
-        context.strokeStyle = baseColor.toString(alpha);
+        context.strokeStyle = getGoalColour(goalPost.label).toString(alpha);
         context.beginPath();
-        context.arc(goalPost.pos[0], goalPost.pos[1], constants.goalPostDiameter/2, 0, Math.PI*2, true);
+        circle(context, goalPost.pos, constants.goalPostDiameter/2);
+        context.stroke();
+    });
+
+    _.each(data.goals, goal =>
+    {
+        context.strokeStyle = getGoalColour(goal.label).toString();
+        context.beginPath();
+        context.moveTo(goal.post1[0], goal.post1[1]);
+        context.lineTo(goal.post2[0], goal.post2[1]);
         context.stroke();
     });
 

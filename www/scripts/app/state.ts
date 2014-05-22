@@ -374,6 +374,7 @@ export interface StationaryMap
 {
     balls: AveragePosition[];
     goalPosts: AverageGoalPosition[];
+    goals: GoalPosition[];
     keepers: AveragePosition[];
     kicks: Kick[];
 }
@@ -386,6 +387,13 @@ export interface AveragePosition
 
 export interface AverageGoalPosition extends AveragePosition
 {
+    label: GoalLabel;
+}
+
+export interface GoalPosition
+{
+    post1: number[];
+    post2: number[];
     label: GoalLabel;
 }
 

@@ -52,7 +52,7 @@ namespace bold
   public:
     GoalEstimate(GoalPostEstimate const& post1, GoalPostEstimate const& post2, GoalLabel label)
     : d_post1(post1),
-      d_post2(post1),
+      d_post2(post2),
       d_label(label)
     {}
 
@@ -102,6 +102,7 @@ namespace bold
     std::vector<Average<Eigen::Vector3d>> const& getBallEstimates() const { return d_ballEstimates; };
     std::vector<Average<Eigen::Vector3d>> const& getTeammateEstimates() const { return d_keeperEstimates; };
     std::vector<GoalPostEstimate> const& getGoalPostEstimates() const { return d_goalPostEstimates; };
+    std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; };
 
     bool hasEnoughBallObservations() const { return existsWithSamples(d_ballEstimates, BallSamplesNeeded); };
     bool hasEnoughGoalPostObservations() const { return countWithSamples(d_goalPostEstimates, GoalSamplesNeeded) >= 2; };
@@ -130,6 +131,7 @@ namespace bold
 
     void calculateTurnAngle();
     void selectKick();
+    void findGoals();
 
     template<typename T>
     inline static bool existsWithSamples(std::vector<T> const& estimates, int sampleThreshold);
@@ -139,6 +141,7 @@ namespace bold
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
     std::vector<Average<Eigen::Vector3d>> d_keeperEstimates;
     std::vector<GoalPostEstimate> d_goalPostEstimates;
+    std::vector<GoalEstimate> d_goalEstimates;
     std::vector<KickResult> d_possibleKicks;
     std::shared_ptr<Kick const> d_selectedKick;
     double d_turnAngleRads;

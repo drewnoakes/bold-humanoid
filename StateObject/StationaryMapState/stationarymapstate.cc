@@ -5,6 +5,8 @@
 #include "../../State/state.hh"
 #include "../../StateObject/TeamState/teamstate.hh"
 
+#include <deque>
+
 using namespace bold;
 using namespace Eigen;
 using namespace rapidjson;
@@ -37,6 +39,8 @@ StationaryMapState::StationaryMapState(
   std::sort(goalPostEstimates.begin(), goalPostEstimates.end(), compareAverages);
 
   d_goalPostEstimates = labelGoalPostObservations(d_keeperEstimates, goalPostEstimates);
+
+  findGoals();
 
   selectKick();
 
@@ -266,6 +270,45 @@ void StationaryMapState::calculateTurnAngle()
 */
 }
 
+void StationaryMapState::findGoals()
+{
+  std::deque<GoalPostEstimate> posts(d_goalPostEstimates.begin(), d_goalPostEstimates.end());
+
+  while (posts.size() > 1)
+  {
+    auto post1 = posts.front();
+
+    if (post1.getCount() < GoalSamplesNeeded)
+      break;
+
+    posts.pop_front();
+
+    for (auto post2 = posts.begin(); post2 != posts.end(); post2++)
+    {
+      if (post2->getCount() < GoalSamplesNeeded)
+        break;
+
+      double dist = (post1.getAverage() - post2->getAverage()).norm();
+      double error = fabs(FieldMap::getGoalY() - dist);
+      if (error < 0.5) // TODO magic number
+      {
+        GoalLabel label;
+        if (post1.getLabel() == GoalLabel::Theirs || post2->getLabel() == GoalLabel::Theirs)
+          label = GoalLabel::Theirs;
+        else if (post1.getLabel() == GoalLabel::Ours || post2->getLabel() == GoalLabel::Ours)
+          label = GoalLabel::Ours;
+        else
+          label = GoalLabel::Unknown;
+
+        d_goalEstimates.emplace_back(post1, *post2, label);
+
+        posts.erase(post2);
+        break;
+      }
+    }
+  }
+}
+
 void StationaryMapState::selectKick()
 {
   // Short circuit if we don't have enough observations
@@ -338,6 +381,19 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
       {
         writer.String("pos").StartArray().Double(estimate.getAverage().x()).Double(estimate.getAverage().y()).EndArray();
         writer.String("count").Uint(estimate.getCount());
+        writer.String("label").Uint(static_cast<int>(estimate.getLabel()));
+      }
+      writer.EndObject();
+    }
+    writer.EndArray();
+
+    writer.String("goals").StartArray();
+    for (auto const& estimate : d_goalEstimates)
+    {
+      writer.StartObject();
+      {
+        writer.String("post1").StartArray().Double(estimate.getPost1().getAverage().x()).Double(estimate.getPost1().getAverage().y()).EndArray();
+        writer.String("post2").StartArray().Double(estimate.getPost2().getAverage().x()).Double(estimate.getPost2().getAverage().y()).EndArray();
         writer.String("label").Uint(static_cast<int>(estimate.getLabel()));
       }
       writer.EndObject();
