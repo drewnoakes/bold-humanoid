@@ -10,6 +10,8 @@ import constants = require('constants');
 import geometry = require('util/geometry');
 import state = require('state');
 
+var circle = (context: CanvasRenderingContext2D, pos: number[], radius: number) => context.arc(pos[0], pos[1], radius, 0, Math.PI*2, true)
+
 export function drawField(context: CanvasRenderingContext2D, options: {groundFillStyle?: string})
 {
     context.save();
@@ -27,7 +29,7 @@ export function drawFieldLines(context: CanvasRenderingContext2D, options: {line
 
     // center circle
     context.beginPath();
-    context.arc(0, 0, constants.circleDiameter/2, 0, Math.PI*2, true);
+    circle(context, [0, 0], constants.circleDiameter/2);
 
     var halfCrossLengthScaled = constants.penaltyLineLength / 2,
         penaltyX = (constants.fieldX/2 - constants.penaltyMarkDistance),
@@ -82,7 +84,7 @@ export function drawGoalPosts(context: CanvasRenderingContext2D, options: {goalS
     _.each(positions, pos =>
     {
         context.beginPath();
-        context.arc(pos[0], pos[1], constants.goalPostDiameter/2, 0, Math.PI*2, true);
+        circle(context, pos, constants.goalPostDiameter/2);
         context.fill();
     });
 }
@@ -173,7 +175,7 @@ export function drawJunctions(context: CanvasRenderingContext2D, junctions: {p: 
     _.each(junctions, junction =>
            {
                context.beginPath();
-               context.arc(junction.p[0], junction.p[1], markerRadius, 0, 2 * Math.PI);
+               circle(context, junction.p, markerRadius);
                if (junction.t == 0) { // X
                    context.moveTo(junction.p[0], junction.p[1] + markerRadius);
                    context.lineTo(junction.p[0], junction.p[1] - markerRadius);
@@ -218,7 +220,7 @@ export function drawBall(context: CanvasRenderingContext2D, options: {ballFillSt
     context.fillStyle = options.ballFillStyle || 'red';
 
     context.beginPath();
-    context.arc(position[0], position[1], constants.ballRadius, 0, Math.PI*2, true);
+    circle(context, position, constants.ballRadius);
     context.fill();
 }
 
@@ -233,7 +235,7 @@ export function drawAgentPosition(context: CanvasRenderingContext2D, options: {a
     context.lineWidth = agentDotRadius / 5;
 
     context.beginPath();
-    context.arc(agentPosition[0], agentPosition[1], agentDotRadius, 0, Math.PI*2, true);
+    circle(context, agentPosition, agentDotRadius);
     context.fill();
     context.beginPath();
     context.moveTo(agentPosition[0], agentPosition[1]);
@@ -291,7 +293,7 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         }
         context.strokeStyle = 'rgba(255,0,0,' + (ball.count / maxBallCount) + ')';
         context.beginPath();
-        context.arc(ball.pos[0], ball.pos[1], constants.ballRadius, 0, Math.PI*2, true);
+        circle(context, ball.pos, constants.ballRadius);
         context.stroke();
     });
 
