@@ -290,6 +290,9 @@ void StationaryMapState::findGoals()
 
       double dist = (post1.getAverage() - post2->getAverage()).norm();
       double error = fabs(FieldMap::getGoalY() - dist);
+
+      // TODO error should be a function of distance, as uncertainty increases
+
       if (error < 0.5) // TODO magic number
       {
         GoalLabel label;
