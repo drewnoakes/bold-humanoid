@@ -24,12 +24,12 @@ namespace bold
 
   //////////////////////////////////////////////////////////////////////////////
 
-  class GoalEstimate
+  class GoalPostEstimate
   {
   public:
-    GoalEstimate() = default;
+    GoalPostEstimate() = default;
 
-    GoalEstimate(Average<Eigen::Vector3d> estimate, GoalLabel label)
+    GoalPostEstimate(Average<Eigen::Vector3d> estimate, GoalLabel label)
     : d_estimate(estimate),
       d_label(label)
     {}
@@ -71,18 +71,18 @@ namespace bold
   {
   public:
     StationaryMapState(std::vector<Average<Eigen::Vector3d>> ballEstimates,
-                       std::vector<Average<Eigen::Vector3d>> goalEstimates,
+                       std::vector<Average<Eigen::Vector3d>> goalPostEstimates,
                        std::vector<Average<Eigen::Vector3d>> teammateEstimates);
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     std::vector<Average<Eigen::Vector3d>> const& getBallEstimates() const { return d_ballEstimates; };
     std::vector<Average<Eigen::Vector3d>> const& getTeammateEstimates() const { return d_keeperEstimates; };
-    std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; };
+    std::vector<GoalPostEstimate> const& getGoalPostEstimates() const { return d_goalPostEstimates; };
 
     bool hasEnoughBallObservations() const { return existsWithSamples(d_ballEstimates, BallSamplesNeeded); };
-    bool hasEnoughGoalObservations() const { return countWithSamples(d_goalEstimates, GoalSamplesNeeded) >= 2; };
-    bool hasEnoughBallAndGoalObservations() const { return hasEnoughBallObservations() && hasEnoughGoalObservations(); };
+    bool hasEnoughGoalPostObservations() const { return countWithSamples(d_goalPostEstimates, GoalSamplesNeeded) >= 2; };
+    bool hasEnoughBallAndGoalPostObservations() const { return hasEnoughBallObservations() && hasEnoughGoalPostObservations(); };
 
     bool canKick() const { return d_selectedKick != nullptr; }
     std::shared_ptr<Kick const> getSelectedKick() const { return d_selectedKick; }
@@ -101,7 +101,7 @@ namespace bold
       return a.getCount() > b.getCount();
     }
 
-    static std::vector<GoalEstimate> labelGoalObservations(
+    static std::vector<GoalPostEstimate> labelGoalPostObservations(
       std::vector<Average<Eigen::Vector3d>> const& keeperEstimates,
       std::vector<Average<Eigen::Vector3d>> const& goalEstimates);
 
@@ -115,7 +115,7 @@ namespace bold
 
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
     std::vector<Average<Eigen::Vector3d>> d_keeperEstimates;
-    std::vector<GoalEstimate> d_goalEstimates;
+    std::vector<GoalPostEstimate> d_goalPostEstimates;
     std::vector<KickResult> d_possibleKicks;
     std::shared_ptr<Kick const> d_selectedKick;
     double d_turnAngleRads;

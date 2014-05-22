@@ -373,7 +373,7 @@ export interface Particle
 export interface StationaryMap
 {
     balls: AveragePosition[];
-    goals: AverageGoalPosition[];
+    goalPosts: AverageGoalPosition[];
     keepers: AveragePosition[];
     kicks: Kick[];
 }

@@ -25,7 +25,7 @@ AtBall::AtBall(std::string const& id, Agent* agent)
 
     double discountFactor = 0.0;
 
-    if (map && cameraFrame && !map->hasEnoughGoalObservations())
+    if (map && cameraFrame && !map->hasEnoughGoalPostObservations())
       discountFactor += 0.3 * cameraFrame->getGoalObservationCount();
 
     if (map && cameraFrame->isBallVisible() && !map->hasEnoughBallObservations())
@@ -47,7 +47,7 @@ vector<shared_ptr<Option>> AtBall::runPolicy(Writer<StringBuffer>& writer)
   if (!map)
     return {};
 
-  if (!map->hasEnoughGoalObservations())
+  if (!map->hasEnoughGoalPostObservations())
   {
     // We don't see enough goals yet, so continue looking
     return {d_lookAroundOption};

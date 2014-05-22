@@ -275,10 +275,10 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
     context.lineWidth = 0.01;
 
     var maxBallCount = 0,
-        maxGoalCount = 0;
+        maxGoalPostCount = 0;
 
     _.each(data.balls, ball => maxBallCount = Math.max(maxBallCount, ball.count));
-    _.each(data.goals, goal => maxGoalCount = Math.max(maxGoalCount, goal.count));
+    _.each(data.goalPosts, goalPost => maxGoalPostCount = Math.max(maxGoalPostCount, goalPost.count));
 
     var maxScore = 0.0,
         maxBall: state.AveragePosition;
@@ -295,21 +295,21 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.stroke();
     });
 
-    _.each(data.goals, goal =>
+    _.each(data.goalPosts, goalPost =>
     {
         var baseColor: color.Rgb;
 
-        switch (goal.label)
+        switch (goalPost.label)
         {
             case state.GoalLabel.Ours:    baseColor = new color.Rgb(1, 0.8, 0); break;
             case state.GoalLabel.Theirs:  baseColor = new color.Rgb(0.8, 1, 0); break;
             case state.GoalLabel.Unknown: baseColor = new color.Rgb(0.7, 0.7, 0); break;
         }
 
-        var alpha = goal.count / maxGoalCount;
+        var alpha = goalPost.count / maxGoalPostCount;
         context.strokeStyle = baseColor.toString(alpha);
         context.beginPath();
-        context.arc(goal.pos[0], goal.pos[1], constants.goalPostDiameter/2, 0, Math.PI*2, true);
+        context.arc(goalPost.pos[0], goalPost.pos[1], constants.goalPostDiameter/2, 0, Math.PI*2, true);
         context.stroke();
     });
 

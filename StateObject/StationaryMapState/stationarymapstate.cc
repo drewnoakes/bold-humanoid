@@ -26,7 +26,7 @@ string bold::getGoalLabelName(GoalLabel label)
 
 StationaryMapState::StationaryMapState(
   std::vector<Average<Eigen::Vector3d>> ballEstimates,
-  std::vector<Average<Eigen::Vector3d>> goalEstimates,
+  std::vector<Average<Eigen::Vector3d>> goalPostEstimates,
   std::vector<Average<Eigen::Vector3d>> keeperEstimates)
 : d_ballEstimates(ballEstimates),
   d_keeperEstimates(keeperEstimates)
@@ -34,9 +34,9 @@ StationaryMapState::StationaryMapState(
   // Sort estimates such that those with greater numbers of observations appear first
   std::sort(d_ballEstimates.begin(), d_ballEstimates.end(), compareAverages);
   std::sort(d_keeperEstimates.begin(), d_keeperEstimates.end(), compareAverages);
-  std::sort(goalEstimates.begin(), goalEstimates.end(), compareAverages);
+  std::sort(goalPostEstimates.begin(), goalPostEstimates.end(), compareAverages);
 
-  d_goalEstimates = labelGoalObservations(d_keeperEstimates, goalEstimates);
+  d_goalPostEstimates = labelGoalPostObservations(d_keeperEstimates, goalPostEstimates);
 
   selectKick();
 
@@ -44,7 +44,7 @@ StationaryMapState::StationaryMapState(
   calculateTurnAngle();
 }
 
-vector<GoalEstimate> StationaryMapState::labelGoalObservations(
+vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
   vector<Average<Vector3d>> const& keeperEstimates,
   vector<Average<Vector3d>> const& goalEstimates)
 {
@@ -141,21 +141,21 @@ vector<GoalEstimate> StationaryMapState::labelGoalObservations(
   };
 
   // Build labelled goal vector
-  vector<GoalEstimate> labelledEstimates;
+  vector<GoalPostEstimate> labelledEstimates;
   labelledEstimates.resize(goalEstimates.size());
   std::transform(goalEstimates.begin(), goalEstimates.end(),
                  labelledEstimates.begin(),
                  [&getLabel](Average<Vector3d> const& goalEstimate)
                  {
                    auto label = getLabel(goalEstimate.getAverage());
-                   return GoalEstimate(goalEstimate, label);
+                   return GoalPostEstimate(goalEstimate, label);
                 });
   return labelledEstimates;
 }
 
 void StationaryMapState::calculateTurnAngle()
 {
-  if (d_ballEstimates.size() == 0 || d_goalEstimates.size() < 2)
+  if (d_ballEstimates.size() == 0 || d_goalPostEstimates.size() < 2)
   {
     d_turnAngleRads = 0.0;
     return;
@@ -269,7 +269,7 @@ void StationaryMapState::calculateTurnAngle()
 void StationaryMapState::selectKick()
 {
   // Short circuit if we don't have enough observations
-  if (d_ballEstimates.size() == 0 || d_goalEstimates.size() < 2)
+  if (d_ballEstimates.size() == 0 || d_goalPostEstimates.size() < 2)
     return;
 
   auto const& ballEstimate = d_ballEstimates[0];
@@ -290,7 +290,7 @@ void StationaryMapState::selectKick()
 
     // Determine whether the end pos is advantageous
     bool hasLeft = false, hasRight = false;
-    for (auto const& goal : d_goalEstimates)
+    for (auto const& goal : d_goalPostEstimates)
     {
       if (goal.getCount() < GoalSamplesNeeded)
         break;
@@ -331,8 +331,8 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("goals").StartArray();
-    for (auto const& estimate : d_goalEstimates)
+    writer.String("goalPosts").StartArray();
+    for (auto const& estimate : d_goalPostEstimates)
     {
       writer.StartObject();
       {
