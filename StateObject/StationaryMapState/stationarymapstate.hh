@@ -24,6 +24,7 @@ namespace bold
 
   //////////////////////////////////////////////////////////////////////////////
 
+  /** Models the estimated position and ownership of a single observed goal post. */
   class GoalPostEstimate
   {
   public:
@@ -40,6 +41,28 @@ namespace bold
 
   private:
     Average<Eigen::Vector3d> d_estimate;
+    GoalLabel d_label;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  /** Models the estimated position and ownership of a pair of observed goal posts. */
+  class GoalEstimate
+  {
+  public:
+    GoalEstimate(GoalPostEstimate const& post1, GoalPostEstimate const& post2, GoalLabel label)
+    : d_post1(post1),
+      d_post2(post1),
+      d_label(label)
+    {}
+
+    GoalPostEstimate getPost1() const { return d_post1; }
+    GoalPostEstimate getPost2() const { return d_post2; }
+    GoalLabel getLabel() const { return d_label; }
+
+  private:
+    GoalPostEstimate d_post1;
+    GoalPostEstimate d_post2;
     GoalLabel d_label;
   };
 
