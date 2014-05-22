@@ -327,15 +327,27 @@ export class Rgb implements IColor
         return new Rgb(r, g, b);
     }
 
-    public toString()
+    public toString(alpha: number = 1)
     {
-        var r = Math.round(this.R * 255).toString(16);
-        var g = Math.round(this.G * 255).toString(16);
-        var b = Math.round(this.B * 255).toString(16);
-        if (r.length == 1) r = '0' + r;
-        if (g.length == 1) g = '0' + g;
-        if (b.length == 1) b = '0' + b;
-        return '#' + r + g + b;
+        if (alpha === 1.0)
+        {
+            // Use regular "#112233" form
+            var r = Math.round(this.R * 255).toString(16);
+            var g = Math.round(this.G * 255).toString(16);
+            var b = Math.round(this.B * 255).toString(16);
+            if (r.length == 1) r = '0' + r;
+            if (g.length == 1) g = '0' + g;
+            if (b.length == 1) b = '0' + b;
+            return '#' + r + g + b;
+        }
+        else
+        {
+            // Use "rgba(32,64,128, 0.256)" form
+            return 'rgba(' + Math.round(this.R * 255) + ','
+                           + Math.round(this.G * 255) + ','
+                           + Math.round(this.B * 255) + ','
+                           + alpha + ')';
+        }
     }
 
     public toByteObject()
