@@ -192,7 +192,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       auto map = State::get<StationaryMapState>();
       if (map && map->canKick())
       {
-        auto kick = map->getKick();
+        auto kick = map->getSelectedKick();
         if (kick != nullptr)
         {
           kickMotion->setMotionScript(kick->getMotionScript());

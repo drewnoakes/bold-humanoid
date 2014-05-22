@@ -45,6 +45,28 @@ namespace bold
 
   //////////////////////////////////////////////////////////////////////////////
 
+  class KickResult
+  {
+  public:
+    KickResult(std::shared_ptr<Kick const> kick, Eigen::Vector2d const& endPos, bool isOnTarget)
+    : d_kick(kick),
+      d_endPos(endPos),
+      d_isOnTarget(isOnTarget)
+    {};
+
+    std::string getId() const { return d_kick->getId(); }
+    std::shared_ptr<Kick const> getKick() const { return d_kick; }
+    Eigen::Vector2d getEndPos() const { return d_endPos; }
+    bool isOnTarget() const { return d_isOnTarget; }
+
+  private:
+    std::shared_ptr<Kick const> d_kick;
+    Eigen::Vector2d d_endPos;
+    bool d_isOnTarget;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
   class StationaryMapState : public StateObject
   {
   public:
@@ -62,8 +84,8 @@ namespace bold
     bool hasEnoughGoalObservations() const { return countWithSamples(d_goalEstimates, GoalSamplesNeeded) >= 2; };
     bool hasEnoughBallAndGoalObservations() const { return hasEnoughBallObservations() && hasEnoughGoalObservations(); };
 
-    bool canKick() const { return d_kick != nullptr; }
-    std::shared_ptr<Kick const> getKick() const { return d_kick; }
+    bool canKick() const { return d_selectedKick != nullptr; }
+    std::shared_ptr<Kick const> getSelectedKick() const { return d_selectedKick; }
 
     double getTurnAngleRads() const { return d_turnAngleRads; };
 
@@ -83,13 +105,8 @@ namespace bold
       std::vector<Average<Eigen::Vector3d>> const& keeperEstimates,
       std::vector<Average<Eigen::Vector3d>> const& goalEstimates);
 
-    static std::shared_ptr<Kick const> selectKick(
-      std::vector<Average<Eigen::Vector3d>> const& ballEstimates,
-      std::vector<GoalEstimate> const& goalEstimates);
-
-    double calculateTurnAngle(
-      std::vector<Average<Eigen::Vector3d>> const& ballEstimates,
-      std::vector<GoalEstimate> const& goalEstimates);
+    void calculateTurnAngle();
+    void selectKick();
 
     template<typename T>
     inline static bool existsWithSamples(std::vector<T> const& estimates, int sampleThreshold);
@@ -99,7 +116,8 @@ namespace bold
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
     std::vector<Average<Eigen::Vector3d>> d_keeperEstimates;
     std::vector<GoalEstimate> d_goalEstimates;
-    std::shared_ptr<Kick const> d_kick;
+    std::vector<KickResult> d_possibleKicks;
+    std::shared_ptr<Kick const> d_selectedKick;
     double d_turnAngleRads;
   };
 

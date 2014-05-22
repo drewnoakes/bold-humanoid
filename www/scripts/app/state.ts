@@ -368,10 +368,25 @@ export interface Particle
     pnwsum: number;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface StationaryMap
+{
+    balls: AveragePosition[];
+    goals: AverageGoalPosition[];
+    keepers: AveragePosition[];
+    kicks: Kick[];
+}
+
 export interface AveragePosition
 {
     pos: number[];
     count: number;
+}
+
+export interface AverageGoalPosition extends AveragePosition
+{
+    label: GoalLabel;
 }
 
 export enum GoalLabel
@@ -381,17 +396,16 @@ export enum GoalLabel
     Theirs = 2
 }
 
-export interface AverageGoalPosition extends AveragePosition
+export interface Kick
 {
-    label: GoalLabel;
+    id: string;
+    /** 2D vector of kick's estimated end position. */
+    endPos: number[];
+    /** Whether this kick is in the correct direction. */
+    onTarget: boolean;
 }
 
-export interface StationaryMap
-{
-    balls: AveragePosition[];
-    goals: AverageGoalPosition[];
-    teammates: AveragePosition[];
-}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export interface StaticJointData
 {
@@ -413,6 +427,8 @@ export interface StaticJointData
     isEepromLocked: boolean;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export interface StaticHardware
 {
     id: number;
@@ -424,11 +440,15 @@ export interface StaticHardware
     joints: StaticJointData[];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export interface Timing
 {
     cycle: number;
     timings: {[key:string]:number};
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export interface WorldFrame
 {

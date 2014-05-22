@@ -4,6 +4,7 @@
 
 /// <reference path="../libs/lodash.d.ts" />
 
+import color = require('color');
 import control = require('control');
 import constants = require('constants');
 import geometry = require('util/geometry');
@@ -279,8 +280,15 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
     _.each(data.balls, ball => maxBallCount = Math.max(maxBallCount, ball.count));
     _.each(data.goals, goal => maxGoalCount = Math.max(maxGoalCount, goal.count));
 
+    var maxScore = 0.0,
+        maxBall: state.AveragePosition;
     _.each(data.balls, ball =>
     {
+        if (ball.count > maxScore)
+        {
+            maxScore = ball.count;
+            maxBall = ball;
+        }
         context.strokeStyle = 'rgba(255,0,0,' + (ball.count / maxBallCount) + ')';
         context.beginPath();
         context.arc(ball.pos[0], ball.pos[1], constants.ballRadius, 0, Math.PI*2, true);
@@ -289,9 +297,32 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
 
     _.each(data.goals, goal =>
     {
-        context.strokeStyle = 'rgba(255,255,0,' + (goal.count / maxGoalCount) + ')';
+        var baseColor: color.Rgb;
+
+        switch (goal.label)
+        {
+            case state.GoalLabel.Ours:    baseColor = new color.Rgb(1, 0.8, 0); break;
+            case state.GoalLabel.Theirs:  baseColor = new color.Rgb(0.8, 1, 0); break;
+            case state.GoalLabel.Unknown: baseColor = new color.Rgb(0.7, 0.7, 0); break;
+        }
+
+        var alpha = goal.count / maxGoalCount;
+        context.strokeStyle = baseColor.toString(alpha);
         context.beginPath();
         context.arc(goal.pos[0], goal.pos[1], constants.goalPostDiameter/2, 0, Math.PI*2, true);
+        context.stroke();
+    });
+
+    var startPos = maxBall
+        ? maxBall.pos
+        : [0, 0.12];
+
+    _.each(data.kicks, kick =>
+    {
+        context.strokeStyle = 'purple';
+        context.beginPath();
+        context.moveTo(startPos[0], startPos[1]);
+        context.lineTo(kick.endPos[0], kick.endPos[1]);
         context.stroke();
     });
 }

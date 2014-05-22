@@ -38,13 +38,10 @@ StationaryMapState::StationaryMapState(
 
   d_goalEstimates = labelGoalObservations(d_keeperEstimates, goalEstimates);
 
-  d_kick = selectKick(d_ballEstimates, d_goalEstimates);
+  selectKick();
 
-  if (d_kick == nullptr)
-  {
-    // TODO include the desired agent-frame ball pos at the end of the turn
-   d_turnAngleRads = calculateTurnAngle(d_keeperEstimates, d_goalEstimates);
-  }
+  // TODO include the desired agent-frame ball pos at the end of the turn
+  calculateTurnAngle();
 }
 
 vector<GoalEstimate> StationaryMapState::labelGoalObservations(
@@ -156,14 +153,15 @@ vector<GoalEstimate> StationaryMapState::labelGoalObservations(
   return labelledEstimates;
 }
 
-double StationaryMapState::calculateTurnAngle(
-  vector<Average<Vector3d>> const& ballEstimates,
-  vector<GoalEstimate> const& goalEstimates)
+void StationaryMapState::calculateTurnAngle()
 {
+  if (d_ballEstimates.size() == 0 || d_goalEstimates.size() < 2)
+  {
+    d_turnAngleRads = 0.0;
+    return;
+  }
 
-  if (ballEstimates.size() == 0 || goalEstimates.size() < 2)
-    return 0.0;
-  // TODO compute turn angle!!!
+  d_turnAngleRads = 0.0;
 
 /*
   static auto maxGoalieGoalDistance = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
@@ -266,29 +264,25 @@ double StationaryMapState::calculateTurnAngle(
       return true;
     });
 */
-
-  return 0;
 }
 
-shared_ptr<Kick const> StationaryMapState::selectKick(
-  vector<Average<Vector3d>> const& ballEstimates,
-  vector<GoalEstimate> const& goalEstimates)
+void StationaryMapState::selectKick()
 {
-  if (ballEstimates.size() == 0 || goalEstimates.size() < 2)
-    return nullptr;
+  // Short circuit if we don't have enough observations
+  if (d_ballEstimates.size() == 0 || d_goalEstimates.size() < 2)
+    return;
 
-  auto const& ballEstimate = ballEstimates[0];
+  auto const& ballEstimate = d_ballEstimates[0];
 
   if (ballEstimate.getCount() < BallSamplesNeeded)
-    return nullptr;
+    return;
 
-  // TODO when more than one kick is possible, take the best, not the first
-  // TODO the end pos doesn't necessarily have to be between the goals -- sometimes just nearer the goal is enough
-
-  for (auto const& kick : Kick::getAll())
+  for (auto& kick : Kick::getAll())
   {
-    auto endPos = kick->estimateEndPos(ballEstimate.getAverage().head<2>());
+    Maybe<Vector2d> endPos = kick->estimateEndPos(ballEstimate.getAverage().head<2>());
 
+    // If no end position, then this kick is not possible given the ball's
+    // current position.
     if (!endPos.hasValue())
       continue;
 
@@ -296,7 +290,7 @@ shared_ptr<Kick const> StationaryMapState::selectKick(
 
     // Determine whether the end pos is advantageous
     bool hasLeft = false, hasRight = false;
-    for (auto const& goal : goalEstimates)
+    for (auto const& goal : d_goalEstimates)
     {
       if (goal.getCount() < GoalSamplesNeeded)
         break;
@@ -310,11 +304,15 @@ shared_ptr<Kick const> StationaryMapState::selectKick(
         hasLeft = true;
     }
 
-    if (hasLeft && hasRight)
-      return kick;
+    bool isOnTarget = hasLeft && hasRight;
+    d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget);
   }
 
-  return nullptr;
+  // TODO when more than one kick is possible, take the best, not the first
+  // TODO the end pos doesn't necessarily have to be between the goals -- sometimes just nearer the goal is enough
+  auto it = find_if(d_possibleKicks.begin(), d_possibleKicks.end(), [](KickResult const& k) { return k.isOnTarget(); });
+  if (it != d_possibleKicks.end())
+    d_selectedKick =  it->getKick();
 }
 
 void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
@@ -346,7 +344,7 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("teammates").StartArray();
+    writer.String("keepers").StartArray();
     for (auto const& estimate : d_keeperEstimates)
     {
       writer.StartObject();
@@ -355,6 +353,22 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
         writer.String("count").Int(estimate.getCount());
       }
       writer.EndObject();
+    }
+    writer.EndArray();
+
+    writer.String("kicks").StartArray();
+    {
+      for (auto const& kick : d_possibleKicks)
+      {
+        writer.StartObject();
+        {
+          writer.String("id").String(kick.getId().c_str());
+          Vector2d const& endPos = kick.getEndPos();
+          writer.String("endPos").StartArray().Double(endPos.x()).Double(endPos.y()).EndArray();
+          writer.String("onTarget").Bool(kick.isOnTarget());
+        }
+        writer.EndObject();
+      }
     }
     writer.EndArray();
   }
