@@ -382,6 +382,7 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
           Vector2d const& endPos = kick.getEndPos();
           writer.String("endPos").StartArray().Double(endPos.x()).Double(endPos.y()).EndArray();
           writer.String("onTarget").Bool(kick.isOnTarget());
+          writer.String("selected").Bool(kick.getKick() == d_selectedKick);
         }
         writer.EndObject();
       }
