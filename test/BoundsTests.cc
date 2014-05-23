@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "helpers.hh"
 
 #include "../geometry/Bounds.hh"
 #include "../geometry/Bounds2i.hh"
@@ -42,4 +43,10 @@ TEST (BoundsTests, overlaps)
   overlapsTest(false, Bounds2i(0,0, 10,10), Bounds2i(11,11, 15,15) );
   overlapsTest(false, Bounds2i(0,0, 10,10), Bounds2i(-2,-2, -1,-1) );
   overlapsTest(false, Bounds2i(0,0, 10,10), Bounds2i(1,11, 12, 20) );
+}
+
+TEST (BoundsTests, mid)
+{
+  EXPECT_TRUE ( VectorsEqual (Vector2i(5, 5), Bounds2i(0,0, 10,10).mid()) );
+  EXPECT_TRUE ( VectorsEqual (Vector2d(5, 5), Bounds2d(Vector2d(0,0), Vector2d(10,10)).mid()) );
 }

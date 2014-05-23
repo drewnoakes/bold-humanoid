@@ -31,6 +31,14 @@ namespace bold
     Eigen::Matrix<T,dim,1> min() const { return d_min; }
     Eigen::Matrix<T,dim,1> max() const { return d_max; }
 
+    Eigen::Matrix<T,dim,1> mid() const
+    {
+      Eigen::Matrix<T,dim,1> mid;
+      for (int i = 0; i < dim; i++)
+        mid[i] = (d_min[i] + d_max[i]) / 2;
+      return mid;
+    }
+
     bool contains(Eigen::Matrix<T,dim,1> const& v) const
     {
       return (v - d_min).minCoeff() >= 0 && (d_max - v).minCoeff() >= 0;
