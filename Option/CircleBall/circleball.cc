@@ -145,6 +145,7 @@ void CircleBall::setTurnAngle(double turnAngleRads)
 
 double CircleBall::hasTerminated()
 {
+  // TODO don't assume that a fixed amount of time is enough -- monitor body orientation and also ensure ball is close to target position
   return Clock::getSecondsSince(d_startTime) >= d_durationSeconds;
 }
 
