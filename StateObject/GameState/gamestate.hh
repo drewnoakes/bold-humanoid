@@ -77,24 +77,24 @@ namespace bold
 
     robocup::TeamInfo const& ourTeamInfo() const
     {
-      static auto team = Config::getStaticValue<int>("team-number");
-      return teamInfo(team);
+      static auto teamNumber = Config::getStaticValue<int>("team-number");
+      return teamInfo(teamNumber);
     }
 
-    robocup::PlayerInfo const& playerInfo(unsigned team, unsigned unum) const
+    robocup::PlayerInfo const& playerInfo(unsigned teamIndex, unsigned unum) const
     {
-      ASSERT(team < 2);
-      return d_data.teams[team].getPlayer(unum);
+      ASSERT(teamIndex < 2);
+      return d_data.teams[teamIndex].getPlayer(unum);
     }
 
     double getAgeMillis() const { return Clock::getMillisSince(d_receivedAt); }
 
     robocup::PlayerInfo const& myPlayerInfo() const
     {
-      static auto team = Config::getStaticValue<int>("team-number");
-      static auto unum = Config::getStaticValue<int>("team-number");
+      static auto teamNumber = Config::getStaticValue<int>("team-number");
+      static auto unum = Config::getStaticValue<int>("uniform-number");
 
-      return playerInfo(team, unum);
+      return playerInfo(getTeamIndex(teamNumber), unum);
     }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
