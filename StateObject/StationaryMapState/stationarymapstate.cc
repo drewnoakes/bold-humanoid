@@ -180,6 +180,13 @@ void StationaryMapState::calculateTurnAngle()
   // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
   // TODO some decisions about turning should only be made once the entire area has been surveyed -- no way to express this currently
 
+  if (d_goalEstimates[0].getLabel() == GoalLabel::Ours)
+  {
+    d_turnAngleRads = M_PI;
+    d_turnBallPos = Vector2d();
+    return;
+  }
+
   vector<Vector3d> targetPositions = {
     d_goalEstimates[0].getMidpoint(0.25),
     d_goalEstimates[0].getMidpoint(0.5),
