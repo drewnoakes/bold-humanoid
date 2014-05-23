@@ -3,6 +3,8 @@
 #include "../option.hh"
 #include "../../Clock/clock.hh"
 
+#include <Eigen/Core>
+
 namespace bold
 {
   class Agent;
@@ -22,7 +24,7 @@ namespace bold
 
     virtual double hasTerminated() override;
 
-    void setTurnAngle(double angleRads);
+    void setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallPos);
 
   private:
     std::shared_ptr<WalkModule> d_walkModule;
@@ -32,5 +34,6 @@ namespace bold
     double d_turnAngleRads;
     double d_durationSeconds;
     Clock::Timestamp d_startTime;
+    Eigen::Vector2d d_targetBallPos;
   };
 }

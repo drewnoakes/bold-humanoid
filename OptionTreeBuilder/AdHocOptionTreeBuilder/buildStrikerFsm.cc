@@ -213,8 +213,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
       if (turnAngle == 0)
         return false;
       // TODO provide onResetBefore virtual on Option, and capure this there
-      // TODO copy required agent-frame ball pos to circlBall too
-      circleBall->setTurnAngle(turnAngle);
+      circleBall->setTurnParams(turnAngle, map->getTurnBallPos());
       return true;
     });
 

@@ -21,7 +21,8 @@ CircleBall::CircleBall(std::string const& id, Agent* agent)
   d_lookAtBall(make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), d_headModule)),
   d_turnAngleRads(0),
   d_durationSeconds(0),
-  d_startTime(0)
+  d_startTime(0),
+  d_targetBallPos(0.0, 0.15)
 {}
 
 vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
@@ -43,11 +44,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   static Setting<double>* turnSpeedA = Config::getSetting<double>("options.circle-ball.turn-speed-a");
 //   static Setting<double>* brakeDistance = Config::getSetting<double>("options.circle-ball.brake-distance");
 
-  // TODO set this position based upon which foot is closest to the ball when commencing
-  // TODO base the Y position from the idealkicking distance as the position to keep
-  auto targetBallPos = Vector2d(0.0, 0.15);
   auto observedBallPos = agentFrame->getBallObservation()->head<2>();
-  Vector2d error = targetBallPos - observedBallPos;
+  Vector2d error = d_targetBallPos - observedBallPos;
   Vector2d errorNorm = error.normalized();
 
   bool isLeftTurn = d_turnAngleRads < 0;
@@ -134,9 +132,10 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   */
 }
 
-void CircleBall::setTurnAngle(double turnAngleRads)
+void CircleBall::setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallPos)
 {
   d_turnAngleRads = turnAngleRads;
+  d_targetBallPos = targetBallPos;
 
   static const auto timeScalingSetting = Config::getSetting<double>("options.circle-ball.time-scaling");
   d_durationSeconds = fabs(turnAngleRads) * timeScalingSetting->getValue();

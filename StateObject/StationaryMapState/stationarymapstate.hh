@@ -114,6 +114,7 @@ namespace bold
     std::shared_ptr<Kick const> getSelectedKick() const { return d_selectedKick; }
 
     double getTurnAngleRads() const { return d_turnAngleRads; };
+    Eigen::Vector2d getTurnBallPos() const { return d_turnBallPos; };
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
