@@ -6,6 +6,7 @@
 #include "../../StateObject/TeamState/teamstate.hh"
 
 #include <deque>
+#include <vector>
 
 using namespace bold;
 using namespace Eigen;
@@ -159,13 +160,64 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
 
 void StationaryMapState::calculateTurnAngle()
 {
-  if (d_ballEstimates.size() == 0 || d_goalPostEstimates.size() < 2)
+  // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
+
+  if (d_selectedKick || d_ballEstimates.size() == 0 || d_goalEstimates.size() == 0)
   {
     d_turnAngleRads = 0.0;
+    d_turnBallPos = Vector2d::Zero();
     return;
   }
 
-  d_turnAngleRads = 0.0;
+  // We see the ball and one goal.
+  // Find the shortest turn required to make a good kick.
+  // If the wrong goal, compute the desired angle(s) away from it.
+  // Ask each kick what it's ideal ball position is. Set this on CircleBall.
+
+  // Find the target angle(s) that would be good from here.
+
+  // TODO don't assume the goal is theirs!
+  // TODO don't assume we only see one goal!
+  // TODO consider obstacles in the goal -- don't just aim for the middle
+
+  vector<Vector3d> targetPositions = {
+    d_goalEstimates[0].getMidpoint(0.25),
+    d_goalEstimates[0].getMidpoint(0.5),
+    d_goalEstimates[0].getMidpoint(0.25)
+  };
+
+  vector<double> targetAngles;
+  targetAngles.reserve(targetPositions.size());
+  std::transform(targetPositions.begin(), targetPositions.end(),
+                 back_inserter(targetAngles),
+                 [](Vector3d const& target) { return atan2(-target.x(), target.y()); });
+
+  double closestAngle = std::numeric_limits<double>::max();
+  Vector2d closestBallPos = {};
+  bool found = false;
+
+  for (shared_ptr<Kick const> const& kick : Kick::getAll())
+  {
+    Vector2d ballPos = kick->getIdealBallPos();
+    Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
+    ASSERT(endPos.hasValue());
+    double angle = atan2(-endPos->x(), endPos->y());
+    for (double const& targetAngle : targetAngles)
+    {
+      if (fabs(closestAngle) > fabs(angle - targetAngle))
+      {
+        closestAngle = angle - targetAngle;
+        closestBallPos = ballPos;
+        found = true;
+      }
+    }
+  }
+
+  if (found)
+  {
+    d_turnAngleRads = -closestAngle;
+    d_turnBallPos = closestBallPos;
+  }
 }
 
 void StationaryMapState::findGoals()
@@ -328,6 +380,9 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
       }
     }
     writer.EndArray();
+
+    writer.String("turnAngle").Double(d_turnAngleRads);
+    writer.String("turnBallPos").StartArray().Double(d_turnBallPos.x()).Double(d_turnBallPos.y()).EndArray();
   }
   writer.EndObject();
 }

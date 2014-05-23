@@ -147,6 +147,7 @@ namespace bold
     std::vector<KickResult> d_possibleKicks;
     std::shared_ptr<Kick const> d_selectedKick;
     double d_turnAngleRads;
+    Eigen::Vector2d d_turnBallPos;
   };
 
   template<typename T>
