@@ -1,11 +1,12 @@
 #include "gtest/gtest.h"
 
 
+#include <algorithm>
 #include <chrono>
 #include <functional>
 #include <map>
 #include <memory>
-#include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -276,6 +277,24 @@ TEST (CppTests, vectorEraseSharedPtr)
 
     EXPECT_EQ( thres, ptrs.size() );
   }
+}
+
+TEST (CppTests, transformTransform)
+{
+  vector<int> ints = { 1, 2, 3 };
+
+  vector<int> doubles;
+  doubles.reserve(ints.size());
+
+  EXPECT_EQ( 3, ints.size() );
+
+  std::transform(ints.begin(), ints.end(), back_inserter(doubles), [](int i) { return i*2; });
+
+  EXPECT_EQ( 3, ints.size() );
+  EXPECT_EQ( 3, doubles.size() );
+  EXPECT_EQ( 2, doubles[0] );
+  EXPECT_EQ( 4, doubles[1] );
+  EXPECT_EQ( 6, doubles[2] );
 }
 
 TEST(CppTests, mutateVectorInMap)
