@@ -49,7 +49,9 @@ Kick::Kick(string id, string scriptPath, Bounds2d ballBounds, Vector2d endPos)
   d_motionScript(MotionScript::fromFile(scriptPath)),
   d_ballBounds(ballBounds),
   d_endPos(endPos)
-{}
+{
+  d_idealBallPos = ballBounds.mid();
+}
 
 Maybe<Vector2d> Kick::estimateEndPos(Vector2d const& ballPos) const
 {

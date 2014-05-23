@@ -31,6 +31,8 @@ namespace bold
 
     std::shared_ptr<MotionScript> getMotionScript() const { return d_motionScript; }
 
+    Eigen::Vector2d getIdealBallPos() const { return d_idealBallPos; }
+
   private:
     static std::vector<std::shared_ptr<Kick const>> d_allKicks;
 
@@ -38,5 +40,6 @@ namespace bold
     std::shared_ptr<MotionScript> d_motionScript;
     Bounds2d d_ballBounds;
     Eigen::Vector2d d_endPos;
+    Eigen::Vector2d d_idealBallPos;
   };
 }
