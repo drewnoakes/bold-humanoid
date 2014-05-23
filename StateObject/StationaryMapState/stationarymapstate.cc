@@ -160,7 +160,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
 
 void StationaryMapState::calculateTurnAngle()
 {
-  if (d_selectedKick != nullptr || d_ballEstimates.size() == 0 || d_goalEstimates.size() == 0)
+  if (d_selectedKick != nullptr || !hasEnoughBallObservations() || d_goalEstimates.size() == 0)
   {
     d_turnAngleRads = 0.0;
     d_turnBallPos = Vector2d::Zero();
