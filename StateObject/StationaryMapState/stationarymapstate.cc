@@ -160,9 +160,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
 
 void StationaryMapState::calculateTurnAngle()
 {
-  // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
-
-  if (d_selectedKick || d_ballEstimates.size() == 0 || d_goalEstimates.size() == 0)
+  if (d_selectedKick != nullptr || d_ballEstimates.size() == 0 || d_goalEstimates.size() == 0)
   {
     d_turnAngleRads = 0.0;
     d_turnBallPos = Vector2d::Zero();
@@ -179,6 +177,8 @@ void StationaryMapState::calculateTurnAngle()
   // TODO don't assume the goal is theirs!
   // TODO don't assume we only see one goal!
   // TODO consider obstacles in the goal -- don't just aim for the middle
+  // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
+  // TODO some decisions about turning should only be made once the entire area has been surveyed -- no way to express this currently
 
   vector<Vector3d> targetPositions = {
     d_goalEstimates[0].getMidpoint(0.25),
