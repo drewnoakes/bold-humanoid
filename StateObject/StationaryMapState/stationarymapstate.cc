@@ -184,6 +184,7 @@ void StationaryMapState::calculateTurnAngle()
   {
     d_turnAngleRads = M_PI;
     d_turnBallPos = Vector2d();
+    cout << "calculateTurnAngle: about face -- it's our goal (crude implementation for now)" << endl;
     return;
   }
 
@@ -216,6 +217,7 @@ void StationaryMapState::calculateTurnAngle()
         closestAngle = angle - targetAngle;
         closestBallPos = ballPos;
         found = true;
+        cout << "calculateTurnAngle: kick " << kick->getId() << " possible (best yet -- last wins)" << endl;
       }
     }
   }
@@ -224,6 +226,7 @@ void StationaryMapState::calculateTurnAngle()
   {
     d_turnAngleRads = -closestAngle;
     d_turnBallPos = closestBallPos;
+    cout << "calculateTurnAngle: turn " << Math::radToDeg(d_turnAngleRads) << " degrees with ball at " << d_turnBallPos.transpose() << endl;
   }
 }
 
