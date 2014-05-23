@@ -253,7 +253,7 @@ void StationaryMapState::findGoals()
         else
           label = GoalLabel::Unknown;
 
-        d_goalEstimates.emplace_back(post1, *post2, label);
+        d_goalEstimates.emplace_back(post1.getAverage(), post2->getAverage(), label);
 
         posts.erase(post2);
         break;
@@ -345,8 +345,8 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.StartObject();
       {
-        writer.String("post1").StartArray().Double(estimate.getPost1().getAverage().x()).Double(estimate.getPost1().getAverage().y()).EndArray();
-        writer.String("post2").StartArray().Double(estimate.getPost2().getAverage().x()).Double(estimate.getPost2().getAverage().y()).EndArray();
+        writer.String("post1").StartArray().Double(estimate.getPost1().x()).Double(estimate.getPost1().y()).EndArray();
+        writer.String("post2").StartArray().Double(estimate.getPost2().x()).Double(estimate.getPost2().y()).EndArray();
         writer.String("label").Uint(static_cast<int>(estimate.getLabel()));
       }
       writer.EndObject();

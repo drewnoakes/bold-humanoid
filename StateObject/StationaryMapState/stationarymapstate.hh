@@ -51,20 +51,20 @@ namespace bold
   class GoalEstimate
   {
   public:
-    GoalEstimate(GoalPostEstimate const& post1, GoalPostEstimate const& post2, GoalLabel label)
+    GoalEstimate(Eigen::Vector3d const& post1, Eigen::Vector3d const& post2, GoalLabel label)
     : d_post1(post1),
       d_post2(post2),
       d_label(label)
     {}
 
-    GoalPostEstimate getPost1() const { return d_post1; }
-    GoalPostEstimate getPost2() const { return d_post2; }
+    Eigen::Vector3d getPost1() const { return d_post1; }
+    Eigen::Vector3d getPost2() const { return d_post2; }
     GoalLabel getLabel() const { return d_label; }
-    Eigen::Vector3d getMidpoint(double ratio = 0.5) const { return Math::lerp(ratio, d_post1.getAverage(), d_post2.getAverage()); }
+    Eigen::Vector3d getMidpoint(double ratio = 0.5) const { return Math::lerp(ratio, d_post1, d_post2); }
 
   private:
-    GoalPostEstimate d_post1;
-    GoalPostEstimate d_post2;
+    Eigen::Vector3d d_post1;
+    Eigen::Vector3d d_post2;
     GoalLabel d_label;
   };
 
