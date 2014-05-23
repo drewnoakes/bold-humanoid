@@ -2,6 +2,7 @@
 
 #include "../stateobject.hh"
 #include "../../Kick/kick.hh"
+#include "../../Math/math.hh"
 #include "../../stats/average.hh"
 
 #include <vector>
@@ -59,6 +60,7 @@ namespace bold
     GoalPostEstimate getPost1() const { return d_post1; }
     GoalPostEstimate getPost2() const { return d_post2; }
     GoalLabel getLabel() const { return d_label; }
+    Eigen::Vector3d getMidpoint(double ratio = 0.5) const { return Math::lerp(ratio, d_post1.getAverage(), d_post2.getAverage()); }
 
   private:
     GoalPostEstimate d_post1;
