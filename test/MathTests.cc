@@ -262,3 +262,19 @@ TEST(MathTests, normaliseRads)
   EXPECT_NEAR ( 0, Math::normaliseRads(6*M_PI), 0.0001 );
 }
 
+TEST(MathTests, shortestAngleDiffRads)
+{
+  // Assumes input angles are both in range [-PI,PI)
+  EXPECT_NEAR ( 0.0, Math::shortestAngleDiffRads(0, 0), 0.0001 );
+  EXPECT_NEAR ( 0.1, Math::shortestAngleDiffRads(0, 0.1), 0.0001 );
+  EXPECT_NEAR ( -0.1, Math::shortestAngleDiffRads(0.1, 0), 0.0001 );
+  EXPECT_NEAR ( 0.0, Math::shortestAngleDiffRads(0, 2*M_PI), 0.0001 );
+  EXPECT_NEAR ( 0.0, Math::shortestAngleDiffRads(-M_PI, M_PI), 0.0001 );
+  EXPECT_NEAR ( M_PI, Math::shortestAngleDiffRads(-M_PI/2, M_PI/2), 0.0001 );
+  EXPECT_NEAR ( -M_PI/2, Math::shortestAngleDiffRads(0, 3*M_PI/2), 0.0001 );
+  EXPECT_NEAR ( M_PI/2, Math::shortestAngleDiffRads(0, -3*M_PI/2), 0.0001 );
+  EXPECT_NEAR ( 2*M_PI/3, Math::shortestAngleDiffRads(-M_PI/3, M_PI/3), 0.0001 );
+  EXPECT_NEAR ( -2*M_PI/3, Math::shortestAngleDiffRads(-2*M_PI/3, 2*M_PI/3), 0.0001 );
+  EXPECT_NEAR ( 2*M_PI/3, Math::shortestAngleDiffRads(2*M_PI/3, -2*M_PI/3), 0.0001 );
+  EXPECT_NEAR ( -M_PI/3, Math::shortestAngleDiffRads(0, 11*M_PI/3), 0.0001 );
+}

@@ -91,6 +91,17 @@ namespace bold
       return rads - M_PI;
     }
 
+    static double shortestAngleDiffRads(double a1, double a2)
+    {
+      double d = fmod(a2 - a1, 2*M_PI);
+      d += (d > M_PI)
+        ? -2*M_PI
+        : d < -M_PI/2
+          ? 2*M_PI
+          : 0;
+      return d;
+    }
+
   private:
     Math() = delete;
   };
