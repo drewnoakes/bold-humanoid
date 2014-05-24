@@ -244,7 +244,21 @@ TEST(MathTests, yawFromQuaternion)
   EXPECT_EQ ( -1.0, Math::yawFromQuaternion(create(0, 0, -1)) );
   EXPECT_NEAR ( 0.0, Math::yawFromQuaternion(create(0, 0, 4*M_PI)), 0.0001 );
 
+  EXPECT_NEAR ( -M_PI/2.0, Math::yawFromQuaternion(create(0, 0, (3*M_PI)/2.0)), 0.0001 );
+
   EXPECT_NEAR ( 1.0, Math::yawFromQuaternion(create(0.1, 0, 1)), 0.01 );
   EXPECT_NEAR ( 1.0, Math::yawFromQuaternion(create(0, 0.1, 1)), 0.01 );
   EXPECT_NEAR ( 1.0, Math::yawFromQuaternion(create(0.1, 0.1, 1)), 0.01 );
 }
+
+TEST(MathTests, normaliseRads)
+{
+  // Ensures return value is in range [-PI,PI)
+  EXPECT_NEAR ( 0.0, Math::normaliseRads(0), 0.0001 );
+  EXPECT_NEAR ( -M_PI, Math::normaliseRads(M_PI), 0.0001 );
+  EXPECT_NEAR ( -M_PI, Math::normaliseRads(-M_PI), 0.0001 );
+  EXPECT_NEAR ( M_PI/2, Math::normaliseRads(M_PI/2), 0.0001 );
+  EXPECT_NEAR ( -M_PI/2, Math::normaliseRads(-M_PI/2), 0.0001 );
+  EXPECT_NEAR ( 0, Math::normaliseRads(6*M_PI), 0.0001 );
+}
+

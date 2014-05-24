@@ -76,13 +76,19 @@ namespace bold
       return asin(2*quaternion.x()*quaternion.y() + 2*quaternion.z()*quaternion.w());
 
 //       // Using http://stackoverflow.com/questions/5782658/extracting-yaw-from-a-quaternion
-//
 //       double mag = sqrt(pow(quaternion.w(), 2.0) + pow(quaternion.z(), 2.0));
-//
 //       if (mag == 0.0)
 //         return 0;
-//
 //       return 2*acos(quaternion.w() / mag);
+    }
+
+    /** Constrains the angle to range [-PI,PI). */
+    static double normaliseRads(double rads)
+    {
+      rads = fmod(rads + M_PI, 2*M_PI);
+      if (rads < 0)
+          rads += 2*M_PI;
+      return rads - M_PI;
     }
 
   private:
