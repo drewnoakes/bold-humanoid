@@ -20,8 +20,6 @@ namespace bold
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    virtual void reset() override;
-
     virtual double hasTerminated() override;
 
     void setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallPos);
@@ -32,8 +30,7 @@ namespace bold
     std::shared_ptr<LookAtFeet> d_lookAtFeet;
     std::shared_ptr<LookAtBall> d_lookAtBall;
     double d_turnAngleRads;
-    double d_durationSeconds;
-    Clock::Timestamp d_startTime;
     Eigen::Vector2d d_targetBallPos;
+    double d_targetYaw;
   };
 }

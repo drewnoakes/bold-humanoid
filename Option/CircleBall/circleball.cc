@@ -5,6 +5,7 @@
 #include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
+#include "../../StateObject/OrientationState/orientationstate.hh"
 #include "../LookAtBall/lookatball.hh"
 #include "../LookAtFeet/lookatfeet.hh"
 
@@ -20,14 +21,15 @@ CircleBall::CircleBall(std::string const& id, Agent* agent)
   d_lookAtFeet(make_shared<LookAtFeet>("lookAtFeet", d_headModule)),
   d_lookAtBall(make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), d_headModule)),
   d_turnAngleRads(0),
-  d_durationSeconds(0),
-  d_startTime(0),
-  d_targetBallPos(0.0, 0.15)
+  d_targetBallPos(0.0, 0.15),
+  d_targetYaw(0)
 {}
 
 vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 {
   auto agentFrame = State::get<AgentFrameState>();
+
+  ASSERT(agentFrame);
 
   if (!agentFrame->isBallVisible())
   {
@@ -60,6 +62,11 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
   double a = errorDir * Math::clamp(fabs(errorNorm.x()), 0.75, 1.0) * turnSpeedA->getValue();
 
+  // Scale turn based upon difference between current and target yaw
+  auto orientation = State::get<OrientationState>();
+  double yawDiffRads = Math::shortestAngleDiffRads(orientation->getYawAngle(), d_targetYaw);
+  a = Math::lerp(yawDiffRads, 0.0, M_PI/3, 0.0, a);
+
   /*
   // Keep distance same
   // Alpha controls how much turning is attempted. Max turn occurs when we have
@@ -88,17 +95,15 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   x = Math::clamp(x, -maxSpeedX->getValue(), maxSpeedX->getValue());
   y = Math::clamp(y, -maxSpeedY->getValue(), maxSpeedY->getValue());
-  if (isLeftTurn)
-    a = Math::clamp(a, -turnSpeedA->getValue(), 0.0);
-  else
-    a = Math::clamp(a, 0.0, turnSpeedA->getValue());
+  a = Math::clamp(a, -turnSpeedA->getValue(), turnSpeedA->getValue());
 
   // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
   // direction being inverted.
   d_walkModule->setMoveDir(-y, -x);
   d_walkModule->setTurnAngle(a);
 
-  writer.String("error").StartArray().Double(error.x()).Double(error.y()).EndArray(2);
+  writer.String("yawError").Double(yawDiffRads);
+  writer.String("posError").StartArray().Double(error.x()).Double(error.y()).EndArray(2);
   writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
   writer.String("turn").Double(a);
 
@@ -137,18 +142,29 @@ void CircleBall::setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallP
   d_turnAngleRads = turnAngleRads;
   d_targetBallPos = targetBallPos;
 
-  static const auto timeScalingSetting = Config::getSetting<double>("options.circle-ball.time-scaling");
-  d_durationSeconds = fabs(turnAngleRads) * timeScalingSetting->getValue();
-  d_startTime = Clock::getTimestamp();
+  // Track starting orientation in order to know when we've reached our desired rotation
+  auto orientation = State::get<OrientationState>();
+  ASSERT(orientation);
+  d_targetYaw = Math::normaliseRads(orientation->getYawAngle() + turnAngleRads);
 }
 
 double CircleBall::hasTerminated()
 {
-  // TODO don't assume that a fixed amount of time is enough -- monitor body orientation and also ensure ball is close to target position
-  return Clock::getSecondsSince(d_startTime) >= d_durationSeconds;
-}
+  // First, assert we've turned enough
+  double yawErrorRads = State::get<OrientationState>()->getYawAngle() - d_targetYaw;
 
-void CircleBall::reset()
-{
-//   d_walkModule->reset();
+  if (fabs(yawErrorRads) > Math::degToRad(10)) // TODO magic number!
+    return false;
+
+  // If we've turned enough, ensure we are positioned correctly to the ball
+
+  auto agentFrame = State::get<AgentFrameState>();
+
+  // If we cannot see the ball, there's no point continuing
+  if (!agentFrame->isBallVisible())
+    return true;
+
+  Vector2d posError = d_targetBallPos - agentFrame->getBallObservation()->head<2>();
+
+  return posError.norm() < 0.02; // TODO magic number
 }

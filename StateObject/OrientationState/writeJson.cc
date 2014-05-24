@@ -1,8 +1,15 @@
 #include "orientationstate.hh"
 
+#include "../../Math/math.hh"
+
 using namespace bold;
 using namespace Eigen;
 using namespace rapidjson;
+
+double OrientationState::getYawAngle() const
+{
+  return Math::normaliseRads(Math::yawFromQuaternion(d_quaternion));
+}
 
 void OrientationState::writeJson(Writer<StringBuffer>& writer) const
 {
@@ -12,10 +19,10 @@ void OrientationState::writeJson(Writer<StringBuffer>& writer) const
   {
     writer.String("quaternion");
     writer.StartArray();
-    writer.Double(swapNaN(d_quaternion.w(), 0), "%.5f");
     writer.Double(swapNaN(d_quaternion.x(), 0), "%.5f");
     writer.Double(swapNaN(d_quaternion.y(), 0), "%.5f");
     writer.Double(swapNaN(d_quaternion.z(), 0), "%.5f");
+    writer.Double(swapNaN(d_quaternion.w(), 0), "%.5f");
     writer.EndArray();
 
     /*

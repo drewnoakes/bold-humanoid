@@ -15,6 +15,8 @@ namespace bold
 
     Eigen::Quaterniond const& getQuaternion() const { return d_quaternion; };
 
+    double getYawAngle() const;
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
