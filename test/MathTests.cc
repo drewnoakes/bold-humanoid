@@ -161,7 +161,7 @@ TEST (MathTests, alignUp)
   EXPECT_TRUE( MatricesEqual( rotated.matrix(), Math::alignUp(rotated).matrix() ) );
   rotated = AngleAxisd(0.64637 * M_PI, Vector3d(0, 0, 1)) * transform;
   EXPECT_TRUE( MatricesEqual( rotated.matrix(), Math::alignUp(rotated).matrix() ) );
-  
+
   rotated = AngleAxisd(0.1 * M_PI, Vector3d(1, 0, 0)) * transform;
   EXPECT_TRUE( MatricesEqual( transform.matrix(), Math::alignUp(rotated).matrix() ) );
   rotated = AngleAxisd(0.25 * M_PI, Vector3d(1, 0, 0)) * transform;
@@ -226,4 +226,25 @@ TEST(MathTests, lerp)
   EXPECT_TRUE ( VectorsEqual(Vector2d(0,0), Math::lerp(0.0, Vector2d(0,0), Vector2d(10,10))) );
   EXPECT_TRUE ( VectorsEqual(Vector2d(5,5), Math::lerp(0.5, Vector2d(0,0), Vector2d(10,10))) );
   EXPECT_TRUE ( VectorsEqual(Vector2d(9,9), Math::lerp(0.9, Vector2d(0,0), Vector2d(10,10))) );
+}
+
+Quaterniond create(double pitch, double roll, double yaw)
+{
+  AngleAxisd pitchAngle(pitch, Vector3d::UnitX());
+  AngleAxisd rollAngle(roll, Vector3d::UnitY());
+  AngleAxisd yawAngle(yaw, Vector3d::UnitZ());
+
+  Quaternion<double> q = rollAngle * pitchAngle * yawAngle;
+  return q;
+}
+
+TEST(MathTests, yawFromQuaternion)
+{
+  EXPECT_EQ ( 1.0, Math::yawFromQuaternion(create(0, 0, 1)) );
+  EXPECT_EQ ( -1.0, Math::yawFromQuaternion(create(0, 0, -1)) );
+  EXPECT_NEAR ( 0.0, Math::yawFromQuaternion(create(0, 0, 4*M_PI)), 0.0001 );
+
+  EXPECT_NEAR ( 1.0, Math::yawFromQuaternion(create(0.1, 0, 1)), 0.01 );
+  EXPECT_NEAR ( 1.0, Math::yawFromQuaternion(create(0, 0.1, 1)), 0.01 );
+  EXPECT_NEAR ( 1.0, Math::yawFromQuaternion(create(0.1, 0.1, 1)), 0.01 );
 }

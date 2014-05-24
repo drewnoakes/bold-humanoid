@@ -71,6 +71,20 @@ namespace bold
       return lowerOutput + (upperOutput - lowerOutput) * ratio;
     };
 
+    static double yawFromQuaternion(Eigen::Quaterniond const& quaternion)
+    {
+      return asin(2*quaternion.x()*quaternion.y() + 2*quaternion.z()*quaternion.w());
+
+//       // Using http://stackoverflow.com/questions/5782658/extracting-yaw-from-a-quaternion
+//
+//       double mag = sqrt(pow(quaternion.w(), 2.0) + pow(quaternion.z(), 2.0));
+//
+//       if (mag == 0.0)
+//         return 0;
+//
+//       return 2*acos(quaternion.w() / mag);
+    }
+
   private:
     Math() = delete;
   };
