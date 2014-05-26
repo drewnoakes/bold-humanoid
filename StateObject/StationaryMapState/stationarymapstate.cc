@@ -45,7 +45,6 @@ StationaryMapState::StationaryMapState(
 
   selectKick();
 
-  // TODO include the desired agent-frame ball pos at the end of the turn
   calculateTurnAngle();
 }
 
