@@ -24,6 +24,8 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
 
   bool hasChange = false;
 
+  // TODO use agentFrame->shouldSeeAgentFrameGroundPoint(...) to decrease scores
+
   if (agentFrame->isBallVisible())
   {
     integrate(d_ballEstimates, agentFrame->getBallObservation().value(), 0.2); // TODO magic number!
