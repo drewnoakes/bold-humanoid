@@ -4,8 +4,8 @@ pair<Localiser::FilterState, double> Localiser::generateState()
 {
   auto gameState = State::get<GameState>();
   auto behaviourControlState = State::get<BehaviourControlState>();
-  bool kidnapped = 
-    (gameState && gameState->myPlayerInfo().hasPenalty()) || 
+  bool kidnapped =
+    (gameState && gameState->getMyPlayerInfo().hasPenalty()) ||
     behaviourControlState->getPlayerStatus() == PlayerStatus::Penalised ||
     behaviourControlState->getPlayerStatus() == PlayerStatus::Paused;
 
@@ -18,7 +18,7 @@ pair<Localiser::FilterState, double> Localiser::generateState()
   {
     // Pick random side
     bool left = d_fieldYRng() > 0;
-    
+
     // Pick random x; negative = on our side
     // TODO: close to center line is more likely
     auto x = -std::abs(d_fieldXRng());
@@ -41,7 +41,7 @@ pair<Localiser::FilterState, double> Localiser::generateState()
   {
     auto theta = d_thetaRng();
     auto state = FilterState(d_fieldXRng(), d_fieldYRng(), cos(theta), sin(theta));
-        
+
     return make_pair(state, d_defaultKidnapWeight->getValue());
   }
 }

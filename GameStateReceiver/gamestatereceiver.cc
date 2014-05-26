@@ -186,8 +186,8 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
 
     // Track the other team numbers we see, and log them as new ones arrive
 
-    uint8 teamNumber1 = gameState->teamInfo1().getTeamNumber();
-    uint8 teamNumber2 = gameState->teamInfo2().getTeamNumber();
+    uint8 teamNumber1 = gameState->getTeam1().getTeamNumber();
+    uint8 teamNumber2 = gameState->getTeam2().getTeamNumber();
 
     bool areWeTeam1 = teamNumber1 == teamNumber;
     bool areWeTeam2 = teamNumber2 == teamNumber;

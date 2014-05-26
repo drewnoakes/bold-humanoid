@@ -56,10 +56,10 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
     };
 
     writer.String("team1");
-    writeTeam(teamInfo1());
+    writeTeam(getTeam1());
 
     writer.String("team2");
-    writeTeam(teamInfo2());
+    writeTeam(getTeam2());
   }
   writer.EndObject();
 }

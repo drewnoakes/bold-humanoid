@@ -12,13 +12,13 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto isPenalised = [teamNumber,uniformNumber]()
   {
     auto gameState = State::get<GameState>();
-    return gameState && gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
+    return gameState && gameState->getTeam(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
   auto isNotPenalised = [teamNumber,uniformNumber]()
   {
     auto gameState = State::get<GameState>();
-    return gameState && !gameState->teamInfo(teamNumber).getPlayer(uniformNumber).hasPenalty();
+    return gameState && !gameState->getTeam(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
   auto nonPenalisedPlayMode = [isNotPenalised](PlayMode playMode)
