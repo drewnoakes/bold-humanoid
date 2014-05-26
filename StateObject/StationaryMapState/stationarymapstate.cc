@@ -158,78 +158,6 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
   return labelledEstimates;
 }
 
-void StationaryMapState::calculateTurnAngle()
-{
-  if (d_selectedKick != nullptr || !hasEnoughBallObservations() || d_goalEstimates.size() == 0)
-  {
-    d_turnAngleRads = 0.0;
-    d_turnBallPos = Vector2d::Zero();
-    return;
-  }
-
-  // We see the ball and one goal.
-  // Find the shortest turn required to make a good kick.
-  // If the wrong goal, compute the desired angle(s) away from it.
-  // Ask each kick what it's ideal ball position is. Set this on CircleBall.
-
-  // Find the target angle(s) that would be good from here.
-
-  // TODO don't assume the goal is theirs!
-  // TODO don't assume we only see one goal!
-  // TODO consider obstacles in the goal -- don't just aim for the middle
-  // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
-  // TODO some decisions about turning should only be made once the entire area has been surveyed -- no way to express this currently
-
-  if (d_goalEstimates[0].getLabel() == GoalLabel::Ours)
-  {
-    d_turnAngleRads = M_PI;
-    d_turnBallPos = Vector2d();
-    cout << "calculateTurnAngle: about face -- it's our goal (crude implementation for now)" << endl;
-    return;
-  }
-
-  vector<Vector3d> targetPositions = {
-    d_goalEstimates[0].getMidpoint(0.25),
-    d_goalEstimates[0].getMidpoint(0.5),
-    d_goalEstimates[0].getMidpoint(0.25)
-  };
-
-  vector<double> targetAngles;
-  targetAngles.reserve(targetPositions.size());
-  std::transform(targetPositions.begin(), targetPositions.end(),
-                 back_inserter(targetAngles),
-                 [](Vector3d const& target) { return atan2(-target.x(), target.y()); });
-
-  double closestAngle = std::numeric_limits<double>::max();
-  Vector2d closestBallPos = {};
-  bool found = false;
-
-  for (shared_ptr<Kick const> const& kick : Kick::getAll())
-  {
-    Vector2d ballPos = kick->getIdealBallPos();
-    Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
-    ASSERT(endPos.hasValue());
-    double angle = atan2(-endPos->x(), endPos->y());
-    for (double const& targetAngle : targetAngles)
-    {
-      if (fabs(closestAngle) > fabs(angle - targetAngle))
-      {
-        closestAngle = angle - targetAngle;
-        closestBallPos = ballPos;
-        found = true;
-        cout << "calculateTurnAngle: kick " << kick->getId() << " possible (best yet -- last wins)" << endl;
-      }
-    }
-  }
-
-  if (found)
-  {
-    d_turnAngleRads = -closestAngle;
-    d_turnBallPos = closestBallPos;
-    cout << "calculateTurnAngle: turn " << Math::radToDeg(d_turnAngleRads) << " degrees with ball at " << d_turnBallPos.transpose() << endl;
-  }
-}
-
 void StationaryMapState::findGoals()
 {
   std::deque<GoalPostEstimate> posts(d_goalPostEstimates.begin(), d_goalPostEstimates.end());
@@ -319,6 +247,78 @@ void StationaryMapState::selectKick()
   auto it = find_if(d_possibleKicks.begin(), d_possibleKicks.end(), [](KickResult const& k) { return k.isOnTarget(); });
   if (it != d_possibleKicks.end())
     d_selectedKick =  it->getKick();
+}
+
+void StationaryMapState::calculateTurnAngle()
+{
+  if (d_selectedKick != nullptr || !hasEnoughBallObservations() || d_goalEstimates.size() == 0)
+  {
+    d_turnAngleRads = 0.0;
+    d_turnBallPos = Vector2d::Zero();
+    return;
+  }
+
+  // We see the ball and one goal.
+  // Find the shortest turn required to make a good kick.
+  // If the wrong goal, compute the desired angle(s) away from it.
+  // Ask each kick what it's ideal ball position is. Set this on CircleBall.
+
+  // Find the target angle(s) that would be good from here.
+
+  // TODO don't assume the goal is theirs!
+  // TODO don't assume we only see one goal!
+  // TODO consider obstacles in the goal -- don't just aim for the middle
+  // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
+  // TODO some decisions about turning should only be made once the entire area has been surveyed -- no way to express this currently
+
+  if (d_goalEstimates[0].getLabel() == GoalLabel::Ours)
+  {
+    d_turnAngleRads = M_PI;
+    d_turnBallPos = Vector2d();
+    cout << "calculateTurnAngle: about face -- it's our goal (crude implementation for now)" << endl;
+    return;
+  }
+
+  vector<Vector3d> targetPositions = {
+    d_goalEstimates[0].getMidpoint(0.25),
+    d_goalEstimates[0].getMidpoint(0.5),
+    d_goalEstimates[0].getMidpoint(0.25)
+  };
+
+  vector<double> targetAngles;
+  targetAngles.reserve(targetPositions.size());
+  std::transform(targetPositions.begin(), targetPositions.end(),
+                 back_inserter(targetAngles),
+                 [](Vector3d const& target) { return atan2(-target.x(), target.y()); });
+
+  double closestAngle = std::numeric_limits<double>::max();
+  Vector2d closestBallPos = {};
+  bool found = false;
+
+  for (shared_ptr<Kick const> const& kick : Kick::getAll())
+  {
+    Vector2d ballPos = kick->getIdealBallPos();
+    Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
+    ASSERT(endPos.hasValue());
+    double angle = atan2(-endPos->x(), endPos->y());
+    for (double const& targetAngle : targetAngles)
+    {
+      if (fabs(closestAngle) > fabs(angle - targetAngle))
+      {
+        closestAngle = angle - targetAngle;
+        closestBallPos = ballPos;
+        found = true;
+        cout << "calculateTurnAngle: kick " << kick->getId() << " possible (best yet -- last wins)" << endl;
+      }
+    }
+  }
+
+  if (found)
+  {
+    d_turnAngleRads = -closestAngle;
+    d_turnBallPos = closestBallPos;
+    cout << "calculateTurnAngle: turn " << Math::radToDeg(d_turnAngleRads) << " degrees with ball at " << d_turnBallPos.transpose() << endl;
+  }
 }
 
 void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
