@@ -277,13 +277,15 @@
     "circle-ball": {
       "max-speed-x":    { "type": "double", "default": 20.0 },
       "max-speed-y":    { "type": "double", "default": 20.0 },
-      "p-gain-x":       { "type": "double", "default": 20.0 },
-      "p-gain-y":       { "type": "double", "default": 20.0 },
-      "turn-speed-x":   { "type": "double", "default": 20.0 },
-      "turn-speed-y":   { "type": "double", "default": 1.0 },
       "turn-speed-a":   { "type": "double", "default": 15.0 },
-      "brake-distance": { "type": "double", "default": 0.2 },
-      "time-scaling":   { "type": "double", "default": 10.0 }
+      "time-scaling":   { "type": "double", "default": 10.0 },
+      "unused": {
+        "p-gain-x":       { "type": "double", "default": 20.0 },
+        "p-gain-y":       { "type": "double", "default": 20.0 },
+        "turn-speed-x":   { "type": "double", "default": 20.0 },
+        "turn-speed-y":   { "type": "double", "default": 1.0 },
+        "brake-distance": { "type": "double", "default": 0.2 }
+      }
     },
     "approach-ball": {
       "turn-speed-scale":  { "type": "double", "default": 25.0 },
