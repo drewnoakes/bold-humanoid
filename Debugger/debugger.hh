@@ -33,7 +33,7 @@ namespace bold
     void showReady();
     void showSet();
     void showPlaying();
-    void showPenalized();
+    void showPenalised();
     void showPaused();
 
     void showExitingAgent();

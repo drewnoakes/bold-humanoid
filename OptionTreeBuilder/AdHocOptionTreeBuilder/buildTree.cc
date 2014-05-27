@@ -73,7 +73,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto pauseState = winFsm->newState("pause", {SequenceOption::make("pause-sequence", {stopWalking,sit})});
   auto setState = winFsm->newState("set", {SequenceOption::make("pause-sequence", {stopWalking,standUp})});
   auto playingState = winFsm->newState("playing", {performRole});
-  auto penalizedState = winFsm->newState("penalized", {stopWalking});
+  auto penalisedState = winFsm->newState("penalised", {stopWalking});
   auto getUpState = winFsm->newState("getUp", {SequenceOption::make("get-up-sequence",  {stopWalkingImmediately,getUp})});
   auto shutdownState = winFsm->newState("shutdown", {SequenceOption::make("shutdown-sequence", {stopWalking,sitArmsBack,stopAgent})});
 
@@ -81,7 +81,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   setPlayerActivityInStates(agent,
     PlayerActivity::Waiting,
     {
-      startUpState, readyState, pauseState, setState, penalizedState,
+      startUpState, readyState, pauseState, setState, penalisedState,
       getUpState,
       shutdownState
     });
@@ -97,14 +97,14 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     });
 
   setPlayerStatusInStates(agent, PlayerStatus::Active, { playingState });
-  setPlayerStatusInStates(agent, PlayerStatus::Penalised, { penalizedState });
+  setPlayerStatusInStates(agent, PlayerStatus::Penalised, { penalisedState });
   setPlayerStatusInStates(agent, PlayerStatus::Paused, { pauseState });
 
   auto const& debugger = agent->getDebugger();
   readyState->onEnter.connect([debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); });
   setState->onEnter.connect([debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); });
   playingState->onEnter.connect([debugger]() { debugger->showPlaying(); });
-  penalizedState->onEnter.connect([debugger,headModule]() { debugger->showPenalized(); headModule->moveToHome(); });
+  penalisedState->onEnter.connect([debugger,headModule]() { debugger->showPenalised(); headModule->moveToHome(); });
   pauseState->onEnter.connect([debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); });
 
   //
@@ -152,7 +152,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->when(isPlayingPlayMode);
 
   setState
-    ->transitionTo(penalizedState, "gc-penalised")
+    ->transitionTo(penalisedState, "gc-penalised")
     ->when(isPenalised);
 
   setState
@@ -160,7 +160,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->when(isPlayingPlayMode);
 
   playingState
-    ->transitionTo(penalizedState, "gc-penalised")
+    ->transitionTo(penalisedState, "gc-penalised")
     ->when(isPenalised);
 
   playingState
@@ -171,11 +171,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->transitionTo(setState, "gc-set")
     ->when(nonPenalisedPlayMode(PlayMode::SET));
 
-  penalizedState
+  penalisedState
     ->transitionTo(setState, "gc-unpenalised")
     ->when(nonPenalisedPlayMode(PlayMode::SET));
 
-  penalizedState
+  penalisedState
     ->transitionTo(playingState, "gc-unpenalised")
     ->when(nonPenalisedPlayMode(PlayMode::PLAYING));
 

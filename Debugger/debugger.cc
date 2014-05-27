@@ -67,7 +67,7 @@ void Debugger::notifyReceivedGameControllerMessage()
 void Debugger::showReady()       { d_foreheadColour = bgr(255,0,0);     /* d_eyeColour = bgr(255,0,0);     */ }
 void Debugger::showSet()         { d_foreheadColour = bgr(0,255,255);   /* d_eyeColour = bgr(255,0,0);     */ }
 void Debugger::showPlaying()     { d_foreheadColour = bgr(0,255,0);     /* d_eyeColour = bgr(64,64,64);    */ }
-void Debugger::showPenalized()   { d_foreheadColour = bgr(0,0,255);     /* d_eyeColour = bgr(255,0,0);     */ }
+void Debugger::showPenalised()   { d_foreheadColour = bgr(0,0,255);     /* d_eyeColour = bgr(255,0,0);     */ }
 void Debugger::showPaused()      { d_foreheadColour = bgr(128,128,128); /* d_eyeColour = bgr(128,128,128); */ }
 void Debugger::showExitedAgent() { d_foreheadColour = bgr(0,0,0);       /* d_eyeColour = bgr(0,0,0);       */ }
 
