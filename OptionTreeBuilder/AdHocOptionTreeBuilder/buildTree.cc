@@ -136,10 +136,6 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->when(modeButtonPressed);
 
   setState
-    ->transitionTo(penalizedState, "button1")
-    ->when(modeButtonPressed);
-
-  penalizedState
     ->transitionTo(playingState, "button1")
     ->when(modeButtonPressed);
 
