@@ -3,12 +3,19 @@
 #include <stdlib.h>
 #include <iostream>
 
+#ifdef __GNUC__
+  #define likely(x)      __builtin_expect(!!(x), 1)
+  #define unlikely(x)    __builtin_expect(!!(x), 0)
+#else
+  #define likely(x)      (x)
+  #define unlikely(x)    (x)
+#endif
 
 /// ASSERT(expr) checks if expr is true.  If not, error details are logged
 /// and the process is exited with a non-zero code.
 #ifdef INCLUDE_ASSERTIONS
 #define ASSERT(expr)                                                      \
-    if (!(expr)) {                                                        \
+    if (unlikely(!(expr))) {                                              \
         char buf[4096];                                                   \
         snprintf (buf, 4096, "Assertion failed in \"%s\", line %d\n%s\n", \
                  __FILE__, __LINE__, #expr);                              \
