@@ -448,7 +448,7 @@ export class AgentObservedGoalLayer extends DataLayer<state.AgentFrame>
             () => {
                 canvasUtil.clear(this.context, true);
                 if (this.data && this.data.goals)
-                    plotter.drawGoalPosts(this.context, {goalStrokeStyle:'#FF5800'}, this.data.goals);
+                    plotter.drawGoalPosts(this.context, {goalStrokeStyle:'yellow'}, this.data.goals);
             });
     }
 }
