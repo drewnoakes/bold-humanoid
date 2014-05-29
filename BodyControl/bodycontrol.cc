@@ -38,9 +38,9 @@ JointControl::JointControl(uchar jointId)
 : d_jointId(jointId),
   d_value(MX28::CENTER_VALUE),
   d_degrees(0.0),
-  d_pGain(P_GAIN_DEFAULT),
-  d_iGain(I_GAIN_DEFAULT),
-  d_dGain(D_GAIN_DEFAULT),
+  d_pGain(DefaultPGain),
+  d_iGain(DefaultIGain),
+  d_dGain(DefaultDGain),
   d_changedAddressRange()
 {}
 

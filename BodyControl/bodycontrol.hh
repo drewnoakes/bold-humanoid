@@ -116,12 +116,9 @@ namespace bold
   class JointControl
   {
   public:
-    enum
-    {
-      P_GAIN_DEFAULT = 32,
-      I_GAIN_DEFAULT = 0,
-      D_GAIN_DEFAULT = 0
-    };
+    static constexpr uchar DefaultPGain = 32;
+    static constexpr uchar DefaultIGain = 0;
+    static constexpr uchar DefaultDGain = 0;
 
     JointControl(uchar jointId);
 
