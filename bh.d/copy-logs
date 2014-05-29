@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh copy-logs N [M...]"
+    echo "          copy all log files from the target robot(s) into the local 'remote-logs' folder"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    echo "copy-logs requires one or more target robot numbers"
+    exit 1
+fi
+
+mkdir -p remote-logs
+
+for i in ${@:1}
+do
+    echo copying log file from darwin$i.local to remote-logs/darwin$i
+
+    mkdir -p remote-logs/darwin$i
+
+    scp darwin@darwin$i.local:log* remote-logs/darwin$i
+
+    if [ $? -ne 0 ]; then
+        echo FAILED to copy from darwin$i.local
+        res=1
+    fi
+done
+
+exit $res
