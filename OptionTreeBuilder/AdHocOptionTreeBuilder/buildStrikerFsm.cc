@@ -106,7 +106,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
   auto locateBallState = fsm->newState("locateBall", {stopWalking, buildStationaryMap, locateBall});
-  auto circleToFindLostBallState = fsm->newState("lookForBallCircling", {searchBall});
+  auto locateBallCirclingState = fsm->newState("locateBallCircling", {searchBall});
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
   auto directAttackState = fsm->newState("directAttack", {approachBall, lookAtBall});
   auto atBallState = fsm->newState("atBall", {stopWalking, buildStationaryMap, atBall});
@@ -119,7 +119,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
 //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
-  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, locateBallState, waitForOtherStrikerState });
+  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, locateBallCirclingState, locateBallState, waitForOtherStrikerState });
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
 
   standUpState
@@ -128,16 +128,16 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // walk a circle if we don't find the ball within some time limit
   locateBallState
-    ->transitionTo(circleToFindLostBallState, "lost-ball-long")
+    ->transitionTo(locateBallCirclingState, "lost-ball-long")
     ->after(chrono::seconds(8));
 
   // after 10 seconds of circling, look for the ball again
-  circleToFindLostBallState
+  locateBallCirclingState
     ->transitionTo(locateBallState, "done")
     ->after(chrono::seconds(10));
 
   // stop turning if the ball comes into view
-  circleToFindLostBallState
+  locateBallCirclingState
     ->transitionTo(locateBallState, "found")
     ->when([]() { return stepUpDownThreshold(5, ballVisibleCondition); });
 
