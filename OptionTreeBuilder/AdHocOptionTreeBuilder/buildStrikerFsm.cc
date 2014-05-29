@@ -89,7 +89,7 @@ auto isPerfectLineForAttack = []()
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shared_ptr<OptionTree> tree)
 {
   auto buildStationaryMap = make_shared<BuildStationaryMap>("buildStationaryMap");
-  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", /* ifNotInFinalPose */ true);
+  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", /*ifNotInFinalPose*/true);
   auto leftKick = make_shared<MotionScriptOption>("leftKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
   auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
@@ -104,7 +104,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
 
-  auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
+  auto standUpState = fsm->newState("standUp", {standUp}, /*endState*/false, /*startState*/true);
   auto locateBallState = fsm->newState("locateBall", {stopWalking, buildStationaryMap, locateBall});
   auto locateBallCirclingState = fsm->newState("locateBallCircling", {searchBall});
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
