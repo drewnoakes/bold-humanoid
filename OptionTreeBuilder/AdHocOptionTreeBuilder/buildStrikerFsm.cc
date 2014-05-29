@@ -115,11 +115,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto leftKickState = fsm->newState("leftKick", {leftKick});
   auto rightKickState = fsm->newState("rightKick", {rightKick});
   auto kickState = fsm->newState("kick", {kickMotion});
-  auto waitForOtherStrikerState = fsm->newState("wait", {stopWalking,lookAtBall});
+  auto yieldState = fsm->newState("yield", {stopWalking,lookAtBall});
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
 //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
-  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, locateBallCirclingState, locateBallState, waitForOtherStrikerState });
+  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, locateBallCirclingState, locateBallState, yieldState });
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
 
   standUpState
@@ -152,7 +152,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // Let another player shine if they're closer and attempting to score
   approachBallState
-    ->transitionTo(waitForOtherStrikerState, "yield")
+    ->transitionTo(yieldState, "yield")
     ->when([]() { return stepUpDownThreshold(10, shouldYieldToOtherAttacker); });
 
   // stop walking to ball once we're close enough
@@ -168,7 +168,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->transitionTo(kickForwardsState, "near-ball")
     ->when(ballIsStoppingDistance);
 
-  waitForOtherStrikerState
+  yieldState
     ->transitionTo(locateBallState, "resume")
     ->when([]() { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
