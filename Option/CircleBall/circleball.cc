@@ -39,12 +39,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   static Setting<double>* maxSpeedX = Config::getSetting<double>("options.circle-ball.max-speed-x");
   static Setting<double>* maxSpeedY = Config::getSetting<double>("options.circle-ball.max-speed-y");
-//   static Setting<double>* pGainX = Config::getSetting<double>("options.circle-ball.p-gain-x");
-//   static Setting<double>* pGainY = Config::getSetting<double>("options.circle-ball.p-gain-y");
-//   static Setting<double>* turnSpeedX = Config::getSetting<double>("options.circle-ball.turn-speed-x");
-//   static Setting<double>* turnSpeedY = Config::getSetting<double>("options.circle-ball.turn-speed-y");
   static Setting<double>* turnSpeedA = Config::getSetting<double>("options.circle-ball.turn-speed-a");
-//   static Setting<double>* brakeDistance = Config::getSetting<double>("options.circle-ball.brake-distance");
 
   auto observedBallPos = agentFrame->getBallObservation()->head<2>();
   Vector2d error = d_targetBallPos - observedBallPos;
@@ -109,32 +104,6 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   // Look at ball to make sure we don't lose track of it
   return { d_lookAtBall };
-
-  /*
-  auto bodyState = State::get<BodyState>();
-
-  double panAngle = bodyState->getJoint(JointId::HEAD_PAN)->angleRads;
-  // TODO don't get this information from the head module, but rather some static model of the body's limits
-  double panAngleRange = d_headModule->getLeftLimitRads();
-  double panRatio = panAngle / panAngleRange;
-
-  // TODO these move/turn values in config
-
-  double x = 1;
-  double y = panRatio < 0 ? 20 : -20;
-  double a = panRatio < 0 ? -15 : 15;
-
-  d_walkModule->setMoveDir(x, y);
-  d_walkModule->setTurnAngle(a);
-
-  writer.String("panAngle").Double(panAngle);
-  writer.String("panAngleRange").Double(panAngleRange);
-  writer.String("panRatio").Double(panRatio);
-  writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
-  writer.String("turn").Double(a);
-
-  return {};
-  */
 }
 
 void CircleBall::setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallPos)
