@@ -21,6 +21,7 @@
 #include "../../Option/LookAround/lookaround.hh"
 #include "../../Option/LookAtBall/lookatball.hh"
 #include "../../Option/LookAtFeet/lookatfeet.hh"
+#include "../../Option/LocateBall/locateball.hh"
 #include "../../Option/MotionScriptOption/motionscriptoption.hh"
 #include "../../Option/SearchBall/searchball.hh"
 #include "../../Option/SequenceOption/sequenceoption.hh"

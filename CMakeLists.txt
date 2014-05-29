@@ -398,6 +398,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/LocateBall/locateball.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/LookAround/runPolicy.cc
 )
 

@@ -93,10 +93,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto leftKick = make_shared<MotionScriptOption>("leftKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
   auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
+  auto locateBall = make_shared<LocateBall>("locateBall", agent);
   auto approachBall = make_shared<ApproachBall>("approachBall", agent->getWalkModule(), agent->getBehaviourControl());
   auto kickMotion = make_shared<MotionScriptOption>("kick", agent->getMotionScriptModule());
   auto atBall = make_shared<AtBall>("atBall", agent);
-  auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 0.5; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto circleBall = make_shared<CircleBall>("circleBall", agent);
@@ -105,9 +105,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", {stopWalking, buildStationaryMap, lookForBall});
+  auto locateBallState = fsm->newState("locateBall", {stopWalking, buildStationaryMap, locateBall});
   auto circleToFindLostBallState = fsm->newState("lookForBallCircling", {searchBall});
-  auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
   auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
   auto directAttackState = fsm->newState("directAttack", {approachBall, lookAtBall});
   auto atBallState = fsm->newState("atBall", {stopWalking, buildStationaryMap, atBall});
@@ -120,43 +119,35 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
 //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
-  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, lookForBallState, lookAtBallState, waitForOtherStrikerState });
+  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, circleToFindLostBallState, locateBallState, waitForOtherStrikerState });
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
 
   standUpState
-    ->transitionTo(lookForBallState, "standing")
+    ->transitionTo(locateBallState, "standing")
     ->whenTerminated();
 
-  lookForBallState
-    ->transitionTo(lookAtBallState, "found")
-    ->when([]() { return stepUpDownThreshold(5, ballVisibleCondition); });
-
   // walk a circle if we don't find the ball within some time limit
-  lookForBallState
+  locateBallState
     ->transitionTo(circleToFindLostBallState, "lost-ball-long")
     ->after(chrono::seconds(8));
 
   // after 10 seconds of circling, look for the ball again
   circleToFindLostBallState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->after(chrono::seconds(10));
 
   // stop turning if the ball comes into view
   circleToFindLostBallState
-    ->transitionTo(lookAtBallState, "found")
+    ->transitionTo(locateBallState, "found")
     ->when([]() { return stepUpDownThreshold(5, ballVisibleCondition); });
 
-  lookAtBallState
-    ->transitionTo(lookForBallState, "lost-ball")
-    ->when(ballLostConditionFactory);
-
   // start approaching the ball when we have the confidence that it's really there
-  lookAtBallState
+  locateBallState
     ->transitionTo(approachBallState, "confident")
     ->when([]() { return stepUpDownThreshold(10, ballVisibleCondition); });
 
   approachBallState
-    ->transitionTo(lookForBallState, "lost-ball")
+    ->transitionTo(locateBallState, "lost-ball")
     ->when(ballLostConditionFactory);
 
   // Let another player shine if they're closer and attempting to score
@@ -178,7 +169,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->when(ballIsStoppingDistance);
 
   waitForOtherStrikerState
-    ->transitionTo(lookAtBallState)
+    ->transitionTo(locateBallState)
     ->when([]() { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
   //
@@ -224,11 +215,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // If we notice the ball is too far to kick, abort kick
   atBallState
-    ->transitionTo(lookForBallState, "ball-too-far")
+    ->transitionTo(locateBallState, "ball-too-far")
     ->when([]() { return stepUpDownThreshold(6, ballTooFarToKick); });
 
   kickState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
   turnAroundBallState
@@ -241,7 +232,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // If we notice the ball is too far to kick, abort kick
   kickForwardsState
-    ->transitionTo(lookForBallState, "ball-too-far")
+    ->transitionTo(locateBallState, "ball-too-far")
     ->when([]() { return stepUpDownThreshold(10, ballTooFarToKick); });
 
   // TODO if ball too central, step to left/right slightly, or use different kick
@@ -295,7 +286,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     });
 
   kickForwardsState
-    ->transitionTo(lookForBallState, "ball-gone")
+    ->transitionTo(locateBallState, "ball-gone")
     ->when([kickForwardsState]()
     {
       // TODO create and use 'all' operator
@@ -307,11 +298,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     });
 
   leftKickState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
   rightKickState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
   ofstream playingOut("fsm-striker.dot");
