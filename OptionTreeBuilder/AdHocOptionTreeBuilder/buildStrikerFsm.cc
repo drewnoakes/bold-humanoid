@@ -138,12 +138,12 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   // stop turning if the ball comes into view
   locateBallCirclingState
-    ->transitionTo(locateBallState, "found")
+    ->transitionTo(locateBallState, "found-ball")
     ->when([]() { return stepUpDownThreshold(5, ballVisibleCondition); });
 
   // start approaching the ball when we have the confidence that it's really there
   locateBallState
-    ->transitionTo(approachBallState, "confident")
+    ->transitionTo(approachBallState, "found-ball")
     ->when([]() { return stepUpDownThreshold(10, ballVisibleCondition); });
 
   approachBallState
@@ -169,7 +169,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->when(ballIsStoppingDistance);
 
   waitForOtherStrikerState
-    ->transitionTo(locateBallState)
+    ->transitionTo(locateBallState, "resume")
     ->when([]() { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
   //
