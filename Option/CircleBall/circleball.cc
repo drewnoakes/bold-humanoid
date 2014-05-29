@@ -60,6 +60,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   // Scale turn based upon difference between current and target yaw
   auto orientation = State::get<OrientationState>();
   double yawDiffRads = Math::shortestAngleDiffRads(orientation->getYawAngle(), d_targetYaw);
+  cout << "circleBall targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << " diff=" << yawDiffRads << endl;
   a = Math::lerp(yawDiffRads, 0.0, M_PI/3, 0.0, a);
 
   /*
@@ -115,6 +116,8 @@ void CircleBall::setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallP
   auto orientation = State::get<OrientationState>();
   ASSERT(orientation);
   d_targetYaw = Math::normaliseRads(orientation->getYawAngle() + turnAngleRads);
+
+  cout << "setTurnParams turn=" << turnAngleRads << " targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << endl;
 }
 
 double CircleBall::hasTerminated()
@@ -134,6 +137,8 @@ double CircleBall::hasTerminated()
     return true;
 
   Vector2d posError = d_targetBallPos - agentFrame->getBallObservation()->head<2>();
+
+  cout << "circleBall posError=" << posError.transpose() << " norm=" << posError.norm() << endl;
 
   return posError.norm() < 0.02; // TODO magic number
 }
