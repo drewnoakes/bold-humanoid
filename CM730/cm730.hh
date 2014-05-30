@@ -64,25 +64,6 @@ namespace bold
   class CM730
   {
   public:
-    /// Error bit flags
-    enum
-    {
-      /// Input Voltage range in over the limit.
-      INPUT_VOLTAGE   = 1,
-      /// Set Angle limit problem(s).
-      ANGLE_LIMIT     = 2,
-      /// Internal overheating.
-      OVERHEATING     = 4,
-      /// Set value(s) out of range.
-      RANGE           = 8,
-      /// Instruction Packet Checksum error.
-      CHECKSUM        = 16,
-      /// Excessive load detected.
-      OVERLOAD        = 32,
-      /// Invalid Instruction Packet Instruction.
-      INSTRUCTION     = 64
-    };
-
     /** Identifies a value in EEPROM or RAM.
      * See page 4 in MX28 Technical Specifications PDF for more information.
      */
