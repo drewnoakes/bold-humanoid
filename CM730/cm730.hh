@@ -284,9 +284,9 @@ namespace bold
     bool d_isPowerEnableRequested;
 
     /**
-     * @param priority select the queue for this exchange: 0=high 1=med 2=low
+     * @param bulkRead populated if txpacket[INSTRUCTION] == INST_BULK_READ, otherwise nullptr.
      */
-    CommResult txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead = nullptr);
+    CommResult txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRead = nullptr);
 
     static uchar calculateChecksum(uchar *packet);
   };

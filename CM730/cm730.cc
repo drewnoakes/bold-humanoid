@@ -301,7 +301,7 @@ CommResult CM730::ping(uchar id, MX28Alarm* error)
   txpacket[INSTRUCTION]  = INST_PING;
   txpacket[LENGTH]       = 2;
 
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket);
 
   if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
@@ -321,7 +321,7 @@ CommResult CM730::reset(uchar id)
   txpacket[INSTRUCTION]   = INST_RESET;
   txpacket[LENGTH] = 2;
 
-  return txRxPacket(txpacket, rxpacket, 0);
+  return txRxPacket(txpacket, rxpacket);
 }
 
 CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error)
@@ -335,7 +335,7 @@ CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* er
   txpacket[PARAMETER+1]  = 1;
   txpacket[LENGTH]       = 4;
 
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket);
 
   if (result == CommResult::SUCCESS)
   {
@@ -358,7 +358,7 @@ CommResult CM730::readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* e
   txpacket[PARAMETER+1]  = 2;
   txpacket[LENGTH]       = 4;
 
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket);
 
   if (result == CommResult::SUCCESS)
   {
@@ -384,7 +384,7 @@ CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar 
   txpacket[PARAMETER+1]  = length;
   txpacket[LENGTH]       = 4;
 
-  CommResult result = txRxPacket(txpacket, rxpacket, 1);
+  CommResult result = txRxPacket(txpacket, rxpacket);
 
   if (result == CommResult::SUCCESS)
   {
@@ -406,7 +406,7 @@ CommResult CM730::bulkRead(BulkRead* bulkRead)
 
   ASSERT(bulkRead->getTxPacket()[LENGTH] != 0);
 
-  return txRxPacket(bulkRead->getTxPacket(), rxpacket, 0, bulkRead);
+  return txRxPacket(bulkRead->getTxPacket(), rxpacket, bulkRead);
 }
 
 CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* error)
@@ -422,7 +422,7 @@ CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* err
   txpacket[PARAMETER+1]  = value;
   txpacket[LENGTH]       = 4;
 
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket);
 
   if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
@@ -445,7 +445,7 @@ CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* er
   txpacket[PARAMETER+2]  = (uchar)getHighByte(value);
   txpacket[LENGTH]       = 5;
 
-  CommResult result = txRxPacket(txpacket, rxpacket, 2);
+  CommResult result = txRxPacket(txpacket, rxpacket);
 
   if (result == CommResult::SUCCESS && id != ID_BROADCAST)
   {
@@ -479,10 +479,10 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
 
   std::copy(&parameters[0], &parameters[paramLength], &txpacket[PARAMETER + 2]);
 
-  return txRxPacket(txpacket, rxpacket, 0);
+  return txRxPacket(txpacket, rxpacket);
 }
 
-CommResult CM730::txRxPacket(uchar *txpacket, uchar *rxpacket, uchar priority, BulkRead* bulkRead)
+CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRead)
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
 
