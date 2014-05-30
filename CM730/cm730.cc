@@ -458,7 +458,13 @@ CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* er
 
 CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar deviceCount, uchar *parameters)
 {
-  unsigned txSize = 8 + (bytesPerDevice * deviceCount);
+  ASSERT(bytesPerDevice != 0);
+  ASSERT(bytesPerDevice - 1 <= 255);
+  ASSERT(deviceCount != 0);
+  ASSERT(fromAddress < MX28::MAXNUM_ADDRESS);
+  unsigned paramLength = bytesPerDevice * deviceCount;
+  ASSERT(paramLength + 4 <= 255);
+  unsigned txSize = 8 + paramLength;
   if (txSize > 143)
     log::warning("CM730::syncWrite") << "Packet of length " << txSize << " exceeds the Dynamixel's inbound buffer size (" << (int)deviceCount << " devices, " << (int)bytesPerDevice << " bytes per device)";
   uchar txpacket[txSize];
@@ -466,15 +472,12 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
   uchar* rxpacket = nullptr;
 
   txpacket[ID]            = (uchar)ID_BROADCAST;
+  txpacket[LENGTH]        = paramLength + 4;
   txpacket[INSTRUCTION]   = INST_SYNC_WRITE;
   txpacket[PARAMETER]     = fromAddress;
-  txpacket[PARAMETER + 1] = (bytesPerDevice - 1);
+  txpacket[PARAMETER + 1] = bytesPerDevice - 1;
 
-  int n;
-  for (n = 0; n < (deviceCount * bytesPerDevice); n++)
-    txpacket[PARAMETER + 2 + n] = parameters[n];
-
-  txpacket[LENGTH] = n + 4;
+  std::copy(&parameters[0], &parameters[paramLength], &txpacket[PARAMETER + 2]);
 
   return txRxPacket(txpacket, rxpacket, 0);
 }
