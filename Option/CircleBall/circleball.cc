@@ -45,57 +45,46 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   Vector2d error = d_targetBallPos - observedBallPos;
   Vector2d errorNorm = error.normalized();
 
-  bool isLeftTurn = d_turnAngleRads < 0;
-
-  // Always walk sideways, but not if error becomes too big
-  double x = (1.0 - fabs(error.x())) * (isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue());
-
-  // Try to keep forward distance stable
-  double y = Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedY->getValue();
-
-  // Turn to keep ball centered
-  double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
-  double a = errorDir * Math::clamp(fabs(errorNorm.x()), 0.75, 1.0) * turnSpeedA->getValue();
-
   // Scale turn based upon difference between current and target yaw
   auto orientation = State::get<OrientationState>();
   double yawDiffRads = Math::shortestAngleDiffRads(orientation->getYawAngle(), d_targetYaw);
-  cout << "circleBall targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << " diff=" << yawDiffRads << endl;
-  a = Math::lerp(yawDiffRads, 0.0, M_PI/3, 0.0, a);
+  //cout << "circleBall targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << " diff=" << yawDiffRads << " error=" << error.transpose() << endl;
+  //a = Math::lerp(fabs(yawDiffRads), 0.0, M_PI/3, 0.0, a);
 
-  /*
-  // Keep distance same
-  // Alpha controls how much turning is attempted. Max turn occurs when we have
-  // no positional error for the ball.
-  // If the error is greater than the brake distance, then turning is disabled
-  // to allow the position to be corrected.
-  // Value is linearly interpolated as a ratio of error length to brake distance.
-  double alpha = Math::clamp(1.0 - (error.norm()/brakeDistance->getValue()), 0.5, 1.0);
+  bool isLeftTurn = d_turnAngleRads < 0;
 
-  // Set movement speed in x/y based on error distance
-  //double x = error.x() * pGainX->getValue();
-  double x = pGainX->getValue() - errorNorm.x() * pGainX->getValue();;
-  double y = error.y() * pGainY->getValue();
 
-  // Add turn movement, based upon ratio of error
-  //x += alpha * turnSpeedX->getValue();
-  //y += alpha * turnSpeedY->getValue();
+  double x, y, a;
 
-  // Blend turn speed
-  double a = (1.0 - fabs(errorNorm.x())) * (d_isLeftTurn ? -turnSpeedA->getValue() : turnSpeedA->getValue());
+  if (fabs(yawDiffRads) > Math::degToRad(10)) // TODO magic number!
+  {
+    // Always walk sideways, but not if error becomes too big
+    x = (1.0 - Math::clamp(fabs(error.x()), 0.0, 1.0)) * isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue();
 
-  // Clamp movement direction to within maximums
+    // Try to keep forward distance stable
+    y = -Math::lerp(error.y(), 0.0, 0.2, 0.0, maxSpeedY->getValue());
+    //y = -Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedY->getValue();
 
-  x = d_isLeftTurn ? -x : x;
-  */
+    // Turn to keep ball centered
+    double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
+    a = errorDir * Math::clamp(fabs(errorNorm.x()), 0.75, 1.0) * turnSpeedA->getValue();
+  }
+  else
+  {
+    a = 0;
+    x = -Math::lerp(error.x() / 0.2, 0.0, maxSpeedX->getValue());
+    y = -Math::lerp(error.y() / 0.2, 0.0, maxSpeedY->getValue());
+  }
 
   x = Math::clamp(x, -maxSpeedX->getValue(), maxSpeedX->getValue());
   y = Math::clamp(y, -maxSpeedY->getValue(), maxSpeedY->getValue());
   a = Math::clamp(a, -turnSpeedA->getValue(), turnSpeedA->getValue());
 
+  cout << "[Circle ball] " << x << "\t" << y << "\t" << a << endl;
+
   // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
   // direction being inverted.
-  d_walkModule->setMoveDir(-y, -x);
+  d_walkModule->setMoveDir(y, -x);
   d_walkModule->setTurnAngle(a);
 
   writer.String("yawError").Double(yawDiffRads);
@@ -117,7 +106,7 @@ void CircleBall::setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallP
   ASSERT(orientation);
   d_targetYaw = Math::normaliseRads(orientation->getYawAngle() + turnAngleRads);
 
-  cout << "setTurnParams turn=" << turnAngleRads << " targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << endl;
+  //cout << "setTurnParams turn=" << turnAngleRads << " targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << endl;
 }
 
 double CircleBall::hasTerminated()
@@ -132,13 +121,13 @@ double CircleBall::hasTerminated()
 
   auto agentFrame = State::get<AgentFrameState>();
 
-  // If we cannot see the ball, there's no point continuing
+  // Don't stop yet, first need to find the ball to know whether we are finished
   if (!agentFrame->isBallVisible())
-    return true;
+    return false;
 
   Vector2d posError = d_targetBallPos - agentFrame->getBallObservation()->head<2>();
 
-  cout << "circleBall posError=" << posError.transpose() << " norm=" << posError.norm() << endl;
+  //cout << "circleBall posError=" << posError.transpose() << " norm=" << posError.norm() << endl;
 
   return posError.norm() < 0.02; // TODO magic number
 }
