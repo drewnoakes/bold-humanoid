@@ -227,20 +227,20 @@ void WalkEngine::reset()
   auto hw = State::get<HardwareState>();
   if (hw)
   {
-    d_outValue[0]  = hw->getMX28State((uchar)JointId::R_HIP_YAW).presentPosition;
-    d_outValue[1]  = hw->getMX28State((uchar)JointId::R_HIP_ROLL).presentPosition;
-    d_outValue[2]  = hw->getMX28State((uchar)JointId::R_HIP_PITCH).presentPosition;
-    d_outValue[3]  = hw->getMX28State((uchar)JointId::R_KNEE).presentPosition;
-    d_outValue[4]  = hw->getMX28State((uchar)JointId::R_ANKLE_PITCH).presentPosition;
-    d_outValue[5]  = hw->getMX28State((uchar)JointId::R_ANKLE_ROLL).presentPosition;
-    d_outValue[6]  = hw->getMX28State((uchar)JointId::L_HIP_YAW).presentPosition;
-    d_outValue[7]  = hw->getMX28State((uchar)JointId::L_HIP_ROLL).presentPosition;
-    d_outValue[8]  = hw->getMX28State((uchar)JointId::L_HIP_PITCH).presentPosition;
-    d_outValue[9]  = hw->getMX28State((uchar)JointId::L_KNEE).presentPosition;
-    d_outValue[10] = hw->getMX28State((uchar)JointId::L_ANKLE_PITCH).presentPosition;
-    d_outValue[11] = hw->getMX28State((uchar)JointId::L_ANKLE_ROLL).presentPosition;
-    d_outValue[12] = hw->getMX28State((uchar)JointId::R_SHOULDER_PITCH).presentPosition;
-    d_outValue[13] = hw->getMX28State((uchar)JointId::L_SHOULDER_PITCH).presentPosition;
+    d_outValue[0]  = hw->getMX28State((uchar)JointId::R_HIP_YAW).presentPositionValue;
+    d_outValue[1]  = hw->getMX28State((uchar)JointId::R_HIP_ROLL).presentPositionValue;
+    d_outValue[2]  = hw->getMX28State((uchar)JointId::R_HIP_PITCH).presentPositionValue;
+    d_outValue[3]  = hw->getMX28State((uchar)JointId::R_KNEE).presentPositionValue;
+    d_outValue[4]  = hw->getMX28State((uchar)JointId::R_ANKLE_PITCH).presentPositionValue;
+    d_outValue[5]  = hw->getMX28State((uchar)JointId::R_ANKLE_ROLL).presentPositionValue;
+    d_outValue[6]  = hw->getMX28State((uchar)JointId::L_HIP_YAW).presentPositionValue;
+    d_outValue[7]  = hw->getMX28State((uchar)JointId::L_HIP_ROLL).presentPositionValue;
+    d_outValue[8]  = hw->getMX28State((uchar)JointId::L_HIP_PITCH).presentPositionValue;
+    d_outValue[9]  = hw->getMX28State((uchar)JointId::L_KNEE).presentPositionValue;
+    d_outValue[10] = hw->getMX28State((uchar)JointId::L_ANKLE_PITCH).presentPositionValue;
+    d_outValue[11] = hw->getMX28State((uchar)JointId::L_ANKLE_ROLL).presentPositionValue;
+    d_outValue[12] = hw->getMX28State((uchar)JointId::R_SHOULDER_PITCH).presentPositionValue;
+    d_outValue[13] = hw->getMX28State((uchar)JointId::L_SHOULDER_PITCH).presentPositionValue;
   }
 }
 
