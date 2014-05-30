@@ -439,11 +439,11 @@ CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* er
   uchar rxpacket[6];
 
   txpacket[ID]           = id;
+  txpacket[LENGTH]       = 5;
   txpacket[INSTRUCTION]  = INST_WRITE;
   txpacket[PARAMETER]    = address;
   txpacket[PARAMETER+1]  = (uchar)getLowByte(value);
   txpacket[PARAMETER+2]  = (uchar)getHighByte(value);
-  txpacket[LENGTH]       = 5;
 
   CommResult result = txRxPacket(txpacket, rxpacket);
 
