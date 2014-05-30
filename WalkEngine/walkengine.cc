@@ -204,7 +204,6 @@ void WalkEngine::updateBalanceParams()
   d_rOffset = Math::degToRad(ROLL_OFFSET->getValue());
   d_pOffset = Math::degToRad(PITCH_OFFSET->getValue());
   d_aOffset = Math::degToRad(YAW_OFFSET->getValue());
-  d_hipPitchOffset = HIP_PITCH_OFFSET*MX28::RATIO_DEGS2VALUE;
 }
 
 void WalkEngine::reset()
@@ -441,7 +440,7 @@ void WalkEngine::step()
     else if (i == 7) // L_HIP_ROLL
       offset += (double)dir[i] * pelvis_offset_l;
     else if (i == 2 || i == 8) // R_HIP_PITCH or L_HIP_PITCH
-      offset -= (double)dir[i] * HIP_PITCH_OFFSET * MX28::RATIO_DEGS2VALUE;
+      offset -= (double)dir[i] * HIP_PITCH_OFFSET * MX28::RATIO_DEGS2VALUE; // NOTE we don't snapshot this parameter, and always use the most recent
 
     d_outValue[i] = MX28::degs2Value(initAngle[i]) + (int)offset;
   }

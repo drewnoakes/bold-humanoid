@@ -131,7 +131,6 @@ namespace bold
 
     double d_pelvisOffset;
     double d_pelvisSwing;
-    double d_hipPitchOffset;
     double d_armSwingGain;
 
     double d_time;
