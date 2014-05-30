@@ -414,6 +414,8 @@ CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* err
   uchar txpacket[8];
   uchar rxpacket[6];
 
+  ASSERT( (id == ID_CM && address < CM730::MAXNUM_ADDRESS) || (address < MX28::MAXNUM_ADDRESS) );
+
   txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = INST_WRITE;
   txpacket[PARAMETER]    = address;
