@@ -16,10 +16,10 @@ namespace bold
   * bit 0 - input voltage error - applied voltage is outside MX28::P_LOW_LIMIT_VOLTAGE and MX28::P_HIGH_LIMIT_VOLTAGE
   * bit 1 - angle limit error - goal position is outside MX28::P_CW_ANGLE_LIMIT_L and MX28::P_CCW_ANGLE_LIMIT_L
   * bit 2 - overheating error - internal temperature exceeds the limit set via MX28::P_HIGH_LIMIT_TEMPERATURE
-  * bit 3 - range error - command is given beyond range of usage
+  * bit 3 - range error - command specifies value with is out of range
   * bit 4 - checksum error - the checksum of the received instruction packet is incorrect
-  * bit 5 - overoad error - the current load cannot be controlled with the set maximum torque
-  * bit 6 - instruction error - undefined instruction, or action command delivered without reg_write
+  * bit 5 - overload error - the current workload cannot be controlled with the set maximum torque
+  * bit 6 - instruction error - invalid instruction, or action command delivered without reg_write
   * bit 7 - unused?
   */
   class MX28Alarm
