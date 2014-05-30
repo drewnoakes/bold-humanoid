@@ -54,6 +54,28 @@
       "window-size":    { "type": "int", "min": 10, "max": 5000, "default": 500, "readonly": true },
       "high-threshold": { "type": "int", "min": 10, "max": 1024, "default": 50,  "readonly": true },
       "low-threshold":  { "type": "int", "min": 10, "max": 1024, "default": 20,  "readonly": true }
+    },
+    "offsets": {
+      "joint-1":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-2":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-3":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-4":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-5":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-6":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-7":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-8":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-9":  { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-10": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-11": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-12": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-13": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-14": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-15": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-16": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-17": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-18": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-19": { "type": "int", "min": -100, "max": 100, "default": 0 },
+      "joint-20": { "type": "int", "min": -100, "max": 100, "default": 0 }
     }
   },
   "world": {

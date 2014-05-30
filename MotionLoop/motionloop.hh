@@ -29,7 +29,6 @@ namespace bold
     void addModule(std::shared_ptr<MotionModule> const& module);
     void removeModule(std::shared_ptr<MotionModule> const& module);
 
-    /// TODO allow specifying these in config
     /// Set of static offsets to be added to all target positions sent to hardware.
     /// May be used to compensate for angular positional errors.
     /// See also the offset_tuner project.

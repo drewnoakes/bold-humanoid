@@ -50,8 +50,13 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
   Config::addAction("hardware.motor-torque-on",  "Torque On",  [this]() { d_torqueChangeToValue = true;  d_torqueChangeNeeded = true; });
   Config::addAction("hardware.motor-torque-off", "Torque Off", [this]() { d_torqueChangeToValue = false; d_torqueChangeNeeded = true; });
 
-  for (uchar i = 0; i < (uchar)JointId::MAX; i++)
-    d_offsets[i] = 0;
+  d_offsets[0] = 0;
+  for (uchar i = 1; i <= (uchar)JointId::MAX; i++)
+  {
+    stringstream path;
+    path << "hardware.offsets.joint-" << (int)i;
+    Config::getSetting<int>(path.str())->track([this,i](int value) { d_offsets[i] = static_cast<uchar>(value); });
+  }
 }
 
 MotionLoop::~MotionLoop()
