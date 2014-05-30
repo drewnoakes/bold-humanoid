@@ -18,7 +18,7 @@ bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d& pos)
     widthSum += run.length();
   double width = widthSum / blob.runs.size();
 
-  // Ensure the goal is rougly the expected radius (in metres)
+  // Ensure the goal is roughly the expected radius (in metres)
   Vector2d sidePos = basePos + Vector2d(width/2.0, 0);
 
   auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(basePos);

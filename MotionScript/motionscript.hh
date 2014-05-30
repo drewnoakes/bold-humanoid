@@ -71,7 +71,7 @@ namespace bold
       unsigned speed;
       /// The number of times this stage should be played. Defaults to 1.
       unsigned repeatCount;
-      /// The p-gain value to be used throught this stage, indexed by joint ID - 1.
+      /// The p-gain value to be used throughout this stage, indexed by joint ID - 1.
       uchar pGains[(uchar)JointId::MAX];
       /// The KeyFrames contained within this stage.
       std::vector<KeyFrame> keyFrames;
