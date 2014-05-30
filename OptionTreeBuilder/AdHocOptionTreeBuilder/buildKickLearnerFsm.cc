@@ -54,6 +54,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
 
   selectKickState->onEnter.connect([]()
   {
+    // HACK only do right-kick for now
+    kickUsed = "right";
+    return;
+
     static auto rng = Math::createUniformRng(0, 4);
     switch (static_cast<int>(floor(rng())))
     {
