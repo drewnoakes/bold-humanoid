@@ -31,7 +31,7 @@ TEST (MX28Tests, rads2Value)
   // TODO test outside range [-M_PI,M_PI]
   EXPECT_EQ( 0x0800, MX28::rads2Value(0.0) );
   // TODO why should this be off by one?
-  EXPECT_NEAR( 0x0FFF, MX28::rads2Value(M_PI), 1 );
+  EXPECT_EQ( 0x0FFF, MX28::rads2Value(M_PI) );
   EXPECT_EQ( 0x0000, MX28::rads2Value(-M_PI) );
 }
 
@@ -40,7 +40,7 @@ TEST (MX28Tests, degs2Value)
   // TODO test outside range [-180,180]
   EXPECT_EQ( 0x0800, MX28::degs2Value(0.0) );
   // TODO why should this be off by one?
-  EXPECT_NEAR( 0x0FFF, MX28::degs2Value(180.0), 1 );
+  EXPECT_EQ( 0x0FFF, MX28::degs2Value(180.0) );
   EXPECT_EQ( 0x0000, MX28::degs2Value(-180.0) );
 }
 
