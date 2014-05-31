@@ -29,11 +29,6 @@ namespace bold
     void addModule(std::shared_ptr<MotionModule> const& module);
     void removeModule(std::shared_ptr<MotionModule> const& module);
 
-    /// Set of static offsets to be added to all target positions sent to hardware.
-    /// May be used to compensate for angular positional errors.
-    /// See also the offset_tuner project.
-    int d_offsets[(uchar)JointId::MAX + 1];
-
     /// Signal raised whenever the motion loop fails to read from the CM730.
     /// Callback is passed the number of consecutive failures.
     sigc::signal<void, uint> onReadFailure;
@@ -56,6 +51,11 @@ namespace bold
     std::shared_ptr<BodyControl> d_bodyControl;
     std::unique_ptr<BulkRead> d_dynamicBulkRead;
     std::unique_ptr<BulkRead> d_staticBulkRead;
+
+    /// Set of static offsets to be added to all target positions sent to hardware.
+    /// May be used to compensate for angular positional errors.
+    /// See also the offset_tuner project.
+    int d_offsets[(uchar)JointId::MAX + 1];
 
     /// Whether we have connected to a CM730 subcontroller.
     bool d_haveBody;
