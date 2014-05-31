@@ -815,10 +815,11 @@ add_typescript_target(
   )
 
 set(JSON_FILES
+  ${CMAKE_SOURCE_DIR}/configuration-berlin.json
   ${CMAKE_SOURCE_DIR}/configuration-drews.json
+  ${CMAKE_SOURCE_DIR}/configuration-german-open-2014.json
   ${CMAKE_SOURCE_DIR}/configuration-hamburg.json
   ${CMAKE_SOURCE_DIR}/configuration-hatfield.json
-  ${CMAKE_SOURCE_DIR}/configuration-german-open-2014.json
   ${CMAKE_SOURCE_DIR}/configuration-iran-open-2014.json
   ${CMAKE_SOURCE_DIR}/configuration-metadata.json
   ${CMAKE_SOURCE_DIR}/configuration-team.json
