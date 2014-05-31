@@ -179,8 +179,6 @@ void *MotionLoop::threadMethod(void *param)
   }
   else
   {
-    if (!loop->d_cm730->powerEnable(true))
-      log::error("MotionLoop::threadMethod") << "Error enabling power";
     if (!loop->d_cm730->torqueEnable(true))
       log::error("MotionLoop::threadMethod") << "Error enabling torque";
   }
