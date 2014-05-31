@@ -9,7 +9,7 @@ set(BUILD_BOLDPY ON CACHE BOOL "Choose whether to Python library")
 set(PRECOMPILE_HEADERS OFF CACHE BOOL "Choose whether to precompile headers")
 set(EIGEN_VECTORIZE OFF CACHE BOOL "Choose whether to enable Eigen vectorization")
 set(INCLUDE_ASSERTIONS ON CACHE BOOL "Choose whether to include assertions in compiled code")
-set(TARGET_ATOM "" ON CACHE BOOL "Choose whether to optimize for atom")
+set(TARGET_ATOM ON CACHE BOOL "Choose whether to optimize for atom")
 
 include(ExternalProject)
 include(AddPcih)
