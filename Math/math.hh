@@ -38,13 +38,13 @@ namespace bold
     static Eigen::Affine3d alignUp(Eigen::Affine3d const& transform);
 
     template<typename T>
-    static T clamp(T val, T min, T max)
+    static constexpr T clamp(T val, T min, T max)
     {
-      if (val < min)
-        return min;
-      if (val > max)
-        return max;
-      return val;
+      return val < min
+        ? min
+        : val > max
+          ? max
+          : val;
     }
 
     /**
