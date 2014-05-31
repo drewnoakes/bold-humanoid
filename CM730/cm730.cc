@@ -91,8 +91,7 @@ BulkReadTable::BulkReadTable()
 : startAddress(0),
   length(0)
 {
-  for (int i = 0; i < MX28::MAXNUM_ADDRESS; i++)
-    table[i] = 0;
+  memset(table, 0, MX28::MAXNUM_ADDRESS);
 }
 
 uchar BulkReadTable::readByte(uchar address) const
