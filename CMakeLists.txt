@@ -10,6 +10,7 @@ set(PRECOMPILE_HEADERS OFF CACHE BOOL "Choose whether to precompile headers")
 set(EIGEN_VECTORIZE OFF CACHE BOOL "Choose whether to enable Eigen vectorization")
 set(INCLUDE_ASSERTIONS ON CACHE BOOL "Choose whether to include assertions in compiled code")
 set(TARGET_ATOM ON CACHE BOOL "Choose whether to optimize for atom")
+set(BUILD_CORE_COUNT 1 CACHE STRING "Number of parallel jobs to run when building")
 
 include(ExternalProject)
 include(AddPcih)
@@ -93,7 +94,15 @@ set(BOLDHUMANOID_LINK_DIRS ${LIBWEBSOCKETDIR}/lib)
 link_directories(${BOLDHUMANOID_LINK_DIRS})
 
 #
-## Additional compile flags
+## Parallel compilation settings
+#
+
+if (BUILD_CORE_COUNT)
+    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM}") # -j${BUILD_CORE_COUNT}
+endif()
+
+#
+## Additional compile flag settings
 #
 
 if(EIGEN_VECTORIZE)
