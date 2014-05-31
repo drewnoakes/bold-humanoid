@@ -6,6 +6,7 @@
 
 #include "../geometry/LineSegment/linesegment.hh"
 #include "../geometry/LineSegment/LineSegment2/linesegment2.hh"
+#include "../util/assert.hh"
 #include "../util/Maybe.hh"
 
 namespace bold
@@ -56,7 +57,7 @@ namespace bold
     template<typename T>
     static T lerp(double const& input, double const& lower, double const& upper, T const& lowerOutput, T const& upperOutput)
     {
-      if (upper <= lower)
+      if (unlikely(upper <= lower))
         throw std::runtime_error("lower must be less than upper");
 
       double ratio = (input - lower) / (upper - lower);
