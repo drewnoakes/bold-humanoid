@@ -63,12 +63,12 @@ namespace bold
     bool hasError() const { return d_flags != 0; }
 
     bool hasInputVoltageError() const { return isSet(0); }
-    bool hasAngleLimitError() const { return isSet(1); }
-    bool hasOverheatedError() const { return isSet(2); }
-    bool hasRangeError() const { return isSet(3); }
-    bool hasChecksumError() const { return isSet(4); }
-    bool hasOverloadError() const { return isSet(5); }
-    bool hasInstructionError() const { return isSet(6); }
+    bool hasAngleLimitError()   const { return isSet(1); }
+    bool hasOverheatedError()   const { return isSet(2); }
+    bool hasRangeError()        const { return isSet(3); }
+    bool hasChecksumError()     const { return isSet(4); }
+    bool hasOverloadError()     const { return isSet(5); }
+    bool hasInstructionError()  const { return isSet(6); }
 
     void setInputVoltageFlag() { set(0, true); }
     void setAngleLimitFlag()   { set(1, true); }

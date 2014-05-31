@@ -115,7 +115,7 @@ ushort BulkReadTable::readWord(uchar address) const
 
 string CM730::getCommResultName(CommResult responseCode)
 {
-  switch(responseCode)
+  switch (responseCode)
   {
     case CommResult::SUCCESS:     return "SUCCESS";
     case CommResult::TX_CORRUPT:  return "TX_CORRUPT";
@@ -129,7 +129,7 @@ string CM730::getCommResultName(CommResult responseCode)
 
 string CM730::getInstructionName(uchar instructionId)
 {
-  switch(instructionId)
+  switch (instructionId)
   {
     case INST_PING:       return "PING";
     case INST_READ:       return "READ";
