@@ -44,7 +44,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
     data[i] = BulkReadTable();
 
   // Create a cached TX packet as it'll be identical each time
-  d_txPacket[ID]          = (uchar)CM730::ID_BROADCAST;
+  d_txPacket[ID]          = CM730::ID_BROADCAST;
   d_txPacket[INSTRUCTION] = INST_BULK_READ;
 
   uchar p = PARAMETER;
@@ -471,7 +471,7 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
   // Sync write instructions do not receive status packet responses, so no buffer is needed.
   uchar* rxpacket = nullptr;
 
-  txpacket[ID]            = (uchar)ID_BROADCAST;
+  txpacket[ID]            = ID_BROADCAST;
   txpacket[LENGTH]        = paramLength + 4;
   txpacket[INSTRUCTION]   = INST_SYNC_WRITE;
   txpacket[PARAMETER]     = fromAddress;

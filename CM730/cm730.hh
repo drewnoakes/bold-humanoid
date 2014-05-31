@@ -129,14 +129,11 @@ namespace bold
       MAXNUM_ADDRESS
     };
 
-    /// Special device IDs
-    enum
-    {
-      /// ID for Sub Controller
-      ID_CM           = 200,
-      /// Communication with all connected devices
-      ID_BROADCAST    = 254
-    };
+    /// ID of CM730 sub-controller
+    static constexpr uchar ID_CM = 200;
+
+    /// Specifies that communication is to all connected devices
+    static constexpr uchar ID_BROADCAST = 254;
 
   public:
     //
