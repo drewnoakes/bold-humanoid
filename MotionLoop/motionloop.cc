@@ -252,7 +252,7 @@ void MotionLoop::initialiseHardwareTables()
           log::error("MotionLoop::initialiseHardwareTables") << "Communication problem writing " << MX28::getAddressName(address) << " to " << JointName::getEnumName(jointId) << ") after " << retryCount << " retries: " << CM730::getCommResultName(res);
           return;
         }
-        usleep(5000); // 5ms
+        usleep(50000); // 50ms
       }
     }
   };
@@ -279,7 +279,7 @@ void MotionLoop::initialiseHardwareTables()
           log::error("MotionLoop::initialiseHardwareTables") << "Communication problem writing " << MX28::getAddressName(address) << " to " << JointName::getEnumName(jointId) << ") after " << retryCount << " retries: " << CM730::getCommResultName(res);
           return;
         }
-        usleep(5000); // 5ms
+        usleep(50000); // 50ms
       }
     }
   };
