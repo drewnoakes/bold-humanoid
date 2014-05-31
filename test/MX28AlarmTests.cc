@@ -50,3 +50,20 @@ TEST (MX28AlarmTests, assignFromUchar)
   EXPECT_EQ ( 7, a.getFlags() );
 }
 
+TEST (MX28AlarmTests, set)
+{
+  MX28Alarm a(1 | 4);
+
+  EXPECT_EQ(5, a.getFlags());
+  EXPECT_FALSE(a.isSet(1));
+
+  a.set(1, true);
+
+  EXPECT_TRUE(a.isSet(1));
+  EXPECT_EQ(7, a.getFlags());
+
+  a.set(1, false);
+
+  EXPECT_FALSE(a.isSet(1));
+  EXPECT_EQ(5, a.getFlags());
+}

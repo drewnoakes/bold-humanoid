@@ -50,6 +50,16 @@ namespace bold
       return ((d_flags >> bitIndex) & 1) == 1;
     }
 
+    void set(uchar bitIndex, bool value)
+    {
+      ASSERT(bitIndex <= MAXBIT);
+
+      if (value)
+        d_flags |= (1 << bitIndex);
+      else
+        d_flags &= ~(1 << bitIndex);
+    }
+
     bool hasError() const { return d_flags != 0; }
 
     bool hasInputVoltageError() const { return isSet(0); }
@@ -59,6 +69,14 @@ namespace bold
     bool hasChecksumError() const { return isSet(4); }
     bool hasOverloadError() const { return isSet(5); }
     bool hasInstructionError() const { return isSet(6); }
+
+    void setInputVoltageFlag() { set(0, true); }
+    void setAngleLimitFlag()   { set(1, true); }
+    void setOverheatedFlag()   { set(2, true); }
+    void setRangeFlag()        { set(3, true); }
+    void setChecksumFlag()     { set(4, true); }
+    void setOverloadFlag()     { set(5, true); }
+    void setInstructionFlag()  { set(6, true); }
 
     bool operator==(MX28Alarm const& other) const
     {
