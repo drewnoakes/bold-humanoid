@@ -224,6 +224,8 @@ void MotionLoop::initialiseHardwareTables()
 {
   ASSERT(d_haveBody);
 
+  log::verbose("MotionLoop::initialiseHardwareTables") << "Starting";
+
   //
   // Helper functions
   //
@@ -345,6 +347,8 @@ void MotionLoop::initialiseHardwareTables()
     writeByteWithRetry(jointId, MX28::P_ALARM_LED, alarmLed.getFlags());
     writeByteWithRetry(jointId, MX28::P_ALARM_SHUTDOWN, alarmShutdown.getFlags());
   }
+
+  log::info("MotionLoop::initialiseHardwareTables") << "All MX28 data tables initialised";
 }
 
 bool MotionLoop::applyJointMotionTasks(SequentialTimer& t)
