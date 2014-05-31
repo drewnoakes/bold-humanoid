@@ -120,7 +120,6 @@ string CM730::getCommResultName(CommResult responseCode)
     case CommResult::SUCCESS:     return "SUCCESS";
     case CommResult::TX_CORRUPT:  return "TX_CORRUPT";
     case CommResult::TX_FAIL:     return "TX_FAIL";
-    case CommResult::RX_FAIL:     return "RX_FAIL";
     case CommResult::RX_TIMEOUT:  return "RX_TIMEOUT";
     case CommResult::RX_CORRUPT:  return "RX_CORRUPT";
 

@@ -53,8 +53,6 @@ namespace bold
     TX_CORRUPT,
     /// Port error, failed to send Instruction Packet
     TX_FAIL,
-    /// Port error, failed to receive Status Packet
-    RX_FAIL,
     /// Timeout Status, failed to receive Packet (check connection)
     RX_TIMEOUT,
     /// Status Packet error (bad communications link)
