@@ -135,7 +135,6 @@ namespace bold
     /// Specifies that communication is to all connected devices
     static constexpr uchar ID_BROADCAST = 254;
 
-  public:
     //
     // ----------------- Static members
     //
