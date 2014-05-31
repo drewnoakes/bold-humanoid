@@ -36,6 +36,8 @@ namespace bold
     ulong getCycleNumber() const { return d_cycleNumber; }
 
   private:
+    void initialiseHardwareTables();
+
     void step(SequentialTimer& t);
 
     bool applyJointMotionTasks(SequentialTimer& t);

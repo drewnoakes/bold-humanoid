@@ -76,6 +76,32 @@
       "joint-18": { "type": "int", "min": -100, "max": 100, "default": 0, "description": "L_ANKLE_ROLL" },
       "joint-19": { "type": "int", "min": -100, "max": 100, "default": 0, "description": "HEAD_PAN" },
       "joint-20": { "type": "int", "min": -100, "max": 100, "default": 0, "description": "HEAD_TILT" }
+    },
+    "limits": {
+      "temperature-centigrade": { "type": "int", "readonly": true, "default": 80 },
+      "voltage-range": { "type": "double-range", "readonly": true, "default": [6.0, 14.0] },
+      "angle-limits": {
+        "joint-1":  { "type": "double-range", "readonly": true, "default": [-180.0, 180.0], "description": "R_SHOULDER_PITCH" },
+        "joint-2":  { "type": "double-range", "readonly": true, "default": [-180.0, 180.0], "description": "L_SHOULDER_PITCH" },
+        "joint-3":  { "type": "double-range", "readonly": true, "default": [-75.0, 135.0], "description": "R_SHOULDER_ROLL" },
+        "joint-4":  { "type": "double-range", "readonly": true, "default": [-135.0, 75.0], "description": "L_SHOULDER_ROLL" },
+        "joint-5":  { "type": "double-range", "readonly": true, "default": [-95.0,  70.0], "description": "R_ELBOW" },
+        "joint-6":  { "type": "double-range", "readonly": true, "default": [-70.0,  95.0], "description": "L_ELBOW" },
+        "joint-7":  { "type": "double-range", "readonly": true, "default": [-123.0, 53.0], "description": "R_HIP_YAW" },
+        "joint-8":  { "type": "double-range", "readonly": true, "default": [-53.0, 123.0], "description": "L_HIP_YAW" },
+        "joint-9":  { "type": "double-range", "readonly": true, "default": [-45.0, 59.0], "description": "R_HIP_ROLL" },
+        "joint-10": { "type": "double-range", "readonly": true, "default": [-59.0, 45.0], "description": "L_HIP_ROLL" },
+        "joint-11": { "type": "double-range", "readonly": true, "default": [-100.0, 29.0], "description": "R_HIP_PITCH" },
+        "joint-12": { "type": "double-range", "readonly": true, "default": [-29.0, 100.0], "description": "L_HIP_PITCH" },
+        "joint-13": { "type": "double-range", "readonly": true, "default": [-6.0, 130.0], "description": "R_KNEE" },
+        "joint-14": { "type": "double-range", "readonly": true, "default": [-130.0, 6.0], "description": "L_KNEE" },
+        "joint-15": { "type": "double-range", "readonly": true, "default": [-72.0, 80.0], "description": "R_ANKLE_PITCH" },
+        "joint-16": { "type": "double-range", "readonly": true, "default": [-80.0, 72.0], "description": "L_ANKLE_PITCH" },
+        "joint-17": { "type": "double-range", "readonly": true, "default": [-44.0, 63.0], "description": "R_ANKLE_ROLL" },
+        "joint-18": { "type": "double-range", "readonly": true, "default": [-63.0, 44.0], "description": "L_ANKLE_ROLL" },
+        "joint-19": { "type": "double-range", "readonly": true, "default": [-135.0, 135.0], "description": "HEAD_PAN" },
+        "joint-20": { "type": "double-range", "readonly": true, "default": [-25.0, 55.0], "description": "HEAD_TILT" }
+      }
     }
   },
   "world": {

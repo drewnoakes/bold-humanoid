@@ -179,6 +179,9 @@ void *MotionLoop::threadMethod(void *param)
   }
   else
   {
+    // Set all CM730/MX28 values to a known set of initial values before continuing
+    loop->initialiseHardwareTables();
+
     if (!loop->d_cm730->torqueEnable(true))
       log::error("MotionLoop::threadMethod") << "Error enabling torque";
   }
@@ -215,6 +218,133 @@ void *MotionLoop::threadMethod(void *param)
   log::verbose("MotionLoop::threadMethod") << "Exiting";
 
   pthread_exit(NULL);
+}
+
+void MotionLoop::initialiseHardwareTables()
+{
+  ASSERT(d_haveBody);
+
+  //
+  // Helper functions
+  //
+
+  const int retryCount = 10;
+
+  auto writeByteWithRetry = [this](uchar jointId, uchar address, uchar value)
+  {
+    int failCount = 0;
+    while (true)
+    {
+      MX28Alarm error;
+      CommResult res = d_cm730->writeByte(jointId, address, value, &error);
+
+      if (res == CommResult::SUCCESS)
+      {
+        if (error.hasError())
+          log::error("MotionLoop::initialiseHardwareTables") << "Error reported by " << JointName::getEnumName(jointId) << " when writing value " << value << " to " << MX28::getAddressName(address) << ": " << error;
+        return;
+      }
+      else
+      {
+        failCount++;
+        if (failCount == retryCount)
+        {
+          log::error("MotionLoop::initialiseHardwareTables") << "Communication problem writing " << MX28::getAddressName(address) << " to " << JointName::getEnumName(jointId) << ") after " << retryCount << " retries: " << CM730::getCommResultName(res);
+          return;
+        }
+        usleep(5000); // 5ms
+      }
+    }
+  };
+
+  auto writeWordWithRetry = [this](uchar jointId, uchar address, ushort value)
+  {
+    int failCount = 0;
+    while (true)
+    {
+      MX28Alarm error;
+      CommResult res = d_cm730->writeWord(jointId, address, value, &error);
+
+      if (res == CommResult::SUCCESS)
+      {
+        if (error.hasError())
+          log::error("MotionLoop::initialiseHardwareTables") << "Error reported by " << JointName::getEnumName(jointId) << " when writing value " << value << " to " << MX28::getAddressName(address) << ": " << error;
+        return;
+      }
+      else
+      {
+        failCount++;
+        if (failCount == retryCount)
+        {
+          log::error("MotionLoop::initialiseHardwareTables") << "Communication problem writing " << MX28::getAddressName(address) << " to " << JointName::getEnumName(jointId) << ") after " << retryCount << " retries: " << CM730::getCommResultName(res);
+          return;
+        }
+        usleep(5000); // 5ms
+      }
+    }
+  };
+
+  auto ping = [this](uchar jointId) -> bool
+  {
+    MX28Alarm error;
+    CommResult res = d_cm730->ping(jointId, &error);
+
+    if (res != CommResult::SUCCESS)
+    {
+      log::error("MotionLoop::initialiseHardwareTables") << "Communication problem pinging " << JointName::getEnumName(jointId) << ": " << CM730::getCommResultName(res);
+      return false;
+    }
+
+    if (error.hasError())
+    {
+      log::error("MotionLoop::initialiseHardwareTables") << "Error when pinging " << JointName::getEnumName(jointId) << ": " << error;
+      return false;
+    }
+
+    return true;
+  };
+
+  //
+  // Prepare values to be written
+  //
+
+  // Under which circumstances do we want the LED to light up?
+  MX28Alarm alarmLed;
+  alarmLed.setOverheatedFlag();
+  alarmLed.setOverloadFlag();
+
+  // Under which circumstances do we want the MX28 to automatically shut down?
+  MX28Alarm alarmShutdown;
+  alarmShutdown.setOverheatedFlag();
+  alarmShutdown.setOverloadFlag();
+
+  int tempLimit = Config::getStaticValue<int>("hardware.limits.temperature-centigrade");
+  Range<double> voltageRange = Config::getStaticValue<Range<double>>("hardware.limits.voltage-range");
+
+  //
+  // Loop through all MX28s
+  //
+
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+  {
+    if (!ping(jointId))
+      continue;
+
+    stringstream path;
+    path << "hardware.limits.angle-limits.joint-" << (int)jointId;
+    Range<double> rangeDegs = Config::getStaticValue<Range<double>>(path.str());
+
+    writeByteWithRetry(jointId, MX28::P_RETURN_DELAY_TIME, 0);
+    writeByteWithRetry(jointId, MX28::P_RETURN_LEVEL, 2);
+    writeWordWithRetry(jointId, MX28::P_CW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.min()));
+    writeWordWithRetry(jointId, MX28::P_CCW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.max()));
+    writeByteWithRetry(jointId, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::centigrade2Value(tempLimit));
+    writeByteWithRetry(jointId, MX28::P_LOW_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.min()));
+    writeByteWithRetry(jointId, MX28::P_HIGH_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.max()));
+    writeWordWithRetry(jointId, MX28::P_MAX_TORQUE_L, MX28::MAX_TORQUE);
+    writeByteWithRetry(jointId, MX28::P_ALARM_LED, alarmLed.getFlags());
+    writeByteWithRetry(jointId, MX28::P_ALARM_SHUTDOWN, alarmShutdown.getFlags());
+  }
 }
 
 bool MotionLoop::applyJointMotionTasks(SequentialTimer& t)

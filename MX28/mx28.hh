@@ -1,17 +1,21 @@
 #pragma once
 
 #include <cmath>
+#include <string>
 
 namespace bold
 {
+  typedef unsigned char uchar;
   typedef unsigned short ushort;
 
   class MX28
   {
   public:
-    static const ushort MIN_VALUE    = 0x0000;
-    static const ushort CENTER_VALUE = 0x0800; // 2048
-    static const ushort MAX_VALUE    = 0x0FFF; // 4095
+    static constexpr ushort MIN_VALUE    = 0x0000;
+    static constexpr ushort CENTER_VALUE = 0x0800; // 2048
+    static constexpr ushort MAX_VALUE    = 0x0FFF; // 4095
+
+    static constexpr ushort MAX_TORQUE = 0x3FF; // 1023
 
     static constexpr double MIN_DEGS = -180.0;
     static constexpr double MAX_DEGS =  180.0;
@@ -33,19 +37,27 @@ namespace bold
 //  static ushort getMirrorValue(ushort value);
 //  static double getMirrorAngle(double angle);
 
+    static ushort clampValue(int value);
+
     static ushort degs2Value(double angle);
     static double value2Degs(ushort value);
 
     static ushort rads2Value(double angle);
     static double value2Rads(ushort value);
 
-    static ushort clampValue(int value);
-
     static ushort rpm2Value(double speed);
     static double value2Rpm(ushort value);
 
     static ushort torque2Value(double speed);
     static double value2Torque(ushort value);
+
+    static uchar centigrade2Value(int degreesCentigrade);
+    static int value2Centigrade(uchar value);
+
+    static uchar voltage2Value(double volts);
+    static double value2Voltage(uchar value);
+
+    static std::string getAddressName(uchar address);
 
     /** EEPROM and RAM p. 4 in MX28 Technical Specifications PDF
      * This enum enumerates the addresses. The list depends on the version the MX28.
