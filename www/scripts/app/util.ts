@@ -97,3 +97,51 @@ export function degToRad(deg: number)
 {
     return Math.PI * deg / 180.0;
 }
+
+export function isFullScreen()
+{
+    var doc: any = document;
+
+    return (doc.fullScreenElement && doc.fullScreenElement !== null)
+        || doc.mozFullScreen
+        || doc.webkitIsFullScreen;
+}
+
+export function requestFullScreen(element: Element)
+{
+    var elem: any = element;
+
+    if (elem.requestFullscreen)
+        elem.requestFullscreen();
+    else if (elem.msRequestFullscreen)
+        elem.msRequestFullscreen();
+    else if (elem.mozRequestFullScreen)
+        elem.mozRequestFullScreen();
+    else if (elem.webkitRequestFullscreen)
+        elem.webkitRequestFullscreen();
+}
+
+export function cancelFullScreen()
+{
+    var doc: any = document;
+
+    if (doc.exitFullscreen)
+        doc.exitFullscreen();
+    else if (doc.msExitFullscreen)
+        doc.msExitFullscreen();
+    else if (doc.mozCancelFullScreen)
+        doc.mozCancelFullScreen();
+    else if (doc.webkitExitFullscreen)
+        doc.webkitExitFullscreen();
+}
+
+export function toggleFullScreen(element?: Element)
+{
+    element = element || document.documentElement;
+
+    if (isFullScreen())
+        cancelFullScreen();
+    else
+        requestFullScreen(element);
+}
+
