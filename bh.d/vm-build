@@ -32,7 +32,7 @@ fi
 
 # strip the binary to reduce size for rsync
 # if debug symbols needed, run "bh vm-build" with no arguments, then
-# run "bh deploy-min N" for the robot you're targetting
+# run "bh deploy-min N" for the robot you're targeting
 
 echo "Stripping binary to reduce transfer size. If debug symbols are needed, don't pass any agent number(s) and use bh deploy-min"
 
