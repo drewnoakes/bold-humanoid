@@ -10,6 +10,7 @@ import constants = require('constants');
 import data = require('data');
 import ModuleHost = require('controls/ModuleHost');
 import Setting = require('Setting');
+import util = require('util');
 
 import MotionScriptModule = require('modules/MotionScriptModule');
 import CameraModule = require('modules/CameraModule');
@@ -110,3 +111,5 @@ var onerror = () =>
 };
 
 control.connect(onerror);
+
+document.getElementById('logo').addEventListener('click', e => util.toggleFullScreen());
