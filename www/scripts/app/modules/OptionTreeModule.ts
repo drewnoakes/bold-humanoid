@@ -222,12 +222,14 @@ class OptionTreeModule extends Module
         });
 
         // Perform layout
-        joint.layout.DirectedGraph.layout(graph, {
+        var size = joint.layout.DirectedGraph.layout(graph, {
             setLinkVertices: false,
             rankSep: 45,
             edgeSep: 35,
             nodeSep: 25
         });
+
+        this.paper.setDimensions(size.width + 2, size.height + 2);
     }
 
     private onOptionTreeState(optionTreeData: state.OptionTree)
