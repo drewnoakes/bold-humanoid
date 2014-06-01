@@ -22,7 +22,7 @@ git fetch --multiple bert \
 
 # if there was an error, propagate it
 if [[ $? -ne 0 ]] ; then
-  exit $?
+  exit 1
 fi
 
 # if no target number provided, we're done
