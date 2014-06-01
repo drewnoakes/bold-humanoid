@@ -22,6 +22,19 @@ html, body
     font-size: 13px;
 }
 
+body
+{
+    margin: 8px;
+}
+
+@media screen and (max-width: 640px)
+{
+    body
+    {
+        margin: 8px 0;
+    }
+}
+
 /********************************************************************/
 
 #loading-indicator
@@ -115,11 +128,27 @@ img#logo
     display: inline-block;
 }
 
+@media screen and (max-width: 640px)
+{
+  #header
+  {
+    min-height: 130px;
+  }
+}
+
 div#header-content
 {
     display: inline-block;
     vertical-align: top;
     margin: 6px;
+}
+
+@media screen and (max-width: 640px)
+{
+  div#header-content
+  {
+      display: none;
+  }
 }
 
 div#header-content h1
@@ -167,6 +196,17 @@ div#header-module-links
     text-align: right;
 }
 
+@media screen and (max-width: 640px)
+{
+  div#header-module-links
+  {
+      top: 6px;
+      left: 110px;
+      right: 1%;
+  }
+}
+
+
 div#header-module-links > a.module-button
 {
     display: inline-block;
@@ -207,6 +247,16 @@ div.module
     padding: 12px;
     margin: 6px;
     cursor: move;
+}
+
+@media screen and (max-width: 640px)
+{
+    div.module
+    {
+        width: 98%;
+        margin: 6px 1%;
+        box-sizing: border-box;
+    }
 }
 
 div.module.full-screen
@@ -479,6 +529,14 @@ div.module.camera div.hover-pixel-info
     bottom: 5px;
     left: 5px;
     pointer-events: none;
+}
+
+@media screen and (max-width: 640px)
+{
+    div.module.camera canvas.camera-canvas
+    {
+        width: 100% !important;
+    }
 }
 
 div.module.camera div.image-container
@@ -1002,6 +1060,17 @@ div.module.motion-scripts button
     padding: 2px 6px;
     font-size: 13px;
 }
+
+@media screen and (max-width: 640px)
+{
+  div.module.motion-scripts button
+  {
+      margin: 0 3px 4px 0;
+      padding: 6px 6px;
+      font-size: 15px;
+  }
+}
+
 
 /*******************************************************************/
 
