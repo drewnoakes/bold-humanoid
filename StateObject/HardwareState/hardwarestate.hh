@@ -46,8 +46,9 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    unsigned long getReceivedBytes() const { return d_rxBytes; }
-    unsigned long getTransmittedBytes() const { return d_txBytes; }
+    ulong getReceivedBytes() const { return d_rxBytes; }
+    ulong getTransmittedBytes() const { return d_txBytes; }
+    ulong getMotionCycleNumber() const { return d_motionCycleNumber; }
 
   private:
     std::unique_ptr<CM730Snapshot const> d_cm730State;
