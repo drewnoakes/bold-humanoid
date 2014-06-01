@@ -39,8 +39,10 @@ var chartHeight = 150,
 
 class HardwareModule extends Module
 {
+    private voltageCanvas: HTMLCanvasElement;
     private voltageChart: SmoothieChart;
     private voltageSeries: TimeSeries;
+    private temperatureCanvas: HTMLCanvasElement;
     private temperatureChart: SmoothieChart;
     private temperatureSeriesById: TimeSeries[] = [undefined];
     private bodyFigure: BodyFigure;
@@ -51,6 +53,15 @@ class HardwareModule extends Module
         super('hardware', 'hardware');
     }
 
+    public onResized(width: number, height: number, isFullScreen: boolean)
+    {
+        var rightMargin = 210;
+        this.voltageCanvas.width = width - rightMargin;
+        this.voltageCanvas.style.width = (width - rightMargin) + "px";
+        this.temperatureCanvas.width = width - rightMargin;
+        this.temperatureCanvas.style.width = (width - rightMargin) + "px";
+    }
+
     public load()
     {
         // VOLTAGE
@@ -59,10 +70,10 @@ class HardwareModule extends Module
         voltageHeader.textContent = 'voltage';
         this.element.appendChild(voltageHeader);
 
-        var voltageCanvas = document.createElement('canvas');
-        voltageCanvas.width = chartWidth;
-        voltageCanvas.height = chartHeight;
-        this.element.appendChild(voltageCanvas);
+        this.voltageCanvas = document.createElement('canvas');
+        this.voltageCanvas.width = chartWidth;
+        this.voltageCanvas.height = chartHeight;
+        this.element.appendChild(this.voltageCanvas);
 
         this.voltageChart = new SmoothieChart(chartOptions);
         this.voltageChart.options.yRangeFunction = range =>
@@ -70,7 +81,7 @@ class HardwareModule extends Module
                 min: Math.floor(Math.min(range.min, lowVoltage)),
                 max: Math.ceil(Math.max(range.max, highVoltage))
             });
-        this.voltageChart.streamTo(voltageCanvas, /*delayMs*/ 200);
+        this.voltageChart.streamTo(this.voltageCanvas, /*delayMs*/ 200);
 
         this.voltageSeries = new TimeSeries();
         this.voltageChart.addTimeSeries(this.voltageSeries, { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 });
@@ -81,10 +92,10 @@ class HardwareModule extends Module
         tempHeader.textContent = 'temperature';
         this.element.appendChild(tempHeader);
 
-        var temperatureCanvas = document.createElement('canvas');
-        temperatureCanvas.width = chartWidth;
-        temperatureCanvas.height = chartHeight;
-        this.element.appendChild(temperatureCanvas);
+        this.temperatureCanvas = document.createElement('canvas');
+        this.temperatureCanvas.width = chartWidth;
+        this.temperatureCanvas.height = chartHeight;
+        this.element.appendChild(this.temperatureCanvas);
 
         this.temperatureChart = new SmoothieChart(chartOptions);
         this.temperatureChart.options.yRangeFunction = range =>
@@ -92,7 +103,7 @@ class HardwareModule extends Module
                 min: Math.floor(Math.min(range.min, lowTemperature)),
                 max: Math.ceil(Math.max(range.max, highTemperature))
             });
-        this.temperatureChart.streamTo(temperatureCanvas, /*delayMs*/ 200);
+        this.temperatureChart.streamTo(this.temperatureCanvas, /*delayMs*/ 200);
 
         for (var i = 1; i <= 20; i++) {
             var series = new TimeSeries();
