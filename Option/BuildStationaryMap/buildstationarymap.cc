@@ -48,8 +48,8 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
     updateStateObject();
 
   writer.String("ball").Bool(agentFrame->isBallVisible());
-  writer.String("goals").Bool(agentFrame->getGoalObservations().size());
-  writer.String("keepers").Bool(agentFrame->getTeamMateObservations().size());
+  writer.String("goals").Uint(agentFrame->getGoalObservations().size());
+  writer.String("keepers").Uint(agentFrame->getTeamMateObservations().size());
   writer.String("change").Bool(hasChange);
 
   return {};
