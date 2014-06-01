@@ -219,7 +219,7 @@ void StationaryMapState::selectKick()
     if (!endPos.hasValue())
       continue;
 
-    double endAngle = atan2(endPos->x(), endPos->y());
+    double endAngle = Math::angleToPoint(*endPos);
 
     // Determine whether the end pos is advantageous
     bool hasLeft = false, hasRight = false;
@@ -229,7 +229,7 @@ void StationaryMapState::selectKick()
         break;
 
       auto goalPos = goal.getAverage();
-      double goalAngle = atan2(goalPos.x(), goalPos.y());
+      double goalAngle = Math::angleToPoint(goalPos);
 
       if (goalAngle > endAngle)
         hasRight = true;
@@ -288,7 +288,7 @@ void StationaryMapState::calculateTurnAngle()
   targetAngles.reserve(targetPositions.size());
   std::transform(targetPositions.begin(), targetPositions.end(),
                  back_inserter(targetAngles),
-                 [](Vector3d const& target) { return atan2(-target.x(), target.y()); });
+                 [](Vector3d const& target) { return Math::angleToPoint(target); });
 
   double closestAngle = std::numeric_limits<double>::max();
   Vector2d closestBallPos = {};
@@ -299,7 +299,7 @@ void StationaryMapState::calculateTurnAngle()
     Vector2d ballPos = kick->getIdealBallPos();
     Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
     ASSERT(endPos.hasValue());
-    double angle = atan2(-endPos->x(), endPos->y());
+    double angle = Math::angleToPoint(*endPos);
     for (double const& targetAngle : targetAngles)
     {
       if (fabs(closestAngle) > fabs(angle - targetAngle))

@@ -278,3 +278,14 @@ TEST(MathTests, shortestAngleDiffRads)
   EXPECT_NEAR ( 2*M_PI/3, Math::shortestAngleDiffRads(2*M_PI/3, -2*M_PI/3), 0.0001 );
   EXPECT_NEAR ( -M_PI/3, Math::shortestAngleDiffRads(0, 11*M_PI/3), 0.0001 );
 }
+
+TEST(MathTests, angleToPoint)
+{
+  EXPECT_EQ ( 0, Math::angleToPoint(Vector2d(0, 2)) );
+  EXPECT_EQ ( 0, Math::angleToPoint(Vector2d(0, 3)) );
+  EXPECT_NEAR (  M_PI/4, Math::angleToPoint(Vector2d(-1, 1)), 0.0001 );
+  EXPECT_NEAR ( -M_PI/4, Math::angleToPoint(Vector2d(1, 1)), 0.0001 );
+  EXPECT_NEAR (  M_PI/2, Math::angleToPoint(Vector2d(-1, 0)), 0.0001 );
+  EXPECT_NEAR ( -M_PI/2, Math::angleToPoint(Vector2d(1, 0)), 0.0001 );
+  EXPECT_NEAR ( -M_PI,   Math::angleToPoint(Vector2d(0, -1)), 0.0001 );
+}

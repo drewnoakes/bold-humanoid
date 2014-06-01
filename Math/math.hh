@@ -103,6 +103,14 @@ namespace bold
       return d;
     }
 
+    /** Returns the angle to a point, as defined in the agent frame, where zero is straight ahead and positive is to the left (counter-clockwise). */
+    template<int N>
+    static double angleToPoint(Eigen::Matrix<double, N, 1> const& point)
+    {
+      static_assert(N > 1, "Vector must have at least two dimensions");
+      return ::atan2(-point.x(), point.y());
+    }
+
   private:
     Math() = delete;
   };
