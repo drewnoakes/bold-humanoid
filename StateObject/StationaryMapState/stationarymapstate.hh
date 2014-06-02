@@ -92,12 +92,36 @@ namespace bold
 
   //////////////////////////////////////////////////////////////////////////////
 
+  // TODO rename as OpenFieldMap or similar
+  class RadialOcclusionMap
+  {
+  public:
+    bool add(std::pair<Eigen::Vector3d,Eigen::Vector3d> const& ray);
+
+    void reset();
+
+//    Maybe<double> getDistance(double angle) const;
+
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
+
+  private:
+    static constexpr int NumberOfBuckets = 144;
+
+    static uint wedgeIndexForAngle(double angle);
+    static double angleForWedgeIndex(uint index);
+
+    std::array<Average<double>,NumberOfBuckets> d_wedges;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
   class StationaryMapState : public StateObject
   {
   public:
     StationaryMapState(std::vector<Average<Eigen::Vector3d>> ballEstimates,
                        std::vector<Average<Eigen::Vector3d>> goalPostEstimates,
-                       std::vector<Average<Eigen::Vector3d>> teammateEstimates);
+                       std::vector<Average<Eigen::Vector3d>> teammateEstimates,
+                       RadialOcclusionMap occlusionMap);
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -144,6 +168,7 @@ namespace bold
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
     std::vector<Average<Eigen::Vector3d>> d_keeperEstimates;
     std::vector<GoalPostEstimate> d_goalPostEstimates;
+    RadialOcclusionMap d_occlusionMap;
     std::vector<GoalEstimate> d_goalEstimates;
     std::vector<KickResult> d_possibleKicks;
     std::shared_ptr<Kick const> d_selectedKick;

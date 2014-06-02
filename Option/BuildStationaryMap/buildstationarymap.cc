@@ -2,7 +2,6 @@
 
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
-#include "../../StateObject/StationaryMapState/stationarymapstate.hh"
 
 using namespace bold;
 using namespace Eigen;
@@ -10,7 +9,6 @@ using namespace rapidjson;
 using namespace std;
 
 // TODO decrease the 'score' of an estimate if it should be seen, but isn't
-// TODO build a map of the closest occluded area, radially from our position -- prove by side-kicking instead of forward kicking when keeper in the way
 
 BuildStationaryMap::BuildStationaryMap(string const& id)
 : Option(id, "BuildStationaryMap")
@@ -44,6 +42,13 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
     hasChange = true;
   }
 
+  // Walk all occlusion rays
+  for (auto const& ray : agentFrame->getOcclusionRays())
+  {
+    if (d_occlusionMap.add(ray))
+      hasChange = true;
+  }
+
   if (hasChange)
     updateStateObject();
 
@@ -57,7 +62,7 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
 
 void BuildStationaryMap::updateStateObject() const
 {
-  State::make<StationaryMapState>(d_ballEstimates, d_goalEstimates, d_teammateEstimates);
+  State::make<StationaryMapState>(d_ballEstimates, d_goalEstimates, d_teammateEstimates, d_occlusionMap);
 }
 
 void BuildStationaryMap::reset()
@@ -65,6 +70,7 @@ void BuildStationaryMap::reset()
   d_ballEstimates.clear();
   d_goalEstimates.clear();
   d_teammateEstimates.clear();
+  d_occlusionMap.reset();
 
   updateStateObject();
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../option.hh"
+#include "../../StateObject/StationaryMapState/stationarymapstate.hh"
 #include "../../stats/average.hh"
 
 #include <vector>
@@ -25,5 +26,6 @@ namespace bold
     std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
     std::vector<Average<Eigen::Vector3d>> d_goalEstimates;
     std::vector<Average<Eigen::Vector3d>> d_teammateEstimates;
+    RadialOcclusionMap d_occlusionMap;
   };
 }

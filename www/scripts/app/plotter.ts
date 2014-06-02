@@ -277,10 +277,12 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
     context.lineWidth = 0.01;
 
     var maxBallCount = 0,
-        maxGoalPostCount = 0;
+        maxGoalPostCount = 0,
+        maxSliceCount = 0;
 
     _.each(data.balls, ball => maxBallCount = Math.max(maxBallCount, ball.count));
     _.each(data.goalPosts, goalPost => maxGoalPostCount = Math.max(maxGoalPostCount, goalPost.count));
+    _.each(data.openField.slices, slice => maxSliceCount = Math.max(maxSliceCount, slice.count));
 
     var maxScore = 0.0,
         maxBall: state.AveragePosition;
@@ -335,6 +337,18 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.beginPath();
         context.moveTo(startPos[0], startPos[1]);
         context.lineTo(kick.endPos[0], kick.endPos[1]);
+        context.stroke();
+    });
+
+    var divisions = data.openField.divisions,
+        arc = 2*Math.PI / divisions,
+        halfArc = arc / 2.0;
+    _.each(data.openField.slices, slice =>
+    {
+        var angle = slice.angle + Math.PI/2.0;
+        context.strokeStyle = 'rgba(0,0,0,' + (slice.count / maxSliceCount) + ')';
+        context.beginPath();
+        context.arc(0, 0, slice.dist, angle - halfArc, angle + halfArc);
         context.stroke();
     });
 }

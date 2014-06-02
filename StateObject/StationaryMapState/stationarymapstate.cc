@@ -27,12 +27,84 @@ string bold::getGoalLabelName(GoalLabel label)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool RadialOcclusionMap::add(pair<Vector3d,Vector3d> const& ray)
+{
+  Vector2d near = ray.first.head<2>();
+  Vector2d far = ray.second.head<2>();
+  Vector2d diff = far - near;
+
+  // If the ray is short, then it's probably just noise.
+  if (diff.norm() < 0.3) // TODO magic number!
+    return false;
+
+  double angle = Math::angleToPoint(near);
+  uint index = wedgeIndexForAngle(angle);
+  d_wedges[index].add(near.norm());
+  return true;
+}
+
+void RadialOcclusionMap::reset()
+{
+  for (auto& wedge : d_wedges)
+    wedge.reset();
+}
+
+uint RadialOcclusionMap::wedgeIndexForAngle(double angle)
+{
+  int index = static_cast<int>(round(NumberOfBuckets*angle/(2*M_PI)));
+  while (index < 0)
+    index += NumberOfBuckets;
+  while (index > NumberOfBuckets)
+    index -= NumberOfBuckets;
+  return static_cast<uint>(index);
+}
+
+double RadialOcclusionMap::angleForWedgeIndex(uint index)
+{
+  return Math::normaliseRads(index*2*M_PI/NumberOfBuckets);
+}
+
+//Maybe<double> RadialOcclusionMap::getDistance(double angle) const
+//{
+//  return d_wedges[wedgeIndexForAngle(angle)].getAverage();
+//}
+
+void RadialOcclusionMap::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+{
+  writer.StartObject();
+  {
+    writer.String("divisions").Uint(NumberOfBuckets);
+    writer.String("slices").StartArray();
+    {
+      for (uint index = 0; index < NumberOfBuckets; index++)
+      {
+        if (d_wedges[index].getCount() == 0)
+          continue;
+
+        writer.StartObject();
+        {
+          writer.String("angle").Double(angleForWedgeIndex(index));
+          writer.String("dist").Double(d_wedges[index].getAverage());
+          writer.String("count").Double(d_wedges[index].getCount());
+        }
+        writer.EndObject();
+      }
+    }
+    writer.EndArray();
+  }
+  writer.EndObject();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 StationaryMapState::StationaryMapState(
   std::vector<Average<Eigen::Vector3d>> ballEstimates,
   std::vector<Average<Eigen::Vector3d>> goalPostEstimates,
-  std::vector<Average<Eigen::Vector3d>> keeperEstimates)
+  std::vector<Average<Eigen::Vector3d>> keeperEstimates,
+  RadialOcclusionMap occlusionMap)
 : d_ballEstimates(ballEstimates),
-  d_keeperEstimates(keeperEstimates)
+  d_keeperEstimates(keeperEstimates),
+  d_occlusionMap(occlusionMap)
 {
   // Sort estimates such that those with greater numbers of observations appear first
   std::sort(d_ballEstimates.begin(), d_ballEstimates.end(), compareAverages);
@@ -237,6 +309,8 @@ void StationaryMapState::selectKick()
         hasLeft = true;
     }
 
+    // TODO consider occlusion
+
     bool isOnTarget = hasLeft && hasRight;
     d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget);
   }
@@ -390,6 +464,9 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
       }
     }
     writer.EndArray();
+
+    writer.String("openField");
+    d_occlusionMap.writeJson(writer);
 
     writer.String("turnAngle").Double(d_turnAngleRads);
     writer.String("turnBallPos").StartArray().Double(d_turnBallPos.x()).Double(d_turnBallPos.y()).EndArray();

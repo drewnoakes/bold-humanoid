@@ -377,6 +377,7 @@ export interface StationaryMap
     goals: GoalPosition[];
     keepers: AveragePosition[];
     kicks: Kick[];
+    openField: OpenFieldData;
 }
 
 export interface AveragePosition
@@ -411,6 +412,19 @@ export interface Kick
     endPos: number[];
     /** Whether this kick is in the correct direction. */
     onTarget: boolean;
+}
+
+export interface OpenFieldData
+{
+    divisions: number;
+    slices: OpenFieldSlice[];
+}
+
+export interface OpenFieldSlice
+{
+    angle: number;
+    dist: number;
+    count: number;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
