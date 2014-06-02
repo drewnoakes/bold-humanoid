@@ -64,6 +64,14 @@ double RadialOcclusionMap::angleForWedgeIndex(uint index)
   return Math::normaliseRads(index*2*M_PI/NumberOfBuckets);
 }
 
+bool RadialOcclusionMap::isOpen(double angle, double distance) const
+{
+  uint index = wedgeIndexForAngle(angle);
+  if (d_wedges[index].getCount() < 3) // TODO magic number!
+    return true;
+  return d_wedges[index].getAverage() > distance;
+}
+
 //Maybe<double> RadialOcclusionMap::getDistance(double angle) const
 //{
 //  return d_wedges[wedgeIndexForAngle(angle)].getAverage();
@@ -309,10 +317,9 @@ void StationaryMapState::selectKick()
         hasLeft = true;
     }
 
-    // TODO consider occlusion
-
+    bool isFieldOpen = d_occlusionMap.isOpen(endAngle, endPos->norm());
     bool isOnTarget = hasLeft && hasRight;
-    d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget);
+    d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget && isFieldOpen);
   }
 
   // TODO when more than one kick is possible, take the best, not the first
@@ -376,6 +383,9 @@ void StationaryMapState::calculateTurnAngle()
     double angle = Math::angleToPoint(*endPos);
     for (double const& targetAngle : targetAngles)
     {
+      if (!d_occlusionMap.isOpen(angle, endPos->norm()))
+        continue;
+
       if (fabs(closestAngle) > fabs(angle - targetAngle))
       {
         closestAngle = angle - targetAngle;
