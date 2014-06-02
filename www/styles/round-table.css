@@ -992,7 +992,7 @@ div.module.optiontree ul.options li.ran
     list-style-type: disc;
 }
 
-div.module.optiontree div.control-container
+div.module.optiontree ul.options
 {
     margin-top: 10px;
     border-top: 1px dotted rgba(0, 0, 0, 0.2);

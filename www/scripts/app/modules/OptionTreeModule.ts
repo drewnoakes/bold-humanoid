@@ -32,10 +32,6 @@ class OptionTreeModule extends Module
 
     public load()
     {
-        this.optionList = document.createElement('ul');
-        this.optionList.className = 'options';
-        this.element.appendChild(this.optionList);
-
         var controls = document.createElement('div');
         controls.className = 'control-container flow';
         control.buildSettings('role-decider', controls, this.closeables);
@@ -86,6 +82,10 @@ class OptionTreeModule extends Module
         controls.insertBefore(select, controls.firstChild);
 
         this.buildFsmGraph(control.getFSM('win'), graph);
+
+        this.optionList = document.createElement('ul');
+        this.optionList.className = 'options';
+        this.element.appendChild(this.optionList);
     }
 
     public unload()
