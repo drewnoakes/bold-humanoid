@@ -343,7 +343,7 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
       {
         writer.String("pos").StartArray().Double(estimate.getAverage().x()).Double(estimate.getAverage().y()).EndArray();
         writer.String("count").Uint(estimate.getCount());
-        writer.String("label").Uint(static_cast<int>(estimate.getLabel()));
+        writer.String("label").Uint(static_cast<uint>(estimate.getLabel()));
       }
       writer.EndObject();
     }
@@ -356,7 +356,7 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
       {
         writer.String("post1").StartArray().Double(estimate.getPost1().x()).Double(estimate.getPost1().y()).EndArray();
         writer.String("post2").StartArray().Double(estimate.getPost2().x()).Double(estimate.getPost2().y()).EndArray();
-        writer.String("label").Uint(static_cast<int>(estimate.getLabel()));
+        writer.String("label").Uint(static_cast<uint>(estimate.getLabel()));
       }
       writer.EndObject();
     }
