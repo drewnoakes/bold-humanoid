@@ -3,7 +3,7 @@
 #include "../../Agent/agent.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../State/state.hh"
-#include "../../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../StateObject/StationaryMapState/stationarymapstate.hh"
 #include "../LookAtFeet/lookatfeet.hh"
 #include "../LookAround/lookaround.hh"
@@ -21,18 +21,26 @@ AtBall::AtBall(std::string const& id, Agent* agent)
   d_lookAroundOption = make_shared<LookAround>("lookAroundFromBall", d_headModule, 135, []()
   {
     auto map = State::get<StationaryMapState>();
-    auto cameraFrame = State::get<CameraFrameState>();
+    auto agentFrame = State::get<AgentFrameState>();
 
-    double discountFactor = 0.0;
+    double speed = 1.0;
 
-    if (map && cameraFrame && !map->hasEnoughGoalPostObservations())
-      discountFactor += 0.3 * cameraFrame->getGoalObservationCount();
+    if (map)
+    {
+      // Don't discount for objects we have seen enough -- otherwise we're running slowly for nothing
 
-    if (map && cameraFrame->isBallVisible() && !map->hasEnoughBallObservations())
-      discountFactor += 0.6;
+      for (auto const& goalPos : agentFrame->getGoalObservations())
+      {
+        if (map->needMoreSightingsOfGoalPostAt(goalPos))
+          speed *= 0.6;
+      }
+
+      if (agentFrame->isBallVisible() && map->needMoreSightingsOfBallAt(agentFrame->getBallObservation().value()))
+        speed *= 0.5;
+    }
 
     const double minSpeed = 0.1;
-    return Math::clamp(1 - discountFactor, minSpeed, 1.0);
+    return Math::clamp(speed, minSpeed, 1.0);
   });
 }
 

@@ -136,6 +136,9 @@ namespace bold
     bool hasEnoughGoalPostObservations() const { return countWithSamples(d_goalPostEstimates, GoalSamplesNeeded) >= 2; };
     bool hasEnoughBallAndGoalPostObservations() const { return hasEnoughBallObservations() && hasEnoughGoalPostObservations(); };
 
+    bool needMoreSightingsOfGoalPostAt(Eigen::Vector3d goalPos) const;
+    bool needMoreSightingsOfBallAt(Eigen::Vector3d ballPos) const;
+
     bool canKick() const { return d_selectedKick != nullptr; }
     std::shared_ptr<Kick const> getSelectedKick() const { return d_selectedKick; }
 

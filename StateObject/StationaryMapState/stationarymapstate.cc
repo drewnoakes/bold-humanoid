@@ -483,3 +483,25 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
   }
   writer.EndObject();
 }
+
+bool StationaryMapState::needMoreSightingsOfGoalPostAt(Eigen::Vector3d goalPos) const
+{
+  for (auto const& goalPostEstimate : d_goalPostEstimates)
+  {
+    double dist = (goalPostEstimate.getAverage() - goalPos).norm();
+    if (dist < 0.5) // TODO magic number!!
+      return goalPostEstimate.getCount() < GoalSamplesNeeded;
+  }
+  return false;
+}
+
+bool StationaryMapState::needMoreSightingsOfBallAt(Eigen::Vector3d ballPos) const
+{
+  for (auto const& ballEstimate : d_ballEstimates)
+  {
+    double dist = (ballEstimate.getAverage() - ballPos).norm();
+    if (dist < 0.3) // TODO magic number!!
+      return ballEstimate.getCount() < BallSamplesNeeded;
+  }
+  return false;
+}
