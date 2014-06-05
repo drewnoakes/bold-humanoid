@@ -411,9 +411,6 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
     {
       if (joint->isDirty())
       {
-        // Specify the goal position, and apply any calibration offset
-        int goalPosition = joint->getValue() + d_offsets[joint->getId()];
-
         parameters[n++] = joint->getId();
 
         if (addrRange.contains(MX28::P_D_GAIN))   parameters[n++] = joint->getDGain();
@@ -423,6 +420,9 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
 
         if (addrRange.contains(MX28::P_GOAL_POSITION_L))
         {
+          // Specify the goal position, and apply any calibration offset
+          int goalPosition = joint->getValue() + d_offsets[joint->getId()];
+
           ASSERT(addrRange.contains(MX28::P_GOAL_POSITION_H));
           parameters[n++] = CM730::getLowByte(goalPosition);
           parameters[n++] = CM730::getHighByte(goalPosition);
