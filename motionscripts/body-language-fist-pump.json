@@ -3,7 +3,7 @@
   "stages": [
     {
       "speed": 21,
-      "p-gains": [
+      "pGains": [
         16,
         16,
         16,

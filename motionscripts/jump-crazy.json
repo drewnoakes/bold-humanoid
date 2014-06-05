@@ -4,7 +4,7 @@
     {
       "repeat": 4,
       "speed": 12,
-      "p-gains": [
+      "pGains": [
         32,
         32,
         8,
@@ -82,7 +82,7 @@
     {
       "repeat": 4,
       "speed": 12,
-      "p-gains": [
+      "pGains": [
         32,
         32,
         8,
@@ -160,7 +160,7 @@
     {
       "repeat": 20,
       "speed": 12,
-      "p-gains": [
+      "pGains": [
         32,
         32,
         8,

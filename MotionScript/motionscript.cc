@@ -13,8 +13,6 @@ using namespace bold;
 using namespace std;
 using namespace rapidjson;
 
-// TODO consistent casing in JSON property names (p-gains / moveCycles)
-
 shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 {
   FILE* pFile = fopen(fileName.c_str(), "rb");
@@ -37,9 +35,9 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 
   auto name = document["name"].GetString();
 
-  bool controlsHead = document.TryGetBoolValue("controls-head", true);
-  bool controlsArms = document.TryGetBoolValue("controls-arms", true);
-  bool controlsLegs = document.TryGetBoolValue("controls-legs", true);
+  bool controlsHead = document.TryGetBoolValue("controlsHead", true);
+  bool controlsArms = document.TryGetBoolValue("controlsArms", true);
+  bool controlsLegs = document.TryGetBoolValue("controlsLegs", true);
 
   vector<shared_ptr<Stage>> stages;
 
@@ -53,7 +51,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 
     stage->speed = stageMember.TryGetIntValue("speed", Stage::DEFAULT_SPEED);
 
-    auto gainsMember = stageMember.FindMember("p-gains");
+    auto gainsMember = stageMember.FindMember("pGains");
     if (gainsMember)
     {
       for (uchar g = 0; g < (uchar)JointId::MAX; g++)
@@ -153,9 +151,9 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
   {
     writer.String("name").String(d_name.c_str());
 
-    writer.String("controls-head").Bool(d_controlsHead);
-    writer.String("controls-arms").Bool(d_controlsArms);
-    writer.String("controls-legs").Bool(d_controlsLegs);
+    writer.String("controlsHead").Bool(d_controlsHead);
+    writer.String("controlsArms").Bool(d_controlsArms);
+    writer.String("controlsLegs").Bool(d_controlsLegs);
 
     writer.String("stages");
     writer.StartArray();
@@ -174,7 +172,7 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
           {
             if (stage->pGains[jointId-1] != Stage::DEFAULT_P_GAIN)
             {
-              writer.String("p-gains");
+              writer.String("pGains");
               writer.StartArray();
               for (int j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
                 writer.Int(stage->pGains[j-1]);

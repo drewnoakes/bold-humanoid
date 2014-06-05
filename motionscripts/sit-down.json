@@ -2,7 +2,7 @@
   "name": "sit-down",
   "stages": [
     {
-      "p-gains": [
+      "pGains": [
         32,
         32,
         32,
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "p-gains": [
+      "pGains": [
         2,
         2,
         2,

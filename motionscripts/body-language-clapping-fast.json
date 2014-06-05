@@ -2,7 +2,7 @@
   "name": "body-language-clapping-fast",
   "stages": [
     {
-      "p-gains": [
+      "pGains": [
         8,
         8,
         32,
@@ -79,7 +79,7 @@
     },
     {
       "speed": 16,
-      "p-gains": [
+      "pGains": [
         8,
         8,
         8,
@@ -256,7 +256,7 @@
     },
     {
       "speed": 16,
-      "p-gains": [
+      "pGains": [
         16,
         16,
         16,
@@ -432,7 +432,7 @@
       ]
     },
     {
-      "p-gains": [
+      "pGains": [
         8,
         8,
         32,

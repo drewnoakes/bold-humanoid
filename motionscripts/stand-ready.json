@@ -2,7 +2,7 @@
   "name": "stand-ready",
   "stages": [
     {
-      "p-gains": [
+      "pGains": [
         32,
         32,
         8,

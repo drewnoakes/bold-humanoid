@@ -4,7 +4,7 @@
     {
       "repeat": 6,
       "speed": 12,
-      "p-gains": [
+      "pGains": [
         32,
         32,
         8,

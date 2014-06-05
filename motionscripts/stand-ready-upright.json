@@ -2,7 +2,7 @@
   "name": "stand-ready-upright",
   "stages": [
     {
-      "p-gains": [
+      "pGains": [
         32,
         32,
         8,

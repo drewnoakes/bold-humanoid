@@ -2,7 +2,7 @@
   "name": "body-language-clapping",
   "stages": [
     {
-      "p-gains": [
+      "pGains": [
         16,
         16,
         16,
