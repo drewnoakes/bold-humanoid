@@ -32,16 +32,18 @@ namespace bold
     GoalPostEstimate() = default;
 
     GoalPostEstimate(Average<Eigen::Vector3d> estimate, GoalLabel label)
-    : d_estimate(estimate),
+    : d_average(estimate.getAverage()),
+      d_count(estimate.getCount()),
       d_label(label)
     {}
 
-    Eigen::Vector3d getAverage() const { return d_estimate.getAverage(); }
-    int getCount() const { return d_estimate.getCount(); }
+    Eigen::Vector3d getAverage() const { return d_average; }
+    int getCount() const { return d_count; }
     GoalLabel getLabel() const { return d_label; }
 
   private:
-    Average<Eigen::Vector3d> d_estimate;
+    Eigen::Vector3d d_average;
+    int d_count;
     GoalLabel d_label;
   };
 
