@@ -75,10 +75,17 @@ class ConfigModule extends Module
             li.dataset['path'] = setting.path;
             // TODO add more details here
             control.createSettingControl(setting, li, this.closeables, /*hideLabel*/true);
-            var desc = document.createElement('span');
-            desc.className = 'description';
-            desc.textContent = setting.path;
-            li.appendChild(desc);
+            var path = document.createElement('span');
+            path.className = 'path';
+            path.textContent = setting.path;
+            li.appendChild(path);
+            if (setting.description)
+            {
+                var desc = document.createElement('span');
+                desc.className = 'description';
+                desc.textContent = ' (' + setting.description + ')';
+                li.appendChild(desc);
+            }
             this.settingList.appendChild(li);
         });
 

@@ -863,11 +863,19 @@ div.module.config li > div.setting.control select
     margin: 0;
 }
 
+div.module.config li > span.path
+{
+    padding-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 div.module.config li > span.description
 {
     padding-left: 10px;
     display: inline-block;
     vertical-align: middle;
+    color: #777;
 }
 
 div.module.config li > button
