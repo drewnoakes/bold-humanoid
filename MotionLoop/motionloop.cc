@@ -55,7 +55,7 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
   {
     stringstream path;
     path << "hardware.offsets.joint-" << (int)i;
-    Config::getSetting<int>(path.str())->track([this,i](int value) { d_offsets[i] = static_cast<uchar>(value); });
+    Config::getSetting<int>(path.str())->track([this,i](int value) { d_offsets[i] = value; });
   }
 }
 
