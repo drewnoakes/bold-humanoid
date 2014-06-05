@@ -34,7 +34,7 @@ Localiser::Localiser()
   case FilterType::Particle:
   {
     auto filter = allocate_aligned_shared<ParticleFilterUsed>();
-    
+
     filter->setStateGenerator([this]() { return this->generateState();});
 
     Config::getSetting<double>("localiser.randomise-ratio")->changed.connect(
@@ -49,15 +49,15 @@ Localiser::Localiser()
                         // Reset the state of the smoother so we flip instantly and don't glide
                         // have our position animated slowly across the field.
                         d_avgPos.reset();
-                        
+
                         // Flip the x-coordinate of every particle, and flip its rotation.
                         filter->transform([](FilterState state) { return FilterState(-state.x(), state.y(), -state(2), -state(3)); });
                       });
-    
+
     d_filter = filter;
     break;
   }
-    
+
   case FilterType::Kalman:
   {
     d_filter = allocate_aligned_shared<KalmanFilter<4>>();
