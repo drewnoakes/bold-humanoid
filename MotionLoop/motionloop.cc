@@ -51,11 +51,15 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
   Config::addAction("hardware.motor-torque-off", "Torque Off", [this]() { d_torqueChangeToValue = false; d_torqueChangeNeeded = true; });
 
   d_offsets[0] = 0;
-  for (uchar i = 1; i <= (uchar)JointId::MAX; i++)
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     stringstream path;
-    path << "hardware.offsets.joint-" << (int)i;
-    Config::getSetting<int>(path.str())->track([this,i](int value) { d_offsets[i] = value; });
+    path << "hardware.offsets.joint-" << (int)jointId;
+    Config::getSetting<int>(path.str())->track([this, jointId ](int value)
+    {
+      d_offsets[jointId] = value;
+      d_bodyControl->getJoint((JointId)jointId)->notifyOffsetChanged();
+    });
   }
 }
 
@@ -486,24 +490,27 @@ void MotionLoop::step(SequentialTimer& t)
     //
 
     t.enter("Apply Motion Module");
-    if (applyJointMotionTasks(t))
-    {
-      // Joints were modified. Write to MX28s.
-      bool anythingChanged = d_haveBody
-        ? writeJointData(t)
-        : true;
-
-      //
-      // Update BodyControlState
-      //
-      if (anythingChanged)
-      {
-        // TODO only create if someone is listening to this in the debugger
-        State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
-        t.timeEvent("Set BodyControlState");
-      }
-    }
+    applyJointMotionTasks(t);
     t.exit();
+
+    //
+    // WRITE TO MX28S
+    //
+
+    bool anythingChanged = d_haveBody
+      ? writeJointData(t)
+      : true;
+
+    //
+    // Update BodyControlState
+    //
+
+    if (anythingChanged)
+    {
+      // TODO only create if someone is listening to this in the debugger
+      State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
+      t.timeEvent("Set BodyControlState");
+    }
 
     if (d_debugControl->isDirty())
     {
@@ -592,7 +599,7 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t
 
   auto mx28Snapshots = vector<unique_ptr<MX28Snapshot const>>();
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-    mx28Snapshots.push_back(make_unique<MX28Snapshot const>(jointId, d_dynamicBulkRead->getBulkReadData(jointId)));
+    mx28Snapshots.push_back(make_unique<MX28Snapshot const>(jointId, d_dynamicBulkRead->getBulkReadData(jointId), d_offsets[jointId]));
 
   //
   // UPDATE HARDWARE STATE

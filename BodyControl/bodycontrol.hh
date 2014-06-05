@@ -141,6 +141,8 @@ namespace bold
     bool isDirty() const { return !d_changedAddressRange.isEmpty(); }
     void clearDirty() { d_changedAddressRange.reset(); }
 
+    void notifyOffsetChanged();
+
     void setPGain(uchar p);
     void setIGain(uchar i);
     void setDGain(uchar d);

@@ -36,7 +36,7 @@ namespace bold
 
     MX28Snapshot(uchar mx28ID) : id(mx28ID) {}
 
-    MX28Snapshot(uchar mx28ID, BulkReadTable const& data);
+    MX28Snapshot(uchar mx28ID, BulkReadTable const& data, int jointOffset);
   };
 
   /** Models infrequently changing data table entries from an MX28 dynamixel device.

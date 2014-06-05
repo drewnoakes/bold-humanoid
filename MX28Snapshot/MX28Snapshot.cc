@@ -13,11 +13,11 @@ using namespace bold;
 
 // TODO have constructors just store const byte[] and convert fields to properties that make conversions
 
-MX28Snapshot::MX28Snapshot(uchar mx28ID, BulkReadTable const& data)
+MX28Snapshot::MX28Snapshot(uchar mx28ID, BulkReadTable const& data, int jointOffset)
 {
   id = mx28ID;
 
-  presentPositionValue = data.readWord(MX28::P_PRESENT_POSITION_L);
+  presentPositionValue = static_cast<ushort>(Math::clamp(data.readWord(MX28::P_PRESENT_POSITION_L) - jointOffset, 0, (int)MX28::MAX_VALUE));
   presentPosition = MX28::value2Rads(presentPositionValue);
 
   presentSpeedRPM = MX28::value2Rpm(data.readWord(MX28::P_PRESENT_SPEED_L));

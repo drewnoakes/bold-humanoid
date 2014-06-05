@@ -74,3 +74,9 @@ void JointControl::setIGain(uchar i) { if (d_iGain == i) return; d_iGain = i; d_
 void JointControl::setDGain(uchar d) { if (d_dGain == d) return; d_dGain = d; d_changedAddressRange.expand(MX28::P_D_GAIN); }
 
 void JointControl::setPidGains(uchar p, uchar i, uchar d) { setPGain(p); setIGain(i); setDGain(d); }
+
+void JointControl::notifyOffsetChanged()
+{
+  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
+  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
+}
