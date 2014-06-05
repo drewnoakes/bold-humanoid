@@ -61,6 +61,7 @@ namespace bold
     Eigen::Vector3d getPost2() const { return d_post2; }
     GoalLabel getLabel() const { return d_label; }
     Eigen::Vector3d getMidpoint(double ratio = 0.5) const { return Math::lerp(ratio, d_post1, d_post2); }
+    bool isTowards(double endBallAngle) const;
 
   private:
     Eigen::Vector3d d_post1;

@@ -105,6 +105,27 @@ void RadialOcclusionMap::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& w
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool GoalEstimate::isTowards(double ballEndAngle) const
+{
+  bool hasLeft = false,
+       hasRight = false;
+
+  auto testSide = [&](Eigen::Vector3d const& postPos)
+  {
+    if (Math::angleToPoint(postPos) > ballEndAngle)
+      hasRight = true;
+    else
+      hasLeft = true;
+  };
+
+  testSide(d_post1);
+  testSide(d_post2);
+
+  return hasLeft && hasRight;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 StationaryMapState::StationaryMapState(
   std::vector<Average<Eigen::Vector3d>> ballEstimates,
   std::vector<Average<Eigen::Vector3d>> goalPostEstimates,
@@ -299,26 +320,26 @@ void StationaryMapState::selectKick()
     if (!endPos.hasValue())
       continue;
 
-    double endAngle = Math::angleToPoint(*endPos);
+    double ballEndAngle = Math::angleToPoint(*endPos);
 
     // Determine whether the end pos is advantageous
-    bool hasLeft = false, hasRight = false;
-    for (auto const& goal : d_goalPostEstimates)
+    bool isOnTarget = false;
+    for (auto& goal : d_goalEstimates)
     {
-      if (goal.getCount() < GoalSamplesNeeded)
+      // Currently, only kick toward the goal
+
+      // Don't kick towards our goal
+      if (goal.getLabel() == GoalLabel::Ours)
+        continue;
+
+      if (goal.isTowards(ballEndAngle))
+      {
+        isOnTarget = true;
         break;
-
-      auto goalPos = goal.getAverage();
-      double goalAngle = Math::angleToPoint(goalPos);
-
-      if (goalAngle > endAngle)
-        hasRight = true;
-      else
-        hasLeft = true;
+      }
     }
 
-    bool isFieldOpen = d_occlusionMap.isOpen(endAngle, endPos->norm());
-    bool isOnTarget = hasLeft && hasRight;
+    bool isFieldOpen = d_occlusionMap.isOpen(ballEndAngle, endPos->norm());
     d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget && isFieldOpen);
   }
 
