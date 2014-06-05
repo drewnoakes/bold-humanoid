@@ -277,6 +277,7 @@ TEST(MathTests, shortestAngleDiffRads)
   EXPECT_NEAR ( -2*M_PI/3, Math::shortestAngleDiffRads(-2*M_PI/3, 2*M_PI/3), 0.0001 );
   EXPECT_NEAR ( 2*M_PI/3, Math::shortestAngleDiffRads(2*M_PI/3, -2*M_PI/3), 0.0001 );
   EXPECT_NEAR ( -M_PI/3, Math::shortestAngleDiffRads(0, 11*M_PI/3), 0.0001 );
+  EXPECT_NEAR ( 2.00605, Math::shortestAngleDiffRads(-2.44379, -0.43774), 0.0001 );
 }
 
 TEST(MathTests, angleToPoint)

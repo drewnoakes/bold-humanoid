@@ -94,12 +94,17 @@ namespace bold
 
     static double shortestAngleDiffRads(double a1, double a2)
     {
+      // The fmod() function computes the floating-point remainder of dividing x by y.
+      // The return value is x - n * y, where n is the quotient of x / y, rounded
+      // toward zero to an integer.
       double d = fmod(a2 - a1, 2*M_PI);
+
       d += (d > M_PI)
         ? -2*M_PI
-        : d < -M_PI/2
+        : d <= -M_PI
           ? 2*M_PI
           : 0;
+
       return d;
     }
 
