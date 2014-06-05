@@ -153,6 +153,10 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
   {
     writer.String("name").String(d_name.c_str());
 
+    writer.String("controls-head").Bool(d_controlsHead);
+    writer.String("controls-arms").Bool(d_controlsArms);
+    writer.String("controls-legs").Bool(d_controlsLegs);
+
     writer.String("stages");
     writer.StartArray();
     {
