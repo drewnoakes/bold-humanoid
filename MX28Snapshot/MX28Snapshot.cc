@@ -16,13 +16,10 @@ using namespace bold;
 MX28Snapshot::MX28Snapshot(uchar mx28ID, BulkReadTable const& data, int jointOffset)
 {
   id = mx28ID;
-
   presentPositionValue = static_cast<ushort>(Math::clamp(data.readWord(MX28::P_PRESENT_POSITION_L) - jointOffset, 0, (int)MX28::MAX_VALUE));
   presentPosition = MX28::value2Rads(presentPositionValue);
   presentSpeedRPM = MX28::value2Rpm(data.readWord(MX28::P_PRESENT_SPEED_L));
-
   presentLoad = MX28::value2Load(data.readWord(MX28::P_PRESENT_LOAD_L));
-
   presentVoltage = MX28::value2Voltage(data.readByte(MX28::P_PRESENT_VOLTAGE));
   presentTemp = MX28::value2Centigrade(data.readByte(MX28::P_PRESENT_TEMPERATURE));
 }
@@ -40,7 +37,7 @@ StaticMX28State::StaticMX28State(uchar mx28ID, BulkReadTable const& data)
 
   // TODO migrate to MX28::value2Baud(uchar)
   auto baudByte    = data.readByte(MX28::P_BAUD_RATE);                        // 0x22
-  baudBPS = 2000000/(baudByte+1);
+  baudBPS = 2000000u/(baudByte+1);
 
   // TODO migrate to MX28::value2ReturnDelayTime(uchar)
   auto retDelayTime = data.readByte(MX28::P_RETURN_DELAY_TIME);               // 0x00
