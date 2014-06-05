@@ -124,6 +124,25 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
   return hasLeft && hasRight;
 }
 
+GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
+{
+  Vector3d goalLine = d_post2 - d_post1;
+
+  // There are two perpendicular vectors which should run down the length of the
+  // field, parallel to the world's x-axis.
+  Vector3d perp1(-goalLine.y(), goalLine.x(), 0);
+  Vector3d perp2(goalLine.y(), -goalLine.x(), 0);
+
+  // Find which one points towards us, as we assume we're between the two goals
+  Vector3d perp = perp1.dot(d_post1) < 0
+    ? perp1
+    : perp2;
+
+  Vector3d fieldX = perp.normalized() * FieldMap::fieldLengthX();
+
+  return GoalEstimate(d_post1 + fieldX, d_post2 + fieldX, label);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 StationaryMapState::StationaryMapState(
@@ -359,38 +378,34 @@ void StationaryMapState::calculateTurnAngle()
     return;
   }
 
-  // We see the ball and one goal.
-  // Find the shortest turn required to make a good kick.
-  // If the wrong goal, compute the desired angle(s) away from it.
-  // Ask each kick what it's ideal ball position is. Set this on CircleBall.
-
-  // Find the target angle(s) that would be good from here.
-
-  // TODO don't assume the goal is theirs!
-  // TODO don't assume we only see one goal!
   // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
   // TODO some decisions about turning should only be made once the entire area has been surveyed -- no way to express this currently
 
-  if (d_goalEstimates[0].getLabel() == GoalLabel::Ours)
-  {
-    d_turnAngleRads = M_PI;
-    d_turnBallPos = Vector2d();
-    cout << "calculateTurnAngle: about face -- it's our goal (crude implementation for now)" << endl;
-    return;
-  }
+  // Take the first goal observation
+  // TODO does it matter than we only check the first goal observation?
+  GoalEstimate& goal = d_goalEstimates[0];
 
+  // If it's our goal, synthesize an estimate of the opposite goal
+  if (goal.getLabel() == GoalLabel::Ours)
+    goal = goal.estimateOppositeGoal(GoalLabel::Theirs);
+
+  // Find desirable target positions
   vector<Vector3d> targetPositions = {
-    d_goalEstimates[0].getMidpoint(0.25),
-    d_goalEstimates[0].getMidpoint(0.5),
-    d_goalEstimates[0].getMidpoint(0.25)
+    goal.getMidpoint(0.2),
+    goal.getMidpoint(0.4),
+    goal.getMidpoint(0.5),
+    goal.getMidpoint(0.6),
+    goal.getMidpoint(0.8)
   };
 
+  // Convert the target positions to angles
   vector<double> targetAngles;
   targetAngles.reserve(targetPositions.size());
   std::transform(targetPositions.begin(), targetPositions.end(),
                  back_inserter(targetAngles),
                  [](Vector3d const& target) { return Math::angleToPoint(target); });
 
+  // Enumerate kicks to find the angle which requires the least turning and/or repositioning
   double closestAngle = std::numeric_limits<double>::max();
   Vector2d closestBallPos = {};
   bool found = false;
@@ -411,7 +426,7 @@ void StationaryMapState::calculateTurnAngle()
         closestAngle = angle - targetAngle;
         closestBallPos = ballPos;
         found = true;
-        cout << "calculateTurnAngle: kick " << kick->getId() << " possible (best yet -- last wins)" << endl;
+        log::info("StationaryMapState::calculateTurnAngle") << "'" << kick->getId() << "' possible and best yet (last wins)";
       }
     }
   }
@@ -420,7 +435,7 @@ void StationaryMapState::calculateTurnAngle()
   {
     d_turnAngleRads = -closestAngle;
     d_turnBallPos = closestBallPos;
-    cout << "calculateTurnAngle: turn " << Math::radToDeg(d_turnAngleRads) << " degrees with ball at " << d_turnBallPos.transpose() << endl;
+    log::info("StationaryMapState::calculateTurnAngle") << "turn " << Math::radToDeg(d_turnAngleRads) << " degrees with ball at " << d_turnBallPos.transpose();
   }
 }
 

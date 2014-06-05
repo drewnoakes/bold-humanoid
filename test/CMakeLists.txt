@@ -37,6 +37,7 @@ set(TEST_SOURCES
   SignalTests.cc
   SpatialiserTest.cc
   StateTests.cc
+  StationaryMapTests.cc
   StatsTests.cc
   ThreadIdTests.cc
   ThreadTests.cc
