@@ -59,7 +59,7 @@ void JointControl::setDegrees(double degrees)
 {
   degrees = Math::clamp(degrees, MX28::MIN_DEGS, MX28::MAX_DEGS);
   d_degrees = degrees;
-  unsigned value = MX28::degs2Value(degrees);
+  ushort value = MX28::degs2Value(degrees);
   if (d_value == value)
     return;
   d_value = value;
