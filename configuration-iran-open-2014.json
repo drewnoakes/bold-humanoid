@@ -67,21 +67,23 @@
   },
 
   "walk-engine": {
-    "x-offset": -10.0,
-    "y-offset": 5.0,
-    "z-offset": 20.0,
-    "roll-offset": 0.0,
-    "pitch-offset": 0.0,
-    "yaw-offset": 0.0,
-    "hip-pitch-offset": 17.0,
-    "period-time": 600.0,
-    "dsp-ratio": 0.1,
-    "foot-height": 40.0,
-    "swing-right-left": 20.0,
-    "swing-top-down": 5.0,
-    "pelvis-offset": 3.0,
-    "arm-swing-gain": 1.5,
-    "step-fb-ratio": 0.28,
+    "params": {
+      "x-offset": -10.0,
+      "y-offset": 5.0,
+      "z-offset": 20.0,
+      "roll-offset": 0.0,
+      "pitch-offset": 0.0,
+      "yaw-offset": 0.0,
+      "hip-pitch-offset": 17.0,
+      "period-time": 600.0,
+      "dsp-ratio": 0.1,
+      "foot-height": 40.0,
+      "swing-right-left": 20.0,
+      "swing-top-down": 5.0,
+      "pelvis-offset": 3.0,
+      "arm-swing-gain": 1.5,
+      "step-fb-ratio": 0.28
+    },
     "balance": {
       "enable": true,
       "knee-gain": 1.2,
@@ -89,9 +91,11 @@
       "hip-roll-gain": 2.0,
       "ankle-roll-gain": 4.0
     },
-    "p-gain": 32,
-    "i-gain": 0,
-    "d-gain": 0
+    "gains": {
+      "p-gain": 32,
+      "i-gain": 0,
+      "d-gain": 0
+    }
   },
   "walk-module": {
     "auto-balance": true,

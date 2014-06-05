@@ -273,31 +273,35 @@
     "move-fine": { "type": "bool", "default": false }
   },
   "walk-engine": {
-    "x-offset":         { "type": "double", "default": -10.0 },
-    "y-offset":         { "type": "double", "default": 5.0 },
-    "z-offset":         { "type": "double", "default": 20.0 },
-    "roll-offset":      { "type": "double", "default": 0.0 },
-    "pitch-offset":     { "type": "double", "default": 0.0 },
-    "yaw-offset":       { "type": "double", "default": 0.0 },
-    "hip-pitch-offset": { "type": "double", "default": 17.0 },
-    "period-time":      { "type": "double", "default": 600.0 },
-    "dsp-ratio":        { "type": "double", "default": 0.1 },
-    "foot-height":      { "type": "double", "default": 40.0 },
-    "swing-right-left": { "type": "double", "default": 20.0 },
-    "swing-top-down":   { "type": "double", "default": 5.0 },
-    "pelvis-offset":    { "type": "double", "default": 3.0 },
-    "arm-swing-gain":   { "type": "double", "default": 1.5 },
-    "step-fb-ratio":    { "type": "double", "default": 0.28 },
+    "params": {
+      "x-offset":         { "type": "double", "default": -10.0 },
+      "y-offset":         { "type": "double", "default": 5.0 },
+      "z-offset":         { "type": "double", "default": 20.0 },
+      "roll-offset":      { "type": "double", "default": 0.0 },
+      "pitch-offset":     { "type": "double", "default": 0.0 },
+      "yaw-offset":       { "type": "double", "default": 0.0 },
+      "hip-pitch-offset": { "type": "double", "default": 17.0 },
+      "period-time":      { "type": "double", "default": 600.0 },
+      "dsp-ratio":        { "type": "double", "default": 0.1 },
+      "foot-height":      { "type": "double", "default": 40.0 },
+      "swing-right-left": { "type": "double", "default": 20.0 },
+      "swing-top-down":   { "type": "double", "default": 5.0 },
+      "pelvis-offset":    { "type": "double", "default": 3.0 },
+      "arm-swing-gain":   { "type": "double", "default": 1.5 },
+      "step-fb-ratio":    { "type": "double", "default": 0.28 }
+    },
     "balance": {
       "enable":           { "type": "bool", "default": true, "description": "Enable auto-balance" },
-      "knee-gain":        { "type": "double", "default": 1.2 },
-      "ankle-pitch-gain": { "type": "double", "default": 3.6 },
-      "hip-roll-gain":    { "type": "double", "default": 2.0 },
-      "ankle-roll-gain":  { "type": "double", "default": 4.0 }
+      "knee-gain":        { "type": "double", "default": 1.2, "description": "Amount gyro affects knee angle" },
+      "ankle-pitch-gain": { "type": "double", "default": 3.6, "description": "Amount gyro affects ankle pitch angle" },
+      "hip-roll-gain":    { "type": "double", "default": 2.0, "description": "Amount gyro affects hip roll angle" },
+      "ankle-roll-gain":  { "type": "double", "default": 4.0, "description": "Amount gyro affects ankle roll angle" }
     },
-    "p-gain":           { "type": "int", "default": 32 },
-    "i-gain":           { "type": "int", "default": 0 },
-    "d-gain":           { "type": "int", "default": 0 }
+    "gains": {
+      "p-gain": { "type": "int", "default": 32 },
+      "i-gain": { "type": "int", "default": 0 },
+      "d-gain": { "type": "int", "default": 0 }
+    }
   },
   "walk-module": {
     "x-amp-delta":   { "type": "double", "default": 1.2, "description": "X smoothing delta" },

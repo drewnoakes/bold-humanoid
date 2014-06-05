@@ -62,7 +62,9 @@ class WalkModule extends Module
         this.radarCanvas = <HTMLCanvasElement>templateRoot.querySelector('canvas.radar');
 
         control.buildSettings('options.approach-ball', templateRoot.querySelector('.approach-ball-controls'), this.closeables);
-        control.buildSettings('walk-engine', templateRoot.querySelector('.walk-engine-controls'), this.closeables);
+        control.buildSettings('walk-engine.params', templateRoot.querySelector('.walk-engine-params-controls'), this.closeables);
+        control.buildSettings('walk-engine.gains', templateRoot.querySelector('.walk-engine-gains-controls'), this.closeables);
+        control.buildSettings('walk-engine.balance', templateRoot.querySelector('.walk-engine-balance-controls'), this.closeables);
         control.buildSettings('walk-module', templateRoot.querySelector('.walk-module-controls'), this.closeables);
 
         this.closeables.add(new data.Subscription<state.Walk>(

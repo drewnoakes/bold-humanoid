@@ -20,20 +20,20 @@ using namespace std;
 
 WalkEngine::WalkEngine()
 {
-  X_OFFSET          = Config::getSetting<double>("walk-engine.x-offset");
-  Y_OFFSET          = Config::getSetting<double>("walk-engine.y-offset");
-  Z_OFFSET          = Config::getSetting<double>("walk-engine.z-offset");
-  ROLL_OFFSET       = Config::getSetting<double>("walk-engine.roll-offset");
-  PITCH_OFFSET      = Config::getSetting<double>("walk-engine.pitch-offset");
-  YAW_OFFSET        = Config::getSetting<double>("walk-engine.yaw-offset");
-  PERIOD_TIME       = Config::getSetting<double>("walk-engine.period-time");
-  DSP_RATIO         = Config::getSetting<double>("walk-engine.dsp-ratio");
-  STEP_FB_RATIO     = Config::getSetting<double>("walk-engine.step-fb-ratio");
-  Z_MOVE_AMPLITUDE  = Config::getSetting<double>("walk-engine.foot-height");
-  Y_SWAP_AMPLITUDE  = Config::getSetting<double>("walk-engine.swing-right-left");
-  Z_SWAP_AMPLITUDE  = Config::getSetting<double>("walk-engine.swing-top-down");
-  PELVIS_OFFSET     = Config::getSetting<double>("walk-engine.pelvis-offset");
-  ARM_SWING_GAIN    = Config::getSetting<double>("walk-engine.arm-swing-gain");
+  X_OFFSET          = Config::getSetting<double>("walk-engine.params.x-offset");
+  Y_OFFSET          = Config::getSetting<double>("walk-engine.params.y-offset");
+  Z_OFFSET          = Config::getSetting<double>("walk-engine.params.z-offset");
+  ROLL_OFFSET       = Config::getSetting<double>("walk-engine.params.roll-offset");
+  PITCH_OFFSET      = Config::getSetting<double>("walk-engine.params.pitch-offset");
+  YAW_OFFSET        = Config::getSetting<double>("walk-engine.params.yaw-offset");
+  PERIOD_TIME       = Config::getSetting<double>("walk-engine.params.period-time");
+  DSP_RATIO         = Config::getSetting<double>("walk-engine.params.dsp-ratio");
+  STEP_FB_RATIO     = Config::getSetting<double>("walk-engine.params.step-fb-ratio");
+  Z_MOVE_AMPLITUDE  = Config::getSetting<double>("walk-engine.params.foot-height");
+  Y_SWAP_AMPLITUDE  = Config::getSetting<double>("walk-engine.params.swing-right-left");
+  Z_SWAP_AMPLITUDE  = Config::getSetting<double>("walk-engine.params.swing-top-down");
+  PELVIS_OFFSET     = Config::getSetting<double>("walk-engine.params.pelvis-offset");
+  ARM_SWING_GAIN    = Config::getSetting<double>("walk-engine.params.arm-swing-gain");
 
   BALANCE_ENABLE           = Config::getSetting<bool>("walk-engine.balance.enable");
   BALANCE_KNEE_GAIN        = Config::getSetting<double>("walk-engine.balance.knee-gain");
@@ -41,9 +41,9 @@ WalkEngine::WalkEngine()
   BALANCE_HIP_ROLL_GAIN    = Config::getSetting<double>("walk-engine.balance.hip-roll-gain");
   BALANCE_ANKLE_ROLL_GAIN  = Config::getSetting<double>("walk-engine.balance.ankle-roll-gain");
 
-  P_GAIN = Config::getSetting<int>("walk-engine.p-gain");
-  I_GAIN = Config::getSetting<int>("walk-engine.i-gain");
-  D_GAIN = Config::getSetting<int>("walk-engine.d-gain");
+  P_GAIN = Config::getSetting<int>("walk-engine.gains.p-gain");
+  I_GAIN = Config::getSetting<int>("walk-engine.gains.i-gain");
+  D_GAIN = Config::getSetting<int>("walk-engine.gains.d-gain");
 
   HIP_PITCH_OFFSET = 13.0;
   X_MOVE_AMPLITUDE = 0;
