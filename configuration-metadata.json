@@ -35,9 +35,6 @@
     "word-gap-ms":       { "type": "int", "min": 0, "max": 1000, "default": 0 },
     "capital-accent-hz": { "type": "int", "min": 0, "max": 5000, "default": 0 }
   },
-  "eyes": {
-    "disabled": { "type": "bool", "default": false }
-  },
   "vocaliser": {
     "announce-ball-position": { "type": "bool", "default": false, "description": "Say ball pos" }
   },
@@ -57,6 +54,11 @@
       "window-size":    { "type": "int", "min": 10, "max": 5000, "default": 500, "readonly": true },
       "high-threshold": { "type": "int", "min": 10, "max": 1024, "default": 50,  "readonly": true },
       "low-threshold":  { "type": "int", "min": 10, "max": 1024, "default": 20,  "readonly": true }
+    },
+    "leds": {
+      "enable-eyes":     { "type": "bool", "default": true },
+      "enable-forehead": { "type": "bool", "default": true },
+      "enable-panel":    { "type": "bool", "default": true }
     },
     "offsets": {
       "shoulder-pitch-r": { "type": "int", "min": -500, "max": 500, "default": 0, "description": "Joint 1" },

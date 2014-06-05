@@ -2,6 +2,7 @@
 
 #include "../BodyPart/bodypart.hh"
 #include "../Colour/colour.hh"
+#include "../Config/config.hh"
 #include "../JointId/jointid.hh"
 #include "../Math/math.hh"
 #include "../util/Range.hh"
@@ -52,16 +53,21 @@ namespace bold
 
     void setPanelLedStates(bool red, bool blue, bool green)
     {
+      static auto enabledSetting = Config::getSetting<bool>("hardware.leds.enable-panel");
+
       uchar ledFlags = 0;
 
-      if (red)
-        ledFlags |= 1;
+      if (enabledSetting->getValue())
+      {
+        if (red)
+          ledFlags |= 1;
 
-      if (blue)
-        ledFlags |= 2;
+        if (blue)
+          ledFlags |= 2;
 
-      if (green)
-        ledFlags |= 4;
+        if (green)
+          ledFlags |= 4;
+      }
 
       if (ledFlags != d_panelLedByte)
       {
@@ -72,10 +78,13 @@ namespace bold
 
     void setEyeColour(Colour::bgr const& colour)
     {
-      ushort shortValue =
-       (colour.r >> 3) |
-      ((colour.g >> 3) << 5) |
-      ((colour.b >> 3) << 10);
+      static auto enabledSetting = Config::getSetting<bool>("hardware.leds.enable-eyes");
+
+      ushort shortValue = !enabledSetting->getValue()
+        ? 0
+        : (colour.r >> 3) |
+          ((colour.g >> 3) << 5) |
+          ((colour.b >> 3) << 10);
 
       if (d_eyeColourShort != shortValue)
       {
@@ -87,10 +96,13 @@ namespace bold
 
     void setForeheadColour(Colour::bgr const& colour)
     {
-      ushort shortValue =
-       (colour.r >> 3) |
-      ((colour.g >> 3) << 5) |
-      ((colour.b >> 3) << 10);
+      static auto enabledSetting = Config::getSetting<bool>("hardware.leds.enable-forehead");
+
+      ushort shortValue = !enabledSetting->getValue()
+        ? 0
+        : (colour.r >> 3) |
+          ((colour.g >> 3) << 5) |
+          ((colour.b >> 3) << 10);
 
       if (d_foreheadColourShort != shortValue)
       {

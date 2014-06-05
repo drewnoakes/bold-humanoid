@@ -18,9 +18,6 @@
     "word-gap-ms": 5,
     "capital-accent-hz": 20
   },
-  "eyes": {
-    "disabled": false
-  },
   "vocaliser": {
     "announce-ball-position": false
   },
@@ -40,6 +37,11 @@
       "window-size": 2000,
       "high-threshold": 50,
       "low-threshold": 20
+    },
+    "leds": {
+      "enable-eyes": true,
+      "enable-forehead": true,
+      "enable-panel": true
     },
     "offsets": {
       "joint-1": 0,
