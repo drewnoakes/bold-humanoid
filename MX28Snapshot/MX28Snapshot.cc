@@ -77,7 +77,7 @@ StaticMX28State::StaticMX28State(uchar mx28ID, BulkReadTable const& data)
   // bit 2 - overheating error - internal temperature exceeds the limit set via MX28::P_HIGH_LIMIT_TEMPERATURE
   // bit 3 - range error - command is given beyond range of usage
   // bit 4 - checksum error - the checksum of the received instruction packet is incorrect
-  // bit 5 - overoad error - the current load cannot be controlled with the set maximum torque
+  // bit 5 - overload error - the current load cannot be controlled with the set maximum torque
   // bit 6 - instruction error - undefined instruction, or action command delivered without reg_write
   // bit 7 - unused?
 

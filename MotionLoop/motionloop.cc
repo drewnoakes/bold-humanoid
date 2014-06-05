@@ -110,7 +110,7 @@ bool MotionLoop::start()
     return false;
   }
 
-  // Set the scheduler inheritence (no inheritance)
+  // Set the scheduler inheritance (no inheritance)
   error = pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
   if (error != 0)
   {
