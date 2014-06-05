@@ -148,8 +148,9 @@ namespace bold
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
     static constexpr double BallMergeDistance = 0.3; // TODO magic number!!
-    static constexpr double GoalMergeDistance = 0.5; // TODO magic number!!
+    static constexpr double GoalPostMergeDistance = 0.5; // TODO magic number!!
     static constexpr double TeammateMergeDistance = 0.5; // TODO magic number!!
+    static constexpr double GoalLengthErrorDistance = 0.5; // TODO magic number!!
 
   private:
     static constexpr int GoalSamplesNeeded = 10; // TODO magic number!!

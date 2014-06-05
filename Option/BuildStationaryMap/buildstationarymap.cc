@@ -32,7 +32,7 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
 
   for (auto const& goal : agentFrame->getGoalObservations())
   {
-    integrate(d_goalEstimates, goal, StationaryMapState::GoalMergeDistance);
+    integrate(d_goalEstimates, goal, StationaryMapState::GoalPostMergeDistance);
     hasChange = true;
   }
 
