@@ -24,7 +24,7 @@ pair<Localiser::FilterState, double> Localiser::generateState()
     auto x = -std::abs(d_fieldXRng());
     // Y is just outside of the field
     // TODO: put a bit of noise on it
-    auto y = (left ? -1.0 : 1.0) * (FieldMap::fieldLengthY() / 2.0 + 0.5);
+    auto y = (left ? -1.0 : 1.0) * (FieldMap::getFieldLengthY() / 2.0 + 0.5);
 
     // Assume facing into field
     auto state = FilterState(x, y, 0, left ? 1.0 : -1.0);

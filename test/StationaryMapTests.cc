@@ -16,24 +16,24 @@ TEST (GoalEstimateTests, estimateOppositeGoal)
 
   GoalEstimate opposite(goal.estimateOppositeGoal(GoalLabel::Ours));
 
-  EXPECT_EQ ( Vector3d(FieldMap::fieldLengthX() - 1, 0, 0), opposite.getPost1() );
-  EXPECT_EQ ( Vector3d(FieldMap::fieldLengthX() - 1, 1, 0), opposite.getPost2() );
+  EXPECT_EQ ( Vector3d(FieldMap::getFieldLengthX() - 1, 0, 0), opposite.getPost1() );
+  EXPECT_EQ ( Vector3d(FieldMap::getFieldLengthX() - 1, 1, 0), opposite.getPost2() );
   EXPECT_EQ ( GoalLabel::Ours, opposite.getLabel() );
 
   goal = { Vector3d(1, 0, 0), Vector3d(1, 1, 0), GoalLabel::Unknown };
 
   opposite = goal.estimateOppositeGoal(GoalLabel::Theirs);
 
-  EXPECT_EQ ( Vector3d(-FieldMap::fieldLengthX() + 1, 0, 0), opposite.getPost1() );
-  EXPECT_EQ ( Vector3d(-FieldMap::fieldLengthX() + 1, 1, 0), opposite.getPost2() );
+  EXPECT_EQ ( Vector3d(-FieldMap::getFieldLengthX() + 1, 0, 0), opposite.getPost1() );
+  EXPECT_EQ ( Vector3d(-FieldMap::getFieldLengthX() + 1, 1, 0), opposite.getPost2() );
   EXPECT_EQ ( GoalLabel::Theirs, opposite.getLabel() );
 
   goal = { Vector3d(0, 1, 0), Vector3d(1, 1, 0), GoalLabel::Unknown };
 
   opposite = goal.estimateOppositeGoal(GoalLabel::Theirs);
 
-  EXPECT_EQ ( Vector3d(0, -FieldMap::fieldLengthX() + 1, 0), opposite.getPost1() );
-  EXPECT_EQ ( Vector3d(1, -FieldMap::fieldLengthX() + 1, 0), opposite.getPost2() );
+  EXPECT_EQ ( Vector3d(0, -FieldMap::getFieldLengthX() + 1, 0), opposite.getPost1() );
+  EXPECT_EQ ( Vector3d(1, -FieldMap::getFieldLengthX() + 1, 0), opposite.getPost2() );
   EXPECT_EQ ( GoalLabel::Theirs, opposite.getLabel() );
 }
 

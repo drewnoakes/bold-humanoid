@@ -174,22 +174,22 @@ FieldSide TeamState::getKeeperBallSideEstimate() const
 
   // ASSUME the keeper is roughly in the middle of the penalty area
 
-  double keeperDistFromGoalLine = FieldMap::goalAreaLengthX() / 2.0;
+  double keeperDistFromGoalLine = FieldMap::getGoalAreaLengthX() / 2.0;
 
   const double maxPositionMeasurementError = 0.4; // TODO review this experimentally
 
   double keeperBallDist = keeper->ballRelative->norm();
 
   // Distance from the keeper within which the ball is unambiguously on our side of the field
-  double oursThreshold = (FieldMap::fieldLengthX() / 2.0) - keeperDistFromGoalLine - maxPositionMeasurementError;
+  double oursThreshold = (FieldMap::getFieldLengthX() / 2.0) - keeperDistFromGoalLine - maxPositionMeasurementError;
 
   if (keeperBallDist < oursThreshold)
     return FieldSide::Ours;
 
   // Distance from the keeper above which the ball is unambiguously on the opponent's side of the field
   double theirsThreshold = Vector2d(
-    (FieldMap::fieldLengthX() / 2.0) - keeperDistFromGoalLine + maxPositionMeasurementError,
-     FieldMap::fieldLengthY() / 2.0
+    (FieldMap::getFieldLengthX() / 2.0) - keeperDistFromGoalLine + maxPositionMeasurementError,
+    FieldMap::getFieldLengthY() / 2.0
   ).norm();
 
   if (keeperBallDist > theirsThreshold)

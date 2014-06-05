@@ -41,15 +41,15 @@ namespace bold
     static double getMaxDiagonalFieldDistance() { return d_maxDiagnoalFieldDistance; }
 
     /// The long length of the field, from goal to goal.
-    static double fieldLengthX() { return d_fieldLengthX; }
+    static double getFieldLengthX() { return d_fieldLengthX; }
 
     /// The narrow length of the field, from sideline to sideline.
-    static double fieldLengthY() { return d_fieldLengthY; }
+    static double getFieldLengthY() { return d_fieldLengthY; }
 
     /// The minimum width of field surface found outside the outer field lines.
-    static double outerMarginMinimum() { return d_outerMarginMinimum; }
+    static double getOuterMarginMinimum() { return d_outerMarginMinimum; }
 
-    static double circleRadius() { return d_circleRadius; }
+    static double getCircleRadius() { return d_circleRadius; }
 
     /// The width between each of a pair of goal posts.
     /// Distance along the Y axis is measured between the midpoint Z vectors.
@@ -57,12 +57,12 @@ namespace bold
 
     /// The longer length of the goal (penalty) area.
     /// Larger than the distance between the goal posts.
-    static double goalAreaLengthX() { return d_goalAreaLengthX; }
+    static double getGoalAreaLengthX() { return d_goalAreaLengthX; }
 
     /// The shorter length of the goal (penalty) area.
-    static double goalAreaLengthY() { return d_goalAreaLengthY; }
+    static double getGoalAreaLengthY() { return d_goalAreaLengthY; }
 
-    static double goalPostDiameter() { return d_goalPostDiameter; }
+    static double getGoalPostDiameter() { return d_goalPostDiameter; }
 
   private:
     FieldMap() = delete;

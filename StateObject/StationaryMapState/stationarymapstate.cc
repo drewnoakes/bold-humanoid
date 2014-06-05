@@ -138,7 +138,7 @@ GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
     ? perp1
     : perp2;
 
-  Vector3d fieldX = perp.normalized() * FieldMap::fieldLengthX();
+  Vector3d fieldX = perp.normalized() * FieldMap::getFieldLengthX();
 
   return GoalEstimate(d_post1 + fieldX, d_post2 + fieldX, label);
 }
@@ -176,8 +176,8 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
   static auto maxGoalPairDistanceError = Config::getSetting<double>("vision.goal-detection.max-pair-error-dist");
   const double maxPositionMeasurementError = 0.4; // TODO review this experimentally and move to config
   double theirsThreshold = Vector2d(
-    (FieldMap::fieldLengthX() / 2.0) + maxPositionMeasurementError,
-     FieldMap::fieldLengthY() / 2.0
+    (FieldMap::getFieldLengthX() / 2.0) + maxPositionMeasurementError,
+    FieldMap::getFieldLengthY() / 2.0
   ).norm();
 
   // Use what we see to try and label goal posts as belonging to either our
@@ -242,7 +242,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
       case FieldSide::Ours:
       {
         double goalDist = goalEstimate.norm();
-        if (goalDist < (FieldMap::fieldLengthX()/2.0) - maxPositionMeasurementError)
+        if (goalDist < (FieldMap::getFieldLengthX()/2.0) - maxPositionMeasurementError)
         {
           log::info("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on our side, and closest goal is too close at " << goalDist;
           return GoalLabel::Ours;

@@ -22,8 +22,8 @@ Localiser::Localiser()
   positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });
   angleErrorDegs->track([this](double value) { d_angleErrorRng = Math::createNormalRng(0, Math::degToRad(value)); });
 
-  double xMax = (FieldMap::fieldLengthX() + FieldMap::outerMarginMinimum()) / 2.0;
-  double yMax = (FieldMap::fieldLengthY() + FieldMap::outerMarginMinimum()) / 2.0;
+  double xMax = (FieldMap::getFieldLengthX() + FieldMap::getOuterMarginMinimum()) / 2.0;
+  double yMax = (FieldMap::getFieldLengthY() + FieldMap::getOuterMarginMinimum()) / 2.0;
 
   d_fieldXRng = Math::createUniformRng(-xMax, xMax);
   d_fieldYRng = Math::createUniformRng(-yMax, yMax);
