@@ -35,6 +35,9 @@
     "word-gap-ms":       { "type": "int", "min": 0, "max": 1000, "default": 0 },
     "capital-accent-hz": { "type": "int", "min": 0, "max": 5000, "default": 0 }
   },
+  "eyes": {
+    "disabled": { "type": "bool", "default": false }
+  },
   "vocaliser": {
     "announce-ball-position": { "type": "bool", "default": false, "description": "Say ball pos" }
   },

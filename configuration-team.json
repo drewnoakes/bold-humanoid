@@ -18,6 +18,9 @@
     "word-gap-ms": 5,
     "capital-accent-hz": 20
   },
+  "eyes": {
+    "disabled": false
+  },
   "vocaliser": {
     "announce-ball-position": false
   },
