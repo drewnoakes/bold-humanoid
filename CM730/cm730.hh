@@ -13,6 +13,18 @@ namespace bold
 {
   typedef unsigned char uchar;
 
+  namespace instruction
+  {
+    constexpr uchar Ping = 1;
+    constexpr uchar Read = 2;
+    constexpr uchar Write = 3;
+    constexpr uchar RegWrite = 4;
+    constexpr uchar Action = 5;
+    constexpr uchar Reset = 6;
+    constexpr uchar SyncWrite = 131; // 0x83
+    constexpr uchar BulkRead = 146; // 0x92
+  }
+
   class BulkReadTable
   {
   public:
@@ -173,7 +185,6 @@ namespace bold
     }
 
     static std::string getCommResultName(CommResult responseCode);
-    static std::string getInstructionName(uchar instructionId);
 
     //
     // ----------------- Instance members

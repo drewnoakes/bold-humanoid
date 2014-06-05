@@ -20,15 +20,6 @@ using namespace std;
 #define PARAMETER          (5)
 #define DEFAULT_BAUDNUMBER (1)
 
-#define INST_PING          (1)
-#define INST_READ          (2)
-#define INST_WRITE         (3)
-#define INST_REG_WRITE     (4)
-#define INST_ACTION        (5)
-#define INST_RESET         (6)
-#define INST_SYNC_WRITE    (131)   // 0x83
-#define INST_BULK_READ     (146)   // 0x92
-
 #define DEBUG_PRINT        (false)
 
 //////////
@@ -45,7 +36,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 
   // Create a cached TX packet as it'll be identical each time
   d_txPacket[ID]          = CM730::ID_BROADCAST;
-  d_txPacket[INSTRUCTION] = INST_BULK_READ;
+  d_txPacket[INSTRUCTION] = instruction::BulkRead;
 
   uchar p = PARAMETER;
 
@@ -126,20 +117,19 @@ string CM730::getCommResultName(CommResult responseCode)
   }
 }
 
-string CM730::getInstructionName(uchar instructionId)
+string getInstructionName(uchar instructionId)
 {
   switch (instructionId)
   {
-    case INST_PING:       return "PING";
-    case INST_READ:       return "READ";
-    case INST_WRITE:      return "WRITE";
-    case INST_REG_WRITE:  return "REG_WRITE";
-    case INST_ACTION:     return "ACTION";
-    case INST_RESET:      return "RESET";
-    case INST_SYNC_WRITE: return "SYNC_WRITE";
-    case INST_BULK_READ:  return "BULK_READ";
-
-    default:              return "UNKNOWN";
+    case instruction::Ping:      return "PING";
+    case instruction::Read:      return "READ";
+    case instruction::Write:     return "WRITE";
+    case instruction::RegWrite:  return "REG_WRITE";
+    case instruction::Action:    return "ACTION";
+    case instruction::Reset:     return "RESET";
+    case instruction::SyncWrite: return "SYNC_WRITE";
+    case instruction::BulkRead:  return "BULK_READ";
+    default:                       return "UNKNOWN";
   }
 }
 
@@ -296,7 +286,7 @@ CommResult CM730::ping(uchar id, MX28Alarm* error)
   uchar rxpacket[6];
 
   txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_PING;
+  txpacket[INSTRUCTION]  = instruction::Ping;
   txpacket[LENGTH]       = 2;
 
   CommResult result = txRxPacket(txpacket, rxpacket);
@@ -316,7 +306,7 @@ CommResult CM730::reset(uchar id)
   uchar rxpacket[6];
 
   txpacket[ID]            = id;
-  txpacket[INSTRUCTION]   = INST_RESET;
+  txpacket[INSTRUCTION]   = instruction::Reset;
   txpacket[LENGTH] = 2;
 
   return txRxPacket(txpacket, rxpacket);
@@ -328,7 +318,7 @@ CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* er
   uchar rxpacket[7];
 
   txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_READ;
+  txpacket[INSTRUCTION]  = instruction::Read;
   txpacket[PARAMETER]    = address;
   txpacket[PARAMETER+1]  = 1;
   txpacket[LENGTH]       = 4;
@@ -351,7 +341,7 @@ CommResult CM730::readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* e
   uchar rxpacket[8];
 
   txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_READ;
+  txpacket[INSTRUCTION]  = instruction::Read;
   txpacket[PARAMETER]    = address;
   txpacket[PARAMETER+1]  = 2;
   txpacket[LENGTH]       = 4;
@@ -377,7 +367,7 @@ CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar 
   uchar rxpacket[6 + length];
 
   txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_READ;
+  txpacket[INSTRUCTION]  = instruction::Read;
   txpacket[PARAMETER]    = fromAddress;
   txpacket[PARAMETER+1]  = length;
   txpacket[LENGTH]       = 4;
@@ -415,7 +405,7 @@ CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* err
   ASSERT( (id == ID_CM && address < CM730::MAXNUM_ADDRESS) || (address < MX28::MAXNUM_ADDRESS) );
 
   txpacket[ID]           = id;
-  txpacket[INSTRUCTION]  = INST_WRITE;
+  txpacket[INSTRUCTION]  = instruction::Write;
   txpacket[PARAMETER]    = address;
   txpacket[PARAMETER+1]  = value;
   txpacket[LENGTH]       = 4;
@@ -438,7 +428,7 @@ CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* er
 
   txpacket[ID]           = id;
   txpacket[LENGTH]       = 5;
-  txpacket[INSTRUCTION]  = INST_WRITE;
+  txpacket[INSTRUCTION]  = instruction::Write;
   txpacket[PARAMETER]    = address;
   txpacket[PARAMETER+1]  = (uchar)getLowByte(value);
   txpacket[PARAMETER+2]  = (uchar)getHighByte(value);
@@ -471,7 +461,7 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
 
   txpacket[ID]            = ID_BROADCAST;
   txpacket[LENGTH]        = paramLength + 4;
-  txpacket[INSTRUCTION]   = INST_SYNC_WRITE;
+  txpacket[INSTRUCTION]   = instruction::SyncWrite;
   txpacket[PARAMETER]     = fromAddress;
   txpacket[PARAMETER + 1] = bytesPerDevice - 1;
 
@@ -529,7 +519,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
   if (txpacket[ID] != ID_BROADCAST)
   {
-    int expectedLength = txpacket[INSTRUCTION] == INST_READ
+    int expectedLength = txpacket[INSTRUCTION] == instruction::Read
       ? txpacket[PARAMETER+1] + 6
       : 6;
 
@@ -599,7 +589,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
       }
     }
   }
-  else if (txpacket[INSTRUCTION] == INST_BULK_READ)
+  else if (txpacket[INSTRUCTION] == instruction::BulkRead)
   {
     ASSERT(bulkRead);
 
