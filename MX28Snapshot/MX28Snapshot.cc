@@ -19,20 +19,12 @@ MX28Snapshot::MX28Snapshot(uchar mx28ID, BulkReadTable const& data, int jointOff
 
   presentPositionValue = static_cast<ushort>(Math::clamp(data.readWord(MX28::P_PRESENT_POSITION_L) - jointOffset, 0, (int)MX28::MAX_VALUE));
   presentPosition = MX28::value2Rads(presentPositionValue);
-
   presentSpeedRPM = MX28::value2Rpm(data.readWord(MX28::P_PRESENT_SPEED_L));
 
-  // TODO migrate to MX28::value2Load(int)
-  auto presentLoadInt = data.readWord(MX28::P_PRESENT_LOAD_L);
-  if (presentLoadInt < 1024)
-    presentLoad = presentLoadInt / 1023.0;
-  else
-    presentLoad = (presentLoadInt - 1024) / 1023.0;
+  presentLoad = MX28::value2Load(data.readWord(MX28::P_PRESENT_LOAD_L));
 
-  // TODO migrate to MX28::value2Voltage(uchar)
-  presentVoltage = data.readByte(MX28::P_PRESENT_VOLTAGE) * 0.1;
-
-  presentTemp = data.readByte(MX28::P_PRESENT_TEMPERATURE);
+  presentVoltage = MX28::value2Voltage(data.readByte(MX28::P_PRESENT_VOLTAGE));
+  presentTemp = MX28::value2Centigrade(data.readByte(MX28::P_PRESENT_TEMPERATURE));
 }
 
 StaticMX28State::StaticMX28State(uchar mx28ID, BulkReadTable const& data)

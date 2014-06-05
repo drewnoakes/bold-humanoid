@@ -57,6 +57,8 @@ namespace bold
     static uchar voltage2Value(double volts);
     static double value2Voltage(uchar value);
 
+    static double value2Load(ushort value);
+
     static std::string getAddressName(uchar address);
 
     /** EEPROM and RAM p. 4 in MX28 Technical Specifications PDF

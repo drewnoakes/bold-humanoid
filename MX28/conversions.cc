@@ -51,6 +51,8 @@ int MX28::value2Centigrade(uchar value) { return value; }
 uchar MX28::voltage2Value(double volts) { ASSERT(volts > 0); ASSERT(volts < 25); return static_cast<uchar>(volts*10); }
 double MX28::value2Voltage(uchar value) { return value / 10.0; }
 
+double MX28::value2Load(ushort value) { return (value < 1024 ? value : value - 1024) / 1023.0; }
+
 std::string MX28::getAddressName(uchar address)
 {
   switch (address)
