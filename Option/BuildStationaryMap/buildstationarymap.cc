@@ -26,19 +26,19 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
 
   if (agentFrame->isBallVisible())
   {
-    integrate(d_ballEstimates, agentFrame->getBallObservation().value(), 0.2); // TODO magic number!
+    integrate(d_ballEstimates, agentFrame->getBallObservation().value(), StationaryMapState::BallMergeDistance);
     hasChange = true;
   }
 
   for (auto const& goal : agentFrame->getGoalObservations())
   {
-    integrate(d_goalEstimates, goal, 0.5); // TODO magic number!
+    integrate(d_goalEstimates, goal, StationaryMapState::GoalMergeDistance);
     hasChange = true;
   }
 
   for (auto const& teammate : agentFrame->getTeamMateObservations())
   {
-    integrate(d_teammateEstimates, teammate, 0.5); // TODO magic number!
+    integrate(d_teammateEstimates, teammate, StationaryMapState::TeammateMergeDistance);
     hasChange = true;
   }
 

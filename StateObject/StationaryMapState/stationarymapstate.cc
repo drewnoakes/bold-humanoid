@@ -260,7 +260,7 @@ void StationaryMapState::findGoals()
 
       // TODO error should be a function of distance, as uncertainty increases
 
-      if (error < 0.5) // TODO magic number
+      if (error < GoalMergeDistance)
       {
         GoalLabel label;
         if (post1.getLabel() == GoalLabel::Theirs || post2->getLabel() == GoalLabel::Theirs)
@@ -489,7 +489,7 @@ bool StationaryMapState::needMoreSightingsOfGoalPostAt(Eigen::Vector3d goalPos) 
   for (auto const& goalPostEstimate : d_goalPostEstimates)
   {
     double dist = (goalPostEstimate.getAverage() - goalPos).norm();
-    if (dist < 0.5) // TODO magic number!!
+    if (dist < GoalMergeDistance)
       return goalPostEstimate.getCount() < GoalSamplesNeeded;
   }
   return false;
@@ -500,7 +500,7 @@ bool StationaryMapState::needMoreSightingsOfBallAt(Eigen::Vector3d ballPos) cons
   for (auto const& ballEstimate : d_ballEstimates)
   {
     double dist = (ballEstimate.getAverage() - ballPos).norm();
-    if (dist < 0.3) // TODO magic number!!
+    if (dist < BallMergeDistance)
       return ballEstimate.getCount() < BallSamplesNeeded;
   }
   return false;
