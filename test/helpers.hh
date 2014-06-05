@@ -1,10 +1,14 @@
 #pragma once
 
 #include "gtest/gtest.h"
+
 #include "../util/Maybe.hh"
 #include "../geometry/LineSegment/linesegment.hh"
 
 #include <Eigen/Core>
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+#include <iostream>
 
 inline ::testing::AssertionResult VectorsEqual(Eigen::Vector3d const& a, Eigen::Vector3d const& b, const float delta = 0.00001) {
   double d = (a-b).norm();
@@ -57,6 +61,34 @@ inline ::testing::AssertionResult LinesEqual(bold::LineSegment<T,dim> const& a, 
   else
     return ::testing::AssertionFailure() << "Actual: " << b << ", expected: " << a << " d1=" << d1 << " d2=" << d2;
 }
+
+//PrintTo(const T&, ostream*)
+
+inline std::ostream& operator<<(std::ostream& stream, Eigen::Vector2i const& v)
+{
+  return stream << "(" << v.x() << ", " << v.y() << ")";
+}
+
+inline std::ostream& operator<<(std::ostream& stream, Eigen::Vector2f const& v)
+{
+  return stream << "(" << v.x() << ", " << v.y() << ")";
+}
+
+inline std::ostream& operator<<(std::ostream& stream, Eigen::Vector2d const& v)
+{
+  return stream << "(" << v.x() << ", " << v.y() << ")";
+}
+
+inline std::ostream& operator<<(std::ostream& stream, Eigen::Vector3d const& v)
+{
+  return stream << "(" << v.x() << ", " << v.y() << ", " << v.z() << ")";
+}
+
+inline bool operator==(Eigen::Vector2i const& a, Eigen::Vector2i const& b)
+{
+  return a.x() == b.x() && a.y() == b.y();
+}
+
 
 #define ASSERT_EMPTY(condition) \
   GTEST_TEST_BOOLEAN_(!(condition.hasValue()), #condition, Non-empty, Empty, \
