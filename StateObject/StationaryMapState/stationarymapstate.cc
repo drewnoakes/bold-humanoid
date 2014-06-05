@@ -347,7 +347,6 @@ void StationaryMapState::calculateTurnAngle()
 
   // TODO don't assume the goal is theirs!
   // TODO don't assume we only see one goal!
-  // TODO consider obstacles in the goal -- don't just aim for the middle
   // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
   // TODO some decisions about turning should only be made once the entire area has been surveyed -- no way to express this currently
 
