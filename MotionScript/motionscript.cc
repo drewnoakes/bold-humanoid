@@ -173,10 +173,10 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
             if (stage->pGains[jointId-1] != Stage::DEFAULT_P_GAIN)
             {
               writer.String("pGains");
-              writer.StartArray();
+              writer.StartObject();
               for (int j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
-                writer.Int(stage->pGains[j-1]);
-              writer.EndArray();
+                writer.String(JointName::getJsonName(j).c_str()).Uint(stage->pGains[j-1]);
+              writer.EndObject();
               break;
             }
           }
@@ -192,10 +192,10 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
                   writer.String("pauseCycles").Int(step.pauseCycles);
                 if (step.moveCycles != 0) // TODO a zero value here should be an error
                   writer.String("moveCycles").Int(step.moveCycles);
-                writer.String("values").StartArray();
+                writer.String("values").StartObject();
                 for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-                  writer.Int(step.values[jointId-1]);
-                writer.EndArray();
+                  writer.String(JointName::getJsonName(jointId).c_str()).Uint(step.values[jointId-1]);
+                writer.EndObject();
               }
               writer.EndObject();
             }
