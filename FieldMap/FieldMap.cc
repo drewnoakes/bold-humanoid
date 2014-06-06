@@ -2,6 +2,7 @@
 
 #include "../Config/config.hh"
 #include "../geometry/LineSegment/linesegment.hh"
+#include "../LineJunctionFinder/linejunctionfinder.hh"
 
 #include <vector>
 #include <Eigen/Core>
@@ -13,6 +14,7 @@ using namespace Eigen;
 
 vector<LineSegment3d> FieldMap::d_fieldLines;
 vector<LineSegment3d> FieldMap::d_fieldLineEdges;
+vector<LineJunction, aligned_allocator<LineJunction>> FieldMap::d_fieldLineJunctions;
 vector<LineSegment3d> FieldMap::d_circleLines;
 vector<Vector3d> FieldMap::d_goalPostPositions;
 vector<Vector3d> FieldMap::d_ourGoalPostPositions;
@@ -97,6 +99,9 @@ void FieldMap::initialise()
 
   // CENTER LINE
   d_fieldLines.emplace_back(Vector3d(0, -halfFieldY, 0), Vector3d(0, halfFieldY, 0));
+
+  LineJunctionFinder lineJunctionFinder;
+  d_fieldLineJunctions = lineJunctionFinder.findLineJunctions(d_fieldLines);
 
   // CIRCLE
   int segments = Config::getStaticValue<int>("world.circle-segment-count");

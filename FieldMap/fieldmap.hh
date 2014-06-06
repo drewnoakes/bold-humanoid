@@ -7,6 +7,8 @@
 
 namespace bold
 {
+  class LineJunction;
+
   enum class FieldSide
   {
     Unknown,
@@ -26,6 +28,8 @@ namespace bold
 
     /// Returns the positions of all field line edges (two per field line), in the world frame.
     static std::vector<LineSegment3d> const& getFieldLineEdges() { return d_fieldLineEdges; }
+
+    static std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> const& getFieldLineJunctions() { return d_fieldLineJunctions; }
 
     static std::vector<LineSegment3d> const& getCircleLines() { return d_circleLines; }
 
@@ -55,11 +59,12 @@ namespace bold
     /// Distance along the Y axis is measured between the midpoint Z vectors.
     static double getGoalY() { return d_goalY; };
 
-    /// The longer length of the goal (penalty) area.
-    /// Larger than the distance between the goal posts.
+    /// The shorter length of the goal (penalty) area.
+    /// Perpendicular to goal line
     static double getGoalAreaLengthX() { return d_goalAreaLengthX; }
 
-    /// The shorter length of the goal (penalty) area.
+    /// The longer length of the goal (penalty) area.
+    /// Larger than the distance between the goal posts.
     static double getGoalAreaLengthY() { return d_goalAreaLengthY; }
 
     static double getGoalPostDiameter() { return d_goalPostDiameter; }
@@ -69,6 +74,7 @@ namespace bold
 
     static std::vector<LineSegment3d> d_fieldLines;
     static std::vector<LineSegment3d> d_fieldLineEdges;
+    static std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> d_fieldLineJunctions;
     static std::vector<LineSegment3d> d_circleLines;
     static std::vector<Eigen::Vector3d> d_goalPostPositions;
     static std::vector<Eigen::Vector3d> d_ourGoalPostPositions;
