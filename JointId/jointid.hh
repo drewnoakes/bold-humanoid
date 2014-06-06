@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <stdexcept>
+
+#include "../util/assert.hh"
 
 namespace bold
 {
@@ -166,6 +169,48 @@ namespace bold
         case JointId::HEAD_TILT:        return "head-tilt";
         default:                        return "unknown";
       }
+    }
+
+    static std::string getJsonPairName(uchar jointId)
+    {
+      return getJsonPairName((JointId)jointId);
+    }
+
+    static std::string getJsonPairName(JointId jointId)
+    {
+      switch (jointId)
+      {
+        case JointId::R_SHOULDER_PITCH: return "shoulder-pitch";
+        case JointId::R_SHOULDER_ROLL:  return "shoulder-roll";
+        case JointId::R_ELBOW:          return "elbow";
+        case JointId::R_HIP_YAW:        return "hip-yaw";
+        case JointId::R_HIP_ROLL:       return "hip-roll";
+        case JointId::R_HIP_PITCH:      return "hip-pitch";
+        case JointId::R_KNEE:           return "knee";
+        case JointId::R_ANKLE_PITCH:    return "ankle-pitch";
+        case JointId::R_ANKLE_ROLL:     return "ankle-roll";
+        default: throw std::runtime_error("Should access joint pair using base ID (of right side, the lower number)");
+      }
+    }
+  };
+
+  class JointPairs
+  {
+  public:
+    JointPairs() = delete;
+
+    static constexpr bool isBase(JointId jointId) { return isBase((uchar)jointId); }
+    static constexpr bool isBase(uchar jointId) { return jointId % 2 == 1 && jointId != (uchar)JointId::HEAD_PAN; }
+
+    static JointId getPartner(JointId jointId)
+    {
+      return (JointId)getPartner((uchar)jointId);
+    }
+
+    static uchar getPartner(uchar jointId)
+    {
+      ASSERT(!isHeadJoint((JointId)jointId));
+      return static_cast<uchar>(jointId + (jointId % 2 == 0 ? -1 : 1));
     }
   };
 }

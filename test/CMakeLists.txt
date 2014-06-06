@@ -18,6 +18,7 @@ set(TEST_SOURCES
   EigenTests.cc
   HalfHullBuilderTests.cc
   IntegralImageTests.cc
+  JointIdTests.cc
   JointSelectionTests.cc
   LinearSmootherTests.cc
   LineJunctionFinderTests.cc
