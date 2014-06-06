@@ -5,6 +5,7 @@
 #include "../MotionTask/motiontask.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../State/state.hh"
+#include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../ThreadUtil/threadutil.hh"
 #include "../util/assert.hh"
@@ -54,6 +55,11 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> const& selectedJoints)
   {
     // Special treatment for the first step of a new script
 
+    auto bodyControl = State::get<BodyControlState>();
+
+    if (!bodyControl)
+      return false;
+
     d_state = MotionScriptRunnerStatus::Running;
     d_isPlayingFinished = false;
     d_sectionStepIndex = 0;
@@ -67,20 +73,17 @@ bool MotionScriptRunner::step(shared_ptr<JointSelection> const& selectedJoints)
 
     memset(&d_mainAngles1024, 0, sizeof(d_mainAngles1024));
 
-    auto hw = State::get<HardwareState>();
-
-    ASSERT(hw);
-
+    // Initialise all joints
     for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     {
-      // copy the current pose
-      d_values[jointId] = hw->getMX28State(jointId).presentPositionValue;
+      // Start the first interpolation from the joint's current control value
+      d_values[jointId] = bodyControl->getJoint((JointId)jointId).value;
 
       // Only update selected joints
       if (!(*selectedJoints)[jointId])
         continue;
 
-      d_keyFrameTargetAngles[jointId] = hw->getMX28State(jointId).presentPositionValue;
+      d_keyFrameTargetAngles[jointId] = d_values[jointId];
       d_sectionStartGoalSpeeds[jointId] = 0;
       d_keyFrameDeltaValue[jointId] = 0;
       d_goalSpeeds[jointId] = 0;
