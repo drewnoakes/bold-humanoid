@@ -317,6 +317,14 @@ void StationaryMapState::findGoals()
       }
     }
   }
+
+  // If we only see our goal, synthesize an estimate of the opposite goal position
+  if (d_goalEstimates.size() == 1)
+  {
+    auto const& goal = d_goalEstimates[0];
+    if (goal.getLabel() == GoalLabel::Ours)
+      d_goalEstimates.push_back(goal.estimateOppositeGoal(GoalLabel::Theirs));
+  }
 }
 
 void StationaryMapState::selectKick()
