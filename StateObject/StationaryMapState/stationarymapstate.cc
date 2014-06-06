@@ -389,57 +389,56 @@ void StationaryMapState::calculateTurnAngle()
   // TODO handle the case where we only see one goal post and it's labelled as belonging to the opponent
   // TODO some decisions about turning should only be made once the entire area has been surveyed -- no way to express this currently
 
-  // Take the first goal observation
-  // TODO does it matter than we only check the first goal observation?
-  GoalEstimate& goal = d_goalEstimates[0];
-
-  // If it's our goal, synthesize an estimate of the opposite goal
-  if (goal.getLabel() == GoalLabel::Ours)
-    goal = goal.estimateOppositeGoal(GoalLabel::Theirs);
-
-  // Find desirable target positions
-  vector<Vector3d> targetPositions = {
-    goal.getMidpoint(0.2),
-    goal.getMidpoint(0.4),
-    goal.getMidpoint(0.5),
-    goal.getMidpoint(0.6),
-    goal.getMidpoint(0.8)
-  };
-
-  // Convert the target positions to angles
-  vector<double> targetAngles;
-  targetAngles.reserve(targetPositions.size());
-  std::transform(targetPositions.begin(), targetPositions.end(),
-                 back_inserter(targetAngles),
-                 [](Vector3d const& target) { return Math::angleToPoint(target); });
-
   // Enumerate kicks to find the angle which requires the least turning and/or repositioning
   double closestAngle = std::numeric_limits<double>::max();
   Vector2d closestBallPos = {};
-  bool found = false;
+  bool foundTurn = false;
 
-  for (shared_ptr<Kick const> const& kick : Kick::getAll())
+  for (GoalEstimate const& goal : d_goalEstimates)
   {
-    Vector2d ballPos = kick->getIdealBallPos();
-    Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
-    ASSERT(endPos.hasValue());
-    double angle = Math::angleToPoint(*endPos);
-    for (double const& targetAngle : targetAngles)
-    {
-      if (!d_occlusionMap.isOpen(angle, endPos->norm()))
-        continue;
+    // Don't turn towards our goal
+    if (goal.getLabel() == GoalLabel::Ours)
+      continue;
 
-      if (fabs(closestAngle) > fabs(angle - targetAngle))
+    // Find desirable target positions
+    vector<Vector3d> targetPositions = {
+      goal.getMidpoint(0.2),
+      goal.getMidpoint(0.4),
+      goal.getMidpoint(0.5),
+      goal.getMidpoint(0.6),
+      goal.getMidpoint(0.8)
+    };
+
+    // Convert the target positions to angles
+    vector<double> targetAngles;
+    targetAngles.reserve(targetPositions.size());
+    std::transform(targetPositions.begin(), targetPositions.end(),
+      back_inserter(targetAngles),
+      [ ](Vector3d const& target) { return Math::angleToPoint(target); });
+
+    for (shared_ptr<Kick const> const& kick : Kick::getAll())
+    {
+      Vector2d ballPos = kick->getIdealBallPos();
+      Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
+      ASSERT(endPos.hasValue());
+      double angle = Math::angleToPoint(*endPos);
+      for (double const& targetAngle : targetAngles)
       {
-        closestAngle = angle - targetAngle;
-        closestBallPos = ballPos;
-        found = true;
-        log::info("StationaryMapState::calculateTurnAngle") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos << " best yet";
+        if (!d_occlusionMap.isOpen(angle, endPos->norm()))
+          continue;
+
+        if (fabs(closestAngle) > fabs(angle - targetAngle))
+        {
+          closestAngle = angle - targetAngle;
+          closestBallPos = ballPos;
+          foundTurn = true;
+          log::info("StationaryMapState::calculateTurnAngle") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos << " best yet";
+        }
       }
     }
   }
 
-  if (found)
+  if (foundTurn)
   {
     d_turnAngleRads = -closestAngle;
     d_turnBallPos = closestBallPos;
