@@ -89,4 +89,5 @@ namespace bold
   };
 
   typedef LineSegment2<double> LineSegment2d;
+  typedef LineSegment2<float> LineSegment2f;
 }
