@@ -351,7 +351,7 @@ void StationaryMapState::selectKick()
 
     // Determine whether the end pos is advantageous
     bool isOnTarget = false;
-    for (auto& goal : d_goalEstimates)
+    for (auto const& goal : d_goalEstimates)
     {
       // Currently, only kick toward the goal
 
