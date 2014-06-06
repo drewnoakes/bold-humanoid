@@ -22,11 +22,18 @@ Localiser::Localiser()
   positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });
   angleErrorDegs->track([this](double value) { d_angleErrorRng = Math::createNormalRng(0, Math::degToRad(value)); });
 
-  double xMax = (FieldMap::getFieldLengthX() + FieldMap::getOuterMarginMinimum()) / 2.0;
-  double yMax = (FieldMap::getFieldLengthY() + FieldMap::getOuterMarginMinimum()) / 2.0;
+  double fieldXMax = (FieldMap::getFieldLengthX() + FieldMap::getOuterMarginMinimum()) / 2.0;
+  double fieldYMax = (FieldMap::getFieldLengthY() + FieldMap::getOuterMarginMinimum()) / 2.0;
+  d_fieldXRng = Math::createUniformRng(-fieldXMax, fieldXMax);
+  d_fieldYRng = Math::createUniformRng(-fieldYMax, fieldYMax);
 
-  d_fieldXRng = Math::createUniformRng(-xMax, xMax);
-  d_fieldYRng = Math::createUniformRng(-yMax, yMax);
+  double goalAreaXMin = -FieldMap::getFieldLengthX() / 2;
+  double goalAreaXMax = goalAreaXMin + FieldMap::getGoalAreaLengthX();
+  double goalAreaYMax = FieldMap::getGoalAreaLengthY() / 2.0;
+
+  d_goalAreaXRng = Math::createUniformRng(goalAreaXMin, goalAreaXMax);
+  d_goalAreaYRng = Math::createUniformRng(-goalAreaYMax, goalAreaYMax);
+
   d_thetaRng  = Math::createUniformRng(-M_PI, M_PI);
 
   switch (d_filterType)

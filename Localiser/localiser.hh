@@ -61,6 +61,8 @@ namespace bold
 
     std::function<double()> d_fieldXRng;
     std::function<double()> d_fieldYRng;
+    std::function<double()> d_goalAreaXRng;
+    std::function<double()> d_goalAreaYRng;
     std::function<double()> d_thetaRng;
     std::function<double()> d_positionErrorRng;
     std::function<double()> d_angleErrorRng;
