@@ -60,6 +60,13 @@ void handleShutdownSignal(int sig)
 //   motionScriptFile.toDotText(cout);
 // }
 
+//void rewriteMotionScriptJSON()
+//{
+//  string path = "/home/drew/bold-humanoid/motionscripts/";
+//  for (auto const& script : bold::MotionScript::loadAllInPath(path))
+//    script->writeJsonFile(path + script->getName() + ".json");
+//}
+
 vector<string> banners = {
   "\n╔══╗────╔╗╔╗╔╗──────╔╗╔═╗\n║╔╗╠═╦╗╔╝║║╚╝╠═╦═╗╔╦╣╚╣═╣\n║╔╗║╬║╚╣╬║║╔╗║╩╣╬╚╣╔╣╔╬═║\n╚══╩═╩═╩═╝╚╝╚╩═╩══╩╝╚═╩═╝",
   "\n╔══╗───╔╗──╔╗╔╗─╔╗───────╔╗\n║╔╗║───║║──║║║║─║║──────╔╝╚╗\n║╚╝╚╦══╣║╔═╝║║╚═╝╠══╦══╦╩╗╔╬══╗\n║╔═╗║╔╗║║║╔╗║║╔═╗║║═╣╔╗║╔╣║║══╣\n║╚═╝║╚╝║╚╣╚╝║║║─║║║═╣╔╗║║║╚╬══║\n╚═══╩══╩═╩══╝╚╝─╚╩══╩╝╚╩╝╚═╩══╝",
@@ -97,6 +104,8 @@ int main(int argc, char **argv)
   srand(time(0));
 
 //  convertMotionFile();
+//  rewriteMotionScriptJSON();
+//  exit(0);
 
   // defaults
   string configurationFile("configuration-agent.json");
