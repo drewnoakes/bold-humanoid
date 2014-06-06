@@ -6,8 +6,8 @@
 using namespace bold;
 using namespace std;
 
-//ushort MX28::getMirrorValue(ushort value) { return MAX_VALUE + 1 - value; }
-//double MX28::getMirrorAngle(double angle) { return -angle; }
+ushort MX28::getMirrorValue(ushort value) { return (MAX_VALUE + 1 - value) & MAX_VALUE; }
+double MX28::getMirrorAngle(double angle) { return -angle; }
 
 ushort MX28::degs2Value(double angle) { return static_cast<ushort>(Math::clamp(static_cast<int>(round(angle*RATIO_DEGS2VALUE)), -CENTER_VALUE, MX28::MAX_VALUE-CENTER_VALUE) + CENTER_VALUE); }
 double MX28::value2Degs(ushort value) { return (double)((int)value-(int)CENTER_VALUE)*RATIO_VALUE2DEGS; }

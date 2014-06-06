@@ -34,8 +34,8 @@ namespace bold
     static constexpr double RATIO_VALUE2TORQUE = 0.01;
     static constexpr double RATIO_TORQUE2VALUE = 100;
 
-//  static ushort getMirrorValue(ushort value);
-//  static double getMirrorAngle(double angle);
+    static ushort getMirrorValue(ushort value);
+    static double getMirrorAngle(double angle);
 
     static ushort clampValue(int value);
 

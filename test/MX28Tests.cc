@@ -3,14 +3,27 @@
 #include "../MX28/mx28.hh"
 
 using namespace bold;
+using namespace std;
 
-// TEST (MX28Tests, getMirrorValue)
-// {
-//   EXPECT_EQ( 0x0000, MX28::getMirrorValue(0x0FFF) );
-//   EXPECT_EQ( 0x0FFF, MX28::getMirrorValue(0x0000) );
-//   EXPECT_EQ( 0x0800, MX28::getMirrorValue(0x0800) );
-//   EXPECT_EQ( 0x0801, MX28::getMirrorValue(0x07FF) );
-// }
+TEST (MX28Tests, getMirrorValue)
+{
+  vector<pair<ushort,ushort>> mirrors = {
+    { 0x0800, 0x0800 },
+    { 0x0001, 0x0FFF },
+    { 0x0000, 0x0000 },
+    { 0x0801, 0x07FF },
+    { 2048, 2048 },
+    { 2038, 2058 },
+    { 3048, 1048 },
+    { 4048, 48 }
+  };
+
+  for (auto const& pair : mirrors)
+  {
+    EXPECT_EQ( pair.first,  MX28::getMirrorValue(pair.second) ) << std::hex << pair.first << " should be the mirror of " << pair.second;
+    EXPECT_EQ( pair.second, MX28::getMirrorValue(pair.first) ) << std::hex << pair.second << " should be the mirror of " << pair.first;
+  }
+}
 
 TEST (MX28Tests, value2Rads)
 {
