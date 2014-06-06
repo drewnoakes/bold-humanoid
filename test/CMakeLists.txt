@@ -17,6 +17,7 @@ set(TEST_SOURCES
   DistributionTrackerTests.cc
   EigenTests.cc
   HalfHullBuilderTests.cc
+  IncrementalRegressionTests.cc
   IntegralImageTests.cc
   JointIdTests.cc
   JointSelectionTests.cc

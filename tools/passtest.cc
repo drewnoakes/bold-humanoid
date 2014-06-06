@@ -99,7 +99,7 @@ int main(int argc, char **argv)
   // TODO: this will crash
   auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels), 0);
 
-  const vector<shared_ptr<PixelLabel>> blobPixelLabels = { ballLabel, goalLabel };
+  const vector<shared_ptr<PixelLabel>> blobPixelLabels = { ballLabel, goalLabel, lineLabel };
   auto blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
 
   // Resources for finding line dots
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
   for (int i = 0; i < loopCount; i++)
     blobDetectPass->detectBlobs(timer);
   cout << "BlobDetectPass::detectBlobs ran " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
-                                                                    
+  
 
   //
   // FIND LINES (RandomPairLineFinder)

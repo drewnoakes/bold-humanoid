@@ -3,6 +3,8 @@
 #include "../../CameraModel/cameramodel.hh"
 #include <Eigen/LU>
 #include "../../util/memory.hh"
+#include "../../IncrementalRegression/incrementalregression.hh"
+
 #include <Eigen/StdVector>
 #include <Eigen/Sparse>
 
