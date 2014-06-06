@@ -81,6 +81,11 @@ namespace bold
       }
     }
     
+    Eigen::Vector2f getBeta() const
+    {
+      return d_beta;
+    }
+
     LineSegment2f getLineSegment()
     {
       solve();
@@ -93,6 +98,19 @@ namespace bold
     {
       return d_nPoints;
     }
+
+    void merge(IncrementalRegression const& other)
+    {
+      d_xxSum += other.d_xxSum;
+      d_xySum += other.d_xySum;
+      d_nPoints += other.d_nPoints;
+      d_xStart = std::min(d_xStart, other.d_xStart);
+      d_xEnd = std::max(d_xEnd, other.d_xEnd);
+      d_sqErrorSum += other.d_sqErrorSum;
+      d_RMS = sqrt(d_sqErrorSum / d_nPoints);
+      solve();
+    }
+
 private:
     Eigen::Matrix2f d_xxSum;
     Eigen::Vector2f d_xySum;

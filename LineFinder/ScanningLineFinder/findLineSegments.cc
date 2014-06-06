@@ -11,7 +11,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   linePointsMatrix.setFromTriplets(begin(triplets), end(triplets));
 
   vector<IncrementalRegression,Eigen::aligned_allocator<IncrementalRegression>> regressions;
-;
+
   // Maximum distance between a point can be away from the head of
   // line segment to be considered as a part of it
   float maxDist = d_maxHeadDist->getValue();;
@@ -46,7 +46,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
           {
             // Error should not be more than current RMSE
             auto e = regression.fit(point);
-            if (e > 1.0f)
+            if (e > 3.0f)
               continue;
             error = e;
           }
@@ -82,10 +82,13 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   float minLength = d_minLength->getValue();
   float minCoverage = d_minCoverage->getValue();
 
-  vector<LineSegment2i> lineSegments;
+  cout << "---" << endl;
+
+  vector<IncrementalRegression,Eigen::aligned_allocator<IncrementalRegression>> acceptedRegressions;
+  
   for (auto& regression : regressions)
   {
-    if (regression.getNPoints() < 2)
+    if (regression.getNPoints() < 3)
       continue;
 
     auto lineSegment = regression.getLineSegment();
@@ -98,13 +101,39 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
     if (coverage < minCoverage)
       continue;
 
-    /*
-    auto errors = (regState.X * regState.beta - regState.y).head(regState.n);
-    auto rms = sqrt(errors.dot(errors) / regState.n);
-    if (rms > maxRMSError)
-      continue;
-    */
-    lineSegments.emplace_back(lineSegment.cast<int>());
+    acceptedRegressions.push_back(regression);
   }
+
+  bool tryMerge = true;
+  while (tryMerge)
+  {
+    tryMerge = false;
+    // Try to connect
+    vector<IncrementalRegression,Eigen::aligned_allocator<IncrementalRegression>> newAcceptedRegressions;
+    for (unsigned i = 0; i < acceptedRegressions.size(); ++i)
+    {
+      auto reg1 = acceptedRegressions[i];
+      for (unsigned j = i + 1; j < acceptedRegressions.size(); ++j)
+      {
+        auto reg2 = acceptedRegressions[j];
+        auto beta1 = reg1.getBeta();
+        auto beta2 = reg2.getBeta();
+        if (std::abs(beta1(0) - beta2(0)) < 0.05 && std::abs(beta1(1) - beta2(1)) < 20)
+        {
+          reg1.merge(reg2);
+          tryMerge = true;
+          for (unsigned j2 = j + 1; j2 < acceptedRegressions.size(); ++j2)
+            newAcceptedRegressions.push_back(acceptedRegressions[j2]);
+          j = i = acceptedRegressions.size();
+        }
+      }
+      newAcceptedRegressions.push_back(reg1);
+    }
+    acceptedRegressions = newAcceptedRegressions;
+  }
+
+  vector<LineSegment2i> lineSegments;
+  for (auto& regression : acceptedRegressions)
+    lineSegments.emplace_back(regression.getLineSegment().cast<int>());
   return lineSegments;
 }
