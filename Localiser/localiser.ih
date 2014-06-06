@@ -23,4 +23,4 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-typedef ParticleFilter<4, 50> ParticleFilterUsed;
+typedef ParticleFilter<4, 50, AlwaysResample, GradualResample> ParticleFilterUsed;
