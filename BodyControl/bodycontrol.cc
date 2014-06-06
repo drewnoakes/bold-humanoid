@@ -46,7 +46,7 @@ JointControl::JointControl(uchar jointId)
 
 void JointControl::setValue(ushort value)
 {
-  value = Math::clamp(value, MX28::MIN_VALUE, MX28::MAX_VALUE);
+  value = MX28::clampValue(value);
   if (d_value == value)
     return;
   d_value = value;

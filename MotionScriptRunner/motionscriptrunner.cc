@@ -3,6 +3,7 @@
 #include "../BodyControl/bodycontrol.hh"
 #include "../Math/math.hh"
 #include "../MotionTask/motiontask.hh"
+#include "../MX28/mx28.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../State/state.hh"
 #include "../StateObject/BodyControlState/bodycontrolstate.hh"
@@ -485,13 +486,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> const
       }
     }
 
-    if (value < 0)
-      value = 0;
-    if (value > 0x0FFF)
-      value = 0x0FFF;
-
-    d_values[jointId] = value;
-
+    d_values[jointId] = MX28::clampValue(value);
     d_pGains[jointId] = d_currentStage->getPGain(jointId);
   }
 }
