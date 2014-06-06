@@ -5,28 +5,28 @@
       "keyFrames": [
         {
           "moveCycles": 125,
-          "values": [
-            1480,
-            2607,
-            1747,
-            2343,
-            2147,
-            1944,
-            2047,
-            2047,
-            2047,
-            2047,
-            2013,
-            2080,
-            2047,
-            2047,
-            2063,
-            2030,
-            2047,
-            2047,
-            2047,
-            2167
-          ]
+          "values": {
+            "shoulder-pitch-r": 1480,
+            "shoulder-pitch-l": 2607,
+            "shoulder-roll-r": 1747,
+            "shoulder-roll-l": 2343,
+            "elbow-r": 2147,
+            "elbow-l": 1944,
+            "hip-yaw-r": 2047,
+            "hip-yaw-l": 2047,
+            "hip-roll-r": 2047,
+            "hip-roll-l": 2047,
+            "hip-pitch-r": 2013,
+            "hip-pitch-l": 2080,
+            "knee-r": 2047,
+            "knee-l": 2047,
+            "ankle-pitch-r": 2063,
+            "ankle-pitch-l": 2030,
+            "ankle-roll-r": 2047,
+            "ankle-roll-l": 2047,
+            "head-pan": 2047,
+            "head-tilt": 2167
+          }
         }
       ]
     }

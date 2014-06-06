@@ -2,112 +2,72 @@
   "name": "sit-down",
   "stages": [
     {
-      "pGains": [
-        32,
-        32,
-        32,
-        32,
-        32,
-        32,
-
-        32,
-        32,
-        32,
-        32,
-        32,
-        32,
-
-        32,
-        32,
-
-        32,
-        32,
-        32,
-        32,
-
-        32,
-        32
-      ],
       "keyFrames": [
         {
           "moveCycles": 125,
-          "values": [
-            2025,
-            1985,
-            1671,
-            2416,
-            983,
-            3119,
-            2043,
-            2033,
-            2057,
-            2043,
-            1377,
-            2697,
-            3513,
-            571,
-            2843,
-            1240,
-            2077,
-            2037,
-            2050,
-            2173
-          ]
+          "values": {
+            "shoulder-pitch-r": 2025,
+            "shoulder-pitch-l": 1985,
+            "shoulder-roll-r": 1671,
+            "shoulder-roll-l": 2416,
+            "elbow-r": 983,
+            "elbow-l": 3119,
+            "hip-yaw-r": 2043,
+            "hip-yaw-l": 2033,
+            "hip-roll-r": 2057,
+            "hip-roll-l": 2043,
+            "hip-pitch-r": 1377,
+            "hip-pitch-l": 2697,
+            "knee-r": 3513,
+            "knee-l": 571,
+            "ankle-pitch-r": 2843,
+            "ankle-pitch-l": 1240,
+            "ankle-roll-r": 2077,
+            "ankle-roll-l": 2037,
+            "head-pan": 2050,
+            "head-tilt": 2173
+          }
         }
       ]
     },
     {
-      "pGains": [
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
-
-        32,
-        32,
-        32,
-        32,
-        32,
-        32,
-
-        2,
-        2,
-
-        32,
-        32,
-        32,
-        32,
-
-        2,
-        2
-      ],
+      "pGains": {
+        "shoulder-pitch-r": 2,
+        "shoulder-pitch-l": 2,
+        "shoulder-roll-r": 2,
+        "shoulder-roll-l": 2,
+        "elbow-r": 2,
+        "elbow-l": 2,
+        "knee-r": 2,
+        "knee-l": 2,
+        "head-pan": 2,
+        "head-tilt": 2
+      },
       "keyFrames": [
         {
           "moveCycles": 3,
-          "values": [
-            2048,
-            2048,
-            1671,
-            2416,
-            983,
-            3119,
-            2043,
-            2033,
-            2057,
-            2043,
-            1377,
-            2697,
-            3513,
-            571,
-            2843,
-            1240,
-            2077,
-            2037,
-            2050,
-            2173
-          ]
+          "values": {
+            "shoulder-pitch-r": 2048,
+            "shoulder-pitch-l": 2048,
+            "shoulder-roll-r": 1671,
+            "shoulder-roll-l": 2416,
+            "elbow-r": 983,
+            "elbow-l": 3119,
+            "hip-yaw-r": 2043,
+            "hip-yaw-l": 2033,
+            "hip-roll-r": 2057,
+            "hip-roll-l": 2043,
+            "hip-pitch-r": 1377,
+            "hip-pitch-l": 2697,
+            "knee-r": 3513,
+            "knee-l": 571,
+            "ankle-pitch-r": 2843,
+            "ankle-pitch-l": 1240,
+            "ankle-roll-r": 2077,
+            "ankle-roll-l": 2037,
+            "head-pan": 2050,
+            "head-tilt": 2173
+          }
         }
       ]
     }

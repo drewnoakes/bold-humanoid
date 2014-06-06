@@ -47,15 +47,14 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
     auto const& stageMember = stagesArray[i];
     auto stage = make_shared<Stage>();
 
-    stage->repeatCount = stageMember.TryGetIntValue("repeat", 1);
-
-    stage->speed = stageMember.TryGetIntValue("speed", Stage::DEFAULT_SPEED);
+    stage->repeatCount = (uchar)stageMember.TryGetUintValue("repeat", 1);
+    stage->speed       = (uchar)stageMember.TryGetUintValue("speed", Stage::DEFAULT_SPEED);
 
     auto gainsMember = stageMember.FindMember("pGains");
     if (gainsMember)
     {
       for (uchar g = 0; g < (uchar)JointId::MAX; g++)
-        stage->pGains[g] = gainsMember->value[g].GetInt();
+        stage->pGains[g] = (uchar)gainsMember->value.TryGetUintValue(JointName::getJsonName(g + 1).c_str(), Stage::DEFAULT_P_GAIN);
     }
 
     auto const& keyFrames = stageMember["keyFrames"];
@@ -64,8 +63,8 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
       auto const& keyFrameMember = keyFrames[j];
       auto keyFrame = KeyFrame();
 
-      keyFrame.pauseCycles = keyFrameMember.TryGetIntValue("pauseCycles", 0);
-      keyFrame.moveCycles = keyFrameMember["moveCycles"].GetInt();
+      keyFrame.pauseCycles = (uchar)keyFrameMember.TryGetUintValue("pauseCycles", 0u);
+      keyFrame.moveCycles = (uchar)keyFrameMember["moveCycles"].GetUint();
 
       if (keyFrame.moveCycles < 3)
       {
@@ -78,7 +77,16 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 
       auto const& valuesMember = keyFrameMember["values"];
       for (uchar v = 0; v < (uchar)JointId::MAX; v++)
-        keyFrame.values[v] = valuesMember[v].GetInt();
+      {
+        string propName = JointName::getJsonName(v + 1);
+        auto prop = valuesMember.FindMember(propName.c_str());
+        if (!prop)
+        {
+          log::error("MotionScript::fromFile") << "Missing property " << propName << " in file " << fileName;
+          return nullptr;
+        }
+        keyFrame.values[v] = (ushort)prop->value.GetUint();
+      }
 
       stage->keyFrames.push_back(keyFrame);
     }
@@ -138,6 +146,8 @@ bool MotionScript::writeJsonFile(string fileName) const
 
   writeJson(writer);
 
+  f.Put('\n');
+
   f.Flush();
 
   fclose(file);
@@ -151,9 +161,12 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
   {
     writer.String("name").String(d_name.c_str());
 
-    writer.String("controlsHead").Bool(d_controlsHead);
-    writer.String("controlsArms").Bool(d_controlsArms);
-    writer.String("controlsLegs").Bool(d_controlsLegs);
+    if (!d_controlsHead)
+      writer.String("controlsHead").Bool(d_controlsHead);
+    if (!d_controlsArms)
+      writer.String("controlsArms").Bool(d_controlsArms);
+    if (!d_controlsLegs)
+      writer.String("controlsLegs").Bool(d_controlsLegs);
 
     writer.String("stages");
     writer.StartArray();
@@ -175,7 +188,11 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
               writer.String("pGains");
               writer.StartObject();
               for (int j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
-                writer.String(JointName::getJsonName(j).c_str()).Uint(stage->pGains[j-1]);
+              {
+                uchar pGain = stage->pGains[j-1];
+                if (pGain != Stage::DEFAULT_P_GAIN)
+                  writer.String(JointName::getJsonName(j).c_str()).Uint(pGain);
+              }
               writer.EndObject();
               break;
             }

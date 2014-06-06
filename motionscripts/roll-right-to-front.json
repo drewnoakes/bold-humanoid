@@ -5,53 +5,53 @@
       "keyFrames": [
         {
           "moveCycles": 90,
-          "values": [
-            113,
-            1974,
-            1690,
-            2338,
-            994,
-            1594,
-            2029,
-            2046,
-            2020,
-            1834,
-            2310,
-            3074,
-            2326,
-            2049,
-            2123,
-            2005,
-            2386,
-            1372,
-            2047,
-            2159
-          ]
+          "values": {
+            "shoulder-pitch-r": 113,
+            "shoulder-pitch-l": 1974,
+            "shoulder-roll-r": 1690,
+            "shoulder-roll-l": 2338,
+            "elbow-r": 994,
+            "elbow-l": 1594,
+            "hip-yaw-r": 2029,
+            "hip-yaw-l": 2046,
+            "hip-roll-r": 2020,
+            "hip-roll-l": 1834,
+            "hip-pitch-r": 2310,
+            "hip-pitch-l": 3074,
+            "knee-r": 2326,
+            "knee-l": 2049,
+            "ankle-pitch-r": 2123,
+            "ankle-pitch-l": 2005,
+            "ankle-roll-r": 2386,
+            "ankle-roll-l": 1372,
+            "head-pan": 2047,
+            "head-tilt": 2159
+          }
         },
         {
           "moveCycles": 90,
-          "values": [
-            2732,
-            1710,
-            1046,
-            1974,
-            2111,
-            2338,
-            2337,
-            1594,
-            2029,
-            2325,
-            2020,
-            1817,
-            2310,
-            2175,
-            2326,
-            1700,
-            2123,
-            1846,
-            2047,
-            2159
-          ]
+          "values": {
+            "shoulder-pitch-r": 2732,
+            "shoulder-pitch-l": 1710,
+            "shoulder-roll-r": 1046,
+            "shoulder-roll-l": 1974,
+            "elbow-r": 2111,
+            "elbow-l": 2338,
+            "hip-yaw-r": 2337,
+            "hip-yaw-l": 1594,
+            "hip-roll-r": 2029,
+            "hip-roll-l": 2325,
+            "hip-pitch-r": 2020,
+            "hip-pitch-l": 1817,
+            "knee-r": 2310,
+            "knee-l": 2175,
+            "ankle-pitch-r": 2326,
+            "ankle-pitch-l": 1700,
+            "ankle-roll-r": 2123,
+            "ankle-roll-l": 1846,
+            "head-pan": 2047,
+            "head-tilt": 2159
+          }
         }
       ]
     }
