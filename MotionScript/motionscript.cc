@@ -1,5 +1,6 @@
 #include "motionscript.hh"
 
+#include "../MX28/mx28.hh"
 #include "../util/assert.hh"
 #include "../util/log.hh"
 
@@ -54,7 +55,9 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
     if (gainsMember)
     {
       for (uchar g = 0; g < (uchar)JointId::MAX; g++)
+      {
         stage->pGains[g] = (uchar)gainsMember->value.TryGetUintValue(JointName::getJsonName(g + 1).c_str(), Stage::DEFAULT_P_GAIN);
+      }
     }
 
     auto const& keyFrames = stageMember["keyFrames"];
@@ -78,6 +81,31 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
       auto const& valuesMember = keyFrameMember["values"];
       for (uchar v = 0; v < (uchar)JointId::MAX; v++)
       {
+        // Try to find a paired value
+        if (JointPairs::isBase(v + (uchar)1))
+        {
+          string pairName = JointName::getJsonPairName(v + 1);
+          auto pairMember = valuesMember.FindMember(pairName.c_str());
+          if (pairMember)
+          {
+            // If a pair exists, the individual values shouldn't
+            if (valuesMember.FindMember(JointName::getJsonName(v + 1).c_str()) ||
+                valuesMember.FindMember(JointName::getJsonName(v + 2).c_str()))
+            {
+              log::error("MotionScript::fromFile") << "JSON file " << fileName << " specifies pair name '" << pairName << "' but also specifies L or R property in same stage";
+              throw std::runtime_error("JSON specifies pair name and also individual L/R joint in same stage");
+            }
+
+            ushort value = (ushort)pairMember->value.GetUint();
+
+            keyFrame.values[v] = value;
+            keyFrame.values[v+1] = MX28::getMirrorValue(value);
+
+            v++;
+            continue;
+          }
+        }
+
         string propName = JointName::getJsonName(v + 1);
         auto prop = valuesMember.FindMember(propName.c_str());
         if (!prop)
@@ -211,7 +239,23 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
                   writer.String("moveCycles").Int(step.moveCycles);
                 writer.String("values").StartObject();
                 for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+                {
+                  // Abbreviate mirrored values
+                  if (JointPairs::isBase(jointId))
+                  {
+                    ushort rVal = step.values[jointId-1];
+                    ushort lVal = step.values[jointId];
+                    if (rVal == MX28::getMirrorValue(lVal))
+                    {
+                      auto pairName = JointName::getJsonPairName(jointId);
+                      writer.String(pairName.c_str()).Uint(rVal);
+                      jointId++;
+                      continue;
+                    }
+                  }
+
                   writer.String(JointName::getJsonName(jointId).c_str()).Uint(step.values[jointId-1]);
+                }
                 writer.EndObject();
               }
               writer.EndObject();

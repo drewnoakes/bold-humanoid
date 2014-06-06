@@ -47,8 +47,7 @@
         {
           "moveCycles": 3,
           "values": {
-            "shoulder-pitch-r": 2048,
-            "shoulder-pitch-l": 2048,
+            "shoulder-pitch": 2048,
             "shoulder-roll-r": 1671,
             "shoulder-roll-l": 2416,
             "elbow-r": 983,
