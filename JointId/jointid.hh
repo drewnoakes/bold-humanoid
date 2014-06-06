@@ -134,5 +134,38 @@ namespace bold
         default:                        return "Unknown";
       }
     }
+
+    static std::string getJsonName(uchar jointId)
+    {
+      return getJsonName((JointId)jointId);
+    }
+
+    static std::string getJsonName(JointId jointId)
+    {
+      switch (jointId)
+      {
+        case JointId::R_SHOULDER_PITCH: return "shoulder-pitch-r";
+        case JointId::L_SHOULDER_PITCH: return "shoulder-pitch-l";
+        case JointId::R_SHOULDER_ROLL:  return "shoulder-roll-r";
+        case JointId::L_SHOULDER_ROLL:  return "shoulder-roll-l";
+        case JointId::R_ELBOW:          return "elbow-r";
+        case JointId::L_ELBOW:          return "elbow-l";
+        case JointId::R_HIP_YAW:        return "hip-yaw-r";
+        case JointId::L_HIP_YAW:        return "hip-yaw-l";
+        case JointId::R_HIP_ROLL:       return "hip-roll-r";
+        case JointId::L_HIP_ROLL:       return "hip-roll-l";
+        case JointId::R_HIP_PITCH:      return "hip-pitch-r";
+        case JointId::L_HIP_PITCH:      return "hip-pitch-l";
+        case JointId::R_KNEE:           return "knee-r";
+        case JointId::L_KNEE:           return "knee-l";
+        case JointId::R_ANKLE_PITCH:    return "ankle-pitch-r";
+        case JointId::L_ANKLE_PITCH:    return "ankle-pitch-l";
+        case JointId::R_ANKLE_ROLL:     return "ankle-roll-r";
+        case JointId::L_ANKLE_ROLL:     return "ankle-roll-l";
+        case JointId::HEAD_PAN:         return "head-pan";
+        case JointId::HEAD_TILT:        return "head-tilt";
+        default:                        return "unknown";
+      }
+    }
   };
 }
