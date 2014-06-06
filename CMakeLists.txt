@@ -509,8 +509,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/BodyControlState/BodyControlState.cc
-  ./StateObject/BodyControlState/writeJson.cc
+  ./StateObject/BodyControlState/bodycontrolstate.cc
 )
 
 add_class(BOLDHUMANOID

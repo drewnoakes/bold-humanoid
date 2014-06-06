@@ -25,6 +25,8 @@ namespace bold
 
     BodyControlState(std::shared_ptr<BodyControl> bodyControl, ulong motionCycleNumber);
 
+    JointControlState const& getJoint(JointId jointId) const { return d_jointStates[(uchar)jointId - 1]; }
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
