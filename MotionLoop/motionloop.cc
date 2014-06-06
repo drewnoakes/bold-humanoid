@@ -15,6 +15,7 @@
 #include "../StateObject/StaticHardwareState/statichardwarestate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
 #include "../ThreadUtil/threadutil.hh"
+#include "../Voice/voice.hh"
 #include "../util/ccolor.hh"
 #include "../util/memory.hh"
 
@@ -69,16 +70,16 @@ MotionLoop::~MotionLoop()
     stop();
 }
 
-void MotionLoop::addModule(shared_ptr<MotionModule> const& module)
+void MotionLoop::addMotionModule(shared_ptr<MotionModule> const& module)
 {
   ASSERT(module);
-  d_modules.push_back(module);
+  d_motionModules.push_back(module);
 }
 
-void MotionLoop::removeModule(shared_ptr<MotionModule>const& module)
+void MotionLoop::addCommsModule(shared_ptr<CM730CommsModule> const& module)
 {
   ASSERT(module);
-  d_modules.remove(module);
+  d_commsModules.push_back(module);
 }
 
 bool MotionLoop::start()
@@ -434,6 +435,8 @@ void MotionLoop::step(SequentialTimer& t)
         parameters[n++] = CM730::getLowByte(eye);
         parameters[n++] = CM730::getHighByte(eye);
 
+        ASSERT(bytesToWrite < std::numeric_limits<uchar>::max());
+
         d_cm730->syncWrite(CM730::P_LED_PANEL, bytesToWrite, 1, parameters);
 
         d_debugControl->clearDirtyFlags();
@@ -470,6 +473,15 @@ void MotionLoop::step(SequentialTimer& t)
 
   t.enter("Observers");
   State::callbackObservers(ThreadId::MotionLoop, t);
+  t.exit();
+
+  t.enter("Comms");
+  for (auto const& commsModule : d_commsModules)
+  {
+    t.enter(commsModule->getName());
+    commsModule->step(d_cm730, t, d_cycleNumber);
+    t.exit();
+  }
   t.exit();
 }
 

@@ -5,6 +5,7 @@
 #include <list>
 #include <sigc++/signal.h>
 
+#include "../CM730CommsModule/cm730commsmodule.hh"
 #include "../MotionModule/motionmodule.hh"
 
 namespace bold
@@ -15,6 +16,7 @@ namespace bold
   class DebugControl;
   class HardwareState;
   class SequentialTimer;
+  class Voice;
 
   class MotionLoop
   {
@@ -26,8 +28,8 @@ namespace bold
     bool start();
     void stop();
 
-    void addModule(std::shared_ptr<MotionModule> const& module);
-    void removeModule(std::shared_ptr<MotionModule> const& module);
+    void addMotionModule(std::shared_ptr<MotionModule> const& module);
+    void addCommsModule(std::shared_ptr<CM730CommsModule> const& module);
 
     /// Signal raised whenever the motion loop fails to read from the CM730.
     /// Callback is passed the number of consecutive failures.
@@ -47,12 +49,14 @@ namespace bold
 
     bool updateStaticHardwareState();
 
-    std::list<std::shared_ptr<MotionModule>> d_modules;
     std::unique_ptr<CM730> d_cm730;
     std::shared_ptr<DebugControl> d_debugControl;
     std::shared_ptr<BodyControl> d_bodyControl;
     std::unique_ptr<BulkRead> d_dynamicBulkRead;
     std::unique_ptr<BulkRead> d_staticBulkRead;
+
+    std::vector<std::shared_ptr<MotionModule>> d_motionModules;
+    std::vector<std::shared_ptr<CM730CommsModule>> d_commsModules;
 
     /// Set of static offsets to be added to all target positions sent to hardware.
     /// May be used to compensate for angular positional errors.

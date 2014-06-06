@@ -1,6 +1,7 @@
 #include "agent.ih"
 
 #include "../Kick/kick.hh"
+#include "../CM730CommsModule/MX28HealthChecker/mx28healthchecker.hh"
 
 Agent::Agent()
   : d_isRunning(false),
@@ -96,9 +97,12 @@ Agent::Agent()
   d_debugger->update();
 
   d_motionLoop = make_shared<MotionLoop>(debugControl);
-  d_motionLoop->addModule(d_motionScriptModule);
-  d_motionLoop->addModule(d_walkModule);
-  d_motionLoop->addModule(d_headModule);
+  d_motionLoop->addMotionModule(d_motionScriptModule);
+  d_motionLoop->addMotionModule(d_walkModule);
+  d_motionLoop->addMotionModule(d_headModule);
+
+  auto mx28HealthChecker = make_shared<MX28HealthChecker>(d_voice);
+  d_motionLoop->addCommsModule(mx28HealthChecker);
 
   d_motionLoop->onReadFailure.connect([this](uint count) -> void {
     // If we were unable to read once during the last second, then we've lost

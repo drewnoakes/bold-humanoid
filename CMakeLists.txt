@@ -178,6 +178,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./CM730CommsModule/MX28HealthChecker/mx28healthchecker.cc
+)
+
+add_class(BOLDHUMANOID
   ./CM730Platform/CM730Linux/cm730linux.cc
 )
 
