@@ -507,7 +507,6 @@ void MotionLoop::step(SequentialTimer& t)
 
     if (anythingChanged)
     {
-      // TODO only create if someone is listening to this in the debugger
       State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
       t.timeEvent("Set BodyControlState");
     }
@@ -559,6 +558,7 @@ void MotionLoop::step(SequentialTimer& t)
   if (!d_readYet)
   {
     d_bodyControl->updateFromHardwareState(hw);
+    State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
     d_readYet = true;
   }
 
