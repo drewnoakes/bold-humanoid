@@ -355,101 +355,6 @@ void MotionLoop::initialiseHardwareTables()
   log::info("MotionLoop::initialiseHardwareTables") << "All MX28 data tables initialised";
 }
 
-bool MotionLoop::applyJointMotionTasks(SequentialTimer& t)
-{
-  auto tasks = State::get<MotionTaskState>();
-
-  if (!tasks || tasks->isEmpty())
-    return false;
-
-  for (pair<MotionModule*, shared_ptr<JointSelection>> const& pair : *tasks->getModuleJointSelection())
-  {
-    MotionModule* module = pair.first;
-    shared_ptr<JointSelection> jointSelection = pair.second;
-
-    ASSERT(module);
-    ASSERT(jointSelection);
-
-    module->step(jointSelection);
-
-    if (jointSelection->hasHead())
-      module->applyHead(d_bodyControl->getHeadSection());
-
-    if (jointSelection->hasArms())
-      module->applyArms(d_bodyControl->getArmSection());
-
-    if (jointSelection->hasLegs())
-      module->applyLegs(d_bodyControl->getLegSection());
-
-    t.timeEvent(module->getName());
-  }
-
-  return true;
-}
-
-bool MotionLoop::writeJointData(SequentialTimer& t)
-{
-  //
-  // WRITE UPDATE
-  //
-
-  uchar dirtyDeviceCount = 0;
-  Range<int> addrRange;
-  for (auto const& joint : d_bodyControl->getJoints())
-  {
-    if (joint->isDirty())
-    {
-      dirtyDeviceCount++;
-      addrRange.expand(joint->getModifiedAddressRange());
-    }
-  }
-
-  if (dirtyDeviceCount != 0)
-  {
-    // Prepare the parameters of a SyncWrite instruction
-    int bytesPerDevice = 1 + addrRange.size() + 1;
-
-    uchar parameters[dirtyDeviceCount * bytesPerDevice];
-    int n = 0;
-    for (auto const& joint : d_bodyControl->getJoints())
-    {
-      if (joint->isDirty())
-      {
-        parameters[n++] = joint->getId();
-
-        if (addrRange.contains(MX28::P_D_GAIN))   parameters[n++] = joint->getDGain();
-        if (addrRange.contains(MX28::P_I_GAIN))   parameters[n++] = joint->getIGain();
-        if (addrRange.contains(MX28::P_P_GAIN))   parameters[n++] = joint->getPGain();
-        if (addrRange.contains(MX28::P_RESERVED)) parameters[n++] = 0;
-
-        if (addrRange.contains(MX28::P_GOAL_POSITION_L))
-        {
-          // Specify the goal position, and apply any calibration offset
-          int goalPosition = joint->getValue() + d_offsets[joint->getId()];
-          ushort value = static_cast<ushort>(Math::clamp(goalPosition, 0, (int)MX28::MAX_VALUE));
-
-          ASSERT(addrRange.contains(MX28::P_GOAL_POSITION_H));
-          parameters[n++] = CM730::getLowByte(value);
-          parameters[n++] = CM730::getHighByte(value);
-        }
-
-        joint->clearDirty();
-      }
-    }
-    ASSERT(n == dirtyDeviceCount * bytesPerDevice);
-
-    //
-    // Send the SyncWrite message, if anything changed
-    //
-
-    d_cm730->syncWrite(addrRange.min(), bytesPerDevice, dirtyDeviceCount, parameters);
-  }
-
-  t.timeEvent("Write to MX28s");
-
-  return dirtyDeviceCount != 0;
-}
-
 void MotionLoop::step(SequentialTimer& t)
 {
   // Rate the limit at which we make this call to the CM730.
@@ -566,6 +471,101 @@ void MotionLoop::step(SequentialTimer& t)
   t.enter("Observers");
   State::callbackObservers(ThreadId::MotionLoop, t);
   t.exit();
+}
+
+bool MotionLoop::applyJointMotionTasks(SequentialTimer& t)
+{
+  auto tasks = State::get<MotionTaskState>();
+
+  if (!tasks || tasks->isEmpty())
+    return false;
+
+  for (pair<MotionModule*, shared_ptr<JointSelection>> const& pair : *tasks->getModuleJointSelection())
+  {
+    MotionModule* module = pair.first;
+    shared_ptr<JointSelection> jointSelection = pair.second;
+
+    ASSERT(module);
+    ASSERT(jointSelection);
+
+    module->step(jointSelection);
+
+    if (jointSelection->hasHead())
+      module->applyHead(d_bodyControl->getHeadSection());
+
+    if (jointSelection->hasArms())
+      module->applyArms(d_bodyControl->getArmSection());
+
+    if (jointSelection->hasLegs())
+      module->applyLegs(d_bodyControl->getLegSection());
+
+    t.timeEvent(module->getName());
+  }
+
+  return true;
+}
+
+bool MotionLoop::writeJointData(SequentialTimer& t)
+{
+  //
+  // WRITE UPDATE
+  //
+
+  uchar dirtyDeviceCount = 0;
+  Range<int> addrRange;
+  for (auto const& joint : d_bodyControl->getJoints())
+  {
+    if (joint->isDirty())
+    {
+      dirtyDeviceCount++;
+      addrRange.expand(joint->getModifiedAddressRange());
+    }
+  }
+
+  if (dirtyDeviceCount != 0)
+  {
+    // Prepare the parameters of a SyncWrite instruction
+    int bytesPerDevice = 1 + addrRange.size() + 1;
+
+    uchar parameters[dirtyDeviceCount * bytesPerDevice];
+    int n = 0;
+    for (auto const& joint : d_bodyControl->getJoints())
+    {
+      if (joint->isDirty())
+      {
+        parameters[n++] = joint->getId();
+
+        if (addrRange.contains(MX28::P_D_GAIN))   parameters[n++] = joint->getDGain();
+        if (addrRange.contains(MX28::P_I_GAIN))   parameters[n++] = joint->getIGain();
+        if (addrRange.contains(MX28::P_P_GAIN))   parameters[n++] = joint->getPGain();
+        if (addrRange.contains(MX28::P_RESERVED)) parameters[n++] = 0;
+
+        if (addrRange.contains(MX28::P_GOAL_POSITION_L))
+        {
+          // Specify the goal position, and apply any calibration offset
+          int goalPosition = joint->getValue() + d_offsets[joint->getId()];
+          ushort value = static_cast<ushort>(Math::clamp(goalPosition, 0, (int)MX28::MAX_VALUE));
+
+          ASSERT(addrRange.contains(MX28::P_GOAL_POSITION_H));
+          parameters[n++] = CM730::getLowByte(value);
+          parameters[n++] = CM730::getHighByte(value);
+        }
+
+        joint->clearDirty();
+      }
+    }
+    ASSERT(n == dirtyDeviceCount * bytesPerDevice);
+
+    //
+    // Send the SyncWrite message, if anything changed
+    //
+
+    d_cm730->syncWrite(addrRange.min(), bytesPerDevice, dirtyDeviceCount, parameters);
+  }
+
+  t.timeEvent("Write to MX28s");
+
+  return dirtyDeviceCount != 0;
 }
 
 shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t)
