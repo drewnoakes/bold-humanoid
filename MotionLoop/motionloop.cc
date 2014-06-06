@@ -557,6 +557,7 @@ void MotionLoop::step(SequentialTimer& t)
 
   if (!d_readYet)
   {
+    // TODO should probably update the body control from hardware measurements whenever torque is enabled
     d_bodyControl->updateFromHardwareState(hw);
     State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
     d_readYet = true;
