@@ -400,6 +400,8 @@ void StationaryMapState::calculateTurnAngle()
     if (goal.getLabel() == GoalLabel::Ours)
       continue;
 
+    log::info("StationaryMapState::calculateTurnAngle") << "Evaluate goal at " << goal.getPost1().transpose() << " to " << goal.getPost2().transpose();
+
     // Find desirable target positions
     vector<Vector3d> targetPositions = {
       goal.getMidpoint(0.2),
@@ -432,7 +434,7 @@ void StationaryMapState::calculateTurnAngle()
           closestAngle = angle - targetAngle;
           closestBallPos = ballPos;
           foundTurn = true;
-          log::info("StationaryMapState::calculateTurnAngle") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos << " best yet";
+          log::info("StationaryMapState::calculateTurnAngle") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << *endPos << " best yet";
         }
       }
     }
