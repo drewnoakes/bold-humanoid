@@ -13,7 +13,6 @@ void Localiser::update()
     auto goalPostModel = [&](Vector4d const& state) {
       AgentPosition pos(state);
       Affine3d agentWorld3d(pos.agentWorldTransform());
-      Affine3d worldAgent3d(pos.worldAgentTransform());
 
       double scoreProd = 1.0;
       unsigned cnt = 0;
@@ -56,7 +55,6 @@ void Localiser::update()
       AgentPosition pos(state);
 
       Affine3d agentWorld3d(pos.agentWorldTransform());
-      Affine3d worldAgent3d(pos.worldAgentTransform());
 
       double scoreProd = 1.0;
       for (auto const& observedLineJunction : agentFrame->getObservedLineJunctions())

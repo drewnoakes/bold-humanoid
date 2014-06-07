@@ -38,7 +38,6 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
       for (auto iter = begin(regressions); iter != end(regressions); ++iter)
       {
         auto& regression = *iter;
-        auto head = regression.head();
         float dist = (regression.head() - point.cast<float>()).norm();
         if (dist <= minDist)
         {
