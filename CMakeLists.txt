@@ -737,9 +737,9 @@ add_custom_target(tags DEPENDS ${CMAKE_SOURCE_DIR}/TAGS)
 #
 ## SWIG/Python
 #
-if (BUILD_BOLDPY)
-  add_subdirectory(swig)
-endif (BUILD_BOLDPY)
+#if (BUILD_BOLDPY)
+#  add_subdirectory(swig)
+#endif (BUILD_BOLDPY)
 
 #
 ## Build and run test
