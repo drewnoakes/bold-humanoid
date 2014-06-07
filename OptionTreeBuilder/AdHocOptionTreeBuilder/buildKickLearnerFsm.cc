@@ -26,8 +26,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
   auto watchBallRollState = fsm->newState("watchBallRoll", {lookAtBall});
   auto recordOutcomeState = fsm->newState("recordOutcome", {});
 
-  constexpr int ObservationCount = 60;
-  constexpr double StationaryDeviation = 0.01;
+  constexpr int observationCount = 60;
+  constexpr double stationaryDeviation = 0.01;
 
   static Vector3d ballStartPos;
   static Vector3d ballEndPos;
@@ -39,16 +39,16 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
 
   waitForBallState
     ->transitionTo(selectKickState, "ball-start-observed")
-    ->when([]()
+    ->when([observationCount]()
     {
-      auto avg = make_shared<MovingAverage<Vector3d>>(ObservationCount);
+      auto avg = make_shared<MovingAverage<Vector3d>>(observationCount);
       return [avg]()
       {
         auto agentFrame = State::get<AgentFrameState>();
         if (!agentFrame || !agentFrame->isBallVisible())
           return false;
         ballStartPos = avg->next(*agentFrame->getBallObservation());
-        return avg->isMature() && ballStartPos.y() < 0.22 && avg->calculateStdDev().norm() < StationaryDeviation;
+        return avg->isMature() && ballStartPos.y() < 0.22 && avg->calculateStdDev().norm() < stationaryDeviation;
       };
     });
 
@@ -96,16 +96,16 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
 
   watchBallRollState
     ->transitionTo(recordOutcomeState, "ball-end-observed")
-    ->when([]()
+    ->when([observationCount]()
     {
-      auto avg = make_shared<MovingAverage<Vector3d>>(ObservationCount);
+      auto avg = make_shared<MovingAverage<Vector3d>>(observationCount);
       return [avg]()
       {
         auto agentFrame = State::get<AgentFrameState>();
         if (!agentFrame || !agentFrame->isBallVisible())
           return false;
         ballEndPos = avg->next(*agentFrame->getBallObservation());
-        return avg->isMature() && avg->calculateStdDev().norm() < StationaryDeviation;
+        return avg->isMature() && avg->calculateStdDev().norm() < stationaryDeviation;
       };
     });
 
