@@ -19,7 +19,7 @@ void HoughLineAccumulator::add(int x, int y)
     radiusInt += halfAccRadLen;
 
     // Check within bounds
-    if (radiusInt >= 0 && radiusInt < d_accumulatorRadiusLen)
+    if (radiusInt < d_accumulatorRadiusLen)
     {
       auto ptr = rowBase + radiusInt;
       // Add a vote to this bin
