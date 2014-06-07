@@ -11,8 +11,6 @@ namespace bold
   template<typename T,int dim>
   struct LineSegment : Eigen::Matrix<T,dim,2>
   {
-    typedef Eigen::Matrix<T,dim,2> Base;
-
   public:
 
     LineSegment(Eigen::Matrix<T,dim,1> const& p1,
@@ -20,8 +18,8 @@ namespace bold
     {
       static_assert(std::is_arithmetic<T>::value, "Must be an arithmetic type");
 
-      Base::col(0) = p1;
-      Base::col(1) = p2;
+      this->col(0) = p1;
+      this->col(1) = p2;
 
       // TODO: costly at runtime, perhaps make assert?
       if ((p2 - p1).cwiseAbs().maxCoeff() == 0)
@@ -32,10 +30,10 @@ namespace bold
       }
     }
 
-    using Base::Matrix;
+    using Eigen::Matrix<T,dim,2>::Matrix;
 
-    Eigen::Matrix<T,dim,1> p1() const { return Base::col(0); }
-    Eigen::Matrix<T,dim,1> p2() const { return Base::col(1); }
+    Eigen::Matrix<T,dim,1> p1() const { return this->col(0); }
+    Eigen::Matrix<T,dim,1> p2() const { return this->col(1); }
 
     /** Returns the vector formed by <code>p2() - p1()</code> */
     Eigen::Matrix<T,dim,1> delta() const { return p2() - p1(); }
@@ -64,26 +62,26 @@ namespace bold
     {
       auto newLineSegment = LineSegment<T,newDim>{LineSegment<T,newDim>::Zero()};
       newLineSegment.col(0).template head< meta::min<dim,newDim>::value >() =
-        Base::col(0).template head< meta::min<dim,newDim>::value >();
+        this->col(0).template head< meta::min<dim,newDim>::value >();
       newLineSegment.col(1).template head< meta::min<dim,newDim>::value >() =
-        Base::col(1).template head< meta::min<dim,newDim>::value >();
+        this->col(1).template head< meta::min<dim,newDim>::value >();
       return newLineSegment;
     }
 
     bool operator==(LineSegment<T,dim> const& other) const
     {
       const double epsilon = 0.0000004;
-      return (Base::array() - other.array()).abs().sum() < epsilon;
+      return (this->array() - other.array()).abs().sum() < epsilon;
     }
 
     LineSegment<T,dim> operator+(Eigen::Matrix<T,dim,1> const& delta) const
     {
-      return LineSegment<T,dim>{Base::colwise() + delta};
+      return LineSegment<T,dim>{this->colwise() + delta};
     }
 
     LineSegment<T,dim> operator-(Eigen::Matrix<T,dim,1> const& delta) const
     {
-      return LineSegment<T,dim>{Base::colwise() - delta};
+      return LineSegment<T,dim>{this->colwise() - delta};
     }
 
     friend std::ostream& operator<<(std::ostream& stream, LineSegment<T,dim> const& lineSegment)
