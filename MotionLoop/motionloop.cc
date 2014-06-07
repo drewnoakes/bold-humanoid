@@ -55,8 +55,8 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     stringstream path;
-    path << "hardware.offsets.joint-" << (int)jointId;
-    Config::getSetting<int>(path.str())->track([this, jointId ](int value)
+    path << "hardware.offsets." << JointName::getJsonName(jointId);
+    Config::getSetting<int>(path.str())->track([this, jointId](int value)
     {
       d_offsets[jointId] = value;
       d_bodyControl->getJoint((JointId)jointId)->notifyOffsetChanged();
@@ -338,7 +338,7 @@ void MotionLoop::initialiseHardwareTables()
       continue;
 
     stringstream path;
-    path << "hardware.limits.angle-limits.joint-" << (int)jointId;
+    path << "hardware.limits.angle-limits." << JointName::getJsonName(jointId);
     Range<double> rangeDegs = Config::getStaticValue<Range<double>>(path.str());
 
     writeByteWithRetry(jointId, MX28::P_RETURN_DELAY_TIME, 0);
