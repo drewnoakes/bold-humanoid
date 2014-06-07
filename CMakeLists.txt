@@ -120,7 +120,7 @@ if(INCLUDE_ASSERTIONS)
 endif(INCLUDE_ASSERTIONS)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(BOLDHUMANOID_COMPILE_FLAGS "-I/usr/include/i386-linux-gnu/c++/4.8 ${BOLDHUMANOID_COMPILE_FLAGS}")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-I/usr/include/i386-linux-gnu/c++/4.8 ${BOLDHUMANOID_COMPILE_FLAGS} -Wno-deprecated -Wno-unused-private-field -Wno-unknown-warning-option")
 endif()
 
 #
