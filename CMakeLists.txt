@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 set(BUILDRUN_UNIT_TEST ON CACHE BOOL "Choose whether to build and run unit tests")
 set(BUILD_TOOLS ON CACHE BOOL "Choose whether to build tools")
-set(BUILD_BOLDPY ON CACHE BOOL "Choose whether to Python library")
+set(BUILD_BOLDPY OFF CACHE BOOL "Choose whether to Python library")
 set(PRECOMPILE_HEADERS OFF CACHE BOOL "Choose whether to precompile headers")
 set(EIGEN_VECTORIZE OFF CACHE BOOL "Choose whether to enable Eigen vectorization")
 set(INCLUDE_ASSERTIONS ON CACHE BOOL "Choose whether to include assertions in compiled code")
