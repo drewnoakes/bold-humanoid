@@ -8,8 +8,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto bigStepLeft = make_shared<MotionScriptOption>("bigStepLeft", agent->getMotionScriptModule(), "./motionscripts/step-left-big.json");
   auto bigStepRight = make_shared<MotionScriptOption>("bigStepRight", agent->getMotionScriptModule(), "./motionscripts/step-right-big.json");
-  auto leftSideKick = make_shared<MotionScriptOption>("leftSideKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-side-left.json");
-  auto rightSideKick = make_shared<MotionScriptOption>("rightSideKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-side-right.json");
+  auto leftCrossKick = make_shared<MotionScriptOption>("leftCrossKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
+  auto rightCrossKick = make_shared<MotionScriptOption>("rightCrossKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "keeper"));
 
@@ -21,8 +21,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
   auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
   auto bigStepLeftState = fsm->newState("bigStepLeft", {bigStepLeft});
   auto bigStepRightState = fsm->newState("bigStepRight", {bigStepRight});
-  auto leftSideKickState = fsm->newState("leftSideKick", {leftSideKick});
-  auto rightSideKickState = fsm->newState("rightSideKick", {rightSideKick});
+  auto leftCrossKickState = fsm->newState("leftCrossKick", { leftCrossKick });
+  auto rightCrossKickState = fsm->newState("rightCrossKick", { rightCrossKick });
 
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, lookForBallState, lookForBallState, lookAtBallState, bigStepLeftState, bigStepRightState });
 
@@ -69,7 +69,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
     ->whenTerminated();
 
   lookAtBallState
-    ->transitionTo(leftSideKickState, "clear-left")
+    ->transitionTo(leftCrossKickState, "clear-left")
     ->when([]()
            {
              auto ball = State::get<AgentFrameState>()->getBallObservation();
@@ -77,18 +77,18 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
            });
 
   lookAtBallState
-    ->transitionTo(rightSideKickState, "clear-right")
+    ->transitionTo(rightCrossKickState, "clear-right")
     ->when([]()
            {
              auto ball = State::get<AgentFrameState>()->getBallObservation();
              return ball && Range<double>(0.0, 0.17).contains(ball->y()) && Range<double>(0, 0.2).contains(ball->x());
            });
 
-  leftSideKickState
+  leftCrossKickState
     ->transitionTo(lookForBallState, "done")
     ->whenTerminated();
 
-  rightSideKickState
+  rightCrossKickState
     ->transitionTo(lookForBallState, "done")
     ->whenTerminated();
 

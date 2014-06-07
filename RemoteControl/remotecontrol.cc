@@ -58,8 +58,8 @@ void RemoteControl::update()
 
   static shared_ptr<MotionScript const> leftKickScript = MotionScript::fromFile("./motionscripts/kick-left.json");
   static shared_ptr<MotionScript const> rightKickScript = MotionScript::fromFile("./motionscripts/kick-right.json");
-  static shared_ptr<MotionScript const> leftSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-left.json");
-  static shared_ptr<MotionScript const> rightSideKickScript = MotionScript::fromFile("./motionscripts/kick-side-right.json");
+  static shared_ptr<MotionScript const> leftCrossKickScript = MotionScript::fromFile("./motionscripts/kick-cross-left.json");
+  static shared_ptr<MotionScript const> rightCrossKickScript = MotionScript::fromFile("./motionscripts/kick-cross-right.json");
   static shared_ptr<MotionScript const> standReadyScript = MotionScript::fromFile("./motionscripts/stand-ready.json");
   static shared_ptr<MotionScript const> sitDownScript = MotionScript::fromFile("./motionscripts/sit-down.json");
 
@@ -116,10 +116,10 @@ void RemoteControl::update()
 
       switch (event.number)
       {
-        case 4: runIfStanding(leftSideKickScript);  break;
-        case 5: runIfStanding(rightSideKickScript); break;
-        case 6: runIfStanding(leftKickScript);      break;
-        case 7: runIfStanding(rightKickScript);     break;
+        case 4: runIfStanding(leftCrossKickScript);  break;
+        case 5: runIfStanding(rightCrossKickScript); break;
+        case 6: runIfStanding(leftKickScript);       break;
+        case 7: runIfStanding(rightKickScript);      break;
         default:
           if (event.value == 1)
             log::info("Agent::processInputCommands") << "Button " << (int)event.number;

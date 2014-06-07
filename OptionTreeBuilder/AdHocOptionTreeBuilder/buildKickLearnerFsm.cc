@@ -10,8 +10,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
   auto standUp       = make_shared<MotionScriptOption>("standUp",   agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto kickLeft      = make_shared<MotionScriptOption>("kickLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
   auto kickRight     = make_shared<MotionScriptOption>("kickRight", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
-  auto kickSideLeft  = make_shared<MotionScriptOption>("kickLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-side-left.json");
-  auto kickSideRight = make_shared<MotionScriptOption>("kickRight", agent->getMotionScriptModule(), "./motionscripts/kick-side-right.json");
+  auto kickCrossLeft = make_shared<MotionScriptOption>("kickCrossLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
+  auto kickCrossRight = make_shared<MotionScriptOption>("kickCrossRight", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "kick-learner"));
 
@@ -20,8 +20,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
   auto selectKickState = fsm->newState("selectKick", {});
   auto kickLeftState = fsm->newState("kickLeft", {kickLeft,lookAtBall});
   auto kickRightState = fsm->newState("kickRight", {kickRight,lookAtBall});
-  auto kickSideLeftState  = fsm->newState("kickSideLeft",  {kickSideLeft, lookAtBall});
-  auto kickSideRightState = fsm->newState("kickSideRight", {kickSideRight,lookAtBall});
+  auto kickCrossLeftState = fsm->newState("kickCrossLeft", {kickCrossLeft, lookAtBall});
+  auto kickCrossRightState = fsm->newState("kickCrossRight", {kickCrossRight,lookAtBall});
   auto lookUpForBallState = fsm->newState("lookUp", {});
   auto watchBallRollState = fsm->newState("watchBallRoll", {lookAtBall});
   auto recordOutcomeState = fsm->newState("recordOutcome", {});
@@ -63,20 +63,20 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
     {
       case 0: kickUsed = "left"; break;
       case 1: kickUsed = "right"; break;
-      case 2: kickUsed = "left-side"; break;
-      case 3: kickUsed = "right-side"; break;
+      case 2: kickUsed = "left-cross"; break;
+      case 3: kickUsed = "right-cross"; break;
     }
   });
 
   selectKickState->transitionTo(kickLeftState) ->when([]() { return kickUsed == "left"; });
   selectKickState->transitionTo(kickRightState)->when([]() { return kickUsed == "right"; });
-  selectKickState->transitionTo(kickSideLeftState) ->when([]() { return kickUsed == "left-side"; });
-  selectKickState->transitionTo(kickSideRightState)->when([]() { return kickUsed == "right-side"; });
+  selectKickState->transitionTo(kickCrossLeftState) ->when([]() { return kickUsed == "left-cross"; });
+  selectKickState->transitionTo(kickCrossRightState)->when([]() { return kickUsed == "right-cross"; });
 
   kickLeftState->transitionTo(lookUpForBallState)->whenTerminated();
   kickRightState->transitionTo(lookUpForBallState)->whenTerminated();
-  kickSideLeftState->transitionTo(lookUpForBallState)->whenTerminated();
-  kickSideRightState->transitionTo(lookUpForBallState)->whenTerminated();
+  kickCrossLeftState->transitionTo(lookUpForBallState)->whenTerminated();
+  kickCrossRightState->transitionTo(lookUpForBallState)->whenTerminated();
 
   lookUpForBallState->onEnter.connect([agent]()
   {
@@ -84,9 +84,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
       agent->getHeadModule()->moveToDegs(5, 20);
     else if (kickUsed=="right")
       agent->getHeadModule()->moveToDegs(-5, 20);
-    else if (kickUsed=="left-side")
+    else if (kickUsed=="left-cross")
       agent->getHeadModule()->moveToDegs(-35, 35);
-    else if (kickUsed=="right-side")
+    else if (kickUsed=="right-cross")
       agent->getHeadModule()->moveToDegs(35, 35);
   });
 
