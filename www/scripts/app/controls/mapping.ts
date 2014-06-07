@@ -2,6 +2,8 @@
  * @author Drew Noakes https://drewnoakes.com
  */
 
+/// <reference path="../../libs/hammer.d.ts" />
+
 import Animator = require('Animator');
 import canvasUtil = require('util/canvas');
 import Checkbox = require('controls/Checkbox');
@@ -24,6 +26,40 @@ export class Map
     constructor(private layerContainer: HTMLDivElement, private checkboxContainer: HTMLDivElement, public transform: Trackable<geometry.Transform>)
     {
         this.transform.setValue(new geometry.Transform().scale(1, -1));
+
+        var hammer = Hammer(this.layerContainer, { preventDefault: true });
+
+        var lastUnitScale, lastCenterX, lastCenterY;
+        hammer.on('transformstart transform', evt =>
+        {
+            if (evt.type === "transformstart")
+            {
+                lastUnitScale = 1.0;
+                lastCenterX = evt.gesture.center.clientX;
+                lastCenterY = evt.gesture.center.clientY;
+            }
+            else if (evt.type === "transform")
+            {
+                var unitScale = evt.gesture.scale;
+                var scaleRatio = unitScale / lastUnitScale;
+                lastUnitScale = unitScale;
+
+                var mapPos = util.getPosition(this.layerContainer);
+                var offsetX = evt.gesture.center.clientX - mapPos.x;
+                var offsetY = evt.gesture.center.clientY - mapPos.y;
+                var deltaX = lastCenterX - evt.gesture.center.clientX,
+                    deltaY = lastCenterY - evt.gesture.center.clientY;
+
+                this.transform.setValue(new geometry.Transform()
+                    .translate(offsetX, offsetY)
+                    .scale(scaleRatio, scaleRatio)
+                    .translate(-offsetX - deltaX, -offsetY - deltaY)
+                    .multiply(this.transform.getValue()));
+
+                lastCenterX = evt.gesture.center.clientX;
+                lastCenterY = evt.gesture.center.clientY;
+            }
+        });
 
         new interaction.Dragger(this.layerContainer, (evt: interaction.IDragEvent) =>
         {

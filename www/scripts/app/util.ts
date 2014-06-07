@@ -98,6 +98,27 @@ export function degToRad(deg: number)
     return Math.PI * deg / 180.0;
 }
 
+export function getPosition(element: HTMLElement)
+{
+    // TODO rename to explain exactly what position this gets :)
+
+    var xPosition = 0;
+    var yPosition = 0;
+
+    while (element)
+    {
+        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+        element = <HTMLElement>element.offsetParent;
+    }
+
+    return { x: xPosition, y: yPosition };
+}
+
+//
+// FULL SCREEN SUPPORT
+//
+
 export function isFullScreen()
 {
     var doc: any = document;
