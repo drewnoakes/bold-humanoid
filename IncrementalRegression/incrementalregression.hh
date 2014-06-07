@@ -59,7 +59,7 @@ namespace bold
         d_head = point;
       }
       else if (d_nPoints == 2)
-        d_head == point;
+        d_head = point;
       else
       {
         d_head = Eigen::Vector2f{point.x(), getY(point.x())};
