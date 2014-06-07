@@ -4,7 +4,7 @@
 
 namespace bold
 {
-  class LineSegment2i;
+  struct LineSegment2i;
 
   class Painter
   {

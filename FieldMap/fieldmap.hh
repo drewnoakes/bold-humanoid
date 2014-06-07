@@ -7,7 +7,7 @@
 
 namespace bold
 {
-  class LineJunction;
+  struct LineJunction;
 
   enum class FieldSide
   {
