@@ -3,7 +3,7 @@
 //#include "MotionScript/motionscript.hh"
 #include "OptionTree/optiontree.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
-// #include "RobotisMotionFile/robotismotionfile.hh"
+//#include "RobotisMotionFile/robotismotionfile.hh"
 //#include "ThreadUtil/threadutil.hh"
 #include "util/ccolor.hh"
 #include "util/log.hh"
@@ -105,6 +105,11 @@ int main(int argc, char **argv)
 
 //  convertMotionFile();
 //  rewriteMotionScriptJSON();
+//  auto kickSideRight = RobotisMotionFile("/home/drew/bold-humanoid/motion-with-side-kick.bin").toMotionScript(65);
+//  kickSideRight->setName("kick-side-right");
+//  kickSideRight->writeJsonFile("/home/drew/bold-humanoid/motionscripts/kick-side-right.json");
+//  kickSideRight->getMirroredScript("kick-side-left")
+//               ->writeJsonFile("/home/drew/bold-humanoid/motionscripts/kick-side-left.json");
 //  exit(0);
 
   // defaults
