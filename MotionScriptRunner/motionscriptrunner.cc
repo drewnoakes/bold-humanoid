@@ -348,7 +348,8 @@ bool MotionScriptRunner::startKeyFrame(shared_ptr<JointSelection> const& selecte
     }
     else
     {
-      nextTargetAngle = d_currentStage->keyFrames[d_currentKeyFrameIndex + 1].getValue(jointId) & MotionScript::INVALID_BIT_MASK
+      nextTargetAngle = d_currentKeyFrameIndex == (int)d_currentStage->keyFrames.size() - 1 ||
+        d_currentStage->keyFrames[d_currentKeyFrameIndex + 1].getValue(jointId) & MotionScript::INVALID_BIT_MASK
         ? currentTargetAngle
         : d_currentStage->keyFrames[d_currentKeyFrameIndex + 1].getValue(jointId);
     }
