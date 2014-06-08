@@ -48,7 +48,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   bool isLeftTurn = d_turnAngleRads < 0;
 
   // Always walk sideways, but not if error becomes too big
-  double x = (1.0 - fabs(error.x())) * isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue();
+  double x = (1.0 - fabs(error.x())) * (isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue());
 
   // Try to keep forward distance stable
   double y = Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedY->getValue();
