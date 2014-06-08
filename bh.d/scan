@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh scan ADAPTER"
+    echo "          scan for network devices on the specified adapter (eg. wlan1)"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    echo "Must specify a network adapter (eg. wlan1)"
+    exit 1
+fi
+
+sudo arp-scan -I $1 -l -m mac-addresses.txt
+
+exit $?
