@@ -14,7 +14,6 @@ namespace bold
       d_xySum{Eigen::Vector2f::Zero()},
       d_nPoints{0},
       d_sqErrorSum{0.0f},
-      d_RMS{0.0f},
       d_dirty{false}
     {}
     
@@ -36,17 +35,36 @@ namespace bold
     float fit(Eigen::Vector2f const& point)
     {
       if (d_nPoints == 1)
-        return 0;
+        return (point - head()).norm();
+      else if (d_xStart == d_xEnd)
+      {
+        return std::abs(point.x() - d_xStart);
+      }
       else
       {
+        solve();
+        auto sigma = sigmaAt(point.x());
         auto yPred = getY(point.x());
         auto error = std::abs(yPred - point.y());
-        return d_nPoints == 2 ? error : error / d_RMS;
+        return sigma == 0 ? error : error / sigma;
       }
+    }
+
+    float sigmaAt(float x)
+    {
+      auto _x = Eigen::Vector2f{x, 1};
+      return sqrt(_x.transpose() * (1.0 / d_sqErrorSum * d_xxSum).inverse() * _x);
+    }
+
+    bool isVertical() const
+    {
+      return d_xStart == d_xEnd;
     }
 
     void addPoint(Eigen::Vector2f const& point)
     {
+      d_points.push_back(point);
+
       auto x = Eigen::Vector2f{point.x(), 1};
       d_xxSum += x * x.transpose();
       d_xySum += x * point.y();
@@ -63,11 +81,6 @@ namespace bold
       else
       {
         d_head = Eigen::Vector2f{point.x(), getY(point.x())};
-
-        auto yPred = getY(point.x());
-        auto error = std::abs(yPred - point.y());
-        d_sqErrorSum += error * error;
-        d_RMS = sqrt(d_sqErrorSum / d_nPoints);
       }
       d_dirty = true;
     }
@@ -99,6 +112,21 @@ namespace bold
       return d_nPoints;
     }
 
+    float determineStandardError() const
+    {
+      auto X = Eigen::MatrixXf(2, d_points.size());
+      auto y = Eigen::VectorXf(d_points.size());
+      unsigned idx = 0;
+      for (auto const& point : d_points)
+      {
+        X.col(idx) = Eigen::Vector2f{point.x(), 1};
+        y(idx) = point.y();
+        ++idx;
+      }
+      auto res = y - X.transpose() * d_beta;
+      return sqrt(res.dot(res) / (d_points.size() - 2));
+    }
+
     void merge(IncrementalRegression const& other)
     {
       d_xxSum += other.d_xxSum;
@@ -106,12 +134,12 @@ namespace bold
       d_nPoints += other.d_nPoints;
       d_xStart = std::min(d_xStart, other.d_xStart);
       d_xEnd = std::max(d_xEnd, other.d_xEnd);
-      d_sqErrorSum += other.d_sqErrorSum;
-      d_RMS = sqrt(d_sqErrorSum / d_nPoints);
       solve();
     }
 
 private:
+    std::vector<Eigen::Vector2f> d_points;
+
     Eigen::Matrix2f d_xxSum;
     Eigen::Vector2f d_xySum;
     unsigned d_nPoints;
@@ -120,7 +148,6 @@ private:
     unsigned d_xEnd;
     Eigen::Vector2f d_head;
     float d_sqErrorSum;
-    float d_RMS;
 
     bool d_dirty;
   };

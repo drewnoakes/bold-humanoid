@@ -186,9 +186,8 @@
       "scanning": {
         "min-length": { "type": "double", "min": 1.0, "max": 1024.0, "default": 30.0 },
         "min-coverage": { "type": "double", "min": 0.0, "max": 1.0, "default": 0.2 },
-        "max-rms-factor": { "type": "double", "min": 0.0, "max": 1024.0, "default": 2.5 },
-        "max-head-dist": { "type": "double", "min": 0.0, "max": 1024.0, "default": 10.0 },
-        "max-line-dist": { "type": "double", "min": 0.0, "max": 1024.0, "default": 10.0 }
+        "max-rms-factor": { "type": "double", "min": 0.0, "max": 1024.0, "default": 4.0 },
+        "max-head-dist": { "type": "double", "min": 0.0, "max": 1024.0, "default": 10.0 }
       }
     },
     "label-counter": {

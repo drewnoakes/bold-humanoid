@@ -25,7 +25,5 @@ namespace bold
     Setting<double>* d_maxRMSFactor;
     // Maximum distance between new point and segment head
     Setting<double>* d_maxHeadDist;
-    // Maximum distance between new point and line 
-    Setting<double>* d_maxLineDist;
   };
 }

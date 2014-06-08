@@ -12,13 +12,8 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
 
   vector<IncrementalRegression,Eigen::aligned_allocator<IncrementalRegression>> regressions;
 
-  // Maximum distance between a point can be away from the head of
-  // line segment to be considered as a part of it
-  float maxDist = d_maxHeadDist->getValue();;
-  // Maximum y-error to consider point member of line segment
-  float maxError = d_maxLineDist->getValue();
-
-//   float maxRMSFactor = d_maxRMSFactor->getValue();
+  auto maxHeadDist = d_maxHeadDist->getValue();
+  auto  worstFitAllowed = d_maxRMSFactor->getValue();;
 
   // Matrix is col-major, so outersize is width
   for (unsigned k = 0; k < static_cast<unsigned>(linePointsMatrix.outerSize()); ++k)
@@ -26,52 +21,39 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
     for (SparseMatrix<bool>::InnerIterator it(linePointsMatrix, k); it; ++it)
     {
       Vector2f point{it.col(), it.row()};
-      auto closest = regressions.end();
-      float error = 0;
-
-      // Find line segment that 1) has head closest to point 2) has least residual between line and point
-      // Minimum distance to head found so far
-      float minDist = maxDist;
-      // Minimum offset of line found so far
-      float minError = 2 * maxError;
+      auto bestFitingRegression = regressions.end();
+      float bestFit = worstFitAllowed + 1;
 
       for (auto iter = begin(regressions); iter != end(regressions); ++iter)
       {
         auto& regression = *iter;
         float dist = (regression.head() - point.cast<float>()).norm();
-        if (dist <= minDist)
+        if (dist <= maxHeadDist)
         {
-          if (regression.getNPoints() > 1)
+          //if (regression.getNPoints() > 1)
           {
             // Error should not be more than current RMSE
-            auto e = regression.fit(point);
-            if (e > 3.0f)
+            auto fit = regression.fit(point);
+            // only accept within 2 sigma
+            if (fit > worstFitAllowed || fit > bestFit)
               continue;
-            error = e;
-          }
-          else
-            error = maxError;
 
-          if (error < minError)
-          {
-            minError = error;
-            closest = iter;
-            minDist = dist;
+            bestFit = fit;
+            bestFitingRegression = iter;
           }
         }
       }
 
-      if (closest != regressions.end())
+      if (bestFitingRegression != regressions.end())
       {
-        closest->addPoint(point);
-        closest->solve();
+        bestFitingRegression->addPoint(point);
+        bestFitingRegression->solve();
       }
       else
       {
         // Start new regression
         IncrementalRegression newRegression;
-        float e = d_maxLineDist->getValue();
-        newRegression.setSqError(e * e);
+        newRegression.setSqError(100.0);
 
         newRegression.addPoint(point);
         regressions.push_back(newRegression);
@@ -81,13 +63,11 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   float minLength = d_minLength->getValue();
   float minCoverage = d_minCoverage->getValue();
 
-  cout << "---" << endl;
-
   vector<IncrementalRegression,Eigen::aligned_allocator<IncrementalRegression>> acceptedRegressions;
   
   for (auto& regression : regressions)
   {
-    if (regression.getNPoints() < 3)
+    if (regression.getNPoints() < 2 || regression.isVertical())
       continue;
 
     auto lineSegment = regression.getLineSegment();
@@ -103,7 +83,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
     acceptedRegressions.push_back(regression);
   }
 
-  bool tryMerge = true;
+  bool tryMerge = false;
   while (tryMerge)
   {
     tryMerge = false;
