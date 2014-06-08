@@ -294,3 +294,46 @@ MotionScript::KeyFrame const& MotionScript::getFinalKeyFrame() const
   ASSERT(finalStage->keyFrames.size());
   return finalStage->keyFrames[finalStage->keyFrames.size() - 1];
 }
+
+shared_ptr<MotionScript> MotionScript::getMirroredScript(std::string name) const
+{
+  // Copy the script
+  auto mirror = make_shared<MotionScript>(*this);
+
+  // Set the new name
+  mirror->setName(name);
+
+  for (auto& stage : mirror->d_stages)
+  {
+    // Transpose p-gains across body
+    std::swap(stage->pGains.at((uchar)JointId::L_ELBOW - 1),          stage->pGains.at((uchar)JointId::R_ELBOW - 1));
+    std::swap(stage->pGains.at((uchar)JointId::L_SHOULDER_PITCH - 1), stage->pGains.at((uchar)JointId::R_SHOULDER_PITCH - 1));
+    std::swap(stage->pGains.at((uchar)JointId::L_SHOULDER_ROLL - 1),  stage->pGains.at((uchar)JointId::R_SHOULDER_ROLL - 1));
+    std::swap(stage->pGains.at((uchar)JointId::L_ANKLE_PITCH - 1),    stage->pGains.at((uchar)JointId::R_ANKLE_PITCH - 1));
+    std::swap(stage->pGains.at((uchar)JointId::L_ANKLE_ROLL - 1),     stage->pGains.at((uchar)JointId::L_ANKLE_ROLL - 1));
+    std::swap(stage->pGains.at((uchar)JointId::L_KNEE - 1),           stage->pGains.at((uchar)JointId::R_KNEE - 1));
+    std::swap(stage->pGains.at((uchar)JointId::L_HIP_YAW - 1),        stage->pGains.at((uchar)JointId::R_HIP_YAW - 1));
+    std::swap(stage->pGains.at((uchar)JointId::L_HIP_PITCH - 1),      stage->pGains.at((uchar)JointId::R_HIP_PITCH - 1));
+    std::swap(stage->pGains.at((uchar)JointId::L_HIP_ROLL - 1),       stage->pGains.at((uchar)JointId::R_HIP_ROLL - 1));
+
+    for (auto& keyFrame : stage->keyFrames)
+    {
+      // Transpose values across body
+      std::swap(keyFrame.values.at((uchar)JointId::L_ELBOW - 1),          keyFrame.values.at((uchar)JointId::R_ELBOW - 1));
+      std::swap(keyFrame.values.at((uchar)JointId::L_SHOULDER_PITCH - 1), keyFrame.values.at((uchar)JointId::R_SHOULDER_PITCH - 1));
+      std::swap(keyFrame.values.at((uchar)JointId::L_SHOULDER_ROLL - 1),  keyFrame.values.at((uchar)JointId::R_SHOULDER_ROLL - 1));
+      std::swap(keyFrame.values.at((uchar)JointId::L_ANKLE_PITCH - 1),    keyFrame.values.at((uchar)JointId::R_ANKLE_PITCH - 1));
+      std::swap(keyFrame.values.at((uchar)JointId::L_ANKLE_ROLL - 1),     keyFrame.values.at((uchar)JointId::L_ANKLE_ROLL - 1));
+      std::swap(keyFrame.values.at((uchar)JointId::L_KNEE - 1),           keyFrame.values.at((uchar)JointId::R_KNEE - 1));
+      std::swap(keyFrame.values.at((uchar)JointId::L_HIP_YAW - 1),        keyFrame.values.at((uchar)JointId::R_HIP_YAW - 1));
+      std::swap(keyFrame.values.at((uchar)JointId::L_HIP_PITCH - 1),      keyFrame.values.at((uchar)JointId::R_HIP_PITCH - 1));
+      std::swap(keyFrame.values.at((uchar)JointId::L_HIP_ROLL - 1),       keyFrame.values.at((uchar)JointId::R_HIP_ROLL - 1));
+
+      // Mirror values
+      for (uchar jointId = (uchar)JointId::R_SHOULDER_PITCH; jointId <= (uchar)JointId::HEAD_PAN; jointId++)
+        keyFrame.values.at(jointId - 1) = MX28::getMirrorValue(keyFrame.values.at(jointId - 1));
+    }
+  }
+
+  return mirror;
+}

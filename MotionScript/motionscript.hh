@@ -103,6 +103,8 @@ namespace bold
     std::string getName() const { return d_name; }
     void setName(std::string name) { d_name = name; }
 
+    std::shared_ptr<MotionScript> getMirroredScript(std::string name) const;
+
     bool writeJsonFile(std::string fileName) const;
     void writeJson(rapidjson::PrettyWriter<rapidjson::FileWriteStream>& writer) const;
 
