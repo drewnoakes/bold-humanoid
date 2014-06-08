@@ -36,6 +36,8 @@ namespace bold
         values()
       {}
 
+      KeyFrame(KeyFrame const& other) = default;
+
       /// Gets the position value to apply to the specified joint during this stage of motion
       ushort getValue(uchar jointId) const { return values.at(jointId - 1u); }
 
@@ -63,6 +65,8 @@ namespace bold
       {
         pGains.fill(DEFAULT_P_GAIN);
       }
+
+      Stage(Stage const& other) = default;
 
       /// Gets the proportional gain to apply to the specified joint during this stage of motion
       inline uchar getPGain(uchar jointId) const { return pGains.at(jointId - 1u); }
