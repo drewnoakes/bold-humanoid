@@ -1111,6 +1111,14 @@ div.module.trajectory button.record.recording
     border-color: red;
 }
 
+div.module.trajectory div.hover-value
+{
+    position: fixed;
+    color: #FFF;
+    margin: 5px;
+}
+
+
 /*******************************************************************/
 
 div.module.agent-2d .hover-info

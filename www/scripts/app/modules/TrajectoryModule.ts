@@ -18,6 +18,14 @@ var chartHeight = 300,
     chartWidth = 430,
     maxDataLength = chartWidth;
 
+var yScale = d3.scale.linear()
+    .range([0, chartHeight])
+    .domain([4096, 0]);
+
+var yScaleMirror = d3.scale.linear()
+    .range([0, chartHeight])
+    .domain([0, 4096]);
+
 interface ICloseable
 {
     close();
@@ -58,10 +66,17 @@ class TrajectoryModule extends Module
         controlContainer.appendChild(mirrorCheckbox.element);
         this.element.appendChild(controlContainer);
 
+        var hoverText = document.createElement('div');
+        hoverText.className = 'hover-value';
+        this.element.appendChild(hoverText);
+
         this.canvas = document.createElement('canvas');
         this.canvas.width = chartWidth;
         this.canvas.height = chartHeight;
         this.element.appendChild(this.canvas);
+
+        this.canvas.addEventListener('mousemove', e => hoverText.textContent = Math.round(yScale.invert(e.offsetY)).toString());
+        this.canvas.addEventListener('mouseout', e => hoverText.textContent = '');
 
         this.bodyFigure = new BodyFigure({hasHover: true, hasSelection: true});
         this.element.appendChild(this.bodyFigure.element);
@@ -136,14 +151,6 @@ class TrajectoryModule extends Module
             .range([0, chartWidth])
             .domain([this.data[0].cycle, this.data[this.data.length - 1].cycle]);
 
-        var y = d3.scale.linear()
-            .range([0, chartHeight])
-            .domain([4096, 0]);
-
-        var yMirror = d3.scale.linear()
-            .range([0, chartHeight])
-            .domain([0, 4096]);
-
         canvas.clear(ctx);
 
         var selectedJointIds = this.bodyFigure.selectedJointIds.getValue(),
@@ -167,9 +174,9 @@ class TrajectoryModule extends Module
             ctx.beginPath();
             _.each(this.data, d =>
             {
-                var yScale = this.mirrorValues.getValue() && jointId % 2 === 0 && jointId !== 20 ? yMirror : y;
+                var y = this.mirrorValues.getValue() && jointId % 2 === 0 && jointId !== 20 ? yScaleMirror : yScale;
                 var px = x(d.cycle),
-                    py = yScale(d.joints[jointId].v);
+                    py = y(d.joints[jointId].v);
                 ctx.lineTo(px, py);
             });
             ctx.stroke();
