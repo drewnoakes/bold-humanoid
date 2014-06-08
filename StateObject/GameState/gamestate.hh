@@ -13,6 +13,12 @@
 
 namespace bold
 {
+  enum class Team
+  {
+    Us,
+    Them
+  };
+
   class GameState : public StateObject
   {
   public:
@@ -57,6 +63,8 @@ namespace bold
     int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn + (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
     int16 getSecondsRemaining() const { return d_data.secondsRemaining - (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
     int16 getSecondaryTime() const { return d_data.secondaryTime; }
+
+    bool isWithinTenSecondsOfKickOff(Team team) const;
 
     robocup::TeamInfo const& getTeam1() const { return d_data.teams[0]; }
     robocup::TeamInfo const& getTeam2() const { return d_data.teams[1]; }

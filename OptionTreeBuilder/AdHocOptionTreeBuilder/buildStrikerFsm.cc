@@ -27,6 +27,18 @@ auto ballIsStoppingDistance = []
   return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
 };
 
+auto isWithinTenSecondsOfTheirKickOff = []()
+{
+  auto game = State::get<GameState>();
+  return game && game->isWithinTenSecondsOfKickOff(Team::Them);
+};
+
+auto isWithinTenSecondsOfOurKickOff = []()
+{
+  auto game = State::get<GameState>();
+  return game && game->isWithinTenSecondsOfKickOff(Team::Us);
+};
+
 // Indicates whether at this moment we observe the ball straight in front of us,
 // and in line with our goal such that we should walk directly to it, and kick
 // straight without looking around once we reach the ball.
@@ -144,7 +156,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // start approaching the ball when we have the confidence that it's really there
   locateBallState
     ->transitionTo(approachBallState, "found-ball")
-    ->when([] { return stepUpDownThreshold(10, ballVisibleCondition); });
+    ->when([] { return stepUpDownThreshold(10,
+      [] { return ballVisibleCondition() && !isWithinTenSecondsOfTheirKickOff(); });
+    });
+    // TODO this takes 300ms after the 10 sec elapses
+    // TODO try to detect when the ball moves
 
   approachBallState
     ->transitionTo(locateBallState, "lost-ball")
@@ -167,6 +183,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   directAttackState
     ->transitionTo(kickForwardsState, "near-ball")
     ->when(ballIsStoppingDistance);
+
+  approachBallState
+    ->transitionTo(kickForwardsState, "first-kick")
+    ->when([]() { return ballIsStoppingDistance() && isWithinTenSecondsOfOurKickOff(); });
 
   yieldState
     ->transitionTo(locateBallState, "resume")

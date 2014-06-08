@@ -4,6 +4,25 @@ using namespace bold;
 using namespace rapidjson;
 using namespace robocup;
 
+bool GameState::isWithinTenSecondsOfKickOff(Team team) const
+{
+  static uint8 teamNumber = static_cast<uint8>(Config::getStaticValue<int>("team-number"));
+
+  int nextKickOffTeamNum = getNextKickOffTeamNumber();
+
+  bool isOurKickOff = nextKickOffTeamNum == getTeamIndex(teamNumber);
+
+  bool isOurTeam = team == Team::Us;
+
+  if (isOurTeam == isOurKickOff)
+    return false;
+
+  PlayMode playMode = getPlayMode();
+  int secondaryTime = getSecondaryTime();
+
+  return playMode == PlayMode::PLAYING && secondaryTime > 0;
+}
+
 void GameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
