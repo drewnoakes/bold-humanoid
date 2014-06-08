@@ -1,0 +1,38 @@
+# This file contains known mappings from MAC addresses to descriptive names.
+#
+# Use this file along with the arp-scan tool to detect devices on a network
+# and their IP addresses:
+#
+#     sudo arp-scan -I wlan1 -l -m bh-macs.txt
+#
+# NOTE
+#
+# - MAC addresses must be in capital letters
+# - Lines must be separated by a TAB character
+
+0001C00C41EC	Nimue (ETH)
+000DF0950F7B	Nimue (WLAN)
+
+0001C00C4187	Gareth (ETH)
+000DF08D906B	Gareth (WLAN)
+
+0001C00C4182	Oberon (ETH)
+000DF0951669	Oberon (WLAN)
+
+0001C00C419B	Bors (ETH)
+000DF09518C5	Bors (WLAN)
+
+0001C00C43DA	Dagonet (ETH)
+000DF0951549	Dagonet (WLAN)
+
+0001C00C43D8	Ywain (ETH)
+000DF0950D4D	Ywain (WLAN)
+
+0001C00C44BE	Tor (ETH)
+000DF0950EEB	Tor (WLAN)
+
+848F69D09EE2	Drew's Laptop (ETH)
+88532ECC160E	Drew's Laptop (WLAN)
+
+10BF48F4D00D	Drew's Phone
+88308AE3DE19	Drew's Nexus 7
