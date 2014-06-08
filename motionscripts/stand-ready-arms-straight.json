@@ -1,0 +1,29 @@
+{
+  "name": "stand-ready-arms-straight",
+  "stages": [
+    {
+      "pGains": {
+        "shoulder-roll-r": 8,
+        "shoulder-roll-l": 8
+      },
+      "keyFrames": [
+        {
+          "moveCycles": 125,
+          "values": {
+            "shoulder-pitch": 2092,
+            "shoulder-roll": 1612,
+            "elbow": 1006,
+            "hip-yaw": 2048,
+            "hip-roll": 2052,
+            "hip-pitch": 1660,
+            "knee": 2646,
+            "ankle-pitch": 2409,
+            "ankle-roll": 2057,
+            "head-pan": 2048,
+            "head-tilt": 2161
+          }
+        }
+      ]
+    }
+  ]
+}
