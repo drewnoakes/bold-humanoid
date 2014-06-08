@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "helpers.hh"
 #include "../IncrementalRegression/incrementalregression.hh"
@@ -7,7 +7,7 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
-TEST (IncrementalRegressionTests, worldToAgentTransform)
+TEST (IncrementalRegressionTests, basic)
 {
   IncrementalRegression regression;
   regression.setSqError(1.0);
@@ -22,15 +22,12 @@ TEST (IncrementalRegressionTests, worldToAgentTransform)
   EXPECT_EQ( regression.getNPoints(), 1);
   EXPECT_EQ( regression.head(), point1 );
 
-  // Any point fits on a line with nly one point
-  EXPECT_EQ( regression.fit(point2), 0.0f );
-  EXPECT_EQ( regression.fit(point3), 0.0f );
-
   regression.addPoint(point2);
   regression.solve();
   EXPECT_EQ( regression.getNPoints(), 2);
+  EXPECT_EQ( regression.head(), point2 );
 
-  EXPECT_EQ( regression.fit(point3), 1.0f );
+  EXPECT_TRUE( regression.fit(point3) < 1.0f );
   
   auto lineSegment = regression.getLineSegment();
 
