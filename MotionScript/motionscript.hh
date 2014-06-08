@@ -53,8 +53,8 @@ namespace bold
      */
     struct Stage
     {
-      static const uchar DEFAULT_SPEED = 32;
-      static const uchar DEFAULT_P_GAIN = 32;
+      static const uchar DEFAULT_SPEED;
+      static const uchar DEFAULT_P_GAIN;
 
       Stage()
       : speed(DEFAULT_SPEED),

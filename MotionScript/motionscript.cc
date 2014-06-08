@@ -14,6 +14,11 @@ using namespace bold;
 using namespace std;
 using namespace rapidjson;
 
+const uchar MotionScript::Stage::DEFAULT_SPEED = 32;
+const uchar MotionScript::Stage::DEFAULT_P_GAIN = 32;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 {
   FILE* pFile = fopen(fileName.c_str(), "rb");
