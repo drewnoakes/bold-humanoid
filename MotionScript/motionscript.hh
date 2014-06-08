@@ -37,14 +37,14 @@ namespace bold
       {}
 
       /// Gets the position value to apply to the specified joint during this stage of motion
-      ushort getValue(uchar jointId) const { return values[jointId - 1]; }
+      ushort getValue(uchar jointId) const { return values.at(jointId - 1u); }
 
       /// The number of cycles to pause for after the target position has been reached.
       uchar pauseCycles;
       /// The number of cycles over which motion towards the target position is planned.
       uchar moveCycles;
       /// The target motor position values, indexed by joint ID - 1.
-      ushort values[(uchar)JointId::MAX];
+      std::array<ushort,(int)JointId::MAX> values;
     };
 
     /** Describes a group of key frames that share some configuration, and may be repeated several times.
@@ -61,18 +61,18 @@ namespace bold
         repeatCount(1),
         keyFrames()
       {
-        memset(&pGains, DEFAULT_P_GAIN, sizeof(pGains));
+        pGains.fill(DEFAULT_P_GAIN);
       }
 
       /// Gets the proportional gain to apply to the specified joint during this stage of motion
-      inline uchar getPGain(uchar jointId) const { return pGains[jointId - 1]; }
+      inline uchar getPGain(uchar jointId) const { return pGains.at(jointId - 1u); }
 
       /// The speed for motion during this stage. Defaults to DEFAULT_SPEED.
       unsigned speed;
       /// The number of times this stage should be played. Defaults to 1.
       unsigned repeatCount;
       /// The p-gain value to be used throughout this stage, indexed by joint ID - 1.
-      uchar pGains[(uchar)JointId::MAX];
+      std::array<uchar,(int)JointId::MAX> pGains;
       /// The KeyFrames contained within this stage.
       std::vector<KeyFrame> keyFrames;
     };
