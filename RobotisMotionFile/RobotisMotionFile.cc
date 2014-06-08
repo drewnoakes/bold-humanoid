@@ -36,7 +36,8 @@ RobotisMotionFile::RobotisMotionFile(string const& filePath)
     throw runtime_error("Invalid motion file size");
   }
 
-  for (unsigned pageIndex = 0; pageIndex <= MAX_PAGE_ID; pageIndex++)
+  // NOTE page zero is unused (all zeroed) and fails checksum validation, so skip it
+  for (unsigned pageIndex = 1; pageIndex <= MAX_PAGE_ID; pageIndex++)
   {
     long position = (long)(sizeof(RobotisMotionFile::Page)*pageIndex);
 
