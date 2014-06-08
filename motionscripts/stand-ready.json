@@ -10,12 +10,9 @@
         {
           "moveCycles": 125,
           "values": {
-            "shoulder-pitch-r": 1498,
-            "shoulder-pitch-l": 2518,
-            "shoulder-roll-r": 1845,
-            "shoulder-roll-l": 2248,
-            "elbow-r": 2381,
-            "elbow-l": 1712,
+            "shoulder-pitch": 1498,
+            "shoulder-roll": 1845,
+            "elbow": 2381,
             "hip-yaw": 2048,
             "hip-roll": 2052,
             "hip-pitch": 1660,
