@@ -23,14 +23,10 @@
     },
     {
       "pGains": {
-        "shoulder-pitch-r": 2,
-        "shoulder-pitch-l": 2,
-        "shoulder-roll-r": 2,
-        "shoulder-roll-l": 2,
-        "elbow-r": 2,
-        "elbow-l": 2,
-        "knee-r": 2,
-        "knee-l": 2,
+        "shoulder-pitch": 2,
+        "shoulder-roll": 2,
+        "elbow": 2,
+        "knee": 2,
         "head-pan": 2,
         "head-tilt": 2
       },

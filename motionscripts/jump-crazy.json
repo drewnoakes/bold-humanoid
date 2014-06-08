@@ -5,8 +5,7 @@
       "repeat": 4,
       "speed": 12,
       "pGains": {
-        "shoulder-roll-r": 8,
-        "shoulder-roll-l": 8
+        "shoulder-roll": 8
       },
       "keyFrames": [
         {
@@ -65,8 +64,7 @@
       "repeat": 4,
       "speed": 12,
       "pGains": {
-        "shoulder-roll-r": 8,
-        "shoulder-roll-l": 8
+        "shoulder-roll": 8
       },
       "keyFrames": [
         {
@@ -125,8 +123,7 @@
       "repeat": 20,
       "speed": 12,
       "pGains": {
-        "shoulder-roll-r": 8,
-        "shoulder-roll-l": 8
+        "shoulder-roll": 8
       },
       "keyFrames": [
         {

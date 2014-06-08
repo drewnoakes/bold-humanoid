@@ -4,6 +4,7 @@
 #include "../util/assert.hh"
 #include "../util/log.hh"
 
+#include <algorithm>
 #include <sstream>
 #include <dirent.h>
 #include <rapidjson/prettywriter.h>
@@ -61,6 +62,31 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
     {
       for (uchar g = 0; g < (uchar)JointId::MAX; g++)
       {
+        // Try to find a paired gain entry
+        if (JointPairs::isBase(g + (uchar)1))
+        {
+          string pairName = JointName::getJsonPairName(g + 1);
+          auto pairMember = gainsMember->value.FindMember(pairName.c_str());
+          if (pairMember)
+          {
+            // If a pair exists, the individual gains shouldn't
+            if (gainsMember->value.FindMember(JointName::getJsonName(g + 1).c_str()) ||
+                gainsMember->value.FindMember(JointName::getJsonName(g + 2).c_str()))
+            {
+              log::error("MotionScript::fromFile") << "JSON file " << fileName << " specifies pGain pair name '" << pairName << "' but also specifies L or R property in same stage";
+              throw std::runtime_error("JSON specifies pGain pair name and also individual L/R joint in same stage");
+            }
+
+            uchar value = (uchar)pairMember->value.GetUint();
+
+            stage->pGains[g] = value;
+            stage->pGains[g+1] = value;
+
+            g++;
+            continue;
+          }
+        }
+
         stage->pGains[g] = (uchar)gainsMember->value.TryGetUintValue(JointName::getJsonName(g + 1).c_str(), Stage::DEFAULT_P_GAIN);
       }
     }
@@ -97,8 +123,8 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
             if (valuesMember.FindMember(JointName::getJsonName(v + 1).c_str()) ||
                 valuesMember.FindMember(JointName::getJsonName(v + 2).c_str()))
             {
-              log::error("MotionScript::fromFile") << "JSON file " << fileName << " specifies pair name '" << pairName << "' but also specifies L or R property in same stage";
-              throw std::runtime_error("JSON specifies pair name and also individual L/R joint in same stage");
+              log::error("MotionScript::fromFile") << "JSON file " << fileName << " specifies value pair name '" << pairName << "' but also specifies L or R property in same stage";
+              throw std::runtime_error("JSON specifies value pair name and also individual L/R joint in same stage");
             }
 
             ushort value = (ushort)pairMember->value.GetUint();
@@ -214,21 +240,32 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
           if (stage->speed != Stage::DEFAULT_SPEED)
             writer.String("speed").Int(stage->speed);
 
-          for (int jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+          if (find_if(stage->pGains.begin(), stage->pGains.end(), [](uchar p) { return p != Stage::DEFAULT_P_GAIN; }) != stage->pGains.end())
           {
-            if (stage->pGains[jointId-1] != Stage::DEFAULT_P_GAIN)
+            writer.String("pGains");
+            writer.StartObject();
+            for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
             {
-              writer.String("pGains");
-              writer.StartObject();
-              for (int j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
+              uchar pGain = stage->pGains[j-1];
+              if (pGain == Stage::DEFAULT_P_GAIN)
+                continue;
+
+              // Abbreviate paired gains
+              if (JointPairs::isBase(j))
               {
-                uchar pGain = stage->pGains[j-1];
-                if (pGain != Stage::DEFAULT_P_GAIN)
-                  writer.String(JointName::getJsonName(j).c_str()).Uint(pGain);
+                uchar r = stage->pGains[j-1];
+                uchar l = stage->pGains[j];
+                if (r == l)
+                {
+                  writer.String(JointName::getJsonPairName(j).c_str()).Uint(r);
+                  j++;
+                  continue;
+                }
               }
-              writer.EndObject();
-              break;
+
+              writer.String(JointName::getJsonName(j).c_str()).Uint(pGain);
             }
+            writer.EndObject();
           }
 
           writer.String("keyFrames");
@@ -252,8 +289,7 @@ void MotionScript::writeJson(PrettyWriter<FileWriteStream>& writer) const
                     ushort lVal = step.values[jointId];
                     if (rVal == MX28::getMirrorValue(lVal))
                     {
-                      auto pairName = JointName::getJsonPairName(jointId);
-                      writer.String(pairName.c_str()).Uint(rVal);
+                      writer.String(JointName::getJsonPairName(jointId).c_str()).Uint(rVal);
                       jointId++;
                       continue;
                     }

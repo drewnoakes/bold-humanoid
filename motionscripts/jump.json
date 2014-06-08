@@ -5,8 +5,7 @@
       "repeat": 6,
       "speed": 12,
       "pGains": {
-        "shoulder-roll-r": 8,
-        "shoulder-roll-l": 8
+        "shoulder-roll": 8
       },
       "keyFrames": [
         {

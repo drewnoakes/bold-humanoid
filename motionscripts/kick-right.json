@@ -3,13 +3,10 @@
   "stages": [
     {
       "pGains": {
-        "shoulder-roll-r": 8,
-        "shoulder-roll-l": 8,
+        "shoulder-roll": 8,
         "hip-pitch-r": 64,
-        "knee-r": 64,
-        "knee-l": 64,
-        "ankle-pitch-r": 64,
-        "ankle-pitch-l": 64
+        "knee": 64,
+        "ankle-pitch": 64
       },
       "keyFrames": [
         {

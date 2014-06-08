@@ -3,8 +3,7 @@
   "stages": [
     {
       "pGains": {
-        "shoulder-pitch-r": 8,
-        "shoulder-pitch-l": 8,
+        "shoulder-pitch": 8,
         "head-pan": 8,
         "head-tilt": 8
       },
@@ -64,12 +63,9 @@
     {
       "speed": 16,
       "pGains": {
-        "shoulder-pitch-r": 8,
-        "shoulder-pitch-l": 8,
-        "shoulder-roll-r": 8,
-        "shoulder-roll-l": 8,
-        "elbow-r": 8,
-        "elbow-l": 8,
+        "shoulder-pitch": 8,
+        "shoulder-roll": 8,
+        "elbow": 8,
         "head-pan": 8,
         "head-tilt": 8
       },
@@ -229,12 +225,9 @@
     {
       "speed": 16,
       "pGains": {
-        "shoulder-pitch-r": 16,
-        "shoulder-pitch-l": 16,
-        "shoulder-roll-r": 16,
-        "shoulder-roll-l": 16,
-        "elbow-r": 16,
-        "elbow-l": 16,
+        "shoulder-pitch": 16,
+        "shoulder-roll": 16,
+        "elbow": 16,
         "head-pan": 8,
         "head-tilt": 8
       },
@@ -393,8 +386,7 @@
     },
     {
       "pGains": {
-        "shoulder-pitch-r": 8,
-        "shoulder-pitch-l": 8
+        "shoulder-pitch": 8
       },
       "keyFrames": [
         {

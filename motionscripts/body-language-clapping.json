@@ -3,12 +3,9 @@
   "stages": [
     {
       "pGains": {
-        "shoulder-pitch-r": 16,
-        "shoulder-pitch-l": 16,
-        "shoulder-roll-r": 16,
-        "shoulder-roll-l": 16,
-        "elbow-r": 16,
-        "elbow-l": 16
+        "shoulder-pitch": 16,
+        "shoulder-roll": 16,
+        "elbow": 16
       },
       "keyFrames": [
         {
