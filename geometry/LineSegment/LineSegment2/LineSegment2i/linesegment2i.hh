@@ -2,7 +2,7 @@
 
 #include <Eigen/Core>
 
-#include "../util/Maybe.hh"
+#include "../../../../util/Maybe.hh"
 
 #include "../../../Line.hh"
 #include "../../../Bounds2i.hh"

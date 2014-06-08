@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../util/meta.hh"
+#include "../../util/meta.hh"
 
 #include <Eigen/Core>
 #include <stdexcept>

@@ -8,9 +8,9 @@
 
 #include "LineSegment/linesegment.hh"
 #include "LineSegment/LineSegment2/linesegment2.hh"
-#include "../util/assert.hh"
-#include "../util/log.hh"
-#include "../util/Maybe.hh"
+#include "../../util/assert.hh"
+#include "../../util/log.hh"
+#include "../../util/Maybe.hh"
 
 namespace bold
 {

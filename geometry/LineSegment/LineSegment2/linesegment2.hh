@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../linesegment.hh"
-#include "../../util/Maybe.hh"
+#include "../../../util/Maybe.hh"
 
 #include <Eigen/Core>
 
