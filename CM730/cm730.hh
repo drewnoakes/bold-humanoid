@@ -57,11 +57,11 @@ namespace bold
     uint getRxLength() const { return d_rxLength; }
 
   private:
-    // TODO is this an MX28Alarm?
-    uchar d_error;
-    uint d_rxLength;
     std::array<BulkReadTable, 21> d_data;
     std::array<uchar, 70> d_txPacket; // 5 + 1 + 3 + (20*3) + 1
+    uint d_rxLength;
+    // TODO is this an MX28Alarm?
+    uchar d_error;
   };
 
   /// Communication results
