@@ -713,8 +713,11 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
       else
       {
         // Move bytes forwards in buffer, so that the header is aligned in byte zero
-        for (uint j = 0; j < (receivedCount - i); j++)
-          rxpacket[j] = rxpacket[j + i];
+        std::copy(
+          &rxpacket[i],
+          &rxpacket[receivedCount],
+          &rxpacket[0]);
+
         receivedCount -= i;
       }
     }
