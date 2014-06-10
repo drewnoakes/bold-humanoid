@@ -2,6 +2,7 @@
 
 #include "../OptionTree/optiontree.hh"
 #include "../Option/FSMOption/fsmoption.hh"
+#include "../MotionScript/motionscript.hh"
 
 shared_ptr<vector<uchar>> DataStreamer::prepareControlSyncBytes()
 {
@@ -53,6 +54,14 @@ shared_ptr<vector<uchar>> DataStreamer::prepareControlSyncBytes()
       {
         fsm->toJson(writer);
       }
+    }
+    writer.EndArray();
+
+    writer.String("motionScripts");
+    writer.StartArray();
+    {
+      for (auto const& motionScript : MotionScript::loadAllInPath("./motionscripts"))
+        motionScript->writeJson(writer);
     }
     writer.EndArray();
   }
