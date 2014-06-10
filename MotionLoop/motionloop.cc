@@ -256,7 +256,7 @@ void MotionLoop::initialiseHardwareTables()
         failCount++;
         if (failCount == retryCount)
         {
-          log::error("MotionLoop::initialiseHardwareTables") << "Communication problem writing " << MX28::getAddressName(address) << " to " << JointName::getEnumName(jointId) << ") after " << retryCount << " retries: " << CM730::getCommResultName(res);
+          log::error("MotionLoop::initialiseHardwareTables") << "Communication problem writing " << MX28::getAddressName(address) << " to " << JointName::getEnumName(jointId) << ") after " << retryCount << " retries: " << getCommResultName(res);
           return;
         }
         usleep(50000); // 50ms
@@ -283,7 +283,7 @@ void MotionLoop::initialiseHardwareTables()
         failCount++;
         if (failCount == retryCount)
         {
-          log::error("MotionLoop::initialiseHardwareTables") << "Communication problem writing " << MX28::getAddressName(address) << " to " << JointName::getEnumName(jointId) << ") after " << retryCount << " retries: " << CM730::getCommResultName(res);
+          log::error("MotionLoop::initialiseHardwareTables") << "Communication problem writing " << MX28::getAddressName(address) << " to " << JointName::getEnumName(jointId) << ") after " << retryCount << " retries: " << getCommResultName(res);
           return;
         }
         usleep(50000); // 50ms
@@ -298,7 +298,7 @@ void MotionLoop::initialiseHardwareTables()
 
     if (res != CommResult::SUCCESS)
     {
-      log::error("MotionLoop::initialiseHardwareTables") << "Communication problem pinging " << JointName::getEnumName(jointId) << ": " << CM730::getCommResultName(res);
+      log::error("MotionLoop::initialiseHardwareTables") << "Communication problem pinging " << JointName::getEnumName(jointId) << ": " << getCommResultName(res);
       return false;
     }
 
@@ -600,7 +600,7 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t
 
   if (res != CommResult::SUCCESS)
   {
-    log::warning("MotionLoop::process") << "CM730 bulk read failed (" << CM730::getCommResultName(res) << ")";
+    log::warning("MotionLoop::process") << "CM730 bulk read failed (" << getCommResultName(res) << ")";
     onReadFailure(++d_consecutiveReadFailureCount);
     return nullptr;
   }

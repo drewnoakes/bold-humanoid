@@ -81,6 +81,8 @@ namespace bold
     RX_CORRUPT
   };
 
+  std::string getCommResultName(CommResult res);
+
   class CM730
   {
   public:
@@ -193,8 +195,6 @@ namespace bold
         ((s >> 5)  & 0x1F) / 31.0,
         ((s >> 10) & 0x1F) / 31.0);
     }
-
-    static std::string getCommResultName(CommResult responseCode);
 
     //
     // ----------------- Instance members

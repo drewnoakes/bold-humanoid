@@ -112,9 +112,9 @@ ushort BulkReadTable::readWord(uchar address) const
 
 //// Static members
 
-string CM730::getCommResultName(CommResult responseCode)
+string bold::getCommResultName(CommResult res)
 {
-  switch (responseCode)
+  switch (res)
   {
     case CommResult::SUCCESS:     return "SUCCESS";
     case CommResult::TX_CORRUPT:  return "TX_CORRUPT";
