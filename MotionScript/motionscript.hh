@@ -194,8 +194,7 @@ namespace bold
                 {
                   if (step.pauseCycles != 0)
                     writer.String("pauseCycles").Int(step.pauseCycles);
-                  if (step.moveCycles != 0) // TODO a zero value here should be an error
-                    writer.String("moveCycles").Int(step.moveCycles);
+                  writer.String("moveCycles").Int(step.moveCycles);
                   writer.String("values").StartObject();
                   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
                   {
