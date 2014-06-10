@@ -62,6 +62,8 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 
   writeDeviceRequest(CM730::ID_CM, cmMin, cmMax);
 
+  static_assert((uchar)JointId::MIN == 1, "Lowest JointId must be 1 for the data packing scheme to work. CM730 is at index 0.");
+
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
     writeDeviceRequest(jointId, mxMin, mxMax);
 
