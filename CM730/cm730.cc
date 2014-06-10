@@ -653,10 +653,13 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
   //
 
   uint length = txpacket[LENGTH] + 4;
+  short checksum = calculateChecksum(txpacket, length);
+
+  ASSERT(checksum >= 0);
 
   txpacket[0] = 0xFF;
   txpacket[1] = 0xFF;
-  txpacket[length - 1] = calculateChecksum(txpacket, length);
+  txpacket[length - 1] = (uchar)checksum;
 
   if (DEBUG_PRINT)
   {
