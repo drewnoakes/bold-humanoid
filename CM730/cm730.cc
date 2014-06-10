@@ -57,8 +57,8 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
     d_txPacket[p++] = startAddress;
 
     uchar dataIndex = deviceId == CM730::ID_CM ? (uchar)0 : deviceId;
-    d_data[dataIndex].startAddress = startAddress;
-    d_data[dataIndex].length = requestedByteCount;
+    d_data[dataIndex].setStartAddress(startAddress);
+    d_data[dataIndex].setLength(requestedByteCount);
   };
 
   writeDeviceRequest(CM730::ID_CM, cmMin, cmMax);
@@ -80,22 +80,22 @@ BulkReadTable& BulkRead::getBulkReadData(uchar id)
 }
 
 BulkReadTable::BulkReadTable()
-: startAddress(0),
-  length(0)
+: d_startAddress(0),
+  d_length(0)
 {
-  memset(table, 0, MX28::MAXNUM_ADDRESS);
+  memset(d_table, 0, MX28::MAXNUM_ADDRESS);
 }
 
 uchar BulkReadTable::readByte(uchar address) const
 {
-  ASSERT(address >= startAddress && address < (startAddress + length));
-  return table[address];
+  ASSERT(address >= d_startAddress && address < (d_startAddress + d_length));
+  return d_table[address];
 }
 
 ushort BulkReadTable::readWord(uchar address) const
 {
-  ASSERT(address >= startAddress && address < (startAddress + length));
-  return CM730::makeWord(table[address], table[address+1]);
+  ASSERT(address >= d_startAddress && address < (d_startAddress + d_length));
+  return CM730::makeWord(d_table[address], d_table[address+1]);
 }
 
 //////////
@@ -658,17 +658,19 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
         if (rxpacket[LENGTH + rxpacket[LENGTH]] == checksum)
         {
+          // Checksum matches
+
           if (DEBUG_PRINT)
             cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID] << " checksum: " << hex << setfill('0') << setw(2) << (int)checksum << dec << endl;
 
-          // Checksum matches
-          for (unsigned j = 0; j < (rxpacket[LENGTH] - 2u); j++)
-          {
-            BulkReadTable& table = bulkRead->getBulkReadData(rxpacket[ID]);
-            unsigned address = table.startAddress + j;
-            ASSERT(address < MX28::MAXNUM_ADDRESS);
-            table.table[address] = rxpacket[PARAMETER + j];
-          }
+          // Copy data from packet to BulkReadTable
+          BulkReadTable& table = bulkRead->getBulkReadData(rxpacket[ID]);
+          const uchar dataByteCount = rxpacket[LENGTH] - (uchar)2;
+          ASSERT(table.getStartAddress() + dataByteCount < MX28::MAXNUM_ADDRESS);
+          std::copy(
+            &rxpacket[PARAMETER],
+            &rxpacket[PARAMETER + dataByteCount + 1],
+            table.getData() + table.getStartAddress());
 
           uint curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
           expectedLength = receivedCount - curPacketLength;
@@ -685,7 +687,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
           log::warning("CM730::txRxPacket") << "Received checksum didn't match";
 
-          for (int j = 0; j <= receivedCount - 2u; j++)
+          for (uint j = 0; j <= receivedCount - 2u; j++)
             rxpacket[j] = rxpacket[j + 2];
 
           expectedLength = receivedCount -= 2;

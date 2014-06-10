@@ -28,14 +28,20 @@ namespace bold
   class BulkReadTable
   {
   public:
-    int startAddress;
-    int length;
-    uchar table[MX28::MAXNUM_ADDRESS];
-
     BulkReadTable();
 
     uchar readByte(uchar address) const;
     ushort readWord(uchar address) const;
+    uchar getStartAddress() const { return d_startAddress; }
+    void setStartAddress(uchar addr) { d_startAddress = addr; }
+    uint getLength() const { return d_length; }
+    void setLength(uint length) { d_length = length; }
+    uchar* getData() { return d_table; }
+
+  private:
+    uchar d_startAddress;
+    uint d_length;
+    uchar d_table[MX28::MAXNUM_ADDRESS];
   };
 
   class BulkRead
