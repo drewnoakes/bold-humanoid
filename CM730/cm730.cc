@@ -31,7 +31,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
   // Build a place for the data we read back
   d_data.fill(BulkReadTable());
 
-  // We will receive 6 bytes per device
+  // We will receive 6 bytes per device plus an amount varying with the requested address range (added in below)
   d_rxLength = (uchar)JointId::DEVICE_COUNT * 6u;
 
   // Create a cached TX packet as it'll be identical each time
