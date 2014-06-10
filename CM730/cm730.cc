@@ -653,15 +653,16 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
       if (i == 0)
       {
-        // Check checksum
-        uchar checksum = calculateChecksum(rxpacket);
+        // Validate checksum
+        const uchar observedChecksum = rxpacket[LENGTH + rxpacket[LENGTH]];
+        const uchar expectedChecksum = calculateChecksum(rxpacket);
 
-        if (rxpacket[LENGTH + rxpacket[LENGTH]] == checksum)
+        if (observedChecksum == expectedChecksum)
         {
           // Checksum matches
 
           if (DEBUG_PRINT)
-            cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID] << " checksum: " << hex << setfill('0') << setw(2) << (int)checksum << dec << endl;
+            cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID] << " checksum: " << hex << setfill('0') << setw(2) << (int)expectedChecksum << dec << endl;
 
           // Copy data from packet to BulkReadTable
           BulkReadTable& table = bulkRead->getBulkReadData(rxpacket[ID]);
