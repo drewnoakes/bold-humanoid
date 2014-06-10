@@ -664,7 +664,8 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
           // Checksum matches
 
           if (DEBUG_PRINT)
-            cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID] << " checksum: " << hex << setfill('0') << setw(2) << (int)expectedChecksum << dec << endl;
+            cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID]
+                 << " checksum: " << hex << setfill('0') << setw(2) << (int)expectedChecksum << dec << endl;
 
           // Copy data from rxpacket to BulkReadTable
           auto& table = bulkRead->getBulkReadData(rxpacket[ID]);
@@ -732,7 +733,8 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
   }
 
   if (DEBUG_PRINT)
-    cout << "[CM730::txRxPacket] Round trip in " << setprecision(2) << d_platform->getPacketTime() << "ms  (" << getCommResultName(res) << ")" << endl;
+    cout << "[CM730::txRxPacket] Round trip in " << setprecision(2) << d_platform->getPacketTime()
+         << "ms  (" << getCommResultName(res) << ")" << endl;
 
   return res;
 }
