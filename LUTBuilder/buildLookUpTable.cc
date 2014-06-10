@@ -1,8 +1,6 @@
 #include "lutbuilder.ih"
 
-// TODO these shared_ptr are not going to release the LUT objects -- they just delete the first item in the array!
-
-shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR24(vector<shared_ptr<PixelLabel>> const& labels)
+shared_ptr<uchar const> LUTBuilder::buildLookUpTableBGR24(vector<shared_ptr<PixelLabel>> const& labels)
 {
   uchar* lut = new uchar[1<<24];
   uchar* p = lut;
@@ -12,10 +10,10 @@ shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR24(vector<shared_ptr<PixelLabel
       for (int r = 0; r < 256; ++r)
           *(p++) = labelPixel(labels, Colour::bgr(b, g, r));
 
-  return shared_ptr<uchar>(lut);
+  return shared_ptr<uchar const>(lut, [](uchar const* p) { delete[] p; });
 }
 
-shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR18(vector<shared_ptr<PixelLabel>> const& labels)
+shared_ptr<uchar const> LUTBuilder::buildLookUpTableBGR18(vector<shared_ptr<PixelLabel>> const& labels)
 {
   uchar* lut = new uchar[1<<18];
   uchar* p = lut;
@@ -25,10 +23,10 @@ shared_ptr<uchar> LUTBuilder::buildLookUpTableBGR18(vector<shared_ptr<PixelLabel
       for (int r = 0; r < 64; ++r)
           *(p++) = labelPixel(labels, Colour::bgr(b<<2, g<<2, r<<2));
 
-  return shared_ptr<uchar>(lut);
+  return shared_ptr<uchar const>(lut, [](uchar const* p) { delete[] p; });
 }
 
-shared_ptr<uchar> LUTBuilder::buildLookUpTableYCbCr18(vector<shared_ptr<PixelLabel>> const& labels)
+shared_ptr<uchar const> LUTBuilder::buildLookUpTableYCbCr18(vector<shared_ptr<PixelLabel>> const& labels)
 {
   uchar* lut = new uchar[1<<18];
   uchar* p = lut;
@@ -40,7 +38,7 @@ shared_ptr<uchar> LUTBuilder::buildLookUpTableYCbCr18(vector<shared_ptr<PixelLab
       for (int cr = 0; cr < 64; ++cr)
           *(p++) = labelPixel(labels, Colour::YCbCr(y<<2, cb<<2, cr<<2).toBgrInt());
 
-  return shared_ptr<uchar>(lut);
+  return shared_ptr<uchar const>(lut, [](uchar const* p) { delete[] p; });
 }
 
 uchar LUTBuilder::labelPixel(vector<shared_ptr<PixelLabel>> const& labels, Colour::bgr const& bgr)
