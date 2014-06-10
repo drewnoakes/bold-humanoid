@@ -288,6 +288,8 @@ bool CM730::powerEnable(bool enable)
 
 CommResult CM730::ping(uchar id, MX28Alarm* error)
 {
+  ASSERT(d_platform->isPortOpen());
+
   uchar txpacket[6];
   uchar rxpacket[6];
 
@@ -308,6 +310,8 @@ CommResult CM730::ping(uchar id, MX28Alarm* error)
 
 CommResult CM730::reset(uchar id)
 {
+  ASSERT(d_platform->isPortOpen());
+
   uchar txpacket[6];
   uchar rxpacket[6];
 
@@ -320,6 +324,8 @@ CommResult CM730::reset(uchar id)
 
 CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error)
 {
+  ASSERT(d_platform->isPortOpen());
+
   uchar txpacket[8];
   uchar rxpacket[7];
 
@@ -343,6 +349,8 @@ CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* er
 
 CommResult CM730::readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* error)
 {
+  ASSERT(d_platform->isPortOpen());
+
   uchar txpacket[8];
   uchar rxpacket[8];
 
@@ -367,6 +375,8 @@ CommResult CM730::readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* e
 
 CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar *table, MX28Alarm* error)
 {
+  ASSERT(d_platform->isPortOpen());
+
   int length = toAddress - fromAddress + 1;
 
   uchar txpacket[8];
@@ -394,6 +404,8 @@ CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar 
 
 CommResult CM730::bulkRead(BulkRead* bulkRead)
 {
+  ASSERT(d_platform->isPortOpen());
+
   uchar rxpacket[bulkRead->getRxLength()];
 
   bulkRead->clearError();
@@ -405,6 +417,8 @@ CommResult CM730::bulkRead(BulkRead* bulkRead)
 
 CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* error)
 {
+  ASSERT(d_platform->isPortOpen());
+
   uchar txpacket[8];
   uchar rxpacket[6];
 
@@ -429,6 +443,8 @@ CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* err
 
 CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* error)
 {
+  ASSERT(d_platform->isPortOpen());
+
   uchar txpacket[9];
   uchar rxpacket[6];
 
@@ -452,6 +468,7 @@ CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* er
 
 CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar deviceCount, uchar *parameters)
 {
+  ASSERT(d_platform->isPortOpen());
   ASSERT(bytesPerDevice != 0);
   ASSERT(bytesPerDevice - 1 <= 255);
   ASSERT(deviceCount != 0);
@@ -494,6 +511,7 @@ uint findPacketHeaderIndex(const uchar* data, uint length)
 CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRead)
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
+  ASSERT(d_platform->isPortOpen());
 
   uint length = txpacket[LENGTH] + 4;
 
