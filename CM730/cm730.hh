@@ -33,7 +33,7 @@ namespace bold
     uchar readByte(uchar address) const;
     ushort readWord(uchar address) const;
     uchar getStartAddress() const { return d_startAddress; }
-    void setStartAddress(uchar addr) { d_startAddress = addr; }
+    void setStartAddress(uchar address) { d_startAddress = address; }
     uint getLength() const { return d_length; }
     void setLength(uint length) { d_length = length; }
     uchar* getData() { return d_table.data(); }
