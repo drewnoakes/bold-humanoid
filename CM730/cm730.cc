@@ -670,7 +670,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
           // Copy data from rxpacket to BulkReadTable
           auto& table = bulkRead->getBulkReadData(rxpacket[ID]);
 
-          // Copy data from packet to BulkReadTable
+          // The number of data bytes is equal to the packet's advertised length, minus two (checksum and length bytes)
           const uchar dataByteCount = rxpacket[LENGTH] - (uchar)2;
           ASSERT(table.getStartAddress() + dataByteCount < MX28::MAXNUM_ADDRESS);
           std::copy(
