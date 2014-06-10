@@ -666,7 +666,8 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
           if (DEBUG_PRINT)
             cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID] << " checksum: " << hex << setfill('0') << setw(2) << (int)expectedChecksum << dec << endl;
 
-          BulkReadTable& table = bulkRead->getBulkReadData(rxpacket[ID]);
+          // Copy data from rxpacket to BulkReadTable
+          auto& table = bulkRead->getBulkReadData(rxpacket[ID]);
 
           // Copy data from packet to BulkReadTable
           const uchar dataByteCount = rxpacket[LENGTH] - (uchar)2;
@@ -683,7 +684,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
           std::copy(
             &rxpacket[curPacketLength],
             &rxpacket[curPacketLength + expectedLength + 1],
-            &rxpacket[0]);
+            rxpacket.data());
 
           receivedCount = expectedLength;
           deviceCount--;
