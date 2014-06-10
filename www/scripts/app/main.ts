@@ -117,3 +117,5 @@ document.getElementById('logo').addEventListener('click', e => util.toggleFullSc
 // Not sure why this copy is required, but it seems to be...
 var toggleNightMode = constants.toggleNightMode;
 document.querySelector("#header h1").addEventListener('click', e => { toggleNightMode(); });
+
+document.documentElement.classList.add("initialised");
