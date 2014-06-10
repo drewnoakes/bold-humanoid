@@ -48,7 +48,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
   {
     ASSERT(startAddress < endAddress);
 
-    uchar requestedByteCount = endAddress - startAddress + 1;
+    uchar requestedByteCount = endAddress - startAddress + (uchar)1;
 
     rxLength += requestedByteCount;
 
@@ -63,10 +63,10 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 
   writeDeviceRequest(CM730::ID_CM, cmMin, cmMax);
 
-  for (int id = 1; id <= 20; id++)
+  for (uchar id = 1; id <= 20; id++)
     writeDeviceRequest(id, mxMin, mxMax);
 
-  d_txPacket[LENGTH] = p - PARAMETER + 2; // Include one byte each for instruction and checksum
+  d_txPacket[LENGTH] = p - (uchar)PARAMETER + (uchar)2; // Include one byte each for instruction and checksum
 }
 
 //////////
@@ -474,7 +474,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
 
-  int length = txpacket[LENGTH] + 4;
+  uint length = txpacket[LENGTH] + 4;
 
   txpacket[0] = 0xFF;
   txpacket[1] = 0xFF;
@@ -485,7 +485,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     cout << "[CM730::txRxPacket] Transmitting '" << getInstructionName(txpacket[INSTRUCTION]) << "' instruction" << endl;
     cout << "[CM730::txRxPacket]   TX[" << length << "]";
     cout << hex << setfill('0');
-    for (int n = 0; n < length; n++)
+    for (uint n = 0; n < length; n++)
       cout << " " << setw(2) << (int)txpacket[n];
     cout << dec << endl;
   }
@@ -509,7 +509,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     log::error("CM730::txRxPacket") << "Error writing to CM730 port: " << strerror(errno) << " (" << errno << ")";
     return CommResult::TX_FAIL;
   }
-  else if (bytesWritten != length)
+  else if ((uint)bytesWritten != length)
   {
     log::warning("CM730::txRxPacket") << "Failed to write entire packet to port: " << bytesWritten << " of " << length << " written";
     return CommResult::TX_FAIL;
@@ -598,9 +598,9 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     int deviceCount = bulkRead->deviceCount;
     int expectedLength = bulkRead->rxLength;
 
-    d_platform->setPacketTimeout(expectedLength*1.5);
+    d_platform->setPacketTimeout(static_cast<uint>(expectedLength * 1.5));
 
-    int receivedCount = 0;
+    uint receivedCount = 0;
 
     // Read until we get enough bytes, or there's a timeout
     while (true)
@@ -641,8 +641,8 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     while (true)
     {
       // Search for the header: 0xFFFF
-      int i;
-      for (i = 0; i < receivedCount - 1; i++)
+      uint i;
+      for (i = 0; i < receivedCount - 1u; i++)
       {
         if (rxpacket[i] == 0xFF && rxpacket[i + 1] == 0xFF)
           break;
@@ -670,9 +670,9 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
             bulkRead->data[dataIndex].table[address] = rxpacket[PARAMETER + j];
           }
 
-          int curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
+          uint curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
           expectedLength = receivedCount - curPacketLength;
-          for (int j = 0; j <= expectedLength; j++)
+          for (uint j = 0; j <= expectedLength; j++)
             rxpacket[j] = rxpacket[j + curPacketLength];
 
           receivedCount = expectedLength;
@@ -685,7 +685,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
           log::warning("CM730::txRxPacket") << "Received checksum didn't match";
 
-          for (int j = 0; j <= receivedCount - 2; j++)
+          for (int j = 0; j <= receivedCount - 2u; j++)
             rxpacket[j] = rxpacket[j + 2];
 
           expectedLength = receivedCount -= 2;
@@ -705,7 +705,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
       else
       {
         // Move bytes forwards in buffer, so that the header is aligned in byte zero
-        for (int j = 0; j < (receivedCount - i); j++)
+        for (uint j = 0; j < (receivedCount - i); j++)
           rxpacket[j] = rxpacket[j + i];
         receivedCount -= i;
       }

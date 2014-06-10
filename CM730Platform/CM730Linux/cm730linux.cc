@@ -151,7 +151,7 @@ int CM730Linux::readPort(unsigned char* packet, size_t byteCount)
   return i;
 }
 
-void CM730Linux::setPacketTimeout(int lenPacket)
+void CM730Linux::setPacketTimeout(uint lenPacket)
 {
   d_packetStartTimeMillis = Clock::getMillis();
   d_packetWaitTimeMillis = (d_byteTransferTimeMillis * lenPacket) + 5.0;

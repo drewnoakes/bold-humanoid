@@ -29,7 +29,7 @@ namespace bold
     int writePort(uchar const* packet, std::size_t numPacket) override;
     int readPort(uchar* packet, std::size_t numPacket) override;
 
-    void setPacketTimeout(int lenPacket) override;
+    void setPacketTimeout(uint lenPacket) override;
     bool isPacketTimeout() override;
     double getPacketTime() override;
     double getPacketTimeoutMillis() const override;

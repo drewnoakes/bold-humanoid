@@ -6,6 +6,7 @@
 namespace bold
 {
   typedef unsigned char uchar;
+  typedef unsigned int uint;
 
   /** An abstract base class for classes that provide direct access to the CM730
    * hardware in a means appropriate to the operating system, such as LinuxCM730.
@@ -35,7 +36,7 @@ namespace bold
     virtual int readPort(uchar* packet, std::size_t byteCount) = 0;
 
     /// Sets timeout for packet receipt, called after sending a packet for which a response is expected
-    virtual void setPacketTimeout(int lenPacket) = 0;
+    virtual void setPacketTimeout(uint lenPacket) = 0;
 
     /// Gets whether the expected packet has timed out
     virtual bool isPacketTimeout() = 0;
