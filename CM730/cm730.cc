@@ -739,8 +739,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
         if (remainingByteCount <= 6)
         {
-          if (deviceCount != 0)
-            res = CommResult::RX_CORRUPT;
+          res = CommResult::RX_CORRUPT;
           break;
         }
       }
