@@ -237,8 +237,14 @@ void MotionLoop::initialiseHardwareTables()
 
   const int retryCount = 10;
 
-  auto writeByteWithRetry = [this](uchar jointId, uchar address, uchar value)
+  auto writeByteWithRetry = [this](BulkReadTable const& table, uchar jointId, uchar address, uchar value)
   {
+    // Don't write anything if the value is already set correctly
+    if (table.readByte(address) == value)
+      return;
+
+    log::info("MotionLoop::initialiseHardwareTables") << "Writing value " << (int)value << " to EEPROM address '" << MX28::getAddressName(address) << "' of " << JointName::getEnumName(jointId);
+
     int failCount = 0;
     while (true)
     {
@@ -264,8 +270,14 @@ void MotionLoop::initialiseHardwareTables()
     }
   };
 
-  auto writeWordWithRetry = [this](uchar jointId, uchar address, ushort value)
+  auto writeWordWithRetry = [this](BulkReadTable const& table, uchar jointId, uchar address, ushort value)
   {
+    // Don't write anything if the value is already set correctly
+    if (table.readWord(address) == value)
+      return;
+
+    log::info("MotionLoop::initialiseHardwareTables") << "Writing value " << (int)value << " to EEPROM address '" << MX28::getAddressName(address) << "' of " << JointName::getEnumName(jointId);
+
     int failCount = 0;
     while (true)
     {
@@ -312,6 +324,23 @@ void MotionLoop::initialiseHardwareTables()
   };
 
   //
+  // Read current EEPROM values.
+  // Avoid writing to EEPROM unless necessary.
+  //
+
+  BulkRead eepromBulkRead(
+    CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
+    MX28::P_MODEL_NUMBER_L, MX28::P_ALARM_SHUTDOWN);
+
+  while (true)
+  {
+    auto res = d_cm730->bulkRead(&eepromBulkRead);
+    if (res == CommResult::SUCCESS)
+      break;
+    log::warning("MotionLoop::initialiseHardwareTables") << "Communication problem (" << getCommResultName(res) << ") during bulk read. Retrying...";
+  }
+
+  //
   // Prepare values to be written
   //
 
@@ -341,16 +370,18 @@ void MotionLoop::initialiseHardwareTables()
     path << "hardware.limits.angle-limits." << JointName::getJsonName(jointId);
     Range<double> rangeDegs = Config::getStaticValue<Range<double>>(path.str());
 
-    writeByteWithRetry(jointId, MX28::P_RETURN_DELAY_TIME, 0);
-    writeByteWithRetry(jointId, MX28::P_RETURN_LEVEL, 2);
-    writeWordWithRetry(jointId, MX28::P_CW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.min()));
-    writeWordWithRetry(jointId, MX28::P_CCW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.max()));
-    writeByteWithRetry(jointId, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::centigrade2Value(tempLimit));
-    writeByteWithRetry(jointId, MX28::P_LOW_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.min()));
-    writeByteWithRetry(jointId, MX28::P_HIGH_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.max()));
-    writeWordWithRetry(jointId, MX28::P_MAX_TORQUE_L, MX28::MAX_TORQUE);
-    writeByteWithRetry(jointId, MX28::P_ALARM_LED, alarmLed.getFlags());
-    writeByteWithRetry(jointId, MX28::P_ALARM_SHUTDOWN, alarmShutdown.getFlags());
+    auto const& table = eepromBulkRead.getBulkReadData(jointId);
+
+    writeByteWithRetry(table, jointId, MX28::P_RETURN_DELAY_TIME, 0);
+    writeByteWithRetry(table, jointId, MX28::P_RETURN_LEVEL, 2);
+    writeWordWithRetry(table, jointId, MX28::P_CW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.min()));
+    writeWordWithRetry(table, jointId, MX28::P_CCW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.max()));
+    writeByteWithRetry(table, jointId, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::centigrade2Value(tempLimit));
+    writeByteWithRetry(table, jointId, MX28::P_LOW_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.min()));
+    writeByteWithRetry(table, jointId, MX28::P_HIGH_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.max()));
+    writeWordWithRetry(table, jointId, MX28::P_MAX_TORQUE_L, MX28::MAX_TORQUE);
+    writeByteWithRetry(table, jointId, MX28::P_ALARM_LED, alarmLed.getFlags());
+    writeByteWithRetry(table, jointId, MX28::P_ALARM_SHUTDOWN, alarmShutdown.getFlags());
   }
 
   log::info("MotionLoop::initialiseHardwareTables") << "All MX28 data tables initialised";
