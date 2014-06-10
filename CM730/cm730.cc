@@ -664,8 +664,9 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
           if (DEBUG_PRINT)
             cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID] << " checksum: " << hex << setfill('0') << setw(2) << (int)expectedChecksum << dec << endl;
 
-          // Copy data from packet to BulkReadTable
           BulkReadTable& table = bulkRead->getBulkReadData(rxpacket[ID]);
+
+          // Copy data from packet to BulkReadTable
           const uchar dataByteCount = rxpacket[LENGTH] - (uchar)2;
           ASSERT(table.getStartAddress() + dataByteCount < MX28::MAXNUM_ADDRESS);
           std::copy(
@@ -673,10 +674,14 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
             &rxpacket[PARAMETER + dataByteCount + 1],
             table.getData() + table.getStartAddress());
 
-          uint curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
+          // Move data forward in the packet
+          // TODO this seems a very wasteful operation -- should just operate on memory in place
+          const uint curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
           expectedLength = receivedCount - curPacketLength;
-          for (uint j = 0; j <= expectedLength; j++)
-            rxpacket[j] = rxpacket[j + curPacketLength];
+          std::copy(
+            &rxpacket[curPacketLength],
+            &rxpacket[curPacketLength + expectedLength + 1],
+            &rxpacket[0]);
 
           receivedCount = expectedLength;
           deviceCount--;
