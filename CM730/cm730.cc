@@ -736,8 +736,5 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
 uchar CM730::calculateChecksum(uchar *packet)
 {
-  uchar checksum = 0;
-  for (int i = 2; i < packet[LENGTH] + 3; i++)
-    checksum += packet[i];
-  return (~checksum);
+  return ~std::accumulate(&packet[2], &packet[packet[LENGTH] + 3], (uchar)0);
 }
