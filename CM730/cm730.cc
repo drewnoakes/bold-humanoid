@@ -55,9 +55,9 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
     d_txPacket[p++] = deviceId;
     d_txPacket[p++] = startAddress;
 
-    uchar dataIndex = deviceId == CM730::ID_CM ? (uchar)0 : deviceId;
-    d_data.at(dataIndex).setStartAddress(startAddress);
-    d_data.at(dataIndex).setLength(requestedByteCount);
+    auto& table = d_data.at(deviceId == CM730::ID_CM ? 0 : deviceId);
+    table.setStartAddress(startAddress);
+    table.setLength(requestedByteCount);
   };
 
   writeDeviceRequest(CM730::ID_CM, cmMin, cmMax);
