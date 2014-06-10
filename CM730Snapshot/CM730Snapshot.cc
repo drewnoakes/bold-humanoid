@@ -77,6 +77,8 @@ StaticCM730State::StaticCM730State(BulkReadTable const& data)
 
   dynamixelId     = data.readByte(CM730::P_ID);                   // 0xC8
 
+  ASSERT(dynamixelId == CM730::ID_CM);
+
   auto baudByte   = data.readByte(CM730::P_BAUD_RATE);            // 0x01
   baudBPS = 2000000/(baudByte+1);
 
