@@ -230,7 +230,7 @@ namespace bold
     void resetByteCounts() { d_platform->resetByteCounts(); }
 
 
-    /// Check the existance of Dynamixel with selected id. Returns communication result enum value.
+    /// Check the existence of Dynamixel with selected id. Returns communication result enum value.
     CommResult ping(uchar id, MX28Alarm* error);
 
     /// Restores the state of the specified Dynamixel to the factory default setting.

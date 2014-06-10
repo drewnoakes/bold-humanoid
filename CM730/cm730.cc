@@ -70,7 +70,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 }
 
 //////////
-////////// BulkReadTable
+////////// BulkRead
 //////////
 
 BulkReadTable& BulkRead::getBulkReadData(uchar id)
@@ -78,6 +78,10 @@ BulkReadTable& BulkRead::getBulkReadData(uchar id)
   ASSERT(id == CM730::ID_CM || (id >= (uchar)JointId::MIN && id <= (uchar)JointId::MAX));
   return d_data[id == CM730::ID_CM ? 0 : id];
 }
+
+//////////
+////////// BulkReadTable
+//////////
 
 BulkReadTable::BulkReadTable()
 : d_startAddress(0),
@@ -113,8 +117,7 @@ string CM730::getCommResultName(CommResult responseCode)
     case CommResult::TX_FAIL:     return "TX_FAIL";
     case CommResult::RX_TIMEOUT:  return "RX_TIMEOUT";
     case CommResult::RX_CORRUPT:  return "RX_CORRUPT";
-
-    default:          return "UNKNOWN";
+    default:                      return "UNKNOWN";
   }
 }
 
@@ -130,7 +133,7 @@ string getInstructionName(uchar instructionId)
     case instruction::Reset:     return "RESET";
     case instruction::SyncWrite: return "SYNC_WRITE";
     case instruction::BulkRead:  return "BULK_READ";
-    default:                       return "UNKNOWN";
+    default:                     return "UNKNOWN";
   }
 }
 
