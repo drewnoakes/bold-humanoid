@@ -57,6 +57,25 @@ button
   padding: 3px 7px;
   border-radius: 3px;
 }
+
+input[type="color"]
+{
+  background-color: #aaa;
+  border: none;
+  padding: 4px;
+  width: 38px;
+}
+
+html.night-mode input[type="color"]
+{
+  background-color: #444;
+}
+
+div.setting.control input[type="color"]
+{
+  margin-top: 4px;
+}
+
 /********************************************************************/
 
 #loading-indicator
@@ -305,11 +324,33 @@ div.module h1
     text-transform: uppercase;
 }
 
+html.night-mode div.module h1
+{
+  color: #999;
+}
+
 div.module h2
 {
     margin: 0 0 4px 0;
     font-size: 12px;
     font-weight: normal;
+}
+
+html.night-mode div.module h2
+{
+  color: #bbb;
+}
+
+div.module hr
+{
+    border: none;
+    border-bottom: 1px dotted #aaa;
+}
+
+html.night-mode div.module hr
+{
+    border: none;
+    border-bottom: 1px dotted #444;
 }
 
 div.module > div.module-content
@@ -416,6 +457,11 @@ div.map-layer-container > canvas
   position: absolute;
 }
 
+div.map-layer-checkboxes
+{
+  margin: 4px 0 4px -3px;
+}
+
 /********************************************************************/
 
 div.checkbox input[type="checkbox"]
@@ -462,6 +508,7 @@ div.checkbox label
 
 .hsv-range-editor h3
 {
+    color: #333;
     text-align: center;
     margin: 0;
     font-size: 13px;
@@ -540,6 +587,7 @@ div.setting span.default-value
 div.head-controls
 {
     display: inline-block;
+    margin-left: -2px;
 }
 
 /********************************************************************/
@@ -622,12 +670,6 @@ div.module.vision div.module-content h2
     color: #555;
     margin: 4px 0;
     display: block;
-}
-
-div.module.vision hr
-{
-    border: none;
-    border-bottom: 1px dotted #aaa;
 }
 
 div.module.vision div.control-container.camera-settings .setting .values
@@ -960,6 +1002,7 @@ div.body-figure
 
 div.body-figure div.joint
 {
+    color: #000;
     position: absolute;
     border: 1px dotted grey;
     border-radius: 4px;
@@ -1014,12 +1057,21 @@ div.module.optiontree ul.options li
     -moz-transition: background-color 1s linear;
     -o-transition: background-color 1s linear;
     -webkit-transition: background-color 1s linear;
+    transition: color 1s linear;
+    -moz-transition: color 1s linear;
+    -o-transition: color 1s linear;
+    -webkit-transition: color 1s linear;
 }
 
 div.module.optiontree ul.options li.ran
 {
     background-color: yellow;
     list-style-type: disc;
+}
+
+html.night-mode div.module.optiontree ul.options li.ran
+{
+  color: #000;
 }
 
 div.module.optiontree ul.options
@@ -1067,6 +1119,23 @@ div.module.optiontree div.graph svg g.link-tools,
 div.module.optiontree div.graph svg g.marker-arrowheads
 {
     display: none;
+}
+
+html.night-mode div.module.optiontree div.graph svg g.link path.connection
+{
+  stroke: #CCC;
+}
+
+html.night-mode div.module.optiontree div.graph svg g.link path.marker-source,
+html.night-mode div.module.optiontree div.graph svg g.link path.marker-target
+{
+    stroke: #CCC;
+    fill: #CCC;
+}
+
+html.night-mode div.module.optiontree div.graph svg g.link text
+{
+    fill: #fff;
 }
 
 /*******************************************************************/
@@ -1262,7 +1331,6 @@ div.module.drawbridge div.player-tile
 
 html.night-mode
 {
-  /*background: #300a24;*/
   background: #0A0208;
   color: #bbb;
 }
@@ -1274,9 +1342,9 @@ html.night-mode div.module
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-html.night-mode div.module h1
+html.night-mode div.module.full-screen
 {
-  color: #999;
+  background: #0A0208;
 }
 
 html.night-mode a,
