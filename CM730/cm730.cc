@@ -539,6 +539,12 @@ CommResult CM730::readPackets(uchar* buffer, const uint bufferLength, std::funct
         cout << dec << endl;
       }
 
+      if (bytesRead == 0)
+      {
+        // Sleep for a very short time to avoid keeping the CPU at 100% utilisation
+        // TODO review this sleep duration
+        usleep(200);
+      }
       if (bytesRead < 0)
       {
         log::error("CM730::readPackets") << "Error reading from CM730: " << strerror(errno) << " (" << errno << ")";
