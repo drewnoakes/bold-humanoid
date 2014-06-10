@@ -41,18 +41,22 @@ namespace bold
   class BulkRead
   {
   public:
-    uchar error;
-    unsigned deviceCount;
-    int rxLength;
-    BulkReadTable data[21];
-
     BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax);
 
-    BulkReadTable const& getBulkReadData(uchar id) const;
-
-    uchar* getTxPacket() const { return const_cast<uchar*>(&d_txPacket[0]); }
+    BulkReadTable& getBulkReadData(uchar id);
+    uchar* getTxPacket() { return &d_txPacket[0]; }
+    void clearError() { d_error = -1; }
+    void setError(uchar error) { d_error = error; }
+    uchar getError() const { return d_error; }
+    uchar getDeviceCount() const { return d_deviceCount; }
+    uint getRxLength() const { return d_rxLength; }
 
   private:
+    // TODO is this an MX28Alarm?
+    uchar d_error;
+    uchar d_deviceCount;
+    uint d_rxLength;
+    BulkReadTable d_data[21];
     uchar d_txPacket[5 + 1 + 3 + (20*3) + 1]; // 70
   };
 

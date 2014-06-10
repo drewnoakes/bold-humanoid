@@ -27,12 +27,12 @@ using namespace std;
 //////////
 
 BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
-: error(-1),
-  deviceCount(1 + 20)
+: d_error((uchar)-1),
+  d_deviceCount(1 + 20)
 {
   // Build a place for the data we read back
   for (int i = 0; i < 21; i++)
-    data[i] = BulkReadTable();
+    d_data[i] = BulkReadTable();
 
   // Create a cached TX packet as it'll be identical each time
   d_txPacket[ID]          = CM730::ID_BROADCAST;
@@ -42,7 +42,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 
   d_txPacket[p++] = (uchar)0x0;
 
-  rxLength = deviceCount * 6;
+  d_rxLength = d_deviceCount * 6u;
 
   auto writeDeviceRequest = [&p,this](uchar deviceId, uchar startAddress, uchar endAddress)
   {
@@ -50,15 +50,15 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 
     uchar requestedByteCount = endAddress - startAddress + (uchar)1;
 
-    rxLength += requestedByteCount;
+    d_rxLength += requestedByteCount;
 
     d_txPacket[p++] = requestedByteCount;
     d_txPacket[p++] = deviceId;
     d_txPacket[p++] = startAddress;
 
-    uchar dataIndex = deviceId == CM730::ID_CM ? 0 : deviceId;
-    data[dataIndex].startAddress = startAddress;
-    data[dataIndex].length = requestedByteCount;
+    uchar dataIndex = deviceId == CM730::ID_CM ? (uchar)0 : deviceId;
+    d_data[dataIndex].startAddress = startAddress;
+    d_data[dataIndex].length = requestedByteCount;
   };
 
   writeDeviceRequest(CM730::ID_CM, cmMin, cmMax);
@@ -73,9 +73,10 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 ////////// BulkReadTable
 //////////
 
-BulkReadTable const& BulkRead::getBulkReadData(uchar id) const
+BulkReadTable& BulkRead::getBulkReadData(uchar id)
 {
-  return data[id == CM730::ID_CM ? 0 : id];
+  ASSERT(id == CM730::ID_CM || (id >= (uchar)JointId::MIN && id <= (uchar)JointId::MAX));
+  return d_data[id == CM730::ID_CM ? 0 : id];
 }
 
 BulkReadTable::BulkReadTable()
@@ -388,9 +389,9 @@ CommResult CM730::readTable(uchar id, uchar fromAddress, uchar toAddress, uchar 
 
 CommResult CM730::bulkRead(BulkRead* bulkRead)
 {
-  uchar rxpacket[bulkRead->rxLength];
+  uchar rxpacket[bulkRead->getRxLength()];
 
-  bulkRead->error = -1;
+  bulkRead->clearError();
 
   ASSERT(bulkRead->getTxPacket()[LENGTH] != 0);
 
@@ -593,10 +594,10 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
   {
     ASSERT(bulkRead);
 
-    bulkRead->error = rxpacket[ERRBIT];
+    bulkRead->setError(rxpacket[ERRBIT]);
 
-    int deviceCount = bulkRead->deviceCount;
-    int expectedLength = bulkRead->rxLength;
+    uchar deviceCount = bulkRead->getDeviceCount();
+    uint expectedLength = bulkRead->getRxLength();
 
     d_platform->setPacketTimeout(static_cast<uint>(expectedLength * 1.5));
 
@@ -661,13 +662,12 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
             cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID] << " checksum: " << hex << setfill('0') << setw(2) << (int)checksum << dec << endl;
 
           // Checksum matches
-          for (int j = 0; j < (rxpacket[LENGTH] - 2); j++)
+          for (unsigned j = 0; j < (rxpacket[LENGTH] - 2u); j++)
           {
-            unsigned dataIndex = rxpacket[ID] == CM730::ID_CM ? 0 : rxpacket[ID];
-            unsigned address = bulkRead->data[dataIndex].startAddress + j;
-            ASSERT(dataIndex < 21);
+            BulkReadTable& table = bulkRead->getBulkReadData(rxpacket[ID]);
+            unsigned address = table.startAddress + j;
             ASSERT(address < MX28::MAXNUM_ADDRESS);
-            bulkRead->data[dataIndex].table[address] = rxpacket[PARAMETER + j];
+            table.table[address] = rxpacket[PARAMETER + j];
           }
 
           uint curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
