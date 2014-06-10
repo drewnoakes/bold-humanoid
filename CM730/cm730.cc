@@ -628,18 +628,19 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
     uchar deviceCount = (uchar)JointId::DEVICE_COUNT;
 
-    uint receivedCount = 0;
-    uint expectedLength = bulkRead->getRxLength();
+    uint remainingByteCount = bulkRead->getRxLength();
 
-    d_platform->setPacketTimeout(static_cast<uint>(expectedLength * 1.5));
+    d_platform->setPacketTimeout(static_cast<uint>(remainingByteCount * 1.5));
 
     //
     // Read until we get enough bytes, or there's a timeout
     //
 
+    uint receivedCount = 0;
+
     while (true)
     {
-      int bytesRead = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
+      int bytesRead = d_platform->readPort(&rxpacket[receivedCount], remainingByteCount - receivedCount);
 
       if (DEBUG_PRINT && bytesRead > 0)
       {
@@ -659,14 +660,14 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
         receivedCount += bytesRead;
       }
 
-      if (receivedCount == expectedLength)
+      if (receivedCount == remainingByteCount)
       {
         res = CommResult::SUCCESS;
         break;
       }
       else if (d_platform->isPacketTimeout())
       {
-        log::error("CM730::txRxPacket") << "Timeout waiting for bulk read response (" << d_platform->getPacketTimeoutMillis() << " ms) -- " << receivedCount << " of " << expectedLength << " bytes read";
+        log::error("CM730::txRxPacket") << "Timeout waiting for bulk read response (" << d_platform->getPacketTimeoutMillis() << " ms) -- " << receivedCount << " of " << remainingByteCount << " bytes read";
         return receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
       }
     }
@@ -674,9 +675,22 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     //
     // Process response message
     //
+
+    auto removePacketBytes = [&](uint removeCount)
+    {
+      // TODO this seems a very wasteful approach -- should just operate on memory in a forward-only fashion
+
+      std::copy(
+        &rxpacket[removeCount],
+        &rxpacket[remainingByteCount + 1],
+        &rxpacket[0]);
+
+      remainingByteCount -= removeCount;
+    };
+
     while (true)
     {
-      uint i = findPacketHeaderIndex(rxpacket, receivedCount);
+      uint i = findPacketHeaderIndex(rxpacket, remainingByteCount);
 
       if (i == 0)
       {
@@ -704,15 +718,10 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
             table.getData() + table.getStartAddress());
 
           // Move data forward in the packet
-          // TODO this seems a very wasteful operation -- should just operate on memory in place
           const uint curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
-          expectedLength = receivedCount - curPacketLength;
-          std::copy(
-            &rxpacket[curPacketLength],
-            &rxpacket[curPacketLength + expectedLength + 1],
-            rxpacket.data());
 
-          receivedCount = expectedLength;
+          removePacketBytes(curPacketLength);
+
           deviceCount--;
         }
         else
@@ -722,17 +731,14 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
           log::warning("CM730::txRxPacket") << "Received checksum didn't match";
 
-          for (uint j = 0; j <= receivedCount - 2u; j++)
-            rxpacket[j] = rxpacket[j + 2];
-
-          expectedLength = receivedCount -= 2;
+          removePacketBytes(2);
         }
 
         // Loop until we've copied from all devices
         if (deviceCount == 0)
           break;
 
-        if (receivedCount <= 6)
+        if (remainingByteCount <= 6)
         {
           if (deviceCount != 0)
             res = CommResult::RX_CORRUPT;
@@ -742,12 +748,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
       else
       {
         // Move bytes forwards in buffer, so that the header is aligned in byte zero
-        std::copy(
-          &rxpacket[i],
-          &rxpacket[receivedCount],
-          &rxpacket[0]);
-
-        receivedCount -= i;
+        removePacketBytes(i);
       }
     }
   }
