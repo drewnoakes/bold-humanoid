@@ -625,13 +625,16 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     bulkRead->setError(rxpacket[ERRBIT]);
 
     uchar deviceCount = (uchar)JointId::DEVICE_COUNT;
+
+    uint receivedCount = 0;
     uint expectedLength = bulkRead->getRxLength();
 
     d_platform->setPacketTimeout(static_cast<uint>(expectedLength * 1.5));
 
-    uint receivedCount = 0;
-
+    //
     // Read until we get enough bytes, or there's a timeout
+    //
+
     while (true)
     {
       int bytesRead = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
@@ -666,7 +669,9 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
       }
     }
 
-    // Process data for all devices
+    //
+    // Process response message
+    //
     while (true)
     {
       uint i = findPacketHeaderIndex(rxpacket, receivedCount);
