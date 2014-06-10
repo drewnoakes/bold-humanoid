@@ -16,6 +16,14 @@
 
 /********************************************************************/
 
+html
+{
+  transition: background-color 0.4s linear;
+  -moz-transition: background-color 0.4s linear;
+  -o-transition: background-color 0.4s linear;
+  -webkit-transition: background-color 0.4s linear;
+}
+
 html, body
 {
     font-family: Montserrat, sans-serif;
@@ -32,6 +40,11 @@ body
     body
     {
         margin: 8px 0;
+    }
+
+    button
+    {
+      font-size: 1.4em;
     }
 }
 
@@ -1237,4 +1250,50 @@ div.module.drawbridge div.player-tile
   border-radius: 5px;
   margin: 4px;
   padding: 4px;
+}
+
+/********************************************************************/
+
+html.night-mode
+{
+  /*background: #300a24;*/
+  background: #0A0208;
+  color: #bbb;
+}
+
+html.night-mode div.module
+{
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #000;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+html.night-mode div.module h1
+{
+  color: #999;
+}
+
+html.night-mode a,
+html.night-mode a:visited
+{
+  color: #8B9DFF;
+}
+
+html.night-mode div#header-module-links > a.module-button
+{
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #bbb;
+}
+
+html.night-mode div#header-content h1
+{
+  color: #eee;
+}
+
+html.night-mode button
+{
+  background: #999;
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }

@@ -7,6 +7,7 @@
 
 import Setting = require('Setting');
 import geometry = require('util/geometry');
+import Trackable = require('util/Trackable');
 
 // All lengths are in metres
 
@@ -446,3 +447,18 @@ var getWebSocketUrl = () =>
 };
 
 export var webSocketUrl = getWebSocketUrl();
+
+export var isNightModeActive = new Trackable<boolean>(window.localStorage["night-mode"] === "true");
+isNightModeActive.track(value =>
+{
+    window.localStorage.setItem("night-mode", value.toString());
+    if (value)
+        document.documentElement.classList.add("night-mode");
+    else
+        document.documentElement.classList.remove("night-mode");
+});
+
+export function toggleNightMode()
+{
+    isNightModeActive.setValue(!isNightModeActive.getValue());
+}

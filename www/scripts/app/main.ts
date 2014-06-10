@@ -113,3 +113,7 @@ var onerror = () =>
 control.connect(onerror);
 
 document.getElementById('logo').addEventListener('click', e => util.toggleFullScreen());
+
+// Not sure why this copy is required, but it seems to be...
+var toggleNightMode = constants.toggleNightMode;
+document.querySelector("#header h1").addEventListener('click', e => { toggleNightMode(); });
