@@ -5,6 +5,7 @@
 #include <Eigen/Core>
 
 #include "../CM730Platform/cm730platform.hh"
+#include "../JointId/jointid.hh"
 #include "../Math/math.hh"
 #include "../MX28/mx28.hh"
 #include "../MX28Alarm/mx28alarm.hh"
@@ -57,8 +58,9 @@ namespace bold
     uint getRxLength() const { return d_rxLength; }
 
   private:
-    std::array<BulkReadTable, 21> d_data;
-    std::array<uchar, 70> d_txPacket; // 5 + 1 + 3 + (20*3) + 1
+    /// Position 0 for the CM730, and the rest for MX28s
+    std::array<BulkReadTable, 1 + (uchar)JointId::DEVICE_COUNT> d_data;               // 21
+    std::array<uchar, 5 + 1 + 3 + ((uchar)JointId::DEVICE_COUNT * 3) + 1> d_txPacket; // 70
     uint d_rxLength;
     // TODO is this an MX28Alarm?
     uchar d_error;

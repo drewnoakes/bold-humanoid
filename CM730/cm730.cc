@@ -2,7 +2,6 @@
 
 #include <iomanip>
 
-#include "../JointId/jointid.hh"
 #include "../ThreadUtil/threadutil.hh"
 #include "../util/assert.hh"
 #include "../util/ccolor.hh"
