@@ -9,6 +9,7 @@ import Closeable = require('util/Closeable');
 import color = require('color');
 import constants = require('constants');
 import data = require('data');
+import scripts = require('scripts');
 import HsvRangeEditor = require('controls/HsvRangeEditor');
 import Setting = require('Setting');
 
@@ -50,6 +51,7 @@ interface ControlSyncData extends ControlData
     actions?: {id: string; label: string; hasArguments:boolean}[];
     settings?: any[];
     fsms: FSM[];
+    motionScripts: scripts.MotionScript[];
 }
 
 interface ControlUpdateData extends ControlData
