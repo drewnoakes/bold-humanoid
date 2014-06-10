@@ -579,6 +579,8 @@ CommResult CM730::readPackets(uchar* buffer, const uint bufferLength, std::funct
 
       // We've found our first packet to start processing the message
 
+      ASSERT(i == 0);
+
       uchar const* head = buffer;
       uint bytesLeft = bufferLength;
 
