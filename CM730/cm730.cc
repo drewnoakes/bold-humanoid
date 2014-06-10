@@ -32,7 +32,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
   d_data.fill(BulkReadTable());
 
   // We will receive 6 bytes per device plus an amount varying with the requested address range (added in below)
-  d_rxLength = (uchar)JointId::DEVICE_COUNT * 6u;
+  d_rxLength = ((uchar)JointId::DEVICE_COUNT + (uchar)1) * 6u;
 
   // Create a cached TX packet as it'll be identical each time
   d_txPacket[ID]          = CM730::ID_BROADCAST;
@@ -494,19 +494,144 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
   return txRxPacket(txpacket, rxpacket);
 }
 
-uint findPacketHeaderIndex(const uchar* data, uint length)
+int findPacketHeaderIndex(const uchar* data, uint length)
 {
   // The packet must start with 0xFFFF. Walk through until we find it.
-  uint i;
-  for (i = 0; i < (length - 1); i++)
-  {
-    if (data[i] == 0xFF && data[i+1] == 0xFF)
-      break;
 
-    if (i == (length - 2) && data[length - 1] == 0xFF)
-      break;
+  bool hasFlag = false;
+
+  for (uint index = 0; index < length; index++)
+  {
+    if (data[index] == 0xFF)
+    {
+      if (hasFlag)
+        return index - 1;
+      hasFlag = true;
+      continue;
+    }
+    else
+    {
+      hasFlag = false;
+    }
   }
-  return i;
+
+  return -1;
+}
+
+CommResult CM730::readPackets(uchar* buffer, const uint bufferLength, std::function<bool(uchar const*)> callback)
+{
+  uint receivedCount = 0;
+
+  while (true)
+  {
+    const uint bytesNeeded = bufferLength - receivedCount;
+
+    if (bytesNeeded != 0)
+    {
+      int bytesRead = d_platform->readPort(&buffer[receivedCount], bytesNeeded);
+
+      if (DEBUG_PRINT && bytesRead > 0)
+      {
+        cout << "[CM730::readPackets]   RX[" << bytesRead << "]" << hex << setfill('0');
+        for (int n = 0; n < bytesRead; n++)
+          cout << " " << setw(2) << (int)buffer[receivedCount + n];
+        cout << dec << endl;
+      }
+
+      if (bytesRead < 0)
+      {
+        log::error("CM730::readPackets") << "Error reading from CM730: " << strerror(errno) << " (" << errno << ")";
+        return CommResult::TX_FAIL;
+      }
+      else
+      {
+        receivedCount += bytesRead;
+      }
+    }
+
+    if (receivedCount == (uint)bufferLength)
+    {
+      // We have the required number of bytes. Now check if it looks valid.
+
+      int i = findPacketHeaderIndex(buffer, bufferLength);
+
+      if (i == -1)
+      {
+        log::warning("CM730::readPackets") << "No header found in response data";
+        return CommResult::RX_CORRUPT;
+      }
+
+      if (i != 0)
+      {
+        // Move bytes forwards in buffer, so that the header is aligned in byte zero.
+        // Note that where multiple packets are located consecutively, we only perform this adjustment
+        // for the first one.
+        std::copy(
+          &buffer[i],
+          &buffer[bufferLength + 1],
+          &buffer[0]);
+
+        // Reduce the count of bytes received, so that we request more bytes when we loop around again
+        receivedCount -= i;
+        continue;
+      }
+
+      // We've found our first packet to start processing the message
+
+      uchar const* head = buffer;
+      uint bytesLeft = bufferLength;
+
+      while (bytesLeft != 0)
+      {
+        // Validate checksum
+        const short calculatedChecksum = calculateChecksum(head, bytesLeft);
+
+        if (findPacketHeaderIndex(head, bufferLength) != 0)
+        {
+          log::warning("CM730::readPackets") << "Invalid packet header";
+          return CommResult::RX_CORRUPT;
+        }
+
+        if (calculatedChecksum == - 1)
+        {
+          log::warning("CM730::readPackets") << "Invalid packet length advertised";
+          return CommResult::RX_CORRUPT;
+        }
+
+        // Now that the length has been verified, look it up
+        const uchar observedChecksum = head[LENGTH + head[LENGTH]];
+
+        if (observedChecksum != calculatedChecksum)
+        {
+          log::warning("CM730::readPackets") << "Invalid checksum";
+          return CommResult::RX_CORRUPT;
+        }
+
+        if (DEBUG_PRINT)
+          cout << "[CM730::readPackets] Processing packet " << (int)head[ID]
+            << " checksum: " << hex << setfill('0') << setw(2) << (int)observedChecksum << dec << endl;
+
+        bool moreToProcess = callback(head);
+
+        if (!moreToProcess)
+          return CommResult::SUCCESS;
+
+        uint packetLength = LENGTH + head[LENGTH] + 1; // preamble, data and checksum
+        head += packetLength;
+        bytesLeft -= packetLength;
+      }
+
+      return CommResult::SUCCESS;
+    }
+
+    if (d_platform->isPacketTimeout())
+    {
+      log::error("CM730::readPackets")
+        << "Timeout waiting for bulk read response (" << d_platform->getPacketTimeoutMillis()
+        << " ms) -- " << receivedCount << " of " << bufferLength << " bytes read";
+      return receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
+    }
+  }
 }
 
 CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRead)
@@ -514,11 +639,15 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
   ASSERT(ThreadUtil::isMotionLoopThread());
   ASSERT(d_platform->isPortOpen());
 
+  //
+  // WRITE DATA
+  //
+
   uint length = txpacket[LENGTH] + 4;
 
   txpacket[0] = 0xFF;
   txpacket[1] = 0xFF;
-  txpacket[length - 1] = calculateChecksum(txpacket);
+  txpacket[length - 1] = calculateChecksum(txpacket, length);
 
   if (DEBUG_PRINT)
   {
@@ -529,8 +658,6 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
       cout << " " << setw(2) << (int)txpacket[n];
     cout << dec << endl;
   }
-
-  CommResult res = CommResult::TX_FAIL;
 
   if (length >= (MAXNUM_TXPARAM + 6))
   {
@@ -555,69 +682,23 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     return CommResult::TX_FAIL;
   }
 
-  // Now, handle the response...
+  //
+  // READ DATA
+  //
+
+  CommResult commResult;
 
   if (txpacket[ID] != ID_BROADCAST)
   {
-    int expectedLength = txpacket[INSTRUCTION] == instruction::Read
+    uint rxPacketLength = txpacket[INSTRUCTION] == instruction::Read
       ? txpacket[PARAMETER+1] + 6
       : 6;
 
     d_platform->setPacketTimeout(length);
 
-    int receivedCount = 0;
-    while (true)
-    {
-      int bytesRead = d_platform->readPort(&rxpacket[receivedCount], expectedLength - receivedCount);
-
-      if (DEBUG_PRINT && bytesRead > 0)
-      {
-        cout << "[CM730::txRxPacket]   RX[" << bytesRead << "]" << hex << setfill('0');
-        for (int n = 0; n < bytesRead; n++)
-          cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
-        cout << dec << endl;
-      }
-
-      if (bytesRead < 0)
-      {
-        log::error("CM730::txRxPacket") << "Error reading from CM730 port: " << strerror(errno) << " (" << errno << ")";
-        return CommResult::TX_FAIL;
-      }
-      else
-      {
-        receivedCount += bytesRead;
-      }
-
-      if (receivedCount == expectedLength)
-      {
-        // Find packet header index
-        uint i = findPacketHeaderIndex(rxpacket, receivedCount);
-
-        if (i == 0)
-        {
-          // Check checksum
-          uchar checksum = calculateChecksum(rxpacket);
-
-          res = rxpacket[receivedCount-1] == checksum ? CommResult::SUCCESS : CommResult::RX_CORRUPT;
-          break;
-        }
-        else
-        {
-          // Header was found later in the data
-          log::warning("CM730::txRxPacket") << "Skipping " << i << " byte" << (i==1?"":"s") << " until response header -- possible corruption";
-          // Move all data forward in the array
-          // This will then loop around until the expected number of bytes are read
-          for (int j = 0; j < (receivedCount - i); j++)
-            rxpacket[j] = rxpacket[j+i];
-          receivedCount -= i;
-        }
-      }
-      else if (d_platform->isPacketTimeout())
-      {
-        log::error("CM730::txRxPacket") << "Timeout waiting for response (" << d_platform->getPacketTimeoutMillis() << " ms) -- " << receivedCount << " of " << expectedLength << " bytes read";
-        return receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
-      }
-    }
+    // We will only have one packet in the response, and so long as it has valid structure,
+    // the communication was successful. The response doesn't contain anything to process.
+    commResult = readPackets(rxpacket, rxPacketLength, [](uchar const* packet) { return false; });
   }
   else if (txpacket[INSTRUCTION] == instruction::BulkRead)
   {
@@ -625,147 +706,54 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
     bulkRead->setError(rxpacket[ERRBIT]);
 
-    uchar deviceCount = (uchar)JointId::DEVICE_COUNT;
+    uchar deviceCount = (uchar)JointId::DEVICE_COUNT + 1;
 
-    uint remainingByteCount = bulkRead->getRxLength();
+    d_platform->setPacketTimeout(static_cast<uint>(bulkRead->getRxLength() * 1.5));
 
-    d_platform->setPacketTimeout(static_cast<uint>(remainingByteCount * 1.5));
-
-    //
-    // Read until we get enough bytes, or there's a timeout
-    //
-
+    auto devicePacketCallback = [this,&deviceCount,&bulkRead](uchar const* packet) -> bool
     {
-      uint receivedCount = 0;
+      // Copy data from the packet to BulkReadTable
+      auto& table = bulkRead->getBulkReadData(packet[ID]);
 
-      while (true)
-      {
-        int bytesRead = d_platform->readPort(&rxpacket[receivedCount], remainingByteCount - receivedCount);
+      // The number of data bytes is equal to the packet's advertised length, minus two (checksum and length bytes)
+      const uchar dataByteCount = packet[LENGTH] - (uchar)2;
 
-        if (DEBUG_PRINT && bytesRead > 0)
-        {
-          cout << "[CM730::txRxPacket]   RX[" << bytesRead << "]" << hex << setfill('0');
-          for (int n = 0; n < bytesRead; n++)
-            cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
-          cout << dec << endl;
-        }
-
-        if (bytesRead < 0)
-        {
-          log::error("CM730::txRxPacket") << "Error reading from CM730 port: " << strerror(errno) << " (" << errno << ")";
-          return CommResult::TX_FAIL;
-        }
-        else
-        {
-          receivedCount += bytesRead;
-        }
-
-        if (receivedCount == remainingByteCount)
-        {
-          res = CommResult::SUCCESS;
-          break;
-        }
-        else if (d_platform->isPacketTimeout())
-        {
-          log::error("CM730::txRxPacket") << "Timeout waiting for bulk read response (" << d_platform->getPacketTimeoutMillis() << " ms) -- " << receivedCount << " of " << remainingByteCount << " bytes read";
-          return receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
-        }
-      }
-    }
-
-    //
-    // Process response message
-    //
-
-    auto removePacketBytes = [&](uint removeCount)
-    {
-      // TODO this seems a very wasteful approach -- should just operate on memory in a forward-only fashion
+      ASSERT(table.getStartAddress() + dataByteCount < MX28::MAXNUM_ADDRESS);
 
       std::copy(
-        &rxpacket[removeCount],
-        &rxpacket[remainingByteCount + 1],
-        &rxpacket[0]);
+        &packet[PARAMETER],
+        &packet[PARAMETER + dataByteCount + 1],
+        table.getData() + table.getStartAddress());
 
-      remainingByteCount -= removeCount;
+      deviceCount--;
+      return deviceCount != 0;
     };
 
-    while (true)
-    {
-      uint i = findPacketHeaderIndex(rxpacket, remainingByteCount);
-
-      if (i == 0)
-      {
-        // Validate checksum
-        const uchar observedChecksum = rxpacket[LENGTH + rxpacket[LENGTH]];
-        const uchar expectedChecksum = calculateChecksum(rxpacket);
-
-        if (observedChecksum == expectedChecksum)
-        {
-          // Checksum matches
-
-          if (DEBUG_PRINT)
-            cout << "[CM730::txRxPacket] Bulk read packet " << (int)rxpacket[ID]
-                 << " checksum: " << hex << setfill('0') << setw(2) << (int)expectedChecksum << dec << endl;
-
-          // Copy data from rxpacket to BulkReadTable
-          auto& table = bulkRead->getBulkReadData(rxpacket[ID]);
-
-          // The number of data bytes is equal to the packet's advertised length, minus two (checksum and length bytes)
-          const uchar dataByteCount = rxpacket[LENGTH] - (uchar)2;
-          ASSERT(table.getStartAddress() + dataByteCount < MX28::MAXNUM_ADDRESS);
-          std::copy(
-            &rxpacket[PARAMETER],
-            &rxpacket[PARAMETER + dataByteCount + 1],
-            table.getData() + table.getStartAddress());
-
-          // Move data forward in the packet
-          const uint curPacketLength = LENGTH + 1 + rxpacket[LENGTH];
-
-          removePacketBytes(curPacketLength);
-
-          deviceCount--;
-        }
-        else
-        {
-          // Checksum doesn't match
-          res = CommResult::RX_CORRUPT;
-
-          log::warning("CM730::txRxPacket") << "Received checksum didn't match";
-
-          removePacketBytes(2);
-        }
-
-        // Loop until we've copied from all devices
-        if (deviceCount == 0)
-          break;
-
-        if (remainingByteCount <= 6)
-        {
-          res = CommResult::RX_CORRUPT;
-          break;
-        }
-      }
-      else
-      {
-        // Move bytes forwards in buffer, so that the header is aligned in byte zero
-        removePacketBytes(i);
-      }
-    }
+    // We will have one response packet per device, and we'll be called back once per
+    commResult = readPackets(rxpacket, bulkRead->getRxLength(), devicePacketCallback);
   }
   else
   {
     // Broadcast message, always successful as no response expected (?)
-    res = CommResult::SUCCESS;
+    commResult = CommResult::SUCCESS;
   }
 
   if (DEBUG_PRINT)
     cout << "[CM730::txRxPacket] Round trip in " << setprecision(2) << d_platform->getPacketTime()
-         << "ms  (" << getCommResultName(res) << ")" << endl;
+         << "ms  (" << getCommResultName(commResult) << ")" << endl;
 
-  return res;
+  return commResult;
 }
 
-uchar CM730::calculateChecksum(uchar *packet)
+short CM730::calculateChecksum(uchar const *packet, uint bufferLength)
 {
-  return ~std::accumulate(&packet[2], &packet[packet[LENGTH] + 3], (uchar)0);
+  // The packet knows how long it is
+  uint packetLength = packet[LENGTH] + 3;
+
+  // Ensure it isn't out of bounds
+  if (packetLength > bufferLength)
+    return -1;
+
+  // Return the two's complement of all bytes summed, excluding the first two bytes
+  return (uchar)~std::accumulate(&packet[2], &packet[packetLength], (uchar)0);
 }

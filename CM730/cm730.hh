@@ -284,6 +284,12 @@ namespace bold
      */
     CommResult txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRead = nullptr);
 
-    static uchar calculateChecksum(uchar *packet);
+    CommResult readPackets(uchar* buffer, const uint bufferLength, std::function<bool(uchar const*)> callback);
+
+    /** Calculates the checksum of the provided packet data.
+    *
+    * @returns the checksum (between 0 and 255) or -1 if the packet length appears invalid
+    */
+    static short calculateChecksum(uchar const *packet, uint bufferLength);
   };
 }
