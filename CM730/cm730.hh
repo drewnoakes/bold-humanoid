@@ -51,7 +51,7 @@ namespace bold
 
     BulkReadTable& getBulkReadData(uchar id);
     uchar* getTxPacket() { return d_txPacket.data(); }
-    void clearError() { d_error = -1; }
+    void clearError() { d_error = (uchar)-1; }
     void setError(uchar error) { d_error = error; }
     uchar getError() const { return d_error; }
     uint getRxLength() const { return d_rxLength; }
