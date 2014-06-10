@@ -36,12 +36,12 @@ namespace bold
     void setStartAddress(uchar addr) { d_startAddress = addr; }
     uint getLength() const { return d_length; }
     void setLength(uint length) { d_length = length; }
-    uchar* getData() { return d_table; }
+    uchar* getData() { return d_table.data(); }
 
   private:
     uchar d_startAddress;
     uint d_length;
-    uchar d_table[MX28::MAXNUM_ADDRESS];
+    std::array<uchar,MX28::MAXNUM_ADDRESS> d_table;
   };
 
   class BulkRead
@@ -50,7 +50,7 @@ namespace bold
     BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax);
 
     BulkReadTable& getBulkReadData(uchar id);
-    uchar* getTxPacket() { return &d_txPacket[0]; }
+    uchar* getTxPacket() { return d_txPacket.data(); }
     void clearError() { d_error = -1; }
     void setError(uchar error) { d_error = error; }
     uchar getError() const { return d_error; }
@@ -62,8 +62,8 @@ namespace bold
     uchar d_error;
     uchar d_deviceCount;
     uint d_rxLength;
-    BulkReadTable d_data[21];
-    uchar d_txPacket[5 + 1 + 3 + (20*3) + 1]; // 70
+    std::array<BulkReadTable, 21> d_data;
+    std::array<uchar, 70> d_txPacket; // 5 + 1 + 3 + (20*3) + 1
   };
 
   /// Communication results

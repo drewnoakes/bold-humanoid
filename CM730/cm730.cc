@@ -31,8 +31,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
   d_deviceCount(1 + 20)
 {
   // Build a place for the data we read back
-  for (int i = 0; i < 21; i++)
-    d_data[i] = BulkReadTable();
+  d_data.fill(BulkReadTable());
 
   // Create a cached TX packet as it'll be identical each time
   d_txPacket[ID]          = CM730::ID_BROADCAST;
@@ -57,8 +56,8 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
     d_txPacket[p++] = startAddress;
 
     uchar dataIndex = deviceId == CM730::ID_CM ? (uchar)0 : deviceId;
-    d_data[dataIndex].setStartAddress(startAddress);
-    d_data[dataIndex].setLength(requestedByteCount);
+    d_data.at(dataIndex).setStartAddress(startAddress);
+    d_data.at(dataIndex).setLength(requestedByteCount);
   };
 
   writeDeviceRequest(CM730::ID_CM, cmMin, cmMax);
@@ -76,7 +75,8 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 BulkReadTable& BulkRead::getBulkReadData(uchar id)
 {
   ASSERT(id == CM730::ID_CM || (id >= (uchar)JointId::MIN && id <= (uchar)JointId::MAX));
-  return d_data[id == CM730::ID_CM ? 0 : id];
+
+  return d_data.at(id == CM730::ID_CM ? 0 : id);
 }
 
 //////////
@@ -87,19 +87,21 @@ BulkReadTable::BulkReadTable()
 : d_startAddress(0),
   d_length(0)
 {
-  memset(d_table, 0, MX28::MAXNUM_ADDRESS);
+  d_table.fill(0);
 }
 
 uchar BulkReadTable::readByte(uchar address) const
 {
   ASSERT(address >= d_startAddress && address < (d_startAddress + d_length));
-  return d_table[address];
+
+  return d_table.at(address);
 }
 
 ushort BulkReadTable::readWord(uchar address) const
 {
   ASSERT(address >= d_startAddress && address < (d_startAddress + d_length - 1));
-  return CM730::makeWord(d_table[address], d_table[address+1]);
+
+  return CM730::makeWord(d_table.at(address), d_table.at(address + 1));
 }
 
 //////////
