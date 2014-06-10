@@ -62,8 +62,8 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 
   writeDeviceRequest(CM730::ID_CM, cmMin, cmMax);
 
-  for (uchar id = 1; id <= 20; id++)
-    writeDeviceRequest(id, mxMin, mxMax);
+  for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+    writeDeviceRequest(jointId, mxMin, mxMax);
 
   d_txPacket[LENGTH] = p - (uchar)PARAMETER + (uchar)2; // Include one byte each for instruction and checksum
 }
