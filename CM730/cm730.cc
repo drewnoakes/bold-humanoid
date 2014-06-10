@@ -543,7 +543,7 @@ CommResult CM730::readPackets(uchar* buffer, const uint bufferLength, std::funct
       {
         // Sleep for a very short time to avoid keeping the CPU at 100% utilisation
         // TODO review this sleep duration
-        usleep(200);
+        usleep(15);
       }
       if (bytesRead < 0)
       {
