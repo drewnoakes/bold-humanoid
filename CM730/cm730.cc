@@ -635,39 +635,41 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     // Read until we get enough bytes, or there's a timeout
     //
 
-    uint receivedCount = 0;
-
-    while (true)
     {
-      int bytesRead = d_platform->readPort(&rxpacket[receivedCount], remainingByteCount - receivedCount);
+      uint receivedCount = 0;
 
-      if (DEBUG_PRINT && bytesRead > 0)
+      while (true)
       {
-        cout << "[CM730::txRxPacket]   RX[" << bytesRead << "]" << hex << setfill('0');
-        for (int n = 0; n < bytesRead; n++)
-          cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
-        cout << dec << endl;
-      }
+        int bytesRead = d_platform->readPort(&rxpacket[receivedCount], remainingByteCount - receivedCount);
 
-      if (bytesRead < 0)
-      {
-        log::error("CM730::txRxPacket") << "Error reading from CM730 port: " << strerror(errno) << " (" << errno << ")";
-        return CommResult::TX_FAIL;
-      }
-      else
-      {
-        receivedCount += bytesRead;
-      }
+        if (DEBUG_PRINT && bytesRead > 0)
+        {
+          cout << "[CM730::txRxPacket]   RX[" << bytesRead << "]" << hex << setfill('0');
+          for (int n = 0; n < bytesRead; n++)
+            cout << " " << setw(2) << (int)rxpacket[receivedCount + n];
+          cout << dec << endl;
+        }
 
-      if (receivedCount == remainingByteCount)
-      {
-        res = CommResult::SUCCESS;
-        break;
-      }
-      else if (d_platform->isPacketTimeout())
-      {
-        log::error("CM730::txRxPacket") << "Timeout waiting for bulk read response (" << d_platform->getPacketTimeoutMillis() << " ms) -- " << receivedCount << " of " << remainingByteCount << " bytes read";
-        return receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
+        if (bytesRead < 0)
+        {
+          log::error("CM730::txRxPacket") << "Error reading from CM730 port: " << strerror(errno) << " (" << errno << ")";
+          return CommResult::TX_FAIL;
+        }
+        else
+        {
+          receivedCount += bytesRead;
+        }
+
+        if (receivedCount == remainingByteCount)
+        {
+          res = CommResult::SUCCESS;
+          break;
+        }
+        else if (d_platform->isPacketTimeout())
+        {
+          log::error("CM730::txRxPacket") << "Timeout waiting for bulk read response (" << d_platform->getPacketTimeoutMillis() << " ms) -- " << receivedCount << " of " << remainingByteCount << " bytes read";
+          return receivedCount == 0 ? CommResult::RX_TIMEOUT : CommResult::RX_CORRUPT;
+        }
       }
     }
 
