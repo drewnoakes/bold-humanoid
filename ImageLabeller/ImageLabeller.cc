@@ -4,8 +4,6 @@
 #include "../Spatialiser/spatialiser.hh"
 #include "../Math/math.hh"
 
-#include <memory>
-
 using namespace cv;
 using namespace bold;
 using namespace Eigen;
