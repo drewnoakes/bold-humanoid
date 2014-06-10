@@ -471,6 +471,21 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
   return txRxPacket(txpacket, rxpacket);
 }
 
+uint findPacketHeaderIndex(const uchar* data, uint length)
+{
+  // The packet must start with 0xFFFF. Walk through until we find it.
+  uint i;
+  for (i = 0; i < (length - 1); i++)
+  {
+    if (data[i] == 0xFF && data[i+1] == 0xFF)
+      break;
+
+    if (i == (length - 2) && data[length - 1] == 0xFF)
+      break;
+  }
+  return i;
+}
+
 CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRead)
 {
   ASSERT(ThreadUtil::isMotionLoopThread());
@@ -551,18 +566,8 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
       if (receivedCount == expectedLength)
       {
-        // Find packet header
-        // The packet must start with 0xFFFF
-        // Walk through until we find it
-        int i;
-        for (i = 0; i < (receivedCount - 1); i++)
-        {
-          if (rxpacket[i] == 0xFF && rxpacket[i+1] == 0xFF)
-            break;
-
-          if (i == (receivedCount - 2) && rxpacket[receivedCount - 1] == 0xFF)
-            break;
-        }
+        // Find packet header index
+        uint i = findPacketHeaderIndex(rxpacket, receivedCount);
 
         if (i == 0)
         {
@@ -641,15 +646,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
     // Process data for all devices
     while (true)
     {
-      // Search for the header: 0xFFFF
-      uint i;
-      for (i = 0; i < receivedCount - 1u; i++)
-      {
-        if (rxpacket[i] == 0xFF && rxpacket[i + 1] == 0xFF)
-          break;
-        if (i == (receivedCount - 2) && rxpacket[receivedCount - 1] == 0xFF)
-          break;
-      }
+      uint i = findPacketHeaderIndex(rxpacket, receivedCount);
 
       if (i == 0)
       {
