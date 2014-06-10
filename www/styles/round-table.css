@@ -48,6 +48,15 @@ body
     }
 }
 
+button
+{
+  background: #aaa;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 3px 7px;
+  border-radius: 3px;
+}
 /********************************************************************/
 
 #loading-indicator
@@ -1077,8 +1086,6 @@ div.module.motion-scripts
 div.module.motion-scripts button
 {
     margin: 0 3px 4px 0;
-    padding: 2px 6px;
-    font-size: 13px;
 }
 
 @media screen and (max-width: 640px)
@@ -1090,7 +1097,6 @@ div.module.motion-scripts button
       font-size: 15px;
   }
 }
-
 
 /*******************************************************************/
 
