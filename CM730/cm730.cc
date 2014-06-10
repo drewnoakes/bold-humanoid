@@ -75,6 +75,7 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
 
 BulkReadTable& BulkRead::getBulkReadData(uchar id)
 {
+  ASSERT(id != 0);
   ASSERT(id == CM730::ID_CM || (id >= (uchar)JointId::MIN && id <= (uchar)JointId::MAX));
 
   return d_data.at(id == CM730::ID_CM ? 0 : id);
