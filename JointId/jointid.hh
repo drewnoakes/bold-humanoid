@@ -57,6 +57,7 @@ namespace bold
     HEAD_START = HEAD_PAN,
     HEAD_END = HEAD_TILT,
 
+    DEVICE_COUNT = HEAD_TILT,
     MIN = R_SHOULDER_PITCH,
     MAX = HEAD_TILT
   };

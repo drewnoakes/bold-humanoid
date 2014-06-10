@@ -27,11 +27,13 @@ using namespace std;
 //////////
 
 BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
-: d_error((uchar)-1),
-  d_deviceCount(1 + 20)
+: d_error((uchar)-1)
 {
   // Build a place for the data we read back
   d_data.fill(BulkReadTable());
+
+  // We will receive 6 bytes per device
+  d_rxLength = (uchar)JointId::DEVICE_COUNT * 6u;
 
   // Create a cached TX packet as it'll be identical each time
   d_txPacket[ID]          = CM730::ID_BROADCAST;
@@ -40,8 +42,6 @@ BulkRead::BulkRead(uchar cmMin, uchar cmMax, uchar mxMin, uchar mxMax)
   uchar p = PARAMETER;
 
   d_txPacket[p++] = (uchar)0x0;
-
-  d_rxLength = d_deviceCount * 6u;
 
   auto writeDeviceRequest = [&p,this](uchar deviceId, uchar startAddress, uchar endAddress)
   {
@@ -606,7 +606,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
 
     bulkRead->setError(rxpacket[ERRBIT]);
 
-    uchar deviceCount = bulkRead->getDeviceCount();
+    uchar deviceCount = (uchar)JointId::DEVICE_COUNT;
     uint expectedLength = bulkRead->getRxLength();
 
     d_platform->setPacketTimeout(static_cast<uint>(expectedLength * 1.5));

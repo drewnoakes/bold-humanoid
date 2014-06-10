@@ -54,13 +54,11 @@ namespace bold
     void clearError() { d_error = -1; }
     void setError(uchar error) { d_error = error; }
     uchar getError() const { return d_error; }
-    uchar getDeviceCount() const { return d_deviceCount; }
     uint getRxLength() const { return d_rxLength; }
 
   private:
     // TODO is this an MX28Alarm?
     uchar d_error;
-    uchar d_deviceCount;
     uint d_rxLength;
     std::array<BulkReadTable, 21> d_data;
     std::array<uchar, 70> d_txPacket; // 5 + 1 + 3 + (20*3) + 1
