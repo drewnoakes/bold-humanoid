@@ -100,8 +100,8 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_goalieMarkerHeight             = Config::getSetting<double>("vision.player-detection.goalie-marker-height");
 
   // TODO don't pass this around -- look it up from config (?)
-  static int imageWidth = d_cameraModel->imageWidth();
-  static int imageHeight = d_cameraModel->imageHeight();
+  static ushort imageWidth = d_cameraModel->imageWidth();
+  static ushort imageHeight = d_cameraModel->imageHeight();
 
   d_imagePassHandlers = make_tuple(
     shared_ptr<LineDotPass<uchar>>(new LineDotPass<uchar>(imageWidth, d_fieldLabel, d_lineLabel)),
