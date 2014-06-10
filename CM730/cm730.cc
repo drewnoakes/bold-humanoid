@@ -94,7 +94,7 @@ uchar BulkReadTable::readByte(uchar address) const
 
 ushort BulkReadTable::readWord(uchar address) const
 {
-  ASSERT(address >= d_startAddress && address < (d_startAddress + d_length));
+  ASSERT(address >= d_startAddress && address < (d_startAddress + d_length - 1));
   return CM730::makeWord(d_table[address], d_table[address+1]);
 }
 
