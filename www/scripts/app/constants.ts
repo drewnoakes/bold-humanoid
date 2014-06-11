@@ -95,6 +95,77 @@ export var jointIds = {
     headTilt: 20
 };
 
+export var jointNiceNames = {
+    1:  "Shoulder Pitch Right",
+    2:  "Shoulder Pitch Reft",
+    3:  "Shoulder Roll Right",
+    4:  "Shoulder Roll Reft",
+    5:  "Elbow Right",
+    6:  "Elbow Reft",
+    7:  "Hip Yaw Right",
+    8:  "Hip Yaw Reft",
+    9:  "Hip Roll Right",
+    10: "Hip Roll Reft",
+    11: "Hip Pitch Right",
+    12: "Hip Pitch Reft",
+    13: "Knee Right",
+    14: "Knee Reft",
+    15: "Ankle Pitch Right",
+    16: "Ankle Pitch Reft",
+    17: "Ankle Roll Right",
+    18: "Ankle Roll Reft",
+    19: "Head Pan",
+    20: "Head Tilt"
+}
+
+export var jointMotionFileNames = {
+    1:  "shoulder-pitch-r",
+    2:  "shoulder-pitch-l",
+    3:  "shoulder-roll-r",
+    4:  "shoulder-roll-l",
+    5:  "elbow-r",
+    6:  "elbow-l",
+    7:  "hip-yaw-r",
+    8:  "hip-yaw-l",
+    9:  "hip-roll-r",
+    10: "hip-roll-l",
+    11: "hip-pitch-r",
+    12: "hip-pitch-l",
+    13: "knee-r",
+    14: "knee-l",
+    15: "ankle-pitch-r",
+    16: "ankle-pitch-l",
+    17: "ankle-roll-r",
+    18: "ankle-roll-l",
+    19: "head-pan",
+    20: "head-tilt"
+}
+
+export var jointPairMotionFileNames = {
+    1:  "shoulder-pitch",
+    3:  "shoulder-roll",
+    5:  "elbow",
+    7:  "hip-yaw",
+    9:  "hip-roll",
+    11: "hip-pitch",
+    13: "knee",
+    15: "ankle-pitch",
+    17: "ankle-roll"
+}
+
+export function isJointBaseOfPair(jointId: number)
+{
+    return jointPairMotionFileNames[jointId] != null;
+}
+
+export function getPairJointId(jointId: number)
+{
+    console.assert(jointId > 0 && jointId < 19);
+    return jointId + (jointId % 2 == 0 ? -1 : 0);
+}
+
+export var jointIdNumbers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+
 export var neckOffsetZ     = .026 + .0505; // OP calculated from spec
 export var neckOffsetX     = .013;         // OP calculated from spec
 export var shoulderOffsetX = .013;         // OP calculated from spec
