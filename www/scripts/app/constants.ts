@@ -72,27 +72,27 @@ export function update(settings: Setting[])
 
 export var webSocketPort = 8080;
 
-export var jointNames = {
-    1: 'shoulderForwardRight',
-    2: 'shoulderForwardLeft',
-    3: 'shoulderOutwardRight',
-    4: 'shoulderOutwardLeft',
-    5: 'elbowRight',
-    6: 'elbowLeft',
-    7: 'legTurnRight',
-    8: 'legTurnLeft',
-    9: 'legOutRight',
-    10: 'legOutLeft',
-    11: 'legForwardRight',
-    12: 'legForwardLeft',
-    13: 'kneeRight',
-    14: 'kneeLeft',
-    15: 'footForwardRight',
-    16: 'footForwardLeft',
-    17: 'footOutRight',
-    18: 'footOutLeft',
-    19: 'headPan',
-    20: 'headTilt'
+export var jointIds = {
+    shoulderPitchRight: 1,
+    shoulderPitchLeft: 2,
+    shoulderRollRight: 3,
+    shoulderRollLeft: 4,
+    elbowRight: 5,
+    elbowLeft: 6,
+    hipYawRight: 7,
+    hipYawLeft: 8,
+    hipRollRight: 9,
+    hipRollLeft: 10,
+    hipPitchRight: 11,
+    hipPitchLeft: 12,
+    kneeRight: 13,
+    kneeLeft: 14,
+    anklePitchRight: 15,
+    anklePitchLeft: 16,
+    ankleRollRight: 17,
+    ankleRollLeft: 18,
+    headPan: 19,
+    headTilt: 20
 };
 
 export var neckOffsetZ     = .026 + .0505; // OP calculated from spec
@@ -119,29 +119,6 @@ export var kneeOffsetX     = .0;           // OP
 
 // export var cameraRangeVertical = (46.0/180) * Math.PI; // 46 degrees from top to bottom
 // export var cameraRangeHorizontal = (60.0/180) * Math.PI; // 60 degrees from left to right
-
-export var jointIds = {
-    shoulderForwardRight: 1,
-    shoulderForwardLeft: 2,
-    shoulderOutwardRight: 3,
-    shoulderOutwardLeft: 4,
-    elbowRight: 5,
-    elbowLeft: 6,
-    legTurnRight: 7,
-    legTurnLeft: 8,
-    legOutRight: 9,
-    legOutLeft: 10,
-    legForwardRight: 11,
-    legForwardLeft: 12,
-    kneeRight: 13,
-    kneeLeft: 14,
-    footForwardRight: 15,
-    footForwardLeft: 16,
-    footOutRight: 17,
-    footOutLeft: 18,
-    headPan: 19,
-    headTilt: 20
-};
 
 // NOTE forehead-camera geometry is not included
 
@@ -207,7 +184,7 @@ export var bodyStructure: IBodyPart = {
             geometryPath: 'models/darwin/darwin-shoulder-left.json',
             offset: { x: -0.082, y: 0, z: 0 },
             rotationAxis: new THREE.Euler(-1, 0, 0),
-            jointId: jointIds.shoulderForwardLeft,
+            jointId: jointIds.shoulderPitchLeft,
             children: [
                 {
                     name: 'arm-upper-left',
@@ -215,7 +192,7 @@ export var bodyStructure: IBodyPart = {
                     offset: { x: 0, y: 0, z: -0.016 },
                     rotationAxis: new THREE.Euler(0, -1, 0),
                     rotationOrigin: -Math.PI / 4,
-                    jointId: jointIds.shoulderOutwardLeft,
+                    jointId: jointIds.shoulderRollLeft,
                     children: [
                         {
                             name: 'arm-lower-left',
@@ -234,7 +211,7 @@ export var bodyStructure: IBodyPart = {
             geometryPath: 'models/darwin/darwin-shoulder-right.json',
             offset: { x: 0.082, y: 0, z: 0 },
             rotationAxis: new THREE.Euler(1, 0, 0),
-            jointId: jointIds.shoulderForwardRight,
+            jointId: jointIds.shoulderPitchRight,
             children: [
                 {
                     name: 'arm-upper-right',
@@ -242,7 +219,7 @@ export var bodyStructure: IBodyPart = {
                     offset: { x: 0, y: 0, z: -0.016 },
                     rotationAxis: new THREE.Euler(0, -1, 0),
                     rotationOrigin: Math.PI / 4,
-                    jointId: jointIds.shoulderOutwardRight,
+                    jointId: jointIds.shoulderRollRight,
                     children: [
                         {
                             name: 'arm-lower-right',
@@ -261,21 +238,21 @@ export var bodyStructure: IBodyPart = {
             geometryPath: 'models/darwin/darwin-pelvis-yaw-left.json',
             offset: { x: -0.037, y: -0.005, z: -0.1222 },
             rotationAxis: new THREE.Euler(0, 0, -1),
-            jointId: jointIds.legTurnLeft,
+            jointId: jointIds.hipYawLeft,
             children: [
                 {
                     name: 'pelvis-left',
                     geometryPath: 'models/darwin/darwin-pelvis-left.json',
                     offset: { x: 0, y: 0, z: 0 },
                     rotationAxis: new THREE.Euler(0, -1, 0),
-                    jointId: jointIds.legOutLeft,
+                    jointId: jointIds.hipRollLeft,
                     children: [
                         {
                             name: 'leg-upper-left',
                             geometryPath: 'models/darwin/darwin-leg-upper-left.json',
                             offset: { x: 0, y: 0, z: 0 },
                             rotationAxis: new THREE.Euler(1, 0, 0),
-                            jointId: jointIds.legForwardLeft,
+                            jointId: jointIds.hipPitchLeft,
                             children: [
                                 {
                                     name: 'leg-lower-left',
@@ -289,14 +266,14 @@ export var bodyStructure: IBodyPart = {
                                             geometryPath: 'models/darwin/darwin-ankle-left.json',
                                             offset: { x: 0, y: 0, z: -0.093 },
                                             rotationAxis: new THREE.Euler(-1, 0, 0),
-                                            jointId: jointIds.footForwardLeft,
+                                            jointId: jointIds.anklePitchLeft,
                                             children: [
                                                 {
                                                     name: 'foot-left',
                                                     geometryPath: 'models/darwin/darwin-foot-left.json',
                                                     offset: { x: 0, y: 0, z: 0 },
                                                     rotationAxis: new THREE.Euler(0, 1, 0),
-                                                    jointId: jointIds.footOutLeft
+                                                    jointId: jointIds.ankleRollLeft
                                                 }
                                             ]
                                         }
@@ -313,21 +290,21 @@ export var bodyStructure: IBodyPart = {
             geometryPath: 'models/darwin/darwin-pelvis-yaw-right.json',
             offset: { x: 0.037, y: -0.005, z: -0.1222 },
             rotationAxis: new THREE.Euler(0, 0, -1),
-            jointId: jointIds.legTurnRight,
+            jointId: jointIds.hipYawRight,
             children: [
                 {
                     name: 'pelvis-right',
                     geometryPath: 'models/darwin/darwin-pelvis-right.json',
                     offset: { x: 0, y: 0, z: 0 },
                     rotationAxis: new THREE.Euler(0, -1, 0),
-                    jointId: jointIds.legOutRight,
+                    jointId: jointIds.hipRollRight,
                     children: [
                         {
                             name: 'leg-upper-right',
                             geometryPath: 'models/darwin/darwin-leg-upper-right.json',
                             offset: { x: 0, y: 0, z: 0 },
                             rotationAxis: new THREE.Euler(-1, 0, 0),
-                            jointId: jointIds.legForwardRight,
+                            jointId: jointIds.hipPitchRight,
                             children: [
                                 {
                                     name: 'leg-lower-right',
@@ -341,14 +318,14 @@ export var bodyStructure: IBodyPart = {
                                             geometryPath: 'models/darwin/darwin-ankle-right.json',
                                             offset: { x: 0, y: 0, z: -0.093 },
                                             rotationAxis: new THREE.Euler(1, 0, 0),
-                                            jointId: jointIds.footForwardRight,
+                                            jointId: jointIds.anklePitchRight,
                                             children: [
                                                 {
                                                     name: 'foot-right',
                                                     geometryPath: 'models/darwin/darwin-foot-right.json',
                                                     offset: { x: 0, y: 0, z: 0 },
                                                     rotationAxis: new THREE.Euler(0, 1, 0),
-                                                    jointId: jointIds.footOutRight
+                                                    jointId: jointIds.ankleRollRight
                                                 }
                                             ]
                                         }

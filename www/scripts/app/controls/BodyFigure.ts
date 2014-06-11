@@ -13,7 +13,6 @@ var bodyTemplate = new DOMTemplate('body-figure-template');
 interface JointDetail
 {
     id: number;
-    name: string;
     row: number;
     group: number;
     xOffset: number;
@@ -42,35 +41,33 @@ class BodyFigure
 
         options = _.extend<any,any,any,any,any>({}, {hasHover: false, hasSelection: false}, options);
 
-        // TODO rename constants.jointIds to use consistent pitch/roll/yaw naming
-
         var bodyData = {
             joints: <JointDetail[]>[
-                { id: constants.jointIds.headTilt, name: 'Head Tilt', row: 0, group: 0, xOffset: 0 },
-                { id: constants.jointIds.headPan,  name: 'Head Pan', row: 1, group: 0, xOffset: 0 },
+                { id: constants.jointIds.headTilt,           row: 0,  group: 0, xOffset: 0 },
+                { id: constants.jointIds.headPan,            row: 1,  group: 0, xOffset: 0 },
 
-                { id: constants.jointIds.shoulderForwardLeft,  name: 'Left Shoulder Pitch', row: 2, group: 1, xOffset: shoulderOffset },
-                { id: constants.jointIds.shoulderForwardRight, name: 'Right Shoulder Pitch', row: 2, group: 1, xOffset: -shoulderOffset },
-                { id: constants.jointIds.shoulderOutwardLeft,  name: 'Left Shoulder Roll', row: 3, group: 1, xOffset: shoulderOffset },
-                { id: constants.jointIds.shoulderOutwardRight, name: 'Right Shoulder Roll', row: 3, group: 1, xOffset: -shoulderOffset },
+                { id: constants.jointIds.shoulderPitchLeft,  row: 2,  group: 1, xOffset: shoulderOffset },
+                { id: constants.jointIds.shoulderPitchRight, row: 2,  group: 1, xOffset: -shoulderOffset },
+                { id: constants.jointIds.shoulderRollLeft,   row: 3,  group: 1, xOffset: shoulderOffset },
+                { id: constants.jointIds.shoulderRollRight,  row: 3,  group: 1, xOffset: -shoulderOffset },
 
-                { id: constants.jointIds.elbowLeft,  name: 'Left Elbow',  row: 4, group: 2, xOffset: elbowOffset },
-                { id: constants.jointIds.elbowRight, name: 'Right Elbow', row: 4, group: 2, xOffset: -elbowOffset },
+                { id: constants.jointIds.elbowLeft,          row: 4,  group: 2, xOffset: elbowOffset },
+                { id: constants.jointIds.elbowRight,         row: 4,  group: 2, xOffset: -elbowOffset },
 
-                { id: constants.jointIds.legTurnLeft,     name: 'Left Hip Yaw', row: 5, group: 3, xOffset: hipOffset },
-                { id: constants.jointIds.legTurnRight,    name: 'Right Hip Yaw', row: 5, group: 3, xOffset: -hipOffset },
-                { id: constants.jointIds.legOutLeft,      name: 'Left Hip Roll', row: 6, group: 3, xOffset: hipOffset },
-                { id: constants.jointIds.legOutRight,     name: 'Right Hip Roll', row: 6, group: 3, xOffset: -hipOffset },
-                { id: constants.jointIds.legForwardLeft,  name: 'Left Hip Pitch', row: 7, group: 3, xOffset: hipOffset },
-                { id: constants.jointIds.legForwardRight, name: 'Right Hip Pitch', row: 7, group: 3, xOffset: -hipOffset },
+                { id: constants.jointIds.hipYawLeft,         row: 5,  group: 3, xOffset: hipOffset },
+                { id: constants.jointIds.hipYawRight,        row: 5,  group: 3, xOffset: -hipOffset },
+                { id: constants.jointIds.hipRollLeft,        row: 6,  group: 3, xOffset: hipOffset },
+                { id: constants.jointIds.hipRollRight,       row: 6,  group: 3, xOffset: -hipOffset },
+                { id: constants.jointIds.hipPitchLeft,       row: 7,  group: 3, xOffset: hipOffset },
+                { id: constants.jointIds.hipPitchRight,      row: 7,  group: 3, xOffset: -hipOffset },
 
-                { id: constants.jointIds.kneeLeft,  name: 'Left Knee', row: 8, group: 4, xOffset: kneeOffset },
-                { id: constants.jointIds.kneeRight, name: 'Right Knee', row: 8, group: 4, xOffset: -kneeOffset },
+                { id: constants.jointIds.kneeLeft,           row: 8,  group: 4, xOffset: kneeOffset },
+                { id: constants.jointIds.kneeRight,          row: 8,  group: 4, xOffset: -kneeOffset },
 
-                { id: constants.jointIds.footForwardLeft,  name: 'Left Ankle Pitch', row: 9, group: 5, xOffset: footOffset },
-                { id: constants.jointIds.footForwardRight, name: 'Right Ankle Pitch', row: 9, group: 5, xOffset: -footOffset },
-                { id: constants.jointIds.footOutLeft,      name: 'Left Ankle Roll', row: 10, group: 5, xOffset: footOffset },
-                { id: constants.jointIds.footOutRight,     name: 'Right Ankle Roll', row: 10, group: 5, xOffset: -footOffset }
+                { id: constants.jointIds.anklePitchLeft,     row: 9,  group: 5, xOffset: footOffset },
+                { id: constants.jointIds.anklePitchRight,    row: 9,  group: 5, xOffset: -footOffset },
+                { id: constants.jointIds.ankleRollLeft,      row: 10, group: 5, xOffset: footOffset },
+                { id: constants.jointIds.ankleRollRight,     row: 10, group: 5, xOffset: -footOffset }
             ],
             containerHeight: 0,
             containerWidth: 0
