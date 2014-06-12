@@ -506,14 +506,18 @@ void MotionLoop::step(SequentialTimer& t)
   State::callbackObservers(ThreadId::MotionLoop, t);
   t.exit();
 
-  t.enter("Comms");
-  for (auto const& commsModule : d_commsModules)
+  // Assume that comms modules cannot run when we are running without a body (debugging)
+  if (d_haveBody)
   {
-    t.enter(commsModule->getName());
-    commsModule->step(d_cm730, t, d_cycleNumber);
+    t.enter("Comms");
+    for (auto const& commsModule : d_commsModules)
+    {
+      t.enter(commsModule->getName());
+      commsModule->step(d_cm730, t, d_cycleNumber);
+      t.exit();
+    }
     t.exit();
   }
-  t.exit();
 }
 
 bool MotionLoop::applyJointMotionTasks(SequentialTimer& t)
