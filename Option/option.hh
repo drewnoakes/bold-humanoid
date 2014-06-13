@@ -25,6 +25,8 @@ namespace bold
   class Option
   {
   public:
+    typedef std::vector<std::shared_ptr<Option>> OptionVector;
+
     Option(std::string const& id, std::string const& typeName)
     : d_id(id),
       d_typeName(typeName)
@@ -63,7 +65,7 @@ namespace bold
      * @returns the sub-option selected by the policy of this option;
      * Default: empty vector
      */
-    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) { return std::vector<std::shared_ptr<Option>>(); }
+    virtual OptionVector runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) { return OptionVector{}; }
 
   private:
     std::string d_id;
