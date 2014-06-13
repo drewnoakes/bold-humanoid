@@ -166,6 +166,20 @@ StationaryMapState::StationaryMapState(
   selectKick();
 
   calculateTurnAngle();
+
+  static bool errorFlag = false;
+  if (hasEnoughBallAndGoalPostObservations())
+  {
+    if (!d_selectedKick && d_turnAngleRads == 0 && !errorFlag)
+    {
+      errorFlag = true;
+      log::warning("StationaryMapState::StationaryMapState") << "Have enough observations, but no kick or turn selected";
+    }
+  }
+  else
+  {
+    errorFlag = false;
+  }
 }
 
 vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
