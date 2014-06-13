@@ -32,6 +32,9 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
   Document document;
   document.ParseStream<0, UTF8<>, FileReadStream>(is);
 
+  if (fclose(pFile) != 0)
+    log::warning("MotionScript::fromFile") << "Error closing file \"" << fileName << "\": " << strerror(errno) << " (" << errno << ")";
+
   if (document.HasParseError())
   {
     log::error("MotionScript::fromFile") << "JSON parse error for " << fileName << ": " << document.GetParseError();
