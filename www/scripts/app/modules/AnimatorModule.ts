@@ -25,7 +25,7 @@ var RATIO_VALUE2RADS: number = (2*Math.PI) / 4096.0;
 var RATIO_RADS2VALUE: number = 4096.0 / (2*Math.PI);
 
 
-function getMirrorValue(value: number) { return (MAX_VALUE + 1 - value) & MAX_VALUE; }
+function getMirrorValue(value: number) { return clampValue(MAX_VALUE + 1 - value); }
 function getMirrorAngle(angle: number) { return -angle; }
 function degs2Value(angle: number) { return math.clamp(Math.round(angle*RATIO_DEGS2VALUE), -CENTER_VALUE, MAX_VALUE - CENTER_VALUE) + CENTER_VALUE; }
 function value2Degs(value: number) { return (value - CENTER_VALUE)*RATIO_VALUE2DEGS; }
@@ -51,7 +51,7 @@ function getJointValue(values: scripts.JointValues, jointId: number, defaultValu
 
     console.assert(v != null);
 
-    return  v
+    return constants.isJointBaseOfPair(jointId) ? v : getMirrorValue(v);
 }
 
 function buildValueArray(values: scripts.JointValues, defaultValue?: number): number[]
