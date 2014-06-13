@@ -1404,6 +1404,21 @@ div.module.animator ul.stages ul.values > li
   /*text-align: left;*/
 }
 
+div.module.animator ul.stages ul.values > li > input
+{
+  width: 100%;
+  height: 23px;
+  margin: 0px;
+  box-sizing: border-box;
+  text-align: center;
+  color: #FFF;
+  background: rgba(140, 162, 252, 0.5);
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10.5px;
+}
+
 /********************************************************************/
 
 html.night-mode
