@@ -434,7 +434,7 @@ void StationaryMapState::calculateTurnAngle()
           closestAngle = angle - targetAngle;
           closestBallPos = ballPos;
           foundTurn = true;
-          log::info("StationaryMapState::calculateTurnAngle") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << *endPos << " best yet";
+          log::info("StationaryMapState::calculateTurnAngle") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos->transpose() << " best yet";
         }
       }
     }
