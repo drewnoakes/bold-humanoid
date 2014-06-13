@@ -109,7 +109,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     shared_ptr<CartoonPass>(new CartoonPass(imageWidth, imageHeight, pixelLabels)),
     shared_ptr<LabelCountPass>(new LabelCountPass(pixelLabels)),
     shared_ptr<CompleteFieldEdgePass>(new CompleteFieldEdgePass(d_fieldLabel, imageWidth, imageHeight)),
-    shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(d_fieldLabel, imageWidth, imageHeight, 1*2*3*4))
+    shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(d_fieldLabel, d_lineLabel, imageWidth, imageHeight, 1*2*3*4))
     );
 
   d_imagePassRunner = shared_ptr<ImagePassRunner<uchar>>(new ImagePassRunner<uchar>());

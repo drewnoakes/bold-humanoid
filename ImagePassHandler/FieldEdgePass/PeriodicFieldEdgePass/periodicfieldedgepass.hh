@@ -10,7 +10,7 @@ namespace bold
   class PeriodicFieldEdgePass : public FieldEdgePass
   {
   public:
-    PeriodicFieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight, ushort period);
+    PeriodicFieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, std::shared_ptr<PixelLabel> lineLabel, ushort pixelWidth, ushort pixelHeight, ushort period);
 
     ~PeriodicFieldEdgePass() override = default;
 
@@ -28,6 +28,7 @@ namespace bold
 
   private:
     uchar d_fieldLabelId;
+    uchar d_lineLabelId;
     std::vector<short> d_maxYByC;
     std::vector<short> d_maxYByCConvex;
     std::vector<ushort> d_runByC;

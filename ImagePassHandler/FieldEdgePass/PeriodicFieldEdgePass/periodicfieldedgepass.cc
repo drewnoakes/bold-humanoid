@@ -9,9 +9,10 @@ using namespace bold;
 using namespace Eigen;
 using namespace std;
 
-PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight, ushort period)
+PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, shared_ptr<PixelLabel> lineLabel, ushort pixelWidth, ushort pixelHeight, ushort period)
 : FieldEdgePass(pixelWidth, pixelHeight),
   d_fieldLabelId(fieldLabel->id()),
+  d_lineLabelId(lineLabel->id()),
   d_maxYByC((pixelWidth/period)+1),
   d_maxYByCConvex((pixelWidth/period)+1),
   d_runByC((pixelWidth/period)+1),
@@ -37,7 +38,12 @@ void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 
   ushort c = x / d_period;
 
-  if (labelId == d_fieldLabel->id())
+  if (labelId == d_lineLabelId)
+  {
+    // Do nothing! Line may still be within field.
+    // We don't increase the score however, and still reset at the first non-field/line pixel.
+  }
+  else if (labelId == d_fieldLabelId)
   {
 //     ASSERT(y >= d_maxYByX[c]);
 
