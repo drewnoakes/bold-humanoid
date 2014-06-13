@@ -20,8 +20,6 @@ void Localiser::predict()
 
   bool dynamicError = d_enableDynamicError->getValue();
 
-  static double preNormWeightFilter = 1.0;
-
   if (d_haveLastAgentTransform)
   {
     // Particle represents WA
@@ -55,8 +53,7 @@ void Localiser::predict()
         auto yPosErr = d_positionErrorRng();
         if (dynamicError)
         {
-          preNormWeightFilter += 0.01 * (d_preNormWeightSum - preNormWeightFilter);
-          auto alpha = (1.0 - preNormWeightFilter) / 0.1;
+          auto alpha = (1.0 - d_preNormWeightSumFilter.getValue()) / 0.1;
           Math::clamp(alpha, 0.0, 1.0);
           xPosErr *= alpha;
           yPosErr *= alpha;

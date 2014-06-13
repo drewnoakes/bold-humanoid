@@ -7,6 +7,7 @@
 #include "../AgentPosition/agentposition.hh"
 #include "../filters/Filter/filter.hh"
 #include "../stats/movingaverage.hh"
+#include "../stats/lowpassfilter.hh"
 
 namespace bold
 {
@@ -45,6 +46,7 @@ namespace bold
     Eigen::Affine3d d_lastAgentTransform;
     Eigen::Quaterniond d_lastQuaternion;
     double d_preNormWeightSum;
+    LowPassFilter d_preNormWeightSumFilter;
 
     bool d_shouldRandomise;
 

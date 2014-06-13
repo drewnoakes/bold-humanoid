@@ -94,6 +94,7 @@ void Localiser::update()
 
     auto weights = filter->getWeights();
     d_preNormWeightSum = weights.sum();
+    d_preNormWeightSumFilter.next(d_preNormWeightSum);
     filter->normalize();
   }
 
