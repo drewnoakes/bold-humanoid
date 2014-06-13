@@ -5,9 +5,9 @@
 /// <reference path="../libs/lodash.d.ts" />
 /// <reference path="../libs/three.d.ts" />
 
-import Setting = require('Setting');
 import geometry = require('util/geometry');
 import math = require('util/math');
+import Setting = require('Setting');
 import Trackable = require('util/Trackable');
 
 // All lengths are in metres

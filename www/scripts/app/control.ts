@@ -9,8 +9,8 @@ import Closeable = require('util/Closeable');
 import color = require('color');
 import constants = require('constants');
 import data = require('data');
-import scripts = require('scripts');
 import HsvRangeEditor = require('controls/HsvRangeEditor');
+import scripts = require('scripts');
 import Setting = require('Setting');
 
 export interface FSMState
