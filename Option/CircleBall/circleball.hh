@@ -29,7 +29,6 @@ namespace bold
     std::shared_ptr<HeadModule> d_headModule;
     std::shared_ptr<LookAtFeet> d_lookAtFeet;
     std::shared_ptr<LookAtBall> d_lookAtBall;
-    double d_turnAngleRads;
     Eigen::Vector2d d_targetBallPos;
     double d_targetYaw;
   };

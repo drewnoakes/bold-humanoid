@@ -20,7 +20,6 @@ CircleBall::CircleBall(std::string const& id, Agent* agent)
   d_headModule(agent->getHeadModule()),
   d_lookAtFeet(make_shared<LookAtFeet>("lookAtFeet", d_headModule)),
   d_lookAtBall(make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), d_headModule)),
-  d_turnAngleRads(0),
   d_targetBallPos(0.0, 0.15),
   d_targetYaw(0)
 {}
@@ -51,7 +50,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   //cout << "circleBall targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << " diff=" << yawDiffRads << " error=" << error.transpose() << endl;
   //a = Math::lerp(fabs(yawDiffRads), 0.0, M_PI/3, 0.0, a);
 
-  bool isLeftTurn = d_turnAngleRads < 0;
+  bool isLeftTurn = yawDiffRads < 0;
 
   double x, y, a;
 
@@ -98,7 +97,6 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
 void CircleBall::setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallPos)
 {
-  d_turnAngleRads = turnAngleRads;
   d_targetBallPos = targetBallPos;
 
   // Track starting orientation in order to know when we've reached our desired rotation
