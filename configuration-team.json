@@ -262,8 +262,8 @@
     "y-amp-delta": 0.35,
     "turn-delta": 0.24,
     "max-hip-pitch-at-speed": 13,
-    "min-hip-pitch": 11,
-    "max-hip-pitch": 14,
+    "min-hip-pitch": 12,
+    "max-hip-pitch": 15,
     "fwd-acc-hip-pitch-factor": 2.0,
     "stabilisation-time-ms": 300
   },
