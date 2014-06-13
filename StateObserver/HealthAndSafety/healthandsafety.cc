@@ -60,6 +60,10 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
   // Track temperatures
   //
 
+  // TODO don't just announce the topmost temperature
+  // TODO announce whether temperature is increasing or decreasing
+  // TODO smooth temperatures with a moving average to stop announcements caused by spikes in data
+
   if (Clock::getSecondsSince(d_lastTemperatureWarningTime) > 20)
   {
     int maxTemperature = 0;
