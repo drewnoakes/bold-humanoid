@@ -232,6 +232,7 @@ function onControlData(data: ControlData)
             allActions = _.map(syncData.actions, actionData => new Action(actionData));
             allSettings = _.map(syncData.settings, settingData => new Setting(settingData));
             allFSMs = syncData.fsms;
+            scripts.allMotionScripts = syncData.motionScripts;
 
             // Raise any queued callbacks
             _.each(actionsCallbacks, callback => callback());

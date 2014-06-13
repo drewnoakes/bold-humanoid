@@ -30,3 +30,5 @@ export interface MotionScript
     controlsLegs?: boolean;
     stages: Stage[];
 }
+
+export var allMotionScripts: MotionScript[] = [];
