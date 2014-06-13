@@ -258,8 +258,8 @@
   },
   "walk-module": {
     "auto-balance": true,
-    "x-amp-delta": 0.72,
-    "y-amp-delta": 0.72,
+    "x-amp-delta": 0.35,
+    "y-amp-delta": 0.35,
     "turn-delta": 0.24,
     "max-hip-pitch-at-speed": 13,
     "min-hip-pitch": 11,
