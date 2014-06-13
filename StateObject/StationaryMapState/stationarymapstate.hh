@@ -138,7 +138,7 @@ namespace bold
     std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; };
 
     bool hasEnoughBallObservations() const { return existsWithSamples(d_ballEstimates, BallSamplesNeeded); };
-    bool hasEnoughGoalPostObservations() const { return countWithSamples(d_goalPostEstimates, GoalSamplesNeeded) >= 2; };
+    bool hasEnoughGoalPostObservations() const { return d_goalEstimates.size() != 0; };
     bool hasEnoughBallAndGoalPostObservations() const { return hasEnoughBallObservations() && hasEnoughGoalPostObservations(); };
 
     bool needMoreSightingsOfGoalPostAt(Eigen::Vector3d goalPos) const;
