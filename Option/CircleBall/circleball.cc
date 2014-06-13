@@ -59,7 +59,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   if (fabs(yawDiffRads) > Math::degToRad(10)) // TODO magic number!
   {
     // Always walk sideways, but not if error becomes too big
-    x = (1.0 - Math::clamp(fabs(error.x()), 0.0, 1.0)) * isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue();
+    x = (1.0 - Math::clamp(fabs(error.x()), 0.0, 1.0)) * (isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue());
 
     // Try to keep forward distance stable
     y = -Math::lerp(error.y(), 0.0, 0.2, 0.0, maxSpeedY->getValue());
