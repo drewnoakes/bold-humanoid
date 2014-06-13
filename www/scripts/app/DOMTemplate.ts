@@ -39,7 +39,7 @@ class DOMTemplate
 
         console.assert(!!obj);
 
-        if (this.contentType === "text/html") {
+        if (this.contentType == null || this.contentType === "text/html") {
             console.assert(!!obj.body);
             if (obj.body.children.length !== 1)
                 console.error("Template specifies " + obj.body.children.length + " children, where only one is allowed.");
