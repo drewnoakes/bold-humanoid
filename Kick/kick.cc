@@ -19,14 +19,14 @@ void Kick::loadAll()
     "forward-right",
     "./motionscripts/kick-right.json",
     Bounds2d(Vector2d(0, 0), Vector2d(0.1, 0.2)),
-    Vector2d(0, 1.5)
+    Vector2d(0, 2.5)
   ));
 
   d_allKicks.push_back(make_shared<Kick const>(
     "forward-left",
     "./motionscripts/kick-left.json",
     Bounds2d(Vector2d(-0.1, 0), Vector2d(0, 0.2)),
-    Vector2d(0, 1.5)
+    Vector2d(0, 2.5)
   ));
 
   d_allKicks.push_back(make_shared<Kick const>(
