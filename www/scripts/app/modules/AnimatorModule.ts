@@ -82,7 +82,14 @@ interface IScriptViewModel
     stages: IStageViewModel[];
 }
 
-var animatorTemplate = new DOMTemplate('animator-template');
+var animatorTemplate = DOMTemplate.forText(
+    '<div>' +
+      '<h2 class="script-name"></h2>' +
+      '<div class="timeline-container">' +
+        '<ul class="joint-names"></ul>' +
+        '<ul class="stages"></ul>' +
+      '</div>' +
+    '</div>');
 
 class AnimatorModule extends Module
 {

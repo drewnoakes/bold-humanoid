@@ -15,7 +15,7 @@ import Module = require('Module');
 
 var radarSize = 200,
     moveScale = 3,
-    moduleTemplate = new DOMTemplate("walk-module-template");
+    moduleTemplate = DOMTemplate.forId("walk-module-template");
 
 var chartOptions = {
     interpolation: 'step',

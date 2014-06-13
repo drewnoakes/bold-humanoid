@@ -12,7 +12,7 @@ import Module = require('Module');
 import state = require('state');
 import util = require('util');
 
-var template = new DOMTemplate('drawbridge-module-template');
+var template = DOMTemplate.forId('drawbridge-module-template');
 
 interface IDrawbridgeData
 {

@@ -15,7 +15,7 @@ import mouse = require('util/mouse');
 import Module = require('Module');
 import PixelLabelInspector = require('controls/PixelLabelInspector');
 
-var moduleTemplate = new DOMTemplate("camera-module-template");
+var moduleTemplate = DOMTemplate.forId("camera-module-template");
 
 class CameraModule extends Module
 {

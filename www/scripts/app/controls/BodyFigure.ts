@@ -8,7 +8,7 @@ import constants = require('constants');
 import DOMTemplate = require('DOMTemplate');
 import Trackable = require('util/Trackable');
 
-var bodyTemplate = new DOMTemplate('body-figure-template');
+var bodyTemplate = DOMTemplate.forId('body-figure-template');
 
 interface JointDetail
 {

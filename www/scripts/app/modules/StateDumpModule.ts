@@ -9,7 +9,7 @@ import data = require('data');
 import DOMTemplate = require('DOMTemplate');
 import Module = require('Module');
 
-var moduleTemplate = new DOMTemplate('state-dump-module-template');
+var moduleTemplate = DOMTemplate.forId('state-dump-module-template');
 
 interface ICloseable
 {

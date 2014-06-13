@@ -7,7 +7,7 @@ import DOMTemplate = require('DOMTemplate');
 import TabControl = require('controls/TabControl');
 import Module = require('Module');
 
-var moduleTemplate = new DOMTemplate("vision-module-template");
+var moduleTemplate = DOMTemplate.forId("vision-module-template");
 
 class VisionModule extends Module
 {

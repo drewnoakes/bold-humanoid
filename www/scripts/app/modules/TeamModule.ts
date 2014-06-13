@@ -12,7 +12,7 @@ import Module = require('Module');
 import state = require('state');
 import util = require('util');
 
-var template = new DOMTemplate('team-module-template');
+var template = DOMTemplate.forId('team-module-template');
 
 class TeamModule extends Module
 {

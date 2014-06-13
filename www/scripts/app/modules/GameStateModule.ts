@@ -11,7 +11,7 @@ import Module = require('Module');
 import state = require('state');
 import util = require('util');
 
-var moduleTemplate = new DOMTemplate('game-module-template');
+var moduleTemplate = DOMTemplate.forId('game-module-template');
 
 var padLeft = (nr, n, str) =>
 {

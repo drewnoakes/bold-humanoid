@@ -10,7 +10,7 @@ import util = require('util');
 
 declare var jQuery;
 
-var moduleTemplate = new DOMTemplate('module-template');
+var moduleTemplate = DOMTemplate.forId('module-template');
 
 /* Modules are dynamic components, many instances of which make up the Round Table UI.
  *
