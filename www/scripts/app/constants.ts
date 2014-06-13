@@ -7,6 +7,7 @@
 
 import Setting = require('Setting');
 import geometry = require('util/geometry');
+import math = require('util/math');
 import Trackable = require('util/Trackable');
 
 // All lengths are in metres
@@ -195,11 +196,6 @@ export var kneeOffsetX     = .0;           // OP
 
 // TODO define the offsets/rotations/etc below in terms of measurements from constants?
 
-// TODO move this function the the math module
-function degToRad(deg)
-{
-  return Math.PI * deg/180;
-}
 
 export var cameraOffsetInHead = new THREE.Vector3(0, 0.0332, 0.0344);
 
@@ -232,7 +228,7 @@ export var bodyStructure: IBodyPart = {
                     geometryPath: 'models/darwin/darwin-head.json',
                     creaseAngle: 1.00,
                     rotationAxis: new THREE.Euler(1, 0, 0),
-                    rotationOrigin: degToRad(-40),
+                    rotationOrigin: math.degToRad(-40),
                     jointId: jointIds.headTilt,
                     children: [
                         {

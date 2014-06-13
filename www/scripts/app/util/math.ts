@@ -4,6 +4,11 @@
 
 /// <reference path="../../libs/lodash.d.ts"/>
 
+export function degToRad(deg: number) : number
+{
+  return Math.PI * deg/180;
+}
+
 export class MovingAverage
 {
     private values: number[] = [];
