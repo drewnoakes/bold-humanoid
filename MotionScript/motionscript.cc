@@ -23,7 +23,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
   FILE* pFile = fopen(fileName.c_str(), "rb");
   if (!pFile)
   {
-    log::error("MotionScript::fromFile") << "Unable to open file: " << fileName;
+    log::error("MotionScript::fromFile") << "Unable to open file \"" << fileName << "\": " << strerror(errno) << " (" << errno << ")";
     return nullptr;
   }
 
