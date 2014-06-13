@@ -13,7 +13,7 @@ FieldEdgePass::FieldEdgePass(ushort pixelWidth, ushort pixelHeight)
 : d_pixelWidth(pixelWidth),
   d_pixelHeight(pixelHeight)
 {
-  Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = value; });
+  Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = (ushort)value; });
   d_useConvexHull = Config::getSetting<bool>("vision.field-edge-pass.use-convex-hull");
 }
 

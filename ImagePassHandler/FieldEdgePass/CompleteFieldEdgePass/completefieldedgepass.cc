@@ -15,7 +15,7 @@ CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
   d_maxYByX(pixelWidth),
   d_runByX(pixelWidth)
 {
-  Config::getSetting<int>("vision.field-edge-pass.complete.smoothing-window-length")->track([this](int value) { d_smoothingWindowSize = value; });
+  Config::getSetting<int>("vision.field-edge-pass.complete.smoothing-window-length")->track([this](int value) { d_smoothingWindowSize = (ushort)value; });
 }
 
 void CompleteFieldEdgePass::onImageStarting(SequentialTimer& timer)
