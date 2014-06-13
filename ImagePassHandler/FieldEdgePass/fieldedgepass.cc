@@ -9,9 +9,8 @@ using namespace bold;
 using namespace Eigen;
 using namespace std;
 
-FieldEdgePass::FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
-: d_fieldLabel(fieldLabel),
-  d_pixelWidth(pixelWidth),
+FieldEdgePass::FieldEdgePass(ushort pixelWidth, ushort pixelHeight)
+: d_pixelWidth(pixelWidth),
   d_pixelHeight(pixelHeight)
 {
   Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = value; });

@@ -27,6 +27,7 @@ namespace bold
     }
 
   private:
+    uchar d_fieldLabelId;
     std::vector<short> d_maxYByX;
     std::vector<short> d_maxYByXConvex;
     std::vector<ushort> d_runByX;

@@ -14,7 +14,7 @@ namespace bold
   class FieldEdgePass : public ImagePassHandler<uchar>
   {
   public:
-    FieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight);
+    FieldEdgePass(ushort pixelWidth, ushort pixelHeight);
 
     virtual ~FieldEdgePass() = default;
 
@@ -26,7 +26,6 @@ namespace bold
     static void applyConvexHull(std::vector<short>& points, unsigned fromIndex, unsigned toIndex);
 
     Setting<bool>* d_useConvexHull;
-    std::shared_ptr<PixelLabel> d_fieldLabel;
     ushort d_pixelWidth;
     ushort d_pixelHeight;
     ushort d_minVerticalRunLength;

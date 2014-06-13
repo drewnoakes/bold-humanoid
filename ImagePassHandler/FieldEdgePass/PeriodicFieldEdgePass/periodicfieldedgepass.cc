@@ -10,7 +10,8 @@ using namespace Eigen;
 using namespace std;
 
 PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight, ushort period)
-: FieldEdgePass(fieldLabel, pixelWidth, pixelHeight),
+: FieldEdgePass(pixelWidth, pixelHeight),
+  d_fieldLabelId(fieldLabel->id()),
   d_maxYByC((pixelWidth/period)+1),
   d_maxYByCConvex((pixelWidth/period)+1),
   d_runByC((pixelWidth/period)+1),

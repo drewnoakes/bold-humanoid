@@ -10,7 +10,8 @@ using namespace Eigen;
 using namespace std;
 
 CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
-: FieldEdgePass(fieldLabel, pixelWidth, pixelHeight),
+: FieldEdgePass(pixelWidth, pixelHeight),
+  d_fieldLabelId(fieldLabel->id()),
   d_maxYByX(pixelWidth),
   d_runByX(pixelWidth)
 {
@@ -33,7 +34,7 @@ void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 {
 //   ASSERT(x >= 0 && x < d_pixelWidth);
 
-  if (labelId == d_fieldLabel->id())
+  if (labelId == d_fieldLabelId)
   {
 //     ASSERT(y >= d_maxYByX[x]);
 
