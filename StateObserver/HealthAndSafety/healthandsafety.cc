@@ -20,6 +20,10 @@ HealthAndSafety::HealthAndSafety(std::shared_ptr<Voice> voice)
 
 void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state, SequentialTimer& timer)
 {
+  //
+  // Track voltage level
+  //
+
   float voltage = d_voltageMovingAverage.next(state->getCM730State().voltage);
 
   switch (d_voltageTrigger.next(voltage))
@@ -51,6 +55,10 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
       break;
     }
   }
+
+  //
+  // Track temperatures
+  //
 
   if (Clock::getSecondsSince(d_lastTemperatureWarningTime) > 20)
   {
