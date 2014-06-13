@@ -20,19 +20,19 @@ const uchar MotionScript::Stage::DEFAULT_P_GAIN = 32;
 
 shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 {
-  FILE* pFile = fopen(fileName.c_str(), "rb");
-  if (!pFile)
+  FILE* file = fopen(fileName.c_str(), "rb");
+  if (!file)
   {
     log::error("MotionScript::fromFile") << "Unable to open file \"" << fileName << "\": " << strerror(errno) << " (" << errno << ")";
     return nullptr;
   }
 
   char buffer[65536];
-  FileReadStream is(pFile, buffer, sizeof(buffer));
+  FileReadStream is(file, buffer, sizeof(buffer));
   Document document;
   document.ParseStream<0, UTF8<>, FileReadStream>(is);
 
-  if (fclose(pFile) != 0)
+  if (fclose(file) != 0)
     log::warning("MotionScript::fromFile") << "Error closing file \"" << fileName << "\": " << strerror(errno) << " (" << errno << ")";
 
   if (document.HasParseError())
