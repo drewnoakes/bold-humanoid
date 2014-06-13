@@ -212,7 +212,8 @@ bool MotionScript::writeJsonFile(string fileName) const
 
   f.Flush();
 
-  fclose(file);
+  if (fclose(file) != 0)
+    log::warning("MotionScript::writeJsonFile") << "Error closing file \"" << fileName << "\": " << strerror(errno) << " (" << errno << ")";
 
   return true;
 }
