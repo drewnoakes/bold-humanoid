@@ -13,6 +13,7 @@ import Setting = require('Setting');
 import util = require('util');
 
 import Agent2dModule = require('modules/Agent2dModule');
+import AnimatorModule = require('modules/AnimatorModule');
 import CameraModule = require('modules/CameraModule');
 import CommsModule = require('modules/CommsModule');
 import ConfigModule = require('modules/ConfigModule');
@@ -68,6 +69,7 @@ var loadUi = (settings?: Setting[]) =>
     moduleHost.register(new LoadModule());
     moduleHost.register(new TrajectoryModule());
     moduleHost.register(new VoiceModule());
+    moduleHost.register(new AnimatorModule());
     moduleHost.register(new DrawbridgeModule());
     moduleHost.register(new ConfigModule());
     moduleHost.register(new StateDumpModule());
