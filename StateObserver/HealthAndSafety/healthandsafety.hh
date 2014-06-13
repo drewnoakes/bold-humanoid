@@ -18,7 +18,7 @@ namespace bold
 
   private:
     std::shared_ptr<Voice> d_voice;
-    MovingAverage<int> d_voltageMovingAverage;
+    MovingAverage<float> d_voltageMovingAverage;
     SchmittTrigger<float> d_voltageTrigger;
     int d_temperatureThreshold;
     Clock::Timestamp d_lastVoltageWarningTime;
