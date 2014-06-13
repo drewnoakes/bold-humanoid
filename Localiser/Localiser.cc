@@ -19,6 +19,7 @@ Localiser::Localiser()
   d_penaltyKidnapWeight = Config::getSetting<double>("localiser.penalty-kidnap-weight");
   d_enablePenaltyRandomise = Config::getSetting<bool>("localiser.enable-penalty-randomise");
   d_enableDynamicError = Config::getSetting<bool>("localiser.enable-dynamic-error");
+  auto preNormWeightSumFilterAlpha = Config::getSetting<double>("localiser.prenorm-weightsum-filter-alpha");
 
   smoothingWindowSize->track([this](int value) { d_avgPos = MovingAverage<Vector4d>(value); });
   positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });
@@ -26,6 +27,8 @@ Localiser::Localiser()
 
   d_preNormWeightSumFilter.reset(1.0);
   d_preNormWeightSumFilter.setAlpha(0.01);
+  preNormWeightSumFilterAlpha->track([this](double value) { d_preNormWeightSumFilter.setAlpha(value); });
+
 
   double fieldXMax = (FieldMap::getFieldLengthX() + FieldMap::getOuterMarginMinimum()) / 2.0;
   double fieldYMax = (FieldMap::getFieldLengthY() + FieldMap::getOuterMarginMinimum()) / 2.0;
