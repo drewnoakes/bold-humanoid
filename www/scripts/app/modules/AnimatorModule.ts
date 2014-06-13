@@ -9,9 +9,30 @@ import control = require('control');
 import constants = require('constants');
 import DOMTemplate = require('DOMTemplate');
 import geometry = require('util/geometry');
+import math = require('util/math');
 import Module = require('Module');
 import scripts = require('scripts');
 import Trackable = require('util/Trackable');
+
+var MIN_VALUE: number    = 0x0000;
+var CENTER_VALUE: number = 0x0800; // 2048
+var MAX_VALUE: number    = 0x0FFF; // 4095
+
+var RATIO_VALUE2DEGS: number =  360.0 / 4096.0;
+var RATIO_DEGS2VALUE: number = 4096.0 / 360.0;
+
+var RATIO_VALUE2RADS: number = (2*Math.PI) / 4096.0;
+var RATIO_RADS2VALUE: number = 4096.0 / (2*Math.PI);
+
+
+function getMirrorValue(value: number) { return (MAX_VALUE + 1 - value) & MAX_VALUE; }
+function getMirrorAngle(angle: number) { return -angle; }
+function degs2Value(angle: number) { return math.clamp(Math.round(angle*RATIO_DEGS2VALUE), -CENTER_VALUE, MAX_VALUE - CENTER_VALUE) + CENTER_VALUE; }
+function value2Degs(value: number) { return (value - CENTER_VALUE)*RATIO_VALUE2DEGS; }
+function rads2Value(angle: number) { return math.clamp(Math.round(angle*RATIO_RADS2VALUE), -CENTER_VALUE, MAX_VALUE - CENTER_VALUE) + CENTER_VALUE; }
+function value2Rads(value: number) { return (value - CENTER_VALUE)*RATIO_VALUE2RADS; }
+function clampValue(value: number) { return math.clamp(value, 0, MAX_VALUE); }
+
 
 function getJointValue(values: scripts.JointValues, jointId: number, defaultValue?: number): number
 {
