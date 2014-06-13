@@ -18,6 +18,10 @@ void Localiser::predict()
   if (!orientationState || !odometryState)
     return;
 
+  bool dynamicError = d_enableDynamicError->getValue();
+
+  static double preNormWeightFilter = 1.0;
+
   if (d_haveLastAgentTransform)
   {
     // Particle represents WA
@@ -32,7 +36,7 @@ void Localiser::predict()
       0, 0, 1;
 
     d_filter->predict(
-      [deltaAgentMat,this](FilterState const& state) -> FilterState
+      [deltaAgentMat,dynamicError,this](FilterState const& state) -> FilterState
       {
         Matrix3d worldAgentMat;
         worldAgentMat <<
@@ -46,9 +50,20 @@ void Localiser::predict()
         FilterState newState;
         newState <<
           newWorldAgentMat.col(2).head<2>(), newWorldAgentMat.col(1).head<2>();
-        
-        newState(0) += d_positionErrorRng();
-        newState(1) += d_positionErrorRng();
+
+        auto xPosErr = d_positionErrorRng();
+        auto yPosErr = d_positionErrorRng();
+        if (dynamicError)
+        {
+          preNormWeightFilter += 0.01 * (d_preNormWeightSum - preNormWeightFilter);
+          auto alpha = (1.0 - preNormWeightFilter) / 0.1;
+          Math::clamp(alpha, 0.0, 1.0);
+          xPosErr *= alpha;
+          yPosErr *= alpha;
+
+        }
+        newState(0) += xPosErr;
+        newState(1) += yPosErr;
         
         auto theta = atan2(newState(3), newState(2));
         theta += d_angleErrorRng();

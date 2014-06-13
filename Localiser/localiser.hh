@@ -27,6 +27,7 @@ namespace bold
 
     AgentPosition position() const { return d_pos; }
     AgentPosition smoothedPosition() const { return d_smoothedPos; }
+    double uncertainty() const { return d_uncertainty; }
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   private:
@@ -50,12 +51,14 @@ namespace bold
     AgentPosition d_pos;
     AgentPosition d_smoothedPos;
     MovingAverage<Eigen::Vector4d> d_avgPos;
+    double d_uncertainty;
 
     Setting<bool>* d_useLines;
     Setting<int>* d_minGoalsNeeded;
     Setting<double>* d_defaultKidnapWeight;
     Setting<double>* d_penaltyKidnapWeight;
     Setting<bool>* d_enablePenaltyRandomise;
+    Setting<bool>* d_enableDynamicError;
 
     FilterType d_filterType;
     std::shared_ptr<Filter<4>> d_filter;

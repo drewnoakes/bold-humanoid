@@ -18,6 +18,7 @@ Localiser::Localiser()
   d_defaultKidnapWeight = Config::getSetting<double>("localiser.default-kidnap-weight");
   d_penaltyKidnapWeight = Config::getSetting<double>("localiser.penalty-kidnap-weight");
   d_enablePenaltyRandomise = Config::getSetting<bool>("localiser.enable-penalty-randomise");
+  d_enableDynamicError = Config::getSetting<bool>("localiser.enable-dynamic-error");
 
   smoothingWindowSize->track([this](int value) { d_avgPos = MovingAverage<Vector4d>(value); });
   positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });

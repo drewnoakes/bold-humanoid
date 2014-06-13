@@ -200,8 +200,8 @@
     "randomise-ratio": 0.03,
     "use-lines": false,
     "min-goals-needed": 1,
-    "position-error": 0.03,
-    "angle-error-degrees": 2
+    "position-error": 0.01,
+    "angle-error-degrees": 0.5
   },
   "head-module": {
     "p-gain": 8,

@@ -100,6 +100,7 @@ void Localiser::update()
   auto stateWeight = d_filter->extract();
 
   d_pos = AgentPosition(stateWeight.first);
+  d_uncertainty = stateWeight.second;
 
   updateSmoothedPos();
 

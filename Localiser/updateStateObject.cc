@@ -11,6 +11,6 @@ void Localiser::updateStateObject()
     MatrixXd particles = MatrixXd::Ones(states.rows() + 1, weights.size());
     particles << states, weights.transpose();
     
-    State::make<ParticleState>(particles, d_preNormWeightSum);
+    State::make<ParticleState>(particles, d_preNormWeightSum, d_uncertainty);
   }
 }

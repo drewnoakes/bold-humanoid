@@ -13,9 +13,10 @@ namespace bold
   class ParticleState : public StateObject
   {
   public:
-    ParticleState(Eigen::MatrixXd const& particles, double preNormWeightSum)
+    ParticleState(Eigen::MatrixXd const& particles, double preNormWeightSum, double uncertainty)
       : d_particles(particles),
-        d_preNormWeightSum(preNormWeightSum)
+        d_preNormWeightSum(preNormWeightSum),
+        d_uncertainty(uncertainty)
     {}
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
@@ -23,5 +24,6 @@ namespace bold
   private:
     Eigen::MatrixXd d_particles;
     double d_preNormWeightSum;
+    double d_uncertainty;
   };
 }
