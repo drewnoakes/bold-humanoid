@@ -176,7 +176,9 @@ vector<shared_ptr<MotionScript>> MotionScript::loadAllInPath(string path)
 
     stringstream filePath;
     filePath << path << "/" << ent->d_name;
-    scripts.push_back(fromFile(filePath.str()));
+    auto script = fromFile(filePath.str());
+    if (script != nullptr)
+      scripts.push_back(script);
   }
 
   closedir(dir);
