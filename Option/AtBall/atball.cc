@@ -66,18 +66,26 @@ vector<shared_ptr<Option>> AtBall::runPolicy(Writer<StringBuffer>& writer)
 
   hasMap = true;
 
+  static bool busy = false;
+
   if (!map->hasEnoughGoalPostObservations())
   {
     // We don't see enough goals yet, so continue looking
+    busy = true;
     return {d_lookAroundOption};
   }
 
   if (!map->hasEnoughBallObservations())
   {
+    busy = true;
     return {d_lookAtFeetOption};
   }
 
-  log::warning("AtBall::runPolicy") << "Policy invoked, yet we have enough goal and ball observations";
+  if (busy)
+  {
+    busy = false;
+    log::warning("AtBall::runPolicy") << "Policy invoked, yet we have enough goal and ball observations";
+  }
 
   return {};
 }
