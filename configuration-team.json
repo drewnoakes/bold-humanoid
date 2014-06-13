@@ -283,8 +283,7 @@
     "circle-ball": {
       "max-speed-x": 20.0,
       "max-speed-y": 20.0,
-      "turn-speed-a": 25.0,
-      "time-scaling": 8
+      "turn-speed-a": 25.0
     },
     "approach-ball": {
       "turn-speed-scale": 18.0,
