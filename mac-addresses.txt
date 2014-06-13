@@ -10,26 +10,28 @@
 # - MAC addresses must be in capital letters
 # - Lines must be separated by a TAB character
 
-0001C00C41EC	Nimue (ETH)
-000DF0950F7B	Nimue (WLAN)
+0001C00C41EC	darwin1 - nimue (ETH)
+000DF0950F7B	darwin1 - nimue (WLAN)
 
-0001C00C4187	Gareth (ETH)
-000DF08D906B	Gareth (WLAN)
+0001C00C4187	darwin2 - gareth (ETH)
+000DF08D906B	darwin2 - gareth (WLAN)
 
-0001C00C4182	Oberon (ETH)
-000DF0951669	Oberon (WLAN)
+0001C00C4182	darwin3 - oberon (ETH)
+000DF0951669	darwin3 - oberon (WLAN)
 
-0001C00C419B	Bors (ETH)
-000DF09518C5	Bors (WLAN)
+0001C00C419B	darwin4 - bors (ETH)
+000DF09518C5	darwin4 - bors (WLAN)
 
-0001C00C43DA	Dagonet (ETH)
-000DF0951549	Dagonet (WLAN)
+0001C00C43DA	darwin5 - dagonet (ETH)
+000DF0951549	darwin5 - dagonet (WLAN)
 
-0001C00C43D8	Ywain (ETH)
-000DF0950D4D	Ywain (WLAN)
+0001C00C43D8	darwin6 - ywain (ETH)
+000DF0950D4D	darwin6 - ywain (WLAN)
 
-0001C00C44BE	Tor (ETH)
-000DF0950EEB	Tor (WLAN)
+0001C00C44BE	darwin7 - tor (ETH)
+000DF0950EEB	darwin7 - tor (WLAN)
+
+001601AF4ACE	Bold Hearts (WLAN)
 
 848F69D09EE2	Drew's Laptop (ETH)
 88532ECC160E	Drew's Laptop (WLAN)
