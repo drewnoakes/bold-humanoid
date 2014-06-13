@@ -67,7 +67,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
     // Turn to keep ball centered
     double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
-    a = errorDir * Math::clamp(fabs(errorNorm.x()), 0.75, 1.0) * turnSpeedA->getValue();
+    a = errorDir * Math::clamp(fabs(errorNorm.x()), 0.5, 1.0) * turnSpeedA->getValue();
   }
   else
   {
