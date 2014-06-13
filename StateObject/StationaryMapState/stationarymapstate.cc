@@ -441,7 +441,10 @@ void StationaryMapState::calculateTurnAngle()
       for (double const& targetAngle : targetAngles)
       {
         if (!d_occlusionMap.isOpen(angle, endPos->norm()))
+        {
+          log::info("StationaryMapState::calculateTurnAngle") << "Obstacle blocks kick " << kick->getId() << " at angle " << round(Math::radToDeg(targetAngle));
           continue;
+        }
 
         if (fabs(closestAngle) > fabs(angle - targetAngle))
         {
