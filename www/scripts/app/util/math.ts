@@ -4,9 +4,14 @@
 
 /// <reference path="../../libs/lodash.d.ts"/>
 
-export function degToRad(deg: number) : number
+export function radToDeg(rad: number)
 {
-  return Math.PI * deg/180;
+    return 180.0 * rad / Math.PI;
+}
+
+export function degToRad(deg: number)
+{
+    return Math.PI * deg / 180.0;
 }
 
 export class MovingAverage
@@ -44,3 +49,68 @@ export class MovingAverage
         return this.sum/this.count;
     }
 }
+
+export function clamp(val: number, min: number, max: number)
+{
+    return val < min
+        ? min
+        : val > max
+            ? max
+            : val;
+}
+
+export function lerp(ratio: number, lowerOutput: number, upperOutput: number)
+{
+    return lowerOutput + (upperOutput - lowerOutput) * ratio;
+}
+
+export function roundUpHumane(value: number)
+{
+    // A function for nicely rounding numbers up for human beings.
+    // Eg: 180.2 -> 200
+    //       3.5 -> 5
+    //       8.9 -> 10
+
+    // calculate the magnitude of the value
+    var mag = Math.floor(Math.log(value) / Math.log(10));
+    var magPow = Math.pow(10, mag);
+
+    // calculate the most significant digit of the value
+    var magMsd = Math.ceil(value / magPow);
+
+    // promote the MSD to either 1, 2, or 5
+    if (magMsd > 5.0)
+        magMsd = 10.0;
+    else if (magMsd > 2.0)
+        magMsd = 5.0;
+    else if (magMsd > 1.0)
+        magMsd = 2.0;
+
+    return magMsd * magPow;
+}
+
+export function roundDownHumane(value: number)
+{
+    // A function for nicely rounding numbers down for human beings.
+    // Eg: 180.2 -> 100
+    //       3.5 -> 2
+    //       8.9 -> 5
+
+    // calculate the magnitude of the value
+    var mag = Math.floor(Math.log(value) / Math.log(10));
+    var magPow = Math.pow(10, mag);
+
+    // calculate the most significant digit of the value
+    var magMsd = Math.ceil(value / magPow);
+
+    // demote the MSD to either 1, 2, or 5
+    if (magMsd > 5.0)
+        magMsd = 5.0;
+    else if (magMsd > 2.0)
+        magMsd = 2.0;
+    else if (magMsd > 1.0)
+        magMsd = 1.0;
+
+    return magMsd * magPow;
+}
+
