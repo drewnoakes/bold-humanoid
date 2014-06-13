@@ -55,6 +55,7 @@ namespace bold
     Setting<int>* d_minGoalsNeeded;
     Setting<double>* d_defaultKidnapWeight;
     Setting<double>* d_penaltyKidnapWeight;
+    Setting<bool>* d_enablePenaltyRandomise;
 
     FilterType d_filterType;
     std::shared_ptr<Filter<4>> d_filter;
