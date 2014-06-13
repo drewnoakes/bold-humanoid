@@ -36,7 +36,7 @@ do
         swig/_bold.so \
         darwin@darwin$i.local:swig/
 
-    rsync -zrP libwebsockets/lib/libwebsockets.so.4.0.0 \
+    rsync -zrP libwebsockets/lib/libwebsockets.so* \
         darwin@darwin$i.local:lib/
 
     ssh darwin@darwin$i.local "sudo ldconfig /home/darwin/lib"
