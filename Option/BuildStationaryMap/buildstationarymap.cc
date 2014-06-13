@@ -49,7 +49,7 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
       hasChange = true;
   }
 
-  if (hasChange)
+  if (hasChange || !State::get<StationaryMapState>())
     updateStateObject();
 
   writer.String("ball").Bool(agentFrame->isBallVisible());
