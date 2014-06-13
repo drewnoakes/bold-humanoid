@@ -9,10 +9,10 @@ using namespace std;
 ushort MX28::getMirrorValue(ushort value) { return (MAX_VALUE + 1 - value) & MAX_VALUE; }
 double MX28::getMirrorAngle(double angle) { return -angle; }
 
-ushort MX28::degs2Value(double angle) { return static_cast<ushort>(Math::clamp(static_cast<int>(round(angle*RATIO_DEGS2VALUE)), -CENTER_VALUE, MX28::MAX_VALUE-CENTER_VALUE) + CENTER_VALUE); }
+ushort MX28::degs2Value(double angle) { return static_cast<ushort>(Math::clamp(static_cast<int>(round(angle*RATIO_DEGS2VALUE)), -CENTER_VALUE, MAX_VALUE-CENTER_VALUE) + CENTER_VALUE); }
 double MX28::value2Degs(ushort value) { return (double)((int)value-(int)CENTER_VALUE)*RATIO_VALUE2DEGS; }
 
-ushort MX28::rads2Value(double angle) { return static_cast<ushort>(Math::clamp(static_cast<int>(round(angle*RATIO_RADS2VALUE)), -CENTER_VALUE, MX28::MAX_VALUE-CENTER_VALUE) + CENTER_VALUE); }
+ushort MX28::rads2Value(double angle) { return static_cast<ushort>(Math::clamp(static_cast<int>(round(angle*RATIO_RADS2VALUE)), -CENTER_VALUE, MAX_VALUE-CENTER_VALUE) + CENTER_VALUE); }
 double MX28::value2Rads(ushort value) { return (double)((int)value-(int)CENTER_VALUE)*RATIO_VALUE2RADS; }
 
 ushort MX28::clampValue(int value) { return (ushort)Math::clamp(value, 0, (int)MAX_VALUE); }
