@@ -97,8 +97,20 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
   writer.EndArray();
 
+  static bool isEndless = false;
   if (loopCount > MAX_LOOP_COUNT)
+  {
     writer.String("warning").String("Max transition count exceeded. Infinite loop?");
+    if (!isEndless)
+    {
+      d_voice->say("Endless loop detected in option tree");
+      isEndless = true;
+    }
+  }
+  else
+  {
+    isEndless = false;
+  }
 
   log::verbose(getId()) << "Final state: " << d_curState->name;
 
