@@ -52,8 +52,19 @@ vector<shared_ptr<Option>> AtBall::runPolicy(Writer<StringBuffer>& writer)
 
   auto map = State::get<StationaryMapState>();
 
+  static bool hasMap = true;
+
   if (!map)
+  {
+    if (hasMap)
+    {
+      log::warning("AtBall::runPolicy") << "StationaryMapState unavailable";
+      hasMap = false;
+    }
     return {};
+  }
+
+  hasMap = true;
 
   if (!map->hasEnoughGoalPostObservations())
   {
