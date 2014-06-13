@@ -28,6 +28,7 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
     writer.EndArray();
 
     writer.String("pnwsum").Double(d_preNormWeightSum);
+    writer.String("pnwsumsmooth").Double(d_smoothedPreNormWeightSum);
     writer.String("uncertainty").Double(d_uncertainty);
   }
   writer.EndObject();
