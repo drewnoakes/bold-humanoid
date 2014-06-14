@@ -1346,6 +1346,11 @@ div.module.animator div.timeline-container
   overflow-x: auto;
 }
 
+div.module.animator ul.joint-names
+{
+  color: #333;
+}
+
 div.module.animator ul.joint-names,
 div.module.animator ul.stages,
 div.module.animator ul.gains,
