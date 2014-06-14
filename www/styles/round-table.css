@@ -18,8 +18,8 @@
 
 html, body, input, select
 {
-    font-family: Montserrat, sans-serif;
-    font-size: 13px;
+  font-family: Montserrat, sans-serif;
+  font-size: 13px;
 }
 
 html.initialised
@@ -32,20 +32,20 @@ html.initialised
 
 body
 {
-    margin: 8px;
+  margin: 8px;
 }
 
 @media screen and (max-width: 640px)
 {
-    body
-    {
-        margin: 8px 0;
-    }
+  body
+  {
+    margin: 8px 0;
+  }
 
-    button
-    {
-      font-size: 1.4em;
-    }
+  button
+  {
+    font-size: 1.4em;
+  }
 }
 
 button
@@ -81,7 +81,7 @@ div.setting.control input[type="color"]
 #loading-indicator
 {
   width: 185px;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   position: absolute;
   margin: -35px auto 0 -92px;
   top: 50%;
@@ -90,7 +90,7 @@ div.setting.control input[type="color"]
 
 html.night-mode #loading-indicator
 {
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 #loading-indicator h1
@@ -98,13 +98,13 @@ html.night-mode #loading-indicator
   width: 185px;
   line-height: 70px;
   font-size: 20px;
-  color: rgba(0,0,0,0.5);
+  color: rgba(0, 0, 0, 0.5);
   text-align: center;
 }
 
 html.night-mode #loading-indicator h1
 {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 #bouncer
@@ -144,39 +144,69 @@ html.night-mode #loading-indicator h1
 
 @-moz-keyframes bouncer-animation
 {
-  0% { left: 0; }
-  100% { left: 169px; }
+  0%
+  {
+    left: 0;
+  }
+  100%
+  {
+    left: 169px;
+  }
 }
 
 @-webkit-keyframes bouncer-animation
 {
-  0% { left: 0; }
-  100% { left: 169px; }
+  0%
+  {
+    left: 0;
+  }
+  100%
+  {
+    left: 169px;
+  }
 }
 
 @-ms-keyframes bouncer-animation
 {
-  0% { left: 0; }
-  100% { left: 169px; }
+  0%
+  {
+    left: 0;
+  }
+  100%
+  {
+    left: 169px;
+  }
 }
 
 @-o-keyframes bouncer-animation
 {
-  0% { left: 0; }
-  100% { left: 169px; }
+  0%
+  {
+    left: 0;
+  }
+  100%
+  {
+    left: 169px;
+  }
 }
 
 @keyframes bouncer-animation
 {
-  0% { left: 0; }
-  100% { left: 169px; }
+  0%
+  {
+    left: 0;
+  }
+  100%
+  {
+    left: 169px;
+  }
 }
 
 /********************************************************************/
 
 img#logo
 {
-    display: inline-block;
+  display: inline-block;
 }
 
 @media screen and (max-width: 640px)
@@ -189,149 +219,148 @@ img#logo
 
 div#header-content
 {
-    display: inline-block;
-    vertical-align: top;
-    margin: 6px;
+  display: inline-block;
+  vertical-align: top;
+  margin: 6px;
 }
 
 @media screen and (max-width: 640px)
 {
   div#header-content
   {
-      display: none;
+    display: none;
   }
 }
 
 div#header-content h1
 {
-    margin: 0;
-    color: #000;
+  margin: 0;
+  color: #000;
 }
 
 div#header-content h2
 {
-    margin: 0;
-    color: rgb(121, 36, 133);
-    font-weight: normal;
+  margin: 0;
+  color: rgb(121, 36, 133);
+  font-weight: normal;
 }
 
 div#header-content div#connections
 {
-    margin-top: 12px;
+  margin-top: 12px;
 }
 
 div#header-content div.indicators
 {
-    display: inline-block;
-    vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 div#header-content a.disconnect
 {
-    text-decoration: none;
-    display: none;
+  text-decoration: none;
+  display: none;
 }
 
 div#header-content:hover a.disconnect
 {
-    display: inline-block;
-    vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 div#header-module-links
 {
-    position: absolute;
-    right: 14px;
-    top: 14px;
-    left: 300px;
-    text-align: right;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  left: 300px;
+  text-align: right;
 }
 
 @media screen and (max-width: 640px)
 {
   div#header-module-links
   {
-      top: 6px;
-      left: 110px;
-      right: 1%;
+    top: 6px;
+    left: 110px;
+    right: 1%;
   }
 }
 
-
 div#header-module-links > a.module-button
 {
-    display: inline-block;
-    margin: 2px;
-    padding: 5px;
-    background-color: #ddd;
-    color: #444;
-    text-decoration: none;
-    transition: background-color 0.4s linear;
-    -moz-transition: background-color 0.4s linear;
-    -o-transition: background-color 0.4s linear;
-    -webkit-transition: background-color 0.4s linear;
+  display: inline-block;
+  margin: 2px;
+  padding: 5px;
+  background-color: #ddd;
+  color: #444;
+  text-decoration: none;
+  transition: background-color 0.4s linear;
+  -moz-transition: background-color 0.4s linear;
+  -o-transition: background-color 0.4s linear;
+  -webkit-transition: background-color 0.4s linear;
 }
 
 div#header-module-links > a.module-button.added
 {
-    color: #fff;
-    background-color: rgba(121, 36, 133, 0.7);
-    border-bottom: 1px solid rgba(121, 36, 133, 1);
+  color: #fff;
+  background-color: rgba(121, 36, 133, 0.7);
+  border-bottom: 1px solid rgba(121, 36, 133, 1);
 }
 
 /********************************************************************/
 
 ul#module-container
 {
-    padding: 0;
+  padding: 0;
 }
 
 div.module
 {
-    box-sizing: content-box;
-    width: 640px;
-    min-height: 80px;
-    display: inline-block;
-    vertical-align: top;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0,rgba(0,0,0,0.2) 12px);
-    border-radius: 3px 3px 12px 12px;
-    padding: 12px;
-    margin: 6px;
-    cursor: move;
+  box-sizing: content-box;
+  width: 640px;
+  min-height: 80px;
+  display: inline-block;
+  vertical-align: top;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0, rgba(0, 0, 0, 0.2) 12px);
+  border-radius: 3px 3px 12px 12px;
+  padding: 12px;
+  margin: 6px;
+  cursor: move;
 }
 
 @media screen and (max-width: 640px)
 {
-    div.module
-    {
-        width: 98%;
-        margin: 6px 1%;
-        box-sizing: border-box;
-    }
+  div.module
+  {
+    width: 98%;
+    margin: 6px 1%;
+    box-sizing: border-box;
+  }
 }
 
 div.module.full-screen
 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    cursor: default;
-    background-color: #fff;
-    box-sizing: border-box;
-    margin: 0;
-    border-radius: 0;
-    z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+  background-color: #fff;
+  box-sizing: border-box;
+  margin: 0;
+  border-radius: 0;
+  z-index: 1;
 }
 
 div.module h1
 {
-    margin: 0 0 12px 0;
-    font-size: 16px;
-    /*font-weight: normal;*/
-    color: rgb(87, 21, 97);
-    text-transform: uppercase;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  /*font-weight: normal;*/
+  color: rgb(87, 21, 97);
+  text-transform: uppercase;
 }
 
 html.night-mode div.module h1
@@ -341,9 +370,9 @@ html.night-mode div.module h1
 
 div.module h2
 {
-    margin: 0 0 4px 0;
-    font-size: 12px;
-    font-weight: normal;
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  font-weight: normal;
 }
 
 html.night-mode div.module h2
@@ -353,111 +382,111 @@ html.night-mode div.module h2
 
 div.module hr
 {
-    border: none;
-    border-bottom: 1px dotted #aaa;
+  border: none;
+  border-bottom: 1px dotted #aaa;
 }
 
 html.night-mode div.module hr
 {
-    border: none;
-    border-bottom: 1px dotted #444;
+  border: none;
+  border-bottom: 1px dotted #444;
 }
 
 div.module > div.module-content
 {
-    position: relative;
-    min-height: 32px;
-    cursor: default;
-    width: 100%;
-    height: 100%;
+  position: relative;
+  min-height: 32px;
+  cursor: default;
+  width: 100%;
+  height: 100%;
 }
 
 div.module > div.module-header
 {
-    position: relative;
-    height: 24px;
-    border-bottom: 1px dotted rgba(87,21,97,0.4);
-    margin-bottom: 10px;
+  position: relative;
+  height: 24px;
+  border-bottom: 1px dotted rgba(87, 21, 97, 0.4);
+  margin-bottom: 10px;
 }
 
 div.module > div.module-header > div.module-header-links
 {
-    position: absolute;
-    right: 2px;
-    top: 0;
+  position: absolute;
+  right: 2px;
+  top: 0;
 }
 
 div.module > div.module-header > div.module-header-links > a
 {
-    text-decoration: none;
-    margin-left: 12px;
+  text-decoration: none;
+  margin-left: 12px;
 }
 
 div.module > div.module-header > div.module-header-links > a:hover
 {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 div.module div.module-column-3
 {
-    display: inline-block;
-    vertical-align: top;
-    box-sizing: border-box;
-    width: 200px;
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  width: 200px;
 }
 
 /********************************************************************/
 
 .control-container .control
 {
-    display: block;
+  display: block;
 }
 
 .flow .control
 {
-    display: inline-block;
-    margin: 2px 6px 2px 0;
+  display: inline-block;
+  margin: 2px 6px 2px 0;
 }
 
 .flow .setting.control
 {
-    width: 100px;
+  width: 100px;
 }
 
 .flow .setting.control select
 {
-    max-width: 100px;
+  max-width: 100px;
 }
 
 .flow .control h3,
 .flow .control label
 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .control-container.column .control input[type="text"],
 .control-container.column .control input[type="number"]
 {
-    min-width: 80px;
+  min-width: 80px;
 }
 
 .control-container.flow input[type="number"]
 {
-    width: 95px;
+  width: 95px;
 }
 
 .control-container.flow label
 {
-    display: inline-block;
-    width: 80px;
+  display: inline-block;
+  width: 80px;
 }
 
 .control-container input[type="number"]
 {
-    border: 1px solid #FFF;
-    padding: 1px 0;
+  border: 1px solid #FFF;
+  padding: 1px 0;
 }
 
 /********************************************************************/
@@ -490,473 +519,496 @@ div.checkbox label
 
 .pixel-labels .control
 {
-    width: 155px;
-    margin: 0 16px 16px 0;
+  width: 155px;
+  margin: 0 16px 16px 0;
 }
 
 .hsv-range-editor .channel-row span
 {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    vertical-align: middle;
-    text-align: center;
-    font-size: 13px;
-    line-height: 16px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 13px;
+  line-height: 16px;
 }
 
 .hsv-range-editor .channel-row input[type="text"]
 {
-    width: 34px;
-    text-align: center;
-    margin: 2px 4px;
-    display: inline-block;
-    vertical-align: middle;
-    border: none;
-    padding: 3px;
+  width: 34px;
+  text-align: center;
+  margin: 2px 4px;
+  display: inline-block;
+  vertical-align: middle;
+  border: none;
+  padding: 3px;
 }
 
 .hsv-range-editor h3
 {
-    color: #333;
-    text-align: center;
-    margin: 0;
-    font-size: 13px;
-    text-shadow: 0 0 5px white;
-    padding: 2px;
-    margin-bottom: 3px;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  font-size: 13px;
+  text-shadow: 0 0 5px white;
+  padding: 2px;
+  margin-bottom: 3px;
 }
 
 .hsv-range-editor
 {
-    background-color: rgba(255,255,255,0.5);
-    padding-bottom: 3px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding-bottom: 3px;
 }
 
 .hsv-range-editor .channel-row
 {
-    text-align: center;
+  text-align: center;
 }
 
 /********************************************************************/
 
 .connection-indicator
 {
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    vertical-align: top;
-    margin: 3px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: top;
+  margin: 3px;
 
-    transition: background-color 0.5s linear;
-    -moz-transition: background-color 0.5s linear;
-    -o-transition: background-color 0.5s linear;
-    -webkit-transition: background-color 0.5s linear;
+  transition: background-color 0.5s linear;
+  -moz-transition: background-color 0.5s linear;
+  -o-transition: background-color 0.5s linear;
+  -webkit-transition: background-color 0.5s linear;
 }
 
 .connection-indicator.disconnected
 {
-    background-color: red;
+  background-color: red;
 }
 
 .connection-indicator.connecting
 {
-    background-color: orange;
+  background-color: orange;
 }
 
 .connection-indicator.connected
 {
-    background-color: green;
+  background-color: green;
 }
 
 /********************************************************************/
 
 .control
 {
-    display: inline-block;
+  display: inline-block;
 }
 
 .setting > h3,
 .setting label
 {
-    font-weight: normal;
-    margin: 0;
-    font-size: 11px;
-    letter-spacing: -0.1em;
+  font-weight: normal;
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: -0.1em;
 }
 
 div.setting span.value-range,
 div.setting span.default-value
 {
-    color: #666;
+  color: #666;
 }
 
 /********************************************************************/
 
 div.head-controls
 {
-    display: inline-block;
-    margin-left: -2px;
+  display: inline-block;
+  margin-left: -2px;
 }
 
 /********************************************************************/
 
 div.module.camera div.hover-pixel-info
 {
-    color: white;
-    position: absolute;
-    bottom: 5px;
-    left: 5px;
-    pointer-events: none;
+  color: white;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  pointer-events: none;
 }
 
 @media screen and (max-width: 640px)
 {
-    div.module.camera canvas.camera-canvas
-    {
-        width: 100% !important;
-    }
+  div.module.camera canvas.camera-canvas
+  {
+    width: 100% !important;
+  }
 }
 
 div.module.camera div.image-container
 {
-    position: relative;
+  position: relative;
 }
 
 div.module.camera div.camera-module-controls h3
 {
-    display: none;
+  display: none;
 }
 
 div.module.camera canvas.pixel-label-inspector
 {
-    margin: 16px 0;
+  margin: 16px 0;
 }
 
 /********************************************************************/
 
 dl.tab-control
 {
-    display: none;
+  display: none;
 }
 
 div.tab-control ul.thumbs
 {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #444;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #444;
 }
 
 div.tab-control ul.thumbs li
 {
-    display: inline-block;
-    padding: 4px 10px;
-    margin: 0 5px 0 0;
-    color: #555;
-    border: 1px solid #888;
-    border-bottom: none;
-    border-radius: 5px 5px 0 0;
-    background: rgba(0,0,0,0.1);
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 0 5px 0 0;
+  color: #555;
+  border: 1px solid #888;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  background: rgba(0, 0, 0, 0.1);
 }
-
 
 div.tab-control ul.thumbs li.selected
 {
-    font-weight: bold;
-    background: rgba(255,255,255,0.1);
-    color: #000;
-    border-color: #444;
-    border-bottom: 1px solid #CBCBCB;
-    position: relative;
-    bottom: -1px;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
+  color: #000;
+  border-color: #444;
+  border-bottom: 1px solid #CBCBCB;
+  position: relative;
+  bottom: -1px;
 }
 
 /********************************************************************/
 
 div.module.vision div.module-content h2
 {
-    color: #555;
-    margin: 4px 0;
-    display: block;
+  color: #555;
+  margin: 4px 0;
+  display: block;
 }
 
 div.module.vision div.control-container.camera-settings .setting .values
 {
-    color: #666;
-    font-size: 10px;
+  color: #666;
+  font-size: 10px;
 }
 
 div.module.vision div.control-container.camera-settings .setting input[type=text],
 div.module.vision div.control-container.camera-settings .setting input[type=number],
 div.module.vision div.control-container.camera-settings .setting select
 {
-    width: 170px;
-    box-sizing: border-box;
+  width: 170px;
+  box-sizing: border-box;
 }
 
 div.module.vision div.image-colours.flow div.setting.control
 {
-    width: 65px;
+  width: 65px;
 }
 
 /********************************************************************/
 
 div.module.walk div.module-content h2
 {
-    color: #444;
-    margin: 12px 0 6px;
-    display: block;
-    font-size: 13px;
+  color: #444;
+  margin: 12px 0 6px;
+  display: block;
+  font-size: 13px;
 }
 
 /********************************************************************/
 
 div.module.game div.play-mode
 {
-    display: inline-block;
-    height: 60px;
-    line-height: 60px;
-    width: 120px;
-    border: 1px solid rgba(0,0,0,0.4);
-    border-radius: 4px;
-    text-align: center;
+  display: inline-block;
+  height: 60px;
+  line-height: 60px;
+  width: 120px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  text-align: center;
 }
 
-div.module.game div.play-mode.Initial { background-color: #CCC; }
-div.module.game div.play-mode.Ready { background-color: #00F; color: #FFF; }
-div.module.game div.play-mode.Set { background-color: #FF0; }
-div.module.game div.play-mode.Playing { background-color: #0F0; }
-div.module.game div.play-mode.Finished { background-color: #444; color: #FFF; }
+div.module.game div.play-mode.Initial
+{
+  background-color: #CCC;
+}
+
+div.module.game div.play-mode.Ready
+{
+  background-color: #00F;
+  color: #FFF;
+}
+
+div.module.game div.play-mode.Set
+{
+  background-color: #FF0;
+}
+
+div.module.game div.play-mode.Playing
+{
+  background-color: #0F0;
+}
+
+div.module.game div.play-mode.Finished
+{
+  background-color: #444;
+  color: #FFF;
+}
 
 div.module.game div.period
 {
-    margin-top: 10px;
-    margin-right: 6px;
-    padding: 4px 10px;
-    display: inline-block;
-    border-radius: 6px;
-    background: #FFF;
-    color: #000;
+  margin-top: 10px;
+  margin-right: 6px;
+  padding: 4px 10px;
+  display: inline-block;
+  border-radius: 6px;
+  background: #FFF;
+  color: #000;
 }
 
 div.module.game div.period.timeout
 {
-    background: #00F;
-    color: #FFF;
+  background: #00F;
+  color: #FFF;
 }
 
 div.module.game div.period.penalties
 {
-    background: #00F;
-    color: #FFF;
+  background: #00F;
+  color: #FFF;
 }
 
 div.module.game ul.penalties
 {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 div.module.game ul.penalties li
 {
-    width: 160px;
-    background-color: rgba(128,0,0,0.1);
-    border: 1px solid rgba(128,0,0,0.3);
-    border-radius: 4px;
-    text-align: center;
-    margin-bottom: 4px;
-    padding: 0 12px;
+  width: 160px;
+  background-color: rgba(128, 0, 0, 0.1);
+  border: 1px solid rgba(128, 0, 0, 0.3);
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 4px;
+  padding: 0 12px;
 }
 
 div.module.game ul.penalties li.done
 {
-    background-color: rgba(255,255,0,0.2);
+  background-color: rgba(255, 255, 0, 0.2);
 }
 
 div.module.game ul.penalties li div.title
 {
-    margin-top: 6px;
+  margin-top: 6px;
 }
 
 div.module.game ul.penalties li div.time
 {
-    margin-bottom: 6px;
-    color: #555;
+  margin-bottom: 6px;
+  color: #555;
 }
 
 div.module.game div.time-remaining
 {
-    margin-top: 22px;
+  margin-top: 22px;
 }
 
 div.module.game div.time-remaining span.secondary
 {
-    color: #444;
+  color: #444;
 }
 
 div.module.game div.score
 {
-    font-size: 32px;
-    color: #444;
-    font-weight: bold;
-    margin-bottom: 18px;
+  font-size: 32px;
+  color: #444;
+  font-weight: bold;
+  margin-bottom: 18px;
 }
 
 /********************************************************************/
 
 div.module.localiser div.control-container.localiser-controls > div:nth-child(1)
 {
-    display: block;
+  display: block;
 }
 
 div.module.localiser div.marker
 {
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-    margin: 3px;
-    border: 1px solid;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  margin: 3px;
+  border: 1px solid;
 }
 
 div.module.localiser div.marker.visible
 {
-    width: 0;
-    height: 0;
-    border-width: 10px;
+  width: 0;
+  height: 0;
+  border-width: 10px;
 }
 
 div.module.localiser div.marker.ball
 {
-    border-color: red;
+  border-color: red;
 }
 
 div.module.localiser div.marker.goal
 {
-    border-color: yellow;
+  border-color: yellow;
 }
 
 /********************************************************************/
 
 div.module.sensors .polar-trace-container
 {
-    display: inline-block;
-    position: relative;
+  display: inline-block;
+  position: relative;
 }
 
 div.module.sensors .polar-trace-container + .polar-trace-container
 {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 /********************************************************************/
 
 div.module.orientation canvas
 {
-    float: left;
+  float: left;
 }
 
 /********************************************************************/
 
 div.module.state .json-text
 {
-    white-space: pre;
-    font-family: Ubuntu Mono, consolas, monospace;
-    font-size: 11px;
+  white-space: pre;
+  font-family: Ubuntu Mono, consolas, monospace;
+  font-size: 11px;
 }
 
 div.module.state > div.module-content
 {
-    height: 456px;
-    overflow: auto;
+  height: 456px;
+  overflow: auto;
 }
 
 /********************************************************************/
 
-div.module.config > div.module-content { height: inherit; }
+div.module.config > div.module-content
+{
+  height: inherit;
+}
 
 div.module.config input.filter
 {
-    float: right;
-    width: 200px;
-    position: relative;
-    top: -6px;
+  float: right;
+  width: 200px;
+  position: relative;
+  top: -6px;
 }
 
 div.module.config div.tab-control > div
 {
-    max-height: 400px;
-    overflow: auto;
+  max-height: 400px;
+  overflow: auto;
 }
 
 div.module.config .json-text
 {
-    white-space: pre;
-    font-family: Ubuntu Mono, consolas, monospace;
-    font-size: 11px;
+  white-space: pre;
+  font-family: Ubuntu Mono, consolas, monospace;
+  font-size: 11px;
 }
 
 div.module.config ul
 {
-    padding: 0;
+  padding: 0;
 }
 
 div.module.config li > div.setting.control
 {
-    min-width: 110px;
-    display: inline-block;
-    vertical-align: middle;
+  min-width: 110px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 div.module.config li > div.setting.control input[type='number']
 {
-    width: 110px;
-    box-sizing: border-box;
-    text-align: right;
-    padding-right: 5px;
+  width: 110px;
+  box-sizing: border-box;
+  text-align: right;
+  padding-right: 5px;
 }
 
 div.module.config li > div.setting.control input[type='checkbox']
 {
-    float: right;
-    margin-right: 0;
+  float: right;
+  margin-right: 0;
 }
 
 div.module.config li > div.setting.control input[type='color']
 {
-    float: right;
-    margin-right: 0;
+  float: right;
+  margin-right: 0;
 }
 
 div.module.config li > div.setting.control select
 {
-    min-width: 110px;
-    margin: 0;
+  min-width: 110px;
+  margin: 0;
 }
 
 div.module.config li > span.path
 {
-    padding-left: 10px;
-    display: inline-block;
-    vertical-align: middle;
+  padding-left: 10px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 div.module.config li > span.description
 {
-    padding-left: 10px;
-    display: inline-block;
-    vertical-align: middle;
-    color: #777;
+  padding-left: 10px;
+  display: inline-block;
+  vertical-align: middle;
+  color: #777;
 }
 
 div.module.config li > button
 {
-    min-width: 190px;
-    display: inline-block;
-    vertical-align: middle;
+  min-width: 190px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /********************************************************************/
@@ -968,27 +1020,27 @@ table.timing-details
 
 table.timing-details tr:hover
 {
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 table.timing-details tr td.duration,
 table.timing-details tr td.avg-duration,
 table.timing-details tr td.max-duration
 {
-    text-align: right;
-    padding-left: 1em;
-    font-family: Ubuntu Mono, Consolas, monospace;
+  text-align: right;
+  padding-left: 1em;
+  font-family: Ubuntu Mono, Consolas, monospace;
 }
 
 table.timing-details td
 {
-    min-width: 60px;
+  min-width: 60px;
 }
 
 table.timing-details td.expander
 {
-    width: 16px;
-    min-width: 16px;
+  width: 16px;
+  min-width: 16px;
 }
 
 table.timing-details tr.parent.root td.expander
@@ -1005,31 +1057,31 @@ table.timing-details tr.parent.root.expanded td.expander
 
 div.body-figure
 {
-    position: absolute;
-    top: 20px;
-    right: 0;
+  position: absolute;
+  top: 20px;
+  right: 0;
 }
 
 div.body-figure div.joint
 {
-    color: #000;
-    position: absolute;
-    border: 1px dotted grey;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 13px;
-    line-height: 20px;
-    transition: background-color 0.4s linear;
-    -moz-transition: background-color 0.4s linear;
-    -o-transition: background-color 0.4s linear;
-    -webkit-transition: background-color 0.4s linear;
+  color: #000;
+  position: absolute;
+  border: 1px dotted grey;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 20px;
+  transition: background-color 0.4s linear;
+  -moz-transition: background-color 0.4s linear;
+  -o-transition: background-color 0.4s linear;
+  -webkit-transition: background-color 0.4s linear;
 }
 
 div.body-figure div.selected
 {
-    border: 1px dotted grey;
-    background-color: #792485;
-    color: white;
+  border: 1px dotted grey;
+  background-color: #792485;
+  color: white;
 }
 
 /*******************************************************************/
@@ -1037,46 +1089,46 @@ div.body-figure div.selected
 div.module.think-timing div.fps,
 div.module.motion-timing div.fps
 {
-    float: right;
-    margin-left: 10px;
+  float: right;
+  margin-left: 10px;
 }
 
 div.module.think-timing a.reset,
 div.module.motion-timing a.reset
 {
-    float: right;
+  float: right;
 }
 
 /*******************************************************************/
 
 div.module.optiontree ul.options
 {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 div.module.optiontree ul.options li
 {
-    margin: 1px 0;
-    padding: 1px 1px 1px 10px;
-    list-style-position: inside;
-    list-style-type: circle;
-    border-radius: 2px;
-    background-color: transparent;
-    transition: background-color 1s linear;
-    -moz-transition: background-color 1s linear;
-    -o-transition: background-color 1s linear;
-    -webkit-transition: background-color 1s linear;
-    transition: color 1s linear;
-    -moz-transition: color 1s linear;
-    -o-transition: color 1s linear;
-    -webkit-transition: color 1s linear;
+  margin: 1px 0;
+  padding: 1px 1px 1px 10px;
+  list-style-position: inside;
+  list-style-type: circle;
+  border-radius: 2px;
+  background-color: transparent;
+  transition: background-color 1s linear;
+  -moz-transition: background-color 1s linear;
+  -o-transition: background-color 1s linear;
+  -webkit-transition: background-color 1s linear;
+  transition: color 1s linear;
+  -moz-transition: color 1s linear;
+  -o-transition: color 1s linear;
+  -webkit-transition: color 1s linear;
 }
 
 div.module.optiontree ul.options li.ran
 {
-    background-color: yellow;
-    list-style-type: disc;
+  background-color: yellow;
+  list-style-type: disc;
 }
 
 html.night-mode div.module.optiontree ul.options li.ran
@@ -1086,49 +1138,49 @@ html.night-mode div.module.optiontree ul.options li.ran
 
 div.module.optiontree ul.options
 {
-    margin-top: 10px;
-    border-top: 1px dotted rgba(0, 0, 0, 0.2);
-    padding-top: 8px;
+  margin-top: 10px;
+  border-top: 1px dotted rgba(0, 0, 0, 0.2);
+  padding-top: 8px;
 }
 
 div.module.optiontree div.graph
 {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 
 div.module.optiontree div.graph svg
 {
-    width: 100%;
+  width: 100%;
 }
 
 div.module.optiontree div.graph svg g.element rect
 {
-    transition: fill 1s linear;
+  transition: fill 1s linear;
 }
 
 div.module.optiontree div.graph svg g.element.active rect
 {
-    transition: fill 0s linear;
-    fill: yellow;
+  transition: fill 0s linear;
+  fill: yellow;
 }
 
 div.module.optiontree div.graph svg g.link path.connection
 {
-    transition: stroke-width 1s linear, stroke 1s linear;
-    stroke-width: 1;
+  transition: stroke-width 1s linear, stroke 1s linear;
+  stroke-width: 1;
 }
 
 div.module.optiontree div.graph svg g.link.active path.connection
 {
-    transition: stroke-width 0s linear, stroke 0s linear;
-    stroke-width: 5;
-    stroke: #792485;
+  transition: stroke-width 0s linear, stroke 0s linear;
+  stroke-width: 5;
+  stroke: #792485;
 }
 
 div.module.optiontree div.graph svg g.link-tools,
 div.module.optiontree div.graph svg g.marker-arrowheads
 {
-    display: none;
+  display: none;
 }
 
 html.night-mode div.module.optiontree div.graph svg g.link path.connection
@@ -1139,41 +1191,41 @@ html.night-mode div.module.optiontree div.graph svg g.link path.connection
 html.night-mode div.module.optiontree div.graph svg g.link path.marker-source,
 html.night-mode div.module.optiontree div.graph svg g.link path.marker-target
 {
-    stroke: #CCC;
-    fill: #CCC;
+  stroke: #CCC;
+  fill: #CCC;
 }
 
 html.night-mode div.module.optiontree div.graph svg g.link text
 {
-    fill: #fff;
+  fill: #fff;
 }
 
 /*******************************************************************/
 
 div.module.histogram
 {
-    min-height: 60px;
+  min-height: 60px;
 }
 
 /*******************************************************************/
 
 div.module.motion-scripts
 {
-    min-height: 60px;
+  min-height: 60px;
 }
 
 div.module.motion-scripts button
 {
-    margin: 0 3px 4px 0;
+  margin: 0 3px 4px 0;
 }
 
 @media screen and (max-width: 640px)
 {
   div.module.motion-scripts button
   {
-      margin: 0 3px 4px 0;
-      padding: 6px 6px;
-      font-size: 15px;
+    margin: 0 3px 4px 0;
+    padding: 6px 6px;
+    font-size: 15px;
   }
 }
 
@@ -1188,34 +1240,33 @@ div.module.load div.module-content
 
 div.module.trajectory div.body-figure
 {
-    top: 0;
-    margin-top: 25px;
+  top: 0;
+  margin-top: 25px;
 }
 
 div.module.trajectory canvas
 {
-    background-color: #000;
+  background-color: #000;
 }
 
 div.module.trajectory button.record
 {
-    margin: 0 3px 4px 0;
-    padding: 2px 6px;
-    font-size: 13px;
+  margin: 0 3px 4px 0;
+  padding: 2px 6px;
+  font-size: 13px;
 }
 
 div.module.trajectory button.record.recording
 {
-    border-color: red;
+  border-color: red;
 }
 
 div.module.trajectory div.hover-value
 {
-    position: fixed;
-    color: #FFF;
-    margin: 5px;
+  position: fixed;
+  color: #FFF;
+  margin: 5px;
 }
-
 
 /*******************************************************************/
 
@@ -1233,20 +1284,20 @@ div.module.agent-2d div.localiser-controls
 
 div.module.voice div.control-container + div.control-container
 {
-    margin-top: 14px;
+  margin-top: 14px;
 }
 
 div.module.voice div.control-container.flow .setting.control
 {
-    width: 125px;
+  width: 125px;
 }
 
 /*******************************************************************/
 
 div.module.world-2d div.module-content .localiser-controls
 {
-    display: inline-block;
-    margin-left: 8px;
+  display: inline-block;
+  margin-left: 8px;
 }
 
 div.module.world-2d .hover-info
@@ -1258,85 +1309,95 @@ div.module.world-2d .hover-info
 
 div.module.team table
 {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 div.module.team td
 {
-    padding: 2px 4px;
+  padding: 2px 4px;
 }
 
 div.module.team table
 {
-    overflow: auto;
+  overflow: auto;
 }
 
 div.module.team table th,
 div.module.team table td
 {
-    width: 125px;
+  width: 125px;
 }
 
 div.module.team tr td:first-child()
 {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 div.module.team tr.unum td
 {
-    font-size: 30px;
-    font-weight: bold;
+  font-size: 30px;
+  font-weight: bold;
 }
 
 div.module.team td.me.teammate
 {
-    background-color: rgba(43, 65, 206, 0.3);
+  background-color: rgba(43, 65, 206, 0.3);
 }
 
 div.module.team td.teammate
 {
-    background-color: rgba(43, 65, 206, 0.2);
+  background-color: rgba(43, 65, 206, 0.2);
 }
 
 div.module.team td.opponent
 {
-    background-color: rgba(206, 44, 73, 0.30);
+  background-color: rgba(206, 44, 73, 0.30);
 }
 
 div.module.team td.old
 {
-    color: rgba(80,0,0, 0.4)
+  color: rgba(80, 0, 0, 0.4)
 }
 
 div.module.team div.role-indicator
 {
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    display: inline-block;
-    vertical-align: middle;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  vertical-align: middle;
 
-    transition: background-color 0.5s linear;
-    -moz-transition: background-color 0.5s linear;
-    -o-transition: background-color 0.5s linear;
-    -webkit-transition: background-color 0.5s linear;
+  transition: background-color 0.5s linear;
+  -moz-transition: background-color 0.5s linear;
+  -o-transition: background-color 0.5s linear;
+  -webkit-transition: background-color 0.5s linear;
 }
 
-div.module.team div.role-indicator.Striker { background-color: purple; }
-div.module.team div.role-indicator.Keeper { background-color: white; }
-div.module.team div.role-indicator.Supporter { background-color: green; }
+div.module.team div.role-indicator.Striker
+{
+  background-color: purple;
+}
+
+div.module.team div.role-indicator.Keeper
+{
+  background-color: white;
+}
+
+div.module.team div.role-indicator.Supporter
+{
+  background-color: green;
+}
 
 /*******************************************************************/
 
 div.module.drawbridge div.player-tile
 {
   display: inline-block;
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   margin: 4px;
   padding: 4px;
 }
-
 
 /*******************************************************************/
 
@@ -1374,11 +1435,18 @@ div.module.animator ul.joint-names
   padding-left: 6px;
 }
 
-div.module.animator ul.values > li { width: 60px; }
-div.module.animator ul.gains  > li { width: 40px; }
+div.module.animator ul.values > li
+{
+  width: 60px;
+}
+
+div.module.animator ul.gains > li
+{
+  width: 40px;
+}
 
 div.module.animator ul.values > li,
-div.module.animator ul.gains  > li
+div.module.animator ul.gains > li
 {
   text-align: center;
 }
