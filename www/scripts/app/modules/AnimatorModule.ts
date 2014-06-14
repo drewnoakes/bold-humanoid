@@ -45,31 +45,50 @@ var KEY_TAB = 9,
     KEY_RIGHT = 39,
     KEY_DOWN = 40;
 
-var DEFAULT_PGAIN = 32;
-
-function getJointValue(values: scripts.JointValues, jointId: number, defaultValue?: number): number
+function getJointValue(values: scripts.JointValues, jointId: number): number
 {
     var v = values[constants.jointMotionFileNames[jointId]];
 
-    // If not found (and not a head joint) then look for a value specified as half a pair
-    if (v == null && jointId < 19)
-    {
-        v = values[constants.jointPairMotionFileNames[constants.getPairJointId(jointId)]];
+    if (v != null)
+        return v;
 
-        // TODO need to mirror value here if from a pair and it's the left side joint!!!
+    if (jointId > 18)
+        throw new Error("Values for head joints must be specified");
 
-        if (v == null && defaultValue != null)
-            return defaultValue;
-    }
+    var pairBaseId = constants.getPairJointId(jointId);
+    var pairName = constants.jointPairMotionFileNames[pairBaseId];
 
-    console.assert(v != null);
+    v = values[pairName];
 
-    return constants.isJointBaseOfPair(jointId) ? v : getMirrorValue(v);
+    if (v == null)
+        throw new Error("No joint data specified for joint ID " + jointId);
+
+    return jointId == pairBaseId
+        ? v
+        : getMirrorValue(v);
 }
 
-function buildValueArray(values: scripts.JointValues, defaultValue?: number): number[]
+var DEFAULT_PGAIN = 32;
+
+function getJointGain(gains: scripts.JointValues, jointId: number): number
 {
-    return _.map(constants.jointIdNumbers, jointId => getJointValue(values, jointId, defaultValue));
+    if (gains == null)
+        return DEFAULT_PGAIN;
+
+    var v = gains[constants.jointMotionFileNames[jointId]];
+
+    if (v != null)
+        return v;
+
+    if (jointId > 18)
+        return DEFAULT_PGAIN;
+
+    var pairBaseId = constants.getPairJointId(jointId);
+    var pairName = constants.jointPairMotionFileNames[pairBaseId];
+
+    v = gains[pairName];
+
+    return v == null ? DEFAULT_PGAIN : v;
 }
 
 function toViewModel(script: scripts.MotionScript): IScriptViewModel
@@ -82,11 +101,11 @@ function toViewModel(script: scripts.MotionScript): IScriptViewModel
         stages: _.map(script.stages, (stage: scripts.Stage) => ({
             repeat: stage.repeat || 0,
             speed: stage.speed || 0,
-            pGains: buildValueArray(stage.pGains || {}, DEFAULT_PGAIN),
+            pGains: _.map(constants.jointIdNumbers, jointId => getJointGain(stage.pGains, jointId)),
             keyFrames: _.map(stage.keyFrames, (keyFrame: scripts.KeyFrame) => ({
                 pauseCycles: keyFrame.pauseCycles || 0,
                 moveCycles: keyFrame.moveCycles,
-                values: buildValueArray(keyFrame.values)
+                values: _.map(constants.jointIdNumbers, jointId => getJointValue(keyFrame.values, jointId))
             }))
         }))
     }
@@ -132,7 +151,7 @@ class AnimatorModule extends Module
         super('animator', 'animator', {fullScreen: true});
     }
 
-    private update(script: IScriptViewModel)
+    private buildUI(script: IScriptViewModel)
     {
         // Set the header directly
         d3.select(this.element).select("h2.script-name").text(script.name);
@@ -180,7 +199,9 @@ class AnimatorModule extends Module
             .data(stage => stage.pGains);
 
         gains.enter()
-            .append("li");
+            .append("li")
+            .attr("taboffset", "0")
+            .attr("data-type", "gain");
 
         gains.text(d => d.toString());
 
@@ -206,27 +227,72 @@ class AnimatorModule extends Module
             .selectAll("li")
             .data((keyFrame: IKeyFrameViewModel) => keyFrame.values)
             .enter()
-            .append("li").text(d => d);
+            .append("li")
+            .attr("data-type", "value")
+            .text(d => d);
 
         var t = this;
-        values.on('click', function(data: any, index: number) { t.onEditValue(this); }, true);
+        values.on('click', function(data: any, index: number) { t.setFocus(this); }, true);
+        values.on('dblclick', function(data: any, index: number) { t.startEdit(this); }, true);
     }
 
-    private onEditValue(element: HTMLLIElement)
+    private clearFocus(): void
     {
-        console.log(element);
-        var textbox = document.createElement('input');
-        textbox.value = element.textContent;
+        _.each(this.element.querySelectorAll('li.focussed'), (element: HTMLElement) => element.classList.remove('focussed'));
+    }
+
+    private setFocus(element: HTMLLIElement): void
+    {
+        this.clearFocus();
+        element.classList.add('focussed');
+        this.element.focus();
+    }
+
+    private editTextBox: HTMLInputElement = document.createElement('input');
+    private editElement: HTMLLIElement;
+
+    private startEdit(element: HTMLLIElement)
+    {
+        this.stopEdit();
+        this.clearFocus();
+
+        this.editElement = element;
+
+        this.editTextBox.value = element.textContent;
         element.textContent = null;
-        element.appendChild(textbox);
+        element.appendChild(this.editTextBox);
+        this.editTextBox.focus();
+        this.editTextBox.setSelectionRange(0, this.editTextBox.value.length);
 
-        textbox.addEventListener('keydown', e =>
+        this.editTextBox.addEventListener('keydown', e =>
         {
-            if (e.keyCode === KEY_ENTER)
+            switch (e.keyCode)
             {
+                case KEY_ENTER:
+                {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
 
+                    var text = this.editTextBox.value;
+                    element.removeChild(this.editTextBox);
+                    element.textContent = text;
+                    this.setFocus(element);
+                    break;
+                }
+                case KEY_ESC:
+                {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    this.stopEdit();
+                }
             }
         });
+    }
+
+    private stopEdit()
+    {
+
     }
 
     public load()
@@ -249,36 +315,47 @@ class AnimatorModule extends Module
             .data(constants.jointIdNumbers)
             .enter()
             .append("li")
-            .text(jointId => constants.jointNiceNames[jointId]);
+            .text(jointId => constants.jointNiceNames[jointId])
+            .on('keydown', this.onKeyDown.bind(this));
 
-        this.update(toViewModel(scripts.allMotionScripts[2]));
+        this.buildUI(toViewModel(scripts.allMotionScripts[2]));
 
         this.element.tabIndex = 0; // allow element to have keyboard focus
-        this.element.addEventListener('keydown', e =>
-        {
-            console.dir(e);
-            if (e.keyCode === KEY_LEFT) {
-                console.log('left');
-            }
-            else if (e.keyCode === KEY_UP) {
-                console.log('up');
-            }
-            else if (e.keyCode === KEY_RIGHT) {
-                console.log('right');
-            }
-            else if (e.keyCode === KEY_DOWN) {
-                console.log('down');
-            }
-        }, true);
+        this.element.addEventListener('keydown', this.onKeyDown.bind(this), true);
 
-        this.intervalHandler = window.setInterval(() => this.update(toViewModel(scripts.allMotionScripts[Math.floor(Math.random() * scripts.allMotionScripts.length)])), 5000);
+//        this.intervalHandler = window.setInterval(() => this.buildUI(toViewModel(scripts.allMotionScripts[Math.floor(Math.random() * scripts.allMotionScripts.length)])), 5000);
     }
 
-    private intervalHandler: number;
+    private onKeyDown(e: KeyboardEvent)
+    {
+        console.dir(e);
+
+        switch (e.keyCode)
+        {
+            case KEY_ESC:
+                console.log('KEY_ESC');
+                this.clearFocus();
+                break;
+            case KEY_LEFT:
+                console.log('KEY_LEFT');
+                break;
+            case KEY_UP:
+                console.log('KEY_UP');
+                break;
+            case KEY_RIGHT:
+                console.log('KEY_RIGHT');
+                break;
+            case KEY_DOWN:
+                console.log('KEY_DOWN');
+                break;
+        }
+    }
+
+//    private intervalHandler: number;
 
     public unload()
     {
-        window.clearInterval(this.intervalHandler);
+//        window.clearInterval(this.intervalHandler);
     }
 }
 
