@@ -24,7 +24,6 @@ var RATIO_DEGS2VALUE: number = 4096.0 / 360.0;
 var RATIO_VALUE2RADS: number = (2*Math.PI) / 4096.0;
 var RATIO_RADS2VALUE: number = 4096.0 / (2*Math.PI);
 
-
 function getMirrorValue(value: number) { return clampValue(MAX_VALUE + 1 - value); }
 function getMirrorAngle(angle: number) { return -angle; }
 function degs2Value(angle: number) { return math.clamp(Math.round(angle*RATIO_DEGS2VALUE), -CENTER_VALUE, MAX_VALUE - CENTER_VALUE) + CENTER_VALUE; }
@@ -33,6 +32,20 @@ function rads2Value(angle: number) { return math.clamp(Math.round(angle*RATIO_RA
 function value2Rads(value: number) { return (value - CENTER_VALUE)*RATIO_VALUE2RADS; }
 function clampValue(value: number) { return math.clamp(value, 0, MAX_VALUE); }
 
+// http://unixpapa.com/js/key.html
+var KEY_TAB = 9,
+    KEY_ENTER = 13,
+    KEY_ESC = 27,
+    KEY_PAGEUP = 33,
+    KEY_PAGEDOWN = 34,
+    KEY_END = 35,
+    KEY_HOME = 36,
+    KEY_LEFT = 37,
+    KEY_UP = 38,
+    KEY_RIGHT = 39,
+    KEY_DOWN = 40;
+
+var DEFAULT_PGAIN = 32;
 
 function getJointValue(values: scripts.JointValues, jointId: number, defaultValue?: number): number
 {
@@ -69,7 +82,7 @@ function toViewModel(script: scripts.MotionScript): IScriptViewModel
         stages: _.map(script.stages, (stage: scripts.Stage) => ({
             repeat: stage.repeat || 0,
             speed: stage.speed || 0,
-            pGains: buildValueArray(stage.pGains || {}, 32),
+            pGains: buildValueArray(stage.pGains || {}, DEFAULT_PGAIN),
             keyFrames: _.map(stage.keyFrames, (keyFrame: scripts.KeyFrame) => ({
                 pauseCycles: keyFrame.pauseCycles || 0,
                 moveCycles: keyFrame.moveCycles,
@@ -206,6 +219,14 @@ class AnimatorModule extends Module
         textbox.value = element.textContent;
         element.textContent = null;
         element.appendChild(textbox);
+
+        textbox.addEventListener('keydown', e =>
+        {
+            if (e.keyCode === KEY_ENTER)
+            {
+
+            }
+        });
     }
 
     public load()
@@ -236,20 +257,16 @@ class AnimatorModule extends Module
         this.element.addEventListener('keydown', e =>
         {
             console.dir(e);
-            if (e.keyCode === 37) {
-                // left arrow
+            if (e.keyCode === KEY_LEFT) {
                 console.log('left');
             }
-            else if (e.keyCode === 38) {
-                // up arrow
+            else if (e.keyCode === KEY_UP) {
                 console.log('up');
             }
-            else if (e.keyCode === 39) {
-                // right arrow
+            else if (e.keyCode === KEY_RIGHT) {
                 console.log('right');
             }
-            else if (e.keyCode === 40) {
-                // down arrow
+            else if (e.keyCode === KEY_DOWN) {
                 console.log('down');
             }
         }, true);
