@@ -232,6 +232,28 @@ class AnimatorModule extends Module
 
         this.update(toViewModel(scripts.allMotionScripts[2]));
 
+        this.element.tabIndex = 0; // allow element to have keyboard focus
+        this.element.addEventListener('keydown', e =>
+        {
+            console.dir(e);
+            if (e.keyCode === 37) {
+                // left arrow
+                console.log('left');
+            }
+            else if (e.keyCode === 38) {
+                // up arrow
+                console.log('up');
+            }
+            else if (e.keyCode === 39) {
+                // right arrow
+                console.log('right');
+            }
+            else if (e.keyCode === 40) {
+                // down arrow
+                console.log('down');
+            }
+        }, true);
+
         this.intervalHandler = window.setInterval(() => this.update(toViewModel(scripts.allMotionScripts[Math.floor(Math.random() * scripts.allMotionScripts.length)])), 5000);
     }
 
