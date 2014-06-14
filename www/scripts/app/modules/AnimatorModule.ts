@@ -119,6 +119,95 @@ class AnimatorModule extends Module
         super('animator', 'animator', {fullScreen: true});
     }
 
+    private update(script: IScriptViewModel)
+    {
+        // Set the header directly
+        d3.select(this.element).select("h2.script-name").text(script.name);
+
+        /*
+          <ul class="stages">
+            <li>
+              <ul class="gains">
+                <li>32</li>
+                ...
+              </ul>
+              <ul class="key-frames">
+                <li>
+                  <ul class="values">
+                    <li>1670</li>
+                    ...
+                  </ul>
+                  <div class="move-cycles">25</div>
+                  <div class="pause-cycles">0</div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        */
+
+        //////// STAGES
+
+        var stages = d3.select(this.element)
+            .select("ul.stages")
+            .selectAll("li")
+            .data(script.stages);
+
+        var enteredStages = stages.enter()
+            .append("li")
+            .classed("stage", true);
+        enteredStages.append("ul").classed("gains", true);
+        enteredStages.append("ul").classed("key-frames", true);
+
+        stages.exit().remove();
+
+        //////// GAINS
+
+        var gains = stages.select("ul.gains")
+            .selectAll("li")
+            .data(stage => stage.pGains);
+
+        gains.enter()
+            .append("li");
+
+        gains.text(d => d.toString());
+
+        gains.exit().remove();
+
+        //////// KEY FRAMES
+
+        var keyFrames = stages.select("ul.key-frames")
+            .selectAll("li")
+            .data((stage: IStageViewModel) => stage.keyFrames);
+
+        var enteredKeyFrames = keyFrames.enter()
+            .append("li")
+            .classed("key-frame", true);
+
+        enteredKeyFrames.append("ul").classed("values", true);
+        enteredKeyFrames.append("div").classed("move-cycles", true);
+        enteredKeyFrames.append("div").classed("pause-cycles", true);
+
+        keyFrames.exit().remove();
+
+        var values = keyFrames.select("ul.values")
+            .selectAll("li")
+            .data((keyFrame: IKeyFrameViewModel) => keyFrame.values)
+            .enter()
+            .append("li").text(d => d);
+
+        var t = this;
+        values.on('click', function(data: any, index: number) { t.onEditValue(this); }, true);
+    }
+
+    private onEditValue(element: HTMLLIElement)
+    {
+        console.log(element);
+        var textbox = document.createElement('input');
+        textbox.value = element.textContent;
+        element.textContent = null;
+        element.appendChild(textbox);
+    }
+
     public load()
     {
         var content = <HTMLElement>animatorTemplate.create();
@@ -141,87 +230,9 @@ class AnimatorModule extends Module
             .append("li")
             .text(jointId => constants.jointNiceNames[jointId]);
 
-        // Function to bind the view model to the stages element
-        var update = (script: IScriptViewModel) =>
-        {
-            // Set the header directly
-            d3.select(this.element).select("h2.script-name").text(script.name);
+        this.update(toViewModel(scripts.allMotionScripts[2]));
 
-            /*
-              <ul class="stages">
-                <li>
-                  <ul class="gains">
-                    <li>32</li>
-                    ...
-                  </ul>
-                  <ul class="key-frames">
-                    <li>
-                      <ul class="values">
-                        <li>1670</li>
-                        ...
-                      </ul>
-                      <div class="move-cycles">25</div>
-                      <div class="pause-cycles">0</div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            */
-
-            //////// STAGES
-
-            var stages = d3.select(this.element)
-                .select("ul.stages")
-                .selectAll("li")
-                .data(script.stages);
-
-            var enteredStages = stages.enter()
-                .append("li")
-                .classed("stage", true);
-            enteredStages.append("ul").classed("gains", true);
-            enteredStages.append("ul").classed("key-frames", true);
-
-            stages.exit().remove();
-
-            //////// GAINS
-
-            var gains = stages.select("ul.gains")
-                .selectAll("li")
-                .data(stage => stage.pGains);
-
-            gains.enter()
-                .append("li");
-
-            gains.text(d => d.toString());
-
-            gains.exit().remove();
-
-            //////// KEY FRAMES
-
-            var keyFrames = stages.select("ul.key-frames")
-                .selectAll("li")
-                .data((stage: IStageViewModel) => stage.keyFrames);
-
-            var enteredKeyFrames = keyFrames.enter()
-                .append("li")
-                .classed("key-frame", true);
-
-            enteredKeyFrames.append("ul").classed("values", true);
-            enteredKeyFrames.append("div").classed("move-cycles", true);
-            enteredKeyFrames.append("div").classed("pause-cycles", true);
-
-            keyFrames.exit().remove();
-
-            var values = keyFrames.select("ul.values")
-                .selectAll("li")
-                .data((keyFrame: IKeyFrameViewModel) => keyFrame.values)
-                .enter()
-                .append("li").text(d => d);
-        };
-
-        update(toViewModel(scripts.allMotionScripts[2]));
-
-        this.intervalHandler = window.setInterval(() => update(toViewModel(scripts.allMotionScripts[Math.floor(Math.random() * scripts.allMotionScripts.length)])), 5000);
+        this.intervalHandler = window.setInterval(() => this.update(toViewModel(scripts.allMotionScripts[Math.floor(Math.random() * scripts.allMotionScripts.length)])), 5000);
     }
 
     private intervalHandler: number;
