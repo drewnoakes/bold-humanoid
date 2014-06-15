@@ -176,6 +176,7 @@ class AnimatorModule extends Module
 {
     private editTextBox: HTMLInputElement = document.createElement('input');
     private focusElement: HTMLLIElement;
+    private script: IScriptViewModel;
 
     constructor()
     {
@@ -251,10 +252,17 @@ class AnimatorModule extends Module
         return  valueData;
     }
 
-    private buildUI(script: IScriptViewModel)
+    private getValueElement(valueData: ValueData): HTMLLIElement
+    {
+        return valueData.type === ValueType.Gain
+            ? <HTMLLIElement>this.element.querySelector('li.stage[data-index="' + valueData.stageIndex + '"] li[data-type="gain"][data-jointid="' + valueData.jointId + '"]')
+            : <HTMLLIElement>this.element.querySelector('li.stage[data-index="' + valueData.stageIndex + '"] li.key-frame[data-index="' + valueData.keyFrameIndex + '"] li[data-type="value"][data-jointid="' + valueData.jointId + '"]');
+    }
+
+    private buildUI()
     {
         // Set the header directly
-        d3.select(this.element).select("h2.script-name").text(script.name);
+        d3.select(this.element).select("h2.script-name").text(this.script.name);
 
         /*
           <ul class="stages">
@@ -282,7 +290,7 @@ class AnimatorModule extends Module
         var stages = d3.select(this.element)
             .select("ul.stages")
             .selectAll("li")
-            .data(script.stages);
+            .data(this.script.stages);
 
         var enteredStages = stages.enter()
             .append("li")
@@ -302,9 +310,8 @@ class AnimatorModule extends Module
 
         gains.enter()
             .append("li")
-            .attr("taboffset", "0")
             .attr("data-type", "gain")
-            .attr("data-joint-id", (d, i) => (i + 1).toString());
+            .attr("data-jointid", (d, i) => (i + 1).toString());
 
         gains.text(d => d.toString());
 
@@ -410,12 +417,85 @@ class AnimatorModule extends Module
             .text(jointId => constants.jointNiceNames[jointId])
             .on('keydown', this.onKeyDown.bind(this));
 
-        this.buildUI(toViewModel(scripts.allMotionScripts[2]));
+        this.script = toViewModel(scripts.allMotionScripts[2]);
+        this.buildUI();
 
         this.element.tabIndex = 0; // allow element to have keyboard focus
         this.element.addEventListener('keydown', this.onKeyDown.bind(this));
 
 //        this.intervalHandler = window.setInterval(() => this.buildUI(toViewModel(scripts.allMotionScripts[Math.floor(Math.random() * scripts.allMotionScripts.length)])), 5000);
+    }
+
+    private moveFocus(deltaX: number, deltaY: number)
+    {
+        var li: HTMLLIElement;
+
+        // Up/down
+        if (deltaY !== 0)
+        {
+            var d = this.getValueData(this.focusElement);
+            d.jointId += deltaY;
+            li = this.getValueElement(d);
+        }
+
+        if (deltaX !== 0)
+        {
+            var d = this.getValueData(this.focusElement);
+            if (deltaX < 0)
+            {
+                if (d.type === ValueType.MotorValue)
+                {
+                    if (d.keyFrameIndex === 0)
+                    {
+                        d.type = ValueType.Gain;
+                        delete d.keyFrameIndex;
+                        li = this.getValueElement(d);
+                    }
+                    else
+                    {
+                        d.keyFrameIndex--;
+                        li = this.getValueElement(d);
+                    }
+                }
+                else
+                {
+                    d.type = ValueType.MotorValue;
+                    d.stageIndex--;
+                    if (d.stageIndex != -1)
+                    {
+                        d.keyFrameIndex = this.script.stages[d.stageIndex].keyFrames.length - 1;
+                        li = this.getValueElement(d);
+                    }
+                }
+            }
+            else
+            {
+                if (d.type === ValueType.MotorValue)
+                {
+                    d.keyFrameIndex++;
+                    li = this.getValueElement(d);
+                    if (li == null)
+                    {
+                        d.type = ValueType.Gain;
+                        d.stageIndex++;
+                        delete d.keyFrameIndex;
+                        li = this.getValueElement(d);
+                    }
+                }
+                else
+                {
+                    d.type = ValueType.MotorValue;
+                    d.keyFrameIndex = 0;
+                    li = this.getValueElement(d);
+                }
+            }
+        }
+
+        if (!li)
+            return false;
+
+        this.setFocus(li);
+        return true;
     }
 
     private onKeyDown(e: KeyboardEvent)
@@ -428,18 +508,11 @@ class AnimatorModule extends Module
                 console.log('KEY_ESC');
                 this.clearFocus();
                 break;
-            case KEY_LEFT:
-                console.log('KEY_LEFT');
-                break;
-            case KEY_UP:
-                console.log('KEY_UP');
-                break;
-            case KEY_RIGHT:
-                console.log('KEY_RIGHT');
-                break;
-            case KEY_DOWN:
-                console.log('KEY_DOWN');
-                break;
+
+            case KEY_LEFT:  if (this.moveFocus(-1,  0)) e.preventDefault(); break;
+            case KEY_RIGHT: if (this.moveFocus( 1,  0)) e.preventDefault(); break;
+            case KEY_UP:    if (this.moveFocus( 0, -1)) e.preventDefault(); break;
+            case KEY_DOWN:  if (this.moveFocus( 0,  1)) e.preventDefault(); break;
         }
     }
 
