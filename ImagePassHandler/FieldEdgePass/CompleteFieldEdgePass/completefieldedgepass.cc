@@ -11,7 +11,7 @@ using namespace std;
 
 CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, ushort pixelWidth, ushort pixelHeight)
 : FieldEdgePass(pixelWidth, pixelHeight),
-  d_fieldLabelId(fieldLabel->id()),
+  d_fieldLabelId(fieldLabel->getID()),
   d_maxYByX(pixelWidth),
   d_runByX(pixelWidth)
 {

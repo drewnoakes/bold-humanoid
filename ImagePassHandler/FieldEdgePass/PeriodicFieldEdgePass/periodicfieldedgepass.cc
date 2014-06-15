@@ -11,11 +11,11 @@ using namespace std;
 
 PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, shared_ptr<PixelLabel> lineLabel, ushort pixelWidth, ushort pixelHeight, ushort period)
 : FieldEdgePass(pixelWidth, pixelHeight),
-  d_fieldLabelId(fieldLabel->id()),
-  d_lineLabelId(lineLabel->id()),
-  d_maxYByC((pixelWidth/period)+1),
-  d_maxYByCConvex((pixelWidth/period)+1),
-  d_runByC((pixelWidth/period)+1),
+  d_fieldLabelId(fieldLabel->getID()),
+  d_lineLabelId(lineLabel->getID()),
+  d_maxYByC((pixelWidth / period) + 1),
+  d_maxYByCConvex((pixelWidth / period) + 1),
+  d_runByC((pixelWidth / period) + 1),
   d_period(period)
 {}
 

@@ -8,6 +8,7 @@
 #include "../../HoughLineAccumulator/houghlineaccumulator.hh"
 #include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../PixelLabel/pixellabel.hh"
+#include "../../SequentialTimer/sequentialtimer.hh"
 
 namespace bold
 {
@@ -36,7 +37,7 @@ namespace bold
       // Do this each frame, as label definitions can change at runtime
       for (std::shared_ptr<PixelLabel> const& label : d_labels)
       {
-        d_bgrByLabelId[label->id()] = label->hsvRange().toBgr();
+        d_bgrByLabelId[label->getID()] = label->modalColour().toBgr();
       }
       timer.timeEvent("Clear");
     }

@@ -30,8 +30,8 @@ namespace bold
     {
       for (std::shared_ptr<PixelLabel> label : d_labels)
       {
-        ASSERT(label->id() < MAX_LABEL_COUNT);
-        d_countByLabelId[label->id()] = 0;
+        ASSERT(label->getID() < MAX_LABEL_COUNT);
+        d_countByLabelId[label->getID()] = 0;
       }
 
       timer.timeEvent("Clear");
@@ -51,7 +51,7 @@ namespace bold
 
       for (std::shared_ptr<PixelLabel> label : d_labels)
       {
-        counts[label] = d_countByLabelId[label->id()];
+        counts[label] = d_countByLabelId[label->getID()];
       }
 
       return counts;

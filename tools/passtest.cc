@@ -24,7 +24,7 @@
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../Painter/painter.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
-#include "../PixelLabel/pixellabel.hh"
+#include "../PixelLabel/RangePixelLabel/rangepixellabel.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../util/meta.hh"
 
@@ -81,10 +81,10 @@ int main(int argc, char **argv)
   auto t = Clock::getTimestamp();
 
   // Build colour ranges for segmentation
-  auto goalLabel  = make_shared<PixelLabel>("Goal",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
-  auto ballLabel  = make_shared<PixelLabel>("Ball",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
-  auto fieldLabel = make_shared<PixelLabel>("Field", Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
-  auto lineLabel  = make_shared<PixelLabel>("Line",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
+  auto goalLabel  = make_shared<RangePixelLabel>("Goal",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
+  auto ballLabel  = make_shared<RangePixelLabel>("Ball",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
+  auto fieldLabel = make_shared<RangePixelLabel>("Field", Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
+  auto lineLabel  = make_shared<RangePixelLabel>("Line",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
 
   cout << "Using labels:" << endl
        << "  " << *ballLabel << endl
@@ -217,9 +217,9 @@ int main(int argc, char **argv)
 
   auto blobsByLabel = blobDetectPass->getDetectedBlobs();
   for (auto const& pixelLabel : blobPixelLabels)
-    cout << "    " << blobsByLabel[pixelLabel].size() << " " << pixelLabel->name() << " blob(s)" << endl;
+    cout << "    " << blobsByLabel[pixelLabel].size() << " " << pixelLabel->getName() << " blob(s)" << endl;
   for (auto const& pair : labelCountPass->getCounts())
-    cout << "    " << pair.second << " " << pair.first->name() << " pixels" << endl;
+    cout << "    " << pair.second << " " << pair.first->getName() << " pixels" << endl;
 
   //
   // DRAW LABELLED 'CARTOON' IMAGE
@@ -290,7 +290,7 @@ int main(int argc, char **argv)
   for (auto const& pixelLabel : blobPixelLabels)
   for (bold::Blob blob : blobsByLabel[pixelLabel])
   {
-    auto blobColor = pixelLabel->hsvRange().toBgr()/*.invert()*/.toScalar();
+    auto blobColor = pixelLabel->modalColour().toBgr()/*.invert()*/.toScalar();
     cv::rectangle(colourImage, blob.toRect(), blobColor);
   }
 

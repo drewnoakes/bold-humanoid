@@ -19,8 +19,8 @@ void LabelCountState::writeJson(Writer<StringBuffer>& writer) const
         uint const& count = pair.second;
         writer.StartObject();
         {
-          writer.String("name").String(label->name().c_str());
-          writer.String("id").Uint(label->id());
+          writer.String("name").String(label->getName().c_str());
+          writer.String("id").Uint(label->getID());
           writer.String("count").Uint(count);
         }
         writer.EndObject();

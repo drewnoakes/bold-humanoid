@@ -46,7 +46,7 @@ namespace bold
       for (ushort x = 0; x <= imageWidth; ++x)
       {
         d_colTrackers.emplace_back(
-          inLabel->id(), onLabel->id(), /*otherCoordinate*/x, hysteresisLimit->getValue(),
+          inLabel->getID(), onLabel->getID(), /*otherCoordinate*/x, hysteresisLimit->getValue(),
           [this](ushort const from, ushort const to, ushort const other) mutable {
             int mid = (from + to) / 2;
             lineDots.emplace_back((int)other, mid);
@@ -55,7 +55,7 @@ namespace bold
       }
 
       d_rowTracker = std::make_unique<LineRunTracker>(
-        inLabel->id(), onLabel->id(), /*otherCoordinate*/0, hysteresisLimit->getValue(),
+        inLabel->getID(), onLabel->getID(), /*otherCoordinate*/0, hysteresisLimit->getValue(),
         [this](ushort const from, ushort const to, ushort const other) mutable {
           int mid = (from + to) / 2;
           lineDots.emplace_back(mid, (int)other);
