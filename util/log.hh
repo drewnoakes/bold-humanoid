@@ -70,7 +70,7 @@ namespace bold
     ~log();
 
     template<typename T>
-    log& operator<<(T value)
+    log& operator<<(T const& value)
     {
       if (d_message)
         *d_message << value;
