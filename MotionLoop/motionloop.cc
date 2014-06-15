@@ -243,7 +243,7 @@ void MotionLoop::initialiseHardwareTables()
 
   const int retryCount = 10;
 
-  auto writeByteWithRetry = [this](BulkReadTable const& table, uchar jointId, uchar address, uchar value)
+  auto writeByteWithRetry = [this,retryCount](BulkReadTable const& table, uchar jointId, uchar address, uchar value)
   {
     // Don't write anything if the value is already set correctly
     if (table.readByte(address) == value)
@@ -276,7 +276,7 @@ void MotionLoop::initialiseHardwareTables()
     }
   };
 
-  auto writeWordWithRetry = [this](BulkReadTable const& table, uchar jointId, uchar address, ushort value)
+  auto writeWordWithRetry = [this,retryCount](BulkReadTable const& table, uchar jointId, uchar address, ushort value)
   {
     // Don't write anything if the value is already set correctly
     if (table.readWord(address) == value)
