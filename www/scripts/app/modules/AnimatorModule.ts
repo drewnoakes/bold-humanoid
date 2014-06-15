@@ -261,6 +261,8 @@ class AnimatorModule extends Module
 
     private buildUI()
     {
+        var t = this;
+
         // Set the header directly
         d3.select(this.element).select("h2.script-name").text(this.script.name);
 
@@ -311,13 +313,12 @@ class AnimatorModule extends Module
         gains.enter()
             .append("li")
             .attr("data-type", "gain")
-            .attr("data-jointid", (d, i) => (i + 1).toString());
+            .attr("data-jointid", (d, i) => (i + 1).toString())
+            .on('click', function(data: any, index: number) { t.setFocus(this); })
+            .on('dblclick', function(data: any, index: number) { t.startEdit(this); });
+
 
         gains.text(d => d.toString());
-
-        var t = this;
-        gains.on('click', function(data: any, index: number) { t.setFocus(this); });
-        gains.on('dblclick', function(data: any, index: number) { t.startEdit(this); });
 
         gains.exit().remove();
 
@@ -345,10 +346,10 @@ class AnimatorModule extends Module
             .append("li")
             .attr("data-type", "value")
             .attr("data-jointid", (d, i) => (i + 1).toString())
-            .text(d => d);
+            .text(d => d)
+            .on('click', function(data: any, index: number) { t.setFocus(this); })
+            .on('dblclick', function(data: any, index: number) { t.startEdit(this); });
 
-        values.on('click', function(data: any, index: number) { t.setFocus(this); });
-        values.on('dblclick', function(data: any, index: number) { t.startEdit(this); });
     }
 
     private clearFocus(): void
