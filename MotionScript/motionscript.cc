@@ -69,13 +69,13 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
         // Try to find a paired gain entry
         if (JointPairs::isBase(g + (uchar)1))
         {
-          string pairName = JointName::getJsonPairName(g + 1);
+          string pairName = JointName::getJsonPairName(g + (uchar)1);
           auto pairMember = gainsMember->value.FindMember(pairName.c_str());
           if (pairMember)
           {
             // If a pair exists, the individual gains shouldn't
-            if (gainsMember->value.FindMember(JointName::getJsonName(g + 1).c_str()) ||
-                gainsMember->value.FindMember(JointName::getJsonName(g + 2).c_str()))
+            if (gainsMember->value.FindMember(JointName::getJsonName(g + (uchar)1).c_str()) ||
+                gainsMember->value.FindMember(JointName::getJsonName(g + (uchar)2).c_str()))
             {
               log::error("MotionScript::fromFile") << "JSON file " << fileName << " specifies pGain pair name '" << pairName << "' but also specifies L or R property in same stage";
               throw std::runtime_error("JSON specifies pGain pair name and also individual L/R joint in same stage");
@@ -119,13 +119,13 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
         // Try to find a paired value
         if (JointPairs::isBase(v + (uchar)1))
         {
-          string pairName = JointName::getJsonPairName(v + 1);
+          string pairName = JointName::getJsonPairName(v + (uchar)1);
           auto pairMember = valuesMember.FindMember(pairName.c_str());
           if (pairMember)
           {
             // If a pair exists, the individual values shouldn't
-            if (valuesMember.FindMember(JointName::getJsonName(v + 1).c_str()) ||
-                valuesMember.FindMember(JointName::getJsonName(v + 2).c_str()))
+            if (valuesMember.FindMember(JointName::getJsonName(v + (uchar)1).c_str()) ||
+                valuesMember.FindMember(JointName::getJsonName(v + (uchar)2).c_str()))
             {
               log::error("MotionScript::fromFile") << "JSON file " << fileName << " specifies value pair name '" << pairName << "' but also specifies L or R property in same stage";
               throw std::runtime_error("JSON specifies value pair name and also individual L/R joint in same stage");
@@ -141,7 +141,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
           }
         }
 
-        string propName = JointName::getJsonName(v + 1);
+        string propName = JointName::getJsonName(v + (uchar)1);
         auto prop = valuesMember.FindMember(propName.c_str());
         if (!prop)
         {
@@ -276,7 +276,7 @@ shared_ptr<MotionScript> MotionScript::getMirroredScript(std::string name) const
 
       // Mirror values
       for (uchar jointId = (uchar)JointId::R_SHOULDER_PITCH; jointId <= (uchar)JointId::HEAD_PAN; jointId++)
-        keyFrame.values.at(jointId - 1) = MX28::getMirrorValue(keyFrame.values.at(jointId - 1));
+        keyFrame.values.at(jointId - (uchar)1) = MX28::getMirrorValue(keyFrame.values.at(jointId - (uchar)1));
     }
   }
 
