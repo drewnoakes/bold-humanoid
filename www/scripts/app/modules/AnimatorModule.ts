@@ -194,17 +194,13 @@ class AnimatorModule extends Module
             {
                 case KEY_ENTER:
                 {
-                    console.assert(this.focusElement === this.editTextBox.parentElement);
-
-                    // TODO apply the edit to the view model and rebuild UI instead of just copying text
-                    this.focusElement.textContent = this.editTextBox.value;
-
-                    this.setFocus(this.focusElement);
-                    this.stopEdit();
+                    if (this.setFocussedValue(parseInt(this.editTextBox.value)))
+                        this.buildUI();
                     break;
                 }
                 case KEY_ESC:
                 {
+                    // TODO cancellation should restore the UI
                     this.stopEdit();
                     break;
                 }
@@ -235,6 +231,30 @@ class AnimatorModule extends Module
                 }
             }
         });
+    }
+
+    private setFocussedValue(value: number): boolean
+    {
+        if (value < 0)
+            return false;
+
+        var d = this.getValueData(this.focusElement);
+        var stage = this.script.stages[d.stageIndex];
+
+        if (d.type === ValueType.Gain)
+        {
+            if (value > 255)
+                return false;
+            stage.pGains[d.jointId - 1] = value;
+        }
+        else
+        {
+            if (value > MAX_VALUE)
+                return false;
+            stage.keyFrames[d.keyFrameIndex].values[d.jointId - 1] = value;
+        }
+
+        return true;
     }
 
     private getValueData(element: HTMLLIElement): ValueData
