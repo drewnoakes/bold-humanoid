@@ -25,10 +25,15 @@ Colour::hsvRange::hsvRange(
   ASSERT(vMin <= vMax);
 }
 
+Colour::hsv Colour::hsvRange::toHsv() const
+{
+  return Colour::hsv(getHMid(), getSMid(), getVMid());
+}
+
 /** Obtain the center colour for the range, in BGR format. */
 Colour::bgr Colour::hsvRange::toBgr() const
 {
-  return Colour::hsv2bgr(Colour::hsv(getHMid(), getSMid(), getVMid()));
+  return toHsv().toBgr();
 }
 
 uchar Colour::hsvRange::getHMid() const

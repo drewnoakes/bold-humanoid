@@ -140,6 +140,8 @@ namespace bold
       uchar getSMid() const;
       uchar getVMid() const;
 
+      Colour::hsv toHsv() const;
+
       /** Obtain the center colour for the range, in BGR format. */
       Colour::bgr toBgr() const;
 
