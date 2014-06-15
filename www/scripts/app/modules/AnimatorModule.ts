@@ -98,11 +98,13 @@ function toViewModel(script: scripts.MotionScript): IScriptViewModel
         controlsHead: script.controlsHead,
         controlsArms: script.controlsArms,
         controlsLegs: script.controlsLegs,
-        stages: _.map(script.stages, (stage: scripts.Stage) => ({
+        stages: _.map(script.stages, (stage: scripts.Stage, stageIndex: number) => ({
+            index: stageIndex,
             repeat: stage.repeat || 0,
             speed: stage.speed || 0,
             pGains: _.map(constants.jointIdNumbers, jointId => getJointGain(stage.pGains, jointId)),
-            keyFrames: _.map(stage.keyFrames, (keyFrame: scripts.KeyFrame) => ({
+            keyFrames: _.map(stage.keyFrames, (keyFrame: scripts.KeyFrame, keyFrameIndex: number) => ({
+                index: keyFrameIndex,
                 pauseCycles: keyFrame.pauseCycles || 0,
                 moveCycles: keyFrame.moveCycles,
                 values: _.map(constants.jointIdNumbers, jointId => getJointValue(keyFrame.values, jointId))
@@ -113,6 +115,7 @@ function toViewModel(script: scripts.MotionScript): IScriptViewModel
 
 interface IKeyFrameViewModel
 {
+    index: number;
     pauseCycles: number;
     moveCycles: number;
     values: number[];
@@ -120,6 +123,7 @@ interface IKeyFrameViewModel
 
 interface IStageViewModel
 {
+    index: number;
     repeat: number;
     speed: number;
     pGains: number[];
@@ -144,11 +148,107 @@ var animatorTemplate = DOMTemplate.forText(
       '</div>' +
     '</div>');
 
+enum ValueType
+{
+    Gain,
+    MotorValue
+}
+
+interface ValueData
+{
+    type: ValueType;
+    stageIndex: number;
+    jointId: number;
+    keyFrameIndex?: number; // only if type == MotorValue
+}
+
+function findParent(element: HTMLElement, className: string)
+{
+    while ((element = <HTMLElement>element.parentElement) != null)
+    {
+        if (element.classList.contains(className))
+            return element;
+    }
+    return null;
+}
+
 class AnimatorModule extends Module
 {
+    private editTextBox: HTMLInputElement = document.createElement('input');
+    private focusElement: HTMLLIElement;
+
     constructor()
     {
         super('animator', 'animator', {fullScreen: true});
+
+        this.editTextBox.addEventListener('click', e => { e.stopPropagation(); });
+        this.editTextBox.addEventListener('dblclick', e => { e.stopPropagation(); });
+
+        this.editTextBox.addEventListener('keydown', e =>
+        {
+            // When editing, disallow key events from bubbling to parent(s)
+            e.stopPropagation();
+
+            switch (e.keyCode)
+            {
+                case KEY_ENTER:
+                {
+                    console.assert(this.focusElement === this.editTextBox.parentElement);
+
+                    // TODO apply the edit to the view model and rebuild UI instead of just copying text
+                    this.focusElement.textContent = this.editTextBox.value;
+
+                    this.setFocus(this.focusElement);
+                    this.stopEdit();
+                    break;
+                }
+                case KEY_ESC:
+                {
+                    this.stopEdit();
+                    break;
+                }
+                case KEY_LEFT:
+                {
+                    if (this.editTextBox.selectionStart === this.editTextBox.selectionEnd && this.editTextBox.selectionStart === 0)
+                        e.preventDefault();
+                    // TODO move focussed item left, if possible
+                    break;
+                }
+                case KEY_RIGHT:
+                {
+                    if (this.editTextBox.selectionStart === this.editTextBox.selectionEnd &&
+                        this.editTextBox.selectionStart === this.editTextBox.value.length)
+                        e.preventDefault();
+                    // TODO move focussed item right, if possible
+                    break;
+                }
+                case KEY_UP:
+                {
+                    // TODO move focussed item up, if possible
+                    break;
+                }
+                case KEY_DOWN:
+                {
+                    // TODO move focussed item down, if possible
+                    break;
+                }
+            }
+        });
+    }
+
+    private getValueData(element: HTMLLIElement): ValueData
+    {
+        var valueData: ValueData = {
+            type: element.dataset["type"] === "gain" ? ValueType.Gain : ValueType.MotorValue,
+            stageIndex: parseInt(findParent(element, "stage").dataset["index"]),
+            jointId: parseInt(element.dataset["jointid"])
+
+        };
+
+        if (valueData.type === ValueType.MotorValue)
+            valueData.keyFrameIndex = parseInt(findParent(element, "key-frame").dataset["index"]);
+
+        return  valueData;
     }
 
     private buildUI(script: IScriptViewModel)
@@ -186,7 +286,9 @@ class AnimatorModule extends Module
 
         var enteredStages = stages.enter()
             .append("li")
-            .classed("stage", true);
+            .classed("stage", true)
+            .attr("data-index", (d, i) => i.toString());
+
         enteredStages.append("ul").classed("gains", true);
         enteredStages.append("ul").classed("key-frames", true);
 
@@ -201,9 +303,14 @@ class AnimatorModule extends Module
         gains.enter()
             .append("li")
             .attr("taboffset", "0")
-            .attr("data-type", "gain");
+            .attr("data-type", "gain")
+            .attr("data-joint-id", (d, i) => (i + 1).toString());
 
         gains.text(d => d.toString());
+
+        var t = this;
+        gains.on('click', function(data: any, index: number) { t.setFocus(this); });
+        gains.on('dblclick', function(data: any, index: number) { t.startEdit(this); });
 
         gains.exit().remove();
 
@@ -215,7 +322,8 @@ class AnimatorModule extends Module
 
         var enteredKeyFrames = keyFrames.enter()
             .append("li")
-            .classed("key-frame", true);
+            .classed("key-frame", true)
+            .attr("data-index", d => d.index);
 
         enteredKeyFrames.append("ul").classed("values", true);
         enteredKeyFrames.append("div").classed("move-cycles", true);
@@ -229,70 +337,54 @@ class AnimatorModule extends Module
             .enter()
             .append("li")
             .attr("data-type", "value")
+            .attr("data-jointid", (d, i) => (i + 1).toString())
             .text(d => d);
 
-        var t = this;
-        values.on('click', function(data: any, index: number) { t.setFocus(this); }, true);
-        values.on('dblclick', function(data: any, index: number) { t.startEdit(this); }, true);
+        values.on('click', function(data: any, index: number) { t.setFocus(this); });
+        values.on('dblclick', function(data: any, index: number) { t.startEdit(this); });
     }
 
     private clearFocus(): void
     {
         _.each(this.element.querySelectorAll('li.focussed'), (element: HTMLElement) => element.classList.remove('focussed'));
+        this.focusElement = null;
     }
 
     private setFocus(element: HTMLLIElement): void
     {
-        this.clearFocus();
-        element.classList.add('focussed');
-        this.element.focus();
-    }
+        if (this.focusElement === element)
+            return;
 
-    private editTextBox: HTMLInputElement = document.createElement('input');
-    private editElement: HTMLLIElement;
+        if (this.focusElement)
+            this.clearFocus();
+
+        // Store a reference to it
+        this.focusElement = element;
+
+        // Mark it as focussed
+        this.focusElement.classList.add('focussed');
+
+        // Focus the outer module-level element, where we trap keyboard events
+        this.element.focus();
+
+        console.dir(this.getValueData(element));
+    }
 
     private startEdit(element: HTMLLIElement)
     {
         this.stopEdit();
-        this.clearFocus();
-
-        this.editElement = element;
+        this.setFocus(element);
 
         this.editTextBox.value = element.textContent;
         element.textContent = null;
         element.appendChild(this.editTextBox);
         this.editTextBox.focus();
         this.editTextBox.setSelectionRange(0, this.editTextBox.value.length);
-
-        this.editTextBox.addEventListener('keydown', e =>
-        {
-            switch (e.keyCode)
-            {
-                case KEY_ENTER:
-                {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-
-                    var text = this.editTextBox.value;
-                    element.removeChild(this.editTextBox);
-                    element.textContent = text;
-                    this.setFocus(element);
-                    break;
-                }
-                case KEY_ESC:
-                {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-
-                    this.stopEdit();
-                }
-            }
-        });
     }
 
     private stopEdit()
     {
-
+        // TODO implement!!!
     }
 
     public load()
@@ -321,7 +413,7 @@ class AnimatorModule extends Module
         this.buildUI(toViewModel(scripts.allMotionScripts[2]));
 
         this.element.tabIndex = 0; // allow element to have keyboard focus
-        this.element.addEventListener('keydown', this.onKeyDown.bind(this), true);
+        this.element.addEventListener('keydown', this.onKeyDown.bind(this));
 
 //        this.intervalHandler = window.setInterval(() => this.buildUI(toViewModel(scripts.allMotionScripts[Math.floor(Math.random() * scripts.allMotionScripts.length)])), 5000);
     }
