@@ -45,14 +45,19 @@ uchar LUTBuilder::labelPixel(vector<shared_ptr<PixelLabel>> const& labels, Colou
 {
   auto const& hsv = Colour::bgr2hsv(bgr);
 
-  // Find first that matches
+  // Find best matching label
+  float bestProb = 0.0f;
+  uint8_t bestLabel = 0u;
+
   for (shared_ptr<PixelLabel> label : labels)
   {
-    if (label->hsvRange().contains(hsv))
+    auto prob = label->labelProb(hsv);
+    if (prob > bestProb)
     {
-      return label->id();
+      bestProb = prob;
+      bestLabel = label->getID();
     }
   }
 
-  return 0;
+  return bestLabel;
 }
