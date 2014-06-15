@@ -44,6 +44,11 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
     return nullptr;
   }
 
+  return fromJsonValue(document);
+}
+
+shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
+{
   auto name = document["name"].GetString();
 
   bool controlsHead = document.TryGetBoolValue("controlsHead", true);
@@ -77,8 +82,8 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
             if (gainsMember->value.FindMember(JointName::getJsonName(g + (uchar)1).c_str()) ||
                 gainsMember->value.FindMember(JointName::getJsonName(g + (uchar)2).c_str()))
             {
-              log::error("MotionScript::fromFile") << "JSON file " << fileName << " specifies pGain pair name '" << pairName << "' but also specifies L or R property in same stage";
-              throw std::runtime_error("JSON specifies pGain pair name and also individual L/R joint in same stage");
+              log::error("MotionScript::fromFile") << "JSON specifies pGain pair name '" << pairName << "' but also specifies L or R property in same stage";
+              return nullptr;
             }
 
             uchar value = (uchar)pairMember->value.GetUint();
@@ -91,7 +96,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
           }
         }
 
-        stage->pGains[g] = (uchar)gainsMember->value.TryGetUintValue(JointName::getJsonName(g + 1).c_str(), Stage::DEFAULT_P_GAIN);
+        stage->pGains[g] = (uchar)gainsMember->value.TryGetUintValue(JointName::getJsonName(g + (uchar)1).c_str(), Stage::DEFAULT_P_GAIN);
       }
     }
 
@@ -109,7 +114,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
         // NOTE the MotionScriptRunner hits an arithmetic error (div by zero) if
         //      moveCycles is less than 3. Should really fix the bug there, but
         //      this is easier for now and provides quick feedback.
-        log::error("MotionScript::fromFile") << "moveCycles value must be greater than 2 in for " << fileName;
+        log::error("MotionScript::fromFile") << "moveCycles value must be greater than 2";
         return nullptr;
       }
 
@@ -127,8 +132,8 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
             if (valuesMember.FindMember(JointName::getJsonName(v + (uchar)1).c_str()) ||
                 valuesMember.FindMember(JointName::getJsonName(v + (uchar)2).c_str()))
             {
-              log::error("MotionScript::fromFile") << "JSON file " << fileName << " specifies value pair name '" << pairName << "' but also specifies L or R property in same stage";
-              throw std::runtime_error("JSON specifies value pair name and also individual L/R joint in same stage");
+              log::error("MotionScript::fromFile") << "JSON specifies value pair name '" << pairName << "' but also specifies L or R property in same stage";
+              return nullptr;
             }
 
             ushort value = (ushort)pairMember->value.GetUint();
@@ -145,7 +150,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
         auto prop = valuesMember.FindMember(propName.c_str());
         if (!prop)
         {
-          log::error("MotionScript::fromFile") << "Missing property " << propName << " in file " << fileName;
+          log::error("MotionScript::fromFile") << "Missing property " << propName;
           return nullptr;
         }
         keyFrame.values[v] = (ushort)prop->value.GetUint();

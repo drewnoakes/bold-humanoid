@@ -3,6 +3,7 @@
 #include "../JointId/jointid.hh"
 #include "../MX28/mx28.hh"
 
+#include <rapidjson/document.h>
 
 #include <algorithm>
 #include <string>
@@ -81,8 +82,12 @@ namespace bold
     };
 
     /** Loads a MotionScript from the specified JSON file.
-     */
+    */
     static std::shared_ptr<MotionScript> fromFile(std::string fileName);
+
+    /** Loads a MotionScript from the specified JSON content.
+    */
+    static std::shared_ptr<MotionScript> fromJsonValue(rapidjson::Value& value);
 
     /** Loads all MotionScript files found in the specified path.
      */
