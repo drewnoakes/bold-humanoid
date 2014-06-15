@@ -2,7 +2,8 @@
 
 uint8_t bold::PixelLabel::s_nextID = 1;
 
-std::ostream& bold::operator<<(std::ostream &stream, bold::PixelLabel const& pixelLabel)
+std::ostream& std::operator<<(std::ostream &stream, bold::PixelLabel const& pixelLabel)
 {
-  return stream << pixelLabel.name() << " (" << (int)pixelLabel.id() << ") " << pixelLabel.hsvRange();
+  pixelLabel.print(stream);
+  return stream;
 }
