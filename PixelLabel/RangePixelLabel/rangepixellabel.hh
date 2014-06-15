@@ -15,7 +15,7 @@ namespace bold
     float labelProb(Colour::hsv const& pixelColour) const override;
     Colour::hsv modalColour() const override;
 
-    void print(std::ostream& out);
+    void print(std::ostream& out) const override;
 
   private:
     Colour::hsvRange d_hsvRange;
@@ -28,27 +28,27 @@ namespace bold
     d_hsvRange{std::move(hsvRange)}
   {}
   
-  Colour::hsvRange RangePixelLabel::getHSVRange() const
+  inline Colour::hsvRange RangePixelLabel::getHSVRange() const
   {
     return d_hsvRange;
   }
 
-  void RangePixelLabel::setHSVRange(Colour::hsvRange range)
+  inline void RangePixelLabel::setHSVRange(Colour::hsvRange range)
   {
     d_hsvRange = std::move(range);
   }
 
-  float RangePixelLabel::labelProb(Colour::hsv const& pixelColour) const
+  inline float RangePixelLabel::labelProb(Colour::hsv const& pixelColour) const
   {
     return d_hsvRange.contains(pixelColour) ? 1.0f : 0.0f;
   }
 
-  Colour::hsv RangePixelLabel::modalColour() const
+  inline Colour::hsv RangePixelLabel::modalColour() const
   {
     return d_hsvRange.toHsv();
   }
 
-  void RangePixelLabel::print(std::ostream& out)
+  inline void RangePixelLabel::print(std::ostream& out) const
   {
     PixelLabel::print(out);
     out << " " << d_hsvRange;
