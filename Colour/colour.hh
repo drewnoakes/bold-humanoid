@@ -13,7 +13,7 @@ namespace bold
     {
       bgr() = default;
 
-      bgr(uchar b, uchar g, uchar r)
+      bgr(uint8_t b, uint8_t g, uint8_t r)
         : b(b), g(g), r(r)
       {}
 
@@ -40,9 +40,9 @@ namespace bold
           r == other.r;
       }
 
-      uchar b;
-      uchar g;
-      uchar r;
+      uint8_t b;
+      uint8_t g;
+      uint8_t r;
 
       static const bgr black;
       static const bgr grey;
@@ -68,7 +68,7 @@ namespace bold
       // http://www.equasys.de/colorconversion.html
 
       YCbCr();
-      YCbCr(uchar y, uchar cb, uchar cr);
+      YCbCr(uint8_t y, uint8_t cb, uint8_t cr);
 
       bool isValid() const;
 
@@ -83,9 +83,9 @@ namespace bold
           cr == other.cr;
       }
 
-      uchar y;
-      uchar cb;
-      uchar cr;
+      uint8_t y;
+      uint8_t cb;
+      uint8_t cr;
     };
 
     struct hsv;
@@ -98,7 +98,7 @@ namespace bold
       hsv()
       {}
 
-      hsv(int h, int s, int v)
+      hsv(uint8_t h, uint8_t s, uint8_t v)
         : h(h), s(s), v(v)
       {}
 
@@ -115,30 +115,30 @@ namespace bold
         return hsv2bgr(*this);
       }
 
-      uchar h;
-      uchar s;
-      uchar v;
+      uint8_t h;
+      uint8_t s;
+      uint8_t v;
     };
 
     struct hsvRange
     {
-      uchar hMin;
-      uchar hMax;
-      uchar sMin;
-      uchar sMax;
-      uchar vMin;
-      uchar vMax;
+      uint8_t hMin;
+      uint8_t hMax;
+      uint8_t sMin;
+      uint8_t sMax;
+      uint8_t vMin;
+      uint8_t vMax;
 
       hsvRange();
 
       hsvRange(
-        uchar hMin, uchar hMax,
-        uchar sMin, uchar sMax,
-        uchar vMin, uchar vMax);
+        uint8_t hMin, uint8_t hMax,
+        uint8_t sMin, uint8_t sMax,
+        uint8_t vMin, uint8_t vMax);
 
-      uchar getHMid() const;
-      uchar getSMid() const;
-      uchar getVMid() const;
+      uint8_t getHMid() const;
+      uint8_t getSMid() const;
+      uint8_t getVMid() const;
 
       Colour::hsv toHsv() const;
 
@@ -160,18 +160,18 @@ namespace bold
           vMax == other.vMax;
       }
 
-      static hsvRange fromBytes(uchar hMin, uchar hMax, uchar sMin, uchar sMax, uchar vMin, uchar vMax);
+      static hsvRange fromBytes(uint8_t hMin, uint8_t hMax, uint8_t sMin, uint8_t sMax, uint8_t vMin, uint8_t vMax);
       static hsvRange fromDoubles(double hMin, double hMax, double sMin, double sMax, double vMin, double vMax);
 
-      hsvRange withHMin(uchar value) const { return hsvRange(value, hMax, sMin, sMax, vMin, vMax); }
-      hsvRange withHMax(uchar value) const { return hsvRange(hMin, value, sMin, sMax, vMin, vMax); }
-      hsvRange withSMin(uchar value) const { return hsvRange(hMin, hMax, value, sMax, vMin, vMax); }
-      hsvRange withSMax(uchar value) const { return hsvRange(hMin, hMax, sMin, value, vMin, vMax); }
-      hsvRange withVMin(uchar value) const { return hsvRange(hMin, hMax, sMin, sMax, value, vMax); }
-      hsvRange withVMax(uchar value) const { return hsvRange(hMin, hMax, sMin, sMax, vMin, value); }
+      hsvRange withHMin(uint8_t value) const { return hsvRange(value, hMax, sMin, sMax, vMin, vMax); }
+      hsvRange withHMax(uint8_t value) const { return hsvRange(hMin, value, sMin, sMax, vMin, vMax); }
+      hsvRange withSMin(uint8_t value) const { return hsvRange(hMin, hMax, value, sMax, vMin, vMax); }
+      hsvRange withSMax(uint8_t value) const { return hsvRange(hMin, hMax, sMin, value, vMin, vMax); }
+      hsvRange withVMin(uint8_t value) const { return hsvRange(hMin, hMax, sMin, sMax, value, vMax); }
+      hsvRange withVMax(uint8_t value) const { return hsvRange(hMin, hMax, sMin, sMax, vMin, value); }
     };
 
-    inline void yCbCrToBgrInPlace(uchar* pxl)
+    inline void yCbCrToBgrInPlace(uint8_t* pxl)
     {
       Colour::YCbCr* ycbcr = reinterpret_cast<Colour::YCbCr*>(pxl);
       Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
