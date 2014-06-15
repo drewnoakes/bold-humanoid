@@ -20,6 +20,11 @@ namespace bold
       d_uncertainty{uncertainty}
     {}
 
+    Eigen::MatrixXd const& getParticles() const { return d_particles; }
+    double getPreNormWeightSum() const { return d_preNormWeightSum; }
+    double getSmoothedPreNormWeightSum() const { return d_smoothedPreNormWeightSum; }
+    double getUncertainty() const { return d_uncertainty; }
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
