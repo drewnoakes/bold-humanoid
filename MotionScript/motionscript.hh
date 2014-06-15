@@ -3,9 +3,6 @@
 #include "../JointId/jointid.hh"
 #include "../MX28/mx28.hh"
 
-#include <rapidjson/writer.h>
-#include <rapidjson/filewritestream.h>
-#include <rapidjson/prettywriter.h>
 
 #include <algorithm>
 #include <string>
