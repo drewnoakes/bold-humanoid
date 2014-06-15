@@ -33,7 +33,7 @@ ExternalProject_Add(libwebsockets_lib
   DOWNLOAD_COMMAND ""
   SOURCE_DIR ${LIBWEBSOCKETDIR}
   BINARY_DIR ${LIBWEBSOCKETDIR}
-  CMAKE_ARGS -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+  CMAKE_ARGS -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DWITHOUT_TESTAPPS=ON 
   INSTALL_COMMAND ""
 )
 
@@ -684,7 +684,7 @@ add_executable(boldhumanoid
 #
 ## Link executable to libraries
 #
-set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} websockets pthread rt espeak)
+set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} ssl crypto libwebsockets.a pthread rt espeak)
 
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
