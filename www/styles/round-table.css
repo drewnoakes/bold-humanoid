@@ -1535,6 +1535,11 @@ div.module.animator ul.gains > li > input
   border-radius: 10.5px;
 }
 
+div.module.animator input.invalid
+{
+  outline: solid 1px red;
+}
+
 /********************************************************************/
 
 html.night-mode

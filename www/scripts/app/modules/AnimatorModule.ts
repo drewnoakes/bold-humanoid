@@ -172,6 +172,39 @@ function findParent(element: HTMLElement, className: string)
     return null;
 }
 
+/*
+  General D3 update pattern:
+
+    function update(data) {
+
+      // DATA JOIN
+      // Join new data with old elements, if any.
+      var text = svg.selectAll("text")
+          .data(data);
+
+      // UPDATE
+      // Update old elements as needed.
+      text.attr("class", "update");
+
+      // ENTER
+      // Create new elements as needed.
+      text.enter().append("text")
+          .attr("class", "enter")
+          .attr("x", function(d, i) { return i * 32; })
+          .attr("dy", ".35em");
+
+      // ENTER + UPDATE
+      // Appending to the enter selection expands the update selection to include
+      // entering elements; so, operations on the update selection after appending to
+      // the enter selection will apply to both entering and updating nodes.
+      text.text(function(d) { return d; });
+
+      // EXIT
+      // Remove old elements as needed.
+      text.exit().remove();
+    }
+ */
+
 class AnimatorModule extends Module
 {
     private editTextBox: HTMLInputElement = document.createElement('input');
@@ -185,60 +218,14 @@ class AnimatorModule extends Module
         this.editTextBox.addEventListener('click', e => { e.stopPropagation(); });
         this.editTextBox.addEventListener('dblclick', e => { e.stopPropagation(); });
 
-        this.editTextBox.addEventListener('keydown', e =>
-        {
-            // When editing, disallow key events from bubbling to parent(s)
-            e.stopPropagation();
-
-            switch (e.keyCode)
-            {
-                case KEY_ENTER:
-                {
-                    if (this.setFocussedValue(parseInt(this.editTextBox.value)))
-                        this.buildUI();
-                    break;
-                }
-                case KEY_ESC:
-                {
-                    // TODO cancellation should restore the UI
-                    this.stopEdit();
-                    break;
-                }
-                case KEY_LEFT:
-                {
-                    if (this.editTextBox.selectionStart === this.editTextBox.selectionEnd && this.editTextBox.selectionStart === 0)
-                        e.preventDefault();
-                    // TODO move focussed item left, if possible
-                    break;
-                }
-                case KEY_RIGHT:
-                {
-                    if (this.editTextBox.selectionStart === this.editTextBox.selectionEnd &&
-                        this.editTextBox.selectionStart === this.editTextBox.value.length)
-                        e.preventDefault();
-                    // TODO move focussed item right, if possible
-                    break;
-                }
-                case KEY_UP:
-                {
-                    // TODO move focussed item up, if possible
-                    break;
-                }
-                case KEY_DOWN:
-                {
-                    // TODO move focussed item down, if possible
-                    break;
-                }
-            }
-        });
+        this.editTextBox.addEventListener('keydown', this.onEditBoxKeyDown.bind(this));
     }
 
-    private setFocussedValue(value: number): boolean
+    private trySetScriptValue(d: ValueData, value: number): boolean
     {
         if (value < 0)
             return false;
 
-        var d = this.getValueData(this.focusElement);
         var stage = this.script.stages[d.stageIndex];
 
         if (d.type === ValueType.Gain)
@@ -255,6 +242,26 @@ class AnimatorModule extends Module
         }
 
         return true;
+    }
+
+    private tryCommitEdit()
+    {
+        return this.trySetFocussedScriptValue(parseInt(this.editTextBox.value));
+    }
+
+    private trySetFocussedScriptValue(value: number): boolean
+    {
+        return this.trySetScriptValue(this.getValueData(this.focusElement), value);
+    }
+
+    private getValue(d: ValueData): number
+    {
+        var stage = this.script.stages[d.stageIndex];
+
+        if (d.type === ValueType.Gain)
+            return stage.pGains[d.jointId - 1];
+        else
+            return stage.keyFrames[d.keyFrameIndex].values[d.jointId - 1];
     }
 
     private getValueData(element: HTMLLIElement): ValueData
@@ -281,6 +288,7 @@ class AnimatorModule extends Module
 
     private buildUI()
     {
+        console.log('----------------------buildUI----------------------');
         var focussedValueData = this.focusElement != null ? this.getValueData(this.focusElement) : null;
 
         var t = this;
@@ -311,20 +319,23 @@ class AnimatorModule extends Module
 
         //////// STAGES
 
-        var stages = d3.select(this.element)
-            .select("ul.stages")
-            .selectAll("li")
-            .data(this.script.stages);
+        var stageList = this.element.querySelector('ul.stages');
 
-        var enteredStages = stages.enter()
-            .append("li")
-            .classed("stage", true)
-            .attr("data-index", (d, i) => i.toString());
+        var stages = d3.select(stageList)
+            .selectAll("li.stage")
+            .data(this.script.stages, (d: IStageViewModel, i: number) => d.index.toString());
 
-        enteredStages.append("ul").classed("gains", true);
-        enteredStages.append("ul").classed("key-frames", true);
+        {
+            var enteredStages = stages.enter()
+                .append("li")
+                .classed("stage", true)
+                .attr("data-index", (d, i) => i.toString());
 
-        stages.exit().remove();
+            enteredStages.append("ul").classed("gains", true);
+            enteredStages.append("ul").classed("key-frames", true);
+        }
+
+        stages.exit().attr("data-foo", (d,i) => console.log('removing stage', i, d)).remove();
 
         //////// GAINS
 
@@ -347,8 +358,8 @@ class AnimatorModule extends Module
         //////// KEY FRAMES
 
         var keyFrames = stages.select("ul.key-frames")
-            .selectAll("li")
-            .data((stage: IStageViewModel) => stage.keyFrames);
+            .selectAll("li.key-frame")
+            .data((stage: IStageViewModel) => stage.keyFrames, (d: IKeyFrameViewModel) => d.index.toString());
 
         var enteredKeyFrames = keyFrames.enter()
             .append("li")
@@ -402,19 +413,27 @@ class AnimatorModule extends Module
 
     private startEdit(element: HTMLLIElement)
     {
-        this.stopEdit();
         this.setFocus(element);
+
+        this.editTextBox.classList.remove('invalid');
 
         this.editTextBox.value = element.textContent;
         element.textContent = null;
         element.appendChild(this.editTextBox);
         this.editTextBox.focus();
-        this.editTextBox.setSelectionRange(0, this.editTextBox.value.length);
+        this.selectAllEditText();
     }
 
+    /** Removes the edit text box and sets the focussed li value to reflect the ScriptViewModel. */
     private stopEdit()
     {
-        // TODO implement!!!
+        this.focusElement.textContent = this.getValue(this.getValueData(this.focusElement)).toString();
+        this.element.focus();
+    }
+
+    private selectAllEditText()
+    {
+        this.editTextBox.setSelectionRange(0, this.editTextBox.value.length);
     }
 
     public load()
@@ -443,10 +462,11 @@ class AnimatorModule extends Module
         this.script = toViewModel(scripts.allMotionScripts[2]);
         this.buildUI();
 
+        // TODO TODO TODO why does rebuilding the UI remove all but the first?
+        this.buildUI();
+
         this.element.tabIndex = 0; // allow element to have keyboard focus
         this.element.addEventListener('keydown', this.onKeyDown.bind(this));
-
-//        this.intervalHandler = window.setInterval(() => this.buildUI(toViewModel(scripts.allMotionScripts[Math.floor(Math.random() * scripts.allMotionScripts.length)])), 5000);
     }
 
     private moveFocus(deltaX: number, deltaY: number)
@@ -521,13 +541,43 @@ class AnimatorModule extends Module
         return true;
     }
 
+    private getNudgeSize(e: KeyboardEvent)
+    {
+        return e.shiftKey
+            ? 10
+            : e.ctrlKey
+                ? 100
+                : 1;
+    }
+
     private onKeyDown(e: KeyboardEvent)
     {
+        if (e.keyCode >= 48 && e.keyCode <= 57)
+        {
+            this.startEdit(this.focusElement);
+            this.editTextBox.value = (e.keyCode - 48).toString();
+            e.preventDefault();
+            return;
+        }
+
+        if (e.keyCode >= 96 && e.keyCode <= 105)
+        {
+            this.startEdit(this.focusElement);
+            this.editTextBox.value = (e.keyCode - 96).toString();
+            e.preventDefault();
+            return;
+        }
+
         switch (e.keyCode)
         {
             case KEY_ESC:
-                console.log('KEY_ESC');
                 this.clearFocus();
+                e.preventDefault();
+                break;
+
+            case KEY_ENTER:
+                this.startEdit(this.focusElement);
+                e.preventDefault();
                 break;
 
             case KEY_LEFT:  if (this.moveFocus(-1,  0)) e.preventDefault(); break;
@@ -536,15 +586,69 @@ class AnimatorModule extends Module
             case KEY_DOWN:  if (this.moveFocus( 0,  1)) e.preventDefault(); break;
 
             default:
-                console.dir(e);
+                console.dir(e.keyCode);
         }
     }
 
-//    private intervalHandler: number;
-
-    public unload()
+    private onEditBoxKeyDown(e: KeyboardEvent): void
     {
-//        window.clearInterval(this.intervalHandler);
+        // When editing, disallow key events from bubbling to parent(s)
+        e.stopPropagation();
+
+        switch (e.keyCode)
+        {
+            case KEY_ENTER:
+            {
+                if (this.tryCommitEdit())
+                    this.stopEdit();
+                else
+                    this.editTextBox.classList.add('invalid');
+                break;
+            }
+            case KEY_ESC:
+            {
+                this.stopEdit();
+                break;
+            }
+            case KEY_LEFT:
+            {
+                if (this.editTextBox.selectionStart === this.editTextBox.selectionEnd && this.editTextBox.selectionStart === 0)
+                    e.preventDefault();
+                break;
+            }
+            case KEY_RIGHT:
+            {
+                if (this.editTextBox.selectionStart === this.editTextBox.selectionEnd &&
+                    this.editTextBox.selectionStart === this.editTextBox.value.length)
+                    e.preventDefault();
+                break;
+            }
+            case KEY_UP:
+            {
+                // Increment
+                try { this.editTextBox.value = (parseInt(this.editTextBox.value) + this.getNudgeSize(e)).toString(); } catch(err) {}
+                this.selectAllEditText();
+                e.preventDefault();
+                break;
+            }
+            case KEY_DOWN:
+            {
+                // Decrement
+                try { this.editTextBox.value = (parseInt(this.editTextBox.value) - this.getNudgeSize(e)).toString(); } catch(err) {}
+                this.selectAllEditText();
+                e.preventDefault();
+                break;
+            }
+            default:
+            {
+                if (!e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.keyCode >= 65 && e.keyCode <= 90)
+                {
+                    // Disallow any A-Z characters
+                    e.preventDefault();
+                    return;
+                }
+            }
+        }
     }
 }
 
