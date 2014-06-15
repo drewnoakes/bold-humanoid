@@ -378,8 +378,6 @@ class AnimatorModule extends Module
 
         // Focus the outer module-level element, where we trap keyboard events
         this.element.focus();
-
-        console.dir(this.getValueData(element));
     }
 
     private startEdit(element: HTMLLIElement)
@@ -505,8 +503,6 @@ class AnimatorModule extends Module
 
     private onKeyDown(e: KeyboardEvent)
     {
-        console.dir(e);
-
         switch (e.keyCode)
         {
             case KEY_ESC:
@@ -518,6 +514,9 @@ class AnimatorModule extends Module
             case KEY_RIGHT: if (this.moveFocus( 1,  0)) e.preventDefault(); break;
             case KEY_UP:    if (this.moveFocus( 0, -1)) e.preventDefault(); break;
             case KEY_DOWN:  if (this.moveFocus( 0,  1)) e.preventDefault(); break;
+
+            default:
+                console.dir(e);
         }
     }
 
