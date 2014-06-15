@@ -1,6 +1,6 @@
 #include "pixellabel.hh"
 
-uchar bold::PixelLabel::nextId = 1;
+uint8_t bold::PixelLabel::s_nextID = 1;
 
 std::ostream& bold::operator<<(std::ostream &stream, bold::PixelLabel const& pixelLabel)
 {
