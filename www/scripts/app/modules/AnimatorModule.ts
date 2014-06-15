@@ -261,6 +261,8 @@ class AnimatorModule extends Module
 
     private buildUI()
     {
+        var focussedValueData = this.focusElement != null ? this.getValueData(this.focusElement) : null;
+
         var t = this;
 
         // Set the header directly
@@ -350,6 +352,8 @@ class AnimatorModule extends Module
             .on('click', function(data: any, index: number) { t.setFocus(this); })
             .on('dblclick', function(data: any, index: number) { t.startEdit(this); });
 
+        if (focussedValueData != null)
+            this.setFocus(this.getValueElement(focussedValueData));
     }
 
     private clearFocus(): void
