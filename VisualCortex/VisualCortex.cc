@@ -50,12 +50,12 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_occlusionEdgeColour       = Config::getSetting<Colour::bgr>("round-table.image-colours.occlusion-edge");
   d_calibrationColour         = Config::getSetting<Colour::bgr>("round-table.image-colours.calibration");
 
-  d_goalLabel     = make_shared<PixelLabel>("Goal",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
-  d_ballLabel     = make_shared<PixelLabel>("Ball",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
-  d_fieldLabel    = make_shared<PixelLabel>("Field",   Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
-  d_lineLabel     = make_shared<PixelLabel>("Line",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
-  d_cyanLabel     = make_shared<PixelLabel>("Cyan",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.cyan"));
-  d_magentaLabel  = make_shared<PixelLabel>("Magenta", Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
+  d_goalLabel     = make_shared<RangePixelLabel>("Goal",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
+  d_ballLabel     = make_shared<RangePixelLabel>("Ball",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
+  d_fieldLabel    = make_shared<RangePixelLabel>("Field",   Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
+  d_lineLabel     = make_shared<RangePixelLabel>("Line",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
+  d_cyanLabel     = make_shared<RangePixelLabel>("Cyan",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.cyan"));
+  d_magentaLabel  = make_shared<RangePixelLabel>("Magenta", Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
 
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_cyanLabel, d_magentaLabel, d_lineLabel };
@@ -78,12 +78,12 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   createLookupTable();
 
   // Recreate lookup table on dynamic configuration changes
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.goal") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_goalLabel ->setHsvRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.ball") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_ballLabel ->setHsvRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_fieldLabel->setHsvRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_lineLabel ->setHsvRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.cyan") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_cyanLabel ->setHsvRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.magenta") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_magentaLabel ->setHsvRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.goal") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_goalLabel->setHSVRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.ball") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_ballLabel->setHSVRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_fieldLabel->setHSVRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_lineLabel->setHSVRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.cyan") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_cyanLabel->setHSVRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.magenta") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_magentaLabel->setHSVRange(value); createLookupTable(); });
 
   // ball detection settings
   d_minBallAreaPixels              = Config::getSetting<int>("vision.ball-detection.min-area-px");

@@ -8,7 +8,7 @@
 #include <opencv2/core/core.hpp>
 
 #include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
-#include "../PixelLabel/pixellabel.hh"
+#include "../PixelLabel/RangePixelLabel/rangepixellabel.hh"
 #include "../Setting/setting.hh"
 #include "../util/meta.hh"
 
@@ -145,12 +145,12 @@ namespace bold
     std::shared_ptr<DataStreamer> d_dataStreamer;
     std::shared_ptr<Spatialiser> d_spatialiser;
 
-    std::shared_ptr<PixelLabel> d_goalLabel;
-    std::shared_ptr<PixelLabel> d_ballLabel;
-    std::shared_ptr<PixelLabel> d_fieldLabel;
-    std::shared_ptr<PixelLabel> d_lineLabel;
-    std::shared_ptr<PixelLabel> d_cyanLabel;
-    std::shared_ptr<PixelLabel> d_magentaLabel;
+    std::shared_ptr<RangePixelLabel> d_goalLabel;
+    std::shared_ptr<RangePixelLabel> d_ballLabel;
+    std::shared_ptr<RangePixelLabel> d_fieldLabel;
+    std::shared_ptr<RangePixelLabel> d_lineLabel;
+    std::shared_ptr<RangePixelLabel> d_cyanLabel;
+    std::shared_ptr<RangePixelLabel> d_magentaLabel;
 
     std::shared_ptr<ImageLabeller> d_imageLabeller;
 
