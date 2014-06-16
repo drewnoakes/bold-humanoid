@@ -155,7 +155,7 @@ function withActions(idPrefix: string, callback: (actions:Action[])=>void)
 export function send(message: ControlMessage)
 {
     // { "type": "action", "id": "some.action" }
-    // { "type": "setting", "path": "some.setting", "value": 1234 }
+    // { "type": "setting", "id": "some.setting", "args": 1234 }
 
     console.log('Sending control message', message);
 
