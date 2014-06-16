@@ -66,6 +66,8 @@ shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
     stage->repeatCount = (uchar)stageMember.TryGetUintValue("repeat", 1);
     stage->speed       = (uchar)stageMember.TryGetUintValue("speed", Stage::DEFAULT_SPEED);
 
+    ASSERT(stage->speed != 0);
+
     auto gainsMember = stageMember.FindMember("pGains");
     if (gainsMember)
     {
