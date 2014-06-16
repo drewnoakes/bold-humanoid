@@ -43,7 +43,11 @@ var KEY_TAB = 9,
     KEY_LEFT = 37,
     KEY_UP = 38,
     KEY_RIGHT = 39,
-    KEY_DOWN = 40;
+    KEY_DOWN = 40,
+    KEY_G = 71,
+    KEY_J = 74,
+    KEY_K = 75,
+    KEY_P = 80;
 
 function getJointValue(values: scripts.JointValues, jointId: number): number
 {
@@ -91,6 +95,31 @@ function getJointGain(gains: scripts.JointValues, jointId: number): number
     return v == null ? DEFAULT_PGAIN : v;
 }
 
+
+function buildGainsObject(gains: number[]): scripts.JointValues
+{
+    var obj: scripts.JointValues = {};
+    for (var j = 1; j <= 20; j++)
+    {
+        if (gains[j - 1] === DEFAULT_PGAIN)
+            continue;
+        // TODO conflate equal pairs
+        obj[constants.jointMotionFileNames[j]] = gains[j - 1];
+    }
+    return obj;
+}
+
+function buildValuesObject(gains: number[]): scripts.JointValues
+{
+    var obj: scripts.JointValues = {};
+    for (var j = 1; j <= 20; j++)
+    {
+        // TODO conflate mirrored pairs
+        obj[constants.jointMotionFileNames[j]] = gains[j - 1];
+    }
+    return obj;
+}
+
 function toViewModel(script: scripts.MotionScript): IScriptViewModel
 {
     return {
@@ -111,6 +140,57 @@ function toViewModel(script: scripts.MotionScript): IScriptViewModel
             }))
         }))
     }
+}
+
+function fromViewModel(viewModel: IScriptViewModel): scripts.MotionScript
+{
+    return {
+        name: viewModel.name,
+        controlsHead: viewModel.controlsHead,
+        controlsArms: viewModel.controlsArms,
+        controlsLegs: viewModel.controlsLegs,
+        stages: _.map(viewModel.stages, (stage: IStageViewModel) => ({
+            repeat: stage.repeat,
+            speed: stage.speed,
+            pGains: buildGainsObject(stage.pGains),
+            keyFrames: _.map(stage.keyFrames, (keyFrame: IKeyFrameViewModel) => ({
+                pauseCycles: keyFrame.pauseCycles,
+                moveCycles: keyFrame.moveCycles,
+                values: buildValuesObject(keyFrame.values)
+            }))
+        }))
+    }
+}
+
+function makeMoveToScript(viewModel: IScriptViewModel, d: ValueData, moveCyclesOverride?: number): scripts.MotionScript
+{
+    var stage = viewModel.stages[d.stageIndex],
+        keyFrame = stage.keyFrames[d.keyFrameIndex],
+        moveCycles = moveCyclesOverride == null ? keyFrame.moveCycles : moveCyclesOverride;
+
+    return {
+        name: "Move to...",
+        controlsHead: viewModel.controlsHead,
+        controlsArms: viewModel.controlsArms,
+        controlsLegs: viewModel.controlsLegs,
+        stages: [
+            {
+                pGains: buildGainsObject(stage.pGains),
+                keyFrames: [
+                    {
+                        moveCycles: moveCycles,
+                        values: buildValuesObject(keyFrame.values)
+                    }
+                ]
+            }
+        ]
+    };
+}
+
+function playScript(script: scripts.MotionScript)
+{
+    var playScriptAction = control.getAction("motion-module.play-script-content");
+    playScriptAction.activate(script);
 }
 
 interface IKeyFrameViewModel
@@ -550,24 +630,47 @@ class AnimatorModule extends Module
                 : 1;
     }
 
+    private stepKeyFrame(d: ValueData, forward: boolean)
+    {
+        if (d.type !== ValueType.MotorValue)
+            return false;
+
+        if (forward)
+        {
+            if (d.keyFrameIndex < this.script.stages[d.stageIndex].keyFrames.length - 1)
+            {
+                d.keyFrameIndex++;
+                return true;
+            }
+
+            if (d.stageIndex < this.script.stages.length - 1)
+            {
+                d.stageIndex++;
+                d.keyFrameIndex = 0;
+                return true;
+            }
+        }
+        else
+        {
+            if (d.keyFrameIndex > 0)
+            {
+                d.keyFrameIndex--;
+                return true;
+            }
+
+            if (d.stageIndex > 0)
+            {
+                d.stageIndex--;
+                d.keyFrameIndex = this.script.stages[d.stageIndex].keyFrames.length - 1;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private onKeyDown(e: KeyboardEvent)
     {
-        if (e.keyCode >= 48 && e.keyCode <= 57)
-        {
-            this.startEdit(this.focusElement);
-            this.editTextBox.value = (e.keyCode - 48).toString();
-            e.preventDefault();
-            return;
-        }
-
-        if (e.keyCode >= 96 && e.keyCode <= 105)
-        {
-            this.startEdit(this.focusElement);
-            this.editTextBox.value = (e.keyCode - 96).toString();
-            e.preventDefault();
-            return;
-        }
-
         switch (e.keyCode)
         {
             case KEY_ESC:
@@ -585,8 +688,63 @@ class AnimatorModule extends Module
             case KEY_UP:    if (this.moveFocus( 0, -1)) e.preventDefault(); break;
             case KEY_DOWN:  if (this.moveFocus( 0,  1)) e.preventDefault(); break;
 
+            case KEY_G:
+                // Move slowly to the current pose
+                var d = this.getValueData(this.focusElement);
+                if (d.type === ValueType.MotorValue)
+                {
+                    playScript(makeMoveToScript(this.script, d, 128));
+                    e.preventDefault();
+                }
+                break;
+
+            case KEY_K:
+                // Move to the next pose
+                var d = this.getValueData(this.focusElement);
+                if (this.stepKeyFrame(d, true))
+                {
+                    this.setFocus(this.getValueElement(d));
+                    playScript(makeMoveToScript(this.script, d));
+                    e.preventDefault();
+                }
+                break;
+
+            case KEY_J:
+                // Move to the previous pose
+                var d = this.getValueData(this.focusElement);
+                if (this.stepKeyFrame(d, false))
+                {
+                    this.setFocus(this.getValueElement(d));
+                    playScript(makeMoveToScript(this.script, d));
+                    e.preventDefault();
+                }
+                break;
+
+            case KEY_P:
+                playScript(fromViewModel(this.script));
+                e.preventDefault();
+                break;
+
             default:
+            {
+                if (e.keyCode >= 48 && e.keyCode <= 57)
+                {
+                    this.startEdit(this.focusElement);
+                    this.editTextBox.value = (e.keyCode - 48).toString();
+                    e.preventDefault();
+                    return;
+                }
+
+                if (e.keyCode >= 96 && e.keyCode <= 105)
+                {
+                    this.startEdit(this.focusElement);
+                    this.editTextBox.value = (e.keyCode - 96).toString();
+                    e.preventDefault();
+                    return;
+                }
+
                 console.dir(e.keyCode);
+            }
         }
     }
 
