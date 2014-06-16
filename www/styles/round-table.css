@@ -1514,7 +1514,7 @@ div.module.animator ul.values > li
   /*text-align: left;*/
 }
 
-div.module.animator li.focussed
+div.module.animator div.module-content:focus li.focussed
 {
   outline: -webkit-focus-ring-color auto 5px;
 }
