@@ -7,7 +7,10 @@
 #include "../../ThreadUtil/threadutil.hh"
 #include "../../util/assert.hh"
 
+#include <rapidjson/document.h>
+
 using namespace bold;
+using namespace rapidjson;
 using namespace std;
 
 void MotionScriptModule::createActions(string const& path, shared_ptr<MotionScriptModule> const& module)
@@ -21,12 +24,19 @@ void MotionScriptModule::createActions(string const& path, shared_ptr<MotionScri
     return a->getName() < b->getName();
   });
 
+  // Add an action for each known motion script
   for (shared_ptr<MotionScript> script : scripts)
   {
     stringstream id;
     id << "motion-script." << script->getName();
     Config::addAction(id.str(), script->getName(), [module,script]() { module->run(script); });
   }
+
+  Config::addAction("motion-module.play-script-content", "Play Script", [module](Value* value)
+  {
+    auto script = MotionScript::fromJsonValue(*value);
+    module->run(script);
+  });
 
   log::info("MotionScriptModule::MotionScriptModule") << "Loaded " << scripts.size() << " motion scripts";
 }
