@@ -150,11 +150,11 @@ function fromViewModel(viewModel: IScriptViewModel): scripts.MotionScript
         controlsArms: viewModel.controlsArms,
         controlsLegs: viewModel.controlsLegs,
         stages: _.map(viewModel.stages, (stage: IStageViewModel) => ({
-            repeat: stage.repeat,
-            speed: stage.speed,
+            repeat: stage.repeat === 0 ? undefined : stage.repeat,
+            speed: stage.speed === 0 ? undefined : stage.speed,
             pGains: buildGainsObject(stage.pGains),
             keyFrames: _.map(stage.keyFrames, (keyFrame: IKeyFrameViewModel) => ({
-                pauseCycles: keyFrame.pauseCycles,
+                pauseCycles: keyFrame.pauseCycles === 0 ? undefined : keyFrame.pauseCycles,
                 moveCycles: keyFrame.moveCycles,
                 values: buildValuesObject(keyFrame.values)
             }))
