@@ -47,8 +47,16 @@ int DataStreamer::callback_control(
     ASSERT(ThreadUtil::isDataStreamerThread());
     if (len != 0)
     {
-      string str((char const*)in, len);
-      processCommand(str, jsonSession, context, wsi);
+      static string message;
+      message.append((char const*)in, len);
+
+      if (libwebsockets_remaining_packet_payload(wsi) == 0)
+      {
+        // We now have all the data
+        processCommand(message, jsonSession, context, wsi);
+
+        message.clear();
+      }
     }
     break;
   }
