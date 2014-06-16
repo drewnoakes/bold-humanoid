@@ -10,6 +10,21 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
     d_isStopRequested(false),
     d_thread()
 {
+  // Set libwebsockets logging level, and redirect logging through our log framework
+  lws_set_log_level(LLL_ERR | LLL_WARN, [](int level, char const* line)
+  {
+    // Trim the newline character
+    string l(line);
+    l = l.substr(0, l.length() - 1);
+
+    if (level == LLL_ERR)
+      log::error("libwebsockets") << l;
+    else if (level == LLL_WARN)
+      log::warning("libwebsockets") << l;
+    else
+      log::info("libwebsockets") << l;
+  });
+
   // We have three special protocols: HTTP-only, Camera and Control.
   // These are followed by N other protocols, one per type of state in the system
 
