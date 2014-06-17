@@ -40,7 +40,7 @@ void OrientationTracker::reset()
 
 Quaterniond OrientationTracker::getQuaternion() const
 {
-  return Quaterniond(SEq_1, SEq_2, SEq_3, SEq_4);
+  return Quaterniond(SEq_4, SEq_1, SEq_2, SEq_3);
 }
 
 void OrientationTracker::observeTyped(shared_ptr<HardwareState const> const& state, SequentialTimer& timer)
