@@ -85,6 +85,7 @@ class PolarTrace
         context.fillRect(0, 0, this.length, this.length);
 
         context.translate(this.length / 2, this.length / 2);
+        context.scale(1, -1);
 
         var x = xValue * this.scale,
             y = yValue * this.scale;
