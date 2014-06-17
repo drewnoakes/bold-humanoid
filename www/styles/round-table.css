@@ -917,13 +917,13 @@ div.module.localiser div.marker.goal
 
 /********************************************************************/
 
-div.module.sensors .polar-trace-container
+div.module.imu .polar-trace-container
 {
   display: inline-block;
   position: relative;
 }
 
-div.module.sensors .polar-trace-container + .polar-trace-container
+div.module.imu .polar-trace-container + .polar-trace-container
 {
   margin-left: 20px;
 }

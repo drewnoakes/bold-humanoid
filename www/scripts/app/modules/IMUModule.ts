@@ -67,7 +67,7 @@ class IMUModule extends Module
 
     constructor()
     {
-        super('sensors', 'IMU', {fullScreen: true});
+        super('imu', 'IMU', {fullScreen: true});
     }
 
     public load()
