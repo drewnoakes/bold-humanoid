@@ -84,7 +84,7 @@ void OrientationTracker::updateMadgwick(shared_ptr<HardwareState const> const& s
   float a_z = acc.z();
 
   //
-  // Auxilliary variables to avoid repeated calcualtions
+  // Auxiliary variables to avoid repeated calculations
   //
 
   float halfSEq_1 = 0.5f * SEq_1;
