@@ -40,3 +40,10 @@ TEST (HistogramPixelLabelTests, index)
   EXPECT_EQ ( 257, label.hsvToIndex(0, 1, 1) );
   EXPECT_EQ ( 65536, label.hsvToIndex(1, 0, 0) );
 }
+
+TEST (HistogramPixelLabelTests, empty)
+{
+  HistogramPixelLabel<8> label("label");
+
+  EXPECT_EQ ( 1.0f / (256 * 256 * 256), label.labelProb(Colour::hsv(0, 0, 0)) );
+}

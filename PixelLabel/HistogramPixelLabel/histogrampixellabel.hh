@@ -17,7 +17,10 @@ namespace bold
 
     float labelProb(Colour::hsv const& pixelColour) const override
     {
-      return float(getHistogramValue(pixelColour.h, pixelColour.s, pixelColour.v)) / d_totalCount;
+      return
+        d_totalCount == 0 ?
+        1.0 / (NBINS * NBINS * NBINS) :
+        float(getHistogramValue(pixelColour.h, pixelColour.s, pixelColour.v)) / d_totalCount;
     }
 
     Colour::hsv modalColour() const override
