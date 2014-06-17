@@ -75,7 +75,7 @@ class IMUModule extends Module
         this.seriesArray = [];
         this.chartCanvases = [];
 
-        this.buildCharts(this.element);
+        this.buildCharts();
 
         var addPolarTrace = name =>
         {
@@ -105,7 +105,7 @@ class IMUModule extends Module
         this.closeables.add(() => _.each(this.charts, chart => chart.stop()));
     }
 
-    private buildCharts(element: HTMLDivElement)
+    private buildCharts()
     {
         this.charts = [];
         _.each(charts, chartDefinition =>
@@ -125,12 +125,12 @@ class IMUModule extends Module
 
             var h2 = document.createElement('h2');
             h2.textContent = chartDefinition.title;
-            element.appendChild(h2);
+            this.element.appendChild(h2);
 
             var canvas = document.createElement('canvas');
             canvas.width = 640;
             canvas.height = chartHeight;
-            element.appendChild(canvas);
+            this.element.appendChild(canvas);
 
             this.chartCanvases.push(canvas);
 
