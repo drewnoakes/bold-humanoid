@@ -169,4 +169,11 @@ void OrientationTracker::updateSum(shared_ptr<HardwareState const> const& state)
   SEq_2 = curr.x();
   SEq_3 = curr.y();
   SEq_4 = curr.z();
+
+  // Normalise quaternion
+  float norm = sqrt(SEq_1 * SEq_1 + SEq_2 * SEq_2 + SEq_3 * SEq_3 + SEq_4 * SEq_4);
+  SEq_1 /= norm;
+  SEq_2 /= norm;
+  SEq_3 /= norm;
+  SEq_4 /= norm;
 }
