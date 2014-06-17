@@ -8,12 +8,15 @@ class PolarTrace
 {
     private length: number = 200;
     private lineStyle: string = '#44C425';
-    private axisStyle: string = 'rgba(255,255,255,0.5)';
+    private xAxisStyle: string = 'rgba(255,255,255,0.5)';
+    private yAxisStyle: string = 'rgba(255,255,255,0.5)';
     private ringStyle: string = 'rgba(255,255,255,0.5)';
     private maxValue: number = 1.5;
     private dotSize: number = 6;
     private ringValues: number[] = [0.5, 1, 1.5];
     private fadeRate: number = 0.02;
+    private xColour: string;
+    private yColour: string;
 
     private scale: number;
 
@@ -50,16 +53,33 @@ class PolarTrace
         this.seriesContext.fillRect(0, 0, this.length, this.length);
     }
 
+    public setAxesColours(xAxisStyle: string, yAxisStyle: string)
+    {
+        this.xAxisStyle = xAxisStyle;
+        this.yAxisStyle = yAxisStyle;
+        this.renderOverlay();
+    }
+
     public renderOverlay()
     {
         var overlayContext = this.overlayCanvas.getContext('2d');
 
+        overlayContext.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+
+        overlayContext.save();
+
         // draw axes
         overlayContext.translate(this.length / 2, this.length / 2);
-        overlayContext.strokeStyle = this.axisStyle;
         overlayContext.lineWidth = 1;
+
+        overlayContext.beginPath();
+        overlayContext.strokeStyle = this.yAxisStyle;
         overlayContext.moveTo(0.5, -this.length / 2);
         overlayContext.lineTo(0.5, this.length / 2);
+        overlayContext.stroke();
+
+        overlayContext.beginPath();
+        overlayContext.strokeStyle = this.xAxisStyle;
         overlayContext.moveTo(-this.length / 2, 0.5);
         overlayContext.lineTo(this.length / 2, 0.5);
         overlayContext.stroke();
@@ -74,6 +94,8 @@ class PolarTrace
             overlayContext.arc(0, 0, radius, 0, 2 * Math.PI, false);
             overlayContext.stroke();
         }
+
+        overlayContext.restore();
     }
 
     public addValue(xValue: number, yValue: number)

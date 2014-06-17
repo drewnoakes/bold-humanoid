@@ -79,7 +79,7 @@ class IMUModule extends Module
 
         this.buildCharts();
 
-        var addPolarTrace = name =>
+        var addPolarTrace = (name: string, xColour: string, yColour: string) =>
         {
             var trace = new PolarTrace(),
                 div = document.createElement('div'),
@@ -88,14 +88,15 @@ class IMUModule extends Module
             h2.textContent = name;
             div.appendChild(h2);
             div.appendChild(trace.element);
+            trace.setAxesColours(xColour, yColour)
 
             this.element.appendChild(div);
             return trace;
         };
 
-        this.polarTraceXY = addPolarTrace('X|Y');
-        this.polarTraceYZ = addPolarTrace('Y|Z');
-        this.polarTraceXZ = addPolarTrace('X|Z');
+        this.polarTraceXY = addPolarTrace('X|Y (above)', red, grn);
+        this.polarTraceYZ = addPolarTrace('Y|Z (side)', grn, blu);
+        this.polarTraceXZ = addPolarTrace('X|Z (behind)', red, blu);
 
         this.closeables.add(new data.Subscription<state.Hardware>(
             constants.protocols.hardwareState,
