@@ -50,11 +50,9 @@ CM730Snapshot::CM730Snapshot(BulkReadTable const& data)
   );
 
   // TODO when IMU calibration data available, use it here
-  // NOTE the accelerometer uses a different set of axes than the agent frame,
-  //      so we flip the X & Y axes here to make them identical.
-  auto accX = CM730::flipImuValue(data.readWord(CM730::P_ACCEL_X_L)); // X = -X
-  auto accY = CM730::flipImuValue(data.readWord(CM730::P_ACCEL_Y_L)); // Y = -Y
-  auto accZ = data.readWord(CM730::P_ACCEL_Z_L);                      // Z =  Z
+  auto accX = data.readWord(CM730::P_ACCEL_X_L);
+  auto accY = data.readWord(CM730::P_ACCEL_Y_L);
+  auto accZ = data.readWord(CM730::P_ACCEL_Z_L);
   accRaw = Vector3i(accX, accY, accZ);
   acc = Vector3d(
     CM730::accValueToGs(accX),
