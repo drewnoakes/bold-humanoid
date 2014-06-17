@@ -917,6 +917,25 @@ div.module.localiser div.marker.goal
 
 /********************************************************************/
 
+div.module.imu div.legend
+{
+  float: right;
+}
+
+div.module.imu div.legend > div.tile
+{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 1em;
+  margin-right: 4px;
+}
+
+div.module.imu div.legend > div.label
+{
+  display: inline-block;
+}
+
 div.module.imu .polar-trace-container
 {
   display: inline-block;

@@ -75,6 +75,8 @@ class IMUModule extends Module
         this.seriesArray = [];
         this.chartCanvases = [];
 
+        this.buildLegend();
+
         this.buildCharts();
 
         var addPolarTrace = name =>
@@ -103,6 +105,31 @@ class IMUModule extends Module
         ));
 
         this.closeables.add(() => _.each(this.charts, chart => chart.stop()));
+    }
+
+    private buildLegend()
+    {
+        var legend = document.createElement('div');
+        legend.className = 'legend';
+
+        var addItem = (name: string, colour: string) =>
+        {
+            var tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.style.backgroundColor = colour;
+            legend.appendChild(tile);
+
+            var label = document.createElement('div');
+            label.className = 'label';
+            label.textContent = name;
+            legend.appendChild(label);
+        };
+
+        addItem("X", red);
+        addItem("Y", grn);
+        addItem("Z", blu);
+
+        this.element.appendChild(legend);
     }
 
     private buildCharts()
