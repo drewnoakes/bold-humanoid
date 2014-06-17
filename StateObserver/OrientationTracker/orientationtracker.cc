@@ -159,9 +159,9 @@ void OrientationTracker::updateSum(shared_ptr<HardwareState const> const& state)
   Quaternionf curr(SEq_1, SEq_2, SEq_3, SEq_4);
   Vector3d const& gyro(state->getCM730State().gyro);
   Matrix3f m;
-  m = AngleAxisf(Math::degToRad(gyro.x()), Vector3f::UnitX())
-    * AngleAxisf(Math::degToRad(gyro.y()), Vector3f::UnitY())
-    * AngleAxisf(Math::degToRad(gyro.z()), Vector3f::UnitZ());
+  m = AngleAxisf((float)Math::degToRad(gyro.x()), Vector3f::UnitX())
+    * AngleAxisf((float)Math::degToRad(gyro.y()), Vector3f::UnitY())
+    * AngleAxisf((float)Math::degToRad(gyro.z()), Vector3f::UnitZ());
 
   curr = curr * m;
 
