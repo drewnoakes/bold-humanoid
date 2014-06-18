@@ -64,13 +64,13 @@ namespace bold
       ratio = clamp(ratio, 0.0, 1.0);
 
       return lowerOutput + (upperOutput - lowerOutput) * ratio;
-    };
+    }
 
     template<typename T>
     static constexpr T lerp(double const& ratio, T const& lowerOutput, T const& upperOutput)
     {
       return lowerOutput + (upperOutput - lowerOutput) * ratio;
-    };
+    }
 
     static double yawFromQuaternion(Eigen::Quaterniond const& quaternion)
     {
