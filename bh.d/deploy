@@ -15,21 +15,22 @@ for i in ${@:1}
 do
     echo deploying to darwin$i.local
 
-    rsync -zrPR www \
-        motionscripts \
-        configuration-team.json \
-        configuration-hatfield.json \
-        configuration-iran-open-2014.json \
-        configuration-drews.json \
-        configuration-metadata.json \
-        boldhumanoid.py \
-        boldpy \
-        bh \
-        bh.d \
-        .bash_team \
-        boldhumanoid \
-        swig/bold.py \
-        swig/_bold.so \
+    rsync -zrPR \
+        www                                \
+        motionscripts                      \
+        configuration-team.json            \
+        configuration-hatfield.json        \
+        configuration-iran-open-2014.json  \
+        configuration-drews.json           \
+        configuration-metadata.json        \
+        boldhumanoid.py                    \
+        boldpy                             \
+        bh                                 \
+        bh.d                               \
+        .bash_team                         \
+        boldhumanoid                       \
+        swig/bold.py                       \
+        swig/_bold.so                      \
         darwin@darwin$i.local:
 
     ssh darwin@darwin$i.local 'espeak -p 0 -s 130 -v english-mb-en1 "Full deployment complete"' 2> /dev/null &
