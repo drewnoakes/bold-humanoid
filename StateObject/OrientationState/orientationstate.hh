@@ -9,15 +9,13 @@ namespace bold
   class OrientationState : public StateObject
   {
   public:
-    OrientationState(Eigen::Quaterniond quaternion)
-    : d_quaternion(quaternion)
-    {}
+    OrientationState(Eigen::Quaterniond quaternion);
 
     Eigen::Quaterniond const& getQuaternion() const { return d_quaternion; };
 
-    double getPitchAngle() const;
-    double getRollAngle() const;
-    double getYawAngle() const;
+    double getPitchAngle() const { return d_pitch; }
+    double getRollAngle() const { return d_pitch; }
+    double getYawAngle() const { return d_pitch; }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -25,5 +23,8 @@ namespace bold
 
   private:
     Eigen::Quaterniond d_quaternion;
+    double d_pitch;
+    double d_roll;
+    double d_yaw;
   };
 }
