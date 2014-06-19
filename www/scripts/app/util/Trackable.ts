@@ -57,6 +57,8 @@ class Trackable<T>
     public onchange(callback: (value: T)=>void)
     {
         this.callbacks.push(callback);
+
+        return () => this.removeCallback(callback);
     }
 }
 
