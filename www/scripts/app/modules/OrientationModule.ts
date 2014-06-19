@@ -4,6 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 /// <reference path="../../libs/three.d.ts" />
+/// <reference path="../../libs/smoothie.d.ts" />
 
 import Animator = require('Animator');
 import constants = require('constants');
@@ -13,6 +14,49 @@ import data = require('data');
 import state = require('state');
 import Module = require('Module');
 
+var chartHeight = 150;
+
+var yawSeriesOptions   = { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 1 };
+var rollSeriesOptions  = { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 };
+var pitchSeriesOptions = { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 };
+
+var chartOptions = {
+    interpolation: 'step',
+    grid: {
+        strokeStyle: 'rgb(40, 40, 40)',
+        fillStyle: 'rgb(0, 0, 0)',
+        lineWidth: 1,
+        millisPerLine: 250,
+        verticalSections: 0,
+        sharpLines: true,
+        borderVisible: false
+    },
+    labels: {
+        fillStyle: '#ffffff'
+    },
+    yRangeFunction: range =>
+    {
+        var max = Math.max(Math.abs(range.min), Math.abs(range.max));
+
+        if (max < Math.PI/4)
+            return {min:-Math.PI/4, max:Math.PI/4};
+        if (max < Math.PI/2)
+            return {min:-Math.PI/2, max:Math.PI/2};
+        if (max < 3*Math.PI/4)
+            return {min:-3*Math.PI/4, max:3*Math.PI/4};
+        return {min:-Math.PI, max:Math.PI};
+    },
+    horizontalLines: [
+        {color: '#444444', lineWidth: 1, value: 3*Math.PI/4},
+        {color: '#888888', lineWidth: 1, value: Math.PI/2},
+        {color: '#444444', lineWidth: 1, value: Math.PI/4},
+        {color: '#CCCCCC', lineWidth: 1, value: 0},
+        {color: '#444444', lineWidth: 1, value: -Math.PI/4},
+        {color: '#888888', lineWidth: 1, value: -Math.PI/2},
+        {color: '#444444', lineWidth: 1, value: -3*Math.PI/4}
+    ]
+};
+
 class OrientationModule extends Module
 {
     private renderer: THREE.WebGLRenderer;
@@ -20,6 +64,12 @@ class OrientationModule extends Module
     private scene: THREE.Scene;
     private body: THREE.Object3D;
     private animator: Animator;
+
+    private chart: SmoothieChart;
+    private canvas: HTMLCanvasElement;
+    private yawSeries: TimeSeries;
+    private rollSeries: TimeSeries;
+    private pitchSeries: TimeSeries;
 
     constructor()
     {
@@ -31,12 +81,26 @@ class OrientationModule extends Module
     public load(width: number)
     {
         this.initialiseScene();
-        this.layout(width, 320, false);
 
         this.closeables.add(constants.isNightModeActive.track(
             isNightMode => this.renderer.setClearColor(isNightMode ? 0x211a20 : 0xcccccc, 1.0)));
 
         this.element.appendChild(this.renderer.domElement);
+
+        this.chart = new SmoothieChart(chartOptions);
+        this.canvas = document.createElement('canvas');
+        this.canvas.height = chartHeight;
+        this.canvas.width = width;
+        this.element.appendChild(this.canvas);
+
+        this.yawSeries = new TimeSeries();
+        this.rollSeries = new TimeSeries();
+        this.pitchSeries = new TimeSeries();
+        this.chart.addTimeSeries(this.yawSeries, yawSeriesOptions);
+        this.chart.addTimeSeries(this.rollSeries, rollSeriesOptions);
+        this.chart.addTimeSeries(this.pitchSeries, pitchSeriesOptions);
+        this.chart.streamTo(this.canvas, /*delayMs*/ 0);
+
 
         this.closeables.add(new data.Subscription<state.Orientation>(
             constants.protocols.orientationState,
@@ -48,6 +112,7 @@ class OrientationModule extends Module
         control.buildActions("orientation-tracker", this.element);
         control.buildSettings("orientation-tracker", this.element, this.closeables);
 
+        this.layout(width, 320, false);
         this.animator.start();
     }
 
@@ -55,9 +120,17 @@ class OrientationModule extends Module
     {
         this.animator.stop();
 
+        this.chart.stop();
+
         delete this.body;
         delete this.scene;
         delete this.renderer;
+
+        delete this.yawSeries;
+        delete this.rollSeries;
+        delete this.pitchSeries;
+        delete this.chart;
+        delete this.canvas;
     }
 
     private onOrientationState(data: state.Orientation)
@@ -65,6 +138,11 @@ class OrientationModule extends Module
         // Quaternion values are provided as [x,y,z,w]
         this.body.quaternion.set(data.quaternion[0], data.quaternion[1], data.quaternion[2], data.quaternion[3]);
         this.animator.setRenderNeeded();
+
+        var time = new Date().getTime();
+        this.pitchSeries.append(time, data.pitch);
+        this.rollSeries.append(time, data.roll);
+        this.yawSeries.append(time, data.yaw);
     }
 
     private initialiseScene()
@@ -142,12 +220,13 @@ class OrientationModule extends Module
 
     private layout(width: number, height: number, isFullScreen: boolean)
     {
-        width /= 2;
-        height = isFullScreen ? height : width;
+        height = isFullScreen ? (height - chartHeight - 30) : width;
 
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
+
+        this.canvas.width = width;
     }
 
     public onResized(width: number, height: number, isFullScreen: boolean)
