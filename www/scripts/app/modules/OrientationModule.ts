@@ -11,14 +11,20 @@ import constants = require('constants');
 import control = require('control');
 import threeUtil = require('util/three');
 import data = require('data');
+import dom = require('../../libs/domdomdom/domdomdom');
 import state = require('state');
+import Legend = require('controls/Legend');
 import Module = require('Module');
 
 var chartHeight = 150;
 
-var yawSeriesOptions   = { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 1 };
-var rollSeriesOptions  = { strokeStyle: 'rgb(255, 0, 0)', lineWidth: 1 };
-var pitchSeriesOptions = { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 };
+var red = '#ED303C',
+    grn = '#44C425',
+    blu = '#00A8C6';
+
+var pitchSeriesOptions = { strokeStyle: red, lineWidth: 1 };
+var rollSeriesOptions  = { strokeStyle: grn, lineWidth: 1 };
+var yawSeriesOptions   = { strokeStyle: blu, lineWidth: 1 };
 
 var chartOptions = {
     interpolation: 'step',
@@ -67,9 +73,9 @@ class OrientationModule extends Module
 
     private chart: SmoothieChart;
     private canvas: HTMLCanvasElement;
-    private yawSeries: TimeSeries;
-    private rollSeries: TimeSeries;
     private pitchSeries: TimeSeries;
+    private rollSeries: TimeSeries;
+    private yawSeries: TimeSeries;
 
     constructor()
     {
@@ -85,22 +91,28 @@ class OrientationModule extends Module
         this.closeables.add(constants.isNightModeActive.track(
             isNightMode => this.renderer.setClearColor(isNightMode ? 0x211a20 : 0xcccccc, 1.0)));
 
+        dom(this.element, this.renderer.domElement)
         this.element.appendChild(this.renderer.domElement);
 
+        dom(this.element, new Legend([
+            {name: "Pitch", colour: red},
+            {name: "Roll",  colour: grn},
+            {name: "Yaw",   colour: blu}
+        ]).element);
+
         this.chart = new SmoothieChart(chartOptions);
-        this.canvas = document.createElement('canvas');
+        this.canvas = <HTMLCanvasElement>dom('canvas');
         this.canvas.height = chartHeight;
         this.canvas.width = width;
         this.element.appendChild(this.canvas);
 
-        this.yawSeries = new TimeSeries();
-        this.rollSeries = new TimeSeries();
         this.pitchSeries = new TimeSeries();
-        this.chart.addTimeSeries(this.yawSeries, yawSeriesOptions);
-        this.chart.addTimeSeries(this.rollSeries, rollSeriesOptions);
+        this.rollSeries = new TimeSeries();
+        this.yawSeries = new TimeSeries();
         this.chart.addTimeSeries(this.pitchSeries, pitchSeriesOptions);
+        this.chart.addTimeSeries(this.rollSeries, rollSeriesOptions);
+        this.chart.addTimeSeries(this.yawSeries, yawSeriesOptions);
         this.chart.streamTo(this.canvas, /*delayMs*/ 0);
-
 
         this.closeables.add(new data.Subscription<state.Orientation>(
             constants.protocols.orientationState,
@@ -126,9 +138,9 @@ class OrientationModule extends Module
         delete this.scene;
         delete this.renderer;
 
-        delete this.yawSeries;
-        delete this.rollSeries;
         delete this.pitchSeries;
+        delete this.rollSeries;
+        delete this.yawSeries;
         delete this.chart;
         delete this.canvas;
     }
