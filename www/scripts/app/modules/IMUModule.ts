@@ -10,6 +10,7 @@ import data = require('data');
 import state = require('state');
 import constants = require('constants');
 import PolarTrace = require('controls/PolarTrace');
+import Legend = require('controls/Legend');
 import Module = require('Module');
 
 // TODO reuse RGB <==> XYZ colour coding on polar trace axes
@@ -110,27 +111,13 @@ class IMUModule extends Module
 
     private buildLegend()
     {
-        var legend = document.createElement('div');
-        legend.className = 'legend';
+        var legend = new Legend([
+            {name:"X", colour: red},
+            {name:"Y", colour: grn},
+            {name:"Z", colour: blu}
+        ]);
 
-        var addItem = (name: string, colour: string) =>
-        {
-            var tile = document.createElement('div');
-            tile.className = 'tile';
-            tile.style.backgroundColor = colour;
-            legend.appendChild(tile);
-
-            var label = document.createElement('div');
-            label.className = 'label';
-            label.textContent = name;
-            legend.appendChild(label);
-        };
-
-        addItem("X", red);
-        addItem("Y", grn);
-        addItem("Z", blu);
-
-        this.element.appendChild(legend);
+        this.element.appendChild(legend.element);
     }
 
     private buildCharts(width: number)
