@@ -6,6 +6,16 @@ using namespace bold;
 using namespace Eigen;
 using namespace rapidjson;
 
+double OrientationState::getPitchAngle() const
+{
+  return Math::normaliseRads(Math::pitchFromQuaternion(d_quaternion));
+}
+
+double OrientationState::getRollAngle() const
+{
+  return Math::normaliseRads(Math::rollFromQuaternion(d_quaternion));
+}
+
 double OrientationState::getYawAngle() const
 {
   return Math::normaliseRads(Math::yawFromQuaternion(d_quaternion));
