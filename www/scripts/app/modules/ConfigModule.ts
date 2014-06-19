@@ -20,7 +20,7 @@ class ConfigModule extends Module
         super('config', 'config');
     }
 
-    public load()
+    public load(width: number)
     {
         /*
             <div class="filter">

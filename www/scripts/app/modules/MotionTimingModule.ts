@@ -16,9 +16,10 @@ class MotionTimingModule extends Module
         this.pane = new TimingPane(constants.protocols.motionTimingState, 125/*fps*/);
     }
 
-    public load()
+    public load(width: number)
     {
         this.pane.load(this.element);
+        this.pane.onResized(width);
     }
 
     public unload()
@@ -28,7 +29,7 @@ class MotionTimingModule extends Module
 
     public onResized(width: number, height: number, isFullScreen: boolean)
     {
-        this.pane.onResized(width, height);
+        this.pane.onResized(width);
     }
 }
 

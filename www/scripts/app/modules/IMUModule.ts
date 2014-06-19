@@ -70,14 +70,14 @@ class IMUModule extends Module
         super('imu', 'IMU', {fullScreen: true});
     }
 
-    public load()
+    public load(width: number)
     {
         this.seriesArray = [];
         this.chartCanvases = [];
 
         this.buildLegend();
 
-        this.buildCharts();
+        this.buildCharts(width);
 
         var addPolarTrace = (name: string, xColour: string, yColour: string) =>
         {
@@ -133,7 +133,7 @@ class IMUModule extends Module
         this.element.appendChild(legend);
     }
 
-    private buildCharts()
+    private buildCharts(width: number)
     {
         this.charts = [];
         _.each(charts, chartDefinition =>
@@ -156,7 +156,7 @@ class IMUModule extends Module
             this.element.appendChild(h2);
 
             var canvas = document.createElement('canvas');
-            canvas.width = 640;
+            canvas.width = width;
             canvas.height = chartHeight;
             this.element.appendChild(canvas);
 

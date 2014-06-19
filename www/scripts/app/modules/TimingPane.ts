@@ -134,7 +134,7 @@ class TimingPane
         delete this.entryByLabel;
     }
 
-    public onResized(width:number, height:number)
+    public onResized(width:number)
     {
         this.canvas.width = width;
     }

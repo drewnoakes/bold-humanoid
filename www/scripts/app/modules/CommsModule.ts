@@ -41,7 +41,7 @@ class CommsModule extends Module
         super('comms', 'communication', {fullScreen: true});
     }
 
-    public load()
+    public load(width: number)
     {
         var controls = document.createElement('div');
         control.buildSettings("game-controller", controls, this.closeables);
@@ -50,6 +50,7 @@ class CommsModule extends Module
         this.chart = new SmoothieChart(chartOptions);
         this.canvas = document.createElement('canvas');
         this.canvas.height = chartHeight;
+        this.canvas.width = width;
         this.element.appendChild(this.canvas);
 
         this.ignoreSeries = new TimeSeries();

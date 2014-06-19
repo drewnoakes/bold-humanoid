@@ -29,7 +29,7 @@ class CameraModule extends Module
         super('camera', 'camera', {fullScreen: true});
     }
 
-    public load()
+    public load(width: number)
     {
         var content = <HTMLElement>moduleTemplate.create();
         this.element.appendChild(content);

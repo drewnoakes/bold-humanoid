@@ -45,7 +45,7 @@ class LocaliserModule extends Module
         super('localiser', 'localiser');
     }
 
-    public load()
+    public load(width: number)
     {
         this.chart = new SmoothieChart(chartOptions);
 

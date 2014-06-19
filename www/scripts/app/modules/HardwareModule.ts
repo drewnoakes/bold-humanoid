@@ -62,7 +62,7 @@ class HardwareModule extends Module
         this.temperatureCanvas.style.width = (width - rightMargin) + "px";
     }
 
-    public load()
+    public load(width: number)
     {
         this.temperatureSeriesById = [undefined];
 

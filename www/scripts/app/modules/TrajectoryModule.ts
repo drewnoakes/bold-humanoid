@@ -51,7 +51,7 @@ class TrajectoryModule extends Module
         this.mirrorValues.onchange(() => this.render());
     }
 
-    public load()
+    public load(width: number)
     {
         this.recordButton = document.createElement('button');
         this.recordButton.className = 'record';

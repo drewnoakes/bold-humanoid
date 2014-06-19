@@ -49,7 +49,7 @@ class LoadModule extends Module
         super('load', 'load');
     }
 
-    public load()
+    public load(width: number)
     {
         var posErrHeader = document.createElement('h2');
         posErrHeader.textContent = 'position error';

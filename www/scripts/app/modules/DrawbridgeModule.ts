@@ -62,7 +62,7 @@ class DrawbridgeModule extends Module
 
     // TODO catch and display errors
 
-    public load()
+    public load(width: number)
     {
         this.socket = new WebSocket("ws://localhost:8888", "drawbridge");
         this.socket.onmessage = msg => this.onMessage(JSON.parse(msg.data));

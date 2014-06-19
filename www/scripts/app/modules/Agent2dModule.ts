@@ -4,6 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
+import constants = require('constants');
 import control = require('control');
 import HeadControls = require('controls/HeadControls');
 import geometry = require('util/geometry');
@@ -20,7 +21,7 @@ class Agent2dModule extends Module
         super('agent-2d', '2d agent', {fullScreen: true});
     }
 
-    public load()
+    public load(width: number)
     {
         var mapDiv = document.createElement('div');
         mapDiv.className = 'map-layer-container';
@@ -55,6 +56,9 @@ class Agent2dModule extends Module
         this.map.addLayer(new mapping.AgentStationaryMapLayer(transform));
         this.map.addLayer(new mapping.AgentObservedGoalLayer(transform));
         this.map.addLayer(new mapping.AgentOcclusionAreaLayer(transform));
+
+        var fieldAspect = constants.fieldY / constants.fieldX;
+        this.map.setPixelSize(width, fieldAspect * width);
     }
 
     public onResized(width: number, height: number, isFullScreen: boolean)

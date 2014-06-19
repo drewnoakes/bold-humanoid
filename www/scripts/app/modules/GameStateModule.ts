@@ -44,7 +44,7 @@ class GameStateModule extends Module
         super('game', 'game');
     }
 
-    public load()
+    public load(width: number)
     {
         this.closeables.add(new data.Subscription<state.Game>(
             constants.protocols.gameState,

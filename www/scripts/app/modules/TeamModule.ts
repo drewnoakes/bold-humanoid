@@ -22,7 +22,7 @@ class TeamModule extends Module
         super('team', 'team', {fullScreen: true});
     }
 
-    public load()
+    public load(width: number)
     {
         this.closeables.add(new data.Subscription<state.Team>(
             constants.protocols.teamState,

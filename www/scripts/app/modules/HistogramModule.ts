@@ -34,7 +34,7 @@ class HistogramModule extends Module
         super('histogram', 'histogram');
     }
 
-    public load()
+    public load(width: number)
     {
         this.closeables.add(new data.Subscription<state.LabelCount>(
             constants.protocols.labelCountState,

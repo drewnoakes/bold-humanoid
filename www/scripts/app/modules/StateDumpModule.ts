@@ -26,7 +26,7 @@ class StateDumpModule extends Module
         super('state', 'state dump');
     }
 
-    public load()
+    public load(width: number)
     {
         var templateRoot = <HTMLElement>moduleTemplate.create();
 

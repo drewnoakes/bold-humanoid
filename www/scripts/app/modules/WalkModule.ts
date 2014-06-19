@@ -53,7 +53,7 @@ class WalkModule extends Module
         super('walk', 'walk');
     }
 
-    public load()
+    public load(width: number)
     {
         var templateRoot = <HTMLElement>moduleTemplate.create({radarSize: radarSize, chartWidth: 440, chartHeight: 60});
         this.element.appendChild(templateRoot);

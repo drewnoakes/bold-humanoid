@@ -16,7 +16,7 @@ class VisionModule extends Module
         super('vision', 'vision');
     }
 
-    public load()
+    public load(width: number)
     {
         var content = <HTMLDListElement>moduleTemplate.create();
         this.element.appendChild(content);

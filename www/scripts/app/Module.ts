@@ -14,7 +14,7 @@ class Module
     constructor(public id:string, public title:string, public options?: { fullScreen: boolean })
     {}
 
-    public load()
+    public load(width: number)
     {}
 
     public unload()

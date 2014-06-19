@@ -12,7 +12,7 @@ class MotionScriptModule extends Module
         super('motion-scripts', 'motion scripts');
     }
 
-    public load()
+    public load(width: number)
     {
         var container = document.createElement('div');
         container.className = 'control-container motion-script-controls';

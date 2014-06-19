@@ -64,7 +64,7 @@ class World3dModule extends Module
         this.animator = new Animator(this.render.bind(this));
     }
 
-    public load()
+    public load(width: number)
     {
         this.hinges = [];
         this.objectByName = {};

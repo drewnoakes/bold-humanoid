@@ -12,7 +12,7 @@ class VoiceModule extends Module
         super('voice', 'voice');
     }
 
-    public load()
+    public load(width: number)
     {
         var usage = document.createElement('div');
         usage.className = 'control-container';

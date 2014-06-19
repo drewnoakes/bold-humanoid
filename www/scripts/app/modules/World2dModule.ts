@@ -4,6 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
+import constants = require('constants');
 import control = require('control');
 import HeadControls = require('controls/HeadControls');
 import mapping = require('controls/mapping');
@@ -20,7 +21,7 @@ class World2dModule extends Module
         super('world-2d', '2d world', {fullScreen: true});
     }
 
-    public load()
+    public load(width: number)
     {
         var mapDiv = document.createElement('div');
         mapDiv.className = 'map-layer-container';
@@ -55,6 +56,9 @@ class World2dModule extends Module
         this.map.addLayer(new mapping.ObservedGoalLayer(transform));
         this.map.addLayer(new mapping.OcclusionAreaLayer(transform));
         this.map.addLayer(new mapping.TeamLayer(transform));
+
+        var fieldAspect = constants.fieldY / constants.fieldX;
+        this.map.setPixelSize(width, fieldAspect * width);
     }
 
     public unload()

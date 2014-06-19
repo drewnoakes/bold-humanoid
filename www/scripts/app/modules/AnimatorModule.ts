@@ -516,7 +516,7 @@ class AnimatorModule extends Module
         this.editTextBox.setSelectionRange(0, this.editTextBox.value.length);
     }
 
-    public load()
+    public load(width: number)
     {
         var content = <HTMLElement>animatorTemplate.create();
         this.element.appendChild(content);

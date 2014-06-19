@@ -28,7 +28,7 @@ class OrientationModule extends Module
         this.animator = new Animator(() => this.renderer.render(this.scene, this.camera));
     }
 
-    public load()
+    public load(width: number)
     {
         this.initialiseScene();
 

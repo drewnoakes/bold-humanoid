@@ -154,9 +154,9 @@ class ModuleHost
         util.clearChildren(container);
 
         module.element = container;
-        module.load();
+        module.load(container.clientWidth);
 
-        module.closeables.add(module.isFullScreen.track(isFullScreen =>
+        module.closeables.add(module.isFullScreen.onchange(isFullScreen =>
         {
             module.onResized(container.clientWidth, container.clientHeight, isFullScreen);
             if (isFullScreen)

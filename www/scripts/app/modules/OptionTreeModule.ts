@@ -30,7 +30,7 @@ class OptionTreeModule extends Module
         super('optiontree', 'option tree', {fullScreen: true});
     }
 
-    public load()
+    public load(width: number)
     {
         var controls = document.createElement('div');
         controls.className = 'control-container flow';
