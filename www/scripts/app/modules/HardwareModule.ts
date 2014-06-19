@@ -44,7 +44,7 @@ class HardwareModule extends Module
     private voltageSeries: TimeSeries;
     private temperatureCanvas: HTMLCanvasElement;
     private temperatureChart: SmoothieChart;
-    private temperatureSeriesById: TimeSeries[] = [undefined];
+    private temperatureSeriesById: TimeSeries[];
     private bodyFigure: BodyFigure;
     private lastDataTime: number;
 
@@ -64,6 +64,8 @@ class HardwareModule extends Module
 
     public load()
     {
+        this.temperatureSeriesById = [undefined];
+
         // VOLTAGE
 
         var voltageHeader = document.createElement('h2');
