@@ -72,15 +72,25 @@ namespace bold
       return lowerOutput + (upperOutput - lowerOutput) * ratio;
     }
 
+    // see http://answers.unity3d.com/questions/416169/finding-pitchrollyaw-from-quaternions.html
+
     static double yawFromQuaternion(Eigen::Quaterniond const& quaternion)
     {
       return asin(2*quaternion.x()*quaternion.y() + 2*quaternion.z()*quaternion.w());
+    }
 
-//       // Using http://stackoverflow.com/questions/5782658/extracting-yaw-from-a-quaternion
-//       double mag = sqrt(pow(quaternion.w(), 2.0) + pow(quaternion.z(), 2.0));
-//       if (mag == 0.0)
-//         return 0;
-//       return 2*acos(quaternion.w() / mag);
+    static double rollFromQuaternion(Eigen::Quaterniond const& quaternion)
+    {
+      return atan2(
+        2*quaternion.y()*quaternion.w() - 2*quaternion.x()*quaternion.z(),
+        1 - 2*quaternion.y()*quaternion.y() - 2*quaternion.z()*quaternion.z());
+    }
+
+    static double pitchFromQuaternion(Eigen::Quaterniond const& quaternion)
+    {
+      return atan2(
+        2*quaternion.x()*quaternion.w() - 2*quaternion.y()*quaternion.z(),
+        1 - 2*quaternion.x()*quaternion.x() - 2*quaternion.z()*quaternion.z());
     }
 
     /** Constrains the angle to range [-PI,PI). */
