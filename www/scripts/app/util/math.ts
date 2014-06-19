@@ -114,3 +114,23 @@ export function roundDownHumane(value: number)
     return magMsd * magPow;
 }
 
+// NOTE quaternion values are arranges as [x,y,z,w]
+
+export function yawFromQuaternion(quaternion: number[]) : number
+{
+  return Math.asin(2*quaternion[0]*quaternion[1] + 2*quaternion[2]*quaternion[3]);
+}
+
+export function rollFromQuaternion(quaternion: number[]) : number
+{
+  return Math.atan2(
+    2*quaternion[1]*quaternion[3] - 2*quaternion[0]*quaternion[2],
+    1 - 2*quaternion[1]*quaternion[1] - 2*quaternion[2]*quaternion[2]);
+}
+
+export function pitchFromQuaternion(quaternion: number[]) : number
+{
+  return Math.atan2(
+    2*quaternion[0]*quaternion[3] - 2*quaternion[1]*quaternion[2],
+    1 - 2*quaternion[0]*quaternion[0] - 2*quaternion[2]*quaternion[2]);
+}
