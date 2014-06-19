@@ -1,5 +1,5 @@
 /**
- * @author Drew Noakes http://drewnoakes.com
+ * @author Drew Noakes https://drewnoakes.com
  */
 
 /// <reference path="../../libs/lodash.d.ts" />
@@ -23,7 +23,7 @@ class OrientationModule extends Module
 
     constructor()
     {
-        super('orientation', 'orientation');
+        super('orientation', 'orientation', { fullScreen: true });
 
         this.animator = new Animator(() => this.renderer.render(this.scene, this.camera));
     }
@@ -31,6 +31,7 @@ class OrientationModule extends Module
     public load(width: number)
     {
         this.initialiseScene();
+        this.layout(width, 320, false);
 
         this.element.appendChild(this.renderer.domElement);
 
@@ -65,16 +66,10 @@ class OrientationModule extends Module
 
     private initialiseScene()
     {
-        var width = 400,
-            height = 400,
-            aspect = width / height;
-
         this.renderer = new THREE.WebGLRenderer({ antialias: true, devicePixelRatio: 1 });
-        this.renderer.setClearColor(0xcccccc, 1.0);
-        this.renderer.setSize(width, height);
 
 //      this.camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, 1000);
-        this.camera = new THREE.PerspectiveCamera(55, aspect, 0.001, 1);
+        this.camera = new THREE.PerspectiveCamera(55, 1, 0.001, 1);
         this.camera.position.y = -0.3;  // behind the agent, looking down +ve y
         this.camera.up.set(0, 0, 1);    // set the z-axis as 'up'
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -140,6 +135,21 @@ class OrientationModule extends Module
         referenceAxes.material.transparent = true;
         referenceAxes.material.opacity = 0.3;
         this.scene.add(referenceAxes);
+    }
+
+    private layout(width: number, height: number, isFullScreen: boolean)
+    {
+        width /= 2;
+        height = isFullScreen ? height - 40 : width;
+
+        this.renderer.setSize(width, height);
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+    }
+
+    public onResized(width: number, height: number, isFullScreen: boolean)
+    {
+        this.layout(width, height, isFullScreen);
     }
 }
 
