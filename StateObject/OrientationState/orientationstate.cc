@@ -7,10 +7,10 @@ using namespace Eigen;
 using namespace rapidjson;
 
 OrientationState::OrientationState(Eigen::Quaterniond quaternion)
-  : d_quaternion(quaternion),
-    d_pitch(Math::normaliseRads(Math::pitchFromQuaternion(quaternion)),
-    d_roll(Math::normaliseRads(Math::rollFromQuaternion(quaternion)),
-    d_yaw(Math::normaliseRads(Math::yawFromQuaternion(quaternion))
+: d_quaternion(quaternion),
+  d_pitch(Math::normaliseRads(Math::pitchFromQuaternion(quaternion))),
+  d_roll(Math::normaliseRads(Math::rollFromQuaternion(quaternion))),
+  d_yaw(Math::normaliseRads(Math::yawFromQuaternion(quaternion)))
 {}
 
 void OrientationState::writeJson(Writer<StringBuffer>& writer) const
