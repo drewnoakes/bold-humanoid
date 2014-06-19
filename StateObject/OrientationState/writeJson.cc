@@ -25,6 +25,10 @@ void OrientationState::writeJson(Writer<StringBuffer>& writer) const
     writer.Double(swapNaN(d_quaternion.w(), 0), "%.5f");
     writer.EndArray();
 
+    writer.String("pitch").Double(Math::pitchFromQuaternion(d_quaternion));
+    writer.String("roll").Double(Math::rollFromQuaternion(d_quaternion));
+    writer.String("yaw").Double(Math::yawFromQuaternion(d_quaternion));
+
     /*
     writer.String("angle-axis");
     AngleAxisd aa(d_quaternion);

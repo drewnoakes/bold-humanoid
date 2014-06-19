@@ -359,6 +359,9 @@ export interface Orientation
 {
     /** [x,y,z,w] */
     quaternion: number[];
+    pitch: number;
+    roll: number;
+    yaw: number;
 }
 
 export interface Particle
