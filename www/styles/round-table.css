@@ -43,7 +43,7 @@ html.night-mode ::-webkit-scrollbar-thumb
 
 /********************************************************************/
 
-html, body, input, select
+html, body, input, select, button
 {
   font-family: Montserrat, sans-serif;
   font-size: 13px;
@@ -83,6 +83,54 @@ button
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 3px 7px;
   border-radius: 3px;
+}
+
+
+html.night-mode button
+{
+  color: #CCC;
+  background: rgba(80, 80, 80, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+select
+{
+  background: #aaa;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  min-height: 23px;
+}
+
+html.night-mode select
+{
+  background: rgba(80, 80, 80, 0.8);
+  color: #CCC;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"],
+input[type="number"]
+{
+  background: #eee;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
+  min-height: 23px;
+  padding: 0 5px;
+  box-sizing: border-box;
+}
+
+html.night-mode input[type="text"],
+html.night-mode input[type="number"]
+{
+  background: #ccc;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 input[type="color"]
@@ -519,12 +567,6 @@ div.module div.module-column-3
 {
   display: inline-block;
   width: 80px;
-}
-
-.control-container input[type="number"]
-{
-  border: 1px solid #FFF;
-  padding: 1px 0;
 }
 
 /********************************************************************/
@@ -1605,13 +1647,4 @@ html.night-mode div#header-module-links > a.module-button
 html.night-mode div#header-content h1
 {
   color: #eee;
-}
-
-html.night-mode button
-{
-  color: #CCC;
-  background: rgba(80, 80, 80, 0.8);
-  border: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
