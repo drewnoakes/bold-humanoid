@@ -33,6 +33,9 @@ class OrientationModule extends Module
         this.initialiseScene();
         this.layout(width, 320, false);
 
+        this.closeables.add(constants.isNightModeActive.track(
+            isNightMode => this.renderer.setClearColor(isNightMode ? 0x211a20 : 0xcccccc, 1.0)));
+
         this.element.appendChild(this.renderer.domElement);
 
         this.closeables.add(new data.Subscription<state.Orientation>(

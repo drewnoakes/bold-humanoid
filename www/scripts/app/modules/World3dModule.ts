@@ -471,7 +471,8 @@ class World3dModule extends Module
 //          this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true, devicePixelRatio: 1 });
-        this.renderer.setClearColor(0xcccccc, 1.0);
+        this.closeables.add(constants.isNightModeActive.track(
+            isNightMode => this.renderer.setClearColor(isNightMode ? 0x211a20 : 0xcccccc, 1.0)));
         this.renderer.setSize(constants.cameraImageWidth, constants.cameraImageHeight, true);
         this.renderer.shadowMapEnabled = true;
         this.renderer.shadowMapType = THREE.PCFSoftShadowMap;
