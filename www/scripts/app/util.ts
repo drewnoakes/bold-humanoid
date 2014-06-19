@@ -44,6 +44,29 @@ export function getPosition(element: HTMLElement)
     return { x: xPosition, y: yPosition };
 }
 
+function binarySearchComparator<T>(array: T[], comparator: (item: T)=>number)
+{
+    var minIndex = 0;
+    var maxIndex = array.length - 1;
+
+    while (minIndex <= maxIndex)
+    {
+        var currentIndex = (minIndex + maxIndex) / 2 | 0;
+        var currentElement = array[currentIndex];
+
+        var comparison = comparator(currentElement);
+
+        if (comparison < 0)
+            minIndex = currentIndex + 1;
+        else if (comparison > 0)
+            maxIndex = currentIndex - 1;
+        else
+            return currentIndex;
+    }
+
+    return -1;
+}
+
 //
 // FULL SCREEN SUPPORT
 //
