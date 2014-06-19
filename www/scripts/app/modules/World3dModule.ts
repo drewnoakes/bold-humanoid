@@ -129,8 +129,6 @@ class World3dModule extends Module
 
     public onResized(width: number, height: number, isFullScreen: boolean)
     {
-        console.log("Resizing", width, height);
-
         // Make space for bottom controls if fullscreen
         if (isFullScreen)
             height -= 50;
