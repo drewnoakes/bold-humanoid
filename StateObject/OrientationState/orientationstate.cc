@@ -35,9 +35,42 @@ void OrientationState::writeJson(Writer<StringBuffer>& writer) const
     writer.Double(swapNaN(d_quaternion.w(), 0), "%.5f");
     writer.EndArray();
 
-    writer.String("pitch").Double(Math::pitchFromQuaternion(d_quaternion));
-    writer.String("roll").Double(Math::rollFromQuaternion(d_quaternion));
-    writer.String("yaw").Double(Math::yawFromQuaternion(d_quaternion));
+    auto const& q1 = d_quaternion;
+
+    double sqw = q1.w()*q1.w();
+    double sqx = q1.x()*q1.x();
+    double sqy = q1.y()*q1.y();
+    double sqz = q1.z()*q1.z();
+    double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+    double test = q1.x()*q1.y() + q1.z()*q1.w();
+
+    double heading;
+    double attitude;
+    double bank;
+
+    if (test > 0.499*unit) { // singularity at north pole
+      heading = 2 * atan2(q1.x(),q1.w());
+      attitude = M_PI/2;
+      bank = 0;
+    }
+    else if (test < -0.499*unit) { // singularity at south pole
+      heading = -2 * atan2(q1.x(),q1.w());
+      attitude = -M_PI/2;
+      bank = 0;
+    }
+    else
+    {
+      heading = atan2(2*q1.y()*q1.w()-2*q1.x()*q1.z() , sqx - sqy - sqz + sqw);
+      attitude = asin(2*test/unit);
+      bank = atan2(2*q1.x()*q1.w()-2*q1.y()*q1.z() , -sqx + sqy - sqz + sqw);
+    }
+
+    writer.String("pitch").Double(attitude);
+    writer.String("roll").Double(bank);
+    writer.String("yaw").Double(heading);
+//    writer.String("pitch").Double(Math::pitchFromQuaternion(d_quaternion));
+//    writer.String("roll").Double(Math::rollFromQuaternion(d_quaternion));
+//    writer.String("yaw").Double(Math::yawFromQuaternion(d_quaternion));
 
     /*
     writer.String("angle-axis");
