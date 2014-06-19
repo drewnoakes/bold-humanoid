@@ -357,7 +357,7 @@ export interface OptionTree
 
 export interface Orientation
 {
-    /** [w,x,y,z] */
+    /** [x,y,z,w] */
     quaternion: number[];
 }
 

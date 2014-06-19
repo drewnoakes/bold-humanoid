@@ -62,8 +62,8 @@ class OrientationModule extends Module
 
     private onOrientationState(data: state.Orientation)
     {
-        // Data values are (w,x,y,z), but THREE.Quaternion needs them (x,y,z,w)
-        this.body.quaternion.set(data.quaternion[1], data.quaternion[2], data.quaternion[3], data.quaternion[0]);
+        // Quaternion values are provided as [x,y,z,w]
+        this.body.quaternion.set(data.quaternion[0], data.quaternion[1], data.quaternion[2], data.quaternion[3]);
         this.animator.setRenderNeeded();
     }
 
