@@ -143,7 +143,7 @@ class OrientationModule extends Module
     private layout(width: number, height: number, isFullScreen: boolean)
     {
         width /= 2;
-        height = isFullScreen ? height - 40 : width;
+        height = isFullScreen ? height : width;
 
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;

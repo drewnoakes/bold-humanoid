@@ -131,7 +131,7 @@ class World3dModule extends Module
     {
         // Make space for bottom controls if fullscreen
         if (isFullScreen)
-            height -= 50;
+            height -= 20;
         else
             height = constants.cameraImageHeight;
 

@@ -70,7 +70,7 @@ class World2dModule extends Module
     {
         // Make space for bottom controls if fullscreen
         if (isFullScreen)
-            height -= 80;
+            height -= 50;
         else
             height = 480;
 
