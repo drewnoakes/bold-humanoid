@@ -561,7 +561,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/OrientationState/writeJson.cc
+  ./StateObject/OrientationState/orientationstate.cc
 )
 
 add_class(BOLDHUMANOID
