@@ -66,6 +66,7 @@ void DrawBridgeComms::publish()
 
 // TODO include: FPS (think/motion)
 //               Memory usage
+//               FSM state(s)
 
 void DrawBridgeComms::buildMessage(StringBuffer& buffer)
 {
