@@ -62,7 +62,7 @@ interface IDrawbridgeData
 class DrawbridgeModule extends Module
 {
     private socket: WebSocket;
-    private containerByUnum: {[unum:string]:HTMLDivElement} = {};
+    private containerById: {[id:string]:HTMLDivElement} = {};
 
     constructor()
     {
@@ -80,7 +80,7 @@ class DrawbridgeModule extends Module
 
     private onMessage(data: IDrawbridgeData)
     {
-        var container = this.containerByUnum[data.unum];
+        var container = this.containerById[DrawbridgeModule.getPlayerId(data)];
 
         if (container != null)
         {
@@ -89,11 +89,16 @@ class DrawbridgeModule extends Module
         else
         {
             container = document.createElement('div');
-            this.containerByUnum[data.unum.toString()] = container;
+            this.containerById[DrawbridgeModule.getPlayerId(data)] = container;
             this.element.appendChild(container);
         }
 
         container.appendChild(template.create(data));
+    }
+
+    private static getPlayerId(data: IDrawbridgeData): string
+    {
+        return data.team.toString() + "-" + data.unum.toString();
     }
 }
 
