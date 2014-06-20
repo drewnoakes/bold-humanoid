@@ -2,6 +2,10 @@
 
 #include "../util/assert.hh"
 
+#ifdef INCLUDE_ASSERTIONS
+#include "../util/log.hh"
+#endif
+
 #include <sys/time.h>
 
 using namespace bold;
@@ -19,14 +23,20 @@ double Clock::getSeconds()
 double Clock::getSecondsSince(Timestamp since)
 {
   Timestamp now = getTimestamp();
-  ASSERT(now > since);
+#ifdef INCLUDE_ASSERTIONS
+  if (now < since)
+    log::warning("Clock") << "Time reversed. now=" << now << " since=" << since << " delta=" << (now-since);
+#endif
   return timestampToSeconds(now - since);
 }
 
 double Clock::getMillisSince(Timestamp since)
 {
   Timestamp now = getTimestamp();
-  ASSERT(now > since);
+#ifdef INCLUDE_ASSERTIONS
+  if (now < since)
+    log::warning("Clock") << "Time reversed. now=" << now << " since=" << since << " delta=" << (now-since);
+#endif
   return timestampToMillis(now - since);
 }
 
