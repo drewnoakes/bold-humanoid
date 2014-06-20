@@ -169,8 +169,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Clock/getTimestamp.cc
-  ./Clock/getSeconds.cc
+  ./Clock/clock.cc
 )
 
 add_class(BOLDHUMANOID

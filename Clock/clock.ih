@@ -1,6 +1,0 @@
-#include "clock.hh"
-
-#include <sys/time.h>
-
-using namespace bold;
-

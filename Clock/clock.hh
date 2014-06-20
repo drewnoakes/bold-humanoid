@@ -14,12 +14,12 @@ namespace bold
     static double getSeconds();
 
     static double getSecondsSince(Timestamp since);
-    
+
     static double getMillisSince(Timestamp since);
-    
-    static double timestampToMillis(Timestamp timestamp) { return timestamp / 1e3; }
-    
-    static double timestampToSeconds(Timestamp timestamp) { return timestamp / 1e6; }
+
+    static double timestampToMillis(Timestamp timestamp);
+
+    static double timestampToSeconds(Timestamp timestamp);
 
   private:
     Clock() {}
