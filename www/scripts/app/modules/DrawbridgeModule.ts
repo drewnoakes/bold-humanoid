@@ -26,6 +26,7 @@ interface IDrawbridgeData
     team: number;
     col: TeamColour;
     host: string;
+    name: string;
 
     uptime: number;
 

@@ -74,6 +74,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
   static int uniformNumber = Config::getStaticValue<int>("uniform-number");
   static int teamNumber = Config::getStaticValue<int>("team-number");
   static int teamColour = Config::getStaticValue<int>("team-colour");
+  static string playerName = Config::getStaticValue<string>("player-name");
 
   writer.StartObject();
   {
@@ -81,6 +82,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     writer.String("team").Int(teamNumber);
     writer.String("col").Int(teamColour);
     writer.String("host").String(d_hostName.c_str());
+    writer.String("name").String(playerName.c_str());
     writer.String("ver").String(Version::GIT_SHA1.c_str());
     writer.String("uptime").Uint(static_cast<uint>(d_agent->getUptimeSeconds()));
 
