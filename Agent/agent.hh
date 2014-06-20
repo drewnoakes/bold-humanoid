@@ -139,8 +139,6 @@ namespace bold
 
     Clock::Timestamp d_startTime;
 
-    void initCamera();
-
     void think();
   };
 }
