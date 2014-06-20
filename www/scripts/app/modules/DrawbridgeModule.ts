@@ -23,7 +23,7 @@ enum TeamColour
 interface IDrawbridgeData
 {
     unum: number;
-    teamnum: number;
+    team: number;
     col: TeamColour;
 
     uptime: number;
@@ -49,7 +49,7 @@ interface IDrawbridgeData
         temps: number[];
     };
 
-    team: {
+    teammates: {
         unum: number;
         ms: number;
     }[];

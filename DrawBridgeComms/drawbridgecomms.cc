@@ -131,7 +131,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     auto team = State::get<TeamState>();
     if (team)
     {
-      writer.String("team");
+      writer.String("teammates");
       writer.StartArray();
       {
         for (PlayerState const& player : team->players())
