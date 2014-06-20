@@ -39,6 +39,18 @@ DrawBridgeComms::DrawBridgeComms(Agent* agent, std::shared_ptr<BehaviourControl>
     log::info("DrawBridgeComms") << "Bound to port " << port;
   else
     log::warning("DrawBridgeComms") << "Error binding to port " << port;
+
+  const int MaxHostLength = 30;
+  char hostChars[MaxHostLength];
+  if (gethostname(hostChars, MaxHostLength) != 0)
+  {
+    log::warning("DrawBridgeComms::DrawBridgeComms") << "Unable to determine hostname: " << strerror(errno) << " (" << errno << ")";
+    d_hostName = "<unknown>";
+  }
+  else
+  {
+    d_hostName = hostChars;
+  }
 }
 
 void DrawBridgeComms::publish()
@@ -68,6 +80,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     writer.String("unum").Int(uniformNumber);
     writer.String("team").Int(teamNumber);
     writer.String("col").Int(teamColour);
+    writer.String("host").String(d_hostName.c_str());
     writer.String("ver").String(Version::GIT_SHA1.c_str());
     writer.String("uptime").Uint(static_cast<uint>(d_agent->getUptimeSeconds()));
 

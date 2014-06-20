@@ -25,5 +25,6 @@ namespace bold
     std::shared_ptr<BehaviourControl> d_behaviourControl;
     std::shared_ptr<Debugger> d_debugger;
     std::unique_ptr<UDPSocket> d_socket;
+    std::string d_hostName;
   };
 }

@@ -25,6 +25,7 @@ interface IDrawbridgeData
     unum: number;
     team: number;
     col: TeamColour;
+    host: string;
 
     uptime: number;
 
