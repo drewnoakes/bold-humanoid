@@ -11,6 +11,6 @@ if [[ $# -eq 0 ]] ; then
     exit 1
 fi
 
-sudo arp-scan -I $1 -l -m mac-addresses.txt
+sudo arp-scan -I $1 -m mac-addresses.txt 192.168.123.0/24 192.168.176.0/24 192.168.0.0/24
 
 exit $?
