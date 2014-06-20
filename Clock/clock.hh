@@ -22,6 +22,6 @@ namespace bold
     static double timestampToSeconds(Timestamp timestamp);
 
   private:
-    Clock() {}
+    Clock() = delete;
   };
 }
