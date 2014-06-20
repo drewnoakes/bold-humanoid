@@ -223,16 +223,18 @@
 
     <script id="drawbridge-module-template" type="text/x-handlebars-template">
         <div class="player-tile">
-            <div class="unum">{{this.unum}}</div>
-            <div class="host">{{this.host}}</div>
-            <div class="name">{{this.name}}</div>
-            <div class="team-num">team {{this.team}}</div>
-            <div class="team-col">{{this.col}}</div>
-            <div class="uptime">uptime {{this.uptime}} seconds</div>
-            <div class="activity">{{this.activity}}</div>
-            <div class="role">{{this.role}}</div>
-            <div class="status">{{this.status}}</div>
-            <div class="version">{{this.ver}}</div>
+            <header>
+                <div class="unum team-colour-{{this.col}}">{{this.unum}}</div>
+                <h1>
+                    <span class="name">{{this.name}}</span>
+                    <span class="host">({{this.host}})</span>
+                </h1>
+            </header>
+            <div class="role"><span class="title">Role</span> {{this.role}} <div class="role-indicator {{this.role}}"></div></div>
+            <div class="uptime"><span class="title">Uptime</span> {{this.uptime}} seconds</div>
+            <div class="activity"><span class="title">Activity</span> {{this.activity}}</div>
+            <div class="status"><span class="title">Status</span> {{this.status}}</div>
+            <div class="version"><span class="title">Build</span> {{this.ver}}</div>
 
           <!--
             {{#if this.agent}}
@@ -246,30 +248,30 @@
           -->
 
             {{#if this.game}}
-            <div class="game-mode">{{this.game.mode}}</div>
-            <div class="game-age">({{this.game.age}} ms old)</div>
+            <div class="game-mode"><span class="title">Game mode</span> {{this.game.mode}} <span class="note">({{this.game.age}} ms old)</span></div>
             {{/if}}
 
             {{#if this.hw}}
-            <div class="hw-volt">{{this.hw.volt}}</div>
-            <div class="hw-temps">
-            {{#each this.hw.temps}}
-            <span>{{this}} </span>
-            {{/each}}
+            <div class="hw-volt"><span class="title">Voltage</span> {{this.hw.volt}}</div>
+            <div class="hw-temps"><span class="title">Temp</span>
+              {{#each this.hw.temps}}
+              <span>{{this}} </span>
+              {{/each}}
             </div>
             {{/if}}
 
             {{#if this.teammates}}
             {{#each this.teammates}}
-            <div class="team-member">{{this.unum}} ({{this.ms}} ms old)</div>
+            <div class="team-member"><span class="title">Teammate</span> {{this.unum}} <span class="note">({{this.ms}} ms old)</span></div>
             {{/each}}
             {{/if}}
 
             {{#if this.options}}
             <div class="options">
-            {{#each this.options}}
-            <span>{{this}} </span>
-            {{/each}}
+                <span class="title">Ran options</span>
+                {{#each this.options}}
+                <span>{{this}} </span>
+                {{/each}}
             </div>
             {{/if}}
         </div>

@@ -385,6 +385,37 @@ div#header-module-links > a.module-button.added
 
 /********************************************************************/
 
+div.role-indicator
+{
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  vertical-align: middle;
+
+  transition: background-color 0.5s linear;
+  -moz-transition: background-color 0.5s linear;
+  -o-transition: background-color 0.5s linear;
+  -webkit-transition: background-color 0.5s linear;
+}
+
+div.role-indicator.Striker
+{
+  background-color: purple;
+}
+
+div.role-indicator.Keeper
+{
+  background-color: white;
+}
+
+div.role-indicator.Supporter
+{
+  background-color: green;
+}
+
+/********************************************************************/
+
 ul#module-container
 {
   padding: 0;
@@ -1473,35 +1504,6 @@ div.module.team td.old
   color: rgba(80, 0, 0, 0.4)
 }
 
-div.module.team div.role-indicator
-{
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  vertical-align: middle;
-
-  transition: background-color 0.5s linear;
-  -moz-transition: background-color 0.5s linear;
-  -o-transition: background-color 0.5s linear;
-  -webkit-transition: background-color 0.5s linear;
-}
-
-div.module.team div.role-indicator.Striker
-{
-  background-color: purple;
-}
-
-div.module.team div.role-indicator.Keeper
-{
-  background-color: white;
-}
-
-div.module.team div.role-indicator.Supporter
-{
-  background-color: green;
-}
-
 /*******************************************************************/
 
 div.module.drawbridge div.player-tile
@@ -1511,6 +1513,53 @@ div.module.drawbridge div.player-tile
   border-radius: 5px;
   margin: 4px;
   padding: 4px;
+}
+
+div.module.drawbridge div.player-tile header div.unum
+{
+  display:inline-block;
+  width: 30px;
+  height: 30px;
+  text-align:center;
+  line-height: 30px;
+  font-size: 24px;
+  border-radius: 3px;
+}
+
+div.module.drawbridge div.player-tile header h1
+{
+  display: inline-block;
+  text-transform: none;
+  color:
+}
+
+div.module.drawbridge div.player-tile header h1 span.host
+{
+  color: #555;
+  font-weight: normal;
+}
+
+div.module.drawbridge div.player-tile span.title
+{
+  color: #555;
+  display: inline-block;
+  min-width: 80px;
+}
+
+div.module.drawbridge div.player-tile span.note
+{
+  color: #555;
+  font-size: 0.8em;
+}
+
+div.module.drawbridge div.player-tile div.unum.team-colour-1
+{
+  background-color: cyan;
+}
+
+div.module.drawbridge div.player-tile div.unum.team-colour-2
+{
+  background-color: magenta;
 }
 
 /*******************************************************************/
