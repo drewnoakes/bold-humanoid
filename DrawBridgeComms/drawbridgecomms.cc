@@ -53,7 +53,6 @@ void DrawBridgeComms::publish()
 }
 
 // TODO include: FPS (think/motion)
-//               Uptime
 //               Memory usage
 
 void DrawBridgeComms::buildMessage(StringBuffer& buffer)
