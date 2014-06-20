@@ -46,11 +46,11 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
     }
     else if (abs(xAvg) > abs(yAvg))
     {
-      d_fallenState = xAvg > 0 ? FallState::RIGHT : FallState::LEFT;
+      d_fallenState = xAvg < 0 ? FallState::RIGHT : FallState::LEFT;
     }
     else
     {
-      d_fallenState = yAvg > 0 ? FallState::FORWARD : FallState::BACKWARD;
+      d_fallenState = yAvg < 0 ? FallState::FORWARD : FallState::BACKWARD;
     }
 
     if (standingBefore && d_fallenState != FallState::STANDUP)
