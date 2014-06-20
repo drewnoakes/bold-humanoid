@@ -12,7 +12,7 @@ pair<Localiser::FilterState, double> Localiser::generateState()
     // Generate inside the penalty area
     auto x = d_goalAreaXRng();
     auto y = d_goalAreaYRng();
-    cout << x << " " << y << endl;
+//    cout << x << " " << y << endl;
     auto theta = d_thetaRng();
     auto state = FilterState(x, y, cos(theta), sin(theta));
 
