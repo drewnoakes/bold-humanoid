@@ -46,7 +46,7 @@ void DrawBridgeComms::publish()
   StringBuffer buffer;
   buildMessage(buffer);
 
-  d_socket->send(buffer.GetString(), buffer.GetSize());
+  d_socket->send(buffer.GetString(), (int)buffer.GetSize());
 
   if (d_debugger)
     d_debugger->notifySendingDrawbridgeMessage();
@@ -69,7 +69,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     writer.String("team").Int(teamNumber);
     writer.String("col").Int(teamColour);
     writer.String("ver").String(Version::GIT_SHA1.c_str());
-    writer.String("uptime").Uint(static_cast<int>(d_agent->getUptimeSeconds()));
+    writer.String("uptime").Uint(static_cast<uint>(d_agent->getUptimeSeconds()));
 
     writer.String("activity").String(getPlayerActivityString(d_behaviourControl->getPlayerActivity()).c_str());
     writer.String("role").String(getPlayerRoleString(d_behaviourControl->getPlayerRole()).c_str());
