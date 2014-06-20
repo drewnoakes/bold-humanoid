@@ -1017,6 +1017,11 @@ div.module.orientation canvas
   float: left;
 }
 
+div.module.orientation div.controls
+{
+  clear: both;
+}
+
 /********************************************************************/
 
 div.module.state .json-text

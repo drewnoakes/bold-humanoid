@@ -121,8 +121,10 @@ class OrientationModule extends Module
             }
         ));
 
-        control.buildActions("orientation-tracker", this.element);
-        control.buildSettings("orientation-tracker", this.element, this.closeables);
+        var controlContainer = dom("div.controls");
+        dom(this.element, controlContainer);
+        control.buildActions("orientation-tracker", controlContainer);
+        control.buildSettings("orientation-tracker", controlContainer, this.closeables);
 
         this.layout(width, 320, false);
         this.animator.start();
