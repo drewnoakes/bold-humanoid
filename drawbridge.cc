@@ -150,12 +150,15 @@ int main()
 
     static char data[MaxMessageSize];
 
-    int bytesRead = socket.receive(data, MaxMessageSize);
-
-    // Returns zero bytes when no message available (non-blocking)
-    // Returns -1 when an error occured. UDPSocket logs the error.
-    if (bytesRead > 0)
+    int bytesRead;
+    while ((bytesRead = socket.receive(data, MaxMessageSize)) != 0)
     {
+      // Returns zero bytes when no message available (non-blocking)
+
+      // Returns -1 when an error occurred. UDPSocket logs the error.
+      if (bytesRead < 0)
+        break;
+
       //
       // Process WebSocket clients
       //
@@ -175,5 +178,10 @@ int main()
     // This is normally very fast
     //
     libwebsocket_service(d_context, 0);
+
+    //
+    // Sleep a while to avoid pegging the CPU at 100%
+    //
+    usleep(50000); // 50ms
   }
 }
