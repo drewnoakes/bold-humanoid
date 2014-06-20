@@ -1,5 +1,7 @@
 #include "clock.ih"
 
+#include "../util/assert.hh"
+
 double Clock::getMillis()
 {
   return timestampToMillis(getTimestamp());
@@ -12,10 +14,14 @@ double Clock::getSeconds()
 
 double Clock::getSecondsSince(Timestamp since)
 {
-  return timestampToSeconds(getTimestamp() - since);
+  Timestamp now = getTimestamp();
+  ASSERT(now > since);
+  return timestampToSeconds(now - since);
 }
 
 double Clock::getMillisSince(Timestamp since)
 {
-  return timestampToMillis(getTimestamp() - since);
+  Timestamp now = getTimestamp();
+  ASSERT(now > since);
+  return timestampToMillis(now - since);
 }
