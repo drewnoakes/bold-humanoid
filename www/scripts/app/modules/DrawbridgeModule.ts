@@ -69,7 +69,9 @@ class DrawbridgeModule extends Module
         super('drawbridge', 'drawbridge', {fullScreen: true});
     }
 
-    // TODO catch and display errors
+    // TODO catch and display problems such as stopped messages, temperatures, different SHA1
+    // TODO sort UI elements
+    // TODO good fit for D3?
 
     public load(width: number)
     {
