@@ -61,11 +61,13 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
 
   static int uniformNumber = Config::getStaticValue<int>("uniform-number");
   static int teamNumber = Config::getStaticValue<int>("team-number");
+  static int teamColour = Config::getStaticValue<int>("team-colour");
 
   writer.StartObject();
   {
     writer.String("unum").Int(uniformNumber);
     writer.String("team").Int(teamNumber);
+    writer.String("col").Int(teamColour);
     writer.String("ver").String(Version::GIT_SHA1.c_str());
     writer.String("uptime").Uint(static_cast<int>(d_agent->getUptimeSeconds()));
 

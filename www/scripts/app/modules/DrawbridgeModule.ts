@@ -14,10 +14,17 @@ import util = require('util');
 
 var template = DOMTemplate.forId('drawbridge-module-template');
 
+enum TeamColour
+{
+    Cyan = 1,
+    Magenta = 2
+}
+
 interface IDrawbridgeData
 {
     unum: number;
     teamnum: number;
+    col: TeamColour;
 
     uptime: number;
 
