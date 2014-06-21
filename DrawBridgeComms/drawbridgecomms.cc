@@ -66,7 +66,6 @@ void DrawBridgeComms::publish()
 
 // TODO include: FPS (think/motion)
 //               Memory usage
-//               FSM state(s)
 
 void DrawBridgeComms::buildMessage(StringBuffer& buffer)
 {
@@ -168,13 +167,22 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     auto optionTree = State::get<OptionTreeState>();
     if (optionTree)
     {
+      auto const& ranOptions = optionTree->getRanOptions();
+      auto const& fsmStates = optionTree->getFSMStates();
+
       writer.String("options");
-      writer.StartArray();
-      {
-        for (auto const& option : optionTree->getRanOptions())
-          writer.String(option->getId().c_str());
-      }
-      writer.EndArray();
+      writer.Array(
+        ranOptions.begin(), ranOptions.end(),
+        [&](shared_ptr<Option> const& option) { writer.String(option->getId().c_str()); });
+
+      writer.String("fsms");
+      writer.Array(
+        fsmStates.begin(), fsmStates.end(),
+        [&](FSMStateSnapshot const& fsmState) { writer.StartObject()
+          .String("fsm").String(fsmState.getFsmName().c_str())
+          .String("state").String(fsmState.getStateName().c_str())
+          .EndObject();
+        });
     }
   }
   writer.EndObject();

@@ -1,5 +1,7 @@
 #include "optiontree.ih"
 
+#include "../Option/FSMOption/fsmoption.hh"
+
 #include <functional>
 #include <rapidjson/document.h>
 
@@ -31,12 +33,13 @@ using namespace rapidjson;
 void OptionTree::run()
 {
   vector<shared_ptr<Option>> ranOptions;
+  vector<FSMStateSnapshot> fsmStates;
 
   StringBuffer buffer;
   Writer<StringBuffer> writer(buffer);
 
   function<void(shared_ptr<Option>)> runOption;
-  runOption = [this,&runOption,&writer,&ranOptions](shared_ptr<Option> option)
+  runOption = [this,&runOption,&writer,&ranOptions,&fsmStates](shared_ptr<Option> option)
   {
     log::verbose("OptionTree::run") << "Running " << option->getTypeName() << " option: " << option->getId();
 
@@ -69,6 +72,10 @@ void OptionTree::run()
 
     // Remember the fact that we ran it
     ranOptions.push_back(option);
+
+    shared_ptr<FSMOption> fsmOption = std::dynamic_pointer_cast<FSMOption,Option>(option);
+    if (fsmOption)
+      fsmStates.emplace_back(fsmOption->getId(), fsmOption->getCurrentState()->name);
   };
 
   runOption(d_top);
@@ -78,7 +85,7 @@ void OptionTree::run()
   auto doc = make_unique<Document>();
   doc->Parse<0,UTF8<>>(buffer.GetString());
 
-  State::make<OptionTreeState>(ranOptions, std::move(doc));
+  State::make<OptionTreeState>(ranOptions, std::move(doc), fsmStates);
 
   // Reset options that ran in the last cycle but not in this one
   for (auto const& o : d_optionsLastCycle)
