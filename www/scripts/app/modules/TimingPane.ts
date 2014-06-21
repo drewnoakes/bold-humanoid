@@ -40,9 +40,7 @@ class TimingPane
     private canvas: HTMLCanvasElement;
     private series: TimeSeries;
     private table: HTMLTableElement;
-    private fpsInterval: number;
-    private fpsCount: number;
-    private lastCycleNumber: number;
+    private fps: HTMLDivElement;
     private closeables: Closeable = new Closeable();
     private entryByLabel: {[label:string]:ITimingEntry} = {};
 
@@ -83,9 +81,9 @@ class TimingPane
         this.chart.addTimeSeries(this.series, seriesOptions);
         this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
-        var fps = document.createElement('div');
-        fps.className = 'fps';
-        element.appendChild(fps);
+        this.fps = document.createElement('div');
+        this.fps.className = 'fps';
+        element.appendChild(this.fps);
 
         var reset = document.createElement('a');
         reset.href = '#';
@@ -110,26 +108,18 @@ class TimingPane
                 onmessage: this.onTimingState.bind(this)
             }
         ));
-
-        this.fpsInterval = setInterval(() =>
-        {
-            // TODO change colour based on performance vs this.targetFps
-            fps.textContent = this.fpsCount ? this.fpsCount + ' FPS' : '';
-            this.fpsCount = 0;
-        }, 1000);
     }
 
     public unload()
     {
         this.chart.stop();
-        clearInterval(this.fpsInterval);
 
         this.closeables.closeAll();
-        delete this.fpsInterval;
 
         delete this.series;
         delete this.chart;
         delete this.table;
+        delete this.fps;
         delete this.canvas;
         delete this.entryByLabel;
     }
@@ -141,10 +131,6 @@ class TimingPane
 
     private onTimingState(data: state.Timing)
     {
-        if (this.lastCycleNumber) {
-            this.fpsCount += data.cycle - this.lastCycleNumber;
-        }
-        this.lastCycleNumber = data.cycle;
         var time = new Date().getTime();
         var timings = data.timings;
 
@@ -154,6 +140,7 @@ class TimingPane
             this.getOrCreateEntry(key).update(time, millis);
         });
 
+        this.fps.textContent = data.fps.toFixed(1);
         this.updateChart(time);
     }
 
