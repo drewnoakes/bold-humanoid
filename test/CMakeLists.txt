@@ -14,6 +14,7 @@ set(TEST_SOURCES
   ConditionalsTests.cc
   ConsumerQueueThreadTests.cc
   CppTests.cc
+  DarwinBodyModelTests.cc
   DistributionTrackerTests.cc
   EigenTests.cc
   HalfHullBuilderTests.cc
