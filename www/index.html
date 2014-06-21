@@ -275,6 +275,15 @@
                 {{/each}}
             </div>
             {{/if}}
+
+            {{#if this.fsms}}
+            <div class="options">
+                <span class="title">FSMs</span>
+                {{#each this.fsms}}
+                {{this.state}} <span class="note">{{this.fsm}}</span>
+                {{/each}}
+            </div>
+            {{/if}}
         </div>
     </script>
 
