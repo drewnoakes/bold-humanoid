@@ -618,7 +618,7 @@ ul.legend
 {
   list-style: none;
   float: right;
-  margin: 0;
+  margin: 4px 0;
   padding: 0;
 }
 
