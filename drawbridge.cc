@@ -32,16 +32,16 @@ int websocket_callback(libwebsocket_context *context, libwebsocket *wsi, libwebs
   {
     case LWS_CALLBACK_ESTABLISHED:
     {
-      log::info("WebSockets") << "Client connected (" << sessions.size() << " active)";
       sessions.push_back(session);
+      log::info("WebSockets") << "Client connected (" << sessions.size() << " active)";
       return 0;
     }
     case LWS_CALLBACK_CLOSED:
     {
-      log::info("WebSockets") << "Client disconnected (" << sessions.size() << " active)";
       auto it = find(sessions.begin(), sessions.end(), session);
       if (it != sessions.end())
         sessions.erase(it);
+      log::info("WebSockets") << "Client disconnected (" << sessions.size() << " active)";
       return 0;
     }
     case LWS_CALLBACK_SERVER_WRITEABLE:
