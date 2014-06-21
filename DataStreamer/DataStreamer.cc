@@ -1,5 +1,7 @@
 #include "datastreamer.ih"
 
+// TODO support a data protocol that supports queries and updates via JSON, all over a single websocket protocol
+
 DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   : hasClientChanged(),
     d_port(Config::getStaticValue<int>("round-table.tcp-port")),
