@@ -226,6 +226,13 @@ export class Rgb implements IColor
 
     public ColorType: any = Rgb;
 
+    /**
+     * Constructs a new colour in RGB space.
+     *
+     * @param r red level, between 0 and 1.
+     * @param g green level, between 0 and 1.
+     * @param b blue level, between 0 and 1.
+     */
     constructor(r: any, g?: number, b?: number)
     {
         if (typeof(r) === 'string')
