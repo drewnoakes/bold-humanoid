@@ -2,8 +2,8 @@
 
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
-
 #include "../Agent/agent.hh"
+
 #include "../BehaviourControl/behaviourcontrol.hh"
 #include "../Config/config.hh"
 #include "../Debugger/debugger.hh"
@@ -13,6 +13,7 @@
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
+#include "../StateObject/TimingState/timingstate.hh"
 #include "../StateObject/TeamState/teamstate.hh"
 #include "../UDPSocket/udpsocket.hh"
 #include "../version.hh"
@@ -89,6 +90,14 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     writer.String("activity").String(getPlayerActivityString(d_behaviourControl->getPlayerActivity()).c_str());
     writer.String("role").String(getPlayerRoleString(d_behaviourControl->getPlayerRole()).c_str());
     writer.String("status").String(getPlayerStatusString(d_behaviourControl->getPlayerStatus()).c_str());
+
+    auto thinkTiming = State::get<ThinkTimingState>();
+    auto motionTiming = State::get<MotionTimingState>();
+
+    if (thinkTiming)
+      writer.String("fpsThink").Double(thinkTiming->getAverageFps());
+    if (motionTiming)
+      writer.String("fpsMotion").Double(motionTiming->getAverageFps());
 
     auto agentFrame = State::get<AgentFrameState>();
     if (agentFrame)

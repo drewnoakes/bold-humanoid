@@ -470,6 +470,7 @@ export interface StaticHardware
 export interface Timing
 {
     cycle: number;
+    fps: number;
     timings: {[key:string]:number};
 }
 

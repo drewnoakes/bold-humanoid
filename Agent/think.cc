@@ -1,5 +1,7 @@
 #include "agent.ih"
 
+#include "../util/fps.hh"
+
 void Agent::think()
 {
   ASSERT(ThreadUtil::isThinkLoopThread());
@@ -94,7 +96,8 @@ void Agent::think()
   //
   // Set timing data for the think cycle
   //
-  State::make<ThinkTimingState>(t.flush(), d_cycleNumber);
+  static FPS<30> fps;
+  State::make<ThinkTimingState>(t.flush(), d_cycleNumber, fps.next());
 
   //
   // Raise the Agent::onThinkEnd signal

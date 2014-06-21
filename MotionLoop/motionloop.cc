@@ -17,6 +17,7 @@
 #include "../ThreadUtil/threadutil.hh"
 #include "../Voice/voice.hh"
 #include "../util/ccolor.hh"
+#include "../util/fps.hh"
 #include "../util/memory.hh"
 
 #include <time.h>
@@ -191,6 +192,7 @@ void *MotionLoop::threadMethod(void *param)
       log::error("MotionLoop::threadMethod") << "Error enabling torque";
   }
 
+  static FPS<100> fps;
   static struct timespec next_time;
   clock_gettime(CLOCK_MONOTONIC, &next_time);
 
@@ -208,7 +210,7 @@ void *MotionLoop::threadMethod(void *param)
     t.timeEvent("Sleep");
 
     // Set timing data for the motion cycle
-    State::make<MotionTimingState>(t.flush(), loop->d_cycleNumber);
+    State::make<MotionTimingState>(t.flush(), loop->d_cycleNumber, fps.next());
   }
 
   if (loop->d_haveBody)

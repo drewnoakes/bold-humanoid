@@ -193,6 +193,9 @@ void queueRandomMessage()
 
     srand(unum);
 
+    writer.String("fpsThink").Double(29.5 + rand() % 10 / 10.0);
+    writer.String("fpsMotion").Double(127.5 + rand() % 10 / 10.0);
+
     writer.String("agent");
     writer.StartObject();
     {

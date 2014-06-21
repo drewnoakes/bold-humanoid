@@ -13,9 +13,10 @@ namespace bold
   class TimingState : public StateObject
   {
   protected:
-    TimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber)
+    TimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber, double averageFps)
     : d_eventTimings(eventTimings),
-      d_cycleNumber(cycleNumber)
+      d_cycleNumber(cycleNumber),
+      d_averageFps(averageFps)
     {}
 
     virtual ~TimingState() {}
@@ -26,6 +27,7 @@ namespace bold
       writer.StartObject();
       {
         writer.String("cycle").Uint64(d_cycleNumber);
+        writer.String("fps").Double(d_averageFps);
         writer.String("timings");
         writer.StartObject();
         {
@@ -44,25 +46,27 @@ namespace bold
     std::shared_ptr<std::vector<EventTiming> const> getTimings() const { return d_eventTimings; }
 
     ulong getCycleNumber() const { return d_cycleNumber; }
+    double getAverageFps() const { return d_averageFps; }
 
   private:
    std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
    ulong d_cycleNumber;
+   double d_averageFps;
   };
 
   class MotionTimingState : public TimingState
   {
   public:
-    MotionTimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber)
-    : TimingState(eventTimings, cycleNumber)
+    MotionTimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber, double averageFps)
+    : TimingState(eventTimings, cycleNumber, averageFps)
     {}
   };
 
   class ThinkTimingState : public TimingState
   {
   public:
-    ThinkTimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber)
-    : TimingState(eventTimings, cycleNumber)
+    ThinkTimingState(std::shared_ptr<std::vector<EventTiming>> eventTimings, ulong cycleNumber, double averageFps)
+    : TimingState(eventTimings, cycleNumber, averageFps)
     {}
   };
 }
