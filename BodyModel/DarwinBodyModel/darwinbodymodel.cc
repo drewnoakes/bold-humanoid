@@ -133,11 +133,14 @@ DarwinBodyModel::DarwinBodyModel()
   leftHipRollJoint->anchors.second = Vector3d(0, 0, 0);
   leftHipYawJoint->childPart = leftHipRollJoint;
 
+  auto leftButtockLimb = createLimb("left-buttock");
+  leftHipRollJoint->childPart = leftButtockLimb;
+
   auto leftHipPitchJoint = createJoint(JointId::L_HIP_PITCH, "left-hip-pitch");
   leftHipPitchJoint->axis = Vector3d(1, 0, 0);
   leftHipPitchJoint->anchors.first = Vector3d(0, 0, 0);
   leftHipPitchJoint->anchors.second = Vector3d(0, 0, 0);
-  leftHipRollJoint->childPart = leftHipPitchJoint;
+  leftButtockLimb->joints.push_back(leftHipPitchJoint);
 
   auto leftUpperLegLimb = createLimb("left-upper-leg");
   leftHipPitchJoint->childPart = leftUpperLegLimb;
@@ -183,11 +186,14 @@ DarwinBodyModel::DarwinBodyModel()
   rightHipRollJoint->anchors.second = Vector3d(0, 0, 0);
   rightHipYawJoint->childPart = rightHipRollJoint;
 
+  auto rightButtockLimb = createLimb("right-buttock");
+  rightHipRollJoint->childPart = rightButtockLimb;
+
   auto rightHipPitchJoint = createJoint(JointId::R_HIP_PITCH, "right-hip-pitch");
   rightHipPitchJoint->axis = Vector3d(-1, 0, 0);
   rightHipPitchJoint->anchors.first = Vector3d(0, 0, 0);
   rightHipPitchJoint->anchors.second = Vector3d(0, 0, 0);
-  rightHipRollJoint->childPart = rightHipPitchJoint;
+  rightButtockLimb->joints.push_back(rightHipPitchJoint);
 
   auto rightUpperLegLimb = createLimb("right-upper-leg");
   rightHipPitchJoint->childPart = rightUpperLegLimb;
