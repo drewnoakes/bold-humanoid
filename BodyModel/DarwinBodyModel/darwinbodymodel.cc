@@ -13,6 +13,7 @@ DarwinBodyModel::DarwinBodyModel()
 : BodyModel()
 {
   auto torso = createLimb("torso");
+  torso->mass = 0.97559947;
 
   // TODO add gyro / acc joints, as done for camera
 
@@ -25,6 +26,7 @@ DarwinBodyModel::DarwinBodyModel()
   torso->joints.push_back(headPanJoint);
 
   auto neckLimb = createLimb("neck");
+  neckLimb->mass = 0.024357719;
   headPanJoint->childPart = neckLimb;
 
   auto headTiltJoint = createJoint(JointId::HEAD_TILT, "head-tilt");
@@ -34,6 +36,7 @@ DarwinBodyModel::DarwinBodyModel()
   neckLimb->joints.push_back(headTiltJoint);
 
   auto headLimb = createLimb("head");
+  headLimb->mass = 0.15804192;
   headTiltJoint->childPart = headLimb;
 
   // Camera tilt is not an MX28, but rather an adjustable 'hinge' for the
@@ -61,6 +64,7 @@ DarwinBodyModel::DarwinBodyModel()
   cameraCalibrationTiltJoint->childPart = cameraCalibrationPanJoint;
 
   auto cameraLimb = createLimb("camera");
+  cameraLimb->mass = 0; // included in head limb
   cameraCalibrationPanJoint->childPart = cameraLimb;
 
   // LEFT ARM
@@ -72,6 +76,7 @@ DarwinBodyModel::DarwinBodyModel()
   torso->joints.push_back(leftShoulderPitchJoint);
 
   auto leftShoulderBracketLimb = createLimb("left-shoulder-bracket");
+  leftShoulderBracketLimb->mass = 0.025913024;
   leftShoulderPitchJoint->childPart = leftShoulderBracketLimb;
 
   auto leftShoulderRollJoint = createJoint(JointId::L_SHOULDER_ROLL, "left-shoulder-roll");
@@ -82,6 +87,7 @@ DarwinBodyModel::DarwinBodyModel()
   leftShoulderBracketLimb->joints.push_back(leftShoulderRollJoint);
 
   auto leftUpperArmLimb = createLimb("left-upper-arm");
+  leftUpperArmLimb->mass = 0.16837715;
   leftShoulderRollJoint->childPart = leftUpperArmLimb;
 
   auto leftElbowJoint = createJoint(JointId::L_ELBOW, "left-elbow");
@@ -92,6 +98,7 @@ DarwinBodyModel::DarwinBodyModel()
   leftUpperArmLimb->joints.push_back(leftElbowJoint);
 
   auto leftLowerArmLimb = createLimb("left-lower-arm");
+  leftLowerArmLimb->mass = 0.059288504;
   leftElbowJoint->childPart = leftLowerArmLimb;
 
   // RIGHT ARM
@@ -103,6 +110,7 @@ DarwinBodyModel::DarwinBodyModel()
   torso->joints.push_back(rightShoulderPitchJoint);
 
   auto rightShoulderBracketLimb = createLimb("right-shoulder-bracket");
+  rightShoulderBracketLimb->mass = 0.025913024;
   rightShoulderPitchJoint->childPart = rightShoulderBracketLimb;
 
   auto rightShoulderRollJoint = createJoint(JointId::R_SHOULDER_ROLL, "right-shoulder-roll");
@@ -113,6 +121,7 @@ DarwinBodyModel::DarwinBodyModel()
   rightShoulderBracketLimb->joints.push_back(rightShoulderRollJoint);
 
   auto rightUpperArmLimb = createLimb("right-upper-arm");
+  rightUpperArmLimb->mass = 0.16837715;
   rightShoulderRollJoint->childPart = rightUpperArmLimb;
 
   auto rightElbowJoint = createJoint(JointId::R_ELBOW, "right-elbow");
@@ -123,6 +132,7 @@ DarwinBodyModel::DarwinBodyModel()
   rightUpperArmLimb->joints.push_back(rightElbowJoint);
 
   auto rightLowerArmLimb = createLimb("right-lower-arm");
+  rightLowerArmLimb->mass = 0.059288504;
   rightElbowJoint->childPart = rightLowerArmLimb;
 
   // LEFT LEG
@@ -134,6 +144,7 @@ DarwinBodyModel::DarwinBodyModel()
   torso->joints.push_back(leftHipYawJoint);
 
   auto leftHipBracketLimb = createLimb("left-hip-bracket");
+  leftHipBracketLimb->mass = 0.027069195;
   leftHipYawJoint->childPart = leftHipBracketLimb;
 
   auto leftHipRollJoint = createJoint(JointId::L_HIP_ROLL, "left-hip-roll");
@@ -143,6 +154,7 @@ DarwinBodyModel::DarwinBodyModel()
   leftHipBracketLimb->joints.push_back(leftHipRollJoint);
 
   auto leftButtockLimb = createLimb("left-buttock");
+  leftButtockLimb->mass = 0.16710792;
   leftHipRollJoint->childPart = leftButtockLimb;
 
   auto leftHipPitchJoint = createJoint(JointId::L_HIP_PITCH, "left-hip-pitch");
@@ -152,6 +164,7 @@ DarwinBodyModel::DarwinBodyModel()
   leftButtockLimb->joints.push_back(leftHipPitchJoint);
 
   auto leftUpperLegLimb = createLimb("left-upper-leg");
+  leftUpperLegLimb->mass = 0.11904336;
   leftHipPitchJoint->childPart = leftUpperLegLimb;
 
   auto leftKneeJoint = createJoint(JointId::L_KNEE, "left-knee");
@@ -161,6 +174,7 @@ DarwinBodyModel::DarwinBodyModel()
   leftUpperLegLimb->joints.push_back(leftKneeJoint);
 
   auto leftLowerLegLimb = createLimb("left-lower-leg");
+  leftLowerLegLimb->mass = 0.070309794;
   leftKneeJoint->childPart = leftLowerLegLimb;
 
   auto leftAnklePitchJoint = createJoint(JointId::L_ANKLE_PITCH, "left-ankle-pitch");
@@ -170,6 +184,7 @@ DarwinBodyModel::DarwinBodyModel()
   leftLowerLegLimb->joints.push_back(leftAnklePitchJoint);
 
   auto leftAnkleLimb = createLimb("left-ankle");
+  leftAnkleLimb->mass = 0.16710792;
   leftAnklePitchJoint->childPart = leftAnkleLimb;
 
   auto leftAngleRollJoint = createJoint(JointId::L_ANKLE_ROLL, "left-ankle-roll");
@@ -179,6 +194,7 @@ DarwinBodyModel::DarwinBodyModel()
   leftAnkleLimb->joints.push_back(leftAngleRollJoint);
 
   auto leftFootLimb = createLimb("left-foot");
+  leftFootLimb->mass = 0.079446226;
   leftAngleRollJoint->childPart = leftFootLimb;
 
   // RIGHT LEG
@@ -190,6 +206,7 @@ DarwinBodyModel::DarwinBodyModel()
   torso->joints.push_back(rightHipYawJoint);
 
   auto rightHipBracketLimb = createLimb("right-hip-bracket");
+  rightHipBracketLimb->mass = 0.027069195;
   rightHipYawJoint->childPart = rightHipBracketLimb;
 
   auto rightHipRollJoint = createJoint(JointId::R_HIP_ROLL, "right-hip-roll");
@@ -199,6 +216,7 @@ DarwinBodyModel::DarwinBodyModel()
   rightHipBracketLimb->joints.push_back(rightHipRollJoint);
 
   auto rightButtockLimb = createLimb("right-buttock");
+  rightButtockLimb->mass = 0.16710792;
   rightHipRollJoint->childPart = rightButtockLimb;
 
   auto rightHipPitchJoint = createJoint(JointId::R_HIP_PITCH, "right-hip-pitch");
@@ -208,6 +226,7 @@ DarwinBodyModel::DarwinBodyModel()
   rightButtockLimb->joints.push_back(rightHipPitchJoint);
 
   auto rightUpperLegLimb = createLimb("right-upper-leg");
+  rightUpperLegLimb->mass = 0.11904336;
   rightHipPitchJoint->childPart = rightUpperLegLimb;
 
   auto rightKneeJoint = createJoint(JointId::R_KNEE, "right-knee");
@@ -217,6 +236,7 @@ DarwinBodyModel::DarwinBodyModel()
   rightUpperLegLimb->joints.push_back(rightKneeJoint);
 
   auto rightLowerLegLimb = createLimb("right-lower-leg");
+  rightLowerLegLimb->mass = 0.070309794;
   rightKneeJoint->childPart = rightLowerLegLimb;
 
   auto rightAnklePitchJoint = createJoint(JointId::R_ANKLE_PITCH, "right-ankle-pitch");
@@ -226,6 +246,7 @@ DarwinBodyModel::DarwinBodyModel()
   rightLowerLegLimb->joints.push_back(rightAnklePitchJoint);
 
   auto rightAnkleLimb = createLimb("right-ankle");
+  rightAnkleLimb->mass = 0.16710792;
   rightAnklePitchJoint->childPart = rightAnkleLimb;
 
   auto rankleFootJoint = createJoint(JointId::R_ANKLE_ROLL, "right-ankle-roll");
@@ -235,6 +256,7 @@ DarwinBodyModel::DarwinBodyModel()
   rightAnkleLimb->joints.push_back(rankleFootJoint);
 
   auto rightFootLimb = createLimb("right-foot");
+  rightFootLimb->mass = 0.079446226;
   rankleFootJoint->childPart = rightFootLimb;
 
   d_torso = torso;
