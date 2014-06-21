@@ -21,7 +21,7 @@
 
   "camera": {
     "settings": {
-      "auto-wb": false,
+      "auto-wb": true,
       "exposure-auto": 1,
       "exposure-absolute": 500,
       "exposure-auto-priority": false,
