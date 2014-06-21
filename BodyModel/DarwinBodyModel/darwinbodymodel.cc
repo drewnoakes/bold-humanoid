@@ -1,9 +1,6 @@
 #include "darwinbodymodel.hh"
 
-#include "../../util/memory.hh"
 #include "../../util/log.hh"
-
-#include <Eigen/Core>
 
 using namespace bold;
 using namespace Eigen;
