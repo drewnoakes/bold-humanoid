@@ -209,7 +209,7 @@
     <script id="team-module-template" type="text/x-handlebars-template">
         <table>
           <tr class="unum"><td></td>{{#each this}}<td>{{this.unum}}</td>{{/each}}</tr>
-          <tr><td>role</td>{{#each this}}<td class="{{this.clazz}}">{{this.role}} <div class="role-indicator {{this.role}}"></div></td>{{/each}}</tr>
+          <tr><td>role</td>{{#each this}}<td class="{{this.clazz}}">{{this.role}} <div class="indicator role {{this.role}}"></div></td>{{/each}}</tr>
           <tr><td>activity</td>{{#each this}}<td class="{{this.clazz}}">{{this.activity}}</td>{{/each}}</tr>
           <tr><td>state</td>{{#each this}}<td class="{{this.clazz}}">{{this.state}}</td>{{/each}}</tr>
           <tr><td>pos</td>{{#each this}}<td class="{{this.clazz}}">{{this.pos}}</td>{{/each}}</tr>
@@ -222,41 +222,38 @@
     </script>
 
     <script id="drawbridge-module-template" type="text/x-handlebars-template">
-        <div class="player-tile">
+        <div>
             <header>
                 <div class="unum team-colour-{{this.col}}">{{this.unum}}</div>
                 <h1>
                     <span class="name">{{this.name}}</span>
-                    <span class="host">({{this.host}})</span>
+                    <span class="host">{{this.host}}</span>
                 </h1>
+                <span class="maxTemp" style="color:{{this.maxTemperatureColour}}" title="{{this.maxTemperatureJoint}}">{{this.maxTemperature}}&deg;</span>
             </header>
-            <div class="role"><span class="title">Role</span> {{this.role}} <div class="role-indicator {{this.role}}"></div></div>
-            <div class="uptime"><span class="title">Uptime</span> {{this.uptime}} seconds</div>
+            <div class="role"><span class="title">Role</span> <div class="indicator role {{this.role}}"></div> {{this.role}}</div>
             <div class="activity"><span class="title">Activity</span> {{this.activity}}</div>
-            <div class="status"><span class="title">Status</span> {{this.status}}</div>
-            <div class="version"><span class="title">Build</span> {{this.ver}}</div>
-            <div class="fps"><span class="title">FPS</span> {{this.fpsThink}} <span class="note">think</span> {{this.fpsMotion}} <span class="note">motion</span></div>
+            <div class="status"><span class="title">Status</span> <div class="indicator status {{this.status}}"></div> {{this.status}}</div>
+            <div class="fps">
+              <span class="title">FPS</span>
+              <span style="color:{{this.fpsThinkColour}}">{{this.fpsThink}}</span> <span class="note">think</span>
+              <span style="color:{{this.fpsMotionColour}}">{{this.fpsMotion}}</span> <span class="note">motion</span>
+            </div>
 
-          <!--
-            {{#if this.agent}}
-            {{#if this.agent.ball}}
-            <div class="agent-ball">{{this.agent.ball0}}, {{this.agent.ball1}}</div>
-            {{/if}}
-            {{#each this.agent.goals}}
-            <div class="agent-goal">{{this0}}, {{this1}}</div>
-            {{/each}}
-            {{/if}}
-          -->
-
-            {{#if this.game}}
-            <div class="game-mode"><span class="title">Game mode</span> {{this.game.mode}} <span class="note">({{this.game.age}} ms old)</span></div>
-            {{/if}}
+            <div class="game-mode">
+              <span class="title">Game mode</span>
+              {{#if this.game}}
+              <div class="indicator play-mode {{this.game.mode}}"></div> {{this.game.mode}} <span class="note" style="color:{{this.gameControllerAgeColour}}}}">({{this.game.age}} ms old)</span>
+              {{else}}
+              <span><div class="indicator error"></div> No game controller observed</span>
+              {{/if}}
+            </div>
 
             {{#if this.hw}}
-            <div class="hw-volt"><span class="title">Voltage</span> {{this.hw.volt}}</div>
+            <div class="hw-volt"><span class="title">Voltage</span> <span style="color:{{this.voltageColour}}">{{this.hw.volt}}</span></div>
             <div class="hw-temps"><span class="title">Temp</span>
-              {{#each this.hw.temps}}
-              <span>{{this}} </span>
+              {{#each this.temperatures}}
+              <span title="{{this.title}}" style="color:{{this.colour}}">{{this.degrees}}</span>
               {{/each}}
             </div>
             {{/if}}
@@ -267,20 +264,31 @@
             {{/each}}
             {{/if}}
 
-            {{#if this.options}}
-            <div class="options">
-                <span class="title">Ran options</span>
-                {{#each this.options}}
-                <span>{{this}} </span>
-                {{/each}}
-            </div>
-            {{/if}}
-
             {{#if this.fsms}}
             <div class="options">
                 <span class="title">FSMs</span>
                 {{#each this.fsms}}
                 {{this.state}} <span class="note">{{this.fsm}}</span>
+                {{/each}}
+            </div>
+            {{/if}}
+
+            {{#if this.agent}}
+            <div class="visible">
+              <span class="title">Visible</span>
+              {{#if this.agent.ball}}<div class="indicator ball visible"></div>{{else}}<div class="indicator ball invisible"></div>{{/if}}
+              {{#each this.agent.goals}}<div class="indicator goal visible"></div> {{/each}}
+            </div>
+            {{/if}}
+
+            <div class="version"><span class="title">Build</span> {{this.ver}}</div>
+            <div class="uptime"><span class="title">Uptime</span> <span style="color:{{this.uptimeColour}}">{{this.uptime}} seconds</span></div>
+
+            {{#if this.options}}
+            <div class="options">
+                <span class="title">Ran options</span>
+                {{#each this.options}}
+                <span>{{this}} </span>
                 {{/each}}
             </div>
             {{/if}}

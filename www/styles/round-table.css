@@ -385,13 +385,15 @@ div#header-module-links > a.module-button.added
 
 /********************************************************************/
 
-div.role-indicator
+div.indicator
 {
   border-radius: 50%;
-  width: 10px;
-  height: 10px;
+  width: 0.8em;
+  height: 0.8em;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: baseline;
+  border: 0;
+  box-sizing: border-box;
 
   transition: background-color 0.5s linear;
   -moz-transition: background-color 0.5s linear;
@@ -399,20 +401,26 @@ div.role-indicator
   -webkit-transition: background-color 0.5s linear;
 }
 
-div.role-indicator.Striker
-{
-  background-color: purple;
-}
+div.indicator.error { background-color: red; }
 
-div.role-indicator.Keeper
-{
-  background-color: white;
-}
+div.indicator.role.Striker { background-color: purple; }
+div.indicator.role.Keeper { background-color: white; }
+div.indicator.role.Supporter { background-color: green; }
 
-div.role-indicator.Supporter
-{
-  background-color: green;
-}
+div.indicator.status.Penalised { background-color: red; }
+div.indicator.status.Inactive { background-color: rgba(0,0,0,0.2); }
+div.indicator.status.Active { background-color: rgba(0,200,0,0.3); }
+div.indicator.status.Unknown { border: 1px solid rgba(0,0,0,0.5); }
+
+div.indicator.play-mode.Initial { background-color: black; }
+div.indicator.play-mode.Ready { background-color: blue; }
+div.indicator.play-mode.Set { background-color: yellow; }
+div.indicator.play-mode.Playing { background-color: rgba(0,200,0,0.5); }
+div.indicator.play-mode.Finished { background-color: white; }
+
+div.indicator.ball.visible { background-color: #FF4F26; }
+div.indicator.ball.invisible { border: 1px solid rgba(255, 79, 38, 0.5); }
+div.indicator.goal.visible { background-color: yellow; }
 
 /********************************************************************/
 
@@ -1509,10 +1517,35 @@ div.module.team td.old
 div.module.drawbridge div.player-tile
 {
   display: inline-block;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 5px;
-  margin: 4px;
-  padding: 4px;
+  margin-bottom: 6px;
+  padding: 6px;
+  width: 640px;
+  box-sizing: border-box;
+}
+
+html.night-mode div.module.drawbridge div.player-tile
+{
+  background: rgba(255, 255, 255, 0.05);
+}
+
+html.night-mode div.module.drawbridge.full-screen div.player-tile
+{
+  background: rgba(255, 255, 255, 0.15);
+}
+
+div.module.drawbridge.full-screen div.player-tile
+{
+  width: 600px;
+  box-sizing: border-box;
+  margin-right: 6px;
+}
+
+div.module.drawbridge div.player-tile header
+{
+  width: 100%;
+  position: relative;
 }
 
 div.module.drawbridge div.player-tile header div.unum
@@ -1524,19 +1557,41 @@ div.module.drawbridge div.player-tile header div.unum
   line-height: 30px;
   font-size: 24px;
   border-radius: 3px;
+  margin-right: 8px;
+}
+
+html.night-mode div.module.drawbridge div.player-tile header div.unum
+{
+  color: #000;
 }
 
 div.module.drawbridge div.player-tile header h1
 {
   display: inline-block;
   text-transform: none;
-  color:
+  line-height: 30px;
+  font-size: 18px;
 }
 
 div.module.drawbridge div.player-tile header h1 span.host
 {
   color: #555;
   font-weight: normal;
+}
+
+html.night-mode div.module.drawbridge div.player-tile header h1 span.host
+{
+  color: #777;
+}
+
+div.module.drawbridge div.player-tile header span.maxTemp
+{
+  position: absolute;
+  right: 0;
+  top: 0;
+  line-height: 30px;
+  font-size: 18px;
+  font-weight: bold
 }
 
 div.module.drawbridge div.player-tile span.title
@@ -1546,20 +1601,30 @@ div.module.drawbridge div.player-tile span.title
   min-width: 80px;
 }
 
+div.module.drawbridge div.player-tile span.title
+{
+  color: #777;
+}
+
 div.module.drawbridge div.player-tile span.note
 {
   color: #555;
   font-size: 0.8em;
 }
 
+html.night-mode div.module.drawbridge div.player-tile span.note
+{
+  color: #777;
+}
+
 div.module.drawbridge div.player-tile div.unum.team-colour-1
 {
-  background-color: cyan;
+  background-color: #36aeff;
 }
 
 div.module.drawbridge div.player-tile div.unum.team-colour-2
 {
-  background-color: magenta;
+  background-color: #ff41e5;
 }
 
 /*******************************************************************/
