@@ -24,8 +24,13 @@ TEST (BodyStateTests, posture_zeroed)
 {
   // All hinges at an angle of zero
 
-  double angles[23] = {0,};
-  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  array<double,23> angles;
+  angles.fill(0);
+
+  array<short, 21> diffs = std::array<short,21>();
+  diffs.fill(0);
+
+  auto body = BodyState(angles, diffs, 1);
   auto leftFoot = body.getLimb("left-foot");
   auto rightFoot = body.getLimb("right-foot");
 
@@ -140,11 +145,13 @@ TEST (BodyStateTests, posture_legsToSides)
 {
   // Roll the legs out 90 degrees
 
-  double angles[23] = {0,};
+  array<double,23> angles;
+  angles.fill(0);
+
   angles[(int)JointId::L_HIP_ROLL] = -M_PI/2;
   angles[(int)JointId::R_HIP_ROLL] =  M_PI/2;
 
-  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  auto body = BodyState(angles, array<short,21>(), 1);
   auto leftFoot = body.getLimb("left-foot");
   auto rightFoot = body.getLimb("right-foot");
 
@@ -175,11 +182,12 @@ TEST (BodyStateTests, posture_legsForwards)
 {
   // Pitch the legs forwards 90 degrees
 
-  double angles[23] = {0,};
+  array<double,23> angles;
+  angles.fill(0);
   angles[(int)JointId::L_HIP_PITCH] =  M_PI/2;
   angles[(int)JointId::R_HIP_PITCH] = -M_PI/2;
 
-  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  auto body = BodyState(angles, array<short,21>(), 1);
   auto leftFoot = body.getLimb("left-foot");
   auto rightFoot = body.getLimb("right-foot");
 
@@ -210,11 +218,13 @@ TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
 {
   // Bend the knees back 90 degrees
 
-  double angles[23] = {0,};
+  array<double,23> angles;
+  angles.fill(0);
+
   angles[(int)JointId::L_KNEE] = -M_PI/2; // TODO VERIFY ANGLES
   angles[(int)JointId::R_KNEE] =  M_PI/2;
 
-  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  auto body = BodyState(angles, array<short,21>(), 1);
   auto leftFoot = body.getLimb("left-foot");
   auto rightFoot = body.getLimb("right-foot");
 
@@ -255,10 +265,12 @@ TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
 
 TEST (BodyStateTests, camera_zeroed)
 {
-  double angles[23] = {0,};
+  array<double,23> angles;
+  angles.fill(0);
+
   angles[(uchar)JointId::CAMERA_CALIB_TILT] = -Math::degToRad(40);
 
-  auto body = BodyState(angles, std::vector<int>(21, 0), 0);
+  auto body = BodyState(angles, array<short,21>(), 0);
 
   Affine3d cameraTransform = body.getLimb("camera")->transform;
 
@@ -286,12 +298,14 @@ TEST (BodyStateTests, camera_zeroed)
 
 TEST (BodyStateTests, camera_headTiltedBack)
 {
-  double angles[23] = {0,};
+  array<double,23> angles;
+  angles.fill(0);
+
   // When the camera is tilted up 40 degrees, the image plane is parallel with the torso's z-axis.
   angles[(uchar)JointId::HEAD_TILT] = Math::degToRad(40);
   angles[(uchar)JointId::CAMERA_CALIB_TILT] = -Math::degToRad(40);
 
-  auto body = BodyState(angles, std::vector<int>(21, 0), 0);
+  auto body = BodyState(angles, array<short,21>(), 0);
 
   Affine3d cameraTransform = body.getLimb("camera")->transform;
 
@@ -322,8 +336,10 @@ TEST (DISABLED_BodyStateTests, cameraNeckJointTransform)
 
 TEST (BodyStateTests, torsoHeight)
 {
-  double angles[23] = {0,};
-  auto body = BodyState(angles, std::vector<int>(21, 0), 1);
+  array<double,23> angles;
+  angles.fill(0);
+
+  auto body = BodyState(angles, array<short,21>(), 1);
 
   EXPECT_EQ ( (33.5 + 93 + 93 + 122.2) / 1000.0, body.getTorsoHeight() );
 }

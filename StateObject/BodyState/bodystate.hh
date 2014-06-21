@@ -50,12 +50,15 @@ namespace bold
     }
 
     /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
-    BodyState(double angles[23],
-              std::vector<int> positionValueDiffs,
-              ulong motionCycleNumber);
-    BodyState(std::shared_ptr<HardwareState const> const& hardwareState,
-              std::shared_ptr<BodyControl> const& bodyControl,
-              ulong motionCycleNumber);
+    BodyState(
+      std::array<double,23> const& angles,
+      std::array<short,21> const& positionValueDiffs,
+      ulong cycleNumber);
+
+    BodyState(
+      std::shared_ptr<HardwareState const> const& hardwareState,
+      std::shared_ptr<BodyControl> const& bodyControl,
+      ulong motionCycleNumber);
 
     std::shared_ptr<Limb const> getTorso() const { return d_torso; }
 
@@ -80,20 +83,20 @@ namespace bold
      * Assumes the lowest foot is flat on the floor */
     double getTorsoHeight() const { return d_torsoHeight; }
 
-    std::vector<int> const getPositionValueDiffs() const { return d_positionValueDiffs; }
+    std::array<short,21> const& getPositionValueDiffs() const { return d_positionValueDiffs; }
 
     Eigen::Affine3d determineFootAgentTr(bool leftFoot) const;
 
   private:
     /// Initialise with the specified angles (radians), and position errors (values)
     /// Indexed by JointId (i.e. 0 is ignored.), including camera tilt angle
-    void initialise(double angles[23]);
+    void initialise(std::array<double,23> const& angles);
 
-    std::vector<int> d_positionValueDiffs;
+    std::array<short,21> d_positionValueDiffs;
 
     double d_torsoHeight;
     std::shared_ptr<Limb> d_torso;
-    std::shared_ptr<Joint> d_jointById[23];
+    std::array<std::shared_ptr<Joint>,23> d_jointById;
     std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
 
     Eigen::Affine3d d_cameraAgentTr;
