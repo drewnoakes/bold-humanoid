@@ -169,7 +169,7 @@ DarwinBodyModel::DarwinBodyModel()
   leftAnklePitchJoint->anchors.second = Vector3d(0, 0, 0);
   leftLowerLegLimb->joints.push_back(leftAnklePitchJoint);
 
-  auto leftAnkleLimb = createLimb("left-angle");
+  auto leftAnkleLimb = createLimb("left-ankle");
   leftAnklePitchJoint->childPart = leftAnkleLimb;
 
   auto leftAngleRollJoint = createJoint(JointId::L_ANKLE_ROLL, "left-ankle-roll");
@@ -225,7 +225,7 @@ DarwinBodyModel::DarwinBodyModel()
   rightAnklePitchJoint->anchors.second = Vector3d(0, 0, 0);
   rightLowerLegLimb->joints.push_back(rightAnklePitchJoint);
 
-  auto rightAnkleLimb = createLimb("right-angle");
+  auto rightAnkleLimb = createLimb("right-ankle");
   rightAnklePitchJoint->childPart = rightAnkleLimb;
 
   auto rankleFootJoint = createJoint(JointId::R_ANKLE_ROLL, "right-ankle-roll");
