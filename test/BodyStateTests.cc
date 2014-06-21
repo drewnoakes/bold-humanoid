@@ -315,7 +315,7 @@ TEST (BodyStateTests, camera_headTiltedBack)
   EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualAgentCameraRotation) );
 }
 
-TEST (BodyStateTests, cameraNeckJointTransform)
+TEST (DISABLED_BodyStateTests, cameraNeckJointTransform)
 {
   // TODO
 }
