@@ -60,8 +60,8 @@ DarwinBodyModel::DarwinBodyModel()
   cameraCalibrationPanJoint->anchors.second = Vector3d(0, 0, 0);
   cameraCalibrationTiltJoint->childPart = cameraCalibrationPanJoint;
 
-  auto camera = createLimb("camera");
-  cameraCalibrationPanJoint->childPart = camera;
+  auto cameraLimb = createLimb("camera");
+  cameraCalibrationPanJoint->childPart = cameraLimb;
 
   // LEFT ARM
 
