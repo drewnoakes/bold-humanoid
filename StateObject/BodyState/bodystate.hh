@@ -78,6 +78,7 @@ namespace bold
     Eigen::Vector3d getAxisVec() const { return d_transform * d_joint->axis; }
 
     double getAngleRads() const { return d_angleRads; }
+    double getAngleDegs() const { return Math::radToDeg(d_angleRads); }
 
   private:
     std::shared_ptr<Joint const> d_joint;

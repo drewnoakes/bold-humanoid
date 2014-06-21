@@ -64,8 +64,8 @@ void HeadModule::moveToDegs(double pan, double tilt)
 void HeadModule::moveByDeltaDegs(double panDelta, double tiltDelta)
 {
   auto body = State::get<BodyState>();
-  double currentPanAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_PAN)->getAngleRads());
-  double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->getAngleRads());
+  double currentPanAngleDegs = body->getJoint(JointId::HEAD_PAN)->getAngleDegs();
+  double currentTiltAngleDegs = body->getJoint(JointId::HEAD_TILT)->getAngleDegs();
   moveToDegs(currentPanAngleDegs + panDelta, currentTiltAngleDegs + tiltDelta);
 }
 
@@ -97,8 +97,8 @@ void HeadModule::moveTracking(double panError, double tiltError)
   };
 
   auto body = State::get<BodyState>();
-  double currentPanAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_PAN)->getAngleRads());
-  double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->getAngleRads());
+  double currentPanAngleDegs = body->getJoint(JointId::HEAD_PAN)->getAngleDegs();
+  double currentTiltAngleDegs = body->getJoint(JointId::HEAD_TILT)->getAngleDegs();
 
   d_targetPanAngleDegs =
     currentPanAngleDegs +

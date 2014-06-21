@@ -9,8 +9,8 @@ using namespace Eigen;
 vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
 {
   auto body = State::get<BodyState>();
-  double currentPanAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_PAN)->getAngleRads());
-  double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->getAngleRads());
+  double currentPanAngleDegs = body->getJoint(JointId::HEAD_PAN)->getAngleDegs();
+  double currentTiltAngleDegs = body->getJoint(JointId::HEAD_TILT)->getAngleDegs();
 
   static Setting<double>* turnSpeedSetting = Config::getSetting<double>("options.search-ball.turn-speed");
   static Setting<double>* maxTargetHeightSetting = Config::getSetting<double>("options.search-ball.max-target-height");
