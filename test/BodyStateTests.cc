@@ -44,8 +44,8 @@ TEST (BodyStateTests, posture_zeroed)
 
   EXPECT_TRUE(VectorsEqual(
              Vector3d(footSide, footForward, -footDownward),
-             Vector3d(rightFoot->transform.translation()) ))
-  ;
+             Vector3d(rightFoot->transform.translation()) ));
+
   EXPECT_TRUE( (rightFoot->transform.rotation() - Matrix3d::Identity()).isZero() ) << "Has no rotation";
 
   // Neck
