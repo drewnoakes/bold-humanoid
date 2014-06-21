@@ -8,8 +8,6 @@ using namespace Eigen;
 
 vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
 {
-  auto agentFrame = State::get<AgentFrameState>();
-
   auto body = State::get<BodyState>();
   double currentPanAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_PAN)->getAngleRads());
   double currentTiltAngleDegs = Math::radToDeg(body->getJoint(JointId::HEAD_TILT)->getAngleRads());
