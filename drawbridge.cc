@@ -32,13 +32,13 @@ int websocket_callback(libwebsocket_context *context, libwebsocket *wsi, libwebs
   {
     case LWS_CALLBACK_ESTABLISHED:
     {
-      log::info("WebSockets") << "Client connected";
+      log::info("WebSockets") << "Client connected (" << sessions.size() << " active)";
       sessions.push_back(session);
       return 0;
     }
     case LWS_CALLBACK_CLOSED:
     {
-      log::info("WebSockets") << "Client disconnected";
+      log::info("WebSockets") << "Client disconnected (" << sessions.size() << " active)";
       auto it = find(sessions.begin(), sessions.end(), session);
       if (it != sessions.end())
         sessions.erase(it);
@@ -150,7 +150,6 @@ void queueBytes(char const* data, size_t len)
   //
   auto str = make_shared<vector<uchar>>(len);
   memcpy(str->data(), data, len);
-  cout << "Received message. " << sessions.size() << " sessions." << endl;
   for (auto const& session : sessions)
   {
     session->data = str;
@@ -273,6 +272,8 @@ void queueRandomMessage()
 int main(int argc, char **argv)
 {
   srand(time(0));
+
+  lws_set_log_level(LLL_ERR | LLL_WARN, nullptr);
 
   // TODO: use getopt
   auto nextArg = [&](int* i) -> char*
@@ -403,6 +404,13 @@ int main(int argc, char **argv)
       // Returns -1 when an error occurred. UDPSocket logs the error.
       if (bytesRead < 0)
         break;
+
+      static bool seenYet = false;
+      if (!likely(seenYet))
+      {
+        log::info("drawbridge") << "Received first message";
+        seenYet = true;
+      }
 
       queueBytes(data, bytesRead);
     }
