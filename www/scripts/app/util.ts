@@ -67,6 +67,27 @@ function binarySearchComparator<T>(array: T[], comparator: (item: T)=>number)
     return -1;
 }
 
+export function sortChildren(parent: HTMLElement, sortBy: (el: Element)=>any)
+{
+    var l = parent.children.length,
+        arr = new Array(l);
+
+    for (var i = 0; i < l; i++)
+        arr[i] = [sortBy(parent.children[i]), parent.children[i]];
+
+    arr.sort(function(a, b) { return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0; });
+
+    var par = parent.parentNode,
+        ref = parent.nextSibling;
+
+    par.removeChild(parent);
+
+    for (var i = 0; i < l; i++)
+        parent.appendChild(arr[i][1]);
+
+    par.insertBefore(parent, ref);
+}
+
 //
 // FULL SCREEN SUPPORT
 //
