@@ -24,7 +24,7 @@ struct Session
 
 vector<Session*> sessions;
 
-int websocket_callback(libwebsocket_context *context, libwebsocket *wsi, libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
+int websocketCallback(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len)
 {
   Session* session = reinterpret_cast<Session*>(user);
 
@@ -363,7 +363,7 @@ int main(int argc, char **argv)
   //
 
                    // name, callback, per-session-data-size, rx-buffer-size, no-buffer-all-partial-tx
-  d_protocols[0] = { "drawbridge", websocket_callback, sizeof(Session), 0, 0 };
+  d_protocols[0] = { "drawbridge", websocketCallback, sizeof(Session), 0, 0 };
   // Mark the end of the protocols
   d_protocols[1] = { nullptr, nullptr, 0, 0, 0 };
 
