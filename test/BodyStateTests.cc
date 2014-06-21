@@ -26,8 +26,8 @@ TEST (BodyStateTests, posture_zeroed)
 
   double angles[23] = {0,};
   auto body = BodyState(angles, std::vector<int>(21, 0), 1);
-  auto leftFoot = body.getLimb("lFoot");
-  auto rightFoot = body.getLimb("rFoot");
+  auto leftFoot = body.getLimb("left-foot");
+  auto rightFoot = body.getLimb("right-foot");
 
   EXPECT_TRUE(VectorsEqual(
              Vector3d(-footSide, footForward, -footDownward),
@@ -145,8 +145,8 @@ TEST (BodyStateTests, posture_legsToSides)
   angles[(int)JointId::R_HIP_ROLL] =  M_PI/2;
 
   auto body = BodyState(angles, std::vector<int>(21, 0), 1);
-  auto leftFoot = body.getLimb("lFoot");
-  auto rightFoot = body.getLimb("rFoot");
+  auto leftFoot = body.getLimb("left-foot");
+  auto rightFoot = body.getLimb("right-foot");
 
   EXPECT_TRUE(VectorsEqual(
              Vector3d(-0.074/2 - legLength, footForward, -0.1222),
@@ -180,8 +180,8 @@ TEST (BodyStateTests, posture_legsForwards)
   angles[(int)JointId::R_HIP_PITCH] = -M_PI/2;
 
   auto body = BodyState(angles, std::vector<int>(21, 0), 1);
-  auto leftFoot = body.getLimb("lFoot");
-  auto rightFoot = body.getLimb("rFoot");
+  auto leftFoot = body.getLimb("left-foot");
+  auto rightFoot = body.getLimb("right-foot");
 
   EXPECT_TRUE(VectorsEqual(
              Vector3d(-0.074/2, footForward + legLength, -0.1222),
@@ -215,8 +215,8 @@ TEST (BodyStateTests, posture_kneesBentNinetyDegrees)
   angles[(int)JointId::R_KNEE] =  M_PI/2;
 
   auto body = BodyState(angles, std::vector<int>(21, 0), 1);
-  auto leftFoot = body.getLimb("lFoot");
-  auto rightFoot = body.getLimb("rFoot");
+  auto leftFoot = body.getLimb("left-foot");
+  auto rightFoot = body.getLimb("right-foot");
 
   EXPECT_TRUE(VectorsEqual(
              Vector3d(-0.074/2, footForward, -0.1222 - 0.093),
