@@ -150,6 +150,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./BodyModel/DarwinBodyModel/darwinbodymodel.cc
+)
+
+add_class(BOLDHUMANOID
   ./Camera/Camera.cc
   ./Camera/capture.cc
   ./Camera/createControls.cc

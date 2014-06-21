@@ -1,6 +1,7 @@
 #include "motionloop.hh"
 
 #include "../BodyControl/bodycontrol.hh"
+#include "../BodyModel/DarwinBodyModel/darwinbodymodel.hh"
 #include "../CM730/cm730.hh"
 #include "../CM730Platform/CM730Linux/cm730linux.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
@@ -37,6 +38,7 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
   d_staticHardwareStateUpdateNeeded(true)
 {
   d_bodyControl = make_shared<BodyControl>();
+  d_bodyModel = make_shared<DarwinBodyModel>();
 
   d_dynamicBulkRead = make_unique<BulkRead>(
     CM730::P_DXL_POWER, CM730::P_VOLTAGE,
@@ -493,7 +495,7 @@ void MotionLoop::step(SequentialTimer& t)
 
   State::set(hw);
 
-  State::make<BodyState>(hw, d_bodyControl, d_cycleNumber);
+  State::make<BodyState>(d_bodyModel, hw, d_bodyControl, d_cycleNumber);
   t.timeEvent("Update BodyState");
 
   if (!d_readYet)

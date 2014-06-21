@@ -3,17 +3,17 @@
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../MX28Snapshot/mx28snapshot.hh"
 
-BodyState::BodyState(array<double,23> const& angles, array<short,21> const& positionValueDiffs, ulong cycleNumber)
+BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, array<double,23> const& angles, array<short,21> const& positionValueDiffs, ulong cycleNumber)
 : d_positionValueDiffs(positionValueDiffs),
   d_torso(),
   d_jointById(),
   d_limbByName(),
   d_motionCycleNumber(cycleNumber)
 {
-  initialise(angles);
+  initialise(bodyModel, angles);
 }
 
-BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, shared_ptr<BodyControl> const& bodyControl, ulong cycleNumber)
+BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, shared_ptr<HardwareState const> const& hardwareState, shared_ptr<BodyControl> const& bodyControl, ulong cycleNumber)
 : d_torso(),
   d_jointById(),
   d_limbByName(),
@@ -39,5 +39,5 @@ BodyState::BodyState(shared_ptr<HardwareState const> const& hardwareState, share
   angles[(uchar)JointId::CAMERA_CALIB_TILT] = Math::degToRad(tiltSetting->getValue());
   angles[(uchar)JointId::CAMERA_CALIB_PAN ] = Math::degToRad(panSetting->getValue());
 
-  initialise(angles);
+  initialise(bodyModel, angles);
 }

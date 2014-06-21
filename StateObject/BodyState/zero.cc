@@ -2,7 +2,7 @@
 
 #include "../../MX28/mx28.hh"
 
-shared_ptr<BodyState const> BodyState::zero(ulong thinkCycleNumber)
+shared_ptr<BodyState const> BodyState::zero(shared_ptr<BodyModel const> const& bodyModel, ulong thinkCycleNumber)
 {
   array<double,23> angles;
   angles.fill(0);
@@ -13,5 +13,5 @@ shared_ptr<BodyState const> BodyState::zero(ulong thinkCycleNumber)
   array<short,21> positionValueDiffs;
   positionValueDiffs.fill(0);
 
-  return make_shared<BodyState>(angles, positionValueDiffs, thinkCycleNumber);
+  return make_shared<BodyState>(bodyModel, angles, positionValueDiffs, thinkCycleNumber);
 }

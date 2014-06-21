@@ -1,10 +1,9 @@
 #include "bodystate.hh"
 
-#include <list>
-
 #include "../HardwareState/hardwarestate.hh"
-#include "../../Math/math.hh"
+#include "../../BodyModel/bodymodel.hh"
 #include "../../Config/config.hh"
+#include "../../Math/math.hh"
 #include "../../util/memory.hh"
 
 using namespace bold;

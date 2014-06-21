@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-#include <future>
 #include <map>
 #include <memory>
 #include <stdexcept>
@@ -17,7 +15,77 @@ namespace bold
 {
   typedef unsigned char uchar;
 
+  class BodyPartPosition
+  {
+  public:
+    /** The transformation matrix of this body part.
+    *
+    * This matrix contains the position and orientation of the body part
+    * relative to the torso.
+    *
+    * Using the returned Affine3d to transform a vector will convert
+    * from the frame of this body part into the frame of the torso.
+    */
+    Eigen::Affine3d const& getTransform() const { return d_transform; }
+
+    /** Get the position of the body part, relative to the torso. */
+    Eigen::Vector3d getPosition() const
+    {
+      return d_transform.translation().head<3>();
+    }
+
+  protected:
+    BodyPartPosition(Eigen::Affine3d const& transform)
+    : d_transform(transform)
+    {}
+
+    virtual ~BodyPartPosition() = default;
+
+    // TODO rename partTorsoTransform (and check that's correct!)
+    Eigen::Affine3d d_transform;
+  };
+
+  class LimbPosition : public BodyPartPosition
+  {
+  public:
+    LimbPosition(std::shared_ptr<Limb const> limb, Eigen::Affine3d const& transform)
+    : BodyPartPosition(transform),
+      d_limb(limb)
+    {
+      ASSERT(limb);
+    }
+
+    std::shared_ptr<Limb const> const& getLimb() const { return d_limb; }
+
+  private:
+    std::shared_ptr<Limb const> d_limb;
+  };
+
+  class JointPosition : public BodyPartPosition
+  {
+  public:
+    JointPosition(std::shared_ptr<Joint const> joint, Eigen::Affine3d const& transform, double angleRads)
+    : BodyPartPosition(transform),
+      d_joint(joint),
+      d_angleRads(angleRads)
+    {
+      ASSERT(joint);
+    }
+
+    std::shared_ptr<Joint const> const& getJoint() const { return d_joint; }
+
+    /// @returns the joint's axis direction vector in the agent coordinate system
+    Eigen::Vector3d getAxisVec() const { return d_transform * d_joint->axis; }
+
+    double getAngleRads() const { return d_angleRads; }
+
+  private:
+    std::shared_ptr<Joint const> d_joint;
+    double d_angleRads;
+  };
+
   class BodyControl;
+  class BodyModel;
   class HardwareState;
   template<typename> class Setting;
 
@@ -42,31 +110,31 @@ namespace bold
   class BodyState : public StateObject
   {
   public:
-    static std::shared_ptr<BodyState const> zero(ulong thinkCycleNumber = 0);
+    static std::shared_ptr<BodyState const> zero(std::shared_ptr<BodyModel const> const& bodyModel, ulong thinkCycleNumber = 0);
 
-    static Eigen::Vector3d distanceBetween(std::shared_ptr<BodyPart const> const& p1, std::shared_ptr<BodyPart const> const& p2)
+    static Eigen::Vector3d distanceBetween(std::shared_ptr<BodyPartPosition const> const& p1, std::shared_ptr<BodyPartPosition const> const& p2)
     {
       return p2->getPosition() - p1->getPosition();
     }
 
     /// Initialise with the specified angles, in radians. Indexed by JointId (i.e. 0 is ignored.)
     BodyState(
+      std::shared_ptr<BodyModel const> const& bodyModel,
       std::array<double,23> const& angles,
       std::array<short,21> const& positionValueDiffs,
       ulong cycleNumber);
 
     BodyState(
+      std::shared_ptr<BodyModel const> const& bodyModel,
       std::shared_ptr<HardwareState const> const& hardwareState,
       std::shared_ptr<BodyControl> const& bodyControl,
       ulong motionCycleNumber);
 
-    std::shared_ptr<Limb const> getTorso() const { return d_torso; }
+    std::shared_ptr<LimbPosition const> getLimb(std::string const& name) const;
 
-    std::shared_ptr<Limb const> getLimb(std::string const& name) const;
+    std::shared_ptr<JointPosition const> getJoint(JointId jointId) const;
 
-    std::shared_ptr<Joint const> getJoint(JointId jointId) const;
-
-    void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const;
+//    void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const;
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -90,14 +158,16 @@ namespace bold
   private:
     /// Initialise with the specified angles (radians), and position errors (values)
     /// Indexed by JointId (i.e. 0 is ignored.), including camera tilt angle
-    void initialise(std::array<double,23> const& angles);
+    void initialise(std::shared_ptr<BodyModel const> const& bodyModel, std::array<double,23> const& angles);
 
     std::array<short,21> d_positionValueDiffs;
 
     double d_torsoHeight;
-    std::shared_ptr<Limb> d_torso;
-    std::array<std::shared_ptr<Joint>,23> d_jointById;
-    std::map<std::string, std::shared_ptr<Limb>> d_limbByName;
+
+    std::shared_ptr<LimbPosition const> d_torso;
+
+    std::array<std::shared_ptr<JointPosition const>,23> d_jointById;
+    std::map<std::string,std::shared_ptr<LimbPosition const>> d_limbByName;
 
     Eigen::Affine3d d_cameraAgentTr;
     Eigen::Affine3d d_agentCameraTr;
@@ -109,7 +179,7 @@ namespace bold
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   };
 
-  inline std::shared_ptr<Limb const> BodyState::getLimb(std::string const& name) const
+  inline std::shared_ptr<LimbPosition const> BodyState::getLimb(std::string const& name) const
   {
     // NOTE cannot use '[]' on a const map
     auto const& i = d_limbByName.find(name);
@@ -121,15 +191,15 @@ namespace bold
     return i->second;
   }
 
-  inline std::shared_ptr<Joint const> BodyState::getJoint(JointId jointId) const
+  inline std::shared_ptr<JointPosition const> BodyState::getJoint(JointId jointId) const
   {
     ASSERT(jointId >= JointId::MIN && jointId <= JointId::MAX);
     return d_jointById[(uchar)jointId];
   }
 
-  inline void BodyState::visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const
-  {
-    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-      action(d_jointById[(uchar)jointId]);
-  }
+//  inline void BodyState::visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const
+//  {
+//    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+//      action(d_jointById[(uchar)jointId]);
+//  }
 }

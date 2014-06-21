@@ -11,6 +11,7 @@
 namespace bold
 {
   class BodyControl;
+  class BodyModel;
   class BulkRead;
   class CM730;
   class DebugControl;
@@ -51,6 +52,7 @@ namespace bold
 
     std::unique_ptr<CM730> d_cm730;
     std::shared_ptr<DebugControl> d_debugControl;
+    std::shared_ptr<BodyModel> d_bodyModel;
     std::shared_ptr<BodyControl> d_bodyControl;
     std::unique_ptr<BulkRead> d_dynamicBulkRead;
     std::unique_ptr<BulkRead> d_staticBulkRead;

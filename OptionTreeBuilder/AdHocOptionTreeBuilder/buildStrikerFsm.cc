@@ -49,7 +49,7 @@ auto isPerfectLineForAttack = []()
 
   // ASSUME we are looking at the ball
   // Must be looking approximately straight ahead (the ball is directly in front of us)
-  double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->angleRads;
+  double panAngle = State::get<BodyState>(StateTime::CameraImage)->getJoint(JointId::HEAD_PAN)->getAngleRads();
   if (fabs(Math::radToDeg(panAngle)) > 5.0)
     return false;
 

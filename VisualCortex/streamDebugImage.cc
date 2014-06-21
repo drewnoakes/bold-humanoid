@@ -165,7 +165,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   // Draw horizon
   if (d_shouldDrawHorizon->getValue())
   {
-    auto neckJoint = bodyState->getLimb("neck")->joints[0];
+    auto neckJoint = bodyState->getLimb("neck")->getLimb()->joints[0];
     Affine3d const& cameraAgentTr = bodyState->getCameraAgentTransform();
 
     Vector2i p1(0,0);

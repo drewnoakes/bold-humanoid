@@ -20,7 +20,7 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
       for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
       {
         auto const& it = d_jointById[j];
-        writer.Double(it->angleRads, "%.3f");
+        writer.Double(it->getAngleRads(), "%.3f");
       }
     }
     writer.EndArray();
