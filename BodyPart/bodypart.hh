@@ -12,8 +12,9 @@ namespace bold
   /**
    * Body part information
    */
-  struct BodyPart
+  class BodyPart
   {
+  public:
     BodyPart(std::string name)
     : name(name),
       rotationOrigin(0)
@@ -55,13 +56,14 @@ namespace bold
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   };
 
-  struct Joint;
+  class Joint;
 
   /**
    * Limb information
    */
-  struct Limb : public BodyPart
+  class Limb : public BodyPart
   {
+  public:
     Limb(std::string name)
     : BodyPart(name)
     {}
@@ -85,8 +87,9 @@ namespace bold
   /**
    * Joint information
    */
-  struct Joint : public BodyPart
+  class Joint : public BodyPart
   {
+  public:
     Joint(JointId id, std::string name)
     : BodyPart(name),
       id(id),
