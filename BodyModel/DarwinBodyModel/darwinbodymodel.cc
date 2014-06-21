@@ -71,12 +71,15 @@ DarwinBodyModel::DarwinBodyModel()
   leftShoulderPitchJoint->anchors.second = Vector3d(0, 0, 0.016);
   torso->joints.push_back(leftShoulderPitchJoint);
 
+  auto leftShoulderBracketLimb = createLimb("left-shoulder-bracket");
+  leftShoulderPitchJoint->childPart = leftShoulderBracketLimb;
+
   auto leftShoulderRollJoint = createJoint(JointId::L_SHOULDER_ROLL, "left-shoulder-roll");
   leftShoulderRollJoint->rotationOrigin = -M_PI/4.0;
   leftShoulderRollJoint->axis = Vector3d(0, -1, 0);
   leftShoulderRollJoint->anchors.first = Vector3d(0, 0, 0);
   leftShoulderRollJoint->anchors.second = Vector3d(0, 0, 0);
-  leftShoulderPitchJoint->childPart = leftShoulderRollJoint;
+  leftShoulderBracketLimb->joints.push_back(leftShoulderRollJoint);
 
   auto leftUpperArmLimb = createLimb("left-upper-arm");
   leftShoulderRollJoint->childPart = leftUpperArmLimb;
@@ -99,12 +102,15 @@ DarwinBodyModel::DarwinBodyModel()
   rightShoulderPitchJoint->anchors.second = Vector3d(0, 0, 0.016);
   torso->joints.push_back(rightShoulderPitchJoint);
 
+  auto rightShoulderBracketLimb = createLimb("right-shoulder-bracket");
+  rightShoulderPitchJoint->childPart = rightShoulderBracketLimb;
+
   auto rightShoulderRollJoint = createJoint(JointId::R_SHOULDER_ROLL, "right-shoulder-roll");
   rightShoulderRollJoint->rotationOrigin = M_PI/4.0;
   rightShoulderRollJoint->axis = Vector3d(0, -1, 0);
   rightShoulderRollJoint->anchors.first = Vector3d(0, 0, 0);
   rightShoulderRollJoint->anchors.second = Vector3d(0, 0, 0);
-  rightShoulderPitchJoint->childPart = rightShoulderRollJoint;
+  rightShoulderBracketLimb->joints.push_back(rightShoulderRollJoint);
 
   auto rightUpperArmLimb = createLimb("right-upper-arm");
   rightShoulderRollJoint->childPart = rightUpperArmLimb;
@@ -127,11 +133,14 @@ DarwinBodyModel::DarwinBodyModel()
   leftHipYawJoint->anchors.second = Vector3d(0, 0, 0);
   torso->joints.push_back(leftHipYawJoint);
 
+  auto leftHipBracketLimb = createLimb("left-hip-bracket");
+  leftHipYawJoint->childPart = leftHipBracketLimb;
+
   auto leftHipRollJoint = createJoint(JointId::L_HIP_ROLL, "left-hip-roll");
   leftHipRollJoint->axis = Vector3d(0, -1, 0);
   leftHipRollJoint->anchors.first = Vector3d(0, 0, 0);
   leftHipRollJoint->anchors.second = Vector3d(0, 0, 0);
-  leftHipYawJoint->childPart = leftHipRollJoint;
+  leftHipBracketLimb->joints.push_back(leftHipRollJoint);
 
   auto leftButtockLimb = createLimb("left-buttock");
   leftHipRollJoint->childPart = leftButtockLimb;
@@ -180,11 +189,14 @@ DarwinBodyModel::DarwinBodyModel()
   rightHipYawJoint->anchors.second = Vector3d(0, 0, 0);
   torso->joints.push_back(rightHipYawJoint);
 
+  auto rightHipBracketLimb = createLimb("right-hip-bracket");
+  rightHipYawJoint->childPart = rightHipBracketLimb;
+
   auto rightHipRollJoint = createJoint(JointId::R_HIP_ROLL, "right-hip-roll");
   rightHipRollJoint->axis = Vector3d(0, -1, 0);
   rightHipRollJoint->anchors.first = Vector3d(0, 0, 0);
   rightHipRollJoint->anchors.second = Vector3d(0, 0, 0);
-  rightHipYawJoint->childPart = rightHipRollJoint;
+  rightHipBracketLimb->joints.push_back(rightHipRollJoint);
 
   auto rightButtockLimb = createLimb("right-buttock");
   rightHipRollJoint->childPart = rightButtockLimb;
