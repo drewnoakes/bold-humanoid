@@ -96,6 +96,7 @@ namespace bold
     void addState(std::shared_ptr<FSMState> state, bool startState = false);
 
     std::shared_ptr<FSMState> getState(std::string name) const;
+    std::shared_ptr<FSMState const> getCurrentState() const { return d_curState; }
 
     std::shared_ptr<FSMState> newState(std::string const& name,
                          std::vector<std::shared_ptr<Option>> options,
