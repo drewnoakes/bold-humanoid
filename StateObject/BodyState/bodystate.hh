@@ -135,7 +135,8 @@ namespace bold
 
     std::shared_ptr<JointPosition const> getJoint(JointId jointId) const;
 
-//    void visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const;
+    void visitJoints(std::function<void(std::shared_ptr<JointPosition const> const&)> visitor) const;
+    void visitLimbs(std::function<void(std::shared_ptr<LimbPosition const> const&)> visitor) const;
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
@@ -198,9 +199,15 @@ namespace bold
     return d_jointById[(uchar)jointId];
   }
 
-//  inline void BodyState::visitJoints(std::function<void(std::shared_ptr<Joint const>)> action) const
-//  {
-//    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-//      action(d_jointById[(uchar)jointId]);
-//  }
+  inline void BodyState::visitJoints(std::function<void(std::shared_ptr<JointPosition const> const&)> visitor) const
+  {
+    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+      visitor(d_jointById[(uchar)jointId]);
+  }
+
+  inline void BodyState::visitLimbs(std::function<void(std::shared_ptr<LimbPosition const> const&)> visitor) const
+  {
+    for (auto const& pair : d_limbByName)
+      visitor(pair.second);
+  }
 }
