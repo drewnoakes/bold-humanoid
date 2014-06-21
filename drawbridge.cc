@@ -163,20 +163,23 @@ void queueRandomMessage()
   StringBuffer buffer;
   Writer<StringBuffer> writer(buffer);
 
-  static int teamNumber = std::rand() % 10;
-  static int teamColour = std::rand() % 2;
+  static int teamNumber = 1 + (std::rand() % 10);
+  static int teamColour = 1 + (std::rand() % 2);
   static vector<string> names = { "nimue", "gareth", "oberon", "bors", "dagonet", "ywain", "tor" };
+  static vector<PlayerActivity> playerActivities = { PlayerActivity::ApproachingBall, PlayerActivity::AttackingGoal, PlayerActivity::Other, PlayerActivity::Positioning, PlayerActivity::Waiting };
+  static vector<PlayerStatus> playerStatuses = { PlayerStatus::Active, PlayerStatus::Inactive, PlayerStatus::Paused, PlayerStatus::Penalised };
   static auto startTime = Clock::getTimestamp();
 
   srand(time(nullptr));
 
-  int unum = std::rand() % 6 + 1;
-  string hostName = "darwin" + std::rand() % 2;
-  string playerName = names[unum];
+  const int MaxPlayerNum = 6;
+
+  int unum = (std::rand() % MaxPlayerNum) + 1;
+  string playerName = names[unum - 1];
 
   writer.StartObject();
   {
-    writer.String("unum").Int(1 + std::rand() % 6);
+    writer.String("unum").Int(1 + (std::rand() % MaxPlayerNum));
     writer.String("team").Int(teamNumber);
     writer.String("col").Int(teamColour);
     stringstream host;
@@ -186,31 +189,45 @@ void queueRandomMessage()
     writer.String("ver").String(Version::GIT_SHA1.c_str());
     writer.String("uptime").Uint(static_cast<uint>(Clock::getSecondsSince(startTime)));
 
-    writer.String("activity").String(getPlayerActivityString(PlayerActivity::ApproachingBall).c_str());
-    writer.String("role").String(getPlayerRoleString(PlayerRole::Striker).c_str());
-    writer.String("status").String(getPlayerStatusString(PlayerStatus::Active).c_str());
+    writer.String("role").String(getPlayerRoleString(unum == 1 ? PlayerRole::Keeper : PlayerRole::Striker).c_str());
 
     srand(unum);
 
-    writer.String("fpsThink").Double(29.5 + rand() % 10 / 10.0);
-    writer.String("fpsMotion").Double(127.5 + rand() % 10 / 10.0);
+    writer.String("activity").String(getPlayerActivityString(playerActivities[rand() % playerActivities.size()]).c_str());
+    writer.String("status").String(getPlayerStatusString(playerStatuses[rand() % playerStatuses.size()]).c_str());
+
+    writer.String("fpsThink").Double(25 + ((rand() % 100) / 10.0));
+    writer.String("fpsMotion").Double(100 + ((rand() % 400) / 10.0));
 
     writer.String("agent");
     writer.StartObject();
     {
-      writer.String("ball")
-        .StartArray()
-        .Double((rand() % 1000) * FieldMap::getFieldLengthX())
-        .Double((rand() % 1000) * FieldMap::getFieldLengthY())
-        .EndArray();
-
-      writer.String("goals")
-        .StartArray()
+      if (rand() % 10 > 5)
+      {
+        writer.String("ball")
           .StartArray()
           .Double((rand() % 1000) * FieldMap::getFieldLengthX())
           .Double((rand() % 1000) * FieldMap::getFieldLengthY())
-          .EndArray()
-        .EndArray();
+          .EndArray();
+      }
+
+      if (rand() % 10 > 5)
+      {
+        writer.String("goals")
+          .StartArray()
+            .StartArray()
+            .Double((rand() % 1000) * FieldMap::getFieldLengthX())
+            .Double((rand() % 1000) * FieldMap::getFieldLengthY())
+            .EndArray();
+        if (rand() % 10 > 5)
+        {
+          writer.StartArray()
+            .Double((rand() % 1000) * FieldMap::getFieldLengthX())
+            .Double((rand() % 1000) * FieldMap::getFieldLengthY())
+            .EndArray();
+        }
+        writer.EndArray();
+      }
     }
     writer.EndObject();
 
@@ -226,11 +243,11 @@ void queueRandomMessage()
     writer.String("hw");
     writer.StartObject();
     {
-      writer.String("volt").Double(10.7 + (rand() % 35) / 10.0);
+      writer.String("volt").Double(10.7 + ((rand() % 35) / 10.0));
       writer.String("power").Bool(rand() % 1);
       writer.String("temps").StartArray();
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-        writer.Uint(30 + rand() % 30);
+        writer.Uint(30 + (rand() % 30));
       writer.EndArray();
     }
     writer.EndObject();
@@ -240,7 +257,7 @@ void queueRandomMessage()
     {
       writer.StartObject();
       {
-        writer.String("unum").Int(1 + rand() % 6);
+        writer.String("unum").Int(1 + (rand() % MaxPlayerNum));
         writer.String("ms").Int(std::rand() % 1000u);
       }
       writer.EndObject();
