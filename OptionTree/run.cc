@@ -58,7 +58,7 @@ void OptionTree::run()
     vector<shared_ptr<Option>> subOptions = option->runPolicy(writer);
     writer.EndObject();
 
-    // Recurse through any sub-options
+    // Recur through any sub-options
     if (!subOptions.empty())
     {
       writer.String("children");
