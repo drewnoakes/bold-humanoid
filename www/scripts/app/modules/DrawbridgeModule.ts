@@ -124,6 +124,9 @@ class DrawbridgeModule extends Module
             container.dataset['sorthint'] = (data.team * 100 + data.unum).toString();
             this.containerById[DrawbridgeModule.getPlayerId(data)] = container;
             this.element.appendChild(container);
+
+            // Ensure tiles are sorted on screen
+            util.sortChildren(this.element, tile => parseInt((<HTMLElement>tile).dataset['sorthint']));
         }
 
         var textColour = new color.Rgb(constants.isNightModeActive.getValue() ? "#777777": "#000000"),
@@ -181,9 +184,6 @@ class DrawbridgeModule extends Module
         }
 
         container.appendChild(template.create(viewModel));
-
-        // Ensure tiles are sorted on screen
-        util.sortChildren(this.element, tile => parseInt((<HTMLElement>tile).dataset['sorthint']));
     }
 
     private static getPlayerId(data: IDrawbridgeData): string
