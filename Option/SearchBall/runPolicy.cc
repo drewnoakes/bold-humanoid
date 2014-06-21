@@ -8,7 +8,7 @@ using namespace Eigen;
 
 vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
 {
-  auto body = State::get<BodyState>();
+  auto body = State::get<BodyState>(StateTime::CameraImage);
   double currentPanAngleDegs = body->getJoint(JointId::HEAD_PAN)->getAngleDegs();
   double currentTiltAngleDegs = body->getJoint(JointId::HEAD_TILT)->getAngleDegs();
 

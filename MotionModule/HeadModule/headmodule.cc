@@ -63,7 +63,7 @@ void HeadModule::moveToDegs(double pan, double tilt)
 
 void HeadModule::moveByDeltaDegs(double panDelta, double tiltDelta)
 {
-  auto body = State::get<BodyState>();
+  auto body = State::get<BodyState>(StateTime::CameraImage);
   double currentPanAngleDegs = body->getJoint(JointId::HEAD_PAN)->getAngleDegs();
   double currentTiltAngleDegs = body->getJoint(JointId::HEAD_TILT)->getAngleDegs();
   moveToDegs(currentPanAngleDegs + panDelta, currentTiltAngleDegs + tiltDelta);
@@ -96,7 +96,7 @@ void HeadModule::moveTracking(double panError, double tiltError)
     return pOffset + iOffset + dOffset;
   };
 
-  auto body = State::get<BodyState>();
+  auto body = State::get<BodyState>(StateTime::CameraImage);
   double currentPanAngleDegs = body->getJoint(JointId::HEAD_PAN)->getAngleDegs();
   double currentTiltAngleDegs = body->getJoint(JointId::HEAD_TILT)->getAngleDegs();
 
