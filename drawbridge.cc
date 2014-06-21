@@ -1,13 +1,19 @@
 #include <iostream>
-#include <libwebsockets.h>
 
+#include <libwebsockets.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
+
+#include "../Clock/clock.hh"
 #include "../Config/config.hh"
+#include "../StateObject/TeamState/teamstate.hh"
 #include "../UDPSocket/udpsocket.hh"
-#include "../util/log.hh"
 #include "../version.hh"
+#include "../JointId/jointid.hh"
 
 using namespace bold;
 using namespace std;
+using namespace rapidjson;
 
 struct Session
 {
@@ -104,6 +110,7 @@ void printUsage()
   cout << endl;
   cout << ccolor::fore::lightblue << "  -c <file> " << ccolor::fore::white << "use specified configuration file (or --config)" << endl;
   cout << ccolor::fore::lightblue << "  -v        " << ccolor::fore::white << "verbose logging (or --verbose)" << endl;
+  cout << ccolor::fore::lightblue << "  -r        " << ccolor::fore::white << "produce random data for testing (or --randomize)" << endl;
   cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
   cout << ccolor::fore::lightblue << "  --version " << ccolor::fore::white << "print git version details at time of build" << endl;
   cout << ccolor::reset;
@@ -134,6 +141,132 @@ void printBanner()
   }
 }
 
+libwebsocket_protocols* d_protocols = new libwebsocket_protocols[2];
+
+void queueBytes(char const* data, size_t len)
+{
+  //
+  // Process WebSocket clients
+  //
+  auto str = make_shared<vector<uchar>>(len);
+  memcpy(str->data(), data, len);
+  cout << "Received message. " << sessions.size() << " sessions." << endl;
+  for (auto const& session : sessions)
+  {
+    session->data = str;
+    session->bytesSent = 0;
+  }
+  libwebsocket_callback_on_writable_all_protocol(&d_protocols[0]);
+}
+
+void queueRandomMessage()
+{
+  StringBuffer buffer;
+  Writer<StringBuffer> writer(buffer);
+
+  static int teamNumber = std::rand() % 10;
+  static int teamColour = std::rand() % 2;
+  static vector<string> names = { "nimue", "gareth", "oberon", "bors", "dagonet", "ywain", "tor" };
+  static auto startTime = Clock::getTimestamp();
+
+  srand(time(nullptr));
+
+  int unum = std::rand() % 6 + 1;
+  string hostName = "darwin" + std::rand() % 2;
+  string playerName = names[unum];
+
+  writer.StartObject();
+  {
+    writer.String("unum").Int(1 + std::rand() % 6);
+    writer.String("team").Int(teamNumber);
+    writer.String("col").Int(teamColour);
+    stringstream host;
+    host << "darwin" << unum;
+    writer.String("host").String(host.str().c_str());
+    writer.String("name").String(playerName.c_str());
+    writer.String("ver").String(Version::GIT_SHA1.c_str());
+    writer.String("uptime").Uint(static_cast<uint>(Clock::getSecondsSince(startTime)));
+
+    writer.String("activity").String(getPlayerActivityString(PlayerActivity::ApproachingBall).c_str());
+    writer.String("role").String(getPlayerRoleString(PlayerRole::Striker).c_str());
+    writer.String("status").String(getPlayerStatusString(PlayerStatus::Active).c_str());
+
+    srand(unum);
+
+    writer.String("agent");
+    writer.StartObject();
+    {
+      writer.String("ball")
+        .StartArray()
+        .Double((rand() % 1000) * FieldMap::getFieldLengthX())
+        .Double((rand() % 1000) * FieldMap::getFieldLengthY())
+        .EndArray();
+
+      writer.String("goals")
+        .StartArray()
+          .StartArray()
+          .Double((rand() % 1000) * FieldMap::getFieldLengthX())
+          .Double((rand() % 1000) * FieldMap::getFieldLengthY())
+          .EndArray()
+        .EndArray();
+    }
+    writer.EndObject();
+
+    writer.String("game");
+    writer.StartObject();
+    {
+      static vector<string> playModes = {"Initial", "Ready", "Set", "Playing", "Finished"};
+      writer.String("mode").String(playModes[std::rand()%playModes.size()].c_str());
+      writer.String("age").Uint(std::rand() % 1000u);
+    }
+    writer.EndObject();
+
+    writer.String("hw");
+    writer.StartObject();
+    {
+      writer.String("volt").Double(10.7 + (rand() % 35) / 10.0);
+      writer.String("power").Bool(rand() % 1);
+      writer.String("temps").StartArray();
+      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+        writer.Uint(30 + rand() % 30);
+      writer.EndArray();
+    }
+    writer.EndObject();
+
+    writer.String("teammates");
+    writer.StartArray();
+    {
+      writer.StartObject();
+      {
+        writer.String("unum").Int(1 + rand() % 6);
+        writer.String("ms").Int(std::rand() % 1000u);
+      }
+      writer.EndObject();
+    }
+    writer.EndArray();
+
+    vector<string> ranOptions = {"win", "stopWalking", "lookAtFeet", "buildStationaryMap", "motionScript"};
+    vector<pair<string,string>> fsmStates = { {"win", "playing"}, {"win", "getUp"} };
+
+    writer.String("options");
+    writer.Array(
+      ranOptions.begin(), ranOptions.end(),
+      [&](string const& option) { writer.String(option.c_str()); });
+
+    writer.String("fsms");
+    writer.Array(
+      fsmStates.begin(), fsmStates.end(),
+      [&](pair<string,string> fsmState) { writer.StartObject()
+        .String("fsm").String(fsmState.first.c_str())
+        .String("state").String(fsmState.second.c_str())
+        .EndObject();
+      });
+  }
+  writer.EndObject();
+
+  queueBytes(buffer.GetString(), buffer.GetSize());
+}
+
 int main(int argc, char **argv)
 {
   srand(time(0));
@@ -154,6 +287,7 @@ int main(int argc, char **argv)
 
   string configurationFile = "configuration-agent.json";
   log::minLevel = LogLevel::Info;
+  bool randomise = false;
 
   for (int i = 1; i < argc; ++i)
   {
@@ -171,6 +305,10 @@ int main(int argc, char **argv)
     else if (arg == "-v" || arg == "--verbose")
     {
       log::minLevel = LogLevel::Verbose;
+    }
+    else if (arg == "-r" || arg == "--randomize")
+    {
+      randomise = true;
     }
     else if (arg == "--version")
     {
@@ -198,6 +336,8 @@ int main(int argc, char **argv)
     }
   }
 
+  printBanner();
+
   Config::initialise("configuration-metadata.json", configurationFile);
 
   // TODO support --random option for front-end testing and demonstration purposes
@@ -217,7 +357,6 @@ int main(int argc, char **argv)
   //
   // WebSocket for publishing
   //
-  libwebsocket_protocols* d_protocols = new libwebsocket_protocols[2];
 
                    // name, callback, per-session-data-size, rx-buffer-size, no-buffer-all-partial-tx
   d_protocols[0] = { "drawbridge", websocket_callback, sizeof(Session), 0, 0 };
@@ -262,18 +401,15 @@ int main(int argc, char **argv)
       if (bytesRead < 0)
         break;
 
-      //
-      // Process WebSocket clients
-      //
-      auto str = make_shared<vector<uchar>>(bytesRead);
-      memcpy(str->data(), data, bytesRead);
-      cout << "Received message. " << sessions.size() << " sessions." << endl;
-      for (auto const& session : sessions)
-      {
-        session->data = str;
-        session->bytesSent = 0;
-      }
-      libwebsocket_callback_on_writable_all_protocol(&d_protocols[0]);
+      queueBytes(data, bytesRead);
+    }
+
+    if (randomise)
+    {
+      // Produce one random player's message
+      queueRandomMessage();
+
+      usleep(200 * 1000); // 0.2 sec
     }
 
     //
