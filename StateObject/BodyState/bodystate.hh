@@ -57,6 +57,8 @@ namespace bold
 
     std::shared_ptr<Limb const> const& getLimb() const { return d_limb; }
 
+    Eigen::Vector3d getCentreOfMassPosition() const;
+
   private:
     std::shared_ptr<Limb const> d_limb;
   };
@@ -148,6 +150,8 @@ namespace bold
      * transform agent coordinates to camera coordinates */
     Eigen::Affine3d const& getCameraAgentTransform() const { return d_cameraAgentTr; }
 
+    Eigen::Vector3d const& getCentreOfMass() const;
+
     /** Height of torso center above the ground
      *
      * Assumes the lowest foot is flat on the floor */
@@ -173,6 +177,9 @@ namespace bold
 
     Eigen::Affine3d d_cameraAgentTr;
     Eigen::Affine3d d_agentCameraTr;
+
+    mutable Eigen::Vector3d d_centreOfMass;
+    mutable bool d_isCentreOfMassComputed;
 
     ulong d_motionCycleNumber;
 

@@ -333,6 +333,18 @@ TEST (BodyStateTests, camera_headTiltedBack)
   EXPECT_TRUE( MatricesEqual(expectedCameraRotation, actualAgentCameraRotation) );
 }
 
+TEST (BodyStateTests, centreOfMass)
+{
+  array<double,23> angles;
+  angles.fill(0);
+
+  auto body = BodyState(bodyModel, angles, array<short,21>(), 1);
+
+  EXPECT_TRUE ( VectorsEqual(
+    Vector3d(-0.0031855364470584095, -0.0031468527893573723, -0.10594546407578488),
+    body.getCentreOfMass()) );
+}
+
 TEST (DISABLED_BodyStateTests, cameraNeckJointTransform)
 {
   // TODO

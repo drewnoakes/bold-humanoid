@@ -41,3 +41,29 @@ BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, shared_ptr<Ha
 
   initialise(bodyModel, angles);
 }
+
+Eigen::Vector3d const& BodyState::getCentreOfMass() const
+{
+  if (!d_isCentreOfMassComputed)
+  {
+    double totalMass = 0.0;
+    Vector3d weightedSum(0,0,0);
+
+    visitLimbs([&](shared_ptr<LimbPosition const> limbPosition)
+    {
+      double mass = limbPosition->getLimb()->mass;
+      totalMass += mass;
+      weightedSum += mass * limbPosition->getCentreOfMassPosition();
+    });
+
+    d_centreOfMass = weightedSum / totalMass;
+    d_isCentreOfMassComputed = true;
+  }
+
+  return d_centreOfMass;
+}
+
+Eigen::Vector3d LimbPosition::getCentreOfMassPosition() const
+{
+  return getTransform() * getLimb()->com;
+}
