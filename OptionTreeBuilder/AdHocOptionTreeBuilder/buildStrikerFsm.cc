@@ -31,7 +31,7 @@ auto ballIsStoppingDistance = []()
 // and in line with our goal such that we should walk directly to it, and kick
 // straight without looking around once we reach the ball.
 // Unlike the building of the stationary map, this is based on a single cycle's
-// observation and so may be used during motion (when not staionary.)
+// observation and so may be used during motion (when not stationary.)
 auto isPerfectLineForAttack = []()
 {
   static auto isPerfectLineEnabled = Config::getSetting<bool>("options.perfect-line.enabled");

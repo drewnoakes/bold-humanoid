@@ -74,7 +74,7 @@ vector<shared_ptr<Option>> SearchBall::runPolicy(Writer<StringBuffer>& writer)
       }
     }
 
-    // finaly we need to turn ourselves
+    // finally we need to turn ourselves
     d_walkModule->setTurnAngle(d_isLeftTurn ? turnSpeed : -turnSpeed);
   }
 
