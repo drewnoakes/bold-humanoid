@@ -4,6 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
+import dom = require('../../libs/domdomdom/domdomdom');
 import control = require('control');
 import Module = require('Module');
 import TabControl = require('controls/TabControl');
@@ -66,15 +67,22 @@ class ConfigModule extends Module
         this.settingList = document.createElement('ul');
         settingsPane.appendChild(this.settingList);
 
-        _.each(control.getAllSettings(), setting =>
-        {
-            if (setting.isReadOnly)
-                return;
+        var settings = _.clone(control.getAllSettings());
+        settings.sort((a,b) => (a.isReadOnly ? 1 : 0) - (b.isReadOnly ? 1 : 0));
 
+        _.each(settings, setting =>
+        {
             var li = document.createElement('li');
             li.dataset['path'] = setting.path;
-            // TODO add more details here
-            control.createSettingControl(setting, li, this.closeables, /*hideLabel*/true);
+            if (setting.isReadOnly)
+            {
+                dom(li, dom("span.readonly-setting-value", setting.value.toString()));
+            }
+            else
+            {
+                // TODO add more details here
+                control.createSettingControl(setting, li, this.closeables, /*hideLabel*/true);
+            }
             var path = document.createElement('span');
             path.className = 'path';
             path.textContent = setting.path;
