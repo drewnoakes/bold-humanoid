@@ -1,19 +1,10 @@
 #include "Agent/agent.hh"
 #include "Config/config.hh"
-//#include "MotionScript/motionscript.hh"
 #include "OptionTree/optiontree.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
-//#include "RobotisMotionFile/robotismotionfile.hh"
-//#include "ThreadUtil/threadutil.hh"
-#include "util/ccolor.hh"
-#include "util/log.hh"
 #include "version.hh"
 
-#include <limits>
-#include <vector>
-#include <string>
 #include <signal.h>
-#include <string.h>
 
 using namespace bold;
 using namespace std;
@@ -113,7 +104,7 @@ int main(int argc, char **argv)
 //  exit(0);
 
   // defaults
-  string configurationFile("configuration-agent.json");
+  string configurationFile = "configuration-agent.json";
   log::minLevel = LogLevel::Info;
 
   // TODO: use getopt
