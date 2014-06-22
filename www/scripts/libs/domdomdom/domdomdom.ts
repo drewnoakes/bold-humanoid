@@ -52,7 +52,6 @@ function dom(...values: any[]): HTMLElement
                 {
                     // string is just a tag name
                     element = document.createElement(val);
-                    console.log(dotIndex, element.tagName, element.className);
                 }
                 else
                 {
@@ -60,19 +59,17 @@ function dom(...values: any[]): HTMLElement
                     console.assert(dotIndex !== 0);
                     element = document.createElement(val.substring(0, dotIndex));
                     element.className = val.substring(dotIndex + 1);
-                    console.log(dotIndex, element.tagName, element.className);
                 }
             }
             else
             {
-                console.log("B", val);
                 console.assert(element != null);
                 element.textContent = val;
             }
         }
         else
         {
-            console.log("Unexpected value type: " + valType);
+            console.warn("Unexpected value type: " + valType);
         }
     }
 
