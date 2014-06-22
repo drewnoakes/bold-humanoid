@@ -60,6 +60,8 @@ export interface Body
     angles: number[];
     /** Differences between current and control. */
     errors: number[];
+    /** Centre of mass [x,y,z] */
+    com: number[];
 }
 
 export interface CameraFrame

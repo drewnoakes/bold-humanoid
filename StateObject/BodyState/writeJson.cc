@@ -33,6 +33,10 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
+    auto com = getCentreOfMass();
+    writer.String("com");
+    writer.StartArray().Double(com.x()).Double(com.y()).Double(com.z()).EndArray();
+
     /*
     writer.String("camera-translation");
     writer.StartArray();
