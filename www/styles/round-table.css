@@ -1376,6 +1376,21 @@ div.module.motion-scripts
   min-height: 60px;
 }
 
+div.module.motion-scripts div.motion-script-controls
+{
+  margin-top: 6px;
+}
+
+div.module.motion-scripts button.rare
+{
+  display: none;
+}
+
+div.module.motion-scripts div.show-all button.rare
+{
+  display: inline-block;
+}
+
 div.module.motion-scripts button
 {
   margin: 0 3px 4px 0;
