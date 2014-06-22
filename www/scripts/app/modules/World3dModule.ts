@@ -37,6 +37,7 @@ class World3dModule extends Module
     private drawObservedGoals: Trackable<boolean>;
     private drawViewPoly: Trackable<boolean>;
     private showStaticObjects: Trackable<boolean>;
+    private showCentreOfMass: Trackable<boolean>;
 
     private pendingTextureCount: number;
 
@@ -48,6 +49,7 @@ class World3dModule extends Module
     private bodyRoot: THREE.Object3D;
     private objectByName: {[name:string]:THREE.Mesh};
     private staticObjects: THREE.Object3D;
+    private centreOfMassAxes: THREE.AxisHelper;
 
     private fieldLineMaterial: THREE.LineBasicMaterial;
     private visibleFieldPolyMaterial: THREE.LineBasicMaterial;
@@ -99,6 +101,10 @@ class World3dModule extends Module
         });
         controls.appendChild(new Checkbox('Show static objects', this.showStaticObjects).element);
 
+        this.showCentreOfMass = new Trackable<boolean>(false);
+        this.showCentreOfMass.onchange(() => this.animator.setRenderNeeded());
+        controls.appendChild(new Checkbox('COM', this.showCentreOfMass).element);
+
         this.initialiseScene();
 
         this.element.appendChild(this.renderer.domElement);
@@ -148,6 +154,16 @@ class World3dModule extends Module
         {
             console.error("Expecting 20 angles");
             return;
+        }
+
+        if (this.showCentreOfMass.getValue())
+        {
+            this.centreOfMassAxes.position.set(data.com[0], data.com[1], data.com[2]);
+            this.centreOfMassAxes.visible = true;
+        }
+        else
+        {
+            this.centreOfMassAxes.visible = false;
         }
 
         var hasChange = false;
@@ -574,6 +590,9 @@ class World3dModule extends Module
 
         var root = new THREE.Object3D();
         processNode(body, root);
+
+        this.centreOfMassAxes = new THREE.AxisHelper(0.2);
+        root.add(this.centreOfMassAxes);
 
         return root;
     }
