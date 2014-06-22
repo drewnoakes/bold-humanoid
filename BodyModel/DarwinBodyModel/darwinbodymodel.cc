@@ -10,6 +10,7 @@ DarwinBodyModel::DarwinBodyModel()
 : BodyModel()
 {
   auto torso = createLimb("torso");
+  torso->com = Vector3d(-0.0095058847, -0.00050287706, -0.025995316);
   torso->mass = 0.97559947;
 
   // TODO add gyro / acc joints, as done for camera
@@ -24,6 +25,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto neckLimb = createLimb("neck");
   neckLimb->mass = 0.024357719;
+  neckLimb->com = Vector3d(-0.0014242818, -0.00071281068, -0.016567586);
   headPanJoint->childPart = neckLimb;
 
   auto headTiltJoint = createJoint(JointId::HEAD_TILT, "head-tilt");
@@ -34,6 +36,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto headLimb = createLimb("head");
   headLimb->mass = 0.15804192;
+  headLimb->com = Vector3d(-0.000063919849, 0.0076666217, 0.018564541);
   headTiltJoint->childPart = headLimb;
 
   // Camera tilt is not an MX28, but rather an adjustable 'hinge' for the
@@ -62,6 +65,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto cameraLimb = createLimb("camera");
   cameraLimb->mass = 0; // included in head limb
+  cameraLimb->com = Vector3d(0, 0, 0);
   cameraCalibrationPanJoint->childPart = cameraLimb;
 
   // LEFT ARM
@@ -74,6 +78,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftShoulderBracketLimb = createLimb("left-shoulder-bracket");
   leftShoulderBracketLimb->mass = 0.025913024;
+  leftShoulderBracketLimb->com = Vector3d(0.013522619, 0.0013935747, 0.010264050);
   leftShoulderPitchJoint->childPart = leftShoulderBracketLimb;
 
   auto leftShoulderRollJoint = createJoint(JointId::L_SHOULDER_ROLL, "left-shoulder-roll");
@@ -85,6 +90,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftUpperArmLimb = createLimb("left-upper-arm");
   leftUpperArmLimb->mass = 0.16837715;
+  leftUpperArmLimb->com = Vector3d(-0.00065978663, 0.00073406497, -0.036239046);
   leftShoulderRollJoint->childPart = leftUpperArmLimb;
 
   auto leftElbowJoint = createJoint(JointId::L_ELBOW, "left-elbow");
@@ -96,6 +102,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftLowerArmLimb = createLimb("left-lower-arm");
   leftLowerArmLimb->mass = 0.059288504;
+  leftLowerArmLimb->com = Vector3d(-0.0066656445, -0.013490080, -0.045838199);
   leftElbowJoint->childPart = leftLowerArmLimb;
 
   // RIGHT ARM
@@ -108,6 +115,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightShoulderBracketLimb = createLimb("right-shoulder-bracket");
   rightShoulderBracketLimb->mass = 0.025913024;
+  rightShoulderBracketLimb->com = Vector3d(-0.013522619, 0.0013935747, 0.010264050);
   rightShoulderPitchJoint->childPart = rightShoulderBracketLimb;
 
   auto rightShoulderRollJoint = createJoint(JointId::R_SHOULDER_ROLL, "right-shoulder-roll");
@@ -119,6 +127,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightUpperArmLimb = createLimb("right-upper-arm");
   rightUpperArmLimb->mass = 0.16837715;
+  rightUpperArmLimb->com = Vector3d(0.00065978663, 0.00073406497, -0.036239046);
   rightShoulderRollJoint->childPart = rightUpperArmLimb;
 
   auto rightElbowJoint = createJoint(JointId::R_ELBOW, "right-elbow");
@@ -130,6 +139,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightLowerArmLimb = createLimb("right-lower-arm");
   rightLowerArmLimb->mass = 0.059288504;
+  rightLowerArmLimb->com = Vector3d(0.0066656445, -0.013490080, -0.045838199);
   rightElbowJoint->childPart = rightLowerArmLimb;
 
   // LEFT LEG
@@ -142,6 +152,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftHipBracketLimb = createLimb("left-hip-bracket");
   leftHipBracketLimb->mass = 0.027069195;
+  leftHipBracketLimb->com = Vector3d(0.0, 0.00048013477, 0.018437244);
   leftHipYawJoint->childPart = leftHipBracketLimb;
 
   auto leftHipRollJoint = createJoint(JointId::L_HIP_ROLL, "left-hip-roll");
@@ -152,6 +163,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftButtockLimb = createLimb("left-buttock");
   leftButtockLimb->mass = 0.16710792;
+  leftButtockLimb->com = Vector3d(-0.000079982774, -0.018242402, -0.013873116);
   leftHipRollJoint->childPart = leftButtockLimb;
 
   auto leftHipPitchJoint = createJoint(JointId::L_HIP_PITCH, "left-hip-pitch");
@@ -162,6 +174,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftUpperLegLimb = createLimb("left-upper-leg");
   leftUpperLegLimb->mass = 0.11904336;
+  leftUpperLegLimb->com = Vector3d(0.00032263469, 0.00069190565, -0.062965549);
   leftHipPitchJoint->childPart = leftUpperLegLimb;
 
   auto leftKneeJoint = createJoint(JointId::L_KNEE, "left-knee");
@@ -172,6 +185,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftLowerLegLimb = createLimb("left-lower-leg");
   leftLowerLegLimb->mass = 0.070309794;
+  leftLowerLegLimb->com = Vector3d(0.00059246918, 0.0065476317, 0.053954532);
   leftKneeJoint->childPart = leftLowerLegLimb;
 
   auto leftAnklePitchJoint = createJoint(JointId::L_ANKLE_PITCH, "left-ankle-pitch");
@@ -182,6 +196,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftAnkleLimb = createLimb("left-ankle");
   leftAnkleLimb->mass = 0.16710792;
+  leftAnkleLimb->com = Vector3d(0.00021373151, -0.018536116, 0.013873116);
   leftAnklePitchJoint->childPart = leftAnkleLimb;
 
   auto leftAngleRollJoint = createJoint(JointId::L_ANKLE_ROLL, "left-ankle-roll");
@@ -192,6 +207,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto leftFootLimb = createLimb("left-foot");
   leftFootLimb->mass = 0.079446226;
+  leftFootLimb->com = Vector3d(-0.0095058847, -0.00050287706, -0.025995316);
   leftAngleRollJoint->childPart = leftFootLimb;
 
   // RIGHT LEG
@@ -204,6 +220,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightHipBracketLimb = createLimb("right-hip-bracket");
   rightHipBracketLimb->mass = 0.027069195;
+  rightHipBracketLimb->com = Vector3d(0.0, 0.00048013477, 0.018437244);
   rightHipYawJoint->childPart = rightHipBracketLimb;
 
   auto rightHipRollJoint = createJoint(JointId::R_HIP_ROLL, "right-hip-roll");
@@ -214,6 +231,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightButtockLimb = createLimb("right-buttock");
   rightButtockLimb->mass = 0.16710792;
+  rightButtockLimb->com = Vector3d(0.000079982774, -0.018242402, -0.013873116);
   rightHipRollJoint->childPart = rightButtockLimb;
 
   auto rightHipPitchJoint = createJoint(JointId::R_HIP_PITCH, "right-hip-pitch");
@@ -224,6 +242,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightUpperLegLimb = createLimb("right-upper-leg");
   rightUpperLegLimb->mass = 0.11904336;
+  rightUpperLegLimb->com = Vector3d(-0.00032263469, 0.00069190565, -0.062965549);
   rightHipPitchJoint->childPart = rightUpperLegLimb;
 
   auto rightKneeJoint = createJoint(JointId::R_KNEE, "right-knee");
@@ -234,6 +253,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightLowerLegLimb = createLimb("right-lower-leg");
   rightLowerLegLimb->mass = 0.070309794;
+  rightLowerLegLimb->com = Vector3d(-0.00059246918, 0.0065476317, 0.053954532);
   rightKneeJoint->childPart = rightLowerLegLimb;
 
   auto rightAnklePitchJoint = createJoint(JointId::R_ANKLE_PITCH, "right-ankle-pitch");
@@ -244,6 +264,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightAnkleLimb = createLimb("right-ankle");
   rightAnkleLimb->mass = 0.16710792;
+  rightAnkleLimb->com = Vector3d(-0.00021373151, -0.018536116, 0.013873116);
   rightAnklePitchJoint->childPart = rightAnkleLimb;
 
   auto rankleFootJoint = createJoint(JointId::R_ANKLE_ROLL, "right-ankle-roll");
@@ -254,6 +275,7 @@ DarwinBodyModel::DarwinBodyModel()
 
   auto rightFootLimb = createLimb("right-foot");
   rightFootLimb->mass = 0.079446226;
+  rightFootLimb->com = Vector3d(0.0095058847, -0.00050287706, -0.025995316);
   rankleFootJoint->childPart = rightFootLimb;
 
   d_torso = torso;
