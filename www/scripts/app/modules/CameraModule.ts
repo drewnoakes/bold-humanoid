@@ -124,7 +124,7 @@ class CameraModule extends Module
                 hoverX = this.cameraCanvas.clientWidth - 1 - point.x,
                 hoverY = this.cameraCanvas.clientHeight - 1 - point.y,
                 hoverText = 'Pos: ' + hoverX + ',' + hoverY;
-            if (imageTypeSetting.value === 2) {
+            if (imageTypeSetting && imageTypeSetting.value === 2) {
                 var rgb = this.context.getImageData(point.x, point.y, 1, 1).data,
                     hsv = new color.Rgb(rgb[0]/255, rgb[1]/255, rgb[2]/255).toHsv();
                 this.pixelLabelInspector.setVisible(true);
