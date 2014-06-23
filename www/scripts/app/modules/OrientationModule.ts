@@ -26,7 +26,41 @@ var pitchSeriesOptions = { strokeStyle: red, lineWidth: 1 };
 var rollSeriesOptions  = { strokeStyle: grn, lineWidth: 1 };
 var yawSeriesOptions   = { strokeStyle: blu, lineWidth: 1 };
 
-var chartOptions = {
+var pi = String.fromCharCode(960);
+var slash = ' ' + String.fromCharCode(8260) + ' ';
+var piOn2 = pi + slash + '2';
+var pi3On4 = '3' + pi + slash + '4';
+var piOn4 = pi + slash + '4';
+
+function toNiceAngleString(val: number) : string
+{
+    if (val > 0)
+    {
+        if (Math.abs(val - Math.PI) < 0.001)
+            return pi;
+        if (Math.abs(val - (3 * Math.PI / 4)) < 0.001)
+            return pi3On4;
+        if (Math.abs(val - (Math.PI / 2)) < 0.001)
+            return piOn2;
+        if (Math.abs(val - (Math.PI / 4)) < 0.001)
+            return piOn4;
+    }
+    else
+    {
+        if (Math.abs(val + Math.PI) < 0.001)
+            return '-' + pi;
+        if (Math.abs(val + (3 * Math.PI / 4)) < 0.001)
+            return '-' + pi3On4;
+        if (Math.abs(val + (Math.PI / 2)) < 0.001)
+            return '-' + piOn2;
+        if (Math.abs(val + (Math.PI / 4)) < 0.001)
+            return '-' + piOn4;
+    }
+
+    return val.toFixed(2);
+}
+
+var chartOptions: IChartOptions = {
     interpolation: 'step',
     grid: {
         strokeStyle: 'rgb(40, 40, 40)',
@@ -52,6 +86,8 @@ var chartOptions = {
             return {min:-3*Math.PI/4, max:3*Math.PI/4};
         return {min:-Math.PI, max:Math.PI};
     },
+    yMinFormatter: toNiceAngleString,
+    yMaxFormatter: toNiceAngleString,
     horizontalLines: [
         {color: '#444444', lineWidth: 1, value: 3*Math.PI/4},
         {color: '#888888', lineWidth: 1, value: Math.PI/2},
