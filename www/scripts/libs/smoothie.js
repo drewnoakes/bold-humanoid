@@ -246,6 +246,13 @@
 
   SmoothieChart.defaultChartOptions = {
     millisPerPixel: 20,
+    enableDpiScaling: true,
+    yMinFormatter: function(min, precision) {
+      return parseFloat(min).toFixed(precision);
+    },
+    yMaxFormatter: function(max, precision) {
+      return parseFloat(max).toFixed(precision);
+    },
     maxValueScale: 1,
     interpolation: 'bezier',
     scaleSmoothing: 0.125,
@@ -688,8 +695,8 @@
 
     // Draw the axis values on the chart.
     if (!chartOptions.labels.disabled && !isNaN(this.valueRange.min) && !isNaN(this.valueRange.max)) {
-      var maxValueString = parseFloat(this.valueRange.max).toFixed(chartOptions.labels.precision),
-          minValueString = parseFloat(this.valueRange.min).toFixed(chartOptions.labels.precision);
+      var maxValueString = chartOptions.yMaxFormatter(this.valueRange.max, chartOptions.labels.precision),
+          minValueString = chartOptions.yMinFormatter(this.valueRange.min, chartOptions.labels.precision);
       context.fillStyle = chartOptions.labels.fillStyle;
       context.fillText(maxValueString, dimensions.width - context.measureText(maxValueString).width - 2, chartOptions.labels.fontSize);
       context.fillText(minValueString, dimensions.width - context.measureText(minValueString).width - 2, dimensions.height - 2);
