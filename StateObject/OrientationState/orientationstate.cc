@@ -57,9 +57,9 @@ void OrientationState::writeJson(Writer<StringBuffer>& writer) const
       bank = atan2(2*q1.x()*q1.w()-2*q1.y()*q1.z() , -sqx + sqy - sqz + sqw);
     }
 
-    writer.String("pitch").Double(attitude);
-    writer.String("roll").Double(bank);
-    writer.String("yaw").Double(heading);
+    writer.String("pitch").Double(swapNaN(attitude, 0));
+    writer.String("roll").Double(swapNaN(bank, 0));
+    writer.String("yaw").Double(swapNaN(heading, 0));
 //    writer.String("pitch").Double(Math::pitchFromQuaternion(d_quaternion));
 //    writer.String("roll").Double(Math::rollFromQuaternion(d_quaternion));
 //    writer.String("yaw").Double(Math::yawFromQuaternion(d_quaternion));
