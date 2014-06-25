@@ -25,6 +25,7 @@
 #include "../Painter/painter.hh"
 #include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../PixelLabel/RangePixelLabel/rangepixellabel.hh"
+#include "../PixelLabel/HistogramPixelLabel/histogrampixellabel.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../util/meta.hh"
 
@@ -33,6 +34,47 @@ using namespace cv;
 using namespace std;
 using namespace bold;
 using namespace Eigen;
+
+void doHistogramPixels(cv::Mat const& img)
+{
+  HistogramPixelLabel<5> label{"label"};
+
+
+  for (int y = 0; y < img.rows; ++y)
+  {
+    auto const* row = img.ptr<uint8_t>(y);
+    for (int x = 0; x < img.cols; x += img.channels())
+    {
+      Colour::bgr bgr;
+      bgr.b = row[x + 0];
+      bgr.g = row[x + 1];
+      bgr.r = row[x + 2];
+
+      Colour::hsv hsv = Colour::bgr2hsv(bgr);
+      label.addSample(hsv);
+    }
+  }
+
+/*
+  auto rng = Math::createNormalRng(128, 64);
+
+  for (unsigned i = 0; i < 1000000; ++i)
+  {
+    Colour::hsv hsv;
+    hsv.h = rng();
+    hsv.s = rng();
+    hsv.v = rng();
+    label.addSample(hsv);
+  }
+*/
+
+  auto hsImg = label.getHSImage();
+  cv::imwrite("hsimg.png", hsImg);
+  auto hvImg = label.getHVImage();
+  cv::imwrite("hvimg.png", hvImg);
+  auto svImg = label.getSVImage();
+  cv::imwrite("svimg.png", svImg);
+}
 
 int main(int argc, char **argv)
 {
@@ -67,6 +109,8 @@ int main(int argc, char **argv)
   PixelFilterChain chain;
   chain.pushFilter(&Colour::yCbCrToBgrInPlace);
   chain.applyFilters(colourImage);
+
+  doHistogramPixels(colourImage);
 
   // Initialise random seed
   std::srand(unsigned(std::time(0)));
