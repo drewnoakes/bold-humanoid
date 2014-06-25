@@ -5,6 +5,8 @@
 #include "version.hh"
 
 #include <signal.h>
+#include <unistd.h>
+#include <getopt.h>
 
 using namespace bold;
 using namespace std;
@@ -31,32 +33,6 @@ void handleShutdownSignal(int sig)
     agent->requestStop();
   }
 }
-
-// void convertMotionFile()
-// {
-//   vector<shared_ptr<MotionScript const>> motionScripts;
-//
-//   auto motionScriptFileName = "./motion_4096.bin";
-//   log::info("convertMotionFile") << "Processing Robotis-formatted motion file: " << motionScriptFileName;
-//   auto motionScriptFile = RobotisMotionFile(motionScriptFileName);
-//   auto rootPageIndices = motionScriptFile.getSequenceRootPageIndices();
-//   for (uchar rootPageIndex : rootPageIndices)
-//   {
-//     stringstream ss;
-//     ss << "./motionscripts/motion_4096." << (int)rootPageIndex << ".json";
-//     shared_ptr<MotionScript> motionScript = motionScriptFile.toMotionScript(rootPageIndex);
-//     motionScripts.push_back(motionScript);
-//     motionScript->writeJsonFile(ss.str());
-//   }
-//   motionScriptFile.toDotText(cout);
-// }
-
-//void rewriteMotionScriptJSON()
-//{
-//  string path = "/home/drew/bold-humanoid/motionscripts/";
-//  for (auto const& script : bold::MotionScript::loadAllInPath(path))
-//    script->writeJsonFile(path + script->getName() + ".json");
-//}
 
 vector<string> banners = {
   "\n╔══╗────╔╗╔╗╔╗──────╔╗╔═╗\n║╔╗╠═╦╗╔╝║║╚╝╠═╦═╗╔╦╣╚╣═╣\n║╔╗║╬║╚╣╬║║╔╗║╩╣╬╚╣╔╣╔╬═║\n╚══╩═╩═╩═╝╚╝╚╩═╩══╩╝╚═╩═╝",
@@ -90,85 +66,26 @@ void printBanner()
   }
 }
 
-int main(int argc, char **argv)
+void printVersion()
 {
-  srand(time(0));
-
-//  convertMotionFile();
-//  rewriteMotionScriptJSON();
-//  auto kickSideRight = RobotisMotionFile("/home/drew/bold-humanoid/motion-with-side-kick.bin").toMotionScript(65);
-//  kickSideRight->setName("kick-side-right");
-//  kickSideRight->writeJsonFile("/home/drew/bold-humanoid/motionscripts/kick-side-right.json");
-//  kickSideRight->getMirroredScript("kick-side-left")
-//               ->writeJsonFile("/home/drew/bold-humanoid/motionscripts/kick-side-left.json");
-//  exit(0);
-
-  // defaults
-  string configurationFile = "configuration-agent.json";
-  log::minLevel = LogLevel::Info;
-
-  // TODO: use getopt
-  auto nextArg = [&](int* i) -> char*
-  {
-    if (*i == argc - 1)
-    {
-      // No more arguments. Error!
-      log::error() << "Insufficient arguments";
-      exit(-1);
-    }
-    int j = *i + 1;
-    *i = j;
-    return argv[j];
-  };
-
-  //
-  // Process command line arguments
-  //
-  for (int i = 1; i < argc; ++i)
-  {
-    string arg(argv[i]);
-    if (arg == "-h" || arg == "--help")
-    {
-      printBanner();
-      printUsage();
-      return 0;
-    }
-    else if (arg == "-c" || arg == "--config")
-    {
-      configurationFile = nextArg(&i);
-    }
-    else if (arg == "-v" || arg == "--verbose")
-    {
-      log::minLevel = LogLevel::Verbose;
-    }
-    else if (arg == "--version")
-    {
-      cout << ccolor::fore::lightblue << "SHA1:        " << ccolor::reset << Version::GIT_SHA1 << endl
+  cout << ccolor::fore::lightblue << "SHA1:        " << ccolor::reset << Version::GIT_SHA1 << endl
 #if EIGEN_ALIGN
-           << ccolor::fore::lightblue << "Eigen align: " << ccolor::reset << "Yes" << endl
+       << ccolor::fore::lightblue << "Eigen align: " << ccolor::reset << "Yes" << endl
 #else
-           << ccolor::fore::lightblue << "Eigen align: " << ccolor::reset << "No" << endl
+       << ccolor::fore::lightblue << "Eigen align: " << ccolor::reset << "No" << endl
 #endif
-           << ccolor::fore::lightblue << "Build type:  " << ccolor::reset << Version::BUILD_TYPE << endl
+       << ccolor::fore::lightblue << "Build type:  " << ccolor::reset << Version::BUILD_TYPE << endl
 #if INCLUDE_ASSERTIONS
-           << ccolor::fore::lightblue << "Assertions:  " << ccolor::reset << "Yes" << endl
+       << ccolor::fore::lightblue << "Assertions:  " << ccolor::reset << "Yes" << endl
 #else
-           << ccolor::fore::lightblue << "Assertions:  " << ccolor::reset << "No" << endl
+       << ccolor::fore::lightblue << "Assertions:  " << ccolor::reset << "No" << endl
 #endif
-           << ccolor::fore::lightblue << "Commit date: " << ccolor::reset << Version::GIT_DATE << " (" << Version::describeTimeSinceGitDate() << ")" << endl
-           << ccolor::fore::lightblue << "Message:     " << ccolor::reset << Version::GIT_COMMIT_SUBJECT << endl;
-      return 0;
-    }
-    else
-    {
-      log::error() << "Unknown argument: " << arg;
-      printUsage();
-      return -1;
-    }
-  }
+       << ccolor::fore::lightblue << "Commit date: " << ccolor::reset << Version::GIT_DATE << " (" << Version::describeTimeSinceGitDate() << ")" << endl
+       << ccolor::fore::lightblue << "Message:     " << ccolor::reset << Version::GIT_COMMIT_SUBJECT << endl;
+}
 
-  printBanner();
-
+void logVersion()
+{
   log::info("BUILD") << Version::GIT_SHA1 << " (committed " << Version::describeTimeSinceGitDate() << ")";
 #if INCLUDE_ASSERTIONS
   log::info("ASSERTIONS") << "Yes";
@@ -181,6 +98,71 @@ int main(int argc, char **argv)
   log::info("EIGEN_ALIGN") << "No";
 #endif
   log::info("BUILD_TYPE") << Version::BUILD_TYPE << "\n";
+}
+
+int main(int argc, char **argv)
+{
+  srand(time(0));
+
+  // defaults
+  string configurationFile = "configuration-agent.json";
+  log::minLevel = LogLevel::Info;
+
+  int c;
+
+  //
+  // Process command line arguments
+  //
+  option longOptions[] = {
+    {"config", required_argument, 0, 'c'},
+    {"help", no_argument, 0, 'h'},
+    {"verbose", no_argument, 0, 'v'},
+    {"version", no_argument, 0, 1},
+    {0, 0, 0, 0}
+  };
+
+  int optionIndex;
+  while ((c = getopt_long(argc, argv, "c:h:v", longOptions, &optionIndex)) != -1)
+  {
+    switch (c)
+    {
+    case 'c':
+    {
+      configurationFile = string{optarg};
+      break;
+    }
+    case 'h':
+    {
+      printBanner();
+      printUsage();
+      exit(0);
+    }
+     
+    case 'v':
+    {
+      log::minLevel = LogLevel::Verbose;
+      break;
+    }
+
+    case 1:
+    {
+      printVersion();
+      exit(0);
+    }
+
+    case '?':
+    {
+      // getopt_long already printed an error message
+      printUsage();
+      exit(-1);;
+    }
+
+    }
+  }
+
+  printBanner();
+
+  logVersion();
 
   Config::initialise("configuration-metadata.json", configurationFile);
 
