@@ -5,7 +5,7 @@ bool Camera::PixelFormat::requestSize(unsigned width, unsigned height)
   v4l2_format formatReq;
   memset(&formatReq, 0, sizeof(formatReq));
   formatReq.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-
+  formatReq.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
   formatReq.fmt.pix.width = width;
   formatReq.fmt.pix.height = height;
   formatReq.fmt.pix.pixelformat = pixelFormat;
