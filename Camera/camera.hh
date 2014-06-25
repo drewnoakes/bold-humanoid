@@ -142,6 +142,8 @@ namespace bold
 
     void logFrameIntervalDetails() const;
 
+    void setImageFeed(cv::Mat image) { d_imageFeed = image; }
+
     friend struct PixelFormat;
 
   private:
@@ -162,5 +164,7 @@ namespace bold
 
     /// If true, the obtained image will have half the width
     bool d_squash;
+
+    cv::Mat d_imageFeed;
   };
 }

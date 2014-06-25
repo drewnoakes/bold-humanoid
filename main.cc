@@ -2,6 +2,8 @@
 #include "Config/config.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 #include "Version/version.hh"
+#include "Camera/camera.hh"
+#include <opencv2/opencv.hpp>
 
 #include <signal.h>
 #include <getopt.h>
@@ -19,6 +21,7 @@ void printUsage()
   cout << ccolor::fore::lightblue << "  -c <file> " << ccolor::fore::white << "use specified configuration file (or --config)" << endl;
   cout << ccolor::fore::lightblue << "  -v        " << ccolor::fore::white << "verbose logging (or --verbose)" << endl;
   cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
+  cout << ccolor::fore::lightblue << "  -i <file> " << ccolor::fore::white << "use specified image file as camera feed (or --image)" << endl;
   cout << ccolor::fore::lightblue << "  --version " << ccolor::fore::white << "print git version details at time of build" << endl;
   cout << ccolor::reset;
 }
@@ -106,6 +109,7 @@ int main(int argc, char **argv)
 
   // defaults
   string configurationFile = "configuration-agent.json";
+  string imageFeedFile = "";
   log::minLevel = LogLevel::Info;
 
   int c;
@@ -116,13 +120,14 @@ int main(int argc, char **argv)
   option longOptions[] = {
     {"config", required_argument, 0, 'c'},
     {"help", no_argument, 0, 'h'},
+    {"image", required_argument, 0, 'i'},
     {"verbose", no_argument, 0, 'v'},
     {"version", no_argument, 0, 1},
     {0, 0, 0, 0}
   };
 
   int optionIndex;
-  while ((c = getopt_long(argc, argv, "c:h:v", longOptions, &optionIndex)) != -1)
+  while ((c = getopt_long(argc, argv, "c:h:i:v", longOptions, &optionIndex)) != -1)
   {
     switch (c)
     {
@@ -137,19 +142,21 @@ int main(int argc, char **argv)
       printUsage();
       exit(0);
     }
-
+    case 'i':
+    {
+      imageFeedFile = string{optarg};
+      break;
+    }
     case 'v':
     {
       log::minLevel = LogLevel::Verbose;
       break;
     }
-
     case 1:
     {
       printVersion();
       exit(0);
     }
-
     case '?':
     {
       // getopt_long already printed an error message
@@ -174,6 +181,12 @@ int main(int argc, char **argv)
   agent->setOptionTree(optionTreeBuilder.buildTree(agent.get()));
 
   Config::initialisationCompleted();
+
+  if (imageFeedFile != "")
+  {
+    auto image = cv::imread(imageFeedFile);
+    agent->getCamera()->setImageFeed(image);
+  }
 
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);

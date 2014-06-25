@@ -29,6 +29,12 @@ Mat Camera::capture(SequentialTimer& t)
   }
   t.timeEvent("Requeue");
 
+  if (!d_imageFeed.empty())
+  {
+    log::verbose("Camera::capture") << "Using image feed. " << d_imageFeed.cols << "x" << d_imageFeed.rows;
+    return d_imageFeed.clone();
+  }
+
   // TODO VISION measure perf difference of reusing this image memory
   Mat img(d_pixelFormat.height, d_squash ? d_pixelFormat.width / 2 : d_pixelFormat.width, CV_8UC3);
 
