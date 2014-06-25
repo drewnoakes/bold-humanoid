@@ -73,6 +73,14 @@ namespace bold
       unsigned imageByteSize;
 
       bool requestSize(unsigned width, unsigned height);
+
+      std::string pixelFormatString() const
+      {
+        char chars[5];
+        for (unsigned i = 0; i < 4; ++i)
+          chars[i] = ((pixelFormat >> (i * 8)) & 0xFF);
+        return std::string(chars);
+      }
     };
 
     struct Buffer

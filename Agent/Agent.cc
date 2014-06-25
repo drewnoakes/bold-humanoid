@@ -112,6 +112,10 @@ Agent::Agent()
 
   auto pixelFormat = d_camera->getPixelFormat();
   log::info("Agent::initCamera") << "Camera resolution: " << pixelFormat.width << "x" << pixelFormat.height;
+  log::info("Agent::initCamera") << "Pixel format: " << pixelFormat.pixelFormatString();
+  log::info("Agent::initCamera") << "Bytes per line: " << pixelFormat.bytesPerLine;
+  log::info("Agent::initCamera") << "imageByteSize: " << pixelFormat.imageByteSize;
+
 
   // Start capturing camera images
   d_camera->startCapture();
