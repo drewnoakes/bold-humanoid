@@ -115,6 +115,24 @@ namespace bold
         return hsv2bgr(*this);
       }
 
+      uint8_t operator[](unsigned idx)
+      {
+        switch (idx)
+        {
+        case 0:
+          return h;
+          break;
+        case 1:
+          return s;
+          break;
+        case 2:
+          return v;
+          break;
+        default:
+          return 0;
+        }
+      }
+
       uint8_t h;
       uint8_t s;
       uint8_t v;
