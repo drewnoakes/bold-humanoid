@@ -18,7 +18,7 @@ include(AddClass)
 include(TypeScript)
 
 find_package(Eigen3 REQUIRED)
-find_package(OpenCV REQUIRED core highgui)
+find_package(OpenCV REQUIRED core highgui imgproc)
 find_package(SigC++ REQUIRED)
 find_package(Git)
 
