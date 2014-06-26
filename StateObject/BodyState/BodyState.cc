@@ -8,6 +8,7 @@ BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, array<double,
   d_torso(),
   d_jointById(),
   d_limbByName(),
+  d_isCentreOfMassComputed(false),
   d_motionCycleNumber(cycleNumber)
 {
   initialise(bodyModel, angles);
@@ -17,6 +18,7 @@ BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, shared_ptr<Ha
 : d_torso(),
   d_jointById(),
   d_limbByName(),
+  d_isCentreOfMassComputed(false),
   d_motionCycleNumber(cycleNumber)
 {
   // Add three extra as:
