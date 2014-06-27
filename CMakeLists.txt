@@ -854,6 +854,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/main.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Module.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/Agent2dModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/BayesianLabelModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CameraModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CommsModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/ConfigModule.ts

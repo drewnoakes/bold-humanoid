@@ -14,6 +14,7 @@ import util = require('util');
 
 import Agent2dModule = require('modules/Agent2dModule');
 import AnimatorModule = require('modules/AnimatorModule');
+import BayesianLabelModule = require('modules/BayesianLabelModule');
 import CameraModule = require('modules/CameraModule');
 import CommsModule = require('modules/CommsModule');
 import ConfigModule = require('modules/ConfigModule');
@@ -50,6 +51,7 @@ var loadUi = (settings?: Setting[]) =>
 
     moduleHost.register(new CameraModule());
     moduleHost.register(new VisionModule());
+    moduleHost.register(new BayesianLabelModule());
     moduleHost.register(new World3dModule());
     moduleHost.register(new World2dModule());
     moduleHost.register(new Agent2dModule());
