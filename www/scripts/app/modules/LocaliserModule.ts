@@ -31,10 +31,18 @@ var chartHeight = 150;
 
 class LocaliserModule extends Module
 {
-    private chartCanvas: HTMLCanvasElement;
-    private chart: SmoothieChart;
-    private averageSeries: TimeSeries;
-    private maxSeries: TimeSeries;
+    private weightChartCanvas: HTMLCanvasElement;
+    private weightChart: SmoothieChart;
+    private averageWeightSeries: TimeSeries;
+    private maxWeightSeries: TimeSeries;
+
+    private preNormWeightSumCanvas: HTMLCanvasElement;
+    private preNormWeightChart: SmoothieChart;
+    private preNormWeightSeries: TimeSeries;
+
+    private uncertaintyCanvas: HTMLCanvasElement;
+    private uncertaintyChart: SmoothieChart;
+    private uncertaintySeries: TimeSeries;
 
     private ballVisibleMarker: HTMLDivElement;
     private goal1VisibleMarker: HTMLDivElement;
@@ -47,20 +55,50 @@ class LocaliserModule extends Module
 
     public load(width: number)
     {
-        this.chart = new SmoothieChart(chartOptions);
+        // Set up weight chart
+        this.weightChart = new SmoothieChart(chartOptions);
 
-        this.chartCanvas = document.createElement('canvas');
-        this.chartCanvas.width = 640;
-        this.chartCanvas.height = chartHeight;
-        this.element.appendChild(this.chartCanvas);
+        this.weightChartCanvas = document.createElement('canvas');
+        this.weightChartCanvas.width = 640;
+        this.weightChartCanvas.height = chartHeight;
+        this.element.appendChild(this.weightChartCanvas);
 
-        this.chart.streamTo(this.chartCanvas, /*delayMs*/ 200);
+        this.weightChart.streamTo(this.weightChartCanvas, /*delayMs*/ 200);
 
-        this.averageSeries = new TimeSeries();
-        this.maxSeries = new TimeSeries();
+        this.averageWeightSeries = new TimeSeries();
+        this.maxWeightSeries = new TimeSeries();
 
-        this.chart.addTimeSeries(this.averageSeries, {lineWidth:1, strokeStyle:'#0040ff', fillStyle:'rgba(0,64,255,0.26)'});
-        this.chart.addTimeSeries(this.maxSeries, {lineWidth:1, strokeStyle:'#00ff00'});
+        this.weightChart.addTimeSeries(this.averageWeightSeries, {lineWidth:1, strokeStyle:'#0040ff', fillStyle:'rgba(0,64,255,0.26)'});
+        this.weightChart.addTimeSeries(this.maxWeightSeries, {lineWidth:1, strokeStyle:'#00ff00'});
+
+        // Set up pre-normalized weight sum chart
+        this.preNormWeightChart = new SmoothieChart(chartOptions);
+        
+        this.preNormWeightSumCanvas = document.createElement('canvas');
+        this.preNormWeightSumCanvas.width = 640;
+        this.preNormWeightSumCanvas.height = chartHeight;
+        this.element.appendChild(this.preNormWeightSumCanvas);
+
+        this.preNormWeightChart.streamTo(this.preNormWeightSumCanvas, /* delayMs*/ 200);
+
+        this.preNormWeightSeries = new TimeSeries();
+
+        this.preNormWeightChart.addTimeSeries(this.preNormWeightSeries, {lineWidth:1, strokeStyle:'#00ff00'});
+
+        // Set up uncertainty chart
+        this.uncertaintyChart = new SmoothieChart(chartOptions);
+        
+        this.uncertaintyCanvas = document.createElement('canvas');
+        this.uncertaintyCanvas.width = 640;
+        this.uncertaintyCanvas.height = chartHeight;
+        this.element.appendChild(this.uncertaintyCanvas);
+
+        this.uncertaintyChart.streamTo(this.uncertaintyCanvas, /* delayMs*/ 200);
+
+        this.uncertaintySeries = new TimeSeries();
+
+        this.uncertaintyChart.addTimeSeries(this.uncertaintySeries, {lineWidth:1, strokeStyle:'#00ff00'});        
+        
 
         this.closeables.add(new data.Subscription<state.Particle>(
             constants.protocols.particleState,
@@ -99,12 +137,12 @@ class LocaliserModule extends Module
 
     public unload()
     {
-        this.chart.stop();
+        this.weightChart.stop();
     }
 
     public onResized(width, height)
     {
-        this.chartCanvas.width = width;
+        this.weightChartCanvas.width = width;
     }
 
     private onCameraFrameState(data: state.CameraFrame)
@@ -154,9 +192,12 @@ class LocaliserModule extends Module
 
         if (count !== 0)
         {
-            this.averageSeries.append(time, sum/count);
-            this.maxSeries.append(time, max);
+            this.averageWeightSeries.append(time, sum/count);
+            this.maxWeightSeries.append(time, max);
         }
+
+        this.preNormWeightSeries.append(time, data.pnwsumsmooth);
+        this.uncertaintySeries.append(time, Math.sqrt(data.uncertainty));
     }
 }
 

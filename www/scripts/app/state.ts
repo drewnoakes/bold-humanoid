@@ -421,6 +421,8 @@ export interface Particle
     /** [[x,y,theta,w],...] */
     particles: number[][];
     pnwsum: number;
+    pnwsumsmooth: number;
+    uncertainty: number;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
