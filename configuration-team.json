@@ -249,16 +249,16 @@
   "localiser": {
     "filter-type": 0,
     "smoothing-window-size": 5,
-    "randomise-ratio": 0.03,
+    "randomise-ratio": 0.0,
     "use-lines": false,
     "min-goals-needed": 1,
     "enable-penalty-randomise": false,
     "enable-dynamic-error": true,
     "default-kidnap-weight": 0.001,
     "penalty-kidnap-weight": 0.5,
-    "position-error": 0.02,
-    "angle-error-degrees": 1,
     "prenorm-weightsum-filter-alpha": 0.01
+    "position-error": 0.01,
+    "angle-error-degrees": 0.3
   },
   "head-module": {
     "p-gain": 8,
