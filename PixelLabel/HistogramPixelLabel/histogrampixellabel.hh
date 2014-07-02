@@ -25,6 +25,8 @@ namespace bold
       ++d_totalCount;
     }
 
+    unsigned getTotalCount() const { return d_totalCount; }
+
     float labelProb(Colour::hsv const& pixelColour) const override
     {
       return
