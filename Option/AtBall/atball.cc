@@ -18,7 +18,7 @@ AtBall::AtBall(std::string const& id, Agent* agent)
   d_headModule(agent->getHeadModule()),
   d_lookAtFeetOption(make_shared<LookAtFeet>("lookForBallAtFeet", d_headModule))
 {
-  d_lookAroundOption = make_shared<LookAround>("lookAroundFromBall", d_headModule, 135, []()
+  d_lookAroundOption = make_shared<LookAround>("lookAroundFromBall", d_headModule, 135, []
   {
     auto map = State::get<StationaryMapState>();
     auto agentFrame = State::get<AgentFrameState>();

@@ -4,7 +4,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
 {
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
-  auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 0.5; });
+  auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 0.5; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto bigStepLeft = make_shared<MotionScriptOption>("bigStepLeft", agent->getMotionScriptModule(), "./motionscripts/step-left-big.json");
   auto bigStepRight = make_shared<MotionScriptOption>("bigStepRight", agent->getMotionScriptModule(), "./motionscripts/step-right-big.json");
@@ -32,17 +32,17 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
 
   lookForBallState
     ->transitionTo(lookAtBallState, "found")
-    ->when([]() { return stepUpDownThreshold(10, ballVisibleCondition); });
+    ->when([] { return stepUpDownThreshold(10, ballVisibleCondition); });
 
   lookAtBallState
     ->transitionTo(lookForBallState, "lost")
-    ->when([]() { return trueForMillis(2000, negate(ballVisibleCondition)); });
+    ->when([] { return trueForMillis(2000, negate(ballVisibleCondition)); });
 
   lookAtBallState
     ->transitionTo(bigStepLeftState, "ball-left")
-    ->when([]()
+    ->when([]
     {
-      return trueForMillis(1000, []()
+      return trueForMillis(1000, []
       {
         auto ball = State::get<AgentFrameState>()->getBallObservation();
         return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(-0.75, -0.3).contains(ball->x());
@@ -51,9 +51,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
 
   lookAtBallState
     ->transitionTo(bigStepRightState, "ball-right")
-    ->when([]()
+    ->when([]
     {
-      return trueForMillis(1000, []()
+      return trueForMillis(1000, []
       {
         auto ball = State::get<AgentFrameState>()->getBallObservation();
         return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(0.3, 0.75).contains(ball->x());
@@ -70,7 +70,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
 
   lookAtBallState
     ->transitionTo(leftCrossKickState, "clear-left")
-    ->when([]()
+    ->when([]
            {
              auto ball = State::get<AgentFrameState>()->getBallObservation();
              return ball && Range<double>(0.0, 0.17).contains(ball->y()) && Range<double>(-0.2, 0).contains(ball->x());
@@ -78,7 +78,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
 
   lookAtBallState
     ->transitionTo(rightCrossKickState, "clear-right")
-    ->when([]()
+    ->when([]
            {
              auto ball = State::get<AgentFrameState>()->getBallObservation();
              return ball && Range<double>(0.0, 0.17).contains(ball->y()) && Range<double>(0, 0.2).contains(ball->x());

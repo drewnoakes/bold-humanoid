@@ -21,7 +21,7 @@ LocateBall::LocateBall(string const& id, Agent* agent)
   d_visibleCount(0),
   d_stepCount(0)
 {
-  d_lookAroundOption = make_shared<LookAround>("lookAroundForBall", d_headModule, 135, []()
+  d_lookAroundOption = make_shared<LookAround>("lookAroundForBall", d_headModule, 135, []
   {
     // Slow down considerably when a ball is observed
     return State::get<CameraFrameState>()->isBallVisible() ? 0.3 : 1.0;

@@ -33,7 +33,7 @@ namespace bold
 
   // GENERAL FUNCTIONS
 
-  auto startButtonPressed = []()
+  auto startButtonPressed = []
   {
     auto hw = State::get<HardwareState>();
     if (!hw)
@@ -50,7 +50,7 @@ namespace bold
     return false;
   };
 
-  auto modeButtonPressed = []()
+  auto modeButtonPressed = []
   {
     auto hw = State::get<HardwareState>();
     if (!hw)
@@ -67,12 +67,12 @@ namespace bold
     return false;
   };
 
-  auto ballVisibleCondition = []()
+  auto ballVisibleCondition = []
   {
     return State::get<CameraFrameState>()->isBallVisible();
   };
 
-  auto ballTooFarToKick = []()
+  auto ballTooFarToKick = []
   {
     // TODO use filtered ball position
     auto ballObs = State::get<AgentFrameState>()->getBallObservation();
@@ -81,8 +81,8 @@ namespace bold
   };
 
   // TODO review this one-size-fits-all approach on a case-by-case basis below
-  auto ballFoundConditionFactory = []() { return trueForMillis(1000, ballVisibleCondition); };
-  auto ballLostConditionFactory = []() { return trueForMillis(1000, bold::negate(ballVisibleCondition)); };
+  auto ballFoundConditionFactory = [] { return trueForMillis(1000, ballVisibleCondition); };
+  auto ballLostConditionFactory = [] { return trueForMillis(1000, bold::negate(ballVisibleCondition)); };
 
   auto isPlayMode = [](robocup::PlayMode playMode, bool defaultValue)
   {

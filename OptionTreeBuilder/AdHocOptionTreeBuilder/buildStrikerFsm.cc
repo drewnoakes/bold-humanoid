@@ -1,6 +1,6 @@
 #include "adhocoptiontreebuilder.ih"
 
-auto shouldYieldToOtherAttacker = []()
+auto shouldYieldToOtherAttacker = []
 {
   auto team = State::get<TeamState>();
   auto agentFrame = State::get<AgentFrameState>();
@@ -18,7 +18,7 @@ auto shouldYieldToOtherAttacker = []()
   return dist > yieldMinDist->getValue() && dist < yieldMaxDist->getValue() && isTeamMateAttacking;
 };
 
-auto ballIsStoppingDistance = []()
+auto ballIsStoppingDistance = []
 {
   // Approach ball until we're within a given distance
   // TODO use filtered ball position
@@ -32,7 +32,7 @@ auto ballIsStoppingDistance = []()
 // straight without looking around once we reach the ball.
 // Unlike the building of the stationary map, this is based on a single cycle's
 // observation and so may be used during motion (when not stationary.)
-auto isPerfectLineForAttack = []()
+auto isPerfectLineForAttack = []
 {
   static auto isPerfectLineEnabled = Config::getSetting<bool>("options.perfect-line.enabled");
 
@@ -139,12 +139,12 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // stop turning if the ball comes into view
   locateBallCirclingState
     ->transitionTo(locateBallState, "found-ball")
-    ->when([]() { return stepUpDownThreshold(5, ballVisibleCondition); });
+    ->when([] { return stepUpDownThreshold(5, ballVisibleCondition); });
 
   // start approaching the ball when we have the confidence that it's really there
   locateBallState
     ->transitionTo(approachBallState, "found-ball")
-    ->when([]() { return stepUpDownThreshold(10, ballVisibleCondition); });
+    ->when([] { return stepUpDownThreshold(10, ballVisibleCondition); });
 
   approachBallState
     ->transitionTo(locateBallState, "lost-ball")
@@ -153,7 +153,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // Let another player shine if they're closer and attempting to score
   approachBallState
     ->transitionTo(yieldState, "yield")
-    ->when([]() { return stepUpDownThreshold(10, shouldYieldToOtherAttacker); });
+    ->when([] { return stepUpDownThreshold(10, shouldYieldToOtherAttacker); });
 
   // stop walking to ball once we're close enough
   approachBallState
@@ -170,7 +170,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   yieldState
     ->transitionTo(locateBallState, "resume")
-    ->when([]() { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
+    ->when([] { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
   //
   // AT-BALL EXIT TRANSITIONS
@@ -216,7 +216,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // If we notice the ball is too far to kick, abort kick
   atBallState
     ->transitionTo(locateBallState, "ball-too-far")
-    ->when([]() { return stepUpDownThreshold(6, ballTooFarToKick); });
+    ->when([] { return stepUpDownThreshold(6, ballTooFarToKick); });
 
   kickState
     ->transitionTo(locateBallState, "done")
@@ -228,7 +228,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   turnAroundBallState
     ->transitionTo(locateBallState, "ball-too-far")
-    ->when([]() { return stepUpDownThreshold(10, ballTooFarToKick); });
+    ->when([] { return stepUpDownThreshold(10, ballTooFarToKick); });
 
   //
   // KICK FORWARDS
@@ -237,7 +237,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   // If we notice the ball is too far to kick, abort kick
   kickForwardsState
     ->transitionTo(locateBallState, "ball-too-far")
-    ->when([]() { return stepUpDownThreshold(10, ballTooFarToKick); });
+    ->when([] { return stepUpDownThreshold(10, ballTooFarToKick); });
 
   // TODO if ball too central, step to left/right slightly, or use different kick
 

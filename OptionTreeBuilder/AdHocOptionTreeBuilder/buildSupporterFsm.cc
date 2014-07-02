@@ -4,7 +4,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, sh
 {
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
-  auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, []() { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
+  auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto keepPosition = make_shared<KeepPosition>("keepPosition", PlayerRole::Supporter, agent);
@@ -35,7 +35,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, sh
 
   lookAtBallState
     ->transitionTo(keepPositionState, "found")
-    ->when([]() { return stepUpDownThreshold(10, ballVisibleCondition); });
+    ->when([] { return stepUpDownThreshold(10, ballVisibleCondition); });
 
   keepPositionState
     ->transitionTo(lookForBallState, "lost-ball")
@@ -54,7 +54,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, sh
   // stop turning if the ball comes into view
   circleToFindLostBallState
     ->transitionTo(lookAtBallState, "found")
-    ->when([]() { return stepUpDownThreshold(5, ballVisibleCondition); });
+    ->when([] { return stepUpDownThreshold(5, ballVisibleCondition); });
 
   ofstream playingOut("fsm-supporter.dot");
   playingOut << fsm->toDot();

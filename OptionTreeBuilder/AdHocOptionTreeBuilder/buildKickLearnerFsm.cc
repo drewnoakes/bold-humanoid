@@ -52,7 +52,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
       };
     });
 
-  selectKickState->onEnter.connect([]()
+  selectKickState->onEnter.connect([]
   {
     // HACK only do right-kick for now
     kickUsed = "right";
@@ -68,10 +68,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
     }
   });
 
-  selectKickState->transitionTo(kickLeftState) ->when([]() { return kickUsed == "left"; });
-  selectKickState->transitionTo(kickRightState)->when([]() { return kickUsed == "right"; });
-  selectKickState->transitionTo(kickCrossLeftState) ->when([]() { return kickUsed == "left-cross"; });
-  selectKickState->transitionTo(kickCrossRightState)->when([]() { return kickUsed == "right-cross"; });
+  selectKickState->transitionTo(kickLeftState) ->when([] { return kickUsed == "left"; });
+  selectKickState->transitionTo(kickRightState)->when([] { return kickUsed == "right"; });
+  selectKickState->transitionTo(kickCrossLeftState) ->when([] { return kickUsed == "left-cross"; });
+  selectKickState->transitionTo(kickCrossRightState)->when([] { return kickUsed == "right-cross"; });
 
   kickLeftState->transitionTo(lookUpForBallState)->whenTerminated();
   kickRightState->transitionTo(lookUpForBallState)->whenTerminated();
@@ -115,7 +115,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
 
   recordOutcomeState
     ->transitionTo(waitForBallState)
-    ->when([]()
+    ->when([]
     {
       auto hw = State::get<HardwareState>();
       log::info("LearnKickResult") << kickUsed << " " << ballStartPos.transpose() << ", " << ballEndPos.transpose() << ", " << (hw ? hw->getCM730State().voltage : -1);
