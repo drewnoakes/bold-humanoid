@@ -44,9 +44,9 @@ namespace bold
       d_description(description)
     {
       auto last = d_path.find_last_of('.');
-      auto nameStart =
-        last == std::string::npos ?
-        0 : last + 1;
+      auto nameStart = last == std::string::npos
+        ? 0
+        : last + 1;
       d_name = d_path.substr(nameStart);
     }
 
