@@ -50,7 +50,7 @@ namespace bold
       d_name = d_path.substr(nameStart);
     }
 
-    virtual ~SettingBase() {}
+    virtual ~SettingBase() = default;
 
     static bool isInitialising();
 
@@ -74,7 +74,7 @@ namespace bold
       d_value(value)
     {}
 
-    virtual ~Setting() {}
+    virtual ~Setting() = default;
 
     const T getValue() const { return d_value; }
 

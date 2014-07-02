@@ -22,7 +22,7 @@ namespace bold
     static bool tryParseJsonValue(rapidjson::Value const* value, int* i);
 
     IntSetting(std::string path, int min, int max, int defaultValue, bool isReadOnly, std::string description);
-    ~IntSetting() {}
+    ~IntSetting() = default;
 
     int getMinimum() const { return d_min; }
     int getMaximum() const { return d_max; }
@@ -44,7 +44,7 @@ namespace bold
   {
   public:
     EnumSetting(std::string path, std::map<int,std::string> pairs, int defaultValue, bool isReadOnly, std::string description);
-    ~EnumSetting() {}
+    ~EnumSetting() = default;
 
     bool isValidValue(int value) const override;
     std::string getValidationMessage(int value) const override;
@@ -63,7 +63,7 @@ namespace bold
   {
   public:
     DoubleSetting(std::string path, double min, double max, double defaultValue, bool isReadOnly, std::string description);
-    ~DoubleSetting() {}
+    ~DoubleSetting() = default;
 
     bool isValidValue(double value) const override;
     std::string getValidationMessage(double value) const override;
@@ -85,7 +85,7 @@ namespace bold
     static bool tryParseJsonValue(rapidjson::Value const* value, bool* b);
 
     BoolSetting(std::string path, bool defaultValue, bool isReadOnly, std::string description);
-    ~BoolSetting() {}
+    ~BoolSetting() = default;
 
     bool isValidValue(bool value) const override;
     std::string getValidationMessage(bool value) const override;
@@ -106,7 +106,7 @@ namespace bold
     static bool tryParseJsonValue(rapidjson::Value const* value, Colour::hsvRange* hsvRange);
 
     HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, std::string description);
-    ~HsvRangeSetting() {}
+    ~HsvRangeSetting() = default;
 
     bool isValidValue(Colour::hsvRange value) const override;
     std::string getValidationMessage(Colour::hsvRange value) const override;
@@ -127,7 +127,7 @@ namespace bold
     static bool tryParseJsonValue(rapidjson::Value const* value, Range<double>* hsvRange);
 
     DoubleRangeSetting(std::string path, Range<double> defaultValue, bool isReadOnly, std::string description);
-    ~DoubleRangeSetting() {}
+    ~DoubleRangeSetting() = default;
 
     bool isValidValue(Range<double> value) const override;
     std::string getValidationMessage(Range<double> value) const override;
@@ -145,7 +145,7 @@ namespace bold
   {
   public:
     StringSetting(std::string path, std::string defaultValue, bool isReadOnly, std::string description);
-    ~StringSetting() {}
+    ~StringSetting() = default;
 
     bool isValidValue(std::string value) const override;
     std::string getValidationMessage(std::string value) const override;
@@ -166,7 +166,7 @@ namespace bold
     static bool tryParseJsonValue(rapidjson::Value const* value, std::vector<std::string>* strings);
 
     StringArraySetting(std::string path, std::vector<std::string> defaultValue, bool isReadOnly, std::string description);
-    ~StringArraySetting() {}
+    ~StringArraySetting() = default;
 
     bool isValidValue(std::vector<std::string> value) const override;
     std::string getValidationMessage(std::vector<std::string> value) const override;
@@ -187,7 +187,7 @@ namespace bold
     static bool tryParseJsonValue(rapidjson::Value const* value, Colour::bgr* bgr);
 
     BgrColourSetting(std::string path, Colour::bgr defaultValue, bool isReadOnly, std::string description);
-    ~BgrColourSetting() {}
+    ~BgrColourSetting() = default;
 
     bool isValidValue(Colour::bgr value) const override;
     std::string getValidationMessage(Colour::bgr value) const override;

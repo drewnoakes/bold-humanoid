@@ -137,7 +137,7 @@ namespace bold
 
     static void processConfigMetaJsonValue(rapidjson::Value const* metaNode, TreeNode* treeNode, std::string path, std::string name);
 
-    Config() {}
+    Config() = delete;
 
     static TreeNode d_root;
     static std::map<std::string,Action*> d_actionById;
