@@ -1,11 +1,9 @@
 #include "Agent/agent.hh"
 #include "Config/config.hh"
-#include "OptionTree/optiontree.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 #include "version.hh"
 
 #include <signal.h>
-#include <unistd.h>
 #include <getopt.h>
 
 using namespace bold;
@@ -137,7 +135,7 @@ int main(int argc, char **argv)
       printUsage();
       exit(0);
     }
-     
+
     case 'v':
     {
       log::minLevel = LogLevel::Verbose;
@@ -154,7 +152,7 @@ int main(int argc, char **argv)
     {
       // getopt_long already printed an error message
       printUsage();
-      exit(-1);;
+      exit(-1);
     }
 
     }
