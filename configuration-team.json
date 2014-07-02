@@ -1,4 +1,8 @@
 {
+  "uniform-number": 2,
+  "team-number": 36,
+  "team-colour": 1,
+  "player-name": "boldie",
   "mitecom": {
     "local-port": 12321,
     "remote-port": 12321,
@@ -64,6 +68,32 @@
       "ankle-roll-l":     0,
       "head-pan":         0,
       "head-tilt":        0
+    },
+    "limits": {
+      "temperature-centigrade": 80,
+      "voltage-range": [6.0, 14.0],
+      "angle-limits": {
+        "shoulder-pitch-r": [-180.0, 180.0],
+        "shoulder-pitch-l": [-180.0, 180.0],
+        "shoulder-roll-r":  [-75.0, 135.0],
+        "shoulder-roll-l":  [-135.0, 75.0],
+        "elbow-r":          [-95.0,  70.0],
+        "elbow-l":          [-70.0,  95.0],
+        "hip-yaw-r":        [-123.0, 53.0],
+        "hip-yaw-l":        [-53.0, 123.0],
+        "hip-roll-r":       [-45.0, 59.0],
+        "hip-roll-l":       [-59.0, 45.0],
+        "hip-pitch-r":      [-100.0, 29.0],
+        "hip-pitch-l":      [-29.0, 100.0],
+        "knee-r":           [-6.0, 130.0],
+        "knee-l":           [-130.0, 6.0],
+        "ankle-pitch-r":    [-72.0, 80.0],
+        "ankle-pitch-l":    [-80.0, 72.0],
+        "ankle-roll-r":     [-44.0, 63.0],
+        "ankle-roll-l":     [-63.0, 44.0],
+        "head-pan":         [-135.0, 135.0],
+        "head-tilt":        [-25.0, 55.0]
+      }
     }
   },
   "world": {
@@ -92,7 +122,8 @@
       "horizontal-degrees": 61.59
     },
     "calibration": {
-      "tilt-angle-degrees": -40
+      "tilt-angle-degrees": -40,
+      "pan-angle-degrees": 0
     },
     "settings": {
       "initialise-order": [
@@ -119,10 +150,15 @@
     "image-granularity": 4,
     "max-granularity": 4,
     "pixel-labels": {
-      "goal": { "hue": [30, 60], "sat": [158, 236], "val": [124, 222] },
-      "ball": { "hue": [248, 30], "sat": [72, 255], "val": [12, 255] },
-      "field": { "hue": [72, 118], "sat": [166, 236], "val": [52, 192] },
-      "line": { "hue": [0, 255], "sat": [0, 167], "val": [161, 255] }
+      "goal":    { "hue": [30, 60],   "sat": [158, 236], "val": [124, 222] },
+      "ball":    { "hue": [248, 30],  "sat": [72, 255],  "val": [12, 255] },
+      "field":   { "hue": [72, 118],  "sat": [166, 236], "val": [52, 192] },
+      "line":    { "hue": [0, 255],   "sat": [0, 167],   "val": [161, 255] },
+      "cyan":    { "hue": [125, 155], "sat": [100, 255], "val": [40, 100] },
+      "magenta": { "hue": [235, 0],   "sat": [100, 150], "val": [40, 100] }
+    },
+    "blob-detection": {
+      "enable": true
     },
     "ball-detection": {
       "min-area-px": 1,
@@ -136,6 +172,12 @@
       "accepted-width-ratio": [0.5, 1.4],
       "max-pair-error-dist": 0.5
     },
+    "player-detection": {
+      "enable": false,
+      "min-area-px": 10,
+      "goalie-marker-height": 0.28,
+      "max-goalie-goal-dist": 1.0
+    },
     "line-detection": {
       "enable": false,
       "line-dots": {
@@ -148,6 +190,12 @@
         "min-line-length": 30,
         "max-line-gap": 30,
         "max-lines-returned": 5
+      },
+      "scanning": {
+        "min-length": 30.0,
+        "min-coverage": 0.2,
+        "max-rms-factor": 4.0,
+        "max-head-dist": 10.0
       }
     },
     "label-counter": {
@@ -195,13 +243,22 @@
       "background-colour": { "b": 0, "g": 0, "r": 0 }
     }
   },
+  "data-streamer": {
+    "thread-sleep-microseconds": 1500
+  },
   "localiser": {
+    "filter-type": 0,
     "smoothing-window-size": 5,
     "randomise-ratio": 0.03,
     "use-lines": false,
     "min-goals-needed": 1,
+    "enable-penalty-randomise": false,
+    "enable-dynamic-error": true,
+    "default-kidnap-weight": 0.001,
+    "penalty-kidnap-weight": 0.5,
     "position-error": 0.02,
-    "angle-error-degrees": 1
+    "angle-error-degrees": 1,
+    "prenorm-weightsum-filter-alpha": 0.01
   },
   "head-module": {
     "p-gain": 8,
@@ -318,6 +375,14 @@
       "min-dist": 0.5,
       "max-dist": 1.5
     },
+    "search-ball": {
+      "turn-speed": 15,
+      "max-target-height": 23,
+      "min-target-height": -1,
+      "max-target-side": 65,
+      "speed-x": 2,
+      "speed-y": 2
+    },
     "perfect-line": {
       "enabled": true
     }
@@ -331,5 +396,9 @@
     "temperature": {
       "high-threshold": 60
     }
+  },
+  "role-decider": {
+    "announce-roles": false,
+    "override": -1
   }
 }
