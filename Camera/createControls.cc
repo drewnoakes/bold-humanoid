@@ -118,17 +118,18 @@ void Camera::createControls()
 
     int currentValue = getValue(control->id);
 
+    Value const* initialJsonValue = Config::getConfigJsonValue(path.str());
+
     // Create the appropriate type of Setting<T>
     switch (type)
     {
       case V4L2ControlType::CT_BOOL:
       {
-        bool defaultValue;
-        if (!BoolSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
-          defaultValue = control->defaultValue != 0;
+        auto setting = new BoolSetting(path.str(), isReadOnly, name);
 
-        auto setting = new BoolSetting(path.str(), defaultValue, isReadOnly, name);
-        setting->setValue(currentValue != 0);
+        if (initialJsonValue == nullptr || !setting->setValueFromJson(initialJsonValue))
+          setting->setValue(currentValue != 0);
+
         setting->changed.connect([setValue,control,setting](bool value) {
           setValue(control, value ? 1 : 0,
                    [setting](int correction) { setting->setValue(correction != 0); });
@@ -139,14 +140,11 @@ void Camera::createControls()
       }
       case V4L2ControlType::CT_INT:
       {
-        int defaultValue;
-        if (!IntSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
-          defaultValue = control->defaultValue;
-        if (defaultValue < control->minimum || defaultValue > control->maximum)
-          log::warning("Camera::createControls") << "Invalid default value " << defaultValue << " for int setting " << path.str();
+        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, isReadOnly, name);
 
-        auto setting = new IntSetting(path.str(), control->minimum, control->maximum, defaultValue, isReadOnly, name);
-        setting->setValue(currentValue);
+        if (initialJsonValue == nullptr || !setting->setValueFromJson(initialJsonValue))
+          setting->setValue(currentValue);
+
         setting->changed.connect([setValue,control,setting](int value) {
           setValue(control, value,
                    [setting](int correction) { setting->setValue(correction); });
@@ -157,14 +155,11 @@ void Camera::createControls()
       }
       case V4L2ControlType::CT_MENU:
       {
-        int defaultValue;
-        if (!IntSetting::tryParseJsonValue(Config::getConfigJsonValue(path.str()), &defaultValue))
-          defaultValue = control->defaultValue;
-        if (control->pairs.find(defaultValue) == control->pairs.end())
-          log::warning("Camera::createControls") << "Invalid default value " << defaultValue << " for enum setting " << path.str();
+        auto setting = new EnumSetting(path.str(), control->pairs, isReadOnly, name);
 
-        auto setting = new EnumSetting(path.str(), control->pairs, defaultValue, isReadOnly, name);
-        setting->setValue(currentValue);
+        if (initialJsonValue == nullptr || !setting->setValueFromJson(initialJsonValue))
+          setting->setValue(currentValue);
+
         setting->changed.connect([setValue,control,setting](int value) {
           setValue(control, value,
                    [setting](int correction) { setting->setValue(correction); });

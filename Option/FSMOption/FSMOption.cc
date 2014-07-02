@@ -20,7 +20,8 @@ FSMOption::FSMOption(shared_ptr<Voice> voice, string const& id)
   stringstream pauseDesc;
   pauseDesc << "Pause " << id;
 
-  d_paused = new BoolSetting(pausePath.str(), false, false, pauseDesc.str());
+  d_paused = new BoolSetting(pausePath.str(), false, pauseDesc.str());
+  d_paused->setValue(false);
 
   Config::addSetting(d_paused);
 

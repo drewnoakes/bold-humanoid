@@ -168,10 +168,10 @@ int main(int argc, char **argv)
 
   agent.reset(new Agent());
 
-  Config::initialisationCompleted();
-
   AdHocOptionTreeBuilder optionTreeBuilder;
   agent->setOptionTree(optionTreeBuilder.buildTree(agent.get()));
+
+  Config::initialisationCompleted();
 
   signal(SIGTERM, &handleShutdownSignal);
   signal(SIGINT, &handleShutdownSignal);

@@ -1,24 +1,24 @@
 #include "setting-implementations.hh"
 
 #include "../util/log.hh"
+#include "../Config/config.hh"
 
 using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-IntSetting::IntSetting(string path, int min, int max, int defaultValue, bool isReadOnly, string description)
-: Setting(path, "int", isReadOnly, defaultValue, description),
+IntSetting::IntSetting(string path, int min, int max, bool isReadOnly, string description)
+: Setting(path, "int", isReadOnly, description),
   d_min(min),
-  d_max(max),
-  d_defaultValue(defaultValue)
+  d_max(max)
 {}
 
-bool IntSetting::isValidValue(int value) const
+bool IntSetting::isValidValue(int const& value) const
 {
   return value >= d_min && value <= d_max;
 }
 
-string IntSetting::getValidationMessage(int value) const
+string IntSetting::getValidationMessage(int const& value) const
 {
   if (value < d_min || value > d_max)
   {
@@ -29,59 +29,42 @@ string IntSetting::getValidationMessage(int value) const
   return "";
 }
 
-void IntSetting::writeJsonValue(Writer<StringBuffer>& writer) const
+bool IntSetting::tryParseJsonValue(Value const* jsonValue, int* parsedValue) const
 {
-  writer.Int(getValue());
+  if (jsonValue == nullptr || !jsonValue->IsInt())
+    return false;
+  *parsedValue = jsonValue->GetInt();
+  return true;
+}
+
+void IntSetting::writeJsonValue(Writer<StringBuffer>& writer, int const& value) const
+{
+  writer.Int(value);
 }
 
 void IntSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
-  writer.String("default").Int(d_defaultValue);
+  Setting<int>::writeJsonMetadata(writer);
+
   if (d_min != -numeric_limits<int>::max())
     writer.String("min").Int(d_min);
   if (d_max != numeric_limits<int>::max())
     writer.String("max").Int(d_max);
 }
 
-bool IntSetting::tryParseJsonValue(Value const* value, int* i)
-{
-  if (value == nullptr || !value->IsInt())
-    return false;
-  *i = value->GetInt();
-  return true;
-}
-
-bool IntSetting::setValueFromJson(Value const* value)
-{
-  if (value == nullptr)
-  {
-    log::error("IntSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
-    return false;
-  }
-
-  if (!value->IsInt())
-  {
-    log::error("IntSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be an integer";
-    return false;
-  }
-
-  return setValue(value->GetInt());
-}
-
 ///////////////////////////////////////////////////////////
 
-EnumSetting::EnumSetting(string path, map<int,string> pairs, int defaultValue, bool isReadOnly, string description)
-: Setting(path, "enum", isReadOnly, defaultValue, description),
-  d_pairs(pairs),
-  d_defaultValue(defaultValue)
+EnumSetting::EnumSetting(string path, map<int,string> pairs, bool isReadOnly, string description)
+: Setting(path, "enum", isReadOnly, description),
+  d_pairs(pairs)
 {}
 
-bool EnumSetting::isValidValue(int value) const
+bool EnumSetting::isValidValue(int const& value) const
 {
   return d_pairs.find(value) != d_pairs.end();
 }
 
-string EnumSetting::getValidationMessage(int value) const
+string EnumSetting::getValidationMessage(int const& value) const
 {
   if (d_pairs.find(value) == d_pairs.end())
   {
@@ -92,14 +75,23 @@ string EnumSetting::getValidationMessage(int value) const
   return "";
 }
 
-void EnumSetting::writeJsonValue(Writer<StringBuffer>& writer) const
+bool EnumSetting::tryParseJsonValue(Value const* jsonValue, int* parsedValue) const
 {
-  writer.Int(getValue());
+  if (jsonValue == nullptr || !jsonValue->IsInt())
+    return false;
+  *parsedValue = jsonValue->GetInt();
+  return true;
+}
+
+void EnumSetting::writeJsonValue(Writer<StringBuffer>& writer, int const& value) const
+{
+  writer.Int(value);
 }
 
 void EnumSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
-  writer.String("default").Int(d_defaultValue);
+  Setting<int>::writeJsonMetadata(writer);
+
   writer.String("values");
   writer.StartArray();
   {
@@ -113,38 +105,20 @@ void EnumSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   writer.EndArray();
 }
 
-bool EnumSetting::setValueFromJson(Value const* value)
-{
-  if (value == nullptr)
-  {
-    log::error("EnumSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
-    return false;
-  }
-
-  if (!value->IsInt())
-  {
-    log::error("EnumSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be an integer";
-    return false;
-  }
-
-  return setValue(value->GetInt());
-}
-
 ///////////////////////////////////////////////////////////
 
-DoubleSetting::DoubleSetting(string path, double min, double max, double defaultValue, bool isReadOnly, string description)
-: Setting(path, "double", isReadOnly, defaultValue, description),
+DoubleSetting::DoubleSetting(string path, double min, double max, bool isReadOnly, string description)
+: Setting(path, "double", isReadOnly, description),
   d_min(min),
-  d_max(max),
-  d_defaultValue(defaultValue)
+  d_max(max)
 {}
 
-bool DoubleSetting::isValidValue(double value) const
+bool DoubleSetting::isValidValue(double const& value) const
 {
   return value >= d_min && value <= d_max;
 }
 
-string DoubleSetting::getValidationMessage(double value) const
+string DoubleSetting::getValidationMessage(double const& value) const
 {
   if (value < d_min || value > d_max)
   {
@@ -155,110 +129,69 @@ string DoubleSetting::getValidationMessage(double value) const
   return "";
 }
 
-void DoubleSetting::writeJsonValue(Writer<StringBuffer>& writer) const
+bool DoubleSetting::tryParseJsonValue(Value const* jsonValue, double* parsedValue) const
 {
-  writer.Double(getValue());
+  if (jsonValue == nullptr || !jsonValue->IsNumber())
+    return false;
+  *parsedValue = jsonValue->GetDouble();
+  return true;
+}
+
+void DoubleSetting::writeJsonValue(Writer<StringBuffer>& writer, double const& value) const
+{
+  writer.Double(value);
 }
 
 void DoubleSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
 {
-  writer.String("default").Double(d_defaultValue);
+  Setting<double>::writeJsonMetadata(writer);
+
   if (d_min != -numeric_limits<double>::max())
     writer.String("min").Double(d_min);
   if (d_max != numeric_limits<double>::max())
     writer.String("max").Double(d_max);
 }
 
-bool DoubleSetting::setValueFromJson(Value const* value)
+///////////////////////////////////////////////////////////
+
+BoolSetting::BoolSetting(string path, bool isReadOnly, string description)
+: Setting(path, "bool", isReadOnly, description)
+{}
+
+bool BoolSetting::tryParseJsonValue(Value const* jsonValue, bool* parsedValue) const
 {
-  if (value == nullptr)
-  {
-    log::error("DoubleSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
+  if (jsonValue == nullptr || !jsonValue->IsBool())
     return false;
-  }
+  *parsedValue = jsonValue->GetBool();
+  return true;
+}
 
-  if (!value->IsNumber())
-  {
-    log::error("DoubleSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be a double";
-    return false;
-  }
-
-  return setValue(value->GetDouble());
+void BoolSetting::writeJsonValue(Writer<StringBuffer>& writer, bool const& value) const
+{
+  writer.Bool(value);
 }
 
 ///////////////////////////////////////////////////////////
 
-BoolSetting::BoolSetting(string path, bool defaultValue, bool isReadOnly, string description)
-: Setting(path, "bool", isReadOnly, defaultValue, description),
-  d_defaultValue(defaultValue)
+HsvRangeSetting::HsvRangeSetting(string path, bool isReadOnly, string description)
+: Setting(path, "hsv-range", isReadOnly, description)
 {}
 
-bool BoolSetting::isValidValue(bool value) const
+bool HsvRangeSetting::isValidValue(Colour::hsvRange const& value) const
 {
-  return true;
+  return value.isValid();
 }
 
-string BoolSetting::getValidationMessage(bool value) const
+string HsvRangeSetting::getValidationMessage(Colour::hsvRange const& value) const
 {
+  if (!value.isValid())
+    return "Sat/Val max values must be greater than min values";
   return "";
 }
 
-void BoolSetting::writeJsonValue(Writer<StringBuffer>& writer) const
+bool HsvRangeSetting::tryParseJsonValue(Value const* jsonValue, Colour::hsvRange* parsedValue) const
 {
-  writer.Bool(getValue());
-}
-
-void BoolSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
-{
-  writer.String("default").Bool(d_defaultValue);
-}
-
-bool BoolSetting::tryParseJsonValue(Value const* value, bool* b)
-{
-  if (value == nullptr || !value->IsBool())
-    return false;
-  *b = value->GetBool();
-  return true;
-}
-
-bool BoolSetting::setValueFromJson(Value const* value)
-{
-  if (value == nullptr)
-  {
-    log::error("BoolSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
-    return false;
-  }
-
-  if (!value->IsBool())
-  {
-    log::error("BoolSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be a bool";
-    return false;
-  }
-
-  return setValue(value->GetBool());
-}
-
-///////////////////////////////////////////////////////////
-
-HsvRangeSetting::HsvRangeSetting(string path, Colour::hsvRange defaultValue, bool isReadOnly, string description)
-: Setting(path, "hsv-range", isReadOnly, defaultValue, description),
-  d_defaultValue(defaultValue)
-{}
-
-void HsvRangeSetting::writeHsvRangeJsonObject(Writer<StringBuffer>& writer, Colour::hsvRange const& value)
-{
-  writer.StartObject();
-  {
-    writer.String("hue").StartArray().Double(value.hMin).Double(value.hMax).EndArray();
-    writer.String("sat").StartArray().Double(value.sMin).Double(value.sMax).EndArray();
-    writer.String("val").StartArray().Double(value.vMin).Double(value.vMax).EndArray();
-  }
-  writer.EndObject();
-}
-
-bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hsvRange)
-{
-  if (!value->IsObject())
+  if (!jsonValue->IsObject())
   {
     log::error("HsvRangeSetting::tryParseObject") << "JSON value must be an object";
     return false;
@@ -266,9 +199,9 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hs
 
   // {"hue":[44,60],"sat":[158,236],"val":[124,222]}
 
-  auto parseChannel = [value](string channel, uchar* min, uchar* max)
+  auto parseChannel = [ jsonValue ](string channel, uchar* min, uchar* max)
   {
-    auto mem = value->FindMember(channel.c_str());
+    auto mem = jsonValue->FindMember(channel.c_str());
 
     if (!mem || !mem->value.IsArray() || mem->value.Size() != 2 || !mem->value[0u].IsInt() || !mem->value[1u].IsInt())
     {
@@ -286,16 +219,16 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hs
     }
 
     *min = (uchar)v1,
-    *max = (uchar)v2;
+      *max = (uchar)v2;
     return true;
   };
 
-  if (!parseChannel("hue", &hsvRange->hMin, &hsvRange->hMax) ||
-      !parseChannel("sat", &hsvRange->sMin, &hsvRange->sMax) ||
-      !parseChannel("val", &hsvRange->vMin, &hsvRange->vMax))
+  if (!parseChannel("hue", &parsedValue->hMin, &parsedValue->hMax) ||
+    !parseChannel("sat", &parsedValue->sMin, &parsedValue->sMax) ||
+    !parseChannel("val", &parsedValue->vMin, &parsedValue->vMax))
     return false;
 
-  if (!hsvRange->isValid())
+  if (!parsedValue->isValid())
   {
     log::error("HsvRangeSetting::tryParseObject") << "hsv-range value parsed correctly but has invalid data";
     return false;
@@ -304,88 +237,29 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* value, Colour::hsvRange* hs
   return true;
 }
 
-bool HsvRangeSetting::isValidValue(Colour::hsvRange value) const
+void HsvRangeSetting::writeJsonValue(Writer<StringBuffer>& writer, Colour::hsvRange const& value) const
 {
-  return value.isValid();
-}
-
-string HsvRangeSetting::getValidationMessage(Colour::hsvRange value) const
-{
-  if (!value.isValid())
-    return "Sat/Val max values must be greater than min values";
-  return "";
-}
-
-void HsvRangeSetting::writeJsonValue(Writer<StringBuffer>& writer) const
-{
-  writeHsvRangeJsonObject(writer, getValue());
-}
-
-void HsvRangeSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
-{
-  writer.String("default");
-  writeHsvRangeJsonObject(writer, d_defaultValue);
-}
-
-bool HsvRangeSetting::setValueFromJson(Value const* value)
-{
-  if (value == nullptr)
+  writer.StartObject();
   {
-    log::error("HsvRangeSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
-    return false;
+    writer.String("hue").StartArray().Double(value.hMin).Double(value.hMax).EndArray();
+    writer.String("sat").StartArray().Double(value.sMin).Double(value.sMax).EndArray();
+    writer.String("val").StartArray().Double(value.vMin).Double(value.vMax).EndArray();
   }
-
-  Colour::hsvRange hsvRange;
-
-  if (!tryParseJsonValue(value, &hsvRange))
-  {
-    log::error("HsvRangeSetting::setValueFromJson") << "Invalid JSON Value provided for '" << getPath();
-    return false;
-  }
-
-  setValue(hsvRange);
-  return true;
+  writer.EndObject();
 }
 
 ///////////////////////////////////////////////////////////
 
-DoubleRangeSetting::DoubleRangeSetting(string path, Range<double> defaultValue, bool isReadOnly, string description)
-: Setting(path, "double-range", isReadOnly, defaultValue, description),
-  d_defaultValue(defaultValue)
+DoubleRangeSetting::DoubleRangeSetting(string path, bool isReadOnly, string description)
+: Setting(path, "double-range", isReadOnly, description)
 {}
 
-void DoubleRangeSetting::writeDoubleRangeJsonObject(Writer<StringBuffer>& writer, Range<double> const& value)
-{
-  writer.StartArray().Double(value.min()).Double(value.max()).EndArray();
-}
-
-bool DoubleRangeSetting::tryParseJsonValue(Value const* value, Range<double>* range)
-{
-  if (!value->IsArray() || value->Size() != 2 || !(*value)[0u].IsNumber() || !(*value)[1u].IsNumber())
-  {
-    log::error("DoubleRangeSetting::tryParseJsonValue") << "Double range value must be a JSON array of two double values";
-    return false;
-  }
-
-  auto v1 = (*value)[0u].GetDouble();
-  auto v2 = (*value)[1u].GetDouble();
-
-  if (v1 > v2)
-  {
-    log::error("DoubleRangeSetting::tryParseJsonValue") << "Double range must have min <= max";
-    return false;
-  }
-
-  *range = Range<double>(v1, v2);
-  return true;
-}
-
-bool DoubleRangeSetting::isValidValue(Range<double> value) const
+bool DoubleRangeSetting::isValidValue(Range<double> const& value) const
 {
   return !value.isEmpty() && value.min() <= value.max();
 }
 
-string DoubleRangeSetting::getValidationMessage(Range<double> value) const
+string DoubleRangeSetting::getValidationMessage(Range<double> const& value) const
 {
   if (value.isEmpty())
     return "Range may not be empty";
@@ -394,107 +268,101 @@ string DoubleRangeSetting::getValidationMessage(Range<double> value) const
   return "";
 }
 
-void DoubleRangeSetting::writeJsonValue(Writer<StringBuffer>& writer) const
+bool DoubleRangeSetting::tryParseJsonValue(Value const* jsonValue, Range<double>* parsedValue) const
 {
-  writeDoubleRangeJsonObject(writer, getValue());
-}
-
-void DoubleRangeSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
-{
-  writer.String("default");
-  writeDoubleRangeJsonObject(writer, d_defaultValue);
-}
-
-bool DoubleRangeSetting::setValueFromJson(Value const* value)
-{
-  if (value == nullptr)
+  if (!jsonValue->IsArray() || jsonValue->Size() != 2 || !(*jsonValue)[0u].IsNumber() || !(*jsonValue)[1u].IsNumber())
   {
-    log::error("DoubleRangeSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
+    log::error("DoubleRangeSetting::tryParseJsonValue") << "Double range value must be a JSON array of two double values";
     return false;
   }
 
-  Range<double> range;
+  auto v1 = (*jsonValue)[0u].GetDouble();
+  auto v2 = (*jsonValue)[1u].GetDouble();
 
-  if (!tryParseJsonValue(value, &range))
+  if (v1 > v2)
   {
-    log::error("DoubleRangeSetting::setValueFromJson") << "Invalid JSON Value provided for '" << getPath();
+    log::error("DoubleRangeSetting::tryParseJsonValue") << "Double range must have min <= max";
     return false;
   }
 
-  setValue(range);
+  *parsedValue = Range<double>(v1, v2);
   return true;
+}
+
+void DoubleRangeSetting::writeJsonValue(Writer<StringBuffer>& writer, Range<double> const& value) const
+{
+  writer.StartArray().Double(value.min()).Double(value.max()).EndArray();
 }
 
 ///////////////////////////////////////////////////////////
 
-StringSetting::StringSetting(string path, string defaultValue, bool isReadOnly, string description)
-: Setting(path, "string", isReadOnly, defaultValue, description),
-  d_defaultValue(defaultValue)
+StringSetting::StringSetting(string path, bool isReadOnly, string description)
+: Setting(path, "string", isReadOnly, description)
 {}
 
-bool StringSetting::isValidValue(string value) const
+bool StringSetting::isValidValue(string const& value) const
 {
   return value.size() > 0;
 }
 
-string StringSetting::getValidationMessage(string value) const
+string StringSetting::getValidationMessage(string const& value) const
 {
   if (value.size() == 0)
     return "String may not have zero length";
   return "";
 }
 
-void StringSetting::writeJsonValue(Writer<StringBuffer>& writer) const
+bool StringSetting::tryParseJsonValue(Value const* jsonValue, string* parsedValue) const
 {
-  writer.String(getValue().c_str());
+  if (jsonValue == nullptr || !jsonValue->IsString())
+    return false;
+  *parsedValue = jsonValue->GetString();
+  return true;
 }
 
-void StringSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
+void StringSetting::writeJsonValue(Writer<StringBuffer>& writer, string const& value) const
 {
-  writer.String("default").String(d_defaultValue.c_str());
-}
-
-bool StringSetting::setValueFromJson(Value const* value)
-{
-  if (value == nullptr)
-  {
-    log::error("StringSetting::setValueFromJson") << "Null JSON Value provided for '" << getPath();
-    return false;
-  }
-
-  if (!value->IsString())
-  {
-    log::error("StringSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must be a string";
-    return false;
-  }
-
-  return setValue(value->GetString());
+  writer.String(value.c_str());
 }
 
 ///////////////////////////////////////////////////////////
 
-bool StringArraySetting::tryParseJsonValue(Value const* value, std::vector<std::string>* strings)
+StringArraySetting::StringArraySetting(string path, bool isReadOnly, string description)
+: Setting(path, "string[]", isReadOnly, description)
+{}
+
+bool StringArraySetting::areValuesEqual(vector<string> const& a, vector<string> const& b) const
 {
-  if (value == nullptr)
+  if (a.size() != b.size())
+    return false;
+  for (uint i = 0; i < a.size(); i++)
+    if (a[i] != b[i])
+      return false;
+  return true;
+}
+
+bool StringArraySetting::tryParseJsonValue(Value const* jsonValue, vector<string>* parsedValue) const
+{
+  if (jsonValue == nullptr)
     return false;
 
-  if (!value->IsArray())
+  if (!jsonValue->IsArray())
     return false;
 
-  *strings = std::vector<std::string>();
+  *parsedValue = vector<string>();
 
-  for (uint i = 0; i < value->Size(); i++)
+  for (uint i = 0; i < jsonValue->Size(); i++)
   {
-    Value const& v = (*value)[i];
+    Value const& v = (*jsonValue)[i];
     if (!v.IsString())
       return false;
-    strings->push_back(v.GetString());
+    parsedValue->push_back(v.GetString());
   }
 
   return true;
 }
 
-void StringArraySetting::writeStringArrayJsonObject(Writer<StringBuffer>& writer, std::vector<std::string> const& value)
+void StringArraySetting::writeJsonValue(Writer<StringBuffer>& writer, vector<string> const& value) const
 {
   writer.StartArray();
   {
@@ -504,56 +372,23 @@ void StringArraySetting::writeStringArrayJsonObject(Writer<StringBuffer>& writer
   writer.EndArray();
 }
 
-StringArraySetting::StringArraySetting(string path, vector<string> defaultValue, bool isReadOnly, string description)
-: Setting(path, "string[]", isReadOnly, defaultValue, description),
-  d_defaultValue(defaultValue)
-{}
-
-bool StringArraySetting::isValidValue(vector<string> value) const
-{
-  return true;
-}
-
-string StringArraySetting::getValidationMessage(vector<string> value) const
-{
-  return "";
-}
-
-void StringArraySetting::writeJsonValue(Writer<StringBuffer>& writer) const
-{
-  writeStringArrayJsonObject(writer, getValue());
-}
-
-void StringArraySetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
-{
-  writer.String("default");
-  writeStringArrayJsonObject(writer, d_defaultValue);
-}
-
-bool StringArraySetting::setValueFromJson(Value const* value)
-{
-  vector<string> strings;
-  if (tryParseJsonValue(value, &strings))
-    return setValue(strings);
-
-  log::error("StringArraySetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must have be an array of strings";
-  return false;
-}
-
-
 ///////////////////////////////////////////////////////////
 
-bool BgrColourSetting::tryParseJsonValue(Value const* value, Colour::bgr* bgr)
+BgrColourSetting::BgrColourSetting(string path, bool isReadOnly, string description)
+  : Setting(path, "bgr-colour", isReadOnly, description)
+{}
+
+bool BgrColourSetting::tryParseJsonValue(Value const* jsonValue, Colour::bgr* parsedValue) const
 {
-  if (value == nullptr)
+  if (jsonValue == nullptr)
     return false;
 
-  if (!value->IsObject())
+  if (!jsonValue->IsObject())
     return false;
 
-  auto bMember = value->FindMember("b");
-  auto gMember = value->FindMember("g");
-  auto rMember = value->FindMember("r");
+  auto bMember = jsonValue->FindMember("b");
+  auto gMember = jsonValue->FindMember("g");
+  auto rMember = jsonValue->FindMember("r");
 
   if (!bMember || !gMember || !rMember)
     return false;
@@ -561,11 +396,11 @@ bool BgrColourSetting::tryParseJsonValue(Value const* value, Colour::bgr* bgr)
   if (!bMember->value.IsInt() || !gMember->value.IsInt() || !rMember->value.IsInt())
     return false;
 
-  *bgr = Colour::bgr(bMember->value.GetInt(), gMember->value.GetInt(), rMember->value.GetInt());
+  *parsedValue = Colour::bgr(bMember->value.GetInt(), gMember->value.GetInt(), rMember->value.GetInt());
   return true;
 }
 
-void BgrColourSetting::writeBgrColourJsonObject(Writer<StringBuffer>& writer, const Colour::bgr& value)
+void BgrColourSetting::writeJsonValue(Writer<StringBuffer>& writer, const Colour::bgr& value) const
 {
   writer.StartObject();
   {
@@ -574,40 +409,4 @@ void BgrColourSetting::writeBgrColourJsonObject(Writer<StringBuffer>& writer, co
     writer.String("b").Int(value.b);
   }
   writer.EndObject();
-}
-
-BgrColourSetting::BgrColourSetting(string path, Colour::bgr defaultValue, bool isReadOnly, string description)
-: Setting(path, "bgr-colour", isReadOnly, defaultValue, description),
-  d_defaultValue(defaultValue)
-{}
-
-bool BgrColourSetting::isValidValue(Colour::bgr value) const
-{
-  return true;
-}
-
-string BgrColourSetting::getValidationMessage(Colour::bgr value) const
-{
-  return "";
-}
-
-void BgrColourSetting::writeJsonValue(Writer<StringBuffer>& writer) const
-{
-  writeBgrColourJsonObject(writer, getValue());
-}
-
-void BgrColourSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
-{
-  writer.String("default");
-  writeBgrColourJsonObject(writer, getDefaultValue());
-}
-
-bool BgrColourSetting::setValueFromJson(Value const* value)
-{
-  Colour::bgr bgr;
-  if (tryParseJsonValue(value, &bgr))
-    return setValue(bgr);
-
-  log::error("BgrColourSetting::setValueFromJson") << "Configuration value for '" << getPath() << "' must have 'b', 'g' and 'r' properties of integral type";
-  return false;
 }

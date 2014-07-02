@@ -19,175 +19,119 @@ namespace bold
   class IntSetting final : public Setting<int>
   {
   public:
-    static bool tryParseJsonValue(rapidjson::Value const* value, int* i);
-
-    IntSetting(std::string path, int min, int max, int defaultValue, bool isReadOnly, std::string description);
+    IntSetting(std::string path, int min, int max, bool isReadOnly, std::string description);
 
     int getMinimum() const { return d_min; }
     int getMaximum() const { return d_max; }
-    bool isValidValue(int value) const override;
-    std::string getValidationMessage(int value) const override;
-    int getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+
+    bool isValidValue(int const& value) const override;
+    std::string getValidationMessage(int const& value) const override;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, int* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, int const& value) const override;
+    void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     int d_min;
     int d_max;
-    int d_defaultValue;
   };
 
   /// Models a setting with an integer value selected from a set of valid numbers.
   class EnumSetting final : public Setting<int>
   {
   public:
-    EnumSetting(std::string path, std::map<int,std::string> pairs, int defaultValue, bool isReadOnly, std::string description);
+    EnumSetting(std::string path, std::map<int,std::string> pairs, bool isReadOnly, std::string description);
 
-    bool isValidValue(int value) const override;
-    std::string getValidationMessage(int value) const override;
-    int getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    bool isValidValue(int const& value) const override;
+    std::string getValidationMessage(int const& value) const override;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, int* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, int const& value) const override;
+    void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     std::map<int,std::string> d_pairs;
-    int d_defaultValue;
   };
 
   /// Models a setting with a double value.
   class DoubleSetting final : public Setting<double>
   {
   public:
-    DoubleSetting(std::string path, double min, double max, double defaultValue, bool isReadOnly, std::string description);
+    DoubleSetting(std::string path, double min, double max, bool isReadOnly, std::string description);
 
-    bool isValidValue(double value) const override;
-    std::string getValidationMessage(double value) const override;
-    double getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    bool isValidValue(double const& value) const override;
+    std::string getValidationMessage(double const& value) const override;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, double* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, double const& value) const override;
+    void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     double d_min;
     double d_max;
-    double d_defaultValue;
   };
 
   /// Models a setting with a boolean value.
   class BoolSetting final : public Setting<bool>
   {
   public:
-    static bool tryParseJsonValue(rapidjson::Value const* value, bool* b);
+    BoolSetting(std::string path, bool isReadOnly, std::string description);
 
-    BoolSetting(std::string path, bool defaultValue, bool isReadOnly, std::string description);
-
-    bool isValidValue(bool value) const override;
-    std::string getValidationMessage(bool value) const override;
-    bool getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-
-  private:
-    bool d_defaultValue;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, bool* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, bool const& value) const override;
   };
 
   /// Models a setting with a Colour::hsvRange value.
   class HsvRangeSetting final : public Setting<Colour::hsvRange>
   {
   public:
-    static void writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value);
-    static bool tryParseJsonValue(rapidjson::Value const* value, Colour::hsvRange* hsvRange);
+    HsvRangeSetting(std::string path, bool isReadOnly, std::string description);
 
-    HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, std::string description);
-
-    bool isValidValue(Colour::hsvRange value) const override;
-    std::string getValidationMessage(Colour::hsvRange value) const override;
-    Colour::hsvRange getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-
-  private:
-    Colour::hsvRange d_defaultValue;
+    bool isValidValue(Colour::hsvRange const& value) const override;
+    std::string getValidationMessage(Colour::hsvRange const& value) const override;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, Colour::hsvRange* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value) const override;
   };
 
   /// Models a setting with a Range<double> value.
   class DoubleRangeSetting final : public Setting<Range<double>>
   {
   public:
-    static void writeDoubleRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Range<double> const& value);
-    static bool tryParseJsonValue(rapidjson::Value const* value, Range<double>* hsvRange);
+    DoubleRangeSetting(std::string path, bool isReadOnly, std::string description);
 
-    DoubleRangeSetting(std::string path, Range<double> defaultValue, bool isReadOnly, std::string description);
-
-    bool isValidValue(Range<double> value) const override;
-    std::string getValidationMessage(Range<double> value) const override;
-    Range<double> getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-
-  private:
-    Range<double> d_defaultValue;
+    bool isValidValue(Range<double> const& value) const override;
+    std::string getValidationMessage(Range<double> const& value) const override;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, Range<double>* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, Range<double> const& value) const override;
   };
 
   /// Models a setting with a std::string value.
   class StringSetting final : public Setting<std::string>
   {
   public:
-    StringSetting(std::string path, std::string defaultValue, bool isReadOnly, std::string description);
+    StringSetting(std::string path, bool isReadOnly, std::string description);
 
-    bool isValidValue(std::string value) const override;
-    std::string getValidationMessage(std::string value) const override;
-    std::string getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-
-  private:
-    std::string d_defaultValue;
+    bool isValidValue(std::string const& value) const override;
+    std::string getValidationMessage(std::string const& value) const override;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, std::string* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, std::string const& value) const override;
   };
 
   /// Models a setting with a std::string value.
   class StringArraySetting final : public Setting<std::vector<std::string>>
   {
   public:
-    static void writeStringArrayJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, std::vector<std::string> const& value);
-    static bool tryParseJsonValue(rapidjson::Value const* value, std::vector<std::string>* strings);
+    StringArraySetting(std::string path, bool isReadOnly, std::string description);
 
-    StringArraySetting(std::string path, std::vector<std::string> defaultValue, bool isReadOnly, std::string description);
-
-    bool isValidValue(std::vector<std::string> value) const override;
-    std::string getValidationMessage(std::vector<std::string> value) const override;
-    std::vector<std::string> getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-
-  private:
-    std::vector<std::string> d_defaultValue;
+    bool areValuesEqual(std::vector<std::string> const& a, std::vector<std::string> const& b) const override;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, std::vector<std::string>* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, std::vector<std::string> const& value) const override;
   };
 
   /// Models a setting with a Colour::bgr value.
   class BgrColourSetting final : public Setting<Colour::bgr>
   {
   public:
-    static void writeBgrColourJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::bgr const& value);
-    static bool tryParseJsonValue(rapidjson::Value const* value, Colour::bgr* bgr);
+    BgrColourSetting(std::string path, bool isReadOnly, std::string description);
 
-    BgrColourSetting(std::string path, Colour::bgr defaultValue, bool isReadOnly, std::string description);
-
-    bool isValidValue(Colour::bgr value) const override;
-    std::string getValidationMessage(Colour::bgr value) const override;
-    Colour::bgr getDefaultValue() const override { return d_defaultValue; }
-    virtual bool setValueFromJson(rapidjson::Value const* value) override;
-    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
-
-  private:
-    Colour::bgr d_defaultValue;
+    bool tryParseJsonValue(rapidjson::Value const* jsonValue, Colour::bgr* parsedValue) const override;
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::bgr const& value) const override;
   };
 }

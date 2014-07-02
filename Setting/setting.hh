@@ -30,25 +30,14 @@ namespace bold
 
     void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
 
-    virtual void resetToDefaultValue() = 0;
-    virtual bool setValueFromJson(rapidjson::Value const* value) = 0;
+    virtual bool isModified() const = 0;
+    virtual void resetToInitialValue() = 0;
+    virtual bool setValueFromJson(rapidjson::Value const* jsonValue) = 0;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
 
   protected:
-    SettingBase(std::string path, std::string typeName, std::type_index typeIndex, bool isReadOnly, std::string description)
-    : d_path(path),
-      d_typeName(typeName),
-      d_typeIndex(typeIndex),
-      d_isReadOnly(isReadOnly),
-      d_description(description)
-    {
-      auto last = d_path.find_last_of('.');
-      auto nameStart = last == std::string::npos
-        ? 0
-        : last + 1;
-      d_name = d_path.substr(nameStart);
-    }
+    SettingBase(std::string path, std::string typeName, std::type_index typeIndex, bool isReadOnly, std::string description);
 
     virtual ~SettingBase() = default;
 
@@ -69,16 +58,42 @@ namespace bold
   class Setting : public SettingBase
   {
   public:
-    Setting(std::string path, std::string typeName, bool isReadOnly, T value, std::string description)
+    Setting(std::string path, std::string typeName, bool isReadOnly, std::string description)
     : SettingBase(path, typeName, typeid(T), isReadOnly, description),
-      d_value(value)
+      d_isInitialValueSet(false)
     {}
 
     virtual ~Setting() = default;
 
     const T getValue() const { return d_value; }
 
-    bool setValue(T value)
+    const T getInitialValue() const
+    {
+      ASSERT(d_isInitialValueSet);
+      return d_initialValue;
+    }
+
+    bool isModified() const override { return !areValuesEqual(d_value, d_initialValue); }
+
+    bool setValueFromJson(rapidjson::Value const* value) override
+    {
+      if (value == nullptr)
+      {
+        log::error("Setting::setValueFromJson") << "Null JSON Value provided for: " << getPath();
+        return false;
+      }
+
+      T parsedValue;
+      if (!tryParseJsonValue(value, &parsedValue))
+      {
+        log::error("Setting::setValueFromJson") << "Unable to parse value for: " << getPath();
+        return false;
+      }
+
+      return setValue(parsedValue);
+    }
+
+    bool setValue(T const& value)
     {
       if (isReadOnly() && !isInitialising())
       {
@@ -92,13 +107,25 @@ namespace bold
         return false;
       }
 
+      if (!d_isInitialValueSet)
+      {
+        if (!isInitialising())
+        {
+          log::error("Setting::setValue") << "Attempt to set initial value after initialisation has completed.";
+          throw std::runtime_error("Attempt to set initial value after initialisation has completed.");
+        }
+
+        d_initialValue = value;
+        d_isInitialValueSet = true;
+      }
+
       d_value = value;
       changed(value);
       changedBase(this);
       return true;
     }
 
-    /// Fires when the setting's value is assigned.
+    /// Fires when the setting's value is changed.
     sigc::signal<void, T const&> changed;
 
     /// Invokes the callback immediately with the current value, and notifies
@@ -109,18 +136,35 @@ namespace bold
       callback(d_value);
     }
 
-    void resetToDefaultValue() override
+    void resetToInitialValue() override
     {
-      setValue(getDefaultValue());
+      ASSERT(d_isInitialValueSet);
+      setValue(d_initialValue);
     }
 
-    virtual bool isValidValue(T value) const = 0;
-    virtual std::string getValidationMessage(T value) const = 0;
-    virtual T getDefaultValue() const = 0;
+    virtual bool areValuesEqual(T const& a, T const& b) const { return a == b; };
+    virtual bool isValidValue(T const& value) const { return true; };
+    virtual std::string getValidationMessage(T const& value) const { return ""; }
+    virtual bool tryParseJsonValue(rapidjson::Value const* jsonValue, T* parsedValue) const = 0;
+    virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, T const& value) const = 0;
+
+    void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+    {
+      writeJsonValue(writer, getValue());
+    }
+
+    virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+    {
+      ASSERT(d_isInitialValueSet);
+
+      writer.String("initial");
+      writeJsonValue(writer, d_initialValue);
+    }
 
   private:
     T d_value;
+    T d_initialValue;
+    bool d_isInitialValueSet;
   };
-
 }
 

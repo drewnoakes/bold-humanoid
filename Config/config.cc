@@ -95,13 +95,25 @@ void Config::initialise(string metadataFile, string configFile)
   // Walk the metadata document, building up a tree of Setting<T> objects
   processConfigMetaJsonValue(metaDocument.get(), &d_root, "", "");
 
-  // TODO defaults are a bit confusing -- remove them from the meta document, and change this to "Reload config from disk"
-  addAction("config.reset-defaults", "Reset default config", []
+  addAction("config.reload-from-disk", "Reload config from disk", []
   {
     for (SettingBase* setting : getAllSettings())
     {
       if (!setting->isReadOnly())
-        setting->resetToDefaultValue();
+        setting->resetToInitialValue();
+    }
+  });
+
+  addAction("config.echo-changes", "Echo changes", []
+  {
+    // TODO build up a valid JSON configuration document
+
+    for (SettingBase* setting : getAllSettings())
+    {
+      if (setting->isReadOnly() || !setting->isModified())
+        continue;
+
+      cout << "Setting " << setting->getPath() << " changed" << endl;
     }
   });
 }
@@ -167,41 +179,22 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
 
     // TODO SETTINGS replace mega-if-block with lookup in map<string,function<bool(Value*)>> populated with static factories on *Setting classes
 
+    SettingBase* setting;
+
     if (type == "double")
     {
-      double defaultValue;
-      if (!metaNode->TryGetDoubleValue("default", &defaultValue))
-      {
-        log::error("Config::processLevel") << "'default' value for '" << path << "' must be a double";
-        throw runtime_error("JSON 'default' value must be a double");
-      }
-
       auto min = metaNode->TryGetDoubleValue("min", -numeric_limits<double>::max());
       auto max = metaNode->TryGetDoubleValue("max", numeric_limits<double>::max());
-      Config::addSetting(new DoubleSetting(path, min, max, defaultValue, isReadOnly, description));
+      setting = new DoubleSetting(path, min, max, isReadOnly, description);
     }
     else if (type == "int")
     {
-      int defaultValue;
-      if (!metaNode->TryGetIntValue("default", &defaultValue))
-      {
-        log::error("Config::processLevel") << "'default' value for '" << path << "' must be an int";
-        throw runtime_error("JSON 'default' value must be an int");
-      }
-
       auto min = metaNode->TryGetIntValue("min", -numeric_limits<int>::max());
       auto max = metaNode->TryGetIntValue("max", numeric_limits<int>::max());
-      Config::addSetting(new IntSetting(path, min, max, defaultValue, isReadOnly, description));
+      setting = new IntSetting(path, min, max, isReadOnly, description);
     }
     else if (type == "enum")
     {
-      int defaultValue;
-      if (!metaNode->TryGetIntValue("default", &defaultValue))
-      {
-        log::error("Config::processLevel") << "'default' value for '" << path << "' must be an int";
-        throw runtime_error("JSON 'default' value must be an int");
-      }
-
       auto valuesObj = metaNode->FindMember("values");
       if (!valuesObj || !valuesObj->value.IsObject())
       {
@@ -220,73 +213,31 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
         pairs[it->value.GetInt()] = it->name.GetString();
       }
 
-      Config::addSetting(new EnumSetting(path, pairs, defaultValue, isReadOnly, description));
+      setting = new EnumSetting(path, pairs, isReadOnly, description);
     }
     else if (type == "bool")
     {
-      bool defaultValue;
-      if (!metaNode->TryGetBoolValue("default", &defaultValue))
-      {
-        log::error("Config::processLevel") << "'default' value for '" << path << "' must be a bool";
-        throw runtime_error("JSON 'default' value must be a bool");
-      }
-
-      Config::addSetting(new BoolSetting(path, defaultValue, isReadOnly, description));
+      setting = new BoolSetting(path, isReadOnly, description);
     }
     else if (type == "string")
     {
-      const char* defaultValue;
-      if (!metaNode->TryGetStringValue("default", &defaultValue))
-      {
-        log::error("Config::processLevel") << "'default' value for '" << path << "' must be a string";
-        throw runtime_error("JSON 'default' value must be a string");
-      }
-
-      Config::addSetting(new StringSetting(path, defaultValue, isReadOnly, description));
+      setting = new StringSetting(path, isReadOnly, description);
     }
     else if (type == "string[]")
     {
-      auto defaultMember = metaNode->FindMember("default");
-
-      vector<string> defaultValue;
-
-      if (defaultMember && !StringArraySetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
-        throw runtime_error("Unable to parse string[]");
-
-      Config::addSetting(new StringArraySetting(path, defaultValue, isReadOnly, description));
+      setting = new StringArraySetting(path, isReadOnly, description);
     }
     else if (type == "hsv-range")
     {
-      auto defaultMember = metaNode->FindMember("default");
-
-      Colour::hsvRange defaultValue;
-
-      if (defaultMember && !HsvRangeSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
-        throw runtime_error("Unable to parse hsv-range");
-
-      Config::addSetting(new HsvRangeSetting(path, defaultValue, isReadOnly, description));
+      setting = new HsvRangeSetting(path, isReadOnly, description);
     }
     else if (type == "double-range")
     {
-      auto defaultMember = metaNode->FindMember("default");
-
-      Range<double> defaultValue;
-
-      if (defaultMember && !DoubleRangeSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
-        throw runtime_error("Unable to parse double-range");
-
-      Config::addSetting(new DoubleRangeSetting(path, defaultValue, isReadOnly, description));
+      setting = new DoubleRangeSetting(path, isReadOnly, description);
     }
     else if (type == "bgr-colour")
     {
-      auto defaultMember = metaNode->FindMember("default");
-
-      Colour::bgr defaultValue;
-
-      if (defaultMember && !BgrColourSetting::tryParseJsonValue(&defaultMember->value, &defaultValue))
-        throw runtime_error("Unable to parse bgr-colour");
-
-      Config::addSetting(new BgrColourSetting(path, defaultValue, isReadOnly, description));
+      setting = new BgrColourSetting(path, isReadOnly, description);
     }
     else
     {
@@ -294,10 +245,12 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
       throw runtime_error("Unsupported JSON 'type' property value");
     }
 
-    return;
+    Value const* jsonValue = Config::getConfigJsonValue(path);
+    setting->setValueFromJson(jsonValue);
+    Config::addSetting(setting);
   }
 
-  // Recurse through child objects of this node
+  // Recur through child objects of this node
 
   for (auto it = metaNode->MemberBegin(); it != metaNode->MemberEnd(); it++)
   {
@@ -323,6 +276,8 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
 void Config::addSetting(SettingBase* setting)
 {
   string path = setting->getPath();
+
+  // Find/create the node for this setting
   string delimiter = ".";
   size_t start = 0;
   size_t end;
@@ -338,7 +293,6 @@ void Config::addSetting(SettingBase* setting)
   }
 
   auto settingName = path.substr(start);
-  Value const* configValue = Config::getConfigJsonValue(path);
 
   // Validate that the setting name is not also used for a tree node
   if (node->subNodeByName.find(settingName) != node->subNodeByName.end())
@@ -353,10 +307,6 @@ void Config::addSetting(SettingBase* setting)
     log::error("Config::addSetting") << "Attempt to add duplicate setting with path: " << setting->getPath();
     throw runtime_error("Attempt to add duplicate setting");
   }
-
-  // If a config value exists for this setting, set it
-  if (configValue != nullptr)
-    setting->setValueFromJson(configValue);
 
   // Propagate change events globally
   setting->changedBase.connect([](SettingBase* s){ Config::updated.emit(s); });
