@@ -16,13 +16,12 @@
 namespace bold
 {
   /// Models a setting with an integer value.
-  class IntSetting : public Setting<int>
+  class IntSetting final : public Setting<int>
   {
   public:
     static bool tryParseJsonValue(rapidjson::Value const* value, int* i);
 
     IntSetting(std::string path, int min, int max, int defaultValue, bool isReadOnly, std::string description);
-    ~IntSetting() = default;
 
     int getMinimum() const { return d_min; }
     int getMaximum() const { return d_max; }
@@ -40,11 +39,10 @@ namespace bold
   };
 
   /// Models a setting with an integer value selected from a set of valid numbers.
-  class EnumSetting : public Setting<int>
+  class EnumSetting final : public Setting<int>
   {
   public:
     EnumSetting(std::string path, std::map<int,std::string> pairs, int defaultValue, bool isReadOnly, std::string description);
-    ~EnumSetting() = default;
 
     bool isValidValue(int value) const override;
     std::string getValidationMessage(int value) const override;
@@ -59,11 +57,10 @@ namespace bold
   };
 
   /// Models a setting with a double value.
-  class DoubleSetting : public Setting<double>
+  class DoubleSetting final : public Setting<double>
   {
   public:
     DoubleSetting(std::string path, double min, double max, double defaultValue, bool isReadOnly, std::string description);
-    ~DoubleSetting() = default;
 
     bool isValidValue(double value) const override;
     std::string getValidationMessage(double value) const override;
@@ -79,13 +76,12 @@ namespace bold
   };
 
   /// Models a setting with a boolean value.
-  class BoolSetting : public Setting<bool>
+  class BoolSetting final : public Setting<bool>
   {
   public:
     static bool tryParseJsonValue(rapidjson::Value const* value, bool* b);
 
     BoolSetting(std::string path, bool defaultValue, bool isReadOnly, std::string description);
-    ~BoolSetting() = default;
 
     bool isValidValue(bool value) const override;
     std::string getValidationMessage(bool value) const override;
@@ -99,14 +95,13 @@ namespace bold
   };
 
   /// Models a setting with a Colour::hsvRange value.
-  class HsvRangeSetting : public Setting<Colour::hsvRange>
+  class HsvRangeSetting final : public Setting<Colour::hsvRange>
   {
   public:
     static void writeHsvRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value);
     static bool tryParseJsonValue(rapidjson::Value const* value, Colour::hsvRange* hsvRange);
 
     HsvRangeSetting(std::string path, Colour::hsvRange defaultValue, bool isReadOnly, std::string description);
-    ~HsvRangeSetting() = default;
 
     bool isValidValue(Colour::hsvRange value) const override;
     std::string getValidationMessage(Colour::hsvRange value) const override;
@@ -120,14 +115,13 @@ namespace bold
   };
 
   /// Models a setting with a Range<double> value.
-  class DoubleRangeSetting : public Setting<Range<double>>
+  class DoubleRangeSetting final : public Setting<Range<double>>
   {
   public:
     static void writeDoubleRangeJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Range<double> const& value);
     static bool tryParseJsonValue(rapidjson::Value const* value, Range<double>* hsvRange);
 
     DoubleRangeSetting(std::string path, Range<double> defaultValue, bool isReadOnly, std::string description);
-    ~DoubleRangeSetting() = default;
 
     bool isValidValue(Range<double> value) const override;
     std::string getValidationMessage(Range<double> value) const override;
@@ -141,11 +135,10 @@ namespace bold
   };
 
   /// Models a setting with a std::string value.
-  class StringSetting : public Setting<std::string>
+  class StringSetting final : public Setting<std::string>
   {
   public:
     StringSetting(std::string path, std::string defaultValue, bool isReadOnly, std::string description);
-    ~StringSetting() = default;
 
     bool isValidValue(std::string value) const override;
     std::string getValidationMessage(std::string value) const override;
@@ -159,14 +152,13 @@ namespace bold
   };
 
   /// Models a setting with a std::string value.
-  class StringArraySetting : public Setting<std::vector<std::string>>
+  class StringArraySetting final : public Setting<std::vector<std::string>>
   {
   public:
     static void writeStringArrayJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, std::vector<std::string> const& value);
     static bool tryParseJsonValue(rapidjson::Value const* value, std::vector<std::string>* strings);
 
     StringArraySetting(std::string path, std::vector<std::string> defaultValue, bool isReadOnly, std::string description);
-    ~StringArraySetting() = default;
 
     bool isValidValue(std::vector<std::string> value) const override;
     std::string getValidationMessage(std::vector<std::string> value) const override;
@@ -180,14 +172,13 @@ namespace bold
   };
 
   /// Models a setting with a Colour::bgr value.
-  class BgrColourSetting : public Setting<Colour::bgr>
+  class BgrColourSetting final : public Setting<Colour::bgr>
   {
   public:
     static void writeBgrColourJsonObject(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::bgr const& value);
     static bool tryParseJsonValue(rapidjson::Value const* value, Colour::bgr* bgr);
 
     BgrColourSetting(std::string path, Colour::bgr defaultValue, bool isReadOnly, std::string description);
-    ~BgrColourSetting() = default;
 
     bool isValidValue(Colour::bgr value) const override;
     std::string getValidationMessage(Colour::bgr value) const override;
