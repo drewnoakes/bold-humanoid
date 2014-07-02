@@ -130,6 +130,17 @@ namespace bold
 
       bool isValid() const;
 
+      bool operator==(hsvRange const& other) const
+      {
+        return
+          hMin == other.hMin &&
+          hMax == other.hMax &&
+          sMin == other.sMin &&
+          sMax == other.sMax &&
+          vMin == other.vMin &&
+          vMax == other.vMax;
+      }
+
       static hsvRange fromBytes(uchar hMin, uchar hMax, uchar sMin, uchar sMax, uchar vMin, uchar vMax);
       static hsvRange fromDoubles(double hMin, double hMax, double sMin, double sMax, double vMin, double vMax);
 
