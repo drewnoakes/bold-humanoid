@@ -1,6 +1,6 @@
 {
   "uniform-number": { "type": "int", "readonly": true, "default": 2, "min": 1, "max": 6 },
-  "team-number":    { "type": "int", "readonly": true, "default": 36 },
+  "team-number":    { "type": "int", "readonly": true, "default": 36, "min": 0, "max": 255 },
   "team-colour":    { "type": "enum", "readonly": true, "default": 1, "values": { "cyan": 1, "magenta": 2 } },
   "player-name":    { "type": "string", "readonly": true, "default": "boldie" },
   "mitecom": {
