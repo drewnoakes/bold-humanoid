@@ -3,6 +3,7 @@
 #include "../Config/config.hh"
 
 using namespace bold;
+using namespace rapidjson;
 using namespace std;
 
 bool SettingBase::isInitialising()
@@ -10,7 +11,7 @@ bool SettingBase::isInitialising()
   return Config::isInitialising();
 }
 
-void SettingBase::writeFullJson(rapidjson::Writer< rapidjson::StringBuffer >& writer) const
+void SettingBase::writeFullJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
