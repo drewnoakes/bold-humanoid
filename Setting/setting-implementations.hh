@@ -21,9 +21,6 @@ namespace bold
   public:
     IntSetting(std::string path, int min, int max, bool isReadOnly, std::string description);
 
-    int getMinimum() const { return d_min; }
-    int getMaximum() const { return d_max; }
-
     bool isValidValue(int const& value) const override;
     std::string getValidationMessage(int const& value) const override;
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, int* parsedValue) const override;
