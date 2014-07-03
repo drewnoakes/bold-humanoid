@@ -260,6 +260,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./HistogramLabelTeacher/HistogramLabelTeacherBase.cc
+)
+
+add_class(BOLDHUMANOID
   ./HoughLineAccumulator/houghlineaccumulator.cc
 )
 

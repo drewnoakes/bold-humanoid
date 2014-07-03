@@ -1,0 +1,7 @@
+#include "histogramlabelteacher.hh"
+
+#include "../Config/config.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;

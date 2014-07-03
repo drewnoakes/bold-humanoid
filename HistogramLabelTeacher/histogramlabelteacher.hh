@@ -1,19 +1,18 @@
 #pragma once
 
 #include "../PixelLabel/HistogramPixelLabel/histogrampixellabel.hh"
-
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace bold
 {
-  template<uint8_t CHANNEL_BITS>
-  class HistogramLabelTeacher
+  class HistogramLabelTeacherBase
   {
   public:
-    HistogramLabelTeacher(std::vector<std::string> const& names);
-    
-    std::vector<HistogramPixelLabel<CHANNEL_BITS>> getLabels() const;
+    HistogramLabelTeacherBase();
+
+    bool requestedSnapShot() const { return d_snapshotRequested; }
 
     void setTrainImage(cv::Mat trainImg);
 
@@ -23,23 +22,34 @@ namespace bold
 
     cv::Mat floodFill() const;
 
+  protected:
+    cv::Mat d_trainImage;
+    Eigen::Vector2i d_seedPoint;
+    uint8_t d_maxDiff;
+
+  private:
+    bool d_snapshotRequested;
+  };
+
+  template<uint8_t CHANNEL_BITS>
+  class HistogramLabelTeacher : public HistogramLabelTeacherBase
+  {
+  public:
+    HistogramLabelTeacher(std::vector<std::string> const& names);
+    
+    std::vector<HistogramPixelLabel<CHANNEL_BITS>> getLabels() const;
+
     void train(std::string const& labelName, cv::Mat const& mask);
 
   private:
     std::vector<HistogramPixelLabel<CHANNEL_BITS>> d_labels;
-    cv::Mat d_trainImage;
-    Eigen::Vector2i d_seedPoint;
-    uint8_t d_maxDiff;
   };
   
 
 
   template<uint8_t CHANNEL_BITS>
   HistogramLabelTeacher<CHANNEL_BITS>::HistogramLabelTeacher(std::vector<std::string> const& names)
-    : d_labels{},
-    d_trainImage{},
-    d_seedPoint{0,0},
-    d_maxDiff{0}
+    : d_labels{}
   {
     for (auto const& name : names)
       d_labels.emplace_back(name);
@@ -51,26 +61,23 @@ namespace bold
     return d_labels;
   }
 
-  template<uint8_t CHANNEL_BITS>
-  void HistogramLabelTeacher<CHANNEL_BITS>::setTrainImage(cv::Mat trainImage)
+  inline void HistogramLabelTeacherBase::setTrainImage(cv::Mat trainImage)
   {
     d_trainImage = trainImage;
+    d_snapshotRequested = false;
   }
 
-  template<uint8_t CHANNEL_BITS>
-  void HistogramLabelTeacher<CHANNEL_BITS>::setSeedPoint(Eigen::Vector2i point)
+  inline void HistogramLabelTeacherBase::setSeedPoint(Eigen::Vector2i point)
   {
     d_seedPoint = point;
   }
 
-  template<uint8_t CHANNEL_BITS>
-  void HistogramLabelTeacher<CHANNEL_BITS>::setMaxDiff(uint8_t maxDiff)
+  inline void HistogramLabelTeacherBase::setMaxDiff(uint8_t maxDiff)
   {
     d_maxDiff = maxDiff;
   }
 
-  template<uint8_t CHANNEL_BITS>
-  cv::Mat HistogramLabelTeacher<CHANNEL_BITS>::floodFill() const
+  inline cv::Mat HistogramLabelTeacherBase::floodFill() const
   {
     cv::Mat mask = cv::Mat::zeros(d_trainImage.rows + 2, d_trainImage.cols + 2, CV_8UC1);
 
