@@ -22,6 +22,7 @@ vector<unique_ptr<Document const>> Config::d_configDocuments;
 vector<string> Config::d_configFileNames;
 bool Config::d_isInitialising = true;
 sigc::signal<void, SettingBase const*> Config::updated;
+bool Config::d_permissible = false;
 
 unique_ptr<Document const> loadJsonDocument(std::string path)
 {
@@ -319,7 +320,7 @@ void Config::addAction(string const& id, string const& label,
   ASSERT(!action->hasArguments());
   auto it = d_actionById.insert(make_pair(id, action));
 
-  if (it.second == false)
+  if (!d_permissible && it.second == false)
   {
     delete action;
     log::error("Config::addAction") << "Action with id '" << id << "' already registered";

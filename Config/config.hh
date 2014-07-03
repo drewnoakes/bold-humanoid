@@ -123,6 +123,8 @@ namespace bold
 
     static std::vector<std::string> getConfigDocumentNames() { return d_configFileNames; }
 
+    static void setPermissible(bool permissible = true) { d_permissible = permissible; }
+
   private:
     struct TreeNode
     {
@@ -144,5 +146,6 @@ namespace bold
     static std::vector<std::unique_ptr<rapidjson::Document const>> d_configDocuments;
     static std::vector<std::string> d_configFileNames;
     static bool d_isInitialising;
+    static bool d_permissible;
   };
 }
