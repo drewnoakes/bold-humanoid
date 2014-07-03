@@ -66,7 +66,9 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
-  auto createLookupTable = [this,pixelLabels]
+  d_labelTeacher = unique_ptr<HistogramLabelTeacher<6>>{new HistogramLabelTeacher<6>({"Goal", "Ball", "Field", "Line", "Cyan", "Magenta"})};
+
+  auto createLookupTable = [this,pixelLabels]()
   {
     log::info("VisualCortex::VisualCortex") << "Creating pixel label LUT";
     for (shared_ptr<PixelLabel> label : pixelLabels)

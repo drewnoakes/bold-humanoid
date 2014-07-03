@@ -14,6 +14,12 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
     t.timeEvent("Save YUV Frame");
   }
 
+  if (d_labelTeacher->requestedSnapShot())
+  {
+    log::info("Label Teacher") << "Setting train image";
+    d_labelTeacher->setTrainImage(image); // TODO: convert to HSV here, or in teacher?
+  }
+
   //
   // PROCESS THE IMAGE
   //

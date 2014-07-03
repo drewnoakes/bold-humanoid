@@ -7,6 +7,7 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 
+#include "../HistogramLabelTeacher/histogramlabelteacher.hh"
 #include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../PixelLabel/RangePixelLabel/rangepixellabel.hh"
 #include "../Setting/setting.hh"
@@ -153,6 +154,8 @@ namespace bold
     std::shared_ptr<RangePixelLabel> d_magentaLabel;
 
     std::shared_ptr<ImageLabeller> d_imageLabeller;
+
+    std::unique_ptr<HistogramLabelTeacher<6>> d_labelTeacher;
 
     std::function<Eigen::Vector2i(int)> d_granularityFunction;
 
