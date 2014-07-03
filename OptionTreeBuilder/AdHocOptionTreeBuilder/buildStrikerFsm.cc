@@ -30,7 +30,7 @@ auto ballIsStoppingDistance = []
 auto isWithinTenSecondsOfTheirKickOff = []()
 {
   auto game = State::get<GameState>();
-  return game && game->isWithinTenSecondsOfKickOff(Team::Them);
+  return game && !game->isWithinTenSecondsOfKickOff(Team::Them);
 };
 
 auto isWithinTenSecondsOfOurKickOff = []()
@@ -130,7 +130,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto yieldState = fsm->newState("yield", {stopWalking,lookAtBall});
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
-//  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
+  //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, locateBallCirclingState, locateBallState, yieldState });
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
 
@@ -157,7 +157,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   locateBallState
     ->transitionTo(approachBallState, "found-ball")
     ->when([] { return stepUpDownThreshold(10,
-      [] { return ballVisibleCondition() && !isWithinTenSecondsOfTheirKickOff(); });
+      [] { return ballVisibleCondition() && isWithinTenSecondsOfTheirKickOff(); });
     });
     // TODO this takes 300ms after the 10 sec elapses
     // TODO try to detect when the ball moves
@@ -165,6 +165,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   approachBallState
     ->transitionTo(locateBallState, "lost-ball")
     ->when(ballLostConditionFactory);
+
+  approachBallState
+    ->transitionTo(kickForwardsState, "first-kick")
+    ->when([]() { return ballIsStoppingDistance() && isWithinTenSecondsOfOurKickOff(); });
 
   // Let another player shine if they're closer and attempting to score
   approachBallState
@@ -183,10 +187,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   directAttackState
     ->transitionTo(kickForwardsState, "near-ball")
     ->when(ballIsStoppingDistance);
-
-  approachBallState
-    ->transitionTo(kickForwardsState, "first-kick")
-    ->when([]() { return ballIsStoppingDistance() && isWithinTenSecondsOfOurKickOff(); });
 
   yieldState
     ->transitionTo(locateBallState, "resume")
