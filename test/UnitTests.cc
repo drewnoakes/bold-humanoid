@@ -25,6 +25,8 @@ int main(int argc, char **argv)
 
   Config::initialise("../configuration-metadata.json", "../configuration-team.json");
 
+  Config::setPermissible();
+
   FieldMap::initialise();
 
   return RUN_ALL_TESTS();
