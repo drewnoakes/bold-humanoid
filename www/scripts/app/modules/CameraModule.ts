@@ -4,6 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
+import Action = require('Action');
 import Closeable = require('util/Closeable');
 import color = require('color');
 import constants = require('constants');
@@ -24,6 +25,7 @@ class CameraModule extends Module
     private context: CanvasRenderingContext2D;
     private hoverPixelInfo: HTMLDivElement;
     private pixelLabelInspector: PixelLabelInspector;
+    private setSeedPointAction : Action;
 
     constructor()
     {
@@ -40,7 +42,7 @@ class CameraModule extends Module
         this.cameraCanvas.height = constants.cameraImageHeight;
 
         this.hoverPixelInfo = <HTMLDivElement>content.querySelector('.hover-pixel-info');
-
+        
         var pixelLabelInspectorCanvas = <HTMLCanvasElement>content.querySelector('.pixel-label-inspector');
         this.pixelLabelInspector = new PixelLabelInspector(pixelLabelInspectorCanvas, 320, 120);
         this.pixelLabelInspector.setVisible(false);
@@ -65,6 +67,13 @@ class CameraModule extends Module
 
         control.buildSetting('head-module.move-fine', imageSettingsContainer, this.closeables);
         control.buildActions('head-module.look-at', imageSettingsContainer);
+
+        var teacherControlsContainer = <HTMLElement>content.querySelector('div.label-teacher-controls');
+
+        control.buildSettings('histogram-label-teacher', teacherControlsContainer, this.closeables);
+        control.buildActions('histogram-label-teacher', teacherControlsContainer);
+
+        this.setSeedPointAction = new Action({id: 'histogram-label-teacher.set-seed-point', label: 'Set Seed Point', hasArguments: true});
     }
 
     public unload()
@@ -108,6 +117,9 @@ class CameraModule extends Module
                     rgb = this.context.getImageData(point.x, point.y, 1, 1).data,
                     hsv = new color.Rgb(rgb[0]/255, rgb[1]/255, rgb[2]/255).toHsv();
                 console.log(Math.round(hsv.H * 255) + ',' + Math.round(hsv.S * 255) + ',' + Math.round(hsv.V * 255));
+            }
+            else if (event.metaKey) {
+                this.setSeedPointAction.activate({x: constants.cameraImageWidth - event.offsetX, y:  constants.cameraImageHeight - event.offsetY});
             }
         });
 
