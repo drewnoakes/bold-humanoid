@@ -296,14 +296,14 @@ void Config::addSetting(SettingBase* setting)
   auto settingName = path.substr(start);
 
   // Validate that the setting name is not also used for a tree node
-  if (node->subNodeByName.find(settingName) != node->subNodeByName.end())
+  if (!d_permissible && node->subNodeByName.find(settingName) != node->subNodeByName.end())
   {
     log::error("Config::addSetting") << "Attempt to add setting but node already exists with path: " << setting->getPath();
     throw runtime_error("Attempt to add setting over existing node");
   }
 
   // Insert, ensuring a setting does not already exist with that name
-  if (!node->settingByName.insert(make_pair(settingName, setting)).second)
+  if (!d_permissible && !node->settingByName.insert(make_pair(settingName, setting)).second)
   {
     log::error("Config::addSetting") << "Attempt to add duplicate setting with path: " << setting->getPath();
     throw runtime_error("Attempt to add duplicate setting");
@@ -335,7 +335,7 @@ void Config::addAction(string const& id, string const& label,
   ASSERT(action->hasArguments());
   auto it = d_actionById.insert(make_pair(id, action));
 
-  if (it.second == false)
+  if (!d_permissible && it.second == false)
   {
     delete action;
     log::error("Config::addAction") << "Action with id '" << id << "' already registered";
