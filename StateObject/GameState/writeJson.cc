@@ -25,13 +25,13 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
   {
     writer.String("playMode").String(getPlayModeString().c_str());
     writer.String("packet").Uint(getPacketNumber());
-    writer.String("playerPerTeam").Int(getPlayersPerTeam());
+    writer.String("playerPerTeam").Uint(getPlayersPerTeam());
     writer.String("isFirstHalf").Bool(isFirstHalf());
-    writer.String("nextKickOffTeamIndex").Int(getNextKickOffTeamIndex());
+    writer.String("nextKickOffTeamIndex").Uint(getNextKickOffTeamIndex());
     writer.String("isPenaltyShootOut").Bool(isPenaltyShootout());
     writer.String("isOvertime").Bool(isOvertime());
     writer.String("isTimeout").Bool(isTimeout());
-    writer.String("lastDropInTeamNum").Int(getLastDropInTeamNumber());
+    writer.String("lastDropInTeamNum").Uint(getLastDropInTeamNumber());
     writer.String("secSinceDropIn").Int(getSecondsSinceLastDropIn());
     writer.String("secondsRemaining").Int(getSecondsRemaining());
     writer.String("secondsSecondaryTime").Int(getSecondaryTime());
@@ -40,10 +40,10 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.StartObject();
       {
-        writer.String("num").Int(team.getTeamNumber());
+        writer.String("num").Uint(team.getTeamNumber());
         writer.String("isBlue").Bool(team.isBlueTeam());
-        writer.String("score").Int(team.getScore());
-        writer.String("penaltyShotCount").Int(team.getPenaltyShotCount());
+        writer.String("score").Uint(team.getScore());
+        writer.String("penaltyShotCount").Uint(team.getPenaltyShotCount());
 
         writer.String("players");
         writer.StartArray();
@@ -59,7 +59,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
                 writer.String(player.getPenaltyTypeString().c_str());
 
                 writer.String("penaltySecondsRemaining");
-                writer.Int(player.getSecondsUntilPenaltyLifted());
+                writer.Uint(player.getSecondsUntilPenaltyLifted());
               }
             }
             writer.EndObject();
