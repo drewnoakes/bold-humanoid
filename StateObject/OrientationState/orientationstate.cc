@@ -8,7 +8,7 @@ using namespace bold;
 using namespace Eigen;
 using namespace rapidjson;
 
-OrientationState::OrientationState(Quaterniond quaternion)
+OrientationState::OrientationState(Quaterniond const& quaternion)
 : d_quaternion(quaternion)
 {
   Affine3d rotation(d_quaternion);

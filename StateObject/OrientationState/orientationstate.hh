@@ -9,7 +9,7 @@ namespace bold
   class OrientationState : public StateObject
   {
   public:
-    OrientationState(Eigen::Quaterniond quaternion);
+    OrientationState(Eigen::Quaterniond const& quaternion);
 
     Eigen::Quaterniond const& getQuaternion() const { return d_quaternion; };
 
