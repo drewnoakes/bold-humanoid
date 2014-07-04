@@ -256,7 +256,7 @@
     "enable-dynamic-error": true,
     "default-kidnap-weight": 0.001,
     "penalty-kidnap-weight": 0.5,
-    "prenorm-weightsum-filter-alpha": 0.01
+    "prenorm-weightsum-filter-alpha": 0.01,
     "position-error": 0.01,
     "angle-error-degrees": 0.3
   },
