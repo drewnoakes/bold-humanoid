@@ -7,8 +7,8 @@ using namespace std;
 
 bool GameState::isWithinTenSecondsOfKickOff(Team team) const
 {
-  static int teamNumber = Config::getStaticValue<int>("team-number");
-  int nextKickOffTeamIndex = getNextKickOffTeamIndex();
+  static uchar teamNumber = static_cast<uchar>(Config::getStaticValue<int>("team-number"));
+  uchar nextKickOffTeamIndex = getNextKickOffTeamIndex();
 
   bool isOurKickOff = nextKickOffTeamIndex == getTeamIndex(teamNumber);
   bool isOurTeam = team == Team::Us;

@@ -91,7 +91,7 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
-    unsigned getTeamIndex(unsigned teamNumber) const
+    uchar getTeamIndex(uchar teamNumber) const
     {
       return getTeam1().getTeamNumber() == teamNumber ? 0 : 1;
     }
