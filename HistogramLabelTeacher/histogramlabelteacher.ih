@@ -1,6 +1,7 @@
 #include "histogramlabelteacher.hh"
 
 #include "../Config/config.hh"
+#include "../Setting/setting-implementations.hh"
 
 using namespace bold;
 using namespace Eigen;
