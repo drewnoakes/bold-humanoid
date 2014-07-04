@@ -122,7 +122,7 @@ namespace bold
     static void set(std::shared_ptr<T const> state);
 
     template<typename T, typename... TArgs>
-    static void make(TArgs&&... args);
+    static std::shared_ptr<T const> make(TArgs&&... args);
 
     /** Get the StateObject of specified type T. May be nullptr.
      */
@@ -204,9 +204,11 @@ namespace bold
   }
 
   template<typename T, typename... Args>
-  void State::make(Args&&... args)
+  std::shared_ptr<T const> State::make(Args&&... args)
   {
-    set(allocate_aligned_shared<T const>(std::forward<Args>(args)...));
+    std::shared_ptr<T const> state = allocate_aligned_shared<T const>(std::forward<Args>(args)...);
+    set(state);
+    return state;
   }
 
   template <typename T>
