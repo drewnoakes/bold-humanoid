@@ -508,10 +508,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/WalkState/walkstate.cc
-)
-
-add_class(BOLDHUMANOID
   ./StateObject/BehaviourControlState/behaviourcontrolstate.cc
 )
 
@@ -577,6 +573,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/StationaryMapState/stationarymapstate.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/WalkState/walkstate.cc
 )
 
 add_class(BOLDHUMANOID
