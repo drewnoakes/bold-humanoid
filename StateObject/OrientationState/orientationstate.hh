@@ -14,8 +14,8 @@ namespace bold
     Eigen::Quaterniond const& getQuaternion() const { return d_quaternion; };
 
     double getPitchAngle() const { return d_pitch; }
-    double getRollAngle() const { return d_pitch; }
-    double getYawAngle() const { return d_pitch; }
+    double getRollAngle() const { return d_roll; }
+    double getYawAngle() const { return d_yaw; }
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
