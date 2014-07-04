@@ -352,3 +352,30 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.stroke();
     });
 }
+
+export function drawDrawingItems(context: CanvasRenderingContext2D, scale: number, items: state.DrawingItem[])
+{
+    _.each(items, item =>
+    {
+        switch (item.type)
+        {
+            case state.DrawingItemType.Line:
+            {
+                var line = <state.LineDrawing>item;
+
+                var width = line.w || 1;
+                var rgb = line.rgb || [0,0,0];
+                var alpha = line.a || 0.8;
+
+                context.lineWidth = width / scale;
+                context.strokeStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
+
+                context.beginPath();
+                context.moveTo(line.p1[0], line.p1[0]);
+                context.lineTo(line.p2[0], line.p2[0]);
+                context.stroke();
+                break;
+            }
+        }
+    });
+}

@@ -2,6 +2,7 @@
 
 #include "../Kick/kick.hh"
 #include "../CM730CommsModule/MX28HealthChecker/mx28healthchecker.hh"
+#include "../Drawing/drawing.hh"
 
 Agent::Agent()
   : d_isRunning(false),
@@ -95,6 +96,8 @@ Agent::Agent()
   d_drawBridgeComms = make_shared<DrawBridgeComms>(this, d_behaviourControl, d_debugger);
 
   d_debugger->update();
+
+  Draw::initialise();
 
   d_motionLoop = make_shared<MotionLoop>(debugControl);
   d_motionLoop->addMotionModule(d_motionScriptModule);

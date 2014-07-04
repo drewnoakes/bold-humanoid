@@ -1,5 +1,6 @@
 #include "agent.ih"
 
+#include "../Drawing/drawing.hh"
 #include "../util/fps.hh"
 
 void Agent::think()
@@ -111,6 +112,10 @@ void Agent::think()
   //
   if (d_cycleNumber % 30 == 0)
     d_drawBridgeComms->publish();
+
+  // Flush out any drawing commands
+  Draw::flushToStateObject();
+  t.timeEvent("Flush Drawing Items");
 
   //
   // Set timing data for the think cycle

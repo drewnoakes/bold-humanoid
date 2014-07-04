@@ -56,6 +56,7 @@ class Agent2dModule extends Module
         this.map.addLayer(new mapping.AgentStationaryMapLayer(transform));
         this.map.addLayer(new mapping.AgentObservedGoalLayer(transform));
         this.map.addLayer(new mapping.AgentOcclusionAreaLayer(transform));
+        this.map.addLayer(new mapping.AgentDrawingLayer(transform));
 
         var fieldAspect = constants.fieldY / constants.fieldX;
         this.map.setPixelSize(width, fieldAspect * width);

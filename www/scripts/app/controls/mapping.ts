@@ -504,3 +504,19 @@ export class AgentOcclusionAreaLayer extends DataLayer<state.AgentFrame>
             });
     }
 }
+
+export class AgentDrawingLayer extends DataLayer<state.Drawing>
+{
+    constructor(transform: Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.drawingState,
+            "Drawing",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data && this.data.items)
+                    plotter.drawDrawingItems(this.context, this.transform.getValue().getScale(), _.filter<state.DrawingItem>(this.data.items, item => item.frame == state.Frame.Agent));
+            });
+    }
+}

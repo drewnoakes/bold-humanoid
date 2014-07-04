@@ -5,6 +5,7 @@
 #include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/DrawingState/drawingstate.hh"
 #include "../StateObject/DebugState/debugstate.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
@@ -33,6 +34,7 @@ void Agent::registerStateTypes()
   State::registerStateType<BodyState>("Body");
   State::registerStateType<CameraFrameState>("CameraFrame");
   State::registerStateType<DebugState>("Debug");
+  State::registerStateType<DrawingState>("Drawing");
   State::registerStateType<GameState>("Game");
   State::registerStateType<HardwareState>("Hardware");
   State::registerStateType<LabelCountState>("LabelCount");

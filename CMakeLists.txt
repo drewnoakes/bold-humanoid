@@ -228,6 +228,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Drawing/drawing.cc
+)
+
+add_class(BOLDHUMANOID
   ./FieldMap/FieldMap.cc
 )
 
@@ -529,6 +533,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/DebugState/writeJson.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/DrawingState/drawingstate.cc
 )
 
 add_class(BOLDHUMANOID

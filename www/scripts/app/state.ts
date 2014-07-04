@@ -526,3 +526,37 @@ export interface WorldFrame
     /** [[x1,y1,x2,y2],...] */
     occlusionRays: number[][];
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export enum Frame
+{
+    Camera = 1,
+    Agent = 2,
+    World = 3
+}
+
+export enum DrawingItemType
+{
+    Line = 1
+}
+
+export interface DrawingItem
+{
+    frame: Frame;
+    type: DrawingItemType;
+}
+
+export interface LineDrawing extends DrawingItem
+{
+    p1: number[];
+    p2: number[];
+    rgb?: number[];
+    a?: number;
+    w?: number;
+}
+
+export interface Drawing
+{
+    items: DrawingItem[];
+}
