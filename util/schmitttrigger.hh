@@ -12,7 +12,7 @@ namespace bold
     Low
   };
 
-  /** A dual-threshold latch with hysterisis.
+  /** A dual-threshold latch with hysteresis.
    *
    * See https://en.wikipedia.org/wiki/Schmitt_trigger
    */
