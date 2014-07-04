@@ -10,6 +10,8 @@
 
 using namespace bold;
 
+typedef unsigned long long ullong;
+
 double Clock::getMillis()
 {
   return timestampToMillis(getTimestamp());
@@ -44,7 +46,7 @@ Clock::Timestamp Clock::getTimestamp()
 {
   struct timeval now;
   gettimeofday(&now, 0);
-  return now.tv_usec + (now.tv_sec * 1000000);
+  return (ullong)now.tv_usec + ((ullong)now.tv_sec * (ullong)1000000);
 }
 
 double Clock::timestampToMillis(Timestamp timestamp)
