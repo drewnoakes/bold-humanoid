@@ -48,7 +48,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   // Scale turn based upon difference between current and target yaw
   auto orientation = State::get<OrientationState>();
   double yawDiffRads = Math::shortestAngleDiffRads(orientation->getYawAngle(), d_targetYaw);
-  //cout << "circleBall targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << " diff=" << yawDiffRads << " error=" << error.transpose() << endl;
+  cout << "[Circle ball] yaw=" << orientation->getYawAngle() << " target=" << d_targetYaw << " diff=" << yawDiffRads << " posError=" << error.transpose() << endl;
   //a = Math::lerp(fabs(yawDiffRads), 0.0, M_PI/3, 0.0, a);
 
   Draw::line(Frame::Agent, Vector2d::Zero(), d_targetBallPos, Colour::bgr(0, 128, 255));
@@ -83,7 +83,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   y = Math::clamp(y, -maxSpeedY->getValue(), maxSpeedY->getValue());
   a = Math::clamp(a, -turnSpeedA->getValue(), turnSpeedA->getValue());
 
-  cout << "[Circle ball] " << x << "\t" << y << "\t" << a << endl;
+//  cout << "[Circle ball] " << x << "\t" << y << "\t" << a << endl;
 
   // NOTE x and y intentionally swapped. 'x' value is also negative as a result of the move
   // direction being inverted.
