@@ -336,6 +336,7 @@
   "options": {
     "announce-fsm-states": false,
     "announce-fsm-transitions": false,
+    "announce-stationary-map-action": true,
     "announce-rate-wpm": 200,
     "circle-ball": {
       "max-speed-x": 20.0,

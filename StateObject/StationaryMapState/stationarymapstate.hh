@@ -150,6 +150,8 @@ namespace bold
     double getTurnAngleRads() const { return d_turnAngleRads; };
     Eigen::Vector2d getTurnBallPos() const { return d_turnBallPos; };
 
+    std::shared_ptr<Kick const> getTurnForKick() const { return d_turnForKick; }
+
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
     static constexpr double BallMergeDistance = 0.3; // TODO magic number!!
@@ -189,6 +191,7 @@ namespace bold
     std::shared_ptr<Kick const> d_selectedKick;
     double d_turnAngleRads;
     Eigen::Vector2d d_turnBallPos;
+    std::shared_ptr<Kick const> d_turnForKick;
   };
 
   template<typename T>

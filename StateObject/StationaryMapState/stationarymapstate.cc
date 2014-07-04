@@ -407,6 +407,7 @@ void StationaryMapState::calculateTurnAngle()
   double closestAngle = std::numeric_limits<double>::max();
   Vector2d closestBallPos = {};
   bool foundTurn = false;
+  shared_ptr<Kick const> turnForKick;
 
   for (GoalEstimate const& goal : d_goalEstimates)
   {
@@ -450,6 +451,7 @@ void StationaryMapState::calculateTurnAngle()
         {
           closestAngle = angle - targetAngle;
           closestBallPos = ballPos;
+          turnForKick = kick;
           foundTurn = true;
           log::info("StationaryMapState::calculateTurnAngle") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos->transpose() << " best yet";
         }
@@ -461,6 +463,7 @@ void StationaryMapState::calculateTurnAngle()
   {
     d_turnAngleRads = -closestAngle;
     d_turnBallPos = closestBallPos;
+    d_turnForKick = turnForKick;
     log::info("StationaryMapState::calculateTurnAngle") << "turn " << Math::radToDeg(d_turnAngleRads) << " degrees with ball at " << d_turnBallPos.transpose();
   }
 }

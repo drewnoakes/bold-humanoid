@@ -8,10 +8,14 @@ using namespace Eigen;
 using namespace rapidjson;
 using namespace std;
 
+#include "../../Voice/voice.hh"
+#include "../../Config/config.hh"
+
 // TODO decrease the 'score' of an estimate if it should be seen, but isn't
 
-BuildStationaryMap::BuildStationaryMap(string const& id)
-: Option(id, "BuildStationaryMap")
+BuildStationaryMap::BuildStationaryMap(string const& id, std::shared_ptr<Voice> voice)
+: Option(id, "BuildStationaryMap"),
+  d_voice(voice)
 {}
 
 vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& writer)
@@ -62,7 +66,16 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
 
 void BuildStationaryMap::updateStateObject() const
 {
-  State::make<StationaryMapState>(d_ballEstimates, d_goalEstimates, d_teammateEstimates, d_occlusionMap);
+  auto map = State::make<StationaryMapState>(d_ballEstimates, d_goalEstimates, d_teammateEstimates, d_occlusionMap);
+
+  static auto announceTurn = Config::getSetting<bool>("options.announce-stationary-map-action");
+
+  if (announceTurn->getValue() && map->getTurnAngleRads() != 0)
+  {
+    stringstream msg;
+    msg << "Turning " << (int)Math::radToDeg(map->getTurnAngleRads()) << " degrees to kick " << map->getTurnForKick()->getId();
+    d_voice->say(msg.str());
+  }
 }
 
 void BuildStationaryMap::reset()

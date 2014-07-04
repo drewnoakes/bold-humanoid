@@ -332,6 +332,7 @@
   "options": {
     "announce-fsm-states": { "type": "bool", "description": "Say states" },
     "announce-fsm-transitions": { "type": "bool", "description": "Say transitions" },
+    "announce-stationary-map-action":  { "type": "bool", "description": "Say stationary map action" },
     "announce-rate-wpm":   { "type": "int", "min": 80, "max": 450 },
     "circle-ball": {
       "max-speed-x":    { "type": "double" },
