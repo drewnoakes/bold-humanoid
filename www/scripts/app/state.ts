@@ -110,7 +110,7 @@ export interface Game
     packet: string;
     playerPerTeam: number;
     isFirstHalf: boolean;
-    nextKickOffTeamNumber: boolean;
+    nextKickOffTeamIndex: boolean;
     isPenaltyShootOut: boolean;
     isOvertime: boolean;
     isTimeout: boolean;

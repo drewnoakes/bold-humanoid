@@ -53,8 +53,8 @@ namespace bold
     uint8 getPacketNumber() const { return d_data.packetNumber; }
     uint8 getPlayersPerTeam() const { return d_data.playersPerTeam; }
     bool isFirstHalf() const { return d_data.isFirstHalf == 1; }
-    /** The next team to kick off. */
-    uint8 getNextKickOffTeamNumber() const { return d_data.nextKickOffTeamNumber; }
+    /** Index of the next team to kick off. Either zero or one. */
+    uint8 getNextKickOffTeamIndex() const { return d_data.nextKickOffTeamIndex; }
     bool isPenaltyShootout() const { return robocup::ExtraState(d_data.secondaryState) == robocup::ExtraState::PENALTYSHOOT; }
     bool isOvertime() const { return robocup::ExtraState(d_data.secondaryState) == robocup::ExtraState::OVERTIME; }
     bool isTimeout() const { return robocup::ExtraState(d_data.secondaryState) == robocup::ExtraState::TIMEOUT; }

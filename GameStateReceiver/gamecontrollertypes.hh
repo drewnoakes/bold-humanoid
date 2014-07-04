@@ -131,7 +131,7 @@ namespace robocup
     uint8 playersPerTeam;          // The number of players on a team
     uint8 playMode;                // state of the game (STATE_READY, STATE_PLAYING, etc)
     uint8 isFirstHalf;             // 1 = game in first half, 0 otherwise
-    uint8 nextKickOffTeamNumber;   // The next team to kick off
+    uint8 nextKickOffTeamIndex;    // Index of the next team to kick off (0 or 1)
     uint8 secondaryState;          // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     uint8 dropInTeamNumber;        // Team that caused last drop in
     int16 secondsSinceLastDropIn;  // Number of seconds passed since the last drop in.  -1 before first drop in.

@@ -8,9 +8,9 @@ using namespace std;
 bool GameState::isWithinTenSecondsOfKickOff(Team team) const
 {
   static int teamNumber = Config::getStaticValue<int>("team-number");
-  int nextKickOffTeamNum = getNextKickOffTeamNumber();
+  int nextKickOffTeamIndex = getNextKickOffTeamIndex();
 
-  bool isOurKickOff = nextKickOffTeamNum == getTeamIndex(teamNumber);
+  bool isOurKickOff = nextKickOffTeamIndex == getTeamIndex(teamNumber);
   bool isOurTeam = team == Team::Us;
 
   PlayMode playMode = getPlayMode();
@@ -27,7 +27,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("packet").Uint(getPacketNumber());
     writer.String("playerPerTeam").Int(getPlayersPerTeam());
     writer.String("isFirstHalf").Bool(isFirstHalf());
-    writer.String("nextKickOffTeamNum").Int(getNextKickOffTeamNumber());
+    writer.String("nextKickOffTeamIndex").Int(getNextKickOffTeamIndex());
     writer.String("isPenaltyShootOut").Bool(isPenaltyShootout());
     writer.String("isOvertime").Bool(isOvertime());
     writer.String("isTimeout").Bool(isTimeout());

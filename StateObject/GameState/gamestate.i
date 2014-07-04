@@ -41,8 +41,8 @@ namespace bold
     uint32 getVersion() const;
     uint8 getPlayersPerTeam() const;
     bool isFirstHalf() const;
-    /** The next team to kick off. */
-    uint8 getNextKickOffTeamNumber() const;
+    /** Index of the next team to kick off. Zero or one. */
+    uint8 getNextKickOffTeamIndex() const;
     bool isPenaltyShootout() const;
     bool isOvertime() const;
     uint8 getSecondsSinceLastDropIn() const;
