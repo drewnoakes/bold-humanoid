@@ -18,6 +18,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
 
   ImageType imageType = d_imageType->getValue();
 
+  bool drawDebugData = true;
+
   // Select the base imagery
   switch (imageType)
   {
@@ -46,7 +48,28 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     }
     case ImageType::Teacher:
     {
-      debugImage = d_labelTeacher->getTrainImage();
+      drawDebugData = false;
+
+      if (d_labelTeacher->requestedLabel())
+      {
+        debugImage = d_labelTeacher->label(d_labelTeacher->getLabelToTrain());
+      }
+      else
+      {
+        auto trainImage = d_labelTeacher->getBGRTrainImage();
+        if (!(trainImage.rows == cameraImage.rows && trainImage.cols == cameraImage.cols))
+          return;
+
+        auto maskImage = d_labelTeacher->getMask();
+        if (maskImage.rows == trainImage.rows && maskImage.cols == trainImage.cols)
+        {
+          cv::Mat multiChannelMask;
+          cv::merge(vector<cv::Mat>{maskImage, maskImage, maskImage}, multiChannelMask);
+          cv::bitwise_xor(trainImage, multiChannelMask, debugImage);
+        }
+        else
+          debugImage = trainImage;
+      }
     }
     default:
     {
@@ -56,8 +79,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw observed lines
-  auto const& observedLineSegments = cameraFrame->getObservedLineSegments();
-  if (d_shouldDrawObservedLines->getValue() && observedLineSegments.size() > 0)
+  auto const& observedLineSegments = State::get<CameraFrameState>()->getObservedLineSegments();
+  if (drawDebugData && d_shouldDrawObservedLines->getValue() && observedLineSegments.size() > 0)
   {
     auto observedLineColour = d_observedLineColour->getValue();
     for (LineSegment2i const& line : observedLineSegments)
@@ -65,7 +88,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw line dots
-  if (d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && getHandler<LineDotPass<uchar>>()->lineDots.size() > 0)
+  if (drawDebugData && d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && getHandler<LineDotPass<uchar>>()->lineDots.size() > 0)
   {
     auto lineDotColour = d_lineDotColour->getValue();
     for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
@@ -73,7 +96,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw blobs
-  if (d_shouldDrawBlobs->getValue())
+  if (drawDebugData && d_shouldDrawBlobs->getValue())
   {
     auto const& blobsByLabel = getHandler<BlobDetectPass>()->getDetectedBlobs();
 
@@ -102,7 +125,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw observed objects (ie. actual ball/goal posts chosen from blobs)
-  if (d_shouldDrawObservedObjects->getValue())
+  if (drawDebugData && d_shouldDrawObservedObjects->getValue())
   {
     auto ball = cameraFrame->getBallObservation();
     if (ball)
@@ -126,7 +149,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   // Draw expected lines
   bool drawExpectedLines = d_shouldDrawExpectedLines->getValue();
   bool drawExpectedLineEdges = d_shouldDrawExpectedLineEdges->getValue();
-  if (drawExpectedLines || drawExpectedLineEdges)
+  if (drawDebugData && (drawExpectedLines || drawExpectedLineEdges))
   {
     auto const& worldFrameState = State::get<WorldFrameState>();
     Affine3d const& agentWorld = worldFrameState->getPosition().agentWorldTransform();
@@ -171,7 +194,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw horizon
-  if (d_shouldDrawHorizon->getValue())
+  if (drawDebugData && d_shouldDrawHorizon->getValue())
   {
     auto neckJoint = bodyState->getLimb("neck")->getLimb()->joints[0];
     Affine3d const& cameraAgentTr = bodyState->getCameraAgentTransform();
@@ -188,7 +211,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw occlusion edge
-  if (d_shouldDrawOcclusionEdge->getValue())
+  if (drawDebugData && d_shouldDrawOcclusionEdge->getValue())
   {
     auto occlusionColour = d_occlusionEdgeColour->getValue().toScalar();
     auto const& rays = cameraFrame->getOcclusionRays();
@@ -212,7 +235,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw field edge
-  if (d_shouldDrawFieldEdge->getValue())
+  if (drawDebugData && d_shouldDrawFieldEdge->getValue())
   {
     auto fieldEdgeColour = d_fieldEdgeColour->getValue();
     for (ushort x = 0; x < debugImage.size().width; ++x)
@@ -224,7 +247,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw calibration lines
-  if (d_shouldDrawCalibration->getValue())
+  if (drawDebugData && d_shouldDrawCalibration->getValue())
   {
     auto calibrationColour = d_calibrationColour->getValue().toScalar();
 
