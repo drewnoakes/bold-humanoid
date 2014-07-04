@@ -30,7 +30,7 @@ auto ballIsStoppingDistance = []
 auto isWithinTenSecondsOfTheirKickOff = []
 {
   auto game = State::get<GameState>();
-  return game && !game->isWithinTenSecondsOfKickOff(Team::Them);
+  return game && game->isWithinTenSecondsOfKickOff(Team::Them);
 };
 
 auto isWithinTenSecondsOfOurKickOff = []
@@ -143,6 +143,15 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->transitionTo(locateBallCirclingState, "lost-ball-long")
     ->after(chrono::seconds(8));
 
+  // start approaching the ball when we have the confidence that it's really there, and it's not their kickoff
+  // TODO this takes 300ms after the 10 sec elapses
+  // TODO try to detect when the ball moves
+  locateBallState
+    ->transitionTo(approachBallState, "found-ball")
+    ->when([] { return stepUpDownThreshold(10,
+    [] { return ballVisibleCondition() && !isWithinTenSecondsOfTheirKickOff(); });
+  });
+
   // after 10 seconds of circling, look for the ball again
   locateBallCirclingState
     ->transitionTo(locateBallState, "done")
@@ -152,15 +161,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   locateBallCirclingState
     ->transitionTo(locateBallState, "found-ball")
     ->when([] { return stepUpDownThreshold(5, ballVisibleCondition); });
-
-  // start approaching the ball when we have the confidence that it's really there
-  locateBallState
-    ->transitionTo(approachBallState, "found-ball")
-    ->when([] { return stepUpDownThreshold(10,
-      [] { return ballVisibleCondition() && isWithinTenSecondsOfTheirKickOff(); });
-    });
-    // TODO this takes 300ms after the 10 sec elapses
-    // TODO try to detect when the ball moves
 
   approachBallState
     ->transitionTo(locateBallState, "lost-ball")
