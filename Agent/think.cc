@@ -94,15 +94,10 @@ void Agent::think()
   t.timeEvent("Update Motion Schedule");
 
   //
-  // Set timing data for the think cycle
-  //
-  static FPS<30> fps;
-  State::make<ThinkTimingState>(t.flush(), d_cycleNumber, fps.next());
-
-  //
   // Raise the Agent::onThinkEnd signal
   //
   onThinkEnd();
+  t.timeEvent("Think End Signalled");
 
   //
   // Invoke observers which requested to be called back from the think loop
@@ -116,6 +111,12 @@ void Agent::think()
   //
   if (d_cycleNumber % 30 == 0)
     d_drawBridgeComms->publish();
+
+  //
+  // Set timing data for the think cycle
+  //
+  static FPS<30> fps;
+  State::make<ThinkTimingState>(t.flush(), d_cycleNumber, fps.next());
 
   log::verbose("Agent::think") << "Ending think cycle " << d_cycleNumber;
 }
