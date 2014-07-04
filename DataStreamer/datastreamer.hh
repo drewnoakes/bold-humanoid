@@ -14,6 +14,7 @@
 #include <sigc++/signal.h>
 
 #include "../StateObject/stateobject.hh"
+#include "../util/assert.hh"
 
 namespace cv
 {
@@ -51,6 +52,7 @@ namespace bold
 
     static std::shared_ptr<std::vector<uchar>> createBytes(rapidjson::StringBuffer const& buffer)
     {
+      ASSERT(buffer.GetSize() != 0);
       auto bytes = std::make_shared<std::vector<uchar>>(buffer.GetSize());
       memcpy(bytes.get()->data(), buffer.GetString(), buffer.GetSize());
       return bytes;
