@@ -2,8 +2,8 @@
 
 shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {
-  unsigned uniformNumber   = agent->getUniformNumber();
-  unsigned teamNumber      = agent->getTeamNumber();
+  uchar uniformNumber   = agent->getUniformNumber();
+  uchar teamNumber      = agent->getTeamNumber();
   auto const& walkModule         = agent->getWalkModule();
   auto const& motionScriptModule = agent->getMotionScriptModule();
   auto const& headModule         = agent->getHeadModule();

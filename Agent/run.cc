@@ -11,8 +11,8 @@ void Agent::run()
   {
     ostringstream announcement;
     announcement <<
-      "Player " << d_uniformNumber <<
-      " on team " << d_teamNumber <<
+      "Player " << (int)d_uniformNumber <<
+      " on team " << (int)d_teamNumber <<
       ", " <<
       (d_teamColour == TeamColour::Cyan ? "cyan" : "magenta");
     d_voice->say(announcement.str());

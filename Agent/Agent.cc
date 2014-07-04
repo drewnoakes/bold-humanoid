@@ -6,8 +6,8 @@
 Agent::Agent()
   : d_isRunning(false),
     d_isStopRequested(false),
-    d_teamNumber(Config::getStaticValue<int>("team-number")),
-    d_uniformNumber(Config::getStaticValue<int>("uniform-number")),
+    d_teamNumber((uchar)Config::getStaticValue<int>("team-number")),
+    d_uniformNumber((uchar)Config::getStaticValue<int>("uniform-number")),
     d_teamColour(Config::getStaticValue<TeamColour>("team-colour")),
     d_cycleNumber(0),
     d_startTime(Clock::getTimestamp())

@@ -39,6 +39,7 @@ namespace bold
   class Voice;
   class WalkModule;
 
+  typedef unsigned char uchar;
   typedef unsigned long ulong;
 
   enum class TeamColour;
@@ -70,8 +71,8 @@ namespace bold
     std::shared_ptr<FallDetector> getFallDetector() const { return d_fallDetector; }
     std::shared_ptr<Voice> getVoice() const { return d_voice; }
 
-    unsigned getTeamNumber() const { return d_teamNumber; }
-    unsigned getUniformNumber() const { return d_uniformNumber; }
+    uchar getTeamNumber() const { return d_teamNumber; }
+    uchar getUniformNumber() const { return d_uniformNumber; }
 
     void setOptionTree(std::shared_ptr<OptionTree> tree);
 
@@ -94,8 +95,8 @@ namespace bold
     bool d_isRunning;
     bool d_isStopRequested;
 
-    unsigned const d_teamNumber;
-    unsigned const d_uniformNumber;
+    uchar const d_teamNumber;
+    uchar const d_uniformNumber;
     TeamColour const d_teamColour;
 
     // Motion

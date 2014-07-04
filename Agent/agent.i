@@ -47,8 +47,8 @@ namespace bold
 
     std::shared_ptr<FallDetector> getFallDetector() const;
 
-    unsigned getTeamNumber() const;
-    unsigned getUniformNumber() const;
+    uchar getTeamNumber() const;
+    uchar getUniformNumber() const;
 
     void run();
     void requestStop();

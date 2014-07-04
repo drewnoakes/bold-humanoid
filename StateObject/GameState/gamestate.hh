@@ -75,7 +75,7 @@ namespace bold
     robocup::TeamInfo const& getTeam1() const { return d_data.teams[0]; }
     robocup::TeamInfo const& getTeam2() const { return d_data.teams[1]; }
 
-    robocup::TeamInfo const& getTeam(unsigned teamNumber) const
+    robocup::TeamInfo const& getTeam(uchar teamNumber) const
     {
       return d_data.teams[getTeamIndex(teamNumber)];
     }
