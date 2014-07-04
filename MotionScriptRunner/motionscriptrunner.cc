@@ -512,7 +512,7 @@ int MotionScriptRunner::getMaxDeltaFromFinalPose(std::shared_ptr<MotionScript co
     int targetValue = frame.values[jointId - 1];
     int delta = presentValue - targetValue;
     if (abs(delta) > abs(maxDelta))
-      maxDelta = delta;;
+      maxDelta = delta;
   }
 
   return maxDelta;

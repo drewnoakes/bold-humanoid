@@ -19,7 +19,7 @@ void Camera::initMemoryMapping()
     exit(-1);
   }
 
-  d_buffers = vector<Buffer>(req.count);;
+  d_buffers = vector<Buffer>(req.count);
 
   for (unsigned i = 0; i < req.count; ++i)
   {

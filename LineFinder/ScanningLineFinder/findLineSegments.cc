@@ -13,7 +13,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   vector<IncrementalRegression,Eigen::aligned_allocator<IncrementalRegression>> regressions;
 
   auto maxHeadDist = d_maxHeadDist->getValue();
-  auto  worstFitAllowed = d_maxRMSFactor->getValue();;
+  auto  worstFitAllowed = d_maxRMSFactor->getValue();
 
   // Matrix is col-major, so outersize is width
   for (unsigned k = 0; k < static_cast<unsigned>(linePointsMatrix.outerSize()); ++k)
@@ -64,7 +64,7 @@ vector<LineSegment2i> ScanningLineFinder::findLineSegments(vector<Vector2i>& lin
   float minCoverage = d_minCoverage->getValue();
 
   vector<IncrementalRegression,Eigen::aligned_allocator<IncrementalRegression>> acceptedRegressions;
-  
+
   for (auto& regression : regressions)
   {
     if (regression.getNPoints() < 2 || regression.isVertical())

@@ -20,7 +20,7 @@ int main()
   cout << "Read/write: " << (cam.canRead() ? "YES" : "NO") << endl;
   cout << "Streaming:  " << (cam.canStream() ? "YES" : "NO") << endl;
 
-  cout << "===== CONTROLS =====" << endl;;
+  cout << "===== CONTROLS =====" << endl;
   for (Control const& control : controls)
     cout << "Control: " << control << endl;
 
