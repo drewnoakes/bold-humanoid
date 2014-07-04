@@ -218,6 +218,9 @@
       "widen-min-height-px": 10
     }
   },
+  "histogram-label-teacher": {
+    "max-flood-diff": 4
+  },
   "game-controller": {
     "send-response-messages": true,
     "tcp-port": 3838
