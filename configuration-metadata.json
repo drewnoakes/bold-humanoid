@@ -220,6 +220,8 @@
     "tcp-port": { "type": "int", "min": 1025, "max": 65535, "readonly": true }
   },
   "round-table": {
+    "tcp-port": { "type": "int", "min": 1025, "max": 65535, "readonly": true },
+    "camera-frame-frequency": { "type": "int", "min": 1, "max": 100 },
     "image-type": { "type": "enum", "values": { "None": 0, "YCbCr": 1, "RGB": 2, "Cartoon": 3, "Teacher": 4 } },
     "image-features": {
       "blobs":          { "type": "bool" },
