@@ -27,13 +27,13 @@ auto ballIsStoppingDistance = []
   return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
 };
 
-auto isWithinTenSecondsOfTheirKickOff = []()
+auto isWithinTenSecondsOfTheirKickOff = []
 {
   auto game = State::get<GameState>();
   return game && !game->isWithinTenSecondsOfKickOff(Team::Them);
 };
 
-auto isWithinTenSecondsOfOurKickOff = []()
+auto isWithinTenSecondsOfOurKickOff = []
 {
   auto game = State::get<GameState>();
   return game && game->isWithinTenSecondsOfKickOff(Team::Us);
