@@ -2,7 +2,7 @@
   "uniform-number": { "type": "int", "readonly": true, "min": 1, "max": 6 },
   "team-number":    { "type": "int", "readonly": true, "min": 0, "max": 255 },
   "team-colour":    { "type": "enum", "readonly": true, "values": { "cyan": 1, "magenta": 2 } },
-  "player-name":    { "type": "string", "readonly": true, "default": "boldie" },
+  "player-name":    { "type": "string", "readonly": true },
   "mitecom": {
     "local-port":  { "type": "int", "readonly": true, "min": 1024, "max": 65535 },
     "remote-port": { "type": "int", "readonly": true, "min": 1024, "max": 65535 },
@@ -15,7 +15,6 @@
   "voice": {
     "name":    {
       "type": "enum",
-      "default": 1,
       "values": {
         "english-mb-en1": 1,
         "english":        2,
@@ -40,11 +39,11 @@
     "announce-ball-position": { "type": "bool", "description": "Say ball pos" }
   },
   "hardware": {
-    "cm730-path":   { "type": "string", "readonly": true, "default": "/dev/ttyUSB0" },
-    "video-path":   { "type": "string", "readonly": true, "default": "/dev/video0" },
+    "cm730-path":   { "type": "string", "readonly": true },
+    "video-path":   { "type": "string", "readonly": true },
     "joystick": {
       "enabled":   { "type": "bool", "readonly": false },
-      "path":      { "type": "string", "readonly": false, "default": "/dev/input/js0" },
+      "path":      { "type": "string", "readonly": false },
       "head-speed": { "type": "double", "min": 1.0, "max": 75.0 },
       "x-amp-max": { "type": "double", "min": 1.0, "max": 30.0 },
       "y-amp-max": { "type": "double", "min": 1.0, "max": 30.0 },
@@ -229,16 +228,16 @@
       "objects":        { "type": "bool" }
     },
     "image-colours": {
-      "line-dot":      { "type": "bgr-colour", "default": { "b": 0, "g": 0, "r": 255 } },
-      "observed-line": { "type": "bgr-colour", "default": { "b": 255, "g": 80, "r": 80 } },
-      "expected-line": { "type": "bgr-colour", "default": { "b": 255, "g": 0, "r": 0 } },
-      "horizon":       { "type": "bgr-colour", "default": { "b": 0, "g": 128, "r": 255 } },
-      "field-edge":    { "type": "bgr-colour", "default": { "b": 0, "g": 255, "r": 0 } },
-      "occlusion-edge":{ "type": "bgr-colour", "default": { "b": 80, "g": 80, "r": 80 } },
-      "calibration":   { "type": "bgr-colour", "default": { "b": 255, "g": 255, "r": 0 } }
+      "line-dot":      { "type": "bgr-colour" },
+      "observed-line": { "type": "bgr-colour" },
+      "expected-line": { "type": "bgr-colour" },
+      "horizon":       { "type": "bgr-colour" },
+      "field-edge":    { "type": "bgr-colour" },
+      "occlusion-edge":{ "type": "bgr-colour" },
+      "calibration":   { "type": "bgr-colour" }
     },
     "cartoon": {
-      "background-colour": { "type": "bgr-colour", "default": { "b": 0, "g": 0, "r": 0 } }
+      "background-colour": { "type": "bgr-colour" }
     }
   },
   "data-streamer": {
@@ -250,8 +249,8 @@
     "randomise-ratio":       { "type": "double", "min": 0.0, "max": 1.0 },
     "use-lines":             { "type": "bool" },
     "min-goals-needed":      { "type": "int", "min": 1, "max": 5 },
-    "enable-penalty-randomise": {"type": "bool", "default": false},
-    "enable-dynamic-error": {"type": "bool", "default": true},
+    "enable-penalty-randomise": { "type": "bool" },
+    "enable-dynamic-error":  { "type": "bool" },
     "default-kidnap-weight": { "type": "double", "min": 0, "max": 100 },
     "penalty-kidnap-weight": { "type": "double", "min": 0, "max": 100 },
     "position-error":        { "type": "double", "min": 0.0, "max": 0.1 },
@@ -399,7 +398,6 @@
     "override": {
       "type": "enum",
       "description": "Role",
-      "default": -1,
       "values": {
         "auto":           -1,
         "idle":            0,
