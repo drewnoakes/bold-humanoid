@@ -198,7 +198,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   atBallState
     ->transitionTo(kickState, "can-kick")
-    ->when([kickMotion,agent]()
+    ->when([kickMotion]()
     {
       auto map = State::get<StationaryMapState>();
       if (map && map->canKick())
