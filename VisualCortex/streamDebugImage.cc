@@ -44,6 +44,10 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
       debugImage = Mat(cameraImage.size(), cameraImage.type(), Scalar(0));
       break;
     }
+    case ImageType::Teacher:
+    {
+      debugImage = d_labelTeacher->getTrainImage();
+    }
     default:
     {
       log::error("VisualCortex::streamDebugging") << "Unknown image type requested!";

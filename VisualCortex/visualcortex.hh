@@ -41,7 +41,8 @@ namespace bold
     None = 0,
     YCbCr = 1,
     RGB = 2,
-    Cartoon = 3
+    Cartoon = 3,
+    Teacher = 4
   };
 
   enum class ImageGranularity

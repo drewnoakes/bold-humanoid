@@ -15,6 +15,7 @@ namespace bold
     bool requestedSnapShot() const { return d_snapshotRequested; }
 
     void setTrainImage(cv::Mat trainImg);
+    cv::Mat getTrainImage() const { return d_trainImage; }
 
     void setSeedPoint(Eigen::Vector2i point);
 
