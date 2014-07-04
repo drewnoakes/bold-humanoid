@@ -1,6 +1,7 @@
 #include "circleball.hh"
 
 #include "../../Agent/agent.hh"
+#include "../../Drawing/drawing.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../../State/state.hh"
@@ -49,6 +50,9 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   double yawDiffRads = Math::shortestAngleDiffRads(orientation->getYawAngle(), d_targetYaw);
   //cout << "circleBall targetYaw=" << d_targetYaw << " yaw=" << orientation->getYawAngle() << " diff=" << yawDiffRads << " error=" << error.transpose() << endl;
   //a = Math::lerp(fabs(yawDiffRads), 0.0, M_PI/3, 0.0, a);
+
+  Draw::line(Frame::Agent, Vector2d::Zero(), d_targetBallPos, Colour::bgr(0, 128, 255));
+  Draw::lineAtAngle(Frame::Agent, d_targetBallPos, M_PI/2 + yawDiffRads, 1.0, Colour::bgr(0, 128, 255));
 
   bool isLeftTurn = yawDiffRads < 0;
 
