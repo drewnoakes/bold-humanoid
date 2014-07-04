@@ -62,8 +62,13 @@ namespace bold
     uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamNumber; }
     int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn + (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
     int16 getSecondsRemaining() const { return d_data.secondsRemaining - (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
-    // TODO secondary time should be decreased by age of message, and clamped to zero
-    int16 getSecondaryTime() const { return d_data.secondaryTime; }
+    int16 getSecondaryTime() const
+    {
+      int16 secondaryTime = d_data.secondaryTime;
+      if (isClockRunning())
+        secondaryTime -= Clock::getSecondsSince(d_receivedAt);
+      return secondaryTime > 0 ? secondaryTime : 0;
+    }
 
     bool isWithinTenSecondsOfKickOff(Team team) const;
 
