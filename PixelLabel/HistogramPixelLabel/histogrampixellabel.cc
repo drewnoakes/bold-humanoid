@@ -1,6 +1,7 @@
 #include "histogrampixellabel.hh"
 
 using namespace bold;
+using namespace std;
 
 template<uint8_t CHANNEL_BITS>
 HistogramPixelLabel<CHANNEL_BITS>::HistogramPixelLabel(std::string name)
@@ -233,6 +234,22 @@ cv::Mat HistogramPixelLabel<CHANNEL_BITS>::getSVImage() const
   channels.push_back(alphaImg);
   cv::merge(channels, result);
   return result;
+}
+
+
+template<uint8_t CHANNEL_BITS>
+void HistogramPixelLabel<CHANNEL_BITS>::write(ostream& out) const
+{
+  out.write(reinterpret_cast<char const*>(d_histogram.data()), d_histogram.size() * sizeof(unsigned));
+}
+
+template<uint8_t CHANNEL_BITS>
+void HistogramPixelLabel<CHANNEL_BITS>::read(istream& in)
+{
+  in.read(reinterpret_cast<char*>(d_histogram.data()), d_histogram.size() * sizeof(unsigned));
+  d_totalCount = 0;
+  for (auto v : d_histogram)
+    d_totalCount += v;
 }
 
 template class bold::HistogramPixelLabel<8>;

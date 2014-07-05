@@ -39,6 +39,9 @@ namespace bold
     cv::Mat getHVImage() const;
     cv::Mat getSVImage() const;
 
+    void write(std::ostream& out) const;
+    void read(std::istream& in);
+
   private:
     constexpr static unsigned BIN_SIZE = (256 >> CHANNEL_BITS);
     constexpr static unsigned NBINS = 1 << CHANNEL_BITS;
