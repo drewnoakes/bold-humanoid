@@ -4,7 +4,8 @@ HistogramLabelTeacherBase::HistogramLabelTeacherBase(std::vector<std::string> co
   : d_yuvTrainImage{},
   d_seedPoint{0,0},
   d_snapshotRequested{false},
-  d_labelRequested{false}
+  d_labelRequested{false},
+  d_fixedRange{false}
 {
   Config::getSetting<int>("histogram-label-teacher.max-flood-diff")->track([this](int val) {
       d_maxFloodDiff = val;
@@ -29,7 +30,10 @@ HistogramLabelTeacherBase::HistogramLabelTeacherBase(std::vector<std::string> co
 
   Config::addAction("histogram-label-teacher.snap-train-image", "Snap Image", [this]()
                     {
-                      d_snapshotRequested = true;
+                      if (d_yuvTrainImage.rows == 0)
+                        d_snapshotRequested = true;
+                      else
+                        d_yuvTrainImage = cv::Mat{0,0,CV_8UC3};
                     });
 
   Config::addAction("histogram-label-teacher.set-seed-point", "Set Seed Point", [this](rapidjson::Value* val) {

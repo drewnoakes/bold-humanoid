@@ -58,17 +58,26 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
       {
         auto trainImage = d_labelTeacher->getBGRTrainImage();
         if (!(trainImage.rows == cameraImage.rows && trainImage.cols == cameraImage.cols))
-          return;
-
-        auto maskImage = d_labelTeacher->getMask();
-        if (maskImage.rows == trainImage.rows && maskImage.cols == trainImage.cols)
         {
-          cv::Mat multiChannelMask;
-          cv::merge(vector<cv::Mat>{maskImage, maskImage, maskImage}, multiChannelMask);
-          cv::bitwise_xor(trainImage, multiChannelMask, debugImage);
+          debugImage = cameraImage;
+          PixelFilterChain chain;
+          chain.pushFilter(&Colour::yCbCrToBgrInPlace);
+          chain.applyFilters(debugImage);
         }
         else
-          debugImage = trainImage;
+        {
+          auto maskImage = d_labelTeacher->getMask();
+          if (maskImage.rows == trainImage.rows && maskImage.cols == trainImage.cols)
+          {
+            cv::Mat multiChannelMask;
+            cv::merge(vector<cv::Mat>{maskImage, maskImage, maskImage}, multiChannelMask);
+            cv::bitwise_xor(trainImage, multiChannelMask, debugImage);
+          }
+          else
+            debugImage = trainImage;
+
+          cv::rectangle(debugImage, cv::Rect(0, 0, debugImage.cols, debugImage.rows), cv::Scalar{0, 0, 255});
+        }
       }
     }
     default:
