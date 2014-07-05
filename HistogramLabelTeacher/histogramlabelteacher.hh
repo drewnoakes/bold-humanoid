@@ -56,6 +56,7 @@ namespace bold
   private:
     bool d_snapshotRequested;
     bool d_labelRequested;
+    bool d_fixedRange;
   };
 
   template<uint8_t CHANNEL_BITS>
@@ -109,7 +110,7 @@ namespace bold
     auto mfd = cv::Scalar(d_maxFloodDiff, d_maxFloodDiff, d_maxFloodDiff);
     cv::floodFill(d_yuvTrainImage, mask,
                   cv::Point{d_seedPoint.x(), d_seedPoint.y()}, cv::Scalar(255), 0,
-                  mfd, mfd, 4 | cv::FLOODFILL_MASK_ONLY | (255 << 8));
+                  mfd, mfd, 4 | (d_fixedRange ? cv::FLOODFILL_FIXED_RANGE : 0) | cv::FLOODFILL_MASK_ONLY | (255 << 8));
 
     return cv::Mat{mask, cv::Rect(1, 1, d_yuvTrainImage.cols, d_yuvTrainImage.rows)};
     

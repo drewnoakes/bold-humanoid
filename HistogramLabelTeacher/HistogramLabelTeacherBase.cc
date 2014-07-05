@@ -23,6 +23,9 @@ HistogramLabelTeacherBase::HistogramLabelTeacherBase(std::vector<std::string> co
 
   Config::addSetting(setting);
 
+  Config::getSetting<bool>("histogram-label-teacher.fixed-range")->track([this](bool val) {
+      d_fixedRange = val;
+    });
 
   Config::addAction("histogram-label-teacher.snap-train-image", "Snap Image", [this]()
                     {

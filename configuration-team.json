@@ -219,7 +219,8 @@
     }
   },
   "histogram-label-teacher": {
-    "max-flood-diff": 4
+    "max-flood-diff": 4,
+    "fixed-range": false
   },
   "game-controller": {
     "send-response-messages": true,
