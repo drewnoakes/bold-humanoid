@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../PixelFilterChain/pixelfilterchain.hh"
 #include "../PixelLabel/HistogramPixelLabel/histogrampixellabel.hh"
 #include "../Setting/setting.hh"
 
@@ -25,8 +26,11 @@ namespace bold
       if (d_yuvTrainImage.rows == 0)
         return d_yuvTrainImage;
 
-      cv::Mat bgrImage = cv::Mat{d_yuvTrainImage.rows, d_yuvTrainImage.cols, CV_8UC3};
-      cv::cvtColor(d_yuvTrainImage, bgrImage, CV_YCrCb2BGR);
+      cv::Mat bgrImage = d_yuvTrainImage.clone();
+
+      PixelFilterChain chain;
+      chain.pushFilter(&Colour::yCbCrToBgrInPlace);
+      chain.applyFilters(bgrImage);
       return bgrImage;
     }
 
