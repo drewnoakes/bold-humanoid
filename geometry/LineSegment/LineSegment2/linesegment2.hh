@@ -32,6 +32,14 @@ namespace bold
       return tryIntersect(other, t, u);
     }
 
+    /**
+    * Attempt to intersect two line segments.
+    * Note that even if the line segments do not intersect, the t and u values will be set.
+    * @param other the line to attempt intersection of this line with
+    * @param t (output) the distance along this line at which intersection would occur, or NaN if lines are collinear/parallel
+    * @param u (output) the distance along the other line at which intersection would occur, or NaN if lines are collinear/parallel
+    * @return The point of intersection if within the line segments, or empty.
+    */
     Maybe<Point> tryIntersect(LineSegment2<T> const& other, double& t, double& u) const
     {
       // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
@@ -49,6 +57,8 @@ namespace bold
       if (denom == 0)
       {
         // lines are collinear or parallel
+        t = std::numeric_limits<double>::quiet_NaN();
+        u = std::numeric_limits<double>::quiet_NaN();
         return Maybe<Point>::empty();
       }
 
