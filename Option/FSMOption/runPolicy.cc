@@ -103,7 +103,8 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
     writer.String("warning").String("Max transition count exceeded. Infinite loop?");
     if (!isEndless)
     {
-      d_voice->say("Endless loop detected in option tree");
+      if (d_voice->queueLength() < 2)
+        d_voice->say("Endless loop detected in option tree");
       isEndless = true;
     }
   }

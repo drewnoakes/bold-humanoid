@@ -70,7 +70,7 @@ void BuildStationaryMap::updateStateObject() const
 
   static auto announceTurn = Config::getSetting<bool>("options.announce-stationary-map-action");
 
-  if (announceTurn->getValue() && map->getTurnAngleRads() != 0)
+  if (announceTurn->getValue() && map->getTurnAngleRads() != 0 && d_voice->queueLength() < 2)
   {
     stringstream msg;
     msg << "Turning " << (int)Math::radToDeg(map->getTurnAngleRads()) << " degrees to kick " << map->getTurnForKick()->getId();
