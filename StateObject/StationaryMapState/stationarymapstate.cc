@@ -350,7 +350,7 @@ double getGoalLineDistance(GoalEstimate const& goal, Vector2d const& endPos)
   if (t < 0 || t > 1)
   {
     // NOTE this warning may become invalid later on -- but for our current use case it's correct
-    log::warning("getGoalLineDistance") << "Ball end pos is outside goal";
+    log::warning("getGoalLineDistance") << "Ball end pos is outside goal (t=" << t << ")";
     return numeric_limits<double>::max();
   }
 
