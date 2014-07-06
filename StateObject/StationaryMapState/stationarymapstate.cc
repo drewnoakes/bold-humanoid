@@ -433,7 +433,7 @@ void StationaryMapState::calculateTurnAngle()
     targetAngles.reserve(targetPositions.size());
     std::transform(targetPositions.begin(), targetPositions.end(),
       back_inserter(targetAngles),
-      [ ](Vector3d const& target) { return Math::angleToPoint(target); });
+      [](Vector3d const& target) { return Math::angleToPoint(target); });
 
     for (shared_ptr<Kick const> const& kick : Kick::getAll())
     {
