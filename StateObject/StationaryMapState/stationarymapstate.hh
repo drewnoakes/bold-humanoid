@@ -67,6 +67,8 @@ namespace bold
 
     GoalEstimate estimateOppositeGoal(GoalLabel label) const;
 
+    LineSegment2d lineSegment2d() const { return LineSegment2d(d_post1.head<2>(), d_post2.head<2>()); }
+
   private:
     Eigen::Vector3d d_post1;
     Eigen::Vector3d d_post2;
