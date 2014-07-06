@@ -164,6 +164,13 @@ TEST (LineSegmentTests, tryIntersect2d)
 //EXPECT_EQ( Maybe<Vector2d>(Vector2d(2,2)), LineSegment2d(1, 1, 2, 2).tryIntersect(LineSegment2d(2, 2, 3, 3)) );
 
   EXPECT_EQ( Maybe<Vector2d>::empty(), LineSegment2d(0, 0, 0, 1).tryIntersect(LineSegment2d(0.5, 0.5, 1.5, 0.5)) );
+
+  // 't' is the distance along the line upon which tryIntersect is called.
+  // 'u' is the distance along the provided line.
+  double t, u;
+  EXPECT_EQ( Maybe<Vector2d>(Vector2d(0, 2)), LineSegment2d(0, 0, 0, 3).tryIntersect(LineSegment2d(-1, 2, 3, 2), t, u) );
+  EXPECT_NEAR ( 2.0/3.0, t, 0.000001 );
+  EXPECT_NEAR ( 1.0/4.0, u, 0.000001 );
 }
 
 TEST (LineSegmentTests, normalisedDot)
