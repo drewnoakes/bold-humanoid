@@ -73,7 +73,10 @@ void BuildStationaryMap::updateStateObject() const
   if (announceTurn->getValue() && map->getTurnAngleRads() != 0 && d_voice->queueLength() < 2)
   {
     stringstream msg;
-    msg << "Turning " << (int)Math::radToDeg(map->getTurnAngleRads()) << " degrees to kick " << map->getTurnForKick()->getId();
+    int degrees = (int)Math::radToDeg(map->getTurnAngleRads());
+    msg << "Turning " << abs(degrees) << " degree" << (abs(degrees) == 1 ? "" : "s")
+        << (degrees < 0 ? " right" : degrees > 0 ? " left" : "")
+        << " to kick " << map->getTurnForKick()->getId();
     d_voice->say(msg.str());
   }
 }
