@@ -126,7 +126,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto kickForwardsState = fsm->newState("kickForwards", {stopWalking,lookAtFeet});
   auto leftKickState = fsm->newState("leftKick", {leftKick});
   auto rightKickState = fsm->newState("rightKick", {rightKick});
-  auto kickState = fsm->newState("kick", {stopWalking,kickMotion});
+  auto kickState = fsm->newState("kick", {SequenceOption::make("stop-walking-and-kick-sequence", {stopWalking, kickMotion})});
   auto yieldState = fsm->newState("yield", {stopWalking,lookAtBall});
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
