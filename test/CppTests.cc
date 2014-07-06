@@ -346,6 +346,18 @@ TEST(CppTests, chrono_duration)
   EXPECT_TRUE( chrono::milliseconds(1001) > chrono::seconds(1) );
 }
 
+void setToTen(double& d)
+{
+  d = 10;
+}
+
+TEST(CppTests, assignToReference)
+{
+  double d = 1;
+  setToTen(d);
+  EXPECT_EQ(10, d);
+}
+
 ///
 /// ATOMIC OPERATIONS
 ///
