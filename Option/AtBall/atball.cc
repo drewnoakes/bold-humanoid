@@ -31,11 +31,11 @@ AtBall::AtBall(std::string const& id, Agent* agent)
 
       for (auto const& goalPos : agentFrame->getGoalObservations())
       {
-        if (map->needMoreSightingsOfGoalPostAt(goalPos))
+        if (map->needMoreSightingsOfGoalPostAt(goalPos.head<2>()))
           speed *= 0.6;
       }
 
-      if (agentFrame->isBallVisible() && map->needMoreSightingsOfBallAt(agentFrame->getBallObservation().value()))
+      if (agentFrame->isBallVisible() && map->needMoreSightingsOfBallAt(agentFrame->getBallObservation().value().head<2>()))
         speed *= 0.5;
     }
 

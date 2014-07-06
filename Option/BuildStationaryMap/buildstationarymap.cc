@@ -30,26 +30,26 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
 
   if (agentFrame->isBallVisible())
   {
-    integrate(d_ballEstimates, agentFrame->getBallObservation().value(), StationaryMapState::BallMergeDistance);
+    integrate(d_ballEstimates, agentFrame->getBallObservation().value().head<2>(), StationaryMapState::BallMergeDistance);
     hasChange = true;
   }
 
   for (auto const& goal : agentFrame->getGoalObservations())
   {
-    integrate(d_goalEstimates, goal, StationaryMapState::GoalPostMergeDistance);
+    integrate(d_goalEstimates, goal.head<2>(), StationaryMapState::GoalPostMergeDistance);
     hasChange = true;
   }
 
   for (auto const& teammate : agentFrame->getTeamMateObservations())
   {
-    integrate(d_teammateEstimates, teammate, StationaryMapState::TeammateMergeDistance);
+    integrate(d_teammateEstimates, teammate.head<2>(), StationaryMapState::TeammateMergeDistance);
     hasChange = true;
   }
 
   // Walk all occlusion rays
   for (auto const& ray : agentFrame->getOcclusionRays())
   {
-    if (d_occlusionMap.add(ray))
+    if (d_occlusionMap.add(ray.first.head<2>(), ray.second.head<2>()))
       hasChange = true;
   }
 
@@ -91,7 +91,7 @@ void BuildStationaryMap::reset()
   updateStateObject();
 }
 
-void BuildStationaryMap::integrate(vector<Average<Vector3d>>& estimates, Vector3d pos, double mergeDistance)
+void BuildStationaryMap::integrate(vector<Average<Vector2d>>& estimates, Vector2d pos, double mergeDistance)
 {
   for (auto& estimate : estimates)
   {

@@ -27,10 +27,8 @@ string bold::getGoalLabelName(GoalLabel label)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool RadialOcclusionMap::add(pair<Vector3d,Vector3d> const& ray)
+bool RadialOcclusionMap::add(Vector2d const& near, Vector2d const& far)
 {
-  Vector2d near = ray.first.head<2>();
-  Vector2d far = ray.second.head<2>();
   Vector2d diff = far - near;
 
   // If the ray is short, then it's probably just noise.
@@ -107,7 +105,7 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
   bool hasLeft = false,
        hasRight = false;
 
-  auto testSide = [&](Eigen::Vector3d const& postPos)
+  auto testSide = [&](Eigen::Vector2d const& postPos)
   {
     if (Math::angleToPoint(postPos) > ballEndAngle)
       hasRight = true;
@@ -123,19 +121,19 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
 
 GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
 {
-  Vector3d goalLine = d_post2 - d_post1;
+  Vector2d goalLine = d_post2 - d_post1;
 
   // There are two perpendicular vectors which should run down the length of the
   // field, parallel to the world's x-axis.
-  Vector3d perp1(-goalLine.y(), goalLine.x(), 0);
-  Vector3d perp2(goalLine.y(), -goalLine.x(), 0);
+  Vector2d perp1(-goalLine.y(), goalLine.x());
+  Vector2d perp2(goalLine.y(), -goalLine.x());
 
   // Find which one points towards us, as we assume we're between the two goals
-  Vector3d perp = perp1.dot(d_post1) < 0
+  Vector2d perp = perp1.dot(d_post1) < 0
     ? perp1
     : perp2;
 
-  Vector3d fieldX = perp.normalized() * FieldMap::getFieldLengthX();
+  Vector2d fieldX = perp.normalized() * FieldMap::getFieldLengthX();
 
   return GoalEstimate(d_post1 + fieldX, d_post2 + fieldX, label);
 }
@@ -143,18 +141,18 @@ GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
 ///////////////////////////////////////////////////////////////////////////////
 
 StationaryMapState::StationaryMapState(
-  std::vector<Average<Eigen::Vector3d>> ballEstimates,
-  std::vector<Average<Eigen::Vector3d>> goalPostEstimates,
-  std::vector<Average<Eigen::Vector3d>> keeperEstimates,
+  std::vector<Average<Eigen::Vector2d>> ballEstimates,
+  std::vector<Average<Eigen::Vector2d>> goalPostEstimates,
+  std::vector<Average<Eigen::Vector2d>> keeperEstimates,
   RadialOcclusionMap occlusionMap)
 : d_ballEstimates(ballEstimates),
   d_keeperEstimates(keeperEstimates),
   d_occlusionMap(occlusionMap)
 {
   // Sort estimates such that those with greater numbers of observations appear first
-  std::sort(d_ballEstimates.begin(), d_ballEstimates.end(), compareAverages);
-  std::sort(d_keeperEstimates.begin(), d_keeperEstimates.end(), compareAverages);
-  std::sort(goalPostEstimates.begin(), goalPostEstimates.end(), compareAverages);
+  std::sort(d_ballEstimates.begin(), d_ballEstimates.end(), compareAverages<Vector2d>);
+  std::sort(d_keeperEstimates.begin(), d_keeperEstimates.end(), compareAverages<Vector2d>);
+  std::sort(goalPostEstimates.begin(), goalPostEstimates.end(), compareAverages<Vector2d>);
 
   d_goalPostEstimates = labelGoalPostObservations(d_keeperEstimates, goalPostEstimates);
 
@@ -180,8 +178,8 @@ StationaryMapState::StationaryMapState(
 }
 
 vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
-  vector<Average<Vector3d>> const& keeperEstimates,
-  vector<Average<Vector3d>> const& goalEstimates)
+  vector<Average<Vector2d>> const& keeperEstimates,
+  vector<Average<Vector2d>> const& goalEstimates)
 {
   static auto maxGoalieGoalDistance = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
   static auto maxGoalPairDistanceError = Config::getSetting<double>("vision.goal-detection.max-pair-error-dist");
@@ -204,7 +202,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
 
   FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
 
-  auto getLabel = [&ballSide,&goalEstimates,&keeperEstimates,maxPositionMeasurementError,theirsThreshold](Vector3d goalEstimate) -> GoalLabel
+  auto getLabel = [&ballSide,&goalEstimates,&keeperEstimates,maxPositionMeasurementError,theirsThreshold](Vector2d goalEstimate) -> GoalLabel
   {
     switch (ballSide)
     {
@@ -280,7 +278,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
   labelledEstimates.resize(goalEstimates.size());
   std::transform(goalEstimates.begin(), goalEstimates.end(),
                  labelledEstimates.begin(),
-                 [&getLabel](Average<Vector3d> const& goalEstimate)
+                 [&getLabel](Average<Vector2d> const& goalEstimate)
                  {
                    auto label = getLabel(goalEstimate.getAverage());
                    return GoalPostEstimate(goalEstimate, label);
@@ -448,16 +446,15 @@ void StationaryMapState::calculateTurnAngle()
 
     log::info("StationaryMapState::calculateTurnAngle") << "Evaluate goal at " << goal.getPost1().transpose() << " to " << goal.getPost2().transpose();
 
-
     // Find desirable target positions
     vector<Vector2d> targetPositions = {
-      goal.getMidpoint(0.2).head<2>(),
-      goal.getMidpoint(0.3).head<2>(),
-      goal.getMidpoint(0.4).head<2>(),
-      goal.getMidpoint(0.5).head<2>(),
-      goal.getMidpoint(0.6).head<2>(),
-      goal.getMidpoint(0.7).head<2>(),
-      goal.getMidpoint(0.8).head<2>()
+      goal.getMidpoint(0.2),
+      goal.getMidpoint(0.3),
+      goal.getMidpoint(0.4),
+      goal.getMidpoint(0.5),
+      goal.getMidpoint(0.6),
+      goal.getMidpoint(0.7),
+      goal.getMidpoint(0.8)
     };
 
     for (shared_ptr<Kick const> const& kick : Kick::getAll())
@@ -582,7 +579,7 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
   writer.EndObject();
 }
 
-bool StationaryMapState::needMoreSightingsOfGoalPostAt(Eigen::Vector3d goalPos) const
+bool StationaryMapState::needMoreSightingsOfGoalPostAt(Eigen::Vector2d goalPos) const
 {
   for (auto const& goalPostEstimate : d_goalPostEstimates)
   {
@@ -593,7 +590,7 @@ bool StationaryMapState::needMoreSightingsOfGoalPostAt(Eigen::Vector3d goalPos) 
   return false;
 }
 
-bool StationaryMapState::needMoreSightingsOfBallAt(Eigen::Vector3d ballPos) const
+bool StationaryMapState::needMoreSightingsOfBallAt(Eigen::Vector2d ballPos) const
 {
   for (auto const& ballEstimate : d_ballEstimates)
   {

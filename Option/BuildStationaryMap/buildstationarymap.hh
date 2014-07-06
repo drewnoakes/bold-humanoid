@@ -23,12 +23,12 @@ namespace bold
   private:
     void updateStateObject() const;
 
-    static void integrate(std::vector<Average<Eigen::Vector3d>>& estimates, Eigen::Vector3d pos, double mergeDistance);
+    static void integrate(std::vector<Average<Eigen::Vector2d>>& estimates, Eigen::Vector2d pos, double mergeDistance);
 
     std::shared_ptr<Voice> d_voice;
-    std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
-    std::vector<Average<Eigen::Vector3d>> d_goalEstimates;
-    std::vector<Average<Eigen::Vector3d>> d_teammateEstimates;
+    std::vector<Average<Eigen::Vector2d>> d_ballEstimates;
+    std::vector<Average<Eigen::Vector2d>> d_goalEstimates;
+    std::vector<Average<Eigen::Vector2d>> d_teammateEstimates;
     RadialOcclusionMap d_occlusionMap;
   };
 }

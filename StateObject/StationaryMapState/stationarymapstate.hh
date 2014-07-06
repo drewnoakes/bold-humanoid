@@ -31,18 +31,18 @@ namespace bold
   public:
     GoalPostEstimate() = default;
 
-    GoalPostEstimate(Average<Eigen::Vector3d> estimate, GoalLabel label)
+    GoalPostEstimate(Average<Eigen::Vector2d> estimate, GoalLabel label)
     : d_average(estimate.getAverage()),
       d_count(estimate.getCount()),
       d_label(label)
     {}
 
-    Eigen::Vector3d getAverage() const { return d_average; }
+    Eigen::Vector2d getAverage() const { return d_average; }
     int getCount() const { return d_count; }
     GoalLabel getLabel() const { return d_label; }
 
   private:
-    Eigen::Vector3d d_average;
+    Eigen::Vector2d d_average;
     int d_count;
     GoalLabel d_label;
   };
@@ -53,25 +53,25 @@ namespace bold
   class GoalEstimate
   {
   public:
-    GoalEstimate(Eigen::Vector3d const& post1, Eigen::Vector3d const& post2, GoalLabel label)
+    GoalEstimate(Eigen::Vector2d const& post1, Eigen::Vector2d const& post2, GoalLabel label)
     : d_post1(post1),
       d_post2(post2),
       d_label(label)
     {}
 
-    Eigen::Vector3d getPost1() const { return d_post1; }
-    Eigen::Vector3d getPost2() const { return d_post2; }
+    Eigen::Vector2d getPost1() const { return d_post1; }
+    Eigen::Vector2d getPost2() const { return d_post2; }
     GoalLabel getLabel() const { return d_label; }
-    Eigen::Vector3d getMidpoint(double ratio = 0.5) const { return Math::lerp(ratio, d_post1, d_post2); }
+    Eigen::Vector2d getMidpoint(double ratio = 0.5) const { return Math::lerp(ratio, d_post1, d_post2); }
     bool isTowards(double endBallAngle) const;
 
     GoalEstimate estimateOppositeGoal(GoalLabel label) const;
 
-    LineSegment2d lineSegment2d() const { return LineSegment2d(d_post1.head<2>(), d_post2.head<2>()); }
+    LineSegment2d lineSegment2d() const { return LineSegment2d(d_post1, d_post2); }
 
   private:
-    Eigen::Vector3d d_post1;
-    Eigen::Vector3d d_post2;
+    Eigen::Vector2d d_post1;
+    Eigen::Vector2d d_post2;
     GoalLabel d_label;
   };
 
@@ -103,7 +103,7 @@ namespace bold
   class RadialOcclusionMap
   {
   public:
-    bool add(std::pair<Eigen::Vector3d,Eigen::Vector3d> const& ray);
+    bool add(Eigen::Vector2d const& near, Eigen::Vector2d const& far);
 
     void reset();
 
@@ -125,15 +125,15 @@ namespace bold
   class StationaryMapState : public StateObject
   {
   public:
-    StationaryMapState(std::vector<Average<Eigen::Vector3d>> ballEstimates,
-                       std::vector<Average<Eigen::Vector3d>> goalPostEstimates,
-                       std::vector<Average<Eigen::Vector3d>> teammateEstimates,
+    StationaryMapState(std::vector<Average<Eigen::Vector2d>> ballEstimates,
+                       std::vector<Average<Eigen::Vector2d>> goalPostEstimates,
+                       std::vector<Average<Eigen::Vector2d>> teammateEstimates,
                        RadialOcclusionMap occlusionMap);
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    std::vector<Average<Eigen::Vector3d>> const& getBallEstimates() const { return d_ballEstimates; };
-    std::vector<Average<Eigen::Vector3d>> const& getTeammateEstimates() const { return d_keeperEstimates; };
+    std::vector<Average<Eigen::Vector2d>> const& getBallEstimates() const { return d_ballEstimates; };
+    std::vector<Average<Eigen::Vector2d>> const& getTeammateEstimates() const { return d_keeperEstimates; };
     std::vector<GoalPostEstimate> const& getGoalPostEstimates() const { return d_goalPostEstimates; };
     std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; };
 
@@ -141,8 +141,8 @@ namespace bold
     bool hasEnoughGoalPostObservations() const { return d_goalEstimates.size() != 0; };
     bool hasEnoughBallAndGoalPostObservations() const { return hasEnoughBallObservations() && hasEnoughGoalPostObservations(); };
 
-    bool needMoreSightingsOfGoalPostAt(Eigen::Vector3d goalPos) const;
-    bool needMoreSightingsOfBallAt(Eigen::Vector3d ballPos) const;
+    bool needMoreSightingsOfGoalPostAt(Eigen::Vector2d goalPos) const;
+    bool needMoreSightingsOfBallAt(Eigen::Vector2d ballPos) const;
 
     bool canKick() const { return d_selectedKick != nullptr; }
     std::shared_ptr<Kick const> getSelectedKick() const { return d_selectedKick; }
@@ -164,14 +164,15 @@ namespace bold
     static constexpr int BallSamplesNeeded = 20; // TODO magic number!!
     static constexpr int KeeperSamplesNeeded = 5; // TODO magic number!!
 
-    static bool compareAverages(Average<Eigen::Vector3d> const& a, Average<Eigen::Vector3d> const& b)
+    template<typename T>
+    static bool compareAverages(Average<T> const& a, Average<T> const& b)
     {
       return a.getCount() > b.getCount();
     }
 
     static std::vector<GoalPostEstimate> labelGoalPostObservations(
-      std::vector<Average<Eigen::Vector3d>> const& keeperEstimates,
-      std::vector<Average<Eigen::Vector3d>> const& goalEstimates);
+      std::vector<Average<Eigen::Vector2d>> const& keeperEstimates,
+      std::vector<Average<Eigen::Vector2d>> const& goalEstimates);
 
     void calculateTurnAngle();
     void selectKick();
@@ -182,8 +183,8 @@ namespace bold
     template<typename T>
     inline static uint countWithSamples(std::vector<T> const& estimates, int sampleThreshold);
 
-    std::vector<Average<Eigen::Vector3d>> d_ballEstimates;
-    std::vector<Average<Eigen::Vector3d>> d_keeperEstimates;
+    std::vector<Average<Eigen::Vector2d>> d_ballEstimates;
+    std::vector<Average<Eigen::Vector2d>> d_keeperEstimates;
     std::vector<GoalPostEstimate> d_goalPostEstimates;
     RadialOcclusionMap d_occlusionMap;
     std::vector<GoalEstimate> d_goalEstimates;
