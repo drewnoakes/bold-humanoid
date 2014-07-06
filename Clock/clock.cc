@@ -6,6 +6,7 @@
 #include "../util/log.hh"
 #endif
 
+#include <string.h>
 #include <sys/time.h>
 
 using namespace bold;
@@ -45,7 +46,8 @@ double Clock::getMillisSince(Timestamp since)
 Clock::Timestamp Clock::getTimestamp()
 {
   struct timeval now;
-  gettimeofday(&now, 0);
+  if (gettimeofday(&now, 0) == -1)
+    log::warning("Clock::getTimestamp") << "Error returned by gettimeofday: " << strerror(errno) << " (" << errno << ")";
   return (ullong)now.tv_usec + ((ullong)now.tv_sec * (ullong)1000000);
 }
 
