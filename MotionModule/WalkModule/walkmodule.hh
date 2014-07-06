@@ -57,6 +57,11 @@ namespace bold
      */
     void setMoveDir(double x, double y);
 
+    void setMoveDir(Eigen::Vector2d const& dir)
+    {
+      setMoveDir(dir.x(), dir.y());
+    }
+
     /**
      * Set the rate of turning, where positive values turn right (clockwise)
      * and negative values turn left (counter-clockwise) (unspecified units).
