@@ -15,6 +15,11 @@ Agent::Agent()
 {
   ThreadUtil::setThreadId(ThreadId::ThinkLoop);
 
+  log::info("Agent::Agent") << "Name:    " << Config::getStaticValue<string>("player-name");
+  log::info("Agent::Agent") << "Uniform: " << (int)d_uniformNumber;
+  log::info("Agent::Agent") << "Team:    " << (int)d_teamNumber;
+  log::info("Agent::Agent") << "Colour:  " << (d_teamColour == TeamColour::Cyan ? "Cyan" : "Magenta");
+
   State::initialise();
 
   FieldMap::initialise();
