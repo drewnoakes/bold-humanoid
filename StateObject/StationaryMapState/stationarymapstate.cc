@@ -380,6 +380,7 @@ void StationaryMapState::selectKick()
       }
     }
 
+    // TODO only check that there's no obstruction before the goal line -- blocks inside the goal are fine
     bool isFieldOpen = d_occlusionMap.isOpen(ballEndAngle, endPos->norm());
     d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget && isFieldOpen);
   }
@@ -443,6 +444,7 @@ void StationaryMapState::calculateTurnAngle()
       double angle = Math::angleToPoint(*endPos);
       for (double const& targetAngle : targetAngles)
       {
+        // TODO only check that there's no obstruction before the goal line -- blocks inside the goal are fine
         if (!d_occlusionMap.isOpen(angle, endPos->norm()))
         {
           log::info("StationaryMapState::calculateTurnAngle") << "Obstacle blocks kick " << kick->getId() << " at angle " << round(Math::radToDeg(targetAngle));
