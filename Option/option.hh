@@ -60,12 +60,23 @@ namespace bold
     /** Select this option to be run
      *
      * If this option returns an empty vector, this indicates that it
+     * is a primitive option. Override this version to be able to send
+     * JSON data to round table.
+     *
+     * @returns the sub-option selected by the policy of this option;
+     * Default: empty vector
+     */
+    virtual OptionVector runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) { return runPolicy(); }
+
+    /** Select this option to be run
+     *
+     * If this option returns an empty vector, this indicates that it
      * is a primitive option.
      *
      * @returns the sub-option selected by the policy of this option;
      * Default: empty vector
      */
-    virtual OptionVector runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) { return OptionVector{}; }
+    virtual OptionVector runPolicy() { return OptionVector{}; }
 
   private:
     std::string d_id;
