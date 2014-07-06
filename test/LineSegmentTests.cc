@@ -157,7 +157,7 @@ TEST (LineSegmentTests, tryIntersect2d)
   // Parallel (horizontal)
   EXPECT_EQ( Maybe<Vector2d>::empty(), LineSegment2d(0, 0, 1, 0).tryIntersect(LineSegment2d(0, 1, 1, 1)) );
 
-  // Colinear
+  // Collinear
   EXPECT_EQ( Maybe<Vector2d>::empty(), LineSegment2d(0, 0, 1, 0).tryIntersect(LineSegment2d(2, 0, 3, 0)) );
   EXPECT_EQ( Maybe<Vector2d>::empty(), LineSegment2d(1, 1, 2, 2).tryIntersect(LineSegment2d(3, 3, 4, 4)) );
   // this case doesn't work -- is it important?
