@@ -126,7 +126,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto kickForwardsState = fsm->newState("kickForwards", {stopWalking,lookAtFeet});
   auto leftKickState = fsm->newState("leftKick", {leftKick});
   auto rightKickState = fsm->newState("rightKick", {rightKick});
-  auto kickState = fsm->newState("kick", {kickMotion});
+  auto kickState = fsm->newState("kick", {stopWalking,kickMotion});
   auto yieldState = fsm->newState("yield", {stopWalking,lookAtBall});
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
@@ -215,7 +215,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   atBallState
     ->transitionTo(turnAroundBallState)
-    ->when([circleBall]()
+    ->when([circleBall,kickMotion]()
     {
       auto map = State::get<StationaryMapState>();
       if (!map)
@@ -225,6 +225,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
         return false;
       // TODO provide onResetBefore virtual on Option, and capture this there
       circleBall->setTurnParams(turnAngle, map->getTurnBallPos());
+
+      auto kick = map->getTurnForKick();
+      ASSERT(kick);
+      kickMotion->setMotionScript(kick->getMotionScript());
+
       return true;
     });
 
@@ -243,7 +248,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->whenTerminated();
 
   turnAroundBallState
-    ->transitionTo(atBallState, "done")
+    ->transitionTo(kickState, "done")
+//    ->transitionTo(atBallState, "done")
     ->whenTerminated();
 
   turnAroundBallState
