@@ -65,8 +65,7 @@ void DrawBridgeComms::publish()
     d_debugger->notifySendingDrawbridgeMessage();
 }
 
-// TODO include: FPS (think/motion)
-//               Memory usage
+// TODO include: Memory usage
 
 void DrawBridgeComms::buildMessage(StringBuffer& buffer)
 {
