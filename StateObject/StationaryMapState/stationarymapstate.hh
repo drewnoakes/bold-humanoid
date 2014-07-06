@@ -107,11 +107,9 @@ namespace bold
 
     void reset();
 
-//    Maybe<double> getDistance(double angle) const;
+    double getOcclusionDistance(double angle) const;
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
-
-    bool isOpen(double angle, double distance) const;
 
   private:
     static constexpr int NumberOfBuckets = 144;

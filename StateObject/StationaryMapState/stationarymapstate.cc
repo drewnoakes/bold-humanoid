@@ -64,18 +64,15 @@ double RadialOcclusionMap::angleForWedgeIndex(uint index)
   return Math::normaliseRads(index*2*M_PI/NumberOfBuckets);
 }
 
-bool RadialOcclusionMap::isOpen(double angle, double distance) const
+double RadialOcclusionMap::getOcclusionDistance(double angle) const
 {
-  uint index = wedgeIndexForAngle(angle);
-  if (d_wedges[index].getCount() < 3) // TODO magic number!
-    return true;
-  return d_wedges[index].getAverage() > distance;
-}
+  Average<double> const& wedge = d_wedges[wedgeIndexForAngle(angle)];
 
-//Maybe<double> RadialOcclusionMap::getDistance(double angle) const
-//{
-//  return d_wedges[wedgeIndexForAngle(angle)].getAverage();
-//}
+  if (wedge.getCount() < 3) // TODO magic number!
+    return numeric_limits<double>::max();
+
+  return wedge.getAverage();
+}
 
 void RadialOcclusionMap::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
 {
@@ -341,6 +338,32 @@ void StationaryMapState::findGoals()
   }
 }
 
+double getGoalLineDistance(GoalEstimate const& goal, Vector2d const& endPos)
+{
+  // 't' is the ratio of intersection along the line between the goal posts
+  // 'u' is the ratio along the length of the kick line
+
+  double t, u;
+  goal.lineSegment2d().tryIntersect(LineSegment2d(Vector2d::Zero(), endPos), t, u);
+
+  // Ensure we're not kicking outside the goal
+  if (t < 0 || t > 1)
+  {
+    // NOTE this warning may become invalid later on -- but for our current use case it's correct
+    log::warning("getGoalLineDistance") << "Ball end pos is outside goal";
+    return numeric_limits<double>::max();
+  }
+
+  // Ensure the intersection doesn't occur 'backwards' along the ball's direction of travel
+  if (u < 0)
+  {
+    log::warning("getGoalLineDistance") << "Kick/goal intersection occurs backwards along ball's direction of travel";
+    return numeric_limits<double>::max();
+  }
+
+  return u * endPos.norm();
+}
+
 void StationaryMapState::selectKick()
 {
   // Short circuit if we don't have enough observations
@@ -352,12 +375,12 @@ void StationaryMapState::selectKick()
   if (ballEstimate.getCount() < BallSamplesNeeded)
     return;
 
+  // Check each kick to see if it's possible, and whether it would give a good result
   for (auto& kick : Kick::getAll())
   {
     Maybe<Vector2d> endPos = kick->estimateEndPos(ballEstimate.getAverage().head<2>());
 
-    // If no end position, then this kick is not possible given the ball's
-    // current position.
+    // If no end position, then this kick is not possible given the ball's current position
     if (!endPos.hasValue())
       continue;
 
@@ -373,16 +396,23 @@ void StationaryMapState::selectKick()
       if (goal.getLabel() == GoalLabel::Ours)
         continue;
 
-      if (goal.isTowards(ballEndAngle))
-      {
-        isOnTarget = true;
-        break;
-      }
+      // If the kick angle is not directed between the goal posts, skip it
+      if (!goal.isTowards(ballEndAngle))
+        continue;
+
+      // Check that there's no obstruction before the goal line -- blocks inside the goal are fine
+      double occlusionDistance = d_occlusionMap.getOcclusionDistance(ballEndAngle);
+      double goalLineDistance = getGoalLineDistance(goal, *endPos);
+
+      // TODO the entire ball must actually cross the line, not just its midpoint
+      if (occlusionDistance < goalLineDistance)
+        continue;
+
+      isOnTarget = true;
+      break;
     }
 
-    // TODO only check that there's no obstruction before the goal line -- blocks inside the goal are fine
-    bool isFieldOpen = d_occlusionMap.isOpen(ballEndAngle, endPos->norm());
-    d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget && isFieldOpen);
+    d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget);
   }
 
   // TODO when more than one kick is possible, take the best, not the first
@@ -418,23 +448,17 @@ void StationaryMapState::calculateTurnAngle()
 
     log::info("StationaryMapState::calculateTurnAngle") << "Evaluate goal at " << goal.getPost1().transpose() << " to " << goal.getPost2().transpose();
 
-    // Find desirable target positions
-    vector<Vector3d> targetPositions = {
-      goal.getMidpoint(0.2),
-      goal.getMidpoint(0.3),
-      goal.getMidpoint(0.4),
-      goal.getMidpoint(0.5),
-      goal.getMidpoint(0.6),
-      goal.getMidpoint(0.7),
-      goal.getMidpoint(0.8)
-    };
 
-    // Convert the target positions to angles
-    vector<double> targetAngles;
-    targetAngles.reserve(targetPositions.size());
-    std::transform(targetPositions.begin(), targetPositions.end(),
-      back_inserter(targetAngles),
-      [](Vector3d const& target) { return Math::angleToPoint(target); });
+    // Find desirable target positions
+    vector<Vector2d> targetPositions = {
+      goal.getMidpoint(0.2).head<2>(),
+      goal.getMidpoint(0.3).head<2>(),
+      goal.getMidpoint(0.4).head<2>(),
+      goal.getMidpoint(0.5).head<2>(),
+      goal.getMidpoint(0.6).head<2>(),
+      goal.getMidpoint(0.7).head<2>(),
+      goal.getMidpoint(0.8).head<2>()
+    };
 
     for (shared_ptr<Kick const> const& kick : Kick::getAll())
     {
@@ -442,10 +466,16 @@ void StationaryMapState::calculateTurnAngle()
       Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
       ASSERT(endPos.hasValue());
       double angle = Math::angleToPoint(*endPos);
-      for (double const& targetAngle : targetAngles)
+      for (Vector2d const& targetPosition : targetPositions)
       {
-        // TODO only check that there's no obstruction before the goal line -- blocks inside the goal are fine
-        if (!d_occlusionMap.isOpen(angle, endPos->norm()))
+        double targetAngle = Math::angleToPoint(targetPosition);
+
+        // Check that there's no obstruction before the goal line -- blocks inside the goal are fine
+        double occlusionDistance = d_occlusionMap.getOcclusionDistance(targetAngle);
+        double goalLineDistance = getGoalLineDistance(goal, targetPosition);
+
+        // TODO the entire ball must actually cross the line, not just its midpoint
+        if (occlusionDistance < goalLineDistance)
         {
           log::info("StationaryMapState::calculateTurnAngle") << "Obstacle blocks kick " << kick->getId() << " at angle " << round(Math::radToDeg(targetAngle));
           continue;
