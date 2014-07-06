@@ -443,6 +443,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/OdoWalkTo/odowalkto.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/SearchBall/runPolicy.cc
 )
 
