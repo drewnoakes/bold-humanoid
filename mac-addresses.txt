@@ -38,3 +38,6 @@
 
 10BF48F4D00D	Drew's Phone
 88308AE3DE19	Drew's Nexus 7
+
+7831C1C0FAA0	Sander's Laptop (WLAN)
+7C05073BA430	Sander's iPhone (WLAN)
