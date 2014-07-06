@@ -455,6 +455,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/SquareDance/squaredance.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/StopWalking/stopwalking.cc
 )
 
