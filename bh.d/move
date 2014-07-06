@@ -31,7 +31,7 @@ do
               .connect('ws://darwin$i.local:8080', 'control-protocol');" | node
 
     if [ $? -ne 0 ]; then
-        echo FAILED to move darwin$i
+        echo FAILED to move darwin$i.local
         res=1
     fi
 done
