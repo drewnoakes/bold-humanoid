@@ -420,9 +420,11 @@ void StationaryMapState::calculateTurnAngle()
     // Find desirable target positions
     vector<Vector3d> targetPositions = {
       goal.getMidpoint(0.2),
+      goal.getMidpoint(0.3),
       goal.getMidpoint(0.4),
       goal.getMidpoint(0.5),
       goal.getMidpoint(0.6),
+      goal.getMidpoint(0.7),
       goal.getMidpoint(0.8)
     };
 
