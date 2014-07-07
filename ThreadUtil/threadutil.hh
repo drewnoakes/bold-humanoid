@@ -4,8 +4,6 @@
 
 namespace bold
 {
-  // TODO rename class as ThreadUtil and enum as ThreadUtil
-
   enum class ThreadId
   {
     MotionLoop = 1,
