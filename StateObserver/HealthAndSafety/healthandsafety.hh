@@ -17,11 +17,17 @@ namespace bold
     void observeTyped(std::shared_ptr<HardwareState const> const& state, SequentialTimer& timer) override;
 
   private:
+    void processVoltage(std::shared_ptr<HardwareState const> const& state);
+    void processTemperature(std::shared_ptr<HardwareState const> const& state);
+
     std::shared_ptr<Voice> d_voice;
+
     MovingAverage<float> d_voltageMovingAverage;
     SchmittTrigger<float> d_voltageTrigger;
-    int d_temperatureThreshold;
     Clock::Timestamp d_lastVoltageWarningTime;
-    Clock::Timestamp d_lastTemperatureWarningTime;
+
+    std::vector<MovingAverage<float>> d_averageTempByJoint;
+    std::array<uchar,(int)JointId::MAX+1> d_lastTempByJoint;
+    Setting<int>* d_temperatureThreshold;
   };
 }

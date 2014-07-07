@@ -402,7 +402,8 @@
       "smoothing-window-size": 200
     },
     "temperature": {
-      "high-threshold": 60
+      "high-threshold": 60,
+      "smoothing-window-size": 200
     }
   },
   "role-decider": {

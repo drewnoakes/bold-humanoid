@@ -10,20 +10,30 @@ using namespace std;
 HealthAndSafety::HealthAndSafety(std::shared_ptr<Voice> voice)
 : TypedStateObserver<HardwareState>("Health & Safety", ThreadId::MotionLoop),
   d_voice(voice),
-  d_voltageMovingAverage(Config::getStaticValue<int>("health-and-safety.voltage.smoothing-window-size")),
+  d_voltageMovingAverage((ushort)Config::getStaticValue<int>("health-and-safety.voltage.smoothing-window-size")),
   d_voltageTrigger(
     (float)Config::getStaticValue<double>("health-and-safety.voltage.low-threshold"),
     (float)Config::getStaticValue<double>("health-and-safety.voltage.high-threshold"),
     true),
-  d_temperatureThreshold(Config::getStaticValue<int>("health-and-safety.temperature.high-threshold"))
-{}
+  d_temperatureThreshold(Config::getSetting<int>("health-and-safety.temperature.high-threshold"))
+{
+  ASSERT(d_voice);
+
+  d_lastTempByJoint.fill((uchar)0);
+
+  int tempSmoothingWindowSize = Config::getStaticValue<int>("health-and-safety.temperature.smoothing-window-size");
+  for (int i = 0; i <= (int)JointId::MAX; i++)
+    d_averageTempByJoint.emplace_back(tempSmoothingWindowSize);
+}
 
 void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state, SequentialTimer& timer)
 {
-  //
-  // Track voltage level
-  //
+  processVoltage(state);
+  processTemperature(state);
+}
 
+void HealthAndSafety::processVoltage(shared_ptr<HardwareState const> const& state)
+{
   float voltage = d_voltageMovingAverage.next(state->getCM730State().voltage);
 
   switch (d_voltageTrigger.next(voltage))
@@ -55,41 +65,66 @@ void HealthAndSafety::observeTyped(shared_ptr<HardwareState const> const& state,
       break;
     }
   }
+}
 
-  //
-  // Track temperatures
-  //
+void HealthAndSafety::processTemperature(shared_ptr<HardwareState const> const& state)
+{
+  const uchar tempThreshold = (uchar)d_temperatureThreshold->getValue();
 
-  // TODO don't just announce the topmost temperature
-  // TODO announce whether temperature is increasing or decreasing
-  // TODO smooth temperatures with a moving average to stop announcements caused by spikes in data
+  stringstream msg;
 
-  if (Clock::getSecondsSince(d_lastTemperatureWarningTime) > 20)
+  for (uchar jointId = (uchar)JointId::MIN; jointId < (uchar)JointId::MAX; jointId++)
   {
-    int maxTemperature = 0;
-    uchar maxTemperatureJointId = 0;
-    for (uchar jointId = (uchar)JointId::MIN; jointId < (uchar)JointId::MAX; jointId++)
+    const uchar presentTemp = state->getMX28State(jointId).presentTemp;
+    const uchar temp = (uchar)round(d_averageTempByJoint[jointId].next(presentTemp));
+    const uchar lastTemp = d_lastTempByJoint[jointId];
+
+    // Require a movement of two degrees before making an announcement, avoiding noise on transitions between degrees
+    if (abs(temp - lastTemp) < 2)
+      continue;
+
+    d_lastTempByJoint[jointId] = temp;
+
+    if (temp > lastTemp)
     {
-      int temperature = state->getMX28State(jointId).presentTemp;
-      if (temperature > maxTemperature)
+      // Temperature is increasing
+      if (temp >= tempThreshold)
       {
-        maxTemperature = temperature;
-        maxTemperatureJointId = jointId;
+        // We are now above the threshold
+        if (lastTemp < tempThreshold)
+        {
+          // First time above the threshold
+          msg << "My " << JointName::getNiceName(jointId) << " is " << (int)temp << " degrees. ";
+          log::warning("HealthAndSafety::processTemperature") << JointName::getNiceName(jointId) << " (" << (int)jointId << ") is " << (int)temp << "°C";
+        }
+        else
+        {
+          // Was previously above threshold, and now increased
+          msg << "My " << JointName::getNiceName(jointId) << " has increased to " << (int)temp << " degrees. ";
+          log::warning("HealthAndSafety::processTemperature") << JointName::getNiceName(jointId) << " (" << (int)jointId << ") increased to " << (int)temp << "°C";
+        }
       }
     }
-
-    if (maxTemperature > d_temperatureThreshold)
+    else
     {
-      if (d_voice)
-      {
-        stringstream msg;
-        msg << "My " << JointName::getNiceName(maxTemperatureJointId)
-            << " is " << maxTemperature << " degrees";
-        d_voice->say(msg.str());
-      }
+      // Temperature is decreasing
+      ASSERT(temp < lastTemp);
 
-      log::warning("HealthAndSafety::observeTyped") << "Joint " << (int)maxTemperatureJointId << " has temperature of " << maxTemperature << "°C";
-      d_lastTemperatureWarningTime = Clock::getTimestamp();
+      if (temp >= tempThreshold)
+      {
+        // We are still above the threshold, but decreased
+        msg << "My " << JointName::getNiceName(jointId) << " has decreased to " << (int)temp << " degrees. ";
+        log::warning("HealthAndSafety::processTemperature") << JointName::getNiceName(jointId) << " (" << (int)jointId << ") decreased to " << (int)temp << "°C";
+      }
+      else if (lastTemp >= tempThreshold)
+      {
+        // Was previously above threshold, and now below
+        msg << "My " << JointName::getNiceName(jointId) << " has decreased to " << (int)temp << " degrees, below threshold. ";
+        log::info("HealthAndSafety::processTemperature") << JointName::getNiceName(jointId) << " (" << (int)jointId << ") is below threshold again at " << (int)temp << "°C";
+      }
     }
   }
+
+  if (msg.tellp() != 0)
+    d_voice->say(msg.str());
 }

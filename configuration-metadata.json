@@ -398,7 +398,8 @@
       "smoothing-window-size": { "type": "int", "readonly": true }
     },
     "temperature": {
-      "high-threshold":        { "type": "int", "readonly": true }
+      "high-threshold":        { "type": "int", "min": 30, "max": 70 },
+      "smoothing-window-size": { "type": "int", "readonly": true }
     }
   },
   "role-decider": {
