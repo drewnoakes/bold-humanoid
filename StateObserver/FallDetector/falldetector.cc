@@ -37,7 +37,7 @@ void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hard
 
     bool standingBefore = d_fallenState == FallState::STANDUP;
 
-    // TODO add some hysterisis here to avoid flickering between states (seen as multiple consecutive fall-data log entries)
+    // TODO add some hysteresis here to avoid flickering between states (seen as multiple consecutive fall-data log entries)
 
     if (abs(zAvg) > abs(xAvg) && abs(zAvg) > abs(yAvg))
     {
