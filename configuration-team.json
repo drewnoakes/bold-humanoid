@@ -331,7 +331,14 @@
     "technique": 0
   },
   "fall-detector": {
-    "window-size": 30
+    "technique": 2,
+    "accelerometer": {
+      "window-size": 30
+    },
+    "orientation": {
+      "pitch-threshold": 0.78,
+      "roll-threshold": 0.78
+    }
   },
   "options": {
     "announce-fsm-states": false,

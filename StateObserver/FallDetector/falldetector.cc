@@ -1,76 +1,54 @@
 #include "falldetector.hh"
 
-#include "../../CM730/cm730.hh"
-#include "../../CM730Snapshot/cm730snapshot.hh"
-#include "../../Config/config.hh"
 #include "../../Voice/voice.hh"
+#include "../../JointId/jointid.hh"
+#include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../Config/config.hh"
 
 #include <iomanip>
 
 using namespace bold;
 using namespace std;
 
-FallDetector::FallDetector(shared_ptr<Voice> voice)
-: TypedStateObserver<HardwareState>("Fall detector", ThreadId::MotionLoop),
-  d_voice(voice),
-  d_xAvg(Config::getStaticValue<int>("fall-detector.window-size")),
-  d_yAvg(Config::getStaticValue<int>("fall-detector.window-size")),
-  d_zAvg(Config::getStaticValue<int>("fall-detector.window-size")),
+typedef unsigned char uchar;
+
+FallDetector::FallDetector(std::shared_ptr<Voice> voice)
+: d_voice(voice),
   d_fallenState(FallState::STANDUP),
   d_startTime(Clock::getTimestamp())
 {}
 
-void FallDetector::observeTyped(std::shared_ptr<HardwareState const> const& hardwareState, SequentialTimer& timer)
+void FallDetector::setFallState(FallState fallState)
 {
-  // Track the smoothed acceleration along each axis to test for a consistent
-  // indication that we have fallen.
+  // TODO add some hysteresis here to avoid flickering between states (seen as multiple consecutive fall-data log entries)
 
-  auto const& accRaw = hardwareState->getCM730State().accRaw;
+  bool standingBefore = d_fallenState == FallState::STANDUP;
 
-  int xAvg = d_xAvg.next(accRaw.x()) - CM730::ACC_VALUE_MID;
-  int yAvg = d_yAvg.next(accRaw.y()) - CM730::ACC_VALUE_MID;
-  int zAvg = d_zAvg.next(accRaw.z()) - CM730::ACC_VALUE_MID;
+  d_fallenState = fallState;
 
-  if (d_xAvg.isMature())
+  if (standingBefore && fallState != FallState::STANDUP)
   {
-    ASSERT(d_yAvg.isMature() && d_zAvg.isMature());
+    auto const& hardwareState = State::get<HardwareState>();
 
-    bool standingBefore = d_fallenState == FallState::STANDUP;
+    ASSERT(hardwareState);
 
-    // TODO add some hysteresis here to avoid flickering between states (seen as multiple consecutive fall-data log entries)
+    // Log a bunch of data when a fall is detected
+    stringstream msg;
+    msg << setprecision(3) << Clock::getSecondsSince(d_startTime) << ","
+      << getFallStateName(fallState) << ","
+      << hardwareState->getCM730State().voltage;
 
-    if (abs(zAvg) > abs(xAvg) && abs(zAvg) > abs(yAvg))
-    {
-      // NOTE could actually be standing on our head, but this is quite unlikely :)
-      d_fallenState = FallState::STANDUP;
-    }
-    else if (abs(xAvg) > abs(yAvg))
-    {
-      d_fallenState = xAvg < 0 ? FallState::RIGHT : FallState::LEFT;
-    }
-    else
-    {
-      d_fallenState = yAvg < 0 ? FallState::FORWARD : FallState::BACKWARD;
-    }
+    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+      msg << "," << (int)hardwareState->getMX28State(jointId).presentTemp;
 
-    if (standingBefore && d_fallenState != FallState::STANDUP)
-    {
-      // Log a bunch of data when a fall is detected
-      stringstream msg;
-      msg << setprecision(3) << Clock::getSecondsSince(d_startTime) << ","
-          << getFallStateName(d_fallenState) << ","
-          << xAvg << "," << yAvg << "," << zAvg << ","
-          << hardwareState->getCM730State().voltage;
+    msg << ",";
+    logFallData(msg);
 
-      for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-        msg << "," << (int)hardwareState->getMX28State(jointId).presentTemp;
+    log::info("fall-data") << msg.str();
 
-      log::info("fall-data") << msg.str();
-
-      // Announce the fall
-      if (d_voice->queueLength() == 0)
-        d_voice->sayOneOf({"Ouch", "Dammit", "Ooopsy", "Bah", "Why me", "Not again", "That hurt"});
-    }
+    // Announce the fall
+    if (d_voice->queueLength() == 0)
+      d_voice->sayOneOf({"Ouch", "Dammit", "Ooopsy", "Bah", "Why me", "Not again", "That hurt"});
   }
 }
 

@@ -1,8 +1,10 @@
 #include "agent.ih"
 
-#include "../Kick/kick.hh"
 #include "../CM730CommsModule/MX28HealthChecker/mx28healthchecker.hh"
 #include "../Drawing/drawing.hh"
+#include "../Kick/kick.hh"
+#include "../StateObserver/FallDetector/AccelerometerFallDetector/accelerometerfalldetector.hh"
+#include "../StateObserver/FallDetector/OrientationFallDetector/orientationfalldetector.hh"
 
 Agent::Agent()
   : d_isRunning(false),
@@ -46,7 +48,6 @@ Agent::Agent()
 
   // Create StateObservers
   d_vocaliser = make_shared<Vocaliser>(d_voice);
-  d_fallDetector = make_shared<FallDetector>(d_voice);
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
   d_jamTracker = make_shared<JamDetector>(d_voice);
@@ -57,7 +58,6 @@ Agent::Agent()
 
   // Register StateObservers
   State::registerObserver(d_vocaliser);
-  State::registerObserver(d_fallDetector);
   State::registerObserver(d_gyroCalibrator);
   State::registerObserver(d_healthAndSafety);
   State::registerObserver(d_jamTracker);
@@ -65,6 +65,25 @@ Agent::Agent()
   State::registerObserver(d_odometer);
   State::registerObserver(d_teamCommunicator);
   State::registerObserver(d_orientationTracker);
+
+  // Special handling for fall detection based upon config
+  switch (Config::getStaticValue<FallDetectorTechnique>("fall-detector.technique"))
+  {
+    case FallDetectorTechnique::Accelerometer:
+    {
+      auto fallDetector = make_shared<AccelerometerFallDetector>(d_voice);
+      d_fallDetector = fallDetector;
+      State::registerObserver(fallDetector);
+      break;
+    }
+    case FallDetectorTechnique::Orientation:
+    {
+      auto fallDetector = make_shared<OrientationFallDetector>(d_voice);
+      d_fallDetector = fallDetector;
+      State::registerObserver(fallDetector);
+      break;
+    }
+  }
 
   d_cameraModel = allocate_aligned_shared<CameraModel>();
 

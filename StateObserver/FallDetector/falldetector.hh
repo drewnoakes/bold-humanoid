@@ -1,12 +1,9 @@
 #pragma once
 
 #include "../typedstateobserver.hh"
-#include "../../StateObject/HardwareState/hardwarestate.hh"
-#include "../../stats/movingaverage.hh"
 
 namespace bold
 {
-  class CM730Snapshot;
   class Voice;
 
   enum class FallState
@@ -18,22 +15,31 @@ namespace bold
     RIGHT
   };
 
+  enum class FallDetectorTechnique
+  {
+    Accelerometer = 1,
+    Orientation = 2
+  };
+
   std::string getFallStateName(FallState fallState);
 
-  class FallDetector : public TypedStateObserver<HardwareState>
+  class FallDetector
   {
   public:
-    FallDetector(std::shared_ptr<Voice> voice);
-
-    void observeTyped(std::shared_ptr<HardwareState const> const& hardwareState, SequentialTimer& timer) override;
-
     FallState getFallenState() const { return d_fallenState; }
 
+  protected:
+    FallDetector(std::shared_ptr<Voice> voice);
+
+    ~FallDetector() = default;
+
+    void setFallState(FallState fallState);
+
+    virtual void logFallData(std::stringstream& msg) const = 0;
+
   private:
+
     std::shared_ptr<Voice> d_voice;
-    MovingAverage<int> d_xAvg;
-    MovingAverage<int> d_yAvg;
-    MovingAverage<int> d_zAvg;
     FallState d_fallenState;
     Clock::Timestamp d_startTime;
   };

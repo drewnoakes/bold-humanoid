@@ -597,6 +597,8 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObserver/FallDetector/falldetector.cc
+  ./StateObserver/FallDetector/AccelerometerFallDetector/accelerometerfalldetector.cc
+  ./StateObserver/FallDetector/OrientationFallDetector/orientationfalldetector.cc
 )
 
 add_class(BOLDHUMANOID

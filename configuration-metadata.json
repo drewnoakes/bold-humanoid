@@ -327,7 +327,14 @@
     "technique": { "type": "enum", "values": { "Madgwick": 0, "Sum": 1 } }
   },
   "fall-detector": {
-    "window-size":          { "type": "int", "min": 1, "max": 1000, "readonly": true }
+    "technique":   { "type": "enum", "readonly": true, "values": { "accelerometer": 1, "orientation": 2 } },
+    "accelerometer": {
+      "window-size": { "type": "int", "min": 1, "max": 1000, "readonly": true }
+    },
+    "orientation": {
+      "pitch-threshold": { "type": "double", "min": 0.2, "max": 1.4 },
+      "roll-threshold": { "type": "double", "min": 0.2, "max": 1.4 }
+    }
   },
   "options": {
     "announce-fsm-states": { "type": "bool", "description": "Say states" },

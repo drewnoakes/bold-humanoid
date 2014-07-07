@@ -68,7 +68,7 @@ namespace bold
     std::shared_ptr<WalkModule> getWalkModule() const { return d_walkModule; }
     std::shared_ptr<MotionScriptModule> getMotionScriptModule() const { return d_motionScriptModule; }
 
-    std::shared_ptr<FallDetector> getFallDetector() const { return d_fallDetector; }
+    std::shared_ptr<FallDetector const> getFallDetector() const { return d_fallDetector; }
     std::shared_ptr<Voice> getVoice() const { return d_voice; }
 
     uchar getTeamNumber() const { return d_teamNumber; }
@@ -110,7 +110,7 @@ namespace bold
     // State observers
 
     std::shared_ptr<Vocaliser> d_vocaliser;
-    std::shared_ptr<FallDetector> d_fallDetector;
+    std::shared_ptr<FallDetector const> d_fallDetector;
     std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
     std::shared_ptr<JamDetector> d_jamTracker;
