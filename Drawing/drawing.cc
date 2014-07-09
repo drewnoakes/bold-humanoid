@@ -14,6 +14,8 @@ void Draw::initialise()
   d_drawingItems = make_unique<vector<unique_ptr<DrawingItem const>>>();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Draw::line(Frame frame, LineSegment2d const& line, Colour::bgr const& colour, double lineWidth, double alpha)
 {
   Draw::line(frame, line.p1(), line.p2(), colour, lineWidth, alpha);
@@ -42,6 +44,32 @@ void Draw::lineAtAngle(Frame frame, Vector2d const& p1, double angle, double len
 
   line(frame, p1, p2, colour, lineWidth, alpha);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Draw::circle(Frame frame, Eigen::Vector2d const& centre, double radius, Colour::bgr const& colour, double lineWidth, double alpha)
+{
+  unique_ptr<CircleDrawing> line = make_unique<CircleDrawing>();
+
+  line->type = DrawingItemType::Line;
+  line->frame = frame;
+  line->centre = centre;
+  line->radius = radius;
+  line->colour = colour;
+  line->alpha = alpha;
+  line->lineWidth = lineWidth;
+
+  d_drawingItems->push_back(std::move(line));
+}
+
+void Draw::circleAtAngle(Frame frame, double angle, double distance, double radius, Colour::bgr const& colour, double lineWidth, double alpha)
+{
+  Vector2d centre(cos(angle) * distance, sin(angle) * distance);
+
+  circle(frame, centre, radius, colour, lineWidth, alpha);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Draw::flushToStateObject()
 {

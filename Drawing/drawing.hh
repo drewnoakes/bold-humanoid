@@ -11,7 +11,8 @@ namespace bold
 {
   enum class DrawingItemType
   {
-    Line = 1
+    Line = 1,
+    Circle = 2
   };
 
   enum class Frame
@@ -36,10 +37,22 @@ namespace bold
     double alpha;
   };
 
+  struct CircleDrawing : public DrawingItem
+  {
+    Eigen::Vector2d centre;
+    double radius;
+    Colour::bgr colour;
+    double lineWidth;
+    double alpha;
+  };
+
   class Draw
   {
   public:
     static void initialise();
+
+    static void circle(Frame frame, Eigen::Vector2d const& centre, double radius, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
+    static void circleAtAngle(Frame frame, double angle, double distance, double radius, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
 
     static void line(Frame frame, Eigen::Vector2d const& p1, Eigen::Vector2d const& p2, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
     static void line(Frame frame, LineSegment2d const& line, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);

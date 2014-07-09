@@ -357,6 +357,8 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
 {
     _.each(items, item =>
     {
+        // TODO refactor out common code, maybe with another base class
+
         switch (item.type)
         {
             case state.DrawingItemType.Line:
@@ -373,6 +375,22 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
                 context.beginPath();
                 context.moveTo(line.p1[0], line.p1[1]);
                 context.lineTo(line.p2[0], line.p2[1]);
+                context.stroke();
+                break;
+            }
+            case state.DrawingItemType.Circle:
+            {
+                var circle = <state.CircleDrawing>item;
+
+                var width = circle.w || 1;
+                var rgb = circle.rgb || [0,0,0];
+                var alpha = circle.a || 0.8;
+
+                context.lineWidth = width / scale;
+                context.strokeStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
+
+                context.beginPath();
+                context.arc(circle.c[0], circle.c[1], circle.r, 0, 2*Math.PI);
                 context.stroke();
                 break;
             }

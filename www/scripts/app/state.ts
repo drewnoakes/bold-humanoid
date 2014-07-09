@@ -538,7 +538,8 @@ export enum Frame
 
 export enum DrawingItemType
 {
-    Line = 1
+    Line = 1,
+    Circle = 2
 }
 
 export interface DrawingItem
@@ -551,6 +552,15 @@ export interface LineDrawing extends DrawingItem
 {
     p1: number[];
     p2: number[];
+    rgb?: number[];
+    a?: number;
+    w?: number;
+}
+
+export interface CircleDrawing extends DrawingItem
+{
+    c: number[];
+    r: number;
     rgb?: number[];
     a?: number;
     w?: number;
