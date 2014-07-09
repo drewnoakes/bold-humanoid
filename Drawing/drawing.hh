@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Colour/colour.hh"
+#include "../geometry/LineSegment/LineSegment2/linesegment2.hh"
 
 #include <memory>
 #include <vector>
@@ -41,6 +42,7 @@ namespace bold
     static void initialise();
 
     static void line(Frame frame, Eigen::Vector2d const& p1, Eigen::Vector2d const& p2, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
+    static void line(Frame frame, LineSegment2d const& line, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
     static void lineAtAngle(Frame frame, Eigen::Vector2d const& p1, double angle, double length, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
 
     static void flushToStateObject();

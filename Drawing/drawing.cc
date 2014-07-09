@@ -14,6 +14,11 @@ void Draw::initialise()
   d_drawingItems = make_unique<vector<unique_ptr<DrawingItem const>>>();
 }
 
+void Draw::line(Frame frame, LineSegment2d const& line, Colour::bgr const& colour, double lineWidth, double alpha)
+{
+  Draw::line(frame, line.p1(), line.p2(), colour, lineWidth, alpha);
+}
+
 void Draw::line(Frame frame, Vector2d const& p1, Vector2d const& p2, Colour::bgr const& colour, double lineWidth, double alpha)
 {
   unique_ptr<LineDrawing> line = make_unique<LineDrawing>();
