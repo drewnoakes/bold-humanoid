@@ -58,8 +58,7 @@ class Agent2dModule extends Module
         this.map.addLayer(new mapping.AgentOcclusionAreaLayer(transform));
         this.map.addLayer(new mapping.AgentDrawingLayer(transform));
 
-        var fieldAspect = constants.fieldY / constants.fieldX;
-        this.map.setPixelSize(width, fieldAspect * width);
+        this.map.setPixelSize(width, 600);
     }
 
     public onResized(width: number, height: number, isFullScreen: boolean)
@@ -68,7 +67,7 @@ class Agent2dModule extends Module
         if (isFullScreen)
             height -= 80;
         else
-            height = 480;
+            height = 600;
 
         var scale = this.map.transform.getValue().getScale();
         this.map.transform.setValue(
