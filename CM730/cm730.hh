@@ -22,8 +22,11 @@ namespace bold
     constexpr uchar RegWrite = 4;
     constexpr uchar Action = 5;
     constexpr uchar Reset = 6;
-    constexpr uchar SyncWrite = 131; // 0x83
-    constexpr uchar BulkRead = 146; // 0x92
+    constexpr uchar DigitalReset = 7; // taken from Dynamixel Wizard - unsure of function
+    constexpr uchar SystemRead = 12;  // taken from Dynamixel Wizard - unsure of function
+    constexpr uchar SystemWrite = 13; // taken from Dynamixel Wizard - unsure of function (firmware update?)
+    constexpr uchar SyncWrite = 131;  // 0x83
+    constexpr uchar BulkRead = 146;   // 0x92
   }
 
   class BulkReadTable
