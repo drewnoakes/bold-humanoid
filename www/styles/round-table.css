@@ -1450,6 +1450,7 @@ div.module.trajectory div.hover-value
 div.module.agent-2d .hover-info
 {
   float: right;
+  text-align: right;
 }
 
 div.module.agent-2d div.localiser-controls

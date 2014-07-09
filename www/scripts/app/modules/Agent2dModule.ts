@@ -36,7 +36,7 @@ class Agent2dModule extends Module
         var hoverInfo = document.createElement('div');
         hoverInfo.className = 'hover-info';
 
-        this.map.hoverPoint.track(p => { hoverInfo.textContent = p ? p.x.toFixed(2) + ', ' + p.y.toFixed(2) : ''; });
+        this.map.hoverPoint.track(p => { hoverInfo.innerHTML = p ? p.x.toFixed(2) + ', ' + p.y.toFixed(2) + '<br>' + Math.sqrt(p.x*p.x + p.y*p.y).toFixed(2) : ''; });
 
         var localiserControlContainer = document.createElement('div');
         localiserControlContainer.className = 'localiser-controls';
