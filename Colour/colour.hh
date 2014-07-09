@@ -11,8 +11,7 @@ namespace bold
   {
     struct bgr
     {
-      bgr()
-      {}
+      bgr() = default;
 
       bgr(uchar b, uchar g, uchar r)
         : b(b), g(g), r(r)

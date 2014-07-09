@@ -34,7 +34,7 @@ namespace bold
     /// Raw raw value of the accelerometer, in range [0,1023] corresponding to [-4,4] g.
     Eigen::Vector3i accRaw;
 
-    CM730Snapshot() {}
+    CM730Snapshot() = default;
 
     CM730Snapshot(BulkReadTable const& data);
 
@@ -69,7 +69,7 @@ namespace bold
 
     // skip dynamic addresses in the table -- they are captured in CM730Snapshot
 
-    StaticCM730State() {};
+    StaticCM730State() = default;
 
     StaticCM730State(BulkReadTable const& data);
   };

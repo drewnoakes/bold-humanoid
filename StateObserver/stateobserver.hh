@@ -21,7 +21,7 @@ namespace bold
   public:
     StateObserver(std::string observerName, ThreadId callbackThread);
 
-    virtual ~StateObserver() {}
+    virtual ~StateObserver() = default;
 
     virtual void observe(SequentialTimer& timer) = 0;
 
