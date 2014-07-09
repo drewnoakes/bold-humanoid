@@ -357,7 +357,12 @@
       "brake-distance": 0.6,
       "stop-distance": 0.15,
       "lower-turn-limit-degs": 1.0,
-      "upper-turn-limit-degs": 35.0
+      "upper-turn-limit-degs": 35.0,
+      "avoid-obstacles": {
+        "enabled": true,
+        "lane-width": 0.4,
+        "avoid-speed": 20.0
+      }
     },
     "await-their-kick-off": {
       "ball-pos-window-size": 30,

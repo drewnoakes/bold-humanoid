@@ -1,6 +1,7 @@
 #include "approachball.hh"
 
 #include "../../BehaviourControl/behaviourcontrol.hh"
+#include "../../Drawing/drawing.hh"
 #include "../../Math/math.hh"
 #include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../../State/state.hh"
@@ -56,9 +57,9 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   writer.String("distSpeed").Double(speedScaleDueToDistance);
 
   Vector2d target(ballPos + Vector2d(0.04, 0));
-  double ballAngleRads = Math::angleToPoint(target);
+  double targetAngleRads = Math::angleToPoint(target);
 
-  double speedScaleDueToAngle = Math::lerp(fabs(ballAngleRads),
+  double speedScaleDueToAngle = Math::lerp(fabs(targetAngleRads),
                                            Math::degToRad(d_lowerTurnLimitDegs->getValue()),
                                            Math::degToRad(d_upperTurnLimitDegs->getValue()),
                                            1.0,
@@ -71,13 +72,48 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
                              d_maxForwardSpeed->getValue());
 
   // unspecified units
-  double turnSpeed = ballAngleRads * d_turnScale->getValue();
+  double turnSpeed = targetAngleRads * d_turnScale->getValue();
 
-  d_walkModule->setMoveDir(xSpeed, 0);
+  double ySpeed = 0;
+
+  // try to avoid any obstacles
+  static auto avoidObstacles = Config::getSetting<bool>("options.approach-ball.avoid-obstacles.enabled");
+  static auto laneWidth = Config::getSetting<double>("options.approach-ball.avoid-obstacles.lane-width");
+  static auto avoidSpeed = Config::getSetting<double>("options.approach-ball.avoid-obstacles.avoid-speed");
+  if (avoidObstacles->getValue())
+  {
+    if (fabs(targetAngleRads) < Math::degToRad(15))
+    {
+      // Try to keep a 'lane' free in front of the bot
+      Vector2d left(ballPos + Vector2d(-laneWidth->getValue(), 0));
+      Vector2d right(ballPos + Vector2d(laneWidth->getValue(), 0));
+
+      Draw::line(Frame::Agent, Vector2d::Zero(), left, Colour::bgr::blue, 1, 0.4);
+      Draw::line(Frame::Agent, Vector2d::Zero(), right, Colour::bgr::blue, 1, 0.4);
+
+      auto leftDist = agentFrame->getOcclusionDistance(Math::angleToPoint(left));
+      auto rightDist = agentFrame->getOcclusionDistance(Math::angleToPoint(right));
+
+      if (!std::isnan(leftDist))
+      {
+        ySpeed += Math::clamp(1 - (leftDist/ballDist), 0.0, 1.0) * avoidSpeed->getValue();
+        Draw::circleAtAngle(Frame::Agent, Math::angleToPoint(left), leftDist, 0.3, Colour::bgr::black, 1, 0.4);
+      }
+      if (!std::isnan(rightDist))
+      {
+        ySpeed -= Math::clamp(1 - (rightDist/ballDist), 0.0, 1.0) * avoidSpeed->getValue();
+        Draw::circleAtAngle(Frame::Agent, Math::angleToPoint(right), rightDist, 0.3, Colour::bgr::black, 1, 0.4);
+      }
+
+      cout << "leftDist=" << leftDist << "\trightDist=" << rightDist << "\tballDist=" << ballDist << "\tySpeed=" << ySpeed << endl;
+//      cout << "leftDist=" << leftDist << "\tballDist=" << ballDist << "\tySpeed=" << ySpeed << endl;
+    }
+  }
+
+  d_walkModule->setMoveDir(xSpeed, ySpeed);
   d_walkModule->setTurnAngle(turnSpeed);
 
-  writer.String("moveDir").StartArray().Double(xSpeed).Double(0).EndArray(2);
-
+  writer.String("moveDir").StartArray().Double(xSpeed).Double(ySpeed).EndArray(2);
   writer.String("turn").Double(turnSpeed);
 
   return {};

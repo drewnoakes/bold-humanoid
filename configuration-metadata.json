@@ -353,7 +353,12 @@
       "brake-distance":    { "type": "double" },
       "stop-distance":     { "type": "double" },
       "lower-turn-limit-degs": { "type": "double" },
-      "upper-turn-limit-degs": { "type": "double" }
+      "upper-turn-limit-degs": { "type": "double" },
+      "avoid-obstacles": {
+        "enabled": { "type": "bool" },
+        "lane-width": { "type": "double", "min": 0.0, "max": 1.0 },
+        "avoid-speed": { "type": "double", "min": 0.0, "max": 60.0 }
+      }
     },
     "await-their-kick-off": {
       "ball-pos-window-size": { "type": "int", "min": 1, "max": 100, "readonly": true },
