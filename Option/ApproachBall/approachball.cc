@@ -30,31 +30,28 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("ballPos").StartArray().Double(ballPos.x()).Double(ballPos.y()).EndArray(2);
 
-  double dist = ballPos.norm();
+  double ballDist = ballPos.norm();
 
   // If we're close to the ball, tell team mates that we're attacking
   d_behaviourControl->setPlayerActivity(
-    dist < 0.5
+    ballDist < 0.5
       ? PlayerActivity::AttackingGoal
       : PlayerActivity::ApproachingBall);
 
+  static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
+
   // Subtract the stopping distance here so that the bot doesn't stop too suddenly
-  if (d_useCustomStopDistance)
-  {
-    dist -= d_stopDistance;
-  }
-  else
-  {
-    static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
-    dist -= stoppingDistance->getValue();
-  }
+  double walkDist = d_useCustomStopDistance
+    ? ballDist - d_stopDistance
+    : ballDist - stoppingDistance->getValue();
 
-  if (dist < 0)
-    dist = 0;
+  if (walkDist < 0)
+    walkDist = 0;
 
-  writer.String("ballDist").Double(dist);
+  writer.String("ballDist").Double(ballDist);
+  writer.String("walkDist").Double(walkDist);
 
-  double speedScaleDueToDistance = Math::clamp(dist/d_brakeDistance->getValue(), 0.0, 1.0);
+  double speedScaleDueToDistance = Math::clamp(walkDist/d_brakeDistance->getValue(), 0.0, 1.0);
 
   writer.String("distSpeed").Double(speedScaleDueToDistance);
 
