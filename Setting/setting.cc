@@ -41,3 +41,8 @@ void SettingBase::writeFullJson(Writer<StringBuffer>& writer) const
   }
   writer.EndObject();
 }
+
+void SettingBase::triggerChanged() const
+{
+  changedBase(this);
+}

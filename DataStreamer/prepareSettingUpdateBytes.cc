@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-shared_ptr<vector<uchar>> DataStreamer::prepareSettingUpdateBytes(SettingBase* setting)
+shared_ptr<vector<uchar>> DataStreamer::prepareSettingUpdateBytes(SettingBase const* setting)
 {
   StringBuffer buffer;
   Writer<StringBuffer> writer(buffer);

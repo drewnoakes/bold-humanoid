@@ -78,7 +78,7 @@ namespace bold
     void setOptionTree(std::shared_ptr<OptionTree> optionTree) { d_optionTree = optionTree; }
 
   private:
-    static std::shared_ptr<std::vector<uchar>> prepareSettingUpdateBytes(SettingBase* setting);
+    static std::shared_ptr<std::vector<uchar>> prepareSettingUpdateBytes(SettingBase const* setting);
 
     void run();
 

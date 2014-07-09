@@ -126,7 +126,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 
     // Listen for Setting<T> changes and publish them via websockets
     Config::updated.connect(
-      [this](SettingBase* setting)
+      [this](SettingBase const* setting)
       {
         // These should only be changed by websocket users
         ASSERT(ThreadUtil::isDataStreamerThread());

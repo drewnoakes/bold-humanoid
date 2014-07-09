@@ -21,7 +21,7 @@ map<string,Action*> Config::d_actionById;
 vector<unique_ptr<Document const>> Config::d_configDocuments;
 vector<string> Config::d_configFileNames;
 bool Config::d_isInitialising = true;
-sigc::signal<void, SettingBase*> Config::updated;
+sigc::signal<void, SettingBase const*> Config::updated;
 
 unique_ptr<Document const> loadJsonDocument(std::string path)
 {
@@ -309,7 +309,7 @@ void Config::addSetting(SettingBase* setting)
   }
 
   // Propagate change events globally
-  setting->changedBase.connect([](SettingBase* s){ Config::updated.emit(s); });
+  setting->changedBase.connect([](SettingBase const* s) { Config::updated.emit(s); });
 }
 
 void Config::addAction(string const& id, string const& label,

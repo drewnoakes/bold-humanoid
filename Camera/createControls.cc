@@ -8,7 +8,8 @@ using namespace std;
 
 void Camera::createControls()
 {
-  d_controls.clear();
+  // Because of the way that settings are built up, we cannot run this function more than once
+  ASSERT(d_controls.size() == 0);
 
   //
   // Query the device for all camera controls
@@ -211,11 +212,14 @@ void Camera::createControls()
     settings.erase(match);
 
     Config::addSetting(setting);
+
+    setting->triggerChanged();
   }
 
   for (SettingBase* leftOver : settings)
   {
     log::warning("Camera::createControls") << "Configuration document doesn't specify a value for camera setting: " << leftOver->getPath();
     Config::addSetting(leftOver);
+    leftOver->triggerChanged();
   }
 }

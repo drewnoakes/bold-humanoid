@@ -19,7 +19,7 @@ namespace bold
   class SettingBase
   {
   public:
-    sigc::signal<void, SettingBase*> changedBase;
+    sigc::signal<void, SettingBase const*> changedBase;
 
     std::string getPath() const { return d_path; }
     std::string getName() const { return d_name; }
@@ -29,6 +29,8 @@ namespace bold
     std::string getDescription() const { return d_description; }
 
     void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
+
+    virtual void triggerChanged() const;
 
     virtual bool isModified() const = 0;
     virtual void resetToInitialValue() = 0;
@@ -120,16 +122,22 @@ namespace bold
       }
 
       d_value = value;
-      changed(value);
-      changedBase(this);
+
+      triggerChanged();
+
       return true;
     }
 
     /// Fires when the setting's value is changed.
     sigc::signal<void, T const&> changed;
 
-    /// Invokes the callback immediately with the current value, and notifies
-    /// of any subsequent changes.
+    virtual void triggerChanged() const override
+    {
+      changed(d_value);
+      SettingBase::triggerChanged();
+    }
+
+    /// Invokes the provided callback immediately with the current value, and notifies of any subsequent changes.
     void track(std::function<void(T)> callback)
     {
       changed.connect(callback);

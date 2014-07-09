@@ -48,7 +48,7 @@ namespace bold
   class Config
   {
   public:
-    static sigc::signal<void, SettingBase*> updated;
+    static sigc::signal<void, SettingBase const*> updated;
 
     static SettingBase* getSettingBase(std::string path);
 
