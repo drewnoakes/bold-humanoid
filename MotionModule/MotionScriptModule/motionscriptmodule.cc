@@ -29,7 +29,7 @@ void MotionScriptModule::createActions(string const& path, shared_ptr<MotionScri
   {
     stringstream id;
     id << "motion-script." << script->getName();
-    Config::addAction(id.str(), script->getName(), [module,script]() { module->run(script); });
+    Config::addAction(id.str(), script->getName(), [module,script] { module->run(script); });
   }
 
   Config::addAction("motion-module.play-script-content", "Play Script", [module](Value* value)

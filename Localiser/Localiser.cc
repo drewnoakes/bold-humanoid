@@ -50,16 +50,16 @@ Localiser::Localiser()
   {
     auto filter = allocate_aligned_shared<ParticleFilterUsed>();
 
-    filter->setStateGenerator([this]() { return this->generateState();});
+    filter->setStateGenerator([this] { return this->generateState();});
 
     Config::getSetting<double>("localiser.randomise-ratio")->changed.connect(
       [filter](double value) {
         filter->setRandomizeRatio(value);
       });
 
-    Config::addAction("localiser.randomize", "Randomize", [filter](){ filter->randomise(); });
+    Config::addAction("localiser.randomize", "Randomize", [filter] { filter->randomise(); });
 
-    Config::addAction("localiser.flip", "Flip", [this,filter]()
+    Config::addAction("localiser.flip", "Flip", [this,filter]
                       {
                         // Reset the state of the smoother so we flip instantly and don't glide
                         // have our position animated slowly across the field.

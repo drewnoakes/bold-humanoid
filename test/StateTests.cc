@@ -18,7 +18,7 @@ TEST (StateTests, threadedAccess)
 {
   int loopCount = 50000;
 
-  thread producer([&]()
+  thread producer([&]
   {
     for (int i = 0; i < loopCount; i++)
     {
@@ -31,7 +31,7 @@ TEST (StateTests, threadedAccess)
 
   bool seenState = false;
 
-  thread consumer([&]()
+  thread consumer([&]
   {
     for (int i = 0; i < loopCount; i++)
     {

@@ -8,13 +8,13 @@ namespace bold
 {
   auto negate = [](std::function<bool()> condition)
   {
-    return [condition]() { return !condition(); };
+    return [condition] { return !condition(); };
   };
 
   auto isRepeated = [](int times, std::function<bool()> condition)
   {
     auto count = std::make_shared<int>(0);
-    return [count,times,condition]()
+    return [count,times,condition]
     {
       if (condition())
       {
@@ -29,7 +29,7 @@ namespace bold
   auto trueNTimes = [](int times)
   {
     auto count = std::make_shared<int>(0);
-    return [count,times]()
+    return [count,times]
     {
       (*count)++;
       return *count <= times;
@@ -41,7 +41,7 @@ namespace bold
     auto turnedTrueAt = std::make_shared<double>(0);
     auto lastTrue = std::make_shared<bool>(false);
 
-    return [turnedTrueAt,lastTrue,millis,condition]()
+    return [turnedTrueAt,lastTrue,millis,condition]
     {
       if (condition())
       {
@@ -71,7 +71,7 @@ namespace bold
   {
     auto count = std::make_shared<int>(0);
 
-    return [count,condition,threshold]()
+    return [count,condition,threshold]
     {
       if (condition())
       {
@@ -97,7 +97,7 @@ namespace bold
     auto currentFun = std::make_shared<std::function<bool()>>();
     auto hasFun = std::make_shared<bool>(false);
 
-    return [currentFun,factory,hasFun]()
+    return [currentFun,factory,hasFun]
     {
       if (!(*hasFun))
       {
@@ -120,7 +120,7 @@ namespace bold
   {
     auto lastValue = std::make_shared<bool>(!trueWhen);
 
-    return [lastValue,trueWhen,condition]()
+    return [lastValue,trueWhen,condition]
     {
       bool val = condition();
 

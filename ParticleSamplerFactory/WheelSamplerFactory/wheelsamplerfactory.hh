@@ -30,7 +30,7 @@ namespace bold
           return p1.second < p2.second;
         })->second;
 
-      return [&]() {
+      return [&] {
         d_beta += d_rnd() * 2 * d_maxWeight;
         double weight = (*particles)[d_index].second;
         while (d_beta > weight) {

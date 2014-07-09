@@ -10,7 +10,7 @@ using namespace std;
 BehaviourControl::BehaviourControl(Agent& agent)
 : d_agent(agent)
 {
-  agent.onThinkEnd.connect([this]() { updateStateObject(); });
+  agent.onThinkEnd.connect([this] { updateStateObject(); });
 }
 
 void BehaviourControl::updateStateObject() const

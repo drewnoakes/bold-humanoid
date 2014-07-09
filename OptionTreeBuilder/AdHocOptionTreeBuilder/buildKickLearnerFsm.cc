@@ -39,10 +39,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
 
   waitForBallState
     ->transitionTo(selectKickState, "ball-start-observed")
-    ->when([observationCount]()
+    ->when([observationCount]
     {
       auto avg = make_shared<MovingAverage<Vector3d>>(observationCount);
-      return [avg]()
+      return [avg]
       {
         auto agentFrame = State::get<AgentFrameState>();
         if (!agentFrame || !agentFrame->isBallVisible())
@@ -78,7 +78,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
   kickCrossLeftState->transitionTo(lookUpForBallState)->whenTerminated();
   kickCrossRightState->transitionTo(lookUpForBallState)->whenTerminated();
 
-  lookUpForBallState->onEnter.connect([agent]()
+  lookUpForBallState->onEnter.connect([agent]
   {
     if (kickUsed=="left")
       agent->getHeadModule()->moveToDegs(5, 20);
@@ -96,10 +96,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
 
   watchBallRollState
     ->transitionTo(recordOutcomeState, "ball-end-observed")
-    ->when([observationCount]()
+    ->when([observationCount]
     {
       auto avg = make_shared<MovingAverage<Vector3d>>(observationCount);
-      return [avg]()
+      return [avg]
       {
         auto agentFrame = State::get<AgentFrameState>();
         if (!agentFrame || !agentFrame->isBallVisible())

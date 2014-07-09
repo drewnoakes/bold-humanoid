@@ -14,7 +14,7 @@ TEST (ThreadIdTests, threadIdAssignment)
 {
   auto makeLoop = [](ThreadId threadId)
   {
-    return [threadId]()
+    return [threadId]
     {
       ThreadUtil::setThreadId(threadId);
 

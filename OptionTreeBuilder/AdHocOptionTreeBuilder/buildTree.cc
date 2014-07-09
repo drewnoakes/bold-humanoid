@@ -11,13 +11,13 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto const& headModule         = agent->getHeadModule();
   auto const& fallDetector       = agent->getFallDetector();
 
-  auto isPenalised = [teamNumber,uniformNumber]()
+  auto isPenalised = [teamNumber,uniformNumber]
   {
     auto gameState = State::get<GameState>();
     return gameState && gameState->getTeam(teamNumber).getPlayer(uniformNumber).hasPenalty();
   };
 
-  auto isNotPenalised = [teamNumber,uniformNumber]()
+  auto isNotPenalised = [teamNumber,uniformNumber]
   {
     auto gameState = State::get<GameState>();
     return gameState && !gameState->getTeam(teamNumber).getPlayer(uniformNumber).hasPenalty();
@@ -25,17 +25,17 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   auto nonPenalisedPlayMode = [isNotPenalised](PlayMode playMode)
   {
-    return [isNotPenalised,playMode]()
+    return [isNotPenalised,playMode]
     {
       auto gameState = State::get<GameState>();
       return gameState && isNotPenalised() && gameState->getPlayMode() == playMode;
     };
   };
 
-  auto isWalking = [walkModule]() { return walkModule->isRunning(); };
-  auto hasFallen = [fallDetector]() { return fallDetector->getFallenState() != FallState::STANDUP; };
+  auto isWalking = [walkModule] { return walkModule->isRunning(); };
+  auto hasFallen = [fallDetector] { return fallDetector->getFallenState() != FallState::STANDUP; };
 
-  auto isAgentShutdownRequested = changedTo(true, [agent]() { return agent->isStopRequested(); });
+  auto isAgentShutdownRequested = changedTo(true, [agent] { return agent->isStopRequested(); });
 
   // BUILD TREE
 
@@ -49,9 +49,9 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto getUp = make_shared<GetUpOption>("getUp", agent);
   auto stopWalking = make_shared<StopWalking>("stopWalking", walkModule);
   auto stopWalkingImmediately = make_shared<StopWalking>("stopWalking", walkModule, /*immediately*/ true);
-  auto stopAgent = make_shared<ActionOption>("stopAgent", [agent]() { agent->stop(); });
+  auto stopAgent = make_shared<ActionOption>("stopAgent", [agent] { agent->stop(); });
 
-  auto performRole = make_shared<DispatchOption<PlayerRole>>("performRole", [agent](){ return agent->getBehaviourControl()->getPlayerRole(); });
+  auto performRole = make_shared<DispatchOption<PlayerRole>>("performRole", [agent] { return agent->getBehaviourControl()->getPlayerRole(); });
   performRole->setOption(PlayerRole::Keeper, buildKeeperFsm(agent, tree));
   // NOTE for now we re-use the same striker behaviour for the regular striker as the penalty striker
   auto strikerFsm = buildStrikerFsm(agent, tree);
@@ -103,11 +103,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   setPlayerStatusInStates(agent, PlayerStatus::Paused, { pauseState });
 
   auto const& debugger = agent->getDebugger();
-  readyState->onEnter.connect([debugger,headModule]() { debugger->showReady(); headModule->moveToHome(); });
-  setState->onEnter.connect([debugger,headModule]() { debugger->showSet(); headModule->moveToHome(); });
-  playingState->onEnter.connect([debugger]() { debugger->showPlaying(); });
-  penalisedState->onEnter.connect([debugger,headModule]() { debugger->showPenalised(); headModule->moveToHome(); });
-  pauseState->onEnter.connect([debugger,headModule]() { debugger->showPaused(); headModule->moveToHome(); });
+  readyState->onEnter.connect([debugger,headModule] { debugger->showReady(); headModule->moveToHome(); });
+  setState->onEnter.connect([debugger,headModule] { debugger->showSet(); headModule->moveToHome(); });
+  playingState->onEnter.connect([debugger] { debugger->showPlaying(); });
+  penalisedState->onEnter.connect([debugger,headModule] { debugger->showPenalised(); headModule->moveToHome(); });
+  pauseState->onEnter.connect([debugger,headModule] { debugger->showPaused(); headModule->moveToHome(); });
 
   //
   // START UP

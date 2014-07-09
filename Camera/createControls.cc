@@ -135,7 +135,7 @@ void Camera::createControls()
                    [setting](int correction) { setting->setValue(correction != 0); });
         });
         settings.push_back(setting);
-        refreshAllActions.emplace_back([setting,control,getValue]() { setting->setValue(getValue(control->id) != 0); });
+        refreshAllActions.emplace_back([setting,control,getValue] { setting->setValue(getValue(control->id) != 0); });
         break;
       }
       case V4L2ControlType::CT_INT:
@@ -150,7 +150,7 @@ void Camera::createControls()
                    [setting](int correction) { setting->setValue(correction); });
         });
         settings.push_back(setting);
-        refreshAllActions.emplace_back([setting,control,getValue]() { setting->setValue(getValue(control->id)); });
+        refreshAllActions.emplace_back([setting,control,getValue] { setting->setValue(getValue(control->id)); });
         break;
       }
       case V4L2ControlType::CT_MENU:
@@ -165,7 +165,7 @@ void Camera::createControls()
                    [setting](int correction) { setting->setValue(correction); });
         });
         settings.push_back(setting);
-        refreshAllActions.emplace_back([setting,control,getValue]() { setting->setValue(getValue(control->id)); });
+        refreshAllActions.emplace_back([setting,control,getValue] { setting->setValue(getValue(control->id)); });
         break;
       }
       default:
@@ -175,7 +175,7 @@ void Camera::createControls()
     }
   }
 
-  Config::addAction("camera.refresh-all-control-values", "Refresh all", [refreshAllActions]()
+  Config::addAction("camera.refresh-all-control-values", "Refresh all", [refreshAllActions]
   {
     for (auto& fun : refreshAllActions)
       fun();

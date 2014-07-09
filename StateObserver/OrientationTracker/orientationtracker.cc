@@ -27,7 +27,7 @@ OrientationTracker::OrientationTracker()
   d_technique(Config::getSetting<OrientationTechnique>("orientation-tracker.technique"))
 {
   reset();
-  Config::addAction("orientation-tracker.zero", "Zero", [this]() { reset(); });
+  Config::addAction("orientation-tracker.zero", "Zero", [this] { reset(); });
 }
 
 void OrientationTracker::reset()

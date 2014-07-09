@@ -20,7 +20,7 @@ TEST (SignalTests, singleConnected)
 
   bool wasCalled = false;
 
-  sig.connect([&]() { wasCalled = true; });
+  sig.connect([&] { wasCalled = true; });
 
   EXPECT_FALSE ( wasCalled );
 
@@ -35,8 +35,8 @@ TEST (SignalTests, multipleConnected)
 
   int count = 0;
 
-  sig.connect([&]() { count++; });
-  sig.connect([&]() { count++; });
+  sig.connect([&] { count++; });
+  sig.connect([&] { count++; });
 
   sig();
 
@@ -49,7 +49,7 @@ TEST (SignalTests, connections)
 
   int count = 0;
 
-  sigc::connection conn = sig.connect([&]() { count++; });
+  sigc::connection conn = sig.connect([&] { count++; });
 
   sig();
 

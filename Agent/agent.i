@@ -67,7 +67,7 @@ namespace bold
     void onThinkEndConnect(PyObject* pyFunc)
     {
       $self->onThinkEnd.connect(
-        [pyFunc]() {
+        [pyFunc] {
           PyEval_CallObject(pyFunc, Py_BuildValue("()"));
         });
     }

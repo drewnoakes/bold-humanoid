@@ -62,7 +62,7 @@ Voice::Voice()
   {
     stringstream id;
     id << "voice.speak.saying-" << sayingIndex++;
-    Config::addAction(id.str(), saying, [this,saying](){ say(saying); });
+    Config::addAction(id.str(), saying, [this,saying] { say(saying); });
   }
 }
 

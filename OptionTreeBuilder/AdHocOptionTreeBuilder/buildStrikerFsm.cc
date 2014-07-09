@@ -168,7 +168,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   approachBallState
     ->transitionTo(kickForwardsState, "first-kick")
-    ->when([]() { return ballIsStoppingDistance() && isWithinTenSecondsOfOurKickOff(); });
+    ->when([] { return ballIsStoppingDistance() && isWithinTenSecondsOfOurKickOff(); });
 
   // Let another player shine if they're closer and attempting to score
   approachBallState
@@ -198,7 +198,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   atBallState
     ->transitionTo(kickState, "can-kick")
-    ->when([kickMotion]()
+    ->when([kickMotion]
     {
       auto map = State::get<StationaryMapState>();
       if (map && map->canKick())
@@ -215,7 +215,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   atBallState
     ->transitionTo(turnAroundBallState)
-    ->when([circleBall,kickMotion]()
+    ->when([circleBall,kickMotion]
     {
       auto map = State::get<StationaryMapState>();
       if (!map)
@@ -269,7 +269,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   kickForwardsState
     ->transitionTo(leftKickState, "ball-left")
-    ->when([lookAtFeet,kickForwardsState]()
+    ->when([lookAtFeet,kickForwardsState]
     {
       // Look at feet for one second
       if (kickForwardsState->secondsSinceStart() < 1)
@@ -293,7 +293,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   kickForwardsState
     ->transitionTo(rightKickState, "ball-right")
-    ->when([lookAtFeet,kickForwardsState]()
+    ->when([lookAtFeet,kickForwardsState]
     {
       // Look at feet for one second
       if (kickForwardsState->secondsSinceStart() < 1)
@@ -317,7 +317,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
 
   kickForwardsState
     ->transitionTo(locateBallState, "ball-gone")
-    ->when([kickForwardsState]()
+    ->when([kickForwardsState]
     {
       // TODO create and use 'all' operator
       if (kickForwardsState->secondsSinceStart() < 1)

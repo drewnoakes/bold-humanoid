@@ -12,7 +12,7 @@ using namespace std;
 TEST(ConditionalsTests, negateFunction)
 {
   bool state = true;
-  auto flop = [&state]()
+  auto flop = [&state]
   {
     state = !state;
     return state;
@@ -62,7 +62,7 @@ TEST(ConditionalsTests, isRepeatedFunction)
 TEST(ConditionalsTests, trueForMillis)
 {
   bool value = true;
-  auto fun = trueForMillis(10, [&value](){ return value; });
+  auto fun = trueForMillis(10, [&value] { return value; });
 
   EXPECT_FALSE(fun());
   EXPECT_FALSE(fun());
@@ -88,7 +88,7 @@ TEST(ConditionalsTests, trueForMillis)
 TEST(ConditionalsTests, stepUpDownThreshold)
 {
   bool value = true;
-  auto fun = stepUpDownThreshold(3, [&value](){ return value; });
+  auto fun = stepUpDownThreshold(3, [&value] { return value; });
 
   EXPECT_FALSE(fun()); // 1
   EXPECT_FALSE(fun()); // 2
@@ -112,10 +112,10 @@ TEST(ConditionalsTests, oneShot)
   int createCount = 0;
   bool value = false;
 
-  auto fun = oneShot([&createCount,&value]()
+  auto fun = oneShot([&createCount,&value]
   {
     createCount++;
-    return [&value]() { return value; };
+    return [&value] { return value; };
   });
 
   EXPECT_EQ(0, createCount) << "Nested function not called until needed";
@@ -143,7 +143,7 @@ TEST(ConditionalsTests, oneShot)
 TEST(ConditionalsTests, changedTo)
 {
   bool value = false;
-  auto fun1 = changedTo(true, [&value](){ return value; });
+  auto fun1 = changedTo(true, [&value] { return value; });
 
   EXPECT_FALSE(fun1());
   EXPECT_FALSE(fun1());
@@ -163,7 +163,7 @@ TEST(ConditionalsTests, changedTo)
   EXPECT_TRUE(fun1());
   EXPECT_FALSE(fun1());
 
-  auto fun2 = changedTo(false, [&value](){ return value; });
+  auto fun2 = changedTo(false, [&value] { return value; });
 
   EXPECT_FALSE(fun2());
 
@@ -173,7 +173,7 @@ TEST(ConditionalsTests, changedTo)
   EXPECT_FALSE(fun2());
 
   value = true;
-  auto fun3 = changedTo(true, [&value](){ return value; });
+  auto fun3 = changedTo(true, [&value] { return value; });
   EXPECT_TRUE(fun3()) << "True if starting value matches target";
   EXPECT_FALSE(fun3());
 }

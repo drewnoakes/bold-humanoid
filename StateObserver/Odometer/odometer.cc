@@ -20,7 +20,7 @@ Odometer::Odometer(shared_ptr<WalkModule> walkModule)
   ASSERT(walkModule);
   State::make<OdometryState>(d_transform);
 
-  Config::addAction("odometer.reset", "Reset odometer", [this]()
+  Config::addAction("odometer.reset", "Reset odometer", [this]
   {
     lock_guard<mutex> lock(d_transformMutex);
     d_transform = Affine3d::Identity();

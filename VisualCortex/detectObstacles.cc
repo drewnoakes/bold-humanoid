@@ -7,7 +7,7 @@ vector<Obstacle> VisualCortex::detectObstacles(Maybe<Vector2d> const& ballPositi
   vector<Obstacle> obstacles;
   vector<pair<Vector2d,Vector2d>> points;
 
-  auto makeObstacle = [&]()
+  auto makeObstacle = [&]
   {
     if (!points.empty())
     {

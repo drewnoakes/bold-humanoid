@@ -15,13 +15,13 @@ namespace bold
   auto setPlayerActivityInStates = [](Agent* agent, PlayerActivity activity, std::vector<std::shared_ptr<FSMState>> states)
   {
     for (std::shared_ptr<FSMState>& state : states)
-      state->onEnter.connect([agent,activity]() { agent->getBehaviourControl()->setPlayerActivity(activity); });
+      state->onEnter.connect([agent,activity] { agent->getBehaviourControl()->setPlayerActivity(activity); });
   };
 
   auto setPlayerStatusInStates = [](Agent* agent, PlayerStatus status, std::vector<std::shared_ptr<FSMState>> states)
   {
     for (std::shared_ptr<FSMState>& state : states)
-      state->onEnter.connect([agent,status]() { agent->getBehaviourControl()->setPlayerStatus(status); });
+      state->onEnter.connect([agent,status] { agent->getBehaviourControl()->setPlayerStatus(status); });
   };
 
   //
@@ -51,7 +51,7 @@ namespace bold
 
   auto isPlayMode = [](robocup::PlayMode playMode, bool defaultValue)
   {
-    return [playMode,defaultValue]()
+    return [playMode,defaultValue]
     {
       auto gameState = State::get<GameState>();
       if (!gameState)

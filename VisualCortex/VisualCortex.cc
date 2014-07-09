@@ -59,14 +59,14 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
 
   vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel, d_cyanLabel, d_magentaLabel };
-  auto blobPixelLabels = 
-    d_playerDetectionEnabled->getValue() ? 
+  auto blobPixelLabels =
+    d_playerDetectionEnabled->getValue() ?
     vector<shared_ptr<PixelLabel>>({ d_ballLabel, d_goalLabel, d_cyanLabel, d_magentaLabel }) :
     vector<shared_ptr<PixelLabel>>({ d_ballLabel, d_goalLabel });
 
   d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
-  auto createLookupTable = [this,pixelLabels]()
+  auto createLookupTable = [this,pixelLabels]
   {
     log::info("VisualCortex::VisualCortex") << "Creating pixel label LUT";
     for (shared_ptr<PixelLabel> label : pixelLabels)
@@ -209,7 +209,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   });
 
   // Only include the cartoon pass when needed
-  auto setCartoonHandler = [this]()
+  auto setCartoonHandler = [this]
   {
     bool enable = d_imageType->getValue() == ImageType::Cartoon
                && d_dataStreamer->hasCameraClients();
@@ -222,6 +222,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_lineFinder = make_shared<ScanningLineFinder>(d_cameraModel);
 
   // Image capture
-  Config::addAction("camera.save-yuv-frame",   "Save YUV Frame",   [this]() { d_saveNextYUVFrame   = true; });
-  Config::addAction("camera.save-debug-frame", "Save Debug Frame", [this]() { d_saveNextDebugFrame = true; });
+  Config::addAction("camera.save-yuv-frame",   "Save YUV Frame",   [this] { d_saveNextYUVFrame   = true; });
+  Config::addAction("camera.save-debug-frame", "Save Debug Frame", [this] { d_saveNextDebugFrame = true; });
 }

@@ -22,7 +22,7 @@ FSMTransition* FSMTransition::when(std::function<std::function<bool()>()> condit
 
 FSMTransition* FSMTransition::whenTerminated()
 {
-  this->condition = [this]() { return parentState->allOptionsTerminated(); };
+  this->condition = [this] { return parentState->allOptionsTerminated(); };
   return this;
 }
 
@@ -34,5 +34,5 @@ FSMTransition* FSMTransition::notify(std::function<void()> callback)
 
 FSMTransition* FSMTransition::after(std::chrono::milliseconds time)
 {
-  return when([this,time]() { return parentState->timeSinceStart() >= time; });
+  return when([this,time] { return parentState->timeSinceStart() >= time; });
 }

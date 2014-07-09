@@ -48,11 +48,11 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
     CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
     MX28::P_MODEL_NUMBER_L, MX28::P_LOCK);
 
-  Config::addAction("hardware.query-static-hardware-state", "Query static HW state", [this]() { d_staticHardwareStateUpdateNeeded = true; });
-//   Config::addAction("hardware.cm730-power-on",  "CM730 On",  [this]() { d_powerChangeToValue = true;  d_powerChangeNeeded = true; });
-//   Config::addAction("hardware.cm730-power-off", "CM730 Off", [this]() { d_powerChangeToValue = false; d_powerChangeNeeded = true; });
-  Config::addAction("hardware.motor-torque-on",  "Torque On",  [this]() { d_torqueChangeToValue = true;  d_torqueChangeNeeded = true; });
-  Config::addAction("hardware.motor-torque-off", "Torque Off", [this]() { d_torqueChangeToValue = false; d_torqueChangeNeeded = true; });
+  Config::addAction("hardware.query-static-hardware-state", "Query static HW state", [this] { d_staticHardwareStateUpdateNeeded = true; });
+//   Config::addAction("hardware.cm730-power-on",  "CM730 On",  [this] { d_powerChangeToValue = true;  d_powerChangeNeeded = true; });
+//   Config::addAction("hardware.cm730-power-off", "CM730 Off", [this] { d_powerChangeToValue = false; d_powerChangeNeeded = true; });
+  Config::addAction("hardware.motor-torque-on",  "Torque On",  [this] { d_torqueChangeToValue = true;  d_torqueChangeNeeded = true; });
+  Config::addAction("hardware.motor-torque-off", "Torque Off", [this] { d_torqueChangeToValue = false; d_torqueChangeNeeded = true; });
 
   d_offsets[0] = 0;
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)

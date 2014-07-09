@@ -39,7 +39,7 @@ TEST (ThreadTests, DISABLED_multipleCounters)
   UnsafeCounter unsafeCounter;
   SafeCounter safeCounter;
 
-  auto countLoop = [&]()
+  auto countLoop = [&]
   {
     for (int i = 0; i < iterationCount; i++)
     {
@@ -69,12 +69,12 @@ TEST (ThreadTests, DISABLED_threadSafetyOfSignals)
   sigc::signal<void> sig;
   mutex m;
 
-  sig.connect([&](){ count++; });
+  sig.connect([&] { count++; });
 
   vector<thread> threads;
   for (int t = 0; t < threadCount; t++)
   {
-    threads.emplace_back([&]()
+    threads.emplace_back([&]
     {
       for (int i = 0; i < iterationCount; i++)
       {
@@ -98,7 +98,7 @@ TEST (ThreadTests, DISABLED_threadedProducerConsumer)
   shared_ptr<int> ptr;
   mutex m;
 
-  thread producer([loopCount,&ptr,&m]()
+  thread producer([loopCount,&ptr,&m]
   {
     for (int i = 0; i < loopCount; i++)
     {
@@ -110,7 +110,7 @@ TEST (ThreadTests, DISABLED_threadedProducerConsumer)
     }
   });
 
-  thread consumer([loopCount,&ptr,&m]()
+  thread consumer([loopCount,&ptr,&m]
   {
     int lastVal = 0;
     for (int i = 0; i < loopCount; i++)
