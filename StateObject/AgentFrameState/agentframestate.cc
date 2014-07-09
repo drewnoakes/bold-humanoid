@@ -6,21 +6,21 @@ using namespace rapidjson;
 using namespace std;
 
 AgentFrameState::AgentFrameState(
-  Maybe<Eigen::Vector3d> ballObservation,
-  std::vector<Eigen::Vector3d> goalObservations,
-  std::vector<Eigen::Vector3d> teamMateObservations,
-  std::vector<LineSegment3d> observedLineSegments,
-  std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> observedLineJunctions,
+  Maybe<Vector3d> ballObservation,
+  vector<Vector3d> goalObservations,
+  vector<Vector3d> teamMateObservations,
+  vector<LineSegment3d> observedLineSegments,
+  vector<LineJunction, aligned_allocator<LineJunction>> observedLineJunctions,
   Maybe<Polygon2d> visibleFieldPoly,
-  std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
+  vector<pair<Vector3d,Vector3d>> occlusionRays,
   ulong thinkCycleNumber)
-: d_ballObservation(std::move(ballObservation)),
-  d_goalObservations(std::move(goalObservations)),
-  d_teamMateObservations(std::move(teamMateObservations)),
-  d_observedLineSegments(std::move(observedLineSegments)),
-  d_observedLineJunctions(std::move(observedLineJunctions)),
-  d_visibleFieldPoly(std::move(visibleFieldPoly)),
-  d_occlusionRays(std::move(occlusionRays)),
+: d_ballObservation(move(ballObservation)),
+  d_goalObservations(move(goalObservations)),
+  d_teamMateObservations(move(teamMateObservations)),
+  d_observedLineSegments(move(observedLineSegments)),
+  d_observedLineJunctions(move(observedLineJunctions)),
+  d_visibleFieldPoly(move(visibleFieldPoly)),
+  d_occlusionRays(move(occlusionRays)),
   d_thinkCycleNumber(thinkCycleNumber)
 {}
 
