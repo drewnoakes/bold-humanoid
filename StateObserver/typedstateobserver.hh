@@ -30,6 +30,8 @@ namespace bold
       d_types.push_back(d_typeIndex);
     }
 
+    virtual ~TypedStateObserver() = default;
+
     void observe(SequentialTimer& timer) override
     {
       ASSERT(ThreadUtil::getThreadId() == d_callbackThreadId);
