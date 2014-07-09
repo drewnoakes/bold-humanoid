@@ -371,8 +371,8 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
                 context.strokeStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
 
                 context.beginPath();
-                context.moveTo(line.p1[0], line.p1[0]);
-                context.lineTo(line.p2[0], line.p2[0]);
+                context.moveTo(line.p1[0], line.p1[1]);
+                context.lineTo(line.p2[0], line.p2[1]);
                 context.stroke();
                 break;
             }
