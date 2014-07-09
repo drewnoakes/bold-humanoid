@@ -25,8 +25,6 @@ namespace bold
       d_upperTurnLimitDegs = Config::getSetting<double>("options.approach-ball.upper-turn-limit-degs");
     }
 
-    virtual void reset() override;
-
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
     void setStopDistance(double stopDistance)

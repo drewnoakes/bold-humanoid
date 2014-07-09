@@ -83,8 +83,3 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   return {};
 }
-
-void ApproachBall::reset()
-{
-//   d_walkModule->reset();
-}
