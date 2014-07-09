@@ -3,6 +3,7 @@
 #include "../CM730CommsModule/MX28HealthChecker/mx28healthchecker.hh"
 #include "../Drawing/drawing.hh"
 #include "../Kick/kick.hh"
+#include "../StateObserver/ButtonObserver/buttonobserver.hh"
 #include "../StateObserver/FallDetector/AccelerometerFallDetector/accelerometerfalldetector.hh"
 #include "../StateObserver/FallDetector/OrientationFallDetector/orientationfalldetector.hh"
 
@@ -47,6 +48,7 @@ Agent::Agent()
   MotionScriptModule::createActions("./motionscripts", d_motionScriptModule);
 
   // Create StateObservers
+  d_buttonObserver = make_shared<ButtonObserver>();
   d_vocaliser = make_shared<Vocaliser>(d_voice);
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);
@@ -57,6 +59,7 @@ Agent::Agent()
   d_teamCommunicator = make_shared<OpenTeamCommunicator>(d_behaviourControl);
 
   // Register StateObservers
+  State::registerObserver(d_buttonObserver);
   State::registerObserver(d_vocaliser);
   State::registerObserver(d_gyroCalibrator);
   State::registerObserver(d_healthAndSafety);

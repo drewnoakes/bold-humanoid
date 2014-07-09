@@ -24,7 +24,6 @@ namespace bold
       state->onEnter.connect([agent,status]() { agent->getBehaviourControl()->setPlayerStatus(status); });
   };
 
-
   //
   // CONDITIONALS
   //
@@ -32,40 +31,6 @@ namespace bold
   // TODO any / all / true functions
 
   // GENERAL FUNCTIONS
-
-  auto startButtonPressed = []
-  {
-    auto hw = State::get<HardwareState>();
-    if (!hw)
-      return false;
-    auto const& cm730 = hw->getCM730State();
-
-    static bool lastState = false;
-    if (lastState ^ cm730.isStartButtonPressed)
-    {
-      lastState = cm730.isStartButtonPressed;
-      return lastState;
-    }
-
-    return false;
-  };
-
-  auto modeButtonPressed = []
-  {
-    auto hw = State::get<HardwareState>();
-    if (!hw)
-      return false;
-    auto const& cm730 = hw->getCM730State();
-
-    static bool lastState = false;
-    if (lastState ^ cm730.isModeButtonPressed)
-    {
-      lastState = cm730.isModeButtonPressed;
-      return lastState;
-    }
-
-    return false;
-  };
 
   auto ballVisibleCondition = []
   {

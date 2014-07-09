@@ -1,5 +1,7 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../../StateObserver/ButtonObserver/buttonobserver.hh"
+
 shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {
   uchar uniformNumber   = agent->getUniformNumber();
@@ -119,25 +121,29 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // PAUSE BUTTON
   //
 
-  playingState
-    ->transitionTo(pauseState, "button2")
-    ->when(startButtonPressed);
+  shared_ptr<ButtonTracker> pauseButton = agent->getButtonObserver()->track(Button::Middle);
+
+  winFsm
+    ->wildcardTransitionTo(pauseState, "middle-button")
+    ->when([pauseButton] { return pauseButton->isPressedForMillis(200); });
 
   pauseState
-    ->transitionTo(setState, "button2")
-    ->when(startButtonPressed);
+    ->transitionTo(setState, "middle-button")
+    ->when([pauseButton] { return pauseButton->isPressedForMillis(80); });
 
   //
   // PLAY MODE BUTTON
   //
 
+  shared_ptr<ButtonTracker> modeButton = agent->getButtonObserver()->track(Button::Left);
+
   readyState
-    ->transitionTo(setState, "button1")
-    ->when(modeButtonPressed);
+    ->transitionTo(setState, "left-button")
+    ->when([modeButton] { return modeButton->isPressedForMillis(80); });
 
   setState
-    ->transitionTo(playingState, "button1")
-    ->when(modeButtonPressed);
+    ->transitionTo(playingState, "left-button")
+    ->when([modeButton] { return modeButton->isPressedForMillis(80); });
 
   //
   // GAME CONTROLLER PLAY MODE

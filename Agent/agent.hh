@@ -11,6 +11,7 @@ namespace bold
   class WalkModule;
   class BehaviourControl;
   class BodyState;
+  class ButtonObserver;
   class Camera;
   class CameraModel;
   class DataStreamer;
@@ -51,6 +52,7 @@ namespace bold
 
     Agent();
 
+    std::shared_ptr<ButtonObserver> getButtonObserver() const { return d_buttonObserver; }
     std::shared_ptr<Camera> getCamera() const { return d_camera; }
     std::shared_ptr<CameraModel> getCameraModel() const { return d_cameraModel; }
     std::shared_ptr<DataStreamer> getDataStreamer() const { return d_streamer; }
@@ -110,6 +112,7 @@ namespace bold
     // State observers
 
     std::shared_ptr<Vocaliser> d_vocaliser;
+    std::shared_ptr<ButtonObserver> d_buttonObserver;
     std::shared_ptr<FallDetector const> d_fallDetector;
     std::shared_ptr<GyroCalibrator> d_gyroCalibrator;
     std::shared_ptr<HealthAndSafety> d_healthAndSafety;
