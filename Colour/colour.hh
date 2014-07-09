@@ -44,6 +44,19 @@ namespace bold
       uchar b;
       uchar g;
       uchar r;
+
+      static const bgr black;
+      static const bgr grey;
+      static const bgr white;
+      static const bgr red;
+      static const bgr lightRed;
+      static const bgr green;
+      static const bgr lightGreen;
+      static const bgr blue;
+      static const bgr lightBlue;
+      static const bgr orange;
+      static const bgr purple;
+      static const bgr yellow;
     };
 
     struct YCbCr

@@ -196,6 +196,7 @@ add_class(BOLDHUMANOID
   ./Colour/bgr2hsv.cc
   ./Colour/hsv2bgr.cc
   ./Colour/hsvRange.cc
+  ./Colour/knownColours.cc
   ./Colour/operator_ins.cc
   ./Colour/YCbCr.cc
 )
