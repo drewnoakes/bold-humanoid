@@ -3,6 +3,7 @@
 using namespace bold;
 using namespace Eigen;
 using namespace rapidjson;
+using namespace std;
 
 AgentFrameState::AgentFrameState(
   Maybe<Eigen::Vector3d> ballObservation,
@@ -22,6 +23,27 @@ AgentFrameState::AgentFrameState(
   d_occlusionRays(std::move(occlusionRays)),
   d_thinkCycleNumber(thinkCycleNumber)
 {}
+
+Maybe<Vector3d> AgentFrameState::getClosestGoalObservation() const
+{
+  if (d_goalObservations.empty())
+    return Maybe<Vector3d>::empty();
+
+  auto closestGoalDist = numeric_limits<double>::max();
+  Maybe<Vector3d> closest;
+
+  for (auto const& obs : d_goalObservations)
+  {
+    auto dist = obs.head<2>().norm();
+    if (dist < closestGoalDist)
+    {
+      closestGoalDist = dist;
+      closest = obs;
+    }
+  }
+
+  return closest;
+}
 
 bool AgentFrameState::shouldSeeAgentFrameGroundPoint(Vector2d groundAgent) const
 {

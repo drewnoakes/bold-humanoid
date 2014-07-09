@@ -37,26 +37,7 @@ namespace bold
 
     uint goalObservationCount() const { return d_goalObservations.size(); }
 
-    Maybe<Eigen::Vector3d> getClosestGoalObservation() const
-    {
-      if (d_goalObservations.empty())
-        return Maybe<Eigen::Vector3d>::empty();
-
-      auto closestGoalDist = std::numeric_limits<double>::max();
-      Maybe<Eigen::Vector3d> closest;
-
-      for (auto const& obs : d_goalObservations)
-      {
-        auto dist = obs.head<2>().norm();
-        if (dist < closestGoalDist)
-        {
-          closestGoalDist = dist;
-          closest = obs;
-        }
-      }
-
-      return closest;
-    }
+    Maybe<Eigen::Vector3d> getClosestGoalObservation() const;
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
