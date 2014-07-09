@@ -51,6 +51,35 @@ bool AgentFrameState::shouldSeeAgentFrameGroundPoint(Vector2d groundAgent) const
   return d_visibleFieldPoly->contains(groundAgent);
 }
 
+double AgentFrameState::getOcclusionDistance(double angle) const
+{
+  // Compute the position at which where 'angle' could be inserted without changing the ordering.
+  // This means that *(lower - 1) is below, and *lower is above.
+  auto lower = lower_bound(
+    d_occlusionRays.begin(),
+    d_occlusionRays.end(),
+    angle,
+    [](pair<Vector3d,Vector3d> const& pair, double const& a)
+    {
+      return Math::angleToPoint(pair.first) < a;
+    });
+
+  if (lower == d_occlusionRays.begin() || lower == d_occlusionRays.end())
+    return numeric_limits<double>::quiet_NaN();
+
+  Vector2d side1 = (lower - 1)->first.head<2>();
+  Vector2d side2 = lower->first.head<2>();
+
+  LineSegment2d occlusionEdge(side1, side2);
+  LineSegment2d ray(Vector2d::Zero(), Vector2d(-sin(angle), cos(angle)));
+
+  double u;
+  double t;
+  auto i = ray.tryIntersect(occlusionEdge, t, u);
+
+  return t <= 0 ? numeric_limits<double>::quiet_NaN() : t;
+}
+
 void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();

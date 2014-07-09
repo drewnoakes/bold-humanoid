@@ -39,6 +39,8 @@ namespace bold
 
     Maybe<Eigen::Vector3d> getClosestGoalObservation() const;
 
+    double getOcclusionDistance(double angle) const;
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     bool shouldSeeAgentFrameGroundPoint(Eigen::Vector2d groundAgent) const;
