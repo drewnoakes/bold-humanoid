@@ -1,4 +1,17 @@
-#include "approachball.ih"
+#include "approachball.hh"
+
+#include "../../BehaviourControl/behaviourcontrol.hh"
+#include "../../Math/math.hh"
+#include "../../MotionModule/WalkModule/walkmodule.hh"
+#include "../../State/state.hh"
+#include "../../StateObject/AgentFrameState/agentframestate.hh"
+
+#include <Eigen/Core>
+
+using namespace bold;
+using namespace Eigen;
+using namespace rapidjson;
+using namespace std;
 
 vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 {
