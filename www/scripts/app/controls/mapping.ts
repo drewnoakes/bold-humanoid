@@ -416,7 +416,7 @@ export class AgentObservedLineJunctionLayer extends DataLayer<state.AgentFrame>
         super(
             transform,
             constants.protocols.agentFrameState,
-            "Observed Line junctions",
+            "Observed line junctions",
             () => {
                 canvasUtil.clear(this.context, true)
                 if (this.data && this.data.junctions)
