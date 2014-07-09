@@ -53,7 +53,7 @@ void GyroCalibrator::observeTyped(std::shared_ptr<HardwareState const> const& ha
     d_rlCenter = (int)round(d_lrAvgValue.getAverage());
     d_calibrationStatus = CalibrationState::COMPLETE;
 
-    log::info("GyroCalibrator::update") << "Gyro calibrated with center at " << d_fbCenter << " (f/b) and " << d_rlCenter << " (l/r)";
+    log::info("GyroCalibrator::observeTyped") << "Gyro calibrated with center at " << d_fbCenter << " (f/b) and " << d_rlCenter << " (l/r)";
   }
   else
   {
