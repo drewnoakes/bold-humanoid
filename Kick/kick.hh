@@ -17,7 +17,7 @@ namespace bold
     static void loadAll();
     static std::vector<std::shared_ptr<Kick const>> const& getAll() { return d_allKicks; }
 
-    Kick(std::string id, std::string scriptPath, Bounds2d ballBounds, Eigen::Vector2d endPos);
+    Kick(std::string id, std::string scriptPath, Bounds2d ballBounds, Eigen::Vector2d endPos, Eigen::Vector2d idealBallPos);
 
     /**
      * Given a ball position, returns whether the ball can be kicked and

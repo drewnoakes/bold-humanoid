@@ -19,39 +19,42 @@ void Kick::loadAll()
     "forward-right",
     "./motionscripts/kick-right.json",
     Bounds2d(Vector2d(0, 0), Vector2d(0.1, 0.2)),
-    Vector2d(0, 2.5)
+    Vector2d(0.164, 1.853),
+    Vector2d(0.065, 0.106)
   ));
 
   d_allKicks.push_back(make_shared<Kick const>(
     "forward-left",
     "./motionscripts/kick-left.json",
     Bounds2d(Vector2d(-0.1, 0), Vector2d(0, 0.2)),
-    Vector2d(0, 2.5)
+    Vector2d(-0.164, 1.853),
+    Vector2d(-0.065, 0.106)
   ));
 
   d_allKicks.push_back(make_shared<Kick const>(
     "cross-left",
     "./motionscripts/kick-cross-left.json",
     Bounds2d(Vector2d(-0.1, 0), Vector2d(0.02, 0.2)),
-    Vector2d(1.5, 1.5)
+    Vector2d(1.002, 1.152),
+    Vector2d(-0.006, 0.105)
   ));
 
   d_allKicks.push_back(make_shared<Kick const>(
     "cross-right",
     "./motionscripts/kick-cross-right.json",
     Bounds2d(Vector2d(-0.02, 0), Vector2d(0.1, 0.2)),
-    Vector2d(-1.5, 1.5)
+    Vector2d(-1.002, 1.152),
+    Vector2d(0.006, 0.105)
   ));
 }
 
-Kick::Kick(string id, string scriptPath, Bounds2d ballBounds, Vector2d endPos)
+Kick::Kick(string id, string scriptPath, Bounds2d ballBounds, Vector2d endPos, Vector2d idealBallPos)
 : d_id(id),
   d_motionScript(MotionScript::fromFile(scriptPath)),
   d_ballBounds(ballBounds),
-  d_endPos(endPos)
-{
-  d_idealBallPos = ballBounds.mid();
-}
+  d_endPos(endPos),
+  d_idealBallPos(idealBallPos)
+{}
 
 Maybe<Vector2d> Kick::estimateEndPos(Vector2d const& ballPos) const
 {
