@@ -58,14 +58,14 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
     kickUsed = "right";
     return;
 
-    static auto rng = Math::createUniformRng(0, 4);
-    switch (static_cast<int>(floor(rng())))
-    {
-      case 0: kickUsed = "left"; break;
-      case 1: kickUsed = "right"; break;
-      case 2: kickUsed = "left-cross"; break;
-      case 3: kickUsed = "right-cross"; break;
-    }
+//    static auto rng = Math::createUniformRng(0, 4);
+//    switch (static_cast<int>(floor(rng())))
+//    {
+//      case 0: kickUsed = "left"; break;
+//      case 1: kickUsed = "right"; break;
+//      case 2: kickUsed = "left-cross"; break;
+//      case 3: kickUsed = "right-cross"; break;
+//    }
   });
 
   selectKickState->transitionTo(kickLeftState) ->when([] { return kickUsed == "left"; });
