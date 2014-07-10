@@ -141,6 +141,8 @@ namespace bold
     bool hasEnoughGoalPostObservations() const { return d_goalEstimates.size() != 0; };
     bool hasEnoughBallAndGoalPostObservations() const { return hasEnoughBallObservations() && hasEnoughGoalPostObservations(); };
 
+    bool hasBallWithinDistance(double distance) const;
+
     bool needMoreSightingsOfGoalPostAt(Eigen::Vector2d goalPos) const;
     bool needMoreSightingsOfBallAt(Eigen::Vector2d ballPos) const;
 

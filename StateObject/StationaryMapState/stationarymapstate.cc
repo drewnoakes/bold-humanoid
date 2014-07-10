@@ -158,22 +158,26 @@ StationaryMapState::StationaryMapState(
 
   findGoals();
 
-  selectKick();
-
-  calculateTurnAngle();
-
-  static bool errorFlag = false;
-  if (hasEnoughBallAndGoalPostObservations())
+  // Only attempt to select a kick/turn angle if the ball is within a reasonable distance
+  if (hasBallWithinDistance(0.5))
   {
-    if (!d_selectedKick && d_turnAngleRads == 0 && !errorFlag)
+    selectKick();
+
+    calculateTurnAngle();
+
+    static bool errorFlag = false;
+    if (hasEnoughBallAndGoalPostObservations())
     {
-      errorFlag = true;
-      log::warning("StationaryMapState::StationaryMapState") << "Have enough observations, but no kick or turn selected";
+      if (!d_selectedKick && d_turnAngleRads == 0 && !errorFlag)
+      {
+        errorFlag = true;
+        log::warning("StationaryMapState::StationaryMapState") << "Have enough observations, but no kick or turn selected";
+      }
     }
-  }
-  else
-  {
-    errorFlag = false;
+    else
+    {
+      errorFlag = false;
+    }
   }
 }
 
@@ -597,6 +601,16 @@ bool StationaryMapState::needMoreSightingsOfBallAt(Eigen::Vector2d ballPos) cons
     double dist = (ballEstimate.getAverage() - ballPos).norm();
     if (dist < BallMergeDistance)
       return ballEstimate.getCount() < BallSamplesNeeded;
+  }
+  return false;
+}
+
+bool StationaryMapState::hasBallWithinDistance(double distance) const
+{
+  for (auto const& ballEstimate : d_ballEstimates)
+  {
+    if (ballEstimate.getCount() >= BallSamplesNeeded && ballEstimate.getAverage().norm() <= distance)
+      return true;
   }
   return false;
 }
