@@ -49,20 +49,6 @@ namespace bold
   auto ballFoundConditionFactory = [] { return trueForMillis(1000, ballVisibleCondition); };
   auto ballLostConditionFactory = [] { return trueForMillis(1000, bold::negate(ballVisibleCondition)); };
 
-  auto isPlayMode = [](robocup::PlayMode playMode, bool defaultValue)
-  {
-    return [playMode,defaultValue]
-    {
-      auto gameState = State::get<GameState>();
-      if (!gameState)
-        return defaultValue;
-      return gameState->getPlayMode() == playMode;
-    };
-  };
-
-  auto isSetPlayMode = isPlayMode(robocup::PlayMode::SET, false);
-  auto isPlayingPlayMode = isPlayMode(robocup::PlayMode::PLAYING, false);
-
   auto isPenalised = []
   {
     auto gameState = State::get<GameState>();
