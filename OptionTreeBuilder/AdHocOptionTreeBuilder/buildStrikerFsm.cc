@@ -10,7 +10,7 @@ auto shouldYieldToOtherAttacker = []
   if (!team || !agentFrame || !agentFrame->isBallVisible())
     return false;
 
-  double ballDist = agentFrame->getBallObservation()->norm();
+//  double ballDist = agentFrame->getBallObservation()->norm();
 
   bool isTeamMateAttacking = team->isTeamMateInActivity(PlayerActivity::AttackingGoal);
 
