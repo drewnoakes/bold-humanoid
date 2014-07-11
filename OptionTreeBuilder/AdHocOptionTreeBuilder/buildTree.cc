@@ -70,9 +70,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // The win FSM is the root of the option tree
   tree->addOption(winFsm, /*isRoot*/ true);
 
-  auto startUpState = winFsm->newState("startUp", {sit}, false/*end state*/, true/* start state */);
-  auto readyState = winFsm->newState("ready", {stopWalking});
-  auto pauseState = winFsm->newState("pause", {SequenceOption::make("pause-sequence", {stopWalking,sit})});
+  auto stopAndSitSequence = SequenceOption::make("stop-then-sit-sequence", {stopWalking,sit});
+
+  auto startUpState = winFsm->newState("startUp", {stopAndSitSequence}, false/*end state*/, true/* start state */);
+  auto readyState = winFsm->newState("ready", {stopAndSitSequence});
+  auto pauseState = winFsm->newState("pause", {stopAndSitSequence});
   auto setState = winFsm->newState("set", {SequenceOption::make("pause-sequence", {stopWalking,standUp})});
   auto playingState = winFsm->newState("playing", {performRole});
   auto penalisedState = winFsm->newState("penalised", {stopWalking});
@@ -170,7 +172,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->when(isPenalised);
 
   playingState
-    ->transitionTo(readyState, "gc-initial")
+    ->transitionTo(startUpState, "gc-initial")
     ->when(nonPenalisedPlayMode(PlayMode::INITIAL));
 
   playingState
