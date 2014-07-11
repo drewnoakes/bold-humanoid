@@ -471,6 +471,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/WalkTo/walkto.cc
+)
+
+add_class(BOLDHUMANOID
   ./OptionTree/getOption.cc
   ./OptionTree/run.cc
 )

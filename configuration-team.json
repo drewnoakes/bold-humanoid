@@ -400,6 +400,17 @@
     },
     "support": {
       "yield-distance": 1.0
+    },
+    "walkto": {
+      "turn-speed-scale": 18.0,
+      "max-forward-speed": 40.0,
+      "min-forward-speed": 0.0,
+      "max-sideways-speed": 40.0,
+      "min-sideways-speed": 0.0,
+      "brake-distance": 0.6,
+      "stop-distance": 0.15,
+      "lower-turn-limit-degs": 1.0,
+      "upper-turn-limit-degs": 35.0
     }
   },
   "health-and-safety": {

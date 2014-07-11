@@ -396,6 +396,17 @@
     },
     "support": {
       "yield-distance": { "type": "double" }
+    },
+    "walkto": {
+      "turn-speed-scale":  { "type": "double" },
+      "max-forward-speed": { "type": "double" },
+      "min-forward-speed": { "type": "double" },
+      "max-sideways-speed": { "type": "double" },
+      "min-sideways-speed": { "type": "double" },
+      "brake-distance":    { "type": "double" },
+      "stop-distance":     { "type": "double" },
+      "lower-turn-limit-degs": { "type": "double" },
+      "upper-turn-limit-degs": { "type": "double" }
     }
   },
   "health-and-safety": {
