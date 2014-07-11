@@ -18,7 +18,7 @@ namespace bold {
 
     double hasTerminated() override;
 
-    OptionVector runPolicy() override;
+    OptionVector runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
     std::shared_ptr<WalkModule> d_walkModule;
