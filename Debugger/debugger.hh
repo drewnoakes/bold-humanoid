@@ -20,7 +20,7 @@ namespace bold
     // UDP Message Counts
     //
 
-    void notifyReceivedGameControllerMessage();
+    void notifyReceivedGameControllerMessage() { d_gameControllerMessageCount++; }
     void notifyIgnoringUnrecognisedMessage() { d_ignoredMessageCount++; }
     void notifySendingTeamMessage() { d_sentTeamMessageCount++; }
     void notifyReceivedTeamMessage() { d_receivedTeamMessageCount++; }
