@@ -3,6 +3,7 @@
 #include "../../StateObserver/ButtonObserver/buttonobserver.hh"
 
 // TODO allow manual unpenalisation of player, regardless of what GC says
+// TODO when game finished, do something based upon whether we won or not :)
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, shared_ptr<Option> whilePlayingOption)
 {
@@ -22,6 +23,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   auto setState = fsm->newState("set", {SequenceOption::make("pause-sequence", {stopWalking,standUp})});
   auto playingState = fsm->newState("playing", {whilePlayingOption});
   auto penalisedState = fsm->newState("penalised", {stopAndSitSequence});
+  auto finishedState = fsm->newState("finished", {stopAndSitSequence});
 
   // STATUSES
 
@@ -87,6 +89,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   fsm
     ->wildcardTransitionTo(setState, "gc-set")
     ->when(nonPenalisedPlayMode(PlayMode::SET));
+
+  fsm
+    ->wildcardTransitionTo(finishedState, "gc-finished")
+    ->when(nonPenalisedPlayMode(PlayMode::FINISHED));
 
   return fsm;
 }
