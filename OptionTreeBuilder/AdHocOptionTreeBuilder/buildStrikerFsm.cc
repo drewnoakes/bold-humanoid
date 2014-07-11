@@ -10,14 +10,14 @@ auto shouldYieldToOtherAttacker = []
   if (!team || !agentFrame || !agentFrame->isBallVisible())
     return false;
 
-  double dist = agentFrame->getBallObservation()->norm();
+  double ballDist = agentFrame->getBallObservation()->norm();
 
   bool isTeamMateAttacking = team->isTeamMateInActivity(PlayerActivity::AttackingGoal);
 
-  static auto yieldMinDist = Config::getSetting<double>("options.yield.min-dist");
-  static auto yieldMaxDist = Config::getSetting<double>("options.yield.max-dist");
+  static auto yieldMinBallDist = Config::getSetting<double>("options.yield.min-ball-dist");
+  static auto yieldMaxBallDist = Config::getSetting<double>("options.yield.max-ball-dist");
 
-  return dist > yieldMinDist->getValue() && dist < yieldMaxDist->getValue() && isTeamMateAttacking;
+  return ballDist > yieldMinBallDist->getValue() && ballDist < yieldMaxBallDist->getValue() && isTeamMateAttacking;
 };
 
 auto ballIsStoppingDistance = []

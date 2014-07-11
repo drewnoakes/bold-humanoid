@@ -384,8 +384,8 @@
       "spacing": 1.4
     },
     "yield": {
-      "min-dist": 0.5,
-      "max-dist": 1.5
+      "min-ball-dist": 0.5,
+      "max-ball-dist": 1.5
     },
     "search-ball": {
       "turn-speed": 15,
