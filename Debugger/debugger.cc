@@ -64,6 +64,7 @@ void Debugger::notifyReceivedGameControllerMessage()
   d_gameControllerMessageCount++;
 }
 
+void Debugger::showInitial()     { d_foreheadColour = bgr(100,0,0);     /* d_eyeColour = bgr(100,0,0);     */ }
 void Debugger::showReady()       { d_foreheadColour = bgr(255,0,0);     /* d_eyeColour = bgr(255,0,0);     */ }
 void Debugger::showSet()         { d_foreheadColour = bgr(0,255,255);   /* d_eyeColour = bgr(255,0,0);     */ }
 void Debugger::showPlaying()     { d_foreheadColour = bgr(0,255,0);     /* d_eyeColour = bgr(64,64,64);    */ }

@@ -100,8 +100,10 @@ auto isPerfectLineForAttack = []
   return true;
 };
 
-shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shared_ptr<OptionTree> tree)
+shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
 {
+  // OPTIONS
+
   auto buildStationaryMap = make_shared<BuildStationaryMap>("buildStationaryMap", agent->getVoice());
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", /*ifNotInFinalPose*/true);
   auto leftKick = make_shared<MotionScriptOption>("leftKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
@@ -117,7 +119,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
   auto awaitTheirKickOff = make_shared<AwaitTheirKickOff>("awaitTheirKickOff");
 
-  auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
+  // STATES
+
+  auto fsm = make_shared<FSMOption>(agent->getVoice(), "striker");
 
   auto standUpState = fsm->newState("standUp", {standUp}, /*endState*/false, /*startState*/true);
   auto locateBallState = fsm->newState("locateBall", {stopWalking, buildStationaryMap, locateBall});
@@ -137,6 +141,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, awaitTheirKickOffState, locateBallCirclingState, locateBallState, yieldState });
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
+
+  // TRANSITIONS
 
   standUpState
     ->transitionTo(awaitTheirKickOffState)
@@ -342,9 +348,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   rightKickState
     ->transitionTo(locateBallState, "done")
     ->whenTerminated();
-
-  ofstream playingOut("fsm-striker.dot");
-  playingOut << fsm->toDot();
 
   return fsm;
 }

@@ -5,6 +5,8 @@ string FSMOption::toDot() const
   ostringstream out;
   out << "digraph "  << getId() << "{" << endl;
 
+  ASSERT(d_startState && "FSM must have a starting state");
+
   list<shared_ptr<FSMState>> stateQueue{d_startState};
   list<shared_ptr<FSMState>> visitedStates;
 

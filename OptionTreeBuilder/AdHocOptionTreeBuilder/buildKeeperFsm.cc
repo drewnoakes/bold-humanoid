@@ -1,7 +1,9 @@
 #include "adhocoptiontreebuilder.ih"
 
-shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, shared_ptr<OptionTree> tree)
+shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 {
+  // OPTIONS
+
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 0.5; });
@@ -11,10 +13,12 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
   auto leftCrossKick = make_shared<MotionScriptOption>("leftCrossKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
   auto rightCrossKick = make_shared<MotionScriptOption>("rightCrossKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
 
-  auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "keeper"));
+  // STATES
 
   // TODO test this further
   // TODO add logic to kick ball away from goal if close to keeper
+
+  auto fsm = make_shared<FSMOption>(agent->getVoice(), "keeper");
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
   auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookForBall});
@@ -25,6 +29,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
   auto rightCrossKickState = fsm->newState("rightCrossKick", { rightCrossKick });
 
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, lookForBallState, lookForBallState, lookAtBallState, bigStepLeftState, bigStepRightState });
+
+  // TRANSITIONS
 
   standUpState
     ->transitionTo(lookForBallState, "standing")
@@ -91,9 +97,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent, share
   rightCrossKickState
     ->transitionTo(lookForBallState, "done")
     ->whenTerminated();
-
-  ofstream playingOut("fsm-keeper.dot");
-  playingOut << fsm->toDot();
 
   return fsm;
 }

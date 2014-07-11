@@ -75,13 +75,13 @@ class OptionTreeModule extends Module
             option.text = fsm.name;
             option.value = fsm.name;
             select.appendChild(option);
-            if (fsm.name === 'win')
+            if (fsm.name === 'play-mode')
                 option.selected = true;
         });
         select.addEventListener('change', () => this.buildFsmGraph(control.getFSM(select.options[select.selectedIndex].value), graph));
         controls.insertBefore(select, controls.firstChild);
 
-        this.buildFsmGraph(control.getFSM('win'), graph);
+        this.buildFsmGraph(control.getFSM('play-mode'), graph);
 
         this.optionList = document.createElement('ul');
         this.optionList.className = 'options';

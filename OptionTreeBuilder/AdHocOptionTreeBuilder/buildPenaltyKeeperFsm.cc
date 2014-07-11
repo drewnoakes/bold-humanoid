@@ -2,8 +2,10 @@
 
 #include "../../FieldMap/fieldmap.hh"
 
-shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent, shared_ptr<OptionTree> tree)
+shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent)
 {
+  // OPTIONS
+
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto leftDive = make_shared<MotionScriptOption>("diveLeft", agent->getMotionScriptModule(), "./motionscripts/dive-left.json");
   auto rightDive = make_shared<MotionScriptOption>("diveRight", agent->getMotionScriptModule(), "./motionscripts/dive-right.json");
@@ -11,13 +13,17 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
   auto lookAroundNarrow = make_shared<LookAround>("lookAroundNarrow", agent->getHeadModule(), 80.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 1.0; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
 
-  auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "penalty-keeper"));
+  // STATES
+
+  auto fsm = make_shared<FSMOption>(agent->getVoice(), "penalty-keeper");
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
   auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookAroundNarrow});
   auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
   auto leftDiveState = fsm->newState("leftDive", {leftDive});
   auto rightDiveState = fsm->newState("rightDive", {rightDive});
+
+  // TRANSITIONS
 
   standUpState
     ->transitionTo(lookForBallState, "standing")
@@ -66,9 +72,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
   rightDiveState
     ->transitionTo(lookForBallState, "done")
     ->whenTerminated();
-
-  ofstream playingOut("fsm-penalty-keeper.dot");
-  playingOut << fsm->toDot();
 
   return fsm;
 }

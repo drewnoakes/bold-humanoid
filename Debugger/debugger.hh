@@ -30,6 +30,7 @@ namespace bold
     // Display status
     //
 
+    void showInitial();
     void showReady();
     void showSet();
     void showPlaying();

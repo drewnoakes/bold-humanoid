@@ -108,6 +108,8 @@ namespace bold
       return s;
     }
 
+    std::shared_ptr<FSMState> const& getStartState() const { return d_startState; }
+
     std::shared_ptr<FSMTransition> wildcardTransitionTo(std::shared_ptr<FSMState> targetState, std::string name = "");
 
     std::string toDot() const;

@@ -2,18 +2,21 @@
 
 /// The robot will stand and kick the ball around in order to learn the
 /// outcome of specific kicks given starting ball positions.
-shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, shared_ptr<OptionTree> tree)
+shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent)
 {
+  // OPTIONS
+
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
-
-  auto standUp       = make_shared<MotionScriptOption>("standUp",   agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
-  auto kickLeft      = make_shared<MotionScriptOption>("kickLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
-  auto kickRight     = make_shared<MotionScriptOption>("kickRight", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
-  auto kickCrossLeft = make_shared<MotionScriptOption>("kickCrossLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
+  auto standUp        = make_shared<MotionScriptOption>("standUp",   agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
+  auto kickLeft       = make_shared<MotionScriptOption>("kickLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
+  auto kickRight      = make_shared<MotionScriptOption>("kickRight", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
+  auto kickCrossLeft  = make_shared<MotionScriptOption>("kickCrossLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
   auto kickCrossRight = make_shared<MotionScriptOption>("kickCrossRight", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
 
-  auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "kick-learner"));
+  // STATES
+
+  auto fsm = make_shared<FSMOption>(agent->getVoice(), "kick-learner");
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
   auto waitForBallState = fsm->newState("wait-for-ball", {lookAtFeet});
@@ -25,6 +28,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
   auto lookUpForBallState = fsm->newState("lookUp", {});
   auto watchBallRollState = fsm->newState("watchBallRoll", {lookAtBall});
   auto recordOutcomeState = fsm->newState("recordOutcome", {});
+
+  // TRANSITIONS
 
   constexpr int observationCount = 60;
   constexpr double stationaryDeviation = 0.01;
@@ -124,9 +129,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent, 
         << ", " << (hw ? hw->getCM730State().voltage : -1);
       return true;
     });
-
-  ofstream playingOut("fsm-kick-learner.dot");
-  playingOut << fsm->toDot();
 
   return fsm;
 }

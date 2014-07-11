@@ -1,17 +1,19 @@
 #include "adhocoptiontreebuilder.ih"
 
-shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, shared_ptr<OptionTree> tree)
+shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent)
 {
+  // OPTIONS
+
   auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
   auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
   auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
-  auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto keepPosition = make_shared<KeepPosition>("keepPosition", PlayerRole::Supporter, agent);
-  auto circleBall = make_shared<CircleBall>("circleBall", agent);
   auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
 
-  auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "supporter"));
+  // STATES
+
+  auto fsm = make_shared<FSMOption>(agent->getVoice(), "supporter");
 
   auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
   auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookForBall});
@@ -20,6 +22,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, sh
   auto keepPositionState = fsm->newState("keepPosition", {keepPosition});
 
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, lookForBallState, lookForBallState, lookAtBallState });
+
+  // TRANSITIONS
 
   standUpState
     ->transitionTo(lookForBallState, "standing")
@@ -55,9 +59,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent, sh
   circleToFindLostBallState
     ->transitionTo(lookAtBallState, "found")
     ->when([] { return stepUpDownThreshold(5, ballVisibleCondition); });
-
-  ofstream playingOut("fsm-supporter.dot");
-  playingOut << fsm->toDot();
 
   return fsm;
 }

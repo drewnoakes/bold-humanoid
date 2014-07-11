@@ -455,6 +455,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/UntilShutdown/untilshutdown.cc
+)
+
+add_class(BOLDHUMANOID
   ./OptionTree/getOption.cc
   ./OptionTree/run.cc
 )
@@ -462,10 +466,13 @@ add_class(BOLDHUMANOID
 add_class(BOLDHUMANOID
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildKeeperFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildKickLearnerFsm.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildPauseStateFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildPenaltyKeeperFsm.cc
-  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildTree.cc
-  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildSupporterFsm.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildPlayModeFsm.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildStayStandingFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildStrikerFsm.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildSupporterFsm.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildTree.cc
 )
 
 add_class(BOLDHUMANOID
