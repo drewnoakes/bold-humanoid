@@ -151,45 +151,29 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   // GAME CONTROLLER PLAY MODE
   //
 
-  readyState
-    ->transitionTo(setState, "gc-set")
-    ->when(isSetPlayMode);
-
-  readyState
-    ->transitionTo(playingState, "gc-playing")
-    ->when(isPlayingPlayMode);
-
-  setState
-    ->transitionTo(penalisedState, "gc-penalised")
-    ->when(isPenalised);
-
-  setState
-    ->transitionTo(playingState, "gc-playing")
-    ->when(isPlayingPlayMode);
-
-  playingState
-    ->transitionTo(penalisedState, "gc-penalised")
-    ->when(isPenalised);
-
-  playingState
-    ->transitionTo(startUpState, "gc-initial")
+  winFsm
+    ->wildcardTransitionTo(startUpState, "gc-initial")
     ->when(nonPenalisedPlayMode(PlayMode::INITIAL));
 
-  playingState
-    ->transitionTo(readyState, "gc-ready")
+  winFsm
+    ->wildcardTransitionTo(readyState, "gc-ready")
     ->when(nonPenalisedPlayMode(PlayMode::READY));
 
-  playingState
-    ->transitionTo(setState, "gc-set")
+  winFsm
+    ->wildcardTransitionTo(setState, "gc-set")
     ->when(nonPenalisedPlayMode(PlayMode::SET));
 
-  penalisedState
-    ->transitionTo(setState, "gc-unpenalised")
-    ->when(nonPenalisedPlayMode(PlayMode::SET));
-
-  penalisedState
-    ->transitionTo(playingState, "gc-unpenalised")
+  winFsm
+    ->wildcardTransitionTo(playingState, "gc-playing")
     ->when(nonPenalisedPlayMode(PlayMode::PLAYING));
+
+  winFsm
+    ->wildcardTransitionTo(penalisedState, "gc-penalised")
+    ->when(isPenalised);
+
+  winFsm
+    ->wildcardTransitionTo(setState, "gc-set")
+    ->when(nonPenalisedPlayMode(PlayMode::SET));
 
   //
   // GET UP FROM FALL
