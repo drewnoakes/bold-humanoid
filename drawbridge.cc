@@ -4,12 +4,12 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
-#include "../Clock/clock.hh"
-#include "../Config/config.hh"
-#include "../StateObject/TeamState/teamstate.hh"
-#include "../UDPSocket/udpsocket.hh"
-#include "../version.hh"
-#include "../JointId/jointid.hh"
+#include "Clock/clock.hh"
+#include "Config/config.hh"
+#include "StateObject/TeamState/teamstate.hh"
+#include "UDPSocket/udpsocket.hh"
+#include "version.hh"
+#include "JointId/jointid.hh"
 
 using namespace bold;
 using namespace std;
