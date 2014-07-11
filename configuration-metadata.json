@@ -380,8 +380,8 @@
       "spacing": { "type": "double", "min": 0.2 }
     },
     "yield": {
-      "min-dist": { "type": "double" },
-      "max-dist": { "type": "double" }
+      "min-ball-dist": { "type": "double" },
+      "max-ball-dist": { "type": "double" }
     },
     "search-ball": {
       "turn-speed":        { "type": "double" },
