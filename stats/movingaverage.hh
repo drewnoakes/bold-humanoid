@@ -72,7 +72,7 @@ namespace bold
     {
       d_length = 0;
       d_nextPointer = 0;
-      d_sum = {};
+      AveragingTraits::zero(d_sum);
     }
 
     T getAverage() const { return d_avg; }

@@ -148,6 +148,26 @@ TEST (StatsTest, average_vector2d)
   EXPECT_EQ( 3, avg.getCount() );
 }
 
+TEST (StatsTests, MovingAverage_reset)
+{
+  MovingAverage<Vector2d> m(5);
+
+  m.next(Vector2d(1,1));
+  m.next(Vector2d(1,1));
+  m.next(Vector2d(1,1));
+
+  EXPECT_TRUE( VectorsEqual(Vector2d(1,1), m.getAverage()) );
+
+  m.reset();
+
+  m.next(Vector2d(2,2));
+  m.next(Vector2d(2,2));
+  m.next(Vector2d(2,2));
+
+  EXPECT_TRUE( VectorsEqual(Vector2d(2,2), m.getAverage()) );
+
+}
+
 // TEST (StatsTests, stdDev_int)
 // {
 //   vector<int> ints = {456644, 5428, 39972, 3884, 7293, 348234, 42, 2335645};
