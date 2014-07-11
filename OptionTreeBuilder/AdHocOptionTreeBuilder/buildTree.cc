@@ -9,21 +9,6 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto const& headModule         = agent->getHeadModule();
   auto const& fallDetector       = agent->getFallDetector();
 
-  auto isPenalised = []
-  {
-    auto gameState = State::get<GameState>();
-    return gameState && gameState->getMyPlayerInfo().hasPenalty();
-  };
-
-  auto nonPenalisedPlayMode = [](PlayMode playMode)
-  {
-    return [playMode]
-    {
-      auto gameState = State::get<GameState>();
-      return gameState && !gameState->getMyPlayerInfo().hasPenalty() && gameState->getPlayMode() == playMode;
-    };
-  };
-
   auto isWalking = [walkModule] { return walkModule->isRunning(); };
   auto hasFallen = [fallDetector] { return fallDetector->getFallenState() != FallState::STANDUP; };
 

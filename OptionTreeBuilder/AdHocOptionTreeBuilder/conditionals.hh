@@ -62,4 +62,19 @@ namespace bold
 
   auto isSetPlayMode = isPlayMode(robocup::PlayMode::SET, false);
   auto isPlayingPlayMode = isPlayMode(robocup::PlayMode::PLAYING, false);
+
+  auto isPenalised = []
+  {
+    auto gameState = State::get<GameState>();
+    return gameState && gameState->getMyPlayerInfo().hasPenalty();
+  };
+
+  auto nonPenalisedPlayMode = [](robocup::PlayMode playMode)
+  {
+    return [playMode]
+    {
+      auto gameState = State::get<GameState>();
+      return gameState && !gameState->getMyPlayerInfo().hasPenalty() && gameState->getPlayMode() == playMode;
+    };
+  };
 }
