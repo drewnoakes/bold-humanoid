@@ -15,8 +15,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStayStandingFsm(Agent* agent,
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "stay-standing");
 
-  auto getUpState = fsm->newState("getUp", {SequenceOption::make("get-up-sequence",  {stopWalkingImmediately,getUp})}, false, true);
-  auto standingState = fsm->newState("standing", {whileStandingOption});
+  auto getUpState = fsm->newState("getUp", { SequenceOption::make("get-up-sequence", { stopWalkingImmediately, getUp }) }, false, true);
+  auto standingState = fsm->newState("standing", { whileStandingOption });
 
   getUpState->onEnter.connect([agent]
   {

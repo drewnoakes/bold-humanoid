@@ -121,20 +121,20 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "striker");
 
-  auto standUpState = fsm->newState("standUp", {standUp}, /*endState*/false, /*startState*/true);
-  auto locateBallState = fsm->newState("locateBall", {stopWalking, buildStationaryMap, locateBall});
-  auto locateBallCirclingState = fsm->newState("locateBallCircling", {searchBall});
-  auto approachBallState = fsm->newState("approachBall", {approachBall, lookAtBall});
-  auto directAttackState = fsm->newState("directAttack", {approachBall, lookAtBall});
-  auto atBallState = fsm->newState("atBall", {stopWalking, buildStationaryMap, atBall});
-  auto turnAroundBallState = fsm->newState("turnAroundBall", {circleBall});
-  auto kickForwardsState = fsm->newState("kickForwards", {stopWalking,lookAtFeet});
-  auto leftKickState = fsm->newState("leftKick", {leftKick});
-  auto rightKickState = fsm->newState("rightKick", {rightKick});
-  auto kickState = fsm->newState("kick", {SequenceOption::make("stop-walking-and-kick-sequence", {stopWalking, kickMotion})});
-  auto yieldState = fsm->newState("yield", {stopWalking,lookAtBall});
-  auto awaitTheirKickOffState = fsm->newState("awaitTheirKickOff", {stopWalking,locateBall,awaitTheirKickOff});
-  auto supportState = fsm->newState("support", {support, lookAtBall});
+  auto standUpState = fsm->newState("standUp", { standUp }, /*endState*/false, /*startState*/true);
+  auto locateBallState = fsm->newState("locateBall", { stopWalking, buildStationaryMap, locateBall });
+  auto locateBallCirclingState = fsm->newState("locateBallCircling", { searchBall });
+  auto approachBallState = fsm->newState("approachBall", { approachBall, lookAtBall });
+  auto directAttackState = fsm->newState("directAttack", { approachBall, lookAtBall });
+  auto atBallState = fsm->newState("atBall", { stopWalking, buildStationaryMap, atBall });
+  auto turnAroundBallState = fsm->newState("turnAroundBall", { circleBall });
+  auto kickForwardsState = fsm->newState("kickForwards", { stopWalking, lookAtFeet });
+  auto leftKickState = fsm->newState("leftKick", { leftKick });
+  auto rightKickState = fsm->newState("rightKick", { rightKick });
+  auto kickState = fsm->newState("kick", { SequenceOption::make("stop-walking-and-kick-sequence", { stopWalking, kickMotion }) });
+  auto yieldState = fsm->newState("yield", { stopWalking, lookAtBall });
+  auto awaitTheirKickOffState = fsm->newState("awaitTheirKickOff", { stopWalking, locateBall, awaitTheirKickOff });
+  auto supportState = fsm->newState("support", { support, lookAtBall });
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
   //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });

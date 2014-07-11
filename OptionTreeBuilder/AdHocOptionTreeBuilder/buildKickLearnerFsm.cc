@@ -18,16 +18,16 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent)
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "kick-learner");
 
-  auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-  auto waitForBallState = fsm->newState("wait-for-ball", {lookAtFeet});
-  auto selectKickState = fsm->newState("selectKick", {});
-  auto kickLeftState = fsm->newState("kickLeft", {kickLeft,lookAtBall});
-  auto kickRightState = fsm->newState("kickRight", {kickRight,lookAtBall});
-  auto kickCrossLeftState = fsm->newState("kickCrossLeft", {kickCrossLeft, lookAtBall});
-  auto kickCrossRightState = fsm->newState("kickCrossRight", {kickCrossRight,lookAtBall});
-  auto lookUpForBallState = fsm->newState("lookUp", {});
-  auto watchBallRollState = fsm->newState("watchBallRoll", {lookAtBall});
-  auto recordOutcomeState = fsm->newState("recordOutcome", {});
+  auto standUpState = fsm->newState("standUp", { standUp }, false/*endState*/, true/*startState*/);
+  auto waitForBallState = fsm->newState("wait-for-ball", { lookAtFeet });
+  auto selectKickState = fsm->newState("selectKick", { });
+  auto kickLeftState = fsm->newState("kickLeft", { kickLeft, lookAtBall });
+  auto kickRightState = fsm->newState("kickRight", { kickRight, lookAtBall });
+  auto kickCrossLeftState = fsm->newState("kickCrossLeft", { kickCrossLeft, lookAtBall });
+  auto kickCrossRightState = fsm->newState("kickCrossRight", { kickCrossRight, lookAtBall });
+  auto lookUpForBallState = fsm->newState("lookUp", { });
+  auto watchBallRollState = fsm->newState("watchBallRoll", { lookAtBall });
+  auto recordOutcomeState = fsm->newState("recordOutcome", { });
 
   // TRANSITIONS
 

@@ -20,11 +20,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "keeper");
 
-  auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookForBall});
-  auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
-  auto bigStepLeftState = fsm->newState("bigStepLeft", {bigStepLeft});
-  auto bigStepRightState = fsm->newState("bigStepRight", {bigStepRight});
+  auto standUpState = fsm->newState("standUp", { standUp }, false/*endState*/, true/*startState*/);
+  auto lookForBallState = fsm->newState("lookForBall", { stopWalking, lookForBall });
+  auto lookAtBallState = fsm->newState("lookAtBall", { stopWalking, lookAtBall });
+  auto bigStepLeftState = fsm->newState("bigStepLeft", { bigStepLeft });
+  auto bigStepRightState = fsm->newState("bigStepRight", { bigStepRight });
   auto leftCrossKickState = fsm->newState("leftCrossKick", { leftCrossKick });
   auto rightCrossKickState = fsm->newState("rightCrossKick", { rightCrossKick });
 

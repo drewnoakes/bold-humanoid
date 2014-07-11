@@ -17,11 +17,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "penalty-keeper");
 
-  auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookAroundNarrow});
-  auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
-  auto leftDiveState = fsm->newState("leftDive", {leftDive});
-  auto rightDiveState = fsm->newState("rightDive", {rightDive});
+  auto standUpState = fsm->newState("standUp", { standUp }, false/*endState*/, true/*startState*/);
+  auto lookForBallState = fsm->newState("lookForBall", { stopWalking, lookAroundNarrow });
+  auto lookAtBallState = fsm->newState("lookAtBall", { stopWalking, lookAtBall });
+  auto leftDiveState = fsm->newState("leftDive", { leftDive });
+  auto rightDiveState = fsm->newState("rightDive", { rightDive });
 
   // TRANSITIONS
 

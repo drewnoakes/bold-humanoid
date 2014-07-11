@@ -15,11 +15,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent)
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "supporter");
 
-  auto standUpState = fsm->newState("standUp", {standUp}, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", {stopWalking, lookForBall});
-  auto lookAtBallState = fsm->newState("lookAtBall", {stopWalking, lookAtBall});
-  auto circleToFindLostBallState = fsm->newState("lookForBallCircling", {searchBall});
-  auto keepPositionState = fsm->newState("keepPosition", {keepPosition});
+  auto standUpState = fsm->newState("standUp", { standUp }, false/*endState*/, true/*startState*/);
+  auto lookForBallState = fsm->newState("lookForBall", { stopWalking, lookForBall });
+  auto lookAtBallState = fsm->newState("lookAtBall", { stopWalking, lookAtBall });
+  auto circleToFindLostBallState = fsm->newState("lookForBallCircling", { searchBall });
+  auto keepPositionState = fsm->newState("keepPosition", { keepPosition });
 
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, lookForBallState, lookForBallState, lookAtBallState });
 
