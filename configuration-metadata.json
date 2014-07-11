@@ -393,6 +393,9 @@
     },
     "perfect-line": {
       "enabled": { "type": "bool" }
+    },
+    "support": {
+      "yield-distance": { "type": "double" }
     }
   },
   "health-and-safety": {

@@ -397,6 +397,9 @@
     },
     "perfect-line": {
       "enabled": true
+    },
+    "support": {
+      "yield-distance": 1.0
     }
   },
   "health-and-safety": {

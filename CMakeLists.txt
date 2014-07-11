@@ -463,6 +463,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/Support/support.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/UntilShutdown/untilshutdown.cc
 )
 
