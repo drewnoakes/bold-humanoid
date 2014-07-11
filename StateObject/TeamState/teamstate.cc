@@ -141,7 +141,7 @@ vector<PlayerState> TeamState::getBallObservers() const
   return observers;
 }
 
-bool TeamState::isTeamMate(PlayerActivity activity) const
+bool TeamState::isTeamMateInActivity(PlayerActivity activity) const
 {
   for (PlayerState const& player : d_playerStates)
   {

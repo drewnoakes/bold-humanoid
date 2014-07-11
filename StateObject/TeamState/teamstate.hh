@@ -145,7 +145,7 @@ namespace bold
 
     std::vector<PlayerState> getBallObservers() const;
 
-    bool isTeamMate(PlayerActivity AttackingGoal) const;
+    bool isTeamMateInActivity(PlayerActivity activity) const;
 
     FieldSide getKeeperBallSideEstimate() const;
 

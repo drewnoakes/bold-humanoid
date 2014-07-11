@@ -12,7 +12,7 @@ auto shouldYieldToOtherAttacker = []
 
   double dist = agentFrame->getBallObservation()->norm();
 
-  bool isTeamMateAttacking = team->isTeamMate(PlayerActivity::AttackingGoal);
+  bool isTeamMateAttacking = team->isTeamMateInActivity(PlayerActivity::AttackingGoal);
 
   static auto yieldMinDist = Config::getSetting<double>("options.yield.min-dist");
   static auto yieldMaxDist = Config::getSetting<double>("options.yield.max-dist");
