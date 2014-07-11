@@ -4,31 +4,23 @@
 
 shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {
-  uchar uniformNumber   = agent->getUniformNumber();
-  uchar teamNumber      = agent->getTeamNumber();
   auto const& walkModule         = agent->getWalkModule();
   auto const& motionScriptModule = agent->getMotionScriptModule();
   auto const& headModule         = agent->getHeadModule();
   auto const& fallDetector       = agent->getFallDetector();
 
-  auto isPenalised = [teamNumber,uniformNumber]
+  auto isPenalised = []
   {
     auto gameState = State::get<GameState>();
-    return gameState && gameState->getTeam(teamNumber).getPlayer(uniformNumber).hasPenalty();
+    return gameState && gameState->getMyPlayerInfo().hasPenalty();
   };
 
-  auto isNotPenalised = [teamNumber,uniformNumber]
+  auto nonPenalisedPlayMode = [](PlayMode playMode)
   {
-    auto gameState = State::get<GameState>();
-    return gameState && !gameState->getTeam(teamNumber).getPlayer(uniformNumber).hasPenalty();
-  };
-
-  auto nonPenalisedPlayMode = [isNotPenalised](PlayMode playMode)
-  {
-    return [isNotPenalised,playMode]
+    return [playMode]
     {
       auto gameState = State::get<GameState>();
-      return gameState && isNotPenalised() && gameState->getPlayMode() == playMode;
+      return gameState && !gameState->getMyPlayerInfo().hasPenalty() && gameState->getPlayMode() == playMode;
     };
   };
 
