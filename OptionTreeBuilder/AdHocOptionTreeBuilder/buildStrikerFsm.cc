@@ -138,11 +138,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->transitionTo(locateBallState, "standing")
     ->whenTerminated();
 
-  // walk a circle if we don't find the ball within some time limit
-  locateBallState
-    ->transitionTo(locateBallCirclingState, "lost-ball-long")
-    ->after(chrono::seconds(8));
-
   // start approaching the ball when we have the confidence that it's really there, and it's not their kickoff
   // TODO this takes 300ms after the 10 sec elapses
   // TODO try to detect when the ball moves
@@ -151,6 +146,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
     ->when([] { return stepUpDownThreshold(10,
     [] { return ballVisibleCondition() && !isWithinTenSecondsOfTheirKickOff(); });
   });
+
+  // walk a circle if we don't find the ball within some time limit
+  locateBallState
+    ->transitionTo(locateBallCirclingState, "lost-ball-long")
+    ->after(chrono::seconds(8));
 
   // after 10 seconds of circling, look for the ball again
   locateBallCirclingState
