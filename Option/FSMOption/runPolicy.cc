@@ -59,6 +59,9 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
     for (auto& transition : d_wildcardTransitions)
     {
+      if (transition->childState == d_curState)
+        continue;
+
       if (tryTransition(transition))
       {
         writer.StartObject();
