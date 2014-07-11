@@ -170,6 +170,10 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
     ->when(isPenalised);
 
   playingState
+    ->transitionTo(readyState, "gc-initial")
+    ->when(nonPenalisedPlayMode(PlayMode::INITIAL));
+
+  playingState
     ->transitionTo(readyState, "gc-ready")
     ->when(nonPenalisedPlayMode(PlayMode::READY));
 
