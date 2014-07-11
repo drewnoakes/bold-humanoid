@@ -14,10 +14,7 @@ auto shouldYieldToOtherAttacker = []
 
   bool isTeamMateAttacking = team->isTeamMateInActivity(PlayerActivity::AttackingGoal);
 
-  static auto yieldMinBallDist = Config::getSetting<double>("options.yield.min-ball-dist");
-  static auto yieldMaxBallDist = Config::getSetting<double>("options.yield.max-ball-dist");
-
-  return ballDist > yieldMinBallDist->getValue() && ballDist < yieldMaxBallDist->getValue() && isTeamMateAttacking;
+  return isTeamMateAttacking;
 };
 
 auto ballIsStoppingDistance = []
@@ -118,6 +115,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   auto circleBall = make_shared<CircleBall>("circleBall", agent);
   auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
   auto awaitTheirKickOff = make_shared<AwaitTheirKickOff>("awaitTheirKickOff");
+  auto support = make_shared<Support>("support", agent->getWalkModule());
 
   // STATES
 
@@ -136,10 +134,12 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   auto kickState = fsm->newState("kick", {SequenceOption::make("stop-walking-and-kick-sequence", {stopWalking, kickMotion})});
   auto yieldState = fsm->newState("yield", {stopWalking,lookAtBall});
   auto awaitTheirKickOffState = fsm->newState("awaitTheirKickOff", {stopWalking,locateBall,awaitTheirKickOff});
+  auto supportState = fsm->newState("support", {support, lookAtBall});
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
   //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
-  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, awaitTheirKickOffState, locateBallCirclingState, locateBallState, yieldState });
+  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, awaitTheirKickOffState, locateBallCirclingState, locateBallState, yieldState, supportState });
+
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
 
   // TRANSITIONS
@@ -186,7 +186,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
 
   // Let another player shine if they're closer and attempting to score
   approachBallState
-    ->transitionTo(yieldState, "yield")
+    ->transitionTo(supportState, "support")
     ->when([] { return stepUpDownThreshold(10, shouldYieldToOtherAttacker); });
 
   // stop walking to ball once we're close enough
@@ -206,6 +206,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
     ->transitionTo(locateBallState, "resume")
     ->when([] { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
 
+  supportState
+    ->transitionTo(locateBallState, "resume")
+    ->when([] { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
   //
   // AT-BALL EXIT TRANSITIONS
   //
