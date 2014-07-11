@@ -39,8 +39,15 @@ Option::OptionVector WalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer
 
   writer.String("distSpeed").Double(speedScaleDueToDistance);
 
-  // TODO: walk backwards if target is behind?
-  double faceAngle = walkDist < d_turnDist ? d_targetAngle : Math::angleToPoint(d_targetPos);
+  double faceAngle = 0;
+  if (walkDist < d_turnDist)
+    faceAngle = d_targetAngle;
+  else
+  {
+    faceAngle = Math::angleToPoint(d_targetPos);
+    if (fabs(faceAngle) > M_PI / 2.0)
+      faceAngle = Math::normaliseRads(faceAngle + M_PI);
+  }
 
   double speedScaleDueToAngle = Math::lerp(fabs(faceAngle),
                                            Math::degToRad(d_lowerTurnLimitDegs->getValue()),
