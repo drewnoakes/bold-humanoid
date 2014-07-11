@@ -1,5 +1,8 @@
 #include "support.hh"
 
+#include "../../MotionModule/WalkModule/walkmodule.hh"
+#include "../WalkTo/walkto.hh"
+
 #include "../../Config/config.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
@@ -10,13 +13,13 @@ using namespace std;
 using namespace Eigen;
 
 Support::Support(string const& id, shared_ptr<WalkModule> walkModule)
-  : Option{id, "Support"},
-    d_walkModule{move(walkModule)}
+  : Option{id, "Support"}
 {
   d_yieldDistance = Config::getSetting<double>("options.support.yield-distance");
+  d_walkTo = make_shared<WalkTo>(id + ".walkto", walkModule);
 }
 
-Option::OptionVector Support::runPolicy()
+Option::OptionVector Support::runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer)
 {
   auto agentFrame = State::get<AgentFrameState>();
 
@@ -26,23 +29,12 @@ Option::OptionVector Support::runPolicy()
   Vector2d ballPos{agentFrame->getBallObservation()->head<2>()};
   auto ballDir = ballPos.normalized();
 
+  writer.String("ballPos").StartArray().Double(ballPos.x()).Double(ballPos.y()).EndArray(2);
+
   auto yieldPos = ballPos - d_yieldDistance->getValue() * ballDir;
-  double walkDist = yieldPos.norm();
 
-  double brakeDist = 0.15;
+  double ballAngleRads = Math::angleToPoint(ballPos);
 
-  double speedScaleDueToDistance = Math::clamp(walkDist / brakeDist, 0.0, 1.0);
-
-  double xSpeed = Math::lerp(speedScaleDueToDistance * yieldPos.y(),
-                             9.0,
-                             40.0);
-
-  double ySpeed = -Math::lerp(speedScaleDueToDistance * yieldPos.x(),
-                             9.0,
-                             40.0);
-
-  d_walkModule->setMoveDir(xSpeed, ySpeed);
-  d_walkModule->setTurnAngle(0.0);
-
-  return {};
+  d_walkTo->setTargetPosition(yieldPos, ballAngleRads);
+  return {d_walkTo};
 }
