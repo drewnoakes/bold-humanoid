@@ -359,6 +359,10 @@
       "lower-turn-limit-degs": 1.0,
       "upper-turn-limit-degs": 35.0
     },
+    "await-their-kick-off": {
+      "ball-pos-window-size": 30,
+      "required-ball-movement": 0.2
+    },
     "look-around": {
       "top-angle": 30.0,
       "bottom-angle": -25.0,

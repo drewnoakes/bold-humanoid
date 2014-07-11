@@ -390,6 +390,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/AwaitTheirKickOff/awaittheirkickoff.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/AtBall/atball.cc
 )
 
@@ -850,4 +854,3 @@ foreach(json_file ${JSON_FILES})
   add_Custom_command(TARGET boldhumanoid PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${json_file} $<TARGET_FILE_DIR:boldhumanoid>)
 endforeach(json_file)
-

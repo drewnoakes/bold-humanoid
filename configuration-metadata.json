@@ -355,6 +355,10 @@
       "lower-turn-limit-degs": { "type": "double" },
       "upper-turn-limit-degs": { "type": "double" }
     },
+    "await-their-kick-off": {
+      "ball-pos-window-size": { "type": "int", "min": 1, "max": 100, "readonly": true },
+      "required-ball-movement": { "type": "double", "min": 0.01, "max": 2 }
+    },
     "look-around": {
       "top-angle":      { "type": "double" },
       "bottom-angle":   { "type": "double" },

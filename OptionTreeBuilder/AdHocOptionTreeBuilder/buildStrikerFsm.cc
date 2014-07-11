@@ -1,5 +1,7 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../../Option/AwaitTheirKickOff/awaittheirkickoff.hh"
+
 auto shouldYieldToOtherAttacker = []
 {
   auto team = State::get<TeamState>();
@@ -113,6 +115,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
   auto circleBall = make_shared<CircleBall>("circleBall", agent);
   auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
+  auto awaitTheirKickOff = make_shared<AwaitTheirKickOff>("awaitTheirKickOff");
 
   auto fsm = tree->addOption(make_shared<FSMOption>(agent->getVoice(), "striker"));
 
@@ -128,24 +131,29 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent, shar
   auto rightKickState = fsm->newState("rightKick", {rightKick});
   auto kickState = fsm->newState("kick", {SequenceOption::make("stop-walking-and-kick-sequence", {stopWalking, kickMotion})});
   auto yieldState = fsm->newState("yield", {stopWalking,lookAtBall});
+  auto awaitTheirKickOffState = fsm->newState("awaitTheirKickOff", {stopWalking,locateBall,awaitTheirKickOff});
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
   //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
-  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, locateBallCirclingState, locateBallState, yieldState });
+  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, awaitTheirKickOffState, locateBallCirclingState, locateBallState, yieldState });
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
+
+  standUpState
+    ->transitionTo(awaitTheirKickOffState)
+    ->when(isWithinTenSecondsOfTheirKickOff);
 
   standUpState
     ->transitionTo(locateBallState, "standing")
     ->whenTerminated();
 
-  // start approaching the ball when we have the confidence that it's really there, and it's not their kickoff
-  // TODO this takes 300ms after the 10 sec elapses
-  // TODO try to detect when the ball moves
+  awaitTheirKickOffState
+    ->transitionTo(locateBallState)
+    ->whenTerminated();
+
+  // start approaching the ball when we have the confidence that it's really there
   locateBallState
     ->transitionTo(approachBallState, "found-ball")
-    ->when([] { return stepUpDownThreshold(10,
-    [] { return ballVisibleCondition() && !isWithinTenSecondsOfTheirKickOff(); });
-  });
+    ->when([] { return stepUpDownThreshold(10, ballVisibleCondition); });
 
   // walk a circle if we don't find the ball within some time limit
   locateBallState
