@@ -202,6 +202,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
     ->transitionTo(kickForwardsState, "near-ball")
     ->when(ballIsStoppingDistance);
 
+  directAttackState
+    ->transitionTo(locateBallState, "lost-ball")
+    ->when([] { return ballLostConditionFactory; });
+
   yieldState
     ->transitionTo(locateBallState, "resume")
     ->when([] { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
