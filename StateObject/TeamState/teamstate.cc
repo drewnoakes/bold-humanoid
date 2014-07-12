@@ -80,6 +80,7 @@ std::string bold::getPlayerRoleString(PlayerRole role)
     case PlayerRole::PenaltyKeeper: return "PenaltyKeeper";
     case PlayerRole::PenaltyStriker: return "PenaltyStriker";
     case PlayerRole::Other: return "Other";
+    case PlayerRole::KickLearner: return "KickLearner";
     default: return "Unknown";
   }
 }
@@ -104,6 +105,7 @@ std::string bold::getPlayerStatusString(PlayerStatus status)
     case PlayerStatus::Inactive: return "Inactive";
     case PlayerStatus::Active: return "Active";
     case PlayerStatus::Penalised: return "Penalised";
+    case PlayerStatus::Paused: return "Paused";
     default: return "Unknown";
   }
 }
