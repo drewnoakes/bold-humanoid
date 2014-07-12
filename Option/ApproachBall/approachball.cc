@@ -104,7 +104,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
       {
         Draw::circle(Frame::Agent, ray.near(), 0.02, bgr::lightBlue, 1, 0.8);
 
-        if ((ray.near() - ballPos).norm() > FieldMap::getBallDiameter() * 1.5)
+        if (!agentFrame->isNearBall(ray.near(), FieldMap::getBallDiameter() * 1.5) &&
+            !agentFrame->isNearGoal(ray.near(), FieldMap::getGoalPostDiameter() * 2))
           minDistInLane = std::min(minDistInLane, ray.near().norm());
       }
     }
