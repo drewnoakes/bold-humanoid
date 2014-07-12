@@ -20,7 +20,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
       return false;
 
     log::info(getId())
-      << d_curState->name << "->" << transition->childState->name
+      << d_curState->name << " >>> " << transition->childState->name
       << " (" << transition->name << ") after "
       << (int)Clock::getMillisSince(d_curState->startTimestamp) << "ms";
 

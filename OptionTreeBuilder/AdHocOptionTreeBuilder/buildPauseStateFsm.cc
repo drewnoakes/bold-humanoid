@@ -10,8 +10,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPauseStateFsm(Agent* agent, s
 
   // OPTIONS
 
-  auto sit = make_shared<MotionScriptOption>("sitDownScript", agent->getMotionScriptModule(), "./motionscripts/sit-down.json");
-  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
+  auto sit = make_shared<MotionScriptOption>("sit-down-script", agent->getMotionScriptModule(), "./motionscripts/sit-down.json");
+  auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
   auto stopAndSitSequence = SequenceOption::make("stop-then-sit-sequence", { stopWalking, sit });
 
   // STATES

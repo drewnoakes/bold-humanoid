@@ -4,22 +4,22 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent)
 {
   // OPTIONS
 
-  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
-  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
-  auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
-  auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
-  auto keepPosition = make_shared<KeepPosition>("keepPosition", PlayerRole::Supporter, agent);
-  auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
+  auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
+  auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
+  auto lookForBall = make_shared<LookAround>("look-for-ball", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
+  auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
+  auto keepPosition = make_shared<KeepPosition>("keep-position", PlayerRole::Supporter, agent);
+  auto searchBall = make_shared<SearchBall>("search-ball", agent->getWalkModule(), agent->getHeadModule());
 
   // STATES
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "supporter");
 
-  auto standUpState = fsm->newState("standUp", { standUp }, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", { stopWalking, lookForBall });
-  auto lookAtBallState = fsm->newState("lookAtBall", { stopWalking, lookAtBall });
-  auto circleToFindLostBallState = fsm->newState("lookForBallCircling", { searchBall });
-  auto keepPositionState = fsm->newState("keepPosition", { keepPosition });
+  auto standUpState = fsm->newState("stand-up", { standUp }, false/*endState*/, true/*startState*/);
+  auto lookForBallState = fsm->newState("look-for-ball", { stopWalking, lookForBall });
+  auto lookAtBallState = fsm->newState("look-at-ball", { stopWalking, lookAtBall });
+  auto circleToFindLostBallState = fsm->newState("look-for-ball-circling", { searchBall });
+  auto keepPositionState = fsm->newState("keep-position", { keepPosition });
 
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, lookForBallState, lookForBallState, lookAtBallState });
 

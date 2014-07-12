@@ -6,22 +6,22 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
 {
   // OPTIONS
 
-  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
-  auto leftDive = make_shared<MotionScriptOption>("diveLeft", agent->getMotionScriptModule(), "./motionscripts/dive-left.json");
-  auto rightDive = make_shared<MotionScriptOption>("diveRight", agent->getMotionScriptModule(), "./motionscripts/dive-right.json");
-  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
-  auto lookAroundNarrow = make_shared<LookAround>("lookAroundNarrow", agent->getHeadModule(), 80.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 1.0; });
-  auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
+  auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
+  auto leftDive = make_shared<MotionScriptOption>("dive-left", agent->getMotionScriptModule(), "./motionscripts/dive-left.json");
+  auto rightDive = make_shared<MotionScriptOption>("dive-right", agent->getMotionScriptModule(), "./motionscripts/dive-right.json");
+  auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
+  auto lookAroundNarrow = make_shared<LookAround>("look-around-narrow", agent->getHeadModule(), 80.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 1.0; });
+  auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
 
   // STATES
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "penalty-keeper");
 
-  auto standUpState = fsm->newState("standUp", { standUp }, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", { stopWalking, lookAroundNarrow });
-  auto lookAtBallState = fsm->newState("lookAtBall", { stopWalking, lookAtBall });
-  auto leftDiveState = fsm->newState("leftDive", { leftDive });
-  auto rightDiveState = fsm->newState("rightDive", { rightDive });
+  auto standUpState = fsm->newState("stand-up", { standUp }, false/*endState*/, true/*startState*/);
+  auto lookForBallState = fsm->newState("look-for-ball", { stopWalking, lookAroundNarrow });
+  auto lookAtBallState = fsm->newState("look-at-ball", { stopWalking, lookAtBall });
+  auto leftDiveState = fsm->newState("left-dive", { leftDive });
+  auto rightDiveState = fsm->newState("right-dive", { rightDive });
 
   // TRANSITIONS
 

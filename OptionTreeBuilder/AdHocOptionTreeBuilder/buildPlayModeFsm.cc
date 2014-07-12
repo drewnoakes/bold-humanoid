@@ -9,9 +9,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
 {
   // OPTIONS
 
-  auto sit = make_shared<MotionScriptOption>("sitDownScript", agent->getMotionScriptModule(), "./motionscripts/sit-down.json", true);
-  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", true);
-  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
+  auto sit = make_shared<MotionScriptOption>("sit-down-script", agent->getMotionScriptModule(), "./motionscripts/sit-down.json", true);
+  auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", true);
+  auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
   auto stopAndSitSequence = SequenceOption::make("stop-then-sit-sequence", { stopWalking, sit });
 
   // STATES

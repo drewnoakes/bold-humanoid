@@ -4,14 +4,14 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 {
   // OPTIONS
 
-  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
-  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
-  auto lookForBall = make_shared<LookAround>("lookForBall", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 0.5; });
-  auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
-  auto bigStepLeft = make_shared<MotionScriptOption>("bigStepLeft", agent->getMotionScriptModule(), "./motionscripts/step-left-big.json");
-  auto bigStepRight = make_shared<MotionScriptOption>("bigStepRight", agent->getMotionScriptModule(), "./motionscripts/step-right-big.json");
-  auto leftCrossKick = make_shared<MotionScriptOption>("leftCrossKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
-  auto rightCrossKick = make_shared<MotionScriptOption>("rightCrossKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
+  auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
+  auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
+  auto lookForBall = make_shared<LookAround>("look-for-ball", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 0.5; });
+  auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
+  auto bigStepLeft = make_shared<MotionScriptOption>("big-step-left", agent->getMotionScriptModule(), "./motionscripts/step-left-big.json");
+  auto bigStepRight = make_shared<MotionScriptOption>("big-step-right", agent->getMotionScriptModule(), "./motionscripts/step-right-big.json");
+  auto leftCrossKick = make_shared<MotionScriptOption>("left-cross-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
+  auto rightCrossKick = make_shared<MotionScriptOption>("right-cross-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
 
   // STATES
 
@@ -20,13 +20,13 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "keeper");
 
-  auto standUpState = fsm->newState("standUp", { standUp }, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("lookForBall", { stopWalking, lookForBall });
-  auto lookAtBallState = fsm->newState("lookAtBall", { stopWalking, lookAtBall });
-  auto bigStepLeftState = fsm->newState("bigStepLeft", { bigStepLeft });
-  auto bigStepRightState = fsm->newState("bigStepRight", { bigStepRight });
-  auto leftCrossKickState = fsm->newState("leftCrossKick", { leftCrossKick });
-  auto rightCrossKickState = fsm->newState("rightCrossKick", { rightCrossKick });
+  auto standUpState = fsm->newState("stand-up", { standUp }, false/*endState*/, true/*startState*/);
+  auto lookForBallState = fsm->newState("look-for-ball", { stopWalking, lookForBall });
+  auto lookAtBallState = fsm->newState("look-at-ball", { stopWalking, lookAtBall });
+  auto bigStepLeftState = fsm->newState("big-step-left", { bigStepLeft });
+  auto bigStepRightState = fsm->newState("big-step-right", { bigStepRight });
+  auto leftCrossKickState = fsm->newState("left-cross-kick", { leftCrossKick });
+  auto rightCrossKickState = fsm->newState("right-cross-kick", { rightCrossKick });
 
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, lookForBallState, lookForBallState, lookAtBallState, bigStepLeftState, bigStepRightState });
 

@@ -101,39 +101,39 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
 {
   // OPTIONS
 
-  auto buildStationaryMap = make_shared<BuildStationaryMap>("buildStationaryMap", agent->getVoice());
-  auto standUp = make_shared<MotionScriptOption>("standUpScript", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", /*ifNotInFinalPose*/true);
-  auto leftKick = make_shared<MotionScriptOption>("leftKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
-  auto rightKick = make_shared<MotionScriptOption>("rightKickScript", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
-  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
-  auto locateBall = make_shared<LocateBall>("locateBall", agent);
-  auto approachBall = make_shared<ApproachBall>("approachBall", agent->getWalkModule(), agent->getBehaviourControl());
+  auto buildStationaryMap = make_shared<BuildStationaryMap>("build-stationary-map", agent->getVoice());
+  auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", /*ifNotInFinalPose*/true);
+  auto leftKick = make_shared<MotionScriptOption>("left-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
+  auto rightKick = make_shared<MotionScriptOption>("right-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
+  auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
+  auto locateBall = make_shared<LocateBall>("locate-ball", agent);
+  auto approachBall = make_shared<ApproachBall>("approach-ball", agent->getWalkModule(), agent->getBehaviourControl());
   auto kickMotion = make_shared<MotionScriptOption>("kick", agent->getMotionScriptModule());
-  auto atBall = make_shared<AtBall>("atBall", agent);
-  auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
-  auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
-  auto circleBall = make_shared<CircleBall>("circleBall", agent);
-  auto searchBall = make_shared<SearchBall>("searchBall", agent->getWalkModule(), agent->getHeadModule());
-  auto awaitTheirKickOff = make_shared<AwaitTheirKickOff>("awaitTheirKickOff");
+  auto atBall = make_shared<AtBall>("at-ball", agent);
+  auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
+  auto lookAtFeet = make_shared<LookAtFeet>("look-at-feet", agent->getHeadModule());
+  auto circleBall = make_shared<CircleBall>("circle-ball", agent);
+  auto searchBall = make_shared<SearchBall>("search-ball", agent->getWalkModule(), agent->getHeadModule());
+  auto awaitTheirKickOff = make_shared<AwaitTheirKickOff>("await-their-kick-off");
   auto support = make_shared<Support>("support", agent->getWalkModule());
 
   // STATES
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "striker");
 
-  auto standUpState = fsm->newState("standUp", { standUp }, /*endState*/false, /*startState*/true);
-  auto locateBallState = fsm->newState("locateBall", { stopWalking, buildStationaryMap, locateBall });
-  auto locateBallCirclingState = fsm->newState("locateBallCircling", { searchBall });
-  auto approachBallState = fsm->newState("approachBall", { approachBall, lookAtBall });
-  auto directAttackState = fsm->newState("directAttack", { approachBall, lookAtBall });
-  auto atBallState = fsm->newState("atBall", { stopWalking, buildStationaryMap, atBall });
-  auto turnAroundBallState = fsm->newState("turnAroundBall", { circleBall });
-  auto kickForwardsState = fsm->newState("kickForwards", { stopWalking, lookAtFeet });
-  auto leftKickState = fsm->newState("leftKick", { leftKick });
-  auto rightKickState = fsm->newState("rightKick", { rightKick });
+  auto standUpState = fsm->newState("stand-up", { standUp }, /*endState*/false, /*startState*/true);
+  auto locateBallState = fsm->newState("locate-ball", { stopWalking, buildStationaryMap, locateBall });
+  auto locateBallCirclingState = fsm->newState("locate-ball-circling", { searchBall });
+  auto approachBallState = fsm->newState("approach-ball", { approachBall, lookAtBall });
+  auto directAttackState = fsm->newState("direct-attack", { approachBall, lookAtBall });
+  auto atBallState = fsm->newState("at-ball", { stopWalking, buildStationaryMap, atBall });
+  auto turnAroundBallState = fsm->newState("turn-around-ball", { circleBall });
+  auto kickForwardsState = fsm->newState("kick-forwards", { stopWalking, lookAtFeet });
+  auto leftKickState = fsm->newState("left-kick", { leftKick });
+  auto rightKickState = fsm->newState("right-kick", { rightKick });
   auto kickState = fsm->newState("kick", { SequenceOption::make("stop-walking-and-kick-sequence", { stopWalking, kickMotion }) });
   auto yieldState = fsm->newState("yield", { stopWalking, lookAtBall });
-  auto awaitTheirKickOffState = fsm->newState("awaitTheirKickOff", { stopWalking, locateBall, awaitTheirKickOff });
+  auto awaitTheirKickOffState = fsm->newState("await-their-kick-off", { stopWalking, locateBall, awaitTheirKickOff });
   auto supportState = fsm->newState("support", { support, lookAtBall });
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
@@ -301,7 +301,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
         auto ballPos = lookAtFeet->getAverageBallPositionAgentFrame();
         if (ballPos.x() < 0)
         {
-          log::info("lookAtFeet2kickLeft") << "Kicking with left foot when ball at (" << ballPos.x() << "," << ballPos.y() << ")";
+          log::info("kickForwardsState->leftKickState") << "Kicking with left foot when ball at (" << ballPos.x() << "," << ballPos.y() << ")";
           return true;
         }
       }
@@ -325,7 +325,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
         auto ballPos = lookAtFeet->getAverageBallPositionAgentFrame();
         if (ballPos.x() >= 0)
         {
-          log::info("lookAtFeet2kickRight") << "Kicking with right foot when ball at (" << ballPos.x() << "," << ballPos.y() << ")";
+          log::info("kickForwardsState->rightKickState") << "Kicking with right foot when ball at (" << ballPos.x() << "," << ballPos.y() << ")";
           return true;
         }
       }

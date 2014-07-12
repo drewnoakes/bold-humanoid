@@ -6,28 +6,28 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKickLearnerFsm(Agent* agent)
 {
   // OPTIONS
 
-  auto lookAtFeet = make_shared<LookAtFeet>("lookAtFeet", agent->getHeadModule());
-  auto lookAtBall = make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), agent->getHeadModule());
-  auto standUp        = make_shared<MotionScriptOption>("standUp",   agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
-  auto kickLeft       = make_shared<MotionScriptOption>("kickLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
-  auto kickRight      = make_shared<MotionScriptOption>("kickRight", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
-  auto kickCrossLeft  = make_shared<MotionScriptOption>("kickCrossLeft",  agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
-  auto kickCrossRight = make_shared<MotionScriptOption>("kickCrossRight", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
+  auto lookAtFeet = make_shared<LookAtFeet>("look-at-feet", agent->getHeadModule());
+  auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
+  auto standUp        = make_shared<MotionScriptOption>("stand-up",   agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
+  auto kickLeft       = make_shared<MotionScriptOption>("kick-left",  agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
+  auto kickRight      = make_shared<MotionScriptOption>("kick-right", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
+  auto kickCrossLeft  = make_shared<MotionScriptOption>("kick-cross-left",  agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
+  auto kickCrossRight = make_shared<MotionScriptOption>("kick-cross-right", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
 
   // STATES
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "kick-learner");
 
-  auto standUpState = fsm->newState("standUp", { standUp }, false/*endState*/, true/*startState*/);
+  auto standUpState = fsm->newState("stand-up", { standUp }, false/*endState*/, true/*startState*/);
   auto waitForBallState = fsm->newState("wait-for-ball", { lookAtFeet });
-  auto selectKickState = fsm->newState("selectKick", { });
-  auto kickLeftState = fsm->newState("kickLeft", { kickLeft, lookAtBall });
-  auto kickRightState = fsm->newState("kickRight", { kickRight, lookAtBall });
-  auto kickCrossLeftState = fsm->newState("kickCrossLeft", { kickCrossLeft, lookAtBall });
-  auto kickCrossRightState = fsm->newState("kickCrossRight", { kickCrossRight, lookAtBall });
-  auto lookUpForBallState = fsm->newState("lookUp", { });
-  auto watchBallRollState = fsm->newState("watchBallRoll", { lookAtBall });
-  auto recordOutcomeState = fsm->newState("recordOutcome", { });
+  auto selectKickState = fsm->newState("select-kick", { });
+  auto kickLeftState = fsm->newState("kick-left", { kickLeft, lookAtBall });
+  auto kickRightState = fsm->newState("kick-right", { kickRight, lookAtBall });
+  auto kickCrossLeftState = fsm->newState("kick-cross-left", { kickCrossLeft, lookAtBall });
+  auto kickCrossRightState = fsm->newState("kick-cross-right", { kickCrossRight, lookAtBall });
+  auto lookUpForBallState = fsm->newState("look-up", { });
+  auto watchBallRollState = fsm->newState("watch-ball-roll", { lookAtBall });
+  auto recordOutcomeState = fsm->newState("record-outcome", { });
 
   // TRANSITIONS
 
