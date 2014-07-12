@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh rt"
+    echo "          launch round table using google-chrome in kiosk mode"
+    exit
+fi
+
+if [[ $# -ne 1 ]] ; then
+    echo "Must specify one robot number"
+    exit 1
+fi
+
+google-chrome --user-data-dir=/tmp/round-table-kiosk --kiosk http://localhost/?host=darwin$1.local
