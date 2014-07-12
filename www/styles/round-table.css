@@ -897,6 +897,12 @@ div.module.walk div.module-content h2
   font-size: 13px;
 }
 
+div.module.walk div.connection-indicator
+{
+  text-align: center;
+  line-height: 20px;
+}
+
 /********************************************************************/
 
 div.module.game div.play-mode
