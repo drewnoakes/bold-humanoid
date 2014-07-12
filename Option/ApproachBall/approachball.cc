@@ -2,12 +2,10 @@
 
 #include "../../BehaviourControl/behaviourcontrol.hh"
 #include "../../Drawing/drawing.hh"
-#include "../../Math/math.hh"
 #include "../../MotionModule/WalkModule/walkmodule.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
-
-#include <Eigen/Core>
+#include "../../geometry/Polygon2.hh"
 
 using namespace bold;
 using namespace bold::Colour;
@@ -83,6 +81,19 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   static auto avoidSpeed = Config::getSetting<double>("options.approach-ball.avoid-obstacles.avoid-speed");
   if (avoidObstacles->getValue())
   {
+    // Determine the polygon of the direct lane to the ball
+    Vector2d perp(Math::findPerpendicularVector(target).normalized() * (laneWidth->getValue()/2.0));
+
+    Polygon2d::PointVector lanePoints;
+    lanePoints.push_back(target + perp);
+    lanePoints.push_back(perp);
+    lanePoints.push_back(-perp);
+    lanePoints.push_back(target - perp);
+
+    Polygon2d lanePoly(lanePoints);
+
+    Draw::polygon(Frame::Agent, lanePoints, bgr::blue, 0.3, bgr::blue, 0.7, 2);
+
     if (fabs(targetAngleRads) < Math::degToRad(15))
     {
       // Try to keep a 'lane' free in front of the bot
