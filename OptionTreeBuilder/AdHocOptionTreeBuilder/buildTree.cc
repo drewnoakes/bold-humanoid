@@ -6,9 +6,10 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {
   // OPTIONS
 
-  auto sitArmsBack = make_shared<MotionScriptOption>("sitDownScript", agent->getMotionScriptModule(), "./motionscripts/sit-down-arms-back.json");
-  auto stopWalking = make_shared<StopWalking>("stopWalking", agent->getWalkModule());
-  auto stopAgent = make_shared<ActionOption>("stopAgent", [agent] { agent->stop(); });
+  auto sitArmsBack = make_shared<MotionScriptOption>("sit-down-script", agent->getMotionScriptModule(), "./motionscripts/sit-down-arms-back.json");
+  auto sit = make_shared<MotionScriptOption>("sit-down-script", agent->getMotionScriptModule(), "./motionscripts/sit-down.json");
+  auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
+  auto stopAgent = make_shared<ActionOption>("stop-agent", [agent] { agent->stop(); });
   auto shutdownSequence = SequenceOption::make("shutdown-sequence", { stopWalking, sitArmsBack, stopAgent });
 
   auto keeperFsm = buildKeeperFsm(agent);
@@ -17,7 +18,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto penaltyKeeperFsm = buildPenaltyKeeperFsm(agent);
   auto kickLearnerFsm = buildKickLearnerFsm(agent);
 
-  auto performRole = make_shared<DispatchOption<PlayerRole>>("performRole", [agent] { return agent->getBehaviourControl()->getPlayerRole(); });
+  auto performRole = make_shared<DispatchOption<PlayerRole>>("perform-role", [agent] { return agent->getBehaviourControl()->getPlayerRole(); });
   performRole->setOption(PlayerRole::Keeper, keeperFsm);
   performRole->setOption(PlayerRole::Striker, strikerFsm);
   performRole->setOption(PlayerRole::Supporter, supporterFsm);
@@ -38,7 +39,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto tree = make_shared<OptionTree>();
 
   // Register all FSMs with the tree so that we can debug them via Round Table
-  tree->addOption(untilShutdown, /* root */ true);
+  tree->addOption(SequenceOption::make("boot", {sit, untilShutdown}), /* root */ true);
   tree->addOption(allowPause, false);
   tree->addOption(stayStanding, false);
   tree->addOption(respectPlayMode, false);
