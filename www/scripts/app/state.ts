@@ -360,6 +360,8 @@ export interface FSMOptionData
 /** Walks recursively through the option data, attempting to find data for an option with the specified id. */
 export function findOptionData(data: OptionData, optionId: string): OptionData
 {
+    if (!data)
+        return null;
     if (data.id === optionId)
         return data;
 
