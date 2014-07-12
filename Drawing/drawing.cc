@@ -51,7 +51,7 @@ void Draw::circle(Frame frame, Eigen::Vector2d const& centre, double radius, Col
 {
   unique_ptr<CircleDrawing> line = make_unique<CircleDrawing>();
 
-  line->type = DrawingItemType::Line;
+  line->type = DrawingItemType::Circle;
   line->frame = frame;
   line->centre = centre;
   line->radius = radius;
