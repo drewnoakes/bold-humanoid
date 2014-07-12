@@ -1,14 +1,9 @@
 #include "walkmodule.hh"
 
 #include "../../Config/config.hh"
-#include "../../Math/math.hh"
-#include "../../MotionTaskScheduler/motiontaskscheduler.hh"
-#include "../../Setting/setting.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/WalkState/walkstate.hh"
-#include "../../ThreadUtil/threadutil.hh"
 #include "../../WalkEngine/walkengine.hh"
-#include "../../util/assert.hh"
 
 using namespace bold;
 using namespace Eigen;
