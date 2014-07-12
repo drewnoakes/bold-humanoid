@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../stateobject.hh"
-#include "../../BodyControl/bodycontrol.hh"
+#include "../../DebugControl/debugcontrol.hh"
 #include "../../Colour/colour.hh"
 
 #include <memory>

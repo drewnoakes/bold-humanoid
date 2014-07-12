@@ -1,6 +1,7 @@
 #include "agent.ih"
 
 #include "../CM730CommsModule/MX28HealthChecker/mx28healthchecker.hh"
+#include "../DebugControl/debugcontrol.hh"
 #include "../Drawing/drawing.hh"
 #include "../Kick/kick.hh"
 #include "../StateObserver/ButtonObserver/buttonobserver.hh"
@@ -35,7 +36,7 @@ Agent::Agent()
   registerStateTypes();
 
   auto debugControl = make_shared<DebugControl>();
-  d_debugger = make_shared<Debugger>(debugControl);
+  d_debugger = make_shared<Debugger>(this, d_behaviourControl, debugControl);
 
   // Prepare the motion schedule, that coordinates which motions are carried out
   d_motionSchedule = make_shared<MotionTaskScheduler>();

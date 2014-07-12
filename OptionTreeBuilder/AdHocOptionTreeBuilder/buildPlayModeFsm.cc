@@ -36,11 +36,12 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   setPlayerStatusInStates(agent, PlayerStatus::Active, { playingState });
   setPlayerStatusInStates(agent, PlayerStatus::Penalised, { penalisedState });
 
-  initialState  ->onEnter.connect([agent] { agent->getDebugger()->showInitial();   agent->getHeadModule()->moveToHome(); });
-  readyState    ->onEnter.connect([agent] { agent->getDebugger()->showReady();     agent->getHeadModule()->moveToHome(); });
-  setState      ->onEnter.connect([agent] { agent->getDebugger()->showSet();       agent->getHeadModule()->moveToHome(); });
-  playingState  ->onEnter.connect([agent] { agent->getDebugger()->showPlaying(); });
-  penalisedState->onEnter.connect([agent] { agent->getDebugger()->showPenalised(); agent->getHeadModule()->moveToHome(); });
+  initialState  ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::INITIAL);   agent->getHeadModule()->moveToHome(); });
+  readyState    ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::READY);     agent->getHeadModule()->moveToHome(); });
+  setState      ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::SET);       agent->getHeadModule()->moveToHome(); });
+  playingState  ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::PLAYING); });
+  finishedState ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::FINISHED); });
+  penalisedState->onEnter.connect([agent] {                                                                 agent->getHeadModule()->moveToHome(); });
 
   // TRANSITIONS
 

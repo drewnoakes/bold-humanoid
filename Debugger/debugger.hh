@@ -2,11 +2,10 @@
 
 #include <memory>
 
-#include "../Colour/colour.hh"
-#include "../StateObject/TeamState/teamstate.hh"
-
 namespace bold
 {
+  class Agent;
+  class BehaviourControl;
   class DebugControl;
 
   // TODO this class's name suggests something grander than its reality
@@ -14,11 +13,7 @@ namespace bold
   class Debugger
   {
   public:
-    Debugger(std::shared_ptr<DebugControl> debugControl);
-
-    //
-    // UDP Message Counts
-    //
+    Debugger(Agent* agent, std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<DebugControl> debugControl);
 
     void notifyReceivedGameControllerMessage() { d_gameControllerMessageCount++; }
     void notifyIgnoringUnrecognisedMessage() { d_ignoredMessageCount++; }
@@ -26,36 +21,21 @@ namespace bold
     void notifyReceivedTeamMessage() { d_receivedTeamMessageCount++; }
     void notifySendingDrawbridgeMessage() { d_sentDrawbridgeMessageCount++; }
 
-    //
-    // Display status
-    //
+    void showDazzle(bool showDazzle) { d_showDazzle = showDazzle; }
 
-    void showInitial();
-    void showReady();
-    void showSet();
-    void showPlaying();
-    void showPenalised();
-    void showPaused();
-
-    void showExitingAgent();
-    void showExitedAgent();
-
-    void showRole(PlayerRole role);
-
-    /**
-     * Update the debugger at the end of the think cycle.
-     */
+    /** Update DebugState. Called at the end of the think cycle. */
     void update();
 
   private:
+    Agent* d_agent;
+    std::shared_ptr<BehaviourControl> d_behaviourControl;
     std::shared_ptr<DebugControl> d_debugControl;
+
+    bool d_showDazzle;
     unsigned d_gameControllerMessageCount;
     unsigned d_ignoredMessageCount;
     unsigned d_sentTeamMessageCount;
     unsigned d_receivedTeamMessageCount;
     unsigned d_sentDrawbridgeMessageCount;
-
-    Colour::bgr d_eyeColour;
-    Colour::bgr d_foreheadColour;
   };
 }

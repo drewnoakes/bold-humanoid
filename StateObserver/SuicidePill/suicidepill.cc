@@ -31,6 +31,8 @@ void SuicidePill::observeTyped(shared_ptr<HardwareState const> const& state, Seq
 
   auto const& cm730 = state->getCM730State();
 
+  bool showDazzle = false;
+
   if (cm730.isStartButtonPressed && cm730.isModeButtonPressed)
   {
     // Both buttons pressed
@@ -42,7 +44,6 @@ void SuicidePill::observeTyped(shared_ptr<HardwareState const> const& state, Seq
       if (seconds > stopServiceAfterSeconds)
       {
         log::warning("SuicidePill::observeTyped") << "Both buttons held for " << stopServiceAfterSeconds << " seconds. Stopping service.";
-        d_debugger->showExitedAgent();
         int res = system("stop boldhumanoid");
         if (res != 0)
           log::error("SuicidePill::observeTyped") << "System call to stop boldhumanoid service exited with: " << res;
@@ -50,7 +51,7 @@ void SuicidePill::observeTyped(shared_ptr<HardwareState const> const& state, Seq
       }
       else if (seconds > stopProcessAfterSeconds)
       {
-        d_debugger->showExitingAgent();
+        showDazzle = true;
       }
     }
     else
@@ -73,9 +74,10 @@ void SuicidePill::observeTyped(shared_ptr<HardwareState const> const& state, Seq
       if (seconds > stopProcessAfterSeconds && seconds < stopServiceAfterSeconds)
       {
         log::warning("SuicidePill::observeTyped") << "Both buttons held for " << stopProcessAfterSeconds << " seconds. Stopping process.";
-        d_debugger->showExitedAgent();
         d_agent->stop();
       }
     }
   }
+
+  d_debugger->showDazzle(showDazzle);
 }

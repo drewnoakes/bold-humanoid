@@ -1,16 +1,27 @@
-#include "debugger.ih"
+#include "debugger.hh"
 
-#include "../BodyControl/bodycontrol.hh"
-#include "../util/log.hh"
+#include "../Agent/agent.hh"
+#include "../BehaviourControl/behaviourcontrol.hh"
+#include "../State/state.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/DebugState/debugstate.hh"
+#include "../stats/movingaverage.hh"
 
+using namespace bold;
 using namespace bold::Colour;
+using namespace robocup;
+using namespace std;
 
-Debugger::Debugger(std::shared_ptr<DebugControl> debugControl)
-: d_debugControl(debugControl),
+Debugger::Debugger(Agent* agent, shared_ptr<BehaviourControl> behaviourControl, shared_ptr<DebugControl> debugControl)
+: d_agent(agent),
+  d_behaviourControl(behaviourControl),
+  d_debugControl(debugControl),
+  d_showDazzle(false),
   d_gameControllerMessageCount(0),
   d_ignoredMessageCount(0),
-  d_eyeColour(0,0,0),
-  d_foreheadColour(0,0,0)
+  d_sentTeamMessageCount(0),
+  d_receivedTeamMessageCount(0),
+  d_sentDrawbridgeMessageCount(0)
 {}
 
 void Debugger::update()
@@ -21,31 +32,97 @@ void Debugger::update()
 
   auto const& cameraFrame = State::get<CameraFrameState>();
 
-  if (!cameraFrame)
-    return;
+  if (cameraFrame)
+  {
+    d_debugControl->setPanelLedStates(
+      /*red  */ cameraFrame->getBallObservation().hasValue(),
+      /*blue */ d_gameControllerMessageCount != 0,
+      /*green*/ cameraFrame->getGoalObservations().size() > 1
+    );
+  }
+  else
+  {
+    d_debugControl->setPanelLedStates(false, false, false);
+  }
 
-  d_debugControl->setPanelLedStates(
-    /*red  */ cameraFrame->getBallObservation().hasValue(),
-    /*blue */ d_gameControllerMessageCount != 0,
-    /*green*/ cameraFrame->getGoalObservations().size() > 1
-  );
+  //
+  // Eye and forehead colours
+  //
+
+  bgr eyeColour = bgr::orange;
+  bgr foreheadColour = bgr::orange;
+
+  if (d_agent->isStopRequested())
+  {
+    eyeColour = bgr::black;
+    foreheadColour = bgr::black;
+  }
+  else if (d_showDazzle)
+  {
+    static auto prng = Math::createUniformRng(0, 1);
+    static MovingAverage<double> smoothedHue(3);
+    static MovingAverage<double> smoothedValue(3);
+
+    double hue = smoothedHue.next(prng());
+    double value = smoothedValue.next(prng());
+
+    bgr colour = hsv(int(hue * 255), 255, int(value * 255)).toBgr();
+
+    foreheadColour = colour;
+    eyeColour = colour;
+  }
+  else
+  {
+    // Set forehead colour
+    if (d_behaviourControl->getPlayerStatus() == PlayerStatus::Paused)
+    {
+      foreheadColour = bgr::grey;
+    }
+    else if (d_behaviourControl->getPlayerStatus() == PlayerStatus::Penalised)
+    {
+      foreheadColour = bgr::lightRed;
+    }
+    else
+    {
+      switch (d_behaviourControl->getPlayMode())
+      {
+        case PlayMode::INITIAL:  foreheadColour = bgr::darkBlue;   break;
+        case PlayMode::READY:    foreheadColour = bgr::lightBlue;  break;
+        case PlayMode::SET:      foreheadColour = bgr::yellow;     break;
+        case PlayMode::PLAYING:  foreheadColour = bgr::lightGreen; break;
+        case PlayMode::FINISHED: foreheadColour = bgr(30,30,30);   break;
+      }
+    }
+
+    // Set eye colour
+    switch (d_behaviourControl->getPlayerRole())
+    {
+      case PlayerRole::Idle:           eyeColour = bgr(64,0,0);    break;
+      case PlayerRole::Defender:       eyeColour = bgr(200,0,0);   break;
+      case PlayerRole::Supporter:      eyeColour = bgr(0,200,0);   break;
+      case PlayerRole::Striker:
+      case PlayerRole::PenaltyStriker: eyeColour = bgr(148,0,211); break;
+      case PlayerRole::Keeper:
+      case PlayerRole::PenaltyKeeper:  eyeColour = bgr(64,64,64);  break;
+      case PlayerRole::Other:
+      default:                         eyeColour = bgr(139,0,139); break;
+    }
+  }
 
   auto modulateColor = [](Colour::bgr const& bgr, uchar const& v)
   {
     auto hsv = Colour::bgr2hsv(bgr);
     hsv.v = v;
-    return Colour::hsv2bgr(hsv);
+    return hsv2bgr(hsv);
   };
 
   double seconds = Clock::getSeconds();
-  d_debugControl->setEyeColour(modulateColor(d_eyeColour, fabs(sin(seconds*2)) * 255));
-  d_debugControl->setForeheadColour(modulateColor(d_foreheadColour, fabs(sin(seconds*3)) * 255));
+  d_debugControl->setEyeColour(modulateColor(eyeColour, fabs(sin(seconds*2)) * 255));
+  d_debugControl->setForeheadColour(modulateColor(foreheadColour, fabs(sin(seconds*3)) * 255));
 
   //
   // Update DebugState object
   //
-
-  // TODO track whether there's actually anything to update, avoiding unnecessary DebugState changes
 
   State::make<DebugState>(
     d_gameControllerMessageCount, d_ignoredMessageCount,
@@ -57,43 +134,7 @@ void Debugger::update()
   // clear accumulators for next cycle
   d_gameControllerMessageCount = 0;
   d_ignoredMessageCount = 0;
-}
-
-void Debugger::showInitial()     { d_foreheadColour = bgr(100,0,0);     /* d_eyeColour = bgr(100,0,0);     */ }
-void Debugger::showReady()       { d_foreheadColour = bgr(255,0,0);     /* d_eyeColour = bgr(255,0,0);     */ }
-void Debugger::showSet()         { d_foreheadColour = bgr(0,255,255);   /* d_eyeColour = bgr(255,0,0);     */ }
-void Debugger::showPlaying()     { d_foreheadColour = bgr(0,255,0);     /* d_eyeColour = bgr(64,64,64);    */ }
-void Debugger::showPenalised()   { d_foreheadColour = bgr(0,0,255);     /* d_eyeColour = bgr(255,0,0);     */ }
-void Debugger::showPaused()      { d_foreheadColour = bgr(128,128,128); /* d_eyeColour = bgr(128,128,128); */ }
-void Debugger::showExitedAgent() { d_foreheadColour = bgr(0,0,0);       /* d_eyeColour = bgr(0,0,0);       */ }
-
-void Debugger::showRole(PlayerRole role)
-{
-  switch (role)
-  {
-    case PlayerRole::Idle:           d_eyeColour = bgr(64,0,0); break;
-    case PlayerRole::Defender:       d_eyeColour = bgr(200,0,0); break;
-    case PlayerRole::Supporter:      d_eyeColour = bgr(0,200,0); break;
-    case PlayerRole::Striker:
-    case PlayerRole::PenaltyStriker: d_eyeColour = bgr(148,0,211); break;
-    case PlayerRole::Keeper:
-    case PlayerRole::PenaltyKeeper:  d_eyeColour = bgr(64,64,64); break;
-    case PlayerRole::Other:
-    default:                         d_eyeColour = bgr(139,0,139); break;
-  }
-}
-
-void Debugger::showExitingAgent()
-{
-  static auto prng = Math::createUniformRng(0, 1);
-  static MovingAverage<double> smoothedHue(3);
-  static MovingAverage<double> smoothedValue(3);
-
-  double hue = smoothedHue.next(prng());
-  double value = smoothedValue.next(prng());
-
-  Colour::bgr colour = Colour::hsv(int(hue * 255), 255, int(value * 255)).toBgr();
-
-  d_foreheadColour = colour;
-  d_eyeColour = colour;
+  d_sentTeamMessageCount = 0;
+  d_receivedTeamMessageCount = 0;
+  d_sentDrawbridgeMessageCount = 0;
 }

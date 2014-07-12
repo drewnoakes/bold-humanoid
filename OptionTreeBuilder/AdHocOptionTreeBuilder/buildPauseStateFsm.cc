@@ -25,7 +25,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPauseStateFsm(Agent* agent, s
   {
     agent->getBehaviourControl()->setPlayerActivity(PlayerActivity::Waiting);
     agent->getBehaviourControl()->setPlayerStatus(PlayerStatus::Paused);
-    agent->getDebugger()->showPaused();
     agent->getHeadModule()->moveToHome();
   });
 

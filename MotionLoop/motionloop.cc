@@ -6,6 +6,7 @@
 #include "../CM730Platform/CM730Linux/cm730linux.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../Config/config.hh"
+#include "../DebugControl/debugcontrol.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../State/state.hh"
 #include "../StateObject/BodyState/bodystate.hh"

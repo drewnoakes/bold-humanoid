@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "../GameStateReceiver/gamecontrollertypes.hh"
 #include "../StateObject/TeamState/teamstate.hh"
 
 namespace bold
@@ -22,10 +23,14 @@ namespace bold
     PlayerActivity getPlayerActivity() const { return d_playerActivity; }
     void setPlayerActivity(PlayerActivity activity) { d_playerActivity = activity; }
 
+    robocup::PlayMode getPlayMode() const { return d_playMode; }
+    void setPlayMode(robocup::PlayMode playMode) { d_playMode = playMode; }
+
   private:
     void updateStateObject() const;
 
     Agent& d_agent;
+    robocup::PlayMode d_playMode;
     PlayerRole d_playerRole;
     PlayerActivity d_playerActivity;
     PlayerStatus d_playerStatus;
