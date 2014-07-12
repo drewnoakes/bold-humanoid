@@ -56,7 +56,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
               if (player.getPenaltyType() == PenaltyType::NONE) {
                 writer.Null();
               } else {
-                writer.String(player.getPenaltyTypeString().c_str());
+                writer.String(getPenaltyTypeString(player.getPenaltyType()).c_str());
 
                 writer.String("penaltySecondsRemaining");
                 writer.Uint(player.getSecondsUntilPenaltyLifted());

@@ -23,6 +23,20 @@ namespace robocup
     FINISHED = 4
   };
 
+  inline std::string getPlayModeString(PlayMode playMode)
+  {
+    switch (playMode)
+    {
+      case PlayMode::INITIAL:  return "Initial";
+      case PlayMode::READY:    return "Ready";
+      case PlayMode::SET:      return "Set";
+      case PlayMode::PLAYING:  return "Playing";
+      case PlayMode::FINISHED: return "Finished";
+      default:
+        throw new std::runtime_error("Unsupported PlayMode enum value.");
+    }
+  }
+
   enum class ExtraState : uint8
   {
     NORMAL = 0,
@@ -30,6 +44,19 @@ namespace robocup
     OVERTIME = 2,
     TIMEOUT = 3
   };
+
+  inline std::string getExtraStateString(ExtraState extraState)
+  {
+    switch (extraState)
+    {
+      case ExtraState::NORMAL:       return "Normal";
+      case ExtraState::PENALTYSHOOT: return "Penalty shoot";
+      case ExtraState::OVERTIME:     return "Overtime";
+      case ExtraState::TIMEOUT:      return "Timeout";
+      default:
+        throw new std::runtime_error("Unsupported ExtraState enum value.");
+    }
+  }
 
   enum class PenaltyType : uint8
   {
@@ -44,37 +71,29 @@ namespace robocup
     MANUAL = 15
   };
 
+  inline std::string getPenaltyTypeString(PenaltyType penaltyType)
+  {
+    switch (penaltyType)
+    {
+      case PenaltyType::NONE:                return "No Penalty";
+      case PenaltyType::BALL_MANIPULATION:   return "Ball Manipulation";
+      case PenaltyType::PHYSICAL_CONTACT:    return "Physical Contact";
+      case PenaltyType::ILLEGAL_ATTACK:      return "Illegal Attack";
+      case PenaltyType::ILLEGAL_DEFENSE:     return "Illegal Defense";
+      case PenaltyType::PICKUP_OR_INCAPABLE: return "Pickup or Incapable";
+      case PenaltyType::SERVICE:             return "Service";
+      case PenaltyType::SUBSTITUTE:          return "Substitute";
+      case PenaltyType::MANUAL:              return "Manual";
+      default:
+        throw new std::runtime_error("Unsupported PenaltyType enum value.");
+    }
+  }
+
   /// Model of the PlayerInfo struct (version 8)
   struct PlayerInfo
   {
     bool hasPenalty() const { return d_penaltyType != PenaltyType::NONE; }
     PenaltyType getPenaltyType() const { return d_penaltyType; }
-    std::string getPenaltyTypeString() const
-    {
-      switch (d_penaltyType)
-      {
-        case PenaltyType::NONE:
-          return std::string("No Penalty");
-        case PenaltyType::BALL_MANIPULATION:
-          return std::string("Ball Manipulation");
-        case PenaltyType::PHYSICAL_CONTACT:
-          return std::string("Physical Contact");
-        case PenaltyType::ILLEGAL_ATTACK:
-          return std::string("Illegal Attack");
-        case PenaltyType::ILLEGAL_DEFENSE:
-          return std::string("Illegal Defense");
-        case PenaltyType::PICKUP_OR_INCAPABLE:
-          return std::string("Pickup or Incapable");
-        case PenaltyType::SERVICE:
-          return std::string("Service");
-        case PenaltyType::SUBSTITUTE:
-          return std::string("Substitute");
-        case PenaltyType::MANUAL:
-          return std::string("Manual");
-        default:
-          throw new std::runtime_error("Unsupported PenaltyType enum value.");
-      }
-    }
     /** estimate of time till unpenalised */
     uint8 getSecondsUntilPenaltyLifted() const { return d_secondsUntilPenaltyLifted; }
 
