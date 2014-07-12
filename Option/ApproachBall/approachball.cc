@@ -92,7 +92,14 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
     Polygon2d lanePoly(lanePoints);
 
-    Draw::polygon(Frame::Agent, lanePoints, bgr::blue, 0.3, bgr::blue, 0.7, 2);
+    Draw::polygon(Frame::Agent, lanePoints, bgr::blue, 0.1, bgr::blue, 0.5, 1.5);
+
+    // Iterate through the occlusion rays
+    for (auto const& ray : agentFrame->getOcclusionRays())
+    {
+      if (lanePoly.contains(ray.near()))
+        Draw::circle(Frame::Agent, ray.near(), 0.02, bgr::lightBlue, 1, 0.8);
+    }
 
     if (fabs(targetAngleRads) < Math::degToRad(15))
     {
