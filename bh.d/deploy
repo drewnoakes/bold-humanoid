@@ -27,6 +27,7 @@ do
         boldpy                             \
         bh                                 \
         bh.d                               \
+        bh_completion                      \
         .bash_team                         \
         boldhumanoid                       \
         swig/bold.py                       \
