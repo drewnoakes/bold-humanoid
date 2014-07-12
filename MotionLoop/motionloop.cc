@@ -203,8 +203,16 @@ void *MotionLoop::threadMethod(void *param)
 
     loop->step(t);
 
-    clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next_time, NULL);
+    int sleepResult = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next_time, nullptr);
     t.timeEvent("Sleep");
+
+    if (sleepResult != 0)
+    {
+      if (sleepResult == EINTR)
+        log::warning("MotionLoop::threadMethod") << "Sleep interrupted";
+      else
+        log::warning("MotionLoop::threadMethod") << "clock_nanosleep returned error code: " << sleepResult;
+    }
 
     // Set timing data for the motion cycle
     State::make<MotionTimingState>(t.flush(), loop->d_cycleNumber, fps.next());
