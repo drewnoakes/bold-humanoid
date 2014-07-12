@@ -13,6 +13,9 @@ namespace bold
     /// CMake build type, such as Release, RelWithDebInfo, Debug
     static const std::string BUILD_TYPE;
 
+    /// Host name of thee machine that built this executable
+    static const std::string BUILT_ON_HOST_NAME;
+
     static std::string describeTimeSinceGitDate();
   };
 }

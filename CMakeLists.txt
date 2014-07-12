@@ -67,6 +67,12 @@ execute_process(COMMAND
   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
   OUTPUT_VARIABLE GIT_COMMIT_SUBJECT
   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+# the host name of the machine making the build
+execute_process(COMMAND
+  hostname
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  OUTPUT_VARIABLE BUILT_ON_HOST_NAME
+  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 # generate version.cc
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.cc.in" "${CMAKE_CURRENT_BINARY_DIR}/version.cc" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.hh" "${CMAKE_CURRENT_BINARY_DIR}/version.hh" @ONLY)

@@ -9,6 +9,7 @@ const std::string Version::GIT_SHA1 = "@GIT_SHA1@";
 const std::string Version::GIT_DATE = "@GIT_DATE@";
 const std::string Version::GIT_COMMIT_SUBJECT = "@GIT_COMMIT_SUBJECT@";
 const std::string Version::BUILD_TYPE = "@CMAKE_BUILD_TYPE@";
+const std::string Version::BUILT_ON_HOST_NAME = "@BUILT_ON_HOST_NAME@";
 
 std::string Version::describeTimeSinceGitDate()
 {

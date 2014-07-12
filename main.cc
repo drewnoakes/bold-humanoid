@@ -73,6 +73,7 @@ void printVersion()
        << ccolor::fore::lightblue << "Eigen align: " << ccolor::reset << "No" << endl
 #endif
        << ccolor::fore::lightblue << "Build type:  " << ccolor::reset << Version::BUILD_TYPE << endl
+       << ccolor::fore::lightblue << "Build host:  " << ccolor::reset << Version::BUILT_ON_HOST_NAME << endl
 #if INCLUDE_ASSERTIONS
        << ccolor::fore::lightblue << "Assertions:  " << ccolor::reset << "Yes" << endl
 #else
@@ -95,7 +96,8 @@ void logVersion()
 #else
   log::info("EIGEN_ALIGN") << "No";
 #endif
-  log::info("BUILD_TYPE") << Version::BUILD_TYPE << "\n";
+  log::info("BUILD_TYPE") << Version::BUILD_TYPE;
+  log::info("BUILT_ON_HOST_NAME") << Version::BUILT_ON_HOST_NAME << "\n";
 }
 
 int main(int argc, char **argv)

@@ -187,6 +187,7 @@ void queueRandomMessage()
     writer.String("host").String(host.str().c_str());
     writer.String("name").String(playerName.c_str());
     writer.String("ver").String(Version::GIT_SHA1.c_str());
+    writer.String("built").String(Version::BUILT_ON_HOST_NAME.c_str());
     writer.String("uptime").Uint(static_cast<uint>(Clock::getSecondsSince(startTime)));
 
     writer.String("role").String(getPlayerRoleString(unum == 1 ? PlayerRole::Keeper : PlayerRole::Striker).c_str());

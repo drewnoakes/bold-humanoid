@@ -30,6 +30,7 @@ interface IDrawbridgeData
     host: string;
     name: string;
     ver: string;
+    built: string;
     uptime: number;
 
     activity: string;
