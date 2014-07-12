@@ -65,7 +65,7 @@ class Agent2dModule extends Module
     {
         // Make space for bottom controls if fullscreen
         if (isFullScreen)
-            height -= 80;
+            height -= width > 1024 ? 50 : 70;
         else
             height = 600;
 
