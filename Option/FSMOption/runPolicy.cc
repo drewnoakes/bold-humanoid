@@ -5,13 +5,6 @@
 
 vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 {
-  log::verbose(getId()) << " ----- Start -----";
-
-  if (!d_curState)
-    setCurrentState(d_startState);
-
-  log::verbose(getId()) << "Current state: " << d_curState->name;
-
   auto tryTransition = [this](shared_ptr<FSMTransition>& transition)
   {
     // TODO include information about transitions that were not taken
@@ -19,10 +12,19 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
     if (!transition->condition())
       return false;
 
-    log::info(getId())
-      << d_curState->name << " >>> " << transition->childState->name
-      << " (" << transition->name << ") after "
-      << (int)Clock::getMillisSince(d_curState->startTimestamp) << "ms";
+    if (d_curState)
+    {
+      log::info(getId())
+        << d_curState->name << " >>> " << transition->childState->name
+        << " (" << transition->name << ") after "
+        << (int)Clock::getMillisSince(d_curState->startTimestamp) << "ms";
+    }
+    else
+    {
+      log::info(getId())
+        << "nil" << " >>> " << transition->childState->name
+        << " (" << transition->name << ") on entry to FSM";
+    }
 
     static Setting<bool>* announceFsmTransitions = Config::getSetting<bool>("options.announce-fsm-transitions");
     static Setting<int>* announceRate = Config::getSetting<int>("options.announce-rate-wpm");
@@ -45,12 +47,50 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
     return true;
   };
 
+  auto tryWildcardTransition = [this,tryTransition](shared_ptr<FSMTransition>& transition, Writer<StringBuffer>& writer)
+  {
+    if (transition->childState == d_curState)
+      return false;
+
+    if (tryTransition(transition))
+    {
+      writer.StartObject();
+      writer.String("to").String(transition->childState->name.c_str());
+      writer.String("via").String(transition->name.c_str());
+      writer.String("wildcard").Bool(true);
+      writer.EndObject();
+      return true;
+    }
+
+    return false;
+  };
+
+  log::verbose(getId()) << " ----- Start -----";
+
+  if (!d_curState)
+  {
+    // No state yet (after reset).
+    // Give wildcard transitions a chance to set the state.
+    for (auto& transition : d_wildcardTransitions)
+    {
+      if (tryWildcardTransition(transition, writer))
+        break;
+    }
+
+    // If no wildcard transition set the initial state, use the default start state
+    if (!d_curState)
+      setCurrentState(d_startState);
+  }
+
+  log::verbose(getId()) << "Current state: " << d_curState->name;
+
   const int MAX_LOOP_COUNT = 20;
 
   writer.String("start").String(d_curState->name.c_str());
 
+  // Take as many transitions as possible
   writer.String("transitions").StartArray();
-
+  // Count the number of transitions made to protect against endless loops
   int loopCount = 0;
   bool transitionMade;
   do
@@ -59,16 +99,8 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
     for (auto& transition : d_wildcardTransitions)
     {
-      if (transition->childState == d_curState)
-        continue;
-
-      if (tryTransition(transition))
+      if (tryWildcardTransition(transition, writer))
       {
-        writer.StartObject();
-        writer.String("to").String(transition->childState->name.c_str());
-        writer.String("via").String(transition->name.c_str());
-        writer.String("wildcard").Bool(true);
-        writer.EndObject();
         transitionMade = true;
         break;
       }
