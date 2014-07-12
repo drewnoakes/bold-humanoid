@@ -7,22 +7,16 @@
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../Config/config.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
-#include "../SequentialTimer/sequentialtimer.hh"
 #include "../State/state.hh"
 #include "../StateObject/BodyState/bodystate.hh"
 #include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
-#include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../StateObject/StaticHardwareState/statichardwarestate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
-#include "../ThreadUtil/threadutil.hh"
 #include "../Voice/voice.hh"
-#include "../util/ccolor.hh"
 #include "../util/fps.hh"
-#include "../util/memory.hh"
 
 #include <time.h>
-#include <string.h>
 
 using namespace bold;
 using namespace std;

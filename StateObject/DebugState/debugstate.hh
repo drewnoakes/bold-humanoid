@@ -5,7 +5,6 @@
 #include "../../Colour/colour.hh"
 
 #include <memory>
-#include <vector>
 
 namespace bold
 {

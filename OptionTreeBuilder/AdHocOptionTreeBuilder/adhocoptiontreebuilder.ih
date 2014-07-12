@@ -41,7 +41,6 @@
 #include "conditionals.hh"
 
 #include <algorithm>
-#include <fstream>
 
 using namespace bold;
 using namespace Eigen;
