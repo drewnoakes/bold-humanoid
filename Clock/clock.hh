@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace bold
 {
   class Clock
@@ -20,6 +22,10 @@ namespace bold
     static double timestampToMillis(Timestamp timestamp);
 
     static double timestampToSeconds(Timestamp timestamp);
+
+    static std::string describeDurationSince(Timestamp timestamp);
+
+    static std::string describeDurationSeconds(double seconds);
 
   private:
     Clock() = delete;

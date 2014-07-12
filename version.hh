@@ -1,5 +1,7 @@
 #pragma once
 
+#include "./Clock/clock.hh"
+
 #include <string>
 
 namespace bold

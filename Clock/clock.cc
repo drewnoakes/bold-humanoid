@@ -8,6 +8,8 @@
 
 #include <string.h>
 #include <sys/time.h>
+#include <math.h>
+#include <sstream>
 
 using namespace bold;
 
@@ -59,4 +61,39 @@ double Clock::timestampToMillis(Timestamp timestamp)
 double Clock::timestampToSeconds(Timestamp timestamp)
 {
   return timestamp / 1e6;
+}
+
+std::string Clock::describeDurationSeconds(double seconds)
+{
+  seconds = fabs(seconds);
+
+  int minutes = seconds / 60;
+  int hours = seconds / (60 * 60);
+  int days = seconds / (60 * 60 * 24);
+
+  std::stringstream out;
+
+  if (days > 2)
+  {
+    out << days << " day" << (days == 1 ? "" : "s");
+  }
+  else if (minutes > 90)
+  {
+    out << hours << " hour" << (hours == 1 ? "" : "s");
+  }
+  else if (seconds > 90)
+  {
+    out << minutes << " minute" << (minutes == 1 ? "" : "s");
+  }
+  else
+  {
+    out << seconds << " second" << (seconds == 1 ? "" : "s");
+  }
+
+  return out.str();
+}
+
+std::string Clock::describeDurationSince(Clock::Timestamp timestamp)
+{
+  return describeDurationSeconds(getSecondsSince(timestamp));
 }
