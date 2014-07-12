@@ -27,17 +27,14 @@ string bold::getGoalLabelName(GoalLabel label)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool RadialOcclusionMap::add(Vector2d const& near, Vector2d const& far)
+bool RadialOcclusionMap::add(OcclusionRay<double> const& ray)
 {
-  Vector2d diff = far - near;
-
   // If the ray is short, then it's probably just noise.
-  if (diff.norm() < 0.3) // TODO magic number!
+  if (ray.norm() < 0.3) // TODO magic number!
     return false;
 
-  double angle = Math::angleToPoint(near);
-  uint index = wedgeIndexForAngle(angle);
-  d_wedges[index].add(near.norm());
+  uint index = wedgeIndexForAngle(ray.angle());
+  d_wedges[index].add(ray.near().norm());
   return true;
 }
 

@@ -47,13 +47,13 @@ void Spatialiser::updateCameraToAgent()
   auto lineJunctions = d_lineJunctionFinder->findLineJunctions(lineSegments);
 
   // Project occlusion rays
-  vector<pair<Vector3d,Vector3d>> occlusionRays;
-  for (pair<Vector2i,Vector2i> const& pair : cameraFrame->getOcclusionRays())
+  vector<OcclusionRay<double>> occlusionRays;
+  for (auto const& ray : cameraFrame->getOcclusionRays())
   {
-    auto const& p1 = findGroundPointForPixel(pair.first.cast<double>() + Vector2d(0.5,0.5));
-    auto const& p2 = findGroundPointForPixel(pair.second.cast<double>() + Vector2d(0.5,0.5));
+    auto const& p1 = findGroundPointForPixel(ray.near().cast<double>() + Vector2d(0.5,0.5));
+    auto const& p2 = findGroundPointForPixel(ray.far().cast<double>() + Vector2d(0.5,0.5));
     if (p1.hasValue() && p2.hasValue())
-      occlusionRays.emplace_back(*p1, *p2);
+      occlusionRays.emplace_back(p1->head<2>(), p2->head<2>());
   }
 
   // Determine observed field area polygon

@@ -49,7 +49,7 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
   // Walk all occlusion rays
   for (auto const& ray : agentFrame->getOcclusionRays())
   {
-    if (d_occlusionMap.add(ray.first.head<2>(), ray.second.head<2>()))
+    if (d_occlusionMap.add(ray))
       hasChange = true;
   }
 

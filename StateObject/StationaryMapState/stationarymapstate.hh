@@ -3,6 +3,7 @@
 #include "../stateobject.hh"
 #include "../../Kick/kick.hh"
 #include "../../Math/math.hh"
+#include "../../OcclusionRay/occlusionray.hh"
 #include "../../stats/average.hh"
 
 #include <vector>
@@ -103,7 +104,7 @@ namespace bold
   class RadialOcclusionMap
   {
   public:
-    bool add(Eigen::Vector2d const& near, Eigen::Vector2d const& far);
+    bool add(OcclusionRay<double> const& ray);
 
     void reset();
 

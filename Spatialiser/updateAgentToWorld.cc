@@ -44,11 +44,15 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   }
 
   // Project occlusion rays
-  vector<pair<Vector3d,Vector3d>> occlusionRays;
-  for (pair<Vector3d,Vector3d> const& pair : agentFrame->getOcclusionRays())
+  vector<OcclusionRay<double>> occlusionRays;
+  // TODO perform the rotation/translation in 2D (where z == 0), not in 3D
+  for (auto const& ray : agentFrame->getOcclusionRays())
   {
-    occlusionRays.emplace_back(worldAgentTransform * pair.first,
-                               worldAgentTransform * pair.second);
+    Vector3d near = ray.near().head<3>();
+    Vector3d far = ray.far().head<3>();
+
+    occlusionRays.emplace_back((worldAgentTransform * near).head<2>(),
+                               (worldAgentTransform * far).head<2>());
   }
 
   // Determine observed field area polygon

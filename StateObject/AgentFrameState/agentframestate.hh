@@ -9,6 +9,7 @@
 #include "../../geometry/LineSegment/linesegment.hh"
 #include "../../geometry/Polygon2.hh"
 #include "../../LineJunctionFinder/linejunctionfinder.hh"
+#include "../../OcclusionRay/occlusionray.hh"
 
 namespace bold
 {
@@ -21,7 +22,7 @@ namespace bold
                     std::vector<LineSegment3d> observedLineSegments,
                     std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> observedLineJunctions,
                     Maybe<Polygon2d> visibleFieldPoly,
-                    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
+                    std::vector<OcclusionRay<double>> occlusionRays,
                     ulong thinkCycleNumber);
 
     Maybe<Eigen::Vector3d> getBallObservation() const { return d_ballObservation; }
@@ -30,7 +31,7 @@ namespace bold
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
     std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> getObservedLineJunctions() const { return d_observedLineJunctions; }
     Maybe<Polygon2d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
-    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> getOcclusionRays() const { return d_occlusionRays; }
+    std::vector<OcclusionRay<double>> getOcclusionRays() const { return d_occlusionRays; }
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
     ulong getThinkCycleNumber() const { return d_thinkCycleNumber; }
@@ -52,7 +53,7 @@ namespace bold
     std::vector<LineSegment3d> d_observedLineSegments;
     std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> d_observedLineJunctions;
     Maybe<Polygon2d> d_visibleFieldPoly;
-    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> d_occlusionRays;
+    std::vector<OcclusionRay<double>> d_occlusionRays;
     ulong d_thinkCycleNumber;
   };
 }

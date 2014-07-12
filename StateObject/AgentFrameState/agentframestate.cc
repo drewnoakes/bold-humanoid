@@ -12,7 +12,7 @@ AgentFrameState::AgentFrameState(
   vector<LineSegment3d> observedLineSegments,
   vector<LineJunction, aligned_allocator<LineJunction>> observedLineJunctions,
   Maybe<Polygon2d> visibleFieldPoly,
-  vector<pair<Vector3d,Vector3d>> occlusionRays,
+  vector<OcclusionRay<double>> occlusionRays,
   ulong thinkCycleNumber)
 : d_ballObservation(move(ballObservation)),
   d_goalObservations(move(goalObservations)),
@@ -59,18 +59,15 @@ double AgentFrameState::getOcclusionDistance(double angle) const
     d_occlusionRays.begin(),
     d_occlusionRays.end(),
     angle,
-    [](pair<Vector3d,Vector3d> const& pair, double const& a)
+    [](OcclusionRay<double> const& ray, double const& a)
     {
-      return Math::angleToPoint(pair.first) < a;
+      return Math::angleToPoint(ray.near()) < a;
     });
 
   if (lower == d_occlusionRays.begin() || lower == d_occlusionRays.end())
     return numeric_limits<double>::quiet_NaN();
 
-  Vector2d side1 = (lower - 1)->first.head<2>();
-  Vector2d side2 = lower->first.head<2>();
-
-  LineSegment2d occlusionEdge(side1, side2);
+  LineSegment2d occlusionEdge((lower - 1)->near(), lower->near());
   LineSegment2d ray(Vector2d::Zero(), Vector2d(-sin(angle), cos(angle)));
 
   double u;
@@ -187,10 +184,10 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
       for (auto const& ray : d_occlusionRays)
       {
         writer.StartArray();
-        writer.Double(ray.first.x(), "%.3f");
-        writer.Double(ray.first.y(), "%.3f");
-        writer.Double(ray.second.x(), "%.3f");
-        writer.Double(ray.second.y(), "%.3f");
+        writer.Double(ray.near().x(), "%.3f");
+        writer.Double(ray.near().y(), "%.3f");
+        writer.Double(ray.far().x(), "%.3f");
+        writer.Double(ray.far().y(), "%.3f");
         writer.EndArray();
       }
     }

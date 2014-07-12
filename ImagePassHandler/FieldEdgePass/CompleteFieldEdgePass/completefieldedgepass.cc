@@ -79,12 +79,14 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
   timer.timeEvent("Convex Hull");
 }
 
-vector<pair<Vector2i,Vector2i>> CompleteFieldEdgePass::getOcclusionRays() const
+vector<OcclusionRay<ushort>> CompleteFieldEdgePass::getOcclusionRays() const
 {
-  vector<pair<Vector2i,Vector2i>> deltas;
+  vector<OcclusionRay<ushort>> rays;
 
   for (ushort x = 0; x < d_pixelWidth; x++)
-    deltas.emplace_back(Vector2i(x, d_maxYByX[x]), Vector2i(x, d_maxYByXConvex[x]));
+    rays.emplace_back(
+      Matrix<ushort,2,1>(x, d_maxYByX[x]),
+      Matrix<ushort,2,1>(x, d_maxYByXConvex[x]));
 
-  return deltas;
+  return rays;
 }

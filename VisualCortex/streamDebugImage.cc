@@ -184,22 +184,22 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   {
     auto occlusionColour = d_occlusionEdgeColour->getValue().toScalar();
     auto rays = d_fieldEdgePass->getOcclusionRays();
-    auto lastPoint = rays[0].first;
+    auto lastPoint = rays[0].near();
     for (auto const& ray : rays)
     {
       // Connected left-to-right lines
       cv::line(debugImage,
                Point(lastPoint.x(), lastPoint.y()),
-               Point(ray.first.x(), ray.first.y()),
+               Point(ray.near().x(), ray.near().y()),
                occlusionColour);
 
       // Lines from front to back
       cv::line(debugImage,
-               Point(ray.first.x(), ray.first.y()),
-               Point(ray.second.x(), ray.second.y()),
+               Point(ray.near().x(), ray.near().y()),
+               Point(ray.far().x(), ray.far().y()),
                occlusionColour);
 
-      lastPoint = ray.first;
+      lastPoint = ray.near();
     }
   }
 

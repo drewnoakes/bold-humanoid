@@ -5,8 +5,9 @@
 #include <vector>
 
 #include "../stateobject.hh"
-#include "../../util/Maybe.hh"
+#include "../../OcclusionRay/occlusionray.hh"
 #include "../../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
+#include "../../util/Maybe.hh"
 
 namespace bold
 {
@@ -19,7 +20,7 @@ namespace bold
                      Vector2dVector goalObservations,
                      Vector2dVector teamMateObservations,
                      std::vector<LineSegment2i> observedLineSegments,
-                     std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> occlusionRays,
+                     std::vector<OcclusionRay<ushort>> occlusionRays,
                      long totalPixelCount, long processedPixelCount,
                      ulong thinkCycleNumber)
     : d_ballObservation(ballObservation),
@@ -37,7 +38,7 @@ namespace bold
     Vector2dVector getGoalObservations() const { return d_goalObservations; }
     Vector2dVector getTeamMateObservations() const { return d_teamMateObservations; }
     int getGoalObservationCount() const { return d_goalObservations.size(); }
-    std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> getOcclusionRays() const { return d_occlusionRays; }
+    std::vector<OcclusionRay<ushort>> getOcclusionRays() const { return d_occlusionRays; }
     std::vector<LineSegment2i> getObservedLineSegments() const { return d_observedLineSegments; }
     long getTotalPixelCount() const { return d_totalPixelCount; }
     long getProcessedPixelCount() const { return d_processedPixelCount; }
@@ -51,7 +52,7 @@ namespace bold
     Vector2dVector d_goalObservations;
     Vector2dVector d_teamMateObservations;
     std::vector<LineSegment2i> d_observedLineSegments;
-    std::vector<std::pair<Eigen::Vector2i,Eigen::Vector2i>> d_occlusionRays;
+    std::vector<OcclusionRay<ushort>> d_occlusionRays;
     long d_totalPixelCount;
     long d_processedPixelCount;
     ulong d_thinkCycleNumber;

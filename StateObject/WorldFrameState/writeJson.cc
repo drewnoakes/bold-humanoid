@@ -83,10 +83,10 @@ void WorldFrameState::writeJson(Writer<StringBuffer>& writer) const
       for (auto const& ray : d_occlusionRays)
       {
         writer.StartArray();
-        writer.Double(ray.first.x(), "%.3f");
-        writer.Double(ray.first.y(), "%.3f");
-        writer.Double(ray.second.x(), "%.3f");
-        writer.Double(ray.second.y(), "%.3f");
+        writer.Double(ray.near().x(), "%.3f");
+        writer.Double(ray.near().y(), "%.3f");
+        writer.Double(ray.far().x(), "%.3f");
+        writer.Double(ray.far().y(), "%.3f");
         writer.EndArray();
       }
     }

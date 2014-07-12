@@ -6,6 +6,7 @@
 
 #include "../stateobject.hh"
 #include "../../AgentPosition/agentposition.hh"
+#include "../../OcclusionRay/occlusionray.hh"
 #include "../../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../../geometry/Polygon2.hh"
 #include "../../util/Maybe.hh"
@@ -19,7 +20,7 @@ namespace bold
                     std::vector<Eigen::Vector3d> goalObservations,
                     std::vector<LineSegment3d> observedLineSegments,
                     Maybe<Polygon2d> visibleFieldPoly,
-                    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> occlusionRays,
+                    std::vector<OcclusionRay<double>> occlusionRays,
                     AgentPosition position)
     : d_ballObservation(ballObservation),
       d_goalObservations(goalObservations),
@@ -33,7 +34,7 @@ namespace bold
     std::vector<Eigen::Vector3d> getGoalObservations() const { return d_goalObservations; }
     std::vector<LineSegment3d> getObservedLineSegments() const { return d_observedLineSegments; }
     Maybe<Polygon2d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
-    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> getOcclusionRays() const { return d_occlusionRays; }
+    std::vector<OcclusionRay<double>> getOcclusionRays() const { return d_occlusionRays; }
 
     AgentPosition getPosition() const { return d_position; }
 
@@ -46,7 +47,7 @@ namespace bold
     std::vector<Eigen::Vector3d> d_goalObservations;
     std::vector<LineSegment3d> d_observedLineSegments;
     Maybe<Polygon2d> d_visibleFieldPoly;
-    std::vector<std::pair<Eigen::Vector3d,Eigen::Vector3d>> d_occlusionRays;
+    std::vector<OcclusionRay<double>> d_occlusionRays;
     AgentPosition d_position;
   };
 }
