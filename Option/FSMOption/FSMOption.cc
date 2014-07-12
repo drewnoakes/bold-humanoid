@@ -60,7 +60,8 @@ FSMOption::FSMOption(shared_ptr<Voice> voice, string const& id)
 
 void FSMOption::reset()
 {
-  setCurrentState(d_startState);
+  // Clear the current state. runPolicy will set it to the starting state when next invoked.
+  d_curState = nullptr;
 }
 
 shared_ptr<FSMState> FSMOption::getState(string name) const
