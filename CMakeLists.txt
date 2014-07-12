@@ -644,6 +644,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObserver/HandlerHelper/handlerhelper.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObserver/HealthAndSafety/healthandsafety.cc
 )
 
