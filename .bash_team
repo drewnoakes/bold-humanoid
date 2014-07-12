@@ -16,6 +16,6 @@ alias bh=~/bh
 
 echo
 
-bh run-with --version | head -4
+bh run-with --version
 
 echo
