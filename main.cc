@@ -160,6 +160,8 @@ int main(int argc, char **argv)
     }
   }
 
+  auto startTime = Clock::getTimestamp();
+
   printBanner();
 
   logVersion();
@@ -179,7 +181,7 @@ int main(int argc, char **argv)
   log::info("boldhumanoid") << "Running Agent";
   agent->run();
 
-  log::info("boldhumanoid") << "Finished";
+  log::info("boldhumanoid") << "Finished after " << Clock::describeDurationSince(startTime);
 
   return 0;
 }
