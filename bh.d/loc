@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh loc"
+    echo "          count lines of code and report by language type"
+    exit
+fi
+
+cloc --skip-uniqueness --exclude-dir=test/google-test,rapidjson,libwebsockets,www/scripts/libs,libwebsockets_lib-prefix,cmake,CMakeFiles,mitecom .
