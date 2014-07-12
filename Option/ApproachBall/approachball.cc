@@ -26,7 +26,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
     return {};
   }
 
-  Vector2d ballPos(agentFrame->getBallObservation()->head<2>());
+  Vector2d ballPos = agentFrame->getBallObservation()->head<2>();
 
   writer.String("ballPos").StartArray().Double(ballPos.x()).Double(ballPos.y()).EndArray(2);
 
