@@ -3,6 +3,8 @@
 #include <ctime>
 #include <sstream>
 
+#include "../Clock/clock.hh"
+
 using namespace bold;
 using namespace std;
 

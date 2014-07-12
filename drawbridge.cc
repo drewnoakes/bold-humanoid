@@ -8,7 +8,7 @@
 #include "Config/config.hh"
 #include "StateObject/TeamState/teamstate.hh"
 #include "UDPSocket/udpsocket.hh"
-#include "version.hh"
+#include "Version/version.hh"
 #include "JointId/jointid.hh"
 
 using namespace bold;

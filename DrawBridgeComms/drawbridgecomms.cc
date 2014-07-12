@@ -16,7 +16,7 @@
 #include "../StateObject/TimingState/timingstate.hh"
 #include "../StateObject/TeamState/teamstate.hh"
 #include "../UDPSocket/udpsocket.hh"
-#include "../version.hh"
+#include "../Version/version.hh"
 
 using namespace bold;
 using namespace rapidjson;

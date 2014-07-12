@@ -41,7 +41,7 @@ TAGS
 /tools/output.png
 /tools/passtest
 /vision
-/version.cc
+/Version/version.cc
 /configuration-agent.json
 /www/.idea
 /www/main-built.js

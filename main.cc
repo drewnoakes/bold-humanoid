@@ -1,7 +1,7 @@
 #include "Agent/agent.hh"
 #include "Config/config.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
-#include "version.hh"
+#include "Version/version.hh"
 
 #include <signal.h>
 #include <getopt.h>

@@ -74,10 +74,10 @@ execute_process(COMMAND
   OUTPUT_VARIABLE BUILT_ON_HOST_NAME
   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 # generate version.cc
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.cc.in" "${CMAKE_CURRENT_BINARY_DIR}/version.cc" @ONLY)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.hh" "${CMAKE_CURRENT_BINARY_DIR}/version.hh" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Version/version.cc.in" "${CMAKE_CURRENT_BINARY_DIR}/Version/version.cc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Version/version.hh" "${CMAKE_CURRENT_BINARY_DIR}/Version/version.hh" @ONLY)
 # explicitly provide the dependency for version.cc, in case it has been deleted
-list(APPEND BOLDHUMANOID_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/version.cc")
+list(APPEND BOLDHUMANOID_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/Version/version.cc")
 
 #
 ## Include directories
