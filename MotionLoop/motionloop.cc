@@ -27,7 +27,6 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
   d_haveBody(false),
   d_isStarted(false),
   d_isStopRequested(false),
-  d_loopDurationMillis(8),
   d_readYet(false),
   d_cycleNumber(0),
   d_staticHardwareStateUpdateNeeded(true)
@@ -196,8 +195,8 @@ void *MotionLoop::threadMethod(void *param)
   while (!loop->d_isStopRequested)
   {
     // TODO this will always increment by <8ms, even if something stalled
-    next_time.tv_sec += (next_time.tv_nsec + loop->d_loopDurationMillis * 1000000) / 1000000000;
-    next_time.tv_nsec = (next_time.tv_nsec + loop->d_loopDurationMillis * 1000000) % 1000000000;
+    next_time.tv_sec += (next_time.tv_nsec + MotionModule::TIME_UNIT * 1000000) / 1000000000;
+    next_time.tv_nsec = (next_time.tv_nsec + MotionModule::TIME_UNIT * 1000000) % 1000000000;
 
     SequentialTimer t;
 
