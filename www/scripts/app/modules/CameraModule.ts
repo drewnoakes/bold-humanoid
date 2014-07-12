@@ -12,6 +12,7 @@ import data = require('data');
 import DOMTemplate = require('DOMTemplate');
 import HeadControls = require('controls/HeadControls');
 import mouse = require('util/mouse');
+import math = require('util/math');
 import Module = require('Module');
 import PixelLabelInspector = require('controls/PixelLabelInspector');
 
@@ -35,6 +36,9 @@ class CameraModule extends Module
         this.element.appendChild(content);
 
         this.cameraCanvas = <HTMLCanvasElement>content.querySelector('.camera-canvas');
+        this.cameraCanvas.width = constants.cameraImageWidth;
+        this.cameraCanvas.height = constants.cameraImageHeight;
+
         this.hoverPixelInfo = <HTMLDivElement>content.querySelector('.hover-pixel-info');
 
         var pixelLabelInspectorCanvas = <HTMLCanvasElement>content.querySelector('.pixel-label-inspector');
@@ -73,14 +77,12 @@ class CameraModule extends Module
 
     public onResized(width: number, height: number, isFullScreen: boolean)
     {
-        if (isFullScreen)
-        {
-            this.cameraCanvas.style.width = "100%";
-        }
-        else
-        {
-            this.cameraCanvas.style.width = constants.cameraImageWidth + 'px';
-        }
+        var size = isFullScreen
+            ? math.scaleWithAspect(constants.cameraImageWidth, constants.cameraImageHeight, width, height - 40)
+            : { width: constants.cameraImageWidth, height: constants.cameraImageHeight };
+
+        this.cameraCanvas.style.width = size.width + 'px';
+        this.cameraCanvas.style.height = size.height + 'px';
     }
 
     private scaleImagePoint(offsetX: number, offsetY: number)

@@ -788,6 +788,16 @@ div.module.camera div.hover-pixel-info
   pointer-events: none;
 }
 
+div.module.camera.full-screen div.module-content
+{
+  text-align: center;
+}
+
+div.module.camera.full-screen div.camera-module-controls.control-container
+{
+  margin-top: 6px;
+}
+
 @media screen and (max-width: 640px)
 {
   div.module.camera canvas.camera-canvas

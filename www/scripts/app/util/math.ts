@@ -113,3 +113,12 @@ export function roundDownHumane(value: number)
 
     return magMsd * magPow;
 }
+
+export interface Size { width: number; height: number; }
+
+export function scaleWithAspect(srcWidth: number, srcHeight: number, maxWidth: number, maxHeight: number) : Size
+{
+    var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+
+    return { width: srcWidth*ratio, height: srcHeight*ratio };
+}
