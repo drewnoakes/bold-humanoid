@@ -102,72 +102,42 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
     double leftPenaltySum = 0, rightPenaltySum = 0;
     for (auto const& ray : agentFrame->getOcclusionRays())
     {
-      if (lanePoly.contains(ray.near()))
-      {
-        Draw::circle(Frame::Agent, ray.near(), 0.02, bgr::lightBlue, 1, 0.8);
+      // Only consider occlusion points within our lane
+      if (!lanePoly.contains(ray.near()))
+        continue;
 
-        if (!agentFrame->isNearBall(ray.near(), FieldMap::getBallDiameter() * 1.5) &&
-            !agentFrame->isNearGoal(ray.near(), FieldMap::getGoalPostDiameter() * 2))
-          minDistInLane = std::min(minDistInLane, ray.near().norm());
+      // Ignore occlusion points which are quite close to the ball
+      if (agentFrame->isNearBall(ray.near(), laneWidth->getValue() / 2.0))
+        continue;
 
-        // Penalty
-        double penalty = Math::clamp((ballDist - ray.near().norm())/ballDist, 0.0, 1.0);
-        if (Math::angleToPoint(ray.near()) < ballAngleRads)
-          leftPenaltySum += penalty;
-        else
-          rightPenaltySum += penalty;
-      }
+      // Draw for debugging
+      Draw::circle(Frame::Agent, ray.near(), 0.02, bgr::lightBlue, 1, 0.8);
+
+      // Remember the minimum distance to an obstacle in the lane
+      minDistInLane = std::min(minDistInLane, ray.near().norm());
+
+      // Turn penalty
+      double penalty = Math::clamp((ballDist - ray.near().norm()) / ballDist, 0.0, 1.0);
+      if (Math::angleToPoint(ray.near()) < ballAngleRads)
+        leftPenaltySum += penalty;
+      else
+        rightPenaltySum += penalty;
     }
 
-    // Turn away from the occluded side
-    double turnSpeedDelta = 0.0;
-    if (leftPenaltySum < rightPenaltySum)
+    // Check there's a difference between sides (also caters for zeroes which causes NaN)
+    if (leftPenaltySum != rightPenaltySum)
     {
-      double turnRatio = 1 - (leftPenaltySum / rightPenaltySum);
-      turnSpeedDelta = -turnRatio * avoidTurnSpeed->getValue();
-    }
-    else
-    {
-      double turnRatio = 1 - (rightPenaltySum / leftPenaltySum);
-      turnSpeedDelta = turnRatio * avoidTurnSpeed->getValue();
+      // Turn away from the occluded side
+      double turnRatio = leftPenaltySum < rightPenaltySum
+        ? -1 + (leftPenaltySum / rightPenaltySum)
+        :  1 - (rightPenaltySum / leftPenaltySum);
+      turnSpeed += turnRatio * avoidTurnSpeed->getValue();
     }
 
     // Slow down if there is an occlusion close in front of us
     double brakeDist = occlusionBrakeDistance->getValue();
-    double xSpeedScale = 1.0;
     if (minDistInLane < brakeDist)
-      xSpeedScale = min(brakeDist - minDistInLane, minForwardSpeedScale->getValue());
-    xSpeed *= xSpeedScale;
-
-    cout << setprecision(2) << setw(6) << "PENALTY left=" << leftPenaltySum << " right=" << rightPenaltySum << " turn=" << turnSpeedDelta << " minDist=" << minDistInLane << " xSpeedScale=" << xSpeedScale << setprecision(6) << endl;
-
-
-//    if (fabs(targetAngleRads) < Math::degToRad(15))
-//    {
-//      // Try to keep a 'lane' free in front of the bot
-//      Vector2d left(ballPos + Vector2d(-laneWidth->getValue(), 0));
-//      Vector2d right(ballPos + Vector2d(laneWidth->getValue(), 0));
-//
-//      Draw::line(Frame::Agent, Vector2d::Zero(), left, bgr::blue, 1, 0.4);
-//      Draw::line(Frame::Agent, Vector2d::Zero(), right, bgr::blue, 1, 0.4);
-//
-//      auto leftDist = agentFrame->getOcclusionDistance(Math::angleToPoint(left));
-//      auto rightDist = agentFrame->getOcclusionDistance(Math::angleToPoint(right));
-//
-//      if (!std::isnan(leftDist))
-//      {
-//        ySpeed += Math::clamp(1 - (leftDist/ballDist), 0.0, 1.0) * avoidSpeed->getValue();
-//        Draw::circleAtAngle(Frame::Agent, Math::angleToPoint(left), leftDist, 0.3, bgr::black, 1, 0.4);
-//      }
-//      if (!std::isnan(rightDist))
-//      {
-//        ySpeed -= Math::clamp(1 - (rightDist/ballDist), 0.0, 1.0) * avoidSpeed->getValue();
-//        Draw::circleAtAngle(Frame::Agent, Math::angleToPoint(right), rightDist, 0.3, bgr::black, 1, 0.4);
-//      }
-//
-//      cout << "leftDist=" << leftDist << "\trightDist=" << rightDist << "\tballDist=" << ballDist << "\tySpeed=" << ySpeed << endl;
-////      cout << "leftDist=" << leftDist << "\tballDist=" << ballDist << "\tySpeed=" << ySpeed << endl;
-//    }
+      xSpeed *= max(minDistInLane / brakeDist, minForwardSpeedScale->getValue());
   }
 
   d_walkModule->setMoveDir(xSpeed, ySpeed);
