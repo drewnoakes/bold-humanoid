@@ -2,6 +2,7 @@
 
 #include "../Colour/colour.hh"
 #include "../geometry/LineSegment/LineSegment2/linesegment2.hh"
+#include "../geometry/Polygon2.hh"
 
 #include <memory>
 #include <vector>
@@ -12,7 +13,8 @@ namespace bold
   enum class DrawingItemType
   {
     Line = 1,
-    Circle = 2
+    Circle = 2,
+    Polygon = 3,
   };
 
   enum class Frame
@@ -46,6 +48,20 @@ namespace bold
     double alpha;
   };
 
+  struct PolygonDrawing : public DrawingItem
+  {
+    PolygonDrawing(Polygon2d const& polygon)
+      : polygon(polygon)
+    {}
+
+    Polygon2d polygon;
+    Colour::bgr fillColour;
+    Colour::bgr strokeColour;
+    double fillAlpha;
+    double strokeAlpha;
+    double lineWidth;
+  };
+
   class Draw
   {
   public:
@@ -57,6 +73,8 @@ namespace bold
     static void line(Frame frame, Eigen::Vector2d const& p1, Eigen::Vector2d const& p2, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
     static void line(Frame frame, LineSegment2d const& line, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
     static void lineAtAngle(Frame frame, Eigen::Vector2d const& p1, double angle, double length, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
+
+    static void polygon(Frame frame, Polygon2d const& polygon, Colour::bgr const& fillColour, double fillAlpha, Colour::bgr const& strokeColour, double strokeAlpha, double lineWidth = 1.0);
 
     static void flushToStateObject();
 

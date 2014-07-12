@@ -1,5 +1,6 @@
 #include "drawingstate.hh"
 
+#include "../../JsonWriter/jsonwriter.hh"
 #include "../../util/assert.hh"
 
 using namespace std;
@@ -64,6 +65,30 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
           .Uint(circle->colour.g)
           .Uint(circle->colour.b)
           .EndArray();
+      }
+    }
+    else if (item->type == DrawingItemType::Polygon)
+    {
+      auto poly = static_cast<PolygonDrawing const*>(item.get());
+      writer.String("p");
+      JsonWriter::polygon(writer, poly->polygon);
+
+      if (poly->fillAlpha > 0 && poly->fillAlpha < 1)
+        writer.String("fa").Double(poly->fillAlpha);
+      if (poly->strokeAlpha > 0 && poly->strokeAlpha < 1)
+        writer.String("sa").Double(poly->strokeAlpha);
+      if (poly->lineWidth > 0 && poly->lineWidth != 1)
+        writer.String("w").Double(poly->lineWidth);
+
+      if (poly->fillColour.b != 0 || poly->fillColour.g != 0 || poly->fillColour.r != 0)
+      {
+        writer.String("frgb");
+        JsonWriter::rgb(writer, poly->fillColour);
+      }
+      if (poly->strokeColour.b != 0 || poly->strokeColour.g != 0 || poly->strokeColour.r != 0)
+      {
+        writer.String("srgb");
+        JsonWriter::rgb(writer, poly->strokeColour);
       }
     }
 

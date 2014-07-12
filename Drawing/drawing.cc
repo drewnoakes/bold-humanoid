@@ -72,6 +72,23 @@ void Draw::circleAtAngle(Frame frame, double angle, double distance, double radi
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void Draw::polygon(Frame frame, Polygon2d const& polygon, bgr const& fillColour, double fillAlpha, bgr const& strokeColour, double strokeAlpha, double lineWidth)
+{
+  unique_ptr<PolygonDrawing> poly = make_unique<PolygonDrawing>(polygon);
+
+  poly->type = DrawingItemType::Polygon;
+  poly->frame = frame;
+  poly->fillColour = fillColour;
+  poly->strokeColour = strokeColour;
+  poly->fillAlpha = fillAlpha;
+  poly->strokeAlpha = strokeAlpha;
+  poly->lineWidth = lineWidth;
+
+  d_drawingItems->push_back(std::move(poly));
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Draw::flushToStateObject()
 {
   State::make<DrawingState>(std::move(d_drawingItems));

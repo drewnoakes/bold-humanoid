@@ -353,6 +353,11 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
     });
 }
 
+function toRgba(rgb: number[], alpha: number)
+{
+    return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
+}
+
 export function drawDrawingItems(context: CanvasRenderingContext2D, scale: number, items: state.DrawingItem[])
 {
     _.each(items, item =>
@@ -365,12 +370,8 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
             {
                 var line = <state.LineDrawing>item;
 
-                var width = line.w || 1;
-                var rgb = line.rgb || [0,0,0];
-                var alpha = line.a || 0.8;
-
-                context.lineWidth = width / scale;
-                context.strokeStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
+                context.lineWidth = (line.w || 1) / scale;
+                context.strokeStyle = toRgba(line.rgb || [0,0,0], line.a || 0.8);
 
                 context.beginPath();
                 context.moveTo(line.p1[0], line.p1[1]);
@@ -382,16 +383,34 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
             {
                 var circle = <state.CircleDrawing>item;
 
-                var width = circle.w || 1;
-                var rgb = circle.rgb || [0,0,0];
-                var alpha = circle.a || 0.8;
-
-                context.lineWidth = width / scale;
-                context.strokeStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
+                context.lineWidth = (circle.w || 1) / scale;
+                context.strokeStyle = toRgba(circle.rgb || [0,0,0], circle.a || 0.8);
 
                 context.beginPath();
                 context.arc(circle.c[0], circle.c[1], circle.r, 0, 2*Math.PI);
                 context.stroke();
+                break;
+            }
+            case state.DrawingItemType.Polygon:
+            {
+                var poly = <state.PolygonDrawing>item;
+
+                console.assert(poly.p.length > 2);
+
+                context.lineWidth = (poly.w || 1) / scale;
+                context.strokeStyle = toRgba(poly.srgb || [0,0,0], poly.sa || 0.8);
+                context.fillStyle = toRgba(poly.frgb || [0,0,0], poly.fa || 0.8);
+
+                var points = poly.p;
+                context.beginPath();
+                context.moveTo(points[0][0], points[0][1]);
+                for (var i = 1; i < points.length; i++)
+                    context.lineTo(points[i][0], points[i][1]);
+                context.closePath();
+                if (poly.sa)
+                    context.stroke();
+                if (poly.fa)
+                    context.fill();
                 break;
             }
         }
