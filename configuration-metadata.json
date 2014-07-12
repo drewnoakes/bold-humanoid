@@ -311,6 +311,7 @@
     }
   },
   "walk-module": {
+    "is-paralysed":  { "type": "bool" },
     "x-amp-delta":   { "type": "double", "description": "X smoothing delta" },
     "y-amp-delta":   { "type": "double", "description": "Y smoothing delta" },
     "turn-delta":    { "type": "double", "description": "Turn smoothing delta" },

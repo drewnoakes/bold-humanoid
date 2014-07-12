@@ -84,6 +84,7 @@ namespace bold
     LinearSmoother d_yAmp;
     LinearSmoother d_turnAmp;
 
+    Setting<bool>* d_isParalysed;
     Setting<double>* d_maxHipPitchAtSpeed;
     Setting<double>* d_minHipPitch;
     Setting<double>* d_maxHipPitch;

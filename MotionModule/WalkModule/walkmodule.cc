@@ -34,6 +34,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_xAmp(0, 1),
   d_yAmp(0, 1),
   d_turnAmp(0, 1),
+  d_isParalysed(Config::getSetting<bool>("walk-module.is-paralysed")),
   d_maxHipPitchAtSpeed(Config::getSetting<double>("walk-module.max-hip-pitch-at-speed")),
   d_minHipPitch(Config::getSetting<double>("walk-module.min-hip-pitch")),
   d_maxHipPitch(Config::getSetting<double>("walk-module.max-hip-pitch")),
@@ -239,6 +240,6 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     d_walkEngine);
 }
 
-void WalkModule::applyHead(HeadSection* head) { d_walkEngine->applyHead(head); }
-void WalkModule::applyArms(ArmSection* arms)  { d_walkEngine->applyArms(arms); }
-void WalkModule::applyLegs(LegSection* legs)  { d_walkEngine->applyLegs(legs); }
+void WalkModule::applyHead(HeadSection* head) { if (!d_isParalysed->getValue()) d_walkEngine->applyHead(head); }
+void WalkModule::applyArms(ArmSection* arms)  { if (!d_isParalysed->getValue()) d_walkEngine->applyArms(arms); }
+void WalkModule::applyLegs(LegSection* legs)  { if (!d_isParalysed->getValue()) d_walkEngine->applyLegs(legs); }
