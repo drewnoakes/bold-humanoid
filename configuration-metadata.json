@@ -358,7 +358,9 @@
       "avoid-obstacles": {
         "enabled": { "type": "bool" },
         "lane-width": { "type": "double", "min": 0.0, "max": 1.0 },
-        "avoid-speed": { "type": "double", "min": 0.0, "max": 60.0 }
+        "avoid-speed": { "type": "double", "min": 0.0, "max": 60.0 },
+        "brake-distance": { "type": "double", "min": 0.0, "max": 5.0 },
+        "min-fwd-scale": { "type": "double", "min": 0.0, "max": 1.0 }
       }
     },
     "await-their-kick-off": {

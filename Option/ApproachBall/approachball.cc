@@ -79,6 +79,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   static auto avoidObstacles = Config::getSetting<bool>("options.approach-ball.avoid-obstacles.enabled");
   static auto laneWidth = Config::getSetting<double>("options.approach-ball.avoid-obstacles.lane-width");
   static auto avoidSpeed = Config::getSetting<double>("options.approach-ball.avoid-obstacles.avoid-speed");
+  static auto occlusionBrakeDistance = Config::getSetting<double>("options.approach-ball.avoid-obstacles.brake-distance");
+  static auto minForwardSpeedScale = Config::getSetting<double>("options.approach-ball.avoid-obstacles.min-fwd-scale");
   if (avoidObstacles->getValue())
   {
     // Determine the polygon of the direct lane to the ball
@@ -95,11 +97,19 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
     Draw::polygon(Frame::Agent, lanePoints, bgr::blue, 0.1, bgr::blue, 0.5, 1.5);
 
     // Iterate through the occlusion rays
+    double minDistInLane = numeric_limits<double>::max();
     for (auto const& ray : agentFrame->getOcclusionRays())
     {
       if (lanePoly.contains(ray.near()))
+      {
+        minDistInLane = std::min(minDistInLane, ray.near().norm());
         Draw::circle(Frame::Agent, ray.near(), 0.02, bgr::lightBlue, 1, 0.8);
+      }
     }
+
+    double brakeDist = occlusionBrakeDistance->getValue();
+    if (minDistInLane < brakeDist)
+      xSpeed *= min(brakeDist - minDistInLane, minForwardSpeedScale->getValue());
 
     if (fabs(targetAngleRads) < Math::degToRad(15))
     {

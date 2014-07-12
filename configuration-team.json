@@ -361,7 +361,9 @@
       "avoid-obstacles": {
         "enabled": true,
         "lane-width": 0.4,
-        "avoid-speed": 20.0
+        "avoid-speed": 20.0,
+        "brake-distance": 1.0,
+        "min-fwd-scale": 0.1
       }
     },
     "await-their-kick-off": {
