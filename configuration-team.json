@@ -169,7 +169,7 @@
     "goal-detection": {
       "min-dimension-px": 3,
       "max-field-edge-distance-px": 30,
-      "accepted-width-ratio": [0.5, 1.4],
+      "accepted-width-ratio": [0.5, 2.0],
       "max-pair-error-dist": 0.5
     },
     "player-detection": {
