@@ -31,7 +31,7 @@ Option::OptionVector WalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer
 
   double walkDist = d_targetPos.norm();
 
-  static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
+//  static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
 
   writer.String("walkDist").Double(walkDist);
 
@@ -60,11 +60,11 @@ Option::OptionVector WalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer
   double xSpeed = Math::lerp(speedScaleDueToDistance * speedScaleDueToAngle * d_targetPos.y(),
                              d_minForwardSpeed->getValue(),
                              d_maxForwardSpeed->getValue());
-  
+
   double ySpeed = -Math::lerp(speedScaleDueToDistance * speedScaleDueToAngle * d_targetPos.x(),
                              d_minSidewaysSpeed->getValue(),
                              d_maxSidewaysSpeed->getValue());
-  
+
   // unspecified units
   double turnSpeed = faceAngle * d_turnScale->getValue();
 
