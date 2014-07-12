@@ -19,7 +19,7 @@ do
 
     mkdir -p remote-logs/darwin$i
 
-    scp darwin@darwin$i.local:log* remote-logs/darwin$i
+    scp darwin@darwin$i.local:log* $BOLD_HUMANOID_DIR/remote-logs/darwin$i
 
     if [ $? -ne 0 ]; then
         echo FAILED to copy from darwin$i.local

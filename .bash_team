@@ -9,6 +9,12 @@ else
     echo "$(tput setaf 2)Boldhumanoid process is running $(tput sgr 0)"
 fi
 
+if [ ! -d "$BOLD_HUMANOID_DIR" ]; then
+    echo
+    echo "$(tput setaf 1)BOLD_HUMANOID_DIR not set to a valid directory! $(tput sgr 0)";
+    echo
+fi
+
 . bh_completion
 
 alias h=history
