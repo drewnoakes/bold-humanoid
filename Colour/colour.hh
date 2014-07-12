@@ -49,10 +49,13 @@ namespace bold
       static const bgr white;
       static const bgr red;
       static const bgr lightRed;
+      static const bgr darkRed;
       static const bgr green;
       static const bgr lightGreen;
+      static const bgr darkGreen;
       static const bgr blue;
       static const bgr lightBlue;
+      static const bgr darkBlue;
       static const bgr orange;
       static const bgr purple;
       static const bgr yellow;
