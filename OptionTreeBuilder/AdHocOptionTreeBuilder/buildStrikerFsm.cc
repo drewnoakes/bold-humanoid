@@ -209,6 +209,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   supportState
     ->transitionTo(locateBallState, "resume")
     ->when([] { return stepUpDownThreshold(10, negate(shouldYieldToOtherAttacker)); });
+
   //
   // AT-BALL EXIT TRANSITIONS
   //
