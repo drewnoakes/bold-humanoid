@@ -1,12 +1,12 @@
 #pragma once
 
-#import "../option.hh"
+#include "../option.hh"
 #include "../../MotionModule/WalkModule/walkmodule.hh"
 
 #include <Eigen/Core>
 
-namespace bold {
-  
+namespace bold
+{
   class WalkTo : public Option
   {
   public:
@@ -35,8 +35,5 @@ namespace bold {
     Setting<double>* d_brakeDistance;
     Setting<double>* d_lowerTurnLimitDegs;
     Setting<double>* d_upperTurnLimitDegs;
-
   };
-
-  
 }
