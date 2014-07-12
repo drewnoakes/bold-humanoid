@@ -29,6 +29,7 @@ double FieldMap::d_goalY;
 double FieldMap::d_goalAreaLengthX;
 double FieldMap::d_goalAreaLengthY;
 double FieldMap::d_goalPostDiameter;
+double FieldMap::d_ballDiameter;
 
 void FieldMap::initialise()
 {
@@ -45,7 +46,7 @@ void FieldMap::initialise()
   double circleDiameter      = Config::getStaticValue<double>("world.circle-diameter");
   double lineWidth           = Config::getStaticValue<double>("world.line-width");
   d_outerMarginMinimum       = Config::getStaticValue<double>("world.outer-margin-minimum");
-//double ballDiameter        = Config::getStaticValue<double>("world.ball-diameter");
+  d_ballDiameter             = Config::getStaticValue<double>("world.ball-diameter");
 
   d_maxDiagnoalFieldDistance = Vector2d(
     d_fieldLengthX + 2*d_outerMarginMinimum,

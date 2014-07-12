@@ -69,6 +69,8 @@ namespace bold
 
     static double getGoalPostDiameter() { return d_goalPostDiameter; }
 
+    static double getBallDiameter() { return d_ballDiameter; }
+
   private:
     FieldMap() = delete;
 
@@ -89,5 +91,6 @@ namespace bold
     static double d_goalAreaLengthX;
     static double d_goalAreaLengthY;
     static double d_goalPostDiameter;
+    static double d_ballDiameter;
   };
 }

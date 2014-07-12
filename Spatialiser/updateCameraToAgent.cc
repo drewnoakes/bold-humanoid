@@ -1,12 +1,13 @@
 #include "spatialiser.ih"
 
 #include "../geometry/Polygon2.hh"
+#include "../FieldMap/fieldmap.hh"
 
 void Spatialiser::updateCameraToAgent()
 {
   auto cameraFrame = State::get<CameraFrameState>();
 
-  static double ballRadius = Config::getStaticValue<double>("world.ball-diameter") / 2.0;
+  static double ballRadius = FieldMap::getBallDiameter() / 2.0;
   static double goalieMarkerHeight = Config::getStaticValue<double>("vision.player-detection.goalie-marker-height");
 
   // Project ball observation
