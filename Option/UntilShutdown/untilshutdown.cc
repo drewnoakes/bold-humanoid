@@ -28,3 +28,10 @@ vector<shared_ptr<Option>> UntilShutdown::runPolicy(Writer<StringBuffer>& writer
     return { d_beforeShutdown };
   }
 }
+
+double UntilShutdown::hasTerminated()
+{
+  return d_agent->isStopRequested()
+    ? d_afterShutdown->hasTerminated()
+    : d_beforeShutdown->hasTerminated();
+}

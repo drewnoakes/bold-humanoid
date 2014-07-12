@@ -16,6 +16,8 @@ namespace bold
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
+    double hasTerminated() override;
+
   private:
     Agent* d_agent;
     std::shared_ptr<Option> d_beforeShutdown;
