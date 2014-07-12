@@ -49,17 +49,17 @@ void Draw::lineAtAngle(Frame frame, Vector2d const& p1, double angle, double len
 
 void Draw::circle(Frame frame, Eigen::Vector2d const& centre, double radius, Colour::bgr const& colour, double lineWidth, double alpha)
 {
-  unique_ptr<CircleDrawing> line = make_unique<CircleDrawing>();
+  unique_ptr<CircleDrawing> circle = make_unique<CircleDrawing>();
 
-  line->type = DrawingItemType::Circle;
-  line->frame = frame;
-  line->centre = centre;
-  line->radius = radius;
-  line->colour = colour;
-  line->alpha = alpha;
-  line->lineWidth = lineWidth;
+  circle->type = DrawingItemType::Circle;
+  circle->frame = frame;
+  circle->centre = centre;
+  circle->radius = radius;
+  circle->colour = colour;
+  circle->alpha = alpha;
+  circle->lineWidth = lineWidth;
 
-  d_drawingItems->push_back(std::move(line));
+  d_drawingItems->push_back(std::move(circle));
 }
 
 void Draw::circleAtAngle(Frame frame, double angle, double distance, double radius, Colour::bgr const& colour, double lineWidth, double alpha)
