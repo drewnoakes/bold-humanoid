@@ -21,11 +21,8 @@ PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
 
 void PeriodicFieldEdgePass::onImageStarting(SequentialTimer& timer)
 {
-  for (ushort c = 0; c < d_runByC.size(); c++)
-    d_maxYByC[c] = -1;
-
-  memset(d_runByC.data(), 0, sizeof(ushort) * d_runByC.size());
-
+  std::fill(d_maxYByC.begin(), d_maxYByC.end(), numeric_limits<ushort>::max());
+  std::fill(d_runByC.begin(), d_runByC.end(), 0);
   timer.timeEvent("Clear");
 }
 

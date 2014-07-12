@@ -20,13 +20,8 @@ CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
 
 void CompleteFieldEdgePass::onImageStarting(SequentialTimer& timer)
 {
-  ASSERT(d_maxYByX.size() == d_pixelWidth);
-
-  for (ushort x = 0; x < d_pixelWidth; x++)
-    d_maxYByX[x] = d_pixelHeight - 1;
-
-  memset(d_runByX.data(), 0, sizeof(ushort) * d_pixelWidth);
-
+  std::fill(d_maxYByX.begin(), d_maxYByX.end(), d_pixelHeight - 1);
+  std::fill(d_runByX.begin(), d_runByX.end(), 0);
   timer.timeEvent("Clear");
 }
 
