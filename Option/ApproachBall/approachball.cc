@@ -82,6 +82,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   static auto occlusionBrakeDistance = Config::getSetting<double>("options.approach-ball.avoid-obstacles.brake-distance");
   static auto minForwardSpeedScale = Config::getSetting<double>("options.approach-ball.avoid-obstacles.min-fwd-scale");
   static auto avoidTurnSpeed = Config::getSetting<double>("options.approach-ball.avoid-obstacles.turn-speed");
+  static auto ignoreNearBallDistance = Config::getSetting<double>("options.approach-ball.avoid-obstacles.ignore-near-ball-dist");
   if (avoidObstacles->getValue())
   {
     // Determine the polygon of the direct lane to the ball
@@ -107,7 +108,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
         continue;
 
       // Ignore occlusion points which are quite close to the ball
-      if (agentFrame->isNearBall(ray.near(), laneWidth->getValue() / 2.0))
+      if (agentFrame->isNearBall(ray.near(), ignoreNearBallDistance->getValue()))
         continue;
 
       // Draw for debugging

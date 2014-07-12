@@ -362,6 +362,7 @@
         "enabled": true,
         "lane-width": 0.4,
         "turn-speed": 5.0,
+        "ignore-near-ball-dist": 0.4,
         "brake-distance": 1.0,
         "min-fwd-scale": 0.1
       }
