@@ -314,7 +314,6 @@
     }
   },
   "walk-module": {
-    "auto-balance": true,
     "x-amp-delta": 0.35,
     "y-amp-delta": 0.35,
     "turn-delta": 0.24,
