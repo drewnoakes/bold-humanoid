@@ -77,6 +77,21 @@ double AgentFrameState::getOcclusionDistance(double angle) const
   return t <= 0 ? numeric_limits<double>::quiet_NaN() : t;
 }
 
+bool AgentFrameState::isNearBall(Vector2d point, double maxDistance) const
+{
+  return d_ballObservation.hasValue() && ((point - d_ballObservation->head<2>()).norm() < maxDistance);
+}
+
+bool AgentFrameState::isNearGoal(Vector2d point, double maxDistance) const
+{
+  for (auto const& goal : d_goalObservations)
+  {
+    if ((point - goal.head<2>()).norm() < maxDistance)
+      return true;
+  }
+  return false;
+}
+
 void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();

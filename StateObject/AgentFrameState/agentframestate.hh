@@ -46,6 +46,9 @@ namespace bold
 
     bool shouldSeeAgentFrameGroundPoint(Eigen::Vector2d groundAgent) const;
 
+    bool isNearBall(Eigen::Vector2d point, double maxDistance) const;
+    bool isNearGoal(Eigen::Vector2d point, double maxDistance) const;
+
   private:
     Maybe<Eigen::Vector3d> d_ballObservation;
     std::vector<Eigen::Vector3d> d_goalObservations;
