@@ -10,6 +10,7 @@
 #include <Eigen/Core>
 
 using namespace bold;
+using namespace bold::Colour;
 using namespace Eigen;
 using namespace rapidjson;
 using namespace std;
@@ -88,8 +89,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
       Vector2d left(ballPos + Vector2d(-laneWidth->getValue(), 0));
       Vector2d right(ballPos + Vector2d(laneWidth->getValue(), 0));
 
-      Draw::line(Frame::Agent, Vector2d::Zero(), left, Colour::bgr::blue, 1, 0.4);
-      Draw::line(Frame::Agent, Vector2d::Zero(), right, Colour::bgr::blue, 1, 0.4);
+      Draw::line(Frame::Agent, Vector2d::Zero(), left, bgr::blue, 1, 0.4);
+      Draw::line(Frame::Agent, Vector2d::Zero(), right, bgr::blue, 1, 0.4);
 
       auto leftDist = agentFrame->getOcclusionDistance(Math::angleToPoint(left));
       auto rightDist = agentFrame->getOcclusionDistance(Math::angleToPoint(right));
@@ -97,12 +98,12 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
       if (!std::isnan(leftDist))
       {
         ySpeed += Math::clamp(1 - (leftDist/ballDist), 0.0, 1.0) * avoidSpeed->getValue();
-        Draw::circleAtAngle(Frame::Agent, Math::angleToPoint(left), leftDist, 0.3, Colour::bgr::black, 1, 0.4);
+        Draw::circleAtAngle(Frame::Agent, Math::angleToPoint(left), leftDist, 0.3, bgr::black, 1, 0.4);
       }
       if (!std::isnan(rightDist))
       {
         ySpeed -= Math::clamp(1 - (rightDist/ballDist), 0.0, 1.0) * avoidSpeed->getValue();
-        Draw::circleAtAngle(Frame::Agent, Math::angleToPoint(right), rightDist, 0.3, Colour::bgr::black, 1, 0.4);
+        Draw::circleAtAngle(Frame::Agent, Math::angleToPoint(right), rightDist, 0.3, bgr::black, 1, 0.4);
       }
 
       cout << "leftDist=" << leftDist << "\trightDist=" << rightDist << "\tballDist=" << ballDist << "\tySpeed=" << ySpeed << endl;
