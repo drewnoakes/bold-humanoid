@@ -14,7 +14,7 @@ namespace bold
   public:
     UntilShutdown(std::string id, Agent* agent, std::shared_ptr<Option> beforeShutdown, std::shared_ptr<Option> afterShutdown);
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
     Agent* d_agent;
