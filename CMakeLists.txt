@@ -640,10 +640,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObserver/OpenTeamCommunicator/openteamcommunicator.cc
-)
-
-add_class(BOLDHUMANOID
   ./StateObserver/GyroCalibrator/gyrocalibrator.cc
 )
 
@@ -657,6 +653,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObserver/Odometer/odometer.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObserver/OpenTeamCommunicator/openteamcommunicator.cc
 )
 
 add_class(BOLDHUMANOID
