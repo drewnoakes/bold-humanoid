@@ -313,28 +313,34 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.stroke();
     });
 
-    var getGoalColour = (label: state.GoalLabel) =>
+    var getGoalLabelColour = (label: state.GoalLabel) =>
     {
         switch (label)
         {
-            case state.GoalLabel.Ours:    return new color.Rgb(1, 0.8, 0); break;
-            case state.GoalLabel.Theirs:  return new color.Rgb(0.8, 1, 0); break;
-            case state.GoalLabel.Unknown: return new color.Rgb(0.7, 0.7, 0); break;
+            case state.GoalLabel.Ours:    return new color.Rgb(0.8, 0.0, 0.0); break;
+            case state.GoalLabel.Theirs:  return new color.Rgb(1.0, 0.0, 0.0); break;
+            case state.GoalLabel.Unknown: return new color.Rgb(0.7, 0.7, 0.0); break;
         }
     };
 
+    // Goal posts
     _.each(data.goalPosts, goalPost =>
     {
         var alpha = goalPost.count / maxGoalPostCount;
-        context.strokeStyle = getGoalColour(goalPost.label).toString(alpha);
+        context.lineWidth = 0.02;
+        context.strokeStyle = new color.Rgb(0.7, 0.7, 0.0).toString(alpha);
+        context.fillStyle = getGoalLabelColour(goalPost.label).toString(0.8);
         context.beginPath();
         circle(context, goalPost.pos, constants.goalPostDiameter/2);
+        context.fill();
         context.stroke();
     });
 
+    // Lines between paired goal posts
     _.each(data.goals, goal =>
     {
-        context.strokeStyle = getGoalColour(goal.label).toString();
+        context.lineWidth = 0.02;
+        context.strokeStyle = getGoalLabelColour(goal.label).toString();
         context.beginPath();
         context.moveTo(goal.post1[0], goal.post1[1]);
         context.lineTo(goal.post2[0], goal.post2[1]);
@@ -345,8 +351,10 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         ? maxBall.pos
         : [0, 0.12];
 
+    // Possible kicks
     _.each(data.kicks, kick =>
     {
+        context.lineWidth = 0.01;
         context.strokeStyle = 'purple';
         context.beginPath();
         context.moveTo(startPos[0], startPos[1]);
@@ -354,12 +362,14 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.stroke();
     });
 
+    // Occlusion markers
     var divisions = data.openField.divisions,
         arc = 2*Math.PI / divisions,
         halfArc = arc / 2.0;
     _.each(data.openField.slices, slice =>
     {
         var angle = slice.angle + Math.PI/2.0;
+        context.lineWidth = 0.01;
         context.strokeStyle = 'rgba(0,0,0,' + (slice.count / maxSliceCount) + ')';
         context.beginPath();
         context.arc(0, 0, slice.dist, angle - halfArc, angle + halfArc);
@@ -415,7 +425,7 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
             case state.DrawingItemType.Polygon:
             {
                 var poly = <state.PolygonDrawing>item;
-                setFillableProperties(context, circle, scale);
+                setFillableProperties(context, poly, scale);
                 console.assert(poly.p.length > 2);
                 var points = poly.p;
                 context.beginPath();
