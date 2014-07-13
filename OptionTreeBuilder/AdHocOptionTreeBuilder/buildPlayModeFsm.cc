@@ -33,7 +33,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   // In the Win FSM, any state other than 'playing' and 'penalised' corresponds to the 'inactive' status.
   setPlayerStatusInStates(agent, PlayerStatus::Inactive, { initialState, readyState, setState, });
 
-  setPlayerStatusInStates(agent, PlayerStatus::Active, { playingState });
   setPlayerStatusInStates(agent, PlayerStatus::Penalised, { penalisedState });
 
   initialState  ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::INITIAL);   agent->getHeadModule()->moveToHome(); });
