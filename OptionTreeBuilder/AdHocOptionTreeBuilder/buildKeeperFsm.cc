@@ -1,5 +1,9 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../Drawing/drawing.hh"
+
+using namespace bold::Colour;
+
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 {
   // KICKS
@@ -37,14 +41,18 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
     ->transitionTo(locateBallState, "standing")
     ->whenTerminated();
 
+  static Bounds2d leftBallStepArea(Vector2d(-0.75, 0.75), Vector2d(-0.3, 1.5));
+  static Bounds2d rightBallStepArea(Vector2d(0.3, 0.75), Vector2d(0.75, 1.5));
+
   locateBallState
     ->transitionTo(bigStepLeftState, "ball-left")
     ->when([]
     {
       return trueForMillis(1000, []
       {
+        Draw::fillPolygon(Frame::Agent, leftBallStepArea, bgr::white, 0.3, bgr::black, 0.0, 0);
         auto ball = State::get<AgentFrameState>()->getBallObservation();
-        return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(-0.75, -0.3).contains(ball->x());
+        return ball && leftBallStepArea.contains(ball->head<2>());
       });
     });
 
@@ -54,8 +62,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
     {
       return trueForMillis(1000, []
       {
+        Draw::fillPolygon(Frame::Agent, rightBallStepArea, bgr::white, 0.3, bgr::black, 0.0, 0);
         auto ball = State::get<AgentFrameState>()->getBallObservation();
-        return ball && Range<double>(0.75, 1.5).contains(ball->y()) && Range<double>(0.3, 0.75).contains(ball->x());
+        return ball && rightBallStepArea.contains(ball->head<2>());
       });
     });
 
