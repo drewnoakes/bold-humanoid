@@ -42,7 +42,7 @@ namespace bold
     /// Positions of the base of our their goal posts (which we attack), in the world frame.
     static std::vector<Eigen::Vector3d> const& getTheirGoalPostPositions() { return d_theirGoalPostPositions; }
 
-    static double getMaxDiagonalFieldDistance() { return d_maxDiagnoalFieldDistance; }
+    static double getMaxDiagonalFieldDistance() { return d_maxDiagonalFieldDistance; }
 
     /// The long length of the field, from goal to goal.
     static double getFieldLengthX() { return d_fieldLengthX; }
@@ -87,7 +87,7 @@ namespace bold
     static double d_fieldLengthY;
     static double d_outerMarginMinimum;
     static double d_circleRadius;
-    static double d_maxDiagnoalFieldDistance;
+    static double d_maxDiagonalFieldDistance;
     static double d_goalY;
     static double d_goalAreaLengthX;
     static double d_goalAreaLengthY;
