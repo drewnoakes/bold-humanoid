@@ -7,10 +7,8 @@
 #include <dirent.h>
 
 #include <rapidjson/filereadstream.h>
-#include <rapidjson/filestream.h>
 #include <rapidjson/filewritestream.h>
 #include <rapidjson/prettywriter.h>
-#include <rapidjson/writer.h>
 
 using namespace bold;
 using namespace std;

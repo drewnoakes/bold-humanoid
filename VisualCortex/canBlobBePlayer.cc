@@ -24,4 +24,3 @@ bool VisualCortex::canBlobBePlayer(Blob const& playerBlob, Vector2d& imagePos, V
 
   return true;
 }
-

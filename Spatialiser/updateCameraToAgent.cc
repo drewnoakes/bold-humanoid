@@ -1,6 +1,5 @@
 #include "spatialiser.ih"
 
-#include "../geometry/Polygon2.hh"
 #include "../FieldMap/fieldmap.hh"
 
 void Spatialiser::updateCameraToAgent()
