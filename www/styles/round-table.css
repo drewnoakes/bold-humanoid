@@ -806,6 +806,15 @@ div.module.camera.full-screen div.camera-module-controls.control-container
   }
 }
 
+div.module.camera canvas.camera-canvas
+{
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
 div.module.camera div.image-container
 {
   position: relative;

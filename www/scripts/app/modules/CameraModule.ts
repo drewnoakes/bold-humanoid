@@ -142,6 +142,16 @@ class CameraModule extends Module
     {
         this.context = this.cameraCanvas.getContext('2d');
 
+        // see:
+        // http://stackoverflow.com/questions/8597081/how-to-stretch-images-with-no-antialiasing
+        // http://vaughnroyko.com/state-of-nearest-neighbor-interpolation-in-canvas/
+
+        (<any>this.context).mozImageSmoothingEnabled = false;
+        (<any>this.context).webkitImageSmoothingEnabled = false;
+        (<any>this.context).msImageSmoothingEnabled = false;
+        (<any>this.context).imageSmoothingEnabled = false;
+        (<any>this.context).oImageSmoothingEnabled = false;
+
         // The image arrives flipped in both x and y axes.
         // Rotate image to correct orientation via scaling by -1 in x and y.
         this.context.translate(this.cameraCanvas.width, this.cameraCanvas.height);
