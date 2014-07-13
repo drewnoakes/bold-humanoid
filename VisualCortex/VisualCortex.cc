@@ -97,6 +97,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   // player detection settings
   d_minPlayerAreaPixels            = Config::getSetting<int>("vision.player-detection.min-area-px");
+  d_minPlayerLengthPixels          = Config::getSetting<int>("vision.player-detection.min-length-px");
   d_goalieMarkerHeight             = Config::getSetting<double>("vision.player-detection.goalie-marker-height");
 
   // TODO don't pass this around -- look it up from config (?)

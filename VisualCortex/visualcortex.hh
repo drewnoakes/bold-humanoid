@@ -188,8 +188,9 @@ namespace bold
     Setting<Range<double>>* d_acceptedGoalMeasuredWidthRatio;
 
     Setting<int>* d_minPlayerAreaPixels;
+    Setting<int>* d_minPlayerLengthPixels;
     Setting<double>* d_goalieMarkerHeight;
-    
+
     bool d_saveNextYUVFrame;
     Setting<bool>* d_isRecordingYUVFrames;
     bool d_saveNextDebugFrame;
