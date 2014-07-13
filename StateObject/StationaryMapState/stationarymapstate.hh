@@ -113,14 +113,15 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
-    std::vector<Average<Eigen::Vector2d>> const& getBallEstimates() const { return d_ballEstimates; };
-    std::vector<Average<Eigen::Vector2d>> const& getTeammateEstimates() const { return d_keeperEstimates; };
-    std::vector<Average<Eigen::Vector2d>> const& getGoalPostEstimates() const { return d_goalPostEstimates; };
-    std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; };
+    std::vector<Average<Eigen::Vector2d>> const& getBallEstimates() const { return d_ballEstimates; }
+    std::vector<Average<Eigen::Vector2d>> const& getTeammateEstimates() const { return d_keeperEstimates; }
+    std::vector<Average<Eigen::Vector2d>> const& getGoalPostEstimates() const { return d_goalPostEstimates; }
+    std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; }
 
-    bool hasEnoughBallObservations() const { return existsWithSamples(d_ballEstimates, BallSamplesNeeded); };
-    bool hasEnoughGoalPostObservations() const { return d_goalEstimates.size() != 0; };
-    bool hasEnoughBallAndGoalPostObservations() const { return hasEnoughBallObservations() && hasEnoughGoalPostObservations(); };
+    bool hasEnoughBallObservations() const { return existsWithSamples(d_ballEstimates, BallSamplesNeeded); }
+    bool hasEnoughGoalPostObservations() const { return d_goalEstimates.size() != 0; }
+    bool hasEnoughBallAndGoalPostObservations() const { return hasEnoughBallObservations() && hasEnoughGoalPostObservations(); }
+
 
     bool hasBallWithinDistance(double distance) const;
 
