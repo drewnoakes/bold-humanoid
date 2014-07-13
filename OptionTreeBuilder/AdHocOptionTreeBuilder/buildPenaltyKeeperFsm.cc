@@ -1,5 +1,6 @@
 #include "adhocoptiontreebuilder.hh"
 
+#include "../../Drawing/drawing.hh"
 #include "../../FieldMap/fieldmap.hh"
 #include "../../Option/LocateBall/locateball.hh"
 #include "../../Option/LookAround/lookaround.hh"
@@ -8,6 +9,7 @@
 #include "conditionals.hh"
 
 using namespace bold;
+using namespace bold::Colour;
 using namespace Eigen;
 using namespace std;
 
@@ -37,6 +39,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
     ->whenTerminated();
 
   const static double goalWidth = FieldMap::getGoalY();
+  static Bounds2d leftBallDiveArea(Vector2d(-goalWidth/1.5, -0.2), Vector2d(-0.1, 1.0));
+  static Bounds2d rightBallDiveArea(Vector2d(0.1, -0.2), Vector2d(goalWidth/1.5, 1.0));
 
   locateBallState
     ->transitionTo(leftDiveState, "ball-left")
@@ -44,10 +48,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
     {
       return stepUpDownThreshold(3, []
       {
+        Draw::fillPolygon(Frame::Agent, leftBallDiveArea, bgr::red, 0.3, bgr::black, 0.0, 0);
         auto ball = State::get<AgentFrameState>()->getBallObservation();
-        return ball &&
-               ball->y() < 1.0 && ball->y() > -0.2 &&
-               ball->x() < -0.1 && ball->x() > -goalWidth/1.5;
+        return ball && leftBallDiveArea.contains(ball->head<2>());
       });
     });
 
@@ -57,10 +60,9 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
     {
       return stepUpDownThreshold(3, []
       {
+        Draw::fillPolygon(Frame::Agent, rightBallDiveArea, bgr::red, 0.3, bgr::red, 0.0, 0);
         auto ball = State::get<AgentFrameState>()->getBallObservation();
-        return ball &&
-               ball->y() < 1.0 && ball->y() > -0.2 &&
-              ball->x() > 0.1 && ball->x() < goalWidth/1.5;
+        return ball && rightBallDiveArea.contains(ball->head<2>());
       });
     });
 
