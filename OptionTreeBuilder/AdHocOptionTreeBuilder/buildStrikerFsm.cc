@@ -41,16 +41,14 @@ auto shouldYieldToOtherAttacker = []
   auto ballObservers = team->getBallObservers();
   bool isTeamMateApproachingBallAndNearer = false;
   for (auto player : ballObservers)
+  {
     if (player.activity == PlayerActivity::ApproachingBall && player.ballRelative->norm() < ballDist)
     {
       isTeamMateApproachingBallAndNearer = true;
       break;
     }
-
-  if (isTeamMateApproachingBallAndNearer)
-    return true;
-
-  return false;
+  }
+  return isTeamMateApproachingBallAndNearer;
 };
 
 auto ballIsStoppingDistance = []
