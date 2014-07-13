@@ -194,7 +194,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
     ->when(ballLostConditionFactory);
 
   approachBallState
-    ->transitionTo(kickForwardsState, "first-kick")
+    ->transitionTo(kickForwardsState, "kick-off")
     ->when([] { return ballIsStoppingDistance() && isWithinTenSecondsOfOurKickOff(); });
 
   // Let another player shine if they're closer and attempting to score
