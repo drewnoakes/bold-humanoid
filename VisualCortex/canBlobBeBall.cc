@@ -34,7 +34,7 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d& imagePos, Vector3d&
 
   Vector2d sidePos = blob.mean + Vector2d(maxDimension/2.0, 0);
 
-  static double ballRadius = FieldMap::getBallDiameter() / 2.0;
+  static double ballRadius = FieldMap::getBallRadius();
 
   auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(blob.mean, ballRadius);
   auto sidePointAgentSpace = d_spatialiser->findGroundPointForPixel(sidePos, ballRadius);

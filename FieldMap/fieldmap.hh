@@ -70,6 +70,7 @@ namespace bold
     static double getGoalPostDiameter() { return d_goalPostDiameter; }
 
     static double getBallDiameter() { return d_ballDiameter; }
+    static double getBallRadius()   { return d_ballDiameter / 2.0; }
 
   private:
     FieldMap() = delete;

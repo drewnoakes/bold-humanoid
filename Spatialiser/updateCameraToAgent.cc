@@ -6,7 +6,7 @@ void Spatialiser::updateCameraToAgent()
 {
   auto cameraFrame = State::get<CameraFrameState>();
 
-  static double ballRadius = FieldMap::getBallDiameter() / 2.0;
+  static double ballRadius = FieldMap::getBallRadius();
   double goalieMarkerHeight = Config::getValue<double>("vision.player-detection.goalie-marker-height");
 
   // Project ball observation
