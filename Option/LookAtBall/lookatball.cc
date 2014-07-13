@@ -1,4 +1,27 @@
-#include "lookatball.ih"
+#include "lookatball.hh"
+
+#include "../../CameraModel/cameramodel.hh"
+#include "../../Config/config.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../State/state.hh"
+#include "../../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../../VisualCortex/visualcortex.hh"
+
+#include <cmath>
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
+using namespace rapidjson;
+
+LookAtBall::LookAtBall(std::string const& id, std::shared_ptr<CameraModel> cameraModel, std::shared_ptr<HeadModule> headModule)
+: Option(id, "LookAtBall"),
+  d_cameraModel(cameraModel),
+  d_headModule(headModule),
+  d_gain(Config::getSetting<double>("options.look-at-ball.gain")),
+  d_minOffset(Config::getSetting<double>("options.look-at-ball.offset-min")),
+  d_maxOffset(Config::getSetting<double>("options.look-at-ball.offset-max"))
+{}
 
 vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
 {
@@ -47,4 +70,9 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
   writer.String("offset").StartArray().Double(offset.x()).Double(offset.y()).EndArray(2);
 
   return {};
+}
+
+void LookAtBall::reset()
+{
+  d_headModule->initTracking();
 }

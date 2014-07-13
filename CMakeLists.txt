@@ -437,7 +437,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/LookAtBall/runPolicy.cc
+  ./Option/LookAtBall/lookatball.cc
 )
 
 add_class(BOLDHUMANOID
