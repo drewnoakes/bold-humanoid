@@ -28,6 +28,11 @@ OrientationState::OrientationState(Quaterniond const& quaternion)
   d_roll = atan2(axisX2.z(), axisX2.x());
 }
 
+Affine3d OrientationState::withoutYaw() const
+{
+  return AngleAxisd(-d_yaw, Vector3d::UnitZ()) * Affine3d(d_quaternion);
+}
+
 void OrientationState::writeJson(Writer<StringBuffer>& writer) const
 {
   auto swapNaN = [](double d, double nanVal) -> double { return std::isnan(d) ? nanVal : d; };

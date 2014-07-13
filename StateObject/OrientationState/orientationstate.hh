@@ -17,6 +17,8 @@ namespace bold
     double getRollAngle() const { return d_roll; }
     double getYawAngle() const { return d_yaw; }
 
+    Eigen::Affine3d withoutYaw() const;
+
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
