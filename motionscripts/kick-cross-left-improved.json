@@ -1,0 +1,189 @@
+{
+  "name": "kick-cross-left-improved",
+  "stages": [
+    {
+      "pGains": {
+        "shoulder-roll": 8,
+        "ankle-pitch": 64
+      },
+      "keyFrames": [
+        {
+          "moveCycles": 25,
+          "values": {
+            "shoulder-pitch-r": 1670,
+            "shoulder-pitch-l": 2850,
+            "shoulder-roll-r": 1804,
+            "shoulder-roll-l": 2253,
+            "elbow-r": 2377,
+            "elbow-l": 2040,
+            "hip-yaw-r": 2040,
+            "hip-yaw-l": 2040,
+            "hip-roll-r": 2047,
+            "hip-roll-l": 2033,
+            "hip-pitch-r": 1524,
+            "hip-pitch-l": 2557,
+            "knee-r": 2677,
+            "knee-l": 1404,
+            "ankle-pitch-r": 2357,
+            "ankle-pitch-l": 1724,
+            "ankle-roll-r": 1928,
+            "ankle-roll-l": 1800,
+            "head-pan": 1539,
+            "head-tilt": 2280
+          }
+        },
+        {
+          "moveCycles": 9,
+          "values": {
+            "shoulder-pitch-r": 1670,
+            "shoulder-pitch-l": 2950,
+            "shoulder-roll-r": 1804,
+            "shoulder-roll-l": 2187,
+            "elbow-r": 2377,
+            "elbow-l": 2040,
+            "hip-yaw-r": 2040,
+            "hip-yaw-l": 1707,
+            "hip-roll-r": 2080,
+            "hip-roll-l": 1967,
+            "hip-pitch-r": 1457,
+            "hip-pitch-l": 2657,
+            "knee-r": 2677,
+            "knee-l": 1071,
+            "ankle-pitch-r": 2357,
+            "ankle-pitch-l": 1557,
+            "ankle-roll-r": 1928,
+            "ankle-roll-l": 1867,
+            "head-pan": 1539,
+            "head-tilt": 2280
+          }
+        },
+        {
+          "moveCycles": 9,
+          "values": {
+            "shoulder-pitch-r": 1870,
+            "shoulder-pitch-l": 2916,
+            "shoulder-roll-r": 1804,
+            "shoulder-roll-l": 2287,
+            "elbow-r": 2610,
+            "elbow-l": 2040,
+            "hip-yaw-r": 2040,
+            "hip-yaw-l": 1640,
+            "hip-roll-r": 2080,
+            "hip-roll-l": 2067,
+            "hip-pitch-r": 1557,
+            "hip-pitch-l": 2757,
+            "knee-r": 2677,
+            "knee-l": 1704,
+            "ankle-pitch-r": 2340,
+            "ankle-pitch-l": 2257,
+            "ankle-roll-r": 1928,
+            "ankle-roll-l": 1934,
+            "head-pan": 1539,
+            "head-tilt": 2280
+          }
+        },
+        {
+          "pauseCycles": 12,
+          "moveCycles": 9,
+          "values": {
+            "shoulder-pitch-r": 1870,
+            "shoulder-pitch-l": 3083,
+            "shoulder-roll-r": 1804,
+            "shoulder-roll-l": 2287,
+            "elbow-r": 2610,
+            "elbow-l": 2040,
+            "hip-yaw-r": 2040,
+            "hip-yaw-l": 2135,
+            "hip-roll-r": 2080,
+            "hip-roll-l": 2066,
+            "hip-pitch-r": 1557,
+            "hip-pitch-l": 2757,
+            "knee-r": 2677,
+            "knee-l": 1704,
+            "ankle-pitch-r": 2340,
+            "ankle-pitch-l": 2257,
+            "ankle-roll-r": 1928,
+            "ankle-roll-l": 1934,
+            "head-pan": 1539,
+            "head-tilt": 2280
+          }
+        },
+        {
+          "moveCycles": 9,
+          "values": {
+            "shoulder-pitch-r": 1870,
+            "shoulder-pitch-l": 2916,
+            "shoulder-roll-r": 1804,
+            "shoulder-roll-l": 2287,
+            "elbow-r": 2610,
+            "elbow-l": 2040,
+            "hip-yaw-r": 2040,
+            "hip-yaw-l": 1640,
+            "hip-roll-r": 2080,
+            "hip-roll-l": 2067,
+            "hip-pitch-r": 1557,
+            "hip-pitch-l": 2757,
+            "knee-r": 2677,
+            "knee-l": 1704,
+            "ankle-pitch-r": 2340,
+            "ankle-pitch-l": 2257,
+            "ankle-roll-r": 1928,
+            "ankle-roll-l": 1934,
+            "head-pan": 1539,
+            "head-tilt": 2280
+          }
+        },
+        {
+          "moveCycles": 25,
+          "values": {
+            "shoulder-pitch-r": 1570,
+            "shoulder-pitch-l": 2583,
+            "shoulder-roll-r": 1804,
+            "shoulder-roll-l": 2253,
+            "elbow-r": 2377,
+            "elbow-l": 1707,
+            "hip-yaw-r": 2040,
+            "hip-yaw-l": 2040,
+            "hip-roll-r": 2080,
+            "hip-roll-l": 2000,
+            "hip-pitch-r": 1524,
+            "hip-pitch-l": 2723,
+            "knee-r": 2677,
+            "knee-l": 1071,
+            "ankle-pitch-r": 2357,
+            "ankle-pitch-l": 1557,
+            "ankle-roll-r": 1964,
+            "ankle-roll-l": 1934,
+            "head-pan": 1539,
+            "head-tilt": 2280
+          }
+        },
+        {
+          "moveCycles": 9,
+          "values": {
+            "shoulder-pitch-r": 1500,
+            "shoulder-pitch-l": 2520,
+            "shoulder-roll-r": 1837,
+            "shoulder-roll-l": 2287,
+            "elbow-r": 2383,
+            "elbow-l": 1714,
+            "hip-yaw-r": 2050,
+            "hip-yaw-l": 2050,
+            "hip-roll-r": 2057,
+            "hip-roll-l": 2043,
+            "hip-pitch-r": 1534,
+            "hip-pitch-l": 2567,
+            "knee-r": 2687,
+            "knee-l": 1414,
+            "ankle-pitch-r": 2367,
+            "ankle-pitch-l": 1734,
+            "ankle-roll-r": 2057,
+            "ankle-roll-l": 2043,
+            "head-pan": 1539,
+            "head-tilt": 2280
+          }
+        }
+      ]
+    }
+  ]
+}
