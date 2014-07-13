@@ -177,7 +177,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   // walk a circle if we don't find the ball within some time limit
   locateBallState
     ->transitionTo(locateBallCirclingState, "lost-ball-long")
-    ->after(chrono::seconds(8));
+    ->after(chrono::seconds(12));
 
   // after 10 seconds of circling, look for the ball again
   locateBallCirclingState
