@@ -48,8 +48,8 @@ void Spatialiser::updateAgentToWorld(AgentPosition position)
   // TODO perform the rotation/translation in 2D (where z == 0), not in 3D
   for (auto const& ray : agentFrame->getOcclusionRays())
   {
-    Vector3d near = ray.near().head<3>();
-    Vector3d far = ray.far().head<3>();
+    Vector3d near(ray.near().x(), ray.near().y(), 0);
+    Vector3d far(ray.far().x(), ray.far().y(), 0);
 
     occlusionRays.emplace_back((worldAgentTransform * near).head<2>(),
                                (worldAgentTransform * far).head<2>());
