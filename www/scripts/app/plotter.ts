@@ -372,6 +372,19 @@ function toRgba(rgb: number[], alpha: number)
     return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
 }
 
+function setStrokeableProperties(context: CanvasRenderingContext2D, item: state.StrokeableDrawingItem, scale: number)
+{
+    context.lineWidth = (item.w || 1) / scale;
+    context.strokeStyle = toRgba(item.rgb || [0,0,0], item.a || 0.8);
+}
+
+function setFillableProperties(context: CanvasRenderingContext2D, item: state.FillableDrawingItem, scale: number)
+{
+    context.lineWidth = (item.w || 1) / scale;
+    context.strokeStyle = toRgba(item.srgb || [0,0,0], item.sa || 0.8);
+    context.fillStyle = toRgba(item.frgb || [0,0,0], item.fa || 0.8);
+}
+
 export function drawDrawingItems(context: CanvasRenderingContext2D, scale: number, items: state.DrawingItem[])
 {
     _.each(items, item =>
@@ -383,10 +396,7 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
             case state.DrawingItemType.Line:
             {
                 var line = <state.LineDrawing>item;
-
-                context.lineWidth = (line.w || 1) / scale;
-                context.strokeStyle = toRgba(line.rgb || [0,0,0], line.a || 0.8);
-
+                setStrokeableProperties(context, line, scale);
                 context.beginPath();
                 context.moveTo(line.p1[0], line.p1[1]);
                 context.lineTo(line.p2[0], line.p2[1]);
@@ -396,10 +406,7 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
             case state.DrawingItemType.Circle:
             {
                 var circle = <state.CircleDrawing>item;
-
-                context.lineWidth = (circle.w || 1) / scale;
-                context.strokeStyle = toRgba(circle.rgb || [0,0,0], circle.a || 0.8);
-
+                setFillableProperties(context, circle, scale);
                 context.beginPath();
                 context.arc(circle.c[0], circle.c[1], circle.r, 0, 2*Math.PI);
                 context.stroke();
@@ -408,13 +415,8 @@ export function drawDrawingItems(context: CanvasRenderingContext2D, scale: numbe
             case state.DrawingItemType.Polygon:
             {
                 var poly = <state.PolygonDrawing>item;
-
+                setFillableProperties(context, circle, scale);
                 console.assert(poly.p.length > 2);
-
-                context.lineWidth = (poly.w || 1) / scale;
-                context.strokeStyle = toRgba(poly.srgb || [0,0,0], poly.sa || 0.8);
-                context.fillStyle = toRgba(poly.frgb || [0,0,0], poly.fa || 0.8);
-
                 var points = poly.p;
                 context.beginPath();
                 context.moveTo(points[0][0], points[0][1]);

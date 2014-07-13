@@ -37,12 +37,8 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
 
       if (line->colour.b != 0 || line->colour.g != 0 || line->colour.r != 0)
       {
-        writer.String("rgb")
-          .StartArray()
-          .Uint(line->colour.r)
-          .Uint(line->colour.g)
-          .Uint(line->colour.b)
-          .EndArray();
+        writer.String("rgb");
+        JsonWriter::rgb(writer, line->colour);
       }
     }
     else if (item->type == DrawingItemType::Circle)
@@ -51,21 +47,22 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
       writer.String("c").StartArray().Double(circle->centre.x()).Double(circle->centre.y()).EndArray();
       writer.String("r").Double(circle->radius);
 
-      if (circle->alpha > 0 && circle->alpha < 1)
-        writer.String("a").Double(circle->alpha);
-
+      if (circle->fillAlpha > 0 && circle->fillAlpha < 1)
+        writer.String("fa").Double(circle->fillAlpha);
+      if (circle->strokeAlpha > 0 && circle->strokeAlpha < 1)
+        writer.String("sa").Double(circle->strokeAlpha);
+      if (circle->fillColour.b != 0 || circle->fillColour.g != 0 || circle->fillColour.r != 0)
+      {
+        writer.String("frgb");
+        JsonWriter::rgb(writer, circle->fillColour);
+      }
+      if (circle->strokeColour.b != 0 || circle->strokeColour.g != 0 || circle->strokeColour.r != 0)
+      {
+        writer.String("srgb");
+        JsonWriter::rgb(writer, circle->strokeColour);
+      }
       if (circle->lineWidth > 0 && circle->lineWidth != 1)
         writer.String("w").Double(circle->lineWidth);
-
-      if (circle->colour.b != 0 || circle->colour.g != 0 || circle->colour.r != 0)
-      {
-        writer.String("rgb")
-          .StartArray()
-          .Uint(circle->colour.r)
-          .Uint(circle->colour.g)
-          .Uint(circle->colour.b)
-          .EndArray();
-      }
     }
     else if (item->type == DrawingItemType::Polygon)
     {
@@ -77,9 +74,6 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
         writer.String("fa").Double(poly->fillAlpha);
       if (poly->strokeAlpha > 0 && poly->strokeAlpha < 1)
         writer.String("sa").Double(poly->strokeAlpha);
-      if (poly->lineWidth > 0 && poly->lineWidth != 1)
-        writer.String("w").Double(poly->lineWidth);
-
       if (poly->fillColour.b != 0 || poly->fillColour.g != 0 || poly->fillColour.r != 0)
       {
         writer.String("frgb");
@@ -90,6 +84,8 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
         writer.String("srgb");
         JsonWriter::rgb(writer, poly->strokeColour);
       }
+      if (poly->lineWidth > 0 && poly->lineWidth != 1)
+        writer.String("w").Double(poly->lineWidth);
     }
 
     writer.EndObject();

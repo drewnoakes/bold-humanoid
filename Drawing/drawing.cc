@@ -48,7 +48,12 @@ void Draw::lineAtAngle(Frame frame, Vector2d const& p1, double angle, double len
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Draw::circle(Frame frame, Eigen::Vector2d const& centre, double radius, bgr const& colour, double lineWidth, double alpha)
+void Draw::circle(Frame frame, Eigen::Vector2d const& centre, double radius, bgr const& strokeColour, double strokeAlpha, double lineWidth)
+{
+  fillCircle(frame, centre, radius, bgr::black, 0.0, strokeColour, strokeAlpha, lineWidth);
+}
+
+void Draw::fillCircle(Frame frame, Eigen::Vector2d const& centre, double radius, bgr const& fillColour, double fillAlpha, bgr const& strokeColour, double strokeAlpha, double lineWidth)
 {
   unique_ptr<CircleDrawing> circle = make_unique<CircleDrawing>();
 
@@ -56,23 +61,23 @@ void Draw::circle(Frame frame, Eigen::Vector2d const& centre, double radius, bgr
   circle->frame = frame;
   circle->centre = centre;
   circle->radius = radius;
-  circle->colour = colour;
-  circle->alpha = alpha;
+  circle->strokeColour = strokeColour;
+  circle->strokeAlpha = strokeAlpha;
+  circle->fillColour = fillColour;
+  circle->fillAlpha = fillAlpha;
   circle->lineWidth = lineWidth;
 
   d_drawingItems->push_back(std::move(circle));
 }
 
-void Draw::circleAtAngle(Frame frame, double angle, double distance, double radius, bgr const& colour, double lineWidth, double alpha)
-{
-  Vector2d centre(cos(angle) * distance, sin(angle) * distance);
-
-  circle(frame, centre, radius, colour, lineWidth, alpha);
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Draw::polygon(Frame frame, Polygon2d const& polygon, bgr const& fillColour, double fillAlpha, bgr const& strokeColour, double strokeAlpha, double lineWidth)
+void Draw::polygon(Frame frame, Polygon2d const& polygon, Colour::bgr const& strokeColour, double strokeAlpha, double lineWidth)
+{
+  fillPolygon(frame, polygon, bgr::black, 0.0, strokeColour, strokeAlpha, lineWidth);
+}
+
+void Draw::fillPolygon(Frame frame, Polygon2d const& polygon, bgr const& fillColour, double fillAlpha, bgr const& strokeColour, double strokeAlpha, double lineWidth)
 {
   unique_ptr<PolygonDrawing> poly = make_unique<PolygonDrawing>(polygon);
 

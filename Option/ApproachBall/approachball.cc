@@ -97,7 +97,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
     Polygon2d lanePoly(lanePoints);
 
-    Draw::polygon(Frame::Agent, lanePoints, bgr::blue, 0.1, bgr::blue, 0.5, 1.5);
+    Draw::fillPolygon(Frame::Agent, lanePoly, bgr::blue, 0.1, bgr::blue, 0.5, 1.5);
 
     // Iterate through the occlusion rays
     double minDistInLane = numeric_limits<double>::max();

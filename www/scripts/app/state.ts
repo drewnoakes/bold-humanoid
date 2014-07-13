@@ -554,32 +554,37 @@ export interface DrawingItem
     type: DrawingItemType;
 }
 
-export interface LineDrawing extends DrawingItem
+export interface StrokeableDrawingItem extends DrawingItem
 {
-    p1: number[];
-    p2: number[];
     rgb?: number[];
     a?: number;
     w?: number;
 }
 
-export interface CircleDrawing extends DrawingItem
+export interface FillableDrawingItem extends DrawingItem
 {
-    c: number[];
-    r: number;
-    rgb?: number[];
-    a?: number;
-    w?: number;
-}
-
-export interface PolygonDrawing extends DrawingItem
-{
-    p: number[][];
     fa?: number;
     sa?: number;
     frgb?: number[];
     srgb?: number[];
     w?: number;
+}
+
+export interface LineDrawing extends StrokeableDrawingItem
+{
+    p1: number[];
+    p2: number[];
+}
+
+export interface CircleDrawing extends FillableDrawingItem
+{
+    c: number[];
+    r: number;
+}
+
+export interface PolygonDrawing extends FillableDrawingItem
+{
+    p: number[][];
 }
 
 export interface Drawing

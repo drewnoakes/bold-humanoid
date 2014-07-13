@@ -43,9 +43,11 @@ namespace bold
   {
     Eigen::Vector2d centre;
     double radius;
-    Colour::bgr colour;
+    Colour::bgr fillColour;
+    Colour::bgr strokeColour;
+    double fillAlpha;
+    double strokeAlpha;
     double lineWidth;
-    double alpha;
   };
 
   struct PolygonDrawing : public DrawingItem
@@ -67,14 +69,15 @@ namespace bold
   public:
     static void initialise();
 
-    static void circle(Frame frame, Eigen::Vector2d const& centre, double radius, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
-    static void circleAtAngle(Frame frame, double angle, double distance, double radius, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
+    static void circle(Frame frame, Eigen::Vector2d const& centre, double radius, Colour::bgr const& colour, double alpha = 1.0, double lineWidth = 1.0);
+    static void fillCircle(Frame frame, Eigen::Vector2d const& centre, double radius, Colour::bgr const& fillColour, double fillAlpha, Colour::bgr const& strokeColour, double strokeAlpha, double lineWidth = 1.0);
 
-    static void line(Frame frame, Eigen::Vector2d const& p1, Eigen::Vector2d const& p2, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
-    static void line(Frame frame, LineSegment2d const& line, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
-    static void lineAtAngle(Frame frame, Eigen::Vector2d const& p1, double angle, double length, Colour::bgr const& colour, double lineWidth = 1.0, double alpha = 1.0);
+    static void polygon(Frame frame, Polygon2d const& polygon, Colour::bgr const& strokeColour, double strokeAlpha, double lineWidth = 1.0);
+    static void fillPolygon(Frame frame, Polygon2d const& polygon, Colour::bgr const& fillColour, double fillAlpha, Colour::bgr const& strokeColour, double strokeAlpha, double lineWidth = 1.0);
 
-    static void polygon(Frame frame, Polygon2d const& polygon, Colour::bgr const& fillColour, double fillAlpha, Colour::bgr const& strokeColour, double strokeAlpha, double lineWidth = 1.0);
+    static void line(Frame frame, Eigen::Vector2d const& p1, Eigen::Vector2d const& p2, Colour::bgr const& colour, double alpha = 1.0, double lineWidth = 1.0);
+    static void line(Frame frame, LineSegment2d const& line, Colour::bgr const& colour, double alpha = 1.0, double lineWidth = 1.0);
+    static void lineAtAngle(Frame frame, Eigen::Vector2d const& p1, double angle, double length, Colour::bgr const& colour, double alpha = 1.0, double lineWidth = 1.0);
 
     static void flushToStateObject();
 
