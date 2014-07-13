@@ -1,13 +1,10 @@
 #include "lookatball.hh"
 
 #include "../../CameraModel/cameramodel.hh"
-#include "../../Config/config.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../../VisualCortex/visualcortex.hh"
-
-#include <cmath>
 
 using namespace bold;
 using namespace Eigen;
