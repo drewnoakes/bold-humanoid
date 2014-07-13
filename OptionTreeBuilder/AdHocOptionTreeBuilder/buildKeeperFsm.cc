@@ -2,6 +2,10 @@
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 {
+  // KICKS
+
+  vector<shared_ptr<Kick const>> kicks = { Kick::getById("cross-right"), Kick::getById("cross-left") };
+
   // OPTIONS
 
   auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
@@ -9,8 +13,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
   auto locateBall = make_shared<LocateBall>("locate-ball", agent, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.3 : 0.5; }, 30, 5);
   auto bigStepLeft = make_shared<MotionScriptOption>("big-step-left", agent->getMotionScriptModule(), "./motionscripts/step-left-big.json");
   auto bigStepRight = make_shared<MotionScriptOption>("big-step-right", agent->getMotionScriptModule(), "./motionscripts/step-right-big.json");
-  auto leftCrossKick = make_shared<MotionScriptOption>("left-cross-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
-  auto rightCrossKick = make_shared<MotionScriptOption>("right-cross-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-cross-right.json");
+  auto clearGoalKick = make_shared<MotionScriptOption>("clear-goal-kick", agent->getMotionScriptModule());
 
   // STATES
 
@@ -23,8 +26,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
   auto locateBallState = fsm->newState("locate-ball", { stopWalking, locateBall });
   auto bigStepLeftState = fsm->newState("big-step-left", { bigStepLeft });
   auto bigStepRightState = fsm->newState("big-step-right", { bigStepRight });
-  auto leftCrossKickState = fsm->newState("left-cross-kick", { leftCrossKick });
-  auto rightCrossKickState = fsm->newState("right-cross-kick", { rightCrossKick });
+  auto clearGoalKickState = fsm->newState("clear-goal-kick", { clearGoalKick });
 
   setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, locateBallState });
   setPlayerActivityInStates(agent, PlayerActivity::Positioning, { bigStepLeftState, bigStepRightState });
@@ -66,26 +68,29 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
     ->whenTerminated();
 
   locateBallState
-    ->transitionTo(leftCrossKickState, "clear-left")
-    ->when([]
-           {
-             auto ball = State::get<AgentFrameState>()->getBallObservation();
-             return ball && Range<double>(0.0, 0.17).contains(ball->y()) && Range<double>(-0.2, 0).contains(ball->x());
-           });
+    ->transitionTo(clearGoalKickState, "can-kick")
+    ->when([clearGoalKick,kicks]
+    {
+      auto ball = State::get<AgentFrameState>()->getBallObservation();
 
-  locateBallState
-    ->transitionTo(rightCrossKickState, "clear-right")
-    ->when([]
-           {
-             auto ball = State::get<AgentFrameState>()->getBallObservation();
-             return ball && Range<double>(0.0, 0.17).contains(ball->y()) && Range<double>(0, 0.2).contains(ball->x());
-           });
+      if (!ball)
+        return false;
 
-  leftCrossKickState
-    ->transitionTo(locateBallState, "done")
-    ->whenTerminated();
+      // Take the first possible kick
+      // TODO should we take the one that travels the furthest?
+      for (auto const& kick : kicks)
+      {
+        if (kick->estimateEndPos(ball->head<2>()).hasValue())
+        {
+          // We can perform this kick
+          clearGoalKick->setMotionScript(kick->getMotionScript());
+          return true;
+        }
+      }
+      return false;
+    });
 
-  rightCrossKickState
+  clearGoalKickState
     ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
