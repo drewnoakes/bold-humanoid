@@ -10,11 +10,24 @@ auto shouldYieldToOtherAttacker = []
   if (!team || !agentFrame || !agentFrame->isBallVisible())
     return false;
 
-//  double ballDist = agentFrame->getBallObservation()->norm();
-
   bool isTeamMateAttacking = team->isTeamMateInActivity(PlayerActivity::AttackingGoal);
+  if (isTeamMateAttacking)
+    return true;
 
-  return isTeamMateAttacking;
+  double ballDist = agentFrame->getBallObservation()->norm();
+  auto ballObservers = team->getBallObservers();
+  bool isTeamMateApproachingBallAndNearer = false;
+  for (auto player : ballObservers)
+    if (player.activity == PlayerActivity::ApproachingBall && player.ballRelative->norm() < ballDist)
+    {
+      isTeamMateApproachingBallAndNearer = true;
+      break;
+    }
+
+  if (isTeamMateApproachingBallAndNearer)
+    return true;
+
+  return false;
 };
 
 auto ballIsStoppingDistance = []
