@@ -1,8 +1,8 @@
 #include "adhocoptiontreebuilder.hh"
 
 #include "../../FieldMap/fieldmap.hh"
+#include "../../Option/LocateBall/locateball.hh"
 #include "../../Option/LookAround/lookaround.hh"
-#include "../../Option/LookAtBall/lookatball.hh"
 #include "../../Option/MotionScriptOption/motionscriptoption.hh"
 #include "../../Option/StopWalking/stopwalking.hh"
 #include "conditionals.hh"
@@ -19,36 +19,26 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
   auto leftDive = make_shared<MotionScriptOption>("dive-left", agent->getMotionScriptModule(), "./motionscripts/dive-left.json");
   auto rightDive = make_shared<MotionScriptOption>("dive-right", agent->getMotionScriptModule(), "./motionscripts/dive-right.json");
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
-  auto lookAroundNarrow = make_shared<LookAround>("look-around-narrow", agent->getHeadModule(), 80.0, LookAround::speedIfBallVisible(0.05));
-  auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
+  auto locateBall = make_shared<LocateBall>("locate-ball", agent, 80.0, LookAround::speedIfBallVisible(0.15, 0.5), 30, 5);
 
   // STATES
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "penalty-keeper");
 
   auto standUpState = fsm->newState("stand-up", { standUp }, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("look-for-ball", { stopWalking, lookAroundNarrow });
-  auto lookAtBallState = fsm->newState("look-at-ball", { stopWalking, lookAtBall });
+  auto locateBallState = fsm->newState("locate-ball", { stopWalking, locateBall });
   auto leftDiveState = fsm->newState("left-dive", { leftDive });
   auto rightDiveState = fsm->newState("right-dive", { rightDive });
 
   // TRANSITIONS
 
   standUpState
-    ->transitionTo(lookForBallState, "standing")
+    ->transitionTo(locateBallState, "standing")
     ->whenTerminated();
-
-  lookForBallState
-    ->transitionTo(lookAtBallState, "found")
-    ->when(ballFoundConditionFactory);
-
-  lookAtBallState
-    ->transitionTo(lookForBallState, "lost-ball")
-    ->when(ballLostConditionFactory);
 
   const static double goalWidth = FieldMap::getGoalY();
 
-  lookAtBallState
+  locateBallState
     ->transitionTo(leftDiveState, "ball-left")
     ->when([]
     {
@@ -61,7 +51,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
       });
     });
 
-  lookAtBallState
+  locateBallState
     ->transitionTo(rightDiveState, "ball-right")
     ->when([]
     {
@@ -75,11 +65,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
     });
 
   leftDiveState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
   rightDiveState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
   return fsm;
