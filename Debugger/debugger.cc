@@ -37,7 +37,7 @@ void Debugger::update()
     d_debugControl->setPanelLedStates(
       /*red  */ cameraFrame->getBallObservation().hasValue(),
       /*blue */ d_gameControllerMessageCount != 0,
-      /*green*/ cameraFrame->getGoalObservations().size() > 1
+      /*green*/ cameraFrame->getGoalObservations().size() != 0
     );
   }
   else
