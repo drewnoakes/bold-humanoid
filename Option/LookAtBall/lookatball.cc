@@ -35,19 +35,19 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
   static unsigned h = d_cameraModel->imageHeight();
 
   static Vector2d centerPx = Vector2d(w,h) / 2;
-  static float happ = d_cameraModel->rangeHorizontalDegs() / w;
-  static float vapp = d_cameraModel->rangeVerticalDegs() / h;
+  static double happ = d_cameraModel->rangeHorizontalDegs() / w;
+  static double vapp = d_cameraModel->rangeVerticalDegs() / h;
 
   Vector2d ballPos = ballObs->head<2>();
 
-  float r = d_gain->getValue();
+  double r = d_gain->getValue();
   Vector2d offset = (ballPos - centerPx) * r;
 
   offset.x() *= happ; // pixel per angle
   offset.y() *= vapp; // pixel per angle
 
-  float maxOffset = d_maxOffset->getValue();
-  float minOffset = d_minOffset->getValue();
+  double maxOffset = d_maxOffset->getValue();
+  double minOffset = d_minOffset->getValue();
 
   offset = offset.cwiseMin(Vector2d(maxOffset,maxOffset)).cwiseMax(Vector2d(-maxOffset,-maxOffset));
 
