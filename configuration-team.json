@@ -363,6 +363,7 @@
         "lane-width": 0.4,
         "ignore-near-ball-dist": 0.3,
         "turn-speed": 16.0,
+        "side-step-speed": 30.0,
         "brake-distance": 1.0,
         "min-fwd-scale": 0.3
       }

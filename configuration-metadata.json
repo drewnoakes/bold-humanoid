@@ -360,6 +360,7 @@
         "lane-width": { "type": "double", "min": 0.0, "max": 1.0 },
         "ignore-near-ball-dist": { "type": "double", "min": 0.0, "max": 1.0 },
         "turn-speed": { "type": "double", "min": 0.0, "max": 60.0 },
+        "side-step-speed": { "type": "double", "min": 0.0, "max": 60.0 },
         "brake-distance": { "type": "double", "min": 0.0, "max": 5.0 },
         "min-fwd-scale": { "type": "double", "min": 0.0, "max": 1.0 }
       }

@@ -82,6 +82,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   static auto occlusionBrakeDistance = Config::getSetting<double>("options.approach-ball.avoid-obstacles.brake-distance");
   static auto minForwardSpeedScale = Config::getSetting<double>("options.approach-ball.avoid-obstacles.min-fwd-scale");
   static auto avoidTurnSpeed = Config::getSetting<double>("options.approach-ball.avoid-obstacles.turn-speed");
+  static auto sideStepSpeed = Config::getSetting<double>("options.approach-ball.avoid-obstacles.side-step-speed");
   static auto ignoreNearBallDistance = Config::getSetting<double>("options.approach-ball.avoid-obstacles.ignore-near-ball-dist");
   if (avoidObstacles->getValue())
   {
@@ -133,6 +134,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
         ? -1 + (leftPenaltySum / rightPenaltySum)
         :  1 - (rightPenaltySum / leftPenaltySum);
       turnSpeed += turnRatio * avoidTurnSpeed->getValue();
+      ySpeed += turnRatio * sideStepSpeed->getValue();
     }
 
     // Slow down if there is an occlusion close in front of us
