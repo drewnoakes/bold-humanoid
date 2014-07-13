@@ -173,9 +173,9 @@
       "max-pair-error-dist": 0.5
     },
     "player-detection": {
-      "enable": false,
+      "enable": true,
       "min-area-px": 10,
-      "goalie-marker-height": 0.28,
+      "goalie-marker-height": 0.25,
       "max-goalie-goal-dist": 1.0
     },
     "line-detection": {
