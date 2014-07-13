@@ -15,7 +15,7 @@ namespace bold
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    virtual void reset() override;
+    void reset() override;
 
   private:
     std::shared_ptr<CameraModel> d_cameraModel;
