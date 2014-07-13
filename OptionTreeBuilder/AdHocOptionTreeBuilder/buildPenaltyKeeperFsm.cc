@@ -10,7 +10,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
   auto leftDive = make_shared<MotionScriptOption>("dive-left", agent->getMotionScriptModule(), "./motionscripts/dive-left.json");
   auto rightDive = make_shared<MotionScriptOption>("dive-right", agent->getMotionScriptModule(), "./motionscripts/dive-right.json");
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
-  auto lookAroundNarrow = make_shared<LookAround>("look-around-narrow", agent->getHeadModule(), 80.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 1.0; });
+  auto lookAroundNarrow = make_shared<LookAround>("look-around-narrow", agent->getHeadModule(), 80.0, LookAround::speedIfBallVisible(0.05));
   auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
 
   // STATES

@@ -119,7 +119,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   auto leftKick = make_shared<MotionScriptOption>("left-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
   auto rightKick = make_shared<MotionScriptOption>("right-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
-  auto locateBall = make_shared<LocateBall>("locate-ball", agent, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.3 : 1.0; });
+  auto locateBall = make_shared<LocateBall>("locate-ball", agent, LookAround::speedIfBallVisible(0.15));
   auto approachBall = make_shared<ApproachBall>("approach-ball", agent->getWalkModule(), agent->getBehaviourControl());
   auto kickMotion = make_shared<MotionScriptOption>("kick", agent->getMotionScriptModule());
   auto atBall = make_shared<AtBall>("at-ball", agent);

@@ -9,7 +9,7 @@ using namespace Eigen;
 using namespace rapidjson;
 using namespace std;
 
-LocateBall::LocateBall(string const& id, Agent* agent, function<double()> speedCallback, uint maxCount, uint thresholdCount)
+LocateBall::LocateBall(string const& id, Agent* agent, function<double(uint)> speedCallback, uint maxCount, uint thresholdCount)
 : Option(id, "LocateBall"),
   d_headModule(agent->getHeadModule()),
   d_lookAroundOption(make_shared<LookAround>("look-around-for-ball", d_headModule, 135.0, speedCallback)),

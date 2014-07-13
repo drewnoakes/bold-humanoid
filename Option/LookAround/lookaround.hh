@@ -11,29 +11,18 @@ namespace bold
   class LookAround : public Option
   {
   public:
-    LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle, std::function<double()> speedCallback = nullptr)
-    : Option(id, "LookAround"),
-      d_speedCallback(speedCallback),
-      d_headModule(headModule),
-      d_isResetNeeded(true),
-      d_lastTimeSeconds(0),
-      d_speed(1.0)
-    {
-      d_topAngle      = Config::getSetting<double>("options.look-around.top-angle");
-      d_bottomAngle   = Config::getSetting<double>("options.look-around.bottom-angle");
-      d_sideAngle     = sideAngle;
-      d_durationHorizUpper = Config::getSetting<double>("options.look-around.horiz-duration-upper");
-      d_durationHorizLower = Config::getSetting<double>("options.look-around.horiz-duration-lower");
-      d_durationVert  = Config::getSetting<double>("options.look-around.vert-duration");
-      d_speedStep     = Config::getSetting<double>("options.look-around.speed-step");
-    }
+    static std::function<double(uint)> speedIfBallVisible(double scaleWhenVisible, double scaleWhenNotVisible = 1.0, double loopExp = 0.5);
+
+    static double speedForLoop(uint loopCount, double loopExp = 0.0);
+
+    LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle, std::function<double(uint)> speedCallback = nullptr);
 
     virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    virtual void reset() override { d_isResetNeeded = true; }
+    virtual void reset();
 
   private:
-    std::function<double()> d_speedCallback;
+    std::function<double(uint)> d_speedCallback;
     std::shared_ptr<HeadModule> d_headModule;
 
     /// The head's upwards tilt angle
@@ -59,5 +48,7 @@ namespace bold
     double d_startTimeSeconds;
     /// Scalar for the speed of movement, between 0 and 1.
     double d_speed;
+    /// The number of full cycles the head has completed since the option was last reset. Zero during the first loop.
+    uint d_loopCount;
   };
 }

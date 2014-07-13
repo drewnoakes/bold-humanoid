@@ -18,7 +18,7 @@ AtBall::AtBall(std::string const& id, Agent* agent)
   d_headModule(agent->getHeadModule()),
   d_lookAtFeetOption(make_shared<LookAtFeet>("look-for-ball-at-feet", d_headModule))
 {
-  d_lookAroundOption = make_shared<LookAround>("look-around-from-ball", d_headModule, 135, []
+  d_lookAroundOption = make_shared<LookAround>("look-around-from-ball", d_headModule, 135, [](uint loopCount)
   {
     auto map = State::get<StationaryMapState>();
     auto agentFrame = State::get<AgentFrameState>();
@@ -39,8 +39,10 @@ AtBall::AtBall(std::string const& id, Agent* agent)
         speed *= 0.5;
     }
 
+    double loopScale = LookAround::speedForLoop(loopCount);
+
     const double minSpeed = 0.1;
-    return Math::clamp(speed, minSpeed, 1.0);
+    return Math::clamp(loopScale * speed, minSpeed, 1.0);
   });
 }
 

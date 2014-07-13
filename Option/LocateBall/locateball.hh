@@ -16,7 +16,7 @@ namespace bold
   class LocateBall : public Option
   {
   public:
-    LocateBall(std::string const& id, Agent* agent, std::function<double()> speedCallback = nullptr, uint maxCount = 10, uint thresholdCount = 5);
+    LocateBall(std::string const& id, Agent* agent, std::function<double(uint)> speedCallback = nullptr, uint maxCount = 10, uint thresholdCount = 5);
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 

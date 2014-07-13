@@ -1,16 +1,31 @@
 #include "lookaround.hh"
 
-#include <cmath>
-#include <sys/time.h>
-
 #include "../../Clock/clock.hh"
-#include "../../Math/math.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
-#include "../../util/assert.hh"
+#include "../../State/state.hh"
+#include "../../StateObject/CameraFrameState/cameraframestate.hh"
 
 using namespace bold;
 using namespace rapidjson;
 using namespace std;
+
+LookAround::LookAround(std::string const& id, std::shared_ptr<HeadModule> headModule, double sideAngle, std::function<double(uint)> speedCallback)
+: Option(id, "LookAround"),
+  d_speedCallback(speedCallback),
+  d_headModule(headModule),
+  d_isResetNeeded(true),
+  d_lastTimeSeconds(0),
+  d_speed(1.0),
+  d_loopCount(0)
+{
+  d_topAngle           = Config::getSetting<double>("options.look-around.top-angle");
+  d_bottomAngle        = Config::getSetting<double>("options.look-around.bottom-angle");
+  d_sideAngle          = sideAngle;
+  d_durationHorizUpper = Config::getSetting<double>("options.look-around.horiz-duration-upper");
+  d_durationHorizLower = Config::getSetting<double>("options.look-around.horiz-duration-lower");
+  d_durationVert       = Config::getSetting<double>("options.look-around.vert-duration");
+  d_speedStep          = Config::getSetting<double>("options.look-around.speed-step");
+}
 
 vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 {
@@ -33,7 +48,7 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   else if (d_speedCallback)
   {
     double speed = d_speed;
-    double requestedSpeed = d_speedCallback();
+    double requestedSpeed = d_speedCallback(d_loopCount);
     // Smooth speed increase, with instant decrease
     speed += d_speedStep->getValue();
     if (requestedSpeed < speed)
@@ -49,6 +64,8 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   d_lastTimeSeconds = t;
 
   double period = durationHorizUpper + durationHorizLower + (durationVert * 2);
+
+  d_loopCount = (uint)((t - d_startTimeSeconds) / period);
 
   double phase = fmod(t - d_startTimeSeconds, period);
 
@@ -115,4 +132,34 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   d_headModule->moveToDegs(panDegs, tiltDegs);
 
   return {};
+}
+
+void LookAround::reset()
+{
+  d_loopCount = 0;
+  d_isResetNeeded = true;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function<double(uint)> LookAround::speedIfBallVisible(double scaleWhenVisible, double scaleWhenNotVisible, double loopExp)
+{
+  return
+    [scaleWhenVisible,scaleWhenNotVisible,loopExp]
+    (uint loopCount)
+    {
+      return speedForLoop(loopCount, loopExp)
+        * (State::get<CameraFrameState>()->isBallVisible() ? scaleWhenVisible : scaleWhenNotVisible);
+    };
+}
+
+double LookAround::speedForLoop(uint loopCount, double loopExp)
+{
+  static auto defaultSpeedScalePerLoop = Config::getSetting<double>("options.look-around.default-speed-scale-per-loop");
+  static auto minSpeedScalePerLoop = Config::getSetting<double>("options.look-around.min-speed-scale-per-loop");
+
+  if (loopExp <= 0)
+    loopExp = defaultSpeedScalePerLoop->getValue();
+
+  return max(pow(loopExp, loopCount), minSpeedScalePerLoop->getValue());
 }

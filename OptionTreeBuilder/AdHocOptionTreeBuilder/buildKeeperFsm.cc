@@ -14,14 +14,13 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 
   auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
-  auto locateBall = make_shared<LocateBall>("locate-ball", agent, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.3 : 0.5; }, 30, 5);
+  auto locateBall = make_shared<LocateBall>("locate-ball", agent, LookAround::speedIfBallVisible(0.15, 0.5), 30, 5);
   auto bigStepLeft = make_shared<MotionScriptOption>("big-step-left", agent->getMotionScriptModule(), "./motionscripts/step-left-big.json");
   auto bigStepRight = make_shared<MotionScriptOption>("big-step-right", agent->getMotionScriptModule(), "./motionscripts/step-right-big.json");
   auto clearGoalKick = make_shared<MotionScriptOption>("clear-goal-kick", agent->getMotionScriptModule());
 
   // STATES
 
-  // TODO test this further
   // TODO add logic to kick ball away from goal if close to keeper
 
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "keeper");

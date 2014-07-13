@@ -6,7 +6,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent)
 
   auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
-  auto lookForBall = make_shared<LookAround>("look-for-ball", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.15 : 1.0; });
+  auto lookForBall = make_shared<LookAround>("look-for-ball", agent->getHeadModule(), 135.0, LookAround::speedIfBallVisible(0.15));
   auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
   auto keepPosition = make_shared<KeepPosition>("keep-position", PlayerRole::Supporter, agent);
   auto searchBall = make_shared<SearchBall>("search-ball", agent->getWalkModule(), agent->getHeadModule());

@@ -416,7 +416,9 @@
       "horiz-duration-upper": 2.1,
       "horiz-duration-lower": 1.0,
       "vert-duration": 0.4,
-      "speed-step": 0.01
+      "speed-step": 0.01,
+      "default-speed-scale-per-loop": 0.5,
+      "min-speed-scale-per-loop": 0.1
     },
     "look-at-feet": {
       "head-pan-degs": 0,
