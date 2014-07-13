@@ -1,6 +1,7 @@
 #include "kick.hh"
 
 #include "../MotionScript/motionscript.hh"
+#include "../util/log.hh"
 
 #include <Eigen/Core>
 
@@ -62,6 +63,22 @@ void Kick::loadAll()
     Vector2d(-1.0, 0.1),
     Vector2d(0.006, 0.105)
   ));
+}
+
+shared_ptr<Kick const> Kick::getById(string id)
+{
+  auto it = std::find_if(
+    d_allKicks.begin(),
+    d_allKicks.end(),
+    [id](shared_ptr<Kick const> const& kick) { return kick->getId() == id; });
+
+  if (it == d_allKicks.end())
+  {
+    log::error("Kick::getById") << "Requested kick with unknown id: " << id;
+    throw runtime_error("Requested kick with unknown id");
+  }
+
+  return *it;
 }
 
 Kick::Kick(string id, string scriptPath, Bounds2d ballBounds, Vector2d endPos, Vector2d idealBallPos)
