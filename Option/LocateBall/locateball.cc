@@ -9,10 +9,10 @@ using namespace Eigen;
 using namespace rapidjson;
 using namespace std;
 
-LocateBall::LocateBall(string const& id, Agent* agent, function<double(uint)> speedCallback, uint maxCount, uint thresholdCount)
+LocateBall::LocateBall(string const& id, Agent* agent, double sideAngle, function<double(uint)> speedCallback, uint maxCount, uint thresholdCount)
 : Option(id, "LocateBall"),
   d_headModule(agent->getHeadModule()),
-  d_lookAroundOption(make_shared<LookAround>("look-around-for-ball", d_headModule, 135.0, speedCallback)),
+  d_lookAroundOption(make_shared<LookAround>("look-around-for-ball", d_headModule, sideAngle, speedCallback)),
   d_lookAtBallOption(make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), d_headModule)),
   d_visibleCount(0),
   d_stepCount(0),
