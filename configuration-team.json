@@ -113,6 +113,9 @@
     "outer-margin-minimum": 0.7,
     "ball-diameter": 0.1
   },
+  "spatialiser": {
+    "use-orientation": true
+  },
   "camera": {
     "image-width": 640,
     "image-height": 480,

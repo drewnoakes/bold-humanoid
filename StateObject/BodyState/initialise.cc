@@ -1,5 +1,8 @@
 #include "bodystate.ih"
 
+#include "../OrientationState/orientationstate.hh"
+#include "../State/state.hh"
+
 void BodyState::initialise(shared_ptr<BodyModel const> const& bodyModel, array<double,23> const& angles)
 {
   //
@@ -85,16 +88,30 @@ void BodyState::initialise(shared_ptr<BodyModel const> const& bodyModel, array<d
 
   auto lowestFoot = zl < zr ? leftFootLimb : rightFootLimb;
 
+  // TODO this is an approximation
   d_torsoHeight = -std::min(zl, zr);
 
-  // TODO this rotation includes any yaw from the leg which isn't wanted here
-  Affine3d lowestFootTorsoRot{lowestFoot->getTransform().inverse().rotation()};
+  static Setting<bool>* useOrientation = Config::getSetting<bool>("spatialiser.use-orientation");
+
+  Affine3d agentTorsoRot;
+  auto const& orientation = State::get<OrientationState>();
+  if (useOrientation->getValue() && orientation)
+  {
+    agentTorsoRot = orientation->withoutYaw();
+  }
+  else
+  {
+    // TODO this rotation includes any yaw from the leg which isn't wanted
+    agentTorsoRot = lowestFoot->getTransform().inverse().rotation();
+  }
+
   Affine3d const& torsoCameraTr = camera->getTransform();
 
   // This is a special transform that gives the position of the camera in
   // the agent's frame, taking any rotation of the torso into account
   // considering the orientation of the foot (which is assumed to be flat.)
-  d_agentCameraTr = Translation3d(0, 0, d_torsoHeight) * lowestFootTorsoRot * torsoCameraTr;
+  auto agentTorsoTr = Translation3d(0, 0, d_torsoHeight) * agentTorsoRot;
+  d_agentCameraTr = agentTorsoTr * torsoCameraTr;
 
   // We use the inverse a lot, so calculate it once here.
   d_cameraAgentTr = d_agentCameraTr.inverse();

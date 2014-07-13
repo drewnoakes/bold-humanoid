@@ -142,6 +142,9 @@
       "initialise-order": { "type": "string[]", "readonly": true }
     }
   },
+  "spatialiser": {
+    "use-orientation": { "type": "bool" }
+  },
   "vision": {
     "ignore-above-horizon": { "type": "bool" },
     "image-granularity": { "type": "enum", "values": { "All": 0, "Half": 1, "Third": 2, "Gradient": 3, "Projected": 4 } },
