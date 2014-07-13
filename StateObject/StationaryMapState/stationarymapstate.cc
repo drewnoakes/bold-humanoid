@@ -707,3 +707,11 @@ Vector2d StationaryMapState::estimateWorldPositionForPoint(
 
   return Vector2d(x, y);
 }
+
+long StationaryMapState::getSatisfactoryGoalPostCount() const
+{
+  return std::count_if(
+    d_goalPostEstimates.begin(),
+    d_goalPostEstimates.end(),
+    [](Average<Eigen::Vector2d> const& estimate) { return estimate.getCount() > GoalSamplesNeeded; });
+}

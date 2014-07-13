@@ -122,6 +122,8 @@ namespace bold
     bool hasEnoughGoalPostObservations() const { return d_goalEstimates.size() != 0; }
     bool hasEnoughBallAndGoalPostObservations() const { return hasEnoughBallObservations() && hasEnoughGoalPostObservations(); }
 
+    /// Returns the number of goal post estimates that have enough observations
+    long getSatisfactoryGoalPostCount() const;
 
     bool hasBallWithinDistance(double distance) const;
 
