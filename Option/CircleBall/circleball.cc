@@ -19,8 +19,8 @@ CircleBall::CircleBall(std::string const& id, Agent* agent)
 : Option(id, "CircleBall"),
   d_walkModule(agent->getWalkModule()),
   d_headModule(agent->getHeadModule()),
-  d_lookAtFeet(make_shared<LookAtFeet>("lookAtFeet", d_headModule)),
-  d_lookAtBall(make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), d_headModule)),
+  d_lookAtFeet(make_shared<LookAtFeet>("look-at-feet", d_headModule)),
+  d_lookAtBall(make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), d_headModule)),
   d_targetBallPos(0.0, 0.15),
   d_targetYaw(0)
 {}

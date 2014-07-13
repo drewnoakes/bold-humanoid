@@ -265,7 +265,7 @@ void queueRandomMessage()
     }
     writer.EndArray();
 
-    vector<string> ranOptions = {"win", "stopWalking", "lookAtFeet", "buildStationaryMap", "motionScript"};
+    vector<string> ranOptions = {"win", "stop-walking", "look-at-feet", "build-stationary-map", "motion-script"};
     vector<pair<string,string>> fsmStates = { {"win", "playing"}, {"win", "getUp"} };
 
     writer.String("options");
