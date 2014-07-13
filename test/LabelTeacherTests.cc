@@ -10,13 +10,13 @@ using namespace bold;
 TEST (LabelTeacherTests, init)
 {
   auto labels = vector<shared_ptr<PixelLabel>>{
-    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
   LabelTeacher<6> teacher{labels};
 
   auto _labels = teacher.getLabels();
-  
+
   EXPECT_EQ(2, _labels.size());
 }
 
@@ -25,7 +25,7 @@ TEST (LabelTeacherTests, setYUVTrainImage)
   cv::Mat trainImage{640, 480, CV_8UC3};
 
   auto labels = vector<shared_ptr<PixelLabel>>{
-    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
   LabelTeacher<6> teacher{labels};
@@ -36,7 +36,7 @@ TEST (LabelTeacherTests, setYUVTrainImage)
 TEST (LabelTeacherTests, setSeedPoint)
 {
   auto labels = vector<shared_ptr<PixelLabel>>{
-    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
   LabelTeacher<6> teacher{labels};
@@ -49,7 +49,7 @@ TEST (LabelTeacherTests, setSeedPoint)
 TEST (LabelTeacherTests, floodFillEmpty)
 {
   auto labels = vector<shared_ptr<PixelLabel>>{
-    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
   LabelTeacher<6> teacher{labels};
@@ -65,15 +65,15 @@ TEST (LabelTeacherTests, floodFillEmpty)
 
   cout << mask.type() << endl;
 
-  for (unsigned i = 0; i < mask.rows; ++i)
-    for (unsigned j = 0; j < mask.cols; ++j)
+  for (int i = 0; i < mask.rows; ++i)
+    for (int j = 0; j < mask.cols; ++j)
       EXPECT_EQ ( 255, mask.at<uint8_t>(i, j) ) << i << " " << j;
 }
 
 TEST (LabelTeacherTests, floodFillColor)
 {
   auto labels = vector<shared_ptr<PixelLabel>>{
-    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
   LabelTeacher<6> teacher{labels};
@@ -84,8 +84,8 @@ TEST (LabelTeacherTests, floodFillColor)
   teacher.setSeedPoint(Eigen::Vector2i{0, 0});
 
   auto mask = teacher.floodFill();
-  for (unsigned i = 0; i < mask.rows; ++i)
-    for (unsigned j = 0; j < mask.cols; ++j)
+  for (int i = 0; i < mask.rows; ++i)
+    for (int j = 0; j < mask.cols; ++j)
       if (i < 100 && j < 100)
         EXPECT_EQ ( 255, mask.at<uint8_t>(i, j) ) << i << " " << j;
       else
@@ -95,7 +95,7 @@ TEST (LabelTeacherTests, floodFillColor)
 TEST (LabelTeacherTests, floodFillNoColor)
 {
   auto labels = vector<shared_ptr<PixelLabel>>{
-    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
   LabelTeacher<6> teacher{labels};
@@ -106,8 +106,8 @@ TEST (LabelTeacherTests, floodFillNoColor)
   teacher.setSeedPoint(Eigen::Vector2i{320, 240});
 
   auto mask = teacher.floodFill();
-  for (unsigned i = 0; i < mask.rows; ++i)
-    for (unsigned j = 0; j < mask.cols; ++j)
+  for (int i = 0; i < mask.rows; ++i)
+    for (int j = 0; j < mask.cols; ++j)
       if (i < 100 && j < 100)
         EXPECT_EQ ( 0, mask.at<uint8_t>(i, j) ) << i << " " << j;
       else
@@ -118,7 +118,7 @@ TEST (LabelTeacherTests, floodFillNoColor)
 TEST (LabelTeacherTests, DISABLED_train)
 {
   auto labels = vector<shared_ptr<PixelLabel>>{
-    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
   };
   LabelTeacher<6> teacher{labels};
 
