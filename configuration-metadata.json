@@ -447,6 +447,10 @@
     "support": {
       "yield-distance": { "type": "double" }
     },
+    "track-ball": {
+      "slow-window-size": { "type": "int", "min": 0, "readonly": true },
+      "fast-window-size": { "type": "int", "min": 0, "readonly": true }
+    },
     "walkto": {
       "turn-speed-scale":  { "type": "double" },
       "max-forward-speed": { "type": "double" },

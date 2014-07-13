@@ -478,6 +478,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/TrackBall/trackball.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/Support/support.cc
 )
 

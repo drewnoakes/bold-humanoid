@@ -450,6 +450,10 @@
     "support": {
       "yield-distance": 1.0
     },
+    "track-ball": {
+      "slow-window-size": 10,
+      "fast-window-size": 3
+    },
     "walkto": {
       "turn-speed-scale": 18.0,
       "max-forward-speed": 40.0,

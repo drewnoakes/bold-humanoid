@@ -1,6 +1,7 @@
 #include "adhocoptiontreebuilder.ih"
 
-#include "../Drawing/drawing.hh"
+#include "../../Drawing/drawing.hh"
+#include "../../Option/TrackBall/trackball.hh"
 
 using namespace bold::Colour;
 
@@ -18,6 +19,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
   auto bigStepLeft = make_shared<MotionScriptOption>("big-step-left", agent->getMotionScriptModule(), "./motionscripts/step-left-big.json");
   auto bigStepRight = make_shared<MotionScriptOption>("big-step-right", agent->getMotionScriptModule(), "./motionscripts/step-right-big.json");
   auto clearGoalKick = make_shared<MotionScriptOption>("clear-goal-kick", agent->getMotionScriptModule());
+  auto trackBall = make_shared<TrackBall>("track-ball");
 
   // STATES
 
@@ -26,7 +28,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "keeper");
 
   auto standUpState = fsm->newState("stand-up", { standUp }, false/*endState*/, true/*startState*/);
-  auto locateBallState = fsm->newState("locate-ball", { stopWalking, locateBall });
+  auto locateBallState = fsm->newState("locate-ball", { stopWalking, locateBall, trackBall });
   auto bigStepLeftState = fsm->newState("big-step-left", { bigStepLeft });
   auto bigStepRightState = fsm->newState("big-step-right", { bigStepRight });
   auto clearGoalKickState = fsm->newState("clear-goal-kick", { clearGoalKick });
