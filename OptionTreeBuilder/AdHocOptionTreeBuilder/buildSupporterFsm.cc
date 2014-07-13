@@ -1,4 +1,15 @@
-#include "adhocoptiontreebuilder.ih"
+#include "adhocoptiontreebuilder.hh"
+
+#include "../../Option/KeepPosition/keepposition.hh"
+#include "../../Option/LookAround/lookaround.hh"
+#include "../../Option/LookAtBall/lookatball.hh"
+#include "../../Option/MotionScriptOption/motionscriptoption.hh"
+#include "../../Option/SearchBall/searchball.hh"
+#include "../../Option/StopWalking/stopwalking.hh"
+#include "conditionals.hh"
+
+using namespace bold;
+using namespace std;
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildSupporterFsm(Agent* agent)
 {

@@ -1,9 +1,13 @@
 #pragma once
 
+#include "../../BehaviourControl/behaviourcontrol.hh"
 #include "../../Config/config.hh"
 #include "../../GameStateReceiver/gamecontrollertypes.hh"
 #include "../../State/state.hh"
+#include "../../StateObject/AgentFrameState/agentframestate.hh"
+#include "../../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../../StateObject/GameState/gamestate.hh"
+#include "../../StateObject/TeamState/teamstate.hh"
 #include "../../util/conditionals.hh"
 
 namespace bold

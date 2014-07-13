@@ -1,6 +1,29 @@
-#include "adhocoptiontreebuilder.ih"
+#include "adhocoptiontreebuilder.hh"
 
+#include "../../Agent/agent.hh"
 #include "../../Option/AwaitTheirKickOff/awaittheirkickoff.hh"
+#include "../../Option/ApproachBall/approachball.hh"
+#include "../../Option/AtBall/atball.hh"
+#include "../../Option/BuildStationaryMap/buildstationarymap.hh"
+#include "../../Option/CircleBall/circleball.hh"
+#include "../../Option/LookAround/lookaround.hh"
+#include "../../Option/LookAtFeet/lookatfeet.hh"
+#include "../../Option/LocateBall/locateball.hh"
+#include "../../Option/MotionScriptOption/motionscriptoption.hh"
+#include "../../Option/SearchBall/searchball.hh"
+#include "../../Option/SequenceOption/sequenceoption.hh"
+#include "../../Option/StopWalking/stopwalking.hh"
+#include "../../Option/Support/support.hh"
+#include "../../State/state.hh"
+#include "../../StateObject/BodyState/bodystate.hh"
+#include "../../StateObject/GameState/gamestate.hh"
+#include "../../StateObject/StationaryMapState/stationarymapstate.hh"
+#include "conditionals.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
+using namespace robocup;
 
 auto shouldYieldToOtherAttacker = []
 {

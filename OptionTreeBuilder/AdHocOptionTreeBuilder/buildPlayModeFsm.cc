@@ -1,7 +1,18 @@
-#include "adhocoptiontreebuilder.ih"
+#include "adhocoptiontreebuilder.hh"
 
+#include "../../BehaviourControl/behaviourcontrol.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../Option/GameOver/gameover.hh"
+#include "../../Option/MotionScriptOption/motionscriptoption.hh"
+#include "../../Option/SequenceOption/sequenceoption.hh"
+#include "../../Option/StopWalking/stopwalking.hh"
+#include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../StateObserver/ButtonObserver/buttonobserver.hh"
+#include "conditionals.hh"
+
+using namespace bold;
+using namespace std;
+using namespace robocup;
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, shared_ptr<Option> whilePlayingOption)
 {

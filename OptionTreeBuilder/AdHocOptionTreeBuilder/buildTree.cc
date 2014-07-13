@@ -1,6 +1,15 @@
-#include "adhocoptiontreebuilder.ih"
+#include "adhocoptiontreebuilder.hh"
 
+#include "../../BehaviourControl/behaviourcontrol.hh"
+#include "../../Option/ActionOption/actionoption.hh"
+#include "../../Option/DispatchOption/dispatchoption.hh"
+#include "../../Option/MotionScriptOption/motionscriptoption.hh"
+#include "../../Option/SequenceOption/sequenceoption.hh"
+#include "../../Option/StopWalking/stopwalking.hh"
 #include "../../Option/UntilShutdown/untilshutdown.hh"
+
+using namespace bold;
+using namespace std;
 
 shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 {

@@ -1,9 +1,20 @@
-#include "adhocoptiontreebuilder.ih"
+#include "adhocoptiontreebuilder.hh"
 
 #include "../../Drawing/drawing.hh"
+#include "../../Kick/kick.hh"
+#include "../../Option/LookAround/lookaround.hh"
+#include "../../Option/LocateBall/locateball.hh"
+#include "../../Option/MotionScriptOption/motionscriptoption.hh"
+#include "../../Option/StopWalking/stopwalking.hh"
 #include "../../Option/TrackBall/trackball.hh"
+#include "../../StateObject/AgentFrameState/agentframestate.hh"
+#include "../../StateObject/TeamState/teamstate.hh"
+#include "conditionals.hh"
 
+using namespace bold;
 using namespace bold::Colour;
+using namespace Eigen;
+using namespace std;
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 {

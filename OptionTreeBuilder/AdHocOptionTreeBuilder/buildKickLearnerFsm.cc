@@ -1,4 +1,17 @@
-#include "adhocoptiontreebuilder.ih"
+#include "adhocoptiontreebuilder.hh"
+
+#include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../Option/LookAtBall/lookatball.hh"
+#include "../../Option/LookAtFeet/lookatfeet.hh"
+#include "../../Option/MotionScriptOption/motionscriptoption.hh"
+#include "../../State/state.hh"
+#include "../../StateObject/AgentFrameState/agentframestate.hh"
+#include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "conditionals.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
 
 /// The robot will stand and kick the ball around in order to learn the
 /// outcome of specific kicks given starting ball positions.

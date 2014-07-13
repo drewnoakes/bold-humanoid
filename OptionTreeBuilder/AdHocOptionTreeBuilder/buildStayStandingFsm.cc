@@ -1,4 +1,16 @@
-#include "adhocoptiontreebuilder.ih"
+#include "adhocoptiontreebuilder.hh"
+
+#include "../../Option/GetUpOption/getupoption.hh"
+#include "../../Option/SequenceOption/sequenceoption.hh"
+#include "../../Option/StopWalking/stopwalking.hh"
+#include "../../StateObject/GameState/gamestate.hh"
+#include "../../StateObserver/FallDetector/falldetector.hh"
+#include "conditionals.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
+using namespace robocup;
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStayStandingFsm(Agent* agent, shared_ptr<Option> whileStandingOption)
 {

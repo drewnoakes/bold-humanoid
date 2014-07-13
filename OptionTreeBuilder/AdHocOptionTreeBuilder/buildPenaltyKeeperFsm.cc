@@ -1,6 +1,15 @@
-#include "adhocoptiontreebuilder.ih"
+#include "adhocoptiontreebuilder.hh"
 
 #include "../../FieldMap/fieldmap.hh"
+#include "../../Option/LookAround/lookaround.hh"
+#include "../../Option/LookAtBall/lookatball.hh"
+#include "../../Option/MotionScriptOption/motionscriptoption.hh"
+#include "../../Option/StopWalking/stopwalking.hh"
+#include "conditionals.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent)
 {
