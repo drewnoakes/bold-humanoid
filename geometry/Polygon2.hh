@@ -6,6 +6,7 @@
 #include <Eigen/Geometry>
 #include <Eigen/StdVector>
 
+#include "Bounds.hh"
 #include "LineSegment/linesegment.hh"
 #include "LineSegment/LineSegment2/linesegment2.hh"
 #include "../../util/assert.hh"
@@ -31,6 +32,15 @@ namespace bold
         log::error("Polygon2::Polygon2") << "Cannot create a polygon with number of vertices: " << vertices.size();
         throw std::runtime_error("A polygon must have at least three vertices");
       }
+    }
+
+    Polygon2(Bounds<T,2> bounds)
+    : d_vertices()
+    {
+      d_vertices.push_back(bounds.min());
+      d_vertices.emplace_back(Point(bounds.max().x(), bounds.min().y()));
+      d_vertices.push_back(bounds.max());
+      d_vertices.emplace_back(Point(bounds.min().x(), bounds.max().y()));
     }
 
     bool contains(Point const& point)
