@@ -418,7 +418,7 @@ export class AgentObservedLineJunctionLayer extends DataLayer<state.AgentFrame>
             constants.protocols.agentFrameState,
             "Observed line junctions",
             () => {
-                canvasUtil.clear(this.context, true)
+                canvasUtil.clear(this.context, true);
                 if (this.data && this.data.junctions)
                     plotter.drawJunctions(this.context, this.data.junctions);
             });
@@ -454,6 +454,23 @@ export class AgentBallPositionLayer extends DataLayer<state.AgentFrame>
                 if (this.data && this.data.ball)
                     plotter.drawBall(this.context, {}, this.data.ball);
             });
+    }
+}
+
+export class AgentObservedPlayerLayer extends DataLayer<state.AgentFrame>
+{
+    constructor(transform: Trackable<geometry.Transform>)
+    {
+        super(
+            transform,
+            constants.protocols.agentFrameState,
+            "Observed players",
+            () => {
+                canvasUtil.clear(this.context, true);
+                if (this.data && this.data.teammates)
+                    plotter.drawObservedTeammates(this.context, {}, this.data.teammates);
+            });
+                
     }
 }
 

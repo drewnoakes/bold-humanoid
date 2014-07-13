@@ -224,6 +224,20 @@ export function drawBall(context: CanvasRenderingContext2D, options: {ballFillSt
     context.fill();
 }
 
+export function drawObservedTeammates(context: CanvasRenderingContext2D, options: {teammateFillStyle?: string}, teammatePositions: number[][])
+{
+    context.fillStyle = options.teammateFillStyle || 'black';
+
+    var nTeammates = teammatePositions.length;
+    for (var i = 0; i < nTeammates; ++i)
+    {
+        var teammatePosition = teammatePositions[i];
+        context.beginPath();
+        circle(context, teammatePosition, constants.ballRadius);
+        context.fill();
+    }
+}
+
 export function drawAgentPosition(context: CanvasRenderingContext2D, options: {agentDotRadius?: number; agentDirectionLength?: number; agentPosStyle?: string}, agentPosition: number[])
 {
     var agentDotRadius = options.agentDotRadius || 0.1,
