@@ -105,6 +105,9 @@ namespace bold
       return ::atan2(-point.x(), point.y());
     }
 
+    /** Returns the point at the given angle and distance, as defined in the agent frame, where zero is straight ahead and positive is to the left (counter-clockwise). */
+    static inline Eigen::Vector2d pointAtAngle(double angle, double distance) { return Eigen::Vector2d(cos(angle) * distance, sin(angle) * distance); }
+
   private:
     Math() = delete;
   };
