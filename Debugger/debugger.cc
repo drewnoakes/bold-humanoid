@@ -5,6 +5,7 @@
 #include "../State/state.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/DebugState/debugstate.hh"
+#include "../StateObject/StationaryMapState/stationarymapstate.hh"
 #include "../stats/movingaverage.hh"
 
 using namespace bold;
@@ -30,9 +31,18 @@ void Debugger::update()
   // Update Hardware LEDs
   //
 
+  auto const& stationaryMap = State::get<StationaryMapState>();
   auto const& cameraFrame = State::get<CameraFrameState>();
 
-  if (cameraFrame)
+  if (stationaryMap)
+  {
+    d_debugControl->setPanelLedStates(
+      /*red  */ stationaryMap->hasEnoughBallObservations(),
+      /*blue */ d_gameControllerMessageCount != 0,
+      /*green*/ stationaryMap->getSatisfactoryGoalPostCount() != 0
+    );
+  }
+  else if (cameraFrame)
   {
     d_debugControl->setPanelLedStates(
       /*red  */ cameraFrame->getBallObservation().hasValue(),
