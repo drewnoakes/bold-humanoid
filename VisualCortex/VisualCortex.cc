@@ -58,7 +58,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_magentaLabel  = make_shared<PixelLabel>("Magenta", Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
 
 
-  vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_lineLabel, d_cyanLabel, d_magentaLabel };
+  vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_cyanLabel, d_magentaLabel, d_lineLabel };
   auto blobPixelLabels =
     d_playerDetectionEnabled->getValue() ?
     vector<shared_ptr<PixelLabel>>({ d_ballLabel, d_goalLabel, d_cyanLabel, d_magentaLabel }) :
