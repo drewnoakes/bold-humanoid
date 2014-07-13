@@ -6,8 +6,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
 
   auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
-  auto lookForBall = make_shared<LookAround>("look-for-ball", agent->getHeadModule(), 135.0, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.05 : 0.5; });
-  auto lookAtBall = make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), agent->getHeadModule());
+  auto locateBall = make_shared<LocateBall>("locate-ball", agent, [] { return State::get<CameraFrameState>()->isBallVisible() ? 0.3 : 0.5; }, 30, 5);
   auto bigStepLeft = make_shared<MotionScriptOption>("big-step-left", agent->getMotionScriptModule(), "./motionscripts/step-left-big.json");
   auto bigStepRight = make_shared<MotionScriptOption>("big-step-right", agent->getMotionScriptModule(), "./motionscripts/step-right-big.json");
   auto leftCrossKick = make_shared<MotionScriptOption>("left-cross-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-cross-left.json");
@@ -21,30 +20,22 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "keeper");
 
   auto standUpState = fsm->newState("stand-up", { standUp }, false/*endState*/, true/*startState*/);
-  auto lookForBallState = fsm->newState("look-for-ball", { stopWalking, lookForBall });
-  auto lookAtBallState = fsm->newState("look-at-ball", { stopWalking, lookAtBall });
+  auto locateBallState = fsm->newState("locate-ball", { stopWalking, locateBall });
   auto bigStepLeftState = fsm->newState("big-step-left", { bigStepLeft });
   auto bigStepRightState = fsm->newState("big-step-right", { bigStepRight });
   auto leftCrossKickState = fsm->newState("left-cross-kick", { leftCrossKick });
   auto rightCrossKickState = fsm->newState("right-cross-kick", { rightCrossKick });
 
-  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, lookForBallState, lookForBallState, lookAtBallState, bigStepLeftState, bigStepRightState });
+  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, locateBallState });
+  setPlayerActivityInStates(agent, PlayerActivity::Positioning, { bigStepLeftState, bigStepRightState });
 
   // TRANSITIONS
 
   standUpState
-    ->transitionTo(lookForBallState, "standing")
+    ->transitionTo(locateBallState, "standing")
     ->whenTerminated();
 
-  lookForBallState
-    ->transitionTo(lookAtBallState, "found")
-    ->when([] { return stepUpDownThreshold(10, ballVisibleCondition); });
-
-  lookAtBallState
-    ->transitionTo(lookForBallState, "lost")
-    ->when([] { return trueForMillis(2000, negate(ballVisibleCondition)); });
-
-  lookAtBallState
+  locateBallState
     ->transitionTo(bigStepLeftState, "ball-left")
     ->when([]
     {
@@ -55,7 +46,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
       });
     });
 
-  lookAtBallState
+  locateBallState
     ->transitionTo(bigStepRightState, "ball-right")
     ->when([]
     {
@@ -67,14 +58,14 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
     });
 
   bigStepLeftState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
   bigStepRightState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
-  lookAtBallState
+  locateBallState
     ->transitionTo(leftCrossKickState, "clear-left")
     ->when([]
            {
@@ -82,7 +73,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
              return ball && Range<double>(0.0, 0.17).contains(ball->y()) && Range<double>(-0.2, 0).contains(ball->x());
            });
 
-  lookAtBallState
+  locateBallState
     ->transitionTo(rightCrossKickState, "clear-right")
     ->when([]
            {
@@ -91,11 +82,11 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildKeeperFsm(Agent* agent)
            });
 
   leftCrossKickState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
   rightCrossKickState
-    ->transitionTo(lookForBallState, "done")
+    ->transitionTo(locateBallState, "done")
     ->whenTerminated();
 
   return fsm;

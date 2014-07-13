@@ -14,18 +14,16 @@ using namespace Eigen;
 using namespace rapidjson;
 using namespace std;
 
-LocateBall::LocateBall(string const& id, Agent* agent)
+LocateBall::LocateBall(string const& id, Agent* agent, function<double()> speedCallback, uint maxCount, uint thresholdCount)
 : Option(id, "LocateBall"),
   d_headModule(agent->getHeadModule()),
+  d_lookAroundOption(make_shared<LookAround>("lookAroundForBall", d_headModule, 135.0, speedCallback)),
   d_lookAtBallOption(make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), d_headModule)),
   d_visibleCount(0),
-  d_stepCount(0)
+  d_stepCount(0),
+  d_maxCount(maxCount),
+  d_thresholdCount(thresholdCount)
 {
-  d_lookAroundOption = make_shared<LookAround>("lookAroundForBall", d_headModule, 135, []
-  {
-    // Slow down considerably when a ball is observed
-    return State::get<CameraFrameState>()->isBallVisible() ? 0.3 : 1.0;
-  });
 }
 
 vector<shared_ptr<Option>> LocateBall::runPolicy(Writer<StringBuffer>& writer)
@@ -39,7 +37,7 @@ vector<shared_ptr<Option>> LocateBall::runPolicy(Writer<StringBuffer>& writer)
 
   if (agentFrame->isBallVisible())
   {
-    if (d_visibleCount < 10)
+    if (d_visibleCount < d_maxCount)
       d_visibleCount++;
   }
   else
@@ -49,11 +47,11 @@ vector<shared_ptr<Option>> LocateBall::runPolicy(Writer<StringBuffer>& writer)
   }
 
   // If we've just started this option and have seen a ball, don't look away from it!
-  if (d_stepCount < 10 && d_visibleCount != 0)
+  if (d_stepCount < d_maxCount && d_visibleCount != 0)
     return {d_lookAtBallOption};
 
   // If we are generally seeing a ball, fixate on it
-  if (d_visibleCount > 5)
+  if (d_visibleCount > d_thresholdCount)
     return {d_lookAtBallOption};
 
   // Otherwise we are not very confident we're looking at a ball, so keep looking.

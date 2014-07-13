@@ -16,7 +16,7 @@ namespace bold
   class LocateBall : public Option
   {
   public:
-    LocateBall(std::string const& id, Agent* agent);
+    LocateBall(std::string const& id, Agent* agent, std::function<double()> speedCallback = nullptr, uint maxCount = 10, uint thresholdCount = 5);
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
@@ -26,7 +26,9 @@ namespace bold
     std::shared_ptr<HeadModule> d_headModule;
     std::shared_ptr<LookAround> d_lookAroundOption;
     std::shared_ptr<LookAtBall> d_lookAtBallOption;
-    int d_visibleCount;
-    int d_stepCount;
+    uint d_visibleCount;
+    uint d_stepCount;
+    uint d_maxCount;
+    uint d_thresholdCount;
   };
 }
