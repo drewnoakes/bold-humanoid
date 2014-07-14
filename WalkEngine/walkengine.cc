@@ -7,6 +7,7 @@
 #include "../../Config/config.hh"
 #include "../../MX28/mx28.hh"
 #include "../../State/state.hh"
+#include "../../StateObject/BalanceState/balancestate.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 
 // TODO reimplement using Eigen and get rid of these classes:
@@ -488,6 +489,10 @@ void WalkEngine::balance(double ratio)
 
     d_outValue[5]  += (int)round(ratio * correction.ankleRollR);
     d_outValue[11] += (int)round(ratio * correction.ankleRollL);
+  }
+  else
+  {
+    State::set<BalanceState>(nullptr);
   }
 }
 
