@@ -36,7 +36,7 @@ double OdoWalkTo::hasTerminated()
 }
 
 Option::OptionVector OdoWalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer)
-{  
+{
   writer.String("odo")
     .StartArray()
     .Double(d_lastOdoReading.translation().x())
@@ -56,7 +56,7 @@ Option::OptionVector OdoWalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuf
   Vector2d stillToGo = (d_progress * d_targetPos).head<2>();
   writer.String("togo").StartArray().Double(stillToGo.x()).Double(stillToGo.y()).EndArray(2);
 
-  double dist = stillToGo.norm();
+//  double dist = stillToGo.norm();
 
   Vector2d moveDir = 10 * stillToGo.normalized();
   writer.String("movedir").StartArray().Double(moveDir.x()).Double(moveDir.y()).EndArray(2);
