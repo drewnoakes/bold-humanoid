@@ -31,17 +31,10 @@ BalanceOffset OrientationBalance::computeCorrection(double targetPitchRads) cons
 
   auto correction = BalanceOffset();
 
-  correction.hipRollR    = static_cast<short>(round(-rollError * d_hipRollGain->getValue()));
-  correction.hipRollL    = static_cast<short>(round(-rollError * d_hipRollGain->getValue()));
-
-  correction.kneeR       = static_cast<short>(round(-pitchError * d_kneeGain->getValue()));
-  correction.kneeL       = static_cast<short>(round( pitchError * d_kneeGain->getValue()));
-
-  correction.anklePitchR = static_cast<short>(round( pitchError * d_anklePitchGain->getValue()));
-  correction.anklePitchL = static_cast<short>(round(-pitchError * d_anklePitchGain->getValue()));
-
-  correction.ankleRollR  = static_cast<short>(round(-rollError * d_ankleRollGain->getValue()));
-  correction.ankleRollL  = static_cast<short>(round(-rollError * d_ankleRollGain->getValue()));
+  correction.hipRoll    = static_cast<short>(round(-rollError * d_hipRollGain->getValue()));
+  correction.knee       = static_cast<short>(round(-pitchError * d_kneeGain->getValue()));
+  correction.anklePitch = static_cast<short>(round( pitchError * d_anklePitchGain->getValue()));
+  correction.ankleRoll  = static_cast<short>(round(-rollError * d_ankleRollGain->getValue()));
 
   return correction;
 }

@@ -287,16 +287,16 @@ void WalkModule::applyLegs(LegSection* legs)
 
     auto const& correction = balanceState->offsets();
 
-    legs->hipRollRight()->setModulationOffset(static_cast<short>(round(ratio * correction.hipRollR)));
-    legs->hipRollLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.hipRollL)));
+    legs->hipRollRight()->setModulationOffset(static_cast<short>(round(ratio * correction.hipRoll)));
+    legs->hipRollLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.hipRoll)));
 
-    legs->kneeRight()->setModulationOffset(static_cast<short>(round(ratio * correction.kneeR)));
-    legs->kneeLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.kneeL)));
+    legs->kneeRight()->setModulationOffset(static_cast<short>(round(ratio * correction.knee)));
+    legs->kneeLeft()->setModulationOffset(static_cast<short>(round(-ratio * correction.knee)));
 
-    legs->anklePitchRight()->setModulationOffset(static_cast<short>(round(ratio * correction.anklePitchR)));
-    legs->anklePitchLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.anklePitchL)));
+    legs->anklePitchRight()->setModulationOffset(static_cast<short>(round(ratio * correction.anklePitch)));
+    legs->anklePitchLeft()->setModulationOffset(static_cast<short>(round(-ratio * correction.anklePitch)));
 
-    legs->ankleRollRight()->setModulationOffset(static_cast<short>(round(ratio * correction.ankleRollR)));
-    legs->ankleRollLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.ankleRollL)));
+    legs->ankleRollRight()->setModulationOffset(static_cast<short>(round(ratio * correction.ankleRoll)));
+    legs->ankleRollLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.ankleRoll)));
   }
 }

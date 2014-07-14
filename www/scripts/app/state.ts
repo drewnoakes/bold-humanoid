@@ -536,14 +536,10 @@ export interface WorldFrame
 
 export interface BalanceOffset
 {
-  hipRollR: number;
-  hipRollL: number;
-  kneeR: number;
-  kneeL: number;
-  anklePitchR: number;
-  anklePitchL: number;
-  ankleRollR: number;
-  ankleRollL: number;
+  hipRoll: number;
+  knee: number;
+  anklePitch: number;
+  ankleRoll: number;
 }
 
 export interface Balance
