@@ -1,15 +1,11 @@
 #include "walkengine.hh"
 
-#include <cmath>
-
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../Config/config.hh"
-#include "../../MotionTask/motiontask.hh"
 #include "../../MX28/mx28.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
-#include "../../ThreadUtil/threadutil.hh"
 
 // TODO reimplement using Eigen and get rid of these classes:
 #include "Vector.h"
