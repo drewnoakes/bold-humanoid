@@ -10,7 +10,7 @@
 namespace bold
 {
   class PixelLabel;
-  template<typename T> class Setting;
+  template<typename> class Setting;
 
   class FieldEdgePass : public ImagePassHandler<uchar>
   {
