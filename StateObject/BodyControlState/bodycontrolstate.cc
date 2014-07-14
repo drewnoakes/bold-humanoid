@@ -15,6 +15,7 @@ BodyControlState::BodyControlState(shared_ptr<BodyControl> bodyControl, ulong mo
     auto joint = bodyControl->getJoint((JointId)j);
 
     d_jointStates[j - 1].value = joint->getValue();
+    d_jointStates[j - 1].modulation = joint->getModulationOffset();
     d_jointStates[j - 1].pGain = joint->getPGain();
     d_jointStates[j - 1].iGain = joint->getIGain();
     d_jointStates[j - 1].dGain = joint->getDGain();
@@ -35,6 +36,7 @@ void BodyControlState::writeJson(Writer<StringBuffer>& writer) const
         writer.StartObject();
         {
           writer.String("v").Uint(d_jointStates[j - 1].value);
+          writer.String("m").Int (d_jointStates[j - 1].modulation);
           writer.String("p").Uint(d_jointStates[j - 1].pGain);
           writer.String("i").Uint(d_jointStates[j - 1].iGain);
           writer.String("d").Uint(d_jointStates[j - 1].dGain);

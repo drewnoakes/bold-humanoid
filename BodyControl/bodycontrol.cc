@@ -11,7 +11,10 @@ using namespace std;
 BodyControl::BodyControl()
 {
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
+  {
     d_joints.push_back(make_unique<JointControl>(jointId));
+    d_modulationOffsets.push_back(0);
+  }
 
   d_headSection = make_unique<HeadSection>(this);
   d_armSection  = make_unique<ArmSection>(this);
@@ -32,11 +35,18 @@ void BodyControl::updateFromHardwareState(shared_ptr<HardwareState const> const&
   }
 }
 
+void BodyControl::clearModulation()
+{
+  for (auto& joint : d_joints)
+    joint->setModulationOffset(0);
+}
+
 /////////////////////////////////////////////////////////////
 
 JointControl::JointControl(uchar jointId)
 : d_jointId(jointId),
   d_value(MX28::CENTER_VALUE),
+  d_modulationOffset(0),
   d_degrees(0.0),
   d_pGain(DefaultPGain),
   d_iGain(DefaultIGain),
@@ -77,6 +87,16 @@ void JointControl::setPidGains(uchar p, uchar i, uchar d) { setPGain(p); setIGai
 
 void JointControl::notifyOffsetChanged()
 {
+  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
+  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
+}
+
+void JointControl::setModulationOffset(short delta)
+{
+  if (d_modulationOffset == delta)
+    return;
+
+  d_modulationOffset = delta;
   d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
   d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
 }

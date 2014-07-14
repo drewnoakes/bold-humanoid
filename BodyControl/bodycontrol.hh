@@ -26,6 +26,9 @@ namespace bold
     void setValue(ushort value);
     ushort getValue() const { return d_value; }
 
+    void setModulationOffset(short delta);
+    short getModulationOffset() const { return d_modulationOffset; }
+
     /// Sets the target angle, in degrees
     void setDegrees(double degrees);
     /// Gets the target angle, in degrees
@@ -55,6 +58,7 @@ namespace bold
   private:
     uchar d_jointId;
     ushort d_value;
+    short d_modulationOffset;
     double d_degrees;
     uchar d_pGain;
     uchar d_iGain;
@@ -84,8 +88,12 @@ namespace bold
     ArmSection*  getArmSection()  const { return d_armSection.get(); }
     LegSection*  getLegSection()  const { return d_legSection.get(); }
 
+    void clearModulation();
+    void modulateJoint(JointId id, short delta);
+
   private:
     std::vector<std::unique_ptr<JointControl>> d_joints;
+    std::vector<int> d_modulationOffsets;
 
     std::unique_ptr<HeadSection> d_headSection;
     std::unique_ptr<ArmSection> d_armSection;

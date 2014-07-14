@@ -18,6 +18,7 @@ namespace bold
     struct JointControlState
     {
       ushort value;
+      short modulation;
       uchar pGain;
       uchar iGain;
       uchar dGain;
