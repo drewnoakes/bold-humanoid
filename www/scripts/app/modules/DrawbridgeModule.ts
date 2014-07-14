@@ -174,7 +174,9 @@ class DrawbridgeModule extends Module
         {
             switch (viewModel.options[i])
             {
-                case "win":
+                case "boot":
+                case "until-shutdown":
+                case "stay-standing":
                 case "dispatch":
                 case "striker":
                 case "keeper":
