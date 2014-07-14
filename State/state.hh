@@ -177,7 +177,6 @@ namespace bold
   void State::set(std::shared_ptr<T const> state)
   {
     static_assert(std::is_base_of<StateObject, T>::value, "T must be a descendant of StateObject");
-    ASSERT(state);
 
     auto const& tracker = getTracker<T const>();
     tracker->set(state);

@@ -17,6 +17,10 @@ HandlerHelper::HandlerHelper(shared_ptr<Voice> voice, shared_ptr<BehaviourContro
 
 void HandlerHelper::observeTyped(shared_ptr<GameState const> const& state, SequentialTimer& timer)
 {
+  // State may be null if the game controller has been lost for a while and we decide to forget its prior state
+  if (!state)
+    return;
+
   // Announce when our penalty period is over, in case the assistant referee has failed to unpenalise us
   auto const& myPlayerInfo = state->getMyPlayerInfo();
   if (myPlayerInfo.hasPenalty())

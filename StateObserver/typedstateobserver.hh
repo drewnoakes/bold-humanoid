@@ -37,7 +37,6 @@ namespace bold
       ASSERT(ThreadUtil::getThreadId() == d_callbackThreadId);
       std::shared_ptr<StateObject const> state = State::getByTypeIndex(d_typeIndex);
       std::shared_ptr<TState const> typedState = std::dynamic_pointer_cast<TState const>(state);
-      ASSERT(typedState);
       observeTyped(typedState, timer);
     }
 

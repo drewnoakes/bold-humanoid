@@ -170,6 +170,19 @@ void GameStateReceiver::receive()
       d_receivedInfoMessageRecently = false;
     }
   }
+
+  //
+  // Forget the last game controller state if it's very old
+  //
+
+  const double forgetGameControllerStateAfterSeconds = 15;
+
+  if (State::get<GameState>() && Clock::getSecondsSince(d_lastReceivedInfoMessageAt) > forgetGameControllerStateAfterSeconds)
+  {
+    d_voice->say("Forgetting game controller");
+    log::warning("GameStateReceiver::receive") << "No game controller message received for " << forgetGameControllerStateAfterSeconds << " seconds, so clearing previous state";
+    State::set<GameState>(nullptr);
+  }
 }
 
 void GameStateReceiver::processGameControllerInfoMessage(char const* data)
