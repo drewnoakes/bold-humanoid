@@ -219,6 +219,7 @@ void WalkEngine::reset()
   X_MOVE_AMPLITUDE = 0;
   Y_MOVE_AMPLITUDE = 0;
   A_MOVE_AMPLITUDE = 0;
+  HIP_PITCH_OFFSET = 13.0;
 
   d_bodySwingY = 0;
   d_bodySwingZ = 0;
