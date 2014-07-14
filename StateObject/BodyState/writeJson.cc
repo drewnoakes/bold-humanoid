@@ -28,8 +28,8 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("errors");
     writer.StartArray();
     {
-      for (int diff : d_positionValueDiffs)
-        writer.Int(diff);
+      for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
+        writer.Int(d_positionValueDiffById[j]);
     }
     writer.EndArray();
 

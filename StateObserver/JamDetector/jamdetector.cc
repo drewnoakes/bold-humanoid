@@ -23,9 +23,9 @@ JamDetector::JamDetector(shared_ptr<Voice> voice)
 
 void JamDetector::observeTyped(std::shared_ptr<BodyState const> const& bodyState, SequentialTimer& timer)
 {
-  const auto& diffs = bodyState->getPositionValueDiffs();
+  const auto& diffById = bodyState->getPositionValueDiffById();
 
-  ASSERT(diffs.size() == (int)JointId::MAX + 1);
+  ASSERT(diffById.size() == (int)JointId::MAX + 1);
 
   // TODO Don't just detect large error, but also the fact that the joint is hardly moving
   //      This is because during some motion script playback, there may be very large errors for a short while
@@ -33,13 +33,15 @@ void JamDetector::observeTyped(std::shared_ptr<BodyState const> const& bodyState
 
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (int)JointId::MAX; jointId++)
   {
-    int diff = diffs[jointId];
-    int avg = d_trackerByJointId[jointId - 1].movingAverage.next(diff);
+    auto& tracker = d_trackerByJointId[jointId - 1];
 
-    if (!d_trackerByJointId[jointId - 1].movingAverage.isMature())
+    int diff = diffById[jointId];
+    int avg = tracker.movingAverage.next(diff);
+
+    if (!tracker.movingAverage.isMature())
       continue;
 
-    auto transition = d_trackerByJointId[jointId - 1].trigger.next(avg);
+    auto transition = tracker.trigger.next(avg);
 
     if (transition == SchmittTriggerTransition::High)
     {

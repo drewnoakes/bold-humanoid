@@ -157,7 +157,7 @@ namespace bold
      * Assumes the lowest foot is flat on the floor */
     double getTorsoHeight() const { return d_torsoHeight; }
 
-    std::array<short,21> const& getPositionValueDiffs() const { return d_positionValueDiffs; }
+    std::array<short,21> const& getPositionValueDiffById() const { return d_positionValueDiffById; }
 
     Eigen::Affine3d determineFootAgentTr(bool leftFoot) const;
 
@@ -166,7 +166,7 @@ namespace bold
     /// Indexed by JointId (i.e. 0 is ignored.), including camera tilt angle
     void initialise(std::shared_ptr<BodyModel const> const& bodyModel, std::array<double,23> const& angles);
 
-    std::array<short,21> d_positionValueDiffs;
+    std::array<short,21> d_positionValueDiffById;
 
     double d_torsoHeight;
 

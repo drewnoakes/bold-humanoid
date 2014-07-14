@@ -128,7 +128,7 @@ class LoadModule extends Module
 
         _.each(_.range(1,21), jointId =>
         {
-            var error = data.errors[jointId];
+            var error = data.errors[jointId - 1];
 
             this.diffSeriesById[jointId].append(time, error);
 

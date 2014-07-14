@@ -4,7 +4,7 @@
 #include "../../MX28Snapshot/mx28snapshot.hh"
 
 BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, array<double,23> const& angles, array<short,21> const& positionValueDiffs, ulong cycleNumber)
-: d_positionValueDiffs(positionValueDiffs),
+: d_positionValueDiffById(positionValueDiffs),
   d_torso(),
   d_jointById(),
   d_limbByName(),
@@ -23,7 +23,7 @@ BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, shared_ptr<Ha
 {
   // Add three extra as:
   // - we don't use index 0
-  // - we add two extra joints for the camera's pan & tilt within the head.
+  // - we add two extra joints for the camera's calibration pan & tilt within the head
   array<double,23> angles;
   angles[0] = 0;
 
@@ -31,7 +31,7 @@ BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, shared_ptr<Ha
   {
     auto const& joint = hardwareState->getMX28State(jointId);
     angles[jointId] = joint.presentPosition;
-    d_positionValueDiffs[jointId] = (short)bodyControl->getJoint((JointId)jointId)->getValue() - joint.presentPositionValue;
+    d_positionValueDiffById[jointId] = (short)bodyControl->getJoint((JointId)jointId)->getValue() - joint.presentPositionValue;
   }
 
   static auto tiltSetting = Config::getSetting<double>("camera.calibration.tilt-angle-degrees");
