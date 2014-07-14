@@ -8,6 +8,7 @@
 
 namespace bold
 {
+  class Balance;
   class WalkEngine;
   template<typename> class Setting;
 
@@ -74,7 +75,10 @@ namespace bold
 
     void start();
 
+    void balance();
+
     std::shared_ptr<WalkEngine> d_walkEngine;
+    std::shared_ptr<Balance> d_balance;
 
     Setting<int>* d_stabilisationTimeMillis;
     int d_stabilisationCycleCount;

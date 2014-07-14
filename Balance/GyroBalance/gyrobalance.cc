@@ -40,7 +40,5 @@ BalanceOffset GyroBalance::computeCorrection(double targetPitchRads) const
   correction.ankleRollR  = static_cast<short>(round(-rlErr * d_ankleRollGain->getValue()));
   correction.ankleRollL  = static_cast<short>(round(-rlErr * d_ankleRollGain->getValue()));
 
-  State::make<BalanceState>(correction);
-
   return correction;
 }

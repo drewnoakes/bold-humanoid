@@ -1,13 +1,9 @@
 #include "walkengine.hh"
 
-#include "../../Balance/balance.hh"
-#include "../../Balance/GyroBalance/gyrobalance.hh"
-#include "../../Balance/OrientationBalance/orientationbalance.hh"
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../Config/config.hh"
 #include "../../MX28/mx28.hh"
 #include "../../State/state.hh"
-#include "../../StateObject/BalanceState/balancestate.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 
 // TODO reimplement using Eigen and get rid of these classes:
@@ -33,24 +29,6 @@ WalkEngine::WalkEngine()
   Z_SWAP_AMPLITUDE  = Config::getSetting<double>("walk-engine.params.swing-top-down");
   PELVIS_OFFSET     = Config::getSetting<double>("walk-engine.params.pelvis-offset");
   ARM_SWING_GAIN    = Config::getSetting<double>("walk-engine.params.arm-swing-gain");
-
-  Config::getSetting<BalanceMode>("walk-engine.balance.mode")->track(
-    [this]
-    (BalanceMode mode)
-    {
-      switch (mode)
-      {
-        case BalanceMode::None:
-          d_balance = nullptr;
-          break;
-        case BalanceMode::Gyro:
-          d_balance = make_shared<GyroBalance>();
-          break;
-        case BalanceMode::Orientation:
-          d_balance = make_shared<OrientationBalance>();
-          break;
-      }
-    });
 
   d_legGainP = Config::getSetting<int>("walk-engine.gains.leg-p-gain");
   d_legGainI = Config::getSetting<int>("walk-engine.gains.leg-i-gain");
@@ -463,36 +441,6 @@ void WalkEngine::step()
       offset -= (double)dir[i] * HIP_PITCH_OFFSET * MX28::RATIO_DEGS2VALUE; // NOTE we don't snapshot this parameter, and always use the most recent
 
     d_outValue[i] = MX28::degs2Value(initAngle[i]) + (int)offset;
-  }
-}
-
-void WalkEngine::balance(double ratio)
-{
-  // Take a copy, for thread safety
-  auto balance = d_balance;
-
-  if (!balance || ratio == 0.0)
-    return;
-
-  if (balance)
-  {
-    auto correction = balance->computeCorrection(Math::degToRad(HIP_PITCH_OFFSET));
-
-    d_outValue[1]  += static_cast<short>(round(ratio * correction.hipRollR));
-    d_outValue[7]  += static_cast<short>(round(ratio * correction.hipRollL));
-
-    d_outValue[3]  += static_cast<short>(round(ratio * correction.kneeR));
-    d_outValue[9]  += static_cast<short>(round(ratio * correction.kneeL));
-
-    d_outValue[4]  += static_cast<short>(round(ratio * correction.anklePitchR));
-    d_outValue[10] += static_cast<short>(round(ratio * correction.anklePitchL));
-
-    d_outValue[5]  += static_cast<short>(round(ratio * correction.ankleRollR));
-    d_outValue[11] += static_cast<short>(round(ratio * correction.ankleRollL));
-  }
-  else
-  {
-    State::set<BalanceState>(nullptr);
   }
 }
 

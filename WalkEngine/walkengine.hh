@@ -8,7 +8,6 @@
 
 namespace bold
 {
-  class Balance;
   template <typename> class Setting;
 
   /** Computes body angles for walking.
@@ -166,9 +165,6 @@ namespace bold
     Setting<double>* Z_SWAP_AMPLITUDE;
     Setting<double>* ARM_SWING_GAIN;
     Setting<double>* PELVIS_OFFSET;
-
-    // balance
-    std::shared_ptr<Balance> d_balance;
 
     // motor gains
     Setting<int>* d_legGainP;

@@ -38,7 +38,5 @@ BalanceOffset OrientationBalance::computeCorrection(double targetPitchRads) cons
   correction.ankleRollR  = static_cast<short>(round(-rollError * d_ankleRollGain->getValue()));
   correction.ankleRollL  = static_cast<short>(round(-rollError * d_ankleRollGain->getValue()));
 
-  State::make<BalanceState>(correction);
-
   return correction;
 }

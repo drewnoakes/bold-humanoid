@@ -1,7 +1,12 @@
 #include "walkmodule.hh"
 
+#include "../../Balance/balance.hh"
+#include "../../Balance/GyroBalance/gyrobalance.hh"
+#include "../../Balance/OrientationBalance/orientationbalance.hh"
+#include "../../BodyControl/bodycontrol.hh"
 #include "../../Config/config.hh"
 #include "../../State/state.hh"
+#include "../../StateObject/BalanceState/balancestate.hh"
 #include "../../StateObject/WalkState/walkstate.hh"
 #include "../../WalkEngine/walkengine.hh"
 
@@ -42,6 +47,23 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   Config::getSetting<double>("walk-module.x-amp-delta")->track([this](double value) { d_xAmp.setDelta(value); });
   Config::getSetting<double>("walk-module.y-amp-delta")->track([this](double value) { d_yAmp.setDelta(value); });
   Config::getSetting<double>("walk-module.turn-delta") ->track([this](double value) { d_turnAmp.setDelta(value); });
+
+  Config::getSetting<BalanceMode>("balance.mode")->track(
+    [this] (BalanceMode mode)
+    {
+      switch (mode)
+      {
+        case BalanceMode::None:
+          d_balance = nullptr;
+          break;
+        case BalanceMode::Gyro:
+          d_balance = make_shared<GyroBalance>();
+          break;
+        case BalanceMode::Orientation:
+          d_balance = make_shared<OrientationBalance>();
+          break;
+      }
+    });
 }
 
 void WalkModule::setMoveDir(double x, double y)
@@ -226,11 +248,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
   {
     d_walkEngine->step();
 
-    double balanceGain = d_status == WalkStatus::Stabilising
-      ? (double)d_stabilisationCyclesRemaining / d_stabilisationCycleCount
-      : 1.0;
-
-    d_walkEngine->balance(balanceGain);
+    balance();
   }
 
   State::make<WalkState>(
@@ -240,6 +258,47 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     d_walkEngine);
 }
 
+void WalkModule::balance()
+{
+  // Take a copy, for thread safety
+  auto balance = d_balance;
+
+  if (balance != nullptr)
+    State::make<BalanceState>(balance->computeCorrection(Math::degToRad(d_walkEngine->HIP_PITCH_OFFSET)));
+  else
+    State::set<BalanceState>(nullptr);
+}
+
 void WalkModule::applyHead(HeadSection* head) { if (!d_isParalysed->getValue()) d_walkEngine->applyHead(head); }
 void WalkModule::applyArms(ArmSection* arms)  { if (!d_isParalysed->getValue()) d_walkEngine->applyArms(arms); }
-void WalkModule::applyLegs(LegSection* legs)  { if (!d_isParalysed->getValue()) d_walkEngine->applyLegs(legs); }
+
+void WalkModule::applyLegs(LegSection* legs)
+{
+  if (!d_isParalysed->getValue())
+    d_walkEngine->applyLegs(legs);
+
+  auto balanceState = State::get<BalanceState>();
+
+  if (balanceState)
+  {
+    double ratio = d_status == WalkStatus::Stabilising
+      ? (double)d_stabilisationCyclesRemaining / d_stabilisationCycleCount
+      : 1.0;
+
+    cout << "ratio = " << ratio << endl;
+
+    auto const& correction = balanceState->offsets();
+
+    legs->hipRollRight()->setModulationOffset(static_cast<short>(round(ratio * correction.hipRollR)));
+    legs->hipRollLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.hipRollL)));
+
+    legs->kneeRight()->setModulationOffset(static_cast<short>(round(ratio * correction.kneeR)));
+    legs->kneeLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.kneeL)));
+
+    legs->anklePitchRight()->setModulationOffset(static_cast<short>(round(ratio * correction.anklePitchR)));
+    legs->anklePitchLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.anklePitchL)));
+
+    legs->ankleRollRight()->setModulationOffset(static_cast<short>(round(ratio * correction.ankleRollR)));
+    legs->ankleRollLeft()->setModulationOffset(static_cast<short>(round(ratio * correction.ankleRollL)));
+  }
+}
