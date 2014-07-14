@@ -2,6 +2,7 @@
 
 #include "../../Drawing/drawing.hh"
 #include "../../FieldMap/fieldmap.hh"
+#include "../../MotionScript/motionscript.hh"
 #include "../../Option/LocateBall/locateball.hh"
 #include "../../Option/LookAround/lookaround.hh"
 #include "../../Option/MotionScriptOption/motionscriptoption.hh"
@@ -15,13 +16,33 @@ using namespace std;
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent)
 {
+  // SCRIPTS
+
+  auto diveLeftScript = MotionScript::fromFile("./motionscripts/dive-left.json");
+  auto diveRightScript = MotionScript::fromFile("./motionscripts/dive-left.json");
+//  auto diveSplitsScript = MotionScript::fromFile("./motionscripts/dive-splits.json");
+
+  auto signalLeftScript = MotionScript::fromFile("./motionscripts/signal-left-side.json");
+  auto signalRightScript = MotionScript::fromFile("./motionscripts/signal-right-side.json");
+//  auto signalBothScript = MotionScript::fromFile("./motionscripts/signal-both-sides.json");
+
   // OPTIONS
 
   auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json");
-  auto leftDive = make_shared<MotionScriptOption>("dive-left", agent->getMotionScriptModule(), "./motionscripts/dive-left.json");
-  auto rightDive = make_shared<MotionScriptOption>("dive-right", agent->getMotionScriptModule(), "./motionscripts/dive-right.json");
+  auto diveLeft = make_shared<MotionScriptOption>("dive-left", agent->getMotionScriptModule());
+  auto diveRight = make_shared<MotionScriptOption>("dive-right", agent->getMotionScriptModule());
+//  auto diveSplits = make_shared<MotionScriptOption>("splits", agent->getMotionScriptModule());
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
   auto locateBall = make_shared<LocateBall>("locate-ball", agent, 80.0, LookAround::speedIfBallVisible(0.15, 0.5), 30, 5);
+
+  // SETTINGS
+
+  Config::getSetting<bool>("keeper.dive.indicate-only")->track([=](bool indicateOnly)
+  {
+    diveLeft->setMotionScript(indicateOnly ? signalLeftScript : diveLeftScript);
+    diveRight->setMotionScript(indicateOnly ? signalRightScript : diveRightScript);
+//    diveSplits->setMotionScript(indicateOnly ? signalBothScript : diveSplitsScript);
+  });
 
   // STATES
 
@@ -29,8 +50,8 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPenaltyKeeperFsm(Agent* agent
 
   auto standUpState = fsm->newState("stand-up", { standUp }, false/*endState*/, true/*startState*/);
   auto locateBallState = fsm->newState("locate-ball", { stopWalking, locateBall });
-  auto leftDiveState = fsm->newState("left-dive", { leftDive });
-  auto rightDiveState = fsm->newState("right-dive", { rightDive });
+  auto leftDiveState = fsm->newState("left-dive", { diveLeft });
+  auto rightDiveState = fsm->newState("right-dive", { diveRight });
 
   // TRANSITIONS
 

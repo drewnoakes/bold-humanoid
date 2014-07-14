@@ -480,5 +480,10 @@
   "role-decider": {
     "announce-roles": false,
     "override": -1
+  },
+  "keeper": {
+    "dive": {
+      "indicate-only": false
+    }
   }
 }

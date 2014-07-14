@@ -492,5 +492,10 @@
         "kick-learner":    8
       }
     }
+  },
+  "keeper": {
+    "dive": {
+      "indicate-only": { "type": "bool" }
+    }
   }
 }
