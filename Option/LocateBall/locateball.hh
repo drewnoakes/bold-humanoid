@@ -30,5 +30,7 @@ namespace bold
     uint d_stepCount;
     uint d_maxCount;
     uint d_thresholdCount;
+    double d_stoppedAtPhase;
+    Clock::Timestamp d_stoppedScanningAt;
   };
 }

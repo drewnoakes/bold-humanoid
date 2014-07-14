@@ -29,6 +29,8 @@ vector<shared_ptr<Option>> LocateBall::runPolicy(Writer<StringBuffer>& writer)
   if (!agentFrame)
     return {};
 
+  auto priorVisibleCount = d_visibleCount;
+
   if (agentFrame->isBallVisible())
   {
     if (d_visibleCount < d_maxCount)
@@ -46,7 +48,27 @@ vector<shared_ptr<Option>> LocateBall::runPolicy(Writer<StringBuffer>& writer)
 
   // If we are generally seeing a ball, fixate on it
   if (d_visibleCount > d_thresholdCount)
+  {
+    // If we have just started fixating on a ball...
+    if (priorVisibleCount <= d_thresholdCount)
+    {
+      // Record the point of the scan we were at, and the time at which we stopped
+      d_stoppedAtPhase = d_lookAroundOption->getPhase();
+      d_stoppedScanningAt = Clock::getTimestamp();
+    }
+
     return {d_lookAtBallOption};
+  }
+  else if (priorVisibleCount > d_thresholdCount)
+  {
+    // We have lost sight of the ball
+    // If we only recently saw it...
+    if (Clock::getSecondsSince(d_stoppedScanningAt) < 2.0)
+    {
+      // Continue scanning for it from the point we left off at
+      d_lookAroundOption->setPhase(d_stoppedAtPhase);
+    }
+  }
 
   // Otherwise we are not very confident we're looking at a ball, so keep looking.
   return {d_lookAroundOption};
