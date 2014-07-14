@@ -184,6 +184,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     if (d_status == WalkStatus::Walking)
     {
       d_status = WalkStatus::Stabilising;
+      d_hipPitch.setTarget(13.0);
       d_stabilisationCycleCount = d_stabilisationTimeMillis->getValue() / TIME_UNIT;
       d_stabilisationCyclesRemaining = d_stabilisationCycleCount;
     }
