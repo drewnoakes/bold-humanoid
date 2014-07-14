@@ -11,6 +11,6 @@ if [[ $# -eq 0 ]] ; then
     exit 1
 fi
 
-sudo arp-scan -I $1 -m $BOLD_HUMANOID_DIR/mac-addresses.txt 192.168.123.0/24 192.168.176.0/24 192.168.0.0/24
+sudo arp-scan -I $1 -m $BOLD_HUMANOID_DIR/mac-addresses.txt 192.168.123.0/24 192.168.176.0/24 192.168.0.0/24 192.168.103.0/24
 
 exit $?
