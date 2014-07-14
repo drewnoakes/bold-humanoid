@@ -1,9 +1,7 @@
 #include "motionscript.hh"
 
-#include "../util/assert.hh"
 #include "../util/log.hh"
 
-#include <sstream>
 #include <dirent.h>
 
 #include <rapidjson/filereadstream.h>
@@ -282,6 +280,11 @@ shared_ptr<MotionScript> MotionScript::getMirroredScript(std::string name) const
       // Mirror values
       for (uchar jointId = (uchar)JointId::R_SHOULDER_PITCH; jointId <= (uchar)JointId::HEAD_PAN; jointId++)
         keyFrame.values.at(jointId - (uchar)1) = MX28::getMirrorValue(keyFrame.values.at(jointId - (uchar)1));
+
+      // TODO: Further investigate the reason for why this must be done for ankle joints only for a good mirror
+
+      // Swapped to create correct mirror from script generated on one side
+      std::swap(keyFrame.values.at((uchar)JointId::L_ANKLE_ROLL - 1), keyFrame.values.at((uchar)JointId::R_ANKLE_ROLL - 1));
     }
   }
 
