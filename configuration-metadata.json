@@ -309,9 +309,15 @@
       "ankle-roll-gain":  { "type": "double", "description": "Amount gyro affects ankle roll angle" }
     },
     "gains": {
-      "p-gain": { "type": "int" },
-      "i-gain": { "type": "int" },
-      "d-gain": { "type": "int" }
+      "leg-p-gain": { "type": "int", "min": 0, "max": 128 },
+      "leg-i-gain": { "type": "int", "min": 0, "max": 128 },
+      "leg-d-gain": { "type": "int", "min": 0, "max": 128 },
+      "arm-p-gain": { "type": "int", "min": 0, "max": 128 },
+      "arm-i-gain": { "type": "int", "min": 0, "max": 128 },
+      "arm-d-gain": { "type": "int", "min": 0, "max": 128 },
+      "head-p-gain": { "type": "int", "min": 0, "max": 128 },
+      "head-i-gain": { "type": "int", "min": 0, "max": 128 },
+      "head-d-gain": { "type": "int", "min": 0, "max": 128 }
     }
   },
   "walk-module": {

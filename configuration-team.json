@@ -312,9 +312,15 @@
       "ankle-roll-gain": 4.0
     },
     "gains": {
-      "p-gain": 32,
-      "i-gain": 0,
-      "d-gain": 0
+      "leg-p-gain": 32,
+      "leg-i-gain": 0,
+      "leg-d-gain": 0,
+      "arm-p-gain": 8,
+      "arm-i-gain": 0,
+      "arm-d-gain": 0,
+      "head-p-gain": 32,
+      "head-i-gain": 0,
+      "head-d-gain": 0
     }
   },
   "walk-module": {

@@ -168,8 +168,14 @@ namespace bold
     Setting<double>* ARM_SWING_GAIN;
     Setting<double>* PELVIS_OFFSET;
 
-    Setting<int>* P_GAIN;
-    Setting<int>* I_GAIN;
-    Setting<int>* D_GAIN;
+    Setting<int>* d_legGainP;
+    Setting<int>* d_legGainI;
+    Setting<int>* d_legGainD;
+    Setting<int>* d_armGainP;
+    Setting<int>* d_armGainI;
+    Setting<int>* d_armGainD;
+    Setting<int>* d_headGainP;
+    Setting<int>* d_headGainI;
+    Setting<int>* d_headGainD;
   };
 }

@@ -41,9 +41,15 @@ WalkEngine::WalkEngine()
   BALANCE_HIP_ROLL_GAIN    = Config::getSetting<double>("walk-engine.balance.hip-roll-gain");
   BALANCE_ANKLE_ROLL_GAIN  = Config::getSetting<double>("walk-engine.balance.ankle-roll-gain");
 
-  P_GAIN = Config::getSetting<int>("walk-engine.gains.p-gain");
-  I_GAIN = Config::getSetting<int>("walk-engine.gains.i-gain");
-  D_GAIN = Config::getSetting<int>("walk-engine.gains.d-gain");
+  d_legGainP = Config::getSetting<int>("walk-engine.gains.leg-p-gain");
+  d_legGainI = Config::getSetting<int>("walk-engine.gains.leg-i-gain");
+  d_legGainD = Config::getSetting<int>("walk-engine.gains.leg-d-gain");
+  d_armGainP = Config::getSetting<int>("walk-engine.gains.arm-p-gain");
+  d_armGainI = Config::getSetting<int>("walk-engine.gains.arm-i-gain");
+  d_armGainD = Config::getSetting<int>("walk-engine.gains.arm-d-gain");
+  d_headGainP = Config::getSetting<int>("walk-engine.gains.head-p-gain");
+  d_headGainI = Config::getSetting<int>("walk-engine.gains.head-i-gain");
+  d_headGainD = Config::getSetting<int>("walk-engine.gains.head-d-gain");
 
   HIP_PITCH_OFFSET = 13.0;
   X_MOVE_AMPLITUDE = 0;
@@ -478,7 +484,7 @@ void WalkEngine::balance(double ratio)
 void WalkEngine::applyHead(HeadSection* head)
 {
   // Ensure we have our standard PID values
-  head->visitJoints([this](JointControl* joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
+  head->visitJoints([this](JointControl* joint) { joint->setPidGains((uchar)d_headGainP->getValue(), (uchar)d_headGainI->getValue(), (uchar)d_headGainD->getValue()); });
 
   // Head pan follows turn, if any
   head->pan()->setDegrees(A_MOVE_AMPLITUDE);
@@ -487,7 +493,7 @@ void WalkEngine::applyHead(HeadSection* head)
 void WalkEngine::applyArms(ArmSection* arms)
 {
   // Arms move with a low P value of 8
-  arms->visitJoints([this](JointControl* joint) { joint->setPGain(8); joint->setIGain(0); joint->setDGain(0); });
+  arms->visitJoints([this](JointControl* joint) { joint->setPidGains((uchar)d_armGainP->getValue(), (uchar)d_armGainI->getValue(), (uchar)d_armGainD->getValue()); });
 
   arms->shoulderPitchRight()->setValue(MX28::clampValue(d_outValue[12]));
   arms->shoulderPitchLeft()->setValue(MX28::clampValue(d_outValue[13]));
@@ -501,7 +507,7 @@ void WalkEngine::applyArms(ArmSection* arms)
 void WalkEngine::applyLegs(LegSection* legs)
 {
   // Ensure we have our standard PID values
-  legs->visitJoints([this](JointControl* joint) { joint->setPidGains(P_GAIN->getValue(), I_GAIN->getValue(), D_GAIN->getValue()); });
+  legs->visitJoints([this](JointControl* joint) { joint->setPidGains((uchar)d_legGainP->getValue(), (uchar)d_legGainI->getValue(), (uchar)d_legGainD->getValue()); });
 
   legs->hipYawRight()->setValue(MX28::clampValue(d_outValue[0]));
   legs->hipRollRight()->setValue(MX28::clampValue(d_outValue[1]));
