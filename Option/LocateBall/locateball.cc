@@ -17,14 +17,13 @@ using namespace std;
 LocateBall::LocateBall(string const& id, Agent* agent, function<double()> speedCallback, uint maxCount, uint thresholdCount)
 : Option(id, "LocateBall"),
   d_headModule(agent->getHeadModule()),
-  d_lookAroundOption(make_shared<LookAround>("lookAroundForBall", d_headModule, 135.0, speedCallback)),
-  d_lookAtBallOption(make_shared<LookAtBall>("lookAtBall", agent->getCameraModel(), d_headModule)),
+  d_lookAroundOption(make_shared<LookAround>("look-around-for-ball", d_headModule, 135.0, speedCallback)),
+  d_lookAtBallOption(make_shared<LookAtBall>("look-at-ball", agent->getCameraModel(), d_headModule)),
   d_visibleCount(0),
   d_stepCount(0),
   d_maxCount(maxCount),
   d_thresholdCount(thresholdCount)
-{
-}
+{}
 
 vector<shared_ptr<Option>> LocateBall::runPolicy(Writer<StringBuffer>& writer)
 {

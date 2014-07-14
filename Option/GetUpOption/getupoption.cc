@@ -14,10 +14,10 @@ GetUpOption::GetUpOption(const string& id, Agent* agent)
 {
   auto const& motionScriptModule = agent->getMotionScriptModule();
 
-  d_forwardGetUp     = make_shared<MotionScriptOption>("forwardGetUpScript",     motionScriptModule, "./motionscripts/get-up-from-front.json");
-  d_backwardGetUp    = make_shared<MotionScriptOption>("backwardGetUpScript",    motionScriptModule, "./motionscripts/get-up-from-back.json");
-  d_rollLeftToFront  = make_shared<MotionScriptOption>("rollLeftToFrontScript",  motionScriptModule, "./motionscripts/roll-left-to-front.json");
-  d_rollRightToFront = make_shared<MotionScriptOption>("rollRightToFrontScript", motionScriptModule, "./motionscripts/roll-right-to-front.json");
+  d_forwardGetUp     = make_shared<MotionScriptOption>("forward-get-up-script",     motionScriptModule, "./motionscripts/get-up-from-front.json");
+  d_backwardGetUp    = make_shared<MotionScriptOption>("backward-get-up-script",    motionScriptModule, "./motionscripts/get-up-from-back.json");
+  d_rollLeftToFront  = make_shared<MotionScriptOption>("roll-left-to-front-script",  motionScriptModule, "./motionscripts/roll-left-to-front.json");
+  d_rollRightToFront = make_shared<MotionScriptOption>("roll-right-to-front-script", motionScriptModule, "./motionscripts/roll-right-to-front.json");
 }
 
 vector<shared_ptr<Option>> GetUpOption::runPolicy(Writer<StringBuffer>& writer)
