@@ -604,6 +604,9 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
             d_offsets[joint->getId()]
           );
 
+          // Modulation only lasts for one cycle
+          joint->setModulationOffset(0);
+
           ushort value = MX28::clampValue(goalPosition);
           parameters[n++] = CM730::getLowByte(value);
           parameters[n++] = CM730::getHighByte(value);
