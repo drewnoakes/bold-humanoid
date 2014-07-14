@@ -21,7 +21,7 @@ void TeamState::writeJson(Writer<StringBuffer>& writer) const
         writer.StartObject();
         {
           writer.String("unum").Uint(player.uniformNumber);
-          writer.String("team").Int(player.teamNumber);
+          writer.String("team").Uint(player.teamNumber);
           writer.String("isMe").Bool(player.isMe());
           writer.String("activity").Int(static_cast<int>(player.activity));
           writer.String("status").Int(static_cast<int>(player.status));
@@ -51,8 +51,8 @@ void TeamState::writeJson(Writer<StringBuffer>& writer) const
 
 bool PlayerState::isMe() const
 {
-  static int myUniformNumber = Config::getStaticValue<int>("uniform-number");
-  static int myTeamNumber = Config::getStaticValue<int>("team-number");
+  static uchar myUniformNumber = (uchar)Config::getStaticValue<int>("uniform-number");
+  static uchar myTeamNumber = (uchar)Config::getStaticValue<int>("team-number");
 
   return uniformNumber == myUniformNumber && teamNumber == myTeamNumber;
 }

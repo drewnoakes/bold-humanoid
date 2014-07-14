@@ -28,8 +28,8 @@ using namespace Eigen;
 OpenTeamCommunicator::OpenTeamCommunicator(shared_ptr<BehaviourControl> behaviourControl)
 : StateObserver::StateObserver("Open Team Communicator", ThreadId::ThinkLoop),
   d_behaviourControl(behaviourControl),
-  d_teamNumber(Config::getStaticValue<int>("team-number")),
-  d_uniformNumber(Config::getStaticValue<int>("uniform-number")),
+  d_teamNumber((uchar)Config::getStaticValue<int>("team-number")),
+  d_uniformNumber((uchar)Config::getStaticValue<int>("uniform-number")),
   d_localPort(Config::getStaticValue<int>("mitecom.local-port")),
   d_remotePort(Config::getStaticValue<int>("mitecom.remote-port")),
   d_sendPeriodSeconds(Config::getSetting<double>("mitecom.send-period-seconds")),
@@ -204,15 +204,12 @@ void OpenTeamCommunicator::mergePlayerState(PlayerState& state)
   // Remember the last time (i.e. now) that we heard from this robot
   state.updateTime = Clock::getTimestamp();
 
-  auto it = find_if(d_players.begin(), d_players.end(), [&state](PlayerState const& player) { return state.uniformNumber == player.uniformNumber; });
+  auto it = find_if(d_players.begin(), d_players.end(), [&state](PlayerState const& s) { return state.uniformNumber == s.uniformNumber; });
 
   if (it == d_players.end())
   {
-    if (static_cast<unsigned>(state.uniformNumber) != d_uniformNumber ||
-        static_cast<unsigned>(state.teamNumber) != d_teamNumber)
-    {
-      log::info("OpenTeamCommunicator::receiveData") << "First message seen from player " << state.uniformNumber;
-    }
+    if (state.uniformNumber != d_uniformNumber || state.teamNumber != d_teamNumber)
+      log::info("OpenTeamCommunicator::receiveData") << "First message seen from player " << (int)state.uniformNumber;
 
     d_players.push_back(state);
   }

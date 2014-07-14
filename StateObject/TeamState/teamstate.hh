@@ -103,8 +103,8 @@ namespace bold
   class PlayerState
   {
   public:
-    int uniformNumber;
-    int teamNumber;
+    uchar uniformNumber;
+    uchar teamNumber;
 
     PlayerStatus status;
     PlayerRole role;

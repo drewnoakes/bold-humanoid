@@ -35,8 +35,8 @@ namespace bold
     void mergePlayerState(PlayerState& state);
 
     std::shared_ptr<BehaviourControl> d_behaviourControl;
-    const unsigned d_teamNumber;
-    const unsigned d_uniformNumber;
+    const uchar d_teamNumber;
+    const uchar d_uniformNumber;
     const int d_localPort;
     const int d_remotePort;
     Setting<double>* d_sendPeriodSeconds;
