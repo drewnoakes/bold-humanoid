@@ -75,8 +75,6 @@ namespace bold
 
     void start();
 
-    void balance();
-
     std::shared_ptr<WalkEngine> d_walkEngine;
     std::shared_ptr<Balance> d_balance;
 

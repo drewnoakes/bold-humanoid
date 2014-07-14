@@ -248,7 +248,13 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
   {
     d_walkEngine->step();
 
-    balance();
+    // Take a copy, for thread safety
+    auto balance = d_balance;
+
+    if (balance != nullptr)
+      State::make<BalanceState>(balance->computeCorrection(Math::degToRad(d_walkEngine->HIP_PITCH_OFFSET)));
+    else
+      State::set<BalanceState>(nullptr);
   }
 
   State::make<WalkState>(
@@ -256,17 +262,6 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     xAmpDelta, yAmpDelta, turnAmpDelta,
     this,
     d_walkEngine);
-}
-
-void WalkModule::balance()
-{
-  // Take a copy, for thread safety
-  auto balance = d_balance;
-
-  if (balance != nullptr)
-    State::make<BalanceState>(balance->computeCorrection(Math::degToRad(d_walkEngine->HIP_PITCH_OFFSET)));
-  else
-    State::set<BalanceState>(nullptr);
 }
 
 void WalkModule::applyHead(HeadSection* head) { if (!d_isParalysed->getValue()) d_walkEngine->applyHead(head); }
