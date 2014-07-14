@@ -71,11 +71,13 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
   {
     // No state yet (after reset).
     // Give wildcard transitions a chance to set the state.
+    writer.String("entry-wildcard-transitions").StartArray();
     for (auto& transition : d_wildcardTransitions)
     {
       if (tryWildcardTransition(transition, writer))
         break;
     }
+    writer.EndArray();
 
     // If no wildcard transition set the initial state, use the default start state
     if (!d_curState)
