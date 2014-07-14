@@ -35,7 +35,7 @@ void Kick::loadAll()
   d_allKicks.push_back(make_shared<Kick const>(
     "cross-left",
     "./motionscripts/kick-cross-left.json",
-    Bounds2d(Vector2d(-0.1, 0), Vector2d(0.02, 0.2)),
+    Bounds2d(Vector2d(-0.1, 0), Vector2d(0.02, 0.16)),
     Vector2d(1.002, 1.152),
     Vector2d(-0.006, 0.105)
   ));
@@ -43,7 +43,7 @@ void Kick::loadAll()
   d_allKicks.push_back(make_shared<Kick const>(
     "cross-right",
     "./motionscripts/kick-cross-right.json",
-    Bounds2d(Vector2d(-0.02, 0), Vector2d(0.1, 0.2)),
+    Bounds2d(Vector2d(-0.02, 0), Vector2d(0.1, 0.16)),
     Vector2d(-1.002, 1.152),
     Vector2d(0.006, 0.105)
   ));
