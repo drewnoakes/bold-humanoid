@@ -148,7 +148,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   auto lookAtFeet = make_shared<LookAtFeet>("look-at-feet", agent->getHeadModule());
   auto circleBall = make_shared<CircleBall>("circle-ball", agent);
   auto searchBall = make_shared<SearchBall>("search-ball", agent->getWalkModule(), agent->getHeadModule());
-  auto awaitTheirKickOff = make_shared<AwaitTheirKickOff>("await-their-kick-off");
+//  auto awaitTheirKickOff = make_shared<AwaitTheirKickOff>("await-their-kick-off");
   auto support = make_shared<Support>("support", agent->getWalkModule());
 
   // STATES
@@ -167,28 +167,28 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   auto rightKickState = fsm->newState("right-kick", { rightKick });
   auto kickState = fsm->newState("kick", { SequenceOption::make("stop-walking-and-kick-sequence", { stopWalking, kickMotion }) });
   auto yieldState = fsm->newState("yield", { stopWalking, lookAtBall });
-  auto awaitTheirKickOffState = fsm->newState("await-their-kick-off", { stopWalking, locateBall, awaitTheirKickOff });
+//  auto awaitTheirKickOffState = fsm->newState("await-their-kick-off", { stopWalking, locateBall, awaitTheirKickOff });
   auto supportState = fsm->newState("support", { support, lookAtBall });
 
   // NOTE we set either ApproachingBall or AttackingGoal in approachBall option directly
   //  setPlayerActivityInStates(agent, PlayerActivity::ApproachingBall, { approachBallState });
-  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState, awaitTheirKickOffState, locateBallCirclingState, locateBallState, yieldState, supportState });
+  setPlayerActivityInStates(agent, PlayerActivity::Waiting, { standUpState/*, awaitTheirKickOffState*/, locateBallCirclingState, locateBallState, yieldState, supportState });
 
   setPlayerActivityInStates(agent, PlayerActivity::AttackingGoal, { atBallState, turnAroundBallState, kickForwardsState, leftKickState, rightKickState });
 
   // TRANSITIONS
 
-  standUpState
-    ->transitionTo(awaitTheirKickOffState)
-    ->when(isWithinTenSecondsOfTheirKickOff);
+//  standUpState
+//    ->transitionTo(awaitTheirKickOffState)
+//    ->when(isWithinTenSecondsOfTheirKickOff);
 
   standUpState
     ->transitionTo(locateBallState, "standing")
     ->whenTerminated();
 
-  awaitTheirKickOffState
-    ->transitionTo(locateBallState)
-    ->whenTerminated();
+//  awaitTheirKickOffState
+//    ->transitionTo(locateBallState)
+//    ->whenTerminated();
 
   // start approaching the ball when we have the confidence that it's really there
   locateBallState
