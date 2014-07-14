@@ -171,7 +171,7 @@ void Debugger::update()
       for (auto const& mate : team->players())
       {
         if (!mate.isMe())
-          msg << mate.uniformNumber << ", ";
+          msg << (int)mate.uniformNumber << ", ";
       }
       msg << ".";
     }
