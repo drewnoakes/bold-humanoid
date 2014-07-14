@@ -2,6 +2,7 @@
 
 #include "../../Config/config.hh"
 #include "../../State/state.hh"
+#include "../../StateObject/BalanceState/balancestate.hh"
 #include "../../StateObject/OrientationState/orientationstate.hh"
 
 using namespace bold;
@@ -36,6 +37,8 @@ BalanceOffset OrientationBalance::computeCorrection(double targetPitchRads) cons
 
   correction.ankleRollR = static_cast<float>(-rollError * d_ankleRollGain->getValue());
   correction.ankleRollL = static_cast<float>(-rollError * d_ankleRollGain->getValue());
+
+  State::make<BalanceState>(correction);
 
   return correction;
 }

@@ -413,6 +413,7 @@ export var protocols = {
 
     // One per StateObject...
     agentFrameState: 'AgentFrame',
+    balanceState: 'Balance',
     bodyState: 'Body',
     behaviourControlState: 'BehaviourControl',
     bodyControlState: 'BodyControl',
@@ -440,6 +441,7 @@ export var protocols = {
 
 export var allStateProtocols = [
     protocols.agentFrameState,
+    protocols.balanceState,
     protocols.behaviourControlState,
     protocols.bodyControlState,
     protocols.bodyState,

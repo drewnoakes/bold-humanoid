@@ -534,6 +534,25 @@ export interface WorldFrame
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export interface BalanceOffset
+{
+  hipRollR: number;
+  hipRollL: number;
+  kneeR: number;
+  kneeL: number;
+  anklePitchR: number;
+  anklePitchL: number;
+  ankleRollR: number;
+  ankleRollL: number;
+}
+
+export interface Balance
+{
+    offsets: BalanceOffset;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export enum Frame
 {
     Camera = 1,

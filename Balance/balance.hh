@@ -9,8 +9,6 @@ namespace bold
     Orientation = 2
   };
 
-  // TODO is this a state object? could visualise it in Round Table
-
   struct BalanceOffset
   {
     float hipRollR;

@@ -1,6 +1,7 @@
 #include "agent.hh"
 
 #include "../StateObject/AgentFrameState/agentframestate.hh"
+#include "../StateObject/BalanceState/balancestate.hh"
 #include "../StateObject/BehaviourControlState/behaviourcontrolstate.hh"
 #include "../StateObject/BodyControlState/bodycontrolstate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
@@ -29,6 +30,7 @@ using namespace bold;
 void Agent::registerStateTypes()
 {
   State::registerStateType<AgentFrameState>("AgentFrame");
+  State::registerStateType<BalanceState>("Balance");
   State::registerStateType<BehaviourControlState>("BehaviourControl");
   State::registerStateType<BodyControlState>("BodyControl");
   State::registerStateType<BodyState>("Body");

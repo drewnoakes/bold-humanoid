@@ -551,6 +551,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./StateObject/BalanceState/balancestate.cc
+)
+
+add_class(BOLDHUMANOID
   ./StateObject/BehaviourControlState/behaviourcontrolstate.cc
 )
 
