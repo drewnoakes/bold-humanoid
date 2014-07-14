@@ -19,6 +19,9 @@ bool VisualCortex::canBlobBePlayer(Blob const& playerBlob, Vector2d& imagePos, V
 
   auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(playerBlob.mean, d_goalieMarkerHeight->getValue());
 
+  if (!midPointAgentSpace.hasValue())
+    return false;
+
   imagePos = playerBlob.mean;
   agentFramePos = *midPointAgentSpace;
 
