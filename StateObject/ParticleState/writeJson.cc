@@ -1,12 +1,12 @@
 #include "particlestate.hh"
 
+#include "../../JsonWriter/jsonwriter.hh"
+
 using namespace bold;
 using namespace rapidjson;
 
 void ParticleState::writeJson(Writer<StringBuffer>& writer) const
 {
-  auto swapNaN = [](double d, double nanVal) -> double { return std::isnan(d) ? nanVal : d; };
-
   writer.StartObject();
   {
     writer.String("particles");
@@ -20,7 +20,7 @@ void ParticleState::writeJson(Writer<StringBuffer>& writer) const
         writer.Double(particle.x(), "%.3f"); // x
         writer.Double(particle.y(), "%.3f"); // y
         writer.Double(atan2(particle(3), particle(2)), "%.3f"); // theta
-        writer.Double(swapNaN(particle(4), 0)); // weight
+        JsonWriter::swapNaN(writer, particle(4)); // weight
 
         writer.EndArray();
       }

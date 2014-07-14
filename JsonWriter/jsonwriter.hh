@@ -29,6 +29,14 @@ namespace bold
       writer.EndArray();
     }
 
+    static void swapNaN(rapidjson::Writer<rapidjson::StringBuffer>& writer, double d)
+    {
+      if (std::isnan(d))
+        writer.Null();
+      else
+        writer.Double(d, "%.5f");
+    };
+
   private:
     JsonWriter() = delete;
   };

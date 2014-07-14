@@ -1,6 +1,7 @@
 #include "orientationstate.hh"
 
 #include "../../Math/math.hh"
+#include "../../JsonWriter/jsonwriter.hh"
 
 #include <iomanip>
 
@@ -35,21 +36,19 @@ Affine3d OrientationState::withoutYaw() const
 
 void OrientationState::writeJson(Writer<StringBuffer>& writer) const
 {
-  auto swapNaN = [](double d, double nanVal) -> double { return std::isnan(d) ? nanVal : d; };
-
   writer.StartObject();
   {
     writer.String("quaternion");
     writer.StartArray();
-    writer.Double(swapNaN(d_quaternion.x(), 0), "%.5f");
-    writer.Double(swapNaN(d_quaternion.y(), 0), "%.5f");
-    writer.Double(swapNaN(d_quaternion.z(), 0), "%.5f");
-    writer.Double(swapNaN(d_quaternion.w(), 0), "%.5f");
+    JsonWriter::swapNaN(writer, d_quaternion.x());
+    JsonWriter::swapNaN(writer, d_quaternion.y());
+    JsonWriter::swapNaN(writer, d_quaternion.z());
+    JsonWriter::swapNaN(writer, d_quaternion.w());
     writer.EndArray();
 
-    writer.String("pitch").Double(swapNaN(d_pitch, 0));
-    writer.String("roll").Double(swapNaN(d_roll, 0));
-    writer.String("yaw").Double(swapNaN(d_yaw, 0));
+    writer.String("pitch"); JsonWriter::swapNaN(writer, d_pitch);
+    writer.String("roll");  JsonWriter::swapNaN(writer, d_roll);
+    writer.String("yaw");   JsonWriter::swapNaN(writer, d_yaw);
   }
   writer.EndObject();
 }

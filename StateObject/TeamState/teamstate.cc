@@ -1,6 +1,7 @@
 #include "teamstate.hh"
 
 #include "../../Config/config.hh"
+#include "../../JsonWriter/jsonwriter.hh"
 #include "../../StateObserver/OpenTeamCommunicator/openteamcommunicator.hh"
 
 using namespace bold;
@@ -10,8 +11,6 @@ using namespace std;
 
 void TeamState::writeJson(Writer<StringBuffer>& writer) const
 {
-  auto swapNaN = [](double d, double nanVal) -> double { return std::isnan(d) ? nanVal : d; };
-
   writer.StartObject();
   {
     writer.String("players");
@@ -28,11 +27,11 @@ void TeamState::writeJson(Writer<StringBuffer>& writer) const
           writer.String("status").Int(static_cast<int>(player.status));
           writer.String("role").Int(static_cast<int>(player.role));
           writer.String("pos")
-            .StartArray()
-              .Double(swapNaN(player.pos.x(), 0))
-              .Double(swapNaN(player.pos.y(), 0))
-              .Double(swapNaN(player.pos.theta(), 0))
-            .EndArray();
+            .StartArray();
+          JsonWriter::swapNaN(writer, player.pos.x());
+          JsonWriter::swapNaN(writer, player.pos.y());
+          JsonWriter::swapNaN(writer, player.pos.theta());
+          writer.EndArray();
           writer.String("posConfidence").Double(player.posConfidence);
           writer.String("ballRelative").StartArray();
           {
