@@ -91,7 +91,8 @@ void Voice::say(SpeechTask const& task)
 
 void Voice::sayOneOf(initializer_list<string> const& messages)
 {
-  size_t index = rand() % messages.size();
+  static default_random_engine randomness((uint)time(0));
+  size_t index = randomness() % messages.size();
   string message = *(messages.begin() + index);
   say(message);
 }
