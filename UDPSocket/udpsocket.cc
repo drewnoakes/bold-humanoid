@@ -22,7 +22,7 @@ using namespace std;
 
 UDPSocket::UDPSocket()
 {
-  d_socket = socket(AF_INET, SOCK_DGRAM, 0);
+  d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
   if (d_socket == -1)
   {
