@@ -2,7 +2,6 @@
 
 #include "../../Config/config.hh"
 #include "../../State/state.hh"
-#include "../../StateObject/BalanceState/balancestate.hh"
 #include "../../StateObject/OrientationState/orientationstate.hh"
 
 using namespace bold;
@@ -22,7 +21,13 @@ BalanceOffset OrientationBalance::computeCorrection(double targetPitchRads) cons
   ASSERT(orientation);
 
   double rollError = -orientation->getRollAngle();
-  double pitchError = targetPitchRads - orientation->getPitchAngle();
+  double pitchError = -targetPitchRads - orientation->getPitchAngle();
+
+  std::cout << "targetPitch=" << (int)Math::radToDeg(targetPitchRads)
+            << " currPitch="  << (int)Math::radToDeg(orientation->getPitchAngle())
+            << " rollErr="    << (int)Math::radToDeg(rollError)
+            << " pitchError=" << (int)Math::radToDeg(pitchError)
+            << std::endl;
 
   auto correction = BalanceOffset();
 

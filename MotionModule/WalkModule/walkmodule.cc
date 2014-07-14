@@ -285,8 +285,6 @@ void WalkModule::applyLegs(LegSection* legs)
       ? (double)d_stabilisationCyclesRemaining / d_stabilisationCycleCount
       : 1.0;
 
-    cout << "ratio = " << ratio << endl;
-
     auto const& correction = balanceState->offsets();
 
     legs->hipRollRight()->setModulationOffset(static_cast<short>(round(ratio * correction.hipRollR)));

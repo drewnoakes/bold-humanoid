@@ -2,7 +2,6 @@
 
 #include "../../Config/config.hh"
 #include "../../State/state.hh"
-#include "../../StateObject/BalanceState/balancestate.hh"
 #include "../../StateObject/HardwareState/hardwarestate.hh"
 
 using namespace bold;
