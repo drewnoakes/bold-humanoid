@@ -92,8 +92,7 @@ vector<shared_ptr<Option>> GameOver::runPolicy(rapidjson::Writer<rapidjson::Stri
     {
       return setRandomScript({
         "./motionscripts/body-language-no.json",
-        "./motionscripts/body-language-whoops.json",
-        "./motionscripts/body-language-pelvic-thrust.json"
+        "./motionscripts/body-language-whoops.json"
       });
     }
     case GameResult::Undecided:
