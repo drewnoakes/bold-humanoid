@@ -51,6 +51,7 @@ WalkEngine::WalkEngine()
   d_headGainI = Config::getSetting<int>("walk-engine.gains.head-i-gain");
   d_headGainD = Config::getSetting<int>("walk-engine.gains.head-d-gain");
 
+  // Initialise dynamic control variables to sensible initial values
   HIP_PITCH_OFFSET = 13.0;
   X_MOVE_AMPLITUDE = 0;
   Y_MOVE_AMPLITUDE = 0;

@@ -186,23 +186,28 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
   }
   else
   {
-    // It may be that we've had new walking params set during the
-    // stabilisation phase.
+    // It may be that we've had new walking params set during the stabilisation phase
     if (d_status == WalkStatus::Stabilising)
       d_status = WalkStatus::Walking;
 
     ASSERT(d_status == WalkStatus::Walking);
 
+    //
+    // SET WALK MOVEMENT PARAMETERS
+    //
+
     d_walkEngine->X_MOVE_AMPLITUDE = xAmp;
     d_walkEngine->Y_MOVE_AMPLITUDE = yAmp;
     d_walkEngine->A_MOVE_AMPLITUDE = turnAmp;
 
-    // TODO allow swappable implementations of a WalkPitchPosture, and calculate every cycle on the motion thread
+    //
+    // SET HIP PITCH PARAMETERS
+    //
 
+    // TODO allow swappable implementations of a WalkPitchPosture, and calculate every cycle on the motion thread
     // TODO this doesn't support walking backwards (-ve x)
     // TODO examine using the acceleration (delta xAmp) as a input signal
 
-    // Lerp hip angle based on forward speed, or turn speed (whichever is greatest)
 //    // TODO revisit this treatment of xAmp and turnAmp as though they're the same units
 //     double alpha = max(xAmp, turnAmp) / d_maxHipPitchAtSpeed->getValue();
     double alpha = xAmp / d_maxHipPitchAtSpeed->getValue();
