@@ -1,0 +1,38 @@
+{
+  "name": "offset-tune",
+  "stages": [
+    {
+      "pGains": {
+        "shoulder-pitch": 64,
+        "shoulder-roll": 12,
+        "elbow": 64,
+        "hip-yaw": 64,
+        "hip-roll": 64,
+        "hip-pitch": 64,
+        "knee": 64,
+        "ankle-pitch": 64,
+        "ankle-roll": 64,
+        "head-pan": 64,
+        "head-tilt": 64
+      },
+      "keyFrames": [
+        {
+          "moveCycles": 125,
+          "values": {
+            "shoulder-pitch": 2048,
+            "shoulder-roll": 1536,
+            "elbow": 1024,
+            "hip-yaw": 2048,
+            "hip-roll": 2048,
+            "hip-pitch": 2048,
+            "knee": 2048,
+            "ankle-pitch": 2048,
+            "ankle-roll": 2048,
+            "head-pan": 2048,
+            "head-tilt": 2048
+          }
+        }
+      ]
+    }
+  ]
+}
