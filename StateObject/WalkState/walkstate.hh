@@ -20,21 +20,6 @@ namespace bold
     bool isRunning() const { return d_isRunning; }
     WalkStatus getStatus() const { return d_status; }
 
-    // From walk engine
-
-    double getTargetX() const { return d_targetX; }
-    double getTargetY() const { return d_targetY; }
-    double getTargetTurn() const { return d_targetTurn; }
-
-    double getCurrentX() const { return d_currentX; }
-    double getCurrentY() const { return d_currentY; }
-    double getCurrentTurn() const { return d_currentTurn; }
-
-    int getCurrentPhase() const { return d_currentPhase; }
-
-    double getBodySwingY() const { return d_bodySwingY; }
-    double getBodySwingZ() const { return d_bodySwingZ; }
-
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:

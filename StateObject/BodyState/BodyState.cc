@@ -1,7 +1,6 @@
 #include "bodystate.ih"
 
 #include "../../BodyControl/bodycontrol.hh"
-#include "../../MX28Snapshot/mx28snapshot.hh"
 
 BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, array<double,23> const& angles, array<short,21> const& positionValueDiffs, ulong cycleNumber)
 : d_positionValueDiffById(positionValueDiffs),
