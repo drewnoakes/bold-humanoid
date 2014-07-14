@@ -25,57 +25,7 @@
           }
         },
         {
-          "pauseCycles": 250,
-          "moveCycles": 10,
-          "values": {
-            "shoulder-pitch-r": 101,
-            "shoulder-pitch-l": 2598,
-            "shoulder-roll-r": 1632,
-            "shoulder-roll-l": 2251,
-            "elbow-r": 1003,
-            "elbow-l": 1715,
-            "hip-yaw": 2048,
-            "hip-roll-r": 2050,
-            "hip-roll-l": 2044,
-            "hip-pitch-r": 1720,
-            "hip-pitch-l": 2049,
-            "knee-r": 3230,
-            "knee-l": 2070,
-            "ankle-pitch-r": 2197,
-            "ankle-pitch-l": 2009,
-            "ankle-roll-r": 2037,
-            "ankle-roll-l": 1369,
-            "head-pan": 2048,
-            "head-tilt": 2161
-          }
-        },
-        {
-          "pauseCycles": 250,
-          "moveCycles": 10,
-          "values": {
-            "shoulder-pitch-r": 101,
-            "shoulder-pitch-l": 2598,
-            "shoulder-roll-r": 1632,
-            "shoulder-roll-l": 2251,
-            "elbow-r": 1003,
-            "elbow-l": 1715,
-            "hip-yaw": 2048,
-            "hip-roll-r": 2050,
-            "hip-roll-l": 2044,
-            "hip-pitch-r": 1720,
-            "hip-pitch-l": 2049,
-            "knee-r": 3230,
-            "knee-l": 2070,
-            "ankle-pitch-r": 2197,
-            "ankle-pitch-l": 2009,
-            "ankle-roll-r": 2037,
-            "ankle-roll-l": 1369,
-            "head-pan": 2048,
-            "head-tilt": 2161
-          }
-        },
-        {
-          "pauseCycles": 250,
+          "pauseCycles": 750,
           "moveCycles": 10,
           "values": {
             "shoulder-pitch-r": 101,
@@ -101,7 +51,7 @@
         },
         {
           "pauseCycles": 5,
-          "moveCycles": 10,
+          "moveCycles": 20,
           "values": {
             "shoulder-pitch-r": 113,
             "shoulder-pitch-l": 1974,
@@ -127,7 +77,7 @@
         },
         {
           "pauseCycles": 5,
-          "moveCycles": 10,
+          "moveCycles": 20,
           "values": {
             "shoulder-pitch-r": 1046,
             "shoulder-pitch-l": 1974,
