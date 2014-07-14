@@ -9,10 +9,10 @@ using namespace bold;
 
 GyroBalance::GyroBalance()
 {
-  d_kneeGain       = Config::getSetting<double>("walk-engine.balance.gyro.knee-gain");
-  d_anklePitchGain = Config::getSetting<double>("walk-engine.balance.gyro.ankle-pitch-gain");
-  d_hipRollGain    = Config::getSetting<double>("walk-engine.balance.gyro.hip-roll-gain");
-  d_ankleRollGain  = Config::getSetting<double>("walk-engine.balance.gyro.ankle-roll-gain");
+  d_kneeGain       = Config::getSetting<double>("balance.gyro.knee-gain");
+  d_anklePitchGain = Config::getSetting<double>("balance.gyro.ankle-pitch-gain");
+  d_hipRollGain    = Config::getSetting<double>("balance.gyro.hip-roll-gain");
+  d_ankleRollGain  = Config::getSetting<double>("balance.gyro.ankle-roll-gain");
 }
 
 BalanceOffset GyroBalance::computeCorrection(double targetPitchRads) const

@@ -9,10 +9,10 @@ using namespace bold;
 
 OrientationBalance::OrientationBalance()
 {
-  d_kneeGain       = Config::getSetting<double>("walk-engine.balance.orientation.knee-gain");
-  d_anklePitchGain = Config::getSetting<double>("walk-engine.balance.orientation.ankle-pitch-gain");
-  d_hipRollGain    = Config::getSetting<double>("walk-engine.balance.orientation.hip-roll-gain");
-  d_ankleRollGain  = Config::getSetting<double>("walk-engine.balance.orientation.ankle-roll-gain");
+  d_kneeGain       = Config::getSetting<double>("balance.orientation.knee-gain");
+  d_anklePitchGain = Config::getSetting<double>("balance.orientation.ankle-pitch-gain");
+  d_hipRollGain    = Config::getSetting<double>("balance.orientation.hip-roll-gain");
+  d_ankleRollGain  = Config::getSetting<double>("balance.orientation.ankle-roll-gain");
 }
 
 BalanceOffset OrientationBalance::computeCorrection(double targetPitchRads) const

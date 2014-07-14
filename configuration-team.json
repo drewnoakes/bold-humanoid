@@ -304,21 +304,6 @@
       "arm-swing-gain": 1.5,
       "step-fb-ratio": 0.28
     },
-    "balance": {
-      "mode": 1,
-      "gyro": {
-        "knee-gain": 1.2,
-        "ankle-pitch-gain": 3.6,
-        "hip-roll-gain": 2.0,
-        "ankle-roll-gain": 4.0
-      },
-      "orientation": {
-        "knee-gain": 1.2,
-        "ankle-pitch-gain": 3.6,
-        "hip-roll-gain": 2.0,
-        "ankle-roll-gain": 4.0
-      }
-    },
     "gains": {
       "leg-p-gain": 32,
       "leg-i-gain": 0,
@@ -341,6 +326,21 @@
     "max-hip-pitch": 15,
     "fwd-acc-hip-pitch-factor": 2.0,
     "stabilisation-time-ms": 300
+  },
+  "balance": {
+    "mode": 1,
+    "gyro": {
+      "knee-gain": 1.2,
+      "ankle-pitch-gain": 3.6,
+      "hip-roll-gain": 2.0,
+      "ankle-roll-gain": 4.0
+    },
+    "orientation": {
+      "knee-gain": 1.2,
+      "ankle-pitch-gain": 3.6,
+      "hip-roll-gain": 2.0,
+      "ankle-roll-gain": 4.0
+    }
   },
   "kick": {
     "max-ball-distance": 0.2

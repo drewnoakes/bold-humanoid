@@ -301,21 +301,6 @@
       "arm-swing-gain":   { "type": "double" },
       "step-fb-ratio":    { "type": "double" }
     },
-    "balance": {
-      "mode": { "type": "enum", "description": "Balance mode", "values": { "none": 0, "gyro": 1, "orientation": 2 } },
-      "gyro": {
-        "knee-gain":        { "type": "double", "min": 0 },
-        "ankle-pitch-gain": { "type": "double", "min": 0 },
-        "hip-roll-gain":    { "type": "double", "min": 0 },
-        "ankle-roll-gain":  { "type": "double", "min": 0 }
-      },
-      "orientation": {
-        "knee-gain":        { "type": "double" },
-        "ankle-pitch-gain": { "type": "double" },
-        "hip-roll-gain":    { "type": "double" },
-        "ankle-roll-gain":  { "type": "double" }
-      }
-    },
     "gains": {
       "leg-p-gain": { "type": "int", "min": 0, "max": 128 },
       "leg-i-gain": { "type": "int", "min": 0, "max": 128 },
@@ -338,6 +323,21 @@
     "max-hip-pitch": { "type": "double", "description": "Max hip pitch" },
     "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Fwd acc hip pitch factor" },
     "stabilisation-time-ms":    { "type": "int", "min": 0 }
+  },
+  "balance": {
+    "mode": { "type": "enum", "description": "Balance mode", "values": { "none": 0, "gyro": 1, "orientation": 2 } },
+    "gyro": {
+      "knee-gain":        { "type": "double", "min": 0 },
+      "ankle-pitch-gain": { "type": "double", "min": 0 },
+      "hip-roll-gain":    { "type": "double", "min": 0 },
+      "ankle-roll-gain":  { "type": "double", "min": 0 }
+    },
+    "orientation": {
+      "knee-gain":        { "type": "double" },
+      "ankle-pitch-gain": { "type": "double" },
+      "hip-roll-gain":    { "type": "double" },
+      "ankle-roll-gain":  { "type": "double" }
+    }
   },
   "kick": {
     "max-ball-distance": { "type": "double", "min": 0, "max": 0.4 }
