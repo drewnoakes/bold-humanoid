@@ -478,17 +478,17 @@ void WalkEngine::balance(double ratio)
   {
     auto correction = balance->computeCorrection(Math::degToRad(HIP_PITCH_OFFSET));
 
-    d_outValue[1]  += (int)round(ratio * correction.hipRollR);
-    d_outValue[7]  += (int)round(ratio * correction.hipRollL);
+    d_outValue[1]  += static_cast<short>(round(ratio * correction.hipRollR));
+    d_outValue[7]  += static_cast<short>(round(ratio * correction.hipRollL));
 
-    d_outValue[3]  += (int)round(ratio * correction.kneeR);
-    d_outValue[9]  += (int)round(ratio * correction.kneeL);
+    d_outValue[3]  += static_cast<short>(round(ratio * correction.kneeR));
+    d_outValue[9]  += static_cast<short>(round(ratio * correction.kneeL));
 
-    d_outValue[4]  += (int)round(ratio * correction.anklePitchR);
-    d_outValue[10] += (int)round(ratio * correction.anklePitchL);
+    d_outValue[4]  += static_cast<short>(round(ratio * correction.anklePitchR));
+    d_outValue[10] += static_cast<short>(round(ratio * correction.anklePitchL));
 
-    d_outValue[5]  += (int)round(ratio * correction.ankleRollR);
-    d_outValue[11] += (int)round(ratio * correction.ankleRollL);
+    d_outValue[5]  += static_cast<short>(round(ratio * correction.ankleRollR));
+    d_outValue[11] += static_cast<short>(round(ratio * correction.ankleRollL));
   }
   else
   {

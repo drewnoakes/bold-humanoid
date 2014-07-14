@@ -28,17 +28,17 @@ BalanceOffset GyroBalance::computeCorrection(double targetPitchRads) const
 
   auto correction = BalanceOffset();
 
-  correction.hipRollR = static_cast<float>(-rlErr * d_hipRollGain->getValue());
-  correction.hipRollL = static_cast<float>(-rlErr * d_hipRollGain->getValue());
+  correction.hipRollR    = static_cast<short>(round(-rlErr * d_hipRollGain->getValue()));
+  correction.hipRollL    = static_cast<short>(round(-rlErr * d_hipRollGain->getValue()));
 
-  correction.kneeR = static_cast<float>(-fbErr * d_kneeGain->getValue());
-  correction.kneeL = static_cast<float>(fbErr * d_kneeGain->getValue());
+  correction.kneeR       = static_cast<short>(round(-fbErr * d_kneeGain->getValue()));
+  correction.kneeL       = static_cast<short>(round( fbErr * d_kneeGain->getValue()));
 
-  correction.anklePitchR = static_cast<float>(fbErr * d_anklePitchGain->getValue());
-  correction.anklePitchL = static_cast<float>(-fbErr * d_anklePitchGain->getValue());
+  correction.anklePitchR = static_cast<short>(round( fbErr * d_anklePitchGain->getValue()));
+  correction.anklePitchL = static_cast<short>(round(-fbErr * d_anklePitchGain->getValue()));
 
-  correction.ankleRollR = static_cast<float>(-rlErr * d_ankleRollGain->getValue());
-  correction.ankleRollL = static_cast<float>(-rlErr * d_ankleRollGain->getValue());
+  correction.ankleRollR  = static_cast<short>(round(-rlErr * d_ankleRollGain->getValue()));
+  correction.ankleRollL  = static_cast<short>(round(-rlErr * d_ankleRollGain->getValue()));
 
   State::make<BalanceState>(correction);
 

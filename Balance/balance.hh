@@ -11,14 +11,14 @@ namespace bold
 
   struct BalanceOffset
   {
-    float hipRollR;
-    float hipRollL;
-    float kneeR;
-    float kneeL;
-    float anklePitchR;
-    float anklePitchL;
-    float ankleRollR;
-    float ankleRollL;
+    short hipRollR;
+    short hipRollL;
+    short kneeR;
+    short kneeL;
+    short anklePitchR;
+    short anklePitchL;
+    short ankleRollR;
+    short ankleRollL;
   };
 
   class Balance

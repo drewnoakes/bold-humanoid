@@ -26,17 +26,17 @@ BalanceOffset OrientationBalance::computeCorrection(double targetPitchRads) cons
 
   auto correction = BalanceOffset();
 
-  correction.hipRollR = static_cast<float>(-rollError * d_hipRollGain->getValue());
-  correction.hipRollL = static_cast<float>(-rollError * d_hipRollGain->getValue());
+  correction.hipRollR    = static_cast<short>(round(-rollError * d_hipRollGain->getValue()));
+  correction.hipRollL    = static_cast<short>(round(-rollError * d_hipRollGain->getValue()));
 
-  correction.kneeR = static_cast<float>(-pitchError * d_kneeGain->getValue());
-  correction.kneeL = static_cast<float>(pitchError * d_kneeGain->getValue());
+  correction.kneeR       = static_cast<short>(round(-pitchError * d_kneeGain->getValue()));
+  correction.kneeL       = static_cast<short>(round( pitchError * d_kneeGain->getValue()));
 
-  correction.anklePitchR = static_cast<float>(pitchError * d_anklePitchGain->getValue());
-  correction.anklePitchL = static_cast<float>(-pitchError * d_anklePitchGain->getValue());
+  correction.anklePitchR = static_cast<short>(round( pitchError * d_anklePitchGain->getValue()));
+  correction.anklePitchL = static_cast<short>(round(-pitchError * d_anklePitchGain->getValue()));
 
-  correction.ankleRollR = static_cast<float>(-rollError * d_ankleRollGain->getValue());
-  correction.ankleRollL = static_cast<float>(-rollError * d_ankleRollGain->getValue());
+  correction.ankleRollR  = static_cast<short>(round(-rollError * d_ankleRollGain->getValue()));
+  correction.ankleRollL  = static_cast<short>(round(-rollError * d_ankleRollGain->getValue()));
 
   State::make<BalanceState>(correction);
 
