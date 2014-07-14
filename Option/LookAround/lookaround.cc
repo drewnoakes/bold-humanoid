@@ -116,6 +116,13 @@ void LookAround::reset()
   d_phase = 0.25;
 }
 
+void LookAround::setPhase(double phase)
+{
+  ASSERT(phase >= 0);
+  ASSERT(phase < d_stages.size());
+  d_phase = phase;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function<double(uint)> LookAround::speedIfBallVisible(double scaleWhenVisible, double scaleWhenNotVisible, double loopExp)

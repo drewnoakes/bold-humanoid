@@ -32,6 +32,10 @@ namespace bold
 
     virtual void reset();
 
+    void setPhase(double phase);
+
+    double getPhase() const { return d_phase; };
+
   private:
     std::vector<LookAroundStage> d_stages;
     std::function<double(uint)> d_speedCallback;
