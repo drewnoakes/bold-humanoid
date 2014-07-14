@@ -9,9 +9,10 @@ import constants = require('constants');
 import control = require('control');
 import data = require('data');
 import DOMTemplate = require('DOMTemplate');
-import util = require('util');
+import Legend = require('controls/Legend');
 import state = require('state');
 import TabControl = require('controls/TabControl');
+import util = require('util');
 import Module = require('Module');
 
 var radarSize = 200,
@@ -44,10 +45,15 @@ class WalkModule extends Module
     private xAmpTargetSeries: TimeSeries;
     private angleCurrentSeries: TimeSeries;
     private angleTargetSeries: TimeSeries;
+    private hipRollSeries: TimeSeries;
+    private kneeSeries: TimeSeries;
+    private anklePitchSeries: TimeSeries;
+    private ankleRollSeries: TimeSeries;
 
     private pitchChart: SmoothieChart;
     private xAmpChart: SmoothieChart;
     private turnChart: SmoothieChart;
+    private balanceChart: SmoothieChart;
 
     constructor()
     {
@@ -75,6 +81,13 @@ class WalkModule extends Module
             }
         ));
 
+        this.closeables.add(new data.Subscription<state.Balance>(
+            constants.protocols.balanceState,
+            {
+                onmessage: this.onBalanceState.bind(this)
+            }
+        ));
+
         this.drawRadar();
 
         this.pitchSeries = new TimeSeries();
@@ -82,6 +95,10 @@ class WalkModule extends Module
         this.xAmpTargetSeries = new TimeSeries();
         this.angleCurrentSeries = new TimeSeries();
         this.angleTargetSeries = new TimeSeries();
+        this.hipRollSeries = new TimeSeries();
+        this.kneeSeries = new TimeSeries();
+        this.anklePitchSeries = new TimeSeries();
+        this.ankleRollSeries = new TimeSeries();
 
         this.pitchChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 10, maxValue: 15}));
         this.pitchChart.addTimeSeries(this.pitchSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
@@ -97,6 +114,27 @@ class WalkModule extends Module
         this.turnChart.addTimeSeries(this.angleTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
         this.turnChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.turn-chart'), /*delayMs*/ 0);
 
+        var hipRollColour = 'red',
+            kneeColour = 'yellow',
+            anklePitchColour = 'green',
+            ankleRollColour = 'orange';
+
+        var balanceLegend = new Legend([
+            { colour: hipRollColour, name: 'Hip Roll' },
+            { colour: kneeColour, name: 'Knee' },
+            { colour: anklePitchColour, name: 'Ankle Pitch' },
+            { colour: ankleRollColour, name: 'Ankle Roll' },
+        ]);
+
+        templateRoot.querySelector('.balance-legend').appendChild(balanceLegend.element);
+
+        this.balanceChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {}));
+        this.balanceChart.addTimeSeries(this.hipRollSeries,    { lineWidth: 1, strokeStyle: hipRollColour });
+        this.balanceChart.addTimeSeries(this.kneeSeries,       { lineWidth: 1, strokeStyle: kneeColour });
+        this.balanceChart.addTimeSeries(this.anklePitchSeries, { lineWidth: 1, strokeStyle: anklePitchColour });
+        this.balanceChart.addTimeSeries(this.ankleRollSeries,  { lineWidth: 1, strokeStyle: ankleRollColour });
+        this.balanceChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.balance-chart'), /*delayMs*/ 0);
+
         new TabControl(<HTMLDListElement>templateRoot.querySelector('dl.tab-control'));
     }
 
@@ -105,10 +143,23 @@ class WalkModule extends Module
         this.pitchChart.stop();
         this.xAmpChart.stop();
         this.turnChart.stop();
+        this.balanceChart.stop();
 
         delete this.pitchChart;
         delete this.xAmpChart;
         delete this.turnChart;
+        delete this.balanceChart;
+
+        delete this.pitchSeries;
+        delete this.xAmpCurrentSeries;
+        delete this.xAmpTargetSeries;
+        delete this.angleCurrentSeries;
+        delete this.angleTargetSeries;
+        delete this.hipRollSeries;
+        delete this.kneeSeries;
+        delete this.anklePitchSeries;
+        delete this.ankleRollSeries;
+
         delete this.radarCanvas;
         delete this.runningIndicator;
     }
@@ -180,6 +231,15 @@ class WalkModule extends Module
         context.moveTo(mid, mid);
         context.lineTo(mid + (data.current[1] * moveScale), mid - (data.current[0] * moveScale));
         context.stroke();
+    }
+
+    private onBalanceState(data: state.Balance)
+    {
+        var time = new Date().getTime();
+        this.hipRollSeries.append(time, data.offsets.hipRoll);
+        this.kneeSeries.append(time, data.offsets.knee);
+        this.anklePitchSeries.append(time, data.offsets.anklePitch);
+        this.ankleRollSeries.append(time, data.offsets.ankleRoll);
     }
 
     private onWalkState(data: state.Walk)

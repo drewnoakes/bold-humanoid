@@ -912,6 +912,18 @@ div.module.walk div.connection-indicator
   line-height: 20px;
 }
 
+div.module.walk canvas.radar
+{
+  display: inline-block;
+  vertical-align: top;
+}
+
+div.module.walk div.chart-container
+{
+  display: inline-block;
+  width: 440px;
+}
+
 /********************************************************************/
 
 div.module.game div.play-mode

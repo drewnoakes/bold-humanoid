@@ -124,13 +124,17 @@
     <script id="walk-module-template" type="text/x-handlebars-template">
         <div>
             <div class="connection-indicator connecting" style="position:absolute"></div>
-            <canvas class="radar" width="{{radarSize}}" height="{{radarSize}}" style="float:left;"></canvas>
-            <h2>hip pitch</h2>
-            <canvas class="pitch-chart" width="{{chartWidth}}" height="{{chartHeight}}" style="float: right;"></canvas>
-            <h2>forward speed</h2>
-            <canvas class="x-amp-chart" width="{{chartWidth}}" height="{{chartHeight}}" style="float: right;"></canvas>
-            <h2>turn speed</h2>
-            <canvas class="turn-chart" width="{{chartWidth}}" height="{{chartHeight}}" style="float: right;"></canvas>
+            <canvas class="radar" width="{{radarSize}}" height="{{radarSize}}"></canvas><div class="chart-container">
+                <h2>hip pitch</h2>
+                <canvas class="pitch-chart" width="{{chartWidth}}" height="{{chartHeight}}"></canvas>
+                <h2>forward speed</h2>
+                <canvas class="x-amp-chart" width="{{chartWidth}}" height="{{chartHeight}}"></canvas>
+                <h2>turn speed</h2>
+                <canvas class="turn-chart" width="{{chartWidth}}" height="{{chartHeight}}"></canvas>
+                <h2>balance</h2>
+                <canvas class="balance-chart" width="{{chartWidth}}" height="{{chartHeight}}"></canvas>
+                <div class="balance-legend"></div>
+            </div>
 
             <br clear="all">
 
