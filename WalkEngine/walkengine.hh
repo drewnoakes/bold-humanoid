@@ -141,7 +141,7 @@ namespace bold
 
     bool d_canStopNow;
 
-    int d_outValue[14];
+    std::array<int,14> d_outValue;
 
     // initial pose
     Setting<double>* X_OFFSET;
