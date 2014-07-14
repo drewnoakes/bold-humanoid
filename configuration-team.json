@@ -390,7 +390,7 @@
     },
     "approach-ball": {
       "turn-speed-scale": 18.0,
-      "max-forward-speed": 40.0,
+      "max-forward-speed": 30.0,
       "min-forward-speed": 9.0,
       "brake-distance": 0.6,
       "stop-distance": 0.15,
