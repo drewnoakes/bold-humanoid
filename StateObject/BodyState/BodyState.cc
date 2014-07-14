@@ -30,8 +30,10 @@ BodyState::BodyState(shared_ptr<BodyModel const> const& bodyModel, shared_ptr<Ha
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
     auto const& joint = hardwareState->getMX28State(jointId);
+    JointControl* jointControl = bodyControl->getJoint((JointId)jointId);
+
     angles[jointId] = joint.presentPosition;
-    d_positionValueDiffById[jointId] = (short)bodyControl->getJoint((JointId)jointId)->getValue() - joint.presentPositionValue;
+    d_positionValueDiffById[jointId] = (short)jointControl->getValue() + jointControl->getModulationOffset() - joint.presentPositionValue;
   }
 
   static auto tiltSetting = Config::getSetting<double>("camera.calibration.tilt-angle-degrees");
