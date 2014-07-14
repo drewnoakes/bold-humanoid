@@ -597,7 +597,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
         {
           // Specify the goal position, and apply any calibration offset
           int goalPosition = joint->getValue() + d_offsets[joint->getId()];
-          ushort value = static_cast<ushort>(Math::clamp(goalPosition, 0, (int)MX28::MAX_VALUE));
+          ushort value = MX28::clampValue(goalPosition);
 
           ASSERT(addrRange.contains(MX28::P_GOAL_POSITION_H));
           parameters[n++] = CM730::getLowByte(value);
