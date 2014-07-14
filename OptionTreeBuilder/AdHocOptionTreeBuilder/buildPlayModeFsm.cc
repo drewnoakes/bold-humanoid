@@ -62,6 +62,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
     ->transitionTo(playingState, "left-button")
     ->when([modeButton] { return modeButton->isPressedForMillis(80); });
 
+  penalisedState
+    ->transitionTo(playingState, "left-button")
+    ->when([modeButton] { return modeButton->isPressedForMillis(80); });
+
   //
   // GAME CONTROLLER PLAY MODE
   //
