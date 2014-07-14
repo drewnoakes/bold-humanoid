@@ -40,7 +40,8 @@ class WalkModule extends Module
     private runningIndicator: HTMLDivElement;
     private radarCanvas: HTMLCanvasElement;
 
-    private pitchSeries: TimeSeries;
+    private pitchCurrentSeries: TimeSeries;
+    private pitchTargetSeries: TimeSeries;
     private xAmpCurrentSeries: TimeSeries;
     private xAmpTargetSeries: TimeSeries;
     private angleCurrentSeries: TimeSeries;
@@ -90,7 +91,8 @@ class WalkModule extends Module
 
         this.drawRadar();
 
-        this.pitchSeries = new TimeSeries();
+        this.pitchCurrentSeries = new TimeSeries();
+        this.pitchTargetSeries = new TimeSeries();
         this.xAmpCurrentSeries = new TimeSeries();
         this.xAmpTargetSeries = new TimeSeries();
         this.angleCurrentSeries = new TimeSeries();
@@ -101,7 +103,8 @@ class WalkModule extends Module
         this.ankleRollSeries = new TimeSeries();
 
         this.pitchChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 10, maxValue: 15}));
-        this.pitchChart.addTimeSeries(this.pitchSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
+        this.pitchChart.addTimeSeries(this.pitchCurrentSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
+        this.pitchChart.addTimeSeries(this.pitchTargetSeries, { strokeStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 });
         this.pitchChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.pitch-chart'), /*delayMs*/ 0);
 
         this.xAmpChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 0, maxValue: 40}));
@@ -150,7 +153,8 @@ class WalkModule extends Module
         delete this.turnChart;
         delete this.balanceChart;
 
-        delete this.pitchSeries;
+        delete this.pitchCurrentSeries;
+        delete this.pitchTargetSeries;
         delete this.xAmpCurrentSeries;
         delete this.xAmpTargetSeries;
         delete this.angleCurrentSeries;
@@ -258,7 +262,8 @@ class WalkModule extends Module
         }
 
         var time = new Date().getTime();
-        this.pitchSeries.append(time, data.hipPitch);
+        this.pitchCurrentSeries.append(time, data.hipPitch.current);
+        this.pitchTargetSeries.append(time, data.hipPitch.target);
         this.xAmpCurrentSeries.append(time, data.current[0]);
         this.xAmpTargetSeries.append(time, data.target[0]);
         this.angleCurrentSeries.append(time, data.current[2]);

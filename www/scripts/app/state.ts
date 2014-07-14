@@ -40,7 +40,7 @@ export interface Walk
     /** [x,y,turn] */
     delta: number[];
     phase: number;
-    hipPitch: number;
+    hipPitch: { target: number; current: number; delta: number };
     bodySwingY: number;
     bodySwingZ: number;
 }

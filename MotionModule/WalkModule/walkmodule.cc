@@ -34,6 +34,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_xAmp(0, 1),
   d_yAmp(0, 1),
   d_turnAmp(0, 1),
+  d_hipPitch(0, 1),
   d_isParalysed(Config::getSetting<bool>("walk-module.is-paralysed")),
   d_maxHipPitchAtSpeed(Config::getSetting<double>("walk-module.max-hip-pitch-at-speed")),
   d_minHipPitch(Config::getSetting<double>("walk-module.min-hip-pitch")),
@@ -151,7 +152,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     // Indicate we no longer need to be committed
     setCompletedFlag();
 
-    State::make<WalkState>(0, 0, 0, 0, 0, 0, this, d_walkEngine);
+    State::make<WalkState>(0, 0, 0, 0, 0, 0, 0, 0, this, d_walkEngine);
 
     return;
   }
@@ -223,13 +224,12 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     d_walkEngine->A_MOVE_AMPLITUDE = turnAmp;
 
     //
-    // SET HIP PITCH PARAMETERS
+    // SET HIP PITCH TARGET
     //
 
     // TODO allow swappable implementations of a WalkPitchPosture, and calculate every cycle on the motion thread
     // TODO this doesn't support walking backwards (-ve x)
     // TODO examine using the acceleration (xAmpDelta) as a input signal
-
 //    // TODO revisit this treatment of xAmp and turnAmp as though they're the same units
 //     double alpha = max(xAmp, turnAmp) / d_maxHipPitchAtSpeed->getValue();
     double alpha = xAmp / d_maxHipPitchAtSpeed->getValue();
@@ -238,28 +238,45 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 
     alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAmpTargetDiff;
 
-    d_walkEngine->HIP_PITCH_OFFSET = Math::lerp(
+    d_hipPitch.setTarget(Math::lerp(
       Math::clamp(alpha, 0.0, 1.0),
       d_minHipPitch->getValue(),
-      d_maxHipPitch->getValue());
+      d_maxHipPitch->getValue()));
   }
+
+  //
+  // UPDATE HIP PITCH
+  //
+
+  double hipPitchPrior = d_hipPitch.getCurrent();
+  double hipPitch = d_hipPitch.getNext();
+  double hipPitchDelta = hipPitch - hipPitchPrior;
+  d_walkEngine->HIP_PITCH_OFFSET = hipPitch;
 
   if (d_status != WalkStatus::Stopped)
   {
+    //
+    // Calculate new motion
+    //
+
     d_walkEngine->step();
+
+    //
+    // Calculate balance parameters
+    //
 
     // Take a copy, for thread safety
     auto balance = d_balance;
 
     if (balance != nullptr)
-      State::make<BalanceState>(balance->computeCorrection(Math::degToRad(d_walkEngine->HIP_PITCH_OFFSET)));
+      State::make<BalanceState>(balance->computeCorrection(Math::degToRad(d_hipPitch.getCurrent())));
     else
       State::set<BalanceState>(nullptr);
   }
 
   State::make<WalkState>(
-    d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(),
-    xAmpDelta, yAmpDelta, turnAmpDelta,
+    d_xAmp.getTarget(), d_yAmp.getTarget(), d_turnAmp.getTarget(), d_hipPitch.getTarget(),
+    xAmpDelta, yAmpDelta, turnAmpDelta, hipPitchDelta,
     this,
     d_walkEngine);
 }

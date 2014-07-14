@@ -10,8 +10,8 @@ namespace bold
   class WalkState : public StateObject
   {
   public:
-    WalkState(double targetX, double targetY, double targetTurn,
-              double lastXDelta, double lastYDelta, double lastTurnDelta,
+    WalkState(double targetX, double targetY, double targetTurn, double targetHipPitch,
+              double lastXDelta, double lastYDelta, double lastTurnDelta, double lastHipPitchDelta,
               WalkModule* walkModule,
               std::shared_ptr<WalkEngine> walkEngine);
 
@@ -35,8 +35,6 @@ namespace bold
     double getBodySwingY() const { return d_bodySwingY; }
     double getBodySwingZ() const { return d_bodySwingZ; }
 
-    double getHipPitch() const { return d_hipPitch; }
-
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
@@ -48,15 +46,17 @@ namespace bold
     double d_targetX;
     double d_targetY;
     double d_targetTurn;
+    double d_targetHipPitch;
     double d_currentX;
     double d_currentY;
     double d_currentTurn;
+    double d_currentHipPitch;
     double d_lastXDelta;
     double d_lastYDelta;
     double d_lastTurnDelta;
+    double d_lastHipPitchDelta;
     int d_currentPhase;
     double d_bodySwingY;
     double d_bodySwingZ;
-    double d_hipPitch;
   };
 }
