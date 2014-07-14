@@ -34,7 +34,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_xAmp(0, 1),
   d_yAmp(0, 1),
   d_turnAmp(0, 1),
-  d_hipPitch(0, 1),
+  d_hipPitch(13.0, 0.1),
   d_isParalysed(Config::getSetting<bool>("walk-module.is-paralysed")),
   d_maxHipPitchAtSpeed(Config::getSetting<double>("walk-module.max-hip-pitch-at-speed")),
   d_minHipPitch(Config::getSetting<double>("walk-module.min-hip-pitch")),
@@ -48,6 +48,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   Config::getSetting<double>("walk-module.x-amp-delta")->track([this](double value) { d_xAmp.setDelta(value); });
   Config::getSetting<double>("walk-module.y-amp-delta")->track([this](double value) { d_yAmp.setDelta(value); });
   Config::getSetting<double>("walk-module.turn-delta") ->track([this](double value) { d_turnAmp.setDelta(value); });
+  Config::getSetting<double>("walk-module.hip-pitch-delta")->track([this](double value) { d_hipPitch.setDelta(value); });
 
   Config::getSetting<BalanceMode>("balance.mode")->track(
     [this] (BalanceMode mode)
