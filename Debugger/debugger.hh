@@ -6,14 +6,22 @@ namespace bold
 {
   class Agent;
   class BehaviourControl;
+  class ButtonObserver;
+  class ButtonTracker;
   class DebugControl;
+  class Voice;
 
   // TODO this class's name suggests something grander than its reality
 
   class Debugger
   {
   public:
-    Debugger(Agent* agent, std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<DebugControl> debugControl);
+    Debugger(
+      Agent* agent,
+      std::shared_ptr<BehaviourControl> behaviourControl,
+      std::shared_ptr<DebugControl> debugControl,
+      std::shared_ptr<Voice> voice,
+      std::shared_ptr<ButtonObserver> buttonObserver);
 
     void notifyReceivedGameControllerMessage() { d_gameControllerMessageCount++; }
     void notifyIgnoringUnrecognisedMessage() { d_ignoredMessageCount++; }
@@ -30,6 +38,8 @@ namespace bold
     Agent* d_agent;
     std::shared_ptr<BehaviourControl> d_behaviourControl;
     std::shared_ptr<DebugControl> d_debugControl;
+    std::shared_ptr<Voice> d_voice;
+    std::shared_ptr<ButtonTracker> d_leftButtonTracker;
 
     bool d_showDazzle;
     unsigned d_gameControllerMessageCount;

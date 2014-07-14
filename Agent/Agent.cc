@@ -36,8 +36,10 @@ Agent::Agent()
 
   registerStateTypes();
 
+  d_buttonObserver = make_shared<ButtonObserver>();
+
   auto debugControl = make_shared<DebugControl>();
-  d_debugger = make_shared<Debugger>(this, d_behaviourControl, debugControl);
+  d_debugger = make_shared<Debugger>(this, d_behaviourControl, debugControl, d_voice, d_buttonObserver);
 
   // Prepare the motion schedule, that coordinates which motions are carried out
   d_motionSchedule = make_shared<MotionTaskScheduler>();
@@ -50,7 +52,6 @@ Agent::Agent()
   MotionScriptModule::createActions("./motionscripts", d_motionScriptModule);
 
   // Create StateObservers
-  d_buttonObserver = make_shared<ButtonObserver>();
   d_vocaliser = make_shared<Vocaliser>(d_voice);
   d_gyroCalibrator = make_shared<GyroCalibrator>();
   d_healthAndSafety = make_shared<HealthAndSafety>(d_voice);

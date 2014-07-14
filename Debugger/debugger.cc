@@ -6,17 +6,24 @@
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
 #include "../StateObject/DebugState/debugstate.hh"
 #include "../StateObject/StationaryMapState/stationarymapstate.hh"
+#include "../StateObserver/ButtonObserver/buttonobserver.hh"
 #include "../stats/movingaverage.hh"
+#include "../Voice/voice.hh"
 
 using namespace bold;
 using namespace bold::Colour;
 using namespace robocup;
 using namespace std;
 
-Debugger::Debugger(Agent* agent, shared_ptr<BehaviourControl> behaviourControl, shared_ptr<DebugControl> debugControl)
+Debugger::Debugger(
+  Agent* agent,
+  shared_ptr<BehaviourControl> behaviourControl, shared_ptr<DebugControl> debugControl,
+  shared_ptr<Voice> voice, shared_ptr<ButtonObserver> buttonObserver)
 : d_agent(agent),
   d_behaviourControl(behaviourControl),
   d_debugControl(debugControl),
+  d_voice(voice),
+  d_leftButtonTracker(buttonObserver->track(Button::Left)),
   d_showDazzle(false),
   d_gameControllerMessageCount(0),
   d_ignoredMessageCount(0),
@@ -147,4 +154,32 @@ void Debugger::update()
   d_sentTeamMessageCount = 0;
   d_receivedTeamMessageCount = 0;
   d_sentDrawbridgeMessageCount = 0;
+
+  // Look for left button presses while paused
+  if (d_leftButtonTracker->isPressedForMillis(20) && d_behaviourControl->getPlayerStatus() == PlayerStatus::Paused)
+  {
+    auto hw = State::get<HardwareState>();
+    auto team = State::get<TeamState>();
+
+    stringstream msg;
+    msg << hw->getCM730State().voltage << " volts.";
+
+    // TODO need to ensure old teammate data is removed from TeamState
+    if (team && team->players().size() > 1)
+    {
+      msg << " I hear team mates ";
+      for (auto const& mate : team->players())
+      {
+        if (!mate.isMe())
+          msg << mate.uniformNumber << ", ";
+      }
+      msg << ".";
+    }
+    else
+    {
+      msg << " No team mates.";
+    }
+
+    d_voice->say(msg.str());
+  }
 }
