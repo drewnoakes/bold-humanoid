@@ -152,6 +152,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Balance/GyroBalance/gyrobalance.cc
+  ./Balance/OrientationBalance/orientationbalance.cc
+)
+
+add_class(BOLDHUMANOID
   ./BodyControl/bodycontrol.cc
 )
 

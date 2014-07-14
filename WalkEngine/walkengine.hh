@@ -2,11 +2,13 @@
 
 #include <string.h>
 #include <cmath>
+#include <memory>
 
 #include "../PoseProvider/poseprovider.hh"
 
 namespace bold
 {
+  class Balance;
   template <typename> class Setting;
 
   /** Computes body angles for walking.
@@ -151,23 +153,20 @@ namespace bold
     Setting<double>* PITCH_OFFSET;
     Setting<double>* ROLL_OFFSET;
 
-    // control
+    // motion
     Setting<double>* PERIOD_TIME;
     Setting<double>* DSP_RATIO;
     Setting<double>* STEP_FB_RATIO;
     Setting<double>* Z_MOVE_AMPLITUDE;
-
-    // Balance control
-    Setting<bool>* BALANCE_ENABLE;
-    Setting<double>* BALANCE_KNEE_GAIN;
-    Setting<double>* BALANCE_ANKLE_PITCH_GAIN;
-    Setting<double>* BALANCE_HIP_ROLL_GAIN;
-    Setting<double>* BALANCE_ANKLE_ROLL_GAIN;
     Setting<double>* Y_SWAP_AMPLITUDE;
     Setting<double>* Z_SWAP_AMPLITUDE;
     Setting<double>* ARM_SWING_GAIN;
     Setting<double>* PELVIS_OFFSET;
 
+    // balance
+    std::shared_ptr<Balance> d_balance;
+
+    // motor gains
     Setting<int>* d_legGainP;
     Setting<int>* d_legGainI;
     Setting<int>* d_legGainD;

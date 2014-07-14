@@ -1,7 +1,9 @@
 #include "walkengine.hh"
 
+#include "../../Balance/balance.hh"
+#include "../../Balance/GyroBalance/gyrobalance.hh"
+#include "../../Balance/OrientationBalance/orientationbalance.hh"
 #include "../../BodyControl/bodycontrol.hh"
-#include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../Config/config.hh"
 #include "../../MX28/mx28.hh"
 #include "../../State/state.hh"
@@ -31,11 +33,23 @@ WalkEngine::WalkEngine()
   PELVIS_OFFSET     = Config::getSetting<double>("walk-engine.params.pelvis-offset");
   ARM_SWING_GAIN    = Config::getSetting<double>("walk-engine.params.arm-swing-gain");
 
-  BALANCE_ENABLE           = Config::getSetting<bool>("walk-engine.balance.enable");
-  BALANCE_KNEE_GAIN        = Config::getSetting<double>("walk-engine.balance.knee-gain");
-  BALANCE_ANKLE_PITCH_GAIN = Config::getSetting<double>("walk-engine.balance.ankle-pitch-gain");
-  BALANCE_HIP_ROLL_GAIN    = Config::getSetting<double>("walk-engine.balance.hip-roll-gain");
-  BALANCE_ANKLE_ROLL_GAIN  = Config::getSetting<double>("walk-engine.balance.ankle-roll-gain");
+  Config::getSetting<BalanceMode>("walk-engine.balance.mode")->track(
+    [this]
+    (BalanceMode mode)
+    {
+      switch (mode)
+      {
+        case BalanceMode::None:
+          d_balance = nullptr;
+          break;
+        case BalanceMode::Gyro:
+          d_balance = make_shared<GyroBalance>();
+          break;
+        case BalanceMode::Orientation:
+          d_balance = make_shared<OrientationBalance>();
+          break;
+      }
+    });
 
   d_legGainP = Config::getSetting<int>("walk-engine.gains.leg-p-gain");
   d_legGainI = Config::getSetting<int>("walk-engine.gains.leg-i-gain");
@@ -59,6 +73,7 @@ constexpr double WalkEngine::CALF_LENGTH;
 constexpr double WalkEngine::ANKLE_LENGTH;
 constexpr double WalkEngine::LEG_LENGTH;
 
+//                                0           1           2         3           4             5           6           7           8           9          10           11            12            13
 //                            R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
 const int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
 const double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
@@ -452,31 +467,28 @@ void WalkEngine::step()
 
 void WalkEngine::balance(double ratio)
 {
-  // TODO convert this stabilisation to a generic and replaceable BodyControlModulator ?
+  // Take a copy, for thread safety
+  auto balance = d_balance;
 
-  if (!BALANCE_ENABLE->getValue() || ratio == 0.0)
+  if (!balance || ratio == 0.0)
     return;
 
-  auto hw = State::get<HardwareState>();
-  ASSERT(hw);
-  // TODO pass gyro calibration data here
-  auto gryoRaw = hw->getCM730State().getBalancedGyroValue();
+  if (balance)
+  {
+    auto correction = balance->computeCorrection(Math::degToRad(HIP_PITCH_OFFSET));
 
-  // TODO review the gyro axes labels
-  double rlGyroErr = -gryoRaw.y();
-  double fbGyroErr = gryoRaw.x();
+    d_outValue[1]  += (int)round(ratio * correction.hipRollR);
+    d_outValue[7]  += (int)round(ratio * correction.hipRollL);
 
-  d_outValue[1]  += (int)(ratio * dir[1] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // R_HIP_ROLL
-  d_outValue[7]  += (int)(ratio * dir[7] * rlGyroErr * BALANCE_HIP_ROLL_GAIN->getValue()); // L_HIP_ROLL
+    d_outValue[3]  += (int)round(ratio * correction.kneeR);
+    d_outValue[9]  += (int)round(ratio * correction.kneeL);
 
-  d_outValue[3]  -= (int)(ratio * dir[3] * fbGyroErr * BALANCE_KNEE_GAIN->getValue()); // R_KNEE
-  d_outValue[9]  -= (int)(ratio * dir[9] * fbGyroErr * BALANCE_KNEE_GAIN->getValue()); // L_KNEE
+    d_outValue[4]  += (int)round(ratio * correction.anklePitchR);
+    d_outValue[10] += (int)round(ratio * correction.anklePitchL);
 
-  d_outValue[4]  -= (int)(ratio * dir[4]  * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN->getValue()); // R_ANKLE_PITCH
-  d_outValue[10] -= (int)(ratio * dir[10] * fbGyroErr * BALANCE_ANKLE_PITCH_GAIN->getValue()); // L_ANKLE_PITCH
-
-  d_outValue[5]  -= (int)(ratio * dir[5]  * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN->getValue()); // R_ANKLE_ROLL
-  d_outValue[11] -= (int)(ratio * dir[11] * rlGyroErr * BALANCE_ANKLE_ROLL_GAIN->getValue()); // L_ANKLE_ROLL
+    d_outValue[5]  += (int)round(ratio * correction.ankleRollR);
+    d_outValue[11] += (int)round(ratio * correction.ankleRollL);
+  }
 }
 
 void WalkEngine::applyHead(HeadSection* head)

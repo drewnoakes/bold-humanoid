@@ -302,11 +302,19 @@
       "step-fb-ratio":    { "type": "double" }
     },
     "balance": {
-      "enable":           { "type": "bool", "description": "Enable auto-balance" },
-      "knee-gain":        { "type": "double", "description": "Amount gyro affects knee angle" },
-      "ankle-pitch-gain": { "type": "double", "description": "Amount gyro affects ankle pitch angle" },
-      "hip-roll-gain":    { "type": "double", "description": "Amount gyro affects hip roll angle" },
-      "ankle-roll-gain":  { "type": "double", "description": "Amount gyro affects ankle roll angle" }
+      "mode": { "type": "enum", "description": "Balance mode", "values": { "none": 0, "gyro": 1, "orientation": 2 } },
+      "gyro": {
+        "knee-gain":        { "type": "double", "min": 0 },
+        "ankle-pitch-gain": { "type": "double", "min": 0 },
+        "hip-roll-gain":    { "type": "double", "min": 0 },
+        "ankle-roll-gain":  { "type": "double", "min": 0 }
+      },
+      "orientation": {
+        "knee-gain":        { "type": "double", "min": 0 },
+        "ankle-pitch-gain": { "type": "double", "min": 0 },
+        "hip-roll-gain":    { "type": "double", "min": 0 },
+        "ankle-roll-gain":  { "type": "double", "min": 0 }
+      }
     },
     "gains": {
       "leg-p-gain": { "type": "int", "min": 0, "max": 128 },

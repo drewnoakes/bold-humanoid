@@ -305,11 +305,19 @@
       "step-fb-ratio": 0.28
     },
     "balance": {
-      "enable": true,
-      "knee-gain": 1.2,
-      "ankle-pitch-gain": 3.6,
-      "hip-roll-gain": 2.0,
-      "ankle-roll-gain": 4.0
+      "mode": 1,
+      "gyro": {
+        "knee-gain": 1.2,
+        "ankle-pitch-gain": 3.6,
+        "hip-roll-gain": 2.0,
+        "ankle-roll-gain": 4.0
+      },
+      "orientation": {
+        "knee-gain": 1.2,
+        "ankle-pitch-gain": 3.6,
+        "hip-roll-gain": 2.0,
+        "ankle-roll-gain": 4.0
+      }
     },
     "gains": {
       "leg-p-gain": 32,
