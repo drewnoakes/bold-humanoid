@@ -198,6 +198,10 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
     {
       for (auto const& ray : d_occlusionRays)
       {
+        // Should be enough to check a single value for NaN
+        if (std::isnan(ray.far().x()))
+          continue;
+
         writer.StartArray();
         writer.Double(ray.near().x(), "%.3f");
         writer.Double(ray.near().y(), "%.3f");
