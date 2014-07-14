@@ -13,19 +13,18 @@ LookAround::LookAround(std::string const& id, std::shared_ptr<HeadModule> headMo
 : Option(id, "LookAround"),
   d_speedCallback(speedCallback),
   d_headModule(headModule),
+  d_sideAngle(sideAngle),
+  d_topAngle(Config::getSetting<double>("options.look-around.top-angle")),
+  d_bottomAngle(Config::getSetting<double>("options.look-around.bottom-angle")),
+  d_durationHorizUpper(Config::getSetting<double>("options.look-around.horiz-duration-upper")),
+  d_durationHorizLower(Config::getSetting<double>("options.look-around.horiz-duration-lower")),
+  d_durationVert(Config::getSetting<double>("options.look-around.vert-duration")),
+  d_speedStep(Config::getSetting<double>("options.look-around.speed-step")),
   d_isResetNeeded(true),
   d_lastTimeSeconds(0),
   d_speed(1.0),
   d_loopCount(0)
-{
-  d_topAngle           = Config::getSetting<double>("options.look-around.top-angle");
-  d_bottomAngle        = Config::getSetting<double>("options.look-around.bottom-angle");
-  d_sideAngle          = sideAngle;
-  d_durationHorizUpper = Config::getSetting<double>("options.look-around.horiz-duration-upper");
-  d_durationHorizLower = Config::getSetting<double>("options.look-around.horiz-duration-lower");
-  d_durationVert       = Config::getSetting<double>("options.look-around.vert-duration");
-  d_speedStep          = Config::getSetting<double>("options.look-around.speed-step");
-}
+{}
 
 vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 {

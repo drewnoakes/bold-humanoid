@@ -25,12 +25,12 @@ namespace bold
     std::function<double(uint)> d_speedCallback;
     std::shared_ptr<HeadModule> d_headModule;
 
+    /// The head's maximum pan angle (negated for left side)
+    double d_sideAngle;
     /// The head's upwards tilt angle
     Setting<double>* d_topAngle;
     /// The head's downwards tilt angle
     Setting<double>* d_bottomAngle;
-    /// The head's maximum pan angle (negated for left side)
-    double d_sideAngle;
 
     /// The time spent in the upper horizontal movement
     Setting<double>* d_durationHorizUpper;
