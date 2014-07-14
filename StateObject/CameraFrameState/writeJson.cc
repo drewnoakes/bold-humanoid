@@ -63,6 +63,21 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
+    writer.String("occlusionRays");
+    writer.StartArray();
+    {
+      for (auto const& ray : d_occlusionRays)
+      {
+        writer.StartArray();
+        writer.Double(ray.near().x(), "%.3f");
+        writer.Double(ray.near().y(), "%.3f");
+        writer.Double(ray.far().x(), "%.3f");
+        writer.Double(ray.far().y(), "%.3f");
+        writer.EndArray();
+      }
+    }
+    writer.EndArray();
+
     writer.String("totalPixelCount").Uint64(d_totalPixelCount);
     writer.String("processedPixelCount").Uint64(d_processedPixelCount);
   }
