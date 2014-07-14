@@ -17,7 +17,7 @@ TeamCommunicator::TeamCommunicator(shared_ptr<Debugger> debugger, int ourTeamNum
   d_socket->setMulticastTTL(1);
   // TODO incorporate team number into broadcast address
   d_socket->setTarget("255.255.255.255", d_port);
-  d_socket->bind("", d_port);
+  d_socket->bind(d_port);
 }
 
 void TeamCommunicator::enableLoopback()

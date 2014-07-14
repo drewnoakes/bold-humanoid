@@ -109,20 +109,14 @@ bool UDPSocket::setTarget(string targetIpAddress, int port)
   return resolveIp4Address(targetIpAddress, port, (sockaddr_in*)d_target);
 }
 
-bool UDPSocket::bind(string const& localIpAddress, int port)
+bool UDPSocket::bind(int port)
 {
   static const int one = 1;
 
   sockaddr_in addr = {0};
   addr.sin_family = AF_INET;
-  addr.sin_addr.s_addr = INADDR_ANY;
+  addr.sin_addr.s_addr = htonl(INADDR_ANY);
   addr.sin_port = htons((uint16_t)port);
-
-  if (inet_pton(AF_INET, localIpAddress.c_str(), &(addr.sin_addr)))
-  {
-    log::error("UDPSocket::bind") << "Failed due to invalid address: " << localIpAddress;
-    return false;
-  }
 
   // Allow other sockets to bind() to this port, unless there is an active
   // listening socket bound to the port already. This gets around 'Address

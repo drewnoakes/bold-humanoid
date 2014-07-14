@@ -16,11 +16,11 @@ TEST (UDPSocketTests, DISABLED_communication)
   EXPECT_TRUE(sender.setBlocking(false));
   EXPECT_TRUE(sender.setBroadcast(true));
   EXPECT_TRUE(sender.setTarget("255.255.255.255", receiverPort));
-  EXPECT_TRUE(sender.bind("", senderPort));
+  EXPECT_TRUE(sender.bind(senderPort));
 
   UDPSocket receiver;
   EXPECT_TRUE(receiver.setBlocking(true));
-  EXPECT_TRUE(receiver.bind("", receiverPort));
+  EXPECT_TRUE(receiver.bind(receiverPort));
 
   EXPECT_TRUE(sender.send("Hello"));
 
@@ -56,7 +56,7 @@ TEST (UDPSocketTests, DISABLED_broadcastLoopback)
   EXPECT_TRUE(socket.setBlocking(true));
   EXPECT_TRUE(socket.setBroadcast(true));
   EXPECT_TRUE(socket.setTarget("255.255.255.255", port));
-  EXPECT_TRUE(socket.bind("", port));
+  EXPECT_TRUE(socket.bind(port));
 
   EXPECT_TRUE(socket.send("Hello"));
 

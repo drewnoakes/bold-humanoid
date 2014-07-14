@@ -47,12 +47,10 @@ namespace bold
 
     /** Binds the UDP socket to the specified IP address and port number.
      *
-     * @param localIpAddress the local IP address to bind to, or if empty
-     *                       INADDR_ANY is used
-     * @param port the local UDP port number to bind to, or if zero one an
+     * @param port the local UDP port number to bind to, or if zero an
      *             ephemeral port will be automatically assigned by the OS
      */
-    bool bind(std::string const& localIpAddress = "", int port = 0);
+    bool bind(int port);
 
     /** Sends a message via this UDP socket.
      *

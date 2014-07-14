@@ -36,7 +36,7 @@ DrawBridgeComms::DrawBridgeComms(Agent* agent, std::shared_ptr<BehaviourControl>
   d_socket->setMulticastTTL(1);
   // TODO broadcast address in config
   d_socket->setTarget("255.255.255.255", port);
-  if (d_socket->bind("", port))
+  if (d_socket->bind(port))
     log::info("DrawBridgeComms") << "Bound to port " << port;
   else
     log::warning("DrawBridgeComms") << "Error binding to port " << port;

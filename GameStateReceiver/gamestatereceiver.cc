@@ -30,7 +30,7 @@ GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, shared_ptr<V
 {
   d_socket = make_shared<UDPSocket>();
   d_socket->setBlocking(false);
-  d_socket->bind("", d_gameControllerPort);
+  d_socket->bind(d_gameControllerPort);
 
   log::info("GameStateReceiver::GameStateReceiver") << "Listening on UDP port " << d_gameControllerPort;
 }

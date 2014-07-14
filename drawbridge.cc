@@ -373,8 +373,9 @@ int main(int argc, char **argv)
   //
 
   UDPSocket socket;
+  socket.setBroadcast(true);
   socket.setBlocking(false);
-  socket.bind("", udpPort);
+  socket.bind(udpPort);
 
   //
   // WebSocket for publishing
