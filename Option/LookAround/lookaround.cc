@@ -1,6 +1,6 @@
 #include "lookaround.hh"
 
-#include "../../Clock/clock.hh"
+#include "../../Config/config.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/CameraFrameState/cameraframestate.hh"
@@ -13,116 +13,88 @@ LookAround::LookAround(std::string const& id, std::shared_ptr<HeadModule> headMo
 : Option(id, "LookAround"),
   d_speedCallback(speedCallback),
   d_headModule(headModule),
-  d_sideAngle(sideAngle),
-  d_topAngle(Config::getSetting<double>("options.look-around.top-angle")),
-  d_bottomAngle(Config::getSetting<double>("options.look-around.bottom-angle")),
-  d_durationHorizUpper(Config::getSetting<double>("options.look-around.horiz-duration-upper")),
-  d_durationHorizLower(Config::getSetting<double>("options.look-around.horiz-duration-lower")),
-  d_durationVert(Config::getSetting<double>("options.look-around.vert-duration")),
   d_speedStep(Config::getSetting<double>("options.look-around.speed-step")),
-  d_isResetNeeded(true),
-  d_lastTimeSeconds(0),
-  d_speed(1.0),
+  d_lastTime(0),
+  d_lastSpeed(1.0),
   d_loopCount(0)
-{}
+{
+  double topAngle           = Config::getStaticValue<double>("options.look-around.top-angle");
+  double bottomAngle        = Config::getStaticValue<double>("options.look-around.bottom-angle");
+  double durationHorizUpper = Config::getStaticValue<double>("options.look-around.horiz-duration-upper");
+  double durationHorizLower = Config::getStaticValue<double>("options.look-around.horiz-duration-lower");
+  double durationVert       = Config::getStaticValue<double>("options.look-around.vert-duration");
+
+  d_stages.emplace_back(durationHorizUpper, topAngle,    -sideAngle);
+  d_stages.emplace_back(durationVert,       topAngle,     sideAngle);
+  d_stages.emplace_back(durationHorizLower, bottomAngle,  sideAngle);
+  d_stages.emplace_back(durationVert,       bottomAngle, -sideAngle);
+
+  reset();
+}
 
 vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 {
   // Make an oscillatory movement to search for the ball
 
-  double t = Clock::getSeconds();
+  auto t = Clock::getTimestamp();
 
-  double durationHorizUpper = d_durationHorizUpper->getValue();
-  double durationHorizLower = d_durationHorizLower->getValue();
-  double durationVert = d_durationVert->getValue();
-
-  if (d_isResetNeeded)
+  if (d_lastTime != 0)
   {
-    // Start quarter-way through the first phase, so the head is slightly
-    // to the left, and pans right through the top of the box.
-    d_startTimeSeconds = t - (durationHorizUpper/4.0);
-    d_isResetNeeded = false;
-    writer.String("reset").Bool(true);
-  }
-  else if (d_speedCallback)
-  {
-    double speed = d_speed;
-    double requestedSpeed = d_speedCallback(d_loopCount);
-    // Smooth speed increase, with instant decrease
-    speed += d_speedStep->getValue();
-    if (requestedSpeed < speed)
-      speed = requestedSpeed;
-    speed = Math::clamp(speed, 0.0, 1.0);
-    writer.String("speed").Double(speed);
-    d_startTimeSeconds += (1 - speed) * (t - d_lastTimeSeconds);
-    d_speed = speed;
-  }
+    double speed = 1.0;
 
-  writer.String("t").Double(t);
-
-  d_lastTimeSeconds = t;
-
-  double period = durationHorizUpper + durationHorizLower + (durationVert * 2);
-
-  d_loopCount = (uint)((t - d_startTimeSeconds) / period);
-
-  double phase = fmod(t - d_startTimeSeconds, period);
-
-  double panDegs = 0;
-  double tiltDegs = 0;
-
-  writer.String("phase").Double(phase);
-
-  ASSERT(phase >= 0);
-
-  if (phase < durationHorizUpper)
-  {
-    // moving right-to-left across top
-    tiltDegs = d_topAngle->getValue();
-    panDegs = Math::lerp(phase/durationHorizUpper, -d_sideAngle, d_sideAngle);
-    writer.String("stage").Int(1);
-  }
-  else
-  {
-    phase -= durationHorizUpper;
-
-    if (phase < durationVert)
+    // Modify speed according to the callback, if present
+    if (d_speedCallback)
     {
-      // moving top-to-bottom at left
-      tiltDegs = Math::lerp(phase/durationVert, d_topAngle->getValue(), d_bottomAngle->getValue());
-      panDegs = d_sideAngle;
-      writer.String("stage").Int(2);
+      double requestedSpeed = d_speedCallback(d_loopCount);
+
+      // Smooth speed increase
+      speed = d_lastSpeed + d_speedStep->getValue();
+
+      // If the requested speed is lower than the current speed, drop to it immediately
+      if (requestedSpeed < speed)
+        speed = requestedSpeed;
+
+      // Clamp speed within range [0,1]
+      speed = Math::clamp(speed, 0.0, 1.0);
+
+      writer.String("speed").Double(speed);
     }
-    else
+
+    // Progress the phase according to the elapsed time
+    double deltaSeconds = Clock::timestampToSeconds(t - d_lastTime);
+    double deltaPhase = deltaSeconds / d_stages[(int)d_phase].durationSeconds;
+    // NOTE this may spill some of the time from one stage into another, but in reality that's fine
+    d_phase += deltaPhase * speed;
+
+    if (d_phase > d_stages.size())
     {
-      phase -= durationVert;
-
-      if (phase < durationHorizLower)
-      {
-        // moving left-to-right across bottom
-        tiltDegs = d_bottomAngle->getValue();
-        panDegs = Math::lerp(phase/durationHorizLower, d_sideAngle, -d_sideAngle);
-        writer.String("stage").Int(3);
-      }
-      else
-      {
-        phase -= durationHorizLower;
-
-        if (phase <= durationVert)
-        {
-          // moving bottom-to-top at right
-          tiltDegs = Math::lerp(phase/durationVert, d_bottomAngle->getValue(), d_topAngle->getValue());
-          panDegs = -d_sideAngle;
-          writer.String("stage").Int(4);
-        }
-        else
-        {
-          log::info("LookAround::runPolicy") << "Failed to find phase of motion";
-          writer.String("stage").Int(-1);
-        }
-      }
+      // We completed a cycle
+      d_loopCount++;
+      d_phase -= d_stages.size();
     }
+
+    d_lastSpeed = speed;
   }
+
+  d_lastTime = t;
+
+  int fromStageIndex = (int)d_phase;
+  int toStageIndex = (int)((fromStageIndex + 1) % d_stages.size());
+  double stageRatio = fmod(d_phase, 1.0);
+
+  ASSERT(d_phase >= 0);
+  ASSERT(d_phase < d_stages.size());
+
+  writer.String("phase").Double(d_phase);
+  writer.String("fromStageIndex").Int(fromStageIndex);
+  writer.String("toStageIndex").Int(toStageIndex);
+  writer.String("stageRatio").Double(stageRatio);
+
+  auto const& fromStage = d_stages[fromStageIndex];
+  auto const& toStage = d_stages[toStageIndex];
+
+  double panDegs  = Math::lerp(stageRatio, fromStage.panAngle,  toStage.panAngle);
+  double tiltDegs = Math::lerp(stageRatio, fromStage.tiltAngle, toStage.tiltAngle);
 
   writer.String("pan").Double(panDegs);
   writer.String("tilt").Double(tiltDegs);
@@ -136,7 +108,12 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 void LookAround::reset()
 {
   d_loopCount = 0;
-  d_isResetNeeded = true;
+  d_lastTime = 0;
+  d_lastSpeed = 1.0;
+
+  // Start quarter-way through the first stage, so the head is slightly
+  // to the left, and pans right through the top of the box.
+  d_phase = 0.25;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

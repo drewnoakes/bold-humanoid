@@ -1,12 +1,23 @@
 #pragma once
 
 #include "../option.hh"
-
-#include "../../Config/config.hh"
+#include "../../Clock/clock.hh"
 
 namespace bold
 {
   class HeadModule;
+  template<typename> class Setting;
+
+  struct LookAroundStage
+  {
+    LookAroundStage(double durationSeconds, double tiltAngle, double panAngle)
+    : durationSeconds(durationSeconds), tiltAngle(tiltAngle), panAngle(panAngle)
+    {}
+
+    double durationSeconds;
+    double tiltAngle;
+    double panAngle;
+  };
 
   class LookAround : public Option
   {
@@ -22,32 +33,17 @@ namespace bold
     virtual void reset();
 
   private:
+    std::vector<LookAroundStage> d_stages;
     std::function<double(uint)> d_speedCallback;
     std::shared_ptr<HeadModule> d_headModule;
 
-    /// The head's maximum pan angle (negated for left side)
-    double d_sideAngle;
-    /// The head's upwards tilt angle
-    Setting<double>* d_topAngle;
-    /// The head's downwards tilt angle
-    Setting<double>* d_bottomAngle;
-
-    /// The time spent in the upper horizontal movement
-    Setting<double>* d_durationHorizUpper;
-    /// The time spent in the lower horizontal movement
-    Setting<double>* d_durationHorizLower;
-    /// The time spent in each vertical movement
-    Setting<double>* d_durationVert;
     /// The amount the pan speed is to be increased per step after being lowered by the speed callback
     Setting<double>* d_speedStep;
 
-    bool d_isResetNeeded;
-    /// The last time this runPolicy was called
-    double d_lastTimeSeconds;
-    /// The time at which this option was considered started
-    double d_startTimeSeconds;
-    /// Scalar for the speed of movement, between 0 and 1.
-    double d_speed;
+    Clock::Timestamp d_lastTime;
+    double d_lastSpeed;
+    double d_phase;
+
     /// The number of full cycles the head has completed since the option was last reset. Zero during the first loop.
     uint d_loopCount;
   };
