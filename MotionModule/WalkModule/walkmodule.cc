@@ -206,7 +206,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 
     // TODO allow swappable implementations of a WalkPitchPosture, and calculate every cycle on the motion thread
     // TODO this doesn't support walking backwards (-ve x)
-    // TODO examine using the acceleration (delta xAmp) as a input signal
+    // TODO examine using the acceleration (xAmpDelta) as a input signal
 
 //    // TODO revisit this treatment of xAmp and turnAmp as though they're the same units
 //     double alpha = max(xAmp, turnAmp) / d_maxHipPitchAtSpeed->getValue();
