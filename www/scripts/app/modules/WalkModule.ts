@@ -11,6 +11,7 @@ import data = require('data');
 import DOMTemplate = require('DOMTemplate');
 import util = require('util');
 import state = require('state');
+import TabControl = require('controls/TabControl');
 import Module = require('Module');
 
 var radarSize = 200,
@@ -64,7 +65,7 @@ class WalkModule extends Module
         control.buildSettings('options.approach-ball', templateRoot.querySelector('.approach-ball-controls'), this.closeables);
         control.buildSettings('walk-engine.params', templateRoot.querySelector('.walk-engine-params-controls'), this.closeables);
         control.buildSettings('walk-engine.gains', templateRoot.querySelector('.walk-engine-gains-controls'), this.closeables);
-        control.buildSettings('walk-engine.balance', templateRoot.querySelector('.walk-engine-balance-controls'), this.closeables);
+        control.buildSettings('balance', templateRoot.querySelector('.balance-controls'), this.closeables);
         control.buildSettings('walk-module', templateRoot.querySelector('.walk-module-controls'), this.closeables);
 
         this.closeables.add(new data.Subscription<state.Walk>(
@@ -95,6 +96,8 @@ class WalkModule extends Module
         this.turnChart.addTimeSeries(this.angleCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
         this.turnChart.addTimeSeries(this.angleTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
         this.turnChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.turn-chart'), /*delayMs*/ 0);
+
+        new TabControl(<HTMLDListElement>templateRoot.querySelector('dl.tab-control'));
     }
 
     public unload()
