@@ -721,11 +721,11 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareStateFake(SequentialTime
   //
 
   auto cm730State = new CM730Snapshot();
-  cm730State->acc = {};
-  cm730State->accRaw = Eigen::Vector3i(512, 512, 512);
+  cm730State->acc = Eigen::Vector3d(0, 0, 5);
+  cm730State->accRaw = Eigen::Vector3i(512, 512, 768);
   cm730State->eyeColor = d_debugControl->getEyeColour().toRgbUnitVector();
   cm730State->foreheadColor = d_debugControl->getForeheadColour().toRgbUnitVector();
-  cm730State->gyro = {};
+  cm730State->gyro = Eigen::Vector3d(0, 0, 0);
   cm730State->gyroRaw = Eigen::Vector3i(512, 512, 512);
   cm730State->isLed2On = d_debugControl->isRedPanelLedLit();
   cm730State->isLed3On = d_debugControl->isBluePanelLedLit();
