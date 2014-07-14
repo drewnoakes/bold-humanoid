@@ -145,7 +145,9 @@ namespace bold
 
     std::array<int,14> d_outValue;
 
-    // initial pose
+    // TODO divide these settings up by path
+
+    // balance params
     Setting<double>* X_OFFSET;
     Setting<double>* Y_OFFSET;
     Setting<double>* Z_OFFSET;
@@ -153,10 +155,12 @@ namespace bold
     Setting<double>* PITCH_OFFSET;
     Setting<double>* ROLL_OFFSET;
 
-    // motion
+    // time params
     Setting<double>* PERIOD_TIME;
     Setting<double>* DSP_RATIO;
     Setting<double>* STEP_FB_RATIO;
+
+    // movement params
     Setting<double>* Z_MOVE_AMPLITUDE;
     Setting<double>* Y_SWAP_AMPLITUDE;
     Setting<double>* Z_SWAP_AMPLITUDE;
