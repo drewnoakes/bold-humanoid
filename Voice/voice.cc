@@ -1,10 +1,8 @@
 #include "voice.hh"
 
 #include <espeak/speak_lib.h>
-#include <string>
 
 #include "../Config/config.hh"
-#include "../util/log.hh"
 
 using namespace bold;
 using namespace std;
@@ -32,21 +30,6 @@ Voice::Voice()
   d_capitalAccentHz(Config::getSetting<int>("voice.capital-accent-hz")),
   d_initialised(false)
 {
-/*
-  d_voice->sayOneOf({
-    "Bold Hearts are go",
-//     "I am a protector of the realm",
-//     "What do you despise? By this are you truly known.",
-//     "A day may come when the courage of men fails",
-//     "Duty is heavier than a mountain",
-//     "Humans have a knack for choosing precisely the things that are worst for them",
-//     "Ride for ruin and the world's ending!",
-//     "Kill if you will, but command me nothing!",
-//     "The existence of tricks does not imply the absence of magic",
-//     "We eat ham and jam and Spam a lot"
-  });
-*/
-
   static const string sayings[] = {
     "Hello", "Bold Hearts", "Hooray", "Oh, my",
     "The rain in spain falls mainly in the plain",
@@ -136,7 +119,7 @@ void Voice::sayCallback(SpeechTask task)
 
   log::verbose("Voice") << "Saying: " << message;
 
-  uint flags = espeakCHARS_AUTO; //  AUTO      8 bit or UTF8 automatically
+  uint flags = espeakCHARS_AUTO; // AUTO      8 bit or UTF8 automatically
                                  //
   if (task.pauseAfter)           //
     flags |= espeakENDPAUSE;     // ENDPAUSE  sentence pause at end of text
