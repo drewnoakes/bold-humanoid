@@ -59,6 +59,8 @@ namespace bold
       static const bgr orange;
       static const bgr purple;
       static const bgr yellow;
+      static const bgr cyan;
+      static const bgr magenta;
     };
 
     struct YCbCr
