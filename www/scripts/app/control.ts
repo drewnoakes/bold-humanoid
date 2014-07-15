@@ -281,7 +281,7 @@ export function connect(onerror)
     );
 }
 
-function withSetting(path: string, callback: (setting:Setting)=>void)
+export function withSetting(path: string, callback: (setting:Setting)=>void)
 {
     var process = () =>
     {
