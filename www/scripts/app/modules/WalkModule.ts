@@ -5,6 +5,7 @@
 /// <reference path="../../libs/lodash.d.ts" />
 /// <reference path="../../libs/smoothie.d.ts" />
 
+import Checkbox = require('controls/Checkbox');
 import constants = require('constants');
 import control = require('control');
 import data = require('data');
@@ -12,6 +13,7 @@ import DOMTemplate = require('DOMTemplate');
 import Legend = require('controls/Legend');
 import state = require('state');
 import TabControl = require('controls/TabControl');
+import Trackable = require('util/Trackable');
 import util = require('util');
 import Module = require('Module');
 
@@ -19,19 +21,38 @@ var radarSize = 200,
     moveScale = 3,
     moduleTemplate = DOMTemplate.forId("walk-module-template");
 
+function balancedYRangeFunction(range)
+{
+  var max = Math.max(Math.abs(range.min), Math.abs(range.max));
+  return {min: -max, max: max};
+}
+
 var chartOptions = {
+    millisPerPixel: 45,
     interpolation: 'step',
     grid: {
-        strokeStyle: 'rgba(0,0,0,0.1)',
+        strokeStyle: 'rgba(0,0,0,0.08)',
         fillStyle: 'transparent',
         lineWidth: 1,
         millisPerLine: 250,
-        verticalSections: 5,
+        verticalSections: 4,
         sharpLines: true
     },
     labels: {
         fillStyle: 'rgba(0,0,0,0.5)',
         precision: 0
+    }, horizontalLines: [ { color: '#ffffff', lineWidth: 1, value: 0 } ]
+};
+
+var statusChartOptions = {
+    millisPerPixel: 45,
+    interpolation: 'step',
+    grid: {
+        strokeStyle: 'transparent',
+        fillStyle: 'transparent'
+    },
+    labels: {
+        disabled: true
     }
 };
 
@@ -64,6 +85,8 @@ class WalkModule extends Module
     private xAmpChart: SmoothieChart;
     private turnChart: SmoothieChart;
     private balanceChart: SmoothieChart;
+
+    private isPaused: Trackable<boolean> = new Trackable<boolean>();
 
     constructor()
     {
@@ -133,11 +156,11 @@ class WalkModule extends Module
 
         templateRoot.querySelector('.status-legend').appendChild(statusLegend.element);
 
-        this.statusChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 0, maxValue: 1 }));
-        this.statusChart.addTimeSeries(this.statusStoppedSeries,     { fillStyle: stoppedColour,     lineWidth: 1 });
-        this.statusChart.addTimeSeries(this.statusStartingSeries,    { fillStyle: startingColour,    lineWidth: 1 });
-        this.statusChart.addTimeSeries(this.statusWalkingSeries,     { fillStyle: walkingColour,     lineWidth: 1 });
-        this.statusChart.addTimeSeries(this.statusStabilisingSeries, { fillStyle: stabilisingColour, lineWidth: 1 });
+        this.statusChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, statusChartOptions, {minValue: 0, maxValue: 1 }));
+        this.statusChart.addTimeSeries(this.statusStoppedSeries,     { fillStyle: stoppedColour,     strokeStyle: 'transparent', lineWidth: 0 });
+        this.statusChart.addTimeSeries(this.statusStartingSeries,    { fillStyle: startingColour,    strokeStyle: 'transparent', lineWidth: 0 });
+        this.statusChart.addTimeSeries(this.statusWalkingSeries,     { fillStyle: walkingColour,     strokeStyle: 'transparent', lineWidth: 0 });
+        this.statusChart.addTimeSeries(this.statusStabilisingSeries, { fillStyle: stabilisingColour, strokeStyle: 'transparent', lineWidth: 0 });
         this.statusChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.status-chart'), /*delayMs*/ 0);
 
         this.pitchChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 10, maxValue: 15}));
@@ -158,7 +181,7 @@ class WalkModule extends Module
         var hipRollColour = 'red',
             kneeColour = 'yellow',
             anklePitchColour = 'green',
-            ankleRollColour = 'orange';
+            ankleRollColour = 'blue';
 
         var balanceLegend = new Legend([
             { colour: hipRollColour, name: 'Hip Roll' },
@@ -169,14 +192,32 @@ class WalkModule extends Module
 
         templateRoot.querySelector('.balance-legend').appendChild(balanceLegend.element);
 
-        this.balanceChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {}));
-        this.balanceChart.addTimeSeries(this.hipRollSeries,    { lineWidth: 1, strokeStyle: hipRollColour });
-        this.balanceChart.addTimeSeries(this.kneeSeries,       { lineWidth: 1, strokeStyle: kneeColour });
-        this.balanceChart.addTimeSeries(this.anklePitchSeries, { lineWidth: 1, strokeStyle: anklePitchColour });
-        this.balanceChart.addTimeSeries(this.ankleRollSeries,  { lineWidth: 1, strokeStyle: ankleRollColour });
+        this.balanceChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {yRangeFunction: balancedYRangeFunction}));
+        this.balanceChart.addTimeSeries(this.hipRollSeries,    { lineWidth: 0.5, strokeStyle: hipRollColour });
+        this.balanceChart.addTimeSeries(this.kneeSeries,       { lineWidth: 0.5, strokeStyle: kneeColour });
+        this.balanceChart.addTimeSeries(this.anklePitchSeries, { lineWidth: 0.5, strokeStyle: anklePitchColour });
+        this.balanceChart.addTimeSeries(this.ankleRollSeries,  { lineWidth: 0.5, strokeStyle: ankleRollColour });
         this.balanceChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.balance-chart'), /*delayMs*/ 0);
 
         new TabControl(<HTMLDListElement>templateRoot.querySelector('dl.tab-control'));
+
+        this.isPaused.track(v => {
+            if (v) {
+                this.statusChart.stop();
+                this.pitchChart.stop();
+                this.xAmpChart.stop();
+                this.turnChart.stop();
+                this.balanceChart.stop();
+            } else {
+                this.statusChart.start();
+                this.pitchChart.start();
+                this.xAmpChart.start();
+                this.turnChart.start();
+                this.balanceChart.start();
+            }
+        });
+
+        templateRoot.querySelector('.chart-controls').appendChild(new Checkbox("Pause charts", this.isPaused).element);
     }
 
     public unload()

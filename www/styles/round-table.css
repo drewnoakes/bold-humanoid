@@ -918,6 +918,12 @@ div.module.walk canvas.radar
   vertical-align: top;
 }
 
+
+div.module.walk div.status-legend
+{
+  margin-top: 8px;
+}
+
 div.module.walk div.chart-container
 {
   display: inline-block;
