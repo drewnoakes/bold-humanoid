@@ -14,10 +14,10 @@ namespace bold
 
   enum class WalkStatus
   {
-    Stopped,
-    Starting,
-    Walking,
-    Stabilising
+    Stopped = 0,
+    Starting = 1,
+    Walking = 2,
+    Stabilising = 3
   };
 
   std::string getWalkStatusName(WalkStatus status);
