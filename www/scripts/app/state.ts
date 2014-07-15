@@ -58,6 +58,7 @@ export interface Walk
 export interface JointControlData
 {
     v: number;
+    m: number;
     p: number;
     i: number;
     d: number;
