@@ -191,7 +191,7 @@ StationaryMapState::StationaryMapState(
 
 vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
   vector<Average<Vector2d>> const& keeperEstimates,
-  vector<Average<Vector2d>> const& goalEstimates)
+  vector<Average<Vector2d>> const& goalPostEstimates)
 {
   static auto maxGoalieGoalDistance = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
   static auto maxGoalPairDistanceError = Config::getSetting<double>("vision.goal-detection.max-pair-error-dist");
@@ -214,7 +214,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
 
   FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
 
-  auto getLabel = [&ballSide,&goalEstimates,&keeperEstimates,maxPositionMeasurementError,theirsThreshold](Vector2d goalEstimate) -> GoalLabel
+  auto getLabel = [&ballSide,&goalPostEstimates,&keeperEstimates,maxPositionMeasurementError,theirsThreshold](Vector2d goalEstimate) -> GoalLabel
   {
     switch (ballSide)
     {
@@ -226,7 +226,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
         // Try to look for the keeper in the image.
         // See if this goal estimate has a viable partner, then test for a keeper
         bool foundPair = false;
-        for (auto const& otherGoal : goalEstimates)
+        for (auto const& otherGoal : goalPostEstimates)
         {
           // Stop looping when the estimates are not confident enough
           if (otherGoal.getCount() < GoalSamplesNeeded)
@@ -286,16 +286,16 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
   };
 
   // Build labelled goal vector
-  vector<GoalPostEstimate> labelledEstimates;
-  labelledEstimates.resize(goalEstimates.size());
-  std::transform(goalEstimates.begin(), goalEstimates.end(),
-                 labelledEstimates.begin(),
+  vector<GoalPostEstimate> labelledPostEstimates;
+  labelledPostEstimates.resize(goalPostEstimates.size());
+  std::transform(goalPostEstimates.begin(), goalPostEstimates.end(),
+                 labelledPostEstimates.begin(),
                  [&getLabel](Average<Vector2d> const& goalEstimate)
                  {
                    auto label = getLabel(goalEstimate.getAverage());
                    return GoalPostEstimate(goalEstimate, label);
                 });
-  return labelledEstimates;
+  return labelledPostEstimates;
 }
 
 void StationaryMapState::findGoals()

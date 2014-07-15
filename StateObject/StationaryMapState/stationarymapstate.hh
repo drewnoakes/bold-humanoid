@@ -178,7 +178,7 @@ namespace bold
 
     static std::vector<GoalPostEstimate> labelGoalPostObservations(
       std::vector<Average<Eigen::Vector2d>> const& keeperEstimates,
-      std::vector<Average<Eigen::Vector2d>> const& goalEstimates);
+      std::vector<Average<Eigen::Vector2d>> const& goalPostEstimates);
 
     void calculateTurnAngle();
     void selectKick();
