@@ -69,16 +69,28 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   {
     for (auto const& pixelLabel : getHandler<BlobDetectPass>()->pixelLabels())
     {
-      auto blobColorBgr = pixelLabel->hsvRange().toBgr();
-      switch (imageType)
-      {
-        case ImageType::Cartoon:
-        case ImageType::RGB:
-          blobColorBgr = blobColorBgr.invert();
-          break;
-        default:
-          break;
-      }
+      // Determine outline colour for the blob
+      Colour::bgr blobColorBgr;
+      if (pixelLabel->name() == "Goal")
+        blobColorBgr = Colour::bgr::yellow;
+      else if (pixelLabel->name() == "Ball")
+        blobColorBgr = Colour::bgr::red;
+      else if (pixelLabel->name() == "Cyan")
+        blobColorBgr = Colour::bgr::cyan;
+      else if (pixelLabel->name() == "Magenta")
+        blobColorBgr = Colour::bgr::magenta;
+      else
+        blobColorBgr = pixelLabel->hsvRange().toBgr();
+
+//      switch (imageType)
+//      {
+//        case ImageType::Cartoon:
+//        case ImageType::RGB:
+//          blobColorBgr = blobColorBgr.invert();
+//          break;
+//        default:
+//          break;
+//      }
 
       auto blobColor = blobColorBgr.toScalar();
       auto detectedBlobs = getHandler<BlobDetectPass>()->getDetectedBlobs().at(pixelLabel);
