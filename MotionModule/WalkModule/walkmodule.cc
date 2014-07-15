@@ -40,6 +40,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_minHipPitch(Config::getSetting<double>("walk-module.min-hip-pitch")),
   d_maxHipPitch(Config::getSetting<double>("walk-module.max-hip-pitch")),
   d_fwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.fwd-acc-hip-pitch-factor")),
+  d_stableHipPitch(Config::getSetting<double>("walk-module.stable-hip-pitch")),
   d_turnAngleSet(false),
   d_moveDirSet(false),
   d_immediateStopRequested(false),
@@ -184,7 +185,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     if (d_status == WalkStatus::Walking)
     {
       d_status = WalkStatus::Stabilising;
-      d_hipPitch.setTarget(13.0);
+      d_hipPitch.setTarget(d_stableHipPitch->getValue());
       d_stabilisationCycleCount = d_stabilisationTimeMillis->getValue() / TIME_UNIT;
       d_stabilisationCyclesRemaining = d_stabilisationCycleCount;
     }
