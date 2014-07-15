@@ -34,7 +34,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_xAmp(0, 1),
   d_yAmp(0, 1),
   d_turnAmp(0, 1),
-  d_hipPitch(13.0, 0.1),
+  d_hipPitch(Config::getValue<double>("walk-module.stable-hip-pitch"), 1),
   d_isParalysed(Config::getSetting<bool>("walk-module.is-paralysed")),
   d_maxHipPitchAtSpeed(Config::getSetting<double>("walk-module.max-hip-pitch-at-speed")),
   d_minHipPitch(Config::getSetting<double>("walk-module.min-hip-pitch")),
