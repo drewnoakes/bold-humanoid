@@ -1,13 +1,8 @@
 #include "locateball.hh"
 
-#include "../../Agent/agent.hh"
-#include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
-#include "../../StateObject/CameraFrameState/cameraframestate.hh"
-#include "../../StateObject/StationaryMapState/stationarymapstate.hh"
 #include "../LookAround/lookaround.hh"
-#include "../LookAtBall/lookatball.hh"
 
 using namespace bold;
 using namespace Eigen;
