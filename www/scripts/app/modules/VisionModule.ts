@@ -45,6 +45,9 @@ class VisionModule extends Module
         var goalSettingsContainer = content.querySelector('div.goal-detection');
         control.buildSettings('vision.goal-detection', goalSettingsContainer, this.closeables);
 
+        var playerSettingsContainer = content.querySelector('div.player-detection');
+        control.buildSettings('vision.player-detection', playerSettingsContainer, this.closeables);
+
         var granularitySettingsContainer = content.querySelector('div.granularity');
         control.buildSetting('vision.image-granularity', granularitySettingsContainer, this.closeables);
         control.buildSetting('vision.max-granularity', granularitySettingsContainer, this.closeables);
