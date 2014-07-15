@@ -47,10 +47,13 @@ class WalkModule extends Module
 
     private pitchCurrentSeries: TimeSeries;
     private pitchTargetSeries: TimeSeries;
+
     private xAmpCurrentSeries: TimeSeries;
     private xAmpTargetSeries: TimeSeries;
+
     private angleCurrentSeries: TimeSeries;
     private angleTargetSeries: TimeSeries;
+
     private hipRollSeries: TimeSeries;
     private kneeSeries: TimeSeries;
     private anklePitchSeries: TimeSeries;
@@ -139,17 +142,17 @@ class WalkModule extends Module
 
         this.pitchChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 10, maxValue: 15}));
         this.pitchChart.addTimeSeries(this.pitchCurrentSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
-        this.pitchChart.addTimeSeries(this.pitchTargetSeries, { strokeStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 });
+        this.pitchChart.addTimeSeries(this.pitchTargetSeries,  { strokeStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 });
         this.pitchChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.pitch-chart'), /*delayMs*/ 0);
 
         this.xAmpChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 0, maxValue: 40}));
         this.xAmpChart.addTimeSeries(this.xAmpCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
-        this.xAmpChart.addTimeSeries(this.xAmpTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
+        this.xAmpChart.addTimeSeries(this.xAmpTargetSeries,  { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
         this.xAmpChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.x-amp-chart'), /*delayMs*/ 0);
 
         this.turnChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: -25, maxValue: 25}));
         this.turnChart.addTimeSeries(this.angleCurrentSeries, { strokeStyle: 'rgb(121, 36, 133)', lineWidth: 1 });
-        this.turnChart.addTimeSeries(this.angleTargetSeries, { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
+        this.turnChart.addTimeSeries(this.angleTargetSeries,  { strokeStyle: 'rgba(121, 36, 133, 0.4)', lineWidth: 1 });
         this.turnChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.turn-chart'), /*delayMs*/ 0);
 
         var hipRollColour = 'red',
@@ -161,7 +164,7 @@ class WalkModule extends Module
             { colour: hipRollColour, name: 'Hip Roll' },
             { colour: kneeColour, name: 'Knee' },
             { colour: anklePitchColour, name: 'Ankle Pitch' },
-            { colour: ankleRollColour, name: 'Ankle Roll' },
+            { colour: ankleRollColour, name: 'Ankle Roll' }
         ]);
 
         templateRoot.querySelector('.balance-legend').appendChild(balanceLegend.element);
