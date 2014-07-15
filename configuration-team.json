@@ -321,7 +321,7 @@
     "x-amp-delta": 0.35,
     "y-amp-delta": 0.35,
     "turn-delta": 0.24,
-    "hip-pitch-delta": 0.15,
+    "hip-pitch-delta": 0.05,
     "max-hip-pitch-at-speed": 13,
     "min-hip-pitch": 12,
     "max-hip-pitch": 15,
