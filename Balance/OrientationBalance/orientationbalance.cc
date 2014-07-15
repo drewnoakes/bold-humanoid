@@ -24,9 +24,9 @@ BalanceOffset OrientationBalance::computeCorrection(double targetPitchRads) cons
   double pitchError = -targetPitchRads - orientation->getPitchAngle();
 
   std::cout << "targetPitch=" << (int)Math::radToDeg(targetPitchRads)
-            << " currPitch="  << (int)Math::radToDeg(orientation->getPitchAngle())
-            << " rollErr="    << (int)Math::radToDeg(rollError)
+            << " currPitch="  << (int)Math::radToDeg(-orientation->getPitchAngle())
             << " pitchError=" << (int)Math::radToDeg(pitchError)
+            << " rollErr="    << (int)Math::radToDeg(rollError)
             << std::endl;
 
   auto correction = BalanceOffset();
