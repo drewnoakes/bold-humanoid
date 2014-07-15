@@ -187,62 +187,61 @@ void GameStateReceiver::receive()
 
 void GameStateReceiver::processGameControllerInfoMessage(char const* data)
 {
-    static set<uint32> observedVersionNumbers;
-    static set<uint8> ignoredTeamNumbers;
-    static set<uint8> observedOpponentTeamNumbers;
+  static set<uint32> observedVersionNumbers;
+  static set<uint8> ignoredTeamNumbers;
+  static set<uint8> observedOpponentTeamNumbers;
 
-    static int teamNumber = Config::getStaticValue<int>("team-number");
+  static int teamNumber = Config::getStaticValue<int>("team-number");
 
-    auto gameState = make_shared<GameState const>(data);
+  auto gameState = make_shared<GameState const>(data);
 
-    ASSERT(gameState->getVersion() == GameStateData::VERSION);
+  ASSERT(gameState->getVersion() == GameStateData::VERSION);
 
-    // Track the other team numbers we see, and log them as new ones arrive
+  // Track the other team numbers we see, and log them as new ones arrive
 
-    uint8 teamNumber1 = gameState->getTeam1().getTeamNumber();
-    uint8 teamNumber2 = gameState->getTeam2().getTeamNumber();
+  uint8 teamNumber1 = gameState->getTeam1().getTeamNumber();
+  uint8 teamNumber2 = gameState->getTeam2().getTeamNumber();
 
-    bool areWeTeam1 = teamNumber1 == teamNumber;
-    bool areWeTeam2 = teamNumber2 == teamNumber;
+  bool areWeTeam1 = teamNumber1 == teamNumber;
+  bool areWeTeam2 = teamNumber2 == teamNumber;
 
-    // Verify that we're one of the teams mentioned in the message
-    if (!areWeTeam1 && !areWeTeam2)
+  // Verify that we're one of the teams mentioned in the message
+  if (!areWeTeam1 && !areWeTeam2)
+  {
+    if (ignoredTeamNumbers.find(teamNumber1) == ignoredTeamNumbers.end() ||
+        ignoredTeamNumbers.find(teamNumber2) == ignoredTeamNumbers.end())
     {
-      if (ignoredTeamNumbers.find(teamNumber1) == ignoredTeamNumbers.end() ||
-          ignoredTeamNumbers.find(teamNumber2) == ignoredTeamNumbers.end())
-      {
-        ignoredTeamNumbers.insert(teamNumber1);
-        ignoredTeamNumbers.insert(teamNumber2);
+      ignoredTeamNumbers.insert(teamNumber1);
+      ignoredTeamNumbers.insert(teamNumber2);
 
-        log::warning("GameStateReceiver::receive")
-          << "Ignoring game controller message for incorrect team numbers "
-          << (int)teamNumber1 << " and " << (int)teamNumber2
-          << " when our team number is " << teamNumber;
-      }
-
-      d_debugger->notifyIgnoringUnrecognisedMessage();
-      return;
+      log::warning("GameStateReceiver::receive")
+        << "Ignoring game controller message for incorrect team numbers "
+        << (int)teamNumber1 << " and " << (int)teamNumber2
+        << " when our team number is " << teamNumber;
     }
 
-    uint8 otherTeamNumber = areWeTeam1 ? teamNumber2 : teamNumber1;
+    d_debugger->notifyIgnoringUnrecognisedMessage();
+    return;
+  }
 
-    if (observedOpponentTeamNumbers.find(otherTeamNumber) == observedOpponentTeamNumbers.end())
-    {
-      log::info("GameStateReceiver::receive") << "Seen first game controller message for our team and team number " << (int)otherTeamNumber;
-      observedOpponentTeamNumbers.insert(otherTeamNumber);
-    }
+  uint8 otherTeamNumber = areWeTeam1 ? teamNumber2 : teamNumber1;
 
-    d_debugger->notifyReceivedGameControllerMessage();
+  if (observedOpponentTeamNumbers.find(otherTeamNumber) == observedOpponentTeamNumbers.end())
+  {
+    log::info("GameStateReceiver::receive") << "Seen first game controller message for our team and team number " << (int)otherTeamNumber;
+    observedOpponentTeamNumbers.insert(otherTeamNumber);
+  }
 
+  d_debugger->notifyReceivedGameControllerMessage();
 
-    if (!d_receivedInfoMessageRecently)
-    {
-      log::info("GameStateReceiver::processGameControllerInfoMessage") << "Connection with game controller established";
-      d_voice->say("Found game controller");
-      d_receivedInfoMessageRecently = true;
-    }
+  if (!d_receivedInfoMessageRecently)
+  {
+    log::info("GameStateReceiver::processGameControllerInfoMessage") << "Connection with game controller established";
+    d_voice->say("Found game controller");
+    d_receivedInfoMessageRecently = true;
+  }
 
-    d_lastReceivedInfoMessageAt = Clock::getTimestamp();
+  d_lastReceivedInfoMessageAt = Clock::getTimestamp();
 
-    State::set(gameState);
+  State::set(gameState);
 }
