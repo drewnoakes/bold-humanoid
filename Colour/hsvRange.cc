@@ -114,8 +114,8 @@ Colour::hsvRange Colour::hsvRange::containing(hsv const& hsv)
   {
     auto d1 = Math::shortestAngleDiffRads(hsv.h * M_PI / 128.0, hMin * M_PI / 128.0);
     auto d2 = Math::shortestAngleDiffRads(hsv.h * M_PI / 128.0, hMax * M_PI / 128.0);
-    cout << "d1: " << d1 << endl;
-    cout << "d2: " << d2 << endl;
+//    cout << "d1: " << d1 << endl;
+//    cout << "d2: " << d2 << endl;
     if (fabs(d1) < fabs(d2))
       res.hMin = hsv.h;
     else
