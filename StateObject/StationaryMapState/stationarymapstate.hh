@@ -54,25 +54,28 @@ namespace bold
   class GoalEstimate
   {
   public:
-    GoalEstimate(Eigen::Vector2d const& post1, Eigen::Vector2d const& post2, GoalLabel label)
-    : d_post1(post1),
-      d_post2(post2),
-      d_label(label)
-    {}
+    GoalEstimate(Eigen::Vector2d const& post1Pos, Eigen::Vector2d const& post2Pos, GoalLabel post1Label, GoalLabel post2Label);
 
-    Eigen::Vector2d getPost1() const { return d_post1; }
-    Eigen::Vector2d getPost2() const { return d_post2; }
+    Eigen::Vector2d getPost1Pos() const { return d_post1Pos; }
+    Eigen::Vector2d getPost2Pos() const { return d_post2Pos; }
+    GoalLabel getPost1Label() const { return d_post1Label; }
+    GoalLabel getPost2Label() const { return d_post2Label; }
+
     GoalLabel getLabel() const { return d_label; }
-    Eigen::Vector2d getMidpoint(double ratio = 0.5) const { return Math::lerp(ratio, d_post1, d_post2); }
+
+    Eigen::Vector2d getMidpoint(double ratio = 0.5) const { return Math::lerp(ratio, d_post1Pos, d_post2Pos); }
+
     bool isTowards(double endBallAngle) const;
 
     GoalEstimate estimateOppositeGoal(GoalLabel label) const;
 
-    LineSegment2d lineSegment2d() const { return LineSegment2d(d_post1, d_post2); }
+    LineSegment2d lineSegment2d() const { return LineSegment2d(d_post1Pos, d_post2Pos); }
 
   private:
-    Eigen::Vector2d d_post1;
-    Eigen::Vector2d d_post2;
+    Eigen::Vector2d d_post1Pos;
+    Eigen::Vector2d d_post2Pos;
+    GoalLabel d_post1Label;
+    GoalLabel d_post2Label;
     GoalLabel d_label;
   };
 

@@ -97,6 +97,20 @@ void RadialOcclusionMap::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& w
 
 ///////////////////////////////////////////////////////////////////////////////
 
+GoalEstimate::GoalEstimate(Vector2d const& post1Pos, Vector2d const& post2Pos, GoalLabel post1Label, GoalLabel post2Label)
+: d_post1Pos(post1Pos),
+  d_post2Pos(post2Pos),
+  d_post1Label(post1Label),
+  d_post2Label(post2Label)
+{
+  if (post1Label == GoalLabel::Theirs || post2Label == GoalLabel::Theirs)
+    d_label = GoalLabel::Theirs;
+  else if (post1Label == GoalLabel::Ours || post2Label == GoalLabel::Ours)
+    d_label = GoalLabel::Ours;
+  else
+    d_label = GoalLabel::Unknown;
+}
+
 bool GoalEstimate::isTowards(double ballEndAngle) const
 {
   bool hasLeft = false,
@@ -110,15 +124,15 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
       hasLeft = true;
   };
 
-  testSide(d_post1);
-  testSide(d_post2);
+  testSide(d_post1Pos);
+  testSide(d_post2Pos);
 
   return hasLeft && hasRight;
 }
 
 GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
 {
-  Vector2d goalLine = d_post2 - d_post1;
+  Vector2d goalLine = d_post2Pos - d_post1Pos;
 
   // There are two perpendicular vectors which should run down the length of the
   // field, parallel to the world's x-axis.
@@ -126,13 +140,13 @@ GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
   Vector2d perp2(goalLine.y(), -goalLine.x());
 
   // Find which one points towards us, as we assume we're between the two goals
-  Vector2d perp = perp1.dot(d_post1) < 0
+  Vector2d perp = perp1.dot(d_post1Pos) < 0
     ? perp1
     : perp2;
 
   Vector2d fieldX = perp.normalized() * FieldMap::getFieldLengthX();
 
-  return GoalEstimate(d_post1 + fieldX, d_post2 + fieldX, label);
+  return GoalEstimate(d_post1Pos + fieldX, d_post2Pos + fieldX, label, label);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -312,15 +326,7 @@ void StationaryMapState::findGoals()
 
       if (error < GoalLengthErrorDistance)
       {
-        GoalLabel label;
-        if (post1.getLabel() == GoalLabel::Theirs || post2->getLabel() == GoalLabel::Theirs)
-          label = GoalLabel::Theirs;
-        else if (post1.getLabel() == GoalLabel::Ours || post2->getLabel() == GoalLabel::Ours)
-          label = GoalLabel::Ours;
-        else
-          label = GoalLabel::Unknown;
-
-        d_goalEstimates.emplace_back(post1.getAverage(), post2->getAverage(), label);
+        d_goalEstimates.emplace_back(post1.getAverage(), post2->getAverage(), post1.getLabel(), post2->getLabel());
 
         posts.erase(post2);
         break;
@@ -452,7 +458,7 @@ void StationaryMapState::calculateTurnAngle()
     if (goal.getLabel() == GoalLabel::Ours)
       continue;
 
-    log::info("StationaryMapState::calculateTurnAngle") << "Evaluate goal at " << goal.getPost1().transpose() << " to " << goal.getPost2().transpose();
+    log::info("StationaryMapState::calculateTurnAngle") << "Evaluate goal at " << goal.getPost1Pos().transpose() << " to " << goal.getPost2Pos().transpose();
 
     // Find desirable target positions
     vector<Vector2d> targetPositions = {
@@ -541,8 +547,8 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.StartObject();
       {
-        writer.String("post1").StartArray().Double(estimate.getPost1().x()).Double(estimate.getPost1().y()).EndArray();
-        writer.String("post2").StartArray().Double(estimate.getPost2().x()).Double(estimate.getPost2().y()).EndArray();
+        writer.String("post1").StartArray().Double(estimate.getPost1Pos().x()).Double(estimate.getPost1Pos().y()).EndArray();
+        writer.String("post2").StartArray().Double(estimate.getPost2Pos().x()).Double(estimate.getPost2Pos().y()).EndArray();
         writer.String("label").Uint(static_cast<uint>(estimate.getLabel()));
       }
       writer.EndObject();
