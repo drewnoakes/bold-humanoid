@@ -5,9 +5,6 @@
 #include "../../State/state.hh"
 #include "../../StateObject/TeamState/teamstate.hh"
 
-#include <deque>
-#include <vector>
-
 using namespace bold;
 using namespace Eigen;
 using namespace rapidjson;
@@ -116,7 +113,7 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
   bool hasLeft = false,
        hasRight = false;
 
-  auto testSide = [&](Eigen::Vector2d const& postPos)
+  auto testSide = [&](Vector2d const& postPos)
   {
     if (Math::angleToPoint(postPos) > ballEndAngle)
       hasRight = true;
@@ -152,9 +149,9 @@ GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
 ///////////////////////////////////////////////////////////////////////////////
 
 StationaryMapState::StationaryMapState(
-  std::vector<Average<Eigen::Vector2d>> ballEstimates,
-  std::vector<Average<Eigen::Vector2d>> goalPostEstimates,
-  std::vector<Average<Eigen::Vector2d>> keeperEstimates,
+  std::vector<Average<Vector2d>> ballEstimates,
+  std::vector<Average<Vector2d>> goalPostEstimates,
+  std::vector<Average<Vector2d>> keeperEstimates,
   RadialOcclusionMap occlusionMap)
 : d_ballEstimates(ballEstimates),
   d_keeperEstimates(keeperEstimates),
@@ -593,7 +590,7 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
   writer.EndObject();
 }
 
-bool StationaryMapState::needMoreSightingsOfGoalPostAt(Eigen::Vector2d goalPos) const
+bool StationaryMapState::needMoreSightingsOfGoalPostAt(Vector2d goalPos) const
 {
   for (auto const& goalPostEstimate : d_goalPostEstimates)
   {
@@ -604,7 +601,7 @@ bool StationaryMapState::needMoreSightingsOfGoalPostAt(Eigen::Vector2d goalPos) 
   return false;
 }
 
-bool StationaryMapState::needMoreSightingsOfBallAt(Eigen::Vector2d ballPos) const
+bool StationaryMapState::needMoreSightingsOfBallAt(Vector2d ballPos) const
 {
   for (auto const& ballEstimate : d_ballEstimates)
   {
