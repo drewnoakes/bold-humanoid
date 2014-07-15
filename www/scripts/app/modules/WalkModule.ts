@@ -40,6 +40,11 @@ class WalkModule extends Module
     private runningIndicator: HTMLDivElement;
     private radarCanvas: HTMLCanvasElement;
 
+    private statusStoppedSeries: TimeSeries;
+    private statusStartingSeries: TimeSeries;
+    private statusWalkingSeries: TimeSeries;
+    private statusStabilisingSeries: TimeSeries;
+
     private pitchCurrentSeries: TimeSeries;
     private pitchTargetSeries: TimeSeries;
     private xAmpCurrentSeries: TimeSeries;
@@ -51,6 +56,7 @@ class WalkModule extends Module
     private anklePitchSeries: TimeSeries;
     private ankleRollSeries: TimeSeries;
 
+    private statusChart: SmoothieChart;
     private pitchChart: SmoothieChart;
     private xAmpChart: SmoothieChart;
     private turnChart: SmoothieChart;
@@ -91,16 +97,45 @@ class WalkModule extends Module
 
         this.drawRadar();
 
+        this.statusStoppedSeries = new TimeSeries();
+        this.statusStartingSeries = new TimeSeries();
+        this.statusWalkingSeries = new TimeSeries();
+        this.statusStabilisingSeries = new TimeSeries();
+
         this.pitchCurrentSeries = new TimeSeries();
         this.pitchTargetSeries = new TimeSeries();
+
         this.xAmpCurrentSeries = new TimeSeries();
         this.xAmpTargetSeries = new TimeSeries();
+
         this.angleCurrentSeries = new TimeSeries();
         this.angleTargetSeries = new TimeSeries();
+
         this.hipRollSeries = new TimeSeries();
         this.kneeSeries = new TimeSeries();
         this.anklePitchSeries = new TimeSeries();
         this.ankleRollSeries = new TimeSeries();
+
+        var stoppedColour = 'rgba(0,0,0,0.2)',
+            startingColour = 'rgba(255,255,0,0.2)',
+            walkingColour = 'rgba(0,255,0,0.2)',
+            stabilisingColour = 'rgba(0,0,255,0.2)';
+
+        var statusLegend = new Legend([
+            { colour: stoppedColour, name: 'Stopped' },
+            { colour: startingColour, name: 'Starting' },
+            { colour: walkingColour, name: 'Walking' },
+            { colour: stabilisingColour, name: 'Stabilising' }
+        ]);
+
+        templateRoot.querySelector('.status-legend').appendChild(statusLegend.element);
+
+        this.statusChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 0, maxValue: 1 }));
+        this.statusChart.addTimeSeries(this.statusStoppedSeries,     { fillStyle: stoppedColour,     lineWidth: 1 });
+        this.statusChart.addTimeSeries(this.statusStartingSeries,    { fillStyle: startingColour,    lineWidth: 1 });
+        this.statusChart.addTimeSeries(this.statusWalkingSeries,     { fillStyle: walkingColour,     lineWidth: 1 });
+        this.statusChart.addTimeSeries(this.statusStabilisingSeries, { fillStyle: stabilisingColour, lineWidth: 1 });
+        this.statusChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.status-chart'), /*delayMs*/ 0);
 
         this.pitchChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 10, maxValue: 15}));
         this.pitchChart.addTimeSeries(this.pitchCurrentSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
@@ -143,11 +178,13 @@ class WalkModule extends Module
 
     public unload()
     {
+        this.statusChart.stop();
         this.pitchChart.stop();
         this.xAmpChart.stop();
         this.turnChart.stop();
         this.balanceChart.stop();
 
+        delete this.statusChart;
         delete this.pitchChart;
         delete this.xAmpChart;
         delete this.turnChart;
@@ -268,6 +305,11 @@ class WalkModule extends Module
         this.xAmpTargetSeries.append(time, data.target[0]);
         this.angleCurrentSeries.append(time, data.current[2]);
         this.angleTargetSeries.append(time, data.target[2]);
+
+        this.statusStoppedSeries.append(time,     data.status === 0 ? 1 : 0);
+        this.statusStartingSeries.append(time,    data.status === 1 ? 1 : 0);
+        this.statusWalkingSeries.append(time,     data.status === 2 ? 1 : 0);
+        this.statusStabilisingSeries.append(time, data.status === 3 ? 1 : 0);
 
         this.drawRadar(data);
     }
