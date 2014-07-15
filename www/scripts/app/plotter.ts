@@ -286,6 +286,8 @@ export function drawTeammates(context: CanvasRenderingContext2D, players: state.
     });
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function drawStationaryMap(context: CanvasRenderingContext2D, data: state.StationaryMap)
 {
     context.lineWidth = 0.01;
@@ -319,7 +321,7 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         {
             case state.GoalLabel.Ours:    return new color.Rgb(0.8, 0.0, 0.0); break;
             case state.GoalLabel.Theirs:  return new color.Rgb(1.0, 0.0, 0.0); break;
-            case state.GoalLabel.Unknown: return new color.Rgb(0.7, 0.7, 0.0); break;
+            case state.GoalLabel.Unknown: return new color.Rgb(0.6, 0.6, 0.4); break;
         }
     };
 
@@ -345,6 +347,25 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.moveTo(goal.post1[0], goal.post1[1]);
         context.lineTo(goal.post2[0], goal.post2[1]);
         context.stroke();
+    });
+
+    var getTeamColour = (teamColour: constants.TeamColour) =>
+    {
+        switch (teamColour)
+        {
+            case constants.TeamColour.Cyan:    return new color.Rgb(0.0, 1.0, 1.0); break;
+            case constants.TeamColour.Magenta: return new color.Rgb(1.0, 0.0, 1.0); break;
+            case constants.TeamColour.Unknown: return new color.Rgb(0.4, 0.4, 0.4); break;
+        }
+    };
+
+    // Keepers
+    _.each(data.keepers, keeper =>
+    {
+        context.fillStyle = getTeamColour(constants.teamColour).toString(0.6);
+        context.beginPath();
+        circle(context, keeper.pos, constants.playerDiameter / 2.0);
+        context.fill();
     });
 
     var startPos = maxBall
@@ -376,6 +397,8 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.stroke();
     });
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function toRgba(rgb: number[], alpha: number)
 {

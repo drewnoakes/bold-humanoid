@@ -40,6 +40,17 @@ export var minDiagonalFieldDistance = Math.sqrt(
 
 export var ballRadius = ballDiameter / 2;
 
+export enum TeamColour
+{
+    Unknown,
+    Cyan,
+    Magenta
+}
+
+export var teamColour = TeamColour.Unknown;
+
+export var playerDiameter = 0.35;
+
 export function update(settings: Setting[])
 {
     _.each(settings, (setting: Setting) =>
@@ -63,10 +74,13 @@ export function update(settings: Setting[])
             case 'world.outer-margin-minimum': outerMarginMinimum = setting.value; break;
             case 'world.penalty-line-length': penaltyLineLength = setting.value; break;
             case 'world.penalty-mark-distance': penaltyMarkDistance = setting.value; break;
+
             case 'camera.field-of-view.horizontal-degrees': cameraFovHorizontalDegrees = setting.value; break;
             case 'camera.field-of-view.vertical-degrees': cameraFovVerticalDegrees = setting.value; break;
             case 'camera.image-width': cameraImageWidth = setting.value; break;
             case 'camera.image-height': cameraImageHeight = setting.value; break;
+
+            case 'team-colour': teamColour = <TeamColour>setting.value; break;
         }
     });
 }
