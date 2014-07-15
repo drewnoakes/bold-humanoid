@@ -407,6 +407,13 @@ void StationaryMapState::selectKick()
       if (occlusionDistance < goalLineDistance)
         continue;
 
+      log::info("StationaryMapState::selectKick")
+        << "Determined goal kick possible: " << kick->getId()
+        << " angleDegs=" << Math::radToDeg(ballEndAngle)
+        << " goalLabel=" << getGoalLabelName(goal.getLabel())
+        << " occlusionDist=" << occlusionDistance
+        << " goalLineDist=" << goalLineDistance;
+
       isOnTarget = true;
       break;
     }
