@@ -82,10 +82,10 @@ namespace bold
     int d_stabilisationCycleCount;
     int d_stabilisationCyclesRemaining;
 
-    LinearSmoother d_xAmp;
-    LinearSmoother d_yAmp;
-    LinearSmoother d_turnAmp;
-    LinearSmoother d_hipPitch;
+    LinearSmoother d_xAmpSmoother;
+    LinearSmoother d_yAmpSmoother;
+    LinearSmoother d_turnAmpSmoother;
+    LinearSmoother d_hipPitchSmoother;
 
     Setting<bool>* d_isParalysed;
 
