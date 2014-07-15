@@ -314,18 +314,22 @@
     }
   },
   "walk-module": {
-    "is-paralysed":  { "type": "bool" },
-    "x-amp-delta":   { "type": "double", "description": "X smoothing delta" },
-    "y-amp-delta":   { "type": "double", "description": "Y smoothing delta" },
-    "turn-delta":    { "type": "double", "description": "Turn smoothing delta" },
-    "hip-pitch-delta": { "type": "double", "description": "Hip pitch smoothing delta" },
-    "max-hip-pitch-at-speed": { "type": "double", "description": "Speed for max hip pitch" },
-    "min-hip-pitch": { "type": "double", "description": "Min hip pitch" },
-    "max-hip-pitch": { "type": "double", "description": "Max hip pitch" },
-    "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Fwd acc hip pitch factor" },
-    "bwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Bwd acc hip pitch factor" },
-    "stable-hip-pitch": { "type": "double", "min": 0.0, "max": 20.0 },
-    "stabilisation-time-ms":    { "type": "int", "min": 0 }
+    "is-paralysed": { "type": "bool" },
+    "stabilisation-time-ms": { "type": "int", "min": 0 },
+    "smoothing-deltas": {
+      "x-amp": { "type": "double", "min": 0 },
+      "y-amp": { "type": "double", "min": 0 },
+      "turn": { "type": "double", "min": 0 },
+      "hip-pitch": { "type": "double", "min": 0 }
+    },
+    "hip-pitch": {
+      "stable-angle": { "type": "double", "min": 0.0, "max": 20.0 },
+      "min-angle": { "type": "double", "description": "Min hip pitch" },
+      "max-angle": { "type": "double", "description": "Max hip pitch" },
+      "max-at-fwd-speed": { "type": "double", "description": "Speed for max hip pitch" },
+      "fwd-acc-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Fwd acc hip pitch factor" },
+      "bwd-acc-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Bwd acc hip pitch factor" }
+    }
   },
   "balance": {
     "mode": { "type": "enum", "description": "Balance mode", "values": { "none": 0, "gyro": 1, "orientation": 2 } },

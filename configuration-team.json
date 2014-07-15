@@ -318,17 +318,21 @@
   },
   "walk-module": {
     "is-paralysed": false,
-    "x-amp-delta": 0.35,
-    "y-amp-delta": 0.35,
-    "turn-delta": 0.24,
-    "hip-pitch-delta": 0.05,
-    "max-hip-pitch-at-speed": 13,
-    "min-hip-pitch": 12,
-    "max-hip-pitch": 15,
-    "fwd-acc-hip-pitch-factor": 2.0,
-    "bwd-acc-hip-pitch-factor": 2.0,
-    "stable-hip-pitch": 11.0,
-    "stabilisation-time-ms": 300
+    "stabilisation-time-ms": 300,
+    "smoothing-deltas": {
+      "x-amp": 0.35,
+      "y-amp": 0.35,
+      "turn": 0.24,
+      "hip-pitch": 0.05
+    },
+    "hip-pitch": {
+      "stable-angle": 11.0,
+      "min-angle": 12,
+      "max-angle": 15,
+      "max-at-fwd-speed": 13,
+      "fwd-acc-factor": 2.0,
+      "bwd-acc-factor": 2.0
+    }
   },
   "balance": {
     "mode": 1,

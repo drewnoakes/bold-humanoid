@@ -34,23 +34,23 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_xAmp(0, 1),
   d_yAmp(0, 1),
   d_turnAmp(0, 1),
-  d_hipPitch(Config::getValue<double>("walk-module.stable-hip-pitch"), 1),
+  d_hipPitch(Config::getValue<double>("walk-module.hip-pitch.stable-angle"), 1),
   d_isParalysed(Config::getSetting<bool>("walk-module.is-paralysed")),
-  d_maxHipPitchAtSpeed(Config::getSetting<double>("walk-module.max-hip-pitch-at-speed")),
-  d_minHipPitch(Config::getSetting<double>("walk-module.min-hip-pitch")),
-  d_maxHipPitch(Config::getSetting<double>("walk-module.max-hip-pitch")),
-  d_fwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.fwd-acc-hip-pitch-factor")),
-  d_bwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.bwd-acc-hip-pitch-factor")),
-  d_stableHipPitch(Config::getSetting<double>("walk-module.stable-hip-pitch")),
+  d_stableHipPitch(Config::getSetting<double>("walk-module.hip-pitch.stable-angle")),
+  d_minHipPitch(Config::getSetting<double>("walk-module.hip-pitch.min-angle")),
+  d_maxHipPitch(Config::getSetting<double>("walk-module.hip-pitch.max-angle")),
+  d_maxHipPitchAtSpeed(Config::getSetting<double>("walk-module.hip-pitch.max-at-fwd-speed")),
+  d_fwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.hip-pitch.fwd-acc-factor")),
+  d_bwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.hip-pitch.bwd-acc-factor")),
   d_turnAngleSet(false),
   d_moveDirSet(false),
   d_immediateStopRequested(false),
   d_status(WalkStatus::Stopped)
 {
-  Config::getSetting<double>("walk-module.x-amp-delta")->track([this](double value) { d_xAmp.setDelta(value); });
-  Config::getSetting<double>("walk-module.y-amp-delta")->track([this](double value) { d_yAmp.setDelta(value); });
-  Config::getSetting<double>("walk-module.turn-delta") ->track([this](double value) { d_turnAmp.setDelta(value); });
-  Config::getSetting<double>("walk-module.hip-pitch-delta")->track([this](double value) { d_hipPitch.setDelta(value); });
+  Config::getSetting<double>("walk-module.smoothing-deltas.x-amp")->track([this](double value) { d_xAmp.setDelta(value); });
+  Config::getSetting<double>("walk-module.smoothing-deltas.y-amp")->track([this](double value) { d_yAmp.setDelta(value); });
+  Config::getSetting<double>("walk-module.smoothing-deltas.turn") ->track([this](double value) { d_turnAmp.setDelta(value); });
+  Config::getSetting<double>("walk-module.smoothing-deltas.hip-pitch")->track([this](double value) { d_hipPitch.setDelta(value); });
 
   Config::getSetting<BalanceMode>("balance.mode")->track(
     [this] (BalanceMode mode)

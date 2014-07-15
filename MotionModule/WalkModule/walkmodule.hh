@@ -88,12 +88,14 @@ namespace bold
     LinearSmoother d_hipPitch;
 
     Setting<bool>* d_isParalysed;
-    Setting<double>* d_maxHipPitchAtSpeed;
+
+    // hip pitch calculation parameters
+    Setting<double>* d_stableHipPitch;
     Setting<double>* d_minHipPitch;
     Setting<double>* d_maxHipPitch;
+    Setting<double>* d_maxHipPitchAtSpeed;
     Setting<double>* d_fwdAccelerationHipPitchFactor;
     Setting<double>* d_bwdAccelerationHipPitchFactor;
-    Setting<double>* d_stableHipPitch;
 
     bool d_turnAngleSet;
     bool d_moveDirSet;
