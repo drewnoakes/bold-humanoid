@@ -60,20 +60,27 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
     playerState.status = d_behaviourControl->getPlayerStatus();
     playerState.role = d_behaviourControl->getPlayerRole();
 
-    auto const& agentFrameState = State::get<AgentFrameState>();
-    if (agentFrameState)
+    if (playerState.status != PlayerStatus::Paused && playerState.status != PlayerStatus::Penalised)
     {
-      auto const& ballObservation = agentFrameState->getBallObservation();
-      if (ballObservation.hasValue())
-        playerState.ballRelative = Vector2d(ballObservation->x(), ballObservation->y());
-    }
+      auto const &agentFrameState = State::get<AgentFrameState>();
+      if (agentFrameState)
+      {
+        auto const &ballObservation = agentFrameState->getBallObservation();
+        if (ballObservation.hasValue())
+          playerState.ballRelative = Vector2d(ballObservation->x(), ballObservation->y());
+      }
 
-    auto const& worldFrameState = State::get<WorldFrameState>();
-    if (worldFrameState)
-    {
-      playerState.pos = worldFrameState->getPosition();
-      // TODO come up with a proper confidence value
-      playerState.posConfidence = 1.0;
+      auto const &worldFrameState = State::get<WorldFrameState>();
+      if (worldFrameState)
+      {
+        playerState.pos = worldFrameState->getPosition();
+        // TODO come up with a proper confidence value
+        playerState.posConfidence = 1.0;
+      }
+      else
+      {
+        playerState.posConfidence = 0.0;
+      }
     }
     else
     {
