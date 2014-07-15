@@ -411,9 +411,11 @@ void StationaryMapState::selectKick()
         continue;
 
       log::info("StationaryMapState::selectKick")
-        << "Determined goal kick possible: " << kick->getId()
+        << "Goal kick possible: " << kick->getId()
         << " angleDegs=" << Math::radToDeg(ballEndAngle)
         << " goalLabel=" << getGoalLabelName(goal.getLabel())
+        << " post1Label=" << getGoalLabelName(goal.getPost1Label())
+        << " post2Label=" << getGoalLabelName(goal.getPost2Label())
         << " occlusionDist=" << occlusionDistance
         << " goalLineDist=" << goalLineDistance;
 
