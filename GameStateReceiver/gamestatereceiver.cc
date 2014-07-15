@@ -236,8 +236,12 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
 
 
     if (!d_receivedInfoMessageRecently)
+    {
       log::info("GameStateReceiver::processGameControllerInfoMessage") << "Connection with game controller established";
-    d_receivedInfoMessageRecently = true;
+      d_voice->say("Found game controller");
+      d_receivedInfoMessageRecently = true;
+    }
+
     d_lastReceivedInfoMessageAt = Clock::getTimestamp();
 
     State::set(gameState);
