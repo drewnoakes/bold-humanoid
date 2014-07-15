@@ -40,6 +40,7 @@ WalkModule::WalkModule(shared_ptr<MotionTaskScheduler> scheduler)
   d_minHipPitch(Config::getSetting<double>("walk-module.min-hip-pitch")),
   d_maxHipPitch(Config::getSetting<double>("walk-module.max-hip-pitch")),
   d_fwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.fwd-acc-hip-pitch-factor")),
+  d_bwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.bwd-acc-hip-pitch-factor")),
   d_stableHipPitch(Config::getSetting<double>("walk-module.stable-hip-pitch")),
   d_turnAngleSet(false),
   d_moveDirSet(false),
@@ -243,7 +244,10 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     // The change in xAmp gives a direction and magnitude of our acceleration in the forward direction.
     double xAcc = xAmpDelta;
 
-    alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAcc;
+    if (xAcc > 0)
+      alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAcc;
+    else
+      alpha += d_bwdAccelerationHipPitchFactor->getValue() * xAcc;
 
     d_hipPitch.setTarget(Math::lerp(
       Math::clamp(alpha, 0.0, 1.0),

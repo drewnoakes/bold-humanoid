@@ -92,6 +92,7 @@ namespace bold
     Setting<double>* d_minHipPitch;
     Setting<double>* d_maxHipPitch;
     Setting<double>* d_fwdAccelerationHipPitchFactor;
+    Setting<double>* d_bwdAccelerationHipPitchFactor;
     Setting<double>* d_stableHipPitch;
 
     bool d_turnAngleSet;

@@ -323,6 +323,7 @@
     "min-hip-pitch": { "type": "double", "description": "Min hip pitch" },
     "max-hip-pitch": { "type": "double", "description": "Max hip pitch" },
     "fwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Fwd acc hip pitch factor" },
+    "bwd-acc-hip-pitch-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Bwd acc hip pitch factor" },
     "stable-hip-pitch": { "type": "double", "min": 0.0, "max": 20.0 },
     "stabilisation-time-ms":    { "type": "int", "min": 0 }
   },
