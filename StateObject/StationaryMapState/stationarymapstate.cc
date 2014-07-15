@@ -254,7 +254,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
         double goalDist = goalEstimate.norm();
         if (goalDist < (FieldMap::getFieldLengthX()/2.0) - maxPositionMeasurementError)
         {
-          log::info("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on our side, and closest goal is too close at " << goalDist;
+          log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on our side, and closest goal is too close at " << goalDist;
           return GoalLabel::Ours;
         }
         break;
@@ -264,7 +264,7 @@ vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
         double goalDist = goalEstimate.norm();
         if (goalDist > theirsThreshold)
         {
-          log::info("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on the opponent's side, and closest goal is too far at " << goalDist;
+          log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on the opponent's side, and closest goal is too far at " << goalDist;
           return GoalLabel::Ours;
         }
         break;
