@@ -452,6 +452,7 @@ void MotionLoop::step(SequentialTimer& t)
     {
       State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
       t.timeEvent("Set BodyControlState");
+      d_bodyControl->clearModulation();
     }
 
     if (d_debugControl->isDirty())
@@ -603,9 +604,6 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
             joint->getModulationOffset() +
             d_offsets[joint->getId()]
           );
-
-          // Modulation only lasts for one cycle
-          joint->setModulationOffset(0);
 
           ushort value = MX28::clampValue(goalPosition);
           parameters[n++] = CM730::getLowByte(value);
