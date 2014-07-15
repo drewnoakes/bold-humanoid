@@ -36,7 +36,7 @@ void WalkState::writeJson(Writer<StringBuffer>& writer) const
   writer.StartObject();
   {
     writer.String("running").Bool(d_isRunning);
-    writer.String("status").String(getWalkStatusName(d_status).c_str());
+    writer.String("status").Int((int)d_status);
 
     writer.String("target");
     writer.StartArray();

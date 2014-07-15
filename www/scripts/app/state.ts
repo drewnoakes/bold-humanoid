@@ -28,10 +28,18 @@ export interface AgentFrame
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export enum WalkStatus
+{
+    Stopped = 0,
+    Starting = 1,
+    Walking = 2,
+    Stabilising = 3
+}
+
 export interface Walk
 {
     running: boolean;
-    status: string;
+    status: WalkStatus;
 
     /** [x,y,turn] */
     target: number[];
