@@ -232,14 +232,18 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 
     // TODO allow swappable implementations of a WalkPitchPosture, and calculate every cycle on the motion thread
     // TODO this doesn't support walking backwards (-ve x)
-    // TODO examine using the acceleration (xAmpDelta) as a input signal
 //    // TODO revisit this treatment of xAmp and turnAmp as though they're the same units
 //     double alpha = max(xAmp, turnAmp) / d_maxHipPitchAtSpeed->getValue();
     double alpha = xAmp / d_maxHipPitchAtSpeed->getValue();
 
-    double xAmpTargetDiff = d_xAmp.getTarget() - xAmp;
+//    // Estimate future forward acceleration by comparing the target forward speed with the current.
+//    // Note that the target can fluctuate considerably, so this value may be quite noisy.
+//    double xAcc = d_xAmp.getTarget() - xAmp;
 
-    alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAmpTargetDiff;
+    // The change in xAmp gives a direction and magnitude of our acceleration in the forward direction.
+    double xAcc = xAmpDelta;
+
+    alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAcc;
 
     d_hipPitch.setTarget(Math::lerp(
       Math::clamp(alpha, 0.0, 1.0),
