@@ -20,12 +20,12 @@ namespace bold
       d_target = target;
     }
 
-    double getCurrent()
+    double getCurrent() const
     {
       return d_current;
     }
 
-    double getTarget()
+    double getTarget() const
     {
       return d_target;
     }
