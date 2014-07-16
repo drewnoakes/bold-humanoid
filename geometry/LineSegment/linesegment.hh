@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../util/assert.hh"
 #include "../../util/meta.hh"
 
 #include <Eigen/Core>
@@ -22,13 +23,7 @@ namespace bold
       this->col(0) = p1;
       this->col(1) = p2;
 
-      // TODO: costly at runtime, perhaps make assert?
-      if ((p2 - p1).cwiseAbs().maxCoeff() == 0)
-      {
-        std::stringstream s;
-        s << "Points must have different values. Both have: " << p1.transpose();
-        throw std::runtime_error(s.str());
-      }
+      ASSERT((p2 - p1).cwiseAbs().maxCoeff() != 0);
     }
 
     using Eigen::Matrix<T,dim,2>::Matrix;

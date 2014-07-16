@@ -18,10 +18,11 @@ TEST (LineSegmentTests, delta)
   EXPECT_EQ (Vector2i(2,1),     LineSegment2i(Vector2i(1,0),   Vector2i(3,1)).delta());
 }
 
-TEST (LineSegmentTests, points_not_identical)
-{
-  ASSERT_THROW (LineSegment2i(Vector2i(50,0), Vector2i(50,0)), std::runtime_error);
-}
+// This test commented as we now have a runtime assertion that fires here, rather than an exception
+//TEST (LineSegmentTests, points_not_identical)
+//{
+//  ASSERT_THROW (LineSegment2i(Vector2i(50,0), Vector2i(50,0)), std::runtime_error);
+//}
 
 TEST (LineSegmentTests, gradient)
 {
