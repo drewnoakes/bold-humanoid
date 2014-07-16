@@ -166,17 +166,10 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     d_walkEngine->reset();
   }
 
-  double xAmpPrior = d_xAmpSmoother.getCurrent();
-  double yAmpPrior = d_yAmpSmoother.getCurrent();
-  double turnAmpPrior = d_turnAmpSmoother.getCurrent();
-
+  // Step the movement smoothers forward
   double xAmp = d_xAmpSmoother.getNext();
   double yAmp = d_yAmpSmoother.getNext();
   double turnAmp = d_turnAmpSmoother.getNext();
-
-  double xAmpDelta = xAmp - xAmpPrior;
-  double yAmpDelta = yAmp - yAmpPrior;
-  double turnAmpDelta = turnAmp - turnAmpPrior;
 
   d_turnAngleSet = false;
   d_moveDirSet = false;
@@ -242,7 +235,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 //    double xAcc = d_xAmpSmoother.getTarget() - xAmp;
 
     // The change in xAmp gives a direction and magnitude of our acceleration in the forward direction.
-    double xAcc = xAmpDelta;
+    double xAcc = d_xAmpSmoother.getLastDelta();
 
     if (xAcc > 0)
       alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAcc;
@@ -287,7 +280,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 
   State::make<WalkState>(
     d_xAmpSmoother.getTarget(), d_yAmpSmoother.getTarget(), d_turnAmpSmoother.getTarget(), d_hipPitchSmoother.getTarget(),
-    xAmpDelta, yAmpDelta, turnAmpDelta, hipPitchDelta,
+    d_xAmpSmoother.getLastDelta(), d_yAmpSmoother.getLastDelta(), d_turnAmpSmoother.getLastDelta(), d_hipPitchSmoother.getLastDelta(),
     this,
     d_walkEngine);
 }
