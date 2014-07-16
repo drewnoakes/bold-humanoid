@@ -179,7 +179,6 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     if (d_status == WalkStatus::Walking)
     {
       d_status = WalkStatus::Stabilising;
-      d_hipPitchSmoother.setTarget(d_stableHipPitch->getValue());
       d_stabilisationCycleCount = d_stabilisationTimeMillis->getValue() / TIME_UNIT;
       d_stabilisationCyclesRemaining = d_stabilisationCycleCount;
     }
@@ -219,15 +218,24 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     d_walkEngine->X_MOVE_AMPLITUDE = xAmp;
     d_walkEngine->Y_MOVE_AMPLITUDE = yAmp;
     d_walkEngine->A_MOVE_AMPLITUDE = turnAmp;
+  }
 
-    //
-    // SET HIP PITCH TARGET
-    //
+  //
+  // UPDATE HIP PITCH
+  //
 
-    // TODO allow swappable implementations of a WalkPitchPosture, and calculate every cycle on the motion thread
-    // TODO this doesn't support walking backwards (-ve x)
-//    // TODO revisit this treatment of xAmp and turnAmp as though they're the same units
-//     double alpha = max(xAmp, turnAmp) / d_maxHipPitchAtSpeed->getValue();
+  if (d_status == WalkStatus::Stabilising)
+  {
+    d_hipPitchSmoother.setTarget(d_stableHipPitch->getValue());
+  }
+  else
+  {
+    // TODO verify this works for walking backwards (-ve x)
+    // TODO consider turn speed and sideways speed
+
+//    double targetHipPitch = d_walkAttitude->getTarget()
+
+    // Determine a ratio [0,1] that determines how far
     double alpha = xAmp / d_maxHipPitchAtSpeed->getValue();
 
 //    // Estimate future forward acceleration by comparing the target forward speed with the current.
@@ -242,15 +250,13 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     else
       alpha += d_bwdAccelerationHipPitchFactor->getValue() * xAcc;
 
-    d_hipPitchSmoother.setTarget(Math::lerp(
+    double targetHipPitch = Math::lerp(
       Math::clamp(alpha, 0.0, 1.0),
       d_minHipPitch->getValue(),
-      d_maxHipPitch->getValue()));
-  }
+      d_maxHipPitch->getValue());
 
-  //
-  // UPDATE HIP PITCH
-  //
+    d_hipPitchSmoother.setTarget(targetHipPitch);
+  }
 
   double hipPitchPrior = d_hipPitchSmoother.getCurrent();
   double hipPitch = d_hipPitchSmoother.getNext();
@@ -259,16 +265,10 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 
   if (d_status != WalkStatus::Stopped)
   {
-    //
     // Calculate new motion
-    //
-
     d_walkEngine->step();
 
-    //
     // Calculate balance parameters
-    //
-
     // Take a copy, for thread safety
     auto balance = d_balance;
 
