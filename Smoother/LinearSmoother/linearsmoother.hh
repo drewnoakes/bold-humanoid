@@ -2,7 +2,7 @@
 
 #include "../smoother.hh"
 
-#include <cmath>
+#include <algorithm>
 
 namespace bold
 {
