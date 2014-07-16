@@ -177,6 +177,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 
   if (xAmp == 0 && yAmp == 0 && turnAmp == 0)
   {
+    // Control is requesting no movement. Stabilise and come to a stop.
     if (d_status == WalkStatus::Walking)
     {
       d_status = WalkStatus::Stabilising;
@@ -212,10 +213,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
 
     ASSERT(d_status == WalkStatus::Walking);
 
-    //
-    // SET WALK MOVEMENT PARAMETERS
-    //
-
+    // Set walk movement parameters
     d_walkEngine->X_MOVE_AMPLITUDE = xAmp;
     d_walkEngine->Y_MOVE_AMPLITUDE = yAmp;
     d_walkEngine->A_MOVE_AMPLITUDE = turnAmp;
@@ -291,6 +289,7 @@ void WalkModule::applyLegs(LegSection* legs)
   if (!d_isParalysed->getValue())
     d_walkEngine->applyLegs(legs);
 
+  // Apply any balancing correction
   auto balanceState = State::get<BalanceState>();
 
   if (balanceState)
