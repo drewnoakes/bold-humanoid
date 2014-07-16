@@ -159,6 +159,8 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
   if (d_status == WalkStatus::Starting)
   {
     d_status = WalkStatus::Walking;
+    d_attitude.reset();
+    d_hipPitchSmoother.reset(d_attitude.getHipPitch());
     d_walkEngine->reset();
   }
 
