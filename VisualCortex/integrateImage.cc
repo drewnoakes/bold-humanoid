@@ -89,8 +89,35 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
     }
   }
 
-  State::make<CameraFrameState>(ballPosition, goalPositions, teamMatePositions, 
-                                observedLineSegments, d_fieldEdgePass->getOcclusionRays(),
+  vector<OcclusionRay<ushort>> occlusionRays = d_fieldEdgePass->getOcclusionRays();
+
+  // TODO do this widening in the image frame, not during projection
+  static auto widenOcclusions = Config::getSetting<bool>("vision.occlusion.widen");
+  static auto midHeightToWiden = Config::getSetting<int>("vision.occlusion.widen-min-height-px");
+
+  if (widenOcclusions->getValue())
+  {
+    vector<OcclusionRay<ushort>> widenedRays;
+    for (uint i = 0; i < occlusionRays.size(); i++)
+    {
+      auto const& ray = occlusionRays[i];
+      Matrix<ushort,2,1> near = ray.near();
+      if ((ray.far().y() - ray.near().y()) > midHeightToWiden->getValue())
+      {
+        // Widen occlusions by taking the near as the lowest of itself and its neighbours in the image
+        if (i != 0)
+          near.y() = min(near.y(), occlusionRays[i - 1].near().y());
+        if (i != occlusionRays.size() - 1)
+          near.y() = min(near.y(), occlusionRays[i + 1].near().y());
+      }
+      widenedRays.emplace_back(near, ray.far());
+    }
+
+    occlusionRays = widenedRays;
+  }
+
+  State::make<CameraFrameState>(ballPosition, goalPositions, teamMatePositions,
+                                observedLineSegments, occlusionRays,
                                 totalPixelCount, processedPixelCount, thinkCycleNumber);
 
   t.timeEvent("Updating State");

@@ -52,22 +52,7 @@ void Spatialiser::updateCameraToAgent()
   for (uint i = 0; i < cameraOcclusionRays.size(); i++)
   {
     auto const& ray = cameraOcclusionRays[i];
-
-    Matrix<ushort,2,1> near = ray.near();
-
-    static auto widenOcclusions = Config::getSetting<bool>("vision.occlusion.widen");
-    static auto midHeightToWiden = Config::getSetting<int>("vision.occlusion.widen-min-height-px");
-
-    if (widenOcclusions->getValue() && (ray.far().y() - ray.near().y()) > midHeightToWiden->getValue())
-    {
-      // Widen occlusions by taking the near as the lowest of itself and its neighbours in the image
-      if (i != 0)
-        near.y() = min(near.y(), cameraOcclusionRays[i - 1].near().y());
-      if (i != cameraOcclusionRays.size() - 1)
-        near.y() = min(near.y(), cameraOcclusionRays[i + 1].near().y());
-    }
-
-    auto const& p1 = findGroundPointForPixel(near.cast<double>() + Vector2d(0.5,0.5));
+    auto const& p1 = findGroundPointForPixel(ray.near().cast<double>() + Vector2d(0.5,0.5));
     auto const& p2 = findGroundPointForPixel(ray.far().cast<double>() + Vector2d(0.5,0.5));
     if (p1.hasValue() && p2.hasValue())
       occlusionRays.emplace_back(p1->head<2>(), p2->head<2>());
