@@ -258,10 +258,7 @@ void WalkModule::step(std::shared_ptr<JointSelection> const& selectedJoints)
     d_hipPitchSmoother.setTarget(targetHipPitch);
   }
 
-  double hipPitchPrior = d_hipPitchSmoother.getCurrent();
-  double hipPitch = d_hipPitchSmoother.getNext();
-  double hipPitchDelta = hipPitch - hipPitchPrior;
-  d_walkEngine->HIP_PITCH_OFFSET = hipPitch;
+  d_walkEngine->HIP_PITCH_OFFSET = d_hipPitchSmoother.getNext();
 
   if (d_status != WalkStatus::Stopped)
   {
