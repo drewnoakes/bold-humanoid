@@ -34,6 +34,9 @@ namespace bold
     /** Returns the vector formed by <code>p2() - p1()</code> */
     PointType delta() const { return p2() - p1(); }
 
+    /** Returns the vector formed by <code>(p2() + p1()) / 2.0</code> */
+    PointType mid() const { return (p2() + p1()) / 2.0; }
+
     T length() const { return delta().norm(); }
 
     double normalisedDot(LineSegment<T,dim> other) const

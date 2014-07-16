@@ -4,6 +4,7 @@
 #include <Eigen/Geometry>
 #include <stdexcept>
 
+#include "helpers.hh"
 #include "../geometry/Bounds2i.hh"
 #include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 
@@ -210,6 +211,14 @@ TEST (LineSegmentTests, addAndSubtractAVector)
 
   EXPECT_EQ (LineSegment2i(Vector2i(1,1),   Vector2i(1,2)),  LineSegment2i(Vector2i(0,0), Vector2i(0,1)) - Vector2i(-1, -1));
   EXPECT_EQ (LineSegment2i(Vector2i(-1,-1), Vector2i(-1,0)), LineSegment2i(Vector2i(0,0), Vector2i(0,1)) + Vector2i(-1, -1));
+}
+
+TEST (LineSegmentTests, mid)
+{
+  EXPECT_TRUE(VectorsEqual(
+    Vector2d(0.5,1),
+    LineSegment2d(Vector2d(0,0), Vector2d(1,2)).mid()
+  ));
 }
 
 /*
