@@ -212,6 +212,9 @@
       "complete": {
         "smoothing-window-length": 5
       }
+    },
+    "occlusion": {
+      "widen": true
     }
   },
   "game-controller": {

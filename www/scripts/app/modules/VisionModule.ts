@@ -48,6 +48,9 @@ class VisionModule extends Module
         var playerSettingsContainer = content.querySelector('div.player-detection');
         control.buildSettings('vision.player-detection', playerSettingsContainer, this.closeables);
 
+        var occlusionSettingsContainer = content.querySelector('div.occlusion');
+        control.buildSettings('vision.occlusion', occlusionSettingsContainer, this.closeables);
+
         var granularitySettingsContainer = content.querySelector('div.granularity');
         control.buildSetting('vision.image-granularity', granularitySettingsContainer, this.closeables);
         control.buildSetting('vision.max-granularity', granularitySettingsContainer, this.closeables);

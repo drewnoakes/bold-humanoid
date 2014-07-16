@@ -209,6 +209,9 @@
       "complete": {
         "smoothing-window-length": { "type": "int", "min": 1, "max": 100 }
       }
+    },
+    "occlusion": {
+      "widen": { "type": "bool", "description": "Widen occlusions" }
     }
   },
   "game-controller": {

@@ -47,10 +47,34 @@ void Spatialiser::updateCameraToAgent()
   auto lineJunctions = d_lineJunctionFinder->findLineJunctions(lineSegments);
 
   // Project occlusion rays
+  auto cameraOcclusionRays = cameraFrame->getOcclusionRays();
   vector<OcclusionRay<double>> occlusionRays;
-  for (auto const& ray : cameraFrame->getOcclusionRays())
+  for (uint i = 0; i < cameraOcclusionRays.size(); i++)
   {
-    auto const& p1 = findGroundPointForPixel(ray.near().cast<double>() + Vector2d(0.5,0.5));
+    auto const& ray = cameraOcclusionRays[i];
+
+    Matrix<ushort,2,1> near = ray.near();
+
+    static auto widenOcclusions = Config::getSetting<bool>("vision.occlusion.widen");
+    if (widenOcclusions->getValue())
+    {
+      // Widen occlusions by taking the near as the lowest of itself and its neighbours in the image
+      if (i != 0)
+      {
+        auto const& rayBefore = cameraOcclusionRays[i - 1];
+        if (rayBefore.near().y() < near.y())
+          near = rayBefore.near();
+      }
+
+      if (i != cameraOcclusionRays.size() - 1)
+      {
+        auto const& rayAfter = cameraOcclusionRays[i + 1];
+        if (rayAfter.near().y() < near.y())
+          near = rayAfter.near();
+      }
+    }
+
+    auto const& p1 = findGroundPointForPixel(near.cast<double>() + Vector2d(0.5,0.5));
     auto const& p2 = findGroundPointForPixel(ray.far().cast<double>() + Vector2d(0.5,0.5));
     if (p1.hasValue() && p2.hasValue())
       occlusionRays.emplace_back(p1->head<2>(), p2->head<2>());
