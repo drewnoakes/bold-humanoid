@@ -18,7 +18,7 @@ namespace bold
     std::string d_name;
 
   public:
-    PixelLabel() {}
+    PixelLabel() = default;
 
     PixelLabel(std::string name, Colour::hsvRange hsvRange)
     : d_id(nextId++),
