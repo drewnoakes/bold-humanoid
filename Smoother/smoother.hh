@@ -43,10 +43,11 @@ namespace bold
       return d_lastDelta;
     }
 
-    void reset()
+    void reset(double value = 0)
     {
-      d_target = 0;
-      d_current = 0;
+      d_target = value;
+      d_current = value;
+      d_lastDelta = 0;
     }
 
   protected:
