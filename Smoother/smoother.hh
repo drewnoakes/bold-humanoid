@@ -4,17 +4,14 @@ namespace bold
 {
   class Smoother
   {
-  protected:
-    double d_target;
-    double d_current;
-
   public:
     Smoother(double initialValue)
     : d_target(initialValue),
-      d_current(initialValue)
+      d_current(initialValue),
+      d_lastDelta(0.0)
     {}
 
-    virtual ~Smoother() {}
+    virtual ~Smoother() = default;
 
     virtual void step() = 0;
 
@@ -35,8 +32,15 @@ namespace bold
 
     double getNext()
     {
+      auto prior = d_current;
       step();
+      d_lastDelta = d_current - prior;
       return getCurrent();
+    }
+
+    double getLastDelta() const
+    {
+      return d_lastDelta;
     }
 
     void reset()
@@ -44,5 +48,10 @@ namespace bold
       d_target = 0;
       d_current = 0;
     }
+
+  protected:
+    double d_target;
+    double d_current;
+    double d_lastDelta;
   };
 }
