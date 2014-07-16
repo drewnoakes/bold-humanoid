@@ -62,18 +62,9 @@ void Spatialiser::updateCameraToAgent()
     {
       // Widen occlusions by taking the near as the lowest of itself and its neighbours in the image
       if (i != 0)
-      {
-        auto const& rayBefore = cameraOcclusionRays[i - 1];
-        if (rayBefore.near().y() < near.y())
-          near = rayBefore.near();
-      }
-
+        near.y() = min(near.y(), cameraOcclusionRays[i - 1].near().y());
       if (i != cameraOcclusionRays.size() - 1)
-      {
-        auto const& rayAfter = cameraOcclusionRays[i + 1];
-        if (rayAfter.near().y() < near.y())
-          near = rayAfter.near();
-      }
+        near.y() = min(near.y(), cameraOcclusionRays[i + 1].near().y());
     }
 
     auto const& p1 = findGroundPointForPixel(near.cast<double>() + Vector2d(0.5,0.5));
