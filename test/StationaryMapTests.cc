@@ -56,6 +56,8 @@ TEST (GoalEstimateTests, getMidpoint)
   EXPECT_EQ ( Vector2d(1.0, 0), goal.getMidpoint(1.0) );
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<typename T>
 Average<T> createAverage(T value, int count)
 {
@@ -65,7 +67,7 @@ Average<T> createAverage(T value, int count)
   return avg;
 }
 
-TEST (GoalEstimateTests, pairGoalPosts)
+TEST (StationaryMapTests, pairGoalPosts)
 {
   // TODO give a case where one of the posts could be paired with two of the others, yet one pairing is more probable
 
@@ -95,7 +97,7 @@ TEST (GoalEstimateTests, pairGoalPosts)
   ASSERT_EQ (0, StationaryMapState::pairGoalPosts(uselessPosts).size());
 }
 
-TEST (GoalEstimateTests, labelGoal_usingKeeperBallEstimate)
+TEST (StationaryMapTests, labelGoal_usingKeeperBallEstimate)
 {
   auto goalY = FieldMap::getGoalY();
   auto fieldX = FieldMap::getFieldLengthX();
@@ -117,7 +119,7 @@ TEST (GoalEstimateTests, labelGoal_usingKeeperBallEstimate)
   // TODO if the ball is on our side and the goal is far enough away, then it's Theirs, not Unknown
 }
 
-TEST (GoalEstimateTests, labelGoal_usingKeeperObservations)
+TEST (StationaryMapTests, labelGoal_usingKeeperObservations)
 {
   auto goalY = FieldMap::getGoalY();
   auto maxGoalieGoalDistance = Config::getValue<double>("vision.player-detection.max-goalie-goal-dist");
