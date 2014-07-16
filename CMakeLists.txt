@@ -722,6 +722,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./WalkAttitude/walkattitude.cc
+)
+
+add_class(BOLDHUMANOID
   ./util/ccolor.cc
   ./util/log.cc
 )

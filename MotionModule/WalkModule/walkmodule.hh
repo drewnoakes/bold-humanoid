@@ -5,6 +5,7 @@
 
 #include "../motionmodule.hh"
 #include "../../Smoother/LinearSmoother/linearsmoother.hh"
+#include "../../WalkAttitude/walkattitude.hh"
 
 namespace bold
 {
@@ -12,7 +13,7 @@ namespace bold
   class WalkEngine;
   template<typename> class Setting;
 
-  enum class WalkStatus
+  enum class WalkStatus : uchar
   {
     Stopped = 0,
     Starting = 1,
@@ -86,16 +87,8 @@ namespace bold
     LinearSmoother d_yAmpSmoother;
     LinearSmoother d_turnAmpSmoother;
     LinearSmoother d_hipPitchSmoother;
-
+    WalkAttitude d_attitude;
     Setting<bool>* d_isParalysed;
-
-    // hip pitch calculation parameters
-    Setting<double>* d_stableHipPitch;
-    Setting<double>* d_minHipPitch;
-    Setting<double>* d_maxHipPitch;
-    Setting<double>* d_maxHipPitchAtSpeed;
-    Setting<double>* d_fwdAccelerationHipPitchFactor;
-    Setting<double>* d_bwdAccelerationHipPitchFactor;
 
     bool d_turnAngleSet;
     bool d_moveDirSet;
