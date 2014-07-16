@@ -169,6 +169,24 @@ StationaryMapState::StationaryMapState(
     if (goal.getLabel() == GoalLabel::Ours)
       d_goalEstimates.push_back(goal.estimateOppositeGoal(GoalLabel::Theirs));
   }
+  else if (d_goalEstimates.size() > 2)
+  {
+    log::warning("StationaryMapState::StationaryMapState")
+      << d_goalEstimates.size() << " goals detected from " << d_goalPostEstimates.size() << " goal posts";
+  }
+
+  // In general we should only see one goal.
+  // Log warnings in some unexpected cases.
+  auto theirCount = std::count_if(d_goalEstimates.begin(), d_goalEstimates.end(), [](GoalEstimate const& goal) { return goal.getLabel() == GoalLabel::Theirs; });
+  auto ourCount   = std::count_if(d_goalEstimates.begin(), d_goalEstimates.end(), [](GoalEstimate const& goal) { return goal.getLabel() == GoalLabel::Ours; });
+
+  if (theirCount > 1)
+    log::warning("StationaryMapState::StationaryMapState")
+      << "Detected " << theirCount << " occurrences of their goal (from " << d_goalPostEstimates.size() << " goal posts)";
+
+  if (ourCount > 1)
+    log::warning("StationaryMapState::StationaryMapState")
+      << "Detected " << ourCount << " occurrences of our goal (from " << d_goalPostEstimates.size() << " goal posts)";
 
   // Only attempt to select a kick/turn angle if the ball is within a reasonable distance
   if (hasBallWithinDistance(0.5))
