@@ -1,5 +1,7 @@
 #include "visualcortex.ih"
 
+using namespace bold::Colour;
+
 void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
 {
   // Only compose the image if at least one client is connected
@@ -26,7 +28,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     {
       debugImage = cameraImage;
       PixelFilterChain chain;
-      chain.pushFilter(&Colour::yCbCrToBgrInPlace);
+      chain.pushFilter(&yCbCrToBgrInPlace);
       chain.applyFilters(debugImage);
       break;
     }
@@ -61,44 +63,34 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   {
     auto lineDotColour = d_lineDotColour->getValue();
     for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
-      debugImage.at<Colour::bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
+      debugImage.at<bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
   }
 
   // Draw blobs
   if (d_shouldDrawBlobs->getValue())
   {
+    auto const& blobsByLabel = getHandler<BlobDetectPass>()->getDetectedBlobs();
+
     for (auto const& pixelLabel : getHandler<BlobDetectPass>()->pixelLabels())
     {
       // Determine outline colour for the blob
-      Colour::bgr blobColorBgr;
+      cv::Scalar blobColour;
       if (pixelLabel->name() == "Goal")
-        blobColorBgr = Colour::bgr::yellow;
+        blobColour = bgr::yellow.toScalar();
       else if (pixelLabel->name() == "Ball")
-        blobColorBgr = Colour::bgr::red;
+        blobColour = bgr::red.toScalar();
       else if (pixelLabel->name() == "Cyan")
-        blobColorBgr = Colour::bgr::cyan;
+        blobColour = bgr::cyan.toScalar();
       else if (pixelLabel->name() == "Magenta")
-        blobColorBgr = Colour::bgr::magenta;
+        blobColour = bgr::magenta.toScalar();
       else
-        blobColorBgr = pixelLabel->hsvRange().toBgr();
+        blobColour = pixelLabel->hsvRange().toBgr().toScalar();
 
-//      switch (imageType)
-//      {
-//        case ImageType::Cartoon:
-//        case ImageType::RGB:
-//          blobColorBgr = blobColorBgr.invert();
-//          break;
-//        default:
-//          break;
-//      }
-
-      auto blobColor = blobColorBgr.toScalar();
-      auto detectedBlobs = getHandler<BlobDetectPass>()->getDetectedBlobs().at(pixelLabel);
-      for (Blob const& blob : detectedBlobs)
+      for (auto const& blob : blobsByLabel.at(pixelLabel))
       {
         // Blobs with zero area were merged into other blobs
         if (blob.area != 0)
-          cv::rectangle(debugImage, blob.toRect(), blobColor);
+          cv::rectangle(debugImage, blob.toRect(), blobColour);
       }
     }
   }
@@ -111,7 +103,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     auto ball = cameraFrame->getBallObservation();
     if (ball)
     {
-      static auto ballColor = Colour::bgr(0, 0, 255).toScalar();
+      static auto ballColor = bgr(0, 0, 255).toScalar();
       Rect rect((int)round(ball->x()), (int)round(ball->y()), 5, 5);
       cv::rectangle(debugImage, rect, ballColor, CV_FILLED);
     }
@@ -119,7 +111,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     auto goals = cameraFrame->getGoalObservations();
     for (auto goal : goals)
     {
-      static auto goalColor = Colour::bgr(0, 255, 255).toScalar();
+      static auto goalColor = bgr(0, 255, 255).toScalar();
       Rect rect((int)round(goal.x()), (int)round(goal.y()), 5, 5);
       cv::rectangle(debugImage, rect, goalColor, CV_FILLED);
     }
@@ -223,7 +215,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     {
       ushort y = d_fieldEdgePass->getEdgeYValue(x);
 
-      debugImage.at<Colour::bgr>(y, x) = fieldEdgeColour;
+      debugImage.at<bgr>(y, x) = fieldEdgeColour;
     }
   }
 
