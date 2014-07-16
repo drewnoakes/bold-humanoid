@@ -84,7 +84,7 @@ export function drawGoalPosts(context: CanvasRenderingContext2D, options: {goalS
     _.each(positions, pos =>
     {
         context.beginPath();
-        circle(context, pos, constants.goalPostDiameter/2);
+        circle(context, pos, constants.goalPostRadius);
         context.fill();
     });
 }
@@ -124,7 +124,7 @@ export function drawOcclusionRays(context: CanvasRenderingContext2D,
 export function drawGoals(context: CanvasRenderingContext2D, options: {goalStrokeStyle?: string})
 {
     var goalY = (constants.goalY + constants.goalPostDiameter) / 2,
-        x = constants.fieldX/2 + constants.goalPostDiameter/2 - constants.lineWidth/2;
+        x = constants.fieldX/2 + constants.goalPostRadius - constants.lineWidth/2;
 
     drawGoalPosts(context, options, [
         [ x,  goalY],
@@ -288,6 +288,26 @@ export function drawTeammates(context: CanvasRenderingContext2D, players: state.
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var getGoalLabelColour = (label: state.GoalLabel) =>
+{
+    switch (label)
+    {
+        case state.GoalLabel.Ours:    return new color.Rgb(0.8, 0.0, 0.0); break;
+        case state.GoalLabel.Theirs:  return new color.Rgb(1.0, 0.0, 0.0); break;
+        case state.GoalLabel.Unknown: return new color.Rgb(0.6, 0.6, 0.4); break;
+    }
+};
+
+var getTeamColour = (teamColour: constants.TeamColour) =>
+{
+    switch (teamColour)
+    {
+        case constants.TeamColour.Cyan:    return new color.Rgb(0.0, 1.0, 1.0); break;
+        case constants.TeamColour.Magenta: return new color.Rgb(1.0, 0.0, 1.0); break;
+        case constants.TeamColour.Unknown: return new color.Rgb(0.4, 0.4, 0.4); break;
+    }
+};
+
 export function drawStationaryMap(context: CanvasRenderingContext2D, data: state.StationaryMap)
 {
     context.lineWidth = 0.01;
@@ -315,30 +335,18 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.stroke();
     });
 
-    var getGoalLabelColour = (label: state.GoalLabel) =>
-    {
-        switch (label)
-        {
-            case state.GoalLabel.Ours:    return new color.Rgb(0.8, 0.0, 0.0); break;
-            case state.GoalLabel.Theirs:  return new color.Rgb(1.0, 0.0, 0.0); break;
-            case state.GoalLabel.Unknown: return new color.Rgb(0.6, 0.6, 0.4); break;
-        }
-    };
-
     // Goal posts
     _.each(data.goalPosts, goalPost =>
     {
         var alpha = goalPost.count / maxGoalPostCount;
         context.lineWidth = 0.02;
         context.strokeStyle = new color.Rgb(0.7, 0.7, 0.0).toString(alpha);
-        context.fillStyle = getGoalLabelColour(goalPost.label).toString(0.8);
         context.beginPath();
-        circle(context, goalPost.pos, constants.goalPostDiameter/2);
-        context.fill();
+        circle(context, goalPost.pos, constants.goalPostRadius);
         context.stroke();
     });
 
-    // Lines between paired goal posts
+    // Goals (pairs of posts)
     _.each(data.goals, goal =>
     {
         context.lineWidth = 0.02;
@@ -347,17 +355,13 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.moveTo(goal.post1[0], goal.post1[1]);
         context.lineTo(goal.post2[0], goal.post2[1]);
         context.stroke();
-    });
 
-    var getTeamColour = (teamColour: constants.TeamColour) =>
-    {
-        switch (teamColour)
-        {
-            case constants.TeamColour.Cyan:    return new color.Rgb(0.0, 1.0, 1.0); break;
-            case constants.TeamColour.Magenta: return new color.Rgb(1.0, 0.0, 1.0); break;
-            case constants.TeamColour.Unknown: return new color.Rgb(0.4, 0.4, 0.4); break;
-        }
-    };
+        context.fillStyle = getGoalLabelColour(goal.label).toString(0.8);
+        context.beginPath();
+        circle(context, goal.post1, constants.goalPostRadius);
+        circle(context, goal.post2, constants.goalPostRadius);
+        context.fill();
+    });
 
     // Keepers
     _.each(data.keepers, keeper =>

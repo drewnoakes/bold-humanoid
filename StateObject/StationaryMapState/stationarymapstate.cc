@@ -94,20 +94,6 @@ void RadialOcclusionMap::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& w
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GoalEstimate::GoalEstimate(Vector2d const& post1Pos, Vector2d const& post2Pos, GoalLabel post1Label, GoalLabel post2Label)
-: d_post1Pos(post1Pos),
-  d_post2Pos(post2Pos),
-  d_post1Label(post1Label),
-  d_post2Label(post2Label)
-{
-  if (post1Label == GoalLabel::Theirs || post2Label == GoalLabel::Theirs)
-    d_label = GoalLabel::Theirs;
-  else if (post1Label == GoalLabel::Ours || post2Label == GoalLabel::Ours)
-    d_label = GoalLabel::Ours;
-  else
-    d_label = GoalLabel::Unknown;
-}
-
 bool GoalEstimate::isTowards(double ballEndAngle) const
 {
   bool hasLeft = false,
@@ -143,7 +129,7 @@ GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
 
   Vector2d fieldX = perp.normalized() * FieldMap::getFieldLengthX();
 
-  return GoalEstimate(d_post1Pos + fieldX, d_post2Pos + fieldX, label, label);
+  return GoalEstimate(d_post1Pos + fieldX, d_post2Pos + fieldX, label);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -154,32 +140,53 @@ StationaryMapState::StationaryMapState(
   std::vector<Average<Vector2d>> keeperEstimates,
   RadialOcclusionMap occlusionMap)
 : d_ballEstimates(ballEstimates),
+  d_goalPostEstimates(goalPostEstimates),
   d_keeperEstimates(keeperEstimates),
   d_occlusionMap(occlusionMap)
 {
   // Sort estimates such that those with greater numbers of observations appear first
   std::sort(d_ballEstimates.begin(), d_ballEstimates.end(), compareAverages<Vector2d>);
   std::sort(d_keeperEstimates.begin(), d_keeperEstimates.end(), compareAverages<Vector2d>);
-  std::sort(goalPostEstimates.begin(), goalPostEstimates.end(), compareAverages<Vector2d>);
+  std::sort(d_goalPostEstimates.begin(), d_goalPostEstimates.end(), compareAverages<Vector2d>);
 
-  d_goalPostEstimates = labelGoalPostObservations(d_keeperEstimates, goalPostEstimates);
+  // Convert the goal post estimates into estimated goals (pairs of posts)
+  auto goalPairs = pairGoalPosts(d_goalPostEstimates);
 
-  findGoals();
+  auto team = State::get<TeamState>();
+  FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
+
+  // Label the goal post pairs as either our goal, their goal or unknown
+  for (auto const& pair : goalPairs)
+  {
+    auto label = labelGoal(ballSide, pair.first, pair.second, d_keeperEstimates);
+    d_goalEstimates.emplace_back(pair.first.getAverage(), pair.second.getAverage(), label);
+  }
+
+  // If we only see our goal, synthesize an estimate of the opposite goal position
+  if (d_goalEstimates.size() == 1)
+  {
+    auto const& goal = d_goalEstimates[0];
+    if (goal.getLabel() == GoalLabel::Ours)
+      d_goalEstimates.push_back(goal.estimateOppositeGoal(GoalLabel::Theirs));
+  }
 
   // Only attempt to select a kick/turn angle if the ball is within a reasonable distance
   if (hasBallWithinDistance(0.5))
   {
-    selectKick();
+    // Try to find a kick we can do immediately
+    selectImmediateKick();
 
-    calculateTurnAngle();
+    // Try to select a turn and kick to perform
+    calculateTurnAndKick();
 
+    // Given enough observations, we should always attempt to do something... if not, log warning
     static bool errorFlag = false;
     if (hasEnoughBallAndGoalPostObservations())
     {
       if (!d_selectedKick && d_turnAngleRads == 0 && !errorFlag)
       {
         errorFlag = true;
-        log::warning("StationaryMapState::StationaryMapState") << "Have enough observations, but no kick or turn selected";
+        log::warning("StationaryMapState::StationaryMapState") << "Have enough observations, but no kick or turn was selected";
       }
     }
     else
@@ -189,118 +196,11 @@ StationaryMapState::StationaryMapState(
   }
 }
 
-vector<GoalPostEstimate> StationaryMapState::labelGoalPostObservations(
-  vector<Average<Vector2d>> const& keeperEstimates,
-  vector<Average<Vector2d>> const& goalPostEstimates)
+vector<pair<Average<Vector2d>,Average<Vector2d>>> StationaryMapState::pairGoalPosts(vector<Average<Vector2d>> goalPostEstimates)
 {
-  static auto maxGoalieGoalDistance = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
-  static auto maxGoalPairDistanceError = Config::getSetting<double>("vision.goal-detection.max-pair-error-dist");
-  const double maxPositionMeasurementError = 0.4; // TODO review this experimentally and move to config
-  double theirsThreshold = Vector2d(
-    (FieldMap::getFieldLengthX() / 2.0) + maxPositionMeasurementError,
-    FieldMap::getFieldLengthY() / 2.0
-  ).norm();
+  std::deque<Average<Vector2d>> posts(goalPostEstimates.begin(), goalPostEstimates.end());
 
-  // Use what we see to try and label goal posts as belonging to either our
-  // team, their team, or having unknown association.
-  //
-  // For example, if the keeper tells us that the ball is 1m from them, and
-  // we observe the ball as 1.5m from the goal post, that post belongs to us.
-  //
-  // Also, if two posts span roughly the expected width of a goal and we see
-  // a keeper between them, this is our goal.
-
-  auto team = State::get<TeamState>();
-
-  FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
-
-  auto getLabel = [&ballSide,&goalPostEstimates,&keeperEstimates,maxPositionMeasurementError,theirsThreshold](Vector2d goalEstimate) -> GoalLabel
-  {
-    switch (ballSide)
-    {
-      // Our keeper doesn't know where the ball is, so base purely upon whether
-      // we see our keeper between the goal posts.
-      case FieldSide::Unknown:
-      {
-        // The ball won't break the symmetry.
-        // Try to look for the keeper in the image.
-        // See if this goal estimate has a viable partner, then test for a keeper
-        bool foundPair = false;
-        for (auto const& otherGoal : goalPostEstimates)
-        {
-          // Stop looping when the estimates are not confident enough
-          if (otherGoal.getCount() < GoalSamplesNeeded)
-            break;
-          // Skip the one being processed -- we only want pairs
-          if (otherGoal.getAverage() == goalEstimate)
-            continue;
-          // Measure the distance between the posts
-          double space = (otherGoal.getAverage() - goalEstimate).head<2>().norm();
-          // Verify the distance is what we expect, within a specified error distance
-          if (fabs(space - FieldMap::getGoalY()) > maxGoalPairDistanceError->getValue())
-            continue;
-          // Check if we see goalie in between this pair of posts
-          auto mid = (otherGoal.getAverage() + goalEstimate) / 2.0;
-          for (auto const& keeperEstimate : keeperEstimates)
-          {
-            // Stop looping when the estimates are not confident enough
-            if (keeperEstimate.getCount() < KeeperSamplesNeeded)
-              break;
-            if ((mid - keeperEstimate.getAverage()).head<2>().norm() < maxGoalieGoalDistance->getValue())
-            {
-              log::info("BuildStationaryMap::labelGoalObservations") << "Observe keeper between goal posts, so assume as ours";
-              return GoalLabel::Ours;
-            }
-          }
-          foundPair = true;
-        }
-        // If we found a good goal pair, but no keeper between, it's theirs.
-        return foundPair ? GoalLabel::Theirs : GoalLabel::Unknown;
-      }
-      // We have an estimate of the keeper's distance from the ball
-      //
-      // ASSUME the ball is approximately at our feet
-      case FieldSide::Ours:
-      {
-        double goalDist = goalEstimate.norm();
-        if (goalDist < (FieldMap::getFieldLengthX()/2.0) - maxPositionMeasurementError)
-        {
-          log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on our side, and closest goal is too close at " << goalDist;
-          return GoalLabel::Ours;
-        }
-        break;
-      }
-      case FieldSide::Theirs:
-      {
-        double goalDist = goalEstimate.norm();
-        if (goalDist > theirsThreshold)
-        {
-          log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on the opponent's side, and closest goal is too far at " << goalDist;
-          return GoalLabel::Ours;
-        }
-        break;
-      }
-    }
-
-    return GoalLabel::Unknown;
-  };
-
-  // Build labelled goal vector
-  vector<GoalPostEstimate> labelledPostEstimates;
-  labelledPostEstimates.resize(goalPostEstimates.size());
-  std::transform(goalPostEstimates.begin(), goalPostEstimates.end(),
-                 labelledPostEstimates.begin(),
-                 [&getLabel](Average<Vector2d> const& goalEstimate)
-                 {
-                   auto label = getLabel(goalEstimate.getAverage());
-                   return GoalPostEstimate(goalEstimate, label);
-                });
-  return labelledPostEstimates;
-}
-
-void StationaryMapState::findGoals()
-{
-  std::deque<GoalPostEstimate> posts(d_goalPostEstimates.begin(), d_goalPostEstimates.end());
+  vector<pair<Average<Vector2d>,Average<Vector2d>>> pairs;
 
   while (posts.size() > 1)
   {
@@ -319,11 +219,13 @@ void StationaryMapState::findGoals()
       double dist = (post1.getAverage() - post2->getAverage()).norm();
       double error = fabs(FieldMap::getGoalY() - dist);
 
-      // TODO error should be a function of distance, as uncertainty increases
+      // TODO error should be a function of distance, as uncertainty increases with distance
 
-      if (error < GoalLengthErrorDistance)
+      static auto maxGoalPairDistanceError = Config::getSetting<double>("vision.goal-detection.max-pair-error-dist");
+
+      if (error < maxGoalPairDistanceError->getValue())
       {
-        d_goalEstimates.emplace_back(post1.getAverage(), post2->getAverage(), post1.getLabel(), post2->getLabel());
+        pairs.emplace_back(post1, *post2);
 
         posts.erase(post2);
         break;
@@ -331,13 +233,82 @@ void StationaryMapState::findGoals()
     }
   }
 
-  // If we only see our goal, synthesize an estimate of the opposite goal position
-  if (d_goalEstimates.size() == 1)
+  return pairs;
+}
+
+GoalLabel StationaryMapState::labelGoal(
+  FieldSide ballSideEstimate,
+  Average<Eigen::Vector2d> const& post1Pos,
+  Average<Eigen::Vector2d> const& post2Pos,
+  std::vector<Average<Eigen::Vector2d>> keeperEstimates)
+{
+  static auto maxGoalieGoalDistance = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
+  const double maxPositionMeasurementError = 0.4; // TODO review this experimentally and move to config
+
+  const double theirsThreshold = Vector2d(
+    (FieldMap::getFieldLengthX() / 2.0) + maxPositionMeasurementError,
+    FieldMap::getFieldLengthY() / 2.0
+  ).norm();
+
+  // Attempt to associate a goal with a team.
+  //
+  // For example, if the keeper tells us that the ball is 1m from them, and
+  // we observe the ball as 1.5m from the midpoint of the goal, then it's likely ours.
+  //
+  // Also, if we see our keeper's uniform in the middle of the goal then it's likely ours.
+
+  Vector2d const mid = (post1Pos.getAverage() + post2Pos.getAverage()) / 2.0;
+
+  switch (ballSideEstimate)
   {
-    auto const& goal = d_goalEstimates[0];
-    if (goal.getLabel() == GoalLabel::Ours)
-      d_goalEstimates.push_back(goal.estimateOppositeGoal(GoalLabel::Theirs));
+    case FieldSide::Ours:
+    {
+      // Keeper says the ball is on our side of the field.
+      // If this goal is close enough then it must be ours, assuming the ball is approximately at our feet.
+      double goalDist = mid.norm();
+      if (goalDist < (FieldMap::getFieldLengthX()/2.0) - maxPositionMeasurementError)
+      {
+        log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on our side, and closest goal is too close at " << goalDist;
+        return GoalLabel::Ours;
+      }
+      break;
+    }
+    case FieldSide::Theirs:
+    {
+      // Keeper says the ball is on their side of the field.
+      // If this goal is far enough then it must be ours, assuming the ball is approximately at our feet.
+      double goalDist = mid.norm();
+      if (goalDist > theirsThreshold)
+      {
+        log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on the opponent's side, and closest goal is too far at " << goalDist;
+        return GoalLabel::Ours;
+      }
+      break;
+    }
+    case FieldSide::Unknown:
+    {
+      // Our keeper can't decide which half of the field the ball is on.
+      // Label this goal based solely upon whether we see our keeper between the posts.
+      for (auto const& keeperEstimate : keeperEstimates)
+      {
+        // Stop looping when the estimates are not confident enough
+        if (keeperEstimate.getCount() < KeeperSamplesNeeded)
+          break;
+
+        Vector2d keeperPos = keeperEstimate.getAverage();
+        Vector2d distFromMid = mid - keeperPos;
+
+        if (distFromMid.norm() < maxGoalieGoalDistance->getValue())
+        {
+          log::info("BuildStationaryMap::labelGoalObservations") << "Observe keeper between goal posts, so assume as ours";
+          return GoalLabel::Ours;
+        }
+      }
+      break;
+    }
   }
+
+  return GoalLabel::Unknown;
 }
 
 double getGoalLineDistance(GoalEstimate const& goal, Vector2d const& endPos)
@@ -366,7 +337,7 @@ double getGoalLineDistance(GoalEstimate const& goal, Vector2d const& endPos)
   return u * endPos.norm();
 }
 
-void StationaryMapState::selectKick()
+void StationaryMapState::selectImmediateKick()
 {
   // Short circuit if we don't have enough observations
   if (d_ballEstimates.size() == 0 || d_goalPostEstimates.size() < 2)
@@ -414,8 +385,6 @@ void StationaryMapState::selectKick()
         << "Goal kick possible: " << kick->getId()
         << " angleDegs=" << Math::radToDeg(ballEndAngle)
         << " goalLabel=" << getGoalLabelName(goal.getLabel())
-        << " post1Label=" << getGoalLabelName(goal.getPost1Label())
-        << " post2Label=" << getGoalLabelName(goal.getPost2Label())
         << " occlusionDist=" << occlusionDistance
         << " goalLineDist=" << goalLineDistance;
 
@@ -433,7 +402,7 @@ void StationaryMapState::selectKick()
     d_selectedKick =  it->getKick();
 }
 
-void StationaryMapState::calculateTurnAngle()
+void StationaryMapState::calculateTurnAndKick()
 {
   if (d_selectedKick != nullptr || !hasEnoughBallObservations() || d_goalEstimates.size() == 0)
   {
@@ -457,7 +426,7 @@ void StationaryMapState::calculateTurnAngle()
     if (goal.getLabel() == GoalLabel::Ours)
       continue;
 
-    log::info("StationaryMapState::calculateTurnAngle") << "Evaluate goal at " << goal.getPost1Pos().transpose() << " to " << goal.getPost2Pos().transpose();
+    log::info("StationaryMapState::calculateTurnAndKick") << "Evaluate goal at " << goal.getPost1Pos().transpose() << " to " << goal.getPost2Pos().transpose();
 
     // Find desirable target positions
     vector<Vector2d> targetPositions = {
@@ -487,7 +456,7 @@ void StationaryMapState::calculateTurnAngle()
         // TODO the entire ball must actually cross the line, not just its midpoint
         if (occlusionDistance < goalLineDistance)
         {
-          log::info("StationaryMapState::calculateTurnAngle") << "Obstacle blocks kick " << kick->getId() << " at angle " << round(Math::radToDeg(targetAngle));
+          log::info("StationaryMapState::calculateTurnAndKick") << "Obstacle blocks kick " << kick->getId() << " at angle " << round(Math::radToDeg(targetAngle));
           continue;
         }
 
@@ -497,7 +466,7 @@ void StationaryMapState::calculateTurnAngle()
           closestBallPos = ballPos;
           turnForKick = kick;
           foundTurn = true;
-          log::info("StationaryMapState::calculateTurnAngle") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos->transpose() << " best yet";
+          log::info("StationaryMapState::calculateTurnAndKick") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos->transpose() << " best yet";
         }
       }
     }
@@ -508,7 +477,7 @@ void StationaryMapState::calculateTurnAngle()
     d_turnAngleRads = -closestAngle;
     d_turnBallPos = closestBallPos;
     d_turnForKick = turnForKick;
-    log::info("StationaryMapState::calculateTurnAngle") << "turn " << Math::radToDeg(d_turnAngleRads) << " degrees with ball at " << d_turnBallPos.transpose();
+    log::info("StationaryMapState::calculateTurnAndKick") << "turn " << Math::radToDeg(d_turnAngleRads) << " degrees with ball at " << d_turnBallPos.transpose();
   }
 }
 
@@ -535,7 +504,6 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
       {
         writer.String("pos").StartArray().Double(estimate.getAverage().x()).Double(estimate.getAverage().y()).EndArray();
         writer.String("count").Uint(estimate.getCount());
-        writer.String("label").Uint(static_cast<uint>(estimate.getLabel()));
       }
       writer.EndObject();
     }

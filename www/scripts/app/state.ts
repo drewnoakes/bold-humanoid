@@ -420,7 +420,7 @@ export interface Particle
 export interface StationaryMap
 {
     balls: AveragePosition[];
-    goalPosts: AverageGoalPosition[];
+    goalPosts: AveragePosition[];
     goals: GoalPosition[];
     keepers: AveragePosition[];
     kicks: Kick[];
@@ -431,11 +431,6 @@ export interface AveragePosition
 {
     pos: number[];
     count: number;
-}
-
-export interface AverageGoalPosition extends AveragePosition
-{
-    label: GoalLabel;
 }
 
 export interface GoalPosition

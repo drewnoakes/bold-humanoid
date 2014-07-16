@@ -20,6 +20,7 @@ export var goalX = 0.5;
 export var goalY = 1.5;
 export var goalZ = 0.8;
 export var goalPostDiameter = 0.1;
+export var goalPostRadius = goalPostDiameter / 2.0;
 export var goalAreaX = 0.6;
 export var goalAreaY = 2.2;
 export var penaltyMarkDistance = 1.8;
@@ -66,7 +67,10 @@ export function update(settings: Setting[])
             case 'world.field-size-y': fieldY = setting.value; break;
             case 'world.goal-area-size-x': goalAreaX = setting.value; break;
             case 'world.goal-area-size-y': goalAreaY = setting.value; break;
-            case 'world.goal-post-diameter': goalPostDiameter = setting.value; break;
+            case 'world.goal-post-diameter':
+                goalPostDiameter = setting.value;
+                goalPostRadius = goalPostDiameter / 2.0;
+                break;
             case 'world.goal-size-x': goalX = setting.value; break;
             case 'world.goal-size-y': goalY = setting.value; break;
             case 'world.goal-size-z': goalZ = setting.value; break;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../stateobject.hh"
+#include "../../FieldMap/fieldmap.hh"
 #include "../../Kick/kick.hh"
 #include "../../Math/math.hh"
 #include "../../OcclusionRay/occlusionray.hh"
@@ -26,40 +27,18 @@ namespace bold
 
   //////////////////////////////////////////////////////////////////////////////
 
-  /** Models the estimated position and ownership of a single observed goal post. */
-  class GoalPostEstimate
-  {
-  public:
-    GoalPostEstimate() = default;
-
-    GoalPostEstimate(Average<Eigen::Vector2d> estimate, GoalLabel label)
-    : d_average(estimate.getAverage()),
-      d_count(estimate.getCount()),
-      d_label(label)
-    {}
-
-    Eigen::Vector2d getAverage() const { return d_average; }
-    int getCount() const { return d_count; }
-    GoalLabel getLabel() const { return d_label; }
-
-  private:
-    Eigen::Vector2d d_average;
-    int d_count;
-    GoalLabel d_label;
-  };
-
-  //////////////////////////////////////////////////////////////////////////////
-
   /** Models the estimated position and ownership of a pair of observed goal posts. */
   class GoalEstimate
   {
   public:
-    GoalEstimate(Eigen::Vector2d const& post1Pos, Eigen::Vector2d const& post2Pos, GoalLabel post1Label, GoalLabel post2Label);
+    GoalEstimate(Eigen::Vector2d const& post1Pos, Eigen::Vector2d const& post2Pos, GoalLabel label)
+    : d_post1Pos(post1Pos),
+      d_post2Pos(post2Pos),
+      d_label(label)
+    {}
 
     Eigen::Vector2d getPost1Pos() const { return d_post1Pos; }
     Eigen::Vector2d getPost2Pos() const { return d_post2Pos; }
-    GoalLabel getPost1Label() const { return d_post1Label; }
-    GoalLabel getPost2Label() const { return d_post2Label; }
 
     GoalLabel getLabel() const { return d_label; }
 
@@ -74,8 +53,6 @@ namespace bold
   private:
     Eigen::Vector2d d_post1Pos;
     Eigen::Vector2d d_post2Pos;
-    GoalLabel d_post1Label;
-    GoalLabel d_post2Label;
     GoalLabel d_label;
   };
 
@@ -138,7 +115,7 @@ namespace bold
 
     std::vector<Average<Eigen::Vector2d>> const& getBallEstimates() const { return d_ballEstimates; };
     std::vector<Average<Eigen::Vector2d>> const& getTeammateEstimates() const { return d_keeperEstimates; };
-    std::vector<GoalPostEstimate> const& getGoalPostEstimates() const { return d_goalPostEstimates; };
+    std::vector<Average<Eigen::Vector2d>> const& getGoalPostEstimates() const { return d_goalPostEstimates; };
     std::vector<GoalEstimate> const& getGoalEstimates() const { return d_goalEstimates; };
 
     bool hasEnoughBallObservations() const { return existsWithSamples(d_ballEstimates, BallSamplesNeeded); };
@@ -163,12 +140,21 @@ namespace bold
     static constexpr double BallMergeDistance = 0.3; // TODO magic number!!
     static constexpr double GoalPostMergeDistance = 0.5; // TODO magic number!!
     static constexpr double TeammateMergeDistance = 0.5; // TODO magic number!!
-    static constexpr double GoalLengthErrorDistance = 0.5; // TODO magic number!!
-
-  private:
     static constexpr int GoalSamplesNeeded = 10; // TODO magic number!!
     static constexpr int BallSamplesNeeded = 20; // TODO magic number!!
     static constexpr int KeeperSamplesNeeded = 5; // TODO magic number!!
+
+    /// Extracts goal pairs from individual post observations.
+    static std::vector<std::pair<Average<Eigen::Vector2d>,Average<Eigen::Vector2d>>> pairGoalPosts(std::vector<Average<Eigen::Vector2d>> goalPostEstimates);
+
+    /// Attempts to label a pair of goal posts as being either ours, theirs or unknown.
+    static GoalLabel labelGoal(
+      FieldSide ballSideEstimate,
+      Average<Eigen::Vector2d> const& post1Pos,
+      Average<Eigen::Vector2d> const& post2Pos,
+      std::vector<Average<Eigen::Vector2d>> keeperEstimates);
+
+  private:
 
     template<typename T>
     static bool compareAverages(Average<T> const& a, Average<T> const& b)
@@ -176,13 +162,14 @@ namespace bold
       return a.getCount() > b.getCount();
     }
 
-    static std::vector<GoalPostEstimate> labelGoalPostObservations(
-      std::vector<Average<Eigen::Vector2d>> const& keeperEstimates,
-      std::vector<Average<Eigen::Vector2d>> const& goalPostEstimates);
+    /// Selects a kick (if there is one) which may be made immediately with a suitably positive outcome.
+    /// If successful, canKick() will return true and getSelectedKick() returns the kick.
+    void selectImmediateKick();
 
-    void calculateTurnAngle();
-    void selectKick();
-    void findGoals();
+    /// Selects a turn angle, turn direction and kick (if there is one) which produce a suitably positive outcome.
+    /// If successful, getTurnAngleRads() will return non-zero, getTurnBallPos() gives the position the ball
+    /// should be kept in, and getTurnForKick() returns the kick.
+    void calculateTurnAndKick();
 
     template<typename T>
     inline static bool existsWithSamples(std::vector<T> const& estimates, int sampleThreshold);
@@ -190,9 +177,10 @@ namespace bold
     inline static uint countWithSamples(std::vector<T> const& estimates, int sampleThreshold);
 
     std::vector<Average<Eigen::Vector2d>> d_ballEstimates;
+    std::vector<Average<Eigen::Vector2d>> d_goalPostEstimates;
     std::vector<Average<Eigen::Vector2d>> d_keeperEstimates;
-    std::vector<GoalPostEstimate> d_goalPostEstimates;
     RadialOcclusionMap d_occlusionMap;
+
     std::vector<GoalEstimate> d_goalEstimates;
     std::vector<KickResult> d_possibleKicks;
     std::shared_ptr<Kick const> d_selectedKick;
