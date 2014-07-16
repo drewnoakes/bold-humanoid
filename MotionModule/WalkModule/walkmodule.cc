@@ -109,6 +109,7 @@ void WalkModule::setTurnAngle(double turnAngle)
 
 void WalkModule::start()
 {
+  ASSERT(d_status == WalkStatus::Stopped);
   d_status = WalkStatus::Starting;
   getScheduler()->request(
     this,
