@@ -211,7 +211,8 @@
       }
     },
     "occlusion": {
-      "widen": { "type": "bool", "description": "Widen occlusions" }
+      "widen": { "type": "bool", "description": "Widen occlusions" },
+      "widen-min-height-px": { "type": "int", "min": 0 }
     }
   },
   "game-controller": {

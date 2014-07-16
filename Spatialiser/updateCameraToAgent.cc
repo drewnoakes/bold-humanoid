@@ -56,7 +56,9 @@ void Spatialiser::updateCameraToAgent()
     Matrix<ushort,2,1> near = ray.near();
 
     static auto widenOcclusions = Config::getSetting<bool>("vision.occlusion.widen");
-    if (widenOcclusions->getValue())
+    static auto midHeightToWiden = Config::getSetting<int>("vision.occlusion.widen-min-height-px");
+
+    if (widenOcclusions->getValue() && (ray.far().y() - ray.near().y()) > midHeightToWiden->getValue())
     {
       // Widen occlusions by taking the near as the lowest of itself and its neighbours in the image
       if (i != 0)
