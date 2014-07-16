@@ -12,9 +12,10 @@ namespace bold
   struct LineSegment : Eigen::Matrix<T,dim,2>
   {
   public:
+    typedef Eigen::Matrix<T,dim,1> PointType;
 
-    LineSegment(Eigen::Matrix<T,dim,1> const& p1,
-                Eigen::Matrix<T,dim,1> const& p2)
+    LineSegment(PointType const& p1,
+                PointType const& p2)
     {
       static_assert(std::is_arithmetic<T>::value, "Must be an arithmetic type");
 
@@ -32,11 +33,11 @@ namespace bold
 
     using Eigen::Matrix<T,dim,2>::Matrix;
 
-    Eigen::Matrix<T,dim,1> p1() const { return this->col(0); }
-    Eigen::Matrix<T,dim,1> p2() const { return this->col(1); }
+    PointType p1() const { return this->col(0); }
+    PointType p2() const { return this->col(1); }
 
     /** Returns the vector formed by <code>p2() - p1()</code> */
-    Eigen::Matrix<T,dim,1> delta() const { return p2() - p1(); }
+    PointType delta() const { return p2() - p1(); }
 
     T length() const { return delta().norm(); }
 
@@ -74,12 +75,12 @@ namespace bold
       return (this->array() - other.array()).abs().sum() < epsilon;
     }
 
-    LineSegment<T,dim> operator+(Eigen::Matrix<T,dim,1> const& delta) const
+    LineSegment<T,dim> operator+(PointType const& delta) const
     {
       return LineSegment<T,dim>{this->colwise() + delta};
     }
 
-    LineSegment<T,dim> operator-(Eigen::Matrix<T,dim,1> const& delta) const
+    LineSegment<T,dim> operator-(PointType const& delta) const
     {
       return LineSegment<T,dim>{this->colwise() - delta};
     }
