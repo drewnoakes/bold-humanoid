@@ -11,7 +11,9 @@ import constants = require('constants');
 import data = require('data');
 import control = require('control');
 import Closeable = require('util/Closeable');
+import Select = require('controls/Select');
 import state = require('state');
+import Trackable = require('util/Trackable');
 import Module = require('Module');
 
 class OptionTreeModule extends Module
@@ -67,19 +69,14 @@ class OptionTreeModule extends Module
             model: graph
         });
 
-        // Control to select the displayed FSM
-        var select = document.createElement('select');
-        _.each(control.getFsmDescriptions(), fsm =>
-        {
-            var option = document.createElement('option');
-            option.text = fsm.name;
-            option.value = fsm.name;
-            select.appendChild(option);
-            if (fsm.name === 'play-mode')
-                option.selected = true;
+        // Control to select the visible FSM
+        var visibleFsm = new Trackable<string>('play-mode');
+        visibleFsm.track(fsmName => {
+            var fsm = control.getFSM(fsmName);
+            this.buildFsmGraph(fsm, graph);
         });
-        select.addEventListener('change', () => this.buildFsmGraph(control.getFSM(select.options[select.selectedIndex].value), graph));
-        controls.insertBefore(select, controls.firstChild);
+        var visibleFsmSelect = new Select(visibleFsm, _.map(control.getFsmDescriptions(), desc => { return {value:desc.name,text:desc.name}; }));
+        controls.insertBefore(visibleFsmSelect.element, controls.firstChild);
 
         this.buildFsmGraph(control.getFSM('play-mode'), graph);
 
