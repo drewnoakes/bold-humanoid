@@ -12,6 +12,7 @@ import geometry = require('util/geometry');
 import math = require('util/math');
 import Module = require('Module');
 import scripts = require('scripts');
+import Select = require('controls/Select');
 import Trackable = require('util/Trackable');
 
 var MIN_VALUE: number    = 0x0000;
@@ -221,7 +222,6 @@ interface IScriptViewModel
 
 var animatorTemplate = DOMTemplate.forText(
     '<div>' +
-      '<h2 class="script-name"></h2>' +
       '<div class="timeline-container">' +
         '<ul class="joint-names"></ul>' +
         '<ul class="stages"></ul>' +
@@ -373,9 +373,6 @@ class AnimatorModule extends Module
 
         var t = this;
 
-        // Set the header directly
-        d3.select(this.element).select("h2.script-name").text(this.script.name);
-
         /*
           <ul class="stages">
             <li>
@@ -522,12 +519,20 @@ class AnimatorModule extends Module
         this.element.appendChild(content);
 
         /*
-          <h2 class="script-name"></h2>
           <div class="timeline-container">
             <ul class="joint-names"></ul>
             <ul class="stages"></ul>
           </div>
         */
+
+        var selectedScriptName = new Trackable<string>(scripts.allMotionScripts[0].name);
+        this.closeables.add(selectedScriptName.track(scriptName => {
+            var script = _.find<scripts.MotionScript>(scripts.allMotionScripts, s => s.name === scriptName);
+                this.script = toViewModel(script);
+            this.buildUI();
+        }));
+        var scriptSelect = new Select(selectedScriptName, _.map(scripts.allMotionScripts, s => { return {value:s.name, text:s.name}; }));
+        this.element.insertBefore(scriptSelect.element, this.element.firstChild);
 
         // Populate the joint names once
         d3.select(this.element)
@@ -539,10 +544,6 @@ class AnimatorModule extends Module
             .text(jointId => constants.jointNiceNames[jointId])
             .on('keydown', this.onKeyDown.bind(this));
 
-        this.script = toViewModel(scripts.allMotionScripts[2]);
-        this.buildUI();
-
-        // TODO TODO TODO why does rebuilding the UI remove all but the first?
         this.buildUI();
 
         this.element.tabIndex = 0; // allow element to have keyboard focus
