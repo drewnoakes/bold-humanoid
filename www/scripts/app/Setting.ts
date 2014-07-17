@@ -5,7 +5,9 @@
 /// <reference path="../libs/lodash.d.ts" />
 /// <reference path="../libs/require.d.ts" />
 
-class Setting
+import IObservable = require('IObservable');
+
+class Setting implements IObservable
 {
     public path: string;
     public type: string;
@@ -45,6 +47,11 @@ class Setting
         var i = this.path.lastIndexOf('.');
         var desc = this.path.substr(i + 1).replace(/-/g, ' ');
         return desc.charAt(0).toUpperCase() + desc.slice(1)
+    }
+
+    public getValue()
+    {
+        return this.value;
     }
 
     public setValue(value)
