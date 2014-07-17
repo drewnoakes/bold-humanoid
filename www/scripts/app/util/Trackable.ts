@@ -2,7 +2,10 @@
  * @author Drew Noakes https://drewnoakes.com
  */
 
-class Trackable<T>
+
+import IObservable = require('IObservable');
+
+class Trackable<T> implements IObservable
 {
     private callbacks: { (value: T, oldValue?: T): void; }[];
 
