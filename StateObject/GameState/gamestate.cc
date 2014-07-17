@@ -5,6 +5,25 @@ using namespace rapidjson;
 using namespace robocup;
 using namespace std;
 
+GameResult GameState::getGameResult() const
+{
+  if (isFirstHalf() || getPlayMode() != PlayMode::FINISHED)
+    return GameResult::Undecided;
+
+  uint8 ourScore = getMyTeam().getScore();
+  uint8 theirScore = getOpponentTeam().getScore();
+
+  if (ourScore > theirScore)
+    return GameResult::Victory;
+
+  if (ourScore < theirScore)
+    return GameResult::Loss;
+
+  // TODO had to know if there's going to be extra time or a penalty shoot out in case of draw
+
+  return GameResult::Undecided;
+}
+
 bool GameState::isWithinTenSecondsOfKickOff(Team team) const
 {
   static uchar teamNumber = static_cast<uchar>(Config::getStaticValue<int>("team-number"));

@@ -19,6 +19,14 @@ namespace bold
     Them
   };
 
+  enum class GameResult
+  {
+    Undecided = 0,
+    Victory = 1,
+    Loss = 2,
+    Draw = 3
+  };
+
   class GameState : public StateObject
   {
   public:
@@ -99,6 +107,8 @@ namespace bold
     }
 
     double getAgeMillis() const { return Clock::getMillisSince(d_receivedAt); }
+
+    GameResult getGameResult() const;
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
