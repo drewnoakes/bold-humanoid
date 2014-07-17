@@ -70,11 +70,11 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
       writer.EndObject();
     };
 
-    writer.String("team1");
-    writeTeam(getTeam1());
+    writer.String("myTeam");
+    writeTeam(getMyTeam());
 
-    writer.String("team2");
-    writeTeam(getTeam2());
+    writer.String("opponentTeam");
+    writeTeam(getOpponentTeam());
   }
   writer.EndObject();
 }

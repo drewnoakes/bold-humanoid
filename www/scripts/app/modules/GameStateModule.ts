@@ -33,8 +33,8 @@ interface ITemplateData extends state.Game
 {
     timeString?: string;
     secondaryTimeString?: string;
-    team1: ExtendedTeamData;
-    team2: ExtendedTeamData;
+    myTeam: ExtendedTeamData;
+    opponentTeam: ExtendedTeamData;
 }
 
 class GameStateModule extends Module
@@ -79,8 +79,8 @@ class GameStateModule extends Module
             }
         };
 
-        amendTeam(templateData.team1);
-        amendTeam(templateData.team2);
+        amendTeam(templateData.myTeam);
+        amendTeam(templateData.opponentTeam);
 
         util.clearChildren(this.element);
         this.element.appendChild(moduleTemplate.create(templateData));

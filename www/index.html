@@ -194,11 +194,11 @@
                 {{/if}}
                 {{#if this.isTimeout}}<div class="period timeout">Timeout</div>{{/if}}
             </div>
-            <div class="module-column-3 team1">
-                <h2>Team 1</h2>
-                <div class="score">{{this.team1.score}}</div>
+            <div class="module-column-3 myTeam">
+                <h2>My Team</h2>
+                <div class="score">{{this.myTeam.score}}</div>
                 <ul class="penalties">
-                    {{#each this.team1.players}}
+                    {{#each this.myTeam.players}}
                     {{#if this.penalty}}
                     {{#if this.isDone}}
                     <li class="done">
@@ -212,11 +212,11 @@
                     {{/each}}
                 </ul>
             </div>
-            <div class="module-column-3 team1">
-                <h2>Team 2</h2>
-                <div class="score">{{this.team2.score}}</div>
+            <div class="module-column-3 opponentTeam">
+                <h2>Opponent Team</h2>
+                <div class="score">{{this.opponentTeam.score}}</div>
                 <ul class="penalties">
-                    {{#each this.team2.players}}
+                    {{#each this.opponentTeam.players}}
                     {{#if this.penalty}}
                     {{#if this.isDone}}
                     <li class="done">

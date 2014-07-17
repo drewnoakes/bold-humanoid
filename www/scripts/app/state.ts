@@ -142,8 +142,8 @@ export interface Game
     secSinceDropIn: number;
     secondsRemaining: number;
     secondsSecondaryTime: number;
-    team1: TeamData;
-    team2: TeamData;
+    myTeam: TeamData;
+    opponentTeam: TeamData;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

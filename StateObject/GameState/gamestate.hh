@@ -86,6 +86,12 @@ namespace bold
       return getTeam(teamNumber);
     }
 
+    robocup::TeamInfo const& getOpponentTeam() const
+    {
+      static auto teamNumber = Config::getStaticValue<int>("team-number");
+      return d_data.teams[getTeamIndex(teamNumber) ^ 1];
+    }
+
     robocup::PlayerInfo const& getMyPlayerInfo() const
     {
       static int unum = Config::getStaticValue<int>("uniform-number");
@@ -99,7 +105,7 @@ namespace bold
   private:
     uchar getTeamIndex(uchar teamNumber) const
     {
-      return getTeam1().getTeamNumber() == teamNumber ? 0 : 1;
+      return d_data.teams[0].getTeamNumber() == teamNumber ? (uchar)0 : (uchar)1;
     }
 
     Clock::Timestamp d_receivedAt;
