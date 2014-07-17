@@ -5,12 +5,14 @@
 /// <reference path="../libs/lodash.d.ts" />
 
 import Action = require('Action');
+import Checkbox = require('controls/Checkbox');
 import Closeable = require('util/Closeable');
 import color = require('color');
 import constants = require('constants');
 import data = require('data');
 import HsvRangeEditor = require('controls/HsvRangeEditor');
 import scripts = require('scripts');
+import Select = require('controls/Select');
 import Setting = require('Setting');
 
 export interface FSMState
@@ -387,22 +389,9 @@ export function createSettingControl(setting: Setting, container: Element, close
                 wrapper.appendChild(heading);
             }
 
-            var select = <HTMLSelectElement>document.createElement('select');
-            _.each(setting.enumValues, enumValue =>
-            {
-                var option = document.createElement('option');
-                option.selected = setting.value === enumValue.value;
-                option.text = enumValue.text;
-                option.value = enumValue.value;
-                select.appendChild(option);
-            });
-            select.addEventListener('change', () => setting.setValue(parseInt(select.options[select.selectedIndex].value)));
-            closeable.add(setting.track(value =>
-            {
-                var option = _.find<HTMLOptionElement>(select.options, option => parseInt(option.value) === value);
-                option.selected = true;
-            }));
-            wrapper.appendChild(select);
+            var select = new Select(<any>setting, setting.enumValues);
+            closeable.add(select);
+            wrapper.appendChild(select.element);
             break;
         }
         case "int":
