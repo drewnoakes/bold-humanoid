@@ -2,7 +2,6 @@
 
 #include "../../StateObserver/ButtonObserver/buttonobserver.hh"
 
-// TODO allow manual unpenalisation of player, regardless of what GC says
 // TODO when game finished, do something based upon whether we won or not :)
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, shared_ptr<Option> whilePlayingOption)
@@ -23,6 +22,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   auto setState = fsm->newState("set", { SequenceOption::make("pause-sequence", { stopWalking, standUp }) });
   auto playingState = fsm->newState("playing", { whilePlayingOption });
   auto penalisedState = fsm->newState("penalised", { stopAndSitSequence });
+  auto unpenalisedState = fsm->newState("unpenalised", { whilePlayingOption });
   auto finishedState = fsm->newState("finished", { stopAndSitSequence });
 
   // STATUSES
@@ -39,6 +39,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   readyState    ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::READY);     agent->getHeadModule()->moveToHome(); });
   setState      ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::SET);       agent->getHeadModule()->moveToHome(); });
   playingState  ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::PLAYING); });
+  unpenalisedState->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::PLAYING); });
   finishedState ->onEnter.connect([agent] { agent->getBehaviourControl()->setPlayMode(PlayMode::FINISHED); });
   penalisedState->onEnter.connect([agent] {                                                                 agent->getHeadModule()->moveToHome(); });
 
@@ -63,7 +64,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
     ->when([modeButton] { return modeButton->isPressedForMillis(80); });
 
   penalisedState
-    ->transitionTo(playingState, "left-button")
+    ->transitionTo(unpenalisedState, "left-button")
     ->when([modeButton] { return modeButton->isPressedForMillis(80); });
 
   finishedState
@@ -92,7 +93,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
 
   fsm
     ->wildcardTransitionTo(penalisedState, "gc-penalised")
-    ->when(isPenalised);
+    ->when([fsm,unpenalisedState] { return isPenalised() && fsm->getCurrentState() != unpenalisedState; });
 
   fsm
     ->wildcardTransitionTo(setState, "gc-set")
