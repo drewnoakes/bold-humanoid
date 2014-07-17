@@ -29,6 +29,7 @@ class Checkbox
         label.textContent = labelText;
         this.element.appendChild(label);
 
+        // TODO LEAK this closeable should be closed at some point
         trackable.track(checked => input.checked = checked);
     }
 }
