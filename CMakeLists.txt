@@ -583,7 +583,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/GameState/writeJson.cc
+  ./StateObject/GameState/gamestate.cc
 )
 
 add_class(BOLDHUMANOID
