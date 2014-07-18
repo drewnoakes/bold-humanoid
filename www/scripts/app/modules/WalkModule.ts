@@ -156,23 +156,19 @@ class WalkModule extends Module
 
         templateRoot.querySelector('.status-legend').appendChild(statusLegend.element);
 
-        this.statusChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, statusChartOptions,
-            {
-                minValue: 0,
-                maxValue: 1,
-                horizontalLines:[
-                    {color:'#ffffff',lineWidth:1,value:0},
-                    {color:'#6666FF',lineWidth:1,value:0},
-                    {color:'#6666FF',lineWidth:1,value:0}
-                ]
-            }));
+        this.statusChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, statusChartOptions, {minValue: 0,maxValue: 1}));
         this.statusChart.addTimeSeries(this.statusStoppedSeries,     { fillStyle: stoppedColour,     strokeStyle: 'transparent', lineWidth: 0 });
         this.statusChart.addTimeSeries(this.statusStartingSeries,    { fillStyle: startingColour,    strokeStyle: 'transparent', lineWidth: 0 });
         this.statusChart.addTimeSeries(this.statusWalkingSeries,     { fillStyle: walkingColour,     strokeStyle: 'transparent', lineWidth: 0 });
         this.statusChart.addTimeSeries(this.statusStabilisingSeries, { fillStyle: stabilisingColour, strokeStyle: 'transparent', lineWidth: 0 });
         this.statusChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.status-chart'), /*delayMs*/ 0);
 
-        this.pitchChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 10, maxValue: 15}));
+        this.pitchChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions,
+            {
+                minValue: 10,
+                maxValue: 15,
+                horizontalLines: [{color:'#ffffff',lineWidth:1,value:0}]
+            }));
         this.pitchChart.addTimeSeries(this.pitchCurrentSeries, { strokeStyle: 'rgb(0, 0, 255)', lineWidth: 1 });
         this.pitchChart.addTimeSeries(this.pitchTargetSeries,  { strokeStyle: 'rgba(0, 0, 255, 0.4)', lineWidth: 1 });
         this.pitchChart.streamTo(<HTMLCanvasElement>templateRoot.querySelector('canvas.pitch-chart'), /*delayMs*/ 0);
@@ -182,10 +178,10 @@ class WalkModule extends Module
             this.closeables.add(setting.track(angle => this.pitchChart.options.horizontalLines[0].value = angle));
         });
         control.withSetting("walk-module.hip-pitch.min-angle", setting => {
-            this.closeables.add(setting.track(angle => this.pitchChart.options.horizontalLines[1].value = angle));
+            this.closeables.add(setting.track(angle => this.pitchChart.options.minValue = angle));
         });
         control.withSetting("walk-module.hip-pitch.max-angle", setting => {
-            this.closeables.add(setting.track(angle => this.pitchChart.options.horizontalLines[2].value = angle));
+            this.closeables.add(setting.track(angle => this.pitchChart.options.maxValue = angle));
         });
 
         this.xAmpChart = new SmoothieChart(_.extend<any,any,any,any,any,any>({}, chartOptions, {minValue: 0, maxValue: 40}));
