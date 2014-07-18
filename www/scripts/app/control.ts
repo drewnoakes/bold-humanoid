@@ -234,6 +234,12 @@ function onControlData(data: ControlData)
             allActions = _.map(syncData.actions, actionData => new Action(actionData));
             allSettings = _.map(syncData.settings, settingData => new Setting(settingData));
             allFSMs = syncData.fsms;
+            syncData.motionScripts = syncData.motionScripts.sort((a,b) =>
+            {
+                if (a.name === b.name)
+                    return 0;
+                return a.name < b.name ? -1 : 1;
+            });
             scripts.allMotionScripts = syncData.motionScripts;
 
             // Raise any queued callbacks
