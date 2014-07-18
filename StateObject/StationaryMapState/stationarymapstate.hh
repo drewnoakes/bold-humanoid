@@ -147,9 +147,12 @@ namespace bold
     /// Extracts goal pairs from individual post observations.
     static std::vector<std::pair<Average<Eigen::Vector2d>,Average<Eigen::Vector2d>>> pairGoalPosts(std::vector<Average<Eigen::Vector2d>> goalPostEstimates);
 
-    /// Attempts to label a pair of goal posts as being either ours, theirs or unknown.
-    static GoalLabel labelGoal(
-      FieldSide ballSideEstimate,
+    static GoalLabel labelGoalByKeeperBallDistance(
+      Average<Eigen::Vector2d> const& post1Pos,
+      Average<Eigen::Vector2d> const& post2Pos,
+      FieldSide ballSideEstimate);
+
+    static GoalLabel labelGoalByKeeperObservations(
       Average<Eigen::Vector2d> const& post1Pos,
       Average<Eigen::Vector2d> const& post2Pos,
       std::vector<Average<Eigen::Vector2d>> keeperEstimates);
@@ -158,12 +161,17 @@ namespace bold
     static Eigen::Vector2d estimateObservationPoint(Eigen::Vector2d post1, Eigen::Vector2d post2, GoalLabel label);
 
   private:
-
     template<typename T>
     static bool compareAverages(Average<T> const& a, Average<T> const& b)
     {
       return a.getCount() > b.getCount();
     }
+
+    /// Attempts to label a pair of goal posts as being either ours, theirs or unknown.
+    /// Uses techniques available in other labelGoalBy* functions.
+    GoalLabel labelGoal(
+      Average<Eigen::Vector2d> const& post1Pos,
+      Average<Eigen::Vector2d> const& post2Pos);
 
     /// Selects a kick (if there is one) which may be made immediately with a suitably positive outcome.
     /// If successful, canKick() will return true and getSelectedKick() returns the kick.

@@ -152,13 +152,10 @@ StationaryMapState::StationaryMapState(
   // Convert the goal post estimates into estimated goals (pairs of posts)
   auto goalPairs = pairGoalPosts(d_goalPostEstimates);
 
-  auto team = State::get<TeamState>();
-  FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
-
   // Label the goal post pairs as either our goal, their goal or unknown
   for (auto const& pair : goalPairs)
   {
-    auto label = labelGoal(ballSide, pair.first, pair.second, d_keeperEstimates);
+    auto label = labelGoal(pair.first, pair.second);
     d_goalEstimates.emplace_back(pair.first.getAverage(), pair.second.getAverage(), label);
   }
 
@@ -254,26 +251,20 @@ vector<pair<Average<Vector2d>,Average<Vector2d>>> StationaryMapState::pairGoalPo
   return pairs;
 }
 
-GoalLabel StationaryMapState::labelGoal(
-  FieldSide ballSideEstimate,
+GoalLabel StationaryMapState::labelGoalByKeeperBallDistance(
   Average<Eigen::Vector2d> const& post1Pos,
   Average<Eigen::Vector2d> const& post2Pos,
-  std::vector<Average<Eigen::Vector2d>> keeperEstimates)
+  FieldSide ballSideEstimate)
 {
-  static auto maxGoalieGoalDistance = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
+  // If the keeper tells us that the ball is 1m from them, and we observe the
+  // ball as 1.5m from the midpoint of the goal, then it's likely ours.
+
   const double maxPositionMeasurementError = 0.4; // TODO review this experimentally and move to config
 
   const double theirsThreshold = Vector2d(
     (FieldMap::getFieldLengthX() / 2.0) + maxPositionMeasurementError,
     FieldMap::getFieldLengthY() / 2.0
   ).norm();
-
-  // Attempt to associate a goal with a team.
-  //
-  // For example, if the keeper tells us that the ball is 1m from them, and
-  // we observe the ball as 1.5m from the midpoint of the goal, then it's likely ours.
-  //
-  // Also, if we see our keeper's uniform in the middle of the goal then it's likely ours.
 
   Vector2d const mid = (post1Pos.getAverage() + post2Pos.getAverage()) / 2.0;
 
@@ -284,7 +275,7 @@ GoalLabel StationaryMapState::labelGoal(
       // Keeper says the ball is on our side of the field.
       // If this goal is close enough then it must be ours, assuming the ball is approximately at our feet.
       double goalDist = mid.norm();
-      if (goalDist < (FieldMap::getFieldLengthX()/2.0) - maxPositionMeasurementError)
+      if (goalDist < (FieldMap::getFieldLengthX() / 2.0) - maxPositionMeasurementError)
       {
         log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on our side, and closest goal is too close at " << goalDist;
         return GoalLabel::Ours;
@@ -303,30 +294,58 @@ GoalLabel StationaryMapState::labelGoal(
       }
       break;
     }
-    case FieldSide::Unknown:
+    default:
     {
-      // Our keeper can't decide which half of the field the ball is on.
-      // Label this goal based solely upon whether we see our keeper between the posts.
-      for (auto const& keeperEstimate : keeperEstimates)
-      {
-        // Stop looping when the estimates are not confident enough
-        if (keeperEstimate.getCount() < KeeperSamplesNeeded)
-          break;
-
-        Vector2d keeperPos = keeperEstimate.getAverage();
-        Vector2d distFromMid = mid - keeperPos;
-
-        if (distFromMid.norm() < maxGoalieGoalDistance->getValue())
-        {
-          log::info("BuildStationaryMap::labelGoalObservations") << "Observe keeper between goal posts, so assume as ours";
-          return GoalLabel::Ours;
-        }
-      }
       break;
     }
   }
 
   return GoalLabel::Unknown;
+}
+
+GoalLabel StationaryMapState::labelGoalByKeeperObservations(
+  Average<Eigen::Vector2d> const& post1Pos,
+  Average<Eigen::Vector2d> const& post2Pos,
+  std::vector<Average<Eigen::Vector2d>> keeperEstimates)
+{
+  static auto maxGoalieGoalDistance = Config::getSetting<double>("vision.player-detection.max-goalie-goal-dist");
+
+  Vector2d const mid = (post1Pos.getAverage() + post2Pos.getAverage()) / 2.0;
+
+  // Label this goal based upon whether we see our keeper between the posts
+  for (auto const& keeperEstimate : keeperEstimates)
+  {
+    // Stop looping when the estimates are not confident enough
+    if (keeperEstimate.getCount() < KeeperSamplesNeeded)
+      break;
+
+    Vector2d keeperPos = keeperEstimate.getAverage();
+    Vector2d distFromMid = mid - keeperPos;
+
+    if (distFromMid.norm() < maxGoalieGoalDistance->getValue())
+    {
+      log::info("BuildStationaryMap::labelGoalObservations") << "Observe keeper between goal posts, so assume as ours";
+      return GoalLabel::Ours;
+    }
+  }
+
+  return GoalLabel::Unknown;
+}
+
+GoalLabel StationaryMapState::labelGoal(
+  Average<Eigen::Vector2d> const& post1Pos,
+  Average<Eigen::Vector2d> const& post2Pos)
+{
+  auto team = State::get<TeamState>();
+
+  FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
+
+  GoalLabel label = labelGoalByKeeperBallDistance(post1Pos, post2Pos, ballSide);
+
+  if (label != GoalLabel::Unknown)
+    return label;
+
+  return labelGoalByKeeperObservations(post1Pos, post2Pos, d_keeperEstimates);
 }
 
 double getGoalLineDistance(GoalEstimate const& goal, Vector2d const& endPos)

@@ -97,7 +97,7 @@ TEST (StationaryMapStateTests, pairGoalPosts)
   ASSERT_EQ (0, StationaryMapState::pairGoalPosts(uselessPosts).size());
 }
 
-TEST (StationaryMapStateTests, labelGoal_usingKeeperBallEstimate)
+TEST (StationaryMapStateTests, labelGoalByKeeperBallDistance)
 {
   auto goalY = FieldMap::getGoalY();
   auto fieldX = FieldMap::getFieldLengthX();
@@ -105,21 +105,19 @@ TEST (StationaryMapStateTests, labelGoal_usingKeeperBallEstimate)
   auto post1 = createAverage(Vector2d(1, 0),     StationaryMapState::GoalSamplesNeeded);
   auto post2 = createAverage(Vector2d(1, goalY), StationaryMapState::GoalSamplesNeeded);
 
-  vector<Average<Vector2d>> keepers;
-
-  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoal(FieldSide::Ours, post1, post2, keepers));
-  ASSERT_EQ(GoalLabel::Unknown, StationaryMapState::labelGoal(FieldSide::Unknown, post1, post2, keepers));
-  ASSERT_EQ(GoalLabel::Unknown, StationaryMapState::labelGoal(FieldSide::Theirs, post1, post2, keepers));
+  ASSERT_EQ(GoalLabel::Ours,    StationaryMapState::labelGoalByKeeperBallDistance(post1, post2, FieldSide::Ours));
+  ASSERT_EQ(GoalLabel::Unknown, StationaryMapState::labelGoalByKeeperBallDistance(post1, post2, FieldSide::Unknown));
+  ASSERT_EQ(GoalLabel::Unknown, StationaryMapState::labelGoalByKeeperBallDistance(post1, post2, FieldSide::Theirs));
 
   post1 = createAverage(Vector2d(1 + fieldX/2.0, 0),     StationaryMapState::GoalSamplesNeeded);
   post2 = createAverage(Vector2d(1 + fieldX/2.0, goalY), StationaryMapState::GoalSamplesNeeded);
 
-  ASSERT_EQ(GoalLabel::Unknown, StationaryMapState::labelGoal(FieldSide::Ours, post1, post2, keepers));
+  ASSERT_EQ(GoalLabel::Unknown, StationaryMapState::labelGoalByKeeperBallDistance(post1, post2, FieldSide::Ours));
 
   // TODO if the ball is on our side and the goal is far enough away, then it's Theirs, not Unknown
 }
 
-TEST (StationaryMapStateTests, labelGoal_usingKeeperObservations)
+TEST (StationaryMapStateTests, labelGoalByKeeperObservations)
 {
   auto goalY = FieldMap::getGoalY();
   auto maxGoalieGoalDistance = Config::getValue<double>("vision.player-detection.max-goalie-goal-dist");
@@ -145,19 +143,19 @@ TEST (StationaryMapStateTests, labelGoal_usingKeeperObservations)
   };
 
   // Test with a set of keepers observations that are too far from the midpoint of the goal
-  ASSERT_EQ(GoalLabel::Unknown, StationaryMapState::labelGoal(FieldSide::Unknown, post1, post2, keepers));
+  ASSERT_EQ(GoalLabel::Unknown, StationaryMapState::labelGoalByKeeperObservations(post1, post2, keepers));
 
   keepers[1] = createAverage(goodKeeper1, StationaryMapState::KeeperSamplesNeeded);
-  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoal(FieldSide::Unknown, post1, post2, keepers));
+  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoalByKeeperObservations(post1, post2, keepers));
 
   keepers[1] = createAverage(goodKeeper2, StationaryMapState::KeeperSamplesNeeded);
-  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoal(FieldSide::Unknown, post1, post2, keepers));
+  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoalByKeeperObservations(post1, post2, keepers));
 
   keepers[1] = createAverage(goodKeeper3, StationaryMapState::KeeperSamplesNeeded);
-  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoal(FieldSide::Unknown, post1, post2, keepers));
+  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoalByKeeperObservations(post1, post2, keepers));
 
   keepers[1] = createAverage(goodKeeper4, StationaryMapState::KeeperSamplesNeeded);
-  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoal(FieldSide::Unknown, post1, post2, keepers));
+  ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoalByKeeperObservations(post1, post2, keepers));
 }
 
 TEST (StationaryMapStateTests, estimateObservationPoint)
