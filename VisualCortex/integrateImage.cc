@@ -70,22 +70,22 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
     // UPDATE STATE
     //
     // Might we have a ball?
-    if (blobsPerLabel[d_ballLabel].size() > 0)
+    if (blobsPerLabel[d_pixelLabels[(uint8_t)LabelClass::BALL]].size() > 0)
     {
-      auto& ballBlobs = blobsPerLabel[d_ballLabel];
+      auto& ballBlobs = blobsPerLabel[d_pixelLabels[(uint8_t)LabelClass::BALL]];
       ballPosition = detectBall(ballBlobs, t);
     }
 
     // Do we have goal posts?
-    if (blobsPerLabel[d_goalLabel].size() > 0)
+    if (blobsPerLabel[d_pixelLabels[(uint8_t)LabelClass::GOAL]].size() > 0)
     {
-      auto& goalBlobs = blobsPerLabel[d_goalLabel];
+      auto& goalBlobs = blobsPerLabel[d_pixelLabels[(uint8_t)LabelClass::GOAL]];
       goalPositions = detectGoal(goalBlobs, t);
     }
 
     auto teamColour = Config::getStaticValue<TeamColour>("team-colour");
 
-    auto ourColourLabel = teamColour == TeamColour::Cyan ? d_cyanLabel : d_magentaLabel;
+    auto ourColourLabel = d_pixelLabels[(uint8_t)(teamColour == TeamColour::Cyan ? LabelClass::CYAN : LabelClass::MAGENTA)];
 
     // Do we have own teammate blobs?
     if (d_playerDetectionEnabled->getValue() && blobsPerLabel[ourColourLabel].size() > 0)

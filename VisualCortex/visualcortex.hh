@@ -7,9 +7,10 @@
 #include <memory>
 #include <opencv2/core/core.hpp>
 
-#include "../HistogramLabelTeacher/histogramlabelteacher.hh"
+#include "../LabelTeacher/labelteacher.hh"
 #include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../PixelLabel/RangePixelLabel/rangepixellabel.hh"
+#include "../PixelLabel/HistogramPixelLabel/histogrampixellabel.hh"
 #include "../Setting/setting.hh"
 #include "../util/meta.hh"
 
@@ -147,16 +148,14 @@ namespace bold
     std::shared_ptr<DataStreamer> d_dataStreamer;
     std::shared_ptr<Spatialiser> d_spatialiser;
 
-    std::shared_ptr<RangePixelLabel> d_goalLabel;
-    std::shared_ptr<RangePixelLabel> d_ballLabel;
-    std::shared_ptr<RangePixelLabel> d_fieldLabel;
-    std::shared_ptr<RangePixelLabel> d_lineLabel;
-    std::shared_ptr<RangePixelLabel> d_cyanLabel;
-    std::shared_ptr<RangePixelLabel> d_magentaLabel;
+    std::vector<std::shared_ptr<PixelLabel>> d_pixelLabels;
 
+    std::vector<std::shared_ptr<RangePixelLabel>> d_rangePixelLabels;
+    std::vector<std::shared_ptr<HistogramPixelLabel<6>>> d_histogramPixelLabels;
+    
     std::shared_ptr<ImageLabeller> d_imageLabeller;
 
-    std::unique_ptr<HistogramLabelTeacher<6>> d_labelTeacher;
+    std::unique_ptr<LabelTeacher<6>> d_labelTeacher;
 
     std::function<Eigen::Vector2i(int)> d_granularityFunction;
 

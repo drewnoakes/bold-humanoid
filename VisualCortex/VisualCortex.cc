@@ -50,42 +50,86 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_occlusionEdgeColour       = Config::getSetting<Colour::bgr>("round-table.image-colours.occlusion-edge");
   d_calibrationColour         = Config::getSetting<Colour::bgr>("round-table.image-colours.calibration");
 
-  d_goalLabel     = make_shared<RangePixelLabel>("Goal",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
-  d_ballLabel     = make_shared<RangePixelLabel>("Ball",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
-  d_fieldLabel    = make_shared<RangePixelLabel>("Field",   Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
-  d_lineLabel     = make_shared<RangePixelLabel>("Line",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
-  d_cyanLabel     = make_shared<RangePixelLabel>("Cyan",    Config::getValue<Colour::hsvRange>("vision.pixel-labels.cyan"));
-  d_magentaLabel  = make_shared<RangePixelLabel>("Magenta", Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
+  // TODO: this is put in correct LabelClass order, use map instead?
 
+  auto goalLabel = make_shared<RangePixelLabel>("Goal",
+                                                LabelClass::GOAL,
+                                                Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
 
-  vector<shared_ptr<PixelLabel>> pixelLabels = { d_ballLabel, d_goalLabel, d_fieldLabel, d_cyanLabel, d_magentaLabel, d_lineLabel };
-  auto blobPixelLabels =
-    d_playerDetectionEnabled->getValue() ?
-    vector<shared_ptr<PixelLabel>>({ d_ballLabel, d_goalLabel, d_cyanLabel, d_magentaLabel }) :
-    vector<shared_ptr<PixelLabel>>({ d_ballLabel, d_goalLabel });
+  auto ballLabel = make_shared<RangePixelLabel>("Ball",
+                                                LabelClass::BALL,
+                                                Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
+
+  auto fieldLabel = make_shared<RangePixelLabel>("Field",
+                                                 LabelClass::FIELD,
+                                                 Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
+
+  auto lineLabel = make_shared<RangePixelLabel>("Line",
+                                                LabelClass::LINE,
+                                                Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
+  auto cyanLabel = make_shared<RangePixelLabel>("Cyan",
+                                                LabelClass::CYAN,
+                                                Config::getValue<Colour::hsvRange>("vision.pixel-labels.cyan"));
+  auto magentaLabel = make_shared<RangePixelLabel>("Magenta",
+                                                               LabelClass::MAGENTA,
+                                                               Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
+
+  d_rangePixelLabels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
+  d_pixelLabels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
+
+  auto blobPixelLabels = 
+    d_playerDetectionEnabled->getValue() ? 
+    vector<shared_ptr<PixelLabel>>({ goalLabel, ballLabel, cyanLabel, magentaLabel }) :
+    vector<shared_ptr<PixelLabel>>({ goalLabel, ballLabel });
 
   d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
-  d_labelTeacher = unique_ptr<HistogramLabelTeacher<6>>{new HistogramLabelTeacher<6>({"Goal", "Ball", "Field", "Line", "Cyan", "Magenta"})};
+  //d_labelTeacher = unique_ptr<HistogramLabelTeacher<6>>{new HistogramLabelTeacher<6>({"Goal", "Ball", "Field", "Line", "Cyan", "Magenta"})};
 
-  auto createLookupTable = [this,pixelLabels]()
+  auto createLookupTable = [this]()
   {
     log::info("VisualCortex::VisualCortex") << "Creating pixel label LUT";
-    for (shared_ptr<PixelLabel> label : pixelLabels)
+    for (shared_ptr<PixelLabel> label : d_rangePixelLabels)
       log::verbose("VisualCortex::VisualCortex") << "  " << *label;
 
+    vector<shared_ptr<PixelLabel>> pixelLabels(d_rangePixelLabels.size());
+    transform(begin(d_rangePixelLabels), end(d_rangePixelLabels),
+              begin(pixelLabels), [](shared_ptr<RangePixelLabel> l) { return l; });
     d_imageLabeller->updateLut(LUTBuilder::buildLookUpTableYCbCr18(pixelLabels));
   };
 
   createLookupTable();
 
   // Recreate lookup table on dynamic configuration changes
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.goal") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_goalLabel->setHSVRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.ball") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_ballLabel->setHSVRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_fieldLabel->setHSVRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_lineLabel->setHSVRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.cyan") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_cyanLabel->setHSVRange(value); createLookupTable(); });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.magenta") ->changed.connect([this,createLookupTable](Colour::hsvRange value) { d_magentaLabel->setHSVRange(value); createLookupTable(); });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.goal")->
+    changed.connect([this,createLookupTable](Colour::hsvRange value) {
+        d_rangePixelLabels[(uint8_t)LabelClass::GOAL]->setHSVRange(value);
+        createLookupTable();
+      });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.ball")->
+    changed.connect([this,createLookupTable](Colour::hsvRange value) {
+        d_rangePixelLabels[(uint8_t)LabelClass::BALL]->setHSVRange(value);
+        createLookupTable();
+      });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->
+    changed.connect([this,createLookupTable](Colour::hsvRange value) {
+        d_rangePixelLabels[(uint8_t)LabelClass::FIELD]->setHSVRange(value);
+        createLookupTable();
+      });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line")->
+    changed.connect([this,createLookupTable](Colour::hsvRange value) {
+        d_rangePixelLabels[(uint8_t)LabelClass::LINE]->setHSVRange(value);
+        createLookupTable();
+      });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.cyan")->
+    changed.connect([this,createLookupTable](Colour::hsvRange value) {
+        d_rangePixelLabels[(uint8_t)LabelClass::CYAN]->setHSVRange(value);
+        createLookupTable();
+      });
+  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.magenta")->
+    changed.connect([this,createLookupTable](Colour::hsvRange value) {
+        d_rangePixelLabels[(uint8_t)LabelClass::MAGENTA]->setHSVRange(value); createLookupTable();
+      });
 
   // ball detection settings
   d_minBallAreaPixels              = Config::getSetting<int>("vision.ball-detection.min-area-px");
@@ -107,12 +151,12 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   static ushort imageHeight = d_cameraModel->imageHeight();
 
   d_imagePassHandlers = make_tuple(
-    shared_ptr<LineDotPass<uchar>>(new LineDotPass<uchar>(imageWidth, d_fieldLabel, d_lineLabel)),
+    shared_ptr<LineDotPass<uchar>>(new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel)),
     shared_ptr<BlobDetectPass>(new BlobDetectPass(imageWidth, imageHeight, blobPixelLabels)),
-    shared_ptr<CartoonPass>(new CartoonPass(imageWidth, imageHeight, pixelLabels)),
-    shared_ptr<LabelCountPass>(new LabelCountPass(pixelLabels)),
-    shared_ptr<CompleteFieldEdgePass>(new CompleteFieldEdgePass(d_fieldLabel, imageWidth, imageHeight)),
-    shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(d_fieldLabel, d_lineLabel, imageWidth, imageHeight, 1*2*3*4))
+    shared_ptr<CartoonPass>(new CartoonPass(imageWidth, imageHeight, d_pixelLabels)),
+    shared_ptr<LabelCountPass>(new LabelCountPass(d_pixelLabels)),
+    shared_ptr<CompleteFieldEdgePass>(new CompleteFieldEdgePass(fieldLabel, imageWidth, imageHeight)),
+    shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(fieldLabel, lineLabel, imageWidth, imageHeight, 1*2*3*4))
     );
 
   d_imagePassRunner = shared_ptr<ImagePassRunner<uchar>>(new ImagePassRunner<uchar>());
