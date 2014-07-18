@@ -115,7 +115,15 @@ namespace bold
 
     uchar getTeamIndex(uchar teamNumber) const
     {
-      return d_data.teams[0].getTeamNumber() == teamNumber ? (uchar)0 : (uchar)1;
+      if (d_data.teams[0].getTeamNumber() == teamNumber)
+        return (uchar)0;
+      if (d_data.teams[1].getTeamNumber() == teamNumber)
+        return (uchar)1;
+
+      // We should never reach this point as the GameStateReceiver should not propagate meesages which do not
+      // apply to our team.
+      log::error("GameState::getTeamIndex") << "Attempt to get index for unknown team number " << teamNumber;
+      throw std::runtime_error("Attempt to get index for unknown team number.");
     }
 
     Clock::Timestamp d_receivedAt;
