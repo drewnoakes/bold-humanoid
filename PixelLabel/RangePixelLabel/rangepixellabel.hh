@@ -7,7 +7,9 @@ namespace bold
   class RangePixelLabel : public PixelLabel
   {
   public:
-    RangePixelLabel(std::string name, Colour::hsvRange hsvRange);
+    RangePixelLabel(std::string name, LabelClass id, Colour::hsvRange hsvRange);
+
+    virtual void addSample(Colour::hsv const& pixelColour) override;
 
     Colour::hsvRange getHSVRange() const;
     void setHSVRange(Colour::hsvRange range);
@@ -23,10 +25,15 @@ namespace bold
 
   
 
-  inline RangePixelLabel::RangePixelLabel(std::string name, Colour::hsvRange hsvRange)
-    : PixelLabel{name},
+  inline RangePixelLabel::RangePixelLabel(std::string name, LabelClass id, Colour::hsvRange hsvRange)
+    : PixelLabel{name, id},
     d_hsvRange{std::move(hsvRange)}
   {}
+
+  inline void RangePixelLabel::addSample(Colour::hsv const& pixelColour)
+  {
+    d_hsvRange = d_hsvRange.containing(pixelColour);
+  }
   
   inline Colour::hsvRange RangePixelLabel::getHSVRange() const
   {

@@ -9,9 +9,9 @@ namespace bold
   class HistogramPixelLabel : public PixelLabel
   {
   public:
-    HistogramPixelLabel(std::string name);
+    HistogramPixelLabel(std::string name, LabelClass id);
 
-    void addSample(Colour::hsv const& pixelColour);
+    void addSample(Colour::hsv const& pixelColour) override;
 
     unsigned getTotalCount() const;
 

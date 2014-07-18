@@ -9,32 +9,41 @@
 
 namespace bold
 {
+  enum class LabelClass : uint8_t
+  {
+    GOAL = 1,
+      BALL,
+      FIELD,
+      LINE,
+      CYAN,
+      MAGENTA
+  };
+
   class PixelLabel
   {
   public:
-    PixelLabel(std::string name);
+    PixelLabel(std::string name, LabelClass id);
 
-    uint8_t getID() const;
+    LabelClass getID() const;
     std::string getName() const;
 
+    virtual void addSample(Colour::hsv const& pixelColour) = 0;
     virtual float labelProb(Colour::hsv const& pixelColour) const = 0;
     virtual Colour::hsv modalColour() const = 0;
 
     virtual void print(std::ostream& out) const;
 
   private:
-    uint8_t d_id;
+    LabelClass d_id;
     std::string d_name;
-
-    static uint8_t s_nextID;
   };
 
-  inline PixelLabel::PixelLabel(std::string name)
-    : d_id{s_nextID++},
+  inline PixelLabel::PixelLabel(std::string name, LabelClass id)
+    : d_id{id},
     d_name{std::move(name)}
   {}
 
-  inline uint8_t PixelLabel::getID() const
+  inline LabelClass PixelLabel::getID() const
   {
     return d_id;
   }

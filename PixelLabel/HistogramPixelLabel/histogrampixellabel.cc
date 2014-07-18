@@ -4,8 +4,8 @@ using namespace bold;
 using namespace std;
 
 template<uint8_t CHANNEL_BITS>
-HistogramPixelLabel<CHANNEL_BITS>::HistogramPixelLabel(std::string name)
-  : PixelLabel{name},
+HistogramPixelLabel<CHANNEL_BITS>::HistogramPixelLabel(std::string name, LabelClass id)
+  : PixelLabel{name, id},
   d_totalCount{0}
 {
 
