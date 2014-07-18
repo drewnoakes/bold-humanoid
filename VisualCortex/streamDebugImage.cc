@@ -12,6 +12,8 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   if (State::getTracker<CameraFrameState>()->updateCount() % d_streamFramePeriod->getValue() != 0)
     return;
 
+  auto const& cameraFrame = State::get<CameraFrameState>();
+
   Mat debugImage;
 
   ImageType imageType = d_imageType->getValue();
@@ -50,7 +52,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   }
 
   // Draw observed lines
-  auto const& observedLineSegments = State::get<CameraFrameState>()->getObservedLineSegments();
+  auto const& observedLineSegments = cameraFrame->getObservedLineSegments();
   if (d_shouldDrawObservedLines->getValue() && observedLineSegments.size() > 0)
   {
     auto observedLineColour = d_observedLineColour->getValue();
@@ -98,8 +100,6 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   // Draw observed objects (ie. actual ball/goal posts chosen from blobs)
   if (d_shouldDrawObservedObjects->getValue())
   {
-    auto cameraFrame = State::get<CameraFrameState>();
-
     auto ball = cameraFrame->getBallObservation();
     if (ball)
     {
@@ -187,7 +187,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
   if (d_shouldDrawOcclusionEdge->getValue())
   {
     auto occlusionColour = d_occlusionEdgeColour->getValue().toScalar();
-    auto rays = d_fieldEdgePass->getOcclusionRays();
+    auto const& rays = cameraFrame->getOcclusionRays();
     auto lastPoint = rays[0].near();
     for (auto const& ray : rays)
     {
