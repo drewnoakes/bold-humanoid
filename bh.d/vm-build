@@ -22,6 +22,7 @@ git fetch --multiple bert \
 
 # if there was an error, propagate it
 if [[ $? -ne 0 ]] ; then
+  ssh -X drew@bert 'DISPLAY=:0 notify-send -i face-sad "AAK AAK AAAK!!" "Build monkey says..."'
   exit 1
 fi
 
