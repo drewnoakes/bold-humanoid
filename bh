@@ -8,8 +8,8 @@ print_usage()
     echo "boldhumanoid console utility"
     echo
     echo "usage:"
-    
-    for SCRIPT in bh.d/*; do
+
+    for SCRIPT in $BOLD_HUMANOID_DIR/bh.d/*; do
         if [ -x ${SCRIPT} ] ; then
             echo
             ${SCRIPT} help
@@ -30,7 +30,7 @@ if [[ $# == 0 || "$1" == "help" ]] ; then
     exit
 fi
 
-SCRIPT="./bh.d/$1"
+SCRIPT="$BOLD_HUMANOID_DIR/bh.d/$1"
 if [ ! -x ${SCRIPT} ] ; then
     print_usage
     exit
