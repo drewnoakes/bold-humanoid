@@ -5,12 +5,14 @@
 /// <reference path="../../libs/lodash.d.ts" />
 
 import IObservable = require('IObservable');
+import ICloseable = require('ICloseable');
 
-class Select
+class Select implements ICloseable
 {
     private static nextIdCounter: number = 0;
 
     public element: HTMLSelectElement;
+    private closeable: ICloseable;
 
     constructor(observable: IObservable, items: {value:any; text:string}[], id?: string)
     {
@@ -29,8 +31,7 @@ class Select
             observable.setValue(items[this.element.selectedIndex].value);
         });
 
-        // TODO LEAK this closeable should be closed at some point
-        observable.track(value =>
+        this.closeable = observable.track(value =>
         {
             for (var i = 0; i < items.length; i++)
             {
@@ -42,6 +43,12 @@ class Select
             }
             console.assert(false && !!"Observed value changed to something not specified in original items");
         });
+    }
+
+    public close(): void
+    {
+        this.closeable.close();
+        delete this.closeable;
     }
 }
 

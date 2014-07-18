@@ -6,6 +6,7 @@
 /// <reference path="../libs/require.d.ts" />
 
 import IObservable = require('IObservable');
+import ICloseable = require('ICloseable');
 
 class Setting implements IObservable
 {
@@ -65,7 +66,7 @@ class Setting implements IObservable
         _.each(this.callbacks, callback => callback(value));
     }
 
-    public track(callback)
+    public track(callback): ICloseable
     {
         callback(this.value);
         this.callbacks.push(callback);

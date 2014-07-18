@@ -2,10 +2,10 @@
  * @author Drew Noakes https://drewnoakes.com
  */
 
-
 import IObservable = require('IObservable');
+import ICloseable = require('ICloseable');
 
-class Trackable<T> implements IObservable
+class Trackable<T>
 {
     private callbacks: { (value: T, oldValue?: T): void; }[];
 
@@ -14,13 +14,13 @@ class Trackable<T> implements IObservable
         this.callbacks = [];
     }
 
-    public track(callback: (value: T, oldValue?: T) => void)
+    public track(callback: (value: T, oldValue?: T) => void): ICloseable
     {
         this.callbacks.push(callback);
         if (typeof (this.value) !== 'undefined' && this.value !== null)
             callback(this.value, undefined);
 
-        return () => this.removeCallback(callback);
+        return { close: () => this.removeCallback(callback) };
     }
 
     public removeCallback(callback: (value: T, oldValue?: T) => void)
