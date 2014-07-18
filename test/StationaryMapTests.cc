@@ -67,7 +67,7 @@ Average<T> createAverage(T value, int count)
   return avg;
 }
 
-TEST (StationaryMapTests, pairGoalPosts)
+TEST (StationaryMapStateTests, pairGoalPosts)
 {
   // TODO give a case where one of the posts could be paired with two of the others, yet one pairing is more probable
 
@@ -97,7 +97,7 @@ TEST (StationaryMapTests, pairGoalPosts)
   ASSERT_EQ (0, StationaryMapState::pairGoalPosts(uselessPosts).size());
 }
 
-TEST (StationaryMapTests, labelGoal_usingKeeperBallEstimate)
+TEST (StationaryMapStateTests, labelGoal_usingKeeperBallEstimate)
 {
   auto goalY = FieldMap::getGoalY();
   auto fieldX = FieldMap::getFieldLengthX();
@@ -119,7 +119,7 @@ TEST (StationaryMapTests, labelGoal_usingKeeperBallEstimate)
   // TODO if the ball is on our side and the goal is far enough away, then it's Theirs, not Unknown
 }
 
-TEST (StationaryMapTests, labelGoal_usingKeeperObservations)
+TEST (StationaryMapStateTests, labelGoal_usingKeeperObservations)
 {
   auto goalY = FieldMap::getGoalY();
   auto maxGoalieGoalDistance = Config::getValue<double>("vision.player-detection.max-goalie-goal-dist");
