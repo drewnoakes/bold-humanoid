@@ -27,6 +27,17 @@ namespace bold
     Draw = 3
   };
 
+  inline std::string getGameResultName(GameResult gameResult)
+  {
+    switch (gameResult)
+    {
+      case GameResult::Undecided: return "Undecided";
+      case GameResult::Victory:   return "Victory";
+      case GameResult::Loss:      return "Loss";
+      case GameResult::Draw:      return "Draw";
+    }
+  }
+
   class GameState : public StateObject
   {
   public:
