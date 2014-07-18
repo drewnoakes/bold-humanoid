@@ -23,7 +23,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   auto playingState = fsm->newState("playing", { whilePlayingOption });
   auto penalisedState = fsm->newState("penalised", { stopAndSitSequence });
   auto unpenalisedState = fsm->newState("unpenalised", { whilePlayingOption });
-  auto finishedState = fsm->newState("finished", { SequenceOption::make("stop-then-game-over-sequence", { stopWalking, gameOver }) });
+  auto finishedState = fsm->newState("finished", { SequenceOption::make("stop-then-game-over-sequence", { stopWalking, standUp, gameOver }) });
 
   // STATUSES
 
