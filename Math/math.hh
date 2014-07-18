@@ -81,6 +81,13 @@ namespace bold
       return rads - M_PI;
     }
 
+    /** Absolute distance between two angles in radians
+     *
+     * e.g.:
+     * |pi - .5 pi| = |.5 pi - pi| = .5 pi
+     * | -.1 po - .1pi | = | .1pi - -.1 pi | = .2 pi
+     * | -.9 pi - .9 pi | = | .9 pi - -.9pi | = .2 pi
+     */
     static double shortestAngleDiffRads(double a1, double a2)
     {
       // The fmod() function computes the floating-point remainder of dividing x by y.
