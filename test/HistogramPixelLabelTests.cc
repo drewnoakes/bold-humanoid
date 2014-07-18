@@ -10,26 +10,26 @@ using namespace Eigen;
 
 TEST (HistogramPixelLabelTests, binSize)
 {
-  HistogramPixelLabel<8> label1("label1");
+  HistogramPixelLabel<8> label1("label1", LabelClass::BALL);
   EXPECT_EQ ( 1, label1.getBinSize() );
   EXPECT_EQ ( 256, label1.getNBins() );
 
-  HistogramPixelLabel<7> label2("label2");
+  HistogramPixelLabel<7> label2("label2", LabelClass::BALL);
   EXPECT_EQ ( 2, label2.getBinSize() );
   EXPECT_EQ ( 128, label2.getNBins() );
 
-  HistogramPixelLabel<6> label3("label3");
+  HistogramPixelLabel<6> label3("label3", LabelClass::BALL);
   EXPECT_EQ ( 4, label3.getBinSize() );
   EXPECT_EQ ( 64, label3.getNBins() );
 
-  HistogramPixelLabel<1> label4("label4");
+  HistogramPixelLabel<1> label4("label4", LabelClass::BALL);
   EXPECT_EQ ( 128, label4.getBinSize() );
   EXPECT_EQ ( 2, label4.getNBins() );
 }
 
 TEST (HistogramPixelLabelTests, index)
 {
-  HistogramPixelLabel<8> label("label");
+  HistogramPixelLabel<8> label("label", LabelClass::BALL);
   EXPECT_EQ ( Colour::hsv(0, 0, 0), label.indexToHsv(0) );
   EXPECT_EQ ( Colour::hsv(0, 0, 1), label.indexToHsv(1) );
   EXPECT_EQ ( Colour::hsv(0, 1, 0), label.indexToHsv(256) );
@@ -45,14 +45,14 @@ TEST (HistogramPixelLabelTests, index)
 
 TEST (HistogramPixelLabelTests, empty)
 {
-  HistogramPixelLabel<8> label("label");
+  HistogramPixelLabel<8> label("label", LabelClass::BALL);
 
   EXPECT_EQ ( 1.0f / (256 * 256 * 256), label.labelProb(Colour::hsv(0, 0, 0)) );
 }
 
 TEST (HistogramPixelLabelTests, readWrite)
 {
-  HistogramPixelLabel<6> label1("label");
+  HistogramPixelLabel<6> label1("label", LabelClass::BALL);
   for (unsigned i = 0; i < 100; ++i)
     label1.addSample(Colour::hsv(128, 64, 224));
 
@@ -60,7 +60,7 @@ TEST (HistogramPixelLabelTests, readWrite)
   label1.write(out);
   out.close();
 
-  HistogramPixelLabel<6> label2("label");
+  HistogramPixelLabel<6> label2("label", LabelClass::BALL);
   ifstream in("/tmp/label.dat");
   label2.read(in);
   in.close();
