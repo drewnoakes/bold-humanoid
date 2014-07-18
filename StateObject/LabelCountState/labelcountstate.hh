@@ -5,10 +5,11 @@
 #include <memory>
 
 #include "../stateobject.hh"
+#include "../../PixelLabel/pixellabel.hh"
 
 namespace bold
 {
-  class PixelLabel;
+  enum class LabelClass : uint8_t;
 
   class LabelCountState : public StateObject
   {

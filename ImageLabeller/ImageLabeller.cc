@@ -148,7 +148,7 @@ void ImageLabeller::createCartoon(Mat& labelledInput, Mat& cartoonOutput, vector
 
   for (PixelLabel const& label : labels)
   {
-    colorByLabel[label.getID()] = label.modalColour().toBgr();
+    colorByLabel[(uint8_t)label.getID()] = label.modalColour().toBgr();
   }
 
   for (int y = 0; y < labelledInput.rows; y++)

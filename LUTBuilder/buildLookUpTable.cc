@@ -55,7 +55,7 @@ uchar LUTBuilder::labelPixel(vector<shared_ptr<PixelLabel>> const& labels, Colou
     if (prob > bestProb)
     {
       bestProb = prob;
-      bestLabel = label->getID();
+      bestLabel = (uint8_t)label->getID();
     }
   }
 

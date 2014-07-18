@@ -27,8 +27,8 @@ namespace bold
     }
 
   private:
-    uchar d_fieldLabelId;
-    uchar d_lineLabelId;
+    uint8_t d_fieldLabelId;
+    uint8_t d_lineLabelId;
     std::vector<short> d_maxYByC;
     std::vector<short> d_maxYByCConvex;
     std::vector<ushort> d_runByC;

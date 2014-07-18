@@ -15,12 +15,12 @@ void LabelCountState::writeJson(Writer<StringBuffer>& writer) const
     {
       for (auto const& pair : d_labelCounts)
       {
-        shared_ptr<PixelLabel> const& label = pair.first;
+        auto label = pair.first;
         uint const& count = pair.second;
         writer.StartObject();
         {
           writer.String("name").String(label->getName().c_str());
-          writer.String("id").Uint(label->getID());
+          writer.String("id").Uint((uint8_t)label);
           writer.String("count").Uint(count);
         }
         writer.EndObject();

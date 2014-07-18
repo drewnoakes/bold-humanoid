@@ -18,10 +18,10 @@ namespace bold
   {
   public:
     LineRunTracker(
-      uchar inLabel,
-      uchar onLabel,
+      uint8_t inLabel,
+      uint8_t onLabel,
       ushort otherCoordinate,
-      uchar hysteresisLimit,
+      uint8_t hysteresisLimit,
       std::function<void(ushort const, ushort const, ushort const)> callback
     )
       : otherCoordinate(otherCoordinate),
@@ -39,15 +39,15 @@ namespace bold
       state = State::Out;
     }
 
-    void update(uchar label, ushort position);
+    void update(uint8_t label, ushort position);
 
-    uchar getHysteresisLimit() const { return hysteresisLimit; }
-    void setHysteresisLimit(uchar limit) { hysteresisLimit = limit; }
+    uint8_t getHysteresisLimit() const { return hysteresisLimit; }
+    void setHysteresisLimit(uint8_t limit) { hysteresisLimit = limit; }
 
     ushort otherCoordinate;
 
   private:
-    enum class State : uchar
+    enum class State : uint8_t
     {
       // Not on the in-label, and not on the on-label after being on the in-label
       Out,
@@ -57,16 +57,16 @@ namespace bold
       On
     };
 
-    uchar inLabel; // eg: green
-    uchar onLabel; // eg: white
-    uchar hysteresisLimit;
+    uint8_t inLabel; // eg: green
+    uint8_t onLabel; // eg: white
+    uint8_t hysteresisLimit;
     State state;
     ushort startedAt;
     std::function<void(ushort const, ushort const, ushort const)> callback;
     uint hysteresis;
   };
 
-  inline void LineRunTracker::update(uchar label, ushort position)
+  inline void LineRunTracker::update(uint8_t label, ushort position)
   {
     switch (state)
     {

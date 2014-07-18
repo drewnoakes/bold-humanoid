@@ -99,7 +99,7 @@ namespace bold
    *
    * Builds blobs while passing through an image
    **/
-  class BlobDetectPass : public ImagePassHandler<uchar>
+  class BlobDetectPass : public ImagePassHandler<uint8_t>
   {
   public:
     BlobDetectPass(ushort imageWidth, ushort imageHeight, std::vector<std::shared_ptr<PixelLabel>> const& blobTypes);
@@ -110,7 +110,7 @@ namespace bold
 
     void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override;
 
-    void onPixel(uchar label, ushort x, ushort y) override;
+    void onPixel(uint8_t label, ushort x, ushort y) override;
 
     std::vector<std::shared_ptr<PixelLabel>> pixelLabels() const { return d_pixelLabels; }
 
@@ -135,9 +135,9 @@ namespace bold
     std::vector<unsigned> d_rowIndices;
 
     // Image pass state Accumulated data for the most recently passed image.
-    std::map<uchar, RunLengthCode> d_runsPerRowPerLabel;
+    std::map<uint8_t, RunLengthCode> d_runsPerRowPerLabel;
     Run d_currentRun;
-    uchar d_currentLabel;
+    uint8_t d_currentLabel;
 
     // Blobs detected
     std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> d_blobsDetectedPerLabel;
@@ -188,7 +188,7 @@ namespace bold
     d_rowIndices.push_back(y);
   }
 
-  inline void BlobDetectPass::onPixel(uchar label, ushort x, ushort y)
+  inline void BlobDetectPass::onPixel(uint8_t label, ushort x, ushort y)
   {
     // Check if we have a run boundary
     if (label != d_currentLabel)

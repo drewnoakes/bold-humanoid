@@ -21,8 +21,8 @@ namespace bold
   {
   private:
     const ushort d_imageWidth;
-    std::shared_ptr<PixelLabel> const inLabel;
-    std::shared_ptr<PixelLabel> const onLabel;
+    std::shared_ptr<PixelLabel> inLabel;
+    std::shared_ptr<PixelLabel> onLabel;
     std::unique_ptr<LineRunTracker> d_rowTracker;
     std::vector<bold::LineRunTracker> d_colTrackers;
     int d_lastXGranularity;
@@ -30,7 +30,7 @@ namespace bold
   public:
     std::vector<Eigen::Vector2i> lineDots;
 
-    LineDotPass(ushort imageWidth, std::shared_ptr<PixelLabel> const inLabel, std::shared_ptr<PixelLabel> const onLabel)
+    LineDotPass(ushort imageWidth, std::shared_ptr<PixelLabel> inLabel, std::shared_ptr<PixelLabel> onLabel)
     : d_imageWidth(imageWidth),
       inLabel(inLabel),
       onLabel(onLabel),
@@ -46,7 +46,7 @@ namespace bold
       for (ushort x = 0; x <= imageWidth; ++x)
       {
         d_colTrackers.emplace_back(
-          inLabel->getID(), onLabel->getID(), /*otherCoordinate*/x, hysteresisLimit->getValue(),
+          (uint8_t)inLabel->getID(), (uint8_t)onLabel->getID(), /*otherCoordinate*/x, hysteresisLimit->getValue(),
           [this](ushort const from, ushort const to, ushort const other) mutable {
             int mid = (from + to) / 2;
             lineDots.emplace_back((int)other, mid);
@@ -55,7 +55,7 @@ namespace bold
       }
 
       d_rowTracker = std::make_unique<LineRunTracker>(
-        inLabel->getID(), onLabel->getID(), /*otherCoordinate*/0, hysteresisLimit->getValue(),
+        (uint8_t)inLabel->getID(), (uint8_t)onLabel->getID(), /*otherCoordinate*/0, hysteresisLimit->getValue(),
         [this](ushort const from, ushort const to, ushort const other) mutable {
           int mid = (from + to) / 2;
           lineDots.emplace_back(mid, (int)other);
