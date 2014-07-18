@@ -35,6 +35,7 @@ using namespace std;
 using namespace bold;
 using namespace Eigen;
 
+/*
 void doHistogramPixels(cv::Mat const& img)
 {
   HistogramPixelLabel<5> label{"label"};
@@ -55,7 +56,7 @@ void doHistogramPixels(cv::Mat const& img)
     }
   }
 
-/*
+/ *
   auto rng = Math::createNormalRng(128, 64);
 
   for (unsigned i = 0; i < 1000000; ++i)
@@ -66,7 +67,7 @@ void doHistogramPixels(cv::Mat const& img)
     hsv.v = rng();
     label.addSample(hsv);
   }
-*/
+* /
 
   auto hsImg = label.getHSImage();
   cv::imwrite("hsimg.png", hsImg);
@@ -75,6 +76,8 @@ void doHistogramPixels(cv::Mat const& img)
   auto svImg = label.getSVImage();
   cv::imwrite("svimg.png", svImg);
 }
+
+*/
 
 int main(int argc, char **argv)
 {
@@ -110,7 +113,7 @@ int main(int argc, char **argv)
   chain.pushFilter(&Colour::yCbCrToBgrInPlace);
   chain.applyFilters(colourImage);
 
-  doHistogramPixels(colourImage);
+  //doHistogramPixels(colourImage);
 
   // Initialise random seed
   std::srand(unsigned(std::time(0)));
@@ -125,10 +128,10 @@ int main(int argc, char **argv)
   auto t = Clock::getTimestamp();
 
   // Build colour ranges for segmentation
-  auto goalLabel  = make_shared<RangePixelLabel>("Goal",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
-  auto ballLabel  = make_shared<RangePixelLabel>("Ball",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
-  auto fieldLabel = make_shared<RangePixelLabel>("Field", Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
-  auto lineLabel  = make_shared<RangePixelLabel>("Line",  Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
+  auto goalLabel  = make_shared<RangePixelLabel>("Goal",  LabelClass::GOAL, Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
+  auto ballLabel  = make_shared<RangePixelLabel>("Ball",  LabelClass::BALL, Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
+  auto fieldLabel = make_shared<RangePixelLabel>("Field", LabelClass::FIELD, Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
+  auto lineLabel  = make_shared<RangePixelLabel>("Line",  LabelClass::LINE, Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
 
   cout << "Using labels:" << endl
        << "  " << *ballLabel << endl
@@ -262,8 +265,8 @@ int main(int argc, char **argv)
   auto blobsByLabel = blobDetectPass->getDetectedBlobs();
   for (auto const& pixelLabel : blobPixelLabels)
     cout << "    " << blobsByLabel[pixelLabel].size() << " " << pixelLabel->getName() << " blob(s)" << endl;
-  for (auto const& pair : labelCountPass->getCounts())
-    cout << "    " << pair.second << " " << pair.first->getName() << " pixels" << endl;
+  //for (auto const& pair : labelCountPass->getCounts())
+  //  cout << "    " << pair.second << " " << pair.first->getName() << " pixels" << endl;
 
   //
   // DRAW LABELLED 'CARTOON' IMAGE
@@ -332,11 +335,11 @@ int main(int argc, char **argv)
 
   // Draw blobs
   for (auto const& pixelLabel : blobPixelLabels)
-  for (bold::Blob blob : blobsByLabel[pixelLabel])
-  {
-    auto blobColor = pixelLabel->modalColour().toBgr()/*.invert()*/.toScalar();
-    cv::rectangle(colourImage, blob.toRect(), blobColor);
-  }
+    for (bold::Blob blob : blobsByLabel[pixelLabel])
+    {
+      auto blobColor = pixelLabel->modalColour().toBgr()/*.invert()*/.toScalar();
+      cv::rectangle(colourImage, blob.toRect(), blobColor);
+    }
 
   // Save output image
   imwrite("output.png", colourImage);
