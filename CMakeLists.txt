@@ -426,6 +426,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/GameOver/gameover.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/GetUpOption/getupoption.cc
 )
 

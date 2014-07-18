@@ -1,8 +1,7 @@
 #include "adhocoptiontreebuilder.ih"
 
+#include "../../Option/GameOver/gameover.hh"
 #include "../../StateObserver/ButtonObserver/buttonobserver.hh"
-
-// TODO when game finished, do something based upon whether we won or not :)
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, shared_ptr<Option> whilePlayingOption)
 {
@@ -11,6 +10,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   auto sit = make_shared<MotionScriptOption>("sit-down-script", agent->getMotionScriptModule(), "./motionscripts/sit-down.json", true);
   auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", true);
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
+  auto gameOver = make_shared<GameOver>("game-over", agent->getMotionScriptModule(), agent->getVoice());
   auto stopAndSitSequence = SequenceOption::make("stop-then-sit-sequence", { stopWalking, sit });
 
   // STATES
@@ -23,7 +23,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   auto playingState = fsm->newState("playing", { whilePlayingOption });
   auto penalisedState = fsm->newState("penalised", { stopAndSitSequence });
   auto unpenalisedState = fsm->newState("unpenalised", { whilePlayingOption });
-  auto finishedState = fsm->newState("finished", { stopAndSitSequence });
+  auto finishedState = fsm->newState("finished", { SequenceOption::make("stop-then-game-over-sequence", { stopWalking, gameOver }) });
 
   // STATUSES
 
