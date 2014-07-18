@@ -609,3 +609,42 @@ bool StationaryMapState::hasBallWithinDistance(double distance) const
   }
   return false;
 }
+
+Vector2d StationaryMapState::estimateObservationPoint(Vector2d post1, Vector2d post2, GoalLabel label)
+{
+  ASSERT(label == GoalLabel::Ours || label == GoalLabel::Theirs);
+
+  LineSegment2d goalLine(post1, post2);
+  Vector2d mid = goalLine.mid();
+
+  Vector2d perp = Math::findPerpendicularVector(goalLine.delta());
+
+  double x = mid.dot(perp.normalized());
+
+  if (x < 0)
+  {
+    x = -x;
+    perp = -perp;
+  }
+
+  double r = mid.norm();
+  double y = sqrt(r*r - x*x);
+
+  double aMid = Math::angleToPoint(Vector2d(-mid));
+  double aPerp = Math::angleToPoint(Vector2d(-perp));
+
+  if (Math::normaliseRads(aMid - aPerp) < 0)
+    y = -y;
+
+  if (label == GoalLabel::Theirs)
+  {
+    x = FieldMap::getFieldLengthX() / 2.0 - x;
+    y = -y;
+  }
+  else
+  {
+    x -= FieldMap::getFieldLengthX() / 2.0;
+  }
+
+  return Vector2d(x, y);
+}

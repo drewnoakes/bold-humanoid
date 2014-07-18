@@ -154,6 +154,9 @@ namespace bold
       Average<Eigen::Vector2d> const& post2Pos,
       std::vector<Average<Eigen::Vector2d>> keeperEstimates);
 
+    /** Estimate the position of the observer of the specified goal posts, if the goal has the specified label. */
+    static Eigen::Vector2d estimateObservationPoint(Eigen::Vector2d post1, Eigen::Vector2d post2, GoalLabel label);
+
   private:
 
     template<typename T>

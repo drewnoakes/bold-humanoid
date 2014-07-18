@@ -159,3 +159,33 @@ TEST (StationaryMapTests, labelGoal_usingKeeperObservations)
   keepers[1] = createAverage(goodKeeper4, StationaryMapState::KeeperSamplesNeeded);
   ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoal(FieldSide::Unknown, post1, post2, keepers));
 }
+
+TEST (StationaryMapStateTests, estimateObservationPoint)
+{
+  auto goalY = FieldMap::getGoalY();
+  auto halfGoalY = goalY/2.0;
+  auto halfFieldX = FieldMap::getFieldLengthX()/2.0;
+
+  Vector2d pos;
+
+  // Test from middle of field
+  pos = StationaryMapState::estimateObservationPoint(Vector2d(halfGoalY, halfFieldX), Vector2d(-halfGoalY, halfFieldX), GoalLabel::Ours);
+  EXPECT_TRUE(VectorsEqual(Vector2d(0,0), pos));
+
+  pos = StationaryMapState::estimateObservationPoint(Vector2d(halfGoalY, halfFieldX), Vector2d(-halfGoalY, halfFieldX), GoalLabel::Theirs);
+  EXPECT_TRUE(VectorsEqual(Vector2d(0,0), pos));
+
+  // Standing 1m in front of one goal post
+  pos = StationaryMapState::estimateObservationPoint(Vector2d(0, 2), Vector2d(goalY, 2), GoalLabel::Ours);
+  EXPECT_TRUE(VectorsEqual(Vector2d(-halfFieldX + 2, -halfGoalY), pos));
+
+  pos = StationaryMapState::estimateObservationPoint(Vector2d(0, 2), Vector2d(-goalY, 2), GoalLabel::Ours);
+  EXPECT_TRUE(VectorsEqual(Vector2d(-halfFieldX + 2, halfGoalY), pos));
+
+  // ...and in front of the other post
+  pos = StationaryMapState::estimateObservationPoint(Vector2d(0, 2), Vector2d(goalY, 2), GoalLabel::Theirs);
+  EXPECT_TRUE(VectorsEqual(Vector2d(halfFieldX - 2, halfGoalY), pos));
+
+  pos = StationaryMapState::estimateObservationPoint(Vector2d(0, 2), Vector2d(-goalY, 2), GoalLabel::Theirs);
+  EXPECT_TRUE(VectorsEqual(Vector2d(halfFieldX - 2, -halfGoalY), pos));
+}
