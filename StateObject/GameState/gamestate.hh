@@ -83,11 +83,6 @@ namespace bold
     robocup::TeamInfo const& getTeam1() const { return d_data.teams[0]; }
     robocup::TeamInfo const& getTeam2() const { return d_data.teams[1]; }
 
-    robocup::TeamInfo const& getTeam(uchar teamNumber) const
-    {
-      return d_data.teams[getTeamIndex(teamNumber)];
-    }
-
     robocup::TeamInfo const& getMyTeam() const
     {
       static auto teamNumber = Config::getStaticValue<int>("team-number");
@@ -113,6 +108,11 @@ namespace bold
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
+    robocup::TeamInfo const& getTeam(uchar teamNumber) const
+    {
+      return d_data.teams[getTeamIndex(teamNumber)];
+    }
+
     uchar getTeamIndex(uchar teamNumber) const
     {
       return d_data.teams[0].getTeamNumber() == teamNumber ? (uchar)0 : (uchar)1;
