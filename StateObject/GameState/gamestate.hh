@@ -36,6 +36,7 @@ namespace bold
       case GameResult::Loss:      return "Loss";
       case GameResult::Draw:      return "Draw";
     }
+    return "Unknown";
   }
 
   class GameState : public StateObject
@@ -48,25 +49,6 @@ namespace bold
     }
 
     robocup::PlayMode getPlayMode() const { return robocup::PlayMode(d_data.playMode); }
-
-    std::string getPlayModeString() const
-    {
-      switch (getPlayMode())
-      {
-        case robocup::PlayMode::INITIAL:
-          return std::string("Initial");
-        case robocup::PlayMode::READY:
-          return std::string("Ready");
-        case robocup::PlayMode::SET:
-          return std::string("Set");
-        case robocup::PlayMode::PLAYING:
-          return std::string("Playing");
-        case robocup::PlayMode::FINISHED:
-          return std::string("Finished");
-        default:
-          throw new std::runtime_error("Unsupported PlayMode enum value.");
-      }
-    }
 
     uint8 getVersion() const { return d_data.version; }
     uint8 getPacketNumber() const { return d_data.packetNumber; }

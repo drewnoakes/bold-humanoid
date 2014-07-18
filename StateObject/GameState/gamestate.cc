@@ -42,7 +42,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("playMode").String(getPlayModeString().c_str());
+    writer.String("playMode").String(getPlayModeString(getPlayMode()).c_str());
     writer.String("packet").Uint(getPacketNumber());
     writer.String("playerPerTeam").Uint(getPlayersPerTeam());
     writer.String("isFirstHalf").Bool(isFirstHalf());
