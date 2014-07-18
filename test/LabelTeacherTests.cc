@@ -1,46 +1,58 @@
 #include "gtest/gtest.h"
-#include "../HistogramLabelTeacher/histogramlabelteacher.hh"
-
+#include "../LabelTeacher/labelteacher.hh"
+#include "../PixelLabel/HistogramPixelLabel/histogrampixellabel.hh"
 #include <opencv2/opencv.hpp>
 #include <vector>
 
 using namespace std;
 using namespace bold;
 
-TEST (HistogramLabelTeacherTests, init)
+TEST (LabelTeacherTests, init)
 {
-  auto names = vector<string>{string{"one"}, string{"two"}};
-  HistogramLabelTeacher<6> teacher{names};
+  auto labels = vector<shared_ptr<PixelLabel>>{
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
+  };
+  LabelTeacher<6> teacher{labels};
 
-  auto labels = teacher.getLabels();
+  auto _labels = teacher.getLabels();
   
-  EXPECT_EQ(2, labels.size());
+  EXPECT_EQ(2, _labels.size());
 }
 
-TEST (HistogramLabelTeacherTests, setYUVTrainImage)
+TEST (LabelTeacherTests, setYUVTrainImage)
 {
   cv::Mat trainImage{640, 480, CV_8UC3};
 
-  auto names = vector<string>{string{"one"}, string{"two"}};
-  HistogramLabelTeacher<6> teacher{names};
+  auto labels = vector<shared_ptr<PixelLabel>>{
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
+  };
+  LabelTeacher<6> teacher{labels};
 
   teacher.setYUVTrainImage(trainImage);
 }
 
-TEST (HistogramLabelTeacherTests, setSeedPoint)
+TEST (LabelTeacherTests, setSeedPoint)
 {
-  auto names = vector<string>{string{"one"}, string{"two"}};
-  HistogramLabelTeacher<6> teacher{names};
+  auto labels = vector<shared_ptr<PixelLabel>>{
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
+  };
+  LabelTeacher<6> teacher{labels};
 
   auto point = Eigen::Vector2i{320, 240};
 
   teacher.setSeedPoint(point);
 }
 
-TEST (HistogramLabelTeacherTests, floodFillEmpty)
+TEST (LabelTeacherTests, floodFillEmpty)
 {
-  auto names = vector<string>{string{"one"}, string{"two"}};
-  HistogramLabelTeacher<6> teacher{names};
+  auto labels = vector<shared_ptr<PixelLabel>>{
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
+  };
+  LabelTeacher<6> teacher{labels};
 
   cv::Mat trainImage = cv::Mat::zeros(640, 480, CV_8UC3);
   teacher.setYUVTrainImage(trainImage);
@@ -58,10 +70,13 @@ TEST (HistogramLabelTeacherTests, floodFillEmpty)
       EXPECT_EQ ( 255, mask.at<uint8_t>(i, j) ) << i << " " << j;
 }
 
-TEST (HistogramLabelTeacherTests, floodFillColor)
+TEST (LabelTeacherTests, floodFillColor)
 {
-  auto names = vector<string>{string{"one"}, string{"two"}};
-  HistogramLabelTeacher<6> teacher{names};
+  auto labels = vector<shared_ptr<PixelLabel>>{
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
+  };
+  LabelTeacher<6> teacher{labels};
 
   cv::Mat trainImage = cv::Mat::zeros(640, 480, CV_8UC3);
   cv::rectangle(trainImage, cv::Rect(0, 0, 100, 100), cv::Scalar(255, 0, 0), CV_FILLED);
@@ -77,10 +92,13 @@ TEST (HistogramLabelTeacherTests, floodFillColor)
         EXPECT_EQ ( 0, mask.at<uint8_t>(i, j) ) << i << " " << j;
 }
 
-TEST (HistogramLabelTeacherTests, floodFillNoColor)
+TEST (LabelTeacherTests, floodFillNoColor)
 {
-  auto names = vector<string>{string{"one"}, string{"two"}};
-  HistogramLabelTeacher<6> teacher{names};
+  auto labels = vector<shared_ptr<PixelLabel>>{
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+    make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
+  };
+  LabelTeacher<6> teacher{labels};
 
   cv::Mat trainImage = cv::Mat::zeros(640, 480, CV_8UC3);
   cv::rectangle(trainImage, cv::Rect(0, 0, 100, 100), cv::Scalar(255, 0, 0), CV_FILLED);
@@ -96,10 +114,13 @@ TEST (HistogramLabelTeacherTests, floodFillNoColor)
         EXPECT_EQ ( 255, mask.at<uint8_t>(i, j) ) << i << " " << j;
 }
 
-TEST (HistogramLabelTeacherTests, DISABLED_train)
+/*
+TEST (LabelTeacherTests, DISABLED_train)
 {
-  auto names = vector<string>{string{"one"}};
-  HistogramLabelTeacher<6> teacher{names};
+  auto labels = vector<shared_ptr<PixelLabel>>{
+    make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL), 
+  };
+  LabelTeacher<6> teacher{labels};
 
   cv::Mat trainImage = cv::Mat::zeros(640, 480, CV_8UC3);
   cv::rectangle(trainImage, cv::Rect(0, 0, 100, 100), cv::Scalar(128, 0, 0), CV_FILLED);
@@ -110,9 +131,9 @@ TEST (HistogramLabelTeacherTests, DISABLED_train)
 
   teacher.train(0, mask);
 
-  auto labels = teacher.getLabels();
+  auto _labels = teacher.getLabels();
 
-  auto labelOne = labels[0];
+  auto labelOne = _labels[0];
 
   EXPECT_EQ ( 100 * 100, labelOne.getTotalCount() );
 
@@ -123,3 +144,4 @@ TEST (HistogramLabelTeacherTests, DISABLED_train)
   EXPECT_EQ ( 0.0f, labelOne.labelProb(Colour::hsv(255, 0, 0)) );
 
 }
+*/
