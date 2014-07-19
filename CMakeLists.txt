@@ -822,6 +822,7 @@ add_custom_target(tags DEPENDS ${CMAKE_SOURCE_DIR}/TAGS)
 #
 if (BUILDRUN_UNIT_TEST)
   add_subdirectory(test)
+  add_dependencies(boldhumanoid runtests)
 endif (BUILDRUN_UNIT_TEST)
 
 #
