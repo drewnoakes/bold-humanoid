@@ -21,6 +21,7 @@ do
         configuration-team.json            \
         configuration-hatfield.json        \
         configuration-iran-open-2014.json  \
+        configuration-rc2014.json           \
         configuration-drews.json           \
         configuration-metadata.json        \
         boldhumanoid.py                    \

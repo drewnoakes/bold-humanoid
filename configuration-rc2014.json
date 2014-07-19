@@ -1,0 +1,110 @@
+{
+  "inherits": "configuration-team.json",
+
+  "team-number": 7,
+    "camera": {
+    "settings": {
+      "auto-wb": false,
+      "exposure-auto": 1,
+      "exposure-absolute": 1000,
+      "exposure-auto-priority": false,
+      "backlight-compensation": false,
+      "power-line-frequency": 2,
+      "brightness": 128,
+      "contrast": 32,
+      "saturation": 28,
+      "gain": 100,
+      "wb-temp-k": 7700,
+      "sharpness": 0
+    }
+  },
+
+  "world": {
+    "ball-diameter": 0.1
+  },
+
+  "vision": {
+    "goal-detection": {
+      "accepted-width-ratio": [0.3, 4]
+    },
+
+    "COMMENT--------------ball-detection": {
+      "accepted-width-ratio": [0.6, 1.6]
+    },
+
+    "player-detection": {
+        "enable": true
+    },
+
+    "field-edge-pass": {
+      "min-vertical-run-length": 5
+    },
+
+    "pixel-labels": {
+      "ball": { "hue": [0, 20], "sat": [150, 250], "val": [40, 190] },
+      "field": { "hue": [80, 120], "sat": [80, 230], "val": [80, 190] },
+      "goal": { "hue": [30, 60], "sat": [120, 230], "val": [80,160] },
+      "line": { "hue": [0, 255], "sat": [0, 167], "val": [120, 255] }
+    },
+
+    "ball-detection": {
+      "accepted-size-ratio": [0.4, 3.0]
+    }
+
+  },
+
+  "options": {
+    "approach-ball": {
+      "turn-speed-scale": 18.0,
+      "max-forward-speed": 40.0,
+      "min-forward-speed": 5.0,
+      "brake-distance": 1.0,
+      "stop-distance": 0.15,
+      "lower-turn-limit-degs": 1.0,
+      "upper-turn-limit-degs": 35.0
+    }
+  },
+
+  "walk-engine": {
+    "params": {
+      "x-offset": -10.0,
+      "y-offset": 5.0,
+      "z-offset": 20.0,
+      "roll-offset": 0.0,
+      "pitch-offset": 0.0,
+      "yaw-offset": 0.0,
+      "hip-pitch-offset": 17.0,
+      "period-time": 600.0,
+      "dsp-ratio": 0.1,
+      "foot-height": 40.0,
+      "swing-right-left": 20.0,
+      "swing-top-down": 5.0,
+      "pelvis-offset": 3.0,
+      "arm-swing-gain": 1.5,
+      "step-fb-ratio": 0.28
+    },
+    "balance": {
+      "enable": true,
+      "knee-gain": 1.2,
+      "ankle-pitch-gain": 3.6,
+      "hip-roll-gain": 2.0,
+      "ankle-roll-gain": 4.0
+    },
+    "gains": {
+      "p-gain": 32,
+      "i-gain": 0,
+      "d-gain": 0
+    }
+  },
+  "walk-module": {
+    "auto-balance": true,
+    "x-amp-delta": 0.6,
+    "y-amp-delta": 0.6,
+    "turn-delta": 0.24,
+    "max-hip-pitch-at-speed": 13,
+    "min-hip-pitch": 12,
+    "max-hip-pitch": 15.5,
+    "fwd-acc-hip-pitch-factor": 0.75
+  }
+
+}
