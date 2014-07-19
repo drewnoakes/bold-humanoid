@@ -26,10 +26,11 @@ namespace bold
 
     // hip pitch calculation parameters
     Setting<double>* d_stableHipPitch;
-    Setting<double>* d_minHipPitch;
-    Setting<double>* d_maxHipPitch;
-    Setting<double>* d_maxHipPitchAtSpeed;
-    Setting<double>* d_fwdAccelerationHipPitchFactor;
-    Setting<double>* d_bwdAccelerationHipPitchFactor;
+    Setting<double>* d_maxFwdHipPitch;
+    Setting<double>* d_maxBwdHipPitch;
+    Setting<double>* d_maxHipPitchAtFwdSpeed;
+    Setting<double>* d_maxHipPitchAtBwdSpeed;
+    Setting<double>* d_fwdAccHipPitchDelta;
+    Setting<double>* d_bwdAccHipPitchDelta;
   };
 }

@@ -339,11 +339,12 @@
     },
     "hip-pitch": {
       "stable-angle": 11.0,
-      "min-angle": 12,
-      "max-angle": 15,
-      "max-at-fwd-speed": 13,
-      "fwd-acc-factor": 2.0,
-      "bwd-acc-factor": 2.0
+      "max-fwd-angle": 15.0,
+      "max-bwd-angle": 8.0,
+      "max-at-fwd-speed": 13.0,
+      "max-at-bwd-speed": 13.0,
+      "fwd-acc-delta": 2.0,
+      "bwd-acc-delta": 2.0
     }
   },
   "balance": {

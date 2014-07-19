@@ -7,11 +7,12 @@ using namespace bold;
 
 WalkAttitude::WalkAttitude()
 : d_stableHipPitch(Config::getSetting<double>("walk-module.hip-pitch.stable-angle")),
-  d_minHipPitch(Config::getSetting<double>("walk-module.hip-pitch.min-angle")),
-  d_maxHipPitch(Config::getSetting<double>("walk-module.hip-pitch.max-angle")),
-  d_maxHipPitchAtSpeed(Config::getSetting<double>("walk-module.hip-pitch.max-at-fwd-speed")),
-  d_fwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.hip-pitch.fwd-acc-factor")),
-  d_bwdAccelerationHipPitchFactor(Config::getSetting<double>("walk-module.hip-pitch.bwd-acc-factor"))
+  d_maxFwdHipPitch(Config::getSetting<double>("walk-module.hip-pitch.max-fwd-angle")),
+  d_maxBwdHipPitch(Config::getSetting<double>("walk-module.hip-pitch.max-bwd-angle")),
+  d_maxHipPitchAtFwdSpeed(Config::getSetting<double>("walk-module.hip-pitch.max-at-fwd-speed")),
+  d_maxHipPitchAtBwdSpeed(Config::getSetting<double>("walk-module.hip-pitch.max-at-bwd-speed")),
+  d_fwdAccHipPitchDelta(Config::getSetting<double>("walk-module.hip-pitch.fwd-acc-delta")),
+  d_bwdAccHipPitchDelta(Config::getSetting<double>("walk-module.hip-pitch.bwd-acc-delta"))
 {}
 
 void WalkAttitude::update(WalkStatus walkStatus, LinearSmoother const& xAmp, LinearSmoother const& yAmp, LinearSmoother const& turnAmp)
@@ -22,11 +23,36 @@ void WalkAttitude::update(WalkStatus walkStatus, LinearSmoother const& xAmp, Lin
     return;
   }
 
-  // TODO verify this works for walking backwards (-ve x)
   // TODO consider turn speed and sideways speed
 
-  // Determine a ratio [0,1] that determines how far
-  double alpha = xAmp.getCurrent() / d_maxHipPitchAtSpeed->getValue();
+  double xCurrent = xAmp.getCurrent();
+
+  if (xCurrent == 0)
+  {
+    // Not moving forwards or backwards
+    d_hipPitch = d_stableHipPitch->getValue();
+    return;
+  }
+
+  double alpha, max;
+  if (xCurrent > 0)
+  {
+    // Moving forwards
+    alpha = xCurrent / d_maxHipPitchAtFwdSpeed->getValue();
+    max = d_maxFwdHipPitch->getValue();
+  }
+  else
+  {
+    // Moving backwards
+    alpha = fabs(xCurrent) / d_maxHipPitchAtBwdSpeed->getValue();
+    max = d_maxBwdHipPitch->getValue();
+  }
+
+  ASSERT(alpha >= 0);
+  double hipPitch = Math::lerp(
+    Math::clamp(alpha, 0.0, 1.0),
+    d_stableHipPitch->getValue(),
+    max);
 
 //    // Estimate future forward acceleration by comparing the target forward speed with the current.
 //    // Note that the target can fluctuate considerably, so this value may be quite noisy.
@@ -37,14 +63,11 @@ void WalkAttitude::update(WalkStatus walkStatus, LinearSmoother const& xAmp, Lin
   double xAcc = xAmp.getLastDelta();
 
   if (xAcc > 0)
-    alpha += d_fwdAccelerationHipPitchFactor->getValue() * xAcc;
+    hipPitch += d_fwdAccHipPitchDelta->getValue();
   else if (xAcc < 0)
-    alpha += d_bwdAccelerationHipPitchFactor->getValue() * xAcc;
+    hipPitch += d_bwdAccHipPitchDelta->getValue();
 
-  d_hipPitch = Math::lerp(
-    Math::clamp(alpha, 0.0, 1.0),
-    d_minHipPitch->getValue(),
-    d_maxHipPitch->getValue());
+  d_hipPitch = hipPitch;
 }
 
 void WalkAttitude::reset()

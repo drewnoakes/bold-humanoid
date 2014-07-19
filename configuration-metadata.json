@@ -335,12 +335,13 @@
       "hip-pitch": { "type": "double", "min": 0 }
     },
     "hip-pitch": {
-      "stable-angle": { "type": "double", "min": 0.0, "max": 20.0 },
-      "min-angle": { "type": "double", "description": "Min hip pitch" },
-      "max-angle": { "type": "double", "description": "Max hip pitch" },
-      "max-at-fwd-speed": { "type": "double", "description": "Speed for max hip pitch" },
-      "fwd-acc-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Fwd acc hip pitch factor" },
-      "bwd-acc-factor": { "type": "double", "min": 0.0, "max": 20.0, "description": "Bwd acc hip pitch factor" }
+      "stable-angle":     { "type": "double", "min": 0.0 },
+      "max-fwd-angle":    { "type": "double", "min": 0.0 },
+      "max-bwd-angle":    { "type": "double", "min": 0.0 },
+      "max-at-fwd-speed": { "type": "double", "min": 0.0 },
+      "max-at-bwd-speed": { "type": "double", "min": 0.0 },
+      "fwd-acc-delta":    { "type": "double", "min": 0.0 },
+      "bwd-acc-delta":    { "type": "double", "min": 0.0 }
     }
   },
   "balance": {
