@@ -41,3 +41,5 @@
 
 7831C1C0FAA0	Sander's Laptop (WLAN)
 7C05073BA430	Sander's iPhone (WLAN)
+
+F04DA27BCE20	Dan's Laptop (ETH)
