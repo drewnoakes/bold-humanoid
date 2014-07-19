@@ -57,7 +57,7 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("phase").Double(phase);
 
-  ASSERT(phase >= 0); // TODO 2014-06-02 Drew saw this assertion fail!
+  ASSERT(phase >= 0);
 
   if (phase < durationHorizUpper)
   {
