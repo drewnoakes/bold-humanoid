@@ -4,8 +4,8 @@
   "team-colour": 1,
   "player-name": "boldie",
   "mitecom": {
-    "local-port": 12321,
-    "remote-port": 12321,
+    "local-port": 18331,
+    "remote-port": 18331,
     "send-period-seconds": 0.1
   },
   "drawbridge": {
