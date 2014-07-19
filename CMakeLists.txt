@@ -442,7 +442,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/LookAround/runPolicy.cc
+  ./Option/LookAround/lookaround.cc
 )
 
 add_class(BOLDHUMANOID

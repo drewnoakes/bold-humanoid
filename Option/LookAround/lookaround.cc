@@ -1,4 +1,16 @@
-#include "lookaround.ih"
+#include "lookaround.hh"
+
+#include <cmath>
+#include <sys/time.h>
+
+#include "../../Clock/clock.hh"
+#include "../../Math/math.hh"
+#include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../util/assert.hh"
+
+using namespace bold;
+using namespace rapidjson;
+using namespace std;
 
 vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
 {
