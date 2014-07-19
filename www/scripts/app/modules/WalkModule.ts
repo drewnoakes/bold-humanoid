@@ -177,10 +177,10 @@ class WalkModule extends Module
         control.withSetting("walk-module.hip-pitch.stable-angle", setting => {
             this.closeables.add(setting.track(angle => this.pitchChart.options.horizontalLines[0].value = angle));
         });
-        control.withSetting("walk-module.hip-pitch.min-angle", setting => {
+        control.withSetting("walk-module.hip-pitch.max-bwd-angle", setting => {
             this.closeables.add(setting.track(angle => this.pitchChart.options.minValue = angle));
         });
-        control.withSetting("walk-module.hip-pitch.max-angle", setting => {
+        control.withSetting("walk-module.hip-pitch.max-fwd-angle", setting => {
             this.closeables.add(setting.track(angle => this.pitchChart.options.maxValue = angle));
         });
 
