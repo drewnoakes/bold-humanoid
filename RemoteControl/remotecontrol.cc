@@ -9,7 +9,6 @@
 #include "../MotionModule/MotionScriptModule/motionscriptmodule.hh"
 #include "../MotionModule/WalkModule/walkmodule.hh"
 #include "../MotionScriptRunner/motionscriptrunner.hh"
-#include "../util/log.hh"
 
 using namespace bold;
 using namespace std;
