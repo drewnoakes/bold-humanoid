@@ -32,9 +32,9 @@
       "enabled": true,
       "path": "/dev/input/js0",
       "head-speed": 15.0,
-      "x-amp-max": 15.0,
-      "y-amp-max": 15.0,
-      "a-amp-max": 15.0
+      "x-amp-max": 40.0,
+      "y-amp-max": 30.0,
+      "a-amp-max": 30.0
     },
     "jam-detector": {
       "enabled": true,
