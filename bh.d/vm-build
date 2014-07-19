@@ -51,6 +51,7 @@ do
                  configuration-berlin.json \
                  configuration-metadata.json \
                  configuration-iran-open-2014.json \
+                 configuration-rc2014.json \
                  darwin@darwin$i.local:
 
   if [[ $? -eq 0 ]] ; then
