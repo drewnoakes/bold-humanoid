@@ -11,11 +11,11 @@
       "exposure-auto-priority": false,
       "backlight-compensation": false,
       "power-line-frequency": 2,
-      "brightness": 128,
+      "brightness": 100,
       "contrast": 32,
       "saturation": 28,
-      "gain": 100,
-      "wb-temp-k": 6000,
+      "gain": 0,
+      "wb-temp-k": 3070,
       "sharpness": 0
     }
   },
