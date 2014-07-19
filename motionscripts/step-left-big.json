@@ -1,5 +1,6 @@
 {
   "name": "step-left-big",
+  "controlsHead": false,
   "stages": [
     {
       "keyFrames": [
