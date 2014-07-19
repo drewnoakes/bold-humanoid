@@ -93,7 +93,7 @@ void RemoteControl::update()
 //         case 4: axis4 = event.value; break;
         case 5: axis5 = event.value; break;
         default:
-          log::info("Agent::processInputCommands") << "Axis " << (int)event.number << " value " << (int)event.value;
+          log::verbose("Agent::processInputCommands") << "Axis " << (int)event.number << " value " << (int)event.value;
           break;
       }
     }
