@@ -359,16 +359,27 @@ GoalLabel StationaryMapState::labelGoal(
   Average<Eigen::Vector2d> const& post1Pos,
   Average<Eigen::Vector2d> const& post2Pos)
 {
+  GoalLabel label = GoalLabel::Unknown;
+
   auto team = State::get<TeamState>();
+  if (team)
+  {
+    auto keeper = team->getKeeperState();
 
-  FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
+    if (keeper && keeper->ballRelative.hasValue())
+      label = labelGoalByKeeperBallPosition(post1Pos, post2Pos, *keeper->ballRelative);
 
-  GoalLabel label = labelGoalByKeeperBallDistance(post1Pos, post2Pos, ballSide);
+    if (label == GoalLabel::Unknown)
+    {
+      FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
+      label = labelGoalByKeeperBallDistance(post1Pos, post2Pos, ballSide);
+    }
+  }
 
-  if (label != GoalLabel::Unknown)
-    return label;
+  if (label == GoalLabel::Unknown)
+    label = labelGoalByKeeperObservations(post1Pos, post2Pos, d_keeperEstimates);
 
-  return labelGoalByKeeperObservations(post1Pos, post2Pos, d_keeperEstimates);
+  return label;
 }
 
 double getGoalLineDistance(GoalEstimate const& goal, Vector2d const& endPos)
