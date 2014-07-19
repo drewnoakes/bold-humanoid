@@ -1,6 +1,6 @@
 #pragma once
 
-#import "../Math/math.hh"
+#include "../Math/math.hh"
 
 #include <vector>
 #include <string>
