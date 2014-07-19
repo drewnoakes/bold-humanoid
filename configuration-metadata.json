@@ -45,7 +45,7 @@
       "enabled":   { "type": "bool", "readonly": false },
       "path":      { "type": "string", "readonly": false },
       "head-speed": { "type": "double", "min": 1.0, "max": 75.0 },
-      "x-amp-max": { "type": "double", "min": 1.0, "max": 30.0 },
+      "x-amp-max": { "type": "double", "min": 1.0, "max": 40.0 },
       "y-amp-max": { "type": "double", "min": 1.0, "max": 30.0 },
       "a-amp-max": { "type": "double", "min": 1.0, "max": 30.0 }
     },
