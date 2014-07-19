@@ -10,7 +10,7 @@ map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(Sequ
   for (auto pixelLabel : d_pixelLabels)
   {
     timer.enter(pixelLabel->getName());
-    auto pixelLabelId = (uint8_t)pixelLabel;
+    auto pixelLabelId = (uint8_t)pixelLabel->getID();
 
     // Go through all runs and add them to the disjoint set
 
