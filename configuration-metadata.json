@@ -155,7 +155,8 @@
       "field":   { "type": "hsv-range" },
       "line":    { "type": "hsv-range" },
       "cyan":    { "type": "hsv-range" },
-      "magenta": { "type": "hsv-range" }
+      "magenta": { "type": "hsv-range" },
+      "border":  { "type": "hsv-range" }
     },
     "blob-detection": {
       "enable": { "type": "bool" }

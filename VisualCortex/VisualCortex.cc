@@ -76,8 +76,12 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
                                                    LabelClass::MAGENTA,
                                                    Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
 
-  d_rangePixelLabels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
-  d_pixelLabels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
+  auto borderLabel = make_shared<RangePixelLabel>("border",
+                                                  LabelClass::BORDER,
+                                                  Config::getValue<Colour::hsvRange>("vision.pixel-labels.border"));
+
+  d_rangePixelLabels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel, borderLabel };
+  d_pixelLabels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel, borderLabel };
 
   auto blobPixelLabels = 
     d_playerDetectionEnabled->getValue() ? 

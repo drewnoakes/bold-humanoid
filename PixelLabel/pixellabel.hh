@@ -16,7 +16,8 @@ namespace bold
       FIELD,
       LINE,
       CYAN,
-      MAGENTA
+      MAGENTA,
+      BORDER
   };
 
   class PixelLabel
