@@ -176,7 +176,7 @@
       "accepted-width-ratio": [0.5, 2.0],
       "max-pair-error-dist": 0.5,
       "label": {
-        "max-keeper-ball-dist": 1.5
+        "max-keeper-ball-dist": 0.7
       }
     },
     "player-detection": {
