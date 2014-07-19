@@ -131,29 +131,26 @@ void RemoteControl::update()
   // Update based upon state
   //
 
-  if (axis0 != 0 || axis1 != 0)
+  if (isButton1Down)
   {
-    if (isButton1Down)
-    {
-      // Move head with left joystick when button 1 is depressed
-      d_headModule->moveByDeltaDegs(
-        (-axis0/32767.0) * d_joystickHeadSpeed->getValue(),
-        (-axis1/32767.0) * d_joystickHeadSpeed->getValue());
-    }
-    else
-    {
-      // TODO only do this if we are standing (need better test for standing though)
-      // Set walk direction with left joystick
-      d_walkModule->setMoveDir(
-        (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
-        (-axis0/32767.0) * d_joystickYAmpMax->getValue());
-    }
+    // Move head with left joystick when button 1 is depressed
+    d_headModule->moveByDeltaDegs(
+      (-axis0/32767.0) * d_joystickHeadSpeed->getValue(),
+      (-axis1/32767.0) * d_joystickHeadSpeed->getValue());
+    d_walkModule->setMoveDir(0, 0);
+  }
+  else
+  {
+    // TODO only do this if we are standing (need better test for standing though)
+    // Set walk direction with left joystick
+    d_walkModule->setMoveDir(
+      (-axis1/32767.0) * d_joystickXAmpMax->getValue(),
+      (-axis0/32767.0) * d_joystickYAmpMax->getValue());
   }
 
   // Control turn angle with right joystick
   // TODO only do this if we are standing (need better test for standing though)
-  if (axis2 != 0)
-    d_walkModule->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
+  d_walkModule->setTurnAngle((-axis2/32767.0) * d_joystickAAmpMax->getValue());
 
   // Up/down on D-Pad makes robot stand/sit
   if (axis5 < 0 && !MotionScriptRunner::isInFinalPose(standReadyScript))
