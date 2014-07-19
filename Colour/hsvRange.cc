@@ -105,3 +105,26 @@ Colour::hsvRange Colour::hsvRange::fromDoubles(double hMin, double hMax, double 
 
   return hsvRange((hMin/360.0)*255, (hMax/360)*255, sMin*255, sMax*255, vMin*255, vMax*255);
 }
+
+Colour::hsvRange Colour::hsvRange::containing(hsv const& hsv)
+{
+  hsvRange res = *this;
+  if ((hMin <= hMax && (hsv.h < hMin || hsv.h > hMax)) ||
+      (hMin > hMax && (hsv.h < hMin && hsv.h > hMax)))
+  {
+    auto d1 = Math::shortestAngleDiffRads(hsv.h * M_PI / 128.0, hMin * M_PI / 128.0);
+    auto d2 = Math::shortestAngleDiffRads(hsv.h * M_PI / 128.0, hMax * M_PI / 128.0);
+    cout << "d1: " << d1 << endl;
+    cout << "d2: " << d2 << endl;
+    if (fabs(d1) < fabs(d2))
+      res.hMin = hsv.h;
+    else
+      res.hMax = hsv.h;
+  }
+
+  res.sMin = std::min(sMin, hsv.s);
+  res.sMax = std::max(sMax, hsv.s);
+  res.vMin = std::min(vMin, hsv.v);
+  res.vMax = std::max(vMax, hsv.v);
+  return res;
+}

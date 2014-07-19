@@ -161,3 +161,21 @@ TEST (ColourTests, hsvRange)
   EXPECT_EQ(0,   Colour::hsvRange(0,0, 0,0, 0,0).getVMid());
   EXPECT_EQ(127, Colour::hsvRange(0,0, 0,0, 0,255).getVMid());
 }
+
+TEST (ColourTests, hsvRangeContaining )
+{
+  auto range = Colour::hsvRange(128,129, 128,128, 128,128);
+
+  EXPECT_EQ ( Colour::hsvRange(64,129, 128,128, 128,128), range.containing(Colour::hsv(64, 128, 128)) );
+  EXPECT_EQ ( Colour::hsvRange(128,192, 128,128, 128,128), range.containing(Colour::hsv(192, 128, 128)) );
+  EXPECT_EQ ( Colour::hsvRange(128,129, 64,128, 128,128), range.containing(Colour::hsv(128, 64, 128)) );
+  EXPECT_EQ ( Colour::hsvRange(128,129, 128,192, 128,128), range.containing(Colour::hsv(128, 192, 128)) );
+  EXPECT_EQ ( Colour::hsvRange(128,129, 128,128, 64,128), range.containing(Colour::hsv(128, 128, 64)) );
+  EXPECT_EQ ( Colour::hsvRange(128,129, 128,128, 128,192), range.containing(Colour::hsv(128, 128, 192)) );
+
+  range = Colour::hsvRange(0,1, 128,128, 128,128);
+  EXPECT_EQ ( Colour::hsvRange(0,64, 128,128, 128,128), range.containing(Colour::hsv(64, 128, 128)) );
+  EXPECT_EQ ( Colour::hsvRange(0,128, 128,128, 128,128), range.containing(Colour::hsv(128, 128, 128)) );
+  EXPECT_EQ ( Colour::hsvRange(192,1, 128,128, 128,128), range.containing(Colour::hsv(192, 128, 128)) );
+  
+}

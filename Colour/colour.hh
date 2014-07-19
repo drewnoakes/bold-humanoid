@@ -190,28 +190,8 @@ namespace bold
       hsvRange withVMin(uint8_t value) const { return hsvRange(hMin, hMax, sMin, sMax, value, vMax); }
       hsvRange withVMax(uint8_t value) const { return hsvRange(hMin, hMax, sMin, sMax, vMin, value); }
 
-      hsvRange containing(hsv const& hsv)
-      {
-        hsvRange res = *this;
-        if ((hMin < hMax && (hsv.h < hMin || hsv.h > hMax)) ||
-            (hMin >= hMax && (hsv.h < hMin && hsv.h > hMax)))
-          {
-            auto d1 = Math::shortestAngleDiffRads(hsv.h, hMin);
-            auto d2 = Math::shortestAngleDiffRads(hsv.h, hMin);
-            if (d1 < d2)
-              res.hMin = hsv.h;
-            else
-              res.hMax = hsv.h;
-          }
+      hsvRange containing(hsv const& hsv);
 
-        res.hMin = std::min(hMin, hsv.h);
-        res.hMax = std::max(hMax, hsv.h);
-        res.sMin = std::min(sMin, hsv.s);
-        res.sMax = std::max(sMax, hsv.s);
-        res.vMin = std::min(vMin, hsv.v);
-        res.vMax = std::max(vMax, hsv.v);
-        return res;
-      }
     };
 
     inline void yCbCrToBgrInPlace(uint8_t* pxl)
@@ -220,7 +200,7 @@ namespace bold
       Colour::bgr* bgr = reinterpret_cast<Colour::bgr*>(pxl);
       *bgr = (*ycbcr).toBgrInt();
     }
-  };
+  }
 
   std::ostream& operator<<(std::ostream &stream, Colour::bgr const& bgr);
   std::ostream& operator<<(std::ostream &stream, Colour::hsv const& hsv);

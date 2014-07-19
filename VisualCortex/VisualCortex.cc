@@ -52,27 +52,29 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   // TODO: this is put in correct LabelClass order, use map instead?
 
-  auto goalLabel = make_shared<RangePixelLabel>("Goal",
+  auto goalLabel = make_shared<RangePixelLabel>("goal",
                                                 LabelClass::GOAL,
                                                 Config::getValue<Colour::hsvRange>("vision.pixel-labels.goal"));
 
-  auto ballLabel = make_shared<RangePixelLabel>("Ball",
+  auto ballLabel = make_shared<RangePixelLabel>("ball",
                                                 LabelClass::BALL,
                                                 Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
 
-  auto fieldLabel = make_shared<RangePixelLabel>("Field",
+  auto fieldLabel = make_shared<RangePixelLabel>("field",
                                                  LabelClass::FIELD,
                                                  Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
 
-  auto lineLabel = make_shared<RangePixelLabel>("Line",
+  auto lineLabel = make_shared<RangePixelLabel>("line",
                                                 LabelClass::LINE,
                                                 Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
-  auto cyanLabel = make_shared<RangePixelLabel>("Cyan",
+
+  auto cyanLabel = make_shared<RangePixelLabel>("cyan",
                                                 LabelClass::CYAN,
                                                 Config::getValue<Colour::hsvRange>("vision.pixel-labels.cyan"));
-  auto magentaLabel = make_shared<RangePixelLabel>("Magenta",
-                                                               LabelClass::MAGENTA,
-                                                               Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
+
+  auto magentaLabel = make_shared<RangePixelLabel>("magenta",
+                                                   LabelClass::MAGENTA,
+                                                   Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
 
   d_rangePixelLabels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
   d_pixelLabels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
@@ -84,7 +86,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
-  //d_labelTeacher = unique_ptr<HistogramLabelTeacher<6>>{new HistogramLabelTeacher<6>({"Goal", "Ball", "Field", "Line", "Cyan", "Magenta"})};
+  d_labelTeacher = unique_ptr<LabelTeacher<6>>{new LabelTeacher<6>{d_pixelLabels}};
 
   auto createLookupTable = [this]()
   {
@@ -92,43 +94,40 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     for (shared_ptr<PixelLabel> label : d_rangePixelLabels)
       log::verbose("VisualCortex::VisualCortex") << "  " << *label;
 
-    vector<shared_ptr<PixelLabel>> pixelLabels(d_rangePixelLabels.size());
-    transform(begin(d_rangePixelLabels), end(d_rangePixelLabels),
-              begin(pixelLabels), [](shared_ptr<RangePixelLabel> l) { return l; });
-    d_imageLabeller->updateLut(LUTBuilder::buildLookUpTableYCbCr18(pixelLabels));
+    d_imageLabeller->updateLut(LUTBuilder::buildLookUpTableYCbCr18(d_pixelLabels));
   };
 
   createLookupTable();
 
   // Recreate lookup table on dynamic configuration changes
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.goal")->
-    changed.connect([this,createLookupTable](Colour::hsvRange value) {
-        d_rangePixelLabels[(uint8_t)LabelClass::GOAL]->setHSVRange(value);
+    changed.connect([goalLabel,createLookupTable](Colour::hsvRange value) {
+       goalLabel->setHSVRange(value);
         createLookupTable();
       });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.ball")->
-    changed.connect([this,createLookupTable](Colour::hsvRange value) {
-        d_rangePixelLabels[(uint8_t)LabelClass::BALL]->setHSVRange(value);
+    changed.connect([ballLabel,createLookupTable](Colour::hsvRange value) {
+        ballLabel->setHSVRange(value);
         createLookupTable();
       });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->
-    changed.connect([this,createLookupTable](Colour::hsvRange value) {
-        d_rangePixelLabels[(uint8_t)LabelClass::FIELD]->setHSVRange(value);
+    changed.connect([fieldLabel,createLookupTable](Colour::hsvRange value) {
+        fieldLabel->setHSVRange(value);
         createLookupTable();
       });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line")->
-    changed.connect([this,createLookupTable](Colour::hsvRange value) {
-        d_rangePixelLabels[(uint8_t)LabelClass::LINE]->setHSVRange(value);
+    changed.connect([lineLabel,createLookupTable](Colour::hsvRange value) {
+        lineLabel->setHSVRange(value);
         createLookupTable();
       });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.cyan")->
-    changed.connect([this,createLookupTable](Colour::hsvRange value) {
-        d_rangePixelLabels[(uint8_t)LabelClass::CYAN]->setHSVRange(value);
+    changed.connect([cyanLabel,createLookupTable](Colour::hsvRange value) {
+        cyanLabel->setHSVRange(value);
         createLookupTable();
       });
   Config::getSetting<Colour::hsvRange>("vision.pixel-labels.magenta")->
-    changed.connect([this,createLookupTable](Colour::hsvRange value) {
-        d_rangePixelLabels[(uint8_t)LabelClass::MAGENTA]->setHSVRange(value); createLookupTable();
+    changed.connect([magentaLabel,createLookupTable](Colour::hsvRange value) {
+        magentaLabel->setHSVRange(value); createLookupTable();
       });
 
   // ball detection settings

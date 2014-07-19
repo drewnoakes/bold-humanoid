@@ -18,7 +18,7 @@ set(TEST_SOURCES
   DistributionTrackerTests.cc
   EigenTests.cc
   HalfHullBuilderTests.cc
-  HistogramLabelTeacherTests.cc
+  LabelTeacherTests.cc
   HistogramPixelLabelTests.cc
   IncrementalRegressionTests.cc
   IntegralImageTests.cc
