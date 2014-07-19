@@ -152,6 +152,11 @@ namespace bold
       Average<Eigen::Vector2d> const& post2Pos,
       FieldSide ballSideEstimate);
 
+    static GoalLabel labelGoalByKeeperBallPosition(
+      Average<Eigen::Vector2d> const& post1Pos,
+      Average<Eigen::Vector2d> const& post2Pos,
+      Eigen::Vector2d const& keeperBallPos);
+
     static GoalLabel labelGoalByKeeperObservations(
       Average<Eigen::Vector2d> const& post1Pos,
       Average<Eigen::Vector2d> const& post2Pos,

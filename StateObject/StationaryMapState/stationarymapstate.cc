@@ -303,6 +303,29 @@ GoalLabel StationaryMapState::labelGoalByKeeperBallDistance(
   return GoalLabel::Unknown;
 }
 
+GoalLabel StationaryMapState::labelGoalByKeeperBallPosition(
+  Average<Eigen::Vector2d> const& post1Pos,
+  Average<Eigen::Vector2d> const& post2Pos,
+  Eigen::Vector2d const& keeperBallPos)
+{
+  static auto maxKeeperBallDistance = Config::getSetting<double>("vision.goal-detection.label.max-keeper-ball-dist");
+
+  Vector2d posIfTheirs = estimateObservationPoint(post1Pos.getAverage(), post2Pos.getAverage(), GoalLabel::Theirs);
+  Vector2d posIfOurs = estimateObservationPoint(post1Pos.getAverage(), post2Pos.getAverage(), GoalLabel::Ours);
+
+  Vector2d errorIfOurs = keeperBallPos - posIfOurs;
+  Vector2d errorIfTheirs = keeperBallPos - posIfTheirs;
+
+  double dist = maxKeeperBallDistance->getValue();
+
+  if (errorIfOurs.norm() < dist && errorIfTheirs.norm() > dist)
+    return GoalLabel::Ours;
+  else if (errorIfTheirs.norm() < dist && errorIfOurs.norm() > dist)
+    return GoalLabel::Theirs;
+  else
+    return GoalLabel::Unknown;
+}
+
 GoalLabel StationaryMapState::labelGoalByKeeperObservations(
   Average<Eigen::Vector2d> const& post1Pos,
   Average<Eigen::Vector2d> const& post2Pos,
