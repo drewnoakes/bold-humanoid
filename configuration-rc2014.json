@@ -15,7 +15,7 @@
       "contrast": 32,
       "saturation": 28,
       "gain": 0,
-      "wb-temp-k": 3070,
+      "wb-temp-k": 6000,
       "sharpness": 0
     }
   },
@@ -26,13 +26,17 @@
 
   "vision": {
     "pixel-labels": {
-      "ball":  { "hue": [ 0,  15], "sat": [160, 255], "val": [ 90, 200] },
-      "field": { "hue": [70, 130], "sat": [ 50, 255], "val": [ 45, 155] },
-      "goal":  { "hue": [40,  50], "sat": [ 90, 255], "val": [100, 175] },
-      "line":  { "hue": [ 0, 255], "sat": [  0, 167], "val": [120, 255] }
+        "ball": { "hue": [0, 15], "sat": [160, 255], "val": [90, 190] },
+        "field": { "hue": [60, 100], "sat": [50, 255], "val": [45, 145] },
+        "goal": { "hue": [40, 50], "sat": [185, 255], "val": [84, 150] },
+        "line": { "hue": [0, 255], "sat": [0, 167], "val": [120, 255] }
     },
     "field-edge-pass": {
       "min-vertical-run-length": 13
+    },
+    "goal-detection": {
+      "max-field-edge-distance-px": 10,
+      "accepted-width-ratio": [0.2, 2.0]
     }
   }
 }
