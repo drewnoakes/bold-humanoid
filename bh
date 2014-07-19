@@ -2,6 +2,10 @@
 
 # boldhumanoid console utility
 
+if [ -z "$BOLD_HUMANOID_DIR" ]; then
+    BOLD_HUMANOID_DIR="."
+fi
+
 print_usage()
 {
     echo
