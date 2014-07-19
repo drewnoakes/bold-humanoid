@@ -1,7 +1,7 @@
 {
   "inherits": "configuration-team.json",
 
-  "team-number": 7,
+  "team-number": 3,
 
   "camera": {
     "settings": {
