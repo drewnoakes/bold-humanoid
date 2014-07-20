@@ -20,14 +20,14 @@ CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
 
 void CompleteFieldEdgePass::onImageStarting(SequentialTimer& timer)
 {
-  std::fill(d_maxYByX.begin(), d_maxYByX.end(), d_pixelHeight - 1);
+  std::fill(d_maxYByX.begin(), d_maxYByX.end(), d_imageHeight - 1);
   std::fill(d_runByX.begin(), d_runByX.end(), 0);
   timer.timeEvent("Clear");
 }
 
 void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 {
-//   ASSERT(x >= 0 && x < d_pixelWidth);
+//   ASSERT(x >= 0 && x < d_imageWidth);
 
   if (labelId == d_fieldLabelId)
   {
@@ -49,7 +49,7 @@ void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 
 ushort CompleteFieldEdgePass::getEdgeYValue(ushort x) const
 {
-  ASSERT(x < d_pixelWidth);
+  ASSERT(x < d_imageWidth);
 
   return d_useConvexHull->getValue() ? d_maxYByXConvex[x] : d_maxYByX[x];
 }
@@ -61,7 +61,7 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
     MovingAverage<int> avg(d_smoothingWindowSize);
 
     int offset = int(d_smoothingWindowSize)/2;
-    for (int x = 0, t = -offset; x < d_pixelWidth; x++, t++)
+    for (int x = 0, t = -offset; x < d_imageWidth; x++, t++)
     {
       auto smoothedY = avg.next(d_maxYByX[x]);
       if (t >= 0 && smoothedY > d_maxYByX[t])
@@ -75,7 +75,7 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
 
   // Create convex hull values
   std::copy(d_maxYByX.begin(), d_maxYByX.end(), d_maxYByXConvex.begin());
-  applyConvexHull(d_maxYByXConvex, 0, d_pixelWidth - 1);
+  applyConvexHull(d_maxYByXConvex, 0, d_imageWidth - 1);
   timer.timeEvent("Convex Hull");
 }
 
@@ -83,7 +83,7 @@ vector<OcclusionRay<ushort>> CompleteFieldEdgePass::getOcclusionRays() const
 {
   vector<OcclusionRay<ushort>> rays;
 
-  for (ushort x = 0; x < d_pixelWidth; x++)
+  for (ushort x = 0; x < d_imageWidth; x++)
     rays.emplace_back(
       Matrix<ushort,2,1>(x, d_maxYByX[x]),
       Matrix<ushort,2,1>(x, d_maxYByXConvex[x]));

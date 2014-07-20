@@ -10,7 +10,8 @@ namespace bold
   class PeriodicFieldEdgePass : public FieldEdgePass
   {
   public:
-    PeriodicFieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, std::shared_ptr<PixelLabel> lineLabel, ushort pixelWidth, ushort pixelHeight, ushort period);
+    PeriodicFieldEdgePass(std::shared_ptr<PixelLabel> fieldLabel, std::shared_ptr<PixelLabel> lineLabel,
+                          ushort imageWidth, ushort imageHeight, ushort period);
 
     ~PeriodicFieldEdgePass() override = default;
 

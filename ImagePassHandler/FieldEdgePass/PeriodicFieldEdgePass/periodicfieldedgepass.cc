@@ -10,13 +10,13 @@ using namespace Eigen;
 using namespace std;
 
 PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, shared_ptr<PixelLabel> lineLabel,
-                                             ushort pixelWidth, ushort pixelHeight, ushort period)
-: FieldEdgePass(pixelWidth, pixelHeight),
+                                             ushort imageWidth, ushort imageHeight, ushort period)
+: FieldEdgePass(imageWidth, imageHeight),
   d_fieldLabelId((uint8_t)fieldLabel->getID()),
   d_lineLabelId((uint8_t)lineLabel->getID()),
-  d_maxYByC((pixelWidth / period) + 1),
-  d_maxYByCConvex((pixelWidth / period) + 1),
-  d_runByC((pixelWidth / period) + 1),
+  d_maxYByC((imageWidth / period) + 1),
+  d_maxYByCConvex((imageWidth / period) + 1),
+  d_runByC((imageWidth / period) + 1),
   d_period(period)
 {}
 
@@ -29,7 +29,7 @@ void PeriodicFieldEdgePass::onImageStarting(SequentialTimer& timer)
 
 void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 {
-//   ASSERT(x >= 0 && x < d_pixelWidth);
+//   ASSERT(x >= 0 && x < d_imageWidth);
 
   if (x % d_period != 0)
     return;
@@ -61,7 +61,7 @@ void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
 
 ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
 {
-  ASSERT(x < d_pixelWidth);
+  ASSERT(x < d_imageWidth);
 
   // Map from the x-position to the periodic samples.
 
@@ -73,7 +73,7 @@ ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
   if (rem == 0 || c == d_runByC.size() - 1)
   {
     // x is an exact multiple of the period, so return the value directly.
-    ASSERT(maxYByC[c] < d_pixelHeight);
+    ASSERT(maxYByC[c] < d_imageHeight);
     return maxYByC[c];
   }
 
@@ -131,7 +131,7 @@ void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
 
     // set line at top of image
     for (ushort c = 0; c < d_runByC.size(); c++)
-      d_maxYByC[c] = d_pixelHeight - 1;
+      d_maxYByC[c] = d_imageHeight - 1;
 
     // skip convex hull as line is straight
     return;
