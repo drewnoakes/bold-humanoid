@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh setnw ESSID"
+    echo "          tell wicd to connect to a specific network and set to automatically connect to it from now on"
+    exit
+fi
+
+ESSID=$1
+
+for i in ${@:2}
+do
+    ssh darwin@darwin$i.local "sudo ./setnw.py ${ESSID} && sudo service wicd restart"
+
+    if [ $? -ne 0 ]; then
+        echo FAILED to set the network for darwin$i.local
+        res=1
+    fi
+done
+
+exit $res
