@@ -370,10 +370,7 @@ GoalLabel StationaryMapState::labelGoal(
       label = labelGoalByKeeperBallPosition(post1Pos, post2Pos, *keeper->ballRelative);
 
     if (label == GoalLabel::Unknown)
-    {
-      FieldSide ballSide = team ? team->getKeeperBallSideEstimate() : FieldSide::Unknown;
-      label = labelGoalByKeeperBallDistance(post1Pos, post2Pos, ballSide);
-    }
+      label = labelGoalByKeeperBallDistance(post1Pos, post2Pos, team->getKeeperBallSideEstimate());
   }
 
   if (label == GoalLabel::Unknown)
