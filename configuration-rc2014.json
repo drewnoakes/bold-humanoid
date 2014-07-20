@@ -23,6 +23,9 @@
   "world": {
     "ball-diameter": 0.1
   },
+  "spatialiser": {
+    "use-orientation": false
+  },
 
   "vision": {
     "pixel-labels": {
