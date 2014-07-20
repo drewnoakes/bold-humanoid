@@ -158,7 +158,7 @@ TEST (StationaryMapStateTests, labelGoalByKeeperObservations)
   ASSERT_EQ(GoalLabel::Ours, StationaryMapState::labelGoalByKeeperObservations(post1, post2, keepers));
 }
 
-TEST (StationaryMapStateTests, estimateObservationPoint)
+TEST (StationaryMapStateTests, estimateWorldPositionForPoint)
 {
   auto goalY = FieldMap::getGoalY();
   auto halfGoalY = goalY/2.0;
@@ -167,23 +167,45 @@ TEST (StationaryMapStateTests, estimateObservationPoint)
   Vector2d pos;
 
   // Test from middle of field
-  pos = StationaryMapState::estimateObservationPoint(Vector2d(halfGoalY, halfFieldX), Vector2d(-halfGoalY, halfFieldX), GoalLabel::Ours);
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(halfGoalY, halfFieldX), Vector2d(-halfGoalY, halfFieldX), Vector2d::Zero(), GoalLabel::Ours);
   EXPECT_TRUE(VectorsEqual(Vector2d(0,0), pos));
 
-  pos = StationaryMapState::estimateObservationPoint(Vector2d(halfGoalY, halfFieldX), Vector2d(-halfGoalY, halfFieldX), GoalLabel::Theirs);
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(halfGoalY, halfFieldX), Vector2d(-halfGoalY, halfFieldX), Vector2d::Zero(), GoalLabel::Theirs);
   EXPECT_TRUE(VectorsEqual(Vector2d(0,0), pos));
 
   // Standing 1m in front of one goal post
-  pos = StationaryMapState::estimateObservationPoint(Vector2d(0, 2), Vector2d(goalY, 2), GoalLabel::Ours);
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(goalY, 2), Vector2d::Zero(), GoalLabel::Ours);
   EXPECT_TRUE(VectorsEqual(Vector2d(-halfFieldX + 2, -halfGoalY), pos));
 
-  pos = StationaryMapState::estimateObservationPoint(Vector2d(0, 2), Vector2d(-goalY, 2), GoalLabel::Ours);
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(-goalY, 2), Vector2d::Zero(), GoalLabel::Ours);
   EXPECT_TRUE(VectorsEqual(Vector2d(-halfFieldX + 2, halfGoalY), pos));
 
   // ...and in front of the other post
-  pos = StationaryMapState::estimateObservationPoint(Vector2d(0, 2), Vector2d(goalY, 2), GoalLabel::Theirs);
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(goalY, 2), Vector2d::Zero(), GoalLabel::Theirs);
   EXPECT_TRUE(VectorsEqual(Vector2d(halfFieldX - 2, halfGoalY), pos));
 
-  pos = StationaryMapState::estimateObservationPoint(Vector2d(0, 2), Vector2d(-goalY, 2), GoalLabel::Theirs);
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(-goalY, 2), Vector2d::Zero(), GoalLabel::Theirs);
   EXPECT_TRUE(VectorsEqual(Vector2d(halfFieldX - 2, -halfGoalY), pos));
+
+  // Now specify points which are not the origin
+
+  // Standing 1m in front of one goal post
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(goalY, 2), Vector2d(0, 1), GoalLabel::Ours);
+  EXPECT_TRUE(VectorsEqual(Vector2d(-halfFieldX + 1, -halfGoalY), pos));
+
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(-goalY, 2), Vector2d(0, 1), GoalLabel::Ours);
+  EXPECT_TRUE(VectorsEqual(Vector2d(-halfFieldX + 1, halfGoalY), pos));
+
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(goalY, 2), Vector2d(goalY, 1), GoalLabel::Ours);
+  EXPECT_TRUE(VectorsEqual(Vector2d(-halfFieldX + 1, halfGoalY), pos));
+
+  // ...and in front of the other post
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(goalY, 2), Vector2d(0, 1), GoalLabel::Theirs);
+  EXPECT_TRUE(VectorsEqual(Vector2d(halfFieldX - 1, halfGoalY), pos));
+
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(-goalY, 2), Vector2d(0, 1), GoalLabel::Theirs);
+  EXPECT_TRUE(VectorsEqual(Vector2d(halfFieldX - 1, -halfGoalY), pos));
+
+  pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(goalY, 2), Vector2d(goalY, 1), GoalLabel::Theirs);
+  EXPECT_TRUE(VectorsEqual(Vector2d(halfFieldX - 1, -halfGoalY), pos));
 }

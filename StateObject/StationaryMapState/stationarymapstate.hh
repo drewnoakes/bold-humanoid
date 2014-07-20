@@ -155,15 +155,20 @@ namespace bold
     static GoalLabel labelGoalByKeeperBallPosition(
       Average<Eigen::Vector2d> const& post1Pos,
       Average<Eigen::Vector2d> const& post2Pos,
-      Eigen::Vector2d const& keeperBallPos);
+      Eigen::Vector2d const& keeperBallPos,
+      Eigen::Vector2d const& agentBallPos);
 
     static GoalLabel labelGoalByKeeperObservations(
       Average<Eigen::Vector2d> const& post1Pos,
       Average<Eigen::Vector2d> const& post2Pos,
       std::vector<Average<Eigen::Vector2d>> keeperEstimates);
 
-    /** Estimate the position of the observer of the specified goal posts, if the goal has the specified label. */
-    static Eigen::Vector2d estimateObservationPoint(Eigen::Vector2d post1, Eigen::Vector2d post2, GoalLabel label);
+    /** Estimate the position of a point in the agent frame if the specified posts have the specified label. */
+    static Eigen::Vector2d estimateWorldPositionForPoint(
+      Eigen::Vector2d const& post1,
+      Eigen::Vector2d const& post2,
+      Eigen::Vector2d const& pointAgent,
+      GoalLabel label);
 
   private:
     template<typename T>
@@ -176,7 +181,8 @@ namespace bold
     /// Uses techniques available in other labelGoalBy* functions.
     GoalLabel labelGoal(
       Average<Eigen::Vector2d> const& post1Pos,
-      Average<Eigen::Vector2d> const& post2Pos);
+      Average<Eigen::Vector2d> const& post2Pos,
+      Maybe<Eigen::Vector2d> const& agentBallPos);
 
     /// Selects a kick (if there is one) which may be made immediately with a suitably positive outcome.
     /// If successful, canKick() will return true and getSelectedKick() returns the kick.

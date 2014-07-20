@@ -155,7 +155,10 @@ StationaryMapState::StationaryMapState(
   // Label the goal post pairs as either our goal, their goal or unknown
   for (auto const& pair : goalPairs)
   {
-    auto label = labelGoal(pair.first, pair.second);
+    Maybe<Vector2d> agentBallPos;
+    if (d_ballEstimates.size() != 0 && d_ballEstimates[0].getCount() > BallSamplesNeeded)
+      agentBallPos = d_ballEstimates[0].getAverage();
+    auto label = labelGoal(pair.first, pair.second, agentBallPos);
     d_goalEstimates.emplace_back(pair.first.getAverage(), pair.second.getAverage(), label);
   }
 
@@ -306,15 +309,16 @@ GoalLabel StationaryMapState::labelGoalByKeeperBallDistance(
 GoalLabel StationaryMapState::labelGoalByKeeperBallPosition(
   Average<Eigen::Vector2d> const& post1Pos,
   Average<Eigen::Vector2d> const& post2Pos,
-  Eigen::Vector2d const& keeperBallPos)
+  Eigen::Vector2d const& keeperBallPos,
+  Eigen::Vector2d const& agentBallPos)
 {
   static auto maxKeeperBallDistance = Config::getSetting<double>("vision.goal-detection.label.max-keeper-ball-dist");
 
-  Vector2d posIfTheirs = estimateObservationPoint(post1Pos.getAverage(), post2Pos.getAverage(), GoalLabel::Theirs);
-  Vector2d posIfOurs = estimateObservationPoint(post1Pos.getAverage(), post2Pos.getAverage(), GoalLabel::Ours);
+  Vector2d ballPosIfTheirs = estimateWorldPositionForPoint(post1Pos.getAverage(), post2Pos.getAverage(), agentBallPos, GoalLabel::Theirs);
+  Vector2d ballPosIfOurs = estimateWorldPositionForPoint(post1Pos.getAverage(), post2Pos.getAverage(), agentBallPos, GoalLabel::Ours);
 
-  Vector2d errorIfOurs = keeperBallPos - posIfOurs;
-  Vector2d errorIfTheirs = keeperBallPos - posIfTheirs;
+  Vector2d errorIfOurs = keeperBallPos - ballPosIfOurs;
+  Vector2d errorIfTheirs = keeperBallPos - ballPosIfTheirs;
 
   double dist = maxKeeperBallDistance->getValue();
 
@@ -357,7 +361,8 @@ GoalLabel StationaryMapState::labelGoalByKeeperObservations(
 
 GoalLabel StationaryMapState::labelGoal(
   Average<Eigen::Vector2d> const& post1Pos,
-  Average<Eigen::Vector2d> const& post2Pos)
+  Average<Eigen::Vector2d> const& post2Pos,
+  Maybe<Eigen::Vector2d> const& agentBallPos)
 {
   GoalLabel label = GoalLabel::Unknown;
 
@@ -367,7 +372,7 @@ GoalLabel StationaryMapState::labelGoal(
     auto keeper = team->getKeeperState();
 
     if (keeper && keeper->ballRelative.hasValue())
-      label = labelGoalByKeeperBallPosition(post1Pos, post2Pos, *keeper->ballRelative);
+      label = labelGoalByKeeperBallPosition(post1Pos, post2Pos, *keeper->ballRelative, agentBallPos.hasValue() ? *agentBallPos : Vector2d::Zero());
 
     if (label == GoalLabel::Unknown)
       label = labelGoalByKeeperBallDistance(post1Pos, post2Pos, team->getKeeperBallSideEstimate());
@@ -660,12 +665,16 @@ bool StationaryMapState::hasBallWithinDistance(double distance) const
   return false;
 }
 
-Vector2d StationaryMapState::estimateObservationPoint(Vector2d post1, Vector2d post2, GoalLabel label)
+Vector2d StationaryMapState::estimateWorldPositionForPoint(
+  Vector2d const& post1,
+  Vector2d const& post2,
+  Vector2d const& pointAgent,
+  GoalLabel label)
 {
   ASSERT(label == GoalLabel::Ours || label == GoalLabel::Theirs);
 
   LineSegment2d goalLine(post1, post2);
-  Vector2d mid = goalLine.mid();
+  Vector2d mid = goalLine.mid() - pointAgent;
 
   Vector2d perp = Math::findPerpendicularVector(goalLine.delta());
 
