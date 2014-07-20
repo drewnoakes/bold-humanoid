@@ -412,64 +412,64 @@ double getGoalLineDistance(GoalEstimate const& goal, Vector2d const& endPos)
 
 void StationaryMapState::selectImmediateKick()
 {
-  // Short circuit if we don't have enough observations
-  if (d_ballEstimates.size() == 0 || d_goalPostEstimates.size() < 2)
+  auto ball = std::find_if(
+    d_ballEstimates.begin(),
+    d_ballEstimates.end(),
+    [](Average<Vector2d> b) { return b.getCount() > BallSamplesNeeded && b.getAverage().norm() < 0.5; });
+
+  if (ball == d_ballEstimates.end())
     return;
 
-  auto const& ballEstimate = d_ballEstimates[0];
+  auto goal = std::find_if(
+    d_goalEstimates.begin(),
+    d_goalEstimates.end(),
+    [](GoalEstimate g) { return g.getLabel() == GoalLabel::Theirs; });
 
-  if (ballEstimate.getCount() < BallSamplesNeeded)
+  if (goal == d_goalEstimates.end())
     return;
+
+  Vector2d ballPosAgent = ball->getAverage().head<2>();
 
   // Check each kick to see if it's possible, and whether it would give a good result
   for (auto& kick : Kick::getAll())
   {
-    Maybe<Vector2d> endPos = kick->estimateEndPos(ballEstimate.getAverage().head<2>());
+    Maybe<Vector2d> ballEndPosAgent = kick->estimateEndPos(ballPosAgent);
 
     // If no end position, then this kick is not possible given the ball's current position
-    if (!endPos.hasValue())
+    if (!ballEndPosAgent.hasValue())
       continue;
 
-    double ballEndAngle = Math::angleToPoint(*endPos);
+    double ballEndAngle = Math::angleToPoint(*ballEndPosAgent);
 
     // Determine whether the end pos is advantageous
     bool isOnTarget = false;
-    for (auto const& goal : d_goalEstimates)
+
+    // Currently, only kick toward the goal
+    // If the kick angle is not directed between the goal posts, skip it
+    // TODO the end pos doesn't necessarily have to be between the goals -- sometimes just nearer the goal is enough
+    if (goal->isTowards(ballEndAngle))
     {
-      // Currently, only kick toward the goal
-
-      // Don't kick towards our goal
-      if (goal.getLabel() == GoalLabel::Ours)
-        continue;
-
-      // If the kick angle is not directed between the goal posts, skip it
-      if (!goal.isTowards(ballEndAngle))
-        continue;
-
       // Check that there's no obstruction before the goal line -- blocks inside the goal are fine
       double occlusionDistance = d_occlusionMap.getOcclusionDistance(ballEndAngle);
-      double goalLineDistance = getGoalLineDistance(goal, *endPos);
+      double goalLineDistance = getGoalLineDistance(*goal, *ballEndPosAgent);
 
       // TODO the entire ball must actually cross the line, not just its midpoint
-      if (occlusionDistance < goalLineDistance)
-        continue;
-
-      log::info("StationaryMapState::selectKick")
-        << "Goal kick possible: " << kick->getId()
-        << " angleDegs=" << Math::radToDeg(ballEndAngle)
-        << " goalLabel=" << getGoalLabelName(goal.getLabel())
-        << " occlusionDist=" << occlusionDistance
-        << " goalLineDist=" << goalLineDistance;
-
-      isOnTarget = true;
-      break;
+      if (occlusionDistance >= goalLineDistance)
+      {
+        isOnTarget = true;
+        log::info("StationaryMapState::selectKick")
+          << "Goal kick possible: " << kick->getId()
+          << " angleDegs=" << Math::radToDeg(ballEndAngle)
+          << " goalLabel=" << getGoalLabelName(goal->getLabel())
+          << " occlusionDist=" << occlusionDistance
+          << " goalLineDist=" << goalLineDistance;
+      }
     }
 
-    d_possibleKicks.emplace_back(kick, endPos.value(), isOnTarget);
+    d_possibleKicks.emplace_back(kick, ballEndPosAgent.value(), isOnTarget);
   }
 
   // TODO when more than one kick is possible, take the best, not the first
-  // TODO the end pos doesn't necessarily have to be between the goals -- sometimes just nearer the goal is enough
   auto it = find_if(d_possibleKicks.begin(), d_possibleKicks.end(), [](KickResult const& k) { return k.isOnTarget(); });
   if (it != d_possibleKicks.end())
     d_selectedKick =  it->getKick();
