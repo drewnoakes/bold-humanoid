@@ -7,15 +7,15 @@
     "settings": {
       "auto-wb": false,
       "exposure-auto": 1,
-      "exposure-absolute": 500,
+      "exposure-absolute": 1000,
       "exposure-auto-priority": false,
       "backlight-compensation": false,
       "power-line-frequency": 2,
-      "brightness": 100,
+      "brightness": 128,
       "contrast": 32,
       "saturation": 28,
-      "gain": 0,
-      "wb-temp-k": 6000,
+      "gain": 200,
+      "wb-temp-k": 5000,
       "sharpness": 0
     }
   },
@@ -30,8 +30,8 @@
   "vision": {
     "pixel-labels": {
         "ball": { "hue": [0, 15], "sat": [160, 255], "val": [90, 190] },
-        "field": { "hue": [60, 100], "sat": [50, 255], "val": [45, 145] },
-        "goal": { "hue": [40, 50], "sat": [140, 255], "val": [84, 150] },
+        "field": { "hue": [70, 100], "sat": [65, 250], "val": [80, 140] },
+        "goal": { "hue": [40, 50], "sat": [140, 220], "val": [110, 140] },
         "line": { "hue": [0, 255], "sat": [0, 167], "val": [120, 255] }
     },
     "field-edge-pass": {
