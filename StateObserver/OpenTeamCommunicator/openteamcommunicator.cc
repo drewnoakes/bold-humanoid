@@ -62,15 +62,15 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
 
     if (playerState.status != PlayerStatus::Paused && playerState.status != PlayerStatus::Penalised)
     {
-      auto const &agentFrameState = State::get<AgentFrameState>();
+      auto const& agentFrameState = State::get<AgentFrameState>();
       if (agentFrameState)
       {
-        auto const &ballObservation = agentFrameState->getBallObservation();
+        auto const& ballObservation = agentFrameState->getBallObservation();
         if (ballObservation.hasValue())
           playerState.ballRelative = Vector2d(ballObservation->x(), ballObservation->y());
       }
 
-      auto const &worldFrameState = State::get<WorldFrameState>();
+      auto const& worldFrameState = State::get<WorldFrameState>();
       if (worldFrameState)
       {
         playerState.pos = worldFrameState->getPosition();
