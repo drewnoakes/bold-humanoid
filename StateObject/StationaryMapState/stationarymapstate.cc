@@ -317,19 +317,17 @@ GoalLabel StationaryMapState::labelGoalByKeeperBallPosition(
   Vector2d ballPosIfTheirs = estimateWorldPositionForPoint(post1Pos.getAverage(), post2Pos.getAverage(), agentBallPos, GoalLabel::Theirs);
   Vector2d ballPosIfOurs = estimateWorldPositionForPoint(post1Pos.getAverage(), post2Pos.getAverage(), agentBallPos, GoalLabel::Ours);
 
-  double errorIfOurs   = (keeperBallPos - ballPosIfOurs).norm();
-  double errorIfTheirs = (keeperBallPos - ballPosIfTheirs).norm();
+  Vector2d errorIfOurs = keeperBallPos - ballPosIfOurs;
+  Vector2d errorIfTheirs = keeperBallPos - ballPosIfTheirs;
 
   double dist = maxKeeperBallDistance->getValue();
 
-  // If the two errors are too similar, then we cannot decide
-  if (fabs(errorIfOurs - errorIfTheirs) < dist)
+  if (errorIfOurs.norm() < dist && errorIfTheirs.norm() > dist)
+    return GoalLabel::Ours;
+  else if (errorIfTheirs.norm() < dist && errorIfOurs.norm() > dist)
+    return GoalLabel::Theirs;
+  else
     return GoalLabel::Unknown;
-
-  // Whichever has the lesser error
-  return errorIfOurs < errorIfTheirs
-    ? GoalLabel::Ours
-    : GoalLabel::Theirs;
 }
 
 GoalLabel StationaryMapState::labelGoalByKeeperObservations(
