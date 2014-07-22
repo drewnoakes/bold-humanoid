@@ -238,7 +238,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
 
   directAttackState
     ->transitionTo(locateBallState, "lost-ball")
-    ->when([] { return ballLostConditionFactory; });
+    ->when(ballLostConditionFactory);
 
   yieldState
     ->transitionTo(locateBallState, "resume")
