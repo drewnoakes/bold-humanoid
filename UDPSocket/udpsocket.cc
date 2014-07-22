@@ -21,6 +21,7 @@ using namespace bold;
 using namespace std;
 
 UDPSocket::UDPSocket()
+: d_lastSendErrno(0)
 {
   d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -183,7 +184,18 @@ bool UDPSocket::send(const char* data, int dataLength)
   ssize_t bytesSent = sendto(d_socket, data, dataLength, 0, (sockaddr*)d_target, sizeof(sockaddr));
 
   if (bytesSent < 0)
-    log::error("UDPSocket::send") << "Error (" << errno << "): " << strerror(errno);
+  {
+    if (errno != d_lastSendErrno)
+    {
+      log::error("UDPSocket::send") << "Error (" << errno << "): " << strerror(errno);
+      d_lastSendErrno = errno;
+    }
+  }
+  else if (d_lastSendErrno != 0)
+  {
+    log::error("UDPSocket::send") << "Successfully sent packet after previous error (" << d_lastSendErrno << "): " << strerror(d_lastSendErrno);
+    d_lastSendErrno = 0;
+  }
 
   return bytesSent > 0;
 }

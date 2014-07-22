@@ -90,5 +90,6 @@ namespace bold
 
     int d_socket;
     sockaddr_in* d_target;
+    int d_lastSendErrno;
   };
 }
