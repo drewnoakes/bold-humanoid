@@ -168,7 +168,7 @@
       "min-area-px": 1,
       "accepted-size-ratio": [0.4, 1.5],
       "enable-blob-merging": false,
-      "max-field-edge-distance-px": 0
+      "max-field-edge-distance-px": 4
     },
     "goal-detection": {
       "min-dimension-px": 3,
