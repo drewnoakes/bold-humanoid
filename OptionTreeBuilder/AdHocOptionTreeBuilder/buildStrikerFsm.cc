@@ -17,7 +17,6 @@
 #include "../../State/state.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../StateObject/GameState/gamestate.hh"
-#include "../../StateObject/StationaryMapState/stationarymapstate.hh"
 #include "conditionals.hh"
 
 using namespace bold;
