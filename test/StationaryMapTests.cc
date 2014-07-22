@@ -209,3 +209,35 @@ TEST (StationaryMapStateTests, estimateWorldPositionForPoint)
   pos = StationaryMapState::estimateWorldPositionForPoint(Vector2d(0, 2), Vector2d(goalY, 2), Vector2d(goalY, 1), GoalLabel::Theirs);
   EXPECT_TRUE(VectorsEqual(Vector2d(halfFieldX - 1, -halfGoalY), pos));
 }
+
+TEST (StationaryMapStateTests, labelGoalByKeeperBallPosition)
+{
+  auto goalY = FieldMap::getGoalY();
+  auto halfGoalY = goalY/2.0;
+
+  EXPECT_EQ(
+    GoalLabel::Ours,
+    StationaryMapState::labelGoalByKeeperBallPosition(
+      createAverage(Vector2d(-3 - halfGoalY, 3), 10),
+      createAverage(Vector2d(-3 + halfGoalY, 3), 10),
+      Vector2d(-3, 3),
+      Vector2d(-0.1, 0.2)));
+
+  EXPECT_EQ(
+    GoalLabel::Theirs,
+    StationaryMapState::labelGoalByKeeperBallPosition(
+      createAverage(Vector2d(3 - halfGoalY, FieldMap::getFieldLengthX() - 3), 10),
+      createAverage(Vector2d(3 + halfGoalY, FieldMap::getFieldLengthX() - 3), 10),
+      Vector2d(-3, 3),
+      Vector2d(-0.1, 0.2)));
+
+  // With some error...
+
+  EXPECT_EQ(
+    GoalLabel::Theirs,
+    StationaryMapState::labelGoalByKeeperBallPosition(
+      createAverage(Vector2d(4 - halfGoalY, FieldMap::getFieldLengthX() - 3), 10),
+      createAverage(Vector2d(4 + halfGoalY, FieldMap::getFieldLengthX() - 3), 10),
+      Vector2d(-3, 3),
+      Vector2d(-0.1, 0.2)));
+}
