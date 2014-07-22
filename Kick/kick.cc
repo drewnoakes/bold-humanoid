@@ -20,7 +20,7 @@ void Kick::loadAll()
     "forward-right",
     "./motionscripts/kick-right.json",
     Bounds2d(Vector2d(0, 0), Vector2d(0.1, 0.2)),
-    Vector2d(0.164, 1.853),
+    Vector2d(0.0, 1.853),
     Vector2d(0.065, 0.106)
   ));
 
@@ -28,7 +28,7 @@ void Kick::loadAll()
     "forward-left",
     "./motionscripts/kick-left.json",
     Bounds2d(Vector2d(-0.1, 0), Vector2d(0, 0.2)),
-    Vector2d(-0.164, 1.853),
+    Vector2d(0.0, 1.853),
     Vector2d(-0.065, 0.106)
   ));
 
