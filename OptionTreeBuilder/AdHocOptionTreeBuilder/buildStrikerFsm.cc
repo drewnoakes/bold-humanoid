@@ -51,15 +51,6 @@ auto shouldYieldToOtherAttacker = []
   return isTeamMateApproachingBallAndNearer;
 };
 
-auto ballIsStoppingDistance = []
-{
-  // Approach ball until we're within a given distance
-  // TODO use filtered ball position
-  auto ballObs = State::get<AgentFrameState>()->getBallObservation();
-  static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
-  return ballObs && (ballObs->head<2>().norm() < stoppingDistance->getValue());
-};
-
 auto isWithinTenSecondsOfTheirKickOff = []
 {
   auto game = State::get<GameState>();
