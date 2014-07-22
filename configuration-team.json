@@ -384,8 +384,11 @@
     "announce-stationary-map-action": true,
     "announce-rate-wpm": 200,
     "circle-ball": {
+      "rotate-until-within-degrees": 10.0,
       "max-speed-x": 20.0,
       "max-speed-y": 20.0,
+      "min-translation-speed-x": 4.0,
+      "min-translation-speed-y": 0.0,
       "turn-speed-a": 25.0
     },
     "approach-ball": {

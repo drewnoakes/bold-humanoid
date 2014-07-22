@@ -381,9 +381,12 @@
     "announce-stationary-map-action":  { "type": "bool", "description": "Say stationary map action" },
     "announce-rate-wpm":   { "type": "int", "min": 80, "max": 450 },
     "circle-ball": {
-      "max-speed-x":    { "type": "double" },
-      "max-speed-y":    { "type": "double" },
-      "turn-speed-a":   { "type": "double" }
+      "rotate-until-within-degrees": { "type": "double" },
+      "max-speed-x":                 { "type": "double" },
+      "max-speed-y":                 { "type": "double" },
+      "min-translation-speed-x":     { "type": "double" },
+      "min-translation-speed-y":     { "type": "double" },
+      "turn-speed-a":                { "type": "double" }
     },
     "approach-ball": {
       "turn-speed-scale":  { "type": "double" },

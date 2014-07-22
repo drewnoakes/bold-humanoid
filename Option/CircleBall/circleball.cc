@@ -37,9 +37,12 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
     return { d_lookAtFeet };
   }
 
-  static Setting<double>* maxSpeedX = Config::getSetting<double>("options.circle-ball.max-speed-x");
-  static Setting<double>* maxSpeedY = Config::getSetting<double>("options.circle-ball.max-speed-y");
-  static Setting<double>* turnSpeedA = Config::getSetting<double>("options.circle-ball.turn-speed-a");
+  static Setting<double>* rotateUntilAngleDegs = Config::getSetting<double>("options.circle-ball.rotate-until-within-degrees");
+  static Setting<double>* maxSpeedX            = Config::getSetting<double>("options.circle-ball.max-speed-x");
+  static Setting<double>* maxSpeedY            = Config::getSetting<double>("options.circle-ball.max-speed-y");
+  static Setting<double>* turnSpeedA           = Config::getSetting<double>("options.circle-ball.turn-speed-a");
+  static Setting<double>* minTranslationSpeedX = Config::getSetting<double>("options.circle-ball.min-translation-speed-x");
+  static Setting<double>* minTranslationSpeedY = Config::getSetting<double>("options.circle-ball.min-translation-speed-y");
 
   Vector2d observedBallPos = agentFrame->getBallObservation()->head<2>();
   Vector2d error = d_targetBallPos - observedBallPos;
@@ -58,15 +61,17 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
 
   double x, y, a;
 
-  if (fabs(yawDiffRads) > Math::degToRad(10)) // TODO magic number!
+  if (fabs(yawDiffRads) > Math::degToRad(rotateUntilAngleDegs->getValue()))
   {
+    // Too much angular error, so rotate
+
     // Always walk sideways, but not if error becomes too big
     x = (1.0 - Math::clamp(fabs(error.x()), 0.0, 1.0))
       * (isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue());
 
     // Try to keep forward distance stable
     y = -Math::lerp(error.y(), 0.0, 0.2, 0.0, maxSpeedY->getValue());
-//  y = -Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedY->getValue();
+//  y = -Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedYRotation->getValue();
 
     // Turn to keep ball centered
     double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
@@ -74,9 +79,10 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   }
   else
   {
+    // Angle is fine, position for kick
     a = 0;
-    x = -Math::lerp(error.x() / 0.2, 0.0, maxSpeedX->getValue());
-    y = -Math::lerp(error.y() / 0.2, 0.0, maxSpeedY->getValue());
+    x = -Math::lerp(error.x() / 0.2, minTranslationSpeedX->getValue(), maxSpeedX->getValue());
+    y = -Math::lerp(error.y() / 0.2, minTranslationSpeedY->getValue(), maxSpeedY->getValue());
   }
 
   x = Math::clamp(x, -maxSpeedX->getValue(), maxSpeedX->getValue());
