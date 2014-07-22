@@ -88,7 +88,7 @@ auto isPerfectLineForAttack = []
   if (!agentFrame->isBallVisible())
     return false;
 
-  auto const& goals = agentFrame->getGoalObservations();
+  auto goals = agentFrame->getGoalObservations();
   if (goals.size() != 2)
     return false;
 
@@ -107,17 +107,29 @@ auto isPerfectLineForAttack = []
   auto team = State::get<TeamState>();
   if (team && team->getKeeperState())
   {
-    // Verify the distance from the ball to the goal midpoint is sufficiently
-    // different to the keeper's observed distance, if they see the ball.
-    auto keeperBall = team->getKeeperState()->ballRelative;
-    if (team->getKeeperState()->getAgeMillis() < 5000 && keeperBall.hasValue())
-    {
-      Vector3d goalMidpoint = (goals[0] + goals[1]) / 2.0;
-      double ballToGoalDist = (agentFrame->getBallObservation().value() - goalMidpoint).norm();
 
-      if (fabs(keeperBall->norm() - ballToGoalDist) < 1.5)
-        return false;
-    }
+    GoalLabel label = GoalLabel::Unknown;
+
+    auto post1Pos = Average<Eigen::Vector2d>{};
+    post1Pos.add(goals[0].head<2>());
+    auto post2Pos = Average<Eigen::Vector2d>{};
+    post2Pos.add(goals[1].head<2>());
+
+    auto keeper = team->getKeeperState();
+      
+    auto agentBallPos = agentFrame->getBallObservation();
+    if (keeper && keeper->ballRelative.hasValue())
+      label = StationaryMapState::labelGoalByKeeperBallPosition(post1Pos, post2Pos,
+                                                                *keeper->ballRelative,
+                                                                agentBallPos.hasValue() ? Vector2d{agentBallPos->head<2>()} : Vector2d::Zero());
+      
+    if (label == GoalLabel::Unknown)
+      label = StationaryMapState::labelGoalByKeeperBallDistance(post1Pos, post2Pos, team->getKeeperBallSideEstimate());
+    
+    if (label == GoalLabel::Ours)
+      return false;
+
+
   }
 
   // The goals must appear to either side of the ball
