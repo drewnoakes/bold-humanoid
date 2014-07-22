@@ -17,7 +17,7 @@ for i in ${@:1}
 do
     echo copying log file from darwin$i.local to remote-logs/darwin$i
 
-    mkdir -p remote-logs/darwin$i
+    mkdir -p $BOLD_HUMANOID_DIR/remote-logs/darwin$i
 
     scp darwin@darwin$i.local:log* $BOLD_HUMANOID_DIR/remote-logs/darwin$i
 
