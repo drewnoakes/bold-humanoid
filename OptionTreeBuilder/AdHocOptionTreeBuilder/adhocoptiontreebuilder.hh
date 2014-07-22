@@ -21,5 +21,6 @@ namespace bold
     std::shared_ptr<FSMOption> buildKeeperFsm(Agent* agent);
     std::shared_ptr<FSMOption> buildPenaltyKeeperFsm(Agent* agent);
     std::shared_ptr<FSMOption> buildKickLearnerFsm(Agent* agent);
+    std::shared_ptr<FSMOption> buildBallCirclerFsm(Agent* agent);
   };
 }

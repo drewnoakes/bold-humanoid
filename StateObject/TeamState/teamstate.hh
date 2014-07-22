@@ -50,7 +50,10 @@ namespace bold
     /// The robot will stand and kick the ball around in order to learn the
     /// outcome of specific kicks given starting ball positions.
     /// This is not a role in a normal game, and using roles to do this may not be the best way.
-    KickLearner = 8
+    KickLearner = 8,
+
+    /// The robot will approach the ball and turn a random angle around it.
+    BallCircler = 9
   };
 
   std::string getPlayerRoleString(PlayerRole role);

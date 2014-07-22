@@ -41,6 +41,11 @@ namespace bold
     return State::get<CameraFrameState>()->isBallVisible();
   };
 
+  auto ballNotVisibleCondition = []
+  {
+    return State::get<CameraFrameState>()->isBallVisible();
+  };
+
   auto ballTooFarToKick = []
   {
     // TODO use filtered ball position

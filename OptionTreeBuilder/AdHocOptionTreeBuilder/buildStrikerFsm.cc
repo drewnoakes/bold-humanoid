@@ -1,6 +1,5 @@
 #include "adhocoptiontreebuilder.hh"
 
-#include "../../Agent/agent.hh"
 #include "../../Option/AwaitTheirKickOff/awaittheirkickoff.hh"
 #include "../../Option/ApproachBall/approachball.hh"
 #include "../../Option/AtBall/atball.hh"

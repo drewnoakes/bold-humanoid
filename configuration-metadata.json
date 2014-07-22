@@ -495,7 +495,8 @@
         "penalty-keeper":  5,
         "penalty-striker": 6,
         "other":           7,
-        "kick-learner":    8
+        "kick-learner":    8,
+        "ball-circler":    9
       }
     }
   },
