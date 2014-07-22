@@ -62,25 +62,27 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
 
   shared_ptr<ButtonTracker> modeButton = agent->getButtonObserver()->track(Button::Left);
 
+  // TODO allow manual override of states even when GC present
+
   initialState
     ->transitionTo(readyState, "left-button")
-    ->when([modeButton] { return modeButton->isPressedForMillis(80); });
+    ->when([modeButton] { return !State::get<GameState>() && modeButton->isPressedForMillis(80); });
 
   readyState
     ->transitionTo(setState, "left-button")
-    ->when([modeButton] { return modeButton->isPressedForMillis(80); });
+    ->when([modeButton] { return !State::get<GameState>() && modeButton->isPressedForMillis(80); });
 
   setState
     ->transitionTo(playingState, "left-button")
-    ->when([modeButton] { return modeButton->isPressedForMillis(80); });
+    ->when([modeButton] { return !State::get<GameState>() && modeButton->isPressedForMillis(80); });
 
   penalisedState
     ->transitionTo(unpenalisedState, "left-button")
-    ->when([modeButton] { return modeButton->isPressedForMillis(80); });
+    ->when([modeButton] { return !State::get<GameState>() && modeButton->isPressedForMillis(80); });
 
   finishedState
     ->transitionTo(initialState, "left-button")
-    ->when([modeButton] { return modeButton->isPressedForMillis(80); });
+    ->when([modeButton] { return !State::get<GameState>() && modeButton->isPressedForMillis(80); });
 
   //
   // GAME CONTROLLER PLAY MODE
