@@ -166,7 +166,7 @@
     },
     "ball-detection": {
       "min-area-px": 1,
-      "accepted-size-ratio": [0.4, 1.5],
+      "accepted-size-ratio": [0.2, 2.5],
       "enable-blob-merging": false,
       "max-field-edge-distance-px": 4
     },
