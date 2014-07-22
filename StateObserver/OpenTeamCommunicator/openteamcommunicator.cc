@@ -65,9 +65,27 @@ void OpenTeamCommunicator::observe(SequentialTimer& timer)
       auto const& agentFrameState = State::get<AgentFrameState>();
       if (agentFrameState)
       {
+        static Maybe<Eigen::Vector2d> stickyBallPos;
+        static Clock::Timestamp lastBallTime = 0;
+
         auto const& ballObservation = agentFrameState->getBallObservation();
         if (ballObservation.hasValue())
-          playerState.ballRelative = Vector2d(ballObservation->x(), ballObservation->y());
+        {
+          // We see the ball, so set it
+          playerState.ballRelative = (Vector2d)ballObservation->head<2>();
+          // Remember it for later
+          stickyBallPos = (Vector2d)ballObservation->head<2>();
+          lastBallTime = Clock::getTimestamp();
+        }
+        else
+        {
+          // No ball this cycle, but if within a short enough period, use the prior value
+          // TODO set playerState.ballConfidence
+          if (Clock::getSecondsSince(lastBallTime) < 5.0) // TODO magic number!!!
+            playerState.ballRelative = stickyBallPos;
+          else
+            stickyBallPos = Maybe<Vector2d>::empty();
+        }
       }
 
       auto const& worldFrameState = State::get<WorldFrameState>();
