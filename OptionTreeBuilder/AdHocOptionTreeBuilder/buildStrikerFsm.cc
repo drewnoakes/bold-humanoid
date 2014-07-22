@@ -97,7 +97,6 @@ auto isPerfectLineForAttack = []
   auto team = State::get<TeamState>();
   if (team && team->getKeeperState())
   {
-
     GoalLabel label = GoalLabel::Unknown;
 
     auto post1Pos = Average<Eigen::Vector2d>{};
@@ -107,19 +106,21 @@ auto isPerfectLineForAttack = []
 
     auto keeper = team->getKeeperState();
       
-    auto agentBallPos = agentFrame->getBallObservation();
     if (keeper && keeper->ballRelative.hasValue())
-      label = StationaryMapState::labelGoalByKeeperBallPosition(post1Pos, post2Pos,
-                                                                *keeper->ballRelative,
-                                                                agentBallPos.hasValue() ? Vector2d{agentBallPos->head<2>()} : Vector2d::Zero());
+    {
+      auto agentBallPos = agentFrame->getBallObservation();
+      label = StationaryMapState::labelGoalByKeeperBallPosition(
+        post1Pos,
+        post2Pos,
+        *keeper->ballRelative,
+        agentBallPos.hasValue() ? Vector2d{agentBallPos->head<2>()} : Vector2d::Zero());
+    }
       
     if (label == GoalLabel::Unknown)
       label = StationaryMapState::labelGoalByKeeperBallDistance(post1Pos, post2Pos, team->getKeeperBallSideEstimate());
     
     if (label == GoalLabel::Ours)
       return false;
-
-
   }
 
   // The goals must appear to either side of the ball
