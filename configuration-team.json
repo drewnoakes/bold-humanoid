@@ -389,7 +389,9 @@
       "max-speed-y": 20.0,
       "min-translation-speed-x": 4.0,
       "min-translation-speed-y": 0.0,
-      "turn-speed-a": 25.0
+      "turn-speed-a": 25.0,
+      "back-up-angle-scale": 0,
+      "back-up-max-distance": 0
     },
     "approach-ball": {
       "turn-speed-scale": 18.0,

@@ -386,7 +386,9 @@
       "max-speed-y":                 { "type": "double" },
       "min-translation-speed-x":     { "type": "double" },
       "min-translation-speed-y":     { "type": "double" },
-      "turn-speed-a":                { "type": "double" }
+      "turn-speed-a":                { "type": "double" },
+      "back-up-angle-scale":         { "type": "double" },
+      "back-up-max-distance":        { "type": "double" }
     },
     "approach-ball": {
       "turn-speed-scale":  { "type": "double" },

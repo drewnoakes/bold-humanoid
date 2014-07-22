@@ -43,6 +43,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   static Setting<double>* turnSpeedA           = Config::getSetting<double>("options.circle-ball.turn-speed-a");
   static Setting<double>* minTranslationSpeedX = Config::getSetting<double>("options.circle-ball.min-translation-speed-x");
   static Setting<double>* minTranslationSpeedY = Config::getSetting<double>("options.circle-ball.min-translation-speed-y");
+  static Setting<double>* backUpAngleScale     = Config::getSetting<double>("options.circle-ball.back-up-angle-scale");
+  static Setting<double>* backUpMaxDistance    = Config::getSetting<double>("options.circle-ball.back-up-max-distance");
 
   Vector2d observedBallPos = agentFrame->getBallObservation()->head<2>();
   Vector2d error = d_targetBallPos - observedBallPos;
@@ -72,6 +74,12 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
     // Try to keep forward distance stable
     y = -Math::lerp(error.y(), 0.0, 0.2, 0.0, maxSpeedY->getValue());
 //  y = -Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedYRotation->getValue();
+
+    // Walk backwards from the ball a little when turning
+    double backUpFactor = (atan(fabs(backUpAngleScale->getValue() * yawDiffRads)) / (M_PI/2.0));
+    ASSERT(backUpFactor >= 0);
+    ASSERT(backUpFactor <= 1);
+    y -= backUpFactor * backUpMaxDistance->getValue();
 
     // Turn to keep ball centered
     double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
