@@ -184,7 +184,8 @@
       "min-area-px": 10,
       "min-length-px": 4,
       "goalie-marker-height": 0.25,
-      "max-goalie-goal-dist": 1.0
+      "max-goalie-goal-dist": 1.0,
+      "enable-occlusion-check": true
     },
     "line-detection": {
       "enable": false,

@@ -216,13 +216,17 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
 }
 
 
-Polygon2d AgentFrameState::getOcclusionPoly() const
+Maybe<Polygon2d> AgentFrameState::getOcclusionPoly() const
 {
-  auto rays = getOcclusionRays();
+  return getOcclusionPoly(d_occlusionRays);
+}
+
+Maybe<Polygon2d> AgentFrameState::getOcclusionPoly(std::vector<OcclusionRay<double>> const& occlusionRays)
+{
   
   auto nearPointsVec = Polygon2d::PointVector{};
   auto farPointsVec = Polygon2d::PointVector{};
-  for (auto const& ray : rays)
+  for (auto const& ray : occlusionRays)
   {
     nearPointsVec.push_back(ray.near());
     farPointsVec.push_back(ray.far());
@@ -235,5 +239,8 @@ Polygon2d AgentFrameState::getOcclusionPoly() const
   for (auto const& p : farPointsVec)
     pointsVec.push_back(p);
 
-  return Polygon2d{pointsVec};
+  if (pointsVec.size() > 0)
+    return Polygon2d{pointsVec};
+  else 
+    return Maybe<Polygon2d>{};
 }

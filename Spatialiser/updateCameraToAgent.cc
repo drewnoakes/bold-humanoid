@@ -24,13 +24,36 @@ void Spatialiser::updateCameraToAgent()
       goals.emplace_back(*pos3d);
   }
 
+  // Project occlusion rays
+  auto cameraOcclusionRays = cameraFrame->getOcclusionRays();
+  vector<OcclusionRay<double>> occlusionRays;
+  for (uint i = 0; i < cameraOcclusionRays.size(); i++)
+  {
+    auto const& ray = cameraOcclusionRays[i];
+    auto const& p1 = findGroundPointForPixel(ray.near().cast<double>() + Vector2d(0.5,0.5));
+    auto const& p2 = findGroundPointForPixel(ray.far().cast<double>() + Vector2d(0.5,0.5));
+    if (p1.hasValue() && p2.hasValue())
+      occlusionRays.emplace_back(p1->head<2>(), p2->head<2>());
+  }
+
+  bool enableOcclusion = Config::getSetting<bool>("vision.player-detection.enable-occlusion-check")->getValue();
+  auto occlusionPoly = AgentFrameState::getOcclusionPoly(occlusionRays);
+
   // Project team mate observations
   std::vector<Vector3d> teamMates;
   for (auto const& teamMate : cameraFrame->getTeamMateObservations())
   {
     auto const& pos3d = findGroundPointForPixel(teamMate, goalieMarkerHeight);
     if (pos3d.hasValue())
-      teamMates.emplace_back(*pos3d);
+    {
+      bool validPlayer = true;
+      if (enableOcclusion)
+        if (occlusionPoly && !occlusionPoly->contains((*pos3d).head<2>()))
+          validPlayer = false;
+
+      if (validPlayer)
+        teamMates.emplace_back(*pos3d);
+    }
   }
 
   // Project observed lines
@@ -45,18 +68,6 @@ void Spatialiser::updateCameraToAgent()
 
   // Find line junctions
   auto lineJunctions = d_lineJunctionFinder->findLineJunctions(lineSegments);
-
-  // Project occlusion rays
-  auto cameraOcclusionRays = cameraFrame->getOcclusionRays();
-  vector<OcclusionRay<double>> occlusionRays;
-  for (uint i = 0; i < cameraOcclusionRays.size(); i++)
-  {
-    auto const& ray = cameraOcclusionRays[i];
-    auto const& p1 = findGroundPointForPixel(ray.near().cast<double>() + Vector2d(0.5,0.5));
-    auto const& p2 = findGroundPointForPixel(ray.far().cast<double>() + Vector2d(0.5,0.5));
-    if (p1.hasValue() && p2.hasValue())
-      occlusionRays.emplace_back(p1->head<2>(), p2->head<2>());
-  }
 
   // Determine observed field area polygon
   Polygon2d::PointVector vertices;

@@ -181,7 +181,8 @@
       "min-area-px":          { "type": "int", "min": 1, "max": 10000 },
       "min-length-px":        { "type": "int", "min": 1, "max": 100 },
       "goalie-marker-height": { "type": "double", "min": 0, "max": 0.7 },
-      "max-goalie-goal-dist": { "type": "double", "min": 0, "max": 2.5 }
+      "max-goalie-goal-dist": { "type": "double", "min": 0, "max": 2.5 },
+      "enable-occlusion-check": {"type" : "bool" }
     },
     "line-detection": {
       "enable":      { "type": "bool", "description": "Detect lines" },
