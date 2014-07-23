@@ -6,7 +6,7 @@ bool VisualCortex::canBlobBePlayer(Blob const& playerBlob, Vector2d& imagePos, V
   // Basic filtering
   //
 
-  // Ignore balls that are too small (avoid noise)
+  // Ignore blobs that are too small (avoid noise)
   // Also ignores blobs that were previously merged into another blob (zero area)
   if (playerBlob.area < unsigned(d_minPlayerAreaPixels->getValue()))
     return false;
