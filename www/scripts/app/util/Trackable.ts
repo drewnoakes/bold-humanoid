@@ -57,11 +57,11 @@ class Trackable<T>
         }
     }
 
-    public onchange(callback: (value: T)=>void)
+    public onchange(callback: (value: T)=>void): ICloseable
     {
         this.callbacks.push(callback);
 
-        return () => this.removeCallback(callback);
+        return { close: () => this.removeCallback(callback) };
     }
 }
 

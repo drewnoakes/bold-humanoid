@@ -107,7 +107,7 @@ class DrawbridgeModule extends Module
     {
         this.socket = new WebSocket("ws://localhost:8888", "drawbridge");
         this.socket.onmessage = msg => this.onMessage(JSON.parse(msg.data));
-        this.closeables.add(() => this.socket.close());
+        this.closeables.add({ close: () => this.socket.close() });
     }
 
     private onMessage(data: IDrawbridgeData)

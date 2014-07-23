@@ -66,7 +66,7 @@ class CommsModule extends Module
             }
         ));
 
-        this.closeables.add(() => this.chart.stop());
+        this.closeables.add({ close: () => this.chart.stop() });
     }
 
     private onDebugState(data: state.Debug)

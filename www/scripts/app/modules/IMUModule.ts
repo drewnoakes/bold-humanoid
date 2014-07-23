@@ -106,7 +106,7 @@ class IMUModule extends Module
             }
         ));
 
-        this.closeables.add(() => _.each(this.charts, chart => chart.stop()));
+        _.each(this.charts, chart => this.closeables.add({ close: () => chart.stop() }));
     }
 
     private buildLegend()
