@@ -7,6 +7,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "../util/Maybe.hh"
+#include "../Config/config.hh"
 
 namespace bold
 {
@@ -139,6 +140,11 @@ namespace bold
     cv::Mat capture(SequentialTimer& timer);
 
     void setSquashWidth(bool squash) { d_squash = squash; }
+
+    void setAutoWB(bool autowb) {
+      Setting<bool>* d_autowb = Config::getSetting<bool>("camera.settings.auto-wb");
+      d_autowb->setValue(autowb);
+    }
 
     void logFrameIntervalDetails() const;
 
