@@ -14,12 +14,12 @@
             "elbow": 2381,
             "hip-yaw": 2048,
             "hip-roll": 2052,
-            "hip-pitch": 1660,
-            "knee": 2646,
-            "ankle-pitch": 2409,
+            "hip-pitch": 1637,
+            "knee": 2653,
+            "ankle-pitch": 2389,
             "ankle-roll": 2057,
             "head-pan": 2048,
-            "head-tilt": 2161
+            "head-tilt": 2330
           }
         }
       ]
