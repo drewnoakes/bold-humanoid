@@ -161,7 +161,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   auto locateBallState = fsm->newState("locate-ball", { stopWalking, buildStationaryMap, locateBall });
   auto locateBallCirclingState = fsm->newState("locate-ball-circling", { searchBall });
   auto approachBallState = fsm->newState("approach-ball", { approachBall, lookAtBall });
-  auto directAttackState = fsm->newState("direct-attack", { approachBall, lookAtBall });
   auto atBallState = fsm->newState("at-ball", { stopWalking, buildStationaryMap, atBall });
   auto turnAroundBallState = fsm->newState("turn-around-ball", { circleBall });
   auto kickForwardsState = fsm->newState("kick-forwards", { stopWalking, lookAtFeet });
@@ -229,18 +228,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   approachBallState
     ->transitionTo(atBallState, "near-ball")
     ->when(ballIsStoppingDistance);
-
-  approachBallState
-    ->transitionTo(directAttackState, "good-line")
-    ->when(isPerfectLineForAttack);
-
-  directAttackState
-    ->transitionTo(kickForwardsState, "near-ball")
-    ->when(ballIsStoppingDistance);
-
-  directAttackState
-    ->transitionTo(locateBallState, "lost-ball")
-    ->when(ballLostConditionFactory);
 
   yieldState
     ->transitionTo(locateBallState, "resume")
