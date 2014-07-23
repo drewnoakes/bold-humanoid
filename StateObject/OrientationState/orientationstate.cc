@@ -13,6 +13,10 @@ OrientationState::OrientationState(Quaterniond const& quaternion)
 : d_quaternion(quaternion)
 {
   ASSERT(quaternion.w() != 0 || quaternion.x() != 0 || quaternion.y() != 0 || quaternion.z() != 0);
+  ASSERT(!::isnan(quaternion.w()));
+  ASSERT(!::isnan(quaternion.x()));
+  ASSERT(!::isnan(quaternion.y()));
+  ASSERT(!::isnan(quaternion.z()));
 
   Affine3d rotation(d_quaternion);
   Vector3d axisX1 = rotation.matrix().col(0).head<3>();
