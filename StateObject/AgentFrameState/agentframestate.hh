@@ -32,6 +32,7 @@ namespace bold
     std::vector<LineJunction, Eigen::aligned_allocator<LineJunction>> getObservedLineJunctions() const { return d_observedLineJunctions; }
     Maybe<Polygon2d> getVisibleFieldPoly() const { return d_visibleFieldPoly; }
     std::vector<OcclusionRay<double>> getOcclusionRays() const { return d_occlusionRays; }
+    Polygon2d getOcclusionPoly() const;
 
     bool isBallVisible() const { return d_ballObservation.hasValue(); }
     ulong getThinkCycleNumber() const { return d_thinkCycleNumber; }

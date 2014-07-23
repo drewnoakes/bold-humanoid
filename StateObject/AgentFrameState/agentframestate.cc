@@ -214,3 +214,26 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
   }
   writer.EndObject();
 }
+
+
+Polygon2d AgentFrameState::getOcclusionPoly() const
+{
+  auto rays = getOcclusionRays();
+  
+  auto nearPointsVec = Polygon2d::PointVector{};
+  auto farPointsVec = Polygon2d::PointVector{};
+  for (auto const& ray : rays)
+  {
+    nearPointsVec.push_back(ray.near());
+    farPointsVec.push_back(ray.far());
+  }
+  std::reverse(begin(nearPointsVec), end(nearPointsVec));
+
+  auto pointsVec = Polygon2d::PointVector{};
+  for (auto const& p : nearPointsVec)
+    pointsVec.push_back(p);
+  for (auto const& p : farPointsVec)
+    pointsVec.push_back(p);
+
+  return Polygon2d{pointsVec};
+}
