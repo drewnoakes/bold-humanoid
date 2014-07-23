@@ -2,6 +2,7 @@
 
 #include "../../Config/config.hh"
 #include "../../FieldMap/fieldmap.hh"
+#include "../../geometry/LineSegment/LineSegment2/linesegment2.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/TeamState/teamstate.hh"
 
@@ -96,21 +97,19 @@ void RadialOcclusionMap::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& w
 
 bool GoalEstimate::isTowards(double ballEndAngle) const
 {
-  bool hasLeft = false,
-       hasRight = false;
+  LineSegment2d kickPath(Vector2d::Zero(), Math::pointAtAngle(ballEndAngle + (M_PI/2.0), 1000.0));
+  LineSegment2d goalLine(d_post1Pos, d_post2Pos);
 
-  auto testSide = [&](Vector2d const& postPos)
-  {
-    if (Math::angleToPoint(postPos) > ballEndAngle)
-      hasRight = true;
-    else
-      hasLeft = true;
-  };
+  double goalEdgeAvoidRatio = 0.1;
 
-  testSide(d_post1Pos);
-  testSide(d_post2Pos);
+  double t;
+  double u;
+  auto intersection = kickPath.tryIntersect(goalLine, t, u);
 
-  return hasLeft && hasRight;
+  double ratio = u / FieldMap::getGoalY();
+
+
+  return intersection.hasValue() && ratio > goalEdgeAvoidRatio && ratio < (1 - goalEdgeAvoidRatio);
 }
 
 GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
