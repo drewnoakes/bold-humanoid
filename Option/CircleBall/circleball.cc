@@ -43,8 +43,8 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   static Setting<double>* turnSpeedA           = Config::getSetting<double>("options.circle-ball.turn-speed-a");
   static Setting<double>* minTranslationSpeedX = Config::getSetting<double>("options.circle-ball.min-translation-speed-x");
   static Setting<double>* minTranslationSpeedY = Config::getSetting<double>("options.circle-ball.min-translation-speed-y");
-  static Setting<double>* backUpAngleScale     = Config::getSetting<double>("options.circle-ball.back-up-angle-scale");
-  static Setting<double>* backUpMaxDistance    = Config::getSetting<double>("options.circle-ball.back-up-max-distance");
+  static Setting<double>* backUpDistance       = Config::getSetting<double>("options.circle-ball.back-up-distance");
+  static Setting<double>* backUpSpeed          = Config::getSetting<double>("options.circle-ball.back-up-speed");
 
   Vector2d observedBallPos = agentFrame->getBallObservation()->head<2>();
   Vector2d error = d_targetBallPos - observedBallPos;
@@ -67,23 +67,30 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   {
     // Too much angular error, so rotate
 
-    // Always walk sideways, but not if error becomes too big
-    x = (1.0 - Math::clamp(fabs(error.x()), 0.0, 1.0))
-      * (isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue());
+    double turnDistanceFromBall = backUpDistance->getValue();
 
-    // Try to keep forward distance stable
-    y = -Math::lerp(error.y(), 0.0, 0.2, 0.0, maxSpeedY->getValue());
-//  y = -Math::clamp(errorNorm.y(), 0.0, 0.4) * maxSpeedYRotation->getValue();
+    if (observedBallPos.y() < turnDistanceFromBall)
+    {
+      // Too close to ball to turn, so step backwards
+      y = -backUpSpeed->getValue();
+      x = 0;
+      a = 0;
+    }
+    else
+    {
+      // Far enough from ball to turn, so get to it
 
-    // Walk backwards from the ball a little when turning
-    double backUpFactor = (atan(fabs(backUpAngleScale->getValue() * yawDiffRads)) / (M_PI/2.0));
-    ASSERT(backUpFactor >= 0);
-    ASSERT(backUpFactor <= 1);
-    y -= backUpFactor * backUpMaxDistance->getValue();
+      // Always walk sideways, but not if error becomes too big
+      x = (1.0 - Math::clamp(fabs(error.x()), 0.0, 1.0))
+        * (isLeftTurn ? -maxSpeedX->getValue() : maxSpeedX->getValue());
 
-    // Turn to keep ball centered
-    double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
-    a = errorDir * Math::clamp(fabs(errorNorm.x()), 0.5, 1.0) * turnSpeedA->getValue();
+      // Try to keep forward distance stable
+      y = -Math::lerp(observedBallPos.y() - turnDistanceFromBall, 0.0, 0.2, 0.0, maxSpeedY->getValue());
+
+      // Turn to keep ball centered
+      double errorDir = errorNorm.x() > 0.0 ? 1.0 : -1.0;
+      a = errorDir * Math::clamp(fabs(errorNorm.x()), 0.5, 1.0) * turnSpeedA->getValue();
+    }
   }
   else
   {
