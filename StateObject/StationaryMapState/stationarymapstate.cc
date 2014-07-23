@@ -108,13 +108,6 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
 
   double ratio = u / FieldMap::getGoalY();
 
-  cout << "GoalEstimate::isTowards intersection=" << intersection << endl
-    << "  ballEndAngle=" << ballEndAngle << endl
-    << "  u=" << u << endl
-    << "  ratio=" << ratio << endl
-    << "  post1=" << d_post1Pos.transpose() << endl
-    << "  post2=" << d_post2Pos.transpose() << endl
-    << "  kickPath=" << kickPath.p2().transpose() << endl;
 
   return intersection.hasValue() && ratio > goalEdgeAvoidRatio && ratio < (1 - goalEdgeAvoidRatio);
 }
@@ -333,27 +326,9 @@ GoalLabel StationaryMapState::labelGoalByKeeperBallPosition(
 
   double dist = maxKeeperBallDistance->getValue();
 
-  cout << "labelGoalByKeeperBallPosition" << endl
-    << "  post1Pos=" << post1Pos.getAverage().transpose() << endl
-    << "  post2Pos=" << post2Pos.getAverage().transpose() << endl
-    << "  agentBallPos=" << agentBallPos.transpose() << endl
-    << "  keeperBallPos=" << keeperBallPos.transpose() << endl
-    << "  keeperBallPosWorldFrame=" << keeperBallPosWorldFrame.transpose() << endl
-    << "  ballPosIfTheirs=" << ballPosIfTheirs.transpose() << endl
-    << "  ballPosIfOurs=" << ballPosIfOurs.transpose() << endl
-    << "  errorIfOurs=" << errorIfOurs << endl
-    << "  errorIfTheirs=" << errorIfTheirs << endl
-    << "  maxKeeperBallDistance=" << dist << endl
-    << "  fabs(errorIfOurs-errorIfTheirs)=" << (fabs(errorIfOurs - errorIfTheirs)) << endl;
-
   // If the two errors are too similar, then we cannot decide
   if (fabs(errorIfOurs - errorIfTheirs) < dist)
-  {
-    cout << "  ambiguous" << endl;
     return GoalLabel::Unknown;
-  }
-
-  cout << "  label=" << getGoalLabelName(errorIfOurs < errorIfTheirs ? GoalLabel::Ours : GoalLabel::Theirs) << endl;
 
   // Whichever has the lesser error
   return errorIfOurs < errorIfTheirs
@@ -395,8 +370,6 @@ GoalLabel StationaryMapState::labelGoal(
   Average<Eigen::Vector2d> const& post2Pos,
   Maybe<Eigen::Vector2d> const& agentBallPos)
 {
-  cout << "-------------------------" << endl;
-
   GoalLabel label = GoalLabel::Unknown;
 
   auto team = State::get<TeamState>();
@@ -407,21 +380,12 @@ GoalLabel StationaryMapState::labelGoal(
     if (keeper && keeper->ballRelative.hasValue())
       label = labelGoalByKeeperBallPosition(post1Pos, post2Pos, *keeper->ballRelative, agentBallPos.hasValue() ? *agentBallPos : Vector2d::Zero());
 
-    if (label != GoalLabel::Unknown)
-      cout << "labelGoal - labelGoalByKeeperBallPosition: " << getGoalLabelName(label) << endl;
-
     if (label == GoalLabel::Unknown)
       label = labelGoalByKeeperBallDistance(post1Pos, post2Pos, team->getKeeperBallSideEstimate());
-
-    if (label != GoalLabel::Unknown)
-      cout << "labelGoal - labelGoalByKeeperBallDistance: " << getGoalLabelName(label) << endl;
   }
 
   if (label == GoalLabel::Unknown)
     label = labelGoalByKeeperObservations(post1Pos, post2Pos, d_keeperEstimates);
-
-  if (label != GoalLabel::Unknown)
-    cout << "labelGoal - labelGoalByKeeperObservations: " << getGoalLabelName(label) << endl;
 
   return label;
 }
@@ -460,10 +424,7 @@ void StationaryMapState::selectImmediateKick()
     [](Average<Vector2d> b) { return b.getCount() >= BallSamplesNeeded && b.getAverage().norm() < 0.5; });
 
   if (ball == d_ballEstimates.end())
-  {
-    cout << "selectImmediateKick -- no ball" << endl;
     return;
-  }
 
   auto goal = std::find_if(
     d_goalEstimates.begin(),
@@ -471,10 +432,7 @@ void StationaryMapState::selectImmediateKick()
     [](GoalEstimate g) { return g.getLabel() != GoalLabel::Ours; });
 
   if (goal == d_goalEstimates.end())
-  {
-    cout << "selectImmediateKick -- no goal" << endl;
     return;
-  }
 
   Vector2d ballPosAgent = ball->getAverage().head<2>();
 
@@ -485,10 +443,7 @@ void StationaryMapState::selectImmediateKick()
 
     // If no end position, then this kick is not possible given the ball's current position
     if (!ballEndPosAgent.hasValue())
-    {
-      cout << "selectImmediateKick -- kick " << kick->getId() << " not possible" << endl;
       continue;
-    }
 
     double ballEndAngle = Math::angleToPoint(*ballEndPosAgent);
 
@@ -500,10 +455,6 @@ void StationaryMapState::selectImmediateKick()
     // TODO the end pos doesn't necessarily have to be between the goals -- sometimes just nearer the goal is enough
     if (goal->isTowards(ballEndAngle))
     {
-      cout << "TOWARDS GOAL " << endl
-           << "  ballEndAngle=" << ballEndAngle << endl
-           << "  goal.label=" << getGoalLabelName(goal->getLabel()) << endl;
-
       // Check that there's no obstruction before the goal line -- blocks inside the goal are fine
       double occlusionDistance = d_occlusionMap.getOcclusionDistance(ballEndAngle);
       double goalLineDistance = getGoalLineDistance(*goal, *ballEndPosAgent);
@@ -519,14 +470,6 @@ void StationaryMapState::selectImmediateKick()
           << " occlusionDist=" << occlusionDistance
           << " goalLineDist=" << goalLineDistance;
       }
-      else
-      {
-        cout << "selectImmediateKick -- kick " << kick->getId() << " occluded" << endl;
-      }
-    }
-    else
-    {
-      cout << "selectImmediateKick -- kick " << kick->getId() << " not towards goal" << endl;
     }
 
     d_possibleKicks.emplace_back(kick, ballEndPosAgent.value(), isOnTarget);
