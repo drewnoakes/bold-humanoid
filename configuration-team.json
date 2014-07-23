@@ -9,6 +9,7 @@
     "send-period-seconds": 0.1
   },
   "drawbridge": {
+    "enabled": false,
     "udp-port": 8074,
     "websocket-port": 8888
   },

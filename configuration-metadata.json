@@ -9,6 +9,7 @@
     "send-period-seconds": { "type": "double", "min": 0.01, "max": 5 }
   },
   "drawbridge": {
+    "enabled":        { "type": "bool", "readonly": true },
     "udp-port":       { "type": "int", "readonly": true, "min": 1024, "max": 65535 },
     "websocket-port": { "type": "int", "readonly": true, "min": 1024, "max": 65535 }
   },

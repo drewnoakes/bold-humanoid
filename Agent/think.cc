@@ -110,7 +110,7 @@ void Agent::think()
   //
   // Send a message for drawbridge use within matches, containing status of the agent.
   //
-  if (d_cycleNumber % 30 == 0)
+  if (d_drawBridgeComms && d_cycleNumber % 30 == 0)
     d_drawBridgeComms->publish();
 
   // Flush out any drawing commands
