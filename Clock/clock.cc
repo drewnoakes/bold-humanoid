@@ -1,15 +1,11 @@
 #include "clock.hh"
 
 #include "../util/assert.hh"
-
-#ifdef INCLUDE_ASSERTIONS
 #include "../util/log.hh"
-#endif
 
 #include <string.h>
 #include <sys/time.h>
 #include <math.h>
-#include <sstream>
 
 using namespace bold;
 
