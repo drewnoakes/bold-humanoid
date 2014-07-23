@@ -42,7 +42,7 @@
       "accepted-width-ratio": [0.1, 5.0]
     },
     "player-detection": {
-      "enable": false
+      "enable": true
     }
 
   }
