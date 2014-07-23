@@ -314,11 +314,16 @@ GoalLabel StationaryMapState::labelGoalByKeeperBallPosition(
 {
   static auto maxKeeperBallDistance = Config::getSetting<double>("vision.goal-detection.label.max-keeper-ball-dist");
 
+  // Convert keeper's agent frame observation to world frame
+  Vector2d keeperBallPosWorldFrame(
+    (-FieldMap::getFieldLengthX() / 2.0) + keeperBallPos.y(),
+    -keeperBallPos.x());
+
   Vector2d ballPosIfTheirs = estimateWorldPositionForPoint(post1Pos.getAverage(), post2Pos.getAverage(), agentBallPos, GoalLabel::Theirs);
   Vector2d ballPosIfOurs = estimateWorldPositionForPoint(post1Pos.getAverage(), post2Pos.getAverage(), agentBallPos, GoalLabel::Ours);
 
-  double errorIfOurs   = (keeperBallPos - ballPosIfOurs).norm();
-  double errorIfTheirs = (keeperBallPos - ballPosIfTheirs).norm();
+  double errorIfOurs   = (keeperBallPosWorldFrame - ballPosIfOurs).norm();
+  double errorIfTheirs = (keeperBallPosWorldFrame - ballPosIfTheirs).norm();
 
   double dist = maxKeeperBallDistance->getValue();
 
