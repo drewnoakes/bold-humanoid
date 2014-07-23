@@ -67,9 +67,15 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("angleSpeed").Double(speedScaleDueToAngle);
 
-  double xSpeed = Math::lerp(speedScaleDueToDistance * speedScaleDueToAngle,
+
+  double xSpeedScale = speedScaleDueToDistance * speedScaleDueToAngle;
+  ASSERT(xSpeedScale >= 0.0);
+  ASSERT(xSpeedScale <= 1.0);
+  double xSpeed = Math::lerp(xSpeedScale,
                              d_minForwardSpeed->getValue(),
                              d_maxForwardSpeed->getValue());
+
+  ASSERT(xSpeed >= d_minForwardSpeed->getValue());
 
   // unspecified units
   double turnSpeed = targetAngleRads * d_turnScale->getValue();
@@ -142,6 +148,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
     if (minDistInLane < brakeDist)
       xSpeed *= max(minDistInLane / brakeDist, minForwardSpeedScale->getValue());
   }
+
+  ASSERT(xSpeed <= d_maxForwardSpeed->getValue());
 
   d_walkModule->setMoveDir(xSpeed, ySpeed);
   d_walkModule->setTurnAngle(turnSpeed);
