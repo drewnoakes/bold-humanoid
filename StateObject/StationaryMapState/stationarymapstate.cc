@@ -417,7 +417,7 @@ void StationaryMapState::selectImmediateKick()
   auto ball = std::find_if(
     d_ballEstimates.begin(),
     d_ballEstimates.end(),
-    [](Average<Vector2d> b) { return b.getCount() > BallSamplesNeeded && b.getAverage().norm() < 0.5; });
+    [](Average<Vector2d> b) { return b.getCount() >= BallSamplesNeeded && b.getAverage().norm() < 0.5; });
 
   if (ball == d_ballEstimates.end())
     return;
@@ -425,7 +425,7 @@ void StationaryMapState::selectImmediateKick()
   auto goal = std::find_if(
     d_goalEstimates.begin(),
     d_goalEstimates.end(),
-    [](GoalEstimate g) { return g.getLabel() == GoalLabel::Theirs; });
+    [](GoalEstimate g) { return g.getLabel() != GoalLabel::Ours; });
 
   if (goal == d_goalEstimates.end())
     return;
