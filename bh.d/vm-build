@@ -18,7 +18,7 @@ git fetch --multiple bert \
  && git submodule init \
  && git submodule update \
  && jsonlint -q *.json \
- && make -j 2 boldhumanoid
+ && make -j 2 boldhumanoid typescript
 
 # if there was an error, propagate it
 if [[ $? -ne 0 ]] ; then
