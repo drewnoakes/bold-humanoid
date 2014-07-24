@@ -62,17 +62,21 @@ Option::OptionVector WalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer
 
   writer.String("angleSpeed").Double(speedScaleDueToAngle);
 
-  double xSpeed = Math::lerp(speedScaleDueToDistance * speedScaleDueToAngle * d_targetPos.y(),
+  double xSpeedScale = Math::clamp(speedScaleDueToDistance * speedScaleDueToAngle * d_targetPos.y(), 0.0, 1.0);
+  double ySpeedScale = Math::clamp(speedScaleDueToDistance * speedScaleDueToAngle * d_targetPos.x(), 0.0, 1.0);
+
+  double xSpeed = Math::lerp(xSpeedScale,
                              d_minForwardSpeed->getValue(),
                              d_maxForwardSpeed->getValue());
 
-  double ySpeed = -Math::lerp(speedScaleDueToDistance * speedScaleDueToAngle * d_targetPos.x(),
+  double ySpeed = -Math::lerp(ySpeedScale,
                              d_minSidewaysSpeed->getValue(),
                              d_maxSidewaysSpeed->getValue());
 
   // unspecified units
   double turnSpeed = faceAngle * d_turnScale->getValue();
 
+  // x is forward, y is left
   d_walkModule->setMoveDir(xSpeed, ySpeed);
   d_walkModule->setTurnAngle(turnSpeed);
 
