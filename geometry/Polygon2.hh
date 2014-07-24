@@ -134,4 +134,22 @@ namespace bold
   typedef Polygon2<int> Polygon2i;
   typedef Polygon2<float> Polygon2f;
   typedef Polygon2<double> Polygon2d;
+
+  template<typename T>
+  Maybe<Polygon2<T>> make_polygon2(typename Polygon2<T>::PointVector const& vertices)
+  {
+      if (vertices.size() < 3)
+      {
+        log::error("Polygon2::Polygon2") << "Cannot create a polygon with number of vertices: " << vertices.size();
+        return Maybe<Polygon2<T>>{};
+      }
+      return Polygon2<T>{vertices};
+  }
+
+  inline Maybe<Polygon2d> make_polygon2d(typename Polygon2d::PointVector const& vertices)
+  {
+    return make_polygon2<double>(vertices);
+  }
+
+
 }

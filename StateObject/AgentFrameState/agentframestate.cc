@@ -239,8 +239,5 @@ Maybe<Polygon2d> AgentFrameState::getOcclusionPoly(std::vector<OcclusionRay<doub
   for (auto const& p : farPointsVec)
     pointsVec.push_back(p);
 
-  if (pointsVec.size() > 0)
-    return Polygon2d{pointsVec};
-  else 
-    return Maybe<Polygon2d>{};
+  return make_polygon2d(pointsVec);
 }
