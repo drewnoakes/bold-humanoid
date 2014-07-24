@@ -50,7 +50,7 @@ Option::OptionVector OdoWalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuf
     .Double(d_progress.translation().x())
     .Double(d_progress.translation().y())
     .Double(d_progress.matrix().diagonal().sum())
-    .EndArray(2);
+    .EndArray(3);
 
   // target pos in current agent frame
   Vector2d stillToGo = (d_progress * d_targetPos).head<2>();
