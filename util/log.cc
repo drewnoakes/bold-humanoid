@@ -13,25 +13,25 @@ using namespace std;
 
 LogLevel log::minLevel = LogLevel::Verbose;
 
-std::string getLogTimestamp()
+void writeLogTimestamp(ostream& o)
 {
   time_t now = time(0);
   tm tstruct = *localtime(&now);
   char buf[80];
   // http://en.cppreference.com/w/cpp/chrono/c/strftime
   strftime(buf, sizeof(buf), "%X", &tstruct);
-  return buf;
+  o << buf;
 }
 
-std::string getLevelShortName(bold::LogLevel level)
+void writeLevelShortName(ostream& o, bold::LogLevel level)
 {
   switch (level)
   {
-    case LogLevel::Verbose: return "vrb";
-    case LogLevel::Info:    return "inf";
-    case LogLevel::Warning: return "WRN";
-    case LogLevel::Error:   return "ERR";
-    default:                return "???";
+    case LogLevel::Verbose: o << "vrb"; break;
+    case LogLevel::Info:    o << "inf"; break;
+    case LogLevel::Warning: o << "WRN"; break;
+    case LogLevel::Error:   o << "ERR"; break;
+    default:                o << "???"; break;
   }
 }
 
@@ -64,7 +64,10 @@ log::~log()
 
   if (isRedirected)
   {
-    ostream << getLogTimestamp() << " " << getLevelShortName(d_level) << " ";
+    writeLogTimestamp(ostream);
+    ostream << " ";
+    writeLevelShortName(ostream, d_level);
+    ostream << " ";
 
     if (d_scope.size())
       ostream << "[" << d_scope << "] ";
