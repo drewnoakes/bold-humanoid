@@ -1,9 +1,11 @@
 #include "walkto.hh"
 
 #include "../../Config/config.hh"
+#include "../../Drawing/drawing.hh"
 
 using namespace std;
 using namespace bold;
+using namespace bold::Colour;
 using namespace Eigen;
 
 WalkTo::WalkTo(string const& id, shared_ptr<WalkModule> walkModule)
@@ -28,6 +30,9 @@ Option::OptionVector WalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer
 {
   ASSERT(d_upperTurnLimitDegs->getValue() > d_lowerTurnLimitDegs->getValue());
   ASSERT(d_brakeDistance->getValue() != 0);
+
+  Draw::circle(Frame::Agent, d_targetPos, 0.1, bgr::darkBlue, 0.8, 1.0);
+  Draw::line(Frame::Agent, Vector2d::Zero(), d_targetPos, bgr::darkBlue, 0.8, 1.0);
 
   double walkDist = d_targetPos.norm();
 
