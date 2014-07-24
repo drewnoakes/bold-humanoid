@@ -2,7 +2,7 @@
   "inherits": "configuration-team.json",
 
   "team-number": 3,
-  "team-colour" : 2,
+  "team-colour" : 1,
   "camera": {
     "settings": {
       "auto-wb": false,
