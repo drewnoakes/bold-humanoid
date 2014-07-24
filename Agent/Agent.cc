@@ -36,6 +36,8 @@ Agent::Agent()
 
   registerStateTypes();
 
+  log::logGameState = true;
+
   d_buttonObserver = make_shared<ButtonObserver>();
 
   auto debugControl = make_shared<DebugControl>();

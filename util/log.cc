@@ -2,12 +2,16 @@
 
 #include <unistd.h>
 
+#include "../StateObject/GameState/gamestate.hh"
+#include "../State/state.hh"
+
 #include "ccolor.hh"
 
 using namespace bold;
 using namespace std;
 
 LogLevel log::minLevel = LogLevel::Verbose;
+bool log::logGameState = false;
 
 void writeLogTimestamp(ostream& o)
 {
@@ -16,18 +20,68 @@ void writeLogTimestamp(ostream& o)
   char buf[80];
   // http://en.cppreference.com/w/cpp/chrono/c/strftime
   strftime(buf, sizeof(buf), "%X", &tstruct);
-  o << buf;
+  o << buf << " ";
+}
+
+void writeGameState(ostream& o)
+{
+  // Ensure the game state has been registered
+  if (!log::logGameState)
+    return;
+
+  auto game = State::get<GameState>();
+
+  if (!game)
+    return;
+
+  auto result = game->getGameResult();
+  if (result != GameResult::Undecided)
+  {
+    o << getGameResultName(result)
+      << " "
+      << (int)game->getMyTeam().getTeamNumber() << "v" << (int)game->getOpponentTeam().getTeamNumber()
+      << " "
+      << (int)game->getMyTeam().getScore() << ":" << (int)game->getOpponentTeam().getScore();
+  }
+  else
+  {
+    auto mode = game->getPlayMode();
+    o << (int)game->getMyTeam().getTeamNumber() << "v" << (int)game->getOpponentTeam().getTeamNumber()
+      << " "
+      << (int)game->getMyTeam().getScore() << ":" << (int)game->getOpponentTeam().getScore()
+      << " "
+      << getPlayModeName(mode)
+      << " ";
+    if (game->isPenaltyShootout())
+    {
+      o << "penalties ";
+    }
+    else
+    {
+      o << (game->isFirstHalf() ? "first" : "second");
+      if (game->isOvertime())
+        o << "-extra";
+      o << " ";
+    }
+
+    o << game->getSecondsRemaining();
+    auto secondary = game->getSecondaryTime();
+    if (secondary != 0)
+      o << "/" << secondary;
+  }
+
+  o << " ";
 }
 
 void writeLevelShortName(ostream& o, bold::LogLevel level)
 {
   switch (level)
   {
-    case LogLevel::Verbose: o << "vrb"; break;
-    case LogLevel::Info:    o << "inf"; break;
-    case LogLevel::Warning: o << "WRN"; break;
-    case LogLevel::Error:   o << "ERR"; break;
-    default:                o << "???"; break;
+    case LogLevel::Verbose: o << "vrb "; break;
+    case LogLevel::Info:    o << "inf "; break;
+    case LogLevel::Warning: o << "WRN "; break;
+    case LogLevel::Error:   o << "ERR "; break;
+    default:                o << "??? "; break;
   }
 }
 
@@ -61,9 +115,8 @@ log::~log()
   if (isRedirected)
   {
     writeLogTimestamp(ostream);
-    ostream << " ";
+    writeGameState(ostream);
     writeLevelShortName(ostream, d_level);
-    ostream << " ";
 
     if (d_scope.size())
       ostream << "[" << d_scope << "] ";

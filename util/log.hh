@@ -47,6 +47,7 @@ namespace bold
 
   public:
     static LogLevel minLevel;
+    static bool logGameState;
 
     static log info()    { return log(LogLevel::Info); }
     static log verbose() { return log(LogLevel::Verbose); }
