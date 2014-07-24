@@ -6,7 +6,6 @@
 #include "../../Option/SequenceOption/sequenceoption.hh"
 #include "../../Option/StopWalking/stopwalking.hh"
 #include "../../StateObserver/ButtonObserver/buttonobserver.hh"
-#include "../../Camera/camera.hh"
 
 using namespace bold;
 using namespace std;
@@ -35,12 +34,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPauseStateFsm(Agent* agent, s
     agent->getBehaviourControl()->setPlayerActivity(PlayerActivity::Waiting);
     agent->getBehaviourControl()->setPlayerStatus(PlayerStatus::Paused);
     agent->getHeadModule()->moveToHome();
-    agent->getCamera()->setAutoWB(true);
-  });
-
-  unpausedState->onEnter.connect([agent]
-  {
-    agent->getCamera()->setAutoWB(true);
   });
 
   // TRANSITIONS
