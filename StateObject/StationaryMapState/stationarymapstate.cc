@@ -100,8 +100,6 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
   LineSegment2d kickPath(Vector2d::Zero(), Math::pointAtAngle(ballEndAngle + (M_PI/2.0), 1000.0));
   LineSegment2d goalLine(d_post1Pos, d_post2Pos);
 
-  double goalEdgeAvoidRatio = 0.1;
-
   double t;
   double u;
   auto intersection = kickPath.tryIntersect(goalLine, t, u);
@@ -109,7 +107,7 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
   double ratio = u / FieldMap::getGoalY();
 
 
-  return intersection.hasValue() && ratio > goalEdgeAvoidRatio && ratio < (1 - goalEdgeAvoidRatio);
+  return intersection.hasValue();
 }
 
 GoalEstimate GoalEstimate::estimateOppositeGoal(GoalLabel label) const
