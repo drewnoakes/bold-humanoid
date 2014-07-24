@@ -1,12 +1,8 @@
 #include "log.hh"
 
 #include <unistd.h>
-#include <iostream>
-#include <stdio.h>
-#include <time.h>
 
 #include "ccolor.hh"
-#include "assert.hh"
 
 using namespace bold;
 using namespace std;
