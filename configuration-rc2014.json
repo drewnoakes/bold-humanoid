@@ -29,7 +29,8 @@
   },
   "hardware": {
     "leds": {
-        "enable-eyes": false
+      "enable-eyes": false,
+      "enable-forehead": false
     }
   },
   "vision": {
