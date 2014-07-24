@@ -23,6 +23,7 @@
   "world": {
     "ball-diameter": 0.1
   },
+
   "spatialiser": {
     "use-orientation": false
   },
@@ -44,6 +45,10 @@
     "player-detection": {
       "enable": true
     }
-
+  },
+  "options": {
+    "approach-ball": {
+      "max-forward-speed": 40.0
+    }
   }
 }
