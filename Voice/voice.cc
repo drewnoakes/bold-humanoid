@@ -87,19 +87,27 @@ void Voice::sayCallback(SpeechTask task)
 
   if (!d_initialised)
   {
-    espeak_Initialize(
+    int res = espeak_Initialize(
       AUDIO_OUTPUT_SYNCH_PLAYBACK, // plays audio data asynchronously
       500,                         // length of buffers for synth function, in ms
       nullptr,                     // dir containing espeak-data, null for default
       0);                          // options are mostly for phoneme callbacks, so 0
 
-    const char* path;
-    auto version = espeak_Info(&path);
-    log::verbose("Voice::Voice") << "espeak " << version << "(" << path << ")";
+    if (res == -1)
+    {
+      log::error("Voice::sayCallback") << "Error initialising libespeak -- ignoring SpeechTask";
+      return;
+    }
+    else
+    {
+      const char *path;
+      auto version = espeak_Info(&path);
+      log::verbose("Voice::Voice") << "espeak " << version << "(" << path << ")";
 
-    espeak_SetParameter(espeakPUNCTUATION, espeakPUNCT_NONE, 0);
+      espeak_SetParameter(espeakPUNCTUATION, espeakPUNCT_NONE, 0);
 
-    d_initialised = true;
+      d_initialised = true;
+    }
   }
 
   int voiceId = d_name->getValue();
