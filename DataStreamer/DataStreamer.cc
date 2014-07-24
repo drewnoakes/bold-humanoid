@@ -131,7 +131,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
         // These should only be changed by websocket users
         //ASSERT(ThreadUtil::isDataStreamerThread());
         // TODO: quick workaround
-        if(!ThreadUtil::isDataStreamerThread());
+        if(!ThreadUtil::isDataStreamerThread(false));
           return;
         
         if (d_controlSessions.size() == 0)
