@@ -507,6 +507,8 @@ void StationaryMapState::calculateTurnAndKick()
 
     log::info("StationaryMapState::calculateTurnAndKick") << "Evaluate goal at " << goal.getPost1Pos().transpose() << " to " << goal.getPost2Pos().transpose();
 
+    double farthestOGR = 0.0;
+
     // Find desirable target positions
     vector<Vector2d> targetPositions = {
       goal.getMidpoint(0.2),
@@ -518,34 +520,35 @@ void StationaryMapState::calculateTurnAndKick()
       goal.getMidpoint(0.8)
     };
 
-    for (shared_ptr<Kick const> const& kick : Kick::getAll())
+    for (Vector2d const& targetPosition : targetPositions)
     {
-      Vector2d ballPos = kick->getIdealBallPos();
-      Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
-      ASSERT(endPos.hasValue());
-      double angle = Math::angleToPoint(*endPos);
-      for (Vector2d const& targetPosition : targetPositions)
+      double targetAngle = Math::angleToPoint(targetPosition);
+
+      // Check that there's no obstruction before the goal line -- blocks inside the goal are fine
+      double occlusionDistance = d_occlusionMap.getOcclusionDistance(targetAngle);
+      double goalLineDistance = getGoalLineDistance(goal, targetPosition);
+
+      // TODO the entire ball must actually cross the line, not just its midpoint (add FieldMap::getBallDiameter() to denominator and test)
+      double occlusionGoalRatio = min(1.0, occlusionDistance / goalLineDistance);
+      ASSERT(occlusionGoalRatio >= 0);
+
+      for (shared_ptr<Kick const> const& kick : Kick::getAll())
       {
-        double targetAngle = Math::angleToPoint(targetPosition);
+        Vector2d ballPos = kick->getIdealBallPos();
+        Maybe<Vector2d> endPos = kick->estimateEndPos(ballPos);
+        ASSERT(endPos.hasValue());
 
-        // Check that there's no obstruction before the goal line -- blocks inside the goal are fine
-        double occlusionDistance = d_occlusionMap.getOcclusionDistance(targetAngle);
-        double goalLineDistance = getGoalLineDistance(goal, targetPosition);
+        double angle = Math::angleToPoint(*endPos);
 
-        // TODO the entire ball must actually cross the line, not just its midpoint
-        if (occlusionDistance < goalLineDistance)
+        if (occlusionGoalRatio >= farthestOGR && fabs(closestAngle) > fabs(angle - targetAngle))
         {
-          log::info("StationaryMapState::calculateTurnAndKick") << "Obstacle blocks kick " << kick->getId() << " at angle " << round(Math::radToDeg(targetAngle));
-          continue;
-        }
-
-        if (fabs(closestAngle) > fabs(angle - targetAngle))
-        {
+          farthestOGR = occlusionGoalRatio;
           closestAngle = angle - targetAngle;
+
           closestBallPos = ballPos;
           turnForKick = kick;
           foundTurn = true;
-          log::info("StationaryMapState::calculateTurnAndKick") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos->transpose() << " best yet";
+          log::info("StationaryMapState::calculateTurnAndKick") << "Turn " << Math::radToDeg(-closestAngle) << " degrees for '" << kick->getId() << "' to kick ball at " << closestBallPos.transpose() << " at " << Math::radToDeg(targetAngle) << " degrees to " << endPos->transpose() << " and occlusion/goal of " << occlusionGoalRatio << " is best yet";
         }
       }
     }
