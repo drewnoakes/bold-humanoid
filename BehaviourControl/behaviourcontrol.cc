@@ -69,7 +69,7 @@ void BehaviourControl::setPlayMode(robocup::PlayMode playMode)
     return;
   if (d_playModeSetThisCycle)
   {
-    log::warning("BehaviourControl::setPlayMode") << "PlayMode set multiple times during think cycle, with values " << getPlayModeString(d_playMode) << " and " << getPlayModeString(playMode);
+    log::warning("BehaviourControl::setPlayMode") << "PlayMode set multiple times during think cycle, with values " << getPlayModeName(d_playMode) << " and " << getPlayModeName(playMode);
     ASSERT(false);
   }
   d_playMode = playMode;

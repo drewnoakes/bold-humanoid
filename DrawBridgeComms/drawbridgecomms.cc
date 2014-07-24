@@ -130,7 +130,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
       writer.String("game");
       writer.StartObject();
       {
-        writer.String("mode").String(getPlayModeString(game->getPlayMode()).c_str());
+        writer.String("mode").String(getPlayModeName(game->getPlayMode()).c_str());
         writer.String("age").Uint(static_cast<unsigned>(game->getAgeMillis()));
       }
       writer.EndObject();

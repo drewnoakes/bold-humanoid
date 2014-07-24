@@ -42,7 +42,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("playMode").String(getPlayModeString(getPlayMode()).c_str());
+    writer.String("playMode").String(getPlayModeName(getPlayMode()).c_str());
     writer.String("packet").Uint(getPacketNumber());
     writer.String("playerPerTeam").Uint(getPlayersPerTeam());
     writer.String("isFirstHalf").Bool(isFirstHalf());
@@ -75,7 +75,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
               if (player.getPenaltyType() == PenaltyType::NONE) {
                 writer.Null();
               } else {
-                writer.String(getPenaltyTypeString(player.getPenaltyType()).c_str());
+                writer.String(getPenaltyTypeName(player.getPenaltyType()).c_str());
 
                 writer.String("penaltySecondsRemaining");
                 writer.Uint(player.getSecondsUntilPenaltyLifted());

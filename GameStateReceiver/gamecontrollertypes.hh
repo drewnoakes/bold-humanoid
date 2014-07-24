@@ -23,7 +23,7 @@ namespace robocup
     FINISHED = 4
   };
 
-  inline std::string getPlayModeString(PlayMode playMode)
+  inline std::string getPlayModeName(PlayMode playMode)
   {
     switch (playMode)
     {
@@ -45,7 +45,7 @@ namespace robocup
     TIMEOUT = 3
   };
 
-  inline std::string getExtraStateString(ExtraState extraState)
+  inline std::string getExtraStateName(ExtraState extraState)
   {
     switch (extraState)
     {
@@ -71,7 +71,7 @@ namespace robocup
     MANUAL = 15
   };
 
-  inline std::string getPenaltyTypeString(PenaltyType penaltyType)
+  inline std::string getPenaltyTypeName(PenaltyType penaltyType)
   {
     switch (penaltyType)
     {
