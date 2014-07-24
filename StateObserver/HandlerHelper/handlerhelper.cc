@@ -23,7 +23,7 @@ void HandlerHelper::observeTyped(shared_ptr<GameState const> const& state, Seque
 
   // Announce when our penalty period is over, in case the assistant referee has failed to unpenalise us
   auto const& myPlayerInfo = state->getMyPlayerInfo();
-  if (myPlayerInfo.hasPenalty())
+  if (myPlayerInfo.hasPenalty() && myPlayerInfo.getPenaltyType() != robocup::PenaltyType::SUBSTITUTE)
   {
     if (myPlayerInfo.getSecondsUntilPenaltyLifted() == 0)
     {
