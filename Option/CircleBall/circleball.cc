@@ -97,7 +97,7 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
     // Angle is fine, position for kick
     a = 0;
     x = -Math::lerp(error.x() / 0.2, minTranslationSpeedX->getValue(), maxSpeedX->getValue());
-    y = -Math::lerp(error.y() / 0.2, minTranslationSpeedY->getValue(), maxSpeedY->getValue());
+    y = -Math::lerp((error.y() + fabs(error.x())) / 0.2, minTranslationSpeedY->getValue(), maxSpeedY->getValue());
   }
 
   x = Math::clamp(x, -maxSpeedX->getValue(), maxSpeedX->getValue());
