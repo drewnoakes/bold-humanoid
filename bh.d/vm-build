@@ -18,6 +18,7 @@ git fetch --multiple bert \
  && git submodule init \
  && git submodule update \
  && jsonlint -q *.json \
+ && touch Version/version.cc Version/version.cc.in \
  && make -j 2 boldhumanoid typescript
 
 # if there was an error, propagate it
