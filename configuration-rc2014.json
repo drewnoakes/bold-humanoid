@@ -27,7 +27,11 @@
   "spatialiser": {
     "use-orientation": false
   },
-
+  "hardware": {
+    "leds": {
+        "enable-eyes": false
+    }
+  },
   "vision": {
     "pixel-labels": {
         "ball": { "hue": [0, 15], "sat": [160, 255], "val": [90, 190] },
