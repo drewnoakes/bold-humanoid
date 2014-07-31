@@ -841,28 +841,33 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Animator.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/color.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/constants.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/control.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/BodyFigure.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/Button.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/Checkbox.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/ColorPicker.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/HeadControls.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/HsvRangeEditor.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/Legend.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/mapping.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/ModuleHost.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/PixelLabelInspector.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/PolarTrace.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/Select.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/controls/TabControl.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/control.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/data.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/DOMTemplate.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/HsvRange.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/ICloseable.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/interaction.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/IObservable.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/main.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/Module.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/Agent2dModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/AnimatorModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CameraModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CommsModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/ConfigModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/DrawbridgeModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/GameStateModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/HardwareModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/HistogramModule.ts
@@ -871,8 +876,8 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/LocaliserModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/MotionScriptModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/MotionTimingModule.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/OrientationModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/OptionTreeModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/OrientationModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/StateDumpModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/TeamModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/ThinkTimingModule.ts
@@ -883,16 +888,20 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/WalkModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World2dModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/World3dModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/Module.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/plotter.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/scripts.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/Setting.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/state.ts
-  ${CMAKE_SOURCE_DIR}/www/scripts/app/util.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/canvas.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/Closeable.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/geometry.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/math.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/mouse.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/util/three.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/util/Trackable.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/util.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/WebGLDetector.ts
   )
 
 set(JSON_FILES
