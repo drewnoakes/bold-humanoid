@@ -724,14 +724,14 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./WalkAttitude/walkattitude.cc
+)
+
+add_class(BOLDHUMANOID
   ./WalkEngine/walkengine.cc
   ./WalkEngine/Matrix.cpp
   ./WalkEngine/Point.cpp
   ./WalkEngine/Vector.cpp
-)
-
-add_class(BOLDHUMANOID
-  ./WalkAttitude/walkattitude.cc
 )
 
 add_class(BOLDHUMANOID
