@@ -223,7 +223,6 @@ Maybe<Polygon2d> AgentFrameState::getOcclusionPoly() const
 
 Maybe<Polygon2d> AgentFrameState::getOcclusionPoly(std::vector<OcclusionRay<double>> const& occlusionRays)
 {
-  
   auto nearPointsVec = Polygon2d::PointVector{};
   auto farPointsVec = Polygon2d::PointVector{};
   for (auto const& ray : occlusionRays)
