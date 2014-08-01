@@ -444,6 +444,24 @@ export function createSettingControl(setting: Setting, container: Element, close
             closeable.add(setting.track(value => input.value = value));
             break;
         }
+        case "string":
+        {
+            if (!hideLabel)
+            {
+                heading = document.createElement('h3');
+                heading.textContent = setting.getDescription();
+                wrapper.appendChild(heading);
+            }
+
+            input = document.createElement('input');
+            input.type = 'text';
+            input.value = setting.value;
+            wrapper.appendChild(input);
+
+            input.addEventListener('change', () => setting.setValue(input.value));
+            closeable.add(setting.track(value => input.value = value));
+            break;
+        }
         case "double-range":
         {
             if (!hideLabel)
