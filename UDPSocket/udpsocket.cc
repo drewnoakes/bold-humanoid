@@ -137,7 +137,7 @@ bool UDPSocket::bind(int port)
   // Obtain a textual name for the bound address, and print it out
   char boundAddressStr[INET_ADDRSTRLEN];
   inet_ntop(AF_INET, &(addr.sin_addr), boundAddressStr, INET_ADDRSTRLEN);
-  log::info("UDPSocket::bind") << "Socket bound to " << boundAddressStr;
+  log::info("UDPSocket::bind") << "Socket bound to " << boundAddressStr << ":" << port;
 
   return true;
 }
