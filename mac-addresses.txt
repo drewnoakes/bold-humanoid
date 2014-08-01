@@ -35,9 +35,10 @@
 
 848F69D09EE2	Drew's Laptop (ETH)
 88532ECC160E	Drew's Laptop (WLAN)
-
-10BF48F4D00D	Drew's Phone
-88308AE3DE19	Drew's Nexus 7
+10BF48F4D00D	Drew's Nexus 7 (WLAN)
+88308AE3DE19	Drew's Phone (WLAN)
+A021B71F22BB	Drew's Home Modem
+74E1B68EF4F9	Jihye's iPad (WLAN)
 
 7831C1C0FAA0	Sander's Laptop (WLAN)
 685B359FDEB7	Sander's Laptop (ETH)
