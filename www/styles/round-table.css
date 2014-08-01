@@ -1149,7 +1149,7 @@ div.module.config .json-text
 
 div.module.config span.readonly-setting-value
 {
-  min-width: 110px;
+  min-width: 120px;
   display: inline-block;
   text-align: right;
   box-sizing: border-box;
@@ -1163,14 +1163,22 @@ div.module.config ul
 
 div.module.config li > div.setting.control
 {
-  min-width: 110px;
+  min-width: 120px;
   display: inline-block;
   vertical-align: middle;
 }
 
 div.module.config li > div.setting.control input[type='number']
 {
-  width: 110px;
+  width: 120px;
+  box-sizing: border-box;
+  text-align: right;
+  padding-right: 5px;
+}
+
+div.module.config li > div.setting.control input[type='text']
+{
+  width: 120px;
   box-sizing: border-box;
   text-align: right;
   padding-right: 5px;
@@ -1190,7 +1198,7 @@ div.module.config li > div.setting.control input[type='color']
 
 div.module.config li > div.setting.control select
 {
-  min-width: 110px;
+  min-width: 120px;
   margin: 0;
 }
 
