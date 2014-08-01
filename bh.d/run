@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ $1 == "help" ]] ; then
-    echo "   bh run N"
+    echo "   bh run [N]"
     echo "          run the boldhumanoid process on darwinN"
     exit
 fi
