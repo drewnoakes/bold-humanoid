@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh dbg"
+    echo "          run the boldhumanoid under the gdb debugger"
+    exit
+fi
+
+if [[ $# -ne 0 ]] ; then
+    echo "'dbg' task accepts no arguments"
+    exit 1
+fi
+
+sudo gdb -ex run boldhumanoid
+
+exit $?
