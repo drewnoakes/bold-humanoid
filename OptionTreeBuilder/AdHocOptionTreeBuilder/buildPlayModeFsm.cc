@@ -63,7 +63,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
 
   shared_ptr<ButtonTracker> modeButton = agent->getButtonObserver()->track(Button::Left);
 
-  // TODO allow manual override of states even when GC present
+  // TODO allow manual override of all states even when GC present
 
   initialState
     ->transitionTo(readyState, "left-button")
