@@ -174,7 +174,7 @@
     "goal-detection": {
       "min-dimension-px": 3,
       "max-field-edge-distance-px": 30,
-      "accepted-width-ratio": [0.5, 2.0],
+      "accepted-width-ratio": [0.2, 5.0],
       "max-pair-error-dist": 1.25,
       "label": {
         "max-keeper-ball-dist": 0.7
@@ -397,7 +397,7 @@
     },
     "approach-ball": {
       "turn-speed-scale": 18.0,
-      "max-forward-speed": 30.0,
+      "max-forward-speed": 40.0,
       "min-forward-speed": 9.0,
       "brake-distance": 0.6,
       "stop-distance": 0.15,
