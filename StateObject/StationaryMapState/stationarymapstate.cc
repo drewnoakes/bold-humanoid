@@ -103,10 +103,6 @@ bool GoalEstimate::isTowards(double ballEndAngle) const
   double t;
   double u;
   auto intersection = kickPath.tryIntersect(goalLine, t, u);
-
-  double ratio = u / FieldMap::getGoalY();
-
-
   return intersection.hasValue();
 }
 
