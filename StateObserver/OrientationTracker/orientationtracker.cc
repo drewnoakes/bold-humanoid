@@ -97,9 +97,12 @@ void OrientationTracker::updateMadgwick(shared_ptr<HardwareState const> const& s
 
   // Normalise the accelerometer measurement
   float norm = sqrt(a_x * a_x + a_y * a_y + a_z * a_z);
-  a_x /= norm;
-  a_y /= norm;
-  a_z /= norm;
+  if (norm != 0)
+  {
+    a_x /= norm;
+    a_y /= norm;
+    a_z /= norm;
+  }
 
   // Compute the objective function
 
@@ -129,10 +132,13 @@ void OrientationTracker::updateMadgwick(shared_ptr<HardwareState const> const& s
 
   // Normalise the gradient
   norm = sqrt(SEqHatDot_1 * SEqHatDot_1 + SEqHatDot_2 * SEqHatDot_2 + SEqHatDot_3 * SEqHatDot_3 + SEqHatDot_4 * SEqHatDot_4);
-  SEqHatDot_1 /= norm;
-  SEqHatDot_2 /= norm;
-  SEqHatDot_3 /= norm;
-  SEqHatDot_4 /= norm;
+  if (norm != 0)
+  {
+    SEqHatDot_1 /= norm;
+    SEqHatDot_2 /= norm;
+    SEqHatDot_3 /= norm;
+    SEqHatDot_4 /= norm;
+  }
 
   // Compute the quaternion derivative measured by gyroscopes
   float SEqDot_omega_1 = -halfSEq_2 * w_x - halfSEq_3 * w_y - halfSEq_4 * w_z;
@@ -148,10 +154,13 @@ void OrientationTracker::updateMadgwick(shared_ptr<HardwareState const> const& s
 
   // Normalise quaternion
   norm = sqrt(SEq_1 * SEq_1 + SEq_2 * SEq_2 + SEq_3 * SEq_3 + SEq_4 * SEq_4);
-  SEq_1 /= norm;
-  SEq_2 /= norm;
-  SEq_3 /= norm;
-  SEq_4 /= norm;
+  if (norm != 0)
+  {
+    SEq_1 /= norm;
+    SEq_2 /= norm;
+    SEq_3 /= norm;
+    SEq_4 /= norm;
+  }
 }
 
 void OrientationTracker::updateSum(shared_ptr<HardwareState const> const& state)
