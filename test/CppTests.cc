@@ -1,12 +1,11 @@
 #include "gtest/gtest.h"
 
-
 #include <algorithm>
 #include <chrono>
-#include <functional>
 #include <map>
 #include <memory>
-#include <vector>
+#include <sigc++/connection.h>
+#include <sigc++/signal.h>
 
 using namespace std;
 
@@ -356,6 +355,24 @@ TEST(CppTests, assignToReference)
   double d = 1;
   setToTen(d);
   EXPECT_EQ(10, d);
+}
+
+TEST(CppTests, signals)
+{
+  int callCount = 0;
+  sigc::signal<void> s;
+  sigc::connection cnx = s.connect([&] { callCount++; });
+
+  s.emit();
+  EXPECT_EQ(1, callCount);
+
+  s.emit();
+  EXPECT_EQ(2, callCount);
+
+  cnx.disconnect();
+
+  s.emit();
+  EXPECT_EQ(2, callCount);
 }
 
 ///
