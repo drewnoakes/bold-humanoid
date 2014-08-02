@@ -48,6 +48,7 @@ set(TEST_SOURCES
   ThreadTests.cc
   UDPSocketTests.cc
   VisualCortexTests.cc
+  WindowFunctionTests.cc
   $<TARGET_OBJECTS:boldhumanoid_objects>
 )
 
