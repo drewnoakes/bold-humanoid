@@ -6,4 +6,4 @@ if [[ $1 == "help" ]] ; then
     exit
 fi
 
-cloc --skip-uniqueness --exclude-dir=test/google-test,rapidjson,libwebsockets,www/scripts/libs,libwebsockets_lib-prefix,cmake,CMakeFiles,mitecom .
+cloc --skip-uniqueness --exclude-dir=test/google-test,rapidjson,libwebsockets,www/scripts/libs,libwebsockets_lib-prefix,cmake,CMakeFiles,mitecom --exclude-lang=make .
