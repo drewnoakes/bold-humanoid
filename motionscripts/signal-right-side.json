@@ -1,5 +1,8 @@
 {
   "name": "signal-right-side",
+  "controlsHead": false,
+  "controlsArms": true,
+  "controlsLegs": false,
   "stages": [
     {
       "pGains": {
