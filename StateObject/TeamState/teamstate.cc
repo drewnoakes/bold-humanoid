@@ -81,6 +81,7 @@ std::string bold::getPlayerRoleString(PlayerRole role)
     case PlayerRole::Other: return "Other";
     case PlayerRole::KickLearner: return "KickLearner";
     case PlayerRole::BallCircler: return "BallCircler";
+    case PlayerRole::WhistleListener: return "WhistleListener";
     default: return "Unknown";
   }
 }

@@ -13,6 +13,7 @@ import Setting = require('Setting');
 import util = require('util');
 
 import Agent2dModule = require('modules/Agent2dModule');
+import AudioModule = require('modules/AudioModule');
 import AnimatorModule = require('modules/AnimatorModule');
 import CameraModule = require('modules/CameraModule');
 import CommsModule = require('modules/CommsModule');
@@ -57,6 +58,7 @@ var loadUi = (settings?: Setting[]) =>
     moduleHost.register(new MotionTimingModule());
     moduleHost.register(new LocaliserModule());
     moduleHost.register(new WalkModule());
+    moduleHost.register(new AudioModule());
     moduleHost.register(new TeamModule());
     moduleHost.register(new CommsModule());
     moduleHost.register(new HardwareModule());

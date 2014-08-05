@@ -42,6 +42,7 @@
   "hardware": {
     "cm730-path":   { "type": "string", "readonly": true },
     "video-path":   { "type": "string", "readonly": true },
+    "microphone-name": { "type": "string" },
     "joystick": {
       "enabled":   { "type": "bool", "readonly": false },
       "path":      { "type": "string", "readonly": false },
@@ -470,6 +471,19 @@
       "upper-turn-limit-degs": { "type": "double" }
     }
   },
+  "whistle-detection": {
+    "sample-rate-hz":        { "type": "int" },
+    "sample-count":          { "type": "int", "min": 1 },
+    "slow-smoothing-length": { "type": "int", "min": 1 },
+    "fast-smoothing-length": { "type": "int", "min": 1 },
+    "window-function":       { "type": "enum", "values": { "rectangular": 1, "triangular": 2, "welch": 3, "hann": 4, "hamming": 5 } },
+    "min-freq-hz":           { "type": "double", "min": 0.0 },
+    "max-freq-hz":           { "type": "double", "min": 0.0 },
+    "width-freq-hz":         { "type": "double", "min": 0.0 },
+    "threshold-db-ratio":    { "type": "double", "min": 0.0, "max": 1.0 },
+    "threshold-db":          { "type": "double", "min": 0.0 },
+    "test-frequency-hz":     { "type": "double", "min": 0.0 }
+  },
   "health-and-safety": {
     "voltage": {
       "high-threshold":        { "type": "double", "readonly": true },
@@ -497,7 +511,8 @@
         "penalty-striker": 6,
         "other":           7,
         "kick-learner":    8,
-        "ball-circler":    9
+        "ball-circler":    9,
+        "whistle-listener":10
       }
     }
   },

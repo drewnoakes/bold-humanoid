@@ -6,6 +6,7 @@
 #include "../../Option/MotionScriptOption/motionscriptoption.hh"
 #include "../../Option/SequenceOption/sequenceoption.hh"
 #include "../../Option/StopWalking/stopwalking.hh"
+#include "../../Option/WaitForWhistle/waitforwhistle.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../StateObserver/ButtonObserver/buttonobserver.hh"
 #include "../../Camera/camera.hh"
@@ -24,6 +25,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
   auto stopWalking = make_shared<StopWalking>("stop-walking", agent->getWalkModule());
   auto gameOver = make_shared<GameOver>("game-over", agent->getMotionScriptModule(), agent->getVoice());
   auto stopAndSitSequence = SequenceOption::make("stop-then-sit-sequence", { stopWalking, sit });
+  auto waitForWhistle = make_shared<WaitForWhistle>("wait-for-whistle");
 
   // STATES
 
@@ -31,7 +33,7 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, sha
 
   auto initialState = fsm->newState("initial", { stopAndSitSequence });
   auto readyState = fsm->newState("ready", { stopAndSitSequence }, false, true);
-  auto setState = fsm->newState("set", { SequenceOption::make("pause-sequence", { stopWalking, standUp }) });
+  auto setState = fsm->newState("set", { SequenceOption::make("pause-sequence", { stopWalking, standUp, waitForWhistle }) });
   auto playingState = fsm->newState("playing", { whilePlayingOption });
   auto penalisedState = fsm->newState("penalised", { stopAndSitSequence });
   auto unpenalisedState = fsm->newState("unpenalised", { whilePlayingOption });

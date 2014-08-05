@@ -53,7 +53,10 @@ namespace bold
     KickLearner = 8,
 
     /// The robot will approach the ball and turn a random angle around it.
-    BallCircler = 9
+    BallCircler = 9,
+
+    /// Robot stands straight, indicating whenever a whistle is heard.
+    WhistleListener = 10
   };
 
   std::string getPlayerRoleString(PlayerRole role);

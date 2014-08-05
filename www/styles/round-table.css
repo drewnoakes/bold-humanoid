@@ -424,6 +424,22 @@ div.indicator.goal.visible { background-color: yellow; }
 
 /********************************************************************/
 
+svg .axis path,
+svg .axis line
+{
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+
+svg .axis text
+{
+  font-family: sans-serif;
+  font-size: 11px;
+}
+
+/********************************************************************/
+
 ul#module-container
 {
   padding: 0;

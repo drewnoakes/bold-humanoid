@@ -29,6 +29,7 @@
   "hardware": {
     "cm730-path": "/dev/ttyUSB0",
     "video-path": "/dev/video0",
+    "microphone-name": "plughw:1,0",
     "joystick": {
       "enabled": true,
       "path": "/dev/input/js0",
@@ -472,6 +473,19 @@
       "lower-turn-limit-degs": 1.0,
       "upper-turn-limit-degs": 35.0
     }
+  },
+  "whistle-detection": {
+    "sample-rate-hz": 44100,
+    "sample-count": 2048,
+    "slow-smoothing-length": 30,
+    "fast-smoothing-length": 8,
+    "window-function": 4,
+    "min-freq-hz": 1000.0,
+    "max-freq-hz": 4000.0,
+    "width-freq-hz": 400.0,
+    "threshold-db": 17.0,
+    "threshold-db-ratio": 0.7,
+    "test-frequency-hz": 0.0
   },
   "health-and-safety": {
     "voltage": {

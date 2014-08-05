@@ -27,6 +27,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto penaltyKeeperFsm = buildPenaltyKeeperFsm(agent);
   auto kickLearnerFsm = buildKickLearnerFsm(agent);
   auto ballCirclerFsm = buildBallCirclerFsm(agent);
+  auto whistleListenerFsm = buildWhistleListenerFsm(agent);
 
   auto performRole = make_shared<DispatchOption<PlayerRole>>("perform-role", [agent] { return agent->getBehaviourControl()->getPlayerRole(); });
   performRole->setOption(PlayerRole::Keeper, keeperFsm);
@@ -36,6 +37,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   performRole->setOption(PlayerRole::PenaltyKeeper, penaltyKeeperFsm);
   performRole->setOption(PlayerRole::KickLearner, kickLearnerFsm);
   performRole->setOption(PlayerRole::BallCircler, ballCirclerFsm);
+  performRole->setOption(PlayerRole::WhistleListener, whistleListenerFsm);
 
   // Build the top-level FSM
 
@@ -60,6 +62,7 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   tree->addOption(penaltyKeeperFsm, false);
   tree->addOption(kickLearnerFsm, false);
   tree->addOption(ballCirclerFsm, false);
+  tree->addOption(whistleListenerFsm, false);
 
   return tree;
 }

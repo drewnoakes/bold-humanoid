@@ -490,6 +490,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./Option/WaitForWhistle/waitforwhistle.cc
+)
+
+add_class(BOLDHUMANOID
   ./Option/WalkTo/walkto.cc
 )
 
@@ -509,6 +513,7 @@ add_class(BOLDHUMANOID
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildStrikerFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildSupporterFsm.cc
   ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildTree.cc
+  ./OptionTreeBuilder/AdHocOptionTreeBuilder/buildWhistleListenerFsm.cc
 )
 
 add_class(BOLDHUMANOID
@@ -561,6 +566,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObject/AgentFrameState/agentframestate.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObject/AudioPowerSpectrumState/audiopowerspectrumstate.cc
 )
 
 add_class(BOLDHUMANOID
@@ -735,6 +744,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./WhistleListener/whistlelistener.cc
+)
+
+add_class(BOLDHUMANOID
   ./util/ccolor.cc
   ./util/log.cc
   ./util/windowfunctions.cc
@@ -762,7 +775,7 @@ add_executable(boldhumanoid
 #
 ## Link executable to libraries
 #
-set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} ssl crypto libwebsockets.a pthread rt espeak z)
+set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} ssl crypto libwebsockets.a pthread rt asound fftw3f espeak z)
 
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
@@ -864,6 +877,7 @@ add_typescript_target(
   ${CMAKE_SOURCE_DIR}/www/scripts/app/IObservable.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/main.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/Agent2dModule.ts
+  ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/AudioModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/AnimatorModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CameraModule.ts
   ${CMAKE_SOURCE_DIR}/www/scripts/app/modules/CommsModule.ts
