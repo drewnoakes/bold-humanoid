@@ -10,15 +10,18 @@ using namespace std;
 OdoWalkTo::OdoWalkTo(string const& id, shared_ptr<WalkModule> walkModule)
   : Option(id, "OdoWalkTo"),
   d_walkModule{move(walkModule)},
-  d_targetPos{0.0, 0.0, 0.0},
+  d_targetPos{0.0, 0.0},
+  d_targetFaceDir{0.0, 1.0},
   d_maxDist{0.1},
   d_lastOdoReading{Affine3d::Identity()},
   d_progress{Affine3d::Identity()}
 {}
 
-void OdoWalkTo::setTargetPos(Vector3d targetPos, double maxDist)
+void OdoWalkTo::setTarget(Vector2d targetPos, Vector2d targetFaceDir, double maxDist)
 {
   d_targetPos = targetPos;
+  d_targetFaceDir = targetFaceDir;
+
   d_maxDist = maxDist;
   d_lastOdoReading = State::get<OdometryState>()->getTransform();
   d_progress = Affine3d::Identity();

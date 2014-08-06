@@ -14,7 +14,7 @@ namespace bold
   public:
     OdoWalkTo(std::string const& id, std::shared_ptr<WalkModule> walkModule);
 
-    void setTargetPos(Eigen::Vector3d targetPos, double maxDist);
+    void setTarget(Eigen::Vector2d targetPos, Eigen::Vector2d targetFaceDir, double maxDist);
 
     double hasTerminated() override;
 
@@ -24,7 +24,8 @@ namespace bold
     void updateProgress();
 
     std::shared_ptr<WalkModule> d_walkModule;
-    Eigen::Vector3d d_targetPos;
+    Eigen::Vector2d d_targetFaceDir;
+
     double d_maxDist;
     Eigen::Affine3d d_lastOdoReading;
     Eigen::Affine3d d_progress;

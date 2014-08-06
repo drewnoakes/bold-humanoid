@@ -20,7 +20,7 @@ Option::OptionVector SquareDance::runPolicy()
       d_stage = FORWARD;
     
     
-    d_odoWalkTo->setTargetPos(Vector3d(1.0, 0.0, 0.0), 0.2);
+    d_odoWalkTo->setTarget(Vector2d(1.0, 0.0),Vector2d(1.0, 0.0), 0.2);
 
     /*
     switch (d_stage)
