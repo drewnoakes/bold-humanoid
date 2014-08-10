@@ -12,7 +12,6 @@
 #include "../StateObject/ParticleState/particlestate.hh"
 #include "../StateObject/OdometryState/odometrystate.hh"
 #include "../StateObject/OrientationState/orientationstate.hh"
-#include "../filters/ObservationModel/JointObservationModel/jointobservationmodel.hh"
 #include "../util/assert.hh"
 #include "../util/memory.hh"
 #include "../filters/Filter/KalmanFilter/kalmanfilter.hh"

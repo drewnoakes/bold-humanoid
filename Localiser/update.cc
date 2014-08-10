@@ -6,8 +6,7 @@ void Localiser::update()
 
   predict();
 
-  JointObservationModel<4> jointModel;
-
+  /*
   if (agentFrame->getGoalObservations().size() >= static_cast<uint>(d_minGoalsNeeded->getValue()))
   {
     auto goalPostModel = [&](Vector4d const& state) {
@@ -45,7 +44,7 @@ void Localiser::update()
       return scoreProd;
     };
 
-    jointModel.addModel(goalPostModel);
+    d_filter->update(goalPostModel);
   }
 
   if (d_useLines->getValue() && agentFrame->getObservedLineJunctions().size() > 0)
@@ -88,6 +87,9 @@ void Localiser::update()
   }
 
   d_filter->update(jointModel);
+  */
+
+
   if (d_filterType == FilterType::Particle)
   {
     auto filter = static_pointer_cast<ParticleFilterUsed>(d_filter);
