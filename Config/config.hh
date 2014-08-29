@@ -58,6 +58,9 @@ namespace bold
     {
       auto setting = getSettingBase(path);
 
+      if (setting == nullptr)
+        return nullptr;
+
       std::type_index typeIndex = std::is_enum<T>::value ? typeid(int) : typeid(T);
 
       if (typeIndex != setting->getTypeIndex())

@@ -142,8 +142,11 @@ namespace bold
     void setSquashWidth(bool squash) { d_squash = squash; }
 
     void setAutoWB(bool autowb) {
-      Setting<bool>* d_autowb = Config::getSetting<bool>("camera.settings.auto-wb");
-      d_autowb->setValue(autowb);
+      Setting<bool>* autowbSetting = Config::getSetting<bool>("camera.settings.auto-wb");
+      if (autowbSetting == nullptr)
+        return;
+
+      autowbSetting->setValue(autowb);
     }
 
     void logFrameIntervalDetails() const;
