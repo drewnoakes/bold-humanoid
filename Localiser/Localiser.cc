@@ -22,9 +22,10 @@ Localiser::Localiser()
   auto preNormWeightSumFilterAlpha = Config::getSetting<double>("localiser.prenorm-weightsum-filter-alpha");
 
   smoothingWindowSize->track([this](int value) { d_avgPos = MovingAverage<Vector4d>(value); });
+  /*
   positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });
   angleErrorDegs->track([this](double value) { d_angleErrorRng = Math::createNormalRng(0, Math::degToRad(value)); });
-
+  */
   d_preNormWeightSumFilter.reset(1.0);
   d_preNormWeightSumFilter.setAlpha(0.01);
   preNormWeightSumFilterAlpha->track([this](double value) { d_preNormWeightSumFilter.setAlpha(value); });

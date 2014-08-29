@@ -17,6 +17,7 @@
 #include "../filters/Filter/KalmanFilter/kalmanfilter.hh"
 #include "../filters/Filter/UnscentedKalmanFilter/unscentedkalmanfilter.hh"
 #include "../filters/Filter/ParticleFilter/particlefilter.hh"
+#include "../filters/MotionModel/GaussianMotionModel/gaussianmotionmodel.hh"
 
 using namespace std;
 using namespace bold;

@@ -1,14 +1,77 @@
 #include "localiser.ih"
 
+template<int DIM>
+class DarwinMotionModel : public GaussianMotionModel<DIM>
+{
+public:
+  using State = typename GaussianMotionModel<DIM>::State;
+
+  void setDeltaAgentMat(Eigen::Matrix3d mat)
+  {
+    d_deltaAgentMat = mat;
+  }
+
+  State operator()(State const& state) const override
+  {
+    Matrix3d worldAgentMat;
+    worldAgentMat <<
+      state(3), state(2), state.x(),
+      -state(2), state(3), state.y(),
+      0        , 0       , 1;
+        
+    Matrix3d newWorldAgentMat = worldAgentMat * d_deltaAgentMat;
+        
+    State newState;
+    newState <<
+      newWorldAgentMat.col(2).head<2>(), newWorldAgentMat.col(1).head<2>();
+
+    return newState;
+  }
+
+  State perturb(State const& state) const override
+  {
+    auto newState = state;
+
+    auto xPosErr = d_positionErrorRng();
+    auto yPosErr = d_positionErrorRng();
+    
+    /*
+    if (d_dynamicError)
+    {
+      auto alpha = (1.0 - d_preNormWeightSumFilter.getValue()) / 0.1;
+      Math::clamp(alpha, 0.0, 1.0);
+      xPosErr *= alpha;
+      yPosErr *= alpha;
+      
+    }
+    */
+    newState(0) += xPosErr;
+    newState(1) += yPosErr;
+    
+    auto theta = atan2(newState(3), newState(2));
+    theta += d_angleErrorRng();
+    newState(3) = sin(theta);
+    newState(2) = cos(theta);
+
+    return newState;
+  }
+
+private:
+  std::function<double()> d_positionErrorRng;
+  std::function<double()> d_angleErrorRng;
+
+  Eigen::Matrix3d d_deltaAgentMat;
+  bool d_dynamicError;
+};
+
 void Localiser::predict()
 {
   if (d_shouldRandomise)
   {
     if (d_filterType == FilterType::Particle)
     {
-      auto filter = static_pointer_cast<ParticleFilterUsed>(d_filter);
-      filter->randomise();
-      filter->normalize();
+      d_filter->reset(generateState().first);
+      d_filter->endStep();
       d_shouldRandomise = false;
     }
   }
@@ -18,6 +81,7 @@ void Localiser::predict()
   if (!orientationState || !odometryState)
     return;
 
+  DarwinMotionModel<4> motionModel;
   bool dynamicError = d_enableDynamicError->getValue();
 
   if (d_haveLastAgentTransform)
@@ -33,41 +97,8 @@ void Localiser::predict()
       deltaAgentMat4.block<2,2>(0,0) , deltaAgentMat4.col(3).head<2>(),
       0, 0, 1;
 
-    d_filter->predict(
-      [deltaAgentMat,dynamicError,this](FilterState const& state) -> FilterState
-      {
-        Matrix3d worldAgentMat;
-        worldAgentMat <<
-          state(3), state(2), state.x(),
-          -state(2), state(3), state.y(),
-          0        , 0       , 1;
-        
-        
-        auto newWorldAgentMat = worldAgentMat * deltaAgentMat;
-        
-        FilterState newState;
-        newState <<
-          newWorldAgentMat.col(2).head<2>(), newWorldAgentMat.col(1).head<2>();
-
-        auto xPosErr = d_positionErrorRng();
-        auto yPosErr = d_positionErrorRng();
-        if (dynamicError)
-        {
-          auto alpha = (1.0 - d_preNormWeightSumFilter.getValue()) / 0.1;
-          Math::clamp(alpha, 0.0, 1.0);
-          xPosErr *= alpha;
-          yPosErr *= alpha;
-
-        }
-        newState(0) += xPosErr;
-        newState(1) += yPosErr;
-        
-        auto theta = atan2(newState(3), newState(2));
-        theta += d_angleErrorRng();
-        newState(3) = sin(theta);
-        newState(2) = cos(theta);
-        return newState;
-      });
+    motionModel.setDeltaAgentMat(deltaAgentMat);
+    d_filter->predict(motionModel);
   }
 
   d_lastAgentTransform = odometryState->getTransform();
