@@ -48,7 +48,7 @@ namespace bold
       memcpy(&d_data, data, sizeof(robocup::GameStateMessage));
     }
 
-    robocup::PlayMode getPlayMode() const { return robocup::PlayMode(d_data.playMode); }
+    robocup::PlayMode getPlayMode() const { return d_data.playMode; }
 
     uint8 getVersion() const { return d_data.version; }
     uint8 getPacketNumber() const { return d_data.packetNumber; }
@@ -56,9 +56,9 @@ namespace bold
     bool isFirstHalf() const { return d_data.isFirstHalf == 1; }
     /** Index of the next team to kick off. Either zero or one. */
     uint8 getNextKickOffTeamIndex() const { return d_data.nextKickOffTeamIndex; }
-    bool isPenaltyShootout() const { return robocup::ExtraState(d_data.secondaryState) == robocup::ExtraState::PENALTYSHOOT; }
-    bool isOvertime() const { return robocup::ExtraState(d_data.secondaryState) == robocup::ExtraState::OVERTIME; }
-    bool isTimeout() const { return robocup::ExtraState(d_data.secondaryState) == robocup::ExtraState::TIMEOUT; }
+    bool isPenaltyShootout() const { return d_data.secondaryState == robocup::ExtraState::PENALTYSHOOT; }
+    bool isOvertime() const { return d_data.secondaryState == robocup::ExtraState::OVERTIME; }
+    bool isTimeout() const { return d_data.secondaryState == robocup::ExtraState::TIMEOUT; }
     bool isClockRunning() const { return getPlayMode() == robocup::PlayMode::PLAYING; }
     uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamNumber; }
     int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn + (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }

@@ -167,14 +167,14 @@ namespace robocup
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
     char header[4];                // Header to identify the structure
     uint8 version;                 // Version of the data structure
-    uint8 leagueNumber;            // Identifies the league of the current game
+    League leagueNumber;           // Identifies the league of the current game
     uint8 packetNumber;            // Sequence number of the packet (overflows from 255 to 0)
     uint32 gameControllerId;       // A 32-bit number that identifies this game controller (use to detect when multiple GCs are running)
     uint8 playersPerTeam;          // The number of players on a team
-    uint8 playMode;                // state of the game (STATE_READY, STATE_PLAYING, etc)
+    PlayMode playMode;             // state of the game (STATE_READY, STATE_PLAYING, etc)
     uint8 isFirstHalf;             // 1 = game in first half, 0 otherwise
     uint8 nextKickOffTeamIndex;    // Index of the next team to kick off (0 or 1)
-    uint8 secondaryState;          // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+    ExtraState secondaryState;     // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     uint8 dropInTeamNumber;        // Team that caused last drop in
     int16 secondsSinceLastDropIn;  // Number of seconds passed since the last drop in.  -1 before first drop in.
     int16 secondsRemaining;        // Estimate of number of seconds remaining in the half
@@ -205,7 +205,7 @@ namespace robocup
     : version(VERSION),
       teamNumber(teamNumber),
       uniformNumber(uniformNumber),
-      message(static_cast<uint8>(message))
+      message(message)
     {
       memcpy(&header, HEADER, sizeof(header));
     }
@@ -214,7 +214,7 @@ namespace robocup
     uint8 version;
     uint8 teamNumber;
     uint8 uniformNumber;
-    uint8 message;
+    RobotStatusMessageType message;
 
     static constexpr char const* HEADER = "RGrt";
     static constexpr uint32 HEADER_INT = 0x74724752;
