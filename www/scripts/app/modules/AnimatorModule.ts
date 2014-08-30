@@ -331,7 +331,7 @@ class AnimatorModule extends Module
 
     private trySetFocussedScriptValue(value: number): boolean
     {
-        return this.trySetScriptValue(this.getValueData(this.focusElement), value);
+        return this.trySetScriptValue(AnimatorModule.getValueData(this.focusElement), value);
     }
 
     private getValue(d: ValueData): number
@@ -344,7 +344,7 @@ class AnimatorModule extends Module
             return stage.keyFrames[d.keyFrameIndex].values[d.jointId - 1];
     }
 
-    private getValueData(element: HTMLLIElement): ValueData
+    private static getValueData(element: HTMLLIElement): ValueData
     {
         var valueData: ValueData = {
             type: element.dataset["type"] === "gain" ? ValueType.Gain : ValueType.MotorValue,
@@ -369,7 +369,7 @@ class AnimatorModule extends Module
     private buildUI()
     {
         console.log('----------------------buildUI----------------------');
-        var focussedValueData = this.focusElement != null ? this.getValueData(this.focusElement) : null;
+        var focussedValueData = this.focusElement != null ? AnimatorModule.getValueData(this.focusElement) : null;
 
         var t = this;
 
@@ -504,7 +504,7 @@ class AnimatorModule extends Module
     /** Removes the edit text box and sets the focussed li value to reflect the ScriptViewModel. */
     private stopEdit()
     {
-        this.focusElement.textContent = this.getValue(this.getValueData(this.focusElement)).toString();
+        this.focusElement.textContent = this.getValue(AnimatorModule.getValueData(this.focusElement)).toString();
         this.element.focus();
     }
 
@@ -557,14 +557,14 @@ class AnimatorModule extends Module
         // Up/down
         if (deltaY !== 0)
         {
-            var d = this.getValueData(this.focusElement);
+            var d = AnimatorModule.getValueData(this.focusElement);
             d.jointId += deltaY;
             li = this.getValueElement(d);
         }
 
         if (deltaX !== 0)
         {
-            var d = this.getValueData(this.focusElement);
+            var d = AnimatorModule.getValueData(this.focusElement);
             if (deltaX < 0)
             {
                 if (d.type === ValueType.MotorValue)
@@ -622,7 +622,7 @@ class AnimatorModule extends Module
         return true;
     }
 
-    private getNudgeSize(e: KeyboardEvent)
+    private static getNudgeSize(e: KeyboardEvent)
     {
         return e.shiftKey
             ? 10
@@ -691,7 +691,7 @@ class AnimatorModule extends Module
 
             case KEY_G:
                 // Move slowly to the current pose
-                var d = this.getValueData(this.focusElement);
+                var d = AnimatorModule.getValueData(this.focusElement);
                 if (d.type === ValueType.MotorValue)
                 {
                     playScript(makeMoveToScript(this.script, d, 128));
@@ -701,7 +701,7 @@ class AnimatorModule extends Module
 
             case KEY_K:
                 // Move to the next pose
-                var d = this.getValueData(this.focusElement);
+                var d = AnimatorModule.getValueData(this.focusElement);
                 if (this.stepKeyFrame(d, true))
                 {
                     this.setFocus(this.getValueElement(d));
@@ -712,7 +712,7 @@ class AnimatorModule extends Module
 
             case KEY_J:
                 // Move to the previous pose
-                var d = this.getValueData(this.focusElement);
+                var d = AnimatorModule.getValueData(this.focusElement);
                 if (this.stepKeyFrame(d, false))
                 {
                     this.setFocus(this.getValueElement(d));
@@ -785,7 +785,7 @@ class AnimatorModule extends Module
             case KEY_UP:
             {
                 // Increment
-                try { this.editTextBox.value = (parseInt(this.editTextBox.value) + this.getNudgeSize(e)).toString(); } catch(err) {}
+                try { this.editTextBox.value = (parseInt(this.editTextBox.value) + AnimatorModule.getNudgeSize(e)).toString(); } catch(err) {}
                 this.selectAllEditText();
                 e.preventDefault();
                 break;
@@ -793,7 +793,7 @@ class AnimatorModule extends Module
             case KEY_DOWN:
             {
                 // Decrement
-                try { this.editTextBox.value = (parseInt(this.editTextBox.value) - this.getNudgeSize(e)).toString(); } catch(err) {}
+                try { this.editTextBox.value = (parseInt(this.editTextBox.value) - AnimatorModule.getNudgeSize(e)).toString(); } catch(err) {}
                 this.selectAllEditText();
                 e.preventDefault();
                 break;

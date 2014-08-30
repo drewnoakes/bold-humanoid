@@ -54,7 +54,7 @@ class GameStateModule extends Module
         ));
     }
 
-    private formatTimeString(seconds: number): string
+    private static formatTimeString(seconds: number): string
     {
         return Math.floor(seconds / 60) + ':' + padLeft(Math.abs(seconds % 60), 2, '0')
     }
@@ -63,8 +63,8 @@ class GameStateModule extends Module
     {
         var templateData: ITemplateData = util.clone(data);
 
-        templateData.timeString = this.formatTimeString(data.secondsRemaining);
-        templateData.secondaryTimeString = this.formatTimeString(data.secondsSecondaryTime);
+        templateData.timeString = GameStateModule.formatTimeString(data.secondsRemaining);
+        templateData.secondaryTimeString = GameStateModule.formatTimeString(data.secondsSecondaryTime);
 
         var amendTeam = (team: ExtendedTeamData) =>
         {

@@ -168,7 +168,7 @@ class World3dModule extends Module
 
         var hasChange = false;
         for (var i = 0; i < 20; i++) {
-            if (this.setHingeAngle(this.hinges[i + 1], data.angles[i])) {
+            if (World3dModule.setHingeAngle(this.hinges[i + 1], data.angles[i])) {
                 hasChange = true;
             }
         }
@@ -306,7 +306,7 @@ class World3dModule extends Module
         }
     }
 
-    private setHingeAngle(hinge: Hinge, angle: number)
+    private static setHingeAngle(hinge: Hinge, angle: number)
     {
         if (!hinge.rotationAxis) {
             // No hinge is defined (eg: eyes)
@@ -582,7 +582,7 @@ class World3dModule extends Module
                 childHinge.rotationAxis = childNode.rotationAxis;
                 childHinge.rotationOrigin = childNode.rotationOrigin;
                 this.hinges[childNode.jointId] = childHinge;
-                this.setHingeAngle(childHinge, 0);
+                World3dModule.setHingeAngle(childHinge, 0);
                 parentObject.add(childHinge.object);
                 processNode(childNode, childHinge.object);
             }

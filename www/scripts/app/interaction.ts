@@ -45,7 +45,7 @@ export class Dragger
     {
         event.preventDefault();
         event.stopImmediatePropagation();
-        this.fixEvent(e);
+        Dragger.fixEvent(e);
         this.lastScreenPoint = { x: e.screenX, y: e.screenY };
         this.startScreenPoint = { x: e.screenX, y: e.screenY };
         this.startEvent = e;
@@ -57,7 +57,7 @@ export class Dragger
 
     private onmouseup(e: MouseEvent)
     {
-        this.fixEvent(e);
+        Dragger.fixEvent(e);
         this.isDragging = false;
         this.element.ownerDocument.removeEventListener('mouseup', this.onmouseup, false);
         this.element.ownerDocument.removeEventListener('mousemove', this.onmousemove, false);
@@ -88,12 +88,12 @@ export class Dragger
     {
         e.preventDefault();
 
-        this.fixEvent(e);
+        Dragger.fixEvent(e);
         this.raiseEvent(e, false);
         this.isStart = false;
     }
 
-    private fixEvent(e)
+    private static fixEvent(e)
     {
         if (!e.hasOwnProperty('offsetX')) {
             var curleft = 0,
