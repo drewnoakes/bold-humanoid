@@ -159,7 +159,9 @@ namespace robocup
     PlayerInfo d_players[MAX_NUM_PLAYERS]; // the team's players
   };
 
-  /// Model of the GameStateData struct (version 9)
+  /**
+   * Message sent from game controller to robots (version 9).
+   */
   struct GameStateData
   {
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
@@ -192,7 +194,11 @@ namespace robocup
     ALIVE = 2
   };
 
-  /// Model of the RoboCupGameControlReturnData struct (version 2)
+  /**
+   * Message sent from robots to the game controller (version 2).
+   *
+   * Also known as RoboCupGameControlReturnData.
+   */
   struct RoboCupGameControlReturnData
   {
     RoboCupGameControlReturnData(uint8 teamNumber, uint8 uniformNumber, GameControllerResponseMessage message)
