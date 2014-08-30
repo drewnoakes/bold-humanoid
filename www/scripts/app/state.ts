@@ -146,7 +146,7 @@ export interface Game
     isPenaltyShootOut: boolean;
     isOvertime: boolean;
     isTimeout: boolean;
-    lastDropInTeamNumber: number;
+    lastDropInTeamColor: number;
     secSinceDropIn: number;
     secondsRemaining: number;
     secondsSecondaryTime: number;

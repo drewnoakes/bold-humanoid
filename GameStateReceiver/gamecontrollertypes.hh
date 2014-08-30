@@ -179,7 +179,7 @@ namespace robocup
     uint8 isFirstHalf;             // Whether the first half (1) or second half (0), for both normal and extra game periods
     uint8 nextKickOffTeamIndex;    // Index of the next team to kick off (0 or 1)
     PeriodType periodType;         // The type of game period (normal, extra, penalties, timeout)
-    uint8 dropInTeamIndex;         // Index of the team that caused the last drop in (or 2 if no drop in yet)
+    uint8 dropInTeamColor;         // Color of the team that caused the last drop in (or 2 if no drop in yet)
     int16 secondsSinceLastDropIn;  // Number of seconds passed since the last drop in (or -1 if no drop in yet)
     int16 secondsRemaining;        // Estimate of number of seconds remaining in the half
     int16 secondaryTime;           // Sub-time (remaining in ready state, etc.) in seconds

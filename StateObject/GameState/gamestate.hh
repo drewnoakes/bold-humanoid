@@ -60,7 +60,8 @@ namespace bold
     bool isOvertime() const { return d_data.periodType == robocup::PeriodType::OVERTIME; }
     bool isTimeout() const { return d_data.periodType == robocup::PeriodType::TIMEOUT; }
     bool isClockRunning() const { return getPlayMode() == robocup::PlayMode::PLAYING; }
-    uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamIndex; }
+    /** Identifies the team having the last drop in (0 blue, 1 red, 2 no drop in yet). */
+    uint8 getLastDropInTeamColorNumber() const { return d_data.dropInTeamColor; }
     int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn + (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
     int16 getSecondsRemaining() const { return d_data.secondsRemaining - (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
     int16 getSecondaryTime() const

@@ -50,7 +50,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("isPenaltyShootOut").Bool(isPenaltyShootout());
     writer.String("isOvertime").Bool(isOvertime());
     writer.String("isTimeout").Bool(isTimeout());
-    writer.String("lastDropInTeamNum").Uint(getLastDropInTeamNumber());
+    writer.String("lastDropInTeamColor").Uint(getLastDropInTeamColorNumber());
     writer.String("secSinceDropIn").Int(getSecondsSinceLastDropIn());
     writer.String("secondsRemaining").Int(getSecondsRemaining());
     writer.String("secondsSecondaryTime").Int(getSecondaryTime());
