@@ -97,7 +97,6 @@ namespace robocup
     /** estimate of time till unpenalised */
     uint8 getSecondsUntilPenaltyLifted() const { return d_secondsUntilPenaltyLifted; }
 
-    static constexpr uint8 VERSION = 8;
     static constexpr uint8 SIZE = 2;
 
   private:
@@ -125,7 +124,6 @@ namespace robocup
       return d_players[unum - 1];
     }
 
-    static constexpr uint8 VERSION = 8;
     static constexpr uint8 SIZE = 46 + (1+MAX_NUM_PLAYERS)*PlayerInfo::SIZE;
 
   private:
