@@ -70,6 +70,7 @@ namespace bold
         secondaryTime -= Clock::getSecondsSince(d_receivedAt);
       return secondaryTime > 0 ? secondaryTime : 0;
     }
+    uint32 getGameControllerId() const { return d_data.gameControllerId; }
 
     bool isWithinTenSecondsOfKickOff(Team team) const;
 

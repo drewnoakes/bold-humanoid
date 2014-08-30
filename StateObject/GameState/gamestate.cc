@@ -54,6 +54,7 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("secSinceDropIn").Int(getSecondsSinceLastDropIn());
     writer.String("secondsRemaining").Int(getSecondsRemaining());
     writer.String("secondsSecondaryTime").Int(getSecondaryTime());
+    writer.String("gameControllerId").Int(getGameControllerId());
 
     auto writeTeam = [&writer,this](TeamInfo const& team)
     {
