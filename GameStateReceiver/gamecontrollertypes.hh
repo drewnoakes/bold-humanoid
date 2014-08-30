@@ -89,7 +89,7 @@ namespace robocup
     }
   }
 
-  /// Model of the PlayerInfo struct (version 8)
+  /// Model of the PlayerInfo struct (version 9)
   struct PlayerInfo
   {
     bool hasPenalty() const { return d_penaltyType != PenaltyType::NONE; }
@@ -105,7 +105,7 @@ namespace robocup
     uint8 d_secondsUntilPenaltyLifted;
   };
 
-  /// Model of the TeamInfo struct (version 8)
+  /// Model of the TeamInfo struct (version 9)
   struct TeamInfo
   {
     uint8 getTeamNumber() const { return d_teamNumber; }
@@ -124,7 +124,7 @@ namespace robocup
       return d_players[unum - 1];
     }
 
-    static constexpr uint8 SIZE = 46 + (1+MAX_NUM_PLAYERS)*PlayerInfo::SIZE;
+    static constexpr uint8 SIZE = 6 + MAX_NUM_PLAYERS*PlayerInfo::SIZE;
 
   private:
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
@@ -133,18 +133,18 @@ namespace robocup
     uint8 d_score;        // Team's score
     uint8 d_penaltyShot;  // Penalty shot counter
     uint16 d_singleShots; // Bits represent penalty shot success
-    uint8 d_coachMessage[40]; // For SPL only (ignore in kid-size league)
-    PlayerInfo d_coach;       // For SPL only (ignore in kid-size league)
     PlayerInfo d_players[MAX_NUM_PLAYERS]; // the team's players
   };
 
-  /// Model of the GameStateData struct (version 8)
+  /// Model of the GameStateData struct (version 9)
   struct GameStateData
   {
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
     char header[4];                // Header to identify the structure
     uint8 version;                 // Version of the data structure
-    uint8 packetNumber;            //
+    uint8 leagueNumber;            // Identifies the league of the current game
+    uint8 packetNumber;            // Sequence number of the packet (overflows from 255 to 0)
+    uint32 gameControllerId;       // A 32-bit number that identifies this game controller (use to detect when multiple GCs are running)
     uint8 playersPerTeam;          // The number of players on a team
     uint8 playMode;                // state of the game (STATE_READY, STATE_PLAYING, etc)
     uint8 isFirstHalf;             // 1 = game in first half, 0 otherwise
@@ -158,8 +158,8 @@ namespace robocup
 
     static constexpr const char* HEADER = "RGme";
     static constexpr uint32 HEADER_INT = 0x656d4752;
-    static constexpr uint8 VERSION = 8;
-    static constexpr uint8 SIZE = 18 + 2*TeamInfo::SIZE;
+    static constexpr uint8 VERSION = 9;
+    static constexpr uint8 SIZE = 23 + 2*TeamInfo::SIZE;
   };
 
   enum class GameControllerResponseMessage : uint8
