@@ -3,7 +3,7 @@
 void Agent::run()
 {
   if (d_isRunning)
-    throw new runtime_error("Already running");
+    throw runtime_error("Already running");
 
   d_isRunning = true;
 

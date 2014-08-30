@@ -33,7 +33,7 @@ namespace robocup
       case PlayMode::PLAYING:  return "Playing";
       case PlayMode::FINISHED: return "Finished";
       default:
-        throw new std::runtime_error("Unsupported PlayMode enum value.");
+        throw std::runtime_error("Unsupported PlayMode enum value.");
     }
   }
 
@@ -54,7 +54,7 @@ namespace robocup
       case ExtraState::OVERTIME:     return "Overtime";
       case ExtraState::TIMEOUT:      return "Timeout";
       default:
-        throw new std::runtime_error("Unsupported ExtraState enum value.");
+        throw std::runtime_error("Unsupported ExtraState enum value.");
     }
   }
 
@@ -85,7 +85,7 @@ namespace robocup
       case PenaltyType::SUBSTITUTE:          return "Substitute";
       case PenaltyType::MANUAL:              return "Manual";
       default:
-        throw new std::runtime_error("Unsupported PenaltyType enum value.");
+        throw std::runtime_error("Unsupported PenaltyType enum value.");
     }
   }
 

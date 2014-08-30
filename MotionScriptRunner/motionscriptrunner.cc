@@ -483,7 +483,7 @@ void MotionScriptRunner::continueCurrentSection(shared_ptr<JointSelection> const
       default:
       {
         log::error("MotionScriptRunner::step") << "Unexpected section: " << (int)d_section;
-        throw new runtime_error("Unexpected section");
+        throw runtime_error("Unexpected section");
       }
     }
 

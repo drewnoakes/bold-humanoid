@@ -3,7 +3,7 @@
 void Agent::requestStop()
 {
   if (!d_isRunning)
-    throw new runtime_error("Not running");
+    throw runtime_error("Not running");
 
   if (d_isStopRequested)
   {

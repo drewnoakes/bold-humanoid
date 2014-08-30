@@ -14,7 +14,7 @@ SequenceOption::SequenceOption(std::string const& id, std::initializer_list<std:
   if (sequence.size() == 0)
   {
     log::error("SequenceOption::SequenceOption") << "Must specify at least one option in sequence: " << id;
-    throw new runtime_error("Must specify at least one option in the sequence");
+    throw runtime_error("Must specify at least one option in the sequence");
   }
 }
 

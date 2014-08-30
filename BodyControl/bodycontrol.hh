@@ -109,7 +109,7 @@ namespace bold
       d_maxJointId(maxJointId)
     {
       if ((int)minJointId > (int)maxJointId)
-        throw new std::runtime_error("Invalid min/max joint IDs");
+        throw std::runtime_error("Invalid min/max joint IDs");
     }
 
     void visitJoints(std::function<void(JointControl*)> action)
