@@ -37,7 +37,7 @@ namespace robocup
     }
   }
 
-  enum class ExtraState : uint8
+  enum class PeriodType : uint8
   {
     NORMAL = 0,
     PENALTYSHOOT = 1,
@@ -45,16 +45,16 @@ namespace robocup
     TIMEOUT = 3
   };
 
-  inline std::string getExtraStateName(ExtraState extraState)
+  inline std::string getPeriodTypeName(PeriodType periodType)
   {
-    switch (extraState)
+    switch (periodType)
     {
-      case ExtraState::NORMAL:       return "Normal";
-      case ExtraState::PENALTYSHOOT: return "Penalty shoot";
-      case ExtraState::OVERTIME:     return "Overtime";
-      case ExtraState::TIMEOUT:      return "Timeout";
+      case PeriodType::NORMAL:       return "Normal";
+      case PeriodType::PENALTYSHOOT: return "Penalty shoot";
+      case PeriodType::OVERTIME:     return "Overtime";
+      case PeriodType::TIMEOUT:      return "Timeout";
       default:
-        throw std::runtime_error("Unsupported ExtraState enum value.");
+        throw std::runtime_error("Unsupported PeriodType enum value.");
     }
   }
 
@@ -174,7 +174,7 @@ namespace robocup
     PlayMode playMode;             // state of the game (STATE_READY, STATE_PLAYING, etc)
     uint8 isFirstHalf;             // 1 = game in first half, 0 otherwise
     uint8 nextKickOffTeamIndex;    // Index of the next team to kick off (0 or 1)
-    ExtraState secondaryState;     // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+    PeriodType periodType;     // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     uint8 dropInTeamNumber;        // Team that caused last drop in
     int16 secondsSinceLastDropIn;  // Number of seconds passed since the last drop in.  -1 before first drop in.
     int16 secondsRemaining;        // Estimate of number of seconds remaining in the half

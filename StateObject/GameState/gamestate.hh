@@ -56,9 +56,9 @@ namespace bold
     bool isFirstHalf() const { return d_data.isFirstHalf == 1; }
     /** Index of the next team to kick off. Either zero or one. */
     uint8 getNextKickOffTeamIndex() const { return d_data.nextKickOffTeamIndex; }
-    bool isPenaltyShootout() const { return d_data.secondaryState == robocup::ExtraState::PENALTYSHOOT; }
-    bool isOvertime() const { return d_data.secondaryState == robocup::ExtraState::OVERTIME; }
-    bool isTimeout() const { return d_data.secondaryState == robocup::ExtraState::TIMEOUT; }
+    bool isPenaltyShootout() const { return d_data.periodType == robocup::PeriodType::PENALTYSHOOT; }
+    bool isOvertime() const { return d_data.periodType == robocup::PeriodType::OVERTIME; }
+    bool isTimeout() const { return d_data.periodType == robocup::PeriodType::TIMEOUT; }
     bool isClockRunning() const { return getPlayMode() == robocup::PlayMode::PLAYING; }
     uint8 getLastDropInTeamNumber() const { return d_data.dropInTeamNumber; }
     int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn + (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
