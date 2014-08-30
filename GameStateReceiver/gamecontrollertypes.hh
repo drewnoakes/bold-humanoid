@@ -89,6 +89,29 @@ namespace robocup
     }
   }
 
+  enum class League : uint8
+  {
+    SPL = 0x01,
+    SPLDropIn = 0x02,
+    HumanoidKidSize = 0x11,
+    HumanoidTeenSize = 0x12,
+    HumanoidAdultSize = 0x13
+  };
+
+  inline std::string getLeagueName(League league)
+  {
+    switch (league)
+    {
+      case League::SPL:               return "SPL";
+      case League::SPLDropIn:         return "SPL Drop In";
+      case League::HumanoidKidSize:   return "Humanoid Kid Size";
+      case League::HumanoidTeenSize:  return "Humanoid Teen Size";
+      case League::HumanoidAdultSize: return "Humanoid Adult Size";
+      default:
+        throw std::runtime_error("Unsupported League enum value.");
+    }
+  }
+
   /// Model of the PlayerInfo struct (version 9)
   struct PlayerInfo
   {
