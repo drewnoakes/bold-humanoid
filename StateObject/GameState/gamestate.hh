@@ -45,7 +45,7 @@ namespace bold
     GameState(char const* data)
     : d_receivedAt(Clock::getTimestamp())
     {
-      memcpy(&d_data, data, sizeof(robocup::GameStateData));
+      memcpy(&d_data, data, sizeof(robocup::GameStateMessage));
     }
 
     robocup::PlayMode getPlayMode() const { return robocup::PlayMode(d_data.playMode); }
@@ -121,6 +121,6 @@ namespace bold
     }
 
     Clock::Timestamp d_receivedAt;
-    robocup::GameStateData d_data;
+    robocup::GameStateMessage d_data;
   };
 }

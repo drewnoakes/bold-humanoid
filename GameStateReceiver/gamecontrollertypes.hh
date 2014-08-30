@@ -162,7 +162,7 @@ namespace robocup
   /**
    * Message sent from game controller to robots (version 9).
    */
-  struct GameStateData
+  struct GameStateMessage
   {
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
     char header[4];                // Header to identify the structure
@@ -187,7 +187,7 @@ namespace robocup
     static constexpr uint8 SIZE = 23 + 2*TeamInfo::SIZE;
   };
 
-  enum class GameControllerResponseMessage : uint8
+  enum class RobotStatusMessageType : uint8
   {
     MANUALLY_PENALISED = 0,
     MANUALLY_UNPENALISED = 1,
@@ -199,9 +199,9 @@ namespace robocup
    *
    * Also known as RoboCupGameControlReturnData.
    */
-  struct RoboCupGameControlReturnData
+  struct RobotStatusMessage
   {
-    RoboCupGameControlReturnData(uint8 teamNumber, uint8 uniformNumber, GameControllerResponseMessage message)
+    RobotStatusMessage(uint8 teamNumber, uint8 uniformNumber, RobotStatusMessageType message)
     {
       memcpy(&header, HEADER, sizeof(header));
       version = VERSION;

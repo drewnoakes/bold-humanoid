@@ -37,7 +37,7 @@ GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, shared_ptr<V
 
 void GameStateReceiver::receive()
 {
-  static constexpr uint MaxMessageSize = GameStateData::SIZE; //max(GameStateData::SIZE, RoboCupGameControlReturnData::SIZE);
+  static constexpr uint MaxMessageSize = GameStateMessage::SIZE; //max(GameStateMessage::SIZE, RobotStatusMessage::SIZE);
 
   static set<uint32> ignoredHeaders;
   static uint8 teamNumber = static_cast<uint8>(Config::getStaticValue<int>("team-number"));
@@ -121,23 +121,23 @@ void GameStateReceiver::receive()
     uint8  observedVersion = *reinterpret_cast<uint8*>(data + 4);
     League observedLeague = *reinterpret_cast<League*>(data + 5);
 
-    if (observedHeader == GameStateData::HEADER_INT)
+    if (observedHeader == GameStateMessage::HEADER_INT)
     {
-      if (observedVersion != GameStateData::VERSION)
-        logBadVersion(observedVersion, GameStateData::VERSION);
-      else if (bytesRead != GameStateData::SIZE)
+      if (observedVersion != GameStateMessage::VERSION)
+        logBadVersion(observedVersion, GameStateMessage::VERSION);
+      else if (bytesRead != GameStateMessage::SIZE)
         logBadSize(bytesRead);
       else if (observedLeague != League::HumanoidKidSize)
         logBadLeague(observedLeague, League::HumanoidKidSize);
       else
         processGameControllerInfoMessage(data);
     }
-    else if (observedHeader == RoboCupGameControlReturnData::HEADER_INT)
+    else if (observedHeader == RobotStatusMessage::HEADER_INT)
     {
       // This is a response message
-      if (observedVersion != RoboCupGameControlReturnData::VERSION)
-        logBadVersion(observedVersion, RoboCupGameControlReturnData::VERSION);
-      else if (bytesRead != RoboCupGameControlReturnData::SIZE)
+      if (observedVersion != RobotStatusMessage::VERSION)
+        logBadVersion(observedVersion, RobotStatusMessage::VERSION);
+      else if (bytesRead != RobotStatusMessage::SIZE)
         logBadSize(bytesRead);
       // TODO process response messages as information about teammates or opponents
 //    else
@@ -167,9 +167,9 @@ void GameStateReceiver::receive()
     fromAddress.sin_port = htons(d_gameControllerPort);
     d_socket->setTarget(fromAddress);
 
-    RoboCupGameControlReturnData response(teamNumber, uniformNumber, GameControllerResponseMessage::ALIVE);
+    RobotStatusMessage response(teamNumber, uniformNumber, RobotStatusMessageType::ALIVE);
 
-    if (!d_socket->send(reinterpret_cast<char*>(&response), sizeof(RoboCupGameControlReturnData)))
+    if (!d_socket->send(reinterpret_cast<char*>(&response), sizeof(RobotStatusMessage)))
       log::warning("GameStateReceiver::receive") << "Failed sending status response message to game controller";
   }
 
@@ -214,7 +214,7 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
 
   auto gameState = make_shared<GameState const>(data);
 
-  ASSERT(gameState->getVersion() == GameStateData::VERSION);
+  ASSERT(gameState->getVersion() == GameStateMessage::VERSION);
 
   // Track the other team numbers we see, and log them as new ones arrive
 
