@@ -6,6 +6,14 @@ class DarwinMotionModel : public GaussianMotionModel<DIM>
 public:
   using State = typename GaussianMotionModel<DIM>::State;
 
+  DarwinMotionModel()
+  {
+    auto positionError  = Config::getSetting<double>("localiser.position-error");
+    auto angleErrorDegs = Config::getSetting<double>("localiser.angle-error-degrees");
+    positionError->track([this](double value) { d_positionErrorRng = Math::createNormalRng(0, value); });
+    angleErrorDegs->track([this](double value) { d_angleErrorRng = Math::createNormalRng(0, Math::degToRad(value)); });
+  }
+
   void setDeltaAgentMat(Eigen::Matrix3d mat)
   {
     d_deltaAgentMat = mat;
