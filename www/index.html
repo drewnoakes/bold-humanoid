@@ -201,7 +201,7 @@
                 <div class="score">{{this.myTeam.score}}</div>
                 <ul class="penalties">
                     {{#each this.myTeam.players}}
-                    {{#if this.penalty}}
+                    {{#if this.showPenalty}}
                     {{#if this.isDone}}
                     <li class="done">
                     {{else}}
@@ -219,7 +219,7 @@
                 <div class="score">{{this.opponentTeam.score}}</div>
                 <ul class="penalties">
                     {{#each this.opponentTeam.players}}
-                    {{#if this.penalty}}
+                    {{#if this.showPenalty}}
                     {{#if this.isDone}}
                     <li class="done">
                     {{else}}

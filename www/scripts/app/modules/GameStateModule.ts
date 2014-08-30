@@ -26,6 +26,7 @@ interface ExtendedTeamData extends state.TeamData
 interface ExtendedPlayerData extends state.PlayerData
 {
     num?: number;
+    showPenalty?: boolean;
     isDone?: boolean;
 }
 
@@ -74,7 +75,12 @@ class GameStateModule extends Module
                 p.num = i;
                 if (typeof(p.penaltySecondsRemaining) !== 'undefined')
                 {
+                    p.showPenalty = p.penalty !== "Substitute";
                     p.isDone = p.penaltySecondsRemaining === 0;
+                }
+                else
+                {
+                    p.showPenalty = false;
                 }
             }
         };
