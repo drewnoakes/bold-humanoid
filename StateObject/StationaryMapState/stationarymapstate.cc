@@ -135,7 +135,10 @@ StationaryMapState::StationaryMapState(
 : d_ballEstimates(ballEstimates),
   d_goalPostEstimates(goalPostEstimates),
   d_keeperEstimates(keeperEstimates),
-  d_occlusionMap(occlusionMap)
+  d_occlusionMap(occlusionMap),
+  d_turnAngleRads(0.0),
+  d_turnBallPos(Vector2d::Zero()),
+  d_turnForKick(nullptr)
 {
   // Sort estimates such that those with greater numbers of observations appear first
   std::sort(d_ballEstimates.begin(), d_ballEstimates.end(), compareAverages<Vector2d>);
