@@ -165,7 +165,7 @@ namespace robocup
   struct GameStateMessage
   {
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
-    char header[4];                // Header to identify the structure
+    uint32 header;                 // Header to identify the structure
     uint8 version;                 // Version of the data structure
     League leagueNumber;           // Identifies the league of the current game
     uint8 packetNumber;            // Sequence number of the packet (overflows from 255 to 0)
@@ -181,8 +181,7 @@ namespace robocup
     int16 secondaryTime;           // Sub-time (remaining in ready state, etc.) in seconds
     TeamInfo teams[2];
 
-    static constexpr const char* HEADER = "RGme";
-    static constexpr uint32 HEADER_INT = 0x656d4752;
+    static constexpr uint32 HEADER_INT = 0x656d4752; // "RGme"
     static constexpr uint8 VERSION = 9;
     static constexpr uint8 SIZE = 23 + 2*TeamInfo::SIZE;
   };
@@ -202,22 +201,20 @@ namespace robocup
   struct RobotStatusMessage
   {
     RobotStatusMessage(uint8 teamNumber, uint8 uniformNumber, RobotStatusMessageType message)
-    : version(VERSION),
+    : header(HEADER_INT),
+      version(VERSION),
       teamNumber(teamNumber),
       uniformNumber(uniformNumber),
       message(message)
-    {
-      memcpy(&header, HEADER, sizeof(header));
-    }
+    {}
 
-    char header[4];
+    uint32 header;
     uint8 version;
     uint8 teamNumber;
     uint8 uniformNumber;
     RobotStatusMessageType message;
 
-    static constexpr char const* HEADER = "RGrt";
-    static constexpr uint32 HEADER_INT = 0x74724752;
+    static constexpr uint32 HEADER_INT = 0x74724752; // "RGrt"
     static constexpr uint8 VERSION = 2;
     static constexpr uint8 SIZE = 8;
   };
