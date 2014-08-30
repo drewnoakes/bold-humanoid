@@ -5,8 +5,6 @@
 
 #include "../util/assert.hh"
 
-#define MAX_NUM_PLAYERS 11
-
 typedef unsigned char  uint8;
 typedef short          int16;
 typedef unsigned short uint16;
@@ -143,11 +141,12 @@ namespace robocup
 
     PlayerInfo const& getPlayer(uint8 unum) const
     {
-      ASSERT(unum > 0 && unum <= MAX_NUM_PLAYERS);
+      ASSERT(unum > 0 && unum <= PLAYER_COUNT);
       return d_players[unum - 1];
     }
 
-    static constexpr uint8 SIZE = 6 + MAX_NUM_PLAYERS*PlayerInfo::SIZE;
+    static constexpr uint8 PLAYER_COUNT = 11;
+    static constexpr uint8 SIZE = 6 + PLAYER_COUNT*PlayerInfo::SIZE;
 
   private:
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
@@ -156,7 +155,7 @@ namespace robocup
     uint8 d_score;        // Team's score
     uint8 d_penaltyShot;  // Penalty shot counter
     uint16 d_singleShots; // Bits represent penalty shot success
-    PlayerInfo d_players[MAX_NUM_PLAYERS]; // the team's players
+    PlayerInfo d_players[PLAYER_COUNT]; // The team's players
   };
 
   /**
