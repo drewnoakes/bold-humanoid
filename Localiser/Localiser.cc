@@ -13,8 +13,8 @@ Localiser::Localiser()
   auto smoothingWindowSize = Config::getSetting<int>("localiser.smoothing-window-size");
   d_useLines          = Config::getSetting<bool>("localiser.use-lines");
   d_minGoalsNeeded    = Config::getSetting<int>("localiser.min-goals-needed");
-  auto positionError  = Config::getSetting<double>("localiser.position-error");
-  auto angleErrorDegs = Config::getSetting<double>("localiser.angle-error-degrees");
+//  auto positionError  = Config::getSetting<double>("localiser.position-error");
+//  auto angleErrorDegs = Config::getSetting<double>("localiser.angle-error-degrees");
   d_defaultKidnapWeight = Config::getSetting<double>("localiser.default-kidnap-weight");
   d_penaltyKidnapWeight = Config::getSetting<double>("localiser.penalty-kidnap-weight");
   d_enablePenaltyRandomise = Config::getSetting<bool>("localiser.enable-penalty-randomise");

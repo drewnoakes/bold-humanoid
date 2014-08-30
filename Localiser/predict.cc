@@ -82,7 +82,7 @@ void Localiser::predict()
     return;
 
   DarwinMotionModel<4> motionModel;
-  bool dynamicError = d_enableDynamicError->getValue();
+//  bool dynamicError = d_enableDynamicError->getValue();
 
   if (d_haveLastAgentTransform)
   {
