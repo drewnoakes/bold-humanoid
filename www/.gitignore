@@ -1,0 +1,4 @@
+/.idea
+/main-built.js
+/scripts/app/**/*.js
+/scripts/app/**/*.js.map

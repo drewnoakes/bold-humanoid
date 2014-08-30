@@ -43,10 +43,6 @@ TAGS
 /vision
 /Version/version.cc
 /configuration-agent.json
-/www/.idea
-/www/main-built.js
-/www/scripts/app/**/*.js
-/www/scripts/app/**/*.js.map
 Release/
 RelWithDebInfo/
 Debug/
