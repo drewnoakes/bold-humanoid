@@ -110,7 +110,9 @@ namespace robocup
     }
   }
 
-  /// Model of the PlayerInfo struct (version 9)
+  /**
+  * Structure of player information in the game controller's GameState message.
+  */
   struct PlayerInfo
   {
     bool hasPenalty() const { return d_penaltyType != PenaltyType::NONE; }
@@ -126,13 +128,16 @@ namespace robocup
     uint8 d_secondsUntilPenaltyLifted;
   };
 
-  /// Model of the TeamInfo struct (version 9)
+  /**
+   * Structure of team information in the game controller's GameState message.
+   */
   struct TeamInfo
   {
     uint8 getTeamNumber() const { return d_teamNumber; }
     uint8 isBlueTeam() const { return d_teamColour == 0; }
     uint8 getScore() const { return d_score; }
     uint8 getPenaltyShotCount() const { return d_penaltyShot; }
+
     bool wasPenaltySuccessful(uint8 number) const
     {
       ASSERT(number < d_penaltyShot);
@@ -170,12 +175,12 @@ namespace robocup
     uint8 packetNumber;            // Sequence number of the packet (overflows from 255 to 0)
     uint32 gameControllerId;       // A 32-bit number that identifies this game controller (use to detect when multiple GCs are running)
     uint8 playersPerTeam;          // The number of players on a team
-    PlayMode playMode;             // state of the game (STATE_READY, STATE_PLAYING, etc)
-    uint8 isFirstHalf;             // 1 = game in first half, 0 otherwise
+    PlayMode playMode;             // The game's play mode (initial, ready, set, play, finished)
+    uint8 isFirstHalf;             // Whether the first half (1) or second half (0), for both normal and extra game periods
     uint8 nextKickOffTeamIndex;    // Index of the next team to kick off (0 or 1)
-    PeriodType periodType;     // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
-    uint8 dropInTeamNumber;        // Team that caused last drop in
-    int16 secondsSinceLastDropIn;  // Number of seconds passed since the last drop in.  -1 before first drop in.
+    PeriodType periodType;         // The type of game period (normal, extra, penalties, timeout)
+    uint8 dropInTeamIndex;         // Index of the team that caused the last drop in (or 2 if no drop in yet)
+    int16 secondsSinceLastDropIn;  // Number of seconds passed since the last drop in (or -1 if no drop in yet)
     int16 secondsRemaining;        // Estimate of number of seconds remaining in the half
     int16 secondaryTime;           // Sub-time (remaining in ready state, etc.) in seconds
     TeamInfo teams[2];
