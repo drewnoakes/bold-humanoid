@@ -202,13 +202,12 @@ namespace robocup
   struct RobotStatusMessage
   {
     RobotStatusMessage(uint8 teamNumber, uint8 uniformNumber, RobotStatusMessageType message)
+    : version(VERSION),
+      teamNumber(teamNumber),
+      uniformNumber(uniformNumber),
+      message(static_cast<uint8>(message))
     {
       memcpy(&header, HEADER, sizeof(header));
-      version = VERSION;
-
-      this->teamNumber = teamNumber;
-      this->uniformNumber = uniformNumber;
-      this->message = static_cast<uint8>(message);
     }
 
     char header[4];
