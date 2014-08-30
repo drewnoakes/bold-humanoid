@@ -81,7 +81,7 @@ void GameStateReceiver::receive()
     int bytesRead = d_socket->receiveFrom(data, MaxMessageSize + 1, &fromAddress, &fromAddressLength);
 
     // Returns zero bytes when no message available (non-blocking)
-    // Returns -1 when an error occured. UDPSocket logs the error.
+    // Returns -1 when an error occurred. UDPSocket logs the error.
     if (bytesRead <= 0)
       break;
 
