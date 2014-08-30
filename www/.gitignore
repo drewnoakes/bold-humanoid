@@ -3,3 +3,5 @@
 /main-built.js
 /scripts/app/**/*.js
 /scripts/app/**/*.js.map
+/scripts/test/**/*.js
+/scripts/test/**/*.js.map
