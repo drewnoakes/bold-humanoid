@@ -74,6 +74,18 @@ void GameStateReceiver::receive()
     d_debugger->notifyIgnoringUnrecognisedMessage();
   };
 
+  auto logBadLeague = [this](League observed, League expected)
+  {
+    static set<pair<League,League>> ignoredLeagues;
+    auto key = make_pair(observed, expected);
+    if (ignoredLeagues.find(key) == ignoredLeagues.end())
+    {
+      ignoredLeagues.insert(key);
+      log::warning("GameStateReceiver::receive") << "First game controller message with wrong league (seen " << getLeagueName(observed) << " but expecting " << getLeagueName(expected) << ")";
+    }
+    d_debugger->notifyIgnoringUnrecognisedMessage();
+  };
+
   // Process all pending messages, looping until done
   while (true)
   {
@@ -107,6 +119,7 @@ void GameStateReceiver::receive()
 
     uint32 observedHeader = (data[3] << 24) | (data[2] << 16) | (data[1] << 8) | (data[0]);
     uint8  observedVersion = *reinterpret_cast<uint8*>(data + 4);
+    League observedLeague = *reinterpret_cast<League*>(data + 5);
 
     if (observedHeader == GameStateData::HEADER_INT)
     {
@@ -114,6 +127,8 @@ void GameStateReceiver::receive()
         logBadVersion(observedVersion, GameStateData::VERSION);
       else if (bytesRead != GameStateData::SIZE)
         logBadSize(bytesRead);
+      else if (observedLeague != League::HumanoidKidSize)
+        logBadLeague(observedLeague, League::HumanoidKidSize);
       else
         processGameControllerInfoMessage(data);
     }
