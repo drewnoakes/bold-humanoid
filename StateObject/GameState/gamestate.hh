@@ -51,6 +51,7 @@ namespace bold
     robocup::PlayMode getPlayMode() const { return d_data.playMode; }
 
     uint8 getVersion() const { return d_data.version; }
+    robocup::League getLeague() const { return d_data.league; }
     uint8 getPacketNumber() const { return d_data.packetNumber; }
     uint8 getPlayersPerTeam() const { return d_data.playersPerTeam; }
     bool isFirstHalf() const { return d_data.isFirstHalf == 1; }
