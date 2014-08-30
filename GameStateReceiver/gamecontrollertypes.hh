@@ -110,6 +110,23 @@ namespace robocup
     }
   }
 
+  enum class TeamColor : uint8
+  {
+    Blue = 0,
+    Red = 1
+  };
+
+  inline std::string getTeamColorName(TeamColor teamColor)
+  {
+    switch (teamColor)
+    {
+      case TeamColor::Red:  return "Red";
+      case TeamColor::Blue: return "Blue";
+      default:
+        throw std::runtime_error("Unsupported TeamColor enum value.");
+    }
+  }
+
   /**
   * Structure of player information in the game controller's GameState message.
   */
@@ -134,7 +151,8 @@ namespace robocup
   struct TeamInfo
   {
     uint8 getTeamNumber() const { return d_teamNumber; }
-    uint8 isBlueTeam() const { return d_teamColour == 0; }
+    TeamColor getTeamColor() const { return d_teamColour; }
+    uint8 isBlueTeam() const { return d_teamColour == TeamColor::Blue; }
     uint8 getScore() const { return d_score; }
     uint8 getPenaltyShotCount() const { return d_penaltyShot; }
 
@@ -155,11 +173,11 @@ namespace robocup
 
   private:
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
-    uint8 d_teamNumber;   // Unique team number
-    uint8 d_teamColour;   // Colour of the team
-    uint8 d_score;        // Team's score
-    uint8 d_penaltyShot;  // Penalty shot counter
-    uint16 d_singleShots; // Bits represent penalty shot success
+    uint8 d_teamNumber;     // Unique team number
+    TeamColor d_teamColour; // Colour of the team
+    uint8 d_score;          // Team's score
+    uint8 d_penaltyShot;    // Penalty shot counter
+    uint16 d_singleShots;   // Bits represent penalty shot success
     PlayerInfo d_players[PLAYER_COUNT]; // The team's players
   };
 
@@ -171,7 +189,7 @@ namespace robocup
     // FIELDS DESERIALISED FROM MEMORY -- DO NOT CHANGE
     uint32 header;                 // Header to identify the structure
     uint8 version;                 // Version of the data structure
-    League leagueNumber;           // Identifies the league of the current game
+    League league;                 // Identifies the league of the current game
     uint8 packetNumber;            // Sequence number of the packet (overflows from 255 to 0)
     uint32 gameControllerId;       // A 32-bit number that identifies this game controller (use to detect when multiple GCs are running)
     uint8 playersPerTeam;          // The number of players on a team
