@@ -189,8 +189,8 @@ namespace robocup
 
   enum class GameControllerResponseMessage : uint8
   {
-    MANUAL_PENALISE = 0,
-    MANUAL_UNPENALISE = 1,
+    MANUALLY_PENALISED = 0,
+    MANUALLY_UNPENALISED = 1,
     ALIVE = 2
   };
 
