@@ -40,7 +40,7 @@ namespace robocup
   enum class PeriodType : uint8
   {
     NORMAL = 0,
-    PENALTYSHOOT = 1,
+    PENALTY_SHOOTOUT = 1,
     OVERTIME = 2,
     TIMEOUT = 3
   };
@@ -49,10 +49,10 @@ namespace robocup
   {
     switch (periodType)
     {
-      case PeriodType::NORMAL:       return "Normal";
-      case PeriodType::PENALTYSHOOT: return "Penalty shoot";
-      case PeriodType::OVERTIME:     return "Overtime";
-      case PeriodType::TIMEOUT:      return "Timeout";
+      case PeriodType::NORMAL:           return "Normal";
+      case PeriodType::PENALTY_SHOOTOUT: return "Penalty shootout";
+      case PeriodType::OVERTIME:         return "Overtime";
+      case PeriodType::TIMEOUT:          return "Timeout";
       default:
         throw std::runtime_error("Unsupported PeriodType enum value.");
     }
