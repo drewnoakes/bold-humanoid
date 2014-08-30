@@ -57,7 +57,7 @@ void GameStateReceiver::receive()
     if (ignoredLengths.find(bytesRead) == ignoredLengths.end())
     {
       ignoredLengths.insert(bytesRead);
-      log::warning("GameStateReceiver::receive") << "First game controller message with invalid size seen (" << bytesRead << ")";
+      log::warning("GameStateReceiver::receive") << "First game controller message with invalid size (seen " << bytesRead << ")";
     }
     d_debugger->notifyIgnoringUnrecognisedMessage();
   };
@@ -69,7 +69,7 @@ void GameStateReceiver::receive()
     if (ignoredVersions.find(key) == ignoredVersions.end())
     {
       ignoredVersions.insert(key);
-      log::warning("GameStateReceiver::receive") << "First game controller message with wrong version seen (" << (int)observed << " but expecting " << (int)expected << ")";
+      log::warning("GameStateReceiver::receive") << "First game controller message with wrong version (seen " << (int)observed << " but expecting " << (int)expected << ")";
     }
     d_debugger->notifyIgnoringUnrecognisedMessage();
   };
