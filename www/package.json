@@ -1,0 +1,30 @@
+{
+  "name": "round-table",
+  "version": "0.1.0",
+  "description": "The development and debugging UI for the Bold Hearts humanoid agent.",
+  "main": "build.js",
+  "scripts": {
+    "test": "karma run",
+    "build": "find . -name \"*.ts\" | xargs tsc -m amd --sourcemap",
+    "optimise": "r.js -o build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:boldhearts/bold-humanoid.git"
+  },
+  "keywords": [
+    "robocup",
+    "humanoid",
+    "robotics",
+    "boldhearts"
+  ],
+  "author": "Drew Noakes https://drewnoakes.com",
+  "license": "Private",
+  "devDependencies": {
+    "karma": "~0.12.23",
+    "karma-jasmine": "~0.1.5",
+    "requirejs": "~2.1.14",
+    "karma-requirejs": "~0.2.2",
+    "karma-chrome-launcher": "~0.1.4"
+  }
+}
