@@ -87,7 +87,11 @@ void GameStateReceiver::receive()
 
     received = true;
 
-    // We need at least 5 bytes for the header (4) and version (1).
+    // The start of both GameState and RobotState messages has format:
+    //
+    // - header  (4 bytes)
+    // - version (1 byte)
+    //
     // For version 7 messages, the version spans 4 bytes, but only the first
     // byte need be read. So only one byte is needed to differentiate between
     // version 7 and 8 messages.
