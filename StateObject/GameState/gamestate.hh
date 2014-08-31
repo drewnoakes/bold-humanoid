@@ -42,12 +42,7 @@ namespace bold
   class GameState : public StateObject
   {
   public:
-    GameState(char const* data)
-    : d_receivedAt(Clock::getTimestamp())
-    {
-      ASSERT(sizeof(robocup::GameStateMessage) == robocup::GameStateMessage::SIZE);
-      memcpy(&d_data, data, sizeof(robocup::GameStateMessage));
-    }
+    GameState(char const* data);
 
     robocup::PlayMode getPlayMode() const { return d_data.playMode; }
 
@@ -66,6 +61,7 @@ namespace bold
     uint8 getLastDropInTeamColorNumber() const { return d_data.dropInTeamColor; }
     int16 getSecondsSinceLastDropIn() const { return d_data.secondsSinceLastDropIn + (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
     int16 getSecondsRemaining() const { return d_data.secondsRemaining - (isClockRunning() ? Clock::getSecondsSince(d_receivedAt) : 0); }
+
     int16 getSecondaryTime() const
     {
       int16 secondaryTime = d_data.secondaryTime;

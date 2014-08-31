@@ -5,6 +5,14 @@ using namespace rapidjson;
 using namespace robocup;
 using namespace std;
 
+GameState::GameState(char const* data)
+: d_receivedAt(Clock::getTimestamp())
+{
+  static_assert(is_pod<GameStateMessage>::value, "Must be POD type");
+  ASSERT(sizeof(GameStateMessage) == GameStateMessage::SIZE);
+  memcpy(&d_data, data, sizeof(GameStateMessage));
+}
+
 GameResult GameState::getGameResult() const
 {
   if (isFirstHalf() || getPlayMode() != PlayMode::FINISHED)
