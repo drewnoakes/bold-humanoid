@@ -10,7 +10,7 @@ GameState::GameState(char const* data)
 {
   static_assert(is_pod<GameStateMessage>::value, "Must be POD type");
   static_assert(sizeof(GameStateMessage) == GameStateMessage::SIZE, "Must have advertised size");
-  memcpy(&d_data, data, sizeof(GameStateMessage));
+  std::copy(data, data + sizeof(GameStateMessage), reinterpret_cast<char*>(&d_data));
 }
 
 GameResult GameState::getGameResult() const
