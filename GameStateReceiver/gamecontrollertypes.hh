@@ -191,13 +191,14 @@ namespace robocup
     uint8 version;                 // Version of the data structure
     League league;                 // Identifies the league of the current game
     uint8 packetNumber;            // Sequence number of the packet (overflows from 255 to 0)
-    uint32 gameControllerId;       // A 32-bit number that identifies this game controller (use to detect when multiple GCs are running)
     uint8 playersPerTeam;          // The number of players on a team
+    uint32 gameControllerId;       // A 32-bit number that identifies this game controller (use to detect when multiple GCs are running)
     PlayMode playMode;             // The game's play mode (initial, ready, set, play, finished)
     uint8 isFirstHalf;             // Whether the first half (1) or second half (0), for both normal and extra game periods
     uint8 nextKickOffTeamIndex;    // Index of the next team to kick off (0 or 1)
     PeriodType periodType;         // The type of game period (normal, extra, penalties, timeout)
     uint8 dropInTeamColor;         // Color of the team that caused the last drop in (or 2 if no drop in yet)
+    uint8 isKnockOutGame;          // Whether the game is a knockout (1) or not (0)
     int16 secondsSinceLastDropIn;  // Number of seconds passed since the last drop in (or -1 if no drop in yet)
     int16 secondsRemaining;        // Estimate of number of seconds remaining in the half
     int16 secondaryTime;           // Sub-time (remaining in ready state, etc.) in seconds
@@ -205,7 +206,7 @@ namespace robocup
 
     static constexpr uint32 HEADER_INT = 0x656d4752; // "RGme"
     static constexpr uint8 VERSION = 9;
-    static constexpr uint8 SIZE = 23 + 2*TeamInfo::SIZE;
+    static constexpr uint8 SIZE = 24 + 2*TeamInfo::SIZE;
   };
 
   enum class RobotStatusMessageType : uint8
