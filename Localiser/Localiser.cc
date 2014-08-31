@@ -86,5 +86,6 @@ Localiser::Localiser()
 
   }
 
+  d_filter->reset(Filter<4>::State::Zero());
   updateStateObject();
 }

@@ -90,6 +90,8 @@ void Localiser::predict()
     return;
 
   DarwinMotionModel<4> motionModel;
+  motionModel.setProcessNoiseCovar(MatrixXd::Identity(4,4) * 0.01);
+
 //  bool dynamicError = d_enableDynamicError->getValue();
 
   if (d_haveLastAgentTransform)
@@ -106,8 +108,13 @@ void Localiser::predict()
       0, 0, 1;
 
     motionModel.setDeltaAgentMat(deltaAgentMat);
-    d_filter->predict(motionModel);
   }
+  else
+  {
+    motionModel.setDeltaAgentMat(Matrix3d::Identity());
+  }
+  
+  d_filter->predict(motionModel);
 
   d_lastAgentTransform = odometryState->getTransform();
   d_haveLastAgentTransform = true;
