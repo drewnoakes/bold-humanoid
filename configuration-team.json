@@ -266,7 +266,7 @@
     "thread-sleep-microseconds": 1500
   },
   "localiser": {
-    "filter-type": 0,
+    "filter-type": 2,
     "smoothing-window-size": 5,
     "randomise-ratio": 0.0,
     "use-lines": false,

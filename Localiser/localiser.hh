@@ -16,7 +16,8 @@ namespace bold
   enum class FilterType
   {
     Particle = 0,
-    Kalman = 1
+    Kalman = 1,
+    UnscentedKalman = 2
   };
 
   class Localiser

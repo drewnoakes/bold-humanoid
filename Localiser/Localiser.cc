@@ -78,6 +78,12 @@ Localiser::Localiser()
   {
     d_filter = allocate_aligned_shared<KalmanFilter<4>>();
   }
+
+  case FilterType::UnscentedKalman:
+  {
+    d_filter = allocate_aligned_shared<UnscentedKalmanFilter<4>>();
+  }
+
   }
 
   updateStateObject();
