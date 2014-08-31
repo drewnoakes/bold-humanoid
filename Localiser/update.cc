@@ -1,10 +1,55 @@
 #include "localiser.ih"
 
+template<int DIM>
+class DarwinGoalPostObservationModel : public GaussianObservationModel<DIM>
+{
+public:
+  using State = typename GaussianObservationModel<DIM>::State;
+
+  VectorXd operator()(State const& state, VectorXd const& observation) const override
+  {
+    // Use maximum likelihood model: find goalpost that is fits
+    // observation best, and determine where we should have seen it
+    // given the supplied state
+
+    
+    Vector2d observation2d{observation.head<2>()};
+    double smallestDist = 1e9;
+    Vector3d expectedObservation3d;
+
+    for (Vector3d const& candidate : FieldMap::getGoalPostPositions())
+    {
+      AgentPosition pos(state);
+      Affine3d agentWorld3d(pos.agentWorldTransform());
+
+      Vector3d candidate3d{candidate.x(), candidate.y(), 0};
+      Vector3d candidateAgent3d{agentWorld3d * candidate3d};
+      Vector2d candidateAgent2d{candidateAgent3d.head<2>()};
+      
+      double distance = (candidateAgent2d - observation2d).norm();
+      if (distance < smallestDist)
+      {
+        expectedObservation3d = candidateAgent3d;
+        smallestDist = distance;
+      }
+    }
+    
+    return expectedObservation3d;
+  }
+
+};
+
 void Localiser::update()
 {
-//  auto const& agentFrame = State::get<AgentFrameState>();
-
   predict();
+
+  auto const& agentFrame = State::get<AgentFrameState>();
+  for (Vector3d const& observed : agentFrame->getGoalObservations())
+  {
+    DarwinGoalPostObservationModel<4> model;
+    model.setObservationNoiseCovar(MatrixXd::Identity(3, 3) * 0.25);
+    d_filter->update(model, observed);
+  }
 
   /*
   if (agentFrame->getGoalObservations().size() >= static_cast<uint>(d_minGoalsNeeded->getValue()))

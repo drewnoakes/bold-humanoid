@@ -18,6 +18,7 @@
 #include "../filters/Filter/UnscentedKalmanFilter/unscentedkalmanfilter.hh"
 #include "../filters/Filter/ParticleFilter/particlefilter.hh"
 #include "../filters/MotionModel/GaussianMotionModel/gaussianmotionmodel.hh"
+#include "../filters/ObservationModel/GaussianObservationModel/gaussianobservationmodel.hh"
 
 using namespace std;
 using namespace bold;
