@@ -45,6 +45,7 @@ namespace bold
     GameState(char const* data)
     : d_receivedAt(Clock::getTimestamp())
     {
+      ASSERT(sizeof(robocup::GameStateMessage) == robocup::GameStateMessage::SIZE);
       memcpy(&d_data, data, sizeof(robocup::GameStateMessage));
     }
 
