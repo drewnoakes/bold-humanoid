@@ -9,7 +9,7 @@ GameState::GameState(char const* data)
 : d_receivedAt(Clock::getTimestamp())
 {
   static_assert(is_pod<GameStateMessage>::value, "Must be POD type");
-  ASSERT(sizeof(GameStateMessage) == GameStateMessage::SIZE);
+  static_assert(sizeof(GameStateMessage) == GameStateMessage::SIZE, "Must have advertised size");
   memcpy(&d_data, data, sizeof(GameStateMessage));
 }
 
