@@ -1,5 +1,7 @@
 #include "audiopowerspectrumstate.hh"
 
+#include <cmath>
+
 using namespace bold;
 using namespace rapidjson;
 using namespace std;
@@ -19,7 +21,7 @@ void AudioPowerSpectrumState::writeJson(Writer<StringBuffer> &writer) const
     {
       for (float const& db : d_dbs)
       {
-        if (isinf(db))
+        if (std::isinf(db))
           writer.Double(-200);
         else
           writer.Double(db);

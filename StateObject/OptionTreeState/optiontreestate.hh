@@ -5,6 +5,7 @@
 #include <rapidjson/document.h>
 #include <vector>
 #include <memory>
+#include <string>
 
 namespace bold
 {

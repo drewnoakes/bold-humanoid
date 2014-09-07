@@ -4,6 +4,8 @@
 
 #include "../Config/config.hh"
 
+#include <random>
+
 using namespace bold;
 using namespace std;
 

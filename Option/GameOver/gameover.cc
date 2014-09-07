@@ -5,6 +5,8 @@
 #include "../../StateObject/GameState/gamestate.hh"
 #include "../../MotionScript/motionscript.hh"
 
+#include <random>
+
 using namespace bold;
 using namespace std;
 using namespace rapidjson;

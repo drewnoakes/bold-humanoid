@@ -2,6 +2,7 @@
 
 #include "../bodymodel.hh"
 
+#include <array>
 #include <map>
 
 namespace bold

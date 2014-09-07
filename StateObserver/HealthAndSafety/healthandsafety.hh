@@ -2,13 +2,19 @@
 
 #include "../typedstateobserver.hh"
 #include "../../Clock/clock.hh"
-#include "../../StateObject/HardwareState/hardwarestate.hh"
 #include "../../stats/movingaverage.hh"
 #include "../../util/schmitttrigger.hh"
-#include "../../Voice/voice.hh"
+#include "../../Setting/setting.hh"
+#include "../../JointId/jointid.hh"
+
+#include <array>
+#include <vector>
 
 namespace bold
 {
+  class Voice;
+  class HardwareState;
+
   class HealthAndSafety : public TypedStateObserver<HardwareState>
   {
   public:

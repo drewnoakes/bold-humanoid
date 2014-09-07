@@ -7,6 +7,7 @@
 #include "../../OcclusionRay/occlusionray.hh"
 #include "../../stats/average.hh"
 
+#include <array>
 #include <vector>
 #include <Eigen/Geometry>
 

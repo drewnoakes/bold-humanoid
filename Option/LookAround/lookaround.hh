@@ -3,6 +3,8 @@
 #include "../option.hh"
 #include "../../Clock/clock.hh"
 
+#include <functional>
+
 namespace bold
 {
   class HeadModule;

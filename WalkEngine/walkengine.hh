@@ -3,6 +3,7 @@
 #include <string.h>
 #include <cmath>
 #include <memory>
+#include <array>
 
 #include "../PoseProvider/poseprovider.hh"
 

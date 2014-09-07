@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdexcept>
 #include <vector>
+#include <array>
 
 #include "../stateobject.hh"
 #include "../../BodyPart/bodypart.hh"

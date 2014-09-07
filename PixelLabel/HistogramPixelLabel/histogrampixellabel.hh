@@ -2,6 +2,7 @@
 
 #include "../pixellabel.hh"
 #include <opencv2/imgproc/imgproc.hpp>
+#include <array>
 
 namespace bold
 {

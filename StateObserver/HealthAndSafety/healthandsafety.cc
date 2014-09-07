@@ -3,6 +3,8 @@
 #include "../../CM730Snapshot/cm730snapshot.hh"
 #include "../../Config/config.hh"
 #include "../../MX28Snapshot/mx28snapshot.hh"
+#include "../../StateObject/HardwareState/hardwarestate.hh"
+#include "../../Voice/voice.hh"
 
 using namespace bold;
 using namespace std;

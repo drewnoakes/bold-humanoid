@@ -1,6 +1,7 @@
 #include "cm730.hh"
 
 #include <iomanip>
+#include <numeric>
 
 #include "../ThreadUtil/threadutil.hh"
 #include "../util/assert.hh"

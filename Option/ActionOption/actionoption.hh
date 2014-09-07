@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../option.hh"
+#include <functional>
 
 namespace bold
 {
