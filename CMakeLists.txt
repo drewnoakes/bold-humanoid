@@ -94,9 +94,9 @@ endif()
 #
 
 if(EIGEN_VECTORIZE)
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++1y -fPIC -pipe -Wall -Wno-unused-local-typedefs -Wno-multichar")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -Wall -Wno-unused-local-typedefs -Wno-multichar")
 else(EIGEN_VECTORIZE)
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++1y -fPIC -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall -Wno-unused-local-typedefs -Wno-multichar")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall -Wno-unused-local-typedefs -Wno-multichar")
 endif(EIGEN_VECTORIZE)
 
 if(TARGET_ATOM)
@@ -108,7 +108,7 @@ if(INCLUDE_ASSERTIONS)
 endif(INCLUDE_ASSERTIONS)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(BOLDHUMANOID_COMPILE_FLAGS "${BOLDHUMANOID_COMPILE_FLAGS} -stdlib=libstdc++ -std=c++1y -Wno-deprecated -Wno-unused-private-field -Wno-unknown-warning-option")
+  set(BOLDHUMANOID_COMPILE_FLAGS "${BOLDHUMANOID_COMPILE_FLAGS} -stdlib=libstdc++ -std=c++11 -Wno-deprecated -Wno-unused-private-field -Wno-unknown-warning-option")
 endif()
 
 #
