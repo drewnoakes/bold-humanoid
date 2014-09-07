@@ -17,10 +17,13 @@ include(AddPcih)
 include(AddClass)
 include(TypeScript)
 
+set(VERSION_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(VERSION_BINARY_DIR ${CMAKE_BINARY_DIR})
+include(ConfigureVersion)
+
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED core highgui imgproc)
 find_package(SigC++ REQUIRED)
-find_package(Git)
 
 set(JOYSTICKDIR ${CMAKE_SOURCE_DIR}/joystick)
 set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
@@ -47,35 +50,14 @@ set(BOLDHUMANOID_SOURCES
 )
 
 #
-## Query version information from repository and save in source code for subsequent compile
+## Custom target to ensure version is reconfigured at build time
 #
-# the commit's SHA1, and whether the building workspace was dirty or not
-execute_process(COMMAND
-  "${GIT_EXECUTABLE}" describe --match=NeVeRmAtCh --always --abbrev=40 --dirty
-  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-  OUTPUT_VARIABLE GIT_SHA1
-  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-# the date of the commit
-execute_process(COMMAND
-  "${GIT_EXECUTABLE}" log -1 --format=%ad --date=local
-  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-  OUTPUT_VARIABLE GIT_DATE
-  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-# the subject of the commit
-execute_process(COMMAND
-  "${GIT_EXECUTABLE}" log -1 --format=%s
-  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-  OUTPUT_VARIABLE GIT_COMMIT_SUBJECT
-  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-# the host name of the machine making the build
-execute_process(COMMAND
-  hostname
-  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-  OUTPUT_VARIABLE BUILT_ON_HOST_NAME
-  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-# generate version.cc
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Version/version.cc.in" "${CMAKE_CURRENT_BINARY_DIR}/Version/version.cc" @ONLY)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Version/version.hh" "${CMAKE_CURRENT_BINARY_DIR}/Version/version.hh" @ONLY)
+add_custom_target(
+  version
+  cmake -DVERSION_SOURCE_DIR=${VERSION_SOURCE_DIR} -DVERSION_BINARY_DIR=${VERSION_BINARY_DIR} -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/ConfigureVersion.cmake"
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 # explicitly provide the dependency for version.cc, in case it has been deleted
 list(APPEND BOLDHUMANOID_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/Version/version.cc")
 
@@ -112,9 +94,9 @@ endif()
 #
 
 if(EIGEN_VECTORIZE)
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -Wall -Wno-unused-local-typedefs -Wno-multichar")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++1y -fPIC -pipe -Wall -Wno-unused-local-typedefs -Wno-multichar")
 else(EIGEN_VECTORIZE)
-  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++11 -fPIC -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall -Wno-unused-local-typedefs -Wno-multichar")
+  set(BOLDHUMANOID_COMPILE_FLAGS "-std=c++1y -fPIC -pipe -DEIGEN_DONT_ALIGN -DEIGEN_DONT_VECTORIZE -Wall -Wno-unused-local-typedefs -Wno-multichar")
 endif(EIGEN_VECTORIZE)
 
 if(TARGET_ATOM)
@@ -126,7 +108,7 @@ if(INCLUDE_ASSERTIONS)
 endif(INCLUDE_ASSERTIONS)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(BOLDHUMANOID_COMPILE_FLAGS "-I/usr/include/i386-linux-gnu/c++/4.8 ${BOLDHUMANOID_COMPILE_FLAGS} -Wno-deprecated -Wno-unused-private-field -Wno-unknown-warning-option")
+  set(BOLDHUMANOID_COMPILE_FLAGS "${BOLDHUMANOID_COMPILE_FLAGS} -stdlib=libstdc++ -std=c++1y -Wno-deprecated -Wno-unused-private-field -Wno-unknown-warning-option")
 endif()
 
 #
@@ -776,6 +758,9 @@ add_executable(boldhumanoid
 ## Link executable to libraries
 #
 set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} ssl crypto libwebsockets.a pthread rt asound fftw3f espeak z)
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  LIST(APPEND BOLDHUMANOID_LINK_LIBRARIES c++)
+endif()
 
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
@@ -790,6 +775,7 @@ set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPI
 ## Target dependencies
 #
 add_dependencies(boldhumanoid libwebsockets_lib)
+add_dependencies(boldhumanoid_objects version)
 
 #
 ## Drawbridge
