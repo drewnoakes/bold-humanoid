@@ -25,6 +25,7 @@ namespace bold
     {};
 
 
+#if __cplusplus <= 201103L
     template<int Index, typename Search, typename First, typename... Types>
     struct get_internal
     {
@@ -48,7 +49,9 @@ namespace bold
     {
       return std::get<get_internal<0,T,Types...>::type::index>(tuple);
     }
-
+#else
+    using std::get;
+#endif
 
     template<typename ...>
     struct for_each_impl

@@ -27,6 +27,7 @@ TEST (MetaTests, get)
 {
   std::tuple<bool, int, double, float> tuple(true, 1, 2.0, 3.0f);
 
+#if __cplusplus <= 201103L
   int boolIndex = meta::get_internal<0,bool,bool,int,double,float>::type::index;
   int intIndex = meta::get_internal<0,int,bool,int,double,float>::type::index;
   int doubleIndex = meta::get_internal<0,double,bool,int,double,float>::type::index;
@@ -36,6 +37,7 @@ TEST (MetaTests, get)
   EXPECT_EQ ( 1, intIndex );
   EXPECT_EQ ( 2, doubleIndex );
   EXPECT_EQ ( 3, floatIndex );
+#endif
 
   EXPECT_EQ ( meta::get<bool>(tuple), true );
   EXPECT_EQ ( meta::get<int>(tuple), 1 );
