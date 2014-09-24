@@ -9,8 +9,6 @@
 
 using namespace bold;
 
-typedef unsigned long long ullong;
-
 double Clock::getMillis()
 {
   return timestampToMillis(getTimestamp());
@@ -48,7 +46,7 @@ Clock::Timestamp Clock::getTimestamp()
   if (gettimeofday(&now, 0) == -1)
     log::warning("Clock::getTimestamp") << "Error returned by gettimeofday: " << strerror(errno) << " (" << errno << ")";
 #endif
-  return (ullong)now.tv_usec + ((ullong)now.tv_sec * (ullong)1000000);
+  return (Timestamp)now.tv_usec + ((Timestamp)now.tv_sec * (Timestamp)1000000);
 }
 
 double Clock::timestampToMillis(Timestamp timestamp)
