@@ -4,7 +4,7 @@
 
 /// <reference path="../../libs/lodash.d.ts" />
 
-import dom = require('../../libs/domdomdom/domdomdom');
+import dom = require('util/domdomdom');
 import control = require('control');
 import Module = require('Module');
 import TabControl = require('controls/TabControl');

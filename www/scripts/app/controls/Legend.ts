@@ -2,7 +2,7 @@
  * @author Drew Noakes https://drewnoakes.com
  */
 
-import dom = require("../../libs/domdomdom/domdomdom");
+import dom = require("util/domdomdom");
 
 class Legend
 {

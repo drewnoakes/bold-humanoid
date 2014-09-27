@@ -3,7 +3,7 @@
  * @date 19 June 2014
  */
 
-import dom = require('../domdomdom');
+import dom = require('app/util/domdomdom');
 
 function expectEqual(expected: any, actual: any)
 {
