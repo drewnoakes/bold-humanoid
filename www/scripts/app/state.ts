@@ -347,7 +347,7 @@ export interface PlayerData
     posConfidence: number;
     /** [x,y] in metres, relative to the agent's frame. */
     ballRelative: number[];
-    /** Between 0 and 1 */
+//    /** Between 0 and 1 */
 //    ballConfidence: number;
     /** Time that the message was received according to the agent's own clock, in milliseconds. */
     updateTime: number;
