@@ -53,3 +53,5 @@ gulp.task('html', function ()
         .pipe(minifyhtml())
         .pipe(gulp.dest(outFolder));
 });
+
+gulp.task('default', ['styles', 'scripts']);
