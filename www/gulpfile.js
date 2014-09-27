@@ -8,6 +8,7 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var autoprefixer = require('gulp-autoprefixer');
 var minifycss = require('gulp-minify-css');
+var minifyhtml = require('gulp-minify-html');
 var fs = require('fs');
 var header = require('gulp-header');
 var typescript = require('gulp-tsc');
@@ -43,5 +44,12 @@ gulp.task('scripts', ['tsc'], function ()
         .pipe(rename('main.min.js'))
         .pipe(uglify())
         .pipe(header(fs.readFileSync('LICENSE')))
+        .pipe(gulp.dest(outFolder));
+});
+
+gulp.task('html', function ()
+{
+    return gulp.src('index.html')
+        .pipe(minifyhtml())
         .pipe(gulp.dest(outFolder));
 });
