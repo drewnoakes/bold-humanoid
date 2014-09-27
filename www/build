@@ -1,4 +1,4 @@
-find . -name "*.ts" | xargs tsc -m amd --sourcemap
+find scripts/app -name "*.ts" | xargs tsc -m amd --sourcemap
 
 # To optimise, run:
 #
