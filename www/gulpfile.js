@@ -54,4 +54,10 @@ gulp.task('html', function ()
         .pipe(gulp.dest(outFolder));
 });
 
+gulp.task('watch', function ()
+{
+    gulp.watch('scripts/app/**/*.ts', ['scripts']);
+    gulp.watch('styles/*.scss', ['styles']);
+});
+
 gulp.task('default', ['styles', 'scripts']);
