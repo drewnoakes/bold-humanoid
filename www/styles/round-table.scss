@@ -52,9 +52,6 @@ html, body, input, select, button
 html.initialised
 {
   transition: background-color 0.2s linear;
-  -moz-transition: background-color 0.2s linear;
-  -o-transition: background-color 0.2s linear;
-  -webkit-transition: background-color 0.2s linear;
 }
 
 body
@@ -190,26 +187,6 @@ html.night-mode #loading-indicator h1
   left: 0;
   width: 16px;
   height: 16px;
-  -moz-animation-name: bouncer-animation;
-  -moz-animation-duration: 0.8s;
-  -moz-animation-iteration-count: infinite;
-  -moz-animation-direction: alternate;
-  -moz-animation-timing-function: ease-in-out;
-  -webkit-animation-name: bouncer-animation;
-  -webkit-animation-duration: 0.8s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-direction: alternate;
-  -webkit-animation-timing-function: ease-in-out;
-  -ms-animation-name: bouncer-animation;
-  -ms-animation-duration: 0.8s;
-  -ms-animation-iteration-count: infinite;
-  -ms-animation-direction: alternate;
-  -ms-animation-timing-function: ease-in-out;
-  -o-animation-name: bouncer-animation;
-  -o-animation-duration: 0.8s;
-  -o-animation-iteration-count: infinite;
-  -o-animation-direction: alternate;
-  -o-animation-timing-function: ease-in-out;
   animation-name: bouncer-animation;
   animation-duration: 0.8s;
   animation-iteration-count: infinite;
@@ -371,9 +348,6 @@ div#header-module-links > a.module-button
   color: #444;
   text-decoration: none;
   transition: background-color 0.4s linear;
-  -moz-transition: background-color 0.4s linear;
-  -o-transition: background-color 0.4s linear;
-  -webkit-transition: background-color 0.4s linear;
 }
 
 div#header-module-links > a.module-button.added
@@ -396,9 +370,6 @@ div.indicator
   box-sizing: border-box;
 
   transition: background-color 0.5s linear;
-  -moz-transition: background-color 0.5s linear;
-  -o-transition: background-color 0.5s linear;
-  -webkit-transition: background-color 0.5s linear;
 }
 
 div.indicator.error { background-color: red; }
@@ -741,11 +712,7 @@ div.checkbox label
   display: inline-block;
   vertical-align: top;
   margin: 3px;
-
   transition: background-color 0.5s linear;
-  -moz-transition: background-color 0.5s linear;
-  -o-transition: background-color 0.5s linear;
-  -webkit-transition: background-color 0.5s linear;
 }
 
 .connection-indicator.disconnected
@@ -1301,9 +1268,6 @@ div.body-figure div.joint
   font-size: 13px;
   line-height: 20px;
   transition: background-color 0.4s linear;
-  -moz-transition: background-color 0.4s linear;
-  -o-transition: background-color 0.4s linear;
-  -webkit-transition: background-color 0.4s linear;
 }
 
 div.body-figure div.selected
@@ -1344,14 +1308,7 @@ div.module.optiontree ul.options li
   list-style-type: circle;
   border-radius: 2px;
   background-color: transparent;
-  transition: background-color 1s linear;
-  -moz-transition: background-color 1s linear;
-  -o-transition: background-color 1s linear;
-  -webkit-transition: background-color 1s linear;
-  transition: color 1s linear;
-  -moz-transition: color 1s linear;
-  -o-transition: color 1s linear;
-  -webkit-transition: color 1s linear;
+  transition: background-color 1s linear, color 1s linear;
 }
 
 div.module.optiontree ul.options li.ran
