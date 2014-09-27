@@ -2,7 +2,11 @@
 
 var gulp = require('gulp');
 
-gulp.task('default', function()
+var typescript = require('gulp-tsc');
+
+gulp.task('tsc', function ()
 {
-    
+    return gulp.src('scripts/app/**/*.ts')
+        .pipe(typescript({module:'amd'}))
+        .pipe(gulp.dest('scripts/app/'))
 });
