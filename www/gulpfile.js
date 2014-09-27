@@ -2,7 +2,7 @@
 
 // TODO investigate gulp-type for incremental compiles https://www.npmjs.org/package/gulp-type/
 // TODO investigate using browserify or webpack and AMD modules
-// TODO investigate keeping sourcemaps through pipeline
+// TODO investigate keeping sourcemaps through pipeline - styles: https://www.npmjs.org/package/gulp-autoprefixer
 // TODO make better use of scss
 
 var gulp = require('gulp');
@@ -25,7 +25,7 @@ gulp.task('styles', function ()
 {
     return gulp.src('styles/*.scss')
         .pipe(sass())
-        .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
+        .pipe(autoprefixer('last 2 versions', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
         .pipe(gulp.dest('styles'))
         .pipe(rename({suffix: '.min'}))
         .pipe(minifycss())

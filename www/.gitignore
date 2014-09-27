@@ -1,7 +1,8 @@
 /.idea
+/dist/
 /node_modules/
 /scripts/app/**/*.js
 /scripts/app/**/*.js.map
 /scripts/test/**/*.js
 /scripts/test/**/*.js.map
-/dist/
+/styles/round-table.css
