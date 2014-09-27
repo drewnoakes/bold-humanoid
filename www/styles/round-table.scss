@@ -194,54 +194,6 @@ html.night-mode #loading-indicator h1
   animation-timing-function: ease-in-out;
 }
 
-@-moz-keyframes bouncer-animation
-{
-  0%
-  {
-    left: 0;
-  }
-  100%
-  {
-    left: 169px;
-  }
-}
-
-@-webkit-keyframes bouncer-animation
-{
-  0%
-  {
-    left: 0;
-  }
-  100%
-  {
-    left: 169px;
-  }
-}
-
-@-ms-keyframes bouncer-animation
-{
-  0%
-  {
-    left: 0;
-  }
-  100%
-  {
-    left: 169px;
-  }
-}
-
-@-o-keyframes bouncer-animation
-{
-  0%
-  {
-    left: 0;
-  }
-  100%
-  {
-    left: 169px;
-  }
-}
-
 @keyframes bouncer-animation
 {
   0%
