@@ -1,5 +1,10 @@
 /// <reference path="scripts/libs/gulp.d.ts" />
 
+// TODO investigate gulp-type for incremental compiles https://www.npmjs.org/package/gulp-type/
+// TODO investigate using browserify or webpack and AMD modules
+// TODO investigate keeping sourcemaps through pipeline
+// TODO make better use of scss
+
 var gulp = require('gulp');
 
 var sass = require('gulp-sass');
