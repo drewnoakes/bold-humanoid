@@ -2,6 +2,7 @@
 
 #include "../../BehaviourControl/behaviourcontrol.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
+#include "../../Option/FSMOption/fsmoption.hh"
 #include "../../Option/MotionScriptOption/motionscriptoption.hh"
 #include "../../Option/SequenceOption/sequenceoption.hh"
 #include "../../Option/StopWalking/stopwalking.hh"

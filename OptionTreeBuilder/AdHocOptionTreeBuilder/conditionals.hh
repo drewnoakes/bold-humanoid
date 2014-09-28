@@ -3,6 +3,7 @@
 #include "../../BehaviourControl/behaviourcontrol.hh"
 #include "../../Config/config.hh"
 #include "../../GameStateReceiver/gamecontrollertypes.hh"
+#include "../../Option/FSMOption/fsmoption.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../StateObject/CameraFrameState/cameraframestate.hh"

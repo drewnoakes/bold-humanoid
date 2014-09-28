@@ -3,10 +3,13 @@
 #include "../Option/FSMOption/fsmoption.hh"
 #include "../State/state.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
-#include "../util/ccolor.hh"
+#include "../util/assert.hh"
+#include "../util/log.hh"
 
 #include <functional>
 #include <rapidjson/document.h>
+#include <sstream>
+#include <fstream>
 
 using namespace bold;
 using namespace rapidjson;
@@ -104,15 +107,30 @@ void OptionTree::run()
   d_optionsLastCycle.insert(ranOptions.begin(), ranOptions.end());
 }
 
+void OptionTree::registerFsm(std::shared_ptr<FSMOption> fsm)
+{
+  // TODO verify that no FSM with this ID already exists
+  d_fsmOptions[fsm->getId()] = fsm;
+
+  // Validate the FSM
+  if (!fsm->getStartState())
+  {
+    log::error("OptionTree::registerFsm") << "Attempt to add an FSMOption with ID '" << fsm->getId() << "' which has no start state";
+    throw std::runtime_error("Attempt to add an FSMOption which has no start state");
+  }
+
+  // Write out its digraph to disk
+  std::stringstream fileName;
+  fileName << fsm->getId() << ".dot";
+
+  std::ofstream winOut(fileName.str());
+  winOut << fsm->toDot();
+}
+
 vector<shared_ptr<FSMOption>> OptionTree::getFSMs() const
 {
   vector<shared_ptr<FSMOption>> fsmOptions;
-  for (auto const& option : d_options)
-  {
-    auto fsmOption = dynamic_pointer_cast<FSMOption>(option.second);
-
-    if (fsmOption)
-      fsmOptions.push_back(fsmOption);
-  }
+  for (auto const& fsm : d_fsmOptions)
+    fsmOptions.push_back(fsm.second);
   return fsmOptions;
 }

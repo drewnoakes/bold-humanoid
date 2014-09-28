@@ -3,6 +3,7 @@
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../Option/ApproachBall/approachball.hh"
 #include "../../Option/CircleBall/circleball.hh"
+#include "../../Option/FSMOption/fsmoption.hh"
 #include "../../Option/LocateBall/locateball.hh"
 #include "../../Option/LookAround/lookaround.hh"
 #include "../../Option/StopWalking/stopwalking.hh"

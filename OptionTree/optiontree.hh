@@ -1,17 +1,14 @@
 #pragma once
 
 #include "../Option/option.hh"
-#include "../Option/FSMOption/fsmoption.hh"
-#include "../util/assert.hh"
-#include "../util/log.hh"
 
 #include <map>
 #include <set>
-#include <sstream>
-#include <fstream>
 
 namespace bold
 {
+  class FSMOption;
+
   class OptionTree
   {
   public:
@@ -19,37 +16,12 @@ namespace bold
 
     void run();
 
-    template<typename OptionType>
-    std::shared_ptr<OptionType> addOption(std::shared_ptr<OptionType> option)
-    {
-      d_options[option->getId()] = std::dynamic_pointer_cast<Option>(option);
-
-      // Special handling for FSMOption
-      auto fsm = std::dynamic_pointer_cast<FSMOption>(option);
-      if (fsm)
-      {
-        // Validate the FSM
-        if (!fsm->getStartState())
-        {
-          log::error("OptionTree::addOption") << "Attempt to add an FSMOption with ID '" << fsm->getId() << "' which has no start state";
-          throw std::runtime_error("Attempt to add an FSMOption which has no start state");
-        }
-
-        // Write out its digraph to disk
-        std::stringstream fileName;
-        fileName << fsm->getId() << ".dot";
-
-        std::ofstream winOut(fileName.str());
-        winOut << fsm->toDot();
-      }
-
-      return option;
-    }
+    void registerFsm(std::shared_ptr<FSMOption> fsm);
 
     std::vector<std::shared_ptr<FSMOption>> getFSMs() const;
 
   private:
-    std::map<std::string, std::shared_ptr<Option> > d_options;
+    std::map<std::string, std::shared_ptr<FSMOption>> d_fsmOptions;
     std::set<std::shared_ptr<Option>> d_optionsLastCycle;
     const std::shared_ptr<Option> d_root;
   };

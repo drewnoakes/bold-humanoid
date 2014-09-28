@@ -3,6 +3,7 @@
 #include "../../BehaviourControl/behaviourcontrol.hh"
 #include "../../Option/ActionOption/actionoption.hh"
 #include "../../Option/DispatchOption/dispatchoption.hh"
+#include "../../Option/FSMOption/fsmoption.hh"
 #include "../../Option/MotionScriptOption/motionscriptoption.hh"
 #include "../../Option/SequenceOption/sequenceoption.hh"
 #include "../../Option/StopWalking/stopwalking.hh"
@@ -52,16 +53,16 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
   auto tree = make_shared<OptionTree>(SequenceOption::make("boot", { sit, untilShutdown }));
 
   // Register all FSMs with the tree so that we can debug them via Round Table
-  tree->addOption(allowPauseFsm);
-  tree->addOption(stayStandingFsm);
-  tree->addOption(respectPlayModeFsm);
-  tree->addOption(keeperFsm);
-  tree->addOption(strikerFsm);
-  tree->addOption(supporterFsm);
-  tree->addOption(penaltyKeeperFsm);
-  tree->addOption(kickLearnerFsm);
-  tree->addOption(ballCirclerFsm);
-  tree->addOption(whistleListenerFsm);
+  tree->registerFsm(allowPauseFsm);
+  tree->registerFsm(stayStandingFsm);
+  tree->registerFsm(respectPlayModeFsm);
+  tree->registerFsm(keeperFsm);
+  tree->registerFsm(strikerFsm);
+  tree->registerFsm(supporterFsm);
+  tree->registerFsm(penaltyKeeperFsm);
+  tree->registerFsm(kickLearnerFsm);
+  tree->registerFsm(ballCirclerFsm);
+  tree->registerFsm(whistleListenerFsm);
 
   return tree;
 }
