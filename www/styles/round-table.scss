@@ -1050,27 +1050,33 @@ div.module.localiser
 
 /********************************************************************/
 
-div.module.imu .polar-trace-container
+div.module.imu
 {
-  display: inline-block;
-  position: relative;
-}
+  .polar-trace-container
+  {
+    display: inline-block;
+    position: relative;
 
-div.module.imu .polar-trace-container + .polar-trace-container
-{
-  margin-left: 20px;
+    + .polar-trace-container
+    {
+      margin-left: 20px;
+    }
+  }
 }
 
 /********************************************************************/
 
-div.module.orientation canvas
+div.module.orientation
 {
-  float: left;
-}
+  canvas
+  {
+    float: left;
+  }
 
-div.module.orientation div.controls
-{
-  clear: both;
+  div.controls
+  {
+    clear: both;
+  }
 }
 
 /********************************************************************/
