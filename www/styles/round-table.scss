@@ -156,25 +156,25 @@ div.setting.control input[type="color"]
   margin: -35px auto 0 -92px;
   top: 50%;
   left: 50%;
-}
 
-html.night-mode #loading-indicator
-{
-  background-color: rgba(255, 255, 255, 0.1);
-}
+  html.night-mode &
+  {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 
-#loading-indicator h1
-{
-  width: 185px;
-  line-height: 70px;
-  font-size: 20px;
-  color: rgba(0, 0, 0, 0.5);
-  text-align: center;
-}
+  h1
+  {
+    width: 185px;
+    line-height: 70px;
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.5);
+    text-align: center;
 
-html.night-mode #loading-indicator h1
-{
-  color: rgba(255, 255, 255, 0.5);
+    html.night-mode &
+    {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
 }
 
 #bouncer
