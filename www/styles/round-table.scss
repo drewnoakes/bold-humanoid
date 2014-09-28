@@ -890,36 +890,38 @@ div.module.vision
 
 /********************************************************************/
 
-div.module.walk div.module-content h2
+div.module.walk
 {
-  color: #444;
-  margin: 12px 0 6px;
-  display: block;
-  font-size: 13px;
-}
+  div.module-content h2
+  {
+    color: #444;
+    margin: 12px 0 6px;
+    display: block;
+    font-size: 13px;
+  }
 
-div.module.walk div.connection-indicator
-{
-  text-align: center;
-  line-height: 20px;
-}
+  div.connection-indicator
+  {
+    text-align: center;
+    line-height: 20px;
+  }
 
-div.module.walk canvas.radar
-{
-  display: inline-block;
-  vertical-align: top;
-}
+  canvas.radar
+  {
+    display: inline-block;
+    vertical-align: top;
+  }
 
+  div.status-legend
+  {
+    margin-top: 8px;
+  }
 
-div.module.walk div.status-legend
-{
-  margin-top: 8px;
-}
-
-div.module.walk div.chart-container
-{
-  display: inline-block;
-  width: 440px;
+  div.chart-container
+  {
+    display: inline-block;
+    width: 440px;
+  }
 }
 
 /********************************************************************/
