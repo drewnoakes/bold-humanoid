@@ -721,24 +721,29 @@ div.checkbox
 
 /********************************************************************/
 
+// TODO review distinction between 'control' and 'setting'
+
 .control
 {
   display: inline-block;
 }
 
-.setting > h3,
-.setting label
+div.setting
 {
-  font-weight: normal;
-  margin: 0;
-  font-size: 11px;
-  letter-spacing: -0.1em;
-}
+  > h3,
+  label
+  {
+    font-weight: normal;
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: -0.1em;
+  }
 
-div.setting span.value-range,
-div.setting span.default-value
-{
-  color: #666;
+  span.value-range,
+  span.default-value
+  {
+    color: #666;
+  }
 }
 
 /********************************************************************/
