@@ -1297,96 +1297,89 @@ div.module.motion-timing
 
 /*******************************************************************/
 
-div.module.optiontree ul.options
+div.module.optiontree
 {
-  margin: 0;
-  padding: 0;
-}
+  ul.options
+  {
+    margin: 0;
+    padding: 0;
+    margin-top: 10px;
+    border-top: 1px dotted rgba(0, 0, 0, 0.2);
+    padding-top: 8px;
 
-div.module.optiontree ul.options li
-{
-  margin: 1px 0;
-  padding: 1px 1px 1px 10px;
-  list-style-position: inside;
-  list-style-type: circle;
-  border-radius: 2px;
-  background-color: transparent;
-  transition: background-color 1s linear, color 1s linear;
-}
+    li
+    {
+      margin: 1px 0;
+      padding: 1px 1px 1px 10px;
+      list-style-position: inside;
+      list-style-type: circle;
+      border-radius: 2px;
+      background-color: transparent;
+      transition: background-color 1s linear, color 1s linear;
 
-div.module.optiontree ul.options li.ran
-{
-  background-color: yellow;
-  list-style-type: disc;
-}
+      &.ran
+      {
+        background-color: yellow;
+        list-style-type: disc;
 
-html.night-mode div.module.optiontree ul.options li.ran
-{
-  color: #000;
-}
+        html.night-mode & { color: #000; }
+      }
+    }
+  }
 
-div.module.optiontree ul.options
-{
-  margin-top: 10px;
-  border-top: 1px dotted rgba(0, 0, 0, 0.2);
-  padding-top: 8px;
-}
+  div.graph
+  {
+    margin-top: 16px;
 
-div.module.optiontree div.graph
-{
-  margin-top: 16px;
-}
+    svg
+    {
+      width: 100%;
 
-div.module.optiontree div.graph svg
-{
-  width: 100%;
-}
+      g.element rect
+      {
+        transition: fill 1s linear;
+      }
 
-div.module.optiontree div.graph svg g.element rect
-{
-  transition: fill 1s linear;
-}
+      g.element.active rect
+      {
+        transition: fill 0s linear;
+        fill: yellow;
+      }
 
-div.module.optiontree div.graph svg g.element.active rect
-{
-  transition: fill 0s linear;
-  fill: yellow;
-}
+      g.link
+      {
+        path.connection
+        {
+          transition: stroke-width 1s linear, stroke 1s linear;
+          stroke-width: 1;
 
-div.module.optiontree div.graph svg g.link path.connection
-{
-  transition: stroke-width 1s linear, stroke 1s linear;
-  stroke-width: 1;
-}
+          html.night-mode & { stroke: #CCC; }
+        }
 
-div.module.optiontree div.graph svg g.link.active path.connection
-{
-  transition: stroke-width 0s linear, stroke 0s linear;
-  stroke-width: 5;
-  stroke: #792485;
-}
+        &.active path.connection
+        {
+          transition: stroke-width 0s linear, stroke 0s linear;
+          stroke-width: 5;
+          stroke: #792485;
+        }
 
-div.module.optiontree div.graph svg g.link-tools,
-div.module.optiontree div.graph svg g.marker-arrowheads
-{
-  display: none;
-}
+        html.night-mode & text { fill: #fff; }
 
-html.night-mode div.module.optiontree div.graph svg g.link path.connection
-{
-  stroke: #CCC;
-}
+        html.night-mode & path.marker-source,
+        html.night-mode & path.marker-target
+        {
+          stroke: #CCC;
+          fill: #CCC;
+        }
+      }
 
-html.night-mode div.module.optiontree div.graph svg g.link path.marker-source,
-html.night-mode div.module.optiontree div.graph svg g.link path.marker-target
-{
-  stroke: #CCC;
-  fill: #CCC;
-}
-
-html.night-mode div.module.optiontree div.graph svg g.link text
-{
-  fill: #fff;
+      g.link-tools,
+      g.marker-arrowheads
+      {
+        display: none;
+      }
+    }
+  }
 }
 
 /*******************************************************************/
