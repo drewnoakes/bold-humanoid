@@ -46,7 +46,7 @@ namespace bold
     bool contains(Point const& point)
     {
       bool isInside = false;
-      for (int i = 0, j = d_vertices.size() - 1; i < d_vertices.size(); j = i++)
+      for (unsigned i = 0, j = d_vertices.size() - 1; i < d_vertices.size(); j = i++)
       {
         Point const& a = d_vertices[i];
         Point const& b = d_vertices[j];
