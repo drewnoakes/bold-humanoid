@@ -1,11 +1,16 @@
-#include "optiontree.ih"
+#include "optiontree.hh"
 
 #include "../Option/FSMOption/fsmoption.hh"
+#include "../State/state.hh"
+#include "../StateObject/OptionTreeState/optiontreestate.hh"
+#include "../util/ccolor.hh"
 
 #include <functional>
 #include <rapidjson/document.h>
 
+using namespace bold;
 using namespace rapidjson;
+using namespace std;
 
 /*
  {
@@ -93,4 +98,17 @@ void OptionTree::run()
 
   d_optionsLastCycle.clear();
   d_optionsLastCycle.insert(ranOptions.begin(), ranOptions.end());
+}
+
+vector<shared_ptr<FSMOption>> OptionTree::getFSMs() const
+{
+  vector<shared_ptr<FSMOption>> fsmOptions;
+  for (auto const& option : d_options)
+  {
+    auto fsmOption = dynamic_pointer_cast<FSMOption>(option.second);
+
+    if (fsmOption)
+      fsmOptions.push_back(fsmOption);
+  }
+  return fsmOptions;
 }

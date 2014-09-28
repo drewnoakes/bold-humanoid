@@ -1,8 +1,0 @@
-#include "optiontree.hh"
-
-#include "../State/state.hh"
-#include "../StateObject/OptionTreeState/optiontreestate.hh"
-#include "../util/ccolor.hh"
-
-using namespace bold;
-using namespace std;
