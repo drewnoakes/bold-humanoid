@@ -534,50 +534,55 @@ div#module-container
 
 /********************************************************************/
 
-.control-container .control
+.control-container
 {
-  display: block;
-}
+  .control
+  {
+    display: block;
+  }
 
-.flow .control
-{
-  display: inline-block;
-  margin: 2px 6px 2px 0;
-}
+  &.flow
+  {
+    display: inline-block;
+    margin: 2px 6px 2px 0;
 
-.flow .setting.control
-{
-  width: 100px;
-}
+    .control
+    {
+      h3, label
+      {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
 
-.flow .setting.control select
-{
-  max-width: 100px;
-}
+    .setting.control
+    {
+      width: 100px;
 
-.flow .control h3,
-.flow .control label
-{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+      select
+      {
+        max-width: 100px;
+      }
+    }
 
-.control-container.column .control input[type="text"],
-.control-container.column .control input[type="number"]
-{
-  min-width: 80px;
-}
+    input[type="number"]
+    {
+      width: 95px;
+    }
 
-.control-container.flow input[type="number"]
-{
-  width: 95px;
-}
+    label
+    {
+      display: inline-block;
+      width: 80px;
+    }
+  }
 
-.control-container.flow label
-{
-  display: inline-block;
-  width: 80px;
+  &.column .control input[type="text"],
+  &.column .control input[type="number"]
+  {
+    min-width: 80px;
+  }
 }
 
 /********************************************************************/
