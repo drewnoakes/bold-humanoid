@@ -206,9 +206,93 @@ div.setting.control input[type="color"]
 
 /********************************************************************/
 
-img#logo
+div#header
 {
-  display: inline-block;
+  img#logo
+  {
+    display: inline-block;
+  }
+
+  div#header-content
+  {
+    display: inline-block;
+    vertical-align: top;
+    margin: 6px;
+
+    h1
+    {
+      margin: 0;
+      color: #000;
+
+      html.night-mode &
+      {
+        color: #eee;
+      }
+    }
+
+    h2
+    {
+      margin: 0;
+      color: rgb(121, 36, 133);
+      font-weight: normal;
+    }
+
+    div#connections
+    {
+      margin-top: 12px;
+    }
+
+    div.indicators
+    {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    a.disconnect
+    {
+      text-decoration: none;
+      display: none;
+    }
+
+    &:hover a.disconnect
+    {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+
+  div#header-module-links
+  {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    left: 300px;
+    text-align: right;
+
+    > a.module-button
+    {
+      display: inline-block;
+      margin: 2px;
+      padding: 5px;
+      background-color: #ddd;
+      color: #444;
+      text-decoration: none;
+      transition: background-color 0.4s linear;
+
+      html.night-mode &
+      {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #bbb;
+      }
+    }
+
+    > a.module-button.added
+    {
+      color: #fff;
+      background-color: rgba(121, 36, 133, 0.7);
+      border-bottom: 1px solid rgba(121, 36, 133, 1);
+    }
+  }
 }
 
 @media screen and (max-width: 640px)
@@ -217,94 +301,18 @@ img#logo
   {
     min-height: 130px;
   }
-}
 
-div#header-content
-{
-  display: inline-block;
-  vertical-align: top;
-  margin: 6px;
-}
-
-@media screen and (max-width: 640px)
-{
   div#header-content
   {
     display: none;
   }
-}
 
-div#header-content h1
-{
-  margin: 0;
-  color: #000;
-}
-
-div#header-content h2
-{
-  margin: 0;
-  color: rgb(121, 36, 133);
-  font-weight: normal;
-}
-
-div#header-content div#connections
-{
-  margin-top: 12px;
-}
-
-div#header-content div.indicators
-{
-  display: inline-block;
-  vertical-align: middle;
-}
-
-div#header-content a.disconnect
-{
-  text-decoration: none;
-  display: none;
-}
-
-div#header-content:hover a.disconnect
-{
-  display: inline-block;
-  vertical-align: middle;
-}
-
-div#header-module-links
-{
-  position: absolute;
-  right: 14px;
-  top: 14px;
-  left: 300px;
-  text-align: right;
-}
-
-@media screen and (max-width: 640px)
-{
   div#header-module-links
   {
     top: 6px;
     left: 110px;
     right: 1%;
   }
-}
-
-div#header-module-links > a.module-button
-{
-  display: inline-block;
-  margin: 2px;
-  padding: 5px;
-  background-color: #ddd;
-  color: #444;
-  text-decoration: none;
-  transition: background-color 0.4s linear;
-}
-
-div#header-module-links > a.module-button.added
-{
-  color: #fff;
-  background-color: rgba(121, 36, 133, 0.7);
-  border-bottom: 1px solid rgba(121, 36, 133, 1);
 }
 
 /********************************************************************/
@@ -1766,13 +1774,4 @@ html.night-mode a:visited
   color: #8B9DFF;
 }
 
-html.night-mode div#header-module-links > a.module-button
-{
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #bbb;
-}
-
-html.night-mode div#header-content h1
-{
-  color: #eee;
 }
