@@ -926,117 +926,96 @@ div.module.walk
 
 /********************************************************************/
 
-div.module.game div.play-mode
+div.module.game
 {
-  display: inline-block;
-  height: 60px;
-  line-height: 60px;
-  width: 120px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 4px;
-  text-align: center;
-}
+  div.play-mode
+  {
+    display: inline-block;
+    height: 60px;
+    line-height: 60px;
+    width: 120px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    text-align: center;
 
-div.module.game div.play-mode.Initial
-{
-  background-color: #CCC;
-}
+    &.Initial { background-color: #CCC; }
+    &.Ready { background-color: #00F; color: #FFF; }
+    &.Set { background-color: #FF0; }
+    &.Playing { background-color: #0F0; }
+    &.Finished { background-color: #444; color: #FFF; }
+  }
 
-div.module.game div.play-mode.Ready
-{
-  background-color: #00F;
-  color: #FFF;
-}
+  div.period
+  {
+    margin-top: 10px;
+    margin-right: 6px;
+    padding: 4px 10px;
+    display: inline-block;
+    border-radius: 6px;
+    background: #FFF;
+    color: #000;
 
-div.module.game div.play-mode.Set
-{
-  background-color: #FF0;
-}
+    &.timeout
+    {
+      background: #00F;
+      color: #FFF;
+    }
 
-div.module.game div.play-mode.Playing
-{
-  background-color: #0F0;
-}
+    &.penalties
+    {
+      background: #00F;
+      color: #FFF;
+    }
+  }
 
-div.module.game div.play-mode.Finished
-{
-  background-color: #444;
-  color: #FFF;
-}
+  ul.penalties
+  {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
-div.module.game div.period
-{
-  margin-top: 10px;
-  margin-right: 6px;
-  padding: 4px 10px;
-  display: inline-block;
-  border-radius: 6px;
-  background: #FFF;
-  color: #000;
-}
+    li
+    {
+      width: 160px;
+      background-color: rgba(128, 0, 0, 0.1);
+      border: 1px solid rgba(128, 0, 0, 0.3);
+      border-radius: 4px;
+      text-align: center;
+      margin-bottom: 4px;
+      padding: 0 12px;
 
-div.module.game div.period.timeout
-{
-  background: #00F;
-  color: #FFF;
-}
+      &.done
+      {
+        background-color: rgba(255, 255, 0, 0.2);
+      }
 
-div.module.game div.period.penalties
-{
-  background: #00F;
-  color: #FFF;
-}
+      div.title
+      {
+        margin-top: 6px;
+      }
 
-div.module.game ul.penalties
-{
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+      div.time
+      {
+        margin-bottom: 6px;
+        color: #555;
+      }
+    }
+  }
 
-div.module.game ul.penalties li
-{
-  width: 160px;
-  background-color: rgba(128, 0, 0, 0.1);
-  border: 1px solid rgba(128, 0, 0, 0.3);
-  border-radius: 4px;
-  text-align: center;
-  margin-bottom: 4px;
-  padding: 0 12px;
-}
+  div.time-remaining
+  {
+    margin-top: 22px;
 
-div.module.game ul.penalties li.done
-{
-  background-color: rgba(255, 255, 0, 0.2);
-}
+    span.secondary { color: #444; }
+  }
 
-div.module.game ul.penalties li div.title
-{
-  margin-top: 6px;
-}
-
-div.module.game ul.penalties li div.time
-{
-  margin-bottom: 6px;
-  color: #555;
-}
-
-div.module.game div.time-remaining
-{
-  margin-top: 22px;
-}
-
-div.module.game div.time-remaining span.secondary
-{
-  color: #444;
-}
-
-div.module.game div.score
-{
-  font-size: 32px;
-  color: #444;
-  font-weight: bold;
-  margin-bottom: 18px;
+  div.score
+  {
+    font-size: 32px;
+    color: #444;
+    font-weight: bold;
+    margin-bottom: 18px;
+  }
 }
 
 /********************************************************************/
