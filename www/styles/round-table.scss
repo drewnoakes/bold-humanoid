@@ -1467,15 +1467,18 @@ div.module.trajectory
 
 /*******************************************************************/
 
-div.module.agent-2d .hover-info
+div.module.agent-2d
 {
-  float: right;
-  text-align: right;
-}
+  .hover-info
+  {
+    float: right;
+    text-align: right;
+  }
 
-div.module.agent-2d div.localiser-controls
-{
-  display: inline-block;
+  div.localiser-controls
+  {
+    display: inline-block;
+  }
 }
 
 /*******************************************************************/
