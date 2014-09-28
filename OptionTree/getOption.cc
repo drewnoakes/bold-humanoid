@@ -1,8 +1,5 @@
 #include "optiontree.ih"
 
-#include "../Option/FSMOption/fsmoption.hh"
-
-
 vector<shared_ptr<FSMOption>> OptionTree::getFSMs() const
 {
   vector<shared_ptr<FSMOption>> fsmOptions;
