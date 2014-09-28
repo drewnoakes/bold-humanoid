@@ -384,23 +384,142 @@ svg .axis
 
 /********************************************************************/
 
-ul#module-container
+div#module-container
 {
   padding: 0;
-}
 
-div.module
-{
-  box-sizing: content-box;
-  width: 640px;
-  min-height: 80px;
-  display: inline-block;
-  vertical-align: top;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0, rgba(0, 0, 0, 0.2) 12px);
-  border-radius: 3px 3px 12px 12px;
-  padding: 12px;
-  margin: 6px;
-  cursor: move;
+  div.module
+  {
+    box-sizing: content-box;
+    width: 640px;
+    min-height: 80px;
+    display: inline-block;
+    vertical-align: top;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0, rgba(0, 0, 0, 0.2) 12px);
+    border-radius: 3px 3px 12px 12px;
+    padding: 12px;
+    margin: 6px;
+    cursor: move;
+
+    html.night-mode &
+    {
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid #000;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    &.full-screen
+    {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: default;
+      background-color: #fff;
+      box-sizing: border-box;
+      margin: 0;
+      border-radius: 0;
+      z-index: 1;
+      display: table;
+
+      html.night-mode &
+      {
+        background: #0A0208;
+      }
+    }
+
+    h1
+    {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      /*font-weight: normal;*/
+      color: rgb(87, 21, 97);
+      text-transform: uppercase;
+
+      html.night-mode &
+      {
+        color: #999;
+      }
+    }
+
+    h2
+    {
+      margin: 0 0 4px 0;
+      font-size: 12px;
+      font-weight: normal;
+
+      html.night-mode &
+      {
+        color: #bbb;
+      }
+    }
+
+    hr
+    {
+      border: none;
+      border-bottom: 1px dotted #aaa;
+
+      html.night-mode &
+      {
+        border: none;
+        border-bottom: 1px dotted #444;
+      }
+    }
+
+    > div.module-content
+    {
+      position: relative;
+      min-height: 32px;
+      cursor: default;
+      width: 100%;
+      height: 100%;
+    }
+
+    > div.module-header
+    {
+      position: relative;
+      height: 24px;
+      border-bottom: 1px dotted rgba(87, 21, 97, 0.4);
+      margin-bottom: 10px;
+
+      > div.module-header-links
+      {
+        position: absolute;
+        right: 2px;
+        top: 0;
+
+        > a
+        {
+          text-decoration: none;
+          margin-left: 12px;
+
+          &:hover
+          {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    &.full-screen > div.module-header
+    {
+      display: table-row;
+
+      > div.module-header-links
+      {
+        margin: 10px;
+      }
+    }
+
+    div.module-column-3
+    {
+      display: inline-block;
+      vertical-align: top;
+      box-sizing: border-box;
+      width: 200px;
+    }
+  }
 }
 
 @media screen and (max-width: 640px)
@@ -411,113 +530,6 @@ div.module
     margin: 6px 1%;
     box-sizing: border-box;
   }
-}
-
-div.module.full-screen
-{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  cursor: default;
-  background-color: #fff;
-  box-sizing: border-box;
-  margin: 0;
-  border-radius: 0;
-  z-index: 1;
-  display: table;
-}
-
-div.module h1
-{
-  margin: 0 0 12px 0;
-  font-size: 16px;
-  /*font-weight: normal;*/
-  color: rgb(87, 21, 97);
-  text-transform: uppercase;
-}
-
-html.night-mode div.module h1
-{
-  color: #999;
-}
-
-div.module h2
-{
-  margin: 0 0 4px 0;
-  font-size: 12px;
-  font-weight: normal;
-}
-
-html.night-mode div.module h2
-{
-  color: #bbb;
-}
-
-div.module hr
-{
-  border: none;
-  border-bottom: 1px dotted #aaa;
-}
-
-html.night-mode div.module hr
-{
-  border: none;
-  border-bottom: 1px dotted #444;
-}
-
-div.module > div.module-content
-{
-  position: relative;
-  min-height: 32px;
-  cursor: default;
-  width: 100%;
-  height: 100%;
-}
-
-div.module > div.module-header
-{
-  position: relative;
-  height: 24px;
-  border-bottom: 1px dotted rgba(87, 21, 97, 0.4);
-  margin-bottom: 10px;
-}
-
-div.module.full-screen > div.module-header
-{
-  display: table-row;
-}
-
-div.module > div.module-header > div.module-header-links
-{
-  position: absolute;
-  right: 2px;
-  top: 0;
-}
-
-div.module.full-screen > div.module-header > div.module-header-links
-{
-  margin: 10px;
-}
-
-div.module > div.module-header > div.module-header-links > a
-{
-  text-decoration: none;
-  margin-left: 12px;
-}
-
-div.module > div.module-header > div.module-header-links > a:hover
-{
-  text-decoration: underline;
-}
-
-div.module div.module-column-3
-{
-  display: inline-block;
-  vertical-align: top;
-  box-sizing: border-box;
-  width: 200px;
 }
 
 /********************************************************************/
@@ -1769,24 +1781,10 @@ html.night-mode
 {
   background: #0A0208;
   color: #bbb;
-}
 
-html.night-mode div.module
-{
-  background: rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid #000;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-html.night-mode div.module.full-screen
-{
-  background: #0A0208;
-}
-
-html.night-mode a,
-html.night-mode a:visited
-{
-  color: #8B9DFF;
-}
-
+  a,
+  a:visited
+  {
+    color: #8B9DFF;
+  }
 }
