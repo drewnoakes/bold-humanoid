@@ -624,16 +624,19 @@ ul.legend
 
 /********************************************************************/
 
-div.checkbox input[type="checkbox"]
+div.checkbox
 {
-  display: inline-block;
-  vertical-align: middle;
-}
+  input[type="checkbox"]
+  {
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-div.checkbox label
-{
-  display: inline-block;
-  vertical-align: middle;
+  label
+  {
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
 
 /********************************************************************/
@@ -644,48 +647,48 @@ div.checkbox label
   margin: 0 16px 16px 0;
 }
 
-.hsv-range-editor .channel-row span
-{
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  vertical-align: middle;
-  text-align: center;
-  font-size: 13px;
-  line-height: 16px;
-}
-
-.hsv-range-editor .channel-row input[type="text"]
-{
-  width: 34px !important;
-  text-align: center;
-  margin: 2px 4px;
-  display: inline-block;
-  vertical-align: middle;
-  border: none;
-  padding: 3px;
-}
-
-.hsv-range-editor h3
-{
-  color: #333;
-  text-align: center;
-  margin: 0;
-  font-size: 13px;
-  text-shadow: 0 0 5px white;
-  padding: 2px;
-  margin-bottom: 3px;
-}
-
 .hsv-range-editor
 {
   background-color: rgba(255, 255, 255, 0.5);
   padding-bottom: 3px;
-}
 
-.hsv-range-editor .channel-row
-{
-  text-align: center;
+  .channel-row
+  {
+    text-align: center;
+
+    span
+    {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 13px;
+      line-height: 16px;
+    }
+
+    input[type="text"]
+    {
+      width: 34px !important;
+      text-align: center;
+      margin: 2px 4px;
+      display: inline-block;
+      vertical-align: middle;
+      border: none;
+      padding: 3px;
+    }
+  }
+
+  h3
+  {
+    color: #333;
+    text-align: center;
+    margin: 0;
+    font-size: 13px;
+    text-shadow: 0 0 5px white;
+    padding: 2px;
+    margin-bottom: 3px;
+  }
 }
 
 /********************************************************************/
