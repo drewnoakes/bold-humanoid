@@ -42,12 +42,6 @@ namespace bold
      */
     std::string getTypeName() const { return d_typeName; }
 
-    /** Check whether this option is currently available
-     *
-     * @returns whether this option is available. Default: always true
-     */
-    virtual bool isAvailable() { return true; }
-
     /** Check the probability this option having terminated
      *
      * @return the probability that this option has reached its

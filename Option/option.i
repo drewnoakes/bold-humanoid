@@ -15,8 +15,6 @@ namespace bold
 
     std::string getID() const;
 
-    virtual bool isAvailable();
-
     virtual double hasTerminated();
 
     virtual std::vector<std::shared_ptr<Option> > runPolicy();

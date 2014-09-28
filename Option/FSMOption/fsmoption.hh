@@ -85,8 +85,6 @@ namespace bold
   public:
     FSMOption(std::shared_ptr<Voice> voice, std::string const& id);
 
-    virtual bool isAvailable() override;
-
     virtual double hasTerminated() override;
 
     virtual void reset() override;
@@ -126,11 +124,6 @@ namespace bold
     std::shared_ptr<Voice> d_voice;
     Setting<bool>* d_paused;
   };
-
-  inline bool FSMOption::isAvailable()
-  {
-    return true;
-  }
 
   inline double FSMOption::hasTerminated()
   {
