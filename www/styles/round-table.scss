@@ -430,10 +430,7 @@ div#module-container
       z-index: 1;
       display: table;
 
-      html.night-mode &
-      {
-        background: #0A0208;
-      }
+      html.night-mode & { background: #0A0208; }
     }
 
     h1
@@ -709,20 +706,9 @@ div.checkbox
   margin: 3px;
   transition: background-color 0.5s linear;
 
-  &.disconnected
-  {
-    background-color: red;
-  }
-
-  &.connecting
-  {
-    background-color: orange;
-  }
-
-  &.connected
-  {
-    background-color: green;
-  }
+  &.disconnected { background-color: red; }
+  &.connecting { background-color: orange; }
+  &.connected { background-color: green; }
 }
 
 /********************************************************************/
