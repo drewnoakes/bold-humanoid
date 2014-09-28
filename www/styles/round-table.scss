@@ -1020,36 +1020,32 @@ div.module.game
 
 /********************************************************************/
 
-div.module.localiser div.control-container.localiser-controls > div:nth-child(1)
+div.module.localiser
 {
-  display: block;
-}
+  div.control-container.localiser-controls > div:nth-child(1)
+  {
+    display: block;
+  }
 
-div.module.localiser div.marker
-{
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: inline-block;
-  margin: 3px;
-  border: 1px solid;
-}
+  div.marker
+  {
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    margin: 3px;
+    border: 1px solid;
 
-div.module.localiser div.marker.visible
-{
-  width: 0;
-  height: 0;
-  border-width: 10px;
-}
+    &.visible
+    {
+      width: 0;
+      height: 0;
+      border-width: 10px;
+    }
 
-div.module.localiser div.marker.ball
-{
-  border-color: red;
-}
-
-div.module.localiser div.marker.goal
-{
-  border-color: yellow;
+    &.ball { border-color: red; }
+    &.goal { border-color: yellow; }
+  }
 }
 
 /********************************************************************/
