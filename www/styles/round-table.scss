@@ -1514,56 +1514,55 @@ div.module.world-2d
 
 /*******************************************************************/
 
-div.module.team table
+div.module.team
 {
-  border-collapse: collapse;
-}
+  table
+  {
+    border-collapse: collapse;
+    overflow: auto;
+  }
 
-div.module.team td
-{
-  padding: 2px 4px;
-}
+  td
+  {
+    padding: 2px 4px;
+  }
 
-div.module.team table
-{
-  overflow: auto;
-}
+  table th,
+  table td
+  {
+    width: 125px;
+  }
 
-div.module.team table th,
-div.module.team table td
-{
-  width: 125px;
-}
+  tr td:first-child
+  {
+    font-weight: bold;
+  }
 
-div.module.team tr td:first-child
-{
-  font-weight: bold;
-}
+  tr.unum td
+  {
+    font-size: 30px;
+    font-weight: bold;
+  }
 
-div.module.team tr.unum td
-{
-  font-size: 30px;
-  font-weight: bold;
-}
+  td.teammate
+  {
+    background-color: rgba(43, 65, 206, 0.2);
+  }
 
-div.module.team td.me.teammate
-{
-  background-color: rgba(43, 65, 206, 0.3);
-}
+  td.teammate.me
+  {
+    background-color: rgba(43, 65, 206, 0.3);
+  }
 
-div.module.team td.teammate
-{
-  background-color: rgba(43, 65, 206, 0.2);
-}
+  td.opponent
+  {
+    background-color: rgba(206, 44, 73, 0.30);
+  }
 
-div.module.team td.opponent
-{
-  background-color: rgba(206, 44, 73, 0.30);
-}
-
-div.module.team td.old
-{
-  color: rgba(80, 0, 0, 0.4)
+  td.old
+  {
+    color: rgba(80, 0, 0, 0.4)
+  }
 }
 
 /*******************************************************************/
