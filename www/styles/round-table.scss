@@ -756,23 +756,53 @@ div.head-controls
 
 /********************************************************************/
 
-div.module.camera div.hover-pixel-info
+div.module.camera
 {
-  color: white;
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  pointer-events: none;
-}
+  div.hover-pixel-info
+  {
+    color: white;
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    pointer-events: none;
+  }
 
-div.module.camera.full-screen div.module-content
-{
-  text-align: center;
-}
+  canvas.camera-canvas
+  {
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
+  }
 
-div.module.camera.full-screen div.camera-module-controls.control-container
-{
-  margin-top: 6px;
+  div.image-container
+  {
+    position: relative;
+  }
+
+  div.camera-module-controls h3
+  {
+    display: none;
+  }
+
+  canvas.pixel-label-inspector
+  {
+    margin: 16px 0;
+  }
+
+  &.full-screen
+  {
+    div.module-content
+    {
+      text-align: center;
+    }
+
+    div.camera-module-controls.control-container
+    {
+      margin-top: 6px;
+    }
+  }
 }
 
 @media screen and (max-width: 640px)
@@ -781,30 +811,6 @@ div.module.camera.full-screen div.camera-module-controls.control-container
   {
     width: 100% !important;
   }
-}
-
-div.module.camera canvas.camera-canvas
-{
-  image-rendering: optimizeSpeed;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: optimize-contrast;
-  -ms-interpolation-mode: nearest-neighbor;
-}
-
-div.module.camera div.image-container
-{
-  position: relative;
-}
-
-div.module.camera div.camera-module-controls h3
-{
-  display: none;
-}
-
-div.module.camera canvas.pixel-label-inspector
-{
-  margin: 16px 0;
 }
 
 /********************************************************************/
