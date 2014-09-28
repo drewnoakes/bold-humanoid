@@ -1257,25 +1257,25 @@ div.body-figure
   position: absolute;
   top: 20px;
   right: 0;
-}
 
-div.body-figure div.joint
-{
-  color: #000;
-  position: absolute;
-  border: 1px dotted grey;
-  border-radius: 4px;
-  text-align: center;
-  font-size: 13px;
-  line-height: 20px;
-  transition: background-color 0.4s linear;
-}
+  div.joint
+  {
+    color: #000;
+    position: absolute;
+    border: 1px dotted grey;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 20px;
+    transition: background-color 0.4s linear;
+  }
 
-div.body-figure div.selected
-{
-  border: 1px dotted grey;
-  background-color: #792485;
-  color: white;
+  div.selected
+  {
+    border: 1px dotted grey;
+    background-color: #792485;
+    color: white;
+  }
 }
 
 /*******************************************************************/
