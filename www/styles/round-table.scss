@@ -1567,117 +1567,107 @@ div.module.team
 
 /*******************************************************************/
 
-div.module.drawbridge div.player-tile
+div.module.drawbridge
 {
-  display: inline-block;
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 5px;
-  margin-bottom: 6px;
-  padding: 6px;
-  width: 640px;
-  box-sizing: border-box;
-}
+  div.player-tile
+  {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    margin-bottom: 6px;
+    padding: 6px;
+    width: 640px;
+    box-sizing: border-box;
 
-html.night-mode div.module.drawbridge div.player-tile
-{
-  background: rgba(255, 255, 255, 0.05);
-}
+    html.night-mode & { background: rgba(255, 255, 255, 0.05); }
 
-html.night-mode div.module.drawbridge.full-screen div.player-tile
-{
-  background: rgba(255, 255, 255, 0.15);
-}
+    header
+    {
+      width: 100%;
+      position: relative;
 
-div.module.drawbridge.full-screen div.player-tile
-{
-  width: 600px;
-  box-sizing: border-box;
-  margin-right: 6px;
-}
+      div.unum
+      {
+        display:inline-block;
+        width: 30px;
+        height: 30px;
+        text-align:center;
+        line-height: 30px;
+        font-size: 24px;
+        border-radius: 3px;
+        margin-right: 8px;
 
-div.module.drawbridge div.player-tile header
-{
-  width: 100%;
-  position: relative;
-}
+        html.night-mode & { color: #000; }
+      }
 
-div.module.drawbridge div.player-tile header div.unum
-{
-  display:inline-block;
-  width: 30px;
-  height: 30px;
-  text-align:center;
-  line-height: 30px;
-  font-size: 24px;
-  border-radius: 3px;
-  margin-right: 8px;
-}
+      h1
+      {
+        display: inline-block;
+        text-transform: none;
+        line-height: 30px;
+        font-size: 18px;
 
-html.night-mode div.module.drawbridge div.player-tile header div.unum
-{
-  color: #000;
-}
+        span.host
+        {
+          color: #555;
+          font-weight: normal;
 
-div.module.drawbridge div.player-tile header h1
-{
-  display: inline-block;
-  text-transform: none;
-  line-height: 30px;
-  font-size: 18px;
-}
+          html.night-mode & { color: #777; }
+        }
+      }
 
-div.module.drawbridge div.player-tile header h1 span.host
-{
-  color: #555;
-  font-weight: normal;
-}
+      span.maxTemp
+      {
+        position: absolute;
+        right: 0;
+        top: 0;
+        line-height: 30px;
+        font-size: 18px;
+        font-weight: bold
+      }
+    }
 
-html.night-mode div.module.drawbridge div.player-tile header h1 span.host
-{
-  color: #777;
-}
+    span.title
+    {
+      color: #555;
+      display: inline-block;
+      min-width: 80px;
 
-div.module.drawbridge div.player-tile header span.maxTemp
-{
-  position: absolute;
-  right: 0;
-  top: 0;
-  line-height: 30px;
-  font-size: 18px;
-  font-weight: bold
-}
+      html.night-mode &
+      {
+        color: #777;
+      }
+    }
 
-div.module.drawbridge div.player-tile span.title
-{
-  color: #555;
-  display: inline-block;
-  min-width: 80px;
-}
+    span.note
+    {
+      color: #555;
+      font-size: 0.8em;
 
-div.module.drawbridge div.player-tile span.title
-{
-  color: #777;
-}
+      html.night-mode &
+      {
+        color: #777;
+      }
+    }
 
-div.module.drawbridge div.player-tile span.note
-{
-  color: #555;
-  font-size: 0.8em;
-}
+    div.unum
+    {
+      &.team-colour-1 { background-color: #36aeff; }
+      &.team-colour-2 { background-color: #ff41e5; }
+    }
+  }
 
-html.night-mode div.module.drawbridge div.player-tile span.note
-{
-  color: #777;
-}
+  &.full-screen
+  {
+    div.player-tile
+    {
+      width: 600px;
+      box-sizing: border-box;
+      margin-right: 6px;
 
-div.module.drawbridge div.player-tile div.unum.team-colour-1
-{
-  background-color: #36aeff;
-}
-
-div.module.drawbridge div.player-tile div.unum.team-colour-2
-{
-  background-color: #ff41e5;
+      html.night-mode & { background: rgba(255, 255, 255, 0.15); }
+    }
+  }
 }
 
 /*******************************************************************/
