@@ -1483,14 +1483,17 @@ div.module.agent-2d
 
 /*******************************************************************/
 
-div.module.voice div.control-container + div.control-container
+div.module.voice
 {
-  margin-top: 14px;
-}
+  div.control-container + div.control-container
+  {
+    margin-top: 14px;
+  }
 
-div.module.voice div.control-container.flow .setting.control
-{
-  width: 125px;
+  div.control-container.flow .setting.control
+  {
+    width: 125px;
+  }
 }
 
 /*******************************************************************/
