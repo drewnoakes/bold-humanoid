@@ -1498,15 +1498,18 @@ div.module.voice
 
 /*******************************************************************/
 
-div.module.world-2d div.module-content .localiser-controls
+div.module.world-2d
 {
-  display: inline-block;
-  margin-left: 8px;
-}
+  .localiser-controls
+  {
+    display: inline-block;
+    margin-left: 8px;
+  }
 
-div.module.world-2d .hover-info
-{
-  float: right;
+  .hover-info
+  {
+    float: right;
+  }
 }
 
 /*******************************************************************/
