@@ -601,25 +601,25 @@ ul.legend
   float: right;
   margin: 4px 0;
   padding: 0;
-}
 
-ul.legend > li
-{
-  display: inline-block;
-}
+  > li
+  {
+    display: inline-block;
 
-ul.legend > li > div.tile
-{
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin-left: 1em;
-  margin-right: 4px;
-}
+    > div.tile
+    {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-left: 1em;
+      margin-right: 4px;
+    }
 
-ul.legend > li > div.label
-{
-  display: inline-block;
+    > div.label
+    {
+      display: inline-block;
+    }
+  }
 }
 
 /********************************************************************/
