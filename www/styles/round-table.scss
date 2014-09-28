@@ -1672,116 +1672,113 @@ div.module.drawbridge
 
 /*******************************************************************/
 
-div.module.animator div.module-content:focus
+div.module.animator
 {
-  outline: none;
-}
+  div.module-content:focus
+  {
+    outline: none;
+  }
 
-div.module.animator div.timeline-container
-{
-  white-space: nowrap;
-  overflow-x: auto;
-}
+  div.timeline-container
+  {
+    white-space: nowrap;
+    overflow-x: auto;
+  }
 
-div.module.animator ul.joint-names
-{
-  color: #333;
-}
+  ul.joint-names
+  {
+    color: #333;
 
-html.night-mode div.module.animator ul.joint-names
-{
-  color: #777;
-}
+    html.night-mode & { color: #777; }
+  }
 
-div.module.animator ul.joint-names,
-div.module.animator ul.stages,
-div.module.animator ul.gains,
-div.module.animator ul.key-frames,
-div.module.animator ul.values
-{
-  display: inline-block;
-  list-style: none;
-  padding: 0;
-}
+  ul.joint-names,
+  ul.stages,
+  ul.gains,
+  ul.key-frames,
+  ul.values
+  {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+  }
 
-div.module.animator li.stage,
-div.module.animator li.key-frame
-{
-  display: inline-block;
-}
+  li.stage,
+  li.key-frame
+  {
+    display: inline-block;
+  }
 
-div.module.animator ul.joint-names
-{
-  width: 145px;
-  padding-left: 6px;
-}
+  ul.joint-names
+  {
+    width: 145px;
+    padding-left: 6px;
+  }
 
-div.module.animator ul.values > li
-{
-  width: 60px;
-}
+  ul.values > li
+  {
+    width: 60px;
+  }
 
-div.module.animator ul.gains > li
-{
-  width: 40px;
-}
+  ul.gains > li
+  {
+    width: 40px;
+  }
 
-div.module.animator ul.values > li,
-div.module.animator ul.gains > li
-{
-  text-align: center;
-}
+  ul.values > li,
+  ul.gains > li
+  {
+    text-align: center;
 
-div.module.animator li.stage
-{
-  margin-left: 4px;
-}
+    > input
+    {
+      width: 100%;
+      height: 23px;
+      margin: 0px;
+      box-sizing: border-box;
+      text-align: center;
+      color: #FFF;
+      background: rgba(140, 162, 252, 0.5);
+      border: none;
+      border-top: 1px solid rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10.5px;
+    }
+  }
 
-div.module.animator ul.joint-names,
-div.module.animator ul.gains,
-div.module.animator ul.values
-{
-  border: none;
-  margin: 0px 1px 0 0;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-}
+  li.stage
+  {
+    margin-left: 4px;
+  }
 
-div.module.animator ul.joint-names > li,
-div.module.animator ul.gains > li,
-div.module.animator ul.values > li
-{
-  height: 25px;
-  line-height: 25px;
-  /*text-align: left;*/
-}
+  ul.joint-names,
+  ul.gains,
+  ul.values
+  {
+    border: none;
+    margin: 0px 1px 0 0;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
-div.module.animator div.module-content:focus li.focussed
-{
-  outline: -webkit-focus-ring-color auto 5px;
-}
+    > li
+    {
+      height: 25px;
+      line-height: 25px;
+      /*text-align: left;*/
+    }
+  }
 
-div.module.animator ul.values > li > input,
-div.module.animator ul.gains > li > input
-{
-  width: 100%;
-  height: 23px;
-  margin: 0px;
-  box-sizing: border-box;
-  text-align: center;
-  color: #FFF;
-  background: rgba(140, 162, 252, 0.5);
-  border: none;
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10.5px;
-}
+  div.module-content:focus li.focussed
+  {
+    outline: -webkit-focus-ring-color auto 5px;
+  }
 
-div.module.animator input.invalid
-{
-  outline: solid 1px red;
+  input.invalid
+  {
+    outline: solid 1px red;
+  }
 }
 
 /********************************************************************/
