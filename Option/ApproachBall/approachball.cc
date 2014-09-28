@@ -15,8 +15,15 @@ using namespace std;
 
 vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 {
-  ASSERT(d_upperTurnLimitDegs->getValue() > d_lowerTurnLimitDegs->getValue());
-  ASSERT(d_brakeDistance->getValue() != 0);
+  static auto turnScale          = Config::getSetting<double>("options.approach-ball.turn-speed-scale");
+  static auto maxForwardSpeed    = Config::getSetting<double>("options.approach-ball.max-forward-speed");
+  static auto minForwardSpeed    = Config::getSetting<double>("options.approach-ball.min-forward-speed");
+  static auto brakeDistance      = Config::getSetting<double>("options.approach-ball.brake-distance");
+  static auto lowerTurnLimitDegs = Config::getSetting<double>("options.approach-ball.lower-turn-limit-degs");
+  static auto upperTurnLimitDegs = Config::getSetting<double>("options.approach-ball.upper-turn-limit-degs");
+
+  ASSERT(upperTurnLimitDegs->getValue() > lowerTurnLimitDegs->getValue());
+  ASSERT(brakeDistance->getValue() != 0);
 
   auto agentFrame = State::get<AgentFrameState>();
 
@@ -51,7 +58,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   writer.String("ballDist").Double(ballDist);
   writer.String("walkDist").Double(walkDist);
 
-  double speedScaleDueToDistance = Math::clamp(walkDist/d_brakeDistance->getValue(), 0.0, 1.0);
+  double speedScaleDueToDistance = Math::clamp(walkDist/brakeDistance->getValue(), 0.0, 1.0);
 
   writer.String("distSpeed").Double(speedScaleDueToDistance);
 
@@ -60,8 +67,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   double targetAngleRads = Math::angleToPoint(target);
 
   double speedScaleDueToAngle = Math::lerp(fabs(targetAngleRads),
-                                           Math::degToRad(d_lowerTurnLimitDegs->getValue()),
-                                           Math::degToRad(d_upperTurnLimitDegs->getValue()),
+                                           Math::degToRad(lowerTurnLimitDegs->getValue()),
+                                           Math::degToRad(upperTurnLimitDegs->getValue()),
                                            1.0,
                                            0.0);
 
@@ -72,13 +79,13 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   ASSERT(xSpeedScale >= 0.0);
   ASSERT(xSpeedScale <= 1.0);
   double xSpeed = Math::lerp(xSpeedScale,
-                             d_minForwardSpeed->getValue(),
-                             d_maxForwardSpeed->getValue());
+                             minForwardSpeed->getValue(),
+                             maxForwardSpeed->getValue());
 
-  ASSERT(xSpeed >= d_minForwardSpeed->getValue());
+  ASSERT(xSpeed >= minForwardSpeed->getValue());
 
   // unspecified units
-  double turnSpeed = targetAngleRads * d_turnScale->getValue();
+  double turnSpeed = targetAngleRads * turnScale->getValue();
 
   double ySpeed = 0;
 
@@ -149,7 +156,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
       xSpeed *= max(minDistInLane / brakeDist, minForwardSpeedScale->getValue());
   }
 
-  ASSERT(xSpeed <= d_maxForwardSpeed->getValue());
+  ASSERT(xSpeed <= maxForwardSpeed->getValue());
 
   d_walkModule->setMoveDir(xSpeed, ySpeed);
   d_walkModule->setTurnAngle(turnSpeed);

@@ -16,14 +16,7 @@ namespace bold
     : Option(id, "ApproachBall"),
       d_walkModule(walkModule),
       d_behaviourControl(behaviourControl)
-    {
-      d_turnScale          = Config::getSetting<double>("options.approach-ball.turn-speed-scale");
-      d_maxForwardSpeed    = Config::getSetting<double>("options.approach-ball.max-forward-speed");
-      d_minForwardSpeed    = Config::getSetting<double>("options.approach-ball.min-forward-speed");
-      d_brakeDistance      = Config::getSetting<double>("options.approach-ball.brake-distance");
-      d_lowerTurnLimitDegs = Config::getSetting<double>("options.approach-ball.lower-turn-limit-degs");
-      d_upperTurnLimitDegs = Config::getSetting<double>("options.approach-ball.upper-turn-limit-degs");
-    }
+    {}
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
@@ -36,12 +29,6 @@ namespace bold
   private:
     std::shared_ptr<WalkModule> d_walkModule;
     std::shared_ptr<BehaviourControl> d_behaviourControl;
-    Setting<double>* d_turnScale;
-    Setting<double>* d_maxForwardSpeed;
-    Setting<double>* d_minForwardSpeed;
-    Setting<double>* d_brakeDistance;
-    Setting<double>* d_lowerTurnLimitDegs;
-    Setting<double>* d_upperTurnLimitDegs;
     bool d_useCustomStopDistance;
     double d_stopDistance;
   };
