@@ -52,8 +52,6 @@ namespace bold
       return option;
     }
 
-    std::shared_ptr<Option> getOption(std::string const& id) const;
-    std::shared_ptr<Option> getTop() const;
     std::vector<std::shared_ptr<FSMOption>> getFSMs() const;
 
     unsigned optionCount() const { return d_options.size(); }
@@ -63,9 +61,4 @@ namespace bold
     std::set<std::shared_ptr<Option>> d_optionsLastCycle;
     std::shared_ptr<Option> d_top;
   };
-
-  inline std::shared_ptr<Option> OptionTree::getTop() const
-  {
-    return d_top;
-  }
 }
