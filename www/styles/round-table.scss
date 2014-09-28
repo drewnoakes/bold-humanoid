@@ -326,30 +326,42 @@ div.indicator
   vertical-align: baseline;
   border: 0;
   box-sizing: border-box;
-
   transition: background-color 0.5s linear;
+
+  &.error { background-color: red; }
+
+  &.role
+  {
+    &.Striker { background-color: purple; }
+    &.Keeper { background-color: white; }
+    &.Supporter { background-color: green; }
+  }
+
+  &.status
+  {
+    &.Penalised { background-color: red; }
+    &.Inactive { background-color: rgba(0,0,0,0.2); }
+    &.Active { background-color: rgba(0,200,0,0.3); }
+    &.Unknown { border: 1px solid rgba(0,0,0,0.5); }
+  }
+
+  &.play-mode
+  {
+    &.Initial { background-color: black; }
+    &.Ready { background-color: blue; }
+    &.Set { background-color: yellow; }
+    &.Playing { background-color: rgba(0,200,0,0.5); }
+    &.Finished { background-color: white; }
+  }
+
+  &.ball
+  {
+    &.visible { background-color: #FF4F26; }
+    &.invisible { border: 1px solid rgba(255, 79, 38, 0.5); }
+  }
+
+  &.goal.visible { background-color: yellow; }
 }
-
-div.indicator.error { background-color: red; }
-
-div.indicator.role.Striker { background-color: purple; }
-div.indicator.role.Keeper { background-color: white; }
-div.indicator.role.Supporter { background-color: green; }
-
-div.indicator.status.Penalised { background-color: red; }
-div.indicator.status.Inactive { background-color: rgba(0,0,0,0.2); }
-div.indicator.status.Active { background-color: rgba(0,200,0,0.3); }
-div.indicator.status.Unknown { border: 1px solid rgba(0,0,0,0.5); }
-
-div.indicator.play-mode.Initial { background-color: black; }
-div.indicator.play-mode.Ready { background-color: blue; }
-div.indicator.play-mode.Set { background-color: yellow; }
-div.indicator.play-mode.Playing { background-color: rgba(0,200,0,0.5); }
-div.indicator.play-mode.Finished { background-color: white; }
-
-div.indicator.ball.visible { background-color: #FF4F26; }
-div.indicator.ball.invisible { border: 1px solid rgba(255, 79, 38, 0.5); }
-div.indicator.goal.visible { background-color: yellow; }
 
 /********************************************************************/
 
