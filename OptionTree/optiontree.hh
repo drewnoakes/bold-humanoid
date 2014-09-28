@@ -12,22 +12,20 @@
 
 namespace bold
 {
-  // TODO rename 'top' as 'root'?
-
   class OptionTree
   {
   public:
     void run();
 
     template<typename OptionType>
-    std::shared_ptr<OptionType> addOption(std::shared_ptr<OptionType> option, bool isTop = false)
+    std::shared_ptr<OptionType> addOption(std::shared_ptr<OptionType> option, bool isRoot = false)
     {
       d_options[option->getId()] = std::dynamic_pointer_cast<Option>(option);
 
-      if (isTop)
+      if (isRoot)
       {
-        ASSERT(!d_top && "top option already added");
-        d_top = std::dynamic_pointer_cast<Option>(option);
+        ASSERT(!d_root && "root option already added");
+        d_root = std::dynamic_pointer_cast<Option>(option);
       }
 
       // Special handling for FSMOption
@@ -59,6 +57,6 @@ namespace bold
   private:
     std::map<std::string, std::shared_ptr<Option> > d_options;
     std::set<std::shared_ptr<Option>> d_optionsLastCycle;
-    std::shared_ptr<Option> d_top;
+    std::shared_ptr<Option> d_root;
   };
 }

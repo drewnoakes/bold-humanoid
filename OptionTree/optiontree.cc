@@ -83,7 +83,7 @@ void OptionTree::run()
       fsmStates.emplace_back(fsmOption->getId(), fsmOption->getCurrentState()->name);
   };
 
-  runOption(d_top);
+  runOption(d_root);
 
   // NOTE this is a bit weird/wasteful... we should generate the Document
   //      above and pass it instead of creating the string then parsing it...
