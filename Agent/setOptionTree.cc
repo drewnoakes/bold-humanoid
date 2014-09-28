@@ -2,7 +2,7 @@
 
 void Agent::setOptionTree(shared_ptr<OptionTree> tree)
 {
-  log::info("Agent::setOptionTree") << "Setting OptionTree with " << tree->optionCount() << " options";
+  log::verbose("Agent::setOptionTree") << "Setting OptionTree";
   d_optionTree = tree;
   d_streamer->setOptionTree(tree);
 }
