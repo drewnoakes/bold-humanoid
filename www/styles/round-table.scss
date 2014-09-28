@@ -702,21 +702,21 @@ div.checkbox
   vertical-align: top;
   margin: 3px;
   transition: background-color 0.5s linear;
-}
 
-.connection-indicator.disconnected
-{
-  background-color: red;
-}
+  &.disconnected
+  {
+    background-color: red;
+  }
 
-.connection-indicator.connecting
-{
-  background-color: orange;
-}
+  &.connecting
+  {
+    background-color: orange;
+  }
 
-.connection-indicator.connected
-{
-  background-color: green;
+  &.connected
+  {
+    background-color: green;
+  }
 }
 
 /********************************************************************/
