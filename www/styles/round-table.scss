@@ -365,18 +365,21 @@ div.indicator
 
 /********************************************************************/
 
-svg .axis path,
-svg .axis line
+svg .axis
 {
-  fill: none;
-  stroke: black;
-  shape-rendering: crispEdges;
-}
+  path,
+  line
+  {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+  }
 
-svg .axis text
-{
-  font-family: sans-serif;
-  font-size: 11px;
+  text
+  {
+    font-family: sans-serif;
+    font-size: 11px;
+  }
 }
 
 /********************************************************************/
