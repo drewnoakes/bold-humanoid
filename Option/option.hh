@@ -32,7 +32,7 @@ namespace bold
       d_typeName(typeName)
     {}
 
-    virtual ~Option() {}
+    virtual ~Option() = default;
 
     /** Get this option's ID
      */

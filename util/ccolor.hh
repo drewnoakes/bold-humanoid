@@ -26,7 +26,7 @@ namespace bold
       static const char *lightwhite;
 
     private:
-      fore() {};
+      fore() = delete;
     };
 
     struct back
@@ -51,7 +51,7 @@ namespace bold
       static const char *lightwhite;
 
     private:
-      back() {};
+      back() = delete;
     };
 
     static const char *error;
@@ -64,6 +64,6 @@ namespace bold
     static const char *underline;
 
   private:
-    ccolor() {};
+    ccolor() = delete;
   };
 }

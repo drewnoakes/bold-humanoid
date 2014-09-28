@@ -12,7 +12,7 @@ using namespace std;
 class Base
 {
 public:
-  virtual ~Base() {}
+  virtual ~Base() = default;
   virtual bool isSomething() = 0;
   virtual bool isSub() { return false; }
 };
