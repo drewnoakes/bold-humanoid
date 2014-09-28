@@ -856,30 +856,36 @@ div.tab-control
 
 /********************************************************************/
 
-div.module.vision div.module-content h2
+div.module.vision
 {
-  color: #555;
-  margin: 4px 0;
-  display: block;
-}
+  div.module-content h2
+  {
+    color: #555;
+    margin: 4px 0;
+    display: block;
+  }
 
-div.module.vision div.control-container.camera-settings .setting .values
-{
-  color: #666;
-  font-size: 10px;
-}
+  div.control-container.camera-settings .setting
+  {
+    .values
+    {
+      color: #666;
+      font-size: 10px;
+    }
 
-div.module.vision div.control-container.camera-settings .setting input[type=text],
-div.module.vision div.control-container.camera-settings .setting input[type=number],
-div.module.vision div.control-container.camera-settings .setting select
-{
-  width: 170px;
-  box-sizing: border-box;
-}
+    input[type=text],
+    input[type=number],
+    select
+    {
+      width: 170px;
+      box-sizing: border-box;
+    }
+  }
 
-div.module.vision div.image-colours.flow div.setting.control
-{
-  width: 65px;
+  div.image-colours.flow div.setting.control
+  {
+    width: 65px;
+  }
 }
 
 /********************************************************************/
