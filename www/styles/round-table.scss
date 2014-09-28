@@ -27,24 +27,24 @@ $team-magenta: #ff41e5;
 {
   height: 12px;
   width: 12px;
-  background: rgba(black,0.15);
+  background: rgba(black, 0.15);
   -webkit-border-radius: 3px;
 
   html.night-mode &
   {
-    background: rgba(black,0.4);
+    background: rgba(black, 0.4);
   }
 }
 
 ::-webkit-scrollbar-thumb
 {
-  background: rgba(white,0.8);
+  background: rgba(white, 0.8);
   -webkit-border-radius: 3px;
   -webkit-box-shadow: inset 0px 0px 2px rgba(black, 1);
 
   html.night-mode &
   {
-    background: rgba(white,0.2);
+    background: rgba(white, 0.2);
   }
 }
 
@@ -66,8 +66,7 @@ body
   margin: 8px;
 }
 
-@media screen and (max-width: 640px)
-{
+@media screen and (max-width: 640px) {
   body
   {
     margin: 8px 0;
@@ -302,8 +301,7 @@ div#header
   }
 }
 
-@media screen and (max-width: 640px)
-{
+@media screen and (max-width: 640px) {
   #header
   {
     min-height: 130px;
@@ -347,9 +345,9 @@ div.indicator
   &.status
   {
     &.Penalised { background-color: red; }
-    &.Inactive { background-color: rgba(black,0.2); }
-    &.Active { background-color: rgba(0,200,0,0.3); }
-    &.Unknown { border: 1px solid rgba(black,0.5); }
+    &.Inactive { background-color: rgba(black, 0.2); }
+    &.Active { background-color: rgba(0, 200, 0, 0.3); }
+    &.Unknown { border: 1px solid rgba(black, 0.5); }
   }
 
   &.play-mode
@@ -357,7 +355,7 @@ div.indicator
     &.Initial { background-color: black; }
     &.Ready { background-color: blue; }
     &.Set { background-color: yellow; }
-    &.Playing { background-color: rgba(0,200,0,0.5); }
+    &.Playing { background-color: rgba(0, 200, 0, 0.5); }
     &.Finished { background-color: white; }
   }
 
@@ -526,8 +524,7 @@ div#module-container
   }
 }
 
-@media screen and (max-width: 640px)
-{
+@media screen and (max-width: 640px) {
   div.module
   {
     width: 98%;
@@ -797,8 +794,7 @@ div.module.camera
   }
 }
 
-@media screen and (max-width: 640px)
-{
+@media screen and (max-width: 640px) {
   div.module.camera canvas.camera-canvas
   {
     width: 100% !important;
@@ -1405,8 +1401,7 @@ div.module.motion-scripts
   }
 }
 
-@media screen and (max-width: 640px)
-{
+@media screen and (max-width: 640px) {
   div.module.motion-scripts button
   {
     margin: 0 3px 4px 0;
@@ -1577,10 +1572,10 @@ div.module.drawbridge
 
       div.unum
       {
-        display:inline-block;
+        display: inline-block;
         width: 30px;
         height: 30px;
-        text-align:center;
+        text-align: center;
         line-height: 30px;
         font-size: 24px;
         border-radius: 3px;
