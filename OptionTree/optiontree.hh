@@ -52,8 +52,6 @@ namespace bold
 
     std::vector<std::shared_ptr<FSMOption>> getFSMs() const;
 
-    unsigned optionCount() const { return d_options.size(); }
-
   private:
     std::map<std::string, std::shared_ptr<Option> > d_options;
     std::set<std::shared_ptr<Option>> d_optionsLastCycle;
