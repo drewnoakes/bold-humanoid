@@ -1,3 +1,10 @@
+$bh-colour-light: rgb(121, 36, 133); // #792485
+$bh-colour-dark: rgb(87, 21, 97);
+$team-cyan: #36aeff;
+$team-magenta: #ff41e5;
+
+/********************************************************************/
+
 @font-face
 {
   font-family: 'Montserrat';
@@ -179,7 +186,7 @@ div.setting.control input[type="color"]
 
 #bouncer
 {
-  background-color: #792485;
+  background-color: $bh-colour-light;
   position: absolute;
   top: 0;
   left: 0;
@@ -233,7 +240,7 @@ div#header
     h2
     {
       margin: 0;
-      color: rgb(121, 36, 133);
+      color: $bh-colour-light;
       font-weight: normal;
     }
 
@@ -289,8 +296,8 @@ div#header
     > a.module-button.added
     {
       color: #fff;
-      background-color: rgba(121, 36, 133, 0.7);
-      border-bottom: 1px solid rgba(121, 36, 133, 1);
+      background-color: rgba($bh-colour-light, 0.7);
+      border-bottom: 1px solid $bh-colour-light;
     }
   }
 }
@@ -434,7 +441,7 @@ div#module-container
       margin: 0 0 12px 0;
       font-size: 16px;
       /*font-weight: normal;*/
-      color: rgb(87, 21, 97);
+      color: $bh-colour-dark;
       text-transform: uppercase;
 
       html.night-mode &
@@ -480,7 +487,7 @@ div#module-container
     {
       position: relative;
       height: 24px;
-      border-bottom: 1px dotted rgba(87, 21, 97, 0.4);
+      border-bottom: 1px dotted rgba($bh-colour-dark, 0.4);
       margin-bottom: 10px;
 
       > div.module-header-links
@@ -1272,7 +1279,7 @@ div.body-figure
   div.selected
   {
     border: 1px dotted grey;
-    background-color: #792485;
+    background-color: $bh-colour-light;
     color: white;
   }
 }
@@ -1356,7 +1363,7 @@ div.module.optiontree
         {
           transition: stroke-width 0s linear, stroke 0s linear;
           stroke-width: 5;
-          stroke: #792485;
+          stroke: $bh-colour-light;
         }
 
         html.night-mode & text { fill: #fff; }
@@ -1648,8 +1655,8 @@ div.module.drawbridge
 
     div.unum
     {
-      &.team-colour-1 { background-color: #36aeff; }
-      &.team-colour-2 { background-color: #ff41e5; }
+      &.team-colour-1 { background-color: $team-cyan; }
+      &.team-colour-2 { background-color: $team-magenta; }
     }
   }
 
