@@ -41,11 +41,11 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   // Build the top-level FSM
 
-  auto stayStanding = buildStayStandingFsm(agent, performRole);
-  auto respectPlayMode = buildPlayModeFsm(agent, stayStanding);
-  auto allowPause = buildPauseStateFsm(agent, respectPlayMode);
+  auto stayStandingFsm = buildStayStandingFsm(agent, performRole);
+  auto respectPlayModeFsm = buildPlayModeFsm(agent, stayStandingFsm);
+  auto allowPauseFsm = buildPauseStateFsm(agent, respectPlayModeFsm);
 
-  auto untilShutdown = make_shared<UntilShutdown>("until-shutdown", agent, allowPause, shutdownSequence);
+  auto untilShutdown = make_shared<UntilShutdown>("until-shutdown", agent, allowPauseFsm, shutdownSequence);
 
   // BUILD TREE
 
@@ -53,9 +53,9 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   // Register all FSMs with the tree so that we can debug them via Round Table
   tree->addOption(SequenceOption::make("boot", {sit, untilShutdown}), /* root */ true);
-  tree->addOption(allowPause, false);
-  tree->addOption(stayStanding, false);
-  tree->addOption(respectPlayMode, false);
+  tree->addOption(allowPauseFsm, false);
+  tree->addOption(stayStandingFsm, false);
+  tree->addOption(respectPlayModeFsm, false);
   tree->addOption(keeperFsm, false);
   tree->addOption(strikerFsm, false);
   tree->addOption(supporterFsm, false);
