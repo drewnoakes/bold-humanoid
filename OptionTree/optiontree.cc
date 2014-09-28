@@ -12,6 +12,10 @@ using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
+OptionTree::OptionTree(std::shared_ptr<Option> root)
+  : d_root(root)
+{}
+
 /*
  {
    "name": "win",

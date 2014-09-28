@@ -49,20 +49,19 @@ shared_ptr<OptionTree> AdHocOptionTreeBuilder::buildTree(Agent* agent)
 
   // BUILD TREE
 
-  auto tree = make_shared<OptionTree>();
+  auto tree = make_shared<OptionTree>(SequenceOption::make("boot", { sit, untilShutdown }));
 
   // Register all FSMs with the tree so that we can debug them via Round Table
-  tree->addOption(SequenceOption::make("boot", {sit, untilShutdown}), /* root */ true);
-  tree->addOption(allowPauseFsm, false);
-  tree->addOption(stayStandingFsm, false);
-  tree->addOption(respectPlayModeFsm, false);
-  tree->addOption(keeperFsm, false);
-  tree->addOption(strikerFsm, false);
-  tree->addOption(supporterFsm, false);
-  tree->addOption(penaltyKeeperFsm, false);
-  tree->addOption(kickLearnerFsm, false);
-  tree->addOption(ballCirclerFsm, false);
-  tree->addOption(whistleListenerFsm, false);
+  tree->addOption(allowPauseFsm);
+  tree->addOption(stayStandingFsm);
+  tree->addOption(respectPlayModeFsm);
+  tree->addOption(keeperFsm);
+  tree->addOption(strikerFsm);
+  tree->addOption(supporterFsm);
+  tree->addOption(penaltyKeeperFsm);
+  tree->addOption(kickLearnerFsm);
+  tree->addOption(ballCirclerFsm);
+  tree->addOption(whistleListenerFsm);
 
   return tree;
 }

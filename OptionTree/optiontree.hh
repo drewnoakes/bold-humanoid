@@ -15,18 +15,14 @@ namespace bold
   class OptionTree
   {
   public:
+    OptionTree(std::shared_ptr<Option> root);
+
     void run();
 
     template<typename OptionType>
-    std::shared_ptr<OptionType> addOption(std::shared_ptr<OptionType> option, bool isRoot = false)
+    std::shared_ptr<OptionType> addOption(std::shared_ptr<OptionType> option)
     {
       d_options[option->getId()] = std::dynamic_pointer_cast<Option>(option);
-
-      if (isRoot)
-      {
-        ASSERT(!d_root && "root option already added");
-        d_root = std::dynamic_pointer_cast<Option>(option);
-      }
 
       // Special handling for FSMOption
       auto fsm = std::dynamic_pointer_cast<FSMOption>(option);
@@ -55,6 +51,6 @@ namespace bold
   private:
     std::map<std::string, std::shared_ptr<Option> > d_options;
     std::set<std::shared_ptr<Option>> d_optionsLastCycle;
-    std::shared_ptr<Option> d_root;
+    const std::shared_ptr<Option> d_root;
   };
 }
