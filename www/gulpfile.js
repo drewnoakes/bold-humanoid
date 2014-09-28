@@ -2,8 +2,10 @@
 
 // TODO investigate gulp-type for incremental compiles https://www.npmjs.org/package/gulp-type/
 // TODO investigate using browserify or webpack and AMD modules
-// TODO investigate keeping sourcemaps through pipeline - styles: https://www.npmjs.org/package/gulp-autoprefixer
-// TODO make better use of scss
+// TODO investigate keeping sourcemaps through pipeline
+//      - code: https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
+//      - styles: https://www.npmjs.org/package/gulp-autoprefixer
+// TODO investigate running tests using gulp
 
 var gulp = require('gulp');
 
