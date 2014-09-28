@@ -1435,34 +1435,34 @@ div.module.load div.module-content
 
 /*******************************************************************/
 
-div.module.trajectory div.body-figure
+div.module.trajectory
 {
-  top: 0;
-  margin-top: 25px;
-}
+  div.body-figure
+  {
+    top: 0;
+    margin-top: 25px;
+  }
 
-div.module.trajectory canvas
-{
-  background-color: #000;
-}
+  canvas
+  {
+    background-color: #000;
+  }
 
-div.module.trajectory button.record
-{
-  margin: 0 3px 4px 0;
-  padding: 2px 6px;
-  font-size: 13px;
-}
+  button.record
+  {
+    margin: 0 3px 4px 0;
+    padding: 2px 6px;
+    font-size: 13px;
 
-div.module.trajectory button.record.recording
-{
-  border-color: red;
-}
+    &.recording { border-color: red; }
+  }
 
-div.module.trajectory div.hover-value
-{
-  position: fixed;
-  color: #FFF;
-  margin: 5px;
+  div.hover-value
+  {
+    position: fixed;
+    color: #FFF;
+    margin: 5px;
+  }
 }
 
 /*******************************************************************/
