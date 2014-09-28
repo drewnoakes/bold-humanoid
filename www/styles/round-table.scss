@@ -543,38 +543,34 @@ div#module-container
 
   &.flow
   {
-    display: inline-block;
-    margin: 2px 6px 2px 0;
-
     .control
     {
+      width: 100px;
+      display: inline-block;
+      margin: 2px 6px 2px 0;
+
       h3, label
       {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-    }
-
-    .setting.control
-    {
-      width: 100px;
 
       select
       {
         max-width: 100px;
       }
-    }
 
-    input[type="number"]
-    {
-      width: 95px;
-    }
+      input[type="number"]
+      {
+        width: 95px;
+      }
 
-    label
-    {
-      display: inline-block;
-      width: 80px;
+      label
+      {
+        display: inline-block;
+        width: 80px;
+      }
     }
   }
 
