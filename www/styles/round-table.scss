@@ -1081,17 +1081,20 @@ div.module.orientation
 
 /********************************************************************/
 
-div.module.state .json-text
+div.module.state
 {
-  white-space: pre;
-  font-family: Ubuntu Mono, consolas, monospace;
-  font-size: 11px;
-}
+  .json-text
+  {
+    white-space: pre;
+    font-family: Ubuntu Mono, consolas, monospace;
+    font-size: 11px;
+  }
 
-div.module.state > div.module-content
-{
-  height: 456px;
-  overflow: auto;
+  > div.module-content
+  {
+    height: 456px;
+    overflow: auto;
+  }
 }
 
 /********************************************************************/
