@@ -33,6 +33,10 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
     return {};
   }
 
+  //
+  // WALK TOWARDS BALL
+  //
+
   Vector2d ballPos = agentFrame->getBallObservation()->head<2>();
 
   writer.String("ballPos").StartArray().Double(ballPos.x()).Double(ballPos.y()).EndArray(2);
@@ -89,14 +93,18 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   double ySpeed = 0;
 
-  // try to avoid any obstacles
-  static auto avoidObstacles = Config::getSetting<bool>("options.approach-ball.avoid-obstacles.enabled");
-  static auto laneWidth = Config::getSetting<double>("options.approach-ball.avoid-obstacles.lane-width");
+  //
+  // AVOID OBSTACLES
+  //
+
+  static auto avoidObstacles         = Config::getSetting<bool>("options.approach-ball.avoid-obstacles.enabled");
+  static auto laneWidth              = Config::getSetting<double>("options.approach-ball.avoid-obstacles.lane-width");
   static auto occlusionBrakeDistance = Config::getSetting<double>("options.approach-ball.avoid-obstacles.brake-distance");
-  static auto minForwardSpeedScale = Config::getSetting<double>("options.approach-ball.avoid-obstacles.min-fwd-scale");
-  static auto avoidTurnSpeed = Config::getSetting<double>("options.approach-ball.avoid-obstacles.turn-speed");
-  static auto sideStepSpeed = Config::getSetting<double>("options.approach-ball.avoid-obstacles.side-step-speed");
+  static auto minForwardSpeedScale   = Config::getSetting<double>("options.approach-ball.avoid-obstacles.min-fwd-scale");
+  static auto avoidTurnSpeed         = Config::getSetting<double>("options.approach-ball.avoid-obstacles.turn-speed");
+  static auto sideStepSpeed          = Config::getSetting<double>("options.approach-ball.avoid-obstacles.side-step-speed");
   static auto ignoreNearBallDistance = Config::getSetting<double>("options.approach-ball.avoid-obstacles.ignore-near-ball-dist");
+
   if (avoidObstacles->getValue())
   {
     // Determine the polygon of the direct lane to the ball
