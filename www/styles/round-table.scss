@@ -1099,107 +1099,110 @@ div.module.state
 
 /********************************************************************/
 
-div.module.config > div.module-content
+div.module.config
 {
-  height: inherit;
-}
+  > div.module-content
+  {
+    height: inherit;
+  }
 
-div.module.config input.filter
-{
-  float: right;
-  width: 200px;
-  position: relative;
-  top: -6px;
-}
+  input.filter
+  {
+    float: right;
+    width: 200px;
+    position: relative;
+    top: -6px;
+  }
 
-div.module.config div.tab-control > div
-{
-  max-height: 400px;
-  overflow: auto;
-}
+  div.tab-control > div
+  {
+    max-height: 400px;
+    overflow: auto;
+  }
 
-div.module.config .json-text
-{
-  white-space: pre;
-  font-family: Ubuntu Mono, consolas, monospace;
-  font-size: 11px;
-}
+  .json-text
+  {
+    white-space: pre;
+    font-family: Ubuntu Mono, consolas, monospace;
+    font-size: 11px;
+  }
 
-div.module.config span.readonly-setting-value
-{
-  min-width: 120px;
-  display: inline-block;
-  text-align: right;
-  box-sizing: border-box;
-  padding-right: 20px;
-}
+  span.readonly-setting-value
+  {
+    min-width: 120px;
+    display: inline-block;
+    text-align: right;
+    box-sizing: border-box;
+    padding-right: 20px;
+  }
 
-div.module.config ul
-{
-  padding: 0;
-}
+  ul
+  {
+    padding: 0;
+  }
 
-div.module.config li > div.setting.control
-{
-  min-width: 120px;
-  display: inline-block;
-  vertical-align: middle;
-}
+  li > div.setting.control
+  {
+    min-width: 120px;
+    display: inline-block;
+    vertical-align: middle;
 
-div.module.config li > div.setting.control input[type='number']
-{
-  width: 120px;
-  box-sizing: border-box;
-  text-align: right;
-  padding-right: 5px;
-}
+    input[type='number']
+    {
+      width: 120px;
+      box-sizing: border-box;
+      text-align: right;
+      padding-right: 5px;
+    }
 
-div.module.config li > div.setting.control input[type='text']
-{
-  width: 120px;
-  box-sizing: border-box;
-  text-align: right;
-  padding-right: 5px;
-}
+    input[type='text']
+    {
+      width: 120px;
+      box-sizing: border-box;
+      text-align: right;
+      padding-right: 5px;
+    }
 
-div.module.config li > div.setting.control input[type='checkbox']
-{
-  float: right;
-  margin-right: 0;
-}
+    input[type='checkbox']
+    {
+      float: right;
+      margin-right: 0;
+    }
 
-div.module.config li > div.setting.control input[type='color']
-{
-  float: right;
-  margin-right: 0;
-}
+    input[type='color']
+    {
+      float: right;
+      margin-right: 0;
+    }
 
-div.module.config li > div.setting.control select
-{
-  min-width: 120px;
-  margin: 0;
-}
+    select
+    {
+      min-width: 120px;
+      margin: 0;
+    }
+  }
 
-div.module.config li > span.path
-{
-  padding-left: 10px;
-  display: inline-block;
-  vertical-align: middle;
-}
+  li > span.path
+  {
+    padding-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-div.module.config li > span.description
-{
-  padding-left: 10px;
-  display: inline-block;
-  vertical-align: middle;
-  color: #777;
-}
+  li > span.description
+  {
+    padding-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    color: #777;
+  }
 
-div.module.config li > button
-{
-  min-width: 190px;
-  display: inline-block;
-  vertical-align: middle;
+  li > button
+  {
+    min-width: 190px;
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
 
 /********************************************************************/
