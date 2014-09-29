@@ -15,7 +15,6 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var autoprefixer = require('gulp-autoprefixer');
 var minifycss = require('gulp-minify-css');
-var minifyhtml = require('gulp-minify-html');
 var fs = require('fs');
 var header = require('gulp-header');
 var typescript = require('gulp-tsc');
@@ -101,7 +100,7 @@ gulp.task('dist', ['bundle-styles', 'bundle-source', 'bundle-libs'], function ()
     return gulp.src('index.html')
         .pipe(rename('dist/index.html'))
         .pipe(inject(gulp.src(sources), {read: false, relative: true}))
-        .pipe(minifyhtml())
+        //.pipe(minifyhtml())
         .pipe(gulp.dest('./'));
 });
 
