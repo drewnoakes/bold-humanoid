@@ -102,8 +102,14 @@ gulp.task('bundle-images', function ()
         .pipe(gulp.dest(outFolder));
 });
 
+gulp.task('bundle-fonts', function ()
+{
+    return gulp.src('./fonts/*', {base: './'})
+        .pipe(gulp.dest(outFolder));
+});
+
 // Produce a distributable version of the site as a self-contained bundle
-gulp.task('dist', ['bundle-images', 'bundle-styles', 'bundle-source', 'bundle-libs'], function ()
+gulp.task('dist', ['bundle-images', 'bundle-styles', 'bundle-source', 'bundle-libs', 'bundle-fonts'], function ()
 {
     var sources = [
         'dist/libs.js',
