@@ -22,6 +22,7 @@ var amdOptimize = require('amd-optimize');
 var inject = require('gulp-inject');
 var imagemin = require('gulp-imagemin');
 var pngcrush = require('imagemin-pngcrush');
+var jsonminify = require('gulp-jsonminify');
 
 var outFolder = 'dist';
 
@@ -108,8 +109,15 @@ gulp.task('bundle-fonts', function ()
         .pipe(gulp.dest(outFolder));
 });
 
+gulp.task('bundle-models', function ()
+{
+    return gulp.src(['models/**/*.json'], {base: './'})
+        .pipe(jsonminify())
+        .pipe(gulp.dest(outFolder));
+});
+
 // Produce a distributable version of the site as a self-contained bundle
-gulp.task('dist', ['bundle-images', 'bundle-styles', 'bundle-source', 'bundle-libs', 'bundle-fonts'], function ()
+gulp.task('dist', ['bundle-images', 'bundle-styles', 'bundle-source', 'bundle-libs', 'bundle-fonts', 'bundle-models'], function ()
 {
     var sources = [
         'dist/libs.js',

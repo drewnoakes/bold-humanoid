@@ -37,6 +37,7 @@
     "amd-optimize": "~0.2.5",
     "gulp-inject": "~1.0.2",
     "gulp-imagemin": "~1.0.1",
-    "imagemin-pngcrush": "~1.0.0"
+    "imagemin-pngcrush": "~1.0.0",
+    "gulp-jsonminify": "0.0.1"
   }
 }
