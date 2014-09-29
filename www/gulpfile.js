@@ -20,6 +20,8 @@ var header = require('gulp-header');
 var typescript = require('gulp-tsc');
 var amdOptimize = require('amd-optimize');
 var inject = require('gulp-inject');
+var imagemin = require('gulp-imagemin');
+var pngcrush = require('imagemin-pngcrush');
 
 var outFolder = 'dist';
 
@@ -89,8 +91,19 @@ gulp.task('bundle-libs', function ()
         .pipe(gulp.dest(outFolder));
 });
 
+gulp.task('bundle-images', function ()
+{
+    return gulp.src('./images/*', {base: './'})
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngcrush()]
+        }))
+        .pipe(gulp.dest(outFolder));
+});
+
 // Produce a distributable version of the site as a self-contained bundle
-gulp.task('dist', ['bundle-styles', 'bundle-source', 'bundle-libs'], function ()
+gulp.task('dist', ['bundle-images', 'bundle-styles', 'bundle-source', 'bundle-libs'], function ()
 {
     var sources = [
         'dist/libs.js',

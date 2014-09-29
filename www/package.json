@@ -35,6 +35,8 @@
     "gulp-header": "~1.1.1",
     "gulp-tsc": "~0.9.2",
     "amd-optimize": "~0.2.5",
-    "gulp-inject": "~1.0.2"
+    "gulp-inject": "~1.0.2",
+    "gulp-imagemin": "~1.0.1",
+    "imagemin-pngcrush": "~1.0.0"
   }
 }
