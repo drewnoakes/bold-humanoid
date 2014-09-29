@@ -17,7 +17,6 @@ var autoprefixer = require('gulp-autoprefixer');
 var minifycss = require('gulp-minify-css');
 var minifyhtml = require('gulp-minify-html');
 var fs = require('fs');
-var es = require('event-stream');
 var header = require('gulp-header');
 var typescript = require('gulp-tsc');
 var amdOptimize = require('amd-optimize');
@@ -42,22 +41,34 @@ gulp.task('tsc', function ()
         .pipe(gulp.dest('scripts/app/'))
 });
 
-// Produce a distributable version of the site as a self-contained bundle
-gulp.task('dist', ['tsc', 'styles'], function ()
+gulp.task('bundle-styles', ['styles'], function ()
 {
-    // TODO allow this to be parallelised
-
     var styles = [
         'styles/round-table.css',
         'styles/joint.css'
     ];
 
-    var bundledStyles = gulp.src(styles)
+    return gulp.src(styles)
         .pipe(concat('styles.css'))
         .pipe(minifycss())
         .pipe(header(fs.readFileSync('LICENSE')))
         .pipe(gulp.dest(outFolder));
+});
 
+gulp.task('bundle-source', ['tsc'], function ()
+{
+    // TODO maybe use CommonJS and ditch RequireJS
+    // TODO sourcemap support
+    return gulp.src('scripts/app/**/*.js')
+        .pipe(amdOptimize('main', {baseUrl: 'scripts/app'}))
+        .pipe(concat('main.js'))
+        .pipe(uglify())
+        .pipe(header(fs.readFileSync('LICENSE')))
+        .pipe(gulp.dest(outFolder));
+});
+
+gulp.task('bundle-libs', function ()
+{
     var libs = [
         'scripts/libs/three.js',
         'scripts/libs/smoothie.js',
@@ -73,28 +84,23 @@ gulp.task('dist', ['tsc', 'styles'], function ()
 
     // TODO delete minified versions of libraries from disk
 
-    var bundledLibs = gulp.src(libs)
+    return gulp.src(libs)
         .pipe(concat('libs.js'))
         .pipe(uglify())
         .pipe(gulp.dest(outFolder));
+});
 
-    // TODO maybe use CommonJS and ditch RequireJS
-    // TODO sourcemap support
-    var bundledSource = gulp.src('scripts/app/**/*.js')
-        .pipe(amdOptimize('main', {baseUrl: 'scripts/app'}))
-        .pipe(concat('main.js'))
-        .pipe(uglify())
-        .pipe(header(fs.readFileSync('LICENSE')))
-        .pipe(gulp.dest(outFolder));
-
-    var sources = es.merge(
-        bundledSource,
-        bundledStyles,
-        bundledLibs);
+// Produce a distributable version of the site as a self-contained bundle
+gulp.task('dist', ['bundle-styles', 'bundle-source', 'bundle-libs'], function ()
+{
+    var sources = [
+        'dist/libs.js',
+        'dist/main.js',
+        'dist/styles.css'];
 
     return gulp.src('index.html')
         .pipe(rename('dist/index.html'))
-        .pipe(inject(sources, {read: false, relative: true}))
+        .pipe(inject(gulp.src(sources), {read: false, relative: true}))
         .pipe(minifyhtml())
         .pipe(gulp.dest('./'));
 });
