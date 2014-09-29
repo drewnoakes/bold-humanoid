@@ -84,8 +84,6 @@ gulp.task('bundle-libs', function ()
         'scripts/libs/joint.layout.DirectedGraph.js'
     ];
 
-    // TODO delete minified versions of libraries from disk
-
     return gulp.src(libs)
         .pipe(concat('libs.js'))
         .pipe(uglify())
