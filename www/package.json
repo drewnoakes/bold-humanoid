@@ -5,8 +5,7 @@
   "main": "build.js",
   "scripts": {
     "test": "karma run",
-    "build": "find . -name \"*.ts\" | xargs tsc -m amd --sourcemap",
-    "optimise": "r.js -o build.js"
+    "build": "gulp"
   },
   "repository": {
     "type": "git",
