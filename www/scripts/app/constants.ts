@@ -222,6 +222,7 @@ export interface IBodyPart
     name: string;
     offset?: geometry.IPoint3;
     rotationAxis?: THREE.Euler;
+    // Models offset to the rotation (adjusts the zero position), in radians
     rotationOrigin?: number;
     creaseAngle?: number;
     jointId?: number;
