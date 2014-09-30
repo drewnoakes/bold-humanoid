@@ -114,7 +114,7 @@ gulp.task('bundle-fonts', function ()
 
 gulp.task('bundle-models', function ()
 {
-    return gulp.src(['models/**/*.json'], {base: './'})
+    return gulp.src(['models/darwin.json'], {base: './'})
         .pipe(jsonminify())
         .pipe(gulp.dest(outFolder));
 });

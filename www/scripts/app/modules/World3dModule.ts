@@ -16,6 +16,7 @@ import state = require('state');
 import Module = require('Module');
 import Checkbox = require('controls/Checkbox');
 import Trackable = require('util/Trackable');
+import BodyBuilder = require('util/BodyBuilder');
 
 interface Hinge
 {
@@ -542,16 +543,17 @@ class World3dModule extends Module
 
         var processNode = (node: constants.IBodyPart, parentObject: THREE.Object3D) =>
         {
-            if (node.geometryPath) {
+            if (node.name) {
                 geometriesToLoad++;
-                var loader = new THREE.JSONLoader();
-                loader.load(node.geometryPath, (geometry, materials) =>
+                BodyBuilder.withDarwinModel(partMap =>
                 {
-                    geometry.computeFaceNormals();
+                    var loader = new THREE.JSONLoader();
+                    var model = loader.parse(<any>partMap[node.name]);
+                    model.geometry.computeFaceNormals();
 //                  geometry.computeVertexNormals();
-                    GeometryUtil.computeVertexNormals(geometry, node.creaseAngle || 0.2);
+                    GeometryUtil.computeVertexNormals(model.geometry, node.creaseAngle || 0.2);
 
-                    var object = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+                    var object = new THREE.Mesh(model.geometry, new THREE.MeshFaceMaterial(model.materials));
                     object.castShadow = true;
                     object.receiveShadow  = false;
                     // rotate to account for the different axes used in the json files
@@ -589,6 +591,9 @@ class World3dModule extends Module
         };
 
         var root = new THREE.Object3D();
+
+
+
         processNode(body, root);
 
         this.centreOfMassAxes = new THREE.AxisHelper(0.2);
