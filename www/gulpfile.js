@@ -1,7 +1,6 @@
 /// <reference path="scripts/libs/gulp.d.ts" />
 
 // TODO investigate gulp-type for incremental compiles https://www.npmjs.org/package/gulp-type/
-// TODO investigate using browserify or webpack and AMD modules
 // TODO investigate keeping sourcemaps through pipeline
 //      - code: https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
 //      - styles: https://www.npmjs.org/package/gulp-autoprefixer
@@ -18,11 +17,13 @@ var minifycss = require('gulp-minify-css');
 var fs = require('fs');
 var header = require('gulp-header');
 var typescript = require('gulp-tsc');
-var amdOptimize = require('amd-optimize');
 var inject = require('gulp-inject');
 var imagemin = require('gulp-imagemin');
 var pngcrush = require('imagemin-pngcrush');
 var jsonminify = require('gulp-jsonminify');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
+var streamify = require('gulp-streamify');
 
 var outFolder = 'dist';
 
@@ -39,7 +40,7 @@ gulp.task('styles', function ()
 gulp.task('tsc', function ()
 {
     return gulp.src('scripts/app/**/*.ts')
-        .pipe(typescript({module:'amd'}))
+        .pipe(typescript({module:'commonjs'}))
         .pipe(gulp.dest('scripts/app/'))
 });
 
@@ -59,12 +60,16 @@ gulp.task('bundle-styles', ['styles'], function ()
 
 gulp.task('bundle-source', ['tsc'], function ()
 {
-    // TODO maybe use CommonJS and ditch RequireJS
     // TODO sourcemap support
-    return gulp.src('scripts/app/**/*.js')
-        .pipe(amdOptimize('main', {baseUrl: 'scripts/app'}))
-        .pipe(concat('main.js'))
-        .pipe(uglify())
+
+    return browserify('main.js', {
+            basedir: './scripts/app/',
+            paths: ['./scripts/app/'],
+            builtins: {constants: null, util: null}
+        })
+        .bundle()
+        .pipe(source('main.js'))
+        .pipe(streamify(uglify()))
         .pipe(header(fs.readFileSync('LICENSE')))
         .pipe(gulp.dest(outFolder));
 });
@@ -115,7 +120,7 @@ gulp.task('bundle-models', function ()
 });
 
 // Produce a distributable version of the site as a self-contained bundle
-gulp.task('dist', ['bundle-images', 'bundle-styles', 'bundle-source', 'bundle-libs', 'bundle-fonts', 'bundle-models'], function ()
+gulp.task('dist', ['bundle-source', 'bundle-images', 'bundle-styles', 'bundle-libs', 'bundle-fonts', 'bundle-models'], function ()
 {
     var sources = [
         'dist/libs.js',
