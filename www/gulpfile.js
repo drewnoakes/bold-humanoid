@@ -5,6 +5,7 @@
 //      - code: https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
 //      - styles: https://www.npmjs.org/package/gulp-autoprefixer
 // TODO investigate running tests using gulp
+// TODO build commonjs source for bundle out-of-tree and delete
 
 var gulp = require('gulp');
 
@@ -36,13 +37,19 @@ gulp.task('styles', function ()
         .pipe(gulp.dest('styles'))
 });
 
-// Transpiles TypeScript source code
-gulp.task('tsc', function ()
+function tsc(moduleType)
 {
-    return gulp.src('scripts/app/**/*.ts')
-        .pipe(typescript({module:'commonjs'}))
-        .pipe(gulp.dest('scripts/app/'))
-});
+    return function()
+    {
+        return gulp.src('scripts/app/**/*.ts')
+            .pipe(typescript({module:moduleType}))
+            .pipe(gulp.dest('scripts/app/'))
+    };
+}
+
+// Transpiles TypeScript source code
+gulp.task('tsc-commonjs', tsc('commonjs'));
+gulp.task('tsc-amd', tsc('amd'));
 
 gulp.task('bundle-styles', ['styles'], function ()
 {
@@ -58,7 +65,7 @@ gulp.task('bundle-styles', ['styles'], function ()
         .pipe(gulp.dest(outFolder));
 });
 
-gulp.task('bundle-source', ['tsc'], function ()
+gulp.task('bundle-source', ['tsc-commonjs'], function ()
 {
     // TODO sourcemap support
 
@@ -145,8 +152,8 @@ gulp.task('dist', allBundles, function ()
 
 gulp.task('watch', function ()
 {
-    gulp.watch('scripts/app/**/*.ts', ['tsc']);
+    gulp.watch('scripts/app/**/*.ts', ['tsc-amd']);
     gulp.watch('styles/*.scss', ['styles']);
 });
 
-gulp.task('default', ['styles', 'tsc']);
+gulp.task('default', ['styles', 'tsc-amd']);
