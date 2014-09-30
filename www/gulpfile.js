@@ -26,7 +26,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
 
-var outFolder = 'dist';
+var distFolder = 'dist';
 
 // Transpiles SASS styles, runs autoprefixer and saves as a .css file
 gulp.task('styles', function ()
@@ -62,7 +62,7 @@ gulp.task('bundle-styles', ['styles'], function ()
         .pipe(concat('styles.css'))
         .pipe(minifycss({keepSpecialComments:0}))
         .pipe(header(fs.readFileSync('LICENSE')))
-        .pipe(gulp.dest(outFolder));
+        .pipe(gulp.dest(distFolder));
 });
 
 gulp.task('bundle-source', ['tsc-commonjs'], function ()
@@ -78,7 +78,7 @@ gulp.task('bundle-source', ['tsc-commonjs'], function ()
         .pipe(source('main.js'))
         .pipe(streamify(uglify()))
         .pipe(header(fs.readFileSync('LICENSE')))
-        .pipe(gulp.dest(outFolder));
+        .pipe(gulp.dest(distFolder));
 });
 
 gulp.task('bundle-libs', function ()
@@ -99,7 +99,7 @@ gulp.task('bundle-libs', function ()
     return gulp.src(libs)
         .pipe(concat('libs.js'))
         .pipe(uglify())
-        .pipe(gulp.dest(outFolder));
+        .pipe(gulp.dest(distFolder));
 });
 
 gulp.task('bundle-images', function ()
@@ -110,20 +110,20 @@ gulp.task('bundle-images', function ()
             svgoPlugins: [{removeViewBox: false}],
             use: [pngcrush()]
         }))
-        .pipe(gulp.dest(outFolder));
+        .pipe(gulp.dest(distFolder));
 });
 
 gulp.task('bundle-fonts', function ()
 {
     return gulp.src('./fonts/*', {base: './'})
-        .pipe(gulp.dest(outFolder));
+        .pipe(gulp.dest(distFolder));
 });
 
 gulp.task('bundle-models', function ()
 {
     return gulp.src(['models/darwin.json'], {base: './'})
         .pipe(jsonminify())
-        .pipe(gulp.dest(outFolder));
+        .pipe(gulp.dest(distFolder));
 });
 
 var allBundles = [
