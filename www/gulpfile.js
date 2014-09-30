@@ -53,7 +53,7 @@ gulp.task('bundle-styles', ['styles'], function ()
 
     return gulp.src(styles)
         .pipe(concat('styles.css'))
-        .pipe(minifycss())
+        .pipe(minifycss({keepSpecialComments:0}))
         .pipe(header(fs.readFileSync('LICENSE')))
         .pipe(gulp.dest(outFolder));
 });
