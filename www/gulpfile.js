@@ -5,7 +5,6 @@
 //      - code: https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
 //      - styles: https://www.npmjs.org/package/gulp-autoprefixer
 // TODO investigate running tests using gulp
-// TODO build commonjs source for bundle out-of-tree and delete
 
 var gulp = require('gulp');
 
@@ -27,6 +26,7 @@ var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
 
 var distFolder = 'dist';
+var buildFolder = 'build';
 
 // Transpiles SASS styles, runs autoprefixer and saves as a .css file
 gulp.task('styles', function ()
@@ -37,19 +37,19 @@ gulp.task('styles', function ()
         .pipe(gulp.dest('styles'))
 });
 
-function tsc(moduleType)
+// Transpiles TypeScript source code
+function tsc(moduleType, outFolder)
 {
     return function()
     {
         return gulp.src('scripts/app/**/*.ts')
-            .pipe(typescript({module:moduleType}))
-            .pipe(gulp.dest('scripts/app/'))
+            .pipe(typescript({module: moduleType}))
+            .pipe(gulp.dest(outFolder))
     };
 }
 
-// Transpiles TypeScript source code
-gulp.task('tsc-commonjs', tsc('commonjs'));
-gulp.task('tsc-amd', tsc('amd'));
+gulp.task('tsc-commonjs', tsc('commonjs', buildFolder));
+gulp.task('tsc-amd',      tsc('amd',      'scripts/app/'));
 
 gulp.task('bundle-styles', ['styles'], function ()
 {
@@ -70,8 +70,8 @@ gulp.task('bundle-source', ['tsc-commonjs'], function ()
     // TODO sourcemap support
 
     return browserify('main.js', {
-            basedir: './scripts/app/',
-            paths: ['./scripts/app/'],
+            basedir: './build/',
+            paths: ['./build/'],
             builtins: {constants: null, util: null}
         })
         .bundle()
