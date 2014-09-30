@@ -537,38 +537,27 @@ class World3dModule extends Module
 
     private buildBody(body: constants.IBodyPart, loadedCallback: ()=>void)
     {
-        // TODO move this to a BodyBuilder class and reuse in OrientationModule
+        // TODO move this to BodyBuilder and reuse in OrientationModule
 
-        var geometriesToLoad = 0;
-
-        var processNode = (node: constants.IBodyPart, parentObject: THREE.Object3D) =>
+        var processNode = (node: constants.IBodyPart, parentObject: THREE.Object3D, partMap: BodyBuilder.IPartMap) =>
         {
             console.assert(!!node.name);
 
-            geometriesToLoad++;
-            BodyBuilder.withDarwinModel(partMap =>
-            {
-                var loader = new THREE.JSONLoader();
-                var model = loader.parse(<any>partMap[node.name]);
-                model.geometry.computeFaceNormals();
+            var loader = new THREE.JSONLoader();
+            var model = loader.parse(<any>partMap[node.name]);
+            model.geometry.computeFaceNormals();
 //              geometry.computeVertexNormals();
-                GeometryUtil.computeVertexNormals(model.geometry, node.creaseAngle || 0.2);
+            GeometryUtil.computeVertexNormals(model.geometry, node.creaseAngle || 0.2);
 
-                var object = new THREE.Mesh(model.geometry, new THREE.MeshFaceMaterial(model.materials));
-                object.castShadow = true;
-                object.receiveShadow  = false;
-                // rotate to account for the different axes used in the json files
-                object.rotation.x = Math.PI/2;
-                object.rotation.y = Math.PI;
-                parentObject.add(object);
+            var object = new THREE.Mesh(model.geometry, new THREE.MeshFaceMaterial(model.materials));
+            object.castShadow = true;
+            object.receiveShadow  = false;
+            // rotate to account for the different axes used in the json files
+            object.rotation.x = Math.PI/2;
+            object.rotation.y = Math.PI;
+            parentObject.add(object);
 
-                this.objectByName[node.name] = object;
-
-                geometriesToLoad--;
-                if (geometriesToLoad === 0) {
-                    loadedCallback();
-                }
-            });
+            this.objectByName[node.name] = object;
 
             for (var i = 0; node.children && i < node.children.length; i++) {
                 // Create hinge objects to house the children
@@ -584,15 +573,17 @@ class World3dModule extends Module
                 this.hinges[childNode.jointId] = childHinge;
                 World3dModule.setHingeAngle(childHinge, 0);
                 parentObject.add(childHinge.object);
-                processNode(childNode, childHinge.object);
+                processNode(childNode, childHinge.object, partMap);
             }
         };
 
         var root = new THREE.Object3D();
 
-
-
-        processNode(body, root);
+        BodyBuilder.withDarwinModel(partMap =>
+        {
+            processNode(body, root, partMap);
+            loadedCallback();
+        });
 
         this.centreOfMassAxes = new THREE.AxisHelper(0.2);
         root.add(this.centreOfMassAxes);
