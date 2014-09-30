@@ -325,7 +325,7 @@ class World3dModule extends Module
             hinge.rotationAxis.z * angle
         );
         if (!hinge.object.rotation.equals(rotation)) {
-            hinge.object.rotation = rotation;
+            hinge.object.rotation.set(rotation.x, rotation.y, rotation.z);
             return true;
         }
 
@@ -532,7 +532,7 @@ class World3dModule extends Module
         }
 
         spotlight.position.set(body.position.x + unit, body.position.y + unit, body.position.z + unit);
-        spotlight.target.position = body.position; //.set(0, 0, 0);
+        spotlight.target.position.set(body.position.x, body.position.y, body.position.z); //.set(0, 0, 0);
     }
 
     private buildBody(body: constants.IBodyPart, loadedCallback: ()=>void)
@@ -644,7 +644,8 @@ class World3dModule extends Module
         } else {
             // First person -- position camera in player's head
             var headMatrix = this.objectByName['head'].matrixWorld;
-            this.camera.position = constants.cameraOffsetInHead.clone().applyMatrix4(headMatrix);
+            var position = constants.cameraOffsetInHead.clone().applyMatrix4(headMatrix);
+            this.camera.position.set(position.x, position.y, position.z);
             this.camera.lookAt(new THREE.Vector3(0, 0, 1).applyMatrix4(headMatrix));
         }
     }
