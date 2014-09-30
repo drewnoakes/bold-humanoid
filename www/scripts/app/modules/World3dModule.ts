@@ -9,7 +9,6 @@ import Animator = require('Animator');
 import constants = require('constants');
 import data = require('data');
 import plotter = require('plotter');
-import GeometryUtil = require('util/three');
 import interaction = require('interaction');
 import geometry = require('util/geometry');
 import state = require('state');
@@ -17,13 +16,6 @@ import Module = require('Module');
 import Checkbox = require('controls/Checkbox');
 import Trackable = require('util/Trackable');
 import BodyBuilder = require('util/BodyBuilder');
-
-interface Hinge
-{
-    rotationAxis?: THREE.Euler;
-    rotationOrigin?: number;
-    object: THREE.Object3D;
-}
 
 class World3dModule extends Module
 {
@@ -58,7 +50,7 @@ class World3dModule extends Module
 
     private animator: Animator;
 
-    private hinges: Hinge[];
+    private hinges: BodyBuilder.Hinge[];
 
     constructor()
     {
@@ -111,8 +103,11 @@ class World3dModule extends Module
         this.element.appendChild(this.renderer.domElement);
         this.element.appendChild(controls);
 
-        this.bodyRoot = this.buildBody(constants.bodyStructure, () =>
+        this.bodyRoot = BodyBuilder.buildBody(this.hinges, this.objectByName, () =>
         {
+            this.centreOfMassAxes = new THREE.AxisHelper(0.2);
+            this.bodyRoot.add(this.centreOfMassAxes);
+
             this.bodyRoot.position.z = this.torsoHeight;
             this.bodyRoot.rotation.z = -Math.PI/2;
             //this.bodyRoot.add(new THREE.AxisHelper(0.2)); // [R,G,B] === (x,y,z)
@@ -151,11 +146,7 @@ class World3dModule extends Module
 
     private onBodyState(data: state.Body)
     {
-        if (!data.angles || data.angles.length !== 20)
-        {
-            console.error("Expecting 20 angles");
-            return;
-        }
+        console.assert(!!data.angles && data.angles.length === 20);
 
         if (this.showCentreOfMass.getValue())
         {
@@ -169,7 +160,7 @@ class World3dModule extends Module
 
         var hasChange = false;
         for (var i = 0; i < 20; i++) {
-            if (World3dModule.setHingeAngle(this.hinges[i + 1], data.angles[i])) {
+            if (this.hinges[i + 1].setAngle(data.angles[i])) {
                 hasChange = true;
             }
         }
@@ -305,32 +296,6 @@ class World3dModule extends Module
             //this.updateCameraPosition();
             this.animator.setRenderNeeded();
         }
-    }
-
-    private static setHingeAngle(hinge: Hinge, angle: number)
-    {
-        if (!hinge.rotationAxis) {
-            // No hinge is defined (eg: eyes)
-            return false;
-        }
-
-        // Add any angular offset applied to this hinge (adjust the zero-position)
-        if (hinge.rotationOrigin) {
-            angle += hinge.rotationOrigin;
-        }
-
-        var rotation = new THREE.Euler(
-            hinge.rotationAxis.x * angle,
-            hinge.rotationAxis.y * angle,
-            hinge.rotationAxis.z * angle
-        );
-        if (!hinge.object.rotation.equals(rotation)) {
-            hinge.object.rotation.set(rotation.x, rotation.y, rotation.z);
-            return true;
-        }
-
-        // No change was applied
-        return false;
     }
 
     private initialiseScene()
@@ -533,62 +498,6 @@ class World3dModule extends Module
 
         spotlight.position.set(body.position.x + unit, body.position.y + unit, body.position.z + unit);
         spotlight.target.position.set(body.position.x, body.position.y, body.position.z); //.set(0, 0, 0);
-    }
-
-    private buildBody(body: constants.IBodyPart, loadedCallback: ()=>void)
-    {
-        // TODO move this to BodyBuilder and reuse in OrientationModule
-
-        var processNode = (node: constants.IBodyPart, parentObject: THREE.Object3D, partMap: BodyBuilder.IPartMap) =>
-        {
-            console.assert(!!node.name);
-
-            var loader = new THREE.JSONLoader();
-            var model = loader.parse(<any>partMap[node.name]);
-            model.geometry.computeFaceNormals();
-//              geometry.computeVertexNormals();
-            GeometryUtil.computeVertexNormals(model.geometry, node.creaseAngle || 0.2);
-
-            var object = new THREE.Mesh(model.geometry, new THREE.MeshFaceMaterial(model.materials));
-            object.castShadow = true;
-            object.receiveShadow  = false;
-            // rotate to account for the different axes used in the json files
-            object.rotation.x = Math.PI/2;
-            object.rotation.y = Math.PI;
-            parentObject.add(object);
-
-            this.objectByName[node.name] = object;
-
-            for (var i = 0; node.children && i < node.children.length; i++) {
-                // Create hinge objects to house the children
-                var childHinge: Hinge = { object: new THREE.Object3D() };
-                var childNode = node.children[i];
-                if (childNode.offset) {
-                    childHinge.object.position.x = childNode.offset.x || 0;
-                    childHinge.object.position.y = childNode.offset.y || 0;
-                    childHinge.object.position.z = childNode.offset.z || 0;
-                }
-                childHinge.rotationAxis = childNode.rotationAxis;
-                childHinge.rotationOrigin = childNode.rotationOrigin;
-                this.hinges[childNode.jointId] = childHinge;
-                World3dModule.setHingeAngle(childHinge, 0);
-                parentObject.add(childHinge.object);
-                processNode(childNode, childHinge.object, partMap);
-            }
-        };
-
-        var root = new THREE.Object3D();
-
-        BodyBuilder.withDarwinModel(partMap =>
-        {
-            processNode(body, root, partMap);
-            loadedCallback();
-        });
-
-        this.centreOfMassAxes = new THREE.AxisHelper(0.2);
-        root.add(this.centreOfMassAxes);
-
-        return root;
     }
 
     private bindMouseInteraction(container: HTMLElement)

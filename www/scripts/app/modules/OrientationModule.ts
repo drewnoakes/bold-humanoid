@@ -15,6 +15,7 @@ import dom = require('util/domdomdom');
 import state = require('state');
 import Legend = require('controls/Legend');
 import Module = require('Module');
+import BodyBuilder = require('util/BodyBuilder');
 
 var chartHeight = 150;
 
@@ -113,6 +114,9 @@ class OrientationModule extends Module
     private rollSeries: TimeSeries;
     private yawSeries: TimeSeries;
 
+    private objectByName: {[name:string]:THREE.Mesh};
+    private hinges: BodyBuilder.Hinge[];
+
     constructor()
     {
         super('orientation', 'orientation', { fullScreen: true });
@@ -122,6 +126,9 @@ class OrientationModule extends Module
 
     public load(width: number)
     {
+        this.objectByName = {};
+        this.hinges = [];
+
         this.initialiseScene();
 
         this.closeables.add(constants.isNightModeActive.track(
@@ -172,6 +179,9 @@ class OrientationModule extends Module
 
         this.chart.stop();
 
+        delete this.objectByName;
+        delete this.hinges;
+
         delete this.body;
         delete this.scene;
         delete this.renderer;
@@ -193,6 +203,17 @@ class OrientationModule extends Module
         this.pitchSeries.append(time, data.pitch);
         this.rollSeries.append(time, data.roll);
         this.yawSeries.append(time, data.yaw);
+    }
+
+    private onBodyState(data: state.Body)
+    {
+        console.assert(!!data.angles && data.angles.length === 20);
+
+        for (var i = 0; i < 20; i++) {
+            if (this.hinges[i + 1].setAngle(data.angles[i])) {
+                this.animator.setRenderNeeded();
+            }
+        }
     }
 
     private initialiseScene()
@@ -223,39 +244,30 @@ class OrientationModule extends Module
         //
         // Body
         //
-        this.body = new THREE.Object3D();
-        this.scene.add(this.body);
 
-        var loader = new THREE.JSONLoader();
-        var loadPart = (path: string, creaseAngle: number, offset?: {x?:number;y?:number;z?:number}) =>
+        this.body = BodyBuilder.buildBody(this.hinges, this.objectByName, () =>
         {
-            loader.load(path, (geometry, materials) =>
+            // Make all object materials a little transparent
+            _.each(this.objectByName, (mesh: THREE.Mesh) =>
             {
-                _.each(materials, m =>
+                _.each((<THREE.MeshFaceMaterial>mesh.material).materials, m =>
                 {
                     m.opacity = 0.85;
                     m.transparent = true;
                     m.side = THREE.DoubleSide;
                     m.blending = THREE.NormalBlending;
                 });
-
-                geometry.computeFaceNormals();
-                threeUtil.computeVertexNormals(geometry, creaseAngle);
-                var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-                mesh.rotation.x = Math.PI / 2;
-                mesh.rotation.y = Math.PI;
-                if (offset && offset.x) mesh.position.x = offset.x;
-                if (offset && offset.y) mesh.position.y = offset.y;
-                if (offset && offset.z) mesh.position.z = offset.z;
-                this.body.add(mesh);
-                this.animator.setRenderNeeded();
             });
-        };
-        loadPart('models/darwin/darwin-body.json', 0.20);
-        loadPart('models/darwin/darwin-neck.json', 0.20, {z: 0.051});
-        loadPart('models/darwin/darwin-head.json', 1.00, {z: 0.051});
-        loadPart('models/darwin/darwin-eye-led.json', 1.00, {z: 0.051});
-        loadPart('models/darwin/darwin-forehead-led.json', 1.00, {z: 0.051});
+
+            // Start listening for body position information
+            this.closeables.add(new data.Subscription<state.Body>(
+                constants.protocols.bodyState,
+                {
+                    onmessage: this.onBodyState.bind(this)
+                }
+            ));
+        });
+        this.scene.add(this.body);
 
         //
         // Axis helper
