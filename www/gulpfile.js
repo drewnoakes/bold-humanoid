@@ -24,6 +24,7 @@ var jsonminify = require('gulp-jsonminify');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
+var combinemediaqueries = require('gulp-combine-media-queries');
 
 var distFolder = 'dist';
 var buildFolder = 'build';
@@ -60,6 +61,7 @@ gulp.task('bundle-styles', ['styles'], function ()
 
     return gulp.src(styles)
         .pipe(concat('styles.css'))
+        .pipe(combinemediaqueries())
         .pipe(minifycss({keepSpecialComments:0}))
         .pipe(header(fs.readFileSync('LICENSE')))
         .pipe(gulp.dest(distFolder));
