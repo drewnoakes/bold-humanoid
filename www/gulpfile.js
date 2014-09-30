@@ -119,8 +119,17 @@ gulp.task('bundle-models', function ()
         .pipe(gulp.dest(outFolder));
 });
 
+var allBundles = [
+    'bundle-source',
+    'bundle-images',
+    'bundle-styles',
+    'bundle-libs',
+    'bundle-fonts',
+    'bundle-models'
+];
+
 // Produce a distributable version of the site as a self-contained bundle
-gulp.task('dist', ['bundle-source', 'bundle-images', 'bundle-styles', 'bundle-libs', 'bundle-fonts', 'bundle-models'], function ()
+gulp.task('dist', allBundles, function ()
 {
     var sources = [
         'dist/libs.js',
