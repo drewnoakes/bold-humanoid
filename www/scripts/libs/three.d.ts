@@ -562,7 +562,7 @@ declare module THREE {
         withCredentials: boolean;
 
         load(url: string, callback: (geometry: Geometry, materials: Material[]) => void , texturePath?: string): void;
-        parse(json:string, texturePath:string): any;
+        parse(json: Object, texturePath?: string): { geometry: Geometry; materials?: Material[] };
         loadAjaxJSON(context: JSONLoader, url: string, callback: (geometry: Geometry, materials: Material[]) => void , texturePath?: string, callbackProgress?: (progress: Progress) => void ): void;
 
     }
