@@ -127,7 +127,7 @@ class OrientationModule extends Module
         this.closeables.add(constants.isNightModeActive.track(
             isNightMode => this.renderer.setClearColor(isNightMode ? 0x211a20 : 0xcccccc, 1.0)));
 
-        dom(this.element, this.renderer.domElement)
+        dom(this.element, this.renderer.domElement);
         this.element.appendChild(this.renderer.domElement);
 
         dom(this.element, new Legend([
