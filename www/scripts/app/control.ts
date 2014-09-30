@@ -5,7 +5,6 @@
 /// <reference path="../libs/lodash.d.ts" />
 
 import Action = require('Action');
-import Checkbox = require('controls/Checkbox');
 import Closeable = require('util/Closeable');
 import color = require('color');
 import constants = require('constants');
