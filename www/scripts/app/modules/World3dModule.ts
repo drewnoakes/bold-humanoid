@@ -543,34 +543,32 @@ class World3dModule extends Module
 
         var processNode = (node: constants.IBodyPart, parentObject: THREE.Object3D) =>
         {
-            if (node.name) {
-                geometriesToLoad++;
-                BodyBuilder.withDarwinModel(partMap =>
-                {
-                    var loader = new THREE.JSONLoader();
-                    var model = loader.parse(<any>partMap[node.name]);
-                    model.geometry.computeFaceNormals();
-//                  geometry.computeVertexNormals();
-                    GeometryUtil.computeVertexNormals(model.geometry, node.creaseAngle || 0.2);
+            console.assert(!!node.name);
 
-                    var object = new THREE.Mesh(model.geometry, new THREE.MeshFaceMaterial(model.materials));
-                    object.castShadow = true;
-                    object.receiveShadow  = false;
-                    // rotate to account for the different axes used in the json files
-                    object.rotation.x = Math.PI/2;
-                    object.rotation.y = Math.PI;
-                    parentObject.add(object);
+            geometriesToLoad++;
+            BodyBuilder.withDarwinModel(partMap =>
+            {
+                var loader = new THREE.JSONLoader();
+                var model = loader.parse(<any>partMap[node.name]);
+                model.geometry.computeFaceNormals();
+//              geometry.computeVertexNormals();
+                GeometryUtil.computeVertexNormals(model.geometry, node.creaseAngle || 0.2);
 
-                    if (node.name) {
-                        this.objectByName[node.name] = object;
-                    }
+                var object = new THREE.Mesh(model.geometry, new THREE.MeshFaceMaterial(model.materials));
+                object.castShadow = true;
+                object.receiveShadow  = false;
+                // rotate to account for the different axes used in the json files
+                object.rotation.x = Math.PI/2;
+                object.rotation.y = Math.PI;
+                parentObject.add(object);
 
-                    geometriesToLoad--;
-                    if (geometriesToLoad === 0) {
-                        loadedCallback();
-                    }
-                });
-            }
+                this.objectByName[node.name] = object;
+
+                geometriesToLoad--;
+                if (geometriesToLoad === 0) {
+                    loadedCallback();
+                }
+            });
 
             for (var i = 0; node.children && i < node.children.length; i++) {
                 // Create hinge objects to house the children
