@@ -15,13 +15,15 @@ for i in ${@:1}
 do
     echo deploying to darwin$i.local
 
-    rsync -zrPR \
-        www                                \
+    # deploy the web bundle
+    rsync --recursive --progress --stats --delete www/dist/ darwin@darwin$i.local:www
+
+    rsync --recursive --relative --progress --stats \
         motionscripts                      \
         configuration-team.json            \
         configuration-hatfield.json        \
         configuration-iran-open-2014.json  \
-        configuration-rc2014.json           \
+        configuration-rc2014.json          \
         configuration-drews.json           \
         configuration-metadata.json        \
         boldhumanoid.py                    \
