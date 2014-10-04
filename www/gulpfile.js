@@ -158,4 +158,6 @@ gulp.task('watch', function ()
     gulp.watch('styles/*.scss', ['styles']);
 });
 
-gulp.task('default', ['styles', 'tsc-amd']);
+gulp.task('compile', ['styles', 'tsc-amd']);
+
+gulp.task('default', ['compile']);
