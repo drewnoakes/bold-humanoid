@@ -3,6 +3,7 @@
 // TODO investigate gulp-type for incremental compiles https://www.npmjs.org/package/gulp-type/
 // TODO investigate keeping sourcemaps through pipeline
 //      - code: https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
+//      - code: http://stackoverflow.com/questions/23453160/keep-original-typescript-source-maps-after-using-browserify
 //      - styles: https://www.npmjs.org/package/gulp-autoprefixer
 // TODO investigate running tests using gulp
 
