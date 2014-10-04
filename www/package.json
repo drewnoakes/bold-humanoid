@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Development and debugging UI for the Bold Hearts humanoid agent.",
   "main": "build.js",
+  "private": true,
   "scripts": {
     "test": "karma run",
     "build": "gulp"
