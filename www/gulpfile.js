@@ -59,7 +59,7 @@ gulp.task('clean-dist', function(cb)
     del([distFolder], cb);
 });
 
-gulp.task('bundle-styles', ['styles'], function ()
+gulp.task('bundle-styles', ['clean-dist', 'styles'], function ()
 {
     var styles = [
         'styles/round-table.css',
@@ -74,7 +74,7 @@ gulp.task('bundle-styles', ['styles'], function ()
         .pipe(gulp.dest(distFolder));
 });
 
-gulp.task('bundle-source', ['tsc-commonjs'], function ()
+gulp.task('bundle-source', ['clean-dist', 'tsc-commonjs'], function ()
 {
     // TODO sourcemap support
 
@@ -90,7 +90,7 @@ gulp.task('bundle-source', ['tsc-commonjs'], function ()
         .pipe(gulp.dest(distFolder));
 });
 
-gulp.task('bundle-libs', function ()
+gulp.task('bundle-libs', ['clean-dist'], function ()
 {
     var libs = [
         'scripts/libs/three.js',
@@ -111,7 +111,7 @@ gulp.task('bundle-libs', function ()
         .pipe(gulp.dest(distFolder));
 });
 
-gulp.task('bundle-images', function ()
+gulp.task('bundle-images', ['clean-dist'], function ()
 {
     return gulp.src('./images/*', {base: './'})
         .pipe(imagemin({
@@ -122,13 +122,13 @@ gulp.task('bundle-images', function ()
         .pipe(gulp.dest(distFolder));
 });
 
-gulp.task('bundle-fonts', function ()
+gulp.task('bundle-fonts', ['clean-dist'], function ()
 {
     return gulp.src('./fonts/*', {base: './'})
         .pipe(gulp.dest(distFolder));
 });
 
-gulp.task('bundle-models', function ()
+gulp.task('bundle-models', ['clean-dist'], function ()
 {
     return gulp.src(['models/darwin.json'], {base: './'})
         .pipe(jsonminify())
