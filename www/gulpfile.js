@@ -26,6 +26,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
 var combinemediaqueries = require('gulp-combine-media-queries');
+var del = require('del');
 
 var distFolder = 'dist';
 var buildFolder = 'build';
@@ -52,6 +53,11 @@ function tsc(moduleType, outFolder)
 
 gulp.task('tsc-commonjs', tsc('commonjs', buildFolder));
 gulp.task('tsc-amd',      tsc('amd',      'scripts/app/'));
+
+gulp.task('clean-dist', function(cb)
+{
+    del([distFolder], cb);
+});
 
 gulp.task('bundle-styles', ['styles'], function ()
 {
