@@ -17,7 +17,7 @@ interface HandlebarsStatic {
     logger: Logger;
     log(level: number, obj: any): void;
     compile(input: any, options?: any): (context?: any, options?: any) => string;
-    Logger: typeof Logger;
+    Logger: Logger;
 }
 
 declare class SafeString {
