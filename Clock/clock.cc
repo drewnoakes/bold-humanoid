@@ -42,10 +42,8 @@ double Clock::getMillisSince(Timestamp since)
 Clock::Timestamp Clock::getTimestamp()
 {
   struct timeval now;
-#ifdef INCLUDE_ASSERTIONS
   if (gettimeofday(&now, 0) == -1)
     log::warning("Clock::getTimestamp") << "Error returned by gettimeofday: " << strerror(errno) << " (" << errno << ")";
-#endif
   return (Timestamp)now.tv_usec + ((Timestamp)now.tv_sec * (Timestamp)1000000);
 }
 
