@@ -276,7 +276,7 @@ GoalLabel StationaryMapState::labelGoalByKeeperBallDistance(
       double goalDist = mid.norm();
       if (goalDist < (FieldMap::getFieldLengthX() / 2.0) - maxPositionMeasurementError)
       {
-        log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on our side, and closest goal is too close at " << goalDist;
+        log::verbose("StationaryMapState::labelGoalObservations") << "Keeper believes ball is on our side, and closest goal is too close at " << goalDist;
         return GoalLabel::Ours;
       }
       break;
@@ -288,7 +288,7 @@ GoalLabel StationaryMapState::labelGoalByKeeperBallDistance(
       double goalDist = mid.norm();
       if (goalDist > theirsThreshold)
       {
-        log::verbose("BuildStationaryMap::labelGoalObservations") << "Keeper believes ball is on the opponent's side, and closest goal is too far at " << goalDist;
+        log::verbose("StationaryMapState::labelGoalObservations") << "Keeper believes ball is on the opponent's side, and closest goal is too far at " << goalDist;
         return GoalLabel::Ours;
       }
       break;
@@ -354,7 +354,7 @@ GoalLabel StationaryMapState::labelGoalByKeeperObservations(
 
     if (distFromMid.norm() < maxGoalieGoalDistance->getValue())
     {
-      log::info("BuildStationaryMap::labelGoalObservations") << "Observe keeper between goal posts, so assume as ours";
+      log::info("StationaryMapState::labelGoalObservations") << "Observe keeper between goal posts, so assume as ours";
       return GoalLabel::Ours;
     }
   }
