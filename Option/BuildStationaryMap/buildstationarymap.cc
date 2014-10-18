@@ -53,6 +53,8 @@ vector<shared_ptr<Option>> BuildStationaryMap::runPolicy(Writer<StringBuffer>& w
       hasChange = true;
   }
 
+  // TODO build map of field edge here
+
   if (hasChange || !State::get<StationaryMapState>())
     updateStateObject();
 
