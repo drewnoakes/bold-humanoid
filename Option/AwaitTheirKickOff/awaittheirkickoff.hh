@@ -16,11 +16,11 @@ namespace bold
   public:
     AwaitTheirKickOff(std::string id);
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    virtual double hasTerminated() override;
+    double hasTerminated() override;
 
-    virtual void reset() override;
+    void reset() override;
 
   private:
     /// Smoothed ball position estimate

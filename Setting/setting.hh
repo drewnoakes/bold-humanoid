@@ -131,7 +131,7 @@ namespace bold
     /// Fires when the setting's value is changed.
     sigc::signal<void, T const&> changed;
 
-    virtual void triggerChanged() const override
+    void triggerChanged() const override
     {
       changed(d_value);
       SettingBase::triggerChanged();

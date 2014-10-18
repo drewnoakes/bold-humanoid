@@ -20,7 +20,7 @@ namespace bold
   public:
     MX28HealthChecker(std::shared_ptr<Voice> voice);
 
-    virtual void step(std::unique_ptr<CM730>& cm730, SequentialTimer& t, ulong motionCycleNumber) override;
+    void step(std::unique_ptr<CM730>& cm730, SequentialTimer& t, ulong motionCycleNumber) override;
 
   private:
     std::array<bool, (uchar)JointId::MAX + 1> d_isTorqueEnabledByJointId;

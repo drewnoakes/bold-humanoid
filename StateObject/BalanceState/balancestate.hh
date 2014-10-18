@@ -12,7 +12,7 @@ namespace bold
 
     BalanceOffset const& offsets() const { return d_offsets; }
 
-    virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
 
   private:
     BalanceOffset d_offsets;

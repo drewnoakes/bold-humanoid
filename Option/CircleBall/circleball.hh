@@ -20,7 +20,7 @@ namespace bold
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    virtual double hasTerminated() override;
+    double hasTerminated() override;
 
     void setTurnParams(double turnAngleRads, Eigen::Vector2d targetBallPos);
 

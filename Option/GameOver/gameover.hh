@@ -16,9 +16,9 @@ namespace bold
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    virtual void reset() override;
+    void reset() override;
 
-    virtual double hasTerminated() override;
+    double hasTerminated() override;
 
   private:
     std::shared_ptr<MotionScriptOption> d_motionScriptOption;

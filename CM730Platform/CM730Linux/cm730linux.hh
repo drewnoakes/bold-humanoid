@@ -34,7 +34,7 @@ namespace bold
     double getPacketTime() override;
     double getPacketTimeoutMillis() const override;
 
-    virtual void sleep(double msec) override;
+    void sleep(double msec) override;
 
   private:
     /// The FD for the socket connected to the CM730

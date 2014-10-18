@@ -13,7 +13,7 @@ namespace bold
   public:
     GyroBalance();
 
-    virtual BalanceOffset computeCorrection(double targetPitchRads) const override;
+    BalanceOffset computeCorrection(double targetPitchRads) const override;
 
   private:
     Setting<double>* d_kneeGain;

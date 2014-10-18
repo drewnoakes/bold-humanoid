@@ -12,11 +12,11 @@ namespace bold
   public:
     GetUpOption(std::string const& id, Agent* agent);
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    virtual void reset() override;
+    void reset() override;
 
-    virtual double hasTerminated() override;
+    double hasTerminated() override;
 
   private:
     Agent* d_agent;

@@ -14,11 +14,11 @@ namespace bold
       d_needsRunning(true)
     {}
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
-    virtual void reset() override;
+    void reset() override;
 
-    virtual double hasTerminated() override;
+    double hasTerminated() override;
 
   private:
     std::function<void()> d_action;

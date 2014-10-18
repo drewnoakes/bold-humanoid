@@ -11,7 +11,7 @@ namespace bold
   public:
     OrientationBalance();
 
-    virtual BalanceOffset computeCorrection(double targetPitchRads) const override;
+    BalanceOffset computeCorrection(double targetPitchRads) const override;
 
   private:
     Setting<double>* d_kneeGain;

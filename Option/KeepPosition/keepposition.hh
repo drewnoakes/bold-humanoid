@@ -15,7 +15,7 @@ namespace bold
   public:
     KeepPosition(std::string id, PlayerRole role, Agent* agent);
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
     std::shared_ptr<WalkModule> d_walkModule;
