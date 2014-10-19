@@ -8,6 +8,7 @@
 #include "../StateObserver/FallDetector/AccelerometerFallDetector/accelerometerfalldetector.hh"
 #include "../StateObserver/FallDetector/OrientationFallDetector/orientationfalldetector.hh"
 #include "../StateObserver/HandlerHelper/handlerhelper.hh"
+#include "../StateObserver/StationaryMapper/stationarymapper.hh"
 
 Agent::Agent()
   : d_isRunning(false),
@@ -62,6 +63,7 @@ Agent::Agent()
   d_odometer = make_shared<Odometer>(d_walkModule);
   d_orientationTracker = make_shared<OrientationTracker>();
   d_teamCommunicator = make_shared<OpenTeamCommunicator>(d_behaviourControl);
+  auto stationaryMapper = make_shared<StationaryMapper>(d_voice);
   auto handlerHelper = make_shared<HandlerHelper>(d_voice, d_behaviourControl);
 
   // Register StateObservers
@@ -74,6 +76,7 @@ Agent::Agent()
   State::registerObserver(d_odometer);
   State::registerObserver(d_teamCommunicator);
   State::registerObserver(d_orientationTracker);
+  State::registerObserver(stationaryMapper);
   State::registerObserver(handlerHelper);
 
   // Special handling for fall detection based upon config

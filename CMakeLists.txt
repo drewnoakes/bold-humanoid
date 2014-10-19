@@ -390,10 +390,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/BuildStationaryMap/buildstationarymap.cc
-)
-
-add_class(BOLDHUMANOID
   ./Option/CircleBall/circleball.cc
 )
 
@@ -676,6 +672,10 @@ add_class(BOLDHUMANOID
 
 add_class(BOLDHUMANOID
   ./StateObserver/OrientationTracker/orientationtracker.cc
+)
+
+add_class(BOLDHUMANOID
+  ./StateObserver/StationaryMapper/stationarymapper.cc
 )
 
 add_class(BOLDHUMANOID

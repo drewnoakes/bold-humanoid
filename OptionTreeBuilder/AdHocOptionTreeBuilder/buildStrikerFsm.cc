@@ -3,7 +3,6 @@
 #include "../../Option/AwaitTheirKickOff/awaittheirkickoff.hh"
 #include "../../Option/ApproachBall/approachball.hh"
 #include "../../Option/AtBall/atball.hh"
-#include "../../Option/BuildStationaryMap/buildstationarymap.hh"
 #include "../../Option/CircleBall/circleball.hh"
 #include "../../Option/LookAround/lookaround.hh"
 #include "../../Option/LookAtFeet/lookatfeet.hh"
@@ -16,6 +15,7 @@
 #include "../../State/state.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 #include "../../StateObject/GameState/gamestate.hh"
+#include "../../StateObject/StationaryMapState/stationarymapstate.hh"
 #include "conditionals.hh"
 
 using namespace bold;
@@ -137,7 +137,6 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
 {
   // OPTIONS
 
-  auto buildStationaryMap = make_shared<BuildStationaryMap>("build-stationary-map", agent->getVoice());
   auto standUp = make_shared<MotionScriptOption>("stand-up-script", agent->getMotionScriptModule(), "./motionscripts/stand-ready-upright.json", /*ifNotInFinalPose*/true);
   auto leftKick = make_shared<MotionScriptOption>("left-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-left.json");
   auto rightKick = make_shared<MotionScriptOption>("right-kick-script", agent->getMotionScriptModule(), "./motionscripts/kick-right.json");
@@ -158,10 +157,10 @@ shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStrikerFsm(Agent* agent)
   auto fsm = make_shared<FSMOption>(agent->getVoice(), "striker");
 
   auto standUpState = fsm->newState("stand-up", { standUp }, /*endState*/false, /*startState*/true);
-  auto locateBallState = fsm->newState("locate-ball", { stopWalking, buildStationaryMap, locateBall });
+  auto locateBallState = fsm->newState("locate-ball", { stopWalking, locateBall });
   auto locateBallCirclingState = fsm->newState("locate-ball-circling", { searchBall });
   auto approachBallState = fsm->newState("approach-ball", { approachBall, lookAtBall });
-  auto atBallState = fsm->newState("at-ball", { stopWalking, buildStationaryMap, atBall });
+  auto atBallState = fsm->newState("at-ball", { stopWalking, atBall });
   auto turnAroundBallState = fsm->newState("turn-around-ball", { circleBall });
   auto kickForwardsState = fsm->newState("kick-forwards", { stopWalking, lookAtFeet });
   auto leftKickState = fsm->newState("left-kick", { leftKick });
