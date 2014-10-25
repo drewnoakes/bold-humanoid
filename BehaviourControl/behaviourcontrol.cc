@@ -15,7 +15,6 @@ BehaviourControl::BehaviourControl(Agent& agent)
   d_playerActivitySetThisCycle(false),
   d_playModeSetThisCycle(false)
 {
-  agent.onThinkEnd.connect([this] { updateStateObject(); });
 }
 
 void BehaviourControl::updateStateObject()

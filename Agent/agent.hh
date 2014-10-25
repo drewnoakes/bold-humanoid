@@ -2,7 +2,6 @@
 
 #include <Eigen/Core>
 #include <memory>
-#include <sigc++/signal.h>
 
 #include "../Clock/clock.hh"
 
@@ -90,8 +89,6 @@ namespace bold
     ulong getThinkCycleNumber() const { return d_cycleNumber; }
 
     double getUptimeSeconds() const { return Clock::getSecondsSince(d_startTime); }
-
-    sigc::signal<void> onThinkEnd;
 
   private:
     bool d_isRunning;

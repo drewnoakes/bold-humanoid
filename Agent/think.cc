@@ -90,15 +90,17 @@ void Agent::think()
   d_debugger->update();
   t.timeEvent("Update Debugger");
 
+  //
   // Refresh MotionTaskState, if one is needed
+  //
   d_motionSchedule->update();
   t.timeEvent("Update Motion Schedule");
 
   //
-  // Raise the Agent::onThinkEnd signal
+  // Publish a snapshot of the behaviour control object
   //
-  onThinkEnd();
-  t.timeEvent("Think End Signalled");
+  d_behaviourControl->updateStateObject();
+  t.timeEvent("Publish Behaviour Control State");
 
   //
   // Invoke observers which requested to be called back from the think loop

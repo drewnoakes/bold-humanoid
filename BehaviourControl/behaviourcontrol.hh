@@ -24,9 +24,9 @@ namespace bold
     void setPlayerActivity(PlayerActivity activity);
     void setPlayMode(robocup::PlayMode playMode);
 
-  private:
     void updateStateObject();
 
+  private:
     Agent& d_agent;
     robocup::PlayMode d_playMode;
     PlayerRole d_playerRole;
