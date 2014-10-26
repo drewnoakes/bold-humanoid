@@ -166,12 +166,12 @@ namespace bold
     ASSERT(mask.type() == CV_8UC1);
     ASSERT(d_yuvTrainImage.cols == mask.cols && d_yuvTrainImage.rows == mask.rows);
 
-    for (unsigned i = 0; i < mask.rows; ++i)
+    for (int i = 0; i < mask.rows; ++i)
     {
       uint8_t const* trainImageRow = d_yuvTrainImage.ptr<uint8_t>(i);
       uint8_t const* maskRow = mask.ptr<uint8_t>(i);
 
-      for (unsigned j = 0; j < mask.cols; ++j)
+      for (int j = 0; j < mask.cols; ++j)
         if (maskRow[j] != 0)
         {
           auto yuv = Colour::YCbCr{trainImageRow[j * 3 + 0], trainImageRow[j * 3 + 1], trainImageRow[j * 3 + 2]};
@@ -196,12 +196,12 @@ namespace bold
   cv::Mat LabelTeacher<CHANNEL_BITS>::label(unsigned labelIdx) const
   {
     auto labelImg = cv::Mat{d_yuvTrainImage.rows, d_yuvTrainImage.cols, CV_8UC1};
-    for (unsigned i = 0; i < labelImg.rows; ++i)
+    for (int i = 0; i < labelImg.rows; ++i)
     {
       uint8_t const* trainImageRow = d_yuvTrainImage.ptr<uint8_t>(i);
       uint8_t* labelRow = labelImg.ptr<uint8_t>(i);
 
-      for (unsigned j = 0; j < labelImg.cols; ++j)
+      for (int j = 0; j < labelImg.cols; ++j)
       {
         auto yuv = Colour::YCbCr{trainImageRow[j * 3 + 0], trainImageRow[j * 3 + 1], trainImageRow[j * 3 + 2]};
         auto bgr = yuv.toBgrInt();
