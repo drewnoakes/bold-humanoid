@@ -95,28 +95,8 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 
             obj->writeJson(writer);
 
-            auto bytes = JsonSession::createBytes(buffer);
-
             for (auto session = range.first; session != range.second; ++session)
-            {
-              // If queue is too long, deal with it
-              const int MaxQueueSize = 200;
-              static int maxQueueSeen = 0;
-              int queueSize = session->second->queue.size();
-              if (queueSize/10 > maxQueueSeen/10)
-              {
-                maxQueueSeen = queueSize;
-                log::warning("StateUpdated") << tracker->name() << " max queue seen " << queueSize;
-              }
-              if (queueSize > MaxQueueSize)
-              {
-                log::error("StateUpdated") << "JsonSession queue for '" << session->first << "' too long (" << queueSize << " > " << MaxQueueSize << "), purging";
-                queue<shared_ptr<vector<uchar> const>> empty;
-                swap(session->second->queue, empty);
-              }
-
-              session->second->queue.push(bytes);
-            }
+              session->second->enqueue(buffer);
 
             libwebsocket_callback_on_writable_all_protocol(tracker->websocketProtocol);
           }
@@ -137,12 +117,12 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
         if (d_controlSessions.size() == 0)
           return;
 
-        auto bytes = prepareSettingUpdateBytes(setting);
+        StringBuffer buffer;
+        Writer<StringBuffer> writer(buffer);
+        writeSettingUpdateJson(setting, writer);
 
         for (JsonSession* session : d_controlSessions)
-          session->queue.push(bytes);
-
-        libwebsocket_callback_on_writable_all_protocol(d_controlProtocol);
+          session->enqueue(buffer);
       }
     );
   }

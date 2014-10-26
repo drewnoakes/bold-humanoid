@@ -1,42 +1,47 @@
 #include "datastreamer.ih"
 
 using namespace bold;
+using namespace rapidjson;
 using namespace std;
 
-void JsonSession::initialise()
+JsonSession::JsonSession(std::string protocolName, libwebsocket* wsi, libwebsocket_context* context)
+  : _protocolName(protocolName),
+    _wsi(wsi),
+    _context(context),
+    _queue(),
+    _bytesSent(0),
+    _maxQueueSeen(0)
 {
-  bytesSent = 0;
-  queue = std::queue<shared_ptr<vector<uchar> const>>();
 }
 
-int JsonSession::write(libwebsocket* wsi, libwebsocket_context* context)
+int JsonSession::write()
 {
   // Fill the outbound pipe with frames of data
-  while (!lws_send_pipe_choked(wsi) && !queue.empty())
+  while (!lws_send_pipe_choked(_wsi) && !_queue.empty())
   {
-    shared_ptr<vector<uchar> const> const& str = queue.front();
-    ASSERT(str);
-    uint totalSize = str.get()->size();
+    vector<uchar> const& str = _queue.front();
 
-    ASSERT(bytesSent < totalSize);
+    uint totalSize = static_cast<uint>(str.size());
 
-    const uchar* start = str.get()->data() + bytesSent;
+    ASSERT(_bytesSent < totalSize);
 
-    uint remainingSize = totalSize - bytesSent;
+    const uchar* start = str.data() + _bytesSent;
+
+    uint remainingSize = totalSize - _bytesSent;
     uint frameSize = min(2048u, remainingSize);
     uchar frameBuffer[LWS_SEND_BUFFER_PRE_PADDING + frameSize + LWS_SEND_BUFFER_POST_PADDING];
     uchar *p = &frameBuffer[LWS_SEND_BUFFER_PRE_PADDING];
 
     memcpy(p, start, frameSize);
 
-    int writeMode = bytesSent == 0
+    int writeMode = _bytesSent == 0
       ? LWS_WRITE_TEXT
       : LWS_WRITE_CONTINUATION;
 
     if (frameSize != remainingSize)
       writeMode |= LWS_WRITE_NO_FIN;
 
-    int res = libwebsocket_write(wsi, p, frameSize, (libwebsocket_write_protocol)writeMode);
+    int res = libwebsocket_write(_wsi, p, frameSize, (libwebsocket_write_protocol)writeMode);
 
     if (res < 0)
     {
@@ -44,19 +49,48 @@ int JsonSession::write(libwebsocket* wsi, libwebsocket_context* context)
       return 1;
     }
 
-    bytesSent += frameSize;
+    _bytesSent += frameSize;
 
-    if (bytesSent == totalSize)
+    if (_bytesSent == totalSize)
     {
       // Done sending this queue item, so ditch it, reset and loop around again
-      queue.pop();
-      bytesSent = 0;
+      _queue.pop();
+      _bytesSent = 0;
     }
   }
 
   // Queue for more writing later on if we still have data remaining
-  if (!queue.empty())
-    libwebsocket_callback_on_writable(context, wsi);
+  if (!_queue.empty())
+    libwebsocket_callback_on_writable(_context, _wsi);
 
   return 0;
+}
+
+void JsonSession::enqueue(StringBuffer& buffer)
+{
+  // TODO accept a different implementation of rapidjson's Buffer which builds a vector directly to avoid the copy
+
+  ASSERT(buffer.GetSize() != 0);
+
+  auto queueSize = static_cast<unsigned>(_queue.size());
+
+  if (queueSize / 10 > _maxQueueSeen / 10)
+  {
+    _maxQueueSeen = queueSize;
+    log::warning("JsonSession::enqueue") << _protocolName << " max queue seen " << queueSize;
+  }
+
+  // If queue is too long, deal with it
+  const int MaxQueueSize = 200;
+  if (queueSize > MaxQueueSize)
+  {
+    log::error("StateUpdated") << "JsonSession queue for '" << _protocolName << "' too long (" << queueSize << " > " << MaxQueueSize << ") — purging";
+    queue<vector<uchar>> empty;
+    swap(_queue, empty);
+  }
+  else
+  {
+    _queue.emplace(buffer.GetString(), buffer.GetString() + buffer.GetSize());
+    libwebsocket_callback_on_writable(_context, _wsi);
+  }
 }

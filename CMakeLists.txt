@@ -208,12 +208,12 @@ add_class(BOLDHUMANOID
   ./DataStreamer/callbackState.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/jsonsession.cc
-  ./DataStreamer/prepareControlSyncBytes.cc
-  ./DataStreamer/prepareSettingUpdateBytes.cc
   ./DataStreamer/processCommand.cc
   ./DataStreamer/run.cc
   ./DataStreamer/stop.cc
   ./DataStreamer/streamImage.cc
+  ./DataStreamer/writeControlSyncJson.cc
+  ./DataStreamer/writeSettingUpdateJson.cc
 )
 
 add_class(BOLDHUMANOID

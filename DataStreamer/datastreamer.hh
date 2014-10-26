@@ -39,24 +39,26 @@ namespace bold
     unsigned bytesSent;
   };
 
-  struct JsonSession
+  class JsonSession
   {
+  public:
+    JsonSession(std::string protocolName, libwebsocket* wsi, libwebsocket_context* context);
+
+    ~JsonSession() = default;
+
+    void enqueue(rapidjson::StringBuffer& buffer);
+
+    int write();
+
+  private:
+    std::string _protocolName;
+    libwebsocket* _wsi;
+    libwebsocket_context* _context;
     /** A queue of JSON strings to be sent to the client. */
-    std::queue<std::shared_ptr<std::vector<uchar> const>> queue;
+    std::queue<std::vector<uchar>> _queue;
     /** The number of bytes sent from the front message in the queue. */
-    unsigned bytesSent;
-
-    void initialise();
-
-    int write(libwebsocket* wsi, libwebsocket_context* context);
-
-    static std::shared_ptr<std::vector<uchar>> createBytes(rapidjson::StringBuffer const& buffer)
-    {
-      ASSERT(buffer.GetSize() != 0);
-      auto bytes = std::make_shared<std::vector<uchar>>(buffer.GetSize());
-      memcpy(bytes.get()->data(), buffer.GetString(), buffer.GetSize());
-      return bytes;
-    }
+    unsigned _bytesSent;
+    unsigned _maxQueueSeen;
   };
 
   class DataStreamer
@@ -78,13 +80,13 @@ namespace bold
     void setOptionTree(std::shared_ptr<OptionTree> optionTree) { d_optionTree = optionTree; }
 
   private:
-    static std::shared_ptr<std::vector<uchar>> prepareSettingUpdateBytes(SettingBase const* setting);
+    static void writeSettingUpdateJson(SettingBase const* setting, rapidjson::Writer<rapidjson::StringBuffer>& writer);
 
     void run();
 
-    void processCommand(std::string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi);
+    void processCommand(std::string json, JsonSession* jsonSession);
 
-    std::shared_ptr<std::vector<uchar>> prepareControlSyncBytes();
+    void writeControlSyncJson(rapidjson::Writer<rapidjson::StringBuffer>& writer);
 
     const int d_port;
     const std::shared_ptr<Camera> d_camera;

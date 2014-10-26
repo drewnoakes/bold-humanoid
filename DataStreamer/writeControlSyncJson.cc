@@ -4,11 +4,8 @@
 #include "../Option/FSMOption/fsmoption.hh"
 #include "../MotionScript/motionscript.hh"
 
-shared_ptr<vector<uchar>> DataStreamer::prepareControlSyncBytes()
+void DataStreamer::writeControlSyncJson(Writer<StringBuffer>& writer)
 {
-  StringBuffer buffer;
-  Writer<StringBuffer> writer(buffer);
-
   writer.StartObject();
   {
     writer.String("files");
@@ -66,6 +63,4 @@ shared_ptr<vector<uchar>> DataStreamer::prepareControlSyncBytes()
     writer.EndArray();
   }
   writer.EndObject();
-
-  return JsonSession::createBytes(buffer);
 }

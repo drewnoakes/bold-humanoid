@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebsocket_context* context, libwebsocket* wsi)
+void DataStreamer::processCommand(string json, JsonSession* jsonSession)
 {
   log::info("DataStreamer::processCommand") << "Processing: " << json;
 
@@ -81,8 +81,10 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession, libwebs
     {
       // Setting the value failed. Send the current value back to the client
       // that requested this invalid value.
-      jsonSession->queue.push(prepareSettingUpdateBytes(setting));
-      libwebsocket_callback_on_writable(context, wsi);
+      StringBuffer buffer;
+      Writer<StringBuffer> writer(buffer);
+      writeSettingUpdateJson(setting, writer);
+      jsonSession->enqueue(buffer);
     }
   }
 }

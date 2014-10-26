@@ -1,10 +1,7 @@
 #include "datastreamer.ih"
 
-shared_ptr<vector<uchar>> DataStreamer::prepareSettingUpdateBytes(SettingBase const* setting)
+void DataStreamer::writeSettingUpdateJson(SettingBase const* setting, Writer<StringBuffer>& writer)
 {
-  StringBuffer buffer;
-  Writer<StringBuffer> writer(buffer);
-
   writer.StartObject();
   {
     writer.String("type").String("update");
@@ -13,6 +10,4 @@ shared_ptr<vector<uchar>> DataStreamer::prepareSettingUpdateBytes(SettingBase co
     setting->writeJsonValue(writer);
   }
   writer.EndObject();
-
-  return JsonSession::createBytes(buffer);
 }

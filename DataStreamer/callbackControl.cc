@@ -16,14 +16,19 @@ int DataStreamer::callback_control(
   {
     // New client connected; initialize session
     ASSERT(ThreadUtil::isDataStreamerThread());
-    jsonSession->initialise();
+
+    new (jsonSession) JsonSession("control-protocol", wsi, context);
+
     d_controlSessions.push_back(jsonSession);
+
     if (d_controlSessions.size() == 1)
       hasClientChanged("control-protocol", true);
 
     // Write control sync message, with current snapshot of state
-    jsonSession->queue.push(prepareControlSyncBytes());
-    libwebsocket_callback_on_writable(context, wsi);
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    writeControlSyncJson(writer);
+    jsonSession->enqueue(buffer);
 
     return 0;
   }
@@ -32,6 +37,7 @@ int DataStreamer::callback_control(
     // Client disconnected
     ASSERT(ThreadUtil::isDataStreamerThread());
     d_controlSessions.erase(find(d_controlSessions.begin(), d_controlSessions.end(), jsonSession));
+    jsonSession->~JsonSession();
     if (d_controlSessions.size() == 0)
       hasClientChanged("control-protocol", false);
     break;
@@ -40,7 +46,7 @@ int DataStreamer::callback_control(
   {
     // Fill the outbound pipe with frames of data
     ASSERT(ThreadUtil::isDataStreamerThread());
-    return jsonSession->write(wsi, context);
+    return jsonSession->write();
   }
   case LWS_CALLBACK_RECEIVE:
   {
@@ -53,7 +59,7 @@ int DataStreamer::callback_control(
       if (libwebsockets_remaining_packet_payload(wsi) == 0)
       {
         // We now have all the data
-        processCommand(message, jsonSession, context, wsi);
+        processCommand(message, jsonSession);
 
         message.clear();
       }
