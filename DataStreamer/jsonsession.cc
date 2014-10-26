@@ -75,7 +75,7 @@ int JsonSession::write()
 
 void JsonSession::enqueue(StringBuffer& buffer)
 {
-  // TODO accept a different implementation of rapidjson's Buffer which builds a vector directly to avoid the copy
+  // TODO accept a different implementation of rapidjson's Buffer which builds a vector directly to avoid the copy, or just queue the buffer objects (if moveable)
 
   ASSERT(buffer.GetSize() != 0);
 
