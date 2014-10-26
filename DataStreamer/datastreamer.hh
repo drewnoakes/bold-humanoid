@@ -59,6 +59,8 @@ namespace bold
     /** The number of bytes sent from the front message in the queue. */
     unsigned _bytesSent;
     unsigned _maxQueueSeen;
+    std::string _hostName;
+    std::string _ipAddress;
   };
 
   class DataStreamer

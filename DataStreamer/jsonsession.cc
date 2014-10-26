@@ -12,6 +12,13 @@ JsonSession::JsonSession(std::string protocolName, libwebsocket* wsi, libwebsock
     _bytesSent(0),
     _maxQueueSeen(0)
 {
+  // add client host name and IP address
+  int fd = libwebsocket_get_socket_fd(wsi);
+  char hostName[256];
+  char ipAddress[32];
+  libwebsockets_get_peer_addresses(context, wsi, fd, hostName, sizeof(hostName), ipAddress, sizeof(ipAddress));
+  _hostName = string(hostName);
+  _ipAddress = string(ipAddress);
 }
 
 int JsonSession::write()
@@ -84,7 +91,7 @@ void JsonSession::enqueue(StringBuffer& buffer)
   const int MaxQueueSize = 200;
   if (queueSize > MaxQueueSize)
   {
-    log::error("StateUpdated") << "JsonSession queue for '" << _protocolName << "' too long (" << queueSize << " > " << MaxQueueSize << ") — purging";
+    log::error("StateUpdated") << "JsonSession queue to " << _hostName << '@' << _ipAddress << " for protocol '" << _protocolName << "' too long (" << queueSize << " > " << MaxQueueSize << ") — purging";
     queue<vector<uchar>> empty;
     swap(_queue, empty);
   }
