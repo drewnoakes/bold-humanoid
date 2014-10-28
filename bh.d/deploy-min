@@ -16,7 +16,7 @@ do
 
     echo deploying to darwin$i.local
 
-    rsync -zrP                            \
+    rsync --human-readable -zrP           \
         configuration-team.json           \
         configuration-hatfield.json       \
         configuration-drews.json          \

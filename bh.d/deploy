@@ -16,9 +16,9 @@ do
     echo deploying to darwin$i.local
 
     # deploy the web bundle
-    rsync --recursive --progress --stats --delete www/dist/ darwin@darwin$i.local:www
+    rsync --recursive --human-readable --progress --stats --delete www/dist/ darwin@darwin$i.local:www
 
-    rsync --recursive --relative --progress --stats \
+    rsync --recursive --human-readable --relative --progress --stats \
         motionscripts                      \
         configuration-team.json            \
         configuration-hatfield.json        \
