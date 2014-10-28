@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../MotionScript/motionscript.hh"

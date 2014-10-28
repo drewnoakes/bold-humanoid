@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "helpers.hh"
 #include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
 

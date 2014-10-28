@@ -60,7 +60,8 @@ add_custom_target(runtests ALL ./unittests DEPENDS unittests)
 #
 ## Include directories
 #
-include_directories(${BOLDHUMANOID_INCLUDE_DIRS} google-test/include google-test)
+include_directories(SYSTEM google-test/include)
+include_directories(${BOLDHUMANOID_INCLUDE_DIRS} google-test)
 
 #
 ## Link directories

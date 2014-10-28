@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "../Agent/agent.hh"
 
 #include "../Config/config.hh"

@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "../LabelTeacher/labelteacher.hh"
 #include "../PixelLabel/HistogramPixelLabel/histogrampixellabel.hh"
 #include <opencv2/opencv.hpp>
