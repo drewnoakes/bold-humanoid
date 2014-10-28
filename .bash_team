@@ -2,16 +2,23 @@
 
 echo
 
+AVAIL=$(df / | awk 'NR==2 {print $4}')
+if [ $AVAIL -lt 200000 ]; then
+  echo "$(tput setaf 7)$(tput setab 1)LOW DISK SPACE: $AVAIL bytes free $(tput sgr 0)"
+  echo
+fi
+
 if [ -z $(pgrep -f boldhumanoid) ]
 then
     echo "$(tput setaf 1)Boldhumanoid process is not running $(tput sgr 0)"
+    echo
 else
     echo "$(tput setaf 2)Boldhumanoid process is running $(tput sgr 0)"
+    echo
 fi
 
 if [ ! -d "$BOLD_HUMANOID_DIR" ]; then
-    echo
-    echo "$(tput setaf 1)BOLD_HUMANOID_DIR not set to a valid directory! $(tput sgr 0)";
+    echo "$(tput setaf 7)$(tput setab 1)BOLD_HUMANOID_DIR not set to a valid directory! $(tput sgr 0)";
     echo
 fi
 
@@ -19,8 +26,6 @@ fi
 
 alias h=history
 alias bh=~/bh
-
-echo
 
 bh run-with --version
 
