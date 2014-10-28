@@ -469,13 +469,8 @@ int main(int argc, char **argv)
 
     //
     // Process whatever else needs doing on the socket (new clients, etc)
-    // This is normally very fast
+    // Use a timeout to avoid pegging the CPU at 100%
     //
-    libwebsocket_service(d_context, 0);
-
-    //
-    // Sleep a while to avoid pegging the CPU at 100%
-    //
-    usleep(50000); // 50ms
+    libwebsocket_service(d_context, 50);
   }
 }
