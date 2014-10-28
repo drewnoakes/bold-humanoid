@@ -35,8 +35,10 @@ void WalkState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("running").Bool(d_isRunning);
-    writer.String("status").Int((int)d_status);
+    writer.String("running");
+    writer.Bool(d_isRunning);
+    writer.String("status");
+    writer.Int((int)d_status);
 
     writer.String("target");
     writer.StartArray();
@@ -67,17 +69,23 @@ void WalkState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("phase").Int(d_currentPhase);
+    writer.String("phase");
+    writer.Int(d_currentPhase);
 
-    writer.String("hipPitch")
-      .StartObject()
-      .String("target").Double(d_targetHipPitch, "%.3f")
-      .String("current").Double(d_currentHipPitch, "%.3f")
-      .String("delta").Double(d_lastHipPitchDelta, "%.3f")
-      .EndObject();
+    writer.String("hipPitch");
+    writer.StartObject();
+    writer.String("target");
+    writer.Double(d_targetHipPitch, "%.3f");
+    writer.String("current");
+    writer.Double(d_currentHipPitch, "%.3f");
+    writer.String("delta");
+    writer.Double(d_lastHipPitchDelta, "%.3f");
+    writer.EndObject();
 
-    writer.String("bodySwingY").Double(d_bodySwingY, "%.3f");
-    writer.String("bodySwingZ").Double(d_bodySwingZ, "%.3f");
+    writer.String("bodySwingY");
+    writer.Double(d_bodySwingY, "%.3f");
+    writer.String("bodySwingZ");
+    writer.Double(d_bodySwingZ, "%.3f");
   }
   writer.EndObject();
 }

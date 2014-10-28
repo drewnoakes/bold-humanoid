@@ -1,6 +1,7 @@
 #include "motionscript.hh"
 
 #include "../util/log.hh"
+#include "../util/json.hh"
 
 #include <dirent.h>
 
@@ -47,9 +48,9 @@ shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
 {
   auto name = document["name"].GetString();
 
-  bool controlsHead = document.TryGetBoolValue("controlsHead", true);
-  bool controlsArms = document.TryGetBoolValue("controlsArms", true);
-  bool controlsLegs = document.TryGetBoolValue("controlsLegs", true);
+  bool controlsHead = GetBoolWithDefault(document, "controlsHead", true);
+  bool controlsArms = GetBoolWithDefault(document, "controlsArms", true);
+  bool controlsLegs = GetBoolWithDefault(document, "controlsLegs", true);
 
   vector<shared_ptr<Stage>> stages;
 
@@ -59,13 +60,13 @@ shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
     auto const& stageMember = stagesArray[i];
     auto stage = make_shared<Stage>();
 
-    stage->repeatCount = (uchar)stageMember.TryGetUintValue("repeat", 1);
-    stage->speed       = (uchar)stageMember.TryGetUintValue("speed", Stage::DEFAULT_SPEED);
+    stage->repeatCount = (uchar)GetUintWithDefault(stageMember, "repeat", 1);
+    stage->speed       = (uchar)GetUintWithDefault(stageMember, "speed", Stage::DEFAULT_SPEED);
 
     ASSERT(stage->speed != 0);
 
     auto gainsMember = stageMember.FindMember("pGains");
-    if (gainsMember)
+    if (gainsMember != stageMember.MemberEnd())
     {
       for (uchar g = 0; g < (uchar)JointId::MAX; g++)
       {
@@ -74,11 +75,11 @@ shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
         {
           string pairName = JointName::getJsonPairName(g + (uchar)1);
           auto pairMember = gainsMember->value.FindMember(pairName.c_str());
-          if (pairMember)
+          if (pairMember != gainsMember->value.MemberEnd())
           {
             // If a pair exists, the individual gains shouldn't
-            if (gainsMember->value.FindMember(JointName::getJsonName(g + (uchar)1).c_str()) ||
-                gainsMember->value.FindMember(JointName::getJsonName(g + (uchar)2).c_str()))
+            if (gainsMember->value.FindMember(JointName::getJsonName(g + (uchar)1).c_str()) != gainsMember->value.MemberEnd() ||
+                gainsMember->value.FindMember(JointName::getJsonName(g + (uchar)2).c_str()) != gainsMember->value.MemberEnd())
             {
               log::error("MotionScript::fromFile") << "JSON specifies pGain pair name '" << pairName << "' but also specifies L or R property in same stage";
               return nullptr;
@@ -94,7 +95,7 @@ shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
           }
         }
 
-        stage->pGains[g] = (uchar)gainsMember->value.TryGetUintValue(JointName::getJsonName(g + (uchar)1).c_str(), Stage::DEFAULT_P_GAIN);
+        stage->pGains[g] = (uchar) GetUintWithDefault(gainsMember->value, JointName::getJsonName(g + (uchar)1).c_str(), Stage::DEFAULT_P_GAIN);
       }
     }
 
@@ -104,7 +105,7 @@ shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
       auto const& keyFrameMember = keyFrames[j];
       auto keyFrame = KeyFrame();
 
-      keyFrame.pauseCycles = (uchar)keyFrameMember.TryGetUintValue("pauseCycles", 0u);
+      keyFrame.pauseCycles = (uchar)GetUintWithDefault(keyFrameMember, "pauseCycles", 0u);
       keyFrame.moveCycles = (uchar)keyFrameMember["moveCycles"].GetUint();
 
       if (keyFrame.moveCycles < 3)
@@ -124,11 +125,11 @@ shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
         {
           string pairName = JointName::getJsonPairName(v + (uchar)1);
           auto pairMember = valuesMember.FindMember(pairName.c_str());
-          if (pairMember)
+          if (pairMember != valuesMember.MemberEnd())
           {
             // If a pair exists, the individual values shouldn't
-            if (valuesMember.FindMember(JointName::getJsonName(v + (uchar)1).c_str()) ||
-                valuesMember.FindMember(JointName::getJsonName(v + (uchar)2).c_str()))
+            if (valuesMember.FindMember(JointName::getJsonName(v + (uchar)1).c_str()) != valuesMember.MemberEnd() ||
+                valuesMember.FindMember(JointName::getJsonName(v + (uchar)2).c_str()) != valuesMember.MemberEnd())
             {
               log::error("MotionScript::fromFile") << "JSON specifies value pair name '" << pairName << "' but also specifies L or R property in same stage";
               return nullptr;
@@ -146,7 +147,7 @@ shared_ptr<MotionScript> MotionScript::fromJsonValue(Value& document)
 
         string propName = JointName::getJsonName(v + (uchar)1);
         auto prop = valuesMember.FindMember(propName.c_str());
-        if (!prop)
+        if (prop == valuesMember.MemberEnd())
         {
           log::error("MotionScript::fromFile") << "Missing property " << propName;
           return nullptr;

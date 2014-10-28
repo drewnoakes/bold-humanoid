@@ -179,53 +179,66 @@ void queueRandomMessage()
 
   writer.StartObject();
   {
-    writer.String("unum").Int(1 + (std::rand() % MaxPlayerNum));
-    writer.String("team").Int(teamNumber);
-    writer.String("col").Int(teamColour);
+    writer.String("unum");
+    writer.Int(1 + (std::rand() % MaxPlayerNum));
+    writer.String("team");
+    writer.Int(teamNumber);
+    writer.String("col");
+    writer.Int(teamColour);
     stringstream host;
     host << "darwin" << unum;
-    writer.String("host").String(host.str().c_str());
-    writer.String("name").String(playerName.c_str());
-    writer.String("ver").String(Version::GIT_SHA1.c_str());
-    writer.String("built").String(Version::BUILT_ON_HOST_NAME.c_str());
-    writer.String("uptime").Uint(static_cast<uint>(Clock::getSecondsSince(startTime)));
+    writer.String("host");
+    writer.String(host.str().c_str());
+    writer.String("name");
+    writer.String(playerName.c_str());
+    writer.String("ver");
+    writer.String(Version::GIT_SHA1.c_str());
+    writer.String("built");
+    writer.String(Version::BUILT_ON_HOST_NAME.c_str());
+    writer.String("uptime");
+    writer.Uint(static_cast<uint>(Clock::getSecondsSince(startTime)));
 
-    writer.String("role").String(getPlayerRoleString(unum == 1 ? PlayerRole::Keeper : PlayerRole::Striker).c_str());
+    writer.String("role");
+    writer.String(getPlayerRoleString(unum == 1 ? PlayerRole::Keeper : PlayerRole::Striker).c_str());
 
     srand(unum);
 
-    writer.String("activity").String(getPlayerActivityString(playerActivities[rand() % playerActivities.size()]).c_str());
-    writer.String("status").String(getPlayerStatusString(playerStatuses[rand() % playerStatuses.size()]).c_str());
+    writer.String("activity");
+    writer.String(getPlayerActivityString(playerActivities[rand() % playerActivities.size()]).c_str());
+    writer.String("status");
+    writer.String(getPlayerStatusString(playerStatuses[rand() % playerStatuses.size()]).c_str());
 
-    writer.String("fpsThink").Double(25 + ((rand() % 100) / 10.0));
-    writer.String("fpsMotion").Double(100 + ((rand() % 400) / 10.0));
+    writer.String("fpsThink");
+    writer.Double(25 + ((rand() % 100) / 10.0));
+    writer.String("fpsMotion");
+    writer.Double(100 + ((rand() % 400) / 10.0));
 
     writer.String("agent");
     writer.StartObject();
     {
       if (rand() % 10 > 5)
       {
-        writer.String("ball")
-          .StartArray()
-          .Double((rand() % 1000) * FieldMap::getFieldLengthX())
-          .Double((rand() % 1000) * FieldMap::getFieldLengthY())
-          .EndArray();
+        writer.String("ball");
+        writer.StartArray();
+        writer.Double((rand() % 1000) * FieldMap::getFieldLengthX());
+        writer.Double((rand() % 1000) * FieldMap::getFieldLengthY());
+        writer.EndArray();
       }
 
       if (rand() % 10 > 5)
       {
-        writer.String("goals")
-          .StartArray()
-            .StartArray()
-            .Double((rand() % 1000) * FieldMap::getFieldLengthX())
-            .Double((rand() % 1000) * FieldMap::getFieldLengthY())
-            .EndArray();
+        writer.String("goals");
+        writer.StartArray();
+        writer.StartArray();
+        writer.Double((rand() % 1000) * FieldMap::getFieldLengthX());
+        writer.Double((rand() % 1000) * FieldMap::getFieldLengthY());
+        writer.EndArray();
         if (rand() % 10 > 5)
         {
-          writer.StartArray()
-            .Double((rand() % 1000) * FieldMap::getFieldLengthX())
-            .Double((rand() % 1000) * FieldMap::getFieldLengthY())
-            .EndArray();
+          writer.StartArray();
+          writer.Double((rand() % 1000) * FieldMap::getFieldLengthX());
+          writer.Double((rand() % 1000) * FieldMap::getFieldLengthY());
+          writer.EndArray();
         }
         writer.EndArray();
       }
@@ -236,17 +249,22 @@ void queueRandomMessage()
     writer.StartObject();
     {
       static vector<string> playModes = {"Initial", "Ready", "Set", "Playing", "Finished"};
-      writer.String("mode").String(playModes[std::rand()%playModes.size()].c_str());
-      writer.String("age").Uint(std::rand() % 1000u);
+      writer.String("mode");
+      writer.String(playModes[std::rand()%playModes.size()].c_str());
+      writer.String("age");
+      writer.Uint(std::rand() % 1000u);
     }
     writer.EndObject();
 
     writer.String("hw");
     writer.StartObject();
     {
-      writer.String("volt").Double(10.7 + ((rand() % 35) / 10.0));
-      writer.String("power").Bool(rand() % 1);
-      writer.String("temps").StartArray();
+      writer.String("volt");
+      writer.Double(10.7 + ((rand() % 35) / 10.0));
+      writer.String("power");
+      writer.Bool(rand() % 1);
+      writer.String("temps");
+      writer.StartArray();
       for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
         writer.Uint(30 + (rand() % 30));
       writer.EndArray();
@@ -258,8 +276,10 @@ void queueRandomMessage()
     {
       writer.StartObject();
       {
-        writer.String("unum").Int(1 + (rand() % MaxPlayerNum));
-        writer.String("ms").Int(std::rand() % 1000u);
+        writer.String("unum");
+        writer.Int(1 + (rand() % MaxPlayerNum));
+        writer.String("ms");
+        writer.Int(std::rand() % 1000u);
       }
       writer.EndObject();
     }
@@ -269,18 +289,23 @@ void queueRandomMessage()
     vector<pair<string,string>> fsmStates = { {"win", "playing"}, {"win", "getUp"} };
 
     writer.String("options");
-    writer.Array(
-      ranOptions.begin(), ranOptions.end(),
-      [&](string const& option) { writer.String(option.c_str()); });
+    writer.StartArray();
+    for (auto const& option : ranOptions)
+      writer.String(option.c_str());
+    writer.EndArray();
 
     writer.String("fsms");
-    writer.Array(
-      fsmStates.begin(), fsmStates.end(),
-      [&](pair<string,string> fsmState) { writer.StartObject()
-        .String("fsm").String(fsmState.first.c_str())
-        .String("state").String(fsmState.second.c_str())
-        .EndObject();
-      });
+    writer.StartArray();
+    for (auto const& fsmState : fsmStates)
+    {
+      writer.StartObject();
+      writer.String("fsm");
+      writer.String(fsmState.first.c_str());
+      writer.String("state");
+      writer.String(fsmState.second.c_str());
+      writer.EndObject();
+    }
+    writer.EndArray();
   }
   writer.EndObject();
 

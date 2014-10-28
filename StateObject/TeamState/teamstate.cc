@@ -20,26 +20,38 @@ void TeamState::writeJson(Writer<StringBuffer>& writer) const
       {
         writer.StartObject();
         {
-          writer.String("unum").Uint(player.uniformNumber);
-          writer.String("team").Uint(player.teamNumber);
-          writer.String("isMe").Bool(player.isMe());
-          writer.String("activity").Int(static_cast<int>(player.activity));
-          writer.String("status").Int(static_cast<int>(player.status));
-          writer.String("role").Int(static_cast<int>(player.role));
-          writer.String("pos")
-            .StartArray();
+          writer.String("unum");
+          writer.Uint(player.uniformNumber);
+          writer.String("team");
+          writer.Uint(player.teamNumber);
+          writer.String("isMe");
+          writer.Bool(player.isMe());
+          writer.String("activity");
+          writer.Int(static_cast<int>(player.activity));
+          writer.String("status");
+          writer.Int(static_cast<int>(player.status));
+          writer.String("role");
+          writer.Int(static_cast<int>(player.role));
+          writer.String("pos");
+          writer.StartArray();
           JsonWriter::swapNaN(writer, player.pos.x());
           JsonWriter::swapNaN(writer, player.pos.y());
           JsonWriter::swapNaN(writer, player.pos.theta());
           writer.EndArray();
-          writer.String("posConfidence").Double(player.posConfidence);
-          writer.String("ballRelative").StartArray();
+          writer.String("posConfidence");
+          writer.Double(player.posConfidence);
+          writer.String("ballRelative");
+          writer.StartArray();
           {
             if (player.ballRelative.hasValue())
-              writer.Double(player.ballRelative->x()).Double(player.ballRelative->y());
+            {
+              writer.Double(player.ballRelative->x());
+              writer.Double(player.ballRelative->y());
+            }
           }
           writer.EndArray();
-          writer.String("updateTime").Uint64(Clock::timestampToMillis(player.updateTime));
+          writer.String("updateTime");
+          writer.Uint64(Clock::timestampToMillis(player.updateTime));
         }
         writer.EndObject();
       }

@@ -39,12 +39,13 @@ FSMOption::FSMOption(shared_ptr<Voice> voice, string const& id)
       return;
     }
 
-    const char* stateName;
-    if (!args->TryGetStringValue("state", &stateName))
+    auto stateMember = args->FindMember("state");
+    if (stateMember == args->MemberEnd() || !stateMember->value.IsString())
     {
       log::warning("FSMOption::goto") << "Invalid request JSON. Must have a 'state' property of type 'string'.";
       return;
     }
+    const char* stateName = stateMember->value.GetString();
 
     // find state having this name
     auto state = getState(string(stateName));

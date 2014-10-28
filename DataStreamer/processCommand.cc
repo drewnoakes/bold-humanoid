@@ -13,12 +13,13 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession)
     return;
   }
 
-  char const* type;
-  if (!doc.TryGetStringValue("type", &type))
+  auto typeMember = doc.FindMember("type");
+  if (typeMember == doc.MemberEnd() || !typeMember->value.IsString())
   {
     log::error("DataStreamer::processCommand") << "No 'type' specified in received command JSON";
     return;
   }
+  char const* type = typeMember->value.GetString();
 
   if (strcmp(type, "action") == 0)
   {
@@ -29,12 +30,14 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession)
     // { "type": "action", "id": "some.action" }
     // { "type": "action", "id": "some.action", "args": ... }
 
-    char const* id;
-    if (!doc.TryGetStringValue("id", &id))
+    auto idMember = doc.FindMember("id");
+    if (idMember == doc.MemberEnd() || !idMember->value.IsString())
     {
       log::error("DataStreamer::processCommand") << "No 'id' specified in received action JSON";
       return;
     }
+
+    char const* id = idMember->value.GetString();
 
     auto action = Config::getAction(string(id));
 
@@ -44,8 +47,8 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession)
       return;
     }
 
-    Value::Member* argsMember = doc.FindMember("args");
-    action->handleRequest(argsMember ? &argsMember->value : nullptr);
+    auto argsMember = doc.FindMember("args");
+    action->handleRequest(argsMember == doc.MemberEnd() ? &argsMember->value : nullptr);
   }
   else if (strcmp(type, "setting") == 0)
   {
@@ -55,15 +58,16 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession)
 
     // { "type": "setting", "path": "some.setting", "value": 1234 }
 
-    char const* path;
-    if (!doc.TryGetStringValue("path", &path))
+    auto pathMember = doc.FindMember("path");
+    if (pathMember == doc.MemberEnd() || !pathMember->value.IsString())
     {
       log::error("DataStreamer::processCommand") << "No 'path' specified in received setting JSON";
       return;
     }
+    char const* path = pathMember->value.GetString();
 
     auto valueMember = doc.FindMember("value");
-    if (!valueMember)
+    if (valueMember == doc.MemberEnd())
     {
       log::error("DataStreamer::processCommand") << "No 'value' specified in received setting JSON";
       return;

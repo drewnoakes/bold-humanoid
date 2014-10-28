@@ -6,6 +6,7 @@
 #include "../Setting/setting.hh"
 #include "../Setting/setting-implementations.hh"
 #include "../Config/config.hh"
+#include "../util/json.hh"
 
 #include <vector>
 #include <string>
@@ -107,9 +108,15 @@ namespace bold
                       });
 
     Config::addAction("histogram-label-teacher.set-seed-point", "Set Seed Point", [this](rapidjson::Value* val) {
-        int x, y;
-        val->TryGetIntValue("x", &x);
-        val->TryGetIntValue("y", &y);
+        auto xMember = val->FindMember("x");
+        auto yMember = val->FindMember("y");
+        if (xMember == val->MemberEnd() || !xMember->value.IsInt() ||
+            yMember == val->MemberEnd() || !yMember->value.IsInt())
+        {
+          log::error() << "Unable to parse x and y integral values from action JSON";
+        }
+        int x = xMember->value.GetInt(),
+            y = yMember->value.GetInt();
         log::info("HistogramLabelTeacherBase") << "Setting seed point: " << x << " " << y;
         d_seedPoint = Eigen::Vector2i{x, y};
 

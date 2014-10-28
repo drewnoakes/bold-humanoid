@@ -57,8 +57,10 @@ void OptionTree::run()
 
     writer.StartObject();
 
-    writer.String("id").String(option->getId().c_str());
-    writer.String("type").String(option->getTypeName().c_str());
+    writer.String("id");
+    writer.String(option->getId().c_str());
+    writer.String("type");
+    writer.String(option->getTypeName().c_str());
 
     // Remove options that run from the set of last cycle
     auto it = d_optionsLastCycle.find(option);
@@ -66,7 +68,8 @@ void OptionTree::run()
       d_optionsLastCycle.erase(it);
 
     // Run it
-    writer.String("run").StartObject();
+    writer.String("run");
+    writer.StartObject();
     vector<shared_ptr<Option>> subOptions = option->runPolicy(writer);
     writer.EndObject();
 

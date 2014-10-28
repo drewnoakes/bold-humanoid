@@ -7,7 +7,7 @@
 	ignore = untracked
 [submodule "rapidjson"]
 	path = rapidjson
-	url = git@bitbucket.org:boldhearts/rapidjson
+	url = https://github.com/miloyip/rapidjson.git
 [submodule "test/google-test"]
 	path = test/google-test
 	url = git@bitbucket.org:boldhearts/google-test.git

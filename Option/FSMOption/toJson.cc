@@ -20,8 +20,10 @@ void FSMOption::toJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("name").String(getId().c_str());
-    writer.String("start").String(d_startState->name.c_str());
+    writer.String("name");
+    writer.String(getId().c_str());
+    writer.String("start");
+    writer.String(d_startState->name.c_str());
 
     writer.String("states");
     writer.StartArray();
@@ -30,7 +32,8 @@ void FSMOption::toJson(Writer<StringBuffer>& writer) const
       {
         writer.StartObject();
         {
-          writer.String("id").String(state->name.c_str());
+          writer.String("id");
+          writer.String(state->name.c_str());
         }
         writer.EndObject();
       }
@@ -46,9 +49,12 @@ void FSMOption::toJson(Writer<StringBuffer>& writer) const
         {
           writer.StartObject();
           {
-            writer.String("id").String(transition->name.c_str());
-            writer.String("from").String(state->name.c_str());
-            writer.String("to").String(transition->childState->name.c_str());
+            writer.String("id");
+            writer.String(transition->name.c_str());
+            writer.String("from");
+            writer.String(state->name.c_str());
+            writer.String("to");
+            writer.String(transition->childState->name.c_str());
           }
           writer.EndObject();
         }
@@ -63,8 +69,10 @@ void FSMOption::toJson(Writer<StringBuffer>& writer) const
       {
         writer.StartObject();
         {
-          writer.String("id").String(transition->name.c_str());
-          writer.String("to").String(transition->childState->name.c_str());
+          writer.String("id");
+          writer.String(transition->name.c_str());
+          writer.String("to");
+          writer.String(transition->childState->name.c_str());
         }
         writer.EndObject();
       }

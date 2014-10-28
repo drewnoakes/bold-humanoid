@@ -55,9 +55,12 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
     if (tryTransition(transition))
     {
       writer.StartObject();
-      writer.String("to").String(transition->childState->name.c_str());
-      writer.String("via").String(transition->name.c_str());
-      writer.String("wildcard").Bool(true);
+      writer.String("to");
+      writer.String(transition->childState->name.c_str());
+      writer.String("via");
+      writer.String(transition->name.c_str());
+      writer.String("wildcard");
+      writer.Bool(true);
       writer.EndObject();
       return true;
     }
@@ -71,7 +74,8 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
   {
     // No state yet (after reset).
     // Give wildcard transitions a chance to set the state.
-    writer.String("entry-wildcard-transitions").StartArray();
+    writer.String("entry-wildcard-transitions");
+    writer.StartArray();
     for (auto& transition : d_wildcardTransitions)
     {
       if (tryWildcardTransition(transition, writer))
@@ -88,10 +92,12 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 
   const int MAX_LOOP_COUNT = 20;
 
-  writer.String("start").String(d_curState->name.c_str());
+  writer.String("start");
+  writer.String(d_curState->name.c_str());
 
   // Take as many transitions as possible
-  writer.String("transitions").StartArray();
+  writer.String("transitions");
+  writer.StartArray();
   // Count the number of transitions made to protect against endless loops
   int loopCount = 0;
   bool transitionMade;
@@ -115,8 +121,10 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
         if (tryTransition(transition))
         {
           writer.StartObject();
-          writer.String("to").String(transition->childState->name.c_str());
-          writer.String("via").String(transition->name.c_str());
+          writer.String("to");
+          writer.String(transition->childState->name.c_str());
+          writer.String("via");
+          writer.String(transition->name.c_str());
           writer.EndObject();
           transitionMade = true;
           break;
@@ -137,7 +145,8 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
   static bool isEndless = false;
   if (loopCount > MAX_LOOP_COUNT)
   {
-    writer.String("warning").String("Max transition count exceeded. Infinite loop?");
+    writer.String("warning");
+    writer.String("Max transition count exceeded. Infinite loop?");
     if (!isEndless)
     {
       if (d_voice->queueLength() < 2)

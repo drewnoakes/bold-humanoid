@@ -8,7 +8,8 @@ using namespace std;
 
 vector<shared_ptr<Option>> StopWalking::runPolicy(Writer<StringBuffer>& writer)
 {
-  writer.String("immediately").Bool(d_stopImmediately);
+  writer.String("immediately");
+  writer.Bool(d_stopImmediately);
 
   if (d_stopImmediately)
   {
@@ -18,7 +19,8 @@ vector<shared_ptr<Option>> StopWalking::runPolicy(Writer<StringBuffer>& writer)
   {
     d_walkModule->stop();
 
-    writer.String("walkRunning").Bool(d_walkModule->isRunning());
+    writer.String("walkRunning");
+    writer.Bool(d_walkModule->isRunning());
   }
 
   return {};

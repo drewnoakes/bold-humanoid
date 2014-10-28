@@ -2,6 +2,7 @@
 
 #include "../stateobject.hh"
 #include "../../Colour/colour.hh"
+#include "../../util/json.hh"
 
 #include <memory>
 #include <vector>
@@ -26,8 +27,10 @@ namespace bold
     {
       writer.StartObject();
       {
-        writer.String("cycle").Uint64(d_cycleNumber);
-        writer.String("fps").Double(d_averageFps);
+        writer.String("cycle");
+        writer.Uint64(d_cycleNumber);
+        writer.String("fps");
+        writer.Double(d_averageFps);
         writer.String("timings");
         writer.StartObject();
         {

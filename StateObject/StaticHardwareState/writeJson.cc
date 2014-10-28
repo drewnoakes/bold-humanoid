@@ -24,12 +24,18 @@ void StaticHardwareState::writeJson(Writer<StringBuffer>& writer) const
 
   writer.StartObject();
   {
-    writer.String("id").Int(d_cm730State->dynamixelId);
-    writer.String("baud").Int(d_cm730State->baudBPS);
-    writer.String("firmwareVersion").Int(d_cm730State->firmwareVersion);
-    writer.String("modelNumber").Int(d_cm730State->modelNumber);
-    writer.String("returnDelayTimeMicroSeconds").Int(d_cm730State->returnDelayTimeMicroSeconds);
-    writer.String("statusRetLevel").Int(d_cm730State->statusRetLevel);
+    writer.String("id");
+    writer.Int(d_cm730State->dynamixelId);
+    writer.String("baud");
+    writer.Int(d_cm730State->baudBPS);
+    writer.String("firmwareVersion");
+    writer.Int(d_cm730State->firmwareVersion);
+    writer.String("modelNumber");
+    writer.Int(d_cm730State->modelNumber);
+    writer.String("returnDelayTimeMicroSeconds");
+    writer.Int(d_cm730State->returnDelayTimeMicroSeconds);
+    writer.String("statusRetLevel");
+    writer.Int(d_cm730State->statusRetLevel);
 
     writer.String("joints");
     writer.StartArray();
@@ -37,22 +43,36 @@ void StaticHardwareState::writeJson(Writer<StringBuffer>& writer) const
     {
       writer.StartObject();
       {
-        writer.String("id").Int(mx28->id);
-        writer.String("modelNumber").Int(mx28->modelNumber);
-        writer.String("firmwareVersion").Int(mx28->firmwareVersion);
-        writer.String("baud").Int(mx28->baudBPS);
-        writer.String("returnDelayTimeMicroSeconds").Int(mx28->returnDelayTimeMicroSeconds);
-        writer.String("angleLimitCW").Double(mx28->angleLimitCW);
-        writer.String("angleLimitCCW").Double(mx28->angleLimitCCW);
-        writer.String("tempLimitHighCelsius").Int(mx28->tempLimitHighCelsius);
-        writer.String("voltageLimitLow").Double(mx28->voltageLimitLow);
-        writer.String("voltageLimitHigh").Double(mx28->voltageLimitHigh);
-        writer.String("maxTorque").Int(mx28->maxTorque);
-        writer.String("statusRetLevel").Int(mx28->statusRetLevel);
+        writer.String("id");
+        writer.Int(mx28->id);
+        writer.String("modelNumber");
+        writer.Int(mx28->modelNumber);
+        writer.String("firmwareVersion");
+        writer.Int(mx28->firmwareVersion);
+        writer.String("baud");
+        writer.Int(mx28->baudBPS);
+        writer.String("returnDelayTimeMicroSeconds");
+        writer.Int(mx28->returnDelayTimeMicroSeconds);
+        writer.String("angleLimitCW");
+        writer.Double(mx28->angleLimitCW);
+        writer.String("angleLimitCCW");
+        writer.Double(mx28->angleLimitCCW);
+        writer.String("tempLimitHighCelsius");
+        writer.Int(mx28->tempLimitHighCelsius);
+        writer.String("voltageLimitLow");
+        writer.Double(mx28->voltageLimitLow);
+        writer.String("voltageLimitHigh");
+        writer.Double(mx28->voltageLimitHigh);
+        writer.String("maxTorque");
+        writer.Int(mx28->maxTorque);
+        writer.String("statusRetLevel");
+        writer.Int(mx28->statusRetLevel);
         writeAlarm("alarmLed", mx28->alarmLed);
         writeAlarm("alarmShutdown", mx28->alarmShutdown);
-        writer.String("torqueEnable").Bool(mx28->torqueEnable);
-        writer.String("isEepromLocked").Bool(mx28->isEepromLocked);
+        writer.String("torqueEnable");
+        writer.Bool(mx28->torqueEnable);
+        writer.String("isEepromLocked");
+        writer.Bool(mx28->isEepromLocked);
       }
       writer.EndObject();
     }

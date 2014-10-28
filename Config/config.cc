@@ -8,6 +8,7 @@
 #include "../Setting/setting-implementations.hh"
 #include "../util/Range.hh"
 #include "../util/log.hh"
+#include "../util/json.hh"
 
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
@@ -81,7 +82,7 @@ void Config::initialise(string metadataFile, string configFile)
 
     // Check whether a parent is specified in the 'inherits' property
     auto it = confDocument->FindMember("inherits");
-    auto hasParent = it && it->value.IsString();
+    auto hasParent = it != confDocument->MemberEnd() && it->value.IsString();
     if (hasParent)
       path = it->value.GetString();
 
@@ -162,7 +163,7 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
   // Any JSON object that defines a 'type' member is considered a value definition
   auto typeMember = metaNode->FindMember("type");
 
-  if (typeMember)
+  if (typeMember != metaNode->MemberEnd())
   {
     // process setting
 
@@ -172,8 +173,8 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
       throw runtime_error("JSON 'type' property must have a string value");
     }
 
-    bool isReadOnly = metaNode->TryGetBoolValue("readonly", false);
-    const char* descriptionChars = metaNode->TryGetStringValue("description", (const char*)nullptr);
+    bool isReadOnly = GetBoolWithDefault(*metaNode, "readonly", false);
+    const char* descriptionChars = GetStringWithDefault(*metaNode, "description", (const char*)nullptr);
     string description = descriptionChars == nullptr ? "" : descriptionChars;
 
     auto type = string(typeMember->value.GetString());
@@ -184,20 +185,20 @@ void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNod
 
     if (type == "double")
     {
-      auto min = metaNode->TryGetDoubleValue("min", -numeric_limits<double>::max());
-      auto max = metaNode->TryGetDoubleValue("max", numeric_limits<double>::max());
+      auto min = GetDoubleWithDefault(*metaNode, "min", -numeric_limits<double>::max());
+      auto max = GetDoubleWithDefault(*metaNode, "max", numeric_limits<double>::max());
       setting = new DoubleSetting(path, min, max, isReadOnly, description);
     }
     else if (type == "int")
     {
-      auto min = metaNode->TryGetIntValue("min", -numeric_limits<int>::max());
-      auto max = metaNode->TryGetIntValue("max", numeric_limits<int>::max());
+      auto min = GetIntWithDefault(*metaNode, "min", -numeric_limits<int>::max());
+      auto max = GetIntWithDefault(*metaNode, "max", numeric_limits<int>::max());
       setting = new IntSetting(path, min, max, isReadOnly, description);
     }
     else if (type == "enum")
     {
       auto valuesObj = metaNode->FindMember("values");
-      if (!valuesObj || !valuesObj->value.IsObject())
+      if (valuesObj == metaNode->MemberEnd() || !valuesObj->value.IsObject())
       {
         log::error("Config::processLevel") << "Configuration value for enum '" << path << "' must specify values";
         throw runtime_error("JSON configuration for enum must specify values");
@@ -369,7 +370,7 @@ Value const* Config::getConfigJsonValue(string path)
 
       auto childMember = node->FindMember(childName.c_str());
 
-      if (!childMember)
+      if (childMember == node->MemberEnd())
       {
         // No match was found in this file, so break to the outer
         // loop to look in the next document.

@@ -78,26 +78,44 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
 
   writer.StartObject();
   {
-    writer.String("unum").Int(uniformNumber);
-    writer.String("team").Int(teamNumber);
-    writer.String("col").Int(teamColour);
-    writer.String("host").String(d_hostName.c_str());
-    writer.String("name").String(playerName.c_str());
-    writer.String("ver").String(Version::GIT_SHA1.c_str());
-    writer.String("built").String(Version::BUILT_ON_HOST_NAME.c_str());
-    writer.String("uptime").Uint(static_cast<uint>(d_agent->getUptimeSeconds()));
+    writer.String("unum");
+    writer.Int(uniformNumber);
+    writer.String("team");
+    writer.Int(teamNumber);
+    writer.String("col");
+    writer.Int(teamColour);
+    writer.String("host");
+    writer.String(d_hostName.c_str());
+    writer.String("name");
+    writer.String(playerName.c_str());
+    writer.String("ver");
+    writer.String(Version::GIT_SHA1.c_str());
+    writer.String("built");
+    writer.String(Version::BUILT_ON_HOST_NAME.c_str());
+    writer.String("uptime");
+    writer.Uint(static_cast<uint>(d_agent->getUptimeSeconds()));
 
-    writer.String("activity").String(getPlayerActivityString(d_behaviourControl->getPlayerActivity()).c_str());
-    writer.String("role").String(getPlayerRoleString(d_behaviourControl->getPlayerRole()).c_str());
-    writer.String("status").String(getPlayerStatusString(d_behaviourControl->getPlayerStatus()).c_str());
+    writer.String("activity");
+    writer.String(getPlayerActivityString(d_behaviourControl->getPlayerActivity()).c_str());
+    writer.String("role");
+    writer.String(getPlayerRoleString(d_behaviourControl->getPlayerRole()).c_str());
+    writer.String("status");
+    writer.String(getPlayerStatusString(d_behaviourControl->getPlayerStatus()).c_str());
 
     auto thinkTiming = State::get<ThinkTimingState>();
     auto motionTiming = State::get<MotionTimingState>();
 
     if (thinkTiming)
-      writer.String("fpsThink").Double(thinkTiming->getAverageFps());
+    {
+      writer.String("fpsThink");
+      writer.Double(thinkTiming->getAverageFps());
+    }
+
     if (motionTiming)
-      writer.String("fpsMotion").Double(motionTiming->getAverageFps());
+    {
+      writer.String("fpsMotion");
+      writer.Double(motionTiming->getAverageFps());
+    }
 
     auto agentFrame = State::get<AgentFrameState>();
     if (agentFrame)
@@ -107,17 +125,23 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
       {
         if (agentFrame->isBallVisible())
         {
-          writer.String("ball")
-            .StartArray()
-            .Double(agentFrame->getBallObservation()->x())
-            .Double(agentFrame->getBallObservation()->y())
-            .EndArray();
+          writer.String("ball");
+          writer.StartArray();
+          writer.Double(agentFrame->getBallObservation()->x());
+          writer.Double(agentFrame->getBallObservation()->y());
+          writer.EndArray();
         }
         if (agentFrame->goalObservationCount())
         {
-          writer.String("goals").StartArray();
+          writer.String("goals");
+          writer.StartArray();
           for (auto const& goal : agentFrame->getGoalObservations())
-            writer.StartArray().Double(goal.x()).Double(goal.y()).EndArray();
+          {
+            writer.StartArray();
+            writer.Double(goal.x());
+            writer.Double(goal.y());
+            writer.EndArray();
+          }
           writer.EndArray();
         }
       }
@@ -130,8 +154,10 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
       writer.String("game");
       writer.StartObject();
       {
-        writer.String("mode").String(getPlayModeName(game->getPlayMode()).c_str());
-        writer.String("age").Uint(static_cast<unsigned>(game->getAgeMillis()));
+        writer.String("mode");
+        writer.String(getPlayModeName(game->getPlayMode()).c_str());
+        writer.String("age");
+        writer.Uint(static_cast<unsigned>(game->getAgeMillis()));
       }
       writer.EndObject();
     }
@@ -142,9 +168,12 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
       writer.String("hw");
       writer.StartObject();
       {
-        writer.String("volt").Double(hw->getCM730State().voltage);
-        writer.String("power").Bool(hw->getCM730State().isPowered);
-        writer.String("temps").StartArray();
+        writer.String("volt");
+        writer.Double(hw->getCM730State().voltage);
+        writer.String("power");
+        writer.Bool(hw->getCM730State().isPowered);
+        writer.String("temps");
+        writer.StartArray();
         for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
           writer.Uint(hw->getMX28State(jointId).presentTemp);
         writer.EndArray();
@@ -164,8 +193,10 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
             continue;
           writer.StartObject();
           {
-            writer.String("unum").Int(player.uniformNumber);
-            writer.String("ms").Int(static_cast<int>(player.getAgeMillis()));
+            writer.String("unum");
+        writer.Int(player.uniformNumber);
+            writer.String("ms");
+        writer.Int(static_cast<int>(player.getAgeMillis()));
           }
           writer.EndObject();
         }
@@ -180,18 +211,22 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
       auto const& fsmStates = optionTree->getFSMStates();
 
       writer.String("options");
-      writer.Array(
-        ranOptions.begin(), ranOptions.end(),
-        [&](shared_ptr<Option> const& option) { writer.String(option->getId().c_str()); });
+      writer.StartArray();
+      for (auto& option : ranOptions)
+        writer.String(option->getId().c_str());
+      writer.EndArray();
 
       writer.String("fsms");
-      writer.Array(
-        fsmStates.begin(), fsmStates.end(),
-        [&](FSMStateSnapshot const& fsmState) { writer.StartObject()
-          .String("fsm").String(fsmState.getFsmName().c_str())
-          .String("state").String(fsmState.getStateName().c_str())
-          .EndObject();
-        });
+      writer.StartArray();
+      for (auto& fsmState : fsmStates)
+      {
+        writer.StartObject();
+        writer.String("fsm");
+        writer.String(fsmState.getFsmName().c_str());
+        writer.String("state");
+        writer.String(fsmState.getStateName().c_str());
+        writer.EndObject();
+      }
     }
   }
   writer.EndObject();

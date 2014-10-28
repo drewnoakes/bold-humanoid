@@ -38,11 +38,13 @@ Option::OptionVector WalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer
 
 //  static auto stoppingDistance = Config::getSetting<double>("options.approach-ball.stop-distance");
 
-  writer.String("walkDist").Double(walkDist);
+  writer.String("walkDist");
+  writer.Double(walkDist);
 
   double speedScaleDueToDistance = Math::clamp(walkDist / d_brakeDistance->getValue(), 0.0, 1.0);
 
-  writer.String("distSpeed").Double(speedScaleDueToDistance);
+  writer.String("distSpeed");
+  writer.Double(speedScaleDueToDistance);
 
   double faceAngle = 0;
   if (walkDist < d_turnDist)
@@ -60,7 +62,8 @@ Option::OptionVector WalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer
                                            1.0,
                                            0.0);
 
-  writer.String("angleSpeed").Double(speedScaleDueToAngle);
+  writer.String("angleSpeed");
+  writer.Double(speedScaleDueToAngle);
 
   double xSpeedScale = Math::clamp(speedScaleDueToDistance * speedScaleDueToAngle * d_targetPos.y(), 0.0, 1.0);
   double ySpeedScale = Math::clamp(speedScaleDueToDistance * speedScaleDueToAngle * d_targetPos.x(), 0.0, 1.0);
@@ -80,9 +83,14 @@ Option::OptionVector WalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer
   d_walkModule->setMoveDir(xSpeed, ySpeed);
   d_walkModule->setTurnAngle(turnSpeed);
 
-  writer.String("moveDir").StartArray().Double(xSpeed).Double(ySpeed).EndArray(2);
+  writer.String("moveDir");
+  writer.StartArray();
+  writer.Double(xSpeed);
+  writer.Double(ySpeed);
+  writer.EndArray(2);
 
-  writer.String("turn").Double(turnSpeed);
+  writer.String("turn");
+  writer.Double(turnSpeed);
 
   return {};
 

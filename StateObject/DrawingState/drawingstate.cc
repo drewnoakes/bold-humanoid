@@ -16,8 +16,10 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
   for (unique_ptr<DrawingItem const> const& item : *d_drawingItems)
   {
     writer.StartObject();
-    writer.String("type").Uint((uint)item->type);
-    writer.String("frame").Uint((uint)item->frame);
+    writer.String("type");
+    writer.Uint((uint)item->type);
+    writer.String("frame");
+    writer.Uint((uint)item->frame);
 
     ASSERT((int)item->type != 0);
 
@@ -26,14 +28,28 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
     if (item->type == DrawingItemType::Line)
     {
       auto line = static_cast<LineDrawing const*>(item.get());
-      writer.String("p1").StartArray().Double(line->p1.x()).Double(line->p1.y()).EndArray();
-      writer.String("p2").StartArray().Double(line->p2.x()).Double(line->p2.y()).EndArray();
+      writer.String("p1");
+      writer.StartArray();
+      writer.Double(line->p1.x());
+      writer.Double(line->p1.y());
+      writer.EndArray();
+      writer.String("p2");
+      writer.StartArray();
+      writer.Double(line->p2.x());
+      writer.Double(line->p2.y());
+      writer.EndArray();
 
       if (line->alpha > 0 && line->alpha < 1)
-        writer.String("a").Double(line->alpha);
+      {
+        writer.String("a");
+        writer.Double(line->alpha);
+      }
 
       if (line->lineWidth > 0 && line->lineWidth != 1)
-        writer.String("w").Double(line->lineWidth);
+      {
+        writer.String("w");
+        writer.Double(line->lineWidth);
+      }
 
       if (line->colour.b != 0 || line->colour.g != 0 || line->colour.r != 0)
       {
@@ -44,13 +60,24 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
     else if (item->type == DrawingItemType::Circle)
     {
       auto circle = static_cast<CircleDrawing const*>(item.get());
-      writer.String("c").StartArray().Double(circle->centre.x()).Double(circle->centre.y()).EndArray();
-      writer.String("r").Double(circle->radius);
+      writer.String("c");
+      writer.StartArray();
+      writer.Double(circle->centre.x());
+      writer.Double(circle->centre.y());
+      writer.EndArray();
+      writer.String("r");
+      writer.Double(circle->radius);
 
       if (circle->fillAlpha > 0 && circle->fillAlpha < 1)
-        writer.String("fa").Double(circle->fillAlpha);
+      {
+        writer.String("fa");
+        writer.Double(circle->fillAlpha);
+      }
       if (circle->strokeAlpha > 0 && circle->strokeAlpha < 1)
-        writer.String("sa").Double(circle->strokeAlpha);
+      {
+        writer.String("sa");
+        writer.Double(circle->strokeAlpha);
+      }
       if (circle->fillColour.b != 0 || circle->fillColour.g != 0 || circle->fillColour.r != 0)
       {
         writer.String("frgb");
@@ -62,7 +89,10 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
         JsonWriter::rgb(writer, circle->strokeColour);
       }
       if (circle->lineWidth > 0 && circle->lineWidth != 1)
-        writer.String("w").Double(circle->lineWidth);
+      {
+        writer.String("w");
+        writer.Double(circle->lineWidth);
+      }
     }
     else if (item->type == DrawingItemType::Polygon)
     {
@@ -71,9 +101,15 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
       JsonWriter::polygon(writer, poly->polygon);
 
       if (poly->fillAlpha > 0 && poly->fillAlpha < 1)
-        writer.String("fa").Double(poly->fillAlpha);
+      {
+        writer.String("fa");
+        writer.Double(poly->fillAlpha);
+      }
       if (poly->strokeAlpha > 0 && poly->strokeAlpha < 1)
-        writer.String("sa").Double(poly->strokeAlpha);
+      {
+        writer.String("sa");
+        writer.Double(poly->strokeAlpha);
+      }
       if (poly->fillColour.b != 0 || poly->fillColour.g != 0 || poly->fillColour.r != 0)
       {
         writer.String("frgb");
@@ -85,7 +121,10 @@ void DrawingState::writeJson(Writer<StringBuffer>& writer) const
         JsonWriter::rgb(writer, poly->strokeColour);
       }
       if (poly->lineWidth > 0 && poly->lineWidth != 1)
-        writer.String("w").Double(poly->lineWidth);
+      {
+        writer.String("w");
+        writer.Double(poly->lineWidth);
+      }
     }
 
     writer.EndObject();

@@ -61,11 +61,13 @@ void VisualCortex::saveImage(cv::Mat const& image)
     }
     else
     {
-      writer.String("hostname").String(hostName);
+      writer.String("hostname");
+      writer.String(hostName);
     }
 
     // Current date and time
-    writer.String("date").String(dateTimeString);
+    writer.String("date");
+    writer.String(dateTimeString);
 
     // Camera settings
     writer.String("camera-settings");

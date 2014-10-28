@@ -15,10 +15,14 @@ void BalanceState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("offsets");
     writer.StartObject();
     {
-      writer.String("hipRoll").Int(d_offsets.hipRoll);
-      writer.String("knee").Int(d_offsets.knee);
-      writer.String("anklePitch").Int(d_offsets.anklePitch);
-      writer.String("ankleRoll").Int(d_offsets.ankleRoll);
+      writer.String("hipRoll");
+      writer.Int(d_offsets.hipRoll);
+      writer.String("knee");
+      writer.Int(d_offsets.knee);
+      writer.String("anklePitch");
+      writer.Int(d_offsets.anklePitch);
+      writer.String("ankleRoll");
+      writer.Int(d_offsets.ankleRoll);
     }
     writer.EndObject();
   }

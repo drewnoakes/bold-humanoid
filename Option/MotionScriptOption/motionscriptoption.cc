@@ -35,11 +35,13 @@ double MotionScriptOption::hasTerminated()
 
 vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& writer)
 {
-  writer.String("hasExisting").Bool(d_request != nullptr);
+  writer.String("hasExisting");
+  writer.Bool(d_request != nullptr);
 
   if (d_hasTerminated)
   {
-    writer.String("hasTerminated").Bool(true);
+    writer.String("hasTerminated");
+    writer.Bool(true);
     return {};
   }
 
@@ -52,11 +54,14 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
     if (d_ifNotFinalPose && MotionScriptRunner::isInFinalPose(d_script))
     {
       // Don't run.
-      writer.String("skip").String("Already in final pose");
-      writer.String("maxDelta").Int(MotionScriptRunner::getMaxDeltaFromFinalPose(d_script));
+      writer.String("skip");
+      writer.String("Already in final pose");
+      writer.String("maxDelta");
+      writer.Int(MotionScriptRunner::getMaxDeltaFromFinalPose(d_script));
       d_request = nullptr;
       d_hasTerminated = true;
-      writer.String("hasTerminated").Bool(true);
+      writer.String("hasTerminated");
+      writer.Bool(true);
       return {};
     }
 
@@ -66,13 +71,15 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
 
     log::verbose("MotionScriptOption::runPolicy") << "Motion script '" << getId() << "' requested with status: " << getMotionRequestStatusName(d_request->getStatus());
 
-    writer.String("status").String(getMotionRequestStatusName(d_request->getStatus()).c_str());
+    writer.String("status");
+    writer.String(getMotionRequestStatusName(d_request->getStatus()).c_str());
   }
   else
   {
     // We're continuing a previous motion request. Check its status.
 
-    writer.String("status").String(getMotionRequestStatusName(d_request->getStatus()).c_str());
+    writer.String("status");
+    writer.String(getMotionRequestStatusName(d_request->getStatus()).c_str());
 
     switch (d_request->getStatus())
     {
@@ -88,7 +95,8 @@ vector<shared_ptr<Option>> MotionScriptOption::runPolicy(Writer<StringBuffer>& w
     }
   }
 
-  writer.String("hasTerminated").Bool(d_hasTerminated);
+  writer.String("hasTerminated");
+  writer.Bool(d_hasTerminated);
   return {};
 }
 

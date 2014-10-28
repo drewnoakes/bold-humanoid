@@ -13,11 +13,16 @@ vector<shared_ptr<Option>> LookAtFeet::runPolicy(Writer<StringBuffer>& writer)
   {
     log::verbose("LookAtFeet::runPolicy") << "Ball pos in agent frame " << ballObs->transpose();
     d_avgBallPos.next(*ballObs);
-    writer.String("ball").StartArray().Double(ballObs->x()).Double(ballObs->y()).EndArray(2);
+    writer.String("ball");
+    writer.StartArray();
+    writer.Double(ballObs->x());
+    writer.Double(ballObs->y());
+    writer.EndArray(2);
   }
   else
   {
-    writer.String("ball").Null();
+    writer.String("ball");
+    writer.Null();
   }
 
   return {};

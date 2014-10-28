@@ -111,10 +111,23 @@ vector<shared_ptr<Option>> CircleBall::runPolicy(Writer<StringBuffer>& writer)
   d_walkModule->setMoveDir(y, -x);
   d_walkModule->setTurnAngle(a);
 
-  writer.String("yawError").Double(yawDiffRads);
-  writer.String("posError").StartArray().Double(error.x()).Double(error.y()).EndArray(2);
-  writer.String("moveDir").StartArray().Double(x).Double(y).EndArray(2);
-  writer.String("turn").Double(a);
+  writer.String("yawError");
+  writer.Double(yawDiffRads);
+
+  writer.String("posError");
+  writer.StartArray();
+  writer.Double(error.x());
+  writer.Double(error.y());
+  writer.EndArray(2);
+
+  writer.String("moveDir");
+  writer.StartArray();
+  writer.Double(x);
+  writer.Double(y);
+  writer.EndArray(2);
+
+  writer.String("turn");
+  writer.Double(a);
 
   // Look at ball to make sure we don't lose track of it
   return { d_lookAtBall };

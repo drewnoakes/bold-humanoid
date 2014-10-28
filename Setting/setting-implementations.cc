@@ -47,9 +47,16 @@ void IntSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   Setting<int>::writeJsonMetadata(writer);
 
   if (d_min != -numeric_limits<int>::max())
-    writer.String("min").Int(d_min);
+  {
+    writer.String("min");
+    writer.Int(d_min);
+  }
+
   if (d_max != numeric_limits<int>::max())
-    writer.String("max").Int(d_max);
+  {
+    writer.String("max");
+    writer.Int(d_max);
+  }
 }
 
 ///////////////////////////////////////////////////////////
@@ -95,11 +102,14 @@ void EnumSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   writer.String("values");
   writer.StartArray();
   {
-    for (auto const& pair : d_pairs) {
-      writer.StartObject()
-          .String("text").String(pair.second.c_str())
-          .String("value").Int(pair.first)
-          .EndObject();
+    for (auto const& pair : d_pairs)
+    {
+      writer.StartObject();
+      writer.String("text");
+      writer.String(pair.second.c_str());
+      writer.String("value");
+      writer.Int(pair.first);
+      writer.EndObject();
     }
   }
   writer.EndArray();
@@ -147,9 +157,15 @@ void DoubleSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
   Setting<double>::writeJsonMetadata(writer);
 
   if (d_min != -numeric_limits<double>::max())
-    writer.String("min").Double(d_min);
+  {
+    writer.String("min");
+    writer.Double(d_min);
+  }
   if (d_max != numeric_limits<double>::max())
-    writer.String("max").Double(d_max);
+  {
+    writer.String("max");
+    writer.Double(d_max);
+  }
 }
 
 ///////////////////////////////////////////////////////////
@@ -203,7 +219,7 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* jsonValue, Colour::hsvRange
   {
     auto mem = jsonValue->FindMember(channel.c_str());
 
-    if (!mem || !mem->value.IsArray() || mem->value.Size() != 2 || !mem->value[0u].IsInt() || !mem->value[1u].IsInt())
+    if (mem == jsonValue->MemberEnd() || !mem->value.IsArray() || mem->value.Size() != 2 || !mem->value[0u].IsInt() || !mem->value[1u].IsInt())
     {
       log::error("HsvRangeSetting::tryParseObject") << "hsv-range value for '" << channel << "' must be an array of two integer values";
       return false;
@@ -241,9 +257,23 @@ void HsvRangeSetting::writeJsonValue(Writer<StringBuffer>& writer, Colour::hsvRa
 {
   writer.StartObject();
   {
-    writer.String("hue").StartArray().Double(value.hMin).Double(value.hMax).EndArray();
-    writer.String("sat").StartArray().Double(value.sMin).Double(value.sMax).EndArray();
-    writer.String("val").StartArray().Double(value.vMin).Double(value.vMax).EndArray();
+    writer.String("hue");
+    writer.StartArray();
+    writer.Double(value.hMin);
+    writer.Double(value.hMax);
+    writer.EndArray();
+
+    writer.String("sat");
+    writer.StartArray();
+    writer.Double(value.sMin);
+    writer.Double(value.sMax);
+    writer.EndArray();
+
+    writer.String("val");
+    writer.StartArray();
+    writer.Double(value.vMin);
+    writer.Double(value.vMax);
+    writer.EndArray();
   }
   writer.EndObject();
 }
@@ -291,7 +321,10 @@ bool DoubleRangeSetting::tryParseJsonValue(Value const* jsonValue, Range<double>
 
 void DoubleRangeSetting::writeJsonValue(Writer<StringBuffer>& writer, Range<double> const& value) const
 {
-  writer.StartArray().Double(value.min()).Double(value.max()).EndArray();
+  writer.StartArray();
+  writer.Double(value.min());
+  writer.Double(value.max());
+  writer.EndArray();
 }
 
 ///////////////////////////////////////////////////////////
@@ -390,7 +423,9 @@ bool BgrColourSetting::tryParseJsonValue(Value const* jsonValue, Colour::bgr* pa
   auto gMember = jsonValue->FindMember("g");
   auto rMember = jsonValue->FindMember("r");
 
-  if (!bMember || !gMember || !rMember)
+  if (bMember == jsonValue->MemberEnd()
+    || gMember == jsonValue->MemberEnd()
+    || rMember == jsonValue->MemberEnd())
     return false;
 
   if (!bMember->value.IsInt() || !gMember->value.IsInt() || !rMember->value.IsInt())
@@ -404,9 +439,12 @@ void BgrColourSetting::writeJsonValue(Writer<StringBuffer>& writer, const Colour
 {
   writer.StartObject();
   {
-    writer.String("r").Int(value.r);
-    writer.String("g").Int(value.g);
-    writer.String("b").Int(value.b);
+    writer.String("r");
+    writer.Int(value.r);
+    writer.String("g");
+    writer.Int(value.g);
+    writer.String("b");
+    writer.Int(value.b);
   }
   writer.EndObject();
 }

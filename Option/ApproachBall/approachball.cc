@@ -29,7 +29,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   if (!agentFrame->isBallVisible())
   {
-    writer.String("ballPos").Null();
+    writer.String("ballPos");
+    writer.Null();
     return {};
   }
 
@@ -39,7 +40,11 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   Vector2d ballPos = agentFrame->getBallObservation()->head<2>();
 
-  writer.String("ballPos").StartArray().Double(ballPos.x()).Double(ballPos.y()).EndArray(2);
+  writer.String("ballPos");
+  writer.StartArray();
+  writer.Double(ballPos.x());
+  writer.Double(ballPos.y());
+  writer.EndArray(2);
 
   double ballDist = ballPos.norm();
 
@@ -59,12 +64,16 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   if (walkDist < 0)
     walkDist = 0;
 
-  writer.String("ballDist").Double(ballDist);
-  writer.String("walkDist").Double(walkDist);
+  writer.String("ballDist");
+  writer.Double(ballDist);
+
+  writer.String("walkDist");
+  writer.Double(walkDist);
 
   double speedScaleDueToDistance = Math::clamp(walkDist/brakeDistance->getValue(), 0.0, 1.0);
 
-  writer.String("distSpeed").Double(speedScaleDueToDistance);
+  writer.String("distSpeed");
+  writer.Double(speedScaleDueToDistance);
 
   Vector2d target = ballPos + Vector2d(0.04, 0);
   double ballAngleRads = Math::angleToPoint(ballPos);
@@ -76,8 +85,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
                                            1.0,
                                            0.0);
 
-  writer.String("angleSpeed").Double(speedScaleDueToAngle);
-
+  writer.String("angleSpeed");
+  writer.Double(speedScaleDueToAngle);
 
   double xSpeedScale = speedScaleDueToDistance * speedScaleDueToAngle;
   ASSERT(xSpeedScale >= 0.0);
@@ -169,8 +178,14 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
   d_walkModule->setMoveDir(xSpeed, ySpeed);
   d_walkModule->setTurnAngle(turnSpeed);
 
-  writer.String("moveDir").StartArray().Double(xSpeed).Double(ySpeed).EndArray(2);
-  writer.String("turn").Double(turnSpeed);
+  writer.String("moveDir");
+  writer.StartArray();
+  writer.Double(xSpeed);
+  writer.Double(ySpeed);
+  writer.EndArray(2);
+
+  writer.String("turn");
+  writer.Double(turnSpeed);
 
   return {};
 }

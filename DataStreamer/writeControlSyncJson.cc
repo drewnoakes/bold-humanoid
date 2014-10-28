@@ -16,7 +16,8 @@ void DataStreamer::writeControlSyncJson(Writer<StringBuffer>& writer)
     }
     writer.EndArray();
 
-    writer.String("type").String("sync");
+    writer.String("type");
+    writer.String("sync");
 
     writer.String("actions");
     writer.StartArray();
@@ -25,9 +26,14 @@ void DataStreamer::writeControlSyncJson(Writer<StringBuffer>& writer)
       {
         writer.StartObject();
         {
-          writer.String("id").String(action->getId().c_str());
-          writer.String("label").String(action->getLabel().c_str());
-          writer.String("hasArguments").Bool(action->hasArguments());
+          writer.String("id");
+          writer.String(action->getId().c_str());
+
+          writer.String("label");
+          writer.String(action->getLabel().c_str());
+
+          writer.String("hasArguments");
+          writer.Bool(action->hasArguments());
         }
         writer.EndObject();
       }
@@ -48,9 +54,7 @@ void DataStreamer::writeControlSyncJson(Writer<StringBuffer>& writer)
     writer.StartArray();
     {
       for (auto const& fsm : d_optionTree->getFSMs())
-      {
         fsm->toJson(writer);
-      }
     }
     writer.EndArray();
 

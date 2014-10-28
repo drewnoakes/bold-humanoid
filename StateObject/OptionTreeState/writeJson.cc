@@ -5,19 +5,23 @@ void OptionTreeState::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writ
   writer.StartObject();
   {
     writer.String("ranoptions");
-    writer.Array(
-      d_ranOptions.begin(), d_ranOptions.end(),
-      [&](shared_ptr<Option> const& option) { writer.String(option->getId().c_str()); });
+    writer.StartArray();
+    for (auto const& option : d_ranOptions)
+      writer.String(option->getId().c_str());
+    writer.EndArray();
 
     writer.String("fsms");
-    writer.Array(
-      d_fsmStates.begin(), d_fsmStates.end(),
-      [&](FSMStateSnapshot const& fsmState) {
-        writer.StartObject()
-          .String("fsm").String(fsmState.getFsmName().c_str())
-          .String("state").String(fsmState.getStateName().c_str())
-          .EndObject();
-      });
+    writer.StartArray();
+    for (auto const& fsmState : d_fsmStates)
+    {
+      writer.StartObject();
+      writer.String("fsm");
+      writer.String(fsmState.getFsmName().c_str());
+      writer.String("state");
+      writer.String(fsmState.getStateName().c_str());
+      writer.EndObject();
+    }
+    writer.EndArray();
 
     // Inject the option JSON document at this point in our output
     writer.String("path");

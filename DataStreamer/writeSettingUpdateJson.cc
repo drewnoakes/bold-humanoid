@@ -4,8 +4,12 @@ void DataStreamer::writeSettingUpdateJson(SettingBase const* setting, Writer<Str
 {
   writer.StartObject();
   {
-    writer.String("type").String("update");
-    writer.String("path").String(setting->getPath().c_str());
+    writer.String("type");
+    writer.String("update");
+
+    writer.String("path");
+    writer.String(setting->getPath().c_str());
+
     writer.String("value");
     setting->writeJsonValue(writer);
   }

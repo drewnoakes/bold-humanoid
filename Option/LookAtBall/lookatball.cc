@@ -26,7 +26,8 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
 
   if (!ballObs.hasValue())
   {
-    writer.String("ball").Null();
+    writer.String("ball");
+    writer.Null();
 //     log::warning("LookAtBall::runPolicy") << "No ball observation in AgentFrame yet LookAtBall was run";
     return {};
   }
@@ -64,7 +65,11 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
     d_headModule->moveTracking(offset.x(), offset.y());
   }
 
-  writer.String("offset").StartArray().Double(offset.x()).Double(offset.y()).EndArray(2);
+  writer.String("offset");
+  writer.StartArray();
+  writer.Double(offset.x());
+  writer.Double(offset.y());
+  writer.EndArray(2);
 
   return {};
 }

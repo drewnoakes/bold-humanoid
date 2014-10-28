@@ -15,7 +15,8 @@ void AudioPowerSpectrumState::writeJson(Writer<StringBuffer> &writer) const
 {
   writer.StartObject();
   {
-    writer.String("maxHertz").Double(d_maxFrequency);
+    writer.String("maxHertz");
+    writer.Double(d_maxFrequency);
     writer.String("dbLevels");
     writer.StartArray();
     {

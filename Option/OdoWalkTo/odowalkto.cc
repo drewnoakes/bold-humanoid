@@ -37,29 +37,41 @@ double OdoWalkTo::hasTerminated()
 
 Option::OptionVector OdoWalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer)
 {
-  writer.String("odo")
-    .StartArray()
-    .Double(d_lastOdoReading.translation().x())
-    .Double(d_lastOdoReading.translation().y())
-    .EndArray(2);
+  writer.String("odo");
+  writer.StartArray();
+  writer.Double(d_lastOdoReading.translation().x());
+  writer.Double(d_lastOdoReading.translation().y());
+  writer.EndArray(2);
 
-  writer.String("target").StartArray().Double(d_targetPos.x()).Double(d_targetPos.y()).EndArray(2);
+  writer.String("target");
+  writer.StartArray();
+  writer.Double(d_targetPos.x());
+  writer.Double(d_targetPos.y());
+  writer.EndArray(2);
 
-  writer.String("progress")
-    .StartArray()
-    .Double(d_progress.translation().x())
-    .Double(d_progress.translation().y())
-    .Double(d_progress.matrix().diagonal().sum())
-    .EndArray(3);
+  writer.String("progress");
+  writer.StartArray();
+  writer.Double(d_progress.translation().x());
+  writer.Double(d_progress.translation().y());
+  writer.Double(d_progress.matrix().diagonal().sum());
+  writer.EndArray(3);
 
   // target pos in current agent frame
   Vector2d stillToGo = (d_progress * d_targetPos).head<2>();
-  writer.String("togo").StartArray().Double(stillToGo.x()).Double(stillToGo.y()).EndArray(2);
+  writer.String("togo");
+  writer.StartArray();
+  writer.Double(stillToGo.x());
+  writer.Double(stillToGo.y());
+  writer.EndArray(2);
 
 //  double dist = stillToGo.norm();
 
   Vector2d moveDir = 10 * stillToGo.normalized();
-  writer.String("movedir").StartArray().Double(moveDir.x()).Double(moveDir.y()).EndArray(2);
+  writer.String("movedir");
+  writer.StartArray();
+  writer.Double(moveDir.x());
+  writer.Double(moveDir.y());
+  writer.EndArray(2);
 
   double turnAngle = -atan2(moveDir.x(), moveDir.y());
 

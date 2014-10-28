@@ -50,28 +50,45 @@ void GameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("playMode").String(getPlayModeName(getPlayMode()).c_str());
-    writer.String("packet").Uint(getPacketNumber());
-    writer.String("playerPerTeam").Uint(getPlayersPerTeam());
-    writer.String("isFirstHalf").Bool(isFirstHalf());
-    writer.String("nextKickOffTeamIndex").Uint(getNextKickOffTeamIndex());
-    writer.String("isPenaltyShootOut").Bool(isPenaltyShootout());
-    writer.String("isOvertime").Bool(isOvertime());
-    writer.String("isTimeout").Bool(isTimeout());
-    writer.String("lastDropInTeamColor").Uint(getLastDropInTeamColorNumber());
-    writer.String("secSinceDropIn").Int(getSecondsSinceLastDropIn());
-    writer.String("secondsRemaining").Int(getSecondsRemaining());
-    writer.String("secondsSecondaryTime").Int(getSecondaryTime());
-    writer.String("gameControllerId").Int(getGameControllerId());
+    writer.String("playMode");
+    writer.String(getPlayModeName(getPlayMode()).c_str());
+    writer.String("packet");
+    writer.Uint(getPacketNumber());
+    writer.String("playerPerTeam");
+    writer.Uint(getPlayersPerTeam());
+    writer.String("isFirstHalf");
+    writer.Bool(isFirstHalf());
+    writer.String("nextKickOffTeamIndex");
+    writer.Uint(getNextKickOffTeamIndex());
+    writer.String("isPenaltyShootOut");
+    writer.Bool(isPenaltyShootout());
+    writer.String("isOvertime");
+    writer.Bool(isOvertime());
+    writer.String("isTimeout");
+    writer.Bool(isTimeout());
+    writer.String("lastDropInTeamColor");
+    writer.Uint(getLastDropInTeamColorNumber());
+    writer.String("secSinceDropIn");
+    writer.Int(getSecondsSinceLastDropIn());
+    writer.String("secondsRemaining");
+    writer.Int(getSecondsRemaining());
+    writer.String("secondsSecondaryTime");
+    writer.Int(getSecondaryTime());
+    writer.String("gameControllerId");
+    writer.Int(getGameControllerId());
 
     auto writeTeam = [&writer,this](TeamInfo const& team)
     {
       writer.StartObject();
       {
-        writer.String("num").Uint(team.getTeamNumber());
-        writer.String("isBlue").Bool(team.isBlueTeam());
-        writer.String("score").Uint(team.getScore());
-        writer.String("penaltyShotCount").Uint(team.getPenaltyShotCount());
+        writer.String("num");
+        writer.Uint(team.getTeamNumber());
+        writer.String("isBlue");
+        writer.Bool(team.isBlueTeam());
+        writer.String("score");
+        writer.Uint(team.getScore());
+        writer.String("penaltyShotCount");
+        writer.Uint(team.getPenaltyShotCount());
 
         writer.String("players");
         writer.StartArray();

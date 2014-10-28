@@ -29,7 +29,11 @@ Option::OptionVector Support::runPolicy(rapidjson::Writer<rapidjson::StringBuffe
   Vector2d ballPos{agentFrame->getBallObservation()->head<2>()};
   auto ballDir = ballPos.normalized();
 
-  writer.String("ballPos").StartArray().Double(ballPos.x()).Double(ballPos.y()).EndArray(2);
+  writer.String("ballPos");
+  writer.StartArray();
+  writer.Double(ballPos.x());
+  writer.Double(ballPos.y());
+  writer.EndArray(2);
 
   auto yieldPos = ballPos - d_yieldDistance->getValue() * ballDir;
 

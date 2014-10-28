@@ -7,7 +7,8 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("thinkCycle").Uint64(d_thinkCycleNumber);
+    writer.String("thinkCycle");
+    writer.Uint64(d_thinkCycleNumber);
 
     writer.String("ball");
     if (d_ballObservation.hasValue())
@@ -78,8 +79,11 @@ void CameraFrameState::writeJson(Writer<StringBuffer>& writer) const
     }
     writer.EndArray();
 
-    writer.String("totalPixelCount").Uint64(d_totalPixelCount);
-    writer.String("processedPixelCount").Uint64(d_processedPixelCount);
+    writer.String("totalPixelCount");
+    writer.Uint64(d_totalPixelCount);
+
+    writer.String("processedPixelCount");
+    writer.Uint64(d_processedPixelCount);
   }
   writer.EndObject();
 }

@@ -29,12 +29,20 @@ void SettingBase::writeFullJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("path").String(getPath().c_str());
-    writer.String("type").String(getTypeName().c_str());
+    writer.String("path");
+    writer.String(getPath().c_str());
+    writer.String("type");
+    writer.String(getTypeName().c_str());
     if (getDescription().size())
-      writer.String("description").String(getDescription().c_str());
+    {
+      writer.String("description");
+      writer.String(getDescription().c_str());
+    }
     if (isReadOnly())
-      writer.String("readonly").Bool(true);
+    {
+      writer.String("readonly");
+      writer.Bool(true);
+    }
     writer.String("value");
     writeJsonValue(writer);
     writeJsonMetadata(writer);

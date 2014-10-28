@@ -65,10 +65,14 @@ void MotionTaskState::writeJson(Writer<StringBuffer>& writer) const
 
         writer.StartObject();
         {
-          writer.String("module").String(task->getModule()->getName().c_str());
-          writer.String("priority").Int((int)task->getPriority());
-          writer.String("committed").Bool(task->isCommitted());
-          writer.String("selected").Bool(task == selected);
+          writer.String("module");
+          writer.String(task->getModule()->getName().c_str());
+          writer.String("priority");
+          writer.Int((int)task->getPriority());
+          writer.String("committed");
+          writer.Bool(task->isCommitted());
+          writer.String("selected");
+          writer.Bool(task == selected);
         }
         writer.EndObject();
       }

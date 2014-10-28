@@ -30,7 +30,8 @@ namespace bold
 
       std::stringstream keyStr;
       keyStr << key;
-      writer.String("key").String(keyStr.str().c_str());
+      writer.String("key");
+      writer.String(keyStr.str().c_str());
 
       auto it = d_optionByKey.find(key);
       if (it == d_optionByKey.end())
@@ -41,11 +42,13 @@ namespace bold
           log::error("DispatchOption::runPolicy") << "No option available for key " << key;
           unknownKeys.insert(key);
         }
-        writer.String("found").Bool(false);
+        writer.String("found");
+        writer.Bool(false);
         return {};
       }
 
-      writer.String("found").Bool(true);
+      writer.String("found");
+      writer.Bool(true);
       return { it->second };
     }
 

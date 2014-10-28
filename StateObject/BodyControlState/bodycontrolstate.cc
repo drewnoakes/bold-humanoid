@@ -26,7 +26,8 @@ void BodyControlState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("cycle").Uint64(d_motionCycleNumber);
+    writer.String("cycle");
+    writer.Uint64(d_motionCycleNumber);
 
     writer.String("joints");
     writer.StartArray();
@@ -35,11 +36,16 @@ void BodyControlState::writeJson(Writer<StringBuffer>& writer) const
       {
         writer.StartObject();
         {
-          writer.String("v").Uint(d_jointStates[j - 1].value);
-          writer.String("m").Int (d_jointStates[j - 1].modulation);
-          writer.String("p").Uint(d_jointStates[j - 1].pGain);
-          writer.String("i").Uint(d_jointStates[j - 1].iGain);
-          writer.String("d").Uint(d_jointStates[j - 1].dGain);
+          writer.String("v");
+          writer.Uint(d_jointStates[j - 1].value);
+          writer.String("m");
+          writer.Int(d_jointStates[j - 1].modulation);
+          writer.String("p");
+          writer.Uint(d_jointStates[j - 1].pGain);
+          writer.String("i");
+          writer.Uint(d_jointStates[j - 1].iGain);
+          writer.String("d");
+          writer.Uint(d_jointStates[j - 1].dGain);
         }
         writer.EndObject();
       }

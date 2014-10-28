@@ -115,7 +115,7 @@ namespace bold
     template<typename TWriter>
     void writeJson(TWriter& writer) const;
 
-    int getStageCount() const { return d_stages.size(); }
+    int getStageCount() const { return static_cast<int>(d_stages.size()); }
     std::shared_ptr<Stage const> getStage(unsigned index) const { return d_stages[index]; }
     std::shared_ptr<Stage const> getFirstStage() const;
     std::shared_ptr<Stage const> getFinalStage() const;
@@ -138,14 +138,26 @@ namespace bold
   {
     writer.StartObject();
     {
-      writer.String("name").String(d_name.c_str());
+      writer.String("name");
+      writer.String(d_name.c_str());
 
       if (!d_controlsHead)
-        writer.String("controlsHead").Bool(d_controlsHead);
+      {
+        writer.String("controlsHead");
+        writer.Bool(d_controlsHead);
+      }
+
       if (!d_controlsArms)
-        writer.String("controlsArms").Bool(d_controlsArms);
+      {
+        writer.String("controlsArms");
+        writer.Bool(d_controlsArms);
+      }
+
       if (!d_controlsLegs)
-        writer.String("controlsLegs").Bool(d_controlsLegs);
+      {
+        writer.String("controlsLegs");
+        writer.Bool(d_controlsLegs);
+      }
 
       writer.String("stages");
       writer.StartArray();
@@ -155,10 +167,16 @@ namespace bold
           writer.StartObject();
           {
             if (stage->repeatCount != 1)
-              writer.String("repeat").Int(stage->repeatCount);
+            {
+              writer.String("repeat");
+              writer.Int(stage->repeatCount);
+            }
 
             if (stage->speed != Stage::DEFAULT_SPEED)
-              writer.String("speed").Int(stage->speed);
+            {
+              writer.String("speed");
+              writer.Int(stage->speed);
+            }
 
             if (std::find_if(stage->pGains.begin(), stage->pGains.end(), [](uchar p) { return p != Stage::DEFAULT_P_GAIN; }) != stage->pGains.end())
             {
@@ -177,13 +195,15 @@ namespace bold
                   uchar l = stage->pGains[j];
                   if (r == l)
                   {
-                    writer.String(JointName::getJsonPairName(j).c_str()).Uint(r);
+                    writer.String(JointName::getJsonPairName(j).c_str());
+                    writer.Uint(r);
                     j++;
                     continue;
                   }
                 }
 
-                writer.String(JointName::getJsonName(j).c_str()).Uint(pGain);
+                writer.String(JointName::getJsonName(j).c_str());
+                writer.Uint(pGain);
               }
               writer.EndObject();
             }
@@ -196,9 +216,16 @@ namespace bold
                 writer.StartObject();
                 {
                   if (step.pauseCycles != 0)
-                    writer.String("pauseCycles").Int(step.pauseCycles);
-                  writer.String("moveCycles").Int(step.moveCycles);
-                  writer.String("values").StartObject();
+                  {
+                    writer.String("pauseCycles");
+                    writer.Int(step.pauseCycles);
+                  }
+
+                  writer.String("moveCycles");
+                  writer.Int(step.moveCycles);
+
+                  writer.String("values");
+                  writer.StartObject();
                   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
                   {
                     // Abbreviate mirrored values
@@ -208,13 +235,15 @@ namespace bold
                       ushort lVal = step.values[jointId];
                       if (rVal == MX28::getMirrorValue(lVal))
                       {
-                        writer.String(JointName::getJsonPairName(jointId).c_str()).Uint(rVal);
+                        writer.String(JointName::getJsonPairName(jointId).c_str());
+                        writer.Uint(rVal);
                         jointId++;
                         continue;
                       }
                     }
 
-                    writer.String(JointName::getJsonName(jointId).c_str()).Uint(step.values[jointId-1]);
+                    writer.String(JointName::getJsonName(jointId).c_str());
+                    writer.Uint(step.values[jointId-1]);
                   }
                   writer.EndObject();
                 }

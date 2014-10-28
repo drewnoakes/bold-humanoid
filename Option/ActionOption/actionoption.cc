@@ -6,7 +6,8 @@ using namespace std;
 
 vector<shared_ptr<Option>> ActionOption::runPolicy(Writer<StringBuffer>& writer)
 {
-  writer.String("run").Bool(d_needsRunning);
+  writer.String("run");
+  writer.Bool(d_needsRunning);
 
   if (d_needsRunning)
   {

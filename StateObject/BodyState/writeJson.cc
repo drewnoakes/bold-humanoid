@@ -12,7 +12,8 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
 
   writer.StartObject();
   {
-    writer.String("motion-cycle").Uint64(d_motionCycleNumber);
+    writer.String("motion-cycle");
+    writer.Uint64(d_motionCycleNumber);
 
     writer.String("angles");
     writer.StartArray();
@@ -35,7 +36,11 @@ void BodyState::writeJson(Writer<StringBuffer>& writer) const
 
     auto com = getCentreOfMass();
     writer.String("com");
-    writer.StartArray().Double(com.x()).Double(com.y()).Double(com.z()).EndArray();
+    writer.StartArray();
+    writer.Double(com.x());
+    writer.Double(com.y());
+    writer.Double(com.z());
+    writer.EndArray();
 
     /*
     writer.String("camera-translation");

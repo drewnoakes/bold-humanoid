@@ -71,8 +71,10 @@ void RadialOcclusionMap::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& w
 {
   writer.StartObject();
   {
-    writer.String("divisions").Uint(NumberOfBuckets);
-    writer.String("slices").StartArray();
+    writer.String("divisions");
+    writer.Uint(NumberOfBuckets);
+    writer.String("slices");
+    writer.StartArray();
     {
       for (uint index = 0; index < NumberOfBuckets; index++)
       {
@@ -81,9 +83,12 @@ void RadialOcclusionMap::writeJson(rapidjson::Writer<rapidjson::StringBuffer>& w
 
         writer.StartObject();
         {
-          writer.String("angle").Double(angleForWedgeIndex(index));
-          writer.String("dist").Double(d_wedges[index].getAverage());
-          writer.String("count").Double(d_wedges[index].getCount());
+          writer.String("angle");
+          writer.Double(angleForWedgeIndex(index));
+          writer.String("dist");
+          writer.Double(d_wedges[index].getAverage());
+          writer.String("count");
+          writer.Double(d_wedges[index].getCount());
         }
         writer.EndObject();
       }
@@ -564,66 +569,102 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("balls").StartArray();
+    writer.String("balls");
+    writer.StartArray();
     for (auto const& estimate : d_ballEstimates)
     {
       writer.StartObject();
       {
-        writer.String("pos").StartArray().Double(estimate.getAverage().x()).Double(estimate.getAverage().y()).EndArray();
-        writer.String("count").Int(estimate.getCount());
+        writer.String("pos");
+        writer.StartArray();
+        writer.Double(estimate.getAverage().x());
+        writer.Double(estimate.getAverage().y());
+        writer.EndArray();
+        writer.String("count");
+        writer.Int(estimate.getCount());
       }
       writer.EndObject();
     }
     writer.EndArray();
 
-    writer.String("goalPosts").StartArray();
+    writer.String("goalPosts");
+    writer.StartArray();
     for (auto const& estimate : d_goalPostEstimates)
     {
       writer.StartObject();
       {
-        writer.String("pos").StartArray().Double(estimate.getAverage().x()).Double(estimate.getAverage().y()).EndArray();
-        writer.String("count").Uint(estimate.getCount());
+        writer.String("pos");
+        writer.StartArray();
+        writer.Double(estimate.getAverage().x());
+        writer.Double(estimate.getAverage().y());
+        writer.EndArray();
+        writer.String("count");
+        writer.Uint(estimate.getCount());
       }
       writer.EndObject();
     }
     writer.EndArray();
 
-    writer.String("goals").StartArray();
+    writer.String("goals");
+    writer.StartArray();
     for (auto const& estimate : d_goalEstimates)
     {
       writer.StartObject();
       {
-        writer.String("post1").StartArray().Double(estimate.getPost1Pos().x()).Double(estimate.getPost1Pos().y()).EndArray();
-        writer.String("post2").StartArray().Double(estimate.getPost2Pos().x()).Double(estimate.getPost2Pos().y()).EndArray();
-        writer.String("label").Uint(static_cast<uint>(estimate.getLabel()));
+        writer.String("post1");
+        writer.StartArray();
+        writer.Double(estimate.getPost1Pos().x());
+        writer.Double(estimate.getPost1Pos().y());
+        writer.EndArray();
+        writer.String("post2");
+        writer.StartArray();
+        writer.Double(estimate.getPost2Pos().x());
+        writer.Double(estimate.getPost2Pos().y());
+        writer.EndArray();
+        writer.String("label");
+        writer.Uint(static_cast<uint>(estimate.getLabel()));
       }
       writer.EndObject();
     }
     writer.EndArray();
 
-    writer.String("keepers").StartArray();
+    writer.String("keepers");
+    writer.StartArray();
     for (auto const& estimate : d_keeperEstimates)
     {
       writer.StartObject();
       {
-        writer.String("pos").StartArray().Double(estimate.getAverage().x()).Double(estimate.getAverage().y()).EndArray();
-        writer.String("count").Int(estimate.getCount());
+        writer.String("pos");
+        writer.StartArray();
+        writer.Double(estimate.getAverage().x());
+        writer.Double(estimate.getAverage().y());
+        writer.EndArray();
+        writer.String("count");
+        writer.Int(estimate.getCount());
       }
       writer.EndObject();
     }
     writer.EndArray();
 
-    writer.String("kicks").StartArray();
+    writer.String("kicks");
+    writer.StartArray();
     {
       for (auto const& kick : d_possibleKicks)
       {
         writer.StartObject();
         {
-          writer.String("id").String(kick.getId().c_str());
+          writer.String("id");
+          writer.String(kick.getId().c_str());
           Vector2d const& endPos = kick.getEndPos();
-          writer.String("endPos").StartArray().Double(endPos.x()).Double(endPos.y()).EndArray();
-          writer.String("onTarget").Bool(kick.isOnTarget());
-          writer.String("selected").Bool(kick.getKick() == d_selectedKick);
+          writer.String("endPos");
+          writer.StartArray();
+          writer.Double(endPos.x());
+          writer.Double(endPos.y());
+          writer.EndArray();
+          writer.String("onTarget");
+          writer.Bool(kick.isOnTarget());
+          writer.String("selected");
+          writer.Bool(kick.getKick() == d_selectedKick);
         }
         writer.EndObject();
       }
@@ -633,8 +674,13 @@ void StationaryMapState::writeJson(Writer<StringBuffer>& writer) const
     writer.String("openField");
     d_occlusionMap.writeJson(writer);
 
-    writer.String("turnAngle").Double(d_turnAngleRads);
-    writer.String("turnBallPos").StartArray().Double(d_turnBallPos.x()).Double(d_turnBallPos.y()).EndArray();
+    writer.String("turnAngle");
+    writer.Double(d_turnAngleRads);
+    writer.String("turnBallPos");
+    writer.StartArray();
+    writer.Double(d_turnBallPos.x());
+    writer.Double(d_turnBallPos.y());
+    writer.EndArray();
   }
   writer.EndObject();
 }

@@ -96,7 +96,8 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
 {
   writer.StartObject();
   {
-    writer.String("thinkCycle").Uint64(d_thinkCycleNumber);
+    writer.String("thinkCycle");
+    writer.Uint64(d_thinkCycleNumber);
 
     writer.String("ball");
     if (d_ballObservation.hasValue())
@@ -163,15 +164,15 @@ void AgentFrameState::writeJson(Writer<StringBuffer>& writer) const
       for (auto const& junction : d_observedLineJunctions)
       {
         writer.StartObject();
-        writer.String("p")
-          .StartArray()
-          .Double(junction.position(0), "%.3f")
-          .Double(junction.position(1), "%.3f")
-          .EndArray();
-        writer.String("a")
-          .Double(junction.angle);
-        writer.String("t")
-          .Uint(static_cast<unsigned>(junction.type));
+        writer.String("p");
+        writer.StartArray();
+        writer.Double(junction.position(0), "%.3f");
+        writer.Double(junction.position(1), "%.3f");
+        writer.EndArray();
+        writer.String("a");
+        writer.Double(junction.angle);
+        writer.String("t");
+        writer.Uint(static_cast<unsigned>(junction.type));
         writer.EndObject();
       }
     }
