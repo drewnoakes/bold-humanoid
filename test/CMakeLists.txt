@@ -66,8 +66,7 @@ include_directories(${BOLDHUMANOID_INCLUDE_DIRS} google-test)
 #
 ## Link directories
 #
-set(BOLDHUMANOID_LINK_DIRS ${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
-link_directories(${BOLDHUMANOID_LINK_DIRS} ${GOOGLETESTS_BINARY_DIR})
+link_directories(${DARWINDIR}/Linux/lib ${LIBWEBSOCKETDIR}/lib)
 
 #
 ## Target
