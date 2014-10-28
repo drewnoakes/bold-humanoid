@@ -84,5 +84,3 @@ target_link_libraries(unittests ${BOLDHUMANOID_LINK_LIBRARIES})
 ## Additional compile flags
 #
 set_target_properties(unittests PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
-
-add_dependencies(runtests googletests)
