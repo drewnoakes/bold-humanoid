@@ -14,7 +14,7 @@ TEST (ConsumerQueueThreadTests, basics)
 
   auto testThreadId = this_thread::get_id();
 
-  ConsumerQueueThread<int> queue([&values,&testThreadId](int i)
+  ConsumerQueueThread<int> queue("Test queue", [&values,&testThreadId](int i)
   {
     ASSERT_NE( testThreadId, this_thread::get_id() ) << "Should be on a different thread";
     values.push_back(i);
@@ -44,7 +44,7 @@ TEST (ConsumerQueueThreadTests, doesntBlockPusher)
 {
   int callCount = 0;
 
-  ConsumerQueueThread<int> queue([&](int i)
+  ConsumerQueueThread<int> queue("Test queue", [&](int i)
   {
     this_thread::sleep_for(chrono::milliseconds(1));
     callCount++;

@@ -13,8 +13,9 @@ namespace bold
   class ConsumerQueueThread
   {
   public:
-    ConsumerQueueThread(std::function<void(T)> processor)
-    : d_processor(processor),
+    ConsumerQueueThread(std::string threadName, std::function<void(T)> processor)
+    : d_threadName(threadName),
+      d_processor(processor),
       d_thread(std::thread(&ConsumerQueueThread::run, this)),
       d_stop(false)
     {}
@@ -54,6 +55,8 @@ namespace bold
   private:
     void run()
     {
+      pthread_setname_np(pthread_self(), d_threadName.c_str());
+
       while (true)
       {
         std::unique_lock<std::mutex> lock(d_mutex);
@@ -81,6 +84,7 @@ namespace bold
     std::queue<T> d_queue;
     mutable std::mutex d_mutex;
     std::condition_variable d_condition;
+    std::string d_threadName;
     std::function<void(T)> d_processor;
     std::thread d_thread;
     bool d_stop;

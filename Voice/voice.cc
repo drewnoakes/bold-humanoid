@@ -22,7 +22,7 @@ static const std::map<int,std::string const> voiceById = {
 };
 
 Voice::Voice()
-: d_queue(std::bind(&Voice::sayCallback, this, std::placeholders::_1)),
+: d_queue("Voice", std::bind(&Voice::sayCallback, this, std::placeholders::_1)),
   d_name(Config::getSetting<int>("voice.name")),
   d_rate(Config::getSetting<int>("voice.rate")),
   d_volume(Config::getSetting<int>("voice.volume")),
