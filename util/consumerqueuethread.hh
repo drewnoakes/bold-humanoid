@@ -20,9 +20,6 @@ namespace bold
       d_stop(false)
     {}
 
-    ConsumerQueueThread(ConsumerQueueThread const&) = delete;
-    ConsumerQueueThread& operator=(ConsumerQueueThread const&) = delete;
-
     unsigned size() const
     {
       std::unique_lock<std::mutex> lock(d_mutex);
@@ -53,6 +50,9 @@ namespace bold
     }
 
   private:
+    ConsumerQueueThread(ConsumerQueueThread const&) = delete;
+    ConsumerQueueThread& operator=(ConsumerQueueThread const&) = delete;
+
     void run()
     {
       pthread_setname_np(pthread_self(), d_threadName.c_str());
