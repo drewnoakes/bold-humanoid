@@ -43,6 +43,12 @@ do
              && echo                                                           \
              && cat ~/configuration-agent.json                                 \
              && echo                                                           \
+             && echo ==== SERVICES =========================================== \
+             && echo                                                           \
+             && service --status-all 2>&1                                      \
+             && echo                                                           \
+             && initctl list  | sed -e 's/, process\s[0-9]*//g'                \
+             && echo                                                           \
              && echo ==== PACKAGES =========================================== \
              && echo                                                           \
              && dpkg-query -W -f='\${Package;-40}\t\${Installed-Size;8}\t\${Status;1}\t\${Version}\n' | grep -v \"\sd\s\" | sort | cut -f1,2,4-" \
