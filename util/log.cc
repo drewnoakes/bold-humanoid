@@ -13,13 +13,13 @@ using namespace std;
 LogLevel log::minLevel = LogLevel::Verbose;
 bool log::logGameState = false;
 
-void writeLogTimestamp(ostream& o)
+void writeLogTimestamp(ostream& o, bool isConsole)
 {
   time_t now = time(0);
   tm tstruct = *localtime(&now);
   char buf[80];
   // http://en.cppreference.com/w/cpp/chrono/c/strftime
-  strftime(buf, sizeof(buf), "%X", &tstruct);
+  strftime(buf, sizeof(buf), isConsole ? "%T" : "%X", &tstruct);
   o << buf << " ";
 }
 
@@ -114,7 +114,7 @@ log::~log()
 
   if (isRedirected)
   {
-    writeLogTimestamp(ostream);
+    writeLogTimestamp(ostream, /*isConsole*/ false);
     writeGameState(ostream);
     writeLevelShortName(ostream, d_level);
 
@@ -125,6 +125,9 @@ log::~log()
   }
   else
   {
+    ostream << ccolor::fore::lightblack;
+    writeLogTimestamp(ostream, /*isConsole*/ true);
+
     if (d_scope.size())
       ostream << ccolor::fore::lightblue << "[" << d_scope << "] ";
 
