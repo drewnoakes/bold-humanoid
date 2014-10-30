@@ -27,11 +27,19 @@ void printUsage()
   cout << ccolor::reset;
 }
 
+void syslog(const char* msg)
+{
+  openlog("boldhumanoid", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+  syslog(LOG_NOTICE, msg);
+  closelog();
+}
+
 void handleShutdownSignal(int sig)
 {
   if (agent)
   {
     log::info("boldhumanoid") << "Received signal '" << strsignal(sig) << "' (" << sig << ") - stopping agent";
+    syslog("Shutdown request received");
     agent->requestStop();
   }
 }
@@ -102,13 +110,6 @@ void logVersion()
 #endif
   log::info("BUILD_TYPE") << Version::BUILD_TYPE;
   log::info("BUILT_ON_HOST_NAME") << Version::BUILT_ON_HOST_NAME << "\n";
-}
-
-void syslog(const char* msg)
-{
-  openlog("boldhumanoid", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
-  syslog(LOG_NOTICE, msg);
-  closelog();
 }
 
 int main(int argc, char **argv)
