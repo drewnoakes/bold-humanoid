@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 {
   syslog("Starting boldhumanoid process");
 
-  srand(time(0));
+  srand(static_cast<unsigned int>(time(0)));
 
   // defaults
   string configurationFile = "configuration-agent.json";
