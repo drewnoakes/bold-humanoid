@@ -82,7 +82,7 @@ void Voice::sayOneOf(initializer_list<string> const& messages)
   say(message);
 }
 
-void Voice::sayCallback(SpeechTask task)
+void Voice::sayCallback(SpeechTask const& task)
 {
   if (!Config::getValue<bool>("voice.enabled"))
     return;

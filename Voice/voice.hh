@@ -37,7 +37,7 @@ namespace bold
     Voice(const Voice&) = delete;
     Voice& operator=(const Voice&) = delete;
 
-    void sayCallback(SpeechTask message);
+    void sayCallback(SpeechTask const& message);
 
     ConsumerQueueThread<SpeechTask> d_queue;
     Setting<int>* d_name;
