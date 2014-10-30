@@ -34,6 +34,9 @@ namespace bold
     unsigned queueLength() const;
 
   private:
+    Voice(const Voice&) = delete;
+    Voice& operator=(const Voice&) = delete;
+
     void sayCallback(SpeechTask message);
 
     ConsumerQueueThread<SpeechTask> d_queue;
