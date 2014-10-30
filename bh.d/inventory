@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh inventory N [M...]"
+    echo "          captures an inventory record of robot(s)"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    echo "inventory requires one or more target robot numbers"
+    exit 1
+fi
+
+res=0
+
+for i in ${@:1}
+do
+  echo Capturing inventory record of darwin$i
+
+  ssh darwin$i "echo Data as of \`date\` on \`hostname\`                       \
+             && echo                                                           \
+             && lsb_release -a                                                 \
+             && echo                                                           \
+             && sudo apt-get clean                                             \
+             && df -h --type ext4                                              \
+             && echo                                                           \
+             && sudo du -d 1 -h /home | grep "/home/"                          \
+             && sudo du -d 0 -h /boot                                          \
+             && echo                                                           \
+             && echo /etc/network/interfaces                                   \
+             && echo                                                           \
+             && cat /etc/network/interfaces | grep -v '^\(#\|[[:space:]]*$\)'  \
+             && echo                                                           \
+             && echo /etc/hosts                                                \
+             && echo                                                           \
+             && cat /etc/hosts | grep -v '^\(#\|[[:space:]]*$\)'               \
+             && echo                                                           \
+             && cat ~/configuration-agent.json                                 \
+             && echo                                                           \
+             && dpkg-query -W -f='\${Package;-40}\t\${Installed-Size;8}\t\${Status;1}\t\${Version}\n' | grep -v \"\sd\s\" | sort | cut -f1,2,4-" \
+              > $BOLD_HUMANOID_DIR/inventory/temp
+
+  if [ $? -ne 0 ]
+  then
+    echo FAILED to update to darwin$i
+    res=1
+    rm $BOLD_HUMANOID_DIR/inventory/temp
+  else
+    mv $BOLD_HUMANOID_DIR/inventory/temp $BOLD_HUMANOID_DIR/inventory/darwin$i
+  fi
+done
+
+exit $res
