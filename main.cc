@@ -3,10 +3,11 @@
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 #include "Version/version.hh"
 #include "Camera/camera.hh"
-#include <opencv2/opencv.hpp>
 
-#include <signal.h>
 #include <getopt.h>
+#include <opencv2/opencv.hpp>
+#include <signal.h>
+#include <syslog.h>
 
 using namespace bold;
 using namespace std;
@@ -103,8 +104,17 @@ void logVersion()
   log::info("BUILT_ON_HOST_NAME") << Version::BUILT_ON_HOST_NAME << "\n";
 }
 
+void syslog(const char* msg)
+{
+  openlog("boldhumanoid", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+  syslog(LOG_NOTICE, msg);
+  closelog();
+}
+
 int main(int argc, char **argv)
 {
+  syslog("Starting boldhumanoid process");
+
   srand(time(0));
 
   // defaults
@@ -195,6 +205,8 @@ int main(int argc, char **argv)
   agent->run();
 
   log::info("boldhumanoid") << "Finished after " << Clock::describeDurationSince(startTime);
+
+  syslog("Exiting boldhumanoid process");
 
   return 0;
 }
