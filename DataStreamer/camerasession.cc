@@ -14,6 +14,8 @@ CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
 
 void CameraSession::notifyImageAvailable()
 {
+  ASSERT(ThreadUtil::isThinkLoopThread());
+
   if (!imgSending)
   {
     imgReady = true;
