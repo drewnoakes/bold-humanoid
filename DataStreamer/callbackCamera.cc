@@ -16,6 +16,8 @@ int DataStreamer::callback_camera(
   {
     ASSERT(ThreadUtil::isDataStreamerThread());
 
+    log::verbose("camera-protocol") << "Client connected";
+
     // New client connected; initialize session
     new (cameraSession) CameraSession(context, wsi);
 
@@ -31,6 +33,8 @@ int DataStreamer::callback_camera(
   {
     // Client disconnected
     ASSERT(ThreadUtil::isDataStreamerThread());
+
+    log::verbose("camera-protocol") << "Client disconnecting";
 
     lock_guard<mutex> guard(d_cameraSessionsMutex);
     d_cameraSessions.erase(find(d_cameraSessions.begin(), d_cameraSessions.end(), cameraSession));

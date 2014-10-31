@@ -18,6 +18,8 @@ int DataStreamer::callback_state(
 
     const libwebsocket_protocols* protocol = libwebsockets_get_protocol(wsi);
 
+    log::verbose(protocol->name) << "Client connected";
+
     // New client connected; initialize session
     new (jsonSession) JsonSession(protocol->name, wsi, context);
 
@@ -48,8 +50,13 @@ int DataStreamer::callback_state(
   {
     // Client disconnected
     ASSERT(ThreadUtil::isDataStreamerThread());
+
     const libwebsocket_protocols* protocol = libwebsockets_get_protocol(wsi);
+
+    log::verbose(protocol->name) << "Client disconnected";
+
     std::lock_guard<std::mutex> guard(d_stateSessionsMutex);
+
     auto range = d_stateSessions.equal_range(protocol->name);
     for (auto it = range.first; it != range.second; ++it)
     {
@@ -63,6 +70,7 @@ int DataStreamer::callback_state(
         return 0;
       }
     }
+
     log::error("DataStreamer::callbackState") << "LWS callback closed for unknown session";
     jsonSession->~JsonSession();
     return 0;
@@ -70,6 +78,7 @@ int DataStreamer::callback_state(
   case LWS_CALLBACK_SERVER_WRITEABLE:
   {
     ASSERT(ThreadUtil::isDataStreamerThread());
+
     std::lock_guard<std::mutex> guard(d_stateSessionsMutex);
     return jsonSession->write();
   }

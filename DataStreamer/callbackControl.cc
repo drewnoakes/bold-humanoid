@@ -17,6 +17,8 @@ int DataStreamer::callback_control(
     // New client connected; initialize session
     ASSERT(ThreadUtil::isDataStreamerThread());
 
+    log::verbose("control-protocol") << "Client connected";
+
     new (jsonSession) JsonSession("control-protocol", wsi, context);
 
     lock_guard<mutex> guard(d_controlSessionsMutex);
@@ -38,6 +40,8 @@ int DataStreamer::callback_control(
   {
     // Client disconnected
     ASSERT(ThreadUtil::isDataStreamerThread());
+
+    log::verbose("control-protocol") << "Client disconnecting";
 
     lock_guard<mutex> guard(d_controlSessionsMutex);
 
@@ -61,6 +65,7 @@ int DataStreamer::callback_control(
     ASSERT(ThreadUtil::isDataStreamerThread());
     if (len != 0)
     {
+      log::verbose("control-protocol") << "Receiving data";
       static string message;
       message.append((char const*)in, len);
 
