@@ -73,6 +73,7 @@ int DataStreamer::callback_camera(
       uchar buf[LWS_SEND_BUFFER_PRE_PADDING + frameSize + LWS_SEND_BUFFER_POST_PADDING];
       uchar *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
 
+      // TODO avoid this copy here by juggling the post padding
       memcpy(p, start, frameSize);
 
       int writeMode = cameraSession->bytesSent == 0

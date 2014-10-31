@@ -41,6 +41,9 @@ namespace bold
     return command;
   }
 
+
+  // TODO can CC_FORECOLOR be a constexpr function
+
   const char *ccolor::error = CC_FORECOLOR(91);
   const char *ccolor::warning = CC_FORECOLOR(95);
   const char *ccolor::info = CC_FORECOLOR(92);
