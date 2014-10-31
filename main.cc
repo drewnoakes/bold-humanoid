@@ -130,12 +130,12 @@ int main(int argc, char **argv)
   // Process command line arguments
   //
   option longOptions[] = {
-    {"config", required_argument, 0, 'c'},
-    {"help", no_argument, 0, 'h'},
-    {"image", required_argument, 0, 'i'},
-    {"verbose", no_argument, 0, 'v'},
-    {"version", no_argument, 0, 1},
-    {0, 0, 0, 0}
+    {"config", required_argument, nullptr, 'c'},
+    {"help", no_argument, nullptr, 'h'},
+    {"image", required_argument, nullptr, 'i'},
+    {"verbose", no_argument, nullptr, 'v'},
+    {"version", no_argument, nullptr, 1},
+    {0, 0, nullptr, 0}
   };
 
   int verboseCount = 0;
