@@ -30,7 +30,7 @@ namespace bold
 
   struct CameraSession
   {
-    CameraSession(libwebsocket_protocols* cameraProtocol);
+    CameraSession(libwebsocket_context* context, libwebsocket *wsi);
 
     ~CameraSession() = default;
 
@@ -43,7 +43,8 @@ namespace bold
     /** If imgSending is true, the number of bytes already sent. */
     unsigned bytesSent;
 
-    libwebsocket_protocols* d_cameraProtocol;
+    libwebsocket_context* d_context;
+    libwebsocket* d_wsi;
 
     void notifyImageAvailable();
   };

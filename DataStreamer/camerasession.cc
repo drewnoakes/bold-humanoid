@@ -4,11 +4,12 @@ using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-CameraSession::CameraSession(libwebsocket_protocols* cameraProtocol)
-  : d_cameraProtocol(cameraProtocol),
-    imgReady(false),
+CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
+  : imgReady(false),
     imgSending(false),
-    imgJpgBuffer(make_unique<vector<uchar>>())
+    imgJpgBuffer(make_unique<vector<uchar>>()),
+    d_context(context),
+    d_wsi(wsi)
 {}
 
 void CameraSession::notifyImageAvailable()
@@ -16,6 +17,6 @@ void CameraSession::notifyImageAvailable()
   if (!imgSending)
   {
     imgReady = true;
-    libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
+    libwebsocket_callback_on_writable(d_context, d_wsi);
   }
 }

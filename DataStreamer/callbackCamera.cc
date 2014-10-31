@@ -17,7 +17,7 @@ int DataStreamer::callback_camera(
     ASSERT(ThreadUtil::isDataStreamerThread());
 
     // New client connected; initialize session
-    new (cameraSession) CameraSession(d_cameraProtocol);
+    new (cameraSession) CameraSession(context, wsi);
 
     lock_guard<mutex> guard(d_cameraSessionsMutex);
     d_cameraSessions.push_back(cameraSession);
