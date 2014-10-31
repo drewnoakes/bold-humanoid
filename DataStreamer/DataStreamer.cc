@@ -74,6 +74,8 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 
   if (hasWebSockets)
   {
+    ASSERT(libwebsocket_context_user(d_context) == this);
+
     // Listen for StateObject changes and publish them via websockets
     State::updated.connect(
       [this](shared_ptr<StateTracker const> tracker)
