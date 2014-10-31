@@ -116,6 +116,7 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
         if (!ThreadUtil::isDataStreamerThread(false))
           return;
 
+        lock_guard<mutex> guard(d_controlSessionsMutex);
         for (JsonSession* session : d_controlSessions)
         {
           WebSocketBuffer buffer;

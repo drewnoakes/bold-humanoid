@@ -19,6 +19,8 @@ int DataStreamer::callback_control(
 
     new (jsonSession) JsonSession("control-protocol", wsi, context);
 
+    lock_guard<mutex> guard(d_controlSessionsMutex);
+
     d_controlSessions.push_back(jsonSession);
 
     if (d_controlSessions.size() == 1)
@@ -36,10 +38,16 @@ int DataStreamer::callback_control(
   {
     // Client disconnected
     ASSERT(ThreadUtil::isDataStreamerThread());
+
+    lock_guard<mutex> guard(d_controlSessionsMutex);
+
     d_controlSessions.erase(find(d_controlSessions.begin(), d_controlSessions.end(), jsonSession));
+
     jsonSession->~JsonSession();
+
     if (d_controlSessions.size() == 0)
       hasClientChanged("control-protocol", false);
+
     break;
   }
   case LWS_CALLBACK_SERVER_WRITEABLE:

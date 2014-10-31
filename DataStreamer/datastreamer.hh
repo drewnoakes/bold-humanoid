@@ -114,6 +114,7 @@ namespace bold
     std::mutex d_cameraSessionsMutex;
 
     std::vector<JsonSession*> d_controlSessions;
+    std::mutex d_controlSessionsMutex;
 
     std::multimap<std::string, JsonSession*> d_stateSessions;
     std::mutex d_stateSessionsMutex;
