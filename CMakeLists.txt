@@ -350,6 +350,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./MotionModule/motionmodule.cc
+)
+
+add_class(BOLDHUMANOID
   ./MotionScript/motionscript.cc
 )
 
@@ -399,7 +403,6 @@ add_class(BOLDHUMANOID
   ./Option/FSMOption/fsmtransition.cc
   ./Option/FSMOption/runPolicy.cc
   ./Option/FSMOption/toDot.cc
-  ./Option/FSMOption/toJson.cc
 )
 
 add_class(BOLDHUMANOID
@@ -549,14 +552,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/BalanceState/balancestate.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/BehaviourControlState/behaviourcontrolstate.cc
-)
-
-add_class(BOLDHUMANOID
   ./StateObject/BodyControlState/bodycontrolstate.cc
 )
 
@@ -564,20 +559,7 @@ add_class(BOLDHUMANOID
   ./StateObject/BodyState/BodyState.cc
   ./StateObject/BodyState/initialise.cc
   ./StateObject/BodyState/determineFootAgentTr.cc
-  ./StateObject/BodyState/writeJson.cc
   ./StateObject/BodyState/zero.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/CameraFrameState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/DebugState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/DrawingState/drawingstate.cc
 )
 
 add_class(BOLDHUMANOID
@@ -585,39 +567,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/HardwareState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/LabelCountState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/MotionTaskState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/OdometryState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/TeamState/teamstate.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/OptionTreeState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
   ./StateObject/OrientationState/orientationstate.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/ParticleState/writeJson.cc
-)
-
-add_class(BOLDHUMANOID
-  ./StateObject/StaticHardwareState/writeJson.cc
 )
 
 add_class(BOLDHUMANOID
@@ -625,11 +575,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/WalkState/walkstate.cc
+  ./StateObject/TeamState/teamstate.cc
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/WorldFrameState/writeJson.cc
+  ./StateObject/WalkState/walkstate.cc
 )
 
 add_class(BOLDHUMANOID

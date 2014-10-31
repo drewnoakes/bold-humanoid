@@ -14,6 +14,7 @@
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/StaticHardwareState/statichardwarestate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
+#include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../Voice/voice.hh"
 #include "../util/fps.hh"
 

@@ -5,8 +5,6 @@
 #include <mutex>
 
 #include "../JointId/jointid.hh"
-#include "../MotionTask/motiontask.hh"
-#include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../PoseProvider/poseprovider.hh"
 #include "../ThreadUtil/threadutil.hh"
 #include "../util/assert.hh"
@@ -17,6 +15,7 @@ namespace bold
   typedef unsigned short ushort;
   typedef unsigned long ulong;
 
+  class JointSelection;
   class MotionTaskScheduler;
 
   /** Abstract base for types of motion such as walking, running scripts or controlling the head.
@@ -26,13 +25,7 @@ namespace bold
     friend class MotionTaskScheduler;
 
   public:
-    MotionModule(std::string const& type, std::shared_ptr<MotionTaskScheduler> const& scheduler)
-    : d_scheduler(scheduler),
-      d_name(type),
-      d_isCompleted(false)
-    {
-      d_scheduler->registerModule(this);
-    }
+    MotionModule(std::string const& type, std::shared_ptr<MotionTaskScheduler> const& scheduler);
 
     virtual ~MotionModule() = default;
 

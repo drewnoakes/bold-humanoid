@@ -3,6 +3,7 @@
 #include "../../MotionModule/MotionScriptModule/motionscriptmodule.hh"
 #include "../../MotionScriptRunner/motionscriptrunner.hh"
 #include "../../MotionScript/motionscript.hh"
+#include "../../MotionTask/motiontask.hh"
 #include "../../util/assert.hh"
 #include "../../util/log.hh"
 

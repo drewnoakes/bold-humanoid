@@ -23,28 +23,8 @@ namespace bold
     virtual ~TimingState() {}
 
   public:
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override
-    {
-      writer.StartObject();
-      {
-        writer.String("cycle");
-        writer.Uint64(d_cycleNumber);
-        writer.String("fps");
-        writer.Double(d_averageFps);
-        writer.String("timings");
-        writer.StartObject();
-        {
-          std::vector<EventTiming> const& timings = *d_eventTimings;
-          for (EventTiming const& timing : timings)
-          {
-            writer.String(timing.second.c_str()); // event name
-            writer.Double(timing.first, "%.3f");  // duration in milliseconds
-          }
-        }
-        writer.EndObject();
-      }
-      writer.EndObject();
-    }
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
     std::shared_ptr<std::vector<EventTiming> const> getTimings() const { return d_eventTimings; }
 
@@ -52,10 +32,37 @@ namespace bold
     double getAverageFps() const { return d_averageFps; }
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer>& writer) const;
+
    std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
    ulong d_cycleNumber;
    double d_averageFps;
   };
+
+  template<typename TBuffer>
+  inline void TimingState::writeJsonInternal(rapidjson::Writer<TBuffer>& writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("cycle");
+      writer.Uint64(d_cycleNumber);
+      writer.String("fps");
+      writer.Double(d_averageFps);
+      writer.String("timings");
+      writer.StartObject();
+      {
+        std::vector<EventTiming> const& timings = *d_eventTimings;
+        for (EventTiming const& timing : timings)
+        {
+          writer.String(timing.second.c_str()); // event name
+          writer.Double(timing.first, "%.3f");  // duration in milliseconds
+        }
+      }
+      writer.EndObject();
+    }
+    writer.EndObject();
+  }
 
   class MotionTimingState : public TimingState
   {

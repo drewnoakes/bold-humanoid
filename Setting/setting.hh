@@ -12,6 +12,7 @@
 #include "../util/Range.hh"
 #include "../util/ccolor.hh"
 #include "../util/log.hh"
+#include "../util/websocketbuffer.hh"
 
 namespace bold
 {
@@ -29,6 +30,7 @@ namespace bold
     std::string getDescription() const { return d_description; }
 
     void writeFullJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
+    void writeFullJson(rapidjson::Writer<WebSocketBuffer>& writer) const;
 
     virtual void triggerChanged() const;
 
@@ -36,7 +38,9 @@ namespace bold
     virtual void resetToInitialValue() = 0;
     virtual bool setValueFromJson(rapidjson::Value const* jsonValue) = 0;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
+    virtual void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer) const = 0;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
+    virtual void writeJsonMetadata(rapidjson::Writer<WebSocketBuffer>& writer) const = 0;
 
   protected:
     SettingBase(std::string path, std::string typeName, std::type_index typeIndex, bool isReadOnly, std::string description);
@@ -44,6 +48,32 @@ namespace bold
     virtual ~SettingBase() = default;
 
     static bool isInitialising();
+
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer>& writer) const
+    {
+      writer.StartObject();
+      {
+        writer.String("path");
+        writer.String(getPath().c_str());
+        writer.String("type");
+        writer.String(getTypeName().c_str());
+        if (getDescription().size())
+        {
+          writer.String("description");
+          writer.String(getDescription().c_str());
+        }
+        if (isReadOnly())
+        {
+          writer.String("readonly");
+          writer.Bool(true);
+        }
+        writer.String("value");
+        writeJsonValue(writer);
+        writeJsonMetadata(writer);
+      }
+      writer.EndObject();
+    }
 
   private:
     std::string d_name;
@@ -155,13 +185,31 @@ namespace bold
     virtual std::string getValidationMessage(T const& value) const { return ""; }
     virtual bool tryParseJsonValue(rapidjson::Value const* jsonValue, T* parsedValue) const = 0;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, T const& value) const = 0;
+    virtual void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, T const& value) const = 0;
+
+    void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer) const
+    {
+      writeJsonValue(writer, getValue());
+    }
 
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
     {
       writeJsonValue(writer, getValue());
     }
 
+    virtual void writeJsonMetadata(rapidjson::Writer<WebSocketBuffer>& writer) const
+    {
+      writeJsonMetadataInternal(writer);
+    }
+
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+    {
+      writeJsonMetadataInternal(writer);
+    }
+
+  private:
+    template<typename TBuffer>
+    void writeJsonMetadataInternal(rapidjson::Writer<TBuffer>& writer) const
     {
       ASSERT(d_isInitialValueSet);
 
@@ -169,7 +217,6 @@ namespace bold
       writeJsonValue(writer, d_initialValue);
     }
 
-  private:
     T d_value;
     T d_initialValue;
     bool d_isInitialValueSet;

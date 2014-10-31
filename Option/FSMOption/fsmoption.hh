@@ -3,6 +3,7 @@
 #include "../option.hh"
 #include "../../Clock/clock.hh"
 #include "../../util/assert.hh"
+#include "../../util/websocketbuffer.hh"
 
 #include <algorithm>
 #include <memory>
@@ -112,9 +113,13 @@ namespace bold
 
     std::string toDot() const;
 
-    void toJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
+    void toJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const { toJsonInternal(writer); }
+    void toJson(rapidjson::Writer<WebSocketBuffer>& writer) const { toJsonInternal(writer); }
 
   private:
+    template<typename TBuffer>
+    void toJsonInternal(rapidjson::Writer<TBuffer>& writer) const;
+
     void setCurrentState(std::shared_ptr<FSMState> state);
 
     std::vector<std::shared_ptr<FSMState>> d_states;
@@ -124,6 +129,88 @@ namespace bold
     std::shared_ptr<Voice> d_voice;
     Setting<bool>* d_paused;
   };
+
+  template<typename TBuffer>
+  void FSMOption::toJsonInternal(rapidjson::Writer<TBuffer>& writer) const
+  {
+    /*
+     {
+       "name": "win",
+       "start": "startup",
+       "states": [
+         { "id": "startup" }
+       ],
+       "transitions": [
+         { "from": "startup", "to": "ready", "label": "init" }
+       ],
+       "wildcardTransitions": [
+         { "to": "ready", "label": "init" }
+       ]
+     }
+    */
+    writer.StartObject();
+    {
+      writer.String("name");
+      writer.String(getId().c_str());
+      writer.String("start");
+      writer.String(d_startState->name.c_str());
+
+      writer.String("states");
+      writer.StartArray();
+      {
+        for (auto const& state : d_states)
+        {
+          writer.StartObject();
+          {
+            writer.String("id");
+            writer.String(state->name.c_str());
+          }
+          writer.EndObject();
+        }
+      }
+      writer.EndArray();
+
+      writer.String("transitions");
+      writer.StartArray();
+      {
+        for (auto const& state : d_states)
+        {
+          for (auto const& transition : state->transitions)
+          {
+            writer.StartObject();
+            {
+              writer.String("id");
+              writer.String(transition->name.c_str());
+              writer.String("from");
+              writer.String(state->name.c_str());
+              writer.String("to");
+              writer.String(transition->childState->name.c_str());
+            }
+            writer.EndObject();
+          }
+        }
+      }
+      writer.EndArray();
+
+      writer.String("wildcardTransitions");
+      writer.StartArray();
+      {
+        for (auto const& transition : d_wildcardTransitions)
+        {
+          writer.StartObject();
+          {
+            writer.String("id");
+            writer.String(transition->name.c_str());
+            writer.String("to");
+            writer.String(transition->childState->name.c_str());
+          }
+          writer.EndObject();
+        }
+      }
+      writer.EndArray();
+    }
+    writer.EndObject();
+  }
 
   inline double FSMOption::hasTerminated()
   {

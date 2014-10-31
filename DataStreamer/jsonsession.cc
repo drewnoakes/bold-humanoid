@@ -26,20 +26,16 @@ int JsonSession::write()
   // Fill the outbound pipe with frames of data
   while (!lws_send_pipe_choked(_wsi) && !_queue.empty())
   {
-    vector<uchar> const& str = _queue.front();
+    WebSocketBuffer& buffer = _queue.front();
 
-    uint totalSize = static_cast<uint>(str.size());
+    const int totalSize = static_cast<int>(buffer.GetSize()) - LWS_SEND_BUFFER_PRE_PADDING - LWS_SEND_BUFFER_POST_PADDING;
 
     ASSERT(_bytesSent < totalSize);
 
-    const uchar* start = str.data() + _bytesSent;
+    uchar* start = buffer.GetBuffer() + LWS_SEND_BUFFER_PRE_PADDING + _bytesSent;
 
-    uint remainingSize = totalSize - _bytesSent;
-    uint frameSize = min(2048u, remainingSize);
-    uchar frameBuffer[LWS_SEND_BUFFER_PRE_PADDING + frameSize + LWS_SEND_BUFFER_POST_PADDING];
-    uchar *p = &frameBuffer[LWS_SEND_BUFFER_PRE_PADDING];
-
-    memcpy(p, start, frameSize);
+    const int remainingSize = totalSize - _bytesSent;
+    const int frameSize = min(2048, remainingSize);
 
     int writeMode = _bytesSent == 0
       ? LWS_WRITE_TEXT
@@ -48,11 +44,16 @@ int JsonSession::write()
     if (frameSize != remainingSize)
       writeMode |= LWS_WRITE_NO_FIN;
 
-    int res = libwebsocket_write(_wsi, p, frameSize, (libwebsocket_write_protocol)writeMode);
+    bool storePostPadding = _bytesSent + frameSize < totalSize;
+    std::array<uchar,LWS_SEND_BUFFER_POST_PADDING> postPadding{};
+    if (storePostPadding)
+      std::copy(start + frameSize, start + frameSize + LWS_SEND_BUFFER_POST_PADDING, postPadding.data());
+
+    int res = libwebsocket_write(_wsi, start, frameSize, (libwebsocket_write_protocol)writeMode);
 
     if (res < 0)
     {
-      lwsl_err("ERROR %d writing to socket (control)\n", res);
+      log::error("JsonSession::write") << "Error writing JSON to socket (" << res << ")";
       return 1;
     }
 
@@ -64,6 +65,10 @@ int JsonSession::write()
       _queue.pop();
       _bytesSent = 0;
     }
+    else if (storePostPadding)
+    {
+      std::copy(postPadding.data(), postPadding.data() + LWS_SEND_BUFFER_POST_PADDING, start + frameSize);
+    }
   }
 
   // Queue for more writing later on if we still have data remaining
@@ -73,10 +78,8 @@ int JsonSession::write()
   return 0;
 }
 
-void JsonSession::enqueue(StringBuffer& buffer)
+void JsonSession::enqueue(WebSocketBuffer&& buffer)
 {
-  // TODO accept a different implementation of rapidjson's Buffer which builds a vector directly to avoid the copy, or just queue the buffer objects (if moveable)
-
   ASSERT(buffer.GetSize() != 0);
 
   auto queueSize = static_cast<unsigned>(_queue.size());
@@ -92,12 +95,13 @@ void JsonSession::enqueue(StringBuffer& buffer)
   if (queueSize > MaxQueueSize)
   {
     log::error("StateUpdated") << "JsonSession queue to " << _hostName << '@' << _ipAddress << " for protocol '" << _protocolName << "' too long (" << queueSize << " > " << MaxQueueSize << ") — purging";
-    queue<vector<uchar>> empty;
+    queue<WebSocketBuffer> empty;
     swap(_queue, empty);
   }
   else
   {
-    _queue.emplace(buffer.GetString(), buffer.GetString() + buffer.GetSize());
+    buffer.Push(LWS_SEND_BUFFER_POST_PADDING);
+    _queue.emplace(move(buffer));
     libwebsocket_callback_on_writable(_context, _wsi);
   }
 }

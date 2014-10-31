@@ -6,6 +6,7 @@
 #include "../../AgentPosition/agentposition.hh"
 #include "../../Clock/clock.hh"
 #include "../../FieldMap/fieldmap.hh"
+#include "../../JsonWriter/jsonwriter.hh"
 #include "../../util/Maybe.hh"
 
 namespace bold
@@ -135,7 +136,8 @@ namespace bold
     : d_playerStates(playerStates)
     {}
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
     bool empty() const { return d_playerStates.empty(); }
 
@@ -156,6 +158,62 @@ namespace bold
     FieldSide getKeeperBallSideEstimate() const;
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+
     std::vector<PlayerState> d_playerStates;
   };
+
+  template<typename TBuffer>
+  inline void TeamState::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("players");
+      writer.StartArray();
+      {
+        for (PlayerState const& player : d_playerStates)
+        {
+          writer.StartObject();
+          {
+            writer.String("unum");
+            writer.Uint(player.uniformNumber);
+            writer.String("team");
+            writer.Uint(player.teamNumber);
+            writer.String("isMe");
+            writer.Bool(player.isMe());
+            writer.String("activity");
+            writer.Int(static_cast<int>(player.activity));
+            writer.String("status");
+            writer.Int(static_cast<int>(player.status));
+            writer.String("role");
+            writer.Int(static_cast<int>(player.role));
+            writer.String("pos");
+            writer.StartArray();
+            JsonWriter::swapNaN(writer, player.pos.x());
+            JsonWriter::swapNaN(writer, player.pos.y());
+            JsonWriter::swapNaN(writer, player.pos.theta());
+            writer.EndArray();
+            writer.String("posConfidence");
+            writer.Double(player.posConfidence);
+            writer.String("ballRelative");
+            writer.StartArray();
+            {
+              if (player.ballRelative.hasValue())
+              {
+                writer.Double(player.ballRelative->x());
+                writer.Double(player.ballRelative->y());
+              }
+            }
+            writer.EndArray();
+            writer.String("updateTime");
+            writer.Uint64(Clock::timestampToMillis(player.updateTime));
+          }
+          writer.EndObject();
+        }
+      }
+      writer.EndArray();
+    }
+    writer.EndObject();
+  }
 }

@@ -26,12 +26,31 @@ namespace bold
     PlayerActivity getPlayerActivity() { return d_playerActivity; }
     PlayerStatus getPlayerStatus() const { return d_playerStatus; }
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+
     ulong d_motionCycleNumber;
     PlayerRole d_playerRole;
     PlayerActivity d_playerActivity;
     PlayerStatus d_playerStatus;
   };
+
+  template<typename TBuffer>
+  inline void BehaviourControlState::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("role");
+      writer.Uint(static_cast<uint>(d_playerRole));
+      writer.String("activity");
+      writer.Uint(static_cast<uint>(d_playerActivity));
+      writer.String("status");
+      writer.Uint(static_cast<uint>(d_playerStatus));
+    }
+    writer.EndObject();
+  }
 }

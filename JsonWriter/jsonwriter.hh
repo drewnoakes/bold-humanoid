@@ -11,7 +11,8 @@ namespace bold
   class JsonWriter
   {
   public:
-    static void rgb(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::bgr const& bgr)
+    template<typename TBuffer>
+    static void rgb(rapidjson::Writer<TBuffer>& writer, Colour::bgr const& bgr)
     {
       writer.StartArray();
       writer.Uint(bgr.r);
@@ -20,7 +21,8 @@ namespace bold
       writer.EndArray();
     }
 
-    static void polygon(rapidjson::Writer<rapidjson::StringBuffer>& writer, Polygon2d const& poly)
+    template<typename TBuffer>
+    static void polygon(rapidjson::Writer<TBuffer>& writer, Polygon2d const& poly)
     {
       writer.StartArray();
       for (auto const& point : poly)
@@ -33,7 +35,8 @@ namespace bold
       writer.EndArray();
     }
 
-    static void swapNaN(rapidjson::Writer<rapidjson::StringBuffer>& writer, double d)
+    template<typename TBuffer>
+    static void swapNaN(rapidjson::Writer<TBuffer>& writer, double d)
     {
       if (std::isnan(d))
         writer.Null();

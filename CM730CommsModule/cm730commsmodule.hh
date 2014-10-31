@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-#include "../MotionModule/motionmodule.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 
 namespace bold

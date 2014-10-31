@@ -90,13 +90,13 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 
           if (obj)
           {
-            StringBuffer buffer;
-            Writer<StringBuffer> writer(buffer);
-
-            obj->writeJson(writer);
-
             for (auto session = range.first; session != range.second; ++session)
-              session->second->enqueue(buffer);
+            {
+              WebSocketBuffer buffer;
+              Writer<WebSocketBuffer> writer(buffer);
+              obj->writeJson(writer);
+              session->second->enqueue(move(buffer));
+            }
 
             libwebsocket_callback_on_writable_all_protocol(tracker->websocketProtocol);
           }
@@ -117,12 +117,13 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
         if (d_controlSessions.size() == 0)
           return;
 
-        StringBuffer buffer;
-        Writer<StringBuffer> writer(buffer);
-        writeSettingUpdateJson(setting, writer);
-
         for (JsonSession* session : d_controlSessions)
-          session->enqueue(buffer);
+        {
+          WebSocketBuffer buffer;
+          Writer<WebSocketBuffer> writer(buffer);
+          writeSettingUpdateJson(setting, writer);
+          session->enqueue(move(buffer));
+        }
       }
     );
   }

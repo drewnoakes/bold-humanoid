@@ -25,10 +25,10 @@ int DataStreamer::callback_control(
       hasClientChanged("control-protocol", true);
 
     // Write control sync message, with current snapshot of state
-    StringBuffer buffer;
-    Writer<StringBuffer> writer(buffer);
+    WebSocketBuffer buffer;
+    Writer<WebSocketBuffer> writer(buffer);
     writeControlSyncJson(writer);
-    jsonSession->enqueue(buffer);
+    jsonSession->enqueue(move(buffer));
 
     return 0;
   }

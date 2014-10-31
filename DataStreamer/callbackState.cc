@@ -36,10 +36,10 @@ int DataStreamer::callback_state(
     if (stateObject)
     {
       // Encode and enqueue for this client
-      StringBuffer buffer;
-      Writer<StringBuffer> writer(buffer);
+      WebSocketBuffer buffer;
+      Writer<WebSocketBuffer> writer(buffer);
       stateObject->writeJson(writer);
-      jsonSession->enqueue(buffer);
+      jsonSession->enqueue(move(buffer));
     }
 
     return 0;

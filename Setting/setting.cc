@@ -25,29 +25,14 @@ bool SettingBase::isInitialising()
   return Config::isInitialising();
 }
 
+void SettingBase::writeFullJson(Writer<WebSocketBuffer>& writer) const
+{
+  writeJsonInternal(writer);
+}
+
 void SettingBase::writeFullJson(Writer<StringBuffer>& writer) const
 {
-  writer.StartObject();
-  {
-    writer.String("path");
-    writer.String(getPath().c_str());
-    writer.String("type");
-    writer.String(getTypeName().c_str());
-    if (getDescription().size())
-    {
-      writer.String("description");
-      writer.String(getDescription().c_str());
-    }
-    if (isReadOnly())
-    {
-      writer.String("readonly");
-      writer.Bool(true);
-    }
-    writer.String("value");
-    writeJsonValue(writer);
-    writeJsonMetadata(writer);
-  }
-  writer.EndObject();
+  writeJsonInternal(writer);
 }
 
 void SettingBase::triggerChanged() const

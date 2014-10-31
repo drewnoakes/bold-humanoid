@@ -8,6 +8,7 @@
 
 namespace bold
 {
+  class MotionRequest;
   class MotionScript;
   class MotionScriptRunner;
 

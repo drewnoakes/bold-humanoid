@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../stateobject.hh"
+#include "../../JsonWriter/jsonwriter.hh"
 
 #include <Eigen/Geometry>
 
@@ -19,14 +20,38 @@ namespace bold
 
     Eigen::Affine3d withoutYaw() const;
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+
     Eigen::Quaterniond d_quaternion;
     double d_pitch;
     double d_roll;
     double d_yaw;
   };
+
+  template<typename TBuffer>
+  inline void OrientationState::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("quaternion");
+      writer.StartArray();
+      JsonWriter::swapNaN(writer, d_quaternion.x());
+      JsonWriter::swapNaN(writer, d_quaternion.y());
+      JsonWriter::swapNaN(writer, d_quaternion.z());
+      JsonWriter::swapNaN(writer, d_quaternion.w());
+      writer.EndArray();
+
+      writer.String("pitch"); JsonWriter::swapNaN(writer, d_pitch);
+      writer.String("roll");  JsonWriter::swapNaN(writer, d_roll);
+      writer.String("yaw");   JsonWriter::swapNaN(writer, d_yaw);
+    }
+    writer.EndObject();
+  }
 }

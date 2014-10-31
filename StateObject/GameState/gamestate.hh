@@ -98,9 +98,13 @@ namespace bold
 
     GameResult getGameResult() const;
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+
     robocup::TeamInfo const& getTeam(uchar teamNumber) const
     {
       return d_data.teams[getTeamIndex(teamNumber)];
@@ -122,4 +126,83 @@ namespace bold
     Clock::Timestamp d_receivedAt;
     robocup::GameStateMessage d_data;
   };
+
+  template<typename TBuffer>
+  inline void GameState::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("playMode");
+      writer.String(getPlayModeName(getPlayMode()).c_str());
+      writer.String("packet");
+      writer.Uint(getPacketNumber());
+      writer.String("playerPerTeam");
+      writer.Uint(getPlayersPerTeam());
+      writer.String("isFirstHalf");
+      writer.Bool(isFirstHalf());
+      writer.String("nextKickOffTeamIndex");
+      writer.Uint(getNextKickOffTeamIndex());
+      writer.String("isPenaltyShootOut");
+      writer.Bool(isPenaltyShootout());
+      writer.String("isOvertime");
+      writer.Bool(isOvertime());
+      writer.String("isTimeout");
+      writer.Bool(isTimeout());
+      writer.String("lastDropInTeamColor");
+      writer.Uint(getLastDropInTeamColorNumber());
+      writer.String("secSinceDropIn");
+      writer.Int(getSecondsSinceLastDropIn());
+      writer.String("secondsRemaining");
+      writer.Int(getSecondsRemaining());
+      writer.String("secondsSecondaryTime");
+      writer.Int(getSecondaryTime());
+      writer.String("gameControllerId");
+      writer.Int(getGameControllerId());
+
+      auto writeTeam = [&writer,this](robocup::TeamInfo const& team)
+      {
+        writer.StartObject();
+        {
+          writer.String("num");
+          writer.Uint(team.getTeamNumber());
+          writer.String("isBlue");
+          writer.Bool(team.isBlueTeam());
+          writer.String("score");
+          writer.Uint(team.getScore());
+          writer.String("penaltyShotCount");
+          writer.Uint(team.getPenaltyShotCount());
+
+          writer.String("players");
+          writer.StartArray();
+          {
+            for (int p = 1; p <= getPlayersPerTeam(); ++p) {
+              auto const& player = team.getPlayer(p);
+              writer.StartObject();
+              {
+                writer.String("penalty");
+                if (player.getPenaltyType() == robocup::PenaltyType::NONE) {
+                  writer.Null();
+                } else {
+                  writer.String(getPenaltyTypeName(player.getPenaltyType()).c_str());
+
+                  writer.String("penaltySecondsRemaining");
+                  writer.Uint(player.getSecondsUntilPenaltyLifted());
+                }
+              }
+              writer.EndObject();
+            }
+          }
+          writer.EndArray();
+        }
+        writer.EndObject();
+      };
+
+      writer.String("myTeam");
+      writeTeam(getMyTeam());
+
+      writer.String("opponentTeam");
+      writeTeam(getOpponentTeam());
+    }
+    writer.EndObject();
+  }
 }

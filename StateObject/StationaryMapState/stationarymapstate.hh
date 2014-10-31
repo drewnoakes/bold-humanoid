@@ -91,9 +91,13 @@ namespace bold
 
     double getOcclusionDistance(double angle) const;
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const { writeJsonInternal(writer); }
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+
     static constexpr int NumberOfBuckets = 144;
 
     static uint wedgeIndexForAngle(double angle);
@@ -101,6 +105,38 @@ namespace bold
 
     std::array<Average<double>,NumberOfBuckets> d_wedges;
   };
+
+  template<typename TBuffer>
+  inline void RadialOcclusionMap::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("divisions");
+      writer.Uint(NumberOfBuckets);
+      writer.String("slices");
+      writer.StartArray();
+      {
+        for (uint index = 0; index < NumberOfBuckets; index++)
+        {
+          if (d_wedges[index].getCount() == 0)
+            continue;
+
+          writer.StartObject();
+          {
+            writer.String("angle");
+            writer.Double(angleForWedgeIndex(index));
+            writer.String("dist");
+            writer.Double(d_wedges[index].getAverage());
+            writer.String("count");
+            writer.Double(d_wedges[index].getCount());
+          }
+          writer.EndObject();
+        }
+      }
+      writer.EndArray();
+    }
+    writer.EndObject();
+  }
 
   //////////////////////////////////////////////////////////////////////////////
 
@@ -112,7 +148,8 @@ namespace bold
                        std::vector<Average<Eigen::Vector2d>> teammateEstimates,
                        RadialOcclusionMap occlusionMap);
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
     std::vector<Average<Eigen::Vector2d>> const& getBallEstimates() const { return d_ballEstimates; }
     std::vector<Average<Eigen::Vector2d>> const& getTeammateEstimates() const { return d_keeperEstimates; }
@@ -175,6 +212,9 @@ namespace bold
       GoalLabel label);
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+
     template<typename T>
     static bool compareAverages(Average<T> const& a, Average<T> const& b)
     {
@@ -214,6 +254,127 @@ namespace bold
     Eigen::Vector2d d_turnBallPos;
     std::shared_ptr<Kick const> d_turnForKick;
   };
+
+  template<typename TBuffer>
+  inline void StationaryMapState::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("balls");
+      writer.StartArray();
+      for (auto const& estimate : d_ballEstimates)
+      {
+        writer.StartObject();
+        {
+          writer.String("pos");
+          writer.StartArray();
+          writer.Double(estimate.getAverage().x());
+          writer.Double(estimate.getAverage().y());
+          writer.EndArray();
+          writer.String("count");
+          writer.Int(estimate.getCount());
+        }
+        writer.EndObject();
+      }
+      writer.EndArray();
+
+      writer.String("goalPosts");
+      writer.StartArray();
+      for (auto const& estimate : d_goalPostEstimates)
+      {
+        writer.StartObject();
+        {
+          writer.String("pos");
+          writer.StartArray();
+          writer.Double(estimate.getAverage().x());
+          writer.Double(estimate.getAverage().y());
+          writer.EndArray();
+          writer.String("count");
+          writer.Uint(estimate.getCount());
+        }
+        writer.EndObject();
+      }
+      writer.EndArray();
+
+      writer.String("goals");
+      writer.StartArray();
+      for (auto const& estimate : d_goalEstimates)
+      {
+        writer.StartObject();
+        {
+          writer.String("post1");
+          writer.StartArray();
+          writer.Double(estimate.getPost1Pos().x());
+          writer.Double(estimate.getPost1Pos().y());
+          writer.EndArray();
+          writer.String("post2");
+          writer.StartArray();
+          writer.Double(estimate.getPost2Pos().x());
+          writer.Double(estimate.getPost2Pos().y());
+          writer.EndArray();
+          writer.String("label");
+          writer.Uint(static_cast<uint>(estimate.getLabel()));
+        }
+        writer.EndObject();
+      }
+      writer.EndArray();
+
+      writer.String("keepers");
+      writer.StartArray();
+      for (auto const& estimate : d_keeperEstimates)
+      {
+        writer.StartObject();
+        {
+          writer.String("pos");
+          writer.StartArray();
+          writer.Double(estimate.getAverage().x());
+          writer.Double(estimate.getAverage().y());
+          writer.EndArray();
+          writer.String("count");
+          writer.Int(estimate.getCount());
+        }
+        writer.EndObject();
+      }
+      writer.EndArray();
+
+      writer.String("kicks");
+      writer.StartArray();
+      {
+        for (auto const& kick : d_possibleKicks)
+        {
+          writer.StartObject();
+          {
+            writer.String("id");
+            writer.String(kick.getId().c_str());
+            Eigen::Vector2d const& endPos = kick.getEndPos();
+            writer.String("endPos");
+            writer.StartArray();
+            writer.Double(endPos.x());
+            writer.Double(endPos.y());
+            writer.EndArray();
+            writer.String("onTarget");
+            writer.Bool(kick.isOnTarget());
+            writer.String("selected");
+            writer.Bool(kick.getKick() == d_selectedKick);
+          }
+          writer.EndObject();
+        }
+      }
+      writer.EndArray();
+
+      writer.String("openField");
+      d_occlusionMap.writeJson(writer);
+
+      writer.String("turnAngle");
+      writer.Double(d_turnAngleRads);
+      writer.String("turnBallPos");
+      writer.StartArray();
+      writer.Double(d_turnBallPos.x());
+      writer.Double(d_turnBallPos.y());
+      writer.EndArray();
+    }
+    writer.EndObject();
+  }
 
   template<typename T>
   bool StationaryMapState::existsWithSamples(std::vector<T> const& estimates, int sampleThreshold)

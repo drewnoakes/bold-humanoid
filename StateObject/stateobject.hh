@@ -4,6 +4,8 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 
+#include "../util/websocketbuffer.hh"
+
 namespace bold
 {
   class StateObject
@@ -13,9 +15,13 @@ namespace bold
 
   public:
     virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
+    virtual void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const = 0;
 
-    static void writeJsonOrNull(rapidjson::Writer<rapidjson::StringBuffer>& writer, std::shared_ptr<StateObject const> const& stateObject)
+    template<typename TBuffer, typename TState>
+    static void writeJsonOrNull(rapidjson::Writer<TBuffer>& writer, std::shared_ptr<TState const> const& stateObject)
     {
+      static_assert(std::is_base_of<StateObject,TState>::value, "TState must be a descendant of StateObject");
+
       if (stateObject)
         stateObject->writeJson(writer);
       else

@@ -37,22 +37,3 @@ Affine3d OrientationState::withoutYaw() const
 {
   return AngleAxisd(-d_yaw, Vector3d::UnitZ()) * Affine3d(d_quaternion);
 }
-
-void OrientationState::writeJson(Writer<StringBuffer>& writer) const
-{
-  writer.StartObject();
-  {
-    writer.String("quaternion");
-    writer.StartArray();
-    JsonWriter::swapNaN(writer, d_quaternion.x());
-    JsonWriter::swapNaN(writer, d_quaternion.y());
-    JsonWriter::swapNaN(writer, d_quaternion.z());
-    JsonWriter::swapNaN(writer, d_quaternion.w());
-    writer.EndArray();
-
-    writer.String("pitch"); JsonWriter::swapNaN(writer, d_pitch);
-    writer.String("roll");  JsonWriter::swapNaN(writer, d_roll);
-    writer.String("yaw");   JsonWriter::swapNaN(writer, d_yaw);
-  }
-  writer.EndObject();
-}

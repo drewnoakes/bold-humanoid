@@ -85,10 +85,10 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession)
     {
       // Setting the value failed. Send the current value back to the client
       // that requested this invalid value.
-      StringBuffer buffer;
-      Writer<StringBuffer> writer(buffer);
+      WebSocketBuffer buffer;
+      Writer<WebSocketBuffer> writer(buffer);
       writeSettingUpdateJson(setting, writer);
-      jsonSession->enqueue(buffer);
+      jsonSession->enqueue(move(buffer));
     }
   }
 }

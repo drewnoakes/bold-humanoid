@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-void DataStreamer::writeSettingUpdateJson(SettingBase const* setting, Writer<StringBuffer>& writer)
+void DataStreamer::writeSettingUpdateJson(SettingBase const* setting, Writer<WebSocketBuffer>& writer)
 {
   writer.StartObject();
   {

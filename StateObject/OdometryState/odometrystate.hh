@@ -25,9 +25,31 @@ namespace bold
      */
     Eigen::Affine3d const& getTransform() const { return d_transform; };
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+
     Eigen::Affine3d d_transform;
   };
+
+  template<typename TBuffer>
+  inline void OdometryState::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("tr");
+      writer.StartArray();
+      for (unsigned j = 0; j < 4; ++j)
+      {
+        for (unsigned i = 0; i < 4; ++i)
+          writer.Double(d_transform.matrix()(i, j), "%.3f");
+        writer.String(" ");
+      }
+      writer.EndArray();
+    }
+    writer.EndObject();
+  }
 }

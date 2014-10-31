@@ -13,8 +13,10 @@
 #include <opencv2/opencv.hpp>
 #include <sigc++/signal.h>
 
+#include "../Setting/setting.hh"
 #include "../StateObject/stateobject.hh"
 #include "../util/assert.hh"
+#include "../util/websocketbuffer.hh"
 
 namespace cv
 {
@@ -25,7 +27,6 @@ namespace bold
 {
   class Camera;
   class OptionTree;
-  class SettingBase;
 
   struct CameraSession
   {
@@ -46,7 +47,7 @@ namespace bold
 
     ~JsonSession() = default;
 
-    void enqueue(rapidjson::StringBuffer& buffer);
+    void enqueue(WebSocketBuffer&& buffer);
 
     int write();
 
@@ -54,10 +55,10 @@ namespace bold
     std::string _protocolName;
     libwebsocket* _wsi;
     libwebsocket_context* _context;
-    /** A queue of JSON strings to be sent to the client. */
-    std::queue<std::vector<uchar>> _queue;
-    /** The number of bytes sent from the front message in the queue. */
-    unsigned _bytesSent;
+    /** A queue of websocket buffers containing messages to send for this session. */
+    std::queue<WebSocketBuffer> _queue;
+    /** The number of bytes already sent of the front message in the queue. */
+    int _bytesSent;
     unsigned _maxQueueSeen;
     std::string _hostName;
     std::string _ipAddress;
@@ -82,13 +83,13 @@ namespace bold
     void setOptionTree(std::shared_ptr<OptionTree> optionTree) { d_optionTree = optionTree; }
 
   private:
-    static void writeSettingUpdateJson(SettingBase const* setting, rapidjson::Writer<rapidjson::StringBuffer>& writer);
+    void writeSettingUpdateJson(SettingBase const* setting, rapidjson::Writer<WebSocketBuffer>& writer);
 
     void run();
 
     void processCommand(std::string json, JsonSession* jsonSession);
 
-    void writeControlSyncJson(rapidjson::Writer<rapidjson::StringBuffer>& writer);
+    void writeControlSyncJson(rapidjson::Writer<WebSocketBuffer>& writer);
 
     const int d_port;
     const std::shared_ptr<Camera> d_camera;

@@ -5,6 +5,7 @@
 #include "../../Balance/OrientationBalance/orientationbalance.hh"
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../Config/config.hh"
+#include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/BalanceState/balancestate.hh"
 #include "../../StateObject/WalkState/walkstate.hh"

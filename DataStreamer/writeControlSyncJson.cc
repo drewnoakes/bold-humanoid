@@ -4,7 +4,7 @@
 #include "../Option/FSMOption/fsmoption.hh"
 #include "../MotionScript/motionscript.hh"
 
-void DataStreamer::writeControlSyncJson(Writer<StringBuffer>& writer)
+void DataStreamer::writeControlSyncJson(Writer<WebSocketBuffer>& writer)
 {
   writer.StartObject();
   {

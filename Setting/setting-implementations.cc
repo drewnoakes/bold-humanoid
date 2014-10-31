@@ -37,28 +37,6 @@ bool IntSetting::tryParseJsonValue(Value const* jsonValue, int* parsedValue) con
   return true;
 }
 
-void IntSetting::writeJsonValue(Writer<StringBuffer>& writer, int const& value) const
-{
-  writer.Int(value);
-}
-
-void IntSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
-{
-  Setting<int>::writeJsonMetadata(writer);
-
-  if (d_min != -numeric_limits<int>::max())
-  {
-    writer.String("min");
-    writer.Int(d_min);
-  }
-
-  if (d_max != numeric_limits<int>::max())
-  {
-    writer.String("max");
-    writer.Int(d_max);
-  }
-}
-
 ///////////////////////////////////////////////////////////
 
 EnumSetting::EnumSetting(string path, map<int,string> pairs, bool isReadOnly, string description)
@@ -88,31 +66,6 @@ bool EnumSetting::tryParseJsonValue(Value const* jsonValue, int* parsedValue) co
     return false;
   *parsedValue = jsonValue->GetInt();
   return true;
-}
-
-void EnumSetting::writeJsonValue(Writer<StringBuffer>& writer, int const& value) const
-{
-  writer.Int(value);
-}
-
-void EnumSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
-{
-  Setting<int>::writeJsonMetadata(writer);
-
-  writer.String("values");
-  writer.StartArray();
-  {
-    for (auto const& pair : d_pairs)
-    {
-      writer.StartObject();
-      writer.String("text");
-      writer.String(pair.second.c_str());
-      writer.String("value");
-      writer.Int(pair.first);
-      writer.EndObject();
-    }
-  }
-  writer.EndArray();
 }
 
 ///////////////////////////////////////////////////////////
@@ -147,27 +100,6 @@ bool DoubleSetting::tryParseJsonValue(Value const* jsonValue, double* parsedValu
   return true;
 }
 
-void DoubleSetting::writeJsonValue(Writer<StringBuffer>& writer, double const& value) const
-{
-  writer.Double(value);
-}
-
-void DoubleSetting::writeJsonMetadata(Writer<StringBuffer>& writer) const
-{
-  Setting<double>::writeJsonMetadata(writer);
-
-  if (d_min != -numeric_limits<double>::max())
-  {
-    writer.String("min");
-    writer.Double(d_min);
-  }
-  if (d_max != numeric_limits<double>::max())
-  {
-    writer.String("max");
-    writer.Double(d_max);
-  }
-}
-
 ///////////////////////////////////////////////////////////
 
 BoolSetting::BoolSetting(string path, bool isReadOnly, string description)
@@ -180,11 +112,6 @@ bool BoolSetting::tryParseJsonValue(Value const* jsonValue, bool* parsedValue) c
     return false;
   *parsedValue = jsonValue->GetBool();
   return true;
-}
-
-void BoolSetting::writeJsonValue(Writer<StringBuffer>& writer, bool const& value) const
-{
-  writer.Bool(value);
 }
 
 ///////////////////////////////////////////////////////////
@@ -253,31 +180,6 @@ bool HsvRangeSetting::tryParseJsonValue(Value const* jsonValue, Colour::hsvRange
   return true;
 }
 
-void HsvRangeSetting::writeJsonValue(Writer<StringBuffer>& writer, Colour::hsvRange const& value) const
-{
-  writer.StartObject();
-  {
-    writer.String("hue");
-    writer.StartArray();
-    writer.Double(value.hMin);
-    writer.Double(value.hMax);
-    writer.EndArray();
-
-    writer.String("sat");
-    writer.StartArray();
-    writer.Double(value.sMin);
-    writer.Double(value.sMax);
-    writer.EndArray();
-
-    writer.String("val");
-    writer.StartArray();
-    writer.Double(value.vMin);
-    writer.Double(value.vMax);
-    writer.EndArray();
-  }
-  writer.EndObject();
-}
-
 ///////////////////////////////////////////////////////////
 
 DoubleRangeSetting::DoubleRangeSetting(string path, bool isReadOnly, string description)
@@ -319,14 +221,6 @@ bool DoubleRangeSetting::tryParseJsonValue(Value const* jsonValue, Range<double>
   return true;
 }
 
-void DoubleRangeSetting::writeJsonValue(Writer<StringBuffer>& writer, Range<double> const& value) const
-{
-  writer.StartArray();
-  writer.Double(value.min());
-  writer.Double(value.max());
-  writer.EndArray();
-}
-
 ///////////////////////////////////////////////////////////
 
 StringSetting::StringSetting(string path, bool isReadOnly, string description)
@@ -351,11 +245,6 @@ bool StringSetting::tryParseJsonValue(Value const* jsonValue, string* parsedValu
     return false;
   *parsedValue = jsonValue->GetString();
   return true;
-}
-
-void StringSetting::writeJsonValue(Writer<StringBuffer>& writer, string const& value) const
-{
-  writer.String(value.c_str());
 }
 
 ///////////////////////////////////////////////////////////
@@ -395,16 +284,6 @@ bool StringArraySetting::tryParseJsonValue(Value const* jsonValue, vector<string
   return true;
 }
 
-void StringArraySetting::writeJsonValue(Writer<StringBuffer>& writer, vector<string> const& value) const
-{
-  writer.StartArray();
-  {
-    for (auto const& s : value)
-      writer.String(s.c_str());
-  }
-  writer.EndArray();
-}
-
 ///////////////////////////////////////////////////////////
 
 BgrColourSetting::BgrColourSetting(string path, bool isReadOnly, string description)
@@ -433,18 +312,4 @@ bool BgrColourSetting::tryParseJsonValue(Value const* jsonValue, Colour::bgr* pa
 
   *parsedValue = Colour::bgr(bMember->value.GetInt(), gMember->value.GetInt(), rMember->value.GetInt());
   return true;
-}
-
-void BgrColourSetting::writeJsonValue(Writer<StringBuffer>& writer, const Colour::bgr& value) const
-{
-  writer.StartObject();
-  {
-    writer.String("r");
-    writer.Int(value.r);
-    writer.String("g");
-    writer.Int(value.g);
-    writer.String("b");
-    writer.Int(value.b);
-  }
-  writer.EndObject();
 }

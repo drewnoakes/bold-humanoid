@@ -141,7 +141,8 @@ namespace bold
     void visitJoints(std::function<void(std::shared_ptr<JointPosition const> const&)> visitor) const;
     void visitLimbs(std::function<void(std::shared_ptr<LimbPosition const> const&)> visitor) const;
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override;
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
     /** Transformation describing camera frame in agent frame, used to
      * transform camera coordinates to agent coordinates */
@@ -163,6 +164,9 @@ namespace bold
     Eigen::Affine3d determineFootAgentTr(bool leftFoot) const;
 
   private:
+    template<typename TBuffer>
+    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+
     /// Initialise with the specified angles (radians), and position errors (values)
     /// Indexed by JointId (i.e. 0 is ignored.), including camera tilt angle
     void initialise(std::shared_ptr<BodyModel const> const& bodyModel, std::array<double,23> const& angles);
@@ -188,6 +192,72 @@ namespace bold
     // Needed when having fixed sized Eigen member
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   };
+
+  template<typename TBuffer>
+  inline void BodyState::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  {
+    writer.StartObject();
+    {
+      writer.String("motion-cycle");
+      writer.Uint64(d_motionCycleNumber);
+
+      writer.String("angles");
+      writer.StartArray();
+      {
+        for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
+        {
+          auto const& it = d_jointById[j];
+          writer.Double(it->getAngleRads(), "%.3f");
+        }
+      }
+      writer.EndArray();
+
+      writer.String("errors");
+      writer.StartArray();
+      {
+        for (uchar j = (uchar)JointId::MIN; j <= (uchar)JointId::MAX; j++)
+          writer.Int(d_positionValueDiffById[j]);
+      }
+      writer.EndArray();
+
+      auto com = getCentreOfMass();
+      writer.String("com");
+      writer.StartArray();
+      writer.Double(com.x());
+      writer.Double(com.y());
+      writer.Double(com.z());
+      writer.EndArray();
+
+      /*
+      writer.String("camera-translation");
+      writer.StartArray();
+      {
+        auto translation = d_agentCameraTransform.translation();
+        writer.Double(translation.x());
+        writer.Double(translation.y());
+        writer.Double(translation.z());
+      }
+      writer.EndArray();
+
+      writer.String("camera-rotation");
+      writer.StartObject();
+      {
+        AngleAxisd angleAxis(d_agentCameraTransform.rotation());
+        writer.String("angle").Double(angleAxis.angle());
+        writer.String("axis");
+        writer.StartArray();
+        {
+          writer.Double(angleAxis.axis().x());
+          writer.Double(angleAxis.axis().y());
+          writer.Double(angleAxis.axis().z());
+        }
+        writer.EndArray();
+      }
+      writer.EndObject();
+      */
+    }
+    writer.EndObject();
+  }
 
   inline std::shared_ptr<LimbPosition const> BodyState::getLimb(std::string const& name) const
   {
