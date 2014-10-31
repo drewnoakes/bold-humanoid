@@ -11,3 +11,11 @@ CameraSession::CameraSession(libwebsocket_protocols* cameraProtocol)
     imgJpgBuffer(make_unique<vector<uchar>>())
 {}
 
+void CameraSession::notifyImageAvailable()
+{
+  if (!imgSending)
+  {
+    imgReady = true;
+    libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
+  }
+}

@@ -13,18 +13,6 @@ void DataStreamer::run()
   while (!d_isStopRequested)
   {
     //
-    // Only request sending images if we have a client who needs servicing
-    //
-    for (CameraSession* session : d_cameraSessions)
-    {
-      if (session->imgReady)
-      {
-        libwebsocket_callback_on_writable_all_protocol(d_cameraProtocol);
-        break;
-      }
-    }
-
-    //
     // Process whatever else needs doing on the socket (new clients, etc)
     // This is normally very fast
     //

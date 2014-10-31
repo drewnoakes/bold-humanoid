@@ -6,6 +6,5 @@ void DataStreamer::streamImage(Mat const& img, string imageEncoding)
   d_imageEncoding = imageEncoding;
 
   for (auto ses : d_cameraSessions)
-    if (!ses->imgSending)
-      ses->imgReady = true;
+    ses->notifyImageAvailable();
 }

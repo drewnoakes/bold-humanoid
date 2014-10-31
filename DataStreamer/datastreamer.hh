@@ -44,6 +44,8 @@ namespace bold
     unsigned bytesSent;
 
     libwebsocket_protocols* d_cameraProtocol;
+
+    void notifyImageAvailable();
   };
 
   class JsonSession
