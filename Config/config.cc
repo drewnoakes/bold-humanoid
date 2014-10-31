@@ -54,7 +54,7 @@ unique_ptr<Document const> loadJsonDocument(std::string path)
   return unique_ptr<Document const>(doc);
 }
 
-void Config::initialise(string metadataFile, string configFile)
+void Config::initialise(string const& metadataFile, string const& configFile)
 {
   if (d_configDocuments.size() != 0 || !d_isInitialising)
   {
@@ -120,7 +120,7 @@ void Config::initialise(string metadataFile, string configFile)
   });
 }
 
-SettingBase* Config::getSettingBase(string path)
+SettingBase* Config::getSettingBase(string const& path)
 {
   string delimiter = ".";
   size_t start = 0;
@@ -156,7 +156,7 @@ SettingBase* Config::getSettingBase(string path)
   return it->second;
 }
 
-void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNode, string path, string name)
+void Config::processConfigMetaJsonValue(Value const* metaNode, TreeNode* treeNode, string const& path, string const& name)
 {
   ASSERT(metaNode->IsObject());
 
@@ -344,7 +344,7 @@ void Config::addAction(string const& id, string const& label,
   }
 }
 
-Value const* Config::getConfigJsonValue(string path)
+Value const* Config::getConfigJsonValue(string const& path)
 {
   if (d_configDocuments.size() == 0)
   {
@@ -401,7 +401,7 @@ vector<Action*> Config::getAllActions()
   return actions;
 }
 
-Action* Config::getAction(string id)
+Action* Config::getAction(string const& id)
 {
   auto it = d_actionById.find(id);
   if (it == d_actionById.end())
@@ -427,7 +427,7 @@ vector<SettingBase*> Config::getAllSettings()
   return settings;
 }
 
-vector<SettingBase*> Config::getSettings(string prefix)
+vector<SettingBase*> Config::getSettings(string const& prefix)
 {
   string delimiter = ".";
   size_t start = 0;

@@ -50,11 +50,11 @@ namespace bold
   public:
     static sigc::signal<void, SettingBase const*> updated;
 
-    static SettingBase* getSettingBase(std::string path);
+    static SettingBase* getSettingBase(std::string const& path);
 
     /// Retrieves a Setting<T> having the specified path.
     template<typename T>
-    static Setting<T>* getSetting(std::string path)
+    static Setting<T>* getSetting(std::string const& path)
     {
       auto setting = getSettingBase(path);
 
@@ -74,7 +74,7 @@ namespace bold
 
     /// Gets the current value of the specified setting. Throws if setting unknown.
     template<typename T>
-    static T getValue(std::string path)
+    static T getValue(std::string const& path)
     {
       auto setting = getSetting<T>(path);
       if (!setting)
@@ -87,7 +87,7 @@ namespace bold
 
     /// Gets the current value of the specified setting. Throws if setting unknown or setting not readonly.
     template<typename T>
-    static T getStaticValue(std::string path)
+    static T getStaticValue(std::string const& path)
     {
       auto setting = getSetting<T>(path);
       if (!setting)
@@ -112,16 +112,16 @@ namespace bold
 
     static void addAction(std::string const& id, std::string const& label, std::function<void(rapidjson::Value*)> callback);
 
-    static rapidjson::Value const* getConfigJsonValue(std::string path);
+    static rapidjson::Value const* getConfigJsonValue(std::string const& path);
 
-    static void initialise(std::string metadataFile, std::string configFile);
+    static void initialise(std::string const& metadataFile, std::string const& configFile);
 
     static void initialisationCompleted() { ASSERT(d_isInitialising); d_isInitialising = false; }
     static bool isInitialising() { return d_isInitialising; }
 
-    static Action* getAction(std::string id);
+    static Action* getAction(std::string const& id);
     static std::vector<Action*> getAllActions();
-    static std::vector<SettingBase*> getSettings(std::string prefix);
+    static std::vector<SettingBase*> getSettings(std::string const& prefix);
     static std::vector<SettingBase*> getAllSettings();
 
     static std::vector<std::string> getConfigDocumentNames() { return d_configFileNames; }
@@ -140,7 +140,7 @@ namespace bold
       std::map<std::string,TreeNode> subNodeByName;
     };
 
-    static void processConfigMetaJsonValue(rapidjson::Value const* metaNode, TreeNode* treeNode, std::string path, std::string name);
+    static void processConfigMetaJsonValue(rapidjson::Value const* metaNode, TreeNode* treeNode, std::string const& path, std::string const& name);
 
     Config() = delete;
 
