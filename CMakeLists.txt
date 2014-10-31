@@ -206,6 +206,7 @@ add_class(BOLDHUMANOID
   ./DataStreamer/callbackControl.cc
   ./DataStreamer/callbackHttp.cc
   ./DataStreamer/callbackState.cc
+  ./DataStreamer/camerasession.cc
   ./DataStreamer/DataStreamer.cc
   ./DataStreamer/jsonsession.cc
   ./DataStreamer/processCommand.cc

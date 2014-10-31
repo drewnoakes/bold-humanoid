@@ -30,6 +30,10 @@ namespace bold
 
   struct CameraSession
   {
+    CameraSession(libwebsocket_protocols* cameraProtocol);
+
+    ~CameraSession() = default;
+
     /** Whether an image is ready to be sent to this client. */
     bool imgReady;
     /** Whether an image is currently in the process of being sent. */
@@ -38,6 +42,8 @@ namespace bold
     std::unique_ptr<std::vector<uchar>> imgJpgBuffer;
     /** If imgSending is true, the number of bytes already sent. */
     unsigned bytesSent;
+
+    libwebsocket_protocols* d_cameraProtocol;
   };
 
   class JsonSession

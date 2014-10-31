@@ -15,10 +15,10 @@ int DataStreamer::callback_camera(
   case LWS_CALLBACK_ESTABLISHED:
   {
     ASSERT(ThreadUtil::isDataStreamerThread());
+
     // New client connected; initialize session
-    cameraSession->imgReady = false;
-    cameraSession->imgSending = false;
-    cameraSession->imgJpgBuffer = make_unique<vector<uchar>>();
+    new (cameraSession) CameraSession(d_cameraProtocol);
+
     d_cameraSessions.push_back(cameraSession);
     if (d_cameraSessions.size() == 1)
       hasClientChanged("camera-protocol", true);
@@ -31,6 +31,9 @@ int DataStreamer::callback_camera(
     d_cameraSessions.erase(find(d_cameraSessions.begin(), d_cameraSessions.end(), cameraSession));
     if (d_cameraSessions.size() == 0)
       hasClientChanged("camera-protocol", false);
+
+    cameraSession->~CameraSession();
+
     break;
   }
   case LWS_CALLBACK_SERVER_WRITEABLE:
