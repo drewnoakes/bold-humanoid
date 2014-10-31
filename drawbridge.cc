@@ -75,7 +75,7 @@ int websocketCallback(libwebsocket_context* context, libwebsocket* wsi, libwebso
 
         if (res < 0)
         {
-          lwsl_err("ERROR %d writing to socket (control)\n", res);
+          log::error("websocketCallback") << "Error " << res << " writing to socket (control)";
           return 1;
         }
 

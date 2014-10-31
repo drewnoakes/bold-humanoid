@@ -86,7 +86,7 @@ int DataStreamer::callback_camera(
 
       if (res < 0)
       {
-        lwsl_err("ERROR %d writing to socket (image)\n", res);
+        log::error("callback_camera") << "Error " << res << " writing to socket (image)";
         return 1;
       }
 
