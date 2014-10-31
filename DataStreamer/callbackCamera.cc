@@ -5,8 +5,8 @@ int DataStreamer::callback_camera(
   libwebsocket *wsi,
   libwebsocket_callback_reasons reason,
   void* session,
-  void* in,
-  size_t len)
+  void*,
+  size_t)
 {
   CameraSession* cameraSession = reinterpret_cast<CameraSession*>(session);
 
