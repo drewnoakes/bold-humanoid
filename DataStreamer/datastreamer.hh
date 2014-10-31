@@ -108,10 +108,15 @@ namespace bold
     libwebsocket_protocols* d_protocols;
     libwebsocket_protocols* d_cameraProtocol;
     libwebsocket_protocols* d_controlProtocol;
+
     std::vector<CameraSession*> d_cameraSessions;
+    std::mutex d_cameraSessionsMutex;
+
     std::vector<JsonSession*> d_controlSessions;
+
     std::multimap<std::string, JsonSession*> d_stateSessions;
     std::mutex d_stateSessionsMutex;
+
     bool d_isStopRequested;
     std::thread d_thread;
     std::shared_ptr<OptionTree> d_optionTree;

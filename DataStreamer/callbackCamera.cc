@@ -19,16 +19,22 @@ int DataStreamer::callback_camera(
     // New client connected; initialize session
     new (cameraSession) CameraSession(d_cameraProtocol);
 
+    lock_guard<mutex> guard(d_cameraSessionsMutex);
     d_cameraSessions.push_back(cameraSession);
+
     if (d_cameraSessions.size() == 1)
       hasClientChanged("camera-protocol", true);
+
     break;
   }
   case LWS_CALLBACK_CLOSED:
   {
     // Client disconnected
     ASSERT(ThreadUtil::isDataStreamerThread());
+
+    lock_guard<mutex> guard(d_cameraSessionsMutex);
     d_cameraSessions.erase(find(d_cameraSessions.begin(), d_cameraSessions.end(), cameraSession));
+
     if (d_cameraSessions.size() == 0)
       hasClientChanged("camera-protocol", false);
 
