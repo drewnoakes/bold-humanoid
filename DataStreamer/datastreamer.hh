@@ -56,7 +56,7 @@ namespace bold
 
     ~JsonSession() = default;
 
-    void enqueue(WebSocketBuffer&& buffer);
+    void enqueue(WebSocketBuffer&& buffer, bool suppressLwsNotify = false);
 
     int write();
 

@@ -90,12 +90,14 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 
           if (obj)
           {
-            for (auto session = range.first; session != range.second; ++session)
+            for (auto it = range.first; it != range.second; ++it)
             {
+              JsonSession* session = it->second;
+
               WebSocketBuffer buffer;
               Writer<WebSocketBuffer> writer(buffer);
               obj->writeJson(writer);
-              session->second->enqueue(move(buffer));
+              session->enqueue(move(buffer), /*suppressLwsNotify*/ true);
             }
 
             libwebsocket_callback_on_writable_all_protocol(tracker->websocketProtocol);
@@ -119,8 +121,10 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
           WebSocketBuffer buffer;
           Writer<WebSocketBuffer> writer(buffer);
           writeSettingUpdateJson(setting, writer);
-          session->enqueue(move(buffer));
+          session->enqueue(move(buffer), /*suppressLwsNotify*/ true);
         }
+
+        libwebsocket_callback_on_writable_all_protocol(d_controlProtocol);
       }
     );
   }

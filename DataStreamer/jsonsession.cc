@@ -78,7 +78,7 @@ int JsonSession::write()
   return 0;
 }
 
-void JsonSession::enqueue(WebSocketBuffer&& buffer)
+void JsonSession::enqueue(WebSocketBuffer&& buffer, bool suppressLwsNotify)
 {
   ASSERT(buffer.GetSize() != 0);
 
@@ -102,6 +102,8 @@ void JsonSession::enqueue(WebSocketBuffer&& buffer)
   {
     buffer.Push(LWS_SEND_BUFFER_POST_PADDING);
     _queue.emplace(move(buffer));
-    libwebsocket_callback_on_writable(_context, _wsi);
+
+    if (!suppressLwsNotify)
+      libwebsocket_callback_on_writable(_context, _wsi);
   }
 }
