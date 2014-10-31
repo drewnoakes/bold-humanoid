@@ -259,9 +259,6 @@
       "background-colour": { "type": "bgr-colour" }
     }
   },
-  "data-streamer": {
-    "thread-sleep-microseconds": { "type": "int", "min": 1, "max": 1000000 }
-  },
   "localiser": {
     "filter-type":           { "type": "enum", "values": { "Particle": 0, "Kalman": 1, "UnscentedKalman": 2 } },
     "smoothing-window-size": { "type": "int", "min": 1, "max": 100 },

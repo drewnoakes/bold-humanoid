@@ -262,9 +262,6 @@
       "background-colour": { "b": 0, "g": 0, "r": 0 }
     }
   },
-  "data-streamer": {
-    "thread-sleep-microseconds": 1500
-  },
   "localiser": {
     "filter-type": 2,
     "smoothing-window-size": 5,
