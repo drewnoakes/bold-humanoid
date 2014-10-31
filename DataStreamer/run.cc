@@ -13,8 +13,7 @@ void DataStreamer::run()
   while (!d_isStopRequested)
   {
     //
-    // Process whatever else needs doing on the socket (new clients, etc)
-    // This is normally very fast
+    // Process whatever needs doing on the web socket (new clients, writing, receiving, etc)
     //
     libwebsocket_service(d_context, 10);
   }
