@@ -35,9 +35,9 @@ namespace bold
     template<typename TBuffer>
     void writeJsonInternal(rapidjson::Writer<TBuffer>& writer) const;
 
-   std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
-   ulong d_cycleNumber;
-   double d_averageFps;
+    std::shared_ptr<std::vector<EventTiming>> d_eventTimings;
+    ulong d_cycleNumber;
+    double d_averageFps;
   };
 
   template<typename TBuffer>

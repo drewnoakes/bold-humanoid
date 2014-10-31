@@ -18,7 +18,7 @@ namespace bold
      * The returned transformation describes the agent frame at t = 0
      * (A0) wrt the current frame (At). i.e. AtA0, transforming a
      * vector v in A0 by AtA0 * v0 gives that vector in the current
-     * agent frrame.
+     * agent frame.
      *
      * Users of this value can compute their own delta values through
      * $\delta = A_tA_{t-1} = A_tA_0 * A_{t-1}A0^{-1}$

@@ -12,12 +12,12 @@ namespace bold
   enum class LabelClass : uint8_t
   {
     GOAL = 1,
-      BALL,
-      FIELD,
-      LINE,
-      CYAN,
-      MAGENTA,
-      BORDER
+    BALL,
+    FIELD,
+    LINE,
+    CYAN,
+    MAGENTA,
+    BORDER
   };
 
   class PixelLabel

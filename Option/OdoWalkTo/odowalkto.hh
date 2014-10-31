@@ -7,8 +7,8 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-namespace bold {
-  
+namespace bold
+{
   class OdoWalkTo : public Option
   {
   public:
@@ -21,15 +21,12 @@ namespace bold {
     OptionVector runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
   private:
-    std::shared_ptr<WalkModule> d_walkModule;
+    void updateProgress();
 
+    std::shared_ptr<WalkModule> d_walkModule;
     Eigen::Vector3d d_targetPos;
     double d_maxDist;
     Eigen::Affine3d d_lastOdoReading;
     Eigen::Affine3d d_progress;
-
-    void updateProgress();
   };
-
-  
 }
