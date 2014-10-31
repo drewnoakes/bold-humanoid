@@ -77,6 +77,7 @@ void writeLevelShortName(ostream& o, bold::LogLevel level)
 {
   switch (level)
   {
+    case LogLevel::Trace:   o << "trc "; break;
     case LogLevel::Verbose: o << "vrb "; break;
     case LogLevel::Info:    o << "inf "; break;
     case LogLevel::Warning: o << "WRN "; break;
@@ -95,6 +96,9 @@ log::~log()
 
   switch (d_level)
   {
+    case LogLevel::Trace:
+      fgColor = 90;
+      break;
     case LogLevel::Verbose:
       fgColor = 37;
       break;

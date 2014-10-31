@@ -21,6 +21,7 @@ void printUsage()
   cout << endl;
   cout << ccolor::fore::lightblue << "  -c <file> " << ccolor::fore::white << "use specified configuration file (or --config)" << endl;
   cout << ccolor::fore::lightblue << "  -v        " << ccolor::fore::white << "verbose logging (or --verbose)" << endl;
+  cout << ccolor::fore::lightblue << "  -vv       " << ccolor::fore::white << "trace logging" << endl;
   cout << ccolor::fore::lightblue << "  -h        " << ccolor::fore::white << "show these options (or --help)" << endl;
   cout << ccolor::fore::lightblue << "  -i <file> " << ccolor::fore::white << "use specified image file as camera feed (or --image)" << endl;
   cout << ccolor::fore::lightblue << "  --version " << ccolor::fore::white << "print git version details at time of build" << endl;
@@ -137,6 +138,7 @@ int main(int argc, char **argv)
     {0, 0, 0, 0}
   };
 
+  int verboseCount = 0;
   int optionIndex;
   while ((c = getopt_long(argc, argv, "c:h:i:v", longOptions, &optionIndex)) != -1)
   {
@@ -160,7 +162,7 @@ int main(int argc, char **argv)
     }
     case 'v':
     {
-      log::minLevel = LogLevel::Verbose;
+      verboseCount++;
       break;
     }
     case 1:
@@ -177,6 +179,11 @@ int main(int argc, char **argv)
 
     }
   }
+
+  if (verboseCount == 1)
+    log::minLevel = LogLevel::Verbose;
+  else if (verboseCount == 2)
+    log::minLevel = LogLevel::Trace;
 
   auto startTime = Clock::getTimestamp();
 

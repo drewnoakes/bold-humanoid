@@ -24,6 +24,7 @@ namespace bold
 
   enum class LogLevel
   {
+    Trace,
     Verbose,
     Info,
     Warning,
@@ -49,11 +50,13 @@ namespace bold
     static LogLevel minLevel;
     static bool logGameState;
 
+    static log trace()   { return log(LogLevel::Trace); }
     static log info()    { return log(LogLevel::Info); }
     static log verbose() { return log(LogLevel::Verbose); }
     static log warning() { return log(LogLevel::Warning); }
     static log error()   { return log(LogLevel::Error); }
 
+    static log trace(std::string const& scope)   { return log(scope, LogLevel::Trace); }
     static log info(std::string const& scope)    { return log(scope, LogLevel::Info); }
     static log verbose(std::string const& scope) { return log(scope, LogLevel::Verbose); }
     static log warning(std::string const& scope) { return log(scope, LogLevel::Warning); }

@@ -53,7 +53,7 @@ void OptionTree::run()
   function<void(shared_ptr<Option>)> runOption;
   runOption = [this,&runOption,&writer,&ranOptions,&fsmStates](shared_ptr<Option> option)
   {
-    log::verbose("OptionTree::run") << "Running " << option->getTypeName() << " option: " << option->getId();
+    log::trace("OptionTree::run") << "Running " << option->getTypeName() << " option: " << option->getId();
 
     writer.StartObject();
 

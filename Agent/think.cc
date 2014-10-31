@@ -9,7 +9,7 @@ void Agent::think()
 
   d_cycleNumber++;
 
-  log::verbose("Agent::think") << "Starting think cycle " << d_cycleNumber;
+  log::trace("Agent::think") << "Starting think cycle " << d_cycleNumber << " --------------------------";
 
   SequentialTimer t;
 
@@ -125,5 +125,5 @@ void Agent::think()
   static FPS<30> fps;
   State::make<ThinkTimingState>(t.flush(), d_cycleNumber, fps.next());
 
-  log::verbose("Agent::think") << "Ending think cycle " << d_cycleNumber;
+  log::trace("Agent::think") << "Ending think cycle " << d_cycleNumber;
 }

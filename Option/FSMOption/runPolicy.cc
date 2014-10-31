@@ -68,8 +68,6 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
     return false;
   };
 
-  log::verbose(getId()) << " ----- Start -----";
-
   if (!d_curState)
   {
     // No state yet (after reset).
@@ -88,7 +86,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
       setCurrentState(d_startState);
   }
 
-  log::verbose(getId()) << "Current state: " << d_curState->name;
+  log::trace(getId()) << "Current state: " << d_curState->name;
 
   const int MAX_LOOP_COUNT = 20;
 
@@ -159,7 +157,7 @@ vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
     isEndless = false;
   }
 
-  log::verbose(getId()) << "Final state: " << d_curState->name;
+  log::trace(getId()) << "Final state: " << d_curState->name;
 
   return d_curState->options;
 }
