@@ -1,4 +1,4 @@
-Data as of Thu Oct 30 14:44:59 GMT 2014 on darwin6
+Data as of Fri Oct 31 11:23:52 GMT 2014 on darwin6
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
@@ -8,9 +8,9 @@ Codename:	saucy
 ==== FILE SYSTEM ========================================
 
 Filesystem               Size  Used Avail Use% Mounted on
-/dev/mapper/darwin-root  2.5G  1.4G  927M  61% /
+/dev/mapper/darwin-root  2.5G  1.6G  821M  66% /
 
-198M	/home/darwin
+197M	/home/darwin
 33M	/boot
 
 ==== NETWORK ============================================
@@ -107,7 +107,7 @@ udev start/running
 upstart-udev-bridge start/running
 ureadahead-other stop/waiting
 whoopsie stop/waiting
-apport start/running
+apport stop/waiting
 console-setup stop/waiting
 hwclock-save stop/waiting
 irqbalance stop/waiting
@@ -159,7 +159,7 @@ mountdevsubfs.sh start/running
 tty2 start/running
 udevtrigger stop/waiting
 upstart-file-bridge start/running
-boldhumanoid stop/waiting
+boldhumanoid stop/killed
 container-detect stop/waiting
 mounted-dev stop/waiting
 mtab.sh start/running
@@ -200,9 +200,6 @@ adduser                                 	     644	3.113+nmu3ubuntu2
 alsa-base                               	     502	1.0.25+dfsg-0ubuntu4
 alsa-utils                              	    2048	1.0.27.1-1ubuntu1
 apparmor                                	    1125	2.8.0-0ubuntu31.1
-apparmor-easyprof                       	     162	2.8.0-0ubuntu31.1
-apport                                  	    1256	2.12.5-0ubuntu2.2
-apport-symptoms                         	      75	0.20
 apt                                     	    3346	0.9.9.1~ubuntu3.3
 aptitude                                	    4483	0.6.8.2-1ubuntu2
 aptitude-common                         	    4176	0.6.8.2-1ubuntu2
@@ -239,11 +236,9 @@ dbus                                    	    1010	1.6.12-0ubuntu10.1
 dctrl-tools                             	     328	2.23
 debconf                                 	     613	1.5.50ubuntu1
 debconf-i18n                            	    1100	1.5.50ubuntu1
-debhelper                               	     992	9.20130630ubuntu1
 debian-goodies                          	     190	0.63
 debianutils                             	     273	4.4
 debsums                                 	     199	2.0.52+nmu1
-dh-apparmor                             	      85	2.8.0-0ubuntu31.1
 dh-python                               	     303	1.20131003-1
 diffutils                               	     396	1:3.2-8
 dmidecode                               	     155	2.12-2
@@ -251,7 +246,6 @@ dmsetup                                 	     178	2:1.02.77-6ubuntu1
 dnsutils                                	     351	1:9.9.3.dfsg.P2-4ubuntu1.1
 dosfstools                              	     199	3.0.16-2ubuntu2
 dpkg                                    	    6559	1.16.12ubuntu1.3
-dpkg-dev                                	    1631	1.16.12ubuntu1.3
 e2fslibs                                	     408	1.42.8-1ubuntu1
 e2fsprogs                               	    2368	1.42.8-1ubuntu1
 ed                                      	     117	1.9-2
@@ -260,7 +254,6 @@ esound-common                           	      79	0.2.41-11
 espeak                                  	     230	1.47.11-1ubuntu0.1
 espeak-data                             	    1873	1.47.11-1ubuntu0.1
 ethtool                                 	     316	1:3.9-1
-fakeroot                                	     334	1.20-1
 file                                    	      93	5.11-2ubuntu4.3
 findutils                               	     668	4.4.2-6ubuntu1
 fontconfig                              	     541	2.10.93-0ubuntu1
@@ -316,16 +309,11 @@ klibc-utils                             	     393	2.0.1-3.1ubuntu2
 kmod                                    	     196	9-3ubuntu1
 krb5-locales                            	    1520	1.10.1+dfsg-6.1ubuntu1
 landscape-common                        	    1014	13.07.3-0ubuntu1
-language-pack-en                        	      30	1:13.10+20131012
-language-pack-en-base                   	    3931	1:13.10+20131012
 language-selector-common                	    2252	0.116
 laptop-detect                           	      56	0.13.7ubuntu2
 less                                    	     278	458-2
 libaccountsservice0                     	     341	0.6.34-0ubuntu6
 libacl1                                 	      75	2.2.52-1
-libalgorithm-diff-perl                  	     136	1.19.02-3
-libalgorithm-diff-xs-perl               	      86	0.04-2build3
-libalgorithm-merge-perl                 	      80	0.08-2
 libapparmor1                            	     127	2.8.0-0ubuntu31.1
 libapparmor-perl                        	     193	2.8.0-0ubuntu31.1
 libapt-inst1.5                          	     715	0.9.9.1~ubuntu3.3
@@ -335,7 +323,6 @@ libasound2                              	    1179	1.0.27.2-1ubuntu6
 libasound2-data                         	     336	1.0.27.2-1ubuntu6
 libasprintf0c2                          	      65	0.18.1.1-10ubuntu3
 libasprintf-dev                         	      69	0.18.1.1-10ubuntu3
-libassuan0                              	     105	2.1.0-1
 libasyncns0                             	      58	0.8-4ubuntu1
 libatk1.0-0                             	     215	2.10.0-2
 libatk1.0-data                          	      92	2.10.0-2
@@ -425,7 +412,6 @@ libgnutls26                             	    1100	2.12.23-1ubuntu4.3
 libgnutls-openssl27                     	     274	2.12.23-1ubuntu4.3
 libgomp1                                	      96	4.8.1-10ubuntu9
 libgpg-error0                           	      88	1.12-0.2
-libgpgme11                              	     467	1.4.2-0.1ubuntu3
 libgpm2                                 	      78	1.20.4-6.1
 libgraphite2-3                          	     154	1.2.3-1
 libgsm1                                 	     102	1.0.13-4
@@ -541,7 +527,6 @@ libsemanage1                            	     256	2.1.10-2
 libsemanage-common                      	      56	2.1.10-2
 libsepol1                               	     313	2.1.9-2
 libsigc++-2.0-0c2a                      	      83	2.2.10-0.2ubuntu1
-libsigc++-2.0-dev                       	    1270	2.2.10-0.2ubuntu1
 libsigsegv2                             	      56	2.10-2
 libslang2                               	    1239	2.2.4-15ubuntu1
 libsndfile1                             	     548	1.0.25-7ubuntu1
@@ -606,15 +591,12 @@ libxslt1.1                              	     484	1.1.28-2
 libxtables10                            	      93	1.4.18-1.1ubuntu1
 linux-firmware                          	   48928	1.116.2
 linux-generic                           	      33	3.11.0.26.27
-linux-generic-pae                       	      33	3.11.0.26.27
 linux-headers-3.11.0-26                 	   60808	3.11.0-26.45
 linux-headers-3.11.0-26-generic         	   12368	3.11.0-26.45
 linux-headers-generic                   	      33	3.11.0.26.27
-linux-headers-generic-pae               	      33	3.11.0.26.27
 linux-image-3.11.0-26-generic           	   30388	3.11.0-26.45
 linux-image-extra-3.11.0-26-generic     	  103333	3.11.0-26.45
 linux-image-generic                     	      33	3.11.0.26.27
-linux-image-generic-pae                 	      33	3.11.0.26.27
 linux-sound-base                        	      96	1.0.25+dfsg-0ubuntu4
 locales                                 	    9012	2.13+git20120306-9
 lockfile-progs                          	      68	0.1.17
@@ -667,7 +649,6 @@ pciutils                                	    1041	1:3.1.9-6ubuntu9
 perl                                    	   11345	5.14.2-21build1
 perl-base                               	    4693	5.14.2-21build1
 perl-modules                            	   14082	5.14.2-21build1
-pkg-config                              	     128	0.26-1ubuntu4
 plymouth                                	     439	0.8.8-0ubuntu8
 plymouth-theme-ubuntu-text              	      82	0.8.8-0ubuntu8
 po-debconf                              	     443	1.0.16+nmu2ubuntu1
@@ -684,7 +665,6 @@ python2.7-minimal                       	    3227	2.7.5-8ubuntu3.1
 python3.3                               	     285	3.3.2-7ubuntu3.1
 python3.3-minimal                       	    3749	3.3.2-7ubuntu3.1
 python3                                 	      99	3.3.2-14ubuntu1
-python3-apport                          	     515	2.12.5-0ubuntu2.2
 python3-apt                             	     609	0.8.9.1ubuntu1
 python3-commandnotfound                 	      61	0.3ubuntu8
 python3-dbus                            	     378	1.2.0-2
@@ -693,7 +673,6 @@ python3-gdbm                            	      70	3.3.1-0ubuntu2
 python3-gi                              	     670	3.10.0-1ubuntu1
 python3-minimal                         	     139	3.3.2-14ubuntu1
 python3-numpy                           	    7914	1:1.7.1-1ubuntu1
-python3-problem-report                  	     170	2.12.5-0ubuntu2.2
 python3-software-properties             	     133	0.92.28
 python3-update-manager                  	     239	1:0.194.1
 python                                  	     671	2.7.5-5ubuntu1
@@ -701,7 +680,6 @@ python-apport                           	     527	2.12.5-0ubuntu2.2
 python-apt                              	     636	0.8.9.1ubuntu1
 python-apt-common                       	     216	0.8.9.1ubuntu1
 python-chardet                          	     578	2.0.1-2build1
-python-configobj                        	    1531	4.7.2+ds-5
 python-crypto                           	    1457	2.6-5
 python-dbus                             	     400	1.2.0-2
 python-dbus-dev                         	      63	1.2.0-2
@@ -711,7 +689,6 @@ python-gi                               	     757	3.10.0-1ubuntu1
 python-gnupginterface                   	     113	0.3.2-9.1ubuntu3
 python-gobject-2                        	     861	2.28.6-12
 python-gobject                          	      40	3.10.0-1ubuntu1
-python-gpgme                            	     137	0.3-0ubuntu1
 python-httplib2                         	     176	0.8-2
 python-keyring                          	     304	1.6-1
 python-launchpadlib                     	     278	1.10.2+ds-1
@@ -722,16 +699,13 @@ python-newt                             	     129	0.52.15-2ubuntu1
 python-oauth                            	      91	1.0.1-3build1
 python-openssl                          	     417	0.13-2ubuntu4
 python-pam                              	      67	0.4.2-13ubuntu6
-python-paramiko                         	     555	1.10.1-1
 python-pkg-resources                    	     179	0.6.37-1ubuntu1
 python-problem-report                   	     174	2.12.5-0ubuntu2.2
-python-pycurl                           	     205	7.19.0-5ubuntu8
 python-requests                         	     192	1.2.3-1
 python-secretstorage                    	      75	1.0.0-1
 python-serial                           	     420	2.6-1
 python-simplejson                       	     256	3.3.0-2ubuntu2
 python-six                              	      56	1.3.0-1
-python-software-properties              	     142	0.92.28
 python-twisted-bin                      	     101	13.0.0-1ubuntu1
 python-twisted-core                     	    6057	13.0.0-1ubuntu1
 python-urllib3                          	     180	1.6-2
