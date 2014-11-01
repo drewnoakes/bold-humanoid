@@ -90,7 +90,6 @@ int CameraSession::write()
     if (bytesSent == totalSize)
     {
       // Done sending
-      imgReady = false;
       imgSending = false;
       bytesSent = 0;
       return 0;
@@ -98,7 +97,7 @@ int CameraSession::write()
   }
 
   // Queue for more writing later on if we still have data remaining
-  if (imgSending)
+  if (imgSending || imgReady)
     libwebsocket_callback_on_writable(d_context, d_wsi);
 
   return 0;
