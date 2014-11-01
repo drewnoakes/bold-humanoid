@@ -2,7 +2,7 @@
 
 using namespace bold::Colour;
 
-void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
+void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
 {
   // Only compose the image if at least one client is connected
   if (!d_dataStreamer->hasCameraClients())

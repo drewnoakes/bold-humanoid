@@ -80,7 +80,7 @@ namespace bold
     void saveImage(cv::Mat const& image);
 
     /** Composes and enqueues a debugging image. */
-    void streamDebugImage(cv::Mat cameraImage, SequentialTimer& timer);
+    void streamDebugImage(cv::Mat& cameraImage, SequentialTimer& timer);
 
     void setShouldDetectLines(bool val) { d_shouldDetectLines->setValue(val); }
     bool getShouldDetectLines() const { return d_shouldDetectLines->getValue(); }
