@@ -44,7 +44,7 @@ namespace bold
     /** Whether an image is currently in the process of being sent. */
     bool imgSending;
     /** If imgSending is true, the encoded JPEG bytes will be here. */
-    std::unique_ptr<std::vector<uchar>> imgJpgBuffer;
+    std::unique_ptr<std::vector<uchar>> imageBytes;
     /** If imgSending is true, the number of bytes already sent. */
     unsigned bytesSent;
 

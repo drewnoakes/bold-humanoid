@@ -7,7 +7,7 @@ using namespace std;
 CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
   : imgReady(false),
     imgSending(false),
-    imgJpgBuffer(make_unique<vector<uchar>>()),
+    imageBytes(make_unique<vector<uchar>>()),
     d_context(context),
     d_wsi(wsi)
 {}
@@ -51,15 +51,16 @@ int CameraSession::write()
     }
 
     // Encode the image
-    cv::imencode(encoding, image, *(imgJpgBuffer));
+    cv::imencode(encoding, image, *imageBytes);
+
     bytesSent = 0;
   }
 
   // Fill the outbound pipe with frames of data
   while (!lws_send_pipe_choked(d_wsi))
   {
-    uint totalSize = imgJpgBuffer->size();
-    uchar* start = imgJpgBuffer->data() + bytesSent;
+    uint totalSize = imageBytes->size();
+    uchar* start = imageBytes->data() + bytesSent;
 
     uint remainingSize = totalSize - bytesSent;
     uint frameSize = min(2048u, remainingSize);
