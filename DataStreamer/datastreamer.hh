@@ -39,9 +39,9 @@ namespace bold
     int write();
 
   private:
-    /** Whether an image is ready to be sent to this client. */
-    bool imgReady;
-    /** Whether an image is currently in the process of being sent. */
+    /** Whether an image is waiting to be encoded. */
+    bool imgWaiting;
+    /** Whether encoded image data is currently being sent. */
     bool imgSending;
     /** If imgSending is true, the encoded JPEG bytes will be here. */
     std::unique_ptr<std::vector<uchar>> imageBytes;

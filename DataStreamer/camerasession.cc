@@ -5,7 +5,7 @@ using namespace rapidjson;
 using namespace std;
 
 CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
-  : imgReady(false),
+  : imgWaiting(false),
     imgSending(false),
     imageBytes(make_unique<vector<uchar>>()),
     d_context(context),
@@ -20,7 +20,7 @@ void CameraSession::notifyImageAvailable(cv::Mat const& image, std::string encod
     lock_guard<mutex> imageGuard(d_imageMutex);
     d_image = image;
     d_imageEncoding = encoding;
-    imgReady = true;
+    imgWaiting = true;
   }
 
   if (!imgSending)
@@ -31,14 +31,11 @@ int CameraSession::write()
 {
   ASSERT(ThreadUtil::isDataStreamerThread());
 
-  // WaitingForImage
-  // Sending
-
-  if (!imgReady)
-    return 0;
-
   if (!imgSending)
   {
+    if (!imgWaiting)
+      return 0;
+
     // Take a thread-safe copy of the image to encode
     cv::Mat image;
     string encoding;
@@ -46,7 +43,7 @@ int CameraSession::write()
       lock_guard<mutex> imageGuard(d_imageMutex);
       image = d_image;
       encoding = d_imageEncoding;
-      imgReady = false;
+      imgWaiting = false;
       imgSending = true;
     }
 
@@ -100,7 +97,7 @@ int CameraSession::write()
   }
 
   // Queue for more writing later on if we still have data remaining
-  if (imgSending || imgReady)
+  if (imgSending || imgWaiting)
     libwebsocket_callback_on_writable(d_context, d_wsi);
 
   return 0;
