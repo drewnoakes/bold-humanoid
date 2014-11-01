@@ -51,7 +51,10 @@ int CameraSession::write()
     }
 
     // Encode the image
+    auto t = Clock::getTimestamp();
     cv::imencode(encoding, image, *imageBytes);
+
+    log::trace("CameraSession::write") << "Encoded image (" << imageBytes->size() << " bytes) in " << Clock::getMillisSince(t) << " ms";
 
     bytesSent = 0;
   }
