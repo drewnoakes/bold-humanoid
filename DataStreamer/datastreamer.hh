@@ -34,6 +34,11 @@ namespace bold
 
     ~CameraSession() = default;
 
+    void notifyImageAvailable(cv::Mat const& image, std::string encoding);
+
+    int write();
+
+  private:
     /** Whether an image is ready to be sent to this client. */
     bool imgReady;
     /** Whether an image is currently in the process of being sent. */
@@ -43,10 +48,12 @@ namespace bold
     /** If imgSending is true, the number of bytes already sent. */
     unsigned bytesSent;
 
+    std::mutex d_imageMutex;
+    cv::Mat d_image;
+    std::string d_imageEncoding;
+
     libwebsocket_context* d_context;
     libwebsocket* d_wsi;
-
-    void notifyImageAvailable();
   };
 
   class JsonSession
@@ -103,9 +110,6 @@ namespace bold
     const int d_port;
     const std::shared_ptr<Camera> d_camera;
 
-    std::mutex d_cameraImageMutex;
-    cv::Mat d_image;
-    std::string d_imageEncoding;
     libwebsocket_context* d_context;
     libwebsocket_protocols* d_protocols;
     libwebsocket_protocols* d_controlProtocol;

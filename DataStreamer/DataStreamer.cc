@@ -6,7 +6,6 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   : hasClientChanged(),
     d_port(Config::getStaticValue<int>("round-table.tcp-port")),
     d_camera(camera),
-    d_image(),
     d_context(0),
     d_cameraSessions(),
     d_isStopRequested(false),
