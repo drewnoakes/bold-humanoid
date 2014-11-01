@@ -103,6 +103,7 @@ namespace bold
     const int d_port;
     const std::shared_ptr<Camera> d_camera;
 
+    std::mutex d_cameraImageMutex;
     cv::Mat d_image;
     std::string d_imageEncoding;
     libwebsocket_context* d_context;

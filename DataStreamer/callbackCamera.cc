@@ -55,8 +55,17 @@ int DataStreamer::callback_camera(
 
     if (!cameraSession->imgSending)
     {
-      // Encode JPEG
-      cv::imencode(d_imageEncoding, d_image, *(cameraSession->imgJpgBuffer));
+      // Take a thread-safe copy of the image to encode
+      cv::Mat image;
+      string encoding;
+      {
+        lock_guard<mutex> imageGuard(d_cameraImageMutex);
+        image = d_image;
+        encoding = d_imageEncoding;
+      }
+
+      // Encode the image
+      cv::imencode(encoding, image, *(cameraSession->imgJpgBuffer));
 
       cameraSession->imgSending = true;
       cameraSession->bytesSent = 0;
