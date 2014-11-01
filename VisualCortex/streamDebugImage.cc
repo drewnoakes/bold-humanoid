@@ -273,7 +273,7 @@ void VisualCortex::streamDebugImage(cv::Mat cameraImage, SequentialTimer& t)
     : ".jpg";
 
   d_dataStreamer->streamImage(debugImage, imageEncoding);
-  t.timeEvent("Stream Debug Image");
+  t.timeEvent("Compose Debug Image");
 
   if (d_saveNextDebugFrame)
   {
