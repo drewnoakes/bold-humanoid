@@ -39,7 +39,6 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   d_protocols[1] = { "camera-protocol",  DataStreamer::_callback_camera,  sizeof(CameraSession), 0, 0 };
   d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, sizeof(JsonSession),   0, 0 };
 
-  d_cameraProtocol = &d_protocols[1];
   d_controlProtocol = &d_protocols[2];
 
   // One protocol per state

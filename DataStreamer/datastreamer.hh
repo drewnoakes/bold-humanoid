@@ -108,7 +108,6 @@ namespace bold
     std::string d_imageEncoding;
     libwebsocket_context* d_context;
     libwebsocket_protocols* d_protocols;
-    libwebsocket_protocols* d_cameraProtocol;
     libwebsocket_protocols* d_controlProtocol;
 
     std::vector<CameraSession*> d_cameraSessions;
