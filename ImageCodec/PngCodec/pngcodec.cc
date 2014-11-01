@@ -106,6 +106,5 @@ void PngCodec::writeDataToBuf(png_struct* png_ptr, uchar* src, size_t size)
 
   buffer->resize(currentSize + size);
 
-  // TODO use std::copy or similar
-  memcpy( &(*buffer)[currentSize], src, size );
+  std::copy(src, src + size, buffer->begin() + currentSize);
 }
