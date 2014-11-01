@@ -800,3 +800,9 @@ foreach(json_file ${JSON_FILES})
   add_Custom_command(TARGET boldhumanoid PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${json_file} $<TARGET_FILE_DIR:boldhumanoid>)
 endforeach(json_file)
+
+#
+## For CLion users. See https://youtrack.jetbrains.com/issue/CPP-270
+#
+file(GLOB_RECURSE clion_all_headers ${CMAKE_SOURCE_DIR}/*.hh ${CMAKE_SOURCE_DIR}/*.ih)
+add_custom_target(all_clion SOURCES ${clion_all_headers})
