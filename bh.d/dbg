@@ -11,6 +11,7 @@ if [[ $# -ne 0 ]] ; then
     exit 1
 fi
 
-sudo gdb -ex run boldhumanoid
+sudo gdb -ex "handle SIGPIPE nostop noprint pass" \
+         -ex "run" boldhumanoid
 
 exit $?
