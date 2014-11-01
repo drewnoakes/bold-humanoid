@@ -1,5 +1,7 @@
 #include "datastreamer.ih"
 
+#include "../ImageCodec/PngCodec/pngcodec.hh"
+
 using namespace bold;
 using namespace rapidjson;
 using namespace std;
@@ -49,7 +51,20 @@ int CameraSession::write()
 
     // Encode the image
     auto t = Clock::getTimestamp();
-    cv::imencode(encoding, image, *imageBytes);
+    ASSERT(imageBytes->size() == 0);
+    if (d_imageEncoding == ".png")
+    {
+      static PngCodec codec;
+      if (!codec.encode(image, *imageBytes))
+      {
+        log::error("CameraSession::write") << "Error encoding image as PNG";
+        return 1;
+      }
+    }
+    else
+    {
+      cv::imencode(encoding, image, *imageBytes);
+    }
 
     log::trace("CameraSession::write") << "Encoded image (" << imageBytes->size() << " bytes) in " << Clock::getMillisSince(t) << " ms";
 
@@ -92,6 +107,7 @@ int CameraSession::write()
       // Done sending
       imgSending = false;
       bytesSent = 0;
+      imageBytes->clear();
       return 0;
     }
   }

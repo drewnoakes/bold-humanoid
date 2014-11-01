@@ -251,6 +251,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./ImageCodec/PngCodec/pngcodec.cc
+)
+
+add_class(BOLDHUMANOID
   ./ImageLabeller/ImageLabeller.cc
 )
 
@@ -706,7 +710,7 @@ add_executable(boldhumanoid
 #
 ## Link executable to libraries
 #
-set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} ssl crypto libwebsockets.a pthread rt asound fftw3f espeak z)
+set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} ${OpenCV_LIBS} ssl crypto libwebsockets.a pthread rt asound fftw3f espeak z png)
 
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
