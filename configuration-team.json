@@ -264,7 +264,7 @@
     "image-encoding": {
       "png": {
         "compression-level": 1,
-        "compression-strategy": 3
+        "compression-strategy": 1
       }
     }
   },
