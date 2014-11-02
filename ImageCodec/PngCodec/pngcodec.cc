@@ -14,7 +14,11 @@ using namespace std;
 
 PngCodec::PngCodec()
   : d_compressionLevel(-1), // default
-    d_compressionStrategy(CompressionStrategy::RLE)
+    d_compressionStrategy(CompressionStrategy::RLE),
+    d_filterSub(true),
+    d_filterUp(false),
+    d_filterAvg(false),
+    d_filterPaeth(false)
 {}
 
 bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
@@ -60,7 +64,12 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
   }
 
   // Set parameters that control the encoding
-  png_set_filter(png_ptr, PNG_FILTER_TYPE_BASE, PNG_FILTER_SUB);
+  int filters = PNG_NO_FILTERS;
+  if (d_filterSub) filters |= PNG_FILTER_SUB;
+  if (d_filterUp) filters |= PNG_FILTER_UP;
+  if (d_filterPaeth) filters |= PNG_FILTER_PAETH;
+  if (d_filterAvg) filters |= PNG_FILTER_AVG;
+  png_set_filter(png_ptr, PNG_FILTER_TYPE_BASE, filters);
   png_set_compression_level(png_ptr, d_compressionLevel);
   png_set_compression_strategy(png_ptr, static_cast<int>(d_compressionStrategy));
 

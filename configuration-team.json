@@ -264,7 +264,13 @@
     "image-encoding": {
       "png": {
         "compression-level": 1,
-        "compression-strategy": 1
+        "compression-strategy": 1,
+        "filters": {
+          "sub": true,
+          "up": false,
+          "avg": false,
+          "paeth": false
+        }
       }
     }
   },

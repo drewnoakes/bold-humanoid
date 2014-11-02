@@ -27,6 +27,11 @@ namespace bold
     void setCompressionLevel(int level) { ASSERT(level >= 0 && level <= 9); d_compressionLevel = level; }
     void setCompressionStrategy(CompressionStrategy strategy) { d_compressionStrategy = strategy; }
 
+    void setFilterSub(bool enabled) { d_filterSub = enabled; }
+    void setFilterUp(bool enabled) { d_filterUp = enabled; }
+    void setFilterAvg(bool enabled) { d_filterAvg = enabled; }
+    void setFilterPaeth(bool enabled) { d_filterPaeth = enabled; }
+
   private:
     static void writeDataToBuf(png_struct_def* png_ptr, uchar* src, size_t size);
     static void onError(png_struct_def* png_ptr, const char* message);
@@ -36,5 +41,9 @@ namespace bold
 
     int d_compressionLevel;
     CompressionStrategy d_compressionStrategy;
+    bool d_filterSub;
+    bool d_filterUp;
+    bool d_filterAvg;
+    bool d_filterPaeth;
   };
 }

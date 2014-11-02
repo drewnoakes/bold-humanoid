@@ -132,6 +132,10 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
 
   Config::getSetting<int>("round-table.image-encoding.png.compression-level")->track([](int value) { CameraSession::pngCodec.setCompressionLevel(value); });
   Config::getSetting<CompressionStrategy>("round-table.image-encoding.png.compression-strategy")->track([](CompressionStrategy value) { CameraSession::pngCodec.setCompressionStrategy(value); });
+  Config::getSetting<bool>("round-table.image-encoding.png.filters.sub")->track([](bool enabled) { CameraSession::pngCodec.setFilterSub(enabled); });
+  Config::getSetting<bool>("round-table.image-encoding.png.filters.up")->track([](bool enabled) { CameraSession::pngCodec.setFilterUp(enabled); });
+  Config::getSetting<bool>("round-table.image-encoding.png.filters.paeth")->track([](bool enabled) { CameraSession::pngCodec.setFilterPaeth(enabled); });
+  Config::getSetting<bool>("round-table.image-encoding.png.filters.avg")->track([](bool enabled) { CameraSession::pngCodec.setFilterAvg(enabled); });
 
   log::info("DataStreamer::DataStreamer") << "Starting DataStreamer thread";
   d_thread = std::thread(&DataStreamer::run, this);
