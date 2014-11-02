@@ -36,7 +36,7 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::
   else
   {
     ASSERT(image.depth() == CV_8U);
-    ASSERT(image.channels() == 1);
+    ASSERT(image.channels() == 3);
     colourType = PNG_COLOR_TYPE_RGB;
   }
 
