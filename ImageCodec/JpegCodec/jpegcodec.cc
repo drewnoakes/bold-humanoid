@@ -16,6 +16,9 @@ JpegCodec::JpegCodec()
 
 bool JpegCodec::encode(cv::Mat const& image, vector<uchar>& buffer)
 {
+  ASSERT(image.depth() == CV_8U);
+  ASSERT(image.channels() == 3);
+
   // TODO look at reusing some of these structures
 
   // Create the JPEG object which represents a compression operation
@@ -71,7 +74,7 @@ bool JpegCodec::encode(cv::Mat const& image, vector<uchar>& buffer)
 
   // Write scan lines
   rowPointers.resize(rows);
-  for (unsigned y = 0; y < image.rows; y++)
+  for (int y = 0; y < image.rows; y++)
     rowPointers[y] = image.data + y*image.step;
 
   jpeg_write_scanlines(&cinfo, rowPointers.data(), rows);
