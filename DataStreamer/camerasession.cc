@@ -62,7 +62,7 @@ int CameraSession::write()
     {
       case ImageEncoding::PNG:
       {
-        if (!pngCodec.encode(image, *d_imageBytes, palette))
+        if (!pngCodec.encode(image, *d_imageBytes, &palette))
         {
           log::error("CameraSession::write") << "Error encoding image as PNG";
           return 1;

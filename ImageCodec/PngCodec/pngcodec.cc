@@ -9,9 +9,11 @@
 using namespace bold;
 using namespace std;
 
-// TODO can compile libpng to support MMX operations (at the expense of thread safety)
-
 // http://www.libpng.org/pub/png/libpng-1.2.5-manual.html
+
+// TODO may wish to cache and reuse: png_structp and png_infop
+// TODO pull out common code from 'encode' overloads
+// TODO can compile libpng to support MMX operations (at the expense of thread safety)
 
 PngCodec::PngCodec()
   : d_compressionLevel(-1), // default
@@ -22,9 +24,21 @@ PngCodec::PngCodec()
     d_filterPaeth(false)
 {}
 
-bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::map<uchar, Colour::bgr> const& colourByNumber)
+bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::map<uchar, Colour::bgr> const* colourByNumber)
 {
-  // TODO may wish to cache and reuse: png_structp and png_infop
+  int colourType;
+  if (colourByNumber)
+  {
+    ASSERT(image.depth() == CV_8U);
+    ASSERT(image.channels() == 1);
+    colourType = PNG_COLOR_TYPE_PALETTE;
+  }
+  else
+  {
+    ASSERT(image.depth() == CV_8U);
+    ASSERT(image.channels() == 1);
+    colourType = PNG_COLOR_TYPE_RGB;
+  }
 
   png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
@@ -74,17 +88,14 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::
   png_set_compression_level(png_ptr, d_compressionLevel);
   png_set_compression_strategy(png_ptr, static_cast<int>(d_compressionStrategy));
 
-  ASSERT(image.depth() == CV_8U);
-  ASSERT(image.channels() == 1);
-
   // Set metadata for the IHDR segment (image header)
   png_set_IHDR(
     png_ptr,
     info_ptr,
     (png_uint_32) image.cols,
     (png_uint_32) image.rows,
-    8,
-    PNG_COLOR_TYPE_PALETTE,
+    8, // TODO experiment with lower bit depth for palette images where possible
+    colourType,
     PNG_INTERLACE_NONE,
     PNG_COMPRESSION_TYPE_DEFAULT,
     PNG_FILTER_TYPE_DEFAULT);
@@ -92,23 +103,28 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::
   // Set callbacks for custom buffering of output
   png_set_write_fn(png_ptr, &buffer, &bold::PngCodec::writeDataToBuf, nullptr);
 
-  // Set the colour palette to use
-  uchar paletteSize = 0;
-  for (auto const& pair : colourByNumber)
-    paletteSize = max(paletteSize, pair.first);
-  paletteSize++;
-  ASSERT(paletteSize <= PNG_MAX_PALETTE_LENGTH);
-  auto palette = (png_color*)png_malloc(png_ptr, paletteSize * sizeof (png_color));
-  for (uchar p = 0; p < paletteSize; p++)
-  {
-    auto const& bgr = colourByNumber.at(p);
-    png_color& col = palette[p];
-    col.red = bgr.r;
-    col.green = bgr.g;
-    col.blue = bgr.b;
-  }
+  png_color* palette = nullptr;
 
-  png_set_PLTE(png_ptr, info_ptr, palette, paletteSize);
+  if (colourByNumber)
+  {
+    // Set the colour palette to use
+    uchar paletteSize = 0;
+    for (auto const& pair : *colourByNumber)
+      paletteSize = max(paletteSize, pair.first);
+    paletteSize++;
+    ASSERT(paletteSize <= PNG_MAX_PALETTE_LENGTH);
+    palette = (png_color*) png_malloc(png_ptr, paletteSize * sizeof(png_color));
+    for (uchar p = 0; p < paletteSize; p++)
+    {
+      auto const& bgr = colourByNumber->at(p);
+      png_color& col = palette[p];
+      col.red = bgr.r;
+      col.green = bgr.g;
+      col.blue = bgr.b;
+    }
+
+    png_set_PLTE(png_ptr, info_ptr, palette, paletteSize);
+  }
 
   // Write all the PNG information before the image
   png_write_info(png_ptr, info_ptr);
@@ -132,7 +148,8 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::
 
   png_destroy_write_struct(&png_ptr, &info_ptr);
 
-  png_free(png_ptr, palette);
+  if (palette)
+    png_free(png_ptr, palette);
 
   return true;
 }

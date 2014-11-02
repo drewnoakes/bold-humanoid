@@ -23,7 +23,7 @@ namespace bold
   public:
     PngCodec();
 
-    bool encode(cv::Mat const& image, std::vector<unsigned char>& buffer, std::map<uchar, Colour::bgr> const& palette);
+    bool encode(cv::Mat const& image, std::vector<unsigned char>& buffer, std::map<uchar, Colour::bgr> const* palette);
 
     void setCompressionLevel(int level) { ASSERT(level >= 0 && level <= 9); d_compressionLevel = level; }
     void setCompressionStrategy(CompressionStrategy strategy) { d_compressionStrategy = strategy; }
