@@ -166,101 +166,102 @@ class TimingPane
     {
         var entry = this.entryByLabel[label];
 
-        if (!entry) {
-            // If this entry is a child of another entry, try to find it's parent
-            var parts = label.split('/'),
-                hasParent = parts.length !== 1,
-                parent;
+        if (entry)
+            return entry;
 
-            // Some messing around to get paths in a nice order, where parents appear above children
-            // Image Processing
-            // Image Processing/Pixel Label
-            // Image Processing/Pixel Label/Find Horizon
-            // Image Processing/Pixel Label/Pixels Above
-            for (var i = 1; i < parts.length; i++) {
-                var parentPath = parts.slice(0, i).join('/');
-                parent = this.getOrCreateEntry(parentPath);
-                parent.row.classList.add('parent');
-                if (i === 1)
-                    parent.row.classList.add('root');
-            }
+        // If this entry is a child of another entry, try to find it's parent
+        var parts = label.split('/'),
+            hasParent = parts.length !== 1,
+            parent;
 
-            var row = document.createElement('tr');
-
-            var cellExpand = document.createElement('td'),     // {'class': 'expander'}).appendTo(row).get(0),
-                cellLabel = document.createElement('td'),      //.text(label).appendTo(row).get(0),
-                cellMillis = document.createElement('td'),     // {'class': 'duration'}).appendTo(row).get(0),
-                cellMAvgMillis = document.createElement('td'), // {'class': 'avg-duration'}).appendTo(row).get(0),
-                cellMaxMillis = document.createElement('td');  // {'class': 'max-duration'}).appendTo(row).get(0);
-
-            cellExpand.className = 'expander';
-            cellLabel.textContent = label;
-            cellMillis.className = 'duration';
-            cellMAvgMillis.className = 'avg-duration';
-            cellMaxMillis.className = 'max-duration';
-
-            row.appendChild(cellExpand);
-            row.appendChild(cellLabel);
-            row.appendChild(cellMillis);
-            row.appendChild(cellMAvgMillis);
-            row.appendChild(cellMaxMillis);
-
-            entry = {
-                label: label,
-                avg: new math.MovingAverage(this.targetFps * 4), // four second moving average
-                update: (timestamp: number, millis: number) =>
-                {
-                    entry.time = timestamp;
-                    entry.millis = millis;
-                    if (!entry.maxMillis || entry.maxMillis < millis) {
-                        entry.maxMillis = millis;
-                        cellMaxMillis.textContent = millis.toFixed(3);
-                    }
-                    cellMillis.textContent = millis.toFixed(3);
-                    cellMAvgMillis.textContent = entry.avg.next(millis).toFixed(3);
-                },
-                row: row,
-                children: [],
-                isExpanded: false
-            };
-
-            var setChildRowDisplay = (e: ITimingEntry) =>
-            {
-                var display = e.isExpanded ? 'table-row' : 'none';
-                _.each(e.children, child =>
-                {
-                    child.row.style.display = display;
-                    setChildRowDisplay(child);
-                });
-            };
-
-            var setRowExpansion = isExpanded =>
-            {
-                entry.isExpanded = isExpanded;
-
-                if (isExpanded)
-                    entry.row.classList.add("expanded");
-                else
-                    entry.row.classList.remove("expanded");
-            };
-
-            entry.row.addEventListener('click', () =>
-            {
-                setRowExpansion(!entry.isExpanded);
-                setChildRowDisplay(entry);
-            });
-
-            this.entryByLabel[label] = entry;
-
-            if (hasParent) {
-                parent.children.push(entry);
-                entry.row.style.display = parent.isExpanded ? 'table-row' : 'none';
-            }
-
-            setRowExpansion(entry.isExpanded);
-
-            this.table.appendChild(row);
+        // Some messing around to get paths in a nice order, where parents appear above children
+        // Image Processing
+        // Image Processing/Pixel Label
+        // Image Processing/Pixel Label/Find Horizon
+        // Image Processing/Pixel Label/Pixels Above
+        for (var i = 1; i < parts.length; i++) {
+            var parentPath = parts.slice(0, i).join('/');
+            parent = this.getOrCreateEntry(parentPath);
+            parent.row.classList.add('parent');
+            if (i === 1)
+                parent.row.classList.add('root');
         }
+
+        var row = document.createElement('tr');
+
+        var cellExpand = document.createElement('td'),     // {'class': 'expander'}).appendTo(row).get(0),
+            cellLabel = document.createElement('td'),      //.text(label).appendTo(row).get(0),
+            cellMillis = document.createElement('td'),     // {'class': 'duration'}).appendTo(row).get(0),
+            cellMAvgMillis = document.createElement('td'), // {'class': 'avg-duration'}).appendTo(row).get(0),
+            cellMaxMillis = document.createElement('td');  // {'class': 'max-duration'}).appendTo(row).get(0);
+
+        cellExpand.className = 'expander';
+        cellLabel.textContent = label;
+        cellMillis.className = 'duration';
+        cellMAvgMillis.className = 'avg-duration';
+        cellMaxMillis.className = 'max-duration';
+
+        row.appendChild(cellExpand);
+        row.appendChild(cellLabel);
+        row.appendChild(cellMillis);
+        row.appendChild(cellMAvgMillis);
+        row.appendChild(cellMaxMillis);
+
+        entry = {
+            label: label,
+            avg: new math.MovingAverage(this.targetFps * 4), // four second moving average
+            update: (timestamp: number, millis: number) =>
+            {
+                entry.time = timestamp;
+                entry.millis = millis;
+                if (!entry.maxMillis || entry.maxMillis < millis) {
+                    entry.maxMillis = millis;
+                    cellMaxMillis.textContent = millis.toFixed(3);
+                }
+                cellMillis.textContent = millis.toFixed(3);
+                cellMAvgMillis.textContent = entry.avg.next(millis).toFixed(3);
+            },
+            row: row,
+            children: [],
+            isExpanded: false
+        };
+
+        var setChildRowDisplay = (e: ITimingEntry) =>
+        {
+            var display = e.isExpanded ? 'table-row' : 'none';
+            _.each(e.children, child =>
+            {
+                child.row.style.display = display;
+                setChildRowDisplay(child);
+            });
+        };
+
+        var setRowExpansion = isExpanded =>
+        {
+            entry.isExpanded = isExpanded;
+
+            if (isExpanded)
+                entry.row.classList.add("expanded");
+            else
+                entry.row.classList.remove("expanded");
+        };
+
+        entry.row.addEventListener('click', () =>
+        {
+            setRowExpansion(!entry.isExpanded);
+            setChildRowDisplay(entry);
+        });
+
+        this.entryByLabel[label] = entry;
+
+        if (hasParent) {
+            parent.children.push(entry);
+            entry.row.style.display = parent.isExpanded ? 'table-row' : 'none';
+        }
+
+        setRowExpansion(entry.isExpanded);
+
+        this.table.appendChild(row);
 
         return entry;
     }
