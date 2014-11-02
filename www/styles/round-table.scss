@@ -3,6 +3,9 @@ $bh-colour-dark: rgb(87, 21, 97);
 $team-cyan: #36aeff;
 $team-magenta: #ff41e5;
 
+$light-mode-text: black;
+$night-mode-text: #DDD;
+
 /********************************************************************/
 
 @font-face
@@ -89,7 +92,7 @@ button
 
   html.night-mode &
   {
-    color: #CCC;
+    color: $night-mode-text;
     background: rgba(80, 80, 80, 0.8);
     border-top: 1px solid rgba(white, 0.1);
     border-bottom: 1px solid rgba(black, 0.1);
@@ -108,7 +111,7 @@ select
   html.night-mode &
   {
     background: rgba(80, 80, 80, 0.8);
-    color: #CCC;
+    color: $night-mode-text;
     border-top: 1px solid rgba(white, 0.1);
     border-bottom: 1px solid rgba(black, 0.1);
   }
@@ -128,7 +131,7 @@ input[type="number"]
 
   html.night-mode &
   {
-    background: #ccc;
+    background: $night-mode-text;
     border-top: 1px solid rgba(white, 0.1);
     border-bottom: 1px solid rgba(black, 0.1);
   }
@@ -1338,7 +1341,7 @@ div.module.optiontree
           transition: stroke-width 1s linear, stroke 1s linear;
           stroke-width: 1;
 
-          html.night-mode & { stroke: #CCC; }
+          html.night-mode & { stroke: $night-mode-text; }
         }
 
         &.active path.connection
@@ -1353,8 +1356,8 @@ div.module.optiontree
         html.night-mode & path.marker-source,
         html.night-mode & path.marker-target
         {
-          stroke: #CCC;
-          fill: #CCC;
+          stroke: $night-mode-text;
+          fill: $night-mode-text;
         }
       }
 
