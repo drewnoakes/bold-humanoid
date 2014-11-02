@@ -113,8 +113,6 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::
   // Write all the PNG information before the image
   png_write_info(png_ptr, info_ptr);
 
-  png_set_palette_to_rgb(png_ptr);
-
   // Use 1 byte per pixel in 1, 2, or 4-bit depth files
   png_set_packing(png_ptr);
 
