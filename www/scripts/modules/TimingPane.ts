@@ -26,6 +26,7 @@ interface ITimingEntry
     update: (timestamp: number, millis: number)=>void;
     row: HTMLTableRowElement;
     children: ITimingEntry[];
+    descendants: ITimingEntry[];
     isExpanded: boolean;
     time?: number;
     millis?: number;
@@ -172,13 +173,22 @@ class TimingPane
         if (entry)
             return entry;
 
+        var row = document.createElement('tr');
+
+        entry = <ITimingEntry>{
+            label: label,
+            avg: new math.MovingAverage(this.targetFps * 4), // four second moving average
+            row: row,
+            children: [],
+            descendants: [],
+            isExpanded: false
+        };
+
         // If this entry is a child of another entry, try to find it's parent
         var parts = label.split('/'),
             hasParent = parts.length !== 1,
             parent,
             parentPath = '';
-
-        var row = document.createElement('tr');
 
         if (!hasParent)
             row.classList.add('root');
@@ -208,6 +218,8 @@ class TimingPane
                 parent = this.getOrCreateEntry(parentPath);
                 parent.row.classList.add('parent');
 
+                parent.descendants.push(entry);
+
                 var ancestor = document.createElement('span');
                 ancestor.className = 'ancestry';
                 ancestor.textContent = parts[i];
@@ -231,33 +243,33 @@ class TimingPane
         row.appendChild(cellMAvgMillis);
         row.appendChild(cellMaxMillis);
 
-        entry = {
-            label: label,
-            avg: new math.MovingAverage(this.targetFps * 4), // four second moving average
-            update: (timestamp: number, millis: number) =>
-            {
-                entry.time = timestamp;
-                entry.millis = millis;
-                if (!entry.maxMillis || entry.maxMillis < millis) {
-                    entry.maxMillis = millis;
-                    cellMaxMillis.textContent = millis.toFixed(3);
-                }
-                cellMillis.textContent = millis.toFixed(3);
-                cellMAvgMillis.textContent = entry.avg.next(millis).toFixed(3);
-            },
-            row: row,
-            children: [],
-            isExpanded: false
+        entry.update = (timestamp: number, millis: number) =>
+        {
+            entry.time = timestamp;
+            entry.millis = millis;
+            if (!entry.maxMillis || entry.maxMillis < millis) {
+                entry.maxMillis = millis;
+                cellMaxMillis.textContent = millis.toFixed(3);
+            }
+            cellMillis.textContent = millis.toFixed(3);
+            cellMAvgMillis.textContent = entry.avg.next(millis).toFixed(3);
         };
 
         var setChildRowDisplay = (e: ITimingEntry) =>
         {
-            var display = e.isExpanded ? 'table-row' : 'none';
-            _.each(e.children, child =>
+            if (e.isExpanded)
             {
-                child.row.style.display = display;
-                setChildRowDisplay(child);
-            });
+                // Show all children, and recur
+                _.each(e.children, child => {
+                    child.row.style.display = 'table-row';
+                    setChildRowDisplay(child); 
+                });
+            }
+            else
+            {
+                // Collapse all ancestors
+                _.each(e.descendants, child => child.row.style.display = 'none');
+            }
         };
 
         var setRowExpansion = isExpanded =>
