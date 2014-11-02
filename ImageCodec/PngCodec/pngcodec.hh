@@ -17,5 +17,7 @@ namespace bold
 
   private:
     static void writeDataToBuf(png_struct_def* png_ptr, uchar* src, size_t size);
+    static void onError(png_struct_def* png_ptr, const char* message);
+    static void onWarning(png_struct_def* png_ptr, const char* message);
   };
 }

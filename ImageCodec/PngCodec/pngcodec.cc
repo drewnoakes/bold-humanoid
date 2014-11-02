@@ -1,6 +1,7 @@
 #include "pngcodec.hh"
 
 #include "../../util/assert.hh"
+#include "../../util/log.hh"
 
 #include <png.h>
 
@@ -21,15 +22,28 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
   png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
   if (!png_ptr)
+  {
+    log::error("PngCodec::PngCodec") << "Error creating libpng png_struct";
     return false;
+  }
 
   png_info* info_ptr = png_create_info_struct(png_ptr);
 
   if (!info_ptr)
   {
+    log::error("PngCodec::PngCodec") << "Error creating libpng png_info";
     png_destroy_write_struct(&png_ptr, nullptr);
     return false;
   }
+
+  png_set_error_fn(
+    png_ptr,
+    png_get_error_ptr(png_ptr),
+    &bold::PngCodec::onError,
+    &bold::PngCodec::onWarning);
+
+  // Intel is little-endian
+  png_set_swap(png_ptr);
 
   // TODO can avoid setjmp/longjmp (see libpng docs)
   if (setjmp(png_jmpbuf(png_ptr)) != 0)
@@ -107,4 +121,14 @@ void PngCodec::writeDataToBuf(png_struct* png_ptr, uchar* src, size_t size)
   buffer->resize(currentSize + size);
 
   std::copy(src, src + size, buffer->begin() + currentSize);
+}
+
+void PngCodec::onError(png_struct* png_ptr, const char* message)
+{
+  log::error("PngCodec::onError") << message;
+}
+
+void PngCodec::onWarning(png_struct* png_ptr, const char* message)
+{
+  log::error("PngCodec::onWarning") << message;
 }
