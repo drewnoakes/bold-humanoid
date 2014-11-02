@@ -40,7 +40,7 @@ $team-magenta: #ff41e5;
 {
   background: rgba(white, 0.8);
   -webkit-border-radius: 3px;
-  -webkit-box-shadow: inset 0px 0px 2px rgba(black, 1);
+  -webkit-box-shadow: inset 0 0 2px rgba(black, 1);
 
   html.night-mode &
   {
@@ -1718,7 +1718,7 @@ div.module.animator
     {
       width: 100%;
       height: 23px;
-      margin: 0px;
+      margin: 0;
       box-sizing: border-box;
       text-align: center;
       color: #FFF;
@@ -1740,7 +1740,7 @@ div.module.animator
   ul.values
   {
     border: none;
-    margin: 0px 1px 0 0;
+    margin: 0 1px 0 0;
     border-radius: 2px;
     background: rgba(black, 0.1);
     border-top: 1px solid rgba(white, 0.5);
