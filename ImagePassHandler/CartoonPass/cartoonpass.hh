@@ -5,8 +5,6 @@
 
 #include "../imagepasshandler.hh"
 #include "../../Config/config.hh"
-#include "../../HoughLineAccumulator/houghlineaccumulator.hh"
-#include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../PixelLabel/pixellabel.hh"
 #include "../../SequentialTimer/sequentialtimer.hh"
 
