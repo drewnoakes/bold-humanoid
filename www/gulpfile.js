@@ -32,7 +32,7 @@ var distFolder = 'dist';
 var buildFolder = 'build';
 
 // Transpiles SASS styles, runs autoprefixer and saves as a .css file
-gulp.task('styles', function ()
+gulp.task('compile-sass', function ()
 {
     return gulp.src('styles/*.scss')
         .pipe(sass())
@@ -41,7 +41,7 @@ gulp.task('styles', function ()
 });
 
 // Transpiles TypeScript source code
-function tsc(moduleType, outFolder)
+function compileTypeScript(moduleType, outFolder)
 {
     return function()
     {
@@ -51,15 +51,15 @@ function tsc(moduleType, outFolder)
     };
 }
 
-gulp.task('tsc-commonjs', tsc('commonjs', buildFolder + '/commonjs/'));
-gulp.task('tsc-amd',      tsc('amd',      buildFolder + '/amd/'));
+gulp.task('compile-commonjs', compileTypeScript('commonjs', buildFolder + '/commonjs/'));
+gulp.task('compile-amd',      compileTypeScript('amd',      buildFolder + '/amd/'));
 
 gulp.task('clean-dist', function(cb)
 {
     del([distFolder], cb);
 });
 
-gulp.task('bundle-styles', ['clean-dist', 'styles'], function ()
+gulp.task('bundle-styles', ['clean-dist', 'compile-sass'], function ()
 {
     var styles = [
         'build/styles/round-table.css',
@@ -74,7 +74,7 @@ gulp.task('bundle-styles', ['clean-dist', 'styles'], function ()
         .pipe(gulp.dest(distFolder));
 });
 
-gulp.task('bundle-source', ['clean-dist', 'tsc-commonjs'], function ()
+gulp.task('bundle-source', ['clean-dist', 'compile-commonjs'], function ()
 {
     // TODO sourcemap support
 
@@ -161,10 +161,10 @@ gulp.task('dist', allBundles, function ()
 
 gulp.task('watch', function ()
 {
-    gulp.watch('scripts/app/**/*.ts', ['tsc-amd']);
-    gulp.watch('styles/*.scss', ['styles']);
+    gulp.watch('scripts/app/**/*.ts', ['compile-amd']);
+    gulp.watch('styles/*.scss',       ['compile-sass']);
 });
 
-gulp.task('compile', ['styles', 'tsc-amd']);
+gulp.task('compile', ['compile-sass', 'compile-amd']);
 
 gulp.task('default', ['compile']);
