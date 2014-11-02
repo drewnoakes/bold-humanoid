@@ -98,7 +98,6 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
   png_set_swap(png_ptr);
 
   // Prepare pointers required by libpng
-  vector<unsigned char*> rowPointers; // TODO convert to field
   rowPointers.resize(image.rows);
   for (int y = 0; y < image.rows; y++)
     rowPointers[y] = image.data + y*image.step;
