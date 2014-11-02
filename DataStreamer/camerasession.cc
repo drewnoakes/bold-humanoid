@@ -57,6 +57,7 @@ int CameraSession::write()
 
     // Encode the image
     ASSERT(imageBytes->size() == 0);
+    imageBytes->resize(LWS_SEND_BUFFER_PRE_PADDING);
     switch (encoding)
     {
       case ImageEncoding::PNG:
@@ -78,6 +79,7 @@ int CameraSession::write()
         break;
       }
     }
+    imageBytes->resize(imageBytes->size() + LWS_SEND_BUFFER_POST_PADDING);
 
     log::trace("CameraSession::write") << "Encoded image (" << imageBytes->size() << " bytes) in " << Clock::getMillisSince(t) << " ms";
 
@@ -87,16 +89,14 @@ int CameraSession::write()
   // Fill the outbound pipe with frames of data
   while (!lws_send_pipe_choked(d_wsi))
   {
-    uint totalSize = imageBytes->size();
-    uchar* start = imageBytes->data() + bytesSent;
+    uint totalSize = (uint) imageBytes->size() - LWS_SEND_BUFFER_PRE_PADDING - LWS_SEND_BUFFER_POST_PADDING;
+
+    ASSERT(bytesSent < totalSize);
+
+    uchar* start = imageBytes->data() + LWS_SEND_BUFFER_PRE_PADDING + bytesSent;
 
     uint remainingSize = totalSize - bytesSent;
     uint frameSize = min(2048u, remainingSize);
-    uchar buf[LWS_SEND_BUFFER_PRE_PADDING + frameSize + LWS_SEND_BUFFER_POST_PADDING];
-    uchar *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
-
-    // TODO avoid this copy here by juggling the post padding
-    memcpy(p, start, frameSize);
 
     int writeMode = bytesSent == 0
       ? LWS_WRITE_BINARY
@@ -105,7 +105,12 @@ int CameraSession::write()
     if (frameSize != remainingSize)
       writeMode |= LWS_WRITE_NO_FIN;
 
-    int res = libwebsocket_write(d_wsi, p, frameSize, (libwebsocket_write_protocol)writeMode);
+    bool storePostPadding = bytesSent + frameSize < totalSize;
+    std::array<uchar,LWS_SEND_BUFFER_POST_PADDING> postPadding{};
+    if (storePostPadding)
+      std::copy(start + frameSize, start + frameSize + LWS_SEND_BUFFER_POST_PADDING, postPadding.data());
+
+    int res = libwebsocket_write(d_wsi, start, frameSize, (libwebsocket_write_protocol)writeMode);
 
     if (res < 0)
     {
@@ -122,6 +127,10 @@ int CameraSession::write()
       bytesSent = 0;
       imageBytes->clear();
       return 0;
+    }
+    else if (storePostPadding)
+    {
+      std::copy(postPadding.data(), postPadding.data() + LWS_SEND_BUFFER_POST_PADDING, start + frameSize);
     }
   }
 
