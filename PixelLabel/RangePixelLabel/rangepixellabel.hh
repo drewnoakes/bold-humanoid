@@ -26,8 +26,8 @@ namespace bold
   
 
   inline RangePixelLabel::RangePixelLabel(std::string name, LabelClass id, Colour::hsvRange hsvRange)
-    : PixelLabel{name, id},
-    d_hsvRange{std::move(hsvRange)}
+    : PixelLabel{name, id, hsvRange.toBgr()},
+      d_hsvRange{std::move(hsvRange)}
   {}
 
   inline void RangePixelLabel::addSample(Colour::hsv const& pixelColour)

@@ -112,17 +112,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     for (auto const& pixelLabel : getHandler<BlobDetectPass>()->pixelLabels())
     {
       // Determine outline colour for the blob
-      cv::Scalar blobColour;
-      if (pixelLabel->getName() == "Goal")
-        blobColour = bgr::yellow.toScalar();
-      else if (pixelLabel->getName() == "Ball")
-        blobColour = bgr::red.toScalar();
-      else if (pixelLabel->getName() == "Cyan")
-        blobColour = bgr::cyan.toScalar();
-      else if (pixelLabel->getName() == "Magenta")
-        blobColour = bgr::magenta.toScalar();
-      else
-        blobColour = pixelLabel->modalColour().toBgr().toScalar();
+      cv::Scalar blobColour = getColour(pixelLabel->getThemeColour());
 
       for (auto const& blob : blobsByLabel.at(pixelLabel))
       {

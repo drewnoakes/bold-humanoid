@@ -23,10 +23,11 @@ namespace bold
   class PixelLabel
   {
   public:
-    PixelLabel(std::string name, LabelClass id);
+    PixelLabel(std::string name, LabelClass id, Colour::bgr themeColour);
 
-    LabelClass getID() const;
-    std::string getName() const;
+    LabelClass getID() const { return d_id; }
+    std::string getName() const { return d_name; }
+    Colour::bgr getThemeColour() const { return d_themeColour; }
 
     virtual void addSample(Colour::hsv const& pixelColour) = 0;
     virtual float labelProb(Colour::hsv const& pixelColour) const = 0;
@@ -37,22 +38,14 @@ namespace bold
   private:
     LabelClass d_id;
     std::string d_name;
+    Colour::bgr d_themeColour;
   };
 
-  inline PixelLabel::PixelLabel(std::string name, LabelClass id)
-    : d_id{id},
-    d_name{std::move(name)}
+  inline PixelLabel::PixelLabel(std::string name, LabelClass id, Colour::bgr themeColour)
+    : d_id(id),
+      d_name(name),
+      d_themeColour(themeColour)
   {}
-
-  inline LabelClass PixelLabel::getID() const
-  {
-    return d_id;
-  }
-
-  inline std::string PixelLabel::getName() const
-  {
-    return d_name;
-  }
 
   inline void PixelLabel::print(std::ostream& out) const
   {
