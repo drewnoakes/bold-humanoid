@@ -45,7 +45,12 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
   // Intel is little-endian
   png_set_swap(png_ptr);
 
-  // TODO can avoid setjmp/longjmp (see libpng docs)
+  // TODO can avoid setjmp/longjmp (from libpng docs):
+  //
+  //    If you would rather avoid the complexity of setjmp/longjmp issues, you can compile libpng
+  //    with PNG_SETJMP_NOT_SUPPORTED, in which case errors will result in a call to PNG_ABORT()
+  //    which defaults to abort().
+  //
   if (setjmp(png_jmpbuf(png_ptr)) != 0)
   {
     png_destroy_write_struct(&png_ptr, &info_ptr);
