@@ -2,8 +2,3 @@
 /build/
 /dist/
 /node_modules/
-/scripts/app/**/*.js
-/scripts/app/**/*.js.map
-/scripts/test/**/*.js
-/scripts/test/**/*.js.map
-/styles/round-table.css

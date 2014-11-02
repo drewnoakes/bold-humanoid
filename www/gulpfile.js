@@ -37,7 +37,7 @@ gulp.task('styles', function ()
     return gulp.src('styles/*.scss')
         .pipe(sass())
         .pipe(autoprefixer('last 2 versions', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
-        .pipe(gulp.dest('styles'))
+        .pipe(gulp.dest(buildFolder + '/styles'))
 });
 
 // Transpiles TypeScript source code
@@ -51,8 +51,8 @@ function tsc(moduleType, outFolder)
     };
 }
 
-gulp.task('tsc-commonjs', tsc('commonjs', buildFolder));
-gulp.task('tsc-amd',      tsc('amd',      'scripts/app/'));
+gulp.task('tsc-commonjs', tsc('commonjs', buildFolder + '/commonjs/'));
+gulp.task('tsc-amd',      tsc('amd',      buildFolder + '/amd/'));
 
 gulp.task('clean-dist', function(cb)
 {
@@ -62,7 +62,7 @@ gulp.task('clean-dist', function(cb)
 gulp.task('bundle-styles', ['clean-dist', 'styles'], function ()
 {
     var styles = [
-        'styles/round-table.css',
+        'build/styles/round-table.css',
         'styles/joint.css'
     ];
 
@@ -79,8 +79,8 @@ gulp.task('bundle-source', ['clean-dist', 'tsc-commonjs'], function ()
     // TODO sourcemap support
 
     return browserify('main.js', {
-            basedir: './build/',
-            paths: ['./build/'],
+            basedir: './' + buildFolder + '/commonjs/',
+            paths: ['./' + buildFolder + '/commonjs/'],
             builtins: {constants: null, util: null}
         })
         .bundle()
