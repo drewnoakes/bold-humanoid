@@ -130,6 +130,8 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
     );
   }
 
+  Config::getSetting<int>("round-table.image-encoding.jpeg.quality-level")->track([](int value) { CameraSession::jpegCodec.setQualityLevel(value); });
+
   Config::getSetting<int>("round-table.image-encoding.png.compression-level")->track([](int value) { CameraSession::pngCodec.setCompressionLevel(value); });
   Config::getSetting<CompressionStrategy>("round-table.image-encoding.png.compression-strategy")->track([](CompressionStrategy value) { CameraSession::pngCodec.setCompressionStrategy(value); });
   Config::getSetting<bool>("round-table.image-encoding.png.filters.sub")->track([](bool enabled) { CameraSession::pngCodec.setFilterSub(enabled); });

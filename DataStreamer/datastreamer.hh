@@ -13,6 +13,7 @@
 #include <opencv2/opencv.hpp>
 #include <sigc++/signal.h>
 
+#include "../ImageCodec/JpegCodec/jpegcodec.hh"
 #include "../ImageCodec/PngCodec/pngcodec.hh"
 #include "../Setting/setting.hh"
 #include "../StateObject/stateobject.hh"
@@ -46,6 +47,7 @@ namespace bold
     int write();
 
     static PngCodec pngCodec;
+    static JpegCodec jpegCodec;
 
   private:
     /** Whether an image is waiting to be encoded. */

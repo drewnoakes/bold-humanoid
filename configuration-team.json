@@ -271,6 +271,9 @@
           "avg": false,
           "paeth": false
         }
+      },
+      "jpeg": {
+        "quality-level": 90
       }
     }
   },

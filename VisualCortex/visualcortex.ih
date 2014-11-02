@@ -34,8 +34,6 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include <opencv2/imgproc/imgproc.hpp>
-
 #include <cmath>
 #include <memory>
 #include <algorithm>

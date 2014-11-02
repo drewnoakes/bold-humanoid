@@ -5,6 +5,7 @@ using namespace rapidjson;
 using namespace std;
 
 PngCodec bold::CameraSession::pngCodec;
+JpegCodec bold::CameraSession::jpegCodec;
 
 CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
   : imgWaiting(false),
@@ -69,7 +70,11 @@ int CameraSession::write()
       }
       case ImageEncoding::JPEG:
       {
-        cv::imencode(".jpg", image, *imageBytes);
+        if (!jpegCodec.encode(image, *imageBytes))
+        {
+          log::error("CameraSession::write") << "Error encoding image as JPEG";
+          return 1;
+        }
         break;
       }
     }
