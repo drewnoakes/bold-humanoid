@@ -156,7 +156,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_imagePassHandlers = make_tuple(
     shared_ptr<LineDotPass<uchar>>(new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel)),
     shared_ptr<BlobDetectPass>(new BlobDetectPass(imageWidth, imageHeight, blobPixelLabels)),
-    shared_ptr<CartoonPass>(new CartoonPass(imageWidth, imageHeight, d_pixelLabels)),
+    shared_ptr<CartoonPass>(new CartoonPass(imageWidth, imageHeight)),
     shared_ptr<LabelCountPass>(new LabelCountPass(d_pixelLabels)),
     shared_ptr<CompleteFieldEdgePass>(new CompleteFieldEdgePass(fieldLabel, imageWidth, imageHeight)),
     shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(fieldLabel, lineLabel, imageWidth, imageHeight, 1*2*3*4))

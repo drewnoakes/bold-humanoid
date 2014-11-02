@@ -2,6 +2,7 @@
 
 #include "../../util/assert.hh"
 #include "../../util/log.hh"
+#include "../../Colour/colour.hh"
 
 #include <png.h>
 
@@ -21,7 +22,7 @@ PngCodec::PngCodec()
     d_filterPaeth(false)
 {}
 
-bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
+bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::map<uchar, Colour::bgr> const& colourByNumber)
 {
   // TODO may wish to cache and reuse: png_structp and png_infop
 
@@ -74,7 +75,7 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
   png_set_compression_strategy(png_ptr, static_cast<int>(d_compressionStrategy));
 
   ASSERT(image.depth() == CV_8U);
-  ASSERT(image.channels() == 3);
+  ASSERT(image.channels() == 1);
 
   // Set metadata for the IHDR segment (image header)
   png_set_IHDR(
@@ -83,7 +84,7 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
     (png_uint_32) image.cols,
     (png_uint_32) image.rows,
     8,
-    PNG_COLOR_TYPE_RGB,
+    PNG_COLOR_TYPE_PALETTE,
     PNG_INTERLACE_NONE,
     PNG_COMPRESSION_TYPE_DEFAULT,
     PNG_FILTER_TYPE_DEFAULT);
@@ -91,19 +92,31 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
   // Set callbacks for custom buffering of output
   png_set_write_fn(png_ptr, &buffer, &bold::PngCodec::writeDataToBuf, nullptr);
 
+  // Set the colour palette to use
+  uchar paletteSize = 0;
+  for (auto const& pair : colourByNumber)
+    paletteSize = max(paletteSize, pair.first);
+  paletteSize++;
+  ASSERT(paletteSize <= PNG_MAX_PALETTE_LENGTH);
+  auto palette = (png_color*)png_malloc(png_ptr, paletteSize * sizeof (png_color));
+  for (uchar p = 0; p < paletteSize; p++)
+  {
+    auto const& bgr = colourByNumber.at(p);
+    png_color& col = palette[p];
+    col.red = bgr.r;
+    col.green = bgr.g;
+    col.blue = bgr.b;
+  }
+
+  png_set_PLTE(png_ptr, info_ptr, palette, paletteSize);
+
   // Write all the PNG information before the image
   png_write_info(png_ptr, info_ptr);
 
-  // TODO use palette instead of RGB
-//  png_colorp palette;
-//  int num_palette;
-//  png_set_PLTE(png_ptr, info_ptr, palette, num_palette);
+  png_set_palette_to_rgb(png_ptr);
 
   // Use 1 byte per pixel in 1, 2, or 4-bit depth files
-//  png_set_packing(png_ptr);
-
-  // Use blue, green, red order for pixels
-  png_set_bgr(png_ptr);
+  png_set_packing(png_ptr);
 
   // Intel is little-endian
   png_set_swap(png_ptr);
@@ -120,6 +133,8 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
   png_write_end(png_ptr, info_ptr);
 
   png_destroy_write_struct(&png_ptr, &info_ptr);
+
+  png_free(png_ptr, palette);
 
   return true;
 }

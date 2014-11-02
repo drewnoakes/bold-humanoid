@@ -35,7 +35,7 @@ namespace bold
 
     ~CameraSession() = default;
 
-    void notifyImageAvailable(cv::Mat const& image, std::string encoding);
+    void notifyImageAvailable(cv::Mat const& image, std::string encoding, std::map<uchar, Colour::bgr> const& palette);
 
     int write();
 
@@ -54,6 +54,7 @@ namespace bold
     std::mutex d_imageMutex;
     cv::Mat d_image;
     std::string d_imageEncoding;
+    std::map<uchar, Colour::bgr> d_palette;
 
     libwebsocket_context* d_context;
     libwebsocket* d_wsi;
@@ -97,7 +98,7 @@ namespace bold
     bool hasCameraClients() const { return d_cameraSessions.size() != 0; }
 
     /** Enqueues an image to be sent to connected clients. */
-    void streamImage(cv::Mat const& img, std::string imageEncoding);
+    void streamImage(cv::Mat const& img, std::string const& imageEncoding, std::map<uchar, Colour::bgr> const& palette);
 
     void setOptionTree(std::shared_ptr<OptionTree> optionTree) { d_optionTree = optionTree; }
 

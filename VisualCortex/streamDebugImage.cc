@@ -14,9 +14,13 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
 
   auto const& cameraFrame = State::get<CameraFrameState>();
 
+  static auto backgroundColour = Config::getSetting<Colour::bgr>("round-table.cartoon.background-colour");
+
   Mat debugImage;
 
   ImageType imageType = d_imageType->getValue();
+  map<uchar,Colour::bgr> palette;
+  bool usePalette = false;
 
   bool drawDebugData = true;
 
@@ -39,11 +43,18 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     case ImageType::Cartoon:
     {
       debugImage = getHandler<CartoonPass>()->mat().clone();
+      // Do this each frame, as colours can change at runtime
+      palette[0] = backgroundColour->getValue();
+      for (std::shared_ptr<PixelLabel> const& label : d_pixelLabels)
+        palette[(uchar)label->getID()] = label->modalColour().toBgr();
+      usePalette = true;
       break;
     }
     case ImageType::None:
     {
       debugImage = Mat(cameraImage.size(), cameraImage.type(), Scalar(0));
+      palette[0] = backgroundColour->getValue();
+      usePalette = true;
       break;
     }
     case ImageType::Teacher:
@@ -87,11 +98,22 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     }
   }
 
+  auto getColour = [&](Colour::bgr color) -> cv::Scalar
+  {
+    if (usePalette)
+    {
+      uchar nextIndex = (uchar)palette.size();
+      palette[nextIndex] = color;
+      return cv::Scalar(nextIndex);
+    }
+    return d_observedLineColour->getValue().toScalar();
+  };
+
   // Draw observed lines
   auto const& observedLineSegments = State::get<CameraFrameState>()->getObservedLineSegments();
   if (drawDebugData && d_shouldDrawObservedLines->getValue() && observedLineSegments.size() > 0)
   {
-    auto observedLineColour = d_observedLineColour->getValue();
+    cv::Scalar observedLineColour = getColour(d_observedLineColour->getValue());
     for (LineSegment2i const& line : observedLineSegments)
       Painter::draw(line, debugImage, observedLineColour, 2);
   }
@@ -99,9 +121,18 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   // Draw line dots
   if (drawDebugData && d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && getHandler<LineDotPass<uchar>>()->lineDots.size() > 0)
   {
-    auto lineDotColour = d_lineDotColour->getValue();
-    for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
-      debugImage.at<bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
+    if (usePalette)
+    {
+      uchar lineDotColour = (uchar)(getColour(d_lineDotColour->getValue()).val[0]);
+      for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
+        debugImage.at<uchar>(lineDot.y(), lineDot.x()) = lineDotColour;
+    }
+    else
+    {
+      auto const& lineDotColour = d_lineDotColour->getValue();
+      for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
+        debugImage.at<bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
+    }
   }
 
   // Draw blobs
@@ -129,7 +160,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     auto ball = cameraFrame->getBallObservation();
     if (ball)
     {
-      static auto ballColor = bgr(0, 0, 255).toScalar();
+      auto ballColor = getColour(bgr(0, 0, 255));
       Rect rect((int)round(ball->x()), (int)round(ball->y()), 5, 5);
       cv::rectangle(debugImage, rect, ballColor, CV_FILLED);
     }
@@ -137,7 +168,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     auto goals = cameraFrame->getGoalObservations();
     for (auto goal : goals)
     {
-      static auto goalColor = bgr(0, 255, 255).toScalar();
+      auto goalColor = getColour(bgr(0, 255, 255));
       Rect rect((int)round(goal.x()), (int)round(goal.y()), 5, 5);
       cv::rectangle(debugImage, rect, goalColor, CV_FILLED);
     }
@@ -159,7 +190,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     auto max = Vector2i(Config::getStaticValue<int>("camera.image-width"),
                         Config::getStaticValue<int>("camera.image-height"));
 
-    auto expectedLineColour = d_expectedLineColour->getValue();
+    auto expectedLineColour = getColour(d_expectedLineColour->getValue());
 
     auto visibleFieldPoly = worldFrameState->getVisibleFieldPoly();
 
@@ -206,7 +237,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
 
     LineSegment2i line2i(p1, p2);
 
-    Painter::draw(line2i, debugImage, d_horizonColour->getValue(), 1);
+    Painter::draw(line2i, debugImage, getColour(d_horizonColour->getValue()), 1);
   }
 
   // Draw occlusion edge
@@ -236,19 +267,30 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   // Draw field edge
   if (drawDebugData && d_shouldDrawFieldEdge->getValue())
   {
-    auto fieldEdgeColour = d_fieldEdgeColour->getValue();
-    for (ushort x = 0; x < debugImage.size().width; ++x)
+    if (usePalette)
     {
-      ushort y = d_fieldEdgePass->getEdgeYValue(x);
-
-      debugImage.at<bgr>(y, x) = fieldEdgeColour;
+      uchar fieldEdgeColour = (uchar)getColour(d_fieldEdgeColour->getValue()).val[0];
+      for (ushort x = 0; x < debugImage.size().width; ++x)
+      {
+        ushort y = d_fieldEdgePass->getEdgeYValue(x);
+        debugImage.at<uchar>(y, x) = fieldEdgeColour;
+      }
+    }
+    else
+    {
+      auto fieldEdgeColour = d_fieldEdgeColour->getValue();
+      for (ushort x = 0; x < debugImage.size().width; ++x)
+      {
+        ushort y = d_fieldEdgePass->getEdgeYValue(x);
+        debugImage.at<bgr>(y, x) = fieldEdgeColour;
+      }
     }
   }
 
   // Draw calibration lines
   if (drawDebugData && d_shouldDrawCalibration->getValue())
   {
-    auto calibrationColour = d_calibrationColour->getValue().toScalar();
+    auto calibrationColour = getColour(d_calibrationColour->getValue());
 
     int w = d_cameraModel->imageWidth();
     int h = d_cameraModel->imageHeight();
@@ -262,7 +304,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     ? ".png"
     : ".jpg";
 
-  d_dataStreamer->streamImage(debugImage, imageEncoding);
+  d_dataStreamer->streamImage(debugImage, imageEncoding, palette);
   t.timeEvent("Compose Debug Image");
 
   if (d_saveNextDebugFrame)

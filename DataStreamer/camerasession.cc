@@ -14,7 +14,7 @@ CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
     d_wsi(wsi)
 {}
 
-void CameraSession::notifyImageAvailable(cv::Mat const& image, std::string encoding)
+void CameraSession::notifyImageAvailable(cv::Mat const& image, std::string encoding, std::map<uchar, Colour::bgr> const& palette)
 {
   ASSERT(ThreadUtil::isThinkLoopThread());
 
@@ -22,6 +22,7 @@ void CameraSession::notifyImageAvailable(cv::Mat const& image, std::string encod
     lock_guard<mutex> imageGuard(d_imageMutex);
     d_image = image;
     d_imageEncoding = encoding;
+    d_palette = palette;
     imgWaiting = true;
   }
 
@@ -41,10 +42,12 @@ int CameraSession::write()
     // Take a thread-safe copy of the image to encode
     cv::Mat image;
     string encoding;
+    std::map<uchar, Colour::bgr> palette;
     {
       lock_guard<mutex> imageGuard(d_imageMutex);
       image = d_image;
       encoding = d_imageEncoding;
+      palette = d_palette;
       imgWaiting = false;
       imgSending = true;
     }
@@ -54,7 +57,7 @@ int CameraSession::write()
     ASSERT(imageBytes->size() == 0);
     if (d_imageEncoding == ".png")
     {
-      if (!pngCodec.encode(image, *imageBytes))
+      if (!pngCodec.encode(image, *imageBytes, palette))
       {
         log::error("CameraSession::write") << "Error encoding image as PNG";
         return 1;

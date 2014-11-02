@@ -1,5 +1,7 @@
 #pragma once
+
 #include <opencv2/core/core.hpp>
+
 #include "../Colour/colour.hh"
 
 namespace bold
@@ -9,6 +11,6 @@ namespace bold
   class Painter
   {
   public:
-    static void draw(LineSegment2i const& segment, cv::Mat& img, Colour::bgr const& colour, unsigned thickness);
+    static void draw(LineSegment2i const& segment, cv::Mat& img, cv::Scalar const& colour, unsigned thickness);
   };
 }
