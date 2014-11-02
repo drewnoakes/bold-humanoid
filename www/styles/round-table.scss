@@ -1227,14 +1227,33 @@ table.timing-details
         padding-left: 1em;
         font-family: Ubuntu Mono, Consolas, monospace;
       }
+
+      &.path span.ancestry
+      {
+        color: lighten($light-mode-text, 40%);
+        html.night-mode & { color: darken($night-mode-text, 50%); }
+      }
+
+      &.path span.separator
+      {
+        margin: 0 3px;
+        color: lighten($light-mode-text, 70%);
+        html.night-mode & { color: darken($night-mode-text, 70%); }
+      }
+
+      &.path span.leaf
+      {
+        color: darken($bh-colour-dark, 10%);
+        html.night-mode & { color: $bh-colour-dark; }
+      }
     }
 
-    &.parent.root td.expander
+    &.parent td.expander
     {
       background: url(/resources/images/sprite-arrows.png);
     }
 
-    &.parent.root.expanded td.expander
+    &.parent.expanded td.expander
     {
       background-position: 0 16px;
     }

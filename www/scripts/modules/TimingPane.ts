@@ -164,6 +164,9 @@ class TimingPane
 
     private getOrCreateEntry(label: string): ITimingEntry
     {
+        // Remove any leading/trailing slashes
+        label = label.replace(/^\/|\/$/g, '');
+
         var entry = this.entryByLabel[label];
 
         if (entry)
@@ -172,37 +175,58 @@ class TimingPane
         // If this entry is a child of another entry, try to find it's parent
         var parts = label.split('/'),
             hasParent = parts.length !== 1,
-            parent;
+            parent,
+            parentPath = '';
+
+        var row = document.createElement('tr');
+
+        if (!hasParent)
+            row.classList.add('root');
+
+        var cellExpand = document.createElement('td'),     // {'class': 'expander'}).appendTo(row).get(0),
+            cellPath = document.createElement('td'),      //.text(label).appendTo(row).get(0),
+            cellMillis = document.createElement('td'),     // {'class': 'duration'}).appendTo(row).get(0),
+            cellMAvgMillis = document.createElement('td'), // {'class': 'avg-duration'}).appendTo(row).get(0),
+            cellMaxMillis = document.createElement('td');  // {'class': 'max-duration'}).appendTo(row).get(0);
+
+        cellExpand.className = 'expander';
+        cellPath.className = 'path';
+        cellMillis.className = 'duration';
+        cellMAvgMillis.className = 'avg-duration';
+        cellMaxMillis.className = 'max-duration';
 
         // Some messing around to get paths in a nice order, where parents appear above children
         // Image Processing
         // Image Processing/Pixel Label
         // Image Processing/Pixel Label/Find Horizon
         // Image Processing/Pixel Label/Pixels Above
-        for (var i = 1; i < parts.length; i++) {
-            var parentPath = parts.slice(0, i).join('/');
-            parent = this.getOrCreateEntry(parentPath);
-            parent.row.classList.add('parent');
-            if (i === 1)
-                parent.row.classList.add('root');
+        if (parts.length !== 1)
+        {
+            for (var i = 0; i < parts.length - 1; i++)
+            {
+                parentPath += parts[i] + '/';
+                parent = this.getOrCreateEntry(parentPath);
+                parent.row.classList.add('parent');
+
+                var ancestor = document.createElement('span');
+                ancestor.className = 'ancestry';
+                ancestor.textContent = parts[i];
+                cellPath.appendChild(ancestor);
+
+                var separator = document.createElement('span');
+                separator.className = 'separator';
+                separator.textContent = '/';
+                cellPath.appendChild(separator);
+            }
         }
 
-        var row = document.createElement('tr');
-
-        var cellExpand = document.createElement('td'),     // {'class': 'expander'}).appendTo(row).get(0),
-            cellLabel = document.createElement('td'),      //.text(label).appendTo(row).get(0),
-            cellMillis = document.createElement('td'),     // {'class': 'duration'}).appendTo(row).get(0),
-            cellMAvgMillis = document.createElement('td'), // {'class': 'avg-duration'}).appendTo(row).get(0),
-            cellMaxMillis = document.createElement('td');  // {'class': 'max-duration'}).appendTo(row).get(0);
-
-        cellExpand.className = 'expander';
-        cellLabel.textContent = label;
-        cellMillis.className = 'duration';
-        cellMAvgMillis.className = 'avg-duration';
-        cellMaxMillis.className = 'max-duration';
+        var leafNameSpan = document.createElement('span');
+        leafNameSpan.className = 'leaf';
+        leafNameSpan.textContent = parts[parts.length - 1];
+        cellPath.appendChild(leafNameSpan);
 
         row.appendChild(cellExpand);
-        row.appendChild(cellLabel);
+        row.appendChild(cellPath);
         row.appendChild(cellMillis);
         row.appendChild(cellMAvgMillis);
         row.appendChild(cellMaxMillis);
