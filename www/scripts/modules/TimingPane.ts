@@ -17,6 +17,11 @@ var seriesOptions = {
     lineWidth: 1
 };
 
+var averageSeriesOptions = {
+    strokeStyle: 'yellow',
+    lineWidth: 1.5
+};
+
 var chartHeight = 150;
 
 interface ITimingEntry
@@ -40,15 +45,18 @@ class TimingPane
     private chart: SmoothieChart;
     private canvas: HTMLCanvasElement;
     private series: TimeSeries;
+    private averageSeries: TimeSeries;
     private table: HTMLTableElement;
     private fps: HTMLDivElement;
     private closeables: Closeable = new Closeable();
     private entryByPath: {[path:string]:ITimingEntry} = {};
+    private averageTime: math.MovingAverage;
 
     constructor(private protocol: string, private targetFps: number)
     {
         this.container = document.createElement('div');
-        this.thresholdMillis = 1000 / targetFps;
+        this.thresholdMillis = 1000 / this.targetFps;
+        this.averageTime = new math.MovingAverage(this.targetFps * 4);
     }
 
     public load(element: HTMLDivElement)
@@ -80,6 +88,10 @@ class TimingPane
 
         this.series = new TimeSeries();
         this.chart.addTimeSeries(this.series, seriesOptions);
+
+        this.averageSeries = new TimeSeries();
+        this.chart.addTimeSeries(this.averageSeries, averageSeriesOptions);
+
         this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
         this.fps = document.createElement('div');
@@ -118,6 +130,7 @@ class TimingPane
         this.closeables.closeAll();
 
         delete this.series;
+        delete this.averageSeries;
         delete this.chart;
         delete this.table;
         delete this.fps;
@@ -157,6 +170,8 @@ class TimingPane
         });
 
         this.series.append(time, totalTime);
+        var avg = this.averageTime.next(totalTime);
+        this.averageSeries.append(time, avg);
     }
 
     private resetMaximums()
