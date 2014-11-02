@@ -22,26 +22,41 @@ namespace bold
     }
 
     template<typename TBuffer>
-    static void polygon(rapidjson::Writer<TBuffer>& writer, Polygon2d const& poly)
+    static void polygon(rapidjson::Writer<TBuffer>& writer, Polygon2d const& poly, const char* format = nullptr)
     {
       writer.StartArray();
-      for (auto const& point : poly)
+      if (format)
       {
-        writer.StartArray();
-        writer.Double(point.x());
-        writer.Double(point.y());
-        writer.EndArray();
+        for (auto const& point : poly)
+        {
+          writer.StartArray();
+          writer.Double(point.x(), format);
+          writer.Double(point.y(), format);
+          writer.EndArray();
+        }
+      }
+      else
+      {
+        for (auto const& point : poly)
+        {
+          writer.StartArray();
+          writer.Double(point.x());
+          writer.Double(point.y());
+          writer.EndArray();
+        }
       }
       writer.EndArray();
     }
 
     template<typename TBuffer>
-    static void swapNaN(rapidjson::Writer<TBuffer>& writer, double d)
+    static void swapNaN(rapidjson::Writer<TBuffer>& writer, double d, const char* format = nullptr)
     {
       if (std::isnan(d))
         writer.Null();
+      else if (format)
+        writer.Double(d, format);
       else
-        writer.Double(d, "%.5f");
+        writer.Double(d);
     };
 
   private:

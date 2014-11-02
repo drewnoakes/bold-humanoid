@@ -183,20 +183,20 @@ namespace bold
       {
         writer.String("hue");
         writer.StartArray();
-        writer.Double(value.hMin);
-        writer.Double(value.hMax);
+        writer.Uint(value.hMin);
+        writer.Uint(value.hMax);
         writer.EndArray();
 
         writer.String("sat");
         writer.StartArray();
-        writer.Double(value.sMin);
-        writer.Double(value.sMax);
+        writer.Uint(value.sMin);
+        writer.Uint(value.sMax);
         writer.EndArray();
 
         writer.String("val");
         writer.StartArray();
-        writer.Double(value.vMin);
-        writer.Double(value.vMax);
+        writer.Uint(value.vMin);
+        writer.Uint(value.vMax);
         writer.EndArray();
       }
       writer.EndObject();

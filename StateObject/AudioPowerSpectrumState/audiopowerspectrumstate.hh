@@ -42,9 +42,9 @@ namespace bold
         for (float const& db : d_dbs)
         {
           if (std::isinf(db))
-            writer.Double(-200);
+            writer.Int(-200);
           else
-            writer.Double(db);
+            writer.Double(db, "%.3f");
         }
       }
       writer.EndArray();

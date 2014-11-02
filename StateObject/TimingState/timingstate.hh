@@ -48,7 +48,7 @@ namespace bold
       writer.String("cycle");
       writer.Uint64(d_cycleNumber);
       writer.String("fps");
-      writer.Double(d_averageFps);
+      writer.Double(d_averageFps, "%.3f");
       writer.String("timings");
       writer.StartObject();
       {

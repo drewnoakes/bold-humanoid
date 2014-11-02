@@ -126,13 +126,13 @@ namespace bold
           writer.String("val");
           writer.Int(mx28->presentPositionValue);
           writer.String("rpm");
-          writer.Double(mx28->presentSpeedRPM);
+          writer.Double(mx28->presentSpeedRPM, "%.3f");
           writer.String("load");
-          writer.Double(mx28->presentLoad);
+          writer.Double(mx28->presentLoad, "%.3f");
           writer.String("temp");
           writer.Int(mx28->presentTemp);
           writer.String("volts");
-          writer.Double(mx28->presentVoltage);
+          writer.Double(mx28->presentVoltage, "%.1f");
         }
         writer.EndObject();
       }

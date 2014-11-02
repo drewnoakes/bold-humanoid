@@ -42,8 +42,8 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("ballPos");
   writer.StartArray();
-  writer.Double(ballPos.x());
-  writer.Double(ballPos.y());
+  writer.Double(ballPos.x(), "%.3f");
+  writer.Double(ballPos.y(), "%.3f");
   writer.EndArray(2);
 
   double ballDist = ballPos.norm();
@@ -65,15 +65,15 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
     walkDist = 0;
 
   writer.String("ballDist");
-  writer.Double(ballDist);
+  writer.Double(ballDist, "%.3f");
 
   writer.String("walkDist");
-  writer.Double(walkDist);
+  writer.Double(walkDist, "%.3f");
 
   double speedScaleDueToDistance = Math::clamp(walkDist/brakeDistance->getValue(), 0.0, 1.0);
 
   writer.String("distSpeed");
-  writer.Double(speedScaleDueToDistance);
+  writer.Double(speedScaleDueToDistance, "%.3f");
 
   Vector2d target = ballPos + Vector2d(0.04, 0);
   double ballAngleRads = Math::angleToPoint(ballPos);
@@ -86,7 +86,7 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
                                            0.0);
 
   writer.String("angleSpeed");
-  writer.Double(speedScaleDueToAngle);
+  writer.Double(speedScaleDueToAngle, "%.3f");
 
   double xSpeedScale = speedScaleDueToDistance * speedScaleDueToAngle;
   ASSERT(xSpeedScale >= 0.0);
@@ -180,12 +180,12 @@ vector<shared_ptr<Option>> ApproachBall::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("moveDir");
   writer.StartArray();
-  writer.Double(xSpeed);
-  writer.Double(ySpeed);
+  writer.Double(xSpeed, "%.3f");
+  writer.Double(ySpeed, "%.3f");
   writer.EndArray(2);
 
   writer.String("turn");
-  writer.Double(turnSpeed);
+  writer.Double(turnSpeed, "%.3f");
 
   return {};
 }

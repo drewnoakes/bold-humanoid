@@ -190,19 +190,19 @@ namespace bold
             writer.Int(static_cast<int>(player.role));
             writer.String("pos");
             writer.StartArray();
-            JsonWriter::swapNaN(writer, player.pos.x());
-            JsonWriter::swapNaN(writer, player.pos.y());
-            JsonWriter::swapNaN(writer, player.pos.theta());
+            JsonWriter::swapNaN(writer, player.pos.x(), "%.3f");
+            JsonWriter::swapNaN(writer, player.pos.y(), "%.3f");
+            JsonWriter::swapNaN(writer, player.pos.theta(), "%.4f");
             writer.EndArray();
             writer.String("posConfidence");
-            writer.Double(player.posConfidence);
+            writer.Double(player.posConfidence, "%.3f");
             writer.String("ballRelative");
             writer.StartArray();
             {
               if (player.ballRelative.hasValue())
               {
-                writer.Double(player.ballRelative->x());
-                writer.Double(player.ballRelative->y());
+                writer.Double(player.ballRelative->x(), "%.3f");
+                writer.Double(player.ballRelative->y(), "%.3f");
               }
             }
             writer.EndArray();

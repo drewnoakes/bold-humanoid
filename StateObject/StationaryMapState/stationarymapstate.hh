@@ -124,11 +124,11 @@ namespace bold
           writer.StartObject();
           {
             writer.String("angle");
-            writer.Double(angleForWedgeIndex(index));
+            writer.Double(angleForWedgeIndex(index), "%.3f");
             writer.String("dist");
-            writer.Double(d_wedges[index].getAverage());
+            writer.Double(d_wedges[index].getAverage(), "%.3f");
             writer.String("count");
-            writer.Double(d_wedges[index].getCount());
+            writer.Uint(d_wedges[index].getCount());
           }
           writer.EndObject();
         }
@@ -268,8 +268,8 @@ namespace bold
         {
           writer.String("pos");
           writer.StartArray();
-          writer.Double(estimate.getAverage().x());
-          writer.Double(estimate.getAverage().y());
+          writer.Double(estimate.getAverage().x(), "%.3f");
+          writer.Double(estimate.getAverage().y(), "%.3f");
           writer.EndArray();
           writer.String("count");
           writer.Int(estimate.getCount());
@@ -286,8 +286,8 @@ namespace bold
         {
           writer.String("pos");
           writer.StartArray();
-          writer.Double(estimate.getAverage().x());
-          writer.Double(estimate.getAverage().y());
+          writer.Double(estimate.getAverage().x(), "%.3f");
+          writer.Double(estimate.getAverage().y(), "%.3f");
           writer.EndArray();
           writer.String("count");
           writer.Uint(estimate.getCount());
@@ -304,13 +304,13 @@ namespace bold
         {
           writer.String("post1");
           writer.StartArray();
-          writer.Double(estimate.getPost1Pos().x());
-          writer.Double(estimate.getPost1Pos().y());
+          writer.Double(estimate.getPost1Pos().x(), "%.3f");
+          writer.Double(estimate.getPost1Pos().y(), "%.3f");
           writer.EndArray();
           writer.String("post2");
           writer.StartArray();
-          writer.Double(estimate.getPost2Pos().x());
-          writer.Double(estimate.getPost2Pos().y());
+          writer.Double(estimate.getPost2Pos().x(), "%.3f");
+          writer.Double(estimate.getPost2Pos().y(), "%.3f");
           writer.EndArray();
           writer.String("label");
           writer.Uint(static_cast<uint>(estimate.getLabel()));
@@ -327,8 +327,8 @@ namespace bold
         {
           writer.String("pos");
           writer.StartArray();
-          writer.Double(estimate.getAverage().x());
-          writer.Double(estimate.getAverage().y());
+          writer.Double(estimate.getAverage().x(), "%.3f");
+          writer.Double(estimate.getAverage().y(), "%.3f");
           writer.EndArray();
           writer.String("count");
           writer.Int(estimate.getCount());
@@ -349,8 +349,8 @@ namespace bold
             Eigen::Vector2d const& endPos = kick.getEndPos();
             writer.String("endPos");
             writer.StartArray();
-            writer.Double(endPos.x());
-            writer.Double(endPos.y());
+            writer.Double(endPos.x(), "%.3f");
+            writer.Double(endPos.y(), "%.3f");
             writer.EndArray();
             writer.String("onTarget");
             writer.Bool(kick.isOnTarget());
@@ -366,11 +366,11 @@ namespace bold
       d_occlusionMap.writeJson(writer);
 
       writer.String("turnAngle");
-      writer.Double(d_turnAngleRads);
+      writer.Double(d_turnAngleRads, "%.3f");
       writer.String("turnBallPos");
       writer.StartArray();
-      writer.Double(d_turnBallPos.x());
-      writer.Double(d_turnBallPos.y());
+      writer.Double(d_turnBallPos.x(), "%.3f");
+      writer.Double(d_turnBallPos.y(), "%.3f");
       writer.EndArray();
     }
     writer.EndObject();

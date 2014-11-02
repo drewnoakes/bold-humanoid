@@ -54,7 +54,7 @@ namespace bold
           writer.Double(particle.x(), "%.3f"); // x
           writer.Double(particle.y(), "%.3f"); // y
           writer.Double(atan2(particle(3), particle(2)), "%.3f"); // theta
-          JsonWriter::swapNaN(writer, particle(4)); // weight
+          JsonWriter::swapNaN(writer, particle(4), "%.4f"); // weight
 
           writer.EndArray();
         }
@@ -62,11 +62,11 @@ namespace bold
       writer.EndArray();
 
       writer.String("pnwsum");
-      writer.Double(d_preNormWeightSum);
+      writer.Double(d_preNormWeightSum, "%.3f");
       writer.String("pnwsumsmooth");
-      writer.Double(d_smoothedPreNormWeightSum);
+      writer.Double(d_smoothedPreNormWeightSum, "%.3f");
       writer.String("uncertainty");
-      writer.Double(d_uncertainty);
+      writer.Double(d_uncertainty, "%.3f");
     }
     writer.EndObject();
   }

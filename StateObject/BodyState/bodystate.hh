@@ -223,9 +223,9 @@ namespace bold
       auto com = getCentreOfMass();
       writer.String("com");
       writer.StartArray();
-      writer.Double(com.x());
-      writer.Double(com.y());
-      writer.Double(com.z());
+      writer.Double(com.x(), "%.4f");
+      writer.Double(com.y(), "%.4f");
+      writer.Double(com.z(), "%.4f");
       writer.EndArray();
 
       /*
@@ -233,9 +233,9 @@ namespace bold
       writer.StartArray();
       {
         auto translation = d_agentCameraTransform.translation();
-        writer.Double(translation.x());
-        writer.Double(translation.y());
-        writer.Double(translation.z());
+        writer.Double(translation.x(), "%.3f");
+        writer.Double(translation.y(), "%.3f");
+        writer.Double(translation.z(), "%.3f");
       }
       writer.EndArray();
 
@@ -243,13 +243,13 @@ namespace bold
       writer.StartObject();
       {
         AngleAxisd angleAxis(d_agentCameraTransform.rotation());
-        writer.String("angle").Double(angleAxis.angle());
+        writer.String("angle").Double(angleAxis.angle(), "%.3f");
         writer.String("axis");
         writer.StartArray();
         {
-          writer.Double(angleAxis.axis().x());
-          writer.Double(angleAxis.axis().y());
-          writer.Double(angleAxis.axis().z());
+          writer.Double(angleAxis.axis().x(), "%.3f");
+          writer.Double(angleAxis.axis().y(), "%.3f");
+          writer.Double(angleAxis.axis().z(), "%.3f");
         }
         writer.EndArray();
       }

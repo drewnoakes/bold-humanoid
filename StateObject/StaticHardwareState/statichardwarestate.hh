@@ -94,9 +94,9 @@ namespace bold
           writer.String("returnDelayTimeMicroSeconds");
           writer.Int(mx28->returnDelayTimeMicroSeconds);
           writer.String("angleLimitCW");
-          writer.Double(mx28->angleLimitCW);
+          writer.Double(mx28->angleLimitCW, "%.4f");
           writer.String("angleLimitCCW");
-          writer.Double(mx28->angleLimitCCW);
+          writer.Double(mx28->angleLimitCCW, "%.4f");
           writer.String("tempLimitHighCelsius");
           writer.Int(mx28->tempLimitHighCelsius);
           writer.String("voltageLimitLow");

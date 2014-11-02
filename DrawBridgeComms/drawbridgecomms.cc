@@ -108,13 +108,13 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
     if (thinkTiming)
     {
       writer.String("fpsThink");
-      writer.Double(thinkTiming->getAverageFps());
+      writer.Double(thinkTiming->getAverageFps(), "%.3f");
     }
 
     if (motionTiming)
     {
       writer.String("fpsMotion");
-      writer.Double(motionTiming->getAverageFps());
+      writer.Double(motionTiming->getAverageFps(), "%.3f");
     }
 
     auto agentFrame = State::get<AgentFrameState>();
@@ -127,8 +127,8 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
         {
           writer.String("ball");
           writer.StartArray();
-          writer.Double(agentFrame->getBallObservation()->x());
-          writer.Double(agentFrame->getBallObservation()->y());
+          writer.Double(agentFrame->getBallObservation()->x(), "%.3f");
+          writer.Double(agentFrame->getBallObservation()->y(), "%.3f");
           writer.EndArray();
         }
         if (agentFrame->goalObservationCount())
@@ -138,8 +138,8 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
           for (auto const& goal : agentFrame->getGoalObservations())
           {
             writer.StartArray();
-            writer.Double(goal.x());
-            writer.Double(goal.y());
+            writer.Double(goal.x(), "%.3f");
+            writer.Double(goal.y(), "%.3f");
             writer.EndArray();
           }
           writer.EndArray();
@@ -169,7 +169,7 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
       writer.StartObject();
       {
         writer.String("volt");
-        writer.Double(hw->getCM730State().voltage);
+        writer.Double(hw->getCM730State().voltage, "%.1f");
         writer.String("power");
         writer.Bool(hw->getCM730State().isPowered);
         writer.String("temps");
@@ -194,9 +194,9 @@ void DrawBridgeComms::buildMessage(StringBuffer& buffer)
           writer.StartObject();
           {
             writer.String("unum");
-        writer.Int(player.uniformNumber);
+            writer.Int(player.uniformNumber);
             writer.String("ms");
-        writer.Int(static_cast<int>(player.getAgeMillis()));
+            writer.Int(static_cast<int>(player.getAgeMillis()));
           }
           writer.EndObject();
         }

@@ -146,7 +146,7 @@ namespace bold
           writer.Double(junction.position(1), "%.3f");
           writer.EndArray();
           writer.String("a");
-          writer.Double(junction.angle);
+          writer.Double(junction.angle, "%.3f");
           writer.String("t");
           writer.Uint(static_cast<unsigned>(junction.type));
           writer.EndObject();

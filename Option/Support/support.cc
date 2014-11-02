@@ -31,8 +31,8 @@ Option::OptionVector Support::runPolicy(rapidjson::Writer<rapidjson::StringBuffe
 
   writer.String("ballPos");
   writer.StartArray();
-  writer.Double(ballPos.x());
-  writer.Double(ballPos.y());
+  writer.Double(ballPos.x(), "%.3f");
+  writer.Double(ballPos.y(), "%.3f");
   writer.EndArray(2);
 
   auto yieldPos = ballPos - d_yieldDistance->getValue() * ballDir;

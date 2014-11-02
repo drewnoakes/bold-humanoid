@@ -42,15 +42,15 @@ namespace bold
     {
       writer.String("quaternion");
       writer.StartArray();
-      JsonWriter::swapNaN(writer, d_quaternion.x());
-      JsonWriter::swapNaN(writer, d_quaternion.y());
-      JsonWriter::swapNaN(writer, d_quaternion.z());
-      JsonWriter::swapNaN(writer, d_quaternion.w());
+      JsonWriter::swapNaN(writer, d_quaternion.x(), "%.6f");
+      JsonWriter::swapNaN(writer, d_quaternion.y(), "%.6f");
+      JsonWriter::swapNaN(writer, d_quaternion.z(), "%.6f");
+      JsonWriter::swapNaN(writer, d_quaternion.w(), "%.6f");
       writer.EndArray();
 
-      writer.String("pitch"); JsonWriter::swapNaN(writer, d_pitch);
-      writer.String("roll");  JsonWriter::swapNaN(writer, d_roll);
-      writer.String("yaw");   JsonWriter::swapNaN(writer, d_yaw);
+      writer.String("pitch"); JsonWriter::swapNaN(writer, d_pitch, "%.3f");
+      writer.String("roll");  JsonWriter::swapNaN(writer, d_roll, "%.3f");
+      writer.String("yaw");   JsonWriter::swapNaN(writer, d_yaw, "%.3f");
     }
     writer.EndObject();
   }

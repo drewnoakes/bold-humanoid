@@ -58,7 +58,7 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
       speed = Math::clamp(speed, 0.0, 1.0);
 
       writer.String("speed");
-      writer.Double(speed);
+      writer.Double(speed, "%.3f");
     }
 
     // Progress the phase according to the elapsed time
@@ -87,13 +87,13 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   ASSERT(d_phase < d_stages.size());
 
   writer.String("phase");
-  writer.Double(d_phase);
+  writer.Double(d_phase, "%.3f");
   writer.String("fromStageIndex");
   writer.Int(fromStageIndex);
   writer.String("toStageIndex");
   writer.Int(toStageIndex);
   writer.String("stageRatio");
-  writer.Double(stageRatio);
+  writer.Double(stageRatio, "%.3f");
 
   auto const& fromStage = d_stages[fromStageIndex];
   auto const& toStage = d_stages[toStageIndex];
@@ -102,9 +102,9 @@ vector<shared_ptr<Option>> LookAround::runPolicy(Writer<StringBuffer>& writer)
   double tiltDegs = Math::lerp(stageRatio, fromStage.tiltAngle, toStage.tiltAngle);
 
   writer.String("pan");
-  writer.Double(panDegs);
+  writer.Double(panDegs, "%.3f");
   writer.String("tilt");
-  writer.Double(tiltDegs);
+  writer.Double(tiltDegs, "%.3f");
 
   // Move to the calculated position
   d_headModule->moveToDegs(panDegs, tiltDegs);

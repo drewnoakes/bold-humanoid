@@ -67,8 +67,8 @@ vector<shared_ptr<Option>> LookAtBall::runPolicy(Writer<StringBuffer>& writer)
 
   writer.String("offset");
   writer.StartArray();
-  writer.Double(offset.x());
-  writer.Double(offset.y());
+  writer.Double(offset.x(), "%.3f");
+  writer.Double(offset.y(), "%.3f");
   writer.EndArray(2);
 
   return {};

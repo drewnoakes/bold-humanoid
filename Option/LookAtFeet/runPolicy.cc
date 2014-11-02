@@ -15,8 +15,8 @@ vector<shared_ptr<Option>> LookAtFeet::runPolicy(Writer<StringBuffer>& writer)
     d_avgBallPos.next(*ballObs);
     writer.String("ball");
     writer.StartArray();
-    writer.Double(ballObs->x());
-    writer.Double(ballObs->y());
+    writer.Double(ballObs->x(), "%.3f");
+    writer.Double(ballObs->y(), "%.3f");
     writer.EndArray(2);
   }
   else

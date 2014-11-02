@@ -50,25 +50,25 @@ namespace bold
         auto line = static_cast<LineDrawing const*>(item.get());
         writer.String("p1");
         writer.StartArray();
-        writer.Double(line->p1.x());
-        writer.Double(line->p1.y());
+        writer.Double(line->p1.x(), "%.3f");
+        writer.Double(line->p1.y(), "%.3f");
         writer.EndArray();
         writer.String("p2");
         writer.StartArray();
-        writer.Double(line->p2.x());
-        writer.Double(line->p2.y());
+        writer.Double(line->p2.x(), "%.3f");
+        writer.Double(line->p2.y(), "%.3f");
         writer.EndArray();
 
         if (line->alpha > 0 && line->alpha < 1)
         {
           writer.String("a");
-          writer.Double(line->alpha);
+          writer.Double(line->alpha, "%.2f");
         }
 
         if (line->lineWidth > 0 && line->lineWidth != 1)
         {
           writer.String("w");
-          writer.Double(line->lineWidth);
+          writer.Double(line->lineWidth, "%.3f");
         }
 
         if (line->colour.b != 0 || line->colour.g != 0 || line->colour.r != 0)
@@ -82,21 +82,21 @@ namespace bold
         auto circle = static_cast<CircleDrawing const*>(item.get());
         writer.String("c");
         writer.StartArray();
-        writer.Double(circle->centre.x());
-        writer.Double(circle->centre.y());
+        writer.Double(circle->centre.x(), "%.3f");
+        writer.Double(circle->centre.y(), "%.3f");
         writer.EndArray();
         writer.String("r");
-        writer.Double(circle->radius);
+        writer.Double(circle->radius, "%.3f");
 
         if (circle->fillAlpha > 0 && circle->fillAlpha < 1)
         {
           writer.String("fa");
-          writer.Double(circle->fillAlpha);
+          writer.Double(circle->fillAlpha, "%.2f");
         }
         if (circle->strokeAlpha > 0 && circle->strokeAlpha < 1)
         {
           writer.String("sa");
-          writer.Double(circle->strokeAlpha);
+          writer.Double(circle->strokeAlpha, "%.2f");
         }
         if (circle->fillColour.b != 0 || circle->fillColour.g != 0 || circle->fillColour.r != 0)
         {
@@ -111,24 +111,24 @@ namespace bold
         if (circle->lineWidth > 0 && circle->lineWidth != 1)
         {
           writer.String("w");
-          writer.Double(circle->lineWidth);
+          writer.Double(circle->lineWidth, "%.3f");
         }
       }
       else if (item->type == DrawingItemType::Polygon)
       {
         auto poly = static_cast<PolygonDrawing const*>(item.get());
         writer.String("p");
-        JsonWriter::polygon(writer, poly->polygon);
+        JsonWriter::polygon(writer, poly->polygon, "%.3f");
 
         if (poly->fillAlpha > 0 && poly->fillAlpha < 1)
         {
           writer.String("fa");
-          writer.Double(poly->fillAlpha);
+          writer.Double(poly->fillAlpha, "%.2f");
         }
         if (poly->strokeAlpha > 0 && poly->strokeAlpha < 1)
         {
           writer.String("sa");
-          writer.Double(poly->strokeAlpha);
+          writer.Double(poly->strokeAlpha, "%.2f");
         }
         if (poly->fillColour.b != 0 || poly->fillColour.g != 0 || poly->fillColour.r != 0)
         {
@@ -143,7 +143,7 @@ namespace bold
         if (poly->lineWidth > 0 && poly->lineWidth != 1)
         {
           writer.String("w");
-          writer.Double(poly->lineWidth);
+          writer.Double(poly->lineWidth, "%.3f");
         }
       }
 

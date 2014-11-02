@@ -39,20 +39,20 @@ Option::OptionVector OdoWalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuf
 {
   writer.String("odo");
   writer.StartArray();
-  writer.Double(d_lastOdoReading.translation().x());
-  writer.Double(d_lastOdoReading.translation().y());
+  writer.Double(d_lastOdoReading.translation().x(), "%.3f");
+  writer.Double(d_lastOdoReading.translation().y(), "%.3f");
   writer.EndArray(2);
 
   writer.String("target");
   writer.StartArray();
-  writer.Double(d_targetPos.x());
-  writer.Double(d_targetPos.y());
+  writer.Double(d_targetPos.x(), "%.3f");
+  writer.Double(d_targetPos.y(), "%.3f");
   writer.EndArray(2);
 
   writer.String("progress");
   writer.StartArray();
-  writer.Double(d_progress.translation().x());
-  writer.Double(d_progress.translation().y());
+  writer.Double(d_progress.translation().x(), "%.3f");
+  writer.Double(d_progress.translation().y(), "%.3f");
   writer.Double(d_progress.matrix().diagonal().sum());
   writer.EndArray(3);
 
@@ -60,8 +60,8 @@ Option::OptionVector OdoWalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuf
   Vector2d stillToGo = (d_progress * d_targetPos).head<2>();
   writer.String("togo");
   writer.StartArray();
-  writer.Double(stillToGo.x());
-  writer.Double(stillToGo.y());
+  writer.Double(stillToGo.x(), "%.3f");
+  writer.Double(stillToGo.y(), "%.3f");
   writer.EndArray(2);
 
 //  double dist = stillToGo.norm();
@@ -69,8 +69,8 @@ Option::OptionVector OdoWalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuf
   Vector2d moveDir = 10 * stillToGo.normalized();
   writer.String("movedir");
   writer.StartArray();
-  writer.Double(moveDir.x());
-  writer.Double(moveDir.y());
+  writer.Double(moveDir.x(), "%.3f");
+  writer.Double(moveDir.y(), "%.3f");
   writer.EndArray(2);
 
   double turnAngle = -atan2(moveDir.x(), moveDir.y());
