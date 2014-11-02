@@ -8,7 +8,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
   static Clock::Timestamp lastRecordTime;
   if (d_saveNextYUVFrame || (d_isRecordingYUVFrames->getValue() && Clock::getSecondsSince(lastRecordTime) > 1.0))
   {
-    saveImage(image);
+    saveImage(image, nullptr);
     lastRecordTime = Clock::getTimestamp();
     d_saveNextYUVFrame = false;
     t.timeEvent("Save YUV Frame");

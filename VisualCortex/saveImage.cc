@@ -15,7 +15,7 @@
 using namespace rapidjson;
 using namespace cv;
 
-void VisualCortex::saveImage(cv::Mat const& image)
+void VisualCortex::saveImage(cv::Mat const& image, std::map<uchar,Colour::bgr>* palette)
 {
   time_t rawtime;
   time(&rawtime);
@@ -39,8 +39,16 @@ void VisualCortex::saveImage(cv::Mat const& image)
   fileName << folderName << "/" << dateTimeString << ".png";
   log::info("VisualCortex::saveImage") << "Saving " << fileName.str();
 
-  // Write the image file
-  cv::imwrite(fileName.str(), image);
+  // Encode the image
+  PngCodec codec;
+  vector<uchar> imageBuffer;
+  codec.encode(image, imageBuffer, palette);
+
+  // Write it to a file
+  ofstream imageFile;
+  imageFile.open(fileName.str());
+  imageFile.write(reinterpret_cast<char*>(imageBuffer.data()), imageBuffer.size());
+  imageFile.close();
 
   // Clear the filename
   fileName.str(std::string());
@@ -96,8 +104,8 @@ void VisualCortex::saveImage(cv::Mat const& image)
   writer.EndObject();
 
   // Write the JSON file
-  ofstream file;
-  file.open(fileName.str());
-  file << buffer.GetString();
-  file.close();
+  ofstream jsonFile;
+  jsonFile.open(fileName.str());
+  jsonFile << buffer.GetString();
+  jsonFile.close();
 }

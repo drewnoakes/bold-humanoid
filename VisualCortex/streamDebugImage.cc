@@ -310,7 +310,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   if (d_saveNextDebugFrame)
   {
     d_saveNextDebugFrame = false;
-    saveImage(debugImage);
+    saveImage(debugImage, &palette);
     t.timeEvent("Save Debug Image");
   }
 }

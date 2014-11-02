@@ -77,7 +77,7 @@ namespace bold
     void integrateImage(cv::Mat& cameraImage, SequentialTimer& timer, ulong thinkCycleNumber);
 
     /** Saves the provided image to a file, along with information about the current agent's state in a JSON file. */
-    void saveImage(cv::Mat const& image);
+    void saveImage(cv::Mat const& image, std::map<uchar,Colour::bgr>* palette);
 
     /** Composes and enqueues a debugging image. */
     void streamDebugImage(cv::Mat& cameraImage, SequentialTimer& timer);
