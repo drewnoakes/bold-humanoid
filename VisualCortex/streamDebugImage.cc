@@ -52,7 +52,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     }
     case ImageType::None:
     {
-      debugImage = Mat(cameraImage.size(), cameraImage.type(), Scalar(0));
+      debugImage = Mat(cameraImage.size(), CV_8UC1, Scalar(0));
       palette[0] = backgroundColour->getValue();
       usePalette = true;
       break;
