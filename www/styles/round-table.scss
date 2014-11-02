@@ -1243,8 +1243,8 @@ table.timing-details
 
       &.path span.leaf
       {
-        color: darken($bh-colour-dark, 10%);
-        html.night-mode & { color: $bh-colour-dark; }
+        color: darken($bh-colour-dark, 5%);
+        html.night-mode & { color: desaturate(lighten($bh-colour-dark, 10%), 40%); }
       }
     }
 

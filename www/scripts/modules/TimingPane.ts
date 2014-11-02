@@ -21,7 +21,7 @@ var chartHeight = 150;
 
 interface ITimingEntry
 {
-    label: string;
+    path: string;
     avg: math.MovingAverage;
     update: (timestamp: number, millis: number)=>void;
     row: HTMLTableRowElement;
@@ -43,7 +43,7 @@ class TimingPane
     private table: HTMLTableElement;
     private fps: HTMLDivElement;
     private closeables: Closeable = new Closeable();
-    private entryByLabel: {[label:string]:ITimingEntry} = {};
+    private entryByPath: {[path:string]:ITimingEntry} = {};
 
     constructor(private protocol: string, private targetFps: number)
     {
@@ -101,7 +101,7 @@ class TimingPane
         this.table.className = 'timing-details';
         element.appendChild(this.table);
 
-        this.entryByLabel = {};
+        this.entryByPath = {};
 
         this.closeables.add(new data.Subscription<state.Timing>(
             this.protocol,
@@ -122,7 +122,7 @@ class TimingPane
         delete this.table;
         delete this.fps;
         delete this.canvas;
-        delete this.entryByLabel;
+        delete this.entryByPath;
     }
 
     public onResized(width:number)
@@ -149,9 +149,9 @@ class TimingPane
     {
         var totalTime = 0;
 
-        _.each(_.values(this.entryByLabel), entry =>
+        _.each(_.values(this.entryByPath), entry =>
         {
-            if (entry.time === time && entry.label.indexOf('/') === -1)
+            if (entry.time === time && entry.path.indexOf('/') === -1)
                 totalTime += entry.millis;
         });
 
@@ -160,15 +160,15 @@ class TimingPane
 
     private resetMaximums()
     {
-        _.each(_.values(this.entryByLabel), entry => entry.maxMillis = 0);
+        _.each(_.values(this.entryByPath), entry => entry.maxMillis = 0);
     }
 
-    private getOrCreateEntry(label: string): ITimingEntry
+    private getOrCreateEntry(path: string): ITimingEntry
     {
         // Remove any leading/trailing slashes
-        label = label.replace(/^\/|\/$/g, '');
+        path = path.replace(/^\/|\/$/g, '');
 
-        var entry = this.entryByLabel[label];
+        var entry = this.entryByPath[path];
 
         if (entry)
             return entry;
@@ -176,7 +176,7 @@ class TimingPane
         var row = document.createElement('tr');
 
         entry = <ITimingEntry>{
-            label: label,
+            path: path,
             avg: new math.MovingAverage(this.targetFps * 4), // four second moving average
             row: row,
             children: [],
@@ -185,7 +185,7 @@ class TimingPane
         };
 
         // If this entry is a child of another entry, try to find it's parent
-        var parts = label.split('/'),
+        var parts = path.split('/'),
             hasParent = parts.length !== 1,
             parent,
             parentPath = '';
@@ -194,7 +194,7 @@ class TimingPane
             row.classList.add('root');
 
         var cellExpand = document.createElement('td'),     // {'class': 'expander'}).appendTo(row).get(0),
-            cellPath = document.createElement('td'),      //.text(label).appendTo(row).get(0),
+            cellPath = document.createElement('td'),      //.text(path).appendTo(row).get(0),
             cellMillis = document.createElement('td'),     // {'class': 'duration'}).appendTo(row).get(0),
             cellMAvgMillis = document.createElement('td'), // {'class': 'avg-duration'}).appendTo(row).get(0),
             cellMaxMillis = document.createElement('td');  // {'class': 'max-duration'}).appendTo(row).get(0);
@@ -262,7 +262,7 @@ class TimingPane
                 // Show all children, and recur
                 _.each(e.children, child => {
                     child.row.style.display = 'table-row';
-                    setChildRowDisplay(child); 
+                    setChildRowDisplay(child);
                 });
             }
             else
@@ -288,7 +288,7 @@ class TimingPane
             setChildRowDisplay(entry);
         });
 
-        this.entryByLabel[label] = entry;
+        this.entryByPath[path] = entry;
 
         if (hasParent) {
             parent.children.push(entry);
