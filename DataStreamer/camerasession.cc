@@ -8,9 +8,9 @@ PngCodec bold::CameraSession::pngCodec;
 JpegCodec bold::CameraSession::jpegCodec;
 
 CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
-  : imgWaiting(false),
-    imgSending(false),
-    imageBytes(make_unique<vector<uchar>>()),
+  : d_imgWaiting(false),
+    d_imgSending(false),
+    d_imageBytes(make_unique<vector<uchar>>()),
     d_context(context),
     d_wsi(wsi)
 {}
@@ -24,10 +24,10 @@ void CameraSession::notifyImageAvailable(cv::Mat const& image, ImageEncoding enc
     d_image = image;
     d_imageEncoding = encoding;
     d_palette = palette;
-    imgWaiting = true;
+    d_imgWaiting = true;
   }
 
-  if (!imgSending)
+  if (!d_imgSending)
     libwebsocket_callback_on_writable(d_context, d_wsi);
 }
 
@@ -35,9 +35,9 @@ int CameraSession::write()
 {
   ASSERT(ThreadUtil::isDataStreamerThread());
 
-  if (!imgSending)
+  if (!d_imgSending)
   {
-    if (!imgWaiting)
+    if (!d_imgWaiting)
       return 0;
 
     // Take a thread-safe copy of the image to encode
@@ -49,20 +49,20 @@ int CameraSession::write()
       image = d_image;
       encoding = d_imageEncoding;
       palette = d_palette;
-      imgWaiting = false;
-      imgSending = true;
+      d_imgWaiting = false;
+      d_imgSending = true;
     }
 
     auto t = Clock::getTimestamp();
 
     // Encode the image
-    ASSERT(imageBytes->size() == 0);
-    imageBytes->resize(LWS_SEND_BUFFER_PRE_PADDING);
+    ASSERT(d_imageBytes->size() == 0);
+    d_imageBytes->resize(LWS_SEND_BUFFER_PRE_PADDING);
     switch (encoding)
     {
       case ImageEncoding::PNG:
       {
-        if (!pngCodec.encode(image, *imageBytes, palette))
+        if (!pngCodec.encode(image, *d_imageBytes, palette))
         {
           log::error("CameraSession::write") << "Error encoding image as PNG";
           return 1;
@@ -71,7 +71,7 @@ int CameraSession::write()
       }
       case ImageEncoding::JPEG:
       {
-        if (!jpegCodec.encode(image, *imageBytes))
+        if (!jpegCodec.encode(image, *d_imageBytes))
         {
           log::error("CameraSession::write") << "Error encoding image as JPEG";
           return 1;
@@ -79,33 +79,33 @@ int CameraSession::write()
         break;
       }
     }
-    imageBytes->resize(imageBytes->size() + LWS_SEND_BUFFER_POST_PADDING);
+    d_imageBytes->resize(d_imageBytes->size() + LWS_SEND_BUFFER_POST_PADDING);
 
-    log::trace("CameraSession::write") << "Encoded image (" << imageBytes->size() << " bytes) in " << Clock::getMillisSince(t) << " ms";
+    log::trace("CameraSession::write") << "Encoded image (" << d_imageBytes->size() << " bytes) in " << Clock::getMillisSince(t) << " ms";
 
-    bytesSent = 0;
+    d_bytesSent = 0;
   }
 
   // Fill the outbound pipe with frames of data
   while (!lws_send_pipe_choked(d_wsi))
   {
-    uint totalSize = (uint) imageBytes->size() - LWS_SEND_BUFFER_PRE_PADDING - LWS_SEND_BUFFER_POST_PADDING;
+    uint totalSize = (uint) d_imageBytes->size() - LWS_SEND_BUFFER_PRE_PADDING - LWS_SEND_BUFFER_POST_PADDING;
 
-    ASSERT(bytesSent < totalSize);
+    ASSERT(d_bytesSent < totalSize);
 
-    uchar* start = imageBytes->data() + LWS_SEND_BUFFER_PRE_PADDING + bytesSent;
+    uchar* start = d_imageBytes->data() + LWS_SEND_BUFFER_PRE_PADDING + d_bytesSent;
 
-    uint remainingSize = totalSize - bytesSent;
+    uint remainingSize = totalSize - d_bytesSent;
     uint frameSize = min(2048u, remainingSize);
 
-    int writeMode = bytesSent == 0
+    int writeMode = d_bytesSent == 0
       ? LWS_WRITE_BINARY
       : LWS_WRITE_CONTINUATION;
 
     if (frameSize != remainingSize)
       writeMode |= LWS_WRITE_NO_FIN;
 
-    bool storePostPadding = bytesSent + frameSize < totalSize;
+    bool storePostPadding = d_bytesSent + frameSize < totalSize;
     std::array<uchar,LWS_SEND_BUFFER_POST_PADDING> postPadding{};
     if (storePostPadding)
       std::copy(start + frameSize, start + frameSize + LWS_SEND_BUFFER_POST_PADDING, postPadding.data());
@@ -118,14 +118,14 @@ int CameraSession::write()
       return 1;
     }
 
-    bytesSent += frameSize;
+    d_bytesSent += frameSize;
 
-    if (bytesSent == totalSize)
+    if (d_bytesSent == totalSize)
     {
       // Done sending
-      imgSending = false;
-      bytesSent = 0;
-      imageBytes->clear();
+      d_imgSending = false;
+      d_bytesSent = 0;
+      d_imageBytes->clear();
       return 0;
     }
     else if (storePostPadding)
@@ -135,7 +135,7 @@ int CameraSession::write()
   }
 
   // Queue for more writing later on if we still have data remaining
-  if (imgSending || imgWaiting)
+  if (d_imgSending || d_imgWaiting)
     libwebsocket_callback_on_writable(d_context, d_wsi);
 
   return 0;

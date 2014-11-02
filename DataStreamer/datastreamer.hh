@@ -51,13 +51,13 @@ namespace bold
 
   private:
     /** Whether an image is waiting to be encoded. */
-    bool imgWaiting;
+    bool d_imgWaiting;
     /** Whether encoded image data is currently being sent. */
-    bool imgSending;
-    /** If imgSending is true, the encoded JPEG bytes will be here. */
-    std::unique_ptr<std::vector<uchar>> imageBytes;
-    /** If imgSending is true, the number of bytes already sent. */
-    unsigned bytesSent;
+    bool d_imgSending;
+    /** If d_imgSending is true, the encoded JPEG bytes will be here. */
+    std::unique_ptr<std::vector<uchar>> d_imageBytes;
+    /** If d_imgSending is true, the number of bytes already sent. */
+    unsigned d_bytesSent;
 
     std::mutex d_imageMutex;
     cv::Mat d_image;
