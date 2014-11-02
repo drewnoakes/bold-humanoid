@@ -38,6 +38,9 @@ namespace bold
 
     void onPixel(uchar value, ushort x, ushort y) override
     {
+      // NOTE Have tested whether it was better to check if value is zero here, but it runs the
+      //      pass 0.3ms slower on average with the if-check here, so skip it. The write pattern
+      //      here is sequential anyway. If this becomes random access, it may help.
       *d_ptr = value;
       d_ptr += d_dx;
     }
