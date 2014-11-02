@@ -125,9 +125,10 @@ class TimingPane
         delete this.entryByPath;
     }
 
-    public onResized(width:number)
+    public onResized(width: number, isFullScreen: boolean)
     {
         this.canvas.width = width;
+        this.canvas.height = isFullScreen ? 300 : 150;
     }
 
     private onTimingState(data: state.Timing)

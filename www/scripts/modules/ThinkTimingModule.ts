@@ -19,7 +19,7 @@ class ThinkTimingModule extends Module
     public load(width: number)
     {
         this.pane.load(this.element);
-        this.pane.onResized(width);
+        this.pane.onResized(width, this.isFullScreen.getValue());
     }
 
     public unload()
@@ -29,7 +29,7 @@ class ThinkTimingModule extends Module
 
     public onResized(width: number, height: number, isFullScreen: boolean)
     {
-        this.pane.onResized(width);
+        this.pane.onResized(width, isFullScreen);
     }
 }
 
