@@ -1,6 +1,6 @@
 #include "datastreamer.ih"
 
-void DataStreamer::streamImage(cv::Mat const& img, std::string const& imageEncoding, std::map<uchar, Colour::bgr> const& palette)
+void DataStreamer::streamImage(cv::Mat const& img, ImageEncoding imageEncoding, std::map<uchar, Colour::bgr> const& palette)
 {
   ASSERT(ThreadUtil::isThinkLoopThread());
 

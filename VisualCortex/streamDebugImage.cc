@@ -301,8 +301,8 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   }
 
   auto imageEncoding = d_imageType->getValue() == ImageType::None || d_imageType->getValue() == ImageType::Cartoon
-    ? ".png"
-    : ".jpg";
+    ? ImageEncoding::PNG
+    : ImageEncoding::JPEG;
 
   d_dataStreamer->streamImage(debugImage, imageEncoding, palette);
   t.timeEvent("Compose Debug Image");
