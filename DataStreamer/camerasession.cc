@@ -1,10 +1,10 @@
 #include "datastreamer.ih"
 
-#include "../ImageCodec/PngCodec/pngcodec.hh"
-
 using namespace bold;
 using namespace rapidjson;
 using namespace std;
+
+PngCodec bold::CameraSession::pngCodec;
 
 CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
   : imgWaiting(false),
@@ -54,8 +54,7 @@ int CameraSession::write()
     ASSERT(imageBytes->size() == 0);
     if (d_imageEncoding == ".png")
     {
-      static PngCodec codec;
-      if (!codec.encode(image, *imageBytes))
+      if (!pngCodec.encode(image, *imageBytes))
       {
         log::error("CameraSession::write") << "Error encoding image as PNG";
         return 1;

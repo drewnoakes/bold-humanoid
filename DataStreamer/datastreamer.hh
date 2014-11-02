@@ -13,6 +13,7 @@
 #include <opencv2/opencv.hpp>
 #include <sigc++/signal.h>
 
+#include "../ImageCodec/PngCodec/pngcodec.hh"
 #include "../Setting/setting.hh"
 #include "../StateObject/stateobject.hh"
 #include "../util/assert.hh"
@@ -37,6 +38,8 @@ namespace bold
     void notifyImageAvailable(cv::Mat const& image, std::string encoding);
 
     int write();
+
+    static PngCodec pngCodec;
 
   private:
     /** Whether an image is waiting to be encoded. */

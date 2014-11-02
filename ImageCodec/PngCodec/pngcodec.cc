@@ -13,6 +13,8 @@ using namespace std;
 // http://www.libpng.org/pub/png/libpng-1.2.5-manual.html
 
 PngCodec::PngCodec()
+  : d_compressionLevel(-1), // default
+    d_compressionStrategy(CompressionStrategy::RLE)
 {}
 
 bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
@@ -59,8 +61,8 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
 
   // Set parameters that control the encoding
   png_set_filter(png_ptr, PNG_FILTER_TYPE_BASE, PNG_FILTER_SUB);
-  png_set_compression_level(png_ptr, Z_BEST_SPEED);
-  png_set_compression_strategy(png_ptr, Z_RLE);
+  png_set_compression_level(png_ptr, d_compressionLevel);
+  png_set_compression_strategy(png_ptr, static_cast<int>(d_compressionStrategy));
 
   ASSERT(image.depth() == CV_8U);
   ASSERT(image.channels() == 3);

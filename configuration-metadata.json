@@ -257,6 +257,12 @@
     },
     "cartoon": {
       "background-colour": { "type": "bgr-colour" }
+    },
+    "image-encoding": {
+      "png": {
+        "compression-level":    { "type": "int", "min": 0, "max": 9 },
+        "compression-strategy": { "type": "enum", "values": { "Filtered": 1, "Huffman Only": 2, "RLE": 3, "Fixed": 4 }}
+      }
     }
   },
   "localiser": {

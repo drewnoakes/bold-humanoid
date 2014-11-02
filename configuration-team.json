@@ -260,6 +260,12 @@
     },
     "cartoon": {
       "background-colour": { "b": 0, "g": 0, "r": 0 }
+    },
+    "image-encoding": {
+      "png": {
+        "compression-level": 1,
+        "compression-strategy": 3
+      }
     }
   },
   "localiser": {
