@@ -45,7 +45,7 @@ function compileTypeScript(moduleType, outFolder)
 {
     return function()
     {
-        return gulp.src('scripts/app/**/*.ts')
+        return gulp.src('scripts/**/*.ts')
             .pipe(typescript({module: moduleType}))
             .pipe(gulp.dest(outFolder))
     };
@@ -93,16 +93,16 @@ gulp.task('bundle-source', ['clean-dist', 'compile-commonjs'], function ()
 gulp.task('bundle-libs', ['clean-dist'], function ()
 {
     var libs = [
-        'scripts/libs/three.js',
-        'scripts/libs/smoothie.js',
-        'scripts/libs/lodash.js',
-        'scripts/libs/jquery-2.0.3.js',
-        'scripts/libs/jquery-ui-1.10.2.custom.js',
-        'scripts/libs/hammer-1.1.3.js',
-        'scripts/libs/handlebars.js',
-        'scripts/libs/d3-4.3.8.js',
-        'scripts/libs/joint.js',
-        'scripts/libs/joint.layout.DirectedGraph.js'
+        'libs/three.js',
+        'libs/smoothie.js',
+        'libs/lodash.js',
+        'libs/jquery-2.0.3.js',
+        'libs/jquery-ui-1.10.2.custom.js',
+        'libs/hammer-1.1.3.js',
+        'libs/handlebars.js',
+        'libs/d3-4.3.8.js',
+        'libs/joint.js',
+        'libs/joint.layout.DirectedGraph.js'
     ];
 
     return gulp.src(libs)
@@ -113,7 +113,7 @@ gulp.task('bundle-libs', ['clean-dist'], function ()
 
 gulp.task('bundle-images', ['clean-dist'], function ()
 {
-    return gulp.src('./images/*', {base: './'})
+    return gulp.src('./resources/images/*', {base: './'})
         .pipe(imagemin({
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
@@ -124,13 +124,13 @@ gulp.task('bundle-images', ['clean-dist'], function ()
 
 gulp.task('bundle-fonts', ['clean-dist'], function ()
 {
-    return gulp.src('./fonts/*', {base: './'})
+    return gulp.src('./resources/fonts/*', {base: './'})
         .pipe(gulp.dest(distFolder));
 });
 
 gulp.task('bundle-models', ['clean-dist'], function ()
 {
-    return gulp.src(['models/darwin.json'], {base: './'})
+    return gulp.src(['/resources/darwin.json'], {base: './'})
         .pipe(jsonminify())
         .pipe(gulp.dest(distFolder));
 });
@@ -161,8 +161,8 @@ gulp.task('dist', allBundles, function ()
 
 gulp.task('watch', function ()
 {
-    gulp.watch('scripts/app/**/*.ts', ['compile-amd']);
-    gulp.watch('styles/*.scss',       ['compile-sass']);
+    gulp.watch('scripts/**/*.ts', ['compile-amd']);
+    gulp.watch('styles/*.scss',   ['compile-sass']);
 });
 
 gulp.task('compile', ['compile-sass', 'compile-amd']);

@@ -10,7 +10,7 @@ $team-magenta: #ff41e5;
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 400;
-  src: local('Montserrat'), local('Montserrat-Regular'), url(/fonts/montserrat-regular.ttf) format('woff');
+  src: local('Montserrat'), local('Montserrat-Regular'), url(/resources/fonts/montserrat-regular.ttf) format('woff');
 }
 
 @font-face
@@ -18,7 +18,7 @@ $team-magenta: #ff41e5;
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 700;
-  src: local('Montserrat'), local('Montserrat-Bold'), url(/fonts/montserrat-bold.ttf) format('woff');
+  src: local('Montserrat'), local('Montserrat-Bold'), url(/resources/fonts/montserrat-bold.ttf) format('woff');
 }
 
 /********************************************************************/

@@ -14,8 +14,8 @@ module.exports = function(config)
     // list of files / patterns to load in the browser
     files: [
       'test-main.js',
-      {pattern: 'scripts/app/**/*.js', included: false},
-      {pattern: 'scripts/test/**/*.js', included: false}
+      {pattern: 'build/amd/**/*.js', included: false},
+      {pattern: 'build/amd/test/**/*.js', included: false}
     ],
 
     // list of files to exclude

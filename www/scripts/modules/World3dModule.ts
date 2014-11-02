@@ -341,7 +341,7 @@ class World3dModule extends Module
         plotter.drawField(fieldLineContext, plotOptions);
         plotter.drawFieldLines(fieldLineContext, plotOptions);
 
-        var groundBumpMap = THREE.ImageUtils.loadTexture('images/felt.jpg', null, texture =>
+        var groundBumpMap = THREE.ImageUtils.loadTexture('resources/images/felt.jpg', null, texture =>
         {
             onTextureLoaded();
             // The image will be stretched to be the same size as the field lines
@@ -385,8 +385,8 @@ class World3dModule extends Module
         //
         var ballMaterial = new THREE.MeshPhongMaterial({
             ambient: 0x666666,
-            map: THREE.ImageUtils.loadTexture("images/ball-colour-map.png", null, onTextureLoaded),
-            bumpMap: THREE.ImageUtils.loadTexture("images/ball-bump-map.jpg", null, onTextureLoaded),
+            map: THREE.ImageUtils.loadTexture("resources/images/ball-colour-map.png", null, onTextureLoaded),
+            bumpMap: THREE.ImageUtils.loadTexture("resources/images/ball-bump-map.jpg", null, onTextureLoaded),
             bumpScale: 0.0075
         });
 
