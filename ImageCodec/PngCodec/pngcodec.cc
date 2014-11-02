@@ -52,9 +52,6 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
     return false;
   }
 
-  // Set callbacks for custom buffering of output
-  png_set_write_fn(png_ptr, &buffer, &bold::PngCodec::writeDataToBuf, nullptr);
-
   // Set parameters that control the encoding
   png_set_filter(png_ptr, PNG_FILTER_TYPE_BASE, PNG_FILTER_SUB);
   png_set_compression_level(png_ptr, Z_BEST_SPEED);
@@ -74,6 +71,9 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer)
     PNG_INTERLACE_NONE,
     PNG_COMPRESSION_TYPE_DEFAULT,
     PNG_FILTER_TYPE_DEFAULT);
+
+  // Set callbacks for custom buffering of output
+  png_set_write_fn(png_ptr, &buffer, &bold::PngCodec::writeDataToBuf, nullptr);
 
   // Write all the PNG information before the image
   png_write_info(png_ptr, info_ptr);
