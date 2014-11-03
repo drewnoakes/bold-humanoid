@@ -1,4 +1,4 @@
-Data as of Mon Nov 3 01:18:18 GMT 2014 on darwin6
+Data as of Mon Nov 3 01:24:52 GMT 2014 on darwin6
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
@@ -8,7 +8,7 @@ Codename:	saucy
 ==== FILE SYSTEM ========================================
 
 Filesystem               Size  Used Avail Use% Mounted on
-/dev/mapper/darwin-root  2.5G  1.4G  945M  60% /
+/dev/mapper/darwin-root  2.5G  1.4G  978M  59% /
 
 198M	/home/darwin
 33M	/boot
@@ -256,7 +256,6 @@ espeak-data                             	    1873	1.47.11-1ubuntu0.1
 ethtool                                 	     316	1:3.9-1
 file                                    	      93	5.11-2ubuntu4.3
 findutils                               	     668	4.4.2-6ubuntu1
-fontconfig                              	     541	2.10.93-0ubuntu1
 fontconfig-config                       	     348	2.10.93-0ubuntu1
 fonts-dejavu-core                       	    2883	2.33+svn2514-3ubuntu1
 fonts-ubuntu-font-family-console        	      59	0.80-0ubuntu6
@@ -323,20 +322,14 @@ libasound2-data                         	     336	1.0.27.2-1ubuntu6
 libasprintf0c2                          	      65	0.18.1.1-10ubuntu3
 libasprintf-dev                         	      69	0.18.1.1-10ubuntu3
 libasyncns0                             	      58	0.8-4ubuntu1
-libatk1.0-0                             	     215	2.10.0-2
-libatk1.0-data                          	      92	2.10.0-2
 libatm1                                 	     123	1:2.5.1-1.5
 libattr1                                	      55	1:2.4.47-1
 libaudiofile1                           	     294	0.3.6-2
 libaudit1                               	     142	1:2.2.2-1ubuntu4
 libaudit-common                         	      42	1:2.2.2-1ubuntu4
-libavahi-client3                        	     136	0.6.31-2ubuntu4.1
 libavahi-common3                        	     121	0.6.31-2ubuntu4.1
 libavahi-common-data                    	     116	0.6.31-2ubuntu4.1
 libavahi-core7                          	     297	0.6.31-2ubuntu4.1
-libavcodec53                            	   13244	6:0.8.13-0ubuntu0.13.10.1
-libavformat53                           	    2532	6:0.8.13-0ubuntu0.13.10.1
-libavutil51                             	     371	6:0.8.13-0ubuntu0.13.10.1
 libbind9-90                             	     102	1:9.9.3.dfsg.P2-4ubuntu1.1
 libblas3                                	     576	1.2.20110419-5
 libblkid1                               	     253	2.20.1-5.1ubuntu9
@@ -345,7 +338,6 @@ libbsd0                                 	     144	0.6.0-1
 libbz2-1.0                              	     112	1.0.6-4
 libc6                                   	    9233	2.17-93ubuntu4
 libc6-dbg                               	   28689	2.17-93ubuntu4
-libcairo2                               	    1735	1.12.16-0ubuntu2
 libcap2                                 	      56	1:2.22-1.2ubuntu2
 libcap-ng0                              	      53	0.7.3-1ubuntu1
 libc-bin                                	    3294	2.17-93ubuntu4
@@ -354,16 +346,13 @@ libclass-accessor-perl                  	     104	0.34-1
 libclass-isa-perl                       	      53	0.36-5
 libcomerr2                              	     100	1.42.8-1ubuntu1
 libcroco3                               	     338	0.6.8-2
-libcups2                                	     577	1.7.0~rc1-0ubuntu5.3
 libcurl3                                	     534	7.32.0-1ubuntu1.4
 libcurl3-gnutls                         	     518	7.32.0-1ubuntu1.4
 libcwidget3                             	    1088	0.5.16-3.4ubuntu2
 libdaemon0                              	      58	0.14-2build1
-libdatrie1                              	      83	0.2.6-2
 libdb5.1                                	    1603	5.1.29-7
 libdbus-1-3                             	     397	1.6.12-0ubuntu10.1
 libdbus-glib-1-2                        	     220	0.100.2-1
-libdc1394-22                            	     256	2.2.1-1ubuntu1
 libdevmapper1.02.1                      	     316	2:1.02.77-6ubuntu1
 libdevmapper-event1.02.1                	      86	2:1.02.77-6ubuntu1
 libdns99                                	    1999	1:9.9.3.dfsg.P2-4ubuntu1.1
@@ -397,8 +386,6 @@ libgcr-base-3-1                         	     719	3.8.2-4
 libgcrypt11                             	     611	1.5.0-3ubuntu3
 libgd3                                  	     459	2.1.0-2
 libgdbm3                                	     105	1.8.3-12build1
-libgdk-pixbuf2.0-0                      	     511	2.28.1-1ubuntu2
-libgdk-pixbuf2.0-common                 	      56	2.28.1-1ubuntu2
 libgeoip1                               	     279	1.5.1-1ubuntu1
 libgettextpo0                           	     342	0.18.1.1-10ubuntu3
 libgettextpo-dev                        	     515	0.18.1.1-10ubuntu3
@@ -412,28 +399,20 @@ libgnutls-openssl27                     	     274	2.12.23-1ubuntu4.3
 libgomp1                                	      96	4.8.1-10ubuntu9
 libgpg-error0                           	      88	1.12-0.2
 libgpm2                                 	      78	1.20.4-6.1
-libgraphite2-3                          	     154	1.2.3-1
-libgsm1                                 	     102	1.0.13-4
 libgssapi3-heimdal                      	     310	1.6~git20120403+dfsg1-3ubuntu0.1
 libgssapi-krb5-2                        	     325	1.10.1+dfsg-6.1ubuntu1
-libgtk2.0-0                             	    6278	2.24.20-1ubuntu1
-libgtk2.0-bin                           	     561	2.24.20-1ubuntu1
-libgtk2.0-common                        	     724	2.24.20-1ubuntu1
-libharfbuzz0a                           	     377	0.9.19-1
 libhcrypto4-heimdal                     	     287	1.6~git20120403+dfsg1-3ubuntu0.1
 libheimbase1-heimdal                    	     124	1.6~git20120403+dfsg1-3ubuntu0.1
 libheimntlm0-heimdal                    	      93	1.6~git20120403+dfsg1-3ubuntu0.1
 libhx509-5-heimdal                      	     356	1.6~git20120403+dfsg1-3ubuntu0.1
 libid3tag0                              	     112	0.15.1b-10build3
 libidn11                                	     362	1.28-1ubuntu1
-libilmbase6                             	     454	1.0.1-6
 libio-string-perl                       	      72	1.08-2
 libisc95                                	     447	1:9.9.3.dfsg.P2-4ubuntu1.1
 libisccc90                              	      86	1:9.9.3.dfsg.P2-4ubuntu1.1
 libisccfg90                             	     148	1:9.9.3.dfsg.P2-4ubuntu1.1
 libiw30                                 	      89	30~pre9-8ubuntu1
 libjack-jackd2-0                        	     558	1.9.9.5+20130622git7de15e7a-1
-libjasper1                              	     348	1.900.1-14
 libjbig0                                	      91	2.0-2ubuntu1.13.10.1
 libjpeg8                                	      26	8c-2ubuntu8
 libjpeg-turbo8                          	     350	1.3.0-0ubuntu1.1
@@ -471,19 +450,13 @@ libnss-mdns                             	     111	0.10-3.2ubuntu1
 libnuma1                                	      86	2.0.8-3
 libogg0                                 	      72	1.3.1-1
 libopencv-core2.4                       	    2159	2.4.5+dfsg-0ubuntu4
-libopencv-highgui2.4                    	     312	2.4.5+dfsg-0ubuntu4
 libopencv-imgproc2.4                    	    2102	2.4.5+dfsg-0ubuntu4
-libopenexr6                             	     756	1.6.1-7
-liborc-0.4-0                            	     650	1:0.4.17-2
 libp11-kit0                             	     172	0.18.3-2ubuntu1
 libpam0g                                	     218	1.1.3-8ubuntu3
 libpam-modules                          	     753	1.1.3-8ubuntu3
 libpam-modules-bin                      	     210	1.1.3-8ubuntu3
 libpam-runtime                          	     296	1.1.3-8ubuntu3
 libpam-systemd                          	     118	204-0ubuntu19.2
-libpango-1.0-0                          	     505	1.32.5-5ubuntu1
-libpangocairo-1.0-0                     	     234	1.32.5-5ubuntu1
-libpangoft2-1.0-0                       	     273	1.32.5-5ubuntu1
 libparse-debianchangelog-perl           	     232	1.2.0-1ubuntu1
 libparted0debian1                       	     552	2.3-16ubuntu1
 libpcap0.8                              	     299	1.4.0-2
@@ -492,7 +465,6 @@ libpciaccess0                           	      80	0.13.2-1
 libpcre3                                	     472	1:8.31-2
 libpcsclite1                            	      89	1.8.6-3ubuntu1b1
 libpipeline1                            	      87	1.2.4-1
-libpixman-1-0                           	     731	0.30.2-1ubuntu0.1
 libplymouth2                            	     297	0.8.8-0ubuntu8
 libpng12-0                              	     300	1.2.49-4ubuntu1
 libpolkit-agent-1-0                     	      80	0.105-3ubuntu3
@@ -511,7 +483,6 @@ libpython3.3-stdlib                     	    8843	3.3.2-7ubuntu3.1
 libpython3-stdlib                       	      52	3.3.2-14ubuntu1
 libpython-stdlib                        	      57	2.7.5-5ubuntu1
 libquadmath0                            	     517	4.8.1-10ubuntu9
-libraw1394-11                           	     113	2.1.0-1
 libreadline5                            	     323	5.2+dfsg-2
 libreadline6                            	     353	6.2-9ubuntu1
 libroken18-heimdal                      	     156	1.6~git20120403+dfsg1-3ubuntu0.1
@@ -520,7 +491,6 @@ libsamplerate0                          	    1495	0.1.8-5ubuntu1
 libsasl2-2                              	     165	2.1.25.dfsg1-17
 libsasl2-modules                        	     221	2.1.25.dfsg1-17
 libsasl2-modules-db                     	      77	2.1.25.dfsg1-17
-libschroedinger-1.0-0                   	     927	1.0.11-2
 libselinux1                             	     189	2.1.13-2
 libsemanage1                            	     256	2.1.10-2
 libsemanage-common                      	      56	2.1.10-2
@@ -530,14 +500,12 @@ libsigsegv2                             	      56	2.10-2
 libslang2                               	    1239	2.2.4-15ubuntu1
 libsndfile1                             	     548	1.0.25-7ubuntu1
 libsonic0                               	      57	0.1.18-0ubuntu1
-libspeex1                               	     266	1.2~rc1-7ubuntu2
 libsqlite3-0                            	     813	3.7.17-1ubuntu1
 libss2                                  	     109	1.42.8-1ubuntu1
 libssl1.0.0                             	    2695	1.0.1e-3ubuntu1.6
 libstdc++6                              	    1153	4.8.1-10ubuntu9
 libsub-name-perl                        	      71	0.05-1build3
 libswitch-perl                          	      74	2.16-2
-libswscale2                             	     721	6:0.8.13-0ubuntu0.13.10.1
 libsys-hostname-long-perl               	      84	1.4-2
 libsystemd-daemon0                      	      58	204-0ubuntu19.2
 libsystemd-login0                       	      99	204-0ubuntu19.2
@@ -546,9 +514,6 @@ libtbb2                                 	     302	4.1~20130613-1.2
 libtext-charwidth-perl                  	      75	0.04-7build2
 libtext-iconv-perl                      	      85	1.7-5build1
 libtext-wrapi18n-perl                   	      68	0.06-7
-libthai0                                	     100	0.1.19-2
-libthai-data                            	     604	0.1.19-2
-libtheora0                              	     777	1.1.1+dfsg.1-3.1
 libtiff5                                	     564	4.0.2-4ubuntu3.1
 libtimedate-perl                        	     248	1.2000-1
 libtinfo5                               	     429	5.9+20130608-1ubuntu1
@@ -558,9 +523,6 @@ libusb-0.1-4                            	      73	2:0.1.12-23.2ubuntu1
 libusb-1.0-0                            	     131	2:1.0.16-3
 libustr-1.0-1                           	     261	1.0.4-3ubuntu1
 libuuid1                                	     106	2.20.1-5.1ubuntu9
-libv4l-0                                	     167	0.8.9-4
-libv4lconvert0                          	     251	0.8.9-4
-libva1                                  	     130	1.1.1-3
 libvorbis0a                             	     222	1.3.2-1.3
 libvorbisenc2                           	    1536	1.3.2-1.3
 libvpx1                                 	     631	1.2.0-2
@@ -571,21 +533,11 @@ libx11-data                             	    1580	2:1.6.1-1ubuntu1
 libxapian22                             	    4399	1.2.15-2
 libxau6                                 	      46	1:1.0.8-1
 libxcb1                                 	     187	1.9.1-3ubuntu1
-libxcb-render0                          	      83	1.9.1-3ubuntu1
-libxcb-shm0                             	      49	1.9.1-3ubuntu1
-libxcomposite1                          	      47	1:0.4.4-1
-libxcursor1                             	      78	1:1.1.14-1
-libxdamage1                             	      46	1:1.1.4-1ubuntu1
 libxdmcp6                               	      70	1:1.1.1-1
 libxext6                                	     120	2:1.3.2-1
-libxfixes3                              	      57	1:5.0.1-1ubuntu1
-libxi6                                  	     106	2:1.7.1.901-1ubuntu1
-libxinerama1                            	      48	2:1.1.3-1
 libxml2                                 	    1749	2.9.1+dfsg1-3ubuntu2.3
 libxmuu1                                	      64	2:1.1.1-1
 libxpm4                                 	     116	1:3.5.10-1
-libxrandr2                              	      93	2:1.4.0-1ubuntu2
-libxrender1                             	      78	1:0.9.8-1
 libxslt1.1                              	     484	1.1.28-2
 libxtables10                            	      93	1.4.18-1.1ubuntu1
 linux-firmware                          	   48928	1.116.2
