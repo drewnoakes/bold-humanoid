@@ -42,7 +42,7 @@ class CameraModule extends Module
         this.cameraCanvas.height = constants.cameraImageHeight;
 
         this.hoverPixelInfo = <HTMLDivElement>content.querySelector('.hover-pixel-info');
-        
+
         var pixelLabelInspectorCanvas = <HTMLCanvasElement>content.querySelector('.pixel-label-inspector');
         this.pixelLabelInspector = new PixelLabelInspector(pixelLabelInspectorCanvas, 320, 120);
         this.pixelLabelInspector.setVisible(false);
@@ -72,6 +72,10 @@ class CameraModule extends Module
 
         control.buildSettings('histogram-label-teacher', teacherControlsContainer, this.closeables);
         control.buildActions('histogram-label-teacher', teacherControlsContainer);
+
+        this.closeables.add(control.getSetting('round-table.image-type').track(type => {
+            teacherControlsContainer.style.display = type === constants.ImageType.Teacher ? 'block' : 'none';
+        }));
 
         this.setSeedPointAction = new Action({id: 'histogram-label-teacher.set-seed-point', label: 'Set Seed Point', hasArguments: true});
     }

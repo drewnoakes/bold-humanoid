@@ -783,6 +783,15 @@ div.module.camera
     margin: 16px 0;
   }
 
+  div.label-teacher-controls
+  {
+    border-top: 1px dotted #AAA;
+    margin-top: 9px;
+    padding-top: 3px;
+
+    html.night-mode & { border-color: #444; }
+  }
+
   &.full-screen
   {
     div.module-content
