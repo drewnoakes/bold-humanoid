@@ -1,4 +1,4 @@
-Data as of Mon Nov 3 22:59:56 GMT 2014 on darwin1
+Data as of Mon Nov 3 23:54:10 GMT 2014 on darwin1
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
@@ -8,7 +8,7 @@ Codename:	saucy
 ==== FILE SYSTEM ========================================
 
 Filesystem                Size  Used Avail Use% Mounted on
-/dev/mapper/darwin1-root  2.5G  1.5G  858M  64% /
+/dev/mapper/darwin1-root  2.5G  1.5G  868M  64% /
 
 49M	/home/darwin/log
 186M	/home/darwin
@@ -270,7 +270,6 @@ bsdmainutils                            	     533	9.0.5ubuntu1
 bsdutils                                	     188	1:2.20.1-5.1ubuntu9
 busybox-initramfs                       	     378	1:1.20.0-8.1ubuntu1
 busybox-static                          	    1859	1:1.20.0-8.1ubuntu1
-byobu                                   	     582	5.60-0ubuntu1
 bzip2                                   	     113	1.0.6-4
 ca-certificates                         	     406	20130906ubuntu0.13.10.1
 command-not-found                       	      52	0.3ubuntu8
@@ -307,15 +306,12 @@ ethtool                                 	     316	1:3.9-1
 file                                    	      93	5.11-2ubuntu4.3
 findutils                               	     668	4.4.2-6ubuntu1
 fontconfig-config                       	     348	2.10.93-0ubuntu1
-fonts-dejavu-core                       	    2883	2.33+svn2514-3ubuntu1
-fonts-ubuntu-font-family-console        	      59	0.80-0ubuntu6
 friendly-recovery                       	      67	0.2.25
 ftp                                     	     141	0.17-28
 fuse                                    	     150	2.9.2-4ubuntu3
 gawk                                    	    1860	1:4.0.1+dfsg-2.1ubuntu2
 gcc-4.8-base                            	     208	4.8.1-10ubuntu9
 gdb                                     	    5381	7.6.1-0ubuntu3
-gettext                                 	    3308	0.18.1.1-10ubuntu3
 gettext-base                            	     332	0.18.1.1-10ubuntu3
 gir1.2-glib-2.0                         	     605	1.38.0-0ubuntu1
 gnupg                                   	    1680	1.4.14-1ubuntu2.2
@@ -340,7 +336,6 @@ initscripts                             	     218	2.88dsf-41ubuntu3
 insserv                                 	     182	1.14.0-5ubuntu2
 installation-report                     	      78	2.51ubuntu1
 install-info                            	     253	5.1.dfsg.1-4ubuntu1
-intltool-debian                         	     140	0.35.0+20060710.1
 iproute2                                	    1127	3.10.0-1ubuntu1
 iproute                                 	      40	1:3.10.0-1ubuntu1
 iptables                                	    1310	1.4.18-1.1ubuntu1
@@ -370,7 +365,6 @@ libasn1-8-heimdal                       	     793	1.6~git20120403+dfsg1-3ubuntu0
 libasound2                              	    1179	1.0.27.2-1ubuntu6
 libasound2-data                         	     336	1.0.27.2-1ubuntu6
 libasprintf0c2                          	      65	0.18.1.1-10ubuntu3
-libasprintf-dev                         	      69	0.18.1.1-10ubuntu3
 libasyncns0                             	      58	0.8-4ubuntu1
 libatm1                                 	     123	1:2.5.1-1.5
 libattr1                                	      55	1:2.4.47-1
@@ -395,7 +389,6 @@ libck-connector0                        	      55	0.4.5-3.1ubuntu2
 libclass-accessor-perl                  	     104	0.34-1
 libclass-isa-perl                       	      53	0.36-5
 libcomerr2                              	     100	1.42.8-1ubuntu1
-libcroco3                               	     338	0.6.8-2
 libcurl3                                	     534	7.32.0-1ubuntu1.4
 libcurl3-gnutls                         	     518	7.32.0-1ubuntu1.4
 libcwidget3                             	    1088	0.5.16-3.4ubuntu2
@@ -437,8 +430,6 @@ libgcrypt11                             	     611	1.5.0-3ubuntu3
 libgd3                                  	     459	2.1.0-2
 libgdbm3                                	     105	1.8.3-12build1
 libgeoip1                               	     279	1.5.1-1ubuntu1
-libgettextpo0                           	     342	0.18.1.1-10ubuntu3
-libgettextpo-dev                        	     515	0.18.1.1-10ubuntu3
 libgfortran3                            	    1077	4.8.1-10ubuntu9
 libgirepository-1.0-1                   	     270	1.38.0-0ubuntu1
 libglib2.0-0                            	    4345	2.38.1-0ubuntu1
@@ -485,7 +476,6 @@ liblwres90                              	     126	1:9.9.3.dfsg.P2-4ubuntu1.1
 liblzma5                                	     320	5.1.1alpha+20120614-2ubuntu1
 libmad0                                 	     138	0.15.1b-7ubuntu2
 libmagic1                               	    2433	5.11-2ubuntu4.3
-libmail-sendmail-perl                   	     100	0.79.16-1
 libmount1                               	     248	2.20.1-5.1ubuntu9
 libncurses5                             	     292	5.9+20130608-1ubuntu1
 libncursesw5                            	     374	5.9+20130608-1ubuntu1
@@ -556,7 +546,6 @@ libssl1.0.0                             	    2695	1.0.1e-3ubuntu1.6
 libstdc++6                              	    1153	4.8.1-10ubuntu9
 libsub-name-perl                        	      71	0.05-1build3
 libswitch-perl                          	      74	2.16-2
-libsys-hostname-long-perl               	      84	1.4-2
 libsystemd-daemon0                      	      58	204-0ubuntu19.2
 libsystemd-login0                       	      99	204-0ubuntu19.2
 libtasn1-3                              	     135	2.14-3
@@ -568,7 +557,6 @@ libtiff5                                	     564	4.0.2-4ubuntu3.1
 libtimedate-perl                        	     248	1.2000-1
 libtinfo5                               	     429	5.9+20130608-1ubuntu1
 libudev1                                	     121	204-0ubuntu19.2
-libunistring0                           	    1134	0.9.3-5ubuntu1
 libusb-0.1-4                            	      73	2:0.1.12-23.2ubuntu1
 libusb-1.0-0                            	     131	2:1.0.16-3
 libustr-1.0-1                           	     261	1.0.4-3ubuntu1
@@ -652,7 +640,6 @@ perl-base                               	    4693	5.14.2-21build1
 perl-modules                            	   14082	5.14.2-21build1
 plymouth                                	     439	0.8.8-0ubuntu8
 plymouth-theme-ubuntu-text              	      82	0.8.8-0ubuntu8
-po-debconf                              	     443	1.0.16+nmu2ubuntu1
 policykit-1                             	     384	0.105-3ubuntu3
 popularity-contest                      	     130	1.57ubuntu1
 powermgmt-base                          	      61	1.31build1
@@ -742,7 +729,7 @@ telnet                                  	     156	0.17-36build2
 time                                    	     118	1.7-24
 tmux                                    	     536	1.8-4
 tree                                    	     109	1.6.0-1
-ttf-dejavu-core                         	      66	2.33+svn2514-3ubuntu1
+ttf-bitstream-vera                      	     684	1.10-8
 tzdata                                  	    1733	2014e-0ubuntu0.13.10
 ubuntu-keyring                          	      46	2012.05.19
 ubuntu-minimal                          	      59	1.307
@@ -773,7 +760,6 @@ wicd-daemon                             	    1653	1.7.2.4-4.1
 wireless-regdb                          	      52	2013.02.13-1ubuntu1
 wireless-tools                          	     312	30~pre9-8ubuntu1
 wpasupplicant                           	    1855	1.0-3ubuntu2.1
-xauth                                   	      81	1:1.0.7-1ubuntu1
 xkb-data                                	    3018	2.5.1-3ubuntu2
 xml-core                                	     188	0.13+nmu2
 xz-utils                                	     384	5.1.1alpha+20120614-2ubuntu1
