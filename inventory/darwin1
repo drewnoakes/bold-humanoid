@@ -1,4 +1,4 @@
-Data as of Mon Nov 3 22:01:45 GMT 2014 on darwin1
+Data as of Mon Nov 3 22:33:04 GMT 2014 on darwin1
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
@@ -8,9 +8,9 @@ Codename:	saucy
 ==== FILE SYSTEM ========================================
 
 Filesystem                Size  Used Avail Use% Mounted on
-/dev/mapper/darwin1-root  2.5G  1.4G  942M  61% /
+/dev/mapper/darwin1-root  2.5G  1.5G  858M  64% /
 
-64M	/home/darwin
+186M	/home/darwin
 33M	/boot
 
 ==== NETWORK ============================================
@@ -249,8 +249,6 @@ adduser                                 	     644	3.113+nmu3ubuntu2
 alsa-base                               	     502	1.0.25+dfsg-0ubuntu4
 alsa-utils                              	    2048	1.0.27.1-1ubuntu1
 apparmor                                	    1125	2.8.0-0ubuntu31.1
-apport                                  	    1256	2.12.5-0ubuntu2.2
-apport-symptoms                         	      75	0.20
 apt                                     	    3346	0.9.9.1~ubuntu3.3
 aptitude                                	    4483	0.6.8.2-1ubuntu2
 aptitude-common                         	    4176	0.6.8.2-1ubuntu2
@@ -330,6 +328,7 @@ grub-pc                                 	     552	2.00-19ubuntu2.1
 grub-pc-bin                             	    2479	2.00-19ubuntu2.1
 gzip                                    	     231	1.6-2ubuntu1
 hdparm                                  	     272	9.43-1ubuntu2
+hexedit                                 	     108	1.2.12-4
 hostname                                	      81	3.13ubuntu1
 htop                                    	     185	1.0.2-2
 ifupdown                                	     221	0.7.44ubuntu3.1
@@ -591,10 +590,13 @@ libxpm4                                 	     116	1:3.5.10-1
 libxslt1.1                              	     484	1.1.28-2
 libxtables10                            	      93	1.4.18-1.1ubuntu1
 linux-firmware                          	   48928	1.116.2
-linux-headers-3.11.0-19                 	   60781	3.11.0-19.33
-linux-headers-3.11.0-19-generic         	   12347	3.11.0-19.33
-linux-image-3.11.0-19-generic           	   30290	3.11.0-19.33
-linux-image-extra-3.11.0-19-generic     	  103301	3.11.0-19.33
+linux-generic                           	      33	3.11.0.26.27
+linux-headers-3.11.0-26                 	   60808	3.11.0-26.45
+linux-headers-3.11.0-26-generic         	   12368	3.11.0-26.45
+linux-headers-generic                   	      33	3.11.0.26.27
+linux-image-3.11.0-26-generic           	   30388	3.11.0-26.45
+linux-image-extra-3.11.0-26-generic     	  103333	3.11.0-26.45
+linux-image-generic                     	      33	3.11.0.26.27
 linux-sound-base                        	      96	1.0.25+dfsg-0ubuntu4
 locales                                 	    9012	2.13+git20120306-9
 lockfile-progs                          	      68	0.1.17
@@ -663,7 +665,6 @@ python2.7-minimal                       	    3227	2.7.5-8ubuntu3.1
 python3.3                               	     285	3.3.2-7ubuntu3.1
 python3.3-minimal                       	    3749	3.3.2-7ubuntu3.1
 python3                                 	      99	3.3.2-14ubuntu1
-python3-apport                          	     515	2.12.5-0ubuntu2.2
 python3-apt                             	     609	0.8.9.1ubuntu1
 python3-commandnotfound                 	      61	0.3ubuntu8
 python3-dbus                            	     378	1.2.0-2
@@ -672,7 +673,6 @@ python3-gdbm                            	      70	3.3.1-0ubuntu2
 python3-gi                              	     670	3.10.0-1ubuntu1
 python3-minimal                         	     139	3.3.2-14ubuntu1
 python3-numpy                           	    7914	1:1.7.1-1ubuntu1
-python3-problem-report                  	     170	2.12.5-0ubuntu2.2
 python3-software-properties             	     133	0.92.28
 python3-update-manager                  	     239	1:0.194.1
 python                                  	     671	2.7.5-5ubuntu1
