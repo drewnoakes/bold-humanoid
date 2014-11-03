@@ -36,6 +36,7 @@ do
         swig/bold.py                       \
         swig/_bold.so                      \
         setnw.py                           \
+        upstart.conf                       \
         darwin@darwin$i.local:
 
     ssh darwin@darwin$i.local 'espeak -p 0 -s 130 -v english-mb-en1 "Full deployment complete"' 2> /dev/null &
