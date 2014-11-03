@@ -122,12 +122,11 @@ void OptionTree::registerFsm(std::shared_ptr<FSMOption> fsm)
     throw std::runtime_error("Attempt to add an FSMOption which has no start state");
   }
 
-  // Write out its digraph to disk
-  std::stringstream fileName;
-  fileName << fsm->getId() << ".dot";
-
-  std::ofstream winOut(fileName.str());
-  winOut << fsm->toDot();
+//  // Write out its digraph to disk
+//  std::stringstream fileName;
+//  fileName << fsm->getId() << ".dot";
+//  std::ofstream winOut(fileName.str());
+//  winOut << fsm->toDot();
 }
 
 vector<shared_ptr<FSMOption>> OptionTree::getFSMs() const
