@@ -22,7 +22,7 @@ namespace bold
 
     void setIsLeftTurn(bool leftTurn);
 
-    virtual void reset() override;
+    void reset() override;
 
   private:
     std::shared_ptr<WalkModule> d_walkModule;

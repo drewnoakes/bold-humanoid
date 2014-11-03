@@ -23,7 +23,7 @@ namespace bold
       d_tiltDegs = Config::getSetting<double>("options.look-at-feet.head-tilt-degs");
     }
 
-    virtual void reset() override { d_avgBallPos.reset(); }
+    void reset() override { d_avgBallPos.reset(); }
 
     std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 

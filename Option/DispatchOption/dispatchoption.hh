@@ -24,7 +24,7 @@ namespace bold
       d_optionByKey.insert(make_pair(key, option));
     }
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override
     {
       T key = d_keyGetter();
 

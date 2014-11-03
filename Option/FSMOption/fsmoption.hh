@@ -86,11 +86,11 @@ namespace bold
   public:
     FSMOption(std::shared_ptr<Voice> voice, std::string const& id);
 
-    virtual double hasTerminated() override;
+    double hasTerminated() override;
 
-    virtual void reset() override;
+    void reset() override;
 
-    virtual std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
+    std::vector<std::shared_ptr<Option>> runPolicy(rapidjson::Writer<rapidjson::StringBuffer>& writer) override;
 
     void addState(std::shared_ptr<FSMState> state, bool startState = false);
 

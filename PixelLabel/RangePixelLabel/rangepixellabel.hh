@@ -9,7 +9,7 @@ namespace bold
   public:
     RangePixelLabel(std::string name, LabelClass id, Colour::hsvRange hsvRange);
 
-    virtual void addSample(Colour::hsv const& pixelColour) override;
+    void addSample(Colour::hsv const& pixelColour) override;
 
     Colour::hsvRange getHSVRange() const;
     void setHSVRange(Colour::hsvRange range);
@@ -22,8 +22,6 @@ namespace bold
   private:
     Colour::hsvRange d_hsvRange;
   };
-
-  
 
   inline RangePixelLabel::RangePixelLabel(std::string name, LabelClass id, Colour::hsvRange hsvRange)
     : PixelLabel{name, id, hsvRange.toBgr()},
