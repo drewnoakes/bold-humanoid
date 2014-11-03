@@ -48,6 +48,30 @@ export enum TeamColour
     Magenta
 }
 
+export enum ImageType
+{
+    None = 0,
+    YCbCr = 1,
+    RGB = 2,
+    Cartoon = 3,
+    Teacher = 4
+}
+
+export enum ImageGranularity
+{
+    All = 0,
+    Half = 1,
+    Third = 2,
+    Gradient = 3,
+    Projected = 4
+}
+
+export enum FieldEdgeType
+{
+    Complete = 0,
+    Periodic = 1
+}
+
 export var teamColour = TeamColour.Unknown;
 
 export var playerDiameter = 0.35;
