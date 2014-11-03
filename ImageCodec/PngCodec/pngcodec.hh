@@ -2,7 +2,6 @@
 
 #include "../imagecodec.hh"
 #include "../../util/assert.hh"
-#include "../../Colour/colour.hh"
 
 #include <opencv2/core/core.hpp>
 
@@ -10,6 +9,8 @@ struct png_struct_def;
 
 namespace bold
 {
+  namespace Colour { class bgr; }
+
   enum class CompressionStrategy
   {
     Filtered = 1,

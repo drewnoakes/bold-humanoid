@@ -1,8 +1,7 @@
 #include "pngcodec.hh"
 
-#include "../../util/assert.hh"
-#include "../../util/log.hh"
 #include "../../Colour/colour.hh"
+#include "../../util/log.hh"
 
 #include <png.h>
 
