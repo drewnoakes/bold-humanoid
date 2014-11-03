@@ -9,8 +9,6 @@ using namespace Eigen;
 using namespace rapidjson;
 using namespace std;
 
-// TODO decrease the 'score' of an estimate if it should be seen, but isn't
-
 StationaryMapper::StationaryMapper(std::shared_ptr<Voice> voice)
 : TypedStateObserver<WalkState>("Stationary Mapper", ThreadId::ThinkLoop),
   d_hasData(false),
@@ -40,7 +38,10 @@ void StationaryMapper::observeTyped(std::shared_ptr<WalkState const> const& walk
 
   bool hasData = false;
 
-  // TODO use agentFrame->shouldSeeAgentFrameGroundPoint(...) to decrease scores
+  // TODO decrease the 'score' of an estimate if it should be seen, but isn't
+  //      - use agentFrame->shouldSeeAgentFrameGroundPoint(...) to decrease score of
+  //        estimates expected but unseen, though only when not within the occlusion polygon
+  //      - ensure we still *can* integrate a ball sighting within the occlusion polygon
 
   if (agentFrame->isBallVisible())
   {
