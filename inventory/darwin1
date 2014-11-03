@@ -1,4 +1,4 @@
-Data as of Mon Nov 3 22:33:04 GMT 2014 on darwin1
+Data as of Mon Nov 3 22:59:56 GMT 2014 on darwin1
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
@@ -10,6 +10,7 @@ Codename:	saucy
 Filesystem                Size  Used Avail Use% Mounted on
 /dev/mapper/darwin1-root  2.5G  1.5G  858M  64% /
 
+49M	/home/darwin/log
 186M	/home/darwin
 33M	/boot
 

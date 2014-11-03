@@ -26,6 +26,7 @@ do
              && sudo apt-get clean                                             \
              && df -h --type ext4                                              \
              && echo                                                           \
+             && sudo du -d 0 -h /home/darwin/log                               \
              && sudo du -d 1 -h /home | grep "/home/"                          \
              && sudo du -d 0 -h /boot                                          \
              && echo                                                           \
