@@ -112,7 +112,12 @@ void OptionTree::run()
 
 void OptionTree::registerFsm(std::shared_ptr<FSMOption> fsm)
 {
-  // TODO verify that no FSM with this ID already exists
+  if (d_fsmOptions.count(fsm->getId()))
+  {
+    log::error("OptionTree::registerFsm") << "Attempted to register FSM with id='" << fsm->getId() << "' more than once";
+    throw runtime_error("Attempt to register FSM ID more than once");
+  }
+
   d_fsmOptions[fsm->getId()] = fsm;
 
   // Validate the FSM
