@@ -59,6 +59,11 @@ html, body, input, select, button
   font-size: 13px;
 }
 
+button + button
+{
+  margin-left: 3px;
+}
+
 html.initialised
 {
   transition: background-color 0.2s linear;
