@@ -34,6 +34,8 @@ namespace bold
     void setFilterAvg(bool enabled) { d_filterAvg = enabled; }
     void setFilterPaeth(bool enabled) { d_filterPaeth = enabled; }
 
+    bool read(std::string filePath, cv::Mat& img);
+
   private:
     static void writeDataToBuf(png_struct_def* png_ptr, uchar* src, size_t size);
     static void onError(png_struct_def* png_ptr, const char* message);

@@ -4,6 +4,8 @@
 #include "../../util/log.hh"
 
 #include <png.h>
+#include <fstream>
+#include <iterator>
 
 using namespace bold;
 using namespace std;
@@ -175,4 +177,70 @@ void PngCodec::onError(png_struct* png_ptr, const char* message)
 void PngCodec::onWarning(png_struct* png_ptr, const char* message)
 {
   log::error("PngCodec::onWarning") << message;
+}
+
+bool PngCodec::read(string filePath, cv::Mat& mat)
+{
+  png_struct* png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+
+  if (!png_ptr)
+    return false;
+
+  png_info* info_ptr = png_create_info_struct(png_ptr);
+  png_info* end_info = png_create_info_struct(png_ptr);
+
+  if (!info_ptr || !end_info)
+    return false;
+
+  // Open the file to read from
+  auto file = fopen(filePath.c_str(), "rb");
+
+  if (!file)
+    return false;
+
+  if (setjmp(png_jmpbuf(png_ptr)) != 0)
+  {
+    log::error("PngCodec::read") << "Error reading PNG file";
+    fclose(file);
+    return false;
+  }
+
+  png_init_io(png_ptr, file);
+
+  // Read header
+  png_uint_32 width, height;
+  int bitDepth, colorType;
+  png_read_info(png_ptr, info_ptr);
+  png_get_IHDR(png_ptr, info_ptr, &width, &height, &bitDepth, &colorType, 0, 0, 0);
+
+  ASSERT(bitDepth == 8);
+  ASSERT(colorType == PNG_COLOR_TYPE_RGB);
+
+  // Create
+  mat.create((int) height, (int) width, colorType);
+
+  // Intel is little-endian
+  png_set_swap(png_ptr);
+
+  // So long as we're only reading the images we've saved, these options shouldn't be needed
+  //png_set_strip_alpha(png_ptr);
+  //png_set_palette_to_rgb( png_ptr );
+  //png_set_interlace_handling(png_ptr);
+
+  // Convert RGB to BGR
+  png_set_bgr(png_ptr);
+
+  png_read_update_info(png_ptr, info_ptr);
+
+  vector<uchar*> buffer;
+  buffer.resize(height);
+  for (unsigned y = 0; y < height; y++)
+    buffer[y] = mat.ptr() + y*mat.step;
+
+  png_read_image(png_ptr, buffer.data());
+  png_read_end(png_ptr, end_info);
+
+  fclose(file);
+
+  return true;
 }

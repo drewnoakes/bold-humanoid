@@ -1,11 +1,11 @@
 #include "Agent/agent.hh"
+#include "Camera/camera.hh"
 #include "Config/config.hh"
+#include "ImageCodec/PngCodec/pngcodec.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
 #include "Version/version.hh"
-#include "Camera/camera.hh"
 
 #include <getopt.h>
-#include <opencv2/opencv.hpp>
 #include <signal.h>
 #include <syslog.h>
 
@@ -202,8 +202,12 @@ int main(int argc, char **argv)
 
   if (imageFeedFile != "")
   {
-    auto image = cv::imread(imageFeedFile);
-    agent->getCamera()->setImageFeed(image);
+    PngCodec pngCodec;
+    cv::Mat image;
+    if (!pngCodec.read(imageFeedFile, image))
+      log::error("boldhumanoid") << "Unable to read image feed file: " << imageFeedFile;
+    else
+      agent->getCamera()->setImageFeed(image);
   }
 
   signal(SIGTERM, &handleShutdownSignal);
