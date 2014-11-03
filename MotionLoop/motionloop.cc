@@ -156,9 +156,8 @@ void MotionLoop::stop()
   d_isStopRequested = true;
 
   // wait for the thread to end
-  int error;
-  if ((error = pthread_join(d_thread, NULL)) != 0)
-    exit(-1);
+  if (pthread_join(d_thread, NULL) != 0)
+    exit(EXIT_FAILURE);
 
   log::info("MotionLoop::stop") << "Stopped";
 

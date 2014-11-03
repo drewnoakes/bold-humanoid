@@ -144,39 +144,38 @@ int main(int argc, char **argv)
   {
     switch (c)
     {
-    case 'c':
-    {
-      configurationFile = string{optarg};
-      break;
-    }
-    case 'h':
-    {
-      printBanner();
-      printUsage();
-      exit(0);
-    }
-    case 'i':
-    {
-      imageFeedFile = string{optarg};
-      break;
-    }
-    case 'v':
-    {
-      verboseCount++;
-      break;
-    }
-    case 1:
-    {
-      printVersion();
-      exit(0);
-    }
-    case '?':
-    {
-      // getopt_long already printed an error message
-      printUsage();
-      exit(-1);
-    }
-
+      case 'c':
+      {
+        configurationFile = string{optarg};
+        break;
+      }
+      case 'h':
+      {
+        printBanner();
+        printUsage();
+        exit(EXIT_SUCCESS);
+      }
+      case 'i':
+      {
+        imageFeedFile = string{optarg};
+        break;
+      }
+      case 'v':
+      {
+        verboseCount++;
+        break;
+      }
+      case 1:
+      {
+        printVersion();
+        exit(EXIT_SUCCESS);
+      }
+      case '?':
+      {
+        // getopt_long already printed an error message
+        printUsage();
+        exit(EXIT_FAILURE);
+      }
     }
   }
 
@@ -220,5 +219,5 @@ int main(int argc, char **argv)
 
   syslog("Exiting boldhumanoid process");
 
-  return 0;
+  return EXIT_SUCCESS;
 }

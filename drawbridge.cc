@@ -325,7 +325,7 @@ int main(int argc, char **argv)
     {
       // No more arguments. Error!
       log::error() << "Insufficient arguments";
-      exit(-1);
+      exit(EXIT_FAILURE);
     }
     int j = *i + 1;
     *i = j;
@@ -422,7 +422,7 @@ int main(int argc, char **argv)
   if (d_context == nullptr)
   {
     log::error("WebSockets") << "libwebsocket context creation failed";
-    exit(1);
+    exit(EXIT_FAILURE);
   }
   log::info("WebSockets") << "Listening on TCP port " << wsPort;
 
@@ -473,4 +473,6 @@ int main(int argc, char **argv)
     //
     libwebsocket_service(d_context, 50);
   }
+
+  return EXIT_SUCCESS;
 }

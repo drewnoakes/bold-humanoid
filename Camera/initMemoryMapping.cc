@@ -16,7 +16,7 @@ void Camera::initMemoryMapping()
   if (req.count < 2)
   {
     log::info("Camera") << "Insufficient buffer memory";
-    exit(-1);
+    exit(EXIT_FAILURE);
   }
 
   d_buffers = vector<Buffer>(req.count);
@@ -44,7 +44,7 @@ void Camera::initMemoryMapping()
     if (MAP_FAILED == d_buffers[i].start)
     {
       log::info("Camera") << "Failed mapping device memory";
-      exit(-1);
+      exit(EXIT_FAILURE);
     }
   }
 }

@@ -19,7 +19,7 @@ void Camera::startCapture()
     if (-1 == ioctl(d_fd, VIDIOC_QBUF, &buf))
     {
       log::error("Camera::startCapture") << "Buffer failure on capture start: " << strerror(errno) << " (" << errno << ")";
-      exit(-1);
+      exit(EXIT_FAILURE);
     }
   }
 
@@ -27,6 +27,6 @@ void Camera::startCapture()
   if (-1 == ioctl(d_fd, VIDIOC_STREAMON, &type))
   {
     log::error("Camera::startCapture") << "Failed stream start: " << strerror(errno) << " (" << errno << ")";
-    exit(-1);
+    exit(EXIT_FAILURE);
   }
 }

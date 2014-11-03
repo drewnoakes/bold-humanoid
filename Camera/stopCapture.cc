@@ -6,6 +6,6 @@ void Camera::stopCapture()
   if (-1 == ioctl(d_fd, VIDIOC_STREAMOFF, &type))
   {
     log::error("Camera::stopCapture") << "Failed stream stop";
-    exit(-1);
+    exit(EXIT_FAILURE);
   }
 }

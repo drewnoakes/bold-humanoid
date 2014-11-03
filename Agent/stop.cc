@@ -8,7 +8,7 @@ void Agent::requestStop()
   if (d_isStopRequested)
   {
     log::warning("Agent::requestStop") << "Forcing exit";
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 
   log::info("Agent::requestStop");

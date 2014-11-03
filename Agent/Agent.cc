@@ -159,7 +159,7 @@ Agent::Agent()
     if (count > 1000 / 8) // 1 second
     {
       log::error("Agent") << "MotionLoop has been unable to read " << count << " times, so shutting down";
-      exit(1);
+      exit(EXIT_FAILURE);
     }
   });
 }
