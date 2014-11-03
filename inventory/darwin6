@@ -1,4 +1,4 @@
-Data as of Fri Oct 31 11:23:52 GMT 2014 on darwin6
+Data as of Mon Nov 3 01:18:18 GMT 2014 on darwin6
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
@@ -8,9 +8,9 @@ Codename:	saucy
 ==== FILE SYSTEM ========================================
 
 Filesystem               Size  Used Avail Use% Mounted on
-/dev/mapper/darwin-root  2.5G  1.6G  821M  66% /
+/dev/mapper/darwin-root  2.5G  1.4G  945M  60% /
 
-197M	/home/darwin
+198M	/home/darwin
 33M	/boot
 
 ==== NETWORK ============================================
@@ -107,7 +107,7 @@ udev start/running
 upstart-udev-bridge start/running
 ureadahead-other stop/waiting
 whoopsie stop/waiting
-apport stop/waiting
+apport start/running
 console-setup stop/waiting
 hwclock-save stop/waiting
 irqbalance stop/waiting
@@ -159,7 +159,7 @@ mountdevsubfs.sh start/running
 tty2 start/running
 udevtrigger stop/waiting
 upstart-file-bridge start/running
-boldhumanoid stop/killed
+boldhumanoid stop/waiting
 container-detect stop/waiting
 mounted-dev stop/waiting
 mtab.sh start/running
@@ -281,7 +281,6 @@ grub-pc-bin                             	    2479	2.00-19ubuntu2.1
 gzip                                    	     231	1.6-2ubuntu1
 hdparm                                  	     272	9.43-1ubuntu2
 hexedit                                 	     108	1.2.12-4
-hicolor-icon-theme                      	    1413	0.12-1ubuntu2
 hostname                                	      81	3.13ubuntu1
 htop                                    	     185	1.0.2-2
 ifupdown                                	     221	0.7.44ubuntu3.1
