@@ -48,7 +48,7 @@ do
              && echo                                                           \
              && service --status-all 2>&1                                      \
              && echo                                                           \
-             && initctl list  | sed -e 's/, process\s[0-9]*//g'                \
+             && initctl list | sed -e 's/, process\s[0-9]*//g' | sort          \
              && echo                                                           \
              && echo ==== LIBRARIES ========================================== \
              && echo                                                           \

@@ -103,103 +103,103 @@ ff02::2 ip6-allrouters
  [ + ]  wicd
  [ - ]  x11-common
 
+acpid start/running
+alsa-restore stop/waiting
+alsa-state stop/waiting
+alsa-store stop/waiting
+apport start/running
+atd start/running
 avahi-cups-reload stop/waiting
 avahi-daemon start/running
-mountall-net stop/waiting
-mountnfs-bootclean.sh start/running
-passwd stop/waiting
-rc stop/waiting
-rsyslog start/running
-screen-cleanup stop/waiting
-startpar-bridge stop/waiting
-tty4 start/running
-udev start/running
-upstart-udev-bridge start/running
-ureadahead-other stop/waiting
-whoopsie stop/waiting
-apport start/running
-console-setup stop/waiting
-hwclock-save stop/waiting
-irqbalance stop/waiting
-plymouth-log stop/waiting
-systemd-logind start/running
-tty5 start/running
-failsafe stop/waiting
-mountall.sh start/running
-rfkill-store stop/waiting
-atd start/running
-dbus start/running
-mounted-var stop/waiting
-plymouth stop/waiting
-resolvconf start/running
-ssh start/running
-udev-fallback-graphics stop/waiting
-checkroot.sh start/running
-control-alt-delete stop/waiting
-hwclock stop/waiting
-mounted-proc stop/waiting
-alsa-store stop/waiting
-isc-dhcp-server stop/waiting
-setvtrgb stop/waiting
-shutdown stop/waiting
-alsa-restore stop/waiting
-cron start/running
-mountall stop/waiting
-mounted-debugfs stop/waiting
-mountkernfs.sh start/running
-console stop/waiting
-mounted-run stop/waiting
-acpid start/running
+boldhumanoid stop/waiting
+bootmisc.sh start/running
 checkfs.sh start/running
 checkroot-bootclean.sh start/running
-kmod stop/waiting
-mountnfs.sh start/running
-plymouth-stop stop/waiting
-rcS stop/waiting
-ufw start/running
-wait-for-state stop/waiting
-bootmisc.sh start/running
+checkroot.sh start/running
+console-font stop/waiting
+console-setup stop/waiting
+console stop/waiting
+container-detect stop/waiting
+control-alt-delete stop/waiting
+cron start/running
+dbus start/running
+dmesg stop/waiting
+failsafe stop/waiting
 flush-early-job-log stop/waiting
 friendly-recovery stop/waiting
-rc-sysinit stop/waiting
-isc-dhcp-server6 stop/waiting
-upstart-socket-bridge start/running
-mountdevsubfs.sh start/running
-tty2 start/running
-udevtrigger stop/waiting
-upstart-file-bridge start/running
-boldhumanoid stop/waiting
-container-detect stop/waiting
-mounted-dev stop/waiting
-mtab.sh start/running
-tty3 start/running
-udev-finish stop/waiting
-alsa-state stop/waiting
 hostname stop/waiting
+hwclock-save stop/waiting
+hwclock stop/waiting
+irqbalance stop/waiting
+isc-dhcp-server6 stop/waiting
+isc-dhcp-server stop/waiting
+kmod stop/waiting
+mountall-bootclean.sh start/running
+mountall-net stop/waiting
 mountall-reboot stop/waiting
 mountall-shell stop/waiting
+mountall.sh start/running
+mountall stop/waiting
+mountdevsubfs.sh start/running
+mounted-debugfs stop/waiting
+mounted-dev stop/waiting
+mounted-proc stop/waiting
+mounted-run stop/waiting
 mounted-tmp stop/waiting
-network-interface (lo) start/running
+mounted-var stop/waiting
+mountkernfs.sh start/running
+mountnfs-bootclean.sh start/running
+mountnfs.sh start/running
+mtab.sh start/running
+networking start/running
+network-interface-container stop/waiting
 network-interface (eth0) start/running
+network-interface (lo) start/running
+network-interface-security (networking) start/running
+network-interface-security (network-interface/eth0) start/running
+network-interface-security (network-interface/lo) start/running
+network-interface-security (network-interface/wlan0) start/running
 network-interface (wlan0) start/running
+passwd stop/waiting
+plymouth-log stop/waiting
 plymouth-ready stop/waiting
 plymouth-splash stop/waiting
+plymouth-stop stop/waiting
+plymouth stop/waiting
 plymouth-upstart-bridge stop/waiting
-tty1 start/running
-udevmonitor stop/waiting
-dmesg stop/waiting
-mountall-bootclean.sh start/running
-network-interface-security (network-interface/eth0) start/running
-network-interface-security (network-interface/wlan0) start/running
-network-interface-security (network-interface/lo) start/running
-network-interface-security (networking) start/running
-networking start/running
 procps stop/waiting
+rcS stop/waiting
+rc stop/waiting
+rc-sysinit stop/waiting
+resolvconf start/running
 rfkill-restore stop/waiting
+rfkill-store stop/waiting
+rsyslog start/running
+screen-cleanup stop/waiting
+setvtrgb stop/waiting
+shutdown stop/waiting
+ssh start/running
+startpar-bridge stop/waiting
+systemd-logind start/running
+tty1 start/running
+tty2 start/running
+tty3 start/running
+tty4 start/running
+tty5 start/running
 tty6 start/running
-console-font stop/waiting
-network-interface-container stop/waiting
+udev-fallback-graphics stop/waiting
+udev-finish stop/waiting
+udevmonitor stop/waiting
+udev start/running
+udevtrigger stop/waiting
+ufw start/running
+upstart-file-bridge start/running
+upstart-socket-bridge start/running
+upstart-udev-bridge start/running
+ureadahead-other stop/waiting
 ureadahead stop/waiting
+wait-for-state stop/waiting
+whoopsie stop/waiting
 
 ==== LIBRARIES ==========================================
 
