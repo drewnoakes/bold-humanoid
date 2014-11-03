@@ -61,13 +61,11 @@ void StationaryMapper::observeTyped(std::shared_ptr<WalkState const> const& walk
     hasData = true;
   }
 
-  // TODO build map of field edge here, either within occlusion map, or in new model
-
   // Walk all occlusion rays
   for (auto const& ray : agentFrame->getOcclusionRays())
   {
-    if (d_occlusionMap.add(ray))
-      hasData = true;
+    d_occlusionMap.add(ray);
+    hasData = true;
   }
 
   if (hasData || !State::get<StationaryMapState>())

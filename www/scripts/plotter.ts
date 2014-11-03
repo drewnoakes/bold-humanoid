@@ -10,7 +10,7 @@ import constants = require('constants');
 import geometry = require('util/geometry');
 import state = require('state');
 
-var circle = (context: CanvasRenderingContext2D, pos: number[], radius: number) => context.arc(pos[0], pos[1], radius, 0, Math.PI*2, true)
+var circle = (context: CanvasRenderingContext2D, pos: number[], radius: number) => context.arc(pos[0], pos[1], radius, 0, Math.PI*2, true);
 
 export function drawField(context: CanvasRenderingContext2D, options: {groundFillStyle?: string})
 {
@@ -314,14 +314,18 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
 
     var maxBallCount = 0,
         maxGoalPostCount = 0,
-        maxSliceCount = 0;
+        maxNearSliceCount = 0,
+        maxFarSliceCount = 0;
 
     _.each(data.balls, ball => maxBallCount = Math.max(maxBallCount, ball.count));
     _.each(data.goalPosts, goalPost => maxGoalPostCount = Math.max(maxGoalPostCount, goalPost.count));
-    _.each(data.openField.slices, slice => maxSliceCount = Math.max(maxSliceCount, slice.count));
+    _.each(data.openField.slices, slice => {
+        maxNearSliceCount = Math.max(maxNearSliceCount, slice.near ? slice.near.count : 0);
+        maxFarSliceCount = Math.max(maxFarSliceCount, slice.far ? slice.far.count : 0);
+    });
 
     var maxScore = 0.0,
-        maxBall: state.AveragePosition;
+        maxBall: state.AveragePosition = null;
     _.each(data.balls, ball =>
     {
         if (ball.count > maxScore)
@@ -387,7 +391,7 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
         context.stroke();
     });
 
-    // Occlusion markers
+    // Radial map (occlusion and field edge)
     var divisions = data.openField.divisions,
         arc = 2*Math.PI / divisions,
         halfArc = arc / 2.0;
@@ -395,10 +399,20 @@ export function drawStationaryMap(context: CanvasRenderingContext2D, data: state
     {
         var angle = slice.angle + Math.PI/2.0;
         context.lineWidth = 0.01;
-        context.strokeStyle = 'rgba(0,0,0,' + (slice.count / maxSliceCount) + ')';
-        context.beginPath();
-        context.arc(0, 0, slice.dist, angle - halfArc, angle + halfArc);
-        context.stroke();
+        if (slice.near)
+        {
+            context.strokeStyle = 'rgba(0,0,0,' + (slice.near.count / maxNearSliceCount) + ')';
+            context.beginPath();
+            context.arc(0, 0, slice.near.dist, angle - halfArc, angle + halfArc);
+            context.stroke();
+        }
+        if (slice.far)
+        {
+            context.strokeStyle = 'rgba(0,255,0,' + (slice.far.count / maxFarSliceCount) + ')';
+            context.beginPath();
+            context.arc(0, 0, slice.far.dist, angle - halfArc, angle + halfArc);
+            context.stroke();
+        }
     });
 }
 

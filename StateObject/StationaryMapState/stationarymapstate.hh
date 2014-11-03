@@ -85,11 +85,12 @@ namespace bold
   class RadialOcclusionMap
   {
   public:
-    bool add(OcclusionRay<double> const& ray);
+    void add(OcclusionRay<double> const& ray);
 
     void reset();
 
     double getOcclusionDistance(double angle) const;
+    double getFieldDistance(double angle) const;
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const { writeJsonInternal(writer); }
     void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const { writeJsonInternal(writer); }
@@ -103,12 +104,26 @@ namespace bold
     static uint wedgeIndexForAngle(double angle);
     static double angleForWedgeIndex(uint index);
 
-    std::array<Average<double>,NumberOfBuckets> d_wedges;
+    std::array<Average<double>,NumberOfBuckets> d_nearWedges;
+    std::array<Average<double>,NumberOfBuckets> d_farWedges;
   };
 
   template<typename TBuffer>
   inline void RadialOcclusionMap::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
   {
+    auto writePoint = [&](uint index, const char* name, std::array<Average<double>,NumberOfBuckets> const& wedges)
+    {
+      writer.String(name);
+      writer.StartObject();
+      {
+        writer.String("dist");
+        writer.Double(wedges.at(index).getAverage(), "%.3f");
+        writer.String("count");
+        writer.Uint(wedges.at(index).getCount());
+      }
+      writer.EndObject();
+    };
+
     writer.StartObject();
     {
       writer.String("divisions");
@@ -118,17 +133,18 @@ namespace bold
       {
         for (uint index = 0; index < NumberOfBuckets; index++)
         {
-          if (d_wedges[index].getCount() == 0)
+          bool hasNear = d_nearWedges[index].getCount() != 0;
+          bool hasFar = d_farWedges[index].getCount() != 0;
+
+          if (!hasNear && !hasFar)
             continue;
 
           writer.StartObject();
           {
             writer.String("angle");
             writer.Double(angleForWedgeIndex(index), "%.3f");
-            writer.String("dist");
-            writer.Double(d_wedges[index].getAverage(), "%.3f");
-            writer.String("count");
-            writer.Uint(d_wedges[index].getCount());
+            if (hasNear) writePoint(index, "near", d_nearWedges);
+            if (hasFar)  writePoint(index, "far", d_farWedges);
           }
           writer.EndObject();
         }

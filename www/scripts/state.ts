@@ -475,8 +475,14 @@ export interface OpenFieldData
 export interface OpenFieldSlice
 {
     angle: number;
-    dist: number;
-    count: number;
+    near?: {
+        dist: number;
+        count: number;
+    };
+    far?: {
+        dist: number;
+        count: number;
+    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

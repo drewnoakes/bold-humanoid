@@ -25,20 +25,22 @@ string bold::getGoalLabelName(GoalLabel label)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool RadialOcclusionMap::add(OcclusionRay<double> const& ray)
+void RadialOcclusionMap::add(OcclusionRay<double> const& ray)
 {
-  // If the ray is short, then it's probably just noise.
-  if (ray.norm() < 0.3) // TODO magic number!
-    return false;
-
   uint index = wedgeIndexForAngle(ray.angle());
-  d_wedges[index].add(ray.near().norm());
-  return true;
+
+  // If the ray is short, then it's probably just noise along the field edge
+  if (ray.norm() > 0.3) // TODO magic number!
+    d_nearWedges[index].add(ray.near().norm());
+
+  d_farWedges[index].add(ray.far().norm());
 }
 
 void RadialOcclusionMap::reset()
 {
-  for (auto& wedge : d_wedges)
+  for (auto& wedge : d_nearWedges)
+    wedge.reset();
+  for (auto& wedge : d_farWedges)
     wedge.reset();
 }
 
@@ -59,7 +61,17 @@ double RadialOcclusionMap::angleForWedgeIndex(uint index)
 
 double RadialOcclusionMap::getOcclusionDistance(double angle) const
 {
-  Average<double> const& wedge = d_wedges[wedgeIndexForAngle(angle)];
+  Average<double> const& wedge = d_nearWedges[wedgeIndexForAngle(angle)];
+
+  if (wedge.getCount() < 3) // TODO magic number!
+    return numeric_limits<double>::max();
+
+  return wedge.getAverage();
+}
+
+double RadialOcclusionMap::getFieldDistance(double angle) const
+{
+  Average<double> const& wedge = d_farWedges[wedgeIndexForAngle(angle)];
 
   if (wedge.getCount() < 3) // TODO magic number!
     return numeric_limits<double>::max();
