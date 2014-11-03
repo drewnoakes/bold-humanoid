@@ -28,17 +28,25 @@ PngCodec::PngCodec()
 bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::map<uchar, Colour::bgr> const* colourByNumber)
 {
   int colourType;
-  if (colourByNumber)
+  if (image.depth() == CV_8UC1 && image.channels() == 1)
   {
-    ASSERT(image.depth() == CV_8U);
-    ASSERT(image.channels() == 1);
+    if (!colourByNumber)
+    {
+      log::error("PngCodec::encode") << "Attempted to write a single-channel image without providing a palette";
+      return false;
+    }
     colourType = PNG_COLOR_TYPE_PALETTE;
+  }
+  else if (image.depth() == CV_8U && image.channels() == 3)
+  {
+    if (colourByNumber && colourByNumber->size())
+      log::warning("PngCodec::encode") << "Provided a non-empty palette when writing RGB data";
+    colourType = PNG_COLOR_TYPE_RGB;
   }
   else
   {
-    ASSERT(image.depth() == CV_8U);
-    ASSERT(image.channels() == 3);
-    colourType = PNG_COLOR_TYPE_RGB;
+    log::error("PngCodec::encode") << "Unsupported image format with depth=" << image.depth() << " channels=" << image.channels();
+    return false;
   }
 
   png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -106,7 +114,7 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::
 
   png_color* palette = nullptr;
 
-  if (colourByNumber)
+  if (colourType == PNG_COLOR_TYPE_PALETTE)
   {
     // Set the colour palette to use
     unsigned paletteSize = 0;
