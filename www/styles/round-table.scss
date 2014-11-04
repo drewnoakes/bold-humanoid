@@ -1093,6 +1093,7 @@ div.module.state
     white-space: pre;
     font-family: Ubuntu Mono, consolas, monospace;
     font-size: 11px;
+    max-height: 800px; // scroll if over this size
   }
 
   > div.module-content
