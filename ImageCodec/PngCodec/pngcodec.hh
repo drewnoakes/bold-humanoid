@@ -9,7 +9,7 @@ struct png_struct_def;
 
 namespace bold
 {
-  namespace Colour { class bgr; }
+  namespace Colour { struct bgr; }
 
   enum class CompressionStrategy
   {
