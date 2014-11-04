@@ -31,7 +31,9 @@ double OdoWalkTo::hasTerminated()
 {
   updateProgress();
 
-  Vector2d stillToGo = (d_progress * d_targetPos).head<2>();
+  Vector3d targetPos3d;
+  targetPos3d << d_targetPos, 0.0;
+  Vector2d stillToGo = (d_progress * targetPos3d).head<2>();
   double dist = stillToGo.norm();
 
   // Progress translation is center of agent frame at t = 0 in current frame
@@ -60,7 +62,9 @@ Option::OptionVector OdoWalkTo::runPolicy(rapidjson::Writer<rapidjson::StringBuf
   writer.EndArray(3);
 
   // target pos in current agent frame
-  Vector2d stillToGo = (d_progress * d_targetPos).head<2>();
+  Vector3d targetPos3d;
+  targetPos3d << d_targetPos, 0.0;
+  Vector2d stillToGo = (d_progress * targetPos3d).head<2>();
   writer.String("togo");
   writer.StartArray();
   writer.Double(stillToGo.x(), "%.3f");

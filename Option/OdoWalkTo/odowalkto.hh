@@ -24,6 +24,7 @@ namespace bold
     void updateProgress();
 
     std::shared_ptr<WalkModule> d_walkModule;
+    Eigen::Vector2d d_targetPos;
     Eigen::Vector2d d_targetFaceDir;
 
     double d_maxDist;
