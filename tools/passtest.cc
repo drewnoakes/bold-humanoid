@@ -153,7 +153,7 @@ int main(int argc, char **argv)
   auto lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel);
 
   // Resources for creating a labelled image
-  auto cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight, labels);
+  auto cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight);
 
   // Resources for counting the number of labels
   auto labelCountPass = make_shared<LabelCountPass>(labels);
@@ -292,7 +292,7 @@ int main(int argc, char **argv)
    for (LineSegment2i const& segment : scanningLines)
    {
      cout << segment << endl;
-     Painter::draw(segment, colourImage, Colour::bgr(192,0,0), 2);
+     Painter::draw(segment, colourImage, Colour::bgr(192,0,0).toScalar(), 2);
    }
 
   // Draw line dots

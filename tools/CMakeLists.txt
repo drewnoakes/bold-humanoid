@@ -16,7 +16,7 @@ add_executable(passtest
   passtest.cc
   ${PASSTEST_SOURCES}
 )
-target_link_libraries(passtest ${BOLDHUMANOID_LINK_LIBRARIES} highgui)
+target_link_libraries(passtest ${BOLDHUMANOID_LINK_LIBRARIES} opencv_highgui)
 set_target_properties(passtest PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPILE_FLAGS})
 
 # todo: use actual needed sources
