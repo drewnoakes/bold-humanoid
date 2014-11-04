@@ -10,14 +10,19 @@ using namespace rapidjson;
 using namespace std;
 
 StationaryMapper::StationaryMapper(std::shared_ptr<Voice> voice)
-: TypedStateObserver<WalkState>("Stationary Mapper", ThreadId::ThinkLoop),
+: StateObserver("Stationary Mapper", ThreadId::ThinkLoop),
   d_hasData(false),
   d_voice(voice)
-{}
-
-void StationaryMapper::observeTyped(std::shared_ptr<WalkState const> const& walkState, SequentialTimer& timer)
 {
-  if (!walkState->isRunning())
+  d_types.push_back(typeid(AgentFrameState));
+  d_types.push_back(typeid(WalkState));
+}
+
+void StationaryMapper::observe(SequentialTimer& timer)
+{
+  auto const walkState = State::get<WalkState>();
+
+  if (walkState && !walkState->isRunning())
   {
     if (d_hasData)
     {
@@ -32,7 +37,7 @@ void StationaryMapper::observeTyped(std::shared_ptr<WalkState const> const& walk
     return;
   }
 
-  auto agentFrame = State::get<AgentFrameState>();
+  auto const agentFrame = State::get<AgentFrameState>();
 
   ASSERT(agentFrame);
 

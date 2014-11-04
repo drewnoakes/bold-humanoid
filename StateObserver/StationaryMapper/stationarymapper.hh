@@ -12,12 +12,12 @@ namespace bold
 {
   class Voice;
 
-  class StationaryMapper : public TypedStateObserver<WalkState>
+  class StationaryMapper : public StateObserver
   {
   public:
     StationaryMapper(std::shared_ptr<Voice> voice);
 
-    virtual void observeTyped(std::shared_ptr<WalkState const> const& walkState, SequentialTimer& timer);
+    void observe(SequentialTimer& timer) override;
 
   private:
     void updateStateObject() const;
