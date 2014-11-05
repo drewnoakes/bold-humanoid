@@ -1,4 +1,4 @@
-Data as of Mon Nov 3 23:54:10 GMT 2014 on darwin1
+Data as of Wed Nov 5 15:42:29 GMT 2014 on darwin1
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
@@ -8,15 +8,16 @@ Codename:	saucy
 ==== FILE SYSTEM ========================================
 
 Filesystem                Size  Used Avail Use% Mounted on
-/dev/mapper/darwin1-root  2.5G  1.5G  868M  64% /
+/dev/mapper/darwin1-root  2.5G  1.5G  867M  64% /
 
 49M	/home/darwin/log
+36K	/home/darwin/captures
 186M	/home/darwin
 33M	/boot
 
 ==== NETWORK ============================================
 
-/etc/network/interfaces
+$ cat /etc/network/interfaces
 
 auto lo
 iface lo inet loopback
@@ -25,17 +26,35 @@ iface eth0 inet static
     address 192.168.123.1
     netmask 255.255.255.0
 
-/etc/hosts
+$ cat /etc/hosts
 
 127.0.0.1	localhost
 127.0.1.1	darwin1
-::1     ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
+
+$ ip addr
+
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN qlen 1000
+    link/ether 00:01:c0:0c:41:ec brd ff:ff:ff:ff:ff:ff
+    inet 192.168.123.1/24 brd 192.168.123.255 scope global eth0
+       valid_lft forever preferred_lft forever
+3: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+    link/ether 00:0d:f0:95:0f:7b brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.7/24 brd 192.168.0.255 scope global wlan0
+       valid_lft forever preferred_lft forever
+
+$ ip route
+
+default via 192.168.0.1 dev wlan0 
+192.168.0.0/24 dev wlan0  proto kernel  scope link  src 192.168.0.7 
+192.168.123.0/24 dev eth0  proto kernel  scope link  src 192.168.123.1 
 
 ==== AGENT CONFIGURATION ================================
+
+$ cat configuration-agent.json
 
 {
   "inherits": "configuration-rc2014.json",
@@ -62,6 +81,8 @@ ff02::2 ip6-allrouters
 }
 
 ==== SERVICES ===========================================
+
+$ service --status-all
 
  [ + ]  acpid
  [ - ]  apparmor
@@ -102,6 +123,8 @@ ff02::2 ip6-allrouters
  [ - ]  urandom
  [ + ]  wicd
  [ - ]  x11-common
+
+$ initctl list
 
 acpid start/running
 alsa-restore stop/waiting
@@ -199,9 +222,10 @@ upstart-udev-bridge start/running
 ureadahead-other stop/waiting
 ureadahead stop/waiting
 wait-for-state stop/waiting
-whoopsie stop/waiting
 
 ==== LIBRARIES ==========================================
+
+$ ldd boldhumanoid
 
 libasound.so.2 => /usr/lib/i386-linux-gnu/libasound.so.2
 libasyncns.so.0 => /usr/lib/i386-linux-gnu/libasyncns.so.0
@@ -242,7 +266,30 @@ libXdmcp.so.6 => /usr/lib/i386-linux-gnu/libXdmcp.so.6
 libz.so.1 => /lib/i386-linux-gnu/libz.so.1
 linux-gate.so.1 => 
 
+==== GRUB ===============================================
+
+$ cat /etc/default/grub
+
+GRUB_CMDLINE_LINUX=""
+GRUB_CMDLINE_LINUX_DEFAULT="video=LVDS-1:d"
+GRUB_DEFAULT=0
+GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_HIDDEN_TIMEOUT_QUIET=true
+GRUB_INIT_TUNE="480 440 1"
+GRUB_RECORDFAIL_TIMEOUT=5
+GRUB_TIMEOUT=2
+
+==== KERNEL =============================================
+
+$ cat /etc/sysctl.conf
+
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+
 ==== PACKAGES ===========================================
+
+$ dpkg-query
 
 accountsservice                         	     420	0.6.34-0ubuntu6
 acpid                                   	     167	1:2.0.18-1ubuntu2
