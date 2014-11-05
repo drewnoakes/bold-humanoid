@@ -2,7 +2,6 @@
 
 #include "../Config/config.hh"
 #include "../BehaviourControl/behaviourcontrol.hh"
-#include "../Debugger/debugger.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/GameState/gamestate.hh"
@@ -15,9 +14,8 @@
 using namespace bold;
 using namespace std;
 
-RoleDecider::RoleDecider(shared_ptr<BehaviourControl> behaviourControl, shared_ptr<Debugger> debugger, shared_ptr<Voice> voice)
+RoleDecider::RoleDecider(shared_ptr<BehaviourControl> behaviourControl, shared_ptr<Voice> voice)
 : d_behaviourControl(behaviourControl),
-  d_debugger(debugger),
   d_voice(voice),
   d_roleOverride(Config::getSetting<int>("role-decider.override")),
   d_announceRoles(Config::getSetting<bool>("role-decider.announce-roles"))
