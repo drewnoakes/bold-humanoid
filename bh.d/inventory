@@ -19,7 +19,7 @@ do
 
   ssh darwin$i "echo Data as of \`date\` on \`hostname\`                       \
              && echo                                                           \
-             && lsb_release -a                                                 \
+             && lsb_release -a 2> /dev/null                                    \
              && echo                                                           \
              && echo ==== FILE SYSTEM ======================================== \
              && echo                                                           \
