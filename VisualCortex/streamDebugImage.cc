@@ -264,6 +264,18 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     }
   }
 
+  // Draw field histogram
+  if (drawDebugData && d_shouldDrawFieldHistogram->getValue())
+  {
+    auto colour = getColour(d_fieldHistogramColour->getValue());
+    for (ushort y = 0; y < debugImage.size().height; ++y)
+    {
+      ushort count = d_fieldHistogramPass->getRowCount(y);
+      if (count)
+        cv::line(debugImage, Point(0, y), Point(count, y), colour);
+    }
+  }
+
   // Draw field edge
   if (drawDebugData && d_shouldDrawFieldEdge->getValue())
   {

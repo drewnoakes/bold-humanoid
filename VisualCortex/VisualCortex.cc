@@ -35,6 +35,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_shouldDrawExpectedLineEdges = Config::getSetting<bool>("round-table.image-features.expected-line-edges");
   d_shouldDrawHorizon         = Config::getSetting<bool>("round-table.image-features.horizon");
   d_shouldDrawFieldEdge       = Config::getSetting<bool>("round-table.image-features.field-edge");
+  d_shouldDrawFieldHistogram  = Config::getSetting<bool>("round-table.image-features.field-histogram");
   d_shouldDrawOcclusionEdge   = Config::getSetting<bool>("round-table.image-features.occlusion-edge");
   d_shouldDrawCalibration     = Config::getSetting<bool>("round-table.image-features.calibration");
   d_shouldDrawObservedObjects = Config::getSetting<bool>("round-table.image-features.objects");
@@ -47,6 +48,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_expectedLineColour        = Config::getSetting<Colour::bgr>("round-table.image-colours.expected-line");
   d_horizonColour             = Config::getSetting<Colour::bgr>("round-table.image-colours.horizon");
   d_fieldEdgeColour           = Config::getSetting<Colour::bgr>("round-table.image-colours.field-edge");
+  d_fieldHistogramColour      = Config::getSetting<Colour::bgr>("round-table.image-colours.field-histogram");
   d_occlusionEdgeColour       = Config::getSetting<Colour::bgr>("round-table.image-colours.occlusion-edge");
   d_calibrationColour         = Config::getSetting<Colour::bgr>("round-table.image-colours.calibration");
 
@@ -159,10 +161,14 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     shared_ptr<CartoonPass>(new CartoonPass(imageWidth, imageHeight)),
     shared_ptr<LabelCountPass>(new LabelCountPass(d_pixelLabels)),
     shared_ptr<CompleteFieldEdgePass>(new CompleteFieldEdgePass(fieldLabel, imageWidth, imageHeight)),
-    shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(fieldLabel, lineLabel, imageWidth, imageHeight, 1*2*3*4))
+    shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(fieldLabel, lineLabel, imageWidth, imageHeight, 1*2*3*4)),
+    shared_ptr<FieldHistogramPass>(new FieldHistogramPass(fieldLabel, imageHeight))
     );
 
   d_imagePassRunner = shared_ptr<ImagePassRunner<uchar>>(new ImagePassRunner<uchar>());
+
+  d_fieldHistogramPass = getHandler<FieldHistogramPass>();
+  d_imagePassRunner->addHandler(d_fieldHistogramPass);
 
   Config::getSetting<FieldEdgeType>("vision.field-edge-pass.field-edge-type")->track(
     [this](FieldEdgeType fieldEdgeType)

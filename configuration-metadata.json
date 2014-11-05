@@ -242,6 +242,7 @@
       "expected-line-edges": { "type": "bool" },
       "horizon":        { "type": "bool" },
       "field-edge":     { "type": "bool" },
+      "field-histogram":{ "type": "bool" },
       "occlusion-edge": { "type": "bool" },
       "calibration":    { "type": "bool" },
       "objects":        { "type": "bool" }
@@ -252,6 +253,7 @@
       "expected-line": { "type": "bgr-colour" },
       "horizon":       { "type": "bgr-colour" },
       "field-edge":    { "type": "bgr-colour" },
+      "field-histogram": { "type": "bgr-colour" },
       "occlusion-edge":{ "type": "bgr-colour" },
       "calibration":   { "type": "bgr-colour" }
     },

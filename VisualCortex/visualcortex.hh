@@ -36,6 +36,7 @@ namespace bold
   class FieldEdgePass;
   class LabelCountPass;
   class PeriodicFieldEdgePass;
+  class FieldHistogramPass;
 
   enum class ImageType
   {
@@ -172,10 +173,12 @@ namespace bold
       std::shared_ptr<CartoonPass>,
       std::shared_ptr<LabelCountPass>,
       std::shared_ptr<CompleteFieldEdgePass>,
-      std::shared_ptr<PeriodicFieldEdgePass>
+      std::shared_ptr<PeriodicFieldEdgePass>,
+      std::shared_ptr<FieldHistogramPass>
       > d_imagePassHandlers;
 
     std::shared_ptr<FieldEdgePass> d_fieldEdgePass;
+    std::shared_ptr<FieldHistogramPass> d_fieldHistogramPass;
 
     Setting<bool>* d_shouldDetectLines;
     Setting<bool>* d_shouldCountLabels;
@@ -206,6 +209,7 @@ namespace bold
     Setting<Colour::bgr>* d_expectedLineColour;
     Setting<Colour::bgr>* d_horizonColour;
     Setting<Colour::bgr>* d_fieldEdgeColour;
+    Setting<Colour::bgr>* d_fieldHistogramColour;
     Setting<Colour::bgr>* d_occlusionEdgeColour;
     Setting<Colour::bgr>* d_calibrationColour;
 
@@ -216,6 +220,7 @@ namespace bold
     Setting<bool>* d_shouldDrawExpectedLineEdges;
     Setting<bool>* d_shouldDrawHorizon;
     Setting<bool>* d_shouldDrawFieldEdge;
+    Setting<bool>* d_shouldDrawFieldHistogram;
     Setting<bool>* d_shouldDrawOcclusionEdge;
     Setting<bool>* d_shouldDrawCalibration;
     Setting<bool>* d_shouldDrawObservedObjects;
