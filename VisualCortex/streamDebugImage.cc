@@ -98,7 +98,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     }
   }
 
-  auto getColour = [&](Colour::bgr color) -> cv::Scalar
+  auto getColour = [&palette,usePalette](Colour::bgr color) -> cv::Scalar
   {
     if (usePalette)
     {
@@ -106,7 +106,8 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
       palette[nextIndex] = color;
       return cv::Scalar(nextIndex);
     }
-    return d_observedLineColour->getValue().toScalar();
+
+    return color.toScalar();
   };
 
   // Draw observed lines
@@ -243,7 +244,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   // Draw occlusion edge
   if (drawDebugData && d_shouldDrawOcclusionEdge->getValue())
   {
-    auto occlusionColour = d_occlusionEdgeColour->getValue().toScalar();
+    auto occlusionColour = getColour(d_occlusionEdgeColour->getValue());
     auto const& rays = cameraFrame->getOcclusionRays();
     auto lastPoint = rays[0].near();
     for (auto const& ray : rays)
