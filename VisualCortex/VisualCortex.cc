@@ -153,7 +153,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_goalieMarkerHeight             = Config::getSetting<double>("vision.player-detection.goalie-marker-height");
 
   // Field thresholding
-  d_fieldHistogramThreshold        = Config::getSetting<double>("vision.player-detection.goalie-marker-height");
+  d_fieldHistogramThreshold        = Config::getSetting<double>("vision.field-edge-pass.field-histogram.threshold");
 
   // TODO don't pass this around -- look it up from config (?)
   static ushort imageWidth = d_cameraModel->imageWidth();

@@ -220,7 +220,7 @@
         "smoothing-window-length": 5
       },
       "field-histogram": {
-        "threshold": 0.985
+        "threshold": 0.97
       }
     },
     "occlusion": {
