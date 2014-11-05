@@ -41,8 +41,6 @@ namespace bold
     void updateSmoothedPos();
     void updateStateObject();
 
-    FilterState createRandomState();
-
     bool d_haveLastAgentTransform;
     Eigen::Affine3d d_lastAgentTransform;
     Eigen::Quaterniond d_lastQuaternion;
