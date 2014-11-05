@@ -809,5 +809,12 @@ endforeach(json_file)
 #
 ## For CLion users. See https://youtrack.jetbrains.com/issue/CPP-270
 #
-file(GLOB_RECURSE clion_all_headers ${CMAKE_SOURCE_DIR}/*.hh ${CMAKE_SOURCE_DIR}/*.ih)
+file(GLOB_RECURSE clion_all_headers
+  ${CMAKE_SOURCE_DIR}/*.hh
+  ${CMAKE_SOURCE_DIR}/*.ih
+  ${CMAKE_SOURCE_DIR}/www/scripts/*.ts
+  ${CMAKE_SOURCE_DIR}/configuration-*.json
+  ${CMAKE_SOURCE_DIR}/motionscripts/*.json
+  ${CMAKE_SOURCE_DIR}/upstart.conf
+  ${CMAKE_SOURCE_DIR}/bh.d/*)
 add_custom_target(all_clion SOURCES ${clion_all_headers})
