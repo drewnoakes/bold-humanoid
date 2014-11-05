@@ -8,8 +8,6 @@
 
 #include "../imagepasshandler.hh"
 #include "../../Config/config.hh"
-#include "../../HoughLineAccumulator/houghlineaccumulator.hh"
-#include "../../HoughLineExtractor/houghlineextractor.hh"
 #include "../../LineRunTracker/lineruntracker.hh"
 #include "../../PixelLabel/pixellabel.hh"
 #include "../../SequentialTimer/sequentialtimer.hh"
@@ -19,23 +17,13 @@ namespace bold
   template <typename T>
   class LineDotPass : public ImagePassHandler<T>
   {
-  private:
-    const ushort d_imageWidth;
-    std::shared_ptr<PixelLabel> inLabel;
-    std::shared_ptr<PixelLabel> onLabel;
-    std::unique_ptr<LineRunTracker> d_rowTracker;
-    std::vector<bold::LineRunTracker> d_colTrackers;
-    int d_lastXGranularity;
-
   public:
-    std::vector<Eigen::Vector2i> lineDots;
-
     LineDotPass(ushort imageWidth, std::shared_ptr<PixelLabel> inLabel, std::shared_ptr<PixelLabel> onLabel)
-    : d_imageWidth(imageWidth),
-      inLabel(inLabel),
-      onLabel(onLabel),
-      d_lastXGranularity(-1),
-      lineDots()
+      : lineDots(),
+        d_imageWidth(imageWidth),
+        d_inLabel(inLabel),
+        d_onLabel(onLabel),
+        d_lastXGranularity(-1)
     {
       auto hysteresisLimit = Config::getSetting<int>("vision.line-detection.line-dots.hysteresis");
 
@@ -110,7 +98,7 @@ namespace bold
         // If this isn't the first row of the image...
         if (d_lastXGranularity != -1)
         {
-          // Interate through at the previous granularity. Any column which is
+          // Iterate through at the previous granularity. Any column which is
           // not a multiple of the new granularity must be reset.
           for (ushort x = 0; x < d_imageWidth; x += d_lastXGranularity)
           {
@@ -133,5 +121,15 @@ namespace bold
     {
       return std::string("LineDotPass");
     }
+
+    std::vector<Eigen::Vector2i> lineDots;
+
+  private:
+    const ushort d_imageWidth;
+    std::shared_ptr<PixelLabel> d_inLabel;
+    std::shared_ptr<PixelLabel> d_onLabel;
+    std::unique_ptr<LineRunTracker> d_rowTracker;
+    std::vector<bold::LineRunTracker> d_colTrackers;
+    int d_lastXGranularity;
   };
 }

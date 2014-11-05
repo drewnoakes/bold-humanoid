@@ -125,8 +125,11 @@ namespace bold
     {
       return std::string("BlobDetectPass");
     }
+
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
+
+    void addRun(unsigned endX);
 
     ushort d_imageHeight;
     ushort d_imageWidth;
@@ -141,8 +144,6 @@ namespace bold
 
     // Blobs detected
     std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> d_blobsDetectedPerLabel;
-
-    void addRun(unsigned endX);
   };
 
 
@@ -181,7 +182,7 @@ namespace bold
     if (d_currentLabel != 0)
     {
       // finish whatever run we were on
-      addRun(d_imageWidth - 1);
+      addRun(d_imageWidth - 1u);
     }
     d_currentRun.y = y;
     d_currentLabel = 0;
@@ -197,8 +198,7 @@ namespace bold
       if (d_currentLabel != 0)
       {
         // Finished run
-        ASSERT(x > 0);
-        addRun(x - 1);
+        addRun(x - 1u);
       }
 
       // Check whether this is the start of a new run
@@ -214,8 +214,6 @@ namespace bold
 
   inline void BlobDetectPass::addRun(unsigned endX)
   {
-    ASSERT(endX >= d_currentRun.startX);
-
     // finish whatever run we were on
     d_currentRun.endX = endX;
 

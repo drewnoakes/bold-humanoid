@@ -17,7 +17,6 @@ namespace bold
   class LabelCountPass : public ImagePassHandler<uchar>
   {
   public:
-
     // assuming we'll never have more than 7 labels (1-8)
     static const uchar MAX_LABEL_COUNT = 8;
 
@@ -61,6 +60,7 @@ namespace bold
     {
       return std::string("LabelCountPass");
     }
+
   private:
     uint d_countByLabelId[MAX_LABEL_COUNT];
     std::vector<std::shared_ptr<PixelLabel>> d_labels;

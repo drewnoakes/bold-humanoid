@@ -17,9 +17,6 @@ namespace bold
   template <typename T>
   class HoughLinePass : public ImagePassHandler<T>
   {
-  private:
-    int d_thresholdDivisor;
-
   public:
     HoughLineAccumulator accumulator;
     std::vector<Candidate<Line>> lines;
@@ -58,5 +55,8 @@ namespace bold
     {
       return std::string("HoughLinePass");
     }
+
+  private:
+    int d_thresholdDivisor;
   };
 }

@@ -1,6 +1,9 @@
-#include "blobdetectpass.ih"
+#include "blobdetectpass.hh"
 
 #include "../../SequentialTimer/sequentialtimer.hh"
+
+using namespace bold;
+using namespace std;
 
 map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(SequentialTimer& timer)
 {

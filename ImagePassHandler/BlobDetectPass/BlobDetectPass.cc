@@ -1,4 +1,7 @@
-#include "blobdetectpass.ih"
+#include "blobdetectpass.hh"
+
+using namespace bold;
+using namespace std;
 
 BlobDetectPass::BlobDetectPass(ushort imageWidth, ushort imageHeight, vector<shared_ptr<PixelLabel>> const& pixelLabels)
   : d_imageHeight(imageHeight),
