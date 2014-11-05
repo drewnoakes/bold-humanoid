@@ -11,14 +11,14 @@ Localiser::Localiser()
   d_filterType = Config::getValue<FilterType>("localiser.filter-type");
 
   auto smoothingWindowSize = Config::getSetting<int>("localiser.smoothing-window-size");
-  d_useLines          = Config::getSetting<bool>("localiser.use-lines");
-  d_minGoalsNeeded    = Config::getSetting<int>("localiser.min-goals-needed");
+//  d_useLines          = Config::getSetting<bool>("localiser.use-lines");
+//  d_minGoalsNeeded    = Config::getSetting<int>("localiser.min-goals-needed");
 //  auto positionError  = Config::getSetting<double>("localiser.position-error");
 //  auto angleErrorDegs = Config::getSetting<double>("localiser.angle-error-degrees");
   d_defaultKidnapWeight = Config::getSetting<double>("localiser.default-kidnap-weight");
   d_penaltyKidnapWeight = Config::getSetting<double>("localiser.penalty-kidnap-weight");
   d_enablePenaltyRandomise = Config::getSetting<bool>("localiser.enable-penalty-randomise");
-  d_enableDynamicError = Config::getSetting<bool>("localiser.enable-dynamic-error");
+//  d_enableDynamicError = Config::getSetting<bool>("localiser.enable-dynamic-error");
   auto preNormWeightSumFilterAlpha = Config::getSetting<double>("localiser.prenorm-weightsum-filter-alpha");
 
   smoothingWindowSize->track([this](int value) { d_avgPos = MovingAverage<Vector4d>(value); });

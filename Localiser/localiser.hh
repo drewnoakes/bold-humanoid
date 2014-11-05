@@ -54,12 +54,12 @@ namespace bold
     MovingAverage<Eigen::Vector4d> d_avgPos;
     double d_uncertainty;
 
-    Setting<bool>* d_useLines;
-    Setting<int>* d_minGoalsNeeded;
+//    Setting<bool>* d_useLines;
+//    Setting<int>* d_minGoalsNeeded;
     Setting<double>* d_defaultKidnapWeight;
     Setting<double>* d_penaltyKidnapWeight;
     Setting<bool>* d_enablePenaltyRandomise;
-    Setting<bool>* d_enableDynamicError;
+//    Setting<bool>* d_enableDynamicError;
 
     FilterType d_filterType;
     std::shared_ptr<Filter<4>> d_filter;
