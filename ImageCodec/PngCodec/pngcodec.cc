@@ -217,7 +217,7 @@ bool PngCodec::read(string filePath, cv::Mat& mat)
   ASSERT(colorType == PNG_COLOR_TYPE_RGB);
 
   // Create
-  mat.create((int) height, (int) width, colorType);
+  mat.create((int) height, (int) width, CV_8UC3);
 
   // Intel is little-endian
   png_set_swap(png_ptr);
