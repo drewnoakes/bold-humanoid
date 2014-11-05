@@ -103,6 +103,8 @@ namespace bold
 
             handler->onPixel(value, x, y);
           }
+
+          handler->onRowCompleted(y, granularity);
         }
 
         timer.timeEvent("Pass");
@@ -161,6 +163,8 @@ namespace bold
 
           handler->T::onPixel(value, x, y);
         }
+
+        handler->T::onRowCompleted(y, granularity);
       }
 
       timer.timeEvent("Pass");

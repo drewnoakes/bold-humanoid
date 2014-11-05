@@ -27,6 +27,9 @@ namespace bold
     /** The row 'y' is about to start. */
     virtual void onRowStarting(ushort y, Eigen::Vector2i const& granularity) {}
 
+    /** The row 'y' has completed. */
+    virtual void onRowCompleted(ushort y, Eigen::Vector2i const& granularity) {}
+
     /**
      * The pixel at 'x', 'y', has a label of 'labelId'.
      * This is the only abstract function on this class.
