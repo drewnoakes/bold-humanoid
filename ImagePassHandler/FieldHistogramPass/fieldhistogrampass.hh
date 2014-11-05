@@ -16,24 +16,29 @@ namespace bold
   public:
     FieldHistogramPass(std::shared_ptr<PixelLabel> fieldLabel, ushort height)
       : d_fieldLabelId((uchar)fieldLabel->getID()),
-        d_rowCounts(height)
+        d_rowWidths(height),
+        d_cumulativePixelCounts(height)
     {}
 
     void onImageStarting(SequentialTimer& timer) override
     {
-      std::fill(d_rowCounts.begin(), d_rowCounts.end(), (ushort)0);
+      d_cumulativePixelCount = 0;
+      std::fill(d_rowWidths.begin(), d_rowWidths.end(), (ushort)0);
+      std::fill(d_cumulativePixelCounts.begin(), d_cumulativePixelCounts.end(), (uint)0);
       timer.timeEvent("Clear");
-    }
-
-    void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override
-    {
-      d_pixelWidth = static_cast<ushort>(granularity.x());
     }
 
     void onPixel(uchar value, ushort x, ushort y) override
     {
       if (value == d_fieldLabelId)
-        d_rowCounts[y] += d_pixelWidth;
+        d_rowWidths[y]++;
+    }
+
+    void onRowCompleted(ushort y, Eigen::Vector2i const& granularity) override
+    {
+      d_rowWidths[y] *= granularity.x();
+      d_cumulativePixelCount += d_rowWidths[y] * granularity.y();
+      d_cumulativePixelCounts[y] = d_cumulativePixelCount;
     }
 
     std::string id() const override
@@ -41,14 +46,22 @@ namespace bold
       return "FieldHistogramPass";
     }
 
-    ushort getRowCount(ushort y) const
+    ushort getRowWidth(ushort y) const
     {
-      return d_rowCounts[y];
+      return d_rowWidths[y];
+    }
+
+    double getRatioBeneath(ushort y) const
+    {
+      return d_cumulativePixelCount == 0
+        ? 0.0
+        : (double)d_cumulativePixelCounts[y] / d_cumulativePixelCount;
     }
 
   private:
     const uchar d_fieldLabelId;
-    std::vector<ushort> d_rowCounts;
-    ushort d_pixelWidth;
+    std::vector<ushort> d_rowWidths;
+    std::vector<uint> d_cumulativePixelCounts;
+    uint d_cumulativePixelCount;
   };
 }

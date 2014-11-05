@@ -269,11 +269,21 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   if (drawDebugData && d_shouldDrawFieldHistogram->getValue())
   {
     auto colour = getColour(d_fieldHistogramColour->getValue());
+    auto outColour = getColour(d_fieldHistogramIgnoredColour->getValue());
+    const double threshold = d_fieldHistogramThreshold->getValue();
     for (ushort y = 0; y < debugImage.size().height; ++y)
     {
-      ushort count = d_fieldHistogramPass->getRowCount(y);
+      ushort count = d_fieldHistogramPass->getRowWidth(y);
       if (count)
-        cv::line(debugImage, Point(0, y), Point(count, y), colour);
+      {
+        cv::line(
+          debugImage,
+          Point(0, y),
+          Point(count, y),
+          d_fieldHistogramPass->getRatioBeneath(y) > threshold
+            ? outColour
+            : colour);
+      }
     }
   }
 

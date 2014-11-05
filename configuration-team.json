@@ -218,6 +218,9 @@
       "use-convex-hull": true,
       "complete": {
         "smoothing-window-length": 5
+      },
+      "field-histogram": {
+        "threshold": 0.985
       }
     },
     "occlusion": {
@@ -257,6 +260,7 @@
       "horizon":       { "b": 0, "g": 128, "r": 255 },
       "field-edge":    { "b": 0, "g": 255, "r": 0 },
       "field-histogram": { "b": 0, "g": 128, "r": 0 },
+      "field-histogram-ignored": { "b": 0, "g": 50, "r": 0 },
       "occlusion-edge":{ "b": 80, "g": 80, "r": 80 },
       "calibration":   { "b": 255, "g": 255, "r": 0 }
     },

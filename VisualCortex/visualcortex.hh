@@ -197,6 +197,8 @@ namespace bold
     Setting<int>* d_minPlayerLengthPixels;
     Setting<double>* d_goalieMarkerHeight;
 
+    Setting<double>* d_fieldHistogramThreshold;
+
     bool d_saveNextYUVFrame;
     Setting<bool>* d_isRecordingYUVFrames;
     bool d_saveNextDebugFrame;
@@ -210,6 +212,7 @@ namespace bold
     Setting<Colour::bgr>* d_horizonColour;
     Setting<Colour::bgr>* d_fieldEdgeColour;
     Setting<Colour::bgr>* d_fieldHistogramColour;
+    Setting<Colour::bgr>* d_fieldHistogramIgnoredColour;
     Setting<Colour::bgr>* d_occlusionEdgeColour;
     Setting<Colour::bgr>* d_calibrationColour;
 

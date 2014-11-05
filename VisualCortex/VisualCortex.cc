@@ -49,6 +49,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_horizonColour             = Config::getSetting<Colour::bgr>("round-table.image-colours.horizon");
   d_fieldEdgeColour           = Config::getSetting<Colour::bgr>("round-table.image-colours.field-edge");
   d_fieldHistogramColour      = Config::getSetting<Colour::bgr>("round-table.image-colours.field-histogram");
+  d_fieldHistogramIgnoredColour = Config::getSetting<Colour::bgr>("round-table.image-colours.field-histogram-ignored");
   d_occlusionEdgeColour       = Config::getSetting<Colour::bgr>("round-table.image-colours.occlusion-edge");
   d_calibrationColour         = Config::getSetting<Colour::bgr>("round-table.image-colours.calibration");
 
@@ -150,6 +151,9 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_minPlayerAreaPixels            = Config::getSetting<int>("vision.player-detection.min-area-px");
   d_minPlayerLengthPixels          = Config::getSetting<int>("vision.player-detection.min-length-px");
   d_goalieMarkerHeight             = Config::getSetting<double>("vision.player-detection.goalie-marker-height");
+
+  // Field thresholding
+  d_fieldHistogramThreshold        = Config::getSetting<double>("vision.player-detection.goalie-marker-height");
 
   // TODO don't pass this around -- look it up from config (?)
   static ushort imageWidth = d_cameraModel->imageWidth();
