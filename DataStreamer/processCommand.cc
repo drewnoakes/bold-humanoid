@@ -48,7 +48,7 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession)
     }
 
     auto argsMember = doc.FindMember("args");
-    action->handleRequest(argsMember == doc.MemberEnd() ? &argsMember->value : nullptr);
+    action->handleRequest(argsMember != doc.MemberEnd() ? &argsMember->value : nullptr);
   }
   else if (strcmp(type, "setting") == 0)
   {
