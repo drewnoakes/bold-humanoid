@@ -41,6 +41,10 @@ do
              && echo                                                           \
              && cat /etc/hosts | grep -v '^\(#\|[[:space:]]*$\)'               \
              && echo                                                           \
+             && ip addr                                                        \
+             && echo                                                           \
+             && ip route                                                       \
+             && echo                                                           \
              && echo ==== AGENT CONFIGURATION ================================ \
              && echo                                                           \
              && cat ~/configuration-agent.json                                 \
