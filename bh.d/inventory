@@ -33,41 +33,59 @@ do
              && echo                                                           \
              && echo ==== NETWORK ============================================ \
              && echo                                                           \
-             && echo /etc/network/interfaces                                   \
+             && echo $ cat /etc/network/interfaces                             \
              && echo                                                           \
              && cat /etc/network/interfaces | grep -v '^\(#\|[[:space:]]*$\)'  \
              && echo                                                           \
-             && echo /etc/hosts                                                \
+             && echo $ cat /etc/hosts                                          \
              && echo                                                           \
              && cat /etc/hosts | grep -v '^\(#\|[[:space:]]*$\)'               \
              && echo                                                           \
+             && echo $ ip addr                                                 \
+             && echo                                                           \
              && ip addr                                                        \
+             && echo                                                           \
+             && echo $ ip route                                                \
              && echo                                                           \
              && ip route                                                       \
              && echo                                                           \
              && echo ==== AGENT CONFIGURATION ================================ \
              && echo                                                           \
+             && echo $ cat configuration-agent.json                            \
+             && echo                                                           \
              && cat ~/configuration-agent.json                                 \
              && echo                                                           \
              && echo ==== SERVICES =========================================== \
              && echo                                                           \
+             && echo $ service --status-all                                    \
+             && echo                                                           \
              && service --status-all 2>&1                                      \
+             && echo                                                           \
+             && echo $ initctl list                                            \
              && echo                                                           \
              && initctl list | sed -e 's/, process\s[0-9]*//g' | sort          \
              && echo                                                           \
              && echo ==== LIBRARIES ========================================== \
              && echo                                                           \
+             && echo $ ldd boldhumanoid                                        \
+             && echo                                                           \
              && ldd boldhumanoid | sed -r 's/\t(.*)\s+\([^)]+\)/\1/g' | sort   \
              && echo                                                           \
              && echo ==== GRUB =============================================== \
+             && echo                                                           \
+             && echo $ cat /etc/default/grub                                   \
              && echo                                                           \
              && sudo grep -e ^\s*GRUB /etc/default/grub | sort                 \
              && echo                                                           \
              && echo ==== KERNEL ============================================= \
              && echo                                                           \
+             && echo $ cat /etc/sysctl.conf                                    \
+             && echo                                                           \
              && sudo grep -e ^[^#] /etc/sysctl.conf | sort                     \
              && echo                                                           \
              && echo ==== PACKAGES =========================================== \
+             && echo                                                           \
+             && echo $ dpkg-query                                              \
              && echo                                                           \
              && dpkg-query -W -f='\${Package;-40}\t\${Installed-Size;8}\t\${Status;1}\t\${Version}\n' | grep -v \"\sd\s\" | sort | cut -f1,2,4-" \
               > $BOLD_HUMANOID_DIR/inventory/temp
