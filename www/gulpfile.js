@@ -145,7 +145,7 @@ var allBundles = [
 ];
 
 // Produce a distributable version of the site as a self-contained bundle
-gulp.task('dist', allBundles.concat(['compile-amd']), function ()
+gulp.task('dist', allBundles, function ()
 {
     var sources = [
         'dist/libs.js',
