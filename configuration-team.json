@@ -228,7 +228,7 @@
       "widen-min-height-px": 10
     }
   },
-  "histogram-label-teacher": {
+  "label-teacher": {
     "max-flood-diff": 4,
     "fixed-range": false
   },

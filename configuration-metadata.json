@@ -225,7 +225,7 @@
       "widen-min-height-px": { "type": "int", "min": 0 }
     }
   },
-  "histogram-label-teacher": {
+  "label-teacher": {
     "max-flood-diff": { "type": "int","min": 1, "max": 256 },
     "fixed-range": {"type": "bool" }
   },

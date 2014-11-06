@@ -10,7 +10,7 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
   d_labelRequested{false},
   d_fixedRange{false}
 {
-  Config::getSetting<int>("histogram-label-teacher.max-flood-diff")->track([this](int val) {
+  Config::getSetting<int>("label-teacher.max-flood-diff")->track([this](int val) {
       d_maxFloodDiff = val;
       log::info("HistogramLabelTeacherBase") << "Setting maxFloodDiff: " << d_maxFloodDiff;
     });
@@ -19,7 +19,7 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
   for (unsigned i = 0; i < labels.size(); ++i)
     enumOptions[i] = labels[i]->getName();
 
-  auto setting = new EnumSetting("histogram-label-teacher.label-to-train", enumOptions, false, "Label to train");
+  auto setting = new EnumSetting("label-teacher.label-to-train", enumOptions, false, "Label to train");
   setting->changed.connect([this](int value) {
       d_labelToTrain = value;
     });
@@ -27,11 +27,11 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
 
   Config::addSetting(setting);
 
-  Config::getSetting<bool>("histogram-label-teacher.fixed-range")->track([this](bool val) {
+  Config::getSetting<bool>("label-teacher.fixed-range")->track([this](bool val) {
       d_fixedRange = val;
     });
 
-  Config::addAction("histogram-label-teacher.snap-train-image", "Snap Image", [this]()
+  Config::addAction("label-teacher.snap-train-image", "Snap Image", [this]()
                     {
                       if (d_yuvTrainImage.rows == 0)
                         d_snapshotRequested = true;
@@ -39,7 +39,7 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
                         d_yuvTrainImage = cv::Mat{0,0,CV_8UC3};
                     });
 
-  Config::addAction("histogram-label-teacher.set-seed-point", "Set Seed Point", [this](rapidjson::Value* val) {
+  Config::addAction("label-teacher.set-seed-point", "Set Seed Point", [this](rapidjson::Value* val) {
       auto xMember = val->FindMember("x");
       auto yMember = val->FindMember("y");
       if (xMember == val->MemberEnd() || !xMember->value.IsInt() ||
@@ -55,11 +55,11 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
       d_mask = floodFill();
     });
 
-  Config::addAction("histogram-label-teacher.train", "Train", [this]() {
+  Config::addAction("label-teacher.train", "Train", [this]() {
       train(d_labelToTrain, d_mask);
     });
 
-  Config::addAction("histogram-label-teacher.label", "Label", [this]() {
+  Config::addAction("label-teacher.label", "Label", [this]() {
       d_labelRequested = !d_labelRequested;
     });
 
