@@ -306,6 +306,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./LabelTeacher/labelteacher.cc
+)
+
+add_class(BOLDHUMANOID
   ./LineFinder/RandomPairLineFinder/findLineSegments.cc
 )
 
