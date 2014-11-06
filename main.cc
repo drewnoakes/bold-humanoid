@@ -31,7 +31,7 @@ void printUsage()
 void syslog(const char* msg)
 {
   openlog("boldhumanoid", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
-  syslog(LOG_NOTICE, msg);
+  syslog(LOG_NOTICE, "%s", msg);
   closelog();
 }
 
