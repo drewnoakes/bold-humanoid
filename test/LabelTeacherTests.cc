@@ -13,7 +13,7 @@ TEST (LabelTeacherTests, init)
     make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
-  LabelTeacher<6> teacher{labels};
+  LabelTeacher teacher{labels};
 
   auto _labels = teacher.getLabels();
 
@@ -28,7 +28,7 @@ TEST (LabelTeacherTests, setYUVTrainImage)
     make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
-  LabelTeacher<6> teacher{labels};
+  LabelTeacher teacher{labels};
 
   teacher.setYUVTrainImage(trainImage);
 }
@@ -39,7 +39,7 @@ TEST (LabelTeacherTests, setSeedPoint)
     make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
-  LabelTeacher<6> teacher{labels};
+  LabelTeacher teacher{labels};
 
   auto point = Eigen::Vector2i{320, 240};
 
@@ -52,7 +52,7 @@ TEST (LabelTeacherTests, floodFillEmpty)
     make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
-  LabelTeacher<6> teacher{labels};
+  LabelTeacher teacher{labels};
 
   cv::Mat trainImage = cv::Mat::zeros(640, 480, CV_8UC3);
   teacher.setYUVTrainImage(trainImage);
@@ -76,7 +76,7 @@ TEST (LabelTeacherTests, floodFillColor)
     make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
-  LabelTeacher<6> teacher{labels};
+  LabelTeacher teacher{labels};
 
   cv::Mat trainImage = cv::Mat::zeros(640, 480, CV_8UC3);
   cv::rectangle(trainImage, cv::Rect(0, 0, 100, 100), cv::Scalar(255, 0, 0), CV_FILLED);
@@ -98,7 +98,7 @@ TEST (LabelTeacherTests, floodFillNoColor)
     make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
     make_shared<HistogramPixelLabel<6>>("two", LabelClass::FIELD)
   };
-  LabelTeacher<6> teacher{labels};
+  LabelTeacher teacher{labels};
 
   cv::Mat trainImage = cv::Mat::zeros(640, 480, CV_8UC3);
   cv::rectangle(trainImage, cv::Rect(0, 0, 100, 100), cv::Scalar(255, 0, 0), CV_FILLED);
@@ -120,7 +120,7 @@ TEST (LabelTeacherTests, DISABLED_train)
   auto labels = vector<shared_ptr<PixelLabel>>{
     make_shared<HistogramPixelLabel<6>>("one", LabelClass::BALL),
   };
-  LabelTeacher<6> teacher{labels};
+  LabelTeacher teacher{labels};
 
   cv::Mat trainImage = cv::Mat::zeros(640, 480, CV_8UC3);
   cv::rectangle(trainImage, cv::Rect(0, 0, 100, 100), cv::Scalar(128, 0, 0), CV_FILLED);

@@ -153,7 +153,7 @@ namespace bold
     
     std::shared_ptr<ImageLabeller> d_imageLabeller;
 
-    std::unique_ptr<LabelTeacher<6>> d_labelTeacher;
+    std::unique_ptr<LabelTeacher> d_labelTeacher;
 
     std::function<Eigen::Matrix<uchar,2,1>(int)> d_granularityFunction;
 

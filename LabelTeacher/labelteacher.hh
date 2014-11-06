@@ -14,7 +14,6 @@
 
 namespace bold
 {
-  template<uint8_t CHANNEL_BITS>
   class LabelTeacher
   {
   public:
@@ -69,8 +68,7 @@ namespace bold
   
   //////
 
-  template<uint8_t CHANNEL_BITS>
-  LabelTeacher<CHANNEL_BITS>::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
+  inline LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
     : d_labels{labels},
     d_yuvTrainImage{},
     d_seedPoint{0,0},
@@ -133,27 +131,23 @@ namespace bold
 
   }
 
-  template<uint8_t CHANNEL_BITS>
-  std::vector<std::shared_ptr<PixelLabel>> LabelTeacher<CHANNEL_BITS>::getLabels() const
+  inline std::vector<std::shared_ptr<PixelLabel>> LabelTeacher::getLabels() const
   {
     return d_labels;
   }
 
-  template<uint8_t CHANNEL_BITS>
-  void LabelTeacher<CHANNEL_BITS>::setYUVTrainImage(cv::Mat yuvTrainImage)
+  inline void LabelTeacher::setYUVTrainImage(cv::Mat yuvTrainImage)
   {
     d_yuvTrainImage = yuvTrainImage;
     d_snapshotRequested = false;
   }
 
-  template<uint8_t CHANNEL_BITS>
-  void LabelTeacher<CHANNEL_BITS>::setSeedPoint(Eigen::Vector2i point)
+  inline void LabelTeacher::setSeedPoint(Eigen::Vector2i point)
   {
     d_seedPoint = point;
   }
 
-  template<uint8_t CHANNEL_BITS>
-  inline cv::Mat LabelTeacher<CHANNEL_BITS>::floodFill() const
+  inline cv::Mat LabelTeacher::floodFill() const
   {
     cv::Mat mask = cv::Mat::zeros(d_yuvTrainImage.rows + 2, d_yuvTrainImage.cols + 2, CV_8UC1);
 
@@ -167,8 +161,7 @@ namespace bold
     return mask;
   }
   
-  template<uint8_t CHANNEL_BITS>
-  void LabelTeacher<CHANNEL_BITS>::train(unsigned labelIdx, cv::Mat const& mask)
+  inline void LabelTeacher::train(unsigned labelIdx, cv::Mat const& mask)
   {
     ASSERT(mask.type() == CV_8UC1);
     ASSERT(d_yuvTrainImage.cols == mask.cols && d_yuvTrainImage.rows == mask.rows);
@@ -199,8 +192,7 @@ namespace bold
 
   }
 
-  template<uint8_t CHANNEL_BITS>
-  cv::Mat LabelTeacher<CHANNEL_BITS>::label(unsigned labelIdx) const
+  inline cv::Mat LabelTeacher::label(unsigned labelIdx) const
   {
     auto labelImg = cv::Mat{d_yuvTrainImage.rows, d_yuvTrainImage.cols, CV_8UC1};
     for (int i = 0; i < labelImg.rows; ++i)

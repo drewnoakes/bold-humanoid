@@ -116,7 +116,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
 
   d_imageLabeller = make_shared<ImageLabeller>(d_spatialiser);
 
-  d_labelTeacher = unique_ptr<LabelTeacher<6>>{new LabelTeacher<6>{d_pixelLabels}};
+  d_labelTeacher = unique_ptr<LabelTeacher>{new LabelTeacher{d_pixelLabels}};
 
   auto createLookupTable = [this]()
   {
