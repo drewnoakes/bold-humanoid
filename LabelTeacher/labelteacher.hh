@@ -59,10 +59,12 @@ namespace bold
     Eigen::Vector2i d_seedPoint;
     float d_maxFloodDiff;
     unsigned d_labelToTrain;
+    float d_sigmaRange;
 
     bool d_snapshotRequested;
     bool d_labelRequested;
     bool d_fixedRange;
 
   };
+
 }

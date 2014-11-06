@@ -12,6 +12,7 @@
 #include "../StateObject/GameState/gamestate.hh"
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/LabelCountState/labelcountstate.hh"
+#include "../StateObject/LabelTeacherState/labelteacherstate.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../StateObject/OdometryState/odometrystate.hh"
 #include "../StateObject/OrientationState/orientationstate.hh"
@@ -42,6 +43,7 @@ void Agent::registerStateTypes()
   State::registerStateType<GameState>("Game");
   State::registerStateType<HardwareState>("Hardware");
   State::registerStateType<LabelCountState>("LabelCount");
+  State::registerStateType<LabelTeacherState>("LabelTeacher");
   State::registerStateType<MotionTaskState>("MotionTask");
   State::registerStateType<MotionTimingState>("MotionTiming");
   State::registerStateType<OdometryState>("Odometry");

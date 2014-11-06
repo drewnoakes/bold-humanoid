@@ -1,6 +1,10 @@
 #include "labelteacher.hh"
 
+#include "../StateObject/LabelTeacherState/labelteacherstate.hh"
+#include "../State/state.hh"
+
 using namespace bold;
+using namespace std;
 
 LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
   : d_labels{labels},
@@ -63,6 +67,7 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
       d_labelRequested = !d_labelRequested;
     });
 
+  State::make<LabelTeacherState>(Colour::hsvRange{0, 0, 0, 0, 0, 0});
 }
 
 std::vector<std::shared_ptr<PixelLabel>> LabelTeacher::getLabels() const
