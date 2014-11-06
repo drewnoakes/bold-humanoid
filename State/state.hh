@@ -164,7 +164,12 @@ namespace bold
     log::verbose("State::registerStateType") << "Registering state type: " << name;
 
     std::lock_guard<std::mutex> guard(d_mutex);
-    ASSERT(d_trackerByTypeId.find(typeid(T)) == d_trackerByTypeId.end()); // assert that it doesn't exist yet
+    if (d_trackerByTypeId.find(typeid(T)) != d_trackerByTypeId.end())
+    {
+      log::warning("State::registerStateType") << "State type already registered: " << name;
+      return;
+    }
+
     auto const& tracker = StateTracker::create<T>(name);
     d_trackerByTypeId[typeid(T)] = tracker;
     d_trackerByName[name] = tracker;
