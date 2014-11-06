@@ -4,8 +4,6 @@ using namespace std;
 
 Colour::bgr Colour::hsv2bgr(hsv const& in)
 {
-  Colour::bgr out;
-
   int const   nh = 256;         // Maximum hue value
   int const   hstep = nh / 3;   // Hue step size between red -> green -> blue
 

@@ -313,7 +313,6 @@ int main(int argc, char **argv)
   }
 
   // Draw lines
-  int colourIndex = 0;
   cout << "    " << randomPairLines.size() << " line(s) via RandomPairLineFinder" << endl;
   for (LineSegment2i const& line : randomPairLines)
   {
