@@ -102,6 +102,8 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   {
     if (usePalette)
     {
+      ASSERT(palette.size() < std::numeric_limits<uchar>::max());
+
       uchar nextIndex = (uchar)palette.size();
       palette[nextIndex] = color;
       return cv::Scalar(nextIndex);

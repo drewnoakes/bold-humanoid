@@ -121,7 +121,6 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::
     for (auto const& pair : *colourByNumber)
       paletteSize = max(paletteSize, static_cast<unsigned>(pair.first));
     paletteSize++;
-    ASSERT(paletteSize <= PNG_MAX_PALETTE_LENGTH);
 
     palette = (png_color*) png_malloc(png_ptr, paletteSize * sizeof(png_color));
     for (uchar p = 0; p < paletteSize; p++)
