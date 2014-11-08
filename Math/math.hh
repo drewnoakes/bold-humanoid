@@ -122,6 +122,24 @@ namespace bold
       return Eigen::Vector2d(cos(angle) * distance, sin(angle) * distance);
     }
 
+    /** Returns mean of angles
+     *
+     * TODO: Algorithm at:
+     * http://www.codeproject.com/Articles/190833/Circular-Values-Math-and-Statistics-with-Cplusplus
+     * seems to give more intuitive results
+     */
+    static double angularMean(std::vector<double> const& angles)
+    {
+      double x = 0.0;
+      double y = 0.0;
+      for (auto a : angles)
+      {
+        x += sin(a);
+        y += cos(a);
+      }
+      return atan2(x / angles.size(), y / angles.size());
+    }
+
   private:
     Math() = delete;
   };
