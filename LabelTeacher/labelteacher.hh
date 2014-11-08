@@ -52,6 +52,11 @@ namespace bold
     unsigned getLabelToTrain() const { return d_labelToTrain; }
 
   private:
+    void updateState(cv::Mat const& mask) const;
+
+    static Colour::hsvRange determineRange(std::vector<Colour::hsv> const& samples);
+    static std::pair<Colour::hsv, Colour::hsv> determineDistribution(std::vector<Colour::hsv> const& samples);
+
     std::vector<std::shared_ptr<PixelLabel>> d_labels;
     cv::Mat d_yuvTrainImage;
     cv::Mat d_mask;

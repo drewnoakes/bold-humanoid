@@ -57,6 +57,7 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
       d_seedPoint = Eigen::Vector2i{x, y};
 
       d_mask = floodFill();
+      updateState(d_mask);
     });
 
   Config::addAction("label-teacher.train", "Train", [this]() {
@@ -99,7 +100,86 @@ cv::Mat LabelTeacher::floodFill() const
     
   return mask;
 }
+
+void LabelTeacher::updateState(cv::Mat const& mask) const
+{
+  ASSERT(mask.type() == CV_8UC1);
+  ASSERT(d_yuvTrainImage.cols == mask.cols && d_yuvTrainImage.rows == mask.rows);
+
+  vector<Colour::hsv> samples;
+  for (int i = 0; i < mask.rows; ++i)
+  {
+    uint8_t const* trainImageRow = d_yuvTrainImage.ptr<uint8_t>(i);
+    uint8_t const* maskRow = mask.ptr<uint8_t>(i);
+
+    for (int j = 0; j < mask.cols; ++j)
+      if (maskRow[j] != 0)
+      {
+        auto yuv = Colour::YCbCr{trainImageRow[j * 3 + 0], trainImageRow[j * 3 + 1], trainImageRow[j * 3 + 2]};
+        auto bgr = yuv.toBgrInt();
+        auto hsv = bgr2hsv(bgr);
+
+        samples.push_back(hsv);
+      }
+  }
   
+  auto range = determineRange(samples);
+  auto distribution = determineDistribution(samples);
+
+  State::make<LabelTeacherState>(range);
+}
+
+Colour::hsvRange LabelTeacher::determineRange(const std::vector<Colour::hsv> &samples)
+{
+  auto range = Colour::hsvRange{255, 0, 255, 0, 255, 0};
+  for (auto const& hsv : samples)
+  {
+    range.hMin = min(range.hMin, hsv.h);
+    range.hMax = max(range.hMax, hsv.h);
+    range.sMin = min(range.sMin, hsv.s);
+    range.sMax = max(range.sMax, hsv.s);
+    range.vMin = min(range.vMin, hsv.v);
+    range.vMax = max(range.vMax, hsv.v);
+  }
+  return range;
+}
+
+pair<Colour::hsv, Colour::hsv> LabelTeacher::determineDistribution(const std::vector<Colour::hsv> &samples)
+{
+  auto radians = std::vector<double>(samples.size());
+  std::transform(std::begin(samples), std::end(samples), 
+                 std::begin(radians),
+                 [](Colour::hsv const& hsv) { return double(hsv.h) / 127.5 * M_PI; });
+  
+  double hMean = Math::angularMean(radians);
+  double hSigma = 0;
+  double sMean = 0;
+  double sSigma = 0;
+  double vMean = 0;
+  double vSigma = 0;
+  for (unsigned i = 0; i < samples.size(); ++i)
+  {
+    auto const& hsv = samples[i];
+    double hDiff = Math::shortestAngleDiffRads(radians[i], hMean);
+    hSigma += hDiff * hDiff;
+
+    sMean += hsv.s;
+    sSigma += double(hsv.s) * hsv.s;
+    
+    vMean += hsv.v;
+    vSigma += double(hsv.v) * hsv.v;
+  }
+  hSigma = sqrt(hSigma / samples.size());
+  
+  sMean /= samples.size();
+  sSigma = sqrt(sSigma / samples.size() - sMean * sMean);
+
+  vMean /= samples.size();
+  vSigma = sqrt(vSigma / samples.size() - vMean * vMean);
+
+  return std::make_pair(Colour::hsv(hMean, sMean, vMean), Colour::hsv(hSigma, sSigma, vSigma));
+}
+
 void LabelTeacher::train(unsigned labelIdx, cv::Mat const& mask)
 {
   ASSERT(mask.type() == CV_8UC1);
