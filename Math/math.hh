@@ -90,9 +90,9 @@ namespace bold
      */
     static double shortestAngleDiffRads(double a1, double a2)
     {
-      // The fmod() function computes the floating-point remainder of dividing x by y.
-      // The return value is x - n * y, where n is the quotient of x / y, rounded
-      // toward zero to an integer.
+      // The fmod() function computes the floating-point remainder of
+      // dividing x by y.  The return value is x - n * y, where n is
+      // the quotient of x / y, rounded toward zero to an integer.
       double d = fmod(a2 - a1, 2*M_PI);
 
       d += (d > M_PI)
@@ -104,7 +104,9 @@ namespace bold
       return d;
     }
 
-    /** Returns the angle to a point, as defined in the agent frame, where zero is straight ahead and positive is to the left (counter-clockwise). */
+    /** Returns the angle to a point, as defined in the agent frame,
+     * where zero is straight ahead and positive is to the left
+     * (counter-clockwise). */
     template<int N>
     static double angleToPoint(Eigen::Matrix<double, N, 1> const& point)
     {
@@ -112,8 +114,13 @@ namespace bold
       return ::atan2(-point.x(), point.y());
     }
 
-    /** Returns the point at the given angle and distance, as defined in the agent frame, where zero is straight ahead and positive is to the left (counter-clockwise). */
-    static inline Eigen::Vector2d pointAtAngle(double angle, double distance) { return Eigen::Vector2d(cos(angle) * distance, sin(angle) * distance); }
+    /** Returns the point at the given angle and distance, as defined
+     * in the agent frame, where zero is straight ahead and positive
+     * is to the left (counter-clockwise). */
+    static inline Eigen::Vector2d pointAtAngle(double angle, double distance)
+    {
+      return Eigen::Vector2d(cos(angle) * distance, sin(angle) * distance);
+    }
 
   private:
     Math() = delete;
