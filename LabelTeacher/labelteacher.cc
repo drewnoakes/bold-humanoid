@@ -67,8 +67,6 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
   Config::addAction("label-teacher.label", "Label", [this]() {
       d_labelRequested = !d_labelRequested;
     });
-
-  State::make<LabelTeacherState>(Colour::hsvRange{0, 0, 0, 0, 0, 0});
 }
 
 std::vector<std::shared_ptr<PixelLabel>> LabelTeacher::getLabels() const
@@ -126,12 +124,14 @@ void LabelTeacher::updateState(cv::Mat const& mask) const
   auto range = determineRange(samples);
   auto distribution = determineDistribution(samples);
 
-  State::make<LabelTeacherState>(range);
+  State::make<LabelTeacherState>(range, distribution);
 }
 
 Colour::hsvRange LabelTeacher::determineRange(const std::vector<Colour::hsv> &samples)
 {
-  auto range = Colour::hsvRange{255, 0, 255, 0, 255, 0};
+  auto range = Colour::hsvRange{samples[0].h, samples[0].h,
+                                samples[0].s, samples[0].s,
+                                samples[0].v, samples[0].v};
   for (auto const& hsv : samples)
   {
     range.hMin = min(range.hMin, hsv.h);
@@ -170,7 +170,9 @@ pair<Colour::hsv, Colour::hsv> LabelTeacher::determineDistribution(const std::ve
     vSigma += double(hsv.v) * hsv.v;
   }
   hSigma = sqrt(hSigma / samples.size());
-  
+  hMean *= 127.5 / M_PI;
+  hSigma *= 127.5 / M_PI;
+
   sMean /= samples.size();
   sSigma = sqrt(sSigma / samples.size() - sMean * sMean);
 
