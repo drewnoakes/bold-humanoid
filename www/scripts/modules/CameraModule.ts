@@ -10,12 +10,14 @@ import color = require('color');
 import constants = require('constants');
 import control = require('control');
 import data = require('data');
+import state = require('state');
 import DOMTemplate = require('DOMTemplate');
 import HeadControls = require('controls/HeadControls');
 import mouse = require('util/mouse');
 import math = require('util/math');
 import Module = require('Module');
 import PixelLabelInspector = require('controls/PixelLabelInspector');
+import LabelTeacherInspector = require('controls/LabelTeacherInspector');
 
 var moduleTemplate = DOMTemplate.forId("camera-module-template");
 
@@ -25,6 +27,7 @@ class CameraModule extends Module
     private context: CanvasRenderingContext2D;
     private hoverPixelInfo: HTMLDivElement;
     private pixelLabelInspector: PixelLabelInspector;
+    private labelTeacherInspector: LabelTeacherInspector;
     private setSeedPointAction : Action;
 
     constructor()
@@ -70,14 +73,26 @@ class CameraModule extends Module
 
         var teacherControlsContainer = <HTMLElement>content.querySelector('div.label-teacher-controls');
 
-        control.buildSettings('histogram-label-teacher', teacherControlsContainer, this.closeables);
-        control.buildActions('histogram-label-teacher', teacherControlsContainer);
+        control.buildSettings('label-teacher', teacherControlsContainer, this.closeables);
+        control.buildActions('label-teacher', teacherControlsContainer);
+
+        var labelTeacherInspectorCanvas = <HTMLCanvasElement>content.querySelector('.label-teacher-inspector');
+        this.labelTeacherInspector = new LabelTeacherInspector(labelTeacherInspectorCanvas, 320, 120);
+        this.labelTeacherInspector.setVisible(true);
+        this.labelTeacherInspector.draw();
+
+        this.closeables.add(new data.Subscription<any>(
+            constants.protocols.labelTeacherState,
+            {
+                onmessage: this.onLabelTeacherState.bind(this)
+            }
+        ));
 
         this.closeables.add(control.getSetting('round-table.image-type').track(type => {
             teacherControlsContainer.style.display = type === constants.ImageType.Teacher ? 'block' : 'none';
         }));
 
-        this.setSeedPointAction = new Action({id: 'histogram-label-teacher.set-seed-point', label: 'Set Seed Point', hasArguments: true});
+        this.setSeedPointAction = new Action({id: 'label-teacher.set-seed-point', label: 'Set Seed Point', hasArguments: true});
     }
 
     public unload()
@@ -181,6 +196,7 @@ class CameraModule extends Module
         // For some good information on Blob:
         // https://www.inkling.com/read/javascript-definitive-guide-david-flanagan-6th/chapter-22/blobs
 
+
         // Wrap the untyped Blob data in order to specify the content type
         var imgBlob = new Blob([message.data], {type: 'image/jpeg'}),
             url = (<any>window).webkitURL || (<any>window).URL,
@@ -210,6 +226,13 @@ class CameraModule extends Module
 
         // Trigger the image to load from the object URL
         img.src = objectURL;
+    }
+
+    private onLabelTeacherState(data: state.LabelTeacher)
+    {
+        this.labelTeacherInspector.hsvRange = data.selectedRange;
+        this.labelTeacherInspector.hsvDist = data.selectedDist;
+        this.labelTeacherInspector.draw();
     }
 }
 
