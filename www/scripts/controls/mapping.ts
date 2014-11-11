@@ -68,12 +68,13 @@ export class Map
                 .multiply(this.transform.getValue()));
         });
 
-        this.layerContainer.addEventListener('mousewheel', e =>
+        this.layerContainer.addEventListener('wheel', (e: WheelEvent) =>
         {
+            console.log(e);
             mouse.polyfill(e);
             e.preventDefault();
 
-            var scale = Math.pow(1.1, e.wheelDelta / 80);
+            var scale = Math.pow(1.05, -e.deltaY);
             this.transform.setValue(new geometry.Transform()
                 .translate(e.offsetX, e.offsetY)
                 .scale(scale, scale)
