@@ -82,6 +82,7 @@ class PixelLabelInspector
         for (var componentIndex = 0; componentIndex < 3; componentIndex++) {
             if (componentIndex != 0) {
                 // Draw horizontal separator line
+                context.beginPath();
                 context.lineWidth = 1;
                 context.strokeStyle = 'rgba(0,0,0,0.3)';
                 canvasUtil.dashedLine(context, 0, Math.floor(y) + 0.5, this.canvas.width, y, [1, 1]);
@@ -147,6 +148,7 @@ class PixelLabelInspector
                 var hoverRatio = this.hsv['HSV'[componentIndex]],
                     hoverX = Math.floor(gutterWidth + hoverRatio * space) + 0.5;
 
+                context.beginPath();
                 context.strokeStyle = 'rgba(0,0,0,0.7)';
                 context.moveTo(hoverX, startY);
                 context.lineTo(hoverX, y);
