@@ -40,15 +40,9 @@ class CameraModule extends Module
         var content = <HTMLElement>moduleTemplate.create();
         this.element.appendChild(content);
 
-        this.cameraCanvas = <HTMLCanvasElement>content.querySelector('.camera-canvas');
-        this.cameraCanvas.width = constants.cameraImageWidth;
-        this.cameraCanvas.height = constants.cameraImageHeight;
+        this.loadCameraCanvas(content);
 
-        this.hoverPixelInfo = <HTMLDivElement>content.querySelector('.hover-pixel-info');
-
-        var pixelLabelInspectorCanvas = <HTMLCanvasElement>content.querySelector('.pixel-label-inspector');
-        this.pixelLabelInspector = new PixelLabelInspector(pixelLabelInspectorCanvas, 320, 120);
-        this.pixelLabelInspector.setVisible(false);
+        this.loadPixelLabelInspector(content);
 
         this.bindInteraction();
 
@@ -62,6 +56,28 @@ class CameraModule extends Module
             }
         ));
 
+        this.loadImageSettingsContainer(content);
+
+        this.loadLabelTeacher(content);
+    }
+
+    private loadCameraCanvas(content: HTMLElement)
+    {
+        this.cameraCanvas = <HTMLCanvasElement>content.querySelector('.camera-canvas');
+        this.cameraCanvas.width = constants.cameraImageWidth;
+        this.cameraCanvas.height = constants.cameraImageHeight;
+    }
+
+    private loadPixelLabelInspector(content: HTMLElement)
+    {
+        this.hoverPixelInfo = <HTMLDivElement>content.querySelector('.hover-pixel-info');
+        var pixelLabelInspectorCanvas = <HTMLCanvasElement>content.querySelector('.pixel-label-inspector');
+        this.pixelLabelInspector = new PixelLabelInspector(pixelLabelInspectorCanvas, 320, 120);
+        this.pixelLabelInspector.setVisible(false);
+    }
+
+    private loadImageSettingsContainer(content: HTMLElement)
+    {
         var imageSettingsContainer = <HTMLElement>content.querySelector('div.camera-module-controls');
         control.buildSetting('round-table.image-type', imageSettingsContainer, this.closeables);
         control.buildSetting('round-table.camera-frame-frequency', imageSettingsContainer, this.closeables);
@@ -70,7 +86,10 @@ class CameraModule extends Module
 
         control.buildSetting('head-module.move-fine', imageSettingsContainer, this.closeables);
         control.buildActions('head-module.look-at', imageSettingsContainer);
+    }
 
+    private loadLabelTeacher(content: HTMLElement)
+    {
         var teacherControlsContainer = <HTMLElement>content.querySelector('div.label-teacher-controls');
 
         control.buildSettings('label-teacher', teacherControlsContainer, this.closeables);
