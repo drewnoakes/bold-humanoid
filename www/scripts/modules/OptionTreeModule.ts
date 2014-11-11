@@ -58,7 +58,9 @@ class OptionTreeModule extends Module
 
         // Swallow mousedown events so that dragging graph elements
         // doesn't pick up the module instead.
-        graph.on('batch:start', () => window.event.stopPropagation());
+        graph.on('batch:start', () => {
+            !window.event || window.event.stopPropagation();
+        });
 
         // The view
         this.paper = new joint.dia.Paper({
@@ -139,9 +141,9 @@ class OptionTreeModule extends Module
 
             graph.addCell(block);
 
-            this.paper.findViewByModel(block).el.addEventListener('click', () =>
+            this.paper.findViewByModel(block).el.addEventListener('click', (e: MouseEvent) =>
             {
-                if (window.event.shiftKey)
+                if (e.shiftKey)
                     control.getAction("options.fsms." + fsm.name + ".goto").activate({ state: state.id });
             });
         });
