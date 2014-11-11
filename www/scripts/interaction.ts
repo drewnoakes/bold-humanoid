@@ -43,8 +43,8 @@ export class Dragger
 
     private onmousedown(e: MouseEvent)
     {
-        event.preventDefault();
-        event.stopImmediatePropagation();
+        e.preventDefault();
+        e.stopImmediatePropagation();
         Dragger.fixEvent(e);
         this.lastScreenPoint = { x: e.screenX, y: e.screenY };
         this.startScreenPoint = { x: e.screenX, y: e.screenY };

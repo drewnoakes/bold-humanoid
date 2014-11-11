@@ -505,12 +505,12 @@ class World3dModule extends Module
         var onMouseDownTheta = this.cameraTheta,
             onMouseDownPhi = this.cameraPhi;
 
-        container.addEventListener('mousewheel', event =>
+        container.addEventListener('mousewheel', e =>
         {
             if (!this.useThirdPerson.getValue())
                 return;
-            event.preventDefault();
-            this.cameraDistance *= 1 - (event.wheelDelta/720);
+            e.preventDefault();
+            this.cameraDistance *= 1 - (e.wheelDelta/720);
             this.cameraDistance = Math.max(0.1, Math.min(5, this.cameraDistance));
             this.updateCameraPosition();
             this.animator.setRenderNeeded();

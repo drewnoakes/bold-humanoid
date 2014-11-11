@@ -61,9 +61,9 @@ class ModuleHost
         link.className = 'module-button';
         link.href = '#';
         link.textContent = module.title;
-        link.addEventListener('click', event =>
+        link.addEventListener('click', e =>
         {
-            event.preventDefault();
+            e.preventDefault();
             if (this.elementById[module.id])
                 this.removeModule(module);
             else
@@ -117,9 +117,9 @@ class ModuleHost
             var fullScreenLink = document.createElement('a');
             fullScreenLink.href = '#';
             fullScreenLink.textContent = 'zoom';
-            fullScreenLink.addEventListener('click', event =>
+            fullScreenLink.addEventListener('click', e =>
             {
-                event.preventDefault();
+                e.preventDefault();
                 module.isFullScreen.setValue(!module.isFullScreen.getValue());
                 return false;
             });
@@ -143,9 +143,9 @@ class ModuleHost
         var closeLink = document.createElement('a');
         closeLink.href = '#';
         closeLink.textContent = 'close';
-        closeLink.addEventListener('click', event =>
+        closeLink.addEventListener('click', e =>
         {
-            event.preventDefault();
+            e.preventDefault();
             this.removeModule(module);
             return false;
         });

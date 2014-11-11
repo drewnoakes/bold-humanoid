@@ -61,28 +61,30 @@ export class Map
             }
         });
 
-        new interaction.Dragger(this.layerContainer, (evt: interaction.IDragEvent) =>
+        new interaction.Dragger(this.layerContainer, (e: interaction.IDragEvent) =>
         {
             this.transform.setValue(new geometry.Transform()
-                .translate(evt.lastDeltaX, evt.lastDeltaY)
+                .translate(e.lastDeltaX, e.lastDeltaY)
                 .multiply(this.transform.getValue()));
         });
 
-        this.layerContainer.addEventListener('mousewheel', event =>
+        this.layerContainer.addEventListener('mousewheel', e =>
         {
-            event.preventDefault();
-            var scale = Math.pow(1.1, event.wheelDelta / 80);
+            mouse.polyfill(e);
+            e.preventDefault();
+
+            var scale = Math.pow(1.1, e.wheelDelta / 80);
             this.transform.setValue(new geometry.Transform()
-                .translate(event.offsetX, event.offsetY)
+                .translate(e.offsetX, e.offsetY)
                 .scale(scale, scale)
-                .translate(-event.offsetX, -event.offsetY)
+                .translate(-e.offsetX, -e.offsetY)
                 .multiply(this.transform.getValue()));
         });
 
-        this.layerContainer.addEventListener('mousemove', event =>
+        this.layerContainer.addEventListener('mousemove', e =>
         {
-            mouse.polyfill(event);
-            this.hoverPoint.setValue(this.transform.getValue().clone().invert().transformPoint(event.offsetX, event.offsetY));
+            mouse.polyfill(e);
+            this.hoverPoint.setValue(this.transform.getValue().clone().invert().transformPoint(e.offsetX, e.offsetY));
         });
 
         this.layerContainer.addEventListener('mouseleave', () => this.hoverPoint.setValue(null));

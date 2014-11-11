@@ -148,16 +148,19 @@ class CameraModule extends Module
         var imageTypeSetting = control.getSetting('round-table.image-type');
 
         // If the image is clicked when shift is held, log the HSV value in the image to the console
-        this.cameraCanvas.addEventListener('click', event =>
+        this.cameraCanvas.addEventListener('click', e =>
         {
-            if (event.shiftKey) {
-                var point = this.scaleImagePoint(event.offsetX, event.offsetY),
+            mouse.polyfill(e);
+
+            if (e.shiftKey) {
+                var point = this.scaleImagePoint(e.offsetX, e.offsetY),
                     rgb = this.context.getImageData(point.x, point.y, 1, 1).data,
                     hsv = new color.Rgb(rgb[0]/255, rgb[1]/255, rgb[2]/255).toHsv();
                 console.log(Math.round(hsv.H * 255) + ',' + Math.round(hsv.S * 255) + ',' + Math.round(hsv.V * 255));
             }
-            else if (event.metaKey) {
-                this.setSeedPointAction.activate({x: constants.cameraImageWidth - event.offsetX, y:  constants.cameraImageHeight - event.offsetY});
+            else if (e.metaKey) {
+                this.setSeedPointAction.activate({x: Math.round(constants.cameraImageWidth - e.offsetX),
+                                                  y:  Math.round(constants.cameraImageHeight - e.offsetY)});
             }
         });
 
@@ -172,7 +175,7 @@ class CameraModule extends Module
             if (!this.context)
                 return;
             mouse.polyfill(e);
-            var point = this.scaleImagePoint(event.offsetX, event.offsetY),
+            var point = this.scaleImagePoint(e.offsetX, e.offsetY),
                 hoverX = this.cameraCanvas.clientWidth - 1 - point.x,
                 hoverY = this.cameraCanvas.clientHeight - 1 - point.y,
                 hoverText = 'Pos: ' + hoverX + ',' + hoverY;
