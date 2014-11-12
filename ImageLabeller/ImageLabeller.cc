@@ -77,8 +77,7 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
 
     for (int x = 0; x < image.cols; x += granularity.x())
     {
-      uchar l =
-        lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
+      uchar l = lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
       *labelledpix = l;
 
@@ -115,10 +114,9 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
           (horizonUpwards && x < horizonX) ||
           (!horizonUpwards && x > horizonX);
 
-        uchar l =
-          aboveHorizon ?
-          0 :
-          lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
+        uchar l = aboveHorizon
+          ? 0
+          : lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
         *labelledpix = l;
 
