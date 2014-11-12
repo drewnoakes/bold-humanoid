@@ -19,6 +19,11 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
       log::info("HistogramLabelTeacherBase") << "Setting maxFloodDiff: " << d_maxFloodDiff;
     });
 
+  Config::getSetting<double>("label-teacher.sigma-range")->track([this](int val) {
+      d_sigmaRange = val;
+      log::info("HistogramLabelTeacherBase") << "Setting sigmaRange: " << d_sigmaRange;
+    });
+
   std::map<int, std::string> enumOptions;
   for (unsigned i = 0; i < labels.size(); ++i)
     enumOptions[i] = labels[i]->getName();

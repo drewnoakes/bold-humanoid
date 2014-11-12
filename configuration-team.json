@@ -230,6 +230,7 @@
   },
   "label-teacher": {
     "max-flood-diff": 4,
+    "sigma-range": 2,
     "fixed-range": false
   },
   "game-controller": {
