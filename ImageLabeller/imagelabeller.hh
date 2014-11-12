@@ -37,12 +37,6 @@ namespace bold
      */
     void label(cv::Mat const& image, cv::Mat& labelled, SequentialTimer& timer, std::function<Eigen::Vector2i(int)> granularityFunction, bool ignoreAboveHorizon = false) const;
 
-    /**
-     * Generates an image in which each pixel is coloured according to the label
-     * assigned to it. The result looks like a cartoon, or paint-by-numbers.
-     */
-    static void createCartoon(cv::Mat& labelledInput, cv::Mat& cartoonOutput, std::vector<bold::PixelLabel> const& labels);
-
   private:
     std::shared_ptr<uchar const> d_LUT;
     std::shared_ptr<Spatialiser> d_spatialiser;

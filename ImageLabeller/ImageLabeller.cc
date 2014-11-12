@@ -141,35 +141,3 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
     timer.timeEvent("Pixels Above");
   }
 }
-
-void ImageLabeller::createCartoon(Mat& labelledInput, Mat& cartoonOutput, vector<bold::PixelLabel> const& labels)
-{
-  map<uchar,Colour::bgr> colorByLabel;
-
-  for (PixelLabel const& label : labels)
-  {
-    colorByLabel[(uint8_t)label.getID()] = label.modalColour().toBgr();
-  }
-
-  for (int y = 0; y < labelledInput.rows; y++)
-  {
-    uchar* in = labelledInput.ptr<uchar>(y);
-    Colour::bgr* out = cartoonOutput.ptr<Colour::bgr>(y);
-
-    for(int x = 0; x < labelledInput.cols; x++)
-    {
-      uchar labelId = *(in++);
-
-      if (labelId != 0)
-      {
-        auto it = colorByLabel.find(labelId);
-        if (it != colorByLabel.end())
-        {
-          *out = it->second;
-        }
-      }
-
-      out++;
-    }
-  }
-}
