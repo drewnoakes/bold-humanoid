@@ -7,7 +7,7 @@ if [[ $1 == "help" ]] ; then
 fi
 
 if [[ $# -eq 0 ]] ; then
-    if [ -z $(pkill -9 boldhumanoid) ]
+    if [ -z $(pkill -f boldhumanoid) ]
     then
         echo "$(tput setaf 2)Boldhumanoid process successfully killed $(tput sgr 0)"
     else
@@ -17,7 +17,7 @@ fi
 
 for i in ${@:1}
 do
-    if [ -z $(ssh darwin@darwin$i.local "sudo pkill -9 boldhumanoid") ]
+    if [ -z $(ssh darwin@darwin$i.local "sudo pkill -f boldhumanoid") ]
     then
         echo "$(tput setaf 2)Boldhumanoid process successfully killed $(tput sgr 0)"
     else
