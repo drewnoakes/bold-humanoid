@@ -19,7 +19,7 @@ namespace bold
   class ImagePassHandler
   {
   public:
-    virtual ~ImagePassHandler() {}
+    virtual ~ImagePassHandler() = default;
 
     /** Processing of an image frame is about to begin. */
     virtual void onImageStarting(SequentialTimer& timer) {}
