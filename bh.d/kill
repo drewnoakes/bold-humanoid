@@ -9,18 +9,26 @@ fi
 if [[ $# -eq 0 ]] ; then
     if [ -z $(pkill -f boldhumanoid) ]
     then
-        echo "$(tput setaf 2)Boldhumanoid process successfully killed $(tput sgr 0)"
+        echo "$(tput setaf 2)local boldhumanoid process successfully killed $(tput sgr 0)"
     else
-        echo "$(tput setaf 1)Boldhumanoid process was not killed$(tput sgr 0)"
+        echo "$(tput setaf 1)local boldhumanoid process was not killed$(tput sgr 0)"
     fi
 fi
 
-for i in ${@:1}
-do
-    if [ -z $(ssh darwin@darwin$i.local "sudo pkill -f boldhumanoid") ]
-    then
-        echo "$(tput setaf 2)Boldhumanoid process successfully killed $(tput sgr 0)"
-    else
-        echo "$(tput setaf 1)Boldhumanoid process was not killed$(tput sgr 0)"
-    fi
-done
+# load common functions
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
+
+remote_kill()
+{
+    ssh darwin@darwin$1.local "sudo pkill -f boldhumanoid"
+
+    report_result $1 $?
+}
+
+export -f remote_kill
+
+parallel -j0 remote_kill ::: ${@:1}

@@ -1,0 +1,46 @@
+report_result()
+{
+    tput setaf 4; tput bold; echo -n "darwin$1"; tput sgr0; echo -n ": "; tput bold
+
+    if [ $2 -eq 0 ]; then
+        tput setaf 2
+        if [ $# -ne 2 ]; then
+            echo -n "${@:3}"
+        else
+            echo -n "OK"
+        fi
+    else
+        tput setaf 1
+        if [ $# -ne 2 ]; then
+            echo -n "${@:3}"
+        else
+            echo -n "FAILED"
+        fi
+    fi
+
+    tput sgr 0
+    echo
+}
+
+report_success()
+{
+  report_result $1 0 $2
+}
+
+report_failure()
+{
+  report_result $1 1 $2
+}
+
+remote_say()
+{
+    ssh darwin@darwin$1.local "espeak -p 0 -s 130 -v english-mb-en1 \"$2\"" 2> /dev/null &
+}
+
+# export 'public' functions
+
+export -f report_result
+export -f report_success
+export -f report_failure
+
+export -f remote_say

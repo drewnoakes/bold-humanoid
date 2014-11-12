@@ -6,6 +6,13 @@ if [[ "$1" == "help" ]] ; then
     exit
 fi
 
+# load common functions
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
+
 # TODO don't couple this to remote name drew, host name drew, ssh target drew@bert, drew's config file
 
 touch version.cc.in
@@ -13,13 +20,13 @@ touch version.cc.in
 # fetch multiple repos, hard-reset to remote version of current branch,
 # and build on one core
 
-git fetch --multiple bert \
- && git reset --hard bert/`git rev-parse --abbrev-ref HEAD` \
- && git submodule init \
- && git submodule update \
- && jsonlint -q *.json \
- && touch Version/version.cc Version/version.cc.in \
- && make -j 2 boldhumanoid \
+git fetch --multiple bert                                     \
+ && git reset --hard bert/`git rev-parse --abbrev-ref HEAD`   \
+ && git submodule init                                        \
+ && git submodule update                                      \
+ && jsonlint -q *.json                                        \
+ && touch Version/version.cc Version/version.cc.in            \
+ && make -j 2 boldhumanoid                                    \
  && git log -5 --oneline
 
 # if there was an error, propagate it
@@ -43,26 +50,29 @@ strip boldhumanoid
 
 # deploy to specified robot(s)
 
-for i in ${@:1}
-do
-  echo "deploying to darwin$i.local" \
-   && rsync -zrP boldhumanoid \
-                 configuration-team.json \
-                 configuration-hatfield.json \
-                 configuration-drews.json \
-                 configuration-berlin.json \
-                 configuration-metadata.json \
-                 configuration-iran-open-2014.json \
-                 configuration-rc2014.json \
-                 darwin@darwin$i.local:
+remote_vm_deploy()
+{
+    rsync -zrP boldhumanoid                        \
+               configuration-team.json             \
+               configuration-hatfield.json         \
+               configuration-drews.json            \
+               configuration-berlin.json           \
+               configuration-metadata.json         \
+               configuration-iran-open-2014.json   \
+               configuration-rc2014.json           \
+               darwin@darwin$1.local:
 
-  if [[ $? -eq 0 ]] ; then
-    ssh darwin@darwin$i.local 'espeak -p 0 -s 130 -v english-mb-en1 "Deployment complete"' 2> /dev/null &
-  else
-    echo FAILED to deploy to darwin$i.local
-    res=1
-  fi
-done
+    if [ $? -eq 0 ]; then
+        remote_say $1 "Deployment complete"
+        report_result $1 0
+    else
+        report_result $1 1
+    fi
+}
+
+export -f remote_vm_deploy
+
+parallel -j0 remote_vm_deploy ::: ${@:1}
 
 # if all went well, log out some stats about what was built so it's
 # easy to see when coming back to the vm later

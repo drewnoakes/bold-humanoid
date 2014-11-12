@@ -7,7 +7,7 @@ if [[ $1 == "help" ]] ; then
 fi
 
 if [[ $# -eq 0 ]] ; then
-    echo "deploy-py requires one or more target robot numbers"
+    echo "Must specify at least one robot number"
     exit 1
 fi
 

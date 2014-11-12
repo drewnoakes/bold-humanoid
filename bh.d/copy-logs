@@ -7,24 +7,28 @@ if [[ $1 == "help" ]] ; then
 fi
 
 if [[ $# -eq 0 ]] ; then
-    echo "copy-logs requires one or more target robot numbers"
+    echo "Must specify at least one robot number"
     exit 1
 fi
 
-mkdir -p remote-logs
+# load common functions
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
 
-for i in ${@:1}
-do
-    echo copying log file from darwin$i.local to remote-logs/darwin$i
+remote_copy_logs()
+{
+    mkdir -p $BOLD_HUMANOID_DIR/remote-logs/darwin$1
 
-    mkdir -p $BOLD_HUMANOID_DIR/remote-logs/darwin$i
+    scp -C -p darwin@darwin$1.local:log/* $BOLD_HUMANOID_DIR/remote-logs/darwin$1
 
-    scp darwin@darwin$i.local:log/* $BOLD_HUMANOID_DIR/remote-logs/darwin$i
+    report_result $1 $?
+}
 
-    if [ $? -ne 0 ]; then
-        echo FAILED to copy from darwin$i.local
-        res=1
-    fi
-done
+export -f remote_copy_logs
 
-exit $res
+mkdir -p $BOLD_HUMANOID_DIR/remote-logs
+
+parallel -j0 remote_copy_logs ::: ${@:1}

@@ -11,14 +11,20 @@ if [[ $# -eq 0 ]] ; then
     exit $?
 fi
 
-for i in ${@:1}
-do
-    ssh darwin@darwin$i.local "sudo restart boldhumanoid"
+# load common functions
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
 
-    if [ $? -ne 0 ]; then
-        echo FAILED to restart the boldhumanoid service to darwin$i.local
-        res=1
-    fi
-done
+remote_restart()
+{
+    ssh darwin@darwin$1.local "sudo restart boldhumanoid"
 
-exit $res
+    report_result $1 $?
+}
+
+export -f remote_restart
+
+parallel -j0 remote_restart ::: ${@:1}

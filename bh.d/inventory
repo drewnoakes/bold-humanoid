@@ -7,17 +7,20 @@ if [[ $1 == "help" ]] ; then
 fi
 
 if [[ $# -eq 0 ]] ; then
-    echo "inventory requires one or more target robot numbers"
+    echo "Must specify at least one robot number"
     exit 1
 fi
 
-res=0
+# load common functions
+if [ -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
 
-for i in ${@:1}
-do
-  echo Capturing inventory record of darwin$i
-
-  ssh darwin$i "echo Data as of \`date\` on \`hostname\`                       \
+remote_inventory_capture()
+{
+  ssh darwin$1 "echo Data as of \`date\` on \`hostname\`                       \
              && echo                                                           \
              && lsb_release -a 2> /dev/null                                    \
              && echo                                                           \
@@ -88,16 +91,18 @@ do
              && echo $ dpkg-query                                              \
              && echo                                                           \
              && dpkg-query -W -f='\${Package;-40}\t\${Installed-Size;8}\t\${Status;1}\t\${Version}\n' | grep -v \"\sd\s\" | sort | cut -f1,2,4-" \
-              > $BOLD_HUMANOID_DIR/inventory/temp
+              > $BOLD_HUMANOID_DIR/inventory/temp$1
 
-  if [ $? -ne 0 ]
-  then
-    echo FAILED to update to darwin$i
-    res=1
-    rm $BOLD_HUMANOID_DIR/inventory/temp
-  else
-    mv $BOLD_HUMANOID_DIR/inventory/temp $BOLD_HUMANOID_DIR/inventory/darwin$i
-  fi
-done
+    if [ $? -eq 0 ]
+    then
+        report_result $1 0
+        mv $BOLD_HUMANOID_DIR/inventory/temp$1 $BOLD_HUMANOID_DIR/inventory/darwin$1
+    else
+        report_result $1 1
+        rm $BOLD_HUMANOID_DIR/inventory/temp$1
+    fi
+}
 
-exit $res
+export -f remote_inventory_capture
+
+parallel -j0 remote_inventory_capture ::: ${@:1}

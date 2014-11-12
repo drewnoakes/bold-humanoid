@@ -7,44 +7,53 @@ if [[ $1 == "help" ]] ; then
 fi
 
 if [[ $# -eq 0 ]] ; then
-    echo "deploy requires one or more target robot numbers"
+    echo "Must specify at least one robot number"
     exit 1
 fi
 
-for i in ${@:1}
-do
-    echo deploying to darwin$i.local
+# load common functions
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
 
-    # deploy the web bundle
-    rsync --recursive --human-readable --progress --stats --delete www/dist/ darwin@darwin$i.local:www
+remote_deploy()
+{
+    rsync --quiet --recursive --compress --delete        \
+        www/dist/                                        \
+        darwin@darwin$1.local:www                        \
+    &&                                                   \
+    rsync --quiet --recursive --compress --relative      \
+        motionscripts                                    \
+        configuration-team.json                          \
+        configuration-hatfield.json                      \
+        configuration-iran-open-2014.json                \
+        configuration-rc2014.json                        \
+        configuration-drews.json                         \
+        configuration-metadata.json                      \
+        boldhumanoid.py                                  \
+        boldpy                                           \
+        bh                                               \
+        bh.d                                             \
+        bh_completion                                    \
+        .bash_team                                       \
+        boldhumanoid                                     \
+        setnw.py                                         \
+        upstart.conf                                     \
+        darwin@darwin$1.local:
 
-    rsync --recursive --human-readable --relative --progress --stats \
-        motionscripts                      \
-        configuration-team.json            \
-        configuration-hatfield.json        \
-        configuration-iran-open-2014.json  \
-        configuration-rc2014.json          \
-        configuration-drews.json           \
-        configuration-metadata.json        \
-        boldhumanoid.py                    \
-        boldpy                             \
-        bh                                 \
-        bh.d                               \
-        bh_completion                      \
-        .bash_team                         \
-        boldhumanoid                       \
-        swig/bold.py                       \
-        swig/_bold.so                      \
-        setnw.py                           \
-        upstart.conf                       \
-        darwin@darwin$i.local:
+#       swig/bold.py                                     \
+#       swig/_bold.so                                    \
 
-    ssh darwin@darwin$i.local 'espeak -p 0 -s 130 -v english-mb-en1 "Full deployment complete"' 2> /dev/null &
-
-    if [ $? -ne 0 ]; then
-        echo FAILED to deploy to darwin$i.local
-        res=1
+    if [ $? -eq 0 ]; then
+        remote_say $1 "Full deployment complete"
+        report_result $1 0
+    else
+        report_result $1 1
     fi
-done
+}
 
-exit $res
+export -f remote_deploy
+
+parallel -j0 remote_deploy ::: ${@:1}

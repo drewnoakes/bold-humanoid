@@ -6,16 +6,22 @@ if [[ $1 == "help" ]] ; then
     exit
 fi
 
+# load common functions
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
+
 ESSID=$1
 
-for i in ${@:2}
-do
-    ssh darwin@darwin$i.local "sudo ./setnw.py ${ESSID} && sudo service wicd restart"
+remote_set_wlan_essid()
+{
+    ssh darwin@darwin$1.local "sudo ./setnw.py $2 && sudo service wicd restart"
 
-    if [ $? -ne 0 ]; then
-        echo FAILED to set the network for darwin$i.local
-        res=1
-    fi
-done
+    report_result $1 $?
+}
 
-exit $res
+export -f remote_set_wlan_essid
+
+parallel -j0 remote_set_wlan_essid {} $1 ::: ${@:2}

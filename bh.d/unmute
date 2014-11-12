@@ -11,14 +11,25 @@ if [[ $# -eq 0 ]] ; then
     exit
 fi
 
-for i in ${@:1}
-do
-    ssh darwin@darwin$i.local "amixer set Master playback 95% unmute" > /dev/null
+# load common functions
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
 
-    if [ $? -ne 0 ]; then
-        echo FAILED to unmute darwin$i.local
-        res=1
+remote_unmute()
+{
+    ssh darwin@darwin$1.local "amixer set Master playback 95% unmute" > /dev/null
+
+    if [ $? -eq 0 ]; then
+        remote_say $1 Unmuted
+        report_success $1
+    else
+        report_failure $1
     fi
-done
+}
 
-exit $res
+export -f remote_unmute
+
+parallel -j0 remote_unmute ::: ${@:1}

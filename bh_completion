@@ -3,6 +3,6 @@ _bh_show()
     local cur
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
-    COMPREPLY=($( compgen -W "$(for x in $BOLD_HUMANOID_DIR/bh.d/*; do echo $(basename ${x%}); done)" -- $cur ) )
+    COMPREPLY=($( compgen -W "$(for x in $BOLD_HUMANOID_DIR/bh.d/[^_]*; do echo $(basename ${x%}); done)" -- $cur ) )
 }
 complete -F _bh_show bh

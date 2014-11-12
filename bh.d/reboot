@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 if [[ $1 == "help" ]] ; then
-    echo "   bh halt N [M...]"
-    echo "          shut down the specified robot(s)"
+    echo "   bh reboot N [M...]"
+    echo "          reboot the specified robot(s)"
     exit
 fi
 
@@ -18,13 +18,13 @@ if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
 fi
 source ${BOLD_HUMANOID_DIR}/bh.d/_functions
 
-remote_halt()
+remote_reboot()
 {
-    ssh darwin@darwin$1.local "sudo halt"
+    ssh darwin@darwin$1.local "sudo reboot"
 
-    remote_halt $1 $?
+    remote_reboot $1 $?
 }
 
-export -f remote_halt
+export -f remote_reboot
 
-parallel -j0 remote_halt ::: ${@:1}
+parallel -j0 remote_reboot ::: ${@:1}
