@@ -30,7 +30,7 @@ namespace bold
       timer.timeEvent("Clear");
     }
 
-    void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override
+    void onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) override
     {
       d_ptr = d_mat.ptr<uchar>(y);
       d_dx = granularity.x();

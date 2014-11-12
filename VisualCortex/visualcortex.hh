@@ -158,7 +158,7 @@ namespace bold
 
     std::unique_ptr<LabelTeacher<6>> d_labelTeacher;
 
-    std::function<Eigen::Vector2i(int)> d_granularityFunction;
+    std::function<Eigen::Matrix<uchar,2,1>(int)> d_granularityFunction;
 
     /** A cached Mat, to be re-used each image pass. */
     cv::Mat d_labelledImage;

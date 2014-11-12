@@ -10,6 +10,7 @@
 
 namespace bold
 {
+  class ImageSampleMap;
   class SequentialTimer;
   class Spatialiser;
 
@@ -35,7 +36,7 @@ namespace bold
      * @param image The input, colour image.
      * @param labelled The target image, in which labels are stored per-pixel.
      */
-    void label(cv::Mat const& image, cv::Mat& labelled, SequentialTimer& timer, std::function<Eigen::Vector2i(int)> granularityFunction, bool ignoreAboveHorizon = false) const;
+    void label(cv::Mat const& image, cv::Mat& labelled, SequentialTimer& timer, ImageSampleMap const& sampleMap, bool ignoreAboveHorizon = false) const;
 
   private:
     std::shared_ptr<uchar const> d_LUT;

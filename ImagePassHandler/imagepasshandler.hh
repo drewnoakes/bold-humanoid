@@ -25,10 +25,10 @@ namespace bold
     virtual void onImageStarting(SequentialTimer& timer) {}
 
     /** The row 'y' is about to start. */
-    virtual void onRowStarting(ushort y, Eigen::Vector2i const& granularity) {}
+    virtual void onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) {}
 
     /** The row 'y' has completed. */
-    virtual void onRowCompleted(ushort y, Eigen::Vector2i const& granularity) {}
+    virtual void onRowCompleted(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) {}
 
     /**
      * The pixel at 'x', 'y', has a label of 'labelId'.

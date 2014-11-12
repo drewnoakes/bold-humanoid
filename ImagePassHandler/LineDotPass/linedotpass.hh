@@ -73,7 +73,7 @@ namespace bold
       timer.timeEvent("Clear");
     }
 
-    void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override
+    void onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) override
     {
       d_rowTracker->reset();
       d_rowTracker->otherCoordinate = y;

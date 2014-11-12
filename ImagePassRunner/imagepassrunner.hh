@@ -7,6 +7,7 @@
 #include <set>
 
 #include "../ImagePassHandler/imagepasshandler.hh"
+#include "../ImageSampleMap/imagesamplemap.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../util/assert.hh"
 #include "../util/meta.hh"
@@ -70,33 +71,29 @@ namespace bold
      * @param granularityFunction The function used to determine
      * granularity within the image.
      */
-    long pass(cv::Mat const& image, std::function<Eigen::Vector2i(int)> const& granularityFunction, SequentialTimer& timer) const
+    void pass(cv::Mat const& image,
+              ImageSampleMap const& sampleMap,
+              SequentialTimer& timer) const
     {
       ASSERT(image.rows);
       ASSERT(image.cols);
       ASSERT(d_handlers.size());
 
-      long pixelCount = 0;
-
       for (auto const& handler : d_handlers)
       {
         timer.enter(handler->id());
 
-        Eigen::Vector2i granularity;
+        auto granularity = sampleMap.begin();
 
         handler->onImageStarting(timer);
 
-        for (int y = 0; y < image.rows; y += granularity.y())
+        for (ushort y = 0; y < image.rows; y += granularity->y(), granularity++)
         {
-          granularity = granularityFunction(y);
-
-          pixelCount += image.cols / granularity.x();
-
           TPixel const* row = image.ptr<TPixel>(y);
 
-          handler->onRowStarting(y, granularity);
+          handler->onRowStarting(y, *granularity);
 
-          int dx = granularity.x();
+          int dx = granularity->x();
           for (int x = 0; x < image.cols; x += dx)
           {
             TPixel value = row[x];
@@ -104,7 +101,7 @@ namespace bold
             handler->onPixel(value, x, y);
           }
 
-          handler->onRowCompleted(y, granularity);
+          handler->onRowCompleted(y, *granularity);
         }
 
         timer.timeEvent("Pass");
@@ -113,7 +110,6 @@ namespace bold
 
         timer.exit();
       }
-      return pixelCount / d_handlers.size();
     }
 
     /** Passes over the image with the given handler
@@ -131,8 +127,9 @@ namespace bold
      * granularity within the image.
      */
     template<typename T>
-    long passWithHandler(std::shared_ptr<T> handler,
-                         cv::Mat const& image, std::function<Eigen::Vector2i(int)> const& granularityFunction,
+    void passWithHandler(std::shared_ptr<T> handler,
+                         cv::Mat const& image,
+                         ImageSampleMap const& sampleMap,
                          SequentialTimer& timer) const
     {
       ASSERT(image.rows);
@@ -141,22 +138,17 @@ namespace bold
 
       timer.enter(handler->id());
 
-      long pixelCount = 0;
-      Eigen::Vector2i granularity;
+      auto granularity = sampleMap.begin();
 
       handler->T::onImageStarting(timer);
 
-      for (int y = 0; y < image.rows; y += granularity.y())
+      for (int y = 0; y < image.rows; y += granularity->y(), granularity++)
       {
-        granularity = granularityFunction(y);
-
-        pixelCount += image.cols / granularity.x();
-
         TPixel const* row = image.ptr<TPixel>(y);
 
-        handler->T::onRowStarting(y, granularity);
+        handler->T::onRowStarting(y, *granularity);
 
-        int dx = granularity.x();
+        int dx = granularity->x();
         for (int x = 0; x < image.cols; x += dx)
         {
           TPixel value = row[x];
@@ -164,7 +156,7 @@ namespace bold
           handler->T::onPixel(value, x, y);
         }
 
-        handler->T::onRowCompleted(y, granularity);
+        handler->T::onRowCompleted(y, *granularity);
       }
 
       timer.timeEvent("Pass");
@@ -172,8 +164,6 @@ namespace bold
       handler->T::onImageComplete(timer);
 
       timer.exit();
-
-      return pixelCount;
     }
 
     /** Passes over the image, calling out to all ImagePassHandlers in
@@ -191,14 +181,12 @@ namespace bold
      */
 
     template<typename... Types>
-    long passWithHandlers(std::tuple<Types...> const& handlers,
+    void passWithHandlers(std::tuple<Types...> const& handlers,
                           cv::Mat const& image,
-                          std::function<Eigen::Vector2i(int)> const& granularityFunction,
+                          ImageSampleMap const& sampleMap,
                           SequentialTimer& timer) const
     {
-      long pixelCount = 0;
-      meta::for_each<PassWrapper>(handlers, this, pixelCount, image, granularityFunction, timer);
-      return pixelCount;
+      meta::for_each<PassWrapper>(handlers, this, image, sampleMap, timer);
     }
 
   private:
@@ -207,15 +195,14 @@ namespace bold
       template<typename Handler>
       static void do_it(std::shared_ptr<Handler> handler,
                         ImagePassRunner const* runner,
-                        long& pixelCount,
                         cv::Mat const& image,
-                        std::function<Eigen::Vector2i(int)> const& granularityFunction,
+                        ImageSampleMap const& sampleMap,
                         SequentialTimer& timer)
       {
         // TODO: disabling this makes direct pass faster??
         // In any case good to prevent this check at every pass again
         if (runner->isEnabled(handler))
-          pixelCount += runner->passWithHandler(handler, image, granularityFunction, timer);
+          runner->passWithHandler(handler, image, sampleMap, timer);
       }
     };
 

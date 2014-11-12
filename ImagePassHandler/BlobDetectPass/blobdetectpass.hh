@@ -108,7 +108,7 @@ namespace bold
 
     void onImageStarting(SequentialTimer& timer) override;
 
-    void onRowStarting(ushort y, Eigen::Vector2i const& granularity) override;
+    void onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) override;
 
     void onPixel(uint8_t label, ushort x, ushort y) override;
 
@@ -175,7 +175,7 @@ namespace bold
     }
   }
 
-  inline void BlobDetectPass::onRowStarting(ushort y, Eigen::Vector2i const& granularity)
+  inline void BlobDetectPass::onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity)
   {
     // TODO VISION might miss last run on last row with this approach -- add
     // onRowEnding, or copy into onImageComplete

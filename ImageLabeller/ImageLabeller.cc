@@ -1,5 +1,6 @@
 #include "imagelabeller.hh"
 
+#include "../ImageSampleMap/imagesamplemap.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../Spatialiser/spatialiser.hh"
 #include "../Math/math.hh"
@@ -27,7 +28,7 @@ void ImageLabeller::updateLut(shared_ptr<uchar const> const& lut)
   d_LUT = lut;
 }
 
-void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& timer, function<Vector2i(int)> granularityFunction, bool ignoreAboveHorizon) const
+void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& timer, ImageSampleMap const& sampleMap, bool ignoreAboveHorizon) const
 {
   // Make a threadsafe copy of the shared ptr, in case another thread reassigns the LUT (avoids segfault)
   unique_lock<mutex> guard(d_lutMutex);
@@ -62,28 +63,29 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
 
   timer.timeEvent("Find Horizon");
 
+  auto granularity = sampleMap.begin();
   int y = 0;
-  Vector2i granularity;
 
   minHorizonY = min(minHorizonY, image.rows);
 
   // First batch: everything guaranteed under the horizon
-  for (; y < minHorizonY; y += granularity.y())
+  while (y < minHorizonY)
   {
-    granularity = granularityFunction(y);
-
     uchar const* origpix = image.ptr<uchar>(y);
     uchar* labelledpix = labelled.ptr<uchar>(y);
 
-    for (int x = 0; x < image.cols; x += granularity.x())
+    for (int x = 0; x < image.cols; x += granularity->x())
     {
       uchar l = lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
       *labelledpix = l;
 
-      origpix += granularity.x() * 3;
-      labelledpix += granularity.x();
+      origpix += granularity->x() * 3;
+      labelledpix += granularity->x();
     }
+
+    y += granularity->y();
+    granularity++;
   }
 
   timer.timeEvent("Pixels Under");
@@ -95,10 +97,8 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
     bool horizonUpwards = maxXHorizonY > minXHorizonY;
 
     // Second batch: horizon goes through these rows
-    for (; y < maxHorizonY && y < image.rows; y += granularity.y())
+    while(y < maxHorizonY && y < image.rows)
     {
-      granularity = granularityFunction(y);
-
       uchar const* origpix = image.ptr<uchar>(y);
       uchar* labelledpix = labelled.ptr<uchar>(y);
 
@@ -108,7 +108,7 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
       // TODO: wrap two loops in for loop? Our Atom can't do branch
       // prediction, so doing same check inside loop may be costly
       // We can also directly fill the line we know to be 0
-      for (int x = 0; x < image.cols; x += granularity.x())
+      for (int x = 0; x < image.cols; x += granularity->x())
       {
         bool aboveHorizon =
           (horizonUpwards && x < horizonX) ||
@@ -120,20 +120,23 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
 
         *labelledpix = l;
 
-        origpix += granularity.x() * 3;
-        labelledpix += granularity.x();
+        origpix += granularity->x() * 3;
+        labelledpix += granularity->x();
       }
+
+      y += granularity->y();
+      granularity++;
     }
 
     timer.timeEvent("Pixels Around");
 
     // Third batch: everything here is above the horizon
-    for (; y < image.rows; y += granularity.y())
+    while (y < image.rows)
     {
-      granularity = granularityFunction(y);
-
-      uchar* labelledpix = labelled.ptr<uchar>(y);
-      memset(labelledpix, 0, image.cols);
+      uchar* labelledPx = labelled.ptr<uchar>(y);
+      memset(labelledPx, 0, image.cols);
+      y += granularity->y();
+      granularity++;
     }
 
     timer.timeEvent("Pixels Above");

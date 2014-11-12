@@ -1,5 +1,7 @@
 #include "visualcortex.ih"
 
+#include "../ImageSampleMap/imagesamplemap.hh"
+
 void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCycleNumber)
 {
   //
@@ -18,6 +20,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
   {
     log::info("Label Teacher") << "Setting train image";
     d_labelTeacher->setYUVTrainImage(image);
+    t.timeEvent("Save YUV Training Image");
   }
 
   //
@@ -28,17 +31,18 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
   if (d_labelledImage.rows != image.rows || d_labelledImage.cols != image.cols)
     d_labelledImage = Mat(image.rows, image.cols, CV_8UC1);
 
+  ImageSampleMap sampleMap(d_granularityFunction, image.cols, image.rows);
+  t.timeEvent("Build Sample Map");
+
   // Produce an image of labelled pixels.
   // If the option is enabled, any pixels above the horizon will be set to zero.
   t.enter("Pixel Label");
-  d_imageLabeller->label(image, d_labelledImage, t, d_granularityFunction, d_shouldIgnoreAboveHorizon->getValue());
+  d_imageLabeller->label(image, d_labelledImage, t, sampleMap, d_shouldIgnoreAboveHorizon->getValue());
   t.exit();
 
   // Perform the image pass
-//long processedPixelCount = d_imagePassRunner->pass(d_labelledImage, d_granularityFunction, t);
-  long processedPixelCount = d_imagePassRunner->passWithHandlers(d_imagePassHandlers, d_labelledImage, d_granularityFunction, t);
-
-  long totalPixelCount = d_labelledImage.rows * d_labelledImage.cols;
+//d_imagePassRunner->pass(d_labelledImage, d_granularityFunction, t);
+  d_imagePassRunner->passWithHandlers(d_imagePassHandlers, d_labelledImage, sampleMap, t);
 
   if (d_shouldCountLabels->getValue())
   {
@@ -121,6 +125,9 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
 
     occlusionRays = widenedRays;
   }
+
+  long processedPixelCount = sampleMap.getPixelCount();
+  long totalPixelCount = d_labelledImage.rows * d_labelledImage.cols;
 
   State::make<CameraFrameState>(ballPosition, goalPositions, teamMatePositions,
                                 observedLineSegments, occlusionRays,

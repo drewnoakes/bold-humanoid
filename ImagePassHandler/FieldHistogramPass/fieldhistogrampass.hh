@@ -34,7 +34,7 @@ namespace bold
         d_rowWidths[y]++;
     }
 
-    void onRowCompleted(ushort y, Eigen::Vector2i const& granularity) override
+    void onRowCompleted(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) override
     {
       d_rowWidths[y] *= granularity.x();
       d_cumulativePixelCount += d_rowWidths[y] * granularity.y();

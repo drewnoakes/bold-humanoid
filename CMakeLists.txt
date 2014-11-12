@@ -278,6 +278,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./ImageSampleMap/imagesamplemap.cc
+)
+
+add_class(BOLDHUMANOID
   ./IntegralImage/integralimage.cc
 )
 

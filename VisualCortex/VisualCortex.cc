@@ -199,13 +199,13 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
       switch (granularity)
       {
         case ImageGranularity::All:
-          d_granularityFunction = [](int y) { return Eigen::Vector2i(1,1); };
+          d_granularityFunction = [](int y) { return Eigen::Matrix<uchar,2,1>(1,1); };
           break;
         case ImageGranularity::Half:
-          d_granularityFunction = [](int y) { return Eigen::Vector2i(2,2); };
+          d_granularityFunction = [](int y) { return Eigen::Matrix<uchar,2,1>(2,2); };
           break;
         case ImageGranularity::Third:
-          d_granularityFunction = [](int y) { return Eigen::Vector2i(3,3); };
+          d_granularityFunction = [](int y) { return Eigen::Matrix<uchar,2,1>(3,3); };
           break;
         case ImageGranularity::Gradient:
         {
@@ -218,7 +218,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
             auto max = maxGranularity->getValue();
             if (pixelDelta > max)
               pixelDelta = max;
-            return Eigen::Vector2i(pixelDelta, pixelDelta);
+            return Eigen::Matrix<uchar,2,1>(pixelDelta, pixelDelta);
           };
           break;
         }
@@ -250,7 +250,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
             else if (pixelDelta < 1)
               pixelDelta = 1;
 
-            return Eigen::Vector2i(pixelDelta, pixelDelta);
+            return Eigen::Matrix<uchar,2,1>(pixelDelta, pixelDelta);
           };
           break;
         }
