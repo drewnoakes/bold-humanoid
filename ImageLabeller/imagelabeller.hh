@@ -11,6 +11,7 @@
 namespace bold
 {
   class ImageSampleMap;
+  class ImageLabelData;
   class SequentialTimer;
   class Spatialiser;
 
@@ -30,13 +31,8 @@ namespace bold
     /** Replaces the LUT used by this image labeller. */
     void updateLut(std::shared_ptr<uchar const> const& lut);
 
-    /**
-     * Labels an entire image's pixels.
-     *
-     * @param image The input, colour image.
-     * @param labelled The target image, in which labels are stored per-pixel.
-     */
-    void label(cv::Mat const& image, cv::Mat& labelled, SequentialTimer& timer, ImageSampleMap const& sampleMap, bool ignoreAboveHorizon = false) const;
+    /** Labels image pixels according to the specified sample map. */
+    ImageLabelData label(cv::Mat const& image, ImageSampleMap const& sampleMap, bool ignoreAboveHorizon, SequentialTimer& timer) const;
 
   private:
     std::shared_ptr<uchar const> d_LUT;

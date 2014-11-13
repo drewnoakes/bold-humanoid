@@ -1,6 +1,7 @@
 #include "visualcortex.ih"
 
 #include "../ImageSampleMap/imagesamplemap.hh"
+#include "../ImageLabelData/imagelabeldata.hh"
 
 void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCycleNumber)
 {
@@ -27,22 +28,18 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
   // PROCESS THE IMAGE
   //
 
-  // Label the image
-  if (d_labelledImage.rows != image.rows || d_labelledImage.cols != image.cols)
-    d_labelledImage = Mat(image.rows, image.cols, CV_8UC1);
-
-  ImageSampleMap sampleMap(d_granularityFunction, image.cols, image.rows);
+  // Build a map to control sub-sampling from the image
+  ImageSampleMap sampleMap(d_granularityFunction, (ushort)image.cols, (ushort)image.rows);
   t.timeEvent("Build Sample Map");
 
-  // Produce an image of labelled pixels.
-  // If the option is enabled, any pixels above the horizon will be set to zero.
+  // Label pixels
   t.enter("Pixel Label");
-  d_imageLabeller->label(image, d_labelledImage, t, sampleMap, d_shouldIgnoreAboveHorizon->getValue());
+  ImageLabelData labelData = d_imageLabeller->label(image, sampleMap, d_shouldIgnoreAboveHorizon->getValue(), t);
   t.exit();
 
   // Perform the image pass
-//d_imagePassRunner->pass(d_labelledImage, d_granularityFunction, t);
-  d_imagePassRunner->passWithHandlers(d_imagePassHandlers, d_labelledImage, sampleMap, t);
+//d_imagePassRunner->pass(labelData, t);
+  d_imagePassRunner->passWithHandlers(d_imagePassHandlers, labelData, t);
 
   if (d_shouldCountLabels->getValue())
   {
@@ -127,7 +124,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
   }
 
   long processedPixelCount = sampleMap.getPixelCount();
-  long totalPixelCount = d_labelledImage.rows * d_labelledImage.cols;
+  long totalPixelCount = image.rows * image.cols;
 
   State::make<CameraFrameState>(ballPosition, goalPositions, teamMatePositions,
                                 observedLineSegments, occlusionRays,

@@ -1,9 +1,9 @@
 #include "imagelabeller.hh"
 
+#include "../ImageLabelData/imagelabeldata.hh"
 #include "../ImageSampleMap/imagesamplemap.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 #include "../Spatialiser/spatialiser.hh"
-#include "../Math/math.hh"
 
 using namespace cv;
 using namespace bold;
@@ -28,7 +28,7 @@ void ImageLabeller::updateLut(shared_ptr<uchar const> const& lut)
   d_LUT = lut;
 }
 
-void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& timer, ImageSampleMap const& sampleMap, bool ignoreAboveHorizon) const
+ImageLabelData ImageLabeller::label(Mat const& image, ImageSampleMap const& sampleMap, bool ignoreAboveHorizon, SequentialTimer& timer) const
 {
   // Make a threadsafe copy of the shared ptr, in case another thread reassigns the LUT (avoids segfault)
   unique_lock<mutex> guard(d_lutMutex);
@@ -64,31 +64,43 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
   timer.timeEvent("Find Horizon");
 
   auto granularity = sampleMap.begin();
-  int y = 0;
+  ushort y = 0;
 
   minHorizonY = min(minHorizonY, image.rows);
 
+  vector<RowLabels> rows;
+  rows.reserve(sampleMap.getSampleRowCount());
+
+  //
   // First batch: everything guaranteed under the horizon
+  //
+
   while (y < minHorizonY)
   {
     uchar const* origpix = image.ptr<uchar>(y);
-    uchar* labelledpix = labelled.ptr<uchar>(y);
+
+    vector<uchar> labels;
+    labels.reserve(image.cols / granularity->x());
 
     for (int x = 0; x < image.cols; x += granularity->x())
     {
       uchar l = lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
-
-      *labelledpix = l;
-
+      labels.push_back(l);
       origpix += granularity->x() * 3;
-      labelledpix += granularity->x();
     }
+
+    rows.emplace_back(move(labels), y, *granularity);
 
     y += granularity->y();
     granularity++;
   }
 
-  timer.timeEvent("Pixels Under");
+  timer.timeEvent("Rows Under Horizon");
+
+  //
+  // Second batch: horizon goes through these rows
+  //
+
   double horizonYRange = maxXHorizonY - minXHorizonY;
   if (ignoreAboveHorizon && minHorizonY < image.rows)
   {
@@ -96,11 +108,11 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
 
     bool horizonUpwards = maxXHorizonY > minXHorizonY;
 
-    // Second batch: horizon goes through these rows
     while(y < maxHorizonY && y < image.rows)
     {
       uchar const* origpix = image.ptr<uchar>(y);
-      uchar* labelledpix = labelled.ptr<uchar>(y);
+      vector<uchar> labels;
+      labels.reserve(image.cols / granularity->x());
 
       double ratio = double(y - minXHorizonY) / double(horizonYRange);
 
@@ -118,27 +130,17 @@ void ImageLabeller::label(Mat const& image, Mat& labelled, SequentialTimer& time
           ? 0
           : lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
 
-        *labelledpix = l;
+        labels.push_back(l);
 
         origpix += granularity->x() * 3;
-        labelledpix += granularity->x();
       }
 
       y += granularity->y();
       granularity++;
     }
 
-    timer.timeEvent("Pixels Around");
-
-    // Third batch: everything here is above the horizon
-    while (y < image.rows)
-    {
-      uchar* labelledPx = labelled.ptr<uchar>(y);
-      memset(labelledPx, 0, image.cols);
-      y += granularity->y();
-      granularity++;
-    }
-
-    timer.timeEvent("Pixels Above");
+    timer.timeEvent("Rows Intersecting Horizon");
   }
+
+  return ImageLabelData(move(rows));
 }

@@ -160,9 +160,6 @@ namespace bold
 
     std::function<Eigen::Matrix<uchar,2,1>(int)> d_granularityFunction;
 
-    /** A cached Mat, to be re-used each image pass. */
-    cv::Mat d_labelledImage;
-
     std::shared_ptr<LineFinder> d_lineFinder;
 
     std::shared_ptr<ImagePassRunner<uchar>> d_imagePassRunner;
