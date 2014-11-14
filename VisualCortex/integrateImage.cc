@@ -1,7 +1,7 @@
 #include "visualcortex.ih"
 
-#include "../ImageSampleMap/imagesamplemap.hh"
 #include "../ImageLabelData/imagelabeldata.hh"
+#include "../ImagePassRunner/imagepassrunner.hh"
 
 void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCycleNumber)
 {

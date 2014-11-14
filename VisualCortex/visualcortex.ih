@@ -8,7 +8,6 @@
 #include "../geometry/LineSegment/linesegment.hh"
 #include "../geometry/Bounds2i.hh"
 #include "../ImageLabeller/imagelabeller.hh"
-#include "../ImagePassRunner/imagepassrunner.hh"
 #include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
 #include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
 #include "../ImagePassHandler/FieldEdgePass/CompleteFieldEdgePass/completefieldedgepass.hh"

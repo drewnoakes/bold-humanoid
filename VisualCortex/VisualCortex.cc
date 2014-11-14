@@ -1,5 +1,7 @@
 #include "visualcortex.ih"
 
+#include "../ImagePassRunner/imagepassrunner.hh"
+
 VisualCortex::VisualCortex(shared_ptr<Camera> camera,
                            shared_ptr<CameraModel> cameraModel,
                            shared_ptr<DataStreamer> dataStreamer,
