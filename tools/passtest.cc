@@ -132,21 +132,25 @@ int main(int argc, char **argv)
   auto ballLabel  = make_shared<RangePixelLabel>("Ball",  LabelClass::BALL, Config::getValue<Colour::hsvRange>("vision.pixel-labels.ball"));
   auto fieldLabel = make_shared<RangePixelLabel>("Field", LabelClass::FIELD, Config::getValue<Colour::hsvRange>("vision.pixel-labels.field"));
   auto lineLabel  = make_shared<RangePixelLabel>("Line",  LabelClass::LINE, Config::getValue<Colour::hsvRange>("vision.pixel-labels.line"));
+  auto cyanLabel  = make_shared<RangePixelLabel>("Cyan",  LabelClass::CYAN, Config::getValue<Colour::hsvRange>("vision.pixel-labels.cyan"));
+  auto magentaLabel  = make_shared<RangePixelLabel>("Magenta", LabelClass::MAGENTA, Config::getValue<Colour::hsvRange>("vision.pixel-labels.magenta"));
 
   cout << "Using labels:" << endl
        << "  " << *ballLabel << endl
        << "  " << *goalLabel << endl
        << "  " << *fieldLabel << endl
-       << "  " << *lineLabel << endl;
+       << "  " << *lineLabel << endl
+       << "  " << *cyanLabel << endl
+       << "  " << *magentaLabel << endl;
 
-  vector<shared_ptr<PixelLabel>> labels = { goalLabel, ballLabel, fieldLabel, lineLabel };
+  vector<shared_ptr<PixelLabel>> labels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
 
   // Resources for labelling
   Mat labelledImage(colourImage.size(), CV_8UC1);
   // TODO: this will crash
   auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels), 0);
 
-  const vector<shared_ptr<PixelLabel>> blobPixelLabels = { ballLabel, goalLabel, lineLabel };
+  const vector<shared_ptr<PixelLabel>> blobPixelLabels = { ballLabel, goalLabel, cyanLabel, magentaLabel };
   auto blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
 
   // Resources for finding line dots
