@@ -21,7 +21,7 @@ namespace bold
   public:
     ImageSampleMap(std::function<Eigen::Matrix<uchar,2,1>(ushort)> granularityFunction, ushort width, ushort height);
 
-    int getPixelCount() const;
+    unsigned getPixelCount() const { return d_pixelCount; }
 
     ushort getSampleRowCount() const { return static_cast<ushort>(d_granularities.size()); }
 
@@ -29,6 +29,7 @@ namespace bold
 
   private:
     std::vector<Eigen::Matrix<uchar,2,1>> d_granularities;
+    unsigned d_pixelCount;
     ushort d_width;
   };
 }

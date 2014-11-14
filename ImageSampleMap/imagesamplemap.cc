@@ -15,12 +15,8 @@ ImageSampleMap::ImageSampleMap(function<Matrix<uchar, 2, 1>(ushort)> granularity
     y += granularity.y();
     d_granularities.emplace_back(move(granularity));
   }
-}
 
-int ImageSampleMap::getPixelCount() const
-{
-  int count = 0;
+  d_pixelCount = 0;
   for (auto const& g : d_granularities)
-    count += d_width / g.x();
-  return 0;
+    d_pixelCount += d_width / g.x();
 }
