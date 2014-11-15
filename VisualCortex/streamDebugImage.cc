@@ -1,6 +1,25 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
 
+#include "../CameraModel/cameramodel.hh"
+#include "../DataStreamer/datastreamer.hh"
+#include "../FieldMap/fieldmap.hh"
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
+#include "../ImagePassHandler/FieldEdgePass/fieldedgepass.hh"
+#include "../ImagePassHandler/FieldHistogramPass/fieldhistogrampass.hh"
+#include "../ImagePassHandler/LineDotPass/linedotpass.hh"
+#include "../Painter/painter.hh"
+#include "../Spatialiser/spatialiser.hh"
+#include "../State/state.hh"
+#include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
+#include "../StateObject/WorldFrameState/worldframestate.hh"
+
+using namespace bold;
 using namespace bold::Colour;
+using namespace cv;
+using namespace Eigen;
+using namespace std;
 
 void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
 {

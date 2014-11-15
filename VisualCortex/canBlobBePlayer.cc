@@ -1,4 +1,10 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
+
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../Spatialiser/spatialiser.hh"
+
+using namespace bold;
+using namespace Eigen;
 
 bool VisualCortex::canBlobBePlayer(Blob const& playerBlob, Vector2d& imagePos, Vector3d& agentFramePos)
 {

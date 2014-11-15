@@ -3,7 +3,7 @@
 #include <opencv2/core/core.hpp>
 
 #include "../imagepasshandler.hh"
-#include "../../Config/config.hh"
+#include "../../ImageLabelData/imagelabeldata.hh"
 #include "../../SequentialTimer/sequentialtimer.hh"
 
 namespace bold

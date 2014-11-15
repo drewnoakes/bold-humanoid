@@ -1,4 +1,11 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
+
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../SequentialTimer/sequentialtimer.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
 
 Maybe<Vector2d> VisualCortex::detectBall(vector<Blob>& ballBlobs, SequentialTimer& t)
 {

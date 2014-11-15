@@ -1,4 +1,11 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
+
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../Spatialiser/spatialiser.hh"
+
+using namespace bold;
+using namespace std;
+using namespace Eigen;
 
 bool VisualCortex::canBlobBeGoal(Blob const& blob, Vector2d& pos)
 {

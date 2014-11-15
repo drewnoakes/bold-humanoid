@@ -1,4 +1,7 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
+
+using namespace bold;
+using namespace Eigen;
 
 bool VisualCortex::shouldMergeBallBlobs(Bounds2i const& larger, Bounds2i const& smaller)
 {
@@ -15,7 +18,7 @@ bool VisualCortex::shouldMergeBallBlobs(Bounds2i const& larger, Bounds2i const& 
   if (combinedAspect < largerAspect)
     return false;
 
-  int maxDimension = max(larger.maxDimension(), smaller.maxDimension());
+  int maxDimension = std::max(larger.maxDimension(), smaller.maxDimension());
   int unionMaxDimension = combined.maxDimension();
 
   return unionMaxDimension < maxDimension * 1.3;

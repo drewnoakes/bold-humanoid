@@ -1,4 +1,10 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
+
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
 
 vector<Vector2d,aligned_allocator<Vector2d>> VisualCortex::detectPlayers(vector<Blob>& playerBlobs, SequentialTimer& t)
 {

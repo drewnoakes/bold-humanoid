@@ -1,7 +1,20 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
 
+#include "../Camera/camera.hh"
 #include "../ImagePassRunner/imagepassrunner.hh"
 #include "../ImageSampleMap/imagesamplemap.hh"
+#include "../ImageLabeller/imagelabeller.hh"
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../ImagePassHandler/FieldEdgePass/fieldedgepass.hh"
+#include "../ImagePassHandler/LineDotPass/linedotpass.hh"
+#include "../LineFinder/linefinder.hh"
+#include "../State/state.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
+
+using namespace cv;
+using namespace bold;
+using namespace Eigen;
+using namespace std;
 
 void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCycleNumber)
 {

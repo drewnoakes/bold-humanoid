@@ -1,6 +1,14 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
 
 #include "../FieldMap/fieldmap.hh"
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../ImagePassHandler/FieldEdgePass/fieldedgepass.hh"
+#include "../Spatialiser/spatialiser.hh"
+
+using namespace bold;
+using namespace cv;
+using namespace Eigen;
+using namespace std;
 
 bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d& imagePos, Vector3d& agentFramePos)
 {

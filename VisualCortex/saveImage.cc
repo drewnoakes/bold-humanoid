@@ -1,19 +1,20 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
 
+#include "../ImageCodec/PngCodec/pngcodec.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
 #include "../StateObject/BodyState/bodystate.hh"
+#include "../StateObject/CameraFrameState/cameraframestate.hh"
 
 #include <rapidjson/prettywriter.h>
 
 #include <fstream>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
-#include <unistd.h>
 
-using namespace rapidjson;
 using namespace cv;
+using namespace bold;
+using namespace rapidjson;
+using namespace std;
 
 void VisualCortex::saveImage(cv::Mat const& image, std::map<uchar,Colour::bgr>* palette)
 {

@@ -1,6 +1,30 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
 
+#include "../Camera/camera.hh"
+#include "../CameraModel/cameramodel.hh"
+#include "../DataStreamer/datastreamer.hh"
+#include "../ImageLabeller/imagelabeller.hh"
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
+#include "../ImagePassHandler/FieldEdgePass/CompleteFieldEdgePass/completefieldedgepass.hh"
+#include "../ImagePassHandler/FieldEdgePass/PeriodicFieldEdgePass/periodicfieldedgepass.hh"
+#include "../ImagePassHandler/FieldHistogramPass/fieldhistogrampass.hh"
+#include "../ImagePassHandler/LabelCountPass/labelcountpass.hh"
+#include "../ImagePassHandler/LineDotPass/linedotpass.hh"
 #include "../ImagePassRunner/imagepassrunner.hh"
+#include "../LineFinder/linefinder.hh"
+#include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"
+#include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
+#include "../LineFinder/ScanningLineFinder/scanninglinefinder.hh"
+#include "../LUTBuilder/lutbuilder.hh"
+#include "../Spatialiser/spatialiser.hh"
+#include "../State/state.hh"
+#include "../StateObject/BodyState/bodystate.hh"
+#include "../MotionModule/HeadModule/headmodule.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
 
 VisualCortex::VisualCortex(shared_ptr<Camera> camera,
                            shared_ptr<CameraModel> cameraModel,

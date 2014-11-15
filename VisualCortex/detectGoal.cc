@@ -1,4 +1,12 @@
-#include "visualcortex.ih"
+#include "visualcortex.hh"
+
+#include "../ImagePassHandler/BlobDetectPass/blobdetectpass.hh"
+#include "../ImagePassHandler/FieldEdgePass/fieldedgepass.hh"
+#include "../SequentialTimer/sequentialtimer.hh"
+
+using namespace bold;
+using namespace Eigen;
+using namespace std;
 
 vector<Vector2d,aligned_allocator<Vector2d>> VisualCortex::detectGoal(vector<Blob>& goalBlobs, SequentialTimer& t)
 {
