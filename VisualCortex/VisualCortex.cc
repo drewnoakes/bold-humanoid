@@ -12,9 +12,6 @@
 #include "../ImagePassHandler/LabelCountPass/labelcountpass.hh"
 #include "../ImagePassHandler/LineDotPass/linedotpass.hh"
 #include "../ImagePassRunner/imagepassrunner.hh"
-#include "../LineFinder/linefinder.hh"
-#include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"
-#include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
 #include "../LineFinder/ScanningLineFinder/scanninglinefinder.hh"
 #include "../LUTBuilder/lutbuilder.hh"
 #include "../Spatialiser/spatialiser.hh"
@@ -300,7 +297,6 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   d_imageType->track([setCartoonHandler](ImageType value) { setCartoonHandler(); });
   d_dataStreamer->hasClientChanged.connect([setCartoonHandler](std::string protocol, bool enabled) { if (protocol == "camera-protocol") setCartoonHandler(); });
 
-  //d_lineFinder = make_shared<MaskWalkLineFinder>();
   d_lineFinder = make_shared<ScanningLineFinder>(d_cameraModel);
 
   // Image capture
