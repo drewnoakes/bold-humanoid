@@ -118,8 +118,8 @@ int main(int argc, char **argv)
   // Initialise random seed
   std::srand(unsigned(std::time(0)));
 
-  int imageWidth = colourImage.cols;
-  int imageHeight = colourImage.rows;
+  ushort imageWidth = colourImage.cols;
+  ushort imageHeight = colourImage.rows;
 
   //
   // FIXED START UP INITIALISATION
@@ -146,7 +146,6 @@ int main(int argc, char **argv)
   vector<shared_ptr<PixelLabel>> labels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
 
   // Resources for labelling
-  Mat labelledImage(colourImage.size(), CV_8UC1);
   // TODO: this will crash
   auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels), 0);
 
@@ -180,46 +179,44 @@ int main(int argc, char **argv)
 
   cout << "Startup took " << Clock::getMillisSince(t) << " ms" << endl;
 
+  SequentialTimer timer;
+
+  auto granularityFunction = [](ushort y) { uchar g = y/100 + 1; return Matrix<uchar,2,1>(g, g); };
+  ImageSampleMap sampleMap(granularityFunction, imageWidth, imageHeight);
+
   //
   // IMAGE LABELLING
   //
   t = Clock::getTimestamp();
-  auto granularityFunction = [](int y) { return Vector2i(1, 1); };
   for (int i = 0; i < loopCount; i++)
-  {
-    SequentialTimer timer;
-    imageLabeller->label(colourImage, labelledImage, timer, granularityFunction);
-  }
+    imageLabeller->label(colourImage, sampleMap, false, timer);
   cout << "Labelled " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
+
+  auto labelData = imageLabeller->label(colourImage, sampleMap, false, timer);
 
   //
   // IMAGE PASS
   //
-  SequentialTimer timer;
 
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
-  {
-    passRunner.pass(labelledImage, granularityFunction, timer);
-  }
+    passRunner.pass(labelData, timer);
   cout << "[simple pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
   {
-    passRunner.passWithHandler(lineDotPass, labelledImage, granularityFunction, timer);
-    passRunner.passWithHandler(blobDetectPass, labelledImage, granularityFunction, timer);
-    passRunner.passWithHandler(cartoonPass, labelledImage, granularityFunction, timer);
-    passRunner.passWithHandler(labelCountPass, labelledImage, granularityFunction, timer);
+    passRunner.passWithHandler(lineDotPass, labelData, timer);
+    passRunner.passWithHandler(blobDetectPass, labelData, timer);
+    passRunner.passWithHandler(cartoonPass, labelData, timer);
+    passRunner.passWithHandler(labelCountPass, labelData, timer);
   }
   cout << "[direct pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   auto passTuple = make_tuple(lineDotPass, blobDetectPass, cartoonPass, labelCountPass);
   t = Clock::getTimestamp();
   for (int i = 0; i < loopCount; i++)
-  {
-    passRunner.passWithHandlers(passTuple, labelledImage, granularityFunction, timer);
-  }
+    passRunner.passWithHandlers(passTuple, labelData, timer);
   cout << "[meta pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
