@@ -76,7 +76,7 @@ namespace bold
           handler->onRowStarting(row.imageY, row.granularity);
 
           ushort x = 0;
-          for (auto const& label : row.labels)
+          for (auto const& label : row)
           {
             handler->onPixel(label, x, row.imageY);
             x += row.granularity.x();
@@ -114,7 +114,7 @@ namespace bold
         handler->T::onRowStarting(row.imageY, row.granularity);
 
         ushort x = 0;
-        for (auto const& label : row.labels)
+        for (auto const& label : row)
         {
           handler->T::onPixel(label, x, row.imageY);
           x += row.granularity.x();

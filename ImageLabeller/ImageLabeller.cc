@@ -68,6 +68,13 @@ ImageLabelData ImageLabeller::label(Mat const& image, ImageSampleMap const& samp
 
   minHorizonY = min(minHorizonY, image.rows);
 
+  // Contiguous storage for all labelled pixels
+  vector<uchar> labels;
+  labels.resize(sampleMap.getPixelCount());
+  ASSERT(labels.size() == sampleMap.getPixelCount());
+  uchar* labelData = labels.data();
+
+  // Data about each row of labelled pixels
   vector<RowLabels> rows;
   rows.reserve(sampleMap.getSampleRowCount());
 
@@ -77,19 +84,22 @@ ImageLabelData ImageLabeller::label(Mat const& image, ImageSampleMap const& samp
 
   while (y < minHorizonY)
   {
-    uchar const* origpix = image.ptr<uchar>(y);
+    uchar const* px = image.ptr<uchar>(y);
 
-    vector<uchar> labels;
-    labels.reserve(image.cols / granularity->x());
+    uchar* from = labelData;
 
-    for (int x = 0; x < image.cols; x += granularity->x())
+    const uchar dx = granularity->x();
+
+    for (int x = 0; x < image.cols; x += dx)
     {
-      uchar l = lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
-      labels.push_back(l);
-      origpix += granularity->x() * 3;
+      *labelData = lut[((px[0] >> 2) << 12) | ((px[1] >> 2) << 6) | (px[2] >> 2)];
+      labelData++;
+      px += dx * 3;
     }
 
-    rows.emplace_back(move(labels), y, *granularity);
+    uchar* to = labelData;
+
+    rows.emplace_back(from, to, y, *granularity);
 
     y += granularity->y();
     granularity++;
@@ -108,11 +118,12 @@ ImageLabelData ImageLabeller::label(Mat const& image, ImageSampleMap const& samp
 
     bool horizonUpwards = maxXHorizonY > minXHorizonY;
 
-    while(y < maxHorizonY && y < image.rows)
+    while (y < maxHorizonY && y < image.rows)
     {
-      uchar const* origpix = image.ptr<uchar>(y);
-      vector<uchar> labels;
-      labels.reserve(image.cols / granularity->x());
+
+      uchar const* px = image.ptr<uchar>(y);
+
+      uchar* from = labelData;
 
       double ratio = double(y - minXHorizonY) / double(horizonYRange);
 
@@ -127,13 +138,18 @@ ImageLabelData ImageLabeller::label(Mat const& image, ImageSampleMap const& samp
           (!horizonUpwards && x > horizonX);
 
         uchar l = aboveHorizon
-          ? 0
-          : lut[((origpix[0] >> 2) << 12) | ((origpix[1] >> 2) << 6) | (origpix[2] >> 2)];
+          ? (uchar)0
+          : lut[((px[0] >> 2) << 12) | ((px[1] >> 2) << 6) | (px[2] >> 2)];
 
-        labels.push_back(l);
+        *labelData = l;
+        labelData++;
 
-        origpix += granularity->x() * 3;
+        px += granularity->x() * 3;
       }
+
+      uchar* to = labelData;
+
+      rows.emplace_back(from, to, y, *granularity);
 
       y += granularity->y();
       granularity++;
@@ -142,5 +158,7 @@ ImageLabelData ImageLabeller::label(Mat const& image, ImageSampleMap const& samp
     timer.timeEvent("Rows Intersecting Horizon");
   }
 
-  return ImageLabelData(move(rows));
+  ASSERT(labelData - labels.data() <= sampleMap.getPixelCount());
+
+  return ImageLabelData(move(labels), move(rows), image.cols);
 }
