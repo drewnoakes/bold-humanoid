@@ -8,15 +8,15 @@ ImageSampleMap::ImageSampleMap(function<Matrix<uchar, 2, 1>(ushort)> granularity
   : d_granularities(),
     d_width(width)
 {
+  unsigned pixelCount = 0;
   ushort y = 0;
   while (y < height)
   {
     auto granularity = granularityFunction(y);
     y += granularity.y();
+    pixelCount += (unsigned)ceil((double)d_width / granularity.x());
     d_granularities.emplace_back(move(granularity));
   }
 
-  d_pixelCount = 0;
-  for (auto const& g : d_granularities)
-    d_pixelCount += d_width / g.x();
+  d_pixelCount = pixelCount;
 }
