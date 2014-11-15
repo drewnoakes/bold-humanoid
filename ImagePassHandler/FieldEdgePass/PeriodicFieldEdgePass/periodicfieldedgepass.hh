@@ -21,11 +21,6 @@ namespace bold
 
     std::vector<OcclusionRay<ushort>> getOcclusionRays() const override;
 
-    std::string id() const override
-    {
-      return std::string("PeriodicFieldEdgePass");
-    }
-
   private:
     uint8_t d_fieldLabelId;
     uint8_t d_lineLabelId;

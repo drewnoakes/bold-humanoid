@@ -19,7 +19,8 @@ namespace bold
      * @param backgroundColour The colour to use for non-labelled pixels. Defaults to black.
      */
     CartoonPass(ushort width, ushort height)
-    : d_mat(height, width, CV_8UC1)
+      : ImagePassHandler("CartoonPass"),
+        d_mat(height, width, CV_8UC1)
     {}
 
     cv::Mat mat() { return d_mat; }
@@ -43,11 +44,6 @@ namespace bold
         }
       }
       timer.timeEvent("Process Rows");
-    }
-
-    std::string id() const override
-    {
-      return "CartoonPass";
     }
 
   private:

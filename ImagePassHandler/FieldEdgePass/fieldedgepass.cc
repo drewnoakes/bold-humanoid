@@ -9,9 +9,10 @@ using namespace bold;
 using namespace Eigen;
 using namespace std;
 
-FieldEdgePass::FieldEdgePass(ushort imageWidth, ushort imageHeight)
-: d_imageWidth(imageWidth),
-  d_imageHeight(imageHeight)
+FieldEdgePass::FieldEdgePass(string id, ushort imageWidth, ushort imageHeight)
+  : ImagePassHandler(id),
+    d_imageWidth(imageWidth),
+    d_imageHeight(imageHeight)
 {
   Config::getSetting<int>("vision.field-edge-pass.min-vertical-run-length")->track([this](int value) { d_minVerticalRunLength = (ushort)value; });
   d_useConvexHull = Config::getSetting<bool>("vision.field-edge-pass.use-convex-hull");

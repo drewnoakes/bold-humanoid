@@ -27,11 +27,6 @@ namespace bold
 
     void process(ImageLabelData const& labelData, SequentialTimer& timer) override;
 
-    std::string id() const override
-    {
-      return std::string("LabelCountPass");
-    }
-
   private:
     uint d_countByLabelId[MAX_LABEL_COUNT];
     std::vector<std::shared_ptr<PixelLabel>> d_labels;

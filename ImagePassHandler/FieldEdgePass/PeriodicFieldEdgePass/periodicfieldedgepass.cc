@@ -11,7 +11,7 @@ using namespace std;
 
 PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, shared_ptr<PixelLabel> lineLabel,
                                              ushort imageWidth, ushort imageHeight, ushort period)
-: FieldEdgePass(imageWidth, imageHeight),
+: FieldEdgePass("PeriodicFieldEdgePass", imageWidth, imageHeight),
   d_fieldLabelId((uint8_t)fieldLabel->getID()),
   d_lineLabelId((uint8_t)lineLabel->getID()),
   d_maxYByC((imageWidth / period) + 1),

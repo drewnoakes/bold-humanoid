@@ -118,11 +118,6 @@ namespace bold
 
     static Blob runSetToBlob(std::set<Run> const& runSet);
 
-    std::string id() const override
-    {
-      return std::string("BlobDetectPass");
-    }
-
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
 

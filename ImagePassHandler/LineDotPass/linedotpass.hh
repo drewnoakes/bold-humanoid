@@ -22,11 +22,6 @@ namespace bold
 
     void process(ImageLabelData const& labelData, SequentialTimer& timer) override;
 
-    std::string id() const override
-    {
-      return std::string("LineDotPass");
-    }
-
     std::vector<Eigen::Vector2i> lineDots;
 
   private:

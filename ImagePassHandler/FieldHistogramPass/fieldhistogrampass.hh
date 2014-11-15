@@ -15,7 +15,8 @@ namespace bold
   {
   public:
     FieldHistogramPass(std::shared_ptr<PixelLabel> fieldLabel, ushort height)
-      : d_fieldLabelId((uchar)fieldLabel->getID()),
+      : ImagePassHandler("FieldHistogramPass"),
+        d_fieldLabelId((uchar)fieldLabel->getID()),
         d_rowWidths(height),
         d_cumulativePixelCounts(height)
     {}
@@ -46,11 +47,6 @@ namespace bold
       timer.timeEvent("Process Rows");
 
       d_cumulativePixelCount = cumulativePixelCount;
-    }
-
-    std::string id() const override
-    {
-      return "FieldHistogramPass";
     }
 
     ushort getRowWidth(ushort y) const

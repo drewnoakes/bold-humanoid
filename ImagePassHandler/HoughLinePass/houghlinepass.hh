@@ -22,9 +22,10 @@ namespace bold
     std::vector<Candidate<Line>> lines;
 
     HoughLinePass(uint width, uint height, int thresholdDivisor, uint accumulatorHeight)
-    : d_thresholdDivisor(thresholdDivisor),
-      accumulator(width, height, accumulatorHeight),
-      lines()
+      : ImagePassHandler("HoughLinePass"),
+        d_thresholdDivisor(thresholdDivisor),
+        accumulator(width, height, accumulatorHeight),
+        lines()
     {}
 
     void process(ImageLabelData<uchar> const& labelData, SequentialTimer& timer) override
@@ -47,11 +48,6 @@ namespace bold
       auto extractor = HoughLineExtractor();
       lines = extractor.findLines(accumulator, accumulator.count() / d_thresholdDivisor);
       timer.timeEvent("Find lines");
-    }
-
-    std::string id() const override
-    {
-      return std::string("HoughLinePass");
     }
 
   private:

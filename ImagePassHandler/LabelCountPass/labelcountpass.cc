@@ -9,7 +9,8 @@ using namespace bold;
 using namespace std;
 
 LabelCountPass::LabelCountPass(std::vector<std::shared_ptr<PixelLabel>> const& labels)
-  : d_countByLabelId(),
+  : ImagePassHandler("LabelCountPass"),
+    d_countByLabelId(),
     d_labels(labels)
 {}
 

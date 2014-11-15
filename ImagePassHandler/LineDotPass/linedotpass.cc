@@ -8,7 +8,8 @@ using namespace bold;
 using namespace std;
 
 LineDotPass::LineDotPass(ushort imageWidth, shared_ptr<PixelLabel> inLabel, shared_ptr<PixelLabel> onLabel)
-  : lineDots(),
+  : ImagePassHandler("LineDotPass"),
+    lineDots(),
     d_imageWidth(imageWidth),
     d_inLabel(inLabel),
     d_onLabel(onLabel),

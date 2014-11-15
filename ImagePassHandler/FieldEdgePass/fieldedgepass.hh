@@ -15,7 +15,7 @@ namespace bold
   class FieldEdgePass : public ImagePassHandler<uchar>
   {
   public:
-    FieldEdgePass(ushort imageWidth, ushort imageHeight);
+    FieldEdgePass(std::string id, ushort imageWidth, ushort imageHeight);
 
     virtual ~FieldEdgePass() = default;
 

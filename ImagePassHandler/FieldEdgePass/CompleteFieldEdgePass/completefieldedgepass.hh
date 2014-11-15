@@ -19,11 +19,6 @@ namespace bold
     ushort getEdgeYValue(ushort x) const override;
     std::vector<OcclusionRay<ushort>> getOcclusionRays() const override;
 
-    std::string id() const override
-    {
-      return std::string("CompleteFieldEdgePass");
-    }
-
   private:
     uint8_t d_fieldLabelId;
     std::vector<short> d_maxYByX;
