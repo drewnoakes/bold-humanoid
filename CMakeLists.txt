@@ -266,6 +266,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./ImagePassHandler/CartoonPass/cartoonpass.cc
+)
+
+add_class(BOLDHUMANOID
   ./ImagePassHandler/FieldEdgePass/fieldedgepass.cc
 )
 
