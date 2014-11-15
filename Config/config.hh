@@ -146,7 +146,7 @@ namespace bold
 
     static TreeNode d_root;
     static std::map<std::string,Action*> d_actionById;
-    static std::vector<std::unique_ptr<rapidjson::Document const>> d_configDocuments;
+    static std::vector<rapidjson::Document> d_configDocuments;
     static std::vector<std::string> d_configFileNames;
     static bool d_isInitialising;
     static bool d_permissible;

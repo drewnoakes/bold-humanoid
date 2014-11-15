@@ -11,6 +11,7 @@
 #include "../util/json.hh"
 
 #include <rapidjson/document.h>
+#include <rapidjson/error/en.h>
 #include <rapidjson/filereadstream.h>
 
 using namespace bold;
@@ -19,13 +20,13 @@ using namespace std;
 
 Config::TreeNode Config::d_root;
 map<string,Action*> Config::d_actionById;
-vector<unique_ptr<Document const>> Config::d_configDocuments;
+vector<Document> Config::d_configDocuments;
 vector<string> Config::d_configFileNames;
 bool Config::d_isInitialising = true;
 sigc::signal<void, SettingBase const*> Config::updated;
 bool Config::d_permissible = false;
 
-unique_ptr<Document const> loadJsonDocument(std::string path)
+Document loadJsonDocument(std::string path)
 {
   FILE* file = fopen(path.c_str(), "rb");
 
@@ -37,21 +38,20 @@ unique_ptr<Document const> loadJsonDocument(std::string path)
 
   char buffer[65536];
 
-  Document* doc = new Document();
+  Document doc;
   FileReadStream stream(file, buffer, sizeof(buffer));
-  doc->ParseStream<0, UTF8<>, FileReadStream>(stream);
+  doc.ParseStream<0, UTF8<>, FileReadStream>(stream);
 
   if (fclose(file))
     log::error("loadJsonDocument") << "Error closing file: " << strerror(errno) << " (" << errno << ")";
 
-  if (doc->HasParseError())
+  if (doc.HasParseError())
   {
-    log::error("loadJsonDocument") << "Parse error in file " << path << ": " << doc->GetParseError();
-    delete doc;
+    log::error("loadJsonDocument") << "Parse error at offset " << doc.GetErrorOffset() << " in file '" << path << "': " << GetParseError_En(doc.GetParseError());
     throw runtime_error("Parse error in JSON file");
   }
 
-  return unique_ptr<Document const>(doc);
+  return move(doc);
 }
 
 void Config::initialise(string const& metadataFile, string const& configFile)
@@ -81,8 +81,8 @@ void Config::initialise(string const& metadataFile, string const& configFile)
     auto confDocument = loadJsonDocument(path);
 
     // Check whether a parent is specified in the 'inherits' property
-    auto it = confDocument->FindMember("inherits");
-    auto hasParent = it != confDocument->MemberEnd() && it->value.IsString();
+    auto it = confDocument.FindMember("inherits");
+    auto hasParent = it != confDocument.MemberEnd() && it->value.IsString();
     if (hasParent)
       path = it->value.GetString();
 
@@ -95,7 +95,7 @@ void Config::initialise(string const& metadataFile, string const& configFile)
   }
 
   // Walk the metadata document, building up a tree of Setting<T> objects
-  processConfigMetaJsonValue(metaDocument.get(), &d_root, "", "");
+  processConfigMetaJsonValue(&metaDocument, &d_root, "", "");
 
   addAction("config.reload-from-disk", "Reload config from disk", []
   {
@@ -352,13 +352,13 @@ Value const* Config::getConfigJsonValue(string const& path)
     throw runtime_error("No config documents have been set");
   }
 
-  for (unique_ptr<Document const> const& configValue : d_configDocuments)
+  for (Document const& configValue : d_configDocuments)
   {
     // Walk down the tree of each config document, looking for a match to 'path'
     // TODO the config files could be flatted into a single map, reducing the complexity of lookups by some small amount
     string delimiter = ".";
     size_t start = 0;
-    Value const* node = configValue.get();
+    Value const* node = &configValue;
 
     while (true)
     {
