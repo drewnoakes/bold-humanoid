@@ -161,7 +161,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   static ushort imageWidth = d_cameraModel->imageWidth();
   static ushort imageHeight = d_cameraModel->imageHeight();
 
-  d_lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel);
+  d_lineDotPass = make_shared<LineDotPass>(imageWidth, fieldLabel, lineLabel);
   d_blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
   d_cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight);
   auto labelCountPass = make_shared<LabelCountPass>(d_pixelLabels);

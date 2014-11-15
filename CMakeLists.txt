@@ -282,6 +282,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./ImagePassHandler/LineDotPass/linedotpass.cc
+)
+
+add_class(BOLDHUMANOID
   ./ImageSampleMap/imagesamplemap.cc
 )
 

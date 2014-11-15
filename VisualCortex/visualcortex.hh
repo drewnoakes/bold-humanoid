@@ -29,7 +29,7 @@ namespace bold
 
   template<typename> class ImagePassRunner;
   template<typename> class ImagePassHandler;
-  template<typename> class LineDotPass;
+  class LineDotPass;
   class BlobDetectPass;
   class CartoonPass;
   class CompleteFieldEdgePass;
@@ -165,7 +165,7 @@ namespace bold
     std::shared_ptr<FieldHistogramPass> d_fieldHistogramPass;
     std::shared_ptr<CartoonPass> d_cartoonPass;
     std::shared_ptr<BlobDetectPass> d_blobDetectPass;
-    std::shared_ptr<LineDotPass<uchar>> d_lineDotPass;
+    std::shared_ptr<LineDotPass> d_lineDotPass;
 
     Setting<bool>* d_shouldDetectLines;
     Setting<bool>* d_shouldCountLabels;

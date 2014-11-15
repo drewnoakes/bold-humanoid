@@ -157,7 +157,7 @@ int main(int argc, char **argv)
   auto blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
 
   // Resources for finding line dots
-  auto lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel);
+  auto lineDotPass = make_shared<LineDotPass>(imageWidth, fieldLabel, lineLabel);
 
   // Resources for creating a labelled image
   auto cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight);
