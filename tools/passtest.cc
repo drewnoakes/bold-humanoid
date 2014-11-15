@@ -338,7 +338,7 @@ int main(int argc, char **argv)
 
   // Draw blobs
   for (auto const& pixelLabel : blobPixelLabels)
-    for (bold::Blob blob : blobsByLabel[pixelLabel])
+    for (bold::Blob const& blob : blobsByLabel[pixelLabel])
     {
       auto blobColor = pixelLabel->modalColour().toBgr()/*.invert()*/.toScalar();
       cv::rectangle(colourImage, blob.toRect(), blobColor);
