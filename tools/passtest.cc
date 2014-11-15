@@ -282,12 +282,12 @@ int main(int argc, char **argv)
   //
 
   vector<Colour::bgr> colours = {
-    Colour::bgr(255,0,0), // blue
-    Colour::bgr(0,255,0), // green
-    Colour::bgr(0,0,255), // red
-    Colour::bgr(0,255,255), // yellow
-    Colour::bgr(255,0,255), // magenta
-    Colour::bgr(255,255,0) // cyan
+    Colour::bgr::blue,
+    Colour::bgr::green,
+    Colour::bgr::red,
+    Colour::bgr::yellow,
+    Colour::bgr::magenta,
+    Colour::bgr::cyan
   };
 
   // Draw line segments
