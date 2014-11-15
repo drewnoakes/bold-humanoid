@@ -12,7 +12,7 @@ namespace bold
    * Builds a cv::Mat of labelled pixels, resembling a cartoon. Access after
    * each image pass via mat().
    */
-  class CartoonPass : public ImagePassHandler<uchar>
+  class CartoonPass : public ImagePassHandler
   {
   public:
     /**

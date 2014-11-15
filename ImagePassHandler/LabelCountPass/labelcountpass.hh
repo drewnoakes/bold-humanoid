@@ -17,7 +17,7 @@ namespace bold
   /**
    * Counts the number of each label value seen in an image.
    */
-  class LabelCountPass : public ImagePassHandler<uchar>
+  class LabelCountPass : public ImagePassHandler
   {
   public:
     // assuming we'll never have more than 7 labels (1-8)

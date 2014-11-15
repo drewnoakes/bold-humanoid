@@ -1,6 +1,7 @@
 #include "visualcortex.ih"
 
 #include "../ImagePassRunner/imagepassrunner.hh"
+#include "../ImageSampleMap/imagesamplemap.hh"
 
 void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCycleNumber)
 {

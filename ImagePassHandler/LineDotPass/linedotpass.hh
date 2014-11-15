@@ -15,7 +15,7 @@ namespace bold
   class ImageLabelData;
   class SequentialTimer;
 
-  class LineDotPass : public ImagePassHandler<uchar>
+  class LineDotPass : public ImagePassHandler
   {
   public:
     LineDotPass(ushort imageWidth, std::shared_ptr<PixelLabel> inLabel, std::shared_ptr<PixelLabel> onLabel);

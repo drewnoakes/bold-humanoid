@@ -11,8 +11,9 @@
 
 #include "../imagepasshandler.hh"
 #include "../../DisjointSet/disjointset.hh"
-#include "../../PixelLabel/pixellabel.hh"
+#include "../../ImageLabelData/imagelabeldata.hh"
 #include "../../geometry/Bounds2i.hh"
+#include "../../PixelLabel/pixellabel.hh"
 #include "../../util/assert.hh"
 #include "../../SequentialTimer/sequentialtimer.hh"
 
@@ -100,7 +101,7 @@ namespace bold
    *
    * Builds blobs while passing through an image
    **/
-  class BlobDetectPass : public ImagePassHandler<uint8_t>
+  class BlobDetectPass : public ImagePassHandler
   {
   public:
     BlobDetectPass(ushort imageWidth, ushort imageHeight, std::vector<std::shared_ptr<PixelLabel>> const& blobTypes);

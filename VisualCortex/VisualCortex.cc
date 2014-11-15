@@ -169,7 +169,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   auto periodicFieldEdgePass = make_shared<PeriodicFieldEdgePass>(fieldLabel, lineLabel, imageWidth, imageHeight, 1*2*3*4);
   d_fieldHistogramPass = make_shared<FieldHistogramPass>(fieldLabel, imageHeight);
 
-  d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
+  d_imagePassRunner = make_shared<ImagePassRunner>();
   d_imagePassRunner->addHandler(d_fieldHistogramPass);
 
   Config::getSetting<FieldEdgeType>("vision.field-edge-pass.field-edge-type")->track(

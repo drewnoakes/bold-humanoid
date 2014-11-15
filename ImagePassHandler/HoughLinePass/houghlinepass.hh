@@ -14,8 +14,7 @@ namespace bold
    * Processes an image, treating any non-zero pixels as though they're lines.
    * Intended for use on grayscale input images.
    */
-  template <typename T>
-  class HoughLinePass : public ImagePassHandler<T>
+  class HoughLinePass : public ImagePassHandler
   {
   public:
     HoughLineAccumulator accumulator;

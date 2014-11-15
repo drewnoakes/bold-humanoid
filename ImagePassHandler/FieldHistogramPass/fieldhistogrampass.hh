@@ -11,7 +11,7 @@ namespace bold
   /**
    * Builds a histogram of field pixels per image row.
    */
-  class FieldHistogramPass : public ImagePassHandler<uchar>
+  class FieldHistogramPass : public ImagePassHandler
   {
   public:
     FieldHistogramPass(std::shared_ptr<PixelLabel> fieldLabel, ushort height)

@@ -27,8 +27,8 @@ namespace bold
   class SequentialTimer;
   class Spatialiser;
 
-  template<typename> class ImagePassRunner;
-  template<typename> class ImagePassHandler;
+  class ImagePassRunner;
+  class ImagePassHandler;
   class LineDotPass;
   class BlobDetectPass;
   class CartoonPass;
@@ -159,7 +159,7 @@ namespace bold
 
     std::shared_ptr<LineFinder> d_lineFinder;
 
-    std::shared_ptr<ImagePassRunner<uchar>> d_imagePassRunner;
+    std::shared_ptr<ImagePassRunner> d_imagePassRunner;
 
     std::shared_ptr<FieldEdgePass> d_fieldEdgePass;
     std::shared_ptr<FieldHistogramPass> d_fieldHistogramPass;

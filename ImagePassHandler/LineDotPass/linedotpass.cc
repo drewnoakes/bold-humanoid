@@ -1,6 +1,7 @@
 #include "linedotpass.hh"
 
 #include "../../Config/config.hh"
+#include "../../ImageLabelData/imagelabeldata.hh"
 #include "../../PixelLabel/pixellabel.hh"
 #include "../../SequentialTimer/sequentialtimer.hh"
 

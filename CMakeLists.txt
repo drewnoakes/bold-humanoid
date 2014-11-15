@@ -286,6 +286,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./ImagePassRunner/imagepassrunner.cc
+)
+
+add_class(BOLDHUMANOID
   ./ImageSampleMap/imagesamplemap.cc
 )
 

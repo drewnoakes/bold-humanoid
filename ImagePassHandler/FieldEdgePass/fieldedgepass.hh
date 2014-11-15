@@ -12,7 +12,7 @@ namespace bold
   class PixelLabel;
   template<typename> class Setting;
 
-  class FieldEdgePass : public ImagePassHandler<uchar>
+  class FieldEdgePass : public ImagePassHandler
   {
   public:
     FieldEdgePass(std::string id, ushort imageWidth, ushort imageHeight);

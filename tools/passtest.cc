@@ -17,6 +17,7 @@
 #include "../ImagePassHandler/CartoonPass/cartoonpass.hh"
 #include "../ImagePassHandler/LabelCountPass/labelcountpass.hh"
 #include "../ImagePassHandler/LineDotPass/linedotpass.hh"
+#include "../ImageSampleMap/imagesamplemap.hh"
 #include "../LineRunTracker/lineruntracker.hh"
 #include "../LineFinder/MaskWalkLineFinder/maskwalklinefinder.hh"
 #include "../LineFinder/RandomPairLineFinder/randompairlinefinder.hh"
@@ -166,7 +167,7 @@ int main(int argc, char **argv)
   auto labelCountPass = make_shared<LabelCountPass>(labels);
 
   // Build the pass runner
-  auto passRunner = ImagePassRunner<uchar>();
+  ImagePassRunner passRunner;
   passRunner.addHandler(lineDotPass);
   passRunner.addHandler(blobDetectPass);
   passRunner.addHandler(cartoonPass);

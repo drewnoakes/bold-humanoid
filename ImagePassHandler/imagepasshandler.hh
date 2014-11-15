@@ -2,16 +2,14 @@
 
 #include <Eigen/Core>
 
-#include "../ImageLabelData/imagelabeldata.hh"
-
 namespace bold
 {
+  class ImageLabelData;
   class SequentialTimer;
 
   /**
    * Abstract base class for classes that process labelled pixel data.
    */
-  template <typename TPixel>
   class ImagePassHandler
   {
   protected:
