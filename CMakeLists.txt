@@ -278,6 +278,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./ImagePassHandler/LabelCountPass/labelcountpass.cc
+)
+
+add_class(BOLDHUMANOID
   ./ImageSampleMap/imagesamplemap.cc
 )
 

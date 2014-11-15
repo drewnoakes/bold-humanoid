@@ -51,15 +51,7 @@ namespace bold
         removeHandler(handler);
     }
 
-    /** Check whether the specified handler is enabled
-     */
-    bool isEnabled(std::shared_ptr<ImagePassHandler<TPixel>> handler) const
-    {
-      return d_handlers.find(handler) != d_handlers.end();
-    }
-
-    /** Passes over the image, calling out to all ImagePassHandlers
-     * with data from the image.
+    /** Passes over the image, calling out to all ImagePassHandlers with data from the image.
      */
     void pass(ImageLabelData const& labelData, SequentialTimer& timer) const
     {
@@ -68,95 +60,10 @@ namespace bold
       for (auto const& handler : d_handlers)
       {
         timer.enter(handler->id());
-
-        handler->onImageStarting(timer);
-
-        for (auto const& row : labelData.getRows())
-        {
-          handler->onRowStarting(row.imageY, row.granularity);
-
-          ushort x = 0;
-          for (auto const& label : row)
-          {
-            handler->onPixel(label, x, row.imageY);
-            x += row.granularity.x();
-          }
-
-          handler->onRowCompleted(row.imageY, row.granularity);
-        }
-
-        timer.timeEvent("Pass");
-
-        handler->onImageComplete(timer);
-
+        handler->process(labelData, timer);
         timer.exit();
       }
     }
-
-    /** Passes over the image with the given handler.
-     *
-     * This method bypasses vtable lookups, so the handler must be
-     * typed correctly; it can't be a pointer to a parent type. A
-     * granularity function allows processing fewer than all pixels in
-     * the image.
-     */
-    template<typename T>
-    void passWithHandler(std::shared_ptr<T> handler, ImageLabelData const& labelData, SequentialTimer& timer) const
-    {
-      ASSERT(handler);
-
-      timer.enter(handler->id());
-
-      handler->T::onImageStarting(timer);
-
-      for (auto const& row : labelData.getRows())
-      {
-        handler->T::onRowStarting(row.imageY, row.granularity);
-
-        ushort x = 0;
-        for (auto const& label : row)
-        {
-          handler->T::onPixel(label, x, row.imageY);
-          x += row.granularity.x();
-        }
-
-        handler->T::onRowCompleted(row.imageY, row.granularity);
-      }
-
-      timer.timeEvent("Pass");
-
-      handler->T::onImageComplete(timer);
-
-      timer.exit();
-    }
-
-    /** Passes over the image, calling out to all ImagePassHandlers in
-     * the given tuple with data from the image.
-     */
-
-    template<typename... Types>
-    void passWithHandlers(std::tuple<Types...> const& handlers,
-                          ImageLabelData const& labelData,
-                          SequentialTimer& timer) const
-    {
-      meta::for_each<PassWrapper>(handlers, this, labelData, timer);
-    }
-
-  private:
-    struct PassWrapper
-    {
-      template<typename Handler>
-      static void do_it(std::shared_ptr<Handler> handler,
-                        ImagePassRunner const* runner,
-                        ImageLabelData const& labelData,
-                        SequentialTimer& timer)
-      {
-        // TODO: disabling this makes direct pass faster??
-        // In any case good to prevent this check at every pass again
-        if (runner->isEnabled(handler))
-          runner->passWithHandler(handler, labelData, timer);
-      }
-    };
 
     std::set<std::shared_ptr<ImagePassHandler<TPixel>>> d_handlers;
   };

@@ -20,25 +20,32 @@ namespace bold
         d_cumulativePixelCounts(height)
     {}
 
-    void onImageStarting(SequentialTimer& timer) override
+    void process(ImageLabelData const& labelData, SequentialTimer& timer) override
     {
-      d_cumulativePixelCount = 0;
       std::fill(d_rowWidths.begin(), d_rowWidths.end(), (ushort)0);
       std::fill(d_cumulativePixelCounts.begin(), d_cumulativePixelCounts.end(), (uint)0);
       timer.timeEvent("Clear");
-    }
 
-    void onPixel(uchar value, ushort x, ushort y) override
-    {
-      if (value == d_fieldLabelId)
-        d_rowWidths[y]++;
-    }
+      uint cumulativePixelCount = 0;
 
-    void onRowCompleted(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) override
-    {
-      d_rowWidths[y] *= granularity.x();
-      d_cumulativePixelCount += d_rowWidths[y] * granularity.y();
-      d_cumulativePixelCounts[y] = d_cumulativePixelCount;
+      for (auto const& row : labelData)
+      {
+        const ushort y = row.imageY;
+        ushort& countForRow = d_rowWidths[y];
+
+        for (auto const& label : row)
+        {
+          if (label == d_fieldLabelId)
+            countForRow++;
+        }
+
+        d_rowWidths[y] *= row.granularity.x();
+        cumulativePixelCount += d_rowWidths[y] * row.granularity.y();
+        d_cumulativePixelCounts[y] = cumulativePixelCount;
+      }
+      timer.timeEvent("Process Rows");
+
+      d_cumulativePixelCount = cumulativePixelCount;
     }
 
     std::string id() const override

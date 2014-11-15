@@ -11,7 +11,7 @@ BlobDetectPass::BlobDetectPass(ushort imageWidth, ushort imageHeight, vector<sha
     d_currentRun(0, 0)
 {
   // Create a run length code for each label
-  for (auto pixelLabel : pixelLabels)
+  for (auto const& pixelLabel : pixelLabels)
   {
     uint8_t pixelLabelId = (uint8_t)pixelLabel->getID();
 

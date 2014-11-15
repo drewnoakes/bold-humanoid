@@ -141,9 +141,6 @@ namespace bold
     bool canBlobBeGoal(Blob const& goalBlob, Eigen::Vector2d& pos);
     bool canBlobBePlayer(Blob const& playerBlob, Eigen::Vector2d& imagePos, Eigen::Vector3d& agentFramePos);
 
-    template<typename T>
-    std::shared_ptr<T> getHandler() { return meta::get<std::shared_ptr<T>>(d_imagePassHandlers); }
-
     std::shared_ptr<Camera> d_camera;
     std::shared_ptr<CameraModel> d_cameraModel;
     std::shared_ptr<DataStreamer> d_dataStreamer;
@@ -164,18 +161,11 @@ namespace bold
 
     std::shared_ptr<ImagePassRunner<uchar>> d_imagePassRunner;
 
-    std::tuple<
-      std::shared_ptr<LineDotPass<uchar>>,
-      std::shared_ptr<BlobDetectPass>,
-      std::shared_ptr<CartoonPass>,
-      std::shared_ptr<LabelCountPass>,
-      std::shared_ptr<CompleteFieldEdgePass>,
-      std::shared_ptr<PeriodicFieldEdgePass>,
-      std::shared_ptr<FieldHistogramPass>
-      > d_imagePassHandlers;
-
     std::shared_ptr<FieldEdgePass> d_fieldEdgePass;
     std::shared_ptr<FieldHistogramPass> d_fieldHistogramPass;
+    std::shared_ptr<CartoonPass> d_cartoonPass;
+    std::shared_ptr<BlobDetectPass> d_blobDetectPass;
+    std::shared_ptr<LineDotPass<uchar>> d_lineDotPass;
 
     Setting<bool>* d_shouldDetectLines;
     Setting<bool>* d_shouldCountLabels;

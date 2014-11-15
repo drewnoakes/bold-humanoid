@@ -21,8 +21,8 @@ namespace bold
     ushort imageY;
     Eigen::Matrix<uchar,2,1> granularity;
 
-    uchar* begin() const { return d_begin; }
-    uchar* end() const { return d_end; }
+    uchar const* begin() const { return d_begin; }
+    uchar const* end() const { return d_end; }
 
   private:
     uchar* d_begin;
@@ -38,9 +38,10 @@ namespace bold
         d_imageWidth(imageWidth)
     {}
 
-    std::vector<RowLabels> const& getRows() const { return d_rows; }
-
     ushort getImageWidth() const { return d_imageWidth; }
+
+    RowLabels const* begin() const { return &(*d_rows.begin()); }
+    RowLabels const* end() const { return &(*d_rows.end()); }
 
   private:
     std::vector<uchar> d_labels;

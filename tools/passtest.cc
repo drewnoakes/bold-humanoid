@@ -27,6 +27,8 @@
 #include "../PixelLabel/RangePixelLabel/rangepixellabel.hh"
 #include "../PixelLabel/HistogramPixelLabel/histogrampixellabel.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
+#include "../State/state.hh"
+#include "../StateObject/LabelCountState/labelcountstate.hh"
 #include "../util/meta.hh"
 
 
@@ -145,6 +147,8 @@ int main(int argc, char **argv)
 
   vector<shared_ptr<PixelLabel>> labels = { goalLabel, ballLabel, fieldLabel, lineLabel, cyanLabel, magentaLabel };
 
+  State::registerStateType<LabelCountState>("LabelCount");
+
   // Resources for labelling
   // TODO: this will crash
   auto imageLabeller = new ImageLabeller(LUTBuilder::buildLookUpTableBGR18(labels), 0);
@@ -202,22 +206,6 @@ int main(int argc, char **argv)
   for (int i = 0; i < loopCount; i++)
     passRunner.pass(labelData, timer);
   cout << "[simple pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
-
-  t = Clock::getTimestamp();
-  for (int i = 0; i < loopCount; i++)
-  {
-    passRunner.passWithHandler(lineDotPass, labelData, timer);
-    passRunner.passWithHandler(blobDetectPass, labelData, timer);
-    passRunner.passWithHandler(cartoonPass, labelData, timer);
-    passRunner.passWithHandler(labelCountPass, labelData, timer);
-  }
-  cout << "[direct pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
-
-  auto passTuple = make_tuple(lineDotPass, blobDetectPass, cartoonPass, labelCountPass);
-  t = Clock::getTimestamp();
-  for (int i = 0; i < loopCount; i++)
-    passRunner.passWithHandlers(passTuple, labelData, timer);
-  cout << "[meta pass] Passed " << loopCount << " times. Average time: " << (Clock::getMillisSince(t)/loopCount) << " ms" << endl;
 
   //
   // DETECT BLOBS

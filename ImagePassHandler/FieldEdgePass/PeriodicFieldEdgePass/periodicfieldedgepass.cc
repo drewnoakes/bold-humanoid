@@ -20,73 +20,51 @@ PeriodicFieldEdgePass::PeriodicFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
   d_period(period)
 {}
 
-void PeriodicFieldEdgePass::onImageStarting(SequentialTimer& timer)
+void PeriodicFieldEdgePass::process(ImageLabelData const& labelData, SequentialTimer& timer)
 {
   std::fill(d_maxYByC.begin(), d_maxYByC.end(), numeric_limits<ushort>::max());
   std::fill(d_runByC.begin(), d_runByC.end(), 0);
   timer.timeEvent("Clear");
-}
 
-void PeriodicFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
-{
+  for (auto const& row : labelData)
+  {
+    ushort x = 0;
+    for (auto const& label : row)
+    {
 //   ASSERT(x >= 0 && x < d_imageWidth);
 
-  if (x % d_period != 0)
-    return;
+      if (x % d_period != 0)
+        return;
 
-  ushort c = x / d_period;
+      ushort c = x / d_period;
 
-  if (labelId == d_lineLabelId)
-  {
-    // Do nothing! Line may still be within field.
-    // We don't increase the score however, and still reset at the first non-field/line pixel.
-  }
-  else if (labelId == d_fieldLabelId)
-  {
+      if (label == d_lineLabelId)
+      {
+        // Do nothing! Line may still be within field.
+        // We don't increase the score however, and still reset at the first non-field/line pixel.
+      }
+      else if (label == d_fieldLabelId)
+      {
 //     ASSERT(y >= d_maxYByX[c]);
 
-    ushort run = d_runByC[c];
-    run++;
+        ushort run = d_runByC[c];
+        run++;
 
-    if (run >= d_minVerticalRunLength)
-      d_maxYByC[c] = y;
+        if (run >= d_minVerticalRunLength)
+          d_maxYByC[c] = row.imageY;
 
-    d_runByC[c] = run;
+        d_runByC[c] = run;
+      }
+      else
+      {
+        d_runByC[c] = 0;
+      }
+
+      x += row.granularity.x();
+    }
   }
-  else
-  {
-    d_runByC[c] = 0;
-  }
-}
+  timer.timeEvent("Process Rows");
 
-ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
-{
-  ASSERT(x < d_imageWidth);
-
-  // Map from the x-position to the periodic samples.
-
-  ushort rem = x % d_period;
-  ushort c = x / d_period;
-
-  auto const& maxYByC = d_useConvexHull->getValue() ? d_maxYByCConvex : d_maxYByC;
-
-  if (rem == 0 || c == d_runByC.size() - 1)
-  {
-    // x is an exact multiple of the period, so return the value directly.
-    ASSERT(maxYByC[c] < d_imageHeight);
-    return maxYByC[c];
-  }
-
-  // Pixels at the far edge of the image may be beyond the last sampled column.
-  if (c == maxYByC.size())
-    return maxYByC[c - 1];
-
-  // Interpolate between the two closest samples.
-  return Math::lerp((double)rem/d_period, maxYByC[c], maxYByC[c + 1]);
-}
-
-void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
-{
   // d_maxYByC is initialised with -1 in all positions.
   //
   // If we didn't observe a single column with enough green, then we will set
@@ -151,6 +129,32 @@ void PeriodicFieldEdgePass::onImageComplete(SequentialTimer& timer)
   if (fromIndex < toIndex)
     applyConvexHull(d_maxYByCConvex, fromIndex, toIndex);
   timer.timeEvent("Convex Hull");
+}
+
+ushort PeriodicFieldEdgePass::getEdgeYValue(ushort x) const
+{
+  ASSERT(x < d_imageWidth);
+
+  // Map from the x-position to the periodic samples.
+
+  ushort rem = x % d_period;
+  ushort c = x / d_period;
+
+  auto const& maxYByC = d_useConvexHull->getValue() ? d_maxYByCConvex : d_maxYByC;
+
+  if (rem == 0 || c == d_runByC.size() - 1)
+  {
+    // x is an exact multiple of the period, so return the value directly.
+    ASSERT(maxYByC[c] < d_imageHeight);
+    return maxYByC[c];
+  }
+
+  // Pixels at the far edge of the image may be beyond the last sampled column.
+  if (c == maxYByC.size())
+    return maxYByC[c - 1];
+
+  // Interpolate between the two closest samples.
+  return Math::lerp((double)rem/d_period, maxYByC[c], maxYByC[c + 1]);
 }
 
 vector<OcclusionRay<ushort>> PeriodicFieldEdgePass::getOcclusionRays() const

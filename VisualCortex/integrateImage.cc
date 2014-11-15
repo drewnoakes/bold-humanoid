@@ -1,6 +1,5 @@
 #include "visualcortex.ih"
 
-#include "../ImageLabelData/imagelabeldata.hh"
 #include "../ImagePassRunner/imagepassrunner.hh"
 
 void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCycleNumber)
@@ -38,21 +37,14 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
   t.exit();
 
   // Perform the image pass
-//d_imagePassRunner->pass(labelData, t);
-  d_imagePassRunner->passWithHandlers(d_imagePassHandlers, labelData, t);
-
-  if (d_shouldCountLabels->getValue())
-  {
-    State::make<LabelCountState>(getHandler<LabelCountPass>()->getCounts());
-    t.timeEvent("Store Label Count");
-  }
+  d_imagePassRunner->pass(labelData, t);
 
   // Find lines
   vector<LineSegment2i> observedLineSegments;
   if (d_shouldDetectLines->getValue())
   {
     t.enter("Line Search");
-    observedLineSegments = d_lineFinder->findLineSegments(getHandler<LineDotPass<uchar>>()->lineDots);
+    observedLineSegments = d_lineFinder->findLineSegments(d_lineDotPass->lineDots);
     t.exit();
   }
 
@@ -64,7 +56,7 @@ void VisualCortex::integrateImage(Mat& image, SequentialTimer& t, ulong thinkCyc
   {
     // Find blobs
     t.enter("Blob Detect");
-    auto blobsPerLabel = getHandler<BlobDetectPass>()->detectBlobs(t);
+    auto blobsPerLabel = d_blobDetectPass->detectBlobs(t);
     t.exit();
 
     //

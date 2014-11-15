@@ -161,35 +161,32 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   static ushort imageWidth = d_cameraModel->imageWidth();
   static ushort imageHeight = d_cameraModel->imageHeight();
 
-  d_imagePassHandlers = make_tuple(
-    shared_ptr<LineDotPass<uchar>>(new LineDotPass<uchar>(imageWidth, fieldLabel, lineLabel)),
-    shared_ptr<BlobDetectPass>(new BlobDetectPass(imageWidth, imageHeight, blobPixelLabels)),
-    shared_ptr<CartoonPass>(new CartoonPass(imageWidth, imageHeight)),
-    shared_ptr<LabelCountPass>(new LabelCountPass(d_pixelLabels)),
-    shared_ptr<CompleteFieldEdgePass>(new CompleteFieldEdgePass(fieldLabel, imageWidth, imageHeight)),
-    shared_ptr<PeriodicFieldEdgePass>(new PeriodicFieldEdgePass(fieldLabel, lineLabel, imageWidth, imageHeight, 1*2*3*4)),
-    shared_ptr<FieldHistogramPass>(new FieldHistogramPass(fieldLabel, imageHeight))
-    );
+  d_lineDotPass = make_shared<LineDotPass<uchar>>(imageWidth, fieldLabel, lineLabel);
+  d_blobDetectPass = make_shared<BlobDetectPass>(imageWidth, imageHeight, blobPixelLabels);
+  d_cartoonPass = make_shared<CartoonPass>(imageWidth, imageHeight);
+  auto labelCountPass = make_shared<LabelCountPass>(d_pixelLabels);
+  auto completeFieldEdgePass = make_shared<CompleteFieldEdgePass>(fieldLabel, imageWidth, imageHeight);
+  auto periodicFieldEdgePass = make_shared<PeriodicFieldEdgePass>(fieldLabel, lineLabel, imageWidth, imageHeight, 1*2*3*4);
+  d_fieldHistogramPass = make_shared<FieldHistogramPass>(fieldLabel, imageHeight);
 
-  d_imagePassRunner = shared_ptr<ImagePassRunner<uchar>>(new ImagePassRunner<uchar>());
-
-  d_fieldHistogramPass = getHandler<FieldHistogramPass>();
+  d_imagePassRunner = make_shared<ImagePassRunner<uchar>>();
   d_imagePassRunner->addHandler(d_fieldHistogramPass);
 
   Config::getSetting<FieldEdgeType>("vision.field-edge-pass.field-edge-type")->track(
-    [this](FieldEdgeType fieldEdgeType)
+    [this,periodicFieldEdgePass,completeFieldEdgePass]
+    (FieldEdgeType fieldEdgeType)
     {
       switch (fieldEdgeType)
       {
         case FieldEdgeType::Complete:
-          d_imagePassRunner->removeHandler(getHandler<PeriodicFieldEdgePass>());
-          d_imagePassRunner->addHandler(getHandler<CompleteFieldEdgePass>());
-          d_fieldEdgePass = getHandler<CompleteFieldEdgePass>();
+          d_imagePassRunner->removeHandler(periodicFieldEdgePass);
+          d_imagePassRunner->addHandler(completeFieldEdgePass);
+          d_fieldEdgePass = completeFieldEdgePass;
           break;
         case FieldEdgeType::Periodic:
-          d_imagePassRunner->removeHandler(getHandler<CompleteFieldEdgePass>());
-          d_imagePassRunner->addHandler(getHandler<PeriodicFieldEdgePass>());
-          d_fieldEdgePass = getHandler<PeriodicFieldEdgePass>();
+          d_imagePassRunner->removeHandler(completeFieldEdgePass);
+          d_imagePassRunner->addHandler(periodicFieldEdgePass);
+          d_fieldEdgePass = periodicFieldEdgePass;
           break;
       }
     }
@@ -260,14 +257,13 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
     }
   );
 
-  d_shouldDetectLines->track([this](bool value) { d_imagePassRunner->setHandler(getHandler<LineDotPass<uchar>>(), value); });
-  d_shouldCountLabels->track([this](bool value) { d_imagePassRunner->setHandler(getHandler<LabelCountPass>(), value); });
+  d_shouldDetectLines->track([this](bool value) { d_imagePassRunner->setHandler(d_lineDotPass, value); });
+  d_shouldCountLabels->track([this,labelCountPass](bool value) { d_imagePassRunner->setHandler(labelCountPass, value); });
   d_shouldDetectBlobs->track([this](bool value)
   {
-    auto const& handler = getHandler<BlobDetectPass>();
-    d_imagePassRunner->setHandler(handler, value);
+    d_imagePassRunner->setHandler(d_blobDetectPass, value);
     if (!value)
-      handler->clear();
+      d_blobDetectPass->clear();
   });
 
   // Only include the cartoon pass when needed
@@ -275,7 +271,7 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   {
     bool enable = d_imageType->getValue() == ImageType::Cartoon
                && d_dataStreamer->hasCameraClients();
-    d_imagePassRunner->setHandler(getHandler<CartoonPass>(), enable);
+    d_imagePassRunner->setHandler(d_cartoonPass, enable);
   };
   d_imageType->track([setCartoonHandler](ImageType value) { setCartoonHandler(); });
   d_dataStreamer->hasClientChanged.connect([setCartoonHandler](std::string protocol, bool enabled) { if (protocol == "camera-protocol") setCartoonHandler(); });

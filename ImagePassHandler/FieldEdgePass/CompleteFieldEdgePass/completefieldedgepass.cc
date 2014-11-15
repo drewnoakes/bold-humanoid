@@ -18,44 +18,41 @@ CompleteFieldEdgePass::CompleteFieldEdgePass(shared_ptr<PixelLabel> fieldLabel, 
   Config::getSetting<int>("vision.field-edge-pass.complete.smoothing-window-length")->track([this](int value) { d_smoothingWindowSize = (ushort)value; });
 }
 
-void CompleteFieldEdgePass::onImageStarting(SequentialTimer& timer)
+void CompleteFieldEdgePass::process(ImageLabelData const& labelData, SequentialTimer& timer)
 {
   std::fill(d_maxYByX.begin(), d_maxYByX.end(), d_imageHeight - 1);
   std::fill(d_runByX.begin(), d_runByX.end(), 0);
   timer.timeEvent("Clear");
-}
 
-void CompleteFieldEdgePass::onPixel(uchar labelId, ushort x, ushort y)
-{
+  for (auto const& row : labelData)
+  {
+    ushort x = 0;
+    for (auto const& label : row)
+    {
 //   ASSERT(x >= 0 && x < d_imageWidth);
 
-  if (labelId == d_fieldLabelId)
-  {
+      if (label == d_fieldLabelId)
+      {
 //     ASSERT(y >= d_maxYByX[x]);
 
-    ushort run = d_runByX[x];
-    run++;
+        ushort run = d_runByX[x];
+        run++;
 
-    if (run >= d_minVerticalRunLength)
-      d_maxYByX[x] = y;
+        if (run >= d_minVerticalRunLength)
+          d_maxYByX[x] = row.imageY;
 
-    d_runByX[x] = run;
+        d_runByX[x] = run;
+      }
+      else
+      {
+        d_runByX[x] = 0;
+      }
+
+      x += row.granularity.x();
+    }
   }
-  else
-  {
-    d_runByX[x] = 0;
-  }
-}
+  timer.timeEvent("Process Rows");
 
-ushort CompleteFieldEdgePass::getEdgeYValue(ushort x) const
-{
-  ASSERT(x < d_imageWidth);
-
-  return d_useConvexHull->getValue() ? d_maxYByXConvex[x] : d_maxYByX[x];
-}
-
-void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
-{
   if (d_smoothingWindowSize > 1)
   {
     MovingAverage<int> avg(d_smoothingWindowSize);
@@ -77,6 +74,13 @@ void CompleteFieldEdgePass::onImageComplete(SequentialTimer& timer)
   std::copy(d_maxYByX.begin(), d_maxYByX.end(), d_maxYByXConvex.begin());
   applyConvexHull(d_maxYByXConvex, 0, d_imageWidth - 1);
   timer.timeEvent("Convex Hull");
+}
+
+ushort CompleteFieldEdgePass::getEdgeYValue(ushort x) const
+{
+  ASSERT(x < d_imageWidth);
+
+  return d_useConvexHull->getValue() ? d_maxYByXConvex[x] : d_maxYByX[x];
 }
 
 vector<OcclusionRay<ushort>> CompleteFieldEdgePass::getOcclusionRays() const

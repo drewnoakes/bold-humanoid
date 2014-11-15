@@ -14,6 +14,7 @@
 #include "../../PixelLabel/pixellabel.hh"
 #include "../../geometry/Bounds2i.hh"
 #include "../../util/assert.hh"
+#include "../../SequentialTimer/sequentialtimer.hh"
 
 namespace bold
 {
@@ -106,11 +107,7 @@ namespace bold
 
     void clear();
 
-    void onImageStarting(SequentialTimer& timer) override;
-
-    void onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) override;
-
-    void onPixel(uint8_t label, ushort x, ushort y) override;
+    void process(ImageLabelData const& labelData, SequentialTimer& timer) override;
 
     std::vector<std::shared_ptr<PixelLabel>> pixelLabels() const { return d_pixelLabels; }
 
@@ -152,13 +149,57 @@ namespace bold
   //
   //// -------- BlobDetectPass --------
   //
-  inline void BlobDetectPass::onImageStarting(SequentialTimer& timer)
+  inline void BlobDetectPass::process(ImageLabelData const& labelData, SequentialTimer& timer)
   {
     // Clear all persistent data
     for (auto& pair : d_runsPerRowPerLabel)
       for (std::vector<Run>& runs : pair.second)
         runs.clear();
+
+    // TODO size of this vector is known at this point -- avoid reallocation
     d_rowIndices.clear();
+
+    timer.timeEvent("Clear");
+
+    for (auto const& row : labelData)
+    {
+      // TODO VISION might miss last run on last row with this approach -- add
+      // onRowEnding, or copy into onImageComplete
+      if (d_currentLabel != 0)
+      {
+        // finish whatever run we were on
+        addRun(d_imageWidth - 1u);
+      }
+      d_currentRun.y = row.imageY;
+      d_currentLabel = 0;
+      d_rowIndices.push_back(row.imageY);
+
+      ushort x = 0;
+      for (auto const& label : row)
+      {
+        // Check if we have a run boundary
+        if (label != d_currentLabel)
+        {
+          // Check whether this is the end of the current run
+          if (d_currentLabel != 0)
+          {
+            // Finished run
+            addRun(x - 1u);
+          }
+
+          // Check whether this is the start of a new run
+          if (label != 0)
+          {
+            // Start new run
+            d_currentRun.startX = x;
+          }
+
+          d_currentLabel = label;
+        }
+        x += row.granularity.x();
+      }
+    }
+    timer.timeEvent("Process Rows");
   }
 
   inline void BlobDetectPass::clear()
@@ -172,43 +213,6 @@ namespace bold
     {
       auto& blobs = pair.second;
       blobs.clear();
-    }
-  }
-
-  inline void BlobDetectPass::onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity)
-  {
-    // TODO VISION might miss last run on last row with this approach -- add
-    // onRowEnding, or copy into onImageComplete
-    if (d_currentLabel != 0)
-    {
-      // finish whatever run we were on
-      addRun(d_imageWidth - 1u);
-    }
-    d_currentRun.y = y;
-    d_currentLabel = 0;
-    d_rowIndices.push_back(y);
-  }
-
-  inline void BlobDetectPass::onPixel(uint8_t label, ushort x, ushort y)
-  {
-    // Check if we have a run boundary
-    if (label != d_currentLabel)
-    {
-      // Check whether this is the end of the current run
-      if (d_currentLabel != 0)
-      {
-        // Finished run
-        addRun(x - 1u);
-      }
-
-      // Check whether this is the start of a new run
-      if (label != 0)
-      {
-        // Start new run
-        d_currentRun.startX = x;
-      }
-
-      d_currentLabel = label;
     }
   }
 

@@ -61,60 +61,61 @@ namespace bold
       });
     }
 
-    void onImageStarting(SequentialTimer& timer) override
+    void process(ImageLabelData const& labelData, SequentialTimer& timer) override
     {
       // reset all run trackers
       d_rowTracker->reset();
       for (ushort x = 0; x < d_imageWidth; ++x)
         d_colTrackers[x].reset();
-
       lineDots.clear();
-
       timer.timeEvent("Clear");
-    }
 
-    void onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) override
-    {
-      d_rowTracker->reset();
-      d_rowTracker->otherCoordinate = y;
-
-      // *   *   *   *   *   *   *   *   *   *   *   *   * 4
-      // *   *   *   *   *   *   *   *   *   *   *   *   * 4
-      // ************************************************* 1
-      // ************************************************* 1
-      // * * * * * * * * * * * * * * * * * * * * * * * * * 2
-      // * * * * * * * * * * * * * * * * * * * * * * * * * 2
-      // *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 3
-      // *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 3
-      // *   *   *   *   *   *   *   *   *   *   *   *   * 4
-      // *   *   *   *   *   *   *   *   *   *   *   *   * 4
-
-      if (d_lastXGranularity != granularity.x())
+      for (auto const& row : labelData)
       {
-        // We've transitioned between x-granularities and need to reset columns
-        // for which we have just stopped observing pixels, as otherwise they
-        // will carry incorrect state across vertical regions of the image.
+        d_rowTracker->reset();
+        d_rowTracker->otherCoordinate = row.imageY;
 
-        // If this isn't the first row of the image...
-        if (d_lastXGranularity != -1)
+        // *   *   *   *   *   *   *   *   *   *   *   *   * 4
+        // *   *   *   *   *   *   *   *   *   *   *   *   * 4
+        // ************************************************* 1
+        // ************************************************* 1
+        // * * * * * * * * * * * * * * * * * * * * * * * * * 2
+        // * * * * * * * * * * * * * * * * * * * * * * * * * 2
+        // *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 3
+        // *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 3
+        // *   *   *   *   *   *   *   *   *   *   *   *   * 4
+        // *   *   *   *   *   *   *   *   *   *   *   *   * 4
+
+        if (d_lastXGranularity != row.granularity.x())
         {
-          // Iterate through at the previous granularity. Any column which is
-          // not a multiple of the new granularity must be reset.
-          for (ushort x = 0; x < d_imageWidth; x += d_lastXGranularity)
+          // We've transitioned between x-granularities and need to reset columns
+          // for which we have just stopped observing pixels, as otherwise they
+          // will carry incorrect state across vertical regions of the image.
+
+          // If this isn't the first row of the image...
+          if (d_lastXGranularity != -1)
           {
-            if (x % granularity.x() != 0)
-              d_colTrackers[x].reset();
+            // Iterate through at the previous granularity. Any column which is
+            // not a multiple of the new granularity must be reset.
+            for (ushort x = 0; x < d_imageWidth; x += d_lastXGranularity)
+            {
+              if (x % row.granularity.x() != 0)
+                d_colTrackers[x].reset();
+            }
           }
+
+          d_lastXGranularity = row.granularity.x();
         }
 
-        d_lastXGranularity = granularity.x();
-      }
-    }
+        ushort x = 0;
 
-    void onPixel(T label, ushort x, ushort y) override
-    {
-      d_rowTracker->update(label, x);
-      d_colTrackers[x].update(label, y);
+        for (auto const& label : row)
+        {
+          d_rowTracker->update(label, x);
+          d_colTrackers[x].update(label, row.imageY);
+          x += row.granularity.x();
+        }
+      }
     }
 
     std::string id() const override

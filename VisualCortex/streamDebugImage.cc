@@ -42,7 +42,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
     }
     case ImageType::Cartoon:
     {
-      debugImage = getHandler<CartoonPass>()->mat().clone();
+      debugImage = d_cartoonPass->mat().clone();
       // Do this each frame, as colours can change at runtime
       palette[0] = backgroundColour->getValue();
       for (std::shared_ptr<PixelLabel> const& label : d_pixelLabels)
@@ -122,18 +122,18 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   }
 
   // Draw line dots
-  if (drawDebugData && d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && getHandler<LineDotPass<uchar>>()->lineDots.size() > 0)
+  if (drawDebugData && d_shouldDetectLines->getValue() && d_shouldDrawLineDots->getValue() && d_lineDotPass->lineDots.size() > 0)
   {
     if (usePalette)
     {
       uchar lineDotColour = (uchar)(getColour(d_lineDotColour->getValue()).val[0]);
-      for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
+      for (auto const& lineDot : d_lineDotPass->lineDots)
         debugImage.at<uchar>(lineDot.y(), lineDot.x()) = lineDotColour;
     }
     else
     {
       auto const& lineDotColour = d_lineDotColour->getValue();
-      for (auto const& lineDot : getHandler<LineDotPass<uchar>>()->lineDots)
+      for (auto const& lineDot : d_lineDotPass->lineDots)
         debugImage.at<bgr>(lineDot.y(), lineDot.x()) = lineDotColour;
     }
   }
@@ -141,9 +141,9 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
   // Draw blobs
   if (drawDebugData && d_shouldDrawBlobs->getValue())
   {
-    auto const& blobsByLabel = getHandler<BlobDetectPass>()->getDetectedBlobs();
+    auto const& blobsByLabel = d_blobDetectPass->getDetectedBlobs();
 
-    for (auto const& pixelLabel : getHandler<BlobDetectPass>()->pixelLabels())
+    for (auto const& pixelLabel : d_blobDetectPass->pixelLabels())
     {
       // Determine outline colour for the blob
       cv::Scalar blobColour = getColour(pixelLabel->getThemeColour());

@@ -24,25 +24,25 @@ namespace bold
 
     cv::Mat mat() { return d_mat; }
 
-    void onImageStarting(SequentialTimer& timer) override
+    void process(ImageLabelData const& labelData, SequentialTimer& timer) override
     {
       d_mat = cv::Scalar(0);
       timer.timeEvent("Clear");
-    }
 
-    void onRowStarting(ushort y, Eigen::Matrix<uchar,2,1> const& granularity) override
-    {
-      d_ptr = d_mat.ptr<uchar>(y);
-      d_dx = granularity.x();
-    }
-
-    void onPixel(uchar value, ushort x, ushort y) override
-    {
-      // NOTE Have tested whether it was better to check if value is zero here, but it runs the
-      //      pass 0.3ms slower on average with the if-check here, so skip it. The write pattern
-      //      here is sequential anyway. If this becomes random access, it may help.
-      *d_ptr = value;
-      d_ptr += d_dx;
+      for (auto const& row : labelData)
+      {
+        uchar* ptr = d_mat.ptr<uchar>(row.imageY);
+        auto dx = row.granularity.x();
+        for (auto const& label : row)
+        {
+          // NOTE Have tested whether it was better to check if value is zero here, but it runs the
+          //      pass 0.3ms slower on average with the if-check here, so skip it. The write pattern
+          //      here is sequential anyway. If this becomes random access, it may help.
+          *ptr = label;
+          ptr += dx;
+        }
+      }
+      timer.timeEvent("Process Rows");
     }
 
     std::string id() const override
@@ -52,7 +52,5 @@ namespace bold
 
   private:
     cv::Mat d_mat;
-    uchar* d_ptr;
-    int d_dx;
   };
 }

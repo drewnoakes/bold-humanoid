@@ -14,9 +14,7 @@ namespace bold
 
     ~CompleteFieldEdgePass() override = default;
 
-    void onImageStarting(SequentialTimer& timer) override;
-    void onPixel(uchar labelId, ushort x, ushort y) override;
-    void onImageComplete(SequentialTimer& timer) override;
+    void process(ImageLabelData const& labelData, SequentialTimer& timer) override;
 
     ushort getEdgeYValue(ushort x) const override;
     std::vector<OcclusionRay<ushort>> getOcclusionRays() const override;

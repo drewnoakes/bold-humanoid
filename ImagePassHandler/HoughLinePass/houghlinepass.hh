@@ -27,27 +27,25 @@ namespace bold
       lines()
     {}
 
-    void onImageStarting(SequentialTimer& timer) override
+    void process(ImageLabelData<uchar> const& labelData, SequentialTimer& timer) override
     {
       accumulator.clear();
-
       timer.timeEvent("Clear");
-    }
 
-    void onPixel(T value, ushort x, ushort y) override
-    {
-      if (value != 0)
+      for (auto const& row : labelData)
       {
-        accumulator.add(x, y);
+        ushort x = 0;
+        for (auto const& label : row)
+        {
+          if (label != 0)
+            accumulator.add(x, row.imageY);
+          x += row.granularity.x();
+        }
       }
-    }
+      timer.timeEvent("Process Rows");
 
-    void onImageComplete(SequentialTimer& timer) override
-    {
       auto extractor = HoughLineExtractor();
-
       lines = extractor.findLines(accumulator, accumulator.count() / d_thresholdDivisor);
-
       timer.timeEvent("Find lines");
     }
 
