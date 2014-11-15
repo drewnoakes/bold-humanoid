@@ -130,35 +130,20 @@ VisualCortex::VisualCortex(shared_ptr<Camera> camera,
   createLookupTable();
 
   // Recreate lookup table on dynamic configuration changes
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.goal")->
-    changed.connect([goalLabel,createLookupTable](Colour::hsvRange value) {
-       goalLabel->setHSVRange(value);
-        createLookupTable();
-      });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.ball")->
-    changed.connect([ballLabel,createLookupTable](Colour::hsvRange value) {
-        ballLabel->setHSVRange(value);
-        createLookupTable();
-      });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.field")->
-    changed.connect([fieldLabel,createLookupTable](Colour::hsvRange value) {
-        fieldLabel->setHSVRange(value);
-        createLookupTable();
-      });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.line")->
-    changed.connect([lineLabel,createLookupTable](Colour::hsvRange value) {
-        lineLabel->setHSVRange(value);
-        createLookupTable();
-      });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.cyan")->
-    changed.connect([cyanLabel,createLookupTable](Colour::hsvRange value) {
-        cyanLabel->setHSVRange(value);
-        createLookupTable();
-      });
-  Config::getSetting<Colour::hsvRange>("vision.pixel-labels.magenta")->
-    changed.connect([magentaLabel,createLookupTable](Colour::hsvRange value) {
-        magentaLabel->setHSVRange(value); createLookupTable();
-      });
+  auto bindLabel = [createLookupTable](string name, shared_ptr<RangePixelLabel> label)
+  {
+    auto setting = Config::getSetting<Colour::hsvRange>(string("vision.pixel-labels.") + name);
+    setting->changed.connect([label,createLookupTable](Colour::hsvRange value) {
+      label->setHSVRange(value);
+      createLookupTable();
+    });
+  };
+  bindLabel("goal", goalLabel);
+  bindLabel("ball", ballLabel);
+  bindLabel("field", fieldLabel);
+  bindLabel("line", lineLabel);
+  bindLabel("cyan", cyanLabel);
+  bindLabel("magenta", magentaLabel);
 
   // ball detection settings
   d_minBallAreaPixels              = Config::getSetting<int>("vision.ball-detection.min-area-px");
