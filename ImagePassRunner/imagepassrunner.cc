@@ -1,7 +1,6 @@
 #include "imagepassrunner.hh"
 
 #include "../ImagePassHandler/imagepasshandler.hh"
-#include "../ImageSampleMap/imagesamplemap.hh"
 #include "../ImageLabelData/imagelabeldata.hh"
 #include "../SequentialTimer/sequentialtimer.hh"
 
@@ -10,6 +9,8 @@ using namespace std;
 
 void ImagePassRunner::addHandler(std::shared_ptr<ImagePassHandler> handler)
 {
+  ASSERT(handler);
+
   if (std::find(d_handlers.begin(), d_handlers.end(), handler) == d_handlers.end())
     d_handlers.insert(handler);
 }
@@ -18,6 +19,8 @@ void ImagePassRunner::addHandler(std::shared_ptr<ImagePassHandler> handler)
 */
 void ImagePassRunner::removeHandler(std::shared_ptr<ImagePassHandler> handler)
 {
+  ASSERT(handler);
+
   auto it = d_handlers.find(handler);
 
   if (it != d_handlers.end())
