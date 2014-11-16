@@ -1,5 +1,7 @@
 #include "fsmoption.hh"
 
+#include <algorithm>
+
 using namespace bold;
 using namespace std;
 

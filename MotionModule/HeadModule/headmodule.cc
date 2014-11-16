@@ -2,11 +2,9 @@
 
 #include "../../BodyControl/bodycontrol.hh"
 #include "../../Config/config.hh"
-#include "../../Math/math.hh"
 #include "../../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../../State/state.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
-#include "../../ThreadUtil/threadutil.hh"
 
 using namespace bold;
 using namespace std;

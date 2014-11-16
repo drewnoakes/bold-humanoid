@@ -1,7 +1,12 @@
-#include "fsmoption.ih"
+#include "fsmoption.hh"
 
 #include "../../Config/config.hh"
+#include "../../util/log.hh"
 #include "../../Voice/voice.hh"
+
+using namespace bold;
+using namespace rapidjson;
+using namespace std;
 
 vector<shared_ptr<Option>> FSMOption::runPolicy(Writer<StringBuffer>& writer)
 {

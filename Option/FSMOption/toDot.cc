@@ -1,4 +1,12 @@
-#include "fsmoption.ih"
+#include "fsmoption.hh"
+
+#include <algorithm>
+#include <sstream>
+
+#include "../../util/assert.hh"
+
+using namespace bold;
+using namespace std;
 
 string FSMOption::toDot() const
 {

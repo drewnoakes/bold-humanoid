@@ -1,5 +1,0 @@
-#include "cameramodel.hh"
-
-using namespace bold;
-using namespace std;
-using namespace Eigen;

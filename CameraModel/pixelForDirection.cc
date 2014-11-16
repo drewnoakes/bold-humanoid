@@ -1,4 +1,8 @@
-#include "cameramodel.ih"
+#include "cameramodel.hh"
+
+using namespace bold;
+using namespace std;
+using namespace Eigen;
 
 Maybe<Vector2d> CameraModel::pixelForDirection(Vector3d const& direction) const
 {

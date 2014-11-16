@@ -4,8 +4,6 @@
 #include "../../Setting/setting-implementations.hh"
 #include "../../Voice/voice.hh"
 
-#include <sstream>
-
 using namespace bold;
 using namespace std;
 using namespace rapidjson;
@@ -93,4 +91,27 @@ void FSMOption::setCurrentState(shared_ptr<FSMState> state)
       d_voice->say(task);
     }
   }
+}
+
+double FSMOption::hasTerminated()
+{
+  return d_curState && d_curState->isFinal ? 1.0 : 0.0;
+}
+
+void FSMOption::addState(std::shared_ptr<FSMState> state, bool startState)
+{
+  d_states.push_back(state);
+  if (startState)
+  {
+    ASSERT(!d_startState);
+    d_startState = state;
+  }
+}
+
+std::shared_ptr<FSMTransition> FSMOption::wildcardTransitionTo(std::shared_ptr<FSMState> targetState, std::string name)
+{
+  std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>(name);
+  t->childState = targetState;
+  d_wildcardTransitions.push_back(t);
+  return t;
 }

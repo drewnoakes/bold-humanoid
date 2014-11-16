@@ -1,6 +1,7 @@
 #include "circleball.hh"
 
 #include "../../Agent/agent.hh"
+#include "../../Config/config.hh"
 #include "../../Drawing/drawing.hh"
 #include "../../MotionModule/HeadModule/headmodule.hh"
 #include "../../MotionModule/WalkModule/walkmodule.hh"

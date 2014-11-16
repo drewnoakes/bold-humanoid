@@ -69,7 +69,7 @@ namespace bold
     {
       // http://www.equasys.de/colorconversion.html
 
-      YCbCr();
+      YCbCr() = default;
       YCbCr(uint8_t y, uint8_t cb, uint8_t cr);
 
       bool isValid() const;

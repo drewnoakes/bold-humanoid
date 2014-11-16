@@ -1,6 +1,0 @@
-#include "painter.hh"
-#include <opencv2/core/core.hpp>
-#include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
-
-using namespace bold;
-

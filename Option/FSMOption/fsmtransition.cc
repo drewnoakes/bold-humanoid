@@ -1,19 +1,20 @@
 #include "fsmoption.hh"
 
 using namespace bold;
+using namespace std;
 
-FSMTransition::FSMTransition(std::string const& name)
+FSMTransition::FSMTransition(string const& name)
 : name(name)
 {}
 
-FSMTransition* FSMTransition::when(std::function<bool()> condition)
+FSMTransition* FSMTransition::when(function<bool()> condition)
 {
   this->conditionFactory = nullptr;
   this->condition = condition;
   return this;
 }
 
-FSMTransition* FSMTransition::when(std::function<std::function<bool()>()> conditionFactory)
+FSMTransition* FSMTransition::when(function<function<bool()>()> conditionFactory)
 {
   this->conditionFactory = conditionFactory;
   this->condition = nullptr;
@@ -26,13 +27,13 @@ FSMTransition* FSMTransition::whenTerminated()
   return this;
 }
 
-FSMTransition* FSMTransition::notify(std::function<void()> callback)
+FSMTransition* FSMTransition::notify(function<void()> callback)
 {
   this->onFire.connect(callback);
   return this;
 }
 
-FSMTransition* FSMTransition::after(std::chrono::milliseconds time)
+FSMTransition* FSMTransition::after(chrono::milliseconds time)
 {
   return when([this,time] { return parentState->timeSinceStart() >= time; });
 }

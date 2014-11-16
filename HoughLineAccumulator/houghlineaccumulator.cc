@@ -1,4 +1,10 @@
-#include "houghlineaccumulator.ih"
+#include "houghlineaccumulator.hh"
+
+#include <opencv2/core/core.hpp>
+
+using namespace bold;
+using namespace cv;
+using namespace std;
 
 void HoughLineAccumulator::add(int x, int y)
 {

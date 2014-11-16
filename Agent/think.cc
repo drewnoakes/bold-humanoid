@@ -1,7 +1,26 @@
-#include "agent.ih"
+#include "agent.hh"
 
+using namespace bold;
+using namespace std;
+
+#include "../BehaviourControl/behaviourcontrol.hh"
+#include "../Camera/camera.hh"
+#include "../Debugger/debugger.hh"
+#include "../DrawBridgeComms/drawbridgecomms.hh"
 #include "../Drawing/drawing.hh"
+#include "../GameStateReceiver/gamestatereceiver.hh"
+#include "../Localiser/localiser.hh"
+#include "../MotionTaskScheduler/motiontaskscheduler.hh"
+#include "../OptionTree/optiontree.hh"
+#include "../RoleDecider/roledecider.hh"
+#include "../RemoteControl/remotecontrol.hh"
+#include "../SequentialTimer/sequentialtimer.hh"
+#include "../Spatialiser/spatialiser.hh"
+#include "../State/state.hh"
+#include "../StateObject/TimingState/timingstate.hh"
+#include "../StateObserver/OpenTeamCommunicator/openteamcommunicator.hh"
 #include "../util/fps.hh"
+#include "../VisualCortex/visualcortex.hh"
 
 void Agent::think()
 {

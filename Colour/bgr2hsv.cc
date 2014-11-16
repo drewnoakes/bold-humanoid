@@ -1,4 +1,8 @@
-#include "colour.ih"
+#include "colour.hh"
+
+#include "../util/assert.hh"
+
+using namespace bold;
 
 Colour::hsv Colour::bgr2hsv(bgr const& in)
 {

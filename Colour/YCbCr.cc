@@ -2,11 +2,6 @@
 
 using namespace bold;
 using namespace std;
-using namespace cv;
-
-
-Colour::YCbCr::YCbCr()
-{}
 
 Colour::YCbCr::YCbCr(uchar y, uchar cb, uchar cr)
 : y(y), cb(cb), cr(cr)

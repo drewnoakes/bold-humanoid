@@ -1,7 +1,0 @@
-#include "colour.hh"
-
-#include <iomanip>
-#include "../util/assert.hh"
-
-using namespace bold;
-using namespace std;

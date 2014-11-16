@@ -1,4 +1,12 @@
-#include "agent.ih"
+#include "agent.hh"
+
+#include "../ImageLabeller/imagelabeller.hh"
+#include "../MotionLoop/motionloop.hh"
+#include "../util/log.hh"
+#include "../Voice/voice.hh"
+
+using namespace std;
+using namespace bold;
 
 void Agent::run()
 {

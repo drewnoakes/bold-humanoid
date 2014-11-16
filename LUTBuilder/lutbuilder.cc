@@ -1,4 +1,7 @@
-#include "lutbuilder.ih"
+#include "lutbuilder.hh"
+
+using namespace bold;
+using namespace std;
 
 shared_ptr<uchar const> LUTBuilder::buildLookUpTableBGR24(vector<shared_ptr<PixelLabel>> const& labels)
 {

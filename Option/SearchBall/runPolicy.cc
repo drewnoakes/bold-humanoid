@@ -2,6 +2,7 @@
 
 #include "../LookAtBall/lookatball.hh"
 #include "../LookAtFeet/lookatfeet.hh"
+#include "../../Config/config.hh"
 #include "../../StateObject/BodyState/bodystate.hh"
 
 using namespace Eigen;

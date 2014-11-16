@@ -1,4 +1,9 @@
-#include "colour.ih"
+#include "colour.hh"
+
+#include <iomanip>
+
+using namespace bold;
+using namespace std;
 
 ostream& bold::operator<<(ostream &stream, Colour::bgr const& bgr)
 {

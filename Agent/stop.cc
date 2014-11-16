@@ -1,4 +1,11 @@
-#include "agent.ih"
+#include "agent.hh"
+
+#include "../DataStreamer/datastreamer.hh"
+#include "../MotionLoop/motionloop.hh"
+#include "../Voice/voice.hh"
+
+using namespace bold;
+using namespace std;
 
 void Agent::requestStop()
 {

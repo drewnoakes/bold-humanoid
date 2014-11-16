@@ -1,4 +1,8 @@
-#include "cameramodel.ih"
+#include "cameramodel.hh"
+
+using namespace bold;
+using namespace std;
+using namespace Eigen;
 
 unsigned CameraModel::expectedPixelSize(Vector3d const& position, double diameter)
 {

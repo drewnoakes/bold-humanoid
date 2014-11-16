@@ -1,4 +1,8 @@
-#include "cameramodel.ih"
+#include "cameramodel.hh"
+
+using namespace bold;
+using namespace std;
+using namespace Eigen;
 
 Vector3d CameraModel::directionForPixel(Vector2d const& pixel) const
 {

@@ -340,7 +340,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./LUTBuilder/buildLookUpTable.cc
+  ./LUTBuilder/lutbuilder.cc
 )
 
 add_class(BOLDHUMANOID
@@ -424,7 +424,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/FSMOption/FSMOption.cc
+  ./Option/FSMOption/fsmoption.cc
   ./Option/FSMOption/fsmstate.cc
   ./Option/FSMOption/fsmtransition.cc
   ./Option/FSMOption/runPolicy.cc
@@ -456,7 +456,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Option/LookAtFeet/runPolicy.cc
+  ./Option/LookAtFeet/lookatfeet.cc
 )
 
 add_class(BOLDHUMANOID
@@ -522,7 +522,7 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./Painter/draw.cc
+  ./Painter/painter.cc
 )
 
 add_class(BOLDHUMANOID
@@ -582,10 +582,8 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./StateObject/BodyState/BodyState.cc
+  ./StateObject/BodyState/bodystate.cc
   ./StateObject/BodyState/initialise.cc
-  ./StateObject/BodyState/determineFootAgentTr.cc
-  ./StateObject/BodyState/zero.cc
 )
 
 add_class(BOLDHUMANOID

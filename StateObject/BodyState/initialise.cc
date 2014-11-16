@@ -1,7 +1,13 @@
-#include "bodystate.ih"
+#include "bodystate.hh"
 
+#include "../../BodyModel/bodymodel.hh"
+#include "../../Config/config.hh"
 #include "../OrientationState/orientationstate.hh"
 #include "../State/state.hh"
+
+using namespace bold;
+using namespace std;
+using namespace Eigen;
 
 void BodyState::initialise(shared_ptr<BodyModel const> const& bodyModel, array<double,23> const& angles)
 {

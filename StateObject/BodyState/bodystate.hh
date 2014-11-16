@@ -2,15 +2,13 @@
 
 #include <map>
 #include <memory>
-#include <stdexcept>
 #include <vector>
 #include <array>
+#include <Eigen/Geometry>
 
 #include "../stateobject.hh"
 #include "../../BodyPart/bodypart.hh"
 #include "../../JointId/jointid.hh"
-#include "../../util/assert.hh"
-#include "../../util/log.hh"
 
 namespace bold
 {
@@ -49,12 +47,7 @@ namespace bold
   class LimbPosition : public BodyPartPosition
   {
   public:
-    LimbPosition(std::shared_ptr<Limb const> limb, Eigen::Affine3d const& transform)
-    : BodyPartPosition(transform),
-      d_limb(limb)
-    {
-      ASSERT(limb);
-    }
+    LimbPosition(std::shared_ptr<Limb const> limb, Eigen::Affine3d const& transform);
 
     std::shared_ptr<Limb const> const& getLimb() const { return d_limb; }
 
@@ -67,13 +60,7 @@ namespace bold
   class JointPosition : public BodyPartPosition
   {
   public:
-    JointPosition(std::shared_ptr<Joint const> joint, Eigen::Affine3d const& transform, double angleRads)
-    : BodyPartPosition(transform),
-      d_joint(joint),
-      d_angleRads(angleRads)
-    {
-      ASSERT(joint);
-    }
+    JointPosition(std::shared_ptr<Joint const> joint, Eigen::Affine3d const& transform, double angleRads);
 
     std::shared_ptr<Joint const> const& getJoint() const { return d_joint; }
 
@@ -165,7 +152,7 @@ namespace bold
 
   private:
     template<typename TBuffer>
-    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
+    void writeJsonInternal(rapidjson::Writer<TBuffer>& writer) const;
 
     /// Initialise with the specified angles (radians), and position errors (values)
     /// Indexed by JointId (i.e. 0 is ignored.), including camera tilt angle
@@ -227,65 +214,7 @@ namespace bold
       writer.Double(com.y(), "%.4f");
       writer.Double(com.z(), "%.4f");
       writer.EndArray();
-
-      /*
-      writer.String("camera-translation");
-      writer.StartArray();
-      {
-        auto translation = d_agentCameraTransform.translation();
-        writer.Double(translation.x(), "%.3f");
-        writer.Double(translation.y(), "%.3f");
-        writer.Double(translation.z(), "%.3f");
-      }
-      writer.EndArray();
-
-      writer.String("camera-rotation");
-      writer.StartObject();
-      {
-        AngleAxisd angleAxis(d_agentCameraTransform.rotation());
-        writer.String("angle").Double(angleAxis.angle(), "%.3f");
-        writer.String("axis");
-        writer.StartArray();
-        {
-          writer.Double(angleAxis.axis().x(), "%.3f");
-          writer.Double(angleAxis.axis().y(), "%.3f");
-          writer.Double(angleAxis.axis().z(), "%.3f");
-        }
-        writer.EndArray();
-      }
-      writer.EndObject();
-      */
     }
     writer.EndObject();
-  }
-
-  inline std::shared_ptr<LimbPosition const> BodyState::getLimb(std::string const& name) const
-  {
-    // NOTE cannot use '[]' on a const map
-    auto const& i = d_limbByName.find(name);
-    if (i == d_limbByName.end())
-    {
-      log::error("BodyState::getJoint") << "Invalid limb name: " << name;
-      throw std::runtime_error("Invalid limb name: " + name);
-    }
-    return i->second;
-  }
-
-  inline std::shared_ptr<JointPosition const> BodyState::getJoint(JointId jointId) const
-  {
-    ASSERT(jointId >= JointId::MIN && jointId <= JointId::MAX);
-    return d_jointById[(uchar)jointId];
-  }
-
-  inline void BodyState::visitJoints(std::function<void(std::shared_ptr<JointPosition const> const&)> visitor) const
-  {
-    for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
-      visitor(d_jointById[(uchar)jointId]);
-  }
-
-  inline void BodyState::visitLimbs(std::function<void(std::shared_ptr<LimbPosition const> const&)> visitor) const
-  {
-    for (auto const& pair : d_limbByName)
-      visitor(pair.second);
   }
 }

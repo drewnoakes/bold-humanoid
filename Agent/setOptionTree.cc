@@ -1,4 +1,10 @@
-#include "agent.ih"
+#include "agent.hh"
+
+#include "../DataStreamer/datastreamer.hh"
+#include "../OptionTree/optiontree.hh"
+
+using namespace bold;
+using namespace std;
 
 void Agent::setOptionTree(shared_ptr<OptionTree> tree)
 {

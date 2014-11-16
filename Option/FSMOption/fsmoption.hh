@@ -2,17 +2,15 @@
 
 #include "../option.hh"
 #include "../../Clock/clock.hh"
-#include "../../util/assert.hh"
+//#include "../../util/assert.hh"
 #include "../../util/websocketbuffer.hh"
 
-#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
 #include <functional>
 #include <chrono>
 #include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
 #include <sigc++/signal.h>
 
 namespace bold
@@ -210,28 +208,5 @@ namespace bold
       writer.EndArray();
     }
     writer.EndObject();
-  }
-
-  inline double FSMOption::hasTerminated()
-  {
-    return d_curState && d_curState->isFinal ? 1.0 : 0.0;
-  }
-
-  inline void FSMOption::addState(std::shared_ptr<FSMState> state, bool startState)
-  {
-    d_states.push_back(state);
-    if (startState)
-    {
-      ASSERT(!d_startState);
-      d_startState = state;
-    }
-  }
-
-  inline std::shared_ptr<FSMTransition> FSMOption::wildcardTransitionTo(std::shared_ptr<FSMState> targetState, std::string name)
-  {
-    std::shared_ptr<FSMTransition> t = std::make_shared<FSMTransition>(name);
-    t->childState = targetState;
-    d_wildcardTransitions.push_back(t);
-    return t;
   }
 }
