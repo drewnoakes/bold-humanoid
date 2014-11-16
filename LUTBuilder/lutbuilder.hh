@@ -11,6 +11,7 @@ namespace bold
   class LUTBuilder
   {
   public:
+    // TODO MEMORY LEAK returning shared_ptr to the first byte won't free the whole LUT buffer
     static std::shared_ptr<uchar const> buildLookUpTableBGR24(std::vector<std::shared_ptr<PixelLabel>> const& labels);
     static std::shared_ptr<uchar const> buildLookUpTableBGR18(std::vector<std::shared_ptr<PixelLabel>> const& labels);
     static std::shared_ptr<uchar const> buildLookUpTableYCbCr18(std::vector<std::shared_ptr<PixelLabel>> const& labels);
