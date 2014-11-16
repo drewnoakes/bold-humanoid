@@ -1,5 +1,7 @@
 #include "datastreamer.ih"
 
+#include <rapidjson/error/en.h>
+
 void DataStreamer::processCommand(string json, JsonSession* jsonSession)
 {
   log::info("DataStreamer::processCommand") << "Processing: " << json;
@@ -9,7 +11,7 @@ void DataStreamer::processCommand(string json, JsonSession* jsonSession)
 
   if (doc.HasParseError())
   {
-    log::error("DataStreamer::processCommand") << "Error parsing command JSON";
+    log::error("DataStreamer::processCommand") << "Error parsing command JSON at offset " << doc.GetErrorOffset() << ": " << GetParseError_En(doc.GetParseError());
     return;
   }
 

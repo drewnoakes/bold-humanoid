@@ -8,6 +8,7 @@
 #include <rapidjson/filereadstream.h>
 #include <rapidjson/filewritestream.h>
 #include <rapidjson/prettywriter.h>
+#include <rapidjson/error/en.h>
 
 using namespace bold;
 using namespace std;
@@ -37,7 +38,7 @@ shared_ptr<MotionScript> MotionScript::fromFile(string fileName)
 
   if (document.HasParseError())
   {
-    log::error("MotionScript::fromFile") << "JSON parse error for " << fileName << ": " << document.GetParseError();
+    log::error("MotionScript::fromFile") << "Parse error at offset " << document.GetErrorOffset() << " in file '" << fileName << "': " << GetParseError_En(document.GetParseError());
     return nullptr;
   }
 
