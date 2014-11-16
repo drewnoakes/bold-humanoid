@@ -2,7 +2,6 @@
 
 #include "../option.hh"
 #include "../../Clock/clock.hh"
-//#include "../../util/assert.hh"
 #include "../../util/websocketbuffer.hh"
 
 #include <memory>
@@ -71,8 +70,6 @@ namespace bold
     double secondsSinceStart() const;
 
     bool allOptionsTerminated() const;
-
-    std::shared_ptr<FSMTransition> newTransition(std::string name = "");
 
     std::shared_ptr<FSMTransition> transitionTo(std::shared_ptr<FSMState>& targetState, std::string name = "");
   };

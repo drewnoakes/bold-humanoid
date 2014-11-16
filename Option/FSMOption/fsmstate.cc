@@ -43,14 +43,6 @@ bool FSMState::allOptionsTerminated() const
   return all_of(options.begin(), options.end(), [](shared_ptr<Option> const& o) { return o->hasTerminated(); });
 }
 
-shared_ptr<FSMTransition> FSMState::newTransition(string name)
-{
-  shared_ptr<FSMTransition> t = make_shared<FSMTransition>(name);
-  t->parentState = shared_from_this();
-  transitions.push_back(t);
-  return t;
-}
-
 shared_ptr<FSMTransition> FSMState::transitionTo(shared_ptr<FSMState>& targetState, string name)
 {
   shared_ptr<FSMTransition> t = make_shared<FSMTransition>(name);
