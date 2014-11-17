@@ -9,7 +9,7 @@ using namespace std;
 
 void Agent::requestStop()
 {
-  if (!d_isRunning)
+  if (!isRunning())
     throw runtime_error("Not running");
 
   if (d_isShutdownRequested)
@@ -26,11 +26,9 @@ void Agent::requestStop()
   d_voice->say("Shutting down");
 }
 
-void Agent::stop()
-{
-  log::verbose("Agent::stop") << "Stopping";
 
-  d_isRunning = false;
+void Agent::onStopped()
+{
   d_streamer->stop();
 
   if (d_motionLoop)

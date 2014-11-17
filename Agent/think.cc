@@ -19,16 +19,13 @@ using namespace std;
 #include "../State/state.hh"
 #include "../StateObject/TimingState/timingstate.hh"
 #include "../StateObserver/OpenTeamCommunicator/openteamcommunicator.hh"
-#include "../util/fps.hh"
 #include "../VisualCortex/visualcortex.hh"
 
-void Agent::think()
+void Agent::onStep(unsigned long long cycleNumber)
 {
   ASSERT(ThreadUtil::isThinkLoopThread());
 
-  d_cycleNumber++;
-
-  log::trace("Agent::think") << "Starting think cycle " << d_cycleNumber << " --------------------------";
+  log::trace("Agent::think") << "Starting think cycle " << cycleNumber << " --------------------------";
 
   SequentialTimer t;
 
@@ -50,7 +47,7 @@ void Agent::think()
   // Process the image
   //
   t.enter("Vision");
-  d_visualCortex->integrateImage(image, t, d_cycleNumber);
+  d_visualCortex->integrateImage(image, t, cycleNumber);
   t.exit();
 
   d_visualCortex->streamDebugImage(image, t);
@@ -131,7 +128,7 @@ void Agent::think()
   //
   // Send a message for drawbridge use within matches, containing status of the agent.
   //
-  if (d_drawBridgeComms && d_cycleNumber % 30 == 0)
+  if (d_drawBridgeComms && cycleNumber % 30 == 0)
     d_drawBridgeComms->publish();
 
   // Flush out any drawing commands
@@ -142,7 +139,7 @@ void Agent::think()
   // Set timing data for the think cycle
   //
   static FPS<30> fps;
-  State::make<ThinkTimingState>(t.flush(), d_cycleNumber, fps.next());
+  State::make<ThinkTimingState>(t.flush(), cycleNumber, fps.next());
 
-  log::trace("Agent::think") << "Ending think cycle " << d_cycleNumber;
+  log::trace("Agent::think") << "Ending think cycle " << cycleNumber;
 }

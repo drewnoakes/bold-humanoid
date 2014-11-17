@@ -10,10 +10,10 @@ using namespace bold;
 
 void Agent::run()
 {
-  if (d_isRunning)
-    throw runtime_error("Already running");
-
-  d_isRunning = true;
+  if (d_motionLoop->isRunning())
+    throw runtime_error("Motion loop already running");
+  if (isRunning())
+    throw runtime_error("Think loop already running");
 
   if (d_voice)
   {
@@ -26,6 +26,7 @@ void Agent::run()
     d_voice->say(announcement.str());
   }
 
+  // Start the motion loop
   if (!d_motionLoop->start())
   {
     log::error("Agent::run") << "Unable to start motion loop";
@@ -43,10 +44,11 @@ void Agent::run()
 
   log::info("Agent::run") << "Starting think loop";
 
-  while (d_isRunning)
-  {
-    think();
-  }
+  // Start the think loop
+  start();
+
+  while (isRunning() || d_motionLoop->isRunning())
+    usleep(100 * 1000);
 
   log::info("Agent::run") << "Stopped";
 }

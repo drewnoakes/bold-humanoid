@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "../Clock/clock.hh"
+#include "../util/loop.hh"
 
 namespace bold
 {
@@ -42,7 +43,7 @@ namespace bold
 
   enum class TeamColour;
 
-  class Agent
+  class Agent : public Loop
   {
   public:
     static void registerStateTypes();
@@ -80,16 +81,18 @@ namespace bold
 
     void run();
     void requestStop();
-    void stop();
 
     bool isShutdownRequested() const { return d_isShutdownRequested; }
 
-    ulong getThinkCycleNumber() const { return d_cycleNumber; }
+    ulong getThinkCycleNumber() const;
 
     double getUptimeSeconds() const { return Clock::getSecondsSince(d_startTime); }
 
   private:
-    bool d_isRunning;
+    void onStep(unsigned long long cycleNumber) override;
+
+    void onStopped() override;
+
     bool d_isShutdownRequested;
 
     uchar const d_teamNumber;
@@ -137,7 +140,5 @@ namespace bold
     ulong d_cycleNumber;
 
     Clock::Timestamp d_startTime;
-
-    void think();
   };
 }

@@ -42,12 +42,11 @@ using namespace std;
 using namespace bold;
 
 Agent::Agent()
-  : d_isRunning(false),
+  : Loop("Think Loop"),
     d_isShutdownRequested(false),
     d_teamNumber((uchar)Config::getStaticValue<int>("team-number")),
     d_uniformNumber((uchar)Config::getStaticValue<int>("uniform-number")),
     d_teamColour(Config::getStaticValue<TeamColour>("team-colour")),
-    d_cycleNumber(0),
     d_startTime(Clock::getTimestamp())
 {
   ThreadUtil::setThreadId(ThreadId::ThinkLoop);
@@ -193,4 +192,9 @@ Agent::Agent()
       exit(EXIT_FAILURE);
     }
   });
+}
+
+ulong Agent::getThinkCycleNumber() const
+{
+  return getCycleNumber();
 }
