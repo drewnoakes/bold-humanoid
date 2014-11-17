@@ -2,9 +2,7 @@
 
 #include "../../../Config/config.hh"
 #include "../../../ImageLabelData/imagelabeldata.hh"
-#include "../../../PixelLabel/pixellabel.hh"
 #include "../../../SequentialTimer/sequentialtimer.hh"
-#include "../../../stats/movingaverage.hh"
 
 using namespace bold;
 using namespace Eigen;
@@ -27,26 +25,22 @@ void PeriodicFieldEdgePass::process(ImageLabelData const& labelData, SequentialT
   std::fill(d_runByC.begin(), d_runByC.end(), 0);
   timer.timeEvent("Clear");
 
+  const uchar lineLabelId = d_lineLabelId;
+  const uchar fieldLabelId = d_fieldLabelId;
+
   for (auto const& row : labelData)
   {
-    ushort x = 0;
-    for (auto const& label : row)
+    ushort c = 0;
+    for (auto label = row.begin(); label < row.end(); label += d_period)
     {
-//   ASSERT(x >= 0 && x < d_imageWidth);
-
-      if (x % d_period != 0)
-        continue;
-
-      ushort c = x / d_period;
-
-      if (label == d_lineLabelId)
+      if (*label == lineLabelId)
       {
         // Do nothing! Line may still be within field.
         // We don't increase the score however, and still reset at the first non-field/line pixel.
       }
-      else if (label == d_fieldLabelId)
+      else if (*label == fieldLabelId)
       {
-//     ASSERT(y >= d_maxYByX[c]);
+//      ASSERT(y >= d_maxYByX[c]);
 
         ushort run = d_runByC[c];
         run++;
@@ -61,7 +55,7 @@ void PeriodicFieldEdgePass::process(ImageLabelData const& labelData, SequentialT
         d_runByC[c] = 0;
       }
 
-      x += row.granularity.x();
+      c++;
     }
   }
   timer.timeEvent("Process Rows");
