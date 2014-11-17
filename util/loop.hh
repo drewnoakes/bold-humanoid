@@ -12,12 +12,9 @@ namespace bold
   class Loop
   {
   public:
-    Loop(std::string loopName);
+    Loop(std::string loopName, int schedulePolicy = SCHED_OTHER, int priority = 0);
 
     ~Loop();
-
-//    void setFifo();
-//    void setRealtime();
 
     bool start();
 
@@ -45,6 +42,8 @@ namespace bold
     std::string d_loopName;
     bool d_isRunning;
     bool d_isStopRequested;
+    int d_schedulePolicy;
+    int d_priority;
   };
 
   class LoopRegulator

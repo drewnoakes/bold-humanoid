@@ -4,9 +4,17 @@
 using namespace bold;
 using namespace std;
 
-Loop::Loop(std::string loopName)
-  : d_loopName(loopName)
-{}
+Loop::Loop(std::string loopName, int schedulePolicy, int priority)
+  : d_loopName(loopName),
+    d_schedulePolicy(schedulePolicy),
+    d_priority(priority)
+{
+  if (d_priority < 0)
+    d_priority = sched_get_priority_max(schedulePolicy);
+
+  ASSERT(d_priority >= sched_get_priority_min(schedulePolicy));
+  ASSERT(d_priority <= sched_get_priority_max(schedulePolicy));
+}
 
 Loop::~Loop()
 {
@@ -24,17 +32,26 @@ bool Loop::start()
     return false;
   }
 
+  // For information on Linux thread scheduling, see: man sched_setscheduler
+
+  // Policy
+  //   Normal (static priority of zero)
+  //     SCHED_OTHER (standard round-robin)
+  //     SCHED_BATCH (for batch processing)
+  //     SCHED_IDLE (for very low priority background tasks)
+  //   Real-time (priority from 1-99)
+  //     SCHED_FIFO (first in, first out, no time-slicing, always preempts priority zero)
+  //     SCHED_RR (round robin, like FIFO except runs only for time slice)
+  //
+  // Scheduler executes highest priority thread
+  // Policy only applies between threads of equal priority
+  // Threads preempted by threads of higher priority
+
   // Initialise default thread attributes
   pthread_attr_t attr;
   pthread_attr_init(&attr);
 
-  // Set the scheduling policy as 'RR'
-  int error = pthread_attr_setschedpolicy(&attr, SCHED_RR);
-  if (error != 0)
-  {
-    log::error(d_loopName) << "Error setting thread scheduling policy as RR: " << error;
-    return false;
-  }
+  int error;
 
   // Set the scheduler inheritance (no inheritance)
   error = pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
@@ -44,14 +61,22 @@ bool Loop::start()
     return false;
   }
 
-  // Set the thread as having real-time priority (requires elevated permissions)
+  // Set the scheduling policy
+  error = pthread_attr_setschedpolicy(&attr, d_schedulePolicy);
+  if (error != 0)
+  {
+    log::error(d_loopName) << "Error setting thread scheduling policy: " << error;
+    return false;
+  }
+
+  // Set the thread priority
   struct sched_param param;
   memset(&param, 0, sizeof(param));
-  param.sched_priority = 31;
+  param.sched_priority = d_priority;
   error = pthread_attr_setschedparam(&attr, &param);
   if (error != 0)
   {
-    log::error(d_loopName) << "Error setting thread priority as realtime: " << error;
+    log::error(d_loopName) << "Error setting thread priority: " << error;
     return false;
   }
 

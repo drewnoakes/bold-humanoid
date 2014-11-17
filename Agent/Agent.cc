@@ -42,7 +42,7 @@ using namespace std;
 using namespace bold;
 
 Agent::Agent()
-  : Loop("Think Loop"),
+  : Loop("Think Loop", SCHED_OTHER, 0),
     d_isShutdownRequested(false),
     d_teamNumber((uchar)Config::getStaticValue<int>("team-number")),
     d_uniformNumber((uchar)Config::getStaticValue<int>("uniform-number")),

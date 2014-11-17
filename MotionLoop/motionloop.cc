@@ -24,7 +24,7 @@ using namespace bold;
 using namespace std;
 
 MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
-  : Loop("Motion Loop"),
+  : Loop("Motion Loop", SCHED_RR, -1),
     d_debugControl(debugControl),
     d_haveBody(false),
     d_readYet(false),
