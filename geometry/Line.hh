@@ -9,7 +9,6 @@
 
 #include "LineSegment/linesegment.hh"
 #include "Bounds.hh"
-#include "LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 #include "../../Math/math.hh"
 #include "../../util/assert.hh"
 #include "../../util/Maybe.hh"
