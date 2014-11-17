@@ -66,7 +66,7 @@ namespace bold
   class VisualCortex
   {
   public:
-    static bool shouldMergeBallBlobs(Bounds2i const& larger, Bounds2i const& smaller);
+    static bool shouldMergeBallBlobs(Bounds2<ushort> const& larger, Bounds2<ushort> const& smaller);
 
     VisualCortex(std::shared_ptr<Camera> camera,
                  std::shared_ptr<CameraModel> cameraModel,

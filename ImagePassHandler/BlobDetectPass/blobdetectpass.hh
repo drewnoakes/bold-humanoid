@@ -17,6 +17,10 @@
 #include "../../util/assert.hh"
 #include "../../SequentialTimer/sequentialtimer.hh"
 
+typedef unsigned short ushort;
+typedef Eigen::Matrix<ushort, 2, 1> ImagePos;
+typedef bold::Bounds2<ushort> ImageBounds;
+
 namespace bold
 {
   /** Horizontal run of pixels
@@ -24,14 +28,14 @@ namespace bold
    **/
   struct Run
   {
-    Run(unsigned startX, unsigned y);
-    Run(unsigned startX, unsigned endX, unsigned y);
+    Run(ushort startX, ushort y);
+    Run(ushort startX, ushort endX, ushort y);
 
     /** Returns the number of pixels in the run.
      *
      * If a run starts and stops at the same x position, it has length one.
      **/
-    unsigned length() const;
+    ushort length() const;
 
     /** Returns whether two runs overlap, ignoring y positions. */
     bool overlaps(Run const& b) const;
@@ -42,11 +46,11 @@ namespace bold
      */
     bool operator<(Run const& other) const;
 
-    unsigned y;        ///< The row index of the horizontal run
-    unsigned startX;   ///< The column index of the left-most pixel
-    unsigned endX;     ///< The column index of the right-most pixel
+    ushort y;        ///< The row index of the horizontal run
+    ushort startX;   ///< The column index of the left-most pixel
+    ushort endX;     ///< The column index of the right-most pixel
 
-    double midX() const { return (endX + startX) / 2.0; }
+    float midX() const { return (endX + startX) / 2.0f; }
 
     inline friend std::ostream& operator<<(std::ostream& stream, Run const& run)
     {
@@ -60,25 +64,25 @@ namespace bold
   struct Blob
   {
     Blob();
-    Blob(Eigen::Vector2i const& _ul, Eigen::Vector2i const& _br,
+    Blob(ImagePos const& _ul, ImagePos const& _br,
          unsigned _area,
-         Eigen::Vector2d _mean, // Eigen::Matrix2d _covar,
+         Eigen::Vector2f _mean, // Eigen::Matrix2f _covar,
          std::set<Run> const& _runs);
 
     cv::Rect toRect() const;
 
-    Bounds2i bounds() const;
+    ImageBounds bounds() const;
 
     void merge(Blob& other);
 
     bool operator<(Blob const& other) const;
     bool operator>(Blob const& other) const { return other < *this; }
 
-    Eigen::Vector2i ul;      ///< Upper left pixel (min)
-    Eigen::Vector2i br;      ///< Bottom right pixel (max)
+    ImagePos ul;             ///< Upper left pixel (min)
+    ImagePos br;             ///< Bottom right pixel (max)
     unsigned area;           ///< Number of pixels in blob
-    Eigen::Vector2d mean;    ///< Mean
-//     Eigen::Matrix2d covar;   ///< Covarience
+    Eigen::Vector2f mean;    ///< Mean
+//  Eigen::Matrix2f covar;   ///< Covarience
 
     std::set<Run> runs;      ///< Runs in this blob
 
@@ -122,13 +126,13 @@ namespace bold
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
 
-    void addRun(unsigned endX);
+    void addRun(ushort endX);
 
     ushort d_imageHeight;
     ushort d_imageWidth;
 
     std::vector<std::shared_ptr<PixelLabel>> d_pixelLabels;
-    std::vector<unsigned> d_rowIndices;
+    std::vector<ushort> d_rowIndices;
 
     // Image pass state Accumulated data for the most recently passed image.
     std::map<uint8_t, RunLengthCode> d_runsPerRowPerLabel;
@@ -214,12 +218,12 @@ namespace bold
     }
   }
 
-  inline void BlobDetectPass::addRun(unsigned endX)
+  inline void BlobDetectPass::addRun(ushort endX)
   {
     // finish whatever run we were on
     d_currentRun.endX = endX;
 
-    // TODO do this with pointer arithmetic rather than a map lookup
+    // TODO PERFORMANCE do this with pointer arithmetic rather than a map lookup
     auto it = d_runsPerRowPerLabel.find(d_currentLabel);
     if (it != d_runsPerRowPerLabel.end())
       it->second[d_currentRun.y].push_back(d_currentRun);
@@ -228,19 +232,19 @@ namespace bold
   //
   //// -------- Run --------
   //
-  inline Run::Run(unsigned startX, unsigned y)
+  inline Run::Run(ushort startX, ushort y)
     : y(y),
       startX(startX),
       endX(startX)
   {}
 
-  inline Run::Run(unsigned startX, unsigned endX, unsigned y)
+  inline Run::Run(ushort startX, ushort endX, ushort y)
     : y(y),
       startX(startX),
       endX(endX)
   {}
 
-  inline unsigned Run::length() const
+  inline ushort Run::length() const
   {
     return endX - startX + 1;
   }
@@ -261,22 +265,22 @@ namespace bold
   //// -------- Blob --------
   //
   inline Blob::Blob()
-    : ul(1e6,1e6),
-      br(-1,-1),
+    : ul(std::numeric_limits<ushort>::max(),std::numeric_limits<ushort>::max()),
+      br(std::numeric_limits<ushort>::min(),std::numeric_limits<ushort>::min()),
       area(0),
-      mean(Eigen::Vector2d::Zero())
-//       covar(Eigen::Matrix2d::Zero()
+      mean(Eigen::Vector2f::Zero())
+//    covar(Eigen::Matrix2f::Zero()
   {}
 
-  inline Blob::Blob(Eigen::Vector2i const& _ul, Eigen::Vector2i const& _br,
+  inline Blob::Blob(ImagePos const& _ul, ImagePos const& _br,
                     unsigned _area,
-                    Eigen::Vector2d _mean, //Eigen::Matrix2d _covar,
+                    Eigen::Vector2f _mean, //Eigen::Matrix2f _covar,
                     std::set<Run> const& _runs)
     : ul(_ul),
       br(_br),
       area(_area),
       mean(_mean),
-//       covar(_covar),
+//    covar(_covar),
       runs(_runs)
   {}
 
@@ -286,9 +290,9 @@ namespace bold
     return cv::Rect(ul.x(), ul.y(), size.x(), size.y());
   }
 
-  inline Bounds2i Blob::bounds() const
+  inline ImageBounds Blob::bounds() const
   {
-    return Bounds2i(ul, br);
+    return ImageBounds(ul, br);
   }
 
   inline void Blob::merge(Blob& other)

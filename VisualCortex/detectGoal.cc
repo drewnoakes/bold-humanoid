@@ -24,7 +24,7 @@ vector<Vector2d,aligned_allocator<Vector2d>> VisualCortex::detectGoal(vector<Blo
       continue;
     
     // TODO apply this filtering earlier, so that the debug image doesn't show unused goal blobs
-    Vector2i wh = goalBlob.br - goalBlob.ul;
+    Matrix<ushort,2,1> wh = goalBlob.br - goalBlob.ul;
     
     if (wh.minCoeff() > minGoalDimensionPixels && // Ignore small blobs
         wh.y() > wh.x())                          // Taller than it is wide

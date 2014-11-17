@@ -23,12 +23,12 @@ bool VisualCortex::canBlobBePlayer(Blob const& playerBlob, Vector2d& imagePos, V
 
   // TODO the transform created in findGroundPointForPixel should only be created once (canBlobBePlayer is called in a loop)
 
-  auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(playerBlob.mean, d_goalieMarkerHeight->getValue());
+  auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(playerBlob.mean.cast<double>(), d_goalieMarkerHeight->getValue());
 
   if (!midPointAgentSpace.hasValue())
     return false;
 
-  imagePos = playerBlob.mean;
+  imagePos = playerBlob.mean.cast<double>();
   agentFramePos = *midPointAgentSpace;
 
   return true;

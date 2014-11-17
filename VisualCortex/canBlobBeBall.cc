@@ -40,11 +40,11 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d& imagePos, Vector3d&
   Rect rect = blob.toRect();
   int maxDimension = max(rect.width, rect.height);
 
-  Vector2d sidePos = blob.mean + Vector2d(maxDimension/2.0, 0);
+  Vector2d sidePos = blob.mean.cast<double>() + Vector2d(maxDimension/2.0, 0);
 
   static double ballRadius = FieldMap::getBallRadius();
 
-  auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(blob.mean, ballRadius);
+  auto midPointAgentSpace = d_spatialiser->findGroundPointForPixel(blob.mean.cast<double>(), ballRadius);
   auto sidePointAgentSpace = d_spatialiser->findGroundPointForPixel(sidePos, ballRadius);
 
   if (!midPointAgentSpace || !sidePointAgentSpace)
@@ -62,7 +62,7 @@ bool VisualCortex::canBlobBeBall(Blob const& blob, Vector2d& imagePos, Vector3d&
   if (midPointAgentSpace->norm() > FieldMap::getMaxDiagonalFieldDistance())
     return false;
 
-  imagePos = blob.mean;
+  imagePos = blob.mean.cast<double>();
   agentFramePos = *midPointAgentSpace;
   return true;
 }

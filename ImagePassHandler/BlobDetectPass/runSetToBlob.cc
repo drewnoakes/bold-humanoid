@@ -7,26 +7,19 @@ using namespace Eigen;
 Blob BlobDetectPass::runSetToBlob(set<Run> const& runSet)
 {
   Blob b;
-//  // Put in constructor?
-//   b.ul = Vector2i(1e6,1e6);
-//   b.br = Vector2i(-1,-1);
-//   b.area = 0;
-//   b.mean << 0, 0;
-//   b.covar << 0, 0, 0, 0;
-
   b.runs = runSet;
 
   for (Run const& run : runSet)
   {
     // OPT: This can be optimized, we know the runs are ordered from top to bottom
-    b.ul = b.ul.array().min(Array2i(run.startX, run.y));
-    b.br = b.br.array().max(Array2i(run.endX, run.y));
+    b.ul = b.ul.array().min(Array<ushort,2,1>(run.startX, run.y));
+    b.br = b.br.array().max(Array<ushort,2,1>(run.endX, run.y));
 
-    unsigned y = run.y;
-    unsigned length = run.length();
+    ushort y = run.y;
+    ushort length = run.length();
 
     b.area += length;
-    b.mean.x() += length * ((run.endX + run.startX) / 2.0);
+    b.mean.x() += length * ((run.endX + run.startX) / 2.0f);
     b.mean.y() += length * y;
 
     // covar(0,0) = avg(x^2) - avg(x)^2
