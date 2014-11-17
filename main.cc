@@ -3,6 +3,7 @@
 #include "Config/config.hh"
 #include "ImageCodec/PngCodec/pngcodec.hh"
 #include "OptionTreeBuilder/AdHocOptionTreeBuilder/adhocoptiontreebuilder.hh"
+#include "ThreadUtil/threadutil.hh"
 #include "Version/version.hh"
 
 #include <getopt.h>
@@ -117,6 +118,8 @@ int main(int argc, char **argv)
 {
   syslog("Starting boldhumanoid process");
 
+  ThreadUtil::setThreadId(ThreadId::Main);
+
   srand(static_cast<unsigned int>(time(0)));
 
   // defaults
@@ -213,6 +216,7 @@ int main(int argc, char **argv)
   signal(SIGINT, &handleShutdownSignal);
 
   log::info("boldhumanoid") << "Running Agent";
+
   agent->run();
 
   log::info("boldhumanoid") << "Finished after " << Clock::describeDurationSince(startTime);

@@ -6,9 +6,10 @@ namespace bold
 {
   enum class ThreadId
   {
-    MotionLoop = 1,
-    ThinkLoop = 2,
-    DataStreamer = 3
+    Main = 1,
+    MotionLoop = 2,
+    ThinkLoop = 3,
+    DataStreamer = 4
   };
 
   class ThreadUtil

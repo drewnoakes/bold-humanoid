@@ -25,6 +25,7 @@ std::string ThreadUtil::getThreadName()
     case ThreadId::MotionLoop: return "Motion Loop";
     case ThreadId::ThinkLoop: return "Think Loop";
     case ThreadId::DataStreamer: return "Data Streamer";
+    case ThreadId::Main: return "Main";
     default:
       stringstream s;
       s << "Unknown (" << (int)d_threadId << ")";
