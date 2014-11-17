@@ -40,6 +40,8 @@ namespace bold
 
     ushort getImageWidth() const { return d_imageWidth; }
 
+    size_t getLabelledRowCount() const { return d_rows.size(); }
+
     RowLabels const* begin() const { return &(*d_rows.begin()); }
     RowLabels const* end() const { return &(*d_rows.end()); }
 

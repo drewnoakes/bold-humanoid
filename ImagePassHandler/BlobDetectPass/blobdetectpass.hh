@@ -155,6 +155,8 @@ namespace bold
     // TODO size of this vector is known at this point -- avoid reallocation
     d_rowIndices.clear();
 
+    ASSERT(labelData.getLabelledRowCount() > 1);
+
     timer.timeEvent("Clear");
 
     for (auto const& row : labelData)
