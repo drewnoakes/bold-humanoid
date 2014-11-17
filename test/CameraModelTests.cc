@@ -5,7 +5,7 @@
 #include <Eigen/Geometry>
 
 #include "../CameraModel/cameramodel.hh"
-#include "../geometry/Bounds2i.hh"
+#include "../geometry/Bounds.hh"
 #include "../geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.hh"
 
 using namespace bold;

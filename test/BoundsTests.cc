@@ -2,7 +2,6 @@
 #include "helpers.hh"
 
 #include "../geometry/Bounds.hh"
-#include "../geometry/Bounds2i.hh"
 
 using namespace std;
 using namespace bold;

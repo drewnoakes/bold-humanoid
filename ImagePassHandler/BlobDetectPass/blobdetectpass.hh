@@ -12,7 +12,7 @@
 #include "../imagepasshandler.hh"
 #include "../../DisjointSet/disjointset.hh"
 #include "../../ImageLabelData/imagelabeldata.hh"
-#include "../../geometry/Bounds2i.hh"
+#include "../../geometry/Bounds.hh"
 #include "../../PixelLabel/pixellabel.hh"
 #include "../../util/assert.hh"
 #include "../../SequentialTimer/sequentialtimer.hh"

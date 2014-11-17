@@ -5,7 +5,7 @@
 #include "../../../../util/Maybe.hh"
 
 #include "../../../Line.hh"
-#include "../../../Bounds2i.hh"
+#include "../../../Bounds.hh"
 #include "../linesegment2.hh"
 
 namespace bold

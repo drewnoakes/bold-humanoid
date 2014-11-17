@@ -234,10 +234,6 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
-  ./geometry/Bounds2i.cc
-)
-
-add_class(BOLDHUMANOID
   ./geometry/LineSegment/LineSegment2/LineSegment2i/linesegment2i.cc
 )
 
