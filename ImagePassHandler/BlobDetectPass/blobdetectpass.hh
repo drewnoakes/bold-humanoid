@@ -126,7 +126,7 @@ namespace bold
   private:
     typedef std::vector<std::vector<Run>> RunLengthCode;
 
-    void addRun(ushort endX);
+    void addRun(Run& run, uint8_t label);
 
     ushort d_imageHeight;
     ushort d_imageWidth;
@@ -136,8 +136,6 @@ namespace bold
 
     // Image pass state Accumulated data for the most recently passed image.
     std::map<uint8_t, RunLengthCode> d_runsPerRowPerLabel;
-    Run d_currentRun;
-    uint8_t d_currentLabel;
 
     // Blobs detected
     std::map<std::shared_ptr<PixelLabel>,std::vector<Blob>> d_blobsDetectedPerLabel;
@@ -159,44 +157,48 @@ namespace bold
     // TODO size of this vector is known at this point -- avoid reallocation
     d_rowIndices.clear();
 
+    uint8_t currentLabel = 0;
+    Run currentRun(0, 0);
+
     ASSERT(labelData.getLabelledRowCount() > 1);
 
     timer.timeEvent("Clear");
 
     for (auto const& row : labelData)
     {
-      // TODO VISION might miss last run on last row with this approach -- add
-      // onRowEnding, or copy into onImageComplete
-      if (d_currentLabel != 0)
+      // TODO VISION might miss last run on last row with this approach
+      if (currentLabel != 0)
       {
         // finish whatever run we were on
-        addRun(d_imageWidth - 1u);
+        currentRun.endX = d_imageWidth - (ushort)1;
+        addRun(currentRun, currentLabel);
       }
-      d_currentRun.y = row.imageY;
-      d_currentLabel = 0;
+      currentRun.y = row.imageY;
+      currentLabel = 0;
       d_rowIndices.push_back(row.imageY);
 
       ushort x = 0;
       for (auto const& label : row)
       {
         // Check if we have a run boundary
-        if (label != d_currentLabel)
+        if (label != currentLabel)
         {
           // Check whether this is the end of the current run
-          if (d_currentLabel != 0)
+          if (currentLabel != 0)
           {
             // Finished run
-            addRun(x - 1u);
+            currentRun.endX = x - (ushort)1;
+            addRun(currentRun, currentLabel);
           }
 
           // Check whether this is the start of a new run
           if (label != 0)
           {
             // Start new run
-            d_currentRun.startX = x;
+            currentRun.startX = x;
           }
 
-          d_currentLabel = label;
+          currentLabel = label;
         }
         x += row.granularity.x();
       }
@@ -218,15 +220,12 @@ namespace bold
     }
   }
 
-  inline void BlobDetectPass::addRun(ushort endX)
+  inline void BlobDetectPass::addRun(Run& run, uint8_t label)
   {
-    // finish whatever run we were on
-    d_currentRun.endX = endX;
-
     // TODO PERFORMANCE do this with pointer arithmetic rather than a map lookup
-    auto it = d_runsPerRowPerLabel.find(d_currentLabel);
+    auto it = d_runsPerRowPerLabel.find(label);
     if (it != d_runsPerRowPerLabel.end())
-      it->second[d_currentRun.y].push_back(d_currentRun);
+      it->second[run.y].push_back(run);
   }
 
   //

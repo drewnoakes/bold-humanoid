@@ -8,8 +8,7 @@ BlobDetectPass::BlobDetectPass(ushort imageWidth, ushort imageHeight, vector<sha
     d_imageHeight(imageHeight),
     d_imageWidth(imageWidth),
     d_pixelLabels(pixelLabels),
-    d_runsPerRowPerLabel(),
-    d_currentRun(0, 0)
+    d_runsPerRowPerLabel()
 {
   // Create a run length code for each label
   for (auto const& pixelLabel : pixelLabels)
