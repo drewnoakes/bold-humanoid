@@ -16,9 +16,7 @@
 #include "../StateObject/TimingState/timingstate.hh"
 #include "../StateObject/MotionTaskState/motiontaskstate.hh"
 #include "../Voice/voice.hh"
-#include "../util/fps.hh"
 
-#include <time.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/filestream.h>
 
@@ -26,14 +24,14 @@ using namespace bold;
 using namespace std;
 
 MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
-: d_debugControl(debugControl),
-  d_haveBody(false),
-  d_isStarted(false),
-  d_isStopRequested(false),
-  d_readYet(false),
-  d_cycleNumber(0),
-  d_staticHardwareStateUpdateNeeded(true)
+  : Loop("Motion Loop"),
+    d_debugControl(debugControl),
+    d_haveBody(false),
+    d_readYet(false),
+    d_staticHardwareStateUpdateNeeded(true)
 {
+  d_loopRegulator.setIntervalMicroseconds(MotionModule::TIME_UNIT * 1000);
+
   d_bodyControl = make_shared<BodyControl>();
   d_bodyModel = make_shared<DarwinBodyModel>();
 
@@ -64,12 +62,6 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
   }
 }
 
-MotionLoop::~MotionLoop()
-{
-  if (d_isStarted && !d_isStopRequested)
-    stop();
-}
-
 void MotionLoop::addMotionModule(shared_ptr<MotionModule> const& module)
 {
   ASSERT(module);
@@ -82,16 +74,8 @@ void MotionLoop::addCommsModule(shared_ptr<CM730CommsModule> const& module)
   d_commsModules.push_back(module);
 }
 
-bool MotionLoop::start()
+void MotionLoop::onLoopStart()
 {
-  log::verbose("MotionLoop::start") << "Starting";
-
-  if (d_isStarted)
-  {
-    log::error("MotionLoop::start") << "Cannot start motion loop as it is already running";
-    return false;
-  }
-
   // Connect to hardware subcontroller
   auto cm730DevicePath = Config::getStaticValue<string>("hardware.cm730-path");
   log::info("MotionLoop::start") << "Using CM730 Device Path: " << cm730DevicePath;
@@ -99,138 +83,24 @@ bool MotionLoop::start()
 
   d_readYet = false;
 
-  // Initialise default thread attributes
-  pthread_attr_t attr;
-  pthread_attr_init(&attr);
-
-  // Set the scheduling policy as 'RR'
-  int error = pthread_attr_setschedpolicy(&attr, SCHED_RR);
-  if (error != 0)
-  {
-    log::error("MotionLoop::start") << "Error setting thread scheduling policy as RR: " << error;
-    return false;
-  }
-
-  // Set the scheduler inheritance (no inheritance)
-  error = pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
-  if (error != 0)
-  {
-    log::error("MotionLoop::start") << "Error setting thread scheduler inheritence as explicit: " << error;
-    return false;
-  }
-
-  // Set the thread as having real-time priority (requires elevated permissions)
-  struct sched_param param;
-  memset(&param, 0, sizeof(param));
-  param.sched_priority = 31;
-  error = pthread_attr_setschedparam(&attr, &param);
-  if (error != 0)
-  {
-    log::error("MotionLoop::start") << "Error setting thread priority as realtime: " << error;
-    return false;
-  }
-
-  // Create and start the thread
-  error = pthread_create(&d_thread, &attr, threadMethod, this);
-  if (error == EPERM)
-  {
-    log::error("MotionLoop::start") << "Not permitted to start the motion thread. Did you use sudo?";
-    return false;
-  }
-  else if (error != 0)
-  {
-    log::error("MotionLoop::start") << "Error starting thread: " << error;
-    return false;
-  }
-
-  d_isStarted = true;
-  return true;
-}
-
-void MotionLoop::stop()
-{
-  if (!d_isStarted || d_isStopRequested)
-    return;
-
-  log::verbose("MotionLoop::stop") << "Stopping";
-
-  // set the flag to end the thread
-  d_isStopRequested = true;
-
-  // wait for the thread to end
-  if (pthread_join(d_thread, NULL) != 0)
-    exit(EXIT_FAILURE);
-
-  log::info("MotionLoop::stop") << "Stopped";
-
-  d_isStopRequested = false;
-  d_isStarted = false;
-}
-
-void *MotionLoop::threadMethod(void *param)
-{
-  log::info("MotionLoop::threadMethod") << "Started";
-
   ThreadUtil::setThreadId(ThreadId::MotionLoop);
 
-  MotionLoop *loop = static_cast<MotionLoop*>(param);
+  d_haveBody = d_cm730->connect();
 
-  loop->d_haveBody = loop->d_cm730->connect();
-
-  if (!loop->d_haveBody)
+  if (!d_haveBody)
   {
     log::warning("MotionLoop::threadMethod") << "Motion loop running without a body";
   }
   else
   {
     // Set all CM730/MX28 values to a known set of initial values before continuing
-    loop->initialiseHardwareTables();
+    initialiseHardwareTables();
 
-    if (!loop->d_cm730->torqueEnable(true))
+    if (!d_cm730->torqueEnable(true))
       log::error("MotionLoop::threadMethod") << "Error enabling torque";
   }
 
-  static FPS<100> fps;
-  static struct timespec next_time;
-  clock_gettime(CLOCK_MONOTONIC, &next_time);
-
-  while (!loop->d_isStopRequested)
-  {
-    // TODO this will always increment by <8ms, even if something stalled
-    next_time.tv_sec += (next_time.tv_nsec + MotionModule::TIME_UNIT * 1000000) / 1000000000;
-    next_time.tv_nsec = (next_time.tv_nsec + MotionModule::TIME_UNIT * 1000000) % 1000000000;
-
-    SequentialTimer t;
-
-    loop->step(t);
-
-    int sleepResult = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next_time, nullptr);
-    t.timeEvent("Sleep");
-
-    if (sleepResult != 0)
-    {
-      if (sleepResult == EINTR)
-        log::warning("MotionLoop::threadMethod") << "Sleep interrupted";
-      else
-        log::warning("MotionLoop::threadMethod") << "clock_nanosleep returned error code: " << sleepResult;
-    }
-
-    // Set timing data for the motion cycle
-    State::make<MotionTimingState>(t.flush(), loop->d_cycleNumber, fps.next());
-  }
-
-  if (loop->d_haveBody)
-  {
-    if (!loop->d_cm730->torqueEnable(false))
-      log::error("MotionLoop::threadMethod") << "Error disabling torque";
-  }
-
-  // Destroy the CM730 object on the motion thread
-  loop->d_cm730.reset();
-
-  log::verbose("MotionLoop::threadMethod") << "Exiting";
-
-  pthread_exit(NULL);
+  d_loopRegulator.start();
 }
 
 void MotionLoop::initialiseHardwareTables()
@@ -395,10 +265,12 @@ void MotionLoop::initialiseHardwareTables()
   log::info("MotionLoop::initialiseHardwareTables") << "All MX28 data tables initialised";
 }
 
-void MotionLoop::step(SequentialTimer& t)
+void MotionLoop::onStep(unsigned long long cycleNumber)
 {
+  SequentialTimer t;
+
   // Rate the limit at which we make this call to the CM730.
-  if (d_cycleNumber % 60 == 0 && d_haveBody)
+  if (cycleNumber % 60 == 0 && d_haveBody)
   {
     d_isCM730PowerEnabled = d_cm730->isPowerEnabled();
     t.timeEvent("Check Power");
@@ -408,8 +280,6 @@ void MotionLoop::step(SequentialTimer& t)
   if (d_haveBody && !d_isCM730PowerEnabled)
     return;
 
-  d_cycleNumber++;
-
   // Don't write until we've read
   if (d_readYet)
   {
@@ -418,14 +288,14 @@ void MotionLoop::step(SequentialTimer& t)
       if (d_powerChangeNeeded)
       {
         if (!d_cm730->powerEnable(d_powerChangeToValue))
-          log::error("MotionLoop::step") << "Error setting power to " << d_powerChangeToValue;
+          log::error("MotionLoop::onStep") << "Error setting power to " << d_powerChangeToValue;
         d_powerChangeNeeded = false;
       }
 
       if (d_torqueChangeNeeded)
       {
         if (!d_cm730->torqueEnable(d_torqueChangeToValue))
-          log::error("MotionLoop::step") << "Error setting torque to " << d_torqueChangeToValue;
+          log::error("MotionLoop::onStep") << "Error setting torque to " << d_torqueChangeToValue;
         d_torqueChangeNeeded = false;
       }
     }
@@ -452,7 +322,7 @@ void MotionLoop::step(SequentialTimer& t)
 
     if (anythingChanged)
     {
-      State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
+      State::make<BodyControlState>(d_bodyControl, cycleNumber);
       t.timeEvent("Set BodyControlState");
       d_bodyControl->clearModulation();
     }
@@ -500,14 +370,14 @@ void MotionLoop::step(SequentialTimer& t)
 
   State::set(hw);
 
-  State::make<BodyState>(d_bodyModel, hw, d_bodyControl, d_cycleNumber);
+  State::make<BodyState>(d_bodyModel, hw, d_bodyControl, cycleNumber);
   t.timeEvent("Update BodyState");
 
   if (!d_readYet)
   {
     // TODO should probably update the body control from hardware measurements whenever torque is enabled
     d_bodyControl->updateFromHardwareState(hw);
-    State::make<BodyControlState>(d_bodyControl, d_cycleNumber);
+    State::make<BodyControlState>(d_bodyControl, cycleNumber);
     d_readYet = true;
   }
 
@@ -522,11 +392,29 @@ void MotionLoop::step(SequentialTimer& t)
     for (auto const& commsModule : d_commsModules)
     {
       t.enter(commsModule->getName());
-      commsModule->step(d_cm730, t, d_cycleNumber);
+      commsModule->step(d_cm730, t, cycleNumber);
       t.exit();
     }
     t.exit();
   }
+
+  d_loopRegulator.wait();
+  t.timeEvent("Sleep");
+
+  // Set timing data for the motion cycle
+  State::make<MotionTimingState>(t.flush(), cycleNumber, getFps());
+}
+
+void MotionLoop::onStopped()
+{
+  if (d_haveBody)
+  {
+    if (!d_cm730->torqueEnable(false))
+      log::error("MotionLoop::threadMethod") << "Error disabling torque";
+  }
+
+  // Destroy the CM730 object on the motion thread
+  d_cm730.reset();
 }
 
 bool MotionLoop::applyJointMotionTasks(SequentialTimer& t)
@@ -689,7 +577,7 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t
   auto rxBytes = d_cm730->getReceivedByteCount();
   auto txBytes = d_cm730->getTransmittedByteCount();
 
-  auto hw = make_shared<HardwareState const>(move(cm730Snapshot), move(mx28Snapshots), rxBytes, txBytes, d_cycleNumber);
+  auto hw = make_shared<HardwareState const>(move(cm730Snapshot), move(mx28Snapshots), rxBytes, txBytes, getCycleNumber());
   t.timeEvent("Update HardwareState");
   return hw;
 }
@@ -779,7 +667,7 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareStateFake(SequentialTime
     mx28States.push_back(unique_ptr<MX28Snapshot const>(mx28State));
   }
 
-  auto hw = make_shared<HardwareState const>(unique_ptr<CM730Snapshot const>(cm730State), move(mx28States), 0, 0, d_cycleNumber);
+  auto hw = make_shared<HardwareState const>(unique_ptr<CM730Snapshot const>(cm730State), move(mx28States), 0, 0, getCycleNumber());
   t.timeEvent("Update HardwareState (Dummy)");
   return hw;
 }

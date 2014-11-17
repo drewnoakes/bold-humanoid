@@ -7,6 +7,7 @@
 
 #include "../CM730CommsModule/cm730commsmodule.hh"
 #include "../MotionModule/motionmodule.hh"
+#include "../util/loop.hh"
 
 namespace bold
 {
@@ -19,15 +20,10 @@ namespace bold
   class SequentialTimer;
   class Voice;
 
-  class MotionLoop
+  class MotionLoop : public Loop
   {
   public:
     MotionLoop(std::shared_ptr<DebugControl> debugControl);
-
-    ~MotionLoop();
-
-    bool start();
-    void stop();
 
     void addMotionModule(std::shared_ptr<MotionModule> const& module);
     void addCommsModule(std::shared_ptr<CM730CommsModule> const& module);
@@ -36,12 +32,12 @@ namespace bold
     /// Callback is passed the number of consecutive failures.
     sigc::signal<void, uint> onReadFailure;
 
-    ulong getCycleNumber() const { return d_cycleNumber; }
-
   private:
-    void initialiseHardwareTables();
+    virtual void onLoopStart() override;
+    virtual void onStep(unsigned long long cycleNumber) override;
+    virtual void onStopped() override;
 
-    void step(SequentialTimer& t);
+    void initialiseHardwareTables();
 
     bool applyJointMotionTasks(SequentialTimer& t);
     bool writeJointData(SequentialTimer& t);
@@ -60,6 +56,8 @@ namespace bold
     std::vector<std::shared_ptr<MotionModule>> d_motionModules;
     std::vector<std::shared_ptr<CM730CommsModule>> d_commsModules;
 
+    LoopRegulator d_loopRegulator;
+
     /// Set of static offsets to be added to all target positions sent to hardware.
     /// May be used to compensate for angular positional errors.
     /// See also the offset_tuner project.
@@ -69,16 +67,8 @@ namespace bold
     bool d_haveBody;
     /// Whether the CM730 subcontroller is powered. Updated every N cycles.
     bool d_isCM730PowerEnabled;
-    /// When false, calls to process have no effect
-    bool d_isStarted;
-    bool d_isStopRequested;
-
-    pthread_t d_thread;
-
     /// Whether the loop has read any values yet.
     bool d_readYet;
-
-    ulong d_cycleNumber;
 
     bool d_staticHardwareStateUpdateNeeded;
     uint d_consecutiveReadFailureCount;
@@ -87,8 +77,5 @@ namespace bold
     bool d_powerChangeToValue;
     bool d_torqueChangeNeeded;
     bool d_torqueChangeToValue;
-
-    /// The method that governs the thread's lifetime and operation
-    static void *threadMethod(void *param);
   };
 }
