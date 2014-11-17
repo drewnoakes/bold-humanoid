@@ -69,7 +69,7 @@ void Debugger::update()
   bgr eyeColour = bgr::orange;
   bgr foreheadColour = bgr::orange;
 
-  if (d_agent->isStopRequested())
+  if (d_agent->isShutdownRequested())
   {
     eyeColour = bgr::black;
     foreheadColour = bgr::black;

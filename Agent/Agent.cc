@@ -43,7 +43,7 @@ using namespace bold;
 
 Agent::Agent()
   : d_isRunning(false),
-    d_isStopRequested(false),
+    d_isShutdownRequested(false),
     d_teamNumber((uchar)Config::getStaticValue<int>("team-number")),
     d_uniformNumber((uchar)Config::getStaticValue<int>("uniform-number")),
     d_teamColour(Config::getStaticValue<TeamColour>("team-colour")),

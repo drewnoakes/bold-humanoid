@@ -17,7 +17,7 @@ UntilShutdown::UntilShutdown(string id, Agent* agent, shared_ptr<Option> beforeS
 
 vector<shared_ptr<Option>> UntilShutdown::runPolicy(Writer<StringBuffer>& writer)
 {
-  if (d_agent->isStopRequested())
+  if (d_agent->isShutdownRequested())
   {
     d_agent->getBehaviourControl()->setPlayerActivity(PlayerActivity::Waiting);
     d_agent->getBehaviourControl()->setPlayerStatus(PlayerStatus::Inactive);
@@ -31,7 +31,7 @@ vector<shared_ptr<Option>> UntilShutdown::runPolicy(Writer<StringBuffer>& writer
 
 double UntilShutdown::hasTerminated()
 {
-  return d_agent->isStopRequested()
+  return d_agent->isShutdownRequested()
     ? d_afterShutdown->hasTerminated()
     : d_beforeShutdown->hasTerminated();
 }

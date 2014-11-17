@@ -83,7 +83,7 @@ namespace bold
     void requestStop();
     void stop();
 
-    bool isStopRequested() const { return d_isStopRequested; }
+    bool isShutdownRequested() const { return d_isShutdownRequested; }
 
     ulong getThinkCycleNumber() const { return d_cycleNumber; }
 
@@ -91,7 +91,7 @@ namespace bold
 
   private:
     bool d_isRunning;
-    bool d_isStopRequested;
+    bool d_isShutdownRequested;
 
     uchar const d_teamNumber;
     uchar const d_uniformNumber;

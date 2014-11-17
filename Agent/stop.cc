@@ -12,7 +12,7 @@ void Agent::requestStop()
   if (!d_isRunning)
     throw runtime_error("Not running");
 
-  if (d_isStopRequested)
+  if (d_isShutdownRequested)
   {
     log::warning("Agent::requestStop") << "Forcing exit";
     exit(EXIT_FAILURE);
@@ -21,7 +21,7 @@ void Agent::requestStop()
   log::info("Agent::requestStop");
 
   // The option tree picks up this flag and performs a shutdown sequence
-  d_isStopRequested = true;
+  d_isShutdownRequested = true;
 
   d_voice->say("Shutting down");
 }
