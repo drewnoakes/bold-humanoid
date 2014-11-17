@@ -21,6 +21,11 @@ using namespace std;
 #include "../StateObserver/OpenTeamCommunicator/openteamcommunicator.hh"
 #include "../VisualCortex/visualcortex.hh"
 
+void Agent::onLoopStart()
+{
+  ThreadUtil::setThreadId(ThreadId::ThinkLoop);
+}
+
 void Agent::onStep(ulong cycleNumber)
 {
   ASSERT(ThreadUtil::isThinkLoopThread());
