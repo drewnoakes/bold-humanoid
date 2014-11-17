@@ -6,7 +6,6 @@
 
 namespace bold
 {
-  class WalkModule;
   class BehaviourControl;
   class BodyState;
   class ButtonObserver;
