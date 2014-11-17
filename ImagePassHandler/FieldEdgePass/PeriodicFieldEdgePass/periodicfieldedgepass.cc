@@ -35,7 +35,7 @@ void PeriodicFieldEdgePass::process(ImageLabelData const& labelData, SequentialT
 //   ASSERT(x >= 0 && x < d_imageWidth);
 
       if (x % d_period != 0)
-        return;
+        continue;
 
       ushort c = x / d_period;
 
