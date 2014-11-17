@@ -37,19 +37,19 @@ namespace bold
       return d_mx28States[jointId - 1];
     }
 
-    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
-    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJson(writer); }
+    void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJson(writer); }
+
+    template<typename TWriter>
+    void writeJson(TWriter &writer) const;
 
   private:
-    template<typename TBuffer>
-    void writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const;
-
     std::shared_ptr<StaticCM730State const> d_cm730State;
     std::vector<std::shared_ptr<StaticMX28State const>> d_mx28States;
   };
 
-  template<typename TBuffer>
-  inline void StaticHardwareState::writeJsonInternal(rapidjson::Writer<TBuffer> &writer) const
+  template<typename TWriter>
+  inline void StaticHardwareState::writeJson(TWriter &writer) const
   {
     auto writeAlarm = [&writer](std::string name, MX28Alarm const& alarm)
     {

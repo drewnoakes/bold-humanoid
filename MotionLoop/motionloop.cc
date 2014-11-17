@@ -19,6 +19,8 @@
 #include "../util/fps.hh"
 
 #include <time.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/filestream.h>
 
 using namespace bold;
 using namespace std;
@@ -627,6 +629,22 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
   return dirtyDeviceCount != 0;
 }
 
+void writeHardwareStateJsonFile()
+{
+  using namespace rapidjson;
+
+  auto state = State::get<StaticHardwareState>();
+
+  ASSERT(state);
+
+  FILE* file = fopen("eeprom.json", "w");
+  FileStream stream(file);
+  PrettyWriter<FileStream> writer(stream);
+  state->writeJson(writer);
+  stream.Flush();
+  fclose(file);
+}
+
 shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t)
 {
   ASSERT(d_haveBody);
@@ -638,7 +656,10 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareState(SequentialTimer& t
   if (d_staticHardwareStateUpdateNeeded)
   {
     if (updateStaticHardwareState())
+    {
+      writeHardwareStateJsonFile();
       d_staticHardwareStateUpdateNeeded = false;
+    }
     t.timeEvent("Read StaticHardwareState");
   }
 
