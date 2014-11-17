@@ -31,7 +31,7 @@ namespace bold
 
   protected:
     virtual void onLoopStart() {}
-    virtual void onStep(unsigned long long cycleNumber) = 0;
+    virtual void onStep(ulong cycleNumber) = 0;
     virtual void onStopped() {}
 
   private:

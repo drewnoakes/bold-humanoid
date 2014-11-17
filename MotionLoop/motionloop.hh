@@ -34,7 +34,7 @@ namespace bold
 
   private:
     virtual void onLoopStart() override;
-    virtual void onStep(unsigned long long cycleNumber) override;
+    virtual void onStep(ulong cycleNumber) override;
     virtual void onStopped() override;
 
     void initialiseHardwareTables();

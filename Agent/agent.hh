@@ -89,8 +89,7 @@ namespace bold
     double getUptimeSeconds() const { return Clock::getSecondsSince(d_startTime); }
 
   private:
-    void onStep(unsigned long long cycleNumber) override;
-
+    void onStep(ulong cycleNumber) override;
     void onStopped() override;
 
     bool d_isShutdownRequested;

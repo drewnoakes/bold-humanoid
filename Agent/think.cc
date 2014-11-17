@@ -21,7 +21,7 @@ using namespace std;
 #include "../StateObserver/OpenTeamCommunicator/openteamcommunicator.hh"
 #include "../VisualCortex/visualcortex.hh"
 
-void Agent::onStep(unsigned long long cycleNumber)
+void Agent::onStep(ulong cycleNumber)
 {
   ASSERT(ThreadUtil::isThinkLoopThread());
 

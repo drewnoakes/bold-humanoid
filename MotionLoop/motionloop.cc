@@ -265,7 +265,7 @@ void MotionLoop::initialiseHardwareTables()
   log::info("MotionLoop::initialiseHardwareTables") << "All MX28 data tables initialised";
 }
 
-void MotionLoop::onStep(unsigned long long cycleNumber)
+void MotionLoop::onStep(ulong cycleNumber)
 {
   SequentialTimer t;
 
