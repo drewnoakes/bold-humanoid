@@ -4,7 +4,6 @@
 
 #include "../../../../util/Maybe.hh"
 
-#include "../../../Line.hh"
 #include "../../../Bounds.hh"
 #include "../linesegment2.hh"
 
@@ -33,9 +32,6 @@ namespace bold
 
     /** Returns the angle of this line to the +ve x-azis, in the range [-pi, pi] */
     double angle() const;
-
-    /** Converts this {@link LineSegment2i} to a {@link Line}. */
-    Line toLine() const;
 
     Maybe<LineSegment2i> cropTo(Bounds2i const& bounds) const;
   };

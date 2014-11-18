@@ -33,27 +33,6 @@ double LineSegment2i::angle() const
   return atan2(delta.y(), delta.x());
 }
 
-Line LineSegment2i::toLine() const
-{
-  double theta = atan2(p2().y() - p1().y(), p1().x() - p2().x());
-
-  double radius = p1().x() * std::sin(theta) + p1().y() * std::cos(theta);
-
-  while (theta < 0)
-  {
-    theta += M_PI;
-    radius = -radius;
-  }
-
-  while (theta > M_PI)
-  {
-    theta -= M_PI;
-    radius = -radius;
-  }
-
-  return Line(radius, theta);
-}
-
 Maybe<LineSegment2i> LineSegment2i::cropTo(Bounds2i const& bounds) const
 {
   struct Vector2iCompare

@@ -30,7 +30,7 @@ vector<LineSegment2i> RandomPairLineFinder::findLineSegments(vector<Vector2i>& l
     }
 
     auto segment = LineSegment2i(dot1, dot2);
-    auto line = segment.toLine();
+    auto line = Line::fromSegment(segment);
 
     // Do we have an entry already for this?
     bool found = false;

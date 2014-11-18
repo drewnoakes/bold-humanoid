@@ -113,6 +113,30 @@ namespace bold
           && fabs(d_theta - other.d_theta) < epsilon;
     }
 
+    template<typename T>
+    static Line fromSegment(LineSegment2<T> const& segment)
+    {
+      double theta = atan2(segment.p2().y() - segment.p1().y(),
+                           segment.p1().x() - segment.p2().x());
+      
+      double radius = segment.p1().x() * std::sin(theta) +
+        segment.p1().y() * std::cos(theta);
+
+      while (theta < 0)
+      {
+        theta += M_PI;
+        radius = -radius;
+      }
+
+      while (theta > M_PI)
+      {
+        theta -= M_PI;
+        radius = -radius;
+      }
+
+      return Line(radius, theta);
+    }
+
     friend std::ostream& operator<<(std::ostream& stream, Line const& line)
     {
       return stream << std::setprecision(13) << "Line (radius=" << line.radius() << " theta=" << line.theta() << ")";
