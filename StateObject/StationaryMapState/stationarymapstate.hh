@@ -6,6 +6,7 @@
 #include "../../Math/math.hh"
 #include "../../OcclusionRay/occlusionray.hh"
 #include "../../stats/average.hh"
+#include "../../geometry/LineSegment/LineSegment2/linesegment2.hh"
 
 #include <array>
 #include <vector>

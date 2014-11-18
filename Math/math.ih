@@ -1,5 +1,7 @@
 #include "math.hh"
 
+#include "../geometry/LineSegment/LineSegment2/linesegment2.hh"
+
 #include <chrono>
 #include <random>
 

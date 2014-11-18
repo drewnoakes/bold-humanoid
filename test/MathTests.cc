@@ -2,6 +2,7 @@
 
 #include "../Math/math.hh"
 #include "helpers.hh"
+#include "../geometry/LineSegment/LineSegment2/linesegment2.hh"
 
 #include <Eigen/Core>
 

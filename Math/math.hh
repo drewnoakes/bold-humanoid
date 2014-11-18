@@ -4,13 +4,14 @@
 #include <Eigen/Geometry>
 #include <functional>
 
-#include "../geometry/LineSegment/linesegment.hh"
-#include "../geometry/LineSegment/LineSegment2/linesegment2.hh"
 #include "../util/assert.hh"
 #include "../util/Maybe.hh"
 
 namespace bold
 {
+  template<typename T>
+  class LineSegment2;
+
   class Math
   {
   public:
@@ -22,7 +23,7 @@ namespace bold
                                                         Eigen::Vector3d const& direction,
                                                         Eigen::Vector4d const& plane);
 
-    static Eigen::Vector2d linePointClosestToPoint(LineSegment2d const& segment,
+    static Eigen::Vector2d linePointClosestToPoint(LineSegment2<double> const& segment,
                                                    Eigen::Vector2d const& point);
 
     // TODO what if 'vector' has zero length? should this return 'Maybe<Vector2d>'?
