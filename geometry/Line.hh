@@ -7,11 +7,12 @@
 #include <Eigen/Core>
 #include <opencv2/core/core.hpp>
 
-#include "LineSegment/linesegment.hh"
 #include "Bounds.hh"
-#include "../../Math/math.hh"
-#include "../../util/assert.hh"
-#include "../../util/Maybe.hh"
+#include "../Math/math.hh"
+#include "../util/assert.hh"
+#include "../util/Maybe.hh"
+
+#include "LineSegment/linesegment.hh"
 
 namespace bold
 {
