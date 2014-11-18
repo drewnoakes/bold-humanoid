@@ -13,7 +13,13 @@ namespace bold
   struct LineSegment : Eigen::Matrix<T,dim,2>
   {
   public:
+    typedef Eigen::Matrix<T,dim,2> Base;
     typedef Eigen::Matrix<T,dim,1> PointType;
+
+    template<typename OtherDerived>
+    LineSegment(Eigen::MatrixBase<OtherDerived> const& other)
+      :  Base(other)
+    {}
 
     LineSegment(PointType const& p1,
                 PointType const& p2)
@@ -26,7 +32,12 @@ namespace bold
       ASSERT((p2 - p1).cwiseAbs().maxCoeff() != 0);
     }
 
-    using Eigen::Matrix<T,dim,2>::Matrix;
+    template<typename OtherDerived>
+    LineSegment& operator=(Eigen::MatrixBase<OtherDerived> const& other)
+    {
+      this->Base::operator=(other);
+      return *this;
+    }
 
     PointType p1() const { return this->col(0); }
     PointType p2() const { return this->col(1); }

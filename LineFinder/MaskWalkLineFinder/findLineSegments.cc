@@ -63,7 +63,7 @@ vector<LineSegment2i> MaskWalkLineFinder::findLineSegments(vector<Vector2i>& lin
       continue;
 
     // For both ends...
-    Vector2i lineEnds[2];
+    LineSegment2i::Point lineEnds[2];
     for (int endIndex = 0; endIndex <= 1; endIndex++)
     {
       int gap = 0;

@@ -14,17 +14,16 @@ namespace bold
   struct LineSegment2i : public LineSegment2<int>
   {
   public:
-    LineSegment2i(LineSegment<int,2> const& other)
-    : LineSegment2<int>::LineSegment2(other.p1(), other.p2())
-    {}
-
-    LineSegment2i(Eigen::Vector2i const& p1, Eigen::Vector2i const& p2)
+    LineSegment2i(Eigen::Matrix<int, 2, 1> const& p1, Eigen::Matrix<int, 2, 1> const& p2)
     : LineSegment2<int>::LineSegment2(p1, p2)
     {}
 
-    LineSegment2i(int const x1, int const y1, int const x2, int const y2)
-    : LineSegment2<int>::LineSegment2(x1, y1, x2, y2)
+    LineSegment2i(int x1, int y1, int x2, int y2)
+    : LineSegment2<int>::LineSegment2(Point(x1, y1), Point(x2, y2))
     {}
+
+    using LineSegment2<int>::LineSegment2;
+    using LineSegment2<int>::operator=;
 
     double gradient() const;
 

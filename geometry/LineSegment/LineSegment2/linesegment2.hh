@@ -8,14 +8,10 @@
 namespace bold
 {
   template<typename T>
-  class LineSegment2 : public LineSegment<T,2>
+  class LineSegment2 : public LineSegment<T, 2>
   {
   public:
     typedef Eigen::Matrix<T,2,1> Point;
-
-    LineSegment2(LineSegment<T,2> const& line)
-      : LineSegment<T,2>(line)
-    {}
 
     LineSegment2(Point const& p1, Point const& p2)
     : LineSegment<T, 2>::LineSegment(p1, p2)
@@ -24,6 +20,9 @@ namespace bold
     LineSegment2(T x1, T y1, T x2, T y2)
     : LineSegment<T, 2>::LineSegment(Point(x1, y1), Point(x2, y2))
     {}
+
+    using LineSegment<T, 2>::LineSegment;
+    using LineSegment<T, 2>::operator=;
 
     Maybe<Point> tryIntersect(LineSegment2<T> const& other) const
     {
