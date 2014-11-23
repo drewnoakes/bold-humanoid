@@ -226,9 +226,11 @@
     }
   },
   "label-teacher": {
+    "use-range": { "type": "enum", "values": { "Full range": 0, "X sigmas": 1 } },
+    "train-mode": { "type": "enum", "values": { "Replace": 0, "Extend": 1 } },
     "max-flood-diff": { "type": "int", "min": 1, "max": 256 },
     "sigma-range": { "type": "double", "min": 0.0, "max": 10.0 },
-    "fixed-range": {"type": "bool" }
+    "fixed-range": { "type": "bool" }
   },
   "game-controller": {
     "send-response-messages": { "type": "bool" },

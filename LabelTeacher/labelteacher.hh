@@ -14,6 +14,18 @@
 
 namespace bold
 {
+  enum class UseRange
+  {
+    Full = 0,
+    XSigmas = 1
+  };
+
+  enum class TrainMode
+  {
+    Replace = 0,
+    Extend = 1
+  };
+
   class LabelTeacher
   {
   public:
@@ -56,6 +68,9 @@ namespace bold
 
     static Colour::hsvRange determineRange(std::vector<Colour::hsv> const& samples);
     static std::pair<Colour::hsv, Colour::hsv> determineDistribution(std::vector<Colour::hsv> const& samples);
+
+    Setting<UseRange>* d_useRange;
+    Setting<TrainMode>* d_trainMode;
 
     std::vector<std::shared_ptr<PixelLabel>> d_labels;
     cv::Mat d_yuvTrainImage;

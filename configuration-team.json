@@ -229,6 +229,8 @@
     }
   },
   "label-teacher": {
+    "use-range": 0,
+    "train-mode": 0,
     "max-flood-diff": 4,
     "sigma-range": 2,
     "fixed-range": false

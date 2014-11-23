@@ -24,10 +24,13 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
       log::info("HistogramLabelTeacherBase") << "Setting sigmaRange: " << d_sigmaRange;
     });
 
+  d_useRange = Config::getSetting<UseRange>("label-teacher.use-range");
+  d_trainMode = Config::getSetting<TrainMode>("label-teacher.train-mode");
+
   std::map<int, std::string> enumOptions;
+
   for (unsigned i = 0; i < labels.size(); ++i)
     enumOptions[i] = labels[i]->getName();
-
   auto setting = new EnumSetting("label-teacher.label-to-train", enumOptions, false, "Label to train");
   setting->changed.connect([this](int value) {
       d_labelToTrain = value;
@@ -49,6 +52,9 @@ LabelTeacher::LabelTeacher(std::vector<std::shared_ptr<PixelLabel>> labels)
                     });
 
   Config::addAction("label-teacher.set-seed-point", "Set Seed Point", [this](rapidjson::Value* val) {
+      if (d_yuvTrainImage.empty())
+        return;
+
       auto xMember = val->FindMember("x");
       auto yMember = val->FindMember("y");
       if (xMember == val->MemberEnd() || !xMember->value.IsInt() ||
@@ -192,6 +198,9 @@ void LabelTeacher::train(unsigned labelIdx, cv::Mat const& mask)
   ASSERT(mask.type() == CV_8UC1);
   ASSERT(d_yuvTrainImage.cols == mask.cols && d_yuvTrainImage.rows == mask.rows);
 
+  auto labelToTrain = d_labels[labelIdx];
+  bool reset = d_trainMode->getValue() == TrainMode::Replace;
+
   for (int i = 0; i < mask.rows; ++i)
   {
     uint8_t const* trainImageRow = d_yuvTrainImage.ptr<uint8_t>(i);
@@ -204,7 +213,13 @@ void LabelTeacher::train(unsigned labelIdx, cv::Mat const& mask)
         auto bgr = yuv.toBgrInt();
         auto hsv = bgr2hsv(bgr);
 
-        d_labels[labelIdx]->addSample(hsv);
+        if (reset)
+        {
+          auto resetRange = Colour::hsvRange(hsv.h, hsv.h, hsv.s, hsv.s, hsv.v, hsv.v);
+          labelToTrain->setHSVRange(resetRange);
+          reset = false;
+        }
+        labelToTrain->addSample(hsv);
       }
   }
 
