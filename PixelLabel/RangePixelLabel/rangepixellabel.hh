@@ -12,7 +12,7 @@ namespace bold
     void addSample(Colour::hsv const& pixelColour) override;
 
     Colour::hsvRange getHSVRange() const;
-    void setHSVRange(Colour::hsvRange range);
+    void setHSVRange(Colour::hsvRange range) override;
 
     float labelProb(Colour::hsv const& pixelColour) const override;
     Colour::hsv modalColour() const override;

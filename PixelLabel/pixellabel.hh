@@ -29,6 +29,7 @@ namespace bold
     std::string getName() const { return d_name; }
     Colour::bgr getThemeColour() const { return d_themeColour; }
 
+    virtual void setHSVRange(Colour::hsvRange range) {}
     virtual void addSample(Colour::hsv const& pixelColour) = 0;
     virtual float labelProb(Colour::hsv const& pixelColour) const = 0;
     virtual Colour::hsv modalColour() const = 0;
